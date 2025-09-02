@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
-import { PeximService } from '../../service/pexim.service';
+import { PeximService } from '../../services/pexim.service';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 
 /**

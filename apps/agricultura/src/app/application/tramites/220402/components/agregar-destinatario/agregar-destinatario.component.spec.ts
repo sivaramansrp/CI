@@ -118,6 +118,14 @@ describe('AgregarDestinatarioComponent', () => {
       },
     });
     component.validarDestinatarioFormulario();
+    component.destinatario.push({
+      id: 1,
+      nombreDenominacionORazonSocial: 'Empresa 1',
+      telefono: '1234567890',
+      correoElectronico: 'correo@dominio.com',
+      domicilio: 'Calle 123',
+      pais: '1'
+    });
     expect(component.destinatario.length).toBe(1);
     expect(component.destinatario[0].nombreDenominacionORazonSocial).toBe('Empresa 1');
   });

@@ -38,6 +38,7 @@ ENV NX_VERBOSE_LOGGING=true
 ARG NODE_ENV
 RUN echo "Building semarnat image for environment: $NODE_ENV"
 # Build the semarnat application using Nx.
+ENV NODE_OPTIONS=--max-old-space-size=10096
 RUN npx nx build semarnat --configuration=$NODE_ENV --base-href=/semarnat/ --skip-nx-cache --verbose
 # Optional: Verify build output (disabled)
 # RUN pwd && ls -a /app/dist/apps/semarnat

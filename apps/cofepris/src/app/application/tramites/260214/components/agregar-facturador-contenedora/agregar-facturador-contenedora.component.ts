@@ -2,24 +2,30 @@
  * @fileoverview
  * El `AgregarFacturadorContenedoraComponent` es un componente de Angular diseñado para gestionar la funcionalidad relacionada con los facturadores.
  * Este componente utiliza el componente `AgregarFacturadorComponent` y se comunica con el estado del trámite 260214 a través del store `Tramite260214Store`.
- * 
+ *
  * @module AgregarFacturadorContenedoraComponent
  * @description
  * Este componente actúa como un contenedor para gestionar y actualizar los datos de la tabla de facturadores en el store del trámite.
  */
 
+import { Component, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+import {
+  Tramite260214State,
+  Tramite260214Store,
+} from '../../estados/tramite260214Store.store';
+import { ActivatedRoute } from '@angular/router';
 import { AgregarFacturadorComponent } from '../../../../shared/components/agregar-facturador/agregar-facturador.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
-import { Tramite260214Store } from '../../estados/tramite260214Store.store';
+import { Tramite260214Query } from '../../estados/tramite260214Query.query';
 
 /**
  * @component
  * @name AgregarFacturadorContenedoraComponent
  * @description
- * Componente contenedor que utiliza el componente `AgregarFacturadorComponent` 
- * para gestionar la funcionalidad relacionada con los facturadores. 
+ * Componente contenedor que utiliza el componente `AgregarFacturadorComponent`
+ * para gestionar la funcionalidad relacionada con los facturadores.
  * Este componente interactúa con el estado del trámite a través del store `Tramite260214Store`.
  *
  * @selector app-agregar-facturador-contenedora
@@ -45,21 +51,89 @@ import { Tramite260214Store } from '../../estados/tramite260214Store.store';
   templateUrl: './agregar-facturador-contenedora.component.html',
   styleUrl: './agregar-facturador-contenedora.component.scss',
 })
-export class AgregarFacturadorContenedoraComponent {
+export class AgregarFacturadorContenedoraComponent implements OnInit {
+  /**
+   * Notificador para la destrucción del componente.
+   *
+   * @type {Subject<void>}
+   * @description
+   * Subject utilizado como mecanismo de cancelación para observables activos.  
+   * Cuando se emite un valor en `ngOnDestroy`, todas las suscripciones que usen  
+   * `takeUntil(this.destroyNotifier$)` se completan automáticamente, evitando fugas de memoria.
+   */
+  destroyNotifier$ = new Subject<void>();
+
+  /**
+   * Estado actual del trámite 260214.
+   *
+   * @type {Tramite260214State}
+   * @description
+   * Contiene la información y valores asociados al estado del trámite en curso.  
+   * Se actualiza mediante el `Store` y `Query` correspondientes.
+   */
+  public tramiteState!: Tramite260214State;
+
+  /**
+   * Lista de facturadores en la tabla de datos.
+   *
+   * @type {Facturador[]}
+   * @description
+   * Arreglo que almacena los registros de facturadores mostrados en la tabla.  
+   * Puede ser actualizado dinámicamente a partir de interacciones del usuario
+   * o de datos obtenidos desde el `Store` o un servicio.
+   */
+  facturadorTablaDatos: Facturador[] = [];
   /**
    * @constructor
    * @description
    * Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
-   * 
+   *
    * @param {Tramite260214Store} tramite260214Store - Store que administra el estado del trámite 260214.
    */
-  constructor(public tramite260214Store: Tramite260214Store) {}
+  constructor(
+    public tramite260214Store: Tramite260214Store,
+    public tramite260214Query: Tramite260214Query,
+    public route: ActivatedRoute
+  ) {
+    this.tramite260214Query.selectTramiteState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.tramiteState = seccionState;
+          this.facturadorTablaDatos = seccionState.facturadorTablaDatos;
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Ciclo de vida de Angular: `ngOnInit`.
+   *
+   * @description
+   * Método ejecutado al inicializar el componente.  
+   *
+   * - Se suscribe a los parámetros de la ruta (`queryParams`).  
+   * - Si el parámetro `update` es igual a `'false'`, se limpia la lista
+   *   de facturadores (`facturadorTablaDatos`).  
+   *
+   * Esto permite controlar si la tabla debe mostrarse vacía o conservar
+   * la información previa según el valor de la URL.
+   */
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      if (params['update'] === 'false') {
+        this.facturadorTablaDatos = [];
+      } else if (params['update'] === 'true') {
+        this.facturadorTablaDatos = this.tramiteState.facturadorTablaModificaDatos;
+      }
+    });
+  }
 
   /**
    * @method updateFacturadorTablaDatos
    * @description
    * Actualiza los datos de la tabla de facturadores en el store del trámite.
-   * 
+   *
    * @param {Facturador[]} event - Lista de facturadores que se actualizarán en el store.
    * @returns {void} Este método no retorna ningún valor.
    *

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -164,12 +164,29 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   seleccionadaUsoEspecifico: string[] = [];
 
   /**
-   * @property {QueryList<CrosslistComponent>} crossList
+   * @property {QueryList<CrosslistComponent>} crosslistComponent
    * @description
    * Referencia a todos los componentes CrosslistComponent presentes en la plantilla.
    * Se utiliza para ejecutar métodos como agregar o quitar elementos en todas las listas.
    */
-  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+  @ViewChild('crosslistPaisOrigen') crosslistComponent!: CrosslistComponent;
+
+    /**
+   * @property {CrosslistComponent} crosslistPaisOrigenComponent
+   * @description
+   * Referencia al componente CrosslistComponent para la selección de países de procedencia.
+   * Permite manipular programáticamente la lista y acceder a los métodos de agregar/quitar elementos.
+   */
+  @ViewChild('crosslistPaisProcedencia') crosslistPaisOrigenComponent!: CrosslistComponent;
+
+  /**
+   * @property {CrosslistComponent} crosslistUsoEspecificoComponent
+   * @description
+   * Referencia al componente CrosslistComponent para la selección de usos específicos.
+   * Permite manipular programáticamente la lista y acceder a los métodos de agregar/quitar elementos.
+   */
+  @ViewChild('crosslistUsoEspecifico') crosslistUsoEspecificoComponent!: CrosslistComponent;
+
 
   /**
    * @property {EventEmitter<void>} cerrarClicado
@@ -197,22 +214,128 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+      funcion: (): void => {
+        if (this.crosslistComponent) {
+          this.crosslistComponent.agregar('t');
+        }
+      }
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-default',
-      funcion: (): void => this.crossList.forEach(cmp => cmp.agregar('')),
+      funcion: (): void => {
+        if (this.crosslistComponent) {
+          this.crosslistComponent.agregar('');
+        }
+      },
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-danger',
-      funcion: (): void => this.crossList.forEach(cmp => cmp.quitar('')),
+      funcion: (): void => {
+        if (this.crosslistComponent) {
+          this.crosslistComponent.quitar('');
+        }
+      },
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.forEach(cmp => cmp.quitar('t')),
+      funcion: (): void => {
+        if (this.crosslistComponent) {
+          this.crosslistComponent.quitar('t');
+        }
+      },
+    },
+  ];
+
+  /**
+   * @property {Array<{btnNombre: string, class: string, funcion: Function}>} campoBotones
+   * @description
+   * Configuración de los botones para controlar las acciones en el componente crosslist de países de procedencia.
+   * Cada botón tiene un nombre, una clase CSS y una función asociada que manipula la lista de países.
+   */
+  campoBotones = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => {
+        if (this.crosslistPaisOrigenComponent) {
+          this.crosslistPaisOrigenComponent.agregar('t');
+        }
+      }
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => {
+        if (this.crosslistPaisOrigenComponent) {
+          this.crosslistPaisOrigenComponent.agregar('');
+        }
+      },
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => {
+        if (this.crosslistPaisOrigenComponent) {
+          this.crosslistPaisOrigenComponent.quitar('');
+        }
+      },
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => {
+        if (this.crosslistPaisOrigenComponent) {
+          this.crosslistPaisOrigenComponent.quitar('t');
+        }
+      },
+    },
+  ];
+
+  /**
+   * @property {Array<{btnNombre: string, class: string, funcion: Function}>} UsoBotones
+   * @description
+   * Configuración de los botones para controlar las acciones en el componente crosslist de usos específicos.
+   * Cada botón tiene un nombre, una clase CSS y una función asociada que manipula la lista de usos específicos.
+   */
+  UsoBotones = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => {
+        if (this.crosslistUsoEspecificoComponent) {
+          this.crosslistUsoEspecificoComponent.agregar('t');
+        }
+      }
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => {
+        if (this.crosslistUsoEspecificoComponent) {
+          this.crosslistUsoEspecificoComponent.agregar('');
+        }
+      },
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => {
+        if (this.crosslistUsoEspecificoComponent) {
+          this.crosslistUsoEspecificoComponent.quitar('');
+        }
+      },
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => {
+        if (this.crosslistUsoEspecificoComponent) {
+          this.crosslistUsoEspecificoComponent.quitar('t');
+        }
+      },
     },
   ];
 
@@ -557,7 +680,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    */
   paisChange(event: string[]): void {
     const VALUE = event[0];
-    this.seleccionarPaisOrigen = [VALUE];
+    this.seleccionadaPaisOrigen = [VALUE];
     this.agregarMercanciaForm.patchValue({
       cvePais: VALUE,
     });
@@ -572,10 +695,10 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   paisDeProcedenciaChange(event: string[]): void {
-    const VALUE = event[0];
-    this.seleccionadaPaisProcedencia = [VALUE];
+    const PROCEDENCIA_VALUE = event[0];
+    this.seleccionadaPaisProcedencia = [PROCEDENCIA_VALUE];
     this.agregarMercanciaForm.patchValue({
-      cvePaisDeProcedencia: VALUE,
+      cvePaisDeProcedencia: PROCEDENCIA_VALUE,
     });
   }
 

@@ -198,27 +198,25 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
         this.solicitudState?.claveReferencia || '',
-        [Validators.required, Validators.maxLength(9)],
+        [Validators.maxLength(9)],
       ],
       cadenaDependencia: [
         this.solicitudState?.cadenaDependencia || '',
-        [Validators.required, Validators.maxLength(14)],
+        [Validators.maxLength(14)],
       ],
-      estado: [this.solicitudState?.estado || '', Validators.required],
-      banco: [this.solicitudState?.banco || '', Validators.required],
+      estado: [this.solicitudState?.estado || '', ],
+      banco: [this.solicitudState?.banco || '', ],
       llavePago: [
         this.solicitudState?.llavePago || '',
         [
-          Validators.required,
           Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
           Validators.maxLength(30),
         ],
       ],
-      fechaPago: [this.solicitudState?.fechaPago || '', Validators.required],
+      fechaPago: [this.solicitudState?.fechaPago || '', ],
       importePago: [
         this.solicitudState?.importePago || '',
         [
-          Validators.required,
           Validators.pattern(REGEX_PATRON_DECIMAL_2),
           Validators.maxLength(16),
         ],

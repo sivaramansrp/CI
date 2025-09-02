@@ -17,6 +17,8 @@ describe('RegistroSolicitudService', () => {
       setManifiesto1: jest.fn(),
       setManifiesto2: jest.fn(),
       setManifiesto3: jest.fn(),
+      setManifiesto4: jest.fn(),
+      setManifiesto5: jest.fn(),
       setFechaPago: jest.fn(),
       setRenovacion: jest.fn(),
       setHomologacion: jest.fn(),

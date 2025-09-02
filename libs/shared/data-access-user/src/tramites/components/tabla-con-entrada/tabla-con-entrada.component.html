@@ -68,7 +68,7 @@
             type="text"
             name=""
             [libSoloNumerica]="col.tipo === 'number'"
-            [maxLength]="col.longitudMaxima || 250"
+            [attr.maxlength]="col.longitudMaxima || 250"
             [value]="col.clave(fila)"
             class="form-control"
             (change)="changeInputValue($event, i, col.llave)"

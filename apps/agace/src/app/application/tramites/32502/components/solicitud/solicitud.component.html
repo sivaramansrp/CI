@@ -1,7 +1,7 @@
 <div class="container">
   <form [formGroup]="FormSolicitud" (ngSubmit)="validarFormulario()">
     <ng-container formGroupName="adaceForm">
-      <div class="row mb-3">
+      <div class="row mb-3 mt-4">
         <div class="col-md-4">
           <label for="adace" class="form-label">ADACE:</label>
           <input
@@ -11,6 +11,7 @@
             formControlName="adace"
             name="adace"
             id="adace"
+          
           />
         </div>
       </div>
@@ -35,6 +36,7 @@
             formControlName="razonSocial"
             name="razonSocial"
             id="razonSocial"
+            maxlength="250"
             (change)="setValoresStore(extranjeroAvisoAgace)"
           />
           <div
@@ -66,7 +68,9 @@
             formControlName="rfc"
             name="rfc"
             id="rfc"
+            maxlength="13"
             (change)="setValoresStore(extranjeroAvisoAgace)"
+            (blur)="verificarRFC()"
           />
           <div
             class="invalid-feedback"
@@ -95,6 +99,7 @@
             name="rfcExtranjero"
             id="rfcExtranjero"
             (change)="setValoresStore(extranjeroAvisoAgace)"
+            maxlength="20"
           />
           <div
             class="invalid-feedback"
@@ -123,7 +128,7 @@
             [label]="'Fracc&iacute;on arancelaria'"
             [required]="true"
             name="cveFraccionArancelaria"
-            (change)="fraccionArancelariaSeleccion()"
+            (change)="setValoresStore(mercanciaST)"
             [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
         </div>
@@ -134,8 +139,10 @@
             [label]="'Fracción de la regla 4.2.2'"
             [required]="true"
             name="reglaFraccion"
-            (change)="fraccionReglaSeleccion()"
+            (change)="setValoresStore(mercanciaST)"
             [isDisabled]="esFormularioSoloLectura"
+            [tooltipQuestionCircle]="true"
+            [tooltipQuestionCircleText]="'Fracción de la regla 4.2.2 a la que corresponde'"
           ></app-catalogo-select>
         </div>
         <div class="col-md-4">
@@ -146,11 +153,13 @@
               mercanciaST.get('nico')?.touched &&
               mercanciaST.get('nico')?.invalid
             "
-            type="number"
+            type="text"
             formControlName="nico"
             name="nico"
             id="nico"
             (change)="setValoresStore(mercanciaST)"
+            maxlength="2"
+            (keypress)="permitirSoloNumeros($event)"
           />
           <div
             class="invalid-feedback"
@@ -206,6 +215,7 @@
           name="marca"
           id="marca"
           (change)="setValoresStore(mercanciaST)"
+          maxlength="250"
         />
         <div
           class="invalid-feedback"
@@ -226,22 +236,28 @@
           [class.is-invalid]="
             mercanciaST.get('peso')?.touched && mercanciaST.get('peso')?.invalid
           "
-          type="number"
+          type="text"
           formControlName="peso"
           name="peso"
           id="peso"
           (change)="setValoresStore(mercanciaST)"
+          maxlength="16"
+          (keypress)="permitirSoloNumerosDecimal($event)"
         />
-        <div
-          class="invalid-feedback"
-          *ngIf="
-            mercanciaST.get('peso')?.touched && mercanciaST.get('peso')?.invalid
-          "
-        >
-          <span *ngIf="mercanciaST.get('peso')?.hasError('required')"
-            >Este campo es obligatorio.</span
-          >
-        </div>
+        @if(mercanciaST.controls['peso'].invalid ) {
+          <div class="d-grid">
+            @if(mercanciaST.controls['peso'].errors?.['required']&& mercanciaST.controls['peso'].touched) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+            }
+            @if(mercanciaST.get('peso')?.errors?.['pattern'])  {
+              <span class="mensaje-error"> No cumple con el formato esperado 9999999999999.99</span>
+            }
+          </div>   
+        }
+
+
+
+        
       </div>
       </div>
       
@@ -250,11 +266,13 @@
           <input-fecha
             [datos]="fechaInicioInput"
             [tooltipQuestionCircle]="true"
+            [tooltipQuestionCircleText]="'Fecha aproximada de la importación de la mercancía'"
             (valorCambiado)="cambioFechaDeIngreso($event)"
             [setFecha]="mercanciaST.get('fechaInicio')?.value"
+            
           ></input-fecha>
           @if (isValid(mercanciaST,'fechaInicio')) {
-          <div class="mensaje-error">Fecha no válida, elija otro día</div>
+          <div class="mensaje-error"><span style="color: red;">Este campo es obligatorio.</span></div>
           }
         </div>
         <div class="col-md-4">
@@ -285,7 +303,7 @@
             (change)="setValoresStore(mercanciaST)"
           ></textarea>
         </div>
-      </div>
+      </div> 
     </ng-container>
 
     <ng-titulo titulo="Datos del domicilio donde se utilizará la mercancía" />
@@ -312,7 +330,7 @@
             [label]="'Entidad federativa'"
             [required]="true"
             name="cveFraccionArancelaria"
-            (change)="onEntidadFederativaChange()"
+            (change)="setValoresStore(direccionST)"
             [isDisabled]="esFormularioSoloLectura"
           >
           </app-catalogo-select>
@@ -327,7 +345,7 @@
             [label]="'Alcaldía o Municipio'"
             [required]="true"
             name="cveFraccionArancelaria"
-            (change)="fraccionArancelariaSeleccion()"
+            (change)="setValoresStore(direccionST)"
             [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
         </div>
@@ -338,7 +356,7 @@
             [label]="'Colonia'"
             [required]="true"
             name="reglaFraccion"
-            (change)="fraccionReglaSeleccion()"
+            (change)="setValoresStore(direccionST)"
             [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
         </div>
@@ -355,6 +373,7 @@
             name="calle"
             id="calle"
             (change)="setValoresStore(direccionST)"
+            maxlength="250"
           />
           <div
             class="invalid-feedback"
@@ -378,11 +397,13 @@
               direccionST.get('numeroExterior')?.touched &&
               direccionST.get('numeroExterior')?.invalid
             "
-            type="number"
+            type="text"
             formControlName="numeroExterior"
             name="valorUSD"
             id="valorUSD"
             (change)="setValoresStore(direccionST)"
+            maxlength="15"
+            
           />
           <div
             class="invalid-feedback"
@@ -406,6 +427,7 @@
             name="numeroInterior"
             id="numeroInterior"
             (change)="setValoresStore(direccionST)"
+            maxlength="15"
           />
         </div>
         <div class="col-md-4">
@@ -454,15 +476,14 @@
           >
           <input
             class="form-control"
-            type="number"
+            type="text"
             formControlName="patenteAutorizacion"
             name="patenteAutorizacion"
             id="patenteAutorizacion"
+            maxlength="4"
+            style="color: red;"
             (change)="setValoresStore(pedimentoST)"
-            [class.is-invalid]="
-              pedimentoST.get('patenteAutorizacion')?.touched &&
-              pedimentoST.get('patenteAutorizacion')?.invalid
-            "
+            
           />
            <div
             class="invalid-feedback"
@@ -486,57 +507,78 @@
             formControlName="rfcAgenteAduanal"
             name="rfcAgenteAduanal"
             id="rfcAgenteAduanal"
-            [class.is-invalid]="
-              pedimentoST.get('rfcAgenteAduanal')?.touched &&
-              pedimentoST.get('rfcAgenteAduanal')?.invalid
-            "
+            maxlength="13"
+          
             (change)="setValoresStore(pedimentoST)"
+            (change)="verificarRFCDos()"
           />
-           <div
-            class="invalid-feedback"
-            *ngIf="
-              pedimentoST.get('rfcAgenteAduanal')?.touched &&
-              pedimentoST.get('rfcAgenteAduanal')?.invalid
-            "
-          >
-            <span *ngIf="pedimentoST.get('rfcAgenteAduanal')?.hasError('maxlength')"
-              >Este campo debe tener un máximo de 12 caracteres.</span
-            >
-          </div>
+
+          @if(pedimentoST.controls['rfcAgenteAduanal'].invalid ) {
+            <div class="invalid-feedback">
+              @if(pedimentoST.get('rfcAgenteAduanal')?.errors?.['maxlength'])  {
+                <span class="mensaje-error"> Este campo debe tener un máximo de 12 caracteres.</span>
+              }
+            </div>   
+          }
+          
         </div>
       </div>
       <div class="row mb-3">
         <div class="col-md-4">
-          <app-catalogo-select
-            [catalogo]="fraccionRegla"
-            formControlName="numeroPedimento"
-            [label]="'Número de pedimento:'"
-            [required]="true"
-            name="numeroPedimento"
-            (change)="fraccionReglaSeleccion()"
-            [isDisabled]="esFormularioSoloLectura"
-          ></app-catalogo-select>
-        </div>
-        <div class="col-md-4">
           <label for="claveAduana" class="form-label"
-            >Aduana de importación:</label
+            >Número de pedimento:</label
           >
           <input
             class="form-control"
-            type="number"
+            type="text"
             formControlName="claveAduana"
             name="claveAduana"
             id="claveAduana"
             (change)="setValoresStore(pedimentoST)"
+            maxlength="7"
+            
           />
+        </div>
+        <div class="col-md-4">
+          <app-catalogo-select
+            [catalogo]="fraccionRegla"
+            formControlName="numeroPedimento"
+            [label]="'Aduana de importación'"
+            [required]="false"
+            name="numeroPedimento"
+            (change)="setValoresStore(pedimentoST)"
+            [isDisabled]="esFormularioSoloLectura"
+          ></app-catalogo-select>
+        </div>
+       
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-12">
+          <div class="alert alert-info">
+            <div class="form-check text-left">
+              <input type="checkbox" class="form-check-input pull-left" formControlName="informacionConfidencial"
+                id="informacionConfidencial"  [disabled]="esFormularioSoloLectura" (change)="setValoresStore(pedimentoST)"/>
+
+              <label class="form-check-label" for="informacionConfidencial"
+                style="margin-left: 10px; font-weight: normal;">
+                * "En mi calidad de Residente en Territorio Nacional, manifiesto mi voluntad y disposición de asumir la responsabilidad solidaria a que se refiere la fracción VIII del artículo 26 del Código Fiscal de la Federación, por los créditos fiscales que lleguen a derivarse por no retornar las Mercancías a que el presente aviso se refiere, al extranjero dentro del plazo establecido en la Ley"
+              </label>
+
+            </div>
+          
+          </div>
+          <div>
+            @if( pedimentoST.get('informacionConfidencial')?.touched && pedimentoST.get('informacionConfidencial')?.value === false) { 
+              <span class="mensaje-error" style=" font-size: 0.875em; color: var(--bs-form-invalid-color);">  Este campo es obligatorio.</span>
+            } 
+          </div>
         </div>
       </div>
 
-      <ng-container>
-        <ng-alert
-          [CONTENIDO]="declaracionDeResponsabilidadSolidaria"
-        ></ng-alert>
-      </ng-container>
-    </ng-container>
+    
+    </ng-container>     
   </form>
 </div>
+@if(nuevaNotificacion){
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" ></lib-notificaciones>
+  }  

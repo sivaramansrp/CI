@@ -6,8 +6,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ConsultaService } from '../../service/consulta.service';
 import { Tramite260704Store } from '../../estados/Tramite260704.store';
 import { Tramite260704Query } from '../../estados/Tramite260704.query';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ValidacionesFormularioService, SolicitanteService } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 jest.mock('bootstrap', () => ({
   Modal: jest.fn().mockImplementation(() => ({
@@ -23,6 +24,7 @@ describe('DatosDeLaSolicitudComponent', () => {
   let queryMock: any;
   let validacionesServiceMock: any;
   let consultaioQueryMock: any;
+  let solicitanteServiceMock: any;
 
   beforeEach(async () => {
     consultaServiceMock = {
@@ -117,14 +119,20 @@ describe('DatosDeLaSolicitudComponent', () => {
       selectConsultaioState$: of({ readonly: false }),
     };
 
+    solicitanteServiceMock = {
+      obtenerSolicitante: jest.fn().mockReturnValue(of({})),
+      guardarSolicitante: jest.fn().mockReturnValue(of({})),
+    };
+
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,DatosDeLaSolicitudComponent],
+      imports: [ReactiveFormsModule, DatosDeLaSolicitudComponent, HttpClientTestingModule],
       providers: [
         { provide: ConsultaService, useValue: consultaServiceMock },
         { provide: Tramite260704Store, useValue: storeMock },
         { provide: Tramite260704Query, useValue: queryMock },
         { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
         { provide: ConsultaioQuery, useValue: consultaioQueryMock },
+        { provide: SolicitanteService, useValue: solicitanteServiceMock },
         FormBuilder,
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],

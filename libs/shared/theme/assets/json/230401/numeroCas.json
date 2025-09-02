@@ -4,6 +4,14 @@
       {
         "id": 1,
         "descripcion": "1336-36-3, Bifenilos policlorados P"
+      },
+      {
+        "id": 2,
+        "descripcion": "Bifenilos policlorados"
+      },
+      {
+        "id": 3,
+        "descripcion": "Bifenilos policlorados T"
       }
     ],
     "message": "Número C.A.S."
