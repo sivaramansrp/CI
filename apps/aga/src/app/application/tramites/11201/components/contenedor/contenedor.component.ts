@@ -827,7 +827,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.limpiarCampos();
   }
 
-  /**
+/**
    * Agrega una nueva solicitud utilizando el servicio `datosTramiteService`.
    * La solicitud se agrega a la lista `datosDelContenedor` y se actualiza el estado en `tramite11201Store`.
    *
@@ -851,19 +851,33 @@ export class ContenedorComponent implements OnInit, OnDestroy {
               valor: DatosDelContenedor[]
             ) => void
           )(this.datosDelContenedor);
-          
-            // Restablecer los valores del formulario para los campos de la sección de contenedor
+
+          // Restablecer los valores del formulario para los campos de la sección de contenedor
           this.solicitudForm.patchValue({
-            aduana: '',
+            aduana: this.aduana.primerOpcion,
             fechaIngreso: '',
             digitoDeControl: '',
             inicialesContenedor: '',
             numeroContenedor: '',
-            contenedores: '',
+            contenedores: this.contenedores.primerOpcion,
           });
-          
-            // Limpiar el estado de validación de todos los controles del formulario
+
+          // Limpiar el estado de validación de todos los controles del formulario
           this.clearFormValidationState();
+
+          // Específicamente limpiar estado de validación de los dropdowns
+          const ADUANA_CONTROL = this.solicitudForm.get('aduana');
+          const CONTENEDORES_CONTROL = this.solicitudForm.get('contenedores');
+          if (ADUANA_CONTROL) {
+            ADUANA_CONTROL.markAsUntouched();
+            ADUANA_CONTROL.markAsPristine();
+            ADUANA_CONTROL.setErrors(null);
+          }
+          if (CONTENEDORES_CONTROL) {
+            CONTENEDORES_CONTROL.markAsUntouched();
+            CONTENEDORES_CONTROL.markAsPristine();
+            CONTENEDORES_CONTROL.setErrors(null);
+          }
         }
       });
   }
