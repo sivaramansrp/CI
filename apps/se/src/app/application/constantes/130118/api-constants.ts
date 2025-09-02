@@ -194,19 +194,26 @@ export const API_GET_OPINION = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/opini
  * API para iniciar requerimiento trámite 130118
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Requerimiento/iniciar-generar-requerimiento
  */
-export const API_POST_INICIAR_REQUERIMIENTO = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/iniciar`;
+export const API_POST_INICIAR_REQUERIMIENTO = `tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/iniciar`;
 
 /**
  * API para guardar el requerimiento del trámite 130118
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Requerimiento/guardar-requerimiento
  */
-export const API_POST_GUARDAR_REQUERIMIENTO = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/guardar`;
+export const API_POST_GUARDAR_REQUERIMIENTO = `tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/guardar`;
 
 /**
  * API para guardar el requerimiento del trámite 130118
  * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Generar-Requerimiento/mostrar-firma
  */
 export const API_POST_GUARDAR_REQUERIMIENTO_MOSTRAR_FIRMA = `tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/mostrar-firmar`;
+
+/**
+ * API para generar la firma del requerimiento del trámite 130118
+ * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Generar-Requerimiento/mostrar-firma
+ */
+export const API_POST_FIRMAR_REQUERIMIENTO = `tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/firmar`;
+
 
 /**
  * API para consultar los sentidos disponibles
