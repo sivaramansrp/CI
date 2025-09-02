@@ -32,7 +32,7 @@ export class FirmarDictamenService {
      * @param PAYLOAD Datos del dictamen a guardar.
      * @returns Observable con la respuesta del servidor.
      */
-    postGuadarDictamen(tramite: number, numFolio: string, PAYLOAD: FirmarDictamenRequest): 
+    postFirmarDictamen(tramite: number, numFolio: string, PAYLOAD: FirmarDictamenRequest): 
     Observable<BaseResponse<null>> {
       const ENDPOINT = `${this.host}${API_POST_FIRMAR_DICTAMEN.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
       return this.http.post<BaseResponse<null>>(ENDPOINT, PAYLOAD);
