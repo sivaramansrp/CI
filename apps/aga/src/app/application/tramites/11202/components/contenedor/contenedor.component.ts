@@ -1,4 +1,4 @@
-import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, REGEX_SOLO_NÚMERO } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, REGEX_NUMEROS, REGEX_SOLO_NÚMERO } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Contenedor11202State, Contenedor11202Store } from '../../estados/contenedor11202.store';
 import { CSV_DE_TABLA, ELGIR_DE_ARCHIVO, GRID_CONTENEDORES, SOLICITUD_11202_ENUM } from '../../constantes/retorno-contenedores.enum';
@@ -476,6 +476,22 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       }),
     });
     this.mostrarCampos();
+    this.solicitudForm
+      .get('datosContenedor.digitoDeControl')
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((valor) => {
+        if (valor) {
+          const SANITIZED = valor.replace(REGEX_NUMEROS, '');
+          this.solicitudForm
+            .get('datosContenedor.digitoDeControl')
+            ?.setValue(SANITIZED, { emitEvent: false });
+          this.setValoresStore(
+            this.solicitudForm,
+            'digitoDeControl',
+            'setDigitoDeControl'
+          );
+        }
+      });
     this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(value => {
       this.setValoresStore(this.solicitudForm, 'tipoBusqueda', 'setTipoBusqueda');
       this.mostrarCampos();

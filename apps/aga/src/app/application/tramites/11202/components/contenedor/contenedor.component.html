@@ -108,10 +108,7 @@
               <div class="form-group">
                   <label for="digitoDeControl">Dígito verificador:</label>
                   <input type="text" formControlName="digitoDeControl" id="digitoDeControl" maxlength="1"
-                      class="form-control" (change)="setValoresStore(
-                        datosContenedor,
-                        'digitoDeControl',
-                        'setDigitoDeControl')" [disabled]="soloLectura">
+                      class="form-control" [disabled]="soloLectura">
               </div>
           </div>
         </div>
