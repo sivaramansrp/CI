@@ -5,27 +5,27 @@ describe('HistoricoProductoressComponent', () => {
   let component: HistoricoProductoressComponent;
 
   // Mock all required dependencies
-  const mockFormBuilder = {
+  const MOCK_FORM_BUILDER = {
     group: jest.fn()
   };
 
-  const mockCertificadoService = {
+  const MOCK_CERTIFICADO_SERVICE = {
     obtenerProductorPorExportador: jest.fn().mockReturnValue(of({ datos: [] })),
     obtenerMenuDesplegable: jest.fn().mockReturnValue(of([])),
     obtenerMercancias: jest.fn().mockReturnValue(of({ datos: [] }))
   };
 
-  const mockStore = {
+  const MOCK_STORE = {
     setFormHistorico: jest.fn(),
     setAgregarFormDatosProductor: jest.fn()
   };
 
-  const mockTramiteQuery = {
+  const MOCK_TRAMITE_QUERY = {
     formulario$: of({}),
     agregarDatosProductorFormulario$: of({})
   };
 
-  const mockConsultaQuery = {
+  const MOCK_CONSULTA_QUERY = {
     selectConsultaioState$: of({
       readonly: false
     })
@@ -34,11 +34,11 @@ describe('HistoricoProductoressComponent', () => {
   beforeEach(() => {
     // Create component instance with mocked dependencies
     component = new HistoricoProductoressComponent(
-      mockFormBuilder as any,
-      mockCertificadoService as any,
-      mockStore as any,
-      mockTramiteQuery as any,
-      mockConsultaQuery as any
+      MOCK_FORM_BUILDER as any,
+      MOCK_CERTIFICADO_SERVICE as any,
+      MOCK_STORE as any,
+      MOCK_TRAMITE_QUERY as any,
+      MOCK_CONSULTA_QUERY as any
     );
   });
 
@@ -71,41 +71,41 @@ describe('HistoricoProductoressComponent', () => {
 
     it('should load productores from service', () => {
       component.cargarProductorPorExportador();
-      expect(mockCertificadoService.obtenerProductorPorExportador).toHaveBeenCalled();
+      expect(MOCK_CERTIFICADO_SERVICE.obtenerProductorPorExportador).toHaveBeenCalled();
     });
 
     it('should load factura options', () => {
       component.facturaOpcion();
-      expect(mockCertificadoService.obtenerMenuDesplegable).toHaveBeenCalledWith('factura.json');
+      expect(MOCK_CERTIFICADO_SERVICE.obtenerMenuDesplegable).toHaveBeenCalledWith('factura.json');
     });
 
     it('should load mercancias', () => {
       component.cargarMercancia();
-      expect(mockCertificadoService.obtenerMercancias).toHaveBeenCalled();
+      expect(MOCK_CERTIFICADO_SERVICE.obtenerMercancias).toHaveBeenCalled();
     });
 
     it('should update store on setValoresStore', () => {
-      const testEvent = {
+      const TEST_EVENT = {
         formGroupName: 'test',
         campo: 'testField',
         valor: undefined,
         storeStateName: 'test'
       };
       
-      component.setValoresStore(testEvent);
-      expect(mockStore.setFormHistorico).toHaveBeenCalledWith({ testField: undefined });
+      component.setValoresStore(TEST_EVENT);
+      expect(MOCK_STORE.setFormHistorico).toHaveBeenCalledWith({ testField: undefined });
     });
 
     it('should update store on setValoresStoreAgregarForm', () => {
-      const testEvent = {
+      const TEST_EVENT = {
         formGroupName: 'test',
         campo: 'testField',
         valor: undefined,
         storeStateName: 'test'
       };
       
-      component.setValoresStoreAgregarForm(testEvent);
-      expect(mockStore.setAgregarFormDatosProductor).toHaveBeenCalledWith({ testField: undefined });
+      component.setValoresStoreAgregarForm(TEST_EVENT);
+      expect(MOCK_STORE.setAgregarFormDatosProductor).toHaveBeenCalledWith({ testField: undefined });
     });
 
     it('should handle cleanup in ngOnDestroy', () => {
@@ -119,7 +119,7 @@ describe('HistoricoProductoressComponent', () => {
     });
 
     it('should handle subscription to readonly state', (done) => {
-      mockConsultaQuery.selectConsultaioState$ = of({ readonly: true });
+      MOCK_CONSULTA_QUERY.selectConsultaioState$ = of({ readonly: true });
       
       component.ngOnInit();
       
