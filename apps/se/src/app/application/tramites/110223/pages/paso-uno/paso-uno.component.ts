@@ -35,6 +35,13 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
    * Referencia al componente SolicitanteComponent mediante ViewChild.
    * Se utiliza para invocar métodos o acceder a propiedades del componente hijo.
    */
+  
+    /**
+   * @property {SolicitanteComponent} solicitante
+   * @description
+   * Referencia al componente hijo `SolicitanteComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de solicitante desde el componente padre.
+   */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
   /**
