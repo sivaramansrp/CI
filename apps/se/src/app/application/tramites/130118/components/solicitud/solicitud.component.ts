@@ -5,14 +5,14 @@ import { Subject, map, merge, takeUntil } from 'rxjs';
 
 import { CATALOGOS_ID, Catalogo, Catalogos, CategoriaMensaje, ConsultaioQuery, ConsultaioState, EntidadesFederativasService, FECHA_SALIDA, FraccionArancelariaService, InputFecha, Notificacion, PaisesService, REGEX_ONCE_ENTEROS_DOS_DECIMALES, REGEX_ONCE_ENTEROS_TRES_DECIMALES, RegimenService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
-import { PeximService } from '../../service/pexim.service';
+import { PeximService } from '../../services/pexim.service';
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
-import { GuardarService } from '../../../../core/services/130118/guardar.service';
+import { GuardarService } from '../../services/guardar.service';
 
-import { CatMolinoService } from '../../../../core/services/130118/catalogos/cat-molino.service';
-import { ConsultaSolicitudResponse } from '../../../../core/models/130118/response/consultar-solicitud-response.model';
-import { ConsultaSolicitudService } from '../../../../core/services/130118/consulta-solicitud.service';
+import { CatMolinoService } from '../../services/cat-molino.service';
+import { ConsultaSolicitudResponse } from '../../model/response/consultar-solicitud-response.model';
+import { ConsultaSolicitudService } from '../../services/consulta-solicitud.service';
 import moment from 'moment';
 
 /**
@@ -26,6 +26,13 @@ import moment from 'moment';
 })
 /*eslint class-methods-use-this: ["error", { "exceptMethods": ["truncar"] }] */
 export class SolicitudComponent implements OnInit, OnDestroy {
+
+  /**
+    * @property {ConsultaioState[]} consultaState
+    * @description Consulta solicitud.
+  */
+  @Input() consultaState!: ConsultaioState;
+  
 
   /**
    * Lista de catálogos de régimen de mercancía.
@@ -234,8 +241,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * para llenar un formulario y realizar diversas acciones basadas en los datos recibidos.
   */
   obtenerDataSolicitud(): void {
-    const FOLIO = '0201300101820251119000004';
-    this.consultaSolicitudService.getCriterios(FOLIO).subscribe({
+    const FOLIO = this.consultaState.folioTramite;
+    this.consultaSolicitudService.getDetalleSolicitud(FOLIO).subscribe({
       next: (response) => {
         if (response?.codigo === '00' && response?.datos) {
           this.llenarFormularioDesdeRespuesta(response.datos);

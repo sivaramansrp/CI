@@ -61,4 +61,72 @@ describe('AppSolicitanteTabsComponent', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
+
+  describe('validarCamposObligatorios', () => {
+    beforeEach(() => {
+      // Reset modal and error message before each test
+      component.showErrorModal = false;
+      component.errorMessage = '';
+    });
+
+    it('should return true when all validations pass', () => {
+      component.tratadosComponent = { detallesdeltransporte: { valid: true } };
+      component.destinatarioComponent = { datosDelDestinatario: { valid: true } };
+      component.transporteComponent = { detallestransporte: { valid: true } };
+      component.representanteLegalComponent = { datosdelexportador: { valid: true } };
+      component.datosCertificadoComponent = { datosDelCertificado: { valid: true } };
+      expect(component.validarCamposObligatorios()).toBe(true);
+      expect(component.showErrorModal).toBe(false);
+    });
+
+    it('should show error modal and set errorMessage for tratadosComponent invalid', () => {
+      component.tratadosComponent = { detallesdeltransporte: { valid: false } };
+      expect(component.validarCamposObligatorios()).toBe(false);
+      expect(component.showErrorModal).toBe(true);
+      expect(component.errorMessage).toContain('Tratados');
+      expect(component.indice).toBe(2);
+    });
+
+    it('should show error modal and set errorMessage for destinatarioComponent invalid', () => {
+      component.tratadosComponent = { detallesdeltransporte: { valid: true } };
+      component.destinatarioComponent = { datosDelDestinatario: { valid: false } };
+      expect(component.validarCamposObligatorios()).toBe(false);
+      expect(component.showErrorModal).toBe(true);
+      expect(component.errorMessage).toContain('destinatario');
+      expect(component.indice).toBe(3);
+    });
+
+    it('should show error modal and set errorMessage for transporteComponent invalid', () => {
+      component.tratadosComponent = { detallesdeltransporte: { valid: true } };
+      component.destinatarioComponent = { datosDelDestinatario: { valid: true } };
+      component.transporteComponent = { detallestransporte: { valid: false } };
+      expect(component.validarCamposObligatorios()).toBe(false);
+      expect(component.showErrorModal).toBe(true);
+      expect(component.errorMessage).toContain('Transporte');
+      expect(component.indice).toBe(4);
+    });
+
+    it('should show error modal and set errorMessage for representanteLegalComponent invalid', () => {
+      component.tratadosComponent = { detallesdeltransporte: { valid: true } };
+      component.destinatarioComponent = { datosDelDestinatario: { valid: true } };
+      component.transporteComponent = { detallestransporte: { valid: true } };
+      component.representanteLegalComponent = { datosdelexportador: { valid: false } };
+      expect(component.validarCamposObligatorios()).toBe(false);
+      expect(component.showErrorModal).toBe(true);
+      expect(component.errorMessage).toContain('Representante Legal');
+      expect(component.indice).toBe(5);
+    });
+
+    it('should show error modal and set errorMessage for datosCertificadoComponent invalid', () => {
+      component.tratadosComponent = { detallesdeltransporte: { valid: true } };
+      component.destinatarioComponent = { datosDelDestinatario: { valid: true } };
+      component.transporteComponent = { detallestransporte: { valid: true } };
+      component.representanteLegalComponent = { datosdelexportador: { valid: true } };
+      component.datosCertificadoComponent = { datosDelCertificado: { valid: false } };
+      expect(component.validarCamposObligatorios()).toBe(false);
+      expect(component.showErrorModal).toBe(true);
+      expect(component.errorMessage).toContain('Datos Certificado');
+      expect(component.indice).toBe(6);
+    });
+  });
 });

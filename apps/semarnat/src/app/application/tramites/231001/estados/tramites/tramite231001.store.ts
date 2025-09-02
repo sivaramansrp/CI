@@ -1,5 +1,6 @@
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
+import { MateriaPrima } from '../../models/datos.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
@@ -10,7 +11,7 @@ export interface Solicitud231001State {
   numeroRegistroAmbiental: string;
   descripcionGenerica1: string;
   nombreDeLaMateriaPrima: string;
-  cantidad: number;
+  cantidad: string;
   numeroProgramaImmex: Catalogo | null;
   aduanas: Catalogo | null;
   unidadMedidaComercial: Catalogo | null;
@@ -19,15 +20,16 @@ export interface Solicitud231001State {
   subPartidaFraccion: Catalogo | null;
   fraccion: Catalogo | null;
   cantidadEnLetra?: string;
+  mercanciasTablaDatos:MateriaPrima[];
  
 }
 
 export function createInitialState(): Solicitud231001State {
   return {
-    numeroRegistroAmbiental: '1000',
+    numeroRegistroAmbiental: '',
     descripcionGenerica1: '',
     nombreDeLaMateriaPrima: '',
-    cantidad: 0,
+    cantidad:'',
     numeroProgramaImmex: null,
     aduanas: null,
     unidadMedidaComercial: null,
@@ -35,7 +37,8 @@ export function createInitialState(): Solicitud231001State {
     partidaFraccion: null,
     subPartidaFraccion: null,
     fraccion: null,
-    cantidadEnLetra: '100'
+    cantidadEnLetra: '100',
+    mercanciasTablaDatos:[]
   }
 }
 

@@ -7,7 +7,7 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
  */
 export const MENSAJE_TABLA_OBLIGATORIA = `
   <p style="text-align: center;">
-    Las tablas marcadas con un asterisco son obligatorias. Debes agregar al menos un registro para continuar.
+    Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.
   </p>
 `;
 
@@ -16,7 +16,9 @@ export const MENSAJE_TABLA_OBLIGATORIA = `
  * @description Representa los datos correspondientes a un fabricante.
  */
 export interface Fabricante {
-  id?:number;
+  nacionalidad?: string;
+  tipoPersona?: string;
+  id?: number;
   nombreRazonSocial: string;
   rfc: string;
   curp: string;
@@ -105,7 +107,9 @@ export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] 
  * @description Representa los datos correspondientes a un destinatario.
  */
 export interface Destinatario {
-  id?:number;
+  nacionalidad?: string;
+  tipoPersona?: string;
+  id?: number;
   nombreRazonSocial: string;
   rfc: string;
   curp: string;
@@ -122,7 +126,7 @@ export interface Destinatario {
   estadoLocalidad: string;
   codigoPostal: string;
   coloniaEquivalente: string;
-   nombres?: string;
+  nombres?: string;
   primerApellido?: string;
   segundoApellido?: string;
   razonSocial?: string;
@@ -194,6 +198,9 @@ export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario
  * @description Representa los datos correspondientes a un proveedor.
  */
 export interface Proveedor {
+  nacionalidad?: string;
+  tipoPersona?: string;
+  id?: number;
   nombreRazonSocial: string;
   rfc: string;
   curp: string;
@@ -282,6 +289,9 @@ export const PROVEEDOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Proveedor>[] =
  * @description Representa los datos correspondientes a un facturador.
  */
 export interface Facturador {
+  nacionalidad?: string;
+  tipoPersona?: string;
+  id?: number;
   nombreRazonSocial: string;
   rfc: string;
   curp: string;
@@ -384,7 +394,7 @@ export interface PagoDerechosFormState {
  * @description Configuración del campo “Fecha de pago” en el formulario.
  */
 export const FECHA_DE_PAGO = {
-  labelNombre: 'Fecha de pago',
+  labelNombre: 'Fecha de pago*',
   required: false,
   habilitado: true,
 };

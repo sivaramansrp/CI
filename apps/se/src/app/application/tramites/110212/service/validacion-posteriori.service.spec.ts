@@ -276,7 +276,18 @@ describe('ValidacionPosterioriService', () => {
           "lada": "11",
           "telefono": "123456789",
           "fax": "12345",
-          "correoElectronico": "test@gmail.com"
+          "correoElectronico": "test@gmail.com",
+          "pais": "México"
+        },
+        "grupoCertificadoOrigen": {
+          "pais": "México",
+          "ciudad": "Ciudad Certificado",
+          "calle": "Calle Certificado",
+          "numeroLetra": "123",
+          "lada": "55",
+          "telefono": "987654321",
+          "fax": "54321",
+          "correoElectronico": "certificado@test.com"
         },
         "grupoRepresentativo": {
           "lugar": "Lugar",

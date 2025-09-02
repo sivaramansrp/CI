@@ -8,7 +8,7 @@
     "nico": 1,
     "valorUSD": "100.00",
     "marca": "dummyMarca",
-    "peso": "10.5",
+    "peso": "109999.99",
     "fechaInicio": "04/07/2025",
     "numeroSerie": "dummyNumeroSerie",
     "descripcionMercancia": "dummyDescripcionMercancia",
@@ -20,7 +20,7 @@
     "numeroExterior": "123",
     "numeroInterior": "456",
     "codigoPostal": "12345",
-    "patenteAutorizacion": 1,
+    "patenteAutorizacion": 1234,
     "rfcAgenteAduanal": "dummyRFCAgenteAduanal",
     "numeroPedimento": 1,
     "claveAduana": 1,
@@ -30,5 +30,6 @@
     "tipoDocumento": "dummyTipoDocumento",
     "dropdown": "dummyDropdown",
     "commonCheckbox": true,
-    "individualCheckbox": [true, false, true, false, true, false]
+    "individualCheckbox": [true, false, true, false, true, false],
+    "informacionConfidencial":true
   }

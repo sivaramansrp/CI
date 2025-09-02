@@ -1,14 +1,31 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { CapturaSolicitudeService } from '../../services/captura-solicitud.service';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+import { map, takeUntil } from 'rxjs/operators';
+
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  SolicitanteComponent
+} from '@ng-mf/data-access-user';
+
+import { AgregarDestinatarioComponent } from '../../components/agregar-destinatario/agregar-destinatario.component';
+import { PagoDeDerechoComponent } from '../../components/pago-de-derecho/pago-de-derecho.component';
+import { TransporteComponent } from '../../components/transporte/transporte.component';
+
+import { CapturaSolicitudeService } from '../../services/captura-solicitud.service';
+
+
 
 /**
- * Componente para la vista de la paso-uno de la sección de "220402".
+ * Componente PasoUnoComponent para la vista del trámite 220402.
+ *
+ * Este componente gestiona los formularios, tabs y validaciones del paso uno del trámite 220402.
+ * Incluye referencias a componentes hijos, grupos de formularios y métodos de validación.
+ *
+ * @component
  */
 
 @Component({
@@ -25,28 +42,33 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Referencia al componente hijo de solicitud, utilizada para acceder a sus métodos y propiedades.
    */
-  @ViewChild('solicitudComp', { static: false }) solicitudComp: any;
+  @ViewChild('solicitudComp', { static: false }) solicitudComp!: SolicitanteComponent;
 
   /**
    * Referencia al componente hijo de transporte, utilizada para acceder a sus métodos y propiedades.
    */
-  @ViewChild('transporteComp', { static: false }) transporteComp: any;
+  @ViewChild('transporteComp', { static: false }) transporteComp!: TransporteComponent;
 
   /**
    * Referencia al componente hijo de pago de derechos, utilizada para acceder a sus métodos y propiedades.
    */
-  @ViewChild('pagoDerechoComp', { static: false }) pagoDerechoComp: any;
+  @ViewChild('pagoDerechoComp', { static: false }) pagoDerechoComp!: PagoDeDerechoComponent;
 
   /**
    * Referencia al componente hijo de destinatario, utilizada para acceder a sus métodos y propiedades.
    */
-  @ViewChild('destinatarioComp', { static: false }) destinatarioComp: any;
+  @ViewChild('destinatarioComp', { static: false }) destinatarioComp!: AgregarDestinatarioComponent;
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
-  /** Form groups para cada tab (debes ajustar los controles según tus necesidades) */
+  /**
+   * FormGroup para el primer tab del formulario.
+   * Contiene los controles y validaciones específicas del tab 1.
+   *
+   * @type {FormGroup}
+   */
   public formGroupTab1: FormGroup = new FormGroup({
     // Ejemplo de control, reemplaza con los controles reales
     campo1: new FormControl('', Validators.required)
@@ -63,22 +85,30 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     campo2: new FormControl('', Validators.required)
   });
 
-  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  /**
+   * Indica si existen datos de respuesta del servidor para actualizar el formulario.
+   *
+   * @type {boolean}
+   */
   public esDatosRespuesta: boolean = false;
 
-  /** Subject para notificar la destrucción del componente. */
+  /**
+   * Subject para notificar la destrucción del componente y cancelar suscripciones.
+   *
+   * @type {Subject<void>}
+   */
   public destroyNotifier$: Subject<void> = new Subject();
   /**
-  * @property {ConsultaioState} consultaDatos
-  * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
-  */
+   * Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   *
+   * @type {ConsultaioState}
+   */
   consultaDatos!: ConsultaioState;
 
   /**
    * Selecciona una pestaña específica estableciendo el índice correspondiente.
    *
    * @param {number} i - El índice de la pestaña a seleccionar.
-   * @memberof PasoUnoComponent
    */
   seleccionaTab(i: number): void {
     this.indice = i;
@@ -87,11 +117,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Constructor de la clase PasoUnoComponent.
    *
-   * @param {CapturaSolicitudeService} solocitud220402Service - Servicio para la gestión de la solicitud 220402.
-   * @param {ConsultaioQuery} consultaQuery - Query para consultar el estado de la consulta actual.
-   * @param {ChangeDetectorRef} cdr - Servicio para la detección de cambios manual en la vista.
-   *
-   * @memberof PasoUnoComponent
+   * @param {CapturaSolicitudeService} solocitud220402Service Servicio para la gestión de la solicitud 220402.
+   * @param {ConsultaioQuery} consultaQuery Query para consultar el estado de la consulta actual.
+   * @param {ChangeDetectorRef} cdr Servicio para la detección de cambios manual en la vista.
    */
   constructor(
     private solocitud220402Service: CapturaSolicitudeService,
@@ -101,17 +129,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
   /**
-   * @method ngOnInit
-   * @description Método del ciclo de vida que se ejecuta al inicializar el componente.
-   * 
-   * Este método realiza las siguientes acciones:
-   * - Se suscribe al observable `selectConsultaioState$` del servicio `ConsultaioQuery` para obtener el estado actual de la consulta.
-   * - Actualiza la propiedad `consultaDatos` con el estado recibido.
-   * - Si la propiedad `update` de `consultaDatos` es verdadera, llama al método `guardarDatosFormulario` para cargar y guardar los datos del formulario.
-   * - En caso contrario, establece la propiedad `esDatosRespuesta` como verdadera.
-   * 
-   * Utiliza el operador `takeUntil` para cancelar las suscripciones cuando el componente se destruye, evitando fugas de memoria.
-   * 
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   *
+   * Realiza la suscripción al estado de consulta y actualiza los datos del formulario según corresponda.
+   * Utiliza el operador `takeUntil` para cancelar las suscripciones cuando el componente se destruye.
+   *
    * @returns {void}
    */
   ngOnInit(): void {
@@ -128,6 +150,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
+   *
+   * @returns {void}
    */
   guardarDatosFormulario(): void {
     this.solocitud220402Service
@@ -146,6 +170,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   
 /**
  * Valida los formularios del paso actual y marca los campos inválidos como tocados para mostrar errores de validación.
+ *
+ * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
  */
 public validarFormularios(): boolean {
   let isValid = true;
@@ -163,58 +189,82 @@ public validarFormularios(): boolean {
    * Marca todos los controles como tocados para mostrar errores de validación.
    *
    * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
-   * @memberof PasoUnoComponent
    */
-  public validarTodosLosFormularios(): boolean {
+public validarTodosLosFormularios(): boolean {
   let isValid = true;
 
-  if (this.formGroupTab1) {
-    Object.values(this.formGroupTab1.controls).forEach(control => control.markAsTouched());
-    if (!this.formGroupTab1.valid) isValid = false;
+
+
+  /**
+   * Función auxiliar para validar un FormGroup.
+   * Marca todos los controles como tocados y verifica la validez del grupo.
+   *
+   * @param {FormGroup | undefined} formGroup Grupo de formulario a validar.
+   * @returns {boolean} `true` si el grupo es válido, `false` en caso contrario.
+   */
+  const VALIDAR_GRUPO_FORMULARIO = (formGroup: FormGroup | undefined): boolean => {
+    if (formGroup) {
+      Object.values(formGroup.controls).forEach(control => control.markAsTouched());
+      if (!formGroup.valid) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  /**
+   * Función auxiliar para validar un formulario de componente hijo.
+   * Marca todos los controles como tocados, ejecuta la función mostrarErrores si existe y verifica la validez del formulario.
+   *
+   * @param {FormGroup | undefined} form Formulario del componente hijo a validar.
+   * @param {() => void} [mostrarErrores] Función opcional para mostrar errores en el componente hijo.
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+  const VALIDAR_FORMULARIO_HIJO = (form: FormGroup | undefined, mostrarErrores?: () => void): boolean => {
+    if (form) {
+      form.markAllAsTouched();
+      if (typeof mostrarErrores === 'function') {
+        mostrarErrores();
+      }
+      if (!form.valid) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+
+
+  // Validación de los formularios principales
+  if (!VALIDAR_GRUPO_FORMULARIO(this.formGroupTab1)) {
+    isValid = false;
   }
-  if (this.formGroupTab2) {
-    Object.values(this.formGroupTab2.controls).forEach(control => control.markAsTouched());
-    if (!this.formGroupTab2.valid) isValid = false;
+  if (!VALIDAR_GRUPO_FORMULARIO(this.formGroupTab2)) {
+    isValid = false;
   }
 
-  if (this.solicitudComp && this.solicitudComp.FormSolicitud) {
-    this.solicitudComp.FormSolicitud.markAllAsTouched();
-    if (typeof this.solicitudComp.mostrarErrores === 'function') {
-      this.solicitudComp.mostrarErrores();
-    }
-    if (!this.solicitudComp.FormSolicitud.valid) isValid = false;
+  // Validación de los formularios de componentes hijos
+  if (!VALIDAR_FORMULARIO_HIJO(this.solicitudComp?.form)) {
+    isValid = false;
+  }
+  if (!VALIDAR_FORMULARIO_HIJO(this.transporteComp?.transporteForm, this.transporteComp?.mostrarErrores)) {
+    isValid = false;
+  }
+  if (!VALIDAR_FORMULARIO_HIJO(this.pagoDerechoComp?.FormSolicitud, this.pagoDerechoComp?.mostrarErrores)) {
+    isValid = false;
+  }
+  if (!VALIDAR_FORMULARIO_HIJO(this.destinatarioComp?.destinatarioForm, this.destinatarioComp?.mostrarErrores)) {
+    isValid = false;
   }
 
-  if (this.transporteComp && this.transporteComp.transporteForm) {
-    this.transporteComp.transporteForm.markAllAsTouched();
-    if (typeof this.transporteComp.mostrarErrores === 'function') {
-      this.transporteComp.mostrarErrores();
-    }
-    if (!this.transporteComp.transporteForm.valid) isValid = false;
-  }
-
-  if (this.pagoDerechoComp && this.pagoDerechoComp.FormSolicitud) {
-    this.pagoDerechoComp.FormSolicitud.markAllAsTouched();
-    if (typeof this.pagoDerechoComp.mostrarErrores === 'function') {
-      this.pagoDerechoComp.mostrarErrores();
-    }
-    if (!this.pagoDerechoComp.FormSolicitud.valid) isValid = false;
-  }
-
-  if (this.destinatarioComp && this.destinatarioComp.destinatarioForm) {
-    this.destinatarioComp.destinatarioForm.markAllAsTouched();
-    if (typeof this.destinatarioComp.mostrarErrores === 'function') {
-      this.destinatarioComp.mostrarErrores();
-    }
-    if (!this.destinatarioComp.destinatarioForm.valid) isValid = false;
-  }
   return isValid;
 }
   /**
    * Devuelve la validez de todos los formularios del paso uno.
-   * Debe devolver un objeto con las propiedades tab1Valid y tab2Valid.
+   *
+   * @returns {{ tab1Valid: boolean; tab2Valid: boolean }} Objeto con la validez de los formularios tab1 y tab2.
    */
-  obtenerValidacionTotalFormularios(): { tab1Valid: boolean; tab2Valid: boolean } {
+  static obtenerValidacionTotalFormularios(): { tab1Valid: boolean; tab2Valid: boolean } {
     // Reemplace la lógica de abajo con la lógica real de validación de formularios
     return {
       tab1Valid: true,
@@ -223,9 +273,10 @@ public validarFormularios(): boolean {
   }
   /**
    * Método que se ejecuta al destruir el componente.
-   * 
-   * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar
-   * todas las suscripciones activas y evitar fugas de memoria.
+   *
+   * Emite un valor al `destroyNotifier$` y lo completa para cancelar todas las suscripciones activas y evitar fugas de memoria.
+   *
+   * @returns {void}
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

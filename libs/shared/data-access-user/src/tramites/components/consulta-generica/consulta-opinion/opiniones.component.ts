@@ -1,9 +1,10 @@
 import { BodyTablaOpiniones, HeaderTablaOpiniones } from '../../../../core/models/shared/consulta-generica.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CONSULTA_OPINIONES } from '../../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
 import { FolioQuery } from '../../../../core/queries/folio.query';
+import { OpinionResponse } from '../../../../core/models/130118/opinion-response.model';
 import { OpinionesService } from '../../../../core/services/consultagenerica/opiniones-service';
 import { Router } from '@angular/router';
 
@@ -14,7 +15,7 @@ import { Router } from '@angular/router';
   templateUrl: './opiniones.component.html',
   styleUrl: './opiniones.component.scss',
 })
-export class OpinionComponent implements OnInit, OnDestroy {
+export class OpinionComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * Variable para almacenar el folio recuperado desde el store.
    * @type {string}
@@ -41,6 +42,15 @@ export class OpinionComponent implements OnInit, OnDestroy {
    */
   public datosTablaOpiniones: BodyTablaOpiniones[] = [];
 
+  /** Listado de opiniones (input desde componente padre) */
+  @Input() opinion: OpinionResponse[] = [];
+  
+  /** 
+   * Evento que emite el ID de la opinión seleccionada
+   * @output {number} idOpinionSeleccionada - ID de la opinión seleccionada
+  */
+  @Output() idOpinionSeleccionada = new EventEmitter<number>();
+
   /**
    * Constructor de la clase OpinionComponent.
    * @param router Router para navegar a la vista de detalle de opinión.
@@ -64,11 +74,19 @@ export class OpinionComponent implements OnInit, OnDestroy {
     this.folioQuery.getFolio().subscribe((folio) => {
       this.folio = folio || '';
     });
+  }
 
-    /** 
-     * Llamar al método para obtener las opiniones al inicializar el componente.
-     */
-    this.getOpiniones();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['opinion'] && changes['opinion'].currentValue?.length > 0) {
+      this.getOpiniones();
+    } else {
+      this.opinionesService
+        .getOpiniones()
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((data) => {
+          this.datosTablaOpiniones = data;
+        });
+    }
   }
 
   /**
@@ -77,7 +95,7 @@ export class OpinionComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   verDetalleOpinion(id: number): void {
-    this.router.navigate(['/lib-detalle-opinion', id]);
+   this.idOpinionSeleccionada.emit(id);
   }
 
   /**
@@ -86,12 +104,13 @@ export class OpinionComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getOpiniones(): void {
-    this.opinionesService
-      .getOpiniones()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.datosTablaOpiniones = data;
-      });
+    this.datosTablaOpiniones = this.opinion.map((doc) => ({
+      id: doc.id_opinion,
+      fechaSolicitud: doc.fecha_solicitud,
+      areaSolicitante: doc.area_solicitante,
+      areaResponsable: doc.area_responsable,
+      estatus: doc.estado_opinion,
+    }));
   }
 
   /**

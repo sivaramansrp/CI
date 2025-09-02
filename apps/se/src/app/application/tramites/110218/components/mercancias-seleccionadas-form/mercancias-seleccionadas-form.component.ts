@@ -10,11 +10,8 @@ import { REG_X } from '@libs/shared/data-access-user/src';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
+import { Component, EventEmitter,Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { OnChanges } from '@angular/core';
 
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -39,11 +36,24 @@ import { takeUntil } from 'rxjs';
   templateUrl: './mercancias-seleccionadas-form.component.html',
   styleUrl: './mercancias-seleccionadas-form.component.scss',
 })
-export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
+export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy, OnChanges {
+  /**
+   * Evento para enviar los datos modificados al padre y cerrar el modal.
+   */
+  @Input() selectedRow!: import('../../models/certificado-tecnico-japon.enum').CompliMentaria;
+  /**
+   * Evento para enviar los datos modificados al padre.
+   */
+  @Output() datosModificados = new EventEmitter<import('../../models/certificado-tecnico-japon.enum').CompliMentaria>();
+  /**
+   * Evento para cerrar el modal.
+   */
+  @Output() closeModalEvent = new EventEmitter<void>();
   /**
    * Opciones para la unidad de medida de comercialización.
    * Contiene un arreglo de objetos de tipo `Catalogo`.
    */
+
   unidaddeMedidadeComercializacionOptions: Catalogo[] = [];
 
   /**
@@ -181,7 +191,29 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
     this.tipoDeFactura();
     this.getValorStore();
     this.inicializarFormulario();
-    this.tableDataValues();
+    if (this.selectedRow) {
+      this.modifydatosdelcertificado.patchValue({
+        nombreComercial: this.selectedRow.nombreComercial,
+        nombreIngles: this.selectedRow.nombreIngles,
+        cantidad: this.selectedRow.cantidad,
+        fechadelaFactura: this.selectedRow.fechadelaFactura,
+      });
+    }
+  }
+  /**
+   * Detecta cambios en las propiedades de entrada del componente.
+   * Actualiza el formulario con los datos de la fila seleccionada si están disponibles.
+   */
+
+    ngOnChanges(): void {
+    if (this.selectedRow && this.modifydatosdelcertificado) {
+      this.modifydatosdelcertificado.patchValue({
+        nombreComercial: this.selectedRow.nombreComercial,
+        nombreIngles: this.selectedRow.nombreIngles,
+        cantidad: this.selectedRow.cantidad,
+        fechadelaFactura: this.selectedRow.fechadelaFactura,
+      });
+    }
   }
 
   /**
@@ -215,12 +247,12 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
    * Actualiza campos como nombre comercial, nombre en inglés, cantidad y fecha de la factura.
    */
   tableDataValues(): void {
-    if (this.receivedData) {
+    if (this.selectedRow) {
       this.modifydatosdelcertificado.patchValue({
-        nombreComercial: this.receivedData[0].nombreComercial,
-        nombreIngles: this.receivedData[0].nombreIngles,
-        cantidad: '100',
-        fechadelaFactura: '2024-11-13',
+        nombreComercial: this.selectedRow.nombreComercial,
+        nombreIngles: this.selectedRow.nombreIngles,
+        cantidad: this.selectedRow.cantidad,
+        fechadelaFactura: this.selectedRow.fechadelaFactura,
       });
     }
   }
@@ -265,5 +297,30 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.estadoSeleccionado = data;
       });
+  }
+
+  /**
+   * Cierra el modal emitiendo el evento correspondiente.
+   */
+  closeModal(): void {
+    this.closeModalEvent.emit();
+  }
+
+  /**
+   * Envía los datos modificados al padre y cierra el modal.
+   */
+  modificarYCerrar(): void {
+    if (this.modifydatosdelcertificado.valid) {
+      // Emitir un objeto que combine la fila seleccionada y los valores del formulario
+      const VALORES_FORM = this.modifydatosdelcertificado.getRawValue();
+      const DATOS_COMPLETOS = {
+        ...this.selectedRow,
+        ...VALORES_FORM
+      };
+      this.datosModificados.emit(DATOS_COMPLETOS);
+      this.closeModal();
+    } else {
+      this.modifydatosdelcertificado.markAllAsTouched();
+    }
   }
 }

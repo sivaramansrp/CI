@@ -2,7 +2,7 @@ services:
 #----------------------------------------------------------------
   modulefederation-aga-microfront:
 
-    image: ghcr.io/vucem30/dockerized-modulefederation-aga-microfront:1.0.28
+    image: ghcr.io/vucem30/dockerized-modulefederation-aga-microfront:1.0.32
 
     build: 
       context: ./../

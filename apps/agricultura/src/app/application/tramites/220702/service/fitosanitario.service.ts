@@ -4,13 +4,14 @@
  * Servicio para manejar las operaciones relacionadas con los datos fitosanitarios.
  */
 
-import { ApiResponseDos, CertificadosResponse, DestinoInfoDatos, ExportadorInfoDatos, InspeccionApiResponse, MercanciaDatosDos, PagoDeDerechosResponseDos, PagoDeDerechosRevisionResponse } from '../modelos/acuicola.model';
+import { ApiResponseDos, CertificadosResponse,DatosDeLaSolicitudInt, DestinoInfoDatos, ExportadorInfoDatos, InspeccionApiResponse, MercanciaDatosDos, PagoDeDerechosResponseDos, PagoDeDerechosRevisionResponse } from '../modelos/acuicola.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { TramiteState } from '../constantes/acuicola.enum';
-import { TramiteStore } from '../estados/tramite220702.store';
+
+import { TramiteState,TramiteStore } from '../estados/tramite220702.store';
+
 import { map } from 'rxjs';
 
 /**
@@ -149,6 +150,12 @@ export class FitosanitarioService {
       map((response) => response)
     );
   }
+  /**
+   * @description
+   * Obtiene las justificaciones de pago disponibles.
+   * 
+   * @returns Un `Observable` que emite un objeto de tipo `RespuestaCatalogos`.
+   */
 
   getPagoJustificacion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`${this.apiUrl}pago-justificacion.json`).pipe(
@@ -300,9 +307,10 @@ export class FitosanitarioService {
     this.tramiteStore.setMedioDeTransporte(DATOS.medioDeTransporte);
     this.tramiteStore.setIdentificacionTransporte(DATOS.identificacionTransporte);
     this.tramiteStore.setOficinaDeInspeccion(DATOS.oficinaDeInspeccion);
-    this.tramiteStore.setSolicitudTramite(DATOS.DatosDeLaSolicitudInt);
-  
-     }
+    this.tramiteStore.setSolicitudTramite(DATOS.SolicitudState);
+    this.tramiteStore.setFechaDeInspeccion(DATOS.fechaDeInspeccion);
+
+  }
 
   /**
    * Obtiene los datos de ampliación de servicios desde un archivo JSON.
@@ -312,6 +320,12 @@ export class FitosanitarioService {
   getServiciosData(): Observable<TramiteState> {
     return this.http.get<TramiteState>('assets/json/220702/datos-prefill.json');
   }
-
+  /**
+   * Obtiene los datos generales para la consulta desde un archivo JSON.
+   * @returns {Observable<DatosDeLaSolicitudInt>} - Observable con los datos generales de la solicitud.
+   */
+  getDatosGeneralesConsulta(): Observable<DatosDeLaSolicitudInt> {
+  return this.http.get<DatosDeLaSolicitudInt>('assets/json/220702/datos-prefill.json');
+}
 
 }

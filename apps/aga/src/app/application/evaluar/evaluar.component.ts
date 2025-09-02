@@ -29,6 +29,7 @@ import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/1
 
 import { Component, Inject, OnDestroy, OnInit, Type } from "@angular/core";
 import { ConsultaioQuery, ConsultaioState, ConsultaioStore, FECHA_DE_INICIO } from '@ng-mf/data-access-user';
+import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/130118/criterios-response.model';
 
 /**
  * @component
@@ -197,6 +198,12 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @description Indica si los requerimientos ya han sido cargados.
    */
   yaCargoRequerimientos = false;
+
+  /**
+   * Almacena los criterios utilizados para el dictamen en el proceso de evaluación.
+   * El tipo es desconocido y debe ser definido según la estructura esperada de los criterios.
+   */
+  criteriosDictamen!: CriteriosResponse;
 
   /**
  * @constructor

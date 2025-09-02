@@ -1,11 +1,11 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnDestroy ,OnInit} from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DetallesPlantasComponent } from '../../../../shared/components/detalles-plantas/detalles-plantas.component';
+import { Location } from '@angular/common';
 import { PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
-import { Tramite80101Query} from '../../estados/tramite80101.query';
-
+import { Tramite80101Query } from '../../estados/tramite80101.query';
 
 /**
  * Regresa a la ruta de la solicitud relativa al contexto actual.
@@ -34,24 +34,31 @@ import { Tramite80101Query} from '../../estados/tramite80101.query';
   styleUrl: './contenedor-complementar-plantas.component.scss',
 })
 export class ContenedorComplementarPlantasComponent implements OnInit, OnDestroy {
-    /**
-   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
-   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
-   *
-   * @property {Subject<void>} destroyNotifier$
-   */
-    private destroyNotifier$: Subject<void> = new Subject();
+  /**
+ * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+ * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+ *
+ * @property {Subject<void>} destroyNotifier$
+ */
+  private destroyNotifier$: Subject<void> = new Subject();
 
-    /**
-     * Arreglo que almacena las plantas seleccionadas del subfabricante.
-     * 
-     * @type {PlantasSubfabricante[]}
-     * @remarks
-     * Este arreglo se utiliza para gestionar las plantas seleccionadas en el componente
-     * y puede ser modificado dinámicamente según las interacciones del usuario.
-     */
-    plantasSeleccionadas:PlantasSubfabricante[]=[]
-    
+
+  /**
+    * Evento emitido al regresar de la vista de plantas.
+    * @property {EventEmitter<void>} graduar
+    */
+  @Output() guadarEvent = new EventEmitter();
+
+  /**
+   * Arreglo que almacena las plantas seleccionadas del subfabricante.
+   * 
+   * @type {PlantasSubfabricante[]}
+   * @remarks
+   * Este arreglo se utiliza para gestionar las plantas seleccionadas en el componente
+   * y puede ser modificado dinámicamente según las interacciones del usuario.
+   */
+  plantasSeleccionadas: PlantasSubfabricante[] = []
+
   /**
    * Constructor de la clase ContenedorComplementarPlantasComponent.
    * 
@@ -59,11 +66,19 @@ export class ContenedorComplementarPlantasComponent implements OnInit, OnDestroy
    * @param router - Servicio de enrutamiento para la navegación entre rutas.
    * @param activatedRoute - Servicio para acceder a información sobre la ruta activa.
    */
+
+  /**
+   * Constructor de la clase ComplementarPlantaComponent.
+   * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
+   */
+
   constructor(private query: Tramite80101Query,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-  // eslint-disable-next-line no-empty-function
-  ) { }
+    private activatedRoute: ActivatedRoute,
+    private ubicaccion: Location,
+  ) { 
+    // Constructor del componente
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -89,16 +104,38 @@ export class ContenedorComplementarPlantasComponent implements OnInit, OnDestroy
    * Navega a la ruta de la solicitud relativa al contexto actual.
    * Utiliza el enrutador para redirigir al usuario a la página de solicitud.
    */
-  regressarPlantas():void{
-    this.router.navigate(['../solicitud'], { relativeTo: this.activatedRoute }); 
+  regressarPlantas(): void {
+    this.router.navigate(['../solicitud'], { relativeTo: this.activatedRoute });
   }
 
-   /**
-     * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-     * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
-     * @method ngOnDestroy
-     */
-   ngOnDestroy(): void {
+  /**
+   * Vuelve a la ubicación anterior en el historial del navegador.
+   * @returns {void}
+   */
+  regrasar(): void {
+    this.ubicaccion.back();
+  }
+
+  /**
+   * Emits the `guadarEvent` to trigger a save action.
+   *
+   * @remarks
+   * This method should be called when the user initiates a save operation
+   * for the component's data.
+   *
+   * @fires guadarEvent
+   */
+  setGuardar(): void {
+    this.guadarEvent.emit();
+  }
+
+
+  /**
+    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+    * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
+    * @method ngOnDestroy
+    */
+  ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

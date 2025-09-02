@@ -45,7 +45,7 @@
           [radioOptions]="btonDeRadio"
           [layout]="'horizontal'"
           formControlName="btonDeRadio"
-          (change)="setValorStore(form,'btonDeRadio')"
+          (change)="setValorStore(form,'btonDeRadio'); tipoTramiteChange.emit(form.get('btonDeRadio')?.value)"
         ></app-input-radio>
         <div *ngIf="form.get('btonDeRadio')?.invalid && form.get('btonDeRadio')?.touched" class="text-danger">
             Este campo es obligatorio
@@ -83,7 +83,7 @@
             type="button"
             class="btn btn-primary"
             (click)="mostrarModalEstablecimiento()"
-            [disabled]="esFormularioSoloLectura || !isRadioButtonSelected"
+            [disabled]="esFormularioSoloLectura || !isRadioButtonSelected || form.get('btonDeRadio')?.value === '0'"
           >
             Seleccionar establecimiento
           </button>
@@ -104,10 +104,11 @@
               (change)="setValorStore(datosDelEstablecimiento,'rfcDel')"
             />
              <div
-            *ngIf="datosDelEstablecimiento.get('rfcDel')?.invalid && datosDelEstablecimiento.get('rfcDel')?.touched"
+            *ngIf="datosDelEstablecimiento.get('rfcDel')?.invalid && datosDelEstablecimiento.get('rfcDel')?.touched && datosDelEstablecimiento.get('rfcDel')?.errors?.['pattern']"
             class="text-danger">
               El RFC no tiene un formato valido.
-          </div>
+            </div> 
+            
           </div>
         </div>
         <div class="col-md-8">
@@ -154,11 +155,12 @@
               class="form-control"
               id="correo"
               placeholder=""
-              type="text"
+              type="email"
               formControlName="correo"
               maxlength="320"
               (change)="setValorStore(datosDelEstablecimiento,'correo')"
               (input)="validarLongitudMaxima('correo', 320)"
+              [ngClass]="isInvalid(datosDelEstablecimiento, 'correo') ? 'required' : ''"
             />
             <div *ngIf="datosDelEstablecimiento.get('correo')?.invalid && datosDelEstablecimiento.get('correo')?.touched" class="text-danger">
               <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
@@ -188,9 +190,10 @@
       <div class="modal-body text-center">
         <p>Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.</p>
       </div>
-      <div class="modal-footer justify-content-center">
+      <div class="modal-footer footer-buttons justify-content-center">
         <button type="button" class="btn btn-primary" (click)="cerrarModal()">Aceptar</button>
       </div>
+        <div class="row" [ngClass]="{'disabled-section': !isRadioButtonSelected || form.get('btonDeRadio')?.value === '0'}">
     </div>
   </div>
 </div>
