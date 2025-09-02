@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_POST_OPCIONES_EVALUACION, NUMFOLIOTRAMITE } from '@libs/shared/data-access-user/src/core/constants/api-constants';
+import { API_POST_OPCIONES_EVALUACION, NUMFOLIOTRAMITE } from '@libs/shared/data-access-user/src/core/servers/api-router';
 import { OpcionesEvaluacionRequest } from '../../models/evaluar/opciones-evaluacion.model';
 
 @Injectable({

@@ -76,11 +76,15 @@ const mockSeccionState = {
   seccion: [],
 };
 const mockConsultaState = {
+  action_id: "",
   consultaioSolicitante: null,
   create: true,
+  current_user: "",
   department: '',
   estadoDeTramite: '',
   folioTramite: '',
+  id_solicitud: "",
+  nombre_pagina: "",
   parameter: '',
   procedureId: '',
   readonly: false,
@@ -89,7 +93,7 @@ const mockConsultaState = {
 };
 
 const mockDatosRealizar = {
-  certificadoTipo: 'animal',
+  certificadoTipo: '',
   paisOrigen: '',
   paisDestino: '',
   aduanaEmbarque: '',

@@ -13,9 +13,8 @@
 }
 
 /* Selectores adicionales de respaldo */
-:host(.ng-invalid.ng-touched) .form-label .require,
-:host(.ng-invalid.ng-dirty) .form-label .require {
-    color: #dc3545 !important;
+:host(.ng-invalid.ng-touched) .form-label .require {
+    color: #dc3545;
 }
 
 /* Enfoque alternativo: verifica si se muestra mensaje-error */

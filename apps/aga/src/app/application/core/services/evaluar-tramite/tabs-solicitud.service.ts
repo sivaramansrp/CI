@@ -5,7 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_GET_ACUSES_RESOLUCION, API_GET_DICTAMENES, API_GET_REQUERIMIENTOS, API_GET_SOLICITUD_DOCUMENTOS, API_GET_TAREAS_DOCUMENTOS, IDSOLICITUD, NUMFOLIOTRAMITE, TRAMITE } from '@libs/shared/data-access-user/src/core/constants/api-constants';
+import { API_GET_ACUSES_RESOLUCION, API_GET_DICTAMENES, API_GET_REQUERIMIENTOS, API_GET_SOLICITUD_DOCUMENTOS, API_GET_TAREAS_DOCUMENTOS } from '@libs/shared/data-access-user/src/core/servers/api-router';
 import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-acuses-response.model';
 import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/130118/dictamenes-response.model';
 import { DocumentoSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model';
@@ -37,7 +37,7 @@ export class TabsSolicitudServiceTsService {
     * @returns Observable con la respuesta del servidor.
     */
     getDocumentosSolicitud(tramite: number, idSolicitud: string): Observable<BaseResponse<DocumentoSolicitud[]>> {
-        const ENDPOINT = `${this.host}${API_GET_SOLICITUD_DOCUMENTOS.replace(TRAMITE, tramite.toString()).replace(IDSOLICITUD, idSolicitud)}`;
+        const ENDPOINT = `${this.host}${API_GET_SOLICITUD_DOCUMENTOS(tramite.toString(), idSolicitud)}`;
         return this.http.get<BaseResponse<DocumentoSolicitud[]>>(ENDPOINT);
     }
 
@@ -49,7 +49,7 @@ export class TabsSolicitudServiceTsService {
     * @returns Observable con la respuesta del servidor.
     */
     getTareasSolicitud(tramite: number, numFolioTramite: string): Observable<BaseResponse<TareasSolicitud[]>> {
-        const ENDPOINT = `${this.host}${API_GET_TAREAS_DOCUMENTOS.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolioTramite)}`;
+        const ENDPOINT = `${this.host}${API_GET_TAREAS_DOCUMENTOS(tramite.toString(), numFolioTramite)}`;
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const params = new HttpParams().set('esFuncionario', 'true');
         return this.http.get<BaseResponse<TareasSolicitud[]>>(ENDPOINT, { params });
@@ -63,7 +63,7 @@ export class TabsSolicitudServiceTsService {
     * @returns Observable con la respuesta del servidor.
     */
     getAcusesResolucion(tramite: number, numFolioTramite: string): Observable<BaseResponse<AcusesResolucionResponse>> {
-        const ENDPOINT = `${this.host}${API_GET_ACUSES_RESOLUCION.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolioTramite)}`;
+        const ENDPOINT = `${this.host}${API_GET_ACUSES_RESOLUCION(tramite.toString(), numFolioTramite)}`;
         return this.http.get<BaseResponse<AcusesResolucionResponse>>(ENDPOINT);
     }
 
@@ -75,7 +75,7 @@ export class TabsSolicitudServiceTsService {
     * @returns Observable con la respuesta del servidor.
     */
     getRequerimientos(tramite: number, numFolioTramite: string): Observable<BaseResponse<RequerimientosResponse[]>> {
-        const ENDPOINT = `${this.host}${API_GET_REQUERIMIENTOS.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolioTramite)}`;
+        const ENDPOINT = `${this.host}${API_GET_REQUERIMIENTOS(tramite.toString(), numFolioTramite)}`;
         return this.http.get<BaseResponse<RequerimientosResponse[]>>(ENDPOINT);
     }
 
@@ -87,7 +87,7 @@ export class TabsSolicitudServiceTsService {
     * @returns Observable con la respuesta del servidor.
     */
     getDictamenes(tramite: number, numFolioTramite: string): Observable<BaseResponse<DictamenesResponse[]>> {
-        const ENDPOINT = `${this.host}${API_GET_DICTAMENES.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolioTramite)}`;
+        const ENDPOINT = `${this.host}${API_GET_DICTAMENES(tramite.toString(), numFolioTramite)}`;
         return this.http.get<BaseResponse<DictamenesResponse[]>>(ENDPOINT);
     }
 }

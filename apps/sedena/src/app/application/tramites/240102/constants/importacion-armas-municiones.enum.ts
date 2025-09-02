@@ -1,12 +1,11 @@
 /**
- * @const PASOS
- * @description Representa los pasos del proceso para solicitar un permiso extraordinario.
- * Cada paso contiene su índice dentro del proceso, el título que lo describe, y su estado actual.
+ * Lista de pasos para el proceso de importación de armas y municiones.
  *
- * @property {number} indice - El número que indica el orden del paso.
- * @property {string} titulo - El nombre descriptivo del paso del proceso.
- * @property {boolean} activo - Indica si el paso está activo actualmente.
- * @property {boolean} completado - Indica si el paso ya fue completado.
+ * Cada paso contiene:
+ * - `indice`: El número de orden del paso.
+ * - `titulo`: Descripción breve del paso.
+ * - `activo`: Indica si el paso está actualmente activo.
+ * - `completado`: Indica si el paso ha sido completado.
  */
 export const PASOS = [
   {
@@ -30,26 +29,25 @@ export const PASOS = [
 ];
 
 /**
- * @const TITULOMENSAJE
- * @description Título principal mostrado durante el proceso de solicitud.
- * Representa el mensaje contextual para el trámite de permiso extraordinario
- * relacionado con la importación de armamento, municiones y materiales diversos
- * para personas físicas y morales.
+ * Mensaje de título utilizado para la solicitud de permiso extraordinario
+ * para la importación de armamento, municiones y diverso material para personas físicas y morales.
  */
 export const TITULOMENSAJE =
   'Solicitud Permiso extraordinario para la importación de armamento, municiones y diverso material para personas físicas y morales';
 
 /**
- * @const TEXTOS_REQUISITOS
- * @description Mensaje informativo que se muestra después de registrar la solicitud.
- * Indica que el número asignado es temporal y no tiene validez legal hasta que se firme la solicitud.
+ * Mensaje informativo que se muestra al registrar una solicitud.
+ * Indica que el número temporal asignado no tiene validez legal y solo sirve para identificar la solicitud.
+ * Un folio oficial será asignado cuando la solicitud sea firmada.
  */
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
+
 /**
- * @const ID_PROCEDIMIENTO
- * @description Identificador numérico del procedimiento correspondiente al trámite de permiso extraordinario.
- * Este ID se utiliza para controlar la lógica del flujo en el sistema.
+ * Identificador único para el trámite de "Importación de armas y municiones".
+ *
+ * @remarks
+ * Esta constante se utiliza para referenciar el trámite específico dentro de la aplicación.
  */
 export const ID_PROCEDIMIENTO = 240102;

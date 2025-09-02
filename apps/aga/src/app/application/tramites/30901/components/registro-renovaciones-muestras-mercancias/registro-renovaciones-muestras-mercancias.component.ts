@@ -472,30 +472,30 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
       fracciondescripcion: [
         {
           value: this.solicitud30901State.fracciondescripcion,
-          disabled: false,
+          disabled: true,
         },
       ],
       comboNicos: [this.solicitud30901State.comboNicos, [Validators.required]],
       nicoDescripcion: [
-        { value: this.solicitud30901State.nicoDescripcion, disabled: false },
+        { value: this.solicitud30901State.nicoDescripcion, disabled: true },
       ],
       nombreQuimico: [
-        { value: this.solicitud30901State.nombreQuimico, disabled: false },
+        { value: this.solicitud30901State.nombreQuimico, disabled: true },
         [Validators.maxLength(256)],
       ],
       nombreComercial: [
-        { value: this.solicitud30901State.nombreComercial, disabled: false },
+        { value: this.solicitud30901State.nombreComercial, disabled: true },
         [Validators.maxLength(256)],
       ],
       numeroCAS: [
-        { value: this.solicitud30901State.numeroCAS, disabled: false },
+        { value: this.solicitud30901State.numeroCAS, disabled: true },
         [Validators.maxLength(120)],
       ],
       ideGenerica: [
         { value: this.solicitud30901State.ideGenerica, disabled: true },
       ],
       descClobGenerica: [
-        { value: this.solicitud30901State.descClobGenerica, disabled: false },
+        { value: this.solicitud30901State.descClobGenerica, disabled: true },
       ],
     });
 
