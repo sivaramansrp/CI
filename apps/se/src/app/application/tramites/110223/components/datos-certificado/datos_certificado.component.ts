@@ -371,7 +371,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       const { campo: CAMPO, valor: VALOR } = e;
       this.store.setFormDatosCertificado({[CAMPO]: VALOR });
     }
-  
+    
     /**
      * @metodo idiomaSeleccion
      * @descripcion
