@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatosDeTablaSeleccionados, DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig, TablaSeleccion } from '../../../../shared/models/datos-solicitud.model';
 import { OPCION_TABLA, PRODUCTO_TABLA, SCIAN_TABLA } from '../../../../shared/constantes/datos-solicitud.enum';
-import { Observable, map, takeUntil } from 'rxjs';
-import { Tramite260204State, Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
+import { Tramite260204State,Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
+import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
@@ -112,13 +112,6 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public seleccionadoScianDatos: TablaScianConfig[] = [];
 
-  /**
-   * Observable que indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
-   *
-   * @type {Observable<boolean>}
-   */
-  //esFormularioSoloLectura!: Observable<boolean>;
 /**
    * que indica si el formulario está en modo solo lectura.
    * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
@@ -186,25 +179,6 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
         })
       ).subscribe();
 
-    // this.esFormularioSoloLectura = this.consultaQuery.selectConsultaioState$
-    //   .pipe(
-    //     map((seccionState) => {
-    //       this.procedureId = Number(seccionState.procedureId);
-    //       if (!seccionState.create && seccionState.procedureId === '260204') {
-    //         return seccionState.readonly;
-    //       }
-    //       return false;
-    //     })
-    //   );
-      this.consultaQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-        )
-        .subscribe((seccionState) => {
-          if(!seccionState.create && seccionState.procedureId === '260204') {
-            this.esFormularioSoloLectura = seccionState.readonly;
-          } 
-        });
   }
 
   /**

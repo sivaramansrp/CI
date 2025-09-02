@@ -69,11 +69,12 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { Subject, delay, takeUntil } from 'rxjs';
+import { Subject, delay, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
+import { ConsultaioQuery }  from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -472,7 +473,8 @@ export class DatosDeLaSolicitudComponent
     public fb: FormBuilder,
     public router: Router,
     public activatedRoute: ActivatedRoute,
-    public datosSolicitudService: DatosSolicitudService
+    public datosSolicitudService: DatosSolicitudService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
@@ -510,6 +512,15 @@ export class DatosDeLaSolicitudComponent
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
+
+        this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => { 
+              this.formularioDeshabilitado = seccionState.readonly;
+            })
+          )
+          .subscribe();
   }
 
   /**

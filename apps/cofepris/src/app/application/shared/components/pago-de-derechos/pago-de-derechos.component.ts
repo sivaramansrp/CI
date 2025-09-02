@@ -172,7 +172,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.unsubscribe$),
-        map((seccionState) => {
+        map((seccionState) => { 
           this.formularioDeshabilitado = seccionState.readonly;
         })
       )
