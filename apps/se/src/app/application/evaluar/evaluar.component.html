@@ -16,21 +16,18 @@
             </div>
             <div class="row margin-top">
                 <ul class="nav nav-tabs justify-content-center">
-                    <li *ngIf="tieneOpcion('Generar un dictamen')" [ngClass]="indice === 1 ? 'active' : ''">
-                        <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
-                            (keydown.space)="seleccionaTab(1)" role="button" tabindex="0">Dictamen</a>
-                    </li>
-
-                    <li *ngIf="tieneOpcion('Generar requerimiento de información')" [ngClass]="indice === 2 ? 'active' : ''">
-                        <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
-                            (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Requerimiento de
-                            información</a>
-                    </li>
-
-                    <li *ngIf="tieneOpcion('Solicitar opinión')" [ngClass]="indice === 3 ? 'active' : ''">
-                        <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
-                            (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Solicitar opinión</a>
-                    </li>
+                    <ng-container *ngFor="let tabsEvaluacion of tabsOpcionEvaluacion">
+                        <li *ngIf="tieneOpcion(tabsEvaluacion.nombre)" [ngClass]="indice === tabsEvaluacion.id ? 'active' : ''">
+                        <a data-toggle="tab"
+                            (click)="seleccionaTab(tabsEvaluacion.id)"
+                            (keydown.enter)="seleccionaTab(tabsEvaluacion.id)"
+                            (keydown.space)="seleccionaTab(tabsEvaluacion.id)"
+                            role="button"
+                            tabindex="{{tabsEvaluacion.id}}">
+                            {{ tabsEvaluacion.nombre }}
+                        </a>
+                        </li>
+                    </ng-container>
                 </ul>
                 <ng-container>
                     @switch (indice) {
