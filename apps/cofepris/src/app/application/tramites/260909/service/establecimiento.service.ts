@@ -110,11 +110,11 @@ export class EstablecimientoService {
    * @description Actualiza el formulario con los datos proporcionados.
    */
   actualizarFormulario(DATOS: DatosDelSolicituteSeccionState): void {
-  this.tramiteStoreData.setRepresentanteRfc(DATOS.representanteRfc);
-  this.tramiteStoreData.setRepresentanteNombre(DATOS.representanteNombre);
-  this.tramiteStoreData.setRepresentanteApellidos(DATOS.apellidoPaterno, DATOS.apellidoMaterno);
-  this.tramiteStore.setInformacionConfidencial(DATOS.informacionConfidencialRadio);
-  this.tramiteStore.setManifests(DATOS.manifests);
+    this.tramiteStoreData.setRepresentanteRfc(DATOS.representanteRfc);
+    this.tramiteStoreData.setRepresentanteNombre(DATOS.representanteNombre);
+    this.tramiteStoreData.setRepresentanteApellidos(DATOS.apellidoPaterno, DATOS.apellidoMaterno);
+    this.tramiteStoreData.setInformacionConfidencial(DATOS.informacionConfidencialRadio);
+    this.tramiteStoreData.setManifests(DATOS.manifests);
   }
 
   /**

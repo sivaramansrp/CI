@@ -47,10 +47,17 @@ export const NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO = [
     {
         label: 'Física',
         value: '1',
+        hint: 'Una persona física es entendida como toda persona con una actividad específica'
     },
     {
         label: 'Moral',
         value: '0',
+        hint: 'Una persona moral es entendida como una empresa con una actividad específica'
+    },
+    {
+      label: 'No contribuyente',
+      value: '2',
+      hint: 'No contribuyente'
     }
   ];
   /**
