@@ -134,6 +134,27 @@ getValorIndice(e: AccionBoton): void {
     }
   }
 }
+/**
+ * @descripcion
+ * Valida todos los formularios contenidos en el componente `pasoUnoComponent`.
+ * 
+ * - Si el componente no está inicializado (`pasoUnoComponent` es `null` o `undefined`), 
+ *   se asume que no hay formularios por validar y retorna `true`.
+ * - Si existe, ejecuta la función `validarFormularios()` del componente 
+ *   y retorna `false` en caso de que alguno no sea válido.
+ *
+ * @returns {boolean}  
+ * Retorna `true` si todos los formularios son válidos o si el componente no existe,  
+ * de lo contrario retorna `false`.
+ *
+ * @ejemplo
+ * ```ts
+ * const esValido = this.validarTodosFormulariosPasoUno();
+ * if (!esValido) {
+ *   console.warn('El paso uno tiene formularios inválidos');
+ * }
+ * ```
+ */
    private validarTodosFormulariosPasoUno(): boolean {
     if (!this.pasoUnoComponent) {
       return true;
