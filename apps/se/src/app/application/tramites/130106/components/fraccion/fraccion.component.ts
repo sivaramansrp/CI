@@ -431,6 +431,28 @@ export class FraccionComponent implements OnInit, OnDestroy {
     this.mostrarNotificacionError = true;
   }
 
+  /**
+   * Maneja el cambio en el dropdown padre (Entidad federativa).
+   * Limpia el valor del dropdown hijo (Representación federal) cuando cambia la entidad federativa.
+   */
+  onEntidadFederativaChange(): void {
+    // Limpia el valor del campo representación federal
+    this.fraccionForm.get('representacion')?.setValue(null);
+    
+    // Actualiza el store con el nuevo valor de entidad federativa
+    this.setValoresStore(this.fraccionForm, 'entidad', 'setEntidad');
+    
+    // También limpia el valor de representación federal en el store
+    this.tramite130106Store.setRepresentacion('');
+  }
+
+  /**
+   * Maneja el cambio en el dropdown hijo (Representación federal).
+   */
+  onRepresentacionFederalChange(): void {
+    this.setValoresStore(this.fraccionForm, 'representacion', 'setRepresentacion');
+  }
+
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

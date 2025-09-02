@@ -286,23 +286,29 @@
     <div class="row" style="padding-bottom: 20px">
         <div class="col-md-4 me-2">
             <div class="form-group">
-              
-                
-            <app-catalogo-select [catalogo]="entidad" [label]="'Entidad federativa'"   [required]="true" name="entidad" [isDisabled]="esFormularioSoloLectura"
-                formControlName="entidad" (change)="setValoresStore(fraccionForm,'entidad', 'setEntidad')">
-            </app-catalogo-select>
-            
+                <app-catalogo-select 
+                    [catalogo]="entidad" 
+                    [label]="'Entidad federativa'"   
+                    [required]="true" 
+                    name="entidad" 
+                    [isDisabled]="esFormularioSoloLectura"
+                    formControlName="entidad" 
+                    (change)="onEntidadFederativaChange()">
+                </app-catalogo-select>
             </div>
-
         </div>
         <div class="col-md-4">
             <div class="form-group">
-            <app-catalogo-select [catalogo]="representacion" [label]="'Representación federal'"   [required]="true" name="representacion" [isDisabled]="esFormularioSoloLectura"
-                formControlName="representacion" (change)="setValoresStore(fraccionForm,'representacion', 'setRepresentacion')">
-            </app-catalogo-select>
-            
+                <app-catalogo-select 
+                    [catalogo]="representacion" 
+                    [label]="'Representación federal'"   
+                    [required]="true" 
+                    name="representacion" 
+                    [isDisabled]="esFormularioSoloLectura"
+                    formControlName="representacion" 
+                    (change)="onRepresentacionFederalChange()">
+                </app-catalogo-select>
             </div>
-
         </div>
     </div>
 </div>
