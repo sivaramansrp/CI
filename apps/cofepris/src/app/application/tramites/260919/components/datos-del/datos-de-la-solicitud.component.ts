@@ -65,9 +65,10 @@ import { Modal } from 'bootstrap';
 import { CrossList, MercanciasInfo } from '../../models/mercancia.model';
 
 import {
-  REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL,
-  REGEX_RFC,
+  REGEX_IMPORTE_PAGO,
+  REGEX_LLAVE_DE_PAGO_DE_DERECHO,
   REGEX_SOLO_DIGITOS,
+  REGEX_SOLO_NUMEROS,
 } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
@@ -404,22 +405,22 @@ private modalElement: HTMLElement | null = null;
         ],
         rfcDel: [
           this.dataDeLaSolicitudState?.rfcDel,
-          [Validators.maxLength(13), Validators.pattern(REGEX_RFC)],
+          [Validators.required,Validators.maxLength(13), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)],
         ],
         denominacion: [
           this.dataDeLaSolicitudState?.denominacion,
-          [Validators.maxLength(100)],
+          [Validators.required,Validators.maxLength(100)],
         ],
         correoElectronico: [
           this.dataDeLaSolicitudState?.correoElectronico,
-          [Validators.email, Validators.maxLength(100)],
+          [Validators.required,Validators.email, Validators.maxLength(100)],
         ],
         codigopostal: [
           this.dataDeLaSolicitudState?.codigopostal,
           [
             Validators.required,
             Validators.maxLength(12),
-            Validators.pattern(REGEX_SOLO_DIGITOS),
+            Validators.pattern(REGEX_SOLO_NUMEROS),
           ],
         ],
         estado: [this.dataDeLaSolicitudState?.estado, Validators.required],
@@ -432,7 +433,7 @@ private modalElement: HTMLElement | null = null;
           [
             Validators.required,
             Validators.maxLength(120),
-            Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),
+            Validators.pattern(REGEX_IMPORTE_PAGO),
           ],
         ],
         colonia: [
@@ -449,7 +450,7 @@ private modalElement: HTMLElement | null = null;
             Validators.required,
             Validators.minLength(5),
             Validators.maxLength(5),
-            Validators.pattern(REGEX_SOLO_DIGITOS),
+            Validators.pattern(REGEX_SOLO_NUMEROS),
           ],
         ],
         telefono: [
@@ -839,7 +840,7 @@ onAdd(): void {
         (item: Catalogo) =>
           String(item.id) === String(FORM_DATA.claveScianG.descripcionDelScian)
       )?.descripcion || 'Not Found';
-    this.tableData.push(FORM_DATA);
+this.tableData = [...this.tableData, FORM_DATA];
     this.showClavaScianForm = false;
     this.clavaScianForm.reset();
   }

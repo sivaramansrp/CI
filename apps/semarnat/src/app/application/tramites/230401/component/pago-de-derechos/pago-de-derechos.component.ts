@@ -236,6 +236,10 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy {
       fecha: [this.pagoDerechosState.fecha, [Validators.required, dateLessThanOrEqualToday]],
       importePago: [ this.pagoDerechosState.importePago, [Validators.required, Validators.maxLength(16), Validators.pattern(REGEX_IMPORTE_PAGO)]],
     });
+
+    this.pagoDerechos.get('clave')?.disable();
+    this.pagoDerechos.get('dependencia')?.disable();
+    this.pagoDerechos.get('importePago')?.disable();
     const FETCHA_CONTROL = this.pagoDerechos.get('fecha');
     if (FETCHA_CONTROL) {
       FETCHA_CONTROL.valueChanges.subscribe((value) => {
@@ -261,14 +265,86 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy {
    * 
    * @param fecha - La nueva fecha seleccionada en formato de cadena.
    * Si se proporciona una fecha válida, actualiza el formulario `pagoDerechos`
-   * con el valor de la fecha de exportación.
+   * con el valor de la fecha de exportación y valida si es una fecha futura.
    */
  onFechaCambiada(fecha: string): void {
   if (fecha) {
     this.pagoDerechos.patchValue({ fecha: fecha });
     this.tramite230401Store.setPagoDerechosStateProperty('fecha', fecha);
+    
+    // Validar si es fecha futura
+    let seleccionada: Date | null = null;
+    if (fecha && fecha.includes('/')) {
+      const [DAY, MONTH, YEAR] = fecha.split('/').map(Number);
+      seleccionada = new Date(YEAR, MONTH - 1, DAY);
+    } else {
+      seleccionada = new Date(fecha); 
+    }
+
+    const HOY = new Date();
+    HOY.setHours(0, 0, 0, 0);
+
+    if (seleccionada && seleccionada > HOY) {
+      this.fechaFuturaSeleccionada = true;
+      this.pagoDerechos.get('fecha')?.setErrors({ futureDate: true });
+    } else {
+      this.fechaFuturaSeleccionada = false;
+      
+      const FETCHA_CONTROL = this.pagoDerechos.get('fecha');
+      if (FETCHA_CONTROL?.errors?.['futureDate']) {
+        delete FETCHA_CONTROL.errors['futureDate'];
+        if (Object.keys(FETCHA_CONTROL.errors).length === 0) {
+          FETCHA_CONTROL.setErrors(null);
+        }
+      }
+    }
   }
 }
+
+
+/**
+
+ * Método para cambiar la fecha final.
+
+ * @param nuevo_valor Nuevo valor de la fecha final.
+
+ */
+fechaFuturaSeleccionada = false;
+  cambioFechaFinal(nuevo_valor: string): void {
+    this.pagoDerechos.patchValue({
+      fecha: nuevo_valor,
+    });
+   // Convert string to Date before passing to setFecha
+   let fechaDate: Date;
+   if (nuevo_valor && nuevo_valor.includes('/')) {
+     const [DAY, MONTH, YEAR] = nuevo_valor.split('/').map(Number);
+     fechaDate = new Date(YEAR, MONTH - 1, DAY);
+   } else {
+     fechaDate = new Date(nuevo_valor);
+   }
+   this.tramite230401Store.setFecha(fechaDate);
+  this.pagoDerechos.get('fecha')?.setValue(nuevo_valor);
+
+  let seleccionada: Date | null = null;
+  if (nuevo_valor && nuevo_valor.includes('/')) {
+    const [DAY, MONTH, YEAR] = nuevo_valor.split('/').map(Number);
+    seleccionada = new Date(YEAR, MONTH - 1, DAY);
+  } else {
+    seleccionada = new Date(nuevo_valor); 
+  }
+
+  const HOY = new Date();
+  HOY.setHours(0, 0, 0, 0);
+
+  if (seleccionada && seleccionada > HOY) {
+    this.fechaFuturaSeleccionada = true;
+    this.pagoDerechos.get('fecha')?.setErrors({ futureDate: true });
+  } else {
+    this.fechaFuturaSeleccionada = false;
+    this.pagoDerechos.get('fecha')?.setErrors(null);
+  }
+  }
+
     /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    *

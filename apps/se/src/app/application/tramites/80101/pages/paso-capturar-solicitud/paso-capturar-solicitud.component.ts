@@ -72,6 +72,12 @@ export class PasoCapturarSolicitudComponent {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+  /** Indica si el botón Guardar debe mostrarse o estar habilitado en el formulario. */
+  public btnGuardar: boolean = true;
+
+  /** Indica la visibilidad del botón Guardar. */
+  public btnGuardarVisible: string = 'visible';
+
   /**
    * Constructor de la clase PasoCapturarSolicitudComponent.
    * 

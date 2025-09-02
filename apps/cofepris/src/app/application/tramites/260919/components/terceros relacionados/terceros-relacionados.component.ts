@@ -402,9 +402,15 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
       const SELECTED_ID = Array.from(this.selectedRows)[0];
       const SELECTED_ROW_DATA = this.tableData.find(
         (row) => row.id === SELECTED_ID
-      );
+      ) || null;
 
       if (SELECTED_ROW_DATA) {
+         const PAIS_ID = this.paisData.catalogos.find(
+        (catalogo) =>
+          catalogo.descripcion === SELECTED_ROW_DATA.pais || 
+          String(catalogo.id) === String(SELECTED_ROW_DATA.pais) 
+      )?.id;
+
         this.destinatarioForm.patchValue({
           agregarDestinatario: {
             tipoPersona: SELECTED_ROW_DATA.tipoPersona,
@@ -414,7 +420,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
             primerApellido: SELECTED_ROW_DATA.primerApellido,
             segundoApellido: SELECTED_ROW_DATA.segundoApellido,
             denominacion: SELECTED_ROW_DATA.denominacion,
-            pais: SELECTED_ROW_DATA.pais,
+             pais: PAIS_ID || '',
             domicilio: SELECTED_ROW_DATA.domicilio,
             estado: SELECTED_ROW_DATA.estado,
             codigopostal: SELECTED_ROW_DATA.codigopostal,
@@ -517,15 +523,19 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
 
       this.selectedRow = null;
     } else {
+
+       const NEW_ID = this.tableData.length > 0
+      ? Math.max(...this.tableData.map((row) => row.id || 0)) + 1
+      : 1;
       const NEW_ROW = {
-        id: this.nextId++,
+        id: NEW_ID,
         ...FORM_DATA.agregarDestinatario,
         ...FORM_DATA.datosPersonales,
         pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
       };
 
-      this.tableData.push(NEW_ROW);
-      this.fabricanteDatos.push(NEW_ROW);
+   this.tableData = [...this.tableData, NEW_ROW];
+   this.fabricanteDatos = [...this.fabricanteDatos, NEW_ROW];
     }
 
     this.destinatarioForm.reset();

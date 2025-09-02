@@ -130,10 +130,10 @@ export class ModificacionInfo90305Component implements OnInit, OnDestroy {
  */
   public crearFormCombinacion(): void {
     this.modificationInfoForm = this.fb.group({
-      registroFederalContribuyentes: [{ value: this.solicitudState?.registroFederalContribuyentes, disabled: false }],
-      representacionFederal: [{ value: this.solicitudState?.representacionFederal, disabled: false }],
-      tipoModificacion: [{ value: this.solicitudState?.tipoModificacion, disabled: false }],
-      modificacionPrograma: [{ value: this.solicitudState?.modificacionPrograma, disabled: false }],
+      registroFederalContribuyentes: [{ value: this.solicitudState?.registroFederalContribuyentes, disabled: true }],
+      representacionFederal: [{ value: this.solicitudState?.representacionFederal, disabled: true }],
+      tipoModificacion: [{ value: this.solicitudState?.tipoModificacion, disabled: true }],
+      modificacionPrograma: [{ value: this.solicitudState?.modificacionPrograma, disabled: true }],
     });
   }
 

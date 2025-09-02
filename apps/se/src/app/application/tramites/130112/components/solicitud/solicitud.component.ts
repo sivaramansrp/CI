@@ -261,14 +261,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
     this.mercanciaForm = this.fb.group({
       producto: [],
-      descripcion: [
-        this.seccionState?.descripcion,
-        [
-          Validators.required,
-          Validators.minLength(10),
-          Validators.maxLength(500),
-        ],
-      ],
+      descripcion: [this.seccionState?.descripcion, [Validators.required]],
       fraccion: [this.seccionState?.fraccion, Validators.required],
       cantidad: [
         this.seccionState?.cantidad,

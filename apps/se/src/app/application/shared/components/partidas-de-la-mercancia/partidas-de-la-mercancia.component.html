@@ -6,49 +6,49 @@
             <div class="col-md-4">
                <div class="form-group">
                   <label class="form-label" for="cantidadPartidasDeLaMercancia">Cantidad<span 
-                     [ngClass]="{'text-danger': esInvalido('cantidadPartidasDeLaMercancia')}"
+                     [ngClass]="{'text-danger': (mostrarErrores && esInvalido('cantidadPartidasDeLaMercancia') || esInvalido('cantidadPartidasDeLaMercancia'))}"
                      >*</span>:</label>
                   <input class="form-control" type="text" id="cantidad" 
                   formControlName="cantidadPartidasDeLaMercancia"
                   appUppercase aria-labelledby="cantidad"
                   maxlength="18"
-                  [ngClass]="{'input-error': esInvalido('cantidadPartidasDeLaMercancia')}"
+                  [ngClass]="{'input-error': (mostrarErrores && esInvalido('cantidadPartidasDeLaMercancia') || esInvalido('cantidadPartidasDeLaMercancia'))}"
                   (change)="setValoresStore(partidasDelaMercanciaForm, 'cantidadPartidasDeLaMercancia')" />
-                  <div *ngIf="esInvalido('cantidadPartidasDeLaMercancia')" class="text-danger">
-                     <small
-                        *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">Este campo es obligatorio.</small>
-                     <small
-                        *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('noEsNumero')">
-                     Por favor, escribe un número entero válido</small>
-                     <small
-                     *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('validarCatorceEnterosTresDecimales')">
-                     La cantidad no cumple el formato especificado. Formato es máximo 14 dígitos enteros y máximo 3 decimales
+                  <div *ngIf="(mostrarErrores && esInvalido('cantidadPartidasDeLaMercancia') || esInvalido('cantidadPartidasDeLaMercancia'))" class="text-danger">
+                     <small *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">
+                        La cantidad no debe ser igual a 0
                      </small>
-                     <small
-                        *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('maxlength')">Máximo
-                     18 caracteres.</small>
-                  </div>
+                     <small *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('noEsNumero')">
+                        Por favor, escribe un número entero válido
+                     </small>
+                     <small *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('validarCatorceEnterosTresDecimales')">
+                        La cantidad no cumple el formato especificado. Formato es máximo 14 dígitos enteros y máximo 3 decimales
+                     </small>
+                     <small *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('maxlength')">
+                        Máximo 18 caracteres
+                     </small>
+                     </div>
                </div>
             </div>
             <div class="col-md-4">
                <div class="form-group">
                   <label class="form-label me-2" for="valorPartidaUSD">Valor partida USD<span 
-                     [ngClass]="{'text-danger': esInvalido('valorPartidaUSDPartidasDeLaMercancia')}"
+                     [ngClass]="{'text-danger': (mostrarErrores && esInvalido('valorPartidaUSDPartidasDeLaMercancia') || esInvalido('valorPartidaUSDPartidasDeLaMercancia'))}"
                      >*</span>:</label>
                   <span class="bi bi-question-circle-fill"
                      tooltip="En caso de no contar con valor factura proporciona el valor estimado"
                      data-bs-toggle="tooltip"></span>
                   <input class="form-control" type="text" id="valorPartidaUSD"
                   formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" 
-                  [ngClass]="{'input-error': esInvalido('valorPartidaUSDPartidasDeLaMercancia')}"
+                  [ngClass]="{'input-error': (mostrarErrores && esInvalido('valorPartidaUSDPartidasDeLaMercancia') || esInvalido('valorPartidaUSDPartidasDeLaMercancia'))}"
                   (change)="
                   setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia')" 
                   maxlength="20"
                   />
-                  <div *ngIf="esInvalido('valorPartidaUSDPartidasDeLaMercancia')" class="text-danger">
-                     <small
-                        *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('required')">Este
-                     campo es obligatorio.</small>
+                  <div *ngIf="(mostrarErrores && esInvalido('valorPartidaUSDPartidasDeLaMercancia') || esInvalido('valorPartidaUSDPartidasDeLaMercancia'))" class="text-danger">
+                     <small *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('required')">
+                        Debe agregar el valor en dolares de la partida
+                     </small>
                      <small
                      *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('validarCatorceEnterosTresDecimales')">
                      La cantidad no cumple el formato especificado. Formato es máximo 14 dígitos enteros y máximo 3 decimales
@@ -58,10 +58,10 @@
                      Por favor, escribe un número entero válido</small>
                      <small
                         *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('min')">El
-                     valor debe ser mayor o igual a 0.</small>
+                     valor debe ser mayor o igual a 0</small>
                      <small
                         *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('maxlength')">Máximo
-                     20 caracteres permitidos.</small>
+                     20 caracteres permitidos</small>
                   </div>
                </div>
             </div>
@@ -69,20 +69,20 @@
          <div class="row">
             <div class="col-md-8">
                <div class="form-group">
-                  <label class="form-label" for="descripcion">Descripción
-                  <span [ngClass]="{'text-danger': esInvalido('descripcionPartidasDeLaMercancia')}">*</span>:
+                  <label class="form-label" for="descripcion">Descripción<span [ngClass]="{'text-danger': mostrarErrores && esInvalido('descripcionPartidasDeLaMercancia')}">*</span>:
                   </label>
                   <textarea class="form-control height" rows="3" id="descripcion"
                   formControlName="descripcionPartidasDeLaMercancia" aria-labelledby="descripcion"
                   (change)="setValoresStore(partidasDelaMercanciaForm, 'descripcionPartidasDeLaMercancia')"
-                  [ngClass]="{'input-error': esInvalido('descripcionPartidasDeLaMercancia')}"
+                  [ngClass]="{'input-error': mostrarErrores && esInvalido('descripcionPartidasDeLaMercancia')}"
                   [maxlength]="245"></textarea>
-                  <div *ngIf="esInvalido('descripcionPartidasDeLaMercancia')" class="text-danger">
-                     <small
-                        *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('required')">Este campo es obligatorio.</small>
+                  <div *ngIf="mostrarErrores && esInvalido('descripcionPartidasDeLaMercancia')" class="text-danger">
+                     <small *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('required')">
+                        Debe agregar una descripción
+                     </small>
                      <small
                         *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('maxlength')">Máximo
-                     255 caracteres.</small>
+                     255 caracteres</small>
                   </div>
                </div>
             </div>
@@ -97,12 +97,12 @@
             <div class="col-md-8"></div>
             <div class="col-md-4 text-end">
                <div class="btn-group">
-                  <button class="btn btn-primary me-2" type="button"  
+                  <button class="btn btn-default me-2" type="button"  
                   [disabled]="esFormularioSoloLectura"
                   (click)="abrirCargarArchivoModal()">
                   Cargar archivo
                   </button>
-                  <button class="btn btn-primary ms-2" (click)="validarYEnviarFormulario()" [disabled]="esFormularioSoloLectura">
+                  <button class="btn btn-primary" (click)="validarYEnviarFormulario()" [disabled]="esFormularioSoloLectura">
                   Agregar
                   </button>
                </div>
@@ -134,6 +134,9 @@
 											   <div *ngIf="mostrarNotificacion" class="col-md-12">
 												 <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
 											  </div>
+                                   <div *ngIf="alertaArchivo" class="col-md-12">
+                                    <ng-alert [CONTENIDO]="ALERTARCHIVOMSG.INSTRUCCIONES" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+                                    </div>
 												 <ng-titulo titulo="Cargar archivo"> </ng-titulo>
 											  
 												 <div class="row align-items-center mb-3">
@@ -161,7 +164,7 @@
                                     <footer class="footer d-flex py-5 gap-3 justify-content-end">
                                         <div class="row btn-row">
                                        <div class="btn-group">
-                                          <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
+                                          <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-default cancel me-2"
                                              data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
                                           Cerrar
                                           </button>
@@ -211,10 +214,11 @@
                <div class="col-md-6 col-sm-6"></div>
                <div class="col-md-6 col-sm-6 text-end">
                   <div class="btn-group">
-                     <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">
+                     <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura"
+                     (click)="confirmarEliminarPartida()">
                      Eliminar Partida
                      </button>
-                     <button class="btn btn-primary" type="button" (click)="navegarParaModificarPartida()" [disabled]="disabled" >
+                     <button class="btn btn-primary" type="button" (click)="navegarParaModificarPartida()" [disabled]="esFormularioSoloLectura" >
                      Modificar partida
                      </button>
                   </div>
@@ -242,7 +246,9 @@
                 <div class="form-group">
                   <label class="form-label" for="cantidad">Cantidad*:</label>
                   <input class="form-control" type="text" id="cantidad"
-                         formControlName="cantidadPartidasDeLaMercancia" appUppercase aria-labelledby="cantidad" 
+                         formControlName="cantidadPartidasDeLaMercancia"
+                         maxlength="18" 
+                         appUppercase aria-labelledby="cantidad" 
                          [ngClass]="{'is-invalid': esInvalido('cantidadPartidasDeLaMercancia')}"/>
                   <div *ngIf="partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.touched && partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.invalid" class="text-danger">
                     <small *ngIf="partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.hasError('required')">La cantidad debe ser mayor a cero</small>
@@ -256,7 +262,8 @@
                 <div class="form-group">
                   <label class="form-label" for="descripcion">Descripción*:</label>
                   <textarea class="form-control height" rows="3" id="descripcion"
-                            formControlName="descripcionPartidasDeLaMercancia" aria-labelledby="descripcion"
+                            formControlName="descripcionPartidasDeLaMercancia"
+                            [maxlength]="245" aria-labelledby="descripcion"
                             [ngClass]="{'is-invalid': esInvalido('descripcionPartidasDeLaMercancia')}"></textarea>
                   <div *ngIf="partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.touched && partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid" class="text-danger">
                     <small *ngIf="partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.hasError('required')">Debe agregar una descripción.</small>
@@ -269,7 +276,8 @@
                 <div class="form-group">
                   <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
                   <input class="form-control" type="text" id="valorPartidaUSD"
-                         formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD"
+                         formControlName="valorPartidaUSDPartidasDeLaMercancia"
+                         maxlength="20" aria-labelledby="valorPartidaUSD"
                          [ngClass]="{'is-invalid': esInvalido('valorPartidaUSDPartidasDeLaMercancia')}" />
                   <div *ngIf="partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.touched && partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.invalid" class="text-danger">
                     <small *ngIf="partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.hasError('required')">Debe agregar el valor en dólares de la partida.</small>
@@ -299,3 +307,8 @@
     </div>
   </div>
 </div>
+<lib-notificaciones
+  *ngIf="mostrarNotificacion"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="onConfirmacionModal($event)">
+</lib-notificaciones>

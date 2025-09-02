@@ -105,9 +105,9 @@ describe('modificarTerrestreService', () => {
         expect(data.datos[0].descripcion).toBe('Tracto Camión');
       });
 
-      const req = httpMock.expectOne('assets/json/40101/tipo-vehiculo-arrastre.json');
+      const req = httpMock.expectOne('assets/json/40101/tipo-de-vehiculo.json');
       expect(req.request.method).toBe('GET');
-      expect(req.request.url).toBe('assets/json/40101/tipo-vehiculo-arrastre.json');
+      expect(req.request.url).toBe('assets/json/40101/tipo-de-vehiculo.json');
       
       req.flush(mockCatalogoLista);
     });
@@ -122,7 +122,7 @@ describe('modificarTerrestreService', () => {
         expect(data.datos).toHaveLength(0);
       });
 
-      const req = httpMock.expectOne('assets/json/40101/tipo-vehiculo-arrastre.json');
+      const req = httpMock.expectOne('assets/json/40101/tipo-de-vehiculo.json');
       req.flush(emptyCatalogo);
     });
 
@@ -135,7 +135,7 @@ describe('modificarTerrestreService', () => {
         }
       });
 
-      const req = httpMock.expectOne('assets/json/40101/tipo-vehiculo-arrastre.json');
+      const req = httpMock.expectOne('assets/json/40101/tipo-de-vehiculo.json');
       req.flush('File not found', { 
         status: 404, 
         statusText: 'Not Found' 
@@ -151,7 +151,7 @@ describe('modificarTerrestreService', () => {
         }
       });
 
-      const req = httpMock.expectOne('assets/json/40101/tipo-vehiculo-arrastre.json');
+      const req = httpMock.expectOne('assets/json/40101/tipo-de-vehiculo.json');
       req.flush('Server Error', { 
         status: 500, 
         statusText: 'Internal Server Error' 
@@ -167,7 +167,7 @@ describe('modificarTerrestreService', () => {
         }
       });
 
-      const req = httpMock.expectOne('assets/json/40101/tipo-vehiculo-arrastre.json');
+      const req = httpMock.expectOne('assets/json/40101/tipo-de-vehiculo.json');
       req.error(new ProgressEvent('Network error'));
     });
 
@@ -179,7 +179,7 @@ describe('modificarTerrestreService', () => {
         }
       });
 
-      const req = httpMock.expectOne('assets/json/40101/tipo-vehiculo-arrastre.json');
+      const req = httpMock.expectOne('assets/json/40101/tipo-de-vehiculo.json');
       req.flush('invalid json{', { 
         status: 200, 
         statusText: 'OK',
@@ -203,7 +203,7 @@ describe('modificarTerrestreService', () => {
         expect(data.datos[0].descripcion).toBe('Tracto Camión');
       });
 
-      const req = httpMock.expectOne('assets/json/40101/tipo-vehiculo-arrastre.json');
+      const req = httpMock.expectOne('assets/json/40101/tipo-de-vehiculo.json');
       req.flush(partialCatalogo);
     });
 
@@ -220,7 +220,7 @@ describe('modificarTerrestreService', () => {
         expect(data).toEqual(mockCatalogoLista);
       });
 
-      const requests = httpMock.match('assets/json/40101/tipo-vehiculo-arrastre.json');
+      const requests = httpMock.match('assets/json/40101/tipo-de-vehiculo.json');
       expect(requests.length).toBe(2);
       
       requests.forEach(req => {
@@ -411,7 +411,7 @@ describe('modificarTerrestreService', () => {
         }
       });
 
-      const catalogoReq = httpMock.expectOne('assets/json/40101/tipo-vehiculo-arrastre.json');
+      const catalogoReq = httpMock.expectOne('assets/json/40101/tipo-de-vehiculo.json');
       catalogoReq.flush(mockCatalogoLista);
 
       const vehiculoReq = httpMock.expectOne('assets/json/40101/vahiculo-dummy.json');
@@ -431,7 +431,7 @@ describe('modificarTerrestreService', () => {
 
       requests.forEach((req, index) => {
         if (index === 0 || index === 2) {
-          expect(req.request.url).toBe('assets/json/40101/tipo-vehiculo-arrastre.json');
+          expect(req.request.url).toBe('assets/json/40101/tipo-de-vehiculo.json');
         } else {
           expect(req.request.url).toBe('assets/json/40101/vahiculo-dummy.json');
         }
@@ -446,7 +446,7 @@ describe('modificarTerrestreService', () => {
         expect(data).toBeNull();
       });
 
-      const req = httpMock.expectOne('assets/json/40101/tipo-vehiculo-arrastre.json');
+      const req = httpMock.expectOne('assets/json/40101/tipo-de-vehiculo.json');
       req.flush(null);
     });
 
@@ -464,7 +464,7 @@ describe('modificarTerrestreService', () => {
         expect(data).toEqual(mockCatalogoLista);
       });
 
-      const req = httpMock.expectOne('assets/json/40101/tipo-vehiculo-arrastre.json');
+      const req = httpMock.expectOne('assets/json/40101/tipo-de-vehiculo.json');
       req.flush(mockCatalogoLista, {
         headers: { 'Content-Type': 'text/plain' }
       });
@@ -479,7 +479,7 @@ describe('modificarTerrestreService', () => {
         service.obtenerTipoDeVehiculo().subscribe();
       }
 
-      const requests = httpMock.match('assets/json/40101/tipo-vehiculo-arrastre.json');
+      const requests = httpMock.match('assets/json/40101/tipo-de-vehiculo.json');
       expect(requests.length).toBe(10);
 
       requests.forEach(req => req.flush(mockCatalogoLista));

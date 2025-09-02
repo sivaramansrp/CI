@@ -39,6 +39,7 @@ import {
   Notificacion,
   NotificacionesComponent,
   Pedimento,
+  REGEX_CORREO_ELECTRONICO,
   REGEX_IMPORTE_PAGO,
   REGEX_RFC,
   REGEX_SOLO_DIGITOS,
@@ -65,7 +66,8 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  Output, SimpleChanges,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
 import { Subject, delay, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -92,7 +94,9 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
-export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, OnChanges {
+export class DatosDeLaSolicitudComponent
+  implements OnInit, OnDestroy, OnChanges
+{
   /**
    * @property {Subject<void>} destroyNotifier$
    * Subject utilizado para cancelar suscripciones activas al destruir el componente.
@@ -526,7 +530,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, OnChanges
       ? true
       : false;
 
-    this.esSinAccionAlIniciar = SIN_ACCION_AL_INICIAR.includes(this.idProcedimiento);
+    this.esSinAccionAlIniciar = SIN_ACCION_AL_INICIAR.includes(
+      this.idProcedimiento
+    );
 
     this.mostrarCorreoElectronico =
       PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC.includes(
@@ -612,9 +618,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, OnChanges
       denominacionRazon: [
         {
           value: this.datosSolicitudFormState.denominacionRazon,
-          disabled: DESHABILITADA_EN_INIT.includes(
-                this.idProcedimiento
-              ),
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
         },
         [
           Validators.required,
@@ -629,9 +633,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, OnChanges
         },
         [
           Validators.required,
+          Validators.pattern(REGEX_CORREO_ELECTRONICO),
           Validators.minLength(2),
           Validators.maxLength(120),
-          Validators.email,
         ],
       ],
       codigoPostal: [
@@ -1011,7 +1015,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, OnChanges
    * componentes o servicios que estén escuchando el evento emitido.
    */
   modificarDatos(): void {
-    if (!this.tablaMercanciasLista.length) {
+    if (this.tablaMercanciasLista.length === 0) {
       this.seleccionarFilaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -1024,15 +1028,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, OnChanges
         txtBtnCancelar: '',
       };
       this.mostrarAlerta = true;
-      return;
+    } else if (this.tablaMercanciasLista.length > 0) {
+      this.datosDeTablaSeleccionados.emit({
+        scianSeleccionados: this.scianLista,
+        mercanciasSeleccionados: this.tablaMercanciasLista,
+        opcionSeleccionados: this.opcionLista,
+        opcionesColapsableState: this.opcionesColapsable,
+      });
+      this.irAAcciones('../mercancia-datos');
     }
-    this.datosDeTablaSeleccionados.emit({
-      scianSeleccionados: this.scianLista,
-      mercanciasSeleccionados: this.tablaMercanciasLista,
-      opcionSeleccionados: this.opcionLista,
-      opcionesColapsableState: this.opcionesColapsable,
-    });
-    this.irAAcciones('../mercancia-datos');
   }
 
   /**
@@ -1156,7 +1160,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, OnChanges
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
-    this.alternarControlesDeFormulario(true);
     this.esSinAccionAlIniciar = false;
 
     this.elementoParaEliminar = i;
@@ -1288,6 +1291,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, OnChanges
    */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
+      this.alternarControlesDeFormulario(true);
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }
@@ -1331,6 +1335,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, OnChanges
     this.destroyNotifier$.complete();
   }
 }
+/**
+ * Valida que el valor del control sea una matriz no vacía.
+ *
+ * @param {AbstractControl} control - El control de formulario a validar.
+ * @returns {ValidationErrors | null} - Retorna un objeto de errores si la validación falla, o `null` si pasa.
+ */
 export function matrizRequerida(
   control: AbstractControl
 ): ValidationErrors | null {
