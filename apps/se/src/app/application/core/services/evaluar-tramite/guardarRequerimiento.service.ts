@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_POST_GUARDAR_REQUERIMIENTO, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
+import { API_POST_GUARDAR_REQUERIMIENTO, API_POST_GUARDAR_REQUERIMIENTO_MOSTRAR_FIRMA, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { GuardarRequerimiento } from '../../models/evaluar/request/guardar-requerimiento-request.model';
@@ -53,7 +53,7 @@ export class GuardarRequerimientoService {
  */
   postMostrarFirma(tramite: number, numFolio: string, PAYLOAD: MostrarFirmarRequerimientoRequest):
    Observable<BaseResponse<MostrarFirmarRequerimientoResponse>> {
-    const ENDPOINT = `${this.host}${API_POST_GUARDAR_REQUERIMIENTO.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
+    const ENDPOINT = `${this.host}${API_POST_GUARDAR_REQUERIMIENTO_MOSTRAR_FIRMA.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
     return this.http.post<BaseResponse<MostrarFirmarRequerimientoResponse>>(ENDPOINT, PAYLOAD);
   }
 }
