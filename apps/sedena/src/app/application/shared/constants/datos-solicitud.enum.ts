@@ -219,7 +219,7 @@ export const AGREGARPROVEEDORFORM =[240118, 240120];
  * @description Contiene un arreglo de identificadores numéricos que indican 
  * los campos que son requeridos para los derechos en el sistema.
  */
-export const CAMPO_OBLIGATORIO_DERECHOS = [240111,240112, 240118, 240120,240114];
+export const CAMPO_OBLIGATORIO_DERECHOS = [240111,240112, 240118, 240120,240114,240108];
 
 
 /**
