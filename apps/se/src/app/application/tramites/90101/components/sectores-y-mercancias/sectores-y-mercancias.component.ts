@@ -22,6 +22,7 @@ import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PARATEXTO } from '../../constantes/prosec.module';
 import { ProsecService } from '../../services/prosec.service';
@@ -206,6 +207,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -240,6 +242,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
           this.sectoresState = state as ProsecState;
           this.sectors = state.sectorDatos as FilaSectors[];
           this.producir = state.producirDatos as FilaProducir[];
+          this.initActionFormBuild();
         })
       )
       .subscribe();
@@ -258,10 +261,15 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    if (this.formularioDeshabilitado) {
-      this.esFormularioSoloLectura = true;
-      this.inicializarEstadoFormulario();
-    }
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.sectors = Array.isArray(this.sectoresState.sectorDatos)
         ? this.sectoresState.sectorDatos as FilaSectors[]
         : [this.sectoresState.sectorDatos as FilaSectors];
@@ -306,7 +314,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         this.sectoresState.Sector
       ],
       Fraccion_arancelaria: [
-        this.sectoresState.Fraccion_arancelaria,
+        { value: this.sectoresState.Fraccion_arancelaria, disabled: this.esFormularioSoloLectura },
         Validators.required
       ],
     })
