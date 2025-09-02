@@ -52,8 +52,8 @@ describe('ChofereNacionalNotificationComponent', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
-    fixture.destroy();
+  jest.clearAllMocks();
+  fixture.destroy();
   });
 
   describe('Component Initialization', () => {
@@ -89,11 +89,9 @@ describe('ChofereNacionalNotificationComponent', () => {
     });
 
     it('should handle mensaje being undefined during initialization', () => {
-      // Create new component instance without setting mensaje
       const newFixture = TestBed.createComponent(ChofereNacionalNotificationComponent);
       const newComponent = newFixture.componentInstance;
 
-      // alertaNotificacion should still be created, mensaje might be undefined
       expect(newComponent.alertaNotificacion).toBeDefined();
       expect(newComponent.alertaNotificacion.tipoNotificacion).toBe(TipoNotificacionEnum.BANNER);
     });
@@ -101,8 +99,6 @@ describe('ChofereNacionalNotificationComponent', () => {
     it('should maintain immutable reference to alertaNotificacion object', () => {
       const originalNotificacion = component.alertaNotificacion;
       component.ngOnInit();
-
-      // Should be the same object reference
       expect(component.alertaNotificacion).toBe(originalNotificacion);
     });
   });

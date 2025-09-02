@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioState, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, delay, map, takeUntil} from 'rxjs';
 
-import { CAPTURA_MERCANCIAS, CATALOGOS_DATOS, CONFIGURACION_MERCANCIA, CONFIGURATION_TABLA_MERCANCIAS, FECHA_FINALS, MERCANCIAS_DATOS} from '../../constantes/modificacion.enum';
+import { CAPTURA_MERCANCIAS, CATALOGOS_DATOS, CONFIGURACION_MERCANCIA, CONFIGURATION_TABLA_MERCANCIAS, FECHA_FINALS, MERCANCIAS_DATOS,MERCANCIA_PREFILL} from '../../constantes/modificacion.enum';
 import { ConfiguracionColumna, Mercancias } from '../../models/configuracion-columna.model';
 
 import { CertificadoDeOrigenComponent } from "../../../../shared/components/certificado-de-origen/certificado-de-origen.component";
@@ -196,7 +196,9 @@ umc: Catalogo[] = CATALOGOS_DATOS;
    * @type {Mercancia[]}
    */
   public seleccionadaguardarClicado: Mercancias[] = [];
-
+   /** Almacena el estado actual de la consulta relacionada con el trámite.  
+ *  Contiene información necesaria para mostrar o procesar datos en el componente. */
+   public consultaState!:ConsultaioState;
   /**
    * Referencia al modal de modificación en la plantilla HTML.
    * @type {ElementRef}
@@ -298,8 +300,16 @@ umc: Catalogo[] = CATALOGOS_DATOS;
      this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState) => {          
+        map((seccionState) => {         
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.consultaState = seccionState;
+            if (this.consultaState.update) {
+          this.store.update((state) => ({
+          ...state,
+          buscarMercancia: MERCANCIA_PREFILL
+         }));
+        }
+          
                   })
       )
       .subscribe();

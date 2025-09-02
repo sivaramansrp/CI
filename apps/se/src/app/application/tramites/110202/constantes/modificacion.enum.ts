@@ -195,3 +195,22 @@ export const CATALOGOS_DATOS = [
         }
 
     ];
+    /**
+ * MERCANCIA_PREFILL contiene datos de ejemplo para pruebas.
+ * Incluye fracción arancelaria, registro, fechas y nombres técnicos/comerciales.
+ * Sirve como plantilla para inicializar formularios o pruebas unitarias.
+ */
+export const MERCANCIA_PREFILL: Mercancia[] = [
+  {
+    fraccionArancelaria: '1234.56.78',
+    numeroDeRegistrodeProductos: 'REG-001',
+    fechaExpedicion: '2024-01-01',
+    fechaVencimiento: '2025-01-01',
+    nombreTecnico: 'Producto Técnico',
+    nombreComercial: 'Producto Comercial',
+    fraccionNaladi: 'NAL001',
+    fraccionNaladiSa93: 'NAL93',
+    fraccionNaladiSa96: 'NAL96',
+    fraccionNaladiSa02: 'NAL02',
+  }
+];

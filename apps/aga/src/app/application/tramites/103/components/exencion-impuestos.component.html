@@ -254,7 +254,7 @@
                     (agregarMercanciasForm.get('datosMercancia.cantidad')?.touched ||
                     agregarMercanciasForm.get('datosMercancia.cantidad')?.dirty)
                   ) {
-                    <div class="text-danger small mt-1">Formato inválido. Máximo 12 enteros y 3 decimales.</div>
+                    <div class="text-danger small mt-1">Este campo permite hasta 12 números enteros y 3 decimales</div>
                   } @else if (
                     agregarMercanciasForm.get('datosMercancia.cantidad')?.errors?.['min'] &&
                     (agregarMercanciasForm.get('datosMercancia.cantidad')?.touched ||

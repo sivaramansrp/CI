@@ -18,10 +18,15 @@
         </div>
         <div class="row mt-5">
           <div class="col-md-8">
-            <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
-              [placeholder]="aduana.primerOpcion" [required]="true" id="aduana" formControlName="aduana" (change)="
-                setValoresStore(importadorExportador, 'aduana', 'setAduana')
-              " [isDisabled]="esFormularioSoloLectura">
+            <app-catalogo-select
+              [catalogo]="aduana"
+              [label]="'Aduana por la que ingresará la mercancía'"
+              formControlName="aduana"
+              [placeholder]="'Seleccione una opción'"
+              [isDisabled]="esFormularioSoloLectura"
+              (change)="aduanaSeleccion()"
+              name="aduana"
+            >
             </app-catalogo-select>
           </div>
         </div>
@@ -35,8 +40,8 @@
           [datos]="mercanciaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"></app-tabla-dinamica>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura" data-bs-toggle="modal"
-            data-bs-target="#modalAgregarMercancias">Modificar</button>
+          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura" 
+            (click)="modificar()">Modificar</button>
           <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura"
             (click)="eliminar()">Eliminar</button>
           <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal"
@@ -47,7 +52,7 @@
       </div>
 
       <div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"
-        aria-hidden="true">
+        aria-hidden="true" #modalAgregarMercancias>
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-body">
@@ -57,23 +62,27 @@
                 </div>
                 <ng-titulo titulo="Datos de la mercancía" />
                 <label class="mb-5">Fines a los que se destinará la mercancía*:</label>
-                <crosslist [fechas]="selectRangoDias" [botones]="finesDeMercanciaBotons"
+                <crosslist [fechas]="selectRangoDias" [botones]="finesDeMercanciaBotons" formControlName="fechasSeleccionadas"
                   [fechasSeleccionadas]="solicitudState.fechasSeleccionadas" [isDisabled]="esFormularioSoloLectura"
                   (fechasSeleccionadasChange)="changeCrosslist($event)"></crosslist>
+                  <div *ngIf="isInvalid('fechasSeleccionadas')" class="mensaje-error">
+                      Este campo es obligatorio.
+                  </div>
                 <ng-container formGroupName="datosMercancia">
                   <div class="row mt-5">
                     <div class="col-md-12">
                       <label>Tipo de mercancía*:</label>
                       <input type="text" width:140 required="true" class="form-control" id="tipoMercancia"
-                        formControlName="tipoMercancia" [ngClass]="
-                isValid(datosMercancia, 'tipoMercancia') ? 'required' : ''
-              " (change)="
-                setValoresStore(
-                  datosMercancia,
-                  'tipoMercancia',
-                  'setTipoMercancia'
-                )
-              " [disabled]="esFormularioSoloLectura" />
+                        formControlName="tipoMercancia" (change)="
+                          setValoresStore(
+                            datosMercancia,
+                            'tipoMercancia',
+                            'setTipoMercancia'
+                          )
+                        " [disabled]="esFormularioSoloLectura" />
+                      <div *ngIf="isInvalid('tipoMercancia')" class="mensaje-error">
+                          Este campo es obligatorio.
+                      </div>
                     </div>
                   </div>
                 </ng-container>
@@ -82,44 +91,51 @@
                     <div class="col-md-4">
                       <label>Uso específico de la mercancía*:</label>
                       <input type="text" required="true" class="form-control" id="usoEspecifico"
-                        formControlName="usoEspecifico" [ngClass]="
-                  isValid(datosMercancia, 'usoEspecifico')
-                    ? 'required'
-                    : ''
-                " (change)="
-                  setValoresStore(
-                    datosMercancia,
-                    'usoEspecifico',
-                    'setUsoEspecifico'
-                  )
-                " [disabled]="esFormularioSoloLectura" />
+                        formControlName="usoEspecifico" (change)="
+                          setValoresStore(
+                            datosMercancia,
+                            'usoEspecifico',
+                            'setUsoEspecifico'
+                          )
+                        " [disabled]="esFormularioSoloLectura" />
+                      <div *ngIf="isInvalid('usoEspecifico')" class="mensaje-error">
+                          Este campo es obligatorio.
+                      </div>
                     </div>
                     <div class="col-md-4">
-                      <app-catalogo-select [catalogo]="condicion.catalogos" [label]="condicion.labelNombre"
-                        [placeholder]="condicion.primerOpcion" [required]="true" id="condicion"
-                        formControlName="condicion" (change)="
-                  setValoresStore(
-                    datosMercancia,
-                    'condicion',
-                    'setCondicion'
-                  )
-                " [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                    <app-catalogo-select
+                        [catalogo]="condicion"
+                        [label]="'Condición de la mercancía'"
+                        formControlName="condicion"
+                        [placeholder]="'Seleccione una opción'"
+                        [required]="true"
+                        (change)="condicionSeleccion()"
+                        name="condicion"
+                        [isDisabled]="esFormularioSoloLectura">
+                      </app-catalogo-select>
+                      <div *ngIf="isInvalid('condicion')" class="mensaje-error">
+                        Este campo es obligatorio.
+                      </div>
                     </div>
                     <div class="col-md-4">
                       <label>Marca:</label>
-                      <input type="text" class="form-control" id="marca" formControlName="marca" [ngClass]="
-                  isValid(datosMercancia, 'marca') ? 'required' : ''
-                " (change)="
+                      <input type="text" class="form-control" id="marca" formControlName="marca" (change)="
                   setValoresStore(datosMercancia, 'marca', 'setMarca')
                 " [disabled]="esFormularioSoloLectura" />
                     </div>
                   </div>
                   <div class="row mt-3">
                     <div class="col-md-4">
-                      <app-catalogo-select [catalogo]="ano.catalogos" [label]="ano.labelNombre"
-                        [placeholder]="ano.primerOpcion" [required]="false" id="ano" formControlName="ano" (change)="
-                  setValoresStore(datosMercancia, 'ano', 'setAno')
-                " [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                      <app-catalogo-select
+                          [catalogo]="ano"
+                          [label]="'Año'"
+                          formControlName="ano"
+                          [placeholder]="'Seleccione una opción'"
+                          [isDisabled]="esFormularioSoloLectura"
+                          (change)="anoSeleccion()"
+                          name="ano"
+                        >
+                        </app-catalogo-select>
                     </div>
                     <div class="col-md-4">
                       <label>Modelo:</label>
@@ -145,8 +161,7 @@
                     (click)="limpiarMercancias()">Limpiar</button>
                   <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura"
                     data-bs-dismiss="modal" #closeModal>Cancelar</button>
-                  <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal"
-                    data-bs-target="#modalConfirmacion" [disabled]="esFormularioSoloLectura"
+                  <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura"
                     (click)="agregarMercancia()">
                     Agregar
                   </button>
@@ -238,10 +253,16 @@
         </div>
         <div class="row mt-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="pais.catalogos" [label]="pais.labelNombre"
-              [placeholder]="pais.primerOpcion" [required]="true" id="pais" formControlName="pais"
-              (change)="setValoresStore(importadorExportador, 'pais', 'setPais')"
-              [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+              <app-catalogo-select
+                [catalogo]="pais"
+                [label]="'País'"
+                formControlName="pais"
+                [placeholder]="'Seleccione una opción'"
+                [isDisabled]="esFormularioSoloLectura"
+                (change)="paisSeleccion()"
+                name="pais"
+              >
+              </app-catalogo-select>
           </div>
           <div class="col-md-4">
             <label>Código postal*:</label>

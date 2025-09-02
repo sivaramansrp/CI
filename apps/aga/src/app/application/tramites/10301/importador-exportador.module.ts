@@ -22,6 +22,7 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ToastrService } from 'ngx-toastr';
+import { provideHttpClient } from '@angular/common/http';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ providers: [
   ToastrService,
   ImportadorExportadorService,
   CatalogosService,
-  TramiteFolioService
+  TramiteFolioService,
+  provideHttpClient(),
 ],
 schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

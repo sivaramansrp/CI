@@ -90,12 +90,7 @@ export class SolicitudPageComponent implements OnDestroy {
     private tramiteQuery: Tramite80102Query,
     private seccion: SeccionLibStore
   ) {
-    this.tramiteQuery.FormaValida$.pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe((res) => {
-      this.seccion.establecerSeccion([true]);
-      this.seccion.establecerFormaValida([res]);
-    });
+    // Constructor del componente
   }
   /**
    * Selecciona una pestaña del asistente.

@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FileType, OperationType } from '../../../core/enums/firma-electronica.enum';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FirmaElectronicaService } from '../../../core/services/shared/firma-electronica/firma-electronica.service';
+import { InputFilaComponent } from '../input-fila/input-fila.component';
 import { LOGIN } from '../../constantes/constantes';
 import { LoginDetalle } from '../../../core/models/usuario/perfilUsuario.model';
 import { ToastrService } from 'ngx-toastr';
@@ -13,7 +14,7 @@ import { esValidObject } from '../../../core/utils/utilerias';
 @Component({
   selector: 'firma-electronica',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, InputFilaComponent],
   providers: [ToastrService],
   templateUrl: './firma-electronica.component.html',
   styleUrl: './firma-electronica.component.scss',
@@ -108,6 +109,10 @@ export class FirmaElectronicaComponent implements OnDestroy {
 
   /** Formulario reactivo */
   FormCertificado = this.fb.group({
+    cerFileName: ['', [Validators.required]],
+    keyFileName: ['', [Validators.required]],
+    cer: new FormControl<File | null>(null),
+    key: new FormControl<File | null>(null),
     password: ['', [Validators.required]],
   });
 
@@ -158,6 +163,9 @@ export class FirmaElectronicaComponent implements OnDestroy {
         }
         this.certFileObj = FILE;
         this.cerInputElement = INPUT;
+        this.FormCertificado.get('cer')?.setValue(FILE);
+        this.FormCertificado.get('cerFileName')?.setValue(FILE.name);
+        this.FormCertificado.get('cerFileName')?.markAsUntouched();
       } else if (type === FileType.PRIVATE_KEY) {
         if (!FILE.name.endsWith('.key') && !FILE.type.includes('application/x-pem-file')) {
           this.keyFileError = 'Por favor, escriba un valor con una extensión aceptada (.key)';
@@ -166,6 +174,9 @@ export class FirmaElectronicaComponent implements OnDestroy {
         }
         this.keyFileObj = FILE;
         this.keyInputElement = INPUT;
+        this.FormCertificado.get('key')?.setValue(FILE);
+        this.FormCertificado.get('keyFileName')?.setValue(FILE.name);
+        this.FormCertificado.get('keyFileName')?.markAsUntouched();
       }
     }
   }
@@ -211,37 +222,35 @@ export class FirmaElectronicaComponent implements OnDestroy {
         ESLOGIN
       );
 
-      // Crear el payload para la autenticación
-      const PAYLOAD = {
-        "rfc": RESULTADO.rfc,
-        "certificate": RESULTADO.certificado,
-        "privateKey": this.keyFileObj?.name.endsWith('.key') ? this.keyFileObj?.name : '',
-        "password": this.FormCertificado.get('password')?.value || ''
-      }
-
-      this.valido.emit({ rfc: RESULTADO.rfc, tieneLogin: true });
-      this.firmaService.loginFielAuthentication(PAYLOAD).pipe(takeUntil(this.destroyNotifier$)).subscribe({
-        next: (response) => {
-          if(esValidObject(response)){
-            this.toastrService.success('Autenticación exitosa');
-
-          }
-        },
-        error: (error) => {
-          this.toastrService.error('Error en la autenticación');
-        }
-      });
-
       if (ESLOGIN) {
+      // Crear el payload para la autenticación
+        const PAYLOAD = {
+          "rfc": RESULTADO.rfc,
+          "certificate": RESULTADO.certificado,
+          "privateKey": this.keyFileObj?.name.endsWith('.key') ? this.keyFileObj?.name : '',
+          "password": this.FormCertificado.get('password')?.value || ''
+        }
+
         // Caso login: solo validación
         this.valido.emit({ rfc: RESULTADO.rfc, tieneLogin: true });
+        this.firmaService.loginFielAuthentication(PAYLOAD).pipe(takeUntil(this.destroyNotifier$)).subscribe({
+          next: (response) => {
+            if(esValidObject(response)){
+              this.toastrService.success('Autenticación exitosa');
+
+            }
+          },
+          error: (error) => {
+            this.toastrService.error('Error en la autenticación');
+          }
+        });
       } else {
         // Caso firma: emitir datos completos
         if (!RESULTADO.firma) {
           throw new Error('No se generó la firma electrónica');
         }
 
-        this.valido.emit({ rfc: RESULTADO.rfc, tieneLogin: true });
+        this.valido.emit({ rfc: '', tieneLogin: true });
         this.datosFirma.emit({
           firma: RESULTADO.firma,
           certSerialNumber: RESULTADO.certificado,
@@ -282,6 +291,15 @@ export class FirmaElectronicaComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Cancela la selección de archivo para el campo especificado, limpiando su valor y marcándolo como tocado.
+   * @param campo Nombre del campo del formulario a limpiar.
+   */
+  dialogoCancelar(campo: string): void {
+    this.FormCertificado.get(campo)?.setValue(null);
+    this.FormCertificado.get(campo)?.markAsTouched();
   }
 }
 

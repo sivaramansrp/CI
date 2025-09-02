@@ -2,3 +2,31 @@
  height: 60% ; 
  resize: none ;
 }
+
+::ng-deep app-tabla-dinamica th:not(:first-child) {
+  padding-left: 25px !important;
+  padding-right: 25px !important;
+  text-align: center !important;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.7);
+  z-index: 2000;
+}
+
+.modal-content {
+  background: white;
+  padding: 1rem;
+  margin: 4% auto 3% auto;
+  width: 1200px;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-radius: 8px;
+  z-index: 2100;
+  position: relative;
+}

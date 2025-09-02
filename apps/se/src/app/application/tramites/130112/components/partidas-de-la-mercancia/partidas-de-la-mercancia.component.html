@@ -133,29 +133,31 @@
 
             <div class="container mt-5">
               <ng-titulo titulo="Cargar archivo"> </ng-titulo>
-              <div class="row mb-5">
-              <div class="col-md-12">
-                <label for="archivoNacionales" class="form-label me-3">
-                Archivo:
-                </label>
-              </div>
-              </div>
-              <div class="row mb-5">
-              <div class="col-md-12">
-                <input type="file" id="archivoNacionales" class="form-control w-auto"
-                aria-label="Seleccionar archivo"
-                data-bs-button-label="Seleccionar archivo"
-                data-bs-placeholder="Sin archivos seleccionados"
-                />
-              </div>
-              </div>
+               <div class="row align-items-center mb-3">
+									<div class="col-md-3">
+											<label for="archivoNacionales" class="form-label mb-0 me-3">Archivo:</label>
+											</div>
+										</div>
+												 <div class="row align-items-center mb-3">
+													<div class="col-md-6 d-flex align-items-center">
+													   <input type="file" id="archivoNacionales" class="d-none" (change)="archivoSeleccionado($event)" #archivoNacionalesElemento />
+
+													   <div class="input-group w-100">
+														  <button type="button" (click)="archivoNacionalesElemento?.click()">
+															 Seleccionar archivo
+														  </button>
+														  <input type="text" class="form-control" [value]="nombreArchivoSeleccionado || 'Sin archivos seleccionados'" readonly
+															 style="background-color: #fff; cursor: default;" />
+													   </div>
+													</div>
+												 </div>
             </div>
             </div>
 
           <div class="row btn-row">
             <div class="col-md-4 text-end">
               <div class="btn-group">
-                <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2" [disabled]="esFormularioSoloLectura"
+                <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-default cancel me-2" [disabled]="esFormularioSoloLectura"
                   data-bs-dismiss="modal">
                   Cerrar
                 </button>

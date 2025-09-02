@@ -107,7 +107,7 @@ export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
    */
   constructor(
     private bsModalService: BsModalService,
-    private chofer40103Service: Chofer40103Service,
+    public chofer40103Service: Chofer40103Service,
     private chofer40103Query: Chofer40103Query,
     private consultaioQuery: ConsultaioQuery
   ) {
