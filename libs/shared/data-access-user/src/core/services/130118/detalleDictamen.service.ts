@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { API_GET_DICTAMEN_DETALLE, API_GET_DICTAMEN_DETALLE_OBSERVACION, ENVIRONMENT, IDDICTAMEN, IDOBSERVACION, TRAMITE } from '../../..';
+import { API_GET_DICTAMEN_DETALLE, API_GET_DICTAMEN_DETALLE_OBSERVACION, COMUN_URL, IDDICTAMEN, IDOBSERVACION, TRAMITE } from '../../servers/api-router';
 import { BaseResponse } from '../../models/5701/base-response.model';
 import { DictamenDetalleResponse } from '../../models/130118/dictamen-detalle-response.model';
 import { Observable } from 'rxjs';
@@ -22,7 +22,7 @@ export class DetalleDictamenService {
    * @param http HttpClient para realizar peticiones HTTP
    */
   constructor(private http: HttpClient) {
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   /**

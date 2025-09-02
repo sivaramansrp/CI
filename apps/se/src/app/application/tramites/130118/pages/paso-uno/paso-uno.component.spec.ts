@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { PeximService } from '../../service/pexim.service';
+import { PeximService } from '../../services/pexim.service';
 import { of, Subject } from 'rxjs';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 

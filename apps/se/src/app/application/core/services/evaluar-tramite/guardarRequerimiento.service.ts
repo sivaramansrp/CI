@@ -1,4 +1,4 @@
-import { API_POST_GUARDAR_REQUERIMIENTO, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
+import { API_POST_GUARDAR_REQUERIMIENTO } from '@libs/shared/data-access-user/src';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { GuardarRequerimiento } from '../../models/evaluar/request/guardar-requerimiento-request.model';
@@ -36,7 +36,7 @@ export class GuardarRequerimientoService {
   */
   postGuardarRequerimiento(tramite: number, numFolio: string, PAYLOAD: GuardarRequerimiento):
     Observable<BaseResponse<GuardarRequerimientosResponse>> {
-    const ENDPOINT = `${this.host}${API_POST_GUARDAR_REQUERIMIENTO.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
+    const ENDPOINT = `${this.host}${API_POST_GUARDAR_REQUERIMIENTO(tramite.toString(), numFolio)}`;
 
     return this.http.post<BaseResponse<GuardarRequerimientosResponse>>(ENDPOINT, PAYLOAD);
   }
