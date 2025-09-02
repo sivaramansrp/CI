@@ -925,6 +925,32 @@ ngOnChanges(changes: SimpleChanges):void {
   aceptar(): void {
     this.mostrarError = false;
   }
+  /**
+ * @descripcion
+ * Verifica la validez del formulario `formCertificado` aplicando validadores dinámicos
+ * según la selección del usuario y validando también la tabla de mercancías asociada.
+ *
+ * @detalle
+ * - Si el control `si` está marcado, agrega validadores obligatorios y de longitud máxima
+ *   a los campos `nombres`, `primerApellido`, `numeroDeRegistroFiscal` y `razonSocial`.
+ * - Si no está marcado, limpia los validadores de esos controles.
+ * - Actualiza la validez de cada control después de aplicar o limpiar validadores.
+ * - Marca todos los campos como "tocados" (`markAllAsTouched`) si el formulario es inválido.
+ * - Valida que exista al menos un registro en la colección `guardarClicado`.
+ * - Muestra un mensaje de error en la tabla si no hay registros.
+ *
+ * @returns {boolean}  
+ * `true` si el formulario y la tabla son válidos, `false` en caso contrario.
+ *
+ * @ejemplo
+ * ```ts
+ * if (this.validatorCheck()) {
+ *   // Proceder con el guardado
+ * } else {
+ *   // Mostrar errores en pantalla
+ * }
+ * ```
+ */
  validatorCheck(): boolean {
   if (!this.formCertificado) {
     return false;
