@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -13,6 +13,7 @@ import { Tramite130106Query } from '../../../../estados/queries/tramite130106.qu
 import fraccions from '@libs/shared/theme/assets/json/130106/fraccion.json';
 
 import { Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
+import { Modal } from 'bootstrap';
 
 /**
  * Valida que el valor sea un número válido:
@@ -74,8 +75,18 @@ export function formFieldValidator(control: AbstractControl): ValidationErrors |
   styleUrl: './fraccion.component.scss'
 })
 export class FraccionComponent implements OnInit, OnDestroy {
+ private modalEditar!: Modal;
+    private cargarArchivoInstance!: Modal;
   esFormularioSoloLectura: boolean = false;
   fraccionForm!: FormGroup;
+
+    @ViewChild('cargarArchivoModal', { static: false }) cargarArchivoModal!: ElementRef;
+    @ViewChild('modalConfirmacionRef') modalConfirmacionRef!: ElementRef;
+    @ViewChild('modalEditarRef') modalEditarRef!: ElementRef;
+
+      public archivoFormGroup: FormGroup = new FormGroup({
+    archivo: new FormControl(''),
+  });
   
   // Catalog data
   public fraccion: Catalogo[] = fraccions?.fraccion;
@@ -451,6 +462,32 @@ export class FraccionComponent implements OnInit, OnDestroy {
    */
   onRepresentacionFederalChange(): void {
     this.setValoresStore(this.fraccionForm, 'representacion', 'setRepresentacion');
+  }
+
+ngAfterViewInit(): void {
+    if (this.cargarArchivoModal) {
+      this.cargarArchivoInstance = new Modal(this.cargarArchivoModal.nativeElement);
+    }
+
+    if (this.modalEditarRef) {
+      this.modalEditar = new Modal(this.modalEditarRef.nativeElement);
+    }
+  }
+
+
+  /**
+   * Opens the file upload modal
+   */
+  cargarArchivo(): void {
+    this.cargarArchivoInstance?.show();
+  }
+
+  
+  /**
+   * Closes the file upload modal
+   */
+  cerrar(): void {
+    this.cargarArchivoInstance?.hide();
   }
 
   ngOnDestroy(): void {
