@@ -24,9 +24,10 @@
      }
       <btn-continuar
         [datos]="datosPasos"
-        [showButton]="true"
+        [btnGuardarVisible]="'visible'"
         [btnGuardar]="indice === 1"
         (continuarEvento)="getValorIndice($event)"
+        (btnGuardarClicked)="onBtnGuardarClicked()"
       ></btn-continuar>
     </div>
   </div>
