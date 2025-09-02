@@ -16,6 +16,9 @@ import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
+
+
 
 /**
  * Servicio para gestionar las operaciones relacionadas con el programa industrial.
@@ -33,7 +36,8 @@ export class NuevoProgramaIndustrialService {
    */
   constructor(
     private readonly http: HttpClient,
-    public tramite80101Store: Tramite80101Store
+    public tramite80101Store: Tramite80101Store,
+    public httpService: HttpCoreService
   ) {
     // No se necesita lógica de inicialización adicional.
   }
@@ -160,4 +164,7 @@ export class NuevoProgramaIndustrialService {
     );
   }
   
+
+
+
 }

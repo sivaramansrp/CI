@@ -59,7 +59,7 @@ import { Notificacion } from '@ng-mf/data-access-user';
 import { DatosCatalago, INPUT_FECHA_CONFIG, INPUT_FECHA_CONFIGURACION } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
 import { TramiteStore } from '../../../estados/tramite.store';
-
+import { CatalogoPaises } from '@ng-mf/data-access-user';
 /**
  * Componente Complimentos.
  * Responsable de mostrar y gestionar los datos relacionados a los complimentos.
@@ -320,6 +320,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
   get totalItemsDatosSocioAccionistasExtranjeros(): number {
     return this.datosSocioAccionistasExtrenjeros.length;
   }
+
+  /**
+   * Stores the list of country catalog data used within the component.
+   * Each entry represents a country and its associated information.
+   */
+  paisDatos: CatalogoPaises[] = [];
+
 
   /**
    * Constructor para inicializar el formulario de datos del subcontratista.
@@ -617,9 +624,10 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    */
   ngOnInit(): void {
     this.inicializarCertificadoFormulario();
-    this.getCatalogoPaises();
+  //  this.getCatalogoPaises();
     this.getCatalogoEstado();
     this.loadComboUnidadMedida();
+    this.getPais();
 
     this.formaComplimentos.valueChanges
       .pipe(delay(100))
@@ -790,7 +798,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         const INDICEALT = this.camposFormularioTipoPersona.findIndex(
           (ele) => ele.campo === PAIS
         );
-        this.camposFormularioTipoPersona[INDICEALT].opciones = datos;
+      //  this.camposFormularioTipoPersona[INDICEALT].opciones = datos;
       });
   }
 
@@ -846,9 +854,9 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         VALUE = DATOS;
       }
       if (VALUE) {
-        
+
         this.accionistasAgregados.emit(VALUE);
-        
+
 
       }
     } else {
@@ -1390,5 +1398,21 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       CONTROL?.markAsDirty();
       CONTROL?.markAsTouched();
     }
+  }
+
+
+  getPais() {
+    this.complimentosService.getPais().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+      console.log('Datos de países:', datos);
+   const INDICE = this.camposFormulario.findIndex(
+          (ele) => ele.campo === 'pais'
+        );
+        const INDICEALT = this.camposFormularioTipoPersona.findIndex(
+          (ele) => ele.campo === PAIS
+        );
+      this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
+
+      this.camposFormularioTipoPersona[INDICEALT].opciones = datos;
+    });
   }
 }
