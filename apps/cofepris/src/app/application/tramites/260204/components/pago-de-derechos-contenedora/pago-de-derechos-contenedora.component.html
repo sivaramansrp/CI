@@ -1,5 +1,5 @@
 <app-pago-de-derechos 
 [pagoDerechoFormState]="pagoDerechos"
 (updatePagoDerechos)="updatePagoDerechos($event)"
-[formularioDeshabilitado]="(esFormularioSoloLectura | async) || false"
+[campoRequerido]="true"
 ></app-pago-de-derechos>
