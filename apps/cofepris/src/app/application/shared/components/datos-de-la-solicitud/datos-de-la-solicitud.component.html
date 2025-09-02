@@ -422,7 +422,7 @@
         </div>
       </div>
     </div>
-    @if (datosSolicitudForm.get('adunasDeEntradas')?.value) {
+    @if (datosSolicitudForm.get('adunasDeEntradas')?.value==="103") {
     <div class="row mt-2">
       <div class="col-md-12">
         <div class="form-check pull-right">
@@ -434,7 +434,20 @@
         </div>
       </div>
     </div>
-    } @if (tablaMercanciasConfig) {
+    }
+    @if (datosSolicitudForm.get('adunasDeEntradas')?.value==="104") {
+      <div class="row mt-2">
+        <div class="col-md-12">
+          <div class="form-check pull-right">
+            <input class="form-check-input" type="checkbox" value="" id="aeropuerto" formControlName="aeropuertoDoS" />
+            <label class="form-check-label" for="aeropuerto">Aeropuerto Internacional Felipe Ángeles (AIFA).
+            </label>
+            <span tooltip="Marcar la casilla si requiere usar esta aduana." data-bs-toggle="tooltip">
+              <i class="bi bi-question-circle-fill"></i></span>
+          </div>
+        </div>
+      </div>
+      } @if (tablaMercanciasConfig) {
     <div class="row mt-5">
       <h5 class="mt-3">Mercancías*:</h5>
       <app-tabla-dinamica
@@ -511,7 +524,7 @@
         <div class="row align-items-center justify-content-start py-2">
           <div class="col-auto d-flex align-items-start pt-1">
             <input class="form-check-input mt-1 me-3" type="checkbox" formControlName="manifiestosCasillaDeVerificacion"
-              value="" id="manifiestosCasillaDeVerificacion">
+              value="" id="manifiestosCasillaDeVerificacion" [disabled]="formularioDeshabilitado" />
             <label class="form-check-label ms-2" for="manifiestosCasillaDeVerificacion"> *</label>
           </div>
 

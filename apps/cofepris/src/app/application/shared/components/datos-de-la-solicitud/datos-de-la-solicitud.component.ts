@@ -723,6 +723,10 @@ export class DatosDeLaSolicitudComponent
         this.datosSolicitudFormState.aeropuerto,
         [Validators.required],
       ],
+      aeropuertoDos: [
+        this.datosSolicitudFormState.aeropuertoDos,
+        [Validators.required],
+      ],
       publico: [this.datosSolicitudFormState.publico, [Validators.required]],
       representanteRfc: [
         this.datosSolicitudFormState.representanteRfc,
