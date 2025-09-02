@@ -52,7 +52,7 @@ export class ComplimentosService {
       .get<any[]>(`${ENVIRONMENT.API_BASE_URL}/api/catalogo/paises`, {}, false)
       .pipe(
         map((res: any) => {
-        return res.da;
+        return res;
         })
       )
     );

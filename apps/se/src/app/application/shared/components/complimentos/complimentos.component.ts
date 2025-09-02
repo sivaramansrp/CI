@@ -1402,17 +1402,16 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
 
   getPais() {
-    this.complimentosService.getPais().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-      console.log('Datos de países:', datos);
+    this.complimentosService.getPais().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
    const INDICE = this.camposFormulario.findIndex(
           (ele) => ele.campo === 'pais'
         );
         const INDICEALT = this.camposFormularioTipoPersona.findIndex(
           (ele) => ele.campo === PAIS
         );
-      this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
+        this.camposFormularioDefault[INDICE].opcionesCatalogo = res.datos;
 
-      this.camposFormularioTipoPersona[INDICEALT].opciones = datos;
+        this.camposFormularioTipoPersona[INDICEALT].opciones = res.datos;
     });
   }
 }
