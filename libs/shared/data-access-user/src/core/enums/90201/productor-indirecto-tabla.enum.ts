@@ -10,7 +10,7 @@ import { ConfiguracionColumna } from "../../models/shared/configuracion-columna.
  * - `orden`: El orden en el que aparecerá la columna en la tabla.
  * 
  * @type {ConfiguracionColumna<DomiciliosDePlantasTabla>[]}
- */
+ */ 
 export const DOMICILIOS_PLANTAS: ConfiguracionColumna<DomiciliosDePlantasTabla>[] = [
     { encabezado: 'Calle', clave: (item: DomiciliosDePlantasTabla) => item.calle, orden: 1 },
     { encabezado: 'Número exterior', clave: (item: DomiciliosDePlantasTabla) => item.numero, orden: 2 },
@@ -19,6 +19,10 @@ export const DOMICILIOS_PLANTAS: ConfiguracionColumna<DomiciliosDePlantasTabla>[
     { encabezado: 'Colonia', clave: (item: DomiciliosDePlantasTabla) => item.colonia, orden: 5 },
     { encabezado: 'Municipio o alcaldía', clave: (item: DomiciliosDePlantasTabla) => item.municipio, orden: 6 },
     { encabezado: 'Estado', clave: (item: DomiciliosDePlantasTabla) => item.estado, orden: 7 },
+    { encabezado: 'País', clave: (item: DomiciliosDePlantasTabla) => item.pais, orden: 8 },
+    { encabezado: 'Registro federal de contribuyentes', clave: (item: DomiciliosDePlantasTabla) => item.registro, orden: 9 },
+    { encabezado: 'Razón social', clave: (item: DomiciliosDePlantasTabla) => item.razonsocial, orden: 10 },
+    { encabezado: 'Domicilio fiscal del solicitante', clave: (item: DomiciliosDePlantasTabla) => item.domicilio, orden: 11 },
   ];
 
 
