@@ -16,14 +16,14 @@ import { Tramite110223Query } from "../../query/tramite110223.query";
 import { Tramite110223Store } from "../../estados/Tramite110223.store";
 
 /**
- * Constante que representa la configuración de la fecha final en el componente de certificado de origen.
+ * Constante que representa la configuración de la fecha de inicio en el componente.
  * 
  * @constant
  * @type {Object}
- * @property {string} labelNombre - El nombre de la etiqueta para la fecha final.
- * @property {boolean} required - Indica si el campo de fecha final es obligatorio.
- * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
-*/
+ * @property {string} labelNombre - Etiqueta que se muestra para el campo de fecha inicial.
+ * @property {boolean} required - Indica si es obligatorio completar este campo.
+ * @property {boolean} habilitado - Determina si el campo está activo para su edición.
+ */
 export const FECHA_INICIO = {
   labelNombre: 'Fecha inicio',
   required: true,
@@ -46,8 +46,19 @@ export const FECHA_FINAL = {
 };
 
 /**
- * Componente para gestionar los certificados de origen.
- * Se encarga de manejar los formularios, la carga de catálogos, la validación y la interacción con el store.
+ * @componente CertificadoOrigen
+ * @descripcion
+ * Componente que gestiona los certificados de origen en el sistema.
+ * 
+ * @responsabilidades
+ * - Gestión de formularios para datos del certificado
+ * - Carga y manejo de catálogos
+ * - Validación de información ingresada
+ * - Interacción con el almacén de datos
+ * - Control de mercancías asociadas
+ * 
+ * @modulo Trámites
+ * @submodulo 110223
  */
 @Component({
   selector: 'app-certificado-origen',
@@ -72,16 +83,17 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   operador: boolean = true;
 
   /**
-   * @input
-   * @description
-   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
-   * @type {boolean}
+   * @entrada
+   * @descripcion
+   * Bandera que indica si el formulario debe estar deshabilitado. Cuando es `true`, todos los controles 
+   * del formulario estarán inactivos e impedirán la edición por parte del usuario.
+   * @tipo {boolean}
    */
    @Input() formularioDeshabilitado: boolean = false;
 
   /**
-   * Formulario reactivo utilizado para la gestión de los datos del certificado.
-   * @type {FormGroup}
+   * Formulario reactivo que gestiona los datos del certificado.
+   * @tipo {FormGroup}
    */
   formCertificado!: { [key: string]: undefined | boolean | string | number | object };
 
@@ -96,8 +108,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    */
   public fechaFinalInput: InputFecha = FECHA_FINAL;
   /**
-   * Observable que emite la lista de estados disponibles.
-   * @type {Observable<Catalogo[]>}
+   * Observable que emite la lista de estados disponibles del catálogo.
+   * @tipo {Observable<Catalogo[]>}
    */
   estados$!: Observable<Catalogo[]>;
 
@@ -131,8 +143,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   datos: Mercancia[] = [];
 
   /**
-   * Observable que emite los datos de la mercancia obtenida.
-   * @type {Observable<Mercancia[]>}
+   * Observable que emite los datos de las mercancías recuperadas.
+   * @tipo {Observable<Mercancia[]>}
    */
   datos1: Observable<Mercancia[]>;
 
@@ -187,39 +199,44 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     mercanciasDisponiblesTabla: boolean = true;
 
     /**
-   * @property {ElementRef} modifyModal
-   * @description
-   * Referencia al elemento del modal de modificación en la plantilla HTML.
-   * Se utiliza para inicializar y controlar la instancia del modal de modificación desde el componente.
+   * @property modifyModal
+   * @tipo {ElementRef}
+   * @descripcion
+   * Referencia al elemento HTML del modal de modificación.
+   * Permite inicializar y controlar el modal desde el componente.
    */
     @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
 
         /**
-   * @property {ElementRef} buscarMercanciaModal
-   * @description
-   * Referencia al elemento del modal de búsqueda de mercancía en la plantilla HTML.
-   * Se utiliza para controlar la apertura y cierre del modal desde el componente.
+   * @property buscarMercanciaModal
+   * @tipo {ElementRef}
+   * @decorador ViewChild
+   * @descripcion
+   * Referencia al elemento HTML del modal de búsqueda de mercancías.
+   * Permite controlar la apertura y cierre del modal desde el componente.
    */
   @ViewChild('buscarMercanciaModal', { static: false }) buscarMercanciaModal!: ElementRef;
 
   /**
-   * @property {CertificadoDeOrigenComponent} certificadoDeOrigen
-   * @description
-   * Referencia al componente hijo `CertificadoDeOrigenComponent`.
-   * Permite acceder a los métodos y propiedades del componente de certificado de origen desde el componente padre.
+   * @property certificadoDeOrigen
+   * @tipo {CertificadoDeOrigenComponent}
+   * @decorador ViewChild
+   * @descripcion
+   * Referencia al componente hijo que maneja el certificado de origen.
+   * Permite acceder a los métodos y propertyes del componente hijo desde este componente padre.
    */
   @ViewChild('certificadoDeOrigen') certificadoDeOrigen!: CertificadoDeOrigenComponent;
 
   /**
-   * Constructor del componente.
-   * Inicializa el formulario y las dependencias necesarias para la carga de datos.
-   * @param fb FormBuilder para la creación del formulario reactivo.
-   * @param store Store para gestionar los datos de estado.
-   * @param tramiteQuery Consulta de estado para obtener los valores del formulario.
-   * @param certificadoService Servicio para la gestión de los certificados.
-   * @param toastr Servicio de notificaciones para mostrar mensajes.
-   * @param seccionQuery Consulta para obtener el estado de la sección.
-   * @param seccionStore Store para actualizar el estado de la sección.
+   * Constructor del componente CertificadoOrigen.
+   * @descripcion Inicializa el formulario y configura las dependencias necesarias.
+   * @param fb FormBuilder para crear el formulario reactivo
+   * @param store Almacén para gestionar el estado de datos
+   * @param tramiteQuery Consulta para obtener valores del formulario
+   * @param certificadoService Servicio que gestiona los certificados
+   * @param toastr Servicio para mostrar notificaciones
+   * @param seccionQuery Consulta para el estado de la sección
+   * @param seccionStore Almacén para actualizar la sección
    */
   private actualizandoFormulario = false;
 
@@ -316,8 +333,14 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   }
 
   /**
-   * Método del ciclo de vida ngOnInit. Se utiliza para cargar los datos iniciales
-   * y suscribirse a los cambios en el formulario.
+   * @metodo ngOnInit
+   * @descripcion
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Realiza las siguientes tareas:
+   * - Carga los estados iniciales
+   * - Carga información de bloques
+   * - Configura las suscripciones necesarias
+   * - Inicializa la tabla de datos
    */
   ngOnInit(): void {
     this.cargarEstados();
@@ -390,7 +413,15 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   }
 
   /**
-   * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
+   * @metodo ngOnDestroy
+   * @descripcion
+   * Se ejecuta cuando el componente va a ser destruido.
+   * 
+   * @tareas
+   * - Cancela todas las suscripciones activas
+   * - Libera recursos para evitar fugas de memoria
+   * 
+   * @implementa OnDestroy
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
@@ -447,13 +478,13 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
          this.store.setSelectedMercancia(evento);
       }
       /**
-   * @method validarFormulario
-   * @description
-   * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
-   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
-   * Si el componente hijo no está disponible, retorna `false`.
+   * @metodo validarFormulario
+   * @descripcion
+   * Realiza la validación del formulario de certificado de origen a través del componente hijo `CertificadoDeOrigenComponent`.
+   * Devuelve `true` cuando el formulario es válido, `false` en caso contrario.
+   * Si no se encuentra disponible el componente hijo, devuelve `false`.
    *
-   * @returns {boolean} Indica si el formulario es válido.
+   * @devuelve {boolean} Verdadero si el formulario es válido, falso en caso contrario.
    */
   validarFormulario(): boolean {
     let isValid = true;
@@ -502,11 +533,15 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
 
 
   /**
-   * @inheritdoc
-   * @method
-   * @description
-   * Este método se ejecuta después de que la vista del componente ha sido inicializada.
-   * Inicializa el modal de modificación si está disponible.
+   * @metodo ngAfterViewInit
+   * @descripcion
+   * Se ejecuta después de que la vista del componente ha sido inicializada.
+   * 
+   * @tareas
+   * - Inicializa el modal de modificación si existe en el DOM
+   * - Configura el modal de búsqueda de mercancías
+   * 
+   * @implementa AfterViewInit
    */
   ngAfterViewInit():void {
     // Inicializa el modal de modificación
