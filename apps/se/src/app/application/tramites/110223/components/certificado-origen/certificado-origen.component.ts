@@ -487,15 +487,15 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @devuelve {boolean} Verdadero si el formulario es válido, falso en caso contrario.
    */
   validarFormulario(): boolean {
-    let isValid = true;
+    let ESVALIDO = true;
     if (this.certificadoDeOrigen) {
       if (!this.certificadoDeOrigen.validatorCheck()) {
-        isValid = false;
+        ESVALIDO = false;
       }
     } else {
-      isValid = false;
+      ESVALIDO = false;
     }
-    return isValid;
+    return ESVALIDO;
   }
   
     /**
