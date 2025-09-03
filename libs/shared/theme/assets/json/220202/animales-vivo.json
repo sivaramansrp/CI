@@ -38,5 +38,9 @@
   "paisDeProcedenciaList": [
     { "id": 1, "descripcion": "Brasil", "clave": "BR" },
     { "id": 2, "descripcion": "Canadá", "clave": "CA" }
+  ],
+  "tipoDeProductoList": [
+    { "id": 1, "descripcion": "Producto 1" },
+    { "id": 2, "descripcion": "Producto 2" }
   ]
 }

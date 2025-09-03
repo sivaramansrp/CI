@@ -1,10 +1,11 @@
-import { AnimalesEventos, AnimalesFormularioSolicitud, DatosDeLaSolicitud } from '../../../../shared/models/datos-de-la-solicitue.model';
+/* eslint-disable complexity */
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { AnimalesEventos } from '../../../../shared/models/datos-de-la-solicitue.model';
 
+import { DatosMercancia, FilaSolicitud } from '../../models/220202/fitosanitario.model';
 import { CommonModule } from '@angular/common';
-import { FilaSolicitud } from '../../models/220202/fitosanitario.model';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { MercanciaFormComponent } from '../../shared/mercancia-form/mercancia-form.component';
@@ -31,7 +32,7 @@ export class AgregarMercanciaComponent implements OnDestroy{
    * Datos de la solicitud que se recibirán como entrada en el componente.
    * @type {DatosDeLaSolicitud}
    */
-  public catalogosDatos: DatosDeLaSolicitud ={
+  public catalogosDatos: DatosMercancia ={
     tipoRequisitoList: [],
     requisitoList: [],
     fraccionArancelariaList: [],
@@ -43,6 +44,7 @@ export class AgregarMercanciaComponent implements OnDestroy{
     paisOrigenList: [],
     paisDeProcedenciaList: [],
     sexoList: [],
+    tipoDeProductoList: []
   }
 
   /**
@@ -57,7 +59,7 @@ export class AgregarMercanciaComponent implements OnDestroy{
    * Indica si el formulario está en modo solo lectura.
    * Cuando es true, los campos del formulario no serán editables por el usuario.
    */
-  public formularioSolicitud!: AnimalesFormularioSolicitud;
+  public formularioSolicitud!: FilaSolicitud;
 
   /**
    * @description Datos de la tabla principal.
@@ -100,22 +102,26 @@ export class AgregarMercanciaComponent implements OnDestroy{
           const VALOR = estado.selectedDatos[0];
           if (VALOR) {
             this.formularioSolicitud = {
+              id: VALOR.id || Math.floor(Math.random() * 1000000),
               tipoRequisito: VALOR.tipoRequisito || '',
               requisito: VALOR.requisito || '',
-              numeroCertificado: VALOR.numeroCertificadoInternacional || '',
+              numeroCertificadoInternacional: VALOR.numeroCertificadoInternacional || '',
               fraccionArancelaria: VALOR.fraccionArancelaria || '',
               descripcionFraccion: VALOR.descripcionFraccion || '',
               nico: VALOR.nico || '',
               descripcionNico: VALOR.descripcionNico || '',
               descripcion: VALOR.descripcion || '',
               cantidadUMT: String(VALOR.cantidadUMT || ''),
-              umt: VALOR.umt || '1',
+              umt: VALOR.umt || '',
               cantidadUMC: String(VALOR.cantidadUMC || ''),
               umc: VALOR.umc || '',
-              especie: '',
               uso: VALOR.uso || '',
-              paisOrigen: '',
+              paisDeOrigen: VALOR.paisDeOrigen || '',
               paisDeProcedencia: VALOR.paisDeProcedencia || '',
+              noPartida: VALOR.noPartida || '',
+              tipoDeProducto: VALOR.tipoDeProducto || '',
+              numeroDeLote: VALOR.numeroDeLote || '',
+              certificadoInternacionalElectronico: VALOR.certificadoInternacionalElectronico || ''
             };
           }
         })
@@ -129,32 +135,41 @@ export class AgregarMercanciaComponent implements OnDestroy{
    */
   agregarDatosFormulario(valor: AnimalesEventos): void {
     const DATOS: FilaSolicitud = {
-      id: Date.now(), // O usa un generador de ID adecuado según tu lógica
+      id: valor.formulario.id || Math.floor(Math.random() * 1000000),
       noPartida: '',
       tipoRequisito: valor.formulario.tipoRequisito || '',
       requisito: valor.formulario.requisito || '',
-      numeroCertificadoInternacional: '',
+      numeroCertificadoInternacional: valor.formulario.numeroCertificadoInternacional || '',
       fraccionArancelaria: valor.formulario.fraccionArancelaria || '',
       descripcionFraccion: valor.formulario.descripcionFraccion || '',
       nico: valor.formulario.nico || '',
       descripcionNico: valor.formulario.descripcionNico || '',
       descripcion: valor.formulario.descripcion || '',
-      umt: '1',
+      umt: valor.formulario.umt || '',
       cantidadUMT: valor.formulario.cantidadUMT || '',
       umc: valor.formulario.umc || '',
       cantidadUMC: valor.formulario.cantidadUMC || '',
       uso: valor.formulario.uso || '',
-      tipoDeProducto: '',
-      numeroDeLote: '',
-      paisDeOrigen: '',
+      tipoDeProducto: valor.formulario.tipoDeProducto || '',
+      numeroDeLote: valor.formulario.numeroDeLote || '',
+      paisDeOrigen: valor.formulario.paisDeOrigen || '',
       paisDeProcedencia: valor.formulario.paisDeProcedencia || '',
-      certificadoInternacionalElectronico: ''
+      certificadoInternacionalElectronico: valor.formulario.certificadoInternacionalElectronico || ''
     }
-    this.fitosanitarioStore.update(state => ({
-      ...state,
-      tablaDatos: [...state.tablaDatos, DATOS],
-      selectedDatos: []
-    }));
+    this.fitosanitarioStore.update(state => {
+      const INDEX = state.tablaDatos.findIndex(item => item.id === DATOS.id);
+
+      const UPDATE_TABLA_DATOS =
+        INDEX !== -1
+          ? state.tablaDatos.map((item, i) => (i === INDEX ? DATOS : item))
+          : [...state.tablaDatos, DATOS];
+      return {
+        ...state,
+        tablaDatos: UPDATE_TABLA_DATOS,
+        selectedDatos: [] 
+      };
+    });
+
   }
 
   /**

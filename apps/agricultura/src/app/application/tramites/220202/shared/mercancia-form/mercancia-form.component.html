@@ -1,13 +1,23 @@
-<div class="container">
+<div class="container mercancia-form-container">
+  <div class="row">
+    <div class="col-12">
+      @if (esFormaValido) {
+      <div
+        class="alert alert-info alert-danger text-center"
+        [innerHTML]="formErrorAlert"
+      ></div>
+      }
+    </div>
+  </div>
   <form [formGroup]="mercanciaForm">
     <ng-titulo titulo="Datos mercancía" />
 
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="tipoRequisitoList"
+          [catalogo]="catalogosDatos.tipoRequisitoList"
           formControlName="tipoRequisito"
-          [label]="'Tipo requisito'"
+          [label]="'Tipo de requisito'"
           [required]="true"
           name="tipoRequisito"
           [isDisabled]="mercanciaForm.disabled"
@@ -37,7 +47,7 @@
       </div>
       <div class="col-md-4 form-group">
         <label class="form-label"
-          >Número certificado internacional*:
+          >Número de certificado internacional*:
           <span
             class="bi bi-question-circle-fill"
             tooltip="Si la normatividad no le solicita el Certificado puede capturar NO APLICA"
@@ -70,7 +80,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="fraccionArancelariaList"
+          [catalogo]="catalogosDatos.fraccionArancelariaList"
           formControlName="fraccionArancelaria"
           [label]="'Fracción arancelaria'"
           [required]="true"
@@ -106,7 +116,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="nicoList"
+          [catalogo]="catalogosDatos.nicoList"
           formControlName="nico"
           [label]="'Nico'"
           [required]="true"
@@ -166,7 +176,14 @@
     <div class="row mt-5">
       <div class="col-md-4 form-group">
         <label class="form-label">Cantidad UMT*:</label>
-        <input type="text" class="form-control" formControlName="cantidadUMT" />
+        <input type="text" class="form-control" formControlName="cantidadUMT"
+           [ngClass]="
+            mercanciaForm.get('cantidadUMT')?.invalid &&
+            mercanciaForm.get('cantidadUMT')?.touched
+              ? 'required'
+              : ''
+          "
+         />
         @if ( mercanciaForm.get('cantidadUMT')?.hasError('maxDecimals') &&
         mercanciaForm.get('cantidadUMT')?.touched){
         <div class="text-danger">
@@ -208,7 +225,14 @@
 
       <div class="col-md-4 form-group">
         <label class="form-label">Cantidad UMC*:</label>
-        <input type="text" class="form-control" formControlName="cantidadUMC" />
+        <input type="text" class="form-control" formControlName="cantidadUMC"
+          [ngClass]="
+            mercanciaForm.get('cantidadUMC')?.invalid &&
+            mercanciaForm.get('cantidadUMC')?.touched
+              ? 'required'
+              : ''
+          "
+         />
         <div
           *ngIf="
             mercanciaForm.get('cantidadUMC')?.hasError('maxDecimals') &&
@@ -247,7 +271,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="umcList"
+          [catalogo]="catalogosDatos.umcList"
           formControlName="umc"
           [label]="'UMC'"
           [required]="true"
@@ -260,7 +284,7 @@
 
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="usoList"
+          [catalogo]="catalogosDatos.usoList"
           formControlName="uso"
           [label]="'Uso'"
           [required]="true"
@@ -270,7 +294,7 @@
       </div>
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="usoList"
+          [catalogo]="catalogosDatos.tipoDeProductoList"
           formControlName="tipoProducto"
           [label]="'Tipo de producto'"
           [required]="true"
@@ -293,19 +317,19 @@
 
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="paisOrigenList"
-          formControlName="paisOrigen"
+          [catalogo]="catalogosDatos.paisOrigenList"
+          formControlName="paisDeOrigen"
           [label]="'País de origen'"
           [required]="true"
-          name="paisOrigen"
+          name="paisDeOrigen"
           [isDisabled]="mercanciaForm.disabled"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="paisDeProcedenciaList"
+          [catalogo]="catalogosDatos.paisDeProcedenciaList"
           formControlName="paisDeProcedencia"
-          [label]="'País De Procedencia'"
+          [label]="'País de Procedencia'"
           [required]="true"
           name="paisDeProcedencia"
           [isDisabled]="mercanciaForm.disabled"
