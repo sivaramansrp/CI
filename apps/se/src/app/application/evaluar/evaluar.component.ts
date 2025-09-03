@@ -936,7 +936,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       estado_evaluacion: this.evaluacionTramite.estado_evaluacion
     };
 
-    this.evaluarSolicitudService.postOpcionesEvaluacion(PAYLOAD)
+    this.evaluarSolicitudService.postOpcionesEvaluacion(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
