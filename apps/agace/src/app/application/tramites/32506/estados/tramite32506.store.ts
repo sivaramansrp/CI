@@ -80,6 +80,9 @@ export interface Tramite32506State {
    */
   valorSeleccionado: string[];
 
+  /**
+   * Información sobre la destrucción de mercancías.
+   */
   destruccionMercanciasTabla: AvisoTabla[];
 }
 /**
