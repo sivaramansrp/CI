@@ -263,6 +263,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
       CONTROL.updateValueAndValidity({ emitEvent: false });
     }
   }
+
+    /**
+   * Marca todos los campos requeridos como tocados para mostrar errores al intentar continuar.
+   */
+  onContinuar(): void {
+    this.form.markAllAsTouched();
+    this.datosDelEstablecimiento.markAllAsTouched();
+  }
   /**
    * Validador personalizado para correos electrónicos que permite una parte local mayor a 64 caracteres,
    * pero exige que el correo completo no exceda los 320 caracteres y cumpla con un formato básico.

@@ -139,7 +139,10 @@ export class PermisoSanitarioComponent {
 
     if (this.pasoUnoComponent?.datosDeLaSolicitudComponent?.form) {
       PermisoSanitarioComponent.MARK_ALL_CONTROLS_TOUCHED_EVEN_IF_DISABLED(this.pasoUnoComponent.datosDeLaSolicitudComponent.form);
-      datosDeLaSolicitudValid = this.pasoUnoComponent.datosDeLaSolicitudComponent.form.valid;
+      if (this.pasoUnoComponent.datosDeLaSolicitudComponent.datosDelEstablecimiento) {
+        PermisoSanitarioComponent.MARK_ALL_CONTROLS_TOUCHED_EVEN_IF_DISABLED(this.pasoUnoComponent.datosDeLaSolicitudComponent.datosDelEstablecimiento);
+      }
+      datosDeLaSolicitudValid = this.pasoUnoComponent.datosDeLaSolicitudComponent.form.valid && this.pasoUnoComponent.datosDeLaSolicitudComponent.datosDelEstablecimiento.valid;
     }
     
     if (this.pasoUnoComponent?.domicilioDelEstablecimientoComponent?.form) {

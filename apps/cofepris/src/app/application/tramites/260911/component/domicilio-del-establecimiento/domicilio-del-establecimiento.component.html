@@ -38,6 +38,7 @@
               [isDisabled]="esFormularioSoloLectura || !!form.get('estado')?.disabled"
               formControlName="estado"
               (change)="setValorStore(form, 'estado')"
+              [markTouched]="domicilio.get('estado')?.touched ?? false"
             >
             </app-catalogo-select>
             <div *ngIf="form.get('estado')?.touched && form.get('estado')?.hasError('required')" class="text-danger">
