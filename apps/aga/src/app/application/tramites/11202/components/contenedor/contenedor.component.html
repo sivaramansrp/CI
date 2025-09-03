@@ -25,7 +25,6 @@
           <app-catalogo-select [catalogo]="options" formControlName="aduana" [label]="'Aduana/sección aduanera'"
             [placeholder]="'Seleccione una opción'" [required]="true"
             (change)="setValoresStore(datosGenerales, 'aduana', 'setAduana')"
-            [markTouched]="solicitudForm.get('datosGenerales.aduana')?.touched??false"
             [isDisabled]="soloLectura"></app-catalogo-select>
           <div *ngIf="isInvalid('datosGenerales.aduana') && solicitudForm.get('datosGenerales.aduana')?.errors?.['required']" class="mensaje-error">
               Este campo es obligatorio.
