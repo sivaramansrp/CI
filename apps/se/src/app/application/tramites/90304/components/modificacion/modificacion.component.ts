@@ -3,11 +3,11 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { EmpresasLista, EmpresasListaResquesta, ModificacionResquesta } from '../../models/prosec.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Solicitud90304State, Tramite90304Store } from '../../estados/tramite90304.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ProducirMercanciasComponent } from '../../../../shared/components/producir-mercancias/producir-mercancias.component';
 import { ProsecService } from '../../services/prosec/prosec.service';
 import { TABLA_EMPRESAS_LISTA } from '../../constantes/prosec.enum';
-import { Solicitud90304State, Tramite90304Store } from '../../estados/tramite90304.store';
 import { Tramite90304Query } from '../../estados/tramite90304.query';
 
 /**

@@ -59,7 +59,7 @@ export class PantallasComponent implements OnInit {
    * Método de inicialización del componente.
    * Suscribe al observable isBaja$ para actualizar el estado local.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.prosecService.isBaja$.subscribe(val => this.isBaja = val);
   }
   
