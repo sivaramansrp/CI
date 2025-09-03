@@ -14,7 +14,8 @@
           maxlength="13"
           formControlName="rfc"
           id="rfc"
-          (change)="setValoresStore(grupoEmpresa, 'rfc', 'setGrupoEmpresaRFC')"
+          (input)="rfcChange($event)"
+          (change)="setValoresStore(grupoEmpresa, 'rfc', 'setGrupoEmpresaRFC');"
         />
       </div>
       <div class="row">
