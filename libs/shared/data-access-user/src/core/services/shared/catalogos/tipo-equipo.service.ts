@@ -1,7 +1,6 @@
+import { API_GET_TIPO_EQUIPO, COMUN_URL } from "../../../servers/api-router";
 import { Observable, catchError, map, throwError } from "rxjs";
-import { API_GET_TIPO_EQUIPO } from "../../../constants/api-constants";
 import { CatalogosResponse } from "../../../models/shared/catalogo.model";
-import { ENVIRONMENT } from "../../../../enviroments/enviroment";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
@@ -15,7 +14,7 @@ export class TipoEquipoService {
   private readonly host: string;
 
     constructor(private http: HttpClient) { 
-        this.host = `${ENVIRONMENT.API_HOST}/api/`;
+        this.host = `${COMUN_URL.BASE_URL}`;
     }
 
   /**

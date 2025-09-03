@@ -1,4 +1,4 @@
-import { BtnContinuarComponent} from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, NotificacionesComponent} from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
 import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
@@ -47,7 +47,9 @@ import { WizardComponent } from '@ng-mf/data-access-user';
         PaisProcendenciaComponent,
         RepresentacionComponent,
         CrosslistComponent,
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        NotificacionesComponent,
+        AlertComponent
   ],
   providers: [
     ToastrService

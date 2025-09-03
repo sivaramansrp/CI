@@ -1,8 +1,7 @@
+import { API_GET_ADUANA, COMUN_URL } from '../../../servers/api-router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
-import { API_GET_ADUANA } from '../../../constants/api-constants';
 import { CatalogosResponse } from '../../../models/shared/catalogo.model';
-import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -12,7 +11,7 @@ export class AduanaService {
   private readonly host: string;
 
   constructor(private http: HttpClient) {
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   /**

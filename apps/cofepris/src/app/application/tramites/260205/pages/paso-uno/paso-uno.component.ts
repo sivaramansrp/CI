@@ -90,9 +90,10 @@ export class PasoUnoComponent implements OnDestroy {
         }
       });
       this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$)).subscribe((seccionState) => {
+      
         this.consultaState = seccionState;
         if (this.consultaState && this.consultaState.procedureId === '260205' &&
-          this.consultaState.update) {
+          this.consultaState.update) { 
           this.guardarDatosFormulario();
         } else {
           this.esDatosRespuesta = true;

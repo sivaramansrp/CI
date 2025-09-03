@@ -1,17 +1,23 @@
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+
 import { Subject, map, takeUntil } from 'rxjs';
+
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   TablaDinamicaComponent,
-  TablaSeleccion,
+  TablaSeleccion
 } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+
 import { CHOFERES_NACIONALES_ALTA } from '../../../enum/choferes.enum';
 import { Chofer40101Query } from '../../../estado/chofer40101.query';
 import { Chofer40101Service } from '../../../estado/chofer40101.service';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { DatosDeChoferesNacionalDialogComponent } from './data.de.choferes.dialog/data.de.choferes.nacional.dialog.component';
 import { DatosDelChoferNacional } from '../../../models/registro-muestras-mercancias.model';
+
+import { DatosDeChoferesNacionalDialogComponent } from './data.de.choferes.dialog/data.de.choferes.nacional.dialog.component';
+
 
 @Component({
   selector: 'app-chofere-nacional',
@@ -185,12 +191,12 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
     if (this.datosDelChoferNacionalSelected.length === 0) {
       return;
     }
-    const seleccionado = this.datosDelChoferNacionalSelected[0];
-    const indice = this.datosDelChoferNacional.findIndex(item => item === seleccionado);
-    this.datosChofere = seleccionado;
+    const SELECCIONADO = this.datosDelChoferNacionalSelected[0];
+    const INDICE = this.datosDelChoferNacional.findIndex(item => item === SELECCIONADO);
+    this.datosChofere = SELECCIONADO;
     setTimeout(() => {
-      if (this.datosDeChoferesDialogComponent && indice !== -1) {
-        this.datosDeChoferesDialogComponent.editarRegistro(seleccionado, indice);
+      if (this.datosDeChoferesDialogComponent && INDICE !== -1) {
+        this.datosDeChoferesDialogComponent.editarRegistro(SELECCIONADO, INDICE);
       }
     });
     this.abrirModal(template);

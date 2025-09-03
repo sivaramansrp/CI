@@ -1,6 +1,7 @@
-import { CATALOGOS_ID, InputFecha } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, InputFecha,Notificacion } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {REGEX_DECIMAL_16_TOTAL,REGEX_RFC, } from '@ng-mf/data-access-user';
 import { Solicitud32502State, Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { AvisoService } from '../../services/aviso.service';
@@ -37,6 +38,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Lista de catálogos de fracción arancelaria.
    */
   fraccionArancelaria!: Catalogo[];
+
+   /**
+     * @public
+     * @property {Notificacion} nuevaNotificacion
+     * @description Representa una nueva notificación que se utilizará en el componente.
+     * @command Este campo debe ser inicializado antes de su uso.
+     */
+   public nuevaNotificacion!: Notificacion;
 
   /**
    * Lista de catálogos de fracción regla.
@@ -183,10 +192,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   * @return {void}
   */
   allowOnlyNumbers(event: KeyboardEvent): void {
-    const charCode = event.key;
-    if (!/^\d$/.test(charCode)) {
+    const CHARCODE= event.key;
+    if (!/^\d$/.test(CHARCODE)) {
       event.preventDefault();
     }
+    const DATOS = this.esFormularioSoloLectura; 
   }
 
   /**
@@ -204,7 +214,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.FormSolicitud = this.fb.group({
       adaceForm: this.fb.group({
       adace: [
-        { value: this.seccionState?.adace || 'Centro', disabled: true }
+        { value: this.seccionState?.adace || 'Centro', disabled: true}
       ]
       }),
       extranjeroAvisoAgace: this.fb.group({
@@ -214,7 +224,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ],
       rfc: [
         this.seccionState?.rfc,
-        Validators.required
+        [Validators.required,Validators.pattern(REGEX_RFC)]
       ],
       rfcExtranjero: [
         this.seccionState?.rfcExtranjero,
@@ -244,7 +254,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ],
       peso: [
         this.seccionState?.peso,
-        Validators.required
+        [Validators.required,Validators.pattern(REGEX_DECIMAL_16_TOTAL)]
       ],
       fechaInicio: [
         this.seccionState?.fechaInicio,
@@ -302,7 +312,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ],
       rfcAgenteAduanal: [
         this.seccionState?.rfcAgenteAduanal,
-        [Validators.required, Validators.maxLength(12)]
+        [Validators.required, Validators.maxLength(12),Validators.pattern(REGEX_RFC)]
       ],
       numeroPedimento: [
         this.seccionState?.numeroPedimento,
@@ -311,6 +321,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       claveAduana: [
         this.seccionState?.claveAduana,
         Validators.required
+      ],
+      informacionConfidencial:[
+        this.seccionState?.informacionConfidencial,
+        Validators.requiredTrue
       ]
       })
     });
@@ -348,44 +362,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       REGLA_ARANCELARIA$
     ).subscribe();
   }
+ 
 
 
-  /**
-   * Selecciona la fracción arancelaria.
-   */
-  fraccionArancelariaSeleccion(): void {
-    const FRACCION_ARANCELATIA = this.mercanciaST.get('cveFraccionArancelaria')?.value;
-    this.tramite32502Store.setCveFraccionArancelaria(FRACCION_ARANCELATIA);
-    if (this.esFormularioSoloLectura) {
-      this.FormSolicitud.disable();
-    } else {
-      this.FormSolicitud.enable();
-    }
-  }
-
-  /**
-   * Selecciona la fracción regla.
-   */
-  fraccionReglaSeleccion(): void {
-    const REGLAFRACCION = this.mercanciaST.get('reglaFraccion')?.value;
-    this.tramite32502Store.setFraccionRegla("reglaFraccion",REGLAFRACCION);
-  }
-
-  /**
-   * Selecciona la Entidad Federativa.
-   */
-  onEntidadFederativaChange(): void {
-    const ENTIDADFEDERATIVA = this.mercanciaST.get('entidadFederativa')?.value;
-    this.tramite32502Store.setFraccionRegla("entidadFederativa",ENTIDADFEDERATIVA);
-  }
-
-  /**
-   * Selecciona la Num Pedimento.
-   */
-  sanitizarNumeroPedimento(): void {
-    const NUMPEDIMENTO = this.mercanciaST.get('numeroPedimento')?.value;
-    this.tramite32502Store.setFraccionRegla("numeroPedimento",NUMPEDIMENTO);
-  }
+  
 
   /**
    * Establece los valores en el store de tramite5701.
@@ -397,36 +377,90 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   setValoresStore(form: FormGroup): void {
     const VALORES = {
-      razonSocial: form.get('razonSocial')?.value,
-      rfc: form.get('rfc')?.value,
-      rfcExtranjero: form.get('rfcExtranjero')?.value,
-      cveFraccionArancelaria: form.get('cveFraccionArancelaria')?.value,
-      reglaFraccion: form.get('reglaFraccion')?.value,
-      nico: form.get('nico')?.value,
-      valorUSD: form.get('valorUSD')?.value,
-      marca: form.get('marca')?.value,
-      peso: form.get('peso')?.value,
-      fechaInicio: form.get('fechaInicio')?.value,
-      numeroSerie: form.get('numeroSerie')?.value,
-      descripcionMercancia: form.get('descripcionMercancia')?.value,
-      informacionExtra: form.get('informacionExtra')?.value,
-      entidadFederativa: form.get('entidadFederativa')?.value,
-      delegacionMunicipio: form.get('delegacionMunicipio')?.value,
-      colonia: form.get('colonia')?.value,
-      calle: form.get('calle')?.value,
-      numeroExterior: form.get('numeroExterior')?.value,
-      numeroInterior: form.get('numeroInterior')?.value,
-      codigoPostal: form.get('codigoPostal')?.value,
-      patenteAutorizacion: form.get('patenteAutorizacion')?.value,
-      rfcAgenteAduanal: form.get('rfcAgenteAduanal')?.value,
-      numeroPedimento: form.get('numeroPedimento')?.value,
-      claveAduana: form.get('claveAduana')?.value,
-      nombre: form.get('nombre')?.value,
-      primerApellido: form.get('primerApellido')?.value,
-      segundoApellido: form.get('segundoApellido')?.value,
-      adace: form.get('adace')?.value,
+      razonSocial: this.extranjeroAvisoAgace.get('razonSocial')?.value,
+      rfc: this.extranjeroAvisoAgace.get('rfc')?.value,
+      rfcExtranjero: this.extranjeroAvisoAgace.get('rfcExtranjero')?.value,
+      cveFraccionArancelaria: this.mercanciaST.get('cveFraccionArancelaria')?.value,
+      reglaFraccion: this.mercanciaST.get('reglaFraccion')?.value,
+      nico: this.mercanciaST.get('nico')?.value,
+      valorUSD: this.mercanciaST.get('valorUSD')?.value,
+      marca: this.mercanciaST.get('marca')?.value,
+      peso: this.mercanciaST.get('peso')?.value,
+      fechaInicio: this.mercanciaST.get('fechaInicio')?.value,
+      numeroSerie: this.mercanciaST.get('numeroSerie')?.value,
+      descripcionMercancia: this.mercanciaST.get('descripcionMercancia')?.value,
+      informacionExtra: this.direccionST.get('informacionExtra')?.value,
+      entidadFederativa: this.direccionST.get('entidadFederativa')?.value,
+      delegacionMunicipio: this.direccionST.get('delegacionMunicipio')?.value,
+      colonia: this.direccionST.get('colonia')?.value,
+      calle: this.direccionST.get('calle')?.value,
+      numeroExterior: this.direccionST.get('numeroExterior')?.value,
+      numeroInterior: this.direccionST.get('numeroInterior')?.value,
+      codigoPostal: this.direccionST.get('codigoPostal')?.value,
+      patenteAutorizacion: this.pedimentoST.get('patenteAutorizacion')?.value,
+      rfcAgenteAduanal: this.pedimentoST.get('rfcAgenteAduanal')?.value,
+      numeroPedimento: this.pedimentoST.get('numeroPedimento')?.value,
+      claveAduana: this.pedimentoST.get('claveAduana')?.value,
+      adace: this.adaceForm.get('adace')?.value,
+      informacionConfidencial: this.pedimentoST.get('informacionConfidencial')?.value,
     };
     this.tramite32502Store.establecerDatos(VALORES);
+  }
+
+  /**
+   * Verifica el formato del RFC ingresado en el formulario.
+   * Si el RFC no cumple con el patrón esperado, se muestra una notificación de error.
+   * @return {void}
+   * Este método utiliza la propiedad `nuevaNotificacion` para configurar y mostrar la notificación.
+   * La notificación indica que existen datos incorrectos que no cumplen con el formato esperado.
+   * La notificación tiene una categoría de 'danger' y se muestra durante 3000 milisegundos.
+   * El botón de aceptar en la notificación está etiquetado como 'Aceptar'.
+   * 
+   * @param {string} rfc - El RFC ingresado por el usuario.
+   */
+  verificarRFC(): void {
+    
+    if ((this.extranjeroAvisoAgace.get('rfc')?.errors?.['pattern'])) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Existen datos incorrectos que no cumplen con el formato esperado.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+   
+  }
+  /**
+   * Verifica el formato del RFC del agente aduanal ingresado en el formulario.
+   * Si el RFC no cumple con el patrón esperado, se muestra una notificación de error.
+   * @return {void}
+   * Este método utiliza la propiedad `nuevaNotificacion` para configurar y mostrar la notificación.
+   * La notificación indica que existen datos incorrectos que no cumplen con el formato esperado.
+   * La notificación tiene una categoría de 'danger' y se muestra durante 3000 milisegundos.
+   * El botón de aceptar en la notificación está etiquetado como 'Aceptar'.
+   * 
+   * @param {string} rfc - El RFC del agente aduanal ingresado por el usuario.
+   */
+  verificarRFCDos(): void {
+   
+    if ( this.pedimentoST.get('rfcAgenteAduanal')?.errors?.['pattern']) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Existen datos incorrectos que no cumplen con el formato esperado.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
   }
 
 
@@ -454,7 +488,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.mercanciaST.patchValue({
       fechaInicio: nuevo_valor
     });
-    this.tramite32502Store.setFechaInicio(nuevo_valor);
+    this.setValoresStore(this.mercanciaST);
   }
 
   /**
@@ -480,6 +514,57 @@ inicializarEstadoFormulario(): void {
     this.crearFormSolicitud();
   }
 }
+/**
+ * Método para permitir solo números y un punto decimal en un campo de entrada.
+ * @param event Evento de teclado que se dispara al presionar una tecla.
+ * @return {void}
+ * Este método previene la entrada de cualquier carácter que no sea un dígito del 0 al 9 o un punto decimal.
+ * Se utiliza una expresión regular para verificar si el carácter ingresado es un número o un punto.
+ * Si el carácter no es un número o un punto, se previene la acción predeterminada del evento.
+ * @param {KeyboardEvent} event - Evento de teclado que se dispara al presionar una tecla.
+ * @return {void}
+ * */
+permitirSoloNumerosDecimal(event: KeyboardEvent): void {
+  const INPUT_CHAR = event.key;
+  const VAL = (event.target as HTMLInputElement).value;
+  const DATOS = this.esFormularioSoloLectura; 
+
+  if (event.ctrlKey || event.metaKey || INPUT_CHAR === 'Backspace') 
+    {return}
+
+  const ISDIGIT = /^[0-9]$/.test(INPUT_CHAR);
+  const ISDOT = INPUT_CHAR=== '.';
+
+  // Only allow one dot
+  if (ISDOT && VAL.includes('.')) {
+    event.preventDefault();
+    return;
+  }
+
+  // Block anything that's not a digit or a dot
+  if (!ISDIGIT && !ISDOT) {
+    event.preventDefault();
+  }
+}
+
+/**
+ * Método para permitir solo números en un campo de entrada.
+ * @param event Evento de teclado que se dispara al presionar una tecla.
+ * @return {void}
+ * Este método previene la entrada de cualquier carácter que no sea un dígito del 0 al 9.
+ * Se utiliza una expresión regular para verificar si el carácter ingresado es un número.
+ * Si el carácter no es un número, se previene la acción predeterminada del evento.
+ * @param {KeyboardEvent} event - Evento de teclado que se dispara al presionar una tecla.
+ * @return {void}
+ * */
+permitirSoloNumeros(event: KeyboardEvent): void {
+  const VAL = event.key;
+  if (!/^\d$/.test(VAL)) {
+    event.preventDefault();
+  }
+  const DATOS = this.esFormularioSoloLectura;
+}
+
 
   /**
 * Carga los datos del formulario y actualiza su estado.

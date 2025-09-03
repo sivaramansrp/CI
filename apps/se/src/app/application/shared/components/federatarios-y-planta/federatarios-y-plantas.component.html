@@ -6,7 +6,7 @@
         [formularioDatos]="representanteLegalFormData" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
       <div class="row mt-5">
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
           <button class="btn btn-primary" (click)="aggregarDatos()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
@@ -80,7 +80,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="pull-right ms-2">
-                <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Buscar plantas IMMEX</button>
+                <button class="btn btn-primary" (click)="buscarPlantasImmex()" [disabled]="esFormularioSoloLectura">Buscar plantas IMMEX</button>
               </div>
             </div>
           </div>
@@ -112,7 +112,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="pull-right ms-2">
-                    <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar plantas</button>
+                    <button class="btn btn-primary" (click)="agregarPlantas()" [disabled]="esFormularioSoloLectura">Agregar plantas</button>
                   </div>
                 </div>
               </div>
@@ -128,50 +128,45 @@
               <div class="col">
                 <app-tabla-dinamica [configuracionTabla]="plantasImmexConfig.TablaEncabezado"
                   [tipoSeleccionTabla]="plantasImmexConfig.TablaSeleccion"
-                  [datos]="plantasImmexDatos"   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
+                  [datos]="plantasImmexDatos"   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false" (filaSeleccionada)="setPlantaImmexSeleccionada($event)"></app-tabla-dinamica>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="d-flex flex-row flex-wrap">
               <div class="p-2">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#complementarPlanta"
-                  (click)="abrirDialogoComplementarPlanta()" [disabled]="esFormularioSoloLectura">
+                <button class="btn btn-danger" (click)="abrirDialogoComplementarPlanta()" [disabled]="esFormularioSoloLectura">
                   Complementar planta
                 </button>
               </div>
               <div class="p-2">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#montos"
-                  (click)="abrirDialogoMontos()" [disabled]="esFormularioSoloLectura">
+                <button class="btn btn-danger" (click)="abrirDialogoMontos()" [disabled]="esFormularioSoloLectura">
                   Montos de inversión
                 </button>
               </div>
               <div class="p-2">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#empleadosAcciones"
-                (click)="abrirDialogoempleadosAcciones()"[disabled]="esFormularioSoloLectura">
+                <button class="btn btn-danger" (click)="abrirDialogoempleadosAcciones()" [disabled]="esFormularioSoloLectura">
                   Empleados
                 </button>
               </div>
               <div class="p-2">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#capacidadInstalada"
-                (click)="abrirDialogocapacidadInstalada()" [disabled]="esFormularioSoloLectura">
+                <button class="btn btn-danger" (click)="abrirDialogocapacidadInstalada()" [disabled]="esFormularioSoloLectura">
                   Capacidad Instalada
                 </button>
               </div>
               <div class="p-2">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cargaPorPrchivo"
-                (click)="abrirDialogocargaPorPrchivo()" [disabled]="esFormularioSoloLectura">
+                <button class="btn btn-primary" (click)="abrirDialogocargaPorPrchivo()" [disabled]="esFormularioSoloLectura">
                   Carga por archivo
                 </button>
               </div>
               <div class="p-2">
-                <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Eliminar plantas</button>
+                <button class="btn btn-danger" [disabled]="esFormularioSoloLectura">Eliminar plantas</button>
               </div>
             </div>
           </div>
           <div class="row mt-5">
             <div class="col-md-4">
-              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Representación federal*'" [required]="true" [isDisabled]="esFormularioSoloLectura"
+              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Representación federal'" [required]="true" [isDisabled]="esFormularioSoloLectura"
                 name="estado" formControlName="representacionFederal"
               (change)="setValoresStore(plantasForm, 'representacionFederal', 'setRepresentacionFederal')"></app-catalogo-select>
             </div>
@@ -189,49 +184,47 @@
     </div>
 
 
-<div class="modal fade" id="complementarPlanta" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"
-  aria-hidden="true">
-  <div class="modal-dialog">
+<ng-container *ngIf="mostrarComplementarPlantaPopup">
+  <div class="modal-overlay">
     <div class="modal-content">
-      <div class="modal-body">
-        <app-complementar-planta></app-complementar-planta>
-      </div>
+      <app-complementar-planta (cerrarPopup)="cerrarComplementarPlanta()"></app-complementar-planta>
     </div>
   </div>
-</div>
-<div class="modal fade" id="montos" tabindex="-1" aria-labelledby="montosLabel" aria-hidden="true">
-  <div class="modal-dialog">
+</ng-container>
+
+<ng-container *ngIf="mostrarMontosDeInversionPopup">
+  <div class="modal-overlay">
     <div class="modal-content">
-      <div class="modal-body">
-        <app-montos-de-inversion></app-montos-de-inversion>
-      </div>
+      <app-montos-de-inversion (cerrarPopup)="cerrarMontosDeInversion()"></app-montos-de-inversion>
     </div>
   </div>
-</div>
-<div class="modal fade" id="empleadosAcciones" tabindex="-1" aria-labelledby="empleadosAccionesLable" aria-hidden="true">
-  <div class="modal-dialog">
+</ng-container>
+
+<ng-container *ngIf="mostrarEmpleadosPopup">
+  <div class="modal-overlay">
     <div class="modal-content">
-      <div class="modal-body">
-        <app-empleados></app-empleados>
-      </div>
+      <app-empleados (cerrarPopup)="cerrarEmpleados()"></app-empleados>
     </div>
   </div>
-</div>
-<div class="modal fade" id="capacidadInstalada" tabindex="-1" aria-labelledby="capacidadInstaladaLable" aria-hidden="true">
-  <div class="modal-dialog">
+</ng-container>
+
+<ng-container *ngIf="mostrarCapacidadInstaladaPopup">
+  <div class="modal-overlay">
     <div class="modal-content">
-      <div class="modal-body">
-        <app-capacidad-instalada></app-capacidad-instalada>
-      </div>
+      <app-capacidad-instalada (cerrarPopup)="cerrarCapacidadInstalada()"></app-capacidad-instalada>
     </div>
   </div>
-</div>
-<div class="modal fade" id="cargaPorPrchivo" tabindex="-1" aria-labelledby="cargaPorPrchivoLable" aria-hidden="true">
-  <div class="modal-dialog">
+</ng-container>
+
+<ng-container *ngIf="mostrarProveedorPorArchivoPopup">
+  <div class="modal-overlay">
     <div class="modal-content">
-      <div class="modal-body">
-        <anexar-documentos></anexar-documentos>
-      </div>
+      <app-carga-por-archivo (cerrarPopup)="cerrarProveedorPorArchivo()"></app-carga-por-archivo>
     </div>
   </div>
-</div>
+</ng-container>
+@if (federatarioNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="federatarioNotificacion" (confirmacionModal)="federatarioNotificacion = undefined"></lib-notificaciones>
+  </section>
+}

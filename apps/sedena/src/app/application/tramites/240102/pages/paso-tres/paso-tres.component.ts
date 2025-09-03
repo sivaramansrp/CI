@@ -3,10 +3,20 @@ import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * @title Paso Tres
- * @description Componente correspondiente al tercer paso del trámite. Contiene la sección de firma electrónica.
- * @summary Encapsula el componente de firma electrónica como parte final del flujo de solicitud.
+ * @component
+ * @description
+ * Componente correspondiente al tercer paso del flujo del trámite.
+ * Este paso está enfocado en capturar la firma electrónica del usuario para completar la solicitud.
+ * 
+ * @summary
+ * Este componente encapsula el componente de firma electrónica y se considera la etapa final del proceso de solicitud.
+ * 
+ * @usageNotes
+ * Este componente se usa normalmente dentro de un flujo de pasos o wizard de trámites.
+ *
+ * @example
+ * <app-paso-tres></app-paso-tres>
  */
-
 @Component({
   selector: 'app-paso-tres',
   standalone: true,

@@ -16,6 +16,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FilaProductos } from '../../models/prosec.module';
 import { ProsecService } from '../../services/prosec.service';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
@@ -153,6 +154,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
     private AutorizacionProsecStore: AutorizacionProsecStore,
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     public seccionStore: SeccionLibStore,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.productorIndirecto = this.fb.group({
       contribuyentes: [''],
@@ -172,6 +174,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
         map((state) => {
           this.productorState = state as ProsecState;
           this.productorDato = state.productorDatos as FilaProductos[];
+          this.initActionFormBuild()
         })
       )
       .subscribe();
@@ -190,10 +193,15 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    if(this.formularioDeshabilitado) {
-      this.esFormularioSoloLectura = true;
-      this.inicializarEstadoFormulario();
-    }
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
 
     this.productorDato = Array.isArray(this.productorState.productorDatos) 
         ? this.productorState.productorDatos 
@@ -229,7 +237,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
   initActionFormBuild(): void {
     this.productorIndirecto = this.fb.group({
       contribuyentes: [
-        this.productorState.contribuyentes,
+        { value: this.productorState.contribuyentes, disabled: this.esFormularioSoloLectura },
         Validators.required
       ]
     })
@@ -331,7 +339,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
         categoria: '',
         modo: 'action',
         titulo: '',
-        mensaje: 'Selecciona la planta que desea eliminar.',
+        mensaje: 'Seleccione el productor indirecto que desea eliminar.',
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',

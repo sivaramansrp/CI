@@ -1,7 +1,6 @@
+import { API_GET_IDC_CONTRIBUYENTE, COMUN_URL } from '../../../servers/api-router';
 import { Observable, catchError, throwError } from 'rxjs';
-import { API_GET_IDC_CONTRIBUYENTE } from '../../../constants/api-constants';
 import { DatosGeneralesModel } from '../../../models/datos-generales.model';
-import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '../../../models/shared/catalogos.model';
@@ -14,7 +13,7 @@ export class SolicitanteService {
 
   constructor(private http: HttpClient) {
     // Lógica de inicialización si es necesario
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';

@@ -60,13 +60,13 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    *
    * @type {SectoresTabla[]}
    */
-  public seleccionarSectorLista: SectoresTabla[] = [] as SectoresTabla[];
+  public seleccionarSectorLista: SectoresTabla | null = null;
   /**
    * Lista de fracciones seleccionadas en la tabla.
    *
    * @type {FraccionTabla[]}
    */
-  public seleccionarFraccionLista: FraccionTabla[] = [] as FraccionTabla[];
+  public seleccionarFraccionLista: FraccionTabla | null = null;
   /**
    * Indica si un elemento está seleccionado.
    *
@@ -303,13 +303,13 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
 
   
   /** Guarda la selección de número de empleados hecha por el usuario.*/
-  seleccionarSector(evento: SectoresTabla[]): void {
+  seleccionarSector(evento: SectoresTabla): void {
     this.seleccionarSectorLista = evento;
   }
 
    
   /** Guarda la selección de número de empleados hecha por el usuario.*/
-  seleccionarFraccion(evento: FraccionTabla[]): void {
+  seleccionarFraccion(evento: FraccionTabla): void {
     this.seleccionarFraccionLista = evento;
   }
 
@@ -320,10 +320,10 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public eliminarSector(): void {
-    if(this.seleccionarSectorLista.length > 0) {
-      const sectoresAEliminar = this.seleccionarSectorLista.map(sector => sector.claveDel);
+    if(this.seleccionarSectorLista) {
+      const sectoresAEliminar = [this.seleccionarSectorLista.claveDel];
       this.sectores = this.sectores.filter(sector => !sectoresAEliminar.includes(sector.claveDel));
-      this.seleccionarSectorLista = [];
+      this.seleccionarSectorLista = null;
     }
   }
 
@@ -334,10 +334,10 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public eliminarFraccion(): void {
-    if(this.seleccionarFraccionLista.length > 0) {
-      const fraccionesAEliminar = this.seleccionarFraccionLista.map(fraccion => fraccion.fraccion);
+    if(this.seleccionarFraccionLista) {
+      const fraccionesAEliminar = [this.seleccionarFraccionLista.fraccion];
       this.fraccion = this.fraccion.filter(fraccion => !fraccionesAEliminar.includes(fraccion.fraccion));
-      this.seleccionarFraccionLista = [];
+      this.seleccionarFraccionLista = null;
     }
   }
 
