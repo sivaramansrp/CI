@@ -75,7 +75,7 @@ export const API_GET_EVALUAR_INICIAR = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMIT
  * API para obtener las opciones de evaluación del tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/opciones-evaluacion
  */
-export const API_POST_OPCIONES_EVALUACION = `sat-t130118/evaluar/opciones-evaluacion-capturista`;
+export const API_POST_OPCIONES_EVALUACION = `sat-t${TRAMITE}/${NUMFOLIOTRAMITE}/evaluar/opciones-evaluacion-capturista`;
 
 /**
  * API para prepar evaluacion tramite 130118.
