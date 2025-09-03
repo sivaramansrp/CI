@@ -43,7 +43,6 @@ export class RegistroFiguraComponent implements OnChanges, OnInit, OnDestroy {
   private listaFiguras: AgenteAduanal[] = [];
   /** Figura seleccionada */
   private figuraSeleccionada: AgenteAduanal | null = null;
-
   constructor(
     private tramite303State: Tramite303StoreService,
     private tramite303Query: Tramite303Query,
@@ -209,7 +208,6 @@ export class RegistroFiguraComponent implements OnChanges, OnInit, OnDestroy {
    * Limpia los formularios de búsqueda y figura, y vuelve a crear los formularios.
    */
   limpiarFigura(): void {
-    this.FormFigura.reset();
     this.FormFigura.reset();
     this.crearFormFigura();
   }

@@ -5,7 +5,6 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite303Store, Tramite303StoreService } from '../../../../core/estados/tramites/tramite303.store';
 import { AgenteAduanal } from '../../../../core/models/303/agente-aduanal.model';
 import { CONFIGURACION_ENCABEZADO_FIGURAS } from '../../../../core/enums/303/figuras.enum';
-import { Router } from '@angular/router';
 import { Tramite303Query } from '../../../../core/queries/tramite303.query';
 import data from '@libs/shared/theme/assets/json/303/cat-tipo-figura.json';
 
