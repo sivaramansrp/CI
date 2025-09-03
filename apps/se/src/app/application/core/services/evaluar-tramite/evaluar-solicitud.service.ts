@@ -32,9 +32,9 @@ export class EvaluarSolicitudService {
    * @param PAYLOAD Datos de las opciones de evaluación.
    * @returns Observable con la respuesta del servidor.
    */
-  postOpcionesEvaluacion(PAYLOAD: OpcionesEvaluacionRequest):
+  postOpcionesEvaluacion(tramite: number,folioTramite: string, PAYLOAD: OpcionesEvaluacionRequest):
     Observable<BaseResponse<string[]>> {
-    const ENDPOINT = `${this.host}` + API_POST_OPCIONES_EVALUACION;
+    const ENDPOINT = `${this.host}${API_POST_OPCIONES_EVALUACION.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, folioTramite)}`;
     return this.http.post<BaseResponse<string[]>>(ENDPOINT, PAYLOAD);
   }
 
