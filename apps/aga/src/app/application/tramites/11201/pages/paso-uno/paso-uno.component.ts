@@ -1,5 +1,6 @@
 import { AfterViewInit, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Notificacion, NotificacionesComponent, SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ContenedorComponent } from '../../components/contenedor/contenedor.component';
