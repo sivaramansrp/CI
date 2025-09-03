@@ -42,7 +42,7 @@
         <button class="btn btn-primary me-2" (click)="agregarAnexoUno()" [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
-        <button class="btn btn-primary" (click)="abrirProveedorPorArchivo()" [disabled]="esFormularioSoloLectura">Carga por archivo</button>
+        <button class="btn btn-primary" (click)="abrirCargaDeFracciones()" [disabled]="esFormularioSoloLectura">Carga por archivo</button>
       </div>
     </div>
 
@@ -75,8 +75,7 @@
       </button>
       <button
         class="btn btn-danger me-2"
-        data-bs-toggle="modal"
-        data-bs-target="#proyectoImmexModal"
+        (click)="abrirProyectoImmexModal()"
         [disabled]="esFormularioSoloLectura"
       >
         Proyecto IMMEX
@@ -491,27 +490,27 @@
           <div class="col-md-3">
             <div class="form-group">
               <h5 class="form-label text-start">Fracción arancelaria</h5>
-              <!-- <p class="form-label text-start">
-          {{ proyectoImmexDatos.fraccionArancelaria }}
-        </p> -->
+              <p class="form-label text-start">
+                {{ selectedRowFields['fraccionArancelaria'] }}
+              </p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <h5 class="form-label text-start">Anexo II</h5>
-              <!-- <p class="form-label text-start">{{ proyectoImmexDatos.anexoDos }}</p> -->
+              <p class="form-label text-start">{{ selectedRowFields['anexoII'] }}</p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <h5 class="form-label text-start">Tipo</h5>
-              <!-- <p class="form-label text-start">{{ proyectoImmexDatos.tipo }}</p> -->
+              <p class="form-label text-start">{{ selectedRowFields['tipo'] }}</p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <h5 class="form-label text-start">UMT</h5>
-              <!-- <p class="form-label text-start">{{ proyectoImmexDatos.umt }}</p> -->
+              <p class="form-label text-start">{{ selectedRowFields['umt'] }}</p>
             </div>
           </div>
         </div>
@@ -655,6 +654,14 @@
     </div>
   </div>
 </div>
+
+<ng-container *ngIf="mostrarCargaDeFraccionesPopup">
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <app-carga-de-fracciones (cerrarPopup)="cerrarCargaDeFracciones()"></app-carga-de-fracciones>
+    </div>
+  </div>
+</ng-container>
 
 <ng-container *ngIf="mostrarProveedorPorArchivoPopup">
   <div class="modal-overlay">

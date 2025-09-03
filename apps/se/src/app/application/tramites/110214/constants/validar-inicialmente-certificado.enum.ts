@@ -275,3 +275,14 @@ export const ACUSE_DATOS = [
     descargar: ''
   }
 ];
+
+/**
+ * Opciones para el componente de radio buttons.
+ * 
+ * Define las opciones disponibles para un conjunto de botones de radio,
+ * incluyendo la etiqueta que se muestra y el valor asociado a cada opción.
+ */
+export const RADIO_OPTIONS = [
+  { label: 'Periodo:', value: 'periodo' },
+  { label: 'Una sola importación', value: 'una_sola_importacion' },
+];

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS, SECCIONES_TRAMITE_5701, WizardComponent } from '@ng-mf/data-access-user';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { ALERTA_220501 } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
+import { ERROR_ALERTA } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SeccionQuery } from'../../../../estados/queries/seccion.query';
 /**
@@ -71,7 +71,7 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Asigna el mensaje de error a mostrar al atributo `ALERTA`.
    */
-  ALERTA = ALERTA_220501;
+  ALERTA = ERROR_ALERTA;
 
   /**
  * Datos de los pasos del asistente.

@@ -5,14 +5,14 @@ import { Subject, map, merge, takeUntil } from 'rxjs';
 
 import { CATALOGOS_ID, Catalogo, Catalogos, CategoriaMensaje, ConsultaioQuery, ConsultaioState, EntidadesFederativasService, FECHA_SALIDA, FraccionArancelariaService, InputFecha, Notificacion, PaisesService, REGEX_ONCE_ENTEROS_DOS_DECIMALES, REGEX_ONCE_ENTEROS_TRES_DECIMALES, RegimenService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
-import { PeximService } from '../../service/pexim.service';
+import { PeximService } from '../../services/pexim.service';
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
-import { GuardarService } from '../../../../core/services/130118/guardar.service';
+import { GuardarService } from '../../services/guardar.service';
 
-import { CatMolinoService } from '../../../../core/services/130118/catalogos/cat-molino.service';
-import { ConsultaSolicitudResponse } from '../../../../core/models/130118/response/consultar-solicitud-response.model';
-import { ConsultaSolicitudService } from '../../../../core/services/130118/consulta-solicitud.service';
+import { CatMolinoService } from '../../services/cat-molino.service';
+import { ConsultaSolicitudResponse } from '../../model/response/consultar-solicitud-response.model';
+import { ConsultaSolicitudService } from '../../services/consulta-solicitud.service';
 import moment from 'moment';
 
 /**

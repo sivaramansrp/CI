@@ -1,7 +1,7 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { APPINJECT } from './app.inject';
 import { ApplicationConfig } from '@angular/core';
-import { BsModalService } from 'ngx-bootstrap/modal'; // Agrega esto
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { ENVIRONMENT } from './environments/environment';
 import { appRoutes } from './app.routes';
 import { httpInterceptorFn } from '@ng-mf/data-access-user';

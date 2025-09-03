@@ -1,11 +1,8 @@
+import { API_GET_FRACCION_ARANCELARIA, API_GET_FRACCION_ARANCELARIA_CVE, API_GET_NICO, COMUN_URL, CVEFRACCION } from '../../../servers/api-router';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { CatalogosResponse } from '../../../models/shared/catalogo.model';
-import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
-import { Observable, catchError, map, throwError } from 'rxjs';
-
-import { API_GET_FRACCION_ARANCELARIA, API_GET_FRACCION_ARANCELARIA_CVE, API_GET_NICO, CVEFRACCION } from '../../../constants/api-constants';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +17,7 @@ export class FraccionArancelariaService {
   private readonly host: string;
 
   constructor(private http: HttpClient) {
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   /**

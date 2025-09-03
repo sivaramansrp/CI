@@ -47,25 +47,12 @@
       </ng-container>
     </div>
     <div class="row mt-5">
-      <div class="col-md-6">
-        <div>
-          <label for="radioPeriodo">Periodo:</label>
-        </div>
-        <div class="form-check">
-          <input type="radio" (change)="setValoresStore(formularioCertificado, 'blnPeriodo', 'setPeriodo')"
-            formControlName="blnPeriodo" id="periodo" value="0" class="form-check-input custom-radio">
-          <label class="form-check-label custom-radio-label" for="periodo"></label>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div>
-          <label for="radioUnaSolaImportacion">Una sola importación:</label>
-        </div>
-        <div class="form-check">
-          <input type="radio" (change)="setValoresStore(formularioCertificado, 'blnPeriodo', 'setPeriodo')"
-            formControlName="blnPeriodo" id="importacion" value="1" class="form-check-input custom-radio">
-          <label class="form-check-label custom-radio-label" for="importacion"></label>
-        </div>
+      <div class="mt-3 mb-3">
+        <app-input-radio 
+              [radioOptions]="radioOptions" 
+                [layout]="'horizontal'"
+            >
+            </app-input-radio>
       </div>
     </div>
 

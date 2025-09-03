@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { API_GET_DESCARGAR_ACUSE, DOCUMENTOMINIO, ENVIRONMENT, TRAMITE } from '../../..';
+import { API_GET_DESCARGAR_ACUSE, COMUN_URL, DOCUMENTOMINIO, TRAMITE } from '../../servers/api-router';
 import { BaseResponse } from '../../models/5701/base-response.model';
 import { DocumentoResponse } from '../../models/shared/documentos-request.model';
 import { Observable } from 'rxjs';
@@ -22,7 +22,7 @@ export class AcuseDetalleService {
    * @param http HttpClient para realizar peticiones HTTP
    */
   constructor(private http: HttpClient) {
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   /**

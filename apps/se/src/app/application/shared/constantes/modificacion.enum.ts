@@ -280,4 +280,4 @@ export const CONFIGURACION_MERCANCIA_TABLA = [
  * Se utiliza para determinar si se debe mostrar o procesar el campo de fecha en los formularios relacionados.
  * @type {number[]}
  */
-export const FECHA_ID = [ 110204 ];
+export const FECHA_ID = [ 110204,110223 ];

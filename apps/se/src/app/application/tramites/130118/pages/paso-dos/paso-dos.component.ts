@@ -1,6 +1,7 @@
 import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
+import { PeximService } from '../../services/pexim.service';
 
 /**
  * Este componente se muestra en PasaDos
