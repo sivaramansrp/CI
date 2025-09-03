@@ -30,8 +30,8 @@
             <label for="razonSocial" class="form-label">Denominación o razón social*:</label>
             <input type="text" class="form-control" formControlName="razonSocial" id="razonSocial" size="68"
                 (change)="setValoresStore(datosDelEstablecimientoForm,'razonSocial', 'setRazonSocial')">
-            <div *ngIf="datosDelEstablecimientoForm.get('razonSocial')?.touched && datosDelEstablecimientoForm.get('razonSocial')?.invalid">
-            <small *ngIf="datosDelEstablecimientoForm.get('razonSocial')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            <div *ngIf="datosDelEstablecimientoForm.get('razonSocial')?.touched">
+            <small *ngIf="datosDelEstablecimientoForm.get('razonSocial')?.errors?.['required'] || razonInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
         </div>
     </div>
@@ -64,13 +64,13 @@
                 maxlength="12"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'codigoPostal', 'setCodigoPostal')">
                 <div *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.touched && domicilloDelEstablecimientoForm.get('codigoPostal')?.invalid">
-            <small *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            <small *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.errors?.['required'] || codigoPostalInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
         </div>
         <div class="col-md-4">
             <app-catalogo-select [catalogo]="estado" formControlName="cveEstado" [label]="'Estado'" [required]="true"
                 name="cveEstado" (change)="estadoSeleccion()" [isDisabled]="habilitarEstado || esFormularioSoloLectura"></app-catalogo-select>
-                <div *ngIf="domicilloDelEstablecimientoForm.get('cveEstado')?.touched && domicilloDelEstablecimientoForm.get('cveEstado')?.invalid">
+                <div *ngIf="domicilloDelEstablecimientoForm.get('cveEstado')?.touched">
             <small *ngIf="domicilloDelEstablecimientoForm.get('cveEstado')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
             <input type="hidden" name="clave" id="idClaveEntidadFederativa">
@@ -80,8 +80,8 @@
             <input type="text" name="descripcionMunicipio" id="descripcionMunicipio" class="form-control"
                 formControlName="descripcionMunicipio" maxlength="120"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'descripcionMunicipio', 'setDescripcionMunicipio')">
-                <div *ngIf="domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.touched && domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.invalid">
-            <small *ngIf="domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+                <div *ngIf="domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.touched">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.errors?.['required'] || descripcionMunicipioInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
         </div>
     </div>
@@ -91,8 +91,8 @@
             <input type="text" name="informacionExtra" id="informacionExtra" class="form-control"
                 formControlName="informacionExtra" maxlength="120"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'informacionExtra', 'setInformacionExtra')">
-                <div *ngIf="domicilloDelEstablecimientoForm.get('informacionExtra')?.touched && domicilloDelEstablecimientoForm.get('informacionExtra')?.invalid">
-            <small *ngIf="domicilloDelEstablecimientoForm.get('informacionExtra')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+                <div *ngIf="domicilloDelEstablecimientoForm.get('informacionExtra')?.touched">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('informacionExtra')?.errors?.['required'] || informacionExtraInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
         </div>
         <div class="col-md-4">
@@ -100,8 +100,8 @@
             <input type="text" name="descripcionColonia" id="descripcionColonia" class="form-control"
                 formControlName="descripcionColonia" maxlength="120"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'descripcionColonia', 'setDescripcionColonia')">
-                <div *ngIf="domicilloDelEstablecimientoForm.get('descripcionColonia')?.touched && domicilloDelEstablecimientoForm.get('descripcionColonia')?.invalid">
-            <small *ngIf="domicilloDelEstablecimientoForm.get('descripcionColonia')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+                <div *ngIf="domicilloDelEstablecimientoForm.get('descripcionColonia')?.touched">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('descripcionColonia')?.errors?.['required'] || descripcionColoniaInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
         </div>
     </div>
@@ -113,8 +113,8 @@
                 <i class="bi bi-question-circle-fill"></i></span></label>
             <input type="text" name="calle" id="calle" class="form-control" formControlName="calle" maxlength="90"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'calle', 'setCalle')">
-                <div *ngIf="domicilloDelEstablecimientoForm.get('calle')?.touched && domicilloDelEstablecimientoForm.get('calle')?.invalid">
-            <small *ngIf="domicilloDelEstablecimientoForm.get('calle')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+                <div *ngIf="domicilloDelEstablecimientoForm.get('calle')?.touched">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('calle')?.errors?.['required'] || calleInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
         </div>
     </div>
@@ -150,6 +150,9 @@
     (listaDeFilaSeleccionada)="seleccionarDomicilios($event)"
     >
 </app-tabla-dinamica>
+<div *ngIf="tableErrorMeassageDispalySCIAN && scianBodyData.length === 0">
+          <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+        </div>
 
     <div class="row">
         <div class="col-md-8"></div>
@@ -241,6 +244,9 @@
      [configuracionTabla]="configuracionTabla"
      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
      ></app-tabla-dinamica>
+        <div *ngIf="tableErrorMeassageDispalyProducto && productoBodyData.length === 0">
+            <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
 
     <div class="row">
         <div class="col-md-12 text-end">
@@ -272,6 +278,9 @@
                     <label>* {{manifiesto.declaracion.descripcion}}</label>
                 </div>
             </div>
+            <div *ngIf="CheckboxError">
+          <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+        </div>
         </div>
     </div>
     }
@@ -285,6 +294,9 @@
                 [disabled]="esFormularioSoloLectura"
                 (change)="setValoresStore(manifiestosForm,'informacionConfidencial', 'setInformacionConfidencial')"
                 ></app-input-radio>
+                <div *ngIf="manifiestosForm.get('informacionConfidencial')?.touched && manifiestosForm.get('informacionConfidencial')?.invalid">
+                <small *ngIf="manifiestosForm.get('informacionConfidencial')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+                </div>
         </div>
     </div>
 </ng-container>
