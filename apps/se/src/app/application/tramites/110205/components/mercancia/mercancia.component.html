@@ -108,7 +108,8 @@
                 mercanciaForm,
                 'umc',
                 'setUmc'
-                )"></app-catalogo-select>
+                )"
+                [markTouched]="mercanciaForm.get('umc')?.touched ?? false"></app-catalogo-select>
               </div>
           </div>
           
@@ -183,7 +184,8 @@
                 mercanciaForm,
                 'tipoFactura',
                 'setTipoFactura'
-                )"></app-catalogo-select>
+                )"
+                [markTouched]="mercanciaForm.get('tipoFactura')?.touched ?? false"></app-catalogo-select>
             </div>
           </div>
         </form>
