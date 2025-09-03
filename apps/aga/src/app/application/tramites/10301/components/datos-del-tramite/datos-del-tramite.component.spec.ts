@@ -52,7 +52,6 @@ describe('DatosDelTramiteComponent', () => {
   ];
 
   beforeEach(async () => {
-    // Create comprehensive mocks
     mockConsultaioQuery = {
       selectConsultaioState$: of({
         procedureId: 'test',
@@ -174,13 +173,11 @@ describe('DatosDelTramiteComponent', () => {
     fixture = TestBed.createComponent(DatosDelTramiteComponent);
     component = fixture.componentInstance;
 
-    // Mock ViewChild elements
     component.modalElement = { nativeElement: document.createElement('div') } as ElementRef;
     component.modalConfirmacion = { nativeElement: document.createElement('div') } as ElementRef;
     component.closeModal = { nativeElement: { click: jest.fn() } } as any;
     component.closeModalConfirmacion = { nativeElement: { click: jest.fn() } } as any;
 
-    // Mock window.bootstrap for modal functionality
     Object.defineProperty(window, 'bootstrap', {
       value: {
         Modal: jest.fn().mockImplementation(() => ({
@@ -265,7 +262,6 @@ describe('DatosDelTramiteComponent', () => {
         consultaioSolicitante: null
       };
       
-      // Create a fresh component with the specific mock
       const tempMockConsultaioQuery = {
         selectConsultaioState$: of(mockState)
       } as any;
@@ -541,7 +537,6 @@ describe('DatosDelTramiteComponent', () => {
     it('should open confirmation modal', () => {
       const mockModalInstance = { show: jest.fn() };
       
-      // Override the Modal constructor for this test
       (window as any).bootstrap.Modal = jest.fn().mockReturnValue(mockModalInstance);
 
       component.abrirModalConfirmacion();
@@ -773,7 +768,6 @@ describe('DatosDelTramiteComponent', () => {
       it('should validate complete form when datosMercancia is valid but overall form is not', () => {
         const datosMercanciaForm = component.agregarMercanciasForm.get('datosMercancia') as FormGroup;
         
-        // Make datosMercancia valid but add invalid field to main form
         datosMercanciaForm.patchValue({
           tipoMercancia: 'Test Tipo',
           usoEspecifico: 'Test Uso',
@@ -784,7 +778,6 @@ describe('DatosDelTramiteComponent', () => {
           serie: '123456'
         });
 
-        // Mock the overall form as invalid
         jest.spyOn(component.agregarMercanciasForm, 'valid', 'get').mockReturnValue(false);
 
         component.agregarMercancia();
@@ -884,7 +877,6 @@ describe('DatosDelTramiteComponent', () => {
     });
 
     it('should execute button functions without errors', () => {
-      // Mock crossList
       component.crossList = {
         forEach: jest.fn((callback) => {
           const mockCrosslistComponent = {
@@ -897,11 +889,10 @@ describe('DatosDelTramiteComponent', () => {
 
       const buttons = component.obtenerCrossListBtn();
 
-      // Test each button function
-      expect(() => buttons[0].funcion()).not.toThrow(); // Agregar todos
-      expect(() => buttons[1].funcion()).not.toThrow(); // Agregar selección
-      expect(() => buttons[2].funcion()).not.toThrow(); // Restar selección
-      expect(() => buttons[3].funcion()).not.toThrow(); // Restar todos
+      expect(() => buttons[0].funcion()).not.toThrow();
+      expect(() => buttons[1].funcion()).not.toThrow();
+      expect(() => buttons[2].funcion()).not.toThrow();
+      expect(() => buttons[3].funcion()).not.toThrow();
     });
   });
 
@@ -965,7 +956,6 @@ describe('DatosDelTramiteComponent', () => {
     });
 
     it('should handle missing form groups in setValoresStore', () => {
-      // Initialize the form first to avoid tramiteForm being undefined
       component.donanteDomicilio();
       const mockForm = new FormGroup({});
 
@@ -1057,14 +1047,12 @@ describe('DatosDelTramiteComponent', () => {
 
       component.agregarMercancia();
 
-      // Check if an item was added (it might not be due to validation)
       if (component.mercanciaDatos.length > 0) {
         const addedItem = component.mercanciaDatos[0];
         expect(addedItem.fines).toBe('');
         expect(addedItem.tipoMercancia).toBe('');
         expect(addedItem.marca).toBe('');
       } else {
-        // If validation prevents addition, that's also valid behavior
         expect(component.mercanciaDatos.length).toBe(0);
         expect(component.mostrarErroresValidacion).toBe(true);
       }
