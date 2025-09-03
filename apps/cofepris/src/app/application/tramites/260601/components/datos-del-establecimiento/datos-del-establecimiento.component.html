@@ -63,7 +63,7 @@
             <input type="text" name="codigoPostal" id="codigoPostal" class="form-control" formControlName="codigoPostal"
                 maxlength="12"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'codigoPostal', 'setCodigoPostal')">
-                <div *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.touched && domicilloDelEstablecimientoForm.get('codigoPostal')?.invalid">
+                <div *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.touched">
             <small *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.errors?.['required'] || codigoPostalInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
         </div>
