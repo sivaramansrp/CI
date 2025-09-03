@@ -1,4 +1,5 @@
 import {
+  AICM,AIFA,
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
   DESHABILITADA_EN_INIT,
@@ -201,6 +202,17 @@ export class DatosDeLaSolicitudComponent
    * Lista de regímenes disponibles.
    */
   public regimenDatos: Catalogo[] = [];
+  
+  /**
+   * @property {string} AICM
+   * Constante que representa el Aeropuerto Internacional de la Ciudad de México (AICM).
+   */
+  AICM = AICM;
+  /**
+   * @property {string} AIFA
+   * Constante que representa el Aeropuerto Internacional Felipe Ángeles (AIFA).
+   */
+  AIFA = AIFA;
 
   /**
    * @property {Catalogo[]} adunasDeEntradasDatos
@@ -307,6 +319,8 @@ export class DatosDeLaSolicitudComponent
    * o no, dependiendo de la lógica implementada en el componente.
    */
   public mostrarRFCCalle = true;
+
+  
 
   /**
    * @property {Catalogo[]} regimenLaMercanciaDatos
@@ -732,6 +746,10 @@ export class DatosDeLaSolicitudComponent
       ],
       aeropuerto: [
         this.datosSolicitudFormState.aeropuerto,
+        [Validators.required],
+      ],
+      aeropuertoDos: [
+        this.datosSolicitudFormState.aeropuertoDos,
         [Validators.required],
       ],
       publico: [this.datosSolicitudFormState.publico, [Validators.required]],
