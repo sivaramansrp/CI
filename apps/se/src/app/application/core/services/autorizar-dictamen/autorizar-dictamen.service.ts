@@ -14,7 +14,7 @@ import { DocumentoOficialResponse } from '../../models/autorizar-requerimiento/r
 import { FirmaAutorizarDictamenRequest } from '../../models/autorizar-requerimiento/request/firma-autorizar-request.model';
 import { MostrarFirmaRequest } from '../../models/autorizar-requerimiento/request/mostrar-firmar-request.model';
 import { MostrarFirmarResponse } from '../../models/autorizar-requerimiento/response/mostrar-firmar-response.model';
-import { ObservacionRequest } from '../../models/130118/request/observacion-guardar-request.model';
+import { ObservacionRequest } from '../../models/autorizar-requerimiento/request/observacion-guardar-request.model';
 
 @Injectable({
   providedIn: 'root'

@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { ConfirmarNotificacionService } from '../../../core/services/confirmar-notificacion/confirmar-notificacion.service';
 
 import { Component, Input } from '@angular/core';
-import { GENERARMENSAJENOTIFICACION, GENERARMENSAJERESOLUCION } from '../../../core/enum/enum-130118';
+import { GENERARMENSAJENOTIFICACION, GENERARMENSAJERESOLUCION } from '../../../tramites/130118/enum/enum-130118';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';

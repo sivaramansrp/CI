@@ -4,23 +4,23 @@
   <!-- Destinatario (destino final)* -->
   <div class="col-md-12">
     <label class="form-label" for="">Destinatario (destino final)*:</label>
-    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="destinatarioConfiguracionTabla" [datos]="destinatarioDatos" ></app-tabla-dinamica>
+    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [disableSeleccionTablaCheckBox]="soloLectura" [configuracionTabla]="destinatarioConfiguracionTabla" [datos]="destinatarioDatos" ></app-tabla-dinamica>
   </div>
   <!-- conditional buttons -->
   <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
-    <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancias"> Agregar </button>
+    <button type="button" [disabled]="soloLectura" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancias"> Agregar </button>
   </div>
   <!-- Fabricante -->
   <div class="col-md-12">
     <label class="form-label" for="">Fabricante*:</label>
-    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="fabricanteConfiguracionTabla" [datos]="destinatarioDatos" (listaDeFilaSeleccionada)="obtenerDatosDestinatario($event)"  (change)="setValoresStore(tercerosForm,'fabricante', 'setFabricante')"></app-tabla-dinamica>
+    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [disableSeleccionTablaCheckBox]="soloLectura" [configuracionTabla]="fabricanteConfiguracionTabla" [datos]="destinatarioDatos" (listaDeFilaSeleccionada)="obtenerDatosDestinatario($event)"  (change)="setValoresStore(tercerosForm,'fabricante', 'setFabricante')"></app-tabla-dinamica>
   </div>
   <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
     <div class="btn-group"> @if (selectedDestinatario.length > 0) { 
-      <button class="btn btn-danger 3" type="button" (click)="eliminarMercancias()"> Eliminar </button>
+      <button class="btn btn-danger 3" type="button" [disabled]="soloLectura" (click)="eliminarMercancias()"> Eliminar </button>
       <button type="button" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancias" class="btn btn-default btn-space ms-3" (click)="abrirModificarProductos()"> Modificar </button> 
     } 
-    <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancias"> Agregar </button>
+    <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" [disabled]="soloLectura" data-bs-target="#modalAgregarMercancias"> Agregar </button>
     </div>
   </div>
   <!-- Modal for adding or modifying manufacturer -->

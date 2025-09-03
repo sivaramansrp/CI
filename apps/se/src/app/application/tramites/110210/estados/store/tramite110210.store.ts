@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { CertificadoDisponibles } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 
 /**
@@ -107,6 +108,14 @@ export interface Tramite110210State {
    * @type {string}
    */
   observaciones: string;
+
+  /**
+   * @property {CertificadoDisponibles[]} certificadosDisponibles
+   * @description
+   * Arreglo que contiene la lista de certificados disponibles para el trámite.
+   * Almacena la información de los certificados que pueden ser utilizados o consultados.
+   */
+  certificadosDisponibles: CertificadoDisponibles[];
 }
 
 /**
@@ -133,6 +142,7 @@ export function createInitialState(): Tramite110210State {
     fax: '',
     correoElectronico: '',
     observaciones: '',
+    certificadosDisponibles: [],
   };
 }
 
@@ -370,6 +380,22 @@ export class Tramite110210Store extends Store<Tramite110210State> {
     this.update((state) => ({
       ...state,
       ...valores,
+    }));
+  }
+
+  /**
+   * @method setCertificadosDisponibles
+   * @description
+   * Actualiza el arreglo de certificados disponibles en el estado.
+   * Reemplaza completamente el arreglo actual con el nuevo arreglo proporcionado.
+   * 
+   * @param {CertificadoDisponibles[]} certificados - Nuevo arreglo de certificados disponibles a almacenar en el estado.
+   * @returns {void}
+   */
+  public setCertificadosDisponibles(certificados: CertificadoDisponibles[]): void {
+    this.update((state) => ({
+      ...state,
+      certificadosDisponibles: certificados,
     }));
   }
 }

@@ -114,7 +114,7 @@ export const CONFIGURACION_SERVICIO_IMMEX = [
     orden: 1,
   },
   {
-    encabezado: 'Descripión del servicio',
+    encabezado: 'Descripción del servicio',
     clave: (ele: Servicio): string | undefined => ele.descripionDelServicio,
     orden: 1,
   },
@@ -195,7 +195,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     tipo_input: 'text',
     required: true,
     orden: 2,
-    maxlength: 100
+    maxlength: 200
   },
   {
     labelNombre: 'País',

@@ -8,9 +8,23 @@
  * @module TextoEnum
  */
 export const TEXTOS = {
-    TEXTOS_SOLICITUD: 'Al dar doble clic en el registro seleccionado creará una Nueva solicitud con los mismos datos de la solicitud elegida.',
-    SECCION_LEYENDA_CONFIRMAR_TEXTOS: 'Debes declarar la cantidad que ingresa en parcialidad por cada fracción arancelaria. La columna "Saldo pendiente" mostrará el saldo disponible para las siguientes parcialidades.'
-}
+  /**
+   * Texto que se muestra al dar doble clic sobre un registro.
+   *
+   * Indica que se creará una nueva solicitud con los mismos datos de la solicitud seleccionada.
+   */
+  TEXTOS_SOLICITUD:
+    'Al dar doble clic en el registro seleccionado creará una nueva solicitud con los mismos datos de la solicitud elegida.',
+
+  /**
+   * Leyenda mostrada en la sección de confirmación de textos.
+   *
+   * Explica que se debe declarar la cantidad que ingresa en parcialidad por cada fracción arancelaria.
+   * Además, aclara que la columna "Saldo pendiente" mostrará el saldo disponible para las siguientes parcialidades.
+   */
+  SECCION_LEYENDA_CONFIRMAR_TEXTOS:
+    'Debes declarar la cantidad que ingresa en parcialidad por cada fracción arancelaria. La columna "Saldo pendiente" mostrará el saldo disponible para las siguientes parcialidades.',
+};
 
 /**
  * Constante que define las propiedades del campo de entrada para la fecha de inspección.
@@ -22,7 +36,18 @@ export const TEXTOS = {
  * @module texto-enum
  */
 export const FECHA_INSPECCION_INPUT = {
-    labelNombre: 'Fecha de inspección',
-    required: true,
-    habilitado: false
+  /**
+   * Etiqueta que se mostrará en el formulario.
+   */
+  labelNombre: 'Fecha de inspección',
+
+  /**
+   * Indica si el campo es obligatorio.
+   */
+  required: true,
+
+  /**
+   * Define si el campo estará habilitado para edición.
+   */
+  habilitado: false,
 };
