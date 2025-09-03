@@ -91,15 +91,13 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <div class="pull-right">
-          <button type="button" name="modificarListaDeNumeros" class="btn btn-default" (click)="modificarListaDeNumeros()"
-            [disabled]="!sustanciasSensiblesSeleccionadas.length">
+          <button type="button" name="modificarListaDeNumeros" class="btn btn-default" (click)="modificarListaDeNumeros()">
             Modificar
           </button>
           <button type="button" name="eliminarListaDeNumeros" class="btn btn-danger ms-2" (click)="eliminarModal()">
             Eliminar
           </button>
-          <button type="button" name="agregarListaDeNumeros" class="btn btn-primary ms-2" (click)="agregarListaDeNumeros()"
-            >
+          <button type="button" name="agregarListaDeNumeros" class="btn btn-primary ms-2" (click)="agregarListaDeNumeros()">
             Agregar
           </button>
         </div>
@@ -262,25 +260,48 @@
           <label class="form-label" for="cantidad">Cantidad*:</label>
           <input class="form-control" id="cantidad" type="text"
             formControlName="cantidad" [ngClass]="isValid(formSolicitud, 'cantidad') ? 'required' : ''"
-            (change)="setValoresStore(formSolicitud,'cantidad')" (click)="buscarRepresentanteRfc()">
-            <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['maxDigits']">
-              Este campo permite 12 enteros y tres decimales</div>
-               <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['required'] && formSolicitud.get('cantidad')?.touched">
-              Este campo es obligatorio</div>
-        </div>
+            (change)="setValoresStore(formSolicitud,'cantidad')" (input)="buscarRepresentanteRfc()">
+            
+            <!-- Only show numeric error when field is touched and has numeric validation error -->
+            <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['numeric'] && formSolicitud.get('cantidad')?.touched">
+              Por favor, escribe un número entero válido
+            </div>
+            
+            <!-- Show specific error messages when field has other validation errors -->
+            <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['maxDigitsDecimals'] && formSolicitud.get('cantidad')?.touched">
+              Este campo permite 12 enteros y tres decimales
+            </div>
+            
+            <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['required'] && formSolicitud.get('cantidad')?.touched">
+              Este campo es obligatorio
+            </div>
+            
+            <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['min'] && formSolicitud.get('cantidad')?.touched">
+              La cantidad debe ser mayor a 0
+            </div>
+          </div>
       </div>
       <div class="col-md-8">
         <div class="form-group">
           <label class="form-label" for="cantidadLetra">Cantidad(letra)*:</label>
           <input class="form-control" id="cantidadLetra" formControlName="cantidadLetra" type="text"
            [ngClass]="isValid(formSolicitud, 'cantidadLetra') ? 'required' : ''">
-    <div class="custom-error" *ngIf="formSolicitud.get('cantidadLetra')?.errors?.['required'] && formSolicitud.get('cantidadLetra')?.touched">
-      Si la cantidad capturada es mayor a 400 es obligatorio capturar la cantidad en letra.
-    </div>
-    <div class="custom-error mt-2" *ngIf="formSolicitud.get('cantidad')?.value && isCantidadMenorOIgualA400()">
-      Si la cantidad capturada es menor o igual a 400 no es obligatorio anexar la Póliza de seguro y recibo de pago vigentes.
-    </div>
-  </div>
+           
+          <!-- Show message ONLY when there's a cantidad value and field is disabled -->
+          <div class="mensaje-info" *ngIf="formSolicitud.get('cantidad')?.value && formSolicitud.get('cantidadLetra')?.disabled">
+            Si la cantidad capturada es menor o igual a 400 no es obligatorio anexar la Póliza de seguro y recibo de pago vigentes.
+          </div>
+          
+          <!-- Show message when quantity > 400 and field is enabled but not touched -->
+          <div class="mensaje-info" *ngIf="isCantidadMayorA400() && formSolicitud.get('cantidadLetra')?.enabled && !formSolicitud.get('cantidadLetra')?.touched">
+            Si la cantidad capturada es mayor a 400 es obligatorio capturar la cantidad en letra.
+          </div>
+          
+          <!-- Required error for cantidadLetra when quantity > 400 - show in red when touched -->
+          <div class="mensaje-error" *ngIf="formSolicitud.get('cantidadLetra')?.errors?.['required'] && formSolicitud.get('cantidadLetra')?.touched && isCantidadMayorA400()">
+            Si la cantidad capturada es mayor a 400 es obligatorio capturar la cantidad en letra.
+          </div>
+        </div>
       </div>
     </div>
 

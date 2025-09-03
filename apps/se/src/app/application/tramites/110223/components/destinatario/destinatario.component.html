@@ -1,24 +1,20 @@
 <form [formGroup]="registroForm" (ngSubmit)="validarDestinatarioFormulario()">
-  <ng-container formGroupName="validacionForm">
+
+  <ng-container formGroupName="destinatarioForm">
     <ng-titulo titulo="Datos del destinatario" />
     <div class="row">
-      <div class="col-md-8 mb-3">
+      <div class="col-md-4 mb-3">
         <label>Nombre(s)*:</label>
         <input
           type="text"
           class="form-control"
           formControlName="nombre"
-          (change)="setValoresStore(validacionForm, 'nombre', 'setNombre')"
+          maxlength="250"
+          (change)="setdestinatarioForm()"
         />
         <div
           class="mensaje-error"
-          *ngIf="validacionForm.get('nombre')?.hasError('maxlength')"
-        >
-          Máximo 150 caracteres permitidos.
-        </div>
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('nombre')?.errors?.['required'] && validacionForm.get('nombre')?.touched"
+          *ngIf="registroForm.get('destinatarioForm.nombre')?.errors?.['required'] && (registroForm.get('destinatarioForm.nombre')?.touched || registroForm.get('destinatarioForm.nombre')?.dirty)"
         >
           Este campo es obligatorio.
         </div>
@@ -30,24 +26,20 @@
           class="form-control"
           id="denominacion"
           formControlName="numeroFiscal"
-          (change)="
-            setValoresStore(validacionForm, 'numeroFiscal', 'setNumeroFiscal')
-          "
+          (change)="setdestinatarioForm()"
+          maxlength="30"
         />
         <div
           class="mensaje-error"
-          *ngIf="validacionForm.get('numeroFiscal')?.hasError('maxlength')"
-        >
-          Máximo 32 caracteres permitidos.
-        </div>
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('numeroFiscal')?.errors?.['required'] && validacionForm.get('numeroFiscal')?.touched"
+          *ngIf="registroForm.get('destinatarioForm.numeroFiscal')?.errors?.['required'] && (registroForm.get('destinatarioForm.numeroFiscal')?.touched || registroForm.get('destinatarioForm.numeroFiscal')?.dirty)"
         >
           Este campo es obligatorio.
         </div>
       </div>
     </div>
+  </ng-container>
+
+  <ng-container formGroupName="domicilioForm">
     <ng-titulo titulo="Domicilio del destinatario" />
     <div class="row">
       <div class="col-md-4 mb-3">
@@ -56,18 +48,13 @@
           type="text"
           class="form-control"
           id="nombre"
+          maxlength="90"
           formControlName="calle"
-          (change)="setValoresStore(validacionForm, 'calle', 'setCalle')"
+          (change)="setdomicilioForm()"
         />
         <div
           class="mensaje-error"
-          *ngIf="validacionForm.get('calle')?.hasError('maxlength')"
-        >
-          Máximo 90 caracteres permitidos.
-        </div>
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('calle')?.errors?.['required'] && validacionForm.get('calle')?.touched"
+          *ngIf="registroForm.get('domicilioForm.calle')?.errors?.['required'] && (registroForm.get('domicilioForm.calle')?.touched || registroForm.get('domicilioForm.calle')?.dirty)"
         >
           Este campo es obligatorio.
         </div>
@@ -78,129 +65,105 @@
           type="text"
           class="form-control"
           id="primerApellido"
+          maxlength="30"
           formControlName="numeroLetra"
-          (change)="
-            setValoresStore(validacionForm, 'numeroLetra', 'setNumeroLetra')
-          "
+          (change)="setdomicilioForm()"
         />
-
         <div
           class="mensaje-error"
-          *ngIf="validacionForm.get('numeroLetra')?.errors?.['required'] && validacionForm.get('numeroLetra')?.touched"
+          *ngIf="registroForm.get('domicilioForm.numeroLetra')?.errors?.['required'] && (registroForm.get('domicilioForm.numeroLetra')?.touched || registroForm.get('domicilioForm.numeroLetra')?.dirty)"
         >
           Este campo es obligatorio.
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-8 mb-3">
+      <div class="col-md-4">
+        <div class="form-group">
+          <app-catalogo-select [catalogo]="optionsPaisDestino" [label]="'País Destino'" [required]="true"
+            placeholder="Selecciona un valor" id="paisDestino" formControlName="paisDestino"
+            (change)="setdomicilioForm()" [isDisabled]="soloLectura"></app-catalogo-select>
+          <div
+            class="mensaje-error"
+            *ngIf="registroForm.get('domicilioForm.paisDestino')?.errors?.['required'] && (registroForm.get('domicilioForm.paisDestino')?.touched || registroForm.get('domicilioForm.paisDestino')?.dirty)"
+          >
+            Este campo es obligatorio.
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
         <label>Ciudad (población, estado o provincia)*:</label>
         <input
           type="text"
           class="form-control"
           id="denominacion"
           formControlName="ciudad"
-          (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')"
+          maxlength="50"
+          (change)="setdomicilioForm()"
         />
         <div
           class="mensaje-error"
-          *ngIf="validacionForm.get('ciudad')?.hasError('maxlength')"
-        >
-          Máximo 50 caracteres permitidos.
-        </div>
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('ciudad')?.errors?.['required'] && validacionForm.get('ciudad')?.touched"
+          *ngIf="registroForm.get('domicilioForm.ciudad')?.errors?.['required'] && (registroForm.get('domicilioForm.ciudad')?.touched || registroForm.get('domicilioForm.ciudad')?.dirty)"
         >
           Este campo es obligatorio.
         </div>
-      </div>
-      <div class="col-md-4 mb-3">
-        <app-catalogo-select
-          [catalogo]="options"
-          [label]="'País destino'"
-          [required]="true"
-          formControlName="nacion"
-          (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"
-          [isDisabled]="soloLectura"
-        ></app-catalogo-select>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
         <label>Correo electrónico*:</label>
+        <span
+          class="bi bi-question-circle-fill"
+          title="ejemplo@dominio.com"
+          data-bs-toggle="tooltip"
+        ></span>
         <input
           type="text"
           class="form-control"
           id="primerApellido"
+          maxlength="70"
           formControlName="correoElectronico"
-          (change)="
-            setValoresStore(
-              validacionForm,
-              'correoElectronico',
-              'setCorreoElectronico'
-            )
-          "
+          (change)="setdomicilioForm()"
         />
         <div
           class="mensaje-error"
-          *ngIf="validacionForm.get('correoElectronico')?.hasError('maxlength')"
-        >
-          Máximo 50 caracteres permitidos.
-        </div>
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('correoElectronico')?.errors?.['required'] && validacionForm.get('correoElectronico')?.touched"
+          *ngIf="registroForm.get('domicilioForm.correoElectronico')?.errors?.['required'] && (registroForm.get('domicilioForm.correoElectronico')?.touched || registroForm.get('domicilioForm.correoElectronico')?.dirty)"
         >
           Este campo es obligatorio.
         </div>
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('domicilioForm.correoElectronico')?.errors?.['email'] && (registroForm.get('domicilioForm.correoElectronico')?.touched || registroForm.get('domicilioForm.correoElectronico')?.dirty)"
+        >
+          El correo electrónico no es válido.
+        </div>
       </div>
-      <div class="col-md-4 mb-3">
+      <div class="col-md-1 mb-3">
+        <label>Lada:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="segundoApellido"
+          formControlName="lada"
+          maxlength="5"
+          (change)="setdomicilioForm()"
+        />
+      </div>
+      <div class="col-md-3 mb-3">
         <label>Teléfono:</label>
         <input
           type="text"
           class="form-control"
           id="segundoApellido"
+          maxlength="20"
           formControlName="telefono"
-          (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')"
+          (change)="setdomicilioForm()"
         />
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('telefono')?.hasError('maxlength')"
-        >
-          Máximo 20 caracteres permitidos.
-        </div>
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('telefono')?.hasError('pattern')"
-        >
-          Por favor, ingrese solo dígitos.
-        </div>
-      </div>
-      <div class="col-md-4 mb-3">
-        <label>Fax:</label>
-        <input
-          type="text"
-          class="form-control"
-          id="nombre"
-          formControlName="fax"
-          (change)="setValoresStore(validacionForm, 'fax', 'setFax')"
-        />
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('fax')?.hasError('maxlength')"
-        >
-          Máximo 20 caracteres permitidos.
-        </div>
-
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('fax')?.hasError('pattern')"
-        >
-          Por favor, ingrese solo dígitos.
-        </div>
       </div>
     </div>
+  </ng-container>
+
+  <ng-container formGroupName="representanteLegalForm">
     <ng-titulo titulo="Datos del representante legal del exportador" />
     <div class="row">
       <div class="col-md-8 mb-3">
@@ -208,19 +171,14 @@
         <input
           type="text"
           class="form-control"
-          id="denominacion"
+          id="lugar"
+          maxlength="70"
           formControlName="lugar"
-          (change)="setValoresStore(validacionForm, 'lugar', 'setLugar')"
+          (change)="setrepresentanteLegalForm()"
         />
         <div
           class="mensaje-error"
-          *ngIf="validacionForm.get('lugar')?.hasError('maxlength')"
-        >
-          Máximo 70 caracteres permitidos.
-        </div>
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('lugar')?.errors?.['required'] && validacionForm.get('lugar')?.touched"
+          *ngIf="registroForm.get('representanteLegalForm.lugar')?.errors?.['required'] && (registroForm.get('representanteLegalForm.lugar')?.touched || registroForm.get('representanteLegalForm.lugar')?.dirty)"
         >
           Este campo es obligatorio.
         </div>
@@ -232,29 +190,14 @@
         <input
           type="text"
           class="form-control"
-          id="denominacion"
-          formControlName="nombreRepresentanteLegalExportador"
-          (change)="
-            setValoresStore(
-              validacionForm,
-              'nombreRepresentanteLegalExportador',
-              'setNombreRepresentanteLegalExportador'
-            )
-          "
+          id="nombreRepresentante"
+          maxlength="70"
+          formControlName="nombreRepresentante"
+          (change)="setrepresentanteLegalForm()"
         />
         <div
           class="mensaje-error"
-          *ngIf="
-            validacionForm
-              .get('nombreRepresentanteLegalExportador')
-              ?.hasError('maxlength')
-          "
-        >
-          Máximo 250 caracteres permitidos.
-        </div>
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('nombreRepresentanteLegalExportador')?.errors?.['required'] && validacionForm.get('nombreRepresentanteLegalExportador')?.touched"
+          *ngIf="registroForm.get('representanteLegalForm.nombreRepresentante')?.errors?.['required'] && (registroForm.get('representanteLegalForm.nombreRepresentante')?.touched || registroForm.get('representanteLegalForm.nombreRepresentante')?.dirty)"
         >
           Este campo es obligatorio.
         </div>
@@ -266,21 +209,14 @@
         <input
           type="text"
           class="form-control"
-          id="nombre"
+          id="empresa"
+          maxlength="90"
           formControlName="empresa"
-          (change)="
-            setValoresStore(validacionForm, 'empresa', 'setEmpresaNombre')
-          "
+          (change)="setrepresentanteLegalForm()"
         />
         <div
           class="mensaje-error"
-          *ngIf="validacionForm.get('empresa')?.hasError('maxlength')"
-        >
-          Máximo 90 caracteres permitidos.
-        </div>
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('empresa')?.errors?.['required'] && validacionForm.get('empresa')?.touched"
+          *ngIf="registroForm.get('representanteLegalForm.empresa')?.errors?.['required'] && (registroForm.get('representanteLegalForm.empresa')?.touched || registroForm.get('representanteLegalForm.empresa')?.dirty)"
         >
           Este campo es obligatorio.
         </div>
@@ -290,49 +226,42 @@
         <input
           type="text"
           class="form-control"
-          id="primerApellido"
+          maxlength="70"
+          id="cargo"
           formControlName="cargo"
-          (change)="setValoresStore(validacionForm, 'cargo', 'setCargo')"
+          (change)="setrepresentanteLegalForm()"
         />
         <div
           class="mensaje-error"
-          *ngIf="validacionForm.get('cargo')?.hasError('maxlength')"
-        >
-          Máximo 90 caracteres permitidos.
-        </div>
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('cargo')?.errors?.['required'] && validacionForm.get('cargo')?.touched"
+          *ngIf="registroForm.get('representanteLegalForm.cargo')?.errors?.['required'] && (registroForm.get('representanteLegalForm.cargo')?.touched || registroForm.get('representanteLegalForm.cargo')?.dirty)"
         >
           Este campo es obligatorio.
         </div>
       </div>
-      <div class="col-md-4 mb-3">
-        <label>Número de registro fiscal*:</label>
+      <div class="col-md-1 mb-3">
+        <label>Lada:</label>
         <input
           type="text"
           class="form-control"
           id="segundoApellido"
-          formControlName="numeroDeRegistroFiscal"
-          (change)="
-            setValoresStore(
-              validacionForm,
-              'numeroDeRegistroFiscal',
-              'setnumeroDeRegistroFiscal'
-            )
-          "
+          maxlength="5"
+          formControlName="lada"
+          (change)="setrepresentanteLegalForm()"
+        />
+      </div>
+      <div class="col-md-3 mb-3">
+        <label>Teléfono*:</label>
+        <input
+          type="text"
+          maxlength="20"
+          class="form-control"
+          id="segundoApellido"
+          formControlName="telefono"
+          (change)="setrepresentanteLegalForm()"
         />
         <div
           class="mensaje-error"
-          *ngIf="
-            validacionForm.get('numeroDeRegistroFiscal')?.hasError('maxlength')
-          "
-        >
-          Máximo 13 caracteres permitidos.
-        </div>
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('numeroDeRegistroFiscal')?.errors?.['required'] && validacionForm.get('numeroDeRegistroFiscal')?.touched"
+          *ngIf="registroForm.get('representanteLegalForm.telefono')?.errors?.['required'] && (registroForm.get('representanteLegalForm.telefono')?.touched || registroForm.get('representanteLegalForm.telefono')?.dirty)"
         >
           Este campo es obligatorio.
         </div>
@@ -340,82 +269,57 @@
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Correo electrónico*:</label>
-        <input
-          type="text"
-          class="form-control"
-          id="primerApellido"
-          formControlName="correoElectronico"
-          (change)="
-            setValoresStore(
-              validacionForm,
-              'correoElectronico',
-              'setCorreoElectronico'
-            )
-          "
-        />
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('correoElectronico')?.hasError('maxlength')"
-        >
-          Máximo 50 caracteres permitidos.
-        </div>
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('correoElectronico')?.errors?.['required'] && validacionForm.get('correoElectronico')?.touched"
-        >
-          Este campo es obligatorio.
-        </div>
-      </div>
-      <div class="col-md-4 mb-3">
-        <label>Teléfono*:</label>
-        <input
-          type="text"
-          class="form-control"
-          id="segundoApellido"
-          formControlName="telefono"
-          (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')"
-        />
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('telefono')?.hasError('maxlength')"
-        >
-          Máximo 20 caracteres permitidos.
-        </div>
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('telefono')?.errors?.['required'] && validacionForm.get('telefono')?.touched"
-        >
-          Este campo es obligatorio.
-        </div>
-        <div
-          class="mensaje-error"
-          *ngIf="validacionForm.get('telefono')?.hasError('pattern')"
-        >
-          Por favor, ingrese solo dígitos.
-        </div>
-      </div>
-      <div class="col-md-4 mb-3">
-        <label>Fax:</label>
+        <label>Fax*:</label>
         <input
           type="text"
           class="form-control"
           id="nombre"
+          maxlength="20"
           formControlName="fax"
-          (change)="setValoresStore(validacionForm, 'fax', 'setFax')"
+          (change)="setrepresentanteLegalForm()"
         />
         <div
           class="mensaje-error"
-          *ngIf="validacionForm.get('fax')?.hasError('maxlength')"
+          *ngIf="registroForm.get('representanteLegalForm.fax')?.errors?.['required'] && (registroForm.get('representanteLegalForm.fax')?.touched || registroForm.get('representanteLegalForm.fax')?.dirty)"
         >
-          Máximo 20 caracteres permitidos.
+          Este campo es obligatorio.
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>Correo electrónico*:</label>
+        <span
+          class="bi bi-question-circle-fill"
+          title="ejemplo@dominio.com"
+          data-bs-toggle="tooltip"
+        ></span>
+        <input
+          type="text"
+          class="form-control"
+          id="correoElectronico"
+          maxlength="70"
+          formControlName="correoElectronico"
+          (change)="setrepresentanteLegalForm()"
+        />
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('representanteLegalForm.correoElectronico')?.errors?.['required'] && (registroForm.get('representanteLegalForm.correoElectronico')?.touched || registroForm.get('representanteLegalForm.correoElectronico')?.dirty)"
+        >
+          Este campo es obligatorio.
         </div>
         <div
           class="mensaje-error"
-          *ngIf="validacionForm.get('fax')?.hasError('pattern')"
+          *ngIf="registroForm.get('representanteLegalForm.correoElectronico')?.errors?.['email'] && (registroForm.get('representanteLegalForm.correoElectronico')?.touched || registroForm.get('representanteLegalForm.correoElectronico')?.dirty)"
         >
-          Por favor, ingrese solo dígitos.
+          El correo electrónico no es válido.
         </div>
+      </div>
+    </div>
+    <div class="mt-5">
+      <div class="mt-5">
+        <ng-alert
+          [CONTENIDO]="TEXTOS.ADJUNTAR"
+          [CUSTOMECLASS]="infoAlert"
+        ></ng-alert>
       </div>
     </div>
   </ng-container>

@@ -196,6 +196,7 @@ describe('FitosanitarioService', () => {
         service.tramiteStore.setPuntoDeInspeccion = jest.fn();
         service.tramiteStore.setNombreInspector = jest.fn();
         service.tramiteStore.setHoraDeInspeccion = jest.fn();
+        service.tramiteStore.setFechaDeInspeccion = jest.fn();
         service.tramiteStore.setPrimerApellido = jest.fn();
         service.tramiteStore.setSegundoApellido = jest.fn();
         service.tramiteStore.setCantidadContenedores = jest.fn();

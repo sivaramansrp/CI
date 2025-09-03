@@ -48,6 +48,15 @@ interface AccionBoton {
   host: {},
 })
 export class BtnContinuarComponent implements OnInit {
+
+  /**
+   * @property btnGuardarVisible
+   * @description Indica la visibilidad del botón Guardar.
+   * Puede ser 'visible' o 'hidden'.
+   * @type {string}
+   */
+  @Input() btnGuardarVisible: string = 'hidden';
+  
   /**
    * @property datos
    * @description Datos relacionados con los pasos del asistente, incluyendo el índice actual y el número total de pasos.

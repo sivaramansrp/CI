@@ -2,18 +2,14 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import {
-  Catalogo,
-  Notificacion,
-  TablaSeleccion,
-  ValidacionesFormularioService,
-} from '@ng-mf/data-access-user';
+import { Catalogo, Notificacion, TablaSeleccion, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 
 import {
   UNIDAD_TABLA_CONFIG,
   VEHICULOS_TABLA_CONFIG,
 } from '../../enum/transportista-terrestre.enum';
+
 import {
   Tramite40101State,
   Tramite40101Store,
@@ -21,7 +17,8 @@ import {
 
 import { Tramite40101Query } from '../../estado/tramite40101.query';
 import { modificarTerrestreService } from '../services/modificacar-terrestre.service';
-import { CatalogoLista, UnidadTabla, VehiculoTabla, VehiculoTablaDatos, UnidadTablaConfig } from '../../models/registro-muestras-mercancias.model';
+
+import { CatalogoLista, UnidadTabla, UnidadTablaConfig, VehiculoTabla, VehiculoTablaDatos } from '../../models/registro-muestras-mercancias.model';
 
 /**
  * Componente para la gestión de vehículos y unidades de arrastre en el trámite 40101.
@@ -122,22 +119,6 @@ export class VehiculosComponent implements OnInit {
    * @default []
    */
   vehiculoSeleccionado: VehiculoTabla[] = [];
-
-  /**
-   * Prepara el proceso de eliminación de vehículos seleccionados.
-   * 
-   * Método placeholder para preparar la eliminación de los vehículos
-   * seleccionados. Actualmente no requiere preparación específica ya que
-   * el modal de confirmación manejará directamente la eliminación.
-   * 
-   * @remarks
-   * - Método preparatorio para futura implementación de lógica previa
-   * - El modal confirmará la eliminación de las filas seleccionadas
-   * - No modifica el estado actual de la aplicación
-   */
-  prepararEliminarVehiculo(): void {
-    // No se necesita preparación, modal confirmará la eliminación de las filas seleccionadas
-  }
 
   /**
    * Indica si el componente está en modo de solo lectura.
@@ -569,9 +550,9 @@ export class VehiculosComponent implements OnInit {
     this.vehiculoFormulario.get('descripcion')?.disable();
     this.vehiculoFormulario.get('tipoDeVehiculo')?.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((selectedValue) => {
-        const id = Number(selectedValue);
-        if (id === 1) {
+      .subscribe((valorSeleccionado) => {
+        const ID_SELECCIONADO = Number(valorSeleccionado);
+        if (ID_SELECCIONADO === 1) {
           this.vehiculoFormulario.get('descripcion')?.enable();
         } else {
           this.vehiculoFormulario.get('descripcion')?.disable();
@@ -582,9 +563,9 @@ export class VehiculosComponent implements OnInit {
     this.unidadFormulario.get('descripcion')?.disable();
     this.unidadFormulario.get('tipoDeUnidadArrastre')?.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((selectedValue) => {
-        const id = Number(selectedValue);
-        if (id === 1) {
+      .subscribe((valorSeleccionado) => {
+        const ID_SELECCIONADO = Number(valorSeleccionado);
+        if (ID_SELECCIONADO === 1) {
           this.unidadFormulario.get('descripcion')?.enable();
         } else {
           this.unidadFormulario.get('descripcion')?.disable();
@@ -658,10 +639,12 @@ export class VehiculosComponent implements OnInit {
    * - Convierte automáticamente el ID a número para la comparación
    * - Útil para mostrar descripciones legibles en lugar de IDs en las tablas
    */
-  private obtenerDescripcionCatalogo(catalogo: Catalogo[], id: number | string): string {
-    if (!id || !catalogo) return id?.toString() || '';
-    const item = catalogo.find(cat => cat.id === Number(id));
-    return item ? item.descripcion : id.toString();
+  private static obtenerDescripcionCatalogo(catalogo: Catalogo[], id: number | string): string {
+    if (!id || !catalogo) {
+      return id?.toString() || '';
+    }
+    const ELEMENTO = catalogo.find(cat => cat.id === Number(id));
+    return ELEMENTO ? ELEMENTO.descripcion : id.toString();
   }
 
   /**
@@ -681,30 +664,30 @@ export class VehiculosComponent implements OnInit {
     // Actualizar solo las columnas que necesitan mostrar descripciones en lugar de IDs
     
     // Para tabla de vehículos
-    const tipoVehiculoCol = this.vehiculosTablaConfig.encabezadas.find(col => col.encabezado === 'Tipo de vehículo');
-    if (tipoVehiculoCol) {
-      tipoVehiculoCol.clave = (item: VehiculoTabla) => this.obtenerDescripcionCatalogo(this.tipoDeVehiculoCatalogo, item.tipoDeVehiculo);
+    const TIPO_VEHICULO_COL = this.vehiculosTablaConfig.encabezadas.find(col => col.encabezado === 'Tipo de vehículo');
+    if (TIPO_VEHICULO_COL) {
+      TIPO_VEHICULO_COL.clave = (item: VehiculoTabla): string => VehiculosComponent.obtenerDescripcionCatalogo(this.tipoDeVehiculoCatalogo, item.tipoDeVehiculo);
     }
 
-    const paisEmisorVehCol = this.vehiculosTablaConfig.encabezadas.find(col => col.encabezado === 'País emisor');
-    if (paisEmisorVehCol) {
-      paisEmisorVehCol.clave = (item: VehiculoTabla) => this.obtenerDescripcionCatalogo(this.paisEmisorCatalogo, item.paisEmisor);
+    const PAIS_EMISOR_VEH_COL = this.vehiculosTablaConfig.encabezadas.find(col => col.encabezado === 'País emisor');
+    if (PAIS_EMISOR_VEH_COL) {
+      PAIS_EMISOR_VEH_COL.clave = (item: VehiculoTabla): string => VehiculosComponent.obtenerDescripcionCatalogo(this.paisEmisorCatalogo, item.paisEmisor);
     }
 
-    const anoCol = this.vehiculosTablaConfig.encabezadas.find(col => col.encabezado === 'Año');
-    if (anoCol) {
-      anoCol.clave = (item: VehiculoTabla) => this.obtenerDescripcionCatalogo(this.anoCatalogo, item.ano);
+    const ANO_COL = this.vehiculosTablaConfig.encabezadas.find(col => col.encabezado === 'Año');
+    if (ANO_COL) {
+      ANO_COL.clave = (item: VehiculoTabla): string => VehiculosComponent.obtenerDescripcionCatalogo(this.anoCatalogo, item.ano);
     }
 
     // Para tabla de unidades de arrastre
-    const tipoUnidadCol = this.unidadesTablaConfig.encabezadas.find(col => col.encabezado === 'Tipo de unidad de arrastre');
-    if (tipoUnidadCol) {
-      tipoUnidadCol.clave = (item: UnidadTabla) => this.obtenerDescripcionCatalogo(this.tipoArrastreCatalogo, item.tipoDeUnidadArrastre);
+    const TIPO_UNIDAD_COL = this.unidadesTablaConfig.encabezadas.find(col => col.encabezado === 'Tipo de unidad de arrastre');
+    if (TIPO_UNIDAD_COL) {
+      TIPO_UNIDAD_COL.clave = (item: UnidadTabla): string => VehiculosComponent.obtenerDescripcionCatalogo(this.tipoArrastreCatalogo, item.tipoDeUnidadArrastre);
     }
 
-    const paisEmisorUnidadCol = this.unidadesTablaConfig.encabezadas.find(col => col.encabezado === 'País Emisor');
-    if (paisEmisorUnidadCol) {
-      paisEmisorUnidadCol.clave = (item: UnidadTabla) => this.obtenerDescripcionCatalogo(this.paisEmisorCatalogo, item.paisEmisor);
+    const PAIS_EMISOR_UNIDAD_COL = this.unidadesTablaConfig.encabezadas.find(col => col.encabezado === 'País Emisor');
+    if (PAIS_EMISOR_UNIDAD_COL) {
+      PAIS_EMISOR_UNIDAD_COL.clave = (item: UnidadTabla): string => VehiculosComponent.obtenerDescripcionCatalogo(this.paisEmisorCatalogo, item.paisEmisor);
     }
   }
 
@@ -745,9 +728,30 @@ export class VehiculosComponent implements OnInit {
    */
   eliminarFilaVehiculo(): void {
     if (this.vehiculoSeleccionado.length > 0) {
-      this.vehiculosTablaConfig.datos = this.vehiculosTablaConfig.datos.filter(
-        (item) => !this.vehiculoSeleccionado.includes(item)
+      const NUMEROS_A_ELIMINAR = new Set(this.vehiculoSeleccionado.map(v => v.numero).filter(Boolean));
+      const IDS_A_ELIMINAR = new Set(this.vehiculoSeleccionado.map(v => v.idDeVehiculo).filter(Boolean));
+      const PLACAS_MARCAS_A_ELIMINAR = new Set(
+        this.vehiculoSeleccionado
+          .filter(v => v.numeroPlaca && v.marca)
+          .map(v => `${v.numeroPlaca}|${v.marca}`)
       );
+
+      this.vehiculosTablaConfig.datos = this.vehiculosTablaConfig.datos.filter(vehiculo => {
+        if (vehiculo.numero && NUMEROS_A_ELIMINAR.has(vehiculo.numero)) {
+          return false;
+        }
+        if (vehiculo.idDeVehiculo && IDS_A_ELIMINAR.has(vehiculo.idDeVehiculo)) {
+          return false;
+        }
+        if (vehiculo.numeroPlaca && vehiculo.marca) {
+          const COMBO_ID = `${vehiculo.numeroPlaca}|${vehiculo.marca}`;
+          if (PLACAS_MARCAS_A_ELIMINAR.has(COMBO_ID)) {
+            return false;
+          }
+        }
+
+        return !this.vehiculoSeleccionado.includes(vehiculo);
+      });
       this.vehiculoSeleccionado = [];
       this.indiceEdicion = null;
       this.vehiculoFormulario.reset();
@@ -856,15 +860,15 @@ export class VehiculosComponent implements OnInit {
    */
   inicializarFormulario(): void {
     // Incremento automático idDeVehiculo
-    let nextId = 1;
+    let siguienteId = 1;
     if (Array.isArray(this.vehiculosTablaConfig.datos) && this.vehiculosTablaConfig.datos.length > 0) {
-      const maxId = Math.max(...this.vehiculosTablaConfig.datos.map(v => Number(v.idDeVehiculo) || 0));
-      nextId = maxId + 1;
+      const ID_MAXIMO = Math.max(...this.vehiculosTablaConfig.datos.map(v => Number(v.idDeVehiculo) || 0));
+      siguienteId = ID_MAXIMO + 1;
     }
     this.vehiculoFormulario = this.fb.group({
       numero: [this.tramiteState.datosVehiculo.numero, [Validators.required]],
       tipoDeVehiculo: [this.tramiteState.datosVehiculo.tipoDeVehiculo, Validators.required],
-      idDeVehiculo: [{ value: nextId, disabled: true }, Validators.required],
+      idDeVehiculo: [{ value: siguienteId, disabled: true }, Validators.required],
       numeroPlaca: [this.tramiteState.datosVehiculo.numeroPlaca, Validators.required],
       paisEmisor: [this.tramiteState.datosVehiculo.paisEmisor, Validators.required],
       estado: [this.tramiteState.datosVehiculo.estado, Validators.required],
@@ -881,13 +885,13 @@ export class VehiculosComponent implements OnInit {
     });
 
     // Incremento automático idDeVehiculoUnidad
-    let nextUnidadId = 1;
+    let siguienteIdUnidad = 1;
     if (Array.isArray(this.unidadesTablaConfig.datos) && this.unidadesTablaConfig.datos.length > 0) {
-      const maxUnidadId = Math.max(...this.unidadesTablaConfig.datos.map(u => Number(u.idDeVehiculoUnidad) || 0));
-      nextUnidadId = maxUnidadId + 1;
+      const ID_MAXIMO_UNIDAD = Math.max(...this.unidadesTablaConfig.datos.map(u => Number(u.idDeVehiculoUnidad) || 0));
+      siguienteIdUnidad = ID_MAXIMO_UNIDAD + 1;
     }
     this.unidadFormulario = this.fb.group({
-      idDeVehiculoUnidad: [{ value: nextUnidadId, disabled: true }, [Validators.required]],
+      idDeVehiculoUnidad: [{ value: siguienteIdUnidad, disabled: true }, [Validators.required]],
       vinVehiculo: [this.tramiteState.datosUnidad.vinVehiculo, [Validators.required]],
       tipoDeUnidadArrastre: [this.tramiteState.datosUnidad.tipoDeUnidadArrastre, [Validators.required]],
       numeroEconomico: [this.tramiteState.datosUnidad.numeroEconomico, [Validators.required]],
@@ -972,12 +976,16 @@ export class VehiculosComponent implements OnInit {
    * - Si el vehículo no se encuentra en la tabla (`index === -1`), termina sin acción
    */
   iniciarEditarVehiculo(): void {
-    if (!this.vehiculoSeleccionado || this.vehiculoSeleccionado.length === 0) return;
-    const vehiculo = this.vehiculoSeleccionado[0];
-    const index = this.vehiculosTablaConfig.datos.indexOf(vehiculo);
-    if (index === -1) return;
-    this.indiceEdicion = index;
-    this.vehiculoFormulario.patchValue(vehiculo);
+    if (!this.vehiculoSeleccionado || this.vehiculoSeleccionado.length === 0) {
+      return;
+    }
+    const VEHICULO = this.vehiculoSeleccionado[0];
+    const INDICE = this.vehiculosTablaConfig.datos.indexOf(VEHICULO);
+    if (INDICE === -1) {
+      return;
+    }
+    this.indiceEdicion = INDICE;
+    this.vehiculoFormulario.patchValue(VEHICULO);
     this.abrirPedimento();
   }
 
@@ -1020,22 +1028,22 @@ export class VehiculosComponent implements OnInit {
     });
 
     if (this.vehiculoFormulario.valid) {
-      const formValue = this.vehiculoFormulario.getRawValue();
+      const VALOR_FORMULARIO = this.vehiculoFormulario.getRawValue();
       if (this.indiceEdicion !== null) {
-        Object.assign(this.vehiculosTablaConfig.datos[this.indiceEdicion], formValue);
+        Object.assign(this.vehiculosTablaConfig.datos[this.indiceEdicion], VALOR_FORMULARIO);
         this.vehiculosTablaConfig.datos = [...this.vehiculosTablaConfig.datos];
         this.indiceEdicion = null;
       } else {
         this.vehiculosTablaConfig.datos = [
           ...this.vehiculosTablaConfig.datos,
-          formValue,
+          VALOR_FORMULARIO,
         ];
       }
       // Incrementa automáticamente el ID para el próximo vehículo
-      const maxId = Math.max(...this.vehiculosTablaConfig.datos.map(v => Number(v.idDeVehiculo) || 0));
+      const ID_MAXIMO = Math.max(...this.vehiculosTablaConfig.datos.map(v => Number(v.idDeVehiculo) || 0));
       this.enviada = false;
       this.vehiculoFormulario.reset();
-      this.vehiculoFormulario.get('idDeVehiculo')?.setValue(maxId + 1);
+      this.vehiculoFormulario.get('idDeVehiculo')?.setValue(ID_MAXIMO + 1);
       this.vehiculoFormulario.get('idDeVehiculo')?.disable();
       this.cerrarModal.nativeElement.click();
     }
@@ -1083,13 +1091,17 @@ export class VehiculosComponent implements OnInit {
    * - Si la unidad no se encuentra en la tabla (`index === -1`), termina sin acción
    */
   iniciarEditarUnidad(): void {
-    if (!this.filasUnidadSeleccionadas || this.filasUnidadSeleccionadas.length === 0) return;
-    const unidad = this.filasUnidadSeleccionadas[0];
-    const index = this.unidadesTablaConfig.datos.indexOf(unidad);
-    if (index === -1) return;
-    this.editarIndiceUnitario = index;
+    if (!this.filasUnidadSeleccionadas || this.filasUnidadSeleccionadas.length === 0) {
+      return;
+    }
+    const UNIDAD = this.filasUnidadSeleccionadas[0];
+    const INDICE = this.unidadesTablaConfig.datos.indexOf(UNIDAD);
+    if (INDICE === -1) {
+      return;
+    }
+    this.editarIndiceUnitario = INDICE;
     this.unidadFormulario.reset();
-    this.unidadFormulario.patchValue(unidad);
+    this.unidadFormulario.patchValue(UNIDAD);
     this.abrirPedimentoUnidad();
   }
 
@@ -1132,22 +1144,22 @@ export class VehiculosComponent implements OnInit {
     });
 
     if (this.unidadFormulario.valid) {
-      const formValue = this.unidadFormulario.getRawValue();
+      const VALOR_FORMULARIO = this.unidadFormulario.getRawValue();
       if (this.editarIndiceUnitario !== null) {
-        Object.assign(this.unidadesTablaConfig.datos[this.editarIndiceUnitario], formValue);
+        Object.assign(this.unidadesTablaConfig.datos[this.editarIndiceUnitario], VALOR_FORMULARIO);
         this.unidadesTablaConfig.datos = [...this.unidadesTablaConfig.datos];
         this.editarIndiceUnitario = null;
       } else {
         this.unidadesTablaConfig.datos = [
           ...this.unidadesTablaConfig.datos,
-          formValue,
+          VALOR_FORMULARIO,
         ];
       }
       // Incrementa automáticamente el ID para la próxima unidad de arrastre
-      const maxUnidadId = Math.max(...this.unidadesTablaConfig.datos.map(u => Number(u.idDeVehiculoUnidad) || 0));
+      const ID_MAXIMO_UNIDAD = Math.max(...this.unidadesTablaConfig.datos.map(u => Number(u.idDeVehiculoUnidad) || 0));
       this.enviada = false;
       this.unidadFormulario.reset();
-      this.unidadFormulario.get('idDeVehiculoUnidad')?.setValue(maxUnidadId + 1);
+      this.unidadFormulario.get('idDeVehiculoUnidad')?.setValue(ID_MAXIMO_UNIDAD + 1);
       this.unidadFormulario.get('idDeVehiculoUnidad')?.disable();
       this.cerrarUnidadModal.nativeElement.click();
     }

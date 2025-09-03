@@ -30,7 +30,7 @@
         </div>
         <div class="row">
             <h6>Solicitud PROSEC sector plural:</h6>
-            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="sectorColumnsConfiguracion" [datos]="sectors" (filaClic)="seleccionarFila($event)" ></app-tabla-dinamica>
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="sectorColumnsConfiguracion" [datos]="sectors" (filaClic)="seleccionarFila($event)" [disableSeleccionTablaRadio]="esFormularioSoloLectura" ></app-tabla-dinamica>
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -72,7 +72,7 @@
         </div>
         <div class="row">
             <h6>Solicitud PROSEC sector plural:</h6>
-            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="producirColumnConfiguracion" [datos]="producir" (filaSeleccionada)="seleccionarFilaProducir($event)"></app-tabla-dinamica>
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="producirColumnConfiguracion" [datos]="producir" (filaSeleccionada)="seleccionarFilaProducir($event)" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
         </div>
     </form>
     <div>

@@ -541,7 +541,7 @@ export const DATOS_MERCANCIA_CAMPO = [260208, 260209];
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO = [
-  260301, 260207, 260201, 260302, 260304, 260103,260102
+  260301, 260207, 260201, 260302, 260304, 260103,260102, 260214
 ];
 
 /**
@@ -555,7 +555,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO = [
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO = [
-  260301, 260207, 260201, 260302, 260304, 260103,260102
+  260301, 260207, 260201, 260302, 260304, 260103,260102, 260214
 ];
 
 /**
@@ -570,7 +570,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO = [
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL = [
-  260301, 260207, 260201, 260302, 260304, 260103,260102,
+  260301, 260207, 260201, 260302, 260304, 260103,260102, 260214
 ];
 
 /**
@@ -578,7 +578,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL = [
  * @description Lista de identificadores de procedimientos que deben ser deshabilitados en la inicialización.
  * @type {number[]}
  */
-export const DESHABILITADA_EN_INIT = [260302];
+export const DESHABILITADA_EN_INIT = [260302, 260214];
 
 /**
  * @const SIN_ACCION_AL_INICIAR
@@ -735,7 +735,7 @@ export const MENSAJE_EMERGENTE_DE_CONFIRMACION =
  *  Identificadores de notificación.
  */
 export const MOSTRAR_NOTIFICACION = [
-  260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214, 260301, 260209,260205
+  260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214, 260301, 260209,260205,260204
 ];
 
 /**
@@ -763,7 +763,7 @@ export const TIPO_PRODUCTO_ESPECIAL = '3';
  * @remarks
  * Esta constante se utiliza para filtrar procedimientos que no deben ser considerados en el contexto de manifiestos y declaraciones.
  */
-export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260210, 260218, 260208, 260209, 260301, 260219, 260216, 260302, 260304, 260205, 260203];
+export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260210, 260218, 260208, 260209, 260301, 260219, 260216, 260302, 260304, 260205, 260203, 260214];
 
 /**
  * @const ES_PUNTO_Y_COMA
@@ -787,4 +787,22 @@ export const TEXTO_MANIFESTO_Y_DECLARACIONES = `Cumplo con los requisitos y norm
 /**
  * Constante que representa los procedimientos para los cuales se debe adjuntar un texto específico.
  */
-export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218, 260301];
+export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218, 260301]; 
+
+/**
+ * Constante que representa el código AIFA.
+ * @type {string}
+ * @value '104'
+ * @description Código utilizado para identificar AIFA en el sistema.
+ * @remarks Utilice esta constante para referirse a AIFA en diferentes partes de la aplicación.
+ */
+export const AIFA='104';
+
+/**
+ * Constante que representa el código AICM.
+ * @type {string}
+ * @value '103'
+ * @description Código utilizado para identificar AICM en el sistema.
+ * @remarks Utilice esta constante para referirse a AICM en diferentes partes de la aplicación.
+ */
+export const AICM='103';

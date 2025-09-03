@@ -6,7 +6,7 @@
       <!-- Clave de referencia -->
       <div class="col-md-4">
         <label for="claveReferencia" class="form-label"
-          >Clave de referencia:</label
+          >Clave de referencia<span *ngIf="campoRequerido">*</span>:</label
         >
         <input
           type="text"
@@ -33,7 +33,7 @@
       <!-- Cadena de la dependencia -->
       <div class="col-md-4">
         <label for="cadenaDependencia" class="form-label"
-          >Cadena de la dependencia:</label
+          >Cadena de la dependencia<span *ngIf="campoRequerido">*</span>:</label
         >
         <input
           type="text"
@@ -99,7 +99,7 @@
     <div class="row g-3 mt-2">
       <!-- Llave de pago -->
       <div class="col-md-4">
-        <label for="llavePago" class="form-label">Llave de pago:</label>
+        <label for="llavePago" class="form-label">Llave de pago<span *ngIf="campoRequerido">*</span>:</label>
         <input
           type="text"
           id="llavePago"
@@ -143,7 +143,7 @@
 
       <!-- Importe de pago -->
       <div class="col-md-4">
-        <label for="importePago" class="form-label">Importe de pago:</label>
+        <label for="importePago" class="form-label">Importe de pago<span *ngIf="campoRequerido">*</span>:</label>
         <input
           type="text"
           id="importePago"

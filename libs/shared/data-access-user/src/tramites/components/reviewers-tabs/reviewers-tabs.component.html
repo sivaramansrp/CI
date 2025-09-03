@@ -20,22 +20,22 @@
             <lib-documentos [documentos]="documentos"></lib-documentos>
             }
             @case (2) {
-            <lib-dictamenes [dictamenes]="dictamenes"></lib-dictamenes>
+            <tab-dictamen [tramite]="tramite" [dictamenes]="dictamenes"></tab-dictamen>
             }
             @case(3) {
-            <lib-consultarequerimientos [requerimientos]="requerimientos"></lib-consultarequerimientos>
+            <tab-requerimiento [tramite]="tramite" [requerimientos]="requerimientos"></tab-requerimiento>
             }
             @case(4) {
-            <lib-opinion></lib-opinion>
+            <tab-opinion [tramite]="tramite" [opinion]="opinion"></tab-opinion>
             }
             @case (5) {
-            <lib-acuses-resoluciones [acusesResolucion]="acusesResolucion"></lib-acuses-resoluciones>
+            <lib-bandeja-acuses [tramite]="tramite" [acusesResolucion]="acusesResolucion"></lib-bandeja-acuses>
             }
             @case (6) {
             <lib-tareas-tramite [tareasSolicitud]="tareasSolicitud"></lib-tareas-tramite>
             }
             @case (7) {
-            <lib-envio-digital></lib-envio-digital>
+            <lib-envio-digital [envioDigital]="envioDigital"></lib-envio-digital>
             }
             @default {
             <p>tab</p>

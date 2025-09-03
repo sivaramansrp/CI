@@ -4,7 +4,7 @@
   "establecimientoRFCResponsableSanitario":"RFC000000XXX",
    "establecimientoRazonSocial":"Nombre por defecto",
     "establecimientoCorreoElectronico": "contacto@empresa.com",
-    "establecimientoEstados": "1",
+    "establecimientoEstados": "987453",
     "descripcionMunicipio": "Benito Juárez",
     "localidad": "Nápoles",
     "establishomentoColonias": "Colonia Nápoles",
@@ -17,8 +17,8 @@
     "noLicenciaSanitaria": "LS-2024-0001",
     "avisoCheckbox": true,
     "licenciaSanitaria": "LS-2024-0001",
-    "regimen": "1",
-    "aduanasEntradas": "1",
+    "regimen": "123456",
+    "aduanasEntradas": "657888",
     "aifaCheckbox": false,
     "clasificacion": "Medicamento",
     "especificarClasificacionProducto": "Controlado",
@@ -36,6 +36,6 @@
     "presentacion": "Caja con 10 blisters",
     "numeroRegistro": "REG-2024-0001",
     "fechaCaducidad": "2026-12-31",
-"apellidoPaterno": "Apellido Paterno por defecto",
-"apellidoMaterno": "Apellido Materno por defecto"
+    "apellidoPaterno": "Apellido Paterno por defecto",
+    "apellidoMaterno": "Apellido Materno por defecto"
 }

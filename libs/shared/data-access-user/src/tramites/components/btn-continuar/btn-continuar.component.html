@@ -12,16 +12,7 @@
     >
       {{ datos.txtBtnAnt }}
     </button>
-    @if (btnGuardar) {
-    <button
-      type="button"
-      class="btn btn-default ms-3"
-      (click)="guardar()"
-      [style.visibility]="btnAntVisible"
-    >
-      Guardar
-    </button>
-    } @if (btnContVisible) {
+   @if (btnContVisible) {
     <button
       type="button"
       class="btn btn-primary ms-3"
@@ -29,6 +20,16 @@
       (click)="continuar()"
     >
       {{ datos.txtBtnSig }}
+    </button>
+    }
+    @if (btnGuardar) {
+    <button
+      type="button"
+      class="btn btn-default ms-3"
+      (click)="guardar()"
+      [style.visibility]="btnGuardarVisible"
+    >
+      Guardar
     </button>
     }
   </div>

@@ -504,7 +504,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy ,OnChanges{
       paisDestino: [
         { value: 'MEXICO (ESTADOS UNIDOS MEXICANOS)', disabled: true },
       ],
-      usoFinal: ['', Validators.required],
+      usoFinal: ['', [Validators.required, Validators.maxLength(1000)]],
       fechaPago: [
         this.datosDelTramiteFormState?.fechaPago || '',
         Validators.required,
@@ -643,6 +643,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy ,OnChanges{
     this.form.patchValue({
       permisoGeneral: this.datosDelTramiteFormState?.permisoGeneral,
       usoFinal: this.datosDelTramiteFormState?.usoFinal,
+      
     });
     if (this.esFormularioSoloLectura) {
       this.form.disable();
