@@ -54,6 +54,11 @@ export const TEXTOS = {
   <p style="text-align: left;">- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
   <p style="text-align: left;">- En caso de que no requieras algún documento, selecciónalo y elimínalo</p>
   <p style="text-align: left;">- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo"</p>`,
+  /**
+   * Mensaje de advertencia para el usuario.
+   */
+  ADVERTENCIA: `<p style="text-align: center;">No cuenta con una autorizaciï¿12n vigente en el Registro del Esquema de Certificacii¿12n de Empresas bajo la modalidad IVA e IEPS,
+rubros AA o AAA, no es posible continuar</p>`,
 };
 
 export const MESES = [

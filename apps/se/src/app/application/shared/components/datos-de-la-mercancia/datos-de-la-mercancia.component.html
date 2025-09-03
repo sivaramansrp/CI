@@ -25,6 +25,7 @@
       cols="110"
       formControlName="descripcion"
       (change)="setValoresStore(form, 'descripcion')"
+      [maxlength]="250"
     ></textarea>
     <div *ngIf="esInvalido('descripcion')" class="text-danger mt-1">
       <small *ngIf="form.controls['descripcion'].errors?.['required']">

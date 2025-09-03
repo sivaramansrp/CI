@@ -83,7 +83,14 @@ export class CatalogoSelectComponent
   @Input() tooltipQuestionCircle: boolean = false;
 
   @Input() markUntouched: boolean = false;
-
+  /**
+   * Indica si el control debe marcarse como tocado para mostrar errores de validación.
+   * Útil para controlar la visualización de errores desde el componente padre.
+   * 
+   * @type {boolean}
+   * @default false
+   */
+  @Input() markTouched: boolean = false;
   /**
    * @description Texto que se muestra en el tooltip del círculo de pregunta.
    * Este texto proporciona información adicional sobre el select cuando el usuario pasa el cursor sobre el círculo de pregunta.
@@ -223,6 +230,21 @@ export class CatalogoSelectComponent
 
     if (changes['markUntouched']) {
       if (this.markUntouched) {
+        this.formSelect.get('selectControl')?.markAsUntouched();
+      }
+    }
+   /**
+   * Maneja los cambios en la propiedad `markTouched` para controlar la visualización de errores.
+   * 
+   * - Si `markTouched` es `true`: marca el control como tocado (muestra errores)
+   * - Si `markTouched` es `false`: marca el control como no tocado (oculta errores)
+   * 
+   * @remarks Útil para controlar errores de validación desde el componente padre
+   */
+    if (changes['markTouched']) {
+      if (this.markTouched) {
+        this.formSelect.get('selectControl')?.markAsTouched();
+      } else {
         this.formSelect.get('selectControl')?.markAsUntouched();
       }
     }

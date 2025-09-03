@@ -6,10 +6,8 @@
         <div class="panel panel-default">
           <div class="panel-heading" (click)="mostrar_colapsable()">
             <p class="panel-title espacio-extra">
-               <a aria-label="Repeat"
-                  ><i class="bi bi-clipboard2-fill" aria-hidden="true"></i
-                ></a>
-              Opciones de pre-llenado de Solicitud
+              <img src="assets/img/imagen-chandra.png" height="24" width="24" alt="" style="vertical-align:middle; margin-right:8px;">
+                Opciones de pre-llenado de Solicitud
             </p>
             <button type="button" class="collpase-button collapsed"
             [ngClass]="{ 'expanded': colapsable,'collapsed': !colapsable}" [disabled]="esFormularioSoloLectura" >
@@ -122,19 +120,15 @@
               placeholder=""
               type="text"
               formControlName="denominacion"
-              maxlength="101"
+              maxlength="100"
               (change)="setValorStore(datosDelEstablecimiento,'denominacion')"
-              (input)="validarLongitudMaxima('denominacion', 101)"
+              (input)="validarLongitudMaxima('denominacion', 100)"
+              [ngClass]="isInvalid(datosDelEstablecimiento, 'denominacion') ? 'required' : ''"
             />
-            <div
-            *ngIf="datosDelEstablecimiento.get('denominacion')?.invalid && datosDelEstablecimiento.get('denominacion')?.touched"
-            class="text-danger">
-            <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['required']">
-              Este campo es obligatorio
-            </span>
-            <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['maxlength']">
-              Máximo 100 caracteres permitidos.
-            </span>
+              <div *ngIf="isInvalid(datosDelEstablecimiento, 'denominacion')" class="text-danger">
+              <small *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['required']">
+                Este campo es obligatorio.
+              </small>
           </div>
           </div>
         </div>
@@ -162,18 +156,17 @@
               (input)="validarLongitudMaxima('correo', 320)"
               [ngClass]="isInvalid(datosDelEstablecimiento, 'correo') ? 'required' : ''"
             />
-            <div *ngIf="datosDelEstablecimiento.get('correo')?.invalid && datosDelEstablecimiento.get('correo')?.touched" class="text-danger">
-              <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
-                Este campo es obligatorio
-              </span>
-              <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
-                El valor Ingresado no es una dirección válida de correo electrónico
-              </span>
-              <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['maxlength']">
-                Máximo 320 caracteres permitidos.
-              </span>
-            </div>
+          <div *ngIf="isInvalid(datosDelEstablecimiento, 'correo')" class="text-danger">
+            <small *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
+              Este campo es obligatorio.
+            </small>
+            <small *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
+              El valor ingresado no es una dirección válida de correo electrónico
+            </small>
           </div>
+          
+
+      </div>
         </div>
       </div>
     </form>

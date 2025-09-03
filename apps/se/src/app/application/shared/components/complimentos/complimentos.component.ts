@@ -816,7 +816,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         const INDICE = this.camposFormulario.findIndex(
-          (ele) => ele.campo === 'pais'
+          (ele) => ele.campo === PAIS
         );
         const INDICEALT = this.camposFormularioTipoPersona.findIndex(
           (ele) => ele.campo === ESTADO
