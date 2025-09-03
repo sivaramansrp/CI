@@ -93,12 +93,10 @@ describe('MercanciaFormComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
-    component.cargarTodosLosCatalogos = jest.fn();
+    // Espía el método crearFormulario en lugar del inexistente cargarTodosLosCatalogos.
+    component.crearFormulario = jest.fn();
     component.fitosanitarioQuery = component.fitosanitarioQuery || {};
     component.fitosanitarioQuery.select = jest.fn().mockReturnValue({
-      0: {
-        usoCrossListDatos: {}
-      },
       pipe: function() {
         return observableOf({});
       }
@@ -115,32 +113,33 @@ describe('MercanciaFormComponent', () => {
       }
     };
     component.ngOnInit();
-    expect(component.cargarTodosLosCatalogos).toHaveBeenCalled();
+    expect(component.crearFormulario).toHaveBeenCalled();
     expect(component.fitosanitarioQuery.select).toHaveBeenCalled();
-    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #tipoSelecionada()', async () => {
-    component.fraccionArancelariaList = component.fraccionArancelariaList || {};
-    component.fraccionArancelariaList.find = jest.fn().mockReturnValue([
+    // Simula catalogosDatos utilizando fraccionArancelariaList
+    component.catalogosDatos = component.catalogosDatos || {};
+    component.catalogosDatos.fraccionArancelariaList = [
       {
-        "id": {}
+        id: 'test-id',
+        descripcion: 'Test Description'
       }
-    ]);
+    ];
+    
     component.mercanciaForm = component.mercanciaForm || {};
     component.mercanciaForm.patchValue = jest.fn();
-    component.tipoSelecionada({
-      id: {}
+    
+    const mockEvent = {
+      id: 'test-id'
+    };
+    
+    component.tipoSelecionada(mockEvent);
+    expect(component.mercanciaForm.patchValue).toHaveBeenCalledWith({
+      descripcionFraccion: 'Test Description',
+      descripcionNico: 'Test Description',
+      umt: 'Test Description'
     });
-    expect(component.fraccionArancelariaList.find).toHaveBeenCalled();
-    expect(component.mercanciaForm.patchValue).toHaveBeenCalled();
-  });
-
-  it('should run #cargarTodosLosCatalogos()', async () => {
-    component.agriculturaApiService = component.agriculturaApiService || {};
-    component.agriculturaApiService.obtenerSelectorList = jest.fn().mockReturnValue(observableOf({}));
-    component.cargarTodosLosCatalogos();
-    expect(component.agriculturaApiService.obtenerSelectorList).toHaveBeenCalled();
   });
 
   it('should run #limpiarAnimalesVivo()', async () => {
