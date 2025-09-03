@@ -168,7 +168,9 @@ export const DATOS_DE_LA_MERCANCIA = [
       { tipo: 'required' }
     ],
     marcadorDePosicion: '',
-    marginTop: 0
+    marginTop: 0,
+    tooltipQuestionCircle: true,
+  tooltipTxt: 'En caso de no contar con valor factura proporciona el valor estimado'
   },
   {
     id: 'umt',
@@ -182,7 +184,9 @@ export const DATOS_DE_LA_MERCANCIA = [
       { tipo: 'required' }
     ],
     marcadorDePosicion: 'Seleccione una opción',
-    marginTop: 0
+    marginTop: 0,
+    tooltipQuestionCircle: true,
+  tooltipTxt: 'Unidad de medida tarifa'
   },
 ];
 
@@ -218,8 +222,10 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
     validadores: [
       { tipo: 'required' }
     ],
-    marcadorDePosicion: '',
-    marginTop: 0
+    marcadorDePosicion: '',        
+    marginTop: 0,
+    tooltipQuestionCircle: true,
+  tooltipTxt: 'En caso de no contar con valor factura proporciona el valor estimado'
   },
   {
     id: '',
