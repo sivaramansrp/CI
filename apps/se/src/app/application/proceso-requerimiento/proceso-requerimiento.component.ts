@@ -402,7 +402,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     /**
  * Genera el texto de alerta de acuse con el folio del trámite.
  */
-    this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
+    this.txtAlerta = TXT_ALERTA_ACUSE(this.guardarDatos.id_solicitud);
 
     /**
      * Realiza un desplazamiento suave hacia la parte superior de la página usando el servicio.
