@@ -464,6 +464,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
     this.setValoresStore(this.fraccionForm, 'representacion', 'setRepresentacion');
   }
 
+// eslint-disable-next-line @angular-eslint/use-lifecycle-interface
 ngAfterViewInit(): void {
     if (this.cargarArchivoModal) {
       this.cargarArchivoInstance = new Modal(this.cargarArchivoModal.nativeElement);
