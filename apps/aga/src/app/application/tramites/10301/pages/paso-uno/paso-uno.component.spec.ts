@@ -6,6 +6,7 @@ describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let solicitud10301ServiceMock: any;
   let consultaQueryMock: any;
+  let tramite10301StoreMock: any;
 
   beforeEach(() => {
     solicitud10301ServiceMock = {
@@ -15,8 +16,10 @@ describe('PasoUnoComponent', () => {
     consultaQueryMock = {
       selectConsultaioState$: of({ update: true })
     };
+    tramite10301StoreMock = {
+    };
 
-    component = new PasoUnoComponent(solicitud10301ServiceMock, consultaQueryMock);
+    component = new PasoUnoComponent(solicitud10301ServiceMock, consultaQueryMock, tramite10301StoreMock);
   });
 
   it('should create the component', () => {
@@ -47,7 +50,7 @@ describe('PasoUnoComponent', () => {
 
   it('should set esDatosRespuesta to true if consultaState.update is false', () => {
     consultaQueryMock.selectConsultaioState$ = of({ update: false });
-    component = new PasoUnoComponent(solicitud10301ServiceMock, consultaQueryMock);
+    component = new PasoUnoComponent(solicitud10301ServiceMock, consultaQueryMock, tramite10301StoreMock);
     component.ngOnInit();
     expect(component.esDatosRespuesta).toBe(true);
   });
