@@ -35,7 +35,6 @@ export interface DatosDelContenedor {
   vigencia: string;
   estadoConstancia: string;
   existeEnVUCEM: string;
-  idConstancia: string;
   numeroManifiesto: string;
   idSolicitud: string;
   fechaInicio: string;
@@ -56,7 +55,6 @@ export interface GridContenedores {
   estadoConstancia?: string;
   aduana: number;
   existeEnVUCEM?: string;
-  idConstancia?: string;
 }
 
 /**
@@ -179,5 +177,4 @@ export interface DatosDelCsvArchivo {
   estadoConstancia?: string;
   aduana: number;
   existeEnVUCEM?: string;
-  idConstancia?: string;
 }

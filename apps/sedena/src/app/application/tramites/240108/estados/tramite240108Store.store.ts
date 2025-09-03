@@ -5,25 +5,113 @@ import { Injectable } from '@angular/core';
 import { PagoDerechosFormState } from '../../../shared/models/pago-de-derechos.model';
 
 /**
- * Interfaz que representa el estado completo del trámite 240108.
- *
- * @property {number} [tabSeleccionado] - Pestaña actualmente activa en el flujo.
- * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
- * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores registrados.
- * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
- * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
- * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
- * @property {DestinoFinal | null} [modificarDestinarioDatos] - Datos del destinatario a modificar, si aplica.
- * @property {Proveedor | null} [modificarProveedorDatos] - Datos del proveedor a modificar, si aplica. 
+ * @interface Tramite240108State
+ * @description
+ * Representa el estado completo del flujo del trámite 240108, incluyendo información de pestañas, formularios, tablas de datos y registros en edición.
  */
 export interface Tramite240108State {
+  /**
+   * @property {number} [tabSeleccionado]
+   * @description
+   * Número de la pestaña actualmente activa en el flujo del trámite.
+   * 
+   * @remarks
+   * Usado por la interfaz de usuario para determinar qué sección del trámite se está visualizando.
+   * 
+   * @example
+   * tabSeleccionado: 2
+   */
   tabSeleccionado?: number;
+
+  /**
+   * @property {DestinoFinal[]} destinatarioFinalTablaDatos
+   * @description
+   * Lista de destinatarios finales registrados en el trámite.
+   * 
+   * @remarks
+   * Esta tabla representa los destinatarios finales agregados por el usuario.
+   * 
+   * @example
+   * destinatarioFinalTablaDatos: [{ nombre: 'Empresa X', pais: 'México' }]
+   */
   destinatarioFinalTablaDatos: DestinoFinal[];
+
+  /**
+   * @property {Proveedor[]} proveedorTablaDatos
+   * @description
+   * Lista de proveedores registrados en el trámite.
+   * 
+   * @remarks
+   * Esta tabla contiene los proveedores asociados al trámite actual.
+   * 
+   * @example
+   * proveedorTablaDatos: [{ nombre: 'Proveedor Y', rfc: 'XYZ123456' }]
+   */
   proveedorTablaDatos: Proveedor[];
+
+  /**
+   * @property {PagoDerechosFormState} pagoDerechos
+   * @description
+   * Estado del formulario relacionado al pago de derechos.
+   * 
+   * @remarks
+   * Incluye datos como el banco, fecha, importe, referencia, etc.
+   * 
+   * @example
+   * pagoDerechos: { banco: 'BANXICO', importePago: '1000.00' }
+   */
   pagoDerechos: PagoDerechosFormState;
+
+  /**
+   * @property {MercanciaDetalle[]} merccancialTablaDatos
+   * @description
+   * Lista de mercancías asociadas al trámite.
+   * 
+   * @remarks
+   * Contiene los detalles de cada mercancía registrada.
+   * 
+   * @example
+   * merccancialTablaDatos: [{ nombre: 'Arma A', cantidad: 10 }]
+   */
   merccancialTablaDatos: MercanciaDetalle[];
+
+  /**
+   * @property {DatosDelTramiteFormState} datosDelTramite
+   * @description
+   * Información general del formulario del trámite.
+   * 
+   * @remarks
+   * Contiene datos como permiso general, uso final, aduanas seleccionadas, país destino, etc.
+   * 
+   * @example
+   * datosDelTramite: { permisoGeneral: 'PG-2023', paisDestino: 'Colombia' }
+   */
   datosDelTramite: DatosDelTramiteFormState;
+
+  /**
+   * @property {DestinoFinal | null} [modificarDestinarioDatos]
+   * @description
+   * Objeto con los datos del destinatario final que se está modificando, si aplica.
+   * 
+   * @remarks
+   * Se usa para precargar los datos en el formulario de edición.
+   * 
+   * @example
+   * modificarDestinarioDatos: { nombre: 'Empresa Z', direccion: 'Av. Reforma' }
+   */
   modificarDestinarioDatos?: DestinoFinal | null;
+
+  /**
+   * @property {Proveedor | null} [modificarProveedorDatos]
+   * @description
+   * Objeto con los datos del proveedor que se está modificando, si aplica.
+   * 
+   * @remarks
+   * Se utiliza cuando el usuario desea editar un proveedor existente.
+   * 
+   * @example
+   * modificarProveedorDatos: { nombre: 'Proveedor A', pais: 'EE.UU.' }
+   */
   modificarProveedorDatos?: Proveedor | null;
 }
 

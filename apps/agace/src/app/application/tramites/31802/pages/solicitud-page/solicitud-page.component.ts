@@ -1,5 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos,ListaPasosWizard,PASOS, WizardComponent} from '@ng-mf/data-access-user';
+import {
+  DatosPasos,
+  ListaPasosWizard,
+  PASOS,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * Texto de alerta para terceros.
@@ -48,6 +54,16 @@ export class SolicitudPageComponent {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
+   * Referencia al componente PasoUnoComponent
+   */
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   * Mensaje de error a mostrar.
+   */
+  esValido = true;
+
+  /**
    * Datos de los pasos del asistente.
    */
   datosPasos: DatosPasos = {
@@ -71,6 +87,23 @@ export class SolicitudPageComponent {
    */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
+      if (this.indice === 1) {
+        const SOLICITUD = this.pasoUnoComponent?.solicitudComponent;
+        this.pasoUnoComponent.registroForm.markAllAsTouched();
+        this.pasoUnoComponent.registroForm.updateValueAndValidity();
+        this.esValido =
+          (SOLICITUD?.validarFormulario() &&
+            (this.pasoUnoComponent.registroForm.get('renovacion')?.invalid ||
+              this.pasoUnoComponent.registroForm.get('homologacion')
+                ?.invalid)) ??
+          false;
+      }
+
+      if (!this.esValido) {
+        this.datosPasos.indice = 1;
+        return;
+      }
+
       this.indice = e.valor;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
@@ -80,4 +113,3 @@ export class SolicitudPageComponent {
     }
   }
 }
-

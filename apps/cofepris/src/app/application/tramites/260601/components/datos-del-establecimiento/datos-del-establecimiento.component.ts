@@ -296,6 +296,78 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
   @ViewChild('representanteLegal') representanteLegal!: RepresentanteLegalComponent;
 
   /**
+   * @property {boolean} tableErrorMeassageDispalySCIAN
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error para la tabla SCIAN.
+   * Se establece a true cuando la tabla SCIAN está vacía y se intenta enviar el formulario.
+   */
+  tableErrorMeassageDispalySCIAN: boolean = false;
+
+  /**
+   * @property {boolean} tableErrorMeassageDispalyProducto
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error para la tabla de productos.
+   * Se establece a true cuando la tabla de productos está vacía y se intenta enviar el formulario.
+   */
+  tableErrorMeassageDispalyProducto: boolean = false;
+
+  /**
+   * @property {boolean} CheckboxError
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error para los checkboxes de manifiestos.
+   * Se establece a true cuando no se ha seleccionado al menos un manifiesto requerido.
+   */
+  CheckboxError: boolean = false;
+
+  /**
+   * @property {boolean} razonInvalid
+   * @description
+   * Bandera que indica si el campo de razón social es inválido.
+   * Se utiliza para mostrar mensajes de error específicos en la interfaz.
+   */
+  razonInvalid: boolean = false;
+
+  /**
+   * @property {boolean} codigoPostalInvalid
+   * @description
+   * Bandera que indica si el campo de código postal es inválido.
+   * Se utiliza para mostrar mensajes de error específicos en la interfaz.
+   */
+  codigoPostalInvalid: boolean = false;
+
+  /**
+   * @property {boolean} descripcionMunicipioInvalid
+   * @description
+   * Bandera que indica si el campo de descripción del municipio es inválido.
+   * Se utiliza para mostrar mensajes de error específicos en la interfaz.
+   */
+  descripcionMunicipioInvalid: boolean = false;
+
+  /**
+   * @property {boolean} informacionExtraInvalid
+   * @description
+   * Bandera que indica si el campo de información extra es inválido.
+   * Se utiliza para mostrar mensajes de error específicos en la interfaz.
+   */
+  informacionExtraInvalid: boolean = false;
+
+  /**
+   * @property {boolean} descripcionColoniaInvalid
+   * @description
+   * Bandera que indica si el campo de descripción de colonia es inválido.
+   * Se utiliza para mostrar mensajes de error específicos en la interfaz.
+   */
+  descripcionColoniaInvalid: boolean = false;
+
+  /**
+   * @property {boolean} calleInvalid
+   * @description
+   * Bandera que indica si el campo de calle es inválido.
+   * Se utiliza para mostrar mensajes de error específicos en la interfaz.
+   */
+  calleInvalid: boolean = false;
+
+  /**
    * Constructor del componente. Utilizado para inyectar servicios necesarios.
    *
    * @param fb FormBuilder para construir formularios reactivos.
@@ -899,24 +971,41 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
    * @returns {boolean} true si todos los formularios son válidos, false en caso contrario.
    */
   validarFormularios(): boolean {
+    let valid = false
     if (this.datosDelEstablecimientoForm.valid &&
       this.domicilloDelEstablecimientoForm.valid &&
       this.scianForm.valid &&
       this.manifiestosForm.valid
     ) {
-      return true;
+      
+      valid = true;
     }
+    if (this.representanteLegal) {
+      if (!this.representanteLegal.validarFormulario()) {
+          valid = false
+        }
+      }
+      else{
+          valid = true
+      }
+    
+    this.razonInvalid = !(this.datosDelEstablecimientoForm.get('razonSocial')?.value !== '' )
+    this.codigoPostalInvalid = !(this.domicilloDelEstablecimientoForm.get('codigoPostal')?.value !== '' )
+    this.descripcionMunicipioInvalid = !(this.domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.value !== '' )
+    this.informacionExtraInvalid = !(this.domicilloDelEstablecimientoForm.get('informacionExtra')?.value !== '' )
+    this.descripcionColoniaInvalid = !(this.domicilloDelEstablecimientoForm.get('descripcionColonia')?.value !== '' )
+    this.calleInvalid = !(this.domicilloDelEstablecimientoForm.get('calle')?.value !== '')
+    const VALID = this.scianBodyData.length > 0
+    this.tableErrorMeassageDispalySCIAN = !VALID
+    const TABLAVALID = this.productoBodyData.length > 0
+    this.tableErrorMeassageDispalyProducto = !TABLAVALID
+    const CHECKBOX_VALID = this.seleccionadaManifiesto.value[0]
+    this.CheckboxError = !CHECKBOX_VALID
     this.datosDelEstablecimientoForm.markAllAsTouched();
     this.domicilloDelEstablecimientoForm.markAllAsTouched();
     this.scianForm.markAllAsTouched();
     this.manifiestosForm.markAllAsTouched();
-    if(this.representanteLegal){
-      if(!this.representanteLegal.validarFormulario()){
-        return false
-      }
-      return false
-    }
-    return false
+    return valid
   }
 
   /**

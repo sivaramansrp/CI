@@ -17,7 +17,7 @@
                 [disabled]="disabled"
               />
             <div *ngIf="esInvalido('claveDeReferencia')" class="text-danger">
-              <small *ngIf="pagoDeDerechosForm.controls['claveDeReferencia'].hasError('required')">Todos los campos de pago son requeridos</small>
+              <small *ngIf="pagoDeDerechosForm.controls['claveDeReferencia'].hasError('required') && (pagoDeDerechosForm.controls['claveDeReferencia'].touched || pagoDeDerechosForm.controls['claveDeReferencia'].dirty)">Todos los campos de pago son requeridos</small>
               <small *ngIf="pagoDeDerechosForm.controls['claveDeReferencia'].hasError('maxlength')">Máximo 9 caracteres.</small>
           </div>
           </div>
@@ -53,7 +53,7 @@
             >
             </app-catalogo-select>
               <div *ngIf="esInvalido('clave')" class="text-danger">
-                <small *ngIf="pagoDeDerechosForm.controls['clave'].hasError('required')">Todos los campos de pago son requeridos.</small>
+                  <small *ngIf="pagoDeDerechosForm.controls['clave'].hasError('required') && (pagoDeDerechosForm.controls['clave'].touched || pagoDeDerechosForm.controls['clave'].dirty)">Todos los campos de pago son requeridos.</small>
             </div>
             </div>
           </div>
@@ -76,7 +76,7 @@
               maxlength="30"
             />
             <div *ngIf="esInvalido('llaveDePago')" class="text-danger">
-              <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('required')">Todos los campos de pago son requeridos</small>
+                <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('required') && (pagoDeDerechosForm.controls['llaveDePago'].touched || pagoDeDerechosForm.controls['llaveDePago'].dirty)">Todos los campos de pago son requeridos</small>
               <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('longitudMaxima')">Debe capturar exactamente 30 caracteres alfanuméricos en mayúsculas.</small>
           </div>
           </div>
@@ -94,7 +94,7 @@
             [disabled]="disabled"
           />
             <div *ngIf="esInvalido('fecPago')" class="text-danger">
-              <small *ngIf="pagoDeDerechosForm.controls['fecPago'].hasError('required')">Todos los campos de pago son requeridos.</small>
+                <small *ngIf="pagoDeDerechosForm.controls['fecPago'].hasError('required') && (pagoDeDerechosForm.controls['fecPago'].touched || pagoDeDerechosForm.controls['fecPago'].dirty)">Todos los campos de pago son requeridos.</small>
               <small *ngIf="pagoDeDerechosForm.get('fecPago')?.hasError('fechaLim')">La fecha de pago debe ser menor o igual a la fecha actual</small>
           </div>
           </div>
@@ -113,7 +113,7 @@
               [disabled]="disabled"
             />
               <div *ngIf="esInvalido('impPago')" class="text-danger">
-              <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('required')">Todos los campos de pago son requeridos.</small>
+                <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('required') && (pagoDeDerechosForm.controls['impPago'].touched || pagoDeDerechosForm.controls['impPago'].dirty)">Todos los campos de pago son requeridos.</small>
               <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('maxlength')">El importe de pago no puede exceder 16 caracteres.</small>
               <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('pattern')">
                Este campo solo permite números hasta dos decimales.

@@ -9,6 +9,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 
 import { CERTIFICADO_DISPONIBLES_COLUMNAS, CertificadoDisponibles, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { CertificadoDisponiblesService } from '../../services/certificado-disponibles/certificadoDisponibles.service';
+import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
 
 
 /**
@@ -60,7 +61,8 @@ export class CertificadoDisponiblesComponent implements OnInit, OnDestroy {
    * @param {CertificadoDisponiblesService} service - Servicio para obtener datos de tratados y acuerdos.
    */
   constructor(private service: CertificadoDisponiblesService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    public tramiteQuery: Tramite110210Query
   ) {
      this.consultaioQuery.selectConsultaioState$
           .pipe(
@@ -77,13 +79,13 @@ export class CertificadoDisponiblesComponent implements OnInit, OnDestroy {
    * Obtiene datos del servicio y los asigna a tableData.
    */
   ngOnInit(): void {
-    this.service.getData().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data: CertificadoDisponibles[]) => {
+    this.tramiteQuery.selectTabla$
+      .pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((data: CertificadoDisponibles[]) => {
         this.datosTabla = data;
-      }
-    );
+      });
   }
 
   /**

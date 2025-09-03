@@ -173,4 +173,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.complete(); // Completa el observable
   }
 
+  /**
+   * Maneja el cambio en el dropdown padre (régimen).
+   * Limpia el valor del dropdown hijo (clasificación) cuando cambia el régimen.
+   */
+  onRegimenChange(): void {
+   this.formulario.get('clasificacion')?.setValue(null);
+  this.setValoresStore(this.formulario, 'regimen', 'setRegimen');
+  this.tramite130106Store.setClasificacion('');
+  }
+
+  /**
+   * Maneja el cambio en el dropdown hijo (clasificación).
+   */
+  onClasificacionChange(): void {
+    this.setValoresStore(this.formulario, 'clasificacion', 'setClasificacion');
+  }
+
 }

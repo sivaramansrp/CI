@@ -1,8 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { API_ENVIAR_FIRMA, API_GENERAR_CADENA_ORIGINAL } from '../../../constants/api-constants';
+import { API_ENVIAR_FIRMA, API_GENERAR_CADENA_ORIGINAL, AUTH_ROUTE } from '../../../servers/api-router';
 import { FielPayload, FirmarRequest } from '../../../models/shared/firma-electronica/request/firmar-request.model';
-import { AUTH_ROUTE } from '../../../servers/common-server-route';
 import { BaseResponse } from '../../../models/shared/base-response.model';
 import { CadenaOriginalRequest } from '../../../models/shared/firma-electronica/request/cadena-original-request.model';
 import { ENVIRONMENT } from '../../../../enviroments/enviroment';

@@ -1,4 +1,4 @@
-import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, REGEX_NUMEROS, REGEX_SOLO_NÚMERO } from '@ng-mf/data-access-user';
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Contenedor11202State, Contenedor11202Store } from '../../estados/contenedor11202.store';
 import { CSV_DE_TABLA, ELGIR_DE_ARCHIVO, GRID_CONTENEDORES, SOLICITUD_11202_ENUM } from '../../constantes/retorno-contenedores.enum';
@@ -305,7 +305,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   limpiarCampos(): void {
     const TIPOBUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
-    this.solicitudForm.reset();
+    (this.solicitudForm.get('datosContenedor') as FormGroup)?.reset();
     this.solicitudForm.get('tipoBusqueda')?.setValue(TIPOBUSQUEDA);
     this.mostrarCampos();
     this.contenedores = [];
@@ -316,9 +316,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Inicializa el modal.
    */
   encontradaModal(): void {
-    console.log('Modal encontrado', this.solicitudForm.valid);
     if (this.solicitudForm.valid) {
-      console.log(this.solicitudForm.value);
       if (this.modalElement) {
         const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
         MODAL_INSTANCE.show();
@@ -413,8 +411,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       'Fecha Ingreso': 'fechaIngreso',
       'Vigencia': 'vigencia',
       'Estado de constancia': 'estadoConstancia',
-      'Existe en VUCEM': 'existeEnVUCEM',
-      'Id constancia': 'idConstancia'
+      'Existe en VUCEM': 'existeEnVUCEM'
     };
     const DATA = LINES.slice(1)
       .map((line) => {
@@ -475,10 +472,26 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         inicialesContenedor: [ this.contenedorState?.inicialesContenedor, [Validators.required, Validators.maxLength(10)]],
         numeroContenedor: [ this.contenedorState?.numeroContenedor, [Validators.required, Validators.minLength(6), Validators.maxLength(15)]],
         tipoContenedor: [this.contenedorState?.tipoContenedor],
-        digitoDeControl: [this.contenedorState?.digitoDeControl, [Validators.minLength(1), Validators.maxLength(1)]],
+        digitoDeControl: [this.contenedorState?.digitoDeControl, [Validators.maxLength(1), Validators.pattern(REGEX_SOLO_NÚMERO)]],
       }),
     });
     this.mostrarCampos();
+    this.solicitudForm
+      .get('datosContenedor.digitoDeControl')
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((valor) => {
+        if (valor) {
+          const SANITIZED = valor.replace(REGEX_NUMEROS, '');
+          this.solicitudForm
+            .get('datosContenedor.digitoDeControl')
+            ?.setValue(SANITIZED, { emitEvent: false });
+          this.setValoresStore(
+            this.solicitudForm,
+            'digitoDeControl',
+            'setDigitoDeControl'
+          );
+        }
+      });
     this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(value => {
       this.setValoresStore(this.solicitudForm, 'tipoBusqueda', 'setTipoBusqueda');
       this.mostrarCampos();

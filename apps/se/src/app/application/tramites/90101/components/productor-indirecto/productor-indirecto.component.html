@@ -40,7 +40,7 @@
     </div>
     <div class="row">
         <h6>Solicitud Prosec Productor Indirecto Tabla:</h6>
-        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="productorColumnsConfiguracion" [datos]="productorDato" (listaDeFilaSeleccionada)="seleccionTabla($event)"></app-tabla-dinamica>
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="productorColumnsConfiguracion" [datos]="productorDato" (listaDeFilaSeleccionada)="seleccionTabla($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
     </div>
     <div>
         @if(espectaculoAlerta){
