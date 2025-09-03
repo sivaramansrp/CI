@@ -17,6 +17,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Reset Nx cache
+        run: npx nx reset
+
       - name: Get version from package.json
         id: get-version
         run: |
