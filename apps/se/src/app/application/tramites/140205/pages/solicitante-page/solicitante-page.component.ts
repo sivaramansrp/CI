@@ -219,6 +219,10 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
         this.mensajeError = this.generarValidacionHTML();
         this.esValido = true;
       }
+    } else {
+      this.mensajesDeValidacion = [];
+      this.mensajeError = '';
+      this.esValido = false;
     }
   }
 

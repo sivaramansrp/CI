@@ -67,17 +67,21 @@ export class PasoUnoPagesComponent implements OnInit {
    */
 guardarDatosFormulario(): void {
   forkJoin({
-    pagoDerechos: this.establecimientoService.getPagoDerechos(), // returns DatosDelSolicituteSeccionState
-    estadoDerechos: this.establecimientoService.getEstadoDerechos() // returns DatosDomicilioLegalStore
+    pagoDerechos: this.establecimientoService.getPagoDerechos(), // regresar DatosDelSolicituteSeccionState
+    estadoDerechos: this.establecimientoService.getEstadoDerechos(), // regresar DatosDomicilioLegalStore
+    pagoDeDerechos: this.establecimientoService.getPagoDerechosDatos() // regresar PermisoImportacionBiologicaState
   })
     .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe(({ pagoDerechos, estadoDerechos }) => {
+    .subscribe(({ pagoDerechos, estadoDerechos, pagoDeDerechos }) => {
       if (pagoDerechos) {
         this.esDatosRespuesta = true;
-        this.establecimientoService.actualizarEstadoFormulario(pagoDerechos); // expects DatosDelSolicituteSeccionState
+        this.establecimientoService.actualizarEstadoFormulario(pagoDerechos); // espera DatosDelSolicituteSeccionState
       }
       if (estadoDerechos) {
-        this.establecimientoService.actualizarFormulario(estadoDerechos); // expects DatosDomicilioLegalStore
+        this.establecimientoService.actualizarFormulario(estadoDerechos); // espera DatosDomicilioLegalStore
+      }
+      if (pagoDeDerechos) {
+        this.establecimientoService.actualizarPagoDerechosFormulario(pagoDeDerechos); // espera PermisoImportacionBiologicaState
       }
     });
 }

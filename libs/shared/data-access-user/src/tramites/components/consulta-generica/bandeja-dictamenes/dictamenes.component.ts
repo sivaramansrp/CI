@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, S
 import { Subject, takeUntil } from 'rxjs';
 import { CONSULTA_DICTAMENES } from '../../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
-import { DictamenesResponse } from "../../../../core/models/130118/dictamenes-response.model";
+import { DictamenesResponse } from "../../../../core/models/shared/dictamenes-response.model";
 import { DictamenesService } from '../../../../core/services/consultagenerica/dictamenes-service';
 import { FolioQuery } from '../../../../core/queries/folio.query';
 

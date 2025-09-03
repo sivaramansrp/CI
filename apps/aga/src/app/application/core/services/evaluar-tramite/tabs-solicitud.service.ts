@@ -6,11 +6,11 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { API_GET_ACUSES_RESOLUCION, API_GET_DICTAMENES, API_GET_REQUERIMIENTOS, API_GET_SOLICITUD_DOCUMENTOS, API_GET_TAREAS_DOCUMENTOS } from '@libs/shared/data-access-user/src/core/servers/api-router';
-import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-acuses-response.model';
-import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/130118/dictamenes-response.model';
-import { DocumentoSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model';
-import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/130118/requerimientos-response.model';
-import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model';
+import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/shared/consulta-acuses-response.model';
+import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/shared/dictamenes-response.model';
+import { DocumentoSolicitud } from '@libs/shared/data-access-user/src/core/models/shared/consulta-documentos-response.model';
+import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/shared/requerimientos-response.model';
+import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/shared/consulta-tareas-response.model';
 @Injectable({
     providedIn: 'root'
 })
