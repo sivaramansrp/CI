@@ -10,7 +10,8 @@
           class="form-control min-hgt"
           id="totalDeEmpleados"
           formControlName="totalDeEmpleados"
-          type="text"
+          type="number"
+          maxlength="10"
              (change)="setValoresStore(empleadosForm, 'totalDeEmpleados', 'setTotalDeEmpleados')"
         />
       </div>
@@ -45,7 +46,7 @@
     </div>
     @if(empleadosForm.get('directos')?.value){
     <div class="row mt-5">
-      <h3>Directios</h3>
+      <h3>Directos</h3>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
@@ -198,12 +199,20 @@
       </div>
     </div>
     <div class="row mt-5">
+      <h6>Directos</h6>
       <app-tabla-dinamica
         [configuracionTabla]="directosEncabezado"
         [tipoSeleccionTabla]="directosTablaSeleccion"
         [datos]="directosDatos"
+        (listaDeFilaSeleccionada)="onDirectosSeleccionadas($event)"
       ></app-tabla-dinamica>
     </div>
+    <div class="row mt-5">
+    <div class="col-12 container text-end mt-5">
+      <button class="btn btn-danger me-2" (click)="eliminarDirectos()">Eliminar</button>
+      <button class="btn btn-primary" >Editar</button>
+    </div>
+  </div>
   </form>
   <div class="row mt-5 my-5">
     <div class="col-12 container text-end mt-5">

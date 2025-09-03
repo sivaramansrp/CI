@@ -42,9 +42,9 @@ export class ComplimentosService {
      }
 
     /**
-     * Retrieves a list of countries from the catalog API.
+     * Recupera una lista de países desde el API de catálogo.
      *
-     * @returns An Observable emitting the response containing an array of countries.
+     * @returns Un Observable que emite la respuesta con un arreglo de países.
      */
      getPais(): Observable<any> {
     return (

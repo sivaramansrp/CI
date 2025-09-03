@@ -1401,7 +1401,15 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
   }
 
 
-  getPais() {
+  /**
+   * Obtiene la lista de países desde el servicio `complimentosService` y actualiza las opciones
+   * de los campos de formulario correspondientes con los datos recibidos.
+   * 
+   * Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   * Actualiza tanto el campo 'pais' en `camposFormularioDefault` como el campo correspondiente
+   * en `camposFormularioTipoPersona` con las opciones obtenidas.
+   */
+  getPais():void {
     this.complimentosService.getPais().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
    const INDICE = this.camposFormulario.findIndex(
           (ele) => ele.campo === 'pais'

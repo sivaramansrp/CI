@@ -6,7 +6,7 @@ import {
   InfoServicios,
   Servicio,
 } from '../models/nuevo-programa-industrial.model';
-import { Observable, map } from 'rxjs';
+import { Observable, map, take, tap } from 'rxjs';
 import {
   Tramite80101State,
   Tramite80101Store,
@@ -17,6 +17,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
+import { Tramite80101Query } from '../estados/tramite80101.query';
 
 
 
@@ -37,7 +38,8 @@ export class NuevoProgramaIndustrialService {
   constructor(
     private readonly http: HttpClient,
     public tramite80101Store: Tramite80101Store,
-    public httpService: HttpCoreService
+    public httpService: HttpCoreService,
+    private Tramite80101Query:Tramite80101Query
   ) {
     // No se necesita lógica de inicialización adicional.
   }
@@ -164,7 +166,12 @@ export class NuevoProgramaIndustrialService {
     );
   }
   
+getAllState() {
+return  this.Tramite80101Query.allStore$
+}
 
-
+dummyPost(body:any) {
+  return this.http.post('assets/json/80101/dummy-post.json', body);
+}
 
 }
