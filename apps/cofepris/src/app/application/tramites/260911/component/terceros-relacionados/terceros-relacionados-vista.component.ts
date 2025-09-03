@@ -2,18 +2,12 @@ import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, Renderer2 }
 import {
   Destinatario,
   Fabricante,
-  Facturador as SharedFacturador,
-  Proveedor as SharedProveedor,
+  Facturador,
+  Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
 import { EventEmitter, Output } from '@angular/core';
 
 
-interface ProveedorWithId extends SharedProveedor {
-  id: string;
-}
-interface FacturadorWithId extends SharedFacturador {
-  id: string;
-}
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
@@ -88,11 +82,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
   /**
    * Datos de la tabla de proveedores.
    */
-  proveedorTablaDatos: ProveedorWithId[] = [];
+  proveedorTablaDatos: Proveedor[] = [];
   /**
    * Datos de la tabla de facturadores.
    */
-  facturadorTablaDatos: FacturadorWithId[] = [];
+  facturadorTablaDatos: Facturador[] = [];
   /**
    * Datos de la tabla de fabricantes seleccionados.
    */
@@ -104,11 +98,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
   /**
    * Datos de la tabla de proveedores seleccionados.
    */
-  proveedorSeleccionadoDatos: ProveedorWithId[] = [];
+  proveedorSeleccionadoDatos: Proveedor[] = [];
   /**
    * Datos de la tabla de facturadores seleccionados.
    */
-  facturadorSeleccionadoDatos: FacturadorWithId[] = [];
+  facturadorSeleccionadoDatos: Facturador[] = [];
 
   /**
    * Estado de habilitación de los botones de acción para la tabla de fabricantes.
@@ -175,13 +169,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
       .pipe(takeUntil(this.destroy$))
       .subscribe((datos) => {
         
-        this.proveedorTablaDatos = datos as ProveedorWithId[];
+        this.proveedorTablaDatos = datos as Proveedor[];
       });
 
     this.tramiteQuery.getFacturadorTablaDatos$
       .pipe(takeUntil(this.destroy$))
       .subscribe((datos) => {
-        this.facturadorTablaDatos = datos as FacturadorWithId[];
+        this.facturadorTablaDatos = datos as Facturador[];
       });
   }
 /**
@@ -295,8 +289,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
    */
   eliminarProveedor(): void {
     if (this.proveedorSeleccionadoDatos.length > 0) {
-      const IDS_TO_DELETE = this.proveedorSeleccionadoDatos.map((p: ProveedorWithId) => p.id);
-      const UPDATED = this.proveedorTablaDatos.filter((p: ProveedorWithId) => !IDS_TO_DELETE.includes(p.id));
+      const IDS_TO_DELETE = this.proveedorSeleccionadoDatos.map((p: Proveedor) => p.id);
+      const UPDATED = this.proveedorTablaDatos.filter((p: Proveedor) => !IDS_TO_DELETE.includes(p.id));
       this.tramiteStore.updateProveedorTablaDatos(UPDATED);
       this.proveedorSeleccionadoDatos = [];
       this.proveedorButtonState = { showModificar: false, showEliminar: false };
@@ -317,8 +311,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
    */
   eliminarFacturador(): void {
     if (this.facturadorSeleccionadoDatos.length > 0) {
-      const IDS_TO_DELETE = this.facturadorSeleccionadoDatos.map((f: FacturadorWithId) => f.id);
-      const UPDATED = this.facturadorTablaDatos.filter((f: FacturadorWithId) => !IDS_TO_DELETE.includes(f.id));
+      const IDS_TO_DELETE = this.facturadorSeleccionadoDatos.map((f: Facturador) => f.id);
+      const UPDATED = this.facturadorTablaDatos.filter((f: Facturador) => !IDS_TO_DELETE.includes(f.id));
       this.tramiteStore.updateFacturadorTablaDatos(UPDATED);
       this.facturadorSeleccionadoDatos = [];
       this.facturadorButtonState = { showModificar: false, showEliminar: false };
@@ -429,11 +423,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
    *
    * @param event - El evento de selección que contiene los datos del proveedor.
    */
-  onProveedorSeleccionado(event: ProveedorWithId[] | object): void {
-    let DATOS: ProveedorWithId[] = [];
+  onProveedorSeleccionado(event: Proveedor[] | object): void {
+    let DATOS: Proveedor[] = [];
     if (Array.isArray(event)) {
-      DATOS = event as ProveedorWithId[];
-    } else if (TercerosRelacionadosVistaComponent.isSelectionEvent<ProveedorWithId>(event)) {
+      DATOS = event as Proveedor[];
+    } else if (TercerosRelacionadosVistaComponent.isSelectionEvent<Proveedor>(event)) {
       DATOS = event.selectedRows ?? event.detail ?? [];
     }
     this.proveedorSeleccionadoDatos = DATOS;
@@ -452,11 +446,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
    *
    * @param event - El evento de selección que contiene los datos del facturador.
    */
-  onFacturadorSeleccionado(event: FacturadorWithId[] | object): void {
-    let DATOS: FacturadorWithId[] = [];
+  onFacturadorSeleccionado(event: Facturador[] | object): void {
+    let DATOS: Facturador[] = [];
     if (Array.isArray(event)) {
-      DATOS = event as FacturadorWithId[];
-    } else if (TercerosRelacionadosVistaComponent.isSelectionEvent<FacturadorWithId>(event)) {
+      DATOS = event as Facturador[];
+    } else if (TercerosRelacionadosVistaComponent.isSelectionEvent<Facturador>(event)) {
       DATOS = event.selectedRows ?? event.detail ?? [];
     }
     this.facturadorSeleccionadoDatos = DATOS;
@@ -491,18 +485,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
   /**
    * Agrega una lista de proveedores al trámite actual.
    *
-   * @param newProveedores - Un arreglo de objetos `ProveedorWithId` que serán añadidos como proveedores en la tabla de datos.
+   * @param newProveedores - Un arreglo de objetos `Proveedor` que serán añadidos como proveedores en la tabla de datos.
    */
-  addProveedores(newProveedores: ProveedorWithId[]): void {
+  addProveedores(newProveedores: Proveedor[]): void {
     this.tramiteStore.updateProveedorTablaDatos(newProveedores);
   }
 
   /**
    * Agrega una lista de facturadores al trámite actual.
    *
-   * @param newFacturadores - Un arreglo de objetos `FacturadorWithId` que serán añadidos como facturadores en la tabla de datos.
+   * @param newFacturadores - Un arreglo de objetos `Facturador` que serán añadidos como facturadores en la tabla de datos.
    */
-  addFacturadores(newFacturadores: FacturadorWithId[]): void {
+  addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
   }
 

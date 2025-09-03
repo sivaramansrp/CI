@@ -1,9 +1,9 @@
-import { ENVIRONMENT, TRAMITE } from '@libs/shared/data-access-user/src';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { API_GET_INICAR_DICTAMEN, NUMFOLIOTRAMITE } from '@libs/shared/data-access-user/src/core/constants/api-constants';
+import { API_GET_INICAR_DICTAMEN } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
 
 
@@ -33,7 +33,7 @@ export class IniciarService {
     * @returns Observable con la respuesta del servidor.
     */
     getIniciarDictamen(tramite: number, numFolio: string): Observable<BaseResponse<null>> {
-        const ENDPOINT = `${this.host}${API_GET_INICAR_DICTAMEN.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
+        const ENDPOINT = `${this.host}${API_GET_INICAR_DICTAMEN(tramite.toString(), numFolio)}`;
         return this.http.get<BaseResponse<null>>(ENDPOINT);
     }
 

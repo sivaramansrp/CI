@@ -19,7 +19,3 @@ export function getAlertaNumFolioAsignacionError(valor: string): string {
     <span style="text-align: center;">El valor (${valor}) debe ser un número válido</span>
   </div>`;
 }
-/**
- * Mensaje de alerta para el trámite 220501.
- */
-export const ALERTA_220501 = `<p style='text-align: center;'>Falta un campo por capturar.</p>`;

@@ -10,6 +10,7 @@
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [datos]="fabricanteDatos"
             (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
+             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           >
           </app-tabla-dinamica>
         </div>
@@ -30,7 +31,7 @@
             *ngIf="selectedRows.size === 1"
               type="button"
               data-bs-toggle="modal"
-              data-bs-target="#modalAgregarMercancias"
+              data-bs-target="#modalAgregarDestinatario"
               class="btn btn-default btn-space ms-3"
               (click)="openModificarMercancias()"    
             >
@@ -41,8 +42,9 @@
             type="button"
             class="btn btn-primary ms-3"
             data-bs-toggle="modal"
-            data-bs-target="#modalAgregarMercancias"
+          data-bs-target="#modalAgregarDestinatario"
             (click)="agregarMercancias()"
+              [disabled]="esFormularioSoloLectura"
           >
               Agregar
             </button>
@@ -62,6 +64,7 @@
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [datos]="destinatarioDatos"
+             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           >
           </app-tabla-dinamica>
         </div>
@@ -71,7 +74,7 @@
             type="button"
             class="btn btn-primary ms-3"
             data-bs-toggle="modal"
-            data-bs-target="#modalAgregarMercancias"
+            [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -83,6 +86,7 @@
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [datos]="proveedorDatos"
+             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
              
              >
           </app-tabla-dinamica>
@@ -94,6 +98,7 @@
             class="btn btn-primary ms-3"
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarMercancias"
+              [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -105,6 +110,7 @@
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [datos]="facturadorDatos"
+             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           >
           </app-tabla-dinamica>
         </div>
@@ -116,6 +122,7 @@
             class="btn btn-primary ms-3"
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarMercancias"
+              [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -124,6 +131,14 @@
       </div>
   </div>
   </div>
+  <div class="modal fade" id="modalAgregarDestinatario" tabindex="-1" aria-labelledby="modalAgregarDestinatarioLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAgregarDestinatarioLabel">Agregar destinatario (destino final)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
   <div class="container" *ngIf="esFormularioVisible">
     <form [formGroup]="destinatarioForm" (ngSubmit)="onGuardar()">
       <ng-titulo titulo="Agregar destinatario (destino final)" />
@@ -289,11 +304,15 @@
       </ng-container>
       <div class="col-md-12 d-flex justify-content-end">
       <div class="btn-group">
-        <button class="btn btn-danger" type="button" (click)="cancelarFormulario()" >Cancelar</button>
+        <button class="btn btn-danger" type="button" (click)="cancelarFormulario()" data-bs-dismiss="modal">Cancelar</button>
         <button class="btn btn-danger" type="button" (click)="limpiarFormulario()" >Limpiar</button>
-        <button class="btn btn-primary me-2" type="button" (click)="onGuardar()">Guardar</button>
+        <button class="btn btn-primary me-2" type="submit" data-bs-dismiss="modal">Guardar</button>
       </div>
     </div>
       </form>
+</div>
+      </div>
+    </div>
+  </div>
 </div>
   

@@ -6,9 +6,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   AnexoDosEncabezado,
   AnexoUnoEncabezado,
+  DatosComplimento,
   RutaNombre,
+
 } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
 import { CommonModule } from '@angular/common';
@@ -58,6 +61,25 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
     anexoDosEncabezadoDeTabla: ANEXO_IMPORTACION_SERVICIO,
   };
 
+
+  /**
+    * FormGroup para el Anexo Uno.
+    * 
+    * Representa el formulario reactivo asociado al Anexo Uno. 
+    * Contiene los controles y validaciones necesarias para capturar o modificar los datos del Anexo Uno.
+    * Se inicializa posteriormente, normalmente en el `ngOnInit` o en el constructor del componente.
+    */
+  public anexoUnoFormGroup!: FormGroup;
+
+  /**
+   * FormGroup para el Anexo Dos.
+   * 
+   * Representa el formulario reactivo asociado al Anexo Dos. 
+   * Contiene los controles y validaciones necesarias para capturar o modificar los datos del Anexo Dos.
+   * Se inicializa posteriormente, generalmente en el `ngOnInit` o en el constructor del componente.
+   */
+  public anexoDosFormGroup!: FormGroup;
+
   /**
    * Lista de encabezados del anexo Uno.
    * @type {AnexoEncabezado[]}
@@ -82,8 +104,8 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
    * Indica si el formulario debe mostrarse en modo solo lectura.
    * Cuando es verdadero, los campos del formulario no pueden ser editados por el usuario.
    */
-  public esFormularioSoloLectura: boolean = false; 
-  
+  public esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor de la clase ContenedorAnnexoUnoComponent.
    * @param {Router} router - Servicio de Angular para la navegación.
@@ -95,17 +117,17 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private store: Tramite80102Store,
-    private query: Tramite80102Query, private consultaQuery: ConsultaioQuery
+    private query: Tramite80102Query, private consultaQuery: ConsultaioQuery, private fb: FormBuilder,
   ) {
-  this.consultaQuery.selectConsultaioState$
-     .pipe(
-       takeUntil(this.destroyNotifier$),
-       map((seccionState)=>{
-         this.esFormularioSoloLectura = seccionState.readonly; 
-       })
-     )
-     .subscribe()
-      }
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -128,6 +150,78 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
           this.anexoDosTablaLista = exportarTablsDatos;
         }
       });
+    this.inicializarFormularioDatosSubcontratista();
+    this.obtenerDatosDelAlmacen();
+    this.inicializarFormularioDatosDosSubcontratista();
+    this.obtenerDatosDosDelAlmacen();
+  }
+
+
+  /**
+     * Obtiene los datos del almacén y los asigna al formulario de información de registro.
+     * Se suscribe al observable `infoRegisterEstado$` para obtener los datos, y cuando se reciben,
+     * se actualiza la propiedad `infoRegistro` y se establece el valor del formulario `formularioInfoRegistro`.
+     *
+     * @method obtenerDatosDelAlmacen
+     */
+  obtenerDatosDelAlmacen(): void {
+    this.query.selectDatosComplimentos$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datosComplimentos) => {
+        this.anexoUnoFormGroup.setValue(datosComplimentos);
+      });
+  }
+
+
+  obtenerDatosDosDelAlmacen(): void {
+    this.query.selectDatosComplimentosDos$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datosComplimentos) => {
+        this.anexoDosFormGroup.setValue(datosComplimentos);
+      });
+  }
+
+
+  /**
+     * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
+     * @method inicializarFormularioDatosSubcontratista
+     */
+  inicializarFormularioDatosSubcontratista(): void {
+    this.anexoUnoFormGroup = this.fb.group({
+      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
+    });
+  }
+
+  /**
+   * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
+   * @method inicializarFormularioDatosSubcontratista
+   */
+  inicializarFormularioDatosDosSubcontratista(): void {
+    this.anexoDosFormGroup = this.fb.group({
+      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
+    });
+  }
+
+  /**
+     * Modifica los datos de los cumplimientos y los almacena en el estado.
+     *
+     * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
+     * @returns void
+     */
+  modifierComplimentos(complimentos: DatosComplimento): void {
+    this.store.setDatosComplimento(complimentos);
+  }
+
+  /**
+   * Modifica los datos de los cumplimientos y los almacena en el estado.
+   *
+   * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
+   * @returns void
+   */
+  modifierDosComplimentos(complimentos: DatosComplimento): void {
+    this.store.setDatosComplimentoDos(complimentos);
   }
 
   /**

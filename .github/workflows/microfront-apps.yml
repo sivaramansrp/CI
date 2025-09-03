@@ -8,7 +8,7 @@ on:
         required: true
         default: 'crt-microfront'
       image_tag:
-        description: 'Docker image tag (e.g. 1.1.82)'
+        description: 'Docker image tag (e.g. 1.1.83)'
         required: true
         default: '1.0.0'
 
@@ -31,16 +31,16 @@ jobs:
 
       - name: Build Docker image for microfront app
         run: |
-          docker compose -f modulefederation-${{ github.event.inputs.app_name }}.yml build --no-cache
+          docker compose -f docker/modulefederation-${{github.event.inputs.app_name}}.yml build --no-cache
 
       - name: Tag Docker image
         run: |
-          docker tag dockerized-modulefederation-${{ github.event.inputs.app_name }}-microfront:latest \
-            ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}-microfront:${{ github.event.inputs.image_tag }}
+          docker tag ghcr.io/vucem30/dockerized-modulefederation-${{github.event.inputs.app_name}}:1.0.35 \
+            ghcr.io/vucem30/dockerized-modulefederation-${{github.event.inputs.app_name}}:${{github.event.inputs.image_tag}}
 
       - name: Push Docker image
         run: |
-          docker push ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}-microfront:${{ github.event.inputs.image_tag }}
+          docker push ghcr.io/vucem30/dockerized-modulefederation-${{github.event.inputs.app_name}}:${{github.event.inputs.image_tag}}
 
   deploy:
     needs: build-and-push
@@ -51,14 +51,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Debug:List yaml files before copy
+        run: |
+          echo "Showing YAML files in k8s/${{github.event.inputs.app_name}}/"
+          ls -l k8s/${{github.event.inputs.app_name}}/ || echo "Directory does not exist"
+          echo "Full find output:"
+          find k8s/${{github.event.inputs.app_name}}/ || echo "Directory does not exist"
+
       - name: Copy deployment files to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-          source: v30/deploy/deploy-microfront/${{ github.event.inputs.app_name }}/*
-          target: ~/deployments/${{ github.event.inputs.app_name }}/
+          source: k8s/${{github.event.inputs.app_name}}/*.yaml
+          target: ~/deployments/${{github.event.inputs.app_name}}/
+          strip_components: 2
+
+      - name: List files on remote after copy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          script: |
+            ls -l ~/deployments/${{github.event.inputs.app_name}}/
 
       - name: SSH Deploy and Restart
         uses: appleboy/ssh-action@v1.0.3
@@ -67,11 +84,32 @@ jobs:
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           script: |
-            cd ~/deployments/${{ github.event.inputs.app_name }}/
+            set -e
+            APP_NAME="${{ github.event.inputs.app_name }}"
+            IMAGE_TAG="${{ github.event.inputs.image_tag }}"
+            DEPLOY_DIR=~/deployments/$APP_NAME
+            DEPLOYMENT_FILE="${APP_NAME}-deployment-dev.yaml"
+            SERVICE_FILE="${APP_NAME}-service-dev.yaml"
+            INGRESS_FILE="${APP_NAME}-ingress-dev.yaml"
+            cd "$DEPLOY_DIR"
+            for FILE in "$DEPLOYMENT_FILE" "$SERVICE_FILE" "$INGRESS_FILE"; do
+              if [ ! -f "$FILE" ]; then
+                echo "ERROR: $FILE not found in $(pwd)"
+                ls -l
+                exit 1
+              fi
+            done
             docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }} ghcr.io
-            docker pull ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}-microfront:${{ github.event.inputs.image_tag }}
+            docker pull ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG
             # Update deployment YAML with new image tag
-            sed -i "s|ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}-microfront:.*|ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}-microfront:${{ github.event.inputs.image_tag }}|g" ${{ github.event.inputs.app_name }}-deployment-dev.yaml
-            microk8s kubectl apply -f ${{ github.event.inputs.app_name }}-deployment-dev.yaml
-            microk8s kubectl rollout restart deployment modulefederation-${{ github.event.inputs.app_name }}-deployment-dev -n default
-            microk8s kubectl get pods | grep ${{ github.event.inputs.app_name }}
+            sed -i "s|ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:.*|ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG|g" "$DEPLOYMENT_FILE"
+            
+            microk8s kubectl apply -f "$DEPLOYMENT_FILE"
+            microk8s kubectl apply -f "$SERVICE_FILE"
+            microk8s kubectl apply -f "$INGRESS_FILE"
+            microk8s kubectl rollout restart deployment modulefederation-$APP_NAME-deployment-dev -n default
+            microk8s kubectl get pods | grep $APP_NAME
+            
+
+            
+            

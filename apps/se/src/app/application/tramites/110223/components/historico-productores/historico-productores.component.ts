@@ -1,21 +1,15 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HEADERSDATASELECCIONADASTABLA, HISTORICOTABLECOLUMNS } from '../../models/registro.model';
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { map, takeUntil } from 'rxjs';
 import { CertificadosOrigenService } from '../../../110223/services/certificado-origen.service';
-import { CommonModule } from '@angular/common';
-import { HistoricoColumnas } from '../../../110223/models/certificado-origen.model';
-import { Modal } from 'bootstrap';
-import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
-import { Solicitud110223State } from '../../../../estados/tramites/Tramite110223.store';
+import { FormBuilder } from '@angular/forms';
+import { HistoricoColumnas} from '../../../110223/models/certificado-origen.model';
+import { HistoricoProductoresComponent } from '../../../../shared/components/historico-productores/historico-productores.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MercanciaTabla } from '../../../../shared/models/certificado-origen.model';
 import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite110223Query } from '../../../../estados/queries/tramite110223.query';
-import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.store';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Tramite110223Query } from '../../query/tramite110223.query';
+import { Tramite110223Store } from '../../estados/Tramite110223.store';
 
 /**
  * Componente para gestionar el histórico de productores.
@@ -24,114 +18,91 @@ import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src
  * datos confidenciales.
  */
 @Component({
-  selector: 'app-historico-productores',
+  selector: 'app-historico-productoress',
   standalone: true,
-  imports: [CommonModule, TituloComponent, FormsModule, ReactiveFormsModule, TablaDinamicaComponent],
+  imports: [HistoricoProductoresComponent],
   templateUrl: './historico-productores.component.html',
   styleUrls: ['./historico-productores.component.scss'],
 })
-export class HistoricoProductoresComponent implements OnInit, OnDestroy {
+export class HistoricoProductoressComponent implements OnInit, OnDestroy {
   /**
-   * Formulario principal para gestionar los datos de los productores.
+   * @property {boolean} ocultarFax
+   * Indica si el campo de fax debe estar oculto o visible en la interfaz de usuario.
+    * @default true
    */
-  formulario!: FormGroup;
+  ocultarFax: boolean = true;
 
   /**
-   * Configuración de la tabla de selección.
+   * @property esTipoDeSeleccionado
+   * @type {boolean}
+   * @description Indica si el tipo seleccionado es válido o está activo.
    */
-  TablaSeleccion = TablaSeleccion;
+  esTipoDeSeleccionado: boolean = true;
 
   /**
-   * Configuración de las columnas de la tabla dinámica.
+   * @property {Catalogo[]} optionsTipoFactura
+   * @description Arreglo que contiene las opciones disponibles para el tipo de factura.
+   * @command Este arreglo se utiliza para poblar un componente de selección en la interfaz de usuario.
    */
-  tableColumns = HISTORICOTABLECOLUMNS;
-
+  optionsTipoFactura: Catalogo[] = [];
   /**
    * Lista de productores disponibles para el exportador.
    */
   productoresExportador: HistoricoColumnas[] = [];
-
   /**
-   * Lista de productores seleccionados para agregar.
+   * @property {MercanciaTabla[]} MercanciaTabla - Arreglo que contiene información de las mercancías.
+   * @command Este arreglo se utiliza para almacenar y gestionar los datos relacionados con las mercancías en el componente.
    */
-  seleccionadoProductoresExportador: HistoricoColumnas[] = [];
-
-  /**
-   * Lista de productores ya agregados.
-   */
-  agregarProductoresExportador: HistoricoColumnas[] = [];
-
-  /**
-   * Lista de productores seleccionados para eliminar.
-   */
-  seleccionadoAgregarProductoresExportador: HistoricoColumnas[] = [];
-
+  mercancia: MercanciaTabla[] = [];
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
    */
   destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Indica si se está editando una mercancía.
-   */
-  esMercanciaEnEdicion = false;
-
-  /**
    * Estado actual del trámite.
    */
-  public tramiteState!: Solicitud110223State;
-
+  public tramiteState!: { [key: string]: unknown };
   /**
-   * Referencia al modal para agregar datos del productor.
+   * @public
+   * @property
+   * @type { [key: string]: unknown}
+   * @comando
+   * Este objeto debe ser inicializado antes de su uso para evitar errores.
    */
-  @ViewChild('modalAgregarDatosProductorPorExportador') modalElement!: ElementRef;
-
+  public agregarDatosProductor!: { [key: string]: unknown };
   /**
-   * Referencia al botón para cerrar el modal.
-   */
-  @ViewChild('closeModal') closeModal!: ElementRef;
-
-  /**
-   * Formulario para agregar datos del productor.
-   */
-  agregarDatosProductorFormulario!: FormGroup;
-
-    /**
-   * Estado actual de la consulta.
-   */
-    consultaDatos!: ConsultaioState;
-
-    /**
-     * Indica si el formulario está en modo de solo lectura.
-     */
-    soloLectura: boolean = false;
+* Indica si el formulario está en modo solo lectura.
+* Cuando es `true`, los campos del formulario no se pueden editar.
+*/
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
-   *
+   * 
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
-   * @param {CertificadosOrigenService} certificadosOrigenService - Servicio para obtener datos relacionados con los productores.
-   * @param {Tramite110223Store} store - Store para gestionar el estado del trámite.
-   * @param {Tramite110223Query} tramiteQuery - Query para obtener el estado del trámite.
-   * @param {ValidacionesFormularioService} validacionesService - Servicio para validar formularios.
-   */
+   * @param {ValidarInicialmenteCertificadoService} ValidarInicialmenteCertificadoService - Servicio para obtener datos relacionados con los productores.
+   * @param {Tramite110221Store} store - Store para gestionar el estado del trámite.
+   * @param {Tramite110221Query} tramiteQuery - Query para obtener el estado del trámite.
+  */
   constructor(
     public fb: FormBuilder,
-    private certificadosOrigenService: CertificadosOrigenService,
+    private certificadoDeService: CertificadosOrigenService,
     public store: Tramite110223Store,
     public tramiteQuery: Tramite110223Query,
-    private validacionesService: ValidacionesFormularioService,
-    private consultaioQuery: ConsultaioQuery
-  ) {
-    // El constructor se utiliza para la inyección de dependencias.
-  }
+    private consultaQuery: ConsultaioQuery
+  ) { }
 
   /**
    * Método que se ejecuta al inicializar el componente.
+   * 
+   * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
    */
   ngOnInit(): void {
     this.cargarProductorPorExportador();
-    this.tramiteQuery.selectSolicitud$
+    this.cargarMercancia();
+    this.facturaOpcion();
+    this.tramiteQuery.formulario$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -139,176 +110,105 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.initFormulario();
-    this.initAgregarDatosProductorFormulario();
-    this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.consultaDatos = seccionState;
-        this.soloLectura = this.consultaDatos.readonly;
-        this.inicializarEstadoFormulario();
+    this.tramiteQuery.agregarDatosProductorFormulario$.pipe(
+      takeUntil(this.destroyNotifier$), map((seccionState) => {
+        this.agregarDatosProductor = seccionState;
       })
-    )
-    .subscribe();
-  }
-
-  /**
-   * Inicializa el formulario principal con los datos del estado del trámite.
-   */
-  initFormulario(): void {
-    this.formulario = this.fb.group({
-      datosConfidencialesProductor: [this.tramiteState?.datosConfidencialesProductor, []],
-      productorMismoExportador: [this.tramiteState?.productorMismoExportador, []],
-    });
-    this.inicializarEstadoFormulario();
-  }
-
-  /**
-   * Inicializa el formulario para agregar datos del productor.
-   */
-  initAgregarDatosProductorFormulario(): void {
-    this.agregarDatosProductorFormulario = this.fb.group({
-      numeroRegistroFiscal: [this.tramiteState?.agregarDatosProductorFormulario?.numeroRegistroFiscal, [Validators.required]],
-      fax: [this.tramiteState?.agregarDatosProductorFormulario?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
-    });
+    ).subscribe();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
   cargarProductorPorExportador(): void {
-    this.certificadosOrigenService
-      .obtenerProductorPorExportador()
+    this.certificadoDeService.obtenerProductorPorExportador()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((respuesta) => {
-        this.productoresExportador = this.agregarProductoresExportador = respuesta.datos;
+      .subscribe(respuesta => {
+        this.productoresExportador = respuesta.datos;
+      });
+  }
+  /**
+   * @descripcion
+   * Obtiene la lista de países disponibles.
+   */
+  facturaOpcion(): void {
+    this.certificadoDeService.obtenerMenuDesplegable('factura.json')
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+      )
+      .subscribe({
+        next: (data) => {
+
+          this.optionsTipoFactura = data as Catalogo[];
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+
+        },
       });
   }
 
   /**
-   * Obtiene los productores seleccionados en la tabla.
-   * @param {HistoricoColumnas[]} evento - Lista de productores seleccionados.
+   * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
-  obtenerSeleccionadoProductores(evento: HistoricoColumnas[]): void {
-    this.seleccionadoProductoresExportador = evento;
+  /**
+   * Carga la lista de productores disponibles para el exportador desde el servicio.
+   */
+  cargarMercancia(): void {
+ this.certificadoDeService.obtenerMercancias().pipe(takeUntil(this.destroyNotifier$)).subscribe(respuesta => {
+      this.mercancia = respuesta.datos;
+    });
   }
 
   /**
-   * Obtiene los productores seleccionados para agregar.
-   * @param {HistoricoColumnas[]} evento - Lista de productores seleccionados para agregar.
+   * Establece valores en el estado del store para un formulario histórico.
+   * 
+   * @param event - Objeto que contiene los datos necesarios para actualizar el store.
+   * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en este método).
+   * @param event.campo - Nombre del campo que se actualizará en el store.
+   * @param event.valor - Valor que se asignará al campo en el store.
+   * @param event.storeStateName - Nombre del estado del store (no utilizado en este método).
+   * 
+   * @returns void
    */
-  obtenerAnadirProductosSeleccionados(evento: HistoricoColumnas[]): void {
-    this.seleccionadoAgregarProductoresExportador = evento;
+  setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormHistorico({ [CAMPO]: VALOR });
   }
 
   /**
-   * Agrega los productores seleccionados a la lista de productores agregados.
+   * Establece valores en el store para agregar datos del formulario del productor.
+   * 
+   * @param event - Objeto que contiene los datos necesarios para actualizar el store.
+   * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en este método).
+   * @param event.campo - Nombre del campo que se actualizará en el store.
+   * @param event.valor - Valor que se asignará al campo en el store.
+   * @param event.storeStateName - Nombre del estado del store (no utilizado en este método).
+   * 
+   * @returns void
+   * 
+   * @command Actualiza el estado del store con los valores proporcionados.
    */
-  productoresSeleccionados(): void {
-    this.agregarProductoresExportador = [
-      ...this.agregarProductoresExportador,
-      ...this.seleccionadoProductoresExportador,
-    ];
-    this.productoresExportador = this.productoresExportador.filter(
-      (elementos) =>
-        !this.seleccionadoProductoresExportador.some(
-          (elementosSecundarios) => elementosSecundarios.id === elementos.id
-        )
-    );
-    this.seleccionadoProductoresExportador = [];
-  }
-
-  /**
-   * Elimina los productores seleccionados de la lista de productores agregados.
-   */
-  eliminarProductoresSeleccionados(): void {
-    this.productoresExportador = [
-      ...this.productoresExportador,
-      ...this.seleccionadoAgregarProductoresExportador,
-    ];
-    this.agregarProductoresExportador = this.agregarProductoresExportador.filter(
-      (elementos) =>
-        !this.seleccionadoAgregarProductoresExportador.some(
-          (elementosSecundarios) => elementosSecundarios.id === elementos.id
-        )
-    );
-    this.seleccionadoAgregarProductoresExportador = [];
-  }
-
-  /**
-   * Abre el modal para agregar datos del productor.
-   */
-  agregarDatosProductorPorExportador(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
-  }
-
-  /**
-   * Cierra el modal para agregar datos del productor.
-   */
-  cerrarModal(): void {
-    if (this.closeModal) {
-      this.closeModal.nativeElement.click();
-    }
-  }
-
-  /**
-   * Agrega un productor si el formulario es válido.
-   */
-  agregarExportador(): void {
-    this.esMercanciaEnEdicion = true;
-    this.agregarDatosProductorFormulario.markAllAsTouched();
-    if (this.agregarDatosProductorFormulario.valid) {
-      this.cerrarModal();
-    }
-  }
-
-  /**
-   * Valida un campo del formulario.
-   * @param {FormGroup} form - El formulario reactivo.
-   * @param {string} field - El nombre del campo a validar.
-   * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
-   */
-  isValid(form: FormGroup, field: string): boolean {
-    return this.validacionesService.isValid(form, field) || false;
-  }
-
-  /**
-   * Actualiza el estado del store con el valor seleccionado en el formulario.
-   * @param {FormGroup} form - El formulario reactivo.
-   * @param {string} campo - El nombre del campo en el formulario.
-   * @param {keyof Tramite110223Store} metodoNombre - El nombre del método en el store para actualizar el estado.
-   */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110223Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  setValoresStoreAgregarForm(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setAgregarFormDatosProductor({ [CAMPO]: VALOR });
   }
 
   /**
    * Método que se ejecuta al destruir el componente.
+   * 
+   * Libera los recursos y cancela las suscripciones activas.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
-  /**
-   * Configuración de las columnas de la tabla de mercancías seleccionadas.
-   */
-  public headersData = HEADERSDATASELECCIONADASTABLA;
-    /**
-   * Inicializa el estado del formulario (habilitado/deshabilitado) basado en el modo de solo lectura.
-   */
-    inicializarEstadoFormulario(): void {
-      if (this.soloLectura) {
-        this.formulario?.disable();
-        this.agregarDatosProductorFormulario?.disable();
-      } else {
-        this.formulario?.enable();
-        this.agregarDatosProductorFormulario?.enable();
-      }
-    }
 }
