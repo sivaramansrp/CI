@@ -6,7 +6,7 @@ import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 import { Solicitud260910Store } from '../../estados/tramites260910.store';
 import { Solicitud260910Query } from '../../estados/tramites260910.query';
 import { Solicitud260910State } from '../../estados/tramites260910.store';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { InputCheckComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { ModificarMercanciasComponent } from '../../components/mercancias-datos/mercancias-datos.component';
@@ -65,7 +65,9 @@ describe('SolicitudDatosComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [SolicitudDatosComponent, ModificarMercanciasComponent],
-      imports: [ReactiveFormsModule, InputRadioComponent, TituloComponent, TablaDinamicaComponent, InputFechaComponent, AlertComponent, CatalogoSelectComponent],
+      imports: [ReactiveFormsModule, InputRadioComponent, TituloComponent, TablaDinamicaComponent, InputFechaComponent, AlertComponent, CatalogoSelectComponent,
+        InputCheckComponent
+      ],
       providers: [
         FormBuilder, SolicitudDatosService, Solicitud260910Store, Solicitud260910Query, provideHttpClient()
       ],
