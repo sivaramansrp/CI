@@ -11,7 +11,6 @@ import { Notificadores } from '../../../../core/models/303/notificadores.model';
 import { NumeroTelefonicoDirective } from '@libs/shared/data-access-user/src/tramites/directives/numeroTelefonico/numero-telefonico.directive';
 import { PERSONAS_OIR_RECIBIR_NOTIFICACIONES } from '../../../../core/enums/303/personas-oir-recibir-notificaciones.enum';
 import { RepresentanteLegal } from '../../../../core/models/303/representante-legal.model';
-import { Router } from '@angular/router';
 import { Tramite303Query } from '../../../../core/queries/tramite303.query';
 import { Tramite303Service } from '../../../../core/services/303/tramite303.service';
 
@@ -48,7 +47,7 @@ export class TercerosRelacionadosComponent implements OnInit {
   encabezadoNotificadores = PERSONAS_OIR_RECIBIR_NOTIFICACIONES;
   /** Lista de notificadores */
   public notificadores: Notificadores[] = [];
-
+  /** Estado del modal para agregar un enlace */
   agregarEnlaceModal = false;
   /**
    * Constructor del componente TercerosRelacionadosComponent.
