@@ -19,11 +19,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./frontend
+        
 
       - name: Run Nx build
         run: npx nx build
-        working-directory: ./frontend
+        
 
       - name: Reset Nx cache
         run: npx nx reset
