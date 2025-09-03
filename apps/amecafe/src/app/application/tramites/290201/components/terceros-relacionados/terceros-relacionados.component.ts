@@ -390,29 +390,6 @@ get selectedTipoPersona(): string | undefined {
  * Método para manejar el envío del formulario.
  */
 enEnviar(): void {
-  // this.destinatarioForm.get('datosDelTramiteRealizar.nombre')?.clearValidators();
-  // this.destinatarioForm.get('datosDelTramiteRealizar.primerApellido')?.clearValidators();
-
-  // // Update the form validity state
-  // this.destinatarioForm.get('datosDelTramiteRealizar.nombre')?.updateValueAndValidity();
-  // this.destinatarioForm.get('datosDelTramiteRealizar.primerApellido')?.updateValueAndValidity();
-  //   this.destinatarioForm.get('datosDelTramiteRealizar.segundoApellido')?.updateValueAndValidity();
-
-  //   this.destinatarioForm.get('datosDelTramiteRealizar')?.updateValueAndValidity();
-  //   this.destinatarioForm.updateValueAndValidity();
-
-//      console.log('Form Valid:', this.destinatarioForm.valid);
-//   console.log('Form Errors:', this.destinatarioForm.errors);
-
-//   const datosDelTramiteRealizar = this.destinatarioForm.get('datosDelTramiteRealizar');
-//   console.log('datosDelTramiteRealizar Valid:', datosDelTramiteRealizar?.valid);
-//   console.log('datosDelTramiteRealizar Errors:', datosDelTramiteRealizar?.errors);
-
-// Object.keys(this.datosDelTramiteRealizar.controls).forEach((key) => {
-//     const control = this.datosDelTramiteRealizar.get(key);
-//     console.log(`${key} Valid:`, control?.valid);
-//     console.log(`${key} Errors:`, control?.errors);
-//   });
   const FORM_DATA = this.destinatarioForm.value;
 
   if (!this.destinatarioForm.valid) {
