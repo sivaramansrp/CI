@@ -38,7 +38,7 @@ export const PERMISO_DEFINITIVO_TITULO = [
  * @type {number[]}
  * @description Representa códigos específicos utilizados en el sistema para identificar permisos aduaneros.
  */
-export const PERMISO_ADUNA_TITULO = [240119, 240120, 240118, 240123,240117];
+export const PERMISO_ADUNA_TITULO = [240119, 240120, 240118, 240123,240117,240122];
 
 /**
  * Identificadores numéricos relacionados con permisos OCULTAR_BOTONES.
@@ -252,4 +252,4 @@ export const DESACTIVADO_PERMISO_GENERAL = [240405, 240411, 240321];
  * @description Contiene un arreglo de identificadores numéricos relacionados con aduanas específicas.
  * Este valor es utilizado en el sistema para identificar trámites o permisos asociados a estas aduanas.
  */
-export const ADUANA_TEXTO = [240123, 240120, 240118,240119,240117];
+export const ADUANA_TEXTO = [240123, 240120, 240118,240119,240117,240122];
