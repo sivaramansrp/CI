@@ -35,8 +35,7 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   host: {},
 })
 export class CatalogoSelectComponent
-  implements ControlValueAccessor, OnChanges
-{
+  implements ControlValueAccessor, OnChanges {
   /**
    * @description Id del select.
    */
@@ -84,7 +83,14 @@ export class CatalogoSelectComponent
   @Input() tooltipQuestionCircle: boolean = false;
 
   @Input() markUntouched: boolean = false;
-
+  /**
+   * Indica si el control debe marcarse como tocado para mostrar errores de validación.
+   * Útil para controlar la visualización de errores desde el componente padre.
+   * 
+   * @type {boolean}
+   * @default false
+   */
+  @Input() markTouched: boolean = false;
   /**
    * @description Texto que se muestra en el tooltip del círculo de pregunta.
    * Este texto proporciona información adicional sobre el select cuando el usuario pasa el cursor sobre el círculo de pregunta.
@@ -128,14 +134,26 @@ export class CatalogoSelectComponent
   @Input() primerOptionValue!: number;
 
   /**
- * Indica si se debe mostrar el signo de dos puntos (:) después del label del select.
- */
+   * Indica si se debe mostrar el signo de dos puntos (:) después del label del select.
+   */
   @Input() showSemiColon: boolean = true;
 
   /**
- * Indica si se debe agregar un espacio inferior al label del select.
- */
+   * Indica si se debe agregar un espacio inferior al label del select.
+   */
   @Input() isLabelBottomSpace: boolean = false;
+
+  /**
+   * Indica si el texto debe mostrarse en **negrita**.
+   *
+   * @example
+   * <!-- Uso en plantilla -->
+   * <app-titulo [isBold]="true"></app-titulo>
+   *
+   * @type {boolean}
+   * @default false
+   */
+  @Input() isBold: boolean = false;
 
   /**
    * @description Formulario reactivo que contiene el control del select.
@@ -148,7 +166,11 @@ export class CatalogoSelectComponent
    * Este valor se utiliza para almacenar la opción seleccionada por el usuario.
    */
   value: string = '';
-
+  /**
+   * @description Indica si se deben mostrar los mensajes de error en el select.
+   * Si es `true`, se mostrarán los mensajes de error de validación.
+   */
+  @Input() mostrarErrores: boolean = true;
   /**
    * @constructor
    * @param fb - Instancia de `FormBuilder` para crear formularios reactivos.
@@ -165,14 +187,14 @@ export class CatalogoSelectComponent
    * Esta función se utiliza para notificar al formulario reactivo sobre el cambio de valor.
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
-  private onChange: (value: string) => void = () => {};
+  private onChange: (value: string) => void = () => { };
 
   /**
    * @description Función que se ejecuta cuando el control del formulario es tocado.
    * Esta función se utiliza para marcar el control como "tocado" en el formulario reactivo.
    */
   // eslint-disable-next-line class-methods-use-this, no-empty-function, @typescript-eslint/no-empty-function
-  private onTouched: () => void = () => {};
+  private onTouched: () => void = () => { };
 
   /**
    * @method ngOnChanges
@@ -208,6 +230,21 @@ export class CatalogoSelectComponent
 
     if (changes['markUntouched']) {
       if (this.markUntouched) {
+        this.formSelect.get('selectControl')?.markAsUntouched();
+      }
+    }
+   /**
+   * Maneja los cambios en la propiedad `markTouched` para controlar la visualización de errores.
+   * 
+   * - Si `markTouched` es `true`: marca el control como tocado (muestra errores)
+   * - Si `markTouched` es `false`: marca el control como no tocado (oculta errores)
+   * 
+   * @remarks Útil para controlar errores de validación desde el componente padre
+   */
+    if (changes['markTouched']) {
+      if (this.markTouched) {
+        this.formSelect.get('selectControl')?.markAsTouched();
+      } else {
         this.formSelect.get('selectControl')?.markAsUntouched();
       }
     }

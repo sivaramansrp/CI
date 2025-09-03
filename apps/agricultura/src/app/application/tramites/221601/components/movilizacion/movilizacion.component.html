@@ -23,7 +23,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="medio" [label]="'Medio de transporte'" [required]="true" name="medio" [isDisabled]="esFormularioSoloLectura" [placeholder]="'Seleccione un valor'"
+          <app-catalogo-select [catalogo]="medio" [label]="'Medio de transporte'" [required]="true" name="medio" [isDisabled]="esFormularioSoloLectura" [placeholder]="'Seleccione un opción'"
             formControlName="medio" (change)="setValoresStore(MedioForm, 'medio', 'setMedio')">
           </app-catalogo-select>
         </div>
@@ -48,7 +48,7 @@
          <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="verificacion" [label]="'Punto de verificación federal'"  [isDisabled]="esFormularioSoloLectura" [placeholder]="'Seleccione un valor'" [tooltipQuestionCircleText]="'Es el primer punto de Inspección Federal dentro del territorio nacional por donde cruzará el embarque'" [tooltipQuestionCircle]="true"
+          <app-catalogo-select [catalogo]="verificacion" [label]="'Punto de verificación federal'"  [isDisabled]="esFormularioSoloLectura" [placeholder]="'Seleccione un opción'" [tooltipQuestionCircleText]="'Es el primer punto de Inspección Federal dentro del territorio nacional por donde cruzará el embarque'" [tooltipQuestionCircle]="true"
             name="verificacion" formControlName="verificacion" (change)="setValoresStore(MedioForm, 'verificacion', 'setVerificacion')" >
           </app-catalogo-select>
         </div>
@@ -57,7 +57,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="empresa">Nombre de la empresa transportista *:</label>
+          <label class="form-label" for="empresa">Nombre de la empresa transportista*:</label>
           <input class="form-control" id="empresa" formControlName="empresa" type="text" maxlength="80" size="29"
             (change)="setValoresStore(MedioForm, 'empresa', 'setEmpresa')" />
         </div>

@@ -4,8 +4,11 @@ import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONA
 import { map, takeUntil } from 'rxjs';
 import { AvisoService } from '../../services/aviso.service';
 import { ConsultaioQuery} from '@ng-mf/data-access-user';
+import { EventEmitter } from '@angular/core';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
+import { Output } from '@angular/core';
 import { Solicitud32502State } from '../../../../estados/tramites/tramite32502.store';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 import { Subject } from 'rxjs';
 @Component({
   selector: 'paso-uno',
@@ -36,9 +39,19 @@ export class PasoUnoComponent implements OnInit,OnDestroy, AfterViewInit {
     public datosRespuestaDisponibles: boolean = false;
   
     /**
+   * Referencia al componente `solicitudComponent`.
+   */
+  @ViewChild('solicitudComponent', { static: false }) solicitudComponent: SolicitudComponent | undefined;
+
+    /**
      * Estado actual de la consulta.
      */
     public estadoConsulta!: ConsultaioState;
+  /**
+   * Emite evento cuando se cambia de tab para ocultar error message.
+   */
+  @Output() cambioDePestana = new EventEmitter<void>();
+
   /**
 /**
 * Constructor del componente.
@@ -89,6 +102,31 @@ this.consultaQuery.selectConsultaioState$
         }
       });
   }
+
+   /**
+   * Valida todos los formularios del paso uno.
+   * 
+   * Este método valida principalmente el formulario de solicitante que es el único
+   * obligatorio. Los otros formularios solo se validan si están disponibles.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
+   public validarTodosLosFormularios(): boolean {
+    let allFormsValid = true;
+        
+    // Validar el formulario de certificado de origen si existe y es visible
+    if (this.indice >= 2 && this.solicitudComponent && (this.solicitudComponent.extranjeroAvisoAgace|| this.solicitudComponent.mercanciaST|| this.solicitudComponent.direccionST || this.solicitudComponent.pedimentoST)) {
+      this.solicitudComponent.extranjeroAvisoAgace.markAllAsTouched();
+      this.solicitudComponent.mercanciaST.markAllAsTouched();
+      this.solicitudComponent.direccionST.markAllAsTouched();
+      this.solicitudComponent.pedimentoST.markAllAsTouched();
+      if (!this.solicitudComponent.extranjeroAvisoAgace.valid || !this.solicitudComponent.mercanciaST.valid || !this.solicitudComponent.direccionST.valid || !this.solicitudComponent.pedimentoST.valid) {
+        allFormsValid = false;
+      }
+      
+    }
+    return allFormsValid ;
+  }
   /**
    * Hook del ciclo de vida que se llama cuando el componente es destruido.
    */
@@ -105,5 +143,6 @@ this.consultaQuery.selectConsultaioState$
 
   seleccionaTab(i: number): void {
     this.indice = i;
+      this.cambioDePestana.emit();
   }
 }

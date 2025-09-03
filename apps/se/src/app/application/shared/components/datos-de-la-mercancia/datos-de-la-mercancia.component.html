@@ -57,10 +57,10 @@
           type="text"
           maxlength="18"
           formControlName="cantidad"
-          [ngClass]="{'input-error': esInvalido('cantidad')}"
+          [ngClass]="{'input-error': (mostrarErrores && esInvalido('cantidad') || esInvalido('cantidad'))}"
           (change)="setValoresStore(form, 'cantidad')"
         />
-        <div *ngIf="esInvalido('cantidad')" class="text-danger">
+        <div *ngIf="(mostrarErrores && esInvalido('cantidad') || esInvalido('cantidad'))" class="text-danger">
           <small *ngIf="form.controls['cantidad'].errors?.['required']">
           Este campo es obligatorio
         </small>
@@ -71,12 +71,16 @@
           El número debe tener 3 dígitos decimales
         </small>
         <small *ngIf="form.controls['cantidad'].errors?.['min']">
-          Debe ser mayor que 0.
+          Debe ser mayor que 0
         </small>
         </div>
       </div>
       <div class="col-md-4 form-group">
-        <label class="form-label" for="valorFacturaUSD">Valor factura USD<span class="require" [ngClass]="{'asterisk-red': esInvalido('valorFacturaUSD')}">*</span>:</label>
+        <label class="form-label" for="valorFacturaUSD">Valor factura USD<span class="require" [ngClass]="{'asterisk-red': esInvalido('valorFacturaUSD')}">*</span>:
+        <span *ngIf="mostrarTooltipValorFacturaUSD" class="bi bi-question-circle-fill"
+                     tooltip="En caso de no contar con valor factura proporciona el valor estimado"
+                     data-bs-toggle="tooltip"></span>
+      </label>
         <input
           class="form-control"
           id="valorFacturaUSD"
@@ -84,10 +88,10 @@
           type="text"
           formControlName="valorFacturaUSD"
           maxlength="20"
-          [ngClass]="{'input-error': esInvalido('valorFacturaUSD')}"
+          [ngClass]="{'input-error': (mostrarErrores && esInvalido('valorFacturaUSD') || esInvalido('valorFacturaUSD'))}"
           (change)="setValoresStore(form, 'valorFacturaUSD')"
         />
-        <div *ngIf="esInvalido('valorFacturaUSD')" class="text-danger">
+        <div *ngIf="(mostrarErrores && esInvalido('valorFacturaUSD') || esInvalido('valorFacturaUSD'))" class="text-danger">
           <small *ngIf="form.controls['valorFacturaUSD'].errors?.['required']">
           Este campo es obligatorio
         </small>
@@ -98,7 +102,7 @@
           El número debe tener 3 dígitos decimales
         </small>
         <small *ngIf="form.controls['valorFacturaUSD'].errors?.['min']">
-          Debe ser mayor que 0.
+          Debe ser mayor que 0
         </small>
         </div>
       </div>
@@ -113,6 +117,7 @@
           (change)="setValoresStore(form, 'unidadMedida')"
           [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
+        
       </div>
     </div>
   </form>

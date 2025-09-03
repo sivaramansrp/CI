@@ -130,6 +130,12 @@ describe('Service260601Service', () => {
       setMostrarRfcBuscarBoton: jest.fn(),
       setMostrarCurpBuscarBoton: jest.fn(),
       setInhabilitarPais: jest.fn(),
+      updateProveedorTablaDatos: jest.fn(),
+      setScianTabla: jest.fn(),
+      updateFabricanteTablaDatos: jest.fn(),
+      updateTabSeleccionado: jest.fn(),
+      setProductoTabla: jest.fn(),
+      setSolicitudTabla: jest.fn(),
     } as any;
 
     TestBed.configureTestingModule({

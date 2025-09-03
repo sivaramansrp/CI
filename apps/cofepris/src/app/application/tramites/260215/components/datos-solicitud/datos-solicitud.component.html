@@ -4,16 +4,14 @@
       <div class="col-md-12">
         <div class="panel-group ficha-collapse" id="accordion">
           <div class="panel panel-default">
-            <div
-              class="panel-heading"
-              (click)="mostrar_colapsable()"
-            >
-            <h4 class="panel-title spaced-text fs-3"><i class="bi bi-file-earmark-text"></i>Opciones de pre-llenado de Solicitud
+            <div class="panel-heading" (click)="mostrar_colapsable()">
+              <h4 class="panel-title spaced-text fs-3"><i class="bi bi-file-earmark-text"></i>Opciones de pre-llenado de
+                Solicitud
               </h4>
               <button [disabled]="esFormularioSoloLectura" type="button" class="collpase-button collapsed"></button>
             </div>
             @if(colapsable){
-           <div class="panel-collapse collapse in" id="panel-01">
+            <div class="panel-collapse collapse in" id="panel-01">
               <div class="panel-body">
                 <div class="row">
                   <ng-alert [CONTENIDO]="TEXTOS.AlDar" [CUSTOMECLASS]="'text-center'"></ng-alert>
@@ -34,12 +32,7 @@
     <div class="row">
       <div class="col-md-8"></div>
       <div class="col-md-4 d-flex justify-content-end">
-        <button
-          type="button"
-          class="btn btn-primary"
-          [disabled]="esFormularioSoloLectura"
-          (click)="abrirModal()"
-        >
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="abrirModal()">
           Seleccionar establecimiento
         </button>
       </div>
@@ -47,46 +40,35 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="rfcDel"
-            >RFC del responsable sanitario:</label
-          >
-          <input
-            class="form-control"
-            id="rfcDel"
-            placeholder=""
-            type="text"
-            [disabled]="true"
-            formControlName="rfcDel"
-            (change)="setValoresStore(forma, 'rfcDel', 'setRfcDel')"
-          />
-          <div *ngIf="forma.get('rfcDel')?.invalid && (forma.get('rfcDel')?.dirty || forma.get('rfcDel')?.touched)" class="text-danger">
-            <div *ngIf="forma.get('rfcDel')?.errors?.['pattern']">
-              El RFC no tiene un formato valido.
-            </div>
+          <label class="form-label" for="rfcDel">RFC del responsable sanitario:</label>
+          <input class="form-control" id="rfcDel" placeholder="" type="text" [disabled]="true" formControlName="rfcDel"
+            maxlength="13" (change)="setValoresStore(forma, 'rfcDel', 'setRfcDel')" />
+          <div *ngIf="forma.get('rfcDel')?.invalid && (forma.get('rfcDel')?.dirty || forma.get('rfcDel')?.touched)"
+            class="text-danger">
+            <span *ngIf="forma.get('rfcDel')?.errors?.['maxlength']">
+              Máximo 13 caracteres permitidos
+            </span>
+            <span *ngIf="forma.get('rfcDel')?.errors?.['pattern']">
+              El RFC no tiene un formato válido.
+            </span>
           </div>
         </div>
       </div>
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="denominacion"
-            >Denominación o razón social*:</label
-          >
-          <input
-            class="form-control"
-            id="denominacion"
-            maxlength="100"
-            placeholder=""
-            type="text"
-            formControlName="denominacion"
-            (change)="setValoresStore(forma, 'denominacion', 'setDenominacion')"
-          />
-        </div>
-        <div *ngIf="forma.get('denominacion')?.invalid && (forma.get('denominacion')?.dirty || forma.get('denominacion')?.touched)" class="text-danger">
-          <div *ngIf="forma.get('denominacion')?.errors?.['maxlength']">
-            Máximo 100 caracteres permitidos
-          </div>
-          <div *ngIf="forma.get('denominacion')?.errors && !forma.get('denominacion')?.errors?.['maxlength']">
-            Por favor, corrige la descripción/dirección
+          <label class="form-label" for="denominacion">Denominación o razón social*:</label>
+          <input class="form-control" id="denominacion" maxlength="100" placeholder="" type="text"
+            formControlName="denominacion" (change)="setValoresStore(forma, 'denominacion', 'setDenominacion')" />
+          <div class="text-danger" *ngIf="forma.get('denominacion')?.touched && forma.get('denominacion')?.invalid">
+            <span *ngIf="forma.get('denominacion')?.errors?.['required']">
+              Este campo es obligatorio
+            </span>
+            <span *ngIf="forma.get('denominacion')?.errors?.['maxlength']">
+              Máximo 100 caracteres permitidos
+            </span>
+            <span *ngIf="forma.get('denominacion')?.errors?.['pattern']">
+              Por favor, corrige la descripción/dirección
+            </span>
           </div>
         </div>
       </div>
@@ -94,28 +76,25 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="correo">Correo electrónico*:</label>
-          <input
-            class="form-control"
-            id="correo"
-            placeholder=""
-            type="email"
-            formControlName="correo"
-            maxlength="320"
-            data-bs-toggle="tooltip"
-            title="ejemplo@dominio.com"
-            (change)="setValoresStore(forma, 'correo', 'setCorreo')"
-          />
-          <div *ngIf="forma.get('correo')?.invalid && (forma.get('correo')?.dirty || forma.get('correo')?.touched)" class="text-danger">
-            <div *ngIf="forma.get('correo')?.errors?.['email']">
+          <label class="form-label" for="correo">Correo electrónico*:
+            <span class="bi bi-question-circle-fill fs-4 m-1"
+            title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
+          </label>
+          <input class="form-control" id="correo"  type="text"
+            formControlName="correo" maxlength="320" data-bs-toggle="tooltip" title="ejemplo@dominio.com"
+            (change)="setValoresStore(forma, 'correo', 'setCorreo')" (blur)="forma.get('correo')?.markAsTouched()" />
+          <div class="mensaje-error" *ngIf="forma.get('correo')?.touched && forma.get('correo')?.invalid">
+            <span *ngIf="forma.get('correo')?.errors?.['required']">
+              Este campo es obligatorio
+            </span>
+            <span *ngIf="forma.get('correo')?.errors?.['email']">
               El valor Ingresado no es una dirección válida de correo electrónico
-            </div>
-            <div *ngIf="forma.get('correo')?.errors?.['maxlength']">
+            </span>
+            <span *ngIf="forma.get('correo')?.errors?.['maxlength']">
               Máximo 320 caracteres permitidos
-            </div>
+            </span>
           </div>
         </div>
-        
       </div>
     </div>
   </form>
@@ -124,8 +103,8 @@
   <app-representante-legal></app-representante-legal>
 </div>
 @if (nuevaNotificacion) {
-  <section>
-    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
-    </lib-notificaciones>
-  </section>
-  }
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+  </lib-notificaciones>
+</section>
+}

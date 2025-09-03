@@ -1,12 +1,19 @@
 <div class="container mt-4">
-  <ng-titulo titulo="Agregar proveedor"></ng-titulo>
+  <ng-titulo
+    *ngIf="datoSeleccionado?.[0]?.tipoPersona; else agregarProveedor"
+    titulo="Modificar proveedor"
+  ></ng-titulo>
+
+  <ng-template #agregarProveedor>
+    <ng-titulo titulo="Agregar proveedor"></ng-titulo>
+  </ng-template>
   <form [formGroup]="agregarProveedorForm">
     <!-- Datos Generales -->
     <h4>Datos generales</h4>
     <div class="row">
       @if(habilitarNacionalidad === true ) {
         <div class="col-md-6">
-        <label class="form-label">Terceros nacionalidad * :</label>
+        <label class="form-label">Terceros nacionalidad*:</label>
         <div class="form-check">
           <input
             type="radio"
@@ -29,7 +36,7 @@
         </div>
       </div>
       <div class="col-md-6">
-        <label class="form-label">Tipo persona * :</label>
+        <label class="form-label">Tipo persona*:</label>
         <div class="form-check">
           <input
             type="radio"
@@ -75,7 +82,7 @@
       }
       @else{
         <div class="col-md-6 offset-md-6">
-        <label class="form-label">Tipo persona * :</label>
+        <label class="form-label">Tipo persona*:</label>
         <div class="form-check">
           <input
             type="radio"
@@ -111,7 +118,7 @@
     @if(agregarProveedorForm.get('nacionalidad')?.value === nacionalStr){
     <div class="row mt-3">
       <div class="col-md-4">
-        <label class="form-label">R.F.C. * : </label>
+        <label class="form-label">R.F.C.*:</label>
         <span
         class="bi bi-question-circle-fill mx-1"
         title="Registro Federal de Contribuyente"
@@ -129,7 +136,7 @@
       </div>
       @if (!estaOculto) {
       <div class="col-md-4">
-        <label class="form-label">C.U.R.P. * :</label>
+        <label class="form-label">C.U.R.P.*:</label>
         <input type="text" class="form-control" formControlName="curp" [ngClass]="esInvalido('curp') ? 'required' : ''" />
         <div *ngIf="esInvalido('curp')" class="text-danger">
           <small *ngIf="agregarProveedorForm.controls['curp'].errors?.['required']">
@@ -266,7 +273,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Estado</label><span
-          class="form-label mx-2"
+          class="form-label"
           *ngIf="elementosRequeridos.includes('estado')"
           >*</span
         ><span class="form-label">:</span>
@@ -395,8 +402,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label"
-          >Correo electrónico:
-          <span tooltip="ejemplo@dominio.com"
+          >Correo electrónico:<span tooltip="ejemplo@dominio.com"
             ><i class="bi bi-question-circle-fill"></i
           ></span>
         </label>

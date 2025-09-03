@@ -234,7 +234,7 @@
     "id": 34,
     "tramite": 90101,
     "linkDashboard": "/se/autorizacion-prosec/prosec",
-    "linkDepartment": "/se/autorizacion-prosec/prosec",
+    "linkDepartment": "/pago/autorizacion-prosec/prosec",
     "department": "se"
   },
   {
@@ -1998,7 +1998,7 @@
     "id": 286,
     "tramite": 80104,
     "linkDashboard": "/se/registro-solicitud-immex-modalidad-controladora/action",
-    "linkDepartment": "/se/registro-solicitud-immex-modalidad-controladora/action",
+    "linkDepartment": "/pago/registro-solicitud-immex-modalidad-controladora/action",
     "department": "se"
   },
   {

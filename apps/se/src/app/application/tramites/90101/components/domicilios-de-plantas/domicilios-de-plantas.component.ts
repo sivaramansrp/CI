@@ -14,12 +14,12 @@
 import { AlertComponent, Catalogo, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ConfiguracionColumna, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FilaPlantas } from '../../models/prosec.module'
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProsecService } from '../../services/prosec.service';
@@ -158,6 +158,14 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   espectaculoAlerta: boolean = false;
 
   /**
+   * @property {boolean} espectaculoAlertaAgregar
+   * @description
+   * Indica si se debe mostrar una alerta relacionada con la acción de agregar plantas seleccionadas a la lista PROSEC.
+   * Se utiliza para advertir al usuario cuando no ha seleccionado ninguna planta para agregar.
+   */
+  espectaculoAlertaAgregar: boolean = false;
+
+  /**
    * @descripcion
    * Configuración de las columnas que se mostrarán en la tabla de plantas.
    */
@@ -208,6 +216,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     public AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     public seccionStore: SeccionLibStore,
     public seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -241,6 +250,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
           this.domiciliosState = state as ProsecState;
           this.plantasDatos = state.plantasDatos;
           this.prosecDatos = state.prosecDatos;
+          this.initActionFormBuild()
         })
       )
       .subscribe();
@@ -254,16 +264,21 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
             tap((_value) => {
               if (this.forma.valid) {
                 this.AutorizacionProsecStore.setDomiciliosFormaValida(true);
-                this.ProsecService.formValida()
+                
               }
             })
           )
           .subscribe();
-    if(this.formularioDeshabilitado){
-      this.esFormularioSoloLectura = true;
-      this.inicializarEstadoFormulario();
-    }
-    this.prosecDatos = Array.isArray(this.domiciliosState.plantasDatos) ? this.domiciliosState.plantasDatos : [this.domiciliosState.plantasDatos] as FilaPlantas[];
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.prosecDatos = Array.isArray(this.domiciliosState.plantasDatos) ? this.domiciliosState.plantasDatos : [] as FilaPlantas[];
     this.nuevaNotificacion = {} as Notificacion;
   }
 
@@ -516,13 +531,26 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarPlantas(): void {
-    if ( this.plantasDatos.length > 0) {
-    this.plantasDatos = [];
-    this.AutorizacionProsecStore.setPlantasDatos([]);
-    this.recuperarProsecDatos();
+    if ( this.listSelectedView.length > 0) {
+      const VALOR = this.AutorizacionProsecStore.getValue().plantasDatos;
+      if (VALOR.length === 0) {
+        return;
+      }
+      const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.AutorizacionProsecStore.getValue().selectedDatos?.includes(item)
+      );
+      this.AutorizacionProsecStore.update(
+        (state) => ({
+          ...state,
+          plantasDatos: FILTERED_VALOR,
+          prosecDatos: this.AutorizacionProsecStore.getValue().selectedDatos,
+          selectedDatos: [],
+        })
+      );
+      this.listSelectedView = [];
     }
     else {
-      this.espectaculoAlerta = true;
+      this.espectaculoAlertaAgregar = true;
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',
@@ -535,6 +563,16 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
         txtBtnCancelar: '',
       };
     }
+  }
+
+  /**
+   * @method agregarPlantasconfirmar
+   * @description
+   * Oculta la alerta relacionada con la acción de agregar plantas seleccionadas a la lista PROSEC.
+   * Se utiliza para cerrar el mensaje de advertencia cuando el usuario confirma la acción.
+   */
+  agregarPlantasconfirmar(): void {
+    this.espectaculoAlertaAgregar = false
   }
 
   /**
@@ -644,6 +682,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
           selectedDatos: [],
         })
       );
+      this.listSelectedView = [];
     }
     else {
       this.eliminarPlantasConfirmacion = false;

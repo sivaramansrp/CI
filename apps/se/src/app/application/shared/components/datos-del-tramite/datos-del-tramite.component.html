@@ -9,8 +9,7 @@
             [radioOptions]="solicitudOpciones"
             formControlName="solicitud"
             [isRequired]="true"
-            [disabled]="esFormularioSoloLectura"
-            (valueChange)="setValoresStore(form, 'solicitud')"
+            (change)="setValoresStore(form, 'solicitud')"
             [layout]="'vertical'"
           ></app-input-radio>
         </div> 
@@ -23,7 +22,7 @@
             [formControlName]="inputFields[i].controlName"
             (selectionChange)="setValoresStore(form, inputFields[i].controlName)"
             [isDisabled]="esFormularioSoloLectura"
-            [placeholder]="'Selecciona un valor'"
+            [placeholder]="'Seleccione una opción'"
           ></app-catalogo-select>
           <div *ngIf="esInvalido(inputFields[i].controlName)">
           <small

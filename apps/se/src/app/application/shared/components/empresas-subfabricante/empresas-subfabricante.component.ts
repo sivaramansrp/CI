@@ -433,6 +433,13 @@ set formularioDatosSubcontratista(valor: FormGroup) {
    * @description Este método emite el evento `plantasPorAgrupar` con las plantas disponibles seleccionadas.
    */
   agregarPlantas(): void {
+    this.plantasDisponiblesSeleccionadas.forEach(planta => {
+      const index = this.datosTablaSubfabricantesDisponibles.findIndex(row => row === planta);
+      if (index !== -1) {
+      this.datosTablaSubfabricantesDisponibles.splice(index, 1);
+      }
+    });
+    this.datosTablaSubfabricantesDisponibles = [...this.datosTablaSubfabricantesDisponibles];
     this.plantasPorAgrupar.emit(this.plantasDisponiblesSeleccionadas);
   }
 

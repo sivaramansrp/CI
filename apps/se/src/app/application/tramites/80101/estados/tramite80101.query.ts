@@ -1,3 +1,4 @@
+import { state } from '@angular/animations';
 import { Tramite80101State, Tramite80101Store } from './tramite80101.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
@@ -100,6 +101,35 @@ export class Tramite80101Query extends Query<Tramite80101State> {
    */
   selectDatosComplimento$ = this.select((state) => state.datosComplimentos);
 
+/**
+   * Selecciona los datos de cumplimientos del estado.
+   */
+  selectDatosComplimentos$ = this.select((state) => state.datosComplimento);
+
+/**
+   * Selecciona los datos de cumplimientos del estado.
+   */
+  selectDatosDosComplimentos$ = this.select((state) => state.datosComplimentoDos);
+
+/**
+   * Selecciona los datos de cumplimientos del estado.
+   */
+  selectDatosComplimentosDos$ = this.select((state) => state.datosComplimentoDos);
+
+  /**
+   * Observable selector for retrieving the `datosAnexoTress` property from the application state.
+   * 
+   * @returns An observable emitting the current value of `datosAnexoTress` from the state.
+   */
+  selectDatosAnexoTres$ = this.select((state) => state.datosAnexoTress);
+
+  /**
+   * Selector observable para obtener la propiedad `datosAnexoTress` del estado de la aplicación.
+   * 
+   * @returns Un observable que emite el valor actual de `datosAnexoTress` desde el estado.
+   */
+  selectDatosAnexoTressDos$ = this.select((state) => state.datosAnexoTressDos);
+
   /**
    * Selecciona los datos del subcontratista del estado.
    */
@@ -198,6 +228,11 @@ export class Tramite80101Query extends Query<Tramite80101State> {
   selectDatosFederatariosFormulario$ = this.select(
     (state) => state.datosFederatarios
   );
+
+/**
+ * Observable selector for retrieving the entire state.
+ */
+allStore$ = this.select((state) => state);
 
   /**
    * Constructor de la clase Tramite80101Query.

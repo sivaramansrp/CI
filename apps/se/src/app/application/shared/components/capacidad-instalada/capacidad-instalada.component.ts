@@ -1,7 +1,7 @@
 import { CAPACIDAD_INSTALADA, CapacidadInstalada } from '../../constantes/capacidad-instalada.enum';
 import { CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent,} from '@libs/shared/data-access-user/src';
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -39,6 +39,15 @@ export class CapacidadInstaladaComponent implements OnInit {
      * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
      */
     private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Evento que se emite al cerrar el popup.
+   * 
+   * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
+   */
+    @Output() cerrarPopup = new EventEmitter<void>();
+    
+
   /**
    * Constructor de la clase CapacidadInstaladaComponent
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador
@@ -77,6 +86,12 @@ export class CapacidadInstaladaComponent implements OnInit {
   capacidadInstaladaDatos!: CapacidadInstalada[];
 
   /**
+   * Datos de la tabla de capacidad instalada
+   * @property {any[]} SelectedInstaladaDatos
+   */
+  SelectedInstaladaDatos!: CapacidadInstalada[];
+
+  /**
    * Catálogo de fracciones arancelarias de producto terminado
    * @property {any[]} fraccionArancelariaProductoTerminadoCatlogo
    */
@@ -87,7 +102,8 @@ export class CapacidadInstaladaComponent implements OnInit {
    * @returns {void}
    */
   regrasar(): void {
-    this.ubicaccion.back();
+    this.cerrarPopup.emit();
+
   }
   /** Inicializa los datos del formulario suscribiéndose al estado del trámite.  
  *  Asigna el estado actual al modelo local del componente. */
@@ -202,5 +218,40 @@ limpiar(): void {
   this.capacidadForm.updateValueAndValidity();
 }
 
+
+  /**
+   * Maneja la selección de capacidades instaladas.
+   * 
+   * @param capacidadInstalada - Arreglo de objetos `CapacidadInstalada` seleccionados.
+   * Si el arreglo contiene elementos, actualiza la propiedad `SelectedInstaladaDatos` con la selección.
+   */
+  onCapacidadInstaladaSeleccionadas(capacidadInstalada: CapacidadInstalada[]): void {
+    if (capacidadInstalada.length > 0) {
+      this.SelectedInstaladaDatos = capacidadInstalada;
+    }
+  }
+
+  /**
+   * Elimina las capacidades instaladas seleccionadas de la lista `capacidadInstaladaDatos`.
+   * 
+   * Recorre el arreglo `SelectedInstaladaDatos` y elimina cada elemento correspondiente
+   * de `capacidadInstaladaDatos` si existe. Al finalizar, actualiza la referencia del arreglo
+   * para asegurar la detección de cambios en Angular.
+   *
+   * @remarks
+   * Esta función asume que `SelectedInstaladaDatos` y `capacidadInstaladaDatos` son arreglos
+   * de objetos comparables mediante igualdad estricta (`===`).
+   */
+  eliminarCapacidadInstalada(): void {
+   if (this.SelectedInstaladaDatos?.length > 0) {
+      this.SelectedInstaladaDatos.forEach(planta => {
+        const index = this.capacidadInstaladaDatos.findIndex(row => row === planta);
+        if (index !== -1) {
+          this.capacidadInstaladaDatos.splice(index, 1);
+        }
+    });
+    this.capacidadInstaladaDatos = [...this.capacidadInstaladaDatos];
+  }
+  }
 
 }

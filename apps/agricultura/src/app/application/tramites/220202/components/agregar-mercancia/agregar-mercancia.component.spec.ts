@@ -5,6 +5,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 import { Component } from '@angular/core';
 import { AgregarMercanciaComponent } from './agregar-mercancia.component';
@@ -14,9 +15,7 @@ import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 
 @Injectable()
 class MockAgriculturaApiService {
-  obtenerRespuestaPorUrl = function() {
-    return observableOf({});
-  };
+  obtenerRespuestaPorUrl = jest.fn().mockReturnValue(observableOf({}));
 }
 
 @Injectable()
@@ -25,7 +24,11 @@ class MockFitosanitarioQuery {
 }
 
 @Injectable()
-class MockFitosanitarioStore {}
+class MockFitosanitarioStore {
+  update = jest.fn().mockReturnValue([{
+    "tablaDatos": {}
+  }]);
+}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -47,13 +50,13 @@ class SafeHtmlPipe implements PipeTransform {
   transform(value) { return value; }
 }
 
-describe('AnimalesVivoContenedoraComponent', () => {
+describe('AgregarMercanciaComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, AnimalesVivoContenedoraComponent, ],
+      imports: [ FormsModule, ReactiveFormsModule, AgregarMercanciaComponent ],
       declarations: [
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
@@ -62,12 +65,23 @@ describe('AnimalesVivoContenedoraComponent', () => {
       providers: [
         { provide: AgriculturaApiService, useClass: MockAgriculturaApiService },
         { provide: FitosanitarioQuery, useClass: MockFitosanitarioQuery },
-        { provide: FitosanitarioStore, useClass: MockFitosanitarioStore }
+        { provide: FitosanitarioStore, useClass: MockFitosanitarioStore },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
+            url: observableOf('url'),
+            params: observableOf({}),
+            queryParams: observableOf({}),
+            fragment: observableOf('fragment'),
+            data: observableOf({})
+          }
+        }
       ]
-    }).overrideComponent(AnimalesVivoContenedoraComponent, {
+    }).overrideComponent(AgregarMercanciaComponent, {
 
     }).compileComponents();
-    fixture = TestBed.createComponent(AnimalesVivoContenedoraComponent);
+    fixture = TestBed.createComponent(AgregarMercanciaComponent);
     component = fixture.debugElement.componentInstance;
   });
 

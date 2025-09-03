@@ -1,5 +1,5 @@
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DIRECTOS, Directos } from '../../constantes/empleados.enum';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
@@ -83,6 +83,12 @@ export class EmpleadosComponent implements OnInit {
   directosDatos!: Directos[];
 
   /**
+   * Datos para la tabla de empleados directos.
+   * @property {Array} selectedDirectosDatos
+   */
+  selectedDirectosDatos!: Directos[];
+
+  /**
    * Configuración de la fecha de cédula.
    * @property {any} fetchaDeCedula
    */
@@ -99,6 +105,14 @@ export class EmpleadosComponent implements OnInit {
    * @property {any} fetchaFinVigencia
    */
   fetchaFinVigencia = FECHA_FIN_VIGENCIA;
+
+  /**
+   * Evento que se emite al cerrar el popup.
+   * 
+   * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
+   */
+  @Output() cerrarPopup = new EventEmitter<void>();
+  
 
   /**
    * Constructor del componente.
@@ -156,7 +170,7 @@ export class EmpleadosComponent implements OnInit {
    * @returns {void}
    */
   regrasar(): void {
-    this.ubicaccion.back();
+    this.cerrarPopup.emit();
   }
    /**
    * Maneja los cambios en el campo "Fecha de Pago".
@@ -312,5 +326,40 @@ export class EmpleadosComponent implements OnInit {
     this.setDirectosValidation();
     this.setIndirectosValidation();
   }
+
+  /**
+     * Maneja la selección de capacidades instaladas.
+     * 
+     * @param capacidadInstalada - Arreglo de objetos `CapacidadInstalada` seleccionados.
+     * Si el arreglo contiene elementos, actualiza la propiedad `SelectedInstaladaDatos` con la selección.
+     */
+    onDirectosSeleccionadas(DirectosDatos: Directos[]): void {
+      if (DirectosDatos.length > 0) {
+        this.selectedDirectosDatos = DirectosDatos;
+      }
+    }
+  
+    /**
+     * Elimina las capacidades instaladas seleccionadas de la lista `capacidadInstaladaDatos`.
+     * 
+     * Recorre el arreglo `SelectedInstaladaDatos` y elimina cada elemento correspondiente
+     * de `capacidadInstaladaDatos` si existe. Al finalizar, actualiza la referencia del arreglo
+     * para asegurar la detección de cambios en Angular.
+     *
+     * @remarks
+     * Esta función asume que `SelectedInstaladaDatos` y `capacidadInstaladaDatos` son arreglos
+     * de objetos comparables mediante igualdad estricta (`===`).
+     */
+    eliminarDirectos(): void {
+     if (this.selectedDirectosDatos?.length > 0) {
+        this.selectedDirectosDatos.forEach(planta => {
+          const index = this.selectedDirectosDatos.findIndex(row => row === planta);
+          if (index !== -1) {
+            this.directosDatos.splice(index, 1);
+          }
+      });
+      this.directosDatos = [...this.directosDatos];
+    }
+    }
   
 }

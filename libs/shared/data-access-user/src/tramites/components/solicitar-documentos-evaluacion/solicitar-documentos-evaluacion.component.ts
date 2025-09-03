@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoTipoDocumento, RespuestaDocuemntosRequeridos } from '../../../core/models/shared/catalogos.model';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 import { SolicitudDocumentosState, SolicitudDocumentosStore } from '../../../core/estados/solicitud-documentos.store';
@@ -49,6 +49,10 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
  * Variable para enviar el nombre del campo 
  */
   valor!: string;
+
+  /** Indica si se debe mostrar la segunda tabla */
+  @Input() isSegundaTabla : boolean = true;
+
   /**
    * Notificador para destruir las suscripciones.
    */

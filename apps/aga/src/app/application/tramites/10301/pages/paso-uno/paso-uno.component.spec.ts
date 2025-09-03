@@ -1,6 +1,5 @@
 import { PasoUnoComponent } from './paso-uno.component';
-import { of } from 'rxjs';
-
+import { of, Subject } from 'rxjs';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -67,21 +66,8 @@ describe('PasoUnoComponent', () => {
   it('should call guardarDatosFormulario if consultaState.update is true', () => {
     const spy = jest.spyOn(component, 'guardarDatosFormulario');
     component.consultaState = {
-      procedureId: '',
-      parameter: '',
-      department: '',
-      folioTramite: '',
-      update: true,
-      tipoDeTramite: '',
-      estadoDeTramite: '',
-      readonly: false,
-      create: false,
-      consultaioSolicitante: {
-        folioDelTramite: '',
-        fechaDeInicio: '',
-        estadoDelTramite: ''
-      },
-    };
+      update: true
+    } as any;
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
   });
@@ -113,5 +99,17 @@ describe('PasoUnoComponent', () => {
     component.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should initialize tipoPersona, persona, domicilioFiscal with default values', () => {
+    expect(component.tipoPersona).toBeUndefined();
+    expect(Array.isArray(component.persona)).toBe(true);
+    expect(Array.isArray(component.domicilioFiscal)).toBe(true);
+  });
+
+  it('should set consultaState on subscription', () => {
+    component.consultaState = undefined as any;
+    component.ngOnInit();
+    expect(component.consultaState).toBeDefined();
   });
 });

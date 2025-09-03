@@ -15,7 +15,19 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  BUSCAR_CUPOS_ERROR,
+  TABLA_DE_DATOS_CUPOS,
+  TABLA_DE_DATOS_DISPONIBLES,
+} from '../../constants/cancelaciones.enum';
 import {
   FormBuilder,
   FormGroup,
@@ -23,10 +35,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
-import {
-  TABLA_DE_DATOS_CUPOS,
-  TABLA_DE_DATOS_DISPONIBLES,
-} from '../../constants/cancelaciones.enum';
 import {
   Tramite140205State,
   Tramite140205Store,
@@ -61,7 +69,30 @@ import { Tramite140205Query } from '../../../../estados/queries/tramite140205.qu
     TablaDinamicaComponent,
   ],
 })
-export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
+/**
+ * Componente encargado de gestionar la cancelación de certificados.
+ *
+ * Este componente:
+ * - Muestra un formulario para capturar datos de cancelación.
+ * - Consulta catálogos necesarios para la selección de opciones.
+ * - Renderiza tablas dinámicas con cupos y disponibles.
+ * - Se comunica con el store para mantener el estado de la solicitud.
+ */
+export class CancelacionCertificadosComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
+  /**
+   * Evento de salida que notifica al componente padre
+   * cuando se realiza la acción de búsqueda de empresa.
+   *
+   * @event
+   * @type {EventEmitter<boolean>}
+   * @example
+   * <!-- Uso en plantilla del componente padre -->
+   * <app-mi-componente (datosEmpresaBuscar)="onBuscarEmpresa($event)"></app-mi-componente>
+   */
+  @Output() datosEmpresaBuscar = new EventEmitter<boolean>();
+
   /**
    * Subject para destruir notificador.
    */
@@ -72,7 +103,16 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
    */
   soloLectura: boolean = false;
 
-  
+  /**
+   * Subject que emite un valor cuando el componente se destruye.
+   *
+   * @description
+   * Se utiliza como mecanismo para desuscribir observables de forma
+   * automática en `ngOnDestroy`, evitando fugas de memoria.
+   *
+   * @private
+   * @type {ReplaySubject<boolean>}
+   */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
@@ -130,9 +170,13 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
   optionFederal!: Catalogo[];
 
   /**
-   * @property {TablaSeleccion} tablaDeDatos
-   * @description Tabla de selección para la tabla de cupos.
+   * Mensaje de error asociado a la búsqueda de empresa.
+   *
+   * @type {string}
+   * @default ''
    */
+  BUSCAR_EMPRESA_ERROR: string = '';
+
   tablaDeDatos: {
     encabezadas: {
       encabezado: string;
@@ -142,10 +186,6 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
     datos: CuposTabla[];
   } = TABLA_DE_DATOS_CUPOS;
 
-  /**
-   * @property {TablaSeleccion} tablaSeleccion
-   * @description Tabla de selección para la tabla de disponibles.
-   */
   tablaDatos: {
     encabezadas: {
       encabezado: string;
@@ -157,12 +197,28 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
 
   /**
    * @constructor
-   * @description Constructor del componente. Inicializa los servicios necesarios.
-   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
-   * @param {Tramite140205Store} store - Store para gestionar el estado de la solicitud.
-   * @param {Tramite140205Query} query - Query para obtener el estado de la solicitud.
-   * @param {CancelacionCertificadosService} cancelacionCertificadosService - Servicio para gestionar datos de cancelación.
-   * @param {ValidacionesFormularioService} validacionesService - Servicio para validaciones de formularios.
+   * @description
+   * Constructor del componente.
+   * Se encarga de inicializar los servicios necesarios para la creación del formulario,
+   * la gestión del estado de la solicitud y la validación de datos.
+   *
+   * @param {FormBuilder} fb
+   * Servicio de Angular utilizado para construir formularios reactivos.
+   *
+   * @param {Tramite140205Store} store
+   * Store encargado de gestionar y actualizar el estado de la solicitud.
+   *
+   * @param {Tramite140205Query} query
+   * Query utilizada para consultar y obtener datos del estado de la solicitud.
+   *
+   * @param {CancelacionCertificadosService} cancelacionCertificadosService
+   * Servicio responsable de manejar la lógica relacionada con la cancelación de certificados.
+   *
+   * @param {ValidacionesFormularioService} validacionesService
+   * Servicio que proporciona validaciones personalizadas para los formularios.
+   *
+   * @param {ConsultaioQuery} consultaioQuery
+   * Query utilizada para acceder a datos relacionados con la consulta de información adicional.
    */
   constructor(
     private fb: FormBuilder,
@@ -175,8 +231,10 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
 
   /**
    * @method ngOnInit
-   * @description Método que se ejecuta al inicializar el componente.
-   * Configura las suscripciones y el formulario inicial.
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe al estado de la solicitud y al estado de consulta, inicializa el formulario
+   * con los valores actuales, carga catálogos y tablas necesarios, y obtiene los datos de la API.
    */
   ngOnInit(): void {
     this.query.selectSolicitud$
@@ -184,6 +242,30 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.solicitudForm?.patchValue({
+            grupoDatalleCupo: {
+              aduanero: this.solicitudState?.grupoDatalleCupo?.aduanero,
+              descripcionProducto:
+                this.solicitudState?.grupoDatalleCupo?.descripcionProducto,
+              clasificacionSubproducto:
+                this.solicitudState?.grupoDatalleCupo?.clasificacionSubproducto,
+              unidad: this.solicitudState?.grupoDatalleCupo?.unidad,
+              mecanismo: this.solicitudState?.grupoDatalleCupo?.mecanismo,
+              tratado: this.solicitudState?.grupoDatalleCupo?.tratado,
+              arancelarias: this.solicitudState?.grupoDatalleCupo?.arancelarias,
+              paises: this.solicitudState?.grupoDatalleCupo?.paises,
+              observaciones:
+                this.solicitudState?.grupoDatalleCupo?.observaciones,
+              fundamentos: this.solicitudState?.grupoDatalleCupo?.fundamentos,
+              fin: this.solicitudState?.grupoDatalleCupo?.fin,
+              inicio: this.solicitudState?.grupoDatalleCupo?.inicio,
+            },
+            grupoFolio: {
+              montoAsignado: this.solicitudState?.grupoFolio?.montoAsignado,
+              montoDisponible: this.solicitudState?.grupoFolio?.montoDisponible,
+              montoExpedido: this.solicitudState?.grupoFolio?.montoExpedido,
+            },
+          });
         })
       )
       .subscribe();
@@ -196,6 +278,7 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
     this.cargarFederal();
     this.cargarCuposTabla2();
     this.cargarCuposTabla();
+    this.fetchGetDatos();
 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -210,46 +293,88 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method grupoCupo
-   * @description Getter para obtener el grupo de formulario relacionado con los datos del cupo.
-   * @returns {FormGroup} Grupo de formulario del cupo.
+   * @method fetchGetDatos
+   * @description
+   * Consulta datos desde el servicio `CancelacionCertificadosService` y actualiza el store
+   * con la información obtenida, en caso de que la respuesta sea exitosa.
+   */
+  public fetchGetDatos(): void {
+    this.cancelacionCertificadosService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.store.setGrupoFolio(respuesta.datos.GrupoFolio);
+          this.store.setGrupoDatalleCupo(respuesta.datos.GrupoDatalleCupo);
+        }
+      });
+  }
+
+  /**
+   * @getter grupoCupo
+   * @description
+   * Devuelve el `FormGroup` correspondiente a la sección **grupoCupo** dentro del formulario reactivo `solicitudForm`.
+   *
+   * @returns {FormGroup} FormGroup que gestiona los controles relacionados con el grupo de cupo.
    */
   get grupoCupo(): FormGroup {
     return this.solicitudForm.get('grupoCupo') as FormGroup;
   }
+
   /**
-   * @method grupoDatalleCupo
-   * @description Getter para obtener el grupo de formulario relacionado con los datos del detalle de cupo.
-   * @returns {FormGroup} Grupo de formulario del detalle de cupo.
+   * @getter grupoDatalleCupo
+   * @description
+   * Devuelve el `FormGroup` correspondiente a la sección **grupoDatalleCupo** dentro del formulario reactivo `solicitudForm`.
+   *
+   * @returns {FormGroup} FormGroup que gestiona los controles relacionados con el detalle del cupo.
    */
   get grupoDatalleCupo(): FormGroup {
     return this.solicitudForm.get('grupoDatalleCupo') as FormGroup;
   }
+
   /**
-   * @method grupoFolio
-   * @description Getter para obtener el grupo de formulario relacionado con los datos del folio.
-   * @returns {FormGroup} Grupo de formulario del folio.
+   * @getter grupoFolio
+   * @description
+   * Devuelve el `FormGroup` correspondiente a la sección **grupoFolio** dentro del formulario reactivo `solicitudForm`.
+   *
+   * @returns {FormGroup} FormGroup que gestiona los controles relacionados con el grupo de folio.
    */
   get grupoFolio(): FormGroup {
     return this.solicitudForm.get('grupoFolio') as FormGroup;
   }
+
   /**
-   * Destruye el componente y libera recursos.
+   * @method inicializarFormulario
+   * @description
+   * Inicializa el estado del formulario `solicitudForm` en función de la variable `soloLectura`.
+   * - Si `soloLectura` es `true`, deshabilita todos los controles del formulario y carga los datos de la tabla de cupos.
+   * - Si `soloLectura` es `false`, habilita los controles del formulario para su edición.
    *
-   * Este método se llama cuando el componente se destruye, asegurando que no queden suscripciones activas.
+   * @returns {void}
    */
   inicializarFormulario(): void {
     if (this.soloLectura) {
       this.solicitudForm.disable();
       this.cargarCuposTabla();
-    } 
-    else {
+    } else {
       this.solicitudForm.enable();
     }
   }
+
   /**
    * @method initImpresaDatosFormulario
-   * @description Inicializa el formulario reactivo con los datos de la solicitud.
+   * @description
+   * Construye el formulario reactivo `solicitudForm` utilizando `FormBuilder` y lo inicializa con valores
+   * obtenidos de `solicitudState`.
+   * El formulario contiene tres secciones principales:
+   * - **grupoCupo**: Información relacionada con cupo (aduanero, mecanismo, tratado, etc.).
+   * - **grupoDatalleCupo**: Información detallada del cupo (descripcionProducto, unidad, fundamentos, etc.),
+   *   con todos sus campos deshabilitados inicialmente.
+   * - **grupoFolio**: Información de montos (asignado, disponible, expedido) con validaciones requeridas y deshabilitados inicialmente.
+   *
+   * Después de construir el formulario, invoca `inicializarFormulario()` para aplicar la lógica de solo lectura.
+   *
+   * @returns {void}
    */
   initImpresaDatosFormulario(): void {
     this.solicitudForm = this.fb.group({
@@ -266,40 +391,110 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
       }),
 
       grupoDatalleCupo: this.fb.group({
-        aduanero: [this.solicitudState?.grupoDatalleCupo?.aduanero, []],
+        aduanero: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.aduanero,
+            disabled: true,
+          },
+          [],
+        ],
         descripcionProducto: [
-          this.solicitudState?.grupoDatalleCupo?.descripcionProducto,
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.descripcionProducto,
+            disabled: true,
+          },
           [],
         ],
         clasificacionSubproducto: [
-          this.solicitudState?.grupoDatalleCupo?.clasificacionSubproducto,
+          {
+            value:
+              this.solicitudState?.grupoDatalleCupo?.clasificacionSubproducto,
+            disabled: true,
+          },
           [],
         ],
-        unidad: [this.solicitudState?.grupoDatalleCupo?.unidad, []],
-        mecanismo: [this.solicitudState?.grupoDatalleCupo?.mecanismo, []],
-        tratado: [this.solicitudState?.grupoDatalleCupo?.tratado, []],
-        arancelarias: [this.solicitudState?.grupoDatalleCupo?.arancelarias, []],
-        paises: [this.solicitudState?.grupoDatalleCupo?.paises, []],
+        unidad: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.unidad,
+            disabled: true,
+          },
+          [],
+        ],
+        mecanismo: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.mecanismo,
+            disabled: true,
+          },
+          [],
+        ],
+        tratado: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.tratado,
+            disabled: true,
+          },
+          [],
+        ],
+        arancelarias: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.arancelarias,
+            disabled: true,
+          },
+          [],
+        ],
+        paises: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.paises,
+            disabled: true,
+          },
+          [],
+        ],
         observaciones: [
-          this.solicitudState?.grupoDatalleCupo?.observaciones,
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.observaciones,
+            disabled: true,
+          },
           [],
         ],
-        fundamentos: [this.solicitudState?.grupoDatalleCupo?.fundamentos, []],
-        fin: [this.solicitudState?.grupoDatalleCupo?.fin, []],
-        inicio: [this.solicitudState?.grupoDatalleCupo?.inicio, []],
+        fundamentos: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.fundamentos,
+            disabled: true,
+          },
+          [],
+        ],
+        fin: [
+          { value: this.solicitudState?.grupoDatalleCupo?.fin, disabled: true },
+          [],
+        ],
+        inicio: [
+          {
+            value: this.solicitudState?.grupoDatalleCupo?.inicio,
+            disabled: true,
+          },
+          [],
+        ],
       }),
 
       grupoFolio: this.fb.group({
         montoAsignado: [
-          this.solicitudState?.grupoFolio?.montoAsignado,
+          {
+            value: this.solicitudState?.grupoFolio?.montoAsignado,
+            disabled: true,
+          },
           [Validators.required],
         ],
         montoDisponible: [
-          this.solicitudState?.grupoFolio?.montoDisponible,
+          {
+            value: this.solicitudState?.grupoFolio?.montoDisponible,
+            disabled: true,
+          },
           [Validators.required],
         ],
         montoExpedido: [
-          this.solicitudState?.grupoFolio?.montoExpedido,
+          {
+            value: this.solicitudState?.grupoFolio?.montoExpedido,
+            disabled: true,
+          },
           [Validators.required],
         ],
       }),
@@ -307,17 +502,36 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
   }
 
-  
+  /**
+   * @method ngAfterViewInit
+   * @description
+   * Hook del ciclo de vida de Angular que se ejecuta después de que la vista ha sido inicializada.
+   * Deshabilita explícitamente las secciones **grupoDatalleCupo** y **grupoFolio** del formulario `solicitudForm`
+   * para garantizar que no sean editables tras la inicialización de la vista.
+   *
+   * @returns {void}
+   */
+  ngAfterViewInit(): void {
+    this.solicitudForm?.get('grupoDatalleCupo')?.disable();
+    this.solicitudForm?.get('grupoFolio')?.disable();
+  }
 
   /**
-   * @property {TablaSeleccion} tablaSeleccion
-   * @description Tabla de selección para la tabla de cupos.
+   * @property {typeof TablaSeleccion} tablaSeleccion
+   * @description
+   * Referencia al enumerador/constante `TablaSeleccion` que se utiliza
+   * para identificar y controlar el tipo de tabla en la vista.
    */
   tablaSeleccion = TablaSeleccion;
+
   /**
    * @method filaSeleccionada
-   * @description Método que se ejecuta al seleccionar una fila en la tabla de cupos.
-   * @param {CuposTabla[]} evento - Evento que contiene la lista de filas seleccionadas.
+   * @description
+   * Maneja el evento de selección de filas en la tabla de **Cupos**.
+   * Almacena en la propiedad `filaSeleccionadaLista` la lista de filas seleccionadas.
+   *
+   * @param {CuposTabla[]} evento - Lista de filas seleccionadas en la tabla de cupos.
+   * @returns {void}
    */
   filaSeleccionada(evento: CuposTabla[]): void {
     this.filaSeleccionadaLista = evento;
@@ -325,38 +539,64 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
 
   /**
    * @method filaDisposible
-   * @description Método que se ejecuta al seleccionar una fila en la tabla de disponibles.
-   * @param {DisponsiblesTabla[]} evento - Evento que contiene la lista de filas seleccionadas.
+   * @description
+   * Maneja el evento de selección de filas en la tabla de **Disponibles**.
+   * Almacena en la propiedad `filaDisposibleLista` la lista de filas seleccionadas.
+   *
+   * @param {DisponsiblesTabla[]} evento - Lista de filas seleccionadas en la tabla de disponibles.
+   * @returns {void}
    */
   filaDisposible(evento: DisponsiblesTabla[]): void {
     this.filaDisposibleLista = evento;
   }
+
   /**
-   * @property {CuposTabla[]} filaSeleccionadaLista
-   * @description Lista de filas seleccionadas en la tabla de cupos.
+   * @property {DisponsiblesTabla[]} filaDisposibleLista
+   * @description
+   * Lista de filas seleccionadas en la tabla de **Disponibles**.
+   * Inicialmente está vacía.
    */
   filaDisposibleLista: DisponsiblesTabla[] = [];
 
   /**
-   * @property {DisponsiblesTabla[]} filaDisposibleLista
-   * @description Lista de filas disponibles seleccionadas.
+   * @property {CuposTabla[]} filaSeleccionadaLista
+   * @description
+   * Lista de filas seleccionadas en la tabla de **Cupos**.
+   * Inicialmente está vacía.
    */
   filaSeleccionadaLista: CuposTabla[] = [];
 
   /**
    * @method buscarCupos
-   * @description Método para habilitar la visualización de los datos generales de la empresa.
+   * @description
+   * Valida el formulario del grupo **Cupo** y, en caso de ser inválido,
+   * marca todos sus controles como tocados y asigna un mensaje de error.
+   * Finalmente emite el evento `datosEmpresaBuscar` para notificar la acción
+   * de búsqueda de cupos.
+   *
+   * @returns {void}
    */
   buscarCupos(): void {
-    this.cargarCuposTabla();
+    const GRUPO_CUPO = this.solicitudForm.get('grupoCupo') as FormGroup;
+    if (GRUPO_CUPO.invalid) {
+      GRUPO_CUPO.markAllAsTouched();
+      this.BUSCAR_EMPRESA_ERROR = BUSCAR_CUPOS_ERROR;
+      this.datosEmpresaBuscar.emit(true);
+    }
+    this.BUSCAR_EMPRESA_ERROR = '';
+    this.datosEmpresaBuscar.emit(true);
   }
 
   /**
    * @method setValoresStore
-   * @description Actualiza el estado del store con el valor seleccionado en el formulario.
-   * @param {FormGroup} form - El formulario que contiene los datos.
-   * @param {string} campo - El campo del formulario que se va a actualizar.
-   * @param {keyof Tramite140205Store} metodoNombre - El nombre del método en el store que se va a llamar.
+   * @description
+   * Asigna el valor de un campo del formulario al **store**,
+   * ejecutando dinámicamente el método correspondiente dentro de `Tramite140205Store`.
+   *
+   * @param {FormGroup} form - Formulario que contiene el campo a actualizar.
+   * @param {string} campo - Nombre del control dentro del formulario.
+   * @param {keyof Tramite140205Store} metodoNombre - Nombre del método en el store que recibirá el valor.
+   * @returns {void}
    */
   setValoresStore(
     form: FormGroup,
@@ -366,9 +606,15 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
   /**
    * @method cargarAduanero
-   * @description Carga las opciones disponibles para el campo "Aduanero".
+   * @description
+   * Obtiene la lista de opciones para el campo **Aduanero**
+   * desde el servicio `cancelacionCertificadosService` y
+   * la asigna a la propiedad `optionsAduanero`.
+   *
+   * @returns {void}
    */
   cargarAduanero(): void {
     this.cancelacionCertificadosService
@@ -381,7 +627,12 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
 
   /**
    * @method cargarMecanismo
-   * @description Carga las opciones disponibles para el campo "Mecanismo".
+   * @description
+   * Obtiene la lista de opciones para el campo **Mecanismo**
+   * desde el servicio `cancelacionCertificadosService` y
+   * la asigna a la propiedad `optionsMecanismo`.
+   *
+   * @returns {void}
    */
   cargarMecanismo(): void {
     this.cancelacionCertificadosService
@@ -392,6 +643,15 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * @method cargarTratado
+   * @description
+   * Obtiene la lista de opciones para el campo **Tratado**
+   * desde el servicio `cancelacionCertificadosService` y
+   * la asigna a la propiedad `optionsTratado`.
+   *
+   * @returns {void}
+   */
   cargarTratado(): void {
     this.cancelacionCertificadosService
       .obtenerTratado()
@@ -403,7 +663,12 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
 
   /**
    * @method cargarNombreProducto
-   * @description Carga las opciones disponibles para el campo "Nombre Producto".
+   * @description
+   * Obtiene la lista de opciones para el campo **Nombre del Producto**
+   * desde el servicio `cancelacionCertificadosService` y
+   * la asigna a la propiedad `optionNombreProducto`.
+   *
+   * @returns {void}
    */
   cargarNombreProducto(): void {
     this.cancelacionCertificadosService
@@ -416,7 +681,12 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
 
   /**
    * @method cargarNombreSubproducto
-   * @description Carga las opciones disponibles para el campo "Nombre Subproducto".
+   * @description
+   * Obtiene la lista de opciones para el campo **Nombre del Subproducto**
+   * desde el servicio `cancelacionCertificadosService` y
+   * la asigna a la propiedad `optionNombreSubproducto`.
+   *
+   * @returns {void}
    */
   cargarNombreSubproducto(): void {
     this.cancelacionCertificadosService
@@ -429,7 +699,12 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
 
   /**
    * @method cargarFederal
-   * @description Carga las opciones disponibles para el campo "Federal".
+   * @description
+   * Obtiene la lista de opciones para el campo **Federal**
+   * desde el servicio `cancelacionCertificadosService` y
+   * la asigna a la propiedad `optionFederal`.
+   *
+   * @returns {void}
    */
   cargarFederal(): void {
     this.cancelacionCertificadosService
@@ -442,8 +717,12 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
 
   /**
    * @method cargarCuposTabla
-   * @description Carga los datos de la tabla de cupos.
-   * Utiliza el servicio de cancelación de certificados para obtener los datos.
+   * @description
+   * Consulta la información de **Aviso de Cupos** desde el servicio
+   * `cancelacionCertificadosService` y asigna el resultado a la propiedad
+   * `tablaDeDatos.datos` para su visualización en la tabla.
+   *
+   * @returns {void}
    */
   public cargarCuposTabla(): void {
     this.cancelacionCertificadosService
@@ -453,10 +732,15 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
         this.tablaDeDatos.datos = datos.datos;
       });
   }
+
   /**
    * @method cargarCuposTabla2
-   * @description Carga los datos de la tabla de cupos 2.
-   * Utiliza el servicio de cancelación de certificados para obtener los datos.
+   * @description
+   * Consulta la información de **Aviso de Cupos Disponibles** desde el servicio
+   * `cancelacionCertificadosService` y asigna el resultado a la propiedad
+   * `tablaDatos.datos` para su visualización en la tabla de disponibles.
+   *
+   * @returns {void}
    */
   public cargarCuposTabla2(): void {
     this.cancelacionCertificadosService
@@ -468,13 +752,14 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Verifica si un campo específico de un formulario es válido.
+   * @method isValid
+   * @description
+   * Verifica si un campo de un formulario es válido utilizando el
+   * servicio `ValidacionesFormularioService`.
    *
-   * Este método utiliza el servicio de validaciones para determinar si un campo es válido.
-   *
-   * @param {FormGroup} form - El formulario que contiene el campo a validar.
-   * @param {string} field - El nombre del campo a validar.
-   * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+   * @param {FormGroup} form - Formulario reactivo en el que se valida el campo.
+   * @param {string} field - Nombre del campo dentro del formulario.
+   * @returns {boolean} `true` si el campo es válido, `false` en caso contrario.
    */
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
@@ -482,8 +767,12 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
 
   /**
    * @method ngOnDestroy
-   * @description Método que se ejecuta al destruir el componente.
-   * Libera los recursos y cancela las suscripciones activas.
+   * @description
+   * Método del ciclo de vida de Angular. Se ejecuta al destruir el componente,
+   * emitiendo la señal de finalización en `destroyNotifier$` y completando el
+   * observable para liberar recursos y evitar fugas de memoria.
+   *
+   * @returns {void}
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

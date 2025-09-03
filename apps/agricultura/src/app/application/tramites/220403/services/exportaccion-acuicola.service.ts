@@ -8,9 +8,9 @@
  * @author Equipo VUCEM
  * @since 2025
  */
-import { Catalogo, LabelValueDatos, PersonaTerceros, RespuestaCatalogos, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
+import { Catalogo, LabelValueDatos, RespuestaCatalogos, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
+import { ConsultarEmpresaProductora, EmpresaProductora, FilaSolicitudRespuesta, FormularioGrupo, Importador } from '../models/acuicola.module';
 import { Observable, Subject, map, of, takeUntil } from 'rxjs';
-import { FormularioGrupo } from '../models/acuicola.module';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Tramite220403Query } from '../estados/tramite220403.query';
@@ -160,12 +160,55 @@ export class ExportaccionAcuicolaService {
   }
 
   /**
-   * Actualiza la lista de terceros relacionados con la solicitud.
-   *
-   * @param {PersonaTerceros[]} tercerosRelacionados Lista de terceros.
-   * @memberof CertificadoZoosanitarioServiceService
+   * Obtiene los datos de la solicitud desde un archivo JSON.
+   * @returns {Observable<FilaSolicitudRespuesta>} Observable con los datos de la solicitud.
    */
-  updateTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
-    this.store.actualizarTercerosRelacionados(tercerosRelacionados);
+  obtenerSolicitudDatos(): Observable<FilaSolicitudRespuesta> {
+    return this.httpClient.get<FilaSolicitudRespuesta>('assets/json/220403/solicitud-datos.json');
+  }
+
+  /**
+   * Obtiene los datos del certificado de exportación.
+   * @returns {Observable<FormularioGrupo>} Observable con los datos del certificado de exportación.
+   */
+  certificadoExportacion(): Observable<FormularioGrupo> {
+    return this.httpClient.get<FormularioGrupo>(`assets/json/220403/certificado-exportacion.json`);
+  }
+
+  /**
+   * Obtiene los datos de la empresa productora desde un archivo JSON.
+   * @returns {Observable<EmpresaProductora[]>} Observable con los datos de la empresa productora.
+   */
+  obtenerEmpresaProductora(): Observable<EmpresaProductora[]> {
+    return this.httpClient.get<EmpresaProductora[]>('assets/json/220403/empresa-productora.json');
+  }
+
+  /**
+   * Obtiene los datos del importador desde un archivo JSON.
+   * @returns {Observable<Importador[]>} Observable con los datos del importador.
+   */
+  obtenerImportador(): Observable<Importador[]> {
+    return this.httpClient.get<Importador[]>('assets/json/220403/importador.json');
+  }
+
+  /**
+   * Obtiene la lista de países desde un archivo JSON.
+   * @returns {Observable<Catalogo[]>} Observable con la lista de países.
+   */
+  obtenerPaises(): Observable<Catalogo[]> {
+    return this.httpClient.get<RespuestaCatalogos>('assets/json/220403/paises.json')
+      .pipe(
+        map(response => response.data)
+      );
+  }
+  
+  /**
+   * Obtiene una lista de datos de empresas productoras realizando una solicitud HTTP GET
+   * a un archivo JSON local.
+   *
+   * @returns Un Observable que emite un arreglo de objetos `ConsultarEmpresaProductora`.
+   */
+  obtenerConsultarEmpresaDatos(): Observable<ConsultarEmpresaProductora> {
+    return this.httpClient.get<ConsultarEmpresaProductora>(`assets/json/220403/consultar-empresa-productora.json`);
   }
 }

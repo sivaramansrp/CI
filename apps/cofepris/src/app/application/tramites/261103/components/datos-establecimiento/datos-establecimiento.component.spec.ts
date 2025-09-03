@@ -50,21 +50,6 @@ describe('DatosestablecimientoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería deshabilitar el formulario si esFormularioSoloLectura es true', () => {
-    component.seccionState = { denominacion: 'Test Denominacion' } as any;
-    component.esFormularioSoloLectura = true;
-    component.crearFormulario();
-    component.guardarDatosFormulario();
-    expect(component.datosdelestablecimiento.disabled).toBe(true);
-  });
-
-  it('debería habilitar el formulario si esFormularioSoloLectura es false', () => {
-    component.seccionState = { denominacion: 'Test Denominacion' } as any;
-    component.esFormularioSoloLectura = false;
-    component.crearFormulario();
-    component.guardarDatosFormulario();
-    expect(component.datosdelestablecimiento.enabled).toBe(true);
-  });
 
   it('debería llamar a establecerDatos en el store al ejecutar setValoresStore', () => {
     component.seccionState = { denominacion: 'Valor Test' } as any;

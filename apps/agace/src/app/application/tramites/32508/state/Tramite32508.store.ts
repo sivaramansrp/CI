@@ -57,6 +57,10 @@ export interface Solicitud32508State {
   fechaElaboracion: string;
   /** Saldo pendiente por compensar. */
   saldoPendienteCompensar: string;
+  /** Ingresos */
+  ingresos: string;
+  /** Cantidad dictaminada */
+  dictaminadaCantidad: string;
 }
 
 /**
@@ -86,6 +90,8 @@ export function createInitialState(): Solicitud32508State {
     fechaPago: '',
     fechaElaboracion: '',
     saldoPendienteCompensar: '',
+    ingresos: '',
+    dictaminadaCantidad: ''
   };
 }
 
@@ -270,6 +276,22 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    */
   public setFechaElaboracion(fechaElaboracion: string): void {
     this.update((state) => ({ ...state, fechaElaboracion }));
+  }
+
+  /**
+   * Actualiza los ingresos.
+   * @param ingresos Nuevos ingresos.
+   */
+  public setIngresos(ingresos: string): void {
+    this.update((state) => ({ ...state, ingresos }));
+  }
+
+  /**
+   * Actualiza la cantidad dictaminada.
+   * @param dictaminadaCantidad Nueva cantidad dictaminada.
+   */
+  public setDictaminadaCantidad(dictaminadaCantidad: string): void {
+    this.update((state) => ({ ...state, dictaminadaCantidad }));
   }
 
   /**

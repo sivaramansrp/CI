@@ -1,6 +1,6 @@
 import { AnexoUnoEncabezado, ProveedorClienteTabla } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ProveedorClienteComponent } from '../../../../shared/components/proveedor-cliente/proveedor-cliente.component';
 
 /**
@@ -31,6 +31,14 @@ export class ContenedorProveedorClienteComponent {
    * Este arreglo se utiliza para gestionar y mostrar la información relacionada con los proveedores.
    */
   datosDelProveedor:ProveedorClienteTabla[]=[];
+
+  /**
+   * Evento que se emite para cerrar el popup actual.
+   * 
+   * Notifica al componente padre que se debe cerrar el popup.
+   * No envía ningún dato, solo indica la acción de cierre.
+   */
+  @Output() cerrarPopup = new EventEmitter<void>();
 
   /**
    * Método que actualiza los datos del proveedor o cliente con la información proporcionada.

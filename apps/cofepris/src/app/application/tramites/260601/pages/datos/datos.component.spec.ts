@@ -4,11 +4,14 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { DatosComponent } from './datos.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Service260601Service } from '../../services/service260601.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrModule } from 'ngx-toastr';
 
 @Injectable()
 class MockService260601Service {}
@@ -19,14 +22,16 @@ describe('DatosComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, DatosComponent ],
+      imports: [ FormsModule, ReactiveFormsModule, DatosComponent, HttpClientTestingModule, ToastrModule.forRoot()  ],
       declarations: [
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         ChangeDetectorRef,
         ConsultaioQuery,
-        { provide: Service260601Service, useClass: MockService260601Service }
+        { provide: Service260601Service, useClass: MockService260601Service },
+        { provide: 'ToastConfig', useValue: {} },
+        { provide: ActivatedRoute, useValue: { snapshot: {}, params: observableOf({}), queryParams: observableOf({}) } }
       ]
     }).overrideComponent(DatosComponent, {
 
@@ -36,7 +41,9 @@ describe('DatosComponent', () => {
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
+    if (component && typeof component.ngOnDestroy === 'function') {
+      component.ngOnDestroy();
+    }
     fixture.destroy();
   });
 

@@ -7,6 +7,7 @@ import {
   CATALOGOS_ID,
   Catalogo,
   CatalogosService,
+  EMAIL,
   InputFecha,
   InputFechaComponent,
   NotificacionesComponent,
@@ -14,6 +15,8 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
+  ValidacionesFormularioService,
+  WEBPAGE,
 } from '@libs/shared/data-access-user/src';
 import {
   Component,
@@ -56,7 +59,7 @@ import { Notificacion } from '@ng-mf/data-access-user';
 import { DatosCatalago, INPUT_FECHA_CONFIG, INPUT_FECHA_CONFIGURACION } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
 import { TramiteStore } from '../../../estados/tramite.store';
-
+import { CatalogoPaises } from '@ng-mf/data-access-user';
 /**
  * Componente Complimentos.
  * Responsable de mostrar y gestionar los datos relacionados a los complimentos.
@@ -107,17 +110,17 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    */
   obligacionesFiscales!: FormGroup;
 
-   /**
-   * Constante para configurar el input de fecha.
-   * Define las propiedades del campo de entrada de fecha.
-   */
-    INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
+  /**
+  * Constante para configurar el input de fecha.
+  * Define las propiedades del campo de entrada de fecha.
+  */
+  INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
 
-    /**
-   * Constante para configurar el input de fecha.
-   * Define las propiedades del campo de entrada de fecha.
-   */
-    INPUT_FECHA_CONFIGURACION = INPUT_FECHA_CONFIGURACION;
+  /**
+ * Constante para configurar el input de fecha.
+ * Define las propiedades del campo de entrada de fecha.
+ */
+  INPUT_FECHA_CONFIGURACION = INPUT_FECHA_CONFIGURACION;
 
   /**
    * @type {Catalogo[]}
@@ -280,27 +283,50 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
   * Objeto que representa una nueva notificación.
   * Se utiliza para mostrar mensajes de alerta o información al usuario.
   */
-    public eliminarNotificacion!: Notificacion;
+  public eliminarNotificacion!: Notificacion;
 
   /**
   * @description
   * Objeto que representa una nueva notificación.
   * Se utiliza para mostrar mensajes de alerta o información al usuario.
   */
-    public eliminarUnoConfirmationNotificacion!: Notificacion;
+  public eliminarUnoConfirmationNotificacion!: Notificacion;
 
-     /**
-  * @description
-  * Objeto que representa una nueva notificación.
-  * Se utiliza para mostrar mensajes de alerta o información al usuario.
-  */
-    public eliminarDosConfirmationNotificacion!: Notificacion;
+  /**
+* @description
+* Objeto que representa una nueva notificación.
+* Se utiliza para mostrar mensajes de alerta o información al usuario.
+*/
+  public eliminarDosConfirmationNotificacion!: Notificacion;
 
-      /**
-       * Configuración del input de fecha de inicio
-       * @property {InputFecha} fechaInicioInput
-       */
-      fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+  /**
+   * Configuración del input de fecha de inicio
+   * @property {InputFecha} fechaInicioInput
+   */
+  fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+
+  /**
+* Obtiene el número total de socios accionistas registrados en el formulario.
+* @returns {number} Total de socios accionistas. 
+*/
+  get totalItemsDatosSocioAccionistas(): number {
+    return this.datosSocioAccionistas.length;
+  }
+
+  /**
+* Obtiene el número total de socios accionistas registrados en el formulario.
+* @returns {number} Total de socios accionistas. 
+*/
+  get totalItemsDatosSocioAccionistasExtranjeros(): number {
+    return this.datosSocioAccionistasExtrenjeros.length;
+  }
+
+  /**
+   * Stores the list of country catalog data used within the component.
+   * Each entry represents a country and its associated information.
+   */
+  paisDatos: CatalogoPaises[] = [];
+
 
   /**
    * Constructor para inicializar el formulario de datos del subcontratista.
@@ -312,35 +338,36 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     private fb: FormBuilder,
     private catalogosServices: CatalogosService,
     private complimentosService: ComplimentosService,
-     private consultaioQuery: ConsultaioQuery,
-     private tramiteStore: TramiteStore
+    private consultaioQuery: ConsultaioQuery,
+    private tramiteStore: TramiteStore,
+    private validacionesService: ValidacionesFormularioService
   ) {
-    
-       this.consultaioQuery.selectConsultaioState$
+
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-           this.formularioDeshabilitado = seccionState.readonly;
-      
-              this.inicializarCertificadoFormulario(); 
+          this.formularioDeshabilitado = seccionState.readonly;
+
+          this.inicializarCertificadoFormulario();
         })
       )
       .subscribe();
-    }
-   
- /**
-   * Método para inicializar el formulario reactivo con los datos de la solicitud.
-   * 
-   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
-   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
-   */
+  }
+
+  /**
+    * Método para inicializar el formulario reactivo con los datos de la solicitud.
+    * 
+    * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+    * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
+    */
   inicializarCertificadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-     this.inicializarFormulario();
-    }  
+      this.inicializarFormulario();
+    }
   }
 
   /**
@@ -354,24 +381,24 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-    /**
-   * @comdoc
-   * Guarda los datos del formulario de combinación requerida.
-   * 
-   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
-   * - Si el formulario es de solo lectura, lo deshabilita.
-   * - Si no es de solo lectura, lo habilita.
-   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
-   */
+  /**
+ * @comdoc
+ * Guarda los datos del formulario de combinación requerida.
+ * 
+ * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+ * - Si el formulario es de solo lectura, lo deshabilita.
+ * - Si no es de solo lectura, lo habilita.
+ * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+ */
   guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-        
-this.formaComplimentos.disable();
-      } else {
-         
-          this.formaComplimentos.enable();    
-      }
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+
+      this.formaComplimentos.disable();
+    } else {
+
+      this.formaComplimentos.enable();
+    }
   }
   /**
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
@@ -384,7 +411,7 @@ this.formaComplimentos.disable();
       modalidad: [{ value: '', disabled: true }],
       programaPreOperativo: [false],
       datosGeneralis: this.fb.group({
-        paginaWWeb: ['', [Validators.required, Validators.maxLength(120)]],
+        paginaWWeb: ['', [Validators.required, Validators.maxLength(120), Validators.pattern(WEBPAGE)]],
         localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
@@ -396,10 +423,10 @@ this.formaComplimentos.disable();
         nombreDelFederatario: ['', [Validators.required, Validators.maxLength(120)]],
         nombreDeNotaria: ['', [Validators.required, Validators.maxLength(10)]],
         estado: ['', Validators.required],
-        nombreDeActa: ['',[ Validators.required, Validators.maxLength(10)]],
+        nombreDeActa: ['', [Validators.required, Validators.maxLength(10)]],
         fechaDeActa: ['', Validators.required],
         rfc: ['', [
-          Validators.required, 
+          Validators.required,
           Validators.minLength(12),
           Validators.maxLength(13),
           Validators.pattern(REGEX_RFC)
@@ -418,13 +445,26 @@ this.formaComplimentos.disable();
       }),
     });
 
- // Apply initial data if available
+    // Apply initial data if available
     if (this.datosFormaComplimentos) {
       // Use immediate execution for better user experience
       setTimeout(() => {
         this.aplicarDatosFormulario();
       }, 0);
     }
+  }
+
+  /**
+  * compo doc
+  * @method isValid
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param field El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(formgroup: string, campo: string): boolean | null {
+    const FORMGRUPO = this.formaComplimentos.get(formgroup) as FormGroup;
+    return this.validacionesService.isValid(FORMGRUPO, campo);
   }
 
   /**
@@ -438,16 +478,16 @@ this.formaComplimentos.disable();
     // Create a copy of the data for transformation
     const DATOS_TRANSFORMADOS = JSON.parse(JSON.stringify(this.datosFormaComplimentos));
 
-  this.transformarValoresRadio(DATOS_TRANSFORMADOS);
-    
-    
+    this.transformarValoresRadio(DATOS_TRANSFORMADOS);
+
+
     const PROGRAMA_PREOPERATIVO_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.programaPreOperativo);
 
-  
+
     this.formaComplimentos.patchValue(DATOS_TRANSFORMADOS, { emitEvent: false });
     this.formaComplimentos.get('programaPreOperativo')?.setValue(PROGRAMA_PREOPERATIVO_VALUE, { emitEvent: false });
 
-    
+
     if (DATOS_TRANSFORMADOS.formaSocioAccionistas) {
       this.aplicarDatosDinamicos(DATOS_TRANSFORMADOS);
     }
@@ -457,23 +497,23 @@ this.formaComplimentos.disable();
    * Transforms radio button values to the expected format
    */
   private transformarValoresRadio(datos: DatosComplimentos): void {
-   
+
     if (!datos.formaSocioAccionistas || !this.formaComplimentos) {
       return;
     }
- if (datos.formaSocioAccionistas.nationalidadMaxicana === 'Sí' || 
-        datos.formaSocioAccionistas.nationalidadMaxicana === 'Si') {
+    if (datos.formaSocioAccionistas.nationalidadMaxicana === 'Sí' ||
+      datos.formaSocioAccionistas.nationalidadMaxicana === 'Si') {
       datos.formaSocioAccionistas.nationalidadMaxicana = 'true';
     } else if (datos.formaSocioAccionistas.nationalidadMaxicana === 'No') {
       datos.formaSocioAccionistas.nationalidadMaxicana = 'false';
     }
 
-    
-    if (datos.formaSocioAccionistas.tipoDePersona === 'Física' || 
-        datos.formaSocioAccionistas.tipoDePersona === 'Persona Física') {
+
+    if (datos.formaSocioAccionistas.tipoDePersona === 'Física' ||
+      datos.formaSocioAccionistas.tipoDePersona === 'Persona Física') {
       datos.formaSocioAccionistas.tipoDePersona = 'true';
-    } else if (datos.formaSocioAccionistas.tipoDePersona === 'Moral' || 
-               datos.formaSocioAccionistas.tipoDePersona === 'Persona Moral') {
+    } else if (datos.formaSocioAccionistas.tipoDePersona === 'Moral' ||
+      datos.formaSocioAccionistas.tipoDePersona === 'Persona Moral') {
       datos.formaSocioAccionistas.tipoDePersona = 'false';
     }
   }
@@ -510,13 +550,13 @@ this.formaComplimentos.disable();
    * Applies dynamic form data with single form modification
    */
   private aplicarDatosDinamicos(datos: DatosComplimentos): void {
-   
+
     this.transformarFormaDatos(datos);
-    
-  
+
+
     const FORM_DATA_TO_APPLY = datos.formaSocioAccionistas.formaDatos;
-    
-    
+
+
     if (FORM_DATA_TO_APPLY) {
       Object.keys(FORM_DATA_TO_APPLY).forEach(key => {
         this.PRESERVED_FORM_DATA[key] = FORM_DATA_TO_APPLY[key];
@@ -541,9 +581,9 @@ this.formaComplimentos.disable();
    * Checks if formaDatos structure is invalid
    */
   private esEstructuraFormaDatosInvalida(formaDatos: { [key: string]: string }): boolean {
-    return !formaDatos || 
-           typeof formaDatos !== 'object' ||
-           Object.keys(formaDatos).some(key => key.startsWith('socio'));
+    return !formaDatos ||
+      typeof formaDatos !== 'object' ||
+      Object.keys(formaDatos).some(key => key.startsWith('socio'));
   }
 
   /**
@@ -583,10 +623,11 @@ this.formaComplimentos.disable();
    * @returns {void}
    */
   ngOnInit(): void {
-     this.inicializarCertificadoFormulario();
-    this.getCatalogoPaises();
+    this.inicializarCertificadoFormulario();
+  //  this.getCatalogoPaises();
     this.getCatalogoEstado();
     this.loadComboUnidadMedida();
+    this.getPais();
 
     this.formaComplimentos.valueChanges
       .pipe(delay(100))
@@ -604,7 +645,7 @@ this.formaComplimentos.disable();
       }, 100);
     }
 
-    if(this.formularioDeshabilitado ) {
+    if (this.formularioDeshabilitado) {
       this.formaComplimentos.disable();
     }
   }
@@ -635,7 +676,7 @@ this.formaComplimentos.disable();
           pais: ['', Validators.required],
           codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
           estado: ['', Validators.required],
-          correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
+          correoElectronico: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]],
         });
 
       case TIPO_FORMA.TIPO_PERSONA:
@@ -645,19 +686,19 @@ this.formaComplimentos.disable();
           pais: ['', Validators.required],
           codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
           estado: ['', [Validators.required, Validators.maxLength(250)]],
-          correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
+          correoElectronico: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]],
           apellidoPaterno: ['', [Validators.required, Validators.maxLength(200)]],
         });
-      
-    case TIPO_FORMA.NATIONALIDAD_MEXICANA:
-      return this.fb.group({
-        rfc: ['', [
-          Validators.required, 
-          Validators.minLength(12),
-          Validators.maxLength(13),
-          Validators.pattern(REGEX_RFC)
-        ]],
-      });
+
+      case TIPO_FORMA.NATIONALIDAD_MEXICANA:
+        return this.fb.group({
+          rfc: ['', [
+            Validators.required,
+            Validators.minLength(12),
+            Validators.maxLength(13),
+            Validators.pattern(REGEX_RFC)
+          ]],
+        });
 
       default:
         return this.fb.group({
@@ -666,7 +707,7 @@ this.formaComplimentos.disable();
           pais: ['', Validators.required],
           codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
           estado: ['', Validators.required],
-          correoElectronico: ['', [Validators.required, Validators.maxLength(200)]],
+          correoElectronico: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(EMAIL)]],
         });
     }
   }
@@ -684,10 +725,10 @@ this.formaComplimentos.disable();
     const CONTROL = this.formaComplimentos.get(
       'formaSocioAccionistas'
     ) as FormGroup;
-    
+
     // Save current form data before removing the control
     const CURRENT_FORM_DATA = CONTROL.get('formaDatos')?.value || {};
-    
+
     // Store ALL current form data in persistent storage, including taxId
     Object.keys(CURRENT_FORM_DATA).forEach(key => {
       const VALUE = CURRENT_FORM_DATA[key];
@@ -695,12 +736,12 @@ this.formaComplimentos.disable();
         this.PRESERVED_FORM_DATA[key] = VALUE;
       }
     });
-    
+
     // Special handling for taxId to ensure it's always preserved
     if (CURRENT_FORM_DATA.taxId) {
       this.PRESERVED_FORM_DATA['taxId'] = CURRENT_FORM_DATA.taxId;
     }
-    
+
     // Update form structure synchronously
     CONTROL.removeControl('formaDatos', { emitEvent: false });
     this.camposFormulario = [...camposDelFormulario];
@@ -708,27 +749,27 @@ this.formaComplimentos.disable();
     CONTROL.setControl('formaDatos', NEW_FORM_CONTROL, {
       emitEvent: false,
     });
-    
+
     const DATA_TO_RESTORE: { [key: string]: string | number | boolean } = {};
     const NEW_FORM_CONTROLS = Object.keys(NEW_FORM_CONTROL.controls);
-    
+
     // Restore data for matching controls, with special attention to taxId
     NEW_FORM_CONTROLS.forEach(controlName => {
       if (this.PRESERVED_FORM_DATA[controlName] !== undefined) {
         DATA_TO_RESTORE[controlName] = this.PRESERVED_FORM_DATA[controlName];
       }
     });
-    
+
     // Ensure taxId is always restored if it exists in preserved data and new form has taxId
     if (this.PRESERVED_FORM_DATA['taxId'] && NEW_FORM_CONTROL.controls['taxId']) {
       DATA_TO_RESTORE['taxId'] = this.PRESERVED_FORM_DATA['taxId'];
     }
-    
+
     if (Object.keys(DATA_TO_RESTORE).length > 0) {
       NEW_FORM_CONTROL.patchValue(DATA_TO_RESTORE, { emitEvent: false });
     }
-  
-  this.tipoFormulario = tipoForma;
+
+    this.tipoFormulario = tipoForma;
   }
 
   /**
@@ -757,16 +798,15 @@ this.formaComplimentos.disable();
         const INDICEALT = this.camposFormularioTipoPersona.findIndex(
           (ele) => ele.campo === PAIS
         );
-        this.camposFormularioDefault[INDICE].opciones = datos;
-        this.camposFormularioTipoPersona[INDICEALT].opciones = datos;
+      //  this.camposFormularioTipoPersona[INDICEALT].opciones = datos;
       });
   }
 
-   /**
-   * method loadComboUnidadMedida
-   * description Carga la lista de derechos desde el servicio.
-   */
-   loadComboUnidadMedida(): void {
+  /**
+  * method loadComboUnidadMedida
+  * description Carga la lista de derechos desde el servicio.
+  */
+  loadComboUnidadMedida(): void {
     this.complimentosService.getDatos() // Llama al servicio para obtener los datos.
       .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
       .subscribe((data): void => { // Maneja los datos recibidos.
@@ -784,7 +824,7 @@ this.formaComplimentos.disable();
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         const INDICE = this.camposFormulario.findIndex(
-          (ele) => ele.campo === ESTADO
+          (ele) => ele.campo === PAIS
         );
         const INDICEALT = this.camposFormularioTipoPersona.findIndex(
           (ele) => ele.campo === ESTADO
@@ -803,21 +843,49 @@ this.formaComplimentos.disable();
     const CONTROL = this.formaComplimentos.get(
       'formaSocioAccionistas'
     ) as FormGroup;
-    const VALUE = CONTROL.get('formaDatos')?.value;
-    if (VALUE) {
-      this.accionistasAgregados.emit(VALUE);
-      this.formaComplimentos.reset();
+    const FORMADATOS_GROUP = CONTROL?.get('formaDatos') as FormGroup;
+    if (FORMADATOS_GROUP?.valid) {
+      let VALUE = CONTROL.get('formaDatos')?.value;
+      if (VALUE.pais) {
+        const DATOS = {
+          ...VALUE,
+          pais: ComplimentosComponent.obtenerDescripcion(this.estados, VALUE.pais)
+        };
+        VALUE = DATOS;
+      }
+      if (VALUE) {
+
+        this.accionistasAgregados.emit(VALUE);
+
+
+      }
+    } else {
+      FORMADATOS_GROUP?.markAllAsTouched();
     }
+  }
+
+  /**
+ * @method obtenerDescripcion
+ * @description
+ * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario dinámico.
+ * @returns {string} Descripción de la fracción arancelaria seleccionada o una cadena vacía si no existe.
+ */
+  public static obtenerDescripcion(array: Catalogo[], id: string): string {
+    const DESCRIPCION = array.find((ele: Catalogo) => Number(ele.id) === Number(id))?.descripcion;
+    return DESCRIPCION ?? '';
   }
 
   /**
    * @description Elimina los accionistas seleccionados y emite el evento correspondiente.
    * @returns {void}
    */
+
   eliminarAccionistas(): void {
+    if (this.eliminarUnoConfirmationNotificacion) {
       this.eliminarUnoConfirmationNotificacion.cerrar = false;
+    }
     if (this.empresaAccionistasSeleccionados.length) {
-      this.accionistasEliminados.emit(this.empresaAccionistasSeleccionados);
+      this.abrirEliminarUnoConfirmationModal();
     } else {
       this.abrirEliminarModal();
     }
@@ -854,28 +922,24 @@ this.formaComplimentos.disable();
     };
   }
 
-    /**
-   * Abre un modal relacionado con las plantas Immex y configura una notificación
-   * para alertar al usuario en caso de que no se hayan seleccionado datos de las plantas.
-   *
-   * La notificación configurada tiene las siguientes características:
-   * - Tipo de notificación: 'alert'
-   * - Categoría: 'danger'
-   * - Modo: 'action'
-   * - Título: vacío
-   * - Mensaje: 'No se seleccionaron datos de las plantas Immex.'
-   * - Cierre automático: habilitado
-   * - Tiempo de espera: 2000 milisegundos
-   * - Texto del botón Aceptar: 'Aceptar'
-   * - Texto del botón Cancelar: vacío
-   *
-   * @returns {void} No retorna ningún valor.
-   */
+  /**
+ * Abre un modal relacionado con las plantas Immex y configura una notificación
+ * para alertar al usuario en caso de que no se hayan seleccionado datos de las plantas.
+ *
+ * La notificación configurada tiene las siguientes características:
+ * - Tipo de notificación: 'alert'
+ * - Categoría: 'danger'
+ * - Modo: 'action'
+ * - Título: vacío
+ * - Mensaje: 'No se seleccionaron datos de las plantas Immex.'
+ * - Cierre automático: habilitado
+ * - Tiempo de espera: 2000 milisegundos
+ * - Texto del botón Aceptar: 'Aceptar'
+ * - Texto del botón Cancelar: vacío
+ *
+ * @returns {void} No retorna ningún valor.
+ */
   abrirEliminarUnoConfirmationModal(): void {
-    if(!this.empresaAccionistasSeleccionados.length) {
-      this.abrirEliminarModal();
-      return;
-    }
     this.eliminarUnoConfirmationNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -885,18 +949,18 @@ this.formaComplimentos.disable();
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+      txtBtnCancelar: 'Cancelar',
     };
   }
 
-      /**
-   * Método para manejar la selección de plantas IMMEX.
-   * 
-   * Este método recibe un evento de tipo `PlantasImmex` y lo agrega al arreglo
-   * `plantasImmexSeleccionadoDatos`, asegurando que no se dupliquen entradas.
-   * 
-   * @param {PlantasImmex} event - Objeto de tipo `PlantasImmex` que representa la planta seleccionada.
-   */
+  /**
+* Método para manejar la selección de plantas IMMEX.
+* 
+* Este método recibe un evento de tipo `PlantasImmex` y lo agrega al arreglo
+* `plantasImmexSeleccionadoDatos`, asegurando que no se dupliquen entradas.
+* 
+* @param {PlantasImmex} event - Objeto de tipo `PlantasImmex` que representa la planta seleccionada.
+*/
   closePlantasModal(): void {
     this.eliminarNotificacion.cerrar = false;
   }
@@ -906,38 +970,34 @@ this.formaComplimentos.disable();
    * @returns {void}
    */
   eliminarAccionistasExtrenjeros(): void {
-    this.eliminarDosConfirmationNotificacion.cerrar = false;
+    if (this.eliminarDosConfirmationNotificacion && this.eliminarDosConfirmationNotificacion.cerrar) {
+      this.eliminarDosConfirmationNotificacion.cerrar = false;
+    }
     if (this.accionistasExtranjerosSeleccionados.length) {
-      this.accionistasExtranjerosEliminado.emit(
-        this.accionistasExtranjerosSeleccionados
-      );
+      this.abrirEliminarDosConfirmationModal();
     } else {
       this.abrirEliminarModal();
     }
   }
 
-      /**
-   * Abre un modal relacionado con las plantas Immex y configura una notificación
-   * para alertar al usuario en caso de que no se hayan seleccionado datos de las plantas.
-   *
-   * La notificación configurada tiene las siguientes características:
-   * - Tipo de notificación: 'alert'
-   * - Categoría: 'danger'
-   * - Modo: 'action'
-   * - Título: vacío
-   * - Mensaje: 'No se seleccionaron datos de las plantas Immex.'
-   * - Cierre automático: habilitado
-   * - Tiempo de espera: 2000 milisegundos
-   * - Texto del botón Aceptar: 'Aceptar'
-   * - Texto del botón Cancelar: vacío
-   *
-   * @returns {void} No retorna ningún valor.
-   */
+  /**
+* Abre un modal relacionado con las plantas Immex y configura una notificación
+* para alertar al usuario en caso de que no se hayan seleccionado datos de las plantas.
+*
+* La notificación configurada tiene las siguientes características:
+* - Tipo de notificación: 'alert'
+* - Categoría: 'danger'
+* - Modo: 'action'
+* - Título: vacío
+* - Mensaje: 'No se seleccionaron datos de las plantas Immex.'
+* - Cierre automático: habilitado
+* - Tiempo de espera: 2000 milisegundos
+* - Texto del botón Aceptar: 'Aceptar'
+* - Texto del botón Cancelar: vacío
+*
+* @returns {void} No retorna ningún valor.
+*/
   abrirEliminarDosConfirmationModal(): void {
-      if(!this.accionistasExtranjerosSeleccionados.length) {
-      this.abrirEliminarModal();
-      return;
-    }
     this.eliminarDosConfirmationNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -947,7 +1007,7 @@ this.formaComplimentos.disable();
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+      txtBtnCancelar: 'Cancelar',
     };
   }
   /**
@@ -958,7 +1018,7 @@ this.formaComplimentos.disable();
     // First, save current form data immediately, with special focus on taxId
     const CONTROL = this.formaComplimentos.get('formaSocioAccionistas') as FormGroup;
     const CURRENT_DATA = CONTROL.get('formaDatos')?.value || {};
-    
+
     // Store initial data from datosFormaComplimentos if available
     if (this.datosFormaComplimentos?.formaSocioAccionistas?.formaDatos) {
       Object.keys(this.datosFormaComplimentos.formaSocioAccionistas.formaDatos).forEach(key => {
@@ -968,7 +1028,7 @@ this.formaComplimentos.disable();
         }
       });
     }
-    
+
     // Preserve all current fields, with explicit handling for taxId
     Object.keys(CURRENT_DATA).forEach(key => {
       const VALUE = CURRENT_DATA[key];
@@ -976,15 +1036,15 @@ this.formaComplimentos.disable();
         this.PRESERVED_FORM_DATA[key] = VALUE;
       }
     });
-    
+
     // Double-check taxId preservation
     if (CURRENT_DATA.taxId && CURRENT_DATA.taxId.trim() !== '') {
       this.PRESERVED_FORM_DATA['taxId'] = CURRENT_DATA.taxId;
     }
-    
+
     // Execute form modification immediately without timeout
     const VALUE = this.formaComplimentos.value;
-    
+
     if (VALUE.formaSocioAccionistas.nationalidadMaxicana === 'true') {
       this.modificarFormulario(
         TIPO_FORMA.NATIONALIDAD_MEXICANA,
@@ -1009,18 +1069,18 @@ this.formaComplimentos.disable();
    * Maneja los cambios en el campo "Fecha de Pago".
    * Actualiza el estado del almacén con la fecha de pago proporcionada.  
    */
-   cambioFechaFinal(nuevo_valor: string): void {
+  cambioFechaFinal(nuevo_valor: string): void {
     this.formaComplimentos.patchValue({
       fechaExpedicion: nuevo_valor,
     });
     this.tramiteStore.setfechaExpedicion(nuevo_valor);
   }
 
-    /**
-   * Maneja los cambios en el campo "Fecha de Pago".
-   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
-   */
-   cambioFecha(nuevo_valor: string): void {
+  /**
+ * Maneja los cambios en el campo "Fecha de Pago".
+ * Actualiza el estado del almacén con la fecha de pago proporcionada.  
+ */
+  cambioFecha(nuevo_valor: string): void {
     this.formaComplimentos.patchValue({
       fechaDeActa: nuevo_valor,
     });
@@ -1042,10 +1102,10 @@ this.formaComplimentos.disable();
     if (!this.formaComplimentos) {
       return 'Formulario no inicializado';
     }
-    
+
     // ONLY get errors from the main RFC field, not the dynamic form RFC
     const RFC_CONTROL = this.formaComplimentos.get('formaModificaciones')?.get('rfc');
-    
+
     if (!RFC_CONTROL?.errors) {
       return '';
     }
@@ -1053,15 +1113,15 @@ this.formaComplimentos.disable();
     if (RFC_CONTROL.errors['required']) {
       return 'El RFC es obligatorio';
     }
-    
+
     if (RFC_CONTROL.errors['minlength']) {
       return 'El RFC no se encontró, favor de verificar';
     }
-    
+
     if (RFC_CONTROL.errors['maxlength']) {
       return 'El RFC no se encontró, favor de verificar';
     }
-    
+
     if (RFC_CONTROL.errors['pattern']) {
       return 'El RFC no se encontró, favor de verificar';
     }
@@ -1075,7 +1135,7 @@ this.formaComplimentos.disable();
   onRfcBlur(): void {
     // Set flag to indicate we're processing RFC validation
     this.isProcessingRfcValidation = true;
-    
+
     // Only target the main RFC field in formaModificaciones
     const RFC_CONTROL = this.formaComplimentos.get('formaModificaciones')?.get('rfc');
     if (RFC_CONTROL) {
@@ -1083,7 +1143,7 @@ this.formaComplimentos.disable();
       // Only check validation for the main RFC field specifically on blur
       this.checkRfcValidationOnly();
     }
-    
+
     // Reset flag after a delay
     setTimeout(() => {
       this.isProcessingRfcValidation = false;
@@ -1097,10 +1157,10 @@ this.formaComplimentos.disable();
   onRfcChange(): void {
     // Set flag to indicate we're processing RFC validation
     this.isProcessingRfcValidation = true;
-    
+
     // Clear any existing notification first
     this.clearRfcNotification();
-    
+
     // Check validation after a slight delay to allow the value to be updated
     setTimeout(() => {
       // Only target the main RFC field in formaModificaciones
@@ -1111,7 +1171,7 @@ this.formaComplimentos.disable();
         // Only check validation for the main RFC field specifically and only if it has a value
         this.checkRfcValidationOnly();
       }
-      
+
       // Reset flag
       this.isProcessingRfcValidation = false;
     }, 100);
@@ -1134,17 +1194,17 @@ this.formaComplimentos.disable();
 
     // ONLY check the main RFC field in formaModificaciones, NOT the dynamic form RFC
     const RFC_CONTROL = this.formaComplimentos.get('formaModificaciones')?.get('rfc');
-    
+
     // Additional check: ensure we're not processing other form events
     const ACTIVE_ELEMENT = document.activeElement as HTMLInputElement;
-    const IS_RFC_FIELD = ACTIVE_ELEMENT?.id === 'rfc' || 
-                        (RFC_CONTROL?.touched && RFC_CONTROL?.value && RFC_CONTROL?.value.trim() !== '');
-    
+    const IS_RFC_FIELD = ACTIVE_ELEMENT?.id === 'rfc' ||
+      (RFC_CONTROL?.touched && RFC_CONTROL?.value && RFC_CONTROL?.value.trim() !== '');
+
     // Ensure we're only checking the specific main RFC field and user is actually interacting with it
-    if (RFC_CONTROL?.invalid && RFC_CONTROL?.touched && RFC_CONTROL?.value && 
-        RFC_CONTROL?.value.trim() !== '' && IS_RFC_FIELD) {
+    if (RFC_CONTROL?.invalid && RFC_CONTROL?.touched && RFC_CONTROL?.value &&
+      RFC_CONTROL?.value.trim() !== '' && IS_RFC_FIELD) {
       const ERROR_MESSAGE = this.getRfcErrorMessage();
-      
+
       // Only show notification if there's actually an error message and no notification is already shown
       if (ERROR_MESSAGE && ERROR_MESSAGE.trim() !== '' && !this.nuevaNotificacionRfc) {
         this.nuevaNotificacionRfc = {
@@ -1182,12 +1242,58 @@ this.formaComplimentos.disable();
     if (confirmar) {
       // Clear the notification
       this.clearRfcNotification();
-      
+
       // Optionally focus back on the RFC field
       const RFC_INPUT = document.getElementById('rfc');
       if (RFC_INPUT) {
         RFC_INPUT.focus();
       }
+    }
+  }
+
+  /**
+ * Maneja la confirmación de la notificación para eliminar registros.
+ * Si el usuario confirma, elimina la notificación correspondiente.
+ * @param confirmar Indica si el usuario confirmó la notificación.
+ */
+  confirmarEliminarNotificacion(confirmar: boolean): void {
+    if (confirmar) {
+      if (this.eliminarNotificacion) {
+        this.eliminarNotificacion = undefined as unknown as Notificacion;
+      }
+    }
+  }
+
+  /**
+ * Maneja la confirmación de la notificación para eliminar accionistas extranjeros.
+ * Si el usuario confirma, emite el evento con los accionistas seleccionados y limpia la lista.
+ * Si no confirma, elimina la notificación correspondiente.
+ * @param confirmar Indica si el usuario confirmó la notificación.
+ */
+  confirmarEliminarDosConfirmation(confirmar: boolean): void {
+    if (confirmar) {
+      this.accionistasExtranjerosEliminado.emit(this.accionistasExtranjerosSeleccionados);
+      const TAX_IDS = this.accionistasExtranjerosSeleccionados.map(x => x.taxId);
+      this.accionistasExtranjerosSeleccionados =
+        this.accionistasExtranjerosSeleccionados.filter(
+          item => !TAX_IDS.includes(item.taxId)
+        );
+    } else {
+      this.eliminarDosConfirmationNotificacion = undefined as unknown as Notificacion;
+    }
+  }
+
+  /**
+ * Maneja la confirmación de la notificación para eliminar accionistas seleccionados.
+ * Si el usuario confirma, emite el evento con los accionistas seleccionados.
+ * Si no confirma, elimina la notificación correspondiente.
+ * @param confirmar Indica si el usuario confirmó la notificación.
+ */
+  confirmarEliminarUnoConfirmation(confirmar: boolean): void {
+    if (confirmar) {
+      this.accionistasEliminados.emit(this.empresaAccionistasSeleccionados);
+    } else {
+      this.eliminarUnoConfirmationNotificacion = undefined as unknown as Notificacion;
     }
   }
 
@@ -1212,7 +1318,7 @@ this.formaComplimentos.disable();
 
     // Update the form control value
     this.formaComplimentos.get('datosGeneralis')?.get('paginaWWeb')?.setValue(UPPERCASEVALUE, { emitEvent: false });
-    
+
     // Update the input field display
     INPUT.value = UPPERCASEVALUE;
   }
@@ -1240,24 +1346,80 @@ this.formaComplimentos.disable();
   onKeyPress(event: KeyboardEvent): boolean {
     const CHAR = String.fromCharCode(event.which);
     const ALLOWEDPATTERN = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s.\-_:/@]$/;
-    
+
     // Allow backspace, delete, tab, escape, enter
-    if (event.which === 8 || event.which === 46 || event.which === 9 || 
-        event.which === 27 || event.which === 13) {
+    if (event.which === 8 || event.which === 46 || event.which === 9 ||
+      event.which === 27 || event.which === 13) {
       return true;
     }
-    
-  if (event.ctrlKey && (event.which === 65 || event.which === 67 || 
-        event.which === 86 || event.which === 88 || event.which === 90)) {
+
+    if (event.ctrlKey && (event.which === 65 || event.which === 67 ||
+      event.which === 86 || event.which === 88 || event.which === 90)) {
       return true;
     }
-    
+
     // Test the character against the pattern
     if (!ALLOWEDPATTERN.test(CHAR)) {
       event.preventDefault();
       return false;
     }
-    
+
     return true;
+  }
+
+  /**
+ * Marca como tocado el control especificado dentro del formulario de socios accionistas al perder el foco.
+ * @param campo - Nombre del campo que perdió el foco.
+ */
+  onDesenfoque(campo: string): void {
+    const CONTROL = this.formaComplimentos.get(`formaSocioAccionistas.formaDatos.${campo}`);
+    if (CONTROL?.value === '' || CONTROL?.value === null) {
+      CONTROL?.markAsTouched();
+    }
+  }
+
+  /**
+ * Actualiza el valor del campo especificado en el formulario de socios accionistas cuando cambia su valor.
+ * Marca el control como tocado y actualiza su validez; si el valor está vacío, lo marca como modificado.
+ * @param event - Evento de cambio del input.
+ * @param campo - Nombre del campo a actualizar.
+ */
+  onCambio(event: Event, campo: string): void {
+    const VALOR = (event.target as HTMLInputElement).value;
+    const CONTROL = this.formaComplimentos.get(`formaSocioAccionistas.formaDatos.${campo}`);
+    if (!CONTROL) {
+      return;
+    }
+    if (VALOR) {
+      CONTROL?.setValue(VALOR, { emitEvent: true });
+      CONTROL?.markAsTouched({ onlySelf: true });
+      CONTROL?.updateValueAndValidity();
+    } else {
+      CONTROL?.markAsDirty();
+      CONTROL?.markAsTouched();
+    }
+  }
+
+
+  /**
+   * Obtiene la lista de países desde el servicio `complimentosService` y actualiza las opciones
+   * de los campos de formulario correspondientes con los datos recibidos.
+   * 
+   * Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   * Actualiza tanto el campo 'pais' en `camposFormularioDefault` como el campo correspondiente
+   * en `camposFormularioTipoPersona` con las opciones obtenidas.
+   */
+  getPais():void {
+    this.complimentosService.getPais().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+   const INDICE = this.camposFormulario.findIndex(
+          (ele) => ele.campo === 'pais'
+        );
+        const INDICEALT = this.camposFormularioTipoPersona.findIndex(
+          (ele) => ele.campo === PAIS
+        );
+        this.camposFormularioDefault[INDICE].opcionesCatalogo = res.datos;
+
+        this.camposFormularioTipoPersona[INDICEALT].opciones = res.datos;
+    });
   }
 }

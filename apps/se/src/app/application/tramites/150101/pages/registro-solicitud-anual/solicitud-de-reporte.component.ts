@@ -1,7 +1,8 @@
+import { ERROR_FORMA_ALERT,ERROR_FORMA_ALERT_DOS,ERROR_FORMA_ALERT_QUAD,ERROR_FORMA_ALERT_TRES,REPORTE_ANUAL_PASOS } from '../../enums/registro-solicitud-anual.enum';
 import { Component } from '@angular/core';
+import { DatosComponent} from '../datos/datos.component';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
-import { REPORTE_ANUAL_PASOS } from '../../enums/registro-solicitud-anual.enum';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
@@ -66,6 +67,45 @@ export class SolicitudDeReporteComponent {
    * @default 1
    */
   indice: number = 1;
+  /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  esFormaValido: boolean = false;
+  /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  esFormaValidoDos: boolean = false;
+
+    /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+    esFormaValidoTres: boolean = false;
+      /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+      esFormaValidoCuatro: boolean = false;
+  /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+    public formErrorAlert = ERROR_FORMA_ALERT;
+
+  /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+  public formErrorAlertDos = ERROR_FORMA_ALERT_DOS;
+  /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+  public formErrorAlertTres = ERROR_FORMA_ALERT_TRES;
+  /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+  public formErrorAlertQuad = ERROR_FORMA_ALERT_QUAD;
+  /**
+  /**
+     * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+     */
+    @ViewChild('pasoUnoRef') pasoUnoComponent!: DatosComponent;
 
   /**
    * @property {number} nroPasos - Número total de pasos en el flujo, calculado a partir de la longitud de `pantallasPasos`.
@@ -87,13 +127,71 @@ export class SolicitudDeReporteComponent {
    * @returns {void}
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
+  if (e.accion === 'cont') {
+    let noError=0;
+    if (this.indice === 1 ) {
+      noError = this.pasoUnoComponent.validarTodosLosFormularios();
     }
+    if (noError===1) {
+      this.esFormaValido = true;
+      this.esFormaValidoDos = false;
+      this.esFormaValidoTres = false;
+      this.esFormaValidoCuatro = false;
+      this.datosPasos.indice = this.indice;
+      return;
+    }
+    else if (noError===2) {
+      this.esFormaValidoDos = true;
+      this.esFormaValido = false;
+      this.esFormaValidoTres = false;
+      this.esFormaValidoCuatro = false;
+      this.datosPasos.indice = this.indice;
+      return;
+    }
+    else if (noError===3) {
+      this.esFormaValidoTres = true;
+      this.esFormaValidoDos = false;
+      this.esFormaValido = false;
+      this.esFormaValidoCuatro = false;
+      this.datosPasos.indice = this.indice;
+      return;
+    }
+    else if (noError===4) {
+      this.esFormaValidoCuatro = true;
+      this.esFormaValidoTres = false;
+      this.esFormaValidoDos = false;
+      this.esFormaValido = false;
+      this.datosPasos.indice = this.indice;
+      return;
+    }
+    else if(noError===5) {
+      this.esFormaValido = false;
+      this.esFormaValidoDos = false;
+      this.esFormaValidoTres = false;
+      this.esFormaValidoCuatro = false;
+      this.datosPasos.indice = this.indice;
+      
+      return;
+    }
+      this.esFormaValido = false;
+      this.esFormaValidoDos = false;
+      this.esFormaValidoTres = false;
+      this.esFormaValidoCuatro = false;
+    this.esFormaValido = false;
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;    
+    
+      this.wizardComponent.siguiente();
   }
+}
+ /**
+   * Método que se ejecuta cuando cambia de tab en paso-uno.
+   * Oculta el mensaje de error de validación.
+   */
+ alCambiarPestana(): void {
+  this.esFormaValido = false;
+  this.esFormaValidoDos = false;
+  this.esFormaValidoTres = false;
+  this.esFormaValidoCuatro = false;
+}
 }

@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260210Query } from '../../estados/tramite260210Query.query';
-
+import { ViewChild } from '@angular/core';
 /**
  * @component PasoUnoComponent
  * @description Container component representing the first step of the procedure form.
@@ -34,7 +34,23 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @type {number | undefined}
    */
   public indice: number | undefined = 1;
-
+ 
+  /**
+     * @property {ContenedorDeDatosSolicitudComponent} contenedorDeDatosSolicitudComponent
+     * @description
+     * Referencia al componente hijo `ContenedorDeDatosSolicitudComponent` obtenida
+     * mediante el decorador `@ViewChild`.
+     *
+     * Esta propiedad permite invocar métodos públicos del contenedor y acceder
+     * a sus propiedades, por ejemplo para delegar la validación del formulario
+     * interno (`validarContenedor()`).
+     *
+     * > Nota: Angular inicializa esta referencia después de que la vista
+     * ha sido cargada, comúnmente en el ciclo de vida `ngAfterViewInit`.
+     */
+    @ViewChild(ContenedorDeDatosSolicitudComponent)
+    contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
+   
   /**
    * @property destroyNotifier$
    * @description Observable notifier to unsubscribe active subscriptions when the component is destroyed.
@@ -115,6 +131,28 @@ actualizarEstadoFormulario(DATOS: Tramite260210State): void {
   }))
 
 }
+
+
+   /**
+   * @description
+   * Método que se encarga de validar el primer paso del flujo.
+   *
+   * Invoca al método `validarContenedor()` del componente hijo
+   * `ContenedorDeDatosSolicitudComponent` para comprobar si los
+   * datos del formulario son correctos.
+   *
+   * En caso de que el componente hijo no esté disponible o
+   * retorne `null/undefined`, se devuelve `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el contenedor y su formulario interno son válidos.
+   * - `false`: si el contenedor no es válido o no está disponible.
+   */
+   validarPasoUno(): boolean {
+    return (
+      this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false
+    );
+  }
 
 /**
 * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.

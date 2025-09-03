@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-            <button class="btn btn-primary"  (click)=" datosBusquedaFormulario.valid && buscar()">Buscar</button>
+            <button class="btn btn-primary"  (click)="buscar()">Buscar</button>
         </div>
     </form>
 
@@ -46,3 +46,8 @@
         </div>
     </div>
 </div>
+ @if (alertaNotificacion) {
+        <div>
+            <lib-notificaciones [notificacionInput]="alertaNotificacion"></lib-notificaciones>
+        </div>
+    }

@@ -1,6 +1,6 @@
 <form class="complimentos-container container" [formGroup]="formaComplimentos">
   <div class="row">
-    <ng-titulo titulo="Datos de la solicitud" />
+    <ng-titulo titulo="Datos de la solicitude" />
 
     <div class="row">
       <div class="col-md-4">
@@ -26,12 +26,21 @@
       <div class="col-md-8 mb-4">
         <label for="pagina">Página web*:</label>
         <input type="text" id="pagina" name="pagina" class="form-control" formControlName="paginaWWeb" maxlength="120"
-          (input)="onPaginaInputChange($event)" (keypress)="onKeyPress($event)" />
+          (input)="onPaginaInputChange($event)" (keypress)="onKeyPress($event)" [ngClass]="esValido('datosGeneralis', 'paginaWWeb') ? 'required' : ''"/>
+        <div *ngIf="formaComplimentos.get('datosGeneralis.paginaWWeb')?.hasError('required') && formaComplimentos.get('datosGeneralis.paginaWWeb')?.touched">
+          <p class="mensaje-error">Este campo es obligatorio.</p>
+        </div>
+        <div *ngIf="formaComplimentos.get('datosGeneralis.paginaWWeb')?.hasError('pattern') && formaComplimentos.get('datosGeneralis.paginaWWeb')?.touched">
+          <p class="mensaje-error">El formato de la página web es inválido.</p>
+        </div>
       </div>
       <div class="col-md-8">
         <label for="localizacion">Localización*:</label>
         <input type="text" id="localizacion" name="localizacion" class="form-control" formControlName="localizacion"
-          maxlength="120" (input)="onLocalizacionInputChange($event)" (keypress)="onKeyPress($event)" />
+          maxlength="120" (input)="onLocalizacionInputChange($event)" (keypress)="onKeyPress($event)" [ngClass]="esValido('datosGeneralis', 'localizacion') ? 'required' : ''"/>
+        <div *ngIf="formaComplimentos.get('datosGeneralis.localizacion')?.hasError('required') && formaComplimentos.get('datosGeneralis.localizacion')?.touched">
+          <p class="mensaje-error">Este campo es obligatorio.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -40,7 +49,7 @@
     <ng-titulo titulo="Obligaciones fiscales" />
     <div class="row">
       <div class="col-md-4">
-       <app-catalogo-select [catalogo]="derechosList" formControlName="opinionPositiva" [label]="'Opinión positiva del SAT'" [required]="false"
+       <app-catalogo-select [catalogo]="derechosList" formControlName="opinionPositiva" [label]="'Opinión positiva del SAT*'" [required]="false"
           [isDisabled]="true"  name="opinionPositiva"></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -70,38 +79,43 @@
         <div class="col-12 mb-4">
           <label for="Nombre">Nombre del federatario que expide el documento*:</label>
           <input type="text" id="Nombre" name="Nombre" class="form-control" formControlName="nombreDelFederatario"
-            maxlength="120" />
-             <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDelFederatario')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDelFederatario')?.touched" class="text-danger">
-            Este campo es obligatorio.
+            maxlength="120" [ngClass]="esValido('formaModificaciones', 'nombreDelFederatario') ? 'required' : ''"/>
+             <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDelFederatario')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDelFederatario')?.touched">
+              <p class="mensaje-error">Este campo es obligatorio.</p>
           </div>
         </div>
         <div class="row">
           <div class="col-md-4 mb-4 mt-3">
             <label for="Numero"> Número de Notaria*:</label>
-            <input type="text" id="Numero" name="Numero" class="form-control" formControlName="nombreDeNotaria"
-              maxlength="10" />
-               <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.touched" class="text-danger">Este campo es obligatorio.</div>
+            <input type="number" id="Numero" name="Numero" class="form-control" formControlName="nombreDeNotaria"
+              maxlength="10" [ngClass]="esValido('formaModificaciones', 'nombreDeNotaria') ? 'required' : ''"/>
+               <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.touched">
+                 <p class="mensaje-error">Este campo es obligatorio.</p>
+               </div>
           </div>
           <div class="col-4 mb-4 mt-1">
-            <app-catalogo-select [catalogo]="estados || []" [label]="'Estado'" [required]="false" name="estado"
-              formControlName="estado" [isDisabled]="formularioDeshabilitado"
-              [placeholder]="'Seleccione un valor'"></app-catalogo-select>
-               <div *ngIf="formaComplimentos.get('formaModificaciones.estado')?.hasError('required') && formaComplimentos.get('formaModificaciones.estado')?.touched" class="text-danger">Este campo es obligatorio.</div>
+            <app-catalogo-select [catalogo]="estados || []" [label]="'Estado*'" [required]="false" name="estado"
+              formControlName="estado" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
           </div>
         </div>
 
         <div class="row mb-4">
           <div class="col-md-4">
             <label for="acta"> Número de acta*:</label>
-            <input type="text" id="acta" name="acta" class="form-control" formControlName="nombreDeActa" maxlength="10"
+            <input type="number" id="acta" name="acta" class="form-control" formControlName="nombreDeActa" maxlength="10"
               [class.is-invalid]="formaComplimentos.get('formaModificaciones')?.get('nombreDeActa')?.invalid && formaComplimentos.get('formaModificaciones')?.get('nombreDeActa')?.touched" />
-           <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeActa')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeActa')?.touched" class="text-danger">Este campo es obligatorio.</div>
+           <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeActa')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeActa')?.touched">
+            <p class="mensaje-error">Este campo es obligatorio.</p>
+           </div>
             </div>
 
           <div class="col-md-4">
-            <input-fecha [datos]="INPUT_FECHA_CONFIGURACION" [setFecha]="formaComplimentos.get('fechaDeActa')?.value"
+            <input-fecha [datos]="INPUT_FECHA_CONFIGURACION" [setFecha]="formaComplimentos.get('fechaDeActa')?.value" [deshabilitarFuturas]="true"
           (valorCambiado)="cambioFecha($event)">
         </input-fecha>
+        <div *ngIf="formaComplimentos.get('formaModificaciones.fechaDeActa')?.hasError('required') && formaComplimentos.get('formaModificaciones.fechaDeActa')?.touched">
+            <p class="mensaje-error">Este campo es obligatorio.</p>
+           </div>
           </div>
         </div>
         <div class="row mb-4">
@@ -111,18 +125,22 @@
               <input type="text" id="rfc" name="rfc" class="form-control" formControlName="rfc" maxlength="13"
                 onkeyup="this.value = this.value.toUpperCase();"
                 onkeypress="return /^[A-ZÑ&0-9]$/i.test(event.key) || event.key === 'Backspace' || event.key === 'Delete' || event.key === 'Tab'"
-                (blur)="onRfcBlur()" (input)="onRfcChange()" />
+                (blur)="onRfcBlur()" (input)="onRfcChange()" [ngClass]="esValido('formaModificaciones', 'rfc') ? 'required' : ''"/>
             </div>
-             <div *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.hasError('required') && formaComplimentos.get('formaModificaciones.rfc')?.touched" class="text-danger">Este campo es obligatorio.</div>
+             <div *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.hasError('required') && formaComplimentos.get('formaModificaciones.rfc')?.touched">
+               <p class="mensaje-error">Este campo es obligatorio.</p>
+             </div>
           </div>
         </div>
         <div class="row mb-4">
           <div class="col-md-10">
             <label for="representante"> Nombre del Representante Legal*:</label>
             <input type="text" id="representante" name="representante" class="form-control"
-              formControlName="nombreDeRepresentante" />
+              formControlName="nombreDeRepresentante" [ngClass]="esValido('formaModificaciones', 'nombreDeRepresentante') ? 'required' : ''"/>
           </div>
-            <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeRepresentante')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeRepresentante')?.touched" class="text-danger">Este campo es obligatorio.</div>
+            <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeRepresentante')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeRepresentante')?.touched">
+              <p class="mensaje-error">Este campo es obligatorio.</p>
+            </div>
         </div>
       </div>
     </div>
@@ -136,7 +154,7 @@
         <div class="row">
           <div class="col-md-12">
             <label class="control-label" for="buscar">
-              Nacionalidad Mexicana</label>
+              Nacionalidad mexicana:</label>
           </div>
           <div class="col-md-6">
             <div class="row">
@@ -197,26 +215,31 @@
         } @else if (item.tipo_input === 'select-catalog') {
         <div [ngClass]="item.class">
           <app-catalogo-select [catalogo]="item?.opcionesCatalogo || []" [label]="item.labelNombre"
-            [required]="item.required" [formControlName]="item.campo"></app-catalogo-select>
+            [required]="item.required" [formControlName]="item.campo" (change)="onCambio($event, item.campo)"></app-catalogo-select>
         </div>
 
         } @else {
         <div [ngClass]="item.class">
-          <label for="{{ item.campo }}">{{ item.labelNombre }} @if (item.required) {*}:</label>
+          <label for="{{ item.campo }}">{{ item.labelNombre }}@if(item.required){*}:</label>
           <input class="form-control" [type]="item.tipo_input" id="{{ item.campo }}" [formControlName]="item.campo"
             [maxlength]="item.maxlength || (item.campo === 'rfc' ? 13 : (item.campo === 'taxId' ? 12 : null))"
+            (blur)="onDesenfoque(item.campo)"
+            (change)="onCambio($event, item.campo)"
             [class.is-invalid]="formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.invalid && formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched" />
+            @if
+            (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.errors?.['required'] && formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched) {
+            <p class="mensaje-error">Este campo es obligatorio.</p>
+            }
+
+            @if (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.hasError('pattern') && formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched) {
+              <p class="mensaje-error">Por favor, escribe una dirección de correo válida.</p>
+            }
           @if (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.invalid &&
           formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.touched) {
-          <div class="invalid-feedback">
-            @if
-            (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.errors?.['required']) {
-            <small>Este campo es obligatorio.</small>
-            }
             @if
             (formaComplimentos.get('formaSocioAccionistas')?.get('formaDatos')?.get(item.campo)?.errors?.['maxlength'])
             {
-            <small>
+            <p class="mensaje-error">
               @switch (item.campo) {
               @case ('nombre') {
               El nombre no puede exceder los 200 caracteres.
@@ -246,9 +269,8 @@
               Este campo excede la longitud máxima permitida.
               }
               }
-            </small>
+            </p>
             }
-          </div>
           }
         </div>
 
@@ -268,10 +290,10 @@
     <div class="col-12">
       <label> Socios y Accionistas</label>
       <label class="my-3 col-12">Datos de los socios y/o accionistas:</label>
-
       <app-tabla-dinamica [configuracionTabla]="tablaSociaAccionistas" [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
         (listaDeFilaSeleccionada)="empresaAccionistasSeleccionados = $event" [datos]="datosSocioAccionistas"
-        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
+        [mode]="'client'" [showPagination]="true" [totalItems]="totalItemsDatosSocioAccionistas"></app-tabla-dinamica>
     </div>
     <div class="col-12">
       <div class="pull-right">
@@ -289,7 +311,8 @@
         [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
         (listaDeFilaSeleccionada)="accionistasExtranjerosSeleccionados = $event"
         [datos]="datosSocioAccionistasExtrenjeros"
-        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
+        [mode]="'client'" [showPagination]="true" [totalItems]="totalItemsDatosSocioAccionistasExtranjeros"></app-tabla-dinamica>
     </div>
     <div class="col-12">
       <div class="pull-right">
@@ -329,3 +352,25 @@
   </lib-notificaciones>
 </section>
 }
+
+@if (eliminarNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="eliminarNotificacion" (confirmacionModal)="confirmarEliminarNotificacion($event)">
+  </lib-notificaciones>
+</section>
+}
+
+@if (eliminarDosConfirmationNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="eliminarDosConfirmationNotificacion" (confirmacionModal)="confirmarEliminarDosConfirmation($event)">
+  </lib-notificaciones>
+</section>
+}
+
+@if (eliminarUnoConfirmationNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="eliminarUnoConfirmationNotificacion" (confirmacionModal)="confirmarEliminarUnoConfirmation($event)">
+    </lib-notificaciones>
+  </section>
+}
+

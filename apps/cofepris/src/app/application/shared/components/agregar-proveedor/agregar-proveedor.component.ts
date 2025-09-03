@@ -1,28 +1,30 @@
 import {
+  CODIGO_POSTAL,
   Catalogo,
   CatalogoSelectComponent,
   REGEX_CORREO_ELECTRONICO,
   REGEX_IMPORTE_PAGO,
   REGEX_NOMBRE,
-  REGEX_NUMEROS,
   REGEX_TELEFONO,
   TipoPersona,
-  TituloComponent
+  TituloComponent,
 } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
 import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  SimpleChanges,
 } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Proveedor } from '../../models/terceros-relacionados.model';
@@ -31,7 +33,6 @@ import { Subject } from 'rxjs';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
-
 
 /**
  * @component AgregarProveedorComponent
@@ -47,20 +48,20 @@ import { takeUntil } from 'rxjs/operators';
     CatalogoSelectComponent,
     ReactiveFormsModule,
     TituloComponent,
-    TooltipModule
+    TooltipModule,
   ],
   templateUrl: './agregar-proveedor.component.html',
   styleUrl: './agregar-proveedor.component.css',
 })
-export class AgregarProveedorComponent implements OnDestroy, OnInit {
-   /**
-     * Identificador del procedimiento actual.
-     * Utilizado para controlar el flujo de la vista dependiendo del tipo de procedimiento.
-     *
-     * @input idProcedimiento - Cadena que representa el ID del procedimiento (por ejemplo: '260102').
-     */
-    @Input()
-    idProcedimiento!: number;
+export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
+  /**
+   * Identificador del procedimiento actual.
+   * Utilizado para controlar el flujo de la vista dependiendo del tipo de procedimiento.
+   *
+   * @input idProcedimiento - Cadena que representa el ID del procedimiento (por ejemplo: '260102').
+   */
+  @Input()
+  idProcedimiento!: number;
   /**
    * @property tipoPersona
    * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
@@ -94,12 +95,12 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   public paisesDatos: Catalogo[] = [];
 
   /**
- * Arreglo que almacena los elementos requeridos.
- * @type {string[]}
- */
+   * Arreglo que almacena los elementos requeridos.
+   * @type {string[]}
+   */
   public elementosRequeridos: string[] = [];
 
-   /**
+  /**
    * @property {Proveedor | undefined} datoSeleccionado
    * Dato seleccionado que se pasará al componente hijo `AgregarDestinatarioComponent`.
    */
@@ -121,8 +122,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @param tramiteStore - Store que administra el estado del trámite actual.
    * @param tramiteQuery - Servicio para consultar el estado del trámite.
    * @param ubicaccion - Servicio de Angular para navegación de retroceso.
-   */  
-  
+   */
+
   /**
    * Lista de elementos deshabilitados en el formulario.
    * Esta propiedad almacena un arreglo de cadenas que representan
@@ -136,7 +137,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   public estaDeshabilitadoDesplegable: boolean = true;
 
-    /**
+  /**
    * @property {boolean} habilitarNacionalidad
    * @description
    * Indica si el campo de nacionalidad debe estar habilitado en el formulario de proveedor.
@@ -161,7 +162,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
 
   /**
    * Constructor del componente AgregarProveedorComponent.
-   * 
+   *
    * @param fb - Inyección del servicio FormBuilder para la creación y manejo de formularios reactivos.
    * @param datosSolicitudService - Servicio para gestionar los datos de la solicitud.
    * @param ubicaccion - Servicio Location para manejar la navegación y ubicación dentro de la aplicación.
@@ -171,7 +172,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     private datosSolicitudService: DatosSolicitudService,
     private ubicaccion: Location
   ) {
-  // Constructor vacío, se inyectan las dependencias para su uso en el componente.
+    // Constructor vacío, se inyectan las dependencias para su uso en el componente.
   }
 
   /**
@@ -187,58 +188,69 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     this.changeNacionalidad();
   }
 
-    /**
+  /**
    * @method cambiarHabilitacionNacionalidad
    * @description
    * Habilita el campo de nacionalidad en el formulario si el procedimiento actual está incluido en la lista `TERCEROS_RELACIONADOS_DATOS_INICIALES`.
    * Cambia el valor de la propiedad `habilitarNacionalidad` a `true` si la condición se cumple.
-   * 
+   *
    * @returns {void}
    */
   public cambiarHabilitacionNacionalidad(): void {
-    if( TERCEROS_RELACIONADOS_DATOS_INICIALES.includes(this.idProcedimiento)){
+    if (TERCEROS_RELACIONADOS_DATOS_INICIALES.includes(this.idProcedimiento)) {
       this.habilitarNacionalidad = true;
     }
   }
 
-   /**
-     * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
-     * @param {keyof Proveedor } field - Nombre del campo a obtener.
-     * @returns {string | number | undefined | string[]} - Valor del campo especificado.
-     */
-    public obtenerValor(field: keyof Proveedor): string | number | undefined {
-      return this.datoSeleccionado?.[0]?.[field as keyof Proveedor] ?? '';
-    }
-  
+  /**
+   * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
+   * @param {keyof Proveedor } field - Nombre del campo a obtener.
+   * @returns {string | number | undefined | string[]} - Valor del campo especificado.
+   */
+  public obtenerValor(field: keyof Proveedor): string | number | undefined {
+    return this.datoSeleccionado?.[0]?.[field as keyof Proveedor] ?? '';
+  }
 
   /**
    * @method crearAgregarFormularioProveedor
    * @description Crea el formulario reactivo `agregarProveedorForm` con sus respectivos controles y validaciones.
    */
-  crearAgregarFormularioProveedor():void{
+  crearAgregarFormularioProveedor(): void {
     this.agregarProveedorForm = this.fb.group({
       nacionalidad: [''],
-      tipoPersona: ['', Validators.required],
+      tipoPersona: [this.obtenerValor('tipoPersona'), Validators.required],
       rfc: [this.obtenerValor('rfc')],
       curp: [this.obtenerValor('curp')],
       denominacionRazon: [
-        this.obtenerValor('razonSocial'),
+        this.obtenerValor('nombreRazonSocial'),
         [Validators.required, Validators.pattern(REGEX_NOMBRE)],
       ],
-      nombres: [this.obtenerValor('nombres'), [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
-      primerApellido: [this.obtenerValor('primerApellido'), [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
-      segundoApellido: [this.obtenerValor('segundoApellido'), [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
+      nombres: [
+        this.obtenerValor('nombres'),
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+      ],
+      primerApellido: [
+        this.obtenerValor('primerApellido'),
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+      ],
+      segundoApellido: [
+        this.obtenerValor('segundoApellido'),
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+      ],
       pais: [this.obtenerValor('pais'), Validators.required],
       estado: [
         this.obtenerValor('estadoLocalidad'),
         this.elementosRequeridos.includes('estado')
-          ? [Validators.required,Validators.pattern(REGEX_IMPORTE_PAGO)]
+          ? [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)]
           : [],
       ],
-      codigoPostal: [this.obtenerValor('codigoPostal'),[Validators.pattern(REGEX_NUMEROS)]],
+      codigoPostal: [this.obtenerValor('codigoPostal'),[Validators.pattern(CODIGO_POSTAL)]],
       colonia: [this.obtenerValor('colonia')],
       calle: [this.obtenerValor('calle'), Validators.required],
-      numeroExterior: [this.obtenerValor('numeroExterior'), Validators.required],
+      numeroExterior: [
+        this.obtenerValor('numeroExterior'),
+        Validators.required,
+      ],
       numeroInterior: [this.obtenerValor('numeroInterior')],
       lada: [this.obtenerValor('lada')],
       telefono: [
@@ -262,23 +274,73 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     });
   }
 
-    /**
+  /**
+   * Ciclo de vida de Angular: `ngOnChanges`.
+   *
+   * @param {SimpleChanges} currentValue - Objeto con los cambios detectados en las propiedades de entrada (`@Input`) del componente.
+   *
+   * @description
+   * Este método se ejecuta automáticamente cuando una de las propiedades de entrada del componente cambia.
+   *
+   * - Si `datoSeleccionado` ha cambiado:
+   *   1. Se asigna el nuevo valor a la propiedad local `datoSeleccionado`.
+   *   2. Después de un retraso de 500 ms (para asegurar la disponibilidad del formulario),
+   *      se habilita el formulario `agregarProveedorForm` si el campo `tipoPersona` está definido.
+   *   3. Se actualizan los campos del formulario con la información del primer elemento de `datoSeleccionado`.
+   */
+  ngOnChanges(currentValue: SimpleChanges): void {
+    if (currentValue['datoSeleccionado']) {
+      this.datoSeleccionado = currentValue['datoSeleccionado'].currentValue;
+      setTimeout(() => {
+        if (this.datoSeleccionado?.[0]?.tipoPersona) {
+          this.agregarProveedorForm?.enable();
+        }
+        this.agregarProveedorForm.patchValue({
+          tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
+          nombres: this.datoSeleccionado?.[0]?.nombres,
+          primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
+          segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
+          pais: this.datoSeleccionado?.[0]?.pais,
+          estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
+          codigoPostal: this.datoSeleccionado?.[0]?.codigoPostal,
+          colonia: this.datoSeleccionado?.[0]?.colonia,
+          calle: this.datoSeleccionado?.[0]?.calle,
+          numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
+          numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
+          lada: this.datoSeleccionado?.[0]?.lada,
+          denominacionRazon: this.datoSeleccionado?.[0]?.nombreRazonSocial,
+          telefono: this.datoSeleccionado?.[0]?.telefono,
+          correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
+        });
+      }, 500);
+    }
+  }
+
+  /**
    * @method actualizarValidaciones
    * @description
    * Actualiza las validaciones de los campos 'nacionalidad', 'rfc' y 'curp' en el formulario de proveedor.
    * Si `habilitarNacionalidad` es verdadero, establece los validadores requeridos en dichos campos.
    * Si es falso, elimina los validadores de los mismos campos.
    * Finalmente, actualiza el estado y la validez de los controles afectados.
-   * 
+   *
    * @returns {void}
    */
   actualizarValidaciones(): void {
-    if(this.habilitarNacionalidad) {
-      this.agregarProveedorForm.get('nacionalidad')?.setValidators([Validators.required]);
-      this.agregarProveedorForm.get('rfc')?.setValidators([Validators.required, Validators.pattern(REGEX_NOMBRE)]);
-      this.agregarProveedorForm.get('curp')?.setValidators([Validators.required]);
-    }
-    else {
+    if (this.habilitarNacionalidad) {
+      this.agregarProveedorForm
+        .get('nacionalidad')
+        ?.setValidators([Validators.required]);
+      this.agregarProveedorForm
+        .get('rfc')
+        ?.setValidators([
+          Validators.required,
+          Validators.pattern(REGEX_NOMBRE),
+        ]);
+      this.agregarProveedorForm
+        .get('curp')
+        ?.setValidators([Validators.required]);
+    } else {
       this.agregarProveedorForm.get('nacionalidad')?.clearValidators();
       this.agregarProveedorForm.get('rfc')?.clearValidators();
       this.agregarProveedorForm.get('curp')?.clearValidators();
@@ -287,25 +349,25 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     this.agregarProveedorForm.get('rfc')?.updateValueAndValidity();
     this.agregarProveedorForm.get('curp')?.updateValueAndValidity();
   }
-    /**
+  /**
    * Valida elementos según el `idProcedimiento` y establece
    * las listas de elementos no válidos y añadidos.
    * @returns {void} Lista de elementos no válidos.
    */
-    validarElementos(): void {
-      switch (this.idProcedimiento) {
-          case 260201:
-          case 260219:
-            this.elementosRequeridos = ['estado'];
-          break;
-          case 260214:
-            this.elementosRequeridos = ['estado'];
-          break;
-        default:
-          this.elementosDeshabilitados = [];
-          this.elementosRequeridos = [];
-      }
+  validarElementos(): void {
+    switch (this.idProcedimiento) {
+      case 260201:
+      case 260219:
+        this.elementosRequeridos = ['estado'];
+        break;
+      case 260214:
+        this.elementosRequeridos = ['estado'];
+        break;
+      default:
+        this.elementosDeshabilitados = [];
+        this.elementosRequeridos = [];
     }
+  }
 
   /**
    * @method cargarDatos
@@ -340,29 +402,34 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
     }
     const NUEVO_PROVEEDOR: Proveedor = {
+      nacionalidad: VALOR_FORMULARIO.nacionalidad,
+      tipoPersona: VALOR_FORMULARIO.tipoPersona,
       nombreRazonSocial: nombreRazonSocial,
       rfc: '',
       curp: '',
-      telefono:  VALOR_FORMULARIO.telefono || '',
-      correoElectronico:
-         VALOR_FORMULARIO.correoElectronico || '',
-      calle:  VALOR_FORMULARIO.calle || '',
-      numeroExterior:  VALOR_FORMULARIO.numeroExterior || '',
-      numeroInterior:  VALOR_FORMULARIO.numeroInterior || '',
-      pais:  VALOR_FORMULARIO.pais || '',
-      colonia:  VALOR_FORMULARIO.colonia || '',
+      telefono: VALOR_FORMULARIO.telefono || '',
+      correoElectronico: VALOR_FORMULARIO.correoElectronico || '',
+      calle: VALOR_FORMULARIO.calle || '',
+      numeroExterior: VALOR_FORMULARIO.numeroExterior || '',
+      numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
+      pais: VALOR_FORMULARIO.pais || '',
+      colonia: VALOR_FORMULARIO.colonia || '',
       municipioAlcaldia: '',
       localidad: '',
-      entidadFederativa:  VALOR_FORMULARIO.estado || '',
-      estadoLocalidad: VALOR_FORMULARIO.estadoLocalidad || '',
-      codigoPostal:  VALOR_FORMULARIO.codigoPostal || '',
+      entidadFederativa: '',
+      estadoLocalidad: VALOR_FORMULARIO.estado || '',
+      codigoPostal: VALOR_FORMULARIO.codigoPostal || '',
       coloniaEquivalente: '',
-        nombres: VALOR_FORMULARIO.nombres,
+      nombres: VALOR_FORMULARIO.nombres,
       primerApellido: VALOR_FORMULARIO.primerApellido,
       segundoApellido: VALOR_FORMULARIO.segundoApellido,
       razonSocial: VALOR_FORMULARIO.razonSocial,
       lada: VALOR_FORMULARIO.lada,
     };
+
+    if (this.datoSeleccionado?.[0]?.id) {
+      NUEVO_PROVEEDOR.id = this.datoSeleccionado[0].id;
+    }
 
     this.proveedores.push(NUEVO_PROVEEDOR);
     this.updateProveedorTablaDatos.emit(this.proveedores);
@@ -406,41 +473,59 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * En caso contrario, habilita todos los campos y marca el desplegable como habilitado.
    */
   changeNacionalidad(): void {
-    if ( this.agregarProveedorForm?.value?.tipoPersona === '') {
-      Object.keys(this.agregarProveedorForm.controls).forEach(controlName => {
+    if (this.agregarProveedorForm?.value?.tipoPersona === '') {
+      Object.keys(this.agregarProveedorForm.controls).forEach((controlName) => {
         this.agregarProveedorForm.get(controlName)?.disable();
-        if (controlName==='nacionalidad' || controlName === 'tipoPersona') {
+        if (controlName === 'nacionalidad' || controlName === 'tipoPersona') {
           this.agregarProveedorForm.get(controlName)?.enable();
         }
       });
-    } 
-    else if(this.agregarProveedorForm?.value?.nacionalidad === this.nacionalStr && (this.agregarProveedorForm?.value?.tipoPersona === this.tipoPersona.FISICA || this.agregarProveedorForm?.value?.tipoPersona === this.tipoPersona.MORAL)) {
-      Object.keys(this.agregarProveedorForm.controls).forEach(controlName => {
+    } else if (
+      this.agregarProveedorForm?.value?.nacionalidad === this.nacionalStr &&
+      (this.agregarProveedorForm?.value?.tipoPersona ===
+        this.tipoPersona.FISICA ||
+        this.agregarProveedorForm?.value?.tipoPersona ===
+          this.tipoPersona.MORAL)
+    ) {
+      Object.keys(this.agregarProveedorForm.controls).forEach((controlName) => {
         this.agregarProveedorForm.get(controlName)?.disable();
-        if (controlName==='nacionalidad' || controlName === 'rfc' || controlName === 'tipoPersona') {
+        if (
+          controlName === 'nacionalidad' ||
+          controlName === 'rfc' ||
+          controlName === 'tipoPersona'
+        ) {
           this.agregarProveedorForm.get(controlName)?.enable();
         }
       });
-    }
-    else if (this.agregarProveedorForm?.value?.nacionalidad === this.nacionalStr && this.agregarProveedorForm?.value?.tipoPersona === this.tipoPersona.NO_CONTRIBUYENTE) {
-      Object.keys(this.agregarProveedorForm.controls).forEach(controlName => {
+    } else if (
+      this.agregarProveedorForm?.value?.nacionalidad === this.nacionalStr &&
+      this.agregarProveedorForm?.value?.tipoPersona ===
+        this.tipoPersona.NO_CONTRIBUYENTE
+    ) {
+      Object.keys(this.agregarProveedorForm.controls).forEach((controlName) => {
         this.agregarProveedorForm.get(controlName)?.disable();
-        if (controlName==='nacionalidad' || controlName === 'tipoPersona' || controlName === 'curp') {
+        if (
+          controlName === 'nacionalidad' ||
+          controlName === 'tipoPersona' ||
+          controlName === 'curp'
+        ) {
           this.agregarProveedorForm.get(controlName)?.enable();
         }
       });
-    }
-    else {
-       if (this.agregarProveedorForm?.get('tipoPersona')?.value) {
+    } else {
+      if (this.agregarProveedorForm?.get('tipoPersona')?.value) {
         Object.keys(this.agregarProveedorForm.controls).forEach(
           (controlName) => {
-            if (controlName !== 'nacionalidad' && controlName !== 'tipoPersona') {
+            if (
+              controlName !== 'nacionalidad' &&
+              controlName !== 'tipoPersona'
+            ) {
               this.agregarProveedorForm.get(controlName)?.reset();
             }
           }
         );
       }
-      Object.keys(this.agregarProveedorForm.controls).forEach(controlName => {
+      Object.keys(this.agregarProveedorForm.controls).forEach((controlName) => {
         this.agregarProveedorForm.get(controlName)?.enable();
         this.estaDeshabilitadoDesplegable = false;
       });

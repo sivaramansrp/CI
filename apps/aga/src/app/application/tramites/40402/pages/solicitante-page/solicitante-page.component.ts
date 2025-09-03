@@ -1,35 +1,87 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { PASOS, SECCIONES_TRAMITE_40402 } from '../../constants/solicitud.enums';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '../../constants/solicitud.enums';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+
+
+import {
+  CategoriaMensaje,
+  DatosPasos,
+  ListaPasosWizard,
+  Notificacion,
+  TipoNotificacionEnum,
+  WizardComponent
+} from '@ng-mf/data-access-user';
+
 import { Subject } from 'rxjs';
+
+import { map, takeUntil } from 'rxjs/operators';
+
 import { Tramite40402Query } from '../../estados/tramite40402.query';
-import { Tramite40402Store } from '../../estados/tramite40402.store';
-import { Tramitenacionales40402State } from '../../estados/tramite40402.store';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { map } from 'rxjs/operators';
-import { takeUntil } from 'rxjs/operators';
+
+import {
+  Tramite40402Store,
+  Tramitenacionales40402State
+} from '../../estados/tramite40402.store';
+
 /**
  * Interfaz que define la estructura de un botón de acción en el asistente.
  */
 interface AccionBoton {
-  /**
-   * Acción que se debe realizar (por ejemplo, "cont" para continuar o "atras" para retroceder).
-   */
+  /** Acción que se debe realizar (por ejemplo, "cont" para continuar o "atras" para retroceder). */
   accion: string;
-
-  /**
-   * Valor asociado al botón, que indica el índice del paso al que se debe mover el asistente.
-   */
+  /** Valor asociado al botón, que indica el índice del paso al que se debe mover el asistente. */
   valor: number;
-}
 
+}
 @Component({
   selector: 'app-solicitante-page',
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
 })
 export class SolicitantePageComponent implements OnInit, OnDestroy {
+  /**
+   * Configuración de notificación actual para mostrar al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+  
+  /**
+   * Controla la visibilidad del modal de notificación.
+   */
+   btnContinuar: boolean = false;
+
+  /**
+ * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+ * const esValido = this.pasoUnoComponent.validateForms();
+ * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+ */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   * }
+   */
+  esFormaValido: boolean = false;
+
+  /**
+   * Método para retroceder el paso desde Paso Tres
+   */
+  retrocederPaso(): void {
+    if (this.indice > 1) {
+      this.indice--;
+      this.actualizarDatosPasos();
+    }
+  }
+  /**
+   * Actualiza los textos y datos de los botones según el paso actual
+   */
+  private actualizarDatosPasos(): void {
+    this.datosPasos = {
+      nroPasos: this.pasos.length,
+      indice: this.indice,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    };
+  }
   /**
    * Lista de pasos del asistente (wizard) que se mostrarán en la página.
    */
@@ -88,8 +140,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.asignarSecciones();
+    this.actualizarDatosPasos();
   }
 
   /**
@@ -106,40 +157,61 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * @param i - Índice del paso seleccionado.
    */
   seleccionadosTodos(i: number): void {
-    this.indice = i;
+  this.indice = i;
+  this.actualizarDatosPasos();
   }
 
   /**
    * Cambia el índice actual del asistente según la acción realizada (continuar o retroceder).
    * @param e - Objeto que contiene la acción y el valor del índice.
    */
-  getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 6) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
+getValorIndice(e: AccionBoton): void {
+  this.esFormaValido = false;
+  if (e.accion === 'cont' && e.valor === 1) {
+    const ES_VALIDO = this.pasoUnoComponent ? this.pasoUnoComponent.validarFormularios() : true;
+    if (!ES_VALIDO) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'modal-md',
+        titulo: '',
+        mensaje: 'Existen requisitos obligatorios en blanco o con errores.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.btnContinuar = true;
+      this.indice = 1;
+      this.actualizarDatosPasos();
+      return;
+    }
+    const INDICE_ACTUALIZADO = e.valor + 1;
+    if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO <= this.pasos.length) {
+      this.indice = INDICE_ACTUALIZADO;
+      this.actualizarDatosPasos();
+      this.wizardComponent.siguiente();
+      this.btnContinuar = false;
+    }
+    return;
+  }
+
+  if (this.indice !== 1) {
+    let INDICE_ACTUALIZADO = e.valor;
+    if (e.accion === 'cont') {
+      INDICE_ACTUALIZADO = e.valor + 1;
+      if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO <= this.pasos.length) {
+        this.indice = INDICE_ACTUALIZADO;
+        this.actualizarDatosPasos();
         this.wizardComponent.siguiente();
-      } else {
+      }
+    } else if (e.accion === 'ant') {
+      INDICE_ACTUALIZADO = e.valor - 1;
+      if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO <= this.pasos.length) {
+        this.indice = INDICE_ACTUALIZADO;
+        this.actualizarDatosPasos();
         this.wizardComponent.atras();
       }
     }
   }
-
-  /**
-   * Método para asignar las secciones existentes al store.
-   * Inicializa las secciones y su estado de validación.
-   */
-  private asignarSecciones(): void {
-    const SECCIONES: boolean[] = [];
-    const FORMA_VALIDA: boolean[] = [];
-
-    for (const LLAVE_SECCION of Object.keys(
-      SECCIONES_TRAMITE_40402.PASO_1
-    ) as Array<keyof typeof SECCIONES_TRAMITE_40402.PASO_1>) {
-      SECCIONES.push(SECCIONES_TRAMITE_40402.PASO_1[LLAVE_SECCION]);
-      FORMA_VALIDA.push(false);
-    }
-
-    this.tramite40402Store.establecerSeccion(SECCIONES);
-    this.tramite40402Store.establecerFormaValida(FORMA_VALIDA);
-  }
+}
 }

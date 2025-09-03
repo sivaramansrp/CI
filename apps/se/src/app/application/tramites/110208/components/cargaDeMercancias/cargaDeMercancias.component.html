@@ -1,6 +1,6 @@
 <ng-titulo titulo="Carga de mercancías por archivo" />
 <div class="text-end mt-3 mb-4">
-    <button class="btn btn-primary" [disabled]="esFormularioSoloLectura ? true : false">Carga por archivo</button>
+    <button class="btn btn-primary" [disabled]="esFormularioSoloLectura ? true : false" (click)="cargarArchivo()">Carga por archivo</button>
 </div>
 <div class="row mt-5">
     <ng-alert [CONTENIDO]="alerta.inst"></ng-alert>
@@ -68,14 +68,34 @@
                             <div class="form-group">
                                 <label for="marca">Marca:</label>
                                 <input type="text" id="marca" formControlName="marca" class="form-control" (change)="setValoresStore(formMercancia,'marca', 'setMarca')">
-                              </div>
+                              
+                            @if(formMercancia.controls['marca'].invalid && formMercancia.controls['marca'].touched) {
+                            <div class="d-grid">  
+                            @if(formMercancia.controls['marca'].errors?.['maxlength']) {
+                            <span class="mensaje-error">La marca no puede ser mayor a 50 caracteres</span>
+                             }
+                             @if(formMercancia.controls['marca'].errors?.['pattern']) {
+                           <span class="mensaje-error">No se permiten caracteres especiales</span>
+                            }
+                            </div>
+                             }
+
+                            </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="cantidad">Cantidad*:</label>
-                                <input type="text" id="cantidad" formControlName="cantidad" class="form-control" (change)="setValoresStore(formMercancia,'cantidad', 'setCantidad')" [ngClass]="esValido('cantidad') ? 'required' : ''">
+                                <input type="number" id="cantidad" formControlName="cantidad" class="form-control" (change)="setValoresStore(formMercancia,'cantidad', 'setCantidad')"  (blur)="formatearACuatroDecimales('cantidad')" [ngClass]="esValido('cantidad') ? 'required' : ''">
                                 <div *ngIf="formMercancia.get('cantidad')?.touched && formMercancia.get('cantidad')?.hasError('required')" class="mensaje-error">
-                                    Este campo es obligatorio
+                                 Este campo es obligatorio
+                                </div>
+
+                               <div *ngIf="formMercancia.get('cantidad')?.touched && formMercancia.get('cantidad')?.hasError('invalidNumber')" class="mensaje-error">
+                                El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales
+                                 </div>
+
+                                <div *ngIf="formMercancia.get('cantidad')?.touched && formMercancia.get('cantidad')?.hasError('greaterThanZero')" class="mensaje-error">
+                                La cantidad a exportar debe ser mayor a cero. El valor de la mercancía debe ser mayor a cero
                                 </div>
                               </div>
                         </div>
@@ -93,9 +113,17 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="valorDeLa">Valor de la mercancía (dólares)*:</label>
-                                <input type="text" id="valorDeLa" formControlName="valorDeLa" class="form-control" [ngClass]="esValido('valorDeLa') ? 'required' : ''" (change)="setValoresStore(formMercancia,'valorDeLa', 'setValorDeLa')">
-                                <div *ngIf="formMercancia.get('valorDeLa')?.touched && formMercancia.get('valorDeLa')?.hasError('required')" class="mensaje-error">
-                                    Este campo es obligatorio
+                                <input type="number" id="valorDeLa" formControlName="valorDeLa" class="form-control" [ngClass]="esValido('valorDeLa') ? 'required' : ''" (blur)="formatearACuatroDecimales('valorDeLa')" (change)="setValoresStore(formMercancia,'valorDeLa', 'setValorDeLa')">
+                                  <div *ngIf="formMercancia.get('valorDeLa')?.touched && formMercancia.get('valorDeLa')?.hasError('required')" class="mensaje-error">
+                                   Este campo es obligatorio
+                                </div>
+
+                                 <div *ngIf="formMercancia.get('valorDeLa')?.touched && formMercancia.get('valorDeLa')?.hasError('invalidNumber')" class="mensaje-error">
+                                El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales
+                               </div>
+
+                               <div *ngIf="formMercancia.get('valorDeLa')?.touched && formMercancia.get('valorDeLa')?.hasError('greaterThanZero')" class="mensaje-error">
+                                El valor de la mercancía debe ser mayor a cero
                                 </div>
                               </div>
                         </div>
@@ -104,7 +132,16 @@
                                 <label for="complementoDescripcion">Complemento de la descripción*:</label>
                                 <textarea id="complementoDescripcion" rows="5" formControlName="complementoDescripcion" [ngClass]="esValido('complementoDescripcion') ? 'required' : ''" class="form-control textarea-height" (change)="setValoresStore(formMercancia,'complementoDescripcion', 'setComplementoDescripcion')"></textarea>
                                 <div *ngIf="formMercancia.get('complementoDescripcion')?.touched && formMercancia.get('complementoDescripcion')?.hasError('required')" class="mensaje-error">
-                                    Este campo es obligatorio
+                                 Este campo es obligatorio
+                                </div>
+                                 <div *ngIf="formMercancia.get('complementoDescripcion')?.touched && formMercancia.get('complementoDescripcion')?.hasError('maxlength')" 
+                                 class="mensaje-error">
+                                 Por favor, no escribas más de 200 caracteres
+                                 </div>
+
+                               <div *ngIf="formMercancia.get('complementoDescripcion')?.touched && formMercancia.get('complementoDescripcion')?.hasError('pattern')" 
+                                class="mensaje-error">
+                               Solo se permiten caracteres alfanuméricos
                                 </div>
                             </div>
                         </div>
@@ -117,6 +154,10 @@
                                 <div *ngIf="formMercancia.get('nFactura')?.touched && formMercancia.get('nFactura')?.hasError('required')" class="mensaje-error">
                                     Este campo es obligatorio
                                 </div>
+                                 <div *ngIf="formMercancia.get('nFactura')?.touched && formMercancia.get('nFactura')?.hasError('maxlength')" 
+                                 class="mensaje-error">
+                                 Por favor, no escribas más de 20 caracteres
+                                 </div>
                               </div>
                         </div>
                         <div class="col-md-4">
@@ -142,10 +183,57 @@
                     <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">* Campos obligatorios</div>
                     <div class="text-end">
                         <button type="button" class="btn btn-default me-3" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura ? true : false">Cancelar</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura ? true : false">Agregar</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura ? true : false" (click)="buscarAgregar()">Agregar</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+ @if (alertaNotificacion) {
+        <div>
+            <lib-notificaciones [notificacionInput]="alertaNotificacion"></lib-notificaciones>
+        </div>
+    }
+    <div
+  class="modal fade"
+  #cargarArchivoModal
+  tabindex="-1"
+  aria-labelledby="confirmModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="row">
+          <ng-titulo titulo="Carga de mercancías por archivo" />
+        </div>
+        <form [formGroup]="archivoFormGroup">
+            <div class="row">
+            <p>Archivo:</p>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <input
+                class="form-control"
+                type="file"
+                formControlName="archivo"
+                id="archivo"   
+                (change)="eventoDeCambioDeValor($event, 'archivo')"             
+            >
+            </div>
+        </div>
+        </form>
+         @if (alertaNotificacionModal) {
+        <div>
+            <lib-notificaciones [notificacionInput]="alertaNotificacionModal"></lib-notificaciones>
+        </div>
+    }
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger me-2 btn-space" (click)="cerrar()">Cerrar</button>
+        <button type="button" class="btn btn-primary btn-space" (click)="cerrar()">Enviar</button>
+    </div>
+  </div>
+</div>
 </div>

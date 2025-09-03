@@ -83,7 +83,7 @@
           </div>
           <div class="col-md-4">
             <label>Código postal*:</label>
-            <input type="text" class="form-control" id="codigoPostal" formControlName="codigoPostal" maxlength="8" size="8"
+            <input type="text" class="form-control" id="codigoPostal" formControlName="codigoPostal" maxlength="5" size="1"
               (change)="setValoresStore(importadorExportador, 'codigoPostal', 'setCodigoPostal')" />
             @if (tramiteForm.get('importadorExportador.codigoPostal')?.invalid &&
             (tramiteForm.get('importadorExportador.codigoPostal')?.touched ||
@@ -154,7 +154,7 @@
           </div>
           <div class="col-md-4">
             <label>Teléfono:</label>
-            <input type="number" class="form-control" id="telefono" formControlName="telefono" maxlength="30" size="25"
+            <input type="text" class="form-control" id="telefono" formControlName="telefono" maxlength="30" size="25"
               (change)="setValoresStore(importadorExportador, 'telefono', 'setTelefono')" />
             @if (tramiteForm.get('importadorExportador.telefono')?.errors?.['pattern']) {
             <div class="text-danger">
@@ -169,6 +169,7 @@
             <div class="form-check mb-2" *ngFor="let option of radioOpcions">
               <input class="form-check-input" type="radio" [id]="'opcion_' + option.value" [value]="option.value"
                 formControlName="opcion"
+                [checked]="importadorExportador.get('opcion')?.value === option.value"
                 (change)="cambiarRadio(option.value); setValoresStore(importadorExportador, 'opcion', 'setOpcion')">
               <label class="form-check-label ms-2" [for]="'opcion_' + option.value">{{ option.label }}</label>
             </div>
@@ -197,7 +198,7 @@
           <ng-container formGroupName="datosMercancia">
             <div class="row">
               <div class="col-md-8">
-                <label for="tipoDeMercancia">Tipo de mercancía:</label>
+                <label for="tipoDeMercancia">Tipo de mercancía*:</label>
                 <input type="text" class="form-control" formControlName="tipoDeMercancia" id="tipoDeMercancia"
                   maxlength="200"
                   size="100"
@@ -213,7 +214,7 @@
             </div>
             <div class="row mt-3">
               <div class="col-md-8">
-                <label for="usoEspecifico">Uso específico de la mercancía:</label>
+                <label for="usoEspecifico">Uso específico de la mercancía*:</label>
                 <input type="text" class="form-control" formControlName="usoEspecifico" id="usoEspecifico"
                 maxlength="512"
                 size="50"  
@@ -227,7 +228,7 @@
                 }
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="condicionMercancia" [label]="'Condición de la mercancía'"
+                <app-catalogo-select [catalogo]="condicionMercancia" [label]="'Condición de la mercancía*'"
                   [required]="true" formControlName="condicionMercancia" (change)="condicionMercanciaSeleccion()"
                   name="condicionMercancia" [isDisabled]="soloLectura"></app-catalogo-select>
                 @if (agregarMercanciasForm.get('datosMercancia.condicionMercancia')?.invalid &&
@@ -239,19 +240,31 @@
             </div>
             <div class="row">
               <div class="col-md-8">
-                <label for="cantidadComercial">Cantidad:</label>
+                <label for="cantidadComercial">Cantidad*:</label>
                 <input type="text" class="form-control" formControlName="cantidad" id="cantidad" maxlength="20" size="20"
                   (change)="setValoresStore(exencionImpuestos, 'datosMercancia.cantidad', 'setCantidad')" />
-                @if (agregarMercanciasForm.get('datosMercancia.cantidad')?.invalid &&
-                (agregarMercanciasForm.get('datosMercancia.cantidad')?.touched ||
-                agregarMercanciasForm.get('datosMercancia.cantidad')?.dirty)) {
-                <div class="text-danger small mt-1">
-                  Este campo es obligatorio.
-                </div>
-                }
+                  @if (
+                    agregarMercanciasForm.get('datosMercancia.cantidad')?.errors?.['required'] &&
+                    (agregarMercanciasForm.get('datosMercancia.cantidad')?.touched ||
+                    agregarMercanciasForm.get('datosMercancia.cantidad')?.dirty || envioIntentado)
+                  ) {
+                    <div class="text-danger small mt-1">Este campo es obligatorio.</div>
+                  } @else if (
+                    agregarMercanciasForm.get('datosMercancia.cantidad')?.errors?.['pattern'] &&
+                    (agregarMercanciasForm.get('datosMercancia.cantidad')?.touched ||
+                    agregarMercanciasForm.get('datosMercancia.cantidad')?.dirty)
+                  ) {
+                    <div class="text-danger small mt-1">Este campo permite hasta 12 números enteros y 3 decimales</div>
+                  } @else if (
+                    agregarMercanciasForm.get('datosMercancia.cantidad')?.errors?.['min'] &&
+                    (agregarMercanciasForm.get('datosMercancia.cantidad')?.touched ||
+                    agregarMercanciasForm.get('datosMercancia.cantidad')?.dirty)
+                  ) {
+                    <div class="text-danger small mt-1">Por favor, escribe un valor mayor o igual a 1</div>
+                  }
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida'" [required]="true"
+                <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida*'" [required]="true"
                   name="unidadMedida" formControlName="unidadMedida" (change)="unidadMedidaSeleccion()"
                   [isDisabled]="soloLectura"></app-catalogo-select>
                 @if (agregarMercanciasForm.get('datosMercancia.unidadMedida')?.invalid &&

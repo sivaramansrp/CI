@@ -24,6 +24,7 @@ import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos
 import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Subject } from 'rxjs';
 import { Tramite260210Query } from '../../estados/tramite260210Query.query';
+import { ViewChild } from '@angular/core';
 
 /**
  * @component ContenedorDeDatosSolicitudComponent
@@ -149,6 +150,22 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
+   /**
+       * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent
+       * @description
+       * Referencia al componente hijo `DatosDeLaSolicitudComponent` obtenida
+       * mediante el decorador `@ViewChild`.
+       *
+       * Esta propiedad permite acceder a los métodos públicos y propiedades
+       * del componente hijo, por ejemplo para validar formularios o recuperar datos.
+       *
+       * > Nota: Angular inicializa esta referencia después de que la vista
+       * ha sido renderizada, normalmente en el ciclo de vida `ngAfterViewInit`.
+       */
+      @ViewChild(DatosDeLaSolicitudComponent)
+      datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+   
+
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
@@ -262,6 +279,27 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       opcionesColapsableState: event.opcionesColapsableState,
     }));
   }
+
+   /**
+   * @description
+   * Método que se encarga de validar el formulario contenido en
+   * el componente `DatosDeLaSolicitudComponent`.
+   *
+   * Utiliza el método `formularioSolicitudValidacion()` del componente hijo
+   * para comprobar si el formulario es válido.
+   * En caso de que el hijo no esté inicializado o devuelva `null/undefined`,
+   * se retorna `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el formulario es válido.
+   * - `false`: si el formulario no es válido o el componente hijo aún no está disponible.
+   */
+   validarContenedor(): boolean {
+    return (
+      this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion() ?? false
+    );
+  }
+
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

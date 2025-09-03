@@ -22,6 +22,7 @@ import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PARATEXTO } from '../../constantes/prosec.module';
 import { ProsecService } from '../../services/prosec.service';
@@ -206,6 +207,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -240,6 +242,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
           this.sectoresState = state as ProsecState;
           this.sectors = state.sectorDatos as FilaSectors[];
           this.producir = state.producirDatos as FilaProducir[];
+          this.initActionFormBuild();
         })
       )
       .subscribe();
@@ -253,15 +256,20 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         tap((_value) => {
           if (this.sectoresYMercancias.valid) {
             this.AutorizacionProsecStore.setSectoresFromValida(true);
-            this.ProsecService.formValida();
+            
           }
         })
       )
       .subscribe();
-    if (this.formularioDeshabilitado) {
-      this.esFormularioSoloLectura = true;
-      this.inicializarEstadoFormulario();
-    }
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.sectors = Array.isArray(this.sectoresState.sectorDatos)
         ? this.sectoresState.sectorDatos as FilaSectors[]
         : [this.sectoresState.sectorDatos as FilaSectors];
@@ -284,7 +292,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.sectoresYMercancias.disable();
-      this.seccionStore.establecerFormaValida([true]);
+      
     }
     else {
       this.sectoresYMercancias.enable();
@@ -306,7 +314,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         this.sectoresState.Sector
       ],
       Fraccion_arancelaria: [
-        this.sectoresState.Fraccion_arancelaria,
+        { value: this.sectoresState.Fraccion_arancelaria, disabled: this.esFormularioSoloLectura },
         Validators.required
       ],
     })
@@ -487,21 +495,35 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Si hay sectores o mercancías seleccionadas, muestra una confirmación antes de eliminarlas.
    */
   eliminarSector(): void {
-    if (this.listSelectedView.length === 0 && this.listSelectedProducir.length === 0) {
+    if (this.listSelectedView.length === 0) {
       this.espectaculoAlerta = true;
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
         titulo: '',
-        mensaje: 'Selecciona la planta que desea eliminar.',
+        mensaje: 'Seleccione el sector que desea eliminar.',
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '', 
       };
     }
-    else if (this.listSelectedView.length > 0 || this.listSelectedProducir.length > 0) {
+    else if (this.listSelectedProducir.length === 0){
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Seleccione la fraccion que desea eliminar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+    else if (this.listSelectedView.length > 0) {
       this.espectaculoConfirmar = true;
       this.espectaculoAlerta = false;
       this.nuevaNotificacion = {
@@ -509,7 +531,22 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         categoria: 'danger',
         modo: 'action',
         titulo: '',
-        mensaje: '¿Estás seguro de eliminar la(s) planta(s)?',
+        mensaje: '¿Está seguro que desea eliminar el sector seleccionado?',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+    }
+    else if (this.listSelectedProducir.length > 0){
+      this.espectaculoConfirmar = true;
+      this.espectaculoAlerta = false;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Está seguro que desea eliminar la fracción seleccionada?',
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
@@ -551,6 +588,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
           selectedSectorDatos: [],
         })
       );
+      this.listSelectedView = [];
     }
     else if (event && this.listSelectedProducir.length > 0) {
       const VALOR = this.AutorizacionProsecStore.getValue().producirDatos;
@@ -567,6 +605,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
           selectedProducirDatos: [],
         })
       );
+      this.listSelectedProducir = [];
     }
   }
 

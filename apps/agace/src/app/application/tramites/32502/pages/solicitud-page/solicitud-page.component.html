@@ -2,7 +2,15 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <h2>Aviso de importación temporal de art&iacute;culo productos siderúrgicos</h2>
+        <h2>Aviso de importación temporal del artículo 106, fracción II, inciso a) de la Ley Aduanera</h2>
+      </div>
+      <div class="col-12">
+        @if (esFormaValido) {
+        <div
+          class="alert alert-info alert-danger"
+          [innerHTML]="formErrorAlert"
+        ></div>
+        }
       </div>
 
       <app-wizard [listaPasos]="pasos"></app-wizard>
@@ -12,7 +20,7 @@
     <div class="row">
       @switch (indice) {
       @case (1) {
-      <paso-uno></paso-uno>
+      <paso-uno #pasoUnoRef (cambioDePestana)="alCambiarPestana()"></paso-uno>
       }
       @case (2) {
       <app-paso-dos></app-paso-dos>
@@ -23,6 +31,7 @@
       }
 
       <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+      <ng-alert [CONTENIDO]="AVISO_PRIVACIDAD_ADJUNTAR"  *ngIf="indice === 1"></ng-alert>
     </div>
   </div>
 </div>
