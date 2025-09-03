@@ -10,13 +10,51 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     solicitud10301ServiceMock = {
-      getDatosDeTrtamitelDoc: jest.fn().mockReturnValue(of({ tipoMercancia: 'test' })),
+      getDatosDeTrtamitelDoc: jest.fn().mockReturnValue(of({ 
+        success: true,
+        datos: {
+          manifesto: 'test-manifesto',
+          aduana: 'test-aduana',
+          nombre: 'test-nombre',
+          tipoMercancia: 'test-tipo',
+          usoEspecifico: 'test-uso',
+          marca: 'test-marca',
+          modelo: 'test-modelo',
+          serie: 'test-serie',
+          calle: 'test-calle',
+          numeroExterior: '123',
+          numeroInterior: '456',
+          telefono: '1234567890',
+          correoElectronico: 'test@test.com',
+          codigoPostal: '12345',
+          estado: 'test-estado',
+          colonia: 'test-colonia',
+          opcion: 'test-opcion'
+        }
+      })),
       actualizarEstadoFormulario: jest.fn()
     };
     consultaQueryMock = {
       selectConsultaioState$: of({ update: true })
     };
     tramite10301StoreMock = {
+      setManifesto: jest.fn(),
+      setAduana: jest.fn(),
+      setNombre: jest.fn(),
+      setTipoMercancia: jest.fn(),
+      setUsoEspecifico: jest.fn(),
+      setMarca: jest.fn(),
+      setModelo: jest.fn(),
+      setSerie: jest.fn(),
+      setCalle: jest.fn(),
+      setNumeroExterior: jest.fn(),
+      setNumeroInterior: jest.fn(),
+      setTelefono: jest.fn(),
+      setCorreoElectronico: jest.fn(),
+      setCodigoPostal: jest.fn(),
+      setEstado: jest.fn(),
+      setColonia: jest.fn(),
+      setOpcion: jest.fn()
     };
 
     component = new PasoUnoComponent(solicitud10301ServiceMock, consultaQueryMock, tramite10301StoreMock);
@@ -55,10 +93,13 @@ describe('PasoUnoComponent', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should call actualizarEstadoFormulario when guardarDatosFormulario is called and response exists', () => {
+  it('should call getDatosDeTrtamitelDoc and update store when guardarDatosFormulario is called', () => {
     component.guardarDatosFormulario();
-    expect(solicitud10301ServiceMock.actualizarEstadoFormulario).toHaveBeenCalled();
-    expect(component.esDatosRespuesta).toBe(true);
+    
+    expect(solicitud10301ServiceMock.getDatosDeTrtamitelDoc).toHaveBeenCalled();
+    expect(tramite10301StoreMock.setManifesto).toHaveBeenCalledWith('test-manifesto');
+    expect(tramite10301StoreMock.setNombre).toHaveBeenCalledWith('test-nombre');
+    expect(tramite10301StoreMock.setTipoMercancia).toHaveBeenCalledWith('test-tipo');
   });
 
   it('should change indice when seleccionaTab is called', () => {

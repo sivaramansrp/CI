@@ -134,24 +134,21 @@ describe('ImportadorExportadorService', () => {
     req.flush(mockResponse);
   });
 
-  it('should run #getFechasSeleccionadas()', () => {
+  it('should run #getFinesDeMercancia()', () => {
     const mockResponse: RespuestaCatalogos = {
       data: [
-        { id: 1, descripcion: 'Fecha 1' },
-        { id: 2, descripcion: 'Fecha 2' }
+        { id: 1, descripcion: 'Fin 1' },
+        { id: 2, descripcion: 'Fin 2' }
       ],
       code: 0,
       message: ''
     };
 
-    const spy = jest.spyOn(store, 'setFechasSeleccionadas');
-
-    service.getFechasSeleccionadas().subscribe(response => {
-      expect(response).toEqual(mockResponse.data);
-      expect(spy).toHaveBeenCalledWith(mockResponse.data);
+    service.getFinesDeMercancia().subscribe((response: RespuestaCatalogos) => {
+      expect(response).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('assets/json/10301/fechasSeleccionadas.json');
+    const req = httpMock.expectOne('assets/json/10301/fines.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -168,8 +165,8 @@ describe('ImportadorExportadorService', () => {
 
     const spy = jest.spyOn(store, 'setDocumentos');
 
-    service.getDocumentos().subscribe(response => {
-      expect(response).toEqual(mockResponse.data);
+    service.getDocumentos().subscribe((response: RespuestaCatalogos) => {
+      expect(response).toEqual(mockResponse);
       expect(spy).toHaveBeenCalledWith(mockResponse.data);
     });
 
