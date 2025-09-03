@@ -581,12 +581,10 @@ private populateFormWithSelectedRow(): void {
   }
 
   if (!this.isPaisdatoscargados) {
-    console.warn('Country data not loaded!');
     return;
   }
 
   if (!this.filaSeleccionada) {
-    console.warn('No row selected!');
     return;
   }
 
