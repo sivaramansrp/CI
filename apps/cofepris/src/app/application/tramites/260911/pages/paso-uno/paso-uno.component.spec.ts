@@ -4,6 +4,7 @@ import { of, Subject } from 'rxjs';
 import { PasoUnoComponent } from './paso-uno.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solocitud260911Service } from '../../services/service260911.service';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -31,7 +32,8 @@ describe('PasoUnoComponent', () => {
       providers: [
         { provide: ConsultaioQuery, useValue: consultaQueryMock },
         { provide: Solocitud260911Service, useValue: solocitudServiceMock },
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);

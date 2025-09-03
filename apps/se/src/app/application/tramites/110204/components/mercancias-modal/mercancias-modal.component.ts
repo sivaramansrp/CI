@@ -138,7 +138,6 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
 
     this.tramiteQuery?.formMercancia$?.pipe(
       takeUntil(this.destroyNotifier$)).subscribe((estado) => {
-
       // eslint-disable-next-line dot-notation
       if (!this.actualizandoFormulario && estado && estado['fraccionNaladiSa02']) {
         this.actualizandoFormulario = true;
@@ -168,7 +167,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       umc: ['', [Validators.required]],
       valorMercancia: ['', [Validators.required]],
       complementoClasificacion: ['', [Validators.required]],
-      fechaFinalInput: ['',[Validators.required]],
+      fechaFinal: ['',[Validators.required]],
       numeroFactura: ['', [Validators.required]],
       tipoFactura: ['', [Validators.required]]
     });
@@ -250,7 +249,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     public cambioFechaFinal(nuevo_valor: string): void {
 
       this.mercanciaForm.get('fechaFinal')?.setValue(nuevo_valor);
-      this.mercanciaForm.get('fechaFinal')?.markAsUntouched();
+      
     }
   
 

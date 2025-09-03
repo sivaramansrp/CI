@@ -130,6 +130,8 @@ export class ModalFuncionesComponent implements OnChanges {
   anexar(): void {
     if (this.archivo) {
       this.archivoSeleccionado.emit(this.archivo);
+      this.archivo = undefined;
+      this.cerrarModal();
     }
   }
   /**

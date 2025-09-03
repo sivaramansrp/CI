@@ -214,7 +214,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
           ),
           fechaDeInspeccion: new FormControl(
             this.solicitud220502State.fechaDeInspeccion,
-            [Validators.required]
+            []
           ),
           fechaInspeccion: new FormControl(
             this.solicitud220502State.fechaInspeccion,

@@ -1,4 +1,4 @@
-import { API_POST_FIRMAR_DICTAMEN, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
+import { API_POST_FIRMAR_DICTAMEN } from '@libs/shared/data-access-user/src';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { FirmarDictamenRequest } from '../../models/evaluar/request/firmar-dictamen-request.model';
@@ -34,7 +34,7 @@ export class FirmarDictamenService {
      */
     postGuadarDictamen(tramite: number, numFolio: string, PAYLOAD: FirmarDictamenRequest): 
     Observable<BaseResponse<null>> {
-      const ENDPOINT = `${this.host}${API_POST_FIRMAR_DICTAMEN.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
+      const ENDPOINT = `${this.host}${API_POST_FIRMAR_DICTAMEN(tramite.toString(), numFolio)}`;
       return this.http.post<BaseResponse<null>>(ENDPOINT, PAYLOAD);
     }
   

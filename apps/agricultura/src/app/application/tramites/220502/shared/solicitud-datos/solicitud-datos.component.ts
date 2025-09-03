@@ -71,7 +71,6 @@ export class SolicitudDatosComponent implements OnDestroy{
     .pipe(
       takeUntil(this.destroyed$),
       map((resultado) => {
-        this.solicitud220501Store.setSagarpaState(resultado.solicitud220501State);
         this.sagarpaService.actualizarEstadoFormulario(resultado.solicitud220502State);
       })
     ).subscribe();

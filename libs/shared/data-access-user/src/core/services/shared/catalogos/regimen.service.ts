@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { API_GET_REGIMEN, API_GET_REGIMENES_CLASIFICACION, CLASIFICACION } from '../../../constants/api-constants';
+import { API_GET_REGIMEN, API_GET_REGIMENES_CLASIFICACION, CLASIFICACION, COMUN_URL } from '../../../servers/api-router';
 import { CatalogosResponse } from '../../../models/shared/catalogo.model';
-import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable, catchError, map, throwError } from 'rxjs';
@@ -20,7 +19,7 @@ export class RegimenService {
   private readonly host: string;
 
   constructor(private http: HttpClient) {
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
 

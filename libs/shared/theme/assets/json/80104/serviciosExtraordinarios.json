@@ -122,15 +122,15 @@
     },
     "obligacionesFiscales": {
          "opinionPositiva":1,
-      "fechaExpedicion": "2025-03-15",
+      "fechaExpedicion": "10/02/2024",
       "aceptarObligacionFiscal": "Sí"
     },
     "formaModificaciones": {
       "nombreDelFederatario": "Juan Pérez",
-      "nombreDeNotaria": "Notaría 123",
+      "nombreDeNotaria": 12345,
       "estado": "1",
-      "nombreDeActa": "Acta de constitución",
-      "fechaDeActa": "2025-01-20",
+      "nombreDeActa": 12345,
+      "fechaDeActa": "01/10/2025",
       "rfc": "RFC11223344",
       "nombreDeRepresentante": "Maria Lopez"
     },
@@ -146,9 +146,9 @@
         "rfc": "RFC55667788",
         "taxId": "TAX99887766",
         "razonSocial": "Socios S.A.",
-        "pais": "México",
+        "pais": "2",
         "codigoPostal": "11590",
-        "estado": "1",
+        "estado": "MEXICO",
         "correoElectronico": "contacto@socios.com",
         "nombre": "Carlos",
         "apellidoPaterno": "Ramírez",

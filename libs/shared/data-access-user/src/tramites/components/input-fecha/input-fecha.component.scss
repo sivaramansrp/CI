@@ -129,9 +129,24 @@ select {
   font-size: large;
 }
 
+
 .disabled-div {
   pointer-events: none;
   opacity: 0.6;
+}
+
+
+/* Error highlighting styles */
+.has-error .input-group-text {
+  border: 1.5px solid #dc3545 !important;
+}
+.has-error .require {
+  color: #dc3545 !important;
+}
+.mensaje-error {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 2px;
 }
 
 .day.disabled {

@@ -1,25 +1,20 @@
 <div class="container">
+ 
     <div class="row">
       <div class="col-md-12">
         <h1>Modificación al permiso sanitario de importación de dispositivos médicos que cuenten con registro sanitario/ fuentes de radiación</h1>
       </div>
     </div>
-
+ <div *ngIf="message" class="alert alert-danger error-message text-center" style="margin-bottom: 16px;">
+    {{ message }}
+  </div>
     <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
     <div>
-      @switch (indice) {
-      @case (1) {
-      <app-paso-uno></app-paso-uno>
-      }
-      @case (2) {
-        <app-paso-dos></app-paso-dos>
-
-      }
-      @case (3) {
-        <app-paso-tres></app-paso-tres>
-
-      }
-    }
+  <app-paso-uno (tabChanged)="onPasoUnoTabChanged($event)"></app-paso-uno>
+  <!-- Tab components are now only rendered inside paso-uno.component.html -->
+      <!-- If you need to show paso-dos or paso-tres for other flows, you can use [hidden] or *ngIf with a condition -->
+      <!-- <app-paso-dos [hidden]="!showPasoDos"></app-paso-dos> -->
+      <!-- <app-paso-tres [hidden]="!showPasoTres"></app-paso-tres> -->
     </div>
   <btn-continuar [datos]="datosPasos" [ocultabotonAnterior]="ocultarBtnAnterior" (continuarEvento)="onContinuar($event)"></btn-continuar>
     <ng-alert [CONTENIDO]="AVISO_DE_PRIVACIDAD"></ng-alert>

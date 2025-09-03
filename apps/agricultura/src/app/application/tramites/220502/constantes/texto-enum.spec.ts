@@ -3,7 +3,7 @@ import { TEXTOS, FECHA_INSPECCION_INPUT } from './texto-enum';
 describe('TEXTOS', () => {
     test('should have the correct TEXTOS_SOLICITUD message', () => {
         expect(TEXTOS.TEXTOS_SOLICITUD).toBe(
-            'Al dar doble clic en el registro seleccionado creará una Nueva solicitud con los mismos datos de la solicitud elegida.'
+            'Al dar doble clic en el registro seleccionado creará una nueva solicitud con los mismos datos de la solicitud elegida.'
         );
     });
 

@@ -14,12 +14,12 @@
 import { AlertComponent, Catalogo, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ConfiguracionColumna, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FilaPlantas } from '../../models/prosec.module'
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProsecService } from '../../services/prosec.service';
@@ -216,6 +216,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     public AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     public seccionStore: SeccionLibStore,
     public seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -249,6 +250,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
           this.domiciliosState = state as ProsecState;
           this.plantasDatos = state.plantasDatos;
           this.prosecDatos = state.prosecDatos;
+          this.initActionFormBuild()
         })
       )
       .subscribe();
@@ -267,11 +269,16 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
             })
           )
           .subscribe();
-    if(this.formularioDeshabilitado){
-      this.esFormularioSoloLectura = true;
-      this.inicializarEstadoFormulario();
-    }
-    this.prosecDatos = Array.isArray(this.domiciliosState.plantasDatos) ? this.domiciliosState.plantasDatos : [this.domiciliosState.plantasDatos] as FilaPlantas[];
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.prosecDatos = Array.isArray(this.domiciliosState.plantasDatos) ? this.domiciliosState.plantasDatos : [] as FilaPlantas[];
     this.nuevaNotificacion = {} as Notificacion;
   }
 

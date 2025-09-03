@@ -5,6 +5,8 @@ import {
   Facturador,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
+import { EventEmitter, Output } from '@angular/core';
+
 
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -41,6 +43,12 @@ import { Tramite260911Store } from '../../estados/tramite260911.store';
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, OnChanges {
+  @Output() continuar = new EventEmitter<void>();
+  // ...existing code...
+
+  onContinuarClicked(): void {
+    this.continuar.emit();
+  }
 
   /**
    * Tipo de trámite actual.

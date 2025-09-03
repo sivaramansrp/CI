@@ -21,6 +21,7 @@
 
 <app-partidas-de-la-mercancia
   [partidasDelaMercanciaForm]="partidasDelaMercanciaForm"
+  [modificarPartidasDelaMercanciaForm]="modificarPartidasDelaMercanciaForm"
   [formForTotalCount]="formForTotalCount"
   [tableHeaderData]="tableHeaderData"
   [tableBodyData]="tableBodyData"
@@ -32,6 +33,9 @@
   (setValoresStoreEvent)="setValoresStore($event)"
   [mostrarErrores]="mostrarErroresPartidas"
   (validarAntesDeCargarArchivo)="validarYCargarArchivo()"
+  (partidasEliminadas)="onPartidasEliminadas($event)"
+  (modificarPartidaSeleccionada)="onModificarPartidaSeleccionada($event)"
+  (partidaModificada)="onPartidaModificada($event)" 
 ></app-partidas-de-la-mercancia>
 
 

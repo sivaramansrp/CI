@@ -658,6 +658,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
         ];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
+        case 260604:
+          this.elementosNoValidos = [
+            'presentacion',
+            'numeroRegistroSanitario',
+            'fechaCaducidad',
+          ];
+          break;
       default:
         if (this.detalleMercancia) {
           this.elementosNoValidos = [

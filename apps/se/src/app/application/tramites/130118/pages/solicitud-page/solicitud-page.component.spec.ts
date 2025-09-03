@@ -6,8 +6,8 @@ import { Location } from '@angular/common';
 import { of, throwError } from 'rxjs';
 
 import { SolicitudPageComponent } from './solicitud-page.component';
-import { IniciarService } from '../../../../core/services/130118/iniciar.service';
-import { GuardarService } from '../../../../core/services/130118/guardar.service';
+import { IniciarService } from '../../services/iniciar.service';
+import { GuardarService } from '../../services/guardar.service';
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 import { CategoriaMensaje, Notificacion } from '@ng-mf/data-access-user';

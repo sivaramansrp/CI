@@ -1,5 +1,5 @@
+import { AVISO, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../enums/diamante.enum';
 import { PASOS_EXPORTACION } from '../../constants/constants/diamante-bruto.enum';
 
@@ -12,6 +12,13 @@ import { PASOS_EXPORTACION } from '../../constants/constants/diamante-bruto.enum
   templateUrl: './diamante-bruto.component.html',
 })
 export class DiamanteBrutoComponent {
+   /**
+   * @property {object} TEXTOS - Contiene constantes relacionadas con aviso y firma.
+   * Se utiliza para manejar textos estáticos en la aplicación.
+   */
+    public TEXTOS = {
+    AVISO,
+  };
   
   /**
    * Lista de pasos que se deben completar en el asistente.

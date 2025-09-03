@@ -23,6 +23,18 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 })
 export class InputFechaComponent implements OnInit, OnChanges {
   /**
+   * Indica si se deben mostrar los mensajes de error en el input-fecha.
+   */
+  @Input() mostrarErrores: boolean = true;
+  /**
+   * Verifica si el campo de fecha es inválido y ha sido tocado.
+   * @returns {boolean} true si es requerido, está vacío y ha sido tocado.
+   */
+  isInvalid(): boolean {
+    const CONTROL = this.Formulario?.get('fechaString');
+    return CONTROL ? CONTROL.invalid && CONTROL.touched : false;
+  }
+  /**
    * Emite el valor seleccionado cuando cambia.
    */
   @Output() valorCambiado: EventEmitter<string> = new EventEmitter();

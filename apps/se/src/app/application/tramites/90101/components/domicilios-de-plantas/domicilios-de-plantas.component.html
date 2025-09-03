@@ -48,7 +48,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h6>Datos de las plantas donde se realizarán las operaciones PROSEC disponibles:</h6>
-                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="plantaColumnsConfiguracion" [datos]="plantasDatos" (listaDeFilaSeleccionada)="seleccionTabla($event)"></app-tabla-dinamica>
+                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="plantaColumnsConfiguracion" [datos]="plantasDatos" (listaDeFilaSeleccionada)="seleccionTabla($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
             </div>
         </div>
         <div class="row mb-5">
@@ -59,7 +59,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="plantaColumnsConfiguracion" [datos]="prosecDatos" (listaDeFilaSeleccionada)="seleccionTabla($event)"></app-tabla-dinamica>
+                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="plantaColumnsConfiguracion" [datos]="prosecDatos" (listaDeFilaSeleccionada)="seleccionTabla($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
             </div>
         </div>
         <div class="row mb-5">

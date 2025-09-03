@@ -44,7 +44,7 @@ export class PasoUnoComponent implements OnDestroy {
    *
    * @type {number}
    */
-  indice: number = 1;
+  indice: number = 2;
 
   /**
    * Esta variable se utiliza para almacenar el índice del subtítulo.
@@ -72,7 +72,7 @@ export class PasoUnoComponent implements OnDestroy {
       this.consultaState = seccionState;
     })).subscribe();
     if (this.consultaState && this.consultaState.procedureId === '260204' &&
-      this.consultaState.update) {
+      this.consultaState.update) { 
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
