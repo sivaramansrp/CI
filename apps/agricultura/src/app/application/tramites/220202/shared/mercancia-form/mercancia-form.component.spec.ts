@@ -93,7 +93,7 @@ describe('MercanciaFormComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
-    // Spy on the crearFormulario method instead of non-existent cargarTodosLosCatalogos
+    // Espía el método crearFormulario en lugar del inexistente cargarTodosLosCatalogos.
     component.crearFormulario = jest.fn();
     component.fitosanitarioQuery = component.fitosanitarioQuery || {};
     component.fitosanitarioQuery.select = jest.fn().mockReturnValue({
@@ -118,7 +118,7 @@ describe('MercanciaFormComponent', () => {
   });
 
   it('should run #tipoSelecionada()', async () => {
-    // Mock catalogosDatos with fraccionArancelariaList
+    // Simula catalogosDatos utilizando fraccionArancelariaList
     component.catalogosDatos = component.catalogosDatos || {};
     component.catalogosDatos.fraccionArancelariaList = [
       {

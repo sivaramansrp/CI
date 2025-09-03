@@ -692,6 +692,10 @@ export interface TercerosrelacionadosTable {
     exportadorPais: string;
 }
 
+/**
+ * Interfaz que define la estructura de datos para la información de la solicitud.
+ * @interface DatosDeLaSolicitud
+ */
 export interface DatosDeLaSolicitud {
     /**
      * Catálogo de países.
@@ -703,6 +707,10 @@ export interface DatosDeLaSolicitud {
     estados: Catalogo[];
 }
 
+/**
+ * Interfaz que define la estructura de datos para la información de mercancías.
+ * @interface DatosMercancia
+ */
 export interface DatosMercancia {
 
     /**
