@@ -1,5 +1,5 @@
 import { AlertComponent, ConsultaioState, NotificacionesComponent, TablaAcciones } from '@ng-mf/data-access-user';
-import { AcuseDetalleService } from '@libs/shared/data-access-user/src/core/services/130118/detalleAcuse.service';
+import { AcuseDetalleService } from '@libs/shared/data-access-user/src/core/services/shared/detalleAcuse.service';
 
 import { BodyTablaResolucion, HeaderTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
 import { CONSULTA_RESOLUCIONES } from '@libs/shared/data-access-user/src/core/enums/consulta-generica.enum';

@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RequerimientoDetalleResponse } from '../../../../core/models/130118/requerimiento-detalle-response.model';
+import { RequerimientoDetalleResponse } from '../../../../core/models/shared/requerimiento-detalle-response.model';
 import { Subject } from 'rxjs';
 
 

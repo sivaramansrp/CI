@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { API_POST_GUARDAR_ACUSE, API_POST_VISTA_PREVIA, COMUN_URL, IDSOLICITUD } from '../../servers/api-router';
 import { Observable, catchError, throwError } from 'rxjs';
-import { BaseResponse } from '../../models/5701/base-response.model';
+import { BaseResponse } from '../../models/shared/base-response.model';
 import { DocumentoResponse } from '../../models/shared/documentos-request.model';
 
 @Injectable({
