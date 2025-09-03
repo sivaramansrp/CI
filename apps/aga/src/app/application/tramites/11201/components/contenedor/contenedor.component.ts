@@ -498,16 +498,19 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.solicitudForm
       .get('aduana')
       ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(() => {
+      .subscribe((value: string) => {
         this.setValoresStore(this.solicitudForm, 'aduana', 'setAduana');
-        this.solicitudForm
-          .get('fechaIngreso')
-          ?.setValue(moment().format('YYYY-MM-DD'));
-        this.setValoresStore(
-          this.solicitudForm,
-          'fechaIngreso',
-          'setFechaIngreso'
-        );
+        if (value) {
+          this.solicitudForm
+            .get('fechaIngreso')
+            ?.setValue(moment().format('DD/MM/YYYY'));
+          this.setValoresStore(
+            this.solicitudForm,
+            'fechaIngreso',
+            'setFechaIngreso'
+          );
+        }
+ 
       });
     this.inicializarEstadoFormulario();
   }
@@ -658,6 +661,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   validarDigitoVerificador(): void {
     this.solicitudForm.markAllAsTouched();
+    // Explicitly mark fechaIngreso as touched and dirty so error shows
+    this.solicitudForm.get('fechaIngreso')?.markAsTouched();
     const ADUANA = this.solicitudForm.value.aduana;
     const FECHAINGRESO = this.solicitudForm.value.fechaIngreso;
     const INICIALESCONTENEDOR = this.solicitudForm.value.inicialesContenedor;
