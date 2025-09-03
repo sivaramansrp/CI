@@ -46,7 +46,7 @@
                             <div class="input-fecha-wrapper" [ngClass]="{'is-invalid': esInvalido('fechaIngreso')}"
                                 (click)="onDateFieldInteraction('fechaIngreso')">
                                 <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaIngreso($event)"
-                                [isDisabled]="soloLectura"
+                                [isDisabled]="soloLectura" required="fechaInicioInput.required"
                                 [setFecha]="solicitudForm.get('fechaIngreso')?.value"
                                     [ngClass]="{'is-invalid': esInvalido('fechaIngreso')}"></input-fecha>
                             </div>
@@ -306,26 +306,27 @@
                     <div class="col-md-12">
                         <ng-titulo titulo="Cargar archivo" />
                         <div class="col-md-12">
-                            <label for="cargarArchivo" class="form-label d-flex">Archivo*:</label>
-                            <div class="d-flex justify-content-between">
-                                <button class="mb-2" type="button" for="cargarArchivo" class="file-upload" (click)="activarSeleccionArchivo()">
-                                    Elegir archivo
-                                </button>
-                                <span class="ml-2 custom-input-file">{{ etiquetaDeArchivo || 'No se eligió ningún archivo'
-                                    }}</span>
+                            <ng-titulo titulo="Cargar archivo" />
+                            <div class="col-md-12">
+                                <label for="cargarArchivo" class="form-label d-flex">Archivo*:</label>
+                                <div class="d-flex">
+                                    <button class="mb-2 file-upload" type="button" (click)="activarSeleccionArchivo()">
+                                        Elegir archivo
+                                    </button>
+                                    <span class="ml-2 custom-input-file">{{ etiquetaDeArchivo || 'No se eligió ningún archivo' }}</span>
+                                </div>
+                                <input type="file" id="cargarArchivo" class="file-upload display-dos display-none" accept=".csv"
+                                    (change)="onCambioDeArchivo($event)">
+                                @if (nuevaNotificacion) { <section>
+                                    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+                                        (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+                                </section> }
                             </div>
-                            
-                            <input type="file" id="cargarArchivo" class="file-upload display-dos" accept=".csv"
-                                (change)="onCambioDeArchivo($event)">
-                            @if (nuevaNotificacion) { <section>
-                                <lib-notificaciones [notificacionInput]="nuevaNotificacion"
-                                    (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
-                            </section> }
                         </div>
                     </div>
                     <div class="col-md-4 d-flex justify-content-end p-5 gap-3 width-dos">
                         <button type="button" class="btn btn-default" data-bs-dismiss="modal" (click)="regresar()">Regresar</button>
-                        <button type="button" class="btn btn-default" (click)="archivo()" data-bs-dismiss="modal">Enviar</button>
+                        <button type="button" class="btn btn-primary" (click)="archivo()" data-bs-dismiss="modal">Enviar</button>
                     </div>
                 </div>
             </div>

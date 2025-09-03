@@ -3,7 +3,7 @@ import { Component, DestroyRef, EventEmitter, Input, OnDestroy, OnInit, Output, 
 import { Subject, map, takeUntil } from 'rxjs';
 
 import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
-import { PeximService } from '../../service/pexim.service';
+import { PeximService } from '../../services/pexim.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 /**
  * Este componente se muestra en PasaDos

@@ -567,4 +567,11 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
     }));
   }
 
+  setFecha(fecha: Date): void {
+    this.update((state) => ({
+      ...state,
+      fecha
+    }));
+  }
+
 }

@@ -29,6 +29,18 @@ export interface Tramite130114State {
   entidad: string;
   representacion: string;
   mostrarTabla: boolean;
+  /**
+   * Datos del cuerpo de la tabla dinámica.
+   */
+  tableBodyData: PartidasDeLaMercanciaModelo[];
+  /**
+   * Cantidad total de partidas de la mercancía.
+   */
+  cantidadTotal: string;
+  /*
+  Valor total en USD de las partidas de la mercancía.
+  */
+  valorTotalUSD: string;
 }
 /**
  * Crea el estado inicial del store.
@@ -58,6 +70,9 @@ export function createInitialState(): Tramite130114State {
     observaciones: '',
     entidad: '',
     representacion: '',
+    tableBodyData: [],
+    cantidadTotal: '',
+    valorTotalUSD: ''
   };
 }
 /**

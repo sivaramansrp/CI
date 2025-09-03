@@ -45,7 +45,7 @@ export const DATOS_DEL_TRAMITE = [
     validadores: [
       { tipo: 'required' }
     ],
-    marcadorDePosicion: 'Selecciona un valor',
+    marcadorDePosicion: 'Seleccione una opción',
     valorPredeterminado: '',
     marginTop: 0
   },
@@ -71,7 +71,7 @@ export const DATOS_DEL_TRAMITE = [
     validadores: [
       { tipo: 'required' }
     ],
-    marcadorDePosicion: 'Selecciona un valor',
+    marcadorDePosicion: 'Seleccione una opción',
     valorPredeterminado: '',
     marginTop: 0
   },
@@ -139,7 +139,7 @@ export const DATOS_DE_LA_MERCANCIA = [
     validadores: [
       { tipo: 'required' }
     ],
-    marcadorDePosicion: 'Selecciona un valor',
+    marcadorDePosicion: 'Seleccione una opción',
     marginTop: 0
   },
   {
@@ -181,7 +181,7 @@ export const DATOS_DE_LA_MERCANCIA = [
     validadores: [
       { tipo: 'required' }
     ],
-    marcadorDePosicion: 'Selecciona un valor',
+    marcadorDePosicion: 'Seleccione una opción',
     marginTop: 0
   },
 ];
@@ -300,7 +300,7 @@ export const PAIS_PROCEDENCIA = [
     validadores: [
       { tipo: '' }
     ],
-    marcadorDePosicion: 'Selecciona un valor',
+    marcadorDePosicion: 'Seleccione una opción',
     marginTop: 0
   },
   {
@@ -385,7 +385,7 @@ export const REPRESENTACION_FEDERAL = [
     validadores: [
       { tipo: 'required' }
     ],
-    marcadorDePosicion: 'Selecciona un valor',
+    marcadorDePosicion: 'Seleccione una opción',
     marginTop: 0
   },
   {

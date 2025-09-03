@@ -24,7 +24,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   templateUrl: './acuicola.component.html',
   styleUrl: './acuicola.component.scss',
 })
-export class AcuicolaComponent implements OnDestroy{
+export class AcuicolaComponent implements OnDestroy {
   /**
    * Array de pasos del wizard.
    * @type {Array<ListsPasoWizard>}
@@ -85,9 +85,7 @@ export class AcuicolaComponent implements OnDestroy{
    * Constructor del componente.
    * @param {Tramite220403Query} tramite220403Query - Servicio para consultar el estado del trámite acuícola.
    */
-  constructor(
-    private tramite220403Query: Tramite220403Query
-  ) {
+  constructor(private tramite220403Query: Tramite220403Query) {
     // Constructor vacío, se pueden inyectar servicios si es necesario.
   }
 
@@ -112,6 +110,19 @@ export class AcuicolaComponent implements OnDestroy{
       } else {
         this.wizardComponent.atras();
       }
+    }
+  }
+
+  /**
+   * Maneja el evento de clic en el botón "Guardar".
+   * @returns {void}
+   */
+  onBtnGuardarClicked(): void {
+    if (this.indice === 1) {
+      this.esFormValido = this.validarFormulario() ?? false;
+    }
+    if (!this.esFormValido) {
+      this.datosPasos.indice = 1;
     }
   }
 

@@ -40,7 +40,7 @@ export * from './core/services/shared/validaciones-formulario/validaciones-formu
 export { PANTA_PASOS } from './core/enums/120404/pantallas260514.enum';
 export { AccionBoton } from './core/models/260514/aviso-pantallas.model';
 export * from './core/ambientes';
-export * from './core/constants/api-constants';
+// export * from './core/constants/api-constants';
 export * from './core/constants/constantes-generales';
 export * from './core/enums/constantes-alertas.enum';
 export * from './core/enums/constantes-alertas.enum';
@@ -211,4 +211,5 @@ export * from './core/interceptor/http.interceptor';
 
 export * from './tramites/directives/solo-alfabetos/solo-alfabetos.directive';
 export * from './tramites/constantes/regex.constants';
-export * from './core/servers/api-const';
+export * from './core/servers/api-router';
+export * from './core/resolvers/iniciar-tramite.resolver';
