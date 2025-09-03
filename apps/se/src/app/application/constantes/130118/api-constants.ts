@@ -212,7 +212,7 @@ export const API_POST_GUARDAR_REQUERIMIENTO_MOSTRAR_FIRMA = `sat-t${TRAMITE}/tra
  * API para generar la firma del requerimiento del trámite 130118
  * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Generar-Requerimiento/mostrar-firma
  */
-export const API_POST_FIRMAR_REQUERIMIENTO = `/sat-t${TRAMITE}tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/firmar`;
+export const API_POST_FIRMAR_REQUERIMIENTO = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/firmar`;
 
 
 /**
