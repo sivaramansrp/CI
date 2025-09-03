@@ -9,7 +9,7 @@
             <div class="row py-3">
                 <div class="col-md-5 d-flex flex-column">
                     <span>Documento {{ item.tipo_documento }}</span>
-                    <small>Tamaño(MB): {{ MB }}, Resolución(dpi) mínima para
+                    <small>Tamaño(MB): {{item.tamanio_maximo}}{{ MB }}, Resolución(dpi) mínima para
                         imágenes: {{ item.ide_rango_resolucion_imagen }} {{ DPI }}</small>
                 </div>
                 <div class="col-md-7">
@@ -87,7 +87,7 @@
             <div class="row py-3">
                 <div class="col-md-5 d-flex flex-column">
                     <span>Documento {{ item.tipo_documento }}</span>
-                    <small>Tamaño(MB): {{ MB }}, Resolución(dpi) mínima para
+                    <small>Tamaño(MB): {{item.tamanio_maximo}}{{ MB }}, Resolución(dpi) mínima para
                         imágenes: {{ item.ide_rango_resolucion_imagen }} {{ DPI }}</small>
                 </div>
                 <div class="col-md-7">

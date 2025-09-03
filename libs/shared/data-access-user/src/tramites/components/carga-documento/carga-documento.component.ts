@@ -415,7 +415,13 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         fileInput.value = '';
         return;
       }
-      this.listadoArchivos.push({
+
+      // Verificar si ya existe un archivo con el mismo ID y tipo
+      const EXISTING_INDEX = this.listadoArchivos.findIndex(
+        archivo => archivo.id === id && archivo.tipo === tipo
+      );
+
+      const NEW_FILE_OBJECT = {
         name: INFORMACION_ARCHIVO.name,
         id,
         archivo: INFORMACION_ARCHIVO,
@@ -424,7 +430,19 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         tipo,
         mensaje: '',
         estatus: 'Pendiente',
-      });
+      };
+
+      if (EXISTING_INDEX !== -1) {
+        // Reemplazar archivo existente para evitar duplicados
+        // Limpiar URL anterior para prevenir pérdidas de memoria
+        if (this.listadoArchivos[EXISTING_INDEX].ruta) {
+          URL.revokeObjectURL(this.listadoArchivos[EXISTING_INDEX].ruta);
+        }
+        this.listadoArchivos[EXISTING_INDEX] = NEW_FILE_OBJECT;
+      } else {
+        // Agregar nuevo archivo si no existe
+        this.listadoArchivos.push(NEW_FILE_OBJECT);
+      }
 
       // Actualizar estado del botón después de cargar archivo
       this.actualizarEstadoBotonCargarArchivos();
@@ -500,34 +518,6 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
     // Forzar detección de cambios y actualizar estado del botón después de agregar una parte
     this.cdr.detectChanges();
     this.actualizarEstadoBotonCargarArchivos();
-  }
-
-  /**
-   * Valida que todos los documentos obligatorios estén completos, incluyendo sus partes adicionales.
-   * @returns {boolean} `true` si todos los documentos obligatorios están cargados, de lo contrario `false`.
-   */
-  private validarDocumentosObligatoriosCompletos(): boolean {
-    return this.catalogoDocumentosObligatorios.every((doc) => {
-      // Verificar documento principal
-      const DOCUMENTO_PRINCIPAL_CARGADO = this.listadoArchivos.some(
-        (archivo) => archivo.id === doc.id_tipo_documento && archivo.archivo
-      );
-      
-      if (!DOCUMENTO_PRINCIPAL_CARGADO) {
-        return false;
-      }
-
-      // Verificar partes adicionales si las hay
-      if (doc.adicionales && doc.adicionales.length > 0) {
-        return doc.adicionales.every((adicional) => {
-          return this.listadoArchivos.some(
-            (archivo) => archivo.id === adicional.id_tipo_documento && archivo.archivo
-          );
-        });
-      }
-
-      return true;
-    });
   }
 
   /**
@@ -663,7 +653,7 @@ private validarCompletitudDocumentosObligatorios(): boolean {
     }
 
     const INDEX_ARCHIVO: number = this.listadoArchivos.findIndex(
-      (f) => f.id === item.id_tipo_documento
+      (f) => f.id === item.id_tipo_documento && f.tipo === (tipo === 'obligatorios' ? 'obligatorio' : 'opcional')
     );
     if (INDEX_ARCHIVO !== -1) {
       this.listadoArchivos.splice(INDEX_ARCHIVO, 1);
