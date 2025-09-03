@@ -1,6 +1,6 @@
 import { AlertComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component,Input,OnDestroy, OnInit} from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud80104State, Tramite80104Store } from '../../../estados/tramites/tramite80104.store';
 import {Subject,map,takeUntil } from 'rxjs';
 import { ANEXO_TRES_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
@@ -71,6 +71,19 @@ export class AnexoTresComponent implements OnInit, OnDestroy {
  /** Indica si el formulario debe mostrarse en modo solo lectura.  
  *  Controla la habilitación o deshabilitación de los campos. */
   esFormularioSoloLectura: boolean = false;
+
+/**  
+ * Arreglo que contiene las filas seleccionadas del Anexo Dos, representadas por objetos de tipo FraccionArancelariaDescripcion.  
+ * Se utiliza para almacenar y manipular las descripciones arancelarias seleccionadas por el usuario.  
+ */
+  public selectedAnexoDosRows: FraccionArancelariaDescripcion[] = [];
+
+/**  
+ * Arreglo que almacena las filas seleccionadas del Anexo Tres, representadas por objetos de tipo FraccionArancelariaDescripcion.  
+ * Permite gestionar las descripciones arancelarias seleccionadas por el usuario en el contexto del Anexo Tres.  
+ */
+  public selectedAnexoTresRows: FraccionArancelariaDescripcion[] = [];
+
   /**
  * Constructor del componente.
  * Inicializa los servicios y realiza una suscripción al estado de `ConsultaioQuery` para determinar si el formulario debe ser de solo lectura.
@@ -158,13 +171,13 @@ export class AnexoTresComponent implements OnInit, OnDestroy {
  * Actualmente no se aplican validadores, pero pueden añadirse si se requiere validación en el futuro.
  */
     this.anexoDosForm = this.fb.group({
-      fraccionArancelaria: [this.solicitudState.fraccionArancelaria],
-      descripcion: [this.solicitudState.descripcion]
+      fraccionArancelaria: [this.solicitudState.fraccionArancelaria,[Validators.required, Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
+      descripcion: [this.solicitudState.descripcion,[Validators.required, Validators.maxLength(1000)]]
     });
     /* Formulario para Anexo Tres con campos de fracción y descripción */
     this.anexoTresForm = this.fb.group({
-      fraccionTres: [this.solicitudState.fraccionTres],
-      descripcionTres: [this.solicitudState.descripcionTres]
+      fraccionTres: [this.solicitudState.fraccionTres, [Validators.required, Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
+      descripcionTres: [this.solicitudState.descripcionTres,[Validators.required, Validators.maxLength(1000)]]
     });
     /* Obtiene los valores actuales del estado para Anexo Dos y Anexo Tres */
     this.anexoDos = this.tramite80104Query.getValue().anexoDos;
@@ -186,25 +199,49 @@ export class AnexoTresComponent implements OnInit, OnDestroy {
    * Agrega un nuevo elemento a la lista del Anexo Dos y actualiza la store.
    */
   anexoDosAgregar(): void {
-    const NUEVOITEM: FraccionArancelariaDescripcion[] = [{
+  if (this.anexoDosForm.invalid) {
+    this.anexoDosForm.markAllAsTouched();
+    return;
+  }
+    const NUEVOITEM: FraccionArancelariaDescripcion = {
       fraccionArancelaria: this.anexoDosForm.value.fraccionArancelaria,
       descripcion: this.anexoDosForm.value.descripcion,
-    }];
-    this.anexoDos = NUEVOITEM;
-    this.tramite80104Store.setAnexoDos(NUEVOITEM);
+    };
+    this.anexoDos = [...(this.anexoDos || []), NUEVOITEM];
+    this.tramite80104Store.setAnexoDos(this.anexoDos);
     this.anexoDosForm.reset();
   }
+
+/**
+ * Método que actualiza las filas seleccionadas del Anexo Dos con las proporcionadas como parámetro.
+ * Se invoca al seleccionar una o más descripciones arancelarias en la interfaz del Anexo Dos.
+ */
+onAnexoDosRowSelected(selectedRows: FraccionArancelariaDescripcion[]): void {
+  this.selectedAnexoDosRows = selectedRows;
+}
+
+/**
+ * Método que actualiza las filas seleccionadas del Anexo Tres con las proporcionadas como parámetro.
+ * Se ejecuta al seleccionar una o más descripciones arancelarias en la interfaz del Anexo Tres.
+ */
+onAnexoTresRowSelected(selectedRows: FraccionArancelariaDescripcion[]): void {
+  this.selectedAnexoTresRows = selectedRows;
+}
 
   /**
    * Agrega un nuevo elemento a la lista del Anexo Tres y actualiza la store.
    */
   anexoTresAgregar(): void {
-    const NUEVOITEM: FraccionArancelariaDescripcion[] = [{
+  if (this.anexoTresForm.invalid) {
+    this.anexoTresForm.markAllAsTouched();
+    return;
+  }
+    const NUEVOITEM: FraccionArancelariaDescripcion = {
       fraccionArancelaria: this.anexoTresForm.value.fraccionTres,
       descripcion: this.anexoTresForm.value.descripcionTres,
-    }];
-    this.anexoTres = NUEVOITEM;
-    this.tramite80104Store.setAnexoTres(NUEVOITEM);
+    };
+    this.anexoTres = [...(this.anexoTres || []), NUEVOITEM];
+    this.tramite80104Store.setAnexoTres(this.anexoTres);
     this.anexoTresForm.reset();
   }
 
@@ -212,14 +249,24 @@ export class AnexoTresComponent implements OnInit, OnDestroy {
    * Elimina (resetea) el formulario del Anexo Dos sin alterar el estado global.
    */
   anexoDosElimiar(): void {
-    this.anexoDosForm.reset();
+  if (!this.selectedAnexoDosRows.length) {return}
+  this.anexoDos = this.anexoDos.filter(
+    item => !this.selectedAnexoDosRows.some(selected => selected === item)
+  );
+  this.tramite80104Store.setAnexoDos(this.anexoDos);
+  this.selectedAnexoDosRows = [];
   }
 
   /**
    * Elimina (resetea) el formulario del Anexo Tres sin alterar el estado global.
    */
   anexoTresElimiar(): void {
-    this.anexoTresForm.reset();
+    if (!this.selectedAnexoTresRows.length) {return}
+    this.anexoTres = this.anexoTres.filter(
+      item => !this.selectedAnexoTresRows.some(selected => selected === item)
+    );
+    this.tramite80104Store.setAnexoTres(this.anexoTres);
+    this.selectedAnexoTresRows = [];
   }
 
   /**

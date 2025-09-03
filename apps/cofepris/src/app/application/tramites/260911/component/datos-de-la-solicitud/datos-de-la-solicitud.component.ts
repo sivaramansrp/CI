@@ -263,6 +263,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
       CONTROL.updateValueAndValidity({ emitEvent: false });
     }
   }
+
+    /**
+   * Marca todos los campos requeridos como tocados para mostrar errores al intentar continuar.
+   */
+  onContinuar(): void {
+    this.form.markAllAsTouched();
+    this.datosDelEstablecimiento.markAllAsTouched();
+  }
   /**
    * Validador personalizado para correos electrónicos que permite una parte local mayor a 64 caracteres,
    * pero exige que el correo completo no exceda los 320 caracteres y cumpla con un formato básico.
@@ -322,10 +330,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
     this.datosDelEstablecimiento = this.fb.group({
       rfcDel: [this.solicitudState?.rfcDel, [Validators.required, Validators.pattern(REGEX_RFC)]],
       denominacion: [this.solicitudState?.denominacion, [Validators.required, Validators.maxLength(100)]],
-      correo: [
-        this.solicitudState?.correo,
-        [Validators.required, DatosDeLaSolicitudComponent.rfcEmailValidator, Validators.maxLength(320)]
-      ],
+     correo: this.fb.control(
+  this.solicitudState?.correo,
+  {
+    validators: [
+      Validators.required,
+      DatosDeLaSolicitudComponent.rfcEmailValidator,
+      Validators.maxLength(320)
+    ],
+    updateOn: 'blur'
+  }
+)
+
     });
 
       // Marcar como touched si no está seleccionado para mostrar el mensaje de error desde el inicio
@@ -464,7 +480,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
       }
       return control.errors && control.touched;
     }
-  
   /**
    * Cierra el modal de selección de establecimiento.
    */

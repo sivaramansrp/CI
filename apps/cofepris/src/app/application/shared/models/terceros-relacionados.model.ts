@@ -394,7 +394,7 @@ export interface PagoDerechosFormState {
  * @description Configuración del campo “Fecha de pago” en el formulario.
  */
 export const FECHA_DE_PAGO = {
-  labelNombre: 'Fecha de pago',
+  labelNombre: 'Fecha de pago*',
   required: false,
   habilitado: true,
 };

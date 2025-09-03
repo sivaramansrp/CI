@@ -7,7 +7,7 @@ describe('ValidarCertificadoTecnicoJaponComponent', () => {
   let component: ValidarCertificadoTecnicoJaponComponent;
   let fixture: ComponentFixture<ValidarCertificadoTecnicoJaponComponent>;
 
-  // Mock WizardComponent for ViewChild
+
   @Component({selector: 'app-wizard', template: ''})
   class MockWizardComponent {
     siguiente = jest.fn();
@@ -18,13 +18,15 @@ describe('ValidarCertificadoTecnicoJaponComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ValidarCertificadoTecnicoJaponComponent, MockWizardComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      // Provide the selector used in ViewChild if different
+      
     }).compileComponents();
 
     fixture = TestBed.createComponent(ValidarCertificadoTecnicoJaponComponent);
     component = fixture.componentInstance;
-    // Attach the mock wizard component to the ViewChild
+    
     component.wizardComponent = new MockWizardComponent() as any;
+    
+    component.solicitanteTabsComponent = { validarCamposObligatorios: jest.fn(() => true) } as any;
     fixture.detectChanges();
   });
 
@@ -39,16 +41,17 @@ describe('ValidarCertificadoTecnicoJaponComponent', () => {
   });
 
   it('should call wizardComponent.siguiente and update indice on getValorIndice with accion "cont"', () => {
-    // Ensure wizardComponent is properly mocked for this test
-    component.wizardComponent = new MockWizardComponent() as any;
-    const spy = jest.spyOn(component.wizardComponent, 'siguiente');
-    component.getValorIndice({ accion: 'cont', valor: 2 });
-    expect(component.indice).toBe(2);
-    expect(spy).toHaveBeenCalled();
+    
+  component.wizardComponent = new MockWizardComponent() as any;
+  component.solicitanteTabsComponent = { validarCamposObligatorios: jest.fn(() => true) } as any;
+  const spy = jest.spyOn(component.wizardComponent, 'siguiente');
+  component.getValorIndice({ accion: 'cont', valor: 2 });
+  expect(component.indice).toBe(2);
+  expect(spy).toHaveBeenCalled();
   });
 
   it('should call wizardComponent.atras and update indice on getValorIndice with accion not "cont"', () => {
-    // Ensure wizardComponent is properly mocked for this test
+    
     component.wizardComponent = new MockWizardComponent() as any;
     const spy = jest.spyOn(component.wizardComponent, 'atras');
     component.getValorIndice({ accion: 'ant', valor: 3 });
@@ -57,11 +60,12 @@ describe('ValidarCertificadoTecnicoJaponComponent', () => {
   });
 
   it('should not change indice or call wizard methods if valor is out of range', () => {
-    // Ensure wizardComponent is properly mocked for this test
+    
     component.wizardComponent = new MockWizardComponent() as any;
     const spySiguiente = jest.spyOn(component.wizardComponent, 'siguiente');
     const spyAtras = jest.spyOn(component.wizardComponent, 'atras');
     component.indice = 1;
+    component.solicitanteTabsComponent = { validarCamposObligatorios: jest.fn(() => true) } as any;
     component.getValorIndice({ accion: 'cont', valor: 0 });
     expect(component.indice).toBe(1);
     expect(spySiguiente).not.toHaveBeenCalled();

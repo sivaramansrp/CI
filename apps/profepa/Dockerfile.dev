@@ -32,6 +32,7 @@ ENV NX_VERBOSE_LOGGING=true
 
 ARG NODE_ENV
 RUN echo "Building profepa image for environment: $NODE_ENV"
+ENV NODE_OPTIONS=--max-old-space-size=10096
 RUN npx nx build profepa --configuration=$NODE_ENV --base-href=/profepa/ --skip-nx-cache --verbose
 
 # --- Inject version into built index.html ---

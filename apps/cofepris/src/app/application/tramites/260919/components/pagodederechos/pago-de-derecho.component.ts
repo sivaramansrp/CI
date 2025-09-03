@@ -18,7 +18,7 @@ import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 
 import {
   REGEX_REEMPLAZAR,
-  REGEX_SOLO_DIGITOS,
+  REGEX_SOLO_NUMEROS,
 } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
@@ -126,21 +126,25 @@ esFormularioSoloLectura: boolean = false;
       pagoDeDerechos: this.fb.group({
         clavedereferencia: [
           this.pagoDeDerechosState?.clavedereferencia,
-          [Validators.required, Validators.pattern(REGEX_REEMPLAZAR)],
+          [Validators.required,Validators.maxLength(9),
+Validators.pattern(REGEX_REEMPLAZAR)],
         ],
         cadenadeladependencia: [
           this.pagoDeDerechosState?.cadenadeladependencia,
-          [Validators.pattern(REGEX_REEMPLAZAR)],
+          [Validators.maxLength(40),Validators.pattern(REGEX_REEMPLAZAR)],
         ],
         banco: [this.pagoDeDerechosState?.banco],
         llavedepago: [
           this.pagoDeDerechosState?.llavedepago,
-          [Validators.pattern(REGEX_REEMPLAZAR)],
+          [ Validators.required,
+            Validators.maxLength(30),
+           Validators.pattern(REGEX_REEMPLAZAR)],
         ],
         fechadepago: [this.pagoDeDerechosState?.fechadepago],
         importedepago: [
           this.pagoDeDerechosState?.importedepago,
-          [Validators.pattern(REGEX_SOLO_DIGITOS)],
+          [ Validators.required,
+            Validators.maxLength(16),Validators.pattern(REGEX_SOLO_NUMEROS)],
         ],
       }),
     });

@@ -70,4 +70,47 @@ describe('AcuicolaComponent', () => {
     expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
     expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
+
+  it('should not call validarFormulario when indice is not 1', () => {
+    component.indice = 2;
+    component.validarFormulario = jest.fn().mockReturnValue(true);
+
+    component.onBtnGuardarClicked();
+
+    expect(component.validarFormulario).not.toHaveBeenCalled();
+    expect(component.datosPasos.indice).toBe(1);
+  });
+
+  it('should set esFormValido when indice is 1 and validarFormulario returns true', () => {
+    component.indice = 1;
+    component.validarFormulario = jest.fn().mockReturnValue(true);
+
+    component.onBtnGuardarClicked();
+
+    expect(component.validarFormulario).toHaveBeenCalled();
+    expect(component.esFormValido).toBe(true);
+    expect(component.datosPasos.indice).toBe(1);
+  });
+
+  it('should set datosPasos.indice = 1 when indice is 1 and validarFormulario returns false', () => {
+    component.indice = 1;
+    component.validarFormulario = jest.fn().mockReturnValue(false);
+
+    component.onBtnGuardarClicked();
+
+    expect(component.validarFormulario).toHaveBeenCalled();
+    expect(component.esFormValido).toBe(false);
+    expect(component.datosPasos.indice).toBe(1);
+  });
+
+  it('should set datosPasos.indice = 1 when indice is not 1 and esFormValido is false', () => {
+    component.indice = 3;
+    component.esFormValido = false;
+    component.validarFormulario = jest.fn();
+
+    component.onBtnGuardarClicked();
+
+    expect(component.validarFormulario).not.toHaveBeenCalled();
+    expect(component.datosPasos.indice).toBe(1);
+  });
 });

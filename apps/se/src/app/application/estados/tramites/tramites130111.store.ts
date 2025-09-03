@@ -9,7 +9,6 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-mercancia.model';
 
-
 export interface Tramite130111State {
   /**
    * Producto seleccionado en el formulario.
@@ -34,7 +33,7 @@ export interface Tramite130111State {
   /**
    * Valor en USD de la partida ingresada en el formulario.
    */
-  valorPartidaUSD: number;
+  valorPartidaUSD: string;
 
   /**
    * Unidad de medida seleccionada en el formulario.
@@ -125,6 +124,18 @@ export interface Tramite130111State {
    * Indica si la tabla dinámica debe mostrarse.
    */
   mostrarTabla: boolean;
+  /**
+   * Datos del cuerpo de la tabla dinámica.
+   */
+  tableBodyData: PartidasDeLaMercanciaModelo[];
+  /**
+   * Cantidad total de partidas de la mercancía.
+   */
+  cantidadTotal: string;
+  /*
+  Valor total en USD de las partidas de la mercancía.
+  */
+  valorTotalUSD: string;
 }
 
 /**
@@ -138,14 +149,14 @@ export interface Tramite130111State {
 export function createInitialState(): Tramite130111State {
   return {
     filaSeleccionada: [],
-    mostrarTabla: false,
+    mostrarTabla: true,
     solicitud: '',
     fraccion: '',
     defaultSelect: 'Inicial',
     producto: '',
     descripcion: '',
     cantidad: '',
-    valorPartidaUSD: 0,
+    valorPartidaUSD: '',
     unidadMedida: '',
     defaultProducto: 'Nuevo',
     regimen: '',
@@ -160,6 +171,9 @@ export function createInitialState(): Tramite130111State {
     observaciones: '',
     entidad: '',
     representacion: '',
+    tableBodyData: [],
+    cantidadTotal: '',
+    valorTotalUSD: ''
   };
 }
 
@@ -178,9 +192,8 @@ export class Tramite130111Store extends Store<Tramite130111State> {
   constructor() {
     super(createInitialState());
   }
-  
-  
-      /**
+
+  /**
    * Actualiza el estado del store con los valores proporcionados.
    * Valores a actualizar en el estado.
    */
@@ -190,5 +203,4 @@ export class Tramite130111Store extends Store<Tramite130111State> {
       ...valores,
     }));
   }
-  
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AlertComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
@@ -85,6 +85,14 @@ export class TercerosRelacionadosComponent implements OnInit {
   esFormularioSoloLectura: boolean = false;
 
   private destruirNotificador$: Subject<void> = new Subject();
+  /**
+   * @property {TercerosRelacionadosProveederComponent} terceros
+   * @description
+   * Referencia al componente hijo TercerosRelacionadosProveederComponent.
+   * Se utiliza para acceder a sus propiedades y métodos, especialmente para validar
+   * si las tablas de proveedores y fabricantes contienen los registros requeridos.
+   */
+  @ViewChild('terceros') terceros!: TercerosRelacionadosProveederComponent;
 
   constructor( private consultaioQuery: ConsultaioQuery,
     public tramiteQuery: Tramite260601Query,
@@ -141,5 +149,20 @@ export class TercerosRelacionadosComponent implements OnInit {
    */
   addFabricantes(newFabricantes: Fabricante[]): void {
     this.tramiteStore.updateFabricanteTablaDatos(newFabricantes);
+  }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida si el formulario de terceros relacionados cumple con los requisitos necesarios.
+   * Delega la validación al componente hijo TercerosRelacionadosProveederComponent,
+   * verificando que existan los registros mínimos requeridos en las tablas habilitadas.
+   * 
+   * @returns {boolean} true si la validación es exitosa, false en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if(!this.terceros.validarFormulario()) {
+      return false;
+    }
+    return true;
   }
 }
