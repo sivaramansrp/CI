@@ -35,13 +35,12 @@ describe('ElegibilidadTextilesComponent', () => {
 
     fixture = TestBed.createComponent(ElegibilidadTextilesComponent);
     component = fixture.componentInstance;
-    // Always mock formGroup
     const { FormGroup, FormControl } = require('@angular/forms');
     component.formGroup = new FormGroup({
       campo1: new FormControl(''),
       campo2: new FormControl('')
     });
-    // Always mock wizardComponent and pasoUnoComponent
+
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn()
@@ -50,7 +49,6 @@ describe('ElegibilidadTextilesComponent', () => {
       validarTodosLosFormularios: jest.fn().mockReturnValue(true)
     } as any;
   
-    // Set indice default
     component.indice = 1;
     fixture.detectChanges();
   });
@@ -64,8 +62,6 @@ describe('ElegibilidadTextilesComponent', () => {
   });
 
   it('should render title in a h1 tag', () => {
-    // Set the title before rendering
-    // Use mock data for titulo
     (component as any).titulo = 'Expedición de certificados de elegibilidad de bienes textiles y prendas de vestir con Canadá y Estados Unidos de América';
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
@@ -93,18 +89,17 @@ describe('ElegibilidadTextilesComponent', () => {
 
   it('should set indice and call wizardComponent.siguiente() when getValorIndice is called with accion "cont"', () => {
   component.indice = 1;
-  // Ensure pasoUnoComponent is a mock that returns true
   component.pasoUnoComponent = {
     validarTodosLosFormularios: jest.fn().mockReturnValue(true),
     indice: 0,
     formularioDeshabilitado: false,
     tabChanged: jest.fn(),
     constanciaDelRegistroComp: null,
-    // Add other required properties with default or mock values
+
     formGroup: new (require('@angular/forms').FormGroup)({}),
     ngOnInit: jest.fn(),
     ngOnDestroy: jest.fn(),
-    // Add more properties as needed to satisfy the type
+
   } as any;
   component.wizardComponent.siguiente = jest.fn();
   component.wizardComponent.atras = jest.fn();
@@ -116,7 +111,6 @@ describe('ElegibilidadTextilesComponent', () => {
   });
 
   it('should set indice and call wizardComponent.atras() when getValorIndice is called with accion not "cont"', () => {
-  // Ensure wizardComponent methods are Jest mocks
   component.wizardComponent.atras = jest.fn();
   component.wizardComponent.siguiente = jest.fn();
   const event = { valor: 3, accion: 'back' };
@@ -127,7 +121,6 @@ describe('ElegibilidadTextilesComponent', () => {
   });
 
   it('should not change indice or call wizardComponent methods if valor is out of range', () => {
-  // Ensure wizardComponent methods are Jest mocks
   component.wizardComponent.siguiente = jest.fn();
   component.wizardComponent.atras = jest.fn();
 
