@@ -258,10 +258,9 @@ this.getDestinatarioData().then(() => {
       datosDelTramiteRealizar: this.fb.group({
         tipoPersona: [ this.destinatarioState?.tipoPersona,[Validators.required]],
         denominacion: [ this.destinatarioState?.denominacion, [Validators.required]],
-        nombre: [ this.destinatarioState?.denominacion, [Validators.required]],
-        primerApellido: [this.destinatarioState?.denominacion,[Validators.required]],
-           
-       segundoApellido: [ this.destinatarioState?.denominacion,[Validators.required] ],
+        nombre: [ this.destinatarioState?.nombre,],
+        primerApellido: [this.destinatarioState?.primerApellido,],
+        segundoApellido: [ this.destinatarioState?.segundoApellido],
         domicilio: [this.destinatarioState?.domicilio, [Validators.required,Validators.pattern('^[a-zA-Z0-9]*$')]],
         pais: [this.destinatarioState?.pais, [Validators.required]],
         codigopostal: [
@@ -391,6 +390,29 @@ get selectedTipoPersona(): string | undefined {
  * Método para manejar el envío del formulario.
  */
 enEnviar(): void {
+  // this.destinatarioForm.get('datosDelTramiteRealizar.nombre')?.clearValidators();
+  // this.destinatarioForm.get('datosDelTramiteRealizar.primerApellido')?.clearValidators();
+
+  // // Update the form validity state
+  // this.destinatarioForm.get('datosDelTramiteRealizar.nombre')?.updateValueAndValidity();
+  // this.destinatarioForm.get('datosDelTramiteRealizar.primerApellido')?.updateValueAndValidity();
+  //   this.destinatarioForm.get('datosDelTramiteRealizar.segundoApellido')?.updateValueAndValidity();
+
+  //   this.destinatarioForm.get('datosDelTramiteRealizar')?.updateValueAndValidity();
+  //   this.destinatarioForm.updateValueAndValidity();
+
+//      console.log('Form Valid:', this.destinatarioForm.valid);
+//   console.log('Form Errors:', this.destinatarioForm.errors);
+
+//   const datosDelTramiteRealizar = this.destinatarioForm.get('datosDelTramiteRealizar');
+//   console.log('datosDelTramiteRealizar Valid:', datosDelTramiteRealizar?.valid);
+//   console.log('datosDelTramiteRealizar Errors:', datosDelTramiteRealizar?.errors);
+
+// Object.keys(this.datosDelTramiteRealizar.controls).forEach((key) => {
+//     const control = this.datosDelTramiteRealizar.get(key);
+//     console.log(`${key} Valid:`, control?.valid);
+//     console.log(`${key} Errors:`, control?.errors);
+//   });
   const FORM_DATA = this.destinatarioForm.value;
 
   if (!this.destinatarioForm.valid) {
@@ -574,42 +596,49 @@ private populateFormWithSelectedRow(): void {
    * Método para modificar los datos de una fila seleccionada.
    */
   enModificar(): void {
-       const MODAL_ELEMENT = document.getElementById('destinatarioModalLabel');
-       if (MODAL_ELEMENT) {
-         const MODAL_INSTANCE = new Modal(MODAL_ELEMENT); 
-         MODAL_INSTANCE.show();
-       }
-       
-    if (!this.isPaisdatoscargados) {
-      return;
-    }
-    if (this.filaSeleccionada) {
-      const PAIS_ID = this.paisData.catalogos.find(
-        (item: Catalogo) =>
-          item.descripcion === this.filaSeleccionada?.datosDelTramiteRealizar?.pais ||
-          String(item.id) === String(this.filaSeleccionada?.datosDelTramiteRealizar?.pais)
-      )?.id;
+  this.esFormularioVisible = true; // Ensure the modal content is rendered
 
-
-      this.destinatarioForm.patchValue({
-        datosDelTramiteRealizar: {
-          tipoPersona: this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona || 'moral',
-          denominacion:this.filaSeleccionada.datosDelTramiteRealizar.denominacion,
-          domicilio: this.filaSeleccionada.datosDelTramiteRealizar.domicilio,
-          pais: PAIS_ID || '', 
-          codigopostal: this.filaSeleccionada.datosDelTramiteRealizar.codigopostal,
-          telefono: this.filaSeleccionada.datosDelTramiteRealizar.telefono,
-          correoelectronico:
-            this.filaSeleccionada.datosDelTramiteRealizar.correoelectronico,
-        },
-      });
-
-      this.tipoPersonaSeleccionada = this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona;
-      this.esFormularioVisible = true;
-    }
-  
+  const MODAL_ELEMENT = document.getElementById('destinatarioModalLabel');
+  if (!MODAL_ELEMENT) {
+    // console.error('Modal element not found!');
+    return;
   }
 
+  if (!this.isPaisdatoscargados) {
+    console.warn('Country data not loaded!');
+    return;
+  }
+
+  if (!this.filaSeleccionada) {
+    console.warn('No row selected!');
+    return;
+  }
+
+  const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+  MODAL_INSTANCE.show();
+
+  const PAIS_ID = this.paisData.catalogos.find(
+    (item: Catalogo) =>
+      item.descripcion === this.filaSeleccionada?.datosDelTramiteRealizar?.pais ||
+      String(item.id) === String(this.filaSeleccionada?.datosDelTramiteRealizar?.pais)
+  )?.id;
+
+  this.destinatarioForm.patchValue({
+    datosDelTramiteRealizar: {
+      tipoPersona: this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona || 'moral',
+      denominacion: this.filaSeleccionada.datosDelTramiteRealizar.denominacion,
+      domicilio: this.filaSeleccionada.datosDelTramiteRealizar.domicilio,
+      pais: PAIS_ID || '',
+      codigopostal: this.filaSeleccionada.datosDelTramiteRealizar.codigopostal,
+      telefono: this.filaSeleccionada.datosDelTramiteRealizar.telefono,
+      correoelectronico: this.filaSeleccionada.datosDelTramiteRealizar.correoelectronico,
+    },
+  });
+
+  this.tipoPersonaSeleccionada = this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona;
+
+  this.changeDetectorRef.detectChanges();
+}
   /**
    * Método para eliminar una fila seleccionada.
    */
@@ -763,6 +792,9 @@ onAgregar(): void {
         datosDelTramiteRealizar: {
             tipoPersona: '',
             denominacion: '',
+             nombre: '',
+      primerApellido: '',
+      segundoApellido: '',
             domicilio: '',
             pais: '',
             codigopostal: '',
