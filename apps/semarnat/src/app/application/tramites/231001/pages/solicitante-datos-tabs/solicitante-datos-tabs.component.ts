@@ -8,6 +8,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject,map, takeUntil } from 'rxjs';
 import { MateriaprimaformserviceService } from '../../services/materia-prima-formservice.service';
+import { ViewChild } from '@angular/core';
+
+  import {PantallasComponent } from '../../pages/pantallas/pantallas.component';
 
 /**
  * Decorador que define un componente de Angular.
@@ -33,6 +36,12 @@ export class SolicitanteDatosTabsComponent implements OnInit, OnDestroy{
  * Se utiliza para mostrar u ocultar información en la interfaz según el estado de la respuesta.
  */
 public esDatosRespuesta: boolean = false;
+  /**
+   * Referencia al componente `solicitudComponent`.
+   */
+  @ViewChild('solicitudComponent', { static: false }) solicitudComponent: PantallasComponent | undefined;
+
+    /**
 
 /**
  * Estado actual de la consulta, obtenido desde el store.
@@ -97,7 +106,28 @@ constructor(
         }
       });
   }
+ /**
+   * Valida todos los formularios del paso uno.
+   * 
+   * Este método valida principalmente el formulario de solicitante que es el único
+   * obligatorio. Los otros formularios solo se validan si están disponibles.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
+ public validarTodosLosFormularios(): boolean {
+  let allFormsValid = true;
 
+  // Validar el formulario de certificado de origen si existe y es visible
+  if (this.indice >= 2 && this.solicitudComponent) {
+    this.solicitudComponent?.solicitudComponent?.formularioParaRecuentoTotal.markAllAsTouched();
+    this.solicitudComponent.datosComponent?.solicitudForm.markAllAsTouched();
+      if (!this.solicitudComponent.solicitudComponent?.formularioParaRecuentoTotal.valid || !this.solicitudComponent.datosComponent?.solicitudForm.valid ) {
+      allFormsValid = false;
+    }
+
+  }
+  return allFormsValid ;
+}
 /**
  * Método del ciclo de vida que se ejecuta al destruir el componente.
  *

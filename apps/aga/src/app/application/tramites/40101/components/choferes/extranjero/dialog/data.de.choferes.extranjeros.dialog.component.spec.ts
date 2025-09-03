@@ -275,7 +275,7 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
     });
 
     it('should open modal', () => {
-      component.openModal();
+      component.abiertoModal();
 
       expect(mockModalService.show).toHaveBeenCalledWith(component.datosDeChoferesModal, { class: 'modal-xl' });
       expect(component.modalRef).toBe(mockModalRef);
@@ -285,7 +285,7 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
       const cancelEventSpy = jest.spyOn(component.cancelEvent, 'emit');
       component.modalRef = mockModalRef;
 
-      component.closeModal();
+      component.cerrarModal();
 
       expect(mockModalRef.hide).toHaveBeenCalled();
       expect(cancelEventSpy).toHaveBeenCalled();
@@ -295,7 +295,7 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
       component.modalRef = undefined;
       const cancelEventSpy = jest.spyOn(component.cancelEvent, 'emit');
 
-      expect(() => component.closeModal()).not.toThrow();
+      expect(() => component.cerrarModal()).not.toThrow();
       expect(cancelEventSpy).toHaveBeenCalled();
     });
   });
@@ -306,7 +306,7 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
     });
 
     it('should reset form with default values', () => {
-      component.resetForm();
+      component.limpiarFormulario();
       expect(component.formChoferes.get('pais')?.value).toBe(1);
       expect(component.formChoferes.get('paisDeResidencia')?.value).toBe('1');
     });
@@ -329,7 +329,7 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
 
     it('should save and emit data when form is valid', () => {
       const addModalEventSpy = jest.spyOn(component.addModalEvent, 'emit');
-      const closeModalSpy = jest.spyOn(component, 'closeModal').mockImplementation();
+      const cerrarModalSpy = jest.spyOn(component, 'cerrarModal').mockImplementation();
 
       component.formChoferes.patchValue({
         numero: '12345',
@@ -347,7 +347,7 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
       component.guardarFilaEditada();
 
       expect(addModalEventSpy).toHaveBeenCalled();
-      expect(closeModalSpy).toHaveBeenCalled();
+      expect(cerrarModalSpy).toHaveBeenCalled();
     });
 
     it('should show alert when form is invalid', () => {
@@ -363,7 +363,7 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
 
     it('should transform catalog IDs to descriptions', () => {
       const addModalEventSpy = jest.spyOn(component.addModalEvent, 'emit');
-      const closeModalSpy = jest.spyOn(component, 'closeModal').mockImplementation();
+      const cerrarModalSpy = jest.spyOn(component, 'cerrarModal').mockImplementation();
 
       component.formChoferes.patchValue({
         numero: '12345',
@@ -388,7 +388,7 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
 
     it('should handle missing catalog descriptions', () => {
       const addModalEventSpy = jest.spyOn(component.addModalEvent, 'emit');
-      const closeModalSpy = jest.spyOn(component, 'closeModal').mockImplementation();
+      const closeModalSpy = jest.spyOn(component, 'cerrarModal').mockImplementation();
 
       component.formChoferes.patchValue({
         numero: '12345',

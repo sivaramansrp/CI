@@ -1,6 +1,6 @@
 import { BodyValidaAereo, BodyValidaAereoDos, BodyValidaFerro, ValidacionesTransporteResponse } from "../../../models/shared/validaciones-transporte.model";
 import { Observable, catchError, map, throwError } from "rxjs";
-import { API_CONSULTAR_VALIDACION } from "../../../constants/api-constants";
+import { API_CONSULTAR_VALIDACION } from "../../../servers/api-router";
 import { ENVIRONMENT } from "../../../../enviroments/enviroment";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";

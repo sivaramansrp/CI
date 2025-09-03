@@ -370,6 +370,7 @@ export const USO_ESPECIFICO_DE_LA_MERCANCIA = [
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
     marginTop: 0,
+    tooltipQuestionCircle: true,
   },
   {
     id: 'uso_descripcion',
@@ -383,6 +384,7 @@ export const USO_ESPECIFICO_DE_LA_MERCANCIA = [
     validadores: [{ tipo: 'required' }],
     marcadorDePosicion: '',
     marginTop: 0,
+    tooltipQuestionCircle: true,
   },
 ];
 

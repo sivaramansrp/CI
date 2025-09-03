@@ -1,50 +1,31 @@
 {
-  "tableHeader": ["Error"],
-  "tableBody": [
+  "data": [
     {
-      "tbodyData": [
-        "Error en Linea1): El registro no cumple con el formato correspondiente, favor de verificar."
-      ]
+      "id": 1,
+      "fraccionNaladi": "",
+      "fraccionNaladiSa93": "04021000",
+      "fraccionNaladiSa96": "",
+      "fraccionNaladiSa02": "03074100",
+      "nombreTecnico": "De hierro o acero, cobrizados, de doble pared soldados por fusion (proceso brazing) con o sin recubrimiento anticorrosivo.",
+      "nombreComercial": "xxx"
     },
     {
-      "tbodyData": [
-        "Error en Linea2): El registro no cumple con el formato correspondiente, favor de verificar."
-      ]
+      "id": 2,
+      "fraccionNaladi": "",
+      "fraccionNaladiSa93": "03026400",
+      "fraccionNaladiSa96": "",
+      "fraccionNaladiSa02": "39269000",
+      "nombreTecnico": "Poli(butadieno-estireno), con un contenido reaccionado de butadieno superior o igual al 90% pero inferior o igual al 97% y de 10% a 3% respectivamente, de estireno.",
+      "nombreComercial": "Patitos de hule"
     },
     {
-      "tbodyData": [
-        "Error en Linea3): El registro no cumple con el formato correspondiente, favor de verificar."
-      ]
-    },
-    {
-      "tbodyData": [
-        "Error en Linea4): El registro no cumple con el formato correspondiente, favor de verificar."
-      ]
-    },
-    {
-      "tbodyData": [
-        "Error en Linea5): El registro no cumple con el formato correspondiente, favor de verificar."
-      ]
-    },
-    {
-      "tbodyData": [
-        "Error en Linea6): El registro no cumple con el formato correspondiente, favor de verificar."
-      ]
-    },
-    {
-      "tbodyData": [
-        "Error en Linea7): El registro no cumple con el formato correspondiente, favor de verificar."
-      ]
-    },
-    {
-      "tbodyData": [
-        "Error en Linea8): El registro no cumple con el formato correspondiente, favor de verificar."
-      ]
-    },
-    {
-      "tbodyData": [
-        "Error en Linea9): El registro no cumple con el formato correspondiente, favor de verificar."
-      ]
+      "id": 3,
+      "fraccionNaladi": "",
+      "fraccionNaladiSa93": "03026400",
+      "fraccionNaladiSa96": "",
+      "fraccionNaladiSa02": "39269000",
+      "nombreTecnico": "Poli(butadieno-estireno), con un contenido",
+      "nombreComercial": "Patitos de hule"
     }
   ]
 }

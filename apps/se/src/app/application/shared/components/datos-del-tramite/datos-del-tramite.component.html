@@ -9,8 +9,7 @@
             [radioOptions]="solicitudOpciones"
             formControlName="solicitud"
             [isRequired]="true"
-            [disabled]="esFormularioSoloLectura"
-            (valueChange)="setValoresStore(form, 'solicitud')"
+            (change)="setValoresStore(form, 'solicitud')"
             [layout]="'vertical'"
           ></app-input-radio>
         </div> 
@@ -36,7 +35,7 @@
               )
             "
           >
-            Este campo es obligatorio.
+            Este campo es obligatorio
           </small>
         </div>
         </div>

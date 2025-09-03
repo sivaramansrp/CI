@@ -103,6 +103,35 @@ export class Tramite80102Query extends Query<Tramite80102State> {
   selectDatosComplimento$ = this.select((state) => state.datosComplimentos);
 
   /**
+   * Selecciona los datos de cumplimientos del estado.
+   */
+  selectDatosDosComplimentos$ = this.select((state) => state.datosComplimentoDos);
+
+  /**
+   * Selecciona los datos de cumplimientos del estado.
+   */
+  selectDatosComplimentos$ = this.select((state) => state.datosComplimento);
+
+/**
+   * Selecciona los datos de cumplimientos del estado.
+   */
+  selectDatosComplimentosDos$ = this.select((state) => state.datosComplimentoDos);
+
+  /**
+   * Selector observable para obtener la propiedad `datosAnexoTress` del estado de la aplicación.
+   * 
+   * @returns Un observable que emite el valor actual de `datosAnexoTress` desde el estado.
+   */
+  selectDatosAnexoTres$ = this.select((state) => state.datosAnexoTress);
+
+  /**
+   * Selector observable para obtener la propiedad `datosAnexoTress` del estado de la aplicación.
+   * 
+   * @returns Un observable que emite el valor actual de `datosAnexoTress` desde el estado.
+   */
+  selectDatosAnexoTressDos$ = this.select((state) => state.datosAnexoTressDos);
+
+  /**
    * @property {Observable<any>} datosSubcontratistaEstado$
    * @description Observable que selecciona y emite los datos del subcontratista desde el estado de la aplicación.
    * @returns Los datos del subcontratista asociados a las plantas del subfabricante.

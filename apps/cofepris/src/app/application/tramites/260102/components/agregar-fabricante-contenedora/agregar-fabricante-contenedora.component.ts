@@ -31,7 +31,6 @@ export class AgregarFabricanteContenedoraComponent {
    * el estado global de la solicitud 260102, incluyendo la tabla
    * de fabricantes.
    */
-  // eslint-disable-next-line no-empty-function
   constructor(public tramiteStore: Tramite260102Store) {}
 
   /**

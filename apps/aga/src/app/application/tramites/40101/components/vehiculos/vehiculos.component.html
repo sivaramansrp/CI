@@ -31,8 +31,8 @@
         Modificar
       </button>
       <button type="button" class="btn btn-danger ms-3"
-        [disabled]="!vehiculoSeleccionado || vehiculoSeleccionado.length === 0"
-        data-bs-toggle="modal" data-bs-target="#confirmarEliminarVehiculoModal" (click)="prepararEliminarVehiculo()">
+  [disabled]="!vehiculoSeleccionado || vehiculoSeleccionado.length === 0"
+  data-bs-toggle="modal" data-bs-target="#confirmarEliminarVehiculoModal" (click)="eliminarFilaVehiculo()">
         Eliminar
       </button>
       <button type="button" class="btn btn-primary ms-3" (click)="abrirPedimento()">

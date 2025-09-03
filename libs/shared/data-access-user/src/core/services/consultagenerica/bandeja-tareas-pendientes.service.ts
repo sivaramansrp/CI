@@ -1,7 +1,6 @@
+import { API_GET_BANDEJATAREA, COMUN_URL } from "../../servers/api-router";
 import { BandejaDeTareasPendientes, BandejaTareasPendientesBody, ResponseTable, RespuestaDatos } from "../../models/shared/bandeja-de-tareas-pendientes.model";
 import { Observable, catchError, map, retry, take, throwError } from "rxjs";
-import { API_GET_BANDEJATAREA } from "../../constants/api-constants";
-import { ENVIRONMENT } from "../../../enviroments/enviroment";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
@@ -16,7 +15,7 @@ export class BandejaDeSolicitudeService {
     private readonly host: string;
 
     constructor(private http: HttpClient) { 
-        this.host = `${ENVIRONMENT.API_HOST}/api/`;
+        this.host = `${COMUN_URL.BASE_URL}`;
     }
 
     /**

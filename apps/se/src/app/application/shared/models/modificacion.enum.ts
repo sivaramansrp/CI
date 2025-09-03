@@ -8,7 +8,7 @@ export interface Mercancia {
   nombreTecnico: string;
   nombreComercial: string;
   normaOrigen?: string;
-  id?: string;
+  id?: number;
   cantidad?: string;
   umc?: string;
   tipoFactura?: string;

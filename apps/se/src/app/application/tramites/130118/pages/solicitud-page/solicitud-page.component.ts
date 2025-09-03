@@ -5,18 +5,17 @@ import { Location } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 
 import { AVISO, CategoriaMensaje, DatosPasos, ListaPasosWizard, Notificacion, PASOS, WizardComponent } from '@ng-mf/data-access-user';
-import { GuadarSolicitudRequest } from '../../../../core/models/130118/request/guardar-solicitud-request.model';
-import { GuardarService } from '../../../../core/services/130118/guardar.service';
-import { IniciarService } from '../../../../core/services/130118/iniciar.service';
+import { GuadarSolicitudRequest } from '../../model/request/guardar-solicitud-request.model';
+import { GuardarService } from '../../services/guardar.service';
+import { IniciarService } from '../../services/iniciar.service';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
-import { IniciarRequest } from '../../../../core/models/130118/request/iniciar-request.model';
 
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
-import { MSG_REGISTRO_EXITOSO } from '../../../../core/enum/enum-130118';
+import { MSG_REGISTRO_EXITOSO } from '../../enum/enum-130118';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -195,47 +194,6 @@ export class SolicitudPageComponent implements OnInit {
           this.solicitudState = seccionState;
         })
       ).subscribe();
-
-    // Obtener la URL actual y separar los segmentos
-    const PAYLOAD: IniciarRequest = {
-      rfc_solicitante: 'LEQI810131GA8',
-      rol_actual: 'SOLICITANTE'
-    };
-
-    // Realiza la solicitud de inicio del trámite
-    this.iniciarService.postIniciar(PAYLOAD).subscribe({
-      next: (response) => {
-        if (response.codigo !== '00') {
-          this.nuevaNotificacion = {
-            tipoNotificacion: 'toastr',
-            categoria: CategoriaMensaje.ERROR,
-            modo: 'action',
-            titulo: response.error || 'Error al iniciar el trámite.',
-            mensaje:
-              response.causa ||
-              response.mensaje ||
-              'Ocurrió un error al guardar la solicitud.',
-            cerrar: false,
-            txtBtnAceptar: '',
-            txtBtnCancelar: '',
-          };
-          this.location.back();
-        }
-      },
-      error: (error) => {
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'toastr',
-          categoria: CategoriaMensaje.ERROR,
-          modo: 'action',
-          titulo: '',
-          mensaje: error?.error?.error || 'Error inesperado al iniciar el trámite.',
-          cerrar: false,
-          txtBtnAceptar: '',
-          txtBtnCancelar: '',
-        };
-        this.location.back();
-      }
-    });
   }
 
 

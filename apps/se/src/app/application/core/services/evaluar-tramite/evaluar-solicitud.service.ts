@@ -5,7 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_GET_EVALUAR_INICIAR, API_GET_EVALUAR_MOSTRAR, API_POST_OPCIONES_EVALUACION, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
+import { API_GET_EVALUAR_INICIAR, API_GET_EVALUAR_MOSTRAR, API_POST_OPCIONES_EVALUACION, NUMFOLIOTRAMITE, TRAMITE } from '../../../tramites/130118/server/api-router';
 import { EvaluacionOpcionResponse } from '../../models/evaluar/response/evaluar-estado-evaluacion-response.model';
 import { OpcionesEvaluacionRequest } from '../../models/evaluar/request/opciones-evaluacion.model';
 
@@ -45,7 +45,7 @@ export class EvaluarSolicitudService {
    * @returns Observable con la respuesta del servidor.
  */
   getEvaluacionTramite(tramite: number, folioTramite: string): Observable<BaseResponse<EvaluacionOpcionResponse>> {
-    const ENDPOINT = `${this.host}${API_GET_EVALUAR_INICIAR.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, folioTramite)}`;
+    const ENDPOINT = `${this.host}${API_GET_EVALUAR_INICIAR(tramite.toString(), folioTramite)}`;
     return this.http.get<BaseResponse<EvaluacionOpcionResponse>>(ENDPOINT);
   }
 
@@ -57,7 +57,7 @@ export class EvaluarSolicitudService {
    * @returns Observable con la respuesta del servidor.
  */
   postPrepararEvaluacion(tramite: number, folioTramite: string, opcion: string): Observable<BaseResponse<string>> {
-    const ENDPOINT = `${this.host}` + API_GET_EVALUAR_MOSTRAR.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, folioTramite);
+    const ENDPOINT = `${this.host}` + API_GET_EVALUAR_MOSTRAR(tramite.toString(), folioTramite);
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const params = new HttpParams().set('opcion', opcion);
     return this.http.post<BaseResponse<string>>(ENDPOINT,null, { params });

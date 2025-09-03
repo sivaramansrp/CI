@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { API_GET_OPINION_DETALLE, ENVIRONMENT, IDOPINION, TRAMITE } from '../../..';
+import { API_GET_OPINION_DETALLE, COMUN_URL, IDOPINION, TRAMITE } from '../../servers/api-router';
 import { BaseResponse } from '../../models/5701/base-response.model';
 import { Observable } from 'rxjs';
 import { OpinionDetalleResponse } from '../../models/130118/opinion-detalle-response.model';
@@ -21,7 +21,7 @@ export class DetalleOpinonService {
    * @param http HttpClient para realizar peticiones HTTP
    */
   constructor(private http: HttpClient) {
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   /**
