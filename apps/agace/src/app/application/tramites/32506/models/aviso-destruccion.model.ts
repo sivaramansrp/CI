@@ -38,6 +38,31 @@ export interface AvisoTabla {
   colonia: string;
 
   /**
+   * Calle asociada al aviso.
+   */
+  calle?: string;
+
+  /**
+   * Número exterior asociado al aviso.
+   */
+  numeroExterior?: string;
+
+  /**
+   * Número interior asociado al aviso.
+   */
+  numeroInterior?: string;
+
+  /**
+   * Código postal asociado al aviso.
+   */
+  codigoPostal?: string;
+
+  /**
+   * RFC asociado al aviso.
+   */
+  rfc?: string;
+
+  /**
    * Hora de destrucción asociada al aviso.
    */
   horaDestruccion: string;
@@ -626,4 +651,9 @@ export interface ConsultaDatos {
    * Tipo de documento relacionado al trámite.
    */
   tipoDocumento: string;
+
+  /**
+   * Información sobre la destrucción de mercancías.
+   */
+  destruccionMercanciasTabla: AvisoTabla[];
 }
