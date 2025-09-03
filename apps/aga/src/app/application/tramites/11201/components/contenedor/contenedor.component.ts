@@ -661,7 +661,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   validarDigitoVerificador(): void {
     this.solicitudForm.markAllAsTouched();
-    // Explicitly mark fechaIngreso as touched and dirty so error shows
     this.solicitudForm.get('fechaIngreso')?.markAsTouched();
     const ADUANA = this.solicitudForm.value.aduana;
     const FECHAINGRESO = this.solicitudForm.value.fechaIngreso;
