@@ -66,24 +66,6 @@ export const API_GET_MOLINO_ACTIVOS = `sat-t130118/catalogo/molinos-acero`;
 export const NUMFOLIOTRAMITE = '{numFolioTramite}';
 
 /**
- * API para obtener evaluar iniciar tramite 130118.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/getOpcionesEvaluacion
- */
-export const API_GET_EVALUAR_INICIAR = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/evaluar/iniciar`;
-
-/**
- * API para obtener las opciones de evaluación del tramite 130118.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/opciones-evaluacion
- */
-export const API_POST_OPCIONES_EVALUACION = `sat-t130118/evaluar/opciones-evaluacion-capturista`;
-
-/**
- * API para prepar evaluacion tramite 130118.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/getOpcionesEvaluacion
- */
-export const API_GET_EVALUAR_MOSTRAR = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/evaluar/mostrar`;
-
-/**
  * ID de la solicitud del dictamen que se utilizará en las consultas.
  * Este valor debe ser reemplazado por el ID real de la solicitud del dictamen.
  */

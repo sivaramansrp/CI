@@ -2,10 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { API_GET_DICTAMEN_DETALLE, API_GET_DICTAMEN_DETALLE_OBSERVACION, COMUN_URL, IDDICTAMEN, IDOBSERVACION, TRAMITE } from '../../servers/api-router';
-import { BaseResponse } from '../../models/5701/base-response.model';
-import { DictamenDetalleResponse } from '../../models/130118/dictamen-detalle-response.model';
+import { BaseResponse } from '../../models/shared/base-response.model';
+import { DictamenDetalleResponse } from '../../models/shared/dictamen-detalle-response.model';
 import { Observable } from 'rxjs';
-import { ObservacionDetalleResponse } from '../../models/130118/observacion-detalle-response.model';
+import { ObservacionDetalleResponse } from '../../models/shared/observacion-detalle-response.model';
 
 @Injectable({
   providedIn: 'root'

@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { SolicitudRequerimientoQuery } from '../../../core/queries/requerimientos.query';
 import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-requerimiento.json';
 
-import { IniciarRequerimientoResponse } from '../../../core/models/130118/Iniciar-requerimiento-response.model';
+import { IniciarRequerimientoResponse } from '../../../core/models/shared/Iniciar-requerimiento-response.model';
 
 @Component({
   selector: 'app-capturar-requerimiento',
