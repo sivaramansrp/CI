@@ -399,7 +399,7 @@ export const PLANTAS_IMMEX: {
     orden: 7,
   },
   {
-    encabezado: 'Delegación o municipio',
+    encabezado: 'Delegación / Municipio',
     clave: (ele: PlantasImmex): string => ele.delegacionMunicipio,
     orden: 8,
   },

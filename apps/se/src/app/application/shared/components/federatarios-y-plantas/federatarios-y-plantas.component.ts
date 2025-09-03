@@ -520,4 +520,22 @@ agregarPlantas(): void {
   this.plantasImmexDatos = [INMEX_PLANTAS];
 }
 
+/**
+   * Elimina todas las plantas seleccionadas, vaciando el arreglo `seleccionadas`.
+   * 
+   * @remarks
+   * Esta función se utiliza para limpiar la selección de plantas en el componente.
+   */
+  eliminarPlantas(): void {
+    if (this.plantasImmexSeleccionadoDatos?.length > 0) {
+      this.plantasImmexSeleccionadoDatos.forEach(planta => {
+        const index = this.plantasImmexDatos.findIndex(row => row === planta);
+        if (index !== -1) {
+          this.plantasImmexDatos.splice(index, 1);
+        }
+    });
+    this.plantasImmexDatos = [...this.plantasImmexDatos];
+  }
+}
+
 }

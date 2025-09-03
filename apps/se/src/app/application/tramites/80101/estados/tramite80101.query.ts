@@ -1,3 +1,4 @@
+import { state } from '@angular/animations';
 import { Tramite80101State, Tramite80101Store } from './tramite80101.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
@@ -227,6 +228,11 @@ export class Tramite80101Query extends Query<Tramite80101State> {
   selectDatosFederatariosFormulario$ = this.select(
     (state) => state.datosFederatarios
   );
+
+/**
+ * Observable selector for retrieving the entire state.
+ */
+allStore$ = this.select((state) => state);
 
   /**
    * Constructor de la clase Tramite80101Query.

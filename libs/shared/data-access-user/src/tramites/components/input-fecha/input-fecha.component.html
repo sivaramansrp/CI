@@ -1,7 +1,6 @@
 <div class="form-group" [ngClass]="{'has-error': isInvalid()}">
   <label for="input_fecha" class="form-label" >
-    {{datos.labelNombre}}
-    @if(datos.required){<span class="require">*</span>}
+    {{datos.labelNombre}}@if(datos.required){<span class="require">*</span>}
     @if(tooltipQuestionCircle){ <span class="bi bi-question-circle-fill" tooltip="{{tooltipQuestionCircleText ? tooltipQuestionCircleText : datos.labelNombre}}"></span>}
     <span *ngIf="datos.required">:</span>
   </label>
