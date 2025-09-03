@@ -41,7 +41,7 @@
             >
             </app-catalogo-select>
             <div *ngIf="form.get('estado')?.touched && form.get('estado')?.hasError('required')" class="text-danger">
-              Por favor, corrija la estadoLocalidad.
+              Este campo es obligatorio.
             </div>
           </div>
         </div>
@@ -384,10 +384,13 @@
           [tooltipQuestionCircle]="true"
           [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
           (change)="setValorStore(domicilio, 'regimen')"
+          [markTouched]="domicilio.get('regimen')?.touched ?? false"
         ></app-catalogo-select>
-        <div *ngIf="domicilio.get('regimen')?.touched && domicilio.get('regimen')?.hasError('required')" class="text-danger">
-          Por favor, corrija la estadoLocalidad.
-        </div>
+          <div *ngIf="esInvalido('regimen')" class="text-danger">
+              <small *ngIf="domicilio.get('regimen')?.errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+          </div>
       </div>
       <div class="col-md-8">
         <app-catalogo-select 
@@ -398,10 +401,13 @@
           [isDisabled]="esFormularioSoloLectura || !!domicilio.get('aduanasEntradas')?.disabled"
           name="aduanasEntradas"
           (change)="setValorStore(domicilio, 'aduanasEntradas')"
+          [markTouched]="domicilio.get('aduanasEntradas')?.touched ?? false"
         ></app-catalogo-select>
-        <div *ngIf="domicilio.get('aduanasEntradas')?.touched && domicilio.get('aduanasEntradas')?.hasError('required')" class="text-danger">
-          Por favor, corrija la estadoLocalidad.
-        </div>
+          <div *ngIf="esInvalido('aduanasEntradas')" class="text-danger">
+              <small *ngIf="domicilio.get('aduanasEntradas')?.errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+          </div>
       </div>
     </div>
      <div class="col-md-4 mt-2">
@@ -550,6 +556,11 @@
           (change)="setValorStore(representanteLegal, 'acuerdoPublico')"
         ></app-input-radio>
       </div>
+         <div *ngIf="esInvalido('representacion')" class="text-danger">
+              <small *ngIf="representanteLegal.get('acuerdoPublico')?.errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+          </div>
       <ng-titulo titulo="Representante legal"></ng-titulo>
       <div class="row">
         <div class="col-md-4">
@@ -564,14 +575,11 @@
               (input)="onRfcInput($event)"
               (change)="setValorStore(representanteLegal, 'rfc')" 
             />
-            <div *ngIf="representanteLegal.get('rfc')?.invalid && representanteLegal.get('rfc')?.touched" class="text-danger">
-              <div *ngIf="representanteLegal.get('rfc')?.hasError('required')">
-                Este campo es obligatorio
-              </div>
-              <div *ngIf="representanteLegal.get('rfc')?.hasError('maxlength')">
-                El RFC no puede tener más de 13 caracteres
-              </div>
-            </div>
+              <div *ngIf="esInvalido('rfc')" class="text-danger">
+              <small *ngIf="representanteLegal.get('rfc')?.errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+          </div>
           </div>
         </div>
         <div class="col-md-3 mt-5">
@@ -595,6 +603,11 @@
               [disabled]="!enableLegalFields"
             />
           </div>
+          <div *ngIf="esInvalido('nombre')" class="text-danger">
+              <small *ngIf="representanteLegal.get('nombre')?.errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+          </div>
         </div>
 
         <div class="col-md-4">
@@ -611,6 +624,11 @@
               aria-labelledby="apellidoPaterno" 
               [disabled]="!enableLegalFields"
             />
+          </div>
+          <div *ngIf="esInvalido('apellidoPaterno')" class="text-danger">
+              <small *ngIf="representanteLegal.get('apellidoPaterno')?.errors?.['required']">
+                Este campo es obligatorio.
+              </small>
           </div>
         </div>
 

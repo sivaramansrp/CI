@@ -120,19 +120,15 @@
               placeholder=""
               type="text"
               formControlName="denominacion"
-              maxlength="101"
+              maxlength="100"
               (change)="setValorStore(datosDelEstablecimiento,'denominacion')"
-              (input)="validarLongitudMaxima('denominacion', 101)"
+              (input)="validarLongitudMaxima('denominacion', 100)"
+              [ngClass]="isInvalid(datosDelEstablecimiento, 'denominacion') ? 'required' : ''"
             />
-            <div
-            *ngIf="datosDelEstablecimiento.get('denominacion')?.invalid && datosDelEstablecimiento.get('denominacion')?.touched"
-            class="text-danger">
-            <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['required']">
-              Este campo es obligatorio
-            </span>
-            <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['maxlength']">
-              Máximo 100 caracteres permitidos.
-            </span>
+              <div *ngIf="isInvalid(datosDelEstablecimiento, 'denominacion')" class="text-danger">
+              <small *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['required']">
+                Este campo es obligatorio.
+              </small>
           </div>
           </div>
         </div>
@@ -161,18 +157,21 @@
               [ngClass]="isInvalid(datosDelEstablecimiento, 'correo') ? 'required' : ''"
             />
           <div *ngIf="
-  datosDelEstablecimiento.get('correo')?.invalid &&
-  (datosDelEstablecimiento.get('correo')?.touched || datosDelEstablecimiento.get('correo')?.dirty) &&
-  datosDelEstablecimiento.get('correo')?.value &&
-  !datosDelEstablecimiento.get('correo')?.pristine
-" class="text-danger">
-  <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
-    Este campo es obligatorio
-  </span>
-  <div *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
-    El valor ingresado no es una dirección válida de correo electrónico
-  </div>
-</div>
+                    datosDelEstablecimiento.get('correo')?.invalid &&
+                    (datosDelEstablecimiento.get('correo')?.touched || datosDelEstablecimiento.get('correo')?.dirty) &&
+                    datosDelEstablecimiento.get('correo')?.value &&
+                    !datosDelEstablecimiento.get('correo')?.pristine
+                  " class="text-danger">
+                 <div *ngIf="isInvalid(datosDelEstablecimiento, 'correo')" class="text-danger">
+              <small *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+          </div>
+                <div *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
+                  El valor ingresado no es una dirección válida de correo electrónico
+                </div>
+          </div>
+          
 
       </div>
         </div>

@@ -472,7 +472,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
       }
       return control.errors && control.touched;
     }
-  
   /**
    * Cierra el modal de selección de establecimiento.
    */
