@@ -76,6 +76,7 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<
   [240120, 'País de procedencia'],
   [240118, 'País de procedencia'],
   [240123, 'País de procedencia'],
+  [240122, 'País de procedencia'],
   [240108, 'paise destino'],
   [240308, 'paise destino'],
   [240405, 'paise destino'],
