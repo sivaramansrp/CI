@@ -7,6 +7,8 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { ProducirMercanciasComponent } from '../../../../shared/components/producir-mercancias/producir-mercancias.component';
 import { ProsecService } from '../../services/prosec/prosec.service';
 import { TABLA_EMPRESAS_LISTA } from '../../constantes/prosec.enum';
+import { Solicitud90304State, Tramite90304Store } from '../../estados/tramite90304.store';
+import { Tramite90304Query } from '../../estados/tramite90304.query';
 
 /**
  * Componente para mostrar la información de modificación de un trámite.
@@ -65,6 +67,22 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   soloLectura: boolean = false;
 
   /**
+   * Indica si el trámite está en estado de baja.
+   * Cuando es `true`, el trámite está dado de baja.
+   */
+  isBaja: boolean = true;
+
+   /**
+   * Notificador para destruir observables.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado de la solicitud.
+   */
+  public solicitudState!: Solicitud90304State;
+
+  /**
    * Constructor del componente.
    * @param {FormBuilder} fb - FormBuilder para crear formularios reactivos.
    * @param {ProsecService} prosecService - Servicio para obtener los datos de modificación.
@@ -72,7 +90,9 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private prosecService: ProsecService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private store: Tramite90304Store,
+    private query: Tramite90304Query,
   ) {
     // constructor vacío
   }
@@ -90,6 +110,14 @@ export class ModificacionComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
+        })
+      )
+      .subscribe();
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
         })
       )
       .subscribe();
@@ -142,13 +170,14 @@ export class ModificacionComponent implements OnInit, OnDestroy {
         this.empresasLista = empresas.data.length > 0 ? empresas.data : [];
       });
   }
-  isBaja: boolean = true;
+  
   onFilaClic(event: Event): void {
     const TARGET = event.target as HTMLInputElement;
     if (TARGET.tagName === 'BUTTON' && TARGET.textContent?.trim() === 'Baja') {
       this.isBaja = false;
       TARGET.textContent = 'Activar';
       this.prosecService.setIsBaja(this.isBaja);
+      this.store.setIsBaja(this.isBaja);
     }
     TARGET.textContent = 'Activar';
   }
