@@ -55,16 +55,6 @@
           Seleccionar establecimiento
         </button>
       </div>
-      @if (nuevaNotificacion) {
-      <section>
-        <lib-notificaciones
-          [notificacionInput]="nuevaNotificacion"
-          (confirmacionModal)="eliminarPedimento($event)"
-        >
-        </lib-notificaciones>
-      </section>
-      }
-
       <div class="row">
         <div class="col-md-4">
           <label class="form-label" for="rfcDel"
@@ -75,11 +65,34 @@
             id="rfcDel"
             type="text"
             formControlName="rfcDel"
+             maxlength="13"
+            [ngClass]="{
+              'is-invalid':
+                datosDelTramiteRealizar.get('rfcDel')?.invalid &&
+                datosDelTramiteRealizar.get('rfcDel')?.touched
+            }"
             (change)="
               setValoresStore(datosDelTramiteRealizar, 'rfcDel', 'setRfcDel')
             "
             [disabled]="esFormularioSoloLectura"
           />
+          <div
+            *ngIf="
+              datosDelTramiteRealizar.get('rfcDel')?.invalid &&
+              datosDelTramiteRealizar.get('rfcDel')?.touched
+            "
+            class="text-danger"
+          >
+            <small *ngIf="datosDelTramiteRealizar.get('rfcDel')?.errors?.['required']">
+              Este campo es obligatorio.
+            </small>
+            <small *ngIf="datosDelTramiteRealizar.get('rfcDel')?.errors?.['maxlength']">
+              El RFC no debe exceder los 13 caracteres.
+            </small>
+            <small *ngIf="datosDelTramiteRealizar.get('rfcDel')?.errors?.['pattern']">
+              El RFC solo debe contener caracteres alfanuméricos.
+            </small>
+          </div>
         </div>
         <div class="col-md-8">
           <label class="form-label" for="denominación"
@@ -90,6 +103,11 @@
             id="denominacion"
             type="text"
             formControlName="denominacion"
+            [ngClass]="{
+              'is-invalid':
+                datosDelTramiteRealizar.get('denominacion')?.invalid &&
+                datosDelTramiteRealizar.get('denominacion')?.touched
+            }"
             (change)="
               setValoresStore(
                 datosDelTramiteRealizar,
@@ -99,6 +117,18 @@
             "
             [disabled]="esFormularioSoloLectura"
           />
+
+          <div
+            *ngIf="
+              datosDelTramiteRealizar.get('denominacion')?.invalid &&
+              datosDelTramiteRealizar.get('denominacion')?.touched
+            "
+            class="text-danger"
+          >
+            <small *ngIf="datosDelTramiteRealizar.get('denominacion')?.errors?.['required']">
+              Este campo es obligatorio.
+            </small>
+          </div>
         </div>
       </div>
       <div class="row">
@@ -133,6 +163,11 @@
             class="text-danger"
           >
             <small
+              *ngIf="datosDelTramiteRealizar.get('correoElectronico')?.errors?.['required']"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
               *ngIf="datosDelTramiteRealizar.get('correoElectronico')?.errors?.['email']"
             >
               El valor ingresado no es una dirección válida de correo
@@ -155,6 +190,7 @@
             id="codigopostal"
             type="text"
             formControlName="codigopostal"
+              maxlength="12"
             (change)="
               setValoresStore(
                 datosDelTramiteRealizar,
@@ -163,6 +199,12 @@
               )
             "
             [disabled]="esFormularioSoloLectura"
+            [ngClass]="{
+              'is-invalid':
+                datosDelTramiteRealizar.get('codigopostal')?.invalid &&
+                datosDelTramiteRealizar.get('codigopostal')?.touched
+            }"
+
           />
           <div
             *ngIf="
@@ -171,6 +213,9 @@
             "
             class="text-danger"
           >
+           <small *ngIf="datosDelTramiteRealizar.get('codigopostal')?.errors?.['required']">
+             Este campo es obligatorio.
+        </small>
             <small
               *ngIf="datosDelTramiteRealizar.get('codigopostal')?.errors?.['pattern']"
             >
@@ -239,6 +284,12 @@
               )
             "
             [disabled]="esFormularioSoloLectura"
+            maxlength="120"
+  [ngClass]="{
+    'is-invalid':
+      datosDelTramiteRealizar.get('localidad')?.invalid &&
+      datosDelTramiteRealizar.get('localidad')?.touched
+  }"
           />
           <div
             *ngIf="
@@ -271,11 +322,28 @@
             id="colonia"
             type="text"
             formControlName="colonia"
+            maxlength="120"
             (change)="
               setValoresStore(datosDelTramiteRealizar, 'colonia', 'setColonia')
             "
             [disabled]="esFormularioSoloLectura"
+            [ngClass]="{
+              'is-invalid':
+                datosDelTramiteRealizar.get('colonia')?.invalid &&
+                datosDelTramiteRealizar.get('colonia')?.touched
+            }"
           />
+          <div
+  *ngIf="
+    datosDelTramiteRealizar.get('colonia')?.invalid &&
+    datosDelTramiteRealizar.get('colonia')?.touched
+  "
+  class="text-danger"
+>
+  <small *ngIf="datosDelTramiteRealizar.get('colonia')?.errors?.['maxlength']">
+    La colonia no debe exceder los 120 caracteres.
+  </small>
+</div>
         </div>
       </div>
       <div class="row">
@@ -286,11 +354,28 @@
             id="calle"
             type="text"
             formControlName="calle"
+              maxlength="100"
             (change)="
               setValoresStore(datosDelTramiteRealizar, 'calle', 'setCalle')
             "
             [disabled]="esFormularioSoloLectura"
+            [ngClass]="{
+              'is-invalid':
+                datosDelTramiteRealizar.get('calle')?.invalid &&
+                datosDelTramiteRealizar.get('calle')?.touched
+            }"
           />
+          <div
+  *ngIf="
+    datosDelTramiteRealizar.get('calle')?.invalid &&
+    datosDelTramiteRealizar.get('calle')?.touched
+  "
+  class="text-danger"
+>
+  <small *ngIf="datosDelTramiteRealizar.get('calle')?.errors?.['maxlength']">
+    La calle no debe exceder los 100 caracteres.
+  </small>
+</div>
         </div>
       </div>
       <div class="row">
@@ -301,11 +386,35 @@
             id="lada"
             type="text"
             formControlName="lada"
+              maxlength="5"
+
             (change)="
               setValoresStore(datosDelTramiteRealizar, 'lada', 'setLada')
             "
             [disabled]="esFormularioSoloLectura"
+            [ngClass]="{
+              'is-invalid':
+                datosDelTramiteRealizar.get('lada')?.invalid &&
+                datosDelTramiteRealizar.get('lada')?.touched
+            }"
           />
+          <div
+  *ngIf="
+    datosDelTramiteRealizar.get('lada')?.invalid &&
+    datosDelTramiteRealizar.get('lada')?.touched
+  "
+  class="text-danger"
+>
+  <small *ngIf="datosDelTramiteRealizar.get('lada')?.errors?.['required']">
+    Este campo es obligatorio.
+  </small>
+  <small *ngIf="datosDelTramiteRealizar.get('lada')?.errors?.['minlength'] || datosDelTramiteRealizar.get('lada')?.errors?.['maxlength']">
+    La lada debe tener exactamente 5 números.
+  </small>
+  <small *ngIf="datosDelTramiteRealizar.get('lada')?.errors?.['pattern']">
+    Por favor, ingresa solo números.
+  </small>
+</div>
           <div
             *ngIf="
               datosDelTramiteRealizar.get('lada')?.invalid &&
@@ -337,6 +446,7 @@
             id="telefono"
             type="text"
             formControlName="telefono"
+              maxlength="30"
             (change)="
               setValoresStore(
                 datosDelTramiteRealizar,
@@ -345,6 +455,11 @@
               )
             "
             [disabled]="esFormularioSoloLectura"
+            [ngClass]="{
+              'is-invalid':
+                datosDelTramiteRealizar.get('telefono')?.invalid &&
+                datosDelTramiteRealizar.get('telefono')?.touched
+            }"
           />
           <div
             *ngIf="
@@ -377,8 +492,9 @@
   [configuracionTabla]="configuracionColumnasoli"
    [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
     [datos]="tableData"
-    (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)">
-</app-tabla-dinamica>
+    (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+></app-tabla-dinamica>
 <div class="col-md-12 d-flex justify-content-end">
     <div class="btn-group">
       <button class="btn btn-danger"
@@ -537,7 +653,8 @@
         [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
         [configuracionTabla]="mercanciasDatos"
         [datos]="mercanciasData"
-        (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)">
+        (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
       </app-tabla-dinamica>
       <div class="modal fade" id="modalAgregarMercancia" tabindex="-1" aria-labelledby="modalAgregarMercanciaLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -759,21 +876,16 @@
         </div>
    </div>
    <div class="col-md-12 d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" name="eliminar" id="btneliminar"(click)="onEliminar()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+    <button type="button" class="btn btn-primary me-2" name="eliminar" id="btneliminar"(click)="onEliminar()" [disabled]="esFormularioSoloLectura">Eliminar</button>
     @if (nuevaNotificacion) {
       <section>
       <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
       </lib-notificaciones>
       </section>
       }
-    <button type="button" class="btn btn-primary" name="modificar" id="btnmodificar"  (click)="onModificar()" [disabled]="esFormularioSoloLectura">Modificar</button>
-    @if (nuevaNotificacion) {
-      <section>
-      <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
-      </lib-notificaciones>
-      </section>
-      }
-    <button type="button" class="btn btn-primary" name="agregar" id="btnagregar" (click)="onAdd()" [disabled]="esFormularioSoloLectura">Agregar</button>
+    <button type="button" class="btn btn-primary me-2" name="modificar" id="btnmodificar"  (click)="onModificar()" [disabled]="esFormularioSoloLectura">Modificar</button>
+    
+    <button type="button" class="btn btn-primary me-2" name="agregar" id="btnagregar" (click)="onAdd()" [disabled]="esFormularioSoloLectura">Agregar</button>
   </div>
 
       <ng-titulo titulo="Manifiestos y declaraciones" />

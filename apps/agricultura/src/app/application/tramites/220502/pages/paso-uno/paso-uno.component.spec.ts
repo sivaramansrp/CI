@@ -72,13 +72,31 @@ describe('PasoUnoComponent', () => {
 
   it('should set consultaState from query observable', () => {
     component.ngOnInit();
-    expect(component.consultaState).toStrictEqual(consultaStateMock);
+    const stateMock = {
+      action_id: '',
+      consultaioSolicitante: null,
+      create: true,
+      current_user: '',
+      department: '',
+      estadoDeTramite: '',
+      folioTramite: '',
+      id_solicitud: '',
+      nombre_pagina: '',
+      parameter: '',
+      procedureId: '',
+      readonly: false,
+      tipoDeTramite: '',
+      update: false,
+    };
+    expect(component.consultaState).toStrictEqual(stateMock);
   });
 
   it('should call guardarDatosFormulario if consultaState.update is true', () => {
     consultaStateMock.update = true;
     mockConsultaQuery.selectConsultaioState$ = of(consultaStateMock);
-    const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario').mockImplementation(() => {});
+    const guardarDatosFormularioSpy = jest
+      .spyOn(component, 'guardarDatosFormulario')
+      .mockImplementation(() => {});
     component.ngOnInit();
     expect(guardarDatosFormularioSpy).toBeDefined();
   });

@@ -1,10 +1,8 @@
+import { API_GET_PAISES, API_GET_PAISES_SAT_T130118, COMUN_URL } from '../../../servers/api-router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
-
-import { API_GET_PAISES, API_GET_PAISES_SAT_T130118 } from '../../../constants/api-constants';
 import { CatalogoPaisesResponse } from '../../../models/shared/catalogos.model';
 import { CatalogosResponse } from '../../../models/shared/catalogo.model';
-import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -14,7 +12,7 @@ export class PaisesService {
   private readonly host: string;
 
   constructor(private http: HttpClient) {
-    this.host = `${ENVIRONMENT.API_HOST}/api/`
+    this.host = `${COMUN_URL.BASE_URL}`
   }
 
   /**

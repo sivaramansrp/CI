@@ -1,4 +1,4 @@
-import { ColumnasTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/registro.model';
+import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
 import { ENVIRONMENT, JSONResponse, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -97,13 +97,6 @@ export class RegistroService {
     return this.http.get<RespuestaCatalogos>('assets/json/110223/tipofactura.json');
   }
 
-  /**
-   * Obtiene el catálogo de unidades de medida comercial (UMC).
-   * @returns Observable con la respuesta del catálogo de UMC.
-   */
-  getUMC(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/110223/umc.json');
-  }
 
   /**
    * Obtiene el catálogo de unidades de medida.
@@ -144,12 +137,6 @@ export class RegistroService {
     );
   }
 
-  /**
-   * Obtiene los datos para la consulta del trámite.
-   * @returns {Observable<RespuestaConsulta>} Observable con los datos de consulta.
-   */
-  getDatosConsulta(): Observable<RespuestaConsulta> {
-    return this.http.get<RespuestaConsulta>('assets/json/110223/consulta_110223.json');
-  }
+
 
 }

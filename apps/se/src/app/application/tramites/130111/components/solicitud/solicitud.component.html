@@ -33,6 +33,10 @@
   [disabled]="disabledModificar()"
   (setValoresStoreEvent)="setValoresStore($event)"
   (validarAntesDeCargarArchivo)="validarYCargarArchivo()"
+  (partidasEliminadas)="onPartidasEliminadas($event)"
+  [modificarPartidasDelaMercanciaForm]="modificarPartidasDelaMercanciaForm"
+	(modificarPartidaSeleccionada)="onModificarPartidaSeleccionada($event)"
+  (partidaModificada)="onPartidaModificada($event)" 
 ></app-partidas-de-la-mercancia>
 
 

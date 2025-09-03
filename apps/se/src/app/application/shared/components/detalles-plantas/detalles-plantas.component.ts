@@ -148,7 +148,7 @@ export class DetallesPlantasComponent {
    *
    * Typically used to signal that the user has requested to save the current state or data.
    */
-  guardar(){
+  guardar(): void{
     this.guadarEvent.emit();
   }
 }

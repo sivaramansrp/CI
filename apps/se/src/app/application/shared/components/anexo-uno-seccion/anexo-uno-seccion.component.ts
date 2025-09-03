@@ -42,6 +42,7 @@ import {
   ProveedorCliente,
   ProyectoImmex,
 } from '../../models/complimentos-seccion.model';
+import { CargaDeFraccionesComponent } from '../carga-de-fracciones/carga-de-fracciones.component';
 import { CargaPorArchivoComponent } from '../carga-por-archivo/carga-por-archivo.component';
 
 import { ComplementosSeccionState, ComplementosSeccionStore } from '../../../estados/tramites/complementos-seccion.store';
@@ -65,7 +66,8 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
     TituloComponent,
     AlertComponent,
     NotificacionesComponent,
-    CargaPorArchivoComponent
+    CargaPorArchivoComponent,
+    CargaDeFraccionesComponent
   ],
   templateUrl: './anexo-uno-seccion.component.html',
   styleUrl: './anexo-uno-seccion.component.scss',
@@ -171,6 +173,12 @@ proveedorClienteModalContext: 'cliente' | 'proveedor' = 'cliente';
  * Valor inicial: `false` (oculto).
  */
 public mostrarProveedorPorArchivoPopup: boolean = false;
+
+/**  
+ * Bandera booleana que indica si el popup para la carga de fracciones debe mostrarse.  
+ * Se utiliza para controlar la visibilidad del componente emergente en la interfaz.  
+ */
+public mostrarCargaDeFraccionesPopup: boolean = false;
 
 /**
  * 
@@ -430,6 +438,34 @@ abrirComplementarFraccionModalUno(): void {
 }
 
 /**
+ * Abre el modal "Proyecto IMMEX" si hay una fracción seleccionada del Anexo Uno.
+ * Si no hay selección, muestra una notificación de alerta indicando que se debe seleccionar una fracción arancelaria.
+ */
+abrirProyectoImmexModal(): void {
+  if (this.selectedFraccionRowUno) {
+    this.activeComplementarContext = 'anexoUno';
+
+    const ELEMENTO_MODAL = document.getElementById('proyectoImmexModal');
+    if (ELEMENTO_MODAL) {
+      const MODAL = new Modal(ELEMENTO_MODAL);
+      MODAL.show();
+    }
+  } else {
+    this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe seleccionar la fracción arancelaria del producto',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+}
+
+/**
  *  * compodoc
  * @method agregarFraccionAnarelaria
  * @description Método que agrega una nueva fracción arancelaria al Anexo Dos. Valida el formulario y, si es válido, agrega los datos a la lista de fracciones arancelarias.
@@ -590,12 +626,31 @@ guardarComplementarFraccion(): void {
  * @param {'cliente' | 'proveedor'} context - Define si el modal es para cliente o proveedor.
  */
 abrirProveedorClienteModal(context: 'cliente' | 'proveedor'): void {
-  this.proveedorClienteModalContext = context;
 
-  const ELEMENTO_MODAL = document.getElementById('proveedorClienteModal');
-  if(ELEMENTO_MODAL){
-    const MODAL = new Modal(ELEMENTO_MODAL);
-    MODAL.show();
+ const SELECT_ROW =
+    context === 'cliente'
+      ? Boolean(this.selectedFraccionRowUno)
+      : Boolean(this.selectedFraccionRowDos);
+
+  if (SELECT_ROW) {
+    this.proveedorClienteModalContext = context;
+    const ELEMENTO_MODAL = document.getElementById('proveedorClienteModal');
+    if (ELEMENTO_MODAL) {
+      const MODAL = new Modal(ELEMENTO_MODAL);
+      MODAL.show();
+    }
+  } else {
+    this.nuevaDosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe seleccionar una fracción arancelaria para continuar',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 }
 
@@ -605,7 +660,29 @@ abrirProveedorClienteModal(context: 'cliente' | 'proveedor'): void {
  * estableciendo la propiedad que controla su visibilidad a `true`.
  */
 abrirProveedorPorArchivo(): void {
+  if (this.selectedFraccionRowUno) {
   this.mostrarProveedorPorArchivoPopup = true;
+  } else {
+     this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe ingresar las fracciones del producto y de la mercancia previamente',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+  }
+}
+}
+
+/**
+ * Método que habilita la visualización del popup para la carga de fracciones.
+ * Establece la bandera correspondiente en `true` para mostrar el componente emergente.
+ */
+abrirCargaDeFracciones(): void {
+  this.mostrarCargaDeFraccionesPopup = true;
 }
 
 /**
@@ -615,6 +692,14 @@ abrirProveedorPorArchivo(): void {
  */
 cerrarProveedorPorArchivo(): void {
   this.mostrarProveedorPorArchivoPopup = false;
+}
+
+/**
+ * Método que cierra el popup para la carga de fracciones.
+ * Cambia la bandera correspondiente a `false` para ocultar el componente emergente.
+ */
+cerrarCargaDeFracciones(): void {
+  this.mostrarCargaDeFraccionesPopup = false;
 }
 
 /**

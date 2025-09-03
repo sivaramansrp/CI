@@ -111,7 +111,7 @@
           <span class="bi bi-question-circle-fill fs-4 m-1" title="Uso final de la mercancía" ata-bs-toggle="tooltip">
           </span>
         </label>
-        <textarea id="usoFinal" class="form-control" rows="3" formControlName="usoFinal" style="height: 90px"
+        <textarea id="usoFinal" class="form-control" [maxLength]="1000" rows="3" formControlName="usoFinal" style="height: 90px"
           [required]="true" [disabled]="esFormularioSoloLectura"></textarea>
         <div class="error-message">
           <small class="text-danger" *ngIf="

@@ -51,11 +51,17 @@ export class NuevoProgramaIndustrialService {
    * @method getSubfabricantesDisponibles
    * @returns {Observable<TableData>} Observable con la lista de subfabricantes disponibles.
    */
-getSubfabricantesDisponibles(): Observable<PlantasSubfabricante[]> {
-  return this.http
-    .get<PlantasSubfabricanteResponse>('assets/json/80207/submanufactureras-disponibles-datos.json')
-    .pipe(map(response => response.data));
-}
+  getSubfabricantesDisponibles(): Observable<PlantasSubfabricante[]> {
+    return (
+      this.http
+        .get<PlantasSubfabricante[]>(
+          'assets/json/80207/submanufactureras-disponibles-datos.json'
+        )
+      
+        .pipe(map((response: PlantasSubfabricante[]) => response))
+    );
+  }
+
 
   /**
    * Obtiene los datos de complementos desde un archivo JSON local.
