@@ -284,6 +284,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     }
+    this.mercanciaForm.markAllAsTouched();
   }
 
   /**
