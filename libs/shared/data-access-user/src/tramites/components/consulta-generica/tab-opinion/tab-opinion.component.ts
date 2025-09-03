@@ -5,9 +5,9 @@ import { Component, Input, OnDestroy} from '@angular/core';
 import { OpinionComponent } from "../consulta-opinion/opiniones.component";
 
 import { DetalleOpinionComponent } from '../consulta-detalle-opinion/detalle-opinion.component';
-import { DetalleOpinonService } from '../../../../core/services/130118/detalleOpinion.service';
-import { OpinionDetalleResponse } from '../../../../core/models/130118/opinion-detalle-response.model';
-import { OpinionResponse } from '../../../../core/models/130118/opinion-response.model';
+import { DetalleOpinonService } from '../../../../core/services/shared/detalleOpinion.service';
+import { OpinionDetalleResponse } from '../../../../core/models/shared/opinion-detalle-response.model';
+import { OpinionResponse } from '../../../../core/models/shared/opinion-response.model';
 import { Subject } from 'rxjs';
 
 import { CategoriaMensaje, Notificacion, NotificacionesComponent } from '../../notificaciones/notificaciones.component';

@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -13,6 +14,7 @@ import { Tramite130106Query } from '../../../../estados/queries/tramite130106.qu
 import fraccions from '@libs/shared/theme/assets/json/130106/fraccion.json';
 
 import { Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
+import { Modal } from 'bootstrap';
 
 /**
  * Valida que el valor sea un número válido:
@@ -73,25 +75,55 @@ export function formFieldValidator(control: AbstractControl): ValidationErrors |
   templateUrl: './fraccion.component.html',
   styleUrl: './fraccion.component.scss'
 })
-export class FraccionComponent implements OnInit, OnDestroy {
+export class FraccionComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  /**
+   * Referencias a los modales
+   */
+  private modalEditar!: Modal;
+
+  /**
+   * Referencias a los modales
+   */
+  private cargarArchivoInstance!: Modal;
+
+  /** Indica si el formulario debe mostrarse en modo solo lectura. */
   esFormularioSoloLectura: boolean = false;
+  /** Formulario reactivo para la fracción. */
   fraccionForm!: FormGroup;
-  
-  // Catalog data
+/** Formulario reactivo para la carga de archivos. */
+    @ViewChild('cargarArchivoModal', { static: false }) cargarArchivoModal!: ElementRef;
+    @ViewChild('modalConfirmacionRef') modalConfirmacionRef!: ElementRef;
+    @ViewChild('modalEditarRef') modalEditarRef!: ElementRef;
+
+  /** Formulario reactivo para la carga de archivos. */
+  public archivoFormGroup: FormGroup = new FormGroup({
+    archivo: new FormControl(''),
+  });
+
+  /**
+   * Datos del catálogo
+   */
   public fraccion: Catalogo[] = fraccions?.fraccion;
   public umt: Catalogo[] = fraccions?.UMT;
   public bloque: Catalogo[] = fraccions?.bloque;
   public entidad: Catalogo[] = fraccions?.entidad;
   public representacion: Catalogo[] = fraccions?.representacion;
-  
-  // State management
+
+  /**
+   * Estado de la solicitud
+   */
   public solicitudState!: Solicitud130106State;
   public destroyNotifier$: Subject<void> = new Subject();
-  
-  // Table and form data
+
+  /**
+   * Datos de las partidas
+   */
   partidas: Partidas[] = [];
-  
-  // Notification properties
+
+  /**
+   * Propiedades de notificación
+   */
   public mostrarNotificacionError: boolean = false;
   public notificacionError: Notificacion = {
     tipoNotificacion: 'alert',
@@ -105,7 +137,9 @@ export class FraccionComponent implements OnInit, OnDestroy {
     txtBtnCancelar: '',
   };
 
-  // Table configuration
+  /**
+   * Configuración de las columnas de la tabla de partidas
+   */
   partidasDatas: ConfiguracionColumna<Partidas>[] = [
     { encabezado: 'Cantidad', clave: (item: Partidas) => item.mercanciaCantidad, orden: 1 },
     { encabezado: 'Unidad de medida', clave: (item: Partidas) => item.unidad, orden: 2 },
@@ -115,16 +149,22 @@ export class FraccionComponent implements OnInit, OnDestroy {
     { encabezado: 'Total USD', clave: (item: Partidas) => item.total, orden: 6 }
   ];
 
+/**
+ * Configuración de la tabla de partidas
+ */
   TablaSeleccion = TablaSeleccion;
   public TEXTOS = AVISO;
-  
-  // Date and country selection
+
+  /**
+   * Selección de fechas y país
+   */
   selectRangoDias: string[] = [];
   fechasSeleccionadas: string[] = [];
   fechasDatos: string[] = [];
   fecha: FormControl = new FormControl('');
   fechaSeleccionada: FormControl = new FormControl('');
 
+  /** Referencias a los componentes hijos */
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
   paisDeProcedenciaBotones = [
@@ -331,7 +371,16 @@ export class FraccionComponent implements OnInit, OnDestroy {
       mercanciaCantidad: '',
     });
   }
-
+/**
+   * Valida el formato del campo "mercanciaCantidad" en el formulario.
+   * - Verifica que el valor sea numérico (entero o decimal, opcionalmente negativo).
+   * - Permite hasta 14 dígitos en la parte entera y hasta 3 dígitos en la parte decimal.
+   * - Si el valor no cumple con el formato, muestra un mensaje de error y retorna false.
+   * - Si el valor es válido, retorna true.
+   * 
+   * @param FORMDATA Objeto con los valores actuales del formulario.
+   * @returns true si el formato es válido, false en caso contrario.
+   */
   private validarMercanciaCantidad(control: AbstractControl | null): boolean {
     if (control && control.invalid) {
       if (control.errors?.['pattern']) {
@@ -349,7 +398,16 @@ export class FraccionComponent implements OnInit, OnDestroy {
     }
     return true;
   }
-
+/**
+   * Valida el formato del campo "mercanciaCantidad" en el formulario.
+   * - Verifica que el valor sea numérico (entero o decimal, opcionalmente negativo).
+   * - Permite hasta 14 dígitos en la parte entera y hasta 3 dígitos en la parte decimal.
+   * - Si el valor no cumple con el formato, muestra un mensaje de error y retorna false.
+   * - Si el valor es válido, retorna true.
+   * 
+   * @param FORMDATA Objeto con los valores actuales del formulario.
+   * @returns true si el formato es válido, false en caso contrario.
+   */
   private validarMercanciaFactura(control: AbstractControl | null): boolean {
     if (control && control.invalid) {
       if (control.errors?.['pattern']) {
@@ -367,21 +425,41 @@ export class FraccionComponent implements OnInit, OnDestroy {
     }
     return true;
   }
-
-  private validarValoresNoCero(FORMDATA: any): boolean {
-    if (FORMDATA.mercanciaCantidad === 0 || FORMDATA.mercanciaCantidad === "0") {
+/**
+   * Valida el formato del campo "mercanciaCantidad" en el formulario.
+   * - Verifica que el valor sea numérico (entero o decimal, opcionalmente negativo).
+   * - Permite hasta 14 dígitos en la parte entera y hasta 3 dígitos en la parte decimal.
+   * - Si el valor no cumple con el formato, muestra un mensaje de error y retorna false.
+   * - Si el valor es válido, retorna true.
+   * 
+   * @param FORMDATA Objeto con los valores actuales del formulario.
+   * @returns true si el formato es válido, false en caso contrario.
+   */
+  private validarValoresNoCero(FORMDATA: Record<string, unknown>): boolean {
+    if (FORMDATA['mercanciaCantidad'] === 0 || FORMDATA['mercanciaCantidad'] === "0") {
       this.mostrarError('Debe agregar el valor en dolares de la partida.');
       return false;
     }
-    if (!FORMDATA.mercanciaFactura || FORMDATA.mercanciaFactura === 0 || FORMDATA.mercanciaFactura === "0") {
+    if (!FORMDATA['mercanciaFactura'] || FORMDATA['mercanciaFactura'] === 0 || FORMDATA['mercanciaFactura'] === "0") {
       this.mostrarError('Debe agregar el valor USD de la partida.');
       return false;
     }
     return true;
   }
 
-  private validarFormatoFactura(FORMDATA: any): boolean {
-    const FACTURA_VALUE = FORMDATA.mercanciaFactura?.toString();
+  /**
+   * Valida el formato del campo "mercanciaCantidad" en el formulario.
+   * - Verifica que el valor sea numérico (entero o decimal, opcionalmente negativo).
+   * - Permite hasta 14 dígitos en la parte entera y hasta 3 dígitos en la parte decimal.
+   * - Si el valor no cumple con el formato, muestra un mensaje de error y retorna false.
+   * - Si el valor es válido, retorna true.
+   * 
+   * @param FORMDATA Objeto con los valores actuales del formulario.
+   * @returns true si el formato es válido, false en caso contrario.
+   */
+
+  private validarFormatoFactura(FORMDATA: Record<string, unknown>): boolean {
+    const FACTURA_VALUE = FORMDATA['mercanciaFactura']?.toString();
     if (FACTURA_VALUE) {
       if (!/^-?\d+(\.\d+)?$/.test(FACTURA_VALUE)) {
         this.mostrarError('Por favor, escribe un número entero válido');
@@ -398,19 +476,29 @@ export class FraccionComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  private validarFormatoCantidad(FORMDATA: any): boolean {
-    const CANTIDAD_VALUE = FORMDATA.mercanciaCantidad?.toString();
+/**
+   * Valida el formato del campo "mercanciaCantidad" en el formulario.
+   * - Verifica que el valor sea numérico (entero o decimal, opcionalmente negativo).
+   * - Permite hasta 14 dígitos en la parte entera y hasta 3 dígitos en la parte decimal.
+   * - Si el valor no cumple con el formato, muestra un mensaje de error y retorna false.
+   * - Si el valor es válido, retorna true.
+   * 
+   * @param FORMDATA Objeto con los valores actuales del formulario.
+   * @returns true si el formato es válido, false en caso contrario.
+   */
+  private validarFormatoCantidad(FORMDATA: Record<string, unknown>): boolean {
+    const CANTIDAD_VALUE = FORMDATA['mercanciaCantidad']?.toString();
     if (CANTIDAD_VALUE) {
       if (!/^-?\d+(\.\d+)?$/.test(CANTIDAD_VALUE)) {
-        this.mostrarError('Por favor, escribe un número entero válido');
-        return false;
+      this.mostrarError('Por favor, escribe un número entero válido');
+      return false;
       }
       const CANTIDAD_PARTS = CANTIDAD_VALUE.replace('-', '').split('.');
       const INTEGER_PART = CANTIDAD_PARTS[0];
       const DECIMAL_PART = CANTIDAD_PARTS[1];
       if (INTEGER_PART.length > 14 || (DECIMAL_PART && DECIMAL_PART.length > 3)) {
-        this.mostrarError('La cantidad no cumple el formato especificado. Formato es máximo 14 dígitos enteros y máximo 3 decimales');
-        return false;
+      this.mostrarError('La cantidad no cumple el formato especificado. Formato es máximo 14 dígitos enteros y máximo 3 decimales');
+      return false;
       }
     }
     return true;
@@ -431,6 +519,69 @@ export class FraccionComponent implements OnInit, OnDestroy {
     this.mostrarNotificacionError = true;
   }
 
+  /**
+   * Maneja el cambio en el dropdown padre (Entidad federativa).
+   * Limpia el valor del dropdown hijo (Representación federal) cuando cambia la entidad federativa.
+   */
+  onEntidadFederativaChange(): void {
+    // Limpia el valor del campo representación federal
+    this.fraccionForm.get('representacion')?.setValue(null);
+    
+    // Actualiza el store con el nuevo valor de entidad federativa
+    this.setValoresStore(this.fraccionForm, 'entidad', 'setEntidad');
+    
+    // También limpia el valor de representación federal en el store
+    this.tramite130106Store.setRepresentacion('');
+  }
+
+  /**
+   * Maneja el cambio en el dropdown hijo (Representación federal).
+   */
+  onRepresentacionFederalChange(): void {
+    this.setValoresStore(this.fraccionForm, 'representacion', 'setRepresentacion');
+  }
+
+/**
+ * @inheritdoc
+ * @description
+ * Método del ciclo de vida de Angular que se llama después de que la vista del componente ha sido inicializada.
+ * Inicializa las instancias de los modales de carga de archivo y edición utilizando los elementos de referencia de la vista.
+ */
+ngAfterViewInit(): void {
+  if (this.cargarArchivoModal) {
+    this.cargarArchivoInstance = new Modal(this.cargarArchivoModal.nativeElement);
+  }
+
+  if (this.modalEditarRef) {
+    this.modalEditar = new Modal(this.modalEditarRef.nativeElement);
+  }
+}
+
+
+  /**
+   * Opens the file upload modal
+   */
+  cargarArchivo(): void {
+    this.cargarArchivoInstance?.show();
+  }
+
+  
+  /**
+   * Closes the file upload modal
+   */
+  cerrar(): void {
+    this.cargarArchivoInstance?.hide();
+  }
+
+/**
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se llama justo antes de destruir el componente.
+   * Utiliza el observable `destroyNotifier$` para notificar y limpiar las suscripciones activas,
+   * evitando posibles fugas de memoria.
+   *
+   * 
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

@@ -5,7 +5,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_GET_EVALUAR_INICIAR, API_GET_EVALUAR_MOSTRAR, API_POST_OPCIONES_EVALUACION, NUMFOLIOTRAMITE, TRAMITE } from '../../../tramites/130118/server/api-router';
+import { API_GET_EVALUAR_INICIAR, API_GET_EVALUAR_MOSTRAR } from '../../server/api-router';
+import { API_POST_OPCIONES_EVALUACION } from '@libs/shared/data-access-user/src/core/servers/api-router';
 import { EvaluacionOpcionResponse } from '../../models/evaluar/response/evaluar-estado-evaluacion-response.model';
 import { OpcionesEvaluacionRequest } from '../../models/evaluar/request/opciones-evaluacion.model';
 
@@ -32,9 +33,9 @@ export class EvaluarSolicitudService {
    * @param PAYLOAD Datos de las opciones de evaluación.
    * @returns Observable con la respuesta del servidor.
    */
-  postOpcionesEvaluacion(PAYLOAD: OpcionesEvaluacionRequest):
+  postOpcionesEvaluacion(tramite: number, folioTramite: string, PAYLOAD: OpcionesEvaluacionRequest):
     Observable<BaseResponse<string[]>> {
-    const ENDPOINT = `${this.host}` + API_POST_OPCIONES_EVALUACION;
+    const ENDPOINT = `${this.host}` + API_POST_OPCIONES_EVALUACION(tramite.toString(), folioTramite);
     return this.http.post<BaseResponse<string[]>>(ENDPOINT, PAYLOAD);
   }
 
