@@ -60,7 +60,6 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
 
   validarFormulario(): boolean {
     this.formDespacho.markAllAsTouched();
-    this.formInventario.markAllAsTouched();
     if (this.formDespacho.valid && this.formInventario.valid) {
       return true;
     }
@@ -126,11 +125,11 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
       cuentaImmex: [this.tramiteConsultado?.cuentaImmex, Validators.required],
       checkboxImportacion1: [this.tramiteConsultado?.checkboxImportacion1 || false],
       checkboxImportacion2: [this.tramiteConsultado?.checkboxImportacion2 || false],
-      immex: [this.tramiteConsultado?.immex, Validators.required], 
+      immex: [this.tramiteConsultado?.immex, Validators.required],
       padron: [this.tramiteConsultado?.padron, Validators.required],
-      controlInventarios: [this.tramiteConsultado?.controlInventarios, Validators.required], 
+      controlInventarios: [this.tramiteConsultado?.controlInventarios, Validators.required],
       contabilidad: [this.tramiteConsultado?.contabilidad, Validators.required],
-      interposicion: [this.tramiteConsultado?.interposicion, Validators.required], 
+      interposicion: [this.tramiteConsultado?.interposicion, Validators.required],
       checkboxManifiesto1: [this.tramiteConsultado?.checkboxManifiesto1 || false],
       checkboxManifiesto2: [this.tramiteConsultado?.checkboxManifiesto2 || false],
       ingresoInforme: [this.tramiteConsultado?.ingresoInforme || false],

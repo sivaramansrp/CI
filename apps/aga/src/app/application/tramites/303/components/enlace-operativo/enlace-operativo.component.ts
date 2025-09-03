@@ -21,13 +21,18 @@ import { Tramite303Query } from '../../../../core/queries/tramite303.query';
   styleUrls: ['./enlace-operativo.component.scss'],
 })
 export class EnlaceOperativoComponent implements OnChanges, OnInit {
+  /** Título del modal */
   @Input() titulo: string = 'Enlace Operativo';
+  /** Estado del modal */
   @Input() abrirModal: boolean = false;
+  /** Evento emitido al seleccionar un archivo */
   @Output() archivoSeleccionado = new EventEmitter<File>();
+  /** Evento emitido al cerrar el modal */
   @Output() cerrar = new EventEmitter<void>();
+  /** Estado del modal */
   public mostrarModal: boolean = false;
+  /** Referencia al modal */
   @ViewChild('modal', { static: false }) modal?: ModalDirective;
-
   /** Formulario de enlace operativo */
   public FormEnlaceOperativo!: FormGroup;
   /** Indicador de envío del formulario */
@@ -55,7 +60,6 @@ export class EnlaceOperativoComponent implements OnChanges, OnInit {
    */
   constructor(
     private fb: FormBuilder,
-    private router: Router,
     private servicioServer: EnlaceOperativoService,
     private tramite303State: Tramite303StoreService,
     private tramite303Query: Tramite303Query,
@@ -190,21 +194,12 @@ export class EnlaceOperativoComponent implements OnChanges, OnInit {
         return;
       }
       this.listaEnlaces = [...this.listaEnlaces, ENLACE];
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'success',
-        modo: 'action',
-        titulo: 'Éxito',
-        mensaje: 'Enlace operativo agregado correctamente.',
-        cerrar: true,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
     }
     this.tramite303State.setListaEnlaces(this.listaEnlaces);
     this.tramite303State.enlaceOperativoModificar(null as unknown as EnlaceOperativo);
     this.FormEnlaceOperativo.reset();
-    this.router.navigate(['aga/despacho-mercancias/registro']);
+    this.mostrarModal = false;
+    this.cerrar.emit();
   }
 
 
@@ -224,7 +219,8 @@ export class EnlaceOperativoComponent implements OnChanges, OnInit {
    */
   cancelar(): void {
     this.FormEnlaceOperativo.reset();
-    this.router.navigate(['aga/despacho-mercancias/registro']);
+    this.mostrarModal = false;
+    this.cerrar.emit();
   }
 
   /**
