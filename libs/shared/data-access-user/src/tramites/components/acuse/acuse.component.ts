@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { AlertComponent } from '../alert/alert.component';
 import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
+
+import { AcuseDetalleService } from '../../../core/services/130118/detalleAcuse.service';
 import { DocumentoService } from '../../..';
 import { DocumentosRequest } from '../../../core/models/shared/documentos-request.model';
 import { DocumentosService } from '../../../core/services/130118/documentos.service';
@@ -53,6 +55,17 @@ export class AcuseComponent implements OnChanges {
    */
   @Input() idSolicitud!: number;
 
+   /**
+   * Datos que se muestran en la tabla de acuse.
+  */
+  @Input() datosTabla: BodyTablaAcuse[] = [];
+
+  /**
+   * @property {number} tramite
+   * @description Identificador del trámite seleccionado.
+   */
+  @Input() tramite!: number;
+
   /**
  * Encabezados de la tabla de acuse.
  *
@@ -80,7 +93,8 @@ export class AcuseComponent implements OnChanges {
   constructor(private router: Router,
     private documentosService: DocumentoService,
     private route: ActivatedRoute,
-    private documentosService130118: DocumentosService
+    private documentosService130118: DocumentosService,
+    private acuseDetalleService: AcuseDetalleService,
   ) { }
 
 
@@ -93,6 +107,11 @@ export class AcuseComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['txtAlerta']?.currentValue) {
       this.txtAlerta = changes['txtAlerta'].currentValue;
+    }
+
+    if(changes['datosTabla']?.currentValue) {
+      this.datosTabla = changes['datosTabla'].currentValue;
+      this.datosTablaAcuse = this.datosTabla;
     }
 
     if (changes['idSolicitud']?.currentValue) {
@@ -171,6 +190,37 @@ export class AcuseComponent implements OnChanges {
     }
   }
 
+  /**
+  * Método genérico para manejar un PDF en base64.
+  *
+  * @param base64 Contenido del PDF en base64.
+  * @param nombreArchivo Nombre del archivo a descargar (si aplica).
+  * @param accion 'abrir' para abrir en pestaña o 'descargar' para forzar descarga.
+  */
+  static manejarPdf(base64: string, nombreArchivo: string, accion: 'abrir' | 'descargar'): void {
+    // Decodificar el base64
+    const BYTE_CHARACTERS = atob(base64);
+    const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
+    for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
+      BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
+    }
+    const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
+
+    // Crear el Blob y la URL
+    const BLOB = new Blob([BYTE_ARRAY], { type: 'application/pdf' });
+    const URLCODIFICADA = URL.createObjectURL(BLOB);
+
+    if (accion === 'abrir') {
+      window.open(URLCODIFICADA, '_blank');
+    } else {
+      const LINK = document.createElement('a');
+      LINK.href = URLCODIFICADA;
+      LINK.download = nombreArchivo.endsWith('.pdf') ? nombreArchivo : `${nombreArchivo}.pdf`;
+      LINK.click();
+      URL.revokeObjectURL(URLCODIFICADA);
+    }
+  }
+
 
 
   /**
@@ -193,6 +243,32 @@ export class AcuseComponent implements OnChanges {
     return URL.createObjectURL(BLOB);
   }
 
+  /**
+   * Obtiene el contenido base64 de un archivo y realiza la acción especificada.
+   * @param {string} uuid - Identificador único del archivo a obtener.
+   * @param {'abrir' | 'descargar'} accion - Acción a realizar con el archivo.
+   * @returns {void}
+   * @example
+   * // Abre el archivo en una nueva pestaña
+   * base64Archivos('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'abrir');
+   * 
+   * // Descarga el archivo
+   * base64Archivos('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'descargar');
+   */
+  base64Archivos(uuid: string, accion: 'abrir' | 'descargar'): void {
+    this.acuseDetalleService.getDescargarAcuse(this.tramite, uuid).subscribe({
+      next: (data) => {
+        if (data?.codigo === "00" && data?.datos?.contenido) {
+          AcuseComponent.manejarPdf(
+            data.datos.contenido,
+            data.datos.nombre_archivo,
+            accion
+          );
+        }
+      },
+    });
+  }
+
 
   /**
    * Método que se ejecuta al hacer clic en un enlace para ver el PDF.
@@ -202,6 +278,15 @@ export class AcuseComponent implements OnChanges {
   // eslint-disable-next-line class-methods-use-this
   verPdf(url: string): void {
     window.open(url, '_blank');
+  }
+
+  /**
+   * Método que se ejecutar descarga PDF.
+   *
+   * @param url - La URL del PDF.
+   */
+  descargarPdf(url: string):void{
+    this.base64Archivos(url, 'descargar');
   }
 
   salir(): void {

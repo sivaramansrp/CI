@@ -1,4 +1,4 @@
-import { API_GET_INICIAR_ATENDER_REQUERIMIENTO, API_POST_FIRMAR, API_POST_MOSTRAR_FIRMAR, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/atender-requerimiento/api-constants';
+import { API_GET_INICIAR_ATENDER_REQUERIMIENTO, API_POST_ACUSE_REQUERIMIENTO, API_POST_FIRMAR, API_POST_MOSTRAR_FIRMAR, IDSOLICITUD, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/atender-requerimiento/api-constants';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
@@ -6,6 +6,7 @@ import { IniciarAtenderRequerimientoResponse } from '../../models/atender-requer
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { DocumentoOficialResponse } from '../../models/autorizar-requerimiento/response/oficio-autorizacion-response.model';
 import { FirmarRequest } from '../../models/atender-requerimiento/request/fimar-request.model';
 import { FirmarResponse } from '../../models/atender-requerimiento/response/firmar-response.model';
 import { MostrarFirmaRequest } from '../../models/atender-requerimiento/request/mostrar-firma-request.model';
@@ -73,4 +74,14 @@ export class AtenderRequerimientoService {
     return this.http.post<BaseResponse<FirmarResponse>>(ENDPOINT, PAYLOAD);
   }
 
+  /** 
+   * Genera oficio de requerimiento
+   * @param tramite - Número de trámite asociado
+   * @param idSolicitud - ID de la solicitud
+   * @returns Observable con la respuesta del oficio generado
+  */
+  postAcuseRecibo(tramite: number, idSolicitud: number): Observable<BaseResponse<DocumentoOficialResponse>> {
+    const ENDPOINT = `${this.host}${API_POST_ACUSE_REQUERIMIENTO.replace(TRAMITE, tramite.toString()).replace(IDSOLICITUD, idSolicitud.toString())}`;
+    return this.http.post<BaseResponse<DocumentoOficialResponse>>(ENDPOINT, null);
+  }
 }

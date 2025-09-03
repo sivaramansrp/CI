@@ -22,6 +22,8 @@
       [subtitulo]="subtitulo"
       [folio]="folio"
       [url]="url"
+      [datosTabla]="datosTablaAcuse"
+      [tramite]="tramite"
     ></lib-component-acuse>
     }
 
@@ -63,7 +65,17 @@
       <app-reviewers-tabs
         [viewChild]="viewChild"
         [tramite]="tramite"
+
+        [tabs]="tabs"
+        [documentos]="documentosSolicitud"
+        [dictamenes]="dictamenesSolicitud"
+        [requerimientos]="requerimientosSolicitud"
+        [opinion]="opinion"
+        [acusesResolucion]="acusesResolucion"
+        [tareasSolicitud]="tareasSolicitud"
+        [envioDigital]="envioDigital"
         (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
+        (tabSeleccionado)="onTabSeleccionado($event)"
       ></app-reviewers-tabs>
     </div>
 

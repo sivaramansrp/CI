@@ -6,6 +6,7 @@ import {
   AccionBoton,
   AcuseComponent,
   AnexarDocumentosComponent,
+  BodyTablaAcuse,
   BtnContinuarComponent,
   CATALOGOS_ID, Catalogo,
   CatalogosService,
@@ -46,11 +47,20 @@ import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramit
 import { Router } from '@angular/router';
 import { Type } from '@angular/core';
 
+import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-acuses-response.model';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { CodigoRespuesta } from '../core/enum/enum-130118';
+import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/130118/dictamenes-response.model';
+import { DocumentoSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model';
+import { EnvioDigitalResponse } from '@libs/shared/data-access-user/src/core/models/130118/envio-digital-response.model';
 import { FirmarRequest } from '../core/models/atender-requerimiento/request/fimar-request.model';
 import { FirmarResponse } from '../core/models/atender-requerimiento/response/firmar-response.model';
 import { MostrarFirmaRequest } from '../core/models/atender-requerimiento/request/mostrar-firma-request.model';
+import { OpinionResponse } from '@libs/shared/data-access-user/src/core/models/130118/opinion-response.model';
+import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/130118/requerimientos-response.model';
+import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tabs-response.model';
+import { TabsSolicitudServiceTsService } from '../core/services/evaluar-tramite/tabs-solicitud.service.ts.service';
+import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model';
 
 /**
  * Componente principal para el proceso de requerimiento.
@@ -144,6 +154,96 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
   tramite: number = 0;
 
   /**
+   * @property {TabsResponse} tabs
+   * @description Almacena la respuesta de pestañas disponibles.
+  */
+  tabs!: TabsResponse;
+
+  /**
+   * @property {DocumentoSolicitud[]} documentos
+   * @description Documentos de solicitud.
+  */
+  documentosSolicitud: DocumentoSolicitud[] = [];
+
+  /**
+   * @property {DictamenesResponse[]} dictamenesSolicitud
+   * @description Dictamenes de solicitud.
+  */
+  dictamenesSolicitud: DictamenesResponse[] = [];
+
+  /**
+   * @property {RequerimientosResponse[]} requerimientosSolicitud
+   * @description Requerimientos de solicitud.
+  */
+  requerimientosSolicitud: RequerimientosResponse[] = [];
+
+  /**
+   * @property {OpinionResponse[]} opinion
+   * @description Opiniones de solicitud.
+  */
+  opinion: OpinionResponse[] = [];
+
+  /**
+    * @property {AcusesResolucionResponse[]} acusesResolucion
+    * @description Acuses de resolución asociados al trámite.
+  */
+  acusesResolucion!: AcusesResolucionResponse;
+
+  /**
+   * @property {TareasSolicitud[]} tareasSolicitud
+   * @description Tareas de solicitud.
+  */
+  tareasSolicitud: TareasSolicitud[] = [];
+
+  /**
+   * @property {EnvioDigitalResponse} envioDigital
+   * @description Respuesta del envío digital asociado al trámite.
+  */
+  envioDigital!: EnvioDigitalResponse;
+
+  /**
+   * @property {boolean} yaCargoDocumentos
+   * @description Indica si los documentos de la solicitud ya han sido cargados.
+   */
+  yaCargoDocumentos = false;
+
+  /**
+   * @property {boolean} yaCargoDictamenes
+   * @description Indica si los dictamenes ya han sido cargados.
+  */
+  yaCargoDictamenes = false;
+
+  /**
+   * @property {boolean} yaCaegoRequerimientos
+   * @description Indica si los requerimientos ya han sido cargados.
+   */
+  yaCargoRequerimientos = false;
+
+  /**
+   * @property {boolean} yaCargoOpinion
+   * @description Indica si las opiniones ya han sido cargados.
+   */
+  yaCargoOpinion = false;
+
+  /**
+   * @property {boolean} yaCargoAcuses
+   * @description Indica si los acuses de resolución ya han sido cargados.
+   */
+  yaCargoAcuses = false;
+
+  /**
+   * @property {boolean} yaCargoTareas
+   * @description Indica si las tareas de la solicitud ya han sido cargadas.
+   */
+  yaCargoTareas = false;
+
+  /**
+   * @property {boolean} yaCargoEnvioDigital
+   * @description Indica si el envío digital ya ha sido cargado.
+   */
+  yaCargoEnvioDigital = false;
+
+  /**
    * Fecha del requerimiento.
    */
   fechaRequerimiento!: string;
@@ -205,6 +305,11 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
   catalogoDocumentos: Catalogo[] = [];
 
   /**
+   * Datos que se muestran en la tabla de acuse.
+  */
+  datosTablaAcuse: BodyTablaAcuse[] = [];
+
+  /**
    * Referencia al componente Wizard.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
@@ -237,6 +342,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     private desplazarseHaciaArribaService: DesplazarseHaciaArribaService,
     private atenderRequerimientoService: AtenderRequerimientoService,
     private location: Location,
+    private tabsSolicitudServiceTsService: TabsSolicitudServiceTsService
   ) {
 
     /**
@@ -305,6 +411,8 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
      */
     this.desplazarseHaciaArribaService.desplazarArriba();
 
+    this.getTabs();
+
     this.iniciarAtenderRequerimiento();
   }
 
@@ -361,7 +469,9 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
           this.guardarDatos?.tipoDeTramite,
           this.guardarDatos?.estadoDeTramite,
           true, false, false,
-          this.guardarDatos?.action_id,);
+          this.guardarDatos?.action_id,
+          this.guardarDatos.current_user,
+          this.guardarDatos.id_solicitud);
       } else {
         this.consultaioStore.establecerConsultaio(
           this.guardarDatos?.procedureId,
@@ -371,7 +481,9 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
           this.guardarDatos?.tipoDeTramite,
           this.guardarDatos?.estadoDeTramite,
           false, false, true,
-          this.guardarDatos?.action_id,);
+          this.guardarDatos?.action_id,
+          this.guardarDatos.current_user,
+          this.guardarDatos.id_solicitud);
       }
       if (this.indice === 4) {
         this.mostrarFirmarAtenderRequerimiento();
@@ -590,6 +702,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             }
+            this.postAcuseRecibo();
           }
 
         }),
@@ -629,6 +742,494 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     const SS = PAD(DATE_OBJ.getSeconds());
 
     return `${YYYY}-${MM}-${DD} ${HH}:${MM_MINUTES}:${SS}`;
+  }
+  /**
+   * @method postAcuseRecibo
+   * @description Genera y obtiene el oficio
+   * 
+   * Realiza una petición al servicio para generar el oficio
+   * para la solicitud actual. Si la respuesta es exitosa (código '00'), 
+   * actualiza la tabla de resoluciones con el documento generado.
+   * 
+   * @returns {void}
+ */
+  postAcuseRecibo(): void {
+    this.atenderRequerimientoService.postAcuseRecibo(this.tramite, Number(this.guardarDatos.id_solicitud))
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO && resp.datos) {
+            this.datosTablaAcuse = [{
+              id: 1,
+              idDocumento: '1',
+              documento: resp.datos.nombre_archivo ?? '',
+              urlPdf: resp.datos.llave_archivo ?? ''
+            }];
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: resp.error || 'Error al obtener oficio.',
+              mensaje:
+                resp.causa ||
+                resp.mensaje ||
+                resp.error ||
+                'Error al obtener oficio.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: 'Error inesperado',
+            mensaje: error?.error.error || 'Ocurrió un error al obtener oficio.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
+  }
+
+  /**
+   * @method getTabs
+   * @description Obtiene las pestañas disponibles para el trámite
+   * 
+   * Realiza una petición al servicio para recuperar las pestañas habilitadas
+   * para el trámite actual. Asigna las pestañas a la variable tabs si la respuesta
+   * es exitosa (código '00'), o muestra un error en caso contrario.
+   * 
+   * @returns {void}
+  */
+  getTabs(): void {
+    this.tabsSolicitudServiceTsService.getTabs(this.tramite, this.guardarDatos.id_solicitud)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.tabs = response.datos ?? {} as TabsResponse;
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en solicitud estado.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en opciones solicitud estado.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en solicitud estado.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
+  }
+
+  /**
+   * @method getDocumentosSolicitud
+   * @description Método para obtener los documentos asociados a una solicitud.
+   * 
+   * Realiza una petición al servicio tabsSolicitudServiceTsService para recuperar los documentos
+   * vinculados al ID de solicitud proporcionado. Asigna los documentos a la variable documentosSolicitud
+   * si la respuesta es exitosa (código '00'), o muestra un error en caso contrario.
+   * 
+   * @returns {void}
+  */
+  getDocumentosSolicitud(): void {
+    this.tabsSolicitudServiceTsService.getDocumentosSolicitud(this.tramite, this.guardarDatos.id_solicitud)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.documentosSolicitud = response.datos ?? [];
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en documentos.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en documentos.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en documentos.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
+  }
+
+  /**
+   * @method getDictamenes
+   * @description Método para obtener los dictámenes asociados a un trámite.
+   *
+   * Realiza una petición al servicio tabsSolicitudServiceTsService para recuperar los dictámenes
+   * vinculados al número de folio proporcionado. Procesa la respuesta si es exitosa (código '00'),
+   * o muestra un error en caso contrario.
+   *
+   * @returns {void}
+   */
+  getDictamenes(): void {
+    this.tabsSolicitudServiceTsService.getDictamenes(this.tramite, this.guardarDatos.folioTramite)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.dictamenesSolicitud = response.datos ?? [];
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en dictamenes.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en dictamenes.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en dictamenes.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
+  }
+
+  /**
+   * @method getRequerimientos
+   * @description Método para obtener los requerimientos asociados a un trámite.
+   *
+   * Realiza una petición al servicio tabsSolicitudServiceTsService para recuperar los requerimientos
+   * vinculados al número de folio proporcionado. Asigna los requerimientos a la variable requerimientosSolicitud
+   * si la respuesta es exitosa (código '00'), o muestra un error en caso contrario.
+   *
+   * @returns {void}
+   */
+  getRequerimientos(): void {
+    this.tabsSolicitudServiceTsService.getRequerimientos(this.tramite, this.guardarDatos.folioTramite)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.requerimientosSolicitud = response.datos ?? [];
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en requerimientos.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en requerimientos.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en requerimientos.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
+  }
+
+  /**
+   * @method getOpiniones
+   * @description Método para obtener las opiniones asociados a un trámite.
+   *
+   * Realiza una petición al servicio tabsSolicitudServiceTsService para recuperar las opiniones
+   * vinculados al número de folio proporcionado. Asigna los requerimientos a la variable opinion
+   * si la respuesta es exitosa (código '00'), o muestra un error en caso contrario.
+   *
+   * @returns {void}
+   */
+  getOpiniones(): void {
+    this.tabsSolicitudServiceTsService.getOpiniones(this.tramite, this.guardarDatos.folioTramite)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.opinion = response.datos ?? [];
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en opiniones.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en opiniones.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en opiniones.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida que se ejecuta al destruir el componente.
+   * 
+   * Cancela todas las suscripciones activas para evitar fugas de memoria.
+   * 
+   * @returns {void}
+   */
+  getAcusesResolucion(): void {
+    this.tabsSolicitudServiceTsService.getAcusesResolucion(this.tramite, this.guardarDatos.folioTramite)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.acusesResolucion = response.datos ?? {} as AcusesResolucionResponse;
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en acuse.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en acuse.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en acuse.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
+  }
+
+  /**
+   * @method TareasSolicitud
+   * @description Método para obtener las tareas asociadas a una solicitud.
+   * 
+   * Realiza una petición al servicio tabsSolicitudServiceTsService para recuperar las tareas
+   * vinculados al ID de solicitud proporcionado. Asigna las tareas a la variable tareasSolicitud
+   * si la respuesta es exitosa (código '00'), o muestra un error en caso contrario.
+   * 
+   * @returns {void}
+ */
+  getTareasSolicitud(): void {
+    this.tabsSolicitudServiceTsService.getTareasSolicitud(this.tramite, this.guardarDatos.folioTramite)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.tareasSolicitud = response.datos ?? [];
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en tareas.',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en tareas.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en tareas.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
+  }
+
+  /**
+   * @method getEnvioDigital
+   * @description Método para obtener el envío digital asociado a un trámite.
+   */
+  getEnvioDigital(): void {
+    this.tabsSolicitudServiceTsService.getEnvioDigital(this.tramite, this.guardarDatos.folioTramite)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.envioDigital = response.datos ?? {} as EnvioDigitalResponse;
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en envio digital',
+              mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error ||
+                'Error en envio digital.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: error?.error?.error || 'Error inesperado en envio digital.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
+  }
+
+  /**
+   * @method onTabSeleccionado
+   * @description Método del ciclo de vida que se ejecuta las peticiones de los tabs.
+   * 
+   * @returns {void}
+   */
+  onTabSeleccionado(indice: number): void {
+    if (indice === 1 && !this.yaCargoDocumentos) {
+      this.yaCargoDocumentos = true;
+      this.getDocumentosSolicitud();
+    }
+
+    if (indice === 6 && !this.yaCargoTareas) {
+      this.yaCargoTareas = true;
+      this.getTareasSolicitud();
+    }
+
+    if (indice === 2 && !this.yaCargoDictamenes) {
+      this.yaCargoDictamenes = true;
+      this.getDictamenes();
+    }
+
+    if (indice === 3 && !this.yaCargoRequerimientos) {
+      this.yaCargoRequerimientos = true;
+      this.getRequerimientos();
+    }
+
+    if (indice === 4 && !this.yaCargoOpinion) {
+      this.yaCargoOpinion = true;
+      this.getOpiniones();
+    }
+
+    if (indice === 7 && !this.yaCargoEnvioDigital) {
+      this.yaCargoEnvioDigital = true;
+      this.getEnvioDigital();
+    }
+
+    if (indice === 5 && !this.yaCargoAcuses) {
+      this.yaCargoAcuses = true;
+      this.getAcusesResolucion();
+    }
   }
 
   /**
