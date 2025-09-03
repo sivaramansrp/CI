@@ -1,19 +1,13 @@
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite32506State, Tramite32506Store } from '../../estados/tramite32506.store';
 import { AvisoComponent } from '../../components/aviso/aviso.component';
 import { AvisoDestruccionService } from '../../services/aviso-destruccion.service';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ConsultaioState } from '@ng-mf/data-access-user';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
-import { Subject } from 'rxjs';
 import { Tramite32506Query } from '../../estados/tramite32506.query';
-import { Tramite32506State } from '../../estados/tramite32506.store';
-import { Tramite32506Store } from '../../estados/tramite32506.store';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente para gestionar el paso uno del trámite 32506.

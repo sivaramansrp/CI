@@ -1,61 +1,71 @@
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  ConsultaioQuery,
+  ConsultaioState,
+  InputFecha,
+  InputFechaComponent,
+  InputHoraComponent,
+  InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
+  REGEX_ALFANUMERICO_CON_ESPACIOS,
+  REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
+  REGEX_IMPORTE_PAGO,
+  REGEX_NUMEROS,
+  REGEX_REEMPLAZAR,
+  REGEX_SOLO_NUMEROS,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
+import {
+  AvisoTabla,
+  AvisoTablaDatos,
+  Catalogo,
+  CatalogoLista,
+  DesperdicioTabla,
+  DesperdicioTablaDatos,
+  PedimentoTabla,
+  PedimentoTablaDatos,
+  ProcesoTabla,
+  ProcesoTablaDatos,
+} from '../../models/aviso-destruccion.model';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   FECHA_INGRESO,
   HORA_DESTRUCCION,
+  TABLA_DESPERDICIO,
+  TABLA_DE_DATOS,
+  TABLA_PEDIMENTO,
+  TABLA_PROCESO,
+  TEXTOS,
+  TIPACA,
+  TIPAVI,
 } from '../../constants/aviso-destruccion.enum';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import {
+  Tramite32506State,
+  Tramite32506Store,
+} from '../../estados/tramite32506.store';
 import { AvisoDestruccionService } from '../../services/aviso-destruccion.service';
-import { AvisoTabla } from '../../models/aviso-destruccion.model';
-import { AvisoTablaDatos } from '../../models/aviso-destruccion.model';
-import { Catalogo } from '../../models/aviso-destruccion.model';
-import { CatalogoLista } from '../../models/aviso-destruccion.model';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { DesperdicioTabla } from '../../models/aviso-destruccion.model';
-import { DesperdicioTablaDatos } from '../../models/aviso-destruccion.model';
-import { ElementRef } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputFecha } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { InputHoraComponent } from '@libs/shared/data-access-user/src';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
-import { Notificacion } from '@libs/shared/data-access-user/src';
-import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { PedimentoTabla } from '../../models/aviso-destruccion.model';
-import { PedimentoTablaDatos } from '../../models/aviso-destruccion.model';
-import { ProcesoTabla } from '../../models/aviso-destruccion.model';
-import { ProcesoTablaDatos } from '../../models/aviso-destruccion.model';
-import { REGEX_ALFANUMERICO_CON_ESPACIOS } from '@libs/shared/data-access-user/src';
-import { REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR } from '@libs/shared/data-access-user/src';
-import { REGEX_IMPORTE_PAGO } from '@libs/shared/data-access-user/src';
-import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
-import { REGEX_REEMPLAZAR } from '@libs/shared/data-access-user/src';
-import { REGEX_SOLO_NUMEROS } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { TABLA_DESPERDICIO } from '../../constants/aviso-destruccion.enum';
-import { TABLA_DE_DATOS } from '../../constants/aviso-destruccion.enum';
-import { TABLA_PEDIMENTO } from '../../constants/aviso-destruccion.enum';
-import { TABLA_PROCESO } from '../../constants/aviso-destruccion.enum';
-import { TEXTOS } from '../../constants/aviso-destruccion.enum';
-import { TIPACA } from '../../constants/aviso-destruccion.enum';
-import { TIPAVI } from '../../constants/aviso-destruccion.enum';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite32506Query } from '../../estados/tramite32506.query';
-import { Tramite32506State } from '../../estados/tramite32506.store';
-import { Tramite32506Store } from '../../estados/tramite32506.store';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 /**
  * Componente para gestionar el aviso de traslado.
  *
@@ -690,9 +700,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
-          if(!this.consultaioState.readonly && this.consultaioState.update){
+          if (!this.consultaioState.readonly && this.consultaioState.update) {
             this.tablaDeDatos.datos = [];
-            this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, {...this.tramiteState.destruccionMercanciasTabla[0]}];
+            this.tablaDeDatos.datos = [
+              ...this.tablaDeDatos.datos,
+              { ...this.tramiteState.destruccionMercanciasTabla[0] },
+            ];
           }
           this.avisoFormulario.patchValue({
             adaceFormulario: {

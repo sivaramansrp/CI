@@ -9,9 +9,9 @@ import {
   ProcesoFormulario,
   TipoDocumento,
 } from '../models/aviso-destruccion.model';
+import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { Store } from '@datorama/akita';
-import { StoreConfig } from '@datorama/akita';
+
 
 /**
  * Interfaz que define el estado del trámite 32506.
