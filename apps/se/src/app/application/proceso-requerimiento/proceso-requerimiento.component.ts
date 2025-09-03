@@ -428,7 +428,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    */
   iniciarAtenderRequerimiento(): void {
     const NUMFOLIO = this.guardarDatos.folioTramite;
-    this.atenderRequerimientoService.getIniciarAtenderRequerimiento(NUMFOLIO).subscribe({
+    this.atenderRequerimientoService.getIniciarAtenderRequerimiento(this.tramite, NUMFOLIO).subscribe({
       next: (response) => {
         if (response.codigo === '00') {
           this.iniciarAtenderRequerimientoData = response.datos ?? {} as IniciarAtenderRequerimientoResponse;

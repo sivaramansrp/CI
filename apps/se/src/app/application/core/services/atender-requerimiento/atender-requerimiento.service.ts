@@ -37,9 +37,9 @@ export class AtenderRequerimientoService {
    * @param numFolio - Número de folio del trámite que se desea atender.
    * @returns Observable que emite la respuesta con los datos necesarios para iniciar la atención del requerimiento.
    */
-  getIniciarAtenderRequerimiento(numFolio: string):
+  getIniciarAtenderRequerimiento(tramite: number, numFolio: string):
     Observable<BaseResponse<IniciarAtenderRequerimientoResponse>> {
-    const ENDPOINT = `${this.host}${API_GET_INICIAR_ATENDER_REQUERIMIENTO.replace(NUMFOLIOTRAMITE, numFolio)}`;
+    const ENDPOINT = `${this.host}${API_GET_INICIAR_ATENDER_REQUERIMIENTO.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
 
     return this.http.get<BaseResponse<IniciarAtenderRequerimientoResponse>>(ENDPOINT);
   }
