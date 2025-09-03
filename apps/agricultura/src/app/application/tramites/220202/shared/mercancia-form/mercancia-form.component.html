@@ -21,6 +21,7 @@
           [required]="true"
           name="tipoRequisito"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('tipoRequisito')?.touched || false"
           (selectionChange)="tipoSelecionada($event)"
         ></app-catalogo-select>
       </div>
@@ -86,6 +87,7 @@
           [required]="true"
           name="fraccionArancelaria"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('fraccionArancelaria')?.touched || false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 form-group">
@@ -122,6 +124,7 @@
           [required]="true"
           name="nico"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('nico')?.touched || false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 form-group">
@@ -279,6 +282,7 @@
           [tooltipQuestionCircle]="true"
           [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('umc')?.touched || false"
         ></app-catalogo-select>
       </div>
 
@@ -290,6 +294,7 @@
           [required]="true"
           name="uso"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('uso')?.touched || false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -300,6 +305,7 @@
           [required]="true"
           name="tipoProducto"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('tipoProducto')?.touched || false"
         ></app-catalogo-select>
       </div>
     </div>
@@ -323,6 +329,7 @@
           [required]="true"
           name="paisDeOrigen"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('paisDeOrigen')?.touched || false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -333,6 +340,7 @@
           [required]="true"
           name="paisDeProcedencia"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('paisDeProcedencia')?.touched || false"
         ></app-catalogo-select>
       </div>
     </div>
