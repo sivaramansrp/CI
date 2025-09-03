@@ -6,6 +6,7 @@ import { Tramite303Store, Tramite303StoreService } from '../../../../core/estado
 import { CommonModule } from '@angular/common';
 import { ENLACE_OPERATIVO } from '../../../../core/enums/303/enlace-operativo.enum';
 import { EnlaceOperativo } from '../../../../core/models/303/enlace-operativo.model';
+import { EnlaceOperativoComponent } from '../enlace-operativo/enlace-operativo.component';
 import { Notificadores } from '../../../../core/models/303/notificadores.model';
 import { NumeroTelefonicoDirective } from '@libs/shared/data-access-user/src/tramites/directives/numeroTelefonico/numero-telefonico.directive';
 import { PERSONAS_OIR_RECIBIR_NOTIFICACIONES } from '../../../../core/enums/303/personas-oir-recibir-notificaciones.enum';
@@ -20,7 +21,7 @@ import { Tramite303Service } from '../../../../core/services/303/tramite303.serv
 @Component({
   selector: 'terceros-relacionados',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, UppercaseDirective, NumeroTelefonicoDirective, TituloComponent, NotificacionesComponent, TablaDinamicaComponent],
+  imports: [CommonModule, ReactiveFormsModule, UppercaseDirective, NumeroTelefonicoDirective, TituloComponent, NotificacionesComponent, TablaDinamicaComponent, EnlaceOperativoComponent],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
 })
@@ -47,6 +48,8 @@ export class TercerosRelacionadosComponent implements OnInit {
   encabezadoNotificadores = PERSONAS_OIR_RECIBIR_NOTIFICACIONES;
   /** Lista de notificadores */
   public notificadores: Notificadores[] = [];
+
+  agregarEnlaceModal = false;
   /**
    * Constructor del componente TercerosRelacionadosComponent.
    * @param fb FormBuilder para crear formularios reactivos.
@@ -58,7 +61,6 @@ export class TercerosRelacionadosComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private servicio: Tramite303Service,
-    private router: Router,
     private tramite303State: Tramite303StoreService,
     private tramite303Query: Tramite303Query,
   ) {
@@ -215,7 +217,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Método para aceptar el enlace operativo seleccionado.
    */
   agregarEnlace(): void {
-    this.router.navigate(['aga/despacho-mercancias/enlace-operativo']);
+    this.agregarEnlaceModal = true;
   }
 
   /**
@@ -251,7 +253,7 @@ export class TercerosRelacionadosComponent implements OnInit {
     }
     const SELECT_ENLACE = this.enlacesOperativosSeleccionados[0];
     this.tramite303State.enlaceOperativoModificar(SELECT_ENLACE);
-    this.router.navigate(['aga/despacho-mercancias/enlace-operativo']);
+    this.agregarEnlaceModal = true;
   }
 
   /**

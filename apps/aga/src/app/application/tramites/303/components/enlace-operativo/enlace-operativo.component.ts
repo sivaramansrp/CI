@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 import { Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite303Store, Tramite303StoreService } from '../../../../core/estados/tramites/tramite303.store';
@@ -15,11 +16,18 @@ import { Tramite303Query } from '../../../../core/queries/tramite303.query';
 @Component({
   selector: 'app-enlace-operativo',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NotificacionesComponent],
+  imports: [CommonModule, ModalModule, ReactiveFormsModule, NotificacionesComponent],
   templateUrl: './enlace-operativo.component.html',
-  styleUrl: './enlace-operativo.component.scss',
+  styleUrls: ['./enlace-operativo.component.scss'],
 })
-export class EnlaceOperativoComponent implements OnInit {
+export class EnlaceOperativoComponent implements OnChanges, OnInit {
+  @Input() titulo: string = 'Enlace Operativo';
+  @Input() abrirModal: boolean = false;
+  @Output() archivoSeleccionado = new EventEmitter<File>();
+  @Output() cerrar = new EventEmitter<void>();
+  public mostrarModal: boolean = false;
+  @ViewChild('modal', { static: false }) modal?: ModalDirective;
+
   /** Formulario de enlace operativo */
   public FormEnlaceOperativo!: FormGroup;
   /** Indicador de envío del formulario */
@@ -238,5 +246,32 @@ export class EnlaceOperativoComponent implements OnInit {
         suplente: enlaceOperativo.suplente
       });
     }
+  }
+
+  /**
+   * Se ejecuta cuando cambian las propiedades de entrada.
+   * @param changes Cambios en las propiedades de entrada.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['abrirModal'] && changes['abrirModal'].currentValue) {
+      if (this.abrirModal) {
+        this.mostrarModal = true;
+      }
+    }
+  }
+
+  /**
+   * Se ejecuta cuando se oculta el modal.
+   */
+  onHidden(): void {
+    this.mostrarModal = false;
+  }
+
+  /**
+   * Cierra el modal y emite el evento de cierre.
+   */
+  cerrarModal(): void {
+    this.mostrarModal = false;
+    this.cerrar.emit();
   }
 }

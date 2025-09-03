@@ -65,7 +65,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     TablaDinamicaComponent,
     forwardRef(() => CargaDocumentoComponent),
     RegistroFiguraComponent,
-    RegistroTrasportistaComponent
+    RegistroTrasportistaComponent,
   ],
   exports: [
   ],
