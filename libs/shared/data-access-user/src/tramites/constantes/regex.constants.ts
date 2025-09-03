@@ -119,7 +119,7 @@ export const REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL = /^(?!\s)(.*\S)?$/;
  * - \d+: Coincide con uno o más dígitos.
  * - $: Aserción para el final de la cadena.
  */
-export const REGEX_SOLO_DIGITOS = /[^A-Za-z0-9]/g;
+export const REGEX_SOLO_DIGITOS = /^\d+$/;
 
 /**
  * Expresión regular para validar un número decimal con hasta 15 dígitos enteros y 4 decimales.
