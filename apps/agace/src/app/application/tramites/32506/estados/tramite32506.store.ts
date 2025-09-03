@@ -1,12 +1,21 @@
-import { ArchivoDocumentos, AvisoFormulario, DatosSolicitante, DesperdicioFormulario, DomicilioFormulario, PedimentoFormulario, ProcesoFormulario, TipoDocumento } from '../models/aviso-destruccion.model';
+import {
+  ArchivoDocumentos,
+  AvisoFormulario,
+  AvisoTabla,
+  DatosSolicitante,
+  DesperdicioFormulario,
+  DomicilioFormulario,
+  PedimentoFormulario,
+  ProcesoFormulario,
+  TipoDocumento,
+} from '../models/aviso-destruccion.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
-
 /**
  * Interfaz que define el estado del trámite 32506.
- * 
+ *
  * Esta interfaz contiene todas las propiedades necesarias para manejar el estado del trámite,
  * incluyendo datos del solicitante, formularios relacionados, y otros datos relevantes.
  */
@@ -70,40 +79,42 @@ export interface Tramite32506State {
    * Lista de valores seleccionados.
    */
   valorSeleccionado: string[];
+
+  destruccionMercanciasTabla: AvisoTabla[];
 }
 /**
  * Estado inicial del trámite 32506.
- * 
+ *
  * Esta función define el estado inicial del trámite, incluyendo datos del solicitante,
  * formulario de mercancías, formulario de domicilio, formulario de aviso, y otros datos relacionados.
- * 
+ *
  * @returns {Tramite32506State} El estado inicial del trámite.
- * 
- * 
+ *
+ *
  */
 export function createInitialState(): Tramite32506State {
   return {
     pasoActivo: 1,
     pestanaActiva: 2,
     datosSolicitante: {
-      rfc: "",
-      denominacion: "",
-      actividadEconomica: "",
-      correoElectronico: "",
-      pais: "",
-      codigoPostal: "",
-      horaDestruccion: "",
-      fechaDestruccion: "",
-      entidadFederativa: "",
-      municipio: "",
-      localidad: "",
-      colonia: "",
-      calle: "",
-      nExt: "",
-      nInt: "",
-      lada: "",
-      telefono: "",
-      adace: "",
+      rfc: '',
+      denominacion: '',
+      actividadEconomica: '',
+      correoElectronico: '',
+      pais: '',
+      codigoPostal: '',
+      horaDestruccion: '',
+      fechaDestruccion: '',
+      entidadFederativa: '',
+      municipio: '',
+      localidad: '',
+      colonia: '',
+      calle: '',
+      nExt: '',
+      nInt: '',
+      lada: '',
+      telefono: '',
+      adace: '',
     },
     domicilioFormulario: {
       nombreComercial: '',
@@ -137,7 +148,7 @@ export function createInitialState(): Tramite32506State {
       tipoCarga: '',
     },
     procesoFormulario: {
-      descripcionProcesoDestruccion: ''
+      descripcionProcesoDestruccion: '',
     },
     desperdicioFormulario: {
       descripcionDesperdicio: '',
@@ -145,7 +156,7 @@ export function createInitialState(): Tramite32506State {
       claveUnidadMedidaDesp: '',
       porcentaje: '',
       descripcionMercancia: '',
-      circunstanciaHechos: ''
+      circunstanciaHechos: '',
     },
     pedimentoFormulario: {
       patenteAutorizacion: '',
@@ -154,17 +165,18 @@ export function createInitialState(): Tramite32506State {
       claveFraccionArancelariaPedimento: '',
       nicoPedimento: '',
       cantidadPedimento: '',
-      claveUnidadMedidaPedimento: ''
+      claveUnidadMedidaPedimento: '',
     },
     tipoTablaDatos: [],
     tipoDocumento: '',
     documentosDesplegable: [],
-    valorSeleccionado: []
+    valorSeleccionado: [],
+    destruccionMercanciasTabla: [],
   };
 }
 /**
  * Store para gestionar el estado del trámite 32506.
- * 
+ *
  * Este store utiliza Akita para manejar el estado del trámite, permitiendo actualizar y consultar
  * diferentes propiedades relacionadas con el trámite.
  */
@@ -173,10 +185,9 @@ export function createInitialState(): Tramite32506State {
 })
 @StoreConfig({ name: 'tramite32506', resettable: true })
 export class Tramite32506Store extends Store<Tramite32506State> {
-
   /**
    * Constructor del store.
-   * 
+   *
    * Inicializa el store con el estado inicial definido en `createInitialState`.
    */
   constructor() {
@@ -184,10 +195,10 @@ export class Tramite32506Store extends Store<Tramite32506State> {
   }
 
   /**
- * Actualiza el paso activo del trámite.
- * 
- * @param {number} pasoActivo - El número del paso activo.
- */
+   * Actualiza el paso activo del trámite.
+   *
+   * @param {number} pasoActivo - El número del paso activo.
+   */
   public setPasoActivo(pasoActivo: number): void {
     this.update((state) => ({
       ...state,
@@ -197,7 +208,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el tipo de documento seleccionado.
-   * 
+   *
    * @param {string} tipoDocumento - El tipo de documento seleccionado.
    */
   public setTipoDocumento(tipoDocumento: string): void {
@@ -209,10 +220,12 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza la lista de documentos desplegables.
-   * 
+   *
    * @param {ArchivoDocumentos[]} documentosDesplegable - Lista de documentos desplegables.
    */
-  public setDocumentosDesplegable(documentosDesplegable: ArchivoDocumentos[]): void {
+  public setDocumentosDesplegable(
+    documentosDesplegable: ArchivoDocumentos[]
+  ): void {
     this.update((state) => ({
       ...state,
       documentosDesplegable,
@@ -221,7 +234,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza los valores seleccionados.
-   * 
+   *
    * @param {string[]} valorSeleccionado - Lista de valores seleccionados.
    */
   public setValorSeleccionado(valorSeleccionado: string[]): void {
@@ -233,7 +246,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza la pestaña activa del trámite.
-   * 
+   *
    * @param {number} pestanaActiva - El número de la pestaña activa.
    */
   public setPestanaActiva(pestanaActiva: number): void {
@@ -244,19 +257,19 @@ export class Tramite32506Store extends Store<Tramite32506State> {
   }
   /**
    * Actualiza los datos del solicitante en el estado.
-   * 
+   *
    * @param {DatosSolicitante} datosSolicitante - Objeto que contiene los datos del solicitante.
    */
   public setDatosSolicitante(datosSolicitante: DatosSolicitante): void {
     this.update((state) => ({
       ...state,
-      datosSolicitante
+      datosSolicitante,
     }));
   }
 
   /**
    * Actualiza el nombre comercial en el formulario de domicilio.
-   * 
+   *
    * @param {string} nombreComercial - El nombre comercial.
    */
   public setDomicilioFormularioNombreComercial(nombreComercial: string): void {
@@ -268,30 +281,40 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza la clave de la entidad federativa en el formulario de domicilio.
-   * 
+   *
    * @param {string} claveEntidadFederativa - La clave de la entidad federativa.
    */
-  public setDomicilioFormularioEntidadFederativa(claveEntidadFederativa: string): void {
+  public setDomicilioFormularioEntidadFederativa(
+    claveEntidadFederativa: string
+  ): void {
     this.update((state) => ({
       ...state,
-      domicilioFormulario: { ...state.domicilioFormulario, claveEntidadFederativa },
+      domicilioFormulario: {
+        ...state.domicilioFormulario,
+        claveEntidadFederativa,
+      },
     }));
   }
 
   /**
    * Actualiza la clave de la delegación o municipio en el formulario de domicilio.
-   * 
+   *
    * @param {string} claveDelegacionMunicipio - La clave de la delegación o municipio.
    */
-  public setDomicilioFormularioDelegacionMunicipio(claveDelegacionMunicipio: string): void {
+  public setDomicilioFormularioDelegacionMunicipio(
+    claveDelegacionMunicipio: string
+  ): void {
     this.update((state) => ({
       ...state,
-      domicilioFormulario: { ...state.domicilioFormulario, claveDelegacionMunicipio },
+      domicilioFormulario: {
+        ...state.domicilioFormulario,
+        claveDelegacionMunicipio,
+      },
     }));
   }
   /**
    * Actualiza la clave de la colonia en el formulario de domicilio.
-   * 
+   *
    * @param {string} claveColonia - La clave de la colonia.
    */
   public setDomicilioFormularioColonia(claveColonia: string): void {
@@ -303,7 +326,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza la calle en el formulario de domicilio.
-   * 
+   *
    * @param {string} calle - El nombre de la calle.
    */
   public setDomicilioFormularioCalle(calle: string): void {
@@ -315,7 +338,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el número exterior en el formulario de domicilio.
-   * 
+   *
    * @param {string} numeroExterior - El número exterior.
    */
   public setDomicilioFormularioNumeroExterior(numeroExterior: string): void {
@@ -327,7 +350,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el número interior en el formulario de domicilio.
-   * 
+   *
    * @param {string} numeroInterior - El número interior.
    */
   public setDomicilioFormularioNumeroInterior(numeroInterior: string): void {
@@ -339,7 +362,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el código postal en el formulario de domicilio.
-   * 
+   *
    * @param {string} codigoPostal - El código postal.
    */
   public setDomicilioFormularioCodigoPostal(codigoPostal: string): void {
@@ -351,7 +374,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el hora destrucción en el formulario de domicilio.
-   * 
+   *
    * @param {string} horaDestruccion - El horaDestruccion.
    */
   public setHoraDestruccion(horaDestruccion: string): void {
@@ -363,7 +386,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el fecha destrucción en el formulario de domicilio.
-   * 
+   *
    * @param {string} fechaDestruccion - El fechaDestruccion.
    */
   public setFechaDestruccion(fechaDestruccion: string): void {
@@ -375,7 +398,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el RFC en el formulario de domicilio.
-   * 
+   *
    * @param {string} rfc - El RFC.
    */
   public setDomicilioFormularioRfc(rfc: string): void {
@@ -387,7 +410,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el valor de ADACE en el formulario de aviso.
-   * 
+   *
    * @param {string} adace - El valor de ADACE.
    */
   public setAvisoFormularioAdace(adace: string): void {
@@ -399,10 +422,12 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el valor del programa IMMEX en el formulario de aviso.
-   * 
+   *
    * @param {string} valorProgramaImmex - El valor del programa IMMEX.
    */
-  public setAvisoFormularioValorProgramaImmex(valorProgramaImmex: string): void {
+  public setAvisoFormularioValorProgramaImmex(
+    valorProgramaImmex: string
+  ): void {
     this.update((state) => ({
       ...state,
       avisoFormulario: { ...state.avisoFormulario, valorProgramaImmex },
@@ -410,10 +435,12 @@ export class Tramite32506Store extends Store<Tramite32506State> {
   }
   /**
    * Actualiza el valor del año del programa IMMEX en el formulario de aviso.
-   * 
+   *
    * @param {string} valorAnioProgramaImmex - El valor del año del programa IMMEX.
    */
-  public setAvisoFormularioValorAnioProgramaImmex(valorAnioProgramaImmex: string): void {
+  public setAvisoFormularioValorAnioProgramaImmex(
+    valorAnioProgramaImmex: string
+  ): void {
     this.update((state) => ({
       ...state,
       avisoFormulario: { ...state.avisoFormulario, valorAnioProgramaImmex },
@@ -422,7 +449,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el tipo de aviso en el formulario de aviso.
-   * 
+   *
    * @param {string} tipoAviso - El tipo de aviso.
    */
   public setAvisoFormularioTipoAviso(tipoAviso: string): void {
@@ -434,7 +461,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el ID de la justificación en el formulario de aviso.
-   * 
+   *
    * @param {string} justificacion - El ID de la justificación.
    */
   public setAvisoFormularioJustificacion(justificacion: string): void {
@@ -446,19 +473,24 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el Periodicidad Mensual Destruccion en el formulario de aviso.
-   * 
+   *
    * @param {string} periodicidadMensualDestruccion - El Periodicidad Mensual Destruccion.
    */
-  public setPeriodicidadMensualDestruccion(periodicidadMensualDestruccion: string): void {
+  public setPeriodicidadMensualDestruccion(
+    periodicidadMensualDestruccion: string
+  ): void {
     this.update((state) => ({
       ...state,
-      avisoFormulario: { ...state.avisoFormulario, periodicidadMensualDestruccion },
+      avisoFormulario: {
+        ...state.avisoFormulario,
+        periodicidadMensualDestruccion,
+      },
     }));
   }
 
   /**
    * Actualiza la fecha de traslado en el formulario de aviso.
-   * 
+   *
    * @param {string} fechaTranslado - La fecha de traslado.
    */
   public setAvisoFormularioFechaTranslado(fechaTranslado: string): void {
@@ -470,7 +502,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el nombre comercial en el formulario de aviso.
-   * 
+   *
    * @param {string} nombreComercial - El nombre comercial.
    */
   public setAvisoFormularioNombreComercial(nombreComercial: string): void {
@@ -482,10 +514,12 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza la clave de la entidad federativa en el formulario de aviso.
-   * 
+   *
    * @param {string} claveEntidadFederativa - La clave de la entidad federativa.
    */
-  public setAvisoFormularioEntidadFederativa(claveEntidadFederativa: string): void {
+  public setAvisoFormularioEntidadFederativa(
+    claveEntidadFederativa: string
+  ): void {
     this.update((state) => ({
       ...state,
       avisoFormulario: { ...state.avisoFormulario, claveEntidadFederativa },
@@ -494,10 +528,12 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza la clave de la delegación o municipio en el formulario de aviso.
-   * 
+   *
    * @param {string} claveDelegacionMunicipio - La clave de la delegación o municipio.
    */
-  public setAvisoFormularioDelegacionMunicipio(claveDelegacionMunicipio: string): void {
+  public setAvisoFormularioDelegacionMunicipio(
+    claveDelegacionMunicipio: string
+  ): void {
     this.update((state) => ({
       ...state,
       avisoFormulario: { ...state.avisoFormulario, claveDelegacionMunicipio },
@@ -506,7 +542,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza la clave de la colonia en el formulario de aviso.
-   * 
+   *
    * @param {string} claveColonia - La clave de la colonia.
    */
   public setAvisoFormularioColonia(claveColonia: string): void {
@@ -516,10 +552,10 @@ export class Tramite32506Store extends Store<Tramite32506State> {
     }));
   }
   /**
- * Actualiza la calle en el formulario de aviso.
- * 
- * @param {string} calle - La calle del aviso.
- */
+   * Actualiza la calle en el formulario de aviso.
+   *
+   * @param {string} calle - La calle del aviso.
+   */
   public setAvisoFormularioCalle(calle: string): void {
     this.update((state) => ({
       ...state,
@@ -529,7 +565,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el número exterior en el formulario de aviso.
-   * 
+   *
    * @param {string} numeroExterior - El número exterior del aviso.
    */
   public setAvisoFormularioNumeroExterior(numeroExterior: string): void {
@@ -541,7 +577,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el número interior en el formulario de aviso.
-   * 
+   *
    * @param {string} numeroInterior - El número interior del aviso.
    */
   public setAvisoFormularioNumeroInterior(numeroInterior: string): void {
@@ -553,7 +589,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el código postal en el formulario de aviso.
-   * 
+   *
    * @param {string} codigoPostal - El código postal del aviso.
    */
   public setAvisoFormularioCodigoPostal(codigoPostal: string): void {
@@ -565,7 +601,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza el tipo de carga en el formulario de aviso.
-   * 
+   *
    * @param {string} tipoCarga - El tipo de carga del aviso.
    */
   public setAvisoFormularioTipoCarga(tipoCarga: string): void {
@@ -577,7 +613,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza los datos de la tabla de tipos de documentos.
-   * 
+   *
    * @param {TipoDocumento[]} tipoTablaDatos - Lista de tipos de documentos.
    */
   public setTipoTablaDatos(tipoTablaDatos: TipoDocumento[]): void {
@@ -589,7 +625,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza la descripción del proceso de destrucción en el formulario de proceso.
-   * 
+   *
    * @param {string} descripcionProceso - La descripción del proceso de destrucción.
    */
   public setDescripcionProcesoDestruccion(descripcionProceso: string): void {
@@ -599,22 +635,24 @@ export class Tramite32506Store extends Store<Tramite32506State> {
     }));
   }
 
-  
   /**
    * Actualiza la descripción del desperdicio en el formulario de desperdicio.
-   * 
+   *
    * @param {string} descripcionDesperdicio - La descripción del desperdicio.
    */
   public setDescripcionDesperdicio(descripcionDesperdicio: string): void {
     this.update((state) => ({
       ...state,
-      desperdicioFormulario: { ...state.desperdicioFormulario, descripcionDesperdicio },
+      desperdicioFormulario: {
+        ...state.desperdicioFormulario,
+        descripcionDesperdicio,
+      },
     }));
   }
 
   /**
    * Actualiza la cantidad de desperdicio en el formulario de desperdicio.
-   * 
+   *
    * @param {string} cantidadDesp - La cantidad de desperdicio.
    */
   public setCantidadDesp(cantidadDesp: string): void {
@@ -626,19 +664,22 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza la clave de unidad de medida del desperdicio en el formulario de desperdicio.
-   * 
+   *
    * @param {string} claveUnidadMedidaDesp - La clave de unidad de medida del desperdicio.
    */
   public setClaveUnidadMedidaDesp(claveUnidadMedidaDesp: string): void {
     this.update((state) => ({
       ...state,
-      desperdicioFormulario: { ...state.desperdicioFormulario, claveUnidadMedidaDesp },
+      desperdicioFormulario: {
+        ...state.desperdicioFormulario,
+        claveUnidadMedidaDesp,
+      },
     }));
   }
 
   /**
    * Actualiza el porcentaje en el formulario de desperdicio.
-   * 
+   *
    * @param {string} porcentaje - El porcentaje.
    */
   public setPorcentaje(porcentaje: string): void {
@@ -650,43 +691,52 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza la descripción de la mercancía en el formulario de desperdicio.
-   * 
+   *
    * @param {string} descripcionMercancia - La descripción de la mercancía.
    */
   public setDescripcionMercancia(descripcionMercancia: string): void {
     this.update((state) => ({
       ...state,
-      desperdicioFormulario: { ...state.desperdicioFormulario, descripcionMercancia },
+      desperdicioFormulario: {
+        ...state.desperdicioFormulario,
+        descripcionMercancia,
+      },
     }));
   }
 
   /**
    * Actualiza la circunstancia de los hechos en el formulario de desperdicio.
-   * 
+   *
    * @param {string} circunstanciaHechos - La circunstancia de los hechos.
    */
   public setCircunstanciaHechos(circunstanciaHechos: string): void {
     this.update((state) => ({
       ...state,
-      desperdicioFormulario: { ...state.desperdicioFormulario, circunstanciaHechos },
+      desperdicioFormulario: {
+        ...state.desperdicioFormulario,
+        circunstanciaHechos,
+      },
     }));
   }
 
   /**
    * Actualiza la patente de autorización en el formulario de pedimento.
-   * 
+   *
    * @param {string} patenteAutorizacion - La patente de autorización.
    */
   public setPatenteAutorizacion(patenteAutorizacion: string): void {
     this.update((state) => ({
       ...state,
-      pedimentoFormulario: { ...state.pedimentoFormulario, patenteAutorizacion },
+      pedimentoFormulario: {
+        ...state.pedimentoFormulario,
+        patenteAutorizacion,
+      },
     }));
   }
 
   /**
    * Actualiza el pedimento en el formulario de pedimento.
-   * 
+   *
    * @param {string} pedimento - El pedimento.
    */
   public setPedimento(pedimento: string): void {
@@ -698,31 +748,39 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza la clave de aduana del pedimento en el formulario de pedimento.
-   * 
+   *
    * @param {string} claveAduanaPedimento - La clave de aduana del pedimento.
    */
   public setClaveAduanaPedimento(claveAduanaPedimento: string): void {
     this.update((state) => ({
       ...state,
-      pedimentoFormulario: { ...state.pedimentoFormulario, claveAduanaPedimento },
+      pedimentoFormulario: {
+        ...state.pedimentoFormulario,
+        claveAduanaPedimento,
+      },
     }));
   }
 
   /**
    * Actualiza la clave de fracción arancelaria del pedimento en el formulario de pedimento.
-   * 
+   *
    * @param {string} claveFraccionArancelariaPedimento - La clave de fracción arancelaria del pedimento.
    */
-  public setClaveFraccionArancelariaPedimento(claveFraccionArancelariaPedimento: string): void {
+  public setClaveFraccionArancelariaPedimento(
+    claveFraccionArancelariaPedimento: string
+  ): void {
     this.update((state) => ({
       ...state,
-      pedimentoFormulario: { ...state.pedimentoFormulario, claveFraccionArancelariaPedimento },
+      pedimentoFormulario: {
+        ...state.pedimentoFormulario,
+        claveFraccionArancelariaPedimento,
+      },
     }));
   }
 
   /**
    * Actualiza el NICO del pedimento en el formulario de pedimento.
-   * 
+   *
    * @param {string} nicoPedimento - El NICO del pedimento.
    */
   public setNicoPedimento(nicoPedimento: string): void {
@@ -734,7 +792,7 @@ export class Tramite32506Store extends Store<Tramite32506State> {
 
   /**
    * Actualiza la cantidad del pedimento en el formulario de pedimento.
-   * 
+   *
    * @param {string} cantidadPedimento - La cantidad del pedimento.
    */
   public setCantidadPedimento(cantidadPedimento: string): void {
@@ -745,15 +803,33 @@ export class Tramite32506Store extends Store<Tramite32506State> {
   }
 
   /**
-   * Actualiza la clave de unidad de medida del pedimento en el formulario de pedimento.
-   * 
-   * @param {string} claveUnidadMedidaPedimento - La clave de unidad de medida del pedimento.
+   * Actualiza la tabla de destrucción de mercancías en el estado del trámite.
+   *
+   * @param {AvisoTabla[]} destruccionMercanciasTabla - La nueva tabla de destrucción de mercancías.
    */
-  public setClaveUnidadMedidaPedimento(claveUnidadMedidaPedimento: string): void {
+  public setDestruccionMercanciasTabla(
+    destruccionMercanciasTabla: AvisoTabla[]
+  ): void {
     this.update((state) => ({
       ...state,
-      pedimentoFormulario: { ...state.pedimentoFormulario, claveUnidadMedidaPedimento },
+      destruccionMercanciasTabla: destruccionMercanciasTabla,
     }));
   }
 
+  /**
+   * Actualiza la clave de unidad de medida del pedimento en el formulario de pedimento.
+   *
+   * @param {string} claveUnidadMedidaPedimento - La clave de unidad de medida del pedimento.
+   */
+  public setClaveUnidadMedidaPedimento(
+    claveUnidadMedidaPedimento: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      pedimentoFormulario: {
+        ...state.pedimentoFormulario,
+        claveUnidadMedidaPedimento,
+      },
+    }));
+  }
 }

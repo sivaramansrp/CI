@@ -1,3 +1,8 @@
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import {
+  FECHA_INGRESO,
+  HORA_DESTRUCCION,
+} from '../../constants/aviso-destruccion.enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { AvisoDestruccionService } from '../../services/aviso-destruccion.service';
 import { AvisoTabla } from '../../models/aviso-destruccion.model';
@@ -7,11 +12,9 @@ import { CatalogoLista } from '../../models/aviso-destruccion.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DesperdicioTabla } from '../../models/aviso-destruccion.model';
 import { DesperdicioTablaDatos } from '../../models/aviso-destruccion.model';
 import { ElementRef } from '@angular/core';
-import { FECHA_INGRESO } from '../../constants/aviso-destruccion.enum';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputFecha } from '@libs/shared/data-access-user/src';
@@ -79,6 +82,11 @@ import { takeUntil } from 'rxjs';
   standalone: true,
 })
 export class AvisoComponent implements OnInit, OnDestroy {
+  /**
+   * @property {string} HORA_DESTRUCCION
+   * @description Hora de destrucción predefinida para el aviso.
+   */
+  HORA_DESTRUCCION: string = HORA_DESTRUCCION;
   /**
    * @property {FormGroup} avisoFormulario
    * @description Formulario reactivo que contiene los datos del aviso en el trámite.
@@ -310,6 +318,11 @@ export class AvisoComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Estado de la consulta de datos.
+   */
+  consultaioState!: ConsultaioState;
+
+  /**
    * Constructor del componente.
    *
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
@@ -333,15 +346,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
      * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
      * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
      */
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
   }
 
   /**
@@ -350,6 +354,16 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * Configura los formularios, carga los datos iniciales y suscribe al estado del trámite.
    */
   ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaioState = seccionState;
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.inicializarEstadoFormulario();
   }
 
@@ -676,6 +690,43 @@ export class AvisoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
+          if(!this.consultaioState.readonly && this.consultaioState.update){
+            this.tablaDeDatos.datos = [];
+            this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, {...this.tramiteState.destruccionMercanciasTabla[0]}];
+          }
+          this.avisoFormulario.patchValue({
+            adaceFormulario: {
+              adace: this.tramiteState.avisoFormulario.adace,
+            },
+            datosEmpresa: {
+              valorProgramaImmex:
+                this.tramiteState.avisoFormulario.valorProgramaImmex,
+              valorAnioProgramaImmex:
+                this.tramiteState.avisoFormulario.valorAnioProgramaImmex,
+            },
+            datosAviso: {
+              tipoAviso: this.tramiteState.avisoFormulario.tipoAviso,
+              justificacion: this.tramiteState.avisoFormulario.justificacion,
+              periodicidadMensualDestruccion:
+                this.tramiteState.avisoFormulario
+                  .periodicidadMensualDestruccion,
+              fechaTranslado: this.tramiteState.avisoFormulario.fechaTranslado,
+            },
+            direccionOrigen: {
+              nombreComercial:
+                this.tramiteState.avisoFormulario.nombreComercial,
+              claveEntidadFederativa:
+                this.tramiteState.avisoFormulario.claveEntidadFederativa,
+              claveDelegacionMunicipio:
+                this.tramiteState.avisoFormulario.claveDelegacionMunicipio,
+              claveColonia: this.tramiteState.avisoFormulario.claveColonia,
+              calle: this.tramiteState.avisoFormulario.calle,
+              numeroExterior: this.tramiteState.avisoFormulario.numeroExterior,
+              numeroInterior: this.tramiteState.avisoFormulario.numeroInterior,
+              codigoPostal: this.tramiteState.avisoFormulario.codigoPostal,
+            },
+            tipoCarga: this.tramiteState.avisoFormulario.tipoCarga,
+          });
         })
       )
       .subscribe();
@@ -926,6 +977,34 @@ export class AvisoComponent implements OnInit, OnDestroy {
   filaSeleccionada(evento: AvisoTabla[]): void {
     this.filaSeleccionadaLista = evento;
   }
+
+  /**
+   * Método para modificar los datos del domicilio.
+   *
+   * Este método se encarga de actualizar el formulario de domicilio con los datos
+   * de la fila seleccionada en la tabla de avisos.
+   */
+  modificarDomicilio(): void {
+    if (this.filaSeleccionadaLista.length > 0) {
+      this.domicilioFormulario.patchValue({
+        nombreComercial: this.filaSeleccionadaLista?.[0]?.nombreComercial,
+        claveEntidadFederativa:
+          this.filaSeleccionadaLista?.[0]?.entidadFederativa,
+        claveDelegacionMunicipio:
+          this.filaSeleccionadaLista?.[0]?.alcaldioOMuncipio,
+        claveColonia: this.filaSeleccionadaLista?.[0]?.colonia,
+        calle: this.filaSeleccionadaLista?.[0]?.calle,
+        numeroExterior: this.filaSeleccionadaLista?.[0]?.numeroExterior,
+        numeroInterior: this.filaSeleccionadaLista?.[0]?.numeroInterior,
+        codigoPostal: this.filaSeleccionadaLista?.[0]?.codigoPostal,
+        rfc: this.filaSeleccionadaLista?.[0]?.rfc,
+        horaDestruccion: this.filaSeleccionadaLista?.[0]?.horaDestruccion,
+        fechaDestruccion: this.filaSeleccionadaLista?.[0]?.fechaDestruccion,
+      });
+      const MODAL_INSTANCE = new Modal(this.modalDomicilio.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
   /**
    * @method filaSeleccionadaPedimento
    * @description Método para manejar las filas seleccionadas en la tabla de Pedimento.
@@ -1044,7 +1123,22 @@ export class AvisoComponent implements OnInit, OnDestroy {
         .get('datosAviso.periodicidadMensualDestruccion')
         ?.disable();
     }
+    if (TIPO_AVISO === TIPAVI[1].value) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje:
+          '¿Desea cambiar el tipo de destrucción que se reporta? Si acepta se eliminarán todos los registros.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+    }
   }
+
   /**
    * @method abiertoDomicilio
    * @description Método para abrir el modal de domicilio.
@@ -1054,16 +1148,33 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   abiertoDomicilio(): void {
-    if (this.modalDomicilio) {
-      if (this.esFormularioSoloLectura) {
-        this.pedimentoFormulario.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.pedimentoFormulario.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
+    const TIPO_AVISO = this.avisoFormulario.get('datosAviso.tipoAviso')?.value;
+    if (!TIPO_AVISO) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje:
+          'Debe seleccionar un tipo de destrucción que se reporta para poder agregar información.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } else {
+      if (this.modalDomicilio) {
+        if (this.esFormularioSoloLectura) {
+          this.pedimentoFormulario.disable();
+        } else if (!this.esFormularioSoloLectura) {
+          this.pedimentoFormulario.enable();
+        } else {
+          // No se requiere ninguna acción en el formulario
+        }
+        this.domicilioFormulario.reset();
+        const MODAL_INSTANCE = new Modal(this.modalDomicilio.nativeElement);
+        MODAL_INSTANCE.show();
       }
-      const MODAL_INSTANCE = new Modal(this.modalDomicilio.nativeElement);
-      MODAL_INSTANCE.show();
     }
   }
 
@@ -1122,7 +1233,40 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarDomicilio(): void {
-    this.cargarAvisoTabla();
+    const VALORES = this.domicilioFormulario.value;
+    const DATOS = {
+      id: this.filaSeleccionadaLista?.[0]?.id
+        ? this.filaSeleccionadaLista?.[0]?.id
+        : (this.tablaDeDatos?.datos?.length || 0) + 1,
+      nombreComercial: VALORES.nombreComercial,
+      entidadFederativa: VALORES.claveEntidadFederativa,
+      alcaldioOMuncipio: VALORES.claveDelegacionMunicipio,
+      colonia: VALORES.claveColonia,
+      calle: VALORES.calle,
+      numeroExterior: VALORES.numeroExterior,
+      numeroInterior: VALORES.numeroInterior,
+      codigoPostal: VALORES.codigoPostal,
+      rfc: '',
+      horaDestruccion: VALORES?.horaDestruccion,
+      fechaDestruccion: '',
+    };
+    if (this.filaSeleccionadaLista.length > 0) {
+      DATOS.id = this.filaSeleccionadaLista[0].id;
+
+      this.tablaDeDatos = {
+        ...this.tablaDeDatos,
+        datos: this.tablaDeDatos.datos.map((item) =>
+          item.id === DATOS.id ? { ...DATOS } : item
+        ),
+      };
+    } else {
+      this.tablaDeDatos = {
+        ...this.tablaDeDatos,
+        datos: [...(this.tablaDeDatos?.datos || []), { ...DATOS }],
+      };
+    }
+    this.domicilioFormulario.reset();
+    this.filaSeleccionadaLista = [];
     this.closeDomicilio.nativeElement.click();
     this.abrirModal();
   }

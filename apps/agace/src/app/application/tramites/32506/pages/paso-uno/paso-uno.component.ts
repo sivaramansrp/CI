@@ -2,8 +2,8 @@ import { AvisoComponent } from '../../components/aviso/aviso.component';
 import { AvisoDestruccionService } from '../../services/aviso-destruccion.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
@@ -77,16 +77,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     public avisoDestruccionService: AvisoDestruccionService,
     private consultaQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
-  }
-
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   *
-   * Este método suscribe al estado del trámite y actualiza la propiedad `tramiteState`
-   * con los datos obtenidos. También inicializa el índice de la pestaña activa.
-   */
-  ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -100,6 +90,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       this.esDatosRespuesta = true;
     }
+    // El constructor se utiliza para la inyección de dependencias.
+  }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   *
+   * Este método suscribe al estado del trámite y actualiza la propiedad `tramiteState`
+   * con los datos obtenidos. También inicializa el índice de la pestaña activa.
+   */
+  ngOnInit(): void {
     this.tramiteQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -117,7 +117,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.avisoDestruccionService
-      .guardarDatosFormulario().pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+      .guardarDatosFormulario()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
         if (resp.success) {
           this.esDatosRespuesta = true;
           const FORM1 = resp?.datos?.avisoFormulario;
@@ -126,12 +128,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           const FORM4 = resp?.datos?.procesoFormulario;
           const FORM5 = resp?.datos?.domicilioFormulario;
 
+          this.store.setDestruccionMercanciasTabla(resp?.datos?.destruccionMercanciasTabla)
+
           this.store.setAvisoFormularioAdace(FORM1?.adace);
           this.store.setAvisoFormularioCalle(FORM1?.calle);
           this.store.setAvisoFormularioCodigoPostal(FORM1?.codigoPostal);
           this.store.setAvisoFormularioColonia(FORM1?.claveColonia);
-          this.store.setAvisoFormularioDelegacionMunicipio(FORM1?.claveDelegacionMunicipio);
-          this.store.setAvisoFormularioEntidadFederativa(FORM1?.claveEntidadFederativa);
+          this.store.setAvisoFormularioDelegacionMunicipio(
+            FORM1?.claveDelegacionMunicipio
+          );
+          this.store.setAvisoFormularioEntidadFederativa(
+            FORM1?.claveEntidadFederativa
+          );
           this.store.setAvisoFormularioFechaTranslado(FORM1?.fechaTranslado);
           this.store.setAvisoFormularioJustificacion(FORM1?.justificacion);
           this.store.setAvisoFormularioNombreComercial(FORM1?.nombreComercial);
@@ -139,8 +147,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.store.setAvisoFormularioNumeroInterior(FORM1?.numeroInterior);
           this.store.setAvisoFormularioTipoAviso(FORM1?.tipoAviso);
           this.store.setAvisoFormularioTipoCarga(FORM1?.tipoCarga);
-          this.store.setAvisoFormularioValorAnioProgramaImmex(FORM1?.valorAnioProgramaImmex);
-          this.store.setAvisoFormularioValorProgramaImmex(FORM1?.valorProgramaImmex);
+          this.store.setAvisoFormularioValorAnioProgramaImmex(
+            FORM1?.valorAnioProgramaImmex
+          );
+          this.store.setAvisoFormularioValorProgramaImmex(
+            FORM1?.valorProgramaImmex
+          );
+          this.store.setPeriodicidadMensualDestruccion(
+            FORM1?.periodicidadMensualDestruccion
+          );
 
           // Desperdicio Formulario
           this.store.setCantidadDesp(FORM2?.cantidadDesp);
@@ -152,23 +167,38 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           // Pedimento Formulario
           this.store.setCantidadPedimento(FORM3?.cantidadPedimento);
           this.store.setClaveAduanaPedimento(FORM3?.claveAduanaPedimento);
-          this.store.setClaveFraccionArancelariaPedimento(FORM3?.claveFraccionArancelariaPedimento);
-          this.store.setClaveUnidadMedidaPedimento(FORM3?.claveUnidadMedidaPedimento);
+          this.store.setClaveFraccionArancelariaPedimento(
+            FORM3?.claveFraccionArancelariaPedimento
+          );
+          this.store.setClaveUnidadMedidaPedimento(
+            FORM3?.claveUnidadMedidaPedimento
+          );
 
           // Proceso Formulario
-          this.store.setDescripcionProcesoDestruccion(FORM4?.descripcionProcesoDestruccion);
+          this.store.setDescripcionProcesoDestruccion(
+            FORM4?.descripcionProcesoDestruccion
+          );
 
           // Domicilio Formulario
           this.store.setDomicilioFormularioCalle(FORM5?.calle);
           this.store.setDomicilioFormularioCodigoPostal(FORM5?.codigoPostal);
           this.store.setDomicilioFormularioColonia(FORM5?.claveColonia);
-          this.store.setDomicilioFormularioDelegacionMunicipio(FORM5?.claveDelegacionMunicipio);
-          this.store.setDomicilioFormularioEntidadFederativa(FORM5?.claveEntidadFederativa);
-          this.store.setDomicilioFormularioNombreComercial(FORM5?.nombreComercial);
-          this.store.setDomicilioFormularioNumeroExterior(FORM5?.numeroExterior);
-          this.store.setDomicilioFormularioNumeroInterior(FORM5?.numeroInterior);
+          this.store.setDomicilioFormularioDelegacionMunicipio(
+            FORM5?.claveDelegacionMunicipio
+          );
+          this.store.setDomicilioFormularioEntidadFederativa(
+            FORM5?.claveEntidadFederativa
+          );
+          this.store.setDomicilioFormularioNombreComercial(
+            FORM5?.nombreComercial
+          );
+          this.store.setDomicilioFormularioNumeroExterior(
+            FORM5?.numeroExterior
+          );
+          this.store.setDomicilioFormularioNumeroInterior(
+            FORM5?.numeroInterior
+          );
           this.store.setDomicilioFormularioRfc(FORM5?.rfc);
-
         }
       });
   }
