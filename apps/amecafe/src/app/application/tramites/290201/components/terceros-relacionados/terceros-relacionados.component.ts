@@ -573,11 +573,10 @@ private populateFormWithSelectedRow(): void {
    * Método para modificar los datos de una fila seleccionada.
    */
   enModificar(): void {
-  this.esFormularioVisible = true; // Ensure the modal content is rendered
+  this.esFormularioVisible = true; 
 
   const MODAL_ELEMENT = document.getElementById('destinatarioModalLabel');
   if (!MODAL_ELEMENT) {
-    // console.error('Modal element not found!');
     return;
   }
 
@@ -616,9 +615,7 @@ private populateFormWithSelectedRow(): void {
 
   this.changeDetectorRef.detectChanges();
 }
-  /**
-   * Método para eliminar una fila seleccionada.
-   */
+ 
  /**
  * Método para eliminar una fila seleccionada.
  */
