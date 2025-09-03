@@ -251,7 +251,7 @@ describe('DatosDelTramiteComponent', () => {
     it('should set consultaDatos and esFormularioSoloLectura from consultaioQuery', () => {
       const mockState: ConsultaioState = {
         procedureId: 'test',
-        parameter: 'test', 
+        parameter: 'test',
         department: 'test',
         folioTramite: 'test',
         tipoDeTramite: 'test',
@@ -259,7 +259,11 @@ describe('DatosDelTramiteComponent', () => {
         readonly: true,
         create: true,
         update: false,
-        consultaioSolicitante: null
+        consultaioSolicitante: null,
+        action_id: '',
+        current_user: '',
+        id_solicitud: '',
+        nombre_pagina: ''
       };
       
       const tempMockConsultaioQuery = {
