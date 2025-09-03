@@ -35,11 +35,12 @@ export class AgentesAgenciasAduanalesComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   /** Estado del trámite 303 consultado */
   public tramiteConsultado?: Tramite303Store;
+  /** Variable para controlar la visibilidad del modal de agregar agente */
+  agregarAgentemodal = false;
 
   constructor(
     private tramite303State: Tramite303StoreService,
     private tramite303Query: Tramite303Query,
-    private router: Router
   ) { }
 
   /**
@@ -92,7 +93,7 @@ export class AgentesAgenciasAduanalesComponent implements OnInit, OnDestroy {
       return;
     }
     this.tramite303State.setSeleccionarFigura(ID_SELECCIONADO);
-    this.router.navigate(['aga/despacho-mercancias/registro-figura']);
+    this.agregarAgentemodal = true;
   }
 
   /**

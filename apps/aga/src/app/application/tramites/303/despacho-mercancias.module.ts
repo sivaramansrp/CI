@@ -19,6 +19,7 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RegistroFiguraComponent } from './components/registro-figura/registro-figura.component';
 import { RegistroPageComponent } from './pages/registro-page/registro-page.component';
 import { RouterModule } from '@angular/router';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
@@ -62,6 +63,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     forwardRef(() => CargaDocumentoComponent),
+    RegistroFiguraComponent
   ],
   exports: [
   ],

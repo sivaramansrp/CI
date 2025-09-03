@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 import { Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite303Store, Tramite303StoreService } from '../../../../core/estados/tramites/tramite303.store';
 import { AgenteAduanal } from '../../../../core/models/303/agente-aduanal.model';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { TipoFiguraSeleccionada } from '../../../../core/enums/303/figuras.enum';
 import { TipoFiguraService } from '../../../../core/services/303/tipo-figura.service';
 import { Tramite303Query } from '../../../../core/queries/tramite303.query';
@@ -14,11 +14,21 @@ import { Tramite303Query } from '../../../../core/queries/tramite303.query';
 @Component({
   selector: 'app-registro-figura',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NotificacionesComponent],
+  imports: [CommonModule, ModalModule, ReactiveFormsModule, NotificacionesComponent],
   templateUrl: './registro-figura.component.html',
   styleUrl: './registro-figura.component.scss',
 })
-export class RegistroFiguraComponent implements OnInit, OnDestroy {
+export class RegistroFiguraComponent implements OnChanges, OnInit, OnDestroy {
+  /** Título del modal */
+  @Input() titulo: string = '';
+  /**Variable para mostrar el modal */
+  public mostrarModal: boolean = false;
+  /** Referencia al modal */
+  @ViewChild('modal', { static: false }) modal?: ModalDirective;
+  /** Indica si se debe abrir el modal */
+  @Input() abrirModal: boolean = false;
+  /** Evento que se emite al cerrar el modal */
+  @Output() cerrar = new EventEmitter<void>();
   /** Formulario para la figura */
   public FormFigura!: FormGroup;
   /** Estado del trámite 303 consultado */
@@ -38,8 +48,7 @@ export class RegistroFiguraComponent implements OnInit, OnDestroy {
     private tramite303State: Tramite303StoreService,
     private tramite303Query: Tramite303Query,
     private figuraService: TipoFiguraService,
-    private fb: FormBuilder,
-    private router: Router
+    private fb: FormBuilder
   ) { }
 
   /**
@@ -57,11 +66,41 @@ export class RegistroFiguraComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.tipoFiguraSeleccionada = this.tramiteConsultado?.tipoFigura || '';
+    this.asignarTitulo();
     this.listaFiguras = this.tramiteConsultado?.listaFiguras || [];
     this.crearFormFigura();
   }
 
+  /**
+   * Método que se ejecuta al detectar cambios en las propiedades de entrada.
+   * @param changes Cambios detectados en las propiedades de entrada.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['abrirModal'] && changes['abrirModal'].currentValue) {
+      if (this.abrirModal) {
+        this.mostrarModal = true;
+      }
+    }
+  }
 
+  /**
+   * Asigna el título del modal según el tipo de figura seleccionada.
+   */
+  asignarTitulo(): void {
+    switch (this.tipoFiguraSeleccionada) {
+      case '1':
+        this.titulo = 'Registro de Agentes Aduanales';
+        break;
+      case '2':
+        this.titulo = 'Registro de Apoderados Aduanales';
+        break;
+      case '3':
+        this.titulo = 'Registro de Agencias Aduanales';
+        break;
+      default:
+        this.titulo = '';
+    }
+  }
   /**
    * Crea el formulario para la figura.
    * Este formulario contiene campos para el nombre, primer apellido, segundo apellido y número de patente.
@@ -80,10 +119,10 @@ export class RegistroFiguraComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método que se ejecuta al buscar una figura.
-   * Realiza una consulta a la API para obtener los datos de la figura según el número de patente y RFC proporcionados.
-   * Si no se encuentra la figura, muestra una notificación al usuario.
-   */
+  * Método que se ejecuta al buscar una figura.
+  * Realiza una consulta a la API para obtener los datos de la figura según el número de patente y RFC proporcionados.
+  * Si no se encuentra la figura, muestra una notificación al usuario.
+  */
   buscarFigura(): void {
     const NUMERO_PATENTE = this.FormFigura.get('idNumPatenteModal')?.value;
     const NUMERO_RFC = this.FormFigura.get('rfcModal')?.value;
@@ -158,9 +197,9 @@ export class RegistroFiguraComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método que se ejecuta al destruir el componente.
-   * Limpia el notifier de destrucción para evitar fugas de memoria.
-   */
+  * Método que se ejecuta al destruir el componente.
+  * Limpia el notifier de destrucción para evitar fugas de memoria.
+  */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
@@ -173,6 +212,22 @@ export class RegistroFiguraComponent implements OnInit, OnDestroy {
     this.FormFigura.reset();
     this.FormFigura.reset();
     this.crearFormFigura();
+  }
+
+  /**
+  * Muestra una notificación de alerta al usuario cuando no hay información para guardar.
+  */
+  notificacionAlert(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'No hay información para guardar',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**
@@ -214,46 +269,51 @@ export class RegistroFiguraComponent implements OnInit, OnDestroy {
         return;
       }
     }
-    this.figuraSeleccionada = {
-      nombreAgente: this.FormFigura.get('nombreAgente')?.value,
-      apellidoPaternoAgente: this.FormFigura.get('apellidoPaternoAgente')?.value,
-      apellidoMaternoAgente: this.FormFigura.get('apellidoMaternoAgente')?.value,
-      patente: (this.FormFigura.get('patente')?.value || this.FormFigura.get('idNumPatenteModal')?.value)?.trim(),
-      rfcModal: this.FormFigura.get('rfcModal')?.value,
-      razonSocial: this.FormFigura.get('razonSocial')?.value?.trim() || '',
-    };
-
+    this.habilitarCampos();
+    const FORM_FIGURA = this.FormFigura.value;
+    const FIGURA_SELEC: AgenteAduanal = {
+      nombreAgente: FORM_FIGURA.nombreAgente,
+      apellidoPaternoAgente: FORM_FIGURA.apellidoPaternoAgente,
+      apellidoMaternoAgente: FORM_FIGURA.apellidoMaternoAgente,
+      patente: (FORM_FIGURA.patente || FORM_FIGURA.idNumPatenteModal)?.trim(),
+      rfcModal: FORM_FIGURA.rfcModal,
+      razonSocial: FORM_FIGURA.razonSocial?.trim() || '',
+    }
     if (this.listaFiguras.length === 0) {
       this.listaFiguras = [];
     }
-
-    this.listaFiguras.push(this.figuraSeleccionada);
+    this.listaFiguras = [...this.listaFiguras, FIGURA_SELEC];
     this.FormFigura.reset();
     this.crearFormFigura();
     this.tramite303State.setListaFiguras(this.listaFiguras);
-    this.router.navigate(['aga/despacho-mercancias/registro']);
+    this.mostrarModal = false;
+    this.cerrar.emit();
   }
 
   /**
-   * Muestra una notificación de alerta al usuario cuando no hay información para guardar.
+   * Habilita los campos del formulario.
    */
-  notificacionAlert(): void {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'warning',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'No hay información para guardar',
-      cerrar: true,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
+  habilitarCampos(): void {
+    this.FormFigura.get('nombreAgente')?.enable();
+    this.FormFigura.get('apellidoPaternoAgente')?.enable();
+    this.FormFigura.get('apellidoMaternoAgente')?.enable();
+    this.FormFigura.get('patente')?.enable();
+    this.FormFigura.get('rfcModal')?.enable();
+    this.FormFigura.get('razonSocial')?.enable();
   }
 
   /**
    * Cancela la figura y navega de vuelta a la página de registro.
    */
   cancelarFigura(): void {
-    this.router.navigate(['aga/despacho-mercancias/registro']);
+    this.mostrarModal = false;
+    this.cerrar.emit();
+  }
+
+  /**
+   * Método que se ejecuta al ocultar el modal.
+   */
+  onHidden(): void {
+    this.mostrarModal = false;
   }
 }
