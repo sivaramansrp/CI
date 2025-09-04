@@ -42,9 +42,13 @@ export const TEXTOS_REQUISITOS = {
  */
 export const TEXTOS_CANCELACIONS = {
   TEXTOS_CANCELACION: `
-   <div style="text-align: center;">
-      <strong style="color: grey;">Corrija los siguientes errores:</strong><br>
-      <span style="color: red;">Para ejecutar la búsqueda se requiere ingresar al menos el parámetro de búsqueda requerido.</span>
-    </div>
+  <div style="text-align: center;">
+  <strong style="color: #585051ff">Corrija los siguientes errores:</strong><br>
+  </div>
+  <div style="text-align: left; margin-top: 5px;">
+  <span style="color: #d1776b">
+    1.<span style="padding-left: 110px;">Para ejecutar la búsqueda se requiere ingresar al menos el parámetro de búsqueda requerido.</span>
+  </span>
+</div>
   `
 };
