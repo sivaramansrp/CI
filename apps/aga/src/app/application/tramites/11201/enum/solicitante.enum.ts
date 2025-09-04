@@ -31,13 +31,13 @@ export const ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO: ConfiguracionColumna<DatosD
 
 export const HEADER_MAP_DATOS: { [key: string]: string } = {
       Id: 'id',
-      Aduana: 'aduana',
+      'Aduana': 'aduana',
       'Iniciales del equipo': 'inicialesEquipo',
       'Tipo de equipo': 'tipoEquipo',
       'Número de equipo': 'numeroEquipo',
       'Dígito Verificador': 'digitoVerificador',
       'Fecha Ingreso': 'fechaIngreso',
-      Vigencia: 'vigencia',
+      'Vigencia': 'vigencia',
       'Estado de constancia': 'estadoConstancia',
       'Existe en VUCEM': 'existeEnVUCEM',
       'Id constancia': 'idConstancia',
