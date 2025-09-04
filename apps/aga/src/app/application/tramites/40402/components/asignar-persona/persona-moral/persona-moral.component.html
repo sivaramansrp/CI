@@ -15,7 +15,7 @@
   <div class="col-md-12">
     <div class="pull-right">
   <button type="button" name="ModificarPME" class="btn btn-default" [disabled]="soloLectura || indiceSeleccionado === null" data-bs-toggle="modal" data-bs-target="#modalAgregarPME" (click)="modificarRegistro()">Modificar</button>
-  <button type="button" name="EliminarPME" class="btn btn-danger ms-2" [disabled]="soloLectura || (indiceSeleccionado === null && filasSeleccionadas.length === 0)" (click)="filasSeleccionadas.length > 0 ? eliminarRegistrosSeleccionados() : eliminarRegistro()">Eliminar</button>
+  <button type="button" name="EliminarPME" class="btn btn-danger ms-2" [disabled]="soloLectura || (indiceSeleccionado === null && filasSeleccionadas.length === 0)" data-bs-toggle="modal" data-bs-target="#confirmarEliminar">Eliminar</button>
   <ng-container *ngIf="personaMoralExtranjeraTabla.length === 0; else yaAgregada">
     <button type="button" name="AgregarPME" class="btn btn-primary ms-2" [disabled]="soloLectura" data-bs-toggle="modal" data-bs-target="#modalAgregarPME" (click)="indiceSeleccionado = null">Agregar</button>
   </ng-container>
@@ -138,6 +138,43 @@
             <button type="button" class="btn btn-primary" id="guardarPME" name="guardar" (click)="agregarPME(personaMoralExtranjeraForm.getRawValue())" [disabled]="soloLectura">{{ indiceSeleccionado !== null ? 'Guardar' : 'Agregar' }}</button>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Confirmar Eliminación Modal -->
+<div id="confirmarEliminar" class="modal fade" tabindex="-1"
+  aria-labelledby="confirmarEliminarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm eliminar-modal" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <label>¿Desea eliminar el elemento seleccionado?</label>
+      </div>
+      <div class="modal-footer" style="justify-content: center">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="filasSeleccionadas.length > 0 ? eliminarRegistrosSeleccionados() : eliminarRegistro()"
+          data-bs-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Confirmar datos eliminados correctamente Modal -->
+<div id="confirmarEliminados" class="modal fade" tabindex="-1"
+  aria-labelledby="confirmarEliminarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm eliminar-modal" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <label>Datos eliminados correctamente</label>
+      </div>
+      <div class="modal-footer" style="justify-content: center">
+        <button type="button" class="btn btn-primary"
+          data-bs-dismiss="modal">Aceptar</button>
       </div>
     </div>
   </div>
