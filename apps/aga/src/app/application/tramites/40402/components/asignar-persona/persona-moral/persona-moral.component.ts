@@ -307,7 +307,6 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
     const PAIS = this.personaMoralExtranjeraForm.get('paisPME')?.value;
     this.tramite40402Store.setPaisPME(PAIS);
   }
-
   /**
    * Agrega una nueva persona moral extranjera a la tabla.
    * @param personaMoralExtranjeraFormDatos Datos del formulario
@@ -351,7 +350,7 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
           tipoNotificacion: 'alert',
           categoria: 'INFORMACION',
           modo: 'action',
-          titulo: 'Registro agregado',
+          titulo: 'Alerta',
           mensaje: 'Datos guardados correctamente',
           cerrar: true,
           txtBtnAceptar: 'Aceptar',

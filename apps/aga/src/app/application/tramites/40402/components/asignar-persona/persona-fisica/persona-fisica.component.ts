@@ -401,7 +401,7 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
           tipoNotificacion: 'alert',
           categoria: 'INFORMACION',
           modo: 'html',
-          titulo: 'Registro agregado',
+          titulo: 'Alerta',
           mensaje: 'Datos guardados correctamente',
           cerrar: true,
           txtBtnAceptar: 'Aceptar',
@@ -426,12 +426,12 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
     }
 }
     /**
-     * Bandera para mostrar la notificación cuando ya existe un registro agregado.
+     * Bandera para mostrar la notificación cuando ya existe un Alerta.
      * @type {boolean}
      */
   mostrarNotificacionYaAgregada: boolean = false;
     /**
-     * Objeto de notificación que se muestra cuando ya existe un registro agregado.
+     * Objeto de notificación que se muestra cuando ya existe un Alerta.
      * @type {Notificacion}
      */
   notificacionYaAgregada!: Notificacion;
