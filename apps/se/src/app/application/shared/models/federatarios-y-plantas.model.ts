@@ -51,6 +51,11 @@ export interface FederatariosEncabezado {
   numeroDeNotaria: string;
   entidadFederativa: string;
   municipioODelegacion: string;
+  estado: string;
+  estadoOptions: string;
+  estadoUno: string;
+  estadoDos: string;
+  estadoTres: string;
 }
 
 /**
