@@ -290,7 +290,7 @@
     "id": 42,
     "tramite": 110204,
     "linkDashboard": "/se/pexim/certificado-origen",
-    "linkDepartment": "/se/pexim/certificado-origen",
+    "linkDepartment": "/pago/pexim/certificado-origen",
     "department": "se"
   },
   {
