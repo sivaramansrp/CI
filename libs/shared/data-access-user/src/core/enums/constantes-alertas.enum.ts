@@ -129,6 +129,10 @@ export const TXT_ALERTA_ACUSE = (folio: string): string => {
   return `Tu solicitud ha sido registrada con el siguiente número de folio:  < ${folio} >`;
 };
 
+export const TXT_ALERTA_ACUSE_RECIBO = (folio: string): string => {
+  return `El requerimiento se registró exitosamente con el folio de requerimiento  < ${folio} >`;
+};
+
 export const TITULO_ACUSE = 'Acuse(s)';
 export const ENCABEZADO_TABLA_ACUSE = [
   {
