@@ -45,7 +45,7 @@
                   <div class="row mt-5">
                     <div class="col-md-12">
                       <label>Tipo de mercancía*:</label>
-                      <input type="text" width:140 required="true" class="form-control" id="tipoMercancia" formControlName="tipoMercancia" [ngClass]=" isValid(datosMercancia, 'tipoMercancia') ? 'required' : '' " (change)=" setValoresStore( datosMercancia, 'tipoMercancia', 'setTipoMercancia' ) " [disabled]="esFormularioSoloLectura" />
+                      <input type="text" required="true" class="form-control" id="tipoMercancia" formControlName="tipoMercancia" [ngClass]=" isValid(datosMercancia, 'tipoMercancia') ? 'required' : '' " (change)=" setValoresStore( datosMercancia, 'tipoMercancia', 'setTipoMercancia' ) " [disabled]="esFormularioSoloLectura" />
                       <div *ngIf="datosMercancia.get('tipoMercancia')?.invalid && datosMercancia.get('tipoMercancia')?.touched" class="text-danger">
                         <small *ngIf="datosMercancia.get('tipoMercancia')?.errors?.['required']">
                           El tipo de mercancía es obligatorio.
