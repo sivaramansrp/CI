@@ -91,10 +91,11 @@
       </div>
     </div>
 
-    <div class="row my-5" style="text-align: center">
-      <ng-alert class="alerta-bold my-4" [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
+    <div class="row mt-5" style="text-align: center">
+      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
     </div>
     <div class="table-container centered-table-wrapper mt-5">
+      <ng-titulo titulo="Certificados disponibles" />
       @if (!estaBuscando && !mostrarErrores) {
         <app-tabla-dinamica
           (dblclick)="onTablaDblClick($event)"
