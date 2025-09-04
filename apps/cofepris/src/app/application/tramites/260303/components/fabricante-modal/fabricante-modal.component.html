@@ -110,7 +110,8 @@
                     </div> 
                 }
             }
-            @if (tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica') {
+             
+            @if (tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica' && tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'extranjero') {
                 <div class="row mt-5">
                     <h5>Datos personales</h5>
                     <div class="col-md-4">
@@ -153,6 +154,7 @@
                                 formControlName="pais" 
                                 label="País" 
                                 [required]="true"
+                                [isDisabled]="true"
                                 name="pais"
                                 (change)="eventoDeCambioDeValor($event, tercerosRelacionadosForm,'pais', 'setTercerosRelacionadosPais')"
                                 ></app-catalogo-select>
@@ -287,5 +289,3 @@
     <button type="button" class="btn btn-primary ms-3" (click)="guardar()">Guardar</button>
   </div>
 </div>
-
-    

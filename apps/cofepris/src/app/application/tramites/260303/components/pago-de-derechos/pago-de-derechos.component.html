@@ -5,114 +5,106 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="claveDe" class="form-label">Clave de referencia*:</label>
-                    <input type="text" id="claveDe" 
-                        formControlName="claveDeReferencia" 
-                        class="form-control"
+                    <input type="text" id="claveDe" formControlName="claveDeReferencia" class="form-control"
                         maxlength="9"
                         (change)="setValoresStore(pagoDerechosForm,'claveDeReferencia', 'setClaveDeReferencia')">
                 </div>
-                @if(pagoDerechosForm.controls['claveDeReferencia'].invalid && pagoDerechosForm.controls['claveDeReferencia'].touched) {
-                    <div class="d-grid">
-                        @if(pagoDerechosForm.controls['claveDeReferencia'].errors?.['required']) {
-                            <span class="mensaje-error">Todos los campos de pago son requeridos</span>
-                        }
-                        @if(pagoDerechosForm.controls['claveDeReferencia'].errors?.['maxlength']) {
-                            <span class="mensaje-error">Máximo 9 caracteres permitidos</span>
-                        }
-                    </div>
+                @if(pagoDerechosForm.controls['claveDeReferencia'].invalid &&
+                pagoDerechosForm.controls['claveDeReferencia'].touched) {
+                <div class="d-grid">
+                    @if(pagoDerechosForm.controls['claveDeReferencia'].errors?.['required']) {
+                    <span class="mensaje-error">Todos los campos de pago son requeridos</span>
+                    }
+                    @if(pagoDerechosForm.controls['claveDeReferencia'].errors?.['maxlength']) {
+                    <span class="mensaje-error">Máximo 9 caracteres permitidos</span>
+                    }
+                </div>
                 }
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="cadena" class="form-label">Cadena de la dependencia*:</label>
-                    <input type="text" id="cadena" 
-                        formControlName="cadenaDaLaDependencia" 
-                        class="form-control"
+                    <input type="text" id="cadena" formControlName="cadenaDaLaDependencia" class="form-control"
                         maxlength="14"
                         (change)="setValoresStore(pagoDerechosForm,'cadenaDaLaDependencia', 'setCadenaDaLaDependencia')">
                 </div>
-                @if(pagoDerechosForm.controls['cadenaDaLaDependencia'].invalid && pagoDerechosForm.controls['cadenaDaLaDependencia'].touched) {
-                    <div class="d-grid">
-                        @if(pagoDerechosForm.controls['cadenaDaLaDependencia'].errors?.['required']) {
-                            <span class="mensaje-error">Todos los campos de pago son requeridos</span>
-                        }
-                        @if(pagoDerechosForm.controls['cadenaDaLaDependencia'].errors?.['maxlength']) {
-                            <span class="mensaje-error">Máximo 14 caracteres permitidos</span>
-                        }
-                    </div>
+                @if(pagoDerechosForm.controls['cadenaDaLaDependencia'].invalid &&
+                pagoDerechosForm.controls['cadenaDaLaDependencia'].touched) {
+                <div class="d-grid">
+                    @if(pagoDerechosForm.controls['cadenaDaLaDependencia'].errors?.['required']) {
+                    <span class="mensaje-error">Todos los campos de pago son requeridos</span>
+                    }
+                    @if(pagoDerechosForm.controls['cadenaDaLaDependencia'].errors?.['maxlength']) {
+                    <span class="mensaje-error">Máximo 14 caracteres permitidos</span>
+                    }
+                </div>
                 }
             </div>
             <div class="col-md-4">
-                <app-catalogo-select 
-                    [catalogo]="bancoCatalogo" 
-                    [label]="'Banco'"
-                    [required]="true"
-                    formControlName="banco"
-                    name="banco"
-                    (change)="setValoresStore(pagoDerechosForm,'banco', 'setBanco')" [isDisabled]="consultaState.readonly">
+                <app-catalogo-select [catalogo]="bancoCatalogo" [label]="'Banco'" [required]="true"
+                    formControlName="banco" name="banco"
+                    (change)="setValoresStore(pagoDerechosForm,'banco', 'setBanco')"
+                    [isDisabled]="consultaState.readonly">
                 </app-catalogo-select>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="Llave" class="form-label">Llave de pago: <span class="text-danger">*</span></label>
-                    <input type="text" id="Llave" 
-                        formControlName="laveDePago" 
-                        class="form-control"
-                        maxlength="30"
+                    <label for="Llave" class="form-label">Llave de pago:</label>
+                    <input type="text" id="Llave" formControlName="laveDePago" class="form-control" maxlength="30"
                         (change)="setValoresStore(pagoDerechosForm,'laveDePago', 'setLaveDePago')">
                 </div>
-                @if(pagoDerechosForm.controls['laveDePago'].invalid && pagoDerechosForm.controls['laveDePago'].touched) {
-                    <div class="d-grid">
-                        @if(pagoDerechosForm.controls['laveDePago'].errors?.['required']) {
-                            <span class="mensaje-error">Todos los campos de pago son requeridos</span>
-                        }
-                        @if(pagoDerechosForm.controls['laveDePago'].errors?.['maxlength']) {
-                            <span class="mensaje-error">Máximo 30 caracteres permitidos</span>
-                        }
-                        @if(pagoDerechosForm.controls['laveDePago'].errors?.['pattern']) {
-                            <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
-                        }
-                    </div>
+                @if(pagoDerechosForm.controls['laveDePago'].invalid && pagoDerechosForm.controls['laveDePago'].touched)
+                {
+                <div class="d-grid">
+                    @if(pagoDerechosForm.controls['laveDePago'].errors?.['required']) {
+                    <span class="mensaje-error">Todos los campos de pago son requeridos</span>
+                    }
+                    @if(pagoDerechosForm.controls['laveDePago'].errors?.['maxlength']) {
+                    <span class="mensaje-error">Máximo 30 caracteres permitidos</span>
+                    }
+                    @if(pagoDerechosForm.controls['laveDePago'].errors?.['pattern']) {
+                    <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                    }
+                </div>
                 }
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <input-fecha 
-                        [datos]="fechaInicioInput" 
-                        (valorCambiado)="cambioFechaFinal($event)" 
-                        name="fechaDePago"
-                        [setFecha]="pagoDerechosForm.get('fechaDePago')?.value">
+                    <input-fecha [datos]="INPUT_FECHA_CONFIG" [setFecha]="pagoDerechosForm.get('fecha')?.value"
+                        (valorCambiado)="cambioFechaFinal($event)">
                     </input-fecha>
-                  </div>
+                </div>
+                <div *ngIf="fechaFuturaSeleccionada" class="text-danger mt-1">
+                    La fecha de pago debe ser menor o igual a la fecha actual.
+                </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="importe" class="form-label">Importe de pago*: </label>
-                    <input type="text" id="Importe" 
-                        formControlName="importeDePago" 
-                        class="form-control"
-                        maxlength="16"
+                    <input type="text" id="Importe" formControlName="importeDePago" class="form-control" maxlength="16"
                         (change)="setValoresStore(pagoDerechosForm,'importeDePago', 'setImporteDePago')">
                 </div>
-                @if(pagoDerechosForm.controls['importeDePago'].invalid && pagoDerechosForm.controls['importeDePago'].touched) {
-                    <div class="d-grid">
-                        @if(pagoDerechosForm.controls['importeDePago'].errors?.['required']) {
-                            <span class="mensaje-error">Todos los campos de pago son requeridos</span>
-                        }
-                        @if(pagoDerechosForm.controls['importeDePago'].errors?.['maxlength']) {
-                            <span class="mensaje-error">Máximo 16 dígitos permitidos</span>
-                        }
-                        @if(pagoDerechosForm.controls['importeDePago'].errors?.['pattern']) {
-                            <span class="mensaje-error">Este campo solo permite números hasta dos decimales</span>
-                        }
-                    </div>
+                @if(pagoDerechosForm.controls['importeDePago'].invalid &&
+                pagoDerechosForm.controls['importeDePago'].touched) {
+                <div class="d-grid">
+                    @if(pagoDerechosForm.controls['importeDePago'].errors?.['required']) {
+                    <span class="mensaje-error">Todos los campos de pago son requeridos</span>
+                    }
+                    @if(pagoDerechosForm.controls['importeDePago'].errors?.['maxlength']) {
+                    <span class="mensaje-error">Máximo 16 dígitos permitidos</span>
+                    }
+                    @if(pagoDerechosForm.controls['importeDePago'].errors?.['pattern']) {
+                    <span class="mensaje-error">Este campo solo permite números hasta dos decimales</span>
+                    }
+                </div>
                 }
             </div>
         </div>
         <div class="d-flex justify-content-end mt-5">
-            <button type="button" class="btn btn-danger" [disabled]="consultaState.readonly" (click)="borrarDatosDelPago()">Borrar datos del pago</button>
+            <button type="button" class="btn btn-danger" [disabled]="consultaState.readonly"
+                (click)="borrarDatosDelPago()">Borrar datos del pago</button>
         </div>
     </form>
 </div>
