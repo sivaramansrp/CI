@@ -43,6 +43,9 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
    */
   onFilasSeleccionadas(filas: PersonaMoralExtranjeraForm[]): void {
     this.filasSeleccionadas = filas;
+    if (filas.length === 0) {
+      this.indiceSeleccionado = null;
+    }
   }
 
   /**

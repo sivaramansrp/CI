@@ -216,6 +216,9 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
    */
   onFilasSeleccionadas(filas: PersonaFisicaExtranjeraForm[]): void {
     this.selectedRows = filas;
+    if (filas.length === 0) {
+      this.indiceSeleccionado = null;
+    }
   }
 
   /**

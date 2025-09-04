@@ -5,11 +5,13 @@ import { Tramite40402Store } from '../../../estados/tramite40402.store';
 import { Tramite40402Query } from '../../../estados/tramite40402.query';
 import { TransportacionMaritimaService } from '../../../../40402/services/transportacion-maritima/transportacion-maritima.service';
 import { provideHttpClient } from '@angular/common/http';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src/core/queries/consulta.query';
 
 describe('PersonaMoralComponent', () => {
   let component: PersonaMoralComponent;
   let tramite40402Store: Tramite40402Store;
   let transportacionMaritimaService: TransportacionMaritimaService;
+  let consultaioQuery: ConsultaioQuery;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -20,16 +22,19 @@ describe('PersonaMoralComponent', () => {
         Tramite40402Store,
         Tramite40402Query,
         TransportacionMaritimaService,
+        ConsultaioQuery,
       ],
     });
 
     tramite40402Store = TestBed.inject(Tramite40402Store);
     transportacionMaritimaService = TestBed.inject(TransportacionMaritimaService);
+    consultaioQuery = TestBed.inject(ConsultaioQuery);
     component = new PersonaMoralComponent(
       TestBed.inject(FormBuilder),
       tramite40402Store,
       TestBed.inject(Tramite40402Query),
-      transportacionMaritimaService
+      transportacionMaritimaService,
+      consultaioQuery
     );
   });
 

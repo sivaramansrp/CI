@@ -5,6 +5,7 @@ import { Tramite40402Store } from '../../../estados/tramite40402.store';
 import { Tramite40402Query } from '../../../estados/tramite40402.query';
 import { TransportacionMaritimaService } from '../../../../40402/services/transportacion-maritima/transportacion-maritima.service';
 import { provideHttpClient } from '@angular/common/http';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src/core/queries/consulta.query';
 
 describe('PersonaFisicaComponent', () => {
   let component: PersonaFisicaComponent;
@@ -29,7 +30,9 @@ describe('PersonaFisicaComponent', () => {
       TestBed.inject(FormBuilder),
       tramite40402Store,
       TestBed.inject(Tramite40402Query),
-      transportacionMaritimaService
+      transportacionMaritimaService,
+      TestBed.inject(ConsultaioQuery),
+      {} as any
     );
   });
 
