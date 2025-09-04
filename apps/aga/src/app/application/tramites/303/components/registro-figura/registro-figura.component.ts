@@ -10,7 +10,6 @@ import { TipoFiguraSeleccionada } from '../../../../core/enums/303/figuras.enum'
 import { TipoFiguraService } from '../../../../core/services/303/tipo-figura.service';
 import { Tramite303Query } from '../../../../core/queries/tramite303.query';
 
-
 @Component({
   selector: 'app-registro-figura',
   standalone: true,
@@ -41,14 +40,14 @@ export class RegistroFiguraComponent implements OnChanges, OnInit, OnDestroy {
   public nuevaNotificacion!: Notificacion;
   /** Lista de figuras aduanales */
   private listaFiguras: AgenteAduanal[] = [];
-  /** Figura seleccionada */
-  private figuraSeleccionada: AgenteAduanal | null = null;
   constructor(
     private tramite303State: Tramite303StoreService,
     private tramite303Query: Tramite303Query,
     private figuraService: TipoFiguraService,
     private fb: FormBuilder
-  ) { }
+  ) {
+    this.crearFormFigura();
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -60,14 +59,13 @@ export class RegistroFiguraComponent implements OnChanges, OnInit, OnDestroy {
       .pipe(
         map((seccionState) => {
           this.tramiteConsultado = seccionState;
+          this.tipoFiguraSeleccionada = this.tramiteConsultado?.tipoFigura || '';
+          this.listaFiguras = this.tramiteConsultado?.listaFiguras || [];
+          this.asignarTitulo();
         }),
         takeUntil(this.destroyNotifier$)
       )
       .subscribe();
-    this.tipoFiguraSeleccionada = this.tramiteConsultado?.tipoFigura || '';
-    this.asignarTitulo();
-    this.listaFiguras = this.tramiteConsultado?.listaFiguras || [];
-    this.crearFormFigura();
   }
 
   /**
@@ -247,43 +245,38 @@ export class RegistroFiguraComponent implements OnChanges, OnInit, OnDestroy {
     if (this.tipoFiguraSeleccionada === TipoFiguraSeleccionada.AgenciaAduanal) {
       const RAZON_SOCIAL = this.FormFigura.get('razonSocial')?.value?.trim();
       const PATENTE = this.FormFigura.get('idNumPatenteModal')?.value?.trim();
-
       if (!RAZON_SOCIAL || !PATENTE) {
         this.notificacionAlert();
         return;
       }
-      const YA_EXISTE = this.listaFiguras.some(figura => figura.patente === PATENTE);
-      if (YA_EXISTE) {
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'warning',
-          modo: 'action',
-          titulo: '',
-          mensaje: 'Esta patente/autorización ya fué capturada.',
-          cerrar: true,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        };
-        return;
-      }
     }
     this.habilitarCampos();
-    const FORM_FIGURA = this.FormFigura.value;
-    const FIGURA_SELEC: AgenteAduanal = {
-      nombreAgente: FORM_FIGURA.nombreAgente,
-      apellidoPaternoAgente: FORM_FIGURA.apellidoPaternoAgente,
-      apellidoMaternoAgente: FORM_FIGURA.apellidoMaternoAgente,
-      patente: (FORM_FIGURA.patente || FORM_FIGURA.idNumPatenteModal)?.trim(),
-      rfcModal: FORM_FIGURA.rfcModal,
-      razonSocial: FORM_FIGURA.razonSocial?.trim() || '',
+    const FORM_VALUE = this.FormFigura.value;
+    const FIGURA: AgenteAduanal = {
+      nombreAgente: FORM_VALUE.nombreAgente,
+      apellidoPaternoAgente: FORM_VALUE.apellidoPaternoAgente,
+      apellidoMaternoAgente: FORM_VALUE.apellidoMaternoAgente,
+      patente: FORM_VALUE.patente,
+      rfcModal: FORM_VALUE.rfcModal,
+      razonSocial: FORM_VALUE.razonSocial
+    };
+    const YA_EXISTE = this.listaFiguras.some(e => e.patente === FIGURA.patente);
+    if (YA_EXISTE) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'La figura ya existe',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
     }
-    if (this.listaFiguras.length === 0) {
-      this.listaFiguras = [];
-    }
-    this.listaFiguras = [...this.listaFiguras, FIGURA_SELEC];
-    this.FormFigura.reset();
-    this.crearFormFigura();
+    this.listaFiguras = [...this.listaFiguras, FIGURA];
     this.tramite303State.setListaFiguras(this.listaFiguras);
+    this.FormFigura.reset();
     this.mostrarModal = false;
     this.cerrar.emit();
   }

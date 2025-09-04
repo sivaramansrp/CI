@@ -55,11 +55,11 @@ export class AgentesAgenciasAduanalesComponent implements OnInit, OnDestroy {
       .pipe(
         map((seccionState) => {
           this.tramiteConsultado = seccionState;
+          this.personasFiguras = this.tramiteConsultado?.listaFiguras || [];
         }),
         takeUntil(this.destroyNotifier$)
       )
       .subscribe();
-    this.personasFiguras = this.tramiteConsultado?.listaFiguras || [];
   }
 
   /**
