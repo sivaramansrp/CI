@@ -84,8 +84,11 @@ export class ModificacionComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente.
-   * @param {FormBuilder} fb - FormBuilder para crear formularios reactivos.
-   * @param {ProsecService} prosecService - Servicio para obtener los datos de modificación.
+   * @param fb - FormBuilder para crear formularios reactivos.
+   * @param prosecService - Servicio para gestionar datos relacionados con PROSEC.
+   * @param consultaioQuery - Query para obtener el estado de la consultaio.
+   * @param store - Store para gestionar el estado del trámite 90304.
+   * @param query - Query para obtener el estado del trámite 90304.
    */
   constructor(
     private fb: FormBuilder,
@@ -171,6 +174,12 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       });
   }
   
+  /**
+   * Maneja el evento de clic en una fila de la tabla.
+   * Cambia el estado de `isBaja` y actualiza el texto del botón según corresponda.
+   * @param {Event} event - Evento de clic en la fila.
+   * @returns {void}
+   */
   onFilaClic(event: Event): void {
     const TARGET = event.target as HTMLInputElement;
     if (TARGET.tagName === 'BUTTON' && TARGET.textContent?.trim() === 'Baja') {
