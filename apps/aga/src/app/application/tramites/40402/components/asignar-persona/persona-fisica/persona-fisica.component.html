@@ -35,7 +35,7 @@
             <ng-titulo titulo="Persona física extranjera"></ng-titulo>
             <div class="row">
               <div class="col-md-4">
-                <label class="form-label" for="nombrePFE">Nombre(s)*:</label>
+                <label class="form-label" for="nombrePFE">Nombre(s)<span [ngClass]="{'text-danger': personaFisicaExtranjeraForm.get('nombrePFE')?.invalid && (personaFisicaExtranjeraForm.get('nombrePFE')?.touched || personaFisicaExtranjeraForm.get('nombrePFE')?.dirty)}">*</span>:</label>
                 <input type="text" class="form-control" size="40" id="nombrePFE" maxlength="200" formControlName="nombrePFE" 
                        [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('nombrePFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('nombrePFE')?.touched}"
                        (change)="setValoresStore(personaFisicaExtranjeraForm,'nombrePFE', 'setNombrePFE')">
@@ -44,7 +44,7 @@
                 }
               </div>
               <div class="col-md-4">
-                <label class="form-label" for="apellidoPaterno">Primer apellido*:</label>
+                <label class="form-label" for="apellidoPaterno">Primer apellido<span [ngClass]="{'text-danger': personaFisicaExtranjeraForm.get('apellidoPaternoPFE')?.invalid && (personaFisicaExtranjeraForm.get('apellidoPaternoPFE')?.touched || personaFisicaExtranjeraForm.get('apellidoPaternoPFE')?.dirty)}">*</span>:</label>
                 <input type="text" class="form-control" size="40" id="apellidoPaternoPFE" maxlength="200" formControlName="apellidoPaternoPFE" 
                        [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('apellidoPaternoPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('apellidoPaternoPFE')?.touched}"
                        (change)="setValoresStore(personaFisicaExtranjeraForm,'apellidoPaternoPFE', 'setApellidoPaternoPFE')">
@@ -64,7 +64,7 @@
             </div>
             <div class="row">
               <div class="col-md-8">
-                <label class="form-label" for="seguroNumero">Número del seguro social*: <span class="bi bi-question-circle-fill mx-2" tooltip="{{ TEXTOS.NUMERO_DE_SEGURO_TITULO_TOOLTIP }}" placement="top"></span></label>
+                <label class="form-label" for="seguroNumero">Número del seguro social<span [ngClass]="{'text-danger': personaFisicaExtranjeraForm.get('seguroNumero')?.invalid && (personaFisicaExtranjeraForm.get('seguroNumero')?.touched || personaFisicaExtranjeraForm.get('seguroNumero')?.dirty)}">*</span>: <span class="bi bi-question-circle-fill mx-2" tooltip="{{ TEXTOS.NUMERO_DE_SEGURO_TITULO_TOOLTIP }}" placement="top"></span></label>
                 <input type="text" class="form-control" size="40" id="nssPFE" maxlength="11" formControlName="seguroNumero" 
                        [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('seguroNumero')?.errors?.['required'] && personaFisicaExtranjeraForm.get('seguroNumero')?.touched}"
                        (change)="setValoresStore(personaFisicaExtranjeraForm,'seguroNumero', 'setSeguroNumero')">
@@ -73,7 +73,7 @@
                 }
               </div>
               <div class="col-md-4">
-                <label class="form-label" for="correoPFE">Correo electrónico*:</label>
+                <label class="form-label" for="correoPFE">Correo electrónico<span [ngClass]="{'text-danger': personaFisicaExtranjeraForm.get('correoPFE')?.invalid && (personaFisicaExtranjeraForm.get('correoPFE')?.touched || personaFisicaExtranjeraForm.get('correoPFE')?.dirty)}">*</span>:</label>
                 <input type="text" class="form-control" name="correoPFE" formControlName="correoPFE" maxlength="320" id="correoPFE" 
                        [ngClass]="{'is-invalid': (personaFisicaExtranjeraForm.get('correoPFE')?.errors?.['required'] || personaFisicaExtranjeraForm.get('correoPFE')?.errors?.['email']) && personaFisicaExtranjeraForm.get('correoPFE')?.touched}"
                        (change)="setValoresStore(personaFisicaExtranjeraForm,'correoPFE', 'setCorreoPFE')">
@@ -92,7 +92,7 @@
                 <app-catalogo-select [catalogo]="pais" [id]="'paisPFE'" formControlName="paisPFE" [label]="'País'" name="cvePais" (change)="paisSeleccion()" [required]="true" [markTouched]="!!personaFisicaExtranjeraForm.get('paisPFE')?.touched"></app-catalogo-select>
               </div>
               <div class="col-md-4 pt-7">
-                <label for="codigoPostal">Código postal*:</label>
+                <label for="codigoPostal">Código postal<span [ngClass]="{'text-danger': personaFisicaExtranjeraForm.get('codigoPostalPFE')?.invalid && (personaFisicaExtranjeraForm.get('codigoPostalPFE')?.touched || personaFisicaExtranjeraForm.get('codigoPostalPFE')?.dirty)}">*</span>:</label>
                 <input type="text" class="form-control" name="codigoPostalPFE" id="codigoPostalPFE" formControlName="codigoPostalPFE" maxlength="12" 
                        [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('codigoPostalPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('codigoPostalPFE')?.touched}"
                        (change)="setValoresStore(personaFisicaExtranjeraForm,'codigoPostalPFE', 'setCodigoPostalPFE')">
@@ -101,7 +101,7 @@
                 }
               </div>
               <div class="col-md-4 pt-7">
-                <label for="estado">Estado*:</label>
+                <label for="estado">Estado<span [ngClass]="{'text-danger': personaFisicaExtranjeraForm.get('estadoPFE')?.invalid && (personaFisicaExtranjeraForm.get('estadoPFE')?.touched || personaFisicaExtranjeraForm.get('estadoPFE')?.dirty)}">*</span>:</label>
                 <input type="text" class="form-control" name="estadoPFE" id="entidadFederativaPFE" formControlName="estadoPFE" maxlength="200" 
                        [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('estadoPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('estadoPFE')?.touched}"
                        (change)="setValoresStore(personaFisicaExtranjeraForm,'estadoPFE', 'setEstadoPFE')">
@@ -112,7 +112,7 @@
             </div>
             <div class="row pt-7">
               <div class="col-md-4">
-                <label for="ciudad">Ciudad*:</label>
+                <label for="ciudad">Ciudad<span [ngClass]="{'text-danger': personaFisicaExtranjeraForm.get('ciudadPFE')?.invalid && (personaFisicaExtranjeraForm.get('ciudadPFE')?.touched || personaFisicaExtranjeraForm.get('ciudadPFE')?.dirty)}">*</span>:</label>
                 <input type="text" class="form-control" name="ciudadPFE" id="ciudadPFE" formControlName="ciudadPFE" maxlength="120" 
                        [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('ciudadPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('ciudadPFE')?.touched}"
                        (change)="setValoresStore(personaFisicaExtranjeraForm,'ciudadPFE', 'setCiudadPFE')">
@@ -121,7 +121,7 @@
                 }
               </div>
               <div class="col-md-8">
-                <label for="calle">Calle*:</label>
+                <label for="calle">Calle<span [ngClass]="{'text-danger': personaFisicaExtranjeraForm.get('callePFE')?.invalid && (personaFisicaExtranjeraForm.get('callePFE')?.touched || personaFisicaExtranjeraForm.get('callePFE')?.dirty)}">*</span>:</label>
                 <input type="text" class="form-control" name="callePFE" id="callePFE" formControlName="callePFE" maxlength="100" 
                        [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('callePFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('callePFE')?.touched}"
                        (change)="setValoresStore(personaFisicaExtranjeraForm,'callePFE', 'setCallePFE')">
@@ -132,7 +132,7 @@
             </div>
             <div class="row pt-7">
               <div class="col-md-4">
-                <label for="numeroExterior">Número exterior*:</label>
+                <label for="numeroExterior">Número exterior<span [ngClass]="{'text-danger': personaFisicaExtranjeraForm.get('numeroExteriorPFE')?.invalid && (personaFisicaExtranjeraForm.get('numeroExteriorPFE')?.touched || personaFisicaExtranjeraForm.get('numeroExteriorPFE')?.dirty)}">*</span>:</label>
                 <input type="text" class="form-control" name="numeroExteriorPFE" id="numeroExteriorPFE" formControlName="numeroExteriorPFE" maxlength="55" 
                        [ngClass]="{'is-invalid': personaFisicaExtranjeraForm.get('numeroExteriorPFE')?.errors?.['required'] && personaFisicaExtranjeraForm.get('numeroExteriorPFE')?.touched}"
                        (change)="setValoresStore(personaFisicaExtranjeraForm,'numeroExteriorPFE', 'setNumeroExteriorPFE')">
