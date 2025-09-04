@@ -104,7 +104,7 @@
         <div class="col-md-8"></div>
         <div class="col-md-4 text-end">
           <div class="btn-group">
-            <button class="btn btn-primary me-2" type="button" data-bs-toggle="modal"
+            <button class="btn btn-default me-2" type="button" data-bs-toggle="modal"
               data-bs-target="#modalCargarArchivo" [disabled]="esFormularioSoloLectura">
               Cargar archivo
             </button>
@@ -126,29 +126,36 @@
     <div class="modal-dialog modal-dialog-centered modal-fullscreen">
       <div class="modal-content">
         <div class="modal-body">
-          <div class="row">
-            <div class="container mt-5">
-              <ng-titulo titulo="Carger Archivo"> </ng-titulo>
-              <div class="row mb-5">
-                <div class="col-md-12 d-flex justify-content-between align-items-center">
-                  <div class="d-flex align-items-center">
-                    <label for="archivoNacionales" class="form-label me-3">
-                      Archivo:
-                    </label>
-                    <input type="file" id="archivoNacionales" class="form-control w-auto" />
+                 <div class="row">
+                  <div class="container mt-4">
+                     <ng-titulo titulo="Cargar archivo"> </ng-titulo>
+                  
+                     <div class="row align-items-center mb-3">
+                        <div class="col-md-3">
+                           <label for="archivoNacionales" class="form-label mb-0 me-3">Archivo:</label>
+                        </div>
+                     </div>
+                  
+                     <div class="row align-items-center mb-3">
+                        <div class="col-md-6 d-flex align-items-center">
+                           <input type="file" id="archivoNacionales" class="d-none" (change)="archivoSeleccionado($event)" #archivoNacionalesElemento />
+
+                           <div class="input-group w-100">
+                              <button type="button" (click)="archivoNacionalesElemento?.click()">
+                                 Seleccionar archivo
+                              </button>
+                              <input type="text" class="form-control" [value]="nombreArchivoSeleccionado || 'Sin archivos seleccionados'" readonly
+                                 style="background-color: #fff; cursor: default;" />
+                           </div>
+                        </div>
+                     </div>
                   </div>
-                  <div></div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
+               </div>
           <div class="row btn-row">
             <div class="col-md-7"></div>
             <div class="col-md-4 text-end">
               <div class="btn-group">
-                <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
+                <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-default cancel me-2"
                   data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
                   Cerrar
                 </button>
@@ -205,11 +212,11 @@
           <div class="col-md-6 col-sm-6 text-end">
             <div class="btn-group">
               <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura">
-                Elimina Partida
+                Eliminar Partida
               </button>
               <button class="btn btn-danger" type="button" (click)="navegarParaModificarPartida()"
                 data-bs-toggle="modal" data-bs-target="#modalModificarPartida" [disabled]="esFormularioSoloLectura">
-                Mofificar partida
+                Modificar partida mercancia
               </button>
             </div>
           </div>

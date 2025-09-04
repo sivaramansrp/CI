@@ -210,6 +210,15 @@ export interface ProyectoImmex {
 export interface AnexoFraccionAnarelaria {
   anexoFraccion: string; // Fracción
   anexoFraccionExportacion: string; // Fracción de exportación
-  anexoDescripcionComercial: string; // Descripción comercial
+  anexoDescripcionComercialExportacion: string; // Descripción comercial
   anexoFraccionImportacion: string; // Fracción de importación
+  anexoDescripcionComercialImportacion: string; // Descripción comercial
+  anexoDos: string; // Anexo II
+  tipo: string; // Tipo
+  umt: string; // Unidad de medida
+  catagoria: string; // Catagoría
+  valorEnMonedaMensual: string; // Valor en moneda mensual
+  valorEnMonedaAnual: string; // Valor en moneda anual
+  volumenMensual: string; // Volumen mensual
+  volumenAnual: string; // Volumen anual
 }

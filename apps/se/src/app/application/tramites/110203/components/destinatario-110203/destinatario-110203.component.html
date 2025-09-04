@@ -50,7 +50,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="fiscal">Número de registro fiscal*:</label>
-          <input class="form-control" id="fiscal" formControlName="fiscal" type="number" maxlength="30"  (change)="setValoresStore(destinatarioForm,'fiscal', 'setFiscal')">
+          <input class="form-control" id="fiscal" formControlName="fiscal" type="type" maxlength="30"  (change)="setValoresStore(destinatarioForm,'fiscal', 'setFiscal')">
         </div>
         @if(destinatarioForm.controls['fiscal'].invalid && destinatarioForm.controls['fiscal'].touched) {
   <div class="d-grid">

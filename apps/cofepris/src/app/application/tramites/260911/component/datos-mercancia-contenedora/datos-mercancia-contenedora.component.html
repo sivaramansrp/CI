@@ -1,7 +1,7 @@
 <div class="container">
   <ng-titulo titulo="Datos mercancía"></ng-titulo>
 
-  <form [formGroup]="mercanciaForm">
+  <form *ngIf="mercanciaForm" [formGroup]="mercanciaForm">
     <div class="row">
       <div class="col-md-10">
         <div class="ml-2">
@@ -51,28 +51,22 @@
         </div>
       </div>
     </div>
-    @if(elementosAnadidos.includes('marca')){
-    <div class="row">
-      <div class="col-md-10">
-        <div class="form-group">
-          <label class="form-label" for="marca">Marca*:</label>
-          <input
-            class="form-control"
-            id="marca"
-            type="text"
-            formControlName="marca"
-            [ngClass]="isValid(mercanciaForm, 'marca') ? 'required' : ''"
-          />
-          <div
-            class="mensaje-error"
-            *ngIf="mercanciaForm.get('marca')?.errors?.['required'] && mercanciaForm.get('marca')?.touched"
-          >
-            Este campo es obligatorio.
+    <ng-container *ngIf="elementosAnadidos.includes('marca')">
+      <div class="row">
+        <div class="col-md-10">
+          <div class="form-group">
+            <label class="form-label" for="marca">Marca*:</label>
+            <input
+              class="form-control"
+              id="marca"
+              type="text"
+              formControlName="marca"
+            />
           </div>
         </div>
       </div>
-    </div>
-    } @if(!elementosNoValidos.includes('denominacionDistintiva')) {
+    </ng-container>
+
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
@@ -98,38 +92,35 @@
         </div>
       </div>
     </div>
-    } @if(!elementosNoValidos.includes('denominacionComun')){
-    <div class="row">
-      <div class="col-md-10">
-        <div class="form-group">
-          <label class="form-label" for="denominacionComun"
-            >Denominación o nombre científico*:</label
-          >
-           <span
-            tooltip="Denominación común internacional o genérica"
-          >
-            <i class="bi bi-question-circle-fill"></i>
-          </span>
-          <input
-            class="form-control"
-            id="denominacionComun"
-            type="text"
-            maxlength="120"
-            formControlName="denominacionComun"
-            [ngClass]="
-              isValid(mercanciaForm, 'denominacionComun') ? 'required' : ''
-            "
-          />
-          <div
-            class="mensaje-error"
-            *ngIf="mercanciaForm.get('denominacionComun')?.errors?.['required'] && mercanciaForm.get('denominacionComun')?.touched"
-          >
-            Este campo es obligatorio.
+
+    <ng-container *ngIf="!elementosNoValidos.includes('denominacionComun')">
+      <div class="row">
+        <div class="col-md-10">
+          <div class="form-group">
+            <label class="form-label" for="denominacionComun"
+              >Denominación o nombre científico*:</label
+            >
+            <span
+              tooltip="Denominación común internacional o genérica"
+            >
+              <i class="bi bi-question-circle-fill"></i>
+            </span>
+            <input
+              class="form-control"
+              id="denominacionComun"
+              type="text"
+              formControlName="denominacionComun"
+            />
+            <div
+              class="mensaje-error"
+              *ngIf="mercanciaForm.get('denominacionComun')?.errors?.['required'] && mercanciaForm.get('denominacionComun')?.touched"
+            >
+              Este campo es obligatorio.
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    }
+    </ng-container>
 
     <div class="row">
       <div class="col-md-10 ml-2">

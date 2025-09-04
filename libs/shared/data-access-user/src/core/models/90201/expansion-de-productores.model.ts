@@ -11,13 +11,17 @@ export interface ProductorIndirectoTabla {
 }
 
 export interface DomiciliosDePlantasTabla {
-   calle: string;
-   numero: string;
-   interior: string;
-   postal: string;
-   colonia: string;
+  calle: string;
+  numero: string;
+  interior: string;
+  postal: string;
+  colonia: string;
   municipio: string;
   estado: string;
+  pais?: string;
+  registro?: string;
+  razonsocial?: string;
+  domicilio?: string;
 }
 
 export interface SectoresTabla {
@@ -31,6 +35,11 @@ export interface SectoresTabla {
  * el campo asociado y otras propiedades de estilo.
  */
 export interface MercanciasTabla {
+  fraccion: string;
+  claveDel: string;
+}
+
+export interface FraccionTabla {
   fraccion: string;
   claveDel: string;
 }

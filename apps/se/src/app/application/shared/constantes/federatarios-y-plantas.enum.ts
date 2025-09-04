@@ -136,7 +136,7 @@ export const DEFAULT_ESTADOS_OPTIONS = {
 export const DATOS_FEDERATARIOS = [
   {
     id: 'nombre',
-    labelNombre: 'Nombre(s)',
+    labelNombre: 'Nombre(s)*',
     campo: 'nombre',
     clase: 'col-md-4',
     tipoInput: 'text',
@@ -185,14 +185,14 @@ export const DATOS_FEDERATARIOS = [
   },
   {
     id: 'numeroDeActa',
-    labelNombre: 'Número de acta',
+    labelNombre: 'Número de acta*',
     campo: 'numeroDeActa',
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: true,
     solo_lectura: false,
     validadores: [
-      { tipo: '' }
+      { tipo: 'required' }
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
@@ -217,14 +217,14 @@ export const DATOS_FEDERATARIOS = [
   },
   {
     id: 'numeroDeNotaria',
-    labelNombre: 'Número de notaría',
+    labelNombre: 'Número de notaría*',
     campo: 'numeroDeNotaria',
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: true,
     solo_lectura: false,
     validadores: [
-      { tipo: '' }
+      { tipo: 'required' }
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
@@ -232,7 +232,7 @@ export const DATOS_FEDERATARIOS = [
   },
   {
     id: 'estado',
-    labelNombre: 'Estado',
+    labelNombre: 'Estado*',
     campo: 'estado',
     clase: 'col-md-4',
     tipoInput: 'select-catalogos',
@@ -246,7 +246,7 @@ export const DATOS_FEDERATARIOS = [
   },
   {
     id: 'estadoOptions',
-    labelNombre: 'Municipio o alcaldía',
+    labelNombre: 'Municipio o alcaldía*',
     campo: 'estadoOptions',
     clase: 'col-md-4',
     tipoInput: 'select-catalogos',

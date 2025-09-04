@@ -116,12 +116,12 @@ export class Tramite11204Store extends Store<Solicitud11204State> {
 
   /**
    * Establece la vigencia.
-   * @param Vigencia Vigencia.
+   * @param vigencia vigencia.
    */
-  public setVigencia(Vigencia: string): void {
+  public setVigencia(vigencia: string): void {
     this.update((state) => ({
       ...state,
-      Vigencia,
+      vigencia,
     }));
   }
 

@@ -56,12 +56,7 @@
           [label]="'Banco'"
           [required]="true"
           [isDisabled]="esFormularioSoloLectura"
-        ></app-catalogo-select>
-        <div class="error-message">
-          <small *ngIf="pagoDerechosForm.get('banco')?.touched && pagoDerechosForm.get('banco')?.hasError('required')" class="text-danger">
-            Este campo es obligatorio.
-          </small>
-        </div>       
+        ></app-catalogo-select>   
       </div>
     </div>
 

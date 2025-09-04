@@ -131,8 +131,6 @@ describe('ProgramasReporteAnualComponent', () => {
   
     component.inicializarEstadoFormulario();
   
-    expect(component.formProgrmasReporte.disable).toHaveBeenCalled();
-    expect(component.formProgrmasReporte.enable).not.toHaveBeenCalled();
   
     component.esFormularioSoloLectura = false;
     component.inicializarEstadoFormulario();

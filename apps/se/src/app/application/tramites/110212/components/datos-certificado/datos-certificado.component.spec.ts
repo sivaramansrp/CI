@@ -152,13 +152,13 @@ describe('DatosCertificadoComponent', () => {
   });
   it('should disable the form when soloLectura is true', () => {
     component.soloLectura = true;
-    component.inicializarEstadoFormulario();
+    component.inicializarFormulario();
     expect(component.formDatosCertificado.disabled).toBe(true);
   });
 
   it('should enable the form when soloLectura is false', () => {
     component.soloLectura = false;
-    component.inicializarEstadoFormulario();
+    component.inicializarFormulario();
     expect(component.formDatosCertificado.enabled).toBe(true);
   });
 });

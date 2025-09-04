@@ -235,6 +235,22 @@ export class TercerosRelacionadosProveederComponent implements OnDestroy {
   >();
 
   /**
+   * @property {boolean} tableErrorMeassageDispalyProveedor
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error para la tabla de proveedores.
+   * Se establece a true cuando la validación de la tabla de proveedores falla (está vacía y es obligatoria).
+   */
+  tableErrorMeassageDispalyProveedor: boolean = false;
+
+  /**
+   * @property {boolean} tableErrorMeassageDispalyFabricante
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error para la tabla de fabricantes.
+   * Se establece a true cuando la validación de la tabla de fabricantes falla (está vacía y es obligatoria).
+   */
+  tableErrorMeassageDispalyFabricante: boolean = false;
+
+  /**
    * @constructor
    * Inyecta los servicios de router, rutas activas y store del trámite.
    *
@@ -511,6 +527,33 @@ export class TercerosRelacionadosProveederComponent implements OnDestroy {
 
     this.facturadorEliminar.emit(this.facturadorTablaDatos);
   }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida si hay datos suficientes en las tablas de terceros relacionados según la configuración habilitada.
+   * - Si el proveedor está habilitado, verifica que haya al menos un proveedor en la tabla.
+   * - Si el fabricante está habilitado, verifica que haya al menos un fabricante en la tabla.
+   * - Si ninguno está habilitado, considera el formulario como válido.
+   * Actualiza las banderas de error para mostrar mensajes visuales cuando corresponda.
+   * 
+   * @returns {boolean} true si las tablas requeridas contienen al menos un registro, false en caso contrario.
+   */
+  validarFormulario(): boolean {
+      let VALIDATE = false;
+     if(this.habilitarProveedor) {
+      
+      VALIDATE =this.proveedorTablaDatos.length > 0;
+      this.tableErrorMeassageDispalyProveedor=!VALIDATE;
+     }
+     if(this.habilitarFabricante){
+      VALIDATE = this.fabricanteTablaDatos.length > 0;
+        this.tableErrorMeassageDispalyFabricante=!VALIDATE;
+     }
+     if(!this.habilitarProveedor && !this.habilitarFabricante) {
+       VALIDATE = true;
+     }
+     return VALIDATE;
+    }
 
   /**
    * Ciclo de vida `OnDestroy`.

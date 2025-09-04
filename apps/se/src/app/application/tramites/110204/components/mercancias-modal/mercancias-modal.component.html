@@ -73,6 +73,9 @@
           <div class="row mb-3">
             <div class="col-md-4">
               <input-fecha [datos]="fechaFinalInput" [setFecha]="mercanciaForm.get('fechaFinal')?.value" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+              <div *ngIf="mercanciaForm.get('fechaFinal')?.touched && mercanciaForm.get('fechaFinal')?.invalid">
+                <small *ngIf="mercanciaForm.get('fechaFinal')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+              </div>
             </div>
             <div class="col-md-4 mt-3">
               <label for="numeroFactura">N° factura*:</label>
@@ -96,19 +99,9 @@
         <button type="button" class="btn btn-default" data-dismiss="modal" (click)="cerrarModal()">Cancelar</button>
         <button type="button" class="btn btn-primary" (click)="activarModal()">Agregar</button>
       </div>
-
-      <div class="modal" tabindex="-1" [ngClass]="{'show': mostrarAlerta}" [ngStyle]="{'display': mostrarAlerta ? 'block' : 'none'}">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 350px;">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal()"></button>
-            </div>
-            <div class="modal-body">
-              <p>{{ mensajeDeAlerta }}</p>
-            </div>
-            <div class="modal-footer justify-content-center">
-              <button type="button" class="btn btn-primary" (click)="cerrarModal()">Aceptar</button>
-            </div>
-          </div>
-        </div>
-      </div>
+    </div>
+</div>
+<div>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="aceptar()" ></lib-notificaciones>
+</div>
+      

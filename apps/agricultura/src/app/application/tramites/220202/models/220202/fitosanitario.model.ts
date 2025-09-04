@@ -692,6 +692,10 @@ export interface TercerosrelacionadosTable {
     exportadorPais: string;
 }
 
+/**
+ * Interfaz que define la estructura de datos para la información de la solicitud.
+ * @interface DatosDeLaSolicitud
+ */
 export interface DatosDeLaSolicitud {
     /**
      * Catálogo de países.
@@ -703,6 +707,72 @@ export interface DatosDeLaSolicitud {
     estados: Catalogo[];
 }
 
+/**
+ * Interfaz que define la estructura de datos para la información de mercancías.
+ * @interface DatosMercancia
+ */
+export interface DatosMercancia {
+
+    /**
+   * Lista de tipos de requisitos asociados a la solicitud.
+   */
+  tipoRequisitoList: Catalogo[];
+
+  /**
+   * Lista de requisitos específicos relacionados con la solicitud.
+   */
+  requisitoList: Catalogo[];
+
+  /**
+   * Lista de fracciones arancelarias aplicables.
+   */
+  fraccionArancelariaList: Catalogo[];
+
+  /**
+   * Lista de NICO (Números de Identificación Comercial) relacionados.
+   */
+  nicoList: Catalogo[];
+
+  /**
+   * Lista de unidades de medida de transporte (UMT).
+   */
+  umtList: Catalogo[];
+
+  /**
+   * Lista de unidades de medida comercial (UMC).
+   */
+  umcList: Catalogo[];
+
+  /**
+   * Lista de especies relacionadas con la solicitud.
+   */
+  especieList: Catalogo[];
+
+  /**
+   * Lista de usos específicos asociados a la solicitud.
+   */
+  usoList: Catalogo[];
+
+  /**
+   * Lista de países de origen de los productos o bienes.
+   */
+  paisOrigenList: Catalogo[];
+
+  /**
+   * Lista de países de procedencia de los productos o bienes.
+   */
+  paisDeProcedenciaList: Catalogo[];
+
+  /**
+   * Lista de sexos aplicables en el contexto de la solicitud.
+   */
+  sexoList: Catalogo[];
+
+  /**
+   * Lista de tipos de productos aplicables en el contexto de la solicitud.
+   */
+  tipoDeProductoList: Catalogo[];
+}
 /**
  * Interfaz que define la estructura de etiquetas cruzadas para elementos de interfaz.
  * @interface CrossListEtiqueta

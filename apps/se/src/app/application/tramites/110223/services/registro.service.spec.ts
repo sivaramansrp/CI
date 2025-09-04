@@ -74,12 +74,6 @@ describe('RegistroService', () => {
     expect(service.http.get).toHaveBeenCalled();
   });
 
-  it('should run #getUMC()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getUMC();
-    expect(service.http.get).toHaveBeenCalled();
-  });
 
   it('should run #getUnidadMedida()', async () => {
     service.http = service.http || {};

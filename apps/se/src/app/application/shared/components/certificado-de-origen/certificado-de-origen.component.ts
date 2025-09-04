@@ -1,9 +1,10 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent,Notificacion, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AbstractControl,FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors,ValidatorFn, Validators} from '@angular/forms';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent,Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
-import { Component,ElementRef,EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output,ViewChild, SimpleChanges } from '@angular/core';
+import { Component,ElementRef,EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
-import { AbstractControl,FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators,ValidationErrors,ValidatorFn} from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import {EIGHT_DIGIT_NUMBER_REGEX} from '@ng-mf/data-access-user'
 import { FormularioSi } from '../../models/certificado-origen.model';
 import { Mercancia } from '../../models/modificacion.enum';
 import { Modal } from 'bootstrap';
@@ -69,8 +70,8 @@ export const FECHA_FIN = {
     CatalogoSelectComponent,
     InputCheckComponent,
     AlertComponent,
-    NotificacionesComponent
-    
+    NotificacionesComponent,
+    forwardRef(() => SoloLetrasNumerosDirective),
   ],  
   templateUrl: './certificado-de-origen.component.html',
   providers:[ToastrService],
@@ -159,6 +160,21 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    */
   @Input() paisBloqu!: Catalogo[];
 
+    /**
+   * @property {Catalogo[]} paises
+   * @description
+   * Propiedad de entrada que recibe el arreglo de países disponibles para seleccionar en el formulario.
+   * Se utiliza para mostrar opciones de país en los menús desplegables del componente.
+   */
+  @Input() paises!: Catalogo[];
+
+  /**
+   * @property {boolean} domicilioTercer
+   * @description
+   * Propiedad de entrada que indica si el domicilio de un tercero debe mostrarse o estar habilitado en el formulario.
+   * Permite controlar la visualización de campos relacionados con el domicilio de terceros.
+   */
+  @Input() domicilioTercer!: boolean;
   /**
    * Propiedad de entrada que recibe los datos de la tabla de mercancia.
    * @type {Mercancia[]}
@@ -207,6 +223,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * @type {EventEmitter<boolean>}
    */
   @Output() setbuscarMercanciaEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  /**
+   * @property {EventEmitter<boolean>} setModelCargaPorArchivo
+   * @description
+   * Evento de salida que emite un valor booleano para indicar que se debe abrir el modal de carga por archivo.
+   * Permite notificar al componente padre para mostrar el modal correspondiente.
+   */
+  @Output() setModelCargaPorArchivo: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
    * Propiedad de salida que emite la fila seleccionada de mercancia.
@@ -225,6 +248,14 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * @type {Mercancia[]}
    */
   public seleccionadaguardarClicado: Mercancia[] = [];
+/**
+ * @descripcion
+ * Representa la mercancía seleccionada actualmente para ser guardada.  
+ * Inicialmente se define como un objeto vacío tipado como `Mercancia`.
+ *
+ * @type {Mercancia}
+ */
+    public seletedccionadaguardarClicado: Mercancia = {} as Mercancia;
 
   /**
    * Formulario reactivo utilizado para la gestión de los datos del certificado.
@@ -381,12 +412,58 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   datosSeleccionados!: Mercancia;
 
   /**
+   * @property {boolean} mostrarError
+   * @description
+   * Indica si se debe mostrar un mensaje de error en el componente.
+   * Se utiliza para controlar la visualización de alertas cuando el formulario no es válido.
+   */
+  mostrarError: boolean = true;
+
+  /**
     * Emisor de eventos para indicar si el formulario es válido.
     * @type {EventEmitter<boolean>}
     */
   @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
     false
   );
+ /**
+ * @descripcion
+ * Evento que se emite cuando se hace clic en **guardar** en la tabla de mercancías.
+ * Envía un arreglo de objetos `Mercancia` hacia el componente padre.
+ */
+/**
+ * @descripcion
+ * Evento de salida que se emite cuando el usuario hace clic en **guardar**.
+ *
+ * @detalle
+ * Envía al componente padre un arreglo de objetos `Mercancia` con la información
+ * que debe procesarse o almacenarse.
+ *
+ * @ejemplo
+ * ```html
+ * <app-datos-certificado
+ *   (guardarClicadoChange)="onGuardar($event)">
+ * </app-datos-certificado>
+ * ```
+ *
+ * @event guardarClicadoChange
+ * @type {EventEmitter<Mercancia[]>}
+ */
+@Output() guardarClicadoChange = new EventEmitter<Mercancia[]>();
+
+/**
+ * @descripcion
+ * Evento que se emite cuando una mercancía es **seleccionada** en la tabla.
+ * Envía el objeto `Mercancia` seleccionado al componente padre.
+ */
+@Output() seleccionado = new EventEmitter<Mercancia>();
+
+/**
+ * @descripcion
+ * Bandera para indicar si hay un error de validación en la tabla.
+ * Se utiliza para mostrar mensajes de error al usuario.
+ */
+tableErrorMensajeError: boolean = false;
 
 
   /**
@@ -413,7 +490,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
       si: [false],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
   bloque: ['', [Validators.required, Validators.min(0)]],
-  fraccionArancelariaForm: ['', [Validators.maxLength(8)]],
+  fraccionArancelariaForm: ['', [Validators.maxLength(8),Validators.pattern(EIGHT_DIGIT_NUMBER_REGEX)]],
   registroProductoForm: ['', [Validators.maxLength(12)]],
   nombreComercialForm: ['', [Validators.maxLength(200)]],
   fechaInicioInput: [''],
@@ -425,9 +502,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   razonSocial: [''],
   calle: ['', [Validators.maxLength(90)]],
   numeroLetra: ['', [Validators.maxLength(30)]],
-  pais:[''],
-  ciudad:[''],
-  telefono:[''],
+    numeroLetras: ['', [Validators.maxLength(30)]],
+  pais: [''],
+  ciudad: [''],
+  lada: [''],
+  telefono: [''],
+  fax:[''],
+  correo:[''],
   correoElectronico:[''],
 
     },
@@ -444,9 +525,9 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
     const PRIMER_APELLIDO = this.formCertificado.get('primerApellido');
     const CALLE = this.formCertificado.get('calle');
     const NUMERO_LETRA = this.formCertificado.get('numeroLetra');
-  
-    if (!PRIMER_APELLIDO || !CALLE || !NUMERO_LETRA) return;
-  
+
+    if (!PRIMER_APELLIDO || !CALLE || !NUMERO_LETRA) { return; }
+
     if (this.idProcedimiento === 110205) {
     
       PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
@@ -476,16 +557,22 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
       this.formCertificado.disable();
     }
   }
-
+  /**
+   * @method ngOnChanges
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta cuando cambian las propiedades de entrada del componente.
+   * Si la propiedad `datosForm` cambia y tiene un valor actual, actualiza el formulario `formCertificado` con los nuevos datos.
+   * Si el formulario no existe, lo crea antes de aplicar los valores.
+   * 
+   * @param {SimpleChanges} changes - Objeto que contiene los cambios en las propiedades de entrada.
+   * @returns {void}
+   */
 ngOnChanges(changes: SimpleChanges):void {
   if (changes['datosForm']?.currentValue) {
-    if(this.formCertificado){
-  this.formCertificado.patchValue(this.datosForm);
-    }
-    else{
+    if (!this.formCertificado) {
       this.createForm();
     }
-  
+    this.formCertificado.patchValue(this.datosForm);
   }
 }
   /**
@@ -528,6 +615,36 @@ ngOnChanges(changes: SimpleChanges):void {
    */
   tipoSeleccion(estado: Catalogo): void {
     this.paisBloquEvent.emit(estado);
+  }
+/**
+ * Validador personalizado para asegurar que la fecha de inicio no sea posterior a la fecha final.
+ *  * @param componente La instancia del componente que contiene el formulario.
+ * @returns Un objeto de errores de validación si la fecha de inicio es posterior a la fecha final, o null si no hay errores.
+ * @remarks
+ * Este validador se utiliza para validar un rango de fechas en un formulario reactivo de Angular.
+ * Asegura que la fecha de inicio no sea posterior a la fecha final.
+ * @command
+ * Utilice este validador en la configuración del formulario para aplicar la validación de rango de fechas.
+ * Por ejemplo, en el método `createForm()`, agregue `{ validators: CertificadoDeOrigenComponent.dateRangeValidator(this) }` al grupo del formulario.
+ * */
+  verificarRFCDos(): void {
+   
+    if ( this.formCertificado.get('fraccionArancelariaForm')?.errors?.['pattern']) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Datos incorrectos, favor de verificar.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+    else {
+     this.buscarMercancia();
+    }
   }
 
    /**
@@ -572,14 +689,15 @@ ngOnChanges(changes: SimpleChanges):void {
   ngOnInit(): void {
     this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
+    this.nuevaNotificacion = {} as Notificacion
     this.inicializarFormularioArchivo();
   }
    validarFormularios(): boolean {
-if(this.formCertificado.valid){
-  return true;
-}
-this.formCertificado.markAllAsTouched();
-return false;
+  if(this.formCertificado.valid){
+    return true;
+  }
+  this.formCertificado.markAllAsTouched();
+  return false;
   }
 
   /**
@@ -602,9 +720,6 @@ return false;
     * y su estado asociado en el store.
     */
   setValoresStore(formGroupName: string, campo: string, storeStateName: string): void {
-    if(this.formCertificado.get('si')?.value){
-     this.formCertificado.get('primerApellido')?.setValidators([Validators.required,Validators.maxLength(20)]);
-    }
     const VALOR = this.formCertificado.get(campo)?.value;
     this.formaValida.emit(this.formCertificado.valid);
     this.formCertificadoEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
@@ -685,8 +800,36 @@ return false;
    * 
    * @returns {void}
    */
-  abrirModal(tableData: Mercancia): void {
-    this.filaClics.emit(tableData);
+  abrirModal(): void {
+    if(this.seleccionadaguardarClicado.length > 0){
+  this.filaClics.emit(this.seletedccionadaguardarClicado);
+    }
+    else{
+       this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'No hay elementos seleccionados para eliminar.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+  }
+
+
+  /**
+   * @method abrirModalCargaPorArchivo
+   * @description
+   * Emite un evento para indicar que se debe abrir el modal de carga por archivo.
+   * Utiliza el EventEmitter `setModelCargaPorArchivo` para notificar al componente padre.
+   * 
+   * @returns {void}
+   */
+  abrirModalCargaPorArchivo(): void {
+    this.setModelCargaPorArchivo.emit(true);
   }
 
   /**
@@ -694,7 +837,9 @@ return false;
  * @param {Mercancia} evento - Objeto de tipo `Mercancia` que ha sido seleccionado.
  */
   obtenerSeleccionadoMercancia(evento: Mercancia): void {
+    this.seletedccionadaguardarClicado = evento
     this.seleccionadaguardarClicado = [evento];
+    this.seleccionado.emit(evento);
   }
 
   /**
@@ -703,8 +848,33 @@ return false;
   * Este método verifica si hay elementos seleccionados antes de vaciar el arreglo `guardarClicado`.
   */
   eliminarSeleccionados(): void {
-    if (this.seleccionadaguardarClicado.length > 0) {
-      this.guardarClicado = [];
+
+    if (this.seleccionadaguardarClicado.length > 0 && this.guardarClicado?.length > 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'info',
+        titulo: 'Confirmación requerida',
+        mensaje: '¿Desea eliminar este dato?',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Sí',
+        txtBtnCancelar: 'No',
+        };
+     
+    }
+    else{
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'No hay elementos seleccionados para eliminar.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
   }
   /**
@@ -750,5 +920,115 @@ return false;
     };
   }
 
- 
+  /**
+   * @method aceptar
+   * @description
+   * Oculta el mensaje de error en el componente estableciendo la propiedad `mostrarError` en `false`.
+   * Se utiliza generalmente como acción al aceptar una notificación o alerta mostrada al usuario.
+   * 
+   * @returns {void}
+   */
+  aceptar(): void {
+    this.mostrarError = false;
+  }
+  /**
+ * @descripcion
+ * Verifica la validez del formulario `formCertificado` aplicando validadores dinámicos
+ * según la selección del usuario y validando también la tabla de mercancías asociada.
+ *
+ * @detalle
+ * - Si el control `si` está marcado, agrega validadores obligatorios y de longitud máxima
+ *   a los campos `nombres`, `primerApellido`, `numeroDeRegistroFiscal` y `razonSocial`.
+ * - Si no está marcado, limpia los validadores de esos controles.
+ * - Actualiza la validez de cada control después de aplicar o limpiar validadores.
+ * - Marca todos los campos como "tocados" (`markAllAsTouched`) si el formulario es inválido.
+ * - Valida que exista al menos un registro en la colección `guardarClicado`.
+ * - Muestra un mensaje de error en la tabla si no hay registros.
+ *
+ * @returns {boolean}  
+ * `true` si el formulario y la tabla son válidos, `false` en caso contrario.
+ *
+ * @ejemplo
+ * ```ts
+ * if (this.validatorCheck()) {
+ *   // Proceder con el guardado
+ * } else {
+ *   // Mostrar errores en pantalla
+ * }
+ * ```
+ */
+ validatorCheck(): boolean {
+  if (!this.formCertificado) {
+    return false;
+  }
+
+  const CONTROL_NOMBRES = this.formCertificado.get('nombres');
+  const CONTROL_PRIMER_APELLIDO = this.formCertificado.get('primerApellido');
+  const CONTROL_NUMERO_REGISTRO = this.formCertificado.get('numeroDeRegistroFiscal');
+  const CONTROL_RAZON_SOCIAL = this.formCertificado.get('razonSocial');
+
+  if (this.formCertificado.get('si')?.value) {
+    CONTROL_NOMBRES?.setValidators([Validators.required, Validators.maxLength(20)]);
+    CONTROL_PRIMER_APELLIDO?.setValidators([Validators.required, Validators.maxLength(20)]);
+    CONTROL_NUMERO_REGISTRO?.setValidators([Validators.required, Validators.maxLength(30)]);
+    CONTROL_RAZON_SOCIAL?.setValidators([Validators.required, Validators.maxLength(200)]);
+  } else {
+    CONTROL_NOMBRES?.clearValidators();
+    CONTROL_PRIMER_APELLIDO?.clearValidators();
+    CONTROL_NUMERO_REGISTRO?.clearValidators();
+    CONTROL_RAZON_SOCIAL?.clearValidators();
+  }
+
+  // 🔹 Update all
+  CONTROL_NOMBRES?.updateValueAndValidity();
+  CONTROL_PRIMER_APELLIDO?.updateValueAndValidity();
+  CONTROL_NUMERO_REGISTRO?.updateValueAndValidity();
+  CONTROL_RAZON_SOCIAL?.updateValueAndValidity();
+
+  const IS_REGISTRO_FORM_VALID = this.formCertificado.valid;
+
+  if (!IS_REGISTRO_FORM_VALID) {
+    this.formCertificado.markAllAsTouched();
+  }
+
+  if (this.guardarClicado.length === 0) {
+    this.tableErrorMensajeError = true;
+    return false;
+  }
+
+  return IS_REGISTRO_FORM_VALID;
+}
+/**
+ * @descripcion
+ * Elimina de la lista `guardarClicado` los elementos previamente seleccionados
+ * cuando se recibe un evento de confirmación, y notifica el cambio al componente padre.
+ *
+ * @detalle
+ * - Obtiene los IDs de los elementos seleccionados en `seleccionadaguardarClicado`.
+ * - Filtra `guardarClicado` eliminando los que coincidan con esos IDs.
+ * - Emite el evento `guardarClicadoChange` con la nueva lista de mercancías.
+ * - Reinicia la notificación (`nuevaNotificacion`) a un objeto vacío.
+ *
+ * @param {boolean} event  
+ * Indica si se debe proceder con la eliminación (`true`) o no (`false`).
+ *
+ * @returns {void}  
+ * No retorna ningún valor.
+ *
+ * @ejemplo
+ * ```ts
+ * this.eliminarErrorMessage(true); // Elimina los elementos seleccionados
+ * this.eliminarErrorMessage(false); // No realiza ninguna acción
+ * ```
+ */
+eliminarErrorMessage(event:boolean): void {
+
+  if(event){
+ const IDS_A_ELIMINAR = this.seleccionadaguardarClicado.map(m => m.id);
+      this.guardarClicado = this.guardarClicado.filter(m => !IDS_A_ELIMINAR.includes(m.id));
+        this.guardarClicadoChange.emit(this.guardarClicado);
+  }
+  this.nuevaNotificacion = {} as Notificacion;
+}
+
 }

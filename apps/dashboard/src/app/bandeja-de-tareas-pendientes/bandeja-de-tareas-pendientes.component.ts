@@ -1,7 +1,8 @@
-import { BANDEJA_DE_TAREAS_PENDIENTES_FORMA , BandejaDeTareasPendientes, ConfiguracionColumna, ConsultaioStore, LibBandejaComponent, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { BANDEJA_DE_TAREAS_PENDIENTES_FORMA , BandejaDeTareasPendientes, ConfiguracionColumna, ConsultaioStore, LibBandejaComponent, ModeloDeFormaDinamica,esValidArray } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Departamento, TramiteItem } from '../models/confirmar-notificacion.model';
-import { Subject, takeUntil } from 'rxjs';
+import { LoginQuery,TareaStore } from '@ng-mf/data-access-user';
+import { Subject,map, takeUntil } from 'rxjs';
 import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
 import { CommonModule } from '@angular/common';
 import { SeleccionadoDepartamento } from '@libs/shared/data-access-user/src/core/models/shared/bandeja-de-tareas-pendientes.model';
@@ -129,11 +130,21 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
    * Estructura del formulario utilizado para la bandeja de tareas pendientes.
    */
     public bandejaDeTareasForma = BANDEJA_DE_TAREAS_PENDIENTES_FORMA;
+
+  /**
+   * Almacena el valor del RFC asociado al trámite.
+   */
+  public rfcValor: string = '';
   /*
    * Constructor del componente.
    * Inyecta el servicio BandejaDeSolicitudeService para obtener los datos necesarios.
    */
-    constructor(private bandejaSvc: BandejaDeSolicitudeService, private consultaStore: ConsultaioStore) {
+    constructor(
+        private bandejaSvc: BandejaDeSolicitudeService, 
+        private consultaStore: ConsultaioStore,
+        private loginQuery: LoginQuery, 
+        private _tareaStore: TareaStore
+      ) {
   
     }
   /*
@@ -141,11 +152,21 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
    * Llama al método para obtener los datos de la tabla al cargar el componente.
    */
     ngOnInit(): void {
+    this.loginQuery.selectLoginState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.rfcValor = seccionState.rfc;
+        })
+      )
+      .subscribe();
       this.getBandejaDeTablaDatos();
       this.getNombreDelDepartamento();
       this.obtieneTipoSolicitudes();
+      this.obtieneTareas();
     }
-/*
+
+    /*
    * Método para obtener los datos de la tabla de tareas pendientes desde el servicio.
    * Se suscribe al observable y asigna los datos obtenidos a la propiedad correspondiente.
    */
@@ -321,6 +342,58 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
             }
           }
         });
+    }
+
+  
+    /**
+     * Recupera las tareas pendientes para el usuario actual construyendo un cuerpo de solicitud
+     * con el RFC del usuario, roles e información del certificado, y luego lo envía al
+     * servicio backend. La respuesta se procesa como un arreglo de `BandejaDeTareasPendientes`.
+     *
+     * El observable se da de baja automáticamente cuando el componente se destruye.
+     *
+     * @remarks
+     * - Utiliza el método de servicio `bandejaSvc.postBandejaTareas` para obtener los datos.
+     * - El cuerpo de la solicitud incluye detalles de certificado y el rol "PersonaMoral" codificados.
+     * - El método no retorna un valor; desencadena efectos secundarios mediante la suscripción.
+     */
+    public obtieneTareas(): void {
+      const RFC = this.rfcValor;
+      const REQUEST_BODY = {
+        rfc_usuario: "",
+        roles: [""],
+        certificado: {
+          cert_serial_number: "",
+          tipo_certificado: ""
+        }
+      };
+
+      REQUEST_BODY.rfc_usuario = RFC;
+      REQUEST_BODY.roles = ["PersonaMoral"];
+      REQUEST_BODY.certificado = {
+        cert_serial_number: "20001000000100001815",
+        tipo_certificado: "TIPCE.02"
+      };
+
+      this.bandejaSvc.postBandejaTareas(REQUEST_BODY).pipe(
+        takeUntil(this.destroyNotifier$),
+        map((datos) => {
+          if(esValidArray(datos)){
+            const API_RESPONSE = JSON.parse(JSON.stringify(datos));
+            // Establece la información de la tarea en el store
+            this._tareaStore.establecerTarea(
+              API_RESPONSE[0].rfc,
+              API_RESPONSE[0].currentUser,
+              API_RESPONSE[0].folioTramite,
+              API_RESPONSE[0].idSolicitud,
+              API_RESPONSE[0].idTarea,
+              API_RESPONSE[0].roleTarea,
+              API_RESPONSE[0].tareasUsuario
+            );
+          }
+          
+        })
+      ).subscribe();
     }
   /*
    * Hook de destrucción del componente.

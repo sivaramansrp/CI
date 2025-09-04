@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { ManifiestosRespuesta, MercanciaCrossList,ProductoTable, RepresentanteLegalRespuesta,ScianTable } from '../models/aviso-model';
+import { ManifiestosRespuesta, MercanciaCrossList,ProductoTable, RepresentanteLegalRespuesta,ScianTable, SolicitudTable } from '../models/aviso-model';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { map } from 'rxjs/operators';
 
@@ -195,6 +195,18 @@ export class AvisoSanitarioService {
 
   obtenerProducto(): Observable<ProductoTable[]> {
     return this.http.get<ProductoTable[]>('assets/json/260601/producto-tabla.json')
+      .pipe(map((res) => res));
+  }
+  /**
+   * @method obtenerSolicitudDatos
+   * @description
+   * Obtiene los datos de las solicitudes desde un archivo JSON.
+   * Estos datos se utilizan para poblar la tabla de solicitudes en el componente de datos de la solicitud.
+   * 
+   * @returns {Observable<SolicitudTable[]>} Observable con un arreglo de datos de solicitudes.
+   */
+  obtenerSolicitudDatos(): Observable<SolicitudTable[]> {
+    return this.http.get<SolicitudTable[]>('assets/json/260601/solicitudDatos.json')
       .pipe(map((res) => res));
   }
 

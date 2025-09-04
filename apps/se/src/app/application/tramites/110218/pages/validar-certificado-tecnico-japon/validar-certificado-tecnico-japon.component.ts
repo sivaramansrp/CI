@@ -29,6 +29,11 @@ interface AccionBoton {
 export class ValidarCertificadoTecnicoJaponComponent {
 
   /**
+   * Referencia al componente de pestañas del solicitante.
+   */
+  @ViewChild('solicitanteTabs') solicitanteTabsComponent: { validarCamposObligatorios: () => boolean } | undefined;
+
+  /**
    * Lista de pasos del asistente para la validación del certificado.
    */
   pasosSolicitar: ListaPasosWizard[] = PASOS;
@@ -74,6 +79,11 @@ export class ValidarCertificadoTecnicoJaponComponent {
    *
    */
   getValorIndice(e: AccionBoton): void {
+    if (e.accion === 'cont' && this.solicitanteTabsComponent) {
+      if (!this.solicitanteTabsComponent.validarCamposObligatorios()) {
+        return;
+      }
+    }
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -83,6 +93,7 @@ export class ValidarCertificadoTecnicoJaponComponent {
       }
     }
   }
+
 
   /**
    * Controla la visibilidad del formulario de mercancía y almacena el índice de la pestaña activa.

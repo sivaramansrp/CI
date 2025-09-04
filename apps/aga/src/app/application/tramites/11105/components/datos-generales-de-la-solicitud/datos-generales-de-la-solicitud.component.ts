@@ -1,9 +1,10 @@
-import { CatalogoSelectComponent,CatalogosSelect,ConfiguracionColumna,ConsultaioQuery,ConsultaioState,InputCheckComponent,InputRadioComponent,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { CatalogosSelect,ConfiguracionColumna,ConsultaioQuery,ConsultaioState,InputCheckComponent,InputRadioComponent,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component,EventEmitter,OnDestroy,OnInit,Output } from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { ReplaySubject, Subject, map, merge, takeUntil } from 'rxjs';
 import { Solicitud11105State, Solicitud11105Store } from '../../estados/solicitud11105.store';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/40102/transportista-terrestre.model';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DATOS_GENERERALES_DE_LA_SOLICICTUD } from '../../constants/retirad-de-la-autorizacion-de-donaciones.enum';
 import { DetallesDelMercancia } from '@libs/shared/data-access-user/src/core/models/11105/detalles-del-merchancia.model';
@@ -241,10 +242,11 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
             takeUntil(this.destroyNotifier$),
             map((seccionState) => {
               this.solicitudState = seccionState;
+              this.donanteDomicilio();
             })
           )
           .subscribe();
-    this.donanteDomicilio();
+
     this.buscarAduanaDatos();
     this.buscarpropositoDeLaMercanciaDatos();
     this.buscarDetallesDelMercanciaDatos();

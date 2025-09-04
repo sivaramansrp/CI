@@ -47,6 +47,22 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
+    /**
+   * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent
+   * @description
+   * Referencia al componente hijo DatosDeLaSolicitudComponent para acceder a sus propiedades y métodos.
+   * Permite validar los formularios del componente y acceder a sus datos durante el flujo del trámite.
+   */
+  @ViewChild(DatosDeLaSolicitudComponent) datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+
+  /**
+   * @property {TercerosRelacionadosComponent} tercerosRelacionadosComponent
+   * @description
+   * Referencia al componente hijo TercerosRelacionadosComponent para acceder a sus propiedades y métodos.
+   * Permite gestionar la información de terceros relacionados con el trámite de aviso sanitario.
+   */
+  @ViewChild(TercerosRelacionadosComponent) tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
   /**
    * Configuración del formulario para la persona moral
    */
@@ -155,6 +171,46 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.tramite260601Store.updateTabSeleccionado(i);
+  }
+
+  /**
+   * @method validarFormularios
+   * @description
+   * Valida todos los formularios del paso de datos del trámite de aviso sanitario.
+   * Verifica la validez de los formularios en los componentes hijos (solicitante y datos de la solicitud).
+   * Si algún formulario es inválido, marca todos los campos como tocados para mostrar los mensajes de error.
+   * 
+   * @returns {boolean} true si todos los formularios son válidos, false si alguno es inválido o no existe la referencia al componente.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosDeLaSolicitudComponent) {
+      if (!this.datosDeLaSolicitudComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if(this.tercerosRelacionadosComponent) {
+      if (!this.tercerosRelacionadosComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
   }
   /**
    * Método del ciclo de vida `ngOnDestroy`.

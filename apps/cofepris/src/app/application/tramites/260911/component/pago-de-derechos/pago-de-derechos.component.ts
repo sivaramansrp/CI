@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent, REGEX_NUMERO_DECIMAL_2_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260911State, Tramite260911Store } from '../../estados/tramite260911.store';
 import { CommonModule } from '@angular/common';
@@ -32,17 +32,29 @@ import { Tramite260911Query } from '../../estados/tramite260911.query';
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss',
 })
-export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
+  ngOnChanges(): void {
+    if (this.pagoDeDerechosForm) {
+      if (this.tipoTramite === '1' || this.tipoTramite === '2') {
+        this.pagoDeDerechosForm.enable();
+      } else {
+        this.pagoDeDerechosForm.disable();
+      }
+    }
+  }
+  @Input() disabled: boolean = false;
+  @Input() tipoTramite: string = '';
   /**
    * Resetea todos los campos del formulario de pago de derechos y actualiza el store.
-   * Marca los controles como tocados para mostrar errores de campos requeridos si están vacíos.
+   * Marca los controles como pristine y untouched para ocultar errores de campos requeridos después de borrar.
    * Se invoca al hacer clic en el botón "Borrar datos del pago".
    */
   resetPagoDeDerechos(): void {
     if (this.pagoDeDerechosForm) {
       this.pagoDeDerechosForm.reset();
       Object.values(this.pagoDeDerechosForm.controls).forEach(control => {
-        control.markAsTouched();
+        control.markAsPristine();
+        control.markAsUntouched();
         control.updateValueAndValidity();
       });
       this.tramite260911Store.setTramite260911State({
@@ -150,8 +162,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.crearForm();
     if (this.esFormularioSoloLectura) {
       this.pagoDeDerechosForm.disable();
-    } else {
-      this.pagoDeDerechosForm.enable();
     }
   }
 
@@ -166,6 +176,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
     this.obtenerBancoList();
+    if (!this.esFormularioSoloLectura && !this.disabled) {
+      if (this.tipoTramite === '1' || this.tipoTramite === '2') {
+        this.pagoDeDerechosForm?.enable();
+      } else {
+        this.pagoDeDerechosForm?.disable();
+      }
+    } else {
+      this.pagoDeDerechosForm?.disable();
+    }
+    if (this.disabled) {
+      this.pagoDeDerechosForm.disable();
+    }
   }
 
   /**
@@ -210,6 +232,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         ],
       ],
     });
+    this.pagoDeDerechosForm.disable();
   }
 
   /**
@@ -251,7 +274,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   public validarLongitudMaxima(controlName: string, maxLength: number): void {
     const CONTROL = this.pagoDeDerechosForm.get(controlName);
-    if (CONTROL && CONTROL.value && CONTROL.value.length >= maxLength) {
+    if (CONTROL) {
+      if (CONTROL.value && CONTROL.value.length > maxLength) {
+        CONTROL.setErrors({ ...CONTROL.errors, longitudMaxima: true });
+      } else {
+        if (CONTROL.errors) {
+          const { longitudMaxima: LONGITUD_MAXIMA, ...OTHER_ERRORS } = CONTROL.errors;
+          CONTROL.setErrors(Object.keys(OTHER_ERRORS).length ? OTHER_ERRORS : null);
+        }
+      }
       CONTROL.markAsTouched();
       CONTROL.markAsDirty();
     }

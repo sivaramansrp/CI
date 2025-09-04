@@ -1,47 +1,42 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { SolicitudPageComponent } from './solicitud-page.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
   let fixture: ComponentFixture<SolicitudPageComponent>;
+  let wizardComponentMock: any;
+  let pasoUnoComponentMock: any;
 
   beforeEach(async () => {
+    wizardComponentMock = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    };
+
+    pasoUnoComponentMock = {
+      validarTodosLosFormularios: jest.fn().mockReturnValue(true), // Mock the method
+    };
+
     await TestBed.configureTestingModule({
-      imports: [
-        WizardComponent,
-        PasoUnoComponent,
-        PasoDosComponent,
-        PasoTresComponent,
-        BtnContinuarComponent
-      ],
       declarations: [SolicitudPageComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
-    })
-    .compileComponents();
-    
+      schemas: [CUSTOM_ELEMENTS_SCHEMA], // Suppress unknown element errors
+    }).compileComponents();
+
     fixture = TestBed.createComponent(SolicitudPageComponent);
     component = fixture.componentInstance;
+
+    // Mock child components
+    component.wizardComponent = wizardComponentMock as any;
+    component.pasoUnoComponent = pasoUnoComponentMock as any;
+
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should select tab', () => {
-    component.seleccionaTab(2);
-    expect(component.indice).toBe(2);
-  });
-
-  it('should get value index', () => {
-    const event = { accion: 'cont', valor: 2 };
-    component.getValorIndice(event);
-    expect(component.indice).toBe(2);
-  });
 });

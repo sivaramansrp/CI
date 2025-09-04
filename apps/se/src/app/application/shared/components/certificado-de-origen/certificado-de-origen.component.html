@@ -115,6 +115,72 @@
     }
                 </div>
             </div>
+            <div *ngIf="formCertificado.get('si')?.value && domicilioTercer" >
+              <ng-titulo titulo="Domicilio del tercer operador" />
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <app-catalogo-select [catalogo]="paises || []" [label]="'País'"
+                      name="pais" formControlName="pais"
+                      (change)="setValoresStore('formCertificado','pais','setFormCertificadoGenric')"
+                      [isDisabled]="esFormularioSoloLectura"
+                    ></app-catalogo-select>
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label class="form-label" for="ciudad">Ciudad (población, estado o provincia):*:</label>
+                    <input type="text" id="ciudad" class="form-control" formControlName="ciudad"
+                        (change)="setValoresStore('formCertificado','ciudad','setFormCertificadoGenric')" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label class="form-label" for="calle" >Calle*:</label>
+                    <input type="text" id="calle" class="form-control" formControlName="calle"
+                        (change)="setValoresStore('formCertificado','calle','setFormCertificadoGenric')" />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
+                  <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra"
+                      (change)="setValoresStore('formCertificado','numeroLetra','setFormCertificadoGenric')" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-1">
+                  <div class="form-group">
+                    <label class="form-label" for="lada">Lada*:</label>
+                    <input type="text" id="lada" class="form-control" formControlName="lada"
+                        (change)="setValoresStore('formCertificado','lada','setFormCertificadoGenric')" />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label class="form-label" for="telefono">Teléfono*:</label>
+                    <input type="text" id="telefono" class="form-control" formControlName="telefono"
+                        (change)="setValoresStore('formCertificado','telefono','setFormCertificadoGenric')" />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label class="form-label" for="fax">Fax:</label>
+                    <input type="text" id="fax" class="form-control" formControlName="fax"
+                        (change)="setValoresStore('formCertificado','fax','setFormCertificadoGenric')" />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label class="form-label" for="correo">Correo electrónico*:</label>
+                    <input type="email" id="correo" class="form-control" formControlName="correo"
+                        (change)="setValoresStore('formCertificado','correo','setFormCertificadoGenric')" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             @if(domicilio){
             <div class="my-4" >
                 <ng-titulo titulo="Domicilio del tercer operador" />
@@ -165,16 +231,16 @@
                 
                     <div class="col-md-4">
                     <div class="form-group">
-                        <label class="form-label" for="numeroLetra">Número y/o letra<span *ngIf="idProcedimiento !== 110205">*</span>:</label>
-                        <input type="text" id="numeroLetra" class="form-control" formControlName="numeroLetra" maxlength="30"
-                            (change)="setValoresStore('formCertificado','numeroLetra','setFormCertificadoGenric')" />
+                        <label class="form-label" for="numeroLetras">Número y/o letra<span *ngIf="idProcedimiento !== 110205">*</span>:</label>
+                        <input type="text" id="numeroLetras" class="form-control" formControlName="numeroLetras" maxlength="30"
+                            (change)="setValoresStore('formCertificado','numeroLetras','setFormCertificadoGenric')" />
                     </div>
-                    @if(formCertificado.controls['numeroLetra'].invalid && (formCertificado.controls['numeroLetra'].touched || formCertificado.controls['numeroLetra'].dirty)) {
+                    @if(formCertificado.controls['numeroLetras'].invalid && (formCertificado.controls['numeroLetras'].touched || formCertificado.controls['numeroLetras'].dirty)) {
     <div class="d-grid">
-      @if(formCertificado.controls['numeroLetra'].errors?.['required']) {
+      @if(formCertificado.controls['numeroLetras'].errors?.['required']) {
         <span class="mensaje-error">Este campo es obligatorio</span>
       }
-      @if(formCertificado.controls['numeroLetra'].errors?.['maxlength']) {
+      @if(formCertificado.controls['numeroLetras'].errors?.['maxlength']) {
         <span class="mensaje-error">Por favor, no escribas más de 30 caracteres</span>
       }
     </div>
@@ -262,11 +328,15 @@
                   <div class="form-group">
                 <label for="fracciónArancelaria" class="form-label">Fracción arancelaria:</label>
                 <input type="text" class="form-control" formControlName="fraccionArancelariaForm"
+                maxlength="8"
+                soloLetrasNumeros
                 (change)="setValoresStore(
                     'formCertificado',
                   'fraccionArancelariaForm',
                   'setFormCertificadoGenric')"
-                    id="fracciónArancelaria">
+                    id="fracciónArancelaria"
+                >
+                    
             </div>
               @if(formCertificado.controls['fraccionArancelariaForm'].invalid && (formCertificado.controls['fraccionArancelariaForm'].touched || formCertificado.controls['fraccionArancelariaForm'].dirty)) {
     <div class="d-grid">
@@ -284,7 +354,10 @@
             <div class="col-md-4">
                 <div class="form-group">
                 <label for="registroProducto" class="form-label"># Registro producto:</label>
-                <input type="text" class="form-control" formControlName="registroProductoForm"   (change)="setValoresStore(
+                <input type="text" class="form-control" formControlName="registroProductoForm"  
+                maxlength="12"
+                soloLetrasNumeros
+                (change)="setValoresStore(
                     'formCertificado',
                   'registroProductoForm',
                   'setFormCertificadoGenric')" id="registroProducto">
@@ -303,7 +376,10 @@
             <div class="col-md-4">
                 <div class="form-group">
                 <label for="nombreComercial" class="form-label">Nombre comercial:</label>
-                <input type="text" class="form-control" formControlName="nombreComercialForm" (change)="setValoresStore(
+                <input type="text" class="form-control" formControlName="nombreComercialForm"
+                maxlength="200"
+                soloLetrasNumeros
+                (change)="setValoresStore(
                     'formCertificado',
                   'nombreComercialForm',
                   'setFormCertificadoGenric')" id="nombreComercial">
@@ -338,7 +414,7 @@
 
         @if(mercanciasDisponibles){
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary"  (click)="buscarMercancia()" [disabled]="esFormularioSoloLectura">Buscar mercancías</button>
+                <button class="btn btn-primary" (click)="verificarRFCDos()"   [disabled]="esFormularioSoloLectura">Buscar mercancías</button>
             </div>
         } @else {
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
@@ -391,7 +467,6 @@
                 </div>
             }
             
-            @if(tablaSeleccionEvent){
 
                 @if (mercanciasDisponibles) {
                     <div class="row">
@@ -405,7 +480,11 @@
                     <div class="row">
                         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="cargaMercanciaConfiguracionTabla"
                         [datos]="guardarClicado || []" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"  [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
+                        <span class="mensaje-error" *ngIf="tableErrorMensajeError && guardarClicado.length === 0">Por favor, necesitas agregar un valor en la tabla dinámica</span>
                     </div>
+                  
+                       
+                    
                 } @else {
                     <div class="row">
                         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="configuracionTablaMercancia"
@@ -416,15 +495,15 @@
               <div class="row d-flex  mt-3 mb-4 justify-content-end">
                   <div class="col-12 container text-end mt-5">
                     <button class="btn btn-default me-2" (click)="eliminarSeleccionados()" [disabled]="esFormularioSoloLectura">Eliminar</button>
-                    <button class="btn btn-primary"  (click)="abrirModal(tableData[0])" [disabled]="esFormularioSoloLectura">Modificar</button>
+                    <button class="btn btn-primary"  (click)="abrirModal()" [disabled]="esFormularioSoloLectura">Modificar</button>
                   </div>
               </div>
 
-            }
 
     </form>
 
 </div>
+
 <div class="modal fade" id="modalArchivo1" tabindex="-1" #modalArchivo aria-labelledby="modalArchivo" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -457,7 +536,7 @@
   </div>
 </div>
 @if(nuevaNotificacion){
-  <lib-notificaciones [notificacionInput]="nuevaNotificacion" ></lib-notificaciones>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion"  (confirmacionModal)="eliminarErrorMessage($event)" ></lib-notificaciones>
   }  
   @if (nuevaNotificacionUno) {
     <section>

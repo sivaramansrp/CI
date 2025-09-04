@@ -1,7 +1,11 @@
 import { ALERT, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento.enum';
 import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Input, OnChanges } from '@angular/core';
+  
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputCheckComponent, InputRadioComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { FormControl } from '@angular/forms';
+
 
 import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 
@@ -62,22 +66,44 @@ import { Tramite260911Query } from '../../estados/tramite260911.query';
   templateUrl: './domicilio-del-establecimiento.component.html',
   styleUrl: './domicilio-del-establecimiento.component.scss',
 })
-export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, AfterViewInit {
+export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
+  @Input() disabled: boolean = false;
+  @Input() tipoTramite: string = '';
+
+
+
   /**
    * Índice del elemento de mercancía seleccionado en la tabla.
    */
   selectedMercanciaIndex: number | null = null;
   /**
+   * Contador de elementos de mercancía seleccionados.
+   */
+  selectedMercanciaCount: number = 0;
+  /**
+   * Indica si la edición está bloqueada.
+   */
+  isEditBlocked: boolean = false;
+  /**
+   * Indica si la tabla de mercancías está deshabilitada.
+   */
+  isMercanciasTableDisabled: boolean = true;
+  /**
+   * Indica si la tabla de NICO está deshabilitada.
+   */
+  isNicoTablaDisabled: boolean = true;
+  /**
    * Obtiene el estado del formulario de mercancía basado en el elemento seleccionado.
    *
    * @returns {MercanciaForm} El estado del formulario de mercancía.
    */
-  get mercanciaFormState(): MercanciaForm {
-    if (this.selectedMercanciaIndex !== null && this.mercanciasTablaDatos[this.selectedMercanciaIndex]) {
-      return DomicilioDelEstablecimientoComponent.mapMercanciasInfoToForm(this.mercanciasTablaDatos[this.selectedMercanciaIndex]);
+    private _mercanciaFormState: MercanciaForm = DomicilioDelEstablecimientoComponent.getEmptyMercanciaForm();
+    get mercanciaFormState(): MercanciaForm {
+      return this._mercanciaFormState;
     }
-    return DomicilioDelEstablecimientoComponent.getEmptyMercanciaForm();
-  }
+    set mercanciaFormState(value: MercanciaForm) {
+      this._mercanciaFormState = value;
+    }
 
   /**
    * Obtiene un formulario de mercancía vacío.
@@ -133,6 +159,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       estadoFisico: string;
       fraccionArancelaria: string;
       descripcionFraccion: string;
+      presentacion: string;
     } => ({
       clasificacionProducto: info.clasificacion || '',
       especificarClasificacionProducto: info.especificar || '',
@@ -144,6 +171,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       estadoFisico: info.estadoFisico || '',
       fraccionArancelaria: info.fraccionArancelaria || '',
       descripcionFraccion: info.descripcionFraccion || '',
+      presentacion: info.presentacion || '',
     });
     /**
      * Mapea la información de mercancías a un formulario de mercancía.
@@ -211,6 +239,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    * @param event - Arreglo de objetos `MercanciasInfo` que representa las filas seleccionadas.
    */
   onMercanciaRowSelected(event: MercanciasInfo[]): void {
+    this.selectedMercanciaCount = event ? event.length : 0;
     if (event && event.length > 0) {
       const SELECTED_ROW = event[0];
       this.selectedMercanciaIndex = this.mercanciasTablaDatos.findIndex(row => row === SELECTED_ROW);
@@ -226,13 +255,11 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    */
   onAgregarMercancia(event: MercanciasInfo): void {
   if (this.selectedMercanciaIndex !== null && this.selectedMercanciaIndex >= 0) {
-    // Update existing row
     this.mercanciasTablaDatos = this.mercanciasTablaDatos.map((row, idx) =>
       idx === this.selectedMercanciaIndex ? event : row
     );
     this.selectedMercanciaIndex = null;
   } else {
-    // Add new row
     this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, event];
   }
   this.cerrarMercanciaModal();
@@ -269,10 +296,78 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    */
   onModificarMercancia(index: number): void {
     this.selectedMercanciaIndex = index;
+    this.isEditBlocked = this.selectedMercanciaCount > 1;
+    if (this.isEditBlocked) {
+      return;
+    }
+    const SELECTED_ROW = this.mercanciasTablaDatos[index];
+    this.mercanciaFormState = DomicilioDelEstablecimientoComponent.mapMercanciasInfoToForm(SELECTED_ROW);
+    const CATALOGS_LOADED = [
+      this.datosMercanciaContenedoraComp.clasificacionProductoDatos,
+      this.datosMercanciaContenedoraComp.especificarClasificacionProductoDatos,
+      this.datosMercanciaContenedoraComp.tipoProductoDatos,
+      this.datosMercanciaContenedoraComp.formaFarmaceuticaDatos,
+      this.datosMercanciaContenedoraComp.estadoFisicoDatos
+    ].every(arr => Array.isArray(arr) && arr.length);
+
+    const PATCH_CHILD_FORM = (): void => {
+      this.datosMercanciaContenedoraComp.crearMercanciaForm();
+      const CATALOG_FIELDS = [
+        'clasificacionProducto',
+        'especificarClasificacionProducto',
+        'tipoProducto',
+        'formaFarmaceutica',
+        'estadoFisico'
+      ];
+      CATALOG_FIELDS.forEach(field => {
+        if (!this.datosMercanciaContenedoraComp.mercanciaForm.contains(field)) {
+          this.datosMercanciaContenedoraComp.mercanciaForm.addControl(field, new FormControl(null, Validators.required));
+        }
+      });
+      if (this.datosMercanciaContenedoraComp.mercanciaForm) {
+        this.datosMercanciaContenedoraComp.mercanciaForm.patchValue({
+          clasificacionProducto: DatosMercanciaContenedoraComponent.matchCatalogId(this.datosMercanciaContenedoraComp.clasificacionProductoDatos, SELECTED_ROW.clasificacion),
+          especificarClasificacionProducto: DatosMercanciaContenedoraComponent.matchCatalogId(this.datosMercanciaContenedoraComp.especificarClasificacionProductoDatos, SELECTED_ROW.especificar),
+          tipoProducto: DatosMercanciaContenedoraComponent.matchCatalogId(this.datosMercanciaContenedoraComp.tipoProductoDatos, SELECTED_ROW.tipoProducto),
+          formaFarmaceutica: DatosMercanciaContenedoraComponent.matchCatalogId(this.datosMercanciaContenedoraComp.formaFarmaceuticaDatos, SELECTED_ROW.formaFarmaceutica),
+          estadoFisico: DatosMercanciaContenedoraComponent.matchCatalogId(this.datosMercanciaContenedoraComp.estadoFisicoDatos, SELECTED_ROW.estadoFisico),
+          presentacion: SELECTED_ROW.presentacion,
+          numeroRegistroSanitario: SELECTED_ROW.numeroRegistro,
+          fraccionArancelaria: SELECTED_ROW.fraccionArancelaria,
+          descripcionFraccion: SELECTED_ROW.descripcionFraccion,
+          cantidadUmtValor: SELECTED_ROW.unidadUMT,
+          cantidadUmt: SELECTED_ROW.cantidadUMT,
+          cantidadUmcValor: SELECTED_ROW.unidad,
+          cantidadUmc: SELECTED_ROW.cantidadUMC,
+          fechaCaducidad: SELECTED_ROW.fechaCaducidad,
+          paisDeOriginDatos: SELECTED_ROW.paisDeOrigen ? [SELECTED_ROW.paisDeOrigen] : [],
+          paisDeProcedenciaDatos: SELECTED_ROW.paisDeProcedencia ? [SELECTED_ROW.paisDeProcedencia] : [],
+          usoEspecifico: SELECTED_ROW.usoEspecifico ? [SELECTED_ROW.usoEspecifico] : []
+        });
+        this.datosMercanciaContenedoraComp.setEditBlocked(false);
+      }
+    };
+
     if (this.datosMercanciaContenedoraComp) {
-      // Patch form in child with mapped data
-      const MAPPED = DomicilioDelEstablecimientoComponent.mapMercanciasInfoToForm(this.mercanciasTablaDatos[index]);
-      this.datosMercanciaContenedoraComp.mercanciaForm.patchValue(MAPPED);
+      if (CATALOGS_LOADED) {
+        PATCH_CHILD_FORM();
+      } else {
+        const RETRY_PATCH = (): void => {
+          const LOADED = [
+            this.datosMercanciaContenedoraComp.clasificacionProductoDatos,
+            this.datosMercanciaContenedoraComp.especificarClasificacionProductoDatos,
+            this.datosMercanciaContenedoraComp.tipoProductoDatos,
+            this.datosMercanciaContenedoraComp.formaFarmaceuticaDatos,
+            this.datosMercanciaContenedoraComp.estadoFisicoDatos
+          ].every(arr => Array.isArray(arr) && arr.length);
+          if (LOADED) {
+            PATCH_CHILD_FORM();
+          } else {
+            setTimeout(RETRY_PATCH, 200);
+          }
+        };
+        RETRY_PATCH();
+      }
     }
     this.openMercanciaModal();
   }
@@ -368,8 +463,50 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
     document.body.classList.remove('modal-open');
     document.body.style.removeProperty('padding-right');
-    if (this.datosMercanciaContenedoraComp && this.selectedMercanciaIndex === null) {
-      this.datosMercanciaContenedoraComp.resetForm();
+    if (this.selectedMercanciaIndex === null) {
+      const CATALOGS_LOADED = [
+        this.datosMercanciaContenedoraComp?.clasificacionProductoDatos,
+        this.datosMercanciaContenedoraComp?.especificarClasificacionProductoDatos,
+        this.datosMercanciaContenedoraComp?.tipoProductoDatos,
+        this.datosMercanciaContenedoraComp?.formaFarmaceuticaDatos,
+        this.datosMercanciaContenedoraComp?.estadoFisicoDatos
+      ].every(arr => Array.isArray(arr) && arr.length);
+
+      const RESET_AND_OPEN = (): void => {
+        this.mercanciaFormState = DomicilioDelEstablecimientoComponent.getEmptyMercanciaForm();
+        if (this.datosMercanciaContenedoraComp) {
+          this.datosMercanciaContenedoraComp.crearMercanciaForm();
+          this.datosMercanciaContenedoraComp.resetForm();
+        }
+        if (this.modalAddMercanciasRef) {
+          const WIN = window as Window & { bootstrap?: { Modal?: typeof Modal } };
+          this.bootstrapModalMercanciasInstance = WIN.bootstrap?.Modal
+            ? new WIN.bootstrap.Modal(this.modalAddMercanciasRef.nativeElement)
+            : undefined;
+          this.bootstrapModalMercanciasInstance?.show();
+        }
+      };
+
+      if (CATALOGS_LOADED) {
+        RESET_AND_OPEN();
+        return;
+      }
+      const RETRY_RESET = (): void => {
+        const LOADED = [
+          this.datosMercanciaContenedoraComp.clasificacionProductoDatos,
+          this.datosMercanciaContenedoraComp.especificarClasificacionProductoDatos,
+          this.datosMercanciaContenedoraComp.tipoProductoDatos,
+          this.datosMercanciaContenedoraComp.formaFarmaceuticaDatos,
+          this.datosMercanciaContenedoraComp.estadoFisicoDatos
+        ].every(arr => Array.isArray(arr) && arr.length);
+        if (LOADED) {
+          RESET_AND_OPEN();
+        } else {
+          setTimeout(RETRY_RESET, 200);
+        }
+      };
+      RETRY_RESET();
+      return;
     }
     if (this.modalAddMercanciasRef) {
       const WIN = window as Window & { bootstrap?: { Modal?: typeof Modal } };
@@ -387,6 +524,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     if (this.bootstrapModalMercanciasInstance && typeof this.bootstrapModalMercanciasInstance.hide === 'function') {
       this.bootstrapModalMercanciasInstance.hide();
     }
+    this.selectedMercanciaIndex = null;
     const BACKDROPS = document.querySelectorAll('.modal-backdrop');
     BACKDROPS.forEach(bd => bd.parentNode?.removeChild(bd));
     document.body.classList.remove('modal-open');
@@ -491,11 +629,43 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
   onBuscarRepresentanteLegal(): void {
     const RFC_CONTROL = this.representanteLegal.get('rfc');
     if (RFC_CONTROL && RFC_CONTROL.invalid) {
+      // Si el RFC es inválido, limpiar y habilitar para entrada manual
       this.enableLegalFields = true;
+      this.representanteLegal.get('nombre')?.setValue('');
+      this.representanteLegal.get('apellidoPaterno')?.setValue('');
+      this.representanteLegal.get('apellidoMaterno')?.setValue('');
       this.representanteLegal.get('nombre')?.enable();
       this.representanteLegal.get('apellidoPaterno')?.enable();
       this.representanteLegal.get('apellidoMaterno')?.enable();
+      return;
+    }
+
+    // Si el RFC es válido, buscar en el servicio
+    const RFC_VALUE = RFC_CONTROL?.value;
+    if (RFC_VALUE) {
+      this.domicilioDelEstablecimientoService.buscarRepresentanteLegalPorRFC(RFC_VALUE).subscribe(result => {
+        if (result) {
+          // Si se encuentra, puedes llenar los campos (opcional)
+          this.representanteLegal.get('nombre')?.setValue(result.nombre);
+          this.representanteLegal.get('apellidoPaterno')?.setValue(result.apellidoPaterno);
+          this.representanteLegal.get('apellidoMaterno')?.setValue(result.apellidoMaterno);
+          this.enableLegalFields = false;
+          this.representanteLegal.get('nombre')?.disable();
+          this.representanteLegal.get('apellidoPaterno')?.disable();
+          this.representanteLegal.get('apellidoMaterno')?.disable();
+        } else {
+          // Si no se encuentra, limpiar y habilitar para entrada manual
+          this.enableLegalFields = true;
+          this.representanteLegal.get('nombre')?.setValue('');
+          this.representanteLegal.get('apellidoPaterno')?.setValue('');
+          this.representanteLegal.get('apellidoMaterno')?.setValue('');
+          this.representanteLegal.get('nombre')?.enable();
+          this.representanteLegal.get('apellidoPaterno')?.enable();
+          this.representanteLegal.get('apellidoMaterno')?.enable();
+        }
+      });
     } else {
+      // Si no hay RFC, deshabilitar los campos
       this.enableLegalFields = false;
       this.representanteLegal.get('nombre')?.disable();
       this.representanteLegal.get('apellidoPaterno')?.disable();
@@ -704,6 +874,11 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     this.loadEntidad();
     this.loadRepresentacion();
     this.inicializarEstadoFormulario();
+    this.form.get('estado')?.disable();
+    this.nicoTablaForm.get('entidad')?.disable();
+    this.nicoTablaForm.get('representacion')?.disable();
+    this.domicilio.get('regimen')?.disable();
+    this.domicilio.get('aduanasEntradas')?.disable();
     this.obtenerTablaDatos();
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
@@ -712,9 +887,82 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       const FIRST_OPTION = this.subRepresentacion && this.subRepresentacion.length > 0 ? this.subRepresentacion[0].id : '';
       this.nicoTablaForm.get('representacion')?.setValue(FIRST_OPTION);
     });
+    if (!this.esFormularioSoloLectura) {
+      this.form?.disable();
+      this.domicilio?.disable();
+      this.representanteLegal?.disable();
+    }
   }
+  /**
+   * Detecta cambios en las propiedades de entrada del componente.
+   */
  
+ngOnChanges(): void {
+  if (this.tipoTramite === '1' || this.tipoTramite === '2') {
+    this.isMercanciasTableDisabled = false;
+    this.isNicoTablaDisabled = false;
+  } else {
+    this.isMercanciasTableDisabled = true;
+    this.isNicoTablaDisabled = true;
+  }
+  this.form.get('estado')?.disable();
+  this.nicoTablaForm.get('entidad')?.disable();
+  this.nicoTablaForm.get('representacion')?.disable();
+  this.domicilio.get('regimen')?.disable();
+  this.domicilio.get('aduanasEntradas')?.disable();
+  if (!this.esFormularioSoloLectura && !this.disabled) {
+    this.form?.disable();
+    this.domicilio?.disable();
+    this.representanteLegal?.disable();
+    this.form?.get('estado')?.disable();
+    this.nicoTablaForm?.get('entidad')?.disable();
+    this.nicoTablaForm?.get('representacion')?.disable();
+    this.domicilio?.get('regimen')?.disable();
+    this.domicilio?.get('aduanasEntradas')?.disable();
 
+    if (this.tipoTramite === '1' || this.tipoTramite === '2') {
+      this.form?.enable();
+      this.domicilio?.enable();
+      this.representanteLegal?.enable();
+      // Enable dropdowns
+      this.form?.get('estado')?.enable();
+      this.nicoTablaForm?.get('entidad')?.enable();
+      this.nicoTablaForm?.get('representacion')?.enable();
+      this.domicilio?.get('regimen')?.enable();
+      this.domicilio?.get('aduanasEntradas')?.enable();
+      this.domicilio?.get('licenciaSanitaria')?.disable();
+      this.representanteLegal?.get('nombre')?.disable();
+      this.representanteLegal?.get('apellidoPaterno')?.disable();
+      this.representanteLegal?.get('apellidoMaterno')?.disable();
+    } else if (this.tipoTramite === '0') {
+      this.form?.disable();
+      this.domicilio?.disable();
+      this.representanteLegal?.disable();
+      if (this.form?.get('justificacion')) {
+        this.form.get('justificacion')?.enable();
+      }
+      this.form?.get('estado')?.disable();
+      this.nicoTablaForm?.get('entidad')?.disable();
+      this.nicoTablaForm?.get('representacion')?.disable();
+      this.domicilio?.get('regimen')?.disable();
+      this.domicilio?.get('aduanasEntradas')?.disable();
+    }
+    const AVISO_CHECKBOX_VALUE = this.domicilio?.get('avisoCheckbox')?.value;
+    const LICENCIA_SANITARIA_CONTROL = this.domicilio?.get('licenciaSanitaria');
+    if (LICENCIA_SANITARIA_CONTROL) {
+      if (AVISO_CHECKBOX_VALUE) {
+        LICENCIA_SANITARIA_CONTROL.disable();
+      } else {
+        LICENCIA_SANITARIA_CONTROL.enable();
+      }
+    }
+    if (this.representanteLegal) {
+      this.representanteLegal.get('nombre')?.disable();
+      this.representanteLegal.get('apellidoPaterno')?.disable();
+      this.representanteLegal.get('apellidoMaterno')?.disable();
+    }
+  }
+    }
 
 
   /** Guarda los datos seleccionados en el modal SCIAN */
@@ -777,12 +1025,27 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
 
     this.domicilio = this.fb.group({
       avisoCheckbox: [true],
-      licenciaSanitaria: [{ value: this.solicitudState?.licenciaSanitaria, disabled: true }],
+      licenciaSanitaria: [this.solicitudState?.licenciaSanitaria],
       regimen: [this.solicitudState?.regimen, [Validators.required]],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas, [Validators.required]],
       importPermitNumberCNSNS: [{ value: this.solicitudState?.importPermitNumberCNSNS, disabled: false }],
       aifaCheckbox: [true],
       manifests: [true],
+    });
+
+   
+
+    if (this.domicilio.get('avisoCheckbox')?.value) {
+      this.domicilio.get('licenciaSanitaria')?.disable();
+    }
+
+    this.domicilio.get('avisoCheckbox')?.valueChanges.subscribe((checked: boolean) => {
+      const LICENCIA_SANITARIA_CONTROL = this.domicilio.get('licenciaSanitaria');
+      if (checked) {
+        LICENCIA_SANITARIA_CONTROL?.disable();
+      } else {
+        LICENCIA_SANITARIA_CONTROL?.enable();
+      }
     });
 
     this.representanteLegal = this.fb.group({
@@ -792,6 +1055,11 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, [Validators.required]],
       apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }, [Validators.required]],
     });
+     this.form.get('estado')?.disable();
+    this.nicoTablaForm.get('entidad')?.disable();
+    this.nicoTablaForm.get('representacion')?.disable();
+    this.domicilio.get('regimen')?.disable();
+    this.domicilio.get('aduanasEntradas')?.disable();
   }
 
   /**
@@ -861,7 +1129,6 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
     const CONTROL = this.form.get('codigoPostal');
     
     if (CONTROL) {
-      // Marcar como touched para mostrar errores
       CONTROL.markAsTouched();
       
       // Si el valor tiene exactamente 12 caracteres, forzar el error de maxlength
@@ -918,11 +1185,11 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
 
       if (CONTROL) {
         CONTROL.markAsTouched();
-        if (VALUE && VALUE.length === 120) {
+        if (VALUE && VALUE.length > 120) {
           CONTROL.setErrors({ ...CONTROL.errors, maxlength: { requiredLength: 120, actualLength: VALUE.length } });
-        } else if (VALUE && VALUE.length < 120) {
+        } else {
           const ERRORS = CONTROL.errors;
-          if (ERRORS) {
+          if (ERRORS && ERRORS['maxlength']) {
             delete ERRORS['maxlength'];
             const HAS_OTHER_ERRORS = Object.keys(ERRORS).length > 0;
             CONTROL.setErrors(HAS_OTHER_ERRORS ? ERRORS : null);
@@ -1084,7 +1351,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       .getRepresentacion()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: Catalogo[]) => {
-        this.allRepresentaciones = data; // Store all options
+        this.allRepresentaciones = data;
       this.updateRepresentacionOptions(this.nicoTablaForm.get('entidad')?.value);
       });
   }

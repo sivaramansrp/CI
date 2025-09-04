@@ -14,15 +14,19 @@ import { PermisoSanitarioComponent } from './pages/permiso-sanitario/permiso-san
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
-import { TercerosRelacionadosVistaComponent } from './component/terceros-relacionados/terceros-relacionados-vista.component.ts';
+import { TercerosRelacionadosVistaComponent } from './component/terceros-relacionados/terceros-relacionados-vista.component';
 import { ToastrService } from 'ngx-toastr';
 import { TramitesAsociadoComponent } from './component/tramites-asociado/tramites-asociado.component';
+
 import { provideHttpClient } from '@angular/common/http';
 
 
 
 @NgModule({
-    declarations: [PermisoSanitarioComponent, PasoUnoComponent],
+    declarations: [
+        PermisoSanitarioComponent,
+        PasoUnoComponent
+    ],
     providers: [provideHttpClient(), InicioSesionService, ToastrService, SubirDocumentoService],
     imports: [
         CommonModule,

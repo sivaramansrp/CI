@@ -153,8 +153,13 @@
     </div>
   </div>
   <div class="row mt-5">
-    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
-      [datos]="mercanciasTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+    <app-tabla-dinamica 
+      [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
+      [configuracionTabla]="mercanciasTabla"
+      [datos]="mercanciasTablaDatos" 
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+      (listaDeFilaSeleccionada)="seleccionarlistaSeccionMercancias($event)"
+    ></app-tabla-dinamica>
 
     <div class="d-flex justify-content-center" *ngIf="esPaginacionVisible">
       <app-table-pagination [totalItems]="totalElementos" [itemsPerPage]="elementosPorPagina"
@@ -164,7 +169,12 @@
     </div>
 
     <div class="container text-end mt-5">
-
+      @if(mercanciasTablaDatos.length > 0) {
+      <button class="btn btn-default me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"
+        [disabled]="esFormularioSoloLectura" (click)="modificarMercancia()">Modificar</button>
+      <button class="btn btn-danger me-2" data-bs-toggle="modal"
+        [disabled]="esFormularioSoloLectura" (click)="eliminarMercancia()">Eliminar</button>
+      }
       <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"
         [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
@@ -267,7 +277,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="nombreComun">Nombre común*:</label>
+            <label for="nombreComun">Nombre común:</label>
             <input type="text" id="nombreComun" formControlName="nombreComun" class="form-control" (change)="
                 setValoresStore(
                   formMercancias,

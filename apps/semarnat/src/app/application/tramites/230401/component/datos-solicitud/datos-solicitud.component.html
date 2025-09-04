@@ -50,7 +50,7 @@
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="pantallasActionService.fraccionArancelaria" formControlName="fraccionArancelaria"
           [label]="'Fracción arancelaria'" [required]="true" name="fraccionArancelaria" [isDisabled]="esFormularioSoloLectura"
-          (change)="fraccionArancelariaSeleccion()"></app-catalogo-select>
+          (change)="fraccionArancelariaSeleccion()" [placeholder]="'Seleccione una opción'"></app-catalogo-select>
       </div>
       <div class="col-md-8">
         <div class="form-group">
@@ -91,16 +91,13 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <div class="pull-right">
-          <button type="button" name="modificarListaDeNumeros" class="btn btn-default" (click)="modificarListaDeNumeros()"
-            [disabled]="!sustanciasSensiblesSeleccionadas.length">
+          <button type="button" name="modificarListaDeNumeros" class="btn btn-default" (click)="modificarListaDeNumeros()">
             Modificar
           </button>
-          <button type="button" name="eliminarListaDeNumeros" class="btn btn-danger ms-2" (click)="eliminarModal()"
-            [disabled]="!sustanciasSensiblesSeleccionadas.length">
+          <button type="button" name="eliminarListaDeNumeros" class="btn btn-danger ms-2" (click)="eliminarModal()">
             Eliminar
           </button>
-          <button type="button" name="agregarListaDeNumeros" class="btn btn-primary ms-2" (click)="agregarListaDeNumeros()"
-            [disabled]="!formSolicitud.get('numeroCas')?.value || !formSolicitud.get('fraccionArancelaria')?.value">
+          <button type="button" name="agregarListaDeNumeros" class="btn btn-primary ms-2" (click)="agregarListaDeNumeros()">
             Agregar
           </button>
         </div>
@@ -108,7 +105,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <h5 class="mt-3">List de Número CAS *:</h5>
+        <h5 class="mt-3">List de Número CAS*:</h5>
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionSustanciasTabla"
           [datos]="sustanciasSensiblesTablaDatos"
           (listaDeFilaSeleccionada)="sustanciasSensiblesSeleccionadas = $event"></app-tabla-dinamica>
@@ -152,7 +149,7 @@
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label class="form-label" for="datosNumeroComun">Nombre común *:</label>
+            <label class="form-label" for="datosNumeroComun">Nombre común*:</label>
             <input class="form-control" id="datosNumeroComun" type="text" maxlength="250"
               formControlName="datosNumeroComun" [ngClass]="isValid(formSolicitud, 'datosNumeroComun') ? 'required' : ''"
               (change)="setValoresStore(formSolicitud,'datosNumeroComun')">
@@ -163,7 +160,7 @@
       <div class="row mt-5">
         <div class="col-md-6">
           <div class="form-group">
-            <label class="form-label" for="datosPorcentaje">Porcentaje de concentración *:</label>
+            <label class="form-label" for="datosPorcentaje">Porcentaje de concentración*:</label>
             <input class="form-control" id="datosPorcentaje" type="number"
               formControlName="datosPorcentaje" [ngClass]="isValid(formSolicitud, 'datosPorcentaje') ? 'required' : ''"
               (change)="setValoresStore(formSolicitud,'datosPorcentaje')" maxlength="100">
@@ -263,15 +260,47 @@
           <label class="form-label" for="cantidad">Cantidad*:</label>
           <input class="form-control" id="cantidad" type="text"
             formControlName="cantidad" [ngClass]="isValid(formSolicitud, 'cantidad') ? 'required' : ''"
-            (change)="setValoresStore(formSolicitud,'cantidad')" (click)="buscarRepresentanteRfc()">
-            <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['maxDigits']">
-              Este campo permite 12 enteros y tres decimales</div>
-        </div>
+            (change)="setValoresStore(formSolicitud,'cantidad')" (input)="buscarRepresentanteRfc()">
+            
+            <!-- Only show numeric error when field is touched and has numeric validation error -->
+            <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['numeric'] && formSolicitud.get('cantidad')?.touched">
+              Por favor, escribe un número entero válido
+            </div>
+            
+            <!-- Show specific error messages when field has other validation errors -->
+            <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['maxDigitsDecimals'] && formSolicitud.get('cantidad')?.touched">
+              Este campo permite 12 enteros y tres decimales
+            </div>
+            
+            <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['required'] && formSolicitud.get('cantidad')?.touched">
+              Este campo es obligatorio
+            </div>
+            
+            <div class="mensaje-error" *ngIf="formSolicitud.get('cantidad')?.errors?.['min'] && formSolicitud.get('cantidad')?.touched">
+              La cantidad debe ser mayor a 0
+            </div>
+          </div>
       </div>
       <div class="col-md-8">
         <div class="form-group">
           <label class="form-label" for="cantidadLetra">Cantidad(letra)*:</label>
-          <input class="form-control" id="cantidadLetra" formControlName="cantidadLetra" type="text">
+          <input class="form-control" id="cantidadLetra" formControlName="cantidadLetra" type="text"
+           [ngClass]="isValid(formSolicitud, 'cantidadLetra') ? 'required' : ''">
+           
+          <!-- Show message ONLY when there's a cantidad value and field is disabled -->
+          <div class="mensaje-info" *ngIf="formSolicitud.get('cantidad')?.value && formSolicitud.get('cantidadLetra')?.disabled">
+            Si la cantidad capturada es menor o igual a 400 no es obligatorio anexar la Póliza de seguro y recibo de pago vigentes.
+          </div>
+          
+          <!-- Show message when quantity > 400 and field is enabled but not touched -->
+          <div class="mensaje-info" *ngIf="isCantidadMayorA400() && formSolicitud.get('cantidadLetra')?.enabled && !formSolicitud.get('cantidadLetra')?.touched">
+            Si la cantidad capturada es mayor a 400 es obligatorio capturar la cantidad en letra.
+          </div>
+          
+          <!-- Required error for cantidadLetra when quantity > 400 - show in red when touched -->
+          <div class="mensaje-error" *ngIf="formSolicitud.get('cantidadLetra')?.errors?.['required'] && formSolicitud.get('cantidadLetra')?.touched && isCantidadMayorA400()">
+            Si la cantidad capturada es mayor a 400 es obligatorio capturar la cantidad en letra.
+          </div>
         </div>
       </div>
     </div>

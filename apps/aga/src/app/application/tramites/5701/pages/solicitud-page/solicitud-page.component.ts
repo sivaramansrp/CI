@@ -173,6 +173,11 @@ export class SolicitudPageComponent implements OnInit {
    */
   public hayArchivosSeleccionados: boolean = false;
 
+  /**
+   * valida si se valido el formulario principal.
+   */
+  VALIDA_FORM: boolean = false;
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -240,8 +245,17 @@ export class SolicitudPageComponent implements OnInit {
    */
   getValorIndice(e: AccionBoton): void {
     // Validar el formulario del componente hijo antes de continuar
-    const VALIDA_FORM=this.SolicitudPasoComponent.validarFormularioPadre();
-    if (!VALIDA_FORM) {
+    this.indice = 1;
+    this.datosPasos.indice = 1;
+    this.wizardComponent.indiceActual = 1;
+      
+      try {
+          this.VALIDA_FORM=this.SolicitudPasoComponent.validarFormularioPadre();
+      } catch (error) {
+        this.VALIDA_FORM = false;
+      }
+
+    if (!this.VALIDA_FORM) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'success',
@@ -252,14 +266,11 @@ export class SolicitudPageComponent implements OnInit {
         txtBtnAceptar: TEXTO_CERRAR,
         txtBtnCancelar: CAMPO_VACIO,
       };
-      this.indice = 1;
-      this.datosPasos.indice = 1;
-      this.wizardComponent.indiceActual = 1;
       
       return;
     }
     // Nos encontramos en el paso 1, se guarda parcialmente la información.
-    if (this.indice === 1 && VALIDA_FORM) {
+    if (this.indice === 1 && this.VALIDA_FORM) {
       this.enviaSolicitudRequest()
         .pipe(
           takeUntil(this.destroyNotifier$),

@@ -9,7 +9,8 @@
         </div>
         <div class="col-md-4">
             <label for="identificacionTransporte" class="form-label">Identificación del transporte:</label>
-            <input class="form-control" type="text" size="30" formControlName="identificacionTransporte"
+            <input class="form-control" type="text" size="30" 
+          maxlength="30" formControlName="identificacionTransporte"
                 id="identificacionTransporte" (input)="getIdentificacionTransporte()" />
         </div>
     </div>
@@ -31,31 +32,45 @@
     <h6>Datos de la mercancía:</h6>
 
     <ng-table [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"
-        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></ng-table>
+       (seleccionCambio)="onSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></ng-table>
 
     @if (solicitud220501State.esSolicitudFerros !== '0') {
     <div class="row">
         <div class="text-end">
-            <button name="modificarSaldoMercancia" id="btnSaldoMercancia" class="btn btn-primary"
+            <button name="modificarSaldoMercancia" id="btnSaldoMercancia" class="btn btn-primary"            
                 (click)="modificarSaldosMercancia()" [disabled]="formularioDeshabilitado">Modificar</button>
         </div>
     </div>
-
-    @if (mostrarAgregarMercancia && solicitud220501State.esSolicitudFerros !== '0') {
-    <app-agregar-mercancia [mercanciasDatos]="mercanciaBodyData"
-        (actualizarMercancia)="actualizarMercanciaEnTabla($event)"
-        (cancelarEvento)="obtenerAgregarMercanciaEvent($event)"></app-agregar-mercancia>
-    }
     }
 
     @if(solicitud220501State.esSolicitudFerros !== '0') {
     <div class="row">
         <div class="col-md-4">
-            <label for="totalGuia" class="form-label">Total de guías amparadas:<span class="bi bi-question-circle-fill"
-                    title="" data-bs-toggle="tooltip"></span></label>
-            <input class="form-control" type="text" formControlName="totalGuias" id="totalGuia"
+            <label for="totalGuia" class="form-label">Total de guías amparadas: <span class="bi bi-question-circle-fill"
+                    title="Total de guías amparadas por la parte II, remesa de consolidado ó copia simple" data-bs-toggle="tooltip"></span></label>
+            <input class="form-control" type="text" 
+          maxlength="50" formControlName="totalGuias" id="totalGuia"
                 (input)="getTotalGuiasAmparadas()" />
         </div>
     </div>
     }
 </form>
+
+<!--Agregar Mercancía Popup-->
+<div
+  #modalModificarSaldoMercancia
+  class="modal fade"
+  id="modalModificarSaldoMercancia"
+  tabindex="-1"
+  aria-labelledby="modalModificarSaldoMercanciaLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <app-agregar-mercancia [mercanciasDatos]="mercanciaBodyData"
+        (actualizarMercancia)="actualizarMercanciaEnTabla($event)"></app-agregar-mercancia>
+      </div>
+    </div>
+    </div>
+</div>

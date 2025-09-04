@@ -27,6 +27,9 @@
     [showSearchInput2]="true"
     [botonField]="campoDeBotones"
     [isDisabled]="esFormularioSoloLectura"
+    [showSearchPlaceholder]="false"
+    [searchInput1Label]="'País disponible:'"
+    [searchInput2Label]="'País seleccionado*:'"
     ></crosslist>
   </div>
 
@@ -51,7 +54,7 @@
         class="text-danger"
       >
         <small *ngIf="paisForm.controls['usoEspecifico'].errors?.['required']"
-          >Este campo es obligatorio.</small
+          >Este campo es obligatorio</small
         >
         </div>
       </div>
@@ -64,7 +67,7 @@
         <label for="justificacionImportacionExportacion" class="form-label d-flex align-items-center">
           Justificación y beneficio que se obtiene*:
             <span class="ms-3"></span>
-            <a *ngIf="esAyuda" href="javascript:void(0)" class="form-label ms-3" [ngClass]="{ 'ayuda-disabled': esFormularioSoloLectura }">Ayuda</a>
+            <a *ngIf="esAyuda" href="javascript:void(0)" (click)="abrirAyuda()" class="form-label ms-3" [ngClass]="{ 'ayuda-disabled': esFormularioSoloLectura }">Ayuda</a>
         </label>
         <textarea
           class="form-control"
@@ -81,7 +84,7 @@
         class="text-danger"
       >
         <small *ngIf="paisForm.controls['justificacionImportacionExportacion'].errors?.['required']"
-          >Este campo es obligatorio.</small
+          >Este campo es obligatorio</small
         >
         </div>
       </div>
@@ -125,6 +128,7 @@
           id="Observaciones"
           formControlName="observaciones"
           (change)="setValoresStore(paisForm,'observaciones')"
+          maxLength = "512"
         ></textarea>
       </div>
     </div>
@@ -132,3 +136,8 @@
 
   </form>
 </div>
+<lib-notificaciones
+  *ngIf="mostrarAyuda"
+  [notificacionInput]="notificacionAyuda"
+  (confirmacionModal)="mostrarAyuda = false">
+</lib-notificaciones>
