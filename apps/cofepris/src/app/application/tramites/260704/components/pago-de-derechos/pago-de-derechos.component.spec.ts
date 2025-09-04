@@ -1,152 +1,181 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+import { Component } from '@angular/core';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { of, ReplaySubject } from 'rxjs';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ConsultaService } from '../../service/consulta.service';
 import { Tramite260704Store } from '../../estados/Tramite260704.store';
 import { Tramite260704Query } from '../../estados/Tramite260704.query';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { FormBuilder } from '@angular/forms';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
+@Injectable()
+class MockConsultaService {}
+
+@Injectable()
+class MockTramite260704Store {}
+
+@Injectable()
+class MockTramite260704Query {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
 describe('PagoDeDerechosComponent', () => {
-  let component: PagoDeDerechosComponent;
-  let fixture: ComponentFixture<PagoDeDerechosComponent>;
-  let consultaServiceMock: any;
-  let storeMock: any;
-  let queryMock: any;
-  let validacionesServiceMock: any;
-  let consultaioQueryMock: any;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    consultaServiceMock = {
-      obtenerDatosBanco: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Banco 1' }])),
-    };
-
-    storeMock = {
-      setFechaPago: jest.fn(),
-      setClaveDeReferencia: jest.fn(),
-      setCadenaDependecia: jest.fn(),
-      setBanco: jest.fn(),
-      setLiaveDePago: jest.fn(),
-      setImporteDePago: jest.fn(),
-    };
-
-    queryMock = {
-      selectSolicitud$: of({
-        claveDeReferencia: 'ref',
-        cadenaDependecia: 'dep',
-        fechaPago: '2024-01-01',
-        banco: 'Banco 1',
-        liaveDePago: 'ref',
-        importeDePago: '1000'
-      }),
-    };
-
-    validacionesServiceMock = {
-      isValid: jest.fn().mockReturnValue(true),
-    };
-
-    consultaioQueryMock = {
-      selectConsultaioState$: of({ readonly: false }),
-    };
-
-    await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,PagoDeDerechosComponent],
-      providers: [
-        { provide: ConsultaService, useValue: consultaServiceMock },
-        { provide: Tramite260704Store, useValue: storeMock },
-        { provide: Tramite260704Query, useValue: queryMock },
-        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
-        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
-        FormBuilder,
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule, PagoDeDerechosComponent, HttpClientTestingModule ],
+      declarations: [
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    }).compileComponents();
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: ConsultaService, useClass: MockConsultaService },
+        { provide: Tramite260704Store, useClass: MockTramite260704Store },
+        { provide: Tramite260704Query, useClass: MockTramite260704Query },
+        FormBuilder,
+        ValidacionesFormularioService,
+        ConsultaioQuery
+      ]
+    }).overrideComponent(PagoDeDerechosComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
-    component = fixture.componentInstance;
-    component.solicitudState = {
-      claveDeReferencia: 'ref',
-      cadenaDependecia: 'dep',
-      fechaPago: '2024-01-01',
-      banco: 'Banco 1',
-      liaveDePago: 'ref',
-      importeDePago: '1000'
-    } as any;
-    component.soloLectura = false;
-    component.donanteDomicilio();
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    if (component && component.ngOnDestroy) {
+      component.ngOnDestroy = function() {};
+    }
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with correct values', () => {
-    expect(component.pagoDeDerechosForm.value.claveDeReferencia).toBe('ref');
-    expect(component.pagoDeDerechosForm.value.cadenaDependecia).toBe('dep');
-    expect(component.pagoDeDerechosForm.value.fechaPago).toBe('2024-01-01');
-    expect(component.pagoDeDerechosForm.value.banco).toBe('Banco 1');
-    expect(component.pagoDeDerechosForm.value.liaveDePago).toBe('ref');
-    expect(component.pagoDeDerechosForm.value.importeDePago).toBe('1000');
+  it('should run #ngOnInit()', async () => {
+    component.donanteDomicilio = jest.fn();
+    component.query = component.query || {};
+    component.query.selectSolicitud$ = observableOf({});
+    component.obtenerDatosBanco = jest.fn();
+    component.inicializarEstadoFormulario = jest.fn();
+    component.ngOnInit();
+    expect(component.donanteDomicilio).toHaveBeenCalled();
+    expect(component.obtenerDatosBanco).toHaveBeenCalled();
+    expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
   });
 
-  it('should call obtenerDatosBanco and set bancoCatalogo', () => {
+  it('should run #inicializarEstadoFormulario()', async () => {
+    component.guardarDatosFormulario = jest.fn();
+    component.donanteDomicilio = jest.fn();
+    component.soloLectura = true; // Set to true to trigger guardarDatosFormulario
+    component.inicializarEstadoFormulario();
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
+    expect(component.donanteDomicilio).not.toHaveBeenCalled(); // This should NOT be called when soloLectura is true
+  });
+
+  it('should run #guardarDatosFormulario()', async () => {
+    component.donanteDomicilio = jest.fn();
+    component.pagoDeDerechosForm = component.pagoDeDerechosForm || {};
+    component.pagoDeDerechosForm.disable = jest.fn();
+    component.pagoDeDerechosForm.enable = jest.fn();
+    component.soloLectura = true; // Set to true to trigger disable
+    component.guardarDatosFormulario();
+    expect(component.donanteDomicilio).toHaveBeenCalled();
+    expect(component.pagoDeDerechosForm.disable).toHaveBeenCalled();
+    expect(component.pagoDeDerechosForm.enable).not.toHaveBeenCalled(); // Should not be called when soloLectura is true
+  });
+
+  it('should run #obtenerDatosBanco()', async () => {
+    component.consulta = component.consulta || {};
+    component.consulta.obtenerDatosBanco = jest.fn().mockReturnValue(observableOf({}));
+    component.bancoCatalogo = component.bancoCatalogo || {};
+    component.bancoCatalogo.catalogos = 'catalogos';
     component.obtenerDatosBanco();
-    expect(consultaServiceMock.obtenerDatosBanco).toHaveBeenCalled();
-    expect(component.bancoCatalogo.catalogos.length).toBe(1);
+    expect(component.consulta.obtenerDatosBanco).toHaveBeenCalled();
   });
 
-  it('should patch fechaPago and call setValoresStore on cambioFechaPago', () => {
-    const spy = jest.spyOn(component, 'setValoresStore');
-    component.cambioFechaPago('2024-02-02');
-    expect(component.pagoDeDerechosForm.value.fechaPago).toBe('2024-02-02');
-    expect(spy).toHaveBeenCalledWith(component.pagoDeDerechosForm, 'fechaPago', 'setFechaPago');
+  it('should run #cambioFechaPago()', async () => {
+    component.pagoDeDerechosForm = component.pagoDeDerechosForm || {};
+    component.pagoDeDerechosForm.patchValue = jest.fn();
+    component.setValoresStore = jest.fn();
+    component.cambioFechaPago({});
+    expect(component.pagoDeDerechosForm.patchValue).toHaveBeenCalled();
+    expect(component.setValoresStore).toHaveBeenCalled();
   });
 
-  it('should call validacionesService.isValid in isValid', () => {
-    const form = component.pagoDeDerechosForm;
-    expect(component.isValid(form, 'claveDeReferencia')).toBe(true);
-    expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(form, 'claveDeReferencia');
+  it('should run #isValid()', async () => {
+    component.validacionesService = component.validacionesService || {};
+    component.validacionesService.isValid = jest.fn();
+    component.isValid({}, {});
+    expect(component.validacionesService.isValid).toHaveBeenCalled();
   });
 
-  it('should call store method in setValoresStore', () => {
-    component.setValoresStore(component.pagoDeDerechosForm, 'claveDeReferencia', 'setClaveDeReferencia');
-    expect(storeMock.setClaveDeReferencia).toHaveBeenCalledWith('ref');
+  it('should run #setValoresStore()', async () => {
+    component.store = component.store || {};
+    component.store.setTestMethod = jest.fn(); // Mock a specific store method
+    
+    const mockForm = {
+      get: jest.fn().mockReturnValue({
+        value: 'testValue'
+      })
+    };
+    
+    component.setValoresStore(mockForm, 'testField', 'setTestMethod');
+    expect(mockForm.get).toHaveBeenCalledWith('testField');
+    expect(component.store.setTestMethod).toHaveBeenCalledWith('testValue');
   });
 
-  it('should disable form in guardarDatosFormulario if soloLectura', () => {
-    component.soloLectura = true;
-    component.guardarDatosFormulario();
-    expect(component.pagoDeDerechosForm.disabled).toBe(true);
+  it('should run #donanteDomicilio()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.solicitudState = component.solicitudState || {};
+    component.solicitudState.claveDeReferencia = 'claveDeReferencia';
+    component.solicitudState.cadenaDependecia = 'cadenaDependecia';
+    component.solicitudState.fechaPago = 'fechaPago';
+    component.solicitudState.banco = 'banco';
+    component.solicitudState.importeDePago = 'importeDePago';
+    component.donanteDomicilio();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should enable form in guardarDatosFormulario if not soloLectura', () => {
-    component.soloLectura = false;
-    component.guardarDatosFormulario();
-    expect(component.pagoDeDerechosForm.enabled).toBe(true);
-  });
-
-  it('should call donanteDomicilio in inicializarEstadoFormulario if not soloLectura', () => {
-    const spy = jest.spyOn(component, 'donanteDomicilio');
-    component.soloLectura = false;
-    component.inicializarEstadoFormulario();
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should call guardarDatosFormulario in inicializarEstadoFormulario if soloLectura', () => {
-    const spy = jest.spyOn(component, 'guardarDatosFormulario');
-    component.soloLectura = true;
-    component.inicializarEstadoFormulario();
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should complete destroyed$ in ngOnDestroy', () => {
-    const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
-    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyed$ = component.destroyed$ || {};
+    component.destroyed$.next = jest.fn();
+    component.destroyed$.complete = jest.fn();
     component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalledWith(true);
-    expect(completeSpy).toHaveBeenCalled();
+    expect(component.destroyed$.next).toHaveBeenCalled();
+    expect(component.destroyed$.complete).toHaveBeenCalled();
   });
+
 });

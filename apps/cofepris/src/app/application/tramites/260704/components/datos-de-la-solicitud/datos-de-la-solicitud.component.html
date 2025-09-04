@@ -11,7 +11,7 @@
     <div class="row mt-5">
       <div class="col-md-6">
         <label>Justificación*:</label>
-        <textarea cols="80" rows="5" formControlName="justificacion" [disabled]="true" maxlength="2000"
+        <textarea cols="80" rows="5" formControlName="justificacion" [disabled]="soloLectura" maxlength="2000"
           (change)="setValoresStore(validacionForm,'justificacion', 'setJustificacion')"></textarea>
           @if (validacionForm.get('justificacion')?.hasError('required') &&
             validacionForm.get('justificacion')?.touched) {
