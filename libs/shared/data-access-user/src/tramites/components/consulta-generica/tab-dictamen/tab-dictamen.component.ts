@@ -4,10 +4,10 @@ import { DictamenesComponent } from '../bandeja-dictamenes/dictamenes.component'
 
 import { ConsultaDetalleDictamenComponent } from '../consulta-detalle-dictamen/consulta-detalle-dictamen.component';
 import { ConsultaDetalleObservacionDictamenComponent } from '../consulta-detalle-observacion-dictamen/consulta-detalle-observacion-dictamen.component';
-import { DetalleDictamenService } from '../../../../core/services/130118/detalleDictamen.service';
-import { DictamenDetalleResponse } from '../../../../core/models/130118/dictamen-detalle-response.model';
-import { DictamenesResponse } from '../../../../core/models/130118/dictamenes-response.model';
-import { ObservacionDetalleResponse } from '../../../../core/models/130118/observacion-detalle-response.model';
+import { DetalleDictamenService } from '../../../../core/services/shared/detalleDictamen.service';
+import { DictamenDetalleResponse } from '../../../../core/models/shared/dictamen-detalle-response.model';
+import { DictamenesResponse } from '../../../../core/models/shared/dictamenes-response.model';
+import { ObservacionDetalleResponse } from '../../../../core/models/shared/observacion-detalle-response.model';
 
 import { CategoriaMensaje, Notificacion, NotificacionesComponent } from '../../notificaciones/notificaciones.component';
 import { Subject } from 'rxjs';

@@ -2,13 +2,21 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          <h1>Expedición de certificados de elegibilidad de bienes textiles y prendas de vestir con Canadá y Estados Unidos de América</h1>
+          <h2>Expedición de certificados de elegibilidad de bienes textiles y prendas de vestir con Canadá y Estados Unidos de América</h2>
+        </div>
+        <div class="col-12">
+          @if (esFormaValido) {
+          <div
+            class="alert alert-info alert-danger"
+            [innerHTML]="formularioAlertaError"
+          ></div>
+          }
         </div>
         <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno></app-paso-uno>
+      <app-paso-uno #pasoUnoRef (tabChanged)="onTabChanged()"></app-paso-uno>
       } @case (2) {
       <app-paso-dos></app-paso-dos>
       } @case (3) {

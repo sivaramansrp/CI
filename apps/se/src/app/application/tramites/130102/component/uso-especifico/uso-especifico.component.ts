@@ -153,45 +153,41 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
   /**
    * @method inicializarFormulario
    * @description Inicializa el formulario reactivo y sus validaciones.
-   * @memberof UsoEspicificoComponent
    */
-  inicializarFormulario():void{
-      this.tramite130102Query.selectSolicitud$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {  
-        this.solicitudState = seccionState;
-        if (
-              this.solicitudState &&
-              typeof this.solicitudState === 'object' &&
-              this.solicitudState !== null &&
-              'uso_especifico_tabla' in this.solicitudState
-            ) {
-              const PRODUCTO = this.solicitudState['uso_especifico_tabla'] as FraccionArancelariaProsec[];
-              PRODUCTO.forEach((productoItem: FraccionArancelariaProsec) => {
-                const IS_ALREADY_ADDED = this.datosSocios.some(
-                (item: FraccionArancelariaProsec) => item.fraccionArancelariaProsec === productoItem.fraccionArancelariaProsec
-              );
-  
-              if (!IS_ALREADY_ADDED) {
-                this.datosSocios.push(productoItem);
-              }
-              });
-            }
-      })
-    )
-    .subscribe();
-
+  inicializarFormulario(): void {
+   
     this.usoEspicificoForm = this.formbuilt.group({
-      fraccionArancelariaProsec: [ this.solicitudState?.fraccionArancelariaProsec, Validators.required],
-      descripción: ['',[Validators.required,UsoEspicificoComponent.noLeadingSpacesValidator]],
-
+      fraccionArancelariaProsec: ['', Validators.required],
+      descripción: ['', [Validators.required, UsoEspicificoComponent.noLeadingSpacesValidator]],
     });
-    if (this.consultaState.readonly) {
+
+ this.tramite130102Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {  
+          this.solicitudState = seccionState;
+          
+          if (this.solicitudState?.['uso_especifico_tabla']) {
+            const PRODUCTOS = this.solicitudState['uso_especifico_tabla'] as FraccionArancelariaProsec[];
+            this.datosSocios = [...PRODUCTOS];
+          }
+          
+          if (this.solicitudState?.fraccionArancelariaProsec) {
+            this.usoEspicificoForm.patchValue({
+              fraccionArancelariaProsec: this.solicitudState.fraccionArancelariaProsec
+            });
+          }
+        })
+      )
+      .subscribe();
+
+   
+    if (this.consultaState?.readonly) {
       this.usoEspicificoForm.disable();
       this.obtenerRequisitosFraccionArancelariaEsquema();
     }
-    if (this.consultaState.update) {
+    
+    if (this.consultaState?.update) {
       this.obtenerRequisitosFraccionArancelariaEsquema();
     }
   }
@@ -251,14 +247,31 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
    * // Agrega una nueva entrada específica a la tabla dinámica y actualiza el estado del trámite.
    */
   public agregar(): void {
+   
     if (this.usoEspicificoForm.valid) {
-      const ESPECIFICO = {
-        fraccionArancelariaProsec: this.obtenerFraccionArancelariaProsec(),
-        descripción: this.usoEspicificoForm.get('descripción')?.value,
-      };
-      this.datosSocios?.push(ESPECIFICO);
-      this.tramite130102Store.setDynamicFieldValue('uso_especifico_tabla', this.datosSocios);
-      this.usoEspicificoForm.reset();
+     
+      const FRACCIONID = Number(this.usoEspicificoForm.get('fraccionArancelariaProsec')?.value);
+      const FRACCIONDESCRIPCION = this.obtenerFraccionArancelariaProsec();
+      const DESCRIPCION = this.usoEspicificoForm.get('descripción')?.value?.trim();
+
+      const EXISTS = this.datosSocios.some(item =>
+        item.fraccionArancelariaProsec === FRACCIONID
+      );
+
+      if (!EXISTS && FRACCIONID && DESCRIPCION) {
+        const ESPECIFICO: FraccionArancelariaProsec = {
+          fraccionArancelariaProsec: FRACCIONID,
+          descripción: DESCRIPCION,
+        };
+        this.datosSocios = [...this.datosSocios, ESPECIFICO];
+        this.tramite130102Store.setDynamicFieldValue('uso_especifico_tabla', this.datosSocios);
+         this.usoEspicificoForm.reset();
+        this.initializeFormDefaults();
+     
+      } 
+    } else {
+      
+      this.markFormGroupTouched();
     }
   }
 
@@ -296,4 +309,26 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.complete();
   }
 
+  /**
+ * @method initializeFormDefaults
+ * @description Reinitializa los valores por defecto del formulario después del reset.
+ */
+private initializeFormDefaults(): void {
+  this.usoEspicificoForm.patchValue({
+    fraccionArancelariaProsec: '',
+    descripción: ''
+  });
+}
+
+/**
+ * @method markFormGroupTouched
+ * @description Marca todos los campos del formulario como tocados para mostrar errores de validación.
+ */
+private markFormGroupTouched(): void {
+  Object.keys(this.usoEspicificoForm.controls).forEach(key => {
+    const CONTROL = this.usoEspicificoForm.get(key);
+    CONTROL?.markAsTouched();
+    CONTROL?.updateValueAndValidity();
+  });
+}
 }

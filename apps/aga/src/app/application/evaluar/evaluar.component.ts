@@ -1,9 +1,9 @@
 import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
-import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-acuses-response.model';
+import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/shared/consulta-acuses-response.model';
 import { CapturarRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/capturar-requerimiento/capturar-requerimiento.component';
 import { CommonModule } from "@angular/common";
-import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/130118/dictamenes-response.model';
-import { DocumentoSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model";
+import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/shared/dictamenes-response.model';
+import { DocumentoSolicitud } from "@libs/shared/data-access-user/src/core/models/shared/consulta-documentos-response.model";
 import { EncabezadoRequerimientoComponent } from '@libs/shared/data-access-user/src/tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
 import { EvaluarSolicitudService } from '../core/services/evaluar-tramite/evaluar-solicitud.service';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
@@ -15,7 +15,7 @@ import { GuardarDictamenService } from '../core/services/evaluar-tramite/guardar
 import { IniciarService } from '../core/services/evaluar-tramite/iniciar.service';
 import { LISTA_TRIMITES } from '../core/enums/lista-trimites.enums';
 import { OpcionesEvaluacionRequest } from '../core/models/evaluar/opciones-evaluacion.model';
-import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/130118/requerimientos-response.model';
+import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/shared/requerimientos-response.model';
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { Router } from '@angular/router';
 import { SolicitarDocumentosEvaluacionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
@@ -25,11 +25,11 @@ import { SolicitudRequerimientosState } from '@libs/shared/data-access-user/src/
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { TabsSolicitudServiceTsService } from "../core/services/evaluar-tramite/tabs-solicitud.service";
-import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model";
+import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/shared/consulta-tareas-response.model";
 
 import { Component, Inject, OnDestroy, OnInit, Type } from "@angular/core";
 import { ConsultaioQuery, ConsultaioState, ConsultaioStore, FECHA_DE_INICIO } from '@ng-mf/data-access-user';
-import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/130118/criterios-response.model';
+import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/shared/criterios-response.model';
 
 /**
  * @component
@@ -496,7 +496,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       datos?: string[];
     }
 
-    this.evaluarSolicitudService.postOpcionesEvaluacion(130118,FOLIOTRAMITE, PAYLOAD)
+    this.evaluarSolicitudService.postOpcionesEvaluacion(this.tramite, FOLIOTRAMITE, PAYLOAD)
       .subscribe({
         next: (response: OpcionesEvaluacionResponse) => {
           if (response.codigo === '00') {

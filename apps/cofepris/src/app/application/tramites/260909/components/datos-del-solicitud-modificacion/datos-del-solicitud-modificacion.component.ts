@@ -50,6 +50,7 @@ import { DatosDelSeccionQuery } from '../../estados/datos-del-solicitud-seccion.
 import { ManifiestosRepresentanteSeccionComponent } from '../../../../shared/components/manifiestos-representante-seccion/manifiestos-representante-seccion.component';
 
 import { DatosDelSolicituteSeccionStateStoreI } from '../../estados/datos-del-solicitud-seccion.store';
+import { TooltipDirective } from "ngx-bootstrap/tooltip";
 
 
 /**
@@ -129,8 +130,9 @@ import { DatosDelSolicituteSeccionStateStoreI } from '../../estados/datos-del-so
     AlertComponent,
     InputCheckComponent,
     NotificacionesComponent,
-     ManifiestosRepresentanteSeccionComponent,
-  ],
+    ManifiestosRepresentanteSeccionComponent,
+    TooltipDirective
+],
 
   templateUrl: './datos-del-solicitud-modificacion.component.html',
   styleUrl: './datos-del-solicitud-modificacion.component.scss',
@@ -354,12 +356,32 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
   ];
 
   /**
+   * Etiqueta para el crosslist de país de origen.
+   */
+  public paisDeOrigenLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionados:',
+  };
+  /**
    * Etiqueta para el crosslist de país de procedencia.
    */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
+    tituluDeLaIzquierda: 'País de procedencia:',
+    derecha: 'País(es) seleccionados:',
   };
+
+  /**
+   * Etiqueta para el crosslist de uso específico.
+   */
+  public usoEspecificoLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'Uso específico:',
+    derecha: 'Uso específico seleccionado*:',
+  };
+
+  /**
+   * Indica si el establecimiento tiene una licencia sanitaria.
+   */
+  public tieneNoLicenciaSanitaria: boolean = false;
   /**
    * Lista de países para la selección de origen.
    */
@@ -727,6 +749,11 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
     };
 
     this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
+    if (controlName === 'noLicenciaSanitaria' && UPDATED_VALUE['noLicenciaSanitaria'] !== '') {
+      this.tieneNoLicenciaSanitaria = true;
+    } else if (controlName === 'noLicenciaSanitaria' && UPDATED_VALUE['noLicenciaSanitaria'] === '') {
+      this.tieneNoLicenciaSanitaria = false;
+    }
   }
  
   /**
@@ -762,6 +789,46 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
   */
   abrirModalMercancia(): void {
     this.modalAddAgentMercanciasInstance.show();
+  }
+
+  /**
+   * Establece los valores por defecto en el formulario de mercancías.
+   */
+  public setFormaControl():void {
+   this.formMercancias.get('descripcionFraccion')?.setValue('vgvxdsy xvytfew');
+   this.formMercancias.get('UMT')?.setValue('34654HGTROJOI6777');
+  }
+
+  public agregarMercancia(): void {
+    if (this.formMercancias.valid) {
+      const FORMA_DATOS = {
+          clasificacion: this.formMercancias.get('clasificacion')?.value,
+          especificar: this.formMercancias.get('especificarClasificacionProducto')?.value,
+          denominacionEspecifica: this.formMercancias.get('denominacionEspecifica')?.value,
+          denominacionDistintiva: this.formMercancias.get('denominacionDistintiva')?.value,
+          denominacionComun: this.formMercancias.get('denominacionComun')?.value,
+          formaFarmaceutica: this.formMercancias.get('formaFarmaceutica')?.value,
+          estadoFisico: this.formMercancias.get('estadoFisico')?.value,
+          fraccionArancelaria: this.formMercancias.get('fraccionArancelaria')?.value,
+          descripcionFraccion: this.formMercancias.get('descripcionFraccion')?.value,
+          unidad: this.formMercancias.get('unidad')?.value,
+          cantidadUMC: this.formMercancias.get('cantidadUMC')?.value,
+          unidadUMT: this.formMercancias.get('UMT')?.value,
+          cantidadUMT: this.formMercancias.get('cantidadUMT')?.value,
+          presentacion: this.formMercancias.get('presentacion')?.value,
+          numeroRegistro: this.formMercancias.get('numeroRegistro')?.value,
+          paisDeOrigen: this.formMercancias.get('paisDeOrigen')?.value,
+          paisDeProcedencia: this.formMercancias.get('paisDeProcedencia')?.value,
+          tipoProducto: this.formMercancias.get('tipoDeProducto')?.value,
+          usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
+      }
+      this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, FORMA_DATOS];
+      this.formMercancias.reset();
+    }
+  }
+
+  public limpiarFormulario(): void {
+    this.formMercancias.reset();
   }
 
   /**

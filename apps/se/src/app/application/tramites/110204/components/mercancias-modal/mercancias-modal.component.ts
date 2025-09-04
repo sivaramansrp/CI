@@ -271,6 +271,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
   }
 
   activarModal(): void {
+    if(this.mercanciaForm.valid){
     this.mostrarAlerta = true;
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -282,6 +283,10 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
+    }
+    }
+    else{
+      this.mercanciaForm.markAllAsTouched();
     }
   }
 

@@ -6,11 +6,11 @@ import { Observable } from 'rxjs';
 
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { GuardarDictamenRequest } from '../../models/evaluar/request/guardar-dictamen-request.model';
-import { SentidosDisponiblesResponse } from '@libs/shared/data-access-user/src/core/models/130118/sentidos-disponibles.model';
+import { SentidosDisponiblesResponse } from '@libs/shared/data-access-user/src/core/models/shared/sentidos-disponibles.model';
 
 
 import { API_GET_DICTAMEN_CRITERIOS, API_GET_SENTIDOS_DISPONIBLES, API_POST_GUARDAR_DICTAMEN, API_POST_MOSTRAR_FIRMAR } from '@libs/shared/data-access-user/src';
-import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/130118/criterios-response.model';
+import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/shared/criterios-response.model';
 import { GuardarDictamenResponse } from '../../models/evaluar/response/guardar-dictamen-response.model';
 import { MostrarFirmarRequest } from '../../models/evaluar/request/firmar-mostrar-dictamen.request.model';
 import { MostrarFirmarResponse } from '../../models/evaluar/response/mostrar-firmar-response.model';

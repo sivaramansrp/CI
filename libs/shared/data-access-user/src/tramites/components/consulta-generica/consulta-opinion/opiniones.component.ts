@@ -4,7 +4,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CONSULTA_OPINIONES } from '../../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
 import { FolioQuery } from '../../../../core/queries/folio.query';
-import { OpinionResponse } from '../../../../core/models/130118/opinion-response.model';
+import { OpinionResponse } from '../../../../core/models/shared/opinion-response.model';
 import { OpinionesService } from '../../../../core/services/consultagenerica/opiniones-service';
 import { Router } from '@angular/router';
 
