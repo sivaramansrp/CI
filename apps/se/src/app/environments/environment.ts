@@ -8,7 +8,7 @@ export const ENVIRONMENT = {
   URL_SERVER: 'https://dev.v30.ultrasist.net/api',
   URL_SERVER_UPLOAD: 'https://upload.v30.ultrasist.net/api/upload',
   URL_SERVER_JSON_AUXILIAR: 'https://dev.v30.ultrasist.net/api/json-auxiliar',
-  API_BASE_URL: 'https://api-v30.cloud-ultrasist.net',
+  API_BASE_URL: 'https://your.api.base.url',
   PRODUCTION: false,
   MOCK: true
 };
