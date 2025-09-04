@@ -98,10 +98,10 @@ describe('PagoDeDerechosComponent', () => {
   it('should run #inicializarEstadoFormulario()', async () => {
     component.guardarDatosFormulario = jest.fn();
     component.donanteDomicilio = jest.fn();
-    component.soloLectura = true; // Set to true to trigger guardarDatosFormulario
+    component.soloLectura = true; 
     component.inicializarEstadoFormulario();
     expect(component.guardarDatosFormulario).toHaveBeenCalled();
-    expect(component.donanteDomicilio).not.toHaveBeenCalled(); // This should NOT be called when soloLectura is true
+    expect(component.donanteDomicilio).not.toHaveBeenCalled(); 
   });
 
   it('should run #guardarDatosFormulario()', async () => {
@@ -113,7 +113,7 @@ describe('PagoDeDerechosComponent', () => {
     component.guardarDatosFormulario();
     expect(component.donanteDomicilio).toHaveBeenCalled();
     expect(component.pagoDeDerechosForm.disable).toHaveBeenCalled();
-    expect(component.pagoDeDerechosForm.enable).not.toHaveBeenCalled(); // Should not be called when soloLectura is true
+    expect(component.pagoDeDerechosForm.enable).not.toHaveBeenCalled(); 
   });
 
   it('should run #obtenerDatosBanco()', async () => {
@@ -143,7 +143,7 @@ describe('PagoDeDerechosComponent', () => {
 
   it('should run #setValoresStore()', async () => {
     component.store = component.store || {};
-    component.store.setTestMethod = jest.fn(); // Mock a specific store method
+    component.store.setTestMethod = jest.fn(); 
     
     const mockForm = {
       get: jest.fn().mockReturnValue({

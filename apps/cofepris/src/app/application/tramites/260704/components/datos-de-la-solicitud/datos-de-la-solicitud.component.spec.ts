@@ -7,7 +7,7 @@ import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-// Mock Bootstrap Modal
+
 jest.mock('bootstrap', () => ({
   Modal: jest.fn().mockImplementation(() => ({
     show: jest.fn(),
@@ -161,7 +161,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.datosDelEstablecimientoForm = component.datosDelEstablecimientoForm || {};
     component.datosDelEstablecimientoForm.disable = jest.fn();
     component.datosDelEstablecimientoForm.enable = jest.fn();
-    component.soloLectura = true; // Set to true to trigger disable
+    component.soloLectura = true; 
     component.guardarDatosFormulario();
     expect(component.donanteDomicilio).toHaveBeenCalled();
     expect(component.datosDelEstablecimientoForm.disable).toHaveBeenCalled();
@@ -215,7 +215,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.consulta.getDescripcionScian).toHaveBeenCalled();
     expect(component.store.setClaveScian).toHaveBeenCalled();
     
-    // Wait for async operations to complete
+    // Espere a que se completen las operaciones asincrónicas
     await new Promise(resolve => setTimeout(resolve, 0));
     expect(component.store.setDescripcionScian).toHaveBeenCalledWith('Test Description');
   });
@@ -288,17 +288,17 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.abrirModalmercancia = jest.fn();
     component.abrirModalmercanciaChecked = jest.fn();
     
-    // Test when esCheckboxSeleccionado is false
+    // Prueba cuando esCheckboxSeleccionado es falso
     component.esCheckboxSeleccionado = false;
     component.eliminarMercanciaGrid();
     expect(component.abrirModalmercancia).toHaveBeenCalled();
     expect(component.abrirModalmercanciaChecked).not.toHaveBeenCalled();
     
-    // Reset mocks
+    // Restablecer simulacros
     component.abrirModalmercancia.mockClear();
     component.abrirModalmercanciaChecked.mockClear();
-    
-    // Test when esCheckboxSeleccionado is true
+
+    // Prueba cuando esCheckboxSeleccionado es verdadero
     component.esCheckboxSeleccionado = true;
     component.eliminarMercanciaGrid();
     expect(component.abrirModalmercancia).not.toHaveBeenCalled();
@@ -423,7 +423,7 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   it('should run #setValoresStore()', async () => {
     component.store = component.store || {};
-    component.store.setTestMethod = jest.fn(); // Mock a specific store method
+    component.store.setTestMethod = jest.fn(); // Burlarse de un método de tienda específico
     component.alCambiarSeleccion = jest.fn();
     
     const mockForm = {
@@ -498,7 +498,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.tieneFilaSeleccionadaFabricante = true;
     component.esCheckboxSeleccionado = true;
     
-    component.eliminarPedimentoMercancia(true); // Pass true to trigger borrar condition
+    component.eliminarPedimentoMercancia(true); // Pasar verdadera para desencadenar la condición de prestatario  
     expect(component.pedimentos.splice).toHaveBeenCalledWith(0, 1);
     expect(component.certificadoDisponsiblesTablaDatos.pop).toHaveBeenCalled();
   });
@@ -506,7 +506,7 @@ describe('DatosDeLaSolicitudComponent', () => {
   it('should run #buscarRFC()', async () => {
     component.datosDelEstablecimientoForm = component.datosDelEstablecimientoForm || {};
     component.datosDelEstablecimientoForm.get = jest.fn().mockReturnValue({
-      value: 'MAVL621207C95' // Provide the hardcoded RFC value that triggers the logic
+      value: 'MAVL621207C95' 
     });
     component.datosDelEstablecimientoForm.patchValue = jest.fn();
     component.abrirRfcModal = jest.fn();
@@ -521,7 +521,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.store.setNombreRazon).toHaveBeenCalledWith('MARIA ALEJANDRA');
     expect(component.store.setApellidoPaterno).toHaveBeenCalledWith('VELASCO');
     expect(component.store.setApellidoMaterno).toHaveBeenCalledWith('LOPEZ');
-    expect(component.abrirRfcModal).not.toHaveBeenCalled(); // Should not be called when RFC exists
+    expect(component.abrirRfcModal).not.toHaveBeenCalled(); 
   });
 
   it('should run #abrirRfcModal()', async () => {
