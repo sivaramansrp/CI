@@ -290,6 +290,11 @@ export class AcuseComponent implements OnChanges {
   }
 
   salir(): void {
-    this.router.navigate(['/seleccion-tramite']);
+    if (this.datosTabla.length === 0) {
+      this.router.navigate(['/seleccion-tramite']);
+    }else{
+      this.router.navigate(['/bandeja-de-tareas-pendientes']);
+    }
+    
   }
 }
