@@ -74,6 +74,7 @@ import {
   SIN_VALOR,
   SIN_VALORES,
   TIPO_DESPACHO_DDEX,
+  TIPO_ENUM,
   TIPO_OPERACION_EXPORTACION,
   TRANSPORTE,
   URL_GENERAR_LINEA_CAPTURA,
@@ -3758,13 +3759,13 @@ export class SolicitudComponent
       rfc: this.datosImportadorExportador.get('RFCImpExp')?.value,
       tipoOperacion: this.despacho.get('tipoOperacion')?.value,
     };
-
+    
     this.encargoConferidoService
       .getEncargoConferido(BODY)
       .pipe(
         takeUntil(this.destroyNotifier$),
         tap((response) => {
-          if (response.datos) {
+          if (response.datos && BODY.tipoOperacion === TIPO_ENUM.IMPORTACION) {
             this.nuevaNotificacion = {
               tipoNotificacion: 'alert',
               categoria: 'danger',
