@@ -87,7 +87,12 @@ export const PROGRAMA_SELECCIONADO = [
     tipoInput: 'textarea',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required' }],
+    validadores: [{ tipo: 'required' },{ 
+      tipo: 'pattern', 
+      valor: /^[a-zA-Z0-9 ]{0,255}$/, 
+      mensaje: ' No puede escribir más de 255 caracteres' 
+    }
+    ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,

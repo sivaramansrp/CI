@@ -1,9 +1,9 @@
 import { Observable, catchError, map, throwError } from 'rxjs';
 
 import { Catalogo, HttpCoreService } from '@ng-mf/data-access-user';
+import { ENVIRONMENT } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENVIRONMENT } from 'apps/se/src/app/environments/environment';
 
 @Injectable({
   providedIn: 'root',
