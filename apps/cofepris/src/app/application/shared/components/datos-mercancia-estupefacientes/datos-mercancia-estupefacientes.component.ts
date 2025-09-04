@@ -198,6 +198,22 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
     derecha: 'Uso específico seleccionado*:',
   };
 
+
+    /**
+   * @property {CrossListLable} usoEspesificoLabel
+   * Etiqueta personalizada para el componente de lista cruzada de uso específico.
+   * Define los títulos para los elementos disponibles y seleccionados.
+   */
+  /**
+   * @property {CrossListLable} UsoEspesificoLabel
+   * Etiqueta personalizada para el componente de lista cruzada de país de procedencia.
+   * Define los títulos mostrados en la parte izquierda y derecha del componente.
+   */
+  public UsoEspesificoLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de Procedencia:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
+
   public formaFaramaceuticaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Forma farmacéutica:',
     derecha: '*:',

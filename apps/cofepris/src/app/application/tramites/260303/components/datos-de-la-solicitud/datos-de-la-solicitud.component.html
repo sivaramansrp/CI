@@ -250,17 +250,30 @@
 </form>
     <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
     <form [formGroup]="representanteLegalForm">
+        <div class="mt-5">
         <div class="alert alert-info">
-            <div class="row form-check d-flex justify-content-between">
-                <div class="col-md-1 mt-5">
-                    <input class="form-check-input" type="checkbox" id="manifiestos" formControlName="manifiestos" (change)="setValoresStore(representanteLegalForm,'manifiestos', 'setManifiestos')">*
-                </div>
-                <div class="col-md-11">
-                    <p class="form-check-label" for="manifiestos">
-                        Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.
-                    </p>
-                </div>
+          <div class="row align-items-center justify-content-start py-2" >
+            <div class="col-auto d-flex align-items-start pt-1">
+              <input class="form-check-input me-3" type="checkbox" id="manifiestos" formControlName="manifiestos" />
+              <label class="form-check-label ms-2 mt-2" for="manifiestos">
+                <span
+                  [ngClass]="
+                    representanteLegalForm.get('manifiestos')?.invalid &&
+                    (representanteLegalForm.get('manifiestos')?.touched ||
+                      representanteLegalForm.get('manifiestos')?.dirty)
+                      ? 'mensaje-error font-weight-bold'
+                      : ''
+                  "
+                >
+                  *</span
+                >
+              </label>
             </div>
+            <div class="col align-items-center ml-38">
+              <label for="manifesto" class="fw-300">{{ textoManifestoContenido }}</label>
+            </div>
+          </div>
+        </div>
         </div>
         <div class="row mb-3">
             <div class="form-group">

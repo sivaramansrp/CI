@@ -1,6 +1,6 @@
 import { Catalogo, CatalogoSelectComponent,InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
@@ -124,12 +124,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   public cerrarPagoDerechosForm(): void {
     this.pagoDerechosForm = this.fb.group({
-      claveDeReferencia: [this.solicitudState.claveDeReferencia],
-      cadenaDaLaDependencia: [this.solicitudState.cadenaDaLaDependencia],
+      claveDeReferencia: [this.solicitudState.claveDeReferencia, [Validators.required, Validators.maxLength(9)]],
+      cadenaDaLaDependencia: [this.solicitudState.cadenaDaLaDependencia, [Validators.required, Validators.maxLength(14)]],
       banco: [this.solicitudState.banco],
-      laveDePago: [this.solicitudState.laveDePago],
+      laveDePago: [this.solicitudState.laveDePago, [Validators.required, Validators.maxLength(30)]],
       fechaDePago: [this.solicitudState.fechaDePago],
-      importeDePago: [this.solicitudState.importeDePago],
+      importeDePago: [this.solicitudState.importeDePago, [Validators.required, Validators.maxLength(16), Validators.pattern(/^\d{1,13}(\.\d{0,2})?$/)]],
     });
   }
 

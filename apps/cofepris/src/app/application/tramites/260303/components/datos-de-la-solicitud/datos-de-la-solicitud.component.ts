@@ -14,6 +14,8 @@ import PAISES_DE_ORIGEN from '@libs/shared/theme/assets/json/260303/paises_de_or
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
 import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico.json';
+
+import { TEXTO_MANIFESTO_Y_DECLARACIONES } from '../../../../shared/constantes/datos-solicitud.enum';
 /**
  * DatosDeLaSolicitudComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
@@ -36,6 +38,12 @@ import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
+
+  /**
+     * @property {string} textoManifestoContenido
+     * Texto que se muestra en el manifiesto y declaraciones.
+     */
+    public textoManifestoContenido = TEXTO_MANIFESTO_Y_DECLARACIONES;
 
       /**
   * @property consultaState
