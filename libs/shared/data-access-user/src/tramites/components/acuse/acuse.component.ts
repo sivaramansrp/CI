@@ -5,7 +5,7 @@ import { AlertComponent } from '../alert/alert.component';
 import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 
-import { AcuseDetalleService } from '../../../core/services/130118/detalleAcuse.service';
+import { AcuseDetalleService } from '../../../core/services/shared/detalleAcuse.service';
 import { DocumentoService } from '../../..';
 import { DocumentosRequest } from '../../../core/models/shared/documentos-request.model';
 import { DocumentosService } from '../../../core/services/shared/documentos.service';

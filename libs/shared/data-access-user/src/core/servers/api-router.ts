@@ -289,10 +289,10 @@ export const NUMFOLIOTRAMITE = '{numFolioTramite}';
 export const IDSOLICITUDDICTAMEN = '{idSolicitudDictamen}';
 
 /**
- * API para obtener las opciones de evaluación del tramite generico.
+ * API para obtener las opciones de evaluación del tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/opciones-evaluacion
  */
-export const API_POST_OPCIONES_EVALUACION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/opciones-evaluacion`;
+export const API_POST_OPCIONES_EVALUACION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/${NUMFOLIOTRAMITE}/evaluar/opciones-evaluacion`;
 
 /**
  * API para generar el dictamen del tramite generico.

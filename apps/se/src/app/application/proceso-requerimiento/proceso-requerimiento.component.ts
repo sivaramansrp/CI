@@ -47,20 +47,21 @@ import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramit
 import { Router } from '@angular/router';
 import { Type } from '@angular/core';
 
-import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-acuses-response.model';
+import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/shared/consulta-acuses-response.model';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { CodigoRespuesta } from '../core/enum/se-core-enum';
-import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/130118/dictamenes-response.model';
-import { DocumentoSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model';
-import { EnvioDigitalResponse } from '@libs/shared/data-access-user/src/core/models/130118/envio-digital-response.model';
+import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/shared/dictamenes-response.model';
+import { DocumentoSolicitud } from '@libs/shared/data-access-user/src/core/models/shared/consulta-documentos-response.model';
 import { FirmarRequest } from '../core/models/atender-requerimiento/request/fimar-request.model';
 import { FirmarResponse } from '../core/models/atender-requerimiento/response/firmar-response.model';
 import { MostrarFirmaRequest } from '../core/models/atender-requerimiento/request/mostrar-firma-request.model';
-import { OpinionResponse } from '@libs/shared/data-access-user/src/core/models/130118/opinion-response.model';
-import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/130118/requerimientos-response.model';
-import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tabs-response.model';
+import { OpinionResponse } from '@libs/shared/data-access-user/src/core/models/shared/opinion-response.model';
+import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/shared/consulta-tabs-response.model';
 import { TabsSolicitudServiceTsService } from '../core/services/evaluar-tramite/tabs-solicitud.service.ts.service';
-import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model';
+
+import { EnvioDigitalResponse } from '@libs/shared/data-access-user/src/core/models/shared/envio-digital-response.model';
+import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/shared/requerimientos-response.model';
+import { TareasSolicitud } from '@libs/shared/data-access-user/src/core/models/shared/consulta-tareas-response.model';
 
 /**
  * Componente principal para el proceso de requerimiento.
