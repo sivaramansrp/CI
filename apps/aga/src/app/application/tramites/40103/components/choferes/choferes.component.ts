@@ -105,13 +105,13 @@ export class ChoferesComponent {
    * Lista de choferes nacionales registrados.
    * @type {any[]}
    */
-  choferesNacionales: any[] = [];
+  choferesNacionales: Array<{ nombre: string; nacionalidad: string }> = [];
 
   /**
    * Lista de choferes extranjeros registrados.
    * @type {any[]}
    */
-  choferesExtranjeros: any[] = [];
+  choferesExtranjeros: Array<{ nombre: string; nacionalidad: string }> = [];
 
   /**
    * Cambia la pestaña activa entre choferes nacionales y extranjeros.
@@ -125,7 +125,7 @@ export class ChoferesComponent {
    * Agrega un chofer nacional a la lista de choferes nacionales.
    * @param {any} chofer - Objeto con los datos del chofer nacional.
    */
-  onAgregarChoferNacional(chofer: any) {
+  onAgregarChoferNacional(chofer: { nombre: string; nacionalidad: string }): void {
     this.choferesNacionales = [...this.choferesNacionales, chofer];
   }
 
@@ -133,17 +133,21 @@ export class ChoferesComponent {
    * Agrega un chofer extranjero a la lista de choferes extranjeros.
    * @param {any} chofer - Objeto con los datos del chofer extranjero.
    */
-  onAgregarChoferExtranjero(chofer: any) {
+  onAgregarChoferExtranjero(chofer: { nombre: string; nacionalidad: string }): void {
     this.choferesExtranjeros = [...this.choferesExtranjeros, chofer];
   }
 
   /**
    * Cancela la operación de alta o edición de chofer nacional.
    */
-  onCancelarChoferNacional() {}
+  static onCancelarChoferNacional(): void {
+  // Lógica de cancelación no implementada
+  }
 
   /**
    * Cancela la operación de alta o edición de chofer extranjero.
    */
-  onCancelarChoferExtranjero() {}
+  static onCancelarChoferExtranjero(): void {
+  // Lógica de cancelación no implementada
+  }
 }

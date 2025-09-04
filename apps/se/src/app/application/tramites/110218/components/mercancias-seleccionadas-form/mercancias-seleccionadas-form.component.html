@@ -38,8 +38,7 @@
                 <div class="invalid-feedback">
                     <small *ngIf="modifydatosdelcertificado.get('valorMercancia')?.hasError('required')">Este campo es
                         obligatorio.</small>
-                    <small *ngIf="modifydatosdelcertificado.get('valorMercancia')?.hasError('pattern')">Ingrese un
-                        número válido con hasta 4 decimales.</small>
+                    <small *ngIf="modifydatosdelcertificado.get('valorMercancia')?.hasError('pattern')">El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales.</small>
                 </div>
             </div>
 
@@ -93,5 +92,8 @@
                     readonly>
             </div>
         </div>
-
+         <footer class="footer d-flex py-5 gap-3 justify-content-end">
+          <button type="button" class="btn btn-primary" (click)="closeModal()">Cancelar</button>
+          <button type="button" class="btn btn-primary" (click)="modificarYCerrar()">Modificar</button>
+        </footer>
     </form>

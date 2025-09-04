@@ -40,6 +40,7 @@ export interface Mercancia {
     nombreDenominacionORazonSocial: string;
     telefono: string;
     correoElectronico: string;
+    domicilio: string;
     calle: string;
     numeroExterior: string;
     numeroInterior: string;
@@ -95,14 +96,15 @@ export const CONFIGURATION_TABLA_DESTINATARIO: ConfiguracionColumna<Destinatario
     { encabezado: 'Nombre/denominación o razón social', clave: (item: Destinatario): string => item.nombreDenominacionORazonSocial, orden: 1 },
     { encabezado: 'Teléfono', clave: (item: Destinatario): string => item.telefono || '', orden: 2 },
     { encabezado: 'Correo electrónico', clave: (item: Destinatario): string => item.correoElectronico, orden: 3 },
-    { encabezado: 'Calle', clave: (item: Destinatario): string => item.calle, orden: 4 },
-    { encabezado: 'Número exterior', clave: (item: Destinatario): string => item.numeroExterior, orden: 5 },
-    { encabezado: 'Número interior', clave: (item: Destinatario): string => item.numeroInterior || '', orden: 6 },
-    { encabezado: 'País', clave: (item: Destinatario): string => item.pais || '', orden: 7 },
-    { encabezado: 'Colonia', clave: (item: Destinatario): string => item.colonia || '', orden: 8 },
-    { encabezado: 'Delegación', clave: (item: Destinatario): string => item.municipioOAlcaldia || '', orden: 9 },
-    { encabezado: 'Entidad Federativa', clave: (item: Destinatario): string => item.entidadFederativa || '', orden: 10 },
-    { encabezado: 'Código Postal', clave: (item: Destinatario): string => item.codigoPostal, orden: 11 }
+    { encabezado: 'Domicilio', clave: (item: Destinatario): string => item.domicilio, orden: 4 },
+    { encabezado: 'Calle', clave: (item: Destinatario): string => item.calle, orden: 5 },
+    { encabezado: 'Número exterior', clave: (item: Destinatario): string => item.numeroExterior, orden: 6 },
+    { encabezado: 'Número interior', clave: (item: Destinatario): string => item.numeroInterior || '', orden: 7 },
+    { encabezado: 'País', clave: (item: Destinatario): string => item.pais || '', orden: 8 },
+    { encabezado: 'Colonia', clave: (item: Destinatario): string => item.colonia || '', orden: 9 },
+    { encabezado: 'Delegación', clave: (item: Destinatario): string => item.municipioOAlcaldia || '', orden: 10 },
+    { encabezado: 'Entidad Federativa', clave: (item: Destinatario): string => item.entidadFederativa || '', orden: 11 },
+    { encabezado: 'Código Postal', clave: (item: Destinatario): string => item.codigoPostal, orden: 12 }
   ];
   /**
  * Configuración de las columnas de la tabla para los exportadores.

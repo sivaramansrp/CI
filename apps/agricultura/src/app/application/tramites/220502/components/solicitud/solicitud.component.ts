@@ -25,6 +25,7 @@ import { CommonModule } from '@angular/common';
 import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { HistorialInspeccionFisicaComponent } from '../../shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
 import { MedioTransporteComponent } from '../../shared/medio-transporte/medio-transporte.component';
+import { PROCEDURE_ID } from '../../constantes/constantes';
 import { ResponsableInspeccionEnPuntoComponent } from '../../shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
 import { SolicitudDatosComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
 import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
@@ -112,6 +113,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {EventEmitter<boolean>}
    */
   @Output() certificadosAutorizValor = new EventEmitter<boolean>(false);
+
+  /**
+   * @property {number} procedimiento
+   * @description
+   * Almacena el identificador del procedimiento actual, asignado a partir de la
+   * constante `PROCEDURE_ID`.
+   * Se utiliza para asociar la lógica y las operaciones del componente con el
+   * trámite correspondiente.
+   *
+   * @default PROCEDURE_ID (220502)
+   */
+  procedimiento: number = PROCEDURE_ID;
 
   /**
    * @constructor

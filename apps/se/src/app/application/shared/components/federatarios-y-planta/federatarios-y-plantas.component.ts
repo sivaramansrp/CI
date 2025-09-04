@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { ComplementarPlantaComponent } from '../complementar-planta/complementar-planta.component';
 import { InputFecha } from '@libs/shared/data-access-user/src';
@@ -26,19 +26,19 @@ import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { FormsModule } from '@angular/forms';
-import { Modal } from 'bootstrap';
 import { MontosDeInversionComponent } from '../montos-de-inversion/montos-de-inversion.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 
-
 import { FederatoriosState, FederatoriosStore } from '../../../estados/tramites/federatarios.store';
 import { Subject,map,takeUntil } from 'rxjs';
+import { CargaPorArchivoComponent } from '../carga-por-archivo/carga-por-archivo.component';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FederatoriosQuery } from '../../../estados/queries/federatarios.query';
 
+import { FECHA_DE_Tabla, INMEX_PLANTAS } from '../../constantes/federatarios-y-plantas.enum';
 /**
  * Componente para los federatarios y plantas
  * @export FederatariosYPlantasComponent
@@ -60,7 +60,9 @@ import { FederatoriosQuery } from '../../../estados/queries/federatarios.query';
     MontosDeInversionComponent,
     EmpleadosComponent,
     CapacidadInstaladaComponent,
-    AnexarDocumentosComponent
+    AnexarDocumentosComponent,
+    CargaPorArchivoComponent,
+    NotificacionesComponent
   ],
   templateUrl: './federatarios-y-plantas.component.html',
   styleUrl: './federatarios-y-plantas.component.scss',
@@ -243,6 +245,54 @@ plantasForm!: FormGroup;
   @Output() datosFormaFedratario: EventEmitter<FederatariosEncabezado> =
     new EventEmitter<FederatariosEncabezado>(true);
 
+ /**
+   * Controla la visibilidad del popup "Complementar Planta".
+   * @property {boolean} mostrarComplementarPlantaPopup
+   */
+  public mostrarComplementarPlantaPopup:boolean = false;
+
+    /**
+   * Controla la visibilidad del popup "Montos de Inversión".
+   * @property {boolean} mostrarMontosDeInversionPopup
+   */
+  public mostrarMontosDeInversionPopup:boolean = false;
+
+  /**
+   * Controla la visibilidad del popup "Empleados".
+   * @property {boolean} mostrarEmpleadosPopup
+   */
+  public mostrarEmpleadosPopup:boolean = false;
+
+  /**
+   * Controla la visibilidad del popup "Capacidad Instalada".
+   * @property {boolean} mostrarCapacidadInstaladaPopup
+   */
+  public mostrarCapacidadInstaladaPopup:boolean = false;
+
+  /**
+   * Controla la visibilidad del popup "Proveedor por Archivo".
+   * @property {boolean} mostrarProveedorPorArchivoPopup
+   */
+  public mostrarProveedorPorArchivoPopup:boolean = false;
+
+/**
+ * Objeto de notificación utilizado para mostrar mensajes relacionados con el proceso del federatario.
+ * @property {Notificacion} federatarioNotificacion
+ */
+  public federatarioNotificacion?: Notificacion;
+
+/**
+ * Contiene la planta IMMEX seleccionada por el usuario o `null` si no hay selección.
+ * @property {PlantasImmex | null} selectedPlantaImmex
+ */
+  public selectedPlantaImmex: PlantasImmex | null = null;
+
+/**
+ * Indica si una planta IMMEX ha sido seleccionada.
+ * @property {boolean} isPlantaImmexSelected
+ */
+  public isPlantaImmexSelected = false;
+  
   /**
    * Constructor de la clase FederatariosYPlantasComponent.
    * @param {Router} router - Servicio de Angular para la navegación.
@@ -326,13 +376,13 @@ plantasForm!: FormGroup;
   initFederatariosFormGroup(): void {
     this.federatariosFormGroup = new FormGroup({
       nombre: new FormControl( this.solicitudState['nombre'], Validators.required),
-      fechaDelActa: new FormControl(this.solicitudState['fechaDelActa']),
-      primerApellido: new FormControl(this.solicitudState['primerApellido']),
+      fechaDelActa: new FormControl(this.solicitudState['fechaDelActa'], Validators.required),
+      primerApellido: new FormControl(this.solicitudState['primerApellido'], Validators.required),
       segundoApellido: new FormControl(this.solicitudState['segundoApellido']),
-      numeroDeActa: new FormControl(this.solicitudState['numeroDeActa']),
-      numeroDeNotaria: new FormControl(this.solicitudState['numeroDeNotaria']),
-      estado: new FormControl(this.solicitudState['estado']),
-      estadoOptions: new FormControl(this.solicitudState['estadoOptions']),
+      numeroDeActa: new FormControl(this.solicitudState['numeroDeActa'], Validators.required),
+      numeroDeNotaria: new FormControl(this.solicitudState['numeroDeNotaria'], Validators.required),
+      estado: new FormControl(this.solicitudState['estado'], Validators.required),
+      estadoOptions: new FormControl(this.solicitudState['estadoOptions'], Validators.required),
     });
   }
 
@@ -384,8 +434,53 @@ plantasForm!: FormGroup;
    * @returns {void}
    */
   aggregarDatos(): void {
-    this.datosFormaFedratario.emit(this.federatariosFormGroup.value);
+    if (this.federatariosFormGroup.invalid) {
+    this.federatariosFormGroup.markAllAsTouched();
+
+    this.federatarioNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Introduzca el Nombre completo y correcto del Notario.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
   }
+  this.datosFormaFedratario.emit(this.federatariosFormGroup.value);
+  this.federatariosFormGroup.reset();
+  }
+
+/**
+ * Asigna a `plantasDisponiblesDatos` los datos disponibles de plantas IMMEX.
+ * Método utilizado para cargar o actualizar la lista de plantas disponibles.
+ */
+buscarPlantasImmex(): void {
+  this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
+}
+
+/**
+ * Adds IMMEX plant data to the `plantasImmexDatos` array.
+ * This method assigns the value of `INMEX_PLANTAS` to the `plantasImmexDatos` property.
+ *
+ * @remarks
+ * Ensure that `INMEX_PLANTAS` is properly defined and contains the expected plant data.
+ */
+agregarPlantas(): void {
+  this.plantasImmexDatos = [INMEX_PLANTAS];
+}
+
+
+setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
+  if (row) {
+    this.selectedPlantaImmex = row;
+  } else {
+    this.selectedPlantaImmex = null;
+  }
+}
 
   /**
    * Abre un diálogo modal para complementar información de la planta.
@@ -397,9 +492,20 @@ plantasForm!: FormGroup;
    * @returns {void} Este método no retorna ningún valor.
    */
   abrirDialogoComplementarPlanta(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
+    if (this.selectedPlantaImmex) {
+      this.mostrarComplementarPlantaPopup = true;
+    } else {
+    this.federatarioNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'No se seleccionaron datos de las plantas Immex.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
     }
   }
 
@@ -414,9 +520,20 @@ plantasForm!: FormGroup;
    * @returns {void} Este método no retorna ningún valor.
    */
   abrirDialogoMontos(): void {
-    if (this.montos) {
-      const MODAL_INSTANCE = new Modal(this.montos.nativeElement);
-      MODAL_INSTANCE.show();
+    if (this.selectedPlantaImmex) {
+      this.mostrarMontosDeInversionPopup = true;
+    } else {
+    this.federatarioNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'No se seleccionaron datos de las plantas Immex.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
     }
   }
 
@@ -429,9 +546,20 @@ plantasForm!: FormGroup;
    * @returns {void} No retorna ningún valor.
    */
   abrirDialogoempleadosAcciones(): void {
-    if (this.empleadosAcciones) {
-      const MODAL_INSTANCE = new Modal(this.empleadosAcciones.nativeElement);
-      MODAL_INSTANCE.show();
+    if (this.selectedPlantaImmex) {
+      this.mostrarEmpleadosPopup = true;
+    } else {
+    this.federatarioNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'No se seleccionaron datos de las plantas Immex.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
     }
   }
 
@@ -447,9 +575,20 @@ plantasForm!: FormGroup;
    * de llamar a este método para evitar errores.
    */
   abrirDialogocapacidadInstalada(): void {
-    if (this.capacidadInstalada) {
-      const MODAL_INSTANCE = new Modal(this.capacidadInstalada.nativeElement);
-      MODAL_INSTANCE.show();
+    if (this.selectedPlantaImmex) {
+      this.mostrarCapacidadInstaladaPopup = true;
+    } else {
+    this.federatarioNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'No se seleccionaron datos de las plantas Immex.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
     }
   }
 
@@ -463,10 +602,71 @@ plantasForm!: FormGroup;
    * @returns {void} No retorna ningún valor.
    */
   abrirDialogocargaPorPrchivo(): void {
-    if (this.cargaPorPrchivo) {
-      const MODAL_INSTANCE = new Modal(this.cargaPorPrchivo.nativeElement);
-      MODAL_INSTANCE.show();
+    if (this.selectedPlantaImmex) {
+      this.mostrarProveedorPorArchivoPopup = true;
+    } else {
+    this.federatarioNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'No se seleccionaron datos de las plantas Immex.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
     }
+  }
+
+   /**
+   * Cierra el popup de complementar planta.
+   * 
+   * Cambia la bandera `mostrarComplementarPlantaPopup` a `false`
+   * para ocultar el popup correspondiente.
+   */
+  cerrarComplementarPlanta(): void {
+    this.mostrarComplementarPlantaPopup = false;
+  }
+
+  /**
+   * Cierra el popup de montos de inversión.
+   * 
+   * Establece la variable `mostrarMontosDeInversionPopup` en `false`
+   * para ocultar el popup correspondiente en la interfaz.
+   */
+  cerrarMontosDeInversion(): void {
+    this.mostrarMontosDeInversionPopup = false;
+  }
+
+  /**
+   * Cierra el popup de empleados.
+   * 
+   * Cambia la variable `mostrarEmpleadosPopup` a `false` para ocultar
+   * el popup relacionado con la información de empleados.
+   */
+  cerrarEmpleados(): void {
+    this.mostrarEmpleadosPopup = false;
+  }
+
+  /**
+   * Cierra el popup de capacidad instalada.
+   * 
+   * Establece la variable `mostrarCapacidadInstaladaPopup` en `false`
+   * para ocultar el popup correspondiente en la interfaz.
+   */
+  cerrarCapacidadInstalada(): void {
+    this.mostrarCapacidadInstaladaPopup = false;
+  }
+
+  /**
+   * Cierra el popup de proveedor por archivo.
+   * 
+   * Cambia la variable `mostrarProveedorPorArchivoPopup` a `false`
+   * para ocultar el popup correspondiente en la interfaz.
+   */
+  cerrarProveedorPorArchivo(): void {
+    this.mostrarProveedorPorArchivoPopup = false;
   }
 
   /**

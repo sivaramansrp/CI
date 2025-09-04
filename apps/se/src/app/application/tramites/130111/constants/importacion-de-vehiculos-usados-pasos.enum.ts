@@ -18,3 +18,8 @@ export const PASOS_EXPORTACION = [
         completado: false,
     }
 ];
+/**
+ * ID_PROCEDIMIENTO representa el identificador numérico del procedimiento
+ * asociado a este tipo de solicitud específica.
+ */
+export const ID_PROCEDIMIENTO = 130111;

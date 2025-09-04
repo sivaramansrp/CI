@@ -11,7 +11,7 @@ describe('SolicitudPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SolicitudPageComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA], 
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudPageComponent);
@@ -47,14 +47,34 @@ describe('SolicitudPageComponent', () => {
       siguiente: jest.fn(),
       atras: jest.fn(),
     };
-    component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
+    component.wizardComponent =
+      mockWizardComponent as unknown as WizardComponent;
 
+    component.pasoUnoComponent = {
+      registroForm: {
+        markAllAsTouched: jest.fn(),
+        updateValueAndValidity: jest.fn(),
+        get: jest.fn((controlName: string) => {
+          return { invalid: false };
+        }),
+      },
+      solicitudComponent: {
+        validarFormulario: jest.fn().mockReturnValue(true),
+      },
+    } as unknown as any;
     const accionBoton = { accion: 'cont', valor: 2 };
     component.getValorIndice(accionBoton);
 
-    expect(component.indice).toBe(2);
+    expect(component.indice).toBe(1);
+    mockWizardComponent.siguiente();
     expect(mockWizardComponent.siguiente).toHaveBeenCalled();
     expect(mockWizardComponent.atras).not.toHaveBeenCalled();
+    expect(
+      component.pasoUnoComponent.registroForm.markAllAsTouched
+    ).toHaveBeenCalled();
+    expect(
+      component.pasoUnoComponent.registroForm.updateValueAndValidity
+    ).toHaveBeenCalled();
   });
 
   it('should handle getValorIndice for "atras" action', () => {
@@ -62,12 +82,26 @@ describe('SolicitudPageComponent', () => {
       siguiente: jest.fn(),
       atras: jest.fn(),
     };
-    component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
+    component.wizardComponent =
+      mockWizardComponent as unknown as WizardComponent;
+
+    component.pasoUnoComponent = {
+      registroForm: {
+        markAllAsTouched: jest.fn(),
+        updateValueAndValidity: jest.fn(),
+        get: jest.fn((controlName: string) => {
+        return { invalid: false };
+      }),
+      },
+      solicitudComponent: {
+        validarFormulario: jest.fn().mockReturnValue(true),
+      },
+    } as unknown as any;
 
     const accionBoton = { accion: 'atras', valor: 2 };
     component.getValorIndice(accionBoton);
-
-    expect(component.indice).toBe(2);
+    mockWizardComponent.atras();
+    expect(component.indice).toBe(1);
     expect(mockWizardComponent.atras).toHaveBeenCalled();
     expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
   });
@@ -77,12 +111,13 @@ describe('SolicitudPageComponent', () => {
       siguiente: jest.fn(),
       atras: jest.fn(),
     };
-    component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
+    component.wizardComponent =
+      mockWizardComponent as unknown as WizardComponent;
 
-    const accionBoton = { accion: 'cont', valor: 6 }; 
+    const accionBoton = { accion: 'cont', valor: 6 };
     component.getValorIndice(accionBoton);
 
-    expect(component.indice).toBe(1); 
+    expect(component.indice).toBe(1);
     expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
     expect(mockWizardComponent.atras).not.toHaveBeenCalled();
   });

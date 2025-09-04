@@ -28,6 +28,7 @@ describe('SolicitudComponent', () => {
       setRenovacion: jest.fn(),
       setHomologacion: jest.fn(),
       setMonedaNacional: jest.fn(),
+      setValorSeleccionado: jest.fn(),
     };
 
     queryMock = {
@@ -172,5 +173,106 @@ describe('SolicitudComponent', () => {
     component.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalledWith(true);
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should update valorSeleccionado and call store.setValorSeleccionado', () => {
+    component.cambiarRadio('yes');
+
+    expect(component.valorSeleccionado).toBe('yes');
+    expect(storeMock.setValorSeleccionado).toHaveBeenCalledWith('yes');
+  });
+
+  it('should call abrirAlertaModal when valorSeleccionado is "no"', () => {
+    jest.spyOn(component, 'abrirAlertaModal');
+    component.cambiarRadio('no');
+    expect(component.valorSeleccionado).toBe('no');
+    expect(storeMock.setValorSeleccionado).toHaveBeenCalledWith('no');
+    expect(component.abrirAlertaModal).toHaveBeenCalled();
+  });
+
+  it('should not call abrirAlertaModal when valorSeleccionado is not "no"', () => {
+    jest.spyOn(component, 'abrirAlertaModal');
+    component.cambiarRadio('yes');
+
+    expect(component.valorSeleccionado).toBe('yes');
+    expect(component.abrirAlertaModal).not.toHaveBeenCalled();
+  });
+
+  it('should handle numeric value correctly', () => {
+    jest.spyOn(component, 'abrirAlertaModal');
+    component.cambiarRadio('1');
+
+    expect(component.valorSeleccionado).toBe('1');
+    expect(storeMock.setValorSeleccionado).toHaveBeenCalledWith('1');
+    expect(component.abrirAlertaModal).not.toHaveBeenCalled();
+  });
+
+  it('should return false when both renovacion and homologacion are true and a field is invalid', () => {
+    component.solicitudState = { renovacion: true, homologacion: true } as any;
+    component.registroForm.get('fechaPago')?.setValue('');
+
+    const result = component.validarFormulario();
+
+    expect(result).toBe(false);
+  });
+
+  it('should return true when both renovacion and homologacion are true and all fields are valid', () => {
+    component.solicitudState = { renovacion: true, homologacion: true } as any;
+    component.registroForm.patchValue({
+      fechaPago: '2025-08-28',
+      numeroOperacion: '12345',
+      llave: 'key123',
+      monedaNacional: '1000',
+      manifiesto1: true,
+      manifiesto2: true,
+      manifiesto5: true,
+      manifiesto4: true,
+      opcion: 'yes',
+    });
+
+    const result = component.validarFormulario();
+
+    expect(result).toBe(true);
+  });
+
+  it('should check correct fields when only renovacion is true', () => {
+    component.solicitudState = { renovacion: true, homologacion: false } as any;
+    component.registroForm.patchValue({
+      fechaPago: '',
+      numeroOperacion: '',
+      llave: '',
+      monedaNacional: '',
+      manifiesto1: false,
+      manifiesto2: false,
+      manifiesto3: false,
+    });
+
+    const result = component.validarFormulario();
+
+    expect(result).toBe(false);
+    expect(component.registroForm.get('manifiesto3')?.touched).toBe(true);
+  });
+
+  it('should check correct fields when only homologacion is true', () => {
+    component.solicitudState = { renovacion: false, homologacion: true } as any;
+    component.registroForm.patchValue({
+      manifiesto5: true,
+      manifiesto4: true,
+      opcion: 'yes',
+    });
+
+    const result = component.validarFormulario();
+
+    expect(result).toBe(true);
+  });
+
+  it('should check correct fields when both are false', () => {
+    component.solicitudState = { renovacion: false, homologacion: false } as any;
+    component.registroForm.get('manifiesto5')?.setValue(false);
+
+    const result = component.validarFormulario();
+
+    expect(result).toBe(false);
+    expect(component.registroForm.get('manifiesto5')?.touched).toBe(true);
   });
 });

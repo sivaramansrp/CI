@@ -4,7 +4,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Observable, Subject, delay, of, takeUntil } from 'rxjs';
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
-import { Mercancia } from '../../models/configuracion-columna.model';
+
+import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
 import { Tramite110202Store } from '../../estados/tramite110202.store';
 /**
@@ -144,14 +145,14 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
         fraccionArancelaria: this.datosSeleccionados.fraccionArancelaria,
         nombreComercialMercancia: this.datosSeleccionados.nombreComercial,
         nombreTecnico: this.datosSeleccionados.nombreTecnico,
-        nombreIngles: this.datosSeleccionados.nombreIngles,
-        criterioClasificacion: this.datosSeleccionados.criterioClasificacion,
-        marca: this.datosSeleccionados.marca,
+        nombreIngles: this.datosSeleccionados.nombreTecnico,
+        criterioClasificacion: this.datosSeleccionados.complementoDescripcion,
+        marca: this.datosSeleccionados.normaOrigen,
         cantidad: this.datosSeleccionados.cantidad,
         umc: this.datosSeleccionados.umc,
         valorMercancia: this.datosSeleccionados.valorMercancia,
         complementoClasificacion: this.datosSeleccionados.complementoClasificacion,
-        masaBruta: this.datosSeleccionados.masaBruta,
+        masaBruta: this.datosSeleccionados.fechaVencimiento,
         unidadMedidaMasaBruta: this.datosSeleccionados.unidadMedidaMasaBruta,
         numeroFactura: this.datosSeleccionados.numeroFactura,
         tipoFactura: this.datosSeleccionados.tipoFactura,

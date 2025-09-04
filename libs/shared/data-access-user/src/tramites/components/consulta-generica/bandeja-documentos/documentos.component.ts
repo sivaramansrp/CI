@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { DocumentosService } from '../../../../core/services/consultagenerica/bandeja-documentos-service';
 
 
-import { DocumentoSolicitud } from '../../../../core/models/130118/consulta-documentos-response.model';
+import { DocumentoSolicitud } from '../../../../core/models/shared/consulta-documentos-response.model';
 
 @Component({
   selector: 'lib-documentos',

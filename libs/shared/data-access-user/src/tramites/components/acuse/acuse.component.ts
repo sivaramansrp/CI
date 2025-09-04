@@ -6,7 +6,7 @@ import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { DocumentoService } from '../../..';
 import { DocumentosRequest } from '../../../core/models/shared/documentos-request.model';
-import { DocumentosService } from '../../../core/services/130118/documentos.service';
+import { DocumentosService } from '../../../core/services/shared/documentos.service';
 import { Router } from '@angular/router';
 
 @Component({

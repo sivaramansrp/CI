@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, ModeloDeFormaDinamica, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioState, InputFecha, ModeloDeFormaDinamica, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FECHA_FINAL_110208, FECHA_INICIO_110208, MERCANCIA_MODAL_FORMA } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -92,7 +92,9 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * Referencia al elemento modal en el template
    */
   @ViewChild('modal', { static: false }) modal!: ElementRef;
-
+  /** Almacena el estado actual de la consulta relacionada con el trámite.  
+ *  Contiene información necesaria para mostrar o procesar datos en el componente. */
+   public consultaState!:ConsultaioState;
   /**
    * Instancia del modal de Bootstrap
    */
@@ -127,7 +129,11 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
+          this.inicializarEstadoFormulario();       
+          this.consultaState = seccionState;
+            if (this.consultaState.update) {
+            this.obtenerTablaDatosCertificado();
+             }
         })
       )
       .subscribe();

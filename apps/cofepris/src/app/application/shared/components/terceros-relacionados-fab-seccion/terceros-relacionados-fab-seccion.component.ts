@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
@@ -17,6 +17,8 @@ import { TercerosRelacionadosFebService } from '../../services/tereceros-relacio
 
 import { TramiteRelacionadaseStore } from '../../estados/stores/terceros-relacionados.stores';
 
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
 
 
 @Component({
@@ -31,9 +33,12 @@ import { TramiteRelacionadaseStore } from '../../estados/stores/terceros-relacio
       ModalComponent,
       CatalogoSelectComponent,
       InputRadioComponent,
-    TablaDinamicaComponent],
+      TablaDinamicaComponent,
+      TooltipModule
+  ],
   templateUrl: './terceros-relacionados-fab-seccion.component.html',
   styleUrl: './terceros-relacionados-fab-seccion.component.scss',
+  encapsulation: ViewEncapsulation.None
 }) 
 export class TercerosRelacionadosFabSeccionComponent implements OnInit, OnDestroy {
 
@@ -464,7 +469,7 @@ public extranjero = false;
         /**
          * Segundo Apellido del tercero.
          */
-        segundoApellido: new FormControl('', [Validators.required]),
+        segundoApellido: new FormControl(''),
         /**
          * Denominación o razón social del tercero.
          */
@@ -497,7 +502,7 @@ public extranjero = false;
         /**
          * Código postal del tercero.
          */
-        codigoPostaloEquivalente: new FormControl('', [Validators.required]),
+        codigoPostaloEquivalente: new FormControl(''),
         /**
          * Colonia del tercero.
          */

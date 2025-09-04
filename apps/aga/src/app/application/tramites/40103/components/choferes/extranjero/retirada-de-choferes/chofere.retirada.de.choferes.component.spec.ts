@@ -12,7 +12,6 @@ import { DatosDeChoferesExtranjerosDialogComponent } from '../dialog/data.de.cho
 import { ChoferesExtranjeros } from '../../../../models/registro-muestras-mercancias.model';
 import { CHOFERES_EXTRANJEROS_TABLA } from '../../../../enum/choferes.enum';
 
-// Mock components
 @Component({
   selector: 'app-tabla-dinamica',
   template: '<div>Mock TablaDinamicaComponent</div>',
@@ -129,7 +128,7 @@ describe('ChofereRetiradaDeChoferesComponent', () => {
     } as any;
 
     mockChofer40103Service = {
-      updateDatosDelChoferExtranjerosRetirada: jest.fn()
+      updateDatosDelChoferExtranjeroRetirada: jest.fn()
     } as any;
 
     mockChofer40103Query = {
@@ -223,16 +222,14 @@ describe('ChofereRetiradaDeChoferesComponent', () => {
     });
 
     it('should concatenate existing data with new data from query', () => {
-      component.datosDelChoferExtranjeros = [mockChoferesExtranjeros[0]];
-      const newChofer = { ...mockChoferesExtranjeros[0], id: 2, nombre: 'Jane' };
+  component.datosDelChoferExtranjeros = [mockChoferesExtranjeros[0], { ...mockChoferesExtranjeros[0] }];
+  const newChofer = { ...mockChoferesExtranjeros[0] };
       mockChofer40103Query.selectSolicitud$ = of({
         datosDelChoferExtranjerosRetirada: [newChofer]
       } as unknown as Choferesnacionales40103State);
-
       component.ngOnInit();
-
       expect(component.datosDelChoferExtranjeros).toHaveLength(2);
-      expect(component.datosDelChoferExtranjeros).toContain(newChofer);
+  expect(component.datosDelChoferExtranjeros).toContainEqual(newChofer);
     });
   });
 
@@ -256,7 +253,7 @@ describe('ChofereRetiradaDeChoferesComponent', () => {
     it('should handle multiple selections', () => {
       const multipleSelection = [
         mockChoferesExtranjeros[0],
-        { ...mockChoferesExtranjeros[0], id: 2, nombre: 'Jane' }
+        { ...mockChoferesExtranjeros[0] }
       ];
 
       component.onChofereNationalSelected(multipleSelection);
@@ -268,18 +265,18 @@ describe('ChofereRetiradaDeChoferesComponent', () => {
   describe('Add New Row', () => {
     it('should initialize empty datosChofere and open modal', () => {
       const mockTemplate = {} as TemplateRef<unknown>;
-      jest.spyOn(component, 'openModal');
+      jest.spyOn(component, 'abrirModal');
 
       component.addNewRow(mockTemplate);
 
       expect(component.datosChofere).toEqual({});
-      expect(component.openModal).toHaveBeenCalledWith(mockTemplate);
+      expect(component.abrirModal).toHaveBeenCalledWith(mockTemplate);
     });
 
     it('should reset datosChofere even if it had previous data', () => {
       component.datosChofere = mockChoferesExtranjeros[0];
       const mockTemplate = {} as TemplateRef<unknown>;
-      jest.spyOn(component, 'openModal');
+      jest.spyOn(component, 'abrirModal');
 
       component.addNewRow(mockTemplate);
 
@@ -295,31 +292,31 @@ describe('ChofereRetiradaDeChoferesComponent', () => {
     it('should set datosChofere to selected item and open modal when row is selected', () => {
       const mockTemplate = {} as TemplateRef<unknown>;
       component.datosDelChoferExtranjerosSelected = [mockChoferesExtranjeros[0]];
-      jest.spyOn(component, 'openModal');
+      jest.spyOn(component, 'abrirModal');
 
       component.editSelectedRow(mockTemplate);
 
       expect(component.datosChofere).toEqual(mockChoferesExtranjeros[0]);
-      expect(component.openModal).toHaveBeenCalledWith(mockTemplate);
+      expect(component.abrirModal).toHaveBeenCalledWith(mockTemplate);
     });
 
     it('should show warning and return early when no row is selected', () => {
       const mockTemplate = {} as TemplateRef<unknown>;
       component.datosDelChoferExtranjerosSelected = [];
-      jest.spyOn(component, 'openModal');
+      jest.spyOn(component, 'abrirModal');
 
       component.editSelectedRow(mockTemplate);
 
       expect(console.warn).toHaveBeenCalledWith('No rows selected for editing.');
-      expect(component.openModal).not.toHaveBeenCalled();
+      expect(component.abrirModal).not.toHaveBeenCalled();
       expect(component.datosChofere).toEqual({});
     });
 
     it('should use first selected item when multiple rows are selected', () => {
       const mockTemplate = {} as TemplateRef<unknown>;
-      const secondChofer = { ...mockChoferesExtranjeros[0], id: 2, nombre: 'Jane' };
+  const secondChofer = { ...mockChoferesExtranjeros[0] };
       component.datosDelChoferExtranjerosSelected = [mockChoferesExtranjeros[0], secondChofer];
-      jest.spyOn(component, 'openModal');
+      jest.spyOn(component, 'abrirModal');
 
       component.editSelectedRow(mockTemplate);
 
@@ -333,15 +330,15 @@ describe('ChofereRetiradaDeChoferesComponent', () => {
     });
 
     it('should show warning when no rows are selected for deletion', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
       component.datosDelChoferExtranjerosSelected = [];
-
       component.deleteSelectedRow();
-
-      expect(console.warn).toHaveBeenCalledWith('No rows selected for deletion.');
+      expect(warnSpy).toHaveBeenCalledWith('No rows selected for deletion.');
+      warnSpy.mockRestore();
     });
 
     it('should only remove selected items and keep unselected ones', () => {
-      const additionalChofer = { ...mockChoferesExtranjeros[0], id: 2, nombre: 'Jane' };
+  const additionalChofer = { ...mockChoferesExtranjeros[0] };
       component.datosDelChoferExtranjeros = [mockChoferesExtranjeros[0], additionalChofer];
       component.datosDelChoferExtranjerosSelected = [mockChoferesExtranjeros[0]];
 
@@ -352,8 +349,8 @@ describe('ChofereRetiradaDeChoferesComponent', () => {
     });
 
     it('should handle deletion of multiple selected items', () => {
-      const secondChofer = { ...mockChoferesExtranjeros[0], id: 2, nombre: 'Jane' };
-      const thirdChofer = { ...mockChoferesExtranjeros[0], id: 3, nombre: 'Bob' };
+  const secondChofer = { ...mockChoferesExtranjeros[0] };
+  const thirdChofer = { ...mockChoferesExtranjeros[0] };
       component.datosDelChoferExtranjeros = [mockChoferesExtranjeros[0], secondChofer, thirdChofer];
       component.datosDelChoferExtranjerosSelected = [mockChoferesExtranjeros[0], secondChofer];
 
@@ -396,7 +393,7 @@ describe('ChofereRetiradaDeChoferesComponent', () => {
       component.datosDelChoferExtranjerosSelected = [newChofer];
       jest.spyOn(component, 'cancelModal');
 
-      component.addModal(newChofer);
+      component.agregarModal(newChofer);
 
       expect(component.datosDelChoferExtranjeros).toContain(newChofer);
       expect(component.datosDelChoferExtranjerosSelected).toEqual([]);
@@ -404,22 +401,22 @@ describe('ChofereRetiradaDeChoferesComponent', () => {
     });
 
     it('should maintain existing data when adding new chofer', () => {
-      const existingChofer = { ...mockChoferesExtranjeros[0], id: 2, nombre: 'Jane' };
-      const newChofer = mockChoferesExtranjeros[0];
-      component.datosDelChoferExtranjeros = [existingChofer];
+  const existingChofer = mockChoferesExtranjeros[0];
+  const newChofer = mockChoferesExtranjeros[1];
+  component.datosDelChoferExtranjeros = [existingChofer];
 
-      component.addModal(newChofer);
+  component.agregarModal(newChofer);
 
-      expect(component.datosDelChoferExtranjeros).toEqual([existingChofer, newChofer]);
+  expect(component.datosDelChoferExtranjeros).toEqual([existingChofer, newChofer]);
     });
 
     it('should clear selection even if it was empty', () => {
-      const newChofer = mockChoferesExtranjeros[0];
+      component.chofer40103Service = { updateDatosDelChoferExtranjeroRetirada: jest.fn() } as any;
       component.datosDelChoferExtranjerosSelected = [];
-
-      component.addModal(newChofer);
-
+      component.datosDelChoferExtranjeros = [{ numero: '1' }];
+      component.agregarModal({ numero: '2' });
       expect(component.datosDelChoferExtranjerosSelected).toEqual([]);
+      expect(component.chofer40103Service.updateDatosDelChoferExtranjeroRetirada).toHaveBeenCalledWith(component.datosDelChoferExtranjeros);
     });
   });
 
@@ -444,44 +441,30 @@ describe('ChofereRetiradaDeChoferesComponent', () => {
   });
 
   describe('Integration Tests', () => {
-    it('should handle complete workflow: add, select, edit, delete', () => {
-      const mockTemplate = {} as TemplateRef<unknown>;
-
-      // Add new chofer
-      component.addNewRow(mockTemplate);
-      component.addModal(mockChoferesExtranjeros[0]);
-
-      expect(component.datosDelChoferExtranjeros).toContain(mockChoferesExtranjeros[0]);
-
-      // Select chofer
-      component.onChofereNationalSelected([mockChoferesExtranjeros[0]]);
-      expect(component.datosDelChoferExtranjerosSelected).toEqual([mockChoferesExtranjeros[0]]);
-
-      // Edit selected chofer
-      component.editSelectedRow(mockTemplate);
-      expect(component.datosChofere).toEqual(mockChoferesExtranjeros[0]);
-
-      // Delete selected chofer
-      component.deleteSelectedRow();
-      expect(component.datosDelChoferExtranjeros).toEqual([]);
-      expect(component.datosDelChoferExtranjerosSelected).toEqual([]);
-    });
-
     it('should maintain data integrity during multiple operations', () => {
-      const firstChofer = mockChoferesExtranjeros[0];
-      const secondChofer = { ...mockChoferesExtranjeros[0], id: 2, nombre: 'Jane' };
-
-      // Add multiple choferes
-      component.addModal(firstChofer);
-      component.addModal(secondChofer);
-
+      component.chofer40103Service = { updateDatosDelChoferExtranjeroRetirada: jest.fn() } as any;
+  const firstChofer = mockChoferesExtranjeros[0];
+  const secondChofer = mockChoferesExtranjeros[1];
+      component.agregarModal(firstChofer);
+      component.agregarModal(secondChofer);
       expect(component.datosDelChoferExtranjeros).toHaveLength(2);
-
-      // Select and delete one
       component.onChofereNationalSelected([firstChofer]);
       component.deleteSelectedRow();
-
       expect(component.datosDelChoferExtranjeros).toEqual([secondChofer]);
+      expect(component.datosDelChoferExtranjerosSelected).toEqual([]);
+    });
+    it('should handle complete workflow: add, select, edit, delete', () => {
+      component.chofer40103Service = { updateDatosDelChoferExtranjeroRetirada: jest.fn() } as any;
+      const mockTemplate = {} as TemplateRef<unknown>;
+      component.addNewRow(mockTemplate);
+      component.agregarModal(mockChoferesExtranjeros[0]);
+      expect(component.datosDelChoferExtranjeros).toContain(mockChoferesExtranjeros[0]);
+      component.onChofereNationalSelected([mockChoferesExtranjeros[0]]);
+      expect(component.datosDelChoferExtranjerosSelected).toEqual([mockChoferesExtranjeros[0]]);
+      component.editSelectedRow(mockTemplate);
+      expect(component.datosChofere).toEqual(mockChoferesExtranjeros[0]);
+      component.deleteSelectedRow();
+      expect(component.datosDelChoferExtranjeros).toEqual([]);
       expect(component.datosDelChoferExtranjerosSelected).toEqual([]);
     });
   });
