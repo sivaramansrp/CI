@@ -33,7 +33,7 @@ export interface Tramite130115State {
   /**
    * Valor en USD de la partida ingresada en el formulario.
    */
-  valorPartidaUSD: number;
+  valorPartidaUSD: string;
 
   /**
    * Unidad de medida seleccionada en el formulario.
@@ -78,7 +78,7 @@ export interface Tramite130115State {
   /**
    * Valor en USD de las partidas de la mercancía ingresado en el formulario.
    */
-  valorPartidaUSDPartidasDeLaMercancia: number;
+  valorPartidaUSDPartidasDeLaMercancia: string;
 
   /**
    * Descripción de las partidas de la mercancía ingresada en el formulario.
@@ -124,7 +124,20 @@ export interface Tramite130115State {
    * Indica si la tabla dinámica debe mostrarse.
    */
   mostrarTabla: boolean;
+  /**
+   * Datos del cuerpo de la tabla dinámica.
+   */
+  tableBodyData: PartidasDeLaMercanciaModelo[];
+  /**
+   * Cantidad total de partidas de la mercancía.
+   */
+  cantidadTotal: string;
+  /*
+  Valor total en USD de las partidas de la mercancía.
+  */
+  valorTotalUSD: string;
 }
+
 
 /**
  * createInitialState
@@ -144,13 +157,13 @@ export function createInitialState(): Tramite130115State {
     producto: '',
     descripcion: '',
     cantidad: '',
-    valorPartidaUSD: 0,
+    valorPartidaUSD: '',
     unidadMedida: '',
     defaultProducto: 'Nuevo',
     regimen: '',
     clasificacion: '',
     cantidadPartidasDeLaMercancia: '',
-    valorPartidaUSDPartidasDeLaMercancia: 0,
+    valorPartidaUSDPartidasDeLaMercancia: '',
     descripcionPartidasDeLaMercancia: '',
     valorFacturaUSD: '',
     bloque: '',
@@ -159,6 +172,9 @@ export function createInitialState(): Tramite130115State {
     observaciones: '',
     entidad: '',
     representacion: '',
+    tableBodyData: [],
+    cantidadTotal: '',
+    valorTotalUSD: ''
   };
 }
 

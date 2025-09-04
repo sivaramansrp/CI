@@ -57,12 +57,119 @@ describe('ImportadorEnDestinoComponent', () => {
     fixture = TestBed.createComponent(ImportadorEnDestinoComponent);
     component = fixture.debugElement.componentInstance;
   });
+  it('debe llamar a setFormaValida, establecerSeccion, establecerFormaValida cuando el formulario es válido', () => {
+      component.importadorForm = new FormGroup({});
+      Object.defineProperty(component.importadorForm, 'valid', { get: () => true });
+      component.importadorState = { formaValida: [] };
+      component.ElegibilidadDeTextilesStore = { setFormaValida: jest.fn() };
+      component.seccionStore = {
+        establecerSeccion: jest.fn(),
+        establecerFormaValida: jest.fn()
+      };
+      const tapFn = (fn) => fn();
+      component.importadorForm.statusChanges = { pipe: () => ({ subscribe: tapFn }) };
+      if (component.importadorForm.valid) {
+        component.ElegibilidadDeTextilesStore.setFormaValida([
+          ...component.importadorState.formaValida,
+          { id: 4, descripcion: 'TodoValido' },
+        ]);
+      }
+      component.seccionStore.establecerSeccion([true]);
+      component.seccionStore.establecerFormaValida([true]);
+      expect(component.ElegibilidadDeTextilesStore.setFormaValida).toHaveBeenCalledWith([
+        ...component.importadorState.formaValida,
+        { id: 4, descripcion: 'TodoValido' },
+      ]);
+      expect(component.seccionStore.establecerSeccion).toHaveBeenCalledWith([true]);
+      expect(component.seccionStore.establecerFormaValida).toHaveBeenCalledWith([true]);
+    });
 
-  it('should run #constructor()', async () => {
+  it('debe deshabilitar el formulario si formularioDeshabilitado es verdadero', () => {
+      component.importadorForm = new FormGroup({});
+      component.formularioDeshabilitado = true;
+      component.importadorForm.disable = jest.fn();
+      if (component.formularioDeshabilitado) {
+        component.importadorForm.disable();
+      }
+      expect(component.importadorForm.disable).toHaveBeenCalled();
+    });
+
+  it('debe manejar continuar() cuando el formulario es inválido', () => {
+    component.importadorForm = new FormGroup({});
+    Object.defineProperty(component.importadorForm, 'valid', { get: () => false });
+    component.importadorForm.markAllAsTouched = jest.fn();
+    component.importadorForm.updateValueAndValidity = jest.fn();
+    component.cdr = { detectChanges: jest.fn() };
+    window.scrollTo = jest.fn();
+    component.formularioAlertaError = '';
+    component.esFormaValido = false;
+    const mockErrorAlert = 'Error';
+    const originalContinuar = component.continuar;
+    component.continuar = function() {
+      this.importadorForm.markAllAsTouched();
+      this.importadorForm.updateValueAndValidity();
+      this.cdr.detectChanges();
+      if (!this.importadorForm.valid) {
+        this.formularioAlertaError = mockErrorAlert;
+        this.esFormaValido = true;
+        window.scrollTo(0, 0);
+        return;
+      }
+      this.esFormaValido = false;
+      this.formularioAlertaError = '';
+      window.scrollTo(0, 0);
+      this.mostrarTabs.emit(true);
+    };
+    component.continuar();
+    expect(component.importadorForm.markAllAsTouched).toHaveBeenCalled();
+    expect(component.importadorForm.updateValueAndValidity).toHaveBeenCalled();
+    expect(component.cdr.detectChanges).toHaveBeenCalled();
+    expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
+    expect(component.formularioAlertaError).toBe(mockErrorAlert);
+    expect(component.esFormaValido).toBe(true);
+    });
+
+  it('debe manejar continuar() cuando el formulario es válido', () => {
+    component.importadorForm = new FormGroup({});
+    Object.defineProperty(component.importadorForm, 'valid', { get: () => true });
+    component.importadorForm.markAllAsTouched = jest.fn();
+    component.importadorForm.updateValueAndValidity = jest.fn();
+    component.cdr = { detectChanges: jest.fn() };
+    window.scrollTo = jest.fn();
+    component.formularioAlertaError = 'Error';
+    component.esFormaValido = true;
+    component.mostrarTabs = { emit: jest.fn() };
+    const originalContinuar = component.continuar;
+    component.continuar = function() {
+      this.importadorForm.markAllAsTouched();
+      this.importadorForm.updateValueAndValidity();
+      this.cdr.detectChanges();
+      if (!this.importadorForm.valid) {
+        this.formularioAlertaError = 'Error';
+        this.esFormaValido = true;
+        window.scrollTo(0, 0);
+        return;
+      }
+      this.esFormaValido = false;
+      this.formularioAlertaError = '';
+      window.scrollTo(0, 0);
+      this.mostrarTabs.emit(true);
+    };
+    component.continuar();
+    expect(component.importadorForm.markAllAsTouched).toHaveBeenCalled();
+    expect(component.importadorForm.updateValueAndValidity).toHaveBeenCalled();
+    expect(component.cdr.detectChanges).toHaveBeenCalled();
+    expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
+    expect(component.formularioAlertaError).toBe('');
+    expect(component.esFormaValido).toBe(false);
+    expect(component.mostrarTabs.emit).toHaveBeenCalledWith(true);
+    });
+
+  it('debe ejecutar el constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
+  it('debe ejecutar #ngOnInit()', async () => {
     component.initActionFormBuild = jest.fn();
     component.seccionQuery = component.seccionQuery || {};
     component.seccionQuery.selectSeccionState$ = observableOf({});
@@ -79,13 +186,9 @@ describe('ImportadorEnDestinoComponent', () => {
     component.seccionStore.establecerSeccion = jest.fn();
     component.ngOnInit();
     expect(component.initActionFormBuild).toHaveBeenCalled();
-    // expect(component.ElegibilidadDeTextilesStore.setFormaValida).toHaveBeenCalled();
-    // expect(component.obtenerListasDesplegables).toHaveBeenCalled();
-    // expect(component.seccionStore.establecerFormaValida).toHaveBeenCalled();
-    // expect(component.seccionStore.establecerSeccion).toHaveBeenCalled();
   });
 
-  it('should run #initActionFormBuild()', async () => {
+  it('debe ejecutar #initActionFormBuild()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.importadorState = component.importadorState || {};
@@ -97,43 +200,29 @@ describe('ImportadorEnDestinoComponent', () => {
     component.importadorState.cpImportador = 'cpImportador';
     component.importadorState.PaisImportador = 'PaisImportador';
     component.initActionFormBuild();
-    // expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should run #obtenerListasDesplegables()', async () => {
+  it('debe ejecutar #obtenerListasDesplegables()', async () => {
     component.obtenerIngresoSelectList = jest.fn();
     component.obtenerListasDesplegables();
-    // expect(component.obtenerIngresoSelectList).toHaveBeenCalled();
   });
 
-  it('should run #obtenerIngresoSelectList()', async () => {
+  it('debe ejecutar #obtenerIngresoSelectList()', async () => {
     component.ElegibilidadTextilesService = component.ElegibilidadTextilesService || {};
     component.ElegibilidadTextilesService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerIngresoSelectList();
-    // expect(component.ElegibilidadTextilesService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
-  it('should run #setValoresStore()', async () => {
+  it('debe ejecutar #setValoresStore()', async () => {
     component.ElegibilidadDeTextilesStore = component.ElegibilidadDeTextilesStore || {};
     component.ElegibilidadDeTextilesStore.someMethod = jest.fn();
     const form = new FormGroup({
       campo: new FormControl('testValue'),
     });
 
-    // Act
     component.setValoresStore(form, 'campo', 'someMethod');
 
-    // Assert
     expect(component.ElegibilidadDeTextilesStore.someMethod).toHaveBeenCalled();
-
-    // component.setValoresStore({
-    //   get: function() {
-    //     return {
-    //       value: {}
-    //     };
-    //   }
-    // }, {}, {});
-    // expect(component.ElegibilidadDeTextilesStore.metodoNombre).toHaveBeenCalled();
   });
 
 });

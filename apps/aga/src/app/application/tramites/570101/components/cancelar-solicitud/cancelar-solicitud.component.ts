@@ -132,7 +132,7 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-        this.consultaQuery.selectConsultaioState$
+    this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -143,49 +143,55 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-        /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.
-   */
-     inicializarEstadoFormulario(): void {
-      if(!this.formCancelorSolicitud){
-        this.crearFormSolicitud();
-      }
-      if (this.esFormularioSoloLectura) {
-          this.formCancelorSolicitud.disable();
-      }
-    }
- 
   /**
+* Evalúa si se debe inicializar o cargar datos en el formulario.
+*/
+  inicializarEstadoFormulario(): void {
+    if (!this.formCancelorSolicitud) {
+      this.crearFormSolicitud();
+    }
+    if (this.esFormularioSoloLectura) {
+      this.formCancelorSolicitud.disable();
+    }
+  }
 
-Actualiza el estado de validación de la sección actual en el store.
-Recorre el arreglo de secciones para identificar la sección activa (aquella cuyo valor es true).
-Si encuentra una sección activa, verifica si el formulario formCancelorSolicitud es válido.
-Si es válido, marca la sección correspondiente como válida en el arreglo formaValida.
-Si no es válido, marca la sección como no válida.
-Finalmente, actualiza el estado global llamando a establecerFormaValida en el store de la sección.
-@returns {void} */
+  /**
+   * Actualiza el estado de validación de la sección actual en el store.
+   * Recorre el arreglo de secciones para identificar la sección activa (aquella cuyo valor es true).
+   * Si encuentra una sección activa, verifica si el formulario formCancelorSolicitud es válido.
+   * Si es válido, marca la sección correspondiente como válida en el arreglo formaValida.
+   * Si no es válido, marca la sección como no válida.
+   * Finalmente, actualiza el estado global llamando a establecerFormaValida en el store de la sección.
+   * @returns {void}
+   */
 
   actualizarValidationInStore(): void {
-    let seccion: number | null = 0;
-    const FORMAS_VALIDAS = this.seccion.formaValida;
-
-    for (let i = 0; i < this.seccion.seccion.length; i++) {
-      if (this.seccion.seccion[i] === true) {
-        seccion = i;
-        break;
-      } else {
-        seccion = null;
+    try {
+      // Validar requisitos previos
+      if (!this.seccion?.seccion || !this.seccion?.formaValida || !this.formCancelorSolicitud) {
+        return;
       }
-    }
 
-    if (seccion !== null) {
-      if (this.formCancelorSolicitud.valid) {
-        FORMAS_VALIDAS[seccion] = true;
-        this.seccionStore.establecerFormaValida(FORMAS_VALIDAS);
-      } else {
-        FORMAS_VALIDAS[seccion] = false;
+      // Buscar la sección activa usando findIndex
+      const SECCION_ACTIVA = this.seccion.seccion.findIndex(seccion => seccion === true);
+
+      if (SECCION_ACTIVA !== -1) {
+        // Crear una copia mutable y asegurar el tamaño adecuado
+        const FORMAS_VALIDAS = [...this.seccion.formaValida];
+
+        // Extiende el arreglo si es necesario
+        while (FORMAS_VALIDAS.length <= SECCION_ACTIVA) {
+          FORMAS_VALIDAS.push(false);
+        }
+
+        // Actualizar el estado de validación
+        FORMAS_VALIDAS[SECCION_ACTIVA] = this.formCancelorSolicitud.valid;
+
+        // Actualizar el store
         this.seccionStore.establecerFormaValida(FORMAS_VALIDAS);
       }
+    } catch (error) {
+      console.error('Error en actualizarValidationInStore:', error);
     }
   }
 
@@ -224,7 +230,7 @@ Finalmente, actualiza el estado global llamando a establecerFormaValida en el st
     }
   }
 
-  
+
 
   /**
    * Establece si el campo 'fechasSeleccionadas.selectedFechas' del formulario es obligatorio o no.

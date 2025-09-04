@@ -67,6 +67,21 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * @description Objeto que contiene la información de la notificación a mostrar en el componente de notificaciones.
    */
   public nuevaNotificacion!: Notificacion;
+  /**
+   * @property {boolean} nombreOrazonsocialInvalid
+   * @description
+   * Bandera que indica si el campo de nombre o razón social es inválido.
+   * Se utiliza para mostrar mensajes de error específicos en la interfaz cuando este campo no cumple con las validaciones.
+   */
+  nombreOrazonsocialInvalid: boolean = false;
+
+  /**
+   * @property {boolean} apellidoPaternoInvalid
+   * @description
+   * Bandera que indica si el campo de apellido paterno es inválido.
+   * Se utiliza para mostrar mensajes de error específicos en la interfaz cuando este campo no cumple con las validaciones.
+   */
+  apellidoPaternoInvalid: boolean = false;
 
   /**
    * Constructor del componente.
@@ -174,6 +189,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       ],
       apellidoPaterno: [
         { value: this.avisoSanitarioState?.apellidoPaterno, disabled: true },
+        Validators.required,
       ],
       apellidoMaterno: [
         { value: this.avisoSanitarioState?.apellidoMaterno, disabled: true },
@@ -284,11 +300,14 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
    */
   validarFormulario(): boolean {
+    let valid = false
     if (this.representanteLegalForm.valid) {
-      return true;
+      valid = true;
     }
+    this.nombreOrazonsocialInvalid = !(this.representanteLegalForm.get('nombreOrazonsocial')?.valid);
+    this.apellidoPaternoInvalid = !(this.representanteLegalForm.get('apellidoPaterno')?.valid);
     this.representanteLegalForm.markAllAsTouched();
-    return false;
+    return valid;
   }
 
   /**

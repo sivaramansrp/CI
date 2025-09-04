@@ -181,7 +181,7 @@ export const MERCANCIAS_DATA = [
 export const FECHA_DE_PAGO = {
   labelNombre: 'Fecha de caducidad',
   required: false,
-  habilitado: false,
+  habilitado: true,
 };
 
 /**

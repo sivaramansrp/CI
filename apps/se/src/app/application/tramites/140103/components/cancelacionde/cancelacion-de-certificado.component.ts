@@ -2,6 +2,7 @@
 import {
   Catalogo,
   ConsultaioQuery,
+  ConsultaioState,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter,OnDestroy, OnInit, Output } from '@angular/core';
@@ -27,22 +28,10 @@ import {
   Solicitud140103State,
   Tramite140103Store,
 } from '../../../../estados/tramites/tramite140103.store';
+import { Cupos } from '../../models/detalle';
+import { NUEVO_CUPOS } from '../../constants/detalle.enum';
 
-/**
- * Interfaz que representa la estructura de un cupo, incluyendo detalles del producto, mecanismo y tipo.
- */
-interface Cupos {
-  /** Cantidad asignada del cupo */
-  cupo: number;
-  /** Nombre del producto asociado al cupo */
-  nombreProducto: string;
-  /** Nombre del subproducto asociado al cupo */
-  nombreSubproducto: string;
-  /** Mecanismo utilizado para la asignación del cupo */
-  mecanismoAsignacion: string;
-  /** Tipo de cupo asignado */
-  tipoCupo: string;
-}
+
 
 /**
  * Componente `CancelacionDeCertificateComponent`
@@ -211,7 +200,9 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
   public representacion: Catalogo[] = cancelcatalog?.representacion ?? [];
   public solicitudState!: Solicitud140103State;
   private destroyNotifier$: Subject<void> = new Subject();
-
+/** Almacena el estado actual de la consulta relacionada con el trámite.  
+ *  Contiene información necesaria para mostrar o procesar datos en el componente. */
+   public consultaState!:ConsultaioState;
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
@@ -276,6 +267,14 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.inicializarEstadoFormulario();
+
+           this.consultaState = seccionState;
+            if (this.consultaState.update) {
+          this.tramite140103Store.update((state) => ({
+          ...state,
+           cancelacion: [...state.cancelacion, NUEVO_CUPOS]
+         }));
+        }
         })
       )
       .subscribe();
@@ -295,6 +294,11 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
 
      /** Llama al método que configura el formulario según el estado de solo lectura. */
     this.inicializarEstadoFormulario();
+    // Se suscribe al estado 'cancelacion' desde el query.
+// Actualiza la propiedad local `Cancelacion` con los datos obtenidos.
+     this.tramite140103Query.select('cancelacion').subscribe((data: Cupo[]) => {
+    this.Cancelacion = data;
+  });
   }
 
   /**

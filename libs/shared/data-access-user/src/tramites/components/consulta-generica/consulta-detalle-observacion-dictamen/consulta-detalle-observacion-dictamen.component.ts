@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ObservacionDetalleResponse } from '../../../../core/models/130118/observacion-detalle-response.model';
+import { ObservacionDetalleResponse } from '../../../../core/models/shared/observacion-detalle-response.model';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';

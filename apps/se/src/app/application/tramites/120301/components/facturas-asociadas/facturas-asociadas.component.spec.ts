@@ -171,11 +171,11 @@ describe('FormularioAsociacionFacturaComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with values from store on ngOnInit and call store methods', fakeAsync(() => {
+  it('debe inicializar el formulario con valores del store en ngOnInit y llamar métodos del store', fakeAsync(() => {
     component.ngOnInit();
     tick();
     fixture.detectChanges();
@@ -188,7 +188,7 @@ describe('FormularioAsociacionFacturaComponent', () => {
     expect(storeMock.setFormaValida).not.toHaveBeenCalled();
   }));
 
-  it('should mark form valid and call setFormaValida on statusChanges', fakeAsync(() => {
+  it('debe marcar el formulario como válido y llamar a setFormaValida en statusChanges', fakeAsync(() => {
     component.ngOnInit();
     tick();
     fixture.detectChanges();
@@ -207,7 +207,7 @@ describe('FormularioAsociacionFacturaComponent', () => {
     );
   }));
 
-  it('should have invalid form if cantidadFacturas is empty', fakeAsync(() => {
+  it('debe tener el formulario inválido si cantidadFacturas está vacío', fakeAsync(() => {
     component.ngOnInit();
     tick();
     fixture.detectChanges();
@@ -219,7 +219,7 @@ describe('FormularioAsociacionFacturaComponent', () => {
     expect(storeMock.setFormaValida).not.toHaveBeenCalled();
   }));
 
-  it('should call recuperarDatos and set facturasDisponible', fakeAsync(() => {
+  it('debe llamar a recuperarDatos y establecer facturasDisponible', fakeAsync(() => {
     component.ngOnInit();
     tick();
     fixture.detectChanges();
@@ -229,7 +229,7 @@ describe('FormularioAsociacionFacturaComponent', () => {
     expect(component.facturasDisponible[0].numeroDeLaFactura).toBe('F1');
   }));
 
-  it('should call recuperarDatosAsociadas and set facturasAsociadas', fakeAsync(() => {
+  it('debe llamar a recuperarDatosAsociadas y establecer facturasAsociadas', fakeAsync(() => {
     component.ngOnInit();
     tick();
     fixture.detectChanges();
@@ -239,7 +239,7 @@ describe('FormularioAsociacionFacturaComponent', () => {
     expect(component.facturasAsociadas[0].numeroDeLaFactura).toBe('FA1');
   }));
 
-  it('should call setValoresStore with correct value', () => {
+  it('debe llamar a setValoresStore con el valor correcto', () => {
     const fb = (component as any).fb as FormBuilder;
     const form = fb.group({
       testField: ['valueTest'],
@@ -255,7 +255,7 @@ describe('FormularioAsociacionFacturaComponent', () => {
     expect(spyMethod).toHaveBeenCalledWith('valueTest');
   });
 
-it('should disable form if formularioDeshabilitado is true on ngOnInit', fakeAsync(() => {
+it('debe deshabilitar el formulario si formularioDeshabilitado es verdadero en ngOnInit', fakeAsync(() => {
   component.formularioDeshabilitado = true;
   component.ngOnInit();
   tick();
@@ -265,7 +265,7 @@ it('should disable form if formularioDeshabilitado is true on ngOnInit', fakeAsy
   tick(20);
 }));
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
     (component as any).destroyNotifier$ = {
       next: jest.fn(),
       complete: jest.fn(),

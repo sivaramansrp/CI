@@ -20,38 +20,38 @@ import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore, FE
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 
-import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-acuses-response.model';
-import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/130118/dictamenes-response.model';
-import { DocumentoSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model";
-import { EnvioDigitalResponse } from '@libs/shared/data-access-user/src/core/models/130118/envio-digital-response.model';
+import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/shared/consulta-acuses-response.model';
+import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/shared/dictamenes-response.model';
+import { DocumentoSolicitud } from "@libs/shared/data-access-user/src/core/models/shared/consulta-documentos-response.model";
+import { EnvioDigitalResponse } from '@libs/shared/data-access-user/src/core/models/shared/envio-digital-response.model';
 import { EvaluacionOpcionResponse } from '../core/models/evaluar/response/evaluar-estado-evaluacion-response.model';
 import { EvaluarSolicitudService } from '../core/services/evaluar-tramite/evaluar-solicitud.service';
 import { GuardarDictamenRequest } from '../core/models/evaluar/request/guardar-dictamen-request.model';
 import { GuardarDictamenService } from '../core/services/evaluar-tramite/guardar-dictamen.service';
 import { IniciarService } from '../core/services/evaluar-tramite/iniciar.service';
 import { OpcionesEvaluacionRequest } from '../core/models/evaluar/request/opciones-evaluacion.model';
-import { OpinionResponse } from '@libs/shared/data-access-user/src/core/models/130118/opinion-response.model';
-import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/130118/requerimientos-response.model';
+import { OpinionResponse } from '@libs/shared/data-access-user/src/core/models/shared/opinion-response.model';
+import { RequerimientosResponse } from '@libs/shared/data-access-user/src/core/models/shared/requerimientos-response.model';
 import { TabsSolicitudServiceTsService } from "../core/services/evaluar-tramite/tabs-solicitud.service.ts.service";
-import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/130118/consulta-tareas-response.model";
+import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/shared/consulta-tareas-response.model";
 
 
 import { GuardarRequerimiento } from '../core/models/evaluar/request/guardar-requerimiento-request.model';
 import { GuardarRequerimientoService } from '../core/services/evaluar-tramite/guardarRequerimiento.service';
-import { IniciarDictamenResponse } from '@libs/shared/data-access-user/src/core/models/130118/iniciar-dictamen-response.model';
+import { IniciarDictamenResponse } from '@libs/shared/data-access-user/src/core/models/shared/iniciar-dictamen-response.model';
 import { IniciarRequerimientoRequest } from '../core/models/evaluar/request/iniciar-requerimiento-request.model';
-import { IniciarRequerimientoResponse } from '@libs/shared/data-access-user/src/core/models/130118/Iniciar-requerimiento-response.model';
+import { IniciarRequerimientoResponse } from '@libs/shared/data-access-user/src/core/models/shared/Iniciar-requerimiento-response.model';
 import { MostrarFirmarRequest } from '../core/models/evaluar/request/firmar-mostrar-dictamen.request.model';
 import { MostrarFirmarResponse } from '../core/models/evaluar/response/mostrar-firmar-response.model';
-import { SentidosDisponiblesResponse } from '@libs/shared/data-access-user/src/core/models/130118/sentidos-disponibles.model';
-import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-tabs-response.model';
+import { SentidosDisponiblesResponse } from '@libs/shared/data-access-user/src/core/models/shared/sentidos-disponibles.model';
+import { TabsResponse } from '@libs/shared/data-access-user/src/core/models/shared/consulta-tabs-response.model';
 
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { FirmarDictamenRequest } from '../core/models/evaluar/request/firmar-dictamen-request.model';
 
 import { CodigoRespuesta } from '../core/enum/se-core-enum';
-import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/130118/criterios-response.model';
-import { DictamenForm } from '@libs/shared/data-access-user/src/core/models/130118/dictamen-form.model';
+import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/shared/criterios-response.model';
+import { DictamenForm } from '@libs/shared/data-access-user/src/core/models/shared/dictamen-form.model';
 import { FirmarDictamenService } from '../core/services/evaluar-tramite/firmarDictamen.service';
 import { FirmarRequerimientoRequest } from '../core/models/evaluar/request/firmar-requerimiento-request.model';
 import { FirmarRequermientoService } from '../core/services/evaluar-tramite/firmarRequermiento.service';
@@ -929,7 +929,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   opcionesEvaluacion(): void {
-
+    
     const PAYLOAD: OpcionesEvaluacionRequest = {
       cve_rol_capturista: this.guardarDatos.current_user,
       considera_capturista: true

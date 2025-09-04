@@ -60,6 +60,12 @@ export class AgriculturaComponent {
    */
   indice: number = 1;
 
+  /** Indica si el botón Guardar debe mostrarse o estar habilitado en el formulario. */
+  public btnGuardar: boolean = true;
+
+  /** Indica la visibilidad del botón Guardar. */
+  public btnGuardarVisible: string = 'visible';
+
   /**
    * @description Objeto que contiene los datos de los pasos del formulario.
    * Este objeto se utiliza para comunicar información entre el componente Agricultura
@@ -71,7 +77,7 @@ export class AgriculturaComponent {
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
-    txtBtnAnt: 'Guardar',
+    txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
 

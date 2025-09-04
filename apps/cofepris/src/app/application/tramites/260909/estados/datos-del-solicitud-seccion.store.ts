@@ -140,6 +140,10 @@ export interface DatosDelSolicituteSeccionStateInterface {
  * * Descripción del SCIAN.
  */
   descripcionScian: string;
+  /**
+   * Descripción Información confidencial.
+   */
+  informacionConfidencialRadio: string;
 }
 
 /**
@@ -176,6 +180,7 @@ export function createInitialState(): DatosDelSolicituteSeccionStateInterface {
           licenciaSanitaria: '',
           regimen:'',
           aduanasEntradas: '',
+          informacionConfidencialRadio: '',
 
   };
 }
@@ -451,4 +456,14 @@ public setDescripcionScian(descripcionScian: string): void {
   }));
 }
 
+  /**
+   * Establece la información confidencial en el estado.
+   * @param informacionConfidencialRadio Nueva información confidencial.
+   */
+  public setInformacionConfidencial(informacionConfidencialRadio: string): void {
+    this.update(state => ({
+      ...state,
+      informacionConfidencialRadio,
+    }));
+  }
 }

@@ -4,6 +4,29 @@
       <div class="col-md-12">
         <h3>Validar inicialmente el certificado de Uruguay</h3>
       </div>
+      <ng-container>
+      <div 
+          *ngIf="isAlerta" 
+          class="alert alert-warning" 
+          role="alert" 
+            [innerHTML]="TEXTO_DE_ALERTA"
+
+        >
+        {{TEXTO_DE_ALERTA}}
+        </div>
+        <div 
+          *ngIf="isPeligro" 
+          class="alert alert-danger" 
+          role="alert" 
+            [innerHTML]="TEXTO_DE_PELIGRO"
+
+        >
+        {{TEXTO_DE_PELIGRO}}
+        
+        
+        </div>
+    </ng-container>
+
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="row">

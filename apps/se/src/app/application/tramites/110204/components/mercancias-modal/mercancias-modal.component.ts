@@ -167,7 +167,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       umc: ['', [Validators.required]],
       valorMercancia: ['', [Validators.required]],
       complementoClasificacion: ['', [Validators.required]],
-      fechaFinalInput: ['',[Validators.required]],
+      fechaFinal: ['',[Validators.required]],
       numeroFactura: ['', [Validators.required]],
       tipoFactura: ['', [Validators.required]]
     });
@@ -249,7 +249,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     public cambioFechaFinal(nuevo_valor: string): void {
 
       this.mercanciaForm.get('fechaFinal')?.setValue(nuevo_valor);
-      this.mercanciaForm.get('fechaFinal')?.markAsUntouched();
+      
     }
   
 
@@ -271,6 +271,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
   }
 
   activarModal(): void {
+    if(this.mercanciaForm.valid){
     this.mostrarAlerta = true;
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -282,6 +283,10 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
+    }
+    }
+    else{
+      this.mercanciaForm.markAllAsTouched();
     }
   }
 
