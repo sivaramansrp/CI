@@ -65,6 +65,7 @@ import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.compone
 import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
 import { TipoEquipoService } from '../../../core/services/shared/catalogos/tipo-equipo.service';
 import { ValidaTransporteService } from '../../../core/services/shared/api-validaciones/valida-transporte.service';
+import { formatearFechaDdMmYyyy } from '../../../core/utils/utilerias';
 
 @Component({
   selector: 'lib-transporte',
@@ -688,7 +689,7 @@ export class TransporteComponent implements OnInit, OnChanges {
     this.datosTabla.emit(this.bodyTabla);
   }
 
-  /**
+  /**agregarTransporte
    * Abre el modal para agregar un documento.
    * @returns {void}
    */
@@ -793,7 +794,10 @@ export class TransporteComponent implements OnInit, OnChanges {
     ) as keyof this;
 
     const FORMULARIO = this[FORMULARIO_NOMBRE] as FormGroup;
-
+    
+    FORMULARIO.controls['fecha_porte']?.setValue(
+      formatearFechaDdMmYyyy(FORMULARIO.controls['fecha_porte']?.value) || ''
+    );
     const VALORES = TransporteComponent.tieneValoresValidos(FORMULARIO);
 
     if (!VALORES && !this.observaciones.value) {
@@ -1193,7 +1197,7 @@ export class TransporteComponent implements OnInit, OnChanges {
           emp_transportista:
             this.carreteroForma.get('emp_transportista')?.value,
           numero_porte: this.carreteroForma.get('numero_porte')?.value,
-          fecha_porte: this.carreteroForma.get('fecha_porte')?.value,
+          fecha_porte: formatearFechaDdMmYyyy(this.carreteroForma.get('fecha_porte')?.value),
           marca_transporte: this.carreteroForma.get('marca_transporte')?.value,
           modelo_transporte:
             this.carreteroForma.get('modelo_transporte')?.value ===
