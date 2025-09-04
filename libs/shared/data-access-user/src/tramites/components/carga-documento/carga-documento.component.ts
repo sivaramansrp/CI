@@ -593,7 +593,7 @@ private validarCompletitudDocumentosObligatorios(): boolean {
   for (const DOCUMENTO of this.catalogoDocumentosObligatorios) {
     // Buscamos si este documento ya fue cargado
     const ARCHIVO_SUBIDO = this.listadoArchivos.find(
-      archivo => archivo.id === DOCUMENTO.id_tipo_documento
+      archivo => archivo.id === DOCUMENTO.id_tipo_documento && archivo.tipo === 'obligatorio'
     );
     
     // El documento principal debe estar cargado y sin errores
@@ -605,7 +605,7 @@ private validarCompletitudDocumentosObligatorios(): boolean {
     if (Array.isArray(DOCUMENTO.adicionales) && DOCUMENTO.adicionales.length > 0) {
       for (const PARTE_ADICIONAL of DOCUMENTO.adicionales) {
         const ARCHIVO_ADICIONAL = this.listadoArchivos.find(
-          archivo => archivo.id === PARTE_ADICIONAL.id_tipo_documento
+          archivo => archivo.id === PARTE_ADICIONAL.id_tipo_documento && archivo.tipo === 'obligatorio'
         );
         
         // Cada parte adicional también debe estar completa
@@ -752,10 +752,11 @@ private validarCompletitudDocumentosObligatorios(): boolean {
    * Elimina un nuevo documento de la lista de documentos.
    * @param {any} item - El documento a eliminar.
    * @param {boolean} adicional - Indica si el documento es adicional.
+   * @param {string} tipo - El tipo de documento ('obligatorio' u 'opcional').
    * @returns {void}
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  eliminarNuevo(item: any, adicional = false): void {
+  eliminarNuevo(item: any, adicional = false, tipo: string = 'obligatorio'): void {
     if (adicional) {
       const INDICE_ADICIONAL = item.item.adicionales.findIndex(
         (adicional: TipoDocumentos) =>
@@ -768,7 +769,7 @@ private validarCompletitudDocumentosObligatorios(): boolean {
         
         // Eliminar archivo de la lista si existe
         const INDICE_ARCHIVO: number = this.listadoArchivos.findIndex(
-          (f) => f.id === item.adicional.id_tipo_documento
+          (f) => f.id === item.adicional.id_tipo_documento && f.tipo === tipo
         );
         if (INDICE_ARCHIVO !== -1) {
           this.listadoArchivos.splice(INDICE_ARCHIVO, 1);
@@ -798,7 +799,7 @@ private validarCompletitudDocumentosObligatorios(): boolean {
         this.documentosOpcionalesSeleccionados[INDICE]?.adicionales?.forEach(
           (adicional: TipoDocumentos) => {
             const INDICE_LISTADO: number = this.listadoArchivos.findIndex(
-              (f) => f.id === adicional.id_tipo_documento
+              (f) => f.id === adicional.id_tipo_documento && f.tipo === 'opcional'
             );
             this.listadoArchivos.splice(INDICE_LISTADO, 1);
           }
@@ -806,7 +807,7 @@ private validarCompletitudDocumentosObligatorios(): boolean {
       }
 
       const INDICE_LISTADO: number = this.listadoArchivos.findIndex(
-        (f) => f.id === item.id_tipo_documento
+        (f) => f.id === item.id_tipo_documento && f.tipo === 'opcional'
       );
       this.listadoArchivos.splice(INDICE_LISTADO, 1);
 
