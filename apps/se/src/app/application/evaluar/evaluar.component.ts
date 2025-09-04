@@ -932,8 +932,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
 
     const PAYLOAD: OpcionesEvaluacionRequest = {
       cve_rol_capturista: this.guardarDatos.current_user,
-      considera_capturista: true,
-      estado_evaluacion: this.evaluacionTramite.estado_evaluacion
+      considera_capturista: true
     };
 
     this.evaluarSolicitudService.postOpcionesEvaluacion(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
