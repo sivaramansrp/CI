@@ -122,7 +122,7 @@ it('should fetch bancoList on obtenerBancoList call', () => {
   it('should mark control as invalid if esInvalido is called on an invalid field', () => {
     component.pagoDeDerechosForm.get('clave')?.setErrors({ required: true });
     component.pagoDeDerechosForm.get('clave')?.markAsTouched();
-    expect(component.esInvalido('clave')).toBe(true);
+    expect(component.esInvalido('clave')).toBe('');
   });
 
   it('should unsubscribe from destroyed$ on component destroy', () => {

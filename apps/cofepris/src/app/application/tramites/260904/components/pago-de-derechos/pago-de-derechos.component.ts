@@ -15,7 +15,7 @@ import {
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { ConsultaioQuery} from "@ng-mf/data-access-user";
+import { ConsultaioQuery, REGEX_IMPORTE_PAGO, REGEX_LLAVE_DE_PAGO} from "@ng-mf/data-access-user";
 
 import { Tramite260904State, Tramite260904Store } from '../../estados/tramite260904.store';
 
@@ -140,7 +140,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       clave: [this.estadoSeleccionado.clave, Validators.required],
       llaveDePago: [
         this.estadoSeleccionado.llaveDePago,
-        [Validators.required, Validators.pattern('^[A-Z0-9]{10}$')],
+        [Validators.required, Validators.pattern(REGEX_LLAVE_DE_PAGO),],
       ],
       fecPago: [
         this.estadoSeleccionado.fecPago,
@@ -148,7 +148,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       ],
       impPago: [
         this.estadoSeleccionado.impPago,
-        [Validators.maxLength(16), PagoDeDerechosComponent.noComaValidator()],
+        [Validators.maxLength(30), Validators.pattern(REGEX_IMPORTE_PAGO), PagoDeDerechosComponent.noComaValidator()],
       ],
     });
 }
@@ -272,11 +272,11 @@ public validarFechaFutura(fecPago:string): void {
    * @returns {boolean} - True si el control es inválido, de lo contrario false.
    */
   public esInvalido(nombreControl: string): boolean {
-    const CONTROL = this.pagoDeDerechosForm.get(nombreControl);
-    return CONTROL
-      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
-      : false;
-  }
+  const CONTROL = this.pagoDeDerechosForm.get(nombreControl);
+  return CONTROL
+    ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) && CONTROL.value
+    : false;
+}
 
 
   /**
@@ -285,13 +285,17 @@ public validarFechaFutura(fecPago:string): void {
    * @param campo - El nombre del campo en el formulario.
    * @param metodoNombre - El método en la tienda para actualizar el estado.
    */
-  public setValoresStore(form: FormGroup, campo: string): void {
-    const VALOR = form.get(campo)?.value;
-    this.tramite260904Store.setTramite260904State({
-      [campo]: VALOR
-    });
+public setValoresStore(form: FormGroup, campo: string): void {
+  const CONTROL = form.get(campo);
+  const VALOR = CONTROL?.value;
+  this.tramite260904Store.setTramite260904State({
+    [campo]: VALOR
+  });
+  if (CONTROL && (VALOR === null || VALOR === '')) {
+    CONTROL.markAsPristine();
+    CONTROL.markAsUntouched();
   }
-  
+}
   /**
    * Obtiene el estado actual del trámite desde el store.
    */
