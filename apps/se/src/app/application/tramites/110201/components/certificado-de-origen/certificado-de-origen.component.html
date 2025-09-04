@@ -55,12 +55,12 @@
         <div class="row mt-5">
           <div class="col-md-4">
             <input-fecha [setFecha]=" registroForm.get('validacionForm.fechaInicial')?.value "
-              [datos]="fechaInicialInput" class="disabled-input-fecha"
+              [datos]="fechaInicialInput" [isDisabled]="soloLectura"
               (valorCambiado)="cambioFechaInicial($event)"></input-fecha>
           </div>
           <div class="col-md-4">
-            <input-fecha [setFecha]="registroForm.get('validacionForm.fechaFinal')?.value" [datos]="fechaFinalInput"
-              class="disabled-input-fecha" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+            <input-fecha [setFecha]="registroForm.get('validacionForm.fechaFinal')?.value" [datos]="fechaFinalInput" [isDisabled]="soloLectura"
+              (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
           </div>
         </div>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
@@ -101,8 +101,7 @@
               <input class="visually-hidden-file" type="file" formControlName="archivo" id="archivoAdjuntar" size="60"
                 (change)="alSeleccionarArchivo($event)"
                 (change)=" setValoresStore(validacionForm, 'archivo', 'setArchivo') " />
-              <label class="custome-file-label" for="archivoAdjuntar" value="Seleccionar archivo"
-                style="background-color: lightgrey; font-weight: bold">Elegir archivo</label>
+              <label class="custome-file-label font-weight" for="archivoAdjuntar" value="Seleccionar archivo">Elegir archivo</label>
               <p style="display: inline-block"> {{ nombreArchivo || 'No se eligió ningún archivo' }} </p>
               <br />
             </div>
@@ -131,14 +130,11 @@
           <label>Mercancías seleccionadas</label>
         </div>
         <div class="table-container mt-5" *ngIf="!esMercanciaEnEdicion">
-          <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [datos]="mercanciaSeleccionadasTablaData"
-            [configuracionTabla]="headersData"
-            [disableSeleccionTablaRadio]="soloLectura? true : false"></app-tabla-dinamica>
+          <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [datos]="mercanciaSeleccionadasTablaData" [configuracionTabla]="headersData"         [disableSeleccionTablaRadio]="soloLectura? true : false"></app-tabla-dinamica>
         </div>
         <div class="table-container mt-5" *ngIf="esMercanciaEnEdicion">
           <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="headersData"
-            [datos]="mercanciaSeleccionadasTablaData"
-            [disableSeleccionTablaRadio]="soloLectura? true : false"></app-tabla-dinamica>
+            [datos]="mercanciaSeleccionadasTablaData" [disableSeleccionTablaRadio]="soloLectura? true : false"></app-tabla-dinamica>
         </div>
         <nav aria-label="Page navigation example">
           <ul class="pagination d-flex justify-content-center">
@@ -172,127 +168,127 @@
 
 
 <!-- new modal -->
-<div class="modal fade modal-xl" id="modalAgregar" tabindex="-1" role="dialog" aria-labelledby="modalAgregarLabel"
-  aria-hidden="true" #modalAgregar>
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalAgregarLabel">Datos de la mercancía</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="mercanciaForm" *ngIf="mercanciaForm">
-          <div formGroupName="validacionMercanciaForm">
-            <div class="row">
-        <div class="col-md-4">
-          <label>Fracción arancelaria:</label>
-          <input type="text" required="true" class="form-control grisColor" readonly
-            formControlName="fraccionMercanciaArancelaria"
-            (change)=" setValoresStore( validacionMercanciaForm, 'fraccionMercanciaArancelaria', 'setfraccionMercanArancelaria' ) " />
+<ng-container>
+  <div class="modal fade modal-xl" id="modalAgregar" tabindex="-1" role="dialog" aria-labelledby="modalAgregarLabel"
+    aria-hidden="true" #modalAgregar>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAgregarLabel">Datos de la mercancía</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-        <div class="col-md-8">
-          <label>Nombre comercial de la mercancía(igual que en la factura):</label>
-          <input type="text" required="true" class="form-control grisColor"
-            formControlName="nombreComercialDelaMercancia" readonly
-            (change)=" setValoresStore( validacionMercanciaForm, 'nombreComercialDelaMercancia', 'setnombrecomercialdelamercancia' ) " />
-        </div>
-      </div>
-      <div class="row mt-5">
-        <div class="col-md-8">
-          <label>Nombre técnico:</label>
-          <input type="text" required="true" class="form-control grisColor" formControlName="nombreTecnico" readonly
-            (change)=" setValoresStore( validacionMercanciaForm, 'nombreTecnico', 'setnombretecnico' ) " />
-        </div>
-      </div>
-      <div class="row mt-5">
-        <div class="col-md-8">
-          <label>Nomre en inglés:</label>
-          <input type="text" required="true" class="form-control grisColor" formControlName="nombreEnIngles" readonly
-            (change)=" setValoresStore( validacionMercanciaForm, 'nombreEnIngles', 'setnomreeningles' ) " />
-        </div>
-        <div class="col-md-4">
-          <label>Criterio para conferir origen:</label>
-          <input type="text" required="true" class="form-control grisColor" formControlName="criterioParaConferir"
-            readonly
-            (change)=" setValoresStore( validacionMercanciaForm, 'criterioParaConferir', 'setcriterioparaconferir' ) " />
-        </div>
-      </div>
-      <div class="row mt-5">
-        <div class="col-md-8">
-          <label>Marca:</label>
-          <input type="text" required="true" class="form-control" formControlName="marca"
-            (change)=" setValoresStore(validacionMercanciaForm, 'marca', 'setmarca') " />
-        </div>
-        <div class="col-md-4">
-          <label>Cantidad:</label>
-          <input type="number" required="true" class="form-control" formControlName="cantidad"
-            (change)=" setValoresStore( validacionMercanciaForm, 'cantidad', 'setcantidad' ) " />
-        </div>
-        <div
-          *ngIf=" mercanciaForm.get('validacionMercanciaForm.cantidad')?.invalid && mercanciaForm.get('validacionMercanciaForm.cantidad')?.touched "
-          class="text-danger">
-          <small class="text-danger"
-            *ngIf="mercanciaForm.get('validacionMercanciaForm.cantidad')?.errors?.['pattern']">Este campo es
-            obligatorio.</small>
-        </div>
-      </div>
-      <div class="row mt-5">
-        <div class="col-md-4">
-          <app-catalogo-select [catalogo]="optionsUMC.catalogos" [label]="'UMC'" [required]="true"
-            [tooltipQuestionCircle]="true" id="umc" formControlName="umc"
-            (change)="setValoresStore(validacionMercanciaForm, 'umc', 'setUMC')"></app-catalogo-select>
-        </div>
-      </div>
-      <div class="row mt-5">
-        <div class="col-md-4">
-          <label>Valor de la mercancía(dólares)*:</label>
-          <input type="text" required="true" class="form-control" formControlName="valorDelaMercancia"
-            (change)=" setValoresStore( validacionMercanciaForm, 'valorDelaMercancia', 'setvalordelamercancia' ) " />
-        </div>
-        <div class="col-md-8">
-          <label>Complemento de la descripción*:</label>
-          <textarea cols="70" rows="3" formControlName="complementoDelaDescripcion"
-            (change)=" setValoresStore( validacionMercanciaForm, 'complementoDelaDescripcion', 'setcomplementodeladescripcion' ) "></textarea>
-        </div>
-      </div>
-      <div class="row mt-5">
-        <div class="col-md-4">
-          <label>Masa bruta*:</label>
-          <input type="text" required="true" class="form-control" formControlName="masaBruta"
-            (change)=" setValoresStore( validacionMercanciaForm, 'masaBruta', 'setmasabruta' ) " />
-        </div>
-        <div class="col-md-8">
-          <app-catalogo-select [catalogo]="optionsUnidadMedida.catalogos" [label]="'Unidad de medida de la masa bruta'"
-            [required]="true" id="unidadMedida" formControlName="unidadMedida"
-            (change)=" setValoresStore( validacionMercanciaForm, 'unidadMedida', 'setUnidadMedida' ) "></app-catalogo-select>
-        </div>
-      </div>
-      <div class="row mt-5">
-        <div class="col-md-4">
-          <input-fecha [setFecha]="registroForm.get('fecha')?.value" [datos]="fechaFacturaInput"
-            (valorCambiado)="cambioFechaFactura($event)"></input-fecha>
-        </div>
-        <div class="col-md-4">
-          <label>N° factura*:</label>
-          <input type="text" required="true" class="form-control" formControlName="numeroFactura"
-            (change)=" setValoresStore( validacionMercanciaForm, 'numeroFactura', 'setNFactura' ) " />
-        </div>
-        <div class="col-md-4">
-          <app-catalogo-select [catalogo]="optionsTipoFactura.catalogos" [label]="'Tipo de factura'" [required]="true"
-            id="tipoFactura" formControlName="tipoFactura"
-            (change)=" setValoresStore( validacionMercanciaForm, 'tipoFactura', 'setTipoFactura' ) "></app-catalogo-select>
-        </div>
-      </div>
+        <div class="modal-body">
+          <form [formGroup]="mercanciaForm" *ngIf="mercanciaForm">
+            <div formGroupName="validacionMercanciaForm">
+              <div class="row">
+                <div class="col-md-4">
+                  <label>Fracción arancelaria:</label>
+                  <input type="text" required="true" class="form-control grisColor" readonly
+                    formControlName="fraccionMercanciaArancelaria"
+                    (change)=" setValoresStore( validacionMercanciaForm, 'fraccionMercanciaArancelaria', 'setfraccionMercanArancelaria' ) " />
+                </div>
+                <div class="col-md-8">
+                  <label>Nombre comercial de la mercancía(igual que en la factura):</label>
+                  <input type="text" required="true" class="form-control grisColor"
+                    formControlName="nombreComercialDelaMercancia" readonly
+                    (change)=" setValoresStore( validacionMercanciaForm, 'nombreComercialDelaMercancia', 'setnombrecomercialdelamercancia' ) " />
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-8">
+                  <label>Nombre técnico:</label>
+                  <input type="text" required="true" class="form-control grisColor" formControlName="nombreTecnico" (change)=" setValoresStore( validacionMercanciaForm, 'nombreTecnico', 'setnombretecnico' ) " />
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-8">
+                  <label>Nomre en inglés:</label>
+                  <input type="text" required="true" class="form-control grisColor" formControlName="nombreEnIngles" (change)=" setValoresStore( validacionMercanciaForm, 'nombreEnIngles', 'setnomreeningles' ) " />
+                </div>
+                <div class="col-md-4">
+                  <label>Criterio para conferir origen:</label>
+                  <input type="text" required="true" class="form-control grisColor"
+                    formControlName="criterioParaConferir" (change)=" setValoresStore( validacionMercanciaForm, 'criterioParaConferir', 'setcriterioparaconferir' ) " />
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-8">
+                  <label>Marca:</label>
+                  <input type="text" required="true" class="form-control" formControlName="marca"
+                    (change)=" setValoresStore(validacionMercanciaForm, 'marca', 'setmarca') " />
+                </div>
+                <div class="col-md-4">
+                  <label>Cantidad:</label>
+                  <input type="number" required="true" class="form-control" formControlName="cantidad"
+                    (change)=" setValoresStore( validacionMercanciaForm, 'cantidad', 'setcantidad' ) " />
+                </div>
+                <div
+                  *ngIf=" mercanciaForm.get('validacionMercanciaForm.cantidad')?.invalid && mercanciaForm.get('validacionMercanciaForm.cantidad')?.touched "
+                  class="text-danger">
+                  <small class="text-danger"
+                    *ngIf="mercanciaForm.get('validacionMercanciaForm.cantidad')?.errors?.['pattern']">Este campo es
+                    obligatorio.</small>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <app-catalogo-select [catalogo]="optionsUMC.catalogos" [label]="'UMC'" [required]="true"
+                    [tooltipQuestionCircle]="true" id="umc" formControlName="umc"
+                    (change)="setValoresStore(validacionMercanciaForm, 'umc', 'setUMC')"></app-catalogo-select>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <label>Valor de la mercancía(dólares)*:</label>
+                  <input type="number" required="true" class="form-control" formControlName="valorDelaMercancia"
+                    (change)=" setValoresStore( validacionMercanciaForm, 'valorDelaMercancia', 'setvalordelamercancia' ) " />
+                </div>
+                <div class="col-md-8">
+                  <label>Complemento de la descripción*:</label>
+                  <textarea cols="70" rows="3" formControlName="complementoDelaDescripcion"
+                    (change)=" setValoresStore( validacionMercanciaForm, 'complementoDelaDescripcion', 'setcomplementodeladescripcion' ) "></textarea>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <label>Masa bruta*:</label>
+                  <input type="number" required="true" class="form-control" formControlName="masaBruta"
+                    (change)=" setValoresStore( validacionMercanciaForm, 'masaBruta', 'setmasabruta' ) " />
+                </div>
+                <div class="col-md-8">
+                  <app-catalogo-select [catalogo]="optionsUnidadMedida.catalogos"
+                    [label]="'Unidad de medida de la masa bruta'" [required]="true" id="unidadMedida"
+                    formControlName="unidadMedida"
+                    (change)=" setValoresStore( validacionMercanciaForm, 'unidadMedida', 'setUnidadMedida' ) "></app-catalogo-select>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <input-fecha [setFecha]="registroForm.get('fecha')?.value" [datos]="fechaFacturaInput"
+                    (valorCambiado)="cambioFechaFactura($event)"></input-fecha>
+                </div>
+                <div class="col-md-4">
+                  <label>N° factura*:</label>
+                  <input type="text" required="true" class="form-control" formControlName="numeroFactura"
+                    (change)=" setValoresStore( validacionMercanciaForm, 'numeroFactura', 'setNFactura' ) " />
+                </div>
+                <div class="col-md-4">
+                  <app-catalogo-select [catalogo]="optionsTipoFactura.catalogos" [label]="'Tipo de factura'"
+                    [required]="true" id="tipoFactura" formControlName="tipoFactura"
+                    (change)=" setValoresStore( validacionMercanciaForm, 'tipoFactura', 'setTipoFactura' ) "></app-catalogo-select>
+                </div>
+              </div>
             </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" #closeModal
-          (click)="cancelar()">Cancelar</button>
-        <button type="button" class="btn btn-primary" (click)="agregar()">Agregar</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" data-bs-toggle="modal" #closeModal
+            (click)="cancelar()">Cancelar</button>
+          <button type="button" class="btn btn-primary" #closeModal (click)="agregar()">Agregar</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</ng-container>
