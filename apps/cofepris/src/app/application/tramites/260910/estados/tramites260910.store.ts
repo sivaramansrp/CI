@@ -53,10 +53,10 @@ export interface Solicitud260910State {
   telefono: number;
 
   /** Número clave SCIAN. */
-  claveSCIAN: number;
+  claveSCIAN: number | string;
 
   /** Número Clave descripcion del SCIAN. */
-  claveSCIANDesc: number;
+  claveSCIANDesc: number | string;
 
   /** Indicador sobre si existe aviso de funcionamiento. */
   avisoDeFuncionamiento: boolean;
@@ -250,8 +250,8 @@ export function createInitialState(): Solicitud260910State {
     calle: '',
     lada: 0,
     telefono: 0,
-    claveSCIAN: 0,
-    claveSCIANDesc: 0,
+    claveSCIAN: '',
+    claveSCIANDesc: '',
     avisoDeFuncionamiento: false,
     licenciaSanitaria: '',
     liveFreshFrozen: false,
@@ -532,7 +532,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza la clave SCIAN asociada al trámite.
    * @param claveSCIAN - Nuevo identificador para la clave SCIAN.
    */
-  public setClaveSCIAN(claveSCIAN: number): void {
+  public setClaveSCIAN(claveSCIAN: number | string): void {
     this.update((state) => ({
       ...state,
       claveSCIAN
@@ -543,7 +543,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza la descripción de la clave SCIAN asociada al trámite.
    * @param claveSCIANDesc - Nuevo identificador para la descripción de la clave SCIAN.
    */
-  public setClaveSCIANDesc(claveSCIANDesc: number): void {
+  public setClaveSCIANDesc(claveSCIANDesc: number | string): void {
     this.update((state) => ({
       ...state,
       claveSCIANDesc

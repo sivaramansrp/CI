@@ -5,15 +5,18 @@
     "catalogos": [
         {
             "id": 1,
-            "descripcion": "311321"
+            "descripcion": "614079",
+            "clave": "614079"
         },
         {
             "id": 2,
-            "descripcion": "614074"
+            "descripcion": "614074",
+            "clave": "614074"
         },
         {
             "id": 3,
-            "descripcion": "614075"
+            "descripcion": "614075",
+            "clave": "614075"
         }
     ]
 }
