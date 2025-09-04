@@ -60,11 +60,12 @@
                 <div class="row">
                   <ng-alert [CONTENIDO]="TEXTO_DE_ADJUNTAR"></ng-alert>
                 </div>
-                <ng-titulo titulo="Datos de la mercancía" />
+                <ng-titulo titulo="Datos de la mercancía"/>
                 <label class="mb-5">Fines a los que se destinará la mercancía*:</label>
                 <crosslist [fechas]="selectRangoDias" [botones]="finesDeMercanciaBotons" formControlName="fechasSeleccionadas"
                   [fechasSeleccionadas]="solicitudState.fechasSeleccionadas" [isDisabled]="esFormularioSoloLectura"
-                  (fechasSeleccionadasChange)="changeCrosslist($event)"></crosslist>
+                  (fechasSeleccionadasChange)="changeCrosslist($event)"
+                  [ngClass]="{'is-invalid': isInvalid('fechasSeleccionadas')}"></crosslist>
                   <div *ngIf="isInvalid('fechasSeleccionadas')" class="mensaje-error">
                       Este campo es obligatorio.
                   </div>
@@ -78,8 +79,8 @@
                             datosMercancia,
                             'tipoMercancia',
                             'setTipoMercancia'
-                          )
-                        " [disabled]="esFormularioSoloLectura" />
+                          )" [ngClass]="{'is-invalid': isInvalid('tipoMercancia')}"
+                          [disabled]="esFormularioSoloLectura" />
                       <div *ngIf="isInvalid('tipoMercancia')" class="mensaje-error">
                           Este campo es obligatorio.
                       </div>
@@ -96,8 +97,8 @@
                             datosMercancia,
                             'usoEspecifico',
                             'setUsoEspecifico'
-                          )
-                        " [disabled]="esFormularioSoloLectura" />
+                          )" [ngClass]="{'is-invalid': isInvalid('usoEspecifico')}"
+                          [disabled]="esFormularioSoloLectura" />
                       <div *ngIf="isInvalid('usoEspecifico')" class="mensaje-error">
                           Este campo es obligatorio.
                       </div>
@@ -111,11 +112,9 @@
                         [required]="true"
                         (change)="condicionSeleccion()"
                         name="condicion"
-                        [isDisabled]="esFormularioSoloLectura">
+                        [isDisabled]="esFormularioSoloLectura"
+                        [markTouched]="agregarMercanciasForm.get('datosMercancia.condicion')?.touched??false">
                       </app-catalogo-select>
-                      <div *ngIf="isInvalid('condicion')" class="mensaje-error">
-                        Este campo es obligatorio.
-                      </div>
                     </div>
                     <div class="col-md-4">
                       <label>Marca:</label>
@@ -320,6 +319,22 @@
       </div>
       <div class="modal-footer" style="justify-content: center">
         <button type="button" class="btn btn-primary" #closeModalConfirmacion data-bs-dismiss="modal">
+          Acceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalModificar" aria-labelledby="modalModificarLabel" class="modal fade" tabindex="-1" role="dialog"
+  #modalModificar>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content modalsm">
+      <div class="modal-body">
+        <label>Selecciona un registro.</label>
+      </div>
+      <div class="modal-footer" style="justify-content: center">
+        <button type="button" class="btn btn-primary" #closeModalModificar data-bs-dismiss="modal">
           Acceptar
         </button>
       </div>

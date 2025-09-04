@@ -14,7 +14,7 @@ import {
   Solicitud10301State,
   Tramite10301Store
 } from '../../estados/tramite10301.store';
-import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, viewChild, ViewChild, ViewChildren } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosMercancia, RespuestaCatalog } from '../../models/importador-exportador.model';
 import {
@@ -250,6 +250,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Referencia al botón para cerrar el modal Confirmacion.
    */
   @ViewChild('closeModalConfirmacion') closeModalConfirmacion!: ElementRef;
+
+  /**
+   * Referencia al elemento del modal para modificar mercancías.
+   */
+  @ViewChild('modalModificar') modalModificar!: ElementRef;
   
   /**
    * Formulario para agregar mercancías.
@@ -717,6 +722,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.agregarMercanciasForm.patchValue(this.filaSeleccionadas);
       if (this.modalElement) {
         const MODEL = new Modal(this.modalElement.nativeElement);
+        MODEL.show();
+      }
+    } else {
+      if (this.modalModificar) {
+        const MODEL = new Modal(this.modalModificar.nativeElement);
         MODEL.show();
       }
     }
