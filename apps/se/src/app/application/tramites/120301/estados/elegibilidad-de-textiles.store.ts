@@ -2108,4 +2108,29 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
       numeroDeLaConstancia,
     }));
   }
+
+  /**
+   * Actualiza la pestaña activa en el flujo del trámite.
+   * 
+   * Este método permite establecer la pestaña activa en el flujo del trámite.
+   * 
+   * @param {number} pestanaActiva - El número de la pestaña activa a establecer.
+   */
+  public setPestanaActiva(pestanaActiva: number): void {
+    this.update((state) => ({
+      ...state,
+      pestanaActiva,
+    }));
+  }
+  /**
+   * Actualiza el paso activo en el flujo del trámite.
+   * Permite establecer el paso activo en el wizard o proceso.
+   * @param {number} pasoActivo - El número del paso activo a establecer.
+   */
+  public setPasoActivo(pasoActivo: number): void {
+    this.update((state) => ({
+      ...state,
+      pasoActivo,
+    }));
+  }
 }

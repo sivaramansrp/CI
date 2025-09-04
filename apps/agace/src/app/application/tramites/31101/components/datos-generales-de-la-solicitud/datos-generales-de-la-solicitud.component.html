@@ -5,14 +5,15 @@
         <ng-titulo titulo="Tipo de garantía" />
       </div>
       <div class="col-md-12">
-        <label class="form-label">Tipo de Garantía *:</label>
+        <label class="form-label mb-5">Tipo de Garantía *:</label>
         <app-input-radio
           formControlName="tipoDeGarantia"
           [selectedValue]="datosGeneralesForm.get('tipoDeGarantia')?.value"
           [radioOptions]="tipoDeGarantiaOpcion.radioOptions"
           [isRequired]="tipoDeGarantiaOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           (valueChange)="actualizarTipoDeGarantia($event)"
         ></app-input-radio>
       </div>
@@ -28,13 +29,13 @@
         </p>
         <p>
           Dicha carta de crédito deberá ser presentada mediante escrito libre
-          que contenga los requisitos establecidos en los artículos 18 y 18- A
+          que contenga los requisitos establecidos en los artículos 18 y 18-A
           del Código Fiscal de la Federación, y acreditando la personalidad del
           representante legal de conformidad con el artículo 19 del Código
           Fiscal de la Federación.
         </p>
         <ng-titulo titulo="Modalidad de la garantía" />
-        <label class="form-label">Modalidad de la Garantía *:</label>
+        <label class="form-label mb-5">Modalidad de la Garantía *:</label>
         <app-input-radio
           formControlName="modalidadDeLaGarantia"
           [selectedValue]="
@@ -43,20 +44,22 @@
           [radioOptions]="modalidadDeLaGarantiaOpcion.radioOptions"
           [isRequired]="modalidadDeLaGarantiaOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           (valueChange)="actualizarModalidadDeLaGarantia($event)"
         ></app-input-radio>
       </div>
       <div class="col-md-12">
         <ng-titulo titulo="Tipo sector" />
-        <label class="form-label">Tipo sector *:</label>
+        <label class="form-label mb-5">Tipo sector *:</label>
         <app-input-radio
           formControlName="tipoSector"
           [selectedValue]="datosGeneralesForm.get('tipoSector')?.value"
           [radioOptions]="tipoSectorOpcion.radioOptions"
           [isRequired]="tipoSectorOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           (valueChange)="actualizarTipoSector($event)"
         ></app-input-radio>
       </div>
@@ -94,7 +97,7 @@
         <ng-titulo titulo="Requisitos" />
       </div>
       <div class="col-md-12">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Señale si al momento de ingresar su solicitud se encuentra al
           corriente en el cumplimiento de sus obligaciones fiscales y
           aduaneras.</label
@@ -103,14 +106,15 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3500"
           (valueChange)="actualizar3500($event)"
         ></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Indique si autorizó al SAT hacer pública su opinión positiva sobre el
           cumplimiento de obligaciones fiscales.</label
         >
@@ -118,14 +122,15 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3501"
           (valueChange)="actualizar3501($event)"
         ></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Indique si cuenta con la totalidad de personal registrado ante el
           IMSS, del SUA, y realiza el pago de las cuotas obrero patronales, así
           como que cumple con la obligación de retener y enterar el ISR de los
@@ -135,7 +140,8 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3502"
           (valueChange)="actualizar3502($event)"
         ></app-input-radio>
@@ -198,7 +204,7 @@
         </div>
       </div>
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Señale si se encuentra en el listado de empresas publicadas por el
           SAT en términos del artículo 69 del CFF, con excepción de lo dispuesto
           en la fracción VI del referido artículo.</label
@@ -207,14 +213,15 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3503"
           (valueChange)="actualizar3503($event)"
         ></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Del mismo modo indique si se encuentra en el listado de empresas
           publicadas por el SAT en términos del artículo 69-B, párrafo cuarto
           del CFF.</label
@@ -223,13 +230,14 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3504"
           (valueChange)="actualizar3504($event)"
         ></app-input-radio>
       </div>
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Indique si se encuentra en el listado de empresas publicadas por el
           SAT en términos del articulo 69-B Bis noveno párrafo, párrafo cuarto
           del CFF.</label
@@ -238,27 +246,29 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3505"
           (valueChange)="actualizar3505($event)"
         ></app-input-radio>
       </div>
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Señale si sus certificados de sellos digitales están vigentes.</label
         >
         <app-input-radio
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3506"
           (valueChange)="actualizar3506($event)"
         ></app-input-radio>
       </div>
       @if(espectaculoEnCasoNegativo){
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >En caso negativo señale si se infringió alguno de los supuestos
           previstos en el artículo 17-H Bis del CFF, durante los últimos doce
           meses.</label
@@ -267,14 +277,15 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3507"
           (valueChange)="actualizar3507($event)"
         ></app-input-radio>
       </div>
       }
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Señale si tiene actualizado sus medios de contacto para efectos del
           buzón tributario en términos del artículo 17-K, penúltimo párrafo del
           CFF.</label
@@ -283,14 +294,15 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3508"
           (valueChange)="actualizar3508($event)"
         ></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Señale si se encuentra suspendida en el Padrón de Importadores o en
           el Padrón de Importadores de Sectores Específicos o Padrón de
           Exportadores Sectorial.</label
@@ -299,7 +311,8 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3509"
           (valueChange)="actualizar3509($event)"
         ></app-input-radio>
@@ -392,7 +405,7 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Señale si el SAT ha interpuesto querella o denuncia penal en contra
           de los socios, accionistas, representante legal con facultad para
           actos de administración o de dominio, o integrantes de la
@@ -404,7 +417,8 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3511"
           (valueChange)="actualizar3511($event)"
         ></app-input-radio>
@@ -415,7 +429,7 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Indique si cuenta con un sistema de control de inventarios, para el
           registro de sus operaciones de comercio exterior de conformidad con el
           artículo 59, fracción I de la Ley.</label
@@ -424,14 +438,15 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3512"
           (valueChange)="actualizar3512($event)"
         ></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Indique, si cuenta con un sistema de control de inventarios de
           conformidad con las disposiciones previstas por el Anexo 24.</label
         >
@@ -439,7 +454,8 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3513"
           (valueChange)="actualizar3513($event)"
         ></app-input-radio>
@@ -484,7 +500,7 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Señale si lleva la contabilidad en medios electrónicos de conformidad
           con el artículo 28, fracción III, del CFF y la regla 2.8.1.5. de la
           RMF.</label
@@ -493,14 +509,15 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3514"
           (valueChange)="actualizar3514($event)"
         ></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Señale si ingresa mensualmente su información contable a través del
           portal del SAT, de conformidad con el artículo 28, fracción IV, del
           CFF y la regla 2.8.1.6. de la RMF.</label
@@ -509,7 +526,8 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3515"
           (valueChange)="actualizar3515($event)"
         ></app-input-radio>
@@ -520,7 +538,7 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Señale si los socios, accionistas, según corresponda, representante
           legal con facultad para actos de administración o de dominio, e
           integrantes de la administración de conformidad con la constitución de
@@ -531,7 +549,8 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3516"
           (valueChange)="actualizar3516($event)"
         ></app-input-radio>
@@ -585,7 +604,7 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Manifieste si sus socios o accionistas, e integrantes de la
           administración, su representante legal con facultad para actos de
           administración o de dominio, o sus partes relacionadas en términos de
@@ -599,14 +618,15 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3517"
           (valueChange)="actualizar3517($event)"
         ></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Indique si sus proveedores se encuentran en el listado de empresas
           publicadas por el SAT, en términos del 69 del CFF, con excepción de la
           fracción VI, articulo 69-B, párrafo cuarto y 69-B Bis noveno párrafo
@@ -616,14 +636,15 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3518"
           (valueChange)="actualizar3518($event)"
         ></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Manifieste si se le ha determinado algún crédito fiscal firme en los
           doce meses anteriores a la fecha de presentación de la
           solicitud.</label
@@ -632,14 +653,15 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3519"
           (valueChange)="actualizar3519($event)"
         ></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Manifieste si cuenta con inversión en territorio nacional y acredita
           la legal posesión de la misma, sin que sea admisible aquella que se
           obtiene de manera gratuita.</label
@@ -648,7 +670,8 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3520"
           (valueChange)="actualizar3520($event)"
         ></app-input-radio>
@@ -737,7 +760,7 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Señale si previamente contó con la Certificación en materia de IVA e
           IEPS, el Registro en el Esquema de Certificación de Empresas bajo la
           modalidad IVA e IEPS o Garantía del interés fiscal del IVA e
@@ -747,14 +770,15 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3521"
           (valueChange)="actualizar3521($event)"
         ></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >En caso afirmativo, señale si se encuentra al corriente en el
           cumplimiento de las obligaciones relativas al Anexo 30 sobre dicho
           registro.</label
@@ -763,7 +787,8 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3522"
           (valueChange)="actualizar3522($event)"
         ></app-input-radio>
@@ -896,7 +921,7 @@
         </div>
       </div>
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Señale si ha realizado operaciones al amparo de su programa
           IMMEX.</label
         >
@@ -904,13 +929,14 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3523"
           (valueChange)="actualizar3523($event)"
         ></app-input-radio>
       </div>
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Señale si al momento de la presentación de su solicitud cuenta con la
           autorización para operar el régimen de depósito fiscal para someterse
           al proceso de ensamble y fabricación de vehículos, a empresas de la
@@ -920,7 +946,8 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3524"
           (valueChange)="actualizar3524($event)"
         ></app-input-radio>
@@ -961,7 +988,7 @@
       </div>
       <div class="col-md-4 mt-4"></div>
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Señale si al momento de la presentación de su solicitud se encuentra
           sujeto a un proceso de cancelación de la autorización para operar el
           régimen de depósito fiscal para someterse al proceso de ensamble y
@@ -972,14 +999,15 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3525"
           (valueChange)="actualizar3525($event)"
         ></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Señale si al momento de la presentación de su solicitud cuenta con la
           autorización para operar el régimen de elaboración, transformación o
           reparación en Recinto Fiscalizado y/o Recinto Fiscalizado
@@ -989,7 +1017,8 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3526"
           (valueChange)="actualizar3526($event)"
         ></app-input-radio>
@@ -1031,7 +1060,7 @@
       <div class="col-md-4 mt-4"></div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Indique si se encuentra sujeto a un proceso de cancelación de la
           autorización para operar el régimen de elaboración, transformación o
           reparación en Recinto Fiscalizado y/o Recinto Fiscalizado
@@ -1041,7 +1070,8 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3527"
           (valueChange)="actualizar3527($event)"
         ></app-input-radio>
@@ -1052,7 +1082,7 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Señale si al momento de su solicitud cuenta con la infraestructura
           necesaria para realizar la operación, el proceso productivo o de
           servicios, según corresponda al régimen aduanero por el que se
@@ -1062,14 +1092,15 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3528"
           (valueChange)="actualizar3528($event)"
         ></app-input-radio>
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Manifieste si se le ha emitido resolución de improcedencia de las
           devoluciones del IVA cuyo monto represente más del 20% del total de
           las devoluciones autorizadas y/o que el monto negado resultante supere
@@ -1081,7 +1112,8 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3529"
           (valueChange)="actualizar3529($event)"
         ></app-input-radio>
@@ -1129,7 +1161,7 @@
       <div class="col-md-4 mt-4"></div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Manifiesta que cuenta con la capacidad financiera para llevar a cabo
           su proyecto productivo o de servicios, a través de solvencia económica
           propia o asumiendo la responsabilidad solidaria.</label
@@ -1138,7 +1170,8 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3530"
           (valueChange)="actualizar3530($event)"
         ></app-input-radio>
@@ -1183,7 +1216,7 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"
+        <label class="fw-0 text-start"
           >Indique si durante los últimos doce meses ha importado temporalmente
           mercancías y que, al menos el 50% de las importaciones temporales de
           insumos realizadas durante el mismo período fueron transformadas y
@@ -1194,7 +1227,8 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
+          [isBold]="true"
           formControlName="3531"
           (valueChange)="actualizar3531($event)"
         ></app-input-radio>

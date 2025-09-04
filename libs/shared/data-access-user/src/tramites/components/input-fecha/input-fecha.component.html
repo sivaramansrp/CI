@@ -1,9 +1,7 @@
 <div class="form-group" [ngClass]="{'has-error': isInvalid()}">
-  <label for="input_fecha" class="form-label" >
-    {{datos.labelNombre}}
-    @if(datos.required){<span class="require">*</span>}
+  <label for="input_fecha" class="form-label">
+    {{datos.labelNombre}}<span *ngIf="datos.required" class="require">*</span><span *ngIf="datos.required">:</span>
     @if(tooltipQuestionCircle){ <span class="bi bi-question-circle-fill" tooltip="{{tooltipQuestionCircleText ? tooltipQuestionCircleText : datos.labelNombre}}"></span>}
-    <span *ngIf="datos.required">:</span>
   </label>
   <div class="d-flex justify-content-start" [formGroup]="Formulario">
     <div class="input-group-text" id="input_fecha" [ngClass]="{'disabled-div': isDisabled, 'has-error': isInvalid()}" (click)="mostrarCalendario()">

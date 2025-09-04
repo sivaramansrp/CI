@@ -94,7 +94,12 @@
     </div>
     <div class="row">
       <div class="col-md-8 mb-3">
-        <app-catalogo-select [catalogo]="nacionOptions.catalogos" [label]="'País destino'" formControlName="nacion" (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="nacionOptions.catalogos" [required]="true" [label]="'País destino'" formControlName="nacion" (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"></app-catalogo-select>
+        <div class="text-danger mt-1">
+          @if(paisNoCoincide){
+            <small>El País destino, debe ser el mismo que se seleccionó en el Campo País/Bloque del apartado de Certificado de origen.</small>
+          }
+        </div>
       </div>
     </div>
     <ng-titulo titulo="Detalles del transporte" />

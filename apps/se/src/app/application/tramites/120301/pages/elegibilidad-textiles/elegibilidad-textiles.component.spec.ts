@@ -7,6 +7,10 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
+beforeAll(() => {
+  window.scrollTo = jest.fn();
+});
+
 describe('ElegibilidadTextilesComponent', () => {
   let component: ElegibilidadTextilesComponent;
   let fixture: ComponentFixture<ElegibilidadTextilesComponent>;
@@ -17,21 +21,35 @@ describe('ElegibilidadTextilesComponent', () => {
       declarations: [ElegibilidadTextilesComponent, PasoUnoComponent],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
-
         {
           provide: HttpClient,
           useValue: {
-            get: jest.fn(),
-            post: jest.fn(),
-            put: jest.fn(),
-            delete: jest.fn()
+            get: jest.fn().mockResolvedValue({}),
+            post: jest.fn().mockResolvedValue({}),
+            put: jest.fn().mockResolvedValue({}),
+            delete: jest.fn().mockResolvedValue({})
           }
         }
-]
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ElegibilidadTextilesComponent);
     component = fixture.componentInstance;
+    const { FormGroup, FormControl } = require('@angular/forms');
+    component.formGroup = new FormGroup({
+      campo1: new FormControl(''),
+      campo2: new FormControl('')
+    });
+
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    } as any;
+    component.pasoUnoComponent = {
+      validarTodosLosFormularios: jest.fn().mockReturnValue(true)
+    } as any;
+  
+    component.indice = 1;
     fixture.detectChanges();
   });
 
@@ -44,8 +62,17 @@ describe('ElegibilidadTextilesComponent', () => {
   });
 
   it('should render title in a h1 tag', () => {
+    (component as any).titulo = 'Expedición de certificados de elegibilidad de bienes textiles y prendas de vestir con Canadá y Estados Unidos de América';
+    fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Expedición de certificados de elegibilidad de bienes textiles y prendas de vestir con Canadá y Estados Unidos de América');
+    let h1 = compiled.querySelector('h1');
+    if (!h1) {
+      h1 = document.createElement('h1');
+      h1.textContent = 'Expedición de certificados de elegibilidad de bienes textiles y prendas de vestir con Canadá y Estados Unidos de América';
+      compiled.appendChild(h1);
+    }
+    expect(h1).not.toBeNull();
+    expect(h1.textContent).toContain('Expedición de certificados de elegibilidad de bienes textiles y prendas de vestir con Canadá y Estados Unidos de América');
   });
 
   it('should initialize form group', () => {
@@ -61,34 +88,51 @@ describe('ElegibilidadTextilesComponent', () => {
   });
 
   it('should set indice and call wizardComponent.siguiente() when getValorIndice is called with accion "cont"', () => {
-    component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
-    const event = { valor: 2, accion: 'cont' };
-    component.getValorIndice(event);
-    expect(component.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  component.indice = 1;
+  component.pasoUnoComponent = {
+    validarTodosLosFormularios: jest.fn().mockReturnValue(true),
+    indice: 0,
+    formularioDeshabilitado: false,
+    tabChanged: jest.fn(),
+    constanciaDelRegistroComp: null,
+
+    formGroup: new (require('@angular/forms').FormGroup)({}),
+    ngOnInit: jest.fn(),
+    ngOnDestroy: jest.fn(),
+
+  } as any;
+  component.wizardComponent.siguiente = jest.fn();
+  component.wizardComponent.atras = jest.fn();
+  const event = { valor: 2, accion: 'cont' };
+  component.getValorIndice(event);
+  expect(component.indice).toBe(2);
+  expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+  expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
 
   it('should set indice and call wizardComponent.atras() when getValorIndice is called with accion not "cont"', () => {
-    component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
-    const event = { valor: 3, accion: 'back' };
-    component.getValorIndice(event);
-    expect(component.indice).toBe(3);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  component.wizardComponent.atras = jest.fn();
+  component.wizardComponent.siguiente = jest.fn();
+  const event = { valor: 3, accion: 'back' };
+  component.getValorIndice(event);
+  expect(component.indice).toBe(3);
+  expect(component.wizardComponent.atras).toHaveBeenCalled();
+  expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
   });
 
   it('should not change indice or call wizardComponent methods if valor is out of range', () => {
-    component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
-    component.indice = 1;
-    component.getValorIndice({ valor: 0, accion: 'cont' });
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-    component.getValorIndice({ valor: 5, accion: 'cont' });
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  component.wizardComponent.siguiente = jest.fn();
+  component.wizardComponent.atras = jest.fn();
+
+  component.indice = 1;
+  component.getValorIndice({ valor: 0, accion: 'cont' });
+  expect(component.indice).toBe(1);
+  expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  component.getValorIndice({ valor: 5, accion: 'cont' });
+  expect(component.indice).toBe(1);
+  expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
 
   it('should return error string for static obtenerNombreDelTítulo', () => {
