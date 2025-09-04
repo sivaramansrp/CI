@@ -24,7 +24,7 @@ import {
   PASOS_REQUERIMIENTOS,
   RequerimientoInformacionComponent,
   TITULO_ACUSE,
-  TXT_ALERTA_ACUSE,
+  TXT_ALERTA_ACUSE_RECIBO,
   TramiteFolioQueries,
   WizardComponent,
   base64ToHex,
@@ -49,7 +49,7 @@ import { Type } from '@angular/core';
 
 import { AcusesResolucionResponse } from '@libs/shared/data-access-user/src/core/models/130118/consulta-acuses-response.model';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
-import { CodigoRespuesta } from '../core/enum/enum-130118';
+import { CodigoRespuesta } from '../core/enum/se-core-enum';
 import { DictamenesResponse } from '@libs/shared/data-access-user/src/core/models/130118/dictamenes-response.model';
 import { DocumentoSolicitud } from '@libs/shared/data-access-user/src/core/models/130118/consulta-documentos-response.model';
 import { EnvioDigitalResponse } from '@libs/shared/data-access-user/src/core/models/130118/envio-digital-response.model';
@@ -402,7 +402,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     /**
  * Genera el texto de alerta de acuse con el folio del trámite.
  */
-    this.txtAlerta = TXT_ALERTA_ACUSE(this.guardarDatos.id_solicitud);
+    this.txtAlerta = TXT_ALERTA_ACUSE_RECIBO(this.guardarDatos.id_solicitud);
 
     /**
      * Realiza un desplazamiento suave hacia la parte superior de la página usando el servicio.

@@ -1,7 +1,7 @@
 <div class="container">
   @if(indiceDePaso === PasoNotificacion.CONFIRMAR_NOTIFICACION) {
   <div class="row">
-    <ng-titulo [titulo]="'Confirmar notificación 130118'"></ng-titulo>
+    <ng-titulo [titulo]="'Confirmar notificación'"></ng-titulo>
   </div>
   <app-detalles-folio *ngIf="notificacionData" [folioTramite]="notificacionData.num_folio_tramite"
     [tipoSolicitud]="notificacionData.desc_modalidad">
