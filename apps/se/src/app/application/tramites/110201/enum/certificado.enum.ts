@@ -1,6 +1,12 @@
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 import { SeleccionadasTabla } from "../models/registro.model";
 
+/**
+ * Encabezados de la tabla de mercancías seleccionadas.
+ * 
+ * Define la configuración de las columnas que se mostrarán en la tabla de mercancías seleccionadas,
+ * incluyendo el nombre del encabezado, la clave para obtener el valor de cada columna y el orden de aparición.
+ */
 export const HEADERS_DATA: ConfiguracionColumna<SeleccionadasTabla>[] = [
     {
       encabezado: 'Fracción arancelaria',
@@ -42,9 +48,15 @@ export const HEADERS_DATA: ConfiguracionColumna<SeleccionadasTabla>[] = [
       clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
       orden: 8,
     },
-  ];
+];
 
-  export const HEADER_MAP_DATOS: { [key: string]: string } = {
+/**
+ * Mapeo de los encabezados de la tabla a las claves de los datos.
+ * 
+ * Permite relacionar el nombre del encabezado mostrado en la tabla con la propiedad correspondiente
+ * en el modelo de datos SeleccionadasTabla.
+ */
+export const HEADER_MAP_DATOS: { [key: string]: string } = {
     'Fracción arancelaria': 'fraccionArancelaria',
     'Cantidad': 'cantidad',
     'Unidad de medida': 'unidadMedida',
@@ -53,4 +65,4 @@ export const HEADERS_DATA: ConfiguracionColumna<SeleccionadasTabla>[] = [
     'Número factura': 'numFactura',
     'Complemento descripción': 'complementoDescripcion',
     'Fecha factura': 'fechaFactura',
-  };
+};

@@ -101,8 +101,7 @@
               <input class="visually-hidden-file" type="file" formControlName="archivo" id="archivoAdjuntar" size="60"
                 (change)="alSeleccionarArchivo($event)"
                 (change)=" setValoresStore(validacionForm, 'archivo', 'setArchivo') " />
-              <label class="custome-file-label" for="archivoAdjuntar" value="Seleccionar archivo"
-                style="background-color: lightgrey; font-weight: bold">Elegir archivo</label>
+              <label class="custome-file-label font-weight" for="archivoAdjuntar" value="Seleccionar archivo">Elegir archivo</label>
               <p style="display: inline-block"> {{ nombreArchivo || 'No se eligió ningún archivo' }} </p>
               <br />
             </div>

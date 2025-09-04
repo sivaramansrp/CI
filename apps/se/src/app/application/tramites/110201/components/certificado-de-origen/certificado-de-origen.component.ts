@@ -1,4 +1,4 @@
-import { AlertComponent,Catalogo,CatalogoSelectComponent,CatalogosSelect,ConfiguracionColumna,InputFecha,TablaDinamicaComponent,TablaSeleccion,TableBodyData,TableComponent,TituloComponent,ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent,Catalogo,CatalogoSelectComponent,CatalogosSelect,ConfiguracionColumna,InputFecha,REGEX_NUMERO_15_ENTEROS_3_DECIMALES,REGEX_PATRON_DECIMAL_2,REGEX_SOLO_DIGITOS,TablaDinamicaComponent,TablaSeleccion,TableBodyData,TableComponent,TituloComponent,ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
  import { ColumnasTabla, FECHAFACTURA, FECHAFINAL, FECHAINICIAL, OPTIONS_PAIS, OPTIONS_TIPO_FACTURA, OPTIONS_TRATADO, OPTIONS_UMC, OPTIONS_UNIDAD_MEDIDA, SeleccionadasTabla} from '../../models/registro.model';
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
@@ -246,8 +246,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Representa una lista de objetos que contienen información sobre las mercancías que han sido seleccionadas
    * por el usuario en el formulario.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public mercanciaSeleccionadasTablaData: any[] = [];
+  public mercanciaSeleccionadasTablaData: SeleccionadasTabla[] = [];
   /**
    * Configuración de las columnas de la tabla de mercancías disponibles.
    * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías disponibles.
@@ -537,12 +536,11 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         fraccionArancelaria: FORM_VALUES.fraccionMercanciaArancelaria,
         nombreTecnico: FORM_VALUES.nombreTecnico,
         nombreComercial: FORM_VALUES.nombreComercialDelaMercancia,
-        numeroRegistroProductos: FORM_VALUES.numeroRegistroProductos || '', // Provide default or fetch from form/state
-        fechaExpedicion: FORM_VALUES.fechaExpedicion || '', // Provide default or fetch from form/state
+        numeroRegistroProductos: FORM_VALUES.numeroRegistroProductos || '',
+        fechaExpedicion: FORM_VALUES.fechaExpedicion || '', 
         fechaVencimiento: FORM_VALUES.fechaVencimiento || ''
       };
 
-      // Add the new item to the table data
       this.mercanciaDisponsiblesTablaDatos = [
         ...this.mercanciaDisponsiblesTablaDatos,
         NEW_ITEM,
@@ -625,7 +623,21 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         return OBJ;
       })
       .filter((articulo) => Object.values(articulo).some((valor) => valor));
-    this.mercanciaSeleccionadasTablaData = DATA;
+    this.mercanciaSeleccionadasTablaData = DATA.map((articulo) => ({
+      fraccionArancelaria: articulo['fraccionArancelaria'] || '',
+      cantidad: articulo['cantidad'] || '',
+      unidadMedida: articulo['unidadMedida'] || '',
+      valorMercancia: articulo['valorMercancia'] || '',
+      nombreTecnico: articulo['nombreTecnico'] || '',
+      nombreComercial: articulo['nombreComercial'] || '',
+      numeroRegistroProductos: articulo['numeroRegistroProductos'] || '',
+      fechaExpedicion: articulo['fechaExpedicion'] || '',
+      fechaVencimiento: articulo['fechaVencimiento'] || '',
+      tipoFactura: articulo['tipoFactura'] || '',
+      numFactura: articulo['numFactura'] || '',
+      complementoDescripcion: articulo['complementoDescripcion'] || '',
+      fechaFactura: articulo['fechaFactura'] || ''
+    }));
   }
   /**
    * Muestra errores en el formulario y desactiva la carga de archivos.
@@ -783,7 +795,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
             value: this.solicitudState?.fraccionArancelaria,
             disabled: this.soloLectura,
           },
-          [Validators.required, Validators.pattern(/^\d+$/)],
+          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
         numeroRegistro: [
           {
@@ -847,7 +859,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         ],
         cantidad: [
           { value: this.solicitudState?.cantidad, disabled: this.soloLectura },
-          [Validators.required, Validators.pattern(/^\d+$/)],
+          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
         umc: [
           { value: this.solicitudState?.umc, disabled: this.soloLectura },
@@ -858,7 +870,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
             value: this.solicitudState?.valorDelaMercancia,
             disabled: this.soloLectura,
           },
-          [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
+          [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],
         ],
         complementoDelaDescripcion: [
           {
@@ -869,7 +881,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         ],
         masaBruta: [
           { value: this.solicitudState?.masaBruta, disabled: this.soloLectura },
-          [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
+          [Validators.required, Validators.pattern(REGEX_NUMERO_15_ENTEROS_3_DECIMALES)],
         ],
         unidadMedida: [
           {
