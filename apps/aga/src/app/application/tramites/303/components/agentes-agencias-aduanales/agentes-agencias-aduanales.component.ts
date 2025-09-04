@@ -37,6 +37,11 @@ export class AgentesAgenciasAduanalesComponent implements OnInit, OnDestroy {
   /** Variable para controlar la visibilidad del modal de agregar agente */
   agregarAgentemodal = false;
 
+  /**
+   * Constructor del componente.
+   * @param tramite303State Estado del trámite 303.
+   * @param tramite303Query Consulta del trámite 303.
+   */
   constructor(
     private tramite303State: Tramite303StoreService,
     private tramite303Query: Tramite303Query,

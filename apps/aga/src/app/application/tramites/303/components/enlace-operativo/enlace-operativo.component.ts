@@ -202,7 +202,6 @@ export class EnlaceOperativoComponent implements OnChanges, OnInit {
     this.cerrar.emit();
   }
 
-
   /**
    * Habilita los campos del formulario de enlace operativo.
    */

@@ -49,6 +49,13 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
   /** Texto de la sección */
   TEXTOS = TEXTOS_303;
 
+  /**
+   * Constructor del componente.
+   * @param fb FormBuilder
+   * @param tramite303State Estado del trámite 303.
+   * @param transportistaService Servicio de transportista.
+   * @param tramite303Query Consulta del trámite 303.
+   */
   constructor(
     private fb: FormBuilder,
     private tramite303State: Tramite303StoreService,
@@ -58,6 +65,10 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
     this.createFormulario();
   }
 
+  /**
+   * Valida el formulario de despacho y el formulario de inventario.
+   * @returns boolean
+   */
   validarFormulario(): boolean {
     this.formDespacho.markAllAsTouched();
     if (this.formDespacho.valid && this.formInventario.valid) {
@@ -329,7 +340,6 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
 
     this.listaControlInventariosSeleccionados = [];
   }
-
 
   /**
    * Método para eliminar un inventario existente.

@@ -10,9 +10,7 @@ import { Tramite303Service } from '../../../../core/services/303/tramite303.serv
   styleUrls: ['./pago-derechos.component.scss']
 })
 export class PagoDerechosComponent implements OnInit {
-  /**
-    * Formulario para la captura de pago de derechos
-    */
+  /** Formulario para la captura de pago de derechos */
   public pagoDerechos!: FormGroup;
   /** Subject para destruir las suscripciones. */
   private destruirSuscripcion$: Subject<void> = new Subject();
