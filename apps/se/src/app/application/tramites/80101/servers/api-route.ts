@@ -1,5 +1,6 @@
-/* eslint-disable no-useless-concat */
-
+/**
+ * Conjunto de rutas de la API para el procedimiento 80101.
+ */
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src/enviroments/enviroment";
 
 
