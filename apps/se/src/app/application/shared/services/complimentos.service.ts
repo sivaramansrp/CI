@@ -49,7 +49,7 @@ export class ComplimentosService {
      getPais(): Observable<any> {
     return (
       this.httpService
-      .get<any[]>(`${ENVIRONMENT.API_BASE_URL}/api/catalogo/paises`, {}, false)
+      .get<any[]>(`${ENVIRONMENT.API_HOST}/api/catalogo/paises`, {}, false)
       .pipe(
         map((res: any) => {
         return res;
