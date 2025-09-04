@@ -35,6 +35,24 @@ export interface Solicitud32201State {
    * Indica si el manifiesto está activo.
    */
   manifiesto: boolean;
+
+  /**
+   * El valor de radio1.
+   * Indica la selección del primer grupo de opciones de radio.
+   */
+  radio_1: string;
+
+  /**
+   * El valor de radio1.
+   * Indica la selección del primer grupo de opciones de radio.
+   */
+  radio_2: string;
+
+  /**
+   * El valor de radio1.
+   * Indica la selección del primer grupo de opciones de radio.
+   */
+  radio_3: string;
 }
 
 /**
@@ -69,6 +87,21 @@ export function createInitialState(): Solicitud32201State {
      * El valor inicial de manifiesto.
      */
     manifiesto: false,
+
+    /**
+     * El valor inicial de radio1.
+     */
+    radio_1: '',
+
+    /**
+     * El valor inicial de radio2.
+     */
+    radio_2: '',
+
+    /**
+     * El valor inicial de radio3.
+     */
+    radio_3: ''
   };
 }
 
@@ -155,6 +188,42 @@ export class Tramite32201Store extends Store<Solicitud32201State> {
     }));
   }
 
+  /**
+   * Establece el estado de radio1.
+   * 
+   * @param {string} radio_1 - El valor de radio1.
+   */
+  public setRadio_1(radio_1: string): void {
+    this.update((state) => ({
+      ...state,
+      radio_1,
+    }));
+  }
+
+  /**
+   * Establece el estado de radio2.
+   * 
+   * @param {string} radio_2 - El valor de radio2.
+   */
+  public setRadio_2(radio_2: string): void {
+    this.update((state) => ({
+      ...state,
+      radio_2,
+    }));
+  }
+
+  /**
+   * Establece el estado de radio3.
+   * 
+   * @param {string} radio_3 - El valor de radio3.
+   */
+  public setRadio_3(radio_3: string): void {
+    this.update((state) => ({
+      ...state,
+      radio_3,
+    }));
+  }
+  
   /**
    * Limpia los datos de la solicitud.
    * Restablece el estado al valor inicial.

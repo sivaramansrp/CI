@@ -27,6 +27,36 @@
       </div>
     </div>
 
+    <ng-titulo titulo="Requisitos"></ng-titulo>
+    <div class="col-md-12">
+      <div class="form-group">
+        <label>Indique si cuenta dieciocho meses después de haber obtenido el Registro en el 
+          Esquema de certificación de Empresas. </label>
+        <app-input-radio [radioOptions]="radioOpcions" [isBold]="true" formControlName="radio_1"
+            [layout]="'horizontal'" (change)="setValoresStore(solicitudForm, 'radio_1', 'setRadio_1')" 
+            [disabled]="esFormularioSoloLectura"></app-input-radio>
+      </div>
+
+      <div class="form-group">
+        <label>Manifieste si ha realizado operaciones del Programa autorizado al amparo 
+          del Decreto IMMEX en al menos doce meses previos a la presentación de la solicitud la 
+          presente autorización</label>
+        <app-input-radio [radioOptions]="radioOpcions" [isBold]="true" formControlName="radio_2"
+            [layout]="'horizontal'" (change)="setValoresStore(solicitudForm, 'radio_2', 'setRadio_2')" 
+            [disabled]="esFormularioSoloLectura"></app-input-radio>
+      </div>
+
+      <div>
+        <label>Indique si durante los últimos doce meses ha importado temporalmente 
+          mercancías y que, al menos el 80% de las importaciones temporales de insumos realizadas 
+          durante el mismo período fueron transformadas y retornadas, retornadas en su mismo estado,
+           transferidas, destruidas, o se les prestó un servicio</label>
+        <app-input-radio [radioOptions]="radioOpcions" [isBold]="true" formControlName="radio_3"
+            [layout]="'horizontal'" (change)="setValoresStore(solicitudForm, 'radio_3', 'setRadio_3')" 
+            [disabled]="esFormularioSoloLectura"></app-input-radio>
+      </div>
+
+    </div>
     <ng-titulo titulo="Operaciones virtuales"></ng-titulo>
     <div class="col-md-12">
       <ng-alert [CONTENIDO]="TEXTOS.TEXTO_OPERACIONES_VIRTUALES" [CUSTOMECLASS]="infoAlert"></ng-alert>

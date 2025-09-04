@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx'; // Importa XLSX para leer archivos Excel
-import { AlertComponent, InputCheckComponent, Notificacion, NotificacionesComponent, TituloComponent, VALID_FILE_REGEX } from '@libs/shared/data-access-user/src';
+import { AlertComponent, InputCheckComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TituloComponent, VALID_FILE_REGEX } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -24,6 +24,7 @@ import { Tramite32201Query } from '../../estados/tramite32201.query';
     AlertComponent,
     InputCheckComponent,
     NotificacionesComponent,
+    InputRadioComponent
   ],
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
@@ -101,6 +102,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @default false
    */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Opciones de radio.
+   */
+  radioOpcions = [
+    { label: 'Sí', value: 'si' },
+    { label: 'No', value: 'no' },
+  ];
 
   /**
    * Constructor del componente.
@@ -294,6 +303,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       regimen_2: [{value: this.solicitudState?.regimen_2, disabled: this.esFormularioSoloLectura}],
       regimen_3: [{value: this.solicitudState?.regimen_3, disabled: this.esFormularioSoloLectura}],
       manifiesto: [{value: this.solicitudState?.manifiesto, disabled: this.esFormularioSoloLectura}],
+      radio1: [{value: this.solicitudState?.radio_1, disabled: this.esFormularioSoloLectura}],
+      radio2: [{value: this.solicitudState?.radio_2, disabled: this.esFormularioSoloLectura}],
+      radio3: [{value: this.solicitudState?.radio_3, disabled: this.esFormularioSoloLectura}],
     });
   }
   /**
