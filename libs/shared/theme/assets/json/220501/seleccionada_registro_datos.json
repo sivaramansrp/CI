@@ -39,7 +39,7 @@
             "calculoResultado": "Aplica inspección"
       },
       "solicitud220502State": {
-            "certificadosAutorizados": "",
+            "certificadosAutorizados": "1",
             "horaDeInspeccion": 1,
             "aduanaDeIngreso": 1,
             "sanidadAgropecuaria": 1,

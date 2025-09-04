@@ -318,7 +318,7 @@ export class AgregarProveedorCustomComponent
         [
           Validators.required,
           Validators.minLength(12),
-          Validators.maxLength(13),
+          Validators.maxLength(15),
         ],
       ],
       curp: [

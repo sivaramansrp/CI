@@ -356,7 +356,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
     );
     this.puntoDeInspeccion = CATALOGOTEMPLATE(
       'Punto de inspección',
-      false,
+      true,
       data.puntoInspeccion
     );
     this.cdRef.detectChanges();

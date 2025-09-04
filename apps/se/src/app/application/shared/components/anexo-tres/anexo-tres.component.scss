@@ -2,8 +2,13 @@
     display: table;
     margin: 0 auto;
 }
+/* component.css or global styles.css */
+.no-arrows::-webkit-inner-spin-button,
+.no-arrows::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
-textarea {
-    height: 60%;
-    resize: none;
+.no-arrows {
+  -moz-appearance: textfield; /* Firefox */
 }

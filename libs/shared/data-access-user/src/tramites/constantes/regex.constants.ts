@@ -493,14 +493,14 @@ export const REGEX_TODOS_CEROS = /^0+$/;
 
 
 /**
- * Expresión regular para validar números enteros con hasta 9 dígitos y opcionalmente dos decimales.
+ * Expresión regular para validar números enteros con hasta 11 dígitos y opcionalmente dos decimales.
  */
-export const REGEX_ONCE_ENTEROS_DOS_DECIMALES = /^(\d{1,9})(\.\d{1,2})?$/;
+export const REGEX_ONCE_ENTEROS_DOS_DECIMALES = /^(\d{1,11})(\.\d{1,2})?$/;
 
 /**
- * Expresión regular para validar números enteros con hasta 9 dígitos y opcionalmente tres decimales.
+ * Expresión regular para validar números enteros con hasta 11 dígitos y opcionalmente tres decimales.
  */
-export const REGEX_ONCE_ENTEROS_TRES_DECIMALES = /^(\d{1,9})(\.\d{1,3})?$/;
+export const REGEX_ONCE_ENTEROS_TRES_DECIMALES = /^(\d{1,11})(\.\d{1,3})?$/;
 /**
  * Expresión regular para validar números con hasta 15 dígitos enteros y 3 decimales.
  *

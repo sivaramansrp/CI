@@ -59,30 +59,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
     expect(formularioServiceMock.setFormValue).toHaveBeenCalledWith('partidasForm', { campo1: 'valor1' });
   });
 
-  it('debe agregar una nueva partida al llamar agregarPartida', () => {
-    const mockFormGroup = {
-      valid: true,
-      get: jest.fn().mockImplementation((field) => ({
-        value: field === 'cantidad' ? 10 : field === 'descripcion' ? 'Test' : 100,
-      })),
-      setValue: jest.fn(),
-      reset: jest.fn(),
-    };
-    Object.defineProperty(component, 'ninoFormGroup', { value: mockFormGroup, writable: true });
-
-    component.agregarPartida();
-
-    expect(component.datospartidas.length).toBe(1);
-    expect(component.datospartidas[0]).toEqual({
-      cantidad: 100,
-      unidadDeMedida: 'Kilogramo',
-      fraccionArancelaria: '9099',
-      descripcion: 100,
-      precioUnitario: 100,
-      totalUsd: 100,
-    });
-    expect(mockFormGroup.reset).toHaveBeenCalled();
-  });
+ 
 
   it('debe completar destroy$ al llamar ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');

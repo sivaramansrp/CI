@@ -255,7 +255,7 @@ Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo do
 export const LASTABLA = {
   Importante: `
     <div class="text-center">
-      <p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>
+      <p class="m-0">Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>
     </div>
   `
 };
