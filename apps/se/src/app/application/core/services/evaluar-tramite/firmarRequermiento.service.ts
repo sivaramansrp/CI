@@ -1,10 +1,10 @@
-import { API_POST_FIRMAR_REQUERIMIENTO, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
-import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { FirmarRequerimientoRequest } from '../../models/evaluar/request/firmar-requerimiento-request.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
+import { API_POST_FIRMAR_REQUERIMIENTO, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +37,7 @@ export class FirmarRequermientoService {
  */
   postFirmarRequerimiento(tramite: number, numFolio: string, PAYLOAD: FirmarRequerimientoRequest):
     Observable<BaseResponse<null>> {
-    const ENDPOINT = `${this.host}${API_POST_FIRMAR_REQUERIMIENTO.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
+    const ENDPOINT = `${this.host}${API_POST_FIRMAR_REQUERIMIENTO(tramite.toString(), numFolio)}`;
     return this.http.post<BaseResponse<null>>(ENDPOINT, PAYLOAD);
   }
 
