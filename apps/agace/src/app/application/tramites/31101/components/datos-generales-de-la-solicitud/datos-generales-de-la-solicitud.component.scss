@@ -12,7 +12,7 @@
 }
 
 .modal-dialog {
-  max-width: 1220px !important;
+  max-width: 1300px !important;
 }
 
 ::ng-deep p {
@@ -47,4 +47,8 @@ textarea.form-control {
 
 .no-resize{
   resize: none;
+}
+
+.fw-0 {
+  font-weight: normal !important;
 }
