@@ -6,6 +6,7 @@ export interface AppConfig {
   URL_SERVER: string,
   URL_SERVER_UPLOAD: string,
   URL_SERVER_JSON_AUXILIAR: string,
+  API_BASE_URL: string,
   MOCK: boolean
 }
 
