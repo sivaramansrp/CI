@@ -25,27 +25,27 @@
 
     <ng-container>
       @switch (indice) { @case (1) {
-        <solicitante></solicitante>
+        <solicitante #Solicitante></solicitante>
         } @case (2) {
           @if(esDatosRespuesta){
-          <app-constancia-del-registro (mostrarTabs)="onMostrarTabs($event)"
+          <app-constancia-del-registro #constanciaDelRegistroRef (mostrarTabs)="onMostrarTabs($event)"
             [formularioDeshabilitado]="formularioDeshabilitado"></app-constancia-del-registro>
           }
         } @case (3) {
           @if(esDatosRespuesta){
-          <app-facturas-asociadas [formularioDeshabilitado]="formularioDeshabilitado"></app-facturas-asociadas>
+          <app-facturas-asociadas #facturasAsociadasRef [formularioDeshabilitado]="formularioDeshabilitado"></app-facturas-asociadas>
           }
         } @case (4) {
           @if(esDatosRespuesta){
-          <app-capturar-facturas [formularioDeshabilitado]="formularioDeshabilitado"></app-capturar-facturas>
+          <app-capturar-facturas #capturarFacturasRef [formularioDeshabilitado]="formularioDeshabilitado"></app-capturar-facturas>
           }
         } @case (5) {
           @if(esDatosRespuesta){
-          <app-historico-fabricantes [formularioDeshabilitado]="formularioDeshabilitado"></app-historico-fabricantes>
+          <app-historico-fabricantes #historicoFabricantesRef [formularioDeshabilitado]="formularioDeshabilitado"></app-historico-fabricantes>
           }
         } @case (6) {
           @if(esDatosRespuesta){
-          <app-importador-en-destino [formularioDeshabilitado]="formularioDeshabilitado"></app-importador-en-destino>
+          <app-importador-en-destino #importadorEnDestinoRef [formularioDeshabilitado]="formularioDeshabilitado"></app-importador-en-destino>
           }
         }
       }

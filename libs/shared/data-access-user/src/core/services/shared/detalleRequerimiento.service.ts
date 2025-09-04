@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { API_GET_REQUERIMIENTO_DETALLE, COMUN_URL, IDREQUERIMIENTO, TRAMITE } from '../../servers/api-router';
-import { BaseResponse } from '../../models/5701/base-response.model';
+import { BaseResponse } from '../../models/shared/base-response.model';
 import { Observable } from 'rxjs';
-import { RequerimientoDetalleResponse } from '../../models/130118/requerimiento-detalle-response.model';
+import { RequerimientoDetalleResponse } from '../../models/shared/requerimiento-detalle-response.model';
 
 @Injectable({
   providedIn: 'root'

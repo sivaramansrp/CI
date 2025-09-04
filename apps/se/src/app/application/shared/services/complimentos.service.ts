@@ -1,14 +1,15 @@
 import { Observable, catchError, map, throwError } from 'rxjs';
 
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, HttpCoreService } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ENVIRONMENT } from 'apps/se/src/app/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ComplimentosService {
-  constructor(private readonly http: HttpClient) {
+  constructor(private readonly http: HttpClient,public httpService: HttpCoreService) {
     // No se necesita lógica de inicialización adicional.
   }
 
@@ -39,4 +40,21 @@ export class ComplimentosService {
             })
           );
      }
+
+    /**
+     * Recupera una lista de países desde el API de catálogo.
+     *
+     * @returns Un Observable que emite la respuesta con un arreglo de países.
+     */
+     getPais(): Observable<any> {
+    return (
+      this.httpService
+      .get<any[]>(`${ENVIRONMENT.API_BASE_URL}/api/catalogo/paises`, {}, false)
+      .pipe(
+        map((res: any) => {
+        return res;
+        })
+      )
+    );
+  }
 }
