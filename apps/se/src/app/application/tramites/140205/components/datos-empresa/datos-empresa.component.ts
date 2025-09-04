@@ -187,6 +187,23 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy, AfterViewInit {
       this.solicitudForm.enable();
     }
   }
+
+  /**
+   * Maneja el cambio en el campo RFC.
+   *
+   * Este método se llama cuando el valor del campo RFC cambia y se encarga de
+   * validar el nuevo valor ingresado.
+   *
+   * @param $event - Evento de cambio del campo RFC.
+   */
+  rfcChange($event: Event): void {
+    const INPUT = ($event.target as HTMLInputElement).value;
+    if (INPUT.length >= 12) {
+      this.BUSCAR_EMPRESA_ERROR = '';
+      this.datosEmpresaBuscar.emit(false);
+    }
+  }
+
   /**
    * @method buscarEmpresa
    * @description Método para habilitar la visualización de los datos generales de la empresa.

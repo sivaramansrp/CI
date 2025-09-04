@@ -9,6 +9,7 @@
             formControlName="manifests"
             type="checkbox"
             id="manifiesto"
+            (change)="onControlChange('manifests')"
             [disabled]="formularioDeshabilitado ? true : false"
           />
           <span class="fw-bold align-middle mt-2">*</span>
@@ -27,6 +28,7 @@
         [radioOptions]="informacionConfidencialRadioOption"
         [isRequired]="true"
         [layout]="'horizontal'"
+        (change)="onControlChange('informacionConfidencialRadio')"
         [gap]="'50px'"
         formControlName="informacionConfidencialRadio"
       ></app-input-radio>

@@ -24,24 +24,20 @@ RUN npm install -g pnpm && \
 # --- Copy the application source code ---
 COPY apps ./apps
 COPY libs ./libs
-# Optional: Check directory structure (currently disabled)
-# RUN pwd && ls -a /app
 
-# Optional: Reset Nx cache (disabled)
-# RUN npx nx reset
+# ------------------------------
+# Clean build and cache directories before build
+# ------------------------------
+RUN rm -rf node_modules/.cache dist .angular/cache
 
 # Enable verbose logging for Nx.
 ENV NX_VERBOSE_LOGGING=true
-# Optional: Enable Nx daemon (disabled)
-# ENV NX_DEAMON=true
 
 ARG NODE_ENV
 RUN echo "Building se image for environment: $NODE_ENV"
 # Build the se application using Nx.
 ENV NODE_OPTIONS=--max-old-space-size=10096
 RUN npx nx build se --configuration=$NODE_ENV --base-href=/se/ --skip-nx-cache --verbose
-# Optional: Verify build output (disabled)
-# RUN pwd && ls -a /app/dist/apps/se
 
 # ------------------------------
 # Stage 2: Serve with Nginx
@@ -50,4 +46,4 @@ FROM nginx:alpine-slim
 # Copy custom Nginx configuration for the se.
 COPY ./apps/se/nginx.conf /etc/nginx/nginx.conf
 # Copy the built se application from Stage 1 to the Nginx-served directory.
-COPY --from=node app/dist/apps/se /usr/share/nginx/html
+COPY --from=node /app/dist/apps/se /usr/share/nginx/html

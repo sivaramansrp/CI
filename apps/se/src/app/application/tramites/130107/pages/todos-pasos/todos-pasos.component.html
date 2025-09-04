@@ -20,6 +20,7 @@
             }
             <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)">
             </btn-continuar>
+            <ng-alert [CONTENIDO]="aviso"  *ngIf="indice === 1"></ng-alert>
         </div>
     </div>
 </div>

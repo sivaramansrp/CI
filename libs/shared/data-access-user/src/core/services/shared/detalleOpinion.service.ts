@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { API_GET_OPINION_DETALLE, COMUN_URL, IDOPINION, TRAMITE } from '../../servers/api-router';
-import { BaseResponse } from '../../models/5701/base-response.model';
+import { BaseResponse } from '../../models/shared/base-response.model';
 import { Observable } from 'rxjs';
-import { OpinionDetalleResponse } from '../../models/130118/opinion-detalle-response.model';
+import { OpinionDetalleResponse } from '../../models/shared/opinion-detalle-response.model';
 
 @Injectable({
   providedIn: 'root'

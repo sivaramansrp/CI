@@ -263,7 +263,8 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
       .getSubfabricantesDisponibles()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((response: PlantasSubfabricante[]) => {
-        if (response.length > 0) {
+        console.log('Respuesta de subfabricantes disponibles:', response);
+        if (response?.length > 0) {
           this.store.setPlantasBuscadas(response)
         }
       });

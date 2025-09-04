@@ -371,6 +371,6 @@ export const DOCUMENTO_CATALOGO_DATOS = [
  */
 
 export const CONFIGURACION_DOS_DATOS: ConfiguracionColumna<FraccionArancelariaDescripcion>[] = [
-    { encabezado: 'FracciónArancelaria', clave: (item: FraccionArancelariaDescripcion) => item.fraccionArancelaria, orden: 1 },
+    { encabezado: 'Fracción arancelaria', clave: (item: FraccionArancelariaDescripcion) => item.fraccionArancelaria, orden: 1 },
     { encabezado: 'Descripción', clave: (item: FraccionArancelariaDescripcion) => item.descripcion, orden: 1 },
   ]

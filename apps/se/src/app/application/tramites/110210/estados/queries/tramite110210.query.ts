@@ -21,6 +21,16 @@ export class Tramite110210Query extends Query<Tramite110210State> {
   });
 
   /**
+   * @property {Observable<CertificadoDisponible[]>} selectTabla$
+   * @description
+   * Observable que emite el arreglo de certificados disponibles almacenados en el estado.
+   * Permite a los componentes consumir de forma reactiva la lista de certificados disponibles.
+   */
+  selectTabla$ = this.select((state) => {
+    return state.certificadosDisponibles;
+  });
+
+  /**
    * @descripcion
    * Constructor de la consulta `Tramite110210Query`.
    * Inicializa la consulta con el store `Tramite110210Store`.

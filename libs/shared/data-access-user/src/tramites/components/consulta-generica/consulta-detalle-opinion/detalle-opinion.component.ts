@@ -1,4 +1,4 @@
-import { BodyTablaOpinion, HeaderTablaOpinion, OpinionDetalleOpinion, SolicitudDetalleOpinion } from '../../../../core/models/shared/consulta-generica.model';
+import { BodyTablaOpinion, HeaderTablaOpinion, OpinionDetalleOpinion } from '../../../../core/models/shared/consulta-generica.model';
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
@@ -7,7 +7,7 @@ import { CONSULTA_DETALLEOPINIONES } from '../../../../core/enums/consulta-gener
 import { CommonModule } from '@angular/common';
 import { DetallesOpinionService } from '../../../../core/services/consultagenerica/detalles-opinion-service';
 import { FolioQuery } from '../../../../core/queries/folio.query';
-import { OpinionDetalleResponse } from '../../../../core/models/130118/opinion-detalle-response.model';
+import { OpinionDetalleResponse } from '../../../../core/models/shared/opinion-detalle-response.model';
 
 @Component({
   selector: 'lib-detalle-opinion',

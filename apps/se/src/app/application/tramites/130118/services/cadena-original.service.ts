@@ -1,4 +1,4 @@
-import { API_POST_CADENA_ORIGINAL, IDSOLICITUD } from '../server/api-router';
+import { API_POST_CADENA_ORIGINAL } from '../server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { CadenaOriginalRequest } from '../model/request/cadena-original-request.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';

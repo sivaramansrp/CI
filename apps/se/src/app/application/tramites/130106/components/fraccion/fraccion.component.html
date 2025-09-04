@@ -147,7 +147,7 @@
         <div class="row m-top-5 buttn">
             <div>
                 
-                <button type="button" class="btn btn-default me-2 btn-space" [disabled]="esFormularioSoloLectura">Cargar archivo</button>
+                <button type="button" class="btn btn-default me-2 btn-space"  (click)="cargarArchivo()" [disabled]="esFormularioSoloLectura">Cargar archivo</button>
                 <button type="button" class="btn btn-primary btn-space" (click)="generarPartidas()" [disabled]="esFormularioSoloLectura">Agregar</button>
                 
             </div>
@@ -286,25 +286,67 @@
     <div class="row" style="padding-bottom: 20px">
         <div class="col-md-4 me-2">
             <div class="form-group">
-              
-                
-            <app-catalogo-select [catalogo]="entidad" [label]="'Entidad federativa'"   [required]="true" name="entidad" [isDisabled]="esFormularioSoloLectura"
-                formControlName="entidad" (change)="setValoresStore(fraccionForm,'entidad', 'setEntidad')">
-            </app-catalogo-select>
-            
+                <app-catalogo-select 
+                    [catalogo]="entidad" 
+                    [label]="'Entidad federativa'"   
+                    [required]="true" 
+                    name="entidad" 
+                    [isDisabled]="esFormularioSoloLectura"
+                    formControlName="entidad" 
+                    (change)="onEntidadFederativaChange()">
+                </app-catalogo-select>
             </div>
-
         </div>
         <div class="col-md-4">
             <div class="form-group">
-            <app-catalogo-select [catalogo]="representacion" [label]="'Representación federal'"   [required]="true" name="representacion" [isDisabled]="esFormularioSoloLectura"
-                formControlName="representacion" (change)="setValoresStore(fraccionForm,'representacion', 'setRepresentacion')">
-            </app-catalogo-select>
-            
+                <app-catalogo-select 
+                    [catalogo]="representacion" 
+                    [label]="'Representación federal'"   
+                    [required]="true" 
+                    name="representacion" 
+                    [isDisabled]="esFormularioSoloLectura"
+                    formControlName="representacion" 
+                    (change)="onRepresentacionFederalChange()">
+                </app-catalogo-select>
             </div>
-
         </div>
     </div>
 </div>
 
+</div>
+<div
+  class="modal fade"
+  #cargarArchivoModal
+  tabindex="-1"
+  aria-labelledby="confirmModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="row">
+          <ng-titulo titulo="Cargar archivo" />
+        </div>
+        <form [formGroup]="archivoFormGroup">
+            <div class="row">
+            <p>Archivo:</p>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <input
+                class="form-control"
+                type="file"
+                formControlName="archivo"
+                id="archivo" 
+            >
+            </div>
+        </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger me-2 btn-space" (click)="cerrar()">Cerrar</button>
+        <button type="button" class="btn btn-primary btn-space" (click)="cerrar()">Enviar</button>
+    </div>
+  </div>
+</div>
 </div>
