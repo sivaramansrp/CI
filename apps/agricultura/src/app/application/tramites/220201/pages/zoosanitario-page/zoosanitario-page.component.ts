@@ -1,7 +1,7 @@
 import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
 import { AlertComponent, BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
+import { ERROR_FORMA_ALERT, MENSAJE_DE_EXITO_ETAPA_UNO, PASOS, PRIVACY_NOTICE_CONTENT } from '../../constantes/certificado-zoosanitario.enum';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
@@ -82,7 +82,17 @@ export class ZoosanitarioPageComponent {
    * @property {string} mensajeDeTextoDeExito - Mensaje que se muestra si el primer paso se completa con éxito.
    */
   mensajeDeTextoDeExito: string = MENSAJE_DE_EXITO_ETAPA_UNO;
+
   esFormaValido: boolean = false;
+   /**
+     * Contenido del aviso de privacidad utilizado en el componente.
+     * @public
+     * @readonly
+     * @type {string}
+     * @memberof SanidadCertificadoComponent
+     */
+    readonly PRIVACY_NOTICE_CONTENT: string = PRIVACY_NOTICE_CONTENT;
+  
 
   /**
    * Constructor del componente. Inicializa los pasos del asistente.

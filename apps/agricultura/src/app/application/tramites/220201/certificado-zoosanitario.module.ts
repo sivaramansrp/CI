@@ -1,5 +1,6 @@
 
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CertificadoZoosanitario } from './certificado-zoosanitario-routing.module';
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionNacionalComponent } from './components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component';
@@ -18,6 +19,7 @@ import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitari
   
   ],
   imports: [
+    AlertComponent,
     CertificadoZoosanitario,
     ReactiveFormsModule,
     PagoDeDerechosComponent,
