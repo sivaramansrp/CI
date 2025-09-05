@@ -2,14 +2,12 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PASOS } from '../../constants/solicitud.enums';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
-
 import {
   CategoriaMensaje,
   DatosPasos,
   ListaPasosWizard,
   Notificacion,
   TipoNotificacionEnum,
-  WizardComponent
 } from '@ng-mf/data-access-user';
 
 import { Subject } from 'rxjs';
@@ -20,9 +18,9 @@ import { Tramite40402Query } from '../../estados/tramite40402.query';
 
 import {
   Tramite40402Store,
-  Tramitenacionales40402State
+  Tramitenacionales40402State,
 } from '../../estados/tramite40402.store';
-
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 /**
  * Interfaz que define la estructura de un botón de acción en el asistente.
  */
@@ -31,7 +29,6 @@ interface AccionBoton {
   accion: string;
   /** Valor asociado al botón, que indica el índice del paso al que se debe mover el asistente. */
   valor: number;
-
 }
 @Component({
   selector: 'app-solicitante-page',
@@ -43,17 +40,17 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * Configuración de notificación actual para mostrar al usuario.
    */
   public nuevaNotificacion!: Notificacion;
-  
+
   /**
    * Controla la visibilidad del modal de notificación.
    */
-   btnContinuar: boolean = false;
+  btnContinuar: boolean = false;
 
   /**
- * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
- * const esValido = this.pasoUnoComponent.validateForms();
- * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
- */
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   * const esValido = this.pasoUnoComponent.validateForms();
+   * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+   */
   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
   /**
@@ -85,7 +82,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   /**
    * Lista de pasos del asistente (wizard) que se mostrarán en la página.
    */
-  pasos: Array<ListaPasosWizard> = PASOS;
+  pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
 
   /**
    * Índice actual del paso seleccionado en el asistente.
@@ -103,7 +100,9 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Referencia al componente del asistente (wizard) en la vista.
+   * ## wizardComponent
+   * 
+   * Referencia al componente `WizardComponent` en la plantilla.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
@@ -125,7 +124,9 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   constructor(
     private tramite40402Query: Tramite40402Query,
     private tramite40402Store: Tramite40402Store
-  ) {}
+  ) {
+    // Coloqué su lógica de constructor aquí.
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -144,6 +145,53 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Cambia el índice actual del asistente al valor proporcionado.
+   * @param i - Índice del paso seleccionado.
+   */
+  seleccionadosTodos(i: number): void {
+    this.indice = i;
+    this.actualizarDatosPasos();
+  }
+
+  /**
+   * Cambia el índice actual del asistente según la acción realizada (continuar o retroceder).
+   * @param e - Objeto que contiene la acción y el valor del índice.
+   */
+  getValorIndice(e: AccionBoton): void {
+    this.esFormaValido = false;
+    // Validate before moving from step 1 to step 2
+    if (e.accion === 'cont' && this.indice === 1) {
+      const ES_VALIDO = this.pasoUnoComponent
+        ? this.pasoUnoComponent.validarFormularios()
+        : true;
+      if (!ES_VALIDO) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: TipoNotificacionEnum.ALERTA,
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'modal-md',
+          titulo: '',
+          mensaje: 'Existen requisitos obligatorios en blanco o con errores.',
+          cerrar: false,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.btnContinuar = true;
+        this.indice = 1;
+        this.actualizarDatosPasos();
+        return; // Evitar pasar al siguiente paso
+      }
+    }
+    // Si es válida o no paso 1, permitir la navegación
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent?.siguiente();
+      } else {
+        this.wizardComponent?.atras();
+      }
+    }
+  }
+  /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia las suscripciones activas para evitar fugas de memoria.
    */
@@ -151,67 +199,4 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
-  /**
-   * Cambia el índice actual del asistente al valor proporcionado.
-   * @param i - Índice del paso seleccionado.
-   */
-  seleccionadosTodos(i: number): void {
-  this.indice = i;
-  this.actualizarDatosPasos();
-  }
-
-  /**
-   * Cambia el índice actual del asistente según la acción realizada (continuar o retroceder).
-   * @param e - Objeto que contiene la acción y el valor del índice.
-   */
-getValorIndice(e: AccionBoton): void {
-  this.esFormaValido = false;
-  if (e.accion === 'cont' && e.valor === 1) {
-    const ES_VALIDO = this.pasoUnoComponent ? this.pasoUnoComponent.validarFormularios() : true;
-    if (!ES_VALIDO) {
-      this.nuevaNotificacion = {
-        tipoNotificacion: TipoNotificacionEnum.ALERTA,
-        categoria: CategoriaMensaje.ERROR,
-        modo: 'modal-md',
-        titulo: '',
-        mensaje: 'Existen requisitos obligatorios en blanco o con errores.',
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-      this.btnContinuar = true;
-      this.indice = 1;
-      this.actualizarDatosPasos();
-      return;
-    }
-    const INDICE_ACTUALIZADO = e.valor + 1;
-    if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO <= this.pasos.length) {
-      this.indice = INDICE_ACTUALIZADO;
-      this.actualizarDatosPasos();
-      this.wizardComponent.siguiente();
-      this.btnContinuar = false;
-    }
-    return;
-  }
-
-  if (this.indice !== 1) {
-    let INDICE_ACTUALIZADO = e.valor;
-    if (e.accion === 'cont') {
-      INDICE_ACTUALIZADO = e.valor + 1;
-      if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO <= this.pasos.length) {
-        this.indice = INDICE_ACTUALIZADO;
-        this.actualizarDatosPasos();
-        this.wizardComponent.siguiente();
-      }
-    } else if (e.accion === 'ant') {
-      INDICE_ACTUALIZADO = e.valor - 1;
-      if (INDICE_ACTUALIZADO > 0 && INDICE_ACTUALIZADO <= this.pasos.length) {
-        this.indice = INDICE_ACTUALIZADO;
-        this.actualizarDatosPasos();
-        this.wizardComponent.atras();
-      }
-    }
-  }
-}
 }
