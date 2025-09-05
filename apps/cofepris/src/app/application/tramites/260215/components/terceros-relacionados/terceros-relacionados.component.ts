@@ -928,11 +928,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     if (checkBoxName === 'nacional') {
       this.nacional = true;
       this.extranjero = false;
-    //  this.desactivarCatalogoSelectEnPopup = true;
     } else {
       this.nacional = false;
       this.extranjero = true;
-     // this.desactivarCatalogoSelectEnPopup = false;
     }
   }
 
@@ -1147,6 +1145,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.showFabricante = !this.showFabricante;
   }
 
+  /**
+   * Limpia los formularios y resetea los valores de persona física/moral y nacional/extranjero.
+   * Este método se llama al cancelar la adición de un tercero.
+   */
   limpiarFormulario(): void {
     this.agregarFabricanteFormGroup.reset();
     this.agregarDestinatarioFormGroup.reset();
