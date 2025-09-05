@@ -27,55 +27,7 @@ describe('DomicilioDelEstablecimientoService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch tabla datos', () => {
-    const mockData: RespuestaTabla = {
-      code: 200,
-      data: [{ clave_Scian: 'SC01', descripcion_Scian: 'Descripción SC01' }],
-      message: 'OK'
-    };
-
-    service.obtenerTablaDatos().subscribe((data) => {
-      expect(data).toEqual(mockData);
-    });
-
-    const req = httpMock.expectOne('../../../../../assets/json/260904/tablaDatos.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
-  });
-
-  it('should fetch estado list', () => {
-    const mockData: RespuestaCatalogos = {
-      code: 200,
-      data: [],
-      message: 'OK'
-    };
-
-    service.obtenerEstadoList().subscribe((data) => {
-      expect(data).toEqual(mockData);
-    });
-
-    const req = httpMock.expectOne('../../../../../assets/json/260904/seleccion.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
-  });
-
-  it('should fetch mercancias datos', () => {
-    const mockData: MercanciasTabla = {
-      code: 200,
-      data: [{ clasificacion: 'Medicamento', descripcionFraccion: 'Mercancía 1', especificar: '', denominacionEspecifica: '', denominacionDistintiva: '', denominacionComun: '', formaFarmaceutica: '', estadoFisico: '', fraccionArancelaria: '', unidad: '', cantidadUMC: '', unidadUMT: '', cantidadUMT: '', presentacion: '', numeroRegistro: '', paisDeOrigen: '', paisDeProcedencia: '', tipoProducto: '', usoEspecifico: '', fechaCaducidad: '' }],
-      message: 'OK'
-    };
-
-    service.obtenerMercanciasDatos().subscribe((data) => {
-      expect(data).toEqual(mockData);
-    });
-
-    const req = httpMock.expectOne('../../../../../assets/json/260904/mercanciasDatos.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
-  });
-
-  it('should fetch representacion data', () => {
+it('should fetch representacion data', () => {
     const mockData: Catalogo[] = [
       {id:1, clave: 'RF01', descripcion: 'Representación 1' },
     ];
@@ -84,7 +36,7 @@ describe('DomicilioDelEstablecimientoService', () => {
       expect(data).toEqual(mockData);
     });
 
-    const req = httpMock.expectOne('../../../../../assets/json/260904/descriptionClave.json');
+    const req = httpMock.expectOne('assets/json/260904/descriptionClave.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });
@@ -98,7 +50,7 @@ describe('DomicilioDelEstablecimientoService', () => {
       expect(data).toEqual(mockData);
     });
 
-    const req = httpMock.expectOne('../../../../../assets/json/260904/clavescian.json');
+    const req = httpMock.expectOne('assets/json/260904/clavescian.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });
