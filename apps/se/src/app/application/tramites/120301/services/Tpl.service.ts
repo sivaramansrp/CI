@@ -1,15 +1,15 @@
+
+import { API_GET_REPRESENTACION_FEDERAL, API_POST_DETALLE_TPL, API_POST_TPL, IDASIGNACION } from '../server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TplRequest } from '../../models/120301/request/tpl-request.model';
-import { TplResponse } from '../../models/120301/response/tpl-response.model';
-
-import { API_GET_REPRESENTACION_FEDERAL, API_POST_DETALLE_TPL, API_POST_TPL, IDASIGNACION } from '../../../constantes/120301/api-constantes';
-import { RepresentaciónFederalResponse } from '../../models/120301/response/representacion-federal-response.model';
-import { TplDetalleRequest } from '../../models/120301/request/tpl-detalle-request.model';
-import { TplDetalleResponse } from '../../models/120301/response/tpl-detalle-response.model';
+import { RepresentaciónFederalResponse } from '../models/response/representacion-federal-response.model';
+import { TplDetalleRequest } from '../models/request/tpl-detalle-request.model';
+import { TplDetalleResponse } from '../models/response/tpl-detalle-response.model';
+import { TplRequest } from '../models/request/tpl-request.model';
+import { TplResponse } from '../models/response/tpl-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +45,7 @@ export class TplService {
    * @param idAsignacion Numero de la asignacion.
    * @returns Observable con la respuesta del servidor.
   */
-  getRepresentacionFederal(idAsignacion: number ): Observable<BaseResponse<RepresentaciónFederalResponse>> {
+  getRepresentacionFederal(idAsignacion: number): Observable<BaseResponse<RepresentaciónFederalResponse>> {
     const ENDPOINT = `${this.host}${API_GET_REPRESENTACION_FEDERAL.replace(IDASIGNACION, idAsignacion.toString())}`;
     return this.http.get<BaseResponse<RepresentaciónFederalResponse>>(ENDPOINT);
   }
@@ -56,7 +56,7 @@ export class TplService {
    * @param PAYLOAD Datos de la solicitud TPL.
    * @returns Observable con la respuesta del servidor.
   */
-  postTplDetalle(PAYLOAD: TplDetalleRequest ): Observable<BaseResponse<TplDetalleResponse>> {
+  postTplDetalle(PAYLOAD: TplDetalleRequest): Observable<BaseResponse<TplDetalleResponse>> {
     const ENDPOINT = `${this.host}` + API_POST_DETALLE_TPL;
     return this.http.post<BaseResponse<TplDetalleResponse>>(ENDPOINT, PAYLOAD);
   }

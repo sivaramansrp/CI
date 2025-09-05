@@ -16,19 +16,14 @@
 
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { CategoriaMensaje, Notificacion, } from '@ng-mf/data-access-user';
-import { FormControl, FormGroup } from '@angular/forms';
-import { IniciarRequest } from '../../../../core/models/120301/request/iniciar-request.model';
-import { IniciarService } from '../../../../core/services/120301/iniciar.service';
-
-import { Location } from '@angular/common';
-
-
-
 import { DatosPasos, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT, PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
-
+import { IniciarRequest } from '../../models/request/iniciar-request.model';
+import { IniciarService } from '../../services/iniciar.service';
 import { ListaPasosWizard } from '../../models/elegibilidad-de-textiles.model';
+import { Location } from '@angular/common';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**

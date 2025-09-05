@@ -4,37 +4,29 @@
  * Incluye un formulario para capturar los datos del importador y funcionalidades adicionales.
  * Gestiona la validación, sincronización con el store global y el estado de la sección.
  */
-
-import { HttpClient } from '@angular/common/http';
-
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-
-import { Subject, delay, map, takeUntil, tap } from 'rxjs';
-
 import {
   Catalogo,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
 } from '@ng-mf/data-access-user';
-
-import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   ElegibilidadDeTextilesStore,
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { ERROR_FORMA_ALERT } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
-import { ImporteRecordService } from '../../../../core/services/120301/catalogos/importe-record.service';
-
+import { HttpClient } from '@angular/common/http';
+import { ImporteRecordService } from '../../services/catalogos/importe-record.service';
+import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
  * @component ImportadorEnDestinoComponent
@@ -94,13 +86,13 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    */
   importadorForm!: FormGroup;
 
-    /**
-   * @property {string} formularioAlertaError
-   * @description
-   * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
-   * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
-   * Vacío cuando el formulario es válido.
-   */
+  /**
+ * @property {string} formularioAlertaError
+ * @description
+ * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
+ * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
+ * Vacío cuando el formulario es válido.
+ */
   public formularioAlertaError: string = '';
 
   /**
@@ -316,18 +308,18 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    */
   obtenerIngresoSelectList(): void {
     this.importeRecordService.getImporteRecord()
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (data) => {
-        if (data.codigo === '00') {
-          this.tipoData = data.datos || [];
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          if (data.codigo === '00') {
+            this.tipoData = data.datos || [];
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+          this.tipoData = [];
         }
-      },
-      error: (error) => {
-        console.error('Error al obtener los datos:', error);
-        this.tipoData = [];
-      }
-    });
+      });
   }
 
   /**

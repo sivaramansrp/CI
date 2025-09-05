@@ -36,16 +36,15 @@ import {
   ElegibilidadDeTextilesStore,
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
-
-import { AnioConstanciaService } from '../../../../core/services/120301/catalogos/anio-constancia.service';
+import { AnioConstanciaService } from '../../services/catalogos/anio-constancia.service';
 import { ERROR_FORMA_ALERT } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
-import { GuardadoService } from '../../../../core/services/120301/guardado.service';
-import { ParcialRequest } from '../../../../core/models/120301/request/parcialRequest.model';
-import { TplDetalleRequest } from '../../../../core/models/120301/request/tpl-detalle-request.model';
-import { TplRequest } from '../../../../core/models/120301/request/tpl-request.model';
-import { TplService } from '../../../../core/services/120301/Tpl.service';
+import { GuardadoService } from '../../services/guardado.service';
+import { ParcialRequest } from '../../models/request/parcialRequest.model';
+import { TplDetalleRequest } from '../../models/request/tpl-detalle-request.model';
+import { TplRequest } from '../../models/request/tpl-request.model';
+import { TplService } from '../../services/Tpl.service';
 import { Tramite120301Store } from '../../estados/tramites/tramite120301.store';
 
 /**
@@ -232,12 +231,12 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    */
   anios!: Catalogo[];
 
-   /**
-   * @property {number | undefined} idAsignacion - Identificador único de la asignación.
-   * Almacena el ID de la asignación actual registro de solicitud parcial.
-   * Es undefined cuando se crea una nueva solicitud parcial.
-   * Se utiliza para el guardado parcial de la solicitud.
-   */
+  /**
+  * @property {number | undefined} idAsignacion - Identificador único de la asignación.
+  * Almacena el ID de la asignación actual registro de solicitud parcial.
+  * Es undefined cuando se crea una nueva solicitud parcial.
+  * Se utiliza para el guardado parcial de la solicitud.
+  */
   public idAsignacion!: number | undefined;
 
   /**
@@ -596,12 +595,12 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       return;
     }
 
-   const ANO_DE_LA_CONSTANCIA =
+    const ANO_DE_LA_CONSTANCIA =
       this.fitosanitarioForm.get('anoDeLaConstancia')?.value;
     const NUMERO_DE_LA_CONSTANCIA = this.fitosanitarioForm.get(
       'numeroDeLaConstancia'
     )?.value;
-    
+
     const PAYLOAD: TplDetalleRequest = {
       id_mecanismo_asignacion: fila.idMecanismoAsignacion ?? 0,
       cve_fraccion: fila.fraccionArancelaria,
@@ -611,84 +610,84 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     };
     this.idAsignacion = fila.idAsignacion;
     forkJoin({
-    representacion: this.tplService.getRepresentacionFederal(fila.idAsignacion ?? 0).pipe(
-      catchError(err => {
-        console.error('Error en representacion:', err);
-        return of(null);
-      })
-    ),
-    detalle: this.tplService.postTplDetalle(PAYLOAD).pipe(
-      catchError(err => {
-        console.error('Error en detalle:', err);
-        return of(null);
-      })
-    )
-  }).subscribe(({ representacion, detalle }) => {
-    if (representacion?.codigo === '00' && representacion?.datos) {
-      const REPRESENTACIONFEDERAL = representacion.datos;
-      fila.estado = REPRESENTACIONFEDERAL.nombre_entidad;
-      fila.representacionFederal = REPRESENTACIONFEDERAL.nombre;
-      this.cveUnidadAdministrativa = REPRESENTACIONFEDERAL.clave;
-    }
+      representacion: this.tplService.getRepresentacionFederal(fila.idAsignacion ?? 0).pipe(
+        catchError(err => {
+          console.error('Error en representacion:', err);
+          return of(null);
+        })
+      ),
+      detalle: this.tplService.postTplDetalle(PAYLOAD).pipe(
+        catchError(err => {
+          console.error('Error en detalle:', err);
+          return of(null);
+        })
+      )
+    }).subscribe(({ representacion, detalle }) => {
+      if (representacion?.codigo === '00' && representacion?.datos) {
+        const REPRESENTACIONFEDERAL = representacion.datos;
+        fila.estado = REPRESENTACIONFEDERAL.nombre_entidad;
+        fila.representacionFederal = REPRESENTACIONFEDERAL.nombre;
+        this.cveUnidadAdministrativa = REPRESENTACIONFEDERAL.clave;
+      }
 
-    if (detalle?.codigo === '00' && detalle?.datos) {
-       const DATOS = detalle.datos;
-      fila.descripcionProducto = DATOS.descripcion_producto;
-      fila.tratado = DATOS.tratado_bloque;
-      fila.subproducto = DATOS.clasificacion_subproducto;
-      fila.mecanismo = DATOS.mecanismo_asignacion;
-      fila.typoCategoria = DATOS.categoria_textil;
-      fila.typoRegimen = DATOS.regimen;
-      fila.descripcionCategoriaTextil = DATOS.descripcion_categoria_textil;
-      fila.PaisDestino = DATOS.pais_origen_destino;
-      fila.unidadMedidaCategoriaTextil = DATOS.unidad_medida;
-      fila.factorConversionCategoriaTextil = DATOS.factor_conversion.toString();
-      fila.fechaInicioVigencia = DATOS.fecha_inicio_vigencia;
-      fila.fechaFinVigencia= DATOS.fecha_fin_vigencia;
-      this.tramite120301.setIdentificadorRegimen(DATOS.identificador_regimen);
-    }
+      if (detalle?.codigo === '00' && detalle?.datos) {
+        const DATOS = detalle.datos;
+        fila.descripcionProducto = DATOS.descripcion_producto;
+        fila.tratado = DATOS.tratado_bloque;
+        fila.subproducto = DATOS.clasificacion_subproducto;
+        fila.mecanismo = DATOS.mecanismo_asignacion;
+        fila.typoCategoria = DATOS.categoria_textil;
+        fila.typoRegimen = DATOS.regimen;
+        fila.descripcionCategoriaTextil = DATOS.descripcion_categoria_textil;
+        fila.PaisDestino = DATOS.pais_origen_destino;
+        fila.unidadMedidaCategoriaTextil = DATOS.unidad_medida;
+        fila.factorConversionCategoriaTextil = DATOS.factor_conversion.toString();
+        fila.fechaInicioVigencia = DATOS.fecha_inicio_vigencia;
+        fila.fechaFinVigencia = DATOS.fecha_fin_vigencia;
+        this.tramite120301.setIdentificadorRegimen(DATOS.identificador_regimen);
+      }
 
-     
-    
-    const FORM_VALUES = {
-     anoDeLaConstancia: ANO_DE_LA_CONSTANCIA ? ANO_DE_LA_CONSTANCIA : '',
-      numeroDeLaConstancia: NUMERO_DE_LA_CONSTANCIA
-        ? NUMERO_DE_LA_CONSTANCIA
-        : '', 
-      estado: fila.estado,
-      representacionFederal: fila.representacionFederal,
-      fraccionArancelaria: fila.fraccionArancelaria || '',
-      descripcionProducto: fila.descripcionProducto || '',
-      tratado: fila.tratado || '',
-      subproducto: fila.subproducto || '',
-      mecanismo: fila.mecanismo || '',
-      typoCategoria: fila.typoCategoria || '',
-      typoRegimen: fila.typoRegimen || '',
-      descripcionCategoriaTextil: fila.descripcionCategoriaTextil || '',
-      PaisDestino: fila.PaisDestino || '',
-      unidadMedidaCategoriaTextil: fila.unidadMedidaCategoriaTextil || '',
-      factorConversionCategoriaTextil: fila.factorConversionCategoriaTextil || '',
-      fechaInicioVigencia: fila.fechaInicioVigencia || '',
-      fechaFinVigencia: fila.fechaFinVigencia || '',
-    };
-    this.fitosanitarioForm.patchValue(FORM_VALUES);
-    Object.keys(FORM_VALUES).forEach((key) => {
-      if (this.fitosanitarioForm.get(key)) {
-        if (key !== 'anoDeLaConstancia' && key !== 'numeroDeLaConstancia') {
-          // Deshabilitar solo si no está en modo de solo lectura
-          if (!this.formularioDeshabilitado) {
-            this.fitosanitarioForm.get(key)?.disable();
+
+
+      const FORM_VALUES = {
+        anoDeLaConstancia: ANO_DE_LA_CONSTANCIA ? ANO_DE_LA_CONSTANCIA : '',
+        numeroDeLaConstancia: NUMERO_DE_LA_CONSTANCIA
+          ? NUMERO_DE_LA_CONSTANCIA
+          : '',
+        estado: fila.estado,
+        representacionFederal: fila.representacionFederal,
+        fraccionArancelaria: fila.fraccionArancelaria || '',
+        descripcionProducto: fila.descripcionProducto || '',
+        tratado: fila.tratado || '',
+        subproducto: fila.subproducto || '',
+        mecanismo: fila.mecanismo || '',
+        typoCategoria: fila.typoCategoria || '',
+        typoRegimen: fila.typoRegimen || '',
+        descripcionCategoriaTextil: fila.descripcionCategoriaTextil || '',
+        PaisDestino: fila.PaisDestino || '',
+        unidadMedidaCategoriaTextil: fila.unidadMedidaCategoriaTextil || '',
+        factorConversionCategoriaTextil: fila.factorConversionCategoriaTextil || '',
+        fechaInicioVigencia: fila.fechaInicioVigencia || '',
+        fechaFinVigencia: fila.fechaFinVigencia || '',
+      };
+      this.fitosanitarioForm.patchValue(FORM_VALUES);
+      Object.keys(FORM_VALUES).forEach((key) => {
+        if (this.fitosanitarioForm.get(key)) {
+          if (key !== 'anoDeLaConstancia' && key !== 'numeroDeLaConstancia') {
+            // Deshabilitar solo si no está en modo de solo lectura
+            if (!this.formularioDeshabilitado) {
+              this.fitosanitarioForm.get(key)?.disable();
+            }
           }
         }
-      }
-    });
-    this.ElegibilidadDeTextilesStore.update((state) => ({
-      ...state,
-      ...FORM_VALUES,
-    }));
-    this.guardarBandera = true;
-    this.ElegibilidadDeTextilesStore.setguardarBandera(true);
-  })
+      });
+      this.ElegibilidadDeTextilesStore.update((state) => ({
+        ...state,
+        ...FORM_VALUES,
+      }));
+      this.guardarBandera = true;
+      this.ElegibilidadDeTextilesStore.setguardarBandera(true);
+    })
   }
 
   /**
@@ -718,9 +717,9 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       ...state,
       ...FORM_VALUES,
     }));
-  this.enviada = true;
-  const RADIO_VALUE = this.fitosanitarioForm.get('flexRadioRegistro')?.value;
-  if (RADIO_VALUE === 'Especifico') {
+    this.enviada = true;
+    const RADIO_VALUE = this.fitosanitarioForm.get('flexRadioRegistro')?.value;
+    if (RADIO_VALUE === 'Especifico') {
       // Validar campos requeridos
       const ANO_CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
       const NUMEROCONTROL = this.fitosanitarioForm.get('numeroDeLaConstancia');
@@ -774,27 +773,27 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    * @fires mostrarTabs Evento que indica al componente padre que debe mostrar las pestañas de navegación.
    */
   guardarEvaluate(): void {
-     const PAYLOAD: ParcialRequest = {
-       id_solicitud: null,
-       id_asignacion: this.idAsignacion ?? null,
-       boolean_generico: null,
-       ide_generica_1: null,
-       descripcion_generica_2: null,
-       ide_generica_2: null,
-       solicitante: {
-         rfc: 'AAL0409235E6',
-         certificado_serial_number: ''
-       },
-       cve_unidad_administrativa: this.cveUnidadAdministrativa,
-       id_expedicion: null
-     };
+    const PAYLOAD: ParcialRequest = {
+      id_solicitud: null,
+      id_asignacion: this.idAsignacion ?? null,
+      boolean_generico: null,
+      ide_generica_1: null,
+      descripcion_generica_2: null,
+      ide_generica_2: null,
+      solicitante: {
+        rfc: 'AAL0409235E6',
+        certificado_serial_number: ''
+      },
+      cve_unidad_administrativa: this.cveUnidadAdministrativa,
+      id_expedicion: null
+    };
     this.guardadoService.postGuardadoParcial(PAYLOAD).subscribe({
       next: (response) => {
         if (response?.codigo === '00' && response?.datos) {
-            const DATOS = response.datos;
-            this.tramite120301.setIdExpedicion(DATOS.id_expedicion);
-             this.mostrarTabs.emit(true);
-             window.scrollTo({ top: 0, behavior: 'smooth' });
+          const DATOS = response.datos;
+          this.tramite120301.setIdExpedicion(DATOS.id_expedicion);
+          this.mostrarTabs.emit(true);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
           console.error('Error al obtener datos:', response?.mensaje);
         }
@@ -803,8 +802,8 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         console.error('Error en la guardado parcial:', err);
       }
     });
- 
-    
+
+
   }
 
   /**
@@ -866,7 +865,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     });
   }
 
-  
+
   /**
    * @method onAnoConstanciaChange
    * @description Maneja el evento de cambio de selección en el catálogo de años de constancia.
@@ -907,11 +906,11 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       }
     }
   }
-    /**
-   * Método para continuar al siguiente paso, validando el campo cantidadFacturas.
-   * Si el formulario es inválido, muestra el mensaje de error y no permite continuar.
-   * Si es válido, limpia el error y permite continuar.
-   */
+  /**
+ * Método para continuar al siguiente paso, validando el campo cantidadFacturas.
+ * Si el formulario es inválido, muestra el mensaje de error y no permite continuar.
+ * Si es válido, limpia el error y permite continuar.
+ */
   continuar(): void {
     this.enviada = true;
     this.fitosanitarioForm.markAllAsTouched();

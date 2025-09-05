@@ -1,7 +1,6 @@
-import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
-
 import { Catalogo, ENVIRONMENT } from '@libs/shared/data-access-user/src';
-import { API_GET_IMPORTE_RECORD } from '../../../../constantes/120301/api-constantes';
+import { API_GET_IMPORTE_RECORD } from '../../server/api-router';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

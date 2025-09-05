@@ -1,7 +1,6 @@
-import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
-
 import { Catalogo, ENVIRONMENT } from '@libs/shared/data-access-user/src';
-import { API_GET_UNIDAD_MEDIDA } from '../../../../constantes/120301/api-constantes';
+import { API_GET_ANIOS_AUTORIZACION } from '../../server/api-router';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -9,10 +8,10 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class UnidadMedidaService {
+export class AnioConstanciaService {
 
   /**
-   * URL base del servidor al que se realizarán las solicitudes
+   * URL base del servidor al que se realizarán las solicitudes relacionadas con aduanas.
     * Esta variable almacena la dirección del host para los servicios compartidos de catálogos.
     * Es de solo lectura y se inicializa en el constructor del servicio.
     */
@@ -27,11 +26,11 @@ export class UnidadMedidaService {
   }
 
   /**
-   * Obtiene las unidades de medida del catálogo.
-   * @returns Observable que emite la respuesta del servidor.
+   * Obtiene los años de autorización del catálogo.
+   * @returns Observable que emite la respuesta del servidor con los años de autorización.
    */
-  getUnidadMedida(): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host}${API_GET_UNIDAD_MEDIDA}`;
+  getAnios(): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_ANIOS_AUTORIZACION}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 

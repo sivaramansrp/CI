@@ -1,12 +1,11 @@
+import { API_POST_INICIO } from '../server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
-import { IniciarRequest } from '../../models/130118/request/iniciar-request.model';
-import { IniciarResponse } from '../../models/120301/response/iniciar-response.model';
+import { IniciarRequest } from '../../130118/model/request/iniciar-request.model';
+import { IniciarResponse } from '../models/response/iniciar-response.model';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { API_POST_INICIO } from '../../../constantes/120301/api-constantes';
 
 @Injectable({
   providedIn: 'root'

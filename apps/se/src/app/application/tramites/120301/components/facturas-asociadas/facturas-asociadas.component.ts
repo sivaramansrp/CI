@@ -40,12 +40,11 @@ import {
 } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
-import { FacturasAsociadasService } from '../../../../core/services/120301/facturas-asociadas.service';
-import { FacturasTplAsociadasRequest } from '../../../../core/models/120301/request/facturas-tpl-asociadas-request.model';
-import { FacturasTplEliminarRequest } from '../../../../core/models/120301/request/facturas-tpl-eliminar-request.model';
-import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
-
+import { FacturasAsociadasService } from '../../services/facturas-asociadas.service';
+import { FacturasTplAsociadasRequest } from '../../models/request/facturas-tpl-asociadas-request.model';
+import { FacturasTplEliminarRequest } from '../../models/request/facturas-tpl-eliminar-request.model';
 import { Solicitud120301State } from '../../estados/tramites/tramite120301.store';
+import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
 
 
 
@@ -112,13 +111,13 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    */
   formularioAsociacionFactura!: FormGroup;
 
-    /**
-   * @property {string} formularioAlertaError
-   * @description
-   * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
-   * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
-   * Vacío cuando el formulario es válido.
-   */
+  /**
+ * @property {string} formularioAlertaError
+ * @description
+ * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
+ * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
+ * Vacío cuando el formulario es válido.
+ */
   public formularioAlertaError: string = '';
 
   /**
@@ -129,13 +128,13 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    */
   public esFormaValido: boolean = false;
 
-      /**
-     * @property {EventEmitter<boolean>} mostrarTabs - Emite un valor booleano para mostrar las pestañas adicionales.
-     * EventEmitter que comunica al componente padre cuándo debe mostrar las pestañas de navegación.
-     * Se activa cuando el usuario completa exitosamente el proceso de guardado o validación.
-     * Permite la coordinación entre componentes para la navegación de la interfaz.
-     */
-    @Output() mostrarTabs: EventEmitter<boolean> = new EventEmitter<boolean>();
+  /**
+ * @property {EventEmitter<boolean>} mostrarTabs - Emite un valor booleano para mostrar las pestañas adicionales.
+ * EventEmitter que comunica al componente padre cuándo debe mostrar las pestañas de navegación.
+ * Se activa cuando el usuario completa exitosamente el proceso de guardado o validación.
+ * Permite la coordinación entre componentes para la navegación de la interfaz.
+ */
+  @Output() mostrarTabs: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
    * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
@@ -305,12 +304,12 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    */
   facturasAsociadas: AsociadasTableColumns[] = [];
 
- /**
-   * @property {Solicitud120301State} solicitudState - Estado de la solicitud en el store de Akita.
-   * Almacena el estado completo de la solicitud según la arquitectura Akita,
-   * incluyendo todos los datos relevantes para el manejo del estado de la aplicación.
-   * Se actualiza mediante los correspondientes stores y queries de Akita.
-   */
+  /**
+    * @property {Solicitud120301State} solicitudState - Estado de la solicitud en el store de Akita.
+    * Almacena el estado completo de la solicitud según la arquitectura Akita,
+    * incluyendo todos los datos relevantes para el manejo del estado de la aplicación.
+    * Se actualiza mediante los correspondientes stores y queries de Akita.
+    */
   public solicitudState!: Solicitud120301State;
 
   /**
@@ -499,12 +498,12 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
               cantidadDisponible: factura.cantidad_disponible.toString(),
               unidadMedida: factura.descripcion,
               valorDolares: factura.imp_dls.toString(),
-              
+
               idFacturaExpedicion: factura.id_factura_expedicion,
               idExpedicion: this.solicitudState.idExpedicion,
             }));
-          }else{
-             this.facturasDisponible = [];
+          } else {
+            this.facturasDisponible = [];
           }
         },
         error: (error) => {
@@ -523,7 +522,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @param {CapturarColumns} fila - Objeto que representa la fila seleccionada con todos sus datos.
    * @returns {void} No retorna ningún valor.
   */
-  guardadoFila(fila: CapturarColumns):void {
+  guardadoFila(fila: CapturarColumns): void {
     if (!fila) {
       return;
     }
@@ -574,27 +573,27 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   recuperarDatosAsociadas(): void {
     this.facturasAsociadasService
       .getFacturasTplAsociadas(
-         this.solicitudState.idExpedicion,
+        this.solicitudState.idExpedicion,
       )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
           if (response.codigo === '00' && response.datos?.content) {
             this.facturasAsociadas = response.datos.content.map((factura) => ({
-             candidadAsociada: factura.cantidad_asociada.toString(),
-            numeroDeLaFactura: factura.factura_expedicion.num_factura,
-            razonSocial: factura.factura_expedicion.razon_social,
-            domicilio: factura.factura_expedicion.domicilio,
-            fechaExpedicionFactura: factura.factura_expedicion.fecha_expedicion,
-            cantidadTotal: factura.factura_expedicion.cantidad.toString(),
-            cantidadDisponible: factura.factura_expedicion.cantidad_disponible.toString(),
-            unidadMedida: factura.factura_expedicion.unidad_medida.descripcion,
-            valorDolares: factura.factura_expedicion.importe_dolares.toString(),
+              candidadAsociada: factura.cantidad_asociada.toString(),
+              numeroDeLaFactura: factura.factura_expedicion.num_factura,
+              razonSocial: factura.factura_expedicion.razon_social,
+              domicilio: factura.factura_expedicion.domicilio,
+              fechaExpedicionFactura: factura.factura_expedicion.fecha_expedicion,
+              cantidadTotal: factura.factura_expedicion.cantidad.toString(),
+              cantidadDisponible: factura.factura_expedicion.cantidad_disponible.toString(),
+              unidadMedida: factura.factura_expedicion.unidad_medida.descripcion,
+              valorDolares: factura.factura_expedicion.importe_dolares.toString(),
 
-            idFacturaExpedicion: factura.id_factura_expedicion,
-            idExpedicion: factura.id_expedicion
+              idFacturaExpedicion: factura.id_factura_expedicion,
+              idExpedicion: factura.id_expedicion
             }));
-          }else{
+          } else {
             this.facturasAsociadas = [];
           }
         },
@@ -616,81 +615,81 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
  */
   setValoresCantidadTotal(): void {
-  this.facturasAsociadasService
-    .getFacturaTplTotalUnida(this.solicitudState.idExpedicion)
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (response) => {
-        if (response.codigo === '00' && response.datos) {
-          this.formularioAsociacionFactura.patchValue({
-            cantidadFacturasTotal: response.datos.cantidad,
-            metrosCuadradosEquivalentes: response.datos.total
-          });
+    this.facturasAsociadasService
+      .getFacturaTplTotalUnida(this.solicitudState.idExpedicion)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === '00' && response.datos) {
+            this.formularioAsociacionFactura.patchValue({
+              cantidadFacturasTotal: response.datos.cantidad,
+              metrosCuadradosEquivalentes: response.datos.total
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
         }
-      },
-      error: (error) => {
-        console.error('Error al obtener los datos:', error);
-      }
-    });
-}
+      });
+  }
 
-/**
- * @method guardadoFilaAsociada
- * @description Asigna la fila seleccionada de la tabla de facturas asociadas
- * a la propiedad `filaSeleccionadaAsociada` para su posterior uso.
- * Este método evita asignar un valor `null` o `undefined`.
- * @param {AsociadasTableColumns} fila - Fila seleccionada de la tabla de facturas asociadas.
- * @returns {void} No retorna ningún valor.
- */
-guardadoFilaAsociada(fila: AsociadasTableColumns):void {
+  /**
+   * @method guardadoFilaAsociada
+   * @description Asigna la fila seleccionada de la tabla de facturas asociadas
+   * a la propiedad `filaSeleccionadaAsociada` para su posterior uso.
+   * Este método evita asignar un valor `null` o `undefined`.
+   * @param {AsociadasTableColumns} fila - Fila seleccionada de la tabla de facturas asociadas.
+   * @returns {void} No retorna ningún valor.
+   */
+  guardadoFilaAsociada(fila: AsociadasTableColumns): void {
     if (!fila) {
       return;
     }
     this.filaSeleccionadaAsociada = fila;
-}
+  }
 
-/**
- * @method eliminarSeleccionado
- * @description Elimina la fila de factura asociada actualmente seleccionada.
- * Construye un payload con los IDs de expedición y factura y llama al servicio `deleteFacturaTpl`.
- * La operación se realiza utilizando un arreglo de `FacturasTplEliminarRequest` aunque solo
- * se elimine un elemento, para mantener compatibilidad con el endpoint que espera un array.
- * La suscripción se maneja con `takeUntil` para evitar fugas de memoria.
- * @returns {void} No retorna ningún valor.
- */
-eliminarSeleccionado(): void{
-  if (!this.filaSeleccionadaAsociada) {
-    return;
-  }
-const PAYLOAD: FacturasTplEliminarRequest[] = [
-  {
-    id_expedicion: this.filaSeleccionadaAsociada?.idExpedicion,
-    id_factura_expedicion: this.filaSeleccionadaAsociada?.idFacturaExpedicion
-  }
-];
-  this.facturasAsociadasService.deleteFacturaTpl(PAYLOAD)
-  .pipe(takeUntil(this.destroyNotifier$))
-  .subscribe({
-    next: (response) => {
-      if (response.codigo === '00') {
-        this.facturasAsociadas = [];
-          this.facturasDisponible = [];
-          this.filaSeleccionada = undefined;
-          this.filaSeleccionadaAsociada = undefined;
-          this.recuperarDatos();
-          this.recuperarDatosAsociadas();
-          this.formularioAsociacionFactura.reset();
-          
-          this.mostrarTabla = false;
-          this.cd.detectChanges(); 
-          this.mostrarTabla = true;
-      }
-    },
-    error: (error) => {
-      console.error('Error al obtener los datos:', error);
+  /**
+   * @method eliminarSeleccionado
+   * @description Elimina la fila de factura asociada actualmente seleccionada.
+   * Construye un payload con los IDs de expedición y factura y llama al servicio `deleteFacturaTpl`.
+   * La operación se realiza utilizando un arreglo de `FacturasTplEliminarRequest` aunque solo
+   * se elimine un elemento, para mantener compatibilidad con el endpoint que espera un array.
+   * La suscripción se maneja con `takeUntil` para evitar fugas de memoria.
+   * @returns {void} No retorna ningún valor.
+   */
+  eliminarSeleccionado(): void {
+    if (!this.filaSeleccionadaAsociada) {
+      return;
     }
-  });
-}
+    const PAYLOAD: FacturasTplEliminarRequest[] = [
+      {
+        id_expedicion: this.filaSeleccionadaAsociada?.idExpedicion,
+        id_factura_expedicion: this.filaSeleccionadaAsociada?.idFacturaExpedicion
+      }
+    ];
+    this.facturasAsociadasService.deleteFacturaTpl(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === '00') {
+            this.facturasAsociadas = [];
+            this.facturasDisponible = [];
+            this.filaSeleccionada = undefined;
+            this.filaSeleccionadaAsociada = undefined;
+            this.recuperarDatos();
+            this.recuperarDatosAsociadas();
+            this.formularioAsociacionFactura.reset();
+
+            this.mostrarTabla = false;
+            this.cd.detectChanges();
+            this.mostrarTabla = true;
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        }
+      });
+  }
 
   /**
    * @method setValoresStore
