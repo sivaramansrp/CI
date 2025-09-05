@@ -93,7 +93,7 @@ export class ScianTablaComponent implements OnInit {
     private ubicaccion: Location,
     public datosSolicitudService: DatosSolicitudService,
     @Inject(BsModalService)
-    private modalService: BsModalService
+    private modalService: BsModalService,
   ) {
     // Carga la lista de SCiAN desde un archivo JSON a través del servicio.
     this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'scianLista', '/cofepris/scianTabla.json');
@@ -163,7 +163,6 @@ export class ScianTablaComponent implements OnInit {
       this.scianSeleccionado.emit(SCIAN_IDX);
       this.ubicaccion.back();
     }
-    
   }
 
    /**

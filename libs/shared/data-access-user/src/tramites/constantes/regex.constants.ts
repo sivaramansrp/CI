@@ -493,14 +493,14 @@ export const REGEX_TODOS_CEROS = /^0+$/;
 
 
 /**
- * Expresión regular para validar números enteros con hasta 9 dígitos y opcionalmente dos decimales.
+ * Expresión regular para validar números enteros con hasta 11 dígitos y opcionalmente dos decimales.
  */
-export const REGEX_ONCE_ENTEROS_DOS_DECIMALES = /^(\d{1,9})(\.\d{1,2})?$/;
+export const REGEX_ONCE_ENTEROS_DOS_DECIMALES = /^(\d{1,11})(\.\d{1,2})?$/;
 
 /**
- * Expresión regular para validar números enteros con hasta 9 dígitos y opcionalmente tres decimales.
+ * Expresión regular para validar números enteros con hasta 11 dígitos y opcionalmente tres decimales.
  */
-export const REGEX_ONCE_ENTEROS_TRES_DECIMALES = /^(\d{1,9})(\.\d{1,3})?$/;
+export const REGEX_ONCE_ENTEROS_TRES_DECIMALES = /^(\d{1,11})(\.\d{1,3})?$/;
 /**
  * Expresión regular para validar números con hasta 15 dígitos enteros y 3 decimales.
  *
@@ -879,7 +879,18 @@ export const EMAIL = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
  * - ejemplo.com/ruta
  */
 export const WEBPAGE = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
-/*
+/**
+ * Expresión regular para validar números con hasta 6 dígitos enteros y opcionalmente hasta 6 decimales.
+  */
+export const REGEX_SEIS_SIGNIFICATIVOS = /^(?:\d{1,6})(?:\.\d{1,6})?$|^\.\d{1,6}$/;
+
+/**
+ * Expresión regular para validar números que pueden ser enteros o decimales.
+ * Permite dígitos del 0 al 9 y un punto decimal opcional.
+ * Ejemplos válidos: "123", "123.45", "0.678"
+ * Ejemplos no válidos: "123.", ".45", "abc"
+ */
+export const REGEX_NUMERIC_ONLY = /^[0-9]*\.?[0-9]*$/;/*
   * Expresión regular para validar un número de 8 dígitos.
   * Esta expresión asegura que la cadena contenga exactamente 8 dígitos numéricos (0-9).
   * Ejemplos válidos: "12345678", "00000001"

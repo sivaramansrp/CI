@@ -5,9 +5,9 @@ import { CategoriaMensaje, Notificacion, NotificacionesComponent } from '../../n
 import { ConsultaDetalleObservacionRequerimientoComponent } from '../consulta-detalle-observacion-requerimiento/consulta-detalle-observacion-requerimiento.component';
 import { ConsultaDetalleRequerimientoComponent } from '../consulta-detalle-requerimiento/consulta-detalle-requerimiento.component';
 import { ConsultarequerimientosComponent } from '../consulta-requerimientos/consulta-requerimientos.component';
-import { DetalleRequerimientoService } from '../../../../core/services/130118/detalleRequerimiento.service';
-import { RequerimientoDetalleResponse } from '../../../../core/models/130118/requerimiento-detalle-response.model';
-import { RequerimientosResponse } from '../../../../core/models/130118/requerimientos-response.model';
+import { DetalleRequerimientoService } from '../../../../core/services/shared/detalleRequerimiento.service';
+import { RequerimientoDetalleResponse } from '../../../../core/models/shared/requerimiento-detalle-response.model';
+import { RequerimientosResponse } from '../../../../core/models/shared/requerimientos-response.model';
 import { Subject } from 'rxjs';
 
 

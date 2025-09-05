@@ -53,7 +53,7 @@
           </label>
           <span
           class="bi bi-question-circle-fill fs-4 m-1"
-          title="Descripción de la fracción arancelaria"
+          title="Ingrese una fracción"
           ata-bs-toggle="tooltip"
         >
         </span>
@@ -85,7 +85,7 @@
           <label for="cantidadUMT" class="form-label">Cantidad en UMT*:</label>
           <span
           class="bi bi-question-circle-fill fs-4 m-1"
-          title="Cantidad en UMT"
+          title="Unidad de medida de la tarifa"
           ata-bs-toggle="tooltip"
         >
         </span>
@@ -110,7 +110,13 @@
         </div>
 
         <div class="col-md-4">
-          <label for="umt" class="form-label">UMT*:</label>
+          <label for="umt" class="form-label">UMT*: <span
+            *ngIf="mostrarTooltipUMT"
+          class="bi bi-question-circle-fill fs-4 m-1"
+          title="Unidad de medida de la tarifa"
+          ata-bs-toggle="tooltip"
+        >
+        </span></label>
           <input
             id="umt"
             type="text"
@@ -168,6 +174,7 @@
             [required]="true"
             [tooltipQuestionCircle]="true"
             [isDisabled]="esFormularioSoloLectura"
+            [tooltipQuestionCircleText]="'Unidad de medida comercial'"
             (selectionChange)="datosMercancia.get('umc')?.setValue($event.id)"
           ></app-catalogo-select>
           <div class="error-message">
@@ -222,7 +229,7 @@
         </div>
       }
 
-      <div class="row mt-5">
+      <div class="row mt-5 mb-5">
         <div class="col-md-12">
           <div class="pull-right">
             <button

@@ -1,9 +1,9 @@
 import {
   API_GET_RECINTO,
   CLAVE_ADUANA_QUERY,
-} from '../../../constants/api-constants';
+  COMUN_URL,
+} from '../../../servers/api-router';
 import { Observable, catchError, map, throwError } from 'rxjs';
-import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RecintoResponse } from '../../../models/shared/recinto.model';
@@ -15,7 +15,7 @@ export class RecintoService {
   private readonly host: string;
 
   constructor(private http: HttpClient) {
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   /**

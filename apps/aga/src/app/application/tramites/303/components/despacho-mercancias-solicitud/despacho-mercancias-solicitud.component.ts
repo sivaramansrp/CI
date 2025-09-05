@@ -42,7 +42,6 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
   mostrarControlInventarios = false;
   /** Formulario para el control de inventarios */
   formInventario!: FormGroup;
-
   /** Subject para destruir las suscripciones. */
   private destruirSuscripcion$: Subject<void> = new Subject();
   /** Inventario en edición */
@@ -50,6 +49,13 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
   /** Texto de la sección */
   TEXTOS = TEXTOS_303;
 
+  /**
+   * Constructor del componente.
+   * @param fb FormBuilder
+   * @param tramite303State Estado del trámite 303.
+   * @param transportistaService Servicio de transportista.
+   * @param tramite303Query Consulta del trámite 303.
+   */
   constructor(
     private fb: FormBuilder,
     private tramite303State: Tramite303StoreService,
@@ -57,6 +63,18 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
     private tramite303Query: Tramite303Query
   ) {
     this.createFormulario();
+  }
+
+  /**
+   * Valida el formulario de despacho y el formulario de inventario.
+   * @returns boolean
+   */
+  validarFormulario(): boolean {
+    this.formDespacho.markAllAsTouched();
+    if (this.formDespacho.valid && this.formInventario.valid) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -84,6 +102,9 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
     this.ObtenerDatosCatalogoImmex();
   }
 
+  /**
+   * Obtiene los datos del catálogo IMMEX.
+   */
   ObtenerDatosCatalogoImmex(): void {
     this.transportistaService.obtenerDatosImmex()
       .pipe(
@@ -115,11 +136,11 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
       cuentaImmex: [this.tramiteConsultado?.cuentaImmex, Validators.required],
       checkboxImportacion1: [this.tramiteConsultado?.checkboxImportacion1 || false],
       checkboxImportacion2: [this.tramiteConsultado?.checkboxImportacion2 || false],
-      immex: [this.tramiteConsultado?.immex, Validators.required], // ✅ corregido
+      immex: [this.tramiteConsultado?.immex, Validators.required],
       padron: [this.tramiteConsultado?.padron, Validators.required],
-      controlInventarios: [this.tramiteConsultado?.controlInventarios, Validators.required], // ✅ string, no boolean
+      controlInventarios: [this.tramiteConsultado?.controlInventarios, Validators.required],
       contabilidad: [this.tramiteConsultado?.contabilidad, Validators.required],
-      interposicion: [this.tramiteConsultado?.interposicion, Validators.required], // ✅ corregido
+      interposicion: [this.tramiteConsultado?.interposicion, Validators.required],
       checkboxManifiesto1: [this.tramiteConsultado?.checkboxManifiesto1 || false],
       checkboxManifiesto2: [this.tramiteConsultado?.checkboxManifiesto2 || false],
       ingresoInforme: [this.tramiteConsultado?.ingresoInforme || false],
@@ -187,7 +208,6 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite303StoreService): void {
     const VALOR = form.get(campo)?.value;
-    // Obtener el valor actual del campo
     const ISCHECKBOX = campo === 'checkboxImportacion1' || campo === 'checkboxImportacion2';
     if (ISCHECKBOX) {
       (this.tramite303State[metodoNombre] as (value: boolean) => void)(Boolean(VALOR));
@@ -195,6 +215,7 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
       (this.tramite303State[metodoNombre] as (value: string) => void)(VALOR);
     }
   }
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Limpia las suscripciones para evitar fugas de memoria.
@@ -222,7 +243,6 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
       };
       return;
     }
-
     if (this.inventarioEnEdicion) {
       const INVENTARIO_ACTUALIZADO: ControlInventario = {
         ...this.inventarioEnEdicion,
@@ -320,7 +340,6 @@ export class DespachoMercanciasSolicitudComponent implements OnInit, OnDestroy {
 
     this.listaControlInventariosSeleccionados = [];
   }
-
 
   /**
    * Método para eliminar un inventario existente.

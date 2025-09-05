@@ -20,6 +20,7 @@ import { OPCION_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/terceros
 import { RadioOpcion } from '../../models/220202/fitosanitario.model';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
 import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
  * @component
@@ -35,7 +36,8 @@ import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/terc
     TituloComponent,
     InputRadioComponent,
     CatalogoSelectComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TooltipModule
   ],
   templateUrl: './agregar-exportador.component.html',
 })

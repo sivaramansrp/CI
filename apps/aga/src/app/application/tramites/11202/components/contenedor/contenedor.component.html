@@ -18,17 +18,15 @@
   <br />
 
   <div id="seccionAduanaaFecha" *ngIf="seccionAduanaaFechaVisible">
-    <ng-titulo titulo="Datos generales" />
+    <ng-titulo titulo="Datos generales"/>
     <ng-container formGroupName="datosGenerales">
       <div class="row">
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="options" formControlName="aduana" [label]="'Aduana/sección aduanera'"
             [placeholder]="'Seleccione una opción'" [required]="true"
             (change)="setValoresStore(datosGenerales, 'aduana', 'setAduana')"
-            [isDisabled]="soloLectura"></app-catalogo-select>
-          <div *ngIf="isInvalid('datosGenerales.aduana') && solicitudForm.get('datosGenerales.aduana')?.errors?.['required']" class="mensaje-error">
-              Este campo es obligatorio.
-          </div>
+            [isDisabled]="soloLectura" 
+            [markTouched]="solicitudForm.get('datosGenerales.aduana')?.touched??false"></app-catalogo-select>
         </div>
       </div>
     </ng-container>
@@ -42,14 +40,13 @@
           <div class="form-group">
             <label class="form-label" for="inicialesContenedor">Iniciales del equipo*:
             </label>
-            <input type="text" class="form-control" id="inicialesContenedor"
+            <input type="text" class="form-control" id="inicialesContenedor" maxlength="10"
               formControlName="inicialesContenedor" (change)="
                 setValoresStore(
                   datosContenedor,
                   'inicialesContenedor',
                   'setInicialesContenedor'
-                )
-              " />
+                )"  [ngClass]="{'is-invalid': isInvalid('datosContenedor.inicialesContenedor')}"/>
               <div *ngIf="isInvalid('datosContenedor.inicialesContenedor') && solicitudForm.get('datosContenedor.inicialesContenedor')?.errors?.['required']" class="mensaje-error">
                 Este campo es obligatorio.
               </div>
@@ -59,14 +56,13 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="numeroContenedor">Número de equipo*:</label>
-            <input type="text" class="form-control" id="numeroContenedor"
+            <input type="text" class="form-control" id="numeroContenedor" maxlength="15"
               formControlName="numeroContenedor" (change)="
                 setValoresStore(
                   datosContenedor,
                   'numeroContenedor',
                   'setNumeroContenedor'
-                )
-              " />
+                )" [ngClass]="{'is-invalid': isInvalid('datosContenedor.numeroContenedor')}"/>
               <div *ngIf="isInvalid('datosContenedor.numeroContenedor') && solicitudForm.get('datosContenedor.numeroContenedor')?.errors?.['required']" class="mensaje-error">
                   Este campo es obligatorio.
               </div>
@@ -109,11 +105,7 @@
               <div class="form-group">
                   <label for="digitoDeControl">Dígito verificador:</label>
                   <input type="text" formControlName="digitoDeControl" id="digitoDeControl" maxlength="1"
-                      pattern="[0-9]" inputmode="numeric" autocomplete="off"
-                      class="form-control" (change)="setValoresStore(
-                        datosContenedor,
-                        'digitoDeControl',
-                        'setDigitoDeControl')" [disabled]="soloLectura">
+                      class="form-control" [disabled]="soloLectura">
               </div>
           </div>
         </div>

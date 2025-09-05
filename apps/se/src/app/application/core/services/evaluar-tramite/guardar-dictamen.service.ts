@@ -6,11 +6,11 @@ import { Observable } from 'rxjs';
 
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { GuardarDictamenRequest } from '../../models/evaluar/request/guardar-dictamen-request.model';
-import { SentidosDisponiblesResponse } from '@libs/shared/data-access-user/src/core/models/130118/sentidos-disponibles.model';
+import { SentidosDisponiblesResponse } from '@libs/shared/data-access-user/src/core/models/shared/sentidos-disponibles.model';
 
 
-import { API_GET_DICTAMEN_CRITERIOS, API_GET_SENTIDOS_DISPONIBLES, API_POST_GUARDAR_DICTAMEN, API_POST_MOSTRAR_FIRMAR, IDSOLICITUDDICTAMEN, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
-import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/130118/criterios-response.model';
+import { API_GET_DICTAMEN_CRITERIOS, API_GET_SENTIDOS_DISPONIBLES, API_POST_GUARDAR_DICTAMEN, API_POST_MOSTRAR_FIRMAR } from '@libs/shared/data-access-user/src';
+import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/shared/criterios-response.model';
 import { GuardarDictamenResponse } from '../../models/evaluar/response/guardar-dictamen-response.model';
 import { MostrarFirmarRequest } from '../../models/evaluar/request/firmar-mostrar-dictamen.request.model';
 import { MostrarFirmarResponse } from '../../models/evaluar/response/mostrar-firmar-response.model';
@@ -42,7 +42,7 @@ export class GuardarDictamenService {
    * @returns Observable con la respuesta del servidor.
    */
   postGuadarDictamen(tramite: number, numFolio: string, PAYLOAD: GuardarDictamenRequest): Observable<BaseResponse<GuardarDictamenResponse>> {
-    const ENDPOINT = `${this.host}${API_POST_GUARDAR_DICTAMEN.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
+    const ENDPOINT = `${this.host}${API_POST_GUARDAR_DICTAMEN(tramite.toString(), numFolio)}`;
     return this.http.post<BaseResponse<GuardarDictamenResponse>>(ENDPOINT, PAYLOAD);
   }
 
@@ -52,7 +52,7 @@ export class GuardarDictamenService {
    * @returns Observable con la respuesta del servidor.
    */
   getCriterios(tramite: number, idSolicitud: string): Observable<BaseResponse<CriteriosResponse>> {
-    const ENDPOINT = `${this.host}${API_GET_DICTAMEN_CRITERIOS.replace(TRAMITE, tramite.toString()).replace(IDSOLICITUDDICTAMEN, idSolicitud)}`;
+    const ENDPOINT = `${this.host}${API_GET_DICTAMEN_CRITERIOS(tramite.toString(), idSolicitud)}`;
     return this.http.get<BaseResponse<CriteriosResponse>>(ENDPOINT);
   }
 
@@ -62,7 +62,7 @@ export class GuardarDictamenService {
    * @returns Observable con la respuesta del servidor.
    */
   getSentidosDisponibles(tramite: string, numFolio: string): Observable<BaseResponse<SentidosDisponiblesResponse[]>> {
-    const ENDPOINT = `${this.host}${API_GET_SENTIDOS_DISPONIBLES.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
+    const ENDPOINT = `${this.host}${API_GET_SENTIDOS_DISPONIBLES(tramite.toString(), numFolio)}`;
     return this.http.get<BaseResponse<SentidosDisponiblesResponse[]>>(ENDPOINT);
   }
 
@@ -77,7 +77,7 @@ export class GuardarDictamenService {
 
   postFirmarMostrar(tramite: number, numFolio: string, PAYLOAD: MostrarFirmarRequest):
     Observable<BaseResponse<MostrarFirmarResponse>> {
-    const ENDPOINT = `${this.host}${API_POST_MOSTRAR_FIRMAR.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
+    const ENDPOINT = `${this.host}${API_POST_MOSTRAR_FIRMAR(tramite.toString(), numFolio)}`;
 
     return this.http.post<BaseResponse<MostrarFirmarResponse>>(ENDPOINT, PAYLOAD);
   }

@@ -108,7 +108,8 @@
                 mercanciaForm,
                 'umc',
                 'setUmc'
-                )"></app-catalogo-select>
+                )"
+                [markTouched]="mercanciaForm.get('umc')?.touched ?? false"></app-catalogo-select>
               </div>
           </div>
           
@@ -157,7 +158,19 @@
           </div>
           <div class="row mb-3">
             <div class="col-md-4">
-              <input-fecha [datos]="fechaFactura" [deshabilitarFuturas]="true" [setFecha]="mercanciaForm.get('fechaFactura')?.value"></input-fecha>
+              <input-fecha
+              [datos]="fechaFactura"
+              [deshabilitarFuturas]="true"
+              [setFecha]="mercanciaForm.get('fechaFactura')?.value"
+              (valorCambiado)="cambioFechaFactura($event)"></input-fecha>
+               @if (esInvalido('fechaFactura')) {
+                  <div class="d-grid">
+                    @if (mercanciaForm.controls['fechaFactura'].errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                  </div>
+                  }
+
             </div>
             <div class="col-md-4">
               <label for="numeroFactura">N° factura / Referencia</label>
@@ -183,7 +196,8 @@
                 mercanciaForm,
                 'tipoFactura',
                 'setTipoFactura'
-                )"></app-catalogo-select>
+                )"
+                [markTouched]="mercanciaForm.get('tipoFactura')?.touched ?? false"></app-catalogo-select>
             </div>
           </div>
         </form>

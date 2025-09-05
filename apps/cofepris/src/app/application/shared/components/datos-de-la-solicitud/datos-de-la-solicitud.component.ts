@@ -1,4 +1,5 @@
 import {
+  AICM,AIFA,
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
   DESHABILITADA_EN_INIT,
@@ -69,11 +70,12 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { Subject, delay, takeUntil } from 'rxjs';
+import { Subject, delay, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
+import { ConsultaioQuery }  from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -200,6 +202,17 @@ export class DatosDeLaSolicitudComponent
    * Lista de regímenes disponibles.
    */
   public regimenDatos: Catalogo[] = [];
+  
+  /**
+   * @property {string} AICM
+   * Constante que representa el Aeropuerto Internacional de la Ciudad de México (AICM).
+   */
+  AICM = AICM;
+  /**
+   * @property {string} AIFA
+   * Constante que representa el Aeropuerto Internacional Felipe Ángeles (AIFA).
+   */
+  AIFA = AIFA;
 
   /**
    * @property {Catalogo[]} adunasDeEntradasDatos
@@ -306,6 +319,8 @@ export class DatosDeLaSolicitudComponent
    * o no, dependiendo de la lógica implementada en el componente.
    */
   public mostrarRFCCalle = true;
+
+  
 
   /**
    * @property {Catalogo[]} regimenLaMercanciaDatos
@@ -472,7 +487,8 @@ export class DatosDeLaSolicitudComponent
     public fb: FormBuilder,
     public router: Router,
     public activatedRoute: ActivatedRoute,
-    public datosSolicitudService: DatosSolicitudService
+    public datosSolicitudService: DatosSolicitudService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
@@ -510,6 +526,15 @@ export class DatosDeLaSolicitudComponent
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
+
+        this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => { 
+              this.formularioDeshabilitado = seccionState.readonly;
+            })
+          )
+          .subscribe();
   }
 
   /**
@@ -721,6 +746,10 @@ export class DatosDeLaSolicitudComponent
       ],
       aeropuerto: [
         this.datosSolicitudFormState.aeropuerto,
+        [Validators.required],
+      ],
+      aeropuertoDos: [
+        this.datosSolicitudFormState.aeropuertoDos,
         [Validators.required],
       ],
       publico: [this.datosSolicitudFormState.publico, [Validators.required]],
@@ -1078,7 +1107,7 @@ export class DatosDeLaSolicitudComponent
    * @param {string} campo - Nombre del campo a verificar.
    * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
    */
-  esCampoRequerido(campo: string): boolean {
+  esCampoRequerido(campo: string): boolean { 
     return this.elementosRequeridos?.includes(campo) ?? false;
   }
 

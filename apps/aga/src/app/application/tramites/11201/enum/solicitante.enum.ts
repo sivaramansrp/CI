@@ -11,11 +11,7 @@ export const ENCABEZADO_TABLA_CONTENEDOR: ConfiguracionColumna<DatosDelContenedo
   { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fechaIngreso, orden: 6 },
   { encabezado: 'Vigencia', clave: (articulo) => articulo.vigencia, orden: 7 },
   { encabezado: 'Estado de constancia', clave: (articulo) => articulo.estadoConstancia, orden: 8 },
-  { encabezado: 'Existe en VUCEM', clave: (articulo) => articulo.existeEnVUCEM, orden: 9 },
-  { encabezado: 'Id constancia', clave: (articulo) => articulo.idConstancia, orden: 10 },
-  { encabezado: 'Número manifiesto', clave: (articulo) => articulo.numeroManifiesto, orden: 11 },
-  { encabezado: 'Id solicitud', clave: (articulo) => articulo.idSolicitud, orden: 12 },
-  { encabezado: 'Fecha inicio', clave: (articulo) => articulo.fechaInicio, orden: 13 },
+  { encabezado: 'Existe en VUCEM', clave: (articulo) => articulo.existeEnVUCEM, orden: 9 }
 ];
 export const ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO: ConfiguracionColumna<DatosDelContenedor>[] = [
   { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
@@ -31,13 +27,13 @@ export const ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO: ConfiguracionColumna<DatosD
 
 export const HEADER_MAP_DATOS: { [key: string]: string } = {
       Id: 'id',
-      Aduana: 'aduana',
+      'Aduana': 'aduana',
       'Iniciales del equipo': 'inicialesEquipo',
       'Tipo de equipo': 'tipoEquipo',
       'Número de equipo': 'numeroEquipo',
       'Dígito Verificador': 'digitoVerificador',
       'Fecha Ingreso': 'fechaIngreso',
-      Vigencia: 'vigencia',
+      'Vigencia': 'vigencia',
       'Estado de constancia': 'estadoConstancia',
       'Existe en VUCEM': 'existeEnVUCEM',
       'Id constancia': 'idConstancia',

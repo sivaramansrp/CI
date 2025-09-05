@@ -15,16 +15,20 @@ describe('PartidasDeLaMercanciaComponent', () => {
     fixture = TestBed.createComponent(PartidasDeLaMercanciaComponent);
     component = fixture.componentInstance;
     component.partidasDelaMercanciaForm = new FormGroup({
-      cantidadPartidasDeLaMercancia: new FormControl(''),
-      nombrePartida: new FormControl(''),
-      descripcionPartidasDeLaMercancia: new FormControl(''), 
-      valorPartidaUSDPartidasDeLaMercancia: new FormControl(''),
-        });
-
-        component.formForTotalCount = new FormGroup({
-          cantidadTotal: new FormControl('', Validators.required),
-          valorTotalUSD: new FormControl('', Validators.required),
-        });
+      cantidadPartidasDeLaMercancia: new FormControl('', Validators.required),
+      nombrePartida: new FormControl('', Validators.required),
+      descripcionPartidasDeLaMercancia: new FormControl('', Validators.required), 
+      valorPartidaUSDPartidasDeLaMercancia: new FormControl('', Validators.required),
+    });
+      component.modificarPartidasDelaMercanciaForm = new FormGroup({
+      cantidadPartidasDeLaMercancia: new FormControl('', Validators.required),
+      descripcionPartidasDeLaMercancia: new FormControl('', Validators.required),
+      valorPartidaUSDPartidasDeLaMercancia: new FormControl('', Validators.required),
+    });
+    component.formForTotalCount = new FormGroup({
+      cantidadTotal: new FormControl('', Validators.required),
+      valorTotalUSD: new FormControl('', Validators.required),
+    });
 
     fixture.detectChanges(); 
   });
@@ -79,6 +83,8 @@ describe('PartidasDeLaMercanciaComponent', () => {
     });
     const testCampo = 'testCampo';
     const testMetodoNombre = 'testMetodoNombre';
+
+    component.partidasDelaMercanciaForm = testForm;
 
     component.setValoresStore(testForm, testCampo);
 

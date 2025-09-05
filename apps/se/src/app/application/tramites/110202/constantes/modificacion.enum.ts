@@ -1,5 +1,5 @@
+import { Mercancia } from '../../../shared/models/modificacion.enum';
 import {
-  Mercancia,
   Mercancias,
 } from '../models/configuracion-columna.model';
 
@@ -77,10 +77,8 @@ export const CONFIGURACION_MERCANCIA = [
   {
     /** Título visible: Fracción arancelaria */
     encabezado: 'Fracción arancelaria',
-
     /** Función que retorna la fracción arancelaria del objeto `Mercancia` */
     clave: (ele: Mercancia): string | undefined => ele.fraccionArancelaria,
-
     /** Posición de esta columna en la tabla */
     orden: 1,
   },
@@ -112,12 +110,9 @@ export const CONFIGURACION_MERCANCIA = [
     /** Título visible: Fecha vencimiento */
     encabezado: 'Fecha vencimiento',
     clave: (ele: Mercancia): string | undefined => ele.fechaVencimiento,
-    orden: 6, // ✔️ Corregido para evitar conflicto con la columna anterior.
+    orden: 6,
   }
 ];
- /**
- * Mensaje informativo sobre las tablas obligatorias.
- */
 
  /**
  * Configuración de las columnas para la tabla de mercancías.
@@ -200,3 +195,22 @@ export const CATALOGOS_DATOS = [
         }
 
     ];
+    /**
+ * MERCANCIA_PREFILL contiene datos de ejemplo para pruebas.
+ * Incluye fracción arancelaria, registro, fechas y nombres técnicos/comerciales.
+ * Sirve como plantilla para inicializar formularios o pruebas unitarias.
+ */
+export const MERCANCIA_PREFILL: Mercancia[] = [
+  {
+    fraccionArancelaria: '1234.56.78',
+    numeroDeRegistrodeProductos: 'REG-001',
+    fechaExpedicion: '2024-01-01',
+    fechaVencimiento: '2025-01-01',
+    nombreTecnico: 'Producto Técnico',
+    nombreComercial: 'Producto Comercial',
+    fraccionNaladi: 'NAL001',
+    fraccionNaladiSa93: 'NAL93',
+    fraccionNaladiSa96: 'NAL96',
+    fraccionNaladiSa02: 'NAL02',
+  }
+];

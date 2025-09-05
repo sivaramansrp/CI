@@ -10,24 +10,12 @@
           [required]="certificadosAutorizados.required"
           formControlName="certificadosAutorizados"
           [isDisabled]="formularioDeshabilitado"
+          [markTouched]="grupoFormularioPadre.get(this.claveDeControl)?.get('certificadosAutorizados')?.touched ?? false"
           (selectionChange)="setCertificadosAutorizados($event)"
         ></app-catalogo-select>
       </div>
     </div>
-    @if (procedimiento === 220502) {
-      <div class="col-md-4">
-        <div class="form-field">
-          <input-fecha
-            formControlName="fechaDeInspeccion"
-            [datos]="configuracionFechaFinVigencia"
-            (valorCambiado)="cambioFechaInicio($event)"
-            [isDisabled]="formularioDeshabilitado"
-            [setFecha]="solicitud220502State.fechaDeInspeccion"
-          ></input-fecha>
-        </div>
-      </div>
-    }
-    @if (procedimiento === 220501) {
+    @if (procedimiento === 220501 || procedimiento === 220502) {
       <div class="col-md-4">
         <div class="form-field">
           <input-fecha
@@ -49,6 +37,7 @@
           [required]="horaDeInspeccion.required"
           formControlName="horaDeInspeccion"
           [isDisabled]="formularioDeshabilitado"
+          [markTouched]="grupoFormularioPadre.get(this.claveDeControl)?.get('horaDeInspeccion')?.touched ?? false"
           (selectionChange)="setHoraDeInspeccion($event)"
         ></app-catalogo-select>
       </div>
@@ -87,6 +76,7 @@
           [label]="puntoDeInspeccion.labelNombre"
           [required]="puntoDeInspeccion.required"
           formControlName="puntoDeInspeccion"
+          [markTouched]="grupoFormularioPadre.get(this.claveDeControl)?.get('puntoDeInspeccion')?.touched ?? false"
           [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setPuntoDeInspeccion($event)"
         ></app-catalogo-select>

@@ -54,6 +54,11 @@ export const TEXTOS = {
   <p style="text-align: left;">- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
   <p style="text-align: left;">- En caso de que no requieras algún documento, selecciónalo y elimínalo</p>
   <p style="text-align: left;">- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo"</p>`,
+  /**
+   * Mensaje de advertencia para el usuario.
+   */
+  ADVERTENCIA: `<p style="text-align: center;">No cuenta con una autorizaciï¿12n vigente en el Registro del Esquema de Certificacii¿12n de Empresas bajo la modalidad IVA e IEPS,
+rubros AA o AAA, no es posible continuar</p>`,
 };
 
 export const MESES = [
@@ -122,6 +127,10 @@ export const FECHA_SALIDA = {
 
 export const TXT_ALERTA_ACUSE = (folio: string): string => {
   return `Tu solicitud ha sido registrada con el siguiente número de folio:  < ${folio} >`;
+};
+
+export const TXT_ALERTA_ACUSE_RECIBO = (folio: string): string => {
+  return `El requerimiento se registró exitosamente con el folio de requerimiento  < ${folio} >`;
 };
 
 export const TITULO_ACUSE = 'Acuse(s)';
@@ -250,7 +259,7 @@ Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo do
 export const LASTABLA = {
   Importante: `
     <div class="text-center">
-      <p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>
+      <p class="m-0">Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>
     </div>
   `
 };

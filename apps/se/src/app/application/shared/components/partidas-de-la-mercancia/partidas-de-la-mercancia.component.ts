@@ -71,6 +71,12 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
   @Input() partidasDelaMercanciaForm!: FormGroup;
 
   /**
+   * modificarPartidasDelaMercanciaForm
+   * Formulario reactivo para modificar las partidas.
+   */
+  @Input() modificarPartidasDelaMercanciaForm!: FormGroup;
+
+  /**
    * formForTotalCount
    * Formulario reactivo para capturar los totales de las partidas.
    */
@@ -168,6 +174,12 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    */
   @Input() mostrarErrores: boolean = false;
 
+  /*
+   * @Input() mostrarErroresModal
+   * Bandera que indica si se deben mostrar los mensajes de error en el modal.
+   */
+  mostrarErroresModal = false;
+
   /**
    * Nombre del archivo seleccionado por el usuario.
    */
@@ -178,6 +190,20 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    */
   @Output() validarAntesDeCargarArchivo = new EventEmitter<void>();
 
+  /*
+   * Evento emitido cuando se eliminan partidas de la tabla.
+   */
+  @Output() partidasEliminadas = new EventEmitter<string[]>();
+
+  /**
+   * Evento emitido cuando se modifica una partida seleccionada.
+   */
+  @Output() modificarPartidaSeleccionada = new EventEmitter<PartidasDeLaMercanciaModelo>();
+
+  /**
+   * Evento emitido cuando se modifica una partida seleccionada.
+   */
+  @Output() partidaModificada = new EventEmitter<PartidasDeLaMercanciaModelo>();
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
    * FormBuilder para crear formularios reactivos.
@@ -216,6 +242,18 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
  }
+/*
+
+*/
+/**
+ * Verifica si un control específico dentro del formulario `modificarPartidasDelaMercanciaForm` es inválido y ha sido tocado o modificado.
+ * El nombre del control dentro del formulario a validar.
+ * true si el control es inválido y ha sido tocado o modificado; de lo contrario, `false`.
+ */
+ esInvalidoModal(nombreControl: string): boolean {
+  const CONTROL = this.modificarPartidasDelaMercanciaForm.get(nombreControl);
+  return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
+}
 
   /**
    * Maneja las filas seleccionadas en la tabla dinámica y emite un evento.
@@ -267,6 +305,8 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
       this.mostrarNotificacion = true;
       return;
     }
+    this.modificarPartidaSeleccionada.emit(this.selectedRows[0]);
+
     if (this.modificarPartidaElemento) {
       const MODAL_INSTANCIA = new Modal(
         this.modificarPartidaElemento?.nativeElement,
@@ -332,10 +372,11 @@ onConfirmacionModal(accion: boolean): void {
  * limpia la selección de filas.
  */
 eliminarPartidasSeleccionadas(): void {
-  if (this.selectedRows && this.selectedRows.length > 0) {
-    const IDS_ELIMINAR = this.selectedRows.map(row => row.id); // Use your unique key
+    if (this.selectedRows && this.selectedRows.length > 0) {
+    const IDS_ELIMINAR = this.selectedRows.map(row => row.id);
     this.tableBodyData = this.tableBodyData.filter(row => !IDS_ELIMINAR.includes(row.id));
     this.selectedRows = [];
+    this.partidasEliminadas.emit(IDS_ELIMINAR); 
   }
 }
   /**
@@ -367,10 +408,25 @@ setValoresStore(form: FormGroup, campo: string): void {
  */
 validarModificarPartida(): void {
   
-  if (this.partidasDelaMercanciaForm.invalid) {
-    this.partidasDelaMercanciaForm.markAllAsTouched();
+  if (this.modificarPartidasDelaMercanciaForm.invalid) {
+    this.mostrarErroresModal = true;
+    this.modificarPartidasDelaMercanciaForm.markAllAsTouched();
     return;
   }
+  this.mostrarErroresModal = false;
+   const PREV = this.selectedRows[0];
+  if (!PREV) { return; }
+
+  this.partidaModificada.emit({
+    id: PREV.id,
+    cantidad: this.modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
+    descripcion: this.modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
+    totalUSD: this.modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
+    unidadDeMedida: PREV.unidadDeMedida,
+    fraccionFrancelaria: PREV.fraccionFrancelaria,
+    precioUnitarioUSD: PREV.precioUnitarioUSD
+  });
+  
   if (this.modificarPartidaElemento && this.modificarPartidaElemento.nativeElement) {
     const MODAL_INSTANCIA = Modal.getInstance(this.modificarPartidaElemento.nativeElement);
     if (MODAL_INSTANCIA) {

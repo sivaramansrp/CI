@@ -8,13 +8,13 @@ import { API_POST_FIRMAR, API_POST_INICIAR_AUTORIZAR_DICTAMEN, API_POST_MOSTRAR_
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { Observable } from 'rxjs';
 
-import { IniciarAutorizacionResponse } from '@libs/shared/data-access-user/src/core/models/130118/iniciar-autorizar-dictamen-response.model';
+import { IniciarAutorizacionResponse } from '@libs/shared/data-access-user/src/core/models/shared/iniciar-autorizar-dictamen-response.model';
 
 import { DocumentoOficialResponse } from '../../models/autorizar-requerimiento/response/oficio-autorizacion-response.model';
 import { FirmaAutorizarDictamenRequest } from '../../models/autorizar-requerimiento/request/firma-autorizar-request.model';
 import { MostrarFirmaRequest } from '../../models/autorizar-requerimiento/request/mostrar-firmar-request.model';
 import { MostrarFirmarResponse } from '../../models/autorizar-requerimiento/response/mostrar-firmar-response.model';
-import { ObservacionRequest } from '../../models/130118/request/observacion-guardar-request.model';
+import { ObservacionRequest } from '../../models/autorizar-requerimiento/request/observacion-guardar-request.model';
 
 @Injectable({
   providedIn: 'root'

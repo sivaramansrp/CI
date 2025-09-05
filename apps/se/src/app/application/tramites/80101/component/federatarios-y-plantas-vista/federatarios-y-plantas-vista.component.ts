@@ -40,6 +40,11 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
   @Input() formularioDeshabilitado: boolean = false;
 
   /**
+   * @property {boolean} esFormularioUpdate - Indica si el formulario está en modo de actualización.
+   */
+  @Input() esFormularioUpdate: boolean = false;
+
+  /**
    * Datos de federatarios que se mostrarán en la tabla
    * @property {FederatariosEncabezado} datosFederatarios
    */
@@ -93,9 +98,21 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
 
   /**
    * Lista de plantas IMMEX para mostrar en la tabla
+   * @property {PlantasImmex[]} plantasDisponiblesTablaLista
+   */
+  public plantasDisponiblesTablaLista$!: Observable<PlantasDisponibles[]>;
+
+  /**
+   * Lista de plantas IMMEX para mostrar en la tabla
    * @property {PlantasImmex[]} plantasImmexTablaLista
    */
   public plantasImmexTablaLista: PlantasImmex[] = [];
+
+  /**
+   * Lista de plantas IMMEX para mostrar en la tabla
+   * @property {PlantasImmex[]} plantasImmexTablaLista
+   */
+  public plantasImmexTablaLista$!: Observable<PlantasImmex[]>;
   /**
    * Lista de federatarios para mostrar en la tabla
    * @property {FederatariosEncabezado[]} federatariosTablaLista
@@ -164,12 +181,8 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
     public nuevoProgramaIndustrialService: NuevoProgramaIndustrialService
   ) {
     this.federatariosTablaLista$ = this.query.selectDatosFederatarios$;
-    this.nuevoProgramaIndustrialService
-      .getFederataiosyPlantaCatalogosData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((resp) => {
-        this.estadoOptionsConfig = resp
-      });
+    this.plantasImmexTablaLista$ = this.query.selectDatosPlantasImmex$;
+    this.plantasDisponiblesTablaLista$ = this.query.selectDatosPlantasDisponibles$;
   }
 
   /**
@@ -190,6 +203,12 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
     .subscribe((val: boolean) => {
       this.tieneDatosDeTabla = val;
     });
+    this.nuevoProgramaIndustrialService
+      .getFederataiosyPlantaCatalogosData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
+        this.estadoOptionsConfig = resp
+      });
   }
   /**
    * Establece los datos de los federatarios en el almacén.

@@ -1,11 +1,14 @@
-import { API_POST_GUARDAR_REQUERIMIENTO, NUMFOLIOTRAMITE, TRAMITE } from '../../../constantes/130118/api-constants';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { API_POST_GUARDAR_REQUERIMIENTO, API_POST_GUARDAR_REQUERIMIENTO_MOSTRAR_FIRMA } from '@libs/shared/data-access-user/src';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { GuardarRequerimiento } from '../../models/evaluar/request/guardar-requerimiento-request.model';
 import { GuardarRequerimientosResponse } from '../../models/evaluar/response/guardar-requerimiento-response.model';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { MostrarFirmarRequerimientoRequest } from '../../models/evaluar/request/firma-mostrar-requerimiento.request.model';
+import { MostrarFirmarRequerimientoResponse } from '../../models/evaluar/response/mostrar-firmar-requerimiento.response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -36,9 +39,21 @@ export class GuardarRequerimientoService {
   */
   postGuardarRequerimiento(tramite: number, numFolio: string, PAYLOAD: GuardarRequerimiento):
     Observable<BaseResponse<GuardarRequerimientosResponse>> {
-    const ENDPOINT = `${this.host}${API_POST_GUARDAR_REQUERIMIENTO.replace(TRAMITE, tramite.toString()).replace(NUMFOLIOTRAMITE, numFolio)}`;
+    const ENDPOINT = `${this.host}${API_POST_GUARDAR_REQUERIMIENTO(tramite.toString(), numFolio)}`;
 
     return this.http.post<BaseResponse<GuardarRequerimientosResponse>>(ENDPOINT, PAYLOAD);
   }
 
+  /** 
+   * Prepara y muestra la interfaz de firma para un requerimiento
+   * @param tramite - Número de trámite al que pertenece el requerimiento
+   * @param numFolio - Número de folio del trámite
+   * @param PAYLOAD - Datos para la firma del requerimiento
+   * @returns Observable con la respuesta del servidor para mostrar la firma
+ */
+  postMostrarFirma(tramite: number, numFolio: string, PAYLOAD: MostrarFirmarRequerimientoRequest):
+   Observable<BaseResponse<MostrarFirmarRequerimientoResponse>> {
+    const ENDPOINT = `${this.host}${API_POST_GUARDAR_REQUERIMIENTO_MOSTRAR_FIRMA(tramite.toString(), numFolio)}`;
+    return this.http.post<BaseResponse<MostrarFirmarRequerimientoResponse>>(ENDPOINT, PAYLOAD);
+  }
 }

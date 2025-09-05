@@ -1,11 +1,8 @@
+import { API_GET_ENTIDADES_FEDERATIVAS, API_GET_ENTIDADES_FEDERATIVAS_CLAVE, COMUN_URL, CVEENTIDAD } from '../../../servers/api-router';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { CatalogosResponse } from '../../../models/shared/catalogo.model';
-import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
-import { Observable, catchError, map, throwError } from 'rxjs';
-
-import { API_GET_ENTIDADES_FEDERATIVAS, API_GET_ENTIDADES_FEDERATIVAS_CLAVE, CVEENTIDAD } from '../../../constants/api-constants';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +17,7 @@ export class EntidadesFederativasService {
   private readonly host: string;
 
   constructor(private http: HttpClient) {
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   /**

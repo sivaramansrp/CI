@@ -1,5 +1,6 @@
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { HistoricoColumnas } from './certificado-origen.model';
+import { TramiteState } from '../estados/Tramite110223.store';
 
 /**
  * Interfaz que define la estructura de las columnas de la tabla.
@@ -121,7 +122,7 @@ export interface RespuestaConsulta {
   /**
    * Contiene los datos obtenidos de la consulta.
    */
-  datos: ConsultaDatos;
+  datos: TramiteState;
 
   /**
    * Mensaje asociado a la respuesta de la consulta.
@@ -405,3 +406,36 @@ export const HEADERSDATASELECCIONADASTABLA: ConfiguracionColumna<SeleccionadasTa
   { encabezado: 'Complemento descripción', clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion, orden: 7 },
   { encabezado: 'Fecha factura', clave: (ele: SeleccionadasTabla) => ele.fechaFactura, orden: 8 },
 ];
+
+/**
+ * @interface Tramite110221State
+ * Interfaz que define el estado global del trámite 110221 para el certificado zoosanitario.
+ * Contiene todas las propiedades y formularios requeridos en el flujo del trámite, así como los datos y banderas de validación.
+ * 
+ */
+
+export interface DestinatarioForm {
+  nombre: string;
+  numeroFiscal: string;
+}
+
+export interface DomicilioForm {
+  calle: string;
+  numeroLetra: string;
+  paisDestino: string | null;
+  ciudad: string;
+  correoElectronico: string;
+  lada: string;
+  telefono: string;
+}
+
+export interface RepresentanteLegalForm{
+  lugar: string;
+  nombreRepresentante: string;
+  empresa: string;
+  cargo: string;
+  lada: string;
+  telefono: string;
+  fax: string;
+  correoElectronico: string;
+}

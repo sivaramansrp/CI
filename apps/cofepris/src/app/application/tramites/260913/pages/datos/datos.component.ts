@@ -40,6 +40,13 @@ export class DatosComponent implements OnInit, OnDestroy {
    * Indica si se han recibido datos de respuesta del servidor para actualizar el formulario.
    */
   public esDatosRespuesta: boolean = false;
+    /**
+   * @property nuevaColumna
+   * @description
+   * Define una nueva columna que se puede agregar a la tabla de fabricantes relacionados.
+   * Esta columna se utiliza para mostrar información adicional en la tabla.
+   */
+  public nuevaColumna = { encabezado: 'Colonia o equivalente', clave: 'coloniaEquivalente' };
 
   /**
    * @description

@@ -1,5 +1,6 @@
 import { AfterViewInit, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Notificacion, NotificacionesComponent, SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ContenedorComponent } from '../../components/contenedor/contenedor.component';
@@ -196,16 +197,19 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
             // Manejar el error de forma silenciosa en producción
         }
       }
-      
+
       // Limpiar el store del trámite primero
       this.tramite11201Store.limpiarSolicitud();
-      
+
       // Reiniciar el formulario de ContenedorComponent y limpiar sus campos
       if (this.contenedorComponent) {
         this.contenedorComponent.solicitudForm.reset();
         this.contenedorComponent.limpiarCampos();
+        // Limpiar los datos de la tabla y del contenedor
+        this.contenedorComponent.datosTabla = [];
+        this.contenedorComponent.datosDelContenedor = [];
       }
-      
+
       this.indice = 2;
       this.cancelarEvento.emit();
       this.obtenerTipoPersona();

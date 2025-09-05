@@ -46,18 +46,18 @@
           <label for="permisoGeneral" class="form-label">Permiso general*:</label>
           <input type="text" id="permisoGeneral" class="form-control" formControlName="permisoGeneral" [required]="true"
             (input)="onPermisoGeneralInput($event)" [disabled]="esFormularioSoloLectura" />
-          <div class="error-message">
+            <div class="error-message">
             <small class="text-danger" *ngIf="
                 form.get('permisoGeneral')?.touched &&
                 form.get('permisoGeneral')?.hasError('required')
               ">
-              Este campo es obligatorio.
+             Este campo es obligatorio.
             </small>
             <small class="text-danger" *ngIf="
                 form.get('permisoGeneral')?.touched &&
                 form.get('permisoGeneral')?.hasError('maxlength')
               ">
-              Máximo 22 caracteres permitidos.
+              Máximo 20 caracteres permitidos.
             </small>
           </div>
         </div>
@@ -111,7 +111,7 @@
           <span class="bi bi-question-circle-fill fs-4 m-1" title="Uso final de la mercancía" ata-bs-toggle="tooltip">
           </span>
         </label>
-        <textarea id="usoFinal" class="form-control" rows="3" formControlName="usoFinal" style="height: 90px"
+        <textarea id="usoFinal" class="form-control" [maxLength]="1000" rows="3" formControlName="usoFinal" style="height: 90px"
           [required]="true" [disabled]="esFormularioSoloLectura"></textarea>
         <div class="error-message">
           <small class="text-danger" *ngIf="

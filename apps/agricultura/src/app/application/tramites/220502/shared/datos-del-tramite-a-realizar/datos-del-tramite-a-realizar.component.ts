@@ -214,7 +214,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
           ),
           fechaDeInspeccion: new FormControl(
             this.solicitud220502State.fechaDeInspeccion,
-            [Validators.required]
+            []
           ),
           fechaInspeccion: new FormControl(
             this.solicitud220502State.fechaInspeccion,
@@ -356,7 +356,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
     );
     this.puntoDeInspeccion = CATALOGOTEMPLATE(
       'Punto de inspección',
-      false,
+      true,
       data.puntoInspeccion
     );
     this.cdRef.detectChanges();

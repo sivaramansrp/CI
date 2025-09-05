@@ -200,3 +200,10 @@ export const TIPO_OPERACION_EXPORTACION = 2;
  */
 export const URL_GENERAR_LINEA_CAPTURA =
   'https://pccem.mat.sat.gob.mx/PTSC/cet/FmpceContr/faces/resources/pages/pagos/formularioMultiplePago.jsf ';
+
+
+  export const TIPO_ENUM = {
+    IMPORTACION: "1",
+    EXPORTACION: "2",
+    TRANSITO: "3",
+  } as const;

@@ -1,46 +1,14 @@
-import {
-  AlertComponent,
-  Catalogo,
-  CatalogoSelectComponent,
-  CatalogosSelect,
-  ConfiguracionColumna,
-  ConsultaioQuery,
-  ConsultaioState,
-  InputFecha,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TableBodyData,
-  TableComponent,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
-import {
-  ColumnasTabla,
-  FECHAFACTURA,
-  FECHAFINAL,
-  FECHAINICIAL,
-  OPTIONS_PAIS,
-  OPTIONS_TIPO_FACTURA,
-  OPTIONS_TRATADO,
-  OPTIONS_UMC,
-  OPTIONS_UNIDAD_MEDIDA,
-  SeleccionadasTabla,
-} from '../../models/registro.model';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { AlertComponent,Catalogo,CatalogoSelectComponent,CatalogosSelect,ConfiguracionColumna,InputFecha,REGEX_NUMERO_15_ENTEROS_3_DECIMALES,REGEX_PATRON_DECIMAL_2,REGEX_SOLO_DIGITOS,TablaDinamicaComponent,TablaSeleccion,TableBodyData,TableComponent,TituloComponent,ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+ import { ColumnasTabla, FECHAFACTURA, FECHAFINAL, FECHAINICIAL, OPTIONS_PAIS, OPTIONS_TIPO_FACTURA, OPTIONS_TRATADO, OPTIONS_UMC, OPTIONS_UNIDAD_MEDIDA, SeleccionadasTabla} from '../../models/registro.model';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
+import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators} from '@angular/forms';
+import { HEADERS_DATA, HEADER_MAP_DATOS } from '../../enum/certificado.enum';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import {
-  Solicitud110201State,
-  Tramite110201Store,
-} from '../../state/Tramite110201.store';
+import { Solicitud110201State,Tramite110201Store } from '../../state/Tramite110201.store';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
+import { Modal } from 'bootstrap';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
 import mercanciaDisponsibleTable from '@libs/shared/theme/assets/json/110201/mercancia-disponsible.json';
@@ -71,17 +39,17 @@ const TERCEROS_TEXTO_DE_ALERTA =
 })
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
-  * Subject para destruir notificador.
-  */
+   * Subject para destruir notificador.
+   */
   consultaDatos!: ConsultaioState;
   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
   soloLectura: boolean = false;
   /**
-    * Evento para comunicar datos al componente padre.
-    */
+   * Evento para comunicar datos al componente padre.
+   */
   @Output() dataEvent = new EventEmitter<boolean>();
   /**
    * Texto de alerta mostrado en el componente.
@@ -97,6 +65,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Formulario reactivo para los datos de la mercancía.
    */
   mercanciaForm!: FormGroup;
+
+  /**
+   * Referencia al modal para agregar/editar mercancía.
+   */
+  @ViewChild('modalAgregar') modalAgregar!: ElementRef;
+
   /**
    * Catálogo de países.
    */
@@ -227,9 +201,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    */
   esFormulario: boolean = false;
   /**
- * Notificador para destruir observables al destruir el componente.
- * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
- */
+   * Notificador para destruir observables al destruir el componente.
+   * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
+   */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
@@ -313,48 +287,32 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla de mercancías seleccionadas.
    * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías seleccionadas.
    */
-  public headersData: ConfiguracionColumna<SeleccionadasTabla>[] = [
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
-      orden: 1,
-    },
-    {
-      encabezado: 'Cantidad',
-      clave: (ele: SeleccionadasTabla) => ele.cantidad,
-      orden: 2,
-    },
-    {
-      encabezado: 'Unidad de medida',
-      clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
-      orden: 3,
-    },
-    {
-      encabezado: 'Valor mercancía',
-      clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
-      orden: 4,
-    },
-    {
-      encabezado: 'Tipo de factura',
-      clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
-      orden: 5,
-    },
-    {
-      encabezado: 'Número factura',
-      clave: (ele: SeleccionadasTabla) => ele.numFactura,
-      orden: 6,
-    },
-    {
-      encabezado: 'Complemento descripción',
-      clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
-      orden: 7,
-    },
-    {
-      encabezado: 'Fecha factura',
-      clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
-      orden: 8,
-    },
-  ];
+  public headersData = HEADERS_DATA;
+
+  /**
+   * Bandera para mostrar la tabla de cargar archivo.
+   */
+  mostrarCargarArchivoTable: boolean = false;
+
+  /**
+   * Define los datos que se mostrarán en la tabla dinámica.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  datosTabla: any[] = [];
+
+  /**
+   * Referencia al botón para cerrar el modal.
+   *
+   * Se utiliza para cerrar el modal de manera programada.
+   */
+  @ViewChild('closeModal') closeModal!: ElementRef;
+
+  /**
+   * Referencia al elemento del modal de modificación.
+   *
+   * Se utiliza para abrir o cerrar el modal de modificación de mercancías.
+   */
+  modalInstances: Modal | null = null;
 
   /**
    * Constructor del componente.
@@ -381,7 +339,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           this.inicializarEstadoFormulario();
         })
       )
-      .subscribe()
+      .subscribe();
   }
   /**
    * Maneja el evento de clic para habilitar el formulario de edición.
@@ -501,48 +459,110 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Además, actualiza los catálogos necesarios llamando a los métodos `getTratado`, `getPais`, `getUMC`, `getUnidadMedida` y `getTipoFactura`.
    */
   buscarMercancias(): void {
-    if (this.registroForm.get('validacionForm.tratado')?.value === 0) {
-      this.hayMercanciasDisponibles = false;
-    } else {
-      this.hayMercanciasDisponibles = true;
-    }
-    this.getTratado();
-    this.getPais();
-    this.getUMC();
-    this.getUnidadMedida();
-    this.getTipoFactura();
+    const FORM_VALUES = this.registroForm.get('validacionForm')?.value;
+    const NEW_ROW = {
+      fraccionArancelaria: FORM_VALUES.fraccionArancelaria,
+      nombreTecnico: FORM_VALUES.nombreTecnico,
+      nombreComercial: FORM_VALUES.nombreComercial,
+      numeroRegistroProductos: FORM_VALUES.numeroRegistro,
+      fechaExpedicion: FORM_VALUES.fechaInicial,
+      fechaVencimiento: FORM_VALUES.fechaFinal,
+    };
+    this.mercanciaDisponsiblesTablaDatos = [NEW_ROW];
+    this.hayMercanciasDisponibles = true;
   }
+
+  /**
+   * Abre el modal para agregar una mercancía desde la tabla de mercancías disponibles.
+   * @param rowData Datos de la fila seleccionada de tipo ColumnasTabla
+   */
+  abrirModalMercancia(rowData: ColumnasTabla): void {
+    if (rowData) {
+      // Configurar el modal para agregar nueva mercancía
+      this.esFormulario = true;
+      this.esMercanciaEnEdicion = false;
+
+      // Cargar catálogos necesarios
+      this.getTratado();
+      this.getPais();
+      this.getUMC();
+      this.getUnidadMedida();
+      this.getTipoFactura();
+
+      // Popuar el formulario con los datos de la mercancía disponible seleccionada
+      this.mercanciaForm.patchValue({
+        validacionMercanciaForm: {
+          fraccionMercanciaArancelaria: rowData.fraccionArancelaria || '',
+          nombreTecnico: rowData.nombreTecnico || '',
+          nombreComercialDelaMercancia: rowData.nombreComercial || '',
+          // Los demás campos se dejan vacíos para que el usuario los complete
+          cantidad: '',
+          valorDelaMercancia: '',
+          tipoFactura: '',
+          numeroFactura: '',
+          complementoDelaDescripcion: '',
+          fecha: rowData.fechaVencimiento || '',
+          marca: '',
+          umc: '',
+          masaBruta: '',
+          unidadMedida: '',
+          criterioParaConferir: '',
+          nombreEnIngles: '',
+        },
+      });
+
+      // Abrir el modal usando Bootstrap
+      const BOOTSTRAP_MODAL = new (
+        window as unknown as {
+          bootstrap: { Modal: new (element: Element) => { show(): void } };
+        }
+      ).bootstrap.Modal(this.modalAgregar.nativeElement);
+      BOOTSTRAP_MODAL.show();
+    }
+  }
+
   /**
    * Agrega una mercancía al formulario.
    */
   agregar(): void {
-    this.getTratado();
-    this.getPais();
-    this.getUMC();
-    this.getUnidadMedida();
-    this.getTipoFactura();
-
     if (this.mercanciaForm.valid) {
       this.esMercanciaEnEdicion = true;
-      this.esFormulario = false;
+      this.esFormulario = true;
 
       const FORM_VALUES = this.mercanciaForm.value.validacionMercanciaForm;
 
-      this.mercanciaSeleccionadasTablaData.splice(0, 1, {
-        fraccionArancelaria: FORM_VALUES.fraccionMercanArancelaria,
-        cantidad: FORM_VALUES.cantidad,
-        unidadMedida: FORM_VALUES.unidadMedida,
-        valorMercancia: FORM_VALUES.valordelamercancia,
-        tipoFactura: FORM_VALUES.tipoFactura,
-        numFactura: FORM_VALUES.numeroFactura,
-        complementoDescripcion: FORM_VALUES.complementoDelaDescripcion,
-        fechaFactura: FORM_VALUES.fecha,
-      });
+      // Create the new item
+      const NEW_ITEM: ColumnasTabla = {
+        fraccionArancelaria: FORM_VALUES.fraccionMercanciaArancelaria,
+        nombreTecnico: FORM_VALUES.nombreTecnico,
+        nombreComercial: FORM_VALUES.nombreComercialDelaMercancia,
+        numeroRegistroProductos: FORM_VALUES.numeroRegistroProductos || '',
+        fechaExpedicion: FORM_VALUES.fechaExpedicion || '', 
+        fechaVencimiento: FORM_VALUES.fechaVencimiento || ''
+      };
+
+      this.mercanciaDisponsiblesTablaDatos = [
+        ...this.mercanciaDisponsiblesTablaDatos,
+        NEW_ITEM,
+      ];
+    }
+    this.cerrarModal();
+  }
+
+  /**
+   * Cierra el modal activo.
+   *
+   * Este método utiliza la referencia al botón de cierre del modal para cerrarlo.
+   */
+  cerrarModal(): void {
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
     }
   }
+
   /**
-    * Cancela la edición de una mercancía.
-    */
+   * Cancela la edición de una mercancía.
+   */
   cancelar(): void {
     this.esMercanciaEnEdicion = true;
     this.esFormulario = false;
@@ -551,14 +571,25 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Modifica una mercancía existente.
    */
   modificar(): void {
-    this.esFormulario = true;
-    this.esMercanciaEnEdicion = false;
+    this.abrirModalModificar();
+  }
 
+  abrirModalModificar(): void {
+    // Cargar catálogos necesarios si es necesario
     this.getTratado();
     this.getPais();
     this.getUMC();
     this.getUnidadMedida();
     this.getTipoFactura();
+    // Abrir el modal usando Bootstrap
+    if (this.modalAgregar && this.modalAgregar.nativeElement) {
+      const BOOTSTRAP_MODAL = new (
+        window as unknown as {
+          bootstrap: { Modal: new (element: Element) => { show(): void } };
+        }
+      ).bootstrap.Modal(this.modalAgregar.nativeElement);
+      BOOTSTRAP_MODAL.show();
+    }
   }
   /**
    * Configura los encabezados y el cuerpo de la tabla de mercancías.
@@ -574,13 +605,58 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    */
   cargaArchivo(): void {
     this.cargarArchivo = true;
-    this.dataEvent.emit(false);
+    this.dataEvent.emit(true);
+  }
+
+  analizarGramaticalmenteCSV(csv: string): void {
+    const LINES = csv.split('\n').filter((line) => line.trim() !== '');
+    const HEADERS = LINES[0].split(',');
+    const HEADER_MAP = HEADER_MAP_DATOS;
+    const DATA = LINES.slice(1)
+      .map((line) => {
+        const VALUES = line.split(',');
+        const OBJ: { [key: string]: string } = {};
+        HEADERS.forEach((header, index) => {
+          const KEY = HEADER_MAP[header.trim()] || header.trim();
+          OBJ[KEY] = VALUES[index]?.trim();
+        });
+        return OBJ;
+      })
+      .filter((articulo) => Object.values(articulo).some((valor) => valor));
+    this.mercanciaSeleccionadasTablaData = DATA.map((articulo) => ({
+      fraccionArancelaria: articulo['fraccionArancelaria'] || '',
+      cantidad: articulo['cantidad'] || '',
+      unidadMedida: articulo['unidadMedida'] || '',
+      valorMercancia: articulo['valorMercancia'] || '',
+      nombreTecnico: articulo['nombreTecnico'] || '',
+      nombreComercial: articulo['nombreComercial'] || '',
+      numeroRegistroProductos: articulo['numeroRegistroProductos'] || '',
+      fechaExpedicion: articulo['fechaExpedicion'] || '',
+      fechaVencimiento: articulo['fechaVencimiento'] || '',
+      tipoFactura: articulo['tipoFactura'] || '',
+      numFactura: articulo['numFactura'] || '',
+      complementoDescripcion: articulo['complementoDescripcion'] || '',
+      fechaFactura: articulo['fechaFactura'] || ''
+    }));
   }
   /**
    * Muestra errores en el formulario y desactiva la carga de archivos.
    * Cambia el estado de las variables `mostrarErrores` a `true` y `cargarArchivo` a `false`.
    */
   darError(): void {
+    const FILE_INPUT = document.getElementById(
+      'archivoAdjuntar'
+    ) as HTMLInputElement;
+    const FILE = FILE_INPUT.files?.[0];
+    if (FILE) {
+      const READER = new FileReader();
+      READER.onload = (e): void => {
+        const TEXT = e.target?.result as string;
+        this.analizarGramaticalmenteCSV(TEXT);
+        this.esMercanciaEnEdicion = true;
+      };
+      READER.readAsText(FILE);
+    }
     this.mostrarErrores = true;
     this.cargarArchivo = false;
   }
@@ -706,33 +782,132 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
       validacionForm: this.fb.group({
-        tratado: [{ value: this.solicitudState?.tratado, disabled: this.soloLectura }, [Validators.required]],
-        pais: [{ value: this.solicitudState?.pais, disabled: this.soloLectura }, [Validators.required]],
-        fraccionArancelaria: [{ value: this.solicitudState?.fraccionArancelaria, disabled: this.soloLectura }, [Validators.required, Validators.pattern(/^\d+$/)]],
-        numeroRegistro: [{ value: this.solicitudState?.numeroRegistro, disabled: this.soloLectura }, [Validators.required]],
-        nombreComercial: [{ value: this.solicitudState?.nombreComercial, disabled: this.soloLectura }, [Validators.required]],
-        fechaInicial: [{ value: this.solicitudState?.fechaInicial, disabled: this.soloLectura }, [Validators.required]],
-        fechaFinal: [{ value: this.solicitudState?.fechaFinal, disabled: this.soloLectura }, [Validators.required]],
-        archivo: [{ value: this.solicitudState?.archivo, disabled: this.soloLectura }, [Validators.required]],
+        tratado: [
+          { value: this.solicitudState?.tratado, disabled: this.soloLectura },
+          [Validators.required],
+        ],
+        pais: [
+          { value: this.solicitudState?.pais, disabled: this.soloLectura },
+          [Validators.required],
+        ],
+        fraccionArancelaria: [
+          {
+            value: this.solicitudState?.fraccionArancelaria,
+            disabled: this.soloLectura,
+          },
+          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
+        ],
+        numeroRegistro: [
+          {
+            value: this.solicitudState?.numeroRegistro,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        nombreComercial: [
+          {
+            value: this.solicitudState?.nombreComercial,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        fechaInicial: [
+          {
+            value: this.solicitudState?.fechaInicial,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        fechaFinal: [
+          {
+            value: this.solicitudState?.fechaFinal,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        archivo: [
+          { value: this.solicitudState?.archivo, disabled: this.soloLectura },
+          [Validators.required],
+        ],
       }),
     });
     this.mercanciaForm = this.fb.group({
       validacionMercanciaForm: this.fb.group({
-        fraccionMercanciaArancelaria: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
-        nombreTecnico: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
-        nombreComercialDelaMercancia: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
-        criterioParaConferir: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
-        nombreEnIngles: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
-        marca: [{ value: this.solicitudState?.marca, disabled: this.soloLectura }, [Validators.required]],
-        cantidad: [{ value: this.solicitudState?.cantidad, disabled: this.soloLectura }, [Validators.required, Validators.pattern(/^\d+$/)]],
-        umc: [{ value: this.solicitudState?.umc, disabled: this.soloLectura }, [Validators.required]],
-        valorDelaMercancia: [{ value: this.solicitudState?.valorDelaMercancia, disabled: this.soloLectura }, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-        complementoDelaDescripcion: [{ value: this.solicitudState?.complementoDelaDescripcion, disabled: this.soloLectura }, [Validators.required]],
-        masaBruta: [{ value: this.solicitudState?.masaBruta, disabled: this.soloLectura }, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-        unidadMedida: [{ value: this.solicitudState?.unidadMedida, disabled: this.soloLectura }, [Validators.required]],
-        tipoFactura: [{ value: this.solicitudState?.tipoFactura, disabled: this.soloLectura }, [Validators.required]],
-        fecha: [{ value: this.solicitudState?.fecha, disabled: this.soloLectura }, [Validators.required]],
-        numeroFactura: [{ value: this.solicitudState?.numeroFactura, disabled: this.soloLectura }, [Validators.required]],
+        fraccionMercanciaArancelaria: [
+          { value: '', disabled: this.soloLectura },
+          [Validators.required],
+        ],
+        nombreTecnico: [
+          { value: '', disabled: this.soloLectura },
+          [Validators.required],
+        ],
+        nombreComercialDelaMercancia: [
+          { value: '', disabled: this.soloLectura },
+          [Validators.required],
+        ],
+        criterioParaConferir: [
+          { value: '', disabled: this.soloLectura },
+          [Validators.required],
+        ],
+        nombreEnIngles: [
+          { value: '', disabled: this.soloLectura },
+          [Validators.required],
+        ],
+        marca: [
+          { value: this.solicitudState?.marca, disabled: this.soloLectura },
+          [Validators.required],
+        ],
+        cantidad: [
+          { value: this.solicitudState?.cantidad, disabled: this.soloLectura },
+          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
+        ],
+        umc: [
+          { value: this.solicitudState?.umc, disabled: this.soloLectura },
+          [Validators.required],
+        ],
+        valorDelaMercancia: [
+          {
+            value: this.solicitudState?.valorDelaMercancia,
+            disabled: this.soloLectura,
+          },
+          [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],
+        ],
+        complementoDelaDescripcion: [
+          {
+            value: this.solicitudState?.complementoDelaDescripcion,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        masaBruta: [
+          { value: this.solicitudState?.masaBruta, disabled: this.soloLectura },
+          [Validators.required, Validators.pattern(REGEX_NUMERO_15_ENTEROS_3_DECIMALES)],
+        ],
+        unidadMedida: [
+          {
+            value: this.solicitudState?.unidadMedida,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        tipoFactura: [
+          {
+            value: this.solicitudState?.tipoFactura,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
+        fecha: [
+          { value: this.solicitudState?.fecha, disabled: this.soloLectura },
+          [Validators.required],
+        ],
+        numeroFactura: [
+          {
+            value: this.solicitudState?.numeroFactura,
+            disabled: this.soloLectura,
+          },
+          [Validators.required],
+        ],
       }),
     });
   }

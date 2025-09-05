@@ -151,10 +151,10 @@
         <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura || !tieneRegistrosSeleccionados || cuerpoTabla.length === 0" (click)="eliminarMercancia()">Eliminar</button>
         <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura" (click)="agregarMercancia()">Agregar</button>
       </div>
-    </div>`
+    </div>
 
   <div>
-    ` @if(moduloEmergente){
+    @if(moduloEmergente){
     <lib-notificaciones
       [notificacionInput]="nuevaNotificacion"
       (confirmacionModal)="eliminarPedimento($event)"

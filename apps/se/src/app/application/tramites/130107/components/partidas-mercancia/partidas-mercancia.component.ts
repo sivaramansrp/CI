@@ -200,10 +200,60 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
         precioUnitario: this.ninoFormGroup.get('valorPartidaUsd')?.value,
         totalUsd: Number(PLANTILLA_PRODUCTO.precio_unitario)
       };
-      this.datospartidas?.push(PRODUCTOS);
-      this.ninoFormGroup.reset();
+      this.datospartidas = [...(this.datospartidas || []), PRODUCTOS];
+      this.actualizarTotalesPartidas();
+      this.resetNinoFormExceptTotals();
     }
   }
+  /**
+   * @method resetNinoFormExceptTotals
+   * @description
+   * Método que resetea el formulario de insumos excepto los totales.
+   * Mantiene los valores de cantidad total y valor total en USD.
+   * */
+  
+
+  private resetNinoFormExceptTotals(): void {
+    const TOTAL_CANTIDAD = this.ninoFormGroup.get('cantidadTotal')?.value;
+    const TUSD= this.ninoFormGroup.get('valorTotalUsd')?.value;
+  
+    Object.keys(this.ninoFormGroup.controls).forEach(controlName => {
+      if (controlName !== 'cantidadTotal' && controlName !== 'valorTotalUsd') {
+        this.ninoFormGroup.get(controlName)?.reset();
+      }
+    });
+  
+    // Restore totals
+    this.ninoFormGroup.get('cantidadTotal')?.setValue(TOTAL_CANTIDAD);
+    this.ninoFormGroup.get('valorTotalUsd')?.setValue(TUSD);
+  }
+  /**
+   * @method actualizarTotalesPartidas
+   * @description
+   * Método que actualiza los totales de cantidad y valor en USD de las partidas.
+   * Calcula los totales sumando los valores correspondientes de cada partida.
+   */
+  actualizarTotalesPartidas(): void {
+    if (!this.datospartidas || !Array.isArray(this.datospartidas)) {
+      return;
+    }
+  
+    const TOTAL_CANTIDAD = this.datospartidas.reduce((sum, item) => {
+      return sum + Number(item.cantidad || 0);
+    }, 0);
+  
+    const TUSD = this.datospartidas.reduce((sum, item) => {
+      return sum + Number(item.totalUsd || 0);
+    }, 0);
+    this.ninoFormGroup.setValue({
+      partidasCantidad: this.ninoFormGroup.get('partidasCantidad')?.value,
+      partidasDescripcion: this.ninoFormGroup.get('partidasDescripcion')?.value,
+      valorPartidaUsd: this.ninoFormGroup.get('valorPartidaUsd')?.value,
+      cantidadTotal: TOTAL_CANTIDAD,
+      valorTotalUsd: TUSD
+    });
+  }
+  
 
   /**
    * @method onSeleccionChange

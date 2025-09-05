@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { Router } from '@angular/router';
 
-import { CadenaOriginal130118Service } from '../../../../core/services/130118/cadenaOriginal130118.service';
-import { CadenaOriginalRequest } from '../../../../core/models/130118/request/cadena-original-request.model';
+import { CadenaOriginal130118Service } from '../../services/cadena-original.service';
+import { CadenaOriginalRequest } from '../../model/request/cadena-original-request.model';
 import { CadenaOriginalService } from '@libs/shared/data-access-user/src/core/services/shared/cadena-original/cadena-original.service';
 
 import { Subject, catchError, map, of, switchMap, takeUntil, tap } from 'rxjs';
-import { Firma130118Service } from '../../../../core/services/130118/firma130118.service';
+import { Firma130118Service } from '../../services/firma130118.service';
 
 import { CategoriaMensaje, DocumentoService, Notificacion, TramiteFolioQueries, TramiteFolioStore, base64ToHex, encodeToISO88591Hex } from '@libs/shared/data-access-user/src';
 import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';

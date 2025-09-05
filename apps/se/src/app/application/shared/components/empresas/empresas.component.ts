@@ -235,6 +235,26 @@ export class EmpresasComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Elimina todas las plantas seleccionadas, vaciando el arreglo `seleccionadas`.
+   * 
+   * @remarks
+   * Esta función se utiliza para limpiar la selección de plantas en el componente.
+   */
+  eliminarPlantas(): void {
+    if (this.seleccionadas.length > 0) {
+
+      this.seleccionadas = this.seleccionadas.filter(item => {
+
+        return !this.seleccionadas.some(selectedItem =>
+          selectedItem.calle === item.calle &&
+          selectedItem.codigoPostal === item.codigoPostal
+        );
+      })
+    }
+    this.seleccionadas = [];
+  }
+
+  /**
    * Método que se ejecuta cuando el componente es destruido.
    * Libera los recursos y completa la notificación de destrucción del componente.
    */

@@ -5,31 +5,32 @@
   
         <div class="row mb-3">
             <div class="col-md-4 form-group">
-                <label for="numeroRegistroAmbiental">Número de Registro Ambiental*:</label>
-                <input type="text" class="form-control" 
+                <label for="numeroRegistroAmbiental">Número del registro ambiental*:</label>
+                <input type="text" class="form-control" maxlength="13"
                 formControlName="numeroRegistroAmbiental" id="numeroRegistroAmbiental" maxlength="13" size="30" [ngClass]="isInvalid('numeroRegistroAmbiental') ? 'required' : ''" 
                 (change)="setValoresStore(solicitudForm,'numeroRegistroAmbiental')"/>
-                <div *ngIf="isInvalid('numeroRegistroAmbiental')" class="text-danger">
-                    Este campo es obligatorio
+                <div *ngIf="solicitudForm.get('numeroRegistroAmbiental')?.invalid && (solicitudForm.get('numeroRegistroAmbiental')?.dirty || solicitudForm.get('numeroRegistroAmbiental')?.touched)">
+                  <div *ngIf="solicitudForm.get('numeroRegistroAmbiental')?.errors?.['required']">
+                      <small class="text-danger">Este campo es obligatorio</small>
                   </div>
+              </div>
             </div>
             <div class="col-md-8 form-group">
                 <label for="descripcionGenerica1">Giro industrial del importador*: </label>
                 <input type="text" class="form-control"  formControlName="descripcionGenerica1" id="descripcionGenerica1" maxlength="150" size="105" [ngClass]="isInvalid('descripcionGenerica1') ? 'required' : ''" 
-                (change)="setValoresStore(solicitudForm,'descripcionGenerica1')"/>
-                <div *ngIf="isInvalid('descripcionGenerica1')" class="text-danger">
-                    Este campo es obligatorio
+                (change)="setValoresStore(solicitudForm,'descripcionGenerica1')" maxlength="150"/>
+                <div *ngIf="solicitudForm.get('descripcionGenerica1')?.invalid && (solicitudForm.get('descripcionGenerica1')?.dirty || solicitudForm.get('descripcionGenerica1')?.touched)">
+                  <div *ngIf="solicitudForm.get('descripcionGenerica1')?.errors?.['required']">
+                      <small class="text-danger">Este campo es obligatorio</small>
+                  </div>
                 </div>
             </div>
             </div>
             <div class="row mb-3">
             <div class="col-md-4 form-group">
-                <app-catalogo-select [catalogo]='aduanas' formControlName="numeroProgramaImmex" [label]="'Número de autorización Immex'"
+                <app-catalogo-select [catalogo]='aduanas' formControlName="numeroProgramaImmex" [label]="'Número de autorización IMMEX'"
                   [required]="true" (change)="setValoresStore(solicitudForm,'numeroProgramaImmex')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
               
-                <div *ngIf="isInvalid('numeroProgramaImmex')" class="text-danger">
-                    Este campo es obligatorio
-                </div>
             </div>
         </div>
       </div>
