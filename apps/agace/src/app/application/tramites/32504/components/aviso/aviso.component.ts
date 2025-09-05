@@ -1,7 +1,7 @@
 import {ALCALDIA_CONFIG, COLONIA_CONFIG, ENTIDAD_FEDERATIVA_CONFIG} from '../../constants/aviso.enum';
+import { BotonAccionesTipos, ConsultaioState } from '@ng-mf/data-access-user';
 import { ANIO_CONFIG } from '../../constants/aviso.enum';
 import { AvisoDatosService } from '../../services/aviso-datos.service';
-import { BotonAccionesTipos } from '@ng-mf/data-access-user';
 import { CARGO_TIPO} from '../../constants/aviso.enum';
 import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
 import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src";
@@ -23,6 +23,7 @@ import { LabelValueDatos } from '@ng-mf/data-access-user';
 import { MES_CONFIG} from '../../constants/aviso.enum';
 import { ManualAvisoComponent } from '../manual-aviso/manual-aviso.component';
 import { MenuConfig } from '@ng-mf/data-access-user';
+import { NUEVAS_COLUMNAS } from '../../enum/aviso.enum';
 import { OnInit } from '@angular/core';
 import { Props } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -193,7 +194,9 @@ export class AvisoComponent implements OnInit {
  * Indica si se debe mostrar el popup de confirmación de registro agregado.
  */
   public mostrarPopupRegistroAgregado = false;
-
+/** Almacena el estado actual de la consulta relacionada con el trámite.  
+ *  Contiene información necesaria para mostrar o procesar datos en el componente. */
+   public consultaState!:ConsultaioState;
 /**
    * @constructor
  * @description Inicializa el componente, inyecta los servicios necesarios y crea el formulario principal.
@@ -230,9 +233,21 @@ export class AvisoComponent implements OnInit {
       map((seccionState) => {
         this.esFormularioSoloLectura = seccionState.readonly;
         this.inicializarEstadoFormulario();
+         this.consultaState = seccionState;
+            if (this.consultaState.update) {
+         this.store.update((state) => ({
+    ...state,
+    aviso: [NUEVAS_COLUMNAS]
+  }));
+        }
       })
     )
     .subscribe();
+   this.query.select('aviso')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.tableData.data = data ?? [];
+      });
   }
 
   /**

@@ -1,11 +1,11 @@
 import { CONFIGURACION_COLUMNAS_DESTINATARIO, CONFIGURACION_COLUMNAS_ENTIDAD, CONFIGURACION_COLUMNAS_FABRICANTE, CONFIGURACION_COLUMNAS_PROVEEDOR } from '../../constantes/260910-enum';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Notificacion, TITULO_MODAL_AVISO } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
 import { Destinatario } from '../../models/destinatario.model';
 import { ElementRef } from '@angular/core';
 import { Fabricante } from '../../models/fabricante.model';
 import { Facturador } from '../../models/facturador.model';
-import { Notificacion, TITULO_MODAL_AVISO } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../models/proveedor.model';

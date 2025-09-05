@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_GET_CONSULTA_SOLICITUD, NUMFOLIOTRAMITE } from '../server/api-router';
+import { API_GET_CONSULTA_SOLICITUD } from '../server/api-router';
 import { ConsultaSolicitudResponse } from '../model/response/consultar-solicitud-response.model';
 
 @Injectable({
@@ -29,11 +29,12 @@ export class ConsultaSolicitudService {
 
   /**
    * Método para consultar los criterios de una solicitud de dictamen.
+   * @param tramite - Identificador del trámite asociado al requerimiento.
    * @param numFolio Número de folio del trámite a consultar.
    * @returns Observable que emite la respuesta de la consulta.
    */
-  getDetalleSolicitud(numFolio: string): Observable<BaseResponse<ConsultaSolicitudResponse>> {
-    const ENDPOINT = `${this.host}${API_GET_CONSULTA_SOLICITUD(NUMFOLIOTRAMITE, numFolio)}`;
+  getDetalleSolicitud(tramite: number,numFolio: string): Observable<BaseResponse<ConsultaSolicitudResponse>> {
+    const ENDPOINT = `${this.host}${API_GET_CONSULTA_SOLICITUD(tramite.toString(), numFolio)}`;
     return this.http.get<BaseResponse<ConsultaSolicitudResponse>>(ENDPOINT);
   }
 

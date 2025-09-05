@@ -5,14 +5,17 @@
     "catalogos": [
         {
             "id": 1,
-            "descripcion": "Deshidratación de productos agrícolas alimecticios 1"
+            "clave": "614079",
+            "descripcion": "Comercio al por mayor de otros productos alimenticios."
         },
         {
             "id": 2,
+            "clave": "614074",
             "descripcion": "Deshidratación de productos agrícolas alimecticios 2"
         },
         {
             "id": 3,
+            "clave": "614075",
             "descripcion": "Deshidratación de productos agrícolas alimecticios 3"
         }
     ]
