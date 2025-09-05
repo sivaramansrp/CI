@@ -5,7 +5,6 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite303Store, Tramite303StoreService } from '../../../../core/estados/tramites/tramite303.store';
 import { AgenteAduanal } from '../../../../core/models/303/agente-aduanal.model';
 import { CONFIGURACION_ENCABEZADO_FIGURAS } from '../../../../core/enums/303/figuras.enum';
-import { Router } from '@angular/router';
 import { Tramite303Query } from '../../../../core/queries/tramite303.query';
 import data from '@libs/shared/theme/assets/json/303/cat-tipo-figura.json';
 
@@ -35,11 +34,17 @@ export class AgentesAgenciasAduanalesComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   /** Estado del trámite 303 consultado */
   public tramiteConsultado?: Tramite303Store;
+  /** Variable para controlar la visibilidad del modal de agregar agente */
+  agregarAgentemodal = false;
 
+  /**
+   * Constructor del componente.
+   * @param tramite303State Estado del trámite 303.
+   * @param tramite303Query Consulta del trámite 303.
+   */
   constructor(
     private tramite303State: Tramite303StoreService,
     private tramite303Query: Tramite303Query,
-    private router: Router
   ) { }
 
   /**
@@ -55,11 +60,11 @@ export class AgentesAgenciasAduanalesComponent implements OnInit, OnDestroy {
       .pipe(
         map((seccionState) => {
           this.tramiteConsultado = seccionState;
+          this.personasFiguras = this.tramiteConsultado?.listaFiguras || [];
         }),
         takeUntil(this.destroyNotifier$)
       )
       .subscribe();
-    this.personasFiguras = this.tramiteConsultado?.listaFiguras || [];
   }
 
   /**
@@ -92,7 +97,7 @@ export class AgentesAgenciasAduanalesComponent implements OnInit, OnDestroy {
       return;
     }
     this.tramite303State.setSeleccionarFigura(ID_SELECCIONADO);
-    this.router.navigate(['aga/despacho-mercancias/registro-figura']);
+    this.agregarAgentemodal = true;
   }
 
   /**

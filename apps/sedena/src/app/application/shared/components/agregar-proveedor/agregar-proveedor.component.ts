@@ -232,6 +232,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       this.agregarProveedorForm.enable();
     } else {
       this.agregarProveedorForm.disable();
+      this.agregarProveedorForm.get('tipoPersona')?.enable();
     }
     this.cargarDatos();
     if (this.formaDatos) {
