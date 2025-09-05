@@ -16,6 +16,7 @@ import { Tramite260303Query } from '../../../../estados/queries/260303/tramite26
 import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico.json';
 
 import { TEXTO_MANIFESTO_Y_DECLARACIONES } from '../../../../shared/constantes/datos-solicitud.enum';
+
 import { NicoInfo } from '../../../260911/models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 /**
  * DatosDeLaSolicitudComponent es responsable de manejar el primer paso del proceso.
@@ -830,19 +831,19 @@ public static deepCopy<T>(obj: T): T {
   * Lista de filas seleccionadas del componente tabla de SCIAN.
   * Se utiliza para manejar la selección de filas en la tabla de SCIAN.
   */
- selectedRowsScian: any[] = [];
+ selectedRowsScian: ScianDatos[] = [];
 
- /*
+/*
   * Lista de filas seleccionadas del componente tabla de mercancías.
   * Se utiliza para manejar la selección de filas en la tabla de mercancías.
   */
- selectedRows: any[] = []; 
+ selectedRows: NicoInfo[] = []; 
 
   /**
    * Maneja el evento de cambio de selección en la tabla de SCIAN.
    * @param selected Lista de filas seleccionadas.
    */
-  onSeleccionChangeScian(selected: any[]): void {
+  onSeleccionChangeScian(selected: ScianDatos[]): void {
     this.selectedRowsScian = selected;
   }
 
