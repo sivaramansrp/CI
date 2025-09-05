@@ -4,21 +4,21 @@ import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
  * Interfaz que define la estructura de las columnas de la tabla de mercancías disponibles.
  */
 export interface ColumnasTabla {
-  fraccionMercanciaArancelaria: string;
-  nombreTecnico: string;
-  nombreComercialDelaMercancia: string;
-  criterioParaConferir: string;
-  nombreEnIngles: string;
-  valordeContenidoRegional: string;
-  cantidad: string;
-  umc: string;
-  valorDelaMercancia: string;
-  complementoDelaDescripcion: string;
-  numeroDeSerie: string;
-  tipoFactura: string;
-  fecha: string;
-  numeroFactura: string;
-  otrasInstancias: string;
+  fraccionMercanciaArancelaria?: string;
+  nombreTecnico?: string;
+  nombreComercialDelaMercancia?: string;
+  criterioParaConferir?: string;
+  nombreEnIngles?: string;
+  valordeContenidoRegional?: string;
+  cantidad?: string;
+  umc?: string;
+  valorDelaMercancia?: string;
+  complementoDelaDescripcion?: string;
+  numeroDeSerie?: string;
+  tipoFactura?: string;
+  fecha?: string;
+  numeroFactura?: string;
+  otrasInstancias?: string;
 }
 
 /**
