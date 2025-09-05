@@ -60,41 +60,43 @@
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="rfc" class="form-label ">RFC*:
-                                <span class="p-2" tooltip="Registro Federal de Contribuyente" placement="top">
-                                <i class="bi bi-question-circle-fill"></i>
-                              </span>
-                            </label>
-                            <input type="text" id="rfc" 
-                                formControlName="rfc"
-                                (change)="setValoresStore(tercerosRelacionadosForm,'rfc', 'setTercerosRelacionadosRfc')" 
-                                class="form-control" [ngClass]="esValido(tercerosRelacionadosForm, 'rfc') ? 'required' : ''">
-                                @if (tercerosRelacionadosForm.get('rfc')?.hasError('rfcInvalido') && tercerosRelacionadosForm.get('rfc')?.touched) {
-                                    <div class="mensaje-error">
-                                        Existen datos incorrectos que no cumplen con el formato esperado.
-                                    </div>
-                                }
-                                @if(tercerosRelacionadosForm.controls['rfc'].errors?.['required'] && tercerosRelacionadosForm.get('rfc')?.touched) {
-                                    <span class="mensaje-error">Este campo es obligatorio</span>
-                                }
-                        </div>
-                        @if (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value && tercerosRelacionadosForm.get('tipoPersona')?.value) {
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-primary mt-5" (click)="buscar()">Buscar</button>
+                    @if (!(tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica' && tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'extranjero')) {
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="rfc" class="form-label ">RFC*:
+                                    <span class="p-2" tooltip="Registro Federal de Contribuyente" placement="top">
+                                    <i class="bi bi-question-circle-fill"></i>
+                                  </span>
+                                </label>
+                                <input type="text" id="rfc" 
+                                    formControlName="rfc"
+                                    (change)="setValoresStore(tercerosRelacionadosForm,'rfc', 'setTercerosRelacionadosRfc')" 
+                                    class="form-control" [ngClass]="esValido(tercerosRelacionadosForm, 'rfc') ? 'required' : ''">
+                                    @if (tercerosRelacionadosForm.get('rfc')?.hasError('rfcInvalido') && tercerosRelacionadosForm.get('rfc')?.touched) {
+                                        <div class="mensaje-error">
+                                            Existen datos incorrectos que no cumplen con el formato esperado.
+                                        </div>
+                                    }
+                                    @if(tercerosRelacionadosForm.controls['rfc'].errors?.['required'] && tercerosRelacionadosForm.get('rfc')?.touched) {
+                                        <span class="mensaje-error">Este campo es obligatorio</span>
+                                    }
                             </div>
-                        }
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="curp" class="form-label ">C.U.R.P.*:</label>
-                            <input type="text" id="curp" 
-                                formControlName="curp"
-                                (change)="setValoresStore(tercerosRelacionadosForm,'curp', 'setTercerosRelacionadosCurp')" 
-                                class="form-control">
+                            @if (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value && tercerosRelacionadosForm.get('tipoPersona')?.value) {
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-primary mt-5" (click)="buscar()">Buscar</button>
+                                </div>
+                            }
                         </div>
-                    </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="curp" class="form-label ">C.U.R.P.*:</label>
+                                <input type="text" id="curp" 
+                                    formControlName="curp"
+                                    (change)="setValoresStore(tercerosRelacionadosForm,'curp', 'setTercerosRelacionadosCurp')" 
+                                    class="form-control">
+                            </div>
+                        </div>
+                    }
                 </div>
                 @if (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value && tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral') {
                     <div class="row mt-5">
