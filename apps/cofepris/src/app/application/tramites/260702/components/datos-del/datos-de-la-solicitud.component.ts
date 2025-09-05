@@ -328,6 +328,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
           } else if (seccionState.tableData) {
             this.tableData = [...seccionState.tableData];
           }
+          
         })
       )
       .subscribe();
@@ -775,12 +776,19 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
   /** Maneja el evento de envío del formulario */
 
   onSubmit(): void {
+      const MODAL_ELEMENT = document.getElementById('claveScianModal');
+  if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
+    MODAL_INSTANCE.hide(); 
+  }
+
     const FORM_DATA = { ...this.clavaScianForm.value };
     FORM_DATA.claveScianG.claveScian =
       this.claveScianData.catalogos.find(
         (item: Catalogo) =>
           String(item.id) === String(FORM_DATA.claveScianG.claveScian)
       )?.descripcion || 'Not Found';
+
 
     FORM_DATA.claveScianG.descripcionDelScian =
       this.descripcionDelScianData.catalogos.find(
@@ -869,7 +877,15 @@ lastSelectedRow: FilaData2 | null = null;
    * Muestra el formulario para agregar una nueva clave SCIAN.
    */
   onAgregar(): void {
-    this.showClavaScianForm = true;
+        this.showClavaScianForm = true;
+
+ setTimeout(() => {
+    const MODAL_ELEMENT = document.getElementById('claveScianModal');
+    if (MODAL_ELEMENT) {
+      const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
+      MODAL_INSTANCE.show(); 
+    }
+  }, 0);
   }
 
   /**
@@ -900,6 +916,7 @@ lastSelectedRow: FilaData2 | null = null;
   onCancelar(): void {
     this.showClavaScianForm = false;
     this.clavaScianForm.reset();
+    
   }
   /** Agrega una nueva mercancia a la tabla */
 agregarMercanciaGrid(): void {
