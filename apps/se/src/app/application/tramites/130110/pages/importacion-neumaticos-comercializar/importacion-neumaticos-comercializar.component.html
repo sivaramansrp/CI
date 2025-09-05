@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-6">
-        <h1>solicitud importación neumáticos comercializar</h1>
+        <h3>Solicitud importación neumáticos comercializar</h3>
       </div>
       <app-wizard [listaPasos]="pasosSolicitar"></app-wizard>
     </div>
@@ -19,6 +19,11 @@
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
       ></btn-continuar>
+      <div class="container">
+      <div class="row">    
+        <ng-alert [CONTENIDO]="TEXTOS.AVISO.Aviso"></ng-alert>
+      </div>   
+    </div>
     </div>
   </div>
 </div>

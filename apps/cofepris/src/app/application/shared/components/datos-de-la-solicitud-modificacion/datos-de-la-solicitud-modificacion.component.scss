@@ -10,7 +10,7 @@ textarea {
   .content-with-checkbox {
     display: flex;
     text-align: left;
-    gap: 20px;
+    gap: 10px;
     padding-left: 40px;
     flex-direction: row;
     align-items: center;
@@ -19,3 +19,7 @@ textarea {
   .align-middle {
     vertical-align: middle !important;
   }
+
+.alert {
+  text-align: center;
+}

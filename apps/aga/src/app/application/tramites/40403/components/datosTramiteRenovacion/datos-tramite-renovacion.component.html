@@ -19,9 +19,6 @@
           <input type="text" formControlName="claveFolioCAAT" id="claveFolioCAAT" maxlength="4"
             (blur)="caatConMayusculas($event)" class="form-control"
             (change)="setValoresStore(formulario,'claveFolioCAAT', 'establecerClaveFolioCAAT')" />
-            <div *ngIf="formulario.get('claveFolioCAAT')?.touched && formulario.get('claveFolioCAAT')?.invalid">
-          <small *ngIf="formulario.get('claveFolioCAAT')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
-        </div>
         <small *ngIf="mostrarError" class="text-danger espaciador-campo-pequeño">No se ha proporcionado información que es requerida.</small>
         <small *ngIf="formulario.get('claveFolioCAAT')?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">Existen datos incorrectos que no cumplen con el formato esperado</small>
         <small *ngIf="formulario.get('claveFolioCAAT')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">Por favor, no escribas menos de 4 caracteres</small>
@@ -46,7 +43,7 @@
         </div>
         <div>
           <input type="text" formControlName="cveFolioCaat" name="caat" maxlength="4" class="form-control"
-            (change)="setValoresStore(formulario,'cveFolioCaat', 'establecerCveFolioCaat')" readonly />
+            (change)="setValoresStore(formulario,'cveFolioCaat', 'establecerCveFolioCaat')" />
         </div>
       </div>
       <div class="col col-md-4 mt-4">
@@ -55,7 +52,7 @@
         </div>
         <div>
           <input type="text" formControlName="descripcionTipoCaat" id="descripcionTipoCaat" class="form-control"
-            (change)="setValoresStore(formulario,'descripcionTipoCaat', 'establecerDescripcionTipoCaat')" readonly />
+            (change)="setValoresStore(formulario,'descripcionTipoCaat', 'establecerDescripcionTipoCaat')" />
         </div>
       </div>
     </div>
@@ -64,12 +61,12 @@
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="tipoDeCaatAerea" formControlName="tipoDeCaatAerea"
           [label]="'Tipo de CAAT Aéreo'" name="tipoDeCaatAerea" 
-          (change)="setValoresStore(formulario, 'tipoDeCaatAerea', 'establecerTipoDeCaatAerea')" [isDisabled]="soloLectura"></app-catalogo-select>
+          (change)="setValoresStore(formulario, 'tipoDeCaatAerea', 'establecerTipoDeCaatAerea')" [isDisabled]="true"></app-catalogo-select>
       </div>
 
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="ideCodTransportacionAerea" formControlName="ideCodTransportacionAerea"
-          [label]="'Código de Transportación Aéreo'" name="ideCodTransportacionAerea" [isDisabled]="soloLectura"
+          [label]="'Código de Transportación Aéreo'" name="ideCodTransportacionAerea" [isDisabled]="true"
           (change)="setValoresStore(formulario, 'ideCodTransportacionAerea', 'establecerIdeCodTransportacionAerea')"></app-catalogo-select>
       </div>
     </div>
@@ -78,7 +75,7 @@
       <div class="col-md-4">
         <label for="solicitudIataIcao" class="form-label">Código:</label>
         <input type="text" formControlName="codIataIcao" maxlength="3" class="form-control"
-          (change)="setValoresStore(formulario,'codIataIcao', 'establecerCodIataIcao')" readonly />
+          (change)="setValoresStore(formulario,'codIataIcao', 'establecerCodIataIcao')" />
       </div>
     </div>
   </div>

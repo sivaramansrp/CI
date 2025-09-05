@@ -3,6 +3,7 @@ import { AgregarDestinatarioFinalContenedoraComponent } from './components/agreg
 import { AgregarFabricanteContenedoraComponent } from './components/agregar-fabricante-contenedora/agregar-fabricante-contenedora.component';
 import { AgregarFacturadorContenedoraComponent } from './components/agregar-facturador-contenedora/agregar-facturador-contenedora.component';
 import { AgregarProveedorContenedoraComponent } from './components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
+import { ContenedorDeDatosSolicitudComponent } from './components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
 import { DatosMercanciaContenedoraComponent } from './components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { NgModule } from '@angular/core';
 import { ScianTablaContenedoraComponent } from './components/scian-tabla-contenedora/scian-tabla-contenedora.component';
@@ -42,6 +43,10 @@ const ROUTES: Routes = [
     path: 'agregar-facturador',
     component: AgregarFacturadorContenedoraComponent,
   },
+  {
+    path:'datos-de-la-solicitud',
+    component: ContenedorDeDatosSolicitudComponent,
+  }
 ];
 
 @NgModule({

@@ -6,7 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import {
+import { AvisoSanitarioState, Tramite260601Store } from '../../../../estados/tramites/tramite260601.store';import {
   ConsultaioQuery,
   ConsultaioState,
   FormularioDinamico,
@@ -18,12 +18,12 @@ import {
   PERSONA_MORAL_NACIONAL,
 } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { Subject, map, takeUntil } from 'rxjs';
-import { AvisoSanitarioState } from '../../../../estados/tramites/tramite260601.store';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Service260601Service } from '../../services/service260601.service';
 import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
+import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
 
 /**
  * Componente para gestionar el paso uno del trámite.
@@ -46,6 +46,22 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+    /**
+   * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent
+   * @description
+   * Referencia al componente hijo DatosDeLaSolicitudComponent para acceder a sus propiedades y métodos.
+   * Permite validar los formularios del componente y acceder a sus datos durante el flujo del trámite.
+   */
+  @ViewChild(DatosDeLaSolicitudComponent) datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
+
+  /**
+   * @property {TercerosRelacionadosComponent} tercerosRelacionadosComponent
+   * @description
+   * Referencia al componente hijo TercerosRelacionadosComponent para acceder a sus propiedades y métodos.
+   * Permite gestionar la información de terceros relacionados con el trámite de aviso sanitario.
+   */
+  @ViewChild(TercerosRelacionadosComponent) tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
 
   /**
    * Configuración del formulario para la persona moral
@@ -77,7 +93,9 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private cdr: ChangeDetectorRef,
     private consultaQuery: ConsultaioQuery,
-    private service260601Service: Service260601Service
+    private service260601Service: Service260601Service,
+    public tramite260601Query: Tramite260601Query,
+    private tramite260601Store: Tramite260601Store
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -97,6 +115,13 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    this.tramite260601Query.getTabSeleccionado$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((tab) => {
+        this.indice = tab;
+      });
+
     if (this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
@@ -137,7 +162,7 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Índice de la pestaña seleccionada.
    */
-  indice: number = 1;
+   public indice: number | undefined = 1;
 
   /**
    * Selecciona la pestaña especificada.
@@ -145,7 +170,47 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    * @param i - El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
-    this.indice = i;
+    this.tramite260601Store.updateTabSeleccionado(i);
+  }
+
+  /**
+   * @method validarFormularios
+   * @description
+   * Valida todos los formularios del paso de datos del trámite de aviso sanitario.
+   * Verifica la validez de los formularios en los componentes hijos (solicitante y datos de la solicitud).
+   * Si algún formulario es inválido, marca todos los campos como tocados para mostrar los mensajes de error.
+   * 
+   * @returns {boolean} true si todos los formularios son válidos, false si alguno es inválido o no existe la referencia al componente.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosDeLaSolicitudComponent) {
+      if (!this.datosDeLaSolicitudComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if(this.tercerosRelacionadosComponent) {
+      if (!this.tercerosRelacionadosComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
   }
   /**
    * Método del ciclo de vida `ngOnDestroy`.

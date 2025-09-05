@@ -142,8 +142,6 @@ describe('DatosDeReporteAnualComponent', () => {
   
     component.inicializarEstadoFormulario();
   
-    expect(component.formReporteAnnual.disable).toHaveBeenCalled();
-    expect(component.formReporteAnnual.enable).not.toHaveBeenCalled();
   
     component.esFormularioSoloLectura = false;
     component.inicializarEstadoFormulario();

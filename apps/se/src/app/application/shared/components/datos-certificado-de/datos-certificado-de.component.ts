@@ -1,5 +1,39 @@
+/**
+ * @description
+ * Componente para gestionar los datos del certificado en el sistema VUCEM.
+ * Este componente permite la captura y gestión de información relacionada con certificados,
+ * incluyendo observaciones, idioma, entidad federativa y representación federal.
+ *
+ * @class
+ * @implements {OnDestroy}
+ * @implements {OnInit}
+ * @implements {OnChanges}
+ *
+ * @example
+ * ```html
+ * <app-datos-certificado-de
+ *   [data]="menusDesplegables"
+ *   [idioma]="true"
+ *   [presenta]="true"
+ *   [precisa]="false"
+ *   [idoPeam]="true"
+ *   [idProcedimiento]="123"
+ *   [idiomaDatos]="catalogoIdiomas"
+ *   [entidadFederativaDatos]="catalogoEntidades"
+ *   [representacionFederalDatos]="catalogoRepresentaciones"
+ *   [datosFormCertificado]="datosCertificado"
+ *   [esFormularioSoloLectura]="false"
+ *   (formDatosCertificadoEvent)="onDatosCertificado($event)"
+ *   (idiomaSeleccionEvent)="onIdiomaSeleccionado($event)"
+ *   (entidadFederativaSeleccionEvent)="onEntidadSeleccionada($event)"
+ *   (representacionFederalSeleccionEvent)="onRepresentacionSeleccionada($event)"
+ *   (formaValida)="onFormaValida($event)">
+ * </app-datos-certificado-de>
+ * ```
+ */
+
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MenusDesplegables } from '../../models/modificacion.enum';
@@ -12,11 +46,24 @@ import { Subject } from 'rxjs';
   templateUrl: './datos-certificado-de.component.html',
   styleUrl: './datos-certificado-de.component.scss'
 })
-export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
+export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges {
   /**
-   * Datos de los menús desplegables.
+   * @description
+   * Datos de los menús desplegables que se mostrarán en el componente.
+   * Contiene la información necesaria para poblar los menús desplegables del formulario.
+   * 
    * @type {MenusDesplegables[]}
    * @input
+   * @memberof DatosCertificadoDeComponent
+   * @required
+   * 
+   * @example
+   * ```typescript
+   * [
+   *   { id: 1, nombre: "Opción 1" },
+   *   { id: 2, nombre: "Opción 2" }
+   * ]
+   * ```
    */
   @Input() data!: MenusDesplegables[];
 
@@ -27,10 +74,22 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
    */
   @Input() idioma!: boolean;
   /**
- * Propiedad de entrada booleana que indica si se muestra el contenido.
- * Si es `true`, se renderiza la sección correspondiente.
- * Se utiliza para controlar la visibilidad desde el componente padre.
- */
+   * @description
+   * Propiedad que controla la visualización del contenido del componente.
+   * Cuando es `true`, se muestra la sección correspondiente.
+   * Esta propiedad se utiliza para gestionar dinámicamente la visibilidad
+   * desde el componente padre.
+   * 
+   * @type {boolean}
+   * @input
+   * @memberof DatosCertificadoDeComponent
+   * @required
+   * 
+   * @example
+   * ```typescript
+   * <app-datos-certificado-de [presenta]="true">
+   * ```
+   */
     @Input() presenta!: boolean;
 
   /**
@@ -39,6 +98,22 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
    * @input
    */
   @Input() precisa!: boolean;
+  /**
+   * Bandera que indica si se requiere precisión en los datos.
+   * @type {boolean}
+   * @input
+   */
+  @Input() idoPeam: boolean =true;
+
+
+   /**
+   * @Input
+   * Identificador único del procedimiento asociado.
+   * Este valor es requerido y se utiliza para determinar el procedimiento actual.
+   *
+   * @type {number}
+   */
+   @Input() idProcedimiento!: number;
 
   /**
    * Catálogo de datos de idiomas disponibles.
@@ -136,8 +211,20 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
   @Input() esFormularioSoloLectura!: boolean;
 
   /**
-   * Constructor del componente. Inicializa el formulario y las dependencias necesarias.
-   * @param fb Instancia del FormBuilder para la creación del formulario.
+   * @description
+   * Constructor del componente que inicializa el formulario y sus dependencias.
+   * Inyecta el servicio FormBuilder necesario para la creación del formulario reactivo.
+   * 
+   * @constructor
+   * @param {FormBuilder} fb - Servicio de Angular para la construcción de formularios reactivos
+   * @memberof DatosCertificadoDeComponent
+   * 
+   * @example
+   * ```typescript
+   * constructor(private fb: FormBuilder) {
+   *   // Inicialización del componente
+   * }
+   * ```
    */
 
   private actualizandoFormulario = false;
@@ -145,12 +232,6 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
   constructor(
     private fb: FormBuilder,
   ) {
-    // La función se ejecutará después de un segundo.
-    setTimeout(() => {
-      if (this.datosFormCertificado) {
-        this.formDatosCertificado.patchValue(this.datosFormCertificado);
-      }
-    }, 100);
   }
   /**
  * @inheritdoc
@@ -174,27 +255,66 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Crea e inicializa el formulario reactivo `formDatosCertificado` con los controles y validaciones necesarios.
+   * @description
+   * Crea e inicializa el formulario reactivo `formDatosCertificado` con sus controles y validaciones.
+   * 
+   * @method
+   * @private
+   * @memberof DatosCertificadoDeComponent
    * 
    * @remarks
-   * Este método configura los campos del formulario, asignando validadores según los requisitos del negocio.
+   * Este método configura los siguientes campos del formulario:
+   * - observacionesDates: Campo de texto libre sin validaciones
+   * - presenta: Campo booleano sin validaciones
+   * - idiomaDates: Campo requerido con validación de valor mínimo si idoPeam es true
+   * - EntidadFederativaDates: Campo requerido con validación de valor mínimo
+   * - representacionFederalDates: Campo requerido con validación de valor mínimo
+   * - precisaDates: Campo requerido solo si precisa es true
    * 
-   * @command
-   * Genera el formulario para capturar los datos del certificado, incluyendo observaciones, idioma, entidad federativa,
-   * representación federal y precisión, aplicando las validaciones correspondientes.
+   * @example
+   * ```typescript
+   * private createForm(): void {
+   *   this.formDatosCertificado = this.fb.group({
+   *     observacionesDates: [''],
+   *     presenta: [''],
+   *     idiomaDates: ['', this.idoPeam ? [Validators.required, Validators.min(0)] : []],
+   *     EntidadFederativaDates: ['', [Validators.required, Validators.min(0)]],
+   *     representacionFederalDates: ['', [Validators.required, Validators.min(0)]],
+   *     precisaDates: ['', this.precisa ? [Validators.required] : []]
+   *   });
+   * }
+   * ```
    */
   createForm(): void {
     this.formDatosCertificado = this.fb.group({
       observacionesDates: [''],
       presenta: [''],
-      idiomaDates: ['', [Validators.required, Validators.min(0)]],
+      idiomaDates: ['', this.idoPeam ? [Validators.required, Validators.min(0)] : []],
       EntidadFederativaDates: ['', [Validators.required, Validators.min(0)]],
       representacionFederalDates: ['', [Validators.required, Validators.min(0)]],
       precisaDates: ['', this.precisa ? [Validators.required] : []]
-
     });
+    this.formDatosCertificado.patchValue(this.datosFormCertificado);
   }
-
+ /**
+   * @method ngOnChanges
+   * @description
+   * Método del ciclo de vida que se llama cuando cambia alguna propiedad enlazada por datos.
+   * Específicamente, verifica si el input `datosForm` ha cambiado. Si es así, actualiza el
+   * formulario `formDatosDelDestinatario` con los nuevos valores de `datosForm`. Si el formulario
+   * no existe, lo crea.
+   * 
+   * @param changes - Objeto con pares clave/valor de las propiedades que han cambiado.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['datosFormCertificado'] || this.datosFormCertificado) {
+      if (this.formDatosCertificado) {
+        this.formDatosCertificado.patchValue(this.datosFormCertificado);
+      } else {
+        this.createForm();
+      }
+    }
+  }
   /**
    * Getter para acceder al control del formulario, utilizado para la validación.
    * @returns FormControl del formulario.
@@ -247,12 +367,52 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Método de ciclo de vida de Angular, se ejecuta al destruir el componente.
-   * Cancela todas las suscripciones para evitar fugas de memoria.
+   * @description
+   * Valida el estado completo del formulario de datos del certificado.
+   * Si el formulario no es válido, marca todos los campos como tocados para mostrar los errores.
+   * 
+   * @method
+   * @public
+   * @memberof DatosCertificadoDeComponent
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario
+   * 
+   * @example
+   * ```typescript
+   * if (this.validarFormularios()) {
+   *   // Proceder con el envío del formulario
+   * } else {
+   *   // Mostrar mensaje de error
+   * }
+   * ```
+   */
+  validarFormularios():boolean{
+    if(this.formDatosCertificado.valid){
+      return true;
+    }
+    this.formDatosCertificado.markAllAsTouched();
+    return false;
+  }
+  /**
+   * @description
+   * Método del ciclo de vida que se ejecuta cuando el componente va a ser destruido.
+   * Se encarga de limpiar las suscripciones y recursos para evitar fugas de memoria.
+   * 
+   * @method
+   * @public
+   * @memberof DatosCertificadoDeComponent
+   * @implements {OnDestroy}
+   * 
+   * @example
+   * ```typescript
+   * // La implementación completa del método
+   * ngOnDestroy(): void {
+   *   this.destroyNotifier$.next();
+   *   this.destroyNotifier$.complete();
+   * }
+   * ```
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

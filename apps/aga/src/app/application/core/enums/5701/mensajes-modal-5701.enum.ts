@@ -92,7 +92,7 @@ export const MSG_PEDIMENTO_VALIDO =
  * @description Mensaje pedimento no válido
  */
 export const MSG_PEDIMENTO_NO_VALIDO =
-  'No se pudo validar el pedimento, favor de capturar los datos de pedimento faltante y anexar documento.';
+  'No fue posible realizar la consulta, favor de adjuntar el documento digitalizado.';
 
 /**
  * @description Pedimento ya capturado

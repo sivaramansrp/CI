@@ -5,7 +5,7 @@ export const TEXTOS = {
     /**
      * Texto para la solicitud.
      */
-    TEXTOS_SOLICITUD: 'Al dar doble clic en el registro seleccionado creará una Nueva solicitud con los mismos datos de la solicitud elegida.',
+    TEXTOS_SOLICITUD: 'Al dar doble clic en el registro seleccionado creará una nueva solicitud con los mismos datos de la solicitud elegida.',
 
     /**
      * Texto para la leyenda de confirmación de la sección.

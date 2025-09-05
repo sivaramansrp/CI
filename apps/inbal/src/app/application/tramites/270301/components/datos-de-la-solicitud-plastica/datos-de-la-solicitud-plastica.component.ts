@@ -449,7 +449,6 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
       this.guardarDatosFormulario();
     } else if (this.solicitudFormGroup && this.obraDeArteFormgroup) {
       this.solicitudFormGroup.enable();
-      this.obraDeArteFormgroup.enable();
     }
 
   }
@@ -468,15 +467,12 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     }
 
     if (this.obraDeArteFormgroup && this.esFormularioSoloLectura) {
-      this.obraDeArteFormgroup.disable();
       if (this.obraDeArteRowData.length === 0) {
         const OBRA_DE_ARTE_ROW: TablaDatos = {
           tbodyData: obraDe,
         };
         this.obraDeArteRowData.push(OBRA_DE_ARTE_ROW);
       }
-    } else if (!this.esFormularioSoloLectura) {
-      this.obraDeArteFormgroup.enable();
     }
 
   }
@@ -577,6 +573,14 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * @default ''
        */
       aduanaEntrada: new FormControl(this.solicitudState?.aduanaEntrada || '', [Validators.required]),
+      /**
+       * @control manifiesto
+       * @description
+       * Control reactivo para definir el manifiesto correspondiente al trámite.
+       * Es obligatorio y debe ser completado.
+       * @default false
+       */
+      manifiesto: new FormControl(this.solicitudState?.manifiesto),
     });
   }
 
@@ -864,7 +868,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     /**
      * Agrega la nueva obra de arte a la lista de obras de arte.
      */
-    this.obraDeArteRowData.push(OBRA_DE_ARTE_ROW);
+    this.obraDeArteRowData = [...this.obraDeArteRowData, OBRA_DE_ARTE_ROW];
 
     /**
      * Actualiza el almacenamiento de obras de arte en la tienda.

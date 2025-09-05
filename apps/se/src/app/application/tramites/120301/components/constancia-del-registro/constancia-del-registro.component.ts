@@ -3,7 +3,9 @@
  * @description Este componente es responsable de manejar el formulario del certificado de registro.
  * Incluye un formulario para capturar los datos del certificado de registro y funcionalidades adicionales.
  */
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
 import {
   FormBuilder,
   FormGroup,
@@ -29,7 +31,6 @@ import {
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
-import { VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
 
 import {
   ElegibilidadDeTextilesStore,
@@ -37,6 +38,7 @@ import {
 } from '../../estados/elegibilidad-de-textiles.store';
 
 import { AnioConstanciaService } from '../../../../core/services/120301/catalogos/anio-constancia.service';
+import { ERROR_FORMA_ALERT } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { GuardadoService } from '../../../../core/services/120301/guardado.service';
@@ -63,7 +65,6 @@ import { Tramite120301Store } from '../../estados/tramites/tramite120301.store';
  * @property {FormGroup} ConstanciaDelRegistro - Formulario para datos adicionales del certificado de registro.
  * @property {any} radioOptions - Opciones de radio cargadas desde un archivo JSON.
  * @property {string | number} selectedValue - Valor seleccionado en las opciones de radio.
- * @property {string[]} tableColumns - Encabezados de columnas de la tabla.
  * @property {ConfiguracionColumna<ConstanciaTramiteConfiguracion>[]} configuracionTabla - Configuración de columnas de la tabla de datos.
  * @property {ConstanciaTramiteConfiguracion[]} configuracionTablaDatos - Datos de la tabla de constancias de trámite.
  * @property {Catalogo[]} paisesDatos - Datos del catálogo de países.
@@ -97,6 +98,7 @@ import { Tramite120301Store } from '../../estados/tramites/tramite120301.store';
     InputRadioComponent,
     TablaDinamicaComponent,
     CatalogoSelectComponent,
+    CommonModule,
   ],
 })
 export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
@@ -109,12 +111,34 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   formularioDeshabilitado: boolean = false;
 
   /**
+   * @property {boolean} enviada - Indica si el formulario ha sido enviado para mostrar errores.
+   */
+  enviada: boolean = false;
+
+  /**
    * @property {FormGroup} fitosanitarioForm - El grupo de formularios para capturar los datos del certificado de registro.
    * Formulario reactivo principal que contiene todos los controles necesarios para la captura
    * de información relacionada con la constancia del registro fitosanitario.
    * Incluye validaciones y manejo de estado para cada campo del formulario.
    */
   fitosanitarioForm!: FormGroup;
+
+  /**
+   * @property {string} formularioAlertaError
+   * @description
+   * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
+   * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
+   * Vacío cuando el formulario es válido.
+   */
+  public formularioAlertaError: string = '';
+
+  /**
+   * @property {boolean} esFormaValido
+   * @description
+   * Bandera booleana que indica si el formulario tiene errores de validación.
+   * Si es `true`, se muestra el mensaje de error; si es `false`, el formulario es válido y no se muestra la alerta.
+   */
+  public esFormaValido: boolean = false;
 
   /**
    * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
@@ -176,21 +200,6 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    * @private
    */
   private seccionState!: SeccionLibState;
-
-  /**
-   * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
-   * Define los títulos de las columnas que se mostrarán en la tabla de datos.
-   * Se utiliza como referencia para la configuración visual de la tabla.
-   * Incluye información sobre constancias, fracciones arancelarias, regímenes, países y fechas.
-   */
-  tableColumns = [
-    'Número de constancia de registro',
-    'Fracción arancelaria',
-    'Clasificación del regimen',
-    'País destino/origen',
-    'Fecha inicio vigencia',
-    'Fecha fin vigencia',
-  ];
 
   /**
    * @property {ConstanciaTramiteConfiguracion[]} configuracionTablaDatos - Datos de la tabla de constancias de trámite.
@@ -259,6 +268,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    * @param {SeccionLibQuery} seccionQuery - Query para consultar y suscribirse al estado de las secciones.
    * @param {ElegibilidadTextilesService} ElegibilidadTextilesService - Servicio de dominio para manejar la lógica de negocio de elegibilidad de textiles.
    * @param {ConsultaioQuery} consultaioQuery - Query para consultar el estado de solo lectura del trámite.
+   * @param {ChangeDetectorRef} cdr - Referencia al ChangeDetectorRef para manejar la detección de cambios.
    */
   constructor(
     private fb: FormBuilder,
@@ -271,7 +281,8 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     private anioConstanciaService: AnioConstanciaService,
     private tplService: TplService,
     private guardadoService: GuardadoService,
-    private tramite120301: Tramite120301Store
+    private tramite120301: Tramite120301Store,
+    private cdr: ChangeDetectorRef
   ) {
     // Lógica del constructor si es necesario
   }
@@ -285,7 +296,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    */
   configuracionTabla: ConfiguracionColumna<ConstanciaTramiteConfiguracion>[] = [
     {
-      encabezado: 'Numero de constancia de registro',
+      encabezado: 'Número de constancia de registro',
       clave: (artículo) => artículo.numeroDeConstancia,
       orden: 1,
     },
@@ -295,7 +306,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       orden: 2,
     },
     {
-      encabezado: 'Clasificación del regimen',
+      encabezado: 'Clasificación del régimen',
       clave: (artículo) => artículo.clasificacionDelRegimen,
       orden: 3,
     },
@@ -707,6 +718,50 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       ...state,
       ...FORM_VALUES,
     }));
+  this.enviada = true;
+  const RADIO_VALUE = this.fitosanitarioForm.get('flexRadioRegistro')?.value;
+  if (RADIO_VALUE === 'Especifico') {
+      // Validar campos requeridos
+      const ANO_CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
+      const NUMEROCONTROL = this.fitosanitarioForm.get('numeroDeLaConstancia');
+      ANO_CONTROL?.markAsTouched();
+      NUMEROCONTROL?.markAsTouched();
+      if (ANO_CONTROL?.invalid || NUMEROCONTROL?.invalid) {
+        return;
+      }
+      // Obtener y filtrar datos
+      this.ElegibilidadTextilesService.obtenerTablaDatos<ConstanciaTramiteConfiguracion>(
+        'constancia-del-registro-tabla-asociados.json'
+      )
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((response) =>
+            this.filtrarDatos(response as ConstanciaTramiteConfiguracion[])
+          )
+        )
+        .subscribe({
+          next: (filteredData) => {
+            this.configuracionTablaDatos = filteredData;
+            this.ElegibilidadDeTextilesStore.setdatosTablaConstanciaDelRegistro(
+              filteredData
+            );
+          },
+        });
+    } else {
+      // Obtener todos los datos de 'Todos' u otros valores
+      this.ElegibilidadTextilesService.obtenerTablaDatos<ConstanciaTramiteConfiguracion>(
+        'constancia-del-registro-tabla-asociados.json'
+      )
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (allData) => {
+            this.configuracionTablaDatos = allData as ConstanciaTramiteConfiguracion[];
+            this.ElegibilidadDeTextilesStore.setdatosTablaConstanciaDelRegistro(
+              this.configuracionTablaDatos
+            );
+          },
+        });
+    }
   }
 
   /**
@@ -811,26 +866,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * @method ngOnDestroy
-   * @description
-   * Método del ciclo de vida de Angular que se ejecuta cuando el componente va a ser destruido.
-   * Se encarga de limpiar las suscripciones activas para evitar fugas de memoria,
-   * completando el Subject destroyNotifier$ que es utilizado por todas las suscripciones
-   * del componente con el operador takeUntil.
-   * 
-   * @returns {void} No retorna ningún valor.
-   * 
-   * @implements {OnDestroy}
-   * @public
-   * @memberof ConstanciaDelRegistroComponent
-   * @since 1.0.0
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
-
+  
   /**
    * @method onAnoConstanciaChange
    * @description Maneja el evento de cambio de selección en el catálogo de años de constancia.
@@ -870,5 +906,47 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         this.ElegibilidadDeTextilesStore.setAnoDeLaConstancia(VALUE);
       }
     }
+  }
+    /**
+   * Método para continuar al siguiente paso, validando el campo cantidadFacturas.
+   * Si el formulario es inválido, muestra el mensaje de error y no permite continuar.
+   * Si es válido, limpia el error y permite continuar.
+   */
+  continuar(): void {
+    this.enviada = true;
+    this.fitosanitarioForm.markAllAsTouched();
+    this.fitosanitarioForm.updateValueAndValidity();
+    this.cdr.detectChanges();
+
+    if (!this.fitosanitarioForm.valid) {
+      this.formularioAlertaError = ERROR_FORMA_ALERT;
+      this.esFormaValido = true;
+      window.scrollTo(0, 0);
+      return;
+    }
+    this.esFormaValido = false;
+    this.formularioAlertaError = '';
+    window.scrollTo(0, 0);
+
+    this.mostrarTabs.emit(true);
+  }
+  /**
+   * @method ngOnDestroy
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente va a ser destruido.
+   * Se encarga de limpiar las suscripciones activas para evitar fugas de memoria,
+   * completando el Subject destroyNotifier$ que es utilizado por todas las suscripciones
+   * del componente con el operador takeUntil.
+   * 
+   * @returns {void} No retorna ningún valor.
+   * 
+   * @implements {OnDestroy}
+   * @public
+   * @memberof ConstanciaDelRegistroComponent
+   * @since 1.0.0
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

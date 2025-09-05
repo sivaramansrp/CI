@@ -14,7 +14,7 @@ import {
 import { CATALOGO_SI_NO, CATALOGO_SI_NOID, CATALOGO_SI_NOVALUE } from '../../constantes/detalles-plantas.enum';
 import { CommonModule } from '@angular/common';
 import { PlantasSubfabricante } from '../../models/empresas-subfabricanta.model';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-detalles-plantas',
   standalone: true,
@@ -44,6 +44,12 @@ export class DetallesPlantasComponent {
   @Output() alRegresarPlantas = new EventEmitter();
 
   /**
+   * Evento emitido al regresar de la vista de plantas.
+   * @property {EventEmitter<void>} graduar
+   */
+  @Output() guadarEvent = new EventEmitter();
+
+  /**
    * Formulario para los datos del subcontratista.
    * @property {FormGroup} formularioDatosPlantas
    */
@@ -71,7 +77,12 @@ export class DetallesPlantasComponent {
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param fb - FormBuilder para la creación del formulario reactivo.
    */
-  constructor(private fb: FormBuilder) {
+
+  /**
+   * Constructor de la clase ComplementarPlantaComponent.
+   * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
+   */
+  constructor(private fb: FormBuilder,private ubicaccion: Location,) {
     this.inicializarFormularioDatosPlantas();
   }
 
@@ -95,6 +106,7 @@ export class DetallesPlantasComponent {
    */
   regresarPlantas(): void {
     this.alRegresarPlantas.emit();
+    this.ubicaccion.back();
   }
 
   /**
@@ -121,5 +133,22 @@ export class DetallesPlantasComponent {
         tipoContribuyente: catalogoSeleccionado.id,
       });
     }
+  }
+
+   /**
+   * Vuelve a la ubicación anterior en el historial del navegador.
+   * @returns {void}
+   */
+  regrasar(): void {
+    this.ubicaccion.back();
+  }
+
+  /**
+   * Emits the `guadarEvent` to notify listeners that a save action has been triggered.
+   *
+   * Typically used to signal that the user has requested to save the current state or data.
+   */
+  guardar(): void{
+    this.guadarEvent.emit();
   }
 }

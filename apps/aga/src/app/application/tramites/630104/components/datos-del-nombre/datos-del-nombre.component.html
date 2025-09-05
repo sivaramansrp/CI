@@ -47,19 +47,21 @@
                     [isDisabled]="esFormularioSoloLectura"
                     (selectionChange)="establecerCambioDeValor({campo:'datosRepresentante',valor:$event});cambiarTipoPropietario()"></app-catalogo-select>
             </div>
-        </div>
-     @if(mostrarFormularioPersonaExtranjera){
-     <div class="row mt-4">
-            <formas-dinamicas [forma]="datisDelNombre" [formularioDatos]="formularioDatosPropietarioNombre"
-                [estado]="estadoSeleccionado" [soloLectura]="esFormularioSoloLectura"
-                (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
-        </div>
-    <div class="row mt-4">
+             @if(mostrarFormularioPersonaExtranjera){
+                <div class="row mt-4">
+                        <formas-dinamicas [forma]="datisDelNombre" [formularioDatos]="formularioDatosPropietarioNombre"
+                            [estado]="estadoSeleccionado" [soloLectura]="esFormularioSoloLectura"
+                            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+                    </div>
+                
+            }
+            <div class="row mt-4">
             <formas-dinamicas [forma]="datisDelNombre" [formularioDatos]="formularioDatosPropietarioDireccion"
                 [estado]="estadoSeleccionado" [soloLectura]="esFormularioSoloLectura"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+            </div>
         </div>
-        }
+    
     }
   
 </form>

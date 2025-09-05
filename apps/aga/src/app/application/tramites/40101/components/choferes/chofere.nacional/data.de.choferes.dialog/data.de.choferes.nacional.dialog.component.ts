@@ -1,27 +1,49 @@
-import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { Subject, firstValueFrom, takeUntil } from "rxjs";
+import { CommonModule } from '@angular/common';
 
-import { REGEX_CURP, REGEX_RFC, REGEX_SOLO_DIGITOS } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
+
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+
+import { Subject, firstValueFrom, takeUntil } from 'rxjs';
+
 import {
   Catalogo,
   CategoriaMensaje,
   Notificacion,
   NotificacionesComponent,
   TipoNotificacionEnum
-} from "@ng-mf/data-access-user";
-
+} from '@ng-mf/data-access-user';
 import {
   CatalogoSelectComponent,
   SharedModule,
   TituloComponent
-} from "@libs/shared/data-access-user/src";
+} from '@libs/shared/data-access-user/src';
+import {
+  REGEX_CURP,
+  REGEX_RFC,
+  REGEX_SOLO_DIGITOS
+} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
-import { Chofer40101Service } from "../../../../estado/chofer40101.service";
-import { DatosDelChoferNacional } from "../../../../models/registro-muestras-mercancias.model";
-
+import { Chofer40101Service } from '../../../../estado/chofer40101.service';
+import { DatosDelChoferNacional } from '../../../../models/registro-muestras-mercancias.model';
 
 @Component({
   selector: 'app-choferes-datos',
@@ -424,41 +446,39 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
    */
   private async updateListsData(data: DatosDelChoferNacional): Promise<void> {
 
-    const paisObj = this.paisList.find(p => p.descripcion === data.pais);
-    const paisId = paisObj ? paisObj.id : '';
+    const PAIS_OBJ = this.paisList.find(p => p.descripcion === data.pais);
+    const PAIS_ID = PAIS_OBJ ? PAIS_OBJ.id : '';
     // ESTADO
-    const estados = await this.fetchEstadosByPais(paisObj || this.paisList[0]);
-    const estadoObj = estados.find(e => e.descripcion === data.estado);
-    const estadoId = estadoObj ? estadoObj.id : '';
+    const ESTADOS = await this.fetchEstadosByPais(PAIS_OBJ || this.paisList[0]);
+    const ESTADO_OBJ = ESTADOS.find(e => e.descripcion === data.estado);
+    const ESTADO_ID = ESTADO_OBJ ? ESTADO_OBJ.id : '';
     // MUNICIPIO
-    let municipioId = '';
-    let coloniaId = '';
-    if (estadoObj) {
-      const municipios = await this.fetchMunicipiosByEstado(estadoObj);
-      const municipioObj = municipios.find(m => m.descripcion === data.municipioAlcaldia);
-      municipioId = municipioObj ? String(municipioObj.id) : '';
+    let MUNICIPIO_ID = '';
+    let COLONIA_ID = '';
+    if (ESTADO_OBJ) {
+      const MUNICIPIOS = await this.fetchMunicipiosByEstado(ESTADO_OBJ);
+      const MUNICIPIO_OBJ = MUNICIPIOS.find(m => m.descripcion === data.municipioAlcaldia);
+      MUNICIPIO_ID = MUNICIPIO_OBJ ? String(MUNICIPIO_OBJ.id) : '';
       // COLONIA
-      if (municipioObj) {
-        await this.fetchColoniasByMunicipio(municipioObj);
-        const coloniaObj = this.coloniaList.find(c => c.descripcion === data.colonia);
-        coloniaId = coloniaObj ? String(coloniaObj.id) : '';
+      if (MUNICIPIO_OBJ) {
+        await this.fetchColoniasByMunicipio(MUNICIPIO_OBJ);
+        const COLONIA_OBJ = this.coloniaList.find(c => c.descripcion === data.colonia);
+        COLONIA_ID = COLONIA_OBJ ? String(COLONIA_OBJ.id) : '';
       }
     }
     // PAIS DE RESIDENCIA
-    const paisResidenciaObj = this.paisList.find(p => p.descripcion === data.paisDeResidencia);
-    const paisResidenciaId = paisResidenciaObj ? paisResidenciaObj.id : '';
+    const PAIS_RESIDENCIA_OBJ = this.paisList.find(p => p.descripcion === data.paisDeResidencia);
+    const PAIS_RESIDENCIA_ID = PAIS_RESIDENCIA_OBJ ? PAIS_RESIDENCIA_OBJ.id : '';
 
     this.formChoferes.patchValue({
-      pais: paisId,
-      estado: estadoId,
-      municipioAlcaldia: municipioId,
-      colonia: coloniaId,
-      paisDeResidencia: paisResidenciaId
+      pais: PAIS_ID,
+      estado: ESTADO_ID,
+      municipioAlcaldia: MUNICIPIO_ID,
+      colonia: COLONIA_ID,
+      paisDeResidencia: PAIS_RESIDENCIA_ID
     });
   }
 
-  // ...existing code...
-  
   /**
    * Guarda los datos editados del chofer nacional si el formulario es válido, emite el evento y cierra el modal.
    * Si el formulario es inválido, muestra una notificación de alerta.
@@ -474,20 +494,21 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     });
 
     if (this.formChoferes.valid) {
-      const datos = this.formChoferes.getRawValue() as DatosDelChoferNacional;
+
+      const DATOS = this.formChoferes.getRawValue() as DatosDelChoferNacional;
       // Convertir ID en descripciones para todos los campos seleccionados
-      datos.pais = this.paisList.find(p => String(p.id) === String(datos.pais))?.descripcion || '';
-      datos.estado = this.estadoList.find(e => String(e.id) === String(datos.estado))?.descripcion || '';
-      datos.municipioAlcaldia = this.municipioList.find(m => String(m.id) === String(datos.municipioAlcaldia))?.descripcion || '';
-      datos.colonia = this.coloniaList.find(c => String(c.id) === String(datos.colonia))?.descripcion || '';
-      datos.paisDeResidencia = this.paisList.find(p => String(p.id) === String(datos.paisDeResidencia))?.descripcion || '';
+      DATOS.pais = this.paisList.find(p => String(p.id) === String(DATOS.pais))?.descripcion || '';
+      DATOS.estado = this.estadoList.find(e => String(e.id) === String(DATOS.estado))?.descripcion || '';
+      DATOS.municipioAlcaldia = this.municipioList.find(m => String(m.id) === String(DATOS.municipioAlcaldia))?.descripcion || '';
+      DATOS.colonia = this.coloniaList.find(c => String(c.id) === String(DATOS.colonia))?.descripcion || '';
+      DATOS.paisDeResidencia = this.paisList.find(p => String(p.id) === String(DATOS.paisDeResidencia))?.descripcion || '';
 
       if (this.isEditando && this.indiceEditando !== null) {
         // Emitir datos y el índice para actualizar
-        this.addModalEvent.emit({ datos, indice: this.indiceEditando });
+        this.addModalEvent.emit({ datos: DATOS, indice: this.indiceEditando });
       } else {
         // Emitir datos para agregar nuevo
-        this.addModalEvent.emit({ datos });
+        this.addModalEvent.emit({ datos: DATOS });
       }
       this.isEditando = false;
       this.indiceEditando = null;

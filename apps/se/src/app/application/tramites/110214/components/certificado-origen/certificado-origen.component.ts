@@ -1,5 +1,5 @@
-import { AlertComponent, ConsultaioQuery, ConsultaioState, Notificacion, Pedimento, REGEX_PATRON_DECIMAL_2 } from "@ng-mf/data-access-user";
-import { DISPONIBLES_ENCABEZADOS, FECHAFACTURA, MERCANCIAS_ENCABEZADOS } from '../../constants/validar-inicialmente-certificado.enum';
+import { AlertComponent, ConsultaioQuery, ConsultaioState, InputRadioComponent, Notificacion, Pedimento, REGEX_PATRON_DECIMAL_2 } from "@ng-mf/data-access-user";
+import { DISPONIBLES_ENCABEZADOS, FECHAFACTURA, MERCANCIAS_ENCABEZADOS, RADIO_OPTIONS } from '../../constants/validar-inicialmente-certificado.enum';
 
 import { AbstractControl, FormBuilder,FormGroup,ReactiveFormsModule,ValidationErrors, ValidatorFn } from "@angular/forms";
 
@@ -53,7 +53,8 @@ import { takeUntil } from "rxjs";
     AlertComponent,
     CatalogoSelectComponent,
     InputFechaComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    InputRadioComponent
   ],
   providers: [ToastrService],
   templateUrl: './certificado-origen.component.html',
@@ -202,6 +203,12 @@ elementoParaEliminar!: number;
  * @description Lista de pedimentos asociados al trámite.
  */
 pedimentos: Array<Pedimento> = [];
+
+
+  /**
+   * Indica si el componente está en modo de solo lectura.
+   */
+ radioOptions = RADIO_OPTIONS;
 
 
   /**
@@ -800,7 +807,22 @@ static restrictFutureDates(): ValidatorFn {
     const CHECKBOX = event.target as HTMLInputElement;
     this.mostrarCamposTercerOperador = CHECKBOX.checked;
   }
+  /**
+   * Valida el formulario de datos del certificado.
+   * 
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
+   */
+public validarFormulario(): boolean {
+  let isValid = true;
 
+  if (this.formularioCertificado.invalid) {
+    this.formularioCertificado.markAllAsTouched();
+    isValid = false;
+  }
+
+
+  return isValid;
+}
   /**
    * Método que se ejecuta al destruir el componente.
    * 

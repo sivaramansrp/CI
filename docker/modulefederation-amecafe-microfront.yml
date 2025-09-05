@@ -1,7 +1,7 @@
 services:
 #----------------------------------------------------------------
   modulefederation-amecafe-microfront:
-    image: ghcr.io/vucem30/dockerized-modulefederation-amecafe-microfront:1.0.4
+    image: ghcr.io/vucem30/dockerized-modulefederation-amecafe-microfront:1.0.7
     build: 
       context: ./../
       dockerfile: apps/amecafe/Dockerfile.dev

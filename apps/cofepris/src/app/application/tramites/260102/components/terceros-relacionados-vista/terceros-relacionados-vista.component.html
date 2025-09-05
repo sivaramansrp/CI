@@ -1,8 +1,9 @@
-<app-terceros-relacionados
-  [fabricanteTablaDatos]="fabricanteTablaDatos"
-  [destinatarioFinalTablaDatos]="destinatarioFinalTablaDatos"
-  [proveedorTablaDatos]="proveedorTablaDatos"
-  [facturadorTablaDatos]="facturadorTablaDatos"
-  [idProcedimiento]="idProcedimiento"
-  [formularioDeshabilitado]="esFormularioSoloLectura"
-></app-terceros-relacionados>
+<app-terceros-relacionados [fabricanteTablaDatos]="fabricanteTablaDatos"
+  [destinatarioFinalTablaDatos]="destinatarioFinalTablaDatos" [proveedorTablaDatos]="proveedorTablaDatos"
+  [facturadorTablaDatos]="facturadorTablaDatos" [idProcedimiento]="idProcedimiento"
+  [formularioDeshabilitado]="esFormularioSoloLectura" (fabricanteEventoModificar)="fabricanteEventoModificar($event)"
+  (destinatarioEventoModificar)="destinatarioEventoModificar($event)"
+  (proveedorEventoModificar)="proveedorEventoModificar($event)"
+  (facturadorEventoModificar)="facturadorEventoModificar($event)" (fabricanteEliminar)="eliminarFabricante($event)"
+  (destinatarioEliminar)="eliminarDestinatario($event)" (proveedorEliminar)="eliminarProveedor($event)"
+  (facturadorEliminar)="eliminarFacturador($event)"></app-terceros-relacionados>

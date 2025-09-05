@@ -31,30 +31,32 @@
         }
         <!-- Crear el encabezado de manera dinámica -->
         <th *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="onSort(col)">
-          {{ col.encabezado }}
-          @if (showSort) {
-            <span class="d-inline-flex flex-column align-items-center ms-2">
-              <!-- Up icon -->
-              <i *ngIf="sortColumn !== col || sortDirection === 'asc'"
-                class="bi bi-caret-up-fill sort-up"
-                [ngClass]="{
-                  'text-primary': sortColumn === col && sortDirection === 'asc',
-                  'text-muted': !(sortColumn === col && sortDirection === 'asc'),
-                  'd-none': sortColumn === col && sortDirection === 'desc'
-                }"
-              ></i>
-              
-              <!-- Down icon -->
-              <i *ngIf="sortColumn !== col || sortDirection === 'desc'"
-                class="bi bi-caret-down-fill sort-down"
-                [ngClass]="{
-                  'text-primary': sortColumn === col && sortDirection === 'desc',
-                  'text-muted': !(sortColumn === col && sortDirection === 'desc'),
-                  'd-none': sortColumn === col && sortDirection === 'asc'
-                }"
-              ></i>
-            </span>
-          }
+          <div class="d-flex align-items-center">
+            {{ col.encabezado }}
+            @if (showSort) {
+              <span class="d-inline-flex flex-column align-items-center ms-2">
+                <!-- Up icon -->
+                <i *ngIf="sortColumn !== col || sortDirection === 'asc'"
+                  class="bi bi-caret-up-fill sort-up"
+                  [ngClass]="{
+                    'text-primary': sortColumn === col && sortDirection === 'asc',
+                    'text-muted': !(sortColumn === col && sortDirection === 'asc'),
+                    'd-none': sortColumn === col && sortDirection === 'desc'
+                  }"
+                ></i>
+                
+                <!-- Down icon -->
+                <i *ngIf="sortColumn !== col || sortDirection === 'desc'"
+                  class="bi bi-caret-down-fill sort-down"
+                  [ngClass]="{
+                    'text-primary': sortColumn === col && sortDirection === 'desc',
+                    'text-muted': !(sortColumn === col && sortDirection === 'desc'),
+                    'd-none': sortColumn === col && sortDirection === 'asc'
+                  }"
+                ></i>
+              </span>
+            }
+          </div>
         </th>
         @if(acciones && acciones.length){
         <th>Acciones</th>
@@ -79,10 +81,10 @@
           <input
             class="cursor-pointer"
             type="radio"
-            name="filaSeleccionada"
+            [name]="'filaSeleccionada_' + tableId"
             [(ngModel)]="idFilaSeleccionada"
             [value]="i"
-            (change)="seleccionarFila(i, fila)"
+            (change)="seleccionarFila($event, i, fila)"
             [checked]="idFilaSeleccionada === i"
             aria-label="Seleccionar"
             [disabled]="disableSeleccionTablaRadio"

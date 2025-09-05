@@ -1,5 +1,6 @@
 import { Tramite630104State, Tramite630104Store } from '../estados/tramites/tramite630104.store';
 import { Catalogo } from '@ng-mf/data-access-user';
+import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -13,6 +14,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class EquipoEInstrumentosMusicalesService {
+  private formsMap: { [key: string]: FormGroup } = {};
+  private formValues: { [key: string]: unknown } = {};
   /**
    * Constructor del servicio.
    * 
@@ -100,6 +103,11 @@ export class EquipoEInstrumentosMusicalesService {
   */
   getDatosDeLaSolicitud(): Observable<Tramite630104State> {
     return this.http.get<Tramite630104State>('assets/json/630104/datos-de-la-solicitud.json');
+  }
+
+  setForm(key: string, form: FormGroup): void {
+    this.formsMap[key] = form;
+    this.formValues[key] = form.value;
   }
 
 }

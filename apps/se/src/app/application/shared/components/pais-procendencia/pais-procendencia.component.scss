@@ -1,3 +1,10 @@
+a.ayuda-disabled {
+  pointer-events: none;     /* Desactiva todos los eventos del mouse (clic, hover, etc.) */
+  color: gray;              /* Cambia el color del texto para indicar que está deshabilitado */
+  text-decoration: none;    /* Elimina el subrayado del enlace */
+  cursor: not-allowed;      /* Cambia el cursor para indicar que no es interactivo */
+}
+
 /* Establece un grupo de botones con ancho completo y diseño de cuadrícula */
 .btn-group {
   width: 100%;
@@ -15,6 +22,8 @@ textarea {
   border-radius: 4px; /* Esquinas redondeadas */
   resize: vertical; /* Permite solo el redimensionamiento vertical */
   box-sizing: border-box; /* Incluye el padding y el borde en el tamaño total */
+  resize: none;
+  overflow: hidden;
 }
 
 /* Ajustes para pantallas más pequeñas */
@@ -29,4 +38,8 @@ textarea {
   textarea {
       min-height: 80px; /* Reduce aún más la altura mínima para pantallas muy pequeñas */
   }
+}
+
+.textarea-error {
+  border: 1px solid #dc3545 !important;
 }

@@ -4,12 +4,9 @@
  * Incluye un formulario para capturar los datos de las facturas y tablas para mostrar las facturas disponibles y asociadas.
  */
 
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 
 import {
   FormBuilder,
@@ -30,7 +27,7 @@ import {
   TituloComponent,
 } from '@ng-mf/data-access-user';
 
-import { VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
+import { ERROR_FORMA_ALERT, VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
 
 import {
   AsociadasTableColumns,
@@ -114,6 +111,31 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * Maneja validaciones y sincronización con el estado global de la aplicación.
    */
   formularioAsociacionFactura!: FormGroup;
+
+    /**
+   * @property {string} formularioAlertaError
+   * @description
+   * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
+   * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
+   * Vacío cuando el formulario es válido.
+   */
+  public formularioAlertaError: string = '';
+
+  /**
+   * @property {boolean} esFormaValido
+   * @description
+   * Bandera booleana que indica si el formulario tiene errores de validación.
+   * Si es `true`, se muestra el mensaje de error; si es `false`, el formulario es válido y no se muestra la alerta.
+   */
+  public esFormaValido: boolean = false;
+
+      /**
+     * @property {EventEmitter<boolean>} mostrarTabs - Emite un valor booleano para mostrar las pestañas adicionales.
+     * EventEmitter que comunica al componente padre cuándo debe mostrar las pestañas de navegación.
+     * Se activa cuando el usuario completa exitosamente el proceso de guardado o validación.
+     * Permite la coordinación entre componentes para la navegación de la interfaz.
+     */
+    @Output() mostrarTabs: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
    * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
@@ -335,6 +357,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @param {SeccionLibStore} seccionStore - Store para manejar el estado específico de las secciones del módulo.
    * @param {SeccionLibQuery} seccionQuery - Query para consultar y suscribirse al estado de las secciones.
    * @param {ElegibilidadTextilesService} elegibilidadTextilesService - Servicio de dominio para manejar la lógica de negocio de elegibilidad de textiles.
+   * @param {ChangeDetectorRef} cdr - Referencia al ChangeDetectorRef para manejar la detección de cambios en el componente.
    */
   constructor(
     private fb: FormBuilder,
@@ -345,7 +368,8 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
     private elegibilidadTextilesService: ElegibilidadTextilesService,
     private facturasAsociadasService: FacturasAsociadasService,
     private tramite120301Query: Tramite120301Query,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -691,6 +715,28 @@ const PAYLOAD: FacturasTplEliminarRequest[] = [
     );
   }
 
+  /**
+   * Método para continuar al siguiente paso, validando el campo cantidadFacturas.
+   * Si el formulario es inválido, muestra el mensaje de error y no permite continuar.
+   * Si es válido, limpia el error y permite continuar.
+   */
+  continuar(): void {
+    this.formularioAsociacionFactura.markAllAsTouched();
+    this.formularioAsociacionFactura.updateValueAndValidity();
+    this.cdr.detectChanges();
+
+    if (!this.formularioAsociacionFactura.valid) {
+      this.formularioAlertaError = ERROR_FORMA_ALERT;
+      this.esFormaValido = true;
+      window.scrollTo(0, 0);
+      return;
+    }
+    this.esFormaValido = false;
+    this.formularioAlertaError = '';
+    window.scrollTo(0, 0);
+
+    this.mostrarTabs.emit(true);
+  }
   /**
    * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.

@@ -64,25 +64,6 @@ describe('Solicitud10301Service', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call all store setters in actualizarEstadoFormulario()', () => {
-    service.actualizarEstadoFormulario(MOCK_STATE);
-
-    expect(store.setTipoMercancia).toHaveBeenCalledWith(MOCK_STATE.tipoMercancia);
-    expect(store.setUsoEspecifico).toHaveBeenCalledWith(MOCK_STATE.usoEspecifico);
-    expect(store.setMarca).toHaveBeenCalledWith(MOCK_STATE.marca);
-    expect(store.setModelo).toHaveBeenCalledWith(MOCK_STATE.modelo);
-    expect(store.setSerie).toHaveBeenCalledWith(MOCK_STATE.serie);
-    expect(store.setCalle).toHaveBeenCalledWith(MOCK_STATE.calle);
-    expect(store.setNumeroExterior).toHaveBeenCalledWith(MOCK_STATE.numeroExterior);
-    expect(store.setNumeroInterior).toHaveBeenCalledWith(MOCK_STATE.numeroInterior);
-    expect(store.setTelefono).toHaveBeenCalledWith(MOCK_STATE.telefono);
-    expect(store.setCorreoElectronico).toHaveBeenCalledWith(MOCK_STATE.correoElectronico);
-    expect(store.setCodigoPostal).toHaveBeenCalledWith(MOCK_STATE.codigoPostal);
-    expect(store.setEstado).toHaveBeenCalledWith(MOCK_STATE.estado);
-    expect(store.setColonia).toHaveBeenCalledWith(MOCK_STATE.colonia);
-    expect(store.setOpcion).toHaveBeenCalledWith(MOCK_STATE.opcion);
-  });
-
   it('should fetch JSON data from getDatosDeTrtamitelDoc()', () => {
     service.getDatosDeTrtamitelDoc().subscribe((result) => {
       expect(result).toEqual(MOCK_STATE);

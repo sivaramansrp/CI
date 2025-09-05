@@ -1,15 +1,16 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Modal } from 'bootstrap';
-import { map, Subject, takeUntil } from 'rxjs';
+
+import { Subject, map, takeUntil } from 'rxjs';
 
 import {
   Catalogo,
+  ConsultaioQuery,
+  ConsultaioState,
   Notificacion,
   TablaSeleccion,
-  ValidacionesFormularioService,
-  ConsultaioQuery,
-  ConsultaioState
+  ValidacionesFormularioService
 } from '@ng-mf/data-access-user';
 
 import {
@@ -19,6 +20,7 @@ import {
 
 import {
   CatalogoLista,
+  DatosUnidad,
   UnidadTabla,
   VehiculoTabla,
   VehiculoTablaDatos
@@ -92,20 +94,20 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    * Permite abrir y cerrar el modal de vehículos mediante código Bootstrap.
    * 
    * @type {Modal | null}
-   * @private
+   * @public
    * @memberof VehiculosComponent
    */
-  private vehiculoModalInstance: Modal | null = null;
+  public vehiculoModalInstance: Modal | null = null;
 
   /**
    * Instancia del modal de unidad para control programático.
    * Permite abrir y cerrar el modal de unidades de arrastre mediante código Bootstrap.
    * 
    * @type {Modal | null}
-   * @private
+   * @public
    * @memberof VehiculosComponent
    */
-  private unidadModalInstance: Modal | null = null;
+  public unidadModalInstance: Modal | null = null;
 
   /**
    * Formulario reactivo para la captura y edición de datos de vehículos.
@@ -368,7 +370,7 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.cleanupModalInstances();
+    VehiculosComponent.cleanupModalInstances();
     
     this.tramiteQuery.selectSolicitud$
       .pipe(
@@ -440,7 +442,7 @@ export class VehiculosComponent implements OnInit, OnDestroy {
           orden: 0,
         },
         {
-          encabezado: 'Número de identificación vehicular',
+          encabezado: 'Número de identificación vehícular',
           clave: (item: VehiculoTabla) => item.numero,
           orden: 1,
         },
@@ -460,12 +462,12 @@ export class VehiculosComponent implements OnInit, OnDestroy {
           orden: 4,
         },
         {
-          encabezado: 'Número de Placas',
+          encabezado: 'Número de placas',
           clave: (item: VehiculoTabla) => item.numeroPlaca,
           orden: 5,
         },
         {
-          encabezado: 'País Emisor',
+          encabezado: 'País emisor',
           clave: (item: VehiculoTabla) => item.paisEmisor,
           orden: 6,
         },
@@ -582,26 +584,26 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    * @memberof VehiculosComponent
    * @returns {void}
    */
-  private cleanupModalInstances(): void {
+  private static cleanupModalInstances(): void {
     try {
-      const vehiculoModalElement = document.getElementById('vehiculoModal');
-      if (vehiculoModalElement) {
-        const existingVehiculoModal = Modal.getInstance(vehiculoModalElement);
-        if (existingVehiculoModal) {
-          existingVehiculoModal.dispose();
+      const ELEMENTO_MODAL_VEHICULO = document.getElementById('vehiculoModal');
+      if (ELEMENTO_MODAL_VEHICULO) {
+        const MODAL_VEHICULO_EXISTENTE = Modal.getInstance(ELEMENTO_MODAL_VEHICULO);
+        if (MODAL_VEHICULO_EXISTENTE) {
+          MODAL_VEHICULO_EXISTENTE.dispose();
         }
       }
       
-      const unidadModalElement = document.getElementById('unidadModal');
-      if (unidadModalElement) {
-        const existingUnidadModal = Modal.getInstance(unidadModalElement);
-        if (existingUnidadModal) {
-          existingUnidadModal.dispose();
+      const ELEMENTO_MODAL_UNIDAD = document.getElementById('unidadModal');
+      if (ELEMENTO_MODAL_UNIDAD) {
+        const MODAL_UNIDAD_EXISTENTE = Modal.getInstance(ELEMENTO_MODAL_UNIDAD);
+        if (MODAL_UNIDAD_EXISTENTE) {
+          MODAL_UNIDAD_EXISTENTE.dispose();
         }
       }
       
-      const backdrops = document.querySelectorAll('.modal-backdrop');
-      backdrops.forEach(backdrop => backdrop.remove());
+      const FONDOS = document.querySelectorAll('.modal-backdrop');
+      FONDOS.forEach(backdrop => backdrop.remove());
       
       document.body.classList.remove('modal-open');
     } catch (error) {
@@ -636,11 +638,11 @@ export class VehiculosComponent implements OnInit, OnDestroy {
     }
     
     try {
-      const modalElement = document.getElementById('vehiculoModal');
-      if (modalElement) {
-        const existingModal = Modal.getInstance(modalElement);
-        if (existingModal) {
-          existingModal.hide();
+      const ELEMENTO_MODAL = document.getElementById('vehiculoModal');
+      if (ELEMENTO_MODAL) {
+        const MODAL_EXISTENTE = Modal.getInstance(ELEMENTO_MODAL);
+        if (MODAL_EXISTENTE) {
+          MODAL_EXISTENTE.hide();
           return;
         }
       }
@@ -649,10 +651,10 @@ export class VehiculosComponent implements OnInit, OnDestroy {
     }
     
     try {
-      const modalElement = document.getElementById('vehiculoModal');
-      if (modalElement) {
-        const newModal = new Modal(modalElement);
-        newModal.hide();
+      const ELEMENTO_MODAL = document.getElementById('vehiculoModal');
+      if (ELEMENTO_MODAL) {
+        const NUEVO_MODAL = new Modal(ELEMENTO_MODAL);
+        NUEVO_MODAL.hide();
         return;
       }
     } catch (error) {
@@ -660,19 +662,19 @@ export class VehiculosComponent implements OnInit, OnDestroy {
     }
     
     try {
-      const modalElement = document.getElementById('vehiculoModal');
-      const backdrop = document.querySelector('.modal-backdrop');
+      const ELEMENTO_MODAL = document.getElementById('vehiculoModal');
+      const FONDO = document.querySelector('.modal-backdrop');
       
-      if (modalElement) {
-        modalElement.style.display = 'none';
-        modalElement.classList.remove('show');
-        modalElement.setAttribute('aria-hidden', 'true');
-        modalElement.removeAttribute('aria-modal');
+      if (ELEMENTO_MODAL) {
+        ELEMENTO_MODAL.style.display = 'none';
+        ELEMENTO_MODAL.classList.remove('show');
+        ELEMENTO_MODAL.setAttribute('aria-hidden', 'true');
+        ELEMENTO_MODAL.removeAttribute('aria-modal');
         document.body.classList.remove('modal-open');
       }
       
-      if (backdrop) {
-        backdrop.remove();
+      if (FONDO) {
+        FONDO.remove();
       }
     } catch (error) {
       // Manejo silencioso de errores
@@ -713,16 +715,16 @@ export class VehiculosComponent implements OnInit, OnDestroy {
         this.vehiculoModalInstance.show();
       } catch (error) {
         try {
-          const modalElement = this.vehiculoModal.nativeElement;
-          modalElement.style.display = 'block';
-          modalElement.classList.add('show');
-          modalElement.setAttribute('aria-modal', 'true');
-          modalElement.removeAttribute('aria-hidden');
+          const ELEMENTO_MODAL = this.vehiculoModal.nativeElement;
+          ELEMENTO_MODAL.style.display = 'block';
+          ELEMENTO_MODAL.classList.add('show');
+          ELEMENTO_MODAL.setAttribute('aria-modal', 'true');
+          ELEMENTO_MODAL.removeAttribute('aria-hidden');
           document.body.classList.add('modal-open');
           
-          const backdrop = document.createElement('div');
-          backdrop.className = 'modal-backdrop fade show';
-          document.body.appendChild(backdrop);
+          const FONDO = document.createElement('div');
+          FONDO.className = 'modal-backdrop fade show';
+          document.body.appendChild(FONDO);
         } catch (fallbackError) {
           // Manejo silencioso de errores
         }
@@ -756,16 +758,16 @@ export class VehiculosComponent implements OnInit, OnDestroy {
         this.unidadModalInstance.show();
       } catch (error) {
         try {
-          const modalElement = this.unidadModal.nativeElement;
-          modalElement.style.display = 'block';
-          modalElement.classList.add('show');
-          modalElement.setAttribute('aria-modal', 'true');
-          modalElement.removeAttribute('aria-hidden');
+          const ELEMENTO_MODAL = this.unidadModal.nativeElement;
+          ELEMENTO_MODAL.style.display = 'block';
+          ELEMENTO_MODAL.classList.add('show');
+          ELEMENTO_MODAL.setAttribute('aria-modal', 'true');
+          ELEMENTO_MODAL.removeAttribute('aria-hidden');
           document.body.classList.add('modal-open');
           
-          const backdrop = document.createElement('div');
-          backdrop.className = 'modal-backdrop fade show';
-          document.body.appendChild(backdrop);
+          const FONDO = document.createElement('div');
+          FONDO.className = 'modal-backdrop fade show';
+          document.body.appendChild(FONDO);
         } catch (fallbackError) {
           // Manejo silencioso de errores
         }
@@ -812,13 +814,22 @@ export class VehiculosComponent implements OnInit, OnDestroy {
       return;
     }
     
-    const lastId = Array.isArray(this.vehiculosTablaConfig?.datos) && this.vehiculosTablaConfig.datos.length > 0
+    this.initializeVehiculoForm();
+    this.initializeUnidadForm();
+    this.disableIdFields();
+  }
+
+  /**
+   * Inicializa el formulario de vehículo con datos del estado y próximo ID
+   */
+  private initializeVehiculoForm(): void {
+    const ULTIMO_ID = Array.isArray(this.vehiculosTablaConfig?.datos) && this.vehiculosTablaConfig.datos.length > 0
       ? Math.max(...this.vehiculosTablaConfig.datos.map(v => Number(v.idDeVehiculo) || 0))
       : 0;
-    const nextId = lastId + 1;
+    const SIGUIENTE_ID = ULTIMO_ID + 1;
 
     this.vehiculoFormulario.patchValue({
-      idDeVehiculo: nextId,
+      idDeVehiculo: SIGUIENTE_ID,
       numero: this.tramiteState.datosVehiculo?.numero || '',
       tipoDeVehiculo: this.tramiteState.datosVehiculo?.tipoDeVehiculo || '',
       numeroPlaca: this.tramiteState.datosVehiculo?.numeroPlaca || '',
@@ -835,16 +846,21 @@ export class VehiculosComponent implements OnInit, OnDestroy {
       paisEmisor2daPlaca: this.tramiteState.datosVehiculo?.paisEmisor2daPlaca || '',
       descripcion: this.tramiteState.datosVehiculo?.descripcion || ''
     });
+  }
 
-    const lastUnidadId = Array.isArray(this.unidadesTablaConfig?.datos) && this.unidadesTablaConfig.datos.length > 0
+  /**
+   * Inicializa el formulario de unidad con datos del estado y próximo ID
+   */
+  private initializeUnidadForm(): void {
+    const ULTIMO_ID_UNIDAD = Array.isArray(this.unidadesTablaConfig?.datos) && this.unidadesTablaConfig.datos.length > 0
       ? Math.max(...this.unidadesTablaConfig.datos.map(u => Number(u.idDeVehiculo) || 0))
       : 0;
-    const nextUnidadId = lastUnidadId + 1;
+    const SIGUIENTE_ID_UNIDAD = ULTIMO_ID_UNIDAD + 1;
 
     this.unidadFormulario.patchValue({
       vinVehiculo: this.tramiteState.datosUnidad?.vinVehiculo || '',
       tipoDeUnidadArrastre: this.tramiteState.datosUnidad?.tipoDeUnidadArrastre || '',
-      idDeVehiculoUnidad: nextUnidadId,
+      idDeVehiculoUnidad: SIGUIENTE_ID_UNIDAD,
       numeroEconomico: this.tramiteState.datosUnidad?.numeroEconomico || '',
       numeroPlaca: this.tramiteState.datosUnidad?.numeroPlaca || '',
       paisEmisor: this.tramiteState.datosUnidad?.paisEmisor || '',
@@ -855,7 +871,12 @@ export class VehiculosComponent implements OnInit, OnDestroy {
       paisEmisor2daPlaca: this.tramiteState.datosUnidad?.paisEmisor2daPlaca || '',
       descripcion: this.tramiteState.datosUnidad?.descripcion || ''
     });
-    
+  }
+
+  /**
+   * Deshabilita los campos de ID en ambos formularios
+   */
+  private disableIdFields(): void {
     this.vehiculoFormulario.get('idDeVehiculo')?.disable();
     this.unidadFormulario.get('idDeVehiculoUnidad')?.disable();
   }
@@ -927,9 +948,9 @@ export class VehiculosComponent implements OnInit, OnDestroy {
       }
       
       this.editIndex = index;
-      const VEHICULO = this.vehiculosTablaConfig.datos[index];
+      const VEHICULO_DATOS = this.vehiculosTablaConfig.datos[index];
       
-      if (!VEHICULO) {
+      if (!VEHICULO_DATOS) {
         this.editIndex = null;
         this.limpiarDatosVehiculo();
         this.abrirModalPedimento();
@@ -940,43 +961,43 @@ export class VehiculosComponent implements OnInit, OnDestroy {
         this.vehiculoFormulario.get(key)?.enable();
       });
       
-      this.vehiculoFormulario.get('idDeVehiculo')?.setValue(VEHICULO.idDeVehiculo);
-      this.vehiculoFormulario.get('numero')?.setValue(VEHICULO.numero);
+      this.vehiculoFormulario.get('idDeVehiculo')?.setValue(VEHICULO_DATOS.idDeVehiculo);
+      this.vehiculoFormulario.get('numero')?.setValue(VEHICULO_DATOS.numero);
       
-      const tipoVehiculoId = this.tipoDeVehiculoCatalogo.find(t => t.descripcion === VEHICULO.tipoDeVehiculo)?.id || VEHICULO.tipoDeVehiculo;
-      this.vehiculoFormulario.get('tipoDeVehiculo')?.setValue(tipoVehiculoId);
+      const TIPO_VEHICULO_ID = this.tipoDeVehiculoCatalogo.find(t => t.descripcion === VEHICULO_DATOS.tipoDeVehiculo)?.id || VEHICULO_DATOS.tipoDeVehiculo;
+      this.vehiculoFormulario.get('tipoDeVehiculo')?.setValue(TIPO_VEHICULO_ID);
       
-      this.vehiculoFormulario.get('numeroPlaca')?.setValue(VEHICULO.numeroPlaca);
+      this.vehiculoFormulario.get('numeroPlaca')?.setValue(VEHICULO_DATOS.numeroPlaca);
       
-      const paisEmisorId = this.paisEmisorCatalogo.find(p => p.descripcion === VEHICULO.paisEmisor)?.id || VEHICULO.paisEmisor;
-      this.vehiculoFormulario.get('paisEmisor')?.setValue(paisEmisorId);
+      const PAIS_EMISOR_ID = this.paisEmisorCatalogo.find(p => p.descripcion === VEHICULO_DATOS.paisEmisor)?.id || VEHICULO_DATOS.paisEmisor;
+      this.vehiculoFormulario.get('paisEmisor')?.setValue(PAIS_EMISOR_ID);
       
-      this.vehiculoFormulario.get('estado')?.setValue(VEHICULO.estado);
-      this.vehiculoFormulario.get('marca')?.setValue(VEHICULO.marca);
-      this.vehiculoFormulario.get('modelo')?.setValue(VEHICULO.modelo);
+      this.vehiculoFormulario.get('estado')?.setValue(VEHICULO_DATOS.estado);
+      this.vehiculoFormulario.get('marca')?.setValue(VEHICULO_DATOS.marca);
+      this.vehiculoFormulario.get('modelo')?.setValue(VEHICULO_DATOS.modelo);
       
-      const anoId = this.anoCatalogo.find(a => a.descripcion === VEHICULO.ano)?.id || VEHICULO.ano;
-      this.vehiculoFormulario.get('ano')?.setValue(anoId);
+      const ANO_ID = this.anoCatalogo.find(a => a.descripcion === VEHICULO_DATOS.ano)?.id || VEHICULO_DATOS.ano;
+      this.vehiculoFormulario.get('ano')?.setValue(ANO_ID);
       
-      this.vehiculoFormulario.get('transponder')?.setValue(VEHICULO.transponder);
+      this.vehiculoFormulario.get('transponder')?.setValue(VEHICULO_DATOS.transponder);
       
-      const colorVehiculoId = this.colorVehiculoCatalogo.find((c: Catalogo) => c.descripcion === VEHICULO.colorVehiculo)?.clave || VEHICULO.colorVehiculo;
-      this.vehiculoFormulario.get('colorVehiculo')?.setValue(colorVehiculoId);
+      const COLOR_VEHICULO_ID = this.colorVehiculoCatalogo.find((c: Catalogo) => c.descripcion === VEHICULO_DATOS.colorVehiculo)?.clave || VEHICULO_DATOS.colorVehiculo;
+      this.vehiculoFormulario.get('colorVehiculo')?.setValue(COLOR_VEHICULO_ID);
       
-      this.vehiculoFormulario.get('numuroEconomico')?.setValue(VEHICULO.numuroEconomico);
-      this.vehiculoFormulario.get('numero2daPlaca')?.setValue(VEHICULO.numero2daPlaca);
-      this.vehiculoFormulario.get('estado2daPlaca')?.setValue(VEHICULO.estado2daPlaca);
+      this.vehiculoFormulario.get('numuroEconomico')?.setValue(VEHICULO_DATOS.numuroEconomico);
+      this.vehiculoFormulario.get('numero2daPlaca')?.setValue(VEHICULO_DATOS.numero2daPlaca);
+      this.vehiculoFormulario.get('estado2daPlaca')?.setValue(VEHICULO_DATOS.estado2daPlaca);
       
-      const paisEmisor2daPlacaId = VEHICULO.paisEmisor2daPlaca ? (this.paisEmisorCatalogo.find(p => p.descripcion === VEHICULO.paisEmisor2daPlaca)?.id || VEHICULO.paisEmisor2daPlaca) : VEHICULO.paisEmisor2daPlaca;
-      this.vehiculoFormulario.get('paisEmisor2daPlaca')?.setValue(paisEmisor2daPlacaId);
+      const PAIS_EMISOR_2DA_PLACA_ID = VEHICULO_DATOS.paisEmisor2daPlaca ? (this.paisEmisorCatalogo.find(p => p.descripcion === VEHICULO_DATOS.paisEmisor2daPlaca)?.id || VEHICULO_DATOS.paisEmisor2daPlaca) : VEHICULO_DATOS.paisEmisor2daPlaca;
+      this.vehiculoFormulario.get('paisEmisor2daPlaca')?.setValue(PAIS_EMISOR_2DA_PLACA_ID);
       
-      this.vehiculoFormulario.get('descripcion')?.setValue(VEHICULO.descripcion);
+      this.vehiculoFormulario.get('descripcion')?.setValue(VEHICULO_DATOS.descripcion);
       
       this.vehiculoFormulario.updateValueAndValidity();
       
-      const tipoVehiculo = Number(VEHICULO.tipoDeVehiculo);
+      const TIPO_VEHICULO = Number(VEHICULO_DATOS.tipoDeVehiculo);
       
-      if (tipoVehiculo === 1) {
+      if (TIPO_VEHICULO === 1) {
         this.vehiculoFormulario.get('descripcion')?.enable();
       } else {
         this.vehiculoFormulario.get('descripcion')?.disable();
@@ -1004,34 +1025,34 @@ export class VehiculosComponent implements OnInit, OnDestroy {
  */
   agregarDatosVehiculo(): void {
     if (this.vehiculoFormulario.valid) {
-      const formData = this.vehiculoFormulario.getRawValue();
+      const DATOS_FORMULARIO = this.vehiculoFormulario.getRawValue();
       
-      const datosVehiculo = {
-        ...formData,
-        tipoDeVehiculo: this.tipoDeVehiculoCatalogo.find(t => t.id === Number(formData.tipoDeVehiculo))?.descripcion || formData.tipoDeVehiculo,
-        paisEmisor: this.paisEmisorCatalogo.find(p => p.id === Number(formData.paisEmisor))?.descripcion || formData.paisEmisor,
-        ano: this.anoCatalogo.find(a => a.id === Number(formData.ano))?.descripcion || formData.ano,
-        colorVehiculo: this.colorVehiculoCatalogo.find((c: Catalogo) => c.clave === formData.colorVehiculo)?.descripcion || formData.colorVehiculo,
-        paisEmisor2daPlaca: formData.paisEmisor2daPlaca ? (this.paisEmisorCatalogo.find(p => p.id === Number(formData.paisEmisor2daPlaca))?.descripcion || formData.paisEmisor2daPlaca) : formData.paisEmisor2daPlaca
+      const DATOS_VEHICULO = {
+        ...DATOS_FORMULARIO,
+        tipoDeVehiculo: this.tipoDeVehiculoCatalogo.find(t => t.id === Number(DATOS_FORMULARIO.tipoDeVehiculo))?.descripcion || DATOS_FORMULARIO.tipoDeVehiculo,
+        paisEmisor: this.paisEmisorCatalogo.find(p => p.id === Number(DATOS_FORMULARIO.paisEmisor))?.descripcion || DATOS_FORMULARIO.paisEmisor,
+        ano: this.anoCatalogo.find(a => a.id === Number(DATOS_FORMULARIO.ano))?.descripcion || DATOS_FORMULARIO.ano,
+        colorVehiculo: this.colorVehiculoCatalogo.find((c: Catalogo) => c.clave === DATOS_FORMULARIO.colorVehiculo)?.descripcion || DATOS_FORMULARIO.colorVehiculo,
+        paisEmisor2daPlaca: DATOS_FORMULARIO.paisEmisor2daPlaca ? (this.paisEmisorCatalogo.find(p => p.id === Number(DATOS_FORMULARIO.paisEmisor2daPlaca))?.descripcion || DATOS_FORMULARIO.paisEmisor2daPlaca) : DATOS_FORMULARIO.paisEmisor2daPlaca
       };
       if (this.editIndex !== null) {
-        const vehiculosMutables = [...this.vehiculosTablaConfig.datos];
-        vehiculosMutables[this.editIndex] = datosVehiculo;
-        this.vehiculosTablaConfig.datos = vehiculosMutables;
+        const VEHICULOS_MUTABLES = [...this.vehiculosTablaConfig.datos];
+        VEHICULOS_MUTABLES[this.editIndex] = DATOS_VEHICULO;
+        this.vehiculosTablaConfig.datos = VEHICULOS_MUTABLES;
         this.editIndex = null;
       } else {
         // Crear una copia mutable del array para agregar el nuevo elemento
-        const vehiculosMutables = [...this.vehiculosTablaConfig.datos];
-        vehiculosMutables.push(datosVehiculo);
-        this.vehiculosTablaConfig.datos = vehiculosMutables;
-        const ultimoIndice = this.vehiculosTablaConfig.datos.length - 1;
-        this.onVehiculoRowSelected([{ index: ultimoIndice }]);
+        const VEHICULOS_MUTABLES = [...this.vehiculosTablaConfig.datos];
+        VEHICULOS_MUTABLES.push(DATOS_VEHICULO);
+        this.vehiculosTablaConfig.datos = VEHICULOS_MUTABLES;
+        const ULTIMO_INDICE = this.vehiculosTablaConfig.datos.length - 1;
+        this.onVehiculoRowSelected([{ index: ULTIMO_INDICE }]);
         
-        const ultimoId = Array.isArray(this.vehiculosTablaConfig?.datos) && this.vehiculosTablaConfig.datos.length > 0
+        const ULTIMO_ID = Array.isArray(this.vehiculosTablaConfig?.datos) && this.vehiculosTablaConfig.datos.length > 0
           ? Math.max(...this.vehiculosTablaConfig.datos.map(v => Number(v.idDeVehiculo) || 0))
           : 0;
-        const proximoId = ultimoId + 1;
-        this.vehiculoFormulario.get('idDeVehiculo')?.setValue(proximoId);
+        const PROXIMO_ID = ULTIMO_ID + 1;
+        this.vehiculoFormulario.get('idDeVehiculo')?.setValue(PROXIMO_ID);
       }
       
       this.forceCloseVehiculoModal();
@@ -1093,8 +1114,8 @@ export class VehiculosComponent implements OnInit, OnDestroy {
       }
       
       this.editUnidadIndex = index;
-      const UNIDAD = this.unidadesTablaConfig.datos[index];
-      if (!UNIDAD) {
+      const DATOS_UNIDAD_TABLA = this.unidadesTablaConfig.datos[index];
+      if (!DATOS_UNIDAD_TABLA) {
         this.editUnidadIndex = null;
         this.limpiarDatosUnidad();
         this.abrirModalPedimentoUnidad();
@@ -1105,35 +1126,35 @@ export class VehiculosComponent implements OnInit, OnDestroy {
         this.unidadFormulario.get(key)?.enable();
       });
       
-      this.unidadFormulario.get('idDeVehiculoUnidad')?.setValue(UNIDAD.idDeVehiculo);
-      this.unidadFormulario.get('vinVehiculo')?.setValue(UNIDAD.vinVehiculo);
+      this.unidadFormulario.get('idDeVehiculoUnidad')?.setValue(DATOS_UNIDAD_TABLA.idDeVehiculo);
+      this.unidadFormulario.get('vinVehiculo')?.setValue(DATOS_UNIDAD_TABLA.vinVehiculo);
       
-      const tipoUnidadId = this.tipoArrastreCatalogo.find((t: Catalogo) => t.descripcion === UNIDAD.tipoDeUnidadArrastre)?.id || UNIDAD.tipoDeUnidadArrastre;
-      this.unidadFormulario.get('tipoDeUnidadArrastre')?.setValue(tipoUnidadId);
+      const TIPO_UNIDAD_ID = this.tipoArrastreCatalogo.find((t: Catalogo) => t.descripcion === DATOS_UNIDAD_TABLA.tipoDeUnidadArrastre)?.id || DATOS_UNIDAD_TABLA.tipoDeUnidadArrastre;
+      this.unidadFormulario.get('tipoDeUnidadArrastre')?.setValue(TIPO_UNIDAD_ID);
       
-      this.unidadFormulario.get('numeroEconomico')?.setValue(UNIDAD.numeroEconomico);
-      this.unidadFormulario.get('numeroPlaca')?.setValue(UNIDAD.numeroPlaca);
+      this.unidadFormulario.get('numeroEconomico')?.setValue(DATOS_UNIDAD_TABLA.numeroEconomico);
+      this.unidadFormulario.get('numeroPlaca')?.setValue(DATOS_UNIDAD_TABLA.numeroPlaca);
       
-      const paisEmisorId = this.paisEmisorCatalogo.find(p => p.descripcion === UNIDAD.paisEmisor)?.id || UNIDAD.paisEmisor;
-      this.unidadFormulario.get('paisEmisor')?.setValue(paisEmisorId);
+      const PAIS_EMISOR_ID = this.paisEmisorCatalogo.find(p => p.descripcion === DATOS_UNIDAD_TABLA.paisEmisor)?.id || DATOS_UNIDAD_TABLA.paisEmisor;
+      this.unidadFormulario.get('paisEmisor')?.setValue(PAIS_EMISOR_ID);
       
-      this.unidadFormulario.get('estado')?.setValue(UNIDAD.estado);
-      const unidadData = UNIDAD as any;
+      this.unidadFormulario.get('estado')?.setValue(DATOS_UNIDAD_TABLA.estado);
+      const DATOS_UNIDAD = DATOS_UNIDAD_TABLA as unknown as DatosUnidad;
       
-      const colorVehiculoId = unidadData.colorVehiculo ? (this.colorVehiculoCatalogo.find((c: Catalogo) => c.descripcion === unidadData.colorVehiculo)?.clave || unidadData.colorVehiculo) : '';
-      this.unidadFormulario.get('colorVehiculo')?.setValue(colorVehiculoId);
+      const COLOR_VEHICULO_ID = DATOS_UNIDAD.colorVehiculo ? (this.colorVehiculoCatalogo.find((c: Catalogo) => c.descripcion === DATOS_UNIDAD.colorVehiculo)?.clave || DATOS_UNIDAD.colorVehiculo) : '';
+      this.unidadFormulario.get('colorVehiculo')?.setValue(COLOR_VEHICULO_ID);
       
-      this.unidadFormulario.get('numero2daPlaca')?.setValue(unidadData.numero2daPlaca || '');
-      this.unidadFormulario.get('estado2daPlaca')?.setValue(unidadData.estado2daPlaca || '');
+      this.unidadFormulario.get('numero2daPlaca')?.setValue(DATOS_UNIDAD.numero2daPlaca || '');
+      this.unidadFormulario.get('estado2daPlaca')?.setValue(DATOS_UNIDAD.estado2daPlaca || '');
       
-      const paisEmisor2daPlacaId = unidadData.paisEmisor2daPlaca ? (this.paisEmisorCatalogo.find(p => p.descripcion === unidadData.paisEmisor2daPlaca)?.id || unidadData.paisEmisor2daPlaca) : '';
-      this.unidadFormulario.get('paisEmisor2daPlaca')?.setValue(paisEmisor2daPlacaId);
+      const PAIS_EMISOR_2DA_PLACA_ID = DATOS_UNIDAD.paisEmisor2daPlaca ? (this.paisEmisorCatalogo.find(p => p.descripcion === DATOS_UNIDAD.paisEmisor2daPlaca)?.id || DATOS_UNIDAD.paisEmisor2daPlaca) : '';
+      this.unidadFormulario.get('paisEmisor2daPlaca')?.setValue(PAIS_EMISOR_2DA_PLACA_ID);
       
-      this.unidadFormulario.get('descripcion')?.setValue(unidadData.descripcion || '');
+      this.unidadFormulario.get('descripcion')?.setValue(DATOS_UNIDAD.descripcion || '');
       
-      const tipoUnidad = Number(UNIDAD.tipoDeUnidadArrastre);
+      const TIPO_UNIDAD = Number(DATOS_UNIDAD_TABLA.tipoDeUnidadArrastre);
       
-      if (tipoUnidad === 1) {
+      if (TIPO_UNIDAD === 1) {
         this.unidadFormulario.get('descripcion')?.enable();
       } else {
         this.unidadFormulario.get('descripcion')?.disable();
@@ -1168,32 +1189,32 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    */
   agregarDatosUnidad(): void {
     if (this.unidadFormulario.valid) {
-      const formData = this.unidadFormulario.getRawValue();
-      const datosUnidad = {
-        ...formData,
-        idDeVehiculo: formData.idDeVehiculoUnidad,
+      const FORM_DATA = this.unidadFormulario.getRawValue();
+      const DATOS_UNIDAD = {
+        ...FORM_DATA,
+        idDeVehiculo: FORM_DATA.idDeVehiculoUnidad,
 
-        tipoDeUnidadArrastre: this.tipoArrastreCatalogo.find(t => t.id === Number(formData.tipoDeUnidadArrastre))?.descripcion || formData.tipoDeUnidadArrastre,
-        paisEmisor: this.paisEmisorCatalogo.find(p => p.id === Number(formData.paisEmisor))?.descripcion || formData.paisEmisor,
-        colorVehiculo: formData.colorVehiculo ? (this.colorVehiculoCatalogo.find((c: Catalogo) => c.clave === formData.colorVehiculo)?.descripcion || formData.colorVehiculo) : formData.colorVehiculo,
-        paisEmisor2daPlaca: formData.paisEmisor2daPlaca ? (this.paisEmisorCatalogo.find(p => p.id === Number(formData.paisEmisor2daPlaca))?.descripcion || formData.paisEmisor2daPlaca) : formData.paisEmisor2daPlaca
+        tipoDeUnidadArrastre: this.tipoArrastreCatalogo.find(t => t.id === Number(FORM_DATA.tipoDeUnidadArrastre))?.descripcion || FORM_DATA.tipoDeUnidadArrastre,
+        paisEmisor: this.paisEmisorCatalogo.find(p => p.id === Number(FORM_DATA.paisEmisor))?.descripcion || FORM_DATA.paisEmisor,
+        colorVehiculo: FORM_DATA.colorVehiculo ? (this.colorVehiculoCatalogo.find((c: Catalogo) => c.clave === FORM_DATA.colorVehiculo)?.descripcion || FORM_DATA.colorVehiculo) : FORM_DATA.colorVehiculo,
+        paisEmisor2daPlaca: FORM_DATA.paisEmisor2daPlaca ? (this.paisEmisorCatalogo.find(p => p.id === Number(FORM_DATA.paisEmisor2daPlaca))?.descripcion || FORM_DATA.paisEmisor2daPlaca) : FORM_DATA.paisEmisor2daPlaca
       };
-      delete datosUnidad.idDeVehiculoUnidad;
+      delete DATOS_UNIDAD.idDeVehiculoUnidad;
       if (this.editUnidadIndex !== null) {
-        const unidadesMutables = [...this.unidadesTablaConfig.datos];
-        unidadesMutables[this.editUnidadIndex] = datosUnidad;
-        this.unidadesTablaConfig.datos = unidadesMutables;
+        const UNIDADES_MUTABLES = [...this.unidadesTablaConfig.datos];
+        UNIDADES_MUTABLES[this.editUnidadIndex] = DATOS_UNIDAD;
+        this.unidadesTablaConfig.datos = UNIDADES_MUTABLES;
         this.editUnidadIndex = null;
       } else {
         // Crear una copia mutable del array para agregar el nuevo elemento
-        const unidadesMutables = [...this.unidadesTablaConfig.datos];
-        unidadesMutables.push(datosUnidad);
-        this.unidadesTablaConfig.datos = unidadesMutables;
-        const ultimoIdUnidad = Array.isArray(this.unidadesTablaConfig?.datos) && this.unidadesTablaConfig.datos.length > 0
+        const UNIDADES_MUTABLES = [...this.unidadesTablaConfig.datos];
+        UNIDADES_MUTABLES.push(DATOS_UNIDAD);
+        this.unidadesTablaConfig.datos = UNIDADES_MUTABLES;
+        const ULTIMO_ID_UNIDAD = Array.isArray(this.unidadesTablaConfig?.datos) && this.unidadesTablaConfig.datos.length > 0
           ? Math.max(...this.unidadesTablaConfig.datos.map(u => Number(u.idDeVehiculo) || 0))
           : 0;
-        const proximoIdUnidad = ultimoIdUnidad + 1;
-        this.unidadFormulario.get('idDeVehiculoUnidad')?.setValue(proximoIdUnidad);
+        const PROXIMO_ID_UNIDAD = ULTIMO_ID_UNIDAD + 1;
+        this.unidadFormulario.get('idDeVehiculoUnidad')?.setValue(PROXIMO_ID_UNIDAD);
       }
       if (this.unidadModalInstance) {
         this.unidadModalInstance.hide();
@@ -1243,11 +1264,11 @@ export class VehiculosComponent implements OnInit, OnDestroy {
     this.editIndex = null;
     
     if (this.vehiculoFormulario) {
-      const valorId = this.vehiculoFormulario.get('idDeVehiculo')?.value;
+      const VALOR_ID = this.vehiculoFormulario.get('idDeVehiculo')?.value;
       this.vehiculoFormulario.reset();
       this.vehiculoFormulario.markAsUntouched();
       this.vehiculoFormulario.markAsPristine();
-      this.vehiculoFormulario.get('idDeVehiculo')?.setValue(valorId);
+      this.vehiculoFormulario.get('idDeVehiculo')?.setValue(VALOR_ID);
       this.vehiculoFormulario.get('idDeVehiculo')?.disable();
       this.vehiculoFormulario.get('descripcion')?.disable();
     }
@@ -1267,11 +1288,11 @@ export class VehiculosComponent implements OnInit, OnDestroy {
     this.editUnidadIndex = null;
     
     if (this.unidadFormulario) {
-      const valorId = this.unidadFormulario.get('idDeVehiculoUnidad')?.value;
+      const VALOR_ID = this.unidadFormulario.get('idDeVehiculoUnidad')?.value;
       this.unidadFormulario.reset();
       this.unidadFormulario.markAsUntouched();
       this.unidadFormulario.markAsPristine();
-      this.unidadFormulario.get('idDeVehiculoUnidad')?.setValue(valorId);
+      this.unidadFormulario.get('idDeVehiculoUnidad')?.setValue(VALOR_ID);
       this.unidadFormulario.get('idDeVehiculoUnidad')?.disable();
       this.unidadFormulario.get('descripcion')?.disable();
     }
@@ -1400,14 +1421,14 @@ export class VehiculosComponent implements OnInit, OnDestroy {
     this.vehiculoFormulario.get('tipoDeVehiculo')?.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((selectedValue) => {
-        const id = Number(selectedValue);
-        const descripcionControl = this.vehiculoFormulario.get('descripcion');
+        const ID = Number(selectedValue);
+        const DESCRIPCION_CONTROL = this.vehiculoFormulario.get('descripcion');
         
-        if (id === 1) {
-          descripcionControl?.enable();
+        if (ID === 1) {
+          DESCRIPCION_CONTROL?.enable();
         } else {
-          descripcionControl?.disable();
-          descripcionControl?.setValue(''); 
+          DESCRIPCION_CONTROL?.disable();
+          DESCRIPCION_CONTROL?.setValue(''); 
         }
       });
 
@@ -1418,14 +1439,13 @@ export class VehiculosComponent implements OnInit, OnDestroy {
     this.unidadFormulario.get('tipoDeUnidadArrastre')?.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((selectedValue) => {
-        const id = Number(selectedValue);
-        const descripcionControl = this.unidadFormulario.get('descripcion');
-        if (id === 1) {
-          descripcionControl?.enable();
+        const ID = Number(selectedValue);
+        const DESCRIPCION_CONTROL = this.unidadFormulario.get('descripcion');
+        if (ID === 1) {
+          DESCRIPCION_CONTROL?.enable();
         } else {
-          console.log('Principal unidadFormulario - Deshabilitando campo descripción para no-OTROS');
-          descripcionControl?.disable();
-          descripcionControl?.setValue('');
+          DESCRIPCION_CONTROL?.disable();
+          DESCRIPCION_CONTROL?.setValue('');
         }
       });
 
@@ -1451,29 +1471,27 @@ export class VehiculosComponent implements OnInit, OnDestroy {
      * @since 1.0.0
      */
     setTimeout(() => {
-      const currentVehiculoValue = this.vehiculoFormulario.get('tipoDeVehiculo')?.value;
-      if (currentVehiculoValue) {
-        const id = Number(currentVehiculoValue);
-        const descripcionControl = this.vehiculoFormulario.get('descripcion');
-        console.log('Principal vehiculoFormulario - Verificación inicial, id:', id);
+      const CURRENT_VEHICULO_VALUE = this.vehiculoFormulario.get('tipoDeVehiculo')?.value;
+      if (CURRENT_VEHICULO_VALUE) {
+        const ID = Number(CURRENT_VEHICULO_VALUE);
+        const DESCRIPCION_CONTROL = this.vehiculoFormulario.get('descripcion');
         
-        if (id === 1) {
-          descripcionControl?.enable();
+        if (ID === 1) {
+          DESCRIPCION_CONTROL?.enable();
         } else {
-          descripcionControl?.disable();
+          DESCRIPCION_CONTROL?.disable();
         }
       }
 
-      const currentUnidadValue = this.unidadFormulario.get('tipoDeUnidadArrastre')?.value;
-      if (currentUnidadValue) {
-        const id = Number(currentUnidadValue);
-        const descripcionControl = this.unidadFormulario.get('descripcion');
-        console.log('Principal unidadFormulario - Verificación inicial, id:', id);
+      const CURRENT_UNIDAD_VALUE = this.unidadFormulario.get('tipoDeUnidadArrastre')?.value;
+      if (CURRENT_UNIDAD_VALUE) {
+        const ID = Number(CURRENT_UNIDAD_VALUE);
+        const DESCRIPCION_CONTROL = this.unidadFormulario.get('descripcion');
         
-        if (id === 1) {
-          descripcionControl?.enable();
+        if (ID === 1) {
+          DESCRIPCION_CONTROL?.enable();
         } else {
-          descripcionControl?.disable();
+          DESCRIPCION_CONTROL?.disable();
         }
       }
     }, 100);
@@ -1495,20 +1513,20 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    * @param {any} event - Evento de selección que contiene los datos del vehículo seleccionado
    * @returns {void}
    */
-  onVehiculoRowSelected(event: any) {
+  onVehiculoRowSelected(event: unknown[]): void {
     if (Array.isArray(event) && event.length > 0) {
-      const selectedVehicle = event[0];
+      const SELECTED_VEHICLE = event[0] as VehiculoTabla;
       // Buscar el índice usando múltiples identificadores únicos para mayor robustez
       this.selectedVehiculoIndex = this.vehiculosTablaConfig.datos.findIndex(v => 
-        (selectedVehicle.numero && v.numero === selectedVehicle.numero) ||
-        (selectedVehicle.idDeVehiculo && v.idDeVehiculo === selectedVehicle.idDeVehiculo) ||
-        (selectedVehicle.numeroPlaca && v.numeroPlaca === selectedVehicle.numeroPlaca && 
-         selectedVehicle.marca && v.marca === selectedVehicle.marca)
+        (SELECTED_VEHICLE.numero && v.numero === SELECTED_VEHICLE.numero) ||
+        (SELECTED_VEHICLE.idDeVehiculo && v.idDeVehiculo === SELECTED_VEHICLE.idDeVehiculo) ||
+        (SELECTED_VEHICLE.numeroPlaca && v.numeroPlaca === SELECTED_VEHICLE.numeroPlaca && 
+         SELECTED_VEHICLE.marca && v.marca === SELECTED_VEHICLE.marca)
       );
       
       // Si no se encuentra por los identificadores únicos, usar la referencia como fallback
       if (this.selectedVehiculoIndex === -1) {
-        this.selectedVehiculoIndex = this.vehiculosTablaConfig.datos.indexOf(selectedVehicle);
+        this.selectedVehiculoIndex = this.vehiculosTablaConfig.datos.indexOf(SELECTED_VEHICLE);
       }
     } else {
       this.selectedVehiculoIndex = null;
@@ -1531,20 +1549,20 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    * @param {any} event - Evento de selección que contiene los datos de la unidad seleccionada
    * @returns {void}
    */
-  onUnidadRowSelected(event: any) {
+  onUnidadRowSelected(event: unknown[]): void {
     if (Array.isArray(event) && event.length > 0) {
-      const selectedUnit = event[0];
+      const SELECTED_UNIT = event[0] as UnidadTabla;
       
       // Buscar el índice usando múltiples identificadores únicos para mayor robustez
       this.selectedUnidadIndex = this.unidadesTablaConfig.datos.findIndex(u => 
-        (selectedUnit.vinVehiculo && u.vinVehiculo === selectedUnit.vinVehiculo) ||
-        (selectedUnit.idDeVehiculo && u.idDeVehiculo === selectedUnit.idDeVehiculo) ||
-        (selectedUnit.numeroPlaca && u.numeroPlaca === selectedUnit.numeroPlaca)
+        (SELECTED_UNIT.vinVehiculo && u.vinVehiculo === SELECTED_UNIT.vinVehiculo) ||
+        (SELECTED_UNIT.idDeVehiculo && u.idDeVehiculo === SELECTED_UNIT.idDeVehiculo) ||
+        (SELECTED_UNIT.numeroPlaca && u.numeroPlaca === SELECTED_UNIT.numeroPlaca)
       );
       
       // Si no se encuentra por los identificadores únicos, usar la referencia como fallback
       if (this.selectedUnidadIndex === -1) {
-        this.selectedUnidadIndex = this.unidadesTablaConfig.datos.indexOf(selectedUnit);
+        this.selectedUnidadIndex = this.unidadesTablaConfig.datos.indexOf(SELECTED_UNIT);
       }
     } else {
       this.selectedUnidadIndex = null;
@@ -1566,44 +1584,44 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    * @memberof VehiculosComponent
    * @returns {void}
    */
-  eliminarVehiculoRow() {
+  eliminarVehiculoRow(): void {
     if (this.selectedVehiculoIndex !== null && this.selectedVehiculoIndex >= 0) {
       // Obtener el vehículo a eliminar
-      const vehiculoAEliminar = this.vehiculosTablaConfig.datos[this.selectedVehiculoIndex];
+      const VEHICULO_A_ELIMINAR = this.vehiculosTablaConfig.datos[this.selectedVehiculoIndex];
       
-      if (vehiculoAEliminar) {
+      if (VEHICULO_A_ELIMINAR) {
         // Crear conjuntos de identificadores únicos para filtrado eficiente
-        const numerosAEliminar = new Set([vehiculoAEliminar.numero].filter(Boolean));
-        const idsAEliminar = new Set([vehiculoAEliminar.idDeVehiculo].filter(Boolean));
-        const placasMarcasAEliminar = new Set();
+        const NUMEROS_A_ELIMINAR = new Set([VEHICULO_A_ELIMINAR.numero].filter(Boolean));
+        const IDS_A_ELIMINAR = new Set([VEHICULO_A_ELIMINAR.idDeVehiculo].filter(Boolean));
+        const PLACAS_MARCAS_A_ELIMINAR = new Set();
         
         // Crear identificador compuesto para placa+marca si ambos existen
-        if (vehiculoAEliminar.numeroPlaca && vehiculoAEliminar.marca) {
-          placasMarcasAEliminar.add(`${vehiculoAEliminar.numeroPlaca}|${vehiculoAEliminar.marca}`);
+        if (VEHICULO_A_ELIMINAR.numeroPlaca && VEHICULO_A_ELIMINAR.marca) {
+          PLACAS_MARCAS_A_ELIMINAR.add(`${VEHICULO_A_ELIMINAR.numeroPlaca}|${VEHICULO_A_ELIMINAR.marca}`);
         }
         
         // Filtrar usando múltiples capas de identificación
         this.vehiculosTablaConfig.datos = this.vehiculosTablaConfig.datos.filter(vehiculo => {
           // Primera capa: filtrar por número (VIN)
-          if (vehiculo.numero && numerosAEliminar.has(vehiculo.numero)) {
+          if (vehiculo.numero && NUMEROS_A_ELIMINAR.has(vehiculo.numero)) {
             return false;
           }
           
           // Segunda capa: filtrar por ID
-          if (vehiculo.idDeVehiculo && idsAEliminar.has(vehiculo.idDeVehiculo)) {
+          if (vehiculo.idDeVehiculo && IDS_A_ELIMINAR.has(vehiculo.idDeVehiculo)) {
             return false;
           }
           
           // Tercera capa: filtrar por combinación placa+marca
           if (vehiculo.numeroPlaca && vehiculo.marca) {
-            const comboId = `${vehiculo.numeroPlaca}|${vehiculo.marca}`;
-            if (placasMarcasAEliminar.has(comboId)) {
+            const COMBO_ID = `${vehiculo.numeroPlaca}|${vehiculo.marca}`;
+            if (PLACAS_MARCAS_A_ELIMINAR.has(COMBO_ID)) {
               return false;
             }
           }
           
           // Cuarta capa: comparación de referencia de objeto como fallback
-          return vehiculo !== vehiculoAEliminar;
+          return vehiculo !== VEHICULO_A_ELIMINAR;
         });
       }
       
@@ -1626,36 +1644,36 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    * @memberof VehiculosComponent
    * @returns {void}
    */
-  eliminarUnidadRow() {
+  eliminarUnidadRow(): void {
     if (this.selectedUnidadIndex !== null && this.selectedUnidadIndex >= 0) {
       // Obtener la unidad a eliminar
-      const unidadAEliminar = this.unidadesTablaConfig.datos[this.selectedUnidadIndex];
+      const UNIDAD_A_ELIMINAR = this.unidadesTablaConfig.datos[this.selectedUnidadIndex];
       
-      if (unidadAEliminar) {
+      if (UNIDAD_A_ELIMINAR) {
         // Crear conjuntos de identificadores únicos para filtrado eficiente
-        const vinsAEliminar = new Set([unidadAEliminar.vinVehiculo].filter(Boolean));
-        const idsAEliminar = new Set([unidadAEliminar.idDeVehiculo].filter(Boolean));
-        const placasAEliminar = new Set([unidadAEliminar.numeroPlaca].filter(Boolean));
+        const VINS_A_ELIMINAR = new Set([UNIDAD_A_ELIMINAR.vinVehiculo].filter(Boolean));
+        const IDS_A_ELIMINAR = new Set([UNIDAD_A_ELIMINAR.idDeVehiculo].filter(Boolean));
+        const PLACAS_A_ELIMINAR = new Set([UNIDAD_A_ELIMINAR.numeroPlaca].filter(Boolean));
         
         // Filtrar usando múltiples capas de identificación
         this.unidadesTablaConfig.datos = this.unidadesTablaConfig.datos.filter(unidad => {
           // Primera capa: filtrar por VIN
-          if (unidad.vinVehiculo && vinsAEliminar.has(unidad.vinVehiculo)) {
+          if (unidad.vinVehiculo && VINS_A_ELIMINAR.has(unidad.vinVehiculo)) {
             return false;
           }
           
           // Segunda capa: filtrar por ID
-          if (unidad.idDeVehiculo && idsAEliminar.has(unidad.idDeVehiculo)) {
+          if (unidad.idDeVehiculo && IDS_A_ELIMINAR.has(unidad.idDeVehiculo)) {
             return false;
           }
           
           // Tercera capa: filtrar por número de placa
-          if (unidad.numeroPlaca && placasAEliminar.has(unidad.numeroPlaca)) {
+          if (unidad.numeroPlaca && PLACAS_A_ELIMINAR.has(unidad.numeroPlaca)) {
             return false;
           }
           
           // Cuarta capa: comparación de referencia de objeto como fallback
-          return unidad !== unidadAEliminar;
+          return unidad !== UNIDAD_A_ELIMINAR;
         });
       }
       
@@ -1669,12 +1687,12 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    * @param {Catalogo[]} catalogo - Array del catálogo donde buscar.
    * @returns {string} La descripción encontrada o la clave original si no se encuentra.
    */
-  private obtenerDescripcionDeCatalogo(clave: string, catalogo: Catalogo[]): string {
+  private static obtenerDescripcionDeCatalogo(clave: string, catalogo: Catalogo[]): string {
     if (!clave || !catalogo || catalogo.length === 0) {
       return clave || '';
     }
-    const item = catalogo.find(c => c.clave === clave);
-    return item ? item.descripcion : clave;
+    const ITEM = catalogo.find(c => c.clave === clave);
+    return ITEM ? ITEM.descripcion : clave;
   }
 
   /**
@@ -1683,7 +1701,7 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    * @returns {string} Descripción del tipo de vehículo.
    */
   private obtenerTipoVehiculoDescripcion = (item: VehiculoTabla): string => {
-    return this.obtenerDescripcionDeCatalogo(item.tipoDeVehiculo, this.tipoDeVehiculoCatalogo);
+    return VehiculosComponent.obtenerDescripcionDeCatalogo(item.tipoDeVehiculo, this.tipoDeVehiculoCatalogo);
   }
 
   /**
@@ -1692,7 +1710,7 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    * @returns {string} Descripción del país emisor.
    */
   private obtenerPaisEmisorDescripcion = (item: VehiculoTabla): string => {
-    return this.obtenerDescripcionDeCatalogo(item.paisEmisor, this.paisEmisorCatalogo);
+    return VehiculosComponent.obtenerDescripcionDeCatalogo(item.paisEmisor, this.paisEmisorCatalogo);
   }
 
   /**
@@ -1701,7 +1719,7 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    * @returns {string} Descripción del año.
    */
   private obtenerAnoDescripcion = (item: VehiculoTabla): string => {
-    return this.obtenerDescripcionDeCatalogo(item.ano, this.anoCatalogo);
+    return VehiculosComponent.obtenerDescripcionDeCatalogo(item.ano, this.anoCatalogo);
   }
 
   /**
@@ -1710,7 +1728,7 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    * @returns {string} Descripción del color.
    */
   private obtenerColorVehiculoDescripcion = (item: VehiculoTabla): string => {
-    return this.obtenerDescripcionDeCatalogo(item.colorVehiculo, this.colorVehiculoCatalogo);
+    return VehiculosComponent.obtenerDescripcionDeCatalogo(item.colorVehiculo, this.colorVehiculoCatalogo);
   }
 
   /**
@@ -1719,7 +1737,7 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    * @returns {string} Descripción del país emisor de la segunda placa.
    */
   private obtenerPaisEmisor2daPlacaDescripcion = (item: VehiculoTabla): string => {
-    return this.obtenerDescripcionDeCatalogo(item.paisEmisor2daPlaca, this.paisEmisorCatalogo);
+    return VehiculosComponent.obtenerDescripcionDeCatalogo(item.paisEmisor2daPlaca, this.paisEmisorCatalogo);
   }
 
   /**

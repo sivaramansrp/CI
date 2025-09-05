@@ -4,7 +4,7 @@
       <div class="form-group">
         <h5 class="form-label text-start">Fracción arancelaria</h5>
         <p class="form-label text-start">
-          {{ complimentarFraccionDatos.fraccionArancelaria }}
+              {{ selectedRow?.encabezadoFraccionArancelaria || selectedDosRow?.encabezadoFraccionExportacion }}
         </p>
       </div>
     </div>
@@ -12,7 +12,7 @@
       <div class="form-group">
         <h5 class="form-label text-start">Anexo II</h5>
         <p class="form-label text-start">
-          {{ complimentarFraccionDatos.anexoDos }}
+            {{ selectedRow?.encabezadoAnexoII || selectedDosRow?.encabezadoAnexoII }}
         </p>
       </div>
     </div>
@@ -20,14 +20,14 @@
       <div class="form-group">
         <h5 class="form-label text-start">Tipo</h5>
         <p class="form-label text-start">
-          {{ complimentarFraccionDatos.tipo }}
+          {{ selectedRow?.encabezadoTipo || selectedDosRow?.encabezadoTipo }}
         </p>
       </div>
     </div>
     <div class="col-md-3">
       <div class="form-group">
         <h5 class="form-label text-start">UMT</h5>
-        <p class="form-label text-start">{{ complimentarFraccionDatos.umt }}</p>
+        <p class="form-label text-start">{{ selectedRow?.encabezadoUmt || selectedDosRow?.encabezadoUmt }}</p>
       </div>
     </div>
   </div>
@@ -136,7 +136,7 @@
   </form>
   <div class="row">
     <div class="col-12 container text-end mt-5">
-      <button class="btn btn-default me-2" (change)="seleccionGuardar()"
+      <button class="btn btn-default me-2" (click)="seleccionGuardar()"
       [disabled]="formularioDeshabilitado">
         Guardar
       </button>

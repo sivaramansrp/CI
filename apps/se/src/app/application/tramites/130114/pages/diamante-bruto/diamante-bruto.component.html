@@ -2,7 +2,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-6">
-          <h1>Exportación Minerales de Hierro</h1>
+          <h3>Solicitud Importación Diamantes en Bruto</h3>
         </div>
         <app-wizard [listaPasos]="pasosSolicitar"></app-wizard>
       </div>
@@ -18,6 +18,11 @@
                 }
         }
         <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+    </div>
+    <div class="container">
+      <div class="row">    
+        <ng-alert [CONTENIDO]="TEXTOS.AVISO.Aviso"></ng-alert>
+      </div>   
     </div>
   </div>
   

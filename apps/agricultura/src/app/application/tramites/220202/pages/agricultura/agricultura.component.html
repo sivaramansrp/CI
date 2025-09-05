@@ -21,11 +21,13 @@
         }
   
       </div>
-      <btn-continuar
-        [btnGuardar]="true"
-        [datos]="datosPasos"
-        (continuarEvento)="getValorIndice($event)"
-      ></btn-continuar>
+    <btn-continuar
+      [datos]="datosPasos"
+      [btnGuardar]="btnGuardar"
+      [btnGuardarVisible]="btnGuardarVisible"
+      (continuarEvento)="getValorIndice($event)"
+    ></btn-continuar>
+
                     <div class="row">
                       <ng-alert [CONTENIDO]="alertText"></ng-alert>
                     </div>

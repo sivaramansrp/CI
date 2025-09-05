@@ -348,3 +348,19 @@ export const VALIDO = 'TodoValido'
  * @constant {string}
  */
 export const REPRESENTACION_FEDERAL_NOTA = 'El monto mostrado es de carácter informativo, no corresponde al saldo real debido a la realización de transacciones de forma constante a nivel nacional';
+
+/**
+ * Constante que define el mensaje de error para validación de formularios.
+ * 
+ * Este mensaje se utiliza para informar al usuario que faltan campos por capturar
+ * antes de poder continuar al siguiente paso del trámite.
+ */
+export const ERROR_FORMA_ALERT = `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12 campos-requeridos">
+      <p>Faltan campos por capturar</p>
+    </div>
+  </div>
+</div>
+`;

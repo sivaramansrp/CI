@@ -11,11 +11,12 @@
 
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
-import { ConfiguracionColumna, SeccionLibState, SeccionLibStore, SoloLetrasNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ConfiguracionColumna, Notificacion, NotificacionesComponent, SeccionLibState, SeccionLibStore, SoloLetrasNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FilaProductos } from '../../models/prosec.module';
 import { ProsecService } from '../../services/prosec.service';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
@@ -38,6 +39,7 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
     ReactiveFormsModule,
     CommonModule,
     TituloComponent,
+    NotificacionesComponent,
     forwardRef(() => SoloLetrasNumerosDirective)
   ]
 })
@@ -107,6 +109,34 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
   private productorState!: ProsecState
 
   /**
+   * @property {FilaProductos[]} listSelectedView
+   * @description
+   * Arreglo que contiene los productos seleccionados en la tabla dinámica para realizar acciones como eliminar.
+   */
+  listSelectedView: FilaProductos[] = [];
+
+  /**
+   * @property {boolean} espectaculoAlerta
+   * @description
+   * Indica si se debe mostrar una alerta relacionada con la validación o acciones sobre el productor indirecto.
+   */
+  espectaculoAlerta: boolean = false;
+
+  /**
+   * @property {boolean} espectaculoConfirmarAlerta
+   * @description
+   * Indica si se debe mostrar el modal de confirmación para eliminar productos seleccionados.
+   */
+  espectaculoConfirmarAlerta: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacion
+   * @description
+   * Objeto que contiene la información de la notificación a mostrar en el componente de notificaciones.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
    * @constructor
    * @param fb - Instancia de FormBuilder para crear y gestionar formularios reactivos.
    * @param ProsecService - Servicio para operaciones relacionadas con PROSEC.
@@ -124,6 +154,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
     private AutorizacionProsecStore: AutorizacionProsecStore,
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     public seccionStore: SeccionLibStore,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.productorIndirecto = this.fb.group({
       contribuyentes: [''],
@@ -142,12 +173,12 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.productorState = state as ProsecState;
+          this.productorDato = state.productorDatos as FilaProductos[];
+          this.initActionFormBuild()
         })
       )
       .subscribe();
     this.initActionFormBuild();
-
-    this.seccionStore.establecerFormaValida([false]);
 
     this.productorIndirecto.statusChanges
       .pipe(
@@ -156,16 +187,27 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
         tap((_value) => {
           if (this.productorIndirecto.valid) {
             this.AutorizacionProsecStore.setProductorFromValida(true);
-            this.ProsecService.formValida()
+            
           }
         })
       )
       .subscribe();
 
-    if(this.formularioDeshabilitado) {
-      this.esFormularioSoloLectura = true;
-      this.inicializarEstadoFormulario();
-    }
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+
+    this.productorDato = Array.isArray(this.productorState.productorDatos) 
+        ? this.productorState.productorDatos 
+        : [this.productorState.productorDatos] as FilaProductos[];
+
+    this.nuevaNotificacion = {} as Notificacion;
   }
 
   /**
@@ -178,14 +220,10 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.productorIndirecto.disable();
-      this.productorDato = Array.isArray(this.productorState.productorDatos) 
-        ? this.productorState.productorDatos 
-        : [this.productorState.productorDatos] as FilaProductos[];
-      this.seccionStore.establecerFormaValida([true]);
+      
     }
     else {
       this.productorIndirecto.enable();
-      this.seccionStore.establecerFormaValida([false]);
     } 
   }
 
@@ -199,7 +237,8 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
   initActionFormBuild(): void {
     this.productorIndirecto = this.fb.group({
       contribuyentes: [
-        this.productorState.contribuyentes
+        { value: this.productorState.contribuyentes, disabled: this.esFormularioSoloLectura },
+        Validators.required
       ]
     })
   }
@@ -238,6 +277,7 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       (response) => {
         if (response && Array.isArray(response)) {
           this.productorDato = response as FilaProductos[];
+          this.AutorizacionProsecStore.setProductorDatos(this.productorDato);
         }
       });
   }
@@ -251,7 +291,129 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarProductor(): void {
-    this.recuperarDatos();
+    if( this.productorIndirecto.get('contribuyentes')?.value === '') {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Se debe ingresa el RFC del productor indirecto.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+    else {
+      this.espectaculoAlerta = false
+      this.recuperarDatos();
+    }
+  }
+
+    /**
+   * @method seleccionTabla
+   * @description
+   * Actualiza la lista de productos seleccionados en la tabla dinámica y sincroniza el estado en el store.
+   * @param {FilaProductos[]} event - Arreglo de productos seleccionados.
+   */
+  seleccionTabla(event: FilaProductos[]): void {
+    this.listSelectedView = event;
+    this.AutorizacionProsecStore.update((state) => ({
+      ...state,
+      selectedProductorDatos: [...event]
+    }));
+  }
+
+  /**
+   * @method eliminarProductor
+   * @description
+   * Muestra una alerta si no hay productos seleccionados para eliminar.
+   * Si hay productos seleccionados, muestra una confirmación antes de eliminarlos.
+   */
+  eliminarProductor(): void {
+    if (this.listSelectedView.length === 0) {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Seleccione el productor indirecto que desea eliminar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+    else if (this.listSelectedView.length > 0) {
+      this.espectaculoConfirmarAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Estás seguro de eliminar la(s) planta(s)?',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+    }
+  }
+
+  /**
+   * @method eliminarPedimento
+   * @description
+   * Oculta la alerta de eliminación si el evento es verdadero.
+   * @param {boolean} event - Indica si se debe ocultar la alerta.
+   */
+  eliminarPedimento(event: boolean): void {
+    if (event) {
+      this.espectaculoAlerta = !event;
+    }
+  }
+
+  /**
+   * @method eliminarPedimentoDatos
+   * @description
+   * Elimina los productos seleccionados del estado y actualiza la lista en el store.
+   * @param {boolean} event - Indica si se debe proceder con la eliminación.
+   */
+  eliminarPedimentoDatos(event: boolean): void {
+    if (event) {
+      this.espectaculoConfirmarAlerta = false;
+      const VALOR = this.AutorizacionProsecStore.getValue().productorDatos;
+      if (VALOR.length === 0) {
+        return;
+      }
+      const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.AutorizacionProsecStore.getValue().selectedProductorDatos?.includes(item)
+      );
+      this.AutorizacionProsecStore.update(
+        (state) => ({
+          ...state,
+          productorDatos: FILTERED_VALOR,
+          selectedProductorDatos: [],
+        })
+      );
+    }
+  }
+
+    /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de productor indirecto. Si el formulario es válido, retorna `true`.
+   * Si no es válido, marca todos los controles como tocados para mostrar los errores y retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (this.productorIndirecto.valid) {
+      return true;
+    }
+    this.productorIndirecto.markAllAsTouched();
+    return false
   }
 
   /**

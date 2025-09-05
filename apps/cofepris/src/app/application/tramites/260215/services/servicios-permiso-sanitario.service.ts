@@ -108,6 +108,14 @@ export class ServiciosPermisoSanitarioService {
       'assets/json/260215/terceros-relacionados.json'
     );
   }
+  /**
+   * Obtiene los datos del estado desde un archivo JSON local.
+   *
+   * @returns Un observable que emite un arreglo de objetos de tipo `Catalogo`.
+   */
+  getEstado(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260215/estado.json');
+  }
 
   /**
    * Obtiene la lista de estados desde un archivo JSON local.

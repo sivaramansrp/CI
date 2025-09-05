@@ -1,5 +1,5 @@
 // Importaciones necesarias de Angular y otros módulos.
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { Asociados } from '../../models/tramites-asociados.model';
@@ -26,6 +26,8 @@ import { TramitesAsociadosService } from '../../services/datos-de-la-solicitud/t
   styleUrl: './tramites-asociado.component.scss', // Ruta al archivo SCSS para los estilos.
 })
 export class TramitesAsociadoComponent implements OnInit, OnDestroy {
+  @Input() disabled: boolean = false;
+  @Input() tipoTramite?: string;
 
   /**
    * Configuración de las columnas de la tabla dinámica.
@@ -75,6 +77,12 @@ export class TramitesAsociadoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.obtenerListaDeAsociados();
+    // Disable all fields if disabled input is true
+    if (this.disabled) {
+      // If you have a FormGroup, disable it here. If not, you may need to disable buttons/fields in the template using [disabled] binding.
+      // Example: this.form?.disable();
+      // For table, you may need to pass [disabled] to TablaDinamicaComponent or disable actions in the template.
+    }
   }
 
   /**

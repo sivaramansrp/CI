@@ -105,7 +105,7 @@
           </div>
         </div>
         <div class="col-md-4 mt-19">
-          <app-catalogo-select [catalogo]="entidadFederativa" [label]="'Entidad federativa'" [required]="true" [placeholder]="'Seleccione un valor'"
+          <app-catalogo-select [catalogo]="entidadFederativa" [label]="'Entidad federativa'" [required]="true"
             [isDisabled]="esFormularioSoloLectura" id="claveEntidadFederativa" formControlName="claveEntidadFederativa"
             [ngClass]=" isValid(direccionOrigen, 'claveEntidadFederativa') ? 'required' : '' "
             (change)=" setValoresStore( direccionOrigen, 'claveEntidadFederativa', 'setAvisoFormularioEntidadFederativa' ) "></app-catalogo-select>
@@ -115,13 +115,13 @@
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="delegacionMunicipio" [label]="'Alcaldía o Municipio'" [required]="true"
             [isDisabled]="esFormularioSoloLectura" id="claveDelegacionMunicipio"
-            formControlName="claveDelegacionMunicipio" [placeholder]="'Seleccione un valor'"
+            formControlName="claveDelegacionMunicipio"
             [ngClass]=" isValid(direccionOrigen, 'claveDelegacionMunicipio') ? 'required' : '' "
             (change)=" setValoresStore( direccionOrigen, 'claveDelegacionMunicipio', 'setAvisoFormularioDelegacionMunicipio' ) "></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="colonia" [label]="'Colonia'" [required]="true" id="claveColonia"
-            [isDisabled]="esFormularioSoloLectura" formControlName="claveColonia" [placeholder]="'Seleccione un valor'"
+            [isDisabled]="esFormularioSoloLectura" formControlName="claveColonia"
             [ngClass]=" isValid(direccionOrigen, 'claveColonia') ? 'required' : '' "
             (change)=" setValoresStore( direccionOrigen, 'claveColonia', 'setAvisoFormularioColonia' ) "></app-catalogo-select>
         </div>
@@ -204,7 +204,7 @@
       <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura"
           (click)="eliminarDomicilio()"> Eliminar </button>
-        <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura"> Modificar </button>
+        <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura" (click)="modificarDomicilio()"> Modificar </button>
         <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-primary ms-3" [disabled]="false"
           (click)="abiertoDomicilio()"> Agregar </button>
         <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura"> Descargar datos
@@ -332,7 +332,7 @@
             <div class="row">
               <div class="col-md-6">
                 <input-hora formControlName="horaDestruccion"
-                  [label]=" 'Hora en la que se efectuar&aacute; la destrucci&oacute;n' " [required]="true"
+                  [label]="HORA_DESTRUCCION" [required]="true"
                   [inputId]="'horaDestruccion'"
                   (change)=" setValoresStore( domicilioFormulario, 'horaDestruccion', 'setHoraDestruccion' ) "></input-hora>
               </div>
@@ -548,9 +548,9 @@
                 </div>
               </div>
               <div class="col-md-4 mb-2">
-                <label for="pedimento" class="form-label">Número del pedimento de importación definitiva a región o franja fronteriza.</label>
-                <span class="require">*</span>
-                <label for="pedimento">:</label>
+                <label for="pedimento" class="form-label text-left">Número del pedimento de importación definitiva a región o franja fronteriza.<span class="require">*</span>
+                <span for="pedimento">:</span></label>
+                
                 <div>
                   <input type="text" formControlName="pedimento" id="pedimento" class="form-control"
                     [ngClass]=" isValid(pedimentoFormulario, 'pedimento') ? 'required' : '' "

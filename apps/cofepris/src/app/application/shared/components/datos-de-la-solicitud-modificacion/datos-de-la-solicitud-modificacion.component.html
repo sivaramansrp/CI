@@ -15,7 +15,7 @@
         <div class="col-md-12">
           <div>
             <label for="observaciones"> Justificación</label>
-            <span class="require">*</span>
+            <span class="require">*:</span>
           </div>
           <div>
             <textarea cols="70" rows="5" id="observacionesId" class="form-control" formControlName="observaciones"
@@ -51,7 +51,7 @@
               <div class="form-group">
                 <label class="form-label" for="establecimientoRazonSocial">Denominación o razón social*:</label>
                 <input class="form-control" id="establecimientoRazonSocialId" placeholder="" type="text"
-                  formControlName="establecimientoRazonSocial"
+                  formControlName="establecimientoRazonSocial" maxlength="100"
                   (change)="actualizarValoresStore(datosSolicitudform,'establecimientoRazonSocial', 'setEstablecimientoRazonSocial')" />
                 <div
                   *ngIf="datosSolicitudform.get('establecimientoRazonSocial')?.touched && datosSolicitudform.get('establecimientoRazonSocial')?.invalid"
@@ -63,9 +63,11 @@
 
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*:</label>
+                <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*:
+                    <span class="bi bi-question-circle-fill" tooltip="ejemplo@dominio.com" placement="top"></span>
+                </label>
                 <input class="form-control" id="establecimientoCorreoElectronicoId" placeholder="" type="text"
-                  formControlName="establecimientoCorreoElectronico"
+                  formControlName="establecimientoCorreoElectronico" maxlength="320" 
                   (change)="actualizarValoresStore(datosSolicitudform,'establecimientoCorreoElectronico', 'setEstablecimientoCorreoElectronico')" />
                 <div
                   *ngIf="datosSolicitudform.get('establecimientoCorreoElectronico')?.touched && datosSolicitudform.get('establecimientoCorreoElectronico')?.invalid"
@@ -84,6 +86,7 @@
             <label class="form-label" for="establecimientoDomicilioCodigoPostal">Código postal*:</label>
             <input class="form-control" type="text" id="establecimientoDomicilioCodigoPostalId"
               formControlName="establecimientoDomicilioCodigoPostal"
+              maxlength="12"
               (change)="actualizarValoresStore(datosSolicitudform,'establecimientoDomicilioCodigoPostal', 'setEstablecimientoDomicilioCodigoPostal')" />
             <div
               *ngIf="datosSolicitudform.get('establecimientoDomicilioCodigoPostal')?.touched && datosSolicitudform.get('establecimientoDomicilioCodigoPostal')?.invalid"
@@ -107,6 +110,7 @@
             <label class="form-label" for="descripcionMunicipio">Municipio o alcaldía*:</label>
             <input class="form-control" type="text" id="descripcionMunicipioId" appUppercase
               formControlName="descripcionMunicipio"
+              maxlength="120"
               (change)="actualizarValoresStore(datosSolicitudform,'descripcionMunicipio', 'setDescripcionMunicipio')" />
             <div
               *ngIf="datosSolicitudform.get('descripcionMunicipio')?.touched && datosSolicitudform.get('descripcionMunicipio')?.invalid"
@@ -133,9 +137,10 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="establishomentoColonias">Colonias:</label>
+            <label class="form-label" for="establishomentoColonias">Colonia:</label>
             <input class="form-control" type="text" id="establishomentoColoniasId"
               formControlName="establishomentoColonias"
+              maxlength="120"
               (change)="actualizarValoresStore(datosSolicitudform,'establishomentoColonias', 'setEstablishomentoColonias')" />
           </div>
         </div>
@@ -145,8 +150,10 @@
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" for="calle">Calle*:
-              <span class="bi bi-question-circle-fill" title="Calle" data-bs-toggle="tooltip"></span></label>
+                <span class="bi bi-question-circle-fill" tooltip="Domicilio, calle, número exterior, número interior,lote" placement="top"></span>
+              </label>
             <input class="form-control" type="text" id="calle" appUppercase formControlName="calle"
+            maxlength="100"
               (change)="actualizarValoresStore(datosSolicitudform,'calle', 'setCalle')" />
             <div *ngIf="datosSolicitudform.get('calle')?.touched && datosSolicitudform.get('calle')?.invalid"
               class="mensaje-error">
@@ -159,14 +166,14 @@
         <div class="col-md-1">
           <div class="form-group">
             <label class="form-label" for="lada">Lada:</label>
-            <input class="form-control" type="text" id="lada" appUppercase formControlName="lada"
+            <input class="form-control" type="text" id="lada" appUppercase formControlName="lada" maxlength="5"
               (change)="actualizarValoresStore(datosSolicitudform,'lada', 'setLada')" />
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
             <label class="form-label" for="telefono">Teléfono*:</label>
-            <input class="form-control" type="text" id="telefono" appUppercase formControlName="telefono"
+            <input class="form-control" type="text" id="telefono" appUppercase formControlName="telefono" maxlength="30"
               (change)="actualizarValoresStore(datosSolicitudform,'telefono', 'setTelefono')" />
             <div *ngIf="datosSolicitudform.get('telefono')?.touched && datosSolicitudform.get('telefono')?.invalid"
               class="mensaje-error">
@@ -180,14 +187,14 @@
         <div class="form-group">
           <label class="form-label" for="scian">S.C.I.A.N.*:</label>
           <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosData"
-            [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formControlName="scian"
+            [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
           </app-tabla-dinamica>
         </div>
       </div>
 
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-default btn-space me-2"  [disabled]="esFormularioSoloLectura">Eliminar</button>
+        <button type="button" class="btn btn-danger btn-space me-2"  [disabled]="esFormularioSoloLectura">Eliminar</button>
         <button type="button" class="btn btn-primary btn-space" data-bs-toggle="modal" data-bs-target="#modalClave"
           (click)="mostrarModeloClave()"  [disabled]="esFormularioSoloLectura">
           Agregar
@@ -196,17 +203,18 @@
       <div class="row align-item-center">
         <div class="col-md-4 mt-5">
           <lib-input-check [label]="'Aviso de funcionamiento:'" [id]="'avisoCheckbox'" [required]="true"
-            formControlName="avisoCheckbox" [isDisabled]="esFormularioSoloLectura"
-            (change)="actualizarValoresStore(datosSolicitudform,'avisoCheckbox', 'setAvisoCheckbox')"></lib-input-check>
+            formControlName="avisoCheckbox" [isDisabled]="esFormularioSoloLectura || tieneNoLicenciaSanitaria"
+            (change)="actualizarValoresStore(datosSolicitudform,'avisoCheckbox', 'setAvisoCheckbox'); enControlCambioFormulario($event,'avisoCheckbox')"></lib-input-check>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:
-              <span class="bi bi-question-circle-fill" title="No. de licencia sanitaria"
-                data-bs-toggle="tooltip"></span></label>
+              <span class="bi bi-question-circle-fill" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente" placement="top"></span>
+            </label>
             <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
               formControlName="noLicenciaSanitaria"
-              (change)="actualizarValoresStore(datosSolicitudform,'noLicenciaSanitaria', 'setNoLicenciaSanitaria')" />
+              maxlength="20"
+              (change)="actualizarValoresStore(datosSolicitudform,'noLicenciaSanitaria', 'setNoLicenciaSanitaria'); enControlCambioFormulario($event,'noLicenciaSanitaria')" />
           </div>
         </div>
       </div>
@@ -215,6 +223,7 @@
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="estado" [label]="'Régimen'" [required]="true" name="regimen"
             [tooltipQuestionCircle]="true" formControlName="regimen"
+            [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
             [isDisabled]="esFormularioSoloLectura"
             (change)="actualizarValoresStore(datosSolicitudform,'regimen', 'setRegimen')"></app-catalogo-select>
         </div>
@@ -257,7 +266,7 @@
       <div class="alert alert-info content-with-checkbox py-6">
         <input formControlName="manifests" type="checkbox" id="manifiesto"
           (change)="actualizarValoresStore(manifiestosRepresentanteForm,'manifests', 'setManifests')" />
-        <span class="fw-bold ms-0">*</span>
+        <span class="fw-bold mt-3">*</span>
         <div>{{ mensajeManifiestos }} </div>
       </div>
     </div>
@@ -286,7 +295,7 @@
 }
 
 
-<div class="modal fade" #establecimientoModal>
+<div class="modal fade" #establecimientoModal data-bs-keyboard="false" data-bs-backdrop="static">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <form [formGroup]="scianForm">

@@ -129,8 +129,6 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.formulario?.disable();
-    } else {
-      this.formulario?.enable();
     }
   }
 

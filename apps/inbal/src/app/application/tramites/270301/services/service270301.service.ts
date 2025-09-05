@@ -44,6 +44,7 @@ export class Service270301Service {
     this.agregar270301Store.setdestinofinal(DATOS.destinofinal);
     this.agregar270301Store.setperiodoEstancia(DATOS.periodoEstancia);
     this.agregar270301Store.setaduanaEntrada(DATOS.aduanaEntrada);
+    this.agregar270301Store.setmanifiesto(DATOS.manifiesto);
     if (DATOS.ciudad) {
       this.agregar270301Store.setciudad(DATOS.ciudad);
     }

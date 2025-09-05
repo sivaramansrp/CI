@@ -1,14 +1,21 @@
+import { AVISO, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../enums/accion-botton.enum';
 import { PASOS } from '../../constants/pasos.enum';
 
 @Component({
   selector: 'app-importacion-neumaticos-comercializar',
   templateUrl: './importacion-neumaticos-comercializar.component.html',
-  styleUrl: './importacion-neumaticos-comercializar.component.css',
+  styleUrl: './importacion-neumaticos-comercializar.component.scss',
 })
 export class ImportacionNeumaticosComercializarComponent {
+       /**
+   * @property {object} TEXTOS - Contiene constantes relacionadas con aviso y firma.
+   * Se utiliza para manejar textos estáticos en la aplicación.
+   */
+       public TEXTOS = {
+        AVISO,
+      };
    /**
    * Lista de pasos del asistente (wizard) para solicitar la importación.
    * Los pasos se obtienen de la constante `PASOS_EXPORTACION`.

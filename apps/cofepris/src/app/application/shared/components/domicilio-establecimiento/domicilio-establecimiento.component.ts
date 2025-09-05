@@ -50,6 +50,7 @@ import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
 import { Modal } from 'bootstrap';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 export interface RespuestaTabla {
   code: number;
@@ -76,12 +77,18 @@ export interface MercanciasTabla {
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     CrosslistComponent,
-    TablePaginationComponent
+    TablePaginationComponent,
+    TooltipModule
   ],
   templateUrl: './domicilio-establecimiento.component.html',
   styleUrls: ['./domicilio-establecimiento.component.scss'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
+
+  /**
+   * Indica si el campo GarantiasOfrecidasVisible es visible.
+   */
+  @Input() tieneUsoEspecifico: boolean = true;
   /**
      * Indica si el campo GarantiasOfrecidasVisible es visible.
      */
@@ -168,6 +175,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Indica si el formulario es de actualización.
    */
   private esFormularioActualizacion: boolean = false;
+
+  /**
+   * Indica si el formulario de mercancías ha sido enviado.
+   */
+  public tieneFormularioMercanciasEnviado: boolean = false;
 
   /**
    * Datos completos de los establecimientos.
@@ -326,17 +338,17 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   aduanasEntradaBotons = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn-default',
       funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn-primary',
       funcion: (): void => this.crossList.toArray()[0].quitar(''),
     },
     {
@@ -430,6 +442,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   mercanciasTablaDatos: MercanciasInfo[] = [];
 
   /**
+   * Lista de mercancías seleccionadas.
+   */
+  public seleccionarlistaMercancias: MercanciasInfo[] = [];
+
+  /**
    * Lista de aduanas de entrada seleccionadas.
    */
   aduanasDeEntradaSeleccionadas: string[] = [];
@@ -487,6 +504,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Lista de rangos de días seleccionarOrigenDelPaisCuatro.
    */
   seleccionarOrigenDelPaisCuatro: string[] = this.crosListaDePaises;
+
+  /**
+   * Lista de rangos de días seleccionarOrigenDelPaisCinco.
+   */
+  seleccionarOrigenDelPaisCinco: string[] = this.crosListaDePaises;
   /**
    * Instancia del Modal de Bootstrap utilizada para controlar la visualización y el comportamiento del cuadro de diálogo modal
    * dentro del componente DomicilioEstablecimientoComponent.
@@ -585,6 +607,28 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     { fraccion: '0402.10.01', descripcion: 'Leche en polvo, sin azúcar' },
     { fraccion: '1006.30.99', descripcion: 'Arroz semiblanqueado' }
   ];
+  /**
+   * Estado de colapsabilidad para los diferentes países.
+   */
+  public paisDeOriginColapsable: boolean = false;
+  /**
+   * Estado de colapsabilidad para el país donde se fabrica.
+   */
+  public paisDoneFabricaColapsable: boolean = false;
+  /**
+   * Indica si la sección colapsable para el "País donde se elabora el producto" está expandida o colapsada.
+   * Cuando es `true`, la sección está expandida; cuando es `false`, está colapsada.
+   */
+  public paisDoneProductoColapsable: boolean = false;
+  /**
+   * Estado de colapsabilidad para el país proveedor.
+   */
+  public paisProveedorColapsable: boolean = false;
+  /**
+   * Estado de colapsabilidad para el país de procedencia.
+   * Cuando es `true`, la sección está expandida; cuando es `false`, está colapsada.
+   */
+  public paisProcedenciaDelColapsable: boolean = false;
   /**
    * Etiqueta de la lista de fechas.
    * */
@@ -724,6 +768,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
       };
       this.nicoTablaDatos.push(NUEVO_DATO);
+      this.nicoTablaDatos = [...this.nicoTablaDatos]; 
       this.formAgente.reset();
       this.cerrarModalScian();
     }
@@ -743,27 +788,23 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotones = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[0].agregar('t'),
+      class: 'btn-default uno',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[0].agregar(''),
+      class: 'btn-primary uno',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[0].quitar(''),
+      class: 'btn-primary uno',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[0].quitar('t'),
+      class: 'btn-default uno',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('uno')})].quitar('t'),
     },
   ];
 
@@ -773,27 +814,23 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotonesDuos = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].agregar('t'),
+      class: 'btn-default duos',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].agregar(''),
+      class: 'btn-primary duos',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].quitar(''),
+      class: 'btn-primary duos',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].quitar('t'),
+      class: 'btn-default duos',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('duos')})].quitar('t'),
     },
   ];
 
@@ -803,27 +840,23 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotonesTres = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].agregar('t'),
+      class: 'btn-default tres',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].agregar(''),
+      class: 'btn-primary tres',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].quitar(''),
+      class: 'btn-primary tres',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].quitar('t'),
+      class: 'btn-default tres',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('tres')})].quitar('t'),
     },
   ];
   /**
@@ -832,27 +865,49 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   readonly paisDeProcedenciaBotonesCuatro = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].agregar('t'),
+      class: 'btn-default cuatro',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].agregar(''),
+      class: 'btn-primary cuatro',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].quitar(''),
+      class: 'btn-primary cuatro',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].quitar('t'),
+      class: 'btn-default cuatro',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cuatro')})].quitar('t'),
+    },
+  ];
+
+  /**
+   * Botones de acción disponibles para gestionar las listas de fechas.
+   */
+  readonly paisDeProcedenciaBotonesCinco = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-default cinco',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-primary cinco',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-primary cinco',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default cinco',
+      funcion: () => this.crossList.toArray()[this.crossList.toArray().findIndex((item,ind)=>{return item.botones?.[0]?.class.includes('cinco')})].quitar('t'),
     },
   ];
 
@@ -911,7 +966,12 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsable
    */
-  mostrar_colapsable(): void {
+  mostrar_colapsable(orden: number): void {
+    if(orden === 1) {
+      this.paisDeOriginColapsable = !this.paisDeOriginColapsable;
+    } else if(orden === 2) {
+      this.paisDoneFabricaColapsable = !this.paisDoneFabricaColapsable;
+    }
     this.colapsable = !this.colapsable;
   }
 
@@ -921,6 +981,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   mostrar_colapsableDuos(): void {
     this.colapsableDuos = !this.colapsableDuos;
+    this.paisDoneProductoColapsable = !this.paisDoneProductoColapsable;
   }
 
   /**
@@ -929,6 +990,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   mostrar_colapsableTres(): void {
     this.colapsableTres = !this.colapsableTres;
+    this.paisProveedorColapsable = !this.paisProveedorColapsable;
   }
 
    /**
@@ -937,6 +999,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   mostrar_procedencia(): void {
     this.colapsableTress = !this.colapsableTress;
+    this.paisProcedenciaDelColapsable = !this.paisProcedenciaDelColapsable;
   }
 
   /**
@@ -977,10 +1040,21 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Este método se utiliza para gestionar la adición dinámica de mercancías en el componente.
    */
   agregarMercancia(): void {
-    if (this.formMercancias.valid) {
-      const NUEVA_MERCANCIA = { ...this.formMercancias.getRawValue() };
+    this.tieneFormularioMercanciasEnviado = true;
+    if (!this.formMercancias.invalid) {
+      const RAW = this.formMercancias.getRawValue();
+    
+      const NUEVA_MERCANCIA: MercanciasInfo = {
+      ...RAW,
+      cantidadUmt: RAW.cantidadUMT,
+      cantidadUmc: RAW.cantidadUMC,
+      umc: RAW.UMC,
+      unidadMedidaTarifa: RAW.UMT,
+    };
       this.listaMercancias.push(NUEVA_MERCANCIA);
+      this.mercanciasTablaDatos = [...this.listaMercancias];
       this.formMercancias.reset();
+      this.tieneFormularioMercanciasEnviado = false;
     }
   }
 
@@ -1052,6 +1126,61 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   public limpiar(forma: FormGroup): void {
     if (forma) {
       forma.reset();
+    }
+  }
+
+  /**
+   * @method seleccionarlistaSeccionMercancias
+   * @description
+   * Método que selecciona una lista de secciones de mercancías.
+   * @param {event}
+   */
+  public seleccionarlistaSeccionMercancias(event: MercanciasInfo[]): void {
+    this.seleccionarlistaMercancias = event;
+  }
+
+  /**
+   * @method eliminarMercancia
+   * @description
+   * Método que elimina una mercancía de la lista de mercancías seleccionadas.
+   */
+  public eliminarMercancia(): void {
+    if (this.seleccionarlistaMercancias.length > 0) {
+      this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter(
+        (item) => {
+          return !this.seleccionarlistaMercancias.some(selectedItems => 
+            selectedItems.nombreComercial === item.nombreComercial &&
+            selectedItems.nombreComun === item.nombreComun &&
+            selectedItems.fraccionArancelaria === item.fraccionArancelaria &&
+            selectedItems.objetoImportacion === item.objetoImportacion &&
+            selectedItems.cantidadUmt === item.cantidadUmt
+          );
+        }
+      );
+      this.listaMercancias = [...this.mercanciasTablaDatos];
+      this.seleccionarlistaMercancias = [];
+    }
+  }
+
+  /**
+   * @method modificarMercancia
+   * @description
+   * Método que modifica una mercancía de la lista de mercancías seleccionadas.
+   */
+  public modificarMercancia(): void {
+    if(this.seleccionarlistaMercancias.length !== 0) {
+      this.formMercancias.get('nombreComercial')?.setValue(this.seleccionarlistaMercancias[0].nombreComercial);
+      this.formMercancias.get('nombreComun')?.setValue(this.seleccionarlistaMercancias[0].nombreComun);
+      this.formMercancias.get('nombreCientifico')?.setValue(this.seleccionarlistaMercancias[0].nombreCientifico);
+      this.formMercancias.get('usoEspecifico')?.setValue(this.seleccionarlistaMercancias[0].usoEspecifico);
+      this.formMercancias.get('fraccionArancelaria')?.setValue(this.seleccionarlistaMercancias[0].fraccionArancelaria);
+      this.formMercancias.get('descripcionFraccion')?.setValue(this.seleccionarlistaMercancias[0].descripcionFraccion);
+      this.formMercancias.get('cantidadUmt')?.setValue(this.seleccionarlistaMercancias[0].cantidadUmt);
+      this.formMercancias.get('UMC')?.setValue(this.seleccionarlistaMercancias[0].umc);
+      this.formMercancias.get('cantidadUMC')?.setValue(this.seleccionarlistaMercancias[0].cantidadUmc);
+      this.formMercancias.get('porcentajeConcentracion')?.setValue(this.seleccionarlistaMercancias[0].porcentajeConcentracion);
+      this.formMercancias.get('clasificacionToxicologica')?.setValue(this.seleccionarlistaMercancias[0].clasificacionToxicologica);
+      this.formMercancias.get('objetoImportacion')?.setValue(this.seleccionarlistaMercancias[0].objetoImportacion);
     }
   }
 

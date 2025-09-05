@@ -161,15 +161,10 @@ export class ExportacionMedicamentosContenganService {
    * @public
    */
   public actualizarEstadoFormulario(DATOS: Tramite260304State): void {
-    this.store.updateOpcionConfigDatos(DATOS.opcionConfigDatos);
-    this.store.updateDestinatarioTablaDatos(DATOS.destinatarioTableDatos);
-    this.store.updateOtrosTablaDatos(DATOS.otrosTablaDatos);
-    this.store.updateOpcionConfigDatos(DATOS.opcionConfigDatos);
-    this.store.updateSeleccionadoOtrosDatos(DATOS.seleccionadoOtrosDatos ?? []);
-    this.store.updateSeleccionadoDestinatarioDatos(DATOS.seleccionadoDestinatarioDatos ?? []);
-    this.store.updateScianConfigDatos(DATOS.scianConfigDatos);
-    this.store.updateTablaMercanciasConfigDatos(DATOS.tablaMercanciasConfigDatos);
-    this.store.updatePagoDerechos(DATOS.pagoDerechos);
-    this.store.updateTabSeleccionado(DATOS.tabSeleccionado ?? 0);
+    this.store.update((state) => {
+     return {
+       ...state, ...DATOS
+     }
+   });
   }
 }

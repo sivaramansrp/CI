@@ -3,33 +3,27 @@
  * Estos modelos se utilizan para estructurar los datos dentro del sistema.
  */
 import { FormularioGrupo, ModificacionGoceInmueble, PersonaFusionEscisionDTO, ProveedorExtranjero } from '../models/avisomodify.model';
-
-/**
- * Importación de la librería Akita para gestionar el estado global de la aplicación.
- * Se incluyen `Store` y `StoreConfig` para definir y estructurar la tienda de datos.
- */
 import { Store, StoreConfig } from '@datorama/akita';
-
-/**
- * Importación de la funcionalidad `Injectable` de Angular.
- * Se usa para definir que la clase puede ser inyectada como un servicio.
- */
+import { EscisionHeaderItem } from '../enums/fusion-oescision.enum';
+import { FraccionGridItem } from '../constantes/importador-exportador.enum';
 import { Injectable } from '@angular/core';
+import { ModificacionSociosItem } from '../enums/modificacion-socios.enum';
+import { MostrarGridNuevoHeader } from '../enums/modificacion-goceInmueble.enum';
 
 /**
  * Definición de la interfaz `Catalogo`.
  * Representa un objeto con un identificador único y una descripción asociada.
  */
 export interface Catalogo {
-    /**
-     * Identificador único del catálogo.
-     */
-    id: number;
+  /**
+   * Identificador único del catálogo.
+   */
+  id: number;
 
-    /**
-     * Descripción del elemento dentro del catálogo.
-     */
-    descripcion: string;
+  /**
+   * Descripción del elemento dentro del catálogo.
+   */
+  descripcion: string;
 }
 
 
@@ -117,16 +111,16 @@ export const INITIAL_STATE: FormularioGrupo = {
 
   /** Datos de la empresa relacionada a la fusión o escisión */
   personaFusionEscisionDTO: {
-    /** RFC de la empresa */
-    rfc: '',
-    /** Razón social de la empresa */
-    razonSocial: '',
-    /** Número de folio del trámite relacionado */
-    numFolioTramite: '',
-    /** Fecha de inicio de vigencia de la fusión o escisión */
-    fechaInicioVigencia: '',
-    /** Fecha de fin de vigencia de la fusión o escisión */
-    fechaFinVigencia: ''
+    /** RFC de la empresa en fusión o escisión */
+    registroFederalDeContribuyentes: '',
+    /** Denominación o razón social de la empresa */
+    denominacionORazonSocial: '',
+    /** Folio VUCEM del trámite */
+    folioVucemUltimaCertificacion: '',
+    /** Fecha de inicio de vigencia del trámite */
+    fechaInicioVigenciaUltimaCertificacion: '',
+    /** Fecha de fin de vigencia del trámite */
+    fechaFinVigenciaUltimaCertificacion: ''
   },
 
   /** Fechas seleccionadas para efectos del trámite */
@@ -198,18 +192,31 @@ export const INITIAL_STATE: FormularioGrupo = {
     /** Descripción general de la mercancía */
     descripcionMercancia: '',
   },
+
+  /** Encabezados de la tabla de fusión o escisión */
+  fusionEscisionHeader: [],
+  /** Encabezados de la tabla de fracciones */
+  gridFraccionesHeader: [],
+
+  /** Encabezados de la tabla de modificación de socios */
+  modificacionSociosHeader: [],
+  /** Encabezados de la tabla de modificación de goce de inmueble */
+  mostrarGridNuevoHeaderData: [],
+  /** Indica si el componente de modificación de socios está activo */
+  formulario: {},
+  /** Indica si el componente de modificación de goce de inmueble está activo */
+  modificacionGoceForm: {}
 };
 
-
 /**
- * Store del trámite 32301.
- * Este store gestiona el estado del formulario relacionado con el trámite 32301.
- * Utiliza Akita para manejar el estado de manera reactiva.
- * 
- * @export
- * @class Tramite32301Store
- * @extends {Store<FormularioGrupo>}
- */
+* Store del trámite 32301.
+* Este store gestiona el estado del formulario relacionado con el trámite 32301.
+* Utiliza Akita para manejar el estado de manera reactiva.
+* 
+* @export
+* @class Tramite32301Store
+* @extends {Store<FormularioGrupo>}
+*/
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'tramite-32301', resettable: true })
 export class Tramite32301Store extends Store<FormularioGrupo> {
@@ -225,7 +232,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
   setModalidadCertificacion(modalidadCertificacion: string): void {
     this.update((state) => ({
       ...state,
-        tipoDevAviso: { ...state.tipoDevAviso, modalidadCertificacion }
+      tipoDevAviso: { ...state.tipoDevAviso, modalidadCertificacion }
     }));
   }
 
@@ -234,10 +241,10 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * 
    * @param {TipoDevAviso} tipoDevAviso - El tipo de proveedor extranjero a establecer.
    */
-  setClientesProveedoresExtranjeros(foreignClientsSuppliers: boolean): void {    
+  setClientesProveedoresExtranjeros(foreignClientsSuppliers: boolean): void {
     this.update((state) => ({
       ...state,
-         tipoDevAviso: { ...state.tipoDevAviso, foreignClientsSuppliers }
+      tipoDevAviso: { ...state.tipoDevAviso, foreignClientsSuppliers }
     }));
   }
 
@@ -249,7 +256,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
   setProveedoresNacionales(nationalSuppliers: boolean): void {
     this.update((state) => ({
       ...state,
-        tipoDevAviso: { ...state.tipoDevAviso, nationalSuppliers }
+      tipoDevAviso: { ...state.tipoDevAviso, nationalSuppliers }
     }));
   }
 
@@ -261,7 +268,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
   setModificacionesMiembros(modificationsMembers: boolean): void {
     this.update((state) => ({
       ...state,
-       tipoDevAviso: { ...state.tipoDevAviso, modificationsMembers }
+      tipoDevAviso: { ...state.tipoDevAviso, modificationsMembers }
     }));
   }
 
@@ -273,7 +280,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
   setCambiosDocumentosLegales(changesToLegalDocuments: boolean): void {
     this.update((state) => ({
       ...state,
-        tipoDevAviso: { ...state.tipoDevAviso, changesToLegalDocuments }
+      tipoDevAviso: { ...state.tipoDevAviso, changesToLegalDocuments }
     }));
   }
 
@@ -285,7 +292,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
   setNotifiFusionOescision(mergerOrSplitNotice: boolean): void {
     this.update((state) => ({
       ...state,
-         tipoDevAviso: { ...state.tipoDevAviso, mergerOrSplitNotice }
+      tipoDevAviso: { ...state.tipoDevAviso, mergerOrSplitNotice }
     }));
   }
 
@@ -297,7 +304,52 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
   setAdicionalesFractions(additionFractions: boolean): void {
     this.update((state) => ({
       ...state,
-        tipoDevAviso: { ...state.tipoDevAviso, additionFractions }
+      tipoDevAviso: { ...state.tipoDevAviso, additionFractions }
+    }));
+  }
+
+
+  /**
+   * Actualiza el estado del store con el arreglo proporcionado de gridFraccionesHeader.
+   *
+   * @param gridFraccionesHeader - Un arreglo de objetos `FraccionGridItem` que representa los encabezados para la tabla de fracciones.
+   */
+  setCargaManual(gridFraccionesHeader: FraccionGridItem[]): void {
+    this.update((state) => ({
+      ...state,
+      gridFraccionesHeader
+    }));
+  }
+
+  /**
+   * Establece el encabezado de la tabla de fusión o escisión.
+   * 
+   * @param {EscisionHeaderItem[]} fusionEscisionHeader - El encabezado a establecer.
+   */
+  setFusionEscisionHeader(fusionEscisionHeader: EscisionHeaderItem[]): void {
+    this.update((state) => ({
+      ...state,
+      fusionEscisionHeader: fusionEscisionHeader
+    }));
+  }
+  /**
+     * Establece el encabezado de la tabla de modificación de socios.
+     * @param {ModificacionSociosItem[]} modificacionSociosHeader - El encabezado a establecer.
+     * */
+  setMostrarGridNuevoHeaderData(mostrarGridNuevoHeaderData: MostrarGridNuevoHeader[]): void {
+    this.update((state) => ({
+      ...state,
+      mostrarGridNuevoHeaderData: mostrarGridNuevoHeaderData
+    }));
+  }
+  /**
+     * Establece el encabezado de la tabla de modificación de socios.
+     * @param {ModificacionSociosItem[]} modificacionSociosHeader - El encabezado a establecer.
+     * */
+  setModificacionSociosHeader(modificacionSociosHeader: ModificacionSociosItem[]): void {
+    this.update((state) => ({
+      ...state,
+      modificacionSociosHeader: modificacionSociosHeader
     }));
   }
 
@@ -306,10 +358,10 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * 
      * @param {boolean} acepto253 - El tipo de adición a establecer.
    */
-  setAceptacion253(acepto253: boolean): void {    
+  setAceptacion253(acepto253: boolean): void {
     this.update((state) => ({
       ...state,
-          tipoDevAviso: { ...state.tipoDevAviso, acepto253 },
+      tipoDevAviso: { ...state.tipoDevAviso, acepto253 },
     }));
   }
 
@@ -396,7 +448,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
       }
     }));
   }
-  
+
   /**
    * Establece el registro federal de contribuyentes de modificación de socios en el estado.
    * 
@@ -411,7 +463,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
       }
     }));
   }
-  
+
   /**
    * Establece los datos de modificación de goce de inmueble en el estado.
    * 
@@ -455,7 +507,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * @param isActive - Valor booleano que indica si la modificación de socios está activa.
    */
   setIsActive(isActive: boolean): void {
-    this.update((state) => ({ 
+    this.update((state) => ({
       ...state,
       modificacionSocios: {
         ...state.modificacionSocios,

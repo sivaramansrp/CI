@@ -234,7 +234,7 @@
     "id": 34,
     "tramite": 90101,
     "linkDashboard": "/se/autorizacion-prosec/prosec",
-    "linkDepartment": "/se/autorizacion-prosec/prosec",
+    "linkDepartment": "/pago/autorizacion-prosec/prosec",
     "department": "se"
   },
   {
@@ -290,7 +290,7 @@
     "id": 42,
     "tramite": 110204,
     "linkDashboard": "/se/pexim/certificado-origen",
-    "linkDepartment": "/se/pexim/certificado-origen",
+    "linkDepartment": "/pago/pexim/certificado-origen",
     "department": "se"
   },
   {
@@ -1046,7 +1046,7 @@
     "id": 150,
     "tramite": 260301,
     "linkDashboard": "/cofepris/importacion-materias-primas-estupefacientes/contenedor-de-pasos",
-    "linkDepartment": "/cofepris/importacion-materias-primas-estupefacientes/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-materias-primas-estupefacientes/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -1711,7 +1711,7 @@
     "id": 245,
     "tramite": 80206,
     "linkDashboard": "/se/modalidad-ampliacion/registro",
-    "linkDepartment": "/se/modalidad-ampliacion/registro",
+    "linkDepartment": "/pago/modalidad-ampliacion/registro",
     "department": "se"
   },
   {
@@ -1998,7 +1998,7 @@
     "id": 286,
     "tramite": 80104,
     "linkDashboard": "/se/registro-solicitud-immex-modalidad-controladora/action",
-    "linkDepartment": "/se/registro-solicitud-immex-modalidad-controladora/action",
+    "linkDepartment": "/pago/registro-solicitud-immex-modalidad-controladora/action",
     "department": "se"
   },
   {
@@ -4339,5 +4339,12 @@
     "linkDashboard": "/agace/aviso-comercializadora-modification-importadora/solicitud",
     "linkDepartment": "/pago/aviso-comercializadora-modification-importadora/solicitud",
     "department": "agace"
+  },
+  {
+    "id": 303,
+    "tramite": 303,
+    "linkDashboard": "/aga/despacho-mercancias/registro/registro",
+    "linkDepartment": "/pago/despacho-mercancias/registro/registro",
+    "department": "aga"
   }
 ]

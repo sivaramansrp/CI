@@ -12,7 +12,9 @@
             class="form-control min-hgt"
             id="fraccionArancelaria"
             formControlName="fraccionArancelaria"
-            type="text" (change)="actualizarControl('anexoUnoFormGroup', 'fraccionArancelaria')"
+            type="text" 
+            maxlength="8"
+            (change)="actualizarControl('anexoUnoFormGroup', 'fraccionArancelaria')"
           />
         </div>
       </div>
@@ -27,20 +29,20 @@
           <textarea
             id="descripcion"
             class="form-control , txtarea "
-              
+            maxlength="1000"
             formControlName="descripcion"
-             (change)="actualizarControl('anexoUnoFormGroup', 'descripcion')"
+            (change)="actualizarControl('anexoUnoFormGroup', 'descripcion')"
           ></textarea>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-12 container text-end mt-5">
-        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+        <button class="btn btn-danger me-2" (click)="eliminarAnexoUno()" [disabled]="esFormularioSoloLectura">Eliminar</button>
         <button class="btn btn-primary me-2" (click)="agregarAnexoUno()" [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
-        <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Carga por archivo</button>
+        <button class="btn btn-primary" (click)="abrirCargaDeFracciones()" [disabled]="esFormularioSoloLectura">Carga por archivo</button>
       </div>
     </div>
 
@@ -49,39 +51,37 @@
         [configuracionTabla]="tablaSociaAccionistas"
         [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
         [datos]="anexoUnoTablaLista"
-         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+        (filaSeleccionada)="setAnexoUnoLista($event)"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       ></app-tabla-dinamica>
     </div>
   </form>
   <div class="row">
     <div class="col-12 container text-end mt-5">
       <button
-        class="btn btn-default me-2"
-        data-bs-toggle="modal"
-        data-bs-target="#complementarFuncionModal"
+        class="btn btn-danger me-2"
+        (click)="abrirComplementarFraccionModalUno()"
         [disabled]="esFormularioSoloLectura"
       >
-        Complementar Función
+        Complementar Fracción
       </button>
 
       <button
-        class="btn btn-primary me-2"
-        data-bs-toggle="modal"
-        data-bs-target="#proveedorClienteModal"
+        class="btn btn-danger me-2"
+        (click)="abrirProveedorClienteModal('cliente')"
         [disabled]="esFormularioSoloLectura"
       >
         Proveedor Cliente
       </button>
       <button
-        class="btn btn-primary me-2"
-        data-bs-toggle="modal"
-        data-bs-target="#proyectoImmexModal"
+        class="btn btn-danger me-2"
+        (click)="abrirProyectoImmexModal()"
         [disabled]="esFormularioSoloLectura"
       >
         Proyecto IMMEX
       </button>
 
-      <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Proveedor Cliente por Archivo</button>
+      <button class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="abrirProveedorPorArchivo()">Proveedor Cliente por Archivo</button>
     </div>
   </div>
   <form class="row mt-5" [formGroup]="anexoDosFormGroup">
@@ -96,6 +96,7 @@
             id="fraccionArancelaria"
             formControlName="fraccionArancelarias"
             type="text"
+            maxlength="8"
             (change)="actualizarControl('anexoDosFormGroup', 'fraccionArancelarias')"
           />
         </div>
@@ -112,6 +113,7 @@
             id="descripcion"
             class="form-control , txtarea"
             formControlName="anexoDosDescripcion"
+            maxlength="1000"
             (change)="actualizarControl('anexoDosFormGroup', 'anexoDosDescripcion')"
           ></textarea>
         </div>
@@ -119,7 +121,7 @@
     </div>
     <div class="row">
       <div class="col-12 container text-end mt-5">
-        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">
+        <button class="btn btn-danger me-2" (click)="eliminarAnexoDos()" [disabled]="esFormularioSoloLectura">
           Eliminar
         </button>
         <button class="btn btn-primary me-2" (click)="agregarFraccionAnarelaria()" [disabled]="esFormularioSoloLectura"  >
@@ -134,24 +136,22 @@
             [configuracionTabla]="tableFracionAnarelaria"
             [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
             [datos]="anexoFraccionAnarelaria"
-             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+            (filaSeleccionada)="setAnexoDosLista($event)"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           ></app-tabla-dinamica>
     </div>
   </form>
   <div class="row">
     <div class="col-12 container text-end mt-5">
    <button
-  class="btn btn-default me-2"
-  data-bs-toggle="modal"
-  data-bs-target="#complementarFuncionModal"
+  class="btn btn-danger me-2"
+  (click)="abrirComplementarFraccionModalDos()"
   [disabled]="esFormularioSoloLectura"
 >
-  Complementar Función
+  Complementar Fracción
 </button>
     <button
-        class="btn btn-primary me-2"
-        data-bs-toggle="modal"
-        data-bs-target="#proveedorClienteModal"
+        class="btn btn-danger me-2" (click)="abrirProveedorClienteModal('proveedor')"
         [disabled]="esFormularioSoloLectura"
       >
         Proveedor Cliente
@@ -171,7 +171,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="complementarFuncionModalLabel">
-          Complementar Función
+          Complementar Fracción
         </h5>
         <button
           type="button"
@@ -186,31 +186,31 @@
           <div class="col-md-3">
             <div class="form-group">
               <h5 class="form-label text-start">Fracción arancelaria</h5>
-              <!-- <p class="form-label text-start">
-          {{ complimentarFraccionDatos.fraccionArancelaria }}
-        </p> -->
+              <p class="form-label text-start">
+           {{ selectedRowFields['fraccionArancelaria'] }}
+        </p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <h5 class="form-label text-start">Anexo II</h5>
-              <!-- <p class="form-label text-start">
-          {{ complimentarFraccionDatos.anexoDos }}
-        </p> -->
+              <p class="form-label text-start">
+          {{ selectedRowFields['anexoII'] }}
+        </p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <h5 class="form-label text-start">Tipo</h5>
-              <!-- <p class="form-label text-start">
-          {{ complimentarFraccionDatos.tipo }}
-        </p> -->
+              <p class="form-label text-start">
+          {{ selectedRowFields['tipo'] }}
+        </p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <h5 class="form-label text-start">UMT</h5>
-              <!-- <p class="form-label text-start">{{ complimentarFraccionDatos.umt }}</p> -->
+              <p class="form-label text-start">{{ selectedRowFields['umt'] }}</p>
             </div>
           </div>
         </div>
@@ -319,17 +319,11 @@
           </div>
         </form>
         <div class="row">
-          <div class="col-12 container text-end mt-5">
-            <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Guardar</button>
-            <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura">Regresar Anexo</button>
+          <div class="col-12 container text-end mt-5 mb-5">
+            <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="guardarComplementarFraccion()">Guardar</button>
+            <button class="btn btn-danger me-2" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">Regresar Anexo I</button>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
-          Cerrar
-        </button>
-        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Guardar</button>
       </div>
     </div>
   </div>
@@ -363,11 +357,12 @@
             <div class="col-md-8">
               <div class="form-group">
                 <label for="descripcion" class="form-label text-start"
-                  >Descripción Comercial:</label
+                  >Descripción comercial*:</label
                 >
                 <textarea
                   id="descripcion"
                   class="form-control , txtarea"
+                  required
                   formControlName="descripcionComercial"
                 ></textarea>
               </div>
@@ -379,7 +374,7 @@
               <div class="form-group">
                 <app-catalogo-select
                   [catalogo]="paisDestinoCatalog"
-                  [label]="'Pais Destino'"
+                  [label]="proveedorClienteModalContext === 'cliente' ? 'País destino' : 'País de origen'"
                   [required]="true"
                   [isDisabled]="false"
                   name="paisDestino"
@@ -393,7 +388,7 @@
           <div class="row mt-3">
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="rfc">RFC/TAXID Cliente*:</label>
+                 <label class="form-label" for="rfc">{{ proveedorClienteModalContext === 'cliente' ? 'RFC/TAX ID Cliente*:' : 'RFC/TAX ID Proveedor*:' }}</label>
                 <input
                   class="form-control min-hgt"
                   id="rfc"
@@ -407,9 +402,7 @@
           <div class="row mt-3">
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="razonSocialCliente"
-                  >Razón social Cliente*:</label
-                >
+                <label class="form-label" for="razonSocialCliente">{{ proveedorClienteModalContext === 'cliente' ? 'Razón social Cliente*:' : 'Razón social Proveedor*:' }}</label>
                 <input
                   class="form-control min-hgt"
                   id="razonSocialCliente"
@@ -446,13 +439,13 @@
         </div>
 
         <div class="row justify-content-end">
-          <button type="button" class="btn btn-danger col-auto mt-3 me-3" [disabled]="esFormularioSoloLectura">
+          <button type="button" class="btn btn-danger col-auto mt-3 me-3 mb-5" [disabled]="esFormularioSoloLectura">
             Eliminar
           </button>
 
           <button
             type="button"
-            class="btn btn-primary col-auto pull-right float-end mt-3 ml-3"
+            class="btn btn-primary col-auto pull-right float-end mt-3 ml-3 mb-5"
             [disabled]="esFormularioSoloLectura"
           >
             Editar
@@ -462,18 +455,13 @@
         <div class="row justify-content-end">
           <button
             type="button"
-            class="btn btn-primary col-auto pull-right float-end mt-3"
+            class="btn btn-danger col-auto pull-right float-end mt-3 mb-5"
+            data-bs-dismiss="modal"
             [disabled]="esFormularioSoloLectura"
           >
-            Regresar
+            Regresar Anexo I
           </button>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
-          Cerrar
-        </button>
-        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Guardar</button>
       </div>
     </div>
   </div>
@@ -503,27 +491,27 @@
           <div class="col-md-3">
             <div class="form-group">
               <h5 class="form-label text-start">Fracción arancelaria</h5>
-              <!-- <p class="form-label text-start">
-          {{ proyectoImmexDatos.fraccionArancelaria }}
-        </p> -->
+              <p class="form-label text-start">
+                {{ selectedRowFields['fraccionArancelaria'] }}
+              </p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <h5 class="form-label text-start">Anexo II</h5>
-              <!-- <p class="form-label text-start">{{ proyectoImmexDatos.anexoDos }}</p> -->
+              <p class="form-label text-start">{{ selectedRowFields['anexoII'] }}</p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <h5 class="form-label text-start">Tipo</h5>
-              <!-- <p class="form-label text-start">{{ proyectoImmexDatos.tipo }}</p> -->
+              <p class="form-label text-start">{{ selectedRowFields['tipo'] }}</p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <h5 class="form-label text-start">UMT</h5>
-              <!-- <p class="form-label text-start">{{ proyectoImmexDatos.umt }}</p> -->
+              <p class="form-label text-start">{{ selectedRowFields['umt'] }}</p>
             </div>
           </div>
         </div>
@@ -537,7 +525,7 @@
             <div class="col-md-8">
               <div class="form-group">
                 <label for="descripcion" class="form-label text-start"
-                  >Descripción comersial*:</label
+                  >Descripción comercial*:</label
                 >
                 <textarea
                   id="descripcion"
@@ -553,7 +541,7 @@
               <div class="form-group">
                 <app-catalogo-select
             [catalogo]="tipoDeDocumenteCatalog"
-            [label]="'Tipo de documento*:'"
+            [label]="'Tipo de documento'"
             [required]="true"
             [isDisabled]="false"
           [isDisabled]="esFormularioSoloLectura"
@@ -595,7 +583,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="rfcTaxId"
-                  >RFC de la parte firmante Tax ID*:</label
+                  >RFC de la parte firmante/ Tax ID*:</label
                 >
                 <input
                   class="form-control min-hgt"
@@ -610,7 +598,7 @@
             <div class="col-md-8">
               <div class="form-group">
                 <label class="form-label" for="razonSocial"
-                  >Razón social de la parte firmante</label
+                  >Razón social de la parte firmante*:</label
                 >
                 <input
                   class="form-control min-hgt"
@@ -624,8 +612,8 @@
           
         </form>
         <div class="row justify-content-end">
-          <button type="button" class="btn btn-danger col-auto mt-3 mr-5 me-3" [disabled]="esFormularioSoloLectura">
-            Limpar
+          <button type="button" class="btn btn-default col-auto mt-3 mr-5 me-3" [disabled]="esFormularioSoloLectura">
+            Limpiar
           </button>
 
           <button
@@ -659,18 +647,36 @@
           </button>
         </div>
         <div class="row">
-          <div class="col-12 container text-end mt-5">
-            <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura">Regresar Anexo</button>
+          <div class="col-12 container text-end mt-5 mb-5">
+            <button class="btn btn-danger me-2" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">Regresar Anexo</button>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
-          Cerrar
-        </button>
-        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Guardar</button>
       </div>
     </div>
   </div>
 </div>
 
+<ng-container *ngIf="mostrarCargaDeFraccionesPopup">
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <app-carga-de-fracciones (cerrarPopup)="cerrarCargaDeFracciones()"></app-carga-de-fracciones>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="mostrarProveedorPorArchivoPopup">
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <app-carga-por-archivo (cerrarPopup)="cerrarProveedorPorArchivo()"></app-carga-por-archivo>
+    </div>
+  </div>
+</ng-container>
+
+<section *ngIf="nuevaUnoNotificacion && nuevaUnoNotificacion.cerrar">
+    <lib-notificaciones [notificacionInput]="nuevaUnoNotificacion" (confirmacionModal)="abrirUnoModal()">
+    </lib-notificaciones>
+</section>
+<section *ngIf="nuevaDosNotificacion && nuevaDosNotificacion.cerrar">
+    <lib-notificaciones [notificacionInput]="nuevaDosNotificacion" (confirmacionModal)="abrirDosModal()">
+    </lib-notificaciones>
+</section>

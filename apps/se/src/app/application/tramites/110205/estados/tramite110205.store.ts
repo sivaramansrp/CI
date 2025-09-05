@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
+import {HistoricoColumnas} from '../models/peru-certificado.module';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 
@@ -61,6 +62,7 @@ export interface Tramite110205State {
   nombreIngles: string;
   otrasInstancias: string;
   criterioParaConferirOrigen: string;
+  fechaFactura: string;
   cantidad: string;
   umc: Catalogo[];
   valorMercancia: string;
@@ -73,6 +75,8 @@ export interface Tramite110205State {
   productorMismoExportador?: boolean;
   agregarDatosProductorFormulario: {[key: string]: unknown};
   formulario: {[key: string]: unknown};
+  disponiblesDatos:Mercancia[];
+  procductoUno:HistoricoColumnas[];
 }
 
 
@@ -96,6 +100,18 @@ export function createInitialState(): Tramite110205State {
       fraccionArancelariaForm: '',
       fechaInicioInput: '',
       fechaFinalInput: '',
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeRegistroFiscal: '',
+      razonSocial: '',
+      pais: '',
+      ciudad: '',
+      telefono: '',
+      correoElectronico: '',
+      numeroLetra: '',
+      calle: '',
+
     },
     estado: {
       id: -1,
@@ -148,6 +164,7 @@ export function createInitialState(): Tramite110205State {
     nombreIngles: '',
     otrasInstancias: '',
     criterioParaConferirOrigen: '',
+    fechaFactura: '',
     cantidad: '',
     umc: [],
     valorMercancia: '',
@@ -188,7 +205,9 @@ export function createInitialState(): Tramite110205State {
     agregarDatosProductorFormulario: {
       numeroRegistroFiscal: '',
       fax: '',      
-    }
+    },
+    disponiblesDatos: [],
+    procductoUno:[]
   };
 }
 
@@ -540,6 +559,19 @@ export class Tramite110205Store extends Store<Tramite110205State> {
   }
 
   /**
+ * @summary Actualiza `fechaFactura` en el estado.
+ * @description Persiste la fecha recibida en el store (Akita) de forma inmutable.
+ * @param {string} fechaFactura Fecha en formato ISO (`YYYY-MM-DD`).
+ * @returns {void}
+ */
+  setFechaFactura(fechaFactura: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaFactura,
+    }));
+  }
+
+  /**
    * @method setTipoFactura
    * @description
    * Actualiza el número de tipoFactura en el almacén.
@@ -595,6 +627,30 @@ export class Tramite110205Store extends Store<Tramite110205State> {
         ...state.formCertificado,
         ...values,
       },
+    }));
+  }
+  /**
+   * @method setDatosConfidencialesProductor
+   * @description
+   * Actualiza el estado de datos confidenciales del productor en el almacén.
+   * @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
+   * */
+  setDisponsiblesDatos(disponiblesDatos: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      disponiblesDatos,
+    }));
+  }
+  /**
+   * @method setDatosConfidencialesProductor
+   * @description
+   * Actualiza el estado de datos confidenciales del productor en el almacén.
+   * @param datosConfidencialesProductor Valor booleano que indica si los datos del productor son confidenciales.
+   * */
+  setHistorica(procductoUno: HistoricoColumnas[]): void {
+    this.update((state) => ({
+      ...state,
+      procductoUno,
     }));
   }
 }

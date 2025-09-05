@@ -1,7 +1,6 @@
+import { API_GET_BANDEJATAREA, COMUN_URL } from "../../servers/api-router";
 import { BandejaDeTareasPendientes, BandejaTareasPendientesBody, ResponseTable, RespuestaDatos } from "../../models/shared/bandeja-de-tareas-pendientes.model";
 import { Observable, catchError, map, retry, take, throwError } from "rxjs";
-import { API_GET_BANDEJATAREA } from "../../constants/api-constants";
-import { ENVIRONMENT } from "../../../enviroments/enviroment";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
@@ -16,7 +15,7 @@ export class BandejaDeSolicitudeService {
     private readonly host: string;
 
     constructor(private http: HttpClient) { 
-        this.host = `${ENVIRONMENT.API_HOST}/api/`;
+        this.host = `${COMUN_URL.BASE_URL}`;
     }
 
     /**
@@ -41,13 +40,19 @@ export class BandejaDeSolicitudeService {
             map((datos: RespuestaDatos[]) => {
                 return datos.map((dato: RespuestaDatos) => ({  
                     folioTramite: dato.folio_tramite,
-                    tipoDeTramite: dato.tipo_tramite,
+                    tipoDeTramite: dato.descripcion_tipo_tramite,
                     nombreDeLaTarea: dato.action_name,
                     fechaDeAsignacion: dato.fecha_inicio_tarea,
                     estadoDeTramite: dato.estado_tramite,
-                    departamento: dato.nombre_grupo,
-                    numeroDeProcedimiento: "301",
-                    origin: dato.bpi_id
+                    departamento: BandejaDeSolicitudeService.obtenerAppPorIdDependencia(Number(String(dato.folio_tramite).substring(0, 2))),
+                    numeroDeProcedimiento: dato.tipo_tramite,
+                    origin: dato.action_name,
+                    fechaInicioTramite: dato.fecha_inicio_tramite,
+                    diasHabilesTranscurridos: dato.dias_trascurridos,
+                    action_id: dato.action_id,
+                    current_user: dato.current_user,
+                    id_solicitud: dato.id_solicitud,
+                    nombre_pagina: dato.nombre_pagina
                 } as BandejaDeTareasPendientes))
             }),
             catchError(() => {
@@ -55,5 +60,29 @@ export class BandejaDeSolicitudeService {
                 return throwError(() => ERROR);
             })
         );
+    }
+    /**
+   * Retorna el nombre del app según el id_dependencia proporcionado.
+   * @param idDependencia - El id de la dependencia.
+   * @returns El nombre del app correspondiente, o undefined si no existe.
+   */
+    public static obtenerAppPorIdDependencia(idDependencia: number): string | undefined {
+        const DEPENDENCIA_APP_MAP: Record<number, string> = {
+            1: 'aga',
+            2: 'se',
+            4: 'cofepris',
+            5: 'semarnat',
+            6: 'sedena',
+            8: 'profepa',
+            9: 'inah',
+            10: 'inbal',
+            11: 'amecafe',
+            12: 'crt',
+            15: 'agricultur',
+            17: 'sener',
+            25: 'agace',
+            27: 'stps'
+        };
+        return DEPENDENCIA_APP_MAP[idDependencia];
     }
 }

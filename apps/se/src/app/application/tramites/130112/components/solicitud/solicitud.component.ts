@@ -2,9 +2,13 @@ import { Catalogo, ConsultaioQuery, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Tramite130112State, Tramite130112Store } from '../../estados/tramites/tramites130112.store';
+import {
+  Tramite130112State,
+  Tramite130112Store,
+} from '../../estados/tramites/tramites130112.store';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-material-de-investigacion-cientifica-pasos.enum';
 import { ImportacionMaterialDeInvestigacionCientificaService } from '../../services/importacion-material-de-investigacion-cientifica.service';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
@@ -64,7 +68,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * tableHeaderData
    * Configuración de las columnas de la tabla dinámica.
    */
-  tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] = PARTIDASDELAMERCANCIA_TABLA;
+  tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] =
+    PARTIDASDELAMERCANCIA_TABLA;
 
   /**
    * tableBodyData
@@ -178,18 +183,26 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {any}
    */
   TEXTOS = TEXTOS;
+
+  /**
+   * @property {string} idProcedimiento
+   * @description
+   * Identificador del procedimiento.
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
-    esFormularioSoloLectura: boolean = false;
+  esFormularioSoloLectura: boolean = false;
 
-   /**
-    * Estado interno de la sección actual del trámite 130110.
-    * Utilizado para gestionar y almacenar la información relacionada con esta sección.
-    * Propiedad privada.
+  /**
+   * Estado interno de la sección actual del trámite 130110.
+   * Utilizado para gestionar y almacenar la información relacionada con esta sección.
+   * Propiedad privada.
    */
-    private seccionState!: Tramite130112State;
+  private seccionState!: Tramite130112State;
   /**
    * Constructor del componente.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -204,17 +217,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private tramite130112Store: Tramite130112Store,
     private tramite130112Query: Tramite130112Query,
     private importacionMaterialDeInvestigacionCientificaService: ImportacionMaterialDeInvestigacionCientificaService,
-    private consultaioQuery: ConsultaioQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
-     this.inicializarFormularios();
-      this.consultaioQuery.selectConsultaioState$
+    this.inicializarFormularios();
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
-        map((seccionState)=>{
-          this.esFormularioSoloLectura = seccionState.readonly; 
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
-      .subscribe()
+      .subscribe();
   }
   /**
    *  Ciclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
@@ -248,14 +261,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
     this.mercanciaForm = this.fb.group({
       producto: [],
-      descripcion: [
-       this.seccionState?.descripcion,
-        [
-          Validators.required,
-          Validators.minLength(10),
-          Validators.maxLength(500),
-        ],
-      ],
+      descripcion: [this.seccionState?.descripcion, [Validators.required]],
       fraccion: [this.seccionState?.fraccion, Validators.required],
       cantidad: [
         this.seccionState?.cantidad,
@@ -267,7 +273,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ],
 
       valorFacturaUSD: [
-         this.seccionState?.valorFacturaUSD,
+        this.seccionState?.valorFacturaUSD,
         [
           Validators.required,
           Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
@@ -298,7 +304,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.maxLength(255)],
       ],
       valorPartidaUSDPartidasDeLaMercancia: [
-         this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
+        this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
         [
           Validators.required,
           Validators.min(0),
@@ -311,8 +317,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.paisForm = this.fb.group({
       bloque: [this.seccionState?.bloque],
       usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
-      justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion, [Validators.required]],
-      observaciones: [this.seccionState?.observaciones,],
+      justificacionImportacionExportacion: [
+        this.seccionState?.justificacionImportacionExportacion,
+        [Validators.required],
+      ],
+      observaciones: [this.seccionState?.observaciones],
     });
     this.frmRepresentacionForm = this.fb.group({
       entidad: [this.seccionState?.entidad, Validators.required],
@@ -324,26 +333,28 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   configuracionFormularioSuscripciones(): void {
     this.tramite130112Query.selectSolicitud$
-      .pipe(takeUntil(this.destroyed$),
+      .pipe(
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.partidasDelaMercanciaForm.patchValue({
             cantidadPartidasDeLaMercancia:
-            seccionState.cantidadPartidasDeLaMercancia,
-            fraccionTigiePartidasDeLaMercancia: seccionState.fraccionTigiePartidasDeLaMercancia,
-            fraccionDescripcionPartidasDeLaMercancia: seccionState.fraccionDescripcionPartidasDeLaMercancia,
+              seccionState.cantidadPartidasDeLaMercancia,
+            fraccionTigiePartidasDeLaMercancia:
+              seccionState.fraccionTigiePartidasDeLaMercancia,
+            fraccionDescripcionPartidasDeLaMercancia:
+              seccionState.fraccionDescripcionPartidasDeLaMercancia,
             valorPartidaUSDPartidasDeLaMercancia:
-            seccionState.valorPartidaUSDPartidasDeLaMercancia,
+              seccionState.valorPartidaUSDPartidasDeLaMercancia,
             descripcionPartidasDeLaMercancia:
-            seccionState.descripcionPartidasDeLaMercancia,
-
+              seccionState.descripcionPartidasDeLaMercancia,
           });
- 
+
           this.formDelTramite.patchValue({
             solicitud: seccionState.solicitud,
             regimen: seccionState.regimen,
             clasificacion: seccionState.clasificacion,
           });
- 
+
           this.mercanciaForm.patchValue({
             producto: seccionState.producto,
             descripcion: seccionState.descripcion,
@@ -352,15 +363,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             valorFacturaUSD: seccionState.valorFacturaUSD,
             unidadMedida: seccionState.unidadMedida,
           });
- 
+
           this.paisForm.patchValue({
             bloque: seccionState.bloque,
             usoEspecifico: seccionState.usoEspecifico,
             justificacionImportacionExportacion:
-            seccionState.justificacionImportacionExportacion,
+              seccionState.justificacionImportacionExportacion,
             observaciones: seccionState.observaciones,
           });
- 
+
           this.frmRepresentacionForm.patchValue({
             entidad: seccionState.entidad,
             representacion: seccionState.representacion,
@@ -418,34 +429,41 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Lista de filas seleccionadas.
    */
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  manejarlaFilaSeleccionada(filasSeleccionadas: PartidasDeLaMercanciaModelo[]): void {
-    this.filaSeleccionada = filasSeleccionadas.length
-      ? filasSeleccionadas
-      : [];
+  manejarlaFilaSeleccionada(
+    filasSeleccionadas: PartidasDeLaMercanciaModelo[]
+  ): void {
+    this.filaSeleccionada = filasSeleccionadas.length ? filasSeleccionadas : [];
     if (this.filaSeleccionada) {
-       this.tramite130112Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
+      this.tramite130112Store.actualizarEstado({
+        filaSeleccionada: this.filaSeleccionada,
+      });
     }
   }
 
   /**
- * Método para obtener los datos de la tabla dinámica.
- * Este método realiza una solicitud al servicio `importacionMaterialDeInvestigacionCientificaService` para obtener los datos
- * de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
- * 
- * - Actualiza `tableBodyData` con los datos obtenidos.
- * - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
- * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
- * 
- */
+   * Método para obtener los datos de la tabla dinámica.
+   * Este método realiza una solicitud al servicio `importacionMaterialDeInvestigacionCientificaService` para obtener los datos
+   * de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
+   *
+   * - Actualiza `tableBodyData` con los datos obtenidos.
+   * - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
+   * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
+   *
+   */
   obtenerTablaDatos(): void {
-    this.importacionMaterialDeInvestigacionCientificaService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
-      this.tableBodyData = data;
-      this.formForTotalCount.patchValue({
-        cantidadTotal:data[0].cantidad,
-        valorTotalUSD:data[0].totalUSD
+    this.importacionMaterialDeInvestigacionCientificaService
+      .getTablaDatos()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.tableBodyData = data;
+        if (this.esFormularioSoloLectura) {
+          this.formForTotalCount.patchValue({
+            cantidadTotal: data[0].cantidad,
+            valorTotalUSD: data[0].totalUSD,
+          });
+        }
       });
-    });
-}
+  }
 
   /**
    * validarYEnviarFormulario
@@ -457,7 +475,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.partidasDelaMercanciaForm.markAllAsTouched();
     } else {
       this.mostrarTabla = true;
-      this.tramite130112Store.actualizarEstado({mostrarTabla:true});
+      this.tramite130112Store.actualizarEstado({ mostrarTabla: true });
     }
   }
 
@@ -467,8 +485,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
-      this.tramite130112Store.actualizarEstado({mostrarTabla:true});
-      this.tramite130112Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
+      this.tramite130112Store.actualizarEstado({ mostrarTabla: true });
+      this.tramite130112Store.actualizarEstado({
+        filaSeleccionada: this.filaSeleccionada,
+      });
     }
   }
   /**
@@ -483,8 +503,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
   /**
-  * Método para obtener la lista de representaciones federales.
-  */
+   * Método para obtener la lista de representaciones federales.
+   */
   fetchRepresentacionFederal(): void {
     this.importacionMaterialDeInvestigacionCientificaService
       .getRepresentacionFederal()
@@ -494,8 +514,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
   /**
-  * Método para obtener la lista de países disponibles.
-  */
+   * Método para obtener la lista de países disponibles.
+   */
   listaDePaisesDisponibles(): void {
     this.importacionMaterialDeInvestigacionCientificaService
       .getListaDePaisesDisponibles()
@@ -507,7 +527,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Método para obtener la lista de fracciones de la descripción de las partidas de la mercancía.
-  */
+   */
   listaDeFraccionDescripcion(): void {
     this.importacionMaterialDeInvestigacionCientificaService
       .getFraccionDescripcionPartidasDeLaMercancia()
@@ -518,9 +538,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Método para obtener la lista de países por bloque.
-  * @param {number} _bloqueId - Identificador del bloque.
-  */
+   * Método para obtener la lista de países por bloque.
+   * @param {number} _bloqueId - Identificador del bloque.
+   */
   fetchPaisesPorBloque(_bloqueId: number): void {
     this.importacionMaterialDeInvestigacionCientificaService
       .getPaisesPorBloque(_bloqueId)
@@ -533,9 +553,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
   /**
-  * Maneja el cambio de bloque seleccionado.
-  * @param {number} bloqueId - Identificador del bloque seleccionado.
-  */
+   * Maneja el cambio de bloque seleccionado.
+   * @param {number} bloqueId - Identificador del bloque seleccionado.
+   */
   enCambioDeBloque(bloqueId: number): void {
     this.fetchPaisesPorBloque(bloqueId);
   }
@@ -547,20 +567,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   setValoresStore($event: { form: FormGroup; campo: string }): void {
     const VALOR = $event.form.get($event.campo)?.value;
     this.tramite130112Store.actualizarEstado({ [$event.campo]: VALOR });
-    if($event.campo === 'fraccion'){
-      this.tramite130112Store.actualizarEstado({'unidadMedida': '1'});
+    if ($event.campo === 'fraccion') {
+      this.tramite130112Store.actualizarEstado({ unidadMedida: '1' });
     }
   }
 
   /**
- * Determina si el botón "Modificar" debe estar deshabilitado.
- * Este método verifica si no hay filas seleccionadas en la tabla dinámica.
- * 
- */
-  disabledModificar() : boolean {
+   * Determina si el botón "Modificar" debe estar deshabilitado.
+   * Este método verifica si no hay filas seleccionadas en la tabla dinámica.
+   *
+   */
+  disabledModificar(): boolean {
     let disabled = false;
-    if(this.filaSeleccionada.length === 0){
-      disabled = true
+    if (this.filaSeleccionada.length === 0) {
+      disabled = true;
     }
     return disabled;
   }

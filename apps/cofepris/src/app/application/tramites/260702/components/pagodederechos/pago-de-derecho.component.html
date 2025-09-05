@@ -34,9 +34,11 @@
               </div>
               <div class="col-md-4 mb-3">
                 <input-fecha
+                formControlName="fechadepago"
                 [datos]="fechaPago"
-                [setFecha]="pagoDeDerechosForm.get('fechaDePago')?.value"
-                (valorCambiado)="seleccionarFechaInicio($event)"
+                 [setFecha]="pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.value"
+                (valorCambiado)="cambioFechaPago($event)"
+                [isDisabled]="esFormularioSoloLectura"
               ></input-fecha>
               </div>
               <div class="col-md-4 mb-3">
@@ -46,7 +48,8 @@
               </div>
             </div>
               <div class="col-md-12 d-flex justify-content-end">
-                <button type="button" name="borarrdatosdelpago" class="btn btn-primary ms-2" (click)="clearForm()"> Borrar datos del pago </button>
+                <button type="button" name="borarrdatosdelpago" class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura"
+                (click)="clearForm()"> Borrar datos del pago </button>
               </div>
         </ng-container>
     </form>

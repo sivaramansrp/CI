@@ -49,6 +49,9 @@ import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directi
 export class SolicitanteComponent implements OnInit,OnDestroy {
   @Input() tabindex!: number;
 
+  /** Indica si se deben mostrar los datos del trámite en el formulario del solicitante. */
+  @Input() mostrarDatosTramite: boolean = true;
+
   tipoPersona!: number;
   persona: FormularioDinamico[] = [];
   domicilioFiscal: FormularioDinamico[] = [];
@@ -59,7 +62,7 @@ export class SolicitanteComponent implements OnInit,OnDestroy {
   guardarDatos!: ConsultaioState;
   private destroyNotifier$: Subject<void> = new Subject();
 
-  @Input() RFC: string= 'SAAE5901017V9';
+  @Input() RFC: string= 'LEQI8101314S7';
 
   datosGenerales?:DatosGeneralesModel;
 

@@ -1,4 +1,4 @@
-import {ProductoTable,ScianTable} from '../models/aviso-model';
+import {ProductoTable,ScianTable, SolicitudTable} from '../models/aviso-model';
 /**
  * Contiene el aviso de privacidad simplificado con su correspondiente enlace al aviso integral.
  */
@@ -145,6 +145,14 @@ export const BOTONS = [
  * Indica al usuario que debe capturar su establecimiento manualmente.
  */
 export const ALERTA_TEXTO = 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar suestablecimiento.';
+
+/**
+ * @const IDPROCEDIMIENTO
+ * @description
+ * Identificador numérico del procedimiento utilizado en el trámite 260601.
+ * Se emplea para asociar lógica y configuración específica en los formularios y componentes relacionados.
+ */
+export const IDPROCEDIMIENTO = 260601;
 /**
  *  @const PRODUCTO_TABLA_CONFIGURACION
  * @description
@@ -193,3 +201,45 @@ export const SCIAN_TABLA_CONFIGURACION = [{
   clave: (ele: ScianTable): string | undefined => ele.descripcionScian,
   orden: 2
 }]; 
+
+/**
+ * @const SOLICITUD_TABLA_CONFIGURACION
+ * @description
+ * Configuración de columnas para la tabla de solicitudes.
+ * Define la estructura y comportamiento de cada columna en la tabla dinámica.
+ * @type {Array<{encabezado: string, clave: (ele: SolicitudTable) => string | undefined, orden: number}>}
+ */
+export const SOLICITUD_TABLA_CONFIGURACION = [{
+  encabezado: 'Fecha Creación',
+  clave: (ele: SolicitudTable): string | undefined => ele.fechaCreacion,
+  orden: 1
+}, {
+  encabezado: 'Mercancía',
+  clave: (ele: SolicitudTable): string | undefined => ele.mercancia,
+  orden: 2
+}, {
+  encabezado: 'Cantidad',
+  clave: (ele: SolicitudTable): string | undefined => ele.cantidad,
+  orden: 3
+}, {
+  encabezado: 'Proveedor',
+  clave: (ele: SolicitudTable): string | undefined => ele.proveedor,
+  orden: 4
+}]; 
+
+/**
+ * @constant ERROR_FORMA_ALERT
+ * @description
+ * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+ * Se utiliza para informar al usuario que debe completar todos los campos requeridos antes de continuar.
+ */
+export const ERROR_FORMA_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      ¡Error de registro! Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`

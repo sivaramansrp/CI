@@ -1,30 +1,25 @@
-import { CommonModule } from '@angular/common';
-
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-
-import { Subject, delay, map, takeUntil, tap } from 'rxjs';
-
 import {
   Catalogo,
   CatalogoSelectComponent,
+  CategoriaMensaje,
   ConfiguracionColumna,
   ConsultaioQuery,
+  Notificacion,
+  NotificacionesComponent,
   SeccionLibQuery,
   SeccionLibState,
   TablaDinamicaComponent,
   TablaSeleccion,
+  TipoNotificacionEnum,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-
-import { NicoService } from '../../servicios/nico/nico.service';
-import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
-
-import { ImmexRegistroQuery } from '../../estados/queries/tramite80203.query';
-import { ImmexRegistroStore } from '../../estados/tramites/tramite80203.store';
-
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   FRACCION_EXPORTACION,
   IMMEX_SERVICIO,
@@ -34,6 +29,15 @@ import {
   immexRegistroform,
   nicoInfo,
 } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ImmexRegistroQuery } from '../../estados/queries/tramite80203.query';
+import { ImmexRegistroStore } from '../../estados/tramites/tramite80203.store';
+import { Modal } from 'bootstrap';
+import { NicoService } from '../../servicios/nico/nico.service';
+import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 
 /**
  * @component
@@ -67,14 +71,11 @@ import {
  * @property {fraccionInfo[]} fraccionDatos - Array de datos fracción.
  * @property {nicoInfo[]} nicoDatos - Array de datos NICO.
  * @property {Catalogo[]} nico - Configuración para el select de unidad de medida.
- * @property {boolean} showFraccionExport - Estado de visibilidad de la tabla de fracción de exportación.
  * @property {boolean} showTableExport - Estado de visibilidad de la tabla de exportación.
  * @property {boolean} showTableImport - Estado de visibilidad de la tabla de importación.
  * @property {boolean} showTableFractionExp - Estado de visibilidad de la tabla de fracción de exportación.
  * @property {boolean} showTableNicoExp - Estado de visibilidad de la tabla NICO exportación.
  * @property {boolean} showTableNicoImp - Estado de visibilidad de la tabla NICO importación.
- * @property {boolean} showProductoImport - Estado de visibilidad de la sección de producto de importación.
- * @property {boolean} showCommodityImport - Estado de visibilidad de la sección de commodity de importación.
  * @property {boolean} esFormularioSoloLectura - Indica si el formulario debe mostrarse solo en modo de lectura.
  *
  * @method ngOnInit Inicializa el componente y obtiene los datos necesarios.
@@ -114,9 +115,24 @@ import {
     ReactiveFormsModule,
     TablaDinamicaComponent,
     CatalogoSelectComponent,
+    NotificacionesComponent,
   ],
 })
-export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
+export class Anexo1Component implements OnInit, OnDestroy {
+  /**
+   * Referencia al elemento del modal de importación de mercancía.
+   * Utilizado para mostrar u ocultar el modal mediante la API de Bootstrap.
+   */
+  @ViewChild('mercanciaImportacionModal')
+  mercanciaImportacionModal!: ElementRef;
+
+  /**
+   * Referencia al elemento del modal de exportación de mercancía.
+   * Utilizado para mostrar u ocultar el modal mediante la API de Bootstrap.
+   */
+  @ViewChild('mercanciaexportacionModal')
+  mercanciaExportacionModal!: ElementRef;
+
   /**
    * @property {FormGroup} immexRegistroform
    * @description Formulario principal del registro IMMEX.
@@ -222,11 +238,32 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
   nico: Catalogo[] = [];
 
   /**
-   * @property {boolean} showFraccionExport
-   * @description Controla la visibilidad de la sección de fracción de exportación.
-   * Cuando es true, muestra la sección correspondiente en la interfaz.
+   * Indica si el campo tiene un valor asignado.
+   * @type {boolean}
    */
-  showFraccionExport: boolean = false;
+  tieneValor: boolean = false;
+
+  /**
+   * Indica si el botón de guardar está habilitado.
+   * @type {boolean}
+   */
+  habilitarGuardar: boolean = false;
+
+  /**
+   * Indica si el botón/agregar está activado.
+   * @type {boolean}
+   */
+  agregarActivado: boolean = false;
+
+  /**
+   * Configuración de notificación actual para mostrar al usuario.
+   *
+   * @description
+   * Almacena la configuración de la notificación que se mostrará
+   * en modales de confirmación, error o información.
+   *
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * @property {boolean} showTableExport
@@ -262,20 +299,6 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
    * Cuando es true, muestra la tabla de datos NICO para importación.
    */
   showTableNicoImp: boolean = false;
-
-  /**
-   * @property {boolean} showProductoImport
-   * @description Controla la visibilidad de la sección de producto de importación.
-   * Cuando es true, muestra los campos relacionados con productos de importación.
-   */
-  showProductoImport: boolean = false;
-
-  /**
-   * @property {boolean} showCommodityImport
-   * @description Controla la visibilidad de la sección de commodity de importación.
-   * Cuando es true, muestra los campos relacionados con commodities de importación.
-   */
-  showCommodityImport: boolean = false;
 
   /**
    * @private
@@ -319,18 +342,165 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
     public seccionQuery: SeccionLibQuery,
     public seccionStore: SeccionLibStore,
     public readonly consultaQuery: ConsultaioQuery
-  ) {}
+  ) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if (!seccionState.create && seccionState.procedureId === '80203') {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          }
+          if (seccionState) {
+            this.showTableExport = true;
+            this.showTableImport = true;
+            this.showTableFractionExp = true;
+          }
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
-   * @method ngOnInit
-   * @description Método del ciclo de vida de Angular que se ejecuta después de la inicialización del componente.
-   * Inicializa todas las suscripciones necesarias, crea el formulario, obtiene datos de servicios y configura
-   * la validación del formulario. También establece las suscripciones para el manejo del estado del formulario
-   * y la sincronización con el store.
-   * 
-   * @returns {void}
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se inicializa.
+   * Inicializa el estado del formulario dependiendo si está en modo solo lectura.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * @method creatFormSolicitud
+   * @description Inicializa el formulario reactivo immexRegistroform con los grupos de controles necesarios
+   * para la exportación e importación. Utiliza los valores actuales del estado immexRegitroAnexoState para
+   * poblar los campos del formulario. El formulario se divide en dos secciones principales:
+   * - exportacionForm: Contiene todos los campos relacionados con la exportación de mercancías
+   * - importacionForm: Contiene todos los campos relacionados con la importación de mercancías
+   *
+   * Cada sección incluye campos para datos de permisos, fracciones arancelarias, descripciones de productos
+   * y códigos NICO, permitiendo la gestión completa del trámite IMMEX.
+   *
+   * @returns {void}
+   */
+  creatFormSolicitud(): void {
+    this.immexRegistroform = this.fb.group({
+      exportacionForm: this.createExportacionFormGroup(),
+      importacionForm: this.createImportacionFormGroup(),
+    });
+  }
+
+  private createExportacionFormGroup(): FormGroup {
+    return this.fb.group({
+      permisoImmexDatos: [
+        this.immexRegitroAnexoState.permisoImmexDatos || [],
+        [],
+      ],
+      fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
+      nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
+      fraccionArancelariaExportacion: [
+        this.immexRegitroAnexoState?.fraccionArancelariaExportacion || '',
+        [],
+      ],
+      // Add missing controls for template binding
+      productoArancelariaExportacion: [
+        this.immexRegitroAnexoState?.productoArancelariaExportacion || '',
+        [],
+      ],
+      productoDescExportacion: [
+        this.immexRegitroAnexoState?.productoDescExportacion || '',
+        [],
+      ],
+      fraccionArancelariaDesc: [
+        this.immexRegitroAnexoState?.fraccionArancelariaDesc || '',
+        [],
+      ],
+      FraccionDescExportacion: [
+        this.immexRegitroAnexoState?.FraccionDescExportacion || '',
+        [],
+      ],
+      exportacionDescExportacion: [
+        this.immexRegitroAnexoState?.exportacionDescExportacion || '',
+        [],
+      ],
+      Nico: [this.immexRegitroAnexoState?.Nico || '', []],
+    });
+  }
+
+  private createImportacionFormGroup(): FormGroup {
+    return this.fb.group({
+      permisoImmexDatos: [
+        this.immexRegitroAnexoState.permisoImmexDatos || [],
+        [],
+      ],
+      fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
+      nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
+      commodityImportacion: [
+        this.immexRegitroAnexoState?.commodityImportacion || '',
+        [],
+      ],
+      commodityDescImportacion: [
+        this.immexRegitroAnexoState?.commodityDescImportacion || '',
+        [],
+      ],
+      commodityNicoDescImportacion: [
+        this.immexRegitroAnexoState?.commodityNicoDescImportacion || '',
+        [],
+      ],
+      candiadAnual: [this.immexRegitroAnexoState?.candiadAnual || '', []],
+      capacidadPeriodo: [
+        this.immexRegitroAnexoState?.capacidadPeriodo || '',
+        [],
+      ],
+      candidadPorPeriodo: [
+        this.immexRegitroAnexoState?.candidadPorPeriodo || '',
+        [],
+      ],
+      Nico: [this.immexRegitroAnexoState?.Nico || '', []],
+    });
+  }
+
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario basándose en la configuración de solo lectura.
+   * Si el formulario no existe, lo crea mediante creatFormSolicitud(). Posteriormente, evalúa
+   * si el formulario debe estar en modo solo lectura (esFormularioSoloLectura) y aplica el
+   * estado correspondiente: deshabilitado para solo lectura o habilitado para edición.
+   *
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.initActionFormBuild();
+    }
+    if (!this.immexRegistroform) {
+      this.creatFormSolicitud();
+    }
+  }
+
+  /**
+   * Habilita o deshabilita el formulario dependiendo del modo de solo lectura.
+   *
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.initActionFormBuild();
+    if (this.esFormularioSoloLectura) {
+      this.immexRegistroform.get('exportacionForm')?.disable();
+      this.immexRegistroform.get('importacionForm')?.disable();
+    } else {
+      this.immexRegistroform.get('exportacionForm')?.enable();
+      this.immexRegistroform.get('importacionForm')?.enable();
+    }
+  }
+
+  /**
+   * Inicializa el formulario de acción.
+   * @method initActionFormBuild
+   * @returns {void}
+   */
+  initActionFormBuild(): void {
     this.immexRegistroQuery.selectImmexRegistro$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -409,154 +579,6 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
       )
       .subscribe();
   }
-  /**
-   * @method ngAfterViewInit
-   * @description Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente
-   * ha sido completamente inicializada. Se suscribe al observable selectConsultaioState$ para escuchar
-   * cambios en el estado de la consulta. Si el estado indica que no se está creando un nuevo registro
-   * y el procedureId es '80203', actualiza la propiedad esFormularioSoloLectura según el valor de readonly
-   * en el estado. Posteriormente inicializa el estado del formulario.
-   * 
-   * @returns {void}
-   * @implements {AfterViewInit}
-   */
-  ngAfterViewInit(): void {
-    this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          if (!seccionState.create && seccionState.procedureId === '80203') {
-            this.esFormularioSoloLectura = seccionState.readonly;
-          }
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
-  }
-
-  /**
-   * @method creatFormSolicitud
-   * @description Inicializa el formulario reactivo immexRegistroform con los grupos de controles necesarios
-   * para la exportación e importación. Utiliza los valores actuales del estado immexRegitroAnexoState para
-   * poblar los campos del formulario. El formulario se divide en dos secciones principales:
-   * - exportacionForm: Contiene todos los campos relacionados con la exportación de mercancías
-   * - importacionForm: Contiene todos los campos relacionados con la importación de mercancías
-   * 
-   * Cada sección incluye campos para datos de permisos, fracciones arancelarias, descripciones de productos
-   * y códigos NICO, permitiendo la gestión completa del trámite IMMEX.
-   * 
-   * @returns {void}
-   */
-  creatFormSolicitud(): void {
-    this.immexRegistroform = this.fb.group({
-      exportacionForm: this.createExportacionFormGroup(),
-      importacionForm: this.createImportacionFormGroup(),
-    });
-  }
-
-  private createExportacionFormGroup(): FormGroup {
-    return this.fb.group({
-      permisoImmexDatos: [
-        this.immexRegitroAnexoState.permisoImmexDatos || [],
-        [],
-      ],
-      fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
-      nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
-      fraccionArancelariaExportacion: [
-        this.immexRegitroAnexoState?.fraccionArancelariaExportacion || '',
-        [],
-      ],
-      productoArancelariaExportacion: [
-        this.immexRegitroAnexoState?.productoArancelariaExportacion || '',
-        [],
-      ],
-      fraccionArancelariaDesc: [
-        this.immexRegitroAnexoState?.fraccionArancelariaDesc || '',
-        [],
-      ],
-      productoDescExportacion: [
-        this.immexRegitroAnexoState?.productoDescExportacion || '',
-        [],
-      ],
-      FraccionDescExportacion: [
-        this.immexRegitroAnexoState?.FraccionDescExportacion || '',
-        [],
-      ],
-      exportacionDescExportacion: [
-        this.immexRegitroAnexoState?.exportacionDescExportacion || '',
-        [],
-      ],
-      Nico: [this.immexRegitroAnexoState?.Nico || '', []],
-    });
-  }
-
-  private createImportacionFormGroup(): FormGroup {
-    return this.fb.group({
-      permisoImmexDatos: [
-        this.immexRegitroAnexoState.permisoImmexDatos || [],
-        [],
-      ],
-      fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
-      nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
-      commodityImportacion: [
-        this.immexRegitroAnexoState?.commodityImportacion || '',
-        [],
-      ],
-      commodityDescImportacion: [
-        this.immexRegitroAnexoState?.commodityDescImportacion || '',
-        [],
-      ],
-      commodityNicoDescImportacion: [
-        this.immexRegitroAnexoState?.commodityNicoDescImportacion || '',
-        [],
-      ],
-      candiadAnual: [this.immexRegitroAnexoState?.candiadAnual || '', []],
-      capacidadPeriodo: [
-        this.immexRegitroAnexoState?.capacidadPeriodo || '',
-        [],
-      ],
-      candidadPorPeriodo: [
-        this.immexRegitroAnexoState?.candidadPorPeriodo || '',
-        [],
-      ],
-      Nico: [this.immexRegitroAnexoState?.Nico || '', []],
-    });
-  }
-
-  /**
-   * @method inicializarEstadoFormulario
-   * @description Inicializa el estado del formulario basándose en la configuración de solo lectura.
-   * Si el formulario no existe, lo crea mediante creatFormSolicitud(). Posteriormente, evalúa
-   * si el formulario debe estar en modo solo lectura (esFormularioSoloLectura) y aplica el
-   * estado correspondiente: deshabilitado para solo lectura o habilitado para edición.
-   * 
-   * @returns {void}
-   */
-  inicializarEstadoFormulario(): void {
-    if (!this.immexRegistroform) {
-      this.creatFormSolicitud();
-    }
-    if (this.esFormularioSoloLectura) {
-      this.immexRegistroform.get('exportacionForm')?.disable();
-      this.immexRegistroform.get('importacionForm')?.disable();
-    } else {
-      this.immexRegistroform.get('exportacionForm')?.enable();
-      this.immexRegistroform.get('importacionForm')?.enable();
-    }
-  }
-  /**
-   * @method ngOnDestroy
-   * @description Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
-   * Se encarga de la limpieza de recursos para evitar memory leaks. Emite una señal a través de
-   * destroyNotifier$ para cancelar todas las suscripciones activas y luego completa el subject.
-   * 
-   * @returns {void}
-   * @implements {OnDestroy}
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
 
   /**
    * @method fetchData
@@ -566,12 +588,15 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
    *    y los asigna a las propiedades del componente para poblar las tablas dinámicas.
    *    También actualiza campos específicos del formulario con los primeros elementos de cada array.
    * 2. Segunda llamada: Obtiene datos adicionales para actualizar el formulario mediante patchValue.
-   * 
+   *
    * Todas las suscripciones se manejan con takeUntil para evitar memory leaks.
-   * 
+   *
    * @returns {void}
    */
   fetchData(): void {
+    const DEBE_MOSTRAR_TABLA = this.immexRegistroform.get(
+      'exportacionForm.permisoImmexDatos'
+    )?.value;
     this.permisoImmexDatosService
       .getDatos()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -589,27 +614,28 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
             Array.isArray(RESPONSE_DATA.fraccionDatos) &&
             Array.isArray(RESPONSE_DATA.nicoDatos)
           ) {
-            this.immexTableDatos = RESPONSE_DATA.permisoImmexDatos;
+            this.immexTableDatos = DEBE_MOSTRAR_TABLA
+              ? RESPONSE_DATA.permisoImmexDatos
+              : [];
             this.nicoTablaDatos = RESPONSE_DATA.nicoDatos;
-            this.fraccionTablaDatos = RESPONSE_DATA.fraccionDatos;
-
+            this.fraccionTablaDatos = DEBE_MOSTRAR_TABLA
+              ? RESPONSE_DATA.fraccionDatos
+              : [];
             this.permisoImmexDatos = RESPONSE_DATA.permisoImmexDatos;
             this.fraccionDatos = RESPONSE_DATA.fraccionDatos;
             this.nicoDatos = RESPONSE_DATA.nicoDatos;
 
-            if (this.permisoImmexDatos.length > 0) {
+            if (this.permisoImmexDatos.length > 0 && DEBE_MOSTRAR_TABLA) {
               this.immexRegistroform.get('exportacionForm')?.patchValue({
                 fraccionArancelariaExportacion:
                   this.permisoImmexDatos[0].IMMEX_Columna_3,
               });
             }
 
-            if (this.fraccionDatos.length > 0) {
+            if (this.fraccionDatos.length > 0 && DEBE_MOSTRAR_TABLA) {
               this.immexRegistroform.get('exportacionForm')?.patchValue({
                 productoArancelariaExportacion:
                   this.fraccionDatos[0].FRACCION_Columna_2,
-                productoDescExportacion:
-                  this.fraccionDatos[0].FRACCION_Columna_5,
                 FraccionDescExportacion:
                   this.fraccionDatos[0].FRACCION_Columna_5,
                 exportacionDescExportacion:
@@ -622,11 +648,9 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
                 commodityImportacion: this.permisoImmexDatos[0].IMMEX_Columna_3,
                 commodityDescImportacion:
                   this.permisoImmexDatos[0].IMMEX_Columna_4,
-                commodityNicoDescImportacion:
-                  this.permisoImmexDatos[0].IMMEX_Columna_4,
               });
             }
-          } 
+          }
         },
       });
 
@@ -647,7 +671,7 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
    * para el formulario. Actualmente delega la responsabilidad a obtenerIngresoSelectList()
    * para obtener los datos del catálogo NICO. Este método puede expandirse para incluir
    * otras listas desplegables en el futuro.
-   * 
+   *
    * @returns {void}
    */
   obtenerListasDesplegables(): void {
@@ -660,7 +684,7 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
    * Realiza una llamada al servicio nicoService para obtener el menú desplegable desde
    * el archivo 'nico.json' y asigna los datos obtenidos a la propiedad nico del componente.
    * Esta lista se utiliza para poblar los selects relacionados con códigos NICO.
-   * 
+   *
    * @returns {void}
    */
   obtenerIngresoSelectList(): void {
@@ -670,27 +694,142 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
-   * @method showFraccionExportacion
-   * @description Controla la visibilidad de la sección de fracción de exportación.
-   * Establece la propiedad showFraccionExport en true para mostrar la sección
-   * correspondiente en la interfaz de usuario.
-   * 
-   * @returns {void}
-   */
-  showFraccionExportacion(): void {
-    this.showFraccionExport = true;
-  }
-
-  /**
    * @method showTableExportacion
    * @description Controla la visibilidad de la tabla de exportación.
    * Establece la propiedad showTableExport en true para mostrar la tabla
    * de datos de exportación en la interfaz de usuario.
-   * 
+   *
    * @returns {void}
    */
   showTableExportacion(): void {
     this.showTableExport = true;
+    this.agregarActivado = true;
+    this.fetchData();
+  }
+
+  /**
+   * @method mostrarDetalleMercancia
+   * @description
+   * Muestra el modal de detalle de mercancía de importación.
+   * Utiliza la instancia de Bootstrap Modal para mostrar el cuadro de diálogo
+   * asociado al elemento mercanciaImportacionModal.
+   *
+   * @returns {void}
+   */
+  mostrarDetalleMercancia(): void {
+    this.cerrarModal();
+    if (
+      this.immexTableDatos.length === 0 ||
+      !this.immexRegistroform.get('exportacionForm.permisoImmexDatos')?.value
+    ) {
+      this.abrirMultipleSeleccionPopup(
+        '',
+        'Debe seleccionar un permiso immex.'
+      );
+      this.tieneValor = true;
+      return;
+    }
+    if (
+      this.mercanciaImportacionModal &&
+      this.mercanciaImportacionModal.nativeElement
+    ) {
+      const MODAL_INSTANCIA = new Modal(
+        this.mercanciaImportacionModal.nativeElement
+      );
+      MODAL_INSTANCIA.show();
+    }
+  }
+
+  mostrarDetalleMercanciaExportacion(): void {
+    this.cerrarModal();
+    if (
+      this.fraccionTablaDatos.length === 0 ||
+      !this.immexRegistroform.get('exportacionForm.permisoImmexDatos')?.value
+    ) {
+      this.abrirMultipleSeleccionPopup(
+        '',
+        'Debe seleccionar un permiso immex.'
+      );
+      this.tieneValor = true;
+      return;
+    }
+    if (
+      this.mercanciaExportacionModal &&
+      this.mercanciaExportacionModal.nativeElement
+    ) {
+      const MODAL_INSTANCIA = new Modal(
+        this.mercanciaExportacionModal.nativeElement
+      );
+      MODAL_INSTANCIA.show();
+    }
+  }
+  /**
+   * Método para cerrar el modal de confirmación.
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.tieneValor = false;
+    this.habilitarGuardar = false;
+  }
+
+  guardarCambios(): void {
+    const IMPORTACION_FORM = this.immexRegistroform.get('importacionForm');
+    const CANDIAD_ANUAL = Number(IMPORTACION_FORM?.get('candiadAnual')?.value);
+    const CAPACIDAD_PERIODO = Number(
+      IMPORTACION_FORM?.get('capacidadPeriodo')?.value
+    );
+    const CANDIDAD_POR_PERIODO = Number(
+      IMPORTACION_FORM?.get('candidadPorPeriodo')?.value
+    );
+    if (
+      CANDIAD_ANUAL === 0 &&
+      CAPACIDAD_PERIODO === 0 &&
+      CANDIDAD_POR_PERIODO === 0
+    ) {
+      this.cerrarModal();
+      this.abrirMultipleSeleccionPopup(
+        '',
+        'Las cantidades deben tener un valor mayor a cero.'
+      );
+      this.habilitarGuardar = true;
+      return;
+    }
+
+    // Lógica para agregar o actualizar
+    if (this.agregarActivado) {
+      // Lógica para agregar
+      // ...
+    } else {
+      // Lógica para actualizar
+      // ...
+    }
+  }
+
+  /**
+   * @method abrirMultipleSeleccionPopup
+   * Muestra un popup de notificación con contenido dinámico.
+   * Este método permite personalizar el título, mensaje y etiquetas de los botones del popup.
+   * @param titulo - Título del popup
+   * @param mensaje - Mensaje a mostrar en el popup
+   * @param txtBtnAceptar - Texto del botón de aceptar (opcional, por defecto 'Cerrar')
+   * @param txtBtnCancelar - Texto del botón de cancelar (opcional, por defecto '')
+   */
+  abrirMultipleSeleccionPopup(
+    titulo: string,
+    mensaje: string,
+    txtBtnAceptar: string = 'Aceptar',
+    txtBtnCancelar: string = ''
+  ): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ALERTA,
+      modo: 'modal',
+      titulo: titulo,
+      mensaje: mensaje,
+      cerrar: false,
+      txtBtnAceptar: txtBtnAceptar,
+      txtBtnCancelar: txtBtnCancelar,
+    };
   }
 
   /**
@@ -698,7 +837,7 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
    * @description Controla la visibilidad de la tabla de importación.
    * Establece la propiedad showTableImport en true para mostrar la tabla
    * de datos de importación en la interfaz de usuario.
-   * 
+   *
    * @returns {void}
    */
   showTableImportacion(): void {
@@ -710,7 +849,7 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
    * @description Controla la visibilidad de la tabla de fracción de exportación.
    * Establece la propiedad showTableFractionExp en true para mostrar la tabla
    * específica de fracciones arancelarias de exportación en la interfaz de usuario.
-   * 
+   *
    * @returns {void}
    */
   showTableFractionExport(): void {
@@ -722,7 +861,7 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
    * @description Controla la visibilidad de la tabla NICO de exportación.
    * Establece la propiedad showTableNicoExp en true para mostrar la tabla
    * de códigos NICO relacionados con exportación en la interfaz de usuario.
-   * 
+   *
    * @returns {void}
    */
   showTableNicoExport(): void {
@@ -734,7 +873,7 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
    * @description Controla la visibilidad de la tabla NICO de importación.
    * Establece la propiedad showTableNicoImp en true para mostrar la tabla
    * de códigos NICO relacionados con importación en la interfaz de usuario.
-   * 
+   *
    * @returns {void}
    */
   showTableNicoImport(): void {
@@ -742,41 +881,75 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
-   * @method showProductoImportacion
-   * @description Controla la visibilidad de la sección de producto de importación.
-   * Establece la propiedad showProductoImport en true para mostrar los campos
-   * y controles relacionados con productos de importación en la interfaz de usuario.
-   * 
-   * @returns {void}
+   * Alterna la visibilidad del cuadro de diálogo modal para el registro de enlaces operativos.
+   *
+   * @description
+   * Oculta el modal si está visible actualmente. Utiliza la API de Bootstrap
+   * para obtener la instancia del modal y controlarlo programáticamente.
+   *
    */
-  showProductoImportacion(): void {
-    this.showProductoImport = true;
+  cambiarEstadoModal(): void {
+    const MODAL_INSTANCIA = Modal.getInstance(
+      this.mercanciaImportacionModal.nativeElement
+    );
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
   }
 
   /**
-   * @method showCommodityImportacion
-   * @description Controla la visibilidad de la sección de commodity de importación.
-   * Establece la propiedad showCommodityImport en true para mostrar los campos
-   * y controles relacionados con commodities de importación en la interfaz de usuario.
-   * 
-   * @returns {void}
+   * Alterna la visibilidad del cuadro de diálogo modal para el registro de enlaces operativos.
+   *
+   * @description
+   * Oculta el modal si está visible actualmente. Utiliza la API de Bootstrap
+   * para obtener la instancia del modal y controlarlo programáticamente.
+   *
    */
-  showCommodityImportacion(): void {
-    this.showCommodityImport = true;
+  cambiarEstadoModalExportacion(): void {
+    const MODAL_INSTANCIA = Modal.getInstance(
+      this.mercanciaExportacionModal.nativeElement
+    );
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
   }
+  /**
+   * Cancela el cuadro de diálogo modal para el registro de enlaces operativos.
+   *
+   * @description
+   * Cierra el modal activo y restablece el formulario a su estado inicial.
+   * Se ejecuta cuando el usuario cancela la operación de agregar o editar
+   * un enlace operativo.
+   */
+  modalCancelar(): void {
+    this.cambiarEstadoModal();
+  }
+
+  /**
+   * Cancela el cuadro de diálogo modal para el registro de enlaces operativos de exportación.
+   *
+   * @description
+   * Cierra el modal activo de exportación y restablece el formulario a su estado inicial.
+   * Se ejecuta cuando el usuario cancela la operación de agregar o editar
+   * un enlace operativo de exportación.
+   */
+  modalCancelarExportacion(): void {
+    this.cambiarEstadoModalExportacion();
+  }
+
   /**
    * @method disableFormControls
    * @description Deshabilita controles específicos del formulario relacionados con la exportación e importación.
    * Los campos deshabilitados incluyen códigos arancelarios y descripciones de productos que no deben ser
    * editables por el usuario, ya que se calculan automáticamente o se obtienen de otras fuentes.
-   * 
+   *
    * Campos deshabilitados:
    * - productoArancelariaExportacion: Código arancelario del producto de exportación
    * - productoDescExportacion: Descripción del producto de exportación
    * - commodityImportacion: Código del commodity de importación
    * - commodityDescImportacion: Descripción del commodity de importación
    * - commodityNicoDescImportacion: Descripción NICO del commodity de importación
-   * 
+   *
    * @returns {void}
    */
   disableFormControls(): void {
@@ -795,5 +968,19 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
     this.immexRegistroform
       .get('importacionForm.commodityNicoDescImportacion')
       ?.disable();
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Se encarga de la limpieza de recursos para evitar memory leaks. Emite una señal a través de
+   * destroyNotifier$ para cancelar todas las suscripciones activas y luego completa el subject.
+   *
+   * @returns {void}
+   * @implements {OnDestroy}
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

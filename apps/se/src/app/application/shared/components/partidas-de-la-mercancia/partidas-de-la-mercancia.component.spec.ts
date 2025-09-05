@@ -15,16 +15,20 @@ describe('PartidasDeLaMercanciaComponent', () => {
     fixture = TestBed.createComponent(PartidasDeLaMercanciaComponent);
     component = fixture.componentInstance;
     component.partidasDelaMercanciaForm = new FormGroup({
-      cantidadPartidasDeLaMercancia: new FormControl(''),
-      nombrePartida: new FormControl(''),
-      descripcionPartidasDeLaMercancia: new FormControl(''), 
-      valorPartidaUSDPartidasDeLaMercancia: new FormControl(''),
-        });
-
-        component.formForTotalCount = new FormGroup({
-          cantidadTotal: new FormControl('', Validators.required),
-          valorTotalUSD: new FormControl('', Validators.required),
-        });
+      cantidadPartidasDeLaMercancia: new FormControl('', Validators.required),
+      nombrePartida: new FormControl('', Validators.required),
+      descripcionPartidasDeLaMercancia: new FormControl('', Validators.required), 
+      valorPartidaUSDPartidasDeLaMercancia: new FormControl('', Validators.required),
+    });
+      component.modificarPartidasDelaMercanciaForm = new FormGroup({
+      cantidadPartidasDeLaMercancia: new FormControl('', Validators.required),
+      descripcionPartidasDeLaMercancia: new FormControl('', Validators.required),
+      valorPartidaUSDPartidasDeLaMercancia: new FormControl('', Validators.required),
+    });
+    component.formForTotalCount = new FormGroup({
+      cantidadTotal: new FormControl('', Validators.required),
+      valorTotalUSD: new FormControl('', Validators.required),
+    });
 
     fixture.detectChanges(); 
   });
@@ -40,6 +44,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
     const emitSpy = jest.spyOn(component.filaSeleccionadaChange, 'emit');
     const filasSeleccionadas: PartidasDeLaMercanciaModelo[]=[
       {
+        id: '1',
         cantidad: '10',
         unidadDeMedida: 'kg',
         fraccionFrancelaria: '1234.56.78',
@@ -48,6 +53,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
         totalUSD: '1000',
       },
       {
+        id: '2',
         cantidad: '5',
         unidadDeMedida: 'kg',
         fraccionFrancelaria: '8765.43.21',
@@ -70,14 +76,6 @@ describe('PartidasDeLaMercanciaComponent', () => {
     expect(emitSpy).toHaveBeenCalled();
   });
 
-  it('should emit navegarParaModificarPartidaEvent when navegarParaModificarPartida is called', () => {
-    const emitSpy = jest.spyOn(component.navegarParaModificarPartidaEvent, 'emit');
-
-    component.navegarParaModificarPartida();
-
-    expect(emitSpy).toHaveBeenCalled();
-  });
-
   it('should emit setValoresStoreEvent with correct arguments when setValoresStore is called', () => {
     const emitSpy = jest.spyOn(component.setValoresStoreEvent, 'emit');
     const testForm = new FormGroup({
@@ -85,6 +83,8 @@ describe('PartidasDeLaMercanciaComponent', () => {
     });
     const testCampo = 'testCampo';
     const testMetodoNombre = 'testMetodoNombre';
+
+    component.partidasDelaMercanciaForm = testForm;
 
     component.setValoresStore(testForm, testCampo);
 

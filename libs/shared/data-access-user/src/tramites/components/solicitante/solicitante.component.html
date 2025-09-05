@@ -1,6 +1,6 @@
 <!-- Formulario dinamico de tipo de personas -->
 <form [formGroup]="form">
-  @if (guardarDatos.consultaioSolicitante) {
+  @if (guardarDatos.consultaioSolicitante && mostrarDatosTramite) {
     <div class="form mt-5" formGroupName="datosTramite">
       <div class="row">
         @for (item of datosTramite; track $index) {
@@ -17,18 +17,53 @@
     }
   <div class="form" formGroupName="datosGenerales">
     <ng-titulo titulo="Datos generales del solicitante" />
-
+    @if (datosGenerales?.datos?.identificacion?.tipo_persona === 'M') {
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label d-flex align-items-center" for="rfc">
+                <strong>RFC:</strong>
+                <span class="p-2" tooltip="Registro Federal de Contribuyentes" placement="top">
+                  <i class="bi bi-question-circle-fill"></i>
+                </span>
+              </label>
+              <input type="text" class="form-control" id="rfc" value="{{ datosGenerales?.datos?.rfc_original || '' }}" disabled>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label" for="razonSocial"><strong>Denominación o razón social:</strong></label>
+              <input type="text" class="form-control" id="razonSocial" value="{{ datosGenerales?.datos?.identificacion?.razon_social || '' }}" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="form-group">
+              <label class="form-label" for="actividad"><strong>Actividad económica preponderante:</strong></label>
+              <input type="text" class="form-control" id="actividad" value="{{ datosGenerales?.datos?.actividades || '' }}" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="form-group">
+              <label class="form-label" for="correo"><strong>Correo electrónico:</strong></label>
+              <input type="email" class="form-control" id="correo" value="{{ datosGenerales?.datos?.identificacion?.email || '' }}" disabled>
+            </div>
+          </div>
+        </div>
+    }
+    @if (datosGenerales?.datos?.identificacion?.tipo_persona === 'F') {
     <!-- Primera fila: CURP y RFC -->
         <div class="row mb-3">
           <div class="col-md-6">
             <div class="form-group">
               <label class="form-label d-flex align-items-center">
                 CURP:
-                <i class="bi bi-question-circle-fill ms-2 text-muted" 
-                    data-bs-toggle="tooltip" 
-                    data-bs-placement="top" 
-                    title="Clave Única de Registro de Población">
-                </i>
+                <span class="p-2" tooltip="Clave Única de Registro de Población" placement="top">
+                  <i class="bi bi-question-circle-fill"></i>
+                </span>
               </label>
               <input 
                 type="text" 
@@ -46,11 +81,9 @@
             <div class="form-group">
               <label class="form-label d-flex align-items-center">
                 RFC:
-                <i class="bi bi-question-circle-fill ms-2 text-muted" 
-                    data-bs-toggle="tooltip" 
-                    data-bs-placement="top" 
-                    title="Registro Federal de Contribuyentes">
-                </i>
+                <span class="p-2" tooltip="Registro Federal de Contribuyentes" placement="top">
+                  <i class="bi bi-question-circle-fill"></i>
+                </span>
               </label>
               <input 
                 type="text" 
@@ -143,6 +176,7 @@
             </div>
           </div>
         </div>
+      }
   </div>
 
   <div class="form" formGroupName="domicilioFiscal">

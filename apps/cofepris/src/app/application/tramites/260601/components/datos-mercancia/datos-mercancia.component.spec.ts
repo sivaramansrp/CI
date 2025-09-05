@@ -54,6 +54,7 @@ fdescribe('DatosMercanciaComponent', () => {
         telefono: null,
         cveSCIAN: 'SCIAN123',
         cveSCIANDescripcion: 'Descripción SCIAN',
+        cveSCIANID: 123,
         avisoFuncionamiento: true,
         cveRegimenes: 'Regimen1',
         cveAduanas: 'Aduana1',
@@ -156,6 +157,13 @@ fdescribe('DatosMercanciaComponent', () => {
         mostrarRfcFabricanteBuscarBoton: false,
         mostrarCurpFabricanteBuscarBoton: false,
         inhabilitarPaisFabricante: true,
+        proveedorTablaDatos: [],
+        fabricanteTablaDatos: [],
+        scianBodyData: [],
+        productoBodyData: [],
+        cvePaisDeOrigen: ['PaisOrigen1'],
+        cvePaisDeProcedencia: ['PaisProcedencia1'],
+        cveUsoEspecifico: ['UsoEspecifico1'],
       }),
     };
 

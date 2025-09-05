@@ -41,8 +41,17 @@ import { takeUntil } from 'rxjs';
   host: { hostID: crypto.randomUUID().toString() },
 })
 export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
+/**
+   * Indica si se debe mostrar la tabla inicial.
+   * Esta propiedad se utiliza para controlar la visibilidad de la tabla de subfabricantes.
+   *
+   * @type {boolean}
+   * @default true
+   */
+  public showTablaInicial: boolean = true;
+
   /**
-   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.Add commentMore actions
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    */
   @Input() formularioDeshabilitado: boolean = false;
 
@@ -352,9 +361,6 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
     if (this.tabIndex) {
       this.store.setindicePrevioRuta(this.tabIndex);
     }
-    this.router.navigate(['../complementar-plantas'], {
-      relativeTo: this.activatedRoute,
-    });
   }
 
   /**

@@ -9,19 +9,19 @@
           <input type="text" class="form-control" id="permiso-immex" formControlName="permisoImmexDatos" placeholder="" />
         </div>
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
           <button class="btn btn-primary" (click)="showTableExportacion()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
       </div>
       <div class="row  mt-5" *ngIf="showTableExport">
-        <app-tabla-dinamica *ngIf="immexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="immexTableDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="immexTableDatos" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
 
         <div class="container text-end mt-5">
-          <button class="btn btn-primary me-2" (click)="showFraccionExportacion()">Mostrar detalle mercancía</button>
+          <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="mostrarDetalleMercancia()">Mostrar detalle mercancía</button>
         </div>
       </div>
     
-      <div class="row" id="fraccion-exportacion" *ngIf="showFraccionExport">
+      <div class="row" id="fraccion-exportacion">
         <ng-titulo titulo="Fracción Arancelaria de exportación"></ng-titulo>
         <div class="col-12">
           <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
@@ -36,94 +36,43 @@
           </div>
         </div>
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2">Eliminar</button>
-          <button class="btn btn-primary" (click)="showTableFractionExport()">Agregar</button>
+          <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button class="btn btn-primary" (click)="showTableFractionExport()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
         <div class="row  mt-5" *ngIf="showTableFractionExp">
           <app-tabla-dinamica 
-          *ngIf="fraccionTablaDatos.length > 0"
           [tipoSeleccionTabla]="tablaSeleccionRadio"
           [configuracionTabla]="fraccionExportacionTabla"
           [datos]="fraccionTablaDatos"
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+          [disableSeleccionTablaRadio]="esFormularioSoloLectura">
         </app-tabla-dinamica>
           <div class="container text-end mt-5">
-            <button class="btn btn-primary me-2" (click)="showProductoImportacion()">Mostrar detalle mercancía</button>
+            <button class="btn btn-primary me-2" (click)="mostrarDetalleMercanciaExportacion()" [disabled]="esFormularioSoloLectura">Mostrar detalle mercancía</button>
           </div>
         </div>    
-      </div>
-
-      <div class="row" id="product-exportacion" *ngIf="showProductoImport">
-        <ng-titulo titulo="Detalle del producto de exportación"></ng-titulo>
-        <div class="col-12">
-          <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
-            <label for="fraccion-arancelaria-exportacion">Fracción arancelaria:</label>
-            <input type="text" class="form-control" id="fraccion-arancelaria-exportacion" formControlName="productoArancelariaExportacion" placeholder="" />
-          </div>
-          <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
-            <label for="description">Descripción:</label>
-            <textarea  class="form-control" id="description" formControlName="productoDescExportacion" rows="5" placeholder=""></textarea>
-          </div>
-        </div>
-        <div class="col-12 mt-5">
-          <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
-            <app-catalogo-select
-            [label]="'Nico'"
-            [catalogo]="nico"
-            formControlName="Nico"
-            [required]="true"
-            name="Nico"
-            [isDisabled]="esFormularioSoloLectura"
-          ></app-catalogo-select>
-          </div>
-          <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
-            <label for="description-nico">Descripción Nico:</label>
-            <textarea  class="form-control" id="description-nico" formControlName="productoDescExportacion" rows="5" placeholder=""></textarea>
-          </div>
-        </div>
-        <div class="col-12 container text-end mt-5">
-          <button class="btn btn-primary" (click)="showTableNicoExport()">Agregar Nico</button>
-        </div>  
-        <div class="row  mt-5" *ngIf="showTableNicoExp">
-          <h6>Nico</h6>
-          <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
-            <app-tabla-dinamica *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
-            [datos]="nicoTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
-          </div>
-          <div class="container text-start mt-5">
-            <button class="btn btn-default me-2">Eliminar Nico</button>
-          </div>
-          <div class="container text-end mt-5">
-            <button class="btn btn-primary me-2">Guardar</button>
-            <button class="btn btn-default me-2">Cancelar</button>
-          </div>
-        </div>  
       </div>
     </div>
  
 
   <!-- Pasos para la sección de importación -->
- 
-    <div formGroupName="importacionForm">
-      <ng-titulo titulo="Permiso Immex"></ng-titulo>
-      <div class="row">
-        <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
-          <label for="permisoImmexDatos">Permiso IMMEX:</label>
-          <input type="text" class="form-control" id="permisoImmexDatos" name="permisoImmexDatosx" formControlName="permisoImmexDatos" />
-        </div>
-        <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
-          <button class="btn btn-primary" (click)="showTableImportacion()" [disabled]="esFormularioSoloLectura">Agregar</button>
-        </div>
-      </div>
-      <div class="row  mt-5" *ngIf="showTableImport">
-        <app-tabla-dinamica *ngIf="immexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="immexTableDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
-        <div class="container text-end mt-5">
-          <button class="btn btn-primary me-2" (click)="showCommodityImportacion()">Mostrar detalle mercancía</button>
-        </div>
-      </div>
+</form>
+</div>
 
-      <div class="row" id="commodity-importacion" *ngIf="showCommodityImport">
+<div
+  class="modal fade"
+  id="mercanciaImportacionModal"
+  tabindex="-1"
+  aria-labelledby="mercanciaImportacionModal"
+  aria-hidden="true"
+  data-bs-backdrop="static"
+  #mercanciaImportacionModal
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-body">
+     <form [formGroup]="immexRegistroform">
+    <div formGroupName="importacionForm">
+      <div class="row" id="commodity-importacion">
         <ng-titulo titulo="Detalle de la mercancía de importación"></ng-titulo>
         <div class="col-12">
           <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
@@ -172,29 +121,118 @@
           <h6>Nico</h6>
           <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
             <app-tabla-dinamica  *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
+            [datos]="nicoTablaDatos"></app-tabla-dinamica>
+          </div>
+          <div class="container text-start mt-5">
+            <button class="btn btn-danger me-2">Eliminar Nico</button>
+          </div>
+        </div>  
+      </div>
+    </div>
+    </form>     
+        <footer class="footer d-flex py-5 gap-3 justify-content-end">
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="modalCancelar()">
+            Regresar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary">
+            Guardar
+          </button>
+        </footer>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="mercanciaExportacionModal"
+  tabindex="-1"
+  aria-labelledby="mercanciaExportacionModal"
+  aria-hidden="true"
+  data-bs-backdrop="static"
+  #mercanciaExportacionModal
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-body">
+    <form [formGroup]="immexRegistroform">
+      <div class="row" id="product-exportacion">
+        <ng-titulo titulo="Detalle del producto de exportación"></ng-titulo>
+        <div class="col-12">
+          <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+            <label for="fraccion-arancelaria-exportacion">Fracción arancelaria:</label>
+            <input type="text" class="form-control" id="fraccion-arancelaria-exportacion" formControlName="productoArancelariaExportacion" placeholder="" />
+          </div>
+          <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
+            <label for="description">Descripción:</label>
+            <textarea  class="form-control" id="description" formControlName="productoDescExportacion" rows="5" placeholder=""></textarea>
+          </div>
+        </div>
+        <div class="col-12 mt-5">
+          <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+            <app-catalogo-select
+            [label]="'Nico'"
+            [catalogo]="nico"
+            formControlName="Nico"
+            [required]="true"
+            [placeholder]="'Selecciona un valor'"
+            name="Nico"
+            [isDisabled]="esFormularioSoloLectura"
+          ></app-catalogo-select>
+          </div>
+          <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
+            <label for="description-nico">Descripción Nico:</label>
+            <textarea  class="form-control" id="description-nico" formControlName="productoDescExportacion" rows="5" placeholder=""></textarea>
+          </div>
+        </div>
+        <div class="col-12 container text-end mt-5">
+          <button class="btn btn-primary" (click)="showTableNicoExport()" [disabled]="esFormularioSoloLectura">Agregar Nico</button>
+        </div>  
+        <div class="row  mt-5" *ngIf="showTableNicoExp">
+          <h6>Nico</h6>
+          <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
+            <app-tabla-dinamica *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
             [datos]="nicoTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
           </div>
           <div class="container text-start mt-5">
-            <button class="btn btn-default me-2">Eliminar Nico</button>
-          </div>
-          <div class="container text-end mt-5">
-            <button class="btn btn-default me-2">Regresar</button>
-            <button class="btn btn-primary me-2">Guardar</button>
+            <button class="btn btn-danger me-2">Eliminar Nico</button>
           </div>
         </div>  
-        <div class="row  mt-5">
-          <app-tabla-dinamica 
-          *ngIf="fraccionTablaDatos.length > 0"
-          [tipoSeleccionTabla]="tablaSeleccionRadio"
-          [configuracionTabla]="fraccionExportacionTabla"
-          [datos]="fraccionTablaDatos"
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
-        </app-tabla-dinamica>
-        
-        </div> 
+      </div>
+    </form>     
+        <footer class="footer d-flex py-5 gap-3 justify-content-end">
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="modalCancelarExportacion()">
+            Regresar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary">
+            Guardar
+          </button>
+        </footer>
       </div>
     </div>
-  </form>
+  </div>
 </div>
+<!-- 
+<lib-notificaciones
+  *ngIf="tieneValor"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="mostrarDetalleMercancia()"
+>
+</lib-notificaciones>
 
-
+<lib-notificaciones
+  *ngIf="habilitarGuardar"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="guardarCambios()"
+>
+</lib-notificaciones> -->

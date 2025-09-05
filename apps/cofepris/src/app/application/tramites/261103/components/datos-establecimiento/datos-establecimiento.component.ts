@@ -70,7 +70,7 @@ export class DatosestablecimientoComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           if(this.datosdelestablecimiento){
-          this.inicializarEstadoFormulario();
+          this.aplicarEstadoFormulario();
           }
         })
       )
@@ -82,33 +82,48 @@ export class DatosestablecimientoComponent implements OnInit, OnDestroy {
    * Además, obtiene la información del catálogo de mercancía.
    */
   inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
+    this.crearFormulario(); // Always create the form first
+    this.aplicarEstadoFormulario(); // Then apply the correct disable/enable state
+  }
+
+
+  /**
+   * Aplica el estado de habilitación/deshabilitación a los campos del formulario.
+   * 
+   * Este método verifica si el formulario existe y, en caso afirmativo, evalúa
+   * si los campos deben estar habilitados o deshabilitados según las condiciones
+   * definidas en la lógica de habilitación.
+   */
+  aplicarEstadoFormulario(): void {
+    if (!this.datosdelestablecimiento) {
+      return;
+    }
+  
+    // Obtener el valor de ideGenerica1 del estado
+    const IDE_GENERICA_1 = this.seccionState?.ideGenerica1;
+    
+    // Determinar si los campos deben estar habilitados
+    const DEBE_ESTAR_HABILITADO = !this.esFormularioSoloLectura && (IDE_GENERICA_1 === 'Modificacion');
+    
+    if (DEBE_ESTAR_HABILITADO) {
+      this.datosdelestablecimiento.enable();
     } else {
-      this.crearFormulario();
+      this.datosdelestablecimiento.disable();
     }
   }
 
-  /**
-   * @method
-   * @name guardarDatosFormulario
-   * @description
-   * Inicializa los formularios y obtiene los datos de la tabla.
-   * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`),
-   * deshabilita o habilita todos los formularios del componente.
-   * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
-   * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
-   *
-   * @returns {void}
-   */
-  guardarDatosFormulario(): void {
-    this.crearFormulario();
-    if (this.esFormularioSoloLectura) {
-      this.datosdelestablecimiento.disable();
-    } else {
-      this.datosdelestablecimiento.enable();
+    /**
+     * Getter que determina si los componentes deben estar deshabilitados.
+     * 
+     * Combina la lógica de `esFormularioSoloLectura` e `ideGenerica1` para determinar
+     * si los componentes de la interfaz (como botones) deben estar deshabilitados.
+     * 
+     * @returns {boolean} true si los componentes deben estar deshabilitados, false si deben estar habilitados
+     */
+    get debeEstarDeshabilitado(): boolean {
+        const IDE_GENERICA_1 = this.seccionState?.ideGenerica1;
+        return this.esFormularioSoloLectura || (IDE_GENERICA_1 !== 'Modificacion');
     }
-  }
 
     /**
    * Gancho de ciclo de vida `OnInit`.

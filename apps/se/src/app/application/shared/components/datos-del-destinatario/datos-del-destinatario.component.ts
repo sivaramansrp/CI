@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
 import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
+import { CommonModule } from '@angular/common';
+import { Subject } from 'rxjs';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'app-datos-del-destinatario',
@@ -12,7 +12,7 @@ import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
   templateUrl: './datos-del-destinatario.component.html',
   styleUrl: './datos-del-destinatario.component.scss',
 })
-export class DatosDelDestinatarioComponent implements OnDestroy, OnInit {
+export class DatosDelDestinatarioComponent implements OnDestroy, OnInit,OnChanges {
 
   /**
    * Datos del formulario para inicializar los valores
@@ -75,7 +75,7 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit {
    * @param {FormBuilder} fb - Servicio para crear formularios reactivos
    */
   constructor(private fb: FormBuilder) {
-
+ this.createForm();
   }
   /**
 * @inheritdoc
@@ -87,7 +87,7 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit {
     // Parcheo de valores iniciales con retraso para asegurar la renderización
     this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
-    this.formDatosDelDestinatario.patchValue(this.datosForm);
+ 
   }
 
   /**
@@ -103,25 +103,69 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit {
   createForm(): void {
     this.formDatosDelDestinatario = this.fb.group({
       nombres: ['', [Validators.maxLength(20)]],
-      primerApellido: ['', [Validators.required, Validators.maxLength(20)]],
+      primerApellido: ['', [ Validators.maxLength(20)]],
       segundoApellido: ['', [Validators.maxLength(20)]],
-      numeroDeRegistroFiscal: ['', [Validators.maxLength(30)]],
+      numeroDeRegistroFiscal: ['',[Validators.maxLength(30),Validators.required]],
       razonSocial: [{ value: '', disabled: this.razonSocialEditable }],
     });
+   
   }
+/**
+ * Aplica validaciones al campo 'numeroDeRegistroFiscal' y 'primerApellido' del formulario
+ * 'formDatosDelDestinatario' según el procedimiento actual.
+ *  * @remarks
+ * Este método establece validadores específicos para los campos 'numeroDeRegistroFiscal' y 'primerApellido'
+ * basándose en el identificador del procedimiento (`idProcedimiento`).
+ * * Si el procedimiento es 110205, 'numeroDeRegistroFiscal' es requerido y 'primerApellido' no lo es.
+ * * En otros casos, 'numeroDeRegistroFiscal' no es requerido y 'primerApellido' es requerido.
+ * * @returns {void} No retorna ningún valor.
+ * */
+  applyNumeroRegistroFiscalValidation(): void {
+    const NUMERO_REGISTRO_FISCAL = this.formDatosDelDestinatario.get('numeroDeRegistroFiscal');
+    const PRIMER_APELLIDO = this.formDatosDelDestinatario.get('primerApellido');
+  
+    if (!NUMERO_REGISTRO_FISCAL || !PRIMER_APELLIDO) return;
+  
+    if (this.idProcedimiento === 110205) {
+      NUMERO_REGISTRO_FISCAL.setValidators([Validators.required, Validators.maxLength(30)]);
+      PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]); 
+    } else {
+      NUMERO_REGISTRO_FISCAL.setValidators([Validators.maxLength(30)]); 
+      PRIMER_APELLIDO.setValidators([Validators.required, Validators.maxLength(20)]);
+    }
+  
+    NUMERO_REGISTRO_FISCAL.updateValueAndValidity();
+    PRIMER_APELLIDO.updateValueAndValidity();
+  }
+  
+  
   /**
 * Evalúa si se debe inicializar o cargar datos en el formulario.
 */
   inicializarEstadoFormulario(): void {
-    if (!this.formDatosDelDestinatario) {
-      this.createForm();
-    }
-
     if (this.esFormularioSoloLectura) {
       this.formDatosDelDestinatario.disable();
     }
   }
-
+  /**
+   * @method ngOnChanges
+   * @description
+   * Método del ciclo de vida que se llama cuando cambia alguna propiedad enlazada por datos.
+   * Específicamente, verifica si el input `datosForm` ha cambiado. Si es así, actualiza el
+   * formulario `formDatosDelDestinatario` con los nuevos valores de `datosForm`. Si el formulario
+   * no existe, lo crea.
+   * 
+   * @param changes - Objeto con pares clave/valor de las propiedades que han cambiado.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['datosForm'] && this.datosForm) {
+      if (this.formDatosDelDestinatario) {
+        this.formDatosDelDestinatario.patchValue(this.datosForm);
+      } else {
+        this.createForm();
+      }
+    }
+  }
   /**
   /**
    * Establece valores en el store y emite eventos relacionados con el formulario.

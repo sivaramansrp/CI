@@ -49,6 +49,10 @@ import { Modal } from 'bootstrap';
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
   /**
+   * Referencia al modal de alerta de selección de mercancía
+   */
+  @ViewChild('modalSeleccionMercancia') modalSeleccionMercanciaElemento!: ElementRef;
+  /**
    * Indica si el formulario está en modo solo lectura.
    * Si es verdadero, el usuario no puede editar los campos del formulario.
    */
@@ -178,6 +182,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
         this.habilitarDeshabilitarFormulario();
       });
   }
+
   /**
    * Habilita o deshabilita el formulario según el modo de solo lectura.
    * Si `esSoloLectura` es verdadero, deshabilita el formulario para evitar ediciones.
@@ -219,16 +224,41 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Almacena los valores de la fila seleccionada en el store y emite un evento para modificar el certificado.
    */
   enModificarFormulario(): void {
-    if (this.filaSeleccionada){
-       if (this.mercanciasSeleccionadasElemento) {
+    if (this.filaSeleccionada) {
+      if (this.mercanciasSeleccionadasElemento) {
         const MODAL_INSTANCIA = new Modal(
           this.mercanciasSeleccionadasElemento?.nativeElement,
           { backdrop: false }
         );
         MODAL_INSTANCIA.show();
+      }
     }
+  }
+
+  /**
+   * Nueva función para manejar el click en Modificar, muestra el modal de alerta si no hay selección
+   */
+  onModificarClick(): void {
+    if (!this.filaSeleccionada) {
+      const MODAL_ELEMENT = document.getElementById('modalSeleccionMercancia');
+      if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+        MODAL_INSTANCE.show();
+      }
+      return;
     }
-    
+    this.enModificarFormulario();
+  }
+
+  cerrarSeleccionMercanciaModal(): void {
+    // Usar 'this' para cumplir con la regla de estilo
+    const MODAL_ELEMENT = this.modalSeleccionMercanciaElemento?.nativeElement;
+    if (MODAL_ELEMENT) {
+      const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT);
+      if (MODAL_INSTANCE) {
+        MODAL_INSTANCE.hide();
+      }
+    }
   }
     /**
    * [ES] Cierra el modal asociado al elemento de registro de mercancía, si existe una instancia activa.
@@ -276,5 +306,18 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.estadoSeleccionado = data;
       });
+  }
+    /**
+   * Maneja los datos modificados recibidos del formulario hijo y actualiza la tabla.
+   */
+  onDatosModificados(valores: CompliMentaria): void {
+    // Mezclar los datos existentes de la fila seleccionada con los valores modificados del formulario
+    if (this.filaSeleccionada) {
+      this.filaSeleccionada = {
+        ...this.filaSeleccionada,
+        ...valores
+      };
+      
+    }
   }
 }

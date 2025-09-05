@@ -4,11 +4,14 @@ import {
   AnexoDosEncabezado,
   AnexoUnoConfiguartion,
   AnexoUnoEncabezado,
+  DatosComplimento,
   RutaNombre,
 } from '../../models/nuevo-programa-industrial.model';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, delay, takeUntil } from 'rxjs';
 import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
 import { CommonModule } from '@angular/common';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -33,7 +36,7 @@ import { Validators } from '@angular/forms';
   templateUrl: './anexo-uno.component.html',
   styleUrl: './anexo-uno.component.scss',
 })
-export class AnexoUnoComponent implements OnInit {
+export class AnexoUnoComponent implements OnInit, OnDestroy {
   public anexoUnoAlerta = ANEXO_UNO_ALERTA;
   public anexoUnoFormGroup!: FormGroup;
   public anexoDosFormGroup!: FormGroup;
@@ -63,6 +66,14 @@ export class AnexoUnoComponent implements OnInit {
   @Input() formularioDeshabilitado: boolean = false;
 
   /**
+    * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+    * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+    *
+    * @property {Subject<void>} destroyNotifier$
+    */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Evento para devolver la llamada del Anexo Uno
    */
   @Output() obtenerAnexoUnoDevolverLaLlamada: EventEmitter<
@@ -84,12 +95,65 @@ export class AnexoUnoComponent implements OnInit {
     new EventEmitter<RutaNombre>();
 
   /**
+   * Evento que emite un booleano cuando hay un cambio en los datos de la tabla.
+   * Útil para notificar al componente padre sobre modificaciones en la tabla.
+   */
+  @Output() tieneCambioDeDatosDeTabla = new EventEmitter<boolean>();
+
+  /**
+   * Emits events containing `DatosComplimento` data to notify parent components of changes or updates.
+   * 
+   * @remarks
+   * This `EventEmitter` is used to communicate from the child component to its parent, typically when
+   * the `DatosComplimento` data has been modified or needs to be sent upwards in the component hierarchy.
+   *
+   * @eventProperty
+   * @type {EventEmitter<DatosComplimento>}
+   */
+  @Output()
+  complimentosDatos: EventEmitter<DatosComplimento> =
+    new EventEmitter<DatosComplimento>(true);
+
+  /**
+   * Emits events containing `DatosComplimento` data when relevant changes occur.
+   * 
+   * @remarks
+   * This output can be subscribed to by parent components to receive updates.
+   *
+   * @eventProperty
+   */
+  @Output()
+  complimentosDatosDos: EventEmitter<DatosComplimento> =
+    new EventEmitter<DatosComplimento>(true);
+
+
+  /**
    * Datos seleccionados de importación
    * @property {AnexoDosEncabezado | AnexoUnoEncabezado} datosImportacionSeleccionados
    */
   public datosImportacionSeleccionados!:
     | AnexoDosEncabezado
     | AnexoUnoEncabezado;
+
+
+  @Input()
+  /**
+   * Establece el formulario de datos del subcontratista.
+   * @param valor - Formulario reactivo con los datos del subcontratista.
+   */
+  set formularioDatosSubcontratista(valor: FormGroup) {
+    this.anexoUnoFormGroup.setValue(valor.value);
+  }
+
+
+  @Input()
+  /**
+   * Establece el formulario de datos del subcontratista.
+   * @param valor - Formulario reactivo con los datos del subcontratista.
+   */
+  set formularioDatosSubcontratistaDos(valor: FormGroup) {
+    this.anexoDosFormGroup.setValue(valor.value);
+  }
 
   /**
    * Datos seleccionados de exportación
@@ -114,31 +178,37 @@ export class AnexoUnoComponent implements OnInit {
   public nuevaUnoNotificacion!: Notificacion;
 
   /**
+   * Indica si la tabla actualmente tiene datos.
+   * Se utiliza para controlar la visualización o lógica relacionada con el contenido de la tabla.
+   */
+  public tenerDatosDeTabla: boolean = false;
+
+  /**
    * Constructor de la clase AnexoUnoComponent
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private complimentosService: ComplimentosService) {
     this.crearFormularioAnexoUno();
     this.crearFormularioAnexoDos();
   }
 
-    /**
-   * Abre un modal con una notificación configurada para confirmar una acción de eliminación.
-   * 
-   * Este método inicializa un objeto de notificación con los siguientes parámetros:
-   * - `tipoNotificacion`: Define el tipo de notificación como "alerta".
-   * - `categoria`: Establece la categoría de la notificación como "peligro".
-   * - `modo`: Configura el modo de la notificación como "acción".
-   * - `titulo`: Campo para el título de la notificación (vacío por defecto).
-   * - `mensaje`: Mensaje que se muestra en la notificación, en este caso,
-   *   pregunta si el usuario está seguro de que desea eliminar.
-   * - `cerrar`: Indica si la notificación puede cerrarse manualmente (true).
-   * - `tiempoDeEspera`: Tiempo en milisegundos antes de que la notificación desaparezca automáticamente (2000 ms).
-   * - `txtBtnAceptar`: Texto del botón de aceptación ("Aceptar").
-   * - `txtBtnCancelar`: Texto del botón de cancelación (vacío por defecto).
-   * 
-   * @returns {void} Este método no devuelve ningún valor.
-   */
+  /**
+ * Abre un modal con una notificación configurada para confirmar una acción de eliminación.
+ * 
+ * Este método inicializa un objeto de notificación con los siguientes parámetros:
+ * - `tipoNotificacion`: Define el tipo de notificación como "alerta".
+ * - `categoria`: Establece la categoría de la notificación como "peligro".
+ * - `modo`: Configura el modo de la notificación como "acción".
+ * - `titulo`: Campo para el título de la notificación (vacío por defecto).
+ * - `mensaje`: Mensaje que se muestra en la notificación, en este caso,
+ *   pregunta si el usuario está seguro de que desea eliminar.
+ * - `cerrar`: Indica si la notificación puede cerrarse manualmente (true).
+ * - `tiempoDeEspera`: Tiempo en milisegundos antes de que la notificación desaparezca automáticamente (2000 ms).
+ * - `txtBtnAceptar`: Texto del botón de aceptación ("Aceptar").
+ * - `txtBtnCancelar`: Texto del botón de cancelación (vacío por defecto).
+ * 
+ * @returns {void} Este método no devuelve ningún valor.
+ */
   abrirUnoModal(): void {
     this.nuevaUnoNotificacion = {
       tipoNotificacion: 'alert',
@@ -184,17 +254,31 @@ export class AnexoUnoComponent implements OnInit {
       txtBtnCancelar: '',
     };
   }
-  
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Si el formulario está deshabilitado (`formularioDeshabilitado` es verdadero),
    * deshabilita los grupos de formularios `anexoUnoFormGroup` y `anexoDosFormGroup`.
    */
   ngOnInit(): void {
-        if (this.formularioDeshabilitado) {
+    if (this.formularioDeshabilitado) {
       this.anexoUnoFormGroup.disable();
       this.anexoDosFormGroup.disable();
     }
+    this.anexoUnoFormGroup.valueChanges
+      .pipe(delay(100))
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((_) => {
+        this.complimentosDatos.emit(this.anexoUnoFormGroup.value);
+      });
+
+    this.anexoDosFormGroup.valueChanges
+      .pipe(delay(100))
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((_) => {
+        this.complimentosDatosDos.emit(this.anexoDosFormGroup.value);
+      });
+
   }
 
   /**
@@ -224,6 +308,8 @@ export class AnexoUnoComponent implements OnInit {
     this.anexoUnoTablaLista = this.anexoUnoTablaLista.filter((idx) => {
       return idx !== this.datosImportacionSeleccionados;
     });
+    this.tenerDatosDeTabla = this.anexoUnoTablaLista.length > 0;
+    this.tieneCambioDeDatosDeTabla.emit(this.tenerDatosDeTabla);
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
   }
 
@@ -245,23 +331,29 @@ export class AnexoUnoComponent implements OnInit {
       this.anexoUnoFormGroup.markAllAsTouched();
       return;
     }
-
+    const SERIAL = this.anexoUnoTablaLista.length + 1;
     const OBJECTO_IDX: AnexoUnoEncabezado = {
-      encabezadoFraccion: this.anexoUnoFormGroup.get('fraccionArancelaria')
-        ?.value,
+      encabezadoFraccion: SERIAL.toString(),
       encabezadoDescripcionComercial:
         this.anexoUnoFormGroup.get('descripcion')?.value,
       estatus: false,
-      encabezadoFraccionArancelaria: '',
-      encabezadoAnexoII: '',
-      encabezadoTipo: '',
-      encabezadoUmt: '',
+      encabezadoFraccionArancelaria: this.anexoUnoFormGroup.get('fraccionArancelaria')
+        ?.value,
+      encabezadoAnexoII: 'NO SENSIBLE',
+      encabezadoTipo: 'EXPORTACION',
+      encabezadoUmt: 'Kilogramo',
       encabezadoCategoria: '',
       encabezadoValorEnMercado: '',
+      encabezadoValorEnMonedaMensual: 0,
+      encabezadoValorEnMonedaAnual: 0,
+      encabezadoVolumenMensual: 0,
+      encabezadoVolumenAnual: 0,
     };
-    
+    this.anexoUnoFormGroup.reset();
     // Reinicia el formulario después de agregar el objeto
-    this.anexoUnoTablaLista.push(OBJECTO_IDX);
+    this.anexoUnoTablaLista = [...this.anexoUnoTablaLista, OBJECTO_IDX];
+    this.tenerDatosDeTabla = this.anexoUnoTablaLista.length > 0;
+    this.tieneCambioDeDatosDeTabla.emit(this.tenerDatosDeTabla);
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
   }
 
@@ -273,19 +365,28 @@ export class AnexoUnoComponent implements OnInit {
       this.anexoDosFormGroup.markAllAsTouched();
       return;
     }
-
+    const SERIAL = this.anexoDosTablaLista.length + 1;
     const OBJECTO_IDX: AnexoDosEncabezado = {
-      encabezadoFraccion: this.anexoDosFormGroup.get('fraccionArancelaria')
-        ?.value,
+      encabezadoFraccion: SERIAL.toString(),
       encabezadoDescripcionComercial:
         this.anexoDosFormGroup.get('descripcion')?.value,
-      encabezadoFraccionExportacion: '',
-      encabezadoFraccionImportacion: '',
       estatus: false,
+      encabezadoFraccionExportacion: this.anexoDosFormGroup.get('fraccionArancelaria')
+        ?.value,
+      encabezadoFraccionImportacion: '',
+      encabezadoDescripcionComercialImportacion: '',
+      encabezadoAnexoII: 'NO SENSIBLE',
+      encabezadoTipo: 'IMPORTACION',
+      encabezadoUmt: 'Kilogramo',
+      encabezadoCategoria: '',
+      encabezadoValorEnMonedaMensual: 0,
+      encabezadoValorEnMonedaAnual: 0,
+      encabezadoVolumenMensual: 0,
+      encabezadoVolumenAnual: 0,
     };
     this.anexoDosFormGroup.reset();
     // Reinicia el formulario después de agregar el objeto
-    this.anexoDosTablaLista.push(OBJECTO_IDX);
+    this.anexoDosTablaLista = [...this.anexoDosTablaLista, OBJECTO_IDX];
     this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoDosTablaLista);
   }
 
@@ -298,6 +399,8 @@ export class AnexoUnoComponent implements OnInit {
    */
   setAnexoUnoLista(event: AnexoUnoEncabezado): void {
     this.datosImportacionSeleccionados = event;
+    this.complimentosService.setAnexoUnoFilaSeleccionada(event);
+    this.complimentosService.setAnexoDosFilaSeleccionada(null);
     //this.obtenerAnexoUnoDevolverLaLlamada.emit(LISTA_SELECCIONADA);
   }
 
@@ -310,6 +413,8 @@ export class AnexoUnoComponent implements OnInit {
    */
   setAnexoDosLista(event: AnexoDosEncabezado): void {
     this.datosExportacionSeleccionados = event;
+    this.complimentosService.setAnexoDosFilaSeleccionada(event);
+    this.complimentosService.setAnexoUnoFilaSeleccionada(null);
   }
 
   /**
@@ -320,6 +425,24 @@ export class AnexoUnoComponent implements OnInit {
    */
   setRuta(nombre: string, id: string): void {
     if (nombre) {
+      if (id === 'IMPORT') {
+      if (
+        this.datosImportacionSeleccionados &&
+        'encabezadoFraccionArancelaria' in this.datosImportacionSeleccionados
+      ) {
+        this.complimentosService.setAnexoUnoFilaSeleccionada(this.datosImportacionSeleccionados as AnexoUnoEncabezado);
+      } else {
+        this.complimentosService.setAnexoUnoFilaSeleccionada(null);
+      }
+      this.complimentosService.setAnexoDosFilaSeleccionada(null);
+    } else if (id === 'EXPORT') {
+      if (this.datosExportacionSeleccionados && 'encabezadoFraccionExportacion' in this.datosExportacionSeleccionados) {
+        this.complimentosService.setAnexoDosFilaSeleccionada(this.datosExportacionSeleccionados as AnexoDosEncabezado);
+      } else {
+        this.complimentosService.setAnexoDosFilaSeleccionada(null);
+      }
+      this.complimentosService.setAnexoUnoFilaSeleccionada(null);
+    }
       const RUTA_NOMBRE: RutaNombre = {
         catagoria: nombre,
         id: id,
@@ -331,4 +454,13 @@ export class AnexoUnoComponent implements OnInit {
       this.rutaLaFraccionDeComplemento.emit(RUTA_NOMBRE);
     }
   }
+
+/**
+ * Método del ciclo de vida que se ejecuta al destruir el componente.
+ * Libera recursos notificando a los observables que deben finalizar suscripciones.
+ */
+ngOnDestroy(): void {
+  this.destroyNotifier$.next();
+  this.destroyNotifier$.complete();
+}
 }

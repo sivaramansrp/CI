@@ -53,7 +53,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
   },
   {
     labelNombre: 'País',
-    campo: 'estado',
+    campo: 'pais',
     class: 'col-md-6 col-10 mt-1',
     tipo_input: 'select-catalog',
     required: true,
@@ -75,7 +75,6 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     class: 'col-md-6 col-10  mt-1',
     tipo_input: 'text',
     required: true,
-    maxlength: 250,
     opciones: [],
     orden: 5,
   },
@@ -156,7 +155,7 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
     tipo_input: 'select-catalog ',
     required: true,
     opciones: [],
-    maxlength: 250,
+    maxlength: 255,
     orden: 5,
   },
   {
@@ -203,7 +202,7 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
  */
 export const FORMA_SOCIO: DatosCatalago[] = [
   {
-    labelNombre: 'Registro Federal de Contribuyentes',
+    labelNombre: 'Registro federal de contribuyentes',
     campo: 'rfc',
     class: 'col-md-6 col-10 mt-3',
     tipo_input: 'text',
@@ -338,7 +337,7 @@ export const TABLA_SOCIO_ACCIONISTAS_EXTRANJEROS = [
   },
   {
     encabezado: 'CP',
-    clave: (ele: SociaoAccionistas): string | undefined => ele.cp,
+    clave: (ele: SociaoAccionistas): string | undefined => ele.codigoPostal,
     orden: 6,
   },
   {

@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, FECHA_FINAL_VIGENCIA, FECHA_FINAL_VIGENCIA_DEL_CUPO, FECHA_INICIO_VIGENCIA, FECHA_INICIO_VIGENCIA_DEL_CUPO, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_ALTO, REGEX_NUMEROS, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, NO_ERRORS_SCHEMA, OnDestroy, Output } from '@angular/core';
 import { ConsultaioQuery, ValidacionesFormularioService  } from '@ng-mf/data-access-user';
 import { ExpedicionCertificadosAsignacion120202State, Tramite120202Store } from '../../../estados/tramites/tramite120202.store';
 import { ExpedirMonto, NumeroOficioAsignacionDetalleRespquesta } from '../../../tramites/120202/models/expedicion-certificados-asignacion.model';
@@ -25,6 +25,7 @@ import { Tramite120202Query } from '../../../estados/queries/tramite120202.query
     InputFechaComponent,
     NotificacionesComponent
   ],
+  schemas: [NO_ERRORS_SCHEMA],
   templateUrl: './expedicion-certificados-asignacion-directa.component.html',
   styleUrl: './expedicion-certificados-asignacion-directa.component.scss',
 })

@@ -17,7 +17,7 @@
                 mercanciaForm,
                 'fraccionArancelaria',
                 'setFraccionArancelaria'
-                )" >
+                )" >            
             </div>
             <div class="col-md-8">
               <label for="nombreComercialMercancia">Nombre comercial de la mercancía (igual que en la factura):</label>
@@ -81,7 +81,7 @@
       
           <div class="row mt-3 mb-3">
             <div class="col-md-6">
-              <label for="cantidad">Cantidad:</label>
+              <label for="cantidad">Cantidad*:</label>
               <input type="number" class="form-control" formControlName="cantidad"
               (change)="
                 setValoresStore(
@@ -89,6 +89,17 @@
                 'cantidad',
                 'setCantidad'
                 )">
+                @if(mercanciaForm.controls['cantidad'].invalid ) {
+                  <div class="d-grid">
+                    @if(mercanciaForm.controls['cantidad'].errors?.['required']&& mercanciaForm.controls['cantidad'].touched) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                    @if(mercanciaForm.get('cantidad')?.errors?.['pattern'])  {
+                      <span class="mensaje-error">El número debe tener máximo 16 dígitos enteros y hasta 4 decimales</span>
+                    }
+                  </div>   
+                }
+                
             </div>
             <div class="col-md-6">
                 <app-catalogo-select [catalogo]="umc || []" [label]="'UMC'" [required]="true" name="estado" formControlName="umc" 
@@ -97,7 +108,8 @@
                 mercanciaForm,
                 'umc',
                 'setUmc'
-                )"></app-catalogo-select>
+                )"
+                [markTouched]="mercanciaForm.get('umc')?.touched ?? false"></app-catalogo-select>
               </div>
           </div>
           
@@ -109,8 +121,18 @@
                 setValoresStore(
                 mercanciaForm,
                 'valorMercancia',
-                'setValorMercancia'
+                'setValorMercancia' 
                 )">
+                @if(mercanciaForm.get('valorMercancia')?.invalid ) {
+                  <div class="d-grid">
+                    @if(mercanciaForm.controls['valorMercancia'].errors?.['required']&& mercanciaForm.get('valorMercancia')?.touched) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                    @if(mercanciaForm.get('valorMercancia')?.errors?.['pattern']) {
+                      <span class="mensaje-error">El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales</span>
+                    }
+                    </div>
+                  }
             </div>
             <div class="col-md-6">
               <label for="complementoDescripcion">Complemento de la descripción*:</label>
@@ -121,21 +143,51 @@
                 'complementoDescripcion',
                 'setComplementoDescripcion'
                 )"></textarea>
+                @if(mercanciaForm.controls['complementoDescripcion'].invalid ) {
+                  <div class="d-grid">
+                    @if(mercanciaForm.controls['complementoDescripcion'].errors?.['required']&& mercanciaForm.controls['complementoDescripcion'].touched) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                    @if(mercanciaForm.controls['complementoDescripcion'].errors?.['maxlength']) {
+                      <span class="mensaje-error">Por favor, no escribas más de 200 caracteres</span>
+                    }
+                    
+                    </div>
+                  }
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-md-4">
-              <input-fecha [datos]="fechaFactura" [setFecha]="mercanciaForm.get('fechaFactura')?.value"></input-fecha>
+              <input-fecha
+              [datos]="fechaFactura"
+              [deshabilitarFuturas]="true"
+              [setFecha]="mercanciaForm.get('fechaFactura')?.value"
+              (valorCambiado)="cambioFechaFactura($event)"></input-fecha>
+               @if (esInvalido('fechaFactura')) {
+                  <div class="d-grid">
+                    @if (mercanciaForm.controls['fechaFactura'].errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                  </div>
+                  }
+
             </div>
             <div class="col-md-4">
-              <label for="numeroFactura">N° factura / Referencia:</label>
-              <input type="text" class="form-control" formControlName="numeroFactura"
+              <label for="numeroFactura">N° factura / Referencia</label>
+              <input type="text" class="form-control" formControlName="numeroFactura"  maxlength="36"
               (change)="
                 setValoresStore(
                 mercanciaForm,
                 'numeroFactura',
                 'setNumeroFactura'
                 )" >
+                @if(mercanciaForm.controls['numeroFactura'].invalid && mercanciaForm.controls['numeroFactura'].touched) {
+                  <div class="d-grid">
+                    @if(mercanciaForm.controls['numeroFactura'].errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                    </div>
+                  }
             </div>
             <div class="col-md-4 mr-2">
               <app-catalogo-select [catalogo]="factura || []" [label]="'Tipo de factura'" [required]="true" name="tipoFactura" formControlName="tipoFactura" 
@@ -144,7 +196,8 @@
                 mercanciaForm,
                 'tipoFactura',
                 'setTipoFactura'
-                )"></app-catalogo-select>
+                )"
+                [markTouched]="mercanciaForm.get('tipoFactura')?.touched ?? false"></app-catalogo-select>
             </div>
           </div>
         </form>
@@ -155,6 +208,5 @@
       </div>
 
       @if(nuevaNotificacion){
-        <lib-notificaciones [notificacionInput]="nuevaNotificacion"></lib-notificaciones>
-        }
-        
+        <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="acceptar($event)"></lib-notificaciones>
+        }       

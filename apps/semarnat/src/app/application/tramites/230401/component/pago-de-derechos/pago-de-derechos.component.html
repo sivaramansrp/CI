@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="control-label" for="clave">Clave de referencia *:</label>
+                        <label class="control-label" for="clave">Clave de referencia*:</label>
                         <input class="form-control" id="clave" placeholder="Clave de referencia" type="text"
                             formControlName="clave">
                             <div class="mensaje-error" *ngIf="pagoDerechos.get('clave')?.errors?.['maxlength']">
@@ -16,7 +16,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="control-label" for="dependencia">Cadena de la dependencia *:</label>
+                        <label class="control-label" for="dependencia">Cadena de la dependencia*:</label>
                         <input class="form-control" id="dependencia" placeholder="Cadena de la dependencia"
                             type="text" formControlName="dependencia">
                             <div class="mensaje-error" *ngIf="pagoDerechos.get('dependencia')?.errors">
@@ -36,7 +36,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="control-label" for="llavePago">Llave de pago *:</label>
+                        <label class="control-label" for="llavePago">Llave de pago*:</label>
                         <input class="form-control" id="llavePago" placeholder="Llave de pago" type="text"
                             formControlName="llavePago">
                             <div class="mensaje-error" *ngIf="pagoDerechos.get('llavePago')?.errors?.['required'] && pagoDerechos.get('llavePago')?.touched">
@@ -49,16 +49,15 @@
                     <div class="form-group ">
                         <input-fecha (valorCambiado)="onFechaCambiada($event)" [setFecha]="pagoDerechos.get('fecha')?.value"
                             [datos]="fechaDeLaFacturaInput"></input-fecha>
-                        <div class="mensaje-error"
-                            *ngIf="pagoDerechos.get('fecha')?.errors?.['required'] && pagoDerechos.get('fecha')?.touched">
-                            Este campo es obligatorio</div>
-                        <div class="mensaje-error" *ngIf="pagoDerechos.get('fecha')?.errors?.['futureDateNotAllowed']">
-                            Debe ser menor o igual a la fecha actual</div>
+                        
+            <div *ngIf="fechaFuturaSeleccionada" class="text-danger mt-1">
+            La fecha de pago debe ser menor o igual a la fecha actual.
+          </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="control-label" for="importePago">Importe de pago *:</label>
+                        <label class="control-label" for="importePago">Importe de pago*:</label>
                         <input class="form-control" id="importePago" placeholder="Importe de pago" type="text" maxlength="16"
                             formControlName="importePago">
                             <div class="mensaje-error" *ngIf="pagoDerechos.get('importePago')?.errors?.['pattern']">

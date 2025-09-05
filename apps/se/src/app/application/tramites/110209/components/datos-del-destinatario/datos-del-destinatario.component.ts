@@ -156,7 +156,19 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
     } else {
       this.inicializarEstadoFormulario();
     }
+    if (this.datosDelDestinatarioForm.get('nombre')?.value) {
+    this.datosDelDestinatarioForm.get('razonSocial')?.disable();
+  }
+  if(this.datosDelDestinatarioForm.get('razonSocial')?.value) {
+    this.datosDelDestinatarioForm.get('nombre')?.setValue('');
+    this.datosDelDestinatarioForm.get('primerApellido')?.setValue('');
+    this.datosDelDestinatarioForm.get('segundoApellido')?.setValue('');
+    this.datosDelDestinatarioForm.get('nombre')?.disable();
+    this.datosDelDestinatarioForm.get('primerApellido')?.disable();
+    this.datosDelDestinatarioForm.get('segundoApellido')?.disable();
+  }
   });
+  
   }
 
 

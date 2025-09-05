@@ -5,7 +5,7 @@
       <app-solicitud-datos [tablaHeadData]="hSolicitud" [tablaFilaDatos]="dSolicitud"></app-solicitud-datos>
       }
       <!-- Datose del tramite a realizar -->
-      <app-datos-del-tramite-a-realizar claveDeControl="datoseDelTramiteRealizar" [procedimiento]="220502" [formularioDeshabilitado]="formularioDeshabilitado"></app-datos-del-tramite-a-realizar>
+      <app-datos-del-tramite-a-realizar claveDeControl="datoseDelTramiteRealizar" [procedimiento]="procedimiento" [formularioDeshabilitado]="formularioDeshabilitado" (certificadosAutorizEmitido)="certificadosAutorizEmitido($event)"></app-datos-del-tramite-a-realizar>
       <!-- Responsable inspeccion en punto -->
       <app-responsable-inspeccion-en-punto claveDeControl="responsableInspeccionEnPunto" [formularioDeshabilitado]="formularioDeshabilitado"></app-responsable-inspeccion-en-punto>
         <!-- app-medio-transporte -->

@@ -1,8 +1,10 @@
-<div class="form-group">
-  <label for="input_fecha" class="form-label" >{{datos.labelNombre}}{{datos.required ? '*:' : ''}} @if(tooltipQuestionCircle){ <span class="bi bi-question-circle-fill" title="{{datos.labelNombre}}"
-        data-bs-toggle="tooltip"></span>}</label>
+<div class="form-group" [ngClass]="{'has-error': isInvalid()}">
+  <label for="input_fecha" class="form-label">
+    {{datos.labelNombre}}<span *ngIf="datos.required" class="require">*</span><span *ngIf="datos.required">:</span>
+    @if(tooltipQuestionCircle){ <span class="bi bi-question-circle-fill" tooltip="{{tooltipQuestionCircleText ? tooltipQuestionCircleText : datos.labelNombre}}"></span>}
+  </label>
   <div class="d-flex justify-content-start" [formGroup]="Formulario">
-    <div class="input-group-text" id="input_fecha" [ngClass]="{'disabled-div': isDisabled}" (click)="mostrarCalendario()">
+    <div class="input-group-text" id="input_fecha" [ngClass]="{'disabled-div': isDisabled, 'has-error': isInvalid()}" (click)="mostrarCalendario()">
       <div class="fecha">
         <span>{{fechaString}}</span>
       </div>
@@ -14,8 +16,8 @@
           }
         </span>
       </div>
-    </div>
-    <div class="border" *ngIf="mostrar" id="calendario">
+  </div>
+  <div class="border" *ngIf="mostrar" id="calendario">
       <div class="contenido-botones">
         <div class="izquierda" (click)="changeMount(-1)">
           <i class="bi bi-chevron-left"></i>
@@ -46,5 +48,8 @@
       
       </ol>
     </div>
+  </div>
+  <div *ngIf="mostrarErrores && isInvalid()" class="mensaje-error">
+    Este campo es obligatorio
   </div>
 </div>

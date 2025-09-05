@@ -1,7 +1,8 @@
-import { BANDEJA_DE_TAREAS_PENDIENTES_FORMA , BandejaDeTareasPendientes, ConfiguracionColumna, ConsultaioStore, LibBandejaComponent, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { BANDEJA_DE_TAREAS_PENDIENTES_FORMA , BandejaDeTareasPendientes, ConfiguracionColumna, ConsultaioStore, LibBandejaComponent, ModeloDeFormaDinamica,esValidArray } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Departamento, TramiteItem } from '../models/confirmar-notificacion.model';
-import { Subject, takeUntil } from 'rxjs';
+import { LoginQuery,TareaStore } from '@ng-mf/data-access-user';
+import { Subject,map, takeUntil } from 'rxjs';
 import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
 import { CommonModule } from '@angular/common';
 import { SeleccionadoDepartamento } from '@libs/shared/data-access-user/src/core/models/shared/bandeja-de-tareas-pendientes.model';
@@ -77,7 +78,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
         orden: 2,
       },
       {
-        encabezado: 'Nombre de la tarea',
+        encabezado: 'Nombre tarea',
         clave: (artículo:BandejaDeTareasPendientes) => artículo.nombreDeLaTarea,
         orden: 3,
       },
@@ -105,6 +106,16 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
         encabezado: 'Origin',
         clave: (artículo:BandejaDeTareasPendientes) => artículo.origin,
         orden: 8,
+      },
+      {
+        encabezado: 'Fecha inicio trámite',
+        clave: (artículo:BandejaDeTareasPendientes) => artículo.fechaInicioTramite,
+        orden: 9,
+      },
+      {
+        encabezado: 'Días hábiles transcurridos',
+        clave: (artículo:BandejaDeTareasPendientes) => artículo.diasHabilesTranscurridos,
+        orden: 10,
       }
     ];
   /**
@@ -119,11 +130,21 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
    * Estructura del formulario utilizado para la bandeja de tareas pendientes.
    */
     public bandejaDeTareasForma = BANDEJA_DE_TAREAS_PENDIENTES_FORMA;
+
+  /**
+   * Almacena el valor del RFC asociado al trámite.
+   */
+  public rfcValor: string = '';
   /*
    * Constructor del componente.
    * Inyecta el servicio BandejaDeSolicitudeService para obtener los datos necesarios.
    */
-    constructor(private bandejaSvc: BandejaDeSolicitudeService, private consultaStore: ConsultaioStore) {
+    constructor(
+        private bandejaSvc: BandejaDeSolicitudeService, 
+        private consultaStore: ConsultaioStore,
+        private loginQuery: LoginQuery, 
+        private _tareaStore: TareaStore
+      ) {
   
     }
   /*
@@ -131,11 +152,21 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
    * Llama al método para obtener los datos de la tabla al cargar el componente.
    */
     ngOnInit(): void {
+    this.loginQuery.selectLoginState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.rfcValor = seccionState.rfc;
+        })
+      )
+      .subscribe();
       this.getBandejaDeTablaDatos();
       this.getNombreDelDepartamento();
       this.obtieneTipoSolicitudes();
+      this.obtieneTareas();
     }
-/*
+
+    /*
    * Método para obtener los datos de la tabla de tareas pendientes desde el servicio.
    * Se suscribe al observable y asigna los datos obtenidos a la propiedad correspondiente.
    */
@@ -157,15 +188,37 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
     public getNombreDelDepartamento(): void {
       this.bandejaSvc.getDepartamento().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
         const API_RESPONSE = JSON.parse(JSON.stringify(response));
-        const DATOS = API_RESPONSE.data;
+        let DATOS = API_RESPONSE.data;
+
+        // Ordena por ACRONIMO
+        DATOS = DATOS.sort((a: { ACRONIMO: string }, b: { ACRONIMO: string }) =>
+          a.ACRONIMO.localeCompare(b.ACRONIMO)
+        );
+
+        // Agrupa por ACRONIMO
+        const AGRUPADOS: { [KEY: string]: Departamento[] } = {};
+        DATOS.forEach((item: Departamento) => {
+          const KEY = item.ACRONIMO || 'Sin acrónimo';
+          if (!AGRUPADOS[KEY]) {
+            AGRUPADOS[KEY] = [];
+          }
+          AGRUPADOS[KEY].push(item);
+        });
+
+        // Convierte agrupados a array si lo necesitas, aquí solo asigna los datos ordenados
         this.departamentoDatos = DATOS;
-        const CLASIFICACION_FIELD = this.bandejaDeTareasForma.find((datos: ModeloDeFormaDinamica) => datos.id === 'departamento') as ModeloDeFormaDinamica;
+
+        const CLASIFICACION_FIELD = this.bandejaDeTareasForma.find(
+          (datos: ModeloDeFormaDinamica) => datos.id === 'departamento'
+        ) as ModeloDeFormaDinamica;
         if (CLASIFICACION_FIELD) {
           if (!CLASIFICACION_FIELD.opciones) {
-            CLASIFICACION_FIELD.opciones = DATOS.map((item: { ID_DEPENDENCIA: number; ACRONIMO: string }) => ({
-              descripcion: item.ACRONIMO,
-              id: item.ID_DEPENDENCIA,
-            }));
+        CLASIFICACION_FIELD.opciones = DATOS.map(
+          (item: { ID_DEPENDENCIA: number; ACRONIMO: string }) => ({
+            descripcion: item.ACRONIMO,
+            id: item.ID_DEPENDENCIA,
+          })
+        );
           }
         }
       });
@@ -180,19 +233,52 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
      *   - Para cualquier otro valor, reinicia el estado de selección del departamento.
      */
     public departamento(event: { campo: string; valor: string }): void {
-      if(event.campo === 'departamento') {
+      if (event.campo === 'departamento') {
         this.selectedDepartamentoObj.tieneDepartamento = true;
-        const SELECTED_DEPARTAMENTO = this.departamentoDatos.filter((item) => item.ID_DEPENDENCIA === Number(event.valor));
-        if(SELECTED_DEPARTAMENTO[0].ACRONIMO !== null && SELECTED_DEPARTAMENTO[0].ACRONIMO !== undefined && SELECTED_DEPARTAMENTO[0].ACRONIMO !== '') {
+        // Filtra el departamento seleccionado
+        const SELECTED_DEPARTAMENTO = this.departamentoDatos.filter(
+          (item) => item.ID_DEPENDENCIA === Number(event.valor)
+        );
+        if (
+          SELECTED_DEPARTAMENTO[0]?.ACRONIMO !== null &&
+          SELECTED_DEPARTAMENTO[0]?.ACRONIMO !== undefined &&
+          SELECTED_DEPARTAMENTO[0]?.ACRONIMO !== ''
+        ) {
+          // Asigna el acrónimo al objeto seleccionado
           this.selectedDepartamentoObj.nombreDelDepartamento = SELECTED_DEPARTAMENTO[0].ACRONIMO;
+
+          // Agrupa los departamentos por acrónimo
+          const AGRUPADOS: { [key: string]: Departamento[] } = {};
+          this.departamentoDatos.forEach((item: Departamento) => {
+        const KEY = item.ACRONIMO || 'Sin acrónimo';
+        if (!AGRUPADOS[KEY]) {
+          AGRUPADOS[KEY] = [];
+        }
+        AGRUPADOS[KEY].push(item);
+          });
+
+          // Ordena los departamentos dentro de cada grupo por nombre
+          Object.keys(AGRUPADOS).forEach((key) => {
+        AGRUPADOS[key] = AGRUPADOS[key].sort((a, b) =>
+          (a.NOMBRE || '').localeCompare(b.NOMBRE || '')
+        );
+          });
+
+          // Si necesitas usar los agrupados, puedes asignarlos a una propiedad
+          // this.departamentoAgrupados = AGRUPADOS;
+
+          // Obtiene los procedimientos relacionados con el acrónimo seleccionado
           this.getProcedimiento(SELECTED_DEPARTAMENTO[0].ACRONIMO);
         }
-      } else if(event.campo === 'procedimiento') {
+      } else if (event.campo === 'procedimiento') {
         this.selectedDepartamentoObj.tieneDepartamento = false;
-        const SELECTED_PROCEDURE = this.procedureNumero.filter((item) => item.id === Number(event.valor));
-       this.selectedDepartamentoObj.numeroDeProcedimiento = String( SELECTED_PROCEDURE[0].tramite);
+        // Filtra el procedimiento seleccionado
+        const SELECTED_PROCEDURE = this.procedureNumero.filter(
+          (item) => item.id === Number(event.valor)
+        );
+        this.selectedDepartamentoObj.numeroDeProcedimiento = String(SELECTED_PROCEDURE[0]?.tramite || '');
       } else {
-          this.selectedDepartamentoObj.tieneDepartamento = false;
+        this.selectedDepartamentoObj.tieneDepartamento = false;
       }
 
     }
@@ -206,13 +292,24 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
      */
     public getProcedimiento(departamento: string): void {
         this.procedureNumero = [];
-        this.procedureNumero = tramiteDetailsData.filter((v) => v.department === departamento.toLocaleLowerCase());
-        const FILTERED_FIELD = this.bandejaDeTareasForma.find((datos: ModeloDeFormaDinamica) => datos.id === 'procedimiento') as ModeloDeFormaDinamica;
+        // Filtra y elimina registros repetidos por 'tramite'
+        const PROCEDIMIENTOS_FILTRADOS = tramiteDetailsData
+          .filter((v) => v.department === departamento.toLocaleLowerCase())
+          .filter(
+            (item, index, self) =>
+              self.findIndex((t) => t.tramite === item.tramite) === index
+          );
+        this.procedureNumero = PROCEDIMIENTOS_FILTRADOS;
+        const FILTERED_FIELD = this.bandejaDeTareasForma.find(
+          (datos: ModeloDeFormaDinamica) => datos.id === 'procedimiento'
+        ) as ModeloDeFormaDinamica;
         if (FILTERED_FIELD) {
-          FILTERED_FIELD.opciones = this.procedureNumero.map((item: { id: number; tramite: number }) => ({
+          FILTERED_FIELD.opciones = this.procedureNumero.map(
+            (item: { id: number; tramite: number }) => ({
               descripcion: item.tramite,
               id: item.id,
-            }));
+            })
+          );
         }
     }
 
@@ -245,6 +342,58 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
             }
           }
         });
+    }
+
+  
+    /**
+     * Recupera las tareas pendientes para el usuario actual construyendo un cuerpo de solicitud
+     * con el RFC del usuario, roles e información del certificado, y luego lo envía al
+     * servicio backend. La respuesta se procesa como un arreglo de `BandejaDeTareasPendientes`.
+     *
+     * El observable se da de baja automáticamente cuando el componente se destruye.
+     *
+     * @remarks
+     * - Utiliza el método de servicio `bandejaSvc.postBandejaTareas` para obtener los datos.
+     * - El cuerpo de la solicitud incluye detalles de certificado y el rol "PersonaMoral" codificados.
+     * - El método no retorna un valor; desencadena efectos secundarios mediante la suscripción.
+     */
+    public obtieneTareas(): void {
+      const RFC = this.rfcValor;
+      const REQUEST_BODY = {
+        rfc_usuario: "",
+        roles: [""],
+        certificado: {
+          cert_serial_number: "",
+          tipo_certificado: ""
+        }
+      };
+
+      REQUEST_BODY.rfc_usuario = RFC;
+      REQUEST_BODY.roles = ["PersonaMoral"];
+      REQUEST_BODY.certificado = {
+        cert_serial_number: "20001000000100001815",
+        tipo_certificado: "TIPCE.02"
+      };
+
+      this.bandejaSvc.postBandejaTareas(REQUEST_BODY).pipe(
+        takeUntil(this.destroyNotifier$),
+        map((datos) => {
+          if(esValidArray(datos)){
+            const API_RESPONSE = JSON.parse(JSON.stringify(datos));
+            // Establece la información de la tarea en el store
+            this._tareaStore.establecerTarea(
+              API_RESPONSE[0].rfc,
+              API_RESPONSE[0].currentUser,
+              API_RESPONSE[0].folioTramite,
+              API_RESPONSE[0].idSolicitud,
+              API_RESPONSE[0].idTarea,
+              API_RESPONSE[0].roleTarea,
+              API_RESPONSE[0].tareasUsuario
+            );
+          }
+          
+        })
+      ).subscribe();
     }
   /*
    * Hook de destrucción del componente.

@@ -6,17 +6,19 @@ import {
   SCIAN_TABLA_CONFIGURACION,
 } from '../../constantes/aviso-enum';
 import {
-  AvisoSanitarioState,
-  Tramite260601Store,
-} from '../../../../estados/tramites/tramite260601.store';
-import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
-import {
+  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
+import {
+  AvisoSanitarioState,
+  Tramite260601Store,
+} from '../../../../estados/tramites/tramite260601.store';
+import { Catalogo, ConsultaioQuery, REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
+
 import {
   FormArray,
   FormBuilder,
@@ -37,15 +39,15 @@ import {
   NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
-  TableBodyData,
   TableComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Manifiestos, ManifiestosRespuesta,ProductoTable,ScianTable} from '../../models/aviso-model';
+import { Manifiestos, ManifiestosRespuesta,ProductoInput,ProductoTable,ScianTable} from '../../models/aviso-model';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
 import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { Modal } from 'bootstrap';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
 import productoTable from '@libs/shared/theme/assets/json/260601/producto-table.json';
 import scianTable from '@libs/shared/theme/assets/json/260601/scian-table.json';
@@ -69,12 +71,13 @@ import scianTable from '@libs/shared/theme/assets/json/260601/scian-table.json';
     RepresentanteLegalComponent,
     NotificacionesComponent,
     TablaDinamicaComponent,
+    TooltipModule,
   ],
   providers: [AvisoSanitarioService],
   templateUrl: './datos-del-establecimiento.component.html',
   styleUrl: './datos-del-establecimiento.component.css',
 })
-export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
+export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Formulario principal para los datos del establecimiento.
    */
@@ -235,6 +238,135 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
+    /**
+   * @property {boolean} limpiar
+   * @description
+   * Indica si se deben limpiar los campos del formulario de mercancía.
+   * Cuando es `true`, se reinician todos los campos en el formulario de mercancía.
+   */
+  limpiar: boolean = false;
+
+  /**
+   * @property {boolean} showModalAgregarMercancia
+   * @description
+   * Controla la visibilidad del modal para agregar una nueva mercancía.
+   * Cuando es `true`, el modal se muestra en la interfaz de usuario.
+   */
+  showModalAgregarMercancia: boolean = false;
+
+  /**
+   * @property {Modal} modalInstance
+   * @description
+   * Instancia del modal de Bootstrap utilizada para controlar programáticamente
+   * las acciones del modal (mostrar, ocultar) desde el componente.
+   */
+  modalInstance!: Modal;
+
+  /**
+   * @property {Modal} modalAddSCIANInstance
+   * @description
+   * Instancia del modal de Bootstrap utilizada para controlar programáticamente
+   * el modal para agregar registros SCIAN desde el componente.
+   * Permite mostrar y ocultar el modal mediante métodos de la API de Bootstrap.
+   */
+  modalAddSCIANInstance!: Modal;
+
+  /**
+   * @property {ElementRef} modalAlerta
+   * @description
+   * Referencia al elemento DOM del modal de alerta.
+   */
+  @ViewChild('modalAddSCIAN', { static: false }) modalAddSCIAN!: ElementRef;
+
+  /**
+   * @property {ElementRef} modifyModal
+   * @description
+   * Referencia al elemento DOM del modal de modificación de datos.
+   * Se utiliza para inicializar la instancia del modal de Bootstrap.
+   */
+  @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+
+  /**
+   * @property {RepresentanteLegalComponent} representanteLegal
+   * @description
+   * Referencia al componente hijo RepresentanteLegalComponent.
+   * Se utiliza para acceder a sus propiedades y métodos, especialmente para la validación de formularios
+   * relacionados con la información del representante legal del establecimiento.
+   */
+  @ViewChild('representanteLegal') representanteLegal!: RepresentanteLegalComponent;
+
+  /**
+   * @property {boolean} tableErrorMeassageDispalySCIAN
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error para la tabla SCIAN.
+   * Se establece a true cuando la tabla SCIAN está vacía y se intenta enviar el formulario.
+   */
+  tableErrorMeassageDispalySCIAN: boolean = false;
+
+  /**
+   * @property {boolean} tableErrorMeassageDispalyProducto
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error para la tabla de productos.
+   * Se establece a true cuando la tabla de productos está vacía y se intenta enviar el formulario.
+   */
+  tableErrorMeassageDispalyProducto: boolean = false;
+
+  /**
+   * @property {boolean} CheckboxError
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error para los checkboxes de manifiestos.
+   * Se establece a true cuando no se ha seleccionado al menos un manifiesto requerido.
+   */
+  CheckboxError: boolean = false;
+
+  /**
+   * @property {boolean} razonInvalid
+   * @description
+   * Bandera que indica si el campo de razón social es inválido.
+   * Se utiliza para mostrar mensajes de error específicos en la interfaz.
+   */
+  razonInvalid: boolean = false;
+
+  /**
+   * @property {boolean} codigoPostalInvalid
+   * @description
+   * Bandera que indica si el campo de código postal es inválido.
+   * Se utiliza para mostrar mensajes de error específicos en la interfaz.
+   */
+  codigoPostalInvalid: boolean = false;
+
+  /**
+   * @property {boolean} descripcionMunicipioInvalid
+   * @description
+   * Bandera que indica si el campo de descripción del municipio es inválido.
+   * Se utiliza para mostrar mensajes de error específicos en la interfaz.
+   */
+  descripcionMunicipioInvalid: boolean = false;
+
+  /**
+   * @property {boolean} informacionExtraInvalid
+   * @description
+   * Bandera que indica si el campo de información extra es inválido.
+   * Se utiliza para mostrar mensajes de error específicos en la interfaz.
+   */
+  informacionExtraInvalid: boolean = false;
+
+  /**
+   * @property {boolean} descripcionColoniaInvalid
+   * @description
+   * Bandera que indica si el campo de descripción de colonia es inválido.
+   * Se utiliza para mostrar mensajes de error específicos en la interfaz.
+   */
+  descripcionColoniaInvalid: boolean = false;
+
+  /**
+   * @property {boolean} calleInvalid
+   * @description
+   * Bandera que indica si el campo de calle es inválido.
+   * Se utiliza para mostrar mensajes de error específicos en la interfaz.
+   */
+  calleInvalid: boolean = false;
+
   /**
    * Constructor del componente. Utilizado para inyectar servicios necesarios.
    *
@@ -283,6 +415,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
       map((seccionState) => {
         this.productoBodyData = seccionState.productoBodyData;
         this.scianBodyData = seccionState.scianBodyData;
+        this.avisoSanitarioState = seccionState;
       })
     )
       
@@ -318,18 +451,13 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.avisoSanitarioState = seccionState;
           this.productoBodyData = seccionState.productoBodyData;
-       this.scianBodyData = seccionState.scianBodyData;
+          this.scianBodyData = seccionState.scianBodyData;
         })
       )
       .subscribe();
 
     // Inicializar el formulario principal
     this.crearFormulario();
- if(this.scianBodyData?.length== 0){
-   this.obtenerSCIAN();
- }
-
-    this.obtenerProducto();
 
     this.estadoSeleccion();
     this.claveScianSeleccion();
@@ -375,7 +503,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
       ],
       correoElectronico: [
         { value: this.avisoSanitarioState?.correoElectronico, disabled: true },
-        [Validators.maxLength(320)],
+        [Validators.maxLength(320), Validators.pattern(REGEX_REEMPLAZAR)],
       ],
     });
     this.domicilloDelEstablecimientoForm = this.fb.group({
@@ -421,7 +549,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
       cveSCIAN: [this.avisoSanitarioState?.cveSCIAN, [Validators.required]],
       cveSCIANDescripcion: [
         {
-          value: this.avisoSanitarioState?.cveSCIANDescripcion,
+          value: this.avisoSanitarioState?.cveSCIANID,
           disabled: true,
         },
       ],
@@ -516,7 +644,8 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
           const SCIAN_DESCRIPCION = result.data[0].descripcion;
           this.scianForm
             .get('cveSCIANDescripcion')
-            ?.setValue(SCIAN_DESCRIPCION);
+            ?.setValue(result.data[0].id);
+          this.tramite260601Store.cveSCIANID(result.data[0].id);
           this.tramite260601Store.setDescripcionScian(SCIAN_DESCRIPCION);
         },
       });
@@ -652,6 +781,10 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
     }
+    this.showModalAgregarMercancia = true;
+    if (this.modalInstance) {
+        this.modalInstance.show();
+      }
   }
 
   /**
@@ -693,7 +826,9 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * con los productos restantes. Si no hay productos seleccionados, no realiza ninguna acción.
    * */
   eliminarScianGrid(): void {
-    if (!this.scianSeleccionados?.length) return;
+    if (!this.scianSeleccionados?.length) {
+      return;
+    }
   
     const CLAVES_A_ELIMINAR = this.scianSeleccionados.map(
       (SCIAN) => SCIAN.claveScian
@@ -708,7 +843,170 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   
     this.tramite260601Store?.setScianTabla?.(DATOS_ACTUALIZADOS);
   }
-  
+
+    /**
+   * @method agregarSCIAN
+   * @description
+   * Agrega un nuevo registro SCIAN a la tabla y actualiza el store.
+   * Toma los valores de los campos cveSCIAN y cveSCIANDescripcion del formulario
+   * y los agrega al arreglo de datos de la tabla SCIAN.
+   * @returns {void}
+   */
+  agregarSCIAN(): void {
+    // Tomar los valores del formulario y agregarlos a scianBodyData
+    const CLAVEACIAN = this.scianForm.get('cveSCIAN')?.value;
+    const DESCRIPCION_SC = this.avisoSanitarioState?.cveSCIANDescripcion;
+    this.scianBodyData = [
+      ...this.scianBodyData,
+      { claveScian: CLAVEACIAN, descripcionScian: DESCRIPCION_SC }
+    ];
+    this.tramite260601Store.setScianTabla(this.scianBodyData);
+  }
+
+  /**
+   * @method limpiarSCIAN
+   * @description
+   * Limpia todos los campos del formulario SCIAN, reiniciándolos a su estado inicial.
+   * @returns {void}
+   */
+  limpiarSCIAN(): void {
+    this.scianForm.reset();
+  }
+
+  /**
+   * @method limpiarMercancia
+   * @description
+   * Limpia la clasificación del producto en el store y activa la bandera de limpieza
+   * para que el componente de datos de mercancía reinicie sus campos.
+   * @returns {void}
+   */
+  limpiarMercancia(): void {
+    this.tramite260601Store.setProductoClasificacion('');
+    this.limpiar = true    
+  }
+
+  /**
+   * @method ngAfterViewInit
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta después de que Angular inicializa las vistas del componente.
+   * Inicializa la instancia del modal Bootstrap si existe la referencia al elemento DOM.
+   * @returns {void}
+   */
+  ngAfterViewInit(): void {
+    if (this.modifyModal) {
+      this.modalInstance = new Modal(this.modifyModal.nativeElement);
+    }
+    if (this.modalAddSCIAN) {
+      this.modalAddSCIANInstance = new Modal(this.modalAddSCIAN.nativeElement);
+    }
+  }
+
+  /**
+   * @method cerrarModificarModal
+   * @description
+   * Cierra el modal de modificación si existe una instancia del modal Bootstrap.
+   * @returns {void}
+   */
+  cerrarModificarModal(): void {
+    if (this.modalInstance) {
+      this.modalInstance.hide();
+    }
+  }
+
+  /**
+   * @method abrirModificarModal
+   * @description
+   * Abre el modal de modificación y carga los datos del producto seleccionado.
+   * Crea un nuevo objeto ProductoTable con los datos recibidos y actualiza la tabla y el store.
+   * @param {ProductoInput} data - Datos del producto a modificar.
+   * @returns {void}
+   */
+  abrirModificarModal(data: ProductoInput): void {
+    const NEW_ARRAY: ProductoTable = {
+      clasificacionDelProducto: data.cveEspecificoProductoClasifi ?? '',
+      tipoDeProducto: data.cveTipoProducto ?? '',
+      fraccionArancelaria: data.fraccionArancelaria ?? '',
+      descripcionDeLaFraccion: data.fraccionArancelariaDescripcion ?? '',
+      modelo: data.modelo ?? '',
+      descripcionDelProducto: data.productoDescripcion ?? '',
+      paisDeOrigen: data.paisDeOrigen ?? ''
+    };
+    this.productoBodyData = [NEW_ARRAY] as ProductoTable[];
+    this.tramite260601Store.setProductoTabla(this.productoBodyData);
+  }
+
+  /**
+   * @method abrirModalAgregarSCIAN
+   * @description
+   * Abre el modal para agregar un nuevo registro SCIAN.
+   * Utiliza la instancia del modal Bootstrap para mostrarlo en la interfaz.
+   * @returns {void}
+   */
+  abrirModalAgregarSCIAN(): void {
+    if (this.modalAddSCIANInstance) {
+      this.modalAddSCIANInstance.show();
+    }
+  }
+
+  /**
+   * @method cancelarAgregarSCIAN
+   * @description
+   * Cierra el modal para agregar un nuevo registro SCIAN sin guardar cambios.
+   * Utiliza la instancia del modal Bootstrap para ocultarlo de la interfaz.
+   * @returns {void}
+   */
+  cancelarAgregarSCIAN(): void {
+    if (this.modalAddSCIANInstance) {
+      this.modalAddSCIANInstance.hide();
+    }
+  }
+
+  /**
+   * @method validarFormularios
+   * @description
+   * Valida todos los formularios relacionados con los datos del establecimiento.
+   * Si todos los formularios son válidos, retorna true.
+   * Si alguno es inválido, marca todos los campos como tocados para mostrar los errores y retorna false.
+   * 
+   * @returns {boolean} true si todos los formularios son válidos, false en caso contrario.
+   */
+  validarFormularios(): boolean {
+    let valid = false
+    if (this.datosDelEstablecimientoForm.valid &&
+      this.domicilloDelEstablecimientoForm.valid &&
+      this.scianForm.valid &&
+      this.manifiestosForm.valid
+    ) {
+      
+      valid = true;
+    }
+    if (this.representanteLegal) {
+      if (!this.representanteLegal.validarFormulario()) {
+          valid = false
+        }
+      }
+      else{
+          valid = true
+      }
+    
+    this.razonInvalid = !(this.datosDelEstablecimientoForm.get('razonSocial')?.value !== '' )
+    this.codigoPostalInvalid = !(this.domicilloDelEstablecimientoForm.get('codigoPostal')?.value !== '' )
+    this.descripcionMunicipioInvalid = !(this.domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.value !== '' )
+    this.informacionExtraInvalid = !(this.domicilloDelEstablecimientoForm.get('informacionExtra')?.value !== '' )
+    this.descripcionColoniaInvalid = !(this.domicilloDelEstablecimientoForm.get('descripcionColonia')?.value !== '' )
+    this.calleInvalid = !(this.domicilloDelEstablecimientoForm.get('calle')?.value !== '')
+    const VALID = this.scianBodyData.length > 0
+    this.tableErrorMeassageDispalySCIAN = !VALID
+    const TABLAVALID = this.productoBodyData.length > 0
+    this.tableErrorMeassageDispalyProducto = !TABLAVALID
+    const CHECKBOX_VALID = this.seleccionadaManifiesto.value[0]
+    this.CheckboxError = !CHECKBOX_VALID
+    this.datosDelEstablecimientoForm.markAllAsTouched();
+    this.domicilloDelEstablecimientoForm.markAllAsTouched();
+    this.scianForm.markAllAsTouched();
+    this.manifiestosForm.markAllAsTouched();
+    return valid
+  }
 
   /**
    * Se ejecuta al destruir el componente.

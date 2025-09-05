@@ -9,7 +9,6 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-mercancia.model';
 
-
 export interface Tramite130115State {
   /**
    * Producto seleccionado en el formulario.
@@ -34,7 +33,7 @@ export interface Tramite130115State {
   /**
    * Valor en USD de la partida ingresada en el formulario.
    */
-  valorPartidaUSD: number;
+  valorPartidaUSD: string;
 
   /**
    * Unidad de medida seleccionada en el formulario.
@@ -79,7 +78,7 @@ export interface Tramite130115State {
   /**
    * Valor en USD de las partidas de la mercancía ingresado en el formulario.
    */
-  valorPartidaUSDPartidasDeLaMercancia: number;
+  valorPartidaUSDPartidasDeLaMercancia: string;
 
   /**
    * Descripción de las partidas de la mercancía ingresada en el formulario.
@@ -125,7 +124,20 @@ export interface Tramite130115State {
    * Indica si la tabla dinámica debe mostrarse.
    */
   mostrarTabla: boolean;
+  /**
+   * Datos del cuerpo de la tabla dinámica.
+   */
+  tableBodyData: PartidasDeLaMercanciaModelo[];
+  /**
+   * Cantidad total de partidas de la mercancía.
+   */
+  cantidadTotal: string;
+  /*
+  Valor total en USD de las partidas de la mercancía.
+  */
+  valorTotalUSD: string;
 }
+
 
 /**
  * createInitialState
@@ -138,20 +150,20 @@ export interface Tramite130115State {
 export function createInitialState(): Tramite130115State {
   return {
     filaSeleccionada: [],
-    mostrarTabla: false,
+    mostrarTabla: true,
     solicitud: '',
     fraccion: '',
     defaultSelect: 'Inicial',
     producto: '',
     descripcion: '',
     cantidad: '',
-    valorPartidaUSD: 0,
+    valorPartidaUSD: '',
     unidadMedida: '',
     defaultProducto: 'Nuevo',
     regimen: '',
     clasificacion: '',
     cantidadPartidasDeLaMercancia: '',
-    valorPartidaUSDPartidasDeLaMercancia: 0,
+    valorPartidaUSDPartidasDeLaMercancia: '',
     descripcionPartidasDeLaMercancia: '',
     valorFacturaUSD: '',
     bloque: '',
@@ -160,6 +172,9 @@ export function createInitialState(): Tramite130115State {
     observaciones: '',
     entidad: '',
     representacion: '',
+    tableBodyData: [],
+    cantidadTotal: '',
+    valorTotalUSD: ''
   };
 }
 
@@ -179,7 +194,6 @@ export class Tramite130115Store extends Store<Tramite130115State> {
     super(createInitialState());
   }
 
-    
   /**
    * Actualiza el estado del store con los valores proporcionados.
    * Valores a actualizar en el estado.

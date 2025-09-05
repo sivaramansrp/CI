@@ -1,100 +1,33 @@
 <div class="container">
-    <ng-titulo titulo="Datos de Transportista" />
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table table-responsive">
-              <thead>
-                <tr>
-                  <th>Transportista</th>
-                  <th>Tipo de persona</th>
-                  <th>Tax ID</th>
-                  <th>Denominación o Razón Social</th>
-                  <th>R.F.C</th>
-                  <th>Nombre(s)</th>
-                  <th>Primer apellido</th>
-                  <th>Segundo apellido</th>
-                </tr>
-              </thead>
-        
-              <tbody>
-                @for (item of transportistas; let i = $index; track item.nombres;) {
-                  <tr>
-                    <td>{{item.transportista}}</td>
-                    <td>{{item.tipoPersona}}</td>
-                    <td>{{item.taxId}}</td>
-                    <td>{{item.razonSocial}}</td>
-                    <td>{{item.rfc}}</td>
-                    <td>{{item.nombres}}</td>
-                    <td>{{item.primerApellido}}</td>
-                    <td>{{item.segundoApellido}}</td>
-                  </tr>
-                }
-              </tbody>
-        
-            </table>
-            
-          </div>
+  <ng-titulo titulo="Datos de Transportista" />
+  <div class="row">
+    <label class="control-label" for="figura">Trasportista: </label>
+    <div class="row mt-4">
+      <div class="table-responsive">
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+          [configuracionTabla]="encabezadoDeTablaTrasportista" [datos]="personasTrasportistas"
+          (listaDeFilaSeleccionada)="trasportistasSeleccionados = $event">>
+        </app-tabla-dinamica>
+      </div>
     </div>
-    <div class="row">
-        <div class="col-md-6"></div>
-        <div class="col-md-6 d-flex align-items-rigth">
-            <div class="btn-group">
-              <button class="btn btn-default" type="button" >Modificar</button>
-              <button class="btn btn-default" type="button" >Eliminar</button>
-              <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalTransportista" (click)="abrirModal()">
-                Agregar
-              </button>
-            </div>
-        </div>
-    </div> 
+    <div class="d-flex justify-content-lg-end h1">
+      <div class="btn-group">
+        <button class="btn btn-default ms-2" type="button" (click)="modificarTransportista()">Modificar</button>
+        <button class="btn btn-default ms-2" type="button" (click)="eliminarTransportista()">Eliminar</button>
+        <button type="button" class="btn btn-primary ms-2" (click)="agregarTransportista()">
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
-
-<div class="modal fade" id="modalTransportista" tabindex="-1" aria-labelledby="modalTransportistaLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Agregar transportista</h4>
-      </div>
-      <div class="modal-body">
-        <form action="" [formGroup]="formTransportista">
-          <div class="form-group">
-            <label for="transportista">Transportista</label>
-            <input type="text" id="transportista" formControlName="transportista" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="tipoPersona">Tipo de persona</label>
-            <input type="text" id="tipoPersona" formControlName="tipoPersona" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="taxId">Tax ID</label>
-            <input type="text" id="taxId" formControlName="taxId" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="razonSocial">Denominación o Razón Social</label>
-            <input type="text" id="razonSocial" formControlName="razonSocial" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="rfc">R.F.C</label>
-            <input type="text" id="rfc" formControlName="rfc" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="nombres">Nombre(s)</label>
-            <input type="text" id="nombres" formControlName="nombres" class="form-control">
-          </div>
-          <div class="form-group">
-              <label for="primerApellido">Primer apellido</label>
-              <input type="text" id="primerApellido" formControlName="primerApellido" class="form-control">
-          </div>
-          <div class="form-group">
-              <label for="segundoApellido">Segundo apellido</label>
-              <input type="text" id="segundoApellido" formControlName="segundoApellido" class="form-control">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Cerrar</button>
-        <button type="button" class="btn btn-primary" (click)="agregarTransportista()">Agregar</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}
+@if(registrarTrasportistaModal){
+<app-registro-trasportista (cerrar)="registrarTrasportistaModal = false">
+</app-registro-trasportista>
+}

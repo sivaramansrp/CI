@@ -172,4 +172,9 @@ export const ELEMENTOS_REQUERIDOS = [
    * Destino final del remedio herbolario.
    */
   'destinoFinal',
+  /**
+   * @property {string} manifesto
+   * Indica si el remedio herbolario está incluido en un manifiesto.
+   */
+  'manifesto'
 ];

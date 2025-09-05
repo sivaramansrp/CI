@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 
 import { ConcluirRelacionComponent } from './components/concluir-relacion/concluir-relacion.component';
 import { ConcluirRelacionRoutingModule } from './concluir-relacion-routing.module';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { ToastrService } from 'ngx-toastr';
@@ -29,7 +30,8 @@ import { ToastrService } from 'ngx-toastr';
     ReactiveFormsModule,
     InputFechaComponent,
     BtnContinuarComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    PasoTresComponent
   ],
 exports:[],
 providers: [

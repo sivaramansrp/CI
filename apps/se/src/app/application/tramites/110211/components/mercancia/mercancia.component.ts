@@ -286,6 +286,13 @@ ngAfterViewInit(): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: camCertificadoStore) => void)(VALOR);
   }
+  validarFormularios():boolean{
+    if(this.mercanciaForm.invalid) {
+      this.mercanciaForm.markAllAsTouched();
+      return false;
+    }
+    return true;
+  }
 
   /**
    * @descripcion

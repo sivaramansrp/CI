@@ -1,6 +1,8 @@
+import { Fabricante, Proveedor } from '../../shared/models/terceros-relacionados.model';
+import {ProductoTable, ScianTable, SolicitudTable } from '../../tramites/260601/models/aviso-model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import {ProductoTable, ScianTable } from '../../tramites/260601/models/aviso-model';
+
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 260601
@@ -45,6 +47,14 @@ export interface AvisoSanitarioState {
 
     /** Descripción de la clave SCIAN. */
     cveSCIANDescripcion: string;
+
+    /**
+   * @property {number | null} cveSCIANID
+   * @description
+   * Identificador numérico de la clave SCIAN (Sistema de Clasificación Industrial de América del Norte).
+   * Puede ser nulo cuando no se ha seleccionado ninguna clasificación.
+   */
+    cveSCIANID: number | null;
 
     /** Indica si el aviso de funcionamiento está activo. */
     avisoFuncionamiento: boolean;
@@ -348,10 +358,53 @@ export interface AvisoSanitarioState {
 
     /** Indica si el país del domicilio está inhabilitado. */
     inhabilitarPaisFabricante: boolean;
+
+        /**
+     * @property {Proveedor[]} proveedorTablaDatos
+     * @description
+     * Arreglo que contiene los datos de los proveedores relacionados con el trámite.
+     */
+    proveedorTablaDatos: Proveedor[];
+
+    /**
+     * @property {Fabricante[]} fabricanteTablaDatos
+     * @description
+     * Arreglo que contiene los datos de los fabricantes relacionados con el trámite.
+     */
+    fabricanteTablaDatos: Fabricante[];
+
+    /**
+     * @property {number} tabSeleccionado
+     * @description
+     * Índice de la pestaña actualmente seleccionada en el formulario del trámite.
+     * Permite controlar la navegación y el estado de la interfaz de usuario.
+     */
+    tabSeleccionado?: number;
     /** Datos de SCIAN para la tabla. */
     scianBodyData : ScianTable[];
     /** Datos de productos para la tabla. */
     productoBodyData:ProductoTable[];
+        /**
+     * @property {string[]} cvePaisDeOrigen
+     * @description
+     * Arreglo que contiene las claves de los países de origen seleccionados para el producto.
+     */
+    cvePaisDeOrigen: string[];
+
+    /**
+     * @property {string[]} cvePaisDeProcedencia
+     * @description
+     * Arreglo que contiene las claves de los países de procedencia seleccionados para el producto.
+     */
+    cvePaisDeProcedencia: string[];
+
+    /**
+     * @property {string[]} cveUsoEspecifico
+     * @description
+     * Arreglo que contiene las claves de los usos específicos seleccionados para el producto.
+     */
+    cveUsoEspecifico: string[];
+
 }
 
 /**
@@ -374,6 +427,7 @@ export function createInitialState(): AvisoSanitarioState {
         telefono: null,
         cveSCIAN: '',
         cveSCIANDescripcion: '',
+        cveSCIANID: null,
         avisoFuncionamiento: false,
         cveRegimenes: '',
         cveAduanas: '',
@@ -481,8 +535,14 @@ export function createInitialState(): AvisoSanitarioState {
         mostrarRfcFabricanteBuscarBoton: false,
         mostrarCurpFabricanteBuscarBoton: false,
         inhabilitarPaisFabricante: true,
+        proveedorTablaDatos: [],
+        fabricanteTablaDatos: [],
+        tabSeleccionado: 1,
         scianBodyData: [],
         productoBodyData: [],
+        cvePaisDeOrigen: [],
+        cvePaisDeProcedencia: [],
+        cveUsoEspecifico: [],
     }
 }
 
@@ -655,6 +715,20 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
             cveSCIANDescripcion,
+        }));
+    }
+  /**
+   * @method cveSCIANID
+   * @description
+   * Actualiza el ID de la clave SCIAN en el estado.
+   * Modifica el identificador numérico asociado al Sistema de Clasificación Industrial de América del Norte.
+   * @param {number} cveSCIANID - Nuevo identificador numérico de la clave SCIAN.
+   * @returns {void}
+   */
+    public cveSCIANID(cveSCIANID: number): void {
+        this.update((state) => ({
+            ...state,
+            cveSCIANID,
         }));
     }
 
@@ -1869,6 +1943,22 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
             inhabilitarPais,
         }));
     }
+
+        /**
+     * @method updateProveedorTablaDatos
+     * @description
+     * Agrega nuevos proveedores al arreglo `proveedorTablaDatos` en el estado.
+     * Los proveedores recibidos se concatenan al arreglo existente.
+     * @param {Proveedor[]} newProveedores - Arreglo de proveedores a agregar.
+     * @returns {void}
+     */
+    public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
+        this.update((state) => ({
+            ...state,
+            proveedorTablaDatos: newProveedores,
+        }));
+    }
+
     /**
      * Actualiza la tabla de datos de SCIAN.
      * @param scianBodyData Nuevo valor de la tabla de datos de SCIAN.
@@ -1884,6 +1974,36 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
     }
 
     /**
+     * @method updateFabricanteTablaDatos
+     * @description
+     * Agrega nuevos fabricantes al arreglo `fabricanteTablaDatos` en el estado.
+     * Los fabricantes recibidos se concatenan al arreglo existente.
+     * @param {Fabricante[]} newFabricantes - Arreglo de fabricantes a agregar.
+     * @returns {void}
+     */
+    public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
+        this.update((state) => ({
+            ...state,
+            fabricanteTablaDatos: newFabricantes,
+        }));
+    }
+
+    /**
+     * @method updateTabSeleccionado
+     * @description
+     * Actualiza el índice de la pestaña actualmente seleccionada en el estado.
+     * Permite controlar la navegación y el estado de la interfaz de usuario.
+     * @param {number} tabSeleccionado - Índice de la pestaña a seleccionar.
+     * @returns {void}
+     */
+    public updateTabSeleccionado(tabSeleccionado: number): void {
+        this.update((state) => ({
+            ...state,
+            tabSeleccionado: tabSeleccionado,
+        }));
+    }
+
+    /**
      * Actualiza la tabla de datos de productos.
      * @param productoBodyData Nuevo valor de la tabla de datos de productos.
      * @returns void
@@ -1893,6 +2013,19 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
              productoBodyData,
+        }));
+    }
+    /**
+     * @method setSolicitudTabla
+     * @description
+     * Actualiza los datos de la tabla de solicitudes en el estado.
+     * @param {SolicitudTable[]} solicitudBodyData - Nuevo arreglo de datos de solicitudes.
+     * @returns {void}
+     */
+    public setSolicitudTabla(solicitudBodyData: SolicitudTable[]): void {
+        this.update((state) => ({
+            ...state,
+            solicitudBodyData,
         }));
     }
 }

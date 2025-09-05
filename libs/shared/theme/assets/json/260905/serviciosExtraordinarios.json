@@ -1,10 +1,11 @@
 {
+"observaciones": "Observaciones por defecto",
 "ideGenerica":"prorroga",
 "establecimientoRFCResponsableSanitario":"RFC000000XXX",
 "establecimientoRazonSocial":"Nombre por defecto",
 "establecimientoCorreoElectronico":"correo@ejemplo.com",
 "establecimientoDomicilioCodigoPostal": "00000",
-"establecimientoEstados": "1",
+"establecimientoEstados": "789012",
 "descripcionMunicipio": "Municipio/Alcaldía por defecto",
 "localidad": "Localidad por defecto",
 "establishomentoColonias": "Colonia por defecto",
@@ -18,8 +19,8 @@
 "apellidoPaterno": "Apellido Paterno por defecto",
 "apellidoMaterno": "Apellido Materno por defecto",
 "informacionConfidencialRadio":"Si",
-"regimen":"1",
-"aduanasEntradas":"1",
+"regimen":"123456",
+"aduanasEntradas":"32513",
 "noDeLicenciaSanitariaObservaciones":"Observaciones por defecto",
 "noLicenciaSanitaria":"0000000000",
 "manifests":true

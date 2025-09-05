@@ -83,6 +83,12 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
 
   /**
    * @descripcion
+   * Observable para los datos de la tabla.
+   */
+  datosTablaUno$: Observable<Mercancia[]> = of([]);
+
+  /**
+   * @descripcion
    * Valores actuales del formulario de certificado.
    */
   formCertificadoValues!: { [key: string]: unknown };
@@ -110,6 +116,12 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   * Indica si el formulario se encuentra en modo solo lectura.
   */
   esFormularioSoloLectura: boolean = false;
+
+    /**
+   * @property {string} idProcedimiento
+   * @description Identificador del procedimiento, utilizado para la gestión del trámite.
+   */
+  public idProcedimiento = 110205;
 
   /**
    * @descripcion
@@ -178,6 +190,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     this.estadoOpcion();
     this.paisOpcion();
     this.datosTabla$ = this.query.selectmercanciaTabla$
+    this.datosTablaUno$=this.query.selectmercanciaTablaUno$;
   }
 
   /**
@@ -243,6 +256,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
       next: (response: Mercancia[]) => {
         if (response && Array.isArray(response)) {
           this.disponiblesDatos = response as Mercancia[];
+          this.store.setDisponsiblesDatos(this.disponiblesDatos);
         }
         else {
           this.disponiblesDatos = [];
@@ -334,5 +348,5 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-  }
+  } 
 }

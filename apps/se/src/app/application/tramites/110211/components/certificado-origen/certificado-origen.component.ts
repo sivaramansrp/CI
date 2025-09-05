@@ -1,11 +1,10 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
 import { Catalogo, ConsultaioQuery, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
-import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
+import { Observable, Subject, map, of, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
-import { DestinatarioComponent } from '../../../110201/components/destinatario/destinatario.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { MercanciaComponent } from '../mercancia/mercancia.component';
@@ -14,9 +13,26 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 
 /**
- * @descripcion
- * El componente `CertificadoOrigenComponent` es responsable de gestionar los datos y las interacciones
- * relacionadas con el formulario de certificado de origen en el módulo CAM.
+ * @description
+ * Componente para la gestión de Certificados de Origen en el módulo CAM.
+ * 
+ * Este componente es responsable de:
+ * - Gestionar el formulario de certificado de origen
+ * - Manejar la interacción con servicios y estados
+ * - Administrar la selección de estados y países
+ * - Controlar la visualización y modificación de mercancías
+ * 
+ * @usageNotes
+ * ### Ejemplo de uso
+ * ```html
+ * <app-certificado-origen
+ *   [esFormularioSoloLectura]="false">
+ * </app-certificado-origen>
+ * ```
+ * 
+ * @publicApi
+ * @module CertificadosOrigin
+ * @version 1.0.0
  */
 @Component({
   selector: 'app-certificado-origen',
@@ -24,87 +40,319 @@ import { camCertificadoQuery } from '../../estados/cam-certificado.query';
   styleUrl: './certificado-origen.component.scss',
   standalone: true,
   imports: [CommonModule,ReactiveFormsModule,CertificadoDeOrigenComponent,
-      DestinatarioComponent,
     MercanciaComponent]
 })
 export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
-   * @descripcion
-   * Lista de estados disponibles.
+   * @description
+   * Lista de estados disponibles para selección.
+   * 
+   * Esta propiedad almacena el catálogo de estados que se cargan desde el servicio
+   * `CamCertificadoService`. Se utiliza para poblar los selectores de estados en el
+   * formulario.
+   * 
+   * @type {Catalogo[]}
+   * @default []
+   * 
+   * @example
+   * ```typescript
+   * // Estructura de un elemento del catálogo
+   * {
+   *   id: number,
+   *   descripcion: string,
+   *   codigo: string
+   * }
+   * ```
    */
   estado: Catalogo[] = [];
 
   /**
-   * @descripcion
-   * Lista de países disponibles.
+   * @description
+   * Catálogo de países disponibles para selección en el formulario.
+   * 
+   * @property {Catalogo[]} pais
+   * @memberof CertificadoOrigenComponent
+   * 
+   * @example
+   * ```typescript
+   * // Estructura del catálogo de países
+   * [
+   *   {
+   *     id: 1,
+   *     codigo: 'MX',
+   *     descripcion: 'México'
+   *   },
+   *   // ... más países
+   * ]
+   * ```
    */
   pais: Catalogo[] = [];
 
   /**
-   * @descripcion
-   * Lista de datos disponibles relacionados con mercancías.
+   * @description
+   * Listado de mercancías disponibles para el certificado.
+   * 
+   * Esta propiedad almacena todas las mercancías que pueden ser 
+   * seleccionadas y asociadas al certificado de origen.
+   * 
+   * @property {Mercancia[]} disponiblesDatos
+   * @memberof CertificadoOrigenComponent
+   * 
+   * @example
+   * ```typescript
+   * // Ejemplo de estructura de mercancías
+   * [
+   *   {
+   *     id: '001',
+   *     descripcion: 'Producto A',
+   *     valorMercancia: 1000
+   *     // ... otros campos
+   *   }
+   * ]
+   * ```
    */
   disponiblesDatos: Mercancia[] = [];
 
   /**
-   * @descripcion
-   * Indica si el operador está activo.
+   * @description
+   * Indicador del estado del operador.
+   * 
+   * Esta bandera controla si el operador del certificado está activo 
+   * y puede realizar operaciones en el sistema.
+   * 
+   * @property {boolean} operador
+   * @memberof CertificadoOrigenComponent
+   * @default true
+   * 
+   * @example
+   * ```typescript
+   * if (this.operador) {
+   *   // Realizar operaciones permitidas
+   * } else {
+   *   // Mostrar mensaje de operador inactivo
+   * }
+   * ```
    */
   operador: boolean = true;
 
   /**
-   * @descripcion
-   * Datos seleccionados para modificación.
+   * @description
+   * Almacena los datos de la mercancía seleccionada para su modificación.
+   * 
+   * Esta propiedad se utiliza cuando el usuario selecciona una mercancía
+   * de la tabla para editarla en el modal de modificación.
+   * 
+   * @property {Mercancia} datosSeleccionados
+   * @memberof CertificadoOrigenComponent
+   * 
+   * @example
+   * ```typescript
+   * // Al seleccionar una mercancía
+   * this.datosSeleccionados = mercanciaSeleccionada;
+   * this.abrirModificarModal(this.datosSeleccionados);
+   * ```
    */
   datosSeleccionados!: Mercancia;
 
   /**
-   * @descripcion
-   * Instancia del modal de modificación.
+   * @description
+   * Instancia del modal de Bootstrap utilizado para modificar datos.
+   * 
+   * Esta propiedad mantiene la referencia al modal de Bootstrap que se utiliza
+   * para mostrar y ocultar el formulario de modificación de mercancías.
+   * 
+   * @property {Modal} modalInstance
+   * @memberof CertificadoOrigenComponent
+   * 
+   * @example
+   * ```typescript
+   * // Inicialización del modal
+   * this.modalInstance = new Modal(this.modifyModal.nativeElement);
+   * 
+   * // Mostrar modal
+   * this.modalInstance.show();
+   * ```
    */
   modalInstance!: Modal;
 
   /**
-   * @descripcion
-   * Evento para indicar si se seleccionó una fila en la tabla.
+   * @description
+   * Indicador de selección de fila en la tabla.
+   * 
+   * Esta bandera se utiliza para controlar el estado de selección
+   * en la tabla de mercancías. Se activa cuando el usuario selecciona
+   * una fila y se reinicia al cerrar el modal.
+   * 
+   * @property {boolean} tablaSeleccionEvent
+   * @memberof CertificadoOrigenComponent
+   * @default false
+   * 
+   * @example
+   * ```typescript
+   * // Al cerrar el modal
+   * cerrarModificarModal(): void {
+   *   this.tablaSeleccionEvent = true;
+   *   this.modalInstance.hide();
+   * }
+   * ```
    */
   tablaSeleccionEvent: boolean = false;
 
   /**
-   * @descripcion
-   * Observable para los datos de la tabla.
+   * @description
+   * Observable que emite los datos para la tabla de mercancías.
+   * 
+   * Este observable se suscribe a los cambios en el estado de la tabla
+   * de mercancías y proporciona los datos actualizados para su visualización.
+   * 
+   * @property {Observable<Mercancia[]>} datosTabla$
+   * @memberof CertificadoOrigenComponent
+   * 
+   * @example
+   * ```typescript
+   * // En el template
+   * <tabla-dinamica
+   *   [datos]="datosTabla$ | async"
+   *   [columnas]="configuracionColumnas">
+   * </tabla-dinamica>
+   * 
+   * // En el componente
+   * this.datosTabla$ = this.query.selectmercanciaTabla$;
+   * ```
    */
   datosTabla$: Observable<Mercancia[]> = of([]);
 
   /**
-   * @descripcion
-   * Valores actuales del formulario de certificado.
+   * @description
+   * Objeto que almacena los valores actuales del formulario de certificado.
+   * 
+   * Esta propiedad mantiene sincronizados los valores del formulario con el estado
+   * de la aplicación, permitiendo acceder a los datos en cualquier momento.
+   * 
+   * @property {Object} formCertificadoValues
+   * @memberof CertificadoOrigenComponent
+   * @type {{ [key: string]: unknown }}
+   * 
+   * @example
+   * ```typescript
+   * // Suscripción a cambios en el formulario
+   * this.query.formCertificado$.subscribe(estado => {
+   *   this.formCertificadoValues = estado;
+   * });
+   * 
+   * // Acceso a valores específicos
+   * const valor = this.formCertificadoValues['campoCertificado'];
+   * ```
    */
   formCertificadoValues!: { [key: string]: unknown};
 
   /**
-   * @descripcion
-   * Estado actual del certificado.
+   * @description
+   * Estado actual del certificado en el módulo CAM.
+   * 
+   * Esta propiedad privada mantiene el estado actual del certificado,
+   * incluyendo toda la información necesaria para su gestión y validación.
+   * 
+   * @property {CamState} certificadoState
+   * @private
+   * @memberof CertificadoOrigenComponent
+   * 
+   * @example
+   * ```typescript
+   * // Actualización del estado
+   * this.query.selectCam$.pipe(
+   *   takeUntil(this.destroyNotifier$),
+   *   map((state) => {
+   *     this.certificadoState = state as CamState;
+   *   })
+   * ).subscribe();
+   * ```
    */
   private certificadoState!: CamState;
 
   /**
-   * @descripcion
-   * Notificador para gestionar la destrucción de suscripciones.
+   * @description
+   * Subject utilizado para gestionar la limpieza de suscripciones.
+   * 
+   * Este Subject se utiliza en conjunto con el operador takeUntil para
+   * cancelar todas las suscripciones cuando el componente se destruye,
+   * evitando así fugas de memoria.
+   * 
+   * @property {Subject<void>} destroyNotifier$
+   * @private
+   * @memberof CertificadoOrigenComponent
+   * 
+   * @example
+   * ```typescript
+   * // Uso en suscripciones
+   * observable$.pipe(
+   *   takeUntil(this.destroyNotifier$)
+   * ).subscribe();
+   * 
+   * // Limpieza en ngOnDestroy
+   * ngOnDestroy(): void {
+   *   this.destroyNotifier$.next();
+   *   this.destroyNotifier$.complete();
+   * }
+   * ```
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * @descripcion
-   * Estado actual de la sección.
+   * @description
+   * Estado actual de la sección del formulario.
+   * 
+   * Mantiene el estado de la sección actual, incluyendo información
+   * sobre permisos, validaciones y configuración específica de la
+   * sección del certificado.
+   * 
+   * @property {SeccionLibState} seccionState
+   * @private
+   * @memberof CertificadoOrigenComponent
+   * 
+   * @example
+   * ```typescript
+   * // Suscripción al estado de la sección
+   * this.seccionQuery.selectSeccionState$
+   *   .pipe(takeUntil(this.destroyNotifier$))
+   *   .subscribe(state => {
+   *     this.seccionState = state;
+   *     // Lógica adicional basada en el estado
+   *   });
+   * ```
    */
   private seccionState!: SeccionLibState;
 
   /**
-   * @descripcion
+   * @description
    * Referencia al elemento del modal de modificación.
+   * 
+   * Esta referencia se utiliza para gestionar el modal de modificación de datos.
+   * El modal se inicializa como una instancia de Bootstrap Modal en el ciclo de vida
+   * `ngAfterViewInit`.
+   * 
+   * @type {ElementRef}
+   * @memberof CertificadoOrigenComponent
+   * @viewChild
+   * 
+   * @example
+   * ```typescript
+   * // En el template
+   * <div #modifyModal class="modal fade">
+   *   <!-- Contenido del modal -->
+   * </div>
+   * 
+   * // En el componente
+   * if (this.modifyModal) {
+   *   this.modalInstance = new Modal(this.modifyModal.nativeElement);
+   * }
+   * ```
    */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+
+  @ViewChild('certificadoDeOrigenRef') certificadoDeOrigenComponent!: CertificadoDeOrigenComponent;
+  @ViewChild('mercanciaRef') mercanciaComponent!: MercanciaComponent;
+
 
 
   /**
@@ -119,12 +367,35 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   esFormularioSoloLectura:boolean = false;
 
   /**
-   * @descripcion
-   * Constructor que inicializa los servicios y dependencias requeridas.
-   * @param camCertificadoService - Servicio para obtener datos relacionados con el certificado.
-   * @param store - Almacén para gestionar el estado del formulario de certificado.
-   * @param query - Consulta para obtener el estado del formulario.
-   * @param seccionQuery - Consulta para obtener el estado de la sección.
+   * @description
+   * Constructor del componente CertificadoOrigen.
+   * 
+   * Inicializa los siguientes servicios y dependencias:
+   * - CamCertificadoService: Para obtener datos del certificado
+   * - camCertificadoStore: Para gestionar el estado del formulario
+   * - camCertificadoQuery: Para consultar el estado del formulario
+   * - SeccionLibQuery: Para consultar el estado de la sección
+   * - ConsultaioQuery: Para gestionar el estado de consulta
+   * 
+   * @constructor
+   * @param {CamCertificadoService} camCertificadoService - Servicio para datos del certificado
+   * @param {camCertificadoStore} store - Store para el estado del formulario
+   * @param {camCertificadoQuery} query - Query para consultar el estado
+   * @param {SeccionLibQuery} seccionQuery - Query para el estado de la sección
+   * @param {ConsultaioQuery} consultaioQuery - Query para el estado de consulta
+   * 
+   * @example
+   * ```typescript
+   * constructor(
+   *   private camCertificadoService: CamCertificadoService,
+   *   private store: camCertificadoStore,
+   *   private query: camCertificadoQuery,
+   *   private seccionQuery: SeccionLibQuery,
+   *   private consultaioQuery: ConsultaioQuery
+   * ) {
+   *   // Inicialización de suscripciones
+   * }
+   * ```
    */
   constructor(
     private camCertificadoService: CamCertificadoService,
@@ -134,7 +405,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     private consultaioQuery: ConsultaioQuery
   ) {
     this.query.formCertificado$
-      .pipe(takeUntil(this.destroyNotifier$), delay(100))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((estado) => {
         this.formCertificadoValues = estado;
       });
@@ -146,12 +417,33 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       })
     )
     .subscribe()
+    
   }
 
   /**
-   * @descripcion
-   * Hook del ciclo de vida que se llama después de inicializar el componente.
-   * Obtiene los datos iniciales para el formulario.
+   * @description
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * 
+   * Este método realiza las siguientes tareas de inicialización:
+   * 1. Suscribe a los cambios del estado de la sección
+   * 2. Suscribe a los cambios del estado del certificado CAM
+   * 3. Carga los catálogos de estados y países
+   * 4. Inicializa el observable de datos de la tabla
+   * 
+   * @lifecycle
+   * @implements OnInit
+   * 
+   * @example
+   * ```typescript
+   * ngOnInit(): void {
+   *   this.seccionQuery.selectSeccionState$
+   *     .pipe(takeUntil(this.destroyNotifier$))
+   *     .subscribe(state => {
+   *       // Manejo del estado
+   *     });
+   *   // Otras inicializaciones...
+   * }
+   * ```
    */
   ngOnInit(): void {
     this.seccionQuery.selectSeccionState$
@@ -176,7 +468,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     this.paisOpcion();
     this.datosTabla$ = this.query.selectmercanciaTabla$
   }
-
+  
   /**
  * @descripcion
  * Actualiza el almacén con los datos del formulario de certificado.
@@ -309,6 +601,9 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
     if (this.modifyModal) {
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
     }
+    if(this.esFormularioSoloLectura){
+      this.conseguirDisponiblesDatos();
+    }
   }
 
   /**
@@ -320,6 +615,13 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: string | n
     this.store.setFormValida({ certificado: valida });
   }
 
+  validarFormularios():boolean{
+    let isFormInvalid = true;
+  if(!this.certificadoDeOrigenComponent.validarFormularios()){
+    isFormInvalid = false;
+  }
+   return isFormInvalid;
+}
   /**
    * @descripcion
    * Hook del ciclo de vida que se llama cuando el componente se destruye.

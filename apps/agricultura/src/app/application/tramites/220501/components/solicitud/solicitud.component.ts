@@ -1,6 +1,6 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { CargarDatosIniciales } from '../../../220502/models/solicitud-pantallas.model';
@@ -30,6 +30,11 @@ import { TEXTOS } from '../../constantes/texto-enum';
   ],
 })
 export class SolicitudComponent implements OnDestroy {
+  /**
+   * Referencia al componente MedioTransporteComponent
+   */
+  @ViewChild(MedioTransporteComponent) medioTransporteComponent!: MedioTransporteComponent;
+
   /**
    * Constantes de texto.
    */
@@ -101,6 +106,11 @@ export class SolicitudComponent implements OnDestroy {
    * @type {boolean}
    */
   esSolicitud: boolean = false;
+
+  /**
+   * Indica si el formulario es válido.
+   */
+  formValida!: boolean;
 
   /**
    * Subject para desuscribirse de los observables.
@@ -181,6 +191,22 @@ export class SolicitudComponent implements OnDestroy {
   onTransporteSeleccionado(value: boolean): void {
     this.mostrarSeccion = value;
     this.solicitud220501Store.setMostrarSeccion(value);
+  }
+
+  /**
+   * Método para validar el formulario.
+   * @returns {boolean} Verdadero si el formulario es válido, falso en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if(this.form.invalid || 
+      !this.medioTransporteComponent.validarMedioTransporteFormulario()) {
+      this.formValida = true;
+      this.form.markAllAsTouched();
+      this.medioTransporteComponent.medioTransporteForm.markAllAsTouched();
+      return false;
+    }
+    this.formValida = this.form.valid;
+    return this.form.valid;
   }
 
   /**

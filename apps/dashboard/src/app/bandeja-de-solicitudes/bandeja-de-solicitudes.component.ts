@@ -1,8 +1,9 @@
 import { BANDEJA_SOLICITUDES_FORMAS, BandejaDeSolicitudes, ConfiguracionColumna, LibBandejaComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject,map,takeUntil } from 'rxjs';
 import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
 import { CommonModule } from '@angular/common';
+import { LoginQuery } from '@ng-mf/data-access-user';
 import { SeleccionadoDepartamento } from '@libs/shared/data-access-user/src/core/models/shared/bandeja-de-tareas-pendientes.model';
 /* 
   Componente bandeja-de-solicitudes:
@@ -99,11 +100,18 @@ export class BandejaDeSolicitudesComponent implements OnInit,OnDestroy {
    * Estructura del formulario usado en la bandeja de solicitudes.
    */
   public bandejaSolicitudeFormaDatos = BANDEJA_SOLICITUDES_FORMAS;
+  /*
+   * Valor del RFC obtenido del estado de login.
+   */
+  public rfcValor: string = '';
  /*
    * Constructor del componente.
    * Inyecta el servicio BandejaDeSolicitudeService para obtener los datos de la bandeja.
    */
-  constructor(private bandejaSvc: BandejaDeSolicitudeService) {
+  constructor(
+    private bandejaSvc: BandejaDeSolicitudeService,
+    private loginQuery: LoginQuery, 
+  ) {
 
   }
 /*
@@ -111,6 +119,14 @@ export class BandejaDeSolicitudesComponent implements OnInit,OnDestroy {
    * Llama al método para obtener los datos de la tabla al cargar el componente.
    */
   ngOnInit(): void {
+    this.loginQuery.selectLoginState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.rfcValor = seccionState.rfc;
+        })
+      )
+      .subscribe();
     this.getSolicitudeTablaDatos();
   }
  /*

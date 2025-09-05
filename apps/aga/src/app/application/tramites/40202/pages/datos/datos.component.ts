@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { ModificacionTransportacionMaritimaService } from '../../services/modificacion-transportacion-maritima/modificacion-transportacion-maritima.service';
+import { ModificarCaatMaritimoComponent } from '../../components/modificar-caat-maritimo/modificar-caat-maritimo.component';
 import { Tramite40202Store } from '../../../../core/estados/tramites/tramite40202.store';
 
 /**
@@ -14,6 +15,11 @@ import { Tramite40202Store } from '../../../../core/estados/tramites/tramite4020
   styles: ``
 })
 export class DatosComponent implements OnInit, OnDestroy{
+  /** 
+   * Referencia al componente CAAT Marítimo
+   */
+  @ViewChild(ModificarCaatMaritimoComponent) caatMaritimoComponent!: ModificarCaatMaritimoComponent;
+
   /** 
    * Configuración del formulario para la persona moral 
    */

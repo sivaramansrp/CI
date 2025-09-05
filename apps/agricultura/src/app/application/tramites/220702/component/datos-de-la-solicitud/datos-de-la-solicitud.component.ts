@@ -137,7 +137,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     primerOpcion: '',
     catalogos: [],
   };
-
+  /**
+   * Opciones para el campo de selección de radio.
+   * @type {Array<{ label: string, value: string }>}
+   */
   radioOpcions = [
     { label: 'Sí', value: 'sí' },
     { label: 'No', value: 'no' },
@@ -158,6 +161,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   TEXTOS = TEXTOS_220702;
 
+
+  /**
+   * Estado actual del trámite.
+   * 
+   * @remarks
+   * Esta propiedad almacena la información relacionada con el estado del trámite en curso.
+   * Se inicializa como un objeto vacío del tipo `TramiteState`.
+   */
   tramiteState: TramiteState={} as TramiteState;
 
   /**
@@ -182,7 +193,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     required: false,
     habilitado: false,
   };
-
+  /**
+   * Configuración del campo de fecha de fin de vigencia.
+   * @type {InputFecha}
+   */
   configuracionFechaFinVigencia: InputFecha = {
     labelNombre: 'Fecha de inspección ',
     required: true,
@@ -337,10 +351,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.campoDeshabilitar=true;
       this.datosDeLaSolicitudForm.disable();
-      this.datosDeLaSolicitudForm.get('esSolicitudFerros')?.disable();
     } else {
       this.campoDeshabilitar=false;
       this.datosDeLaSolicitudForm.enable();
+      // El campo esSolicitudFerros debe permanecer deshabilitado en el flujo regular
+      this.datosDeLaSolicitudForm.get('esSolicitudFerros')?.disable();
     }
 
 
@@ -351,11 +366,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   iniciarFormulario(): void {
-    // Solo establecer valor por defecto 'no' para esSolicitudFerros en modo consulta (solo lectura) 
-    // y solo si el valor está vacío
-    const ES_SOLICITUD_FERROS_VALUE = this.esFormularioSoloLectura && !this.tramiteState.esSolicitudFerros 
-      ? this.defaultEsSolicitudFerros 
-      : this.tramiteState.esSolicitudFerros;
+    // Establecer valor por defecto 'no' para esSolicitudFerros si no hay valor previo
+    const ES_SOLICITUD_FERROS_VALUE = this.tramiteState.esSolicitudFerros || this.defaultEsSolicitudFerros;
 
     this.datosDeLaSolicitudForm = this.fb.group({
       justificacion: [{value:this.tramiteState.justificacion}, Validators.required],
@@ -371,12 +383,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       tipoContenedor: [{value:this.tramiteState.tipoContenedor}, Validators.required],
       medioDeTransporte: [{value:this.tramiteState.medioDeTransporte}, Validators.required],
       identificacionTransporte: [{value:this.tramiteState.identificacionTransporte}, Validators.required],
-      esSolicitudFerros: [{value: ES_SOLICITUD_FERROS_VALUE}, Validators.required],
+      esSolicitudFerros: [{value: ES_SOLICITUD_FERROS_VALUE, disabled: true}, Validators.required],
       fechaDeInspeccion: [{value:this.tramiteState.fechaDeInspeccion}, Validators.required]
     });
 
-    // Si estamos en modo consulta (solo lectura) y no hay valor previo, establecer 'no' como valor por defecto
-    if (this.esFormularioSoloLectura && !this.tramiteState.esSolicitudFerros) {
+    // Establecer 'no' como valor por defecto si no hay valor previo
+    if (!this.tramiteState.esSolicitudFerros) {
       this.tramiteStore.setEsSolicitudFerros(this.defaultEsSolicitudFerros);
       this.valorSeleccionado = this.defaultEsSolicitudFerros;
     }

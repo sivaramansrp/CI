@@ -1,18 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Catalogo, ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { MENSAJES } from '../../constants/importacion-material-de-investigacion-cientifica-pasos.enum';
+import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 /**
  * PartidasDeLaMercanciaComponent
  * Este componente es responsable de gestionar las partidas de la mercancía.
@@ -33,7 +41,7 @@ import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/parti
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
-export class PartidasDeLaMercanciaComponent implements OnChanges{
+export class PartidasDeLaMercanciaComponent implements OnChanges {
   /**
    * @description Indica si el formulario debe mostrarse en modo solo lectura.
    */
@@ -54,7 +62,8 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Configuración de las columnas de la tabla dinámica.
    * Este campo define las columnas que se mostrarán en la tabla, incluyendo encabezados y claves.
    */
-  @Input() tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] =
+  @Input()
+  tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] =
     PARTIDASDELAMERCANCIA_TABLA;
 
   /**
@@ -69,16 +78,15 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    */
   @Input() mostrarTabla = false;
 
-  
   /**
    * Lista de elementos del catálogo de fracciones arancelarias.
    */
   @Input() fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = [];
 
   /**
-  * Bandera para deshabilitar la tabla dinámica.
-  * Si está configurada como `true`, la tabla estará deshabilitada.
-  */
+   * Bandera para deshabilitar la tabla dinámica.
+   * Si está configurada como `true`, la tabla estará deshabilitada.
+   */
   @Input() disabled: boolean = false;
 
   /**
@@ -106,12 +114,31 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Nombre del campo que se está actualizando.
    * Nombre del método que realiza la actualización.
    */
-  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; }>();
+  @Output() setValoresStoreEvent = new EventEmitter<{
+    form: FormGroup;
+    campo: string;
+  }>();
 
   /**
    * Tipo de selección de la tabla dinámica (checkbox).
    */
   CHECKBOX = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Constante que contiene los mensajes de texto utilizados en el componente.
+   */
+  MENSAJES_TEXTOS = MENSAJES;
+
+  /**
+   * Referencia al elemento del DOM asociado con el archivo de nacionales.
+   * Utilizado para acceder y manipular directamente el elemento en la plantilla.
+   */
+  @ViewChild('archivoNacionales') archivoNacionalesElemento!: ElementRef;
+
+  /**
+   * Nombre del archivo seleccionado por el usuario.
+   */
+  nombreArchivoSeleccionado: string = '';
 
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
@@ -128,17 +155,17 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * Esto permite que el formulario se muestre en modo solo lectura o editable dinámicamente.
    *
    * @param changes - Objeto que contiene los cambios detectados en las propiedades de entrada.
-  */
-    ngOnChanges(changes: SimpleChanges): void {
-      // Verifica si el formulario ha cambiado y actualiza su estado
-      if (changes['esFormularioSoloLectura']) {
-        if (this.esFormularioSoloLectura) {
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    // Verifica si el formulario ha cambiado y actualiza su estado
+    if (changes['esFormularioSoloLectura']) {
+      if (this.esFormularioSoloLectura) {
         this.partidasDelaMercanciaForm.disable();
-    }else {
-       this.partidasDelaMercanciaForm.enable();
-     }
+      } else {
+        this.partidasDelaMercanciaForm.enable();
+      }
+    }
   }
-}
 
   /**
    * Verifica si un control del formulario es inválido.
@@ -147,7 +174,9 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    */
   esInvalido(nombreControl: string): boolean {
     const CONTROL = this.partidasDelaMercanciaForm.get(nombreControl);
-    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
 
   /**
@@ -173,9 +202,22 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
   }
 
   /**
+   * Maneja el evento de selección de archivo y actualiza el nombre del archivo seleccionado.
+   * @param evento Evento de cambio del input de archivo.
+   */
+  archivoSeleccionado(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    if (INPUT.files && INPUT.files.length > 0) {
+      this.nombreArchivoSeleccionado = INPUT.files[0].name;
+    } else {
+      this.nombreArchivoSeleccionado = '';
+    }
+  }
+
+  /**
    * Emite un evento para almacenar valores en el store.
    */
   setValoresStore(form: FormGroup, campo: string): void {
-    this.setValoresStoreEvent.emit({ form, campo});
+    this.setValoresStoreEvent.emit({ form, campo });
   }
 }

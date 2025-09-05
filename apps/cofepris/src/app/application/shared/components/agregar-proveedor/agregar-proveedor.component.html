@@ -1,10 +1,87 @@
 <div class="container mt-4">
-  <ng-titulo titulo="Agregar proveedor"></ng-titulo>
+  <ng-titulo
+    *ngIf="datoSeleccionado?.[0]?.tipoPersona; else agregarProveedor"
+    titulo="Modificar proveedor"
+  ></ng-titulo>
+
+  <ng-template #agregarProveedor>
+    <ng-titulo titulo="Agregar proveedor"></ng-titulo>
+  </ng-template>
   <form [formGroup]="agregarProveedorForm">
     <!-- Datos Generales -->
     <h4>Datos generales</h4>
     <div class="row">
-      <div class="col-md-6 offset-md-6">
+      @if(habilitarNacionalidad === true ) {
+        <div class="col-md-6">
+        <label class="form-label">Terceros nacionalidad*:</label>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            formControlName="nacionalidad"
+            [value]="nacionalStr"
+            (change)="changeNacionalidad()"
+          />
+          Nacional
+        </div>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            formControlName="nacionalidad"
+            value="Extranjero"
+            (change)="changeNacionalidad()"
+          />
+          Extranjero
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Tipo persona*:</label>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            formControlName="tipoPersona"
+            [value]="tipoPersona.FISICA"
+            (change)="changeNacionalidad()"
+          />
+          Física
+          <span
+            tooltip="Una persona física es entendida como toda persona con una actividad específica"
+            ><i class="bi bi-question-circle-fill"></i
+          ></span>
+        </div>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            formControlName="tipoPersona"
+            [value]="tipoPersona.MORAL"
+            (change)="changeNacionalidad()"
+          />
+          Moral
+          <span
+          class="bi bi-question-circle-fill"
+          title="Una persona moral es entendida como una empresa con una actividad específica"
+          data-bs-toggle="tooltip"
+        ></span>
+        </div>
+        @if(agregarProveedorForm.get('nacionalidad')?.value === nacionalStr) {
+          <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            formControlName="tipoPersona"
+            [value]="tipoPersona.NO_CONTRIBUYENTE"
+            (change)="changeNacionalidad()"
+          />
+          No contribuyente
+        </div>
+        }
+      </div>
+      }
+      @else{
+        <div class="col-md-6 offset-md-6">
         <label class="form-label">Tipo persona*:</label>
         <div class="form-check">
           <input
@@ -35,7 +112,48 @@
           ></span>
         </div>
       </div>
+      }
     </div>
+
+    @if(agregarProveedorForm.get('nacionalidad')?.value === nacionalStr){
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <label class="form-label">R.F.C.*:</label>
+        <span
+        class="bi bi-question-circle-fill mx-1"
+        title="Registro Federal de Contribuyente"
+        data-bs-toggle="tooltip"
+      ></span>
+        <input type="text" class="form-control" [maxlength]="15" formControlName="rfc" [ngClass]="esInvalido('rfc') ? 'required' : ''"/>
+        <div *ngIf="esInvalido('rfc')" class="text-danger">
+          <small *ngIf="agregarProveedorForm.controls['rfc'].errors?.['required']">
+            Este campo es obligatorio
+          </small>
+          <small *ngIf="agregarProveedorForm.controls['rfc'].errors?.['pattern']">
+            Existen datos incorrectos que no cumplen con el formato esperado
+          </small>
+        </div>
+      </div>
+      @if (!estaOculto) {
+      <div class="col-md-4">
+        <label class="form-label">C.U.R.P.*:</label>
+        <input type="text" class="form-control" formControlName="curp" [ngClass]="esInvalido('curp') ? 'required' : ''" />
+        <div *ngIf="esInvalido('curp')" class="text-danger">
+          <small *ngIf="agregarProveedorForm.controls['curp'].errors?.['required']">
+            Este campo es obligatorio
+          </small>
+        </div>
+      </div>
+      }
+    </div>
+      <div class="row mt-3">
+        <div [ngClass]="agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.NO_CONTRIBUYENTE ? 'col-md-8' : 'col-md-4'">
+          <div class="d-flex justify-content-end mt-2">
+                <button type="button" class="btn btn-primary w-50">Buscar</button>
+          </div>
+        </div>
+      </div>
+    }
 
     @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
     <div class="row">
@@ -72,8 +190,7 @@
     }
 
     <!-- Datos Personales -->
-    @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.FISICA )
-    {
+    @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.FISICA || agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.NO_CONTRIBUYENTE) {
     <h4 class="mt-4">Datos personales</h4>
     <div class="row">
       <div class="col-md-4">
@@ -156,7 +273,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Estado</label><span
-          class="form-label mx-2"
+          class="form-label"
           *ngIf="elementosRequeridos.includes('estado')"
           >*</span
         ><span class="form-label">:</span>
@@ -285,8 +402,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label"
-          >Correo electrónico:
-          <span tooltip="ejemplo@dominio.com"
+          >Correo electrónico:<span tooltip="ejemplo@dominio.com"
             ><i class="bi bi-question-circle-fill"></i
           ></span>
         </label>

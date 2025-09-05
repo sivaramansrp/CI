@@ -141,7 +141,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       entidadFederativa: [this.tramiteState?.entidadFederativa, [Validators.required, Validators.min(0)]],
       representacionFederal: [this.tramiteState?.representacionFederal, [Validators.required, Validators.min(0)]],
     });
-    this.formDatosCertificado.markAllAsTouched();
+    // this.formDatosCertificado.markAllAsTouched();
     this.inicializarEstadoFormulario();
   }
   /**
@@ -223,7 +223,22 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   representacionFederalSeleccion(): void {
     this.setValoresStore(this.formDatosCertificado, 'representacionFederal', 'setRepresentacionFederal');
   }
+  /**
+   * Valida el formulario de datos del certificado.
+   * 
+   * @returns {boolean} - Retorna true si el formulario es válido, false en caso contrario.
+   */
+public validarFormulario(): boolean {
+  let isValid = true;
 
+  if (this.formDatosCertificado.invalid) {
+    this.formDatosCertificado.markAllAsTouched();
+    isValid = false;
+  }
+
+
+  return isValid;
+}
   /**
    * Actualiza el estado del store con el valor seleccionado en el formulario.
    * 

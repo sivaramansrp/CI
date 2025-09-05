@@ -73,3 +73,17 @@ export const SECCIONES_TRAMITE_260102 = {
     VALIDACION_SECCION: false,
   }
 };
+/**
+ * Lista de elementos requeridos para el trámite de importación o retorno sanitario.
+ * 
+ * Contiene los nombres de los campos obligatorios que deben ser proporcionados:
+ * - 'denominacionRazon': Denominación o razón social de la empresa.
+ * - 'scian': Código SCIAN correspondiente a la actividad económica.
+ * - 'correoElectronico': Correo electrónico de contacto.
+ */
+export const ELEMENTOS_REQUERIDOS = [
+  'denominacionRazon',
+  'scian',
+  'correoElectronico',
+];
+

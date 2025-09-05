@@ -59,7 +59,7 @@ export interface Catalogo {
   /** Identificador relacionado con acotación opcional. */
   relacionadaAcotacionId?: number;
   /** Decripcion del titulo del select, cuando se requiera. */
-  title?: string; 
+  title?: string;
 }
 
 /**
