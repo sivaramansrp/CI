@@ -103,11 +103,14 @@
       <div class="row">
         <ng-titulo titulo="Tipo de Mercancía" />
         <div class="col-md-12">
-          <label for="certficacion_a">Captura de datos de mercancía*:</label>
+          <label for="certficacion_a">Captura de datos de mercancía<span [ngClass]="{'mensaje-error':datosDelaSolicitud.get('tipoMercancia')?.invalid && datosDelaSolicitud.get('tipoMercancia')?.touched}">*</span>:</label>
         </div>
         <div class="col-md-12">
           <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [layout]="'vertical'" name="tipoMercancia"
             formControlName="tipoMercancia" (change)="radioBotonSeleccionado()" ></app-input-radio>
+          <div *ngIf="datosDelaSolicitud.get('tipoMercancia')?.invalid && datosDelaSolicitud.get('tipoMercancia')?.touched">
+            <small class="mensaje-error">Este campo es obligatorio.</small>
+          </div>
         </div>
       </div>
     </div>

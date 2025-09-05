@@ -396,7 +396,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   initActionFormBuild(): void {
     this.datosDelaSolicitud = this.fb.group({
-      tipoMercancia: ['yes', Validators.required],
+      tipoMercancia: ['', Validators.required],
       aduanaIngreso: ['', Validators.required],
       oficinaInspeccion: ['', Validators.required],
       puntoInspeccion: ['', Validators.required],
@@ -410,7 +410,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     this.certificadoZoosanitarioQuery.seleccionarDatosSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
       if (datosDeLaSolicitud) {
         this.datosDelaSolicitud.patchValue({
-          tipoMercancia: datosDeLaSolicitud.tipoMercancia || 'yes',
+          tipoMercancia: datosDeLaSolicitud.tipoMercancia || '',
           aduanaIngreso: datosDeLaSolicitud.aduanaIngreso || '',
           oficinaInspeccion: datosDeLaSolicitud.oficinaInspeccion || '',
           puntoInspeccion: datosDeLaSolicitud.puntoInspeccion || '',
@@ -421,7 +421,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
           certificacion: datosDeLaSolicitud.certificacion || '',
           regimen: datosDeLaSolicitud.regimen || ''
         })
-        this.notificationCheck = true;
+        this.notificationCheck = false;
       }
     });
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
