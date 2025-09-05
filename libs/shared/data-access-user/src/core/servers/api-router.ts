@@ -461,3 +461,10 @@ export const API_GET_INICIAR_CONFIRMACION_NOTIFICACION = (TRAMITE:string, NUMFOL
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/guardar-dictamen-generado-by-numFolioTramite
  */
 export const API_POST_RESOLUCION_GUARDAR = (TRAMITE: string, IDRESOLUCION: string) : string => `sat-t${TRAMITE}/confirmar-notificacion/resolucion/${IDRESOLUCION}/acuse/guardar`;
+
+
+/**
+ * API para cargar documentos.
+ * @see https://api-v30.cloud-ultrasist.net/api/digitalizacion/cargar
+ */
+export const API_POST_CARGAR_DOCUMENTOS = `digitalizacion/cargar`

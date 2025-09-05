@@ -33,10 +33,12 @@ import {
   Notificacion,
   NotificacionesComponent,
 } from '../notificaciones/notificaciones.component';
+import { CargarDocumentoService } from '../../../core/services/shared/cargar-documento/cargar-documento.service';
 import { CatalogoDocumentosService } from '../../../core/services/shared/catalogos/catalogo-documentos.service';
 import { CommonModule } from '@angular/common';
 import { DocumentosQuery } from '../../../core/queries/documentos.query';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -175,8 +177,12 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
     private documentosQuery: DocumentosQuery,
     private documentosStore: DocumentosStore,
     private cdr: ChangeDetectorRef,
-    private catalogoDocumentosService: CatalogoDocumentosService
-  ) { }
+    private catalogoDocumentosService: CatalogoDocumentosService,
+    private cargarDocumentoService: CargarDocumentoService,
+    private http: HttpClient
+  ) { 
+    
+  }
 
   ngOnInit(): void {
     this.documentosQuery.selectDocumentoState$
@@ -336,7 +342,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
     event: Event,
     fileInput: HTMLInputElement,
     id: number,
-    tipo: string
+    tipo: string,
+    tamanioMaximo:number
   ): void {
     const ARCHIVO = event.target as HTMLInputElement;
     const INFORMACION_ARCHIVO = (ARCHIVO.files as FileList)[0];
@@ -430,6 +437,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         tipo,
         mensaje: '',
         estatus: 'Pendiente',
+        tamanioMaximo
       };
 
       if (EXISTING_INDEX !== -1) {
@@ -708,8 +716,7 @@ private validarCompletitudDocumentosObligatorios(): boolean {
       this.archivosCargando.opcionales = this.listadoArchivos.filter(
         (f) => f.tipo === 'opcional'
       );
-      this.cargarArchivos(this.archivosCargando.obligatorios);
-      this.cargarArchivos(this.archivosCargando.opcionales);
+      this.cargarArchivos(this.listadoArchivos);
       this.cargaRealizada.emit(this.cargarDocumentos);
     }
   }
@@ -877,11 +884,11 @@ private validarCompletitudDocumentosObligatorios(): boolean {
    * @returns {Promise<void>} Promesa que se resuelve cuando la carga se completa.
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, require-await
-  async cargarArchivos(archivosCargando: any[]): Promise<void> {
-    for (const ARCHIVO of archivosCargando) {
-      // const DATA = await this.uploadFiles(ARCHIVO.archivo);  TODO: Descomentar cuando funcione el API de cargar documento
-      ARCHIVO.cargado = true;
-      ARCHIVO.estatus = 'cargado';
-    }
+  cargarArchivos(archivosCargando: DocumentosParaCargar[]): void {
+    this.cargarDocumentoService.cargarDocumentos(archivosCargando).subscribe({
+      next: (res) => console.log('Upload successful', res),
+      error: (err) => console.error('Upload failed', err)
+    });
+
   }
 }

@@ -19,7 +19,7 @@
                                 <label for="formFile{{item.id_tipo_documento}}" class="form-label"></label>
                                 <input class="form-control custom-file-label" type="file"
                                     [id]="'formFile' + item.id_tipo_documento" #fileInput
-                                    (change)="cargarDoc($event, fileInput,item.id_tipo_documento,'obligatorio')">
+                                    (change)="cargarDoc($event, fileInput,item.id_tipo_documento,'obligatorio', item.tamanio_maximo)">
                             </div>
                         </div>
 
@@ -51,7 +51,7 @@
                                 <label for="formFile{{adicional.id_tipo_documento}}" class="form-label"></label>
                                 <input class="form-control custom-file-label" type="file"
                                     id="formFile{{adicional.id_tipo_documento}}" #fileInput
-                                    (change)="cargarDoc($event, fileInput,adicional.id_tipo_documento,'obligatorio')"
+                                    (change)="cargarDoc($event, fileInput,adicional.id_tipo_documento,'obligatorio',item.tamanio_maximo)"
                                     title="Cargar documento">
                             </div>
                         </div>
@@ -97,7 +97,7 @@
                                 <label for="formFileOpcionales{{item.id_tipo_documento}}" class="form-label"></label>
                                 <input class="form-control custom-file-label" type="file"
                                     id="formFileOpcionales{{item.id_tipo_documento}}" #fileInput
-                                    (change)="cargarDoc($event, fileInput,item.id_tipo_documento,'opcional')"
+                                    (change)="cargarDoc($event, fileInput,item.id_tipo_documento,'opcional', item.tamanio_maximo)"
                                     title="Cargar documento">
                             </div>
                         </div>
@@ -134,7 +134,7 @@
                                     class="form-label"></label>
                                 <input class="form-control custom-file-label" type="file"
                                     id="formFileOpcionales{{adicional.id_tipo_documento}}" #fileInput
-                                    (change)="cargarDoc($event, fileInput,adicional.id_tipo_documento,'opcional')"
+                                    (change)="cargarDoc($event, fileInput,adicional.id_tipo_documento,'opcional', item.tamanio_maximo)"
                                     placeholder="" title="Cargar documento">
                             </div>
                         </div>
