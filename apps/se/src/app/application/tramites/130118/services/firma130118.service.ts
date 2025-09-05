@@ -1,4 +1,4 @@
-import { API_POST_FIRMA, IDSOLICITUD } from '../server/api-router';
+import { API_POST_FIRMA } from '../server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';

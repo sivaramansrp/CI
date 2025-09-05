@@ -1,21 +1,28 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  Pipe,
-  PipeTransform,
-  Injectable,
-  CUSTOM_ELEMENTS_SCHEMA,
-  NO_ERRORS_SCHEMA,
-  Directive,
-  Input,
-  Output,
-} from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
 import { Component } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+@Component({
+  selector: 'app-input-fecha',
+  template: '<input />',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: MockInputFechaComponent,
+      multi: true
+    }
+  ]
+})
+class MockInputFechaComponent implements ControlValueAccessor {
+  writeValue(obj: any): void {}
+  registerOnChange(fn: any): void {}
+  registerOnTouched(fn: any): void {}
+  setDisabledState?(isDisabled: boolean): void {}
+}
+// @ts-nocheck
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { of as observableOf } from 'rxjs';
 import { CapturarFacturasComponent } from './capturar-facturas.component';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { HttpClient } from '@angular/common/http';
@@ -26,47 +33,34 @@ import { SeccionLibStore, SeccionLibQuery } from '@ng-mf/data-access-user';
 
 @Injectable()
 class MockElegibilidadTextilesService {}
-
 @Injectable()
-class MockHttpClient {
-  post() {}
-}
-
+class MockHttpClient { post() {} }
 @Injectable()
 class MockElegibilidadDeTextilesStore {}
-
 @Injectable()
 class MockElegibilidadDeTextilesQuery {}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
-  @Input() myCustom;
+  @Input() myCustom: any;
 }
 
 @Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
+  transform(value: any): any { return value; }
 }
-
 @Pipe({ name: 'phoneNumber' })
 class PhoneNumberPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
+  transform(value: any): any { return value; }
 }
-
 @Pipe({ name: 'safeHtml' })
 class SafeHtmlPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
+  transform(value: any): any { return value; }
 }
 
 describe('CapturarFacturasComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<CapturarFacturasComponent>;
+  let component: CapturarFacturasComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -76,6 +70,7 @@ describe('CapturarFacturasComponent', () => {
         PhoneNumberPipe,
         SafeHtmlPipe,
         MyCustomDirective,
+        MockInputFechaComponent,
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
@@ -105,84 +100,130 @@ describe('CapturarFacturasComponent', () => {
 
   afterEach(() => {
     if (component) {
-      component.ngOnDestroy = () => {};
+      (component as any).ngOnDestroy = () => {};
     }
     if (fixture) {
-      fixture.destroy();
+      (fixture as any).destroy();
     }
   });
 
-  it('should run #constructor()', async () => {
+  it('debe ejecutar el constructor()', async () => {
     expect(component).toBeTruthy();
   });
+  it('debe retornar facturaForm desde el getter formGroup', () => {
+    const mockFormGroup = { test: 'value' } as any;
+    component.facturaForm = mockFormGroup;
+    expect(component.formGroup).toBe(mockFormGroup);
+  });
 
-  it('should run #ngOnInit()', () => {
-    const mockSeccionState = { readonly: true }; 
+  it('debe tener el mapeo correcto de tableColumns', () => {
+    expect(component.tableColumns.length).toBe(8);
+    const sampleRow = {
+      numeroDeLaFactura: 'F001',
+      razonSocial: 'Empresa X',
+      domicilio: 'CDMX',
+      fechaExpedicionFactura: '2025-01-01',
+      cantidadTotal: '100',
+      cantidadDisponible: '50',
+      unidadMedida: 'KG',
+      valorDolares: '200',
+    };
+    expect(component.tableColumns[0].clave(sampleRow)).toBe('F001');
+    expect(component.tableColumns[1].clave(sampleRow)).toBe('Empresa X');
+    expect(component.tableColumns[2].clave(sampleRow)).toBe('CDMX');
+    expect(component.tableColumns[3].clave(sampleRow)).toBe('2025-01-01');
+    expect(component.tableColumns[4].clave(sampleRow)).toBe('100');
+    expect(component.tableColumns[5].clave(sampleRow)).toBe('50');
+    expect(component.tableColumns[6].clave(sampleRow)).toBe('KG');
+    expect(component.tableColumns[7].clave(sampleRow)).toBe('200');
+  });
+
+
+
+  it('debe manejar continuar() cuando el formulario es válido', () => {
+    component['facturaForm'] = {
+      markAllAsTouched: jest.fn(),
+      updateValueAndValidity: jest.fn(),
+      valid: true,
+    } as any;
+    component['cdr'] = { detectChanges: jest.fn() } as any;
+    window.scrollTo = jest.fn();
+    component['mostrarTabs'] = { emit: jest.fn() } as any;
+    component.continuar();
+    expect(component.formularioAlertaError).toBe('');
+    expect(component.esFormaValido).toBe(false);
+    expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
+    expect(component['mostrarTabs'].emit).toHaveBeenCalledWith(true);
+  });
+
+  it('debe ejecutar #ngOnInit()', () => {
+    const mockSeccionState = { readonly: true };
     const mockTextileState = { formaValida: [{ descripcion: 'Valida' }] };
 
-    component.seccionQuery = {
+    component['seccionQuery'] = {
       selectSeccionState$: observableOf(mockSeccionState),
     } as any;
 
-    component.ElegibilidadDeTextilesQuery = {
+    component['ElegibilidadDeTextilesQuery'] = {
       selectTextile$: observableOf(mockTextileState),
     } as any;
 
-    component.initActionFormBuild = jest.fn();
-    component.obtenerListasDesplegables = jest.fn();
-    component.recuperarDatos = jest.fn();
+    component['initActionFormBuild'] = jest.fn();
+    component['obtenerListasDesplegables'] = jest.fn();
+    component['recuperarDatos'] = jest.fn();
 
-    component.seccionStore = {
+    component['seccionStore'] = {
       establecerFormaValida: jest.fn(),
       establecerSeccion: jest.fn(),
     } as any;
 
-    component.ElegibilidadDeTextilesStore = {
+    component['ElegibilidadDeTextilesStore'] = {
       setFormaValida: jest.fn(),
     } as any;
 
-    component.facturaForm = {
+    component['facturaForm'] = {
       statusChanges: observableOf({}),
       valid: true,
       disable: jest.fn(),
     } as any;
 
-    component.formularioDeshabilitado = true;
+    component['formularioDeshabilitado'] = true;
 
-    component.capturarState = mockTextileState;
+  component['capturarState'] = mockTextileState as any;
 
     component.ngOnInit();
 
-    expect(component.initActionFormBuild).toHaveBeenCalled();
-    expect(component.obtenerListasDesplegables).toHaveBeenCalled();
-    expect(component.recuperarDatos).toHaveBeenCalled();
+    expect(component['initActionFormBuild']).toHaveBeenCalled();
+    expect(component['obtenerListasDesplegables']).toHaveBeenCalled();
+    expect(component['recuperarDatos']).toHaveBeenCalled();
   });
 
-  it('should run #initActionFormBuild()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.capturarState = component.capturarState || {};
-    component.capturarState.numeroFactura = 'numeroFactura';
-    component.capturarState.cantidadTotal = 'cantidadTotal';
-    component.capturarState.unidadDeMedida = 'unidadDeMedida';
-    component.capturarState.valorDolares = 'valorDolares';
-    component.capturarState.taxId = 'taxId';
-    component.capturarState.razonSocial = 'razonSocial';
-    component.capturarState.calle = 'calle';
-    component.capturarState.ciudad = 'ciudad';
-    component.capturarState.cp = 'cp';
-    component.capturarState.pais = 'pais';
-    component.initActionFormBuild();
-    expect(component.fb.group).toHaveBeenCalled();
+  it('debe ejecutar #initActionFormBuild()', async () => {
+  jest.spyOn(component['fb'], 'group').mockImplementation(jest.fn());
+    component['capturarState'] = {
+      numeroFactura: 'numeroFactura',
+      cantidadTotal: 'cantidadTotal',
+      unidadDeMedida: 'unidadDeMedida',
+      valorDolares: 'valorDolares',
+      taxId: 'taxId',
+      razonSocial: 'razonSocial',
+      calle: 'calle',
+      ciudad: 'ciudad',
+      cp: 'cp',
+      pais: 'pais',
+      formaValida: [],
+    } as any;
+  component.initActionFormBuild();
+  expect(component['fb'].group).toHaveBeenCalled();
   });
 
-  it('should run #obtenerListasDesplegables()', async () => {
+  it('debe ejecutar #obtenerListasDesplegables()', async () => {
     component.obtenerIngresoSelectList = jest.fn();
     component.obtenerListasDesplegables();
     expect(component.obtenerIngresoSelectList).toHaveBeenCalled();
   });
 
-  it('should run #setValoresStore()', () => {
+  it('debe ejecutar #setValoresStore()', () => {
     const mockForm = {
       get: jest.fn().mockReturnValue({ value: 'ABC123' }),
     } as any;
@@ -198,9 +239,9 @@ describe('CapturarFacturasComponent', () => {
     expect(mockStore.setTaxId).toHaveBeenCalledWith('ABC123');
   });
 
-  it('should run #obtenerIngresoSelectList() with data', () => {
+  it('debe ejecutar #obtenerIngresoSelectList() con datos', () => {
     const mockData = [{ id: '1', descripcion: 'KG' }];
-    component.ElegibilidadTextilesService = {
+    component['ElegibilidadTextilesService'] = {
       obtenerMenuDesplegable: jest.fn().mockReturnValue(observableOf(mockData)),
     } as any;
 
@@ -209,7 +250,7 @@ describe('CapturarFacturasComponent', () => {
     expect(component.unidadDeMedida).toEqual(mockData);
   });
 
-  it('should run #recuperarDatos() with data', () => {
+  it('debe ejecutar #recuperarDatos() con datos', () => {
     const mockFacturas = [
       {
         numeroDeLaFactura: 'F001',
@@ -222,7 +263,7 @@ describe('CapturarFacturasComponent', () => {
         valorDolares: 200,
       },
     ];
-    component.ElegibilidadTextilesService = {
+    component['ElegibilidadTextilesService'] = {
       obtenerTablaDatos: jest.fn().mockReturnValue(observableOf(mockFacturas)),
     } as any;
 
@@ -231,12 +272,12 @@ describe('CapturarFacturasComponent', () => {
     expect(component.facturas).toEqual(mockFacturas);
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
-    component.ngOnDestroy();
-    expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+  it('debe ejecutar #ngOnDestroy()', async () => {
+  component['destroyNotifier$'] = component['destroyNotifier$'] || {};
+  component['destroyNotifier$'].next = jest.fn();
+  component['destroyNotifier$'].complete = jest.fn();
+  component.ngOnDestroy();
+  expect(component['destroyNotifier$'].next).toHaveBeenCalled();
+  expect(component['destroyNotifier$'].complete).toHaveBeenCalled();
   });
 });

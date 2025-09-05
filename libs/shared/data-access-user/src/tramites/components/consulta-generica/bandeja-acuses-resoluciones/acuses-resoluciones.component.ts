@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
-import { AcusesResolucionResponse } from '../../../../core/models/130118/consulta-acuses-response.model';
+import { AcusesResolucionResponse } from '../../../../core/models/shared/consulta-acuses-response.model';
 import { AcusesService } from '../../../../core/services/consultagenerica/acuses-service';
 import { CommonModule } from '@angular/common';
 import { ResolucionesService } from '../../../../core/services/consultagenerica/resoluciones-service';

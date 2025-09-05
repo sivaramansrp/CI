@@ -51,6 +51,11 @@ export interface FederatariosEncabezado {
   numeroDeNotaria: string;
   entidadFederativa: string;
   municipioODelegacion: string;
+  estado: string;
+  estadoOptions: string;
+  estadoUno: string;
+  estadoDos: string;
+  estadoTres: string;
 }
 
 /**
@@ -399,7 +404,7 @@ export const PLANTAS_IMMEX: {
     orden: 7,
   },
   {
-    encabezado: 'Delegación o municipio',
+    encabezado: 'Delegación / Municipio',
     clave: (ele: PlantasImmex): string => ele.delegacionMunicipio,
     orden: 8,
   },

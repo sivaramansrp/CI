@@ -70,6 +70,16 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
   public solicitudState!: Solicitud110201State;
 
   /**
+   * Valor de país/bloque del certificado de origen para validación cruzada.
+   */
+  paisCertificadoOrigen: string | null = null;
+
+  /**
+   * Controla si hay error de país destino distinto.
+   */
+  paisNoCoincide: boolean = false;
+
+  /**
    * Indica si el formulario está deshabilitado.
    */
   isDisabled: boolean = false;
@@ -174,6 +184,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          // Guardar el valor de país/bloque del certificado de origen para validación cruzada
+          this.paisCertificadoOrigen = seccionState?.pais || null;
         })
       )
       .subscribe();
@@ -268,6 +280,23 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+    // Si el campo cambiado es 'nacion', comparar con paisCertificadoOrigen
+    if (campo === 'nacion') {
+      this.compararPaisDestino(VALOR);
+    }
+  }
+
+  /**
+   * Compara el país destino con el país/bloque del certificado de origen.
+   * Si no coinciden, activa el error.
+   */
+  compararPaisDestino(valorNacion: string): void {
+    // Si paisCertificadoOrigen no está definido, no mostrar error
+    if (!this.paisCertificadoOrigen) {
+      this.paisNoCoincide = false;
+      return;
+    }
+    this.paisNoCoincide = valorNacion !== this.paisCertificadoOrigen;
   }
 
   /**

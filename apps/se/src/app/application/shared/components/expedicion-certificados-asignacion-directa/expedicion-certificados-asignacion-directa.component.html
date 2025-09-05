@@ -13,6 +13,7 @@
           name="cveAniosAutorizacion"
           [isDisabled]="formularioDeshabilitado"
           [placeholder]="'Selecciona un año'"
+          [markTouched]="asignacionOficioNumeroForm.get('cveAniosAutorizacion')?.touched ?? false"
           (change)="aniosAutorizacionSeleccion()"
         ></app-catalogo-select>
       </div>
@@ -213,6 +214,7 @@
           [setFecha]="asignacionDatosForm.get('fechaInicio')?.value"
           [datos]="fechaInicioInput"
           [tooltipQuestionCircle]="true"
+          [tooltipQuestionCircleText]="'Fecha de inicio vigencia de la asignación'"
           [isDisabled]="formularioDeshabilitado"
           (valorCambiado)="cambioFechaInicio($event)"
         ></input-fecha>
@@ -224,6 +226,7 @@
           "
           [datos]="fechaFinVigenciaAprobadaInput"
           [tooltipQuestionCircle]="true"
+          [tooltipQuestionCircleText]="'Fecha de fin vigencia de la asignación'"
           [isDisabled]="formularioDeshabilitado"
           (valorCambiado)="cambioFechaFinVigenciaAprobada($event)"
         ></input-fecha>

@@ -1,6 +1,7 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
 import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from '../../constantes/importaciones-agropecuarias.enum';
+import { AVISO } from '../../constantes/importaciones-agropecuarias.enum';
 
 
 /**
@@ -35,6 +36,14 @@ export class TodosPasosComponent {
    * @type {number}
    */
   public indice: number = 1;
+
+  /**
+   * @property aviso
+   * @type {string}
+   *  Texto del aviso de privacidad en formato HTML.
+   */
+
+  aviso= AVISO.Aviso;
 
   /**
    * @property titulo

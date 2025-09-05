@@ -16,9 +16,111 @@
             </form>
         </div>
     </div>
-    <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
+    <ng-titulo titulo="Domicilio del establecimiento" *ngIf="consultaState.parameter!== 'READ_PROCEDURE'"></ng-titulo>
     <form [formGroup]="domicilioDeElstablecimientoForm">
-        <div class="row mb-3">
+        <div *ngIf="consultaState.parameter=== 'READ_PROCEDURE'">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="calle" class="form-label">Calle y número exterior y/o interior: 
+                            <i class="bi bi-question-circle-fill" *ngIf="consultaState.parameter!== 'READ_PROCEDURE'"></i></label>
+                        <input type="text" id="calle" 
+                            formControlName="calleYNumero" 
+                            class="form-control"
+                            (change)="setValoresStore(domicilioDeElstablecimientoForm,'calleYNumero', 'setCalleYNumero')">
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="codigoPostal" class="form-label">Código postal:</label>
+                        <input type="text" id="codigoPostal" 
+                            formControlName="codigoPostal" 
+                            class="form-control"
+                            (change)="setValoresStore(domicilioDeElstablecimientoForm,'codigoPostal', 'setCodigoPostal')">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="estado" class="form-label">Estado:</label>
+                        <input type="text" id="estado" 
+                            formControlName="estado" 
+                            class="form-control"
+                            (change)="setValoresStore(domicilioDeElstablecimientoForm,'estado', 'setEstado')">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="municipioAlcaldia" class="form-label">Municipio o alcaldía:</label>
+                        <input type="text" id="municipioAlcaldia" 
+                            formControlName="municipio"
+                            (change)="setValoresStore(domicilioDeElstablecimientoForm,'municipio', 'setMunicipio')" 
+                            class="form-control">
+                    </div>
+                </div>
+            </div>
+
+             <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="colonia" class="form-label">Colonia:</label>
+                        <input type="text" id="colonia" 
+                            formControlName="colonia" 
+                            class="form-control"
+                            (change)="setValoresStore(domicilioDeElstablecimientoForm,'colonia', 'setColonia')">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="localidad" class="form-label">Localidad:</label>
+                        <input type="text" id="localidad" 
+                            formControlName="localidad" 
+                            class="form-control"
+                            (change)="setValoresStore(domicilioDeElstablecimientoForm,'localidad', 'setLocalidad')">
+                    </div>
+                </div>
+
+             </div>
+
+             <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="correoElectronico" class="form-label">Correo electrónico: <i class="bi bi-question-circle-fill" *ngIf="consultaState.parameter!== 'READ_PROCEDURE'"></i></label>
+                        <input type="text" id="correoElectronico" 
+                            formControlName="correoElecronico" 
+                            class="form-control"
+                            (change)="setValoresStore(domicilioDeElstablecimientoForm,'correoElecronico', 'setCorreoElecronico')">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="rfc" class="form-label">Solicitud Persona RFC Responsable Sanitario:</label>
+                        <input type="text" id="rfc" 
+                            formControlName="rfc" 
+                            class="form-control"
+                            (change)="setValoresStore(domicilioDeElstablecimientoForm,'rfc', 'setRfc')">
+                    </div>
+                </div>
+
+             </div>
+
+             <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="telefono" class="form-label">Teléfono:</label>
+                        <input type="text" id="telefono" 
+                            formControlName="telefono" 
+                            class="form-control"
+                            (change)="setValoresStore(domicilioDeElstablecimientoForm,'lada', 'setTelefono')">
+                    </div>
+                </div>
+             </div>
+        </div>
+        
+        <div class="row mb-3" *ngIf="consultaState.parameter!== 'READ_PROCEDURE'">
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="codigoPostal" class="form-label">Código postal*:</label>
@@ -67,7 +169,7 @@
                 }
             </div>
         </div>
-        <div class="row mb-3">
+        <div class="row mb-3" *ngIf="consultaState.parameter!== 'READ_PROCEDURE'">
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="localidad" class="form-label">Localidad*:</label>
@@ -125,7 +227,7 @@
                 }
             </div>
         </div>
-        <div class="row mb-3">
+        <div class="row mb-3" *ngIf="consultaState.parameter!== 'READ_PROCEDURE'">
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="correoElectronico" class="form-label">Correo electrónico*: <i

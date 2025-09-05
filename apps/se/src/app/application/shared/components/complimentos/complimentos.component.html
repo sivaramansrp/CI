@@ -1,6 +1,6 @@
 <form class="complimentos-container container" [formGroup]="formaComplimentos">
   <div class="row">
-    <ng-titulo titulo="Datos de la solicitud" />
+    <ng-titulo titulo="Datos de la solicitude" />
 
     <div class="row">
       <div class="col-md-4">
@@ -53,8 +53,8 @@
           [isDisabled]="true"  name="opinionPositiva"></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <input-fecha [datos]="INPUT_FECHA_CONFIG" [setFecha]="formaComplimentos.get('fechaExpedicion')?.value"
-          (valorCambiado)="cambioFechaFinal($event)">
+        <input-fecha [datos]="INPUT_FECHA_CONFIG" [setFecha]="formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.value"
+          (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="formularioDeshabilitado">
         </input-fecha>
       </div>
       <div class="col-12 mt-5">
@@ -110,8 +110,8 @@
             </div>
 
           <div class="col-md-4">
-            <input-fecha [datos]="INPUT_FECHA_CONFIGURACION" [setFecha]="formaComplimentos.get('fechaDeActa')?.value" [deshabilitarFuturas]="true"
-          (valorCambiado)="cambioFecha($event)">
+            <input-fecha [datos]="INPUT_FECHA_CONFIGURACION" [setFecha]="formaComplimentos.get('formaModificaciones.fechaDeActa')?.value" [deshabilitarFuturas]="true"
+          (valorCambiado)="cambioFecha($event)" [isDisabled]="formularioDeshabilitado">
         </input-fecha>
         <div *ngIf="formaComplimentos.get('formaModificaciones.fechaDeActa')?.hasError('required') && formaComplimentos.get('formaModificaciones.fechaDeActa')?.touched">
             <p class="mensaje-error">Este campo es obligatorio.</p>
@@ -154,7 +154,7 @@
         <div class="row">
           <div class="col-md-12">
             <label class="control-label" for="buscar">
-              Nacionalidad Mexicana</label>
+              Nacionalidad mexicana:</label>
           </div>
           <div class="col-md-6">
             <div class="row">
@@ -198,23 +198,23 @@
       </div>
     </div>
     <div class="row mt-4">
-      <div formGroupName="formaDatos" class="row mb-4" *ngIf="obtenerControles()">
+      <div formGroupName="formaDatos" class="row mb-4">
         @for (item of camposFormulario; track $index) { @if (item.tipo_input ===
         'select') {
         <div [ngClass]="item.class">
-          <app-select-paises [catalogosPaises]="item?.opciones || []" [label]="item.labelNombre"
+          <app-select-paises [catalogosPaises]="item?.opciones || []" [label]="item.labelNombre" [isDisabled]="formularioDeshabilitado"
             [required]="item.required" [formControlName]="item.campo"></app-select-paises>
         </div>
 
         } @else if (item.tipo_input === 'select-paise') {
         <div [ngClass]="item.class">
-          <app-select-paises [catalogosPaises]="item?.opciones || []" [label]="item.labelNombre"
+          <app-select-paises [catalogosPaises]="item?.opciones || []" [label]="item.labelNombre" [isDisabled]="formularioDeshabilitado"
             [required]="item.required" [formControlName]="item.campo"></app-select-paises>
         </div>
 
         } @else if (item.tipo_input === 'select-catalog') {
         <div [ngClass]="item.class">
-          <app-catalogo-select [catalogo]="item?.opcionesCatalogo || []" [label]="item.labelNombre"
+          <app-catalogo-select [catalogo]="item?.opcionesCatalogo || []" [label]="item.labelNombre" [isDisabled]="formularioDeshabilitado"
             [required]="item.required" [formControlName]="item.campo" (change)="onCambio($event, item.campo)"></app-catalogo-select>
         </div>
 

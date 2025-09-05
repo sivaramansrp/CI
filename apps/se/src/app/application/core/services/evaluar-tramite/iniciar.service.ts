@@ -6,9 +6,9 @@ import { Injectable } from '@angular/core';
 import { API_GET_INICAR_DICTAMEN, API_POST_INICIAR_REQUERIMIENTO } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
 
-import { IniciarDictamenResponse } from '@libs/shared/data-access-user/src/core/models/130118/iniciar-dictamen-response.model';
+import { IniciarDictamenResponse } from '@libs/shared/data-access-user/src/core/models/shared/iniciar-dictamen-response.model';
 import { IniciarRequerimientoRequest } from '../../models/evaluar/request/iniciar-requerimiento-request.model';
-import { IniciarRequerimientoResponse } from '@libs/shared/data-access-user/src/core/models/130118/Iniciar-requerimiento-response.model';
+import { IniciarRequerimientoResponse } from '@libs/shared/data-access-user/src/core/models/shared/Iniciar-requerimiento-response.model';
 
 
 @Injectable({

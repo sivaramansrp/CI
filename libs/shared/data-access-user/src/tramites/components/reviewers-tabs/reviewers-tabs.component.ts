@@ -1,20 +1,20 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, Type, ViewChild, ViewContainerRef } from "@angular/core";
-import { AcusesResolucionResponse } from "../../../core/models/130118/consulta-acuses-response.model";
+import { AcusesResolucionResponse } from "../../../core/models/shared/consulta-acuses-response.model";
 import { BandejaAcusesComponent } from "../consulta-generica/bandeja-acuses/bandeja-acuses.component";
 import { CommonModule } from "@angular/common";
-import { DictamenesResponse } from "../../../core/models/130118/dictamenes-response.model";
-import { DocumentoSolicitud } from "../../../core/models/130118/consulta-documentos-response.model";
+import { DictamenesResponse } from "../../../core/models/shared/dictamenes-response.model";
+import { DocumentoSolicitud } from "../../../core/models/shared/consulta-documentos-response.model";
 import { DocumentosComponent } from "../consulta-generica/bandeja-documentos/documentos.component";
 import { EnvioDigitalComponent } from "../consulta-generica/consulta-envio-digital/envio-digital.component";
-import { EnvioDigitalResponse } from "../../../core/models/130118/envio-digital-response.model";
-import { OpinionResponse } from "../../../core/models/130118/opinion-response.model";
-import { RequerimientosResponse } from "../../../core/models/130118/requerimientos-response.model";
+import { EnvioDigitalResponse } from "../../../core/models/shared/envio-digital-response.model";
+import { OpinionResponse } from "../../../core/models/shared/opinion-response.model";
+import { RequerimientosResponse } from "../../../core/models/shared/requerimientos-response.model";
 import { TabDictamenComponent } from "../consulta-generica/tab-dictamen/tab-dictamen.component";
 import { TabOpinionComponent } from "../consulta-generica/tab-opinion/tab-opinion.component";
 import { TabRequerimientoComponent } from "../consulta-generica/tab-requerimiento/tab-requerimiento.component";
-import { TabsResponse } from "../../../core/models/130118/consulta-tabs-response.model";
+import { TabsResponse } from "../../../core/models/shared/consulta-tabs-response.model";
 import { Tabulaciones } from "../../../core/models/lista-trimites.model";
-import { TareasSolicitud } from "../../../core/models/130118/consulta-tareas-response.model";
+import { TareasSolicitud } from "../../../core/models/shared/consulta-tareas-response.model";
 import { TareasTramiteComponent } from "../consulta-generica/bandeja-tareas-tramite/tareas-tramite.component";
 import tramiteDetailsData from '@libs/shared/theme/assets/json/shared/lista-trimites-tabs.json';
 

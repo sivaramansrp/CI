@@ -289,10 +289,10 @@ export const NUMFOLIOTRAMITE = '{numFolioTramite}';
 export const IDSOLICITUDDICTAMEN = '{idSolicitudDictamen}';
 
 /**
- * API para obtener las opciones de evaluación del tramite generico.
+ * API para obtener las opciones de evaluación del tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/opciones-evaluacion
  */
-export const API_POST_OPCIONES_EVALUACION = `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/opciones-evaluacion`;
+export const API_POST_OPCIONES_EVALUACION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/${NUMFOLIOTRAMITE}/evaluar/opciones-evaluacion`;
 
 /**
  * API para generar el dictamen del tramite generico.
@@ -433,10 +433,22 @@ export const API_GET_SENTIDOS_DISPONIBLES = (TRAMITE: string, NUMFOLIOTRAMITE: s
 export const API_POST_GUARDAR_REQUERIMIENTO = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/guardar`;
 
 /**
+ * API para guardar el requerimiento del trámite 130118
+ * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Generar-Requerimiento/mostrar-firma
+ */
+export const API_POST_GUARDAR_REQUERIMIENTO_MOSTRAR_FIRMA = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/mostrar-firmar`;
+
+/**
+ * API para generar la firma del requerimiento del trámite 130118
+ * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Generar-Requerimiento/mostrar-firma
+ */
+export const API_POST_FIRMAR_REQUERIMIENTO = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/firmar`;
+
+/**
  * API para iniciar requerimiento trámite generico
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Requerimiento/iniciar-generar-requerimiento
  */
-export const API_POST_INICIAR_REQUERIMIENTO = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/iniciar`;
+export const API_POST_INICIAR_REQUERIMIENTO = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/requerimiento/generar/iniciar`;
 
 /** 
  * API para detalle de la opinion tramite generico.

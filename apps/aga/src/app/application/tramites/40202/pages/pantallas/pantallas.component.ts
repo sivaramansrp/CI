@@ -1,7 +1,8 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-
+import { ALERTA } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
+import { DatosComponent } from '../datos/datos.component';
 import { MODIFICACION_TRANSPORTACION_MARITIMA_PASO } from '../../constantes/modificacion-transportacion-maritima.enum';
 
 /**
@@ -13,6 +14,16 @@ import { MODIFICACION_TRANSPORTACION_MARITIMA_PASO } from '../../constantes/modi
   styles: ``
 })
 export class PantallasComponent {
+  /**
+   * Referencia al componente DatosComponent
+   */
+  @ViewChild(DatosComponent) datosComponent!: DatosComponent;
+
+  /**
+   * Mensaje de error a mostrar.
+   */
+  esValido = true;
+
   /**
    * Lista de pasos del wizard.
    * @type {ListaPasosWizard[]}
@@ -46,6 +57,16 @@ export class PantallasComponent {
   TEXTOS = AVISO.Aviso;
 
   /**
+   * Mensajes de alerta para el formulario.
+   */
+  ALERTA = ALERTA;
+
+  /**
+   * Una cadena que representa la clase CSS para una alerta de error.
+   */
+  infoError = 'alert-danger';
+
+  /**
    * Datos utilizados para el control del wizard.
    * @type {DatosPasos}
    */
@@ -64,6 +85,16 @@ export class PantallasComponent {
    */
   public getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+      if (this.indice === 1) {
+        const CAAT_MARITIMO = this.datosComponent?.caatMaritimoComponent;
+        this.esValido = CAAT_MARITIMO?.validarFormulario() ?? false;
+      }
+
+      if (!this.esValido) {
+        this.datosPasos.indice = 1;
+        return;
+      }
+
       this.indice = e.valor;
       this.datosPasos.indice = e.valor;
 
