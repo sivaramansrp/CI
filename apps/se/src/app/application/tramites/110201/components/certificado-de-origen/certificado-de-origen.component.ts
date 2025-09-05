@@ -948,7 +948,17 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Add this method to format the value on blur/change:
+
+/**
+ * Formatea el valor del campo 'cantidad' en el formulario 'mercanciaForm' para asegurar que tenga exactamente cuatro decimales.
+ *
+ * - Si el valor es un número entero o no contiene decimales, se le agregan '.0000'.
+ * - Si el valor ya contiene decimales, se ajusta para que tenga exactamente cuatro cifras decimales, rellenando con ceros si es necesario.
+ * - No emite eventos de cambio al actualizar el valor del control.
+ *
+ * @remarks
+ * Este método no realiza validaciones sobre el valor numérico, solo sobre el formato de los decimales.
+ */
 formatearCantidad(): void {
   const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.cantidad');
   let valor = CONTROL?.value;
@@ -964,6 +974,17 @@ formatearCantidad(): void {
   }
 }
 
+/**
+ * Formatea el valor de la mercancía en el formulario para asegurar que tenga exactamente cuatro decimales.
+ *
+ * - Si el valor no contiene decimales, se le agregan '.0000'.
+ * - Si el valor ya contiene decimales, se ajusta para que tenga exactamente cuatro dígitos decimales,
+ *   rellenando con ceros si es necesario o truncando si hay más de cuatro.
+ * - El valor formateado se establece en el control del formulario sin emitir eventos.
+ *
+ * @remarks
+ * Este método asume que el control 'validacionMercanciaForm.valorDelaMercancia' existe en el formulario 'mercanciaForm'.
+ */
 formatearValorDelaMercancia(): void {
   const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.valorDelaMercancia');
   let valor = CONTROL?.value;
@@ -979,6 +1000,16 @@ formatearValorDelaMercancia(): void {
   }
 }
 
+/**
+ * Formatea el valor del campo 'masaBruta' en el formulario 'mercanciaForm' para asegurar que tenga exactamente cuatro decimales.
+ * 
+ * - Si el valor no contiene decimales, se le agregan '.0000'.
+ * - Si el valor ya contiene decimales, se ajusta para que tenga exactamente cuatro dígitos decimales, rellenando con ceros si es necesario.
+ * - El valor formateado se establece en el control sin emitir eventos.
+ * 
+ * @remarks
+ * Este método no realiza validaciones numéricas, solo formatea la cadena del valor.
+ */
 formatearMasaBruta(): void {
   const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.masaBruta');
   let valor = CONTROL?.value;
