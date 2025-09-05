@@ -33,6 +33,7 @@
                     value=""
                     class="form-control" 
                     id="nombre"
+                    maxlength="250"
                     formControlName="nombre"
                     (change)="
                     setValoresStore(
@@ -40,7 +41,14 @@
                     'nombre',
                     'setNombre'
                     )"
+                    [ngClass]="{
+            'is-invalid': avisoForm.get('nombre')?.invalid && avisoForm.get('nombre')?.touched,
+            'is-valid': avisoForm.get('nombre')?.valid && avisoForm.get('nombre')?.touched
+        }"
                     >
+                      <div *ngIf="avisoForm.get('nombre')?.hasError('required') && avisoForm.get('nombre')?.touched">
+        <small class="text-danger">Este campo es obligatorio.</small>
+    </div>
                 </div>
             </div>
         </div>
@@ -52,6 +60,7 @@
                     value=""
                     class="form-control" 
                     id="rfc"
+                     maxlength="13"
                     formControlName="rfc" 
                     (change)="
                     setValoresStore(
@@ -59,8 +68,18 @@
                     'rfc',
                     'setRfc'
                     )"
+                    [ngClass]="{
+            'is-invalid': avisoForm.get('rfc')?.invalid && avisoForm.get('rfc')?.touched,
+            'is-valid': avisoForm.get('rfc')?.valid && avisoForm.get('rfc')?.touched
+        }"
                     [disabled]="esFormularioSoloLectura"
                     >
+                    <div *ngIf="avisoForm.get('rfc')?.hasError('required') && avisoForm.get('rfc')?.touched">
+        <small class="text-danger">Este campo es obligatorio.</small>
+    </div>
+    <div *ngIf="avisoForm.get('rfc')?.hasError('pattern') && avisoForm.get('rfc')?.touched">
+        <small class="text-danger">El RFC debe tener entre 12 y 13 caracteres alfanuméricos sin espacios.</small>
+    </div>
                 </div>
             </div>
         </div>
@@ -120,6 +139,8 @@
                     class="form-control" 
                     id="calle"
                     formControlName="calle" 
+                        maxlength="250"
+
                     (change)="
                     setValoresStore(
                     avisoForm,
@@ -140,6 +161,8 @@
                     class="form-control" 
                     id="numeroExterior"
                     formControlName="numeroExterior" 
+                        maxlength="15"
+
                     (change)="
                     setValoresStore(
                     avisoForm,
@@ -152,7 +175,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="numeroInterior">Número interior*:</label>
+                    <label class="form-label" for="numeroInterior">Número interior:</label>
                     <input type="text" 
                     value=""
                     class="form-control" 
@@ -176,6 +199,8 @@
                     class="form-control" 
                     id="codigoPostal"
                     formControlName="codigoPostal" 
+                     maxlength="5"
+                    pattern="[0-9]*"
                     (change)="
                     setValoresStore(
                     avisoForm,
@@ -195,6 +220,7 @@
                     value=""
                     class="form-control" 
                     id="cartaCupo"
+                    maxlength="250"
                     formControlName="cartaCupo" 
                     (change)="
                     setValoresStore(
@@ -220,6 +246,7 @@
                     class="form-control" 
                     id="numeraDeAcuse"
                     formControlName="numeraDeAcuse" 
+                    maxlength="8"
                     (change)="
                     setValoresStore(
                     avisoForm,
@@ -232,7 +259,7 @@
             </div>
         </div>
         
-        @if(avisoValor === 'deposito_fiscal' || avisoValor === 'fisco_federal'){
+        @if(avisoValor === 'deposito_fiscal' || avisoValor !== 'fisco_federal'){
 
         <div class="col-md-12">
             <ng-titulo titulo="Causas que motivan la destrucción" />
@@ -249,7 +276,10 @@
                     value=""
                     class="form-control" 
                     id="destruccionMercancia"
+                        maxlength="500"
+
                     formControlName="destruccionMercancia" 
+                      maxlength="500"
                     (change)="
                     setValoresStore(
                     avisoForm,
@@ -320,6 +350,7 @@
                     class="form-control" 
                     id="merccanciaCalle"
                     formControlName="merccanciaCalle" 
+                        maxlength="250"
                     (change)="
                     setValoresStore(
                     avisoForm,
@@ -340,6 +371,8 @@
                     class="form-control" 
                     id="merccanciaNumeroExterior"
                     formControlName="merccanciaNumeroExterior"
+                        maxlength="15"
+
                     (change)="
                     setValoresStore(
                     avisoForm,
@@ -352,7 +385,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="merccanciaNumeroInterior">Número interior*:</label>
+                    <label class="form-label" for="merccanciaNumeroInterior">Número interior:</label>
                     <input type="text" 
                     value=""
                     class="form-control" 
@@ -376,6 +409,8 @@
                     class="form-control" 
                     id="merccanciaCodigoPostal"
                     formControlName="merccanciaCodigoPostal" 
+                     maxlength="5"
+                   pattern="[0-9]*"
                     (change)="
                     setValoresStore(
                     avisoForm,
@@ -390,11 +425,13 @@
          <div class="row mt-5">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="destruir">Cantidad de mercancías a destruir*:</label>
+                    <label class="form-label" for="destruir">Cantidad de mercancías donadas*:</label>
                     <input type="text" 
                     value=""
                     class="form-control" 
                     id="destruir"
+                     maxlength="5"
+                     pattern="[0-9]*"
                     formControlName="destruir" 
                     (change)="
                     setValoresStore(
@@ -481,6 +518,7 @@
                     class="form-control" 
                     id="destruccionCalle"
                     formControlName="destruccionCalle" 
+                        maxlength="250"
                     [disabled]="esFormularioSoloLectura"
                     >
                 </div>
@@ -495,6 +533,7 @@
                     class="form-control" 
                     id="destruccionNumeroExterior"
                     formControlName="destruccionNumeroExterior" 
+                        maxlength="15"
                     (change)="
                     setValoresStore(
                     avisoForm,
@@ -507,7 +546,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="destruccionNumeroInterior">Número interior*:</label>
+                    <label class="form-label" for="destruccionNumeroInterior">Número interior:</label>
                     <input type="text" 
                     value=""
                     class="form-control" 
@@ -531,7 +570,9 @@
                     class="form-control" 
                     id="destruccionCodigoPostal"
                     formControlName="destruccionCodigoPostal"
-                    (change)="
+                     maxlength="5"
+                      pattern="[0-9]*"
+                     (change)="
                     setValoresStore(
                     avisoForm,
                     'destruccionCodigoPostal',
@@ -545,7 +586,7 @@
      }
         @if(avisoValor === 'deposito_fiscal'){
 
-          <div class="row mt-5">
+            <div class="row mt-5 justify-content-center text-center">
                 <ng-alert [CONTENIDO]="MENSAJE"></ng-alert>
             </div>
             <div class="row mt-5">
@@ -554,6 +595,7 @@
                     [setFecha]="DestruccionFecha" name= "caboDestruccionFecha" 
                 ></input-fecha>
                 </div>
+                 <div class="col-md-6">
                 <div class="form-group">
                     <label class="form-label" for="destruccionHora">Hora en la que se llevará a cabo la destrucción*:</label>
                     <input type="text" 
@@ -561,6 +603,11 @@
                     class="form-control" 
                     id="destruccionHora"
                     formControlName="destruccionHora" 
+                     pattern="^([01]\d|2[0-3]):([0-5]\d)$"
+                      [ngClass]="{
+            'is-invalid': avisoForm.get('destruccionHora')?.invalid && avisoForm.get('destruccionHora')?.touched,
+            'is-valid': avisoForm.get('destruccionHora')?.valid && avisoForm.get('destruccionHora')?.touched
+        }"
                     (change)="
                     setValoresStore(
                     avisoForm,
@@ -569,6 +616,10 @@
                     )"
                     [disabled]="esFormularioSoloLectura"
                     >
+                      <div *ngIf="avisoForm.get('destruccionHora')?.hasError('pattern') && avisoForm.get('destruccionHora')?.touched">
+                <small class="text-danger">La hora no cumple con el formato esperado(HH:mm) formato 24 horas.</small>
+            </div>
+                </div>
                 </div>
             </div>
             <div class="row mt-5">
@@ -621,7 +672,7 @@
             <div class="row mt-5">
                 <p>Descargar plantilla: Aquí</p>
                 <p>Adjuntar archivo:</p>
-                <div class="col-md-8">
+                 <div class="col-md-8 d-flex align-items-center">
                     <button type="button" for="archivoMedicamentos" class="file-upload"
                         (click)="activarSeleccionArchivo()"
                         [disabled]="esFormularioSoloLectura">
@@ -633,7 +684,7 @@
                         [disabled]="esFormularioSoloLectura">
                 </div>
 
-                <div class="col-md-4 text-end">
+                <div class="col-md-4 d-flex align-items-center">
                     <button class="btn btn-primary mr-5px" disabled="esFormularioSoloLectura"
                     [disabled]="esFormularioSoloLectura">Cargar
                         archivo</button>
@@ -657,6 +708,7 @@
                         class="form-control" 
                         id="donoMercancia"
                         formControlName="donoMercancia" 
+                            maxlength="500"
                         (change)="
                             setValoresStore(
                             avisoForm,
@@ -677,6 +729,7 @@
                         class="form-control" 
                         id="condicionesMateriales"
                         formControlName="condicionesMateriales" 
+                            maxlength="500"
                         (change)="
                             setValoresStore(
                             avisoForm,

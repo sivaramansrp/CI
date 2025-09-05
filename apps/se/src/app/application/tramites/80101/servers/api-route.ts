@@ -1,8 +1,7 @@
-/* eslint-disable no-useless-concat */
-
+/**
+ * Conjunto de rutas de la API para el procedimiento 80101.
+ */
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src/enviroments/enviroment";
-
-
 /**
  * url base de la API
  */
@@ -36,11 +35,11 @@ const PROCEDURE = '/sat-t80101';
  * Rutas de la API para el procedimiento 80101
  */
 export const PROC_80101 = {
-    ESTADO: `${BASE_URL}` + `${API}` + `${API_VERSION}` + `${PROCEDURE}` + `${CATALOGO}` + '/estado',
-    PAIS: `${BASE_URL}` + `${API}` + `${API_VERSION}` + `${PROCEDURE}` + `${CATALOGO}` + '/pais',
-    NICO: `${BASE_URL}` + `${API}` + `${API_VERSION}` + `${PROCEDURE}` + `${CATALOGO}` + '/nico',
-    POST_FORM_DATA: `${BASE_URL}` + `${API}` + `${API_VERSION}` + `${PROCEDURE}` + `${SOLICITUD}` + '/guardar',
-    GET_FORM_DATA: `${BASE_URL}` + `${API}` + `${API_VERSION}` + `${PROCEDURE}` + `${SOLICITUD}` + '/acuse',
-    CONSULTA_SOLICITUDE: `${BASE_URL}` + `${API}` + `${API_VERSION}` + `${PROCEDURE}` + `${TRAMITE}` + '/consulta' + '/${id}',
-    OPINIONES: (numFolioTramite: string | number) => `${BASE_URL}` + `${API}` + `${API_VERSION}` + `${PROCEDURE}` + `${TRAMITE}` + `/${numFolioTramite}/opiniones`
+    ESTADO: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/estado`,
+    PAIS: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/pais`,
+    NICO: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/nico`,
+    POST_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/guardar`,
+    GET_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/acuse`,
+    CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${TRAMITE}/consulta/${id}`,
+    OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`
 };
