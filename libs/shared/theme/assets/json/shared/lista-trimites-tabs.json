@@ -10,7 +10,7 @@
         "disabled": false
     },
     {
-        "titulo": "Generar un dictamen",
+        "titulo": "Dictamen",
         "id": "dictamen",
         "disabled": false
     },
@@ -30,7 +30,7 @@
         "disabled": false
     },
     {
-        "titulo": "Tareas",
+        "titulo": "Tareas del trámite",
         "id": "tareas",
         "disabled": false
     },

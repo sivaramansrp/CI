@@ -53,7 +53,7 @@ export class NuevoProgramaIndustrialService {
    */
 getSubfabricantesDisponibles(): Observable<PlantasSubfabricante[]> {
   return this.http
-    .get<PlantasSubfabricanteResponse>('assets/json/80207/submanufactureras-disponibles-datos.json')
+    .get<PlantasSubfabricanteResponse>('assets/json/80102/submanufactureras-disponibles-datos.json')
     .pipe(map(response => response.data));
 }
 

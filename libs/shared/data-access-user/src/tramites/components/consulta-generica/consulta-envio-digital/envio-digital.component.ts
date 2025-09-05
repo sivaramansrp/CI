@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { EnviosDigitalesService } from '../../../../core/services/consultagenerica/envio-digital-service';
 import { FolioQuery } from '../../../../core/queries/folio.query';
 
-import { EnvioDigitalResponse } from '../../../../core/models/130118/envio-digital-response.model';
+import { EnvioDigitalResponse } from '../../../../core/models/shared/envio-digital-response.model';
 
 @Component({
   selector: 'lib-envio-digital',

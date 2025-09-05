@@ -242,7 +242,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   */
   obtenerDataSolicitud(): void {
     const FOLIO = this.consultaState.folioTramite;
-    this.consultaSolicitudService.getDetalleSolicitud(FOLIO).subscribe({
+    this.consultaSolicitudService.getDetalleSolicitud(Number(this.consultaState.procedureId), FOLIO).subscribe({
       next: (response) => {
         if (response?.codigo === '00' && response?.datos) {
           this.llenarFormularioDesdeRespuesta(response.datos);
@@ -422,8 +422,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         fraccionArancelaria: [this.solicitudState?.fraccionArancelaria || null, Validators.required],
         nico: [{ value: this.solicitudState?.nico || null, disabled: true }, Validators.required],
         unidadMedidaTarifaria: [{ value: this.solicitudState?.unidadMedidaTarifaria || null, disabled: true }, Validators.required],
-        cantidadTarifaria: [this.solicitudState?.cantidadTarifaria, [Validators.min(0), Validators.required, Validators.max(999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
-        valorFacturaUSD: [this.solicitudState?.valorFacturaUSD, [Validators.min(0), Validators.max(999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES), Validators.required]],
+        cantidadTarifaria: [this.solicitudState?.cantidadTarifaria, [Validators.min(0), Validators.required, Validators.max(99999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
+        valorFacturaUSD: [this.solicitudState?.valorFacturaUSD, [Validators.min(0), Validators.max(99999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES), Validators.required]],
         precioUnitarioUSD: [{ value: this.solicitudState?.precioUnitarioUSD, disabled: true }],
         paisOrigen: [this.solicitudState?.paisOrigen || null, Validators.required],
         paisDestino: [this.solicitudState?.paisDestino || null, Validators.required],

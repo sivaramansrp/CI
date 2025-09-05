@@ -2,13 +2,13 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { IniciarDictamenResponse } from "../../../core/models/130118/iniciar-dictamen-response.model";
-import { SentidosDisponiblesResponse } from "../../../core/models/130118/sentidos-disponibles.model";
+import { IniciarDictamenResponse } from "../../../core/models/shared/iniciar-dictamen-response.model";
+import { SentidosDisponiblesResponse } from "../../../core/models/shared/sentidos-disponibles.model";
 import { ValidacionesFormularioService } from "../../../core/services/shared/validaciones-formulario/validaciones-formulario.service";
 
-import { CriteriosResponse } from "../../../core/models/130118/criterios-response.model";
-import { DictamenForm } from "../../../core/models/130118/dictamen-form.model";
-import { IniciarAutorizacionResponse } from "../../../core/models/130118/iniciar-autorizar-dictamen-response.model";
+import { CriteriosResponse } from "../../../core/models/shared/criterios-response.model";
+import { DictamenForm } from "../../../core/models/shared/dictamen-form.model";
+import { IniciarAutorizacionResponse } from "../../../core/models/shared/iniciar-autorizar-dictamen-response.model";
 
 
 
@@ -254,7 +254,7 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
         fechaFinVigenciaAutorizada: this.conformidad.fecha_fin_vigencia,
       });
     }
-    if (changes['dataIniciarDictamen'] && changes['dataIniciarDictamen'].currentValue) {
+    if (changes['dataIniciarDictamen'] && changes['dataIniciarDictamen'].currentValue && this.dictamenForm) {
       this.dictamenForm.patchValue({
         cumplimiento: this.dataIniciarDictamen.ide_sent_dictamen,
         mensajeDictamen: this.dataIniciarDictamen.justificacion,

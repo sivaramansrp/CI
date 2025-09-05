@@ -1,69 +1,76 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  Pipe,
-  PipeTransform,
-  Injectable,
-  CUSTOM_ELEMENTS_SCHEMA,
-  NO_ERRORS_SCHEMA,
-  Directive,
-  Input,
-  Output,
-} from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
-import { RegistroService } from '../../services/registro.service';
+import { Subject, of } from 'rxjs';
 
-@Injectable()
-class MockRegistroService {}
+describe('PasoUnoComponent (Simple Jest Tests)', () => {
+  let component: PasoUnoComponent;
+  
+  // Simple mocks for required services
+  const mockChangeDetectorRef = {
+    detectChanges: jest.fn()
+  };
 
-describe('PasoUnoComponent', () => {
-  let fixture;
-  let component;
+  const mockCertificadosOrigenService = {
+    getDatosConsulta: jest.fn().mockReturnValue(of({})),
+    actualizarEstadoFormulario: jest.fn()
+  };
+
+  const mockConsultaQuery = {
+    selectConsultaioState$: of({
+      update: true,
+      readonly: false
+    })
+  };
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, PasoUnoComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [{ provide: RegistroService, useClass: MockRegistroService }],
-    })
-      .overrideComponent(PasoUnoComponent, {})
-      .compileComponents();
-    fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.debugElement.componentInstance;
+    // Create component instance with mocks
+    component = new PasoUnoComponent(
+      mockChangeDetectorRef as any,
+      mockCertificadosOrigenService as any,
+      mockConsultaQuery as any
+    );
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function () {};
-    fixture.destroy();
-  });
+  // Basic tests that should pass
+  describe('Basic Component Tests', () => {
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
 
-  it('should run #constructor()', async () => {
-    expect(component).toBeTruthy();
-  });
+    it('should have initial values', () => {
+      expect(component.indice).toBe(1);
+      expect(component.formularioDeshabilitado).toBe(false);
+      expect(component.persona).toEqual([]);
+      expect(component.domicilioFiscal).toEqual([]);
+    });
 
-  it('should run #ngOnInit()', async () => {
-    component.registro = component.registro || {};
-    component.registro.getCatalogoById = jest
-      .fn()
-      .mockReturnValue(observableOf({}));
-    component.ngOnInit();
-    expect(component.registro.getCatalogoById).toHaveBeenCalled();
-  });
+    it('should update tab index when seleccionaTab is called', () => {
+      component.seleccionaTab(2);
+      expect(component.indice).toBe(2);
+    });
 
-  it('should run #ngAfterViewInit()', async () => {
-    component.solicitante = component.solicitante || {};
-    component.solicitante.obtenerTipoPersona = jest.fn();
-    component.ngAfterViewInit();
-    expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalled();
-  });
+    it('should handle subscription in ngOnInit', () => {
+      const spy = jest.spyOn(mockCertificadosOrigenService, 'getDatosConsulta');
+      component.ngOnInit();
+      expect(spy).toHaveBeenCalled();
+    });
 
-  it('should run #seleccionaTab()', async () => {
-    component.seleccionaTab({});
+    it('should cleanup subscriptions in ngOnDestroy', () => {
+      const testSubject = new Subject<void>();
+      const completeSpy = jest.spyOn(testSubject, 'complete');
+      
+      // Set the subject
+      component.destroyNotifier$ = testSubject;
+      
+      // Call ngOnDestroy
+      component.ngOnDestroy();
+      
+      // Verify complete was called
+      expect(completeSpy).toHaveBeenCalled();
+    });
+
+    // Test form validation when no child components are set
+    it('should return false for validarFormularios when child components are not set', () => {
+      expect(component.validarFormularios()).toBe(false);
+    });
   });
 });

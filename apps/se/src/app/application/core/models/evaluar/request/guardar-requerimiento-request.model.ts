@@ -4,6 +4,8 @@
 export interface GuardarRequerimiento {
     /** ID de la acción a realizar */
     id_accion: string;
+    /** Clave del usuario que realiza la acción */
+    cve_usuario:string;
     /** Justificación del requerimiento */
     justificacion: string;
     /** Lista de documentos requeridos */
@@ -11,7 +13,7 @@ export interface GuardarRequerimiento {
     /** IDs de documentos específicos */
     documentos_especificos?: number[];
     /** Alcance o descripción detallada del requerimiento */
-    alcance_requerimiento: string;
+    alcance_requerimiento?: string;
 }
 
 export interface Documento {

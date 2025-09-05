@@ -46,14 +46,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   @Input() tipoTramite: string = '';
   /**
    * Resetea todos los campos del formulario de pago de derechos y actualiza el store.
-   * Marca los controles como tocados para mostrar errores de campos requeridos si están vacíos.
+   * Marca los controles como pristine y untouched para ocultar errores de campos requeridos después de borrar.
    * Se invoca al hacer clic en el botón "Borrar datos del pago".
    */
   resetPagoDeDerechos(): void {
     if (this.pagoDeDerechosForm) {
       this.pagoDeDerechosForm.reset();
       Object.values(this.pagoDeDerechosForm.controls).forEach(control => {
-        control.markAsTouched();
+        control.markAsPristine();
+        control.markAsUntouched();
         control.updateValueAndValidity();
       });
       this.tramite260911Store.setTramite260911State({

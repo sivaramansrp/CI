@@ -7,7 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CONSULTA_REQUERIMIENTOS } from '../../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
 import { FolioQuery } from '../../../../core/queries/folio.query';
-import { RequerimientosResponse } from "../../../../core/models/130118/requerimientos-response.model";
+import { RequerimientosResponse } from "../../../../core/models/shared/requerimientos-response.model";
 import { RequerimientosService } from '../../../../core/services/consultagenerica/requerimiento-service';
 import { Router } from '@angular/router';
 

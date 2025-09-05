@@ -3,12 +3,10 @@ import {
   RespuestaCatalogos,
   SeccionLibStore,
 } from '@ng-mf/data-access-user';
-import {
-  DatosDeLaSolicitud,
-  ProductosCatalogosDatos,
-} from '../../../../shared/models/datos-de-la-solicitue.model';
+
 import {
   DatosForma,
+  DatosMercancia,
   FinalEnviar,
   ListaDeDatosFinal,
   Movilizacion,
@@ -19,6 +17,7 @@ import { Observable, map } from 'rxjs';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ProductosCatalogosDatos } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { URL } from '../../constantes/220202/fitosanitario.enums';
 
@@ -214,8 +213,8 @@ export class AgriculturaApiService {
    * @param {string} url - URL del archivo JSON que contiene los datos de la solicitud.
    * @returns {Observable<DatosDeLaSolicitud>} Observable con los datos de la solicitud.
    */
-  obtenerRespuestaPorUrl(url: string): Observable<DatosDeLaSolicitud> {
-    return this.http.get<DatosDeLaSolicitud>(
+  obtenerRespuestaPorUrl(url: string): Observable<DatosMercancia> {
+    return this.http.get<DatosMercancia>(
       `../../../../../assets/json/220202/${url}`
     );
   }

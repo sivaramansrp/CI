@@ -1,276 +1,224 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { SharedModule, SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { Subject, map, takeUntil } from 'rxjs';
-import { CertificadoDeOrigenComponent } from '../../components/certificado-de-origen/certificado-de-origen.component';
-import { CommonModule } from '@angular/common';
-import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
-import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
-import { HistoricoProductoresComponent } from '../../components/historico-productores/historico-productores.component';
-import { RegistroService } from '../../services/registro.service';
-import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.store';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { ConsultaioQuery, DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, FormularioDinamico, PERSONA_MORAL_NACIONAL, SolicitanteComponent, TIPO_PERSONA } from "@libs/shared/data-access-user/src";
+import { Subject, takeUntil } from "rxjs";
+import { CertificadoOrigenComponent } from "../../components/certificado-origen/certificado-origen.component";
+import { CertificadosOrigenService } from "../../services/certificado-origen.service";
+import { CommonModule } from "@angular/common";
+import { DatosCertificadoComponent } from "../../components/datos-certificado/datos_certificado.component";
+import { DestinatarioComponent } from "../../components/destinatario/destinatario.component";
+import { HistoricoProductoressComponent } from "../../components/historico-productores/historico-productores.component";
+import { ReactiveFormsModule } from "@angular/forms";
+
 
 /**
- * Componente que representa el primer paso del trámite.
- * Se encarga de gestionar la información del solicitante,
- * el domicilio fiscal y otros datos asociados al certificado.
+ * Componente correspondiente al primer paso del flujo del trámite.
+ * Contiene la lógica y vista para capturar datos del solicitante, su domicilio fiscal
+ * y el certificado de origen, además de manejar estados de solo lectura y edición.
  */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
-  styles: ``,
   standalone: true,
   imports: [
-    SharedModule,
-    CommonModule,
     SolicitanteComponent,
-    CertificadoDeOrigenComponent,
+    CertificadoOrigenComponent,
+    HistoricoProductoressComponent,
     DatosCertificadoComponent,
-    DestinatarioComponent,
-    HistoricoProductoresComponent,
-  ],
+    ReactiveFormsModule,
+    CommonModule,
+    DestinatarioComponent
+  ]
 })
-export class PasoUnoComponent implements OnDestroy, OnInit, AfterViewInit {
-  /**
-   * Catálogo de entidades federativas obtenido desde el servicio de registros.
-   */
-  entidadFederativa!: {
-    data: string;
-    domicilioFiscal?: { entidadFederativa?: string };
-  };
+export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
-   * Tipo de persona (física o moral) seleccionada en el formulario.
+   * Referencia al componente SolicitanteComponent mediante ViewChild.
+   * Se utiliza para invocar métodos o acceder a propiedades del componente hijo.
    */
-  tipoPersona!: number;
-
-  /**
-   * Configuración del formulario dinámico correspondiente a la persona.
-   */
-  persona: FormularioDinamico[] = [];
-
-  /**
-   * Configuración del formulario dinámico correspondiente al domicilio fiscal.
-   */
-  domicilioFiscal: FormularioDinamico[] = [];
-
-  /**
-   * Índice del paso actual en el flujo del asistente.
-   */
-  indice: number = 1;
-
-  /**
-   * Datos de consulta del trámite.
-   * @type {ConsultaioState}
-   */
-  consultaDatos!: ConsultaioState;
-
-  /**
-   * Bandera que indica si se están utilizando datos de respuesta del servidor.
-   * @type {boolean}
-   */
-  public esDatosRespuesta: boolean = false;
-
-  /**
-   * Subject para gestionar la destrucción de suscripciones.
-   * @type {Subject<void>}
-   */
-  public destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * Referencia al componente hijo `SolicitanteComponent`,
-   * usado para obtener y manipular información del solicitante.
+  
+    /**
+   * @property {SolicitanteComponent} solicitante
+   * @description
+   * Referencia al componente hijo `SolicitanteComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de solicitante desde el componente padre.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
   /**
-   * Constructor del componente.
-   * @param registro Servicio para obtener datos de catálogos, como entidades federativas.
+   * Representa el tipo de persona (física o moral).
+   */
+  tipoPersona!: number;
+
+  /**
+   * Arreglo de campos de formulario para datos del solicitante.
+   */
+  persona: FormularioDinamico[] = [];
+
+  /**
+   * Arreglo de campos de formulario para datos del domicilio fiscal del solicitante.
+   */
+  domicilioFiscal: FormularioDinamico[] = [];
+
+  /**
+   * Índice de pestaña activa en la interfaz de usuario.
+   */
+  indice: number = 1;
+
+  /**
+   * Subject utilizado para cancelar suscripciones activas al destruir el componente.
+   * Esto previene fugas de memoria.
+   * @private
+   */
+  public destroyNotifier$ = new Subject<void>();
+
+  /**
+   * Controla si el formulario se encuentra deshabilitado (solo lectura).
+   */
+  formularioDeshabilitado: boolean = false;
+
+    /**
+   * @property {CertificadoOrigenComponent} certificadoOrigen
+   * @description
+   * Referencia al componente hijo `CertificadoOrigenComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de certificado de origen desde el componente padre.
+   */
+  @ViewChild('CertificadoOrigen') certificadoOrigen!: CertificadoOrigenComponent;
+
+  /**
+   * @property {DatosCertificadoComponent} datosCertificado
+   * @description
+   * Referencia al componente hijo `DatosCertificadoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de datos del certificado desde el componente padre.
+   */
+  @ViewChild('DatosCertificado') datosCertificado!: DatosCertificadoComponent;
+  /**
+   * @property {DatosCertificadoComponent} datosCertificado
+   * @description
+   * Referencia al componente hijo `DatosCertificadoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de datos del certificado desde el componente padre.
+   */
+  @ViewChild('Destinatario') destinatario!: DestinatarioComponent;
+
+  /**
+   * Constructor con inyección de dependencias para servicios de detección de cambios,
+   * gestión de certificados de origen y consulta de estado de edición.
+   * 
+   * @param cdr Servicio de Angular para ejecutar detección de cambios manual.
+   * @param certificadosOrigenGridService Servicio para gestión de datos de certificados de origen.
+   * @param consultaQuery Servicio que expone el estado del proceso y permite reaccionar a cambios.
    */
   constructor(
-    private registro: RegistroService,
-    private consultaioQuery: ConsultaioQuery,
-    private tramite110223Store: Tramite110223Store
-  ) {
-    // El constructor se utiliza para la inyección de dependencias.
-  }
+    private cdr: ChangeDetectorRef,
+    private certificadosOrigenGridService: CertificadosOrigenService,
+    private consultaQuery: ConsultaioQuery
+  ) {}
 
   /**
-   * Ciclo de vida de Angular que se ejecuta una vez que el componente ha sido inicializado.
-   * Carga el catálogo de entidades federativas desde el servicio.
+   * Hook del ciclo de vida Angular que se ejecuta al iniciar el componente.
+   * Se suscribe a los cambios del estado de consulta y actualiza la vista en función del modo (lectura o edición).
    */
   ngOnInit(): void {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-        })
-      )
-      .subscribe();
-    this.registro.getCatalogoById(21).subscribe((resp) => {
-      this.entidadFederativa = resp;
-
-      const DATA = JSON.parse(this.entidadFederativa.data);
-      this.entidadFederativa = DATA?.domicilioFiscal?.entidadFederativa;
-    });
-    if (this.consultaDatos?.update) {
-      this.fetchGetDatosConsulta();
-    } else {
-      this.esDatosRespuesta = true;
-    }
-  }
-
-  /**
-   * Ciclo de vida de Angular que se ejecuta después de que las vistas hijas han sido inicializadas.
-   * Configura los formularios dinámicos de persona y domicilio fiscal,
-   * y obtiene el tipo de persona a través del componente solicitante.
-   */
-  ngAfterViewInit(): void {
-    this.persona = PERSONA_MORAL_NACIONAL;
-    this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
-  }
-
-  /**
-   * Método que permite seleccionar una pestaña del asistente.
-   * @param i Índice de la pestaña a seleccionar.
-   */
-  seleccionaTab(i: number): void {
-    this.indice = i;
-  }
-
-  /**
-   * Obtiene datos de consulta del servicio y actualiza el store.
-   * @returns {void}
-   */
-  public fetchGetDatosConsulta(): void {
-    this.registro
-      .getDatosConsulta()
+    this.consultaQuery.selectConsultaioState$
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((respuesta) => {
-        if (respuesta?.success) {
-          this.esDatosRespuesta = true;
-
-          this.tramite110223Store.setTercerOperador(
-            respuesta?.datos?.tercerOperador
-          );
-          this.tramite110223Store.setTratado(respuesta?.datos?.tratado);
-          this.tramite110223Store.setPais(respuesta?.datos?.pais);
-          this.tramite110223Store.setFraccionArancelaria(
-            respuesta?.datos?.fraccionArancelaria
-          );
-          this.tramite110223Store.setfraccionMercanArancelaria(
-            respuesta?.datos?.fraccionMercanciaArancelaria
-          );
-          this.tramite110223Store.setnombretecnico(
-            respuesta?.datos?.nombreTecnico
-          );
-          this.tramite110223Store.setvalorContenidoRegional(
-            respuesta?.datos?.valorContenidoRegional
-          );
-          this.tramite110223Store.setotrasInstancias(
-            respuesta?.datos?.otrasInstancias
-          );
-          this.tramite110223Store.setcriterioparapreferencial(
-            respuesta?.datos?.criterioParaPreferencial
-          );
-          this.tramite110223Store.setcantidad(respuesta?.datos?.cantidad);
-          this.tramite110223Store.setUMC(respuesta?.datos?.umc);
-          this.tramite110223Store.setTipoFactura(respuesta?.datos?.tipoFactura);
-          this.tramite110223Store.setFecha(respuesta?.datos?.fecha);
-          this.tramite110223Store.setNFactura(respuesta?.datos?.numeroFactura);
-          this.tramite110223Store.setnumeroSerie(respuesta?.datos?.numeroSerie);
-          this.tramite110223Store.setCheckbox(
-            respuesta?.datos?.casillaVerificacion
-          );
-          this.tramite110223Store.setJustificacion(
-            respuesta?.datos?.justificacion
-          );
-          this.tramite110223Store.setvalordelamercancia(
-            respuesta?.datos?.valorDelaMercancia
-          );
-          this.tramite110223Store.setcomplementodeladescripcion(
-            respuesta?.datos?.complementoDelaDescripcion
-          );
-          this.tramite110223Store.setnombrecomercialdelamercancia(
-            respuesta?.datos?.nombreComercialDelaMercancia
-          );
-          this.tramite110223Store.setNumRegistro(
-            respuesta?.datos?.numeroRegistro
-          );
-          this.tramite110223Store.setNomComercial(
-            respuesta?.datos?.nombreComercial
-          );
-          this.tramite110223Store.setFechInicioB(
-            respuesta?.datos?.fechaInicial
-          );
-          this.tramite110223Store.setFechFinB(respuesta?.datos?.fechaFinal);
-          this.tramite110223Store.setArchivo(respuesta?.datos?.archivo);
-          this.tramite110223Store.setObservaciones(
-            respuesta?.datos?.observaciones
-          );
-          this.tramite110223Store.setEntidad(respuesta?.datos?.entidad);
-          this.tramite110223Store.setRepresentacion(
-            respuesta?.datos?.representacion
-          );
-          this.tramite110223Store.setNombre(respuesta?.datos?.nombre);
-          this.tramite110223Store.setNumeroFiscal(
-            respuesta?.datos?.numeroFiscal
-          );
-          this.tramite110223Store.setCiudad(respuesta?.datos?.ciudad);
-          this.tramite110223Store.setCalle(respuesta?.datos?.calle);
-          this.tramite110223Store.setNumeroLetra(respuesta?.datos?.numeroLetra);
-          this.tramite110223Store.setnumeroDeRegistroFiscal(
-            respuesta?.datos?.numeroDeRegistroFiscal
-          );
-          this.tramite110223Store.setTelefono(respuesta?.datos?.telefono);
-          this.tramite110223Store.setFax(respuesta?.datos?.fax);
-          this.tramite110223Store.setCorreoElectronico(
-            respuesta?.datos?.correoElectronico
-          );
-          this.tramite110223Store.setNacion(respuesta?.datos?.nacion);
-          this.tramite110223Store.setDatosConfidencialesProductor(
-            respuesta?.datos?.datosConfidencialesProductor
-          );
-          this.tramite110223Store.setProductorMismoExportador(
-            respuesta?.datos?.productorMismoExportador
-          );
-          this.tramite110223Store.setAgregarDatosProductorNumeroRegistroFiscal(
-            respuesta?.datos?.numeroRegistroFiscal
-          );
-          this.tramite110223Store.setAgregarDatosProductorFax(
-            respuesta?.datos?.agregarDatosProductorFax
-          );
-          this.tramite110223Store.setLugar(
-            respuesta?.datos?.lugar
-          );
-          this.tramite110223Store.setNombreRepresentanteLegalExportador(
-            respuesta?.datos?.nombreRepresentanteLegalExportador
-          );
-          this.tramite110223Store.setNombreRepresentanteLegalExportador(
-            respuesta?.datos?.nombreRepresentanteLegalExportador
-          );
-          this.tramite110223Store.setEmpresaNombre(respuesta?.datos?.empresa);
-          this.tramite110223Store.setCargo(respuesta?.datos?.cargo);
-          this.tramite110223Store.setMercanciaSeleccionadasTablaData(
-            respuesta?.datos?.mercanciaSeleccionadasTablaData || []
-          );
-          this.tramite110223Store.setMercanciaDisponsiblesTablaDatos(
-            respuesta?.datos?.mercanciaDisponsiblesTablaDatos || []
-          );
+      .subscribe((seccionState) => {
+        if (seccionState.update) {
+          this.formularioDeshabilitado = false;
+          this.guardarDatosFormulario();
+        }
+        if (seccionState.readonly) {
+          this.formularioDeshabilitado = true;
         }
       });
   }
 
   /**
-   * Método que se ejecuta al destruir el componente.
-   * Limpia las suscripciones activas.
-   * @returns {void}
+   * Método que consulta los datos almacenados en el servicio `CertificadosOrigenGridService`
+   * y actualiza el estado del formulario si la respuesta es válida.
+   */
+  guardarDatosFormulario(): void {
+    this.certificadosOrigenGridService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.certificadosOrigenGridService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+
+  /**
+   * Hook del ciclo de vida Angular que se ejecuta después de que la vista se haya inicializado.
+   * Asigna los formularios dinámicos correspondientes y establece el tipo de persona por defecto.
+   */
+  ngAfterViewInit(): void {
+    this.persona = PERSONA_MORAL_NACIONAL;
+    this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
+    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * Cambia el índice de la pestaña activa en la interfaz de usuario.
+   *
+   * @param indice Nuevo índice que se desea seleccionar.
+   */
+  seleccionaTab(indice: number): void {
+    this.indice = indice;
+  }
+
+  /**
+   * @method validarFormularios
+   * @description
+   * Valida todos los formularios del paso uno: solicitante, certificado de origen y datos del certificado.
+   * Marca los controles como tocados si algún formulario es inválido para mostrar los errores de validación.
+   * Retorna `true` si todos los formularios son válidos, de lo contrario retorna `false`.
+   *
+   * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.certificadoOrigen) {
+      if (!this.certificadoOrigen.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosCertificado) {
+      if (!this.datosCertificado.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    if(this.destinatario){
+       if (!this.destinatario.validatorCheck()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
+  }
+
+  /**
+   * Hook del ciclo de vida Angular que se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones activas mediante la emisión del Subject.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
 }

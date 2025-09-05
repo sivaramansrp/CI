@@ -497,8 +497,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy ,OnChanges{
         '',
         [
           Validators.required,
-          Validators.maxLength(22),
-          Validators.pattern(REGEX_SOLO_DIGITOS),
+          Validators.maxLength(20),
         ],
       ],
       paisDestino: [
@@ -578,7 +577,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy ,OnChanges{
    */
   onPermisoGeneralInput(event: Event): void {
     const INPUT = event.target as HTMLInputElement;
-    INPUT.value = INPUT.value.replace(REGEX_NUMEROS, '').slice(0, 22);
+      INPUT.value = INPUT.value.replace(REGEX_SOLO_DIGITOS, '').slice(0, 22);
     this.form
       .get('permisoGeneral')
       ?.setValue(INPUT.value, { emitEvent: false });

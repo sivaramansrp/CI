@@ -38,13 +38,13 @@
   </div>
 </div>
 
-<div class="row mt-4 mb-4">
+<div class="row mt-4 mb-4" *ngIf="acusesResolucion?.documentos_oficiales?.length">
   <div class="col-md 6">
     <h5 class="titulo titulo-gold text-gold">Resolución(es)</h5>
   </div>
 </div>
 
-<div class="row">
+<div class="row" *ngIf="acusesResolucion?.documentos_oficiales?.length">
   <div class="col-md-12">
     <table class="table table-container">
       <thead>

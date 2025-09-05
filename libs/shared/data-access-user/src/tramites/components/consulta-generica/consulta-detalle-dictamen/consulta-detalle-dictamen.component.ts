@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 
 import { CONSULTA_DICTAMEN_OBSERVACIONES } from '../../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
-import { DictamenDetalleResponse } from '../../../../core/models/130118/dictamen-detalle-response.model';
+import { DictamenDetalleResponse } from '../../../../core/models/shared/dictamen-detalle-response.model';
 
 @Component({
   selector: 'lib-detalle-dictamen',

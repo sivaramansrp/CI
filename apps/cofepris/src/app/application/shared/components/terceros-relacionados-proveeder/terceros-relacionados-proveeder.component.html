@@ -17,6 +17,9 @@
        (listaDeFilaSeleccionada)="proveedorSeleccionadoDatos=$event"
        [disableSeleccionTablaCheckBox]="formularioDeshabilitado ? true : false"
     ></app-tabla-dinamica>
+    <div *ngIf="tableErrorMeassageDispalyProveedor && proveedorTablaDatos.length === 0">
+          <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+        </div>
   </div>
 
   <div class="row mt-5">
@@ -73,6 +76,9 @@
       (listaDeFilaSeleccionada)="fabricanteSeleccionadoDatos=$event"
        [disableSeleccionTablaCheckBox]="formularioDeshabilitado ? true : false"
     ></app-tabla-dinamica>
+    <div *ngIf="tableErrorMeassageDispalyFabricante && fabricanteTablaDatos.length === 0">
+          <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+        </div>
   </div>
 
 
