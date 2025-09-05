@@ -26,6 +26,12 @@ export class PasoUnoCsComponent implements OnInit, OnDestroy {
   formularioDeshabilitado: boolean = false;
 
   /**
+   * @description Constructor del componente.
+   * Inicializa el componente y establece el índice de la pestaña seleccionada.
+   */
+  public esFormularioUpdate: boolean = false;
+
+  /**
    * @property {Subject<void>} destroyNotifier$ - Subject para notificar la destrucción del componente.
    * Utilizado para cancelar suscripciones y evitar fugas de memoria.
    */
@@ -66,6 +72,7 @@ export class PasoUnoCsComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.consultaState = seccionState;
           this.formularioDeshabilitado = seccionState.readonly;
+          this.esFormularioUpdate = seccionState.update;
           if (this.consultaState.update) {
             this.guardarDatosFormulario();
           }
