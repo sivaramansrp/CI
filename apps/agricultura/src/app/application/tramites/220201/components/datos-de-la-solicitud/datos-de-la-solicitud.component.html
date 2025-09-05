@@ -126,6 +126,9 @@
           <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli" [configuracionTabla]="configuracionColumnasoli"
             [datos]="cuerpoTabla" (listaDeFilaSeleccionada)="seleccionTabla($event)"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+              <div *ngIf="mensajeErrorTabla && cuerpoTabla.length === 0 ">
+            <small class="mensaje-error">Este campo es obligatorio.</small>
+          </div>
         </div>
       </div>
       @if(!esFormularioSoloLectura){
@@ -136,7 +139,7 @@
           <button type="button" class="btn btn-danger ms-3"
             [disabled]="!notificationCheck || listSelectedView.length === 0"
             (click)="eliminarMercancia()">Eliminar</button>
-          <button type="button" class="btn btn-primary ms-3" [disabled]="!notificationCheck"
+          <button type="button" class="btn btn-primary ms-3"  [disabled]="!datosDelaSolicitud.get('tipoMercancia')?.value"
             (click)="agregarMercancia()">Agregar</button>
         </div>
       </div>

@@ -57,6 +57,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @property {string} TEXTOS
    */
   TEXTOS: string = TEXTOS;
+  /**
+   * Constantes de texto.
+   * @property {string} TEXTOS
+   */
+  mensajeErrorTabla: boolean = false;
 
   /**
    * Grupo de formularios principal.
@@ -421,7 +426,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
           certificacion: datosDeLaSolicitud.certificacion || '',
           regimen: datosDeLaSolicitud.regimen || ''
         })
-        this.notificationCheck = false;
+        this.radioBotonSeleccionado();
       }
     });
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
@@ -528,13 +533,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method radioBotonSeleccionado
    */
   radioBotonSeleccionado(): void {
-    const VALOR = this.datosDelaSolicitud.value.tipoMercancia;
-    if (VALOR !== '' && VALOR !== null && VALOR !== undefined) {
-      this.notificationCheck = true;
-    } else {
-      this.notificationCheck = false;
-    }
+    const VALOR = this.datosDelaSolicitud.value.tipoMercancia
+    
     if (VALOR === 'yes') {
+      this.notificationCheck = true;  
       this.configuracionColumnasoli = [
         { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
         { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
@@ -557,6 +559,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       ];
     }
     else {
+      this.notificationCheck = false;  
       this.configuracionColumnasoli = [
         { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
         { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
@@ -694,9 +697,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   * @returns {boolean}
   */
   validarFormulario(): boolean {
+     this.mensajeErrorTabla = this.cuerpoTabla.length > 0 ? true :false;
     if (this.forma.valid) {
-      return true;
+      return this.mensajeErrorTabla;
     }
+
     this.forma.markAllAsTouched();
     return false
   }
