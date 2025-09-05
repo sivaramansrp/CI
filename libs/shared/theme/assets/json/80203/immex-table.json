@@ -1,26 +1,14 @@
 {
     "permisoImmexDatos": [
       {
-        "IMMEX_Columna_1": "01",
-        "IMMEX_Columna_2": "IM23377137",
-        "IMMEX_Columna_3": "72012001",
-        "IMMEX_Columna_4": "Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso",
+        "IMMEX_Columna_1": "1",
+        "IMMEX_Columna_2": "IM25000185",
+        "IMMEX_Columna_3": "72162101",
+        "IMMEX_Columna_4": "Perfiles en L.",
         "IMMEX_Columna_5": "Kilogramo",
-        "IMMEX_Columna_6": "10",
-        "IMMEX_Columna_7": "28/12/203",
-        "IMMEX_Columna_8": "28/12/205",
-        "estatus": true
-      },
-      {
-        "IMMEX_Columna_1": "02",
-        "IMMEX_Columna_2": "IM56789234",
-        "IMMEX_Columna_3": "72015010",
-        "IMMEX_Columna_4": "Hierro y acero sin alear en lingotes",
-        "IMMEX_Columna_5": "Tonelada",
-        "IMMEX_Columna_6": "25",
-        "IMMEX_Columna_7": "15/05/2025",
-        "IMMEX_Columna_8": "28/12/205",
-        "estatus": false
+        "IMMEX_Columna_6": "300",
+        "IMMEX_Columna_7": "05/06/2025",
+        "IMMEX_Columna_8": "05/10/2025"
       }
     ],
     "fraccionDatos": [
