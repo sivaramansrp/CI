@@ -448,9 +448,17 @@
           [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
           [required]="true" 
           formControlName="aifaCheckbox" 
-                    [isDisabled]="esFormularioSoloLectura || !!nicoTablaForm.get('entidad')?.disabled"
+          [isDisabled]="esFormularioSoloLectura || !!nicoTablaForm.get('entidad')?.disabled"
           (change)="setValorStore(domicilio, 'aifaCheckbox')"
-        ></lib-input-check>
+        > <span 
+              class="bi bi-question-circle-fill" 
+              title="Marcar la
+                    casilla si
+                    requiere usar
+                    esta aduana."
+              data-bs-toggle="tooltip"
+              ></span
+            ></lib-input-check>
       </div>
     </div>
 
