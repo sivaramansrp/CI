@@ -52,3 +52,8 @@
     </div>
   </div>
 </ng-container>
+
+<section *ngIf="nuevaUnoNotificacion">
+    <lib-notificaciones [notificacionInput]="nuevaUnoNotificacion">
+    </lib-notificaciones>
+</section>
