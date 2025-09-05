@@ -7,10 +7,11 @@ import {
   DatosComplimento,
   RutaNombre,
 } from '../../models/nuevo-programa-industrial.model';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, delay, takeUntil } from 'rxjs';
 import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
 import { CommonModule } from '@angular/common';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -35,7 +36,7 @@ import { Validators } from '@angular/forms';
   templateUrl: './anexo-uno.component.html',
   styleUrl: './anexo-uno.component.scss',
 })
-export class AnexoUnoComponent implements OnInit {
+export class AnexoUnoComponent implements OnInit, OnDestroy {
   public anexoUnoAlerta = ANEXO_UNO_ALERTA;
   public anexoUnoFormGroup!: FormGroup;
   public anexoDosFormGroup!: FormGroup;
@@ -186,7 +187,7 @@ export class AnexoUnoComponent implements OnInit {
    * Constructor de la clase AnexoUnoComponent
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private complimentosService: ComplimentosService) {
     this.crearFormularioAnexoUno();
     this.crearFormularioAnexoDos();
   }
@@ -398,6 +399,8 @@ export class AnexoUnoComponent implements OnInit {
    */
   setAnexoUnoLista(event: AnexoUnoEncabezado): void {
     this.datosImportacionSeleccionados = event;
+    this.complimentosService.setAnexoUnoFilaSeleccionada(event);
+    this.complimentosService.setAnexoDosFilaSeleccionada(null);
     //this.obtenerAnexoUnoDevolverLaLlamada.emit(LISTA_SELECCIONADA);
   }
 
@@ -410,6 +413,8 @@ export class AnexoUnoComponent implements OnInit {
    */
   setAnexoDosLista(event: AnexoDosEncabezado): void {
     this.datosExportacionSeleccionados = event;
+    this.complimentosService.setAnexoDosFilaSeleccionada(event);
+    this.complimentosService.setAnexoUnoFilaSeleccionada(null);
   }
 
   /**
@@ -420,6 +425,24 @@ export class AnexoUnoComponent implements OnInit {
    */
   setRuta(nombre: string, id: string): void {
     if (nombre) {
+      if (id === 'IMPORT') {
+      if (
+        this.datosImportacionSeleccionados &&
+        'encabezadoFraccionArancelaria' in this.datosImportacionSeleccionados
+      ) {
+        this.complimentosService.setAnexoUnoFilaSeleccionada(this.datosImportacionSeleccionados as AnexoUnoEncabezado);
+      } else {
+        this.complimentosService.setAnexoUnoFilaSeleccionada(null);
+      }
+      this.complimentosService.setAnexoDosFilaSeleccionada(null);
+    } else if (id === 'EXPORT') {
+      if (this.datosExportacionSeleccionados && 'encabezadoFraccionExportacion' in this.datosExportacionSeleccionados) {
+        this.complimentosService.setAnexoDosFilaSeleccionada(this.datosExportacionSeleccionados as AnexoDosEncabezado);
+      } else {
+        this.complimentosService.setAnexoDosFilaSeleccionada(null);
+      }
+      this.complimentosService.setAnexoUnoFilaSeleccionada(null);
+    }
       const RUTA_NOMBRE: RutaNombre = {
         catagoria: nombre,
         id: id,
@@ -431,4 +454,13 @@ export class AnexoUnoComponent implements OnInit {
       this.rutaLaFraccionDeComplemento.emit(RUTA_NOMBRE);
     }
   }
+
+/**
+ * Método del ciclo de vida que se ejecuta al destruir el componente.
+ * Libera recursos notificando a los observables que deben finalizar suscripciones.
+ */
+ngOnDestroy(): void {
+  this.destroyNotifier$.next();
+  this.destroyNotifier$.complete();
+}
 }
