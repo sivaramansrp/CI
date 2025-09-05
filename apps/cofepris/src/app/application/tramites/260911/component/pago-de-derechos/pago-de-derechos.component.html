@@ -52,9 +52,7 @@
               (change)="setValoresStore(pagoDeDerechosForm, 'clave')"
             >
             </app-catalogo-select>
-              <div *ngIf="esInvalido('clave')" class="text-danger">
-                  <small *ngIf="pagoDeDerechosForm.controls['clave'].hasError('required') && (pagoDeDerechosForm.controls['clave'].touched || pagoDeDerechosForm.controls['clave'].dirty)">Todos los campos de pago son requeridos.</small>
-            </div>
+
             </div>
           </div>
       </div>
