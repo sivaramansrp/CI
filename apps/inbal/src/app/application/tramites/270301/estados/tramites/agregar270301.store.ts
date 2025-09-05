@@ -44,6 +44,8 @@ export interface Solicitud270301State {
 
   /** Aduana de entrada seleccionada. */
   aduanaEntrada: string;
+  /** Manifiesto correspondiente al trámite. */
+  manifiesto: boolean;
 
    /**
      * Arreglo que contiene los datos de las obras de arte.
@@ -72,6 +74,7 @@ export function createInitialState(): Solicitud270301State {
     destinofinal: '',
     periodoEstancia: '',
     aduanaEntrada: '',
+    manifiesto: false,
     /**
      * Arreglo que contiene los datos de las obras de arte. Inicialmente está vacío.
      */
@@ -222,6 +225,19 @@ export class Agregar270301Store extends Store<Solicitud270301State> {
     this.update((state) => ({
       ...state,
       aduanaEntrada,
+    }));
+  }
+
+  /**
+   * @method setmanifiesto
+   * @description
+   * Actualiza el estado con el manifiesto correspondiente al trámite.
+   * @param {boolean} manifiesto - El manifiesto correspondiente.
+   */
+  public setmanifiesto(manifiesto: boolean): void {
+    this.update((state) => ({
+      ...state,
+      manifiesto,
     }));
   }
 
