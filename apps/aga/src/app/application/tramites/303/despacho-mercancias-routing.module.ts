@@ -1,9 +1,9 @@
 import { RouterModule, Routes } from '@angular/router';
+import { EnlaceOperativoComponent } from './components/enlace-operativo/enlace-operativo.component';
 import { NgModule } from '@angular/core';
 import { RegistroFiguraComponent } from './components/registro-figura/registro-figura.component';
 import { RegistroPageComponent } from './pages/registro-page/registro-page.component';
 import { RegistroTrasportistaComponent } from './components/registro-trasportista/registro-trasportista.component';
-import { TestPageComponent } from './pages/test-page/test-page.component';
 
 export const ROUTES: Routes = [
   {
@@ -30,9 +30,9 @@ export const ROUTES: Routes = [
     component: RegistroTrasportistaComponent
   },
   {
-    path: 'test',
-    component: TestPageComponent
-  }
+    path: 'enlace-operativo',
+    component: EnlaceOperativoComponent
+  },
 ];
 
 @NgModule({
