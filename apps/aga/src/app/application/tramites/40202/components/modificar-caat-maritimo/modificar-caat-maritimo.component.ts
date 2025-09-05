@@ -139,6 +139,12 @@ export class ModificarCaatMaritimoComponent implements OnDestroy {
   formularioDeshabilitado: boolean = false;
 
   /**
+   * @property {boolean} mostrarError
+   * @description Indica si se debe mostrar un mensaje de error.
+   */
+  mostrarError: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
    * @param tramite40202Store Store para gestionar el estado del trámite 40202.
@@ -606,6 +612,19 @@ export class ModificarCaatMaritimoComponent implements OnDestroy {
     this.setValoresStore(this.personaFisicaExtranjeraForm, 'callePFE', 'setCallePFE');
     this.setValoresStore(this.personaFisicaExtranjeraForm, 'numeroExteriorPFE', 'setNumeroExteriorPFE');
     this.setValoresStore(this.personaFisicaExtranjeraForm, 'numeroInteriorPFE', 'setNumeroInteriorPFE');
+  }
+
+  /**
+   * Método para validar el formulario.
+   * @returns {boolean} Verdadero si el formulario es válido, falso en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if(this.candidatoModificarCaatTabla.length === 0) {
+      this.mostrarError = true;
+      return false;
+    }
+    this.mostrarError = false;
+    return true;
   }
 
   /**
