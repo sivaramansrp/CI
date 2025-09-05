@@ -53,6 +53,58 @@ export interface Solicitud32201State {
    * Indica la selección del primer grupo de opciones de radio.
    */
   radio_3: string;
+
+  /**
+   * El valor de valorAduana.
+   * Indica el valor aduana.
+   */
+  valorAduana?: string;
+
+  /** Texto genérico 10, valor numérico */
+  textoGenerico10: number | string;
+
+  /** Texto genérico 11, valor numérico */
+  textoGenerico11: number | string;
+
+  /** Texto genérico 12, valor numérico */
+  textoGenerico12: number | string;
+
+  /** Texto genérico 13, valor numérico */
+  textoGenerico13: number | string;
+
+  /** Texto genérico 14, valor numérico */
+  textoGenerico14: number | string;
+
+  /** Texto genérico 15, valor numérico */
+  textoGenerico15: number | string;
+
+  /** Texto genérico 16, valor numérico */
+  textoGenerico16: number | string;
+
+  /** Texto genérico 17, valor numérico */
+  textoGenerico17: number | string;
+
+  /** Texto genérico 18, valor numérico */
+  textoGenerico18: number | string;
+
+  /** Texto genérico 19, valor numérico */
+  textoGenerico19: number | string;
+
+  /** Texto genérico 20, valor numérico */
+  textoGenerico20: number | string;
+
+  /** Texto genérico 21, valor numérico */
+  textoGenerico21: number | string;
+
+  /** Texto genérico 22, valor numérico */
+  textoGenerico22: number | string;
+
+  /** Texto genérico 23, valor numérico */
+  textoGenerico23: number | string;
+
+  /** Texto genérico 24, valor numérico */
+  textoGenerico24: number | string;
+
 }
 
 /**
@@ -101,7 +153,29 @@ export function createInitialState(): Solicitud32201State {
     /**
      * El valor inicial de radio3.
      */
-    radio_3: ''
+    radio_3: '',
+
+    /**
+     * El valor inicial de valorAduana.
+     */
+    valorAduana: '',
+
+    textoGenerico10: '',
+    textoGenerico11: '',
+    textoGenerico12: '',
+    textoGenerico13: '',
+    textoGenerico14: '',
+    textoGenerico15: '',
+    textoGenerico16: '',
+    textoGenerico17: '',
+    textoGenerico18: '',
+    textoGenerico19: '',
+    textoGenerico20: '',
+    textoGenerico21: '',
+    textoGenerico22: '',
+    textoGenerico23: '',
+    textoGenerico24: '',
+    
   };
 }
 
@@ -223,7 +297,169 @@ export class Tramite32201Store extends Store<Solicitud32201State> {
       radio_3,
     }));
   }
-  
+
+  /**
+   * Establece el estado de valorAduana.
+   * 
+   * @param {string} valorAduana - El valor de valorAduana.
+   */
+  public setValorAduana(valorAduana: string): void {
+    this.update((state) => ({
+      ...state,
+      valorAduana,
+    }));
+  }
+
+  /**
+   * Establece el estado de textoGenerico10.
+   */
+  public setTextoGenerico10(textoGenerico10: number | string): void {
+    this.update((state) => ({
+      ...state,
+      textoGenerico10,
+    }));
+  }
+
+  /**
+   * Establece el estado de textoGenerico11.
+   */
+  public setTextoGenerico11(textoGenerico11: number | string): void {
+    this.update((state) => ({
+      ...state,
+      textoGenerico11,
+    }));
+  }
+
+  /**
+   * Establece el estado de textoGenerico12.
+   */
+  public setTextoGenerico12(textoGenerico12: number | string): void {
+    this.update((state) => ({
+      ...state,
+      textoGenerico12,
+    }));
+  }
+
+  /**
+   * Establece el estado de textoGenerico13.
+   */
+  public setTextoGenerico13(textoGenerico13: number | string): void {
+    this.update((state) => ({
+      ...state,
+      textoGenerico13,
+    }));
+  }
+
+  /**
+   * Establece el estado de textoGenerico14.
+   */
+  public setTextoGenerico14(textoGenerico14: number | string): void {
+    this.update((state) => ({
+      ...state,
+      textoGenerico14,
+    }));
+  }
+
+  /**
+   * Establece el estado de textoGenerico15.
+   */
+  public setTextoGenerico15(textoGenerico15: number | string): void {
+    this.update((state) => ({
+      ...state,
+      textoGenerico15,
+    }));
+  }
+
+  /**
+   * Establece el estado de textoGenerico16.
+   */
+  public setTextoGenerico16(textoGenerico16: number | string): void {
+    this.update((state) => ({
+      ...state,
+      textoGenerico16,
+    }));
+  }
+
+  /**
+   * Establece el estado de textoGenerico17.
+   */
+  public setTextoGenerico17(textoGenerico17: number | string): void {
+    this.update((state) => ({
+      ...state,
+      textoGenerico17,
+    }));
+  }
+
+  /**
+   * Establece el estado de textoGenerico18.
+   */
+  public setTextoGenerico18(textoGenerico18: number | string): void {
+    this.update((state) => ({
+      ...state,
+      textoGenerico18,
+    }));
+  }
+
+  /**
+   * Establece el estado de textoGenerico19.
+   */
+  public setTextoGenerico19(textoGenerico19: number | string): void {
+    this.update((state) => ({
+      ...state,
+      textoGenerico19,
+    }));
+  }
+
+  /**
+   * Establece el estado de textoGenerico20.
+   */
+  public setTextoGenerico20(textoGenerico20: number | string): void {
+    this.update((state) => ({
+      ...state,
+      textoGenerico20,
+    }));
+  }
+
+  /**
+   * Establece el estado de textoGenerico21.
+   */
+  public setTextoGenerico21(textoGenerico21: number | string): void {
+    this.update((state) => ({
+      ...state,
+      textoGenerico21,
+    }));
+  }
+
+  /**
+   * Establece el estado de textoGenerico22.
+   */
+  public setTextoGenerico22(textoGenerico22: number | string): void {
+    this.update((state) => ({
+      ...state,
+      textoGenerico22,
+    }));
+  }
+
+  /**
+   * Establece el estado de textoGenerico23.
+   */
+  public setTextoGenerico23(textoGenerico23: number | string): void {
+    this.update((state) => ({
+      ...state,
+      textoGenerico23,
+    }));
+  }
+
+  /**
+   * Establece el estado de textoGenerico24.
+   */
+  public setTextoGenerico24(textoGenerico24: number | string): void {
+    this.update((state) => ({
+      ...state,
+      textoGenerico24,
+    }));
+  }
+
   /**
    * Limpia los datos de la solicitud.
    * Restablece el estado al valor inicial.

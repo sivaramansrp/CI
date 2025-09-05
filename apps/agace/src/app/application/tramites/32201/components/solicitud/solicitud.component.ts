@@ -111,6 +111,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     { label: 'No', value: 'no' },
   ];
 
+  textoRequisito = this.TEXTOS.TEXTO_REQUISITOS;
+
   /**
    * Constructor del componente.
    * @param fb - FormBuilder para crear formularios reactivos.
@@ -303,11 +305,154 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       regimen_2: [{value: this.solicitudState?.regimen_2, disabled: this.esFormularioSoloLectura}],
       regimen_3: [{value: this.solicitudState?.regimen_3, disabled: this.esFormularioSoloLectura}],
       manifiesto: [{value: this.solicitudState?.manifiesto, disabled: this.esFormularioSoloLectura}],
-      radio1: [{value: this.solicitudState?.radio_1, disabled: this.esFormularioSoloLectura}],
-      radio2: [{value: this.solicitudState?.radio_2, disabled: this.esFormularioSoloLectura}],
-      radio3: [{value: this.solicitudState?.radio_3, disabled: this.esFormularioSoloLectura}],
+      radio_1: [{value: this.solicitudState?.radio_1, disabled: this.esFormularioSoloLectura}],
+      radio_2: [{value: this.solicitudState?.radio_2, disabled: this.esFormularioSoloLectura}],
+      radio_3: [{value: this.solicitudState?.radio_3, disabled: this.esFormularioSoloLectura}],
+      valorAduana: [{value: this.solicitudState?.valorAduana, disabled: this.esFormularioSoloLectura}],
+      textoGenerico10: this.solicitudState.textoGenerico10,
+      textoGenerico11: this.solicitudState.textoGenerico11,
+      textoGenerico12: this.solicitudState.textoGenerico12,
+      textoGenerico13: this.solicitudState.textoGenerico13,
+      textoGenerico14: this.solicitudState.textoGenerico14,
+      textoGenerico15: this.solicitudState.textoGenerico15,
+      textoGenerico16: this.solicitudState.textoGenerico16,
+      textoGenerico17: this.solicitudState.textoGenerico17,
+      textoGenerico18: this.solicitudState.textoGenerico18,
+      textoGenerico19: this.solicitudState.textoGenerico19,
+      textoGenerico20: this.solicitudState.textoGenerico20,
+      textoGenerico21: this.solicitudState.textoGenerico21,
+      textoGenerico22: this.solicitudState.textoGenerico22,
+      textoGenerico23: this.solicitudState.textoGenerico23,
+      textoGenerico24: this.solicitudState.textoGenerico24,
     });
   }
+
+  /** Actualiza el décimo texto genérico y recalcula el valor comercial */
+  actualizarTextoGenerico10(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico10(VALOR);
+    this.calcularValorComercial();
+  }
+
+  /** Actualiza el undécimo texto genérico y recalcula el valor aduanero */
+  actualizarTextoGenerico11(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico11(VALOR);
+    this.calcularValorAduana();
+  }
+
+  /** Actualiza el duodécimo texto genérico y recalcula el porcentaje */
+  actualizarTextoGenerico12(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico12(VALOR);
+    this.calcularValorPorcentaje();
+  }
+
+  /** Actualiza el decimotercer texto genérico y recalcula el valor comercial */
+  actualizarTextoGenerico13(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico13(VALOR);
+    this.calcularValorComercial();
+  }
+
+  /** Actualiza el decimocuarto texto genérico y recalcula el valor aduanero */
+  actualizarTextoGenerico14(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico14(VALOR);
+    this.calcularValorAduana();
+  }
+
+  /** Actualiza el decimoquinto texto genérico y recalcula el porcentaje */
+  actualizarTextoGenerico15(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico15(VALOR);
+    this.calcularValorPorcentaje();
+  }
+
+  /** Actualiza el decimosexto texto genérico y recalcula el valor comercial */
+  actualizarTextoGenerico16(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico16(VALOR);
+    this.calcularValorComercial();
+  }
+
+  /** Actualiza el decimoséptimo texto genérico y recalcula el valor aduanero */
+  actualizarTextoGenerico17(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico17(VALOR);
+    this.calcularValorAduana();
+  }
+
+  /** Actualiza el decimoctavo texto genérico y recalcula el porcentaje */
+  actualizarTextoGenerico18(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico18(VALOR);
+    this.calcularValorPorcentaje();
+  }
+
+  /** Actualiza el decimonoveno texto genérico y recalcula el valor comercial */
+  actualizarTextoGenerico19(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico19(VALOR);
+    this.calcularValorComercial();
+  }
+
+  /** Actualiza el vigésimo texto genérico y recalcula el valor aduanero */
+  actualizarTextoGenerico20(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico20(VALOR);
+    this.calcularValorAduana();
+  }
+
+  /** Actualiza el vigesimoprimer texto genérico y recalcula el porcentaje */
+  actualizarTextoGenerico21(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico21(VALOR);
+    this.calcularValorPorcentaje();
+  }
+
+  /** Calcula el valor comercial sumando los valores ingresados */
+  calcularValorComercial(): void {
+    const VALOR1 = this.solicitudForm.get('textoGenerico10')?.value;
+    const VALOR2 = this.solicitudForm.get('textoGenerico13')?.value;
+    const VALOR3 = this.solicitudForm.get('textoGenerico16')?.value;
+    const VALOR4 = this.solicitudForm.get('textoGenerico19')?.value;
+
+    if (VALOR1 || VALOR2 || VALOR3 || VALOR4) {
+      const VALOR_COMERCIAL =
+        Number(VALOR1) + Number(VALOR2) + Number(VALOR3) + Number(VALOR4);
+      this.tramite32201Store.setTextoGenerico22(VALOR_COMERCIAL);
+    }
+  }
+
+  /** Calcula el valor aduanero sumando los valores ingresados */
+  calcularValorAduana(): void {
+    const VALOR1 = this.solicitudForm.get('textoGenerico11')?.value;
+    const VALOR2 = this.solicitudForm.get('textoGenerico14')?.value;
+    const VALOR3 = this.solicitudForm.get('textoGenerico17')?.value;
+    const VALOR4 = this.solicitudForm.get('textoGenerico20')?.value;
+
+    if (VALOR1 || VALOR2 || VALOR3 || VALOR4) {
+      const VALOR_COMERCIAL =
+        Number(VALOR1) + Number(VALOR2) + Number(VALOR3) + Number(VALOR4);
+      this.tramite32201Store.setTextoGenerico23(VALOR_COMERCIAL);
+    }
+  }
+
+  /** Calcula el porcentaje basado en los valores ingresados */
+  calcularValorPorcentaje(): void {
+    const VALOR1 = this.solicitudForm.get('textoGenerico12')?.value;
+    const VALOR2 = this.solicitudForm.get('textoGenerico15')?.value;
+    const VALOR3 = this.solicitudForm.get('textoGenerico18')?.value;
+    const VALOR4 = this.solicitudForm.get('textoGenerico21')?.value;
+
+    if (VALOR1 || VALOR2 || VALOR3 || VALOR4) {
+      const VALOR_COMERCIAL =
+        Number(VALOR1) + Number(VALOR2) + Number(VALOR3) + Number(VALOR4);
+      this.tramite32201Store.setTextoGenerico24(VALOR_COMERCIAL);
+    }
+  }
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Completa el observable `destroyed$` para evitar fugas de memoria.

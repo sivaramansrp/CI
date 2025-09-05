@@ -24,5 +24,10 @@ export const SOLICITUD_32201_ENUM = {
   /**
    * Texto de button.
    */
-  ELGIR_DE_ARCHIVO: 'No se eligió ningún archivo'
+  ELGIR_DE_ARCHIVO: 'No se eligió ningún archivo',
+
+  /**
+   * Texto de alerta.
+   */
+  TEXTO_REQUISITOS: 'Los siguientes campos, deberán llenarse, solamente en caso de ser afirmativa la respuesta.',
 };
