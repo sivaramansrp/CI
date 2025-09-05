@@ -39,7 +39,7 @@ export class ProsecService {
    * Establece el valor de si es baja o no.
    * @param value - Valor booleano que indica si es baja o no.
    */
-  setIsBaja(value: boolean) {
+  setIsBaja(value: boolean): void {
     this.isBajaSubject.next(value);
   }
 

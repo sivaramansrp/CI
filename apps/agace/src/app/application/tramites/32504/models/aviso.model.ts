@@ -4,6 +4,8 @@ export interface FormularioGrupo {
     datosQuienRecibe: DatosQuienRecibe,
     datosDomicilioLugar: DatosDomicilioLugar,
     datosMercanciaSubmanufactura: DatosMercanciaSubmanufactura,
+    aviso?:ColumnasTabla[]
+    mercancias?: ColumnsTableMercancia[]
 }
 
 export interface DatosEmpresa {

@@ -193,3 +193,8 @@ label:has(+ app-catalogo-select .required) .require,
 .mb-2 {
     margin-bottom: 0.05rem !important;
 }
+
+.has-error .form-select,
+.has-error .form-control {
+  border-color: #dc3545 !important;
+}

@@ -20,15 +20,17 @@
       titulo="Acuse de recibo"
       [txtAlerta]="txtAlerta"
       [subtitulo]="subtitulo"
-      [folio]="folio"
+      [folio]="idSolicitud.toString()"
       [url]="url"
+      [datosTabla]="datosTablaAcuse"
+      [tramite]="tramite"
     ></lib-component-acuse>
     }
 
-    @if(indice === 1 && fechaRequerimiento && justificacionRequerimiento) {
+    @if(indice === 1 && iniciarAtenderRequerimientoData) {
     <lib-requerimiento-informacion
-      [fechaRequerimiento]="fechaRequerimiento"
-      [justificacionRequerimiento]="justificacionRequerimiento"
+      [fechaRequerimiento]="iniciarAtenderRequerimientoData.fecha_generacion || '' "
+      [justificacionRequerimiento]="iniciarAtenderRequerimientoData.justificacion || ''"
     ></lib-requerimiento-informacion>
     }
 
@@ -46,10 +48,8 @@
             </div>
       <div class="row justify-content-center">
           <div class="col-md-6">
-            <firma-electronica
-            [tipo]="''"
-            (firma)="obtieneFirma($event)"
-          ></firma-electronica>
+            <firma-electronica [tipo]="''" [cadenaOriginal]="cadenaOriginal"
+                  (datosFirma)="obtieneFirma($event)"></firma-electronica>
         </div>
       </div>
     }
@@ -65,7 +65,17 @@
       <app-reviewers-tabs
         [viewChild]="viewChild"
         [tramite]="tramite"
+
+        [tabs]="tabs"
+        [documentos]="documentosSolicitud"
+        [dictamenes]="dictamenesSolicitud"
+        [requerimientos]="requerimientosSolicitud"
+        [opinion]="opinion"
+        [acusesResolucion]="acusesResolucion"
+        [tareasSolicitud]="tareasSolicitud"
+        [envioDigital]="envioDigital"
         (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
+        (tabSeleccionado)="onTabSeleccionado($event)"
       ></app-reviewers-tabs>
     </div>
 
@@ -78,4 +88,10 @@
 
   </div>
 </div>
+}
+@if(nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
 }

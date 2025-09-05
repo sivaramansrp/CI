@@ -1,7 +1,9 @@
 import { Store, StoreConfig } from "@datorama/akita";
 import { AgenteAduanal } from "../../models/303/agente-aduanal.model";
 import { ControlInventario } from "../../models/303/control-inventario.model";
+import { EnlaceOperativo } from "../../models/303/enlace-operativo.model";
 import { Injectable } from "@angular/core";
+import { RepresentanteLegal } from "../../models/303/representante-legal.model";
 import { Transportista } from "@libs/shared/data-access-user/src";
 
 export interface Tramite303Store {
@@ -108,7 +110,19 @@ export interface Tramite303Store {
     /**
      * Indica si se debe mostrar un campo para el ingreso de informes.
      */
-    ingresoInforme:string;
+    ingresoInforme: string;
+    /**
+     * Lista de enlaces operativos asociados al trámite 303.
+     */
+    listaEnlaces: EnlaceOperativo[];
+    /**
+     * Representa el enlace operativo a modificar en el estado del trámite 303.
+     */
+    enlaceOperativoModificar?: EnlaceOperativo;
+    /**
+     * Representa al representante legal asociado al trámite 303.
+     */
+    representanteLegal?: RepresentanteLegal;
 }
 export function createInitialState(): Tramite303Store {
     return {
@@ -138,6 +152,9 @@ export function createInitialState(): Tramite303Store {
         checkboxManifiesto1: false,
         checkboxManifiesto2: false,
         ingresoInforme: '',
+        listaEnlaces: [],
+        enlaceOperativoModificar: undefined,
+        representanteLegal: undefined
     };
 }
 
@@ -168,11 +185,16 @@ export class Tramite303StoreService extends Store<Tramite303Store> {
      * @param state Estado parcial del trámite 303 a establecer.
      * Este método actualiza el estado del trámite 303 con los valores proporcionados.
      */
-    setState(state: Partial<Tramite303Store>) {
+    setState(state: Partial<Tramite303Store>): void {
         this.state = { ...this.state, ...state };
         this.update(this.state);
     }
 
+    /**
+     * 
+     * @param indice Índice del trámite 303 a establecer en el estado.
+     * Este método actualiza el estado del índice del trámite 303.
+     */
     public setIndice(indice: number): void {
         this.update((state) => ({
             ...state,
@@ -343,6 +365,17 @@ export class Tramite303StoreService extends Store<Tramite303Store> {
     }
 
     /**
+     * Establece el enlace operativo a modificar en el estado del trámite 303.
+     * @param enlaceOperativoModificar Enlace operativo a modificar.
+     */
+    public enlaceOperativoModificar(enlaceOperativoModificar: EnlaceOperativo): void {
+        this.update((state) => ({
+            ...state,
+            enlaceOperativoModificar: enlaceOperativoModificar,
+        }));
+    }
+
+    /**
      * Establece el valor del padrón en el estado del trámite 303.
      * @param padron Valor del padrón a establecer.
      */
@@ -429,4 +462,27 @@ export class Tramite303StoreService extends Store<Tramite303Store> {
             checkboxManifiesto2,
         }));
     }
+
+    /**
+     * Establece el representante legal en el estado del trámite 303.
+     * @param representanteLegal Representante legal a establecer.
+     */
+    setRepresentanteLegal(representanteLegal: RepresentanteLegal): void {
+        this.update((state) => ({
+            ...state,
+            representanteLegal,
+        }));
+    }
+
+    /**
+     * Establece la lista de enlaces operativos en el estado del trámite 303.
+     * @param listaEnlaces Lista de enlaces operativos a establecer.
+     */
+    setListaEnlaces(listaEnlaces: EnlaceOperativo[]): void {
+        this.update((state) => ({
+            ...state,
+            listaEnlaces,
+        }));
+    }
+
 }

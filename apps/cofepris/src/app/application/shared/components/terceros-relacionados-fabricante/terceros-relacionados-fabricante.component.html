@@ -10,12 +10,14 @@
                 [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
+                @if (fabricanteTablaDatos.length > 0) {
                 <button type="button" class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">
                     Eliminar
                 </button>
                 <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">
                     Modificar
                 </button>
+                }
                 <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>
@@ -29,12 +31,14 @@
                 [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
-                <button type="button" class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">
-                    Eliminar
-                </button>
-                <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">
-                    Modificar
-                </button>
+                @if(fabricanteTablaDatos.length > 0) {
+                    <button type="button" class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">
+                        Eliminar
+                    </button>
+                    <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">
+                        Modificar
+                    </button>
+                }
                 <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>
@@ -48,12 +52,14 @@
                 [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
-                <button type="button" class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">
-                    Eliminar
-                </button>
-                <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">
-                    Modificar
-                </button>
+                @if(fabricanteTablaDatos.length > 0) {
+                    <button type="button" class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">
+                        Eliminar
+                    </button>
+                    <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">
+                        Modificar
+                    </button>
+                }
                 <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>
@@ -67,12 +73,14 @@
                 [datos]="fabricanteTablaDatos" [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
-                <button type="button" class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">
-                    Eliminar
-                </button>
-                <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">
-                    Modificar
-                </button>
+                @if(fabricanteTablaDatos.length > 0) {
+                    <button type="button" class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">
+                        Eliminar
+                    </button>
+                    <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">
+                        Modificar
+                    </button>
+                }
                 <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>

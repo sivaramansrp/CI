@@ -1,9 +1,16 @@
 <div class="page">
   <div class="container">
     <div class="row">
+      @if(indice === 1){
       <div class="col-md-12">
         <h2>Aviso automático de importación de productos siderúrgicos</h2>
       </div>
+      }
+      @if(indice === 2){
+        <div class="col-md-12">
+          <h1>Cargar archivos</h1>
+        </div>
+      }
 
       @if (!esValido) {
         <ng-alert [CONTENIDO]="ALERTA" [CUSTOMECLASS]="infoError"></ng-alert>

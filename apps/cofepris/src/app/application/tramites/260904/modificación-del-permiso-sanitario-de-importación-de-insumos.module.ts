@@ -1,4 +1,4 @@
-import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent,BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitud260904Component } from './components/datos-de-la-solicitud-260904/datos-de-la-solicitud-260904.component';
 import { DomicilioDelEstablecimiento260904Component } from './components/domicilio-del-establecimiento-260904/domicilio-del-establecimiento-260904.component';
@@ -10,7 +10,7 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
+import { TercerosRelacionadosVistaComponent } from './components/terceros-relacionados/terceros-relacionados-vista.component';
 import { ToastrService } from 'ngx-toastr';
 import { TramitesAsociadoComponent } from './components/tramites-asociado/tramites-asociado.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
@@ -38,7 +38,8 @@ import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/se
     DomicilioDelEstablecimiento260904Component,
     PagoDeDerechosComponent,
     TramitesAsociadoComponent,
-    TercerosRelacionadosComponent,
+    TercerosRelacionadosVistaComponent,
+    AlertComponent
   ],
   providers: [ToastrService, InicioSesionService, SubirDocumentoService],
 })

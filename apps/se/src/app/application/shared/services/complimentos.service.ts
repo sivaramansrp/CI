@@ -1,9 +1,9 @@
 import { Observable, catchError, map, throwError } from 'rxjs';
 
 import { Catalogo, HttpCoreService } from '@ng-mf/data-access-user';
+import { ENVIRONMENT } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENVIRONMENT } from 'apps/se/src/app/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -49,7 +49,7 @@ export class ComplimentosService {
      getPais(): Observable<any> {
     return (
       this.httpService
-      .get<any[]>(`${ENVIRONMENT.API_BASE_URL}/api/catalogo/paises`, {}, false)
+      .get<any[]>(`${ENVIRONMENT.API_HOST}/api/catalogo/paises`, {}, false)
       .pipe(
         map((res: any) => {
         return res;

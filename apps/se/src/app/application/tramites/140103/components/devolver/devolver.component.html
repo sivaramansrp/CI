@@ -14,7 +14,7 @@
         </div>
         <div class="col-md-5">
           <div class="form-group">
-            <label class="form-label" for="disponible"> Monto disponible (en unidades primarias):</label>
+            <label class="form-label" for="disponible"> Monto disponible <span class="text-secondary fw-normal">(en unidades primarias)</span>:</label>
             <input class="form-control" id="disponible" formControlName="disponible" type="text">
           </div>
         </div>
@@ -41,7 +41,7 @@
       <div class="row sub-title">
         <div class="col-md-5">
           <div class="form-group">
-            <label class="form-label" for="cantidad"> Cantidad a devolver (en unidades primarias):</label>
+            <label class="form-label" for="cantidad"> Cantidad a devolver <span class="text-secondary fw-normal">(en unidades primarias)</span>:</label>
             <input class="form-control" id="cantidad" formControlName="cantidad" type="text"
               (change)="setValoresStore(devolverForm,'cantidad', 'setCantidad')">
           </div>

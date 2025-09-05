@@ -1,4 +1,4 @@
-import { CargaTipo, DatosDomicilioLugar, DatosEmpresa, DatosMercanciaSubmanufactura, DatosQuienRecibe, FormularioGrupo } from '../models/aviso.model';
+import { CargaTipo, ColumnasTabla, ColumnsTableMercancia, DatosDomicilioLugar, DatosEmpresa, DatosMercanciaSubmanufactura, DatosQuienRecibe, FormularioGrupo } from '../models/aviso.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -39,6 +39,8 @@ export const INITIAL_STATE: FormularioGrupo = {
         valorUsd: '',
         descripcionMercancia: '',
     },
+    aviso:[],
+    mercancias:[]
 };
 
 /**
@@ -133,7 +135,26 @@ export class Tramite32504Store extends Store<FormularioGrupo> {
       datos,
     }));
   }
-
+  /**
+ * Actualiza el estado con una nueva lista de avisos.
+ *
+ * @param aviso Lista de objetos de tipo ColumnasTabla que reemplazará el valor actual.
+ */
+public setAviso(aviso: ColumnasTabla[]): void {
+  this.update((state) => ({
+    ...state,
+    aviso, 
+  }));
+}
+/** Actualiza el estado con mercancías nuevas. 
+ *  Reemplaza la lista existente por la recibida. 
+ *  Se utiliza al cargar datos o reiniciar la tabla. */
+public setMercancias(mercancias: ColumnsTableMercancia[]): void {
+  this.update((state) => ({
+    ...state,
+    mercancias,
+  }));
+}
   /**
    * Restaura el estado del store a su estado inicial.
    * @returns {void}
