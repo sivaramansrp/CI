@@ -16,6 +16,7 @@ import { Tramite260303Query } from '../../../../estados/queries/260303/tramite26
 import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico.json';
 
 import { TEXTO_MANIFESTO_Y_DECLARACIONES } from '../../../../shared/constantes/datos-solicitud.enum';
+import { NicoInfo } from '../../../260911/models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 /**
  * DatosDeLaSolicitudComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
@@ -38,6 +39,17 @@ import { TEXTO_MANIFESTO_Y_DECLARACIONES } from '../../../../shared/constantes/d
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+   /**
+     * Datos cargados para la tabla NICO.
+     */
+    nicoTablaDatos: NicoInfo[] = [];
 
   /**
      * @property {string} textoManifestoContenido
@@ -249,12 +261,6 @@ private destroyNotifier$: Subject<void> = new Subject();
   public sinoOpciones = RADIO_OPCIONES;
 /**
  * Constructor para el componente DatosDeLaSolicitudComponent.
- * 
- * @param modalService - Servicio para manejar cuadros de diálogo modales.
- * @param fb - Instancia de FormBuilder para crear y gestionar formularios reactivos.
- * @param certificadosLicenciasSvc - Servicio para gestionar certificados, licencias y permisos.
- * @param tramite260211Store - Store para gestionar el estado relacionado con el Trámite 260303.
- * @param tramite260211Query - Servicio de consulta para recuperar datos relacionados con el Trámite 260303.
  */
 constructor(
   private modalService: BsModalService,
@@ -264,6 +270,8 @@ constructor(
   private tramite260211Query: Tramite260303Query,
   private validacionesService: ValidacionesFormularioService
 ) {
+    // Set the readonly state based on consultaState
+    this.esFormularioSoloLectura = this.consultaState?.readonly || false;
 }
 
 /**
@@ -277,13 +285,16 @@ constructor(
  *   `crearElstablecimientoForm`, `crearRepresentanteLegalForm`, `cerrarSCIANForm` y `cerrarMercanciasForm`.
  */
 ngOnInit(): void {
-  this.inicializarFormulario();
-  this.inicializarTablaYCatalogoDatos();
-  this.crearElstablecimientoForm();
-  this.crearRepresentanteLegalForm();
-  this.cerrarSCIANForm();
-  this.cerrarMercanciasForm();
-   this.deshabilitarFormularios();
+  // Update readonly state
+  this.esFormularioSoloLectura = this.consultaState?.readonly || false;
+    
+    this.inicializarFormulario();
+    this.inicializarTablaYCatalogoDatos();
+    this.crearElstablecimientoForm();
+    this.crearRepresentanteLegalForm();
+    this.cerrarSCIANForm();
+    this.cerrarMercanciasForm();
+    this.deshabilitarFormularios();
 }
 
   /**
@@ -457,8 +468,8 @@ public static deepCopy<T>(obj: T): T {
    */
   public cerrarSCIANForm(): void {
     this.scianForm = this.fb.group({
-      claveScian: [this.solicitudState.claveScian],
-      descripcion: [this.solicitudState.descripcion]
+      claveScian: [this.solicitudState.claveScian, Validators.required],
+      descripcion: [this.solicitudState.descripcion, Validators.required]
     });
   }
 
@@ -631,20 +642,6 @@ public static deepCopy<T>(obj: T): T {
     this.modalRef = this.modalService.show(template, { class: 'modal-lg' });
   }
 
-  /** Lógica para agregar un nuevo elemento a la tabla de SCIAN */
-  public scianAgregar(): void {
-    if (this.scianForm.valid) {
-      const DATO = {
-        clave: DatosDeLaSolicitudComponent.obtenerDescripcion(this.claveCatalogo, this.scianForm.get('claveScian')?.value),
-        descripcion: DatosDeLaSolicitudComponent.obtenerDescripcion(this.estadoCatalogo, this.scianForm.get('descripcion')?.value),
-      };
-
-      this.scianTablaDatos = [...this.scianTablaDatos, DATO];
-      (this.tramite260211Store['setScianTabla'] as (value: unknown) => void)(this.scianTablaDatos);
-      this.modalRef?.hide();
-    }
-  }
-
   /**
  * @method obtenerDescripcion
  * @description
@@ -765,24 +762,19 @@ public static deepCopy<T>(obj: T): T {
    * @param campo - El nombre del campo cuyo valor se va a establecer.
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
-  eventoDeCambioDeValor(event: string | number, form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
-    form.get(campo)?.setValue(event);
-    this.setValoresStore(form, campo, metodoNombre);
-  }
-
-  /**
-   * Establece el valor de un campo en el store de Tramite31601.
-   * @param form - El grupo de formularios que contiene el campo.
-   * @param campo - El nombre del campo cuyo valor se va a establecer.
-   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
-   */
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
-    if (campo === 'claveScian') {
-      form.get('descripcion')?.setValue('1');
+    // Special handling for SCIAN form
+    if (campo === 'claveScian' && form === this.scianForm) {
+      // Don't auto-set description for SCIAN form - let user select
+      const VALOR = form.get(campo)?.value;
+      (this.tramite260211Store[metodoNombre] as (value: unknown) => void)(VALOR);
+      return;
     }
+    
     if (campo === 'licenciaSanitaria' && form.get('licenciaSanitaria')?.value) {
       form.get('avisoCheckbox')?.disable();
     }
+    
     const VALOR = form.get(campo)?.value;
     (this.tramite260211Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
@@ -793,12 +785,20 @@ public static deepCopy<T>(obj: T): T {
      * Si no, se habilitan para permitir la edición.
      */
     deshabilitarFormularios(): void {
-      if (this.consultaState?.readonly) {
-        this.denominacionForm.disable();
-        this.domicilioDeElstablecimientoForm.disable();
-        this.representanteLegalForm.disable();
-        this.scianForm.disable();
-        this.mercanciasForm.disable();
+      this.esFormularioSoloLectura = this.consultaState?.readonly || false;
+    
+      if (this.esFormularioSoloLectura) {
+        this.denominacionForm?.disable();
+        this.domicilioDeElstablecimientoForm?.disable();
+        this.representanteLegalForm?.disable();
+        this.scianForm?.disable();
+        this.mercanciasForm?.disable();
+      } else {
+        this.denominacionForm?.enable();
+        this.domicilioDeElstablecimientoForm?.enable();
+        this.representanteLegalForm?.enable();
+        this.scianForm?.enable();
+        this.mercanciasForm?.enable();
       }
     }
 
@@ -826,8 +826,91 @@ public static deepCopy<T>(obj: T): T {
   public esValido(form: FormGroup, campo: string): boolean | null {
     return this.validacionesService.isValid(form, campo);
   }
+ /*
+  * Lista de filas seleccionadas del componente tabla de SCIAN.
+  * Se utiliza para manejar la selección de filas en la tabla de SCIAN.
+  */
+ selectedRowsScian: any[] = [];
 
-    /**
+ /*
+  * Lista de filas seleccionadas del componente tabla de mercancías.
+  * Se utiliza para manejar la selección de filas en la tabla de mercancías.
+  */
+ selectedRows: any[] = []; 
+
+  /**
+   * Maneja el evento de cambio de selección en la tabla de SCIAN.
+   * @param selected Lista de filas seleccionadas.
+   */
+  onSeleccionChangeScian(selected: any[]): void {
+    this.selectedRowsScian = selected;
+  }
+
+  /**
+   * Elimina las filas seleccionadas de la tabla SCIAN
+   */
+  eliminarSeleccionadosScian(): void {
+    this.scianTablaDatos = this.scianTablaDatos.filter(
+      (row) => !this.selectedRowsScian.includes(row)
+    );
+    this.selectedRowsScian = [];
+    // Update the store with the new data
+    (this.tramite260211Store['setScianTabla'] as (value: unknown) => void)(this.scianTablaDatos);
+  }
+
+  /**
+   * Limpia el formulario SCIAN y resetea los datos seleccionados
+   */
+  limpiarFormularioScian(): void {
+    this.scianForm.reset();
+    this.selectedRowsScian = [];
+  }
+
+  /** Lógica para agregar un nuevo elemento a la tabla de SCIAN */
+  public scianAgregar(): void {
+    if (this.scianForm.valid) {
+     
+      const CLAVEVALUE = this.scianForm.get('claveScian')?.value;
+      const DESCRIPCIONVALUE = this.scianForm.get('descripcion')?.value;
+
+      const DATO: ScianDatos = {
+        clave: CLAVEVALUE || '',
+        descripcion: DESCRIPCIONVALUE || ''
+      };
+
+      
+      this.scianTablaDatos = [...this.scianTablaDatos, DATO];
+      
+      
+      (this.tramite260211Store['setScianTabla'] as (value: unknown) => void)(this.scianTablaDatos);
+      
+      this.modalRef?.hide();
+      this.limpiarFormularioScian();
+    } else {
+     
+      this.scianForm.markAllAsTouched();
+    }
+  }
+
+  /**
+   * Cierra el modal y limpia el formulario SCIAN
+   */
+  public cerrarModalScian(): void {
+    this.modalRef?.hide();
+    this.limpiarFormularioScian();
+  }
+
+  /**
+   * Elimina las filas seleccionadas del NICO
+   */
+  eliminarSeleccionados(): void {
+    this.nicoTablaDatos = this.nicoTablaDatos.filter(
+      (row) => !this.selectedRows.includes(row)
+    );
+    this.selectedRows = [];
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
    */
@@ -835,5 +918,4 @@ public static deepCopy<T>(obj: T): T {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

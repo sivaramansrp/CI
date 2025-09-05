@@ -158,7 +158,7 @@
                     <input type="text" id="telefono" 
                         formControlName="telefono" 
                         class="form-control"
-                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'lada', 'setTelefono')">
+                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'telefono', 'setTelefono')">
                 </div>
                 @if(domicilioDeElstablecimientoForm.controls['telefono'].invalid && domicilioDeElstablecimientoForm.controls['telefono'].touched) {
                     <div class="d-block">
@@ -169,112 +169,123 @@
                 }
             </div>
         </div>
-    <div class="row mb-3 mt-5">
-        <h5 class="mb-5">S.C.I.A.N*:</h5>
-        <div class="col-md-12">
-            <app-tabla-dinamica
-                [configuracionTabla]="configuracionTabla"
-                [datos]="scianTablaDatos"
-                [tipoSeleccionTabla]="checkbox"
-                [disableSeleccionTablaCheckBox]="consultaState.readonly"
-                >
-            </app-tabla-dinamica>
-            <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-danger me-3" [disabled]="consultaState.readonly">Eliminar</button>
-                <button class="btn btn-primary" (click)="seleccionarAgregar(scian)" [disabled]="consultaState.readonly">Agregar</button>
+        
+        <div class="row mb-3 mt-5">
+            <h5 class="mb-5">S.C.I.A.N*:</h5>
+            <div class="col-md-12">
+                <!-- SCIAN Table Section -->
+                <app-tabla-dinamica 
+                  [tipoSeleccionTabla]="checkbox" 
+                  [configuracionTabla]="configuracionTabla"
+                  [datos]="scianTablaDatos" 
+                  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+                  (listaDeFilaSeleccionada)="onSeleccionChangeScian($event)">
+                </app-tabla-dinamica>
+
+                <div class="container text-end mt-5">
+                  <button 
+                    class="btn btn-default me-2" 
+                    (click)="eliminarSeleccionadosScian()" 
+                    [disabled]="selectedRowsScian.length === 0 || esFormularioSoloLectura">
+                    Eliminar
+                  </button>
+                  <button 
+                    class="btn btn-primary me-2" 
+                    (click)="seleccionarAgregar(scian)" 
+                    [disabled]="esFormularioSoloLectura">
+                    Agregar
+                  </button>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" 
-                        formControlName="avisoCheckbox" 
-                        (change)="onFuncionamientoCheckboxCambiar($event)"
-                        id="aviso">
-                <label class="form-check-label fw-normal" for="aviso">
-                    Aviso de funcionamiento
-                </label>
+        
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" 
+                            formControlName="avisoCheckbox" 
+                            (change)="onFuncionamientoCheckboxCambiar($event)"
+                            id="aviso">
+                    <label class="form-check-label fw-normal" for="aviso">
+                        Aviso de funcionamiento
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="licenciaSanitaria" class="form-label">No. de licencia sanitaria: <span class="p-2" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente." placement="top"><i class="bi bi-question-circle-fill"></i></span></label>
+                    <input type="text" id="licenciaSanitaria" 
+                        formControlName="licenciaSanitaria" 
+                        class="form-control"
+                        maxlength="20"
+                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'licenciaSanitaria', 'setLicenciaSanitaria')">
+                </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="licenciaSanitaria" class="form-label">No. de licencia sanitaria: <span class="p-2" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente." placement="top"><i class="bi bi-question-circle-fill"></i></span></label>
-                <input type="text" id="licenciaSanitaria" 
-                    formControlName="licenciaSanitaria" 
-                    class="form-control"
-                    maxlength="20"
-                    (change)="setValoresStore(domicilioDeElstablecimientoForm,'licenciaSanitaria', 'setLicenciaSanitaria')">
+        
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <app-catalogo-select 
+                    [catalogo]="regimenCatalogo" 
+                    [label]="'Régimen al que se destinará la mercancía'"
+                    [required]="true"
+                    formControlName="regimenDestinara"
+                    name="regimenCatalogo"
+                    (change)="setValoresStore(domicilioDeElstablecimientoForm,'regimenDestinara', 'setRegimenDestinara')" 
+                    [isDisabled]="consultaState.readonly">
+                </app-catalogo-select>
             </div>
         </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-8">
-            <app-catalogo-select 
-                [catalogo]="regimenCatalogo" 
-                [label]="'Régimen al que se destinará la mercancía'"
-                [required]="true"
-                formControlName="regimenDestinara"
-                name="regimenCatalogo"
-                (change)="setValoresStore(domicilioDeElstablecimientoForm,'regimenDestinara', 'setRegimenDestinara')" [isDisabled]="consultaState.readonly">
-            </app-catalogo-select>
-        </div>
-    </div>
-    <div class="row mb-3 mt-5">
-        <h5 class="mt-3 mb-3">Mercancías*:</h5>
-        <p class="mt-5 fw-bold fs-4">Mercancías</p>
-        <div class="col-md-12">
-            <app-tabla-dinamica
-                [configuracionTabla]="configuracionMercancias"
-                [datos]="mercanciasTablaDatos"
-                [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="consultaState.readonly"
->
-            </app-tabla-dinamica>
-            <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-primary" (click)="seleccionarAgregar(mercancias)" [disabled]="consultaState.readonly">Agregar</button>
+        
+        <div class="row mb-3 mt-5">
+            <h5 class="mt-3 mb-3">Mercancías*:</h5>
+            <p class="mt-5 fw-bold fs-4">Mercancías</p>
+            <div class="col-md-12">
+                <app-tabla-dinamica
+                    [configuracionTabla]="configuracionMercancias"
+                    [datos]="mercanciasTablaDatos"
+                    [tipoSeleccionTabla]="checkbox" 
+                    [disableSeleccionTablaCheckBox]="consultaState.readonly">
+                </app-tabla-dinamica>
+                <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-primary" (click)="seleccionarAgregar(mercancias)" [disabled]="consultaState.readonly">Agregar</button>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <app-catalogo-select 
-                [catalogo]="regimenCatalogo" 
-                [label]="'Aduana'"
-                [required]="true"
-                formControlName="aduana"
-                name="regimenCatalogo"
-                (change)="setValoresStore(domicilioDeElstablecimientoForm,'aduana', 'setAduanasEntradas')" [isDisabled]="consultaState.readonly">
-            </app-catalogo-select>
+        
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <app-catalogo-select 
+                    [catalogo]="regimenCatalogo" 
+                    [label]="'Aduana'"
+                    [required]="true"
+                    formControlName="aduana"
+                    name="regimenCatalogo"
+                    (change)="setValoresStore(domicilioDeElstablecimientoForm,'aduana', 'setAduanasEntradas')" 
+                    [isDisabled]="consultaState.readonly">
+                </app-catalogo-select>
+            </div>
         </div>
-    </div>
-</form>
+    </form>
+    
     <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
     <form [formGroup]="representanteLegalForm">
         <div class="mt-5">
-        <div class="alert alert-info">
-          <div class="row align-items-center justify-content-start py-2" >
-            <div class="col-auto d-flex align-items-start pt-1">
-              <input class="form-check-input me-3" type="checkbox" id="manifiestos" formControlName="manifiestos" />
-              <label class="form-check-label ms-2 mt-2" for="manifiestos">
-                <span
-                  [ngClass]="
-                    representanteLegalForm.get('manifiestos')?.invalid &&
-                    (representanteLegalForm.get('manifiestos')?.touched ||
-                      representanteLegalForm.get('manifiestos')?.dirty)
-                      ? 'mensaje-error font-weight-bold'
-                      : ''
-                  "
-                >
-                  *</span
-                >
-              </label>
+            <div class="alert alert-info">
+                <div class="row align-items-center justify-content-start py-2">
+                    <div class="col-auto d-flex align-items-start pt-1">
+                        <input class="form-check-input me-3" type="checkbox" id="manifiestos" formControlName="manifiestos" />
+                        <label class="form-check-label ms-2 mt-2" for="manifiestos">
+                            <span [ngClass]="representanteLegalForm.get('manifiestos')?.invalid && (representanteLegalForm.get('manifiestos')?.touched || representanteLegalForm.get('manifiestos')?.dirty) ? 'mensaje-error font-weight-bold' : ''">*</span>
+                        </label>
+                    </div>
+                    <div class="col align-items-center ml-38">
+                        <label for="manifesto" class="fw-300">{{ textoManifestoContenido }}</label>
+                    </div>
+                </div>
             </div>
-            <div class="col align-items-center ml-38">
-              <label for="manifesto" class="fw-300">{{ textoManifestoContenido }}</label>
-            </div>
-          </div>
         </div>
-        </div>
+        
         <div class="row mb-3">
             <div class="form-group">
                 <label class="form-label " for="losDatosNo">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
@@ -284,12 +295,13 @@
                     formControlName="losDatosNo"
                     [layout]="'horizontal'"
                     [isRequired]="true"
-                    (valueChange)="eventoDeCambioDeValor($event, representanteLegalForm,'losDatosNo', 'setLosDatosNo')"
+                    (valueChange)="setValoresStore(representanteLegalForm,'losDatosNo', 'setLosDatosNo')"
                 ></app-input-radio>
             </div>
-          </div>
-          <ng-titulo titulo="Representante legal"></ng-titulo>
-          <div class="row mb-2">
+        </div>
+        
+        <ng-titulo titulo="Representante legal"></ng-titulo>
+        <div class="row mb-2">
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="rfc" class="form-label">RFC*:</label>
@@ -304,16 +316,17 @@
                     </div>
                 }
                 @if (representanteLegalForm.get('rfc')?.hasError('rfcInvalido') && representanteLegalForm.get('rfc')?.touched) {
-                <div class="mensaje-error">
-                    La nomenclatura del RFC es incorrecta
-                </div>
+                    <div class="mensaje-error">
+                        La nomenclatura del RFC es incorrecta
+                    </div>
                 }
             </div>
             <div class="col-md-4">
                 <button type="button" class="btn btn-primary mt-5" (click)="buscarRepresentanteLegal()" [disabled]="consultaState.readonly">Buscar</button>
             </div>
-          </div>
-          <div class="row mb-2">
+        </div>
+        
+        <div class="row mb-2">
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="nombreORazon" class="form-label">Nombre o Razón Social*:</label>
@@ -362,7 +375,7 @@
                     </div>
                 }
             </div>
-          </div>
+        </div>
     </form>
 </div>
 
@@ -415,11 +428,14 @@
             </div>
         </form>
     </div>
-    <div class="modal-footer justify-content-end mt-3">
-        <button type="button" class="btn btn-default me-3">Cancelar</button>
-        <button type="button" class="btn btn-default me-3">Limpiar</button>
-        <button type="button" class="btn btn-primary" (click)="scianAgregar()">Agregar</button>
-    </div>
+    <div class="modal-footer custom-footer d-flex justify-content-between align-items-center w-100">
+        <p class="mb-0">* Campos obligatorios</p>
+        <div>
+          <button type="button" class="btn btn-default me-2" (click)="limpiarFormularioScian()">Limpiar</button>
+          <button type="button" class="btn btn-default me-2" (click)="cerrarModalScian()">Cancelar</button>
+          <button type="button" class="btn btn-primary" (click)="scianAgregar()">Agregar</button>
+        </div>
+      </div>
 </ng-template>
 
 <!-- Mercancías Tabla Modal -->
