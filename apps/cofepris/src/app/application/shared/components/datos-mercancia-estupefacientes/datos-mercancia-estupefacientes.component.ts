@@ -214,6 +214,17 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
     derecha: 'País(es) seleccionado(s)*:',
   };
 
+  /**
+   * @desc Etiquetas para mostrar la forma farmacéutica en el componente de datos de mercancía estupefacientes.
+   * @property {string} tituluDeLaIzquierda - Etiqueta que se muestra a la izquierda, indicando el campo de forma farmacéutica.
+   * @property {string} derecha - Etiqueta que se muestra a la derecha, indicando que el campo es obligatorio.
+   *
+   * @see CrossListLable
+   *
+   * @example
+   * // Uso en el template:
+   * {{ formaFaramaceuticaLabel.tituluDeLaIzquierda }} {{ formaFaramaceuticaLabel.derecha }}
+   */
   public formaFaramaceuticaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Forma farmacéutica:',
     derecha: '*:',

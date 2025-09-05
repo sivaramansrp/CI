@@ -468,7 +468,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       apellidoMaterno: [{ value: this.solicitudState.apellidoMaterno, disabled: true }],
     });
   }
-
+/**
+   * Validador personalizado que verifica que el valor del campo no sea solo espacios en blanco.
+   * 
+   * @method noWhitespaceValidator
+   * @param control Control de formulario a validar.
+   * @returns {ValidationErrors | null} Un objeto de error si el valor contiene solo espacios en blanco, o null si es válido.
+   */
   static noWhitespaceValidator(control: FormControl): ValidationErrors | null {
     if (control.value && control.value.trim().length === 0) {
       return { whitespace: true };
