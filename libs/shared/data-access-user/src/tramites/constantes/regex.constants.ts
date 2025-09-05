@@ -121,6 +121,9 @@ export const REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL = /^(?!\s)(.*\S)?$/;
  */
 export const REGEX_SOLO_DIGITOS = /^\d+$/;
 
+
+export const REGEX_CANTIDAD_15_4 = /^\d{1,15}(\.\d{1,4})?$/;
+
 /**
  * Expresión regular para validar un número decimal con hasta 15 dígitos enteros y 4 decimales.
  *
@@ -516,6 +519,10 @@ export const REGEX_ONCE_ENTEROS_TRES_DECIMALES = /^(\d{1,11})(\.\d{1,3})?$/;
  */
 
 export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
+
+// Add this at the top of your file or in your constants file
+export const REGEX_NUMERO_15_ENTEROS_4_DECIMALES = /^\d{1,15}(\.\d{1,4})?$/;
+
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
  *

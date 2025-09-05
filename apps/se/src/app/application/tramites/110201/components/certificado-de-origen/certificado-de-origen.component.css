@@ -146,3 +146,7 @@ background-color: lightgrey;
     pointer-events: all;
     opacity: 1;
   }
+
+  .is-invalid {
+  border-color: #dc3545 !important;
+  }
