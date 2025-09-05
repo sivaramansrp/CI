@@ -13,7 +13,7 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component,Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 
 import { ConsultaioQuery, REGEX_IMPORTE_PAGO, REGEX_LLAVE_DE_PAGO} from "@ng-mf/data-access-user";
 
@@ -44,7 +44,7 @@ import { Tramite260904Query } from '../../estados/tramite260904.query';
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss',
 })
-export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * Formulario reactivo para manejar los campos de entrada del usuario.
    */
@@ -114,26 +114,47 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Hook de ciclo de vida para inicializar la lógica del componente y cargar datos.
    */
   ngOnInit(): void {
-
-    this.tramite260904Query.selectTramite260904$.pipe(
-      takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        if (data) {
-          this.estadoSeleccionado = data;
-        }
-      });
-
-    this.crearForm();
-    this.getValorStore();
-    this.enPatchStoredFormData();
-    this.getBancoList();
+   
     this.inicializarEstadoFormulario();
+     this.getBancoList();
+    if (!this.esFormularioSoloLectura && !this.disabled) {
+      if (this.tipoTramite === '1' || this.tipoTramite === '2') {
+        this.pagoDeDerechosForm?.enable();
+      } else {
+        this.pagoDeDerechosForm?.disable();
+      }
+    } else {
+      this.pagoDeDerechosForm?.disable();
+    }
+    if (this.disabled) {
+      this.pagoDeDerechosForm.disable();
+    }
   }
+
+   ngOnChanges(): void {
+    if (this.pagoDeDerechosForm) {
+      if (this.tipoTramite === '1' || this.tipoTramite === '2') {
+        this.pagoDeDerechosForm.enable();
+      } else {
+        this.pagoDeDerechosForm.disable();
+      }
+    }
+  }
+  @Input() disabled: boolean = false;
+  @Input() tipoTramite: string = '';
 
   /**
    * Crea el formulario reactivo con las reglas de validación para cada control.
    */
   crearForm(): void {
+     this.tramite260904Query.selectTramite260904$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.estadoSeleccionado = seccionState;
+        })
+      )
+      .subscribe();
     this.pagoDeDerechosForm = this.fb.group({
       claveDeReferencia: [this.estadoSeleccionado.claveDeReferencia, [Validators.maxLength(50)]],
       cadenaPagoDependencia: [this.estadoSeleccionado.cadenaPagoDependencia, [Validators.maxLength(50)]],
@@ -151,6 +172,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         [Validators.maxLength(30), Validators.pattern(REGEX_IMPORTE_PAGO), PagoDeDerechosComponent.noComaValidator()],
       ],
     });
+    this.pagoDeDerechosForm.disable();
 }
 
 /**
@@ -160,24 +182,27 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.disableBanco = true;
-      this.pagoDeDerechosForm.get('claveDeReferencia')?.disable();
-      this.pagoDeDerechosForm.get('cadenaPagoDependencia')?.disable();
-      this.pagoDeDerechosForm.get('clave')?.disable();
-      this.pagoDeDerechosForm.get('llaveDePago')?.disable();
-      this.pagoDeDerechosForm.get('fecPago')?.disable();
-      this.pagoDeDerechosForm.get('impPago')?.disable();
+      this.guardarDatosFormulario();
     } else {
-      this.disableBanco = false;
-      this.pagoDeDerechosForm.get('claveDeReferencia')?.enable();
-      this.pagoDeDerechosForm.get('cadenaPagoDependencia')?.enable();
-      this.pagoDeDerechosForm.get('clave')?.enable();
-      this.pagoDeDerechosForm.get('llaveDePago')?.enable();
-      this.pagoDeDerechosForm.get('fecPago')?.enable();
-      this.pagoDeDerechosForm.get('impPago')?.enable();
+      this.crearForm();
     }
   }
 
+  
+  /**
+   * Guarda los datos del formulario y configura su estado de habilitación.
+   * 
+   * Crea el formulario y posteriormente lo habilita o deshabilita
+   * según el modo de operación (lectura o edición).
+   * 
+   * @returns void
+   */
+  guardarDatosFormulario(): void {
+    this.crearForm();
+    if (this.esFormularioSoloLectura) {
+      this.pagoDeDerechosForm.disable();
+    }
+  }
 /**
  * Método para validar que el campo de un formulario no contenga comas.
  * Actualiza el estado de validez del campo especificado sin emitir eventos adicionales.
@@ -327,6 +352,30 @@ public setValoresStore(form: FormGroup, campo: string): void {
       CONTROL.markAsDirty();
     }
   }
+  /**
+   * Resetea todos los campos del formulario de pago de derechos y actualiza el store.
+   * Marca los controles como pristine y untouched para ocultar errores de campos requeridos después de borrar.
+   * Se invoca al hacer clic en el botón "Borrar datos del pago".
+   */
+  resetPagoDeDerechos(): void {
+    if (this.pagoDeDerechosForm) {
+      this.pagoDeDerechosForm.reset();
+      Object.values(this.pagoDeDerechosForm.controls).forEach(control => {
+        control.markAsPristine();
+        control.markAsUntouched();
+        control.updateValueAndValidity();
+      });
+      this.tramite260904Store.setTramite260904State({
+        claveDeReferencia: '',
+        cadenaPagoDependencia: '',
+        clave: '',
+        llaveDePago: '',
+        fecPago: '',
+        impPago: ''
+      });
+    }
+  }
+
 
 
   /**

@@ -1,8 +1,9 @@
 import { AfterViewInit,Input,OnInit } from '@angular/core';
 import { AlertComponent, InputCheckComponent, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
-import { ConsultaioQuery,REGEX_POSTAL} from "@ng-mf/data-access-user";
 import { FormBuilder, FormControl } from '@angular/forms';
+import { ConsultaioQuery} from "@ng-mf/data-access-user";
+
 import { OnChanges, OnDestroy } from '@angular/core';
 import { Subject, map } from 'rxjs';
 import {Tramite260904State, Tramite260904Store } from '../../estados/tramite260904.store';

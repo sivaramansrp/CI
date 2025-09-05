@@ -69,7 +69,7 @@ export class DomicilioDelEstablecimientoService {
     ): Observable<{ nombre: string; apellidoPaterno: string; apellidoMaterno: string } | null> {
       // Busca el RFC en el archivo destinatario-de-tabla.json
       return new Observable(observer => {
-        this.http.get<RepresentanteLegal[]>('assets/json/260911/destinatario-de-tabla.json').subscribe(data => {
+        this.http.get<RepresentanteLegal[]>('assets/json/260904/destinatario-de-tabla.json').subscribe(data => {
           const FOUND = data.find(item => item.rfc === rfc);
           if (FOUND) {
             // Separar nombre en nombre, apellidoPaterno, apellidoMaterno si es posible
