@@ -47,7 +47,7 @@ import {
   TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
 } from '../../enum/permiso.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {Subject, map, takeUntil, } from 'rxjs';
+import { Subject, map, takeUntil, } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
@@ -257,13 +257,13 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   nacionalidadOptions = NacionalidadRadioOptions;
 
- /**
-   * Notificador para destruir observables.
-   */
+  /**
+    * Notificador para destruir observables.
+    */
   private destroyNotifier$: Subject<void> = new Subject();
 
 
-  
+
   /**
    * Opciones para el radio de tipo de persona.
    * Utiliza los datos predefinidos en `TipoPersonaRadioOptions`.
@@ -272,75 +272,81 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   tipoPersonaOptions = TipoPersonaRadioOptions;
 
-/**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
-   */
- public esFormularioSoloLectura: boolean = false;
+  /**
+     * Indica si el formulario está en modo solo lectura.
+     * Cuando es `true`, los campos del formulario no se pueden editar.
+     */
+  public esFormularioSoloLectura: boolean = false;
 
-/**
- * Indica si los selectores de catálogos deben estar desactivados en el popup.
- * Cuando es `true`, los selectores estarán deshabilitados.
- */
-public desactivarCatalogoSelectEnPopup: boolean = true;
-/**
- * Valor por defecto para el campo de país.
- */
-public defaultPaisValue = 1;
-/**
- * Valor por defecto para el campo de tipo de persona.
- */
-public tipoPersonaValue = "fisica";
-/**
- * Constructor del componente.
- * Inyecta el FormBuilder, el store del trámite, el servicio de terceros y la consulta de estado.
- *
- * @param fb Constructor de formularios para crear los formularios reactivos.
- * @param sanitario260215Store Store del trámite 260215.
- * @param service Servicio que proporciona datos de terceros.
- * @param consultaioQuery Consulta para obtener el estado de solo lectura.
- */
+  /**
+   * Indica si los selectores de catálogos deben estar desactivados en el popup.
+   * Cuando es `true`, los selectores estarán deshabilitados.
+   */
+  public desactivarCatalogoSelectEnPopup: boolean = true;
+  /**
+   * Indica si el selector de país debe estar desactivado en el popup.
+   * Cuando es `true`, el selector estará deshabilitado.
+   */
+  public desactivarPaisSelectEnPopup: boolean = true;
+
+  /**
+   * Valor por defecto para el campo de país.
+   */
+  public defaultPaisValue = 1;
+  /**
+   * Valor por defecto para el campo de tipo de persona.
+   */
+  public tipoPersonaValue = "fisica";
+  /**
+   * Constructor del componente.
+   * Inyecta el FormBuilder, el store del trámite, el servicio de terceros y la consulta de estado.
+   *
+   * @param fb Constructor de formularios para crear los formularios reactivos.
+   * @param sanitario260215Store Store del trámite 260215.
+   * @param service Servicio que proporciona datos de terceros.
+   * @param consultaioQuery Consulta para obtener el estado de solo lectura.
+   */
   constructor(
     private fb: FormBuilder,
     private sanitario260215Store: Sanitario260215Store,
     private service: ServiciosPermisoSanitarioService,
     private consultaioQuery: ConsultaioQuery
   ) {
-     /**
-             * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-             *
-             * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-             * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-             * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-             */
-            this.consultaioQuery.selectConsultaioState$
-            .pipe(
-              takeUntil(this.destroyNotifier$),
-              map((seccionState)=>{
-                this.esFormularioSoloLectura = seccionState.readonly; 
-                if(this.esFormularioSoloLectura) {
-                 this.fetchTableDummyJson();
-                }
-             
-              })
-            )
-            .subscribe()
-          
-    
+    /**
+            * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+            *
+            * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+            * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+            * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+            */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          if (this.esFormularioSoloLectura) {
+            this.fetchTableDummyJson();
+          }
+
+        })
+      )
+      .subscribe()
+
+
   }
 
-/**
- * Método para obtener datos de ejemplo para la tabla.
- * Retorna un arreglo vacío de tipo TablaDatos.
- *
- * @returns Un arreglo vacío de TablaDatos.
- */
-fetchTableDummyJson(): void {
-  this.fabricanteRowData.push(TERCEROS_RELACIONADOS_TABLE_BODY_DATA);
-  this.destinatarioRowData.push(TERCEROS_RELACIONADOS_TABLE_BODY_DATA);
-  this.proveedorRowData.push(TERCEROS_RELACIONADOS_TABLE_BODY_DATA);
-  this.facturadorRowData.push(TERCEROS_RELACIONADOS_TABLE_BODY_DATA);
-}
+  /**
+   * Método para obtener datos de ejemplo para la tabla.
+   * Retorna un arreglo vacío de tipo TablaDatos.
+   *
+   * @returns Un arreglo vacío de TablaDatos.
+   */
+  fetchTableDummyJson(): void {
+    this.fabricanteRowData.push(TERCEROS_RELACIONADOS_TABLE_BODY_DATA);
+    this.destinatarioRowData.push(TERCEROS_RELACIONADOS_TABLE_BODY_DATA);
+    this.proveedorRowData.push(TERCEROS_RELACIONADOS_TABLE_BODY_DATA);
+    this.facturadorRowData.push(TERCEROS_RELACIONADOS_TABLE_BODY_DATA);
+  }
   /**
    * Ciclo de vida que se ejecuta al iniciar el componente.
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
@@ -370,7 +376,7 @@ fetchTableDummyJson(): void {
    * Inicializa el formulario para agregar un fabricante.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarFabricanteFormGroup():void {
+  initializeAgregarFabricanteFormGroup(): void {
     /**
      * Crea el formulario reactivos para agregar un fabricante.
      * Cada campo tiene sus propias validaciones.
@@ -454,7 +460,7 @@ fetchTableDummyJson(): void {
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl({ value: '', disabled: true }),
       /**
        * Calle del tercero.
        */
@@ -493,7 +499,7 @@ fetchTableDummyJson(): void {
       /**
        * Colonia del extranjero.
        */
-      extranjeroColonia: new FormControl('', [Validators.required]),
+      extranjeroColonia: new FormControl({ value: '', disabled: true }, [Validators.required]),
     });
 
   }
@@ -523,8 +529,8 @@ fetchTableDummyJson(): void {
       formGroup.get('correoElectronico')?.enable();
       formGroup.get('estado')?.enable();
       formGroup.get('codigoPostaloEquivalente')?.enable();
-      formGroup.get('coloniaoEquivalente')?.enable();
-      this.desactivarCatalogoSelectEnPopup = false;
+      formGroup.get('extranjeroColonia')?.enable();
+      this.desactivarCatalogoSelectEnPopup = true;
     } else {
       formGroup.get('rfc')?.disable();
       formGroup.get('curp')?.disable();
@@ -540,7 +546,7 @@ fetchTableDummyJson(): void {
       formGroup.get('correoElectronico')?.disable();
       formGroup.get('estado')?.disable();
       formGroup.get('codigoPostaloEquivalente')?.disable();
-      formGroup.get('coloniaoEquivalente')?.disable();
+     formGroup.get('extranjeroColonia')?.disable();
       this.desactivarCatalogoSelectEnPopup = true;
     }
   }
@@ -549,7 +555,7 @@ fetchTableDummyJson(): void {
    * Inicializa el formulario para agregar un destinatario.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarDestinatarioFormGroup():void {
+  initializeAgregarDestinatarioFormGroup(): void {
     /**
      * Crea el formulario reactivos para agregar un destinatario.
      * Cada campo tiene sus propias validaciones.
@@ -668,7 +674,7 @@ fetchTableDummyJson(): void {
    * Inicializa el formulario para agregar un proveedor.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarProveedorFormGroup():void {
+  initializeAgregarProveedorFormGroup(): void {
     /**
      * Crea el formulario reactivos para agregar un proveedor.
      * Cada campo tiene sus propias validaciones.
@@ -743,7 +749,7 @@ fetchTableDummyJson(): void {
    * Inicializa el formulario para agregar un facturador.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarFacturadorFormGroup():void {
+  initializeAgregarFacturadorFormGroup(): void {
     /**
      * Crea el formulario reactivos para agregar un facturador.
      * Cada campo tiene sus propias validaciones.
@@ -918,13 +924,15 @@ fetchTableDummyJson(): void {
     }
   }
 
-  public tercerosInputChecked(checkBoxName: string):void {
+  public tercerosInputChecked(checkBoxName: string): void {
     if (checkBoxName === 'nacional') {
       this.nacional = true;
       this.extranjero = false;
+    //  this.desactivarCatalogoSelectEnPopup = true;
     } else {
       this.nacional = false;
       this.extranjero = true;
+     // this.desactivarCatalogoSelectEnPopup = false;
     }
   }
 
@@ -932,7 +940,7 @@ fetchTableDummyJson(): void {
    * Cambia la visibilidad del formulario de Fabricante.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivFabricante():void {
+  toggleDivFabricante(): void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -943,7 +951,7 @@ fetchTableDummyJson(): void {
    * Cambia la visibilidad del formulario de Destinatario.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivDestinatario():void {
+  toggleDivDestinatario(): void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -954,7 +962,7 @@ fetchTableDummyJson(): void {
    * Cambia la visibilidad del formulario de Proveedor.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivProveedor():void {
+  toggleDivProveedor(): void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -965,7 +973,7 @@ fetchTableDummyJson(): void {
    * Cambia la visibilidad del formulario de Facturador.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivFacturador():void {
+  toggleDivFacturador(): void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -984,17 +992,18 @@ fetchTableDummyJson(): void {
    *
    * @description Este método es llamado al enviar el formulario de agregar un fabricante.
    */
-  submitFabricanteForm():void {
+  submitFabricanteForm(): void {
+  
     /**
      * Obtiene los valores de LADA y TELEFONO del formulario.
      */
-  const { LADA, TELEFONO } = this.agregarFabricanteFormGroup.value;
-/**
- * Obtiene el valor completo del teléfono, incluyendo lada y número.
- */
-const FULLTELEFONO = LADA || TELEFONO 
-  ? `${LADA ?? ''}${LADA && TELEFONO ? '-' : ''}${TELEFONO ?? ''}`
-  : '';
+    const { LADA, TELEFONO } = this.agregarFabricanteFormGroup.value;
+    /**
+     * Obtiene el valor completo del teléfono, incluyendo lada y número.
+     */
+    const FULLTELEFONO = LADA || TELEFONO
+      ? `${LADA ?? ''}${LADA && TELEFONO ? '-' : ''}${TELEFONO ?? ''}`
+      : '';
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1138,23 +1147,35 @@ const FULLTELEFONO = LADA || TELEFONO
     this.showFabricante = !this.showFabricante;
   }
 
+  limpiarFormulario(): void {
+    this.agregarFabricanteFormGroup.reset();
+    this.agregarDestinatarioFormGroup.reset();
+    this.agregarProveedorFormGroup.reset();
+    this.agregarFacturadorFormGroup.reset();
+    this.fisica = false;
+    this.moral = false;
+    this.nacional = false;
+    this.extranjero = false;
+  }
+
   /**
    * Envía el formulario de Destinatario y actualiza los datos en el store.
    * Obtiene los valores seleccionados de los dropdowns y crea una nueva fila para la tabla.
    *
    * @description Este método es llamado al enviar el formulario de agregar un destinatario.
    */
-  submitDestinatarioForm():void {
-       /**
-     * Obtiene los valores de LADA y TELEFONO del formulario.
+  submitDestinatarioForm(): void {
+
+    /**
+  * Obtiene los valores de LADA y TELEFONO del formulario.
+  */
+    const { LADA, TELEFONO } = this.agregarFabricanteFormGroup.value;
+    /**
+     * Obtiene el valor completo del teléfono, incluyendo lada y número.
      */
-  const { LADA, TELEFONO } = this.agregarFabricanteFormGroup.value;
-/**
- * Obtiene el valor completo del teléfono, incluyendo lada y número.
- */
-const FULLTELEFONODESTINATARIO = LADA || TELEFONO 
-  ? `${LADA ?? ''}${LADA && TELEFONO ? '-' : ''}${TELEFONO ?? ''}`
-  : '';
+    const FULLTELEFONODESTINATARIO = LADA || TELEFONO
+      ? `${LADA ?? ''}${LADA && TELEFONO ? '-' : ''}${TELEFONO ?? ''}`
+      : '';
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1303,7 +1324,7 @@ const FULLTELEFONODESTINATARIO = LADA || TELEFONO
    *
    * @description Este método es llamado al enviar el formulario de agregar un proveedor.
    */
-  submitProveedorForm():void {
+  submitProveedorForm(): void {
     /**
      * Crea una nueva fila para la tabla con los datos del formulario.
      */
@@ -1313,8 +1334,8 @@ const FULLTELEFONODESTINATARIO = LADA || TELEFONO
         this.agregarProveedorFormGroup.value.rfc,
         this.agregarProveedorFormGroup.value.curp,
         this.agregarProveedorFormGroup.value.lada +
-          '-' +
-          this.agregarProveedorFormGroup.value.telefono,
+        '-' +
+        this.agregarProveedorFormGroup.value.telefono,
         this.agregarProveedorFormGroup.value.correoElectronico,
         this.agregarProveedorFormGroup.value.calle,
         this.agregarProveedorFormGroup.value.numeroExterior,
@@ -1353,7 +1374,7 @@ const FULLTELEFONODESTINATARIO = LADA || TELEFONO
    *
    * @description Este método es llamado al enviar el formulario de agregar un facturador.
    */
-  submitFacturadorForm():void {
+  submitFacturadorForm(): void {
     /**
      * Crea una nueva fila para la tabla con los datos del formulario.
      */
@@ -1363,8 +1384,8 @@ const FULLTELEFONODESTINATARIO = LADA || TELEFONO
         this.agregarFacturadorFormGroup.value.rfc,
         this.agregarFacturadorFormGroup.value.curp,
         this.agregarFacturadorFormGroup.value.lada +
-          '-' +
-          this.agregarFacturadorFormGroup.value.telefono,
+        '-' +
+        this.agregarFacturadorFormGroup.value.telefono,
         this.agregarFacturadorFormGroup.value.correoElectronico,
         this.agregarFacturadorFormGroup.value.calle,
         this.agregarFacturadorFormGroup.value.numeroExterior,
@@ -1454,9 +1475,10 @@ const FULLTELEFONODESTINATARIO = LADA || TELEFONO
    *
    * @param value Valor seleccionado del radio button.
    */
-  cambiarRadio(value: string | number):void {
+  cambiarRadio(value: string | number): void {
     const VALOR_SELECCIONADO = value as string;
     this.tercerosInputChecked(VALOR_SELECCIONADO);
+
   }
 
   /**
@@ -1464,7 +1486,7 @@ const FULLTELEFONODESTINATARIO = LADA || TELEFONO
    *
    * @param value Valor seleccionado del radio button.
    */
-  cambiarRadioFisica(value: string | number):void {
+  cambiarRadioFisica(value: string | number): void {
     const VALOR_SELECCIONADO = value as string;
     this.inputChecked(VALOR_SELECCIONADO);
   }
