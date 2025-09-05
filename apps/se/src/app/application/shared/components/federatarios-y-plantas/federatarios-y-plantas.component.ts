@@ -318,6 +318,10 @@ export class FederatariosYPlantasComponent implements OnInit {
    * @param accionesPath
    */
   irAAcciones(accionesPath: string): void {
+    if (accionesPath === '../proveedor-por-archivo' && this.accionSeccion.observers.length > 0){
+    this.accionSeccion.emit(accionesPath);
+    return;
+    }
     if (!this.plantasImmexSeleccionadoDatos.length){
       this.abrirPlantasModal();
       return;

@@ -8,6 +8,7 @@ import {
   RutaNombre,
 } from '../../models/nuevo-programa-industrial.model';
 import { Component, OnInit } from '@angular/core';
+import { Subject, delay, takeUntil } from 'rxjs';
 import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
 import { CommonModule } from '@angular/common';
 import { EventEmitter } from '@angular/core';
@@ -19,7 +20,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
-import { delay, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-anexo-uno',
@@ -93,7 +93,11 @@ export class AnexoUnoComponent implements OnInit {
   @Output() rutaLaFraccionDeComplemento: EventEmitter<RutaNombre> =
     new EventEmitter<RutaNombre>();
 
-
+  /**
+   * Evento que emite un booleano cuando hay un cambio en los datos de la tabla.
+   * Útil para notificar al componente padre sobre modificaciones en la tabla.
+   */
+  @Output() tieneCambioDeDatosDeTabla = new EventEmitter<boolean>();
 
   /**
    * Emits events containing `DatosComplimento` data to notify parent components of changes or updates.
@@ -171,6 +175,12 @@ export class AnexoUnoComponent implements OnInit {
    * Se utiliza para mostrar mensajes de alerta o información al usuario.
    */
   public nuevaUnoNotificacion!: Notificacion;
+
+  /**
+   * Indica si la tabla actualmente tiene datos.
+   * Se utiliza para controlar la visualización o lógica relacionada con el contenido de la tabla.
+   */
+  public tenerDatosDeTabla: boolean = false;
 
   /**
    * Constructor de la clase AnexoUnoComponent
@@ -297,6 +307,8 @@ export class AnexoUnoComponent implements OnInit {
     this.anexoUnoTablaLista = this.anexoUnoTablaLista.filter((idx) => {
       return idx !== this.datosImportacionSeleccionados;
     });
+    this.tenerDatosDeTabla = this.anexoUnoTablaLista.length > 0;
+    this.tieneCambioDeDatosDeTabla.emit(this.tenerDatosDeTabla);
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
   }
 
@@ -339,6 +351,8 @@ export class AnexoUnoComponent implements OnInit {
     this.anexoUnoFormGroup.reset();
     // Reinicia el formulario después de agregar el objeto
     this.anexoUnoTablaLista = [...this.anexoUnoTablaLista, OBJECTO_IDX];
+    this.tenerDatosDeTabla = this.anexoUnoTablaLista.length > 0;
+    this.tieneCambioDeDatosDeTabla.emit(this.tenerDatosDeTabla);
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
   }
 
