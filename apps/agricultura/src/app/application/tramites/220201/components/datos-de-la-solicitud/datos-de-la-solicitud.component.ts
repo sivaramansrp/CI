@@ -172,7 +172,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Utiliza la enumeración TablaSeleccion para definir el tipo de selección.
    * @type {TablaSeleccion}
    */
-  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
 
   /**
    * @description
