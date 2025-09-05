@@ -168,6 +168,7 @@
             formControlName="tratado" 
             [ngClass]="grupoTratado.get('tratado')?.invalid && grupoTratado.get('tratado')?.touched ? 'required' : ''"
             (change)=" setValoresStore(grupoTratado, 'tratado', 'setGrupoTratadoTratado') "
+            [markTouched]="grupoTratado.get('tratado')?.touched ?? false"
             [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-4">
@@ -175,6 +176,7 @@
             formControlName="pais" 
             [ngClass]="grupoTratado.get('pais')?.invalid && grupoTratado.get('pais')?.touched ? 'required' : ''"
             (change)="setValoresStore(grupoTratado, 'pais', 'setGrupoTratadoPais')"
+            [markTouched]="grupoTratado.get('pais')?.touched ?? false"
             [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
@@ -363,6 +365,7 @@
                 <app-catalogo-select [catalogo]="optionsPais" [label]="'UMC'" [required]="true" id="pais" [tooltipQuestionCircle]="true" [tooltipQuestionCircleText]="''"
                   formControlName="pais" [ngClass]="formularioMercancia.get('pais')?.invalid && formularioMercancia.get('pais')?.touched ? 'required' : ''"
                   (change)="setValoresStore(formularioMercancia, 'pais', 'setPais')"
+                  [markTouched]="formularioMercancia.get('pais')?.touched ?? false"
                   [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
 
@@ -440,6 +443,7 @@
                 <app-catalogo-select [catalogo]="optionsTipoFactura" [label]="'Tipo de factura'" id="tipoFactura"
                   formControlName="tipoFactura" [required]="true"
                   (change)=" setValoresStore( formularioMercancia, 'tipoFactura', 'setTipoFactura' ) "
+                  [markTouched]="formularioMercancia.get('tipoFactura')?.touched ?? false"
                   [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
             </div>

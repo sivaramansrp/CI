@@ -8,6 +8,7 @@ import {
   AnnexoDosTres,
   AnnexoUno,
 } from '../models/nuevo-programa-industrial.model';
+import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoPaises } from '@ng-mf/data-access-user';
@@ -15,7 +16,6 @@ import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { DatosEmpresaExtranjera } from '../models/nuevo-programa-industrial.model';
 import { DatosSubcontratista } from '../../../shared/models/empresas-subfabricanta.model';
 import { EmpressaSubFabricantePlantas } from '../../../shared/models/empresas-subfabricanta.model';
-import { FederatariosEncabezado } from '../../../shared/models/federatarios-y-plantas.model';
 import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Servicio } from '../models/nuevo-programa-industrial.model';
@@ -166,6 +166,16 @@ export interface Tramite80101State {
    * Información detallada de federatarios.
    */
   datosFederatarios: FederatariosEncabezado;
+
+  /**
+   * Información detallada de plantas immex.
+   */
+  plantasImmexTablaLista: PlantasImmex[];
+
+  /**
+   * Información detallada de plantas disponibles.
+   */
+  plantasDisponiblesTablaLista: PlantasDisponibles[];
 }
 
 /**
@@ -340,7 +350,14 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     numeroDeNotaria: '',
     entidadFederativa: '',
     municipioODelegacion: '',
+    estado: '',
+    estadoOptions: '',
+    estadoUno: '',
+    estadoDos: '',
+    estadoTres: ''
   },
+  plantasImmexTablaLista: [],
+  plantasDisponiblesTablaLista: []
 };
 
 /**
@@ -960,6 +977,40 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       tablaDatosFederatarios: [
         ...state.tablaDatosFederatarios,
         formaFederatarios,
+      ],
+    }));
+  }
+
+  /**
+   * Agrega un nuevo elemento de tipo `PlantasImmex` a la lista `plantasImmexTablaLista`
+   * en el estado actual de la tienda.
+   *
+   * @param formaFederatarios - El objeto de tipo `PlantasImmex` que se añadirá
+   * a la lista `plantasImmexTablaLista`.
+   */
+  setPlantasImmex(formaFederatarios: PlantasImmex): void {
+    this.update((state) => ({
+      ...state,
+      plantasImmexTablaLista: [
+        ...state.plantasImmexTablaLista,
+        formaFederatarios
+      ],
+    }));
+  }
+
+  /**
+   * Agrega un nuevo elemento de tipo `PlantasDisponibles` a la lista `plantasDisponiblesTablaLista`
+   * en el estado actual de la tienda.
+   *
+   * @param formaFederatarios - El objeto de tipo `PlantasDisponibles` que se añadirá
+   * a la lista `plantasDisponiblesTablaLista`.
+   */
+  setPlantasDisponibles(formaFederatarios: PlantasDisponibles): void {
+    this.update((state) => ({
+      ...state,
+      plantasDisponiblesTablaLista: [
+        ...state.plantasDisponiblesTablaLista,
+        formaFederatarios
       ],
     }));
   }

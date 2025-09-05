@@ -99,7 +99,15 @@ export class PasoUnoComponent implements OnDestroy {
   isFormValid(): boolean {
     return this.cancelarSolicitudComponent?.formCancelorSolicitud.valid;
   }
-
+  /**
+   * Marca todos los controles del formulario como tocados.
+   * Esto es útil para mostrar mensajes de error de validación.
+   */
+  markFormAsTouched(): void {
+    if (this.cancelarSolicitudComponent?.formCancelorSolicitud) {
+      this.cancelarSolicitudComponent.formCancelorSolicitud.markAllAsTouched();
+    }
+  }
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
@@ -115,6 +123,13 @@ export class PasoUnoComponent implements OnDestroy {
       });
   }
 
+  /**
+   * Obtiene el folio de la solicitud de cancelación.
+   * @returns El folio de la solicitud.
+   */
+  getFolio(): string {
+    return this.cancelarSolicitudComponent?.formCancelorSolicitud?.getRawValue()?.folioSVEX || '';
+  }
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
    * Libera los recursos y completa el Subject para evitar fugas de memoria.

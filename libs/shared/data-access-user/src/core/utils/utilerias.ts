@@ -258,3 +258,20 @@ export function dateLessThanOrEqualToday(control: AbstractControl): ValidationEr
       });
     }
 
+    /**
+     * Formatea una fecha en formato 'yyyy-MM-dd' a 'dd/MM/yyyy'.
+     * 
+     * @param fecha - La fecha en formato 'yyyy-MM-dd' como string.
+     * @returns La fecha formateada en 'dd/MM/yyyy' como string.
+     */
+    export function formatearFechaDdMmYyyy(fecha: string): string {
+        if (!fecha || typeof fecha !== 'string') {
+            return '';
+        }
+        const [YEAR, MONTH, DAY] = fecha.split('-');
+        if (!YEAR || !MONTH || !DAY) {
+            return '';
+        }
+        return `${DAY.padStart(2, '0')}/${MONTH.padStart(2, '0')}/${YEAR}`;
+    }
+

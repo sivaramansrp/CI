@@ -54,9 +54,13 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   formularioDeshabilitado: boolean = false;
      /** Indica si el formulario debe mostrarse en modo solo lectura.  
  *  Controla la habilitación o deshabilitación de los campos. */
-  public esFormularioSoloLectura: boolean = false;
+   public esFormularioSoloLectura: boolean = false;
+   /* Campos requeridos:
+   - denominacionRazon → Denominación o razón social
+   - rfcSanitario, correoElectronico → RFC sanitario y correo electrónico */
+   denominacionRazon: string = 'scian,denominacionRazon,rfcSanitario,correoElectronico';
   
-  /**
+   /**
    *
    *
    * @property {Subject<void>} destroyNotifier$

@@ -1102,7 +1102,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    */
   postTerminar(): void {
     const PAYLOAD: ObservacionRequest = {
-      id_accion: this.guardarDatos.id_solicitud,
+      id_accion: this.guardarDatos.action_id,
       observacion: this.observacionForm.get('observacion')?.value,
       cve_usuario: this.guardarDatos.current_user,
     };

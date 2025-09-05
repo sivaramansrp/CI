@@ -1,7 +1,7 @@
 import { Catalogo, ConsultaioQuery, InputFecha, Notificacion, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, delay, map, of, takeUntil } from 'rxjs';
+import { Subject, delay, of, skip, take, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
 import { AbstractControl} from '@angular/forms';
 import { FECHA } from '../../constantes/peru-certificado.module';
@@ -153,29 +153,46 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * Hook del ciclo de vida que se llama después de inicializar el componente.
    * Obtiene los datos iniciales para el formulario.
    */
-  ngOnInit(): void {
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccionState = seccionState;
-        })
-      )
-      .subscribe();
+ngOnInit(): void {
+  this.seccionQuery.selectSeccionState$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(s => (this.seccionState = s));
 
-    this.query.selectPeru$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((state) => {
-          this.mercanciaState = state as Tramite110205State;
-          this.initActionFormBuild();
-        })
-      )
-      .subscribe();
+  this.query.selectPeru$
+    .pipe(take(1))
+    .subscribe(state => {
+      this.mercanciaState = state as Tramite110205State;
+      this.initActionFormBuild();
+    });
 
-    this.umcOpcion();
-    this.facturasOpcion();
-  }
+  this.query.selectPeru$
+    .pipe(skip(1), takeUntil(this.destroyNotifier$))
+    .subscribe(S => {
+      if (!this.mercanciaForm) {
+        return; 
+      }
+      this.mercanciaForm.patchValue(
+        {
+          fraccionArancelaria: S.mercanciaForm['fraccionArancelaria'],
+          nombreComercialMercancia: S.mercanciaForm['nombreComercialMercancia'],
+          nombreTecnico: S.mercanciaForm['nombreTecnico'],
+          nombreIngles: S.mercanciaForm['nombreIngles'],
+          otrasInstancias: S.mercanciaForm['otrasInstancias'],
+          criterioParaConferirOrigen: S.mercanciaForm['criterioParaConferirOrigen'],
+          cantidad: S.cantidad,
+          umc: S.umc,
+          valorMercancia: S.valorMercancia,
+          complementoDescripcion: S.complementoDescripcion,
+          numeroFactura: S.numeroFactura,
+          tipoFactura: S.tipoFactura,
+        },
+        { emitEvent: false }
+      );
+    });
+
+  this.umcOpcion();
+  this.facturasOpcion();
+}
 
   /**
    * @descripcion
@@ -189,6 +206,7 @@ export class MercanciaComponent implements OnInit, OnDestroy {
       nombreIngles: [{ value: this.mercanciaState.mercanciaForm['nombreIngles'], disabled: true }],
       otrasInstancias: [{ value: this.mercanciaState.mercanciaForm['otrasInstancias'], disabled: true }],
       criterioParaConferirOrigen: [{ value: this.mercanciaState.mercanciaForm['criterioParaConferirOrigen'], disabled: true }],
+      fechaFactura: [this.mercanciaState.fechaFactura ?? null, Validators.required],
       cantidad: [this.mercanciaState.cantidad, [Validators.required,Validators.pattern(REGEX_PATRON_DECIMAL_16_4)]],
       umc: [this.mercanciaState.umc, Validators.required],
       valorMercancia: [this.mercanciaState.valorMercancia,[Validators.required,Validators.pattern(REGEX_PATRON_DECIMAL_15_4)]],
@@ -272,26 +290,24 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * @descripcion
    * Acepta los datos del formulario, los guarda en el almacén y emite los eventos correspondientes.
    */
-  acceptar(agregar:boolean): void {
-    if(agregar && this.mercanciaForm.valid){
-    this.guardarClicado.emit(this.mercanciaForm.value);
-    this.store.setmercanciaTabla([this.mercanciaForm.value]);
+acceptar(agregar: boolean): void {
+  this.mercanciaForm.markAllAsTouched();
+  this.mercanciaForm.updateValueAndValidity({ onlySelf: false, emitEvent: false });
 
-    if (this.mostrarAlerta) {
-      of(null)
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          delay(100))
-        .subscribe(() => {
-          this.cerrarModal();
-          this.tablaSeleccionEvent.emit(true);
-        });
-    }
+  if (!(agregar && this.mercanciaForm.valid)) {
+    return;
   }
-  else{
-    this.markAllFieldsAsTouched(this.mercanciaForm);
+
+  this.guardarClicado.emit(this.mercanciaForm.value);
+  this.store.setmercanciaTabla([this.mercanciaForm.value]);
+
+  if (this.mostrarAlerta) {
+    of(null).pipe(takeUntil(this.destroyNotifier$), delay(100)).subscribe(() => {
+      this.cerrarModal();
+      this.tablaSeleccionEvent.emit(true);
+    });
   }
-}                                
+}
 
   /**
    * @descripcion
@@ -300,15 +316,12 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * @param campo - El campo del formulario cuyo valor se actualizará.
    * @param metodoNombre - El método del almacén que se llamará para actualizar el valor.
    */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite110205Store
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: Tramite110205Store) => void)(VALOR);
-  }
-    /**
+ setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110205Store): void {
+  const VALOR = form.get(campo)?.value;
+  (this.store[metodoNombre] as (value: Tramite110205Store) => void)(VALOR);
+}
+
+  /**
    * Abre un modal con una notificación configurada.
    * 
    * @command abrirModal
@@ -337,5 +350,31 @@ export class MercanciaComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+ * @summary Actualiza `fechaFactura` y sincroniza con el store.
+ * @description Setea el valor, marca el control como tocado/modificado y persiste vía `setFechaFactura`.
+ * @param {string} nuevo_valor Fecha seleccionada (p. ej., '2025-09-04').
+ * @returns {void}
+ */
+public cambioFechaFactura(nuevo_valor: string): void {
+    this.mercanciaForm.get('fechaFactura')?.setValue(nuevo_valor);
+    this.mercanciaForm.get('fechaFactura')?.markAsTouched();
+    this.mercanciaForm.get('fechaFactura')?.markAsDirty();
+    this.setValoresStore(this.mercanciaForm, 'fechaFactura', 'setFechaFactura');
+  }
+
+  /**
+    * Verifica si un control del formulario es inválido, tocado o modificado.
+    * @param nombreControl - Nombre del control a verificar.
+    * @returns True si el control es inválido, de lo contrario false.
+    */
+  public esInvalido(nombreControl: string): boolean {
+
+    const CONTROL = this.mercanciaForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
 }

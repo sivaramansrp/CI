@@ -1,7 +1,11 @@
-<div class="container">
-  <ng-titulo titulo="Requisitos necesarios" />
+<div class="row">
+  <div class="col-md-12" *ngIf="!cargaRealizada">
+    <lib-notificaciones [notificacionInput]="alertaNotificacion"></lib-notificaciones>
+  </div>
 
-  <ng-alert [CONTENIDO]="TEXTOS.DOCS_NECESARIOS"></ng-alert>
-
- 
+  <div class="col-md-12">
+    <carga-documento [idTipoTRamite]="'303'" [cargaArchivosEvento]="reenviarEvento"
+      [regresarSeccionCargarDocumentoEvento]="reenviarRegresarSeccion" (cargaRealizada)="documentosCargados($event)"
+      (activarBotonCargaArchivos)="manejarEventoCargaDocumento($event)"></carga-documento>
+  </div>
 </div>
