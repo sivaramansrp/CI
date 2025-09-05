@@ -242,7 +242,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   */
   obtenerDataSolicitud(): void {
     const FOLIO = this.consultaState.folioTramite;
-    this.consultaSolicitudService.getDetalleSolicitud(FOLIO).subscribe({
+    this.consultaSolicitudService.getDetalleSolicitud(Number(this.consultaState.procedureId), FOLIO).subscribe({
       next: (response) => {
         if (response?.codigo === '00' && response?.datos) {
           this.llenarFormularioDesdeRespuesta(response.datos);
