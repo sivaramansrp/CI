@@ -6,8 +6,12 @@
         <form [formGroup]="destinatarioForm">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <label for="certficacion_a">Tipo persona*:</label>
+                    </div>
+                     <div class="col-md-6">
+                         <input type="radio" id="planta" name="planta" value="yes" [checked]="destinatarioForm.value.planta === 'yes'" (change)="enCambioValorRadio()" [disabled]="esFormularioSoloLectura"/>
+                          <label class="form-label  ms-3" for="planta">Planta TIF</label>
                     </div>
                     <div>
                         <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [layout]="'vertical'"
