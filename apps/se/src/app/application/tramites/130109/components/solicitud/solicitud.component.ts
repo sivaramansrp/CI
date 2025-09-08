@@ -477,25 +477,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 	    this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
 	  }
 
-  /**
-   * Método para obtener los datos de la tabla dinámica.
-   * Este método realiza una solicitud al servicio `vehiculosUsadosAdaptadosService` para obtener los datos
-   * de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
-   * 
-   * - Actualiza `tableBodyData` con los datos obtenidos.
-   * - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
-   * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
-   * 
-   */
-    obtenerTablaDatos(): void {
-        this.vehiculosUsadosAdaptadosService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
-          this.tableBodyData = data;
-          this.formForTotalCount.patchValue({
-            cantidadTotal:data[0].cantidad,
-            valorTotalUSD:data[0].totalUSD
-          });
-        });
-    }
    
     /**
      * validarYEnviarFormulario
