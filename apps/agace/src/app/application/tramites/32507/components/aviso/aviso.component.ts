@@ -1,6 +1,6 @@
 import { AvisoTabla,AvisoTablaDatos,Catalogo,CatalogoLista } from '../../models/aviso-traslado.model';
-import { CatalogoSelectComponent, REGEX_IMPORTE_PAGO, REGEX_NUMEROS,REGEX_NUMEROS_USD, REGEX_REEMPLAZAR, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery, ConsultaioState,InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, InputRadioComponent, REGEX_IMPORTE_PAGO, REGEX_NUMEROS,REGEX_NUMEROS_USD, REGEX_REEMPLAZAR, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { RADIO_OPCIONS, TABLA_DE_DATOS_AVISO } from '../../constants/avios-procesos.enum';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -38,8 +38,8 @@ import { takeUntil } from 'rxjs';
     ReactiveFormsModule,
     TituloComponent,
     TablaDinamicaComponent,
-    InputRadioComponent,
     CatalogoSelectComponent,
+    InputRadioComponent
   ],
   standalone: true,
 })
@@ -225,6 +225,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      
   }
 
   /**

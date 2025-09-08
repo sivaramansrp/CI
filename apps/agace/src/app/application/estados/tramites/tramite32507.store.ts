@@ -1,5 +1,6 @@
 import {
   AvisoFormulario,
+  AvisoTabla,
   DatosSolicitante,
 } from '../../tramites/32507/models/aviso-traslado.model';
 import { Injectable } from '@angular/core';
@@ -24,6 +25,7 @@ import { StoreConfig } from '@datorama/akita';
 export interface Tramite32507State {
   datosSolicitante: DatosSolicitante;
   avisoFormulario: AvisoFormulario;
+  tablaDeDatos: AvisoTabla[];
 }
 /**
  * Estado inicial del trámite 32507.
@@ -82,6 +84,7 @@ export function createInitialState(): Tramite32507State {
       unidadMedida: '',
       descripcion: '',
     },
+    tablaDeDatos: [],
   };
 }
 /**

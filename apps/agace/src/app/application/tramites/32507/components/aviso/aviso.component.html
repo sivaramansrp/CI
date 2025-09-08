@@ -50,7 +50,7 @@
     </ng-container>
     <ng-titulo titulo="Datos de las mercancías destruídas" />
     <div class="row">
-      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas" [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)"></app-tabla-dinamica>
+      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas" [datos]="tablaDeDatos.datos" [disableSeleccionTablaCheckBox]="this.soloLectura" (listaDeFilaSeleccionada)="filaSeleccionada($event)"></app-tabla-dinamica>
       <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-primary ms-3" (click)="datosDelAviso()" [disabled]="soloLectura"> Agregar </button>
         <button type="button" class="btn btn-danger ms-3" (click)="eliminarMercancia()" [disabled]="soloLectura"> Eliminar </button>
