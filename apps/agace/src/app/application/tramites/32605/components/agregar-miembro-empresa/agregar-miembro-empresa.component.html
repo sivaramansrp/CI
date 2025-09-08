@@ -39,9 +39,9 @@
                             </app-tabla-dinamica>
                             <div class="d-flex justify-content-end">
                               <div class="d-flex flex-row flex-wrap gap-3">
-                                  <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
+                                 <button class="btn btn-default" [ngClass]="{'btn-secondary': !enableEliminarBoton}" (click)="modificarItemEmpleado()" [disabled]="esFormularioSoloLectura">Modificar</button> 
+                                  <button class="btn btn-danger" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
                                   (click)="confirmEliminarEmpleadoItem()" [disabled]="esFormularioSoloLectura">Eliminar</button>
-                                  <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}" (click)="modificarItemEmpleado()" [disabled]="esFormularioSoloLectura">Modificar</button>
                                   <button class="btn btn-primary" (click)="agregarDialogoDatos()" [disabled]="esFormularioSoloLectura">Agregar</button>
                               </div>
                             </div>
@@ -80,7 +80,7 @@
                                               </div>
                                               <div class="row">
                                                 <div class="col-md-12 pt-5">
-                                                    <label class="form-label text-left"><span class="text-danger">*</span> Obligado a Tributar en México</label>
+                                                    <label class="form-label text-left"><span class="text-danger">*</span> Obligado a Tributar en México:</label>
                                                     <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                                                     formControlName="obligadoTributarMexico" (valueChange)="enCambioDeValor($event)"
                                                     ></app-input-radio>
@@ -230,7 +230,7 @@
                                           </div>
                                         </div>
                                     <footer class="footer d-flex py-5 gap-3 justify-content-end">
-                                        <button type="button" class="btn btn-primary" (click)="modalCancelar()">Cancelar</button>
+                                        <button type="button" class="btn btn-danger" (click)="modalCancelar()">Cancelar</button>
                                         <button type="button" class="btn btn-primary" (click)="enviarDialogData()">Agregar</button>
                                     </footer>
                                   </div>

@@ -1,8 +1,14 @@
 import { TablaEnlaceOperativo } from '../models/enlace-operativo-tabla.model';
 
+/**
+ * Configuración de la tabla de Enlaces Operativos.
+ *
+ * Define los encabezados, las claves para obtener el valor de cada
+ * campo desde la entidad `TablaEnlaceOperativo` y el orden de despliegue.
+ */
 export const ENLACE_OPERATIVO_TABLA = [
   {
-    /** Columna para el Registro Federal de Contribuyentes */
+    /** Columna para el Registro Federal de Contribuyentes (RFC) */
     encabezado: 'RFC',
     clave: (ele: TablaEnlaceOperativo): string => ele.rfc,
     orden: 1,
@@ -26,13 +32,13 @@ export const ENLACE_OPERATIVO_TABLA = [
     orden: 4,
   },
   {
-    /** Columna para Ciudad/Estado */
-    encabezado: 'Cuidad o Estado de Residencia',
+    /** Columna para Ciudad o Estado de Residencia */
+    encabezado: 'Ciudad o Estado de Residencia',
     clave: (ele: TablaEnlaceOperativo): string => ele.cuidad,
     orden: 5,
   },
   {
-    /** Columna para Cargo/Puesto */
+    /** Columna para Cargo o Puesto */
     encabezado: 'Cargo o Puesto',
     clave: (ele: TablaEnlaceOperativo): string => ele.cargo,
     orden: 6,
@@ -50,12 +56,16 @@ export const ENLACE_OPERATIVO_TABLA = [
     orden: 8,
   },
   {
-    /** Columna para Suplente */
+    /**
+     * Columna para Suplente.
+     * Muestra "Sí" si `suplente` es verdadero, en caso contrario "No".
+     */
     encabezado: 'Suplente',
     clave: (ele: TablaEnlaceOperativo): string => (ele.suplente ? 'Sí' : 'No'),
     orden: 9,
   },
 ];
+
 
 /**
  * Lista de paneles de configuración para la interfaz de usuario.
