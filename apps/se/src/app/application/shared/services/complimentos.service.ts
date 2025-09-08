@@ -1,7 +1,7 @@
 import { BehaviorSubject, Observable, catchError, map, throwError } from 'rxjs';
 
 import { AnexoDosEncabezado, AnexoUnoEncabezado } from '../models/nuevo-programa-industrial.model';
-import { Catalogo, HttpCoreService } from '@ng-mf/data-access-user';
+import { Catalogo, HttpCoreService, JsonResponseCatalogo } from '@ng-mf/data-access-user';
 import { ENVIRONMENT } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -68,16 +68,28 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
      *
      * @returns Un Observable que emite la respuesta con un arreglo de países.
      */
-     getPais(): Observable<any> {
-    return (
-      this.httpService
-      .get<any[]>(`${ENVIRONMENT.API_HOST}/api/catalogo/paises`, {}, false)
-      .pipe(
-        map((res: any) => {
-        return res;
-        })
-      )
-    );
+     getPais(): Observable<JsonResponseCatalogo> {
+  return this.httpService.get<JsonResponseCatalogo>(
+    `${ENVIRONMENT.API_HOST}/api/catalogo/paises`,
+    {},
+    false
+  );
+  }
+
+  /**
+   * Obtiene el catálogo de estados desde el servidor.
+   *
+   * Realiza una petición HTTP GET al endpoint `/api/catalogo/estados` y retorna la respuesta
+   * como un observable de tipo `JsonResponseCatalogo`.
+   *
+   * @returns Observable que emite la respuesta del catálogo de estados.
+   */
+  getEstado(): Observable<JsonResponseCatalogo> {
+     return this.httpService.get<JsonResponseCatalogo>(
+    `${ENVIRONMENT.API_HOST}/api/catalogo/estados`,
+    {},
+    false
+  );
   }
 
 /**

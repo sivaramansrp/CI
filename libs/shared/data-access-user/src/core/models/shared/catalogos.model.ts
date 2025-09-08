@@ -62,6 +62,20 @@ export interface Catalogo {
   title?: string;
 }
 
+
+/**
+ * Represents the structure of a JSON response containing catalog data.
+ *
+ * @property codigo - The response code indicating the status of the request.
+ * @property datos - An array of `Catalogo` objects containing the catalog data.
+ * @property mensaje - A message providing additional information about the response.
+ */
+export interface JsonResponseCatalogo {
+  codigo: string
+  datos: Catalogo[]
+  mensaje: string
+}
+
 /**
  * Representa un catálogo de documentos que extiende las propiedades de un catálogo genérico.
  *

@@ -1415,7 +1415,24 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         );
         this.camposFormularioDefault[INDICE].opcionesCatalogo = res.datos;
 
-        this.camposFormularioTipoPersona[INDICEALT].opciones = res.datos;
+        this.camposFormularioTipoPersona[INDICEALT].opciones = res.datos
+          .filter((item: Catalogo) => item.clave !== undefined)
+          .map((item: Catalogo) => ({
+            ...item,
+            clave: Number(item.clave)
+          })) as CatalogoPaises[];
     });
+    
+  }
+
+  /**
+ * Obtiene la lista de estados llamando al servicio `complimentosService`.
+ * Se suscribe al observable retornado por `getEstado()` y muestra la respuesta en la consola.
+ * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
+ */
+obtenerEstados():void {
+    this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+    });
+    
   }
 }

@@ -29,11 +29,14 @@ import {
 } from '../../constantes/federatarios-y-plantas.enum';
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
+
 
 /**
  * Componente para los federatarios y plantas
@@ -232,11 +235,19 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
   public plantasNotificacion!: Notificacion;
 
   /**
+     * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+     * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+     *
+     * @property {Subject<void>} destroyNotifier$
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Constructor de la clase FederatariosYPlantasComponent.
    * @param {Router} router - Servicio de Angular para la navegación.
    * @param {ActivatedRoute} activatedRoute - Servicio de Angular para obtener información sobre la ruta actual.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private validacionesService: ValidacionesFormularioService) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private validacionesService: ValidacionesFormularioService,private complimentosService: ComplimentosService) {}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -244,6 +255,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
    * deshabilita el grupo de controles `federatariosFormGroup` para evitar la interacción del usuario.
    */
   ngOnInit(): void {
+    this.obtenerEstados();
     this.initFederatariosFormGroup();
     if (this.formularioDeshabilitado) {
       this.federatariosFormGroup.disable();
@@ -561,5 +573,16 @@ agregarPlantas(): void {
     this.plantasImmexDatos = [...this.plantasImmexDatos];
   }
 }
+
+/**
+ * Obtiene la lista de estados llamando al servicio `complimentosService`.
+ * Se suscribe al observable retornado por `getEstado()` y muestra la respuesta en la consola.
+ * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
+ */
+obtenerEstados():void {
+    this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+    });
+    
+  }
 
 }
