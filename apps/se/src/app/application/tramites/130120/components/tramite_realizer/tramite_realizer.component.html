@@ -10,7 +10,7 @@
                 formControlName="regimen"
                 [required]="true"
                 [isDisabled]="esFormularioSoloLectura"
-                (change)="setValoresStore(datosRealizer, 'regimen', 'setregimen')">
+                (change)="onRegimenSeleccionado()">
                 </app-catalogo-select>
                 <div *ngIf="datosRealizer.get('regimen')?.touched && datosRealizer.get('regimen')?.invalid">
                 <small *ngIf="datosRealizer.get('regimen')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>

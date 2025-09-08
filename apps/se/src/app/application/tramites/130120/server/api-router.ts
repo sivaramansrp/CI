@@ -1,0 +1,15 @@
+
+/**
+ * API para el catálogo de regimenes.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Catalogos/consulta-regimenes
+ */
+export const API_GET_CAT_REGIMENES = `sat-t130120/catalogo/regimenes`;
+
+
+/**
+ * API para el catálogo de clasificación de régimen.
+ * @param CVEREGIMEN - Clave del régimen para el cual se desean obtener las clasificaciones.
+ * @returns URL del endpoint para obtener la clasificación de régimen.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130120/swagger-ui/index.html#/Catalogos/consulta-clasificacion-regimen 
+ */
+export const API_GET_CAT_REGIMENES_CLASIFICACION = (CVEREGIMEN: string): string => `sat-t130120/catalogo/regimenes/${CVEREGIMEN}/clasificacion`;
