@@ -797,6 +797,13 @@ export class AgregarFabricanteComponent
     }
   }
 
+  /**
+   * @method changeTipoPersona
+   * @description Cambia el estado de los controles del formulario según el tipo de persona seleccionado.
+   * Si el tipo de persona es física, habilita el campo RFC; si es moral, lo deshabilita.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
   changeTipoPersona(): void {
     const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
 

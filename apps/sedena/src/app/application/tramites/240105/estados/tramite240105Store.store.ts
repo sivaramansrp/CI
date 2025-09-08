@@ -205,7 +205,7 @@ export class Tramite240105Store extends Store<Tramite240105State> {
       return {
         ...state,
         proveedorTablaDatos: UPDATED_LIST,
-        // modificarProveedorDatos: null
+        modificarProveedorDatos: null
       };
     });
   }

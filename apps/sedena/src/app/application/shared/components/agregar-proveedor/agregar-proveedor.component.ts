@@ -321,6 +321,13 @@ private obtenerNombreRazonSocial(formValue: Proveedor): string {
   }
   return '';
 }
+
+/**
+ * @method crearProveedorDesdeFormulario
+ * @description Crea un objeto `Proveedor` a partir de los valores del formulario.
+ *
+ * @returns {Proveedor} El objeto `Proveedor` creado.
+ */
 private crearProveedorDesdeFormulario(): Proveedor {
   const FORM_VALUE = this.agregarProveedorForm.value;
   const TIPO_PERSONA = FORM_VALUE.tipoPersona;

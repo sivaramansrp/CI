@@ -40,7 +40,6 @@ export class AgregarProveedorContenedoraComponent implements OnInit {
    *
    * @param tramite260214Store - Store que administra el estado del trámite 260214.
    */
-  // eslint-disable-next-line no-empty-function
   constructor(public tramite240105Store: Tramite240105Store,public tramiteQuery: Tramite240105Query) {}
 
   /**

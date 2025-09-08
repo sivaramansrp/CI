@@ -51,7 +51,6 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
    * @param {Tramite240105Store} tramiteStore - Store que administra el estado del trámite.
    * @returns {void}
    */
-  // eslint-disable-next-line no-empty-function
   constructor(public tramiteStore: Tramite240105Store,public tramiteQuery: Tramite240105Query) {}
 
   /**

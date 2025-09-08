@@ -5,15 +5,11 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite240105Store } from '../../../240105/estados/tramite240105Store.store';
 import { of } from 'rxjs';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
-import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { ActivatedRoute } from '@angular/router';
 
-// ✅ Define mock ONCE outside
 const viewContainerRefMock = {
-  // Add only the methods/properties used by your code, or leave empty if not accessed
   element: {},
   injector: {},
   parentInjector: {},
@@ -25,7 +21,7 @@ const viewContainerRefMock = {
   remove: jest.fn(),
   createComponent: jest.fn(),
   length: 0
-} as any; // Use 'as any' to satisfy the type
+} as any;
 
 const modalComponentMock = {
   abrir: jest.fn(),
