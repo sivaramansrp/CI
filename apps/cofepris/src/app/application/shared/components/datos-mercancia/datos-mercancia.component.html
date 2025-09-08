@@ -213,7 +213,7 @@
       </div>
     </div>
     } @if(elementosAnadidos.includes('especifiqueForma') &&
-    mercanciaForm.get('formaFarmaceutica')?.value === tipoProductoEspecial ){
+    mercanciaForm.get('formaFarmaceutica')?.value === tipoProductoEspecial && !elementosBelow){
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
@@ -263,13 +263,14 @@
       <div class="col-md-10">
         <div class="form-group">
           <label class="form-label" for="especifiqueEstado"
-            >Especifique<span
-              [ngClass]="
-            {
-              'text-danger': mercanciaForm.get('especifiqueEstado')?.errors?.['required'] && mercanciaForm.get('especifiqueEstado')?.touched
-            }"
-            ></span
-            >:</label
+            >Especifique@if(elementosMandatorios.includes('especifiqueEstado')){
+              <span
+                [ngClass]="
+                {
+                  'text-danger': mercanciaForm.get('especifiqueEstado')?.errors?.['required'] && mercanciaForm.get('especifiqueEstado')?.touched
+                }"
+              >*</span>
+            }:</label
           >
           <input
             maxlength="100"
@@ -284,6 +285,41 @@
           <div
             class="mensaje-error"
             *ngIf="mercanciaForm.get('especifiqueEstado')?.errors?.['required'] && mercanciaForm.get('especifiqueEstado')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+    @if(elementosAnadidos.includes('especifiqueForma') &&
+    mercanciaForm.get('formaFarmaceutica')?.value === tipoProductoEspecial && elementosBelow){
+    <div class="row">
+      <div class="col-md-10">
+        <div class="form-group">
+          <label class="form-label" for="especifiqueForma"
+            >Especifique<span
+              [ngClass]="
+            {
+              'text-danger': mercanciaForm.get('especifiqueForma')?.errors?.['required'] && mercanciaForm.get('especifiqueForma')?.touched
+            }"
+            >*</span
+            >:</label
+          >
+          <input
+            maxlength="100"
+            class="form-control"
+            id="especifiqueForma"
+            type="text"
+            formControlName="especifiqueForma"
+            [ngClass]="
+              isValid(mercanciaForm, 'especifiqueForma') ? 'required' : ''
+            "
+          />
+          <div
+            class="mensaje-error"
+            *ngIf="mercanciaForm.get('especifiqueForma')?.errors?.['required'] && mercanciaForm.get('especifiqueForma')?.touched"
           >
             Este campo es obligatorio.
           </div>
@@ -315,9 +351,14 @@
             id="fraccionArancelaria"
             type="text"
             formControlName="fraccionArancelaria"
-            (change)="cambiarFraccionArancelaria()"/>
+            (change)="cambiarFraccionArancelaria()"
+            (keydown)="validarFraccionArancelaria()"
+            />
           <div class="mensaje-error" *ngIf="mercanciaForm.get('fraccionArancelaria')?.value && mercanciaForm.get('fraccionArancelaria')?.errors?.['pattern'] && mercanciaForm.get('fraccionArancelaria')?.touched">
             Por favor, sólo escribe dígitos
+          </div>
+          <div class="mensaje-error" *ngIf="mercanciaForm.get('fraccionArancelaria')?.value && showLimitError">
+            Por favor, no escribas menos de 8 caracteres.
           </div>
           <div
             class="mensaje-error"
@@ -475,7 +516,7 @@
     </div>
     @if(!elementosNoValidos.includes('presentacion')){
     <div class="row">
-      <div class="col-6 ml-1">
+      <div class="col-md-10">
         <label class="form-label text-start" for="presentacion">
           Presentación farmacéutica o tipo de envase<span
               [ngClass]="
@@ -488,10 +529,9 @@
         <textarea
           maxlength="250"
           id="presentacion"
-          class="form-control height"
-          rows="3"
+          class="form-control height t-area"
+          rows="5"
           formControlName="presentacion"
-          style="height: 90px"
         ></textarea>
         <div
           class="mensaje-error"

@@ -203,7 +203,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     class: 'col-md-10 col-10',
     tipo_input: 'select',
     required: true,
-    opcionesCatalogo: [], // Use this instead of opciones
+    opciones: [], // Use this instead of opciones
     orden: 3,
   },
   {
