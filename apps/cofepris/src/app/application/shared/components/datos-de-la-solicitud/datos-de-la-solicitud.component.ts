@@ -75,7 +75,8 @@ import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
-import { ConsultaioQuery }  from '@ng-mf/data-access-user';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -1189,8 +1190,9 @@ export class DatosDeLaSolicitudComponent
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
+    // Force show the notification regardless of procedure
+    this.mostrarNotificacion = true;
     this.esSinAccionAlIniciar = false;
-
     this.elementoParaEliminar = i;
   }
 

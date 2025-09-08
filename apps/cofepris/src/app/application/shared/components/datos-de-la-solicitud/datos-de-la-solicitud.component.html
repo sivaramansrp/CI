@@ -359,24 +359,8 @@
             type="text"
             formControlName="licenciaSanitaria"
             (change)="cambioLicenciaSanitaria($event)"
-            [ngClass]="{
-              required:
-                datosSolicitudForm.get('licenciaSanitaria')?.touched &&
-                datosSolicitudForm
-                  .get('licenciaSanitaria')
-                  ?.hasError('required')
-            }"
-          />
-          <small
-            class="text-danger"
-            *ngIf="
-              datosSolicitudForm.get('licenciaSanitaria')?.touched &&
-              datosSolicitudForm.get('licenciaSanitaria')?.hasError('required')
-            "
-          >
-            Este campo es obligatorio.
-          </small>
-        </div>
+           />
+         </div>
       </div>
     </div>
 
@@ -674,7 +658,8 @@
             datosSolicitudForm.get('correoElectronico')?.touched &&
             datosSolicitudForm.get('correoElectronico')?.hasError('pattern')
           ">
-          Por favor, escribe una dirección de correo válida
+El valor ingresado no es una dirección válida de correo electrónico.
+
         </div>
       </div>
     </ng-template>
