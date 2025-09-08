@@ -243,7 +243,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method getCatalogoTratadoACuerdo
+   * @method getCatalogoTratadoAcuerdo
    * @description Obtiene el catálogo de tratados y acuerdos por país
    * 
    * Realiza una petición al servicio para recuperar los tratados y acuerdos
@@ -253,7 +253,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * @param {string} cvePais - Clave del país para filtrar los tratados
    * @returns {void}
  */
-  public getCatalogoTratadoACuerdo(cvePais: string): void {
+  public getCatalogoTratadoAcuerdo(cvePais: string): void {
     this.catalogosTramiteService.getCatTratadosAcuerdos(cvePais)
       .pipe(takeUntil(this.destroy$))
       .subscribe((response) => {
@@ -272,7 +272,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method getCatalogoTratadoACuerdoBloque
+   * @method getCatalogoTratadoAcuerdoBloque
    * @description Obtiene el catálogo de tratados y acuerdos por bloque comercial
    * 
    * Realiza una petición al servicio para recuperar los tratados y acuerdos
@@ -282,7 +282,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * @param {string} cvePais - Clave del país para determinar el bloque comercial
    * @returns {void}
    */
-  public getCatalogoTratadoACuerdoBloque(cvePais: string): void {
+  public getCatalogoTratadoAcuerdoBloque(cvePais: string): void {
     this.catalogosTramiteService.getCatTratadosAcuerdosBloque(cvePais)
       .pipe(takeUntil(this.destroy$))
       .subscribe((response) => {
