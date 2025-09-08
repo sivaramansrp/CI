@@ -39,3 +39,9 @@ export const API_GET_CAT_TRATADOS_ACUERDO_BLOQUE= (CVETRATADOACUERDO: string): s
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/consulta-criterio-tratados
  */
 export const API_GET_CAT_CRITERIOS= (IDTRATADOACUERDO: string): string => `sat-t110101/catalogo/tratado-acuerdo/${IDTRATADOACUERDO}/criterios`;
+
+/**
+ * API para el catalogo de entidades federativas.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/consulta
+ */
+export const API_GET_CAT_ENTIDADES_FEDERATIVAS = `sat-t110101/catalogo/entidades-federativas`;
