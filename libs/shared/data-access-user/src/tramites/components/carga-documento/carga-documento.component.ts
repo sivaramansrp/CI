@@ -7,6 +7,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   QueryList,
@@ -31,7 +32,7 @@ import {
   UNIDADES_DOCUMENTOS,
 } from '../../../core/enums/mensajes-documentos.enum';
 import { ErrorModelo, UploadDocumentResponse } from '../../../core/models/shared/cargar-documentos.model';
-import { catchError, interval, map, of, switchMap, takeWhile, timeInterval } from 'rxjs';
+import { Subject, catchError, interval, map, of, switchMap, takeUntil, takeWhile } from 'rxjs';
 import { CargarDocumentoService } from '../../../core/services/shared/cargar-documento/cargar-documento.service';
 import { CatalogoDocumentosService } from '../../../core/services/shared/catalogos/catalogo-documentos.service';
 import { CommonModule } from '@angular/common';
@@ -48,7 +49,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './carga-documento.component.html',
   styleUrl: './carga-documento.component.scss',
 })
-export class CargaDocumentoComponent implements OnInit, OnChanges {
+export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * @description ID del tipo de trámite.
    * @type {string}
@@ -173,7 +174,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
 
   public alertaNotificacion: Notificacion | null = null;
 
-public PDF_ERRORS:ErrorModelo[] =[];
+  public PDF_ERRORS: ErrorModelo[] = [];
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private documentosQuery: DocumentosQuery,
@@ -921,13 +924,14 @@ cargarArchivos(archivosCargando: DocumentosParaCargar[]): void {
       const REFERENCIA = res?.datos?.referenciaSolicitud;
       return interval(3000).pipe(
         switchMap(() => this.cargarDocumentoService.documentosreferenciaSolicitud(REFERENCIA)),
-        takeWhile((statusResponse) => !(statusResponse.codigo === 'UPSER00'), true),
+        takeWhile((statusResponse) => !(statusResponse.codigo === '00'), true),
         catchError((err) => {
           console.error('Polling error', err);
           return of(null);
         })
       );
-    })
+    }),
+    takeUntil(this.destroy$)
   ).subscribe({
     next: (res) => {
       if (res?.codigo === '00') {
@@ -1006,6 +1010,9 @@ manejarErrorArchivoOpcional(): void {
   });
 }
 
-
+ngOnDestroy(): void {
+  this.destroy$.next();
+  this.destroy$.complete();
+}
 
 }
