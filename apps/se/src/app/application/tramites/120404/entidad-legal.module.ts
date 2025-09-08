@@ -1,4 +1,4 @@
-import { BtnContinuarComponent, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { AsignciondirectaPageComponent } from './pages/asignciondirecta-page/asignciondirecta-page.component';
 import { AsignciontabComponent } from './component/asigncionTab/asigncion-tab.component';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
@@ -18,7 +18,7 @@ declarations: [SolicitanteAsigncionComponent,AsignciondirectaPageComponent],
   imports: [
     PasoDosComponent,PasoTresComponent,
     CommonModule,WizardComponent,
-    EntidadLegalRoutingModule,SolicitanteComponent,ReactiveFormsModule,AsignciontabComponent,SolicitantetabComponent,BtnContinuarComponent,CatalogoSelectComponent,InputRadioComponent 
+    EntidadLegalRoutingModule,SolicitanteComponent,ReactiveFormsModule,AsignciontabComponent,SolicitantetabComponent,BtnContinuarComponent,CatalogoSelectComponent,InputRadioComponent,AlertComponent
   ]
    
 })

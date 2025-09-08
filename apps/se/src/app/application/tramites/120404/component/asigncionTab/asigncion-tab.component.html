@@ -30,6 +30,16 @@
                         [class.is-invalid]="isInvalid('numTramite')"
                         (change)="setValoresStore(asignacionForm,'numTramite')">
                 </div>
+    @if(asignacionForm.controls['numTramite'].invalid && asignacionForm.controls['numTramite'].touched) {
+    <div class="d-grid">
+      @if(asignacionForm.controls['numTramite'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+      }
+      @if(asignacionForm.controls['numTramite'].errors?.['maxlength']) {
+        <span class="mensaje-error">El número de oficio no puede ser mayor a 30 caracteres</span>
+      }
+    </div>
+  }
             </div>
         </div>
         <div class="row mb-5">
