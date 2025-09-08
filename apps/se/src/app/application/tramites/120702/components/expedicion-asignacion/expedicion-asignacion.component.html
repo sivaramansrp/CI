@@ -124,14 +124,20 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="montoAExpedir">Monto a expedir*:</label>
-                    <input type="number" class="form-control" id="montoAExpedir" formControlName="montoAExpedir"
+                    <input type="text" class="form-control" id="montoAExpedir" formControlName="montoAExpedir"
                         name="montoAExpedir" [required]="true" aria-label="Monto a expedir"
                         (change)="setValoresStore(asignacionForm,'montoAExpedir', 'setMontoAExpedir')">
-                    @if(asignacionForm.controls['montoAExpedir'].invalid &&
-                    asignacionForm.controls['montoAExpedir'].touched){
+                     @if(asignacionForm.controls['montoAExpedir'].invalid &&
+                    asignacionForm.controls['montoAExpedir'].touched) {
                     <div class="d-grid">
                         @if(asignacionForm.controls['montoAExpedir'].errors?.['required']) {
                         <span class="mensaje-error">Este campo es obligatorio</span>
+                        }
+                        @if(asignacionForm.controls['montoAExpedir'].errors?.['pattern']) {
+                        <span class="mensaje-error">Por favor, escribe un número entero válido</span>
+                        }
+                        @if(asignacionForm.controls['montoAExpedir'].errors?.['maxlength']) {
+                        <span class="mensaje-error">La cantidad solicitada a expedir no debe ser mayor al saldo disponible</span>
                         }
                     </div>
                     }
