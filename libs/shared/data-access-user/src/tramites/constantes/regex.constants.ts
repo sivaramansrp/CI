@@ -520,6 +520,26 @@ export const REGEX_ONCE_ENTEROS_TRES_DECIMALES = /^(\d{1,11})(\.\d{1,3})?$/;
 
 export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
 
+/**
+ * Expresión regular para validar números con hasta 15 dígitos enteros y opcionalmente hasta 4 decimales.
+ *
+ * Formato permitido:
+ * - Hasta 15 dígitos antes del punto decimal.
+ * - Un punto decimal opcional seguido de hasta 4 dígitos decimales.
+ *
+ * Ejemplos válidos:
+ * - "123"
+ * - "123456789012345"
+ * - "123.4567"
+ * - "1.2"
+ *
+ * Ejemplos no válidos:
+ * - "1234567890123456" (más de 15 enteros)
+ * - "123.45678" (más de 4 decimales)
+ * - ".1234" (falta de dígitos enteros)
+ */
+export const REGEX_NUMERO_15_ENTEROS_4_DECIMALES = /^\d{1,15}(\.\d{1,4})?$/;
+
 
 /**
  * Expresión regular para validar números con hasta 15 dígitos enteros y opcionalmente hasta 4 decimales.
@@ -924,3 +944,27 @@ export const CODIGO_POSTAL = /^\d{1,12}$/
  * SOLO_REGEX_NUMEROS.test("");      // true (cadena vacía)
  */
 export const SOLO_REGEX_NUMEROS = /^[0-9]*$/;
+
+/**
+ * Expresión regular para validar un código postal de 5 dígitos.
+ * 
+ * Esta expresión regular asegura que la entrada contenga exactamente 5 dígitos numéricos.
+ * Es útil para validar códigos postales en formato estándar de México.
+ * 
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - \d{5}: Coincide con exactamente 5 dígitos.
+ * - $: Aserción para el final de la cadena.
+ * 
+ * Ejemplos válidos:
+ * - "12345"
+ * - "01000"
+ * - "99999"
+ * 
+ * Ejemplos no válidos:
+ * - "1234" (menos de 5 dígitos)
+ * - "123456" (más de 5 dígitos)
+ * - "12A45" (contiene caracteres no numéricos)
+ * - "12 345" (contiene espacios)
+ */
+export const REGEX_CODIGO_POSTAL = /^\d{5}$/;

@@ -1,10 +1,10 @@
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, InputRadioComponent, MercanciasDatos, REGEX_RFC, ScianDatos, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CONFIGURACION_MERCANCIAS_DATOS, RADIO_OPCIONES } from '../../services/certificados-licencias-permisos.enum';
 import { Component, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
-import { Subject,map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import CROSLISTA_DE_PAISES from '@libs/shared/theme/assets/json/260303/croslista_de_paises.json';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
@@ -14,6 +14,10 @@ import PAISES_DE_ORIGEN from '@libs/shared/theme/assets/json/260303/paises_de_or
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
 import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico.json';
+
+import { TEXTO_MANIFESTO_Y_DECLARACIONES } from '../../../../shared/constantes/datos-solicitud.enum';
+
+import { NicoInfo } from '../../../260911/models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 /**
  * DatosDeLaSolicitudComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
@@ -31,17 +35,34 @@ import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico
     TooltipModule,
     InputRadioComponent
   ],
-  providers:[BsModalService],
+  providers: [BsModalService],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
-export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
-      /**
-  * @property consultaState
-  * @description
-  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
-  */
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+    * Datos cargados para la tabla NICO.
+    */
+  nicoTablaDatos: NicoInfo[] = [];
+
+  /**
+     * @property {string} textoManifestoContenido
+     * Texto que se muestra en el manifiesto y declaraciones.
+     */
+  public textoManifestoContenido = TEXTO_MANIFESTO_Y_DECLARACIONES;
+
+  /**
+* @property consultaState
+* @description
+* Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+*/
   @Input() consultaState!: ConsultaioState;
 
   /**
@@ -138,25 +159,25 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
    * Se espera que se inicialice con una instancia de `Solicitud260303State`.
    */
   public solicitudState!: Solicitud260303State;
-    /**
-   * Lista de componentes Crosslist disponibles en la vista.
-   */
-    @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+  /**
+ * Lista de componentes Crosslist disponibles en la vista.
+ */
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
-    /**
-   * Lista de países para la selección de origen.
+  /**
+ * Lista de países para la selección de origen.
+ */
+  public crosListaDePaises = DatosDeLaSolicitudComponent.deepCopy(CROSLISTA_DE_PAISES);
+  /**
+   * Una propiedad pública que contiene la lista de países de origen.
+   * Se inicializa con la constante `PAISES_DE_ORIGEN`.
    */
-    public crosListaDePaises = DatosDeLaSolicitudComponent.deepCopy(CROSLISTA_DE_PAISES);
-    /**
-     * Una propiedad pública que contiene la lista de países de origen.
-     * Se inicializa con la constante `PAISES_DE_ORIGEN`.
-     */
-    public seleccionarPais = DatosDeLaSolicitudComponent.deepCopy(PAISES_DE_ORIGEN);
-    /**
-     * Una propiedad pública que contiene las opciones de uso específico para la aplicación.
-     * Se inicializa con la constante `USO_ESPECIFICO`.
-     */
-    public seleccionarUsoEspecifico = DatosDeLaSolicitudComponent.deepCopy(USO_ESPECIFICO);
+  public seleccionarPais = DatosDeLaSolicitudComponent.deepCopy(PAISES_DE_ORIGEN);
+  /**
+   * Una propiedad pública que contiene las opciones de uso específico para la aplicación.
+   * Se inicializa con la constante `USO_ESPECIFICO`.
+   */
+  public seleccionarUsoEspecifico = DatosDeLaSolicitudComponent.deepCopy(USO_ESPECIFICO);
 
   /**
    * Lista de países para seleccionar el origen de la primera sección.
@@ -171,112 +192,111 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
 
   /** Configuración de la tabla de sectores */
   public configuracionMercancias = CONFIGURACION_MERCANCIAS_DATOS;
-    /**
-   * Etiqueta para el crosslist de Forma farmacéutica.
+  /**
+ * Etiqueta para el crosslist de Forma farmacéutica.
+ */
+  public paisDeProcedenciaLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'Forma farmacéutica',
+    derecha: 'País(es) seleccionados',
+  };
+
+  /**
+   * Representa las etiquetas utilizadas para mostrar información sobre el país de origen.
+   * 
+   * @property tituluDeLaIzquierda - La etiqueta que se muestra en el lado izquierdo, indicando el país de origen.
+   * @property derecha - La etiqueta que se muestra en el lado derecho, mostrando el país o países seleccionados.
    */
-    public paisDeProcedenciaLabel: CrossListLable = {
-      tituluDeLaIzquierda: 'Forma farmacéutica',
-      derecha: 'País(es) seleccionados',
-    };
+  public paisDeOrigenLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
 
-    /**
-     * Representa las etiquetas utilizadas para mostrar información sobre el país de origen.
-     * 
-     * @property tituluDeLaIzquierda - La etiqueta que se muestra en el lado izquierdo, indicando el país de origen.
-     * @property derecha - La etiqueta que se muestra en el lado derecho, mostrando el país o países seleccionados.
-     */
-    public paisDeOrigenLabel: CrossListLable = {
-      tituluDeLaIzquierda: 'País de origen',
-      derecha: 'País(es) seleccionado(s)*:',
-    };
+  /**
+   * Representa las etiquetas utilizadas para la sección "Uso específico" en la interfaz de usuario.
+   * 
+   * @property {string} tituluDeLaIzquierda - La etiqueta que se muestra en el lado izquierdo, indicando el uso específico.
+   * @property {string} derecha - La etiqueta que se muestra en el lado derecho, mostrando los usos seleccionados con un asterisco para denotar un campo obligatorio.
+   */
+  public usoEspecificoLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'Uso específico',
+    derecha: 'Uso(s) seleccionado(s)*:',
+  }
 
-    /**
-     * Representa las etiquetas utilizadas para la sección "Uso específico" en la interfaz de usuario.
-     * 
-     * @property {string} tituluDeLaIzquierda - La etiqueta que se muestra en el lado izquierdo, indicando el uso específico.
-     * @property {string} derecha - La etiqueta que se muestra en el lado derecho, mostrando los usos seleccionados con un asterisco para denotar un campo obligatorio.
-     */
-    public usoEspecificoLabel: CrossListLable = {
-      tituluDeLaIzquierda: 'Uso específico',
-      derecha: 'Uso(s) seleccionado(s)*:',
-    }
+  /**
+* Botones de acción para gestionar listas de países en la primera sección.
+*/
+  public paisDeProcedenciaBotons = this.getCrossListBtn();
+  /**
+   * Una propiedad que inicializa una lista de botones para la sección "País de Origen"
+   * invocando el método `getCrossListBtn`. Esto probablemente se utiliza para gestionar o
+   * mostrar elementos interactivos relacionados con el país de origen en la aplicación.
+   */
+  public paisDeOrigenBotons = this.getCrossListBtn();
+  /**
+   * Una propiedad que inicializa y almacena el resultado del método `getCrossListBtn`.
+   * Esto probablemente se utiliza para gestionar o configurar botones específicos relacionados 
+   * con la funcionalidad de "uso específico" dentro del componente.
+   */
+  public usoEspecificoBotons = this.getCrossListBtn();
+  /**
+   * Un objeto que representa el estado colapsable de varias secciones en el componente.
+   * Cada propiedad corresponde a una sección específica e indica si está colapsada.
+   * 
+   * Propiedades:
+   * - `formaFarmaceuticaColapsable`: Indica si la sección "Forma Farmacéutica" está colapsada.
+   * - `paisDeOrigenColapsable`: Indica si la sección "País de Origen" está colapsada.
+   * - `usoEspecificoColapsable`: Indica si la sección "Uso Específico" está colapsada.
+   */
+  public colapsableObj = {
+    formaFarmaceuticaColapsable: false,
+    paisDeOrigenColapsable: false,
+    usoEspecificoColapsable: false,
+  };
 
-    /**
- * Botones de acción para gestionar listas de países en la primera sección.
- */
-public paisDeProcedenciaBotons = this.getCrossListBtn();
-/**
- * Una propiedad que inicializa una lista de botones para la sección "País de Origen"
- * invocando el método `getCrossListBtn`. Esto probablemente se utiliza para gestionar o
- * mostrar elementos interactivos relacionados con el país de origen en la aplicación.
- */
-public paisDeOrigenBotons = this.getCrossListBtn();
-/**
- * Una propiedad que inicializa y almacena el resultado del método `getCrossListBtn`.
- * Esto probablemente se utiliza para gestionar o configurar botones específicos relacionados 
- * con la funcionalidad de "uso específico" dentro del componente.
- */
-public usoEspecificoBotons = this.getCrossListBtn();
-/**
- * Un objeto que representa el estado colapsable de varias secciones en el componente.
- * Cada propiedad corresponde a una sección específica e indica si está colapsada.
- * 
- * Propiedades:
- * - `formaFarmaceuticaColapsable`: Indica si la sección "Forma Farmacéutica" está colapsada.
- * - `paisDeOrigenColapsable`: Indica si la sección "País de Origen" está colapsada.
- * - `usoEspecificoColapsable`: Indica si la sección "Uso Específico" está colapsada.
- */
-public colapsableObj = {
-  formaFarmaceuticaColapsable: false,
-  paisDeOrigenColapsable: false,
-  usoEspecificoColapsable: false,
-};
+  /**
+   * Notificador para destruir los observables al finalizar.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
-/**
- * Notificador para destruir los observables al finalizar.
- */
-private destroyNotifier$: Subject<void> = new Subject();
-
-/** Modelo para la opción de tipo sí/no representado como radio button */
+  /** Modelo para la opción de tipo sí/no representado como radio button */
   public sinoOpciones = RADIO_OPCIONES;
-/**
- * Constructor para el componente DatosDeLaSolicitudComponent.
- * 
- * @param modalService - Servicio para manejar cuadros de diálogo modales.
- * @param fb - Instancia de FormBuilder para crear y gestionar formularios reactivos.
- * @param certificadosLicenciasSvc - Servicio para gestionar certificados, licencias y permisos.
- * @param tramite260211Store - Store para gestionar el estado relacionado con el Trámite 260303.
- * @param tramite260211Query - Servicio de consulta para recuperar datos relacionados con el Trámite 260303.
- */
-constructor(
-  private modalService: BsModalService,
-  private fb: FormBuilder,
-  private certificadosLicenciasSvc: CertificadosLicenciasPermisosService,
-  private tramite260211Store: Tramite260303Store,
-  private tramite260211Query: Tramite260303Query,
-  private validacionesService: ValidacionesFormularioService
-) {
-}
+  /**
+   * Constructor para el componente DatosDeLaSolicitudComponent.
+   */
+  constructor(
+    private modalService: BsModalService,
+    private fb: FormBuilder,
+    private certificadosLicenciasSvc: CertificadosLicenciasPermisosService,
+    private tramite260211Store: Tramite260303Store,
+    private tramite260211Query: Tramite260303Query,
+    private validacionesService: ValidacionesFormularioService
+  ) {
+    // Set the readonly state based on consultaState
+    this.esFormularioSoloLectura = this.consultaState?.readonly || false;
+  }
 
-/**
- * Gancho del ciclo de vida que se llama después de que Angular ha inicializado todas las propiedades enlazadas a datos de un componente.
- * 
- * Este método realiza las siguientes acciones:
- * - Se suscribe al observable `selectSolicitud$` de `tramite260211Query` para actualizar la propiedad `solicitudState`
- *   con el estado más reciente de la sección, asegurando que la suscripción se limpie adecuadamente utilizando `takeUntil` con `destroyNotifier$`.
- * - Inicializa los datos de las tablas y catálogos llamando a `inicializarTablaYCatalogoDatos`.
- * - Crea formularios para "Establecimiento", "Representante Legal", "SCIAN" y "Mercancías" invocando sus respectivos métodos:
- *   `crearElstablecimientoForm`, `crearRepresentanteLegalForm`, `cerrarSCIANForm` y `cerrarMercanciasForm`.
- */
-ngOnInit(): void {
-  this.inicializarFormulario();
-  this.inicializarTablaYCatalogoDatos();
-  this.crearElstablecimientoForm();
-  this.crearRepresentanteLegalForm();
-  this.cerrarSCIANForm();
-  this.cerrarMercanciasForm();
-   this.deshabilitarFormularios();
-}
+  /**
+   * Gancho del ciclo de vida que se llama después de que Angular ha inicializado todas las propiedades enlazadas a datos de un componente.
+   * 
+   * Este método realiza las siguientes acciones:
+   * - Se suscribe al observable `selectSolicitud$` de `tramite260211Query` para actualizar la propiedad `solicitudState`
+   *   con el estado más reciente de la sección, asegurando que la suscripción se limpie adecuadamente utilizando `takeUntil` con `destroyNotifier$`.
+   * - Inicializa los datos de las tablas y catálogos llamando a `inicializarTablaYCatalogoDatos`.
+   * - Crea formularios para "Establecimiento", "Representante Legal", "SCIAN" y "Mercancías" invocando sus respectivos métodos:
+   *   `crearElstablecimientoForm`, `crearRepresentanteLegalForm`, `cerrarSCIANForm` y `cerrarMercanciasForm`.
+   */
+  ngOnInit(): void {
+    // Update readonly state
+    this.esFormularioSoloLectura = this.consultaState?.readonly || false;
+
+    this.inicializarFormulario();
+    this.inicializarTablaYCatalogoDatos();
+    this.crearElstablecimientoForm();
+    this.crearRepresentanteLegalForm();
+    this.cerrarSCIANForm();
+    this.cerrarMercanciasForm();
+    this.deshabilitarFormularios();
+  }
 
   /**
    * Inicializa el formulario suscribiéndose al observable selectSolicitud$ del store.
@@ -297,35 +317,35 @@ ngOnInit(): void {
       .subscribe();
   }
 
-/**
- * Inicializa la tabla de datos y los catálogos asociados invocando una serie de métodos.
- * Este método es responsable de configurar los datos y configuraciones necesarios
- * para que la aplicación funcione correctamente.
- *
- * Se realizan las siguientes acciones:
- * - Recupera los datos del formulario de denominación.
- * - Obtiene los datos del catálogo de estados.
- * - Carga los datos de la tabla SCIAN.
- * - Recupera los datos del catálogo de claves.
- * - Obtiene los datos del catálogo de regímenes.
- * - Carga los datos de la tabla de mercancías.
- * - Recupera los datos del catálogo de tipos de productos.
- * - Obtiene los datos del catálogo de países de origen.
- */
-public inicializarTablaYCatalogoDatos(): void {
-  this.getDenominacionForm();
-  this.getEstadoCatalogDatos();
-  if (this.solicitudState['scianTabla']?.length) {
-    this.scianTablaDatos = this.solicitudState['scianTabla'];
-  } else {
-    this.getscianTabla();
+  /**
+   * Inicializa la tabla de datos y los catálogos asociados invocando una serie de métodos.
+   * Este método es responsable de configurar los datos y configuraciones necesarios
+   * para que la aplicación funcione correctamente.
+   *
+   * Se realizan las siguientes acciones:
+   * - Recupera los datos del formulario de denominación.
+   * - Obtiene los datos del catálogo de estados.
+   * - Carga los datos de la tabla SCIAN.
+   * - Recupera los datos del catálogo de claves.
+   * - Obtiene los datos del catálogo de regímenes.
+   * - Carga los datos de la tabla de mercancías.
+   * - Recupera los datos del catálogo de tipos de productos.
+   * - Obtiene los datos del catálogo de países de origen.
+   */
+  public inicializarTablaYCatalogoDatos(): void {
+    this.getDenominacionForm();
+    this.getEstadoCatalogDatos();
+    if (this.solicitudState['scianTabla']?.length) {
+      this.scianTablaDatos = this.solicitudState['scianTabla'];
+    } else {
+      this.getscianTabla();
+    }
+    this.getClaveCatalogDatos();
+    this.getRegimenCatalogDatos();
+    this.getMercanciasTabla();
+    this.getTipoDeProductoCatalogDatos();
+    this.getPaisDeProcedenciaCatalogoDatos();
   }
-  this.getClaveCatalogDatos();
-  this.getRegimenCatalogDatos();
-  this.getMercanciasTabla();
-  this.getTipoDeProductoCatalogDatos();
-  this.getPaisDeProcedenciaCatalogoDatos();
-}
 
   /**
    * Crea una copia profunda del objeto proporcionado.
@@ -338,22 +358,22 @@ public inicializarTablaYCatalogoDatos(): void {
    * @returns Una copia profunda del objeto proporcionado.
    */
 
-/**
- * Realiza una copia profunda de un objeto dado utilizando serialización y deserialización JSON.
- * 
- * @template T El tipo del objeto a copiar.
- * @param obj El objeto que se desea copiar profundamente.
- * @returns Una nueva instancia del objeto, completamente independiente del original.
- * @remarks
- * - Si el objeto es `undefined` o `null`, se retorna tal cual.
- * - Esta función no copia correctamente objetos que contienen funciones, fechas, mapas, conjuntos, o propiedades no serializables por JSON.
- */
-public static deepCopy<T>(obj: T): T {
-  if (obj === undefined || obj === null) {
-    return obj;
+  /**
+   * Realiza una copia profunda de un objeto dado utilizando serialización y deserialización JSON.
+   * 
+   * @template T El tipo del objeto a copiar.
+   * @param obj El objeto que se desea copiar profundamente.
+   * @returns Una nueva instancia del objeto, completamente independiente del original.
+   * @remarks
+   * - Si el objeto es `undefined` o `null`, se retorna tal cual.
+   * - Esta función no copia correctamente objetos que contienen funciones, fechas, mapas, conjuntos, o propiedades no serializables por JSON.
+   */
+  public static deepCopy<T>(obj: T): T {
+    if (obj === undefined || obj === null) {
+      return obj;
+    }
+    return JSON.parse(JSON.stringify(obj));
   }
-  return JSON.parse(JSON.stringify(obj));
-}
 
 
   /**
@@ -380,21 +400,43 @@ public static deepCopy<T>(obj: T): T {
    */
   public crearElstablecimientoForm(): void {
     const AVISO_VALOR = this.solicitudState.licenciaSanitaria === ''
-    ? true
-    : this.solicitudState.avisoCheckbox;
+      ? true
+      : this.solicitudState.avisoCheckbox;
 
     this.domicilioDeElstablecimientoForm = this.fb.group({
-      codigoPostal: [{value: this.solicitudState.codigoPostal, disabled: true},Validators.required],
-      estado: [{value: this.solicitudState.estado, disabled: false},Validators.required],
-      municipio: [{value: this.solicitudState.municipio, disabled: true},Validators.required],
-      localidad: [{value: this.solicitudState.localidad, disabled: true},Validators.required],  
-      colonia: [{value: this.solicitudState.colonia, disabled: true},Validators.required],
-      calleYNumero: [{value: this.solicitudState.calleYNumero, disabled: true},Validators.required],
-      correoElecronico: [{value: this.solicitudState.correoElecronico, disabled: true},Validators.required],
-      rfc: [{value: this.solicitudState.rfc, disabled: true},Validators.required],
-      lada: [{value: this.solicitudState.lada, disabled: true}],
-      telefono: [{value: this.solicitudState.telefono, disabled: true},Validators.required],
-      avisoCheckbox: [{value: AVISO_VALOR, disabled: false}],
+
+      codigoPostal: [
+        '',
+        [
+          Validators.required,
+          DatosDeLaSolicitudComponent.noWhitespaceValidator,
+          Validators.pattern(/^\d+$/),
+          Validators.maxLength(12)
+        ],
+      ],
+      estado: [{ value: this.solicitudState.estado, disabled: false }, Validators.required],
+      municipio: [{ value: this.solicitudState.municipio, disabled: true }, Validators.required],
+      localidad: ['', [
+        Validators.required,
+        Validators.pattern('^[0-9]+$'),
+        Validators.maxLength(30)
+      ]],
+      colonia: [{ value: this.solicitudState.colonia, disabled: true }, Validators.required],
+      calleYNumero: [{ value: this.solicitudState.calleYNumero, disabled: true }, Validators.required],
+      correoElecronico: [{ value: this.solicitudState.correoElecronico, disabled: true }, Validators.required],
+      rfc: [{ value: this.solicitudState.rfc, disabled: true }, Validators.required],
+
+      lada: ['', [
+        Validators.required,
+        Validators.pattern('^[0-9]+$'),
+        Validators.maxLength(5)
+      ]],
+      telefono: ['', [
+        Validators.required,
+        Validators.pattern('^[0-9]+$'),
+        Validators.maxLength(30)
+      ]],
+      avisoCheckbox: [{ value: AVISO_VALOR, disabled: false }],
       licenciaSanitaria: [{ value: this.solicitudState.licenciaSanitaria, disabled: false }],
       regimenDestinara: [this.solicitudState.regimenDestinara],
       aduana: [this.solicitudState.aduana],
@@ -421,10 +463,23 @@ public static deepCopy<T>(obj: T): T {
       manifiestos: [this.solicitudState.manifiestos],
       losDatosNo: [this.solicitudState.losDatosNo],
       rfc: [this.solicitudState.rfc, [Validators.required, Validators.maxLength(13), DatosDeLaSolicitudComponent.validadorRFC]],
-      nombreORazon: [{value: this.solicitudState.nombreORazon, disabled: true}],
-      apellidoPaterno: [{value: this.solicitudState.apellidoPaterno, disabled: true}],
-      apellidoMaterno: [{value: this.solicitudState.apellidoMaterno, disabled: true}],
+      nombreORazon: [{ value: this.solicitudState.nombreORazon, disabled: true }],
+      apellidoPaterno: [{ value: this.solicitudState.apellidoPaterno, disabled: true }],
+      apellidoMaterno: [{ value: this.solicitudState.apellidoMaterno, disabled: true }],
     });
+  }
+/**
+   * Validador personalizado que verifica que el valor del campo no sea solo espacios en blanco.
+   * 
+   * @method noWhitespaceValidator
+   * @param control Control de formulario a validar.
+   * @returns {ValidationErrors | null} Un objeto de error si el valor contiene solo espacios en blanco, o null si es válido.
+   */
+  static noWhitespaceValidator(control: FormControl): ValidationErrors | null {
+    if (control.value && control.value.trim().length === 0) {
+      return { whitespace: true };
+    }
+    return null;
   }
 
   /**
@@ -449,8 +504,8 @@ public static deepCopy<T>(obj: T): T {
    */
   public cerrarSCIANForm(): void {
     this.scianForm = this.fb.group({
-      claveScian: [this.solicitudState.claveScian],
-      descripcion: [this.solicitudState.descripcion]
+      claveScian: [this.solicitudState.claveScian, Validators.required],
+      descripcion: [this.solicitudState.descripcion, Validators.required]
     });
   }
 
@@ -530,7 +585,7 @@ public static deepCopy<T>(obj: T): T {
    * - Habilita el campo 'denominacionRazon' en el grupo de formularios `denominacionForm`,
    *   permitiendo nuevamente la interacción del usuario con el campo.
    */
-  public cerrar():void {
+  public cerrar(): void {
     this.modalRef?.hide();
     this.denominacionForm.get('denominacionRazon')?.enable();
     this.domicilioDeElstablecimientoForm?.enable();
@@ -543,7 +598,7 @@ public static deepCopy<T>(obj: T): T {
    */
   public getDenominacionForm(): void {
     this.denominacionForm = this.fb.group({
-      denominacionRazon: [{value: this.solicitudState.denominacionRazon,disabled: true}]
+      denominacionRazon: [{ value: this.solicitudState.denominacionRazon, disabled: true }]
     })
   }
 
@@ -588,7 +643,7 @@ public static deepCopy<T>(obj: T): T {
    * 
    * @returns {void} Este método no retorna un valor.
    */
-  public getClaveCatalogDatos():void {
+  public getClaveCatalogDatos(): void {
     this.certificadosLicenciasSvc.getClaveDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       const DATOS = DatosDeLaSolicitudComponent.deepCopy<EstadoCatalogResponse>(response);
       this.claveCatalogo = DATOS.data;
@@ -604,7 +659,7 @@ public static deepCopy<T>(obj: T): T {
    * 
    * @returns {void} Este método no retorna un valor.
    */
-  public getRegimenCatalogDatos():void {
+  public getRegimenCatalogDatos(): void {
     this.certificadosLicenciasSvc.getRegimenDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       const DATOS = DatosDeLaSolicitudComponent.deepCopy(response);
       this.regimenCatalogo = DATOS.data;
@@ -621,20 +676,6 @@ public static deepCopy<T>(obj: T): T {
    */
   public seleccionarAgregar(template: TemplateRef<void>): void {
     this.modalRef = this.modalService.show(template, { class: 'modal-lg' });
-  }
-
-  /** Lógica para agregar un nuevo elemento a la tabla de SCIAN */
-  public scianAgregar(): void {
-    if (this.scianForm.valid) {
-      const DATO = {
-        clave: DatosDeLaSolicitudComponent.obtenerDescripcion(this.claveCatalogo, this.scianForm.get('claveScian')?.value),
-        descripcion: DatosDeLaSolicitudComponent.obtenerDescripcion(this.estadoCatalogo, this.scianForm.get('descripcion')?.value),
-      };
-
-      this.scianTablaDatos = [...this.scianTablaDatos, DATO];
-      (this.tramite260211Store['setScianTabla'] as (value: unknown) => void)(this.scianTablaDatos);
-      this.modalRef?.hide();
-    }
   }
 
   /**
@@ -675,15 +716,15 @@ public static deepCopy<T>(obj: T): T {
     });
   }
 
-/**
- * Alterna el estado colapsable de la primera sección.
- */
+  /**
+   * Alterna el estado colapsable de la primera sección.
+   */
   public mostrarColapsable(valores: string): void {
-    if(valores === 'forma') {
+    if (valores === 'forma') {
       this.colapsableObj.formaFarmaceuticaColapsable = !this.colapsableObj.formaFarmaceuticaColapsable;
-    } else if(valores === 'PaisDeOrigen') {
+    } else if (valores === 'PaisDeOrigen') {
       this.colapsableObj.paisDeOrigenColapsable = !this.colapsableObj.paisDeOrigenColapsable;
-    } else if(valores === 'usoEspecifico') {
+    } else if (valores === 'usoEspecifico') {
       this.colapsableObj.usoEspecificoColapsable = !this.colapsableObj.usoEspecificoColapsable;
     } else {
       this.colapsableObj.formaFarmaceuticaColapsable = false;
@@ -741,12 +782,12 @@ public static deepCopy<T>(obj: T): T {
    * @param event - El evento activado por el cambio del checkbox.
    *                Se espera que sea de tipo `Event` y su objetivo debe ser un `HTMLInputElement`.
    */
-  public onFuncionamientoCheckboxCambiar(event: Event): void{
+  public onFuncionamientoCheckboxCambiar(event: Event): void {
     const VALOR = event.target as HTMLInputElement;
-    if(VALOR.checked) {
-        this.domicilioDeElstablecimientoForm.get('licenciaSanitaria')?.disable();
+    if (VALOR.checked) {
+      this.domicilioDeElstablecimientoForm.get('licenciaSanitaria')?.disable();
     } else {
-        this.domicilioDeElstablecimientoForm.get('licenciaSanitaria')?.enable();
+      this.domicilioDeElstablecimientoForm.get('licenciaSanitaria')?.enable();
     }
     (this.tramite260211Store['setAvisoCheckbox'] as (value: unknown) => void)(VALOR.checked);
   }
@@ -757,69 +798,155 @@ public static deepCopy<T>(obj: T): T {
    * @param campo - El nombre del campo cuyo valor se va a establecer.
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
-  eventoDeCambioDeValor(event: string | number, form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
-    form.get(campo)?.setValue(event);
-    this.setValoresStore(form, campo, metodoNombre);
-  }
-
-  /**
-   * Establece el valor de un campo en el store de Tramite31601.
-   * @param form - El grupo de formularios que contiene el campo.
-   * @param campo - El nombre del campo cuyo valor se va a establecer.
-   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
-   */
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
-    if (campo === 'claveScian') {
-      form.get('descripcion')?.setValue('1');
+    // Special handling for SCIAN form
+    if (campo === 'claveScian' && form === this.scianForm) {
+      // Don't auto-set description for SCIAN form - let user select
+      const VALOR = form.get(campo)?.value;
+      (this.tramite260211Store[metodoNombre] as (value: unknown) => void)(VALOR);
+      return;
     }
+
     if (campo === 'licenciaSanitaria' && form.get('licenciaSanitaria')?.value) {
       form.get('avisoCheckbox')?.disable();
     }
+
     const VALOR = form.get(campo)?.value;
     (this.tramite260211Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-    /**
-     * Habilita o deshabilita todos los formularios del componente según el estado de solo lectura.
-     * Si la propiedad `readonly` de `consultaState` es verdadera, todos los formularios se deshabilitan para evitar la edición.
-     * Si no, se habilitan para permitir la edición.
-     */
-    deshabilitarFormularios(): void {
-      if (this.consultaState?.readonly) {
-        this.denominacionForm.disable();
-        this.domicilioDeElstablecimientoForm.disable();
-        this.representanteLegalForm.disable();
-        this.scianForm.disable();
-        this.mercanciasForm.disable();
-      }
-    }
+  /**
+   * Habilita o deshabilita todos los formularios del componente según el estado de solo lectura.
+   * Si la propiedad `readonly` de `consultaState` es verdadera, todos los formularios se deshabilitan para evitar la edición.
+   * Si no, se habilitan para permitir la edición.
+   */
+  deshabilitarFormularios(): void {
+    this.esFormularioSoloLectura = this.consultaState?.readonly || false;
 
-    /** Busca y asigna los datos del representante legal en el formulario si es válido. */
-    buscarRepresentanteLegal(): void {
-      if (this.representanteLegalForm.valid) {
-        this.representanteLegalForm.patchValue({
-          nombreORazon: 'EUROFOODS DE MEXICO',
-          apellidoPaterno: 'GONZALEZ',
-          apellidoMaterno: 'PINAL'
-        })
-      } else {
-        this.representanteLegalForm.markAllAsTouched();
-      }
+    if (this.esFormularioSoloLectura) {
+      this.denominacionForm?.disable();
+      this.domicilioDeElstablecimientoForm?.disable();
+      this.representanteLegalForm?.disable();
+      this.scianForm?.disable();
+      this.mercanciasForm?.disable();
+    } else {
+      this.denominacionForm?.enable();
+      this.domicilioDeElstablecimientoForm?.enable();
+      this.representanteLegalForm?.enable();
+      this.scianForm?.enable();
+      this.mercanciasForm?.enable();
     }
+  }
 
-    /**
-  * compo doc
-  * @method isValid
-  * @description 
-  * Verifica si un campo específico del formulario es válido.
-  * @param field El nombre del campo que se desea validar.
-  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
-  */
+  /** Busca y asigna los datos del representante legal en el formulario si es válido. */
+  buscarRepresentanteLegal(): void {
+    if (this.representanteLegalForm.valid) {
+      this.representanteLegalForm.patchValue({
+        nombreORazon: 'EUROFOODS DE MEXICO',
+        apellidoPaterno: 'GONZALEZ',
+        apellidoMaterno: 'PINAL'
+      })
+    } else {
+      this.representanteLegalForm.markAllAsTouched();
+    }
+  }
+
+  /**
+* compo doc
+* @method isValid
+* @description 
+* Verifica si un campo específico del formulario es válido.
+* @param field El nombre del campo que se desea validar.
+* @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+*/
   public esValido(form: FormGroup, campo: string): boolean | null {
     return this.validacionesService.isValid(form, campo);
   }
+  /*
+   * Lista de filas seleccionadas del componente tabla de SCIAN.
+   * Se utiliza para manejar la selección de filas en la tabla de SCIAN.
+   */
+  selectedRowsScian: ScianDatos[] = [];
 
-    /**
+  /*
+    * Lista de filas seleccionadas del componente tabla de mercancías.
+    * Se utiliza para manejar la selección de filas en la tabla de mercancías.
+    */
+  selectedRows: NicoInfo[] = [];
+
+  /**
+   * Maneja el evento de cambio de selección en la tabla de SCIAN.
+   * @param selected Lista de filas seleccionadas.
+   */
+  onSeleccionChangeScian(selected: ScianDatos[]): void {
+    this.selectedRowsScian = selected;
+  }
+
+  /**
+   * Elimina las filas seleccionadas de la tabla SCIAN
+   */
+  eliminarSeleccionadosScian(): void {
+    this.scianTablaDatos = this.scianTablaDatos.filter(
+      (row) => !this.selectedRowsScian.includes(row)
+    );
+    this.selectedRowsScian = [];
+    // Update the store with the new data
+    (this.tramite260211Store['setScianTabla'] as (value: unknown) => void)(this.scianTablaDatos);
+  }
+
+  /**
+   * Limpia el formulario SCIAN y resetea los datos seleccionados
+   */
+  limpiarFormularioScian(): void {
+    this.scianForm.reset();
+    this.selectedRowsScian = [];
+  }
+
+  /** Lógica para agregar un nuevo elemento a la tabla de SCIAN */
+  public scianAgregar(): void {
+    if (this.scianForm.valid) {
+
+      const CLAVEVALUE = this.scianForm.get('claveScian')?.value;
+      const DESCRIPCIONVALUE = this.scianForm.get('descripcion')?.value;
+
+      const DATO: ScianDatos = {
+        clave: CLAVEVALUE || '',
+        descripcion: DESCRIPCIONVALUE || ''
+      };
+
+
+      this.scianTablaDatos = [...this.scianTablaDatos, DATO];
+
+
+      (this.tramite260211Store['setScianTabla'] as (value: unknown) => void)(this.scianTablaDatos);
+
+      this.modalRef?.hide();
+      this.limpiarFormularioScian();
+    } else {
+
+      this.scianForm.markAllAsTouched();
+    }
+  }
+
+  /**
+   * Cierra el modal y limpia el formulario SCIAN
+   */
+  public cerrarModalScian(): void {
+    this.modalRef?.hide();
+    this.limpiarFormularioScian();
+  }
+
+  /**
+   * Elimina las filas seleccionadas del NICO
+   */
+  eliminarSeleccionados(): void {
+    this.nicoTablaDatos = this.nicoTablaDatos.filter(
+      (row) => !this.selectedRows.includes(row)
+    );
+    this.selectedRows = [];
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
    */
@@ -827,5 +954,4 @@ public static deepCopy<T>(obj: T): T {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

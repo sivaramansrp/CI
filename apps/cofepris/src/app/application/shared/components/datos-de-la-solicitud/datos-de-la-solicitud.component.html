@@ -522,9 +522,16 @@
 
         <div class="row align-items-center justify-content-start py-2">
           <div class="col-auto d-flex align-items-start pt-1">
-            <input class="form-check-input mt-1 me-3" type="checkbox" formControlName="manifiestosCasillaDeVerificacion"
-              value="" id="manifiestosCasillaDeVerificacion" [disabled]="formularioDeshabilitado" />
-            <label class="form-check-label ms-2" for="manifiestosCasillaDeVerificacion"> *</label>
+            <input class="form-check-input mt-1 me-3" type="checkbox" formControlName="manifesto"
+              value="" id="manifesto">
+            <label class="form-check-label ms-2" for="manifesto" *ngIf="esCampoRequerido('manifesto')">
+                <span
+                  [ngClass]="
+                    datosSolicitudForm.get('manifesto')?.invalid &&
+                    (datosSolicitudForm.get('manifesto')?.touched ||
+                      datosSolicitudForm.get('manifesto')?.dirty)
+                      ? 'mensaje-error font-weight-bold' : ''
+                  "> *</span></label>
           </div>
 
           <div class="col margin-left-check">
@@ -534,6 +541,12 @@
           </div>
         </div>
       </div>
+            <div
+          class="mensaje-error"
+          *ngIf="datosSolicitudForm.get('manifesto')?.errors?.['required'] && datosSolicitudForm.get('manifesto')?.touched"
+        >
+          Este campo es obligatorio.
+        </div>
     </div>
     } @if(esManifesto) {
     <div class="row mt-2">
