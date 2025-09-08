@@ -502,4 +502,4 @@ export const API_GET_TABS = (TRAMITE: string, IDSOLICITUD: string) : string => `
  * API para Consultar los datos del solicitante
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/estado-consulta-solicitud
  */
-export const API_GET_DATOS_SOLICITANTE = (IDSOLICITUD: string) : string => `tramite/solicitud/${IDSOLICITUD}/solicitante`;
+export const API_GET_DATOS_SOLICITANTE = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/tramite/${IDSOLICITUD}/solicitud/solicitante`;
