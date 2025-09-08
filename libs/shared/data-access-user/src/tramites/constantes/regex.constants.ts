@@ -520,6 +520,26 @@ export const REGEX_ONCE_ENTEROS_TRES_DECIMALES = /^(\d{1,11})(\.\d{1,3})?$/;
 
 export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
 
+/**
+ * Expresión regular para validar números con hasta 15 dígitos enteros y opcionalmente hasta 4 decimales.
+ *
+ * Formato permitido:
+ * - Hasta 15 dígitos antes del punto decimal.
+ * - Un punto decimal opcional seguido de hasta 4 dígitos decimales.
+ *
+ * Ejemplos válidos:
+ * - "123"
+ * - "123456789012345"
+ * - "123.4567"
+ * - "1.2"
+ *
+ * Ejemplos no válidos:
+ * - "1234567890123456" (más de 15 enteros)
+ * - "123.45678" (más de 4 decimales)
+ * - ".1234" (falta de dígitos enteros)
+ */
+export const REGEX_NUMERO_15_ENTEROS_4_DECIMALES = /^\d{1,15}(\.\d{1,4})?$/;
+
 
 /**
  * Expresión regular para validar números con hasta 15 dígitos enteros y opcionalmente hasta 4 decimales.
