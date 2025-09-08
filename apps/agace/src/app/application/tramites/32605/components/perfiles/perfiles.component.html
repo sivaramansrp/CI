@@ -9,28 +9,28 @@
   <h6>Indique la siguiente información de la instalación:</h6>
 
   <div class="form-row">
-    <label class="custom-label" for="antiguedad">Antigüedad de la planta (años de operación)</label>
-    <input class="custom-input" id="antiguedad" formControlName="antiguedad" type="text" (input)="actualizarAntiguedad()" [disabled]="esFormularioSoloLectura"/>
+    <label class="custom-label" for="antiguedad">Antigüedad de la planta (años de operación):</label>
+    <input class="custom-input" id="antiguedad" formControlName="antiguedad" type="text" (input)="actualizarAntiguedad()" />
   </div>
   <div class="form-row">
-    <label class="custom-label" for="productos">Productos que fabrica o maneja en esta planta</label>
-    <input class="custom-input" id="productos" formControlName="productos" type="text" (input)="actualizarProductos()" [disabled]="esFormularioSoloLectura"/>
+    <label class="custom-label" for="productos">Productos que fabrica o maneja en esta planta:</label>
+    <input class="custom-input" id="productos" formControlName="productos" type="text" (input)="actualizarProductos()" />
   </div>
   <div class="form-row">
     <label class="custom-label" for="embarquesExp">No. de embarques promedio mensual (EXP):</label>
-    <input class="custom-input" id="embarquesExp" formControlName="embarquesExp" type="text" (input)="actualizarEmbarquesExp()" [disabled]="esFormularioSoloLectura"/>
+    <input class="custom-input" id="embarquesExp" formControlName="embarquesExp" type="text" (input)="actualizarEmbarquesExp()" />
   </div>
   <div class="form-row">
-    <label class="custom-label" for="embarquesImp">No. de embarques promedio mensual (IMP)</label>
-    <input class="custom-input" id="embarquesImp" formControlName="embarquesImp" type="text" (input)="actualizarEmbarquesImp()" [disabled]="esFormularioSoloLectura"/>
+    <label class="custom-label" for="embarquesImp">No. de embarques promedio mensual (IMP):</label>
+    <input class="custom-input" id="embarquesImp" formControlName="embarquesImp" type="text" (input)="actualizarEmbarquesImp()" />
   </div>
   <div class="form-row">
-    <label class="custom-label" for="empleados">Número de empleados total de esta instalación</label>
-    <input class="custom-input" id="empleados" formControlName="empleados" type="text" (input)="actualizarEmpleados()" [disabled]="esFormularioSoloLectura"/>
+    <label class="custom-label" for="empleados">Número de empleados total de esta instalación:</label>
+    <input class="custom-input" id="empleados" formControlName="empleados" type="text" (input)="actualizarEmpleados()" />
   </div>
   <div class="form-row">
-    <label class="custom-label" for="superficie">Superficie de la instalación (m²)</label>
-    <input class="custom-input" id="superficie" formControlName="superficie" type="text" (input)="actualizarSuperficie()" [disabled]="esFormularioSoloLectura"/>
+    <label class="custom-label" for="superficie">Superficie de la instalación (m²):</label>
+    <input class="custom-input" id="superficie" formControlName="superficie" type="text" (input)="actualizarSuperficie()" />
   </div>
 
 <div class="row">
@@ -44,17 +44,17 @@
 <ng-container *ngIf="profileForm.get('blCtpat')?.value === '1'">
     <div class="form-row mb-3">
   <label class="custom-label" for="niverCertificado">Nivel: certificado / certificado-validado</label>
-  <input class="custom-input" id="niverCertificado" formControlName="niverCertificado" type="text" (change)="setValoresStore(profileForm,'niverCertificado')" [disabled]="esFormularioSoloLectura" />
+  <input class="custom-input" id="niverCertificado" formControlName="niverCertificado" type="text" (change)="setValoresStore(profileForm,'niverCertificado')"  />
 </div>
 
 <div class="form-row mb-3">
   <label class="custom-label" for="ctpatAccountNumber">CTPAT Account number</label>
-  <input class="custom-input" id="ctpatAccountNumber" formControlName="ctpatAccountNumber" type="text" (change)="setValoresStore(profileForm,'ctpatAccountNumber')" [disabled]="esFormularioSoloLectura"/>
+  <input class="custom-input" id="ctpatAccountNumber" formControlName="ctpatAccountNumber" type="text" (change)="setValoresStore(profileForm,'ctpatAccountNumber')" />
 </div>
 
 <div class="form-row mb-0">
   <label class="custom-label" for="codigoMid">Manufacturer Identification Code (MID)</label>
-  <input class="custom-input" id="codigoMid" formControlName="codigoMid" type="text" (change)="setValoresStore(profileForm,'codigoMid')" [disabled]="esFormularioSoloLectura"/>
+  <input class="custom-input" id="codigoMid" formControlName="codigoMid" type="text" (change)="setValoresStore(profileForm,'codigoMid')" />
 </div>
 
 <div class="form-row mt-n-3 mb-3">
@@ -83,7 +83,7 @@
 <ng-container *ngIf="profileForm.get('blnPip')?.value === '1'">
     <div class="form-row mb-3">
       <label class="custom-label" for="numRegistroPip">Número de registro</label>
-      <input class="custom-input" id="numRegistroPip" formControlName="numRegistroPip" type="text" (change)="setValoresStore(profileForm,'numRegistroPip')" [disabled]="esFormularioSoloLectura"/>
+      <input class="custom-input" id="numRegistroPip" formControlName="numRegistroPip" type="text" (change)="setValoresStore(profileForm,'numRegistroPip')"/>
     </div>
   </ng-container>
 
@@ -100,11 +100,11 @@
 <ng-container *ngIf="profileForm.get('blnOea')?.value === '1'">
     <div class="form-row mb-3">
       <label class="custom-label" for="nomProgramapaisOea">Nombre del programa y país</label>
-      <input class="custom-input" id="nomProgramapaisOea" formControlName="nomProgramapaisOea" type="text" (change)="setValoresStore(profileForm,'nomProgramapaisOea')" [disabled]="esFormularioSoloLectura"/>
+      <input class="custom-input" id="nomProgramapaisOea" formControlName="nomProgramapaisOea" type="text" (change)="setValoresStore(profileForm,'nomProgramapaisOea')"/>
     </div>
     <div class="form-row mb-3">
       <label class="custom-label" for="numRegistroOea">Número de registro</label>
-      <input class="custom-input" id="numRegistroOea" formControlName="numRegistroOea" type="text" (change)="setValoresStore(profileForm,'numRegistroOea')" [disabled]="esFormularioSoloLectura"/>
+      <input class="custom-input" id="numRegistroOea" formControlName="numRegistroOea" type="text" (change)="setValoresStore(profileForm,'numRegistroOea')"/>
     </div>
   </ng-container>
 
@@ -121,11 +121,11 @@
 <ng-container *ngIf="profileForm.get('blnOtrosProgramasSegu')?.value === '1'">
     <div class="form-row mb-3">
       <label class="custom-label" for="nombreProgramaOtros">Nombre del programa</label>
-      <input class="custom-input" id="nombreProgramaOtros" formControlName="nombreProgramaOtros" type="text" (change)="setValoresStore(profileForm,'nombreProgramaOtros')" [disabled]="esFormularioSoloLectura"/>
+      <input class="custom-input" id="nombreProgramaOtros" formControlName="nombreProgramaOtros" type="text" (change)="setValoresStore(profileForm,'nombreProgramaOtros')"/>
     </div>
     <div class="form-row mb-3">
       <label class="custom-label" for="numRegistroOtros">Número de registro</label>
-      <input class="custom-input" id="numRegistroOtros" formControlName="numRegistroOtros" type="text" (change)="setValoresStore(profileForm,'numRegistroOtros')" [disabled]="esFormularioSoloLectura"/>
+      <input class="custom-input" id="numRegistroOtros" formControlName="numRegistroOtros" type="text" (change)="setValoresStore(profileForm,'numRegistroOtros')"/>
     </div>
     <div class="form-row mt-n-3 mb-3">
       <label class="custom-label  mt-4" for="numRegistroOtros">Vigencia</label>
@@ -151,15 +151,15 @@
 
   <div class="row pb-5">
     <div class="col-md-12">
-      <label class="form-label" for="nombre">Nombre</label>
+      <label class="form-label" for="nombre">Nombre:</label>
       <input type="text" class="form-control" id="nombre" formControlName="nombre"
-        (change)="setValoresStore(profileForm,'nombre')" [disabled]="esFormularioSoloLectura">
+        (change)="setValoresStore(profileForm,'nombre')">
     </div>
 
     <div class="col-md-12">
-      <label class="form-label" for="categoria">Categoría</label>
+      <label class="form-label" for="categoria">Categoría:</label>
       <input type="text" class="form-control" id="categoria" formControlName="categoria"
-        (change)="setValoresStore(profileForm,'categoria')" [disabled]="esFormularioSoloLectura">
+        (change)="setValoresStore(profileForm,'categoria')">
     </div>
 
     <div class="col-md-4 mb-4">
@@ -167,15 +167,15 @@
     </div>
 
     <div class="col-md-12">
-      <label class="form-label" for="nombre2">Nombre</label>
+      <label class="form-label" for="nombre2">Nombre:</label>
       <input type="text" class="form-control" id="nombre2" formControlName="nombre2"
-        (change)="setValoresStore(profileForm,'nombre2')" [disabled]="esFormularioSoloLectura">
+        (change)="setValoresStore(profileForm,'nombre2')">
     </div>
 
     <div class="col-md-12">
-      <label class="form-label" for="categoria2">Categoría</label>
+      <label class="form-label" for="categoria2">Categoría:</label>
       <input type="text" class="form-control" id="categoria2" formControlName="categoria2"
-        (change)="setValoresStore(profileForm,'categoria2')" [disabled]="esFormularioSoloLectura">
+        (change)="setValoresStore(profileForm,'categoria2')">
     </div>
 
     <div class="col-md-4">
@@ -183,15 +183,15 @@
     </div>
 
     <div class="col-md-12">
-      <label class="form-label" for="nombre3">Nombre</label>
+      <label class="form-label" for="nombre3">Nombre:</label>
       <input type="text" class="form-control" id="nombre3" formControlName="nombre3"
-        (change)="setValoresStore(profileForm,'nombre3')" [disabled]="esFormularioSoloLectura">
+        (change)="setValoresStore(profileForm,'nombre3')">
     </div>
 
     <div class="col-md-12">
-      <label class="form-label" for="categoria3">Categoría</label>
+      <label class="form-label" for="categoria3">Categoría:</label>
       <input type="text" class="form-control" id="categoria3" formControlName="categoria3"
-        (change)="setValoresStore(profileForm,'categoria3')" [disabled]="esFormularioSoloLectura">
+        (change)="setValoresStore(profileForm,'categoria3')">
     </div>
 
     <div class="col-md-4">

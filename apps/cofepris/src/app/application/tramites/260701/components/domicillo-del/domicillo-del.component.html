@@ -186,6 +186,7 @@
         </div>
         <div class="row mt-5">
             <app-tabla-dinamica 
+                [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                 [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
                 [configuracionTabla]="mercanciasTabla"
                 [datos]="mercanciasTablaDatos">

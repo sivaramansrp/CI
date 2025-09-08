@@ -282,6 +282,13 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * Lista de países para la selección de origen.
    */
   public crosListaDePaises = CROSLISTA_DE_PAISES;
+
+  /**
+   * Indica si se ha seleccionado un establecimiento.
+   * Cuando es `true`, significa que el usuario ha seleccionado un establecimiento; cuando es `false`, no se ha seleccionado ninguno.
+   * @default false
+   */
+  public tieneSeleccionEstablecimiento: boolean = false;
   /**
    * Botones de acción para gestionar listas de países en la primera sección.
    */
@@ -369,9 +376,9 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
+      txtBtnCancelar: '',
     };
-
+    this.tieneSeleccionEstablecimiento = !this.tieneSeleccionEstablecimiento;
     this.elementoParaEliminar = i;
   }
   /**
@@ -644,6 +651,9 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+    if(this.tieneSeleccionEstablecimiento) {
+      this.datosSolicitudform.enable();
     }
   }
 

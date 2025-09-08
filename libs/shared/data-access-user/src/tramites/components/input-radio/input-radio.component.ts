@@ -4,8 +4,10 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
   forwardRef,
 } from '@angular/core';
@@ -38,7 +40,9 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     },
   ],
 })
-export class InputRadioComponent implements ControlValueAccessor, OnInit {
+export class InputRadioComponent
+  implements ControlValueAccessor, OnInit, OnChanges
+{
   @Input() description!: string; // Optional description
   @Input() showDescription: boolean = false;
   @Input() labelMargin: string = '15px'; // Dynamic label margin
@@ -82,24 +86,110 @@ export class InputRadioComponent implements ControlValueAccessor, OnInit {
    */
   @Input() showTooltip: boolean = false;
 
+  /**
+ * Indica si el componente debe mostrarse en un diseño de cuadrícula (grid).
+ *
+ * Este `@Input` permite al componente padre habilitar o deshabilitar el
+ * modo de presentación en cuadrícula.
+ *
+ * @example
+ * <!-- En el componente padre -->
+ * <app-hijo [gridLayout]="true"></app-hijo>
+ *
+ * @type {boolean}
+ * @default false
+ */
   @Input() gridLayout: boolean = false;
 
+  /**
+ * Referencia al contenedor de los botones de radio en la plantilla.
+ *
+ * Se obtiene mediante `@ViewChild` para manipular directamente el
+ * elemento nativo del DOM que contiene los botones de radio.
+ *
+ * @type {ElementRef}
+ */
   @ViewChild('radioContainer', { static: true }) radioContainer!: ElementRef;
 
+  /**
+ * Ancho aplicado a los botones de radio.
+ *
+ * Esta propiedad define el estilo de ancho que se aplicará a los botones
+ * de radio en la interfaz de usuario.
+ *
+ * @type {string}
+ * @default '100%'
+ */
   public anchoDelBotonDeRadio = '100%';
+
+  /**
+ * Lista de etiquetas que deben mostrarse como deshabilitadas.
+ *
+ * Este `@Input` recibe desde el componente padre un arreglo de cadenas
+ * que representan las opciones que no deben estar disponibles para el usuario.
+ *
+ * @example
+ * <!-- En el componente padre -->
+ * <app-hijo [disableLabel]="['Opción 1', 'Opción 2']"></app-hijo>
+ *
+ * @type {string[]}
+ * @default []
+ */
+  @Input() disableLabel: string[] = [];
 
   /**
    * Evento emitido cuando el valor seleccionado cambia.
    */
   @Output() valueChange = new EventEmitter<string | number>();
+
+  /**
+ * Constructor del componente.
+ *
+ * Inicializa el servicio `FormBuilder` que permite crear y gestionar
+ * formularios reactivos dentro del componente.
+ *
+ * @param {FormBuilder} fb - Servicio inyectado de Angular utilizado
+ * para construir instancias de `FormGroup`, `FormControl` y `FormArray`.
+ */
   constructor(private fb: FormBuilder) {
     //constructor
+  }
+
+  /**
+ * Ciclo de vida `ngOnChanges` de Angular.
+ *
+ * Se ejecuta automáticamente cuando cambia el valor de alguna
+ * propiedad marcada con `@Input`.  
+ * En este caso, detecta los cambios en la propiedad `disableLabel`
+ * y actualiza su valor con el nuevo recibido desde el componente padre.
+ *
+ * @param {SimpleChanges} changes - Objeto que contiene el historial de cambios
+ * de todas las propiedades vinculadas con `@Input`.
+ *
+ * @returns {void}
+ *
+ * @example
+ * <!-- En el padre -->
+ * <app-hijo [disableLabel]="['Opción 1']"></app-hijo>
+ *
+ * // En el hijo, al cambiar `disableLabel`:
+ * ngOnChanges(changes: SimpleChanges): void {
+ *   if (changes['disableLabel']) {
+ *     this.disableLabel = changes['disableLabel'].currentValue;
+ *   }
+ * }
+ */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['disableLabel']) {
+      this.disableLabel = changes['disableLabel'].currentValue;
+    }
   }
 
   ngOnInit(): void {
     this.createFormRadio();
     this.calcularAnchoBotonDeRadio();
   }
+
   /**
    * Crea el grupo de formulario para los botones de radio con los validadores apropiados.
    */
@@ -212,7 +302,6 @@ export class InputRadioComponent implements ControlValueAccessor, OnInit {
         'margin-right': '30px',
       };
     }
-    
     if (this.layout === 'radio-label-wrap') {
       return {
         'margin-bottom': '10px',

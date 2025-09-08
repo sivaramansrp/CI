@@ -202,6 +202,12 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
   public usoEspesificoColapsable = false;
 
   /**
+   * @property {boolean} showLimitError
+   * Controla la visibilidad del mensaje de error por límite de caracteres.
+   */
+  public showLimitError = false;
+
+  /**
    * @property {string[]} elementosRequirdos
    * Lista de elementos requeridos para el formulario.
    */
@@ -545,6 +551,19 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    */
   public elementosAnadidos: string[] = [];
   /**
+   * Arreglo que almacena los elementos mandatorios.
+   *
+   * Este arreglo se utiliza para guardar una lista de cadenas que representan
+   * los elementos que son obligatorios en el componente.
+   */
+  public elementosMandatorios: string[] = [];
+  /**
+   * @method crearMercanciaForm
+   * @description Construye el formulario reactivo `mercanciaForm` con sus controles y validaciones.
+   * Si `mercanciaFormState` tiene datos, los utiliza para inicializar los controles del formulario.
+   */
+  public elementosBelow: boolean = false;
+  /**
    * Configuración para la clave de mercancía.
    *
    * Esta propiedad define la configuración utilizada para la tabla de selección
@@ -598,6 +617,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
   validarElementos(): void {
     this.elementosNoValidos = [];
     this.elementosAnadidos = [];
+    this.elementosMandatorios = [];
     switch (this.idProcedimiento) {
       case 260102:
         this.elementosNoValidos = [
@@ -642,6 +662,9 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
           'paisDeProcedencia',
           'usoEspecífico',
         ];
+        this.elementosAnadidos = ['especifique','especifiqueForma','especifiqueEstado'];
+        this.elementosMandatorios = ['especifiqueEstado'];
+        this.elementosBelow = true;
         break;
       case 260213:
         this.elementosNoValidos = [
@@ -1133,16 +1156,31 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
     if (!FRACCION) {
       this.mercanciaForm.get('descripcionFraccion')?.setValue('');
     } else if (FRACCION && this.mercanciaForm.get('cantidadUmt')?.disabled) {
-      if (isNaN(Number(FRACCION))) {
-        this.abrirModal();
-      } else {
-        this.mercanciaForm
-          .get('descripcionFraccion')
-          ?.setValue(DESCRIPCION_FRACCION_DESHABILITADO_VALOR);
-        this.mercanciaForm
-          .get('cantidadUmt')
-          ?.setValue(UMT_DESHABILITADO_VALOR);
+      if(FRACCION.length === 8){
+        if (isNaN(Number(FRACCION))) {
+          this.abrirModal();
+        } else {
+          this.mercanciaForm
+            .get('descripcionFraccion')
+            ?.setValue(DESCRIPCION_FRACCION_DESHABILITADO_VALOR);
+          this.mercanciaForm
+            .get('cantidadUmt')
+            ?.setValue(UMT_DESHABILITADO_VALOR);
+        }
       }
+    }
+  }
+  /**
+   * Valida la longitud de la fracción arancelaria ingresada en el formulario.
+   * Si la longitud es menor a 8 caracteres, establece `showLimitError` en true,
+   * de lo contrario, lo establece en false.
+   * */
+  public validarFraccionArancelaria(): void {
+    const FRACCION_ARANCELARIA = this.mercanciaForm.get('fraccionArancelaria')?.value;
+    if(FRACCION_ARANCELARIA.length < 8){
+      this.showLimitError = true;
+    }else{
+      this.showLimitError = false;
     }
   }
 

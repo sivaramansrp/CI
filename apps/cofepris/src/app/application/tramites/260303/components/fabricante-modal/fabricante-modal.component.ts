@@ -1,8 +1,8 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, REGEX_RFC, ValidacionesFormularioService} from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, REGEX_RFC, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
-import { Subject,map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
@@ -19,11 +19,11 @@ import tipoPersona from '@libs/shared/theme/assets/json/260303/tipo-persona.json
 @Component({
   selector: 'app-fabricante-modal',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule, InputRadioComponent, TooltipModule, CatalogoSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule, InputRadioComponent, TooltipModule, CatalogoSelectComponent],
   templateUrl: './fabricante-modal.component.html',
   styleUrl: './fabricante-modal.component.scss',
 })
-export class FabricanteModalComponent implements OnInit,OnDestroy {
+export class FabricanteModalComponent implements OnInit, OnDestroy {
 
   @Output() guardarFabricante = new EventEmitter<Record<string, unknown>>();
 
@@ -80,7 +80,7 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
     private certificadosLicenciasSvc: CertificadosLicenciasPermisosService,
   ) {
     this.titulo = '';
-     this.consultaioQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -99,12 +99,12 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
    */
   ngOnInit(): void {
     this.tramite260303Query.selectSolicitud$.pipe(
-    takeUntil(this.destroyNotifier$),
+      takeUntil(this.destroyNotifier$),
       map((seccionState) => {
         this.solicitudState = seccionState;
       })
     )
-    .subscribe();
+      .subscribe();
     this.getPaisDatos();
     if (this.titulo === 'Agregar otros') {
       this.cerrarTercerosRelacionadosForm();
@@ -120,14 +120,14 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
      *
      * @returns {void}
      */
-    public getPaisDatos(): void {
-      this.certificadosLicenciasSvc.getPaisDatos()
+  public getPaisDatos(): void {
+    this.certificadosLicenciasSvc.getPaisDatos()
       .pipe(
         takeUntil(this.destroyNotifier$)
       ).subscribe((response) => {
         this.paisCatalogo = response;
       });
-    }
+  }
 
   /**
    * Inicializa el formulario obteniendo el estado actual de la solicitud desde el store.
@@ -157,24 +157,24 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
       terceroNombre: [this.solicitudState.tercerosRelacionadosTerceroNombre, Validators.required],
       tercerosNacionalidad: [this.solicitudState.tercerosNacionalidad],
       tipoPersona: [this.solicitudState.tipoPersona, Validators.required],
-      rfc: [{value: this.solicitudState.tercerosRelacionadosRfc, disabled: true}, [Validators.required, Validators.maxLength(13), FabricanteModalComponent.validadorRFC]],
-      curp: [{value: this.solicitudState.tercerosRelacionadosCurp, disabled: true}],
-      razonSocial: [{value: this.solicitudState.tercerosRelacionadosRazonSocial, disabled: true}],
-      datosPersonalesNombre: [{value: this.solicitudState.datosPersonalesNombre, disabled: true}],
-      datosPersonalesPrimerApellido: [{value: this.solicitudState.datosPersonalesPrimerApellido, disabled: true}],
-      datosPersonalesSegundoApellido: [{value: this.solicitudState.datosPersonalesSegundoApellido, disabled: true}],
-      pais: [{value: this.solicitudState.tercerosRelacionadosPais, disabled: true}],
-      estado: [{value: this.solicitudState.tercerosRelacionadosEstado, disabled: true}],
-      municipio: [{value: this.solicitudState.tercerosRelacionadosMunicipio, disabled: true}],
-      localidad: [{value: this.solicitudState.tercerosRelacionadosLocalidad, disabled: true}],
-      codigoPostal: [{value: this.solicitudState.tercerosRelacionadosCodigoPostal, disabled: true}],
-      colonia: [{value: this.solicitudState.tercerosRelacionadosColonia, disabled: true}],
-      calle: [{value: this.solicitudState.tercerosRelacionadosCalle, disabled: true}],
-      numeroExterior: [{value: this.solicitudState.tercerosRelacionadosNumeroExterior, disabled: true}],
-      numeroInterior: [{value: this.solicitudState.tercerosRelacionadosNumeroInterior, disabled: true}],
-      lada: [{value: this.solicitudState.tercerosRelacionadosLada, disabled: true}],
-      telefono: [{value: this.solicitudState.tercerosRelacionadosTelefono, disabled: true}],
-      correoElectronico: [{value: this.solicitudState.tercerosRelacionadosCorreoElectronico, disabled: true}],
+      rfc: [{ value: this.solicitudState.tercerosRelacionadosRfc, disabled: true }, [Validators.required, Validators.maxLength(13), FabricanteModalComponent.validadorRFC]],
+      curp: [{ value: this.solicitudState.tercerosRelacionadosCurp, disabled: true }],
+      razonSocial: [{ value: this.solicitudState.tercerosRelacionadosRazonSocial, disabled: true }],
+      datosPersonalesNombre: [{ value: this.solicitudState.datosPersonalesNombre, disabled: true }],
+      datosPersonalesPrimerApellido: [{ value: this.solicitudState.datosPersonalesPrimerApellido, disabled: true }],
+      datosPersonalesSegundoApellido: [{ value: this.solicitudState.datosPersonalesSegundoApellido, disabled: true }],
+      pais: [{ value: this.solicitudState.tercerosRelacionadosPais, disabled: true }],
+      estado: [{ value: this.solicitudState.tercerosRelacionadosEstado, disabled: true }],
+      municipio: [{ value: this.solicitudState.tercerosRelacionadosMunicipio, disabled: true }],
+      localidad: [{ value: this.solicitudState.tercerosRelacionadosLocalidad, disabled: true }],
+      codigoPostal: [{ value: this.solicitudState.tercerosRelacionadosCodigoPostal, disabled: true }],
+      colonia: [{ value: this.solicitudState.tercerosRelacionadosColonia, disabled: true }],
+      calle: [{ value: this.solicitudState.tercerosRelacionadosCalle, disabled: true }],
+      numeroExterior: [{ value: this.solicitudState.tercerosRelacionadosNumeroExterior, disabled: true }],
+      numeroInterior: [{ value: this.solicitudState.tercerosRelacionadosNumeroInterior, disabled: true }],
+      lada: [{ value: this.solicitudState.tercerosRelacionadosLada, disabled: true }],
+      telefono: [{ value: this.solicitudState.tercerosRelacionadosTelefono, disabled: true }],
+      correoElectronico: [{ value: this.solicitudState.tercerosRelacionadosCorreoElectronico, disabled: true }],
     });
   }
 
@@ -188,16 +188,32 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
    */
   initializeTercerosRelacionadosForm(): void {
     this.tercerosRelacionadosForm = this.fb.group({
-      denominacionSocial: [this.solicitudState.tercerosRelacionadosDenominacionSocial, Validators.required],
+      denominacionSocial: ['', [
+        Validators.required,
+        Validators.pattern("^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s.,'-]+$"),
+        Validators.maxLength(254)
+      ]],
       pais: [this.solicitudState.tercerosRelacionadosPais, Validators.required],
-      estado: [this.solicitudState.tercerosRelacionadosEstado],
-      codigoPostal: [this.solicitudState.tercerosRelacionadosCodigoPostal, Validators.required],
+      estado: ['', [
+        Validators.required,
+        Validators.pattern("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s.,'-]+$"),
+        Validators.maxLength(255)
+      ]],
+      codigoPostal: ['', [
+        Validators.required,
+        Validators.pattern('^[0-9]+$'),
+        Validators.maxLength(12)
+      ]],
       calle: [this.solicitudState.tercerosRelacionadosCalle, Validators.required],
       numeroExterior: [this.solicitudState.tercerosRelacionadosNumeroExterior, Validators.required],
       numeroInterior: [this.solicitudState.tercerosRelacionadosNumeroInterior],
       lada: [this.solicitudState.tercerosRelacionadosLada],
       telefono: [this.solicitudState.tercerosRelacionadosTelefono],
-      correoElectronico: [this.solicitudState.tercerosRelacionadosCorreoElectronico],
+      correoElectronico: ['', [
+        Validators.required,
+        Validators.email,
+        Validators.maxLength(254)
+      ]],
     });
   }
 
@@ -207,14 +223,14 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
      * 
      * @returns Un objeto de error si el RFC es inválido, o null si es válido.
      */
-    static validadorRFC(control: AbstractControl): ValidationErrors | null {
-      const VALUE = control.value;
-      if (!VALUE) {
-        return null;
-      }
-      const ES_VALIDO = REGEX_RFC.test(VALUE);
-      return ES_VALIDO ? null : { rfcInvalido: true };
+  static validadorRFC(control: AbstractControl): ValidationErrors | null {
+    const VALUE = control.value;
+    if (!VALUE) {
+      return null;
     }
+    const ES_VALIDO = REGEX_RFC.test(VALUE);
+    return ES_VALIDO ? null : { rfcInvalido: true };
+  }
 
 
   /**
@@ -263,7 +279,7 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
    * @param campo - El nombre del campo cuyo valor se va a establecer.
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
-  eventoDeCambioDeValor(event: string | number | Event , form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
+  eventoDeCambioDeValor(event: string | number | Event, form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
     let VALOR;
     if (event instanceof Event && (event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement || event.target instanceof HTMLTextAreaElement)) {
       const INPUT = event.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
@@ -339,5 +355,5 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-  
+
 }

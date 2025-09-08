@@ -441,7 +441,7 @@ export class AgregarDestinatarioFinalComponent
       pais: [
         {
           value: this.elementosDeshabilitados.includes('pais')
-            ? '2'
+            ? '1'
             : this.obtenerValor('pais'),
           disabled: this.elementosDeshabilitados.includes('pais'),
         },
