@@ -309,7 +309,7 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
  * @param {Mercancia} evento - Objeto de tipo `Mercancia` que ha sido seleccionado.
  */
   obtenerSeleccionadoMercancia(filas: Monto[]): void {
-  this.seleccionadaguardarClicado = filas;// store selected rows
+  this.seleccionadaguardarClicado = filas;
 }
   /**
   * Método que elimina los objetos seleccionados del arreglo de mercancías guardadas.
