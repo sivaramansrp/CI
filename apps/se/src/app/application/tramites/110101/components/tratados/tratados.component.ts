@@ -6,6 +6,8 @@ import { Solicitante110101State, Tramite110101Store } from '../../estados/tramit
 import { Subject, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CatalogosTramiteService } from '../../services/catalogo.service';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
@@ -126,7 +128,8 @@ export class TratadosComponent implements OnInit, OnDestroy {
     private tramite110101Store: Tramite110101Store,
     private solicitanteQuery: Solicitante110101Query,
     private consultaioQuery: ConsultaioQuery,
-    private pantallaService: PantallasSvcService
+    private pantallaService: PantallasSvcService,
+    private catalogosTramiteService: CatalogosTramiteService
   ) { 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -148,7 +151,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
-     this.getCatalogoList();
+     this.getCatalogoPaisBloques();
     this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
         this.solicitudeState = seccionState;
     })).subscribe();
@@ -210,6 +213,33 @@ export class TratadosComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @method getCatalogoPaisBloques
+   * @description Obtiene el catálogo de países y bloques comerciales
+   * 
+   * Realiza una petición al servicio para recuperar el catálogo de países y bloques.
+   * Si la respuesta es exitosa (código '00'), transforma los datos al formato requerido
+   * y los asigna a la propiedad paisCatalogo.
+   * 
+   * @returns {void}
+ */
+  public getCatalogoPaisBloques(): void {
+    this.catalogosTramiteService.getCatPaisBloques()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response) => {
+        if (response.codigo === CodigoRespuesta.EXITO) {
+          // El backend manda "datos"
+          const DATOS = response.datos || [];
+
+          // Transformación a tu respuesta a response Catalogo
+          this.paisCatalogo = DATOS.map((item, index) => ({
+            id: index + 1,
+            descripcion: item.descripcion,
+            clave: item.clave,
+          }));
+        }
+      });
+  }
 
 
 
