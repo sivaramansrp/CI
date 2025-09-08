@@ -826,7 +826,8 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         );
         this.estados = datos;
         this.camposFormularioTipoPersona[INDICEALT].opcionesCatalogo = datos;
-        this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
+        if(this.camposFormularioDefault && this.camposFormularioDefault[INDICE].opcionesCatalogo)
+          this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
       });
   }
 

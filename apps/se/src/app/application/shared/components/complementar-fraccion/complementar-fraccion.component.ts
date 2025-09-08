@@ -1,10 +1,13 @@
 import {
+  AnexoDosEncabezado,
+  AnexoUnoEncabezado,
   Catalogo,
   ComplimentarFraccion,
   ComplimentarFraccionResoponse,
 } from '../../models/nuevo-programa-industrial.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { Component } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
@@ -68,34 +71,58 @@ export class ComplementarFraccionComponent implements OnInit {
   @Output() cerrarPopup = new EventEmitter<void>();
 
   /**
+   * Fila seleccionada del tipo AnexoUnoEncabezado.
+   * Se utiliza para almacenar y manipular la fila actualmente activa o seleccionada en la tabla.
+   */
+  selectedRow: AnexoUnoEncabezado | null = null;
+
+  /**
+   * Fila seleccionada del tipo AnexoDosEncabezado.
+   * Permite gestionar la fila activa o seleccionada dentro de la tabla correspondiente al Anexo Dos.
+   */
+  selectedDosRow: AnexoDosEncabezado | null = null;
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
    * @param ubicaccion Servicio de ubicación para navegación.
    */
   // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder, private ubicaccion: Location) {}
+  constructor(private fb: FormBuilder, private ubicaccion: Location, private complimentosService: ComplimentosService) {}
 
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+ this.complimentosService.anexoUnoFilaSeleccionada$.subscribe(row => {
+   this.selectedRow = row;
+   this.crearFormularioComplimentar();
+   if (this.formularioDeshabilitado) {
+     this.complimentarForm.disable();
+   }
+ });
+
+   this.complimentosService.anexoDosFilaSeleccionada$.subscribe(row => {
+    this.selectedDosRow = row;
     this.crearFormularioComplimentar();
     if (this.formularioDeshabilitado) {
       this.complimentarForm.disable();
     }
-  }
+  });
+}
 
   /**
    * Crea el formulario del Anexo Uno.
    */
   crearFormularioComplimentar(): void {
+    const ROW = this.selectedRow || this.selectedDosRow;
     this.complimentarForm = this.fb.group({
       catagoria: [
         this.complimentarFraccionDatos.catagoria,
         Validators.required,
       ],
       descripcion: [
-        this.complimentarFraccionDatos.descripcion,
+        { value: ROW?.encabezadoDescripcionComercial, disabled: true },
         Validators.required,
       ],
       monedaNacionalMensual: [
