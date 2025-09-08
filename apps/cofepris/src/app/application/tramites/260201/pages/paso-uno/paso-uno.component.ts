@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ConsultaioQuery,
   ConsultaioState,
-} from '@libs/shared/data-access-user/src';
+} from '@ng-mf/data-access-user';
 import {
   Observable, 
   Subject,
@@ -16,6 +16,7 @@ import {
   Tramite260201State,
   Tramite260201Store
 } from '../../estados/tramite260201Store.store';
+import { DatosSolicitudConsultaService } from '../../../../shared/services/datos-solicitud-consulta.service';
 
 @Component({
   selector: 'app-paso-uno',
@@ -64,7 +65,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     private tramite260201Query: Tramite260201Query,
     private tramite260201Store: Tramite260201Store,
     private consultaQuery: ConsultaioQuery,
-    private readonly http: HttpClient
+    private readonly http: HttpClient,
+    private datosSolicitudConsultaService: DatosSolicitudConsultaService
   ) {}
 
   /**
@@ -86,6 +88,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
           if (this.consultaState.update) {
             this.formularioDeshabilitado = false;
             this.guardarDatosFormulario();
+            this.getDatosSolicitudData();
           } else if (this.consultaState.readonly) {
             this.formularioDeshabilitado = true;
           }
@@ -135,6 +138,18 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
           this.actualizarEstadoFormulario(resp);
         }
       });
+  }
+/**   * Obtiene los datos de la solicitud desde un archivo JSON y actualiza el estado del formulario
+   * en el store utilizando el servicio DatosSolicitudConsultaService.
+   * Si se reciben datos válidos, se actualiza el estado del formulario en el store.
+   */
+  public getDatosSolicitudData():void{
+    this.datosSolicitudConsultaService.getDatosSolicitudData().pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((resp) => {
+          if (resp) {
+            this.datosSolicitudConsultaService.actualizarEstadoFormulario(resp);
+          }
+        });
   }
 
   /**
