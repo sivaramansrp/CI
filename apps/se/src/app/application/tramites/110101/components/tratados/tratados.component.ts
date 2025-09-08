@@ -300,7 +300,34 @@ export class TratadosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * @method getCatalogoCriterios
+   * @description Obtiene el catálogo de criterios de origen por tratado o acuerdo
+   * 
+   * Realiza una petición al servicio para recuperar los criterios de origen
+   * específicos de un tratado o acuerdo. Si la respuesta es exitosa (código '00'), 
+   * transforma los datos al formato requerido y los asigna a origenCatalogo.
+   * 
+   * @param {string} idTratadoAcuerdo - Clave del tratado o acuerdo para filtrar los criterios
+   * @returns {void}
+   */
+  public getCatalogoCriterios(idTratadoAcuerdo: string): void {
+    this.catalogosTramiteService.getCatCriterios(idTratadoAcuerdo)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response) => {
+        if (response.codigo === CodigoRespuesta.EXITO) {
+          // El backend manda "datos"
+          const DATOS = response.datos || [];
 
+          // Transformación a tu respuesta a response Catalogo
+          this.origenCatalogo = DATOS.map((item, index) => ({
+            id: index + 1,
+            descripcion: item.descripcion,
+            clave: item.clave,
+          }));
+        }
+      });
+  }
 
   /**
    * Encabezados comunes de la tabla de tratados.
