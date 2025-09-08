@@ -13,7 +13,7 @@
             formControlName="descripcion"
             rows="3"
             style="height: 90px"
-            placeholder="Ingrese la descripción"
+            placeholder=""
           ></textarea>
           <div class="error-message">
             <small
@@ -53,7 +53,7 @@
           </label>
           <span
           class="bi bi-question-circle-fill fs-4 m-1"
-          title="Descripción de la fracción arancelaria"
+          tooltip="Ingrese una fracción"
           ata-bs-toggle="tooltip"
         >
         </span>
@@ -85,7 +85,7 @@
           <label for="cantidadUMT" class="form-label">Cantidad en UMT*:</label>
           <span
           class="bi bi-question-circle-fill fs-4 m-1"
-          title="Cantidad en UMT"
+          tooltip="Unidad de medida de la tarifa"
           ata-bs-toggle="tooltip"
         >
         </span>
@@ -110,13 +110,13 @@
         </div>
 
         <div class="col-md-4">
-          <label for="umt" class="form-label">UMT*:</label>
+          <label for="umt" class="form-label">UMT*:<span class="bi bi-question-circle-fill fs-4 m-1" tooltip="Unidad de medida de la tarifa" ata-bs-toggle="tooltip"></span></label>
           <input
             id="umt"
             type="text"
             class="form-control"
             formControlName="umt"
-            placeholder="Kilogramo"
+            placeholder=""
             readonly
           />
           <div class="error-message">
@@ -167,6 +167,7 @@
             [label]="'UMC'"
             [required]="true"
             [tooltipQuestionCircle]="true"
+            [tooltipQuestionCircleText]="'Unidad de medida comercial'"
             [isDisabled]="esFormularioSoloLectura"
             (selectionChange)="datosMercancia.get('umc')?.setValue($event.id)"
           ></app-catalogo-select>

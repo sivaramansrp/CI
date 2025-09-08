@@ -366,7 +366,6 @@ export class AgregarFabricanteComponent
       tipoPersona: [this.obtenerValor('tipoPersona'), Validators.required],
       rfc: [
         this.obtenerValor('rfc'),
-        [Validators.required, Validators.maxLength(13)],
       ],
       curp: [
         this.obtenerValor('curp'),
@@ -391,11 +390,11 @@ export class AgregarFabricanteComponent
       pais: [
         {
           value: this.elementosDeshabilitados.includes('pais')
-            ? '2'
+            ? ''
             : this.obtenerValor('pais'),
           disabled: this.elementosDeshabilitados.includes('pais'),
         },
-        Validators.required,
+        [Validators.required],
       ],
       estado: [
         {
@@ -404,7 +403,7 @@ export class AgregarFabricanteComponent
             : this.obtenerValor('estadoLocalidad'),
           disabled: this.elementosDeshabilitados.includes('estado'),
         },
-        Validators.required,
+        [Validators.required],
       ],
       municipio: [
         {
@@ -413,7 +412,7 @@ export class AgregarFabricanteComponent
             : this.obtenerValor('municipioAlcaldia'),
           disabled: this.elementosDeshabilitados.includes('municipio'),
         },
-        Validators.required,
+        [Validators.required],
       ],
       localidad: [
         this.obtenerValor('localidad'),
@@ -436,7 +435,7 @@ export class AgregarFabricanteComponent
       calle: [this.obtenerValor('calle'), Validators.required],
       numeroExterior: [
         this.obtenerValor('numeroExterior'),
-        Validators.required,
+        [Validators.required],
       ],
       numeroInterior: [this.obtenerValor('numeroInterior')],
       lada: [this.obtenerValor('lada')],
@@ -799,6 +798,17 @@ export class AgregarFabricanteComponent
   }
 
   changeTipoPersona(): void {
+    const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
+
+    const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
+    if (RFC_CONTROL) {
+      RFC_CONTROL.setValidators([
+        Validators.required,
+        AgregarFabricanteComponent.rfcFisicaValidator(VALOR_FORMULARIO.tipoPersona)
+      ]);
+      RFC_CONTROL.markAsTouched();
+      RFC_CONTROL.updateValueAndValidity();
+    }
     if (
       this.agregarFabricanteForm?.get('tipoPersona')?.value === '' ||
       this.agregarFabricanteForm?.get('tipoPersona')?.value === undefined

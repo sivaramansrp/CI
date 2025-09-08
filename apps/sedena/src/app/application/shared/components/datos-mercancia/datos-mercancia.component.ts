@@ -8,6 +8,7 @@ import { Subject,takeUntil } from 'rxjs';
 import { CROSLISTA_DE_PAISES } from '../../constants/datos-solicitud.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { MercanciaDetalle } from '../../models/datos-del-tramite.model';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 /**
  * @title Datos de la Mercancía
  * @description Componente que permite capturar y emitir la información relacionada con una mercancía específica.
@@ -23,6 +24,7 @@ import { MercanciaDetalle } from '../../models/datos-del-tramite.model';
     CatalogoSelectComponent,
     ReactiveFormsModule,
     CrosslistComponent,
+    TooltipModule
   ],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
@@ -290,14 +292,14 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
         );
       this.datosMercancia.get('descFraccion')?.disable();
       this.datosMercancia.get('umt')?.setValue('Kilogramo');
-      this.datosMercancia.get('umt')?.enable();
+      this.datosMercancia.get('umt')?.disable();
     } else if (value === 2) {
       this.datosMercancia
         .get('descFraccion')
         ?.setValue('Otra descripción para 25030003.');
       this.datosMercancia.get('descFraccion')?.disable();
       this.datosMercancia.get('umt')?.setValue('Tonelada');
-      this.datosMercancia.get('umt')?.enable();
+      this.datosMercancia.get('umt')?.disable();
     } else {
       this.datosMercancia.get('descFraccion')?.setValue(null);
       this.datosMercancia.get('descFraccion')?.disable();
@@ -313,8 +315,6 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     if (this.esFormularioSoloLectura) {
       this.datosMercancia.disable();
-    } else {
-      this.datosMercancia.enable();
     }
   }
 
@@ -325,14 +325,11 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    */
   crearFormaulario(): void {
     this.datosMercancia = this.fb.group({
-      descripcion: ['QAS', Validators.required],
+      descripcion: ['', Validators.required],
       fraccionArancelaria: ['', { validators: Validators.required }],
       descFraccion: [
-        {
-          value: null,
-          disabled: true,
-        },
-        { validators: Validators.required },
+        { value:null, disabled: true },
+  [Validators.required]
       ],
       cantidadUMT: [
         '',
