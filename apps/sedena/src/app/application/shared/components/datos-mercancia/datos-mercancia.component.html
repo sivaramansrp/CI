@@ -13,7 +13,7 @@
             formControlName="descripcion"
             rows="3"
             style="height: 90px"
-            placeholder="Ingrese la descripción"
+            placeholder=""
           ></textarea>
           <div class="error-message">
             <small
@@ -53,7 +53,7 @@
           </label>
           <span
           class="bi bi-question-circle-fill fs-4 m-1"
-          title="Ingrese una fracción"
+          tooltip="Ingrese una fracción"
           ata-bs-toggle="tooltip"
         >
         </span>
@@ -85,7 +85,7 @@
           <label for="cantidadUMT" class="form-label">Cantidad en UMT*:</label>
           <span
           class="bi bi-question-circle-fill fs-4 m-1"
-          title="Unidad de medida de la tarifa"
+          tooltip="Unidad de medida de la tarifa"
           ata-bs-toggle="tooltip"
         >
         </span>
@@ -110,19 +110,13 @@
         </div>
 
         <div class="col-md-4">
-          <label for="umt" class="form-label">UMT*: <span
-            *ngIf="mostrarTooltipUMT"
-          class="bi bi-question-circle-fill fs-4 m-1"
-          title="Unidad de medida de la tarifa"
-          ata-bs-toggle="tooltip"
-        >
-        </span></label>
+          <label for="umt" class="form-label">UMT*:<span class="bi bi-question-circle-fill fs-4 m-1" tooltip="Unidad de medida de la tarifa" ata-bs-toggle="tooltip"></span></label>
           <input
             id="umt"
             type="text"
             class="form-control"
             formControlName="umt"
-            placeholder="Kilogramo"
+            placeholder=""
             readonly
           />
           <div class="error-message">
@@ -173,6 +167,7 @@
             [label]="'UMC'"
             [required]="true"
             [tooltipQuestionCircle]="true"
+            [tooltipQuestionCircleText]="'Unidad de medida comercial'"
             [isDisabled]="esFormularioSoloLectura"
             [tooltipQuestionCircleText]="'Unidad de medida comercial'"
             (selectionChange)="datosMercancia.get('umc')?.setValue($event.id)"

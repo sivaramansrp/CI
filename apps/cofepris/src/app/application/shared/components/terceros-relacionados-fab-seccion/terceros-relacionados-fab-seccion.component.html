@@ -18,7 +18,7 @@
         <br />
   
         <div class="d-flex justify-content-end mt-3">
-          @if(fabricanteRowData.length > 0) {
+          @if(selectedFabricanteRows.length > 0) {
             <div>
               <button class="btn btn-danger mx-2" type="button"  (click)="eliminarSeleccionadosFabricante()" [disabled]="esFormularioSoloLectura" >Eliminar</button>
               <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura"   (click)="onModificarFabricante()">Modificar</button>
@@ -41,7 +41,7 @@
         <br />
   
         <div class="d-flex justify-content-end mt-3">
-          @if(destinatarioRowData.length > 0) {
+          @if(selectedDestinatarioRows.length > 0) {
             <div>
                 <button class="btn btn-danger mx-2" type="button" (click)="eliminarSeleccionadosDestinatario()" [disabled]="esFormularioSoloLectura">Eliminar</button>
                 <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura"  (click)="onModificarDestinatario()">Modificar</button>
@@ -64,7 +64,7 @@
         <br />
   
         <div class="d-flex justify-content-end mt-3">
-          @if(proveedorRowData.length > 0) {
+          @if(selectedProveedorRows.length > 0) {
             <div>
               <button class="btn btn-danger mx-2" type="button" (click)="eliminarSeleccionadosProveedor()" [disabled]="esFormularioSoloLectura">Eliminar</button>
               <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura"  (click)="onModificarProveedor()">Modificar</button>
@@ -87,7 +87,7 @@
         <br />
   
         <div class="d-flex justify-content-end mt-3">
-          @if(facturadorRowData.length > 0) {
+          @if(selectedFacturadorRows.length > 0) {
             <div>
               <button class="btn btn-danger mx-2" type="button" (click)="eliminarSeleccionadosFacturador()" [disabled]="esFormularioSoloLectura">Eliminar</button>
               <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura" (click)="onModificarFacturador()">Modificar</button>
@@ -151,7 +151,7 @@
                 <label for="rfc" class="form-label">R.F.C*:
                     <span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyentes" placement="top"></span>
                 </label>
-                <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+                <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" maxlength="15" />
                 <ng-container *ngIf="agregarFabricanteFormGroup.get('rfc')?.invalid && (agregarFabricanteFormGroup.get('rfc')?.touched || agregarFabricanteFormGroup.get('rfc')?.dirty)">
                   <div class="text-danger small">
                     <div *ngIf="agregarFabricanteFormGroup.get('rfc')?.errors?.['required']">El RFC es obligatorio.</div>
@@ -435,7 +435,7 @@
             <div class="col-md-1 mt-5">
               <div class="form-group">
                 <label class="form-label" for="lada">Lada:</label>
-                <input class="form-control" type="text" id="lada" formControlName="lada" name="lada" />
+                <input class="form-control" type="text" id="lada" formControlName="lada" name="lada" maxlength="5" />
               </div>
             </div>
   
@@ -516,7 +516,7 @@
               <label for="rfc" class="form-label">R.F.C*:
                   <span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyentes" placement="top"></span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" maxlength="15" name="rfc" />
               <ng-container *ngIf="agregarDestinatarioFormGroup.get('rfc')?.invalid && (agregarDestinatarioFormGroup.get('rfc')?.touched || agregarDestinatarioFormGroup.get('rfc')?.dirty)">
                 <div class="text-danger small">
                   <div *ngIf="agregarDestinatarioFormGroup.get('rfc')?.errors?.['required']">El RFC es obligatorio.</div>
@@ -547,7 +547,7 @@
             <div class="col-md-8">
               <div class="form-group">
                 <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
-                <input type="text" class="form-control" id="denominacionRazonSocial"
+                <input type="text" class="form-control" id="denominacionRazonSocial" maxlength="254"
                   formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
                   <div class="text-danger" *ngIf="agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.touched && agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.invalid">
                     La denominación o razón social es obligatoria.
@@ -660,7 +660,7 @@
             <div class="col-md-1 mt-5">
               <div class="form-group">
                 <label class="form-label" for="lada">Lada:</label>
-                <input type="text" id="lada" formControlName="lada" class="form-control" name="lada" />
+                <input type="text" id="lada" formControlName="lada" maxlength="5" class="form-control" name="lada" />
               </div>
             </div>
   
@@ -770,7 +770,7 @@
             <div class="form-group">
               <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
               <input type="text" class="form-control" id="denominacionRazonSocial"
-                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" maxlength="254" />
                 <ng-container *ngIf="agregarProveedorFormGroup.get('denominacionRazonSocial')?.invalid && (agregarProveedorFormGroup.get('denominacionRazonSocial')?.touched || agregarProveedorFormGroup.get('denominacionRazonSocial')?.dirty)">
                   <div class="text-danger small">La denominación o razón social es obligatoria.</div>
                 </ng-container>
@@ -965,7 +965,7 @@
             <div class="col-md-8">
               <div class="form-group">
                 <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
-                <input type="text" class="form-control" id="denominacionRazonSocial"
+                <input type="text" class="form-control" id="denominacionRazonSocial" maxlength="254"
                   formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
               </div>
             </div>

@@ -25,6 +25,7 @@
           name="eliminarServicio"
           (click)="eliminarServiciosGrid()"
           class="btn btn-danger"
+          [disabled]="esFormularioSoloLectura"
         >
           Eliminar
         </button>
@@ -112,6 +113,7 @@
           name="eliminar"
           (click)="eliminarEmpresasNacionales()"
           class="btn btn-danger"
+          [disabled]="esFormularioSoloLectura"
         >
           Eliminar
         </button>
@@ -197,6 +199,7 @@
             name="eliminarServicio"
             (click)="eliminarEmpresaExtranjera()"
             class="btn btn-danger"
+            [disabled]="esFormularioSoloLectura"
           >
             Eliminar
           </button>

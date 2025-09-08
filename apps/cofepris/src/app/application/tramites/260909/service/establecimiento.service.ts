@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable} from 'rxjs';
 
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, JSONResponse } from '@libs/shared/data-access-user/src';
 
 import { PropietarioTipoPersona } from '../models/datos-de-la-solicitud.model';
 
@@ -140,4 +140,22 @@ export class EstablecimientoService {
       this.tramite260909.setImporteDePago(DATOS.setImporteDePago);
       this.tramite260909.setBanco(DATOS.setBanco);
   }
+
+  /**
+   * Obtiene los datos del catálogo SCIAN desde un archivo JSON.
+   * @returns Un observable que emite la respuesta JSON con los datos del catálogo SCIAN.
+   */
+  getScianTablaDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260909/scian-tabla-datos.json');
+  }
+
+  /**
+   * Obtiene los datos del catálogo de mercancías desde un archivo JSON.
+   * @returns Un observable que emite la respuesta JSON con los datos del catálogo de mercancías.
+   */
+  getMercanciasTablaDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260909/mercancias-tabla-datos.json');
+  }
+
+
 }

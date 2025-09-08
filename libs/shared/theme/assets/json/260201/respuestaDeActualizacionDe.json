@@ -2,11 +2,11 @@
   "pagoDerechos": {
     "claveReferencia": "1234567890",
     "cadenaDependencia": "DEP123456",
-    "estado": "2",
+    "estado": "1",
     "llavePago": "LLAVE987654",
-    "fechaPago": "2024-06-20",
+    "fechaPago": "01/01/2024",
     "importePago": "1500.00",
-    "banco": "Banco Ejemplo"
+    "banco": "1"
   },
   "datosSolicitudFormState": {
     "rfcSanitario": "SAN123456789",

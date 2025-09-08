@@ -1395,6 +1395,15 @@
     "numeroDeProcedimiento": "260204"
   },
   {
+    "id": 260201,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260201"
+  },
+  {
     "id": 260207,
     "tipoDeTramite": "Solicitud de cs Permiso",
     "fecha": "2023-10-01",

@@ -10,28 +10,34 @@
     "localizacion": "Ciudad de México, CDMX"
   },
   "obligacionesFiscales": {
-    "opinionPositiva": "Sí",
-    "fechaExpedicion": "2025-05-15",
+    "opinionPositiva": "1",
+    "fechaExpedicion": "20/05/2025",
     "aceptarObligacionFiscal": "Aceptado"
   },
   "formaModificaciones": {
     "nombreDelFederatario": "Juan Pérez",
-    "nombreDeNotaria": "Notaría 123",
+    "nombreDeNotaria": "123",
     "estado": "1",
-    "nombreDeActa": "Acta Constitutiva",
-    "fechaDeActa": "2023-11-30",
+    "nombreDeActa": "123",
+    "fechaDeActa": "30/11/2023",
     "rfc": "ABC123456XYZ",
     "nombreDeRepresentante": "Laura Martínez"
   },
   "formaCertificacion": {
     "certificada": "Sí",
-    "fechaInicio": "2024-01-01",
-    "fechaVigencia": "2026-01-01"
+    "fechaInicio": "01/05/2025",
+    "fechaVigencia": "01/05/2024"
   },
   "formaSocioAccionistas": {
-    "nationalidadMaxicana": "Sí",
+    "nationalidadMaxicana": "No",
     "tipoDePersona": "Moral",
     "formaDatos": {
+      "taxId":"TAX0011223344",
+      "razonSocial":"Comercial Mexicana S.A. de C.V.",
+      "pais": "1",
+      "codigoPostal":"03100",
+      "estado":"Nuevo León",
+      "correoElectronico": "contacto@comercialmexicana.com",
       "socio1": "Carlos López",
       "socio2": "Ana García",
       "socio3": "Luis Torres"
@@ -116,7 +122,8 @@
   },
 "datosImmex": [{
       "descripionDelServicio": "AEROPUERTO INTERNAL",
-      "tipode": "Grande"
+      "tipode": "Grande",
+      "clave": "AER-INT-001"
     }],
 "datos":[
     {
@@ -132,7 +139,7 @@
     "id": "1",
     "taxIdEmpresaExt": "EXT1234567A",
     "nombreEmpresaExt": "GlobalTech Solutions Ltd.",
-    "entidadFederativaEmpresaExt": "California",
+    "entidadFederativaEmpresaExt": "1",
     "direccionEmpresaExtranjera": "1234 Sunset Blvd, Los Angeles, CA, USA"
   }
 ],
@@ -271,7 +278,22 @@
    "datosAnexoTressDos":{
     "fraccionArancelaria":"fraccionArancelaria",
   "descripcion": "descripcion test"
+  },
+  "entidadFederativa": "1",
+  "datosFederatarios": {
+    "nombre": "Ana",
+    "primerApellido": "Gómez",
+    "segundoApellido": "Pérez",
+    "numeroDeActa": "002",
+    "fechaDelActa": "01/10/2025",
+    "numeroDeNotaria": "456",
+    "entidadFederativa": "1",
+    "municipioODelegacion": "1",
+    "estado":"1",
+    "estadoOptions":"101",
+    "estadoUno": "201",
+    "estadoDos": "101",
+    "estadoTres": "101"
   }
-
 
 }

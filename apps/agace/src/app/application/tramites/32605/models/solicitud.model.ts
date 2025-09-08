@@ -1075,15 +1075,49 @@ export interface GuardarDatosFormulario {
   enlaceOperativosLista: EnlaceOperativo[];
 }
 
+/**
+ * Representa la información básica del enlace operativo
+ * identificado por su RFC.
+ */
 export interface RFCEnlaceOperativo {
+  /**
+   * RFC del enlace operativo.
+   */
   enlaceOperativorfc: string;
+
+  /**
+   * Denominación o razón social asociada al RFC.
+   */
   denominacionRazonsocial: string;
+
+  /**
+   * Domicilio registrado del enlace operativo.
+   */
   domicilio: string;
-  
 }
+
+/**
+ * Representa la información de un transportista dentro de la lista de registros.
+ * Incluye datos del RFC, razón social, domicilio y clave CCAT.
+ */
 export interface TransportistasListaInterface {
+  /**
+   * RFC del transportista.
+   */
   enlaceOperativorfc: string;
+
+  /**
+   * Denominación o razón social del transportista.
+   */
   denominacionRazonsocial: string;
+
+  /**
+   * Domicilio del transportista.
+   */
   domicilio: string;
+
+  /**
+   * Clave de identificación CCAT asociada al transportista.
+   */
   ccat: string;
 }

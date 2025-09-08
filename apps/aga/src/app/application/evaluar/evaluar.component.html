@@ -16,27 +16,28 @@
             </div>
             <div class="row margin-top">
                 <ul class="nav nav-tabs justify-content-center">
-                    <li *ngIf="tieneOpcion('GENERAR_DICTAMEN')" [ngClass]="indice === 1 ? 'active' : ''">
-                        <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
-                            (keydown.space)="seleccionaTab(1)" role="button" tabindex="0">Dictamen</a>
-                    </li>
-
-                    <li *ngIf="tieneOpcion('GENERAR_REQUERIMIENTO')" [ngClass]="indice === 2 ? 'active' : ''">
-                        <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
-                            (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Requerimiento de
-                            información</a>
-                    </li>
-
-                    <li *ngIf="tieneOpcion('SOLICITAR_OPINION')" [ngClass]="indice === 3 ? 'active' : ''">
-                        <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
-                            (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Solicitar opinión</a>
-                    </li>
+                    <ng-container *ngFor="let tabsEvaluacion of tabsOpcionEvaluacion">
+                        <li *ngIf="tieneOpcion(tabsEvaluacion.nombre)" [ngClass]="indice === tabsEvaluacion.id ? 'active' : ''">
+                        <a data-toggle="tab"
+                            (click)="seleccionaTab(tabsEvaluacion.id)"
+                            (keydown.enter)="seleccionaTab(tabsEvaluacion.id)"
+                            (keydown.space)="seleccionaTab(tabsEvaluacion.id)"
+                            role="button"
+                            tabindex="{{tabsEvaluacion.id}}">
+                            {{ tabsEvaluacion.nombre }}
+                        </a>
+                        </li>
+                    </ng-container>
                 </ul>
                 <ng-container>
                     @switch (indice) {
                     @case (1) {
-                    <app-generar-dictamen [isAntecedentes]="false" [conformidad]="criteriosDictamen"
-                        (enviarEvento)="enviarEvento($event)"></app-generar-dictamen>
+                    <app-generar-dictamen [isAntecedentes]="false" 
+                    [conformidad]="conformidadDictamen"
+                    [dataIniciarDictamen]="dataIniciarDictamen"
+                    [opcionesSentidosDisponibles]="opcionesSentidosDispobles"
+                    (enviarEvento)="enviarEvento($event)">
+                    </app-generar-dictamen>
                     }
                     @case (2) {
                     <br>
@@ -47,7 +48,7 @@
                                 (keydown.space)="seleccionaTabRequerimiento(1)" role="button" tabindex="0">Capturar
                                 requerimiento</a>
                         </li>
-                        <li [ngClass]="{'active': indiceDictamen === 2,'disabled': deshabilitarSolicitarDocumentos}">
+                        <li [ngClass]="indiceDictamen === 2 ? 'active' : ''">
                             <a data-toggle="tab" (click)="seleccionaTabRequerimiento(2)"
                                 (keydown.enter)="seleccionaTabRequerimiento(2)"
                                 (keydown.space)="seleccionaTabRequerimiento(2)" role="button" tabindex="2">Seleccionar
@@ -57,16 +58,25 @@
                     <ng-container>
                         @switch (indiceDictamen) {
                         @case (1) {
-                        <app-capturar-requerimiento></app-capturar-requerimiento>
+                        <app-capturar-requerimiento 
+                            [isTipoRequerimiento]="false" 
+                            [isAreaSolicitante]="false"
+                            [isJustificacionRequerimiento]="true"
+                            [iniciarResponse]="this.dataIniciarRequerimiento"
+                            (formChanged)="onFormRequerimientoChanged($event)">
+                        </app-capturar-requerimiento>
                         }
                         @case (2) {
-                        <app-solicitar-documentos></app-solicitar-documentos>
+                        <app-solicitar-documentos 
+                        [isSegundaTabla]="false">
+                        </app-solicitar-documentos>
                         }
                         }
                     </ng-container>
                     <div class="d-flex justify-content-lg-end h3">
+                        <button type="button" class="btn btn-default ms-2" (click)="mostrarFirmarRequerimiento()">Guardar y Firmar</button>
+                        <button class="btn  btn-primary ms-2" type="button" (click)="guardarRequerimiento()">Guardar</button>
                         <button type="button" class="btn btn-default ms-2" (click)="cancelar()">Cancelar</button>
-                        <button class="btn  btn-primary ms-2" type="button" (click)="continuar()">Continuar</button>
                     </div>
                     }
                     @case (3) {
@@ -85,14 +95,16 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <firma-electronica tipo="" (firma)="obtieneFirma($event)"></firma-electronica>
+                    <firma-electronica [tipo]="''" [cadenaOriginal]="cadenaOriginal || cadenaOriginalRequerimiento"
+                        (datosFirma)="obtieneFirma($event)"></firma-electronica>
                 </div>
             </div>
         </div>
 
         <div class="row mb-5 mt-5">
-            <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite" [documentos]="documentosSolicitud"
-                [tareasSolicitud]="tareasSolicitud" [dictamenes]="dictamenesSolicitud" 
+            <app-reviewers-tabs [viewChild]="viewChild" [tramite]="tramite" [tabs]="tabs" [documentos]="documentosSolicitud"
+                [tareasSolicitud]="tareasSolicitud" [dictamenes]="dictamenesSolicitud"
+                [envioDigital]="envioDigital" [opinion]="opinion"
                 [requerimientos]="requerimientosSolicitud" [acusesResolucion]="acusesResolucion"
                 (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
                 (tabSeleccionado)="onTabSeleccionado($event)">
@@ -100,4 +112,10 @@
         </div>
     </div>
 </div>
+}
+@if(nuevaNotificacion) {
+<section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+</section>
 }
