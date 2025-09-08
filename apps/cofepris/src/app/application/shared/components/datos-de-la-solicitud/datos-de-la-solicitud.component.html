@@ -359,6 +359,7 @@
             type="text"
             formControlName="licenciaSanitaria"
             (change)="cambioLicenciaSanitaria($event)"
+            maxlength="20"
             [ngClass]="{
               required:
                 datosSolicitudForm.get('licenciaSanitaria')?.touched &&
