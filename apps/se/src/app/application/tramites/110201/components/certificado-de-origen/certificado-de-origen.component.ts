@@ -1,4 +1,4 @@
-import { AlertComponent,Catalogo,CatalogoSelectComponent,CatalogosSelect,ConfiguracionColumna,InputFecha,REGEX_NUMERO_15_ENTEROS_3_DECIMALES,REGEX_PATRON_DECIMAL_2,REGEX_SOLO_DIGITOS,TablaDinamicaComponent,TablaSeleccion,TableBodyData,TableComponent,TituloComponent,ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent,Catalogo,CatalogoSelectComponent,CatalogosSelect,ConfiguracionColumna,InputFecha,REGEX_CANTIDAD_15_4,REGEX_NUMERO_15_ENTEROS_4_DECIMALES,REGEX_SOLO_DIGITOS,TablaDinamicaComponent,TablaSeleccion,TableBodyData,TableComponent,TituloComponent,ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
  import { ColumnasTabla, FECHAFACTURA, FECHAFINAL, FECHAINICIAL, OPTIONS_PAIS, OPTIONS_TIPO_FACTURA, OPTIONS_TRATADO, OPTIONS_UMC, OPTIONS_UNIDAD_MEDIDA, SeleccionadasTabla} from '../../models/registro.model';
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
@@ -315,6 +315,14 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   modalInstances: Modal | null = null;
 
   /**
+   * Indica si se debe mostrar un mensaje de error relacionado con el registro.
+   * 
+   * Cuando es `true`, se muestra el error de registro en la interfaz de usuario.
+   * Cuando es `false`, el error no se muestra.
+   */
+  mostrarErrorRegistro: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param registroService Servicio para obtener datos de catálogos.
    * @param fb Constructor de formularios reactivos.
@@ -329,18 +337,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     private query: Tramite110201Query,
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery
-  ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-          this.soloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
-  }
+  ) {}
+
   /**
    * Maneja el evento de clic para habilitar el formulario de edición.
    * @param row Fila seleccionada.
@@ -389,6 +387,16 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.donanteDomicilio();
   }
   /**
@@ -411,8 +419,10 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.donanteDomicilio();
     if (this.soloLectura) {
       this.registroForm.disable();
+      this.mercanciaForm.disable();
     } else {
       this.registroForm.enable();
+      this.mercanciaForm.enable();
     }
   }
   /**
@@ -525,14 +535,16 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Agrega una mercancía al formulario.
    */
   agregar(): void {
-    if (this.mercanciaForm.valid) {
-      this.esMercanciaEnEdicion = true;
-      this.esFormulario = true;
+  if (this.mercanciaForm.invalid) {
+    this.mostrarErrorRegistro = true;
+    this.mercanciaForm.markAllAsTouched();
+    return;
+  }
+  this.mostrarErrorRegistro = false;
 
-      const FORM_VALUES = this.mercanciaForm.value.validacionMercanciaForm;
+  const FORM_VALUES = this.mercanciaForm.value.validacionMercanciaForm;
 
-      // Create the new item
-      const NEW_ITEM: ColumnasTabla = {
+  const NEW_ITEM: ColumnasTabla = {
         fraccionArancelaria: FORM_VALUES.fraccionMercanciaArancelaria,
         nombreTecnico: FORM_VALUES.nombreTecnico,
         nombreComercial: FORM_VALUES.nombreComercialDelaMercancia,
@@ -545,9 +557,11 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         ...this.mercanciaDisponsiblesTablaDatos,
         NEW_ITEM,
       ];
-    }
-    this.cerrarModal();
-  }
+
+  this.esMercanciaEnEdicion = true;
+  this.esFormulario = true;
+  this.cerrarModal();
+}
 
   /**
    * Cierra el modal activo.
@@ -555,6 +569,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Este método utiliza la referencia al botón de cierre del modal para cerrarlo.
    */
   cerrarModal(): void {
+    this.mostrarErrorRegistro = false;
     if (this.closeModal) {
       this.closeModal.nativeElement.click();
     }
@@ -564,6 +579,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Cancela la edición de una mercancía.
    */
   cancelar(): void {
+    this.mostrarErrorRegistro = false;
     this.esMercanciaEnEdicion = true;
     this.esFormulario = false;
   }
@@ -859,7 +875,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         ],
         cantidad: [
           { value: this.solicitudState?.cantidad, disabled: this.soloLectura },
-          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
+          [Validators.required, Validators.pattern(REGEX_CANTIDAD_15_4),Validators.maxLength(22)],
         ],
         umc: [
           { value: this.solicitudState?.umc, disabled: this.soloLectura },
@@ -870,18 +886,18 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
             value: this.solicitudState?.valorDelaMercancia,
             disabled: this.soloLectura,
           },
-          [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],
+          [Validators.required, Validators.pattern(REGEX_CANTIDAD_15_4),Validators.maxLength(22)],
         ],
         complementoDelaDescripcion: [
           {
             value: this.solicitudState?.complementoDelaDescripcion,
             disabled: this.soloLectura,
           },
-          [Validators.required],
+          [Validators.required,Validators.maxLength(200)],
         ],
         masaBruta: [
           { value: this.solicitudState?.masaBruta, disabled: this.soloLectura },
-          [Validators.required, Validators.pattern(REGEX_NUMERO_15_ENTEROS_3_DECIMALES)],
+          [Validators.required, Validators.pattern(REGEX_NUMERO_15_ENTEROS_4_DECIMALES), Validators.maxLength(22)],
         ],
         unidadMedida: [
           {
@@ -906,7 +922,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
             value: this.solicitudState?.numeroFactura,
             disabled: this.soloLectura,
           },
-          [Validators.required],
+          [Validators.required, Validators.maxLength(50)],
         ],
       }),
     });
@@ -931,6 +947,83 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       this.mercanciaSeleccionadasTablaData = data;
     });
   }
+
+
+/**
+ * Formatea el valor del campo 'cantidad' en el formulario 'mercanciaForm' para asegurar que tenga exactamente cuatro decimales.
+ *
+ * - Si el valor es un número entero o no contiene decimales, se le agregan '.0000'.
+ * - Si el valor ya contiene decimales, se ajusta para que tenga exactamente cuatro cifras decimales, rellenando con ceros si es necesario.
+ * - No emite eventos de cambio al actualizar el valor del control.
+ *
+ * @remarks
+ * Este método no realiza validaciones sobre el valor numérico, solo sobre el formato de los decimales.
+ */
+formatearCantidad(): void {
+  const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.cantidad');
+  let valor = CONTROL?.value;
+  if (valor !== null && valor !== undefined && valor !== '') {
+    valor = valor.toString();
+    if (!valor.includes('.')) {
+      valor = valor + '.0000';
+    } else {
+      const [ENTERO, DECIMALES] = valor.split('.');
+      valor = ENTERO + '.' + (DECIMALES + '0000').slice(0, 4);
+    }
+    CONTROL?.setValue(valor, { emitEvent: false });
+  }
+}
+
+/**
+ * Formatea el valor de la mercancía en el formulario para asegurar que tenga exactamente cuatro decimales.
+ *
+ * - Si el valor no contiene decimales, se le agregan '.0000'.
+ * - Si el valor ya contiene decimales, se ajusta para que tenga exactamente cuatro dígitos decimales,
+ *   rellenando con ceros si es necesario o truncando si hay más de cuatro.
+ * - El valor formateado se establece en el control del formulario sin emitir eventos.
+ *
+ * @remarks
+ * Este método asume que el control 'validacionMercanciaForm.valorDelaMercancia' existe en el formulario 'mercanciaForm'.
+ */
+formatearValorDelaMercancia(): void {
+  const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.valorDelaMercancia');
+  let valor = CONTROL?.value;
+  if (valor !== null && valor !== undefined && valor !== '') {
+    valor = valor.toString();
+    if (!valor.includes('.')) {
+      valor = valor + '.0000';
+    } else {
+      const [ENTERO, DECIMALES] = valor.split('.');
+      valor = ENTERO + '.' + (DECIMALES + '0000').slice(0, 4);
+    }
+    CONTROL?.setValue(valor, { emitEvent: false });
+  }
+}
+
+/**
+ * Formatea el valor del campo 'masaBruta' en el formulario 'mercanciaForm' para asegurar que tenga exactamente cuatro decimales.
+ * 
+ * - Si el valor no contiene decimales, se le agregan '.0000'.
+ * - Si el valor ya contiene decimales, se ajusta para que tenga exactamente cuatro dígitos decimales, rellenando con ceros si es necesario.
+ * - El valor formateado se establece en el control sin emitir eventos.
+ * 
+ * @remarks
+ * Este método no realiza validaciones numéricas, solo formatea la cadena del valor.
+ */
+formatearMasaBruta(): void {
+  const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.masaBruta');
+  let valor = CONTROL?.value;
+  if (valor !== null && valor !== undefined && valor !== '') {
+    valor = valor.toString();
+    if (!valor.includes('.')) {
+      valor = valor + '.0000';
+    } else {
+      const [ENTERO, DECIMALES] = valor.split('.');
+      valor = ENTERO + '.' + (DECIMALES + '0000').slice(0, 4);
+    }
+    CONTROL?.setValue(valor, { emitEvent: false });
+  }
+}
 
   /**
    * Método que se ejecuta al destruir el componente.

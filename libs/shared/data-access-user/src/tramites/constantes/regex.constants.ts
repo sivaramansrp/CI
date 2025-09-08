@@ -121,6 +121,9 @@ export const REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL = /^(?!\s)(.*\S)?$/;
  */
 export const REGEX_SOLO_DIGITOS = /^\d+$/;
 
+
+export const REGEX_CANTIDAD_15_4 = /^\d{1,15}(\.\d{1,4})?$/;
+
 /**
  * Expresión regular para validar un número decimal con hasta 15 dígitos enteros y 4 decimales.
  *
@@ -516,33 +519,25 @@ export const REGEX_ONCE_ENTEROS_TRES_DECIMALES = /^(\d{1,11})(\.\d{1,3})?$/;
  */
 
 export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
-/**
- * Expresión regular para validar un código postal de 5 dígitos.
- *
- * Esta expresión regular asegura que la entrada contenga exactamente 5 dígitos numéricos.
- *
- * Ejemplos válidos:
- * - "12345"
- *
- * Ejemplos no válidos:
- * - "1234" (menos de 5 dígitos)
- * - "123456" (más de 5 dígitos)
- * - "12a45" (contiene caracteres no numéricos)
- */
-export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
+
 
 /**
- * Expresión regular para validar un número de teléfono de 10 dígitos.
+ * Expresión regular para validar números con hasta 15 dígitos enteros y opcionalmente hasta 4 decimales.
  * 
- * Esta expresión regular asegura que la entrada contenga exactamente 10 dígitos numéricos.
+ * Formato permitido:
+ * - Hasta 15 dígitos antes del punto decimal.
+ * - Un punto decimal opcional seguido de hasta 4 dígitos decimales.
  * 
  * Ejemplos válidos:
- * - "1234567890"
+ * - 123
+ * - 123456789012345
+ * - 123.4567
+ * - 1.2
  * 
  * Ejemplos no válidos:
- * - "123456789" (menos de 10 dígitos)
- * - "12345678901" (más de 10 dígitos)
- * - "12345678a0" (contiene caracteres no numéricos)
+ * - 1234567890123456 (más de 15 enteros)
+ * - 123.45678 (más de 4 decimales)
+ * - .1234 (falta de dígitos enteros)
  */
 export const REGEX_VALID_UMT = /^\d{1,12}(\.\d{1,5})?$/
 
