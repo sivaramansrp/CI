@@ -12,16 +12,53 @@ import {
  * Cada nota proporciona información o instrucciones específicas:
  */
 export const NOTA = {
+  /**
+   * @property {string} REQUISITO_OBLIGATORIO_PARA_ACCEDER_NOTA
+   * Mensaje que indica que es obligatorio cumplir con la regla 7.1.1. de las RGCE
+   * para poder acceder al Registro en el Esquema de Certificación de Empresas.
+   */
   REQUISITO_OBLIGATORIO_PARA_ACCEDER_NOTA:
     'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificación de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+  /**
+   * @property {string} CONFIRMACION_NUMEROEMPLEADOS
+   * Mensaje de confirmación mostrado al guardar correctamente los datos de empleados.
+   */
   CONFIRMACION_NUMEROEMPLEADOS: 'Datos guardados correctamente',
+  /*
+   * @property {string} DOMICILIO_REGISTRADOS
+   * Nota que informa sobre la visualización de los domicilios registrados
+   * ante la Secretaría de Economía en caso de contar con un programa IMMEX activo,
+   * así como la posibilidad de agregar otros relacionados con el RFC del solicitante.
+   */
   DOMICILIO_REGISTRADOS:
     '<strong>Nota:</strong> De contar con un programa IMMEX activo y vigente al momento de ingresar la solicitud, se mostraran los domicilios registrados ante la Secretaria de Economía. Así mismo, podrá incluir otros domicilios que se encuentren relacionados con el RFC del solicitante, dando click en el boton "Agregar" y seleccionado la Entidad Federativa.',
+  /**
+   * @property {string} EMPLEADO_REQUISITO_RGCE
+   * Mensaje que establece que es requisito obligatorio contar con empleados
+   * (propios o subcontratados) para acceder al Registro en el Esquema de Certificación
+   * de Empresas, conforme a la regla 7.1.1. de las RGCE.
+   */
   EMPLEADO_REQUISITO_RGCE:
     'Es un requisito obligatorio el contar con algún tipo de empleado, ya sea propio o subcontratado para acceder al Registro en el Esquema de Certificación de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+
+  /**
+   * @property {string} DEBE_CAPTURAR
+   * Mensaje de advertencia que indica que todos los campos obligatorios deben ser capturados.
+   */
   DEBE_CAPTURAR: 'Debe capturar todos los datos marcados como obligatorios.',
+  /*
+   * @property {string} CUMPLE_ANEXO24
+   * Instrucción para indicar si se cuenta con un sistema de control de inventarios
+   * de acuerdo con las disposiciones del Anexo 24.
+   */
   CUMPLE_ANEXO24:
     'Indique, si cuenta con un sistema de control de inventarios de conformidad con las disposiciones previstas por el Anexo 24.',
+  /**
+   * @property {string} SECTOR_PRODUCTIVO
+   * Nota que aclara que, en caso de no encuadrar en los sectores o servicios
+   * de los catálogos, se debe seleccionar la opción más cercana a las actividades
+   * de la empresa.
+   */
   SECTOR_PRODUCTIVO:
     '<strong>Nota:</strong> Si no encuadra en los sectores o los servicios de los catálogos, deberá seleccionar el más cercano a sus actividades.',
 };

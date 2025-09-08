@@ -346,10 +346,9 @@ describe('DatosComunesComponent', () => {
     component.toggleTablaPorValor('1');
     expect(component.esTablaVisible).toBe(true);
 
-    // Number 1 should not work because the method uses strict comparison with '1'
-    component.esTablaVisible = false; // Reset
+    component.esTablaVisible = false;
     component.toggleTablaPorValor(1);
-    expect(component.esTablaVisible).toBe(false); // Will remain false because 1 !== '1'
+    expect(component.esTablaVisible).toBe(false); 
   });
 
   it('debería ocultar tabla cuando valor es "0"', () => {
@@ -489,7 +488,6 @@ describe('DatosComunesComponent', () => {
   });
 
   it('debería limpiar suscripciones al destruir el componente', () => {
-    // Test without spies to avoid interference
     const originalNext = component.destroyed$.next.bind(component.destroyed$);
     const originalComplete = component.destroyed$.complete.bind(
       component.destroyed$

@@ -495,6 +495,17 @@ export class DomiciliosRfcSolicitanteComponent
     this.esHabilitarElDialogo = true;
   }
 
+  /**
+   * @method instalacionesSeleccionadas
+   * @description
+   * Recibe un arreglo de instalaciones seleccionadas y lo transforma en un arreglo de objetos
+   * con el formato esperado por la tabla `DomiciliosRfcSolicitanteTabla`.
+   *
+   * @param {InstalacionesInterface[]} event - Lista de instalaciones seleccionadas.
+   *
+   * @returns {void} No retorna un valor directo, pero actualiza la propiedad
+   * `datosTablaModalSeleccionados` con los datos mapeados.
+   */
   instalacionesSeleccionadas(event: InstalacionesInterface[]): void {
     this.datosTablaModalSeleccionados = event.map((elemento) => {
       return {
@@ -767,7 +778,7 @@ export class DomiciliosRfcSolicitanteComponent
       this.perfillRecinto.emit(FORM_DATA.perfilEmpresa);
       // Limpiar formulario después de modificar datos exitosamente
       this.limpiarFormulario();
-    } 
+    }
   }
   /**
    * Método para cerrar el modal de confirmación.
@@ -1141,7 +1152,6 @@ export class DomiciliosRfcSolicitanteComponent
     let isValid = true;
 
     if (this.DomiciliosRfcSolicitanteList.length === 0) {
-      // Mark the control as touched so the error shows
       this.forma.get('domiciliosRFCTabla')?.markAsTouched();
       isValid = false;
     } else {
