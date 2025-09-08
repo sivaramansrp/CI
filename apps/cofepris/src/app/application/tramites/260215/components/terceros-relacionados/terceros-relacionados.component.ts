@@ -1154,10 +1154,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   limpiarFormulario(): void {
     this.agregarFabricanteFormGroup.reset();
-    // this.agregarDestinatarioFormGroup.reset();
-    // this.agregarProveedorFormGroup.reset();
-    // this.agregarFacturadorFormGroup.reset();
-   this.fisica = false;
+    this.fisica = false;
     this.moral = false;
     this.nacional = false;
     this.extranjero = false;
