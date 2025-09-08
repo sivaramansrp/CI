@@ -302,6 +302,14 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
         this.paisesDatos = data;
       });
   }
+  /**
+   * @method obtenerNombreRazonSocial
+   * @description Construye el nombre o razón social del proveedor basado en el tipo de persona.
+   * Si es física, concatena nombres y apellidos; si es moral, utiliza la denominación o razón social.
+   *
+   * @param {Proveedor} formValue - Objeto que contiene los valores del formulario.
+   * @returns {string} El nombre completo o razón social del proveedor.
+   */
 private obtenerNombreRazonSocial(formValue: Proveedor): string {
   if (formValue.tipoPersona === this.tipoPersona.FISICA) {
     const NOMBRES = formValue.nombres || '';

@@ -204,6 +204,12 @@ export class AgregarDestinatarioFinalComponent
    * @default true
    */
   public campoObligatorio = false;
+  /**
+   * @property estaDeshabilitadoDesplegable
+   * @description Indica si el desplegable está deshabilitado.
+   * @type {boolean}
+   * @default true
+   */
   estaDeshabilitadoDesplegable: boolean = true;
 
   /**
