@@ -11,6 +11,12 @@ export const CLAVEPAIS = '{cvePais}';
 export const CVETRATADOACUERDO = '{cveTratadoAcuerdo}';
 
 /**
+ * idTratadoAcuerdo de la solicitud que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el idTratadoAcuerdo real de la solicitud.
+ */
+export const IDTRATADOACUERDO = '{idTratadoAcuerdo}';
+
+/**
  * API para el catalogo pais y bloque.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/consulta-paises-bloques
  */
@@ -27,3 +33,9 @@ export const API_GET_CAT_TRATADOS_ACUERDO = (CLAVEPAIS: string): string => `sat-
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/consulta-tratado-acuerdo-bloque
  */
 export const API_GET_CAT_TRATADOS_ACUERDO_BLOQUE= (CVETRATADOACUERDO: string): string => `sat-t110101/catalogo/tratado-acuerdo/${CVETRATADOACUERDO}/bloque`;
+
+/**
+ * API para elcatalogo de criterios de origen.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/consulta-criterio-tratados
+ */
+export const API_GET_CAT_CRITERIOS= (IDTRATADOACUERDO: string): string => `sat-t110101/catalogo/tratado-acuerdo/${IDTRATADOACUERDO}/criterios`;
