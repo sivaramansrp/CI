@@ -36,6 +36,13 @@ export class SolicitanteAsigncionComponent implements OnInit, OnDestroy {
      * Contiene el estado del formulario (si fue enviado y si es inválido).
      */
     @Output() buscarIntento = new EventEmitter<{ submitted: boolean; invalid: boolean }>();
+    /**
+ * Evento que emite un valor booleano al componente padre.
+ * Se activa cuando el subíndice del child componente cambia.
+ * - true: el subíndice es 3 (mostrar alerta)
+ * - false: cualquier otro valor de subíndice
+ */
+   @Output() alertaEvento = new EventEmitter<boolean>();
   /**
    * Índice de la pestaña seleccionada.
    */
@@ -57,6 +64,7 @@ export class SolicitanteAsigncionComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+     this.alertaEvento.emit(this.indice === 2);
 
 
   }
