@@ -157,13 +157,37 @@ describe('AvisoComponent', () => {
       } as ElementRef;
     });
 
-    it('should call cargarMercanciaTabla and click closeMercancia element', () => {
-      jest.spyOn(component, 'cargarMercanciaTabla');
+    it('should add new mercancia to table and close modal when form is valid', () => {
+      component.adaceForm.patchValue({
+        transaccionId: 'TX-001',
+        cantidad: '10',
+        peso: '5',
+        unidadMedida: '1',
+        descripcion: 'Test Item'
+      });
+      
+      Object.keys(component.adaceForm.controls).forEach(key => {
+        component.adaceForm.get(key)?.setErrors(null);
+      });
+      
+      component.unidadMedida = [
+        { id: 1, descripcion: 'Kilogramos' }
+      ];
+      
+      component.tablaDeDatos.datos = [];
 
       component.agregarMercancia();
 
-      expect(component.cargarMercanciaTabla).toHaveBeenCalled();
+      expect(component.tablaDeDatos.datos).toHaveLength(1);
+      expect(component.tablaDeDatos.datos[0]).toEqual({
+        idTransaccionVUCEM: 'TX-001',
+        cantidad: '10',
+        pesoKg: '5',
+        descripcionUnidadMedida: 'Kilogramos',
+        descripcion: 'Test Item'
+      });
       expect(component.closeMercancia.nativeElement.click).toHaveBeenCalled();
+      expect(component.esPopupAbierto).toBe(false);
     });
   });
 
@@ -272,26 +296,22 @@ describe('AvisoComponent', () => {
       } as ElementRef;
     });
 
-    it('should disable form and call agregarMercancia when soloLectura is true', () => {
+    it('should disable form when soloLectura is true', () => {
       component.soloLectura = true;
       jest.spyOn(component.avisoFormulario, 'disable');
-      jest.spyOn(component, 'agregarMercancia');
 
       component.inicializarAvisoFormulario();
 
       expect(component.avisoFormulario.disable).toHaveBeenCalled();
-      expect(component.agregarMercancia).toHaveBeenCalled();
     });
 
     it('should enable form when soloLectura is false', () => {
       component.soloLectura = false;
       jest.spyOn(component.avisoFormulario, 'enable');
-      jest.spyOn(component, 'agregarMercancia');
 
       component.inicializarAvisoFormulario();
 
       expect(component.avisoFormulario.enable).toHaveBeenCalled();
-      expect(component.agregarMercancia).not.toHaveBeenCalled();
     });
   });
 
@@ -467,6 +487,20 @@ describe('AvisoComponent', () => {
 
     it('should handle agregarMercancia when closeMercancia is undefined', () => {
       component.closeMercancia = undefined as any;
+      
+      component.adaceForm.patchValue({
+        transaccionId: 'TX-001',
+        cantidad: '10',
+        peso: '5',
+        unidadMedida: '1',
+        descripcion: 'Test Item'
+      });
+      
+      Object.keys(component.adaceForm.controls).forEach(key => {
+        component.adaceForm.get(key)?.setErrors(null);
+      });
+      
+      component.unidadMedida = [{ id: 1, descripcion: 'Kilogramos' }];
 
       expect(() => component.agregarMercancia()).toThrow();
     });
