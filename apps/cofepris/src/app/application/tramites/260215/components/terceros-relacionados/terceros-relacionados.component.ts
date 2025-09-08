@@ -46,7 +46,7 @@ import {
   TERCEROS_RELACIONADOS_TABLE_BODY_DATA,
   TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
 } from '../../enum/permiso.enum';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil, } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
@@ -58,6 +58,8 @@ import { ServiciosPermisoSanitarioService } from '../../services/servicios-permi
 import { TablaDatos } from '../../models/permiso-sanitario.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260215/tipo-persona-options.json';
+
+
 /**
  * Texto de alerta para los terceros relacionados.
  * Indica que las tablas con asterisco son obligatorias.
@@ -530,7 +532,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       formGroup.get('estado')?.enable();
       formGroup.get('codigoPostaloEquivalente')?.enable();
       formGroup.get('extranjeroColonia')?.enable();
-      this.desactivarCatalogoSelectEnPopup = true;
+      this.desactivarCatalogoSelectEnPopup = false;
     } else {
       formGroup.get('rfc')?.disable();
       formGroup.get('curp')?.disable();
@@ -928,6 +930,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     if (checkBoxName === 'nacional') {
       this.nacional = true;
       this.extranjero = false;
+
+      
     } else {
       this.nacional = false;
       this.extranjero = true;
@@ -991,7 +995,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Este método es llamado al enviar el formulario de agregar un fabricante.
    */
   submitFabricanteForm(): void {
-  
     /**
      * Obtiene los valores de LADA y TELEFONO del formulario.
      */
@@ -1141,8 +1144,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     /**
      * Cambia la visibilidad de las secciones del componente.
      */
-    this.showTableDiv = !this.showTableDiv;
-    this.showFabricante = !this.showFabricante;
+     this.showTableDiv = !this.showTableDiv;
+     this.showFabricante = !this.showFabricante;
   }
 
   /**
@@ -1151,10 +1154,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   limpiarFormulario(): void {
     this.agregarFabricanteFormGroup.reset();
-    this.agregarDestinatarioFormGroup.reset();
-    this.agregarProveedorFormGroup.reset();
-    this.agregarFacturadorFormGroup.reset();
-    this.fisica = false;
+    // this.agregarDestinatarioFormGroup.reset();
+    // this.agregarProveedorFormGroup.reset();
+    // this.agregarFacturadorFormGroup.reset();
+   this.fisica = false;
     this.moral = false;
     this.nacional = false;
     this.extranjero = false;

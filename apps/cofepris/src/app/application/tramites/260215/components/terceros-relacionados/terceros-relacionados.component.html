@@ -218,6 +218,9 @@
                 class="form-control"
                 name="rfc"
               />
+              <div *ngIf="agregarFabricanteFormGroup.get('rfc')?.touched && agregarFabricanteFormGroup.get('rfc')?.errors?.['required']" class="text-danger">
+                El campo R.F.C es obligatorio.
+              </div>
             </div>
           </div>
            <div class="col-md-4" *ngIf="!agregarDestinatarioFormGroup.get('tipoPersona')?.value">
@@ -232,6 +235,9 @@
                 class="form-control"
                 name="curp"
               />
+              <div *ngIf="agregarFabricanteFormGroup.get('curp')?.touched && agregarFabricanteFormGroup.get('curp')?.errors?.['required']" class="text-danger">
+                El campo C.U.R.P es obligatorio.
+              </div>
             </div>
           </div>
         </div>
@@ -247,6 +253,9 @@
                 name="nombre"
                 class="form-control"
               />
+              <div *ngIf="agregarFabricanteFormGroup.get('nombre')?.touched && agregarFabricanteFormGroup.get('nombre')?.errors?.['required']" class="text-danger">
+                El campo Nombre(s) es obligatorio.
+              </div>
             </div>
           </div>
 
@@ -262,6 +271,9 @@
                 name="primerApellido"
                 class="form-control"
               />
+              <div *ngIf="agregarFabricanteFormGroup.get('primerApellido')?.touched && agregarFabricanteFormGroup.get('primerApellido')?.errors?.['required']" class="text-danger">
+                El campo Primer apellido es obligatorio.
+              </div>
             </div>
           </div>
 
@@ -298,6 +310,9 @@
                 class="form-control"
                 name="curp"
               />
+              <div *ngIf="agregarFabricanteFormGroup.get('curp')?.touched && agregarFabricanteFormGroup.get('curp')?.errors?.['required']" class="text-danger">
+                El campo R.F.C es obligatorio.
+              </div>
             </div>
           </div>
         </div>
@@ -314,6 +329,9 @@
                 formControlName="denominacionRazonSocial"
                 name="denominacionRazonSocial"
               />
+              <div *ngIf="agregarFabricanteFormGroup.get('denominacionRazonSocial')?.touched && agregarFabricanteFormGroup.get('denominacionRazonSocial')?.errors?.['required']" class="text-danger">
+                El campo Denominación/Razón Social es obligatorio.
+              </div>
             </div>
           </div>
         </div>
@@ -331,6 +349,9 @@
                 formControlName="denominacionRazonSocial"
                 name="denominacionRazonSocial"
               />
+              <div *ngIf="agregarFabricanteFormGroup.get('denominacionRazonSocial')?.touched && agregarFabricanteFormGroup.get('denominacionRazonSocial')?.errors?.['required']" class="text-danger">
+                El campo Denominación/Razón Social es obligatorio.
+              </div>
             </div>
           </div>
         </div>
@@ -347,6 +368,9 @@
                 name="nombre"
                 class="form-control"
               />
+              <div *ngIf="agregarFabricanteFormGroup.get('nombre')?.touched && agregarFabricanteFormGroup.get('nombre')?.errors?.['required']" class="text-danger">
+                El campo Nombre(s) es obligatorio.
+              </div>
             </div>
           </div>
 
@@ -362,6 +386,9 @@
                 name="primerApellido"
                 class="form-control"
               />
+              <div *ngIf="agregarFabricanteFormGroup.get('primerApellido')?.touched && agregarFabricanteFormGroup.get('primerApellido')?.errors?.['required']" class="text-danger">
+                El campo Primer apellido es obligatorio.
+              </div>
             </div>
           </div>
 
@@ -398,8 +425,12 @@
                   for="pais"
                   id="pais"
                   formControlName="pais"
-                  [isDisabled]="desactivarCatalogoSelectEnPopup"
+                  [isDisabled]="desactivarPaisSelectEnPopup"
+                  [mostrarErrores]="false"
                 ></app-catalogo-select>
+                <div *ngIf="agregarFabricanteFormGroup.get('pais')?.touched && agregarFabricanteFormGroup.get('pais')?.errors?.['required']" class="text-danger">
+                  El campo País es obligatorio.
+                  </div>
               </div>
             </div>
 
@@ -413,7 +444,11 @@
                   id="estadoLocalidad"
                   formControlName="estadoLocalidad"
                   [isDisabled]="desactivarCatalogoSelectEnPopup"
+                  [mostrarErrores]="false"
                 ></app-catalogo-select>
+                <div *ngIf="agregarFabricanteFormGroup.get('estadoLocalidad')?.touched && agregarFabricanteFormGroup.get('estadoLocalidad')?.errors?.['required']" class="text-danger">
+                  El campo Estado/Localidad es obligatorio.
+                  </div>
               </div>
             </div>
 
@@ -427,7 +462,11 @@
                   id="municipioAlcaldia"
                   formControlName="municipioAlcaldia"
                   [isDisabled]="desactivarCatalogoSelectEnPopup"
+                  [mostrarErrores]="false"
                 ></app-catalogo-select>
+                <div *ngIf="agregarFabricanteFormGroup.get('municipioAlcaldia')?.touched && agregarFabricanteFormGroup.get('municipioAlcaldia')?.errors?.['required']" class="text-danger">
+                  El campo Municipio/Alcaldía es obligatorio.
+                  </div>
               </div>
             </div>
             <br />
@@ -442,7 +481,11 @@
                   id="localidad"
                   formControlName="localidad"
                   [isDisabled]="desactivarCatalogoSelectEnPopup"
+                  [mostrarErrores]="false"
                 ></app-catalogo-select>
+                <div *ngIf="agregarFabricanteFormGroup.get('localidad')?.touched && agregarFabricanteFormGroup.get('localidad')?.errors?.['required']" class="text-danger">
+                  El campo Localidad es obligatorio.
+                  </div>
               </div>
             </div>
 
@@ -483,8 +526,11 @@
                   for="pais"
                   id="pais"
                   formControlName="pais"
-                  [isDisabled]="desactivarCatalogoSelectEnPopup"
+                  [isDisabled]="desactivarPaisSelectEnPopup"
                 ></app-catalogo-select>
+                <div *ngIf="agregarFabricanteFormGroup.get('pais')?.touched && agregarFabricanteFormGroup.get('pais')?.errors?.['required']" class="text-danger">
+                  El campo País es obligatorio.
+                  </div>
               </div>
             </div>
 
@@ -500,6 +546,9 @@
                   name="extranjeroEstado"
                   class="form-control"
                 />
+                <div *ngIf="agregarFabricanteFormGroup.get('extranjeroEstado')?.touched && agregarFabricanteFormGroup.get('extranjeroEstado')?.errors?.['required']" class="text-danger">
+                  El campo Estado es obligatorio.
+                  </div>
               </div>
             </div>
 
@@ -515,6 +564,9 @@
                   name="extranjeroCodigo"
                   class="form-control"
                 />
+                <div *ngIf="agregarFabricanteFormGroup.get('extranjeroCodigo')?.touched && agregarFabricanteFormGroup.get('extranjeroCodigo')?.errors?.['required']" class="text-danger">
+                  El campo Código postal o equivalente es obligatorio.
+                  </div>
                 </div>
             </div>
           </div>
@@ -627,6 +679,9 @@
                   formControlName="calle"
                   name="calle"
                 />
+                <div *ngIf="agregarFabricanteFormGroup.get('calle')?.touched && agregarFabricanteFormGroup.get('calle')?.errors?.['required']" class="text-danger">
+                  El campo Calle es obligatorio.
+                </div>
               </div>
             </div>
 
@@ -642,6 +697,9 @@
                   class="form-control"
                   name="numeroExterior"
                 />
+                <div *ngIf="agregarFabricanteFormGroup.get('numeroExterior')?.touched && agregarFabricanteFormGroup.get('numeroExterior')?.errors?.['required']" class="text-danger">
+                  El campo Número exterior es obligatorio.
+                </div>
               </div>
             </div>
           </div>
@@ -719,12 +777,12 @@
               >
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default">Limpiar</button>
+              <button type="button" class="btn btn-default" (click)="limpiarFormulario()">Limpiar</button>
               <button
                 type="button"
                 class="btn btn-primary"
                 (click)="submitFabricanteForm()"
-                data-bs-dismiss="modal"
+                 data-bs-dismiss="modal"
               >
                 Guardar
               </button>
