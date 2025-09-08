@@ -176,7 +176,7 @@
             id="btnBusqRfc"
             class="btn btn-primary me-5"
           >
-          Agregar
+            Agregar
           </button>
         </div>
       </div>
@@ -480,9 +480,8 @@
         <textarea
           formControlName="textoGenerico1"
           id="textoGenerico1"
-          class="form-control no-resize"
+          class="form-control no-resize height50px"
           rows="3"
-          style="height: 50px"
           (change)="actualizarTextoGenerico1($event)"
         ></textarea>
       </div>
@@ -492,9 +491,8 @@
         <textarea
           formControlName="textoGenerico2"
           id="textoGenerico2"
-          class="form-control no-resize"
+          class="form-control no-resize height50px"
           rows="3"
-          style="height: 50px"
           (change)="actualizarTextoGenerico2($event)"
         ></textarea>
       </div>
@@ -566,9 +564,8 @@
         >
         <textarea
           id="textoGenerico3"
-          class="form-control no-resize"
+          class="form-control no-resize height50px"
           rows="3"
-          style="height: 70px"
           formControlName="textoGenerico3"
           (change)="actualizarTextoGenerico3($event)"
         ></textarea>
@@ -583,12 +580,24 @@
           [tipoSeleccionTabla]="tipoSeleccionTabla"
           [configuracionTabla]="seccionSociosICConfiguracionColumnas"
           [datos]="listaSeccionSociosIC"
+          (listaDeFilaSeleccionada)="listaDeFilaSeleccionada($event)"
         >
         </app-tabla-dinamica>
       </div>
 
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
+          @if(selectedListaSeccionSociosIC.length === 1){
+          <button
+            type="button"
+            id="eliminarSocio"
+            [disabled]="esFormularioSoloLectura"
+            (click)="eliminarMiembrosEmpresa()"
+            class="btn btn-danger ms-3"
+          >
+            Eliminar
+          </button>
+          }
           <button
             type="button"
             id="agregarSocio"
@@ -678,11 +687,11 @@
       </div>
       <div class="col-md-4 mt-4">
         <app-catalogo-select
-          formContorlName="tipoInversion"
+          formControlName="tipoInversion"
           [catalogo]="tipoDeInversionLista.catalogos"
           [label]="tipoDeInversionLista.labelNombre"
           [placeholder]="tipoDeInversionLista.primerOpcion"
-          [required]="true"
+          [required]="tipoDeInversionLista.required"
           [isDisabled]="esFormularioSoloLectura"
           name="tipoInversion"
           id="tipoInversion"
@@ -736,7 +745,7 @@
 
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-          @if(tipoSeleccionListo.length > 0){
+          @if(tipoSeleccionListo.length === 1){
           <button
             type="button"
             id="eliminarSocio"
@@ -854,7 +863,7 @@
           <button
             type="button"
             id="modificarSocio"
-            class="btn btn-secondary"
+            class="btn btn-default"
             [disabled]="esFormularioSoloLectura"
             data-bs-toggle="modal"
             data-bs-target="#modificarImmexProgram"
@@ -1515,7 +1524,7 @@
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <app-modificar-immex-program
+      <app-modificar-immex-program [seleccionarDomiciliosDatos]="seleccionarDomiciliosDatos"
         (modificarImmexValor)="modificarImmexValor($event)"
       ></app-modificar-immex-program>
     </div>

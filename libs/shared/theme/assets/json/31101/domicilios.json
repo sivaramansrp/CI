@@ -1,7 +1,7 @@
 [
     {
         "instalacionPrincipal": "Planta Norte",
-        "cveTipoInstalacion": "01",
+        "cveTipoInstalacion": "No",
         "tipoInstalacion": "Fábrica",
         "cveEntidadFederativa": "09",
         "entidadFederativa": "Ciudad de México",

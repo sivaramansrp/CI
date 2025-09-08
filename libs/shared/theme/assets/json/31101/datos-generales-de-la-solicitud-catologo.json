@@ -1,38 +1,28 @@
 {
-    "concepto": {
-        "labelNombre": "Concepto",
-        "required": false,
-        "primerOpcion": "Seleccione un valor",
-        "catalogos": [
-            {
-                "id": 1,
-                "descripcion": "Reparación, re-trabajo o mantenimiento de"
-            },
-            {
-                "id": 2,
-                "descripcion": "Reparación, re-trabajo o mantenimiento de - 1"
-            }
-        ]
-    },
-    "tipoDeInversion": {
-        "labelNombre": "Tipo de inversión",
-        "required": true,
-        "primerOpcion": "Selecciona un tipo",
-        "catalogos": [
-            {
-                "id": 1,
-                "descripcion": "Test"
-            },
-            {
-                "id": 2,
-                "descripcion": "Test - 1"
-            }
-        ]
-    },
+    "concepto": [
+        {
+            "id": 1,
+            "descripcion": "Reparación, re-trabajo o mantenimiento de"
+        },
+        {
+            "id": 2,
+            "descripcion": "Reparación, re-trabajo o mantenimiento de - 1"
+        }
+    ],
+    "tipoDeInversion": [
+        {
+            "id": 1,
+            "descripcion": "Test"
+        },
+        {
+            "id": 2,
+            "descripcion": "Test - 1"
+        }
+    ],
     "enSuCaracterDe": {
         "labelNombre": "En su caracter de",
         "required": true,
-        "primerOpcion": "Selecciona un tipo",
+        "primerOpcion": "Selecciona una opción",
         "catalogos": [
             {
                 "id": 1,
@@ -47,7 +37,7 @@
     "nacionalidad": {
         "labelNombre": "Nacionalidad",
         "required": true,
-        "primerOpcion": "Selecciona un tipo",
+        "primerOpcion": "Selecciona una opción",
         "catalogos": [
             {
                 "id": 1,
@@ -62,7 +52,7 @@
     "tipoDePersona": {
         "labelNombre": "Tipo de Persona",
         "required": true,
-        "primerOpcion": "Selecciona un tipo",
+        "primerOpcion": "Selecciona una opción",
         "catalogos": [
             {
                 "id": 1,
@@ -74,21 +64,16 @@
             }
         ]
     },
-    "modalidadDelProgramaIMMEX": {
-        "labelNombre": "Seleccione el numero y modalidad del programa I M M E X",
-        "required": false,
-        "primerOpcion": "Selecciona un tipo",
-        "catalogos": [
-            {
-                "id": 1,
-                "descripcion": "Domicilios registrados"
-            },
-            {
-                "id": 2,
-                "descripcion": "192022 - Autorización Programa Nuevo Industrial"
-            }
-        ]
-    },
+    "modalidadDelProgramaIMMEX": [
+        {
+            "id": 1,
+            "descripcion": "Domicilios registrados"
+        },
+        {
+            "id": 2,
+            "descripcion": "192022 - Autorización Programa Nuevo Industrial"
+        }
+    ],
     "tipoDeInstalacion": {
         "labelNombre": "Tipo de instalación",
         "required": true,
@@ -107,7 +92,7 @@
     "entidadFederativa": {
         "labelNombre": "",
         "required": true,
-        "primerOpcion": "Selecciona un tipo",
+        "primerOpcion": "Selecciona una opción",
         "catalogos": [
             {
                 "id": 1,

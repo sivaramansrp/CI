@@ -88,7 +88,7 @@ export interface Solicitud31101State {
   '3520': number | string;
 
   /** Tipo de inversión, valor numérico */
-  tipoInversion: number;
+  tipoInversion: number | string;
 
   /** Cantidad de inversión, valor en cadena */
   cantidadInversion: string;
@@ -383,7 +383,7 @@ export function createInitialSolicitudState(): Solicitud31101State {
     '3518': 0,
     '3519': 0,
     '3520': 0,
-    tipoInversion: 0,
+    tipoInversion: '',
     cantidadInversion: '',
     descInversion: '',
     '3521': 0,
@@ -622,7 +622,7 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
   }
 
   /** Actualiza el tipo de inversión en el estado */
-  actualizarTipoInversion(valor: number): void {
+  actualizarTipoInversion(valor: number | string): void {
     this.update((state) => ({ ...state, tipoInversion: valor }));
   }
 

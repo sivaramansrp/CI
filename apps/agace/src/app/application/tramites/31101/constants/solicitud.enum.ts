@@ -276,3 +276,24 @@ export const FECHA_DE_FIN_VIGENCIA: InputFecha = {
    */
   habilitado: true,
 };
+
+export const TIPO_DE_INVERSION_CONFIG = {
+  labelNombre: 'Tipo de inversión',
+  required: true,
+  primerOpcion: 'Selecciona una opción',
+  catalogos: [],
+};
+
+export const CONCEPTO = {
+  labelNombre: 'Concepto',
+  required: false,
+  primerOpcion: 'Selecciona una opción',
+  catalogos: [],
+};
+
+export const MODALIDAD_DEL_PROGRAMA_IMMEX = {
+  labelNombre: 'Seleccione el numero y modalidad del programa I M M E X',
+  required: false,
+  primerOpcion: 'Selecciona una opción',
+  catalogos: []
+};

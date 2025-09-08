@@ -1,9 +1,9 @@
 import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { DatosGeneralesDeLaSolicitudCatologo, Domicilios } from '../../models/solicitud.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { DatosGeneralesDeLaSolicitudCatologo } from '../../models/solicitud.model';
 import { DatosGeneralesDeLaSolicitudRadioLista } from '../../models/solicitud.model';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
@@ -41,11 +41,15 @@ import { takeUntil } from 'rxjs';
 /**
  *  Componente para modificar el programa IMMEX.
  */
-export class ModificarImmexProgramComponent implements OnInit, OnDestroy {
+export class ModificarImmexProgramComponent
+  implements OnInit, OnDestroy, OnChanges
+{
   /**
    *  Formulario reactivo para modificar el programa IMMEX.
    */
   modificarImmexProgramForm!: FormGroup;
+
+  @Input() seleccionarDomiciliosDatos!: Domicilios[];
 
   /**
    *  Opciones de radio para selección de sí o no.
@@ -112,6 +116,25 @@ export class ModificarImmexProgramComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['seleccionarDomiciliosDatos'] &&
+      changes['seleccionarDomiciliosDatos'].currentValue
+    ) {
+      const DOMICILIOS = changes['seleccionarDomiciliosDatos'].currentValue;
+      this.modificarImmexProgramForm.patchValue({
+        instalacionesPrincipales: DOMICILIOS.instalacionPrincipal === 'No' ? 0 : 1,
+        municipio: DOMICILIOS.municipioDelegacion,
+        tipoDeInstalacion: DOMICILIOS.tipoInstalacion,
+        federativa: DOMICILIOS.entidadFederativa,
+        registroSE: DOMICILIOS.registroSE,
+        desceripe: DOMICILIOS.desceripe,
+        codigoPostal: DOMICILIOS.codigoPostal,
+        procesoProductivo: DOMICILIOS.procesoProductivo
+      });
+    }
   }
 
   /**

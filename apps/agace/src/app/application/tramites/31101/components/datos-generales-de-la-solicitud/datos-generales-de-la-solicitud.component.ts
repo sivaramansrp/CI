@@ -1,3 +1,4 @@
+import { CONCEPTO, DOMICILIOS_CONFIGURACION_COLUMNAS, MODALIDAD_DEL_PROGRAMA_IMMEX, TIPO_DE_INVERSION_CONFIG } from '../../constants/solicitud.enum';
 import { AgregarImmexProgramComponent } from '../agregar-immex-program/agregar-immex-program.component';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -6,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { DOMICILIOS_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
 import { DatosGeneralesDeLaSolicitudCatologo } from '../../models/solicitud.model';
 import { DatosGeneralesDeLaSolicitudRadioLista } from '../../models/solicitud.model';
 import { Domicilios } from '../../models/solicitud.model';
@@ -98,12 +98,12 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Opciones de sí/no */
   sinoOpcion: InputRadio = {} as InputRadio;
   /** Catálogo de conceptos */
-  conceptoLista: CatalogosSelect = {} as CatalogosSelect;
+  conceptoLista: CatalogosSelect = CONCEPTO;
   /** Catálogo de tipos de inversión */
-  tipoDeInversionLista: CatalogosSelect = {} as CatalogosSelect;
+  tipoDeInversionLista: CatalogosSelect = TIPO_DE_INVERSION_CONFIG;
 
   /** Modalidad del programa IMMEX seleccionada */
-  modalidadDelProgramaIMMEX: CatalogosSelect = {} as CatalogosSelect;
+  modalidadDelProgramaIMMEX: CatalogosSelect = MODALIDAD_DEL_PROGRAMA_IMMEX;
 
   /** Tipo de selección en tabla: checkbox */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
@@ -166,6 +166,8 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /** Lista de subcontratistas asociados */
   subContratistasDatos: SubContratistas[] = [];
+
+  selectedListaSeccionSociosIC: SeccionSociosIC[] = [];
 
   /**
    * Referencia al modal para agregar mercancías.
@@ -619,9 +621,9 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (respuesta: DatosGeneralesDeLaSolicitudCatologo) => {
-          this.conceptoLista = respuesta.concepto;
-          this.tipoDeInversionLista = respuesta.tipoDeInversion;
-          this.modalidadDelProgramaIMMEX = respuesta.modalidadDelProgramaIMMEX;
+          this.conceptoLista.catalogos = respuesta.concepto;
+          this.tipoDeInversionLista.catalogos = respuesta.tipoDeInversion;
+          this.modalidadDelProgramaIMMEX.catalogos = respuesta.modalidadDelProgramaIMMEX;
         },
       });
   }
@@ -1265,6 +1267,19 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  listaDeFilaSeleccionada(evento: SeccionSociosIC[]): void {
+    this.selectedListaSeccionSociosIC = evento;
+  }
+
+  eliminarMiembrosEmpresa(): void {
+    if (this.selectedListaSeccionSociosIC.length === 1) {
+      this.listaSeccionSociosIC = this.listaSeccionSociosIC.filter(
+        (item) => item.rfc !== this.selectedListaSeccionSociosIC[0].rfc
+      );
+      this.selectedListaSeccionSociosIC = [];
+    }
+  }
+
   /** Guarda los datos modificados en el programa IMMEX y agrega un pedimento */
   modificarImmexValor(evento: boolean): void {
     if (evento) {
@@ -1318,7 +1333,10 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         descripcion: this.datosGeneralesForm.get('descInversion')?.value,
         cveTipoInversion: '',
       };
-      this.tipoDeInversionDatos.push(OBJETO_JSON);
+      this.tipoDeInversionDatos = [...this.tipoDeInversionDatos, OBJETO_JSON];
+      this.datosGeneralesForm.get('tipoInversion')?.reset();
+      this.datosGeneralesForm.get('cantidadInversion')?.reset();
+      this.datosGeneralesForm.get('descInversion')?.reset();
     }
   }
 
@@ -1340,13 +1358,13 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       pedimentoValidado: false,
     };
 
-    if (this.tipoDeInversionDatos.length > 0) {
+    if (this.tipoSeleccionListo.length > 0) {
       this.tipoDeInversionDatos = this.tipoDeInversionDatos.filter(
         (dato) =>
           dato.tipoInversion !== this.tipoSeleccionListo[0].tipoInversion
       );
 
-      this.tipoDeInversionDatos = [];
+      this.tipoSeleccionListo = [];
       this.abrirModal('El registro seleccionado fue eliminado correctamente');
       this.pedimentos.push(PEDIMENTO);
     }

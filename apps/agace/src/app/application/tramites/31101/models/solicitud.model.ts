@@ -1,4 +1,4 @@
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogosSelect } from '@libs/shared/data-access-user/src';
 /**
  * Representa los datos de una persona que desea recibir notificaciones.
  */
@@ -111,10 +111,10 @@ export interface DatosGeneralesDeLaSolicitudRadioLista {
  */
 export interface DatosGeneralesDeLaSolicitudCatologo {
   /** Concepto relacionado con la solicitud */
-  concepto: CatalogosSelect;
+  concepto: Catalogo[];
 
   /** Tipo de inversión a realizar */
-  tipoDeInversion: CatalogosSelect;
+  tipoDeInversion: Catalogo[];
 
   /**
    * Catálogo de opciones sobre el carácter del miembro.
@@ -134,7 +134,7 @@ export interface DatosGeneralesDeLaSolicitudCatologo {
   /**
    * Catálogo de modalidades del programa IMMEX.
    */
-  modalidadDelProgramaIMMEX: CatalogosSelect;
+  modalidadDelProgramaIMMEX: Catalogo[];
 
   /**
    * Catálogo de tipos de instalación.
