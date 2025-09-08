@@ -1,4 +1,4 @@
-import { API_GET_CAT_CRITERIOS, API_GET_CAT_PAIS_BLOQUES, API_GET_CAT_TRATADOS_ACUERDO, API_GET_CAT_TRATADOS_ACUERDO_BLOQUE } from "../server/api-router";
+import { API_GET_CAT_CRITERIOS, API_GET_CAT_ENTIDADES_FEDERATIVAS, API_GET_CAT_PAIS_BLOQUES, API_GET_CAT_TRATADOS_ACUERDO, API_GET_CAT_TRATADOS_ACUERDO_BLOQUE } from "../server/api-router";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
 import { Catalogo } from "@libs/shared/data-access-user/src";
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
@@ -66,6 +66,15 @@ export class CatalogosTramiteService {
 
   getCatCriterios(idTratadoAcuerdo: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_GET_CAT_CRITERIOS(idTratadoAcuerdo)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Consulta el catálogo de entidades federativas.
+   * @returns Observable con la respuesta del servidor que contiene el catálogo
+   */
+  getCatEntidadesFederativas(): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CAT_ENTIDADES_FEDERATIVAS}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 }
