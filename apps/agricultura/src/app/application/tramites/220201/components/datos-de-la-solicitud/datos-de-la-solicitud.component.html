@@ -135,10 +135,10 @@
       @if(!esFormularioSoloLectura){
       <div class="row">
         <div class="col-md-12 d-flex justify-content-end">
-          <button type="button" class="btn btn-default" [disabled]="!notificationCheck || listSelectedView.length === 0"
+          <button type="button" class="btn btn-default" [disabled]="listSelectedView.length === 0  || cuerpoTabla.length === 0 "
             (click)="modificarMercancia()">Modificar</button>
           <button type="button" class="btn btn-danger ms-3"
-            [disabled]="!notificationCheck || listSelectedView.length === 0"
+            [disabled]="listSelectedView.length === 0 || cuerpoTabla.length === 0"
             (click)="eliminarMercancia()">Eliminar</button>
           <button type="button" class="btn btn-primary ms-3"  [disabled]="!datosDelaSolicitud.get('tipoMercancia')?.value"
             (click)="agregarMercancia()">Agregar</button>

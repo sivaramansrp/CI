@@ -249,7 +249,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @type {boolean}
    * @memberof DatosDeLaSolicitudComponent
    */
-  notificationCheck: boolean = false;
+  notificationCheck: boolean = true;
   listSelectedView: FilaSolicitud[] = [];
 
   /**
@@ -544,7 +544,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     const VALOR = this.datosDelaSolicitud.value.tipoMercancia
     
     if (VALOR === 'yes') {
-      this.notificationCheck = true;  
       this.configuracionColumnasoli = [
         { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
         { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
@@ -566,8 +565,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 }
       ];
     }
-    else {
-      this.notificationCheck = false;  
+    else { 
       this.configuracionColumnasoli = [
         { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
         { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
