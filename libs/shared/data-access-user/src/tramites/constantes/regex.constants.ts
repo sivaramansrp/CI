@@ -944,3 +944,27 @@ export const CODIGO_POSTAL = /^\d{1,12}$/
  * SOLO_REGEX_NUMEROS.test("");      // true (cadena vacía)
  */
 export const SOLO_REGEX_NUMEROS = /^[0-9]*$/;
+
+/**
+ * Expresión regular para validar un código postal de 5 dígitos.
+ * 
+ * Esta expresión regular asegura que la entrada contenga exactamente 5 dígitos numéricos.
+ * Es útil para validar códigos postales en formato estándar de México.
+ * 
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - \d{5}: Coincide con exactamente 5 dígitos.
+ * - $: Aserción para el final de la cadena.
+ * 
+ * Ejemplos válidos:
+ * - "12345"
+ * - "01000"
+ * - "99999"
+ * 
+ * Ejemplos no válidos:
+ * - "1234" (menos de 5 dígitos)
+ * - "123456" (más de 5 dígitos)
+ * - "12A45" (contiene caracteres no numéricos)
+ * - "12 345" (contiene espacios)
+ */
+export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
