@@ -13,10 +13,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TercerospageComponent } from './components/tercerospage/tercerospage.component';
 import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitario-page.component';
 
-
 @NgModule({
   declarations: [
-  
   ],
   imports: [
     AlertComponent,

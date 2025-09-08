@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { DatosForma, RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { DatosDeLaSolicitud, FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
+import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
 import { Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { AnimalesVivoContenedoraComponent } from '../animales-vivo-contenedora/animales-vivo-contenedora.component';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
@@ -244,12 +244,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   seleccionado: string = SELECCIONADO;
 
-  /**
-   * @description Indica si la notificación ha sido verificada o marcada.
-   * @type {boolean}
-   * @memberof DatosDeLaSolicitudComponent
-   */
-  notificationCheck: boolean = true;
+
   listSelectedView: FilaSolicitud[] = [];
 
   /**
