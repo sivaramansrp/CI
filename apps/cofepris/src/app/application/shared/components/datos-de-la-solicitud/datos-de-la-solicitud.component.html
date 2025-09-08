@@ -476,21 +476,20 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <div class="pull-right">
-         
-          <button
+               
+          <button type="button" name="eliminarMercancias"
+            class="btn btn-danger" (click)="eliminarMercancias()" [disabled]="formularioDeshabilitado">
+            Eliminar
+          </button>
+             <button
             type="button"
             name="modificarMercancias"
-            class="btn btn-default"
+            class="btn btn-default ms-2"
             (click)="modificarDatos()"
             [disabled]="formularioDeshabilitado"
           >
             Modificar
           </button>
-          <button type="button" name="eliminarMercancias"
-            class="btn btn-danger ms-2" (click)="eliminarMercancias()" [disabled]="formularioDeshabilitado">
-            Eliminar
-          </button>
-          
           <button
             type="button"
             name="agregarMercancias"

@@ -1,50 +1,50 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 import { Notificacion, NotificacionesComponent, REGEX_RFC_FISICA, REGEX_RFC_MORAL, Transportista } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite303Store, Tramite303StoreService } from '../../../../core/estados/tramites/tramite303.store';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { Tramite303Query } from '../../../../core/queries/tramite303.query';
 import { TransportistaService } from '../../../../core/services/303/transportista.service';
 
 @Component({
   selector: 'app-registro-trasportista',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NotificacionesComponent],
+  imports: [CommonModule, ModalModule, ReactiveFormsModule, NotificacionesComponent],
   templateUrl: './registro-trasportista.component.html',
   styleUrl: './registro-trasportista.component.scss',
 })
-export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
-  /**
-   * Formulario para el registro de transportistas
-   */
-  public FormTrasportista!: FormGroup;
-  /**
-   * Alerta para mostrar mensajes de éxito o error
-   */
-  public alerta: string | null = null;
 
+
+export class RegistroTrasportistaComponent implements OnChanges, OnInit, OnDestroy {
+  /** Título del modal */
+  @Input() titulo: string = 'Datos del transportista';
+  /** Indica si el modal debe abrirse */
+  @Input() abrirModal: boolean = false;
+  /** Evento para cerrar el modal */
+  @Output() cerrar = new EventEmitter<void>();
+  /** Indica si el modal debe mostrarse */
+  public mostrarModal: boolean = false;
+  /** Referencia al modal */
+  @ViewChild('modal', { static: false }) modal?: ModalDirective;
+  /** Formulario para el registro de transportistas */
+  public FormTrasportista!: FormGroup;
+  /** Alerta para mostrar mensajes de éxito o error */
+  public alerta: string | null = null;
   /** Notificación a mostrar al usuario */
   public nuevaNotificacion!: Notificacion;
-  /**
-   * Lista de transportistas registrados
-   */
+  /** Lista de transportistas registrados */
   listaTransportistas: Transportista[] = [];
-  /** 
-   * Notificador para destruir las suscripciones y evitar fugas de memoria 
-   */
+  /** Notificador para destruir las suscripciones y evitar fugas de memoria */
   private destroyNotifier$: Subject<void> = new Subject();
   /** Estado del trámite 303 consultado */
   public tramiteConsultado?: Tramite303Store;
-  /**
-   * Transportista a modificar
-   */
+  /** Transportista a modificar */
   public transportistaModificar?: Transportista;
-  /**
-   * Indica si el formulario está en modo de edición
-   */
+  /** Indica si el formulario está en modo de edición */
   public modoEdicion = false;
+
   /**
    * Constructor del componente
    * @param fb FormBuilder para crear formularios reactivos
@@ -52,8 +52,7 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private transportistaService: TransportistaService,
     private tramite303State: Tramite303StoreService,
-    private tramite303Query: Tramite303Query,
-    private router: Router
+    private tramite303Query: Tramite303Query
   ) {
     this.inicializarFormulario();
   }
@@ -81,9 +80,9 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Carga los datos del transportista en el formulario para su edición
-   * @param transportista Transportista a modificar
-   */
+  * Carga los datos del transportista en el formulario para su edición
+  * @param transportista Transportista a modificar
+  */
   private cargarFormularioParaEdicion(transportista: Transportista): void {
     this.FormTrasportista.patchValue({
       nacionalidad: transportista.nacionalidad,
@@ -95,7 +94,6 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
       taxID: transportista.taxId || transportista.rfcExtranjero || '',
       razonSocial: transportista.denominacionRazonSocial || ''
     });
-
     // Deshabilitar campos clave
     this.FormTrasportista.get('nacionalidad')?.disable({ emitEvent: false });
     this.FormTrasportista.get('tipoPersona')?.disable({ emitEvent: false });
@@ -150,11 +148,11 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Actualiza las validaciones del formulario en función de la nacionalidad y tipo de persona seleccionados.
-   * Dependiendo de si es nacional o extranjero, y si es persona física o moral,
-   * se establecen diferentes validaciones para los campos RFC, nombre, apellido paterno,
-   * apellido materno, taxID y razón social.
-   */
+  * Actualiza las validaciones del formulario en función de la nacionalidad y tipo de persona seleccionados.
+  * Dependiendo de si es nacional o extranjero, y si es persona física o moral,
+  * se establecen diferentes validaciones para los campos RFC, nombre, apellido paterno,
+  * apellido materno, taxID y razón social.
+  */
   private actualizarValidaciones(): void {
     const NACIONALIDAD = this.FormTrasportista.get('nacionalidad')?.value;
     const TIPOPERSONA = this.FormTrasportista.get('tipoPersona')?.value;
@@ -169,14 +167,12 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
     const APELLIDOMATERNO = this.FormTrasportista.get('apellidoMaterno');
     const TAXID = this.FormTrasportista.get('taxID');
     const RAZONSOCIAL = this.FormTrasportista.get('razonSocial');
-
     RFC?.clearValidators();
     NOMBRE?.clearValidators();
     APELLIDOPATERNO?.clearValidators();
     APELLIDOMATERNO?.clearValidators();
     TAXID?.clearValidators();
     RAZONSOCIAL?.clearValidators();
-
     if (ESNACIONALFISICA) {
       this.FormTrasportista.get('nombre')?.disable({ emitEvent: false });
       this.FormTrasportista.get('apellidoPaterno')?.disable({ emitEvent: false });
@@ -185,29 +181,24 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
       NOMBRE?.setValidators([Validators.required]);
       APELLIDOPATERNO?.setValidators([Validators.required]);
     }
-
     if (ESEXTRANJEROFISICA) {
       NOMBRE?.enable({ emitEvent: false });
       APELLIDOPATERNO?.enable({ emitEvent: false });
       APELLIDOMATERNO?.enable({ emitEvent: false });
-
       NOMBRE?.setValidators([Validators.required]);
       APELLIDOPATERNO?.setValidators([Validators.required]);
       TAXID?.setValidators([Validators.required]);
     }
-
     if (ESNACIONALMORAL) {
       this.FormTrasportista.get('razonSocial')?.disable({ emitEvent: true });
       RFC?.setValidators([Validators.required]);
       RAZONSOCIAL?.setValidators([Validators.required]);
     }
-
     if (ESEXTRANJEROMORAL) {
       RAZONSOCIAL?.enable({ emitEvent: false });
       RAZONSOCIAL?.setValidators([Validators.required]);
       TAXID?.setValidators([Validators.required]);
     }
-
     RFC?.updateValueAndValidity();
     NOMBRE?.updateValueAndValidity();
     APELLIDOPATERNO?.updateValueAndValidity();
@@ -280,12 +271,10 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
         return;
       }
     }
-
     const BUSQUEDA$ =
       TIPOPERSONA === 'fisica'
         ? this.transportistaService.buscarFisicaPorRFC(RFCVALUE)
         : this.transportistaService.buscarMoralPorRFC(RFCVALUE);
-
     BUSQUEDA$.subscribe({
       next: (transportista) => {
         if (!transportista) {
@@ -349,6 +338,7 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   /**
    * Muestra una notificación cuando no se encuentra un transportista.
    */
@@ -365,9 +355,10 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
     };
     this.limpiarFormulario();
   }
-/**
- * Habilita los campos del formulario.
- */
+
+  /**
+   * Habilita los campos del formulario.
+   */
   habilitarCampos(): void {
     const RFC = this.FormTrasportista.get('rfc');
     const NOMBRE = this.FormTrasportista.get('nombre');
@@ -382,10 +373,11 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
     RAZONSOCIAL?.enable({ emitEvent: false });
     RFC?.enable({ emitEvent: false });
   }
+
   /**
-   * Guarda los datos del transportista.
-   * @returns void
-   */
+  * Guarda los datos del transportista.
+  * @returns void
+  */
   guardar(): void {
     if (!this.FormTrasportista.valid) {
       this.nuevaNotificacion = {
@@ -405,10 +397,9 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
     }
     this.habilitarCampos();
     const FORM_VALUE = this.FormTrasportista.value;
-
     const TRANSPORTISTA: Transportista = {
-      idPersonaTransportista: this.modoEdicion
-        ? this.transportistaModificar!.idPersonaTransportista
+      idPersonaTransportista: this.modoEdicion && this.transportistaModificar
+        ? this.transportistaModificar.idPersonaTransportista
         : crypto.randomUUID(),
       tipoPersona: FORM_VALUE.tipoPersona,
       nacionalidad: FORM_VALUE.nacionalidad,
@@ -423,12 +414,10 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
       apellidoPaterno: FORM_VALUE.apellidoPaterno || '',
       apellidoMaterno: FORM_VALUE.apellidoMaterno || ''
     };
-
     if (this.modoEdicion) {
       this.listaTransportistas = this.listaTransportistas.map(t =>
         t.idPersonaTransportista === TRANSPORTISTA.idPersonaTransportista ? TRANSPORTISTA : t
       );
-
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'success',
@@ -460,22 +449,12 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
         return;
       }
       this.listaTransportistas = [...this.listaTransportistas, TRANSPORTISTA];
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'success',
-        modo: 'action',
-        titulo: 'Éxito',
-        mensaje: 'Transportista agregado correctamente.',
-        cerrar: true,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
     }
-
     this.tramite303State.setListaTransportistas(this.listaTransportistas);
     this.tramite303State.trasportistaModificar(null as unknown as Transportista);
     this.limpiarFormulario();
-    this.router.navigate(['aga/despacho-mercancias/registro']);
+    this.mostrarModal = false;
+    this.cerrar.emit();
   }
 
   /**
@@ -483,7 +462,8 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
    */
   cancelar(): void {
     this.FormTrasportista.reset();
-    this.router.navigate(['aga/despacho-mercancias/registro']);
+    this.mostrarModal = false;
+    this.cerrar.emit();
   }
 
   /**
@@ -540,5 +520,31 @@ export class RegistroTrasportistaComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Detecta cambios en las propiedades de entrada del componente.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['abrirModal'] && changes['abrirModal'].currentValue) {
+      if (this.abrirModal) {
+        this.mostrarModal = true;
+      }
+    }
+  }
+
+  /**
+   * Maneja el evento cuando el modal se oculta.    
+   */
+  onHidden(): void {
+    this.mostrarModal = false;
+  }
+
+  /**
+   * Cierra el modal y emite el evento de cierre.
+   */
+  cerrarModal(): void {
+    this.mostrarModal = false;
+    this.cerrar.emit();
   }
 }

@@ -1,5 +1,5 @@
 export const FECHA_DE_FIRMA = {
-  labelNombre: 'Fecha del Firma',
+  labelNombre: 'Fecha de firma',
   required: true,
   habilitado: true,
 };

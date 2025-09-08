@@ -4,27 +4,67 @@
 
     <div class="row">
       <div class="col-md-8">
-        <label for="justificacionDictamen" class="form-label">Observaciones:</label>
-        <textarea id="justificacionDictamen" formControlName="observaciones" class="mb-4 h-20 w-100" placeholder=""
-          rows="6" (change)="setValoresStore(formDatosCertificado,'observaciones', 'setObservaciones')" [disabled]="soloLectura"></textarea>
+        <label for="justificacionDictamen" class="form-label"
+          >Observaciones:</label
+        >
+        <textarea
+          id="justificacionDictamen"
+          formControlName="observaciones"
+          class="mb-4 h-20 w-100"
+          placeholder=""
+          rows="6"
+          (change)="
+            setValoresStore(
+              formDatosCertificado,
+              'observaciones',
+              'setObservaciones'
+            )
+          "
+          [disabled]="soloLectura"
+        ></textarea>
       </div>
       <div class="row mb-3">
         <div class="col-md-6">
-          <app-catalogo-select class="row-margen-agrega" [label]="'Idioma'" [catalogo]="idiomas" [required]="true"
-            name="estado" formControlName="idioma" [isDisabled]="soloLectura" (selectionChange)="idiomaSeleccion()"></app-catalogo-select>
+          <app-catalogo-select
+            class="row-margen-agrega"
+            [label]="'Idioma'"
+            [catalogo]="idiomas"
+            [required]="true"
+            name="estado"
+            formControlName="idioma"
+            [isDisabled]="soloLectura"
+            (selectionChange)="idiomaSeleccion()"
+            [markTouched]="formDatosCertificado.get('idioma')?.touched ?? false"
+          ></app-catalogo-select>
         </div>
       </div>
       <div class="row">
         <ng-titulo titulo="Representación federal" />
         <div class="col-md-6">
-          <app-catalogo-select class="row-margen-agrega" [label]="'Entidad federativa'" [catalogo]="entidadFederativas"
-            [required]="true" name="estado" formControlName="entidadFederativa" [isDisabled]="soloLectura"
-            (selectionChange)="entidadFederativaSeleccion()"></app-catalogo-select>
+          <app-catalogo-select
+            class="row-margen-agrega"
+            [label]="'Entidad federativa'"
+            [catalogo]="entidadFederativas"
+            [required]="true"
+            name="estado"
+            formControlName="entidadFederativa"
+            [isDisabled]="soloLectura"
+            [markTouched]="formDatosCertificado.get('entidadFederativa')?.touched ?? false"
+            (selectionChange)="entidadFederativaSeleccion()"
+          ></app-catalogo-select>
         </div>
         <div class="col-md-6">
-          <app-catalogo-select class="row-margen-agrega" [label]="'Representación federal'"
-            [catalogo]="representacionFederal" [required]="true" name="estado" formControlName="representacionFederal" [isDisabled]="soloLectura"
-            (selectionChange)="representacionFederalSeleccion()"></app-catalogo-select>
+          <app-catalogo-select
+            class="row-margen-agrega"
+            [label]="'Representación federal'"
+            [catalogo]="representacionFederal"
+            [required]="true"
+            name="estado"
+            formControlName="representacionFederal"
+            [isDisabled]="soloLectura"
+            [markTouched]="formDatosCertificado.get('representacionFederal')?.touched ?? false"
+            (selectionChange)="representacionFederalSeleccion()"
+          ></app-catalogo-select>
         </div>
       </div>
     </div>

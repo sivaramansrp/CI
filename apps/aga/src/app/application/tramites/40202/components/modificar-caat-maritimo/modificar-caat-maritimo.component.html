@@ -114,13 +114,16 @@
     <!--Candidato a modificar CAAT marítimo-->
     <label for="Candidato a modificar CAAT marítimo">Candidato a modificar CAAT marítimo:</label>
     <div class="row mt-5">
-        <div class="col-md-12">
+        <div class="col-md-12" [ngStyle]="mostrarError ? { 'border': '1px solid red' } : {}">
             <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox"
                 [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
                 [configuracionTabla]="candidatoModificarCaatEncabezadoDeTabla" [datos]="candidatoModificarCaatTabla">
             </app-tabla-dinamica>
         </div>
     </div>
+    @if (mostrarError) {
+        <div class="mensaje-error">Este campo es obligatorio</div>
+    }
 </div>
 
 <div class="modal fade" id="modal-agregar-pfe" tabindex="-1" aria-labelledby="modalAgregarPFELabel">
