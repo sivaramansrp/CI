@@ -1,11 +1,12 @@
-import { AlertComponent, Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy } from '@angular/core';
+import { AbstractControl, FormBuilder } from '@angular/forms';
+import { AlertComponent, Notificacion, NotificacionesComponent, REGEX_RFC } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
 import { ALERT } from '../../enums/datos-de-la-solicitud.enum';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { FormBuilder } from '@angular/forms';
+
 import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/datos-de-la-solicitud.enum';
@@ -50,9 +51,18 @@ import { Validators } from '@angular/forms';
 })
 export class DatosEmpresaComponent implements OnInit, OnDestroy {
 
+    /**
+   * Evento emitido cuando se selecciona un botón de radio.
+   */
+  @Output() radioButtonSelectedChange = new EventEmitter<boolean>();
   
   /** Estado actual de la solicitud proveniente del store */
   public solicitudState!: Tramites260912State;
+
+   /**
+   * Evento emitido cuando cambia el tipo de trámite.
+   */
+  @Output() tipoTramiteChange = new EventEmitter<string>();
 
   /** Indica si el formulario está en modo solo lectura */
   esFormularioSoloLectura: boolean = false;
@@ -66,6 +76,11 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    * Textos de alerta.
    */
   TEXTOS = ALERT;
+
+  /**
+   * Indica si se ha seleccionado una opción de radio button.
+   */
+  isRadioButtonSelected: boolean = false;
 
     /**
      * Estado seleccionado del trámite 260911.
@@ -146,9 +161,50 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       this.form.disable();
       this.datosDelEstablecimiento.disable();
     } else {
-      this.form.enable();
+      const RADIO_VALUE = this.form.get('btonDeRadio')?.value;
+       if (!RADIO_VALUE) {
+        this.disableSections();
+      } else if (RADIO_VALUE === '0') {
+        this.enableProrrogaOnly();
+      } else {
+        this.enableSections();
+      }
+    }
+  }
+
+   /**
+   * Habilita solo el campo de justificación para la opción 'Prórroga'.
+   * Deshabilita todos los campos de datosDelEstablecimiento.
+   */
+  enableProrrogaOnly(): void {
+    if (!this.esFormularioSoloLectura) {
+      this.form.get('justificacion')?.enable();
+      this.datosDelEstablecimiento.disable();
+    }
+  }
+
+  
+  /**
+   * Habilita todas las secciones cuando se selecciona un radio button.
+   */
+  enableSections(): void {
+    if (!this.esFormularioSoloLectura) {
+      // Habilitar el campo de justificación
+      this.form.get('justificacion')?.enable();
+      // Habilitar todos los campos del formulario de datos del establecimiento
       this.datosDelEstablecimiento.enable();
     }
+
+  }
+
+   /**
+   * Deshabilita todas las secciones excepto el radio button.
+   */
+  disableSections(): void {
+  // Deshabilitar el campo de justificación
+  this.form.get('justificacion')?.disable();
+  // Deshabilitar todos los campos del formulario de datos del establecimiento
+  this.datosDelEstablecimiento.disable();
   }
 
 
@@ -184,16 +240,151 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     });
 
     this.datosDelEstablecimiento = this.fb.group({
-      rfcDel: [this.solicitudState?.rfcDel, Validators.required],
+      rfcDel: [this.solicitudState?.rfcDel, [Validators.required, Validators.pattern(REGEX_RFC)]],
       denominacion: [this.solicitudState?.denominacion, Validators.required],
-      correo: [this.solicitudState?.correo, Validators.required],
+       correo: this.fb.control(
+  this.solicitudState?.correo,
+  {
+    validators: [
+      Validators.required,
+      DatosEmpresaComponent.rfcEmailValidator,
+      Validators.maxLength(320)
+    ],
+    updateOn: 'blur'
+  }
+)
     });
+
+     // Marcar como touched si no está seleccionado para mostrar el mensaje de error desde el inicio
+      if (!this.solicitudState.btonDeRadio) {
+        this.form.get('btonDeRadio')?.markAsTouched();
+      }
+
+    // Verificar si hay un valor inicial en el radio button
+    this.isRadioButtonSelected = Boolean(this.solicitudState.btonDeRadio);
+    // Suscribirse a cambios en el radio button
+    this.form.get('btonDeRadio')?.valueChanges.subscribe(value => {
+      this.onRadioButtonChange(value);
+    });
+
+    // Aplica el estado correcto de los campos según el valor inicial del radio
+    const RADIO_VALUE = this.form.get('btonDeRadio')?.value;
+    if (RADIO_VALUE === undefined || RADIO_VALUE === null || RADIO_VALUE === '') {
+      this.disableSections();
+    } else if (RADIO_VALUE === '0') {
+      this.enableProrrogaOnly();
+    } else {
+      this.enableSections();
+    }
+
   }
 
+  /**
+   * Valida la longitud máxima de un campo y marca el control como tocado para mostrar errores.
+   * 
+   * Este método se ejecuta en el evento input para mostrar errores de validación
+   * cuando el usuario alcanza el límite de caracteres, incluso cuando el HTML
+   * maxlength previene la entrada de más caracteres.
+   * 
+   * @param controlName - Nombre del control a validar
+   * @param maxLength - Longitud máxima permitida
+   * @returns void
+   */
+  public validarLongitudMaxima(controlName: string, maxLength: number): void {
+    const CONTROL = this.datosDelEstablecimiento.get(controlName);
+    if (CONTROL && CONTROL.value) {
+      CONTROL.markAsTouched();
+      CONTROL.markAsDirty();
+      // Solo marcar error si la longitud es MAYOR al máximo permitido
+      if (CONTROL.value.length > maxLength) {
+        const CURRENT_ERRORS = CONTROL.errors || {};
+        const NEW_ERRORS = {
+          ...CURRENT_ERRORS,
+          maxlength: { requiredLength: maxLength, actualLength: CONTROL.value.length }
+        };
+        CONTROL.setErrors(NEW_ERRORS);
+      } else {
+        // Limpiar solo el error de maxlength si el texto es menor o igual al límite
+        const ERRORS = CONTROL.errors;
+        if (ERRORS && ERRORS['maxlength']) {
+          delete ERRORS['maxlength'];
+          CONTROL.setErrors(Object.keys(ERRORS).length === 0 ? null : ERRORS);
+        }
+      }
+      CONTROL.updateValueAndValidity({ emitEvent: false });
+    }
+  }
+
+    /**
+     * Valida si el campo de un formulario no contiene errores
+     * @param {AbstractControl} control  : Control del formulario
+     * @param {string} campo  : Nombre del campo a validar, si el control es un FormGroup
+     * @returns {boolean | null} : Retorna true si el campo contiene errores y ha sido tocado, de lo contrario retorna false
+     */
+   // eslint-disable-next-line class-methods-use-this
+   public isInvalid(control: AbstractControl, campo?: string): boolean | null {
+      if (!control) {
+        return null;
+      }
+      if (control instanceof FormGroup && campo) {
+        const CHILD = control.controls[campo];
+        if (!CHILD) {
+          return null;
+        }
+        return CHILD.errors && CHILD.touched;
+      }
+      return control.errors && control.touched;
+    }
+
+   /**
+   * Método que se ejecuta cuando cambia el valor del radio button.
+   * Habilita o deshabilita las secciones según la selección.
+   *
+   * @param value Valor seleccionado del radio button.
+   */
+  onRadioButtonChange(value: string | null): void {
+    this.isRadioButtonSelected = value !== undefined && value !== null && value !== '';
+    this.radioButtonSelectedChange.emit(this.isRadioButtonSelected);
+    if (this.isRadioButtonSelected) {
+      if (value === '0') {
+        this.enableProrrogaOnly();
+      } else {
+        this.enableSections();
+      }
+    } else {
+      this.disableSections();
+    }
+  }
+
+   /**
+   * Validador personalizado para correos electrónicos que permite una parte local mayor a 64 caracteres,
+   * pero exige que el correo completo no exceda los 320 caracteres y cumpla con un formato básico.
+   * 
+   * @param control Control de formulario de Angular que contiene el valor a validar.
+   * @returns Un objeto con el error de validación si el valor no es válido, o `null` si es válido.
+   *
+   * @compo Validador de correo electrónico para RFC. Permite correos con parte local extensa y verifica formato básico.
+   */
+  static rfcEmailValidator(control: import('@angular/forms').AbstractControl): Record<string, unknown> | null {
+    if (!control.value) {
+      return null;
+    }
+    // Permitir parte local mayor a 64 caracteres, exigir total <= 320 y formato básico
+    const BASIC_EMAIL_REGEX = /^[A-Za-z0-9!#$%&'*+/=?^_`{|}~.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (control.value.length > 320) {
+      return { maxlength: true };
+    }
+    return BASIC_EMAIL_REGEX.test(control.value) ? null : { email: true };
+  }
   /**
    * Método para habilitar los controles del formulario.
    */
   toggleFormControls(): void {
+    // Solo permitir habilitar si hay un radio button seleccionado y no está en modo solo lectura
+    if (!this.isRadioButtonSelected || this.esFormularioSoloLectura) {
+      return;
+    }
+
     this.abrirModal();
     Object.keys(this.datosDelEstablecimiento.controls).forEach(
       (controlName) => {
@@ -250,6 +441,22 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     };
   }  
 
+  
+  /**
+   * Indica si ambos formularios son válidos.
+   */
+  isValid(): boolean {
+    return this.form?.valid && this.datosDelEstablecimiento?.valid;
+  }
+   /**
+   * Devuelve los datos actuales del formulario principal y del establecimiento.
+   */
+  getData(): { [key: string]: unknown; datosDelEstablecimiento: { [key: string]: unknown } } {
+    return {
+      ...this.form?.value,
+      datosDelEstablecimiento: this.datosDelEstablecimiento?.value
+    };
+  }
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */

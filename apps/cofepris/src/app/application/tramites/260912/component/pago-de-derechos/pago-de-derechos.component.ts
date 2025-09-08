@@ -10,7 +10,7 @@
 
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges,OnDestroy, OnInit} from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
 import { CommonModule } from '@angular/common';
@@ -34,7 +34,7 @@ import { Tramite260912Query } from '../../estados/tramite-260912.query';
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss',
 })
-export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
 /**
    * Estado actual de la solicitud del trámite 260911.
    * Contiene toda la información del formulario y su estado.
@@ -131,7 +131,31 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
    this.inicializarEstadoFormulario();
     this.obtenerBancoList();
+     if (!this.esFormularioSoloLectura && !this.disabled) {
+      if (this.tipoTramite === '1' || this.tipoTramite === '2') {
+        this.pagoDeDerechosForm?.enable();
+      } else {
+        this.pagoDeDerechosForm?.disable();
+      }
+    } else {
+      this.pagoDeDerechosForm?.disable();
+    }
+    if (this.disabled) {
+      this.pagoDeDerechosForm.disable();
+    }
   }
+
+   ngOnChanges(): void {
+    if (this.pagoDeDerechosForm) {
+      if (this.tipoTramite === '1' || this.tipoTramite === '2') {
+        this.pagoDeDerechosForm.enable();
+      } else {
+        this.pagoDeDerechosForm.disable();
+      }
+    }
+  }
+  @Input() disabled: boolean = false;
+  @Input() tipoTramite: string = '';
 
  /**
    * Crea el formulario reactivo con validaciones.
@@ -258,8 +282,45 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       [campo]: VALOR
     });
   }
-  
 
+    /**
+   * Indica si el formulario de pago de derechos es válido.
+   */
+  isValid(): boolean {
+    return this.pagoDeDerechosForm?.valid ?? false;
+  }
+    /**
+   * Valida la longitud máxima de un campo y marca el control como tocado para mostrar errores.
+   * 
+   * Este método se ejecuta en el evento input para mostrar errores de validación
+   * cuando el usuario alcanza el límite de caracteres, incluso cuando el HTML
+   * maxlength previene la entrada de más caracteres.
+   * 
+   * @param controlName - Nombre del control a validar
+   * @param maxLength - Longitud máxima permitida
+   * @returns void
+   */
+  public validarLongitudMaxima(controlName: string, maxLength: number): void {
+    const CONTROL = this.pagoDeDerechosForm.get(controlName);
+    if (CONTROL) {
+      if (CONTROL.value && CONTROL.value.length > maxLength) {
+        CONTROL.setErrors({ ...CONTROL.errors, longitudMaxima: true });
+      } else {
+        if (CONTROL.errors) {
+          const { longitudMaxima: LONGITUD_MAXIMA, ...OTHER_ERRORS } = CONTROL.errors;
+          CONTROL.setErrors(Object.keys(OTHER_ERRORS).length ? OTHER_ERRORS : null);
+        }
+      }
+      CONTROL.markAsTouched();
+      CONTROL.markAsDirty();
+    }
+  }
+ /**
+   * Devuelve los datos actuales del formulario de pago de derechos.
+   */
+   getData(): Tramites260912State {
+    return this.pagoDeDerechosForm?.value as Tramites260912State;
+  }
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Libera recursos y evita fugas de memoria.

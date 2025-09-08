@@ -10,8 +10,10 @@
               placeholder=""
               type="text"
               name="claveDeReferencia"
-              formControlName="claveDeReferencia"
+              maxlength="9"
               (change)="setValoresStore(pagoDeDerechosForm,'claveDeReferencia')"
+              (input)="validarLongitudMaxima('claveDeReferencia', 10)"
+              [disabled]="disabled"
             />
             <div *ngIf="esInvalido('claveDeReferencia')" class="text-danger">
               <small *ngIf="pagoDeDerechosForm.controls['claveDeReferencia'].hasError('maxlength')">Máximo 50 caracteres.</small>
@@ -27,6 +29,7 @@
               type="text"
               name="cadenaPagoDependencia"
               formControlName="cadenaPagoDependencia"
+              maxlength="50"
               (change)="setValoresStore(pagoDeDerechosForm,'cadenaPagoDependencia')"
             />
             <div *ngIf="esInvalido('cadenaPagoDependencia')" class="text-danger">
@@ -99,10 +102,14 @@
                 name="impPago"
                 formControlName="impPago"
                 (change)="setValoresStore(pagoDeDerechosForm,'impPago'); validarSinComas('impPago')"
+                [ngClass]="{'is-invalid': esInvalido('impPago')}"
               />
               <div *ngIf="esInvalido('impPago')" class="text-danger">
-                <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('maxlength')">Máximo 16 caracteres.</small>
+                
                 <small *ngIf="pagoDeDerechosForm.get('impPago')?.hasError('noComa')">El campo no debe contener comas.</small>
+                 <span *ngIf="pagoDeDerechosForm.get('impPago')?.errors?.['pattern']">
+                    Por favor, escribe un número entero válido.
+                </span>
             </div>
             </div>
           </div>

@@ -52,6 +52,14 @@ describe('PagoDeDerechosComponent', () => {
         nombre: '',
         apellidoPaterno: '',
         apellidoMaterno: '',
+        entidad: null,
+        representacion: null,
+        fabricanteTablaDatos: [],
+        proveedorTablaDatos: [],
+        importadorTablaDatos: [],
+        distribuidorTablaDatos: [],
+        destinatarioFinalTablaDatos: [],
+        facturadorTablaDatos: [],
       }),
     };
     mockTramite260912Store = {};
