@@ -1,30 +1,9 @@
-import { API_POST_CARGAR_DOCUMENTOS, COMUN_URL } from '../../../servers/api-router';
+import { API_POST_CARGAR_DOCUMENTOS, API_POST_DOCUMENTO_REFERENCIA_SOLICITUD, COMUN_URL } from '../../../servers/api-router';
+import { DocumentoProcesadoResponse, UploadDocumentResponse } from '../../../models/shared/cargar-documentos.model';
 import { DocumentosParaCargar } from '../../../models/shared/anexar-documentos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-export interface Persona {
-  claveUsuario: string;
-  rfc: string;
-  nombre: string;
-  apellidoPaterno: string;
-  apellidoMaterno: string;
-}
-
-export interface FirmaElectronica {
-  rolActual: string;
-  rfcSolicitante: string;
-  idSolicitud: number;
-  referenciaSolicitud: string;
-}
-
-export interface Payload {
-  documentos: FileTipoDocumento[];
-  persona: Persona;
-  firmaElectronica: FirmaElectronica;
-}
-
 
 export interface FileTipoDocumento {
   nombreDocumento: string;
@@ -73,7 +52,7 @@ export class CargarDocumentoService {
  * para la carga de documentos. El cuerpo de la petición incluye datos del usuario, información de la firma electrónica
  * y los metadatos de los documentos a cargar.
  */
-public cargarDocumentos(archivosCargando: DocumentosParaCargar[]): Observable<Payload> {
+public cargarDocumentos(archivosCargando: DocumentosParaCargar[]): Observable<UploadDocumentResponse> {
     const ENDPOINT = `${this.host}${API_POST_CARGAR_DOCUMENTOS}`;
     const FORMDATA = new FormData();
     const FILEINFO: FileTipoDocumento[] = [];
@@ -109,16 +88,20 @@ public cargarDocumentos(archivosCargando: DocumentosParaCargar[]): Observable<Pa
         }
       });
       if (ARCHIVO?.archivo) {
-        FORMDATA.append('files', ARCHIVO.archivo);
+        FORMDATA.append("files", ARCHIVO.archivo, ARCHIVO.archivo.name);
       }
       // ARCHIVO.cargado = true;
       // ARCHIVO.estatus = 'cargado';
     }
 
-    FORMDATA.append('body', JSON.stringify(BODY));
-    return this.http.post<Payload>(ENDPOINT, FORMDATA);
+    FORMDATA.append("body", new Blob([JSON.stringify(BODY)], { type: "application/json" }));
+    return this.http.post<UploadDocumentResponse>(ENDPOINT, FORMDATA);
   }
 
   
-
+ public documentosreferenciaSolicitud(referenciaSolicitud: string | undefined): Observable<DocumentoProcesadoResponse> {
+   const REFERENCIA = referenciaSolicitud ?? '';
+   const ENDPOINT = `${this.host}${API_POST_DOCUMENTO_REFERENCIA_SOLICITUD(REFERENCIA)}`;
+   return this.http.post<DocumentoProcesadoResponse>(ENDPOINT, REFERENCIA);
+ }
 }

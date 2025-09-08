@@ -468,3 +468,9 @@ export const API_POST_RESOLUCION_GUARDAR = (TRAMITE: string, IDRESOLUCION: strin
  * @see https://api-v30.cloud-ultrasist.net/api/digitalizacion/cargar
  */
 export const API_POST_CARGAR_DOCUMENTOS = `digitalizacion/cargar`
+
+/**
+ * 
+ * @see https://api-v30.cloud-ultrasist.net/api/digitalizacion/documentos/LEQI8101314S7-ba0fedcf-0e76-4165-be82-5923cc664f41
+ */
+export const API_POST_DOCUMENTO_REFERENCIA_SOLICITUD = (REFRERENCIASOLICITUD: string) : string => `digitalizacion/documentos/${REFRERENCIASOLICITUD}`;

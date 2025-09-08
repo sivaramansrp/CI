@@ -1,3 +1,4 @@
+import { CategoriaMensaje, Notificacion, NotificacionesComponent} from '../notificaciones/notificaciones.component';
 import {
   ChangeDetectorRef,
   Component,
@@ -29,10 +30,8 @@ import {
   OPCIONAL,
   UNIDADES_DOCUMENTOS,
 } from '../../../core/enums/mensajes-documentos.enum';
-import {
-  Notificacion,
-  NotificacionesComponent,
-} from '../notificaciones/notificaciones.component';
+import { ErrorModelo, UploadDocumentResponse } from '../../../core/models/shared/cargar-documentos.model';
+import { catchError, interval, map, of, switchMap, takeWhile, timeInterval } from 'rxjs';
 import { CargarDocumentoService } from '../../../core/services/shared/cargar-documento/cargar-documento.service';
 import { CatalogoDocumentosService } from '../../../core/services/shared/catalogos/catalogo-documentos.service';
 import { CommonModule } from '@angular/common';
@@ -40,7 +39,6 @@ import { DocumentosQuery } from '../../../core/queries/documentos.query';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -172,6 +170,10 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
    * @type {Notificacion}
    */
   public nuevaNotificacion!: Notificacion;
+
+  public alertaNotificacion: Notificacion | null = null;
+
+public PDF_ERRORS:ErrorModelo[] =[];
 
   constructor(
     private documentosQuery: DocumentosQuery,
@@ -343,7 +345,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
     fileInput: HTMLInputElement,
     id: number,
     tipo: string,
-    tamanioMaximo:number
+    tamanioMaximo:number,
+    item?: TipoDocumentos
   ): void {
     const ARCHIVO = event.target as HTMLInputElement;
     const INFORMACION_ARCHIVO = (ARCHIVO.files as FileList)[0];
@@ -360,6 +363,27 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
           modo: '',
           titulo: '',
           mensaje: MENSAJES_DOCUMENTOS.ONL_YPDF,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+        fileInput.value = '';
+        return;
+      }
+
+      // Validación 2: Verificar nombres de archivo duplicados
+      const ARCHIVO_DUPLICADO = this.listadoArchivos.find(
+        archivo => archivo.name.toLowerCase() === INFORMACION_ARCHIVO.name.toLowerCase() && 
+                  archivo.id !== id // Excluir el mismo campo (para re-uploads)
+      );
+
+      if (ARCHIVO_DUPLICADO) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'danger',
+          modo: '',
+          titulo: 'Archivo duplicado',
+          mensaje: `Ya existe un archivo con el nombre "${INFORMACION_ARCHIVO.name}" en otro campo. Por favor, seleccione un archivo con nombre diferente.`,
           cerrar: false,
           txtBtnAceptar: '',
           txtBtnCancelar: '',
@@ -440,6 +464,12 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         tamanioMaximo
       };
 
+      if (item) {
+        item.file = NEW_FILE_OBJECT;
+        // Clear any existing errors when uploading a new file
+        item.error = [];
+      }
+      
       if (EXISTING_INDEX !== -1) {
         // Reemplazar archivo existente para evitar duplicados
         // Limpiar URL anterior para prevenir pérdidas de memoria
@@ -667,6 +697,9 @@ private validarCompletitudDocumentosObligatorios(): boolean {
       this.listadoArchivos.splice(INDEX_ARCHIVO, 1);
     }
 
+    // Clear errors when removing file
+    item.error = [];
+
     // Actualizar estado del botón después de limpiar archivo
     this.actualizarEstadoBotonCargarArchivos();
   }
@@ -708,8 +741,6 @@ private validarCompletitudDocumentosObligatorios(): boolean {
 
   confirmarCargaArchivos(acepta: boolean): void {
     if (acepta) {
-      this.cargarDocumentos = true;
-      this.mostrarSeccionCargaArchivos = false;
       this.archivosCargando.obligatorios = this.listadoArchivos.filter(
         (f) => f.tipo === 'obligatorio'
       );
@@ -878,17 +909,103 @@ private validarCompletitudDocumentosObligatorios(): boolean {
     this.cargaRealizada.emit(false);
   }
 
-  /**
-   * Carga los archivos seleccionados.
-   * @param {any[]} archivosCargando - Lista de archivos a cargar.
-   * @returns {Promise<void>} Promesa que se resuelve cuando la carga se completa.
-   */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, require-await
-  cargarArchivos(archivosCargando: DocumentosParaCargar[]): void {
-    this.cargarDocumentoService.cargarDocumentos(archivosCargando).subscribe({
-      next: (res) => console.log('Upload successful', res),
-      error: (err) => console.error('Upload failed', err)
-    });
+cargarArchivos(archivosCargando: DocumentosParaCargar[]): void {
+  this.cargarDocumentoService.cargarDocumentos(archivosCargando).pipe(
+    switchMap((res: UploadDocumentResponse) => {
+      if (res.error) {
+        this.PDF_ERRORS = res.errores_modelo ?? [];
+        this.manejarErrorArchivoObligatorio();
+        this.manejarErrorArchivoOpcional();
+        return of(null);
+      }
+      const REFERENCIA = res?.datos?.referenciaSolicitud;
+      return interval(3000).pipe(
+        switchMap(() => this.cargarDocumentoService.documentosreferenciaSolicitud(REFERENCIA)),
+        takeWhile((statusResponse) => !(statusResponse.codigo === 'UPSER00'), true),
+        catchError((err) => {
+          console.error('Polling error', err);
+          return of(null);
+        })
+      );
+    })
+  ).subscribe({
+    next: (res) => {
+      if (res?.codigo === '00') {
+          this.cargarDocumentos = true;
+          this.mostrarSeccionCargaArchivos = false;
+      } else {
+        this.mostrarAlertaDeNotificacion();
+      }
+    },
+    error: (err) => console.error('Upload or polling failed', err)
+  });
+}
 
-  }
+mostrarAlertaDeNotificacion(): void {
+  this.alertaNotificacion = {
+    tipoNotificacion: 'toastr',
+    categoria: CategoriaMensaje.ERROR,
+    modo: 'action',
+    titulo: 'Error',
+    mensaje: 'Error inesperado al enviar la solicitud.',
+    cerrar: false,
+    txtBtnAceptar: '',
+    txtBtnCancelar: '',
+    };
+}
+
+manejarErrorArchivoObligatorio(): void {
+  this.catalogoDocumentosObligatorios.forEach(res => {
+    if (res) {
+      res.error = [];
+      
+      const ERROR_EXISTS = this.PDF_ERRORS.find((error: ErrorModelo) => error.campo === res?.file?.name);
+     
+      if (ERROR_EXISTS) {
+        res.error = ERROR_EXISTS.errores;
+      }
+
+      if (res.adicionales && res.adicionales.length > 0) {
+        res.adicionales.forEach(adicional => {
+          adicional.error = [];
+          
+          const ADICIONAL_ERROR = this.PDF_ERRORS.find((error: ErrorModelo) => error.campo === adicional?.file?.name);
+          
+          if (ADICIONAL_ERROR) {
+            adicional.error = ADICIONAL_ERROR.errores;
+          }
+        });
+      }
+    }
+  });
+}
+
+manejarErrorArchivoOpcional(): void {
+  this.documentosOpcionalesSeleccionados.forEach(res => {
+    if (res) {
+      res.error = [];
+      
+      const ERROR_EXISTS = this.PDF_ERRORS.find((error: ErrorModelo) => error.campo === res?.file?.name);
+     
+      if (ERROR_EXISTS) {
+        res.error = ERROR_EXISTS.errores;
+      }
+
+      if (res.adicionales && res.adicionales.length > 0) {
+        res.adicionales.forEach(adicional => {
+          adicional.error = [];
+          
+          const ADICIONAL_ERROR = this.PDF_ERRORS.find((error: ErrorModelo) => error.campo === adicional?.file?.name);
+          
+          if (ADICIONAL_ERROR) {
+            adicional.error = ADICIONAL_ERROR.errores;
+          }
+        });
+      }
+    }
+  });
+}
+
+
+
 }
