@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Catalogo, ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, Notificacion, TipoNotificacionEnum } from '@ng-mf/data-access-user';
 import {
   Component,
   ElementRef,
@@ -11,15 +11,17 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { NotificacionesComponent,TituloComponent} from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { MENSAJES } from '../../constants/importacion-material-de-investigacion-cientifica-pasos.enum';
+import { Modal } from 'bootstrap';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
  * PartidasDeLaMercanciaComponent
@@ -37,11 +39,36 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     AlertComponent,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
+    TooltipModule,
+    NotificacionesComponent
   ],
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
 export class PartidasDeLaMercanciaComponent implements OnChanges {
+    /**
+   * modificarPartidasDelaMercanciaForm
+   * Formulario reactivo para modificar las partidas.
+   */
+  @Input() modificarPartidasDelaMercanciaForm!: FormGroup;
+    /**
+   * confirmandoEliminarPartida
+   * Bandera que indica si se está confirmando la eliminación de una partida específica.
+   */
+  confirmandoEliminarPartida = false;
+    /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+    /*
+   * @descripcion Indica si se debe mostrar una notificación.
+   */
+  mostrarNotificacion = false;
+  /**
+   * @Input() mostrarErrores
+   * Bandera que indica si se deben mostrar los mensajes de error en el formulario.
+   */
+  @Input() mostrarErrores: boolean = false;
   /**
    * @description Indica si el formulario debe mostrarse en modo solo lectura.
    */
@@ -76,7 +103,7 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
    * mostrarTabla
    * Bandera para mostrar u ocultar la tabla dinámica.
    */
-  @Input() mostrarTabla = false;
+  @Input() mostrarTabla = true;
 
   /**
    * Lista de elementos del catálogo de fracciones arancelarias.
@@ -134,11 +161,29 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
    * Utilizado para acceder y manipular directamente el elemento en la plantilla.
    */
   @ViewChild('archivoNacionales') archivoNacionalesElemento!: ElementRef;
+   /*
+   * Evento emitido cuando se eliminan partidas de la tabla.
+   */
+  @Output() partidasEliminadas = new EventEmitter<string[]>();
+  
+  /**
+   * @description Referencia al elemento de la partida que se va a modificar.
+   */
+  @ViewChild('modificarPartidaModal') modificarPartidaElemento!: ElementRef;
+    /**
+   * Evento emitido cuando se modifica una partida seleccionada.
+   */
+  @Output() modificarPartidaSeleccionada = new EventEmitter<PartidasDeLaMercanciaModelo>();
 
   /**
    * Nombre del archivo seleccionado por el usuario.
    */
   nombreArchivoSeleccionado: string = '';
+    /**
+   * selectedRows
+   * Arreglo de filas seleccionadas en la tabla dinámica de partidas de la mercancía.
+   */
+  selectedRows: PartidasDeLaMercanciaModelo[] = [];
 
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
@@ -183,8 +228,9 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
    * Maneja las filas seleccionadas en la tabla dinámica y emite un evento.
    * Lista de filas seleccionadas.
    */
-  handleListaDeFilaSeleccionada(filasSeleccionadas: any[]): void {
-    this.filaSeleccionadaChange.emit(filasSeleccionadas);
+  handleListaDeFilaSeleccionada(event: PartidasDeLaMercanciaModelo[]): void {
+    this.selectedRows = event;
+    this.filaSeleccionadaChange.emit(event);
   }
 
   /**
@@ -198,7 +244,45 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
    * Navega para modificar una partida específica, emitiendo un evento.
    */
   navegarParaModificarPartida(): void {
-    this.navegarParaModificarPartidaEvent.emit();
+       if (!this.selectedRows || this.selectedRows.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: 'info',
+        modo: '',
+        titulo: '',
+        mensaje: 'Debe seleccionar un elemento',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal:'modal-sm'
+      };
+      this.mostrarNotificacion = true;
+      return;
+    }
+    if (this.selectedRows.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: 'info',
+        modo: '',
+        titulo: '',
+        mensaje: 'Sólo debe seleccionar un elemento',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal:'modal-sm'
+      };
+      this.mostrarNotificacion = true;
+      return;
+    }
+    this.modificarPartidaSeleccionada.emit(this.selectedRows[0]);
+
+    if (this.modificarPartidaElemento) {
+      const MODAL_INSTANCIA = new Modal(
+        this.modificarPartidaElemento?.nativeElement,
+        { backdrop: false }
+      );
+      MODAL_INSTANCIA.show();
+    }
   }
 
   /**
@@ -220,4 +304,30 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
   setValoresStore(form: FormGroup, campo: string): void {
     this.setValoresStoreEvent.emit({ form, campo });
   }
+  /**
+   * Maneja la confirmación del modal para eliminar partidas seleccionadas.
+   * Si la bandera `confirmandoEliminarPartida` está activa, elimina las partidas seleccionadas
+   * y restablece la bandera. Además, oculta la notificación.
+   */
+  onConfirmacionModal(accion: boolean): void {
+    if (this.confirmandoEliminarPartida && accion === true) {
+      this.eliminarPartidasSeleccionadas();
+      this.confirmandoEliminarPartida = false;
+    }
+    this.mostrarNotificacion = false;
+
+  }
+  /**
+ * Si existen filas seleccionadas, obtiene sus identificadores y filtra la lista de datos de la tabla
+ * para eliminar aquellas filas cuyos identificadores coincidan con los seleccionados. Finalmente,
+ * limpia la selección de filas.
+ */
+eliminarPartidasSeleccionadas(): void {
+    if (this.selectedRows && this.selectedRows.length > 0) {
+    const IDS_ELIMINAR = this.selectedRows.map(row => row.id);
+    this.tableBodyData = this.tableBodyData.filter(row => !IDS_ELIMINAR.includes(row.id));
+    this.selectedRows = [];
+    this.partidasEliminadas.emit(IDS_ELIMINAR); 
+  }
+}
 }
