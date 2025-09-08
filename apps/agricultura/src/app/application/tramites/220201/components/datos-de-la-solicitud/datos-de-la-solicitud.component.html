@@ -9,7 +9,8 @@
                 <a aria-label="Repeat">
                   <i class="bi bi-repeat" aria-hidden="true"></i></a>
               </h4>
-              <button type="button" class="collpase-button collapsed"></button>
+             <button type="button" class="collpase-button collapsed" *ngIf="!colapsable"></button>
+            <button type="button" class="collpase-button" *ngIf="colapsable"></button>
             </div>
             @if(colapsable && !esFormularioSoloLectura){
             <div class="panel-collapse collapse in" id="panel-01">
@@ -22,7 +23,7 @@
                   <div class="col-md-12">
                     <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli"
                       [configuracionTabla]="configuracionColumnasSolicitud" [datos]="cuerpoTablaSolicitud"
-                      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+                      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" (filaClic)="onFilaClic($event)"></app-tabla-dinamica>
                   </div>
                 </div>
               </div>
@@ -115,7 +116,7 @@
       </div>
     </div>
     <div class="row">
-      @if(notificationCheck && !esFormularioSoloLectura){
+      @if(forma.value.datosDelaSolicitud.tipoMercancia === 'yes'){
       <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
       }
       <div class="row mt-5">
@@ -123,7 +124,7 @@
           <label for="mercancia">Mercancías</label>
         </div>
         <div class="col-md-12">
-          <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli" [configuracionTabla]="configuracionColumnasoli"
+          <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoliMercancias" [configuracionTabla]="configuracionColumnasoli"
             [datos]="cuerpoTabla" (listaDeFilaSeleccionada)="seleccionTabla($event)"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
               <div *ngIf="mensajeErrorTabla && cuerpoTabla.length === 0 ">

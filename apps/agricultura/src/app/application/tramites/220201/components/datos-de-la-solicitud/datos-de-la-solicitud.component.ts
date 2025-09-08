@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { DatosForma, RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
+import { DatosDeLaSolicitud, FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
 import { Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { AnimalesVivoContenedoraComponent } from '../animales-vivo-contenedora/animales-vivo-contenedora.component';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
@@ -273,30 +273,35 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   cuerpoTablaSolicitud: SolicitudData[] = [
     {
+      id:1,
       fechaCreacion: '2025-06-17 10:30:00',
       mercancia: 'Laptop HP',
       cantidad: 5,
       proovedor: 'Tech Solutions Inc.'
     },
     {
+      id:2,
       fechaCreacion: '2025-06-16 14:15:30',
       mercancia: 'Monitor Dell 27"',
       cantidad: 10,
       proovedor: 'Global Electronics'
     },
     {
+      id:3,
       fechaCreacion: '2025-06-15 09:00:00',
       mercancia: 'Teclado Mecánico RGB',
       cantidad: 8,
       proovedor: 'Peripherals World'
     },
     {
+      id:4,
       fechaCreacion: '2025-06-14 17:45:10',
       mercancia: 'Mouse Inalámbrico Logitech',
       cantidad: 12,
       proovedor: 'Tech Accessories Co.'
     },
     {
+      id:5,
       fechaCreacion: '2025-06-13 11:20:05',
       mercancia: 'Impresora Epson EcoTank',
       cantidad: 3,
@@ -409,9 +414,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       establecimientoTIF: [''],
       nombreVeterinario: [''],
       numeroGuia: [''],
-      certficacion: [''],
+      certificacion: [''],
       regimen: ['', Validators.required],
+      datosDeMercancia:['']
     });
+     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
     this.certificadoZoosanitarioQuery.seleccionarDatosSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
       if (datosDeLaSolicitud) {
         this.datosDelaSolicitud.patchValue({
@@ -424,12 +431,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
           nombreVeterinario: datosDeLaSolicitud.nombreVeterinario || '',
           numeroGuia: datosDeLaSolicitud.numeroGuia || '',
           certificacion: datosDeLaSolicitud.certificacion || '',
-          regimen: datosDeLaSolicitud.regimen || ''
+          regimen: datosDeLaSolicitud.regimen || '',
+          datosDeMercancia: datosDeLaSolicitud.datosDeMercancia || ''
         })
         this.radioBotonSeleccionado();
       }
     });
-    this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
+   
   }
 
   /**
@@ -705,6 +713,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     this.forma.markAllAsTouched();
     return false
   }
+
+onFilaClic(event: SolicitudData): void {
+  if (event && event.id) {
+    this.certificadoZoosanitarioServices.obtenerSolicitudDataUrl("solicitud.json")
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        if (datos?.datosDeLaSolicitud) {
+          this.datosDelaSolicitud.patchValue(datos.datosDeLaSolicitud);
+        }
+        if (datos?.filaSolicitud) {
+          this.fitosanitarioStore.updateFilaSolicitud(datos.filaSolicitud);
+        }
+      });
+  }
+}
+
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    * Se utiliza para emitir una notificación y completar el observable `destroyNotifier$`, 
@@ -715,4 +739,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+
 }
