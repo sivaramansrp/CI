@@ -141,8 +141,7 @@ export const ALERTA_OPCIONS = `<p style="text-align: center;">Al dar doble-clic 
 export const ALERTA_DE_MANIFESTO_Y_DECLARACIONES = `Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su
       cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una
       autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio
-      Exterior por los mecanismos de la misma.
-`;
+      Exterior por los mecanismos de la misma.`;
 
 /**
  * Represents a constant array `PRODUCTO_TABLA` that defines the structure of a product table.
@@ -763,7 +762,7 @@ export const TIPO_PRODUCTO_ESPECIAL = '3';
  * @remarks
  * Esta constante se utiliza para filtrar procedimientos que no deben ser considerados en el contexto de manifiestos y declaraciones.
  */
-export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260210, 260218, 260208, 260209, 260301, 260219, 260216, 260302, 260304, 260205, 260203, 260214];
+export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260210, 260218, 260208, 260209, 260301, 260219, 260216, 260302, 260304, 260205, 260203];
 
 /**
  * @const ES_PUNTO_Y_COMA

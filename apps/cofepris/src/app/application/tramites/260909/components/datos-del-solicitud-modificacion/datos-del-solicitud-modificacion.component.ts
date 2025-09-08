@@ -25,6 +25,7 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
+  doDeepCopy,
 } from '@libs/shared/data-access-user/src';
 
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
@@ -360,14 +361,14 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
    */
   public paisDeOrigenLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen:',
-    derecha: 'País(es) seleccionados:',
+    derecha: 'País(es) seleccionados*:',
   };
   /**
    * Etiqueta para el crosslist de país de procedencia.
    */
   public paisDeProcedenciaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de procedencia:',
-    derecha: 'País(es) seleccionados:',
+    derecha: 'País(es) seleccionados*:',
   };
 
   /**
@@ -501,6 +502,11 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
    * Datos de la tabla de mercancías.
    */
   mercanciasTablaDatos: MercanciasInfo[] = [];
+
+  /** 
+   * Selección actual de elementos en la tabla de mercancías.
+   */
+  public seleccionaMercancias: MercanciasInfo[] = [];
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los formularios estarán deshabilitados y no se podrán editar.
@@ -526,6 +532,10 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
             takeUntil(this.destroy$),
             map((seccionState) => {
               this.esFormularioSoloLectura = seccionState.readonly;
+              if(seccionState.readonly || seccionState.update) {
+                this.getScianTablaDatosInfo();
+                this.getDatosMercanciasTablaDatosInfo();
+              }
             })
           )
           .subscribe()
@@ -785,6 +795,11 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
   personaparas: ScianModel[] = [];
 
   /**
+   * Selección actual de elementos en la tabla SCIAN.
+   */
+  public scianSelecciona: ScianModel[] = [];
+
+  /**
   * Abre el modal SCIAN.
   */
   abrirModalMercancia(): void {
@@ -827,8 +842,47 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
     }
   }
 
+  /** 
+   * Limpia el formulario de mercancías.
+   */
   public limpiarFormulario(): void {
     this.formMercancias.reset();
+  }
+
+  /**
+   * Obtiene los datos de la tabla SCIAN.
+   */
+  public getScianTablaDatosInfo(): void {
+    this.establecimientoService.getScianTablaDatos().pipe(takeUntil(this.destroy$))
+      .subscribe(response => {
+        this.personaparas = doDeepCopy(response);
+      });
+  }
+
+  /** 
+   * Obtiene los datos de la tabla de mercancías.
+   */
+  public getDatosMercanciasTablaDatosInfo(): void {
+    this.establecimientoService.getMercanciasTablaDatos().pipe(takeUntil(this.destroy$))
+      .subscribe(response => {
+        this.mercanciasTablaDatos = doDeepCopy(response);
+      });
+  }
+
+  /**
+   * Maneja la selección de elementos SCIAN.
+   * @param event Evento que contiene los elementos seleccionados.
+   */
+  public onScianSeleccionados(event: ScianModel[]): void {
+    this.scianSelecciona = event;
+  }
+
+  /**
+   * Maneja la selección de mercancías.
+   * @param event Evento que contiene las mercancías seleccionadas.
+   */
+  public onMercanciasSeleccionados(event: MercanciasInfo[]): void {
+    this.seleccionaMercancias = event;
   }
 
   /**

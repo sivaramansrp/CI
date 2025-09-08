@@ -4,23 +4,51 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { PagoDerechosFormState } from '../../../shared/models/pago-de-derechos.model';
 
+
+
 /**
- * Interfaz que representa el estado completo del trámite 240101.
- *
- * @property {number} [tabSeleccionado] - Pestaña actualmente activa en el flujo.
- * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
- * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores registrados.
- * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
- * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
- * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
+ * Estado de la gestión del trámite 240105.
  */
 export interface Tramite240105State {
+  /**
+   * Número del tab actualmente seleccionado en la interfaz de usuario.
+   */
   tabSeleccionado?: number;
+
+  /**
+   * Lista de destinatarios finales mostrados en la tabla.
+   */
   destinatarioFinalTablaDatos: DestinoFinal[];
+
+  /**
+   * Lista de proveedores mostrados en la tabla.
+   */
   proveedorTablaDatos: Proveedor[];
+
+  /**
+   * Información del formulario de pago de derechos.
+   */
   pagoDerechos: PagoDerechosFormState;
+
+  /**
+   * Lista de mercancías detalladas en la tabla.
+   */
   merccancialTablaDatos: MercanciaDetalle[];
+
+  /**
+   * Información general del trámite capturada en el formulario.
+   */
   datosDelTramite: DatosDelTramiteFormState;
+
+  /**
+   * Objeto de destinatario que se está modificando actualmente (si aplica).
+   */
+  modificarDestinarioDatos?: DestinoFinal | null;
+
+  /**
+   * Objeto de proveedor que se está modificando actualmente (si aplica).
+   */
+  modificarProveedorDatos?: Proveedor | null;
 }
 
 /**
@@ -53,7 +81,7 @@ export function createInitialState(): Tramite240105State {
 }
 
 /**
- * Store que maneja el estado del trámite 240101.
+ * Store que maneja el estado del trámite 240105.
  * Utiliza Akita para el control reactivo del estado.
  */
 @Injectable({
@@ -121,14 +149,32 @@ export class Tramite240105Store extends Store<Tramite240105State> {
   public updateDestinatarioFinalTablaDatos(
     newDestinatarios: DestinoFinal[]
   ): void {
-    this.update((state) => ({
-      ...state,
-      destinatarioFinalTablaDatos: [
-        ...state.destinatarioFinalTablaDatos,
-        ...newDestinatarios,
-      ],
-    }));
+    this.update((state) => {
+
+      const EXISTING_LIST = state.destinatarioFinalTablaDatos;
+
+      const UPDATED_LIST = [...EXISTING_LIST];
+
+      for (const NEW_DEST of newDestinatarios) {
+        const INDEX = EXISTING_LIST.findIndex(
+          (existing) => existing.id === NEW_DEST.id
+        );
+
+        if (INDEX !== -1) {
+          UPDATED_LIST[INDEX] = NEW_DEST;
+        } else {
+          UPDATED_LIST.push(NEW_DEST);
+        }
+      }
+
+      return {
+        ...state,
+        destinatarioFinalTablaDatos: UPDATED_LIST,
+        modificarDestinarioDatos: null
+      };
+    });
   }
+
 
   /**
    * Agrega nuevos registros a la tabla de proveedores.
@@ -138,10 +184,30 @@ export class Tramite240105Store extends Store<Tramite240105State> {
    * @returns {void}
    */
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
-    this.update((state) => ({
-      ...state,
-      proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
-    }));
+    this.update((state) => {
+
+      const EXISTING_LIST = state.proveedorTablaDatos;
+
+      const UPDATED_LIST = [...EXISTING_LIST];
+
+      for (const NEW_DEST of newProveedores) {
+        const INDEX = EXISTING_LIST.findIndex(
+          (existing) => existing.id === NEW_DEST.id
+        );
+
+        if (INDEX !== -1) {
+          UPDATED_LIST[INDEX] = NEW_DEST;
+        } else {
+          UPDATED_LIST.push(NEW_DEST);
+        }
+      }
+
+      return {
+        ...state,
+        proveedorTablaDatos: UPDATED_LIST,
+        modificarProveedorDatos: null
+      };
+    });
   }
 
   /**
@@ -182,4 +248,99 @@ export class Tramite240105Store extends Store<Tramite240105State> {
       };
     });
   }
+  /**
+ * Elimina un destinatario de la tabla de destinatarios.
+ *
+ * @param destinatarioFinal - El destinatario que se eliminará de la tabla de destinatarios.
+ * @returns void
+ */
+  eliminarDestinatarioFinal(destinatarioFinal: DestinoFinal): void {
+    this.update(state => {
+      const INDICE_A_ELIMINAR = state.destinatarioFinalTablaDatos.findIndex(ele =>
+        Object.keys(destinatarioFinal).some(key => destinatarioFinal[key as keyof DestinoFinal] === ele[key as keyof DestinoFinal])
+      );
+
+      if (INDICE_A_ELIMINAR !== -1) {
+        state.destinatarioFinalTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+      }
+
+      return {
+        ...state,
+        destinatarioFinalTablaDatos: [...state.destinatarioFinalTablaDatos],
+        modificarDestinarioDatos: null
+      };
+    });
+  }
+  /**
+ * Actualiza el estado con los datos del proveedor proporcionados y limpia los datos del destinatario.
+ * 
+ * Esta función se utiliza para establecer nuevos datos del proveedor (`modificarProveedorDatos`)
+ * en el estado del store, asegurando que los datos del destinatario se reinicien a `null`.
+ *
+ * @param {Proveedor} datos - Objeto con la información actualizada del proveedor.
+ * @returns {void}
+ */
+  public actualizarDatosProveedor(datos: Proveedor): void {
+    this.update((state) => ({
+      ...state,
+      modificarProveedorDatos: datos,
+      modificarDestinarioDatos: null
+    }));
+  }
+
+  /**
+* Elimina un Proveedor de la tabla de Proveedor.
+*
+* @param proveedorFinal - El Proveedor que se eliminará de la tabla de Proveedor.
+* @returns void
+*/
+  eliminareliminarProveedorFinal(proveedorFinal: Proveedor): void {
+    this.update(state => {
+      const INDICE_A_ELIMINAR = state.proveedorTablaDatos.findIndex(ele =>
+        Object.keys(proveedorFinal).some(key => proveedorFinal[key as keyof Proveedor] === ele[key as keyof Proveedor])
+      );
+
+      if (INDICE_A_ELIMINAR !== -1) {
+        state.proveedorTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+      }
+
+      return {
+        ...state,
+        proveedorTablaDatos: [...state.proveedorTablaDatos],
+        modificarProveedorDatos: null
+      };
+    });
+  }
+  /**
+ * Actualiza el estado con los datos del destinatario proporcionados y limpia los datos del proveedor.
+ * 
+ * Esta función se utiliza para establecer nuevos datos del destinatario (`modificarDestinarioDatos`)
+ * en el estado del store, asegurando que los datos del proveedor se reinicien a `null`.
+ *
+ * @param {DestinoFinal} datos - Objeto con la información actualizada del destinatario.
+ * @returns {void}
+ */
+  public actualizarDatosDestinatario(datos: DestinoFinal): void {
+    this.update((state) => ({
+      ...state,
+      modificarDestinarioDatos: datos,
+      modificarProveedorDatos: null
+    }));
+  }
+
+  /**
+   * Limpia los datos de terceros del store de trámite.
+   */
+  public clearTercerosDatos(): void {
+    this.update((state) => {
+      return {
+        ...state,
+        modificarDestinarioDatos: null,
+        modificarProveedorDatos: null,
+      };
+    });
+
+  }
+
 }
+
