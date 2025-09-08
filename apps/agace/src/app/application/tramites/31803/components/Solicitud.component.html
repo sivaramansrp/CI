@@ -89,6 +89,7 @@
           [catalogo]="bancoCatalogo.catalogos"
           [label]="'Banco'"
           formControlName="banco"
+          [markTouched]="registroForm.get('banco')?.touched ?? false"
           (change)="setValoresStore(registroForm, 'banco', 'setBanco')"
         ></app-catalogo-select>
       </div>

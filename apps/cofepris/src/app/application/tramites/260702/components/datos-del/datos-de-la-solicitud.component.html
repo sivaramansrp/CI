@@ -123,31 +123,39 @@
           <button class="btn btn-danger"
             type="button" (click)="onDelete()" [disabled]="esFormularioSoloLectura">Eliminar</button>
             <button class="btn btn-primary me-2"
-            type="submit" (click)="onAgregar()" [disabled]="esFormularioSoloLectura">Agregar</button>
+            type="button" (click)="onAgregar()" [disabled]="esFormularioSoloLectura" data-bs-target="#claveScianModal"
+>Agregar</button>
         </div>
     </div>
     <div *ngIf="showClavaScianForm">
-      <ng-titulo titulo="Clave S.C.I.A.N" />
-  <form [formGroup]="clavaScianForm" (ngSubmit)="onSubmit()">
-      <ng-container formGroupName="claveScianG"> 
-          <div class="row">
-              <div class="col-md-4 mb-3">
+  <div class="modal fade" id="claveScianModal" tabindex="-1" aria-labelledby="claveScianModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="claveScianModalLabel">Clave S.C.I.A.N</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="clavaScianForm" (ngSubmit)="onSubmit()">
+            <ng-container formGroupName="claveScianG">
+              <div class="row">
+                <div class="col-md-4 mb-3">
                   <div class="form-group">
-                      <app-catalogo-select
+                    <app-catalogo-select
                       id="claveScianData"
                       formControlName="claveScian"
                       [catalogo]="claveScianData.catalogos"
                       [label]="'Clave S.C.I.A.N'"
                       [required]="true"
-                      [isDisabled]="esFormularioSoloLectura"                     
+                      [isDisabled]="esFormularioSoloLectura"
                     ></app-catalogo-select>
                   </div>
-               </div>
-          </div>
-          <div class="row">
-              <div class="col-md-4 mb-3">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 mb-3">
                   <div class="form-group">
-                      <app-catalogo-select
+                    <app-catalogo-select
                       id="descripcionDelScianData"
                       formControlName="descripcionDelScian"
                       [catalogo]="descripcionDelScianData.catalogos"
@@ -156,22 +164,22 @@
                       [isDisabled]="esFormularioSoloLectura"
                     ></app-catalogo-select>
                   </div>
-               </div>
-          </div>
-      </ng-container>
-      <div class="col-md-12 d-flex justify-content-end">
-          <div class="btn-group">
-            <button class="btn btn-danger"
-              type="button" (click)="onCancelar()">Cancelar</button>
-              <button class="btn btn-primary me-2"
-              type="button" (click)="onLimpiar()">Limpiar</button>
-              <button class="btn btn-primary me-2"
-              type="submit">Agregar</button>
-          </div>
-        
+                </div>
+              </div>
+            </ng-container>
+            <div class="col-md-12 d-flex justify-content-end">
+              <div class="btn-group">
+                <button class="btn btn-danger" type="button" data-bs-dismiss="modal" (click)="onCancelar()">Cancelar</button>
+                <button class="btn btn-primary me-2" type="button" (click)="onLimpiar()">Limpiar</button>
+                <button class="btn btn-primary me-2" type="submit" >Agregar</button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-      </form>
+    </div>
   </div>
+</div>
     <ng-container formGroupName="datosDelTramiteRealizar"> 
       <div class="row mt-5">
         <div class="col-md-4 mt-4">
@@ -180,7 +188,7 @@
           [label]="'Aviso de funcionamiento'"
           [required]="true"
           formControlName="avisoDeFuncionamiento"
-          [disabled]="esFormularioSoloLectura"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValoresStore(datosDelTramiteRealizar,'avisoDeFuncionamiento', 'setAvisoDeFuncionamiento')"
           ></lib-input-check>
         </div>

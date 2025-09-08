@@ -1,10 +1,10 @@
 import { ALCALDIA_CONFIG, COLONIA_CONFIG, DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE, ENTIDAD_FEDERATIVA_CONFIG, FRACCION_ARANCELARIA_CONFIG, UNIDAD_MEDIDA_CONFIG } from '../../constants/aviso.enum';
-import { BotonAccionesTipos, ConsultaioQuery, FormaValidators, InputTypes, Props } from '@ng-mf/data-access-user';
+import { ActionType, NUEVA_MERCANCIA } from '../../enum/aviso.enum';
+import { BotonAccionesTipos, ConsultaioQuery, ConsultaioState, FormaValidators, InputTypes, Props } from '@ng-mf/data-access-user';
 import { ColumnasTabla, ColumnsTableMercancia } from '../../models/aviso.model';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { ActionType } from '../../enum/aviso.enum';
 import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src";
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -293,7 +293,9 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
    * @type {any}
    */
   event = {};
-
+/** Almacena el estado actual de la consulta relacionada con el trámite.  
+ *  Contiene información necesaria para mostrar o procesar datos en el componente. */
+   public consultaState!:ConsultaioState;
   /**
    * Enumeración de los tipos de input disponibles.
    * @type {typeof InputTypes}
@@ -328,9 +330,21 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
           map((seccionState) => {
             this.esFormularioSoloLectura = seccionState.readonly;
             this.inicializarEstadoFormulario();
+             this.consultaState = seccionState;
+            if (this.consultaState.update) {
+          this.store.update((state) => ({
+          ...state,
+          mercancias: [...(state.mercancias ?? []), NUEVA_MERCANCIA],
+         }));
+        }
           })
         )
         .subscribe();
+        this.query.select('mercancias')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.tableData.data = data ?? [];
+      });
   }
 
   /**

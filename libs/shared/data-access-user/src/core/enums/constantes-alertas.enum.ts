@@ -129,6 +129,10 @@ export const TXT_ALERTA_ACUSE = (folio: string): string => {
   return `Tu solicitud ha sido registrada con el siguiente número de folio:  < ${folio} >`;
 };
 
+export const TXT_ALERTA_ACUSE_RECIBO = (folio: string): string => {
+  return `El requerimiento se registró exitosamente con el folio de requerimiento  < ${folio} >`;
+};
+
 export const TITULO_ACUSE = 'Acuse(s)';
 export const ENCABEZADO_TABLA_ACUSE = [
   {
@@ -255,7 +259,7 @@ Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo do
 export const LASTABLA = {
   Importante: `
     <div class="text-center">
-      <p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>
+      <p class="m-0">Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>
     </div>
   `
 };

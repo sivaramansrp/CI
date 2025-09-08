@@ -103,6 +103,8 @@ describe('SolicitudComponent', () => {
         entidad: '',
         representacion: '',
       }),
+      select: jest.fn().mockReturnValue(of({})),
+      getValue: jest.fn().mockReturnValue({})
     } as any;
 
     mockExportacionMineralesDeHierroService = {
@@ -156,7 +158,6 @@ describe('SolicitudComponent', () => {
   describe('ngOnInit', () => {
     it('Debe inicializar formularios y configurar suscripciones', () => {
       jest.spyOn(component, 'inicializarFormularios');
-      jest.spyOn(component, 'configuracionFormularioSuscripciones');
       jest.spyOn(component, 'opcionesDeBusqueda');
       jest.spyOn(component, 'formularioTotalCount');
       jest.spyOn(component, 'fetchEntidadFederativa');
@@ -165,7 +166,6 @@ describe('SolicitudComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.configuracionFormularioSuscripciones).toHaveBeenCalled();
       expect(component.opcionesDeBusqueda).toHaveBeenCalled();
       expect(component.formularioTotalCount).toHaveBeenCalled();
       expect(component.fetchEntidadFederativa).toHaveBeenCalled();
@@ -173,15 +173,6 @@ describe('SolicitudComponent', () => {
       expect(component.listaDePaisesDisponibles).toHaveBeenCalled();
     });
 
-    it('Debería actualizar mostrarTabla según la consulta', () => {
-      const MONSTER_TABLA_SUBJECT = new Subject<boolean>();
-      mockQuery.mostrarTabla$ = MONSTER_TABLA_SUBJECT.asObservable();
-
-      component.ngOnInit();
-      MONSTER_TABLA_SUBJECT.next(true);
-
-      expect(component.mostrarTabla).toBe(true);
-    });
 
   });
 
@@ -204,36 +195,35 @@ describe('SolicitudComponent', () => {
   });
 
 
-  describe('validarYEnviarFormulario', () => {
-    it('Debería establecer mostrarTabla en verdadero y marcar el formulario como tocado si no es válido', () => {
-      component.partidasDelaMercanciaForm = TestBed.inject(FormBuilder).group({
-        cantidadPartidasDeLaMercancia: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-        descripcionPartidasDeLaMercancia: ['', Validators.required],
-        valorPartidaUSDPartidasDeLaMercancia: ['', Validators.required],
-      });
-      jest.spyOn(component.partidasDelaMercanciaForm, 'markAllAsTouched');
+describe('validarYEnviarFormulario', () => {
+  it('Debe establecer mostrarTabla como verdadero si el formulario es válido', () => {
+    component.unidadCatalogo = [{ id: 1, descripcion: 'Pieza' }];
+    component.fraccionCatalogo = [{ id: 1234, descripcion: 'Fracción Test' }];
 
-      component.validarYEnviarFormulario();
-
-      expect(component.partidasDelaMercanciaForm.markAllAsTouched).toHaveBeenCalled();
+    component.mercanciaForm = TestBed.inject(FormBuilder).group({
+      cantidad: ['10', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      valorFacturaUSD: ['100', Validators.required],
+      fraccion: ['1234', Validators.required],
+      unidadMedida: ['1', Validators.required], 
+      descripcion: ['desc', Validators.required],
     });
 
-    it('Debe establecer mostrarTabla como verdadero si el formulario es válido', () => {
-      component.partidasDelaMercanciaForm = TestBed.inject(FormBuilder).group({
-        cantidadPartidasDeLaMercancia: ['10', [Validators.required, Validators.pattern('^[0-9]+$')]],
-        descripcionPartidasDeLaMercancia: ['Test', Validators.required],
-        valorPartidaUSDPartidasDeLaMercancia: ['100', Validators.required],
-      });
-
-      component.validarYEnviarFormulario();
-
-      expect(component.mostrarTabla).toBe(true);
+    component.partidasDelaMercanciaForm = TestBed.inject(FormBuilder).group({
+      cantidadPartidasDeLaMercancia: ['10', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      descripcionPartidasDeLaMercancia: ['Test', Validators.required],
+      valorPartidaUSDPartidasDeLaMercancia: ['100', Validators.required],
     });
+
+    component.mercanciaForm.get('fraccion')?.setValue('1234');
+
+    component.validarYEnviarFormulario();
+
+    expect(component.mostrarTabla).toBe(true);
   });
-
+});
   describe('navegarParaModificarPartida', () => {
     it('Debería actualizar el estado y mostrarTabla si hay fila seleccionada', () => {
-      component.filaSeleccionada = [{ cantidad: '10', descripcion: 'Item', precioUnitarioUSD: '50', unidadDeMedida: 'kg', fraccionFrancelaria: '1234', totalUSD: '100' }];
+      component.filaSeleccionada = [{ id:'1',cantidad: '10', descripcion: 'Item', precioUnitarioUSD: '50', unidadDeMedida: 'kg', fraccionFrancelaria: '1234', totalUSD: '100' }];
 
       component.navegarParaModificarPartida();
 

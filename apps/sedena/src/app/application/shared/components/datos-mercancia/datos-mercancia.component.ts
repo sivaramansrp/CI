@@ -43,6 +43,12 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
   datosMercancias: MercanciaDetalle[] = [];
 
   /**
+   * Indica si se debe mostrar el tooltip.
+   * @input
+   */
+  @Input() mostrarTooltipUMT = false;
+
+  /**
    * Evento que emite la lista de mercancías cuando se actualiza.
    * @event updateMercanciaDetalle
    */

@@ -210,12 +210,8 @@
                                     [placeholder]="aduana.primerOpcion" [required]="true"
                                     formControlName="aduanaMenuDesplegable"
                                     (change)="setValoresStore(solicitudForm,'aduanaMenuDesplegable', 'setAduanaMenuDesplegable')"
-                                    [isDisabled]="soloLectura"></app-catalogo-select>
-                                <div *ngIf="esInvalido('aduanaMenuDesplegable')" class="text-danger">
-                                    <small *ngIf="solicitudForm.controls['aduanaMenuDesplegable'].errors?.['required']">
-                                        Este campo es obligatorio.
-                                    </small>
-                                </div>
+                                    [isDisabled]="soloLectura"
+                                    [markTouched]="solicitudForm.controls['aduanaMenuDesplegable'].touched"></app-catalogo-select>
                             </div>
                         </div>
                     </div>
@@ -224,7 +220,7 @@
                             <div class="form-group datepicker-group" [ngClass]="{'has-error': esInvalido('fechaDeIngreso')}">
                                 <div class="input-fecha-wrapper" [ngClass]="{'is-invalid': esInvalido('fechaDeIngreso')}"
                                     (click)="onDateFieldInteraction('fechaDeIngreso')">
-                                    <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaDeIngreso($event)"
+                                    <input-fecha [datos]="fechaInicioInput" labelNombre="Fecha de ingreso" (valorCambiado)="cambioFechaDeIngreso($event)"
                                     [isDisabled]="soloLectura" required="fechaInicioInput.required"
                                     [setFecha]="solicitudForm.get('fechaDeIngreso')?.value"
                                         [ngClass]="{'is-invalid': esInvalido('fechaDeIngreso')}"></input-fecha>

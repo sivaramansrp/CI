@@ -92,6 +92,11 @@ table {
   background-color: #a5a8ab;
   border-color: #a5a8ab;
 }
+
+.font-weight{
+font-weight: bold;
+background-color: lightgrey;
+}
 .visually-hidden-file {
   opacity: 0;
   position: absolute;
@@ -132,12 +137,16 @@ table {
 
  .disabled-input-fecha {
     background-color: rgb(227, 226, 226) !important;
-    pointer-events: none;
+    pointer-events: all;
     opacity: 1;
   }
   
   ::ng-deep .disabled-input-fecha{
     background-color: rgb(227, 226, 226) !important;
-    pointer-events: none;
+    pointer-events: all;
     opacity: 1;
+  }
+
+  .is-invalid {
+  border-color: #dc3545 !important;
   }

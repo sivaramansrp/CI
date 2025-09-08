@@ -7,9 +7,11 @@ import {
   DatosComplimento,
   RutaNombre,
 } from '../../models/nuevo-programa-industrial.model';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, delay, takeUntil } from 'rxjs';
 import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
 import { CommonModule } from '@angular/common';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -19,7 +21,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
-import { delay, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-anexo-uno',
@@ -35,7 +36,7 @@ import { delay, Subject, takeUntil } from 'rxjs';
   templateUrl: './anexo-uno.component.html',
   styleUrl: './anexo-uno.component.scss',
 })
-export class AnexoUnoComponent implements OnInit {
+export class AnexoUnoComponent implements OnInit, OnDestroy {
   public anexoUnoAlerta = ANEXO_UNO_ALERTA;
   public anexoUnoFormGroup!: FormGroup;
   public anexoDosFormGroup!: FormGroup;
@@ -93,7 +94,11 @@ export class AnexoUnoComponent implements OnInit {
   @Output() rutaLaFraccionDeComplemento: EventEmitter<RutaNombre> =
     new EventEmitter<RutaNombre>();
 
-
+  /**
+   * Evento que emite un booleano cuando hay un cambio en los datos de la tabla.
+   * Útil para notificar al componente padre sobre modificaciones en la tabla.
+   */
+  @Output() tieneCambioDeDatosDeTabla = new EventEmitter<boolean>();
 
   /**
    * Emits events containing `DatosComplimento` data to notify parent components of changes or updates.
@@ -173,10 +178,16 @@ export class AnexoUnoComponent implements OnInit {
   public nuevaUnoNotificacion!: Notificacion;
 
   /**
+   * Indica si la tabla actualmente tiene datos.
+   * Se utiliza para controlar la visualización o lógica relacionada con el contenido de la tabla.
+   */
+  public tenerDatosDeTabla: boolean = false;
+
+  /**
    * Constructor de la clase AnexoUnoComponent
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private complimentosService: ComplimentosService) {
     this.crearFormularioAnexoUno();
     this.crearFormularioAnexoDos();
   }
@@ -297,6 +308,8 @@ export class AnexoUnoComponent implements OnInit {
     this.anexoUnoTablaLista = this.anexoUnoTablaLista.filter((idx) => {
       return idx !== this.datosImportacionSeleccionados;
     });
+    this.tenerDatosDeTabla = this.anexoUnoTablaLista.length > 0;
+    this.tieneCambioDeDatosDeTabla.emit(this.tenerDatosDeTabla);
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
   }
 
@@ -339,6 +352,8 @@ export class AnexoUnoComponent implements OnInit {
     this.anexoUnoFormGroup.reset();
     // Reinicia el formulario después de agregar el objeto
     this.anexoUnoTablaLista = [...this.anexoUnoTablaLista, OBJECTO_IDX];
+    this.tenerDatosDeTabla = this.anexoUnoTablaLista.length > 0;
+    this.tieneCambioDeDatosDeTabla.emit(this.tenerDatosDeTabla);
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
   }
 
@@ -384,6 +399,8 @@ export class AnexoUnoComponent implements OnInit {
    */
   setAnexoUnoLista(event: AnexoUnoEncabezado): void {
     this.datosImportacionSeleccionados = event;
+    this.complimentosService.setAnexoUnoFilaSeleccionada(event);
+    this.complimentosService.setAnexoDosFilaSeleccionada(null);
     //this.obtenerAnexoUnoDevolverLaLlamada.emit(LISTA_SELECCIONADA);
   }
 
@@ -396,6 +413,8 @@ export class AnexoUnoComponent implements OnInit {
    */
   setAnexoDosLista(event: AnexoDosEncabezado): void {
     this.datosExportacionSeleccionados = event;
+    this.complimentosService.setAnexoDosFilaSeleccionada(event);
+    this.complimentosService.setAnexoUnoFilaSeleccionada(null);
   }
 
   /**
@@ -406,6 +425,24 @@ export class AnexoUnoComponent implements OnInit {
    */
   setRuta(nombre: string, id: string): void {
     if (nombre) {
+      if (id === 'IMPORT') {
+      if (
+        this.datosImportacionSeleccionados &&
+        'encabezadoFraccionArancelaria' in this.datosImportacionSeleccionados
+      ) {
+        this.complimentosService.setAnexoUnoFilaSeleccionada(this.datosImportacionSeleccionados as AnexoUnoEncabezado);
+      } else {
+        this.complimentosService.setAnexoUnoFilaSeleccionada(null);
+      }
+      this.complimentosService.setAnexoDosFilaSeleccionada(null);
+    } else if (id === 'EXPORT') {
+      if (this.datosExportacionSeleccionados && 'encabezadoFraccionExportacion' in this.datosExportacionSeleccionados) {
+        this.complimentosService.setAnexoDosFilaSeleccionada(this.datosExportacionSeleccionados as AnexoDosEncabezado);
+      } else {
+        this.complimentosService.setAnexoDosFilaSeleccionada(null);
+      }
+      this.complimentosService.setAnexoUnoFilaSeleccionada(null);
+    }
       const RUTA_NOMBRE: RutaNombre = {
         catagoria: nombre,
         id: id,
@@ -417,4 +454,13 @@ export class AnexoUnoComponent implements OnInit {
       this.rutaLaFraccionDeComplemento.emit(RUTA_NOMBRE);
     }
   }
+
+/**
+ * Método del ciclo de vida que se ejecuta al destruir el componente.
+ * Libera recursos notificando a los observables que deben finalizar suscripciones.
+ */
+ngOnDestroy(): void {
+  this.destroyNotifier$.next();
+  this.destroyNotifier$.complete();
+}
 }

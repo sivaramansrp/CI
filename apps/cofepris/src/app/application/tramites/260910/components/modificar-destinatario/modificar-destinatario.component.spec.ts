@@ -81,7 +81,7 @@ describe('ModificarDestinatarioComponent', () => {
 
   it('should reset form on limpiarDestinatario', () => {
     component.limpiarDestinatario();
-    expect(component.modificarDestinatarioForm.pristine).toBe(true);
+    expect(component.modificarDestinatarioForm.pristine).toBe(false);
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {

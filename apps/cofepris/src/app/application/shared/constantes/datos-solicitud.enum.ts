@@ -577,7 +577,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL = [
  * @description Lista de identificadores de procedimientos que deben ser deshabilitados en la inicialización.
  * @type {number[]}
  */
-export const DESHABILITADA_EN_INIT = [260302, 260214];
+export const DESHABILITADA_EN_INIT = [260302, 260214,260202];
 
 /**
  * @const SIN_ACCION_AL_INICIAR
@@ -734,7 +734,7 @@ export const MENSAJE_EMERGENTE_DE_CONFIRMACION =
  *  Identificadores de notificación.
  */
 export const MOSTRAR_NOTIFICACION = [
-  260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214, 260301, 260209,260205,260204
+  260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214, 260301, 260209,260205,260204,260202
 ];
 
 /**

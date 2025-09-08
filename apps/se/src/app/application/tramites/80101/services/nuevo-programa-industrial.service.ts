@@ -11,6 +11,7 @@ import {
   Tramite80101State,
   Tramite80101Store,
 } from '../estados/tramite80101.store';
+import { BehaviorSubject } from 'rxjs';
 import { CatalogoDatosIdx } from '../../../shared/models/federatarios-y-plantas.model';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { HttpClient } from '@angular/common/http';
@@ -30,6 +31,19 @@ import { Tramite80101Query } from '../estados/tramite80101.query';
   providedIn: 'root',
 })
 export class NuevoProgramaIndustrialService {
+
+  /**
+   * Subject que mantiene el estado actual sobre si la tabla tiene datos.
+   * Permite la suscripción reactiva a los cambios en la presencia de datos en la tabla.
+   */
+  private _tieneDatosDeTabla$ = new BehaviorSubject<boolean>(false);
+
+  /**
+   * Observable que expone el estado de si la tabla tiene datos.
+   * Se utiliza para que otros componentes puedan reaccionar a los cambios sin modificar el estado directamente.
+   */
+  public tieneDatosDeTabla$ = this._tieneDatosDeTabla$.asObservable();
+
   /**
    * Constructor de la clase NuevoProgramaIndustrialService.
    *
@@ -42,6 +56,14 @@ export class NuevoProgramaIndustrialService {
     private Tramite80101Query:Tramite80101Query
   ) {
     // No se necesita lógica de inicialización adicional.
+  }
+
+  /**
+   * Actualiza el estado interno indicando si la tabla tiene datos.
+   * Emite el nuevo valor a todos los suscriptores del observable correspondiente.
+  */
+  setTieneDatosDeTabla(value: boolean): void {
+    this._tieneDatosDeTabla$.next(value);
   }
 
   /**
