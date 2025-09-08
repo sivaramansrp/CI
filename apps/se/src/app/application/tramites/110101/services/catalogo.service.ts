@@ -1,4 +1,4 @@
-import { API_GET_CAT_PAIS_BLOQUES } from "../server/api-router";
+import { API_GET_CAT_PAIS_BLOQUES, API_GET_CAT_TRATADOS_ACUERDO, API_GET_CAT_TRATADOS_ACUERDO_BLOQUE } from "../server/api-router";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
 import { Catalogo } from "@libs/shared/data-access-user/src";
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
@@ -35,6 +35,26 @@ export class CatalogosTramiteService {
   */
   getCatPaisBloques(): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_GET_CAT_PAIS_BLOQUES}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+    * Consulta el catálogo de tratados acuerdos
+    * @param cvePais - Identificador dela clave del pais.
+    * @returns Observable con la respuesta del servidor que contiene el catálogo
+  */
+  getCatTratadosAcuerdos(cvePais: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CAT_TRATADOS_ACUERDO(cvePais)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+    * Consulta el catálogo de tratados acuerdos bloque
+    * @param cveTratadoAcuerdo - Identificador del cveTratadoAcuerdo del bloque.
+    * @returns Observable con la respuesta del servidor que contiene el catálogo
+  */
+  getCatTratadosAcuerdosBloque(cveTratadoAcuerdo: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CAT_TRATADOS_ACUERDO_BLOQUE(cveTratadoAcuerdo)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 }
