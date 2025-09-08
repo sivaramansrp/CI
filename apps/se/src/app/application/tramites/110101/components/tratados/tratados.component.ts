@@ -236,6 +236,65 @@ export class TratadosComponent implements OnInit, OnDestroy {
             id: index + 1,
             descripcion: item.descripcion,
             clave: item.clave,
+            title: item.bloque,
+          }));
+        }
+      });
+  }
+
+  /**
+   * @method getCatalogoTratadoACuerdo
+   * @description Obtiene el catálogo de tratados y acuerdos por país
+   * 
+   * Realiza una petición al servicio para recuperar los tratados y acuerdos
+   * específicos de un país. Si la respuesta es exitosa (código '00'), 
+   * transforma los datos al formato requerido y los asigna a tratadoCatalogo.
+   * 
+   * @param {string} cvePais - Clave del país para filtrar los tratados
+   * @returns {void}
+ */
+  public getCatalogoTratadoACuerdo(cvePais: string): void {
+    this.catalogosTramiteService.getCatTratadosAcuerdos(cvePais)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response) => {
+        if (response.codigo === CodigoRespuesta.EXITO) {
+          // El backend manda "datos"
+          const DATOS = response.datos || [];
+
+          // Transformación a tu respuesta a response Catalogo
+          this.tratadoCatalogo = DATOS.map((item, index) => ({
+            id: index + 1,
+            descripcion: item.descripcion,
+            clave: item.clave,
+          }));
+        }
+      });
+  }
+
+  /**
+   * @method getCatalogoTratadoACuerdoBloque
+   * @description Obtiene el catálogo de tratados y acuerdos por bloque comercial
+   * 
+   * Realiza una petición al servicio para recuperar los tratados y acuerdos
+   * específicos de un bloque comercial. Si la respuesta es exitosa (código '00'), 
+   * transforma los datos al formato requerido y los asigna a tratadoCatalogo.
+   * 
+   * @param {string} cvePais - Clave del país para determinar el bloque comercial
+   * @returns {void}
+   */
+  public getCatalogoTratadoACuerdoBloque(cvePais: string): void {
+    this.catalogosTramiteService.getCatTratadosAcuerdosBloque(cvePais)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response) => {
+        if (response.codigo === CodigoRespuesta.EXITO) {
+          // El backend manda "datos"
+          const DATOS = response.datos || [];
+
+          // Transformación a tu respuesta a response Catalogo
+          this.tratadoCatalogo = DATOS.map((item, index) => ({
+            id: index + 1,
+            descripcion: item.descripcion,
+            clave: item.clave,
           }));
         }
       });
