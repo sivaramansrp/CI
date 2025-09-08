@@ -114,7 +114,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    */
   getDatosSolicitanteEvaluar(idSolicitud: string): void {
     this.solicitanteServicio
-      .getSolicitanteEvaluar(idSolicitud)
+      .getSolicitanteEvaluar(this.guardarDatos?.procedureId,idSolicitud)
       .pipe(
         tap((response) => {
           if (response?.datos) {

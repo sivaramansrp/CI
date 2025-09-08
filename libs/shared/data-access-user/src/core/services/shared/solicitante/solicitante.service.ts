@@ -56,8 +56,8 @@ export class SolicitanteService {
    * @returns Observable que emite un objeto `BaseResponse<SolicitanteEvaluarResponse>`
    *          con los datos del solicitante, del trámite, domicilio y personas de notificación.
    */
-  getSolicitanteEvaluar(idSolicitud: string): Observable<BaseResponse<SolicitanteEvaluarResponse>> {
-    const ENDPOINT = `${this.host}${API_GET_DATOS_SOLICITANTE(idSolicitud)}`;
+  getSolicitanteEvaluar(tramite: string,idSolicitud: string): Observable<BaseResponse<SolicitanteEvaluarResponse>> {
+    const ENDPOINT = `${this.host}${API_GET_DATOS_SOLICITANTE(tramite,idSolicitud)}`;
     return this.http.get<BaseResponse<SolicitanteEvaluarResponse>>(ENDPOINT);
   }
 }
