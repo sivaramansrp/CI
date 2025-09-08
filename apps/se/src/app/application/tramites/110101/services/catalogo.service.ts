@@ -1,4 +1,4 @@
-import { API_GET_CAT_PAIS_BLOQUES, API_GET_CAT_TRATADOS_ACUERDO, API_GET_CAT_TRATADOS_ACUERDO_BLOQUE } from "../server/api-router";
+import { API_GET_CAT_CRITERIOS, API_GET_CAT_PAIS_BLOQUES, API_GET_CAT_TRATADOS_ACUERDO, API_GET_CAT_TRATADOS_ACUERDO_BLOQUE } from "../server/api-router";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
 import { Catalogo } from "@libs/shared/data-access-user/src";
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
@@ -55,6 +55,17 @@ export class CatalogosTramiteService {
   */
   getCatTratadosAcuerdosBloque(cveTratadoAcuerdo: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_GET_CAT_TRATADOS_ACUERDO_BLOQUE(cveTratadoAcuerdo)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+    * Consulta el catálogo de criterios de origen
+    * @param idTratadoAcuerdo - Identificador del idTratadoAcuerdo del bloque.
+    * @returns Observable con la respuesta del servidor que contiene el catálogo
+   */
+
+  getCatCriterios(idTratadoAcuerdo: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CAT_CRITERIOS(idTratadoAcuerdo)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 }
