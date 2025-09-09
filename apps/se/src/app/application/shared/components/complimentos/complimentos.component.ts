@@ -328,6 +328,11 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    */
   paisDatos: CatalogoPaises[] = [];
 
+/**
+ * Notificación relacionada con accionistas extranjeros.
+ * Se utiliza para mostrar mensajes o alertas específicas en la interfaz.
+ */
+  public accionistasExtranjerosNotificacion!: Notificacion;
 
   /**
    * Constructor para inicializar el formulario de datos del subcontratista.
@@ -382,7 +387,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
-        opinionPositiva: [{ value: 'SI', disabled: true }],
+        opinionPositiva: [{ value: 1, disabled: false }],
         fechaExpedicion: ['', Validators.required],
         aceptarObligacionFiscal: [''],
       }),
@@ -468,6 +473,18 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     this.transformarValoresRadio(DATOS_TRANSFORMADOS);
 
+    if (
+      !DATOS_TRANSFORMADOS.obligacionesFiscales ||
+      DATOS_TRANSFORMADOS.obligacionesFiscales.opinionPositiva === undefined ||
+      DATOS_TRANSFORMADOS.obligacionesFiscales.opinionPositiva === null ||
+      DATOS_TRANSFORMADOS.obligacionesFiscales.opinionPositiva === '' ||
+      isNaN(Number(DATOS_TRANSFORMADOS.obligacionesFiscales.opinionPositiva))
+  ) {
+    if (!DATOS_TRANSFORMADOS.obligacionesFiscales) {
+      DATOS_TRANSFORMADOS.obligacionesFiscales = {};
+    }
+    DATOS_TRANSFORMADOS.obligacionesFiscales.opinionPositiva = 1;
+  }
 
     const PROGRAMA_PREOPERATIVO_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.programaPreOperativo);
 
@@ -827,7 +844,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         this.estados = datos;
         this.camposFormularioTipoPersona[INDICEALT].opcionesCatalogo = datos;
         if(this.camposFormularioDefault && this.camposFormularioDefault[INDICE].opcionesCatalogo)
-          this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
+          {this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;}
       });
   }
 
@@ -852,11 +869,19 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       if (VALUE) {
 
         this.accionistasAgregados.emit(VALUE);
-
-
       }
     } else {
-      FORMADATOS_GROUP?.markAllAsTouched();
+    this.accionistasExtranjerosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Los campos marcados con (*) son requeridos.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      };
     }
   }
 
