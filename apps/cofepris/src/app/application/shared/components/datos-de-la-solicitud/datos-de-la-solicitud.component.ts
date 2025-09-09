@@ -478,6 +478,12 @@ export class DatosDeLaSolicitudComponent
   esSinAccionAlIniciar: boolean = false;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * @property {boolean} esFormularioSoloLectura
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
    *
