@@ -1,4 +1,4 @@
-import { API_GET_CAT_REGIMENES, API_GET_CAT_REGIMENES_CLASIFICACION } from '../server/api-router';
+import { API_GET_CAT_ENTIDADES, API_GET_CAT_PAISES, API_GET_CAT_REGIMENES, API_GET_CAT_REGIMENES_CLASIFICACION, API_GET_CAT_TIPOS_ADUANAS, API_GET_CAT_TIPOS_MONEDAS } from '../server/api-router';
 import { Catalogo, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { HttpClient } from '@angular/common/http';
@@ -46,6 +46,42 @@ export class CatalogosTramiteService {
   getCatCveRegimen(cveRegimen: string):
     Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${API_GET_CAT_REGIMENES_CLASIFICACION(cveRegimen)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de entidades federativas desde el backend.
+   * @returns Observable con la respuesta que contiene la lista de entidades federativas.
+   */
+  getCatEntidades(): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CAT_ENTIDADES}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de tipos de aduanas desde el backend.
+   * @returns Observable con la respuesta que contiene la lista de tipos de aduanas.
+   */
+  getCatTiposAduanas(): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CAT_TIPOS_ADUANAS}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de tipos de monedas desde el backend.
+   * @returns Observable con la respuesta que contiene la lista de tipos de monedas.
+   */
+  getCatTiposMonedas(): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CAT_TIPOS_MONEDAS}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de países desde el backend.
+   * @returns Observable con la respuesta que contiene la lista de países.
+   */
+  getCatPaises(): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CAT_PAISES}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 

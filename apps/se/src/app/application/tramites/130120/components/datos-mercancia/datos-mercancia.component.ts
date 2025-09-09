@@ -1,13 +1,17 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
+  CategoriaMensaje,
   InputFecha,
   InputFechaComponent,
+  Notificacion,
   TituloComponent
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogosTramiteService } from '../../services/catalogosTramite.service';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosGrupos } from '../../models/permiso-importacion-modification.model';
@@ -73,6 +77,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   private DatosState!: DatosGrupos;
 
   /**
+    * Nueva notificación para mostrar mensajes de error o información al usuario.
+    */
+  nuevaNotificacion: Notificacion | null = null;
+
+  /**
    * @constructor
    * @param {FormBuilder} fb Constructor de formularios reactivos.
    * @param {PermisoImportacionStore} store Store para manejar el estado de permiso de importación.
@@ -87,7 +96,8 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     public query: Tramite130120Query,
     public consultaQuery: ConsultaioQuery,
     public permisoImportacionService: PermisoImportacionService,
-  ) {}
+    private catalogosService: CatalogosTramiteService,
+  ) { }
 
   /**
    * @method ngOnInit
@@ -121,7 +131,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    if(this.esFormularioSoloLectura) {
+    if (this.esFormularioSoloLectura) {
       this.datosMercanica.disable();
     }
   }
@@ -158,13 +168,31 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   /** @method ObtenerTipoEntradaOpcion Carga las opciones del catálogo de tipo de entrada. */
   ObtenerTipoEntradaOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('tipo_entrada.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.tipoEntradaOpcion = data as Catalogo[];
-        },
-      });
+    this.catalogosService.getCatTiposAduanas().subscribe({
+      next: (resp) => {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
+          this.tipoEntradaOpcion = resp.datos ?? [];
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: resp.error || 'Error al mostrar la firma.',
+            mensaje:
+              resp.causa ||
+              resp.mensaje ||
+              'Ocurrió un error al mostrar la firma.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar los regímenes', err);
+      }
+    });
   }
 
   /** @method ObtenerFraccionOpcion Carga las opciones del catálogo de fracción arancelaria. */
@@ -213,35 +241,89 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   /** @method obtenerMonedaComercializacionOpcion Carga las opciones del catálogo de moneda de comercialización. */
   obtenerMonedaComercializacionOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('moneda_comercializacion.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.monedaComercializacionOpcion = data as Catalogo[];
-        },
-      });
+    this.catalogosService.getCatTiposMonedas().subscribe({
+      next: (resp) => {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
+          this.monedaComercializacionOpcion = resp.datos ?? [];
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: resp.error || 'Error al mostrar la firma.',
+            mensaje:
+              resp.causa ||
+              resp.mensaje ||
+              'Ocurrió un error al mostrar la firma.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar los regímenes', err);
+      }
+    });
   }
 
   /** @method obternerPaisExportadorOpcion Carga las opciones del catálogo de país exportador. */
   obternerPaisExportadorOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('pais_exportador.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.paisExportadorOpcion = data as Catalogo[];
-        },
-      });
+    this.catalogosService.getCatPaises().subscribe({
+      next: (resp) => {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
+          this.paisExportadorOpcion = resp.datos ?? [];
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: resp.error || 'Error al mostrar la firma.',
+            mensaje:
+              resp.causa ||
+              resp.mensaje ||
+              'Ocurrió un error al mostrar la firma.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar los regímenes', err);
+      }
+    });
   }
 
   /** @method obtenerPaisOrigenOpcion Carga las opciones del catálogo de país de origen. */
   obtenerPaisOrigenOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('pais_exportador.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.paisOrigenOpcion = data as Catalogo[];
-        },
-      });
+    this.catalogosService.getCatPaises().subscribe({
+      next: (resp) => {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
+          this.paisOrigenOpcion = resp.datos ?? [];
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: resp.error || 'Error al mostrar la firma.',
+            mensaje:
+              resp.causa ||
+              resp.mensaje ||
+              'Ocurrió un error al mostrar la firma.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar los regímenes', err);
+      }
+    });
   }
 
   /**
