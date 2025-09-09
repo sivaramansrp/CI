@@ -6,12 +6,14 @@
     <div class="col-md-8">
       <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'Pais o bloque'" [required]="true"
         name="Pais o bloque" [isDisabled]="esFormularioSoloLectura"
-        (change)="setValoresStore(formularioTratados,'pais', 'setPais');getLabelFromCatalogData(paisCatalogo,'pais')"></app-catalogo-select>
+        (change)="setValoresStore(formularioTratados,'pais', 'setPais');getLabelFromCatalogData(paisCatalogo,'pais')"
+        (selectionChange)="onTratadoAcuerdo($event, 'pais')"></app-catalogo-select>
     </div>
     <div class="col-md-8">
       <app-catalogo-select [catalogo]="tratadoCatalogo" formControlName="tratado" [label]="'Tratado o Acuerdo'"
         [required]="true" name="Tratado o Acuerdo" [isDisabled]="esFormularioSoloLectura"
-        (change)="setValoresStore(formularioTratados,'tratado', 'setTratado');getLabelFromCatalogData(tratadoCatalogo,'tratado')"></app-catalogo-select>
+        (change)="setValoresStore(formularioTratados,'tratado', 'setTratado');getLabelFromCatalogData(tratadoCatalogo,'tratado')"
+        (selectionChange)="onTratadoAcuerdo($event, 'tratado')"></app-catalogo-select>
     </div>
     <div class="col-md-8">
       <app-catalogo-select [catalogo]="origenCatalogo" formControlName="origen" [label]="'Criterio de origen'"
