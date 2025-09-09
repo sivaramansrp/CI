@@ -328,7 +328,16 @@ export class CatalogoSelectComponent
    * @param isDisabled - Indica si el componente debe estar deshabilitado.
    * @returns void
    */
-  setDisabledState?(isDisabled: boolean): void {
-    this.isDisabled = isDisabled;
+  setDisabledState(isDisabled: boolean): void {
+  this.isDisabled = isDisabled;
+  const CONTROL = this.formSelect.get('selectControl');
+  if (CONTROL) {
+    if (isDisabled) {
+      CONTROL.disable({ emitEvent: false });
+    } else {
+      CONTROL.enable({ emitEvent: false });
+    }
   }
+}
+
 }
