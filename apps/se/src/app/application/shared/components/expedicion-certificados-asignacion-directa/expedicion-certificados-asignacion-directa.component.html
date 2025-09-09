@@ -50,7 +50,7 @@
         (asignacionOficioNumeroForm.get('numFolioAsignacionAux')?.errors?.['required']
         && (asignacionOficioNumeroForm.get('numFolioAsignacionAux')?.touched ||
         asignacionOficioNumeroForm.get('numFolioAsignacionAux')?.dirty)) {
-        <small class="mensaje-error">Este campo es obligatorio.</small>
+        <small class="mensaje-error">Este campo es obligatorio</small>
         }
       </div>
     </div>
@@ -515,11 +515,11 @@
         @if ((distribucionSaldoForm.get('montoExpedir')?.touched ||
         distribucionSaldoForm.get('montoExpedir')?.dirty) &&
         distribucionSaldoForm.get('montoExpedir')?.errors?.['required']) {
-        <small class="mensaje-error">Este campo es obligatorio.</small>
+        <small class="mensaje-error">Este campo es obligatorio</small>
         } @if ((distribucionSaldoForm.get('montoExpedir')?.touched ||
         distribucionSaldoForm.get('montoExpedir')?.dirty) &&
         distribucionSaldoForm.get('montoExpedir')?.errors?.['pattern']) {
-        <p class="mensaje-error m-0">Este campo es obligatorio.</p>
+        <p class="mensaje-error m-0">Este campo es obligatorio</p>
         <p class="mensaje-error">Por favor, escribe un número entero válido</p>
         }
       </div>

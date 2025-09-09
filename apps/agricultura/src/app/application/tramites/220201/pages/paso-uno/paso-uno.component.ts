@@ -84,6 +84,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 * @command Este decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
 */
   @ViewChild('padoDeRef') pagoDeDerechosComponent!: PagoDeDerechosComponent;
+    /**
+     * Referencia al componente hijo TercerospageComponent para manejar los terceros relacionados.
+     * @public
+     * @type {TercerospageComponent}
+     * @memberof PasoUnoComponent
+     */
+    @ViewChild('tercerospageRef') tercerospage!: TercerospageComponent;
 
 
   /**
@@ -194,6 +201,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         isValid = false;
       }
     } else {
+      isValid = false;
+    }
+      if(this.tercerospage){
+      if(!this.tercerospage.validarFormulario()){
+        isValid = false;
+      }
+    }
+    else{
       isValid = false;
     }
 

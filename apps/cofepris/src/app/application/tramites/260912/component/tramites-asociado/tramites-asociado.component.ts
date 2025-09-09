@@ -1,5 +1,5 @@
 // Importaciones necesarias de Angular y otros módulos.
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { Asociados } from '../../modelos/tramites-asociados.model';
@@ -27,6 +27,8 @@ import { TramitesAsociadosService } from '../../services/tramites-asociados.serv
 })
 export class TramitesAsociadoComponent implements OnInit, OnDestroy {
 
+    @Input() disabled: boolean = false;
+  @Input() tipoTramite?: string;
   /**
    * Configuración de las columnas de la tabla dinámica.
    * Define qué datos se mostrarán y en qué orden.
@@ -89,6 +91,21 @@ export class TramitesAsociadoComponent implements OnInit, OnDestroy {
     });
   }
 
+   /**
+   * Indica si la tabla de trámites asociados es válida.
+   * Aquí se considera válida si hay al menos un trámite asociado.
+   * Ajusta la lógica según tus requisitos de validación.
+   */
+  isValid(): boolean {
+    return Array.isArray(this.acuseTablaDatos) && this.acuseTablaDatos.length > 0;
+  }
+
+   /**
+   * Devuelve los datos actuales de la tabla de trámites asociados.
+   */
+  getData(): Asociados[] {
+    return this.acuseTablaDatos;
+  }
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */

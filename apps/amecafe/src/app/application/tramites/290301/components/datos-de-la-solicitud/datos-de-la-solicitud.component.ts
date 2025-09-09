@@ -205,7 +205,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
       }
     }
-  
+    this.setValoresStore(this.datosSolicitudForma, 'productorDeCafe', 'setProductorDeCafe');
+
   }
   /** Método para obtener los datos de las regiones */
   getRegionsData(): void {
