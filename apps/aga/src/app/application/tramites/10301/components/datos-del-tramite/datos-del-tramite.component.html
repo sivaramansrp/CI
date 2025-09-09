@@ -71,7 +71,10 @@
                 <ng-container formGroupName="datosMercancia">
                   <div class="row mt-5">
                     <div class="col-md-12">
-                      <label>Tipo de mercancía*:</label>
+                      <label>Tipo de mercancía
+                        <span [ngClass]="agregarMercanciasForm.get('datosMercancia.tipoMercancia')?.invalid && 
+              agregarMercanciasForm.get('datosMercancia.tipoMercancia')?.touched ? 'text-danger' : ''">*</span>:
+                      </label>
                       <input type="text" width:140 required="true" class="form-control" id="tipoMercancia"
                         formControlName="tipoMercancia" (change)="
                           setValoresStore(
@@ -79,7 +82,8 @@
                             'tipoMercancia',
                             'setTipoMercancia'
                           )
-                        " [disabled]="esFormularioSoloLectura" />
+                        " [ngClass]="{'is-invalid': isInvalid('tipoMercancia')}"
+                        [disabled]="esFormularioSoloLectura" />
                       <div *ngIf="isInvalid('tipoMercancia')" class="mensaje-error">
                           Este campo es obligatorio.
                       </div>
@@ -89,7 +93,10 @@
                 <ng-container formGroupName="datosMercancia">
                   <div class="row mt-3">
                     <div class="col-md-4">
-                      <label>Uso específico de la mercancía*:</label>
+                      <label>Uso específico de la mercancía
+                        <span [ngClass]="agregarMercanciasForm.get('datosMercancia.usoEspecifico')?.invalid && 
+              agregarMercanciasForm.get('datosMercancia.usoEspecifico')?.touched ? 'text-danger' : ''">*</span>:
+                      </label>
                       <input type="text" required="true" class="form-control" id="usoEspecifico"
                         formControlName="usoEspecifico" (change)="
                           setValoresStore(
@@ -97,7 +104,8 @@
                             'usoEspecifico',
                             'setUsoEspecifico'
                           )
-                        " [disabled]="esFormularioSoloLectura" />
+                        " [ngClass]="{'is-invalid': isInvalid('usoEspecifico')}"
+                        [disabled]="esFormularioSoloLectura" />
                       <div *ngIf="isInvalid('usoEspecifico')" class="mensaje-error">
                           Este campo es obligatorio.
                       </div>
@@ -109,13 +117,11 @@
                         formControlName="condicion"
                         [placeholder]="'Seleccione una opción'"
                         [required]="true"
+                        [markTouched]="agregarMercanciasForm.get('datosMercancia.condicion')?.touched??false"
                         (change)="condicionSeleccion()"
                         name="condicion"
                         [isDisabled]="esFormularioSoloLectura">
                       </app-catalogo-select>
-                      <div *ngIf="isInvalid('condicion')" class="mensaje-error">
-                        Este campo es obligatorio.
-                      </div>
                     </div>
                     <div class="col-md-4">
                       <label>Marca:</label>
