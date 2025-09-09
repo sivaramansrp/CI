@@ -144,7 +144,7 @@ export const FETCHA_SALIDA = [240123];
  * @type {number[]}
  * @description Contiene un arreglo de identificadores numéricos relacionados con CURP en el sistema.
  */
-export const ES_CURP = [240107, 240114, 240118, 240117, 240121, 240311];
+export const ES_CURP = [240107, 240114, 240118, 240117, 240121, 240311, 240105];
 
 /**
  * Identificadores numéricos relacionados con RFC.

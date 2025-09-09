@@ -47,7 +47,8 @@
       "numeroInterior": "4B",
       "lada": "81",
       "telefono": "12345678",
-      "correo": "juan.perez@agronorte.com"
+      "correo": "juan.perez@agronorte.com",
+      "planta": "yes"
     }
   ],
   "validarEnvio": {

@@ -1,17 +1,13 @@
 import { ApiResponse, EntidadFederativa, InstalacionesInterface } from '../../models/oea-textil-registro.model';
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-} from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject, map, takeUntil} from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { INSTALACIONES_TABLA_DATOS } from '../../constants/oea-textil-registro.enum';
 import { SolicitudService } from '../../services/solicitud.service';
+
 
 
 /**

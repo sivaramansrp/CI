@@ -1,20 +1,17 @@
-import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Component, Inject, OnDestroy, OnInit,TemplateRef, ViewChild, } from '@angular/core';
 import { ConfiguracionColumna, ConsultaioQuery, InputFecha, InputFechaComponent,TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { EMPRESA_DEL_GRUPO, EMPRESA_DEL_GRUPO_CON_FECHA, EmpresaDelGrupo, FECHA_DE_INICIO, FECHA_DE_PAGO, INFORMACION_EMPRESA_OPTIONS, OPCIONES_DE_BOTON_DE_RADIO, PANELS, PANELS1, REGISTRO_ESQUEMA_CERTIFICACION_OPTIONS, TRANSPORTISTAS_CONFIGURACION, TransportistasTable } from '../../constants/datos-comunes.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud32605State, Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { FECHA_DELA_ULTIMA_OPERACION } from'../../constants/datos-comunes.enum';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { RFCEnlaceOperativo } from '../../models/solicitud.model';
 import { Solicitud32605Query } from '../../estados/solicitud32605.query';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TemplateRef } from '@angular/core';
 
 /**
  * Componente principal para gestionar los datos de importador y exportador
@@ -616,13 +613,15 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   aceptarEnlaceOperativo(): void {
     const RFC_VALUE = this.agregarEnlaceOperativoForm.get('rfcEnclaveOperativo')?.value;
     const DATE_VALUE = this.agregarEnlaceOperativoForm.get('inputfechaDeLaUltimaOperacion')?.value;
-    
-    // Verificar que el campo RFC requerido esté lleno
-    if (!RFC_VALUE?.trim()) {
-      this.agregarEnlaceOperativoForm.get('rfcEnclaveOperativo')?.markAsTouched();
-      return;
+
+    if(!this.isEditMode){
+      this.agregarEnlaceOperativoForm.get('rfcEnclaveOperativo')?.addValidators(Validators.required);
+      // Verificar que el campo RFC requerido esté lleno
+      if (!RFC_VALUE?.trim()) {
+        this.agregarEnlaceOperativoForm.get('rfcEnclaveOperativo')?.markAsTouched();
+        return;
+      }
     }
-    
     // En modo edición, verificar si el RFC existe en otros registros (excluyendo el actual)
     if (this.isEditMode && this.existeRFCEnTablaExcluyendo(RFC_VALUE, this.selectedEmpresa?.rfcEnclaveOperativo)) {
       this.mostrarModalDatosObligatorios();

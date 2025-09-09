@@ -34,9 +34,9 @@
 
   <div class="d-flex justify-content-end">
     <div class="d-flex flex-row flex-wrap gap-3">
-        <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
+        <button class="btn btn-danger" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
         (click)="confirmEliminarEmpleadoItem()" [disabled]="esFormularioSoloLectura">Eliminar</button>
-        <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}" (click)="modificarItemEmpleado()" [disabled]="esFormularioSoloLectura">Modificar</button>
+        <button class="btn btn-default" [ngClass]="{'btn-secondary': !enableEliminarBoton}" (click)="modificarItemEmpleado()" [disabled]="esFormularioSoloLectura">Modificar</button>
         <button class="btn btn-primary" (click)="agregarDialogoDatos()" [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
   </div>
@@ -68,6 +68,7 @@
                   type="text"
                   class="form-control"
                   id="rfcInput"
+                  maxlength="13"
                   formControlName="rfcInput"
                   placeholder="Ingrese RFC"
                 />
@@ -122,6 +123,7 @@
               >
               <input
                 type="text"
+                maxlength="5"
                 class="form-control mb-2"
                 formControlName="numeroDeEmpleados"
               />

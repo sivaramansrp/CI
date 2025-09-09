@@ -17,14 +17,15 @@ describe('PasoUnoComponent', () => {
 
     certificadoServiceMock = {
       guardarDatosFormulario: jest.fn().mockReturnValue(of({})),
-      storeDatosFormulario: jest.fn(),
     };
 
     consultaQueryMock = {
       selectConsultaioState$: new Subject<any>(),
     };
 
-    certificadoZoosanitarioStoreMock = {};
+    certificadoZoosanitarioStoreMock = {
+      actualizarTodoElEstado: jest.fn()
+    };
 
     component = new PasoUnoComponent(
       seccionStoreMock,
@@ -49,6 +50,10 @@ describe('PasoUnoComponent', () => {
     } as any;
 
     component.pagoDeDerechosComponent = {
+      validarFormulario: jest.fn(() => true)
+    } as any;
+
+    component.tercerospage = {
       validarFormulario: jest.fn(() => true)
     } as any;
   });
@@ -82,7 +87,7 @@ describe('PasoUnoComponent', () => {
 
     setTimeout(() => {
       expect(certificadoServiceMock.guardarDatosFormulario).toHaveBeenCalled();
-      expect(certificadoServiceMock.storeDatosFormulario).toHaveBeenCalledWith(fakeData);
+      expect(certificadoZoosanitarioStoreMock.actualizarTodoElEstado).toHaveBeenCalledWith(fakeData);
       expect(seccionStoreMock.establecerFormaValida).toHaveBeenCalledWith([true]);
       expect(seccionStoreMock.establecerSeccion).toHaveBeenCalledWith([true]);
       done();
@@ -97,7 +102,7 @@ describe('PasoUnoComponent', () => {
 
     setTimeout(() => {
       expect(certificadoServiceMock.guardarDatosFormulario).toHaveBeenCalled();
-      expect(certificadoServiceMock.storeDatosFormulario).not.toHaveBeenCalled();
+      expect(certificadoZoosanitarioStoreMock.actualizarTodoElEstado).not.toHaveBeenCalled();
       expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error));
       consoleSpy.mockRestore();
       done();
@@ -123,6 +128,39 @@ describe('PasoUnoComponent', () => {
       component.datosParaMovilizacionNacional = { validarFormulario: () => true } as any;
       component.pagoDeDerechosComponent = undefined as any;
       expect(component.validarFormularios()).toBe(false);
+
+      component.pagoDeDerechosComponent = { validarFormulario: () => true } as any;
+      component.tercerospage = undefined as any;
+      expect(component.validarFormularios()).toBe(false);
+    });
+
+    it('debe regresar verdadero cuando todos los formularios son válidos incluyendo tercerospage', () => {
+      // Arrange - configurar todos los componentes como válidos
+      component.solicitante = {
+        form: { invalid: false, markAllAsTouched: jest.fn() }
+      } as any;
+
+      component.datosDelaSolicitu = {
+        validarFormulario: jest.fn(() => true)
+      } as any;
+
+      component.datosParaMovilizacionNacional = {
+        validarFormulario: jest.fn(() => true)
+      } as any;
+
+      component.pagoDeDerechosComponent = {
+        validarFormulario: jest.fn(() => true)
+      } as any;
+
+      component.tercerospage = {
+        validarFormulario: jest.fn(() => true)
+      } as any;
+
+      // Act
+      const result = component.validarFormularios();
+
+      // Assert
+      expect(result).toBe(true);
     });
   });
 

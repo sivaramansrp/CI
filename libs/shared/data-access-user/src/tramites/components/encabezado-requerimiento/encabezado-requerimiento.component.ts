@@ -8,6 +8,7 @@ import { Component, Input } from "@angular/core";
 })
 
 export class EncabezadoRequerimientoComponent {
+    @Input() isAturorizar!: boolean;
     @Input() numFolioTramite!: string;
     @Input() tipoTramite!: string;
 

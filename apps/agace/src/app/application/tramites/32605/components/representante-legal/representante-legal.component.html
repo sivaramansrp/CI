@@ -22,25 +22,22 @@
           ) {
           <div class="mensaje-error">Este campo es obligatorio.</div>
           }
+          @if (
+          representante.get('representanteRegistro')?.touched &&
+          representante.get('representanteRegistro')?.hasError('maxlength')
+          ) {
+          <div class="mensaje-error">Por favor, no escriba más de 15 caracteres.</div>
+          }
+          @if (
+          representante.get('representanteRegistro')?.touched &&
+          representante.get('representanteRegistro')?.hasError('pattern')
+          ) {
+          <div class="mensaje-error">Por favor, ingrese un RFC válido.</div>
+          }
         </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="representanteRfc">RFC</label>
-            <input
-              class="form-control"
-              id="representanteRfc"
-              formControlName="representanteRfc"
-              type="text"
-              (change)="setValoresStore(representante, 'representanteRfc')"
-            />
-          </div>
-        </div>
-        <div class="col-md-4 mt-4">
+        <div class="col-md-8 mt-5">
             <div class="btn-group">
-                <button class="btn btn-default" type="button" (click)="botonBuscar()" [disabled]="esFormularioSoloLectura">
+                <button class="btn btn-primary" type="button" (click)="botonBuscar()" [disabled]="esFormularioSoloLectura">
                     Buscar
                 </button>
             </div>
@@ -50,7 +47,25 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="representanteNombre">Nombre</label>
+            <label class="form-label" for="representanteRfc">RFC:</label>
+            <input
+              class="form-control"
+              id="representanteRfc"
+              formControlName="representanteRfc"
+              type="text"
+              (change)="setValoresStore(representante, 'representanteRfc')"
+            />
+          </div>
+        </div>
+        <div class="col-md-8">
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="representanteNombre">Nombre:</label>
             <input
               class="form-control"
               id="representanteNombre"
@@ -62,7 +77,7 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="representanteApellidoPaterno">Apellido Paterno</label>
+            <label class="form-label" for="representanteApellidoPaterno">Apellido Paterno:</label>
             <input
               class="form-control"
               id="representanteApellidoPaterno"
@@ -74,7 +89,7 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="representanteApellidoMaterno">Apellido Materno</label>
+            <label class="form-label" for="representanteApellidoMaterno">Apellido Materno:</label>
             <input
               class="form-control"
               id="representanteApellidoMaterno"
@@ -89,7 +104,7 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="representanteTelefono">Teléfono</label>
+            <label class="form-label" for="representanteTelefono">Teléfono:</label>
             <input
               class="form-control"
               id="representanteTelefono"
@@ -101,7 +116,7 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="representanteCorreo">Correo Electrónico</label>
+            <label class="form-label" for="representanteCorreo">Correo Electrónico:</label>
             <input
               class="form-control"
               id="representanteCorreo"
@@ -109,6 +124,18 @@
               type="text"
               (change)="setValoresStore(representante, 'representanteCorreo')"
             />
+             @if (
+              representante.get('representanteCorreo')?.touched &&
+              representante.get('representanteCorreo')?.hasError('pattern')
+              ) {
+              <div class="mensaje-error">Por favor, escriba una dirección de correo válida.</div>
+              }
+              @if (
+              representante.get('representanteCorreo')?.touched &&
+              representante.get('representanteCorreo')?.hasError('maxlength')
+              ) {
+              <div class="mensaje-error">Por favor, no escriba más de 320 caracteres.</div>
+              }
           </div>
         </div>
       </div>

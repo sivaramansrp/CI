@@ -59,6 +59,7 @@ import { Notificacion } from '@ng-mf/data-access-user';
 
 import { DatosCatalago, INPUT_FECHA_CONFIG, INPUT_FECHA_CONFIGURACION } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
 import { CatalogoPaises } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
 import { TramiteStore } from '../../../estados/tramite.store';
 /**
@@ -88,6 +89,11 @@ import { TramiteStore } from '../../../estados/tramite.store';
  * Gestiona la lógica del componente Complimentos, incluyendo inicialización y limpieza.
  */
 export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
+  /**
+   * @property {ConsultaioState} consultaState - Estado actual relacionado con la consulta.
+   */
+  @Input() consultaState!: ConsultaioState;
+
 
   /**
    * property {Catalogo[]} derechosList - Lista de derechos obtenida del servicio.
@@ -843,8 +849,9 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         );
         this.estados = datos;
         this.camposFormularioTipoPersona[INDICEALT].opcionesCatalogo = datos;
-        if(this.camposFormularioDefault && this.camposFormularioDefault[INDICE].opcionesCatalogo)
-          {this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;}
+        if(this.camposFormularioDefault && this.camposFormularioDefault[INDICE].opcionesCatalogo){
+          this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
+        }
       });
   }
 
