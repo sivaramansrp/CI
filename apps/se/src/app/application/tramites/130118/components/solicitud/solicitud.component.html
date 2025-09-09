@@ -73,7 +73,7 @@
             <option [ngValue]="null">Selecciona una opción</option>
             <option *ngFor="let fraccion of fraccionArancelaria" [title]="fraccion.descripcion"
               [value]="fraccion.clave">
-              {{ fraccion.descripcion }}
+              {{ fraccion.clave + ' - ' + fraccion.descripcion | slice:0:70}}
             </option>
           </select>
           <div
