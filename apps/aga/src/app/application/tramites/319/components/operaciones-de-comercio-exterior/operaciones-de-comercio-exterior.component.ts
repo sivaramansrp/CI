@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, REGEX_FECHA_MES_ANO, SeccionLibStore, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent, } from '@libs/shared/data-access-user/src';
+import { AfterViewInit, Component, OnDestroy, OnInit, forwardRef } from '@angular/core';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, REGEX_FECHA_MES_ANO, SeccionLibStore, SharedModule, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent, } from '@libs/shared/data-access-user/src';
 import { CONFIGURACION_PERSONAS_COLUMNAS, CONFIGURACION_SOLICITAR_COLUMNAS, INFO_ALERT, TEXTOS } from '../../constantes/operaciones-de-comercio-exterior.enum';
 import { Personas, Solicitar } from '../../models/personas.module';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -38,7 +38,8 @@ import { Tramite319Store } from '../../estados/tramite319Store.store';
     AlertComponent,
     TituloComponent,
     ReactiveFormsModule,
-    NotificacionesComponent
+    NotificacionesComponent,
+    forwardRef(() => SoloLetrasNumerosDirective),
   ]
 })
 export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -162,6 +163,10 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
    */
   public esFormularioSoloLectura: boolean = false;
 
+  public nuevaNotificacion!: Notificacion;
+
+  mostrarAlerta: boolean = false;
+
   /**
    * Constructor del componente.
    * @constructor
@@ -256,9 +261,9 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
     this.modalEmergente = !status;
     if (status) {
       this.periodoForm = this.fb.group({
-        periodo: ['', Validators.required],
-        periodoInicial: ['', [Validators.required, validadorDeMesyAno()]],
-        periodoFinal: ['', [Validators.required, validadorDeMesyAno()]],
+        periodo: ['', [Validators.required]],
+        periodoInicial: ['', [Validators.required, validadorDeMesyAno(), Validators.maxLength(7)]],
+        periodoFinal: ['', [Validators.required, validadorDeMesyAno(), Validators.maxLength(7)]],
       });
     }
   }
@@ -282,6 +287,7 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
       this.seccionStore.establecerFormaValida([true]);
       this.seccionStore.establecerSeccion([true]);
     } else {
+      this.periodoForm.markAllAsTouched();
       this.vistaAlerta = true;
       this.textos = TEXTOS + this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal;
     }
@@ -315,6 +321,23 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
    * @method eliminarPeriodoPorId
    */
   public eliminarPeriodoPorId(): void {
+    if(this.cuerpoSolicitarTablaFila.length === 0){
+      this.mostrarAlerta = true
+      this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Sin informacion.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    }
+    else {
+      this.mostrarAlerta = false;
+    
     this.cuerpoSolicitarTablaFila = this.cuerpoSolicitarTablaFila?.filter(item =>
       this.listaDeTablasSeleccionadas?.some(seleccionado => seleccionado?.id === item?.id) === false
     ) ?? [];
@@ -326,6 +349,11 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
       this.seccionStore.establecerSeccion([true]);
     }
     this.periodoView = false;
+  }
+  }
+
+  aceptar(): void {
+    this.mostrarAlerta = false;
   }
 
   /**

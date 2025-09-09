@@ -29,7 +29,7 @@
           </app-tabla-dinamica>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
             <button type="button" class="btn btn-primary" (click)="abrirModuloPersonasNotificaciones(true)">Agregar</button>
-            <button type="button" class="btn btn-default ms-2" (click)="eliminarPeriodoPorId()" [disabled]="cuerpoSolicitarTablaFila.length === 0 ? true : false">Eliminar</button>
+            <button type="button" class="btn btn-default ms-2" (click)="eliminarPeriodoPorId()" >Eliminar</button>
            
             </div>
         </div>
@@ -61,6 +61,9 @@
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="periodoList" [label]="'Periodo'" [required]="true" id="operacion"
         formControlName="periodo"  ></app-catalogo-select>
+        <div *ngIf="periodoForm.get('periodo')?.touched && periodoForm.get('periodo')?.invalid">
+          <small *ngIf="periodoForm.get('periodo')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+        </div>
         </div>
       </div>
       <div class="col-md-12"> <label class="form-label" for="periodoInicial">Fecha sobre el periodo :</label>
@@ -71,12 +74,20 @@
           <div class="form-group">
             <label class="form-label" for="periodoInicial">Periodo inicial*:</label>
             <input class="form-control" id="periodoInicial" placeholder="MM/YYYY (mes/año)" type="text" formControlName="periodoInicial" />
+            <div *ngIf="periodoForm.get('periodoInicial')?.touched && periodoForm.get('periodoInicial')?.invalid">
+              <small *ngIf="periodoForm.get('periodoInicial')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
+            <small *ngIf="periodoForm.get('periodoInicial')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">Por favor, no escribas menos de 7 caracteres</small>
           </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="periodoFinal">Periodo final*:</label>
-              <input class="form-control" id="periodoFinal" placeholder="MM/YYYY (mes/año)" type="text" formControlName="periodoFinal" />
+              <input class="form-control" id="periodoFinal" placeholder="MM/YYYY (mes/año)" type="text" formControlName="periodoFinal"  />
+              <div *ngIf="periodoForm.get('periodoFinal')?.touched && periodoForm.get('periodoFinal')?.invalid">
+              <small *ngIf="periodoForm.get('periodoFinal')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            </div>
+            <small *ngIf="periodoForm.get('periodoFinal')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">Por favor, no escribas menos de 7 caracteres</small>
             </div>
             </div>
         </div>
@@ -88,3 +99,4 @@
         </div>
 
 </div>
+<lib-notificaciones [notificacionInput]="nuevaNotificacion" *ngIf="mostrarAlerta" (confirmacionModal)="aceptar()"></lib-notificaciones>
