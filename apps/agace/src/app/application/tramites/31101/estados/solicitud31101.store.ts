@@ -13,7 +13,10 @@ export interface Solicitud31101State {
   tipoSector: string | number;
 
   /** Concepto, valor numérico */
-  concepto: number;
+  concepto: number | string;
+
+  productivoConcepto: number | string;
+  servicioConcepto: number | string;
 
   /** Número 3500, valor numérico */
   '3500': number | string;
@@ -358,7 +361,9 @@ export function createInitialSolicitudState(): Solicitud31101State {
     tipoDeGarantia: 0,
     modalidadDeLaGarantia: 0,
     tipoSector: '',
-    concepto: 0,
+    concepto: '',
+    productivoConcepto: '',
+    servicioConcepto: '',
     '3500': 0,
     '3501': 0,
     '3502': 0,
@@ -497,8 +502,16 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
   }
 
   /** Actualiza el concepto en el estado */
-  actualizarConcepto(concepto: number): void {
+  actualizarConcepto(concepto: number | string): void {
     this.update((state) => ({ ...state, concepto }));
+  }
+
+  actualizarProductivoConcepto(productivoConcepto: number | string): void {
+    this.update((state) => ({ ...state, productivoConcepto }));
+  }
+
+  actualizarServicioConcepto(servicioConcepto: number | string): void {
+    this.update((state) => ({ ...state, servicioConcepto }));
   }
 
   /** Actualiza el valor de 3500 en el estado */

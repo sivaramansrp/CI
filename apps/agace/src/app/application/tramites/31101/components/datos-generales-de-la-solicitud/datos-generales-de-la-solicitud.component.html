@@ -51,7 +51,7 @@
       </div>
       <div class="col-md-12">
         <ng-titulo titulo="Tipo sector" />
-        <label class="form-label mb-5">Tipo sector *:</label>
+        <label class="form-label mb-5">Tipo sector<span [ngClass]="noEsValido('tipoSector')? 'text-danger':''">*</span>:</label>
         <app-input-radio
           formControlName="tipoSector"
           [selectedValue]="datosGeneralesForm.get('tipoSector')?.value"
@@ -700,7 +700,7 @@
       </div>
       <div class="col-md-4 mt-4">
         <label class="form-label text-start" for="valorenpesos"
-          >Valor en pesos *:</label
+          >Valor en pesos<span [ngClass]="noEsValido('cantidadInversion') ? 'text-danger':''">*</span>:</label
         >
         <input
           class="form-control"
@@ -718,7 +718,7 @@
       <div class="col-md-4 mt-4"></div>
       <div class="col-md-12 mt-4">
         <label class="form-label text-start" for="valorenpesos"
-          >Descripción general *:</label
+          >Descripción general<span [ngClass]="noEsValido('descInversion') ? 'text-danger':''">*</span>:</label
         >
         <input
           class="form-control"
@@ -835,9 +835,9 @@
           de instalaciones).</label
         >
       </div>
-      <div class="col-md-4 mt-4 text-start">
+      <div class="col-md-4 mt-6 text-start">
         <app-catalogo-select
-          formContorlName="modalidadProgramaImmex"
+          formControlName="modalidadProgramaImmex"
           [catalogo]="modalidadDelProgramaIMMEX.catalogos"
           [label]="modalidadDelProgramaIMMEX.labelNombre"
           [placeholder]="modalidadDelProgramaIMMEX.primerOpcion"
@@ -865,8 +865,6 @@
             id="modificarSocio"
             class="btn btn-default"
             [disabled]="esFormularioSoloLectura"
-            data-bs-toggle="modal"
-            data-bs-target="#modificarImmexProgram"
             (click)="modificarImmexProgram()"
           >
             Modificar
@@ -887,9 +885,7 @@
             id="agregarSocio"
             class="btn btn-primary ms-3"
             [disabled]="esFormularioSoloLectura"
-            data-bs-toggle="modal"
-            data-bs-target="#agregarImmexProgram"
-            (click)="agregarImmexProgram()"
+            (click)="agregarImmexProgramModel()"
           >
             Agregar
           </button>
@@ -1499,6 +1495,27 @@
 </section>
 }
 
+@if (eliminarImmexNotificacion) {
+<section>
+  <lib-notificaciones
+    [notificacionInput]="eliminarImmexNotificacion"
+    (confirmacionModal)="eliminarPedimentoImmexNotificacion($event)"
+  >
+  </lib-notificaciones>
+</section>
+}
+
+@if (eliminadosCorrectamenteNotificacion) {
+<section>
+  <lib-notificaciones
+    [notificacionInput]="eliminadosCorrectamenteNotificacion"
+    (confirmacionModal)="eliminarCorrectamenteImmexNotificacion($event)"
+  >
+  </lib-notificaciones>
+</section>
+}
+
+
 <div
   class="modal fade"
   id="modalAgregarMiembrosEmpresa"
@@ -1533,8 +1550,9 @@
 
 <div
   class="modal fade"
-  id="agregarImmexProgram"
   tabindex="-1"
+  id="agregarImmexProgram"
+  #agregarImmexProgram
   aria-labelledby="modalAgregarImmexProgram"
   aria-hidden="true"
 >

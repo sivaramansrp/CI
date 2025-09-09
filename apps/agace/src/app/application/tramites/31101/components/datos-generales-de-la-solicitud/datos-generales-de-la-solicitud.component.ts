@@ -1,4 +1,13 @@
-import { CONCEPTO, DOMICILIOS_CONFIGURACION_COLUMNAS, MODALIDAD_DEL_PROGRAMA_IMMEX, TIPO_DE_INVERSION_CONFIG } from '../../constants/solicitud.enum';
+import {
+  CONCEPTO,
+  DOMICILIOS_CONFIGURACION_COLUMNAS,
+  MODALIDAD_DEL_PROGRAMA_IMMEX,
+  MODALIDAD_DE_LA_GARANTIA_OPCION,
+  SINO_OPCION,
+  TIPO_DE_GARANTIA_OPCION,
+  TIPO_DE_INVERSION_CONFIG,
+  TIPO_SECTOR,
+} from '../../constants/solicitud.enum';
 import { AgregarImmexProgramComponent } from '../agregar-immex-program/agregar-immex-program.component';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -8,7 +17,6 @@ import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosGeneralesDeLaSolicitudCatologo } from '../../models/solicitud.model';
-import { DatosGeneralesDeLaSolicitudRadioLista } from '../../models/solicitud.model';
 import { Domicilios } from '../../models/solicitud.model';
 import { ElementRef } from '@angular/core';
 import { FECHA_DE_FIN_VIGENCIA } from '../../constants/solicitud.enum';
@@ -90,15 +98,16 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Define qué hacer si el espectáculo no se realiza */
   espectaculoEnCasoNegativo: boolean = false;
   /** Opciones para el tipo de garantía */
-  tipoDeGarantiaOpcion: InputRadio = {} as InputRadio;
+  tipoDeGarantiaOpcion: InputRadio = TIPO_DE_GARANTIA_OPCION;
   /** Opciones para la modalidad de la garantía */
-  modalidadDeLaGarantiaOpcion: InputRadio = {} as InputRadio;
+  modalidadDeLaGarantiaOpcion: InputRadio = MODALIDAD_DE_LA_GARANTIA_OPCION;
   /** Opciones para el tipo de sector */
-  tipoSectorOpcion: InputRadio = {} as InputRadio;
+  tipoSectorOpcion: InputRadio = TIPO_SECTOR;
   /** Opciones de sí/no */
-  sinoOpcion: InputRadio = {} as InputRadio;
+  sinoOpcion: InputRadio = SINO_OPCION;
   /** Catálogo de conceptos */
   conceptoLista: CatalogosSelect = CONCEPTO;
+
   /** Catálogo de tipos de inversión */
   tipoDeInversionLista: CatalogosSelect = TIPO_DE_INVERSION_CONFIG;
 
@@ -154,6 +163,13 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   public nuevaNotificacion!: Notificacion;
 
   /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public eliminarImmexNotificacion!: Notificacion;
+
+  public eliminadosCorrectamenteNotificacion!: Notificacion;
+
+  /**
    * Elemento a eliminar de la tabla de pedimentos.
    */
   elementoParaEliminar!: number;
@@ -176,11 +192,11 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   modalElement!: ElementRef;
 
   /** Referencia al elemento del DOM para modificar el programa IMMEX */
-  @ViewChild('modificarImmexProgram', { static: false })
+  @ViewChild('modificarImmexProgram', { static: true })
   modificarImmexProgramElement!: ElementRef;
 
   /** Referencia al elemento del DOM para agregar un nuevo programa IMMEX */
-  @ViewChild('agregarImmexProgram', { static: false })
+  @ViewChild('agregarImmexProgram', { static: true })
   agregarImmexProgramElement!: ElementRef;
 
   /**
@@ -213,13 +229,12 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.conseguirDatosGeneralesOpcionDeRadio();
+    // this.conseguirDatosGeneralesOpcionDeRadio();
     this.conseguirDatosGeneralesCatologo();
     this.conseguirListaDeSubcontratistas();
     this.conseguirRegimenAduanero();
     this.conseguirMiembrosDeLaEmpresa();
     this.conseguirTipoDeInversionDatos();
-    this.conseguirDomicilios();
   }
 
   /**
@@ -516,7 +531,6 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
             modalidadDeLaGarantia:
               this.solicitud31101State.modalidadDeLaGarantia,
             tipoSector: this.solicitud31101State.tipoSector,
-            concepto: this.solicitud31101State.concepto,
             alerta2: this.solicitud31101State.alerta2,
             '3500': this.solicitud31101State['3500'],
             '3501': this.solicitud31101State['3501'],
@@ -588,6 +602,18 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
             textoGenerico23: this.solicitud31101State.textoGenerico23,
             textoGenerico24: this.solicitud31101State.textoGenerico24,
           });
+
+          if (this.solicitud31101State.tipoSector) {
+            if (this.solicitud31101State.tipoSector === 1) {
+              this.datosGeneralesForm.patchValue({
+                concepto: this.solicitud31101State.productivoConcepto,
+              });
+            } else if (this.solicitud31101State.tipoSector === 2) {
+              this.datosGeneralesForm.patchValue({
+                concepto: this.solicitud31101State.servicioConcepto,
+              });
+            }
+          }
         })
       )
       .subscribe();
@@ -597,19 +623,19 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene los datos generales correspondientes a las opciones de tipo de radio.
    * Asigna los valores recibidos a las propiedades correspondientes del componente.
    */
-  conseguirDatosGeneralesOpcionDeRadio(): void {
-    this.solicitudService
-      .conseguirDatosGeneralesOpcionDeRadio()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (respuesta: DatosGeneralesDeLaSolicitudRadioLista) => {
-          this.tipoDeGarantiaOpcion = respuesta.tipoDeGarantia;
-          this.modalidadDeLaGarantiaOpcion = respuesta.modalidadDeLaGarantia;
-          this.tipoSectorOpcion = respuesta.tipoSector;
-          this.sinoOpcion = respuesta.requisitos;
-        },
-      });
-  }
+  // conseguirDatosGeneralesOpcionDeRadio(): void {
+  //   this.solicitudService
+  //     .conseguirDatosGeneralesOpcionDeRadio()
+  //     .pipe(takeUntil(this.destroy$))
+  //     .subscribe({
+  //       next: (respuesta: DatosGeneralesDeLaSolicitudRadioLista) => {
+  //         // this.tipoDeGarantiaOpcion = respuesta.tipoDeGarantia;
+  //         // this.modalidadDeLaGarantiaOpcion = respuesta.modalidadDeLaGarantia;
+  //         // this.tipoSectorOpcion = respuesta.tipoSector;
+  //         // this.sinoOpcion = respuesta.requisitos;
+  //       },
+  //     });
+  // }
 
   /**
    * Obtiene los datos generales desde el catálogo.
@@ -623,7 +649,8 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         next: (respuesta: DatosGeneralesDeLaSolicitudCatologo) => {
           this.conceptoLista.catalogos = respuesta.concepto;
           this.tipoDeInversionLista.catalogos = respuesta.tipoDeInversion;
-          this.modalidadDelProgramaIMMEX.catalogos = respuesta.modalidadDelProgramaIMMEX;
+          this.modalidadDelProgramaIMMEX.catalogos =
+            respuesta.modalidadDelProgramaIMMEX;
         },
       });
   }
@@ -721,11 +748,16 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.espectaculoConcepto = false;
     }
     this.solicitud31101Store.actualizarTipoSector(evento);
+    // this.datosGeneralesForm.get('concepto')?.reset();
   }
 
   /** Actualiza el concepto basado en el catálogo */
   actualizarConcepto(evento: Catalogo): void {
-    this.solicitud31101Store.actualizarConcepto(evento.id);
+    if (this.datosGeneralesForm.get('tipoSector')?.value === 1) {
+      this.solicitud31101Store.actualizarProductivoConcepto(evento.id);
+    } else if (this.datosGeneralesForm.get('tipoSector')?.value === 2) {
+      this.solicitud31101Store.actualizarServicioConcepto(evento.id);
+    }
   }
 
   /** Actualiza el valor de 3500 */
@@ -911,7 +943,10 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /** Actualiza la modalidad del programa IMMEX */
   actualizarModalidadProgramaImmex(evento: Catalogo): void {
-    this.solicitud31101Store.actualizarModalidadProgramaImmex(evento.id);
+    if (evento.id) {
+      this.conseguirDomicilios();
+      this.solicitud31101Store.actualizarModalidadProgramaImmex(evento.id);
+    }
   }
 
   /** Actualiza el cuarto texto genérico */
@@ -1223,6 +1258,53 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  eliminarPedimentoImmexNotificacion(borrar: boolean): void {
+    if (borrar) {
+      if (
+        this.seleccionarDomiciliosDatos.length === 1 &&
+        !this.seleccionarDomiciliosDatos[0].id
+      ) {
+        this.domiciliosDatos = this.domiciliosDatos.filter(
+          (item) =>
+            item.procesoProductivo !==
+            this.seleccionarDomiciliosDatos[0].procesoProductivo
+        );
+        const PEDIMENTO = {
+          patente: 0,
+          pedimento: 0,
+          aduana: 0,
+          idTipoPedimento: 0,
+          descTipoPedimento: 'Por evaluar',
+          numero: '',
+          comprobanteValor: '',
+          pedimentoValidado: false,
+        };
+
+        this.eliminadosCorrectamenteNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Datos Eliminados correctamente',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.elementoParaEliminar = 0;
+        this.pedimentos.push(PEDIMENTO);
+      }
+      this.seleccionarDomiciliosDatos = [];
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+
+  eliminarCorrectamenteImmexNotificacion(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+
   /** Muestra el modal para agregar miembros de la empresa */
   agregarMiembrosEmpresa(): void {
     if (this.modalElement) {
@@ -1239,7 +1321,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Muestra el modal para modificar el programa IMMEX si hay domicilios seleccionados */
   modificarImmexProgram(): void {
     if (this.seleccionarDomiciliosDatos.length > 0) {
-      if (this.modalElement) {
+      if (this.modificarImmexProgramElement) {
         const MODAL_INSTANCE = new Modal(
           this.modificarImmexProgramElement.nativeElement
         );
@@ -1250,7 +1332,10 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /** Abre un modal de confirmación y agrega un pedimento si hay domicilios seleccionados */
   eliminarImmexProgram(): void {
-    if (this.seleccionarDomiciliosDatos.length > 0) {
+    if (
+      this.seleccionarDomiciliosDatos.length === 1 &&
+      this.seleccionarDomiciliosDatos[0].id
+    ) {
       const PEDIMENTO = {
         patente: 0,
         pedimento: 0,
@@ -1262,7 +1347,47 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         pedimentoValidado: false,
       };
 
-      this.abrirModal('¿Desea eliminar el registro seleccionado?');
+      this.eliminarImmexNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'No puede eliminar domicilios de la SE.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+
+      this.elementoParaEliminar = 0;
+      this.pedimentos.push(PEDIMENTO);
+    } else if (
+      this.seleccionarDomiciliosDatos.length === 1 &&
+      !this.seleccionarDomiciliosDatos[0].id
+    ) {
+      const PEDIMENTO = {
+        patente: 0,
+        pedimento: 0,
+        aduana: 0,
+        idTipoPedimento: 0,
+        descTipoPedimento: 'Por evaluar',
+        numero: '',
+        comprobanteValor: '',
+        pedimentoValidado: false,
+      };
+
+      this.eliminarImmexNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Desea eliminar el registro seleccionado?',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+      this.elementoParaEliminar = 0;
       this.pedimentos.push(PEDIMENTO);
     }
   }
@@ -1300,8 +1425,8 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /** Muestra el modal para agregar un programa IMMEX */
-  agregarImmexProgram(): void {
-    if (this.modalElement) {
+  agregarImmexProgramModel(): void {
+    if (this.agregarImmexProgramElement) {
       const MODAL_INSTANCE = new Modal(
         this.agregarImmexProgramElement.nativeElement
       );
@@ -1389,7 +1514,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /** Agrega información de domicilio */
   agregarImmexValor(evento: Domicilios): void {
-    this.domiciliosDatos.push(evento);
+    this.domiciliosDatos = [...this.domiciliosDatos, evento];
   }
 
   /**

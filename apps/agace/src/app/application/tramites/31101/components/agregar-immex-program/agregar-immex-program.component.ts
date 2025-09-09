@@ -1,3 +1,4 @@
+import { Domicilios, EntidadFederativa } from '../../models/solicitud.model';
 import { AGREGAR_IMMEX_CONFIGURACION } from '../../constants/solicitud.enum';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -6,8 +7,6 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { Domicilios } from '../../models/solicitud.model';
-import { EntidadFederativa } from '../../models/solicitud.model';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -73,6 +72,8 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
   /** Lista de domicilios seleccionados */
   domicilioslista: EntidadFederativa[] = [] as EntidadFederativa[];
 
+  seleccionarImmexProgram: EntidadFederativa[] = [] as EntidadFederativa[];
+
   /** Estado de la solicitud */
   solicitud31101State: Solicitud31101State = {} as Solicitud31101State;
 
@@ -110,7 +111,7 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
     this.entidadFederativaCatalogo();
 
     /** Obtiene los datos de la entidad federativa */
-    this.conseguirEntidadFederativaDatos();
+    // this.conseguirEntidadFederativaDatos();
   }
 
   /** Inicializa el formulario */
@@ -177,39 +178,53 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
 
   /** Maneja la selección de entidad federativa */
   seleccionArentidadFederativa(evento: Catalogo): void {
-    this.domicilioslista = this.domiciliosDatos;
+    // this.domicilioslista = this.domiciliosDatos;
+    this.conseguirEntidadFederativaDatos();
     this.solicitud31101Store.actualizarEntidadFederativa(evento.id);
+  }
+
+  seleccionarImmexProgramLista(evento: EntidadFederativa[]): void {
+    this.seleccionarImmexProgram = evento;
   }
 
   /** Agrega un programa IMMEX y emite los datos */
   agregarImmexProgram(): void {
-    const VALOR = {
-      instalacionPrincipal: '',
-      cveTipoInstalacion: '',
-      tipoInstalacion: '',
-      cveEntidadFederativa: this.domicilioslista[0].cveEntidadFederativa,
-      entidadFederativa: '',
-      cveDelegacionMunicipio: '',
-      municipioDelegacion: this.domicilioslista[0].municipioDelegacion,
-      direccion: this.domicilioslista[0].direccion,
-      codigoPostal: this.domicilioslista[0].codigoPostal,
-      registroSESAT: this.domicilioslista[0].registroSESAT,
-      procesoProductivo: '',
-      fechaModificacion: '',
-      cveEstatus: '',
-      estatus: '',
-      noExterior: '',
-      noInterior: '',
-      cveColonia: '',
-      calle: '',
-      descCol: '',
-      idRecinto: '',
-      numFolioAcuse: '',
-      observaciones: '',
-    };
-
-    /** Emite el valor agregado */
-    this.agregarImmexValor.emit(VALOR);
+    if (this.seleccionarImmexProgram.length > 0) {
+      const VALOR: Domicilios = {
+        instalacionPrincipal: this.seleccionarImmexProgram?.[0]
+          ?.instalacionPrincipal
+          ? this.seleccionarImmexProgram?.[0]?.instalacionPrincipal
+          : '',
+        cveTipoInstalacion: '',
+        tipoInstalacion: this.seleccionarImmexProgram?.[0]?.tipoInstalacion
+          ? this.seleccionarImmexProgram?.[0]?.tipoInstalacion
+          : '',
+        cveEntidadFederativa: '',
+        entidadFederativa: this.seleccionarImmexProgram[0].entidadFederativa,
+        cveDelegacionMunicipio: '',
+        municipioDelegacion:
+          this.seleccionarImmexProgram[0].municipioDelegacion,
+        direccion: this.seleccionarImmexProgram[0].direccion,
+        codigoPostal: this.seleccionarImmexProgram[0].codigoPostal,
+        registroSESAT: this.seleccionarImmexProgram[0].registroSESAT,
+        procesoProductivo: '',
+        fechaModificacion: '',
+        cveEstatus: '',
+        estatus: '',
+        noExterior: '',
+        noInterior: '',
+        cveColonia: '',
+        calle: '',
+        descCol: '',
+        idRecinto: '',
+        numFolioAcuse: '',
+        observaciones: '',
+      };
+      /** Emite el valor agregado */
+      this.agregarImmexValor.emit(VALOR);
+    }
+    this.agregarImmexProgramForm.reset();
+    this.domicilioslista = [];
   }
 
   /** Obtiene los datos de la entidad federativa desde el servicio */
@@ -219,7 +234,7 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (respuesta: EntidadFederativa[]) => {
-          this.domiciliosDatos = respuesta;
+          this.domicilioslista = respuesta;
         },
       });
   }

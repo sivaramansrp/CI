@@ -2,11 +2,23 @@
     "concepto": [
         {
             "id": 1,
-            "descripcion": "Reparación, re-trabajo o mantenimiento de"
+            "descripcion": "Abastecimiento, almacenaje o distribución de mercancías"
         },
         {
             "id": 2,
-            "descripcion": "Reparación, re-trabajo o mantenimiento de - 1"
+            "descripcion": "Alquiler de Oficinas y locales comerciales"
+        },
+        {
+            "id": 3,
+            "descripcion": "Autotransporte foráneo de materiales y residuos peligrosos"
+        },
+        {
+            "id": 4,
+            "descripcion": "Autotransporte terrestre de mercancías"
+        },
+        {
+            "id": 5,
+            "descripcion": "Blindaje, modificación o adaptación de vehículo automotor"
         }
     ],
     "tipoDeInversion": [

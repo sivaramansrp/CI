@@ -295,5 +295,61 @@ export const MODALIDAD_DEL_PROGRAMA_IMMEX = {
   labelNombre: 'Seleccione el numero y modalidad del programa I M M E X',
   required: false,
   primerOpcion: 'Selecciona una opción',
-  catalogos: []
+  catalogos: [],
+};
+
+export const TIPO_SECTOR = {
+  radioOptions: [
+    {
+      label: 'Sector productivo',
+      value: 1,
+    },
+    {
+      label: 'Sector servicio',
+      value: 2,
+    },
+  ],
+  isRequired: true,
+};
+
+export const MODALIDAD_DE_LA_GARANTIA_OPCION = {
+  radioOptions: [
+    {
+      label: 'Póliza revolvente',
+      value: 1,
+    },
+    {
+      label: 'Póliza individual',
+      value: 2,
+    },
+  ],
+  isRequired: true,
+};
+
+export const TIPO_DE_GARANTIA_OPCION = {
+  radioOptions: [
+    {
+      label: 'Fianza',
+      value: 1,
+    },
+    {
+      label: 'Carta de crédito',
+      value: 2,
+    },
+  ],
+  isRequired: true,
+};
+
+export const SINO_OPCION = {
+  radioOptions: [
+    {
+      label: 'Sí',
+      value: 1,
+    },
+    {
+      label: 'No',
+      value: 2,
+    },
+  ],
+  isRequired: true,
 };

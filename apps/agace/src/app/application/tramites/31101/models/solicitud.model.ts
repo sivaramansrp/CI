@@ -238,6 +238,8 @@ export interface TipoDeInversion {
  * Representa los domicilios relacionados con la empresa o instalación.
  */
 export interface Domicilios {
+  id? : number;
+  
   /** Indica si es instalación principal */
   instalacionPrincipal: string;
 
