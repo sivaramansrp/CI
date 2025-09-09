@@ -229,7 +229,11 @@
               datosSolicitudForm.get('correoElectronico')?.touched &&
               datosSolicitudForm.get('correoElectronico')?.hasError('email')
             ">
-            El valor Ingresado no es una dirección válida de correo electrónico
+            @if(correoElectronicoMensajeError){
+                El valor Ingresado no es una dirección válida de correo electrónico
+            }@else{
+                Por favor, escribe una dirección de correo válida
+            }
           </div>
         </div>
       </div>
@@ -688,7 +692,11 @@
             datosSolicitudForm.get('correoElectronico')?.touched &&
             datosSolicitudForm.get('correoElectronico')?.hasError('pattern')
           ">
-          El valor Ingresado no es una dirección válida de correo electrónico
+           @if(correoElectronicoMensajeError){
+                El valor Ingresado no es una dirección válida de correo electrónico
+            }@else{
+                Por favor, escribe una dirección de correo válida
+            }
         </div>
       </div>
     </ng-template>

@@ -116,6 +116,14 @@ export class DatosDeLaSolicitudComponent
    */
   @Input() public scianConfig!: ScianConfig<TablaScianConfig>;
 
+   /**
+   * Indica si existe un error en el campo de correo electrónico.
+   * 
+   * - `true`: Se muestra el mensaje de error de correo electrónico no válido.
+   * - `false`: No hay error, el correo electrónico es válido.
+   */
+  @Input() public correoElectronicoMensajeError: boolean = false;
+
   /**
    * @property {TablaMercanciasConfig<TablaMercanciasDatos>} tablaMercanciasConfig
    * Configuración de la tabla de mercancías recibida como input.
