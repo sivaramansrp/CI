@@ -10,7 +10,7 @@ import { FormBuilder } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { PermisoImportacionStore } from '../../estados/permiso-importacion.store';
 import { Tramite130120Query } from '../../estados/permiso-importacion.query';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
 
 @Injectable()
 class MockPermisoImportacionStore {}
@@ -135,8 +135,12 @@ describe('DatosExportadorComponent', () => {
         folioDelTramite: '',
         fechaDeInicio: '',
         estadoDelTramite: ''
-      }, 
-    });
+      },
+      action_id: '',
+      current_user: '',
+      id_solicitud: '',
+      nombre_pagina: ''
+    }) as Observable<ConsultaioState>;
     await component.ngOnInit();
   });
 
