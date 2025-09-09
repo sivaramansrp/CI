@@ -5,9 +5,11 @@ import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destina
 import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240105Query } from '../../estados/tramite240105Query.query';
+import { Tramite240105Store } from '../../../240105/estados/tramite240105Store.store';
 
 /**
  * @title Terceros Relacionados Contenedora
@@ -55,7 +57,11 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    * @property {Proveedor[]} proveedorTablaDatos
    */
   proveedorTablaDatos: Proveedor[] = [];
-
+  /**
+   * Identificador del procedimiento.
+   * @property {number} idProcedimiento
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Indica si el formulario debe mostrarse en modo solo lectura.
    *
@@ -75,9 +81,8 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    */
   constructor(
     private tramiteQuery: Tramite240105Query,
-    private consultaQuery: ConsultaioQuery
-  ) // eslint-disable-next-line no-empty-function
-  {}
+    private consultaQuery: ConsultaioQuery,
+        private tramiteStore: Tramite240105Store,){}
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -139,6 +144,54 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
       });
     }
   }
+  
+  /**
+   * Modifica los datos del destinatario en el store y navega a la sección de acciones.
+   * 
+   * Llama al método `actualizarDatosDestinatario` del store con el objeto recibido,
+   * y luego ejecuta la función `irAAcciones()` para continuar con el flujo.
+   *
+   * @param {DestinoFinal} datos - Objeto que contiene los datos actualizados del destinatario.
+   * @returns {void}
+   */
+  modificarDestinarioDatos(datos: DestinoFinal): void {
+    this.tramiteStore.actualizarDatosDestinatario(datos);
+    this.openModal('agregar-destino-final');
+  }
+  /**
+   * Modifica los datos del proveedor en el store.
+   * 
+   * Llama al método `actualizarDatosProveedor` del store con el objeto recibido.
+   *
+   * @param {Proveedor} datos - Objeto que contiene los datos actualizados del proveedor.
+   * @returns {void}
+   */
+  modificarProveedorDatos(datos: Proveedor): void {
+    this.tramiteStore.actualizarDatosProveedor(datos);
+    this.openModal('agregar-proveedor');
+  }
+
+  /**
+* @method eliminarDestinatarioFinal
+* @description Elimina el primer DestinoFinal final de la tabla de datos.
+* Si no hay DestinoFinal finales seleccionados, no realiza ninguna acción.
+*/
+eliminarDestinatarioFinal(datos: DestinoFinal): void {
+  if (datos) {
+    this.tramiteStore.eliminarDestinatarioFinal(datos);
+    
+  }
+}
+/**
+* @method eliminarProveedor
+* @description Elimina el primer Proveedor final de la tabla de datos.
+* Si no hay Proveedor finales seleccionados, no realiza ninguna acción.
+*/
+eliminarProveedor(datos: Proveedor): void {
+  if (datos) {
+    this.tramiteStore.eliminareliminarProveedorFinal(datos);
+  }
+}  
   /**
    * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
    *

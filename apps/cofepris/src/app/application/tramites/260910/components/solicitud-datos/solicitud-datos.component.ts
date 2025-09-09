@@ -1,4 +1,9 @@
-import { CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SCIAN, CONFIGURACION_COLUMNAS_SOLICITUD, DATOS_INICIALES_TABLA } from '../../constantes/260910-enum';
+import {
+  CONFIGURACION_COLUMNAS_MERCANCIAS,
+  CONFIGURACION_COLUMNAS_SCIAN,
+  CONFIGURACION_COLUMNAS_SOLICITUD,
+  DATOS_INICIALES_TABLA,
+} from '../../constantes/260910-enum';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
@@ -264,9 +269,18 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   inicializarFormGroup(): void {
     this.solicitudForm = this.fb.group({
-      tipoOperacion: [this.solicitud260910State.tipoOperacion, Validators.required],
-      observaciones: [{ value: this.solicitud260910State.observaciones, disabled: true }, [Validators.required]],
-      rfcSanitario: [{ value: this.solicitud260910State.rfcSanitario, disabled: true }, [Validators.required]],
+      tipoOperacion: [
+        this.solicitud260910State.tipoOperacion,
+        Validators.required,
+      ],
+      observaciones: [
+        { value: this.solicitud260910State.observaciones, disabled: true },
+        [Validators.required],
+      ],
+      rfcSanitario: [
+        { value: this.solicitud260910State.rfcSanitario, disabled: true },
+        [Validators.required],
+      ],
       razonSocial: [
         { value: this.solicitud260910State.razonSocial, disabled: true },
         [Validators.required, Validators.maxLength(30)],
@@ -282,7 +296,8 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       estado: [this.solicitud260910State.estado, [Validators.required]],
       municipio: [
         { value: this.solicitud260910State.municipio, disabled: true },
-        [Validators.required]],
+        [Validators.required],
+      ],
       localidad: [
         { value: this.solicitud260910State.localidad, disabled: true },
       ],
@@ -301,7 +316,9 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
         ],
       ],
       avisoDeFuncionamiento: [this.solicitud260910State.avisoDeFuncionamiento],
-      licenciaSanitaria: [{ value: this.solicitud260910State.licenciaSanitaria, disabled: true }],
+      licenciaSanitaria: [
+        { value: this.solicitud260910State.licenciaSanitaria, disabled: true },
+      ],
       liveFreshFrozen: [this.solicitud260910State.liveFreshFrozen],
       regimen: [this.solicitud260910State.regimen, [Validators.required]],
       aduana: [this.solicitud260910State.aduana, [Validators.required]],
@@ -327,7 +344,10 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
 
     this.claveSCIANForm = this.fb.group({
       claveSCIAN: [this.solicitud260910State.claveSCIAN, [Validators.required]],
-      claveSCIANDesc: [this.solicitud260910State.claveSCIANDesc, [Validators.required]]
+      claveSCIANDesc: [
+        this.solicitud260910State.claveSCIANDesc,
+        [Validators.required],
+      ],
     });
 
     this.solicitud260910Query.seleccionarSolicitud$
@@ -403,7 +423,9 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
           this.solicitud260910Store.setCalle(respuesta.calle);
           this.solicitud260910Store.setLada(respuesta.lada);
           this.solicitud260910Store.setTelefono(respuesta.telefono);
-          this.solicitud260910Store.setAvisoDeFuncionamiento(respuesta.avisoDeFuncionamiento);
+          this.solicitud260910Store.setAvisoDeFuncionamiento(
+            respuesta.avisoDeFuncionamiento
+          );
           this.solicitud260910Store.setLegalRazonSocial(
             respuesta.legalRazonSocial
           );
@@ -547,7 +569,9 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   openAgregarSCIAN(): void {
     if (this.modalElementSCIAN) {
-      const MODAL_INSTANCE_SCIAN = new Modal(this.modalElementSCIAN.nativeElement);
+      const MODAL_INSTANCE_SCIAN = new Modal(
+        this.modalElementSCIAN.nativeElement
+      );
       MODAL_INSTANCE_SCIAN.show();
     }
   }
@@ -601,6 +625,11 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   setClaveSCIAN(evento: Catalogo): void {
     this.solicitud260910Store.setClaveSCIAN(evento.id);
+    this.SCIANDescCatalogo.catalogos.forEach((elemento) => {
+      if (elemento.clave === evento.clave) {
+        this.solicitud260910Store.setClaveSCIANDesc(elemento.id);
+      }
+    });
   }
 
   /**
@@ -702,18 +731,31 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Limpia los campos del formulario de clave SCIAN.
+   * @returns { void }
+   */
+  limpiarSCIAN(): void {
+    this.claveSCIANForm.reset();
+  }
+
+  /**
    * Agrega nuevo SCIAN.
    */
   agregarSCIAN(): void {
+    const SELECCIONADA_SCIAN =
+      this.SCIANCatalogo.catalogos.find(
+        (item) => item.id === Number(this.claveSCIANForm.get('claveSCIAN')?.value)
+      )?.descripcion ?? '';
+    const SELECCIONADA_SCIAN_DESCRIPCION =
+      this.SCIANDescCatalogo.catalogos.find(
+        (item) => item.id === Number(this.claveSCIANForm.get('claveSCIANDesc')?.value)
+      )?.descripcion ?? '';
     const OBJETO_JSON = {
-      claveSCIAN: this.claveSCIANForm.get(
-        'claveSCIAN'
-      )?.value,
-      claveSCIANDesc: this.claveSCIANForm.get(
-        'claveSCIANDesc'
-      )?.value
+      claveSCIAN: SELECCIONADA_SCIAN,
+      claveSCIANDesc: SELECCIONADA_SCIAN_DESCRIPCION,
     };
     this.solicitud260910Store.addSCIANDatos(OBJETO_JSON);
+    this.limpiarSCIAN();
   }
 
   /**
@@ -735,7 +777,9 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   confirmarEliminarMercancias(tipo: string): void {
     this.seleccionadoTipo = tipo;
     if (this.modalConfirmarElement) {
-      const MODAL_CONFIRMAR_INSTANCE = new Modal(this.modalConfirmarElement.nativeElement);
+      const MODAL_CONFIRMAR_INSTANCE = new Modal(
+        this.modalConfirmarElement.nativeElement
+      );
       MODAL_CONFIRMAR_INSTANCE.show();
     }
   }
@@ -752,7 +796,9 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Establece aviso de funcionamiento.
    */
   setAvisoDeFuncionamiento(): void {
-    const AVISO_CHECKBOX = this.solicitudForm.get('avisoDeFuncionamiento')?.value;
+    const AVISO_CHECKBOX = this.solicitudForm.get(
+      'avisoDeFuncionamiento'
+    )?.value;
     this.solicitud260910Store.setAvisoDeFuncionamiento(AVISO_CHECKBOX);
     if (this.solicitudForm.get('avisoDeFuncionamiento')?.value === true) {
       this.solicitudForm.get('licenciaSanitaria')?.disable();
@@ -776,9 +822,17 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * @param campo Nombre del campo
    * @param metodoNombre Método del almacén
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud260910Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Solicitud260910Store
+  ): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud260910Store[metodoNombre] as (value: string | number | boolean) => void)(VALOR);
+    (
+      this.solicitud260910Store[metodoNombre] as (
+        value: string | number | boolean
+      ) => void
+    )(VALOR);
   }
 
   /**
@@ -786,7 +840,9 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   seleccionarEstablecimiento(): void {
     if (this.modalAlertaElement) {
-      const MODAL_ALERTA_INSTANCE = new Modal(this.modalAlertaElement.nativeElement);
+      const MODAL_ALERTA_INSTANCE = new Modal(
+        this.modalAlertaElement.nativeElement
+      );
       MODAL_ALERTA_INSTANCE.show();
     }
   }

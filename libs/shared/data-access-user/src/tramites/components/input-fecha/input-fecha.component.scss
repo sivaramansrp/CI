@@ -1,3 +1,7 @@
+/* Ensure asterisk turns red when parent has-error, for Angular component encapsulation */
+::ng-deep.form-group.has-error .require {
+  color: #dc3545 !important;
+}
 ol {
   list-style: none;
   display: grid;

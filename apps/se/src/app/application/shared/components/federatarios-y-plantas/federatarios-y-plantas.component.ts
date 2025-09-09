@@ -1,5 +1,5 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
-import { Input, Output } from '@angular/core';
+import { Component, EventEmitter, OnChanges, OnInit } from '@angular/core';
+import { Input, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -56,7 +56,7 @@ import { Validators } from '@angular/forms';
   templateUrl: './federatarios-y-plantas.component.html',
   styleUrl: './federatarios-y-plantas.component.scss',
 })
-export class FederatariosYPlantasComponent implements OnInit {
+export class FederatariosYPlantasComponent implements OnInit, OnChanges {
   /**
    * Datos de federatarios que se mostrarán en la tabla
    * @property {FederatariosEncabezado} datosFederatarios
@@ -129,6 +129,11 @@ export class FederatariosYPlantasComponent implements OnInit {
    * @property {CatalogoDatosIdx} estadoOptionsConfig
    */
   @Input() estadoOptionsConfig!: CatalogoDatosIdx;
+
+  /**
+   * @property {boolean} esFormularioUpdate - Indica si el formulario está en modo de actualización.
+   */
+  @Input() esFormularioUpdate: boolean = false;
 
   /**
    * Emite eventos relacionados con acciones en la sección.
@@ -255,6 +260,21 @@ export class FederatariosYPlantasComponent implements OnInit {
   }
 
   /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Si el formulario está deshabilitado (`formularioDeshabilitado` es verdadero),
+   * deshabilita el grupo de controles `federatariosFormGroup` para evitar la interacción del usuario.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['estadoOptionsConfig'] && this.esFormularioUpdate) {
+      this.federatariosFormGroup.get('estado')?.setValue(this.estadoOptionsConfig.estadosFederatarios?.[0]?.id);
+      this.federatariosFormGroup.get('estadoOptions')?.setValue(this.estadoOptionsConfig.municipio?.[0]?.id);
+      this.federatariosCatalogoGroup.get('estadoUno')?.setValue(this.estadoOptionsConfig.estadoImmex?.[0]?.id);
+      this.federatariosCatalogoGroup.get('estadoDos')?.setValue(this.estadoOptionsConfig.municipio?.[0]?.id);
+      this.federatariosCatalogoGroup.get('estadoTres')?.setValue(this.estadoOptionsConfig.municipio?.[0]?.id);
+    }
+  }
+
+  /**
    * Inicializa el formulario de federatarios con sus campos y validaciones
    * @method initFederatariosFormGroup
    * @returns {void}
@@ -280,22 +300,22 @@ export class FederatariosYPlantasComponent implements OnInit {
       numeroDeNotaria: new FormControl(this.datosFederatarios?.numeroDeNotaria,
         [Validators.required, Validators.maxLength(6)]
       ),
-      estado: new FormControl('',
+      estado: new FormControl(this.datosFederatarios?.estado,
         Validators.required
       ),
-      estadoOptions: new FormControl('',
+      estadoOptions: new FormControl(this.datosFederatarios?.estadoOptions,
         Validators.required
       ),
       
     });
     this.federatariosCatalogoGroup = new FormGroup({
-      estadoUno: new FormControl('',
+      estadoUno: new FormControl(this.datosFederatarios?.estadoUno,
         Validators.required
       ),
-      estadoDos: new FormControl('',
+      estadoDos: new FormControl(this.datosFederatarios?.estadoDos,
         Validators.required
       ),
-      estadoTres: new FormControl('',
+      estadoTres: new FormControl(this.datosFederatarios?.estadoTres,
         Validators.required
       ),
     })
@@ -318,6 +338,10 @@ export class FederatariosYPlantasComponent implements OnInit {
    * @param accionesPath
    */
   irAAcciones(accionesPath: string): void {
+    if (accionesPath === '../proveedor-por-archivo' && this.accionSeccion.observers.length > 0){
+    this.accionSeccion.emit(accionesPath);
+    return;
+    }
     if (!this.plantasImmexSeleccionadoDatos.length){
       this.abrirPlantasModal();
       return;
@@ -529,9 +553,9 @@ agregarPlantas(): void {
   eliminarPlantas(): void {
     if (this.plantasImmexSeleccionadoDatos?.length > 0) {
       this.plantasImmexSeleccionadoDatos.forEach(planta => {
-        const index = this.plantasImmexDatos.findIndex(row => row === planta);
-        if (index !== -1) {
-          this.plantasImmexDatos.splice(index, 1);
+        const INDEX = this.plantasImmexDatos.findIndex(row => row === planta);
+        if (INDEX !== -1) {
+          this.plantasImmexDatos.splice(INDEX, 1);
         }
     });
     this.plantasImmexDatos = [...this.plantasImmexDatos];

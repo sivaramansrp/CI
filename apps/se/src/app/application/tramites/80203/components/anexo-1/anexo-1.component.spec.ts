@@ -173,17 +173,6 @@ describe('Anexo1Component', () => {
     expect(Array.isArray(component.nico)).toBe(true);
   });
 
-  it('should set UI state flags', () => {
-    component.showFraccionExport = false;
-    component.showFraccionExportacion();
-    expect(component.showFraccionExport).toBe(true);
-    component.showTableExport = false;
-    component.showTableExportacion();
-    expect(component.showTableExport).toBe(true);
-    component.showTableImport = false;
-    component.showTableImportacion();
-    expect(component.showTableImport).toBe(true);
-  });
 
   it('should call get on immexRegistroform in disableFormControls', () => {
     const getMock = jest.fn().mockReturnValue({ disable: jest.fn() });

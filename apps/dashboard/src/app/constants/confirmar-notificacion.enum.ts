@@ -52,3 +52,4 @@ export const CONFIRMAR_NOTIFICACION_ALERT = "<div class='text-center'>La notific
  * Mensaje de alerta para la notificación de resolución.
  */
 export const CONFIRMAR_NOTIFICACION_RESOLUCION_ALERT = "<div class='text-center'>La notificación de la resolución para el trámite con número 2500301600120259910000129 ha sido confirmada.</div>";
+

@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Notificacion, NotificacionesComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 import {
   CatalogoDatosIdx,
@@ -22,7 +22,6 @@ import { CargaPorArchivoComponent } from '../../../../shared/components/carga-po
 import { ComplementarPlantaComponent } from '../../../../shared/components/complementar-planta/complementar-planta.component';
 import { EmpleadosComponent } from '../../../../shared/components/empleados/empleados.component';
 import { MontosDeInversionComponent } from '../../../../shared/components/montos-de-inversion/montos-de-inversion.component';
-
 /**
  * Componente para la vista de federatarios y plantas
  * @export FederatariosYPlantasVistaComponent
@@ -30,7 +29,7 @@ import { MontosDeInversionComponent } from '../../../../shared/components/montos
 @Component({
   selector: 'app-federatarios-y-plantas-vista',
   standalone: true,
-  imports: [CommonModule, FederatariosYPlantasComponent,ComplementarPlantaComponent,MontosDeInversionComponent,EmpleadosComponent,CapacidadInstaladaComponent,CargaPorArchivoComponent],
+  imports: [CommonModule, FederatariosYPlantasComponent,ComplementarPlantaComponent,MontosDeInversionComponent,EmpleadosComponent,CapacidadInstaladaComponent,CargaPorArchivoComponent,NotificacionesComponent],
   templateUrl: './federatarios-y-plantas-vista.component.html',
   styleUrl: './federatarios-y-plantas-vista.component.css',
 })
@@ -39,6 +38,11 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.Add commentMore actions
    */
   @Input() formularioDeshabilitado: boolean = false;
+
+  /**
+   * @property {boolean} esFormularioUpdate - Indica si el formulario está en modo de actualización.
+   */
+  @Input() esFormularioUpdate: boolean = false;
 
   /**
    * Datos de federatarios que se mostrarán en la tabla
@@ -94,9 +98,21 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
 
   /**
    * Lista de plantas IMMEX para mostrar en la tabla
+   * @property {PlantasImmex[]} plantasDisponiblesTablaLista
+   */
+  public plantasDisponiblesTablaLista$!: Observable<PlantasDisponibles[]>;
+
+  /**
+   * Lista de plantas IMMEX para mostrar en la tabla
    * @property {PlantasImmex[]} plantasImmexTablaLista
    */
   public plantasImmexTablaLista: PlantasImmex[] = [];
+
+  /**
+   * Lista de plantas IMMEX para mostrar en la tabla
+   * @property {PlantasImmex[]} plantasImmexTablaLista
+   */
+  public plantasImmexTablaLista$!: Observable<PlantasImmex[]>;
   /**
    * Lista de federatarios para mostrar en la tabla
    * @property {FederatariosEncabezado[]} federatariosTablaLista
@@ -140,6 +156,18 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
   public mostrarProveedorPorArchivoPopup:boolean = false;
 
   /**
+   * Indica si la tabla contiene datos actualmente.
+   * Se emplea para controlar comportamientos o visualizaciones basadas en la presencia de datos.
+   */
+  tieneDatosDeTabla: boolean = false;
+
+  /**
+   * Instancia de la notificación que representa un nuevo evento o mensaje.
+   * Se utiliza para manejar y mostrar notificaciones dentro del componente.
+   */
+  public nuevaUnoNotificacion!: Notificacion;
+
+  /**
    * Constructor de la clase FederatariosYPlantasVistaComponent.
    *
    * @param store - Inyección de dependencia del servicio `Tramite80101Store` para gestionar el estado de la aplicación.
@@ -153,12 +181,8 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
     public nuevoProgramaIndustrialService: NuevoProgramaIndustrialService
   ) {
     this.federatariosTablaLista$ = this.query.selectDatosFederatarios$;
-    this.nuevoProgramaIndustrialService
-      .getFederataiosyPlantaCatalogosData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((resp) => {
-        this.estadoOptionsConfig = resp
-      });
+    this.plantasImmexTablaLista$ = this.query.selectDatosPlantasImmex$;
+    this.plantasDisponiblesTablaLista$ = this.query.selectDatosPlantasDisponibles$;
   }
 
   /**
@@ -172,6 +196,18 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((datos) => {
         this.datosFederatarios = datos;
+      });
+
+  this.nuevoProgramaIndustrialService.tieneDatosDeTabla$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((val: boolean) => {
+      this.tieneDatosDeTabla = val;
+    });
+    this.nuevoProgramaIndustrialService
+      .getFederataiosyPlantaCatalogosData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
+        this.estadoOptionsConfig = resp
       });
   }
   /**
@@ -205,7 +241,21 @@ onAccionSeccion(ruta: string):void {
   } else if (ruta === '../capacidad-instalada-acciones') {
     this.mostrarCapacidadInstaladaPopup = true;
   } else if (ruta === '../proveedor-por-archivo'){
-    this.mostrarProveedorPorArchivoPopup = true;
+    if(this.tieneDatosDeTabla){
+      this.mostrarProveedorPorArchivoPopup = true;
+    } else {
+      this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe ingresar las fracciones del producto para agregar la capacidad instalada.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
   }
 }
 

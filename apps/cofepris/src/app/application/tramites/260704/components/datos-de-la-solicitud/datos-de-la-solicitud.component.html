@@ -11,7 +11,7 @@
     <div class="row mt-5">
       <div class="col-md-6">
         <label>Justificación*:</label>
-        <textarea cols="80" rows="5" formControlName="justificacion" [disabled]="true" maxlength="2000"
+        <textarea cols="80" rows="5" formControlName="justificacion" [disabled]="soloLectura" maxlength="2000"
           (change)="setValoresStore(validacionForm,'justificacion', 'setJustificacion')"></textarea>
           @if (validacionForm.get('justificacion')?.hasError('required') &&
             validacionForm.get('justificacion')?.touched) {
@@ -92,7 +92,14 @@
       <div class="col-md-4">
         <label for="descripcionMunicipio" class="form-label">Municipio o alcaldía*:</label>
         <input type="text" class="form-control" maxlength="120" formControlName="municipio" 
-          (change)="setValoresStore(validacionMercanciaForm,'municipio', 'setMunicipio')" />
+          (change)="setValoresStore(validacionMercanciaForm,'municipio', 'setMunicipio')" 
+          />
+          @if (validacionMercanciaForm.get('municipio')?.hasError('required') &&
+            validacionMercanciaForm.get('municipio')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            }
       </div>
     </div>
     <div class="row mt-5">
@@ -114,12 +121,21 @@
     </div>
     <div class="row">
       <div class="col-md-8">
-        <label for="calle" class="form-label">Calle*: <span class="bi bi-question-circle-fill"
-            title="Domicilio, calle, n&uacute;mero interior, n&uacute;mero exterior, lote"
-            data-bs-toggle="tooltip"></span>
+        <label for="calle" class="form-label">Calle*:
+          <span
+            class="bi bi-question-circle-fill"
+            tooltip="Domicilio, calle, número interior, numero exterior, lote"
+            placement="top">
+          </span>
         </label>
-        <input type="text" class="form-control" formControlName="calle" maxlength="90" 
+        <input type="text" class="form-control" formControlName="calle" maxlength="100" 
           (change)="setValoresStore(validacionMercanciaForm,'calle', 'setCalle')" />
+          @if (validacionMercanciaForm.get('calle')?.hasError('required') &&
+            validacionMercanciaForm.get('calle')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            }
       </div>
     </div>
     <div class="row">
@@ -506,3 +522,11 @@
     </div>
   </div>
 </form>
+
+@if (mostrarRfcAlerta) {
+<section>
+  <lib-notificaciones 
+  [notificacionInput]="nuevaRfcNotificacion" >
+  </lib-notificaciones>
+</section>
+}

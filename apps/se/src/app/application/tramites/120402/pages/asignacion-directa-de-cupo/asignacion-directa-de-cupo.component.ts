@@ -5,7 +5,7 @@
 
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, Notificacion, WizardComponent } from '@ng-mf/data-access-user';
-import { ERROR_FORMA_ALERT, NOTA } from '../../constantes/definiciones.enum';
+import { ERROR_FORMA_ALERT, NOTA, PRIVACY_NOTICE_CONTENT } from '../../constantes/definiciones.enum';
 import { ASIGNACION } from '@ng-mf/data-access-user';
 import { DatosComponent } from '../datos/datos.component';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -103,6 +103,15 @@ export class AsignacionDirectaDeCupoComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  /**
+   * Contenido del aviso de privacidad utilizado en el componente.
+   * @public
+   * @readonly
+   * @type {string}
+   * @memberof SanidadCertificadoComponent
+   */
+  readonly PRIVACY_NOTICE_CONTENT: string = PRIVACY_NOTICE_CONTENT;
 
   /**
    * Valida los formularios del paso actual y marca los campos inválidos como tocados para mostrar errores de validación.
