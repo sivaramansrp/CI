@@ -7,7 +7,9 @@ import { Tramite260201Store } from '../../estados/tramite260201Store.store';
 import { ScianDataService } from '../../../../shared/services/scian-data.service';
 import { Subscription } from 'rxjs';
 
-
+/**
+ * @component ScianTablaContenedoraComponent
+ */
 @Component({
   selector: 'app-scian-tabla-contenedora',
   standalone: true,
