@@ -1,7 +1,9 @@
-import { Catalogo, CatalogoSelectComponent, SeccionLibState, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CategoriaMensaje, Notificacion, SeccionLibState, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogosTramiteService } from '../../services/catalogosTramite.service';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user'
 import { DatosGrupos } from '../../models/permiso-importacion-modification.model';
@@ -80,7 +82,7 @@ export class RepresentacionFederalComponent implements OnInit {
    * @description Indica si el formulario está en modo solo lectura.
    */
   esFormularioSoloLectura: boolean = false;
-  
+
   /**
    * @property {Subject<void>} destroyNotifier$
    * @description Subject para manejar la destrucción de suscripciones.
@@ -92,6 +94,11 @@ export class RepresentacionFederalComponent implements OnInit {
    * @description Estado actual de los datos del trámite.
    */
   private datosState!: DatosGrupos
+
+  /**
+    * Nueva notificación para mostrar mensajes de error o información al usuario.
+    */
+  nuevaNotificacion: Notificacion | null = null;
 
   /**
    * @constructor
@@ -106,7 +113,8 @@ export class RepresentacionFederalComponent implements OnInit {
     public store: PermisoImportacionStore,
     public query: Tramite130120Query,
     public consultaQuery: ConsultaioQuery,
-    public permisoImportacionService: PermisoImportacionService
+    public permisoImportacionService: PermisoImportacionService,
+    private catalogosService: CatalogosTramiteService
   ) {
   }
 
@@ -116,30 +124,30 @@ export class RepresentacionFederalComponent implements OnInit {
    */
   async ngOnInit(): Promise<void> {
     this.query.selectDatos$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((state) => {
-        this.datosState = state as DatosGrupos;
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.datosState = state as DatosGrupos;
+        })
+      )
+      .subscribe();
     await this.initActionFormBuild();
     this.obtenerEntidadSelectList();
     this.obtenerRepresentacionSelectList();
     this.consultaQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.esFormularioSoloLectura = seccionState.readonly;
-          })
-        )
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
       .subscribe();
 
     if (this.esFormularioSoloLectura) {
       this.datosFederal.disable();
     }
-    }
-    
+  }
+
   /**
    * @method initActionFormBuild
    * @description Inicializa el formulario reactivo con los valores actuales del estado.
@@ -156,31 +164,47 @@ export class RepresentacionFederalComponent implements OnInit {
    * @description Obtiene las opciones del catálogo de entidad federativa desde el servicio y las asigna al arreglo local.
    */
   obtenerEntidadSelectList(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable(
-        'entidad_federativa.json'
-      )
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-      next: (data) => {
-        this.entidadOpcion = data as Catalogo[];
+    this.catalogosService.getCatEntidades().subscribe({
+      next: (resp) => {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
+          this.entidadOpcion = resp.datos ?? [];
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: resp.error || 'Error al mostrar la firma.',
+            mensaje:
+              resp.causa ||
+              resp.mensaje ||
+              'Ocurrió un error al mostrar la firma.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
       },
-      });
-    }
+      error: (err) => {
+        console.error('Error al cargar los regímenes', err);
+      }
+    });
+  }
 
   /**
    * @method obtenerRepresentacionSelectList
    * @description Obtiene las opciones del catálogo de representación federal desde el servicio y las asigna al arreglo local.
    */
   obtenerRepresentacionSelectList(): void {
-      this.permisoImportacionService.obtenerMenuDesplegable(
-        'representacion_federal.json'
-      )
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe({
-          next: (data) => {
-            this.representacionOpcion = data as Catalogo[];
-          },
-        });
+    this.permisoImportacionService.obtenerMenuDesplegable(
+      'representacion_federal.json'
+    )
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          this.representacionOpcion = data as Catalogo[];
+        },
+      });
   }
 
   /**
