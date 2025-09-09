@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ALERTARCHIVOMSG, PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { Catalogo, ConfiguracionColumna, Notificacion, TipoNotificacionEnum } from '@ng-mf/data-access-user';
 import {
   Component,
@@ -17,7 +18,6 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CommonModule } from '@angular/common';
 import { MENSAJES } from '../../constants/importacion-material-de-investigacion-cientifica-pasos.enum';
 import { Modal } from 'bootstrap';
-import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
@@ -46,6 +46,20 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
 export class PartidasDeLaMercanciaComponent implements OnChanges {
+  /**
+   *  Indica si se debe mostrar una alerta de archivo.
+   */
+  alertaArchivo = false;
+  /**
+   * Textos utilizados en el componente.
+   * @type {typeof TEXTOS}
+   */
+  TEXTOS = TEXTOS;
+
+  /*
+   * @descripcion Mensaje de alerta para el archivo.
+   */
+  ALERTARCHIVOMSG = ALERTARCHIVOMSG ;
     /**
    * modificarPartidasDelaMercanciaForm
    * Formulario reactivo para modificar las partidas.
@@ -60,10 +74,19 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
    * @descripcion Notificación para mostrar mensajes al usuario.
    */
   public nuevaNotificacion!: Notificacion;
+  /*
+   * @Input() mostrarErroresModal
+   * Bandera que indica si se deben mostrar los mensajes de error en el modal.
+   */
+  mostrarErroresModal = false;
     /*
    * @descripcion Indica si se debe mostrar una notificación.
    */
   mostrarNotificacion = false;
+    /**
+   * Evento emitido cuando se modifica una partida seleccionada.
+   */
+  @Output() partidaModificada = new EventEmitter<PartidasDeLaMercanciaModelo>();
   /**
    * @Input() mostrarErrores
    * Bandera que indica si se deben mostrar los mensajes de error en el formulario.
@@ -174,6 +197,15 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
    * Evento emitido cuando se modifica una partida seleccionada.
    */
   @Output() modificarPartidaSeleccionada = new EventEmitter<PartidasDeLaMercanciaModelo>();
+    /**
+   * Evento emitido antes de cargar un archivo, permitiendo realizar validaciones previas.
+   */
+  @Output() validarAntesDeCargarArchivo = new EventEmitter<void>();
+    /**
+   * @ViewChild('cargarArchivo') cargarArchivoElemento
+   * Referencia al elemento del DOM para el modal de carga de archivos.
+   */
+  @ViewChild('cargarArchivo') cargarArchivoElemento!: ElementRef;		
 
   /**
    * Nombre del archivo seleccionado por el usuario.
@@ -305,6 +337,15 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
     this.setValoresStoreEvent.emit({ form, campo });
   }
   /**
+ * Verifica si un control específico dentro del formulario `modificarPartidasDelaMercanciaForm` es inválido y ha sido tocado o modificado.
+ * El nombre del control dentro del formulario a validar.
+ * true si el control es inválido y ha sido tocado o modificado; de lo contrario, `false`.
+ */
+  esInvalidoModal(nombreControl: string): boolean {
+    const CONTROL = this.modificarPartidasDelaMercanciaForm.get(nombreControl);
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
+  }
+  /**
    * Maneja la confirmación del modal para eliminar partidas seleccionadas.
    * Si la bandera `confirmandoEliminarPartida` está activa, elimina las partidas seleccionadas
    * y restablece la bandera. Además, oculta la notificación.
@@ -328,6 +369,131 @@ eliminarPartidasSeleccionadas(): void {
     this.tableBodyData = this.tableBodyData.filter(row => !IDS_ELIMINAR.includes(row.id));
     this.selectedRows = [];
     this.partidasEliminadas.emit(IDS_ELIMINAR); 
+  }
+}
+/**
+ * Muestra una notificación para confirmar la eliminación de las partidas seleccionadas.
+ * Si no hay elementos seleccionados, muestra una alerta informando al usuario que debe seleccionar al menos un elemento.
+ * Si hay elementos seleccionados, muestra una notificación de confirmación para proceder con la eliminación.
+ */
+confirmarEliminarPartida(): void {
+  if (!this.selectedRows || this.selectedRows.length === 0) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: 'info',
+      modo: '',
+      titulo: '',
+      mensaje: 'Selecciona un registro a eliminar.',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm'
+    };
+    this.mostrarNotificacion = true;
+    this.confirmandoEliminarPartida = false;
+    return;
+  }
+  this.nuevaNotificacion = {
+    tipoNotificacion: TipoNotificacionEnum.ALERTA,
+    categoria: 'info',
+    modo: '',
+    titulo: '',
+    mensaje: '¿Está seguro que desea eliminar los registros marcados?',
+    cerrar: false,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+    tamanioModal: 'modal-md'
+  };
+  this.mostrarNotificacion = true;
+  this.confirmandoEliminarPartida = true;
+}
+  /*
+   * Abre el modal para cargar un archivo.
+   */
+  abrirCargarArchivoModal(): void {
+  this.validarAntesDeCargarArchivo.emit();
+  }
+    /**
+   * Abre un modal para cargar un archivo utilizando el elemento referenciado en `cargarArchivoElemento`.
+   * Si el elemento existe, se crea una instancia de `Modal` con la opción de fondo deshabilitada (`backdrop: false`)
+   * y se muestra el modal.
+   */
+  abrirCargarArchivoModalReal(): void {
+    if (this.cargarArchivoElemento && this.cargarArchivoElemento.nativeElement) {
+      const MODAL_INSTANCIA = new Modal(
+        this.cargarArchivoElemento?.nativeElement,
+        { backdrop: false }
+      );
+      MODAL_INSTANCIA.show();
+    }
+  }
+
+  /**
+ * Método que gestiona la carga de un archivo desde un input HTML. 
+ * Verifica que el archivo seleccionado exista y que su extensión sea `.csv`. 
+ * Si no se selecciona ningún archivo o la extensión no es válida, muestra una notificación de error.
+ * Si el archivo es válido, oculta la notificación y cierra el modal de carga.
+ */
+  enviarArchivo(): void {
+  const INPUT_FILE = document.getElementById('archivoNacionales') as HTMLInputElement;
+  if (!INPUT_FILE || !INPUT_FILE.files || INPUT_FILE.files.length === 0) {
+    this.alertaArchivo = true;
+    this.mostrarNotificacion = false;
+    return;
+  }
+  const FILE = INPUT_FILE.files[0];
+  const EXTENSION = FILE.name.split('.').pop()?.toLowerCase();
+  if (EXTENSION !== 'csv') {
+    this.mostrarNotificacion = true;
+    this.alertaArchivo = false; 
+    return;
+  }
+  this.mostrarNotificacion = false;
+  this.alertaArchivo = false;
+  this.cerrarCargarArchivoModal();
+  }
+  /*
+ * Cierra el modal para cargar un archivo.
+ */
+  cerrarCargarArchivoModal(): void {
+    if (this.cargarArchivoElemento && this.cargarArchivoElemento.nativeElement) {
+      const MODAL_INSTANCIA = Modal.getInstance(
+        this.cargarArchivoElemento.nativeElement
+      );
+      if (MODAL_INSTANCIA) {
+        MODAL_INSTANCIA.hide();
+      }
+    }
+  }
+  /**
+ * Valida los campos del formulario antes de modificar una partida.
+ */
+validarModificarPartida(): void {
+  
+  if (this.modificarPartidasDelaMercanciaForm.invalid) {
+    this.mostrarErroresModal = true;
+    this.modificarPartidasDelaMercanciaForm.markAllAsTouched();
+    return;
+  }
+  this.mostrarErroresModal = false;
+   const PREV = this.selectedRows[0];
+  if (!PREV) { return; }
+
+  this.partidaModificada.emit({
+    id: PREV.id,
+    cantidad: this.modificarPartidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
+    descripcion: this.modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
+    totalUSD: this.modificarPartidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
+    unidadDeMedida: PREV.unidadDeMedida,
+    fraccionFrancelaria: PREV.fraccionFrancelaria,
+    precioUnitarioUSD: PREV.precioUnitarioUSD
+  });
+  
+  if (this.modificarPartidaElemento && this.modificarPartidaElemento.nativeElement) {
+    const MODAL_INSTANCIA = Modal.getInstance(this.modificarPartidaElemento.nativeElement);
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
   }
 }
 }

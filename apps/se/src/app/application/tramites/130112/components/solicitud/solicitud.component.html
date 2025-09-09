@@ -36,6 +36,8 @@
   (setValoresStoreEvent)="setValoresStore($event)"
   (partidasEliminadas)="onPartidasEliminadas($event)"
   (modificarPartidaSeleccionada)="onModificarPartidaSeleccionada($event)"
+  (validarAntesDeCargarArchivo)="validarYCargarArchivo()"
+  (partidaModificada)="onPartidaModificada($event)"
 ></app-partidas-de-la-mercancia>
 
 
@@ -53,8 +55,6 @@
 [frmRepresentacionForm]="frmRepresentacionForm"
 [entidadFederativa]="entidadFederativa"
 [representacionFederal]="representacionFederal"
-[TEXTOS]="TEXTOS"
-[idProcedimiento]="idProcedimiento"
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
 (setValoresStoreEvent)="setValoresStore($event)">
 </app-representacion>

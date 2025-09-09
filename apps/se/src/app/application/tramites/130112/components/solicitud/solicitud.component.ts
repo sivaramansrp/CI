@@ -15,7 +15,6 @@ import { PartidasDeLaMercanciaComponent } from '../partidas-de-la-mercancia/part
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130112/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
-import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130112Query } from '../../estados/queries/tramite130112.query';
 import fractionValues from '@libs/shared/theme/assets/json/130112/fraccion_arancelaria.json';
@@ -183,12 +182,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {string[]}
    */
   selectRangoDias: string[] = [];
-  /**
-   *  Objeto o constante que contiene los textos utilizados en la aplicación.
-   * @type {any}
-   */
-  TEXTOS = TEXTOS;
-
   /**
    * @property {string} idProcedimiento
    * @description
@@ -431,10 +424,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       );
     this.paisForm = this.fb.group({
       bloque: [this.seccionState?.bloque],
-      usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
+      usoEspecifico: [this.seccionState?.usoEspecifico, [Validators.required, SolicitudComponent.validarSinCaracterAnguloDerecho]],
       justificacionImportacionExportacion: [
         this.seccionState?.justificacionImportacionExportacion,
-        [Validators.required],
+        [Validators.required, SolicitudComponent.validarSinCaracterAnguloDerecho],
       ],
       observaciones: [this.seccionState?.observaciones],
     });
@@ -844,5 +837,99 @@ this.tramite130112Store.actualizarEstado({
     fraccionTigiePartidasDeLaMercancia: partida.fraccionTigiePartidasDeLaMercancia,
     fraccionDescripcionPartidasDeLaMercancia: partida.fraccionDescripcionPartidasDeLaMercancia || ''
   });
+  }
+  /**
+   * Valida los formularios de mercancía y partidas de la mercancía antes de permitir la carga de un archivo.
+   */
+  validarYCargarArchivo(): void {
+     ['cantidad', 'valorFacturaUSD'].forEach((controlName) => {
+      const CONTROL = this.mercanciaForm.get(controlName);
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        CONTROL.updateValueAndValidity();
+      }
+    });
+
+    if (
+      this.mercanciaForm.get('cantidad')?.invalid ||
+      this.mercanciaForm.get('valorFacturaUSD')?.invalid
+    ) {
+      this.mostrarErroresMercancia = true;
+      this.mostrarErroresPartidas = false;
+      return;
+    }
+
+    this.mostrarErroresMercancia = false;
+
+    [
+      'cantidadPartidasDeLaMercancia',
+      'valorPartidaUSDPartidasDeLaMercancia',
+      'descripcionPartidasDeLaMercancia',
+      'fraccionTigiePartidasDeLaMercancia'
+    ].forEach((controlName) => {
+      const CONTROL = this.partidasDelaMercanciaForm.get(controlName);
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        CONTROL.updateValueAndValidity();
+      }
+    });
+
+    if (
+      this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')
+        ?.invalid ||
+      this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')
+        ?.invalid ||
+      this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')
+        ?.invalid ||
+      this.partidasDelaMercanciaForm.get('fraccionTigiePartidasDeLaMercancia')
+        ?.invalid
+    ) {
+      this.mostrarErroresPartidas = true;
+      return;
+    }
+
+    if (!this.mercanciaForm.get('fraccion')?.value || !this.partidasDelaMercanciaForm.get('fraccionDescripcionPartidasDeLaMercancia')?.value) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'info',
+        modo: '',
+        titulo: '',
+        mensaje: 'Debes seleccionar una Fracción arancelaria',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-sm',
+      };
+      this.mostrarNotificacion = true;
+      return;
+    }
+
+      this.partidasDeLaMercanciaComponent.abrirCargarArchivoModalReal();
+    } 
+    
+    /**
+   * onPartidaModificada
+   * Maneja la modificación de una partida.
+   * @param partida - La partida que se va a modificar.
+   */
+  onPartidaModificada(partida: PartidasDeLaMercanciaModelo): void {
+    this.tableBodyData = this.tableBodyData.map(row =>
+      row.id === partida.id ? { ...row, ...partida } : row
+    );
+    this.tramite130112Store.actualizarEstado({ tableBodyData: this.tableBodyData });
+
+    const CANTIDAD_TOTAL = this.tableBodyData.reduce(
+      (sum, row) => sum + Number(row.cantidad),
+      0
+    );
+    const VALOR_TOTAL_USD = this.tableBodyData.reduce(
+      (sum, row) => sum + Number(row.totalUSD),
+      0
+    );
+    this.tramite130112Store.actualizarEstado({
+      cantidadTotal: String(CANTIDAD_TOTAL),
+      valorTotalUSD: String(VALOR_TOTAL_USD)
+    });
+    this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
   }
 }
