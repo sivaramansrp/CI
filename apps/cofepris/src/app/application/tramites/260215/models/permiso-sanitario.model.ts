@@ -1,3 +1,7 @@
+/**
+ * Modelo de datos para el permiso sanitario.
+ * Contiene información básica sobre el permiso sanitario.
+ */
 export interface PermisoModel {
   Nombre: string;
   RFC: string;
@@ -6,11 +10,18 @@ export interface PermisoModel {
   CorreoElectrónico: string;
   calle: string;
 }
+/**
+ * Modelo de datos para la información NICO.
+ * Contiene la clave y descripción del S.C.I.A.N.
+ */
 export interface NicoInfo {
   clave_Scian: string;
   descripcion_Scian: string;
 }
-
+/**
+ * Configuración de las columnas para la tabla NICO.
+ *  Contiene los encabezados y las funciones para obtener los valores de cada columna.
+ */
 export const NICO_TABLA = [
   {
     encabezado: 'Clave S.C.I.A.N.',
@@ -24,6 +35,10 @@ export const NICO_TABLA = [
   },
 ];
 
+/**
+ * Modelo de datos para la información de mercancías.
+ * Contiene detalles específicos sobre las mercancías.
+ */
 export interface MercanciasInfo {
   clasificacion: string;
   especificar: string;
@@ -46,7 +61,10 @@ export interface MercanciasInfo {
   usoEspecifico: string;
   fechaCaducidad: string;
 }
-
+/**
+ * Configuración de las columnas para la tabla de mercancías.
+ * Contiene los encabezados y las funciones para obtener los valores de cada columna.
+ */
 export const MERCANCIAS_DATA = [
   {
     encabezado: 'Clasificación del producto',

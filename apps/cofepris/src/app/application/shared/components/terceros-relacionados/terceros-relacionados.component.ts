@@ -144,6 +144,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   isAdjuntar: boolean = false;
 
   /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+
+  /**
    * Indica si el componente debe estar oculto o visible.
    * @input estaOculto - Valor booleano que determina la visibilidad del componente.
    */
@@ -283,6 +289,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
       .subscribe();
