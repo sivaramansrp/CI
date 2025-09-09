@@ -82,7 +82,17 @@ export class ZoosanitarioPageComponent {
    * @property {string} mensajeDeTextoDeExito - Mensaje que se muestra si el primer paso se completa con éxito.
    */
   mensajeDeTextoDeExito: string = MENSAJE_DE_EXITO_ETAPA_UNO;
-
+/**
+ * Indica si el formulario actual es válido o no.
+ *
+ * @property esFormaValido
+ * @type {boolean}
+ * @default false
+ * @example
+ * if (this.esFormaValido) {
+ *   // Continuar con el envío
+ * }
+ */
   esFormaValido: boolean = false;
    /**
      * Contenido del aviso de privacidad utilizado en el componente.
