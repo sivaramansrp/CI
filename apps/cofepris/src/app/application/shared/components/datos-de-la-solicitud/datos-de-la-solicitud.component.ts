@@ -107,6 +107,12 @@ export class DatosDeLaSolicitudComponent
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * @property {boolean} establecimientoSeleccionado
+   * Indica si ya se ha seleccionado un establecimiento para habilitar los campos del formulario.
+   */
+  public establecimientoSeleccionado: boolean = false;
+
+  /**
    * @property {ScianConfig<TablaScianConfig>} scianConfig
    * Configuración de la tabla SCIAN recibida como input.
    */
@@ -621,18 +627,14 @@ export class DatosDeLaSolicitudComponent
 
   /**
    * @method crearDatosSolicitudForm
-   * @description Crea y configura el formulario reactivo `datosSolicitudForm` con los campos necesarios
-   *              para capturar la información de la solicitud. Cada campo incluye validaciones como
-   *              longitud mínima, longitud máxima y obligatoriedad.
-   *
-   * @returns {void} Este método no retorna ningún valor.
+   * @description Crea y configura el formulario reactivo con campos específicos deshabilitados por defecto
    */
   crearDatosSolicitudForm(): void {
     this.datosSolicitudForm = this.fb.group({
       rfcSanitario: [
         {
           value: this.datosSolicitudFormState.rfcSanitario,
-          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+          disabled: true, // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -644,7 +646,7 @@ export class DatosDeLaSolicitudComponent
       denominacionRazon: [
         {
           value: this.datosSolicitudFormState.denominacionRazon,
-          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+          disabled: true, // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -655,7 +657,7 @@ export class DatosDeLaSolicitudComponent
       correoElectronico: [
         {
           value: this.datosSolicitudFormState.correoElectronico,
-          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+          disabled: true, // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -667,7 +669,7 @@ export class DatosDeLaSolicitudComponent
       codigoPostal: [
         {
           value: this.datosSolicitudFormState.codigoPostal,
-          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+          disabled: true, // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -677,16 +679,16 @@ export class DatosDeLaSolicitudComponent
         ],
       ],
       estado: [
-        this.datosSolicitudFormState.estado,
+        {
+          value: this.datosSolicitudFormState.estado,
+          disabled: false, // Keep enabled (dropdown is enabled in screenshot)
+        },
         [Validators.required, Validators.minLength(2)],
       ],
       municipioAlcaldia: [
         {
           value: this.datosSolicitudFormState.municipioAlcaldia,
-          disabled:
-            PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA.includes(
-              this.idProcedimiento
-            ) || DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+          disabled: true, // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -697,35 +699,41 @@ export class DatosDeLaSolicitudComponent
       localidad: [
         {
           value: this.datosSolicitudFormState.localidad,
-          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+          disabled: true, // Disabled by default (as shown in screenshot)
         },
         [Validators.pattern(REGEX_IMPORTE_PAGO)],
       ],
       colonia: [
         {
           value: this.datosSolicitudFormState.colonia,
-          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+          disabled: true, // Disabled by default (as shown in screenshot)
         },
       ],
       calleYNumero: [
         {
           value: this.datosSolicitudFormState.calleYNumero,
-          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+          disabled: false, // Keep enabled (not shown disabled in screenshot)
         },
         [Validators.required],
       ],
-      calle: [this.datosSolicitudFormState.calle, [Validators.required]],
+      calle: [
+        {
+          value: this.datosSolicitudFormState.calle,
+          disabled: true, // Disabled by default (as shown in screenshot)
+        },
+        [Validators.required]
+      ],
       lada: [
         {
           value: this.datosSolicitudFormState.lada,
-          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+          disabled: true, // Disabled by default (as shown in screenshot)
         },
         [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
       telefono: [
         {
           value: this.datosSolicitudFormState.telefono,
-          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+          disabled: true, // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -733,74 +741,124 @@ export class DatosDeLaSolicitudComponent
           Validators.pattern(REGEX_SOLO_DIGITOS),
         ],
       ],
-      aviso: [this.datosSolicitudFormState.aviso],
+      aviso: [
+        {
+          value: this.datosSolicitudFormState.aviso,
+          disabled: false, // Keep enabled (checkboxes should be clickable)
+        }
+      ],
       licenciaSanitaria: [
-        this.datosSolicitudFormState.licenciaSanitaria,
+        {
+          value: this.datosSolicitudFormState.licenciaSanitaria,
+          disabled: false, // Keep enabled (not shown disabled in screenshot)
+        },
         [Validators.required],
       ],
-      regimen: [this.datosSolicitudFormState.regimen, [Validators.required]],
+      regimen: [
+        {
+          value: this.datosSolicitudFormState.regimen,
+          disabled: false, // Keep enabled (dropdowns should be selectable)
+        },
+        [Validators.required]
+      ],
       adunasDeEntradas: [
-        this.datosSolicitudFormState.adunasDeEntradas
-          ? this.datosSolicitudFormState.adunasDeEntradas
-          : '',
+        {
+          value: this.datosSolicitudFormState.adunasDeEntradas ? this.datosSolicitudFormState.adunasDeEntradas : '',
+          disabled: false, // Keep enabled (dropdowns should be selectable)
+        },
         [Validators.required],
       ],
       aeropuerto: [
-        this.datosSolicitudFormState.aeropuerto,
+        {
+          value: this.datosSolicitudFormState.aeropuerto,
+          disabled: false, // Keep enabled (checkboxes should be clickable)
+        },
         [Validators.required],
       ],
       aeropuertoDos: [
-        this.datosSolicitudFormState.aeropuertoDos,
+        {
+          value: this.datosSolicitudFormState.aeropuertoDos,
+          disabled: false, // Keep enabled (checkboxes should be clickable)
+        },
         [Validators.required],
       ],
-      publico: [this.datosSolicitudFormState.publico, [Validators.required]],
+      publico: [
+        {
+          value: this.datosSolicitudFormState.publico,
+          disabled: false, // Keep enabled (radio buttons should be selectable)
+        },
+        [Validators.required]
+      ],
       representanteRfc: [
-        this.datosSolicitudFormState.representanteRfc,
+        {
+          value: this.datosSolicitudFormState.representanteRfc,
+          disabled: false, // Keep enabled (not shown disabled in screenshot)
+        },
         [Validators.required],
       ],
       representanteNombre: [
         {
           value: this.datosSolicitudFormState.representanteNombre,
-          disabled:
-            PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL.includes(
-              this.idProcedimiento
-            ),
+          disabled: false, // Keep enabled (not shown disabled in screenshot)
         },
         [Validators.required],
       ],
       apellidoPaterno: [
         {
           value: this.datosSolicitudFormState.apellidoPaterno,
-          disabled: PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO.includes(
-            this.idProcedimiento
-          ),
+          disabled: false, // Keep enabled (not shown disabled in screenshot)
         },
         [Validators.required],
       ],
       apellidoMaterno: [
         {
           value: this.datosSolicitudFormState.apellidoMaterno,
-          disabled: PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO.includes(
-            this.idProcedimiento
-          ),
+          disabled: false, // Keep enabled (not shown disabled in screenshot)
         },
       ],
-      regimenLaMercancia: [this.datosSolicitudFormState.regimenLaMercancia, [Validators.required]],
-      aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
-      mercancias: [this.tablaMercanciasConfig.datos, matrizRequerida],
+      regimenLaMercancia: [
+        {
+          value: this.datosSolicitudFormState.regimenLaMercancia,
+          disabled: false, // Keep enabled (dropdowns should be selectable)
+        },
+        [Validators.required]
+      ],
+      aduana: [
+        {
+          value: this.datosSolicitudFormState.aduana,
+          disabled: false, // Keep enabled (dropdowns should be selectable)
+        },
+        [Validators.required]
+      ],
+      mercancias: [
+        {
+          value: this.tablaMercanciasConfig.datos,
+          disabled: false, // Keep enabled (tables should be interactive)
+        },
+        matrizRequerida
+      ],
       manifesto: [
-        this.datosSolicitudFormState.manifesto,
+        {
+          value: this.datosSolicitudFormState.manifesto,
+          disabled: false, // Keep enabled (checkboxes should be clickable)
+        },
         [Validators.required],
       ],
       manifiestosCasillaDeVerificacion: [
-        this.datosSolicitudFormState.manifiestosCasillaDeVerificacion,
+        {
+          value: this.datosSolicitudFormState.manifiestosCasillaDeVerificacion,
+          disabled: false, // Keep enabled (checkboxes should be clickable)
+        },
         [Validators.required],
       ],
     });
+
+    // Override disabled state if already in readonly mode
     if (this.formularioDeshabilitado) {
       this.datosSolicitudForm.disable();
     }
 
+    // Handle initial state for notification procedures
     if (this.mostrarNotificacion) {
       const EMPTY = Object.entries(this.datosSolicitudFormState)
         .filter(([key]) => key !== 'publico')
@@ -810,8 +868,10 @@ export class DatosDeLaSolicitudComponent
       }
     }
   }
+
   /**
-   * Hook que se ejecuta cuando cambian las propiedades de entrada del componente.
+   * @method ngOnChanges
+   * @description Hook que se ejecuta cuando cambian las propiedades de entrada del componente.
    * Permite habilitar o deshabilitar los formularios según el modo de solo lectura.
    * @param {SimpleChanges} changes - Cambios detectados en las propiedades de entrada.
    */
@@ -1190,9 +1250,7 @@ export class DatosDeLaSolicitudComponent
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
-    // Force show the notification regardless of procedure
     this.mostrarNotificacion = true;
-    this.esSinAccionAlIniciar = false;
     this.elementoParaEliminar = i;
   }
 
@@ -1287,14 +1345,25 @@ export class DatosDeLaSolicitudComponent
    * Método que se llama cuando se envía el formulario.
    */
   alternarControlesDeFormulario(enable: boolean): void {
+    if (!this.datosSolicitudForm) return;
+
     Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
+      
+      // Skip estado field
+      if (controlName === 'estado') {
+        return;
+      }
+
       if (enable && this.controlYaDeshabilitado(controlName)) {
         CONTROL?.enable();
       } else {
         CONTROL?.disable();
       }
     });
+    
+    // Update the establishment selection state
+    this.establecimientoSeleccionado = enable;
   }
 
   /**
@@ -1322,9 +1391,35 @@ export class DatosDeLaSolicitudComponent
    */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
-      this.alternarControlesDeFormulario(true);
+      this.habilitarCamposFormulario(); // Use the new method instead of alternarControlesDeFormulario
+      this.mostrarNotificacion = false; // Hide the notification
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
+  }
+
+  /**
+   * @method habilitarCamposFormulario
+   * @description Habilita todos los campos del formulario después de seleccionar establecimiento
+   */
+  private habilitarCamposFormulario(): void {
+    if (!this.datosSolicitudForm) return;
+
+    Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
+      const CONTROL = this.datosSolicitudForm.get(controlName);
+      
+      // Skip estado field as it should remain enabled
+      if (controlName === 'estado') {
+        return;
+      }
+
+      // Enable the control if it meets the criteria
+      if (this.controlYaDeshabilitado(controlName)) {
+        CONTROL?.enable();
+      }
+    });
+
+    // Update the establishment selection state
+    this.establecimientoSeleccionado = true;
   }
 
   /**
