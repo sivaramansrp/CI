@@ -47,6 +47,7 @@ export interface DocumentoProcesado {
   mensajeGuardado: string;
   documentoUuid: string;
   edocument: string;
+  cargaEstadoKafka:string;
 }
 
 export interface DocumentoTipo {

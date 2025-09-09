@@ -20,7 +20,7 @@
                                 <input class="form-control custom-file-label" type="file"
                                     [id]="'formFile' + item.id_tipo_documento" #fileInput
                                     (change)="cargarDoc($event, fileInput,item.id_tipo_documento,'obligatorio', item.tamanio_maximo, item)">
-                                <div class="text-danger mt-2" *ngFor="let error of item.error">{{ error }}</div>
+                                <div class="text-danger mt-2 fs-4" *ngFor="let error of item.error">{{ error }}</div>
                             </div>
                         </div>
 
@@ -54,7 +54,7 @@
                                     id="formFile{{adicional.id_tipo_documento}}" #fileInput
                                     (change)="cargarDoc($event, fileInput,adicional.id_tipo_documento,'obligatorio',adicional.tamanio_maximo, adicional)"
                                     title="Cargar documento">
-                                <div class="text-danger mt-2" *ngFor="let error of adicional.error">{{ error }}</div>
+                                <div class="text-danger mt-2 fs-4" *ngFor="let error of adicional.error">{{ error }}</div>
                             </div>
                         </div>
 
@@ -101,7 +101,7 @@
                                     id="formFileOpcionales{{item.id_tipo_documento}}" #fileInput
                                     (change)="cargarDoc($event, fileInput,item.id_tipo_documento,'opcional', item.tamanio_maximo, item)"
                                     title="Cargar documento">
-                                <div class="text-danger mt-2" *ngFor="let error of item.error">{{ error }}</div>
+                                <div class="text-danger mt-2 fs-4" *ngFor="let error of item.error">{{ error }}</div>
                             </div>
                         </div>
                         <div class="col-md-3 d-flex justify-content-end">
@@ -139,7 +139,7 @@
                                     id="formFileOpcionales{{adicional.id_tipo_documento}}" #fileInput
                                     (change)="cargarDoc($event, fileInput,adicional.id_tipo_documento,'opcional', item.tamanio_maximo, adicional)"
                                     placeholder="" title="Cargar documento">
-                                <div class="text-danger mt-2" *ngFor="let error of adicional.error">{{ error }}</div>
+                                <div class="text-danger mt-2 fs-4" *ngFor="let error of adicional.error">{{ error }}</div>
                             </div>
                         </div>
                         <div class="col-md-3 mt-2 d-flex justify-content-end">
@@ -223,6 +223,10 @@
                         } @else {
                         <span class="text-danger"><i class="bi bi-x-circle-fill"></i> {{ doc.mensaje }}</span>
                         }
+                        } @else {
+                            <div class="spinner-border" style="width: 2rem; height: 2rem;" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
                         }
                     </td>
                     <td>{{ doc.estatus }}</td>
@@ -250,6 +254,10 @@
                         } @else {
                         <span class="text-danger"><i class="bi bi-x-circle-fill"></i> {{ doc.mensaje }}</span>
                         }
+                        } @else {
+                            <div class="spinner-border" style="width: 2rem; height: 2rem;" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
                         }
                     </td>
                     <td>{{ doc.estatus }}</td>
@@ -268,10 +276,3 @@
     </lib-notificaciones>
 </section>
 }
-
-<!-- @if(alertaDeError) {
-<section>
-  <lib-notificaciones [notificacionInput]="alertaDeError">
-  </lib-notificaciones>
-</section>
-} -->
