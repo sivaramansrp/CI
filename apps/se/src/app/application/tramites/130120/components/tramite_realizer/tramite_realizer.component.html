@@ -9,7 +9,6 @@
                 [label]="'Régimen al que destinará la mercancía'"
                 formControlName="regimen"
                 [required]="true"
-                [isDisabled]="esFormularioSoloLectura"
                 (change)="onRegimenSeleccionado()">
                 </app-catalogo-select>
                 <div *ngIf="datosRealizer.get('regimen')?.touched && datosRealizer.get('regimen')?.invalid">
@@ -23,7 +22,6 @@
                 [catalogo]="classificationRegimenOpciones"
                 [label]="'Clasificación de régimen'"
                 [required]="true"
-                [isDisabled]="esFormularioSoloLectura"
                 formControlName="classificion_regimen"
                 (change)="setValoresStore(datosRealizer, 'classificion_regimen', 'setclassificion_regimen')">
                 </app-catalogo-select>

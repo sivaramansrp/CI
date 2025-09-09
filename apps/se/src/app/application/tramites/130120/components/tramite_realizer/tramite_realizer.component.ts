@@ -198,14 +198,9 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
   onRegimenSeleccionado(): void {
   const CVEREGIMEN = this.datosRealizer.get('regimen')?.value;
 
-  console.log('Régimen seleccionado:', CVEREGIMEN);
-
   // Solo si hay valor válido
   if (CVEREGIMEN) {
-    // Actualiza el store
     this.store.setregimen(CVEREGIMEN);
-
-    // Carga las clasificaciones
     this.cargarClasificacionRegimen(CVEREGIMEN);
   } else {
     this.classificationRegimenOpciones = [];
@@ -223,7 +218,7 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe({
       next: (resp) => {
-        if (resp.codigo === CodigoRespuesta.EXITO && resp.datos) {
+        if (resp.codigo === CodigoRespuesta.EXITO && resp.datos && resp.datos.length > 0) {
           this.classificationRegimenOpciones = resp.datos;
           this.datosRealizer.get('classificion_regimen')?.enable();
         } else {
