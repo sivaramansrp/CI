@@ -222,9 +222,18 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
       };
       /** Emite el valor agregado */
       this.agregarImmexValor.emit(VALOR);
+      this.seleccionarImmexProgram = [];
+      this.domicilioslista = [];
+      this.agregarImmexProgramForm.reset();
     }
+    
+  }
+
+  cancelarImmexProgram(): void {
     this.agregarImmexProgramForm.reset();
     this.domicilioslista = [];
+    this.seleccionarImmexProgram = [];
+    this.agregarImmexValor.emit(undefined);
   }
 
   /** Obtiene los datos de la entidad federativa desde el servicio */

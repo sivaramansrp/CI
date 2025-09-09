@@ -460,7 +460,7 @@ export function createInitialSolicitudState(): Solicitud31101State {
     miembroApellidoPaterno: '',
     miembroApellidoMaterno: '',
     miembroNombreEmpresa: '',
-    entidadFederativa: 0,
+    entidadFederativa: '',
     instalacionesPrincipales: 0,
     municipio: '',
     tipoDeInstalacion: 0,

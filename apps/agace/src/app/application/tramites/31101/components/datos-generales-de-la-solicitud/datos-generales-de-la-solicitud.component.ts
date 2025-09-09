@@ -195,9 +195,13 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   @ViewChild('modificarImmexProgram', { static: true })
   modificarImmexProgramElement!: ElementRef;
 
+  MODAL_INSTANCE_MODIFICAR_IMMEX!: Modal;
+
   /** Referencia al elemento del DOM para agregar un nuevo programa IMMEX */
   @ViewChild('agregarImmexProgram', { static: true })
   agregarImmexProgramElement!: ElementRef;
+
+  MODAL_INSTANCE_AGREGAR_IMMEX!: Modal;
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -1319,13 +1323,13 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /** Muestra el modal para modificar el programa IMMEX si hay domicilios seleccionados */
-  modificarImmexProgram(): void {
-    if (this.seleccionarDomiciliosDatos.length > 0) {
+  modificarImmexProgramModel(): void {
+    if (this.seleccionarDomiciliosDatos.length === 1) {
       if (this.modificarImmexProgramElement) {
-        const MODAL_INSTANCE = new Modal(
+        this.MODAL_INSTANCE_MODIFICAR_IMMEX = new Modal(
           this.modificarImmexProgramElement.nativeElement
         );
-        MODAL_INSTANCE.show();
+        this.MODAL_INSTANCE_MODIFICAR_IMMEX.show();
       }
     }
   }
@@ -1333,7 +1337,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Abre un modal de confirmación y agrega un pedimento si hay domicilios seleccionados */
   eliminarImmexProgram(): void {
     if (
-      this.seleccionarDomiciliosDatos.length === 1 &&
+      this.seleccionarDomiciliosDatos.length >= 1 &&
       this.seleccionarDomiciliosDatos[0].id
     ) {
       const PEDIMENTO = {
@@ -1362,7 +1366,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.elementoParaEliminar = 0;
       this.pedimentos.push(PEDIMENTO);
     } else if (
-      this.seleccionarDomiciliosDatos.length === 1 &&
+      this.seleccionarDomiciliosDatos.length >= 1 &&
       !this.seleccionarDomiciliosDatos[0].id
     ) {
       const PEDIMENTO = {
@@ -1422,15 +1426,18 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.abrirModal('Datos guardados correctamente');
       this.pedimentos.push(PEDIMENTO);
     }
+    if (this.MODAL_INSTANCE_MODIFICAR_IMMEX) {
+      this.MODAL_INSTANCE_MODIFICAR_IMMEX.hide();
+    }
   }
 
   /** Muestra el modal para agregar un programa IMMEX */
   agregarImmexProgramModel(): void {
     if (this.agregarImmexProgramElement) {
-      const MODAL_INSTANCE = new Modal(
+      this.MODAL_INSTANCE_AGREGAR_IMMEX = new Modal(
         this.agregarImmexProgramElement.nativeElement
       );
-      MODAL_INSTANCE.show();
+      this.MODAL_INSTANCE_AGREGAR_IMMEX.show();
     }
   }
 
@@ -1514,7 +1521,12 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /** Agrega información de domicilio */
   agregarImmexValor(evento: Domicilios): void {
-    this.domiciliosDatos = [...this.domiciliosDatos, evento];
+    if (evento) {
+      this.domiciliosDatos = [...this.domiciliosDatos, evento];
+    }
+    if (this.MODAL_INSTANCE_AGREGAR_IMMEX) {
+      this.MODAL_INSTANCE_AGREGAR_IMMEX.hide();
+    }
   }
 
   /**

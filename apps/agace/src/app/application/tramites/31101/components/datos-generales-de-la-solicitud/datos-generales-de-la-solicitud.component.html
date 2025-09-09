@@ -865,7 +865,7 @@
             id="modificarSocio"
             class="btn btn-default"
             [disabled]="esFormularioSoloLectura"
-            (click)="modificarImmexProgram()"
+            (click)="modificarImmexProgramModel()"
           >
             Modificar
           </button>
@@ -1534,7 +1534,7 @@
 
 <div
   class="modal fade"
-  id="modificarImmexProgram"
+  #modificarImmexProgram
   tabindex="-1"
   aria-labelledby="modalModificarImmexProgram"
   aria-hidden="true"

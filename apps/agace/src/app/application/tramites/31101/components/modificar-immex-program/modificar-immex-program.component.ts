@@ -1,6 +1,9 @@
 import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { DatosGeneralesDeLaSolicitudCatologo, Domicilios } from '../../models/solicitud.model';
+import {
+  DatosGeneralesDeLaSolicitudCatologo,
+  Domicilios,
+} from '../../models/solicitud.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -125,14 +128,15 @@ export class ModificarImmexProgramComponent
     ) {
       const DOMICILIOS = changes['seleccionarDomiciliosDatos'].currentValue;
       this.modificarImmexProgramForm.patchValue({
-        instalacionesPrincipales: DOMICILIOS.instalacionPrincipal === 'No' ? 0 : 1,
+        instalacionesPrincipales:
+          DOMICILIOS.instalacionPrincipal === 'No' ? 0 : 1,
         municipio: DOMICILIOS.municipioDelegacion,
         tipoDeInstalacion: DOMICILIOS.tipoInstalacion,
         federativa: DOMICILIOS.entidadFederativa,
         registroSE: DOMICILIOS.registroSE,
         desceripe: DOMICILIOS.desceripe,
         codigoPostal: DOMICILIOS.codigoPostal,
-        procesoProductivo: DOMICILIOS.procesoProductivo
+        procesoProductivo: DOMICILIOS.procesoProductivo,
       });
     }
   }
@@ -239,9 +243,18 @@ export class ModificarImmexProgramComponent
    *  Acepta y emite el evento para modificar el programa IMMEX.
    */
   aceptarImmexProgram(): void {
+    if (this.modificarImmexProgramForm.invalid) {
+      this.modificarImmexProgramForm.markAllAsTouched();
+      return;
+    }
+    this.modificarImmexProgramForm.reset();
     this.modificarImmexValor.emit(true);
   }
 
+  cancelarImmexProgram(): void {
+    this.modificarImmexProgramForm.reset();
+    this.modificarImmexValor.emit(false);
+  }
   /**
    * Verifica si un campo del formulario no es válido.
    * @param id Identificador del campo en el formulario.

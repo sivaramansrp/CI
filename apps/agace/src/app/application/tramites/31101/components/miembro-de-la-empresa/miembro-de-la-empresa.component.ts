@@ -454,7 +454,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       tributarMexico: TRIBUTAR_MEXICO_VALOR,
       razonSocial: this.miembroEmpresaForm.get('miembroRegistroFederal')?.value,
     };
-
+    this.miembroEmpresaForm.reset();
     this.eventoActualizarMiembro.emit(VALORES);
   }
 
