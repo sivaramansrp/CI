@@ -110,7 +110,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     { label: 'Sí', value: 'si' },
     { label: 'No', value: 'no' },
   ];
-
   textoRequisito = this.TEXTOS.TEXTO_REQUISITOS;
 
   /**
@@ -314,7 +313,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Método para inicializar el formulario reactivo con los valores del estado de la solicitud.
    * Este método se llama al inicializar el componente y establece los valores del formulario
    * basándose en el estado actual de la solicitud.
-   */
+   */  
   donanteDomicilio(): void {
     this.solicitudForm = this.fb.group({
       regimen_0: [{value: this.solicitudState?.regimen_0, disabled: this.esFormularioSoloLectura}],
@@ -325,25 +324,26 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       radio_1: [{value: this.solicitudState?.radio_1, disabled: this.esFormularioSoloLectura}],
       radio_2: [{value: this.solicitudState?.radio_2, disabled: this.esFormularioSoloLectura}],
       radio_3: [{value: this.solicitudState?.radio_3, disabled: this.esFormularioSoloLectura}],
-      valorAduana: [{value: this.solicitudState?.valorAduana, disabled: this.esFormularioSoloLectura}],
-      textoGenerico10: this.solicitudState.textoGenerico10,
-      textoGenerico11: this.solicitudState.textoGenerico11,
-      textoGenerico12: this.solicitudState.textoGenerico12,
-      textoGenerico13: this.solicitudState.textoGenerico13,
-      textoGenerico14: this.solicitudState.textoGenerico14,
-      textoGenerico15: this.solicitudState.textoGenerico15,
-      textoGenerico16: this.solicitudState.textoGenerico16,
-      textoGenerico17: this.solicitudState.textoGenerico17,
-      textoGenerico18: this.solicitudState.textoGenerico18,
-      textoGenerico19: this.solicitudState.textoGenerico19,
-      textoGenerico20: this.solicitudState.textoGenerico20,
-      textoGenerico21: this.solicitudState.textoGenerico21,
-      textoGenerico22: this.solicitudState.textoGenerico22,
-      textoGenerico23: this.solicitudState.textoGenerico23,
-      textoGenerico24: this.solicitudState.textoGenerico24,
+      valorAduana: [{value: this.solicitudState?.valorAduana, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico10: [{value: this.solicitudState.textoGenerico10, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico11: [{value: this.solicitudState.textoGenerico11, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico12: [{value: this.solicitudState.textoGenerico12, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico13: [{value: this.solicitudState.textoGenerico13, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico14: [{value: this.solicitudState.textoGenerico14, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico15: [{value: this.solicitudState.textoGenerico15, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico16: [{value: this.solicitudState.textoGenerico16, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico17: [{value: this.solicitudState.textoGenerico17, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico18: [{value: this.solicitudState.textoGenerico18, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico19: [{value: this.solicitudState.textoGenerico19, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico20: [{value: this.solicitudState.textoGenerico20, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico21: [{value: this.solicitudState.textoGenerico21, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico22: [{value: this.solicitudState.textoGenerico22, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico23: [{value: this.solicitudState.textoGenerico23, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico24: [{value: this.solicitudState.textoGenerico24, disabled: true}], // Inicialmente deshabilitado
     });
 
     this.configurarValidacionRegimen();
+    this.configurarValidacionRadio3();
   }
 
   /**
@@ -373,7 +373,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Valida la condición de Régimen aduanero y muestra popup si es necesario.
    * Condición 1: Si regimen_0 está seleccionado y NINGUNO de regimen_1, regimen_2 o regimen_3 está seleccionado.
    * Condición 2: Si cualquiera de los regímenes 1, 2 o 3 estaba seleccionado y ahora todos están deseleccionados.
-   */
+   */  
   private validarRegimenAduanero(): void {
     const regimen0 = this.solicitudForm.get('regimen_0')?.value;
     const regimen1 = this.solicitudForm.get('regimen_1')?.value;
@@ -387,13 +387,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
 
     const regimenesActuales = { regimen_1: regimen1, regimen_2: regimen2, regimen_3: regimen3 };
-    const regimenSeleccionado = this.regimenesAnteriores.regimen_1 || 
+    const teníaAlgunRegimenSeleccionado = this.regimenesAnteriores.regimen_1 || 
                                           this.regimenesAnteriores.regimen_2 || 
                                           this.regimenesAnteriores.regimen_3;
-    const regimens = regimen1 || regimen2 || regimen3;
+    const tieneAlgunRegimenSeleccionado = regimen1 || regimen2 || regimen3;
 
-    if (regimenSeleccionado && !regimens) {
-      console.log('Debe seleccionar al menos un régimen.');
+    if (teníaAlgunRegimenSeleccionado && !tieneAlgunRegimenSeleccionado) {
       this.mostrarErrorDeseleccionRegimenes = true;
     }
 
@@ -417,6 +416,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     };
   }
 
+  // /**
+  //  * Muestra un error cuando se deseleccionan todos los regímenes 1, 2 y 3
+  //  * después de haber estado seleccionados.
+  //  */
+  // public mostrarErrorDeseleccionRegimenesNotificacion(): void {
+  //   this.confirmarNotificacion = {
+  //     tipoNotificacion: 'alert',
+  //     categoria: 'danger',
+  //     modo: 'action',
+  //     titulo: '',
+  //     mensaje: 'Debe seleccionar al menos un régimen aduanero.',
+  //     cerrar: false,
+  //     tiempoDeEspera: 5000,
+  //     txtBtnAceptar: 'Aceptar',
+  //     txtBtnCancelar: '',
+  //   };
+  // }
+
   /**
    * Maneja la confirmación del popup de régimen aduanero.
    * @param confirmar - Indica si el usuario confirmó (true) o canceló (false)
@@ -434,6 +451,47 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   private deseleccionarRegimen0(): void {
     this.solicitudForm.get('regimen_0')?.setValue(false);
     this.tramite32201Store.setRegimen_0(false);
+  }
+
+  /**
+   * Configura la validación para el radio_3 que controla la habilitación/deshabilitación
+   * de los campos textoGenerico y valorAduana.
+   */
+  private configurarValidacionRadio3(): void {
+    if (!this.esFormularioSoloLectura) {
+      this.solicitudForm.get('radio_3')?.valueChanges
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((valor) => {
+          this.controlarCamposTextoGenerico(valor);
+        });
+      
+      const valorInicialRadio3 = this.solicitudForm.get('radio_3')?.value;
+      this.controlarCamposTextoGenerico(valorInicialRadio3);
+    }
+  }
+
+  /**
+   * Controla la habilitación/deshabilitación de los campos textoGenerico y valorAduana
+   * basado en el valor del radio_3.
+   * @param valorRadio3 - El valor seleccionado en radio_3 ('si' o 'no')
+   */
+  private controlarCamposTextoGenerico(valorRadio3: string): void {
+    const camposTextoGenerico = [
+      'textoGenerico10', 'textoGenerico11', 'textoGenerico12', 'textoGenerico13',
+      'textoGenerico14', 'textoGenerico15', 'textoGenerico16', 'textoGenerico17',
+      'textoGenerico18', 'textoGenerico19', 'textoGenerico20', 'textoGenerico21',
+      'textoGenerico22', 'textoGenerico23', 'textoGenerico24', 'valorAduana'
+    ];
+
+    if (valorRadio3 === 'si') {
+      camposTextoGenerico.forEach(campo => {
+        this.solicitudForm.get(campo)?.enable();
+      });
+    } else {
+      camposTextoGenerico.forEach(campo => {
+        this.solicitudForm.get(campo)?.disable();
+      });
+    }
   }
 
   /** Actualiza el décimo texto genérico y recalcula el valor comercial */
