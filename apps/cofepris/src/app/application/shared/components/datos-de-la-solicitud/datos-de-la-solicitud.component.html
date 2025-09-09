@@ -209,7 +209,7 @@
     <div class="row">
       <div class="col-md-4" *ngIf="mostrarCamposDelProcedimiento('correoElectronico')">
         <div class="form-group">
-          <label class="form-label" for="correoElectronico">Correo electrónico*:
+          <label class="form-label" for="correoElectronico">Correo electrónico<span [ngClass]="isValid(datosSolicitudForm, 'correoElectronico') ? 'text-danger' : ''">*</span>:
           </label>
           <span tooltip="ejemplo@dominio.com">
             <i class="bi bi-question-circle-fill"></i>
@@ -229,7 +229,7 @@
               datosSolicitudForm.get('correoElectronico')?.touched &&
               datosSolicitudForm.get('correoElectronico')?.hasError('email')
             ">
-            Por favor, escribe una dirección de correo válida
+            El valor Ingresado no es una dirección válida de correo electrónico
           </div>
         </div>
       </div>
@@ -669,7 +669,7 @@
       <div class="form-group">
         <label class="form-label" for="correoElectronico">Correo electrónico
         </label>
-        <span class="form-label municipio-label" *ngIf="esCampoRequerido('correoElectronico')">*</span>
+        <span class="form-label municipio-label" [ngClass]="isValid(datosSolicitudForm, 'correoElectronico') ? 'text-danger' : ''" *ngIf="esCampoRequerido('correoElectronico')">*</span>
         <span class="form-label mx-1">:</span>
         <span tooltip="ejemplo@dominio.com">
           <i class="bi bi-question-circle-fill"></i>
@@ -688,7 +688,7 @@
             datosSolicitudForm.get('correoElectronico')?.touched &&
             datosSolicitudForm.get('correoElectronico')?.hasError('pattern')
           ">
-          Por favor, escribe una dirección de correo válida
+          El valor Ingresado no es una dirección válida de correo electrónico
         </div>
       </div>
     </ng-template>
