@@ -1,5 +1,9 @@
 import { AlertComponent, ConsultaioQuery, InputRadioComponent } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CatalogosTramiteService } from '../../services/catalogo.service';
+
+import { Component, OnDestroy, OnInit } from '@angular/core'; 
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -10,6 +14,7 @@ import { PROTESTA } from '@ng-mf/data-access-user';
 import { RADIO_OPCIONS } from '../constante110101.enum';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { TituloComponent } from '@ng-mf/data-access-user';
+
 /**
 * Este componente se utiliza para mostrar la forma del datos adicionales. - 110101
 */
@@ -116,6 +121,7 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
     private tramite110101Store: Tramite110101Store,
     private solicitanteQuery: Solicitante110101Query,
     private consultaioQuery: ConsultaioQuery,
+    private catalogoTramiteService: CatalogosTramiteService
 
   ) {
     this.consultaioQuery.selectConsultaioState$
@@ -187,6 +193,9 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method getEntidadFederativa
+   * @description Obtiene el catálogo de la entidad federativa
+   *
    * Recupera y establece la información de la entidad federativa.
    * El objeto de entidad incluye el nombre de la etiqueta, el estado requerido, la opción predeterminada,
    * y un catálogo de opciones disponibles.
@@ -194,16 +203,21 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public getEntidadFederativa(): void {
-    this.entidad = [
-      {
-        id: 1,
-        descripcion: 'SINALOA',
-      },
-      {
-        id: 2,
-        descripcion: 'Opción 1',
-      }
-    ]
+    this.catalogoTramiteService.getCatEntidadesFederativas()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response) => {
+        if (response.codigo === CodigoRespuesta.EXITO) {
+          // El backend manda "datos"
+          const DATOS = response.datos || [];
+
+          // Transformación a tu respuesta a response Catalogo
+          this.entidad = DATOS.map((item, index) => ({
+            id: index + 1,
+            descripcion: item.descripcion,
+            clave: item.clave,
+          }));
+        }
+      });
   }
 
   /**
