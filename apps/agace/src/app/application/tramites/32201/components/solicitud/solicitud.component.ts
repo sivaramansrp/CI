@@ -416,24 +416,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     };
   }
 
-  // /**
-  //  * Muestra un error cuando se deseleccionan todos los regímenes 1, 2 y 3
-  //  * después de haber estado seleccionados.
-  //  */
-  // public mostrarErrorDeseleccionRegimenesNotificacion(): void {
-  //   this.confirmarNotificacion = {
-  //     tipoNotificacion: 'alert',
-  //     categoria: 'danger',
-  //     modo: 'action',
-  //     titulo: '',
-  //     mensaje: 'Debe seleccionar al menos un régimen aduanero.',
-  //     cerrar: false,
-  //     tiempoDeEspera: 5000,
-  //     txtBtnAceptar: 'Aceptar',
-  //     txtBtnCancelar: '',
-  //   };
-  // }
-
   /**
    * Maneja la confirmación del popup de régimen aduanero.
    * @param confirmar - Indica si el usuario confirmó (true) o canceló (false)
