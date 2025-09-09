@@ -1,6 +1,6 @@
 <div class="container">
   <ng-titulo titulo="Terceros relacionados"></ng-titulo>
-  <div class="row mt-5">
+  <div class="row mt-5 text-center">
     <ng-alert [CONTENIDO]="tercerorTextoDeAlerta"></ng-alert>
   </div>
   <div class="row mt-5">
@@ -11,7 +11,7 @@
       [tipoSeleccionTabla]="destinoFinalTablaConfiguracion.tipoSeleccionTabla"
       [configuracionTabla]="destinoFinalTablaConfiguracion.configuracionTabla"
       [datos]="destinatarioFinalTablaDatos"
-      (listaDeFilaSeleccionada)="destinarioTablaSeleccionada = $event"
+      (listaDeFilaSeleccionada)="destinarioTablaSeleccionadaEvent($event)"
       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
@@ -58,7 +58,7 @@
       [tipoSeleccionTabla]="dproveedorTablaConfiguracion.tipoSeleccionTabla"
       [configuracionTabla]="dproveedorTablaConfiguracion.configuracionTabla"
       [datos]="proveedorTablaDatos"
-      (listaDeFilaSeleccionada)="proveedorTablaSeleccionada = $event"
+      (listaDeFilaSeleccionada)="proveedorTablaSeleccionadaEvent($event)"
       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>

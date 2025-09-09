@@ -77,6 +77,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ScianDataService } from '../../services/scian-data.service';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -105,12 +106,6 @@ export class DatosDeLaSolicitudComponent
    * Subject utilizado para cancelar suscripciones activas al destruir el componente.
    */
   public destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * @property {boolean} establecimientoSeleccionado
-   * Indica si ya se ha seleccionado un establecimiento para habilitar los campos del formulario.
-   */
-  public establecimientoSeleccionado: boolean = false;
 
   /**
    * @property {ScianConfig<TablaScianConfig>} scianConfig
@@ -495,7 +490,8 @@ export class DatosDeLaSolicitudComponent
     public router: Router,
     public activatedRoute: ActivatedRoute,
     public datosSolicitudService: DatosSolicitudService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private scianDataService: ScianDataService
   ) {
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
@@ -539,6 +535,7 @@ export class DatosDeLaSolicitudComponent
             takeUntil(this.destroyNotifier$),
             map((seccionState) => { 
               this.formularioDeshabilitado = seccionState.readonly;
+              this.esFormularioSoloLectura = seccionState.readonly;
             })
           )
           .subscribe();
@@ -852,8 +849,6 @@ export class DatosDeLaSolicitudComponent
         [Validators.required],
       ],
     });
-
-   
     if (this.formularioDeshabilitado) {
       this.datosSolicitudForm.disable();
     }
@@ -884,6 +879,7 @@ export class DatosDeLaSolicitudComponent
       }
     }
   }
+
   /**
  * @method actualizarDatosFormularioSolicitud
  * @description Actualiza las validaciones de los campos del formulario `datosSolicitudForm`
@@ -1067,7 +1063,10 @@ export class DatosDeLaSolicitudComponent
    * - Redirige al usuario a la ruta '../scian-selecion'.
    */
   agregarScian(): void {
-    this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
+    if(this.idProcedimiento !== NUMERO_TRAMITE.TRAMITE_260201){
+      this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
+    }
+    this.scianDataService.updateScianData(this.scianConfig.datos);
     if (this.scianSeleccionado) {
       this.scianSeleccionado.emit(this.scianConfig.datos);
     }
@@ -1340,6 +1339,12 @@ export class DatosDeLaSolicitudComponent
     }
     return true;
   }
+
+  /**
+   * Indica si se ha seleccionado un establecimiento.
+   * @property {boolean} establecimientoSeleccionado
+   */
+  public establecimientoSeleccionado: boolean = false;
 
   /**
    * Método que se llama cuando se envía el formulario.

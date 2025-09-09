@@ -1,8 +1,10 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
-import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
+import { Observable } from 'rxjs';
+import { Tramite240105Query } from '../../estados/tramite240105Query.query';
 import { Tramite240105Store } from '../../estados/tramite240105Store.store';
 
 
@@ -19,13 +21,23 @@ import { Tramite240105Store } from '../../estados/tramite240105Store.store';
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
-export class AgregarDestinatarioFinalContenedoraComponent {
-
+export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
+    /**
+     * @property terechosDatos$
+     * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
+     * @description Observable que emite datos relacionados con el destino final o proveedor.
+     * Puede ser un objeto de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+     * @command Este observable se utiliza para gestionar y observar los datos de los proveedores o destinos finales en el componente.
+     */
+    terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
   /**
    * @event cerrar
    * @description Evento emitido para indicar que se debe cerrar el componente.
    */
   @Output() cerrar = new EventEmitter<void>();
+
+
+  cancelarEventListenerCancel = new EventEmitter<void>();
 
   /**
    * Identificador del procedimiento.
@@ -39,8 +51,7 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * @param {Tramite240105Store} tramiteStore - Store que administra el estado del trámite.
    * @returns {void}
    */
-  // eslint-disable-next-line no-empty-function
-  constructor(public tramiteStore: Tramite240105Store) {}
+  constructor(public tramiteStore: Tramite240105Store,public tramiteQuery: Tramite240105Query) {}
 
   /**
    * Actualiza la lista de destinatarios finales en el store del trámite.
@@ -51,5 +62,24 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    */
   updateDestinatarioFinalTablaDatos(event: DestinoFinal[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
+    this.cerrar.emit();
+  }
+
+  /**
+   * Maneja el evento para cerrar la acción actual.
+   * Limpia los datos de terceros del store de trámite.
+   */
+  cerrarEvent(): void {
+    this.tramiteStore.clearTercerosDatos();
+  }
+  
+
+   /**
+   * @method ngOnInit
+   * @description Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * @command Este método asigna un observable `terechosDatos$` con los datos obtenidos desde `tramiteQuery`.
+   */
+  ngOnInit(): void {
+    this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
   }
 }

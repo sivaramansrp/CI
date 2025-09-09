@@ -1,4 +1,6 @@
 {
+    "bajoProtesta":true,
+    "manifests": true,
     "comercioExteriorRealizado":"1",
     "fechaInicioComercio":"01/01/2025",
     "fechaDePago":"12/11/2025",

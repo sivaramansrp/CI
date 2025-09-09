@@ -281,9 +281,9 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
     this.registroControlInventariosForm = this.fb.group({
       id: [null],
       sistemaControlInventariosArt59: ['', [Validators.required]],
-      nombreSistema: [{ value: this.seccionState?.nombreSistema, disabled: true }, [Validators.required]],
-      lugarRadicacion: [{ value: this.seccionState?.lugarRadicacion, disabled: true }, [Validators.required]],
-      cumpleAnexo24: [{ value: this.seccionState?.cumpleAnexo24 }],
+      nombreSistema: [{ value: this.seccionState?.nombreSistema, disabled: !this.radioSeleccionado }, [Validators.required]],
+      lugarRadicacion: [{ value: this.seccionState?.lugarRadicacion, disabled: !this.radioSeleccionado }, [Validators.required]],
+      cumpleAnexo24: [false],
     });
 
     this.modificarRegistroControlInventariosForm = this.fb.group({
@@ -380,17 +380,15 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
         lugarRadicacion: lugarRadicacion,
         cumpleAnexo24: cumpleAnexo24
       } as ControlInventariosTabla;
-
       this.controlInventariosList = [...this.controlInventariosList, OBJETO];
       this.tramite32605Store.actualizarEstado({ controlInventarios: this.controlInventariosList });
     } else {
       // Actualizar registro existente
       this.controlInventariosList = this.controlInventariosList.map((elemento) =>
         elemento.id === this.filaSeleccionadaControlInventarios.id
-          ? { ...elemento, nombreSistema: nombreSistema, lugarRadicacion: lugarRadicacion, cumpleAnexo24: cumpleAnexo24 }
-          : elemento
-      );
-
+      ? { ...elemento, nombreSistema: nombreSistema, lugarRadicacion: lugarRadicacion, cumpleAnexo24: cumpleAnexo24 }
+      : elemento
+    );
       this.tramite32605Store.actualizarEstado({ controlInventarios: this.controlInventariosList });
       this.filaSeleccionadaControlInventarios = {} as ControlInventariosTabla;
     }
