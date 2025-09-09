@@ -325,6 +325,76 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       textoGenerico23: this.solicitudState.textoGenerico23,
       textoGenerico24: this.solicitudState.textoGenerico24,
     });
+
+    this.configurarValidacionRegimen();
+  }
+
+  /**
+   * Configura la validación para los checkboxes de Régimen aduanero.
+   * Muestra un popup cuando regimen_0 está seleccionado y NINGUNO de los otros está seleccionado.
+   */
+  private configurarValidacionRegimen(): void {
+    if (!this.esFormularioSoloLectura) {
+      ['regimen_0', 'regimen_1', 'regimen_2', 'regimen_3'].forEach(controlName => {
+        this.solicitudForm.get(controlName)?.valueChanges
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe(() => {
+            this.validarRegimenAduanero();
+          });
+      });
+    }
+  }
+  /**
+   * Valida la condición de Régimen aduanero y muestra popup si es necesario.
+   * Condición: Si regimen_0 está seleccionado y NINGUNO de regimen_1, regimen_2 o regimen_3 está seleccionado.
+   */
+  private validarRegimenAduanero(): void {
+    const regimen0 = this.solicitudForm.get('regimen_0')?.value;
+    const regimen1 = this.solicitudForm.get('regimen_1')?.value;
+    const regimen2 = this.solicitudForm.get('regimen_2')?.value;
+    const regimen3 = this.solicitudForm.get('regimen_3')?.value;
+
+    if (regimen0) {
+      if (!regimen1 && !regimen2 && !regimen3) {
+        this.mostrarPopupRegimenAduanero();
+      }
+    }
+  }  
+  
+  /**
+   * Muestra un popup de advertencia para la condición de Régimen aduanero.
+   */
+  public mostrarPopupRegimenAduanero(): void {
+    this.confirmarNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe contar con IMMEX activo y vigente.',
+      cerrar: false,
+      tiempoDeEspera: 5000,
+      txtBtnAceptar: 'Acceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+  /**
+   * Maneja la confirmación del popup de régimen aduanero.
+   * @param confirmar - Indica si el usuario confirmó (true) o canceló (false)
+   */
+  public manejarConfirmacionRegimen(confirmar: boolean): void {
+    if (confirmar) {
+      this.deseleccionarRegimen0();
+    }
+    this.confirmarNotificacion = null as any;
+  }
+
+  /**
+   * Deselecciona el régimen 0 y actualiza el store.
+   */
+  private deseleccionarRegimen0(): void {
+    this.solicitudForm.get('regimen_0')?.setValue(false);
+    this.tramite32201Store.setRegimen_0(false);
   }
 
   /** Actualiza el décimo texto genérico y recalcula el valor comercial */

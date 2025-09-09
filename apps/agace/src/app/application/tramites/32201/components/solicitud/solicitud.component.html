@@ -361,7 +361,7 @@
 <!-- Confirmar Modal -->
 @if (confirmarNotificacion) {
 <section>
-  <lib-notificaciones [notificacionInput]="confirmarNotificacion">
+  <lib-notificaciones [notificacionInput]="confirmarNotificacion" (confirmacionModal)="manejarConfirmacionRegimen($event)">
   </lib-notificaciones>
 </section>
 }
