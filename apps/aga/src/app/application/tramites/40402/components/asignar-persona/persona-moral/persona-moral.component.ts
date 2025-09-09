@@ -65,7 +65,7 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
     // Mostrar modal de confirmación después de la eliminación
     setTimeout(() => {
       const MODAL = document.getElementById('confirmarEliminados');
-      if (MODAL) {
+    if (MODAL) {
         const WIN = window as unknown as { bootstrap: { Modal: new (modal: HTMLElement) => { show: () => void } } };
         const BS_MODAL: { show: () => void } = new WIN.bootstrap.Modal(MODAL);
         BS_MODAL.show();

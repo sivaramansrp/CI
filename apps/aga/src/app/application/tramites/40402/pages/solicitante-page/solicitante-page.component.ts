@@ -44,13 +44,13 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   /**
    * Controla la visibilidad del modal de notificación.
    */
-  btnContinuar: boolean = false;
+    btnContinuar: boolean = false;
 
   /**
-   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
-   * const esValido = this.pasoUnoComponent.validateForms();
-   * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
-   */
+  * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+  * const esValido = this.pasoUnoComponent.validateForms();
+  * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+  */
   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
   /**
@@ -159,7 +159,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   getValorIndice(e: AccionBoton): void {
     this.esFormaValido = false;
-    // Validate before moving from step 1 to step 2
+    // Validar antes de pasar del paso 1 al paso 2
     if (e.accion === 'cont' && this.indice === 1) {
       const ES_VALIDO = this.pasoUnoComponent
         ? this.pasoUnoComponent.validarFormularios()
