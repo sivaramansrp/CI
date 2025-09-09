@@ -278,7 +278,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       this.modalSeleccionaRegistroMercanciaInstance.hide();
     }
   }
-  private modalSeleccionaRegistroMercanciaInstance: Modal | undefined;
+    public modalSeleccionaRegistroMercanciaInstance: Modal | undefined;
 
   /**
    * Muestra el modal de selección de registro de mercancía.
@@ -389,7 +389,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    *
    * @param index - Índice de la mercancía a eliminar.
    */
-  private modalConfirmarEliminarMercanciaInstance: Modal | undefined;
+  public modalConfirmarEliminarMercanciaInstance: Modal | undefined;
 
   /**
    * Maneja el evento de eliminación de una mercancía.
@@ -538,12 +538,12 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
   }
   selectedScianIndex: number | null = null;
 
-  private modalSeleccionaRegistroInstance: Modal | undefined;
-  private modalConfirmarEliminarScianInstance: Modal | undefined;
+  public modalSeleccionaRegistroInstance: Modal | undefined;
+  public modalConfirmarEliminarScianInstance: Modal | undefined;
   @ViewChild('modalAddMercancias', { static: false }) modalAddMercanciasRef?: ElementRef<HTMLDivElement>;
   @ViewChild('modalAddNicoTabla', { static: false }) modalAddNicoTablaRef?: ElementRef<HTMLDivElement>;
-  private bootstrapModalMercanciasInstance: Modal | undefined;
-  private bootstrapModalNicoTablaInstance: Modal | undefined;
+  public bootstrapModalMercanciasInstance: Modal | undefined;
+  public bootstrapModalNicoTablaInstance: Modal | undefined;
 
   /**
    * Inicializa las instancias de los modales después de que la vista ha sido inicializada.
@@ -717,6 +717,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    * Referencia al componente de tabla dinámica para SCIAN.
    */
   onScianRowSelected(event: NicoInfo[]): void {
+    this.scianTableTouched = true;
     if (event && event.length > 0) {
       const SELECTED_ROW = event[0];
       this.selectedScianIndex = this.nicoTablaDatos.findIndex(row => row === SELECTED_ROW);
@@ -765,6 +766,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    * Elimina el registro seleccionado de la lista `nicoTablaDatos` y cierra el modal de confirmación.
    */
   aceptarEliminarScian(): void {
+    this.scianTableTouched = true;
     if (this.selectedScianIndex !== null) {
       this.nicoTablaDatos = this.nicoTablaDatos.filter((_, i) => i !== this.selectedScianIndex);
       this.selectedScianIndex = null;
@@ -1003,7 +1005,7 @@ ngOnChanges(): void {
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(12)]],
       estado: [this.solicitudState?.estado],
       municipioOAlcaldia: [this.solicitudState?.municipioOAlcaldia, [Validators.required, Validators.maxLength(120)]],
-      localidad: [this.solicitudState?.localidad, [Validators.maxLength(120)]],
+      localidad: ['', [Validators.required, Validators.pattern('^[a-zA-ZÀ-ÿ0-9\\s]+$'), Validators.maxLength(120)]],
       colonias: [this.solicitudState?.colonias, [Validators.maxLength(120)]],
       calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
       lada: [this.solicitudState?.lada, [Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(5)]],
@@ -1054,7 +1056,7 @@ ngOnChanges(): void {
     });
 
     this.representanteLegal = this.fb.group({
-      acuerdoPublico: [this.solicitudState?.acuerdoPublico],
+      acuerdoPublico: [this.solicitudState?.acuerdoPublico || '0', [Validators.required]],
       rfc: [this.solicitudState?.rfc, [Validators.required, Validators.maxLength(13)]],
       nombre: [{ value: this.solicitudState?.nombre, disabled: true }, [Validators.required]],
       apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, [Validators.required]],
@@ -1404,6 +1406,7 @@ ngOnChanges(): void {
    * @returns {void} No retorna ningún valor.
    */
   agregarScian(): void {
+    this.scianTableTouched = true; 
     if (this.nicoTablaForm.invalid) {
       this.nicoTablaForm.markAllAsTouched();
       return;
@@ -1492,9 +1495,36 @@ ngOnChanges(): void {
   }
 
   /**
+ * Indicates if the SCIAN table has been touched/interacted with for validation
+ */
+scianTableTouched: boolean = false;
+
+/**
+ * Indicates if the Mercancías table has been touched/interacted with for validation
+ */
+mercanciasTableTouched: boolean = false;
+
+/**
+ * Checks if the SCIAN table is invalid (empty and required)
+ */
+isScianTableInvalid(): boolean {
+  return this.scianTableTouched && (!this.nicoTablaDatos || this.nicoTablaDatos.length === 0);
+}
+
+/**
+ * Checks if the Mercancías table is invalid (empty and required)
+ */
+isMercanciasTableInvalid(): boolean {
+  return this.mercanciasTableTouched && (!this.mercanciasTablaDatos || this.mercanciasTablaDatos.length === 0);
+}
+
+  /**
    * Indica si los formularios principales del domicilio del establecimiento son válidos.
    */
   isValid(): boolean {
+      this.scianTableTouched = true;
+  this.mercanciasTableTouched = true;
+
     return (
       this.form?.valid &&
       this.domicilio?.valid &&

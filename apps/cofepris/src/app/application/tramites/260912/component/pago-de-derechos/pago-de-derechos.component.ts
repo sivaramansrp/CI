@@ -185,12 +185,57 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       .subscribe();
     this.pagoDeDerechosForm = this.fb.group({
       claveDeReferencia: [this.solicitudState?.claveDeReferencia, [Validators.maxLength(50)]],
-      cadenaPagoDependencia: [this.solicitudState?.cadenaPagoDependencia, [Validators.maxLength(50)]],
+      cadenaPagoDependencia: [this.solicitudState?.cadenaPagoDependencia, [Validators.maxLength(9)]],
       clave: [this.solicitudState?.clave, Validators.required],
       llaveDePago: [this.solicitudState?.llaveDePago, [Validators.required, Validators.pattern('^[A-Z0-9]{10}$')]],
       fecPago: [this.solicitudState?.fecPago, [Validators.required, PagoDeDerechosComponent.fechaLimValidator()]],
       impPago: [this.solicitudState?.impPago, [Validators.maxLength(16), PagoDeDerechosComponent.noComaValidator()]],
     });
+  }
+
+   /**
+   * Actualiza el formulario con datos obtenidos desde la tienda.
+   */
+  public enPatchStoredFormData(): void {
+    this.tramite260912Query.selectTramite260912$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.pagoDeDerechosForm.patchValue({
+            claveDeReferencia: seccionState.claveDeReferencia,
+            cadenaPagoDependencia: seccionState.cadenaPagoDependencia,
+            clave: seccionState.clave,
+            llaveDePago: seccionState.llaveDePago,
+            fecPago: seccionState.fecPago,
+            impPago: seccionState.impPago,
+          });
+        })
+      )
+      .subscribe();
+  }
+
+    /**
+   * Resetea todos los campos del formulario de pago de derechos y actualiza el store.
+   * Marca los controles como pristine y untouched para ocultar errores de campos requeridos después de borrar.
+   * Se invoca al hacer clic en el botón "Borrar datos del pago".
+   */
+  resetPagoDeDerechos(): void {
+    if (this.pagoDeDerechosForm) {
+      this.pagoDeDerechosForm.reset();
+      Object.values(this.pagoDeDerechosForm.controls).forEach(control => {
+        control.markAsPristine();
+        control.markAsUntouched();
+        control.updateValueAndValidity();
+      });
+      this.tramite260912Store.setTramite260912State({
+        claveDeReferencia: '',
+        cadenaPagoDependencia: '',
+        clave: '',
+        llaveDePago: '',
+        fecPago: '',
+        impPago: ''
+      });
+    }
   }
 
   /**
@@ -307,6 +352,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
         CONTROL.setErrors({ ...CONTROL.errors, longitudMaxima: true });
       } else {
         if (CONTROL.errors) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { longitudMaxima: LONGITUD_MAXIMA, ...OTHER_ERRORS } = CONTROL.errors;
           CONTROL.setErrors(Object.keys(OTHER_ERRORS).length ? OTHER_ERRORS : null);
         }

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
-import { Tramite260912Store,Tramites260912State } from '../../estados/tramite-260912.store';
-import { map, take } from 'rxjs/operators';
+import { Tramite260912Store } from '../../estados/tramite-260912.store';
+
 import { DatosEmpresaComponent } from '../../component/datos-empresa/datos-empresa.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 

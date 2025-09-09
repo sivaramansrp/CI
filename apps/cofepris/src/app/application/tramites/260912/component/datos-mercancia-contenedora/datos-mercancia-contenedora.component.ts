@@ -40,9 +40,7 @@ import {
   Input,
   OnInit,
   Output,
-  QueryList,
-  ViewChild,
-  ViewChildren
+  ViewChild
 } from '@angular/core';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { DetalleMercancia } from '../../../../shared/models/detalle-mercancia.model';
