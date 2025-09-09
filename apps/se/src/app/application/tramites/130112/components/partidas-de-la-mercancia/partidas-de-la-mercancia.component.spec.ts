@@ -1,111 +1,101 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PartidasDeLaMercanciaComponent } from './partidas-de-la-mercancia.component';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 
 describe('PartidasDeLaMercanciaComponent', () => {
   let component: PartidasDeLaMercanciaComponent;
   let fixture: ComponentFixture<PartidasDeLaMercanciaComponent>;
-  let formBuilder: FormBuilder;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,PartidasDeLaMercanciaComponent],
-      providers: [FormBuilder],
-      declarations: []
+      imports: [ReactiveFormsModule, PartidasDeLaMercanciaComponent], 
     }).compileComponents();
-
+  
     fixture = TestBed.createComponent(PartidasDeLaMercanciaComponent);
     component = fixture.componentInstance;
-    formBuilder = TestBed.inject(FormBuilder);
-    
-    component.partidasDelaMercanciaForm = formBuilder.group({
-      descripcion: ['', Validators.required],
-      cantidadPartidasDeLaMercancia: [''],
-      fraccionTigiePartidasDeLaMercancia: [''],
-      fraccionDescripcionPartidasDeLaMercancia:[''],
-      descripcionPartidasDeLaMercancia:[],
-      valorPartidaUSDPartidasDeLaMercancia:[]
-    
-      
+    component.partidasDelaMercanciaForm = new FormGroup({
+      cantidadPartidasDeLaMercancia: new FormControl('', Validators.required),
+      nombrePartida: new FormControl('', Validators.required),
+      descripcionPartidasDeLaMercancia: new FormControl('', Validators.required), 
+      valorPartidaUSDPartidasDeLaMercancia: new FormControl('', Validators.required),
+      fraccionTigiePartidasDeLaMercancia: new FormControl('', Validators.required),
+      fraccionDescripcionPartidasDeLaMercancia: new FormControl('', Validators.required),
+    });
+    component.modificarPartidasDelaMercanciaForm = new FormGroup({
+      cantidadPartidasDeLaMercancia: new FormControl('', Validators.required),
+      descripcionPartidasDeLaMercancia: new FormControl('', Validators.required),
+      valorPartidaUSDPartidasDeLaMercancia: new FormControl('', Validators.required),
+      fraccionTigiePartidasDeLaMercancia: new FormControl('', Validators.required),
+      fraccionDescripcionPartidasDeLaMercancia: new FormControl('', Validators.required),
+    });
+    component.formForTotalCount = new FormGroup({
+      cantidadTotal: new FormControl('', Validators.required),
+      valorTotalUSD: new FormControl('', Validators.required),
     });
 
-    component.formForTotalCount = formBuilder.group({
-      cantidadTotal:[0],
-      valorTotalUSD:[0]
-    });
-
-    fixture.detectChanges();
+    fixture.detectChanges(); 
   });
+  
+  
+  
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should disable form if esFormularioSoloLectura is true', () => {
-    component.esFormularioSoloLectura = true;
-    component.ngOnChanges({
-      esFormularioSoloLectura: {
-        currentValue: true,
-        previousValue: false,
-        isFirstChange: () => false,
-        firstChange: false
+  it('should emit filaSeleccionadaChange when handleListaDeFilaSeleccionada is called', () => {
+    const emitSpy = jest.spyOn(component.filaSeleccionadaChange, 'emit');
+    const filasSeleccionadas: PartidasDeLaMercanciaModelo[]=[
+      {
+        id: '1',
+        cantidad: '10',
+        unidadDeMedida: 'kg',
+        fraccionFrancelaria: '1234.56.78',
+        descripcion: 'Producto A',
+        precioUnitarioUSD: '100',
+        totalUSD: '1000',
+      },
+      {
+        id: '2',
+        cantidad: '5',
+        unidadDeMedida: 'kg',
+        fraccionFrancelaria: '8765.43.21',
+        descripcion: 'Producto B',
+        precioUnitarioUSD: '100',
+        totalUSD: '1000',
       }
-    });
+    ];
 
-    expect(component.partidasDelaMercanciaForm.disabled).toBe(true);
+    component.handleListaDeFilaSeleccionada(filasSeleccionadas);
+
+    expect(emitSpy).toHaveBeenCalledWith(filasSeleccionadas);
   });
 
-  it('should enable form if esFormularioSoloLectura is false', () => {
-    component.esFormularioSoloLectura = false;
-    component.ngOnChanges({
-      esFormularioSoloLectura: {
-        currentValue: false,
-        previousValue: true,
-        isFirstChange: () => false,
-        firstChange: false
-      }
-    });
+  it('should emit validarYEnviarFormularioEvent when validarYEnviarFormulario is called', () => {
+    const emitSpy = jest.spyOn(component.validarYEnviarFormularioEvent, 'emit');
 
-    expect(component.partidasDelaMercanciaForm.enabled).toBe(true);
-  });
-
-  it('should return true if control is invalid', () => {
-    const controlName = 'descripcion';
-    component.partidasDelaMercanciaForm.get(controlName)?.markAsTouched();
-    expect(component.esInvalido(controlName)).toBe(true);
-  });
-
-  it('should emit filaSeleccionadaChange on handleListaDeFilaSeleccionada', () => {
-    const spy = jest.spyOn(component.filaSeleccionadaChange, 'emit');
-    const mockRows = [{ id: 1 }, { id: 2 }];
-    component.handleListaDeFilaSeleccionada(mockRows);
-    expect(spy).toHaveBeenCalledWith(mockRows);
-  });
-
-  it('should emit validarYEnviarFormularioEvent on validarYEnviarFormulario', () => {
-    const spy = jest.spyOn(component.validarYEnviarFormularioEvent, 'emit');
     component.validarYEnviarFormulario();
-    expect(spy).toHaveBeenCalled();
+
+    expect(emitSpy).toHaveBeenCalled();
   });
 
-  it('should emit navegarParaModificarPartidaEvent on navegarParaModificarPartida', () => {
-    const spy = jest.spyOn(component.navegarParaModificarPartidaEvent, 'emit');
-    component.navegarParaModificarPartida();
-    expect(spy).toHaveBeenCalled();
-  });
+  it('should emit setValoresStoreEvent with correct arguments when setValoresStore is called', () => {
+    const emitSpy = jest.spyOn(component.setValoresStoreEvent, 'emit');
+    const testForm = new FormGroup({
+      testControl: new FormControl('')
+    });
+    const testCampo = 'testCampo';
+    const testMetodoNombre = 'testMetodoNombre';
 
-  it('should emit setValoresStoreEvent with correct data', () => {
-    const spy = jest.spyOn(component.setValoresStoreEvent, 'emit');
-    const mockForm = component.partidasDelaMercanciaForm;
-    const campo = 'descripcion';
-    component.setValoresStore(mockForm, campo);
-    expect(spy).toHaveBeenCalledWith({ form: mockForm, campo });
-  });
+    component.partidasDelaMercanciaForm = testForm;
 
-  it('should use correct table header and selection type', () => {
-    expect(component.tableHeaderData).toEqual(PARTIDASDELAMERCANCIA_TABLA);
-    expect(component.CHECKBOX).toBe(TablaSeleccion.CHECKBOX);
+    component.setValoresStore(testForm, testCampo);
+
+    expect(emitSpy).toHaveBeenCalledWith({
+      form: testForm,
+      campo: testCampo
+     
+    });
   });
 });

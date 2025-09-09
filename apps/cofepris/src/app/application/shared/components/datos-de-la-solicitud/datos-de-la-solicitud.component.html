@@ -33,7 +33,7 @@
   <div class="row">
     <div class="col-md-12">
       <div class="pull-right ml-2">
-        <button type="button" class="btn btn-primary" (click)="abrirModal()" [disabled]="formularioDeshabilitado">
+        <button type="button" class="btn btn-primary" (click)="abrirModal()" [disabled]="formularioDeshabilitado || establecimientoSeleccionado">
           Seleccionar establecimiento
         </button>
       </div>
@@ -49,9 +49,7 @@
           <span class="form-label" *ngIf="esCampoRequerido('rfcSanitario')">*</span>
           <span class="form-label">:</span>
           <input class="form-control" id="rfcSanitario" type="text" maxlength="13" formControlName="rfcSanitario"
-            [ngClass]="
-              isValid(datosSolicitudForm, 'rfcSanitario') ? 'required' : ''
-            " />
+            [ngClass]="isValid(datosSolicitudForm, 'rfcSanitario') ? 'required' : ''" />
           <div *ngIf="datosSolicitudForm.get('rfcSanitario')?.hasError('pattern') && datosSolicitudForm.get('rfcSanitario')?.touched" class="mensaje-error">
             El RFC no tiene un formato válido.
           </div>
@@ -62,6 +60,7 @@
         </div>
       </div>
       }
+      
       <div [class.col-md-6]="!mostrarCorreoElectronicoenMismaFila"
         [class.col-md-8]="mostrarCorreoElectronicoenMismaFila">
         <div class="form-group">
@@ -69,9 +68,7 @@
           <span class="form-label municipio-label" *ngIf="esCampoRequerido('denominacionRazon')">*</span>
           <span class="form-label municipio-labe">:</span>
           <input class="form-control" id="denominacionRazon" type="text" formControlName="denominacionRazon"
-            maxlength="100" [ngClass]="
-              isValid(datosSolicitudForm, 'denominacionRazon') ? 'required' : ''
-            " />
+            maxlength="100" [ngClass]="isValid(datosSolicitudForm, 'denominacionRazon') ? 'required' : ''" />
           <div class="mensaje-error"
             *ngIf="datosSolicitudForm.get('denominacionRazon')?.errors?.['required'] && datosSolicitudForm.get('denominacionRazon')?.touched">
             Este campo es obligatorio.
@@ -363,25 +360,8 @@
             type="text"
             formControlName="licenciaSanitaria"
             (change)="cambioLicenciaSanitaria($event)"
-            maxlength="20"
-            [ngClass]="{
-              required:
-                datosSolicitudForm.get('licenciaSanitaria')?.touched &&
-                datosSolicitudForm
-                  .get('licenciaSanitaria')
-                  ?.hasError('required')
-            }"
-          />
-          <small
-            class="text-danger"
-            *ngIf="
-              datosSolicitudForm.get('licenciaSanitaria')?.touched &&
-              datosSolicitudForm.get('licenciaSanitaria')?.hasError('required')
-            "
-          >
-            Este campo es obligatorio.
-          </small>
-        </div>
+           />
+         </div>
       </div>
     </div>
 
