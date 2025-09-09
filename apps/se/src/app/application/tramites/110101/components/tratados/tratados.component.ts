@@ -236,7 +236,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
             id: index + 1,
             descripcion: item.descripcion,
             clave: item.clave,
-            title: item.bloque,
+            bloque: item.bloque,
           }));
         }
       });
@@ -525,6 +525,28 @@ talbleData: RegistroDeSolicitudesTabla = {
     (this.tramite110101Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  /**
+   * @method onTratadoAcuerdo
+   * @description Maneja el evento de cambio de selección en el catálogo..
+   * @param {Catalogo} selectedOption - La opción seleccionada del catálogo.
+   * @returns {void} No retorna ningún valor.
+   */
+  onTratadoAcuerdo(selectedOption: Catalogo, campo: string): void {
+    switch (campo) {
+      case 'pais':
+        if (selectedOption.bloque === 'false') {
+          this.getCatalogoTratadoAcuerdo(selectedOption.clave || '');
+        } else if (selectedOption.bloque === 'true') {
+          this.getCatalogoTratadoAcuerdoBloque(selectedOption.clave || '');
+        }
+        break;
+      case 'tratado':
+        this.getCatalogoCriterios(selectedOption.clave || '')
+        break;
+      default:
+        break;
+    }
+  }
 
   /**
    * **Ciclo de vida: OnDestroy**
