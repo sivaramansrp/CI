@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11201/pasos.enums';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 interface AccionBoton {
   accion: string;
   valor: number;

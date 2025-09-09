@@ -863,8 +863,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
 
           // Restablecer los valores del formulario para los campos de la sección de contenedor
           this.solicitudForm.patchValue({
-            aduana: this.aduana.primerOpcion,
-            fechaIngreso: '',
             digitoDeControl: '',
             inicialesContenedor: '',
             numeroContenedor: '',
