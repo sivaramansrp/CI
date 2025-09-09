@@ -124,6 +124,8 @@ jobs:
               fi
             done
             docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }} ghcr.io
+            # Delete existing image for a clean pull
+            docker rmi -f ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG || true
             docker pull ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG
             # Confirm YAML is using correct image
             grep "image: ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG" "$DEPLOYMENT_FILE"
