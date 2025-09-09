@@ -21,3 +21,12 @@ export interface MontoExpedirTablaDatos {
      */
     tbodyData: string[];
   }
+  /**
+ * Representa el modelo de datos para los montos a expedir.
+ */
+export interface Monto {
+  /**
+   * Monto que se va a expedir.
+   */
+  Montoaexpedir: string;
+}

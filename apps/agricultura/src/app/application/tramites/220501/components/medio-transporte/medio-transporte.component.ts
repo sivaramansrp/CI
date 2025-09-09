@@ -400,6 +400,18 @@ export class MedioTransporteComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
+   * Método para validar el formulario de medio de transporte.
+   * @returns {boolean} Verdadero si el formulario es válido, falso en caso contrario.
+   */
+  validarMedioTransporteFormulario(): boolean {
+    if(this.medioTransporteForm.invalid) {
+      this.medioTransporteForm.markAllAsTouched();
+      return false;
+    }
+    return this.medioTransporteForm.valid;
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Desuscribe el componente de todos los observables.
    * @returns {void}

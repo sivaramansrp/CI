@@ -2,20 +2,21 @@ import {
   AlertComponent,
   CatalogoSelectComponent,
   ConfiguracionColumna,
+  ConsultaioQuery,
+  ConsultaioState,
   CrosslistComponent,
   InputRadioComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-  ValidacionesFormularioService
-} from '@libs/shared/data-access-user/src';
+  ValidacionesFormularioService,
+} from '@ng-mf/data-access-user';
 import {
   Catalogo,
   Solicitud10301State,
-  Tramite10301Store
+  Tramite10301Store,
 } from '../../estados/tramite10301.store';
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosMercancia, RespuestaCatalog } from '../../models/importador-exportador.model';
 import {
   FormArray,
@@ -24,7 +25,7 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -33,13 +34,13 @@ import { Modal } from 'bootstrap';
 import { Solicitud10301Service } from '../../services/solicitud10301.service';
 import { Tramite10301Query } from '../../estados/tramite10301.query';
 
-/**
- * Texto de adjuntar para terceros.
- */
+/** Texto de adjuntar para terceros */
 const TERCEROS_TEXTO_DE_ADJUNTAR =
   'Debes capturar la descripción de la mercancía en los mismos términos de la carta de donación';
+
 /**
- * Componente que representa los datos del trámite.
+ * @component DatosDelTramiteComponent
+ * @description Componente para gestionar datos del trámite 10301
  */
 @Component({
   selector: 'app-datos-del-tramite',
@@ -59,141 +60,87 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
   ],
 })
 export class DatosDelTramiteComponent implements OnInit, OnDestroy {
-  /**
-   * Suscripciones a observables.
-   */
+  /** Suscripciones a observables */
   private subscriptions: Subscription[] = [];
 
-  /**
-   * Estado de la solicitud.
-   */
+  /** Estado de la solicitud */
   public solicitudState!: Solicitud10301State;
 
-  /**
-   * Notificador para destruir observables.
-   */
+  /** Notificador para destruir observables */
   private destroyNotifier$: Subject<void> = new Subject();
-  /**
-   * Suscripción para obtener el catálogo de aduanas.
-   */
+
+  /** Suscripción para obtener el catálogo de aduanas */
   getAduanaIngresaraSubscription!: Subscription;
 
-  /**
-   * Suscripción para obtener el catálogo de años.
-   */
+  /** Suscripción para obtener el catálogo de años */
   getAnoSubscription!: Subscription;
 
-  /**
-   * Suscripción para obtener el catálogo de condiciones.
-   */
+  /** Suscripción para obtener el catálogo de condiciones */
   getCondicionSubscription!: Subscription;
 
-  /**
-   * Suscripción para obtener el catálogo de países.
-   */
+  /** Suscripción para obtener el catálogo de países */
   getPaisSubscription!: Subscription;
 
-  /**
-   * Texto de adjuntar para terceros.
-   */
+  /** Texto de adjuntar para terceros */
   TEXTO_DE_ADJUNTAR: string = TERCEROS_TEXTO_DE_ADJUNTAR;
 
-  /**
-   * Lista de fines elegidos.
-   */
+  /** Lista de fines elegidos */
   finesElegidos: string[] = [];
 
-  /**
-   * Lista de fines elegidos seleccionados.
-   */
+  /** Lista de fines elegidos seleccionados */
   elegidosSeleccionados: string[] = [];
 
-  /**
-   * Catálogo de aduanas.
-   */
+  /** Catálogo de aduanas */
   aduana!: Catalogo[];
 
-  /**
-   * Catálogo de años.
-   */
+  /** Catálogo de años */
   ano!: Catalogo[];
 
-  /**
-   * Catálogo de condiciones.
-   */
+  /** Catálogo de condiciones */
   condicion!: Catalogo[];
 
-  /**
-   * Catálogo de países.
-   */
+  /** Catálogo de países */
   pais!: Catalogo[];
 
-  /**
-   * Lista de rangos de días seleccionados.
-   */
+  /** Lista de rangos de días seleccionados */
   selectRangoDias: string[] = [];
 
-  /**
-   * Control de formulario para la fecha.
-   */
+  /** Control de formulario para la fecha */
   fecha: FormControl = new FormControl('');
 
-  /**
-   * Control de formulario para la fecha seleccionada.
-   */
+  /** Control de formulario para la fecha seleccionada */
   fechaSeleccionada: FormControl = new FormControl('');
-  /**
-   * Formulario de trámite.
-   */
+
+  /** Formulario de trámite */
   tramiteForm!: FormGroup;
 
-  /**
-   * Valor seleccionado del radio.
-   */
+  /** Valor seleccionado del radio */
   valorSeleccionado!: string;
 
-  /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
+  /** Indica si el formulario está en modo solo lectura */
   esFormularioSoloLectura: boolean = false;
 
-  /**
-   * Indica si el formulario es de solo lectura.
-   * 
-   */
+  /** Indica si el formulario es de solo lectura */
   formularioDeshabilitado: boolean = true;
 
-  /**
-   * Indicates whether the selected location is a country.
-   * Set to `true` if the location is a country, otherwise `false`.
-   */
+  /** Indica si es país */
   isPais: boolean = false;
 
-    /**
-   * Indicates whether the selected location is a country.
-   * Set to `true` if the location is a country, otherwise `false`.
-   */
+  /** Indica si es desplegable de países */
   isDesplegableDepaises: boolean = false;
-    /**
-   * Indicates whether the selected location is a country.
-   * Set to `true` if the location is a country, otherwise `false`.
-   */
+
+  /** Indica si es aduana de mercancía */
   isAdunaMarcancia: boolean = false;
 
-  /**
-   * Referencia a los componentes Crosslist en la vista.
-   */
+  /** Referencia a los componentes Crosslist en la vista */
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
-  
-  /**
-   * Botones para gestionar la lista de países de origen.
-   */
+
+  /** Botones para gestionar la lista de países de origen */
   public finesDeMercanciaBotons = this.obtenerCrossListBtn();
 
   /**
-   * Devuelve la configuración de los botones para gestionar la lista de países de origen en el Crosslist.
-   * Cada botón ejecuta una acción sobre todos o la selección actual del Crosslist.
+   * Devuelve la configuración de los botones para gestionar la lista de países de origen en el Crosslist
+   * @returns Configuración de botones del crosslist
    */
   public obtenerCrossListBtn(): Array<{ btnNombre: string; class: string; funcion: () => void }> {
     return [
@@ -236,9 +183,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
 
-   /**
-   * Referencia al modal de confirmación.
-   */
+  /**
+  * Referencia al modal de confirmación.
+  */
   @ViewChild('modalConfirmacion', { static: false }) modalConfirmacion!: ElementRef;
 
   /**
@@ -250,7 +197,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Referencia al botón para cerrar el modal Confirmacion.
    */
   @ViewChild('closeModalConfirmacion') closeModalConfirmacion!: ElementRef;
-  
+
   /**
    * Formulario para agregar mercancías.
    */
@@ -404,7 +351,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Opciones de radio.
    */
   radioOpcions = [
-    { label: 'Sí', value: 'si' },
+    { label: 'Sí', value: 'sí' },
     { label: 'No', value: 'no' },
   ];
 
@@ -424,7 +371,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Cambia el valor seleccionado del radio.
    * @param value Valor seleccionado.
    */
-  cambiarRadio(value: string | number):void {
+  cambiarRadio(value: string | number): void {
     this.valorSeleccionado = value as string;
     this.store.setValorSeleccionado(this.valorSeleccionado);
   }
@@ -475,7 +422,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       );
 
     merge(FINES$, CONDICION$, ADUANA$, ANO$, PAIS$).pipe(takeUntil(this.destroyNotifier$)).subscribe();
-
   }
 
   /**
@@ -512,7 +458,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
-     this.importadorExportador.get(campo)?.updateValueAndValidity();
+    this.importadorExportador.get(campo)?.updateValueAndValidity();
 
   }
   /**
@@ -585,7 +531,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
     this.agregarMercanciasForm = this.fb.group({
       datosMercancia: this.fb.group({
-        finesElegidos: [ this.solicitudState?.finesElegidos, Validators.required],
+        finesElegidos: [this.solicitudState?.finesElegidos, Validators.required],
         tipoMercancia: [
           this.solicitudState?.tipoMercancia,
           [Validators.required, Validators.maxLength(100)],
@@ -597,16 +543,16 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         condicion: [this.solicitudState?.condicion, Validators.required],
         marca: [
           this.solicitudState?.marca,
-          [Validators.maxLength(50)],
+          [Validators.required, Validators.maxLength(50)],
         ],
-        ano: [this.solicitudState?.ano],
+        ano: [this.solicitudState?.ano, [Validators.required]],
         modelo: [
           this.solicitudState?.modelo,
-          [Validators.maxLength(50)],
+          [Validators.required, Validators.maxLength(50)],
         ],
         serie: [
           this.solicitudState?.serie,
-          [Validators.maxLength(50)],
+          [Validators.required, Validators.maxLength(50)],
         ],
         fechasSeleccionadas: this.fb.array([])
       }),
@@ -614,18 +560,14 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
   }
 
-  /**
-   * Cierra el modal actual.
-   */
+  /** Cierra el modal actual */
   cerrarModal(): void {
     if (this.closeModal) {
       this.closeModal.nativeElement.click();
     }
   }
 
-  /**
-   * Agregar mercancia.
-   */
+  /** Agrega una nueva mercancía al listado */
   agregarMercancia(): void {
     const FINES = this.agregarMercanciasForm.value.datosMercancia.finesElegidos;
     const TIPOMERCANCIA = this.agregarMercanciasForm.value.datosMercancia.tipoMercancia;
@@ -656,17 +598,14 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la selección de condicion.
+   * Abre el modal de confirmación.
    */
   condicionSeleccion(): void {
     const CONDICION = this.agregarMercanciasForm.get('datosMercancia.condicion')?.value;
     this.store.setCondicion(CONDICION);
   }
 
-  /**
-   * Maneja la selección de la aduana.
-   * Obtiene el valor del formulario y lo establece en el store.
-   */
+  /** Maneja la selección de aduana */
   aduanaSeleccion(): void {
     const ADUANA = this.tramiteForm.get('importadorExportador.aduana')?.value;
     this.store.setAduana(ADUANA);
@@ -680,7 +619,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     const ANO = this.agregarMercanciasForm.get('datosMercancia.ano')?.value;
     this.store.setAduana(ANO);
   }
-
   /**
    * Maneja la selección de la pais.
    * Obtiene el valor del formulario y lo establece en el store.
@@ -709,9 +647,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Modifica las filas seleccionadas en la tabla de solicitudes.
-   * Abre un modal para realizar los cambios.
-   */
+ * Modifica las filas seleccionadas en la tabla de solicitudes.
+ * Abre un modal para realizar los cambios.
+ */
   modificar(): void {
     if (this.filaSeleccionadas && this.filaSeleccionadas.length > 0) {
       this.agregarMercanciasForm.patchValue(this.filaSeleccionadas);
@@ -722,7 +660,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     }
   }
 
-/**
+  /**
    * Obtiene el array del formulario 'fechasSeleccionadas' del grupo de formulario  'datosServicio'.
    *
    * @returns {FormArray} El array de formulario 'fechasSeleccionadas'.
@@ -752,7 +690,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     (this.agregarMercanciasForm.get('datosMercancia') as FormGroup).setControl('fechasSeleccionadas', FECHAS);
     this.store.setFechasSeleccionadas(fechas);
   }
-  
+
   /**
    * Método de limpieza que se ejecuta cuando el componente se destruye.
    */

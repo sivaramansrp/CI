@@ -660,7 +660,7 @@ export const PUNTO_DE_INSPECCION = {
   /**
    * Indica si el campo es obligatorio.
    */
-  required: false,
+  required: true,
 
   /**
    * Texto que se mostrará como primera opción en el menú desplegable.

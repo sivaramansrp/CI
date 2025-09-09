@@ -1,4 +1,3 @@
-import { state } from '@angular/animations';
 import { Tramite80101State, Tramite80101Store } from './tramite80101.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
@@ -227,6 +226,20 @@ export class Tramite80101Query extends Query<Tramite80101State> {
 
   selectDatosFederatariosFormulario$ = this.select(
     (state) => state.datosFederatarios
+  );
+
+  /**
+   * Selecciona los datos de los fedatarios del estado.
+   */
+  selectDatosPlantasImmex$ = this.select(
+    (state) => state.plantasImmexTablaLista
+  );
+
+  /**
+   * Selecciona los datos de los fedatarios del estado.
+   */
+  selectDatosPlantasDisponibles$ = this.select(
+    (state) => state.plantasDisponiblesTablaLista
   );
 
 /**

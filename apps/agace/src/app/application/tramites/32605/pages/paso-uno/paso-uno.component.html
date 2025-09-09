@@ -2,7 +2,7 @@
   <div class="row">
     <ul class="nav nav-tabs">
       <li *ngFor="let tab of seccionesDeLaSolicitud" [ngClass]="indice === tab.index ? 'active' : ''">
-        <a *ngIf="tab.index !== 5 || reconocimientoMutuoValue === '1'" [class.active]="indice === tab.index"
+        <a *ngIf="mostrarTab(tab.index)" [class.active]="indice === tab.index"
           (click)="seleccionaTab(tab.index)">
           {{ tab.title }}
         </a>
@@ -14,7 +14,7 @@
 
       @if(esDatosRespuesta){
       <app-datos-comunes #datosComunesRef (reconocimientoMutuoCTPATChange)="onReconocimientoMutuoChange($event)"
-        [hidden]="indice !== 2">
+        (perfilesEmitter)="perfilesChanges($event)" [hidden]="indice !== 2">
       </app-datos-comunes>
       }
 
@@ -32,7 +32,7 @@
       <app-c-tpat #ctpatRef [hidden]="indice !== 5"></app-c-tpat>
       }
 
-      @if(esDatosRespuesta){
+      @if(esDatosRespuesta && perfiles === '1'){
       <app-perfiles #perfilesRef [hidden]="indice !== 6"></app-perfiles>
       }
     </ng-container>

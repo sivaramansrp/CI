@@ -105,6 +105,11 @@ export class DatosDeLaSolicitudComponent
    */
   public destroyNotifier$: Subject<void> = new Subject();
 
+    /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
   /**
    * @property {ScianConfig<TablaScianConfig>} scianConfig
    * Configuración de la tabla SCIAN recibida como input.
@@ -532,6 +537,7 @@ export class DatosDeLaSolicitudComponent
             takeUntil(this.destroyNotifier$),
             map((seccionState) => { 
               this.formularioDeshabilitado = seccionState.readonly;
+              this.esFormularioSoloLectura = seccionState.readonly;
             })
           )
           .subscribe();
@@ -796,6 +802,7 @@ export class DatosDeLaSolicitudComponent
         [Validators.required],
       ],
     });
+    this.formularioDeshabilitado = this.esFormularioSoloLectura
     if (this.formularioDeshabilitado) {
       this.datosSolicitudForm.disable();
     }
@@ -823,6 +830,7 @@ export class DatosDeLaSolicitudComponent
       }
     }
   }
+
   /**
  * @method actualizarDatosFormularioSolicitud
  * @description Actualiza las validaciones de los campos del formulario `datosSolicitudForm`
