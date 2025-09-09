@@ -30,4 +30,9 @@ export const SOLICITUD_32201_ENUM = {
    * Texto de alerta.
    */
   TEXTO_REQUISITOS: 'Los siguientes campos, deberán llenarse, solamente en caso de ser afirmativa la respuesta.',
+
+  /**
+   * Texto de alerta2.
+   */
+  TEXTO_REQUISITOS2: 'Los últimos doce meses se podrán computar a partir del mes inmediato anterior al que la empresa presente su solicitud.',
 };

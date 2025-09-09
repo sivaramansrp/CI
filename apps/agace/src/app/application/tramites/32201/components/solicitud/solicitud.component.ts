@@ -114,6 +114,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   textoRequisito = this.TEXTOS.TEXTO_REQUISITOS;
 
   /**
+   * Indica si se debe mostrar un error cuando se deseleccionan todos los regímenes 1, 2 y 3
+   * después de haber estado seleccionados.
+   */
+  mostrarErrorDeseleccionRegimenes: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb - FormBuilder para crear formularios reactivos.
    * @param tramite32201Store - Store para manejar el estado del trámite.
@@ -136,6 +142,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
+  /**
+   * Propiedad para rastrear el estado anterior de los regímenes 1, 2 y 3
+   * para detectar cuando se deseleccionan después de haber estado seleccionados
+   */
+  private regimenesAnteriores = {
+    regimen_1: false,
+    regimen_2: false,
+    regimen_3: false
+  };
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -293,6 +309,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       FIELD_VALUE
     );
   }
+
   /**
    * Método para inicializar el formulario reactivo con los valores del estado de la solicitud.
    * Este método se llama al inicializar el componente y establece los valores del formulario
@@ -332,9 +349,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Configura la validación para los checkboxes de Régimen aduanero.
    * Muestra un popup cuando regimen_0 está seleccionado y NINGUNO de los otros está seleccionado.
+   * También valida cuando se deseleccionan todos los regímenes 1, 2 y 3 después de haber estado seleccionados.
    */
   private configurarValidacionRegimen(): void {
     if (!this.esFormularioSoloLectura) {
+      this.regimenesAnteriores = {
+        regimen_1: this.solicitudForm.get('regimen_1')?.value || false,
+        regimen_2: this.solicitudForm.get('regimen_2')?.value || false,
+        regimen_3: this.solicitudForm.get('regimen_3')?.value || false
+      };
+
       ['regimen_0', 'regimen_1', 'regimen_2', 'regimen_3'].forEach(controlName => {
         this.solicitudForm.get(controlName)?.valueChanges
           .pipe(takeUntil(this.destroyNotifier$))
@@ -343,10 +367,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           });
       });
     }
-  }
+  }  
+  
   /**
    * Valida la condición de Régimen aduanero y muestra popup si es necesario.
-   * Condición: Si regimen_0 está seleccionado y NINGUNO de regimen_1, regimen_2 o regimen_3 está seleccionado.
+   * Condición 1: Si regimen_0 está seleccionado y NINGUNO de regimen_1, regimen_2 o regimen_3 está seleccionado.
+   * Condición 2: Si cualquiera de los regímenes 1, 2 o 3 estaba seleccionado y ahora todos están deseleccionados.
    */
   private validarRegimenAduanero(): void {
     const regimen0 = this.solicitudForm.get('regimen_0')?.value;
@@ -359,7 +385,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.mostrarPopupRegimenAduanero();
       }
     }
-  }  
+
+    const regimenesActuales = { regimen_1: regimen1, regimen_2: regimen2, regimen_3: regimen3 };
+    const regimenSeleccionado = this.regimenesAnteriores.regimen_1 || 
+                                          this.regimenesAnteriores.regimen_2 || 
+                                          this.regimenesAnteriores.regimen_3;
+    const regimens = regimen1 || regimen2 || regimen3;
+
+    if (regimenSeleccionado && !regimens) {
+      console.log('Debe seleccionar al menos un régimen.');
+      this.mostrarErrorDeseleccionRegimenes = true;
+    }
+
+    this.regimenesAnteriores = { ...regimenesActuales };
+  }
   
   /**
    * Muestra un popup de advertencia para la condición de Régimen aduanero.

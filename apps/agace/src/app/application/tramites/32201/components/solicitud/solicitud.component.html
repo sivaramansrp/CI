@@ -33,6 +33,10 @@
           formControlName="regimen_3" (change)="setValoresStore(solicitudForm, 'regimen_3', 'setRegimen_3')"
           [isDisabled]="esFormularioSoloLectura"></lib-input-check>
       </div>
+
+      <div *ngIf="mostrarErrorDeseleccionRegimenes" class="mensaje-error">
+          Debe seleccionar al menos un régimen.
+      </div>
     </div>
 
     <ng-titulo titulo="Requisitos"></ng-titulo>
@@ -68,9 +72,8 @@
           [disabled]="esFormularioSoloLectura"></app-input-radio>
       </div>
 
-      <div class="col-md-12 mt-2 mb-2">
-        Los últimos doce meses se podrán computar a partir del mes inmediato
-        anterior al que la empresa presente su solicitud.
+      <div class="mt-2 mb-2">
+        <ng-alert [CONTENIDO]="TEXTOS.TEXTO_REQUISITOS2" [CUSTOMECLASS]="infoAlert"></ng-alert>
       </div>
 
       <div class="mt-2 mb-2">

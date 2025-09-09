@@ -376,6 +376,46 @@ describe('SolicitudComponent', () => {
 
         expect(showPopupSpy).not.toHaveBeenCalled();
       });
+
+      it('should show error when regimes 1,2,3 are deselected after being selected', () => {
+        const showErrorSpy = jest.spyOn(component, 'mostrarErrorDeseleccionRegimenes');
+        
+        // First set regimen_1 to true to establish previous state
+        component.solicitudForm.patchValue({
+          regimen_0: false,
+          regimen_1: true,
+          regimen_2: false,
+          regimen_3: false
+        });
+        
+        // Then deselect regimen_1
+        component.solicitudForm.patchValue({
+          regimen_0: false,
+          regimen_1: false,
+          regimen_2: false,
+          regimen_3: false
+        });
+
+        expect(showErrorSpy).toHaveBeenCalled();
+      });
+
+      it('should handle confirmation correctly by deselecting regimen_0', () => {
+        const deseleccionarSpy = jest.spyOn(component as any, 'deseleccionarRegimen0');
+        
+        component.manejarConfirmacionRegimen(true);
+        
+        expect(deseleccionarSpy).toHaveBeenCalled();
+        expect(component.confirmarNotificacion).toBeNull();
+      });
+
+      it('should handle cancellation correctly without deselecting regimen_0', () => {
+        const deseleccionarSpy = jest.spyOn(component as any, 'deseleccionarRegimen0');
+        
+        component.manejarConfirmacionRegimen(false);
+        
+        expect(deseleccionarSpy).not.toHaveBeenCalled();
+        expect(component.confirmarNotificacion).toBeNull();
+      });
     });
 
   });
