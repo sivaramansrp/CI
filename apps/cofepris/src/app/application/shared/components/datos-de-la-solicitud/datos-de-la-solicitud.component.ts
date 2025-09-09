@@ -744,7 +744,7 @@ export class DatosDeLaSolicitudComponent
       aviso: [
         {
           value: this.datosSolicitudFormState.aviso,
-          disabled: false, // Keep enabled (checkboxes should be clickable)
+          disabled: false, 
         }
       ],
       licenciaSanitaria: [
@@ -757,14 +757,14 @@ export class DatosDeLaSolicitudComponent
       regimen: [
         {
           value: this.datosSolicitudFormState.regimen,
-          disabled: false, // Keep enabled (dropdowns should be selectable)
+          disabled: false, 
         },
         [Validators.required]
       ],
       adunasDeEntradas: [
         {
           value: this.datosSolicitudFormState.adunasDeEntradas ? this.datosSolicitudFormState.adunasDeEntradas : '',
-          disabled: false, // Keep enabled (dropdowns should be selectable)
+          disabled: false, 
         },
         [Validators.required],
       ],
@@ -792,73 +792,73 @@ export class DatosDeLaSolicitudComponent
       representanteRfc: [
         {
           value: this.datosSolicitudFormState.representanteRfc,
-          disabled: false, // Keep enabled (not shown disabled in screenshot)
+          disabled: false,
         },
         [Validators.required],
       ],
       representanteNombre: [
         {
           value: this.datosSolicitudFormState.representanteNombre,
-          disabled: false, // Keep enabled (not shown disabled in screenshot)
+          disabled: false,
         },
         [Validators.required],
       ],
       apellidoPaterno: [
         {
           value: this.datosSolicitudFormState.apellidoPaterno,
-          disabled: false, // Keep enabled (not shown disabled in screenshot)
+          disabled: false, 
         },
         [Validators.required],
       ],
       apellidoMaterno: [
         {
           value: this.datosSolicitudFormState.apellidoMaterno,
-          disabled: false, // Keep enabled (not shown disabled in screenshot)
+          disabled: false, 
         },
       ],
       regimenLaMercancia: [
         {
           value: this.datosSolicitudFormState.regimenLaMercancia,
-          disabled: false, // Keep enabled (dropdowns should be selectable)
+          disabled: false, 
         },
         [Validators.required]
       ],
       aduana: [
         {
           value: this.datosSolicitudFormState.aduana,
-          disabled: false, // Keep enabled (dropdowns should be selectable)
+          disabled: false, 
         },
         [Validators.required]
       ],
       mercancias: [
         {
           value: this.tablaMercanciasConfig.datos,
-          disabled: false, // Keep enabled (tables should be interactive)
+          disabled: false,
         },
         matrizRequerida
       ],
       manifesto: [
         {
           value: this.datosSolicitudFormState.manifesto,
-          disabled: false, // Keep enabled (checkboxes should be clickable)
+          disabled: false,
         },
         [Validators.required],
       ],
       manifiestosCasillaDeVerificacion: [
         {
           value: this.datosSolicitudFormState.manifiestosCasillaDeVerificacion,
-          disabled: false, // Keep enabled (checkboxes should be clickable)
+          disabled: false,
         },
         [Validators.required],
       ],
     });
 
-    // Override disabled state if already in readonly mode
+   
     if (this.formularioDeshabilitado) {
       this.datosSolicitudForm.disable();
     }
 
-    // Handle initial state for notification procedures
+  
     if (this.mostrarNotificacion) {
       const EMPTY = Object.entries(this.datosSolicitudFormState)
         .filter(([key]) => key !== 'publico')
@@ -1345,12 +1345,14 @@ export class DatosDeLaSolicitudComponent
    * Método que se llama cuando se envía el formulario.
    */
   alternarControlesDeFormulario(enable: boolean): void {
-    if (!this.datosSolicitudForm) return;
+    if (!this.datosSolicitudForm) {
+      return;
+    }
 
     Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
       
-      // Skip estado field
+      
       if (controlName === 'estado') {
         return;
       }
@@ -1362,7 +1364,7 @@ export class DatosDeLaSolicitudComponent
       }
     });
     
-    // Update the establishment selection state
+   
     this.establecimientoSeleccionado = enable;
   }
 
@@ -1402,23 +1404,22 @@ export class DatosDeLaSolicitudComponent
    * @description Habilita todos los campos del formulario después de seleccionar establecimiento
    */
   private habilitarCamposFormulario(): void {
-    if (!this.datosSolicitudForm) return;
+    if (!this.datosSolicitudForm) {
+      return;
+    }
 
     Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
       
-      // Skip estado field as it should remain enabled
       if (controlName === 'estado') {
         return;
       }
 
-      // Enable the control if it meets the criteria
+     
       if (this.controlYaDeshabilitado(controlName)) {
         CONTROL?.enable();
       }
     });
-
-    // Update the establishment selection state
     this.establecimientoSeleccionado = true;
   }
 
