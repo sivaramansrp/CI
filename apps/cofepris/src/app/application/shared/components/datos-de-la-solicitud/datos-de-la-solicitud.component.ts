@@ -76,6 +76,7 @@ import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
 import { ConsultaioQuery }  from '@ng-mf/data-access-user';
+import { ScianDataService } from '../../services/scian-data.service';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -493,7 +494,8 @@ export class DatosDeLaSolicitudComponent
     public router: Router,
     public activatedRoute: ActivatedRoute,
     public datosSolicitudService: DatosSolicitudService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private scianDataService: ScianDataService
   ) {
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
@@ -1014,7 +1016,10 @@ export class DatosDeLaSolicitudComponent
    * - Redirige al usuario a la ruta '../scian-selecion'.
    */
   agregarScian(): void {
-    this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
+    if(this.idProcedimiento !== NUMERO_TRAMITE.TRAMITE_260201){
+      this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
+    }
+    this.scianDataService.updateScianData(this.scianConfig.datos);
     if (this.scianSeleccionado) {
       this.scianSeleccionado.emit(this.scianConfig.datos);
     }
