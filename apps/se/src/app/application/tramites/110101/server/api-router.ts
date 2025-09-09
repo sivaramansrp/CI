@@ -17,25 +17,29 @@ export const CVETRATADOACUERDO = '{cveTratadoAcuerdo}';
 export const IDTRATADOACUERDO = '{idTratadoAcuerdo}';
 
 /**
+ *  URLs de catalogos
+ */
+
+/**
  * API para el catalogo pais y bloque.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/consulta-paises-bloques
  */
 export const API_GET_CAT_PAIS_BLOQUES = `sat-t110101/catalogo/paises/bloques`;
 
 /**
- * API para elcatalogo de tratados acuerdo.
+ * API para el catalogo de tratados acuerdo.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/getTratadosPorPais
  */
 export const API_GET_CAT_TRATADOS_ACUERDO = (CLAVEPAIS: string): string => `sat-t110101/catalogo/pais/${CLAVEPAIS}/tratado-acuerdo`;
 
 /**
- * API para elcatalogo de tratados acuerdo bloque.
+ * API para el catalogo de tratados acuerdo bloque.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/consulta-tratado-acuerdo-bloque
  */
 export const API_GET_CAT_TRATADOS_ACUERDO_BLOQUE= (CVETRATADOACUERDO: string): string => `sat-t110101/catalogo/tratado-acuerdo/${CVETRATADOACUERDO}/bloque`;
 
 /**
- * API para elcatalogo de criterios de origen.
+ * API para el catalogo de criterios de origen.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/consulta-criterio-tratados
  */
 export const API_GET_CAT_CRITERIOS= (IDTRATADOACUERDO: string): string => `sat-t110101/catalogo/tratado-acuerdo/${IDTRATADOACUERDO}/criterios`;
@@ -45,3 +49,19 @@ export const API_GET_CAT_CRITERIOS= (IDTRATADOACUERDO: string): string => `sat-t
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/consulta
  */
 export const API_GET_CAT_ENTIDADES_FEDERATIVAS = `sat-t110101/catalogo/entidades-federativas`;
+
+/**
+ *  URLs de validacion de tratados y de tabla de tratados
+ */
+
+/**
+ * API para  validar si es posible agregar criterios de tratado a una solicitud.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/agrega-tratado-criterio-solicitud
+*/
+export const API_POST_TRATADO_CRITERIO = `sat-t110101/solicitud/tratado/criterio`;
+
+/**
+ * API para tabla tratados.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/consultar-configuracion-tratados
+*/
+export const API_POST_SOLICITUD_TRATADOS = `sat-t110101/solicitud/tratados/configuracion`;
