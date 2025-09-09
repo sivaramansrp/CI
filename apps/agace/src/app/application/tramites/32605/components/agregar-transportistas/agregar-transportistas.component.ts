@@ -1,21 +1,21 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, Inject, TemplateRef, ViewChild } from '@angular/core';
-import { ConfiguracionColumna,ConsultaioQuery,ConsultaioState,TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Component, Inject, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ConfiguracionColumna,
+  ConsultaioQuery,
+  ConsultaioState,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+} from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PANELS1, TRANSPORTISTAS_CONFIGURACION, TransportistasTable } from '../../constants/datos-comunes.enum';
-import { Subject, map } from 'rxjs';
+import { Solicitud32605State, Solicitud32605Store } from '../../estados/solicitud32605.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { Solicitud32605State } from '../../estados/solicitud32605.store';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
 import { SolicitudService } from '../../services/solicitud.service';
 import { TransportistasListaInterface } from '../../models/solicitud.model';
-import { Validators } from '@angular/forms';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente para agregar y gestionar transportistas en el trámite 32605.

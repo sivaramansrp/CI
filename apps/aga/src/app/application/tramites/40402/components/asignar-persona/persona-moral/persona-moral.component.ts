@@ -43,6 +43,9 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
    */
   onFilasSeleccionadas(filas: PersonaMoralExtranjeraForm[]): void {
     this.filasSeleccionadas = filas;
+    if (filas.length === 0) {
+      this.indiceSeleccionado = null;
+    }
   }
 
   /**
@@ -59,6 +62,15 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
     this.tramite40402Store.setPersonaMoralExtranjeraTabla(this.personaMoralExtranjeraTabla);
     this.filasSeleccionadas = [];
     this.indiceSeleccionado = null;
+    // Mostrar modal de confirmación después de la eliminación
+    setTimeout(() => {
+      const MODAL = document.getElementById('confirmarEliminados');
+    if (MODAL) {
+        const WIN = window as unknown as { bootstrap: { Modal: new (modal: HTMLElement) => { show: () => void } } };
+        const BS_MODAL: { show: () => void } = new WIN.bootstrap.Modal(MODAL);
+        BS_MODAL.show();
+      }
+    }, 300);
   }
   /**
    * Configuración de la tabla de selección.
@@ -307,7 +319,6 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
     const PAIS = this.personaMoralExtranjeraForm.get('paisPME')?.value;
     this.tramite40402Store.setPaisPME(PAIS);
   }
-
   /**
    * Agrega una nueva persona moral extranjera a la tabla.
    * @param personaMoralExtranjeraFormDatos Datos del formulario
@@ -351,7 +362,7 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
           tipoNotificacion: 'alert',
           categoria: 'INFORMACION',
           modo: 'action',
-          titulo: 'Registro agregado',
+          titulo: 'Alerta',
           mensaje: 'Datos guardados correctamente',
           cerrar: true,
           txtBtnAceptar: 'Aceptar',
@@ -430,11 +441,36 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
    * Elimina el registro seleccionado de la tabla.
    */
   eliminarRegistro(): void {
-    if (this.indiceSeleccionado !== null) {
-      this.personaMoralExtranjeraTabla.splice(this.indiceSeleccionado, 1);
-      this.personaMoralExtranjeraTabla = [...this.personaMoralExtranjeraTabla];
-      this.tramite40402Store.setPersonaMoralExtranjeraTabla(this.personaMoralExtranjeraTabla);
+    if (this.indiceSeleccionado !== null || this.filasSeleccionadas.length > 0) {
+      const DENOMINACIONES_A_ELIMINAR = new Set(this.filasSeleccionadas.map(p => p.denominacionPME).filter(Boolean));
+      const CORREOS_A_ELIMINAR = new Set(this.filasSeleccionadas.map(p => p.correoPME).filter(Boolean));
+      const COMBO_CORREO_DENOMINACION_A_ELIMINAR = new Set(
+        this.filasSeleccionadas
+          .filter(p => p.correoPME && p.denominacionPME)
+          .map(p => `${p.correoPME}|${p.denominacionPME}`)
+      );
+
+      this.personaMoralExtranjeraTabla = this.personaMoralExtranjeraTabla.filter(persona => {
+        if (persona.denominacionPME && DENOMINACIONES_A_ELIMINAR.has(persona.denominacionPME)) {
+          return false;
+        }
+        if (persona.correoPME && CORREOS_A_ELIMINAR.has(persona.correoPME)) {
+          return false;
+        }
+        if (persona.correoPME && persona.denominacionPME) {
+          const COMBO_ID = `${persona.correoPME}|${persona.denominacionPME}`;
+          if (COMBO_CORREO_DENOMINACION_A_ELIMINAR.has(COMBO_ID)) {
+            return false;
+          }
+        }
+        return !this.filasSeleccionadas.includes(persona);
+      });
+      this.filasSeleccionadas = [];
       this.indiceSeleccionado = null;
+      if (this.personaMoralExtranjeraForm) {
+        this.personaMoralExtranjeraForm.reset();
+      }
+      this.tramite40402Store.setPersonaMoralExtranjeraTabla(this.personaMoralExtranjeraTabla);  
     }
   }
 

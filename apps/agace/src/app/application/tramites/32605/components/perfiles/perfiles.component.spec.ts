@@ -1,10 +1,23 @@
 import { TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { PerfilesComponent } from './perfiles.component';
 import { Solicitud32605Store } from '../../estados/solicitud32605.store';
 import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, InputFechaComponent, InputRadioComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { PlaneacionDelaSeguridadComponent } from './planeacion-de-la-seguridad/planeacion-de-la-seguridad.component';
+import { SeguridadFisicaComponent } from './seguridad-fisica/seguridad-fisica.component';
+import { ControlesFisicoComponent } from './controles-fisico/controles-fisico.component';
+import { SociosComercialesComponent } from './socios-comerciales/socios-comerciales.component';
+import { SeguridadProcesosComponent } from './seguridad-procesos/seguridad-procesos.component';
+import { GestionAduaneraComponent } from './gestion-aduanera/gestion-aduanera.component';
+import { SeguridadLosVehiculosComponent } from './seguridad-los-vehiculos/seguridad-los-vehiculos.component';
+import { CapacitacionSeguridadComponent } from './capacitacion-seguridad/capacitacion-seguridad.component';
+import { SeguridadPersonalComponent } from './seguridad-personal/seguridad-personal.component';
+import { SeguridadInformacionDocumentacionComponent } from './seguridad-informacion-documentacion/seguridad-informacion-documentacion.component';
+import { ManejoInvestigacionComponent } from './manejo-investigacion/manejo-investigacion.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PerfilesComponent', () => {
   let component: PerfilesComponent;
@@ -29,12 +42,31 @@ describe('PerfilesComponent', () => {
         estadoDeTramite: '',
         create: false,
         update: false,
-        consultaioSolicitante: null
-      })
+        consultaioSolicitante: null,
+      }),
     };
 
     TestBed.configureTestingModule({
-      imports: [PerfilesComponent, ReactiveFormsModule],
+      imports: [
+        PerfilesComponent,
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        PlaneacionDelaSeguridadComponent,
+        SeguridadFisicaComponent,
+        ControlesFisicoComponent,
+        SociosComercialesComponent,
+        SeguridadProcesosComponent,
+        GestionAduaneraComponent,
+        SeguridadLosVehiculosComponent,
+        SeguridadPersonalComponent,
+        SeguridadInformacionDocumentacionComponent,
+        CapacitacionSeguridadComponent,
+        ManejoInvestigacionComponent,
+        InputFechaComponent,
+        InputRadioComponent,
+        HttpClientTestingModule
+      ],
       providers: [
         FormBuilder,
         {
@@ -61,15 +93,15 @@ describe('PerfilesComponent', () => {
                 blCtpat: '1',
                 blnPip: '1',
                 blnOea: '1',
-                blnOtrosProgramasSegu: '1'
-              }
+                blnOtrosProgramasSegu: '1',
+              },
             }),
           },
         },
         {
           provide: ConsultaioQuery,
-          useValue: consultaioQueryMock
-        }
+          useValue: consultaioQueryMock,
+        },
       ],
     }).compileComponents();
 
@@ -105,53 +137,70 @@ describe('PerfilesComponent', () => {
   it('debe actualizar antiguedad en el store', () => {
     component.profileForm.get('antiguedad')?.setValue('antiguedad');
     component.actualizarAntiguedad();
-    expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"antiguedad": "antiguedad"}});
+    expect(store.actualizarEstado).toHaveBeenCalledWith({
+      perfiles: { antiguedad: 'antiguedad' },
+    });
   });
 
   it('debe actualizar productos en el store', () => {
     component.profileForm.get('productos')?.setValue('New Product');
     component.actualizarProductos();
-    expect(store.actualizarEstado).toHaveBeenCalledWith( {"perfiles": {"productos": "New Product"}});
+    expect(store.actualizarEstado).toHaveBeenCalledWith({
+      perfiles: { productos: 'New Product' },
+    });
   });
 
   it('debe actualizar embarquesExp en el store', () => {
     component.profileForm.get('embarquesExp')?.setValue('20');
     component.actualizarEmbarquesExp();
-    expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"embarquesExp": "20"}});
+    expect(store.actualizarEstado).toHaveBeenCalledWith({
+      perfiles: { embarquesExp: '20' },
+    });
   });
 
   it('debe actualizar embarquesImp en el store', () => {
     component.profileForm.get('embarquesImp')?.setValue('25');
     component.actualizarEmbarquesImp();
-    expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"embarquesImp": "25"}});
+    expect(store.actualizarEstado).toHaveBeenCalledWith({
+      perfiles: { embarquesImp: '25' },
+    });
   });
 
   it('debe actualizar empleados en el store', () => {
     component.profileForm.get('empleados')?.setValue('100');
     component.actualizarEmpleados();
-    expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"empleados": "100"}}
-);
+    expect(store.actualizarEstado).toHaveBeenCalledWith({
+      perfiles: { empleados: '100' },
+    });
   });
 
   it('debe actualizar superficie en el store', () => {
     component.profileForm.get('superficie')?.setValue('2000 m2');
     component.actualizarSuperficie();
-    expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"superficie": "2000 m2"}});
+    expect(store.actualizarEstado).toHaveBeenCalledWith({
+      perfiles: { superficie: '2000 m2' },
+    });
   });
 
   it('debe establecer vigencia en el store', () => {
     component.seleccionarVigenciaUno('2026');
-    expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"vigencia": "2026"}});
+    expect(store.actualizarEstado).toHaveBeenCalledWith({
+      perfiles: { vigencia: '2026' },
+    });
   });
 
   it('debe establecer vigenciaDos en el store', () => {
     component.seleccionarVigenciaDos('2027');
-    expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"vigencia2": "2027"}});
+    expect(store.actualizarEstado).toHaveBeenCalledWith({
+      perfiles: { vigencia2: '2027' },
+    });
   });
 
   it('debe establecer vigenciaTres en el store', () => {
     component.seleccionarVigenciaTres('2028');
-    expect(store.actualizarEstado).toHaveBeenCalledWith({"perfiles": {"vigencia3": "2028"}});
+    expect(store.actualizarEstado).toHaveBeenCalledWith({
+      perfiles: { vigencia3: '2028' },
+    });
   });
 
   it('debe limpiar las suscripciones en ngOnDestroy', () => {
@@ -165,20 +214,26 @@ describe('PerfilesComponent', () => {
   describe('guardarDatosFormulario', () => {
     it('debe crear formulario y habilitarlo cuando no está en modo solo lectura', () => {
       component.esFormularioSoloLectura = false;
-      const crearFormularioSpy = jest.spyOn(component, 'crearFormularioProfileForm');
-      
+      const crearFormularioSpy = jest.spyOn(
+        component,
+        'crearFormularioProfileForm'
+      );
+
       component.guardarDatosFormulario();
-      
+
       expect(crearFormularioSpy).toHaveBeenCalled();
       expect(component.profileForm.enabled).toBe(true);
     });
 
     it('debe crear formulario y deshabilitarlo cuando está en modo solo lectura', () => {
       component.esFormularioSoloLectura = true;
-      const crearFormularioSpy = jest.spyOn(component, 'crearFormularioProfileForm');
-      
+      const crearFormularioSpy = jest.spyOn(
+        component,
+        'crearFormularioProfileForm'
+      );
+
       component.guardarDatosFormulario();
-      
+
       expect(crearFormularioSpy).toHaveBeenCalled();
       expect(component.profileForm.disabled).toBe(true);
     });
@@ -268,7 +323,7 @@ describe('PerfilesComponent', () => {
         testField: ['test value'],
         nullField: [null],
         undefinedField: [undefined],
-        emptyStringField: ['']
+        emptyStringField: [''],
       });
     });
 
@@ -280,7 +335,7 @@ describe('PerfilesComponent', () => {
     it('debe actualizar el store cuando el control tiene un valor válido', () => {
       component.setValoresStore(testForm, 'testField');
       expect(store.actualizarEstado).toHaveBeenCalledWith({
-        perfiles: { testField: 'test value' }
+        perfiles: { testField: 'test value' },
       });
     });
 
@@ -299,7 +354,7 @@ describe('PerfilesComponent', () => {
     it('debe actualizar el store cuando el control tiene string vacío', () => {
       component.setValoresStore(testForm, 'emptyStringField');
       expect(store.actualizarEstado).toHaveBeenCalledWith({
-        perfiles: { emptyStringField: '' }
+        perfiles: { emptyStringField: '' },
       });
     });
 
@@ -313,7 +368,7 @@ describe('PerfilesComponent', () => {
       testForm.addControl('numberField', fb.control(123));
       component.setValoresStore(testForm, 'numberField');
       expect(store.actualizarEstado).toHaveBeenCalledWith({
-        perfiles: { numberField: 123 }
+        perfiles: { numberField: 123 },
       });
     });
 
@@ -321,7 +376,7 @@ describe('PerfilesComponent', () => {
       testForm.addControl('booleanField', fb.control(true));
       component.setValoresStore(testForm, 'booleanField');
       expect(store.actualizarEstado).toHaveBeenCalledWith({
-        perfiles: { booleanField: true }
+        perfiles: { booleanField: true },
       });
     });
   });
@@ -330,9 +385,9 @@ describe('PerfilesComponent', () => {
     it('debe actualizar fecha correctamente', () => {
       const nuevoValor = '2024-12-25';
       const campo = 'fecUltimaCtapt';
-      
+
       component.actualizarFecha(nuevoValor, campo);
-      
+
       expect(component.profileForm.get(campo)?.value).toBe(nuevoValor);
       expect(component.profileForm.get(campo)?.untouched).toBe(true);
     });
@@ -340,10 +395,13 @@ describe('PerfilesComponent', () => {
     it('debe inicializar estado del formulario correctamente cuando no está en modo solo lectura', () => {
       component.esFormularioSoloLectura = false;
       const guardarDatosSpy = jest.spyOn(component, 'guardarDatosFormulario');
-      const crearFormularioSpy = jest.spyOn(component, 'crearFormularioProfileForm');
-      
+      const crearFormularioSpy = jest.spyOn(
+        component,
+        'crearFormularioProfileForm'
+      );
+
       component.inicializarEstadoFormulario();
-      
+
       expect(crearFormularioSpy).toHaveBeenCalled();
       expect(guardarDatosSpy).not.toHaveBeenCalled();
     });
@@ -351,9 +409,9 @@ describe('PerfilesComponent', () => {
     it('debe inicializar estado del formulario correctamente cuando está en modo solo lectura', () => {
       component.esFormularioSoloLectura = true;
       const guardarDatosSpy = jest.spyOn(component, 'guardarDatosFormulario');
-      
+
       component.inicializarEstadoFormulario();
-      
+
       expect(guardarDatosSpy).toHaveBeenCalled();
     });
   });

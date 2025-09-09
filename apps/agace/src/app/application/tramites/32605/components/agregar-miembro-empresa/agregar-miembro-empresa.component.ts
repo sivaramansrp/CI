@@ -14,13 +14,14 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { EMPRESA_MIEMBRO_TABLA_DATOS, MENSAJE_DE_VALIDACION, NOTA, OPCIONES_DE_BOTON_DE_RADIO } from '../../constants/oea-textil-registro.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud32605State, Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { Subject, map, takeUntil} from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarMiembroEmpresaTabla } from '../../models/oea-textil-registro.model';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { Solicitud32605Query } from '../../estados/solicitud32605.query';
 import { SolicitudService } from '../../services/solicitud.service';
+
 
 /**
  * Componente para agregar miembros de empresa en el trámite OEA textil.

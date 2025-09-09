@@ -566,3 +566,16 @@ export const SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Secci
       orden: 1,
     },
   ];
+
+  /**
+   * Mensaje informativo relacionado con el programa CTPAT.
+   *
+   * Este texto se utiliza en el sistema para indicar que el requisito es
+   * necesario a fin de hacer válido el reconocimiento mutuo como socio del
+   * programa **CBP (CTPAT)**, conforme a las **Reglas Generales de Comercio Exterior (RGCE)**.
+   *
+   * @constant
+   * @type {string}
+   * @readonly
+   */
+  export const CTPAT_MENSAJE = 'Este requisito es necesario para hacer válido el reconocimiento mutuo como socio del programa CBP (CTPAT), de conformidad con las RGCE.'

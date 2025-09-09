@@ -19,11 +19,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        
 
       - name: Run Nx build
         run: npx nx build
-        
 
       - name: Reset Nx cache
         run: npx nx reset
@@ -46,7 +44,7 @@ jobs:
 
       - name: Update Docker Compose image tag
         run: |
-          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:${{ steps.get-version.outputs.VERSION }}|g" docker/modulefederation-${{ github.event.inputs.app_name }}.yml
+          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:${{ steps.get-version.outputs.VERSION }}|" docker/modulefederation-${{ github.event.inputs.app_name }}.yml
 
       - name: Build Docker image for microfront app
         run: |
@@ -80,7 +78,7 @@ jobs:
 
       - name: Update deployment YAML image tag
         run: |
-          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:${{ steps.get-version.outputs.VERSION }}|g" k8s/${{ github.event.inputs.app_name }}/*deployment*.yaml
+          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:${{ steps.get-version.outputs.VERSION }}|" k8s/${{ github.event.inputs.app_name }}/*.yaml
 
       - name: Copy deployment files to server
         uses: appleboy/scp-action@v0.1.7
@@ -124,9 +122,32 @@ jobs:
               fi
             done
             docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }} ghcr.io
+
+            echo "Before image/container cleanup:"
+            docker images | grep $APP_NAME || true
+            docker ps -a | grep $APP_NAME || true
+
+            # Remove any containers using the image
+            docker ps -a --filter "ancestor=ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG" -q | xargs -r docker rm -f
+
+            # Remove the old image if present
+            docker rmi -f ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG || true
+
+            # Remove all dangling and unused images and containers to free up space
+            docker image prune -af || true
+            docker container prune -f || true
+            docker system prune -af || true
+
+            echo "After image/container cleanup:"
+            docker images | grep $APP_NAME || true
+            docker ps -a | grep $APP_NAME || true
+
+            # Pull the new image
             docker pull ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG
+
             # Confirm YAML is using correct image
             grep "image: ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG" "$DEPLOYMENT_FILE"
+
             microk8s kubectl apply -f "$DEPLOYMENT_FILE"
             microk8s kubectl apply -f "$SERVICE_FILE"
             microk8s kubectl apply -f "$INGRESS_FILE"

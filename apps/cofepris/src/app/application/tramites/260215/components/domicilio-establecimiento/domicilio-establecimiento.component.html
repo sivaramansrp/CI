@@ -252,7 +252,7 @@
       <div class="modal-header">
         <h4 class="modal-title">Datos mercancía</h4>
       </div>
-      <div class="modal-body modal-height">
+      <div class="modal-body">
         <form [formGroup]="formMercancias">
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" formControlName="clasificacion"
@@ -468,9 +468,6 @@
               (change)="setValoresStore(formMercancias, 'cantidadUMC', 'setCantidadUMC')" />
             <div class="mensaje-error"
               *ngIf="formMercancias.get('cantidadUMC')?.invalid && formMercancias.get('cantidadUMC')?.touched">
-              <span *ngIf="formMercancias.get('cantidadUMC')?.errors?.['required']">
-                Este campo es obligatorio
-              </span>
               <span *ngIf="formMercancias.get('cantidadUMC')?.errors?.['required']">
                 Este campo es obligatorio
               </span>
