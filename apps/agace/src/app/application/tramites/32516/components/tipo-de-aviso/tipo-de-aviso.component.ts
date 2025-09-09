@@ -12,42 +12,20 @@
  * @since 2025
  */
 
-import { ALFANUMERICO_ESPACIO } from '@libs/shared/data-access-user/src';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { ALFANUMERICO_ESPACIO, ConsultaioQuery, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HECHOS_SERVICIO, HechosInfo, SolicitudForm } from '../../modelos/acta-de-hechos.model';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+import { TramiteState, TramiteStore } from '../../estados/tramite32516Store.store';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosService } from '../../servicios/catalogo.service';
-import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { HECHOS_SERVICIO } from '../../modelos/acta-de-hechos.model';
-import { HechosInfo } from '../../modelos/acta-de-hechos.model';
 import { HechosTablaServicios } from '../../servicios/hechos-tabla.service';
-import { Input } from '@angular/core';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
-import { SeccionLibState } from '@libs/shared/data-access-user/src';
-import { SolicitudForm } from '../../modelos/acta-de-hechos.model';
-import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { TramiteState } from '../../estados/tramite32516Store.store';
-import { TramiteStore } from '../../estados/tramite32516Store.store';
 import { TramiteStoreQuery } from '../../estados/tramite32516Query.query';
-import { delay } from 'rxjs/operators';
-import { map } from 'rxjs/operators';
-import { takeUntil } from 'rxjs/operators';
-import { tap } from 'rxjs/operators';
 
-import { Validators } from '@angular/forms';
 /**
  * Componente Angular standalone para el manejo del tipo de aviso en el trámite 32516.
  * 
