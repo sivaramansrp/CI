@@ -91,7 +91,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="rfcDel"
-              >RFC del responsable sanitario:</label
+              >RFC del responsable sanitario*:</label
             >
             <input
               class="form-control"
@@ -102,46 +102,17 @@
               maxlength="13"
               (change)="setValorStore(datosDelEstablecimiento,'rfcDel')"
             />
-              <div
-            *ngIf="datosDelEstablecimiento.get('rfcDel')?.invalid && datosDelEstablecimiento.get('rfcDel')?.touched && datosDelEstablecimiento.get('rfcDel')?.errors?.['pattern']"
-            class="text-danger">
-              El RFC no tiene un formato valido.
-            </div> 
+            <div *ngIf="isInvalid(datosDelEstablecimiento, 'rfcDel')" class="text-danger">
+              <div *ngIf="datosDelEstablecimiento.get('rfcDel')?.invalid && datosDelEstablecimiento.get('rfcDel')?.touched && datosDelEstablecimiento.get('rfcDel')?.errors?.['pattern']">
+                 El RFC no tiene un formato valido.
+              </div>
+              <div *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
+                Este campo es obligatorio.
+              </div>
+          </div>
           </div>
         </div>
        <div class="col-md-8">
-          <!-- <div class="form-group">
-            <label class="form-label" for="denominacion"
-              >Denominación o razón social*:</label
-            >
-            <input
-              class="form-control"
-              id="denominacion"
-              placeholder=""
-              type="text"
-              formControlName="denominacion"
-              maxlength="100"
-              (change)="setValorStore(datosDelEstablecimiento,'denominacion')"
-              (input)="validarLongitudMaxima('denominacion', 100)"
-              [ngClass]="isInvalid(datosDelEstablecimiento, 'denominacion') ? 'required' : ''"
-            />
-              <div class="text-danger" *ngIf="datosDelEstablecimiento.get('denominacion')?.touched && datosDelEstablecimiento.get('denominacion')?.invalid">
-            <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['required']">
-              Este campo es obligatorio
-            </span>
-            <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['maxlength']">
-              Máximo 100 caracteres permitidos
-            </span>
-            <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['pattern']">
-              Por favor, corrige la descripción/dirección
-            </span>
-            <div *ngIf="esInvalido('denominacion')">
-            <span class="text-danger">
-              Por favor, corrige la descripción/dirección 2.
-            </span>
-</div>
-          </div>
-          </div> -->
         <div class="form-group">
   <label class="form-label" for="denominacion"
     >Denominación o razón social*:</label
@@ -194,12 +165,12 @@
               [ngClass]="isInvalid(datosDelEstablecimiento, 'correo') ? 'required' : ''"
             />
           <div *ngIf="isInvalid(datosDelEstablecimiento, 'correo')" class="text-danger">
-            <small *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
+            <div *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
               Este campo es obligatorio.
-            </small>
-            <small *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
+            </div>
+            <div *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
               El valor ingresado no es una dirección válida de correo electrónico
-            </small>
+            </div>
           </div>
           
 

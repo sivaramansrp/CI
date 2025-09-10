@@ -968,3 +968,10 @@ export const SOLO_REGEX_NUMEROS = /^[0-9]*$/;
  * - "12 345" (contiene espacios)
  */
 export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
+
+/**
+ * Expresión regular para validar nombres de localidades.
+ * Permite letras (incluyendo acentuadas), números y espacios.
+ * No permite caracteres especiales.
+ */
+export const REGEX_LOCALIDAD = /^[a-zA-ZÀ-ÿ0-9\\s]+$/;
