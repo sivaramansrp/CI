@@ -17,8 +17,21 @@ import mercanciaTable from '@libs/shared/theme/assets/json/110201/mercancia.json
 
 const TERCEROS_TEXTO_DE_ALERTA =
   'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
+
 /**
- * Componente que representa el formulario de certificado de origen en el trámite.
+ * @component CertificadoDeOrigenComponent (Enhanced)
+ * @description Componente responsable de gestionar el formulario de certificado de origen en el trámite 110201.
+ * Proporciona funcionalidades para captura de datos del certificado, gestión de mercancías y validaciones.
+ * Incluye formularios reactivos, tablas dinámicas, modales y manejo de archivos CSV.
+ * @implements OnInit, OnDestroy
+ * @features
+ * - Formularios reactivos con validaciones
+ * - Gestión de mercancías disponibles y seleccionadas
+ * - Modal para agregar/editar mercancías
+ * - Carga masiva de mercancías via CSV
+ * - Validación de fechas y datos
+ * - Integración con catálogos de países, tratados y unidades
+ * @dependencies FormBuilder, Store, ValidacionesService, RegistroService
  */
 @Component({
   selector: 'app-certificado-de-origen',
@@ -40,231 +53,245 @@ const TERCEROS_TEXTO_DE_ALERTA =
 })
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
-   * Subject para destruir notificador.
+   * @property consultaDatos - Estado de consulta de datos para el componente
    */
   consultaDatos!: ConsultaioState;
+  
   /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
+   * @property soloLectura - Indica si el formulario está en modo solo lectura
+   * Cuando es `true`, los campos del formulario no se pueden editar
    */
   soloLectura: boolean = false;
+  
   /**
-   * Evento para comunicar datos al componente padre.
+   * @property dataEvent - Evento para comunicar datos al componente padre
    */
   @Output() dataEvent = new EventEmitter<boolean>();
+  
   /**
-   * Texto de alerta mostrado en el componente.
+   * @property TEXTO_DE_ALERTA - Texto de alerta mostrado en el componente
    */
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
 
   /**
-   * Formulario reactivo para los datos del certificado.
+   * @property registroForm - Formulario reactivo para los datos del certificado
    */
   registroForm!: FormGroup;
 
   /**
-   * Formulario reactivo para los datos de la mercancía.
+   * @property mercanciaForm - Formulario reactivo para los datos de la mercancía
    */
   mercanciaForm!: FormGroup;
 
   /**
-   * Referencia al modal para agregar/editar mercancía.
+   * @property modalAgregar - Referencia al modal para agregar/editar mercancía
    */
   @ViewChild('modalAgregar') modalAgregar!: ElementRef;
 
   /**
-   * Catálogo de países.
+   * @property pais - Catálogo de países disponibles
    */
   pais!: CatalogosSelect;
 
   /**
-   * Catálogo de tratados.
+   * @property tratado - Catálogo de tratados comerciales
    */
   tratado!: CatalogosSelect;
 
   /**
-   * Catálogo de unidades de medida comercial (UMC).
+   * @property umc - Catálogo de unidades de medida comercial (UMC)
    */
   umc!: CatalogosSelect;
 
   /**
-   * Catálogo de unidades de medida.
+   * @property unidadMedida - Catálogo de unidades de medida
    */
   unidadMedida!: CatalogosSelect;
 
   /**
-   * Catálogo de tipos de factura.
+   * @property tipoFactura - Catálogo de tipos de factura
    */
   tipoFactura!: CatalogosSelect;
 
   /**
-   * Indica si se debe mostrar el formulario para cargar un archivo.
+   * @property cargarArchivo - Indica si se debe mostrar el formulario para cargar un archivo
    */
   cargarArchivo: boolean = false;
 
   /**
-   * Indica si se deben mostrar errores en el formulario.
+   * @property mostrarErrores - Indica si se deben mostrar errores en el formulario
    */
   mostrarErrores: boolean = false;
 
   /**
-   * Indica si se deben mostrar errores para mercancías seleccionadas.
+   * @property mostrarErrorMercancias - Indica si se deben mostrar errores para mercancías seleccionadas
    */
   mostrarErrorMercancias: boolean = false;
 
   /**
-   * Indica si hay mercancías disponibles.
+   * @property hayMercanciasDisponibles - Indica si hay mercancías disponibles
    */
   hayMercanciasDisponibles: boolean = false;
 
   /**
-   * Indica si se está editando una mercancía.
+   * @property esMercanciaEnEdicion - Indica si se está editando una mercancía
    */
   esMercanciaEnEdicion = false;
 
   /**
-   * Datos de la tabla de mercancías disponibles.
+   * @property getMercanciaDisponsibleTableData - Datos de la tabla de mercancías disponibles
    */
   public getMercanciaDisponsibleTableData = mercanciaDisponsibleTable;
 
   /**
-   * Datos de la tabla de mercancías seleccionadas.
+   * @property getmercanciaSeleccionadasTable - Datos de la tabla de mercancías seleccionadas
    */
   public getmercanciaSeleccionadasTable = mercanciaSeleccionadasTable;
 
   /**
-   * Datos de la tabla de mercancías.
+   * @property getMercanciaTable - Datos de la tabla de mercancías
    */
   public getMercanciaTable = mercanciaTable;
 
   /**
-   * Lista de mercancías disponibles.
+   * @property mercanciasdisponibles - Lista de mercancías disponibles
    */
   public mercanciasdisponibles: string[] = [];
 
   /**
-   * Encabezados de las tablas.
+   * @property encabezadosTablas - Encabezados de las tablas
    */
   public encabezadosTablas: string[] = [];
 
   /**
-   * Encabezados de la tabla de mercancías.
+   * @property mercanciasHeader - Encabezados de la tabla de mercancías
    */
   public mercanciasHeader: string[] = [];
 
   /**
-   * Cuerpo de la tabla de mercancías.
+   * @property mercanciasBody - Cuerpo de la tabla de mercancías
    */
   public mercanciasBody: TableBodyData[] = [];
 
   /**
-   * Estado actual de la solicitud.
+   * @property solicitudState - Estado actual de la solicitud del trámite 110201
    */
   public solicitudState!: Solicitud110201State;
+  
   /**
-   * Tabla de selección de mercancías.
+   * @property TablaSeleccion - Tabla de selección de mercancías
    */
   TablaSeleccion = TablaSeleccion;
 
   /**
-   * Descripciones de los tratados.
+   * @property Tratadodescripcion - Descripciones de los tratados comerciales
    */
   Tratadodescripcion: unknown[] = [];
 
   /**
-   * Valores de las unidades de medida.
+   * @property unidadMedidaValue - Valores de las unidades de medida
    */
   unidadMedidaValue: unknown[] = [];
 
   /**
-   * Tratado seleccionado.
+   * @property seleccioneTratado - Tratado comercial seleccionado
    */
   seleccioneTratado: string | null = null;
 
   /**
-   * Nombre del archivo seleccionado.
+   * @property nombreArchivo - Nombre del archivo seleccionado para carga
    */
   nombreArchivo: string = '';
+  
   /**
-   * Configuración de la fecha inicial.
-   * Representa la configuración del campo de entrada para la fecha inicial en el formulario.
+   * @property fechaInicialInput - Configuración de la fecha inicial
+   * Representa la configuración del campo de entrada para la fecha inicial en el formulario
    */
   fechaInicialInput: InputFecha = FECHAINICIAL;
 
   /**
-   * Configuración de la fecha final.
-   * Representa la configuración del campo de entrada para la fecha final en el formulario.
+   * @property fechaFinalInput - Configuración de la fecha final
+   * Representa la configuración del campo de entrada para la fecha final en el formulario
    */
   fechaFinalInput: InputFecha = FECHAFINAL;
 
   /**
-   * Configuración de la fecha de la factura.
-   * Representa la configuración del campo de entrada para la fecha de la factura en el formulario.
+   * @property fechaFacturaInput - Configuración de la fecha de la factura
+   * Representa la configuración del campo de entrada para la fecha de la factura en el formulario
    */
   fechaFacturaInput: InputFecha = FECHAFACTURA;
+  
   /**
-   * Indica si se está mostrando el formulario.
+   * @property esFormulario - Indica si se está mostrando el formulario
    */
   esFormulario: boolean = false;
+  
   /**
-   * Notificador para destruir observables al destruir el componente.
-   * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
+   * @property destroyed$ - Notificador para destruir observables al destruir el componente
+   * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
-   * Opciones del catálogo de tratados.
-   * Contiene una lista de objetos del catálogo de tratados obtenidos desde el servicio.
+   * @property optionsTratado - Opciones del catálogo de tratados comerciales
+   * Contiene una lista de objetos del catálogo de tratados obtenidos desde el servicio
    */
   public optionsTratado = OPTIONS_TRATADO;
+  
   /**
-   * Opciones del catálogo de países.
-   * Contiene una lista de objetos del catálogo de países obtenidos desde el servicio.
+   * @property optionsPais - Opciones del catálogo de países
+   * Contiene una lista de objetos del catálogo de países obtenidos desde el servicio
    */
   public optionsPais = OPTIONS_PAIS;
 
   /**
-   * Opciones del catálogo de unidades de medida comercial (UMC).
-   * Contiene una lista de objetos del catálogo de UMC obtenidos desde el servicio.
+   * @property optionsUMC - Opciones del catálogo de unidades de medida comercial (UMC)
+   * Contiene una lista de objetos del catálogo de UMC obtenidos desde el servicio
    */
   public optionsUMC = OPTIONS_UMC;
 
   /**
-   * Opciones del catálogo de unidades de medida.
-   * Contiene una lista de objetos del catálogo de unidades de medida obtenidos desde el servicio.
+   * @property optionsUnidadMedida - Opciones del catálogo de unidades de medida
+   * Contiene una lista de objetos del catálogo de unidades de medida obtenidos desde el servicio
    */
   optionsUnidadMedida = OPTIONS_UNIDAD_MEDIDA;
 
   /**
-   * Opciones del catálogo de tipos de factura.
-   * Contiene una lista de objetos del catálogo de tipos de factura obtenidos desde el servicio.
+   * @property optionsTipoFactura - Opciones del catálogo de tipos de factura
+   * Contiene una lista de objetos del catálogo de tipos de factura obtenidos desde el servicio
    */
   optionsTipoFactura = OPTIONS_TIPO_FACTURA;
 
   /**
-   * Datos de la tabla de mercancías disponibles.
-   * Representa una lista de objetos que contienen información sobre las mercancías disponibles
-   * para ser seleccionadas en el formulario.
+   * @property mercanciaDisponsiblesTablaDatos - Datos de la tabla de mercancías disponibles
+   * Representa una lista de objetos que contienen información sobre las mercancías disponibles para selección
    */
   public mercanciaDisponsiblesTablaDatos: ColumnasTabla[] = [];
+  
   /**
-   * Datos de la tabla de mercancías seleccionadas.
-   * Representa una lista de objetos que contienen información sobre las mercancías que han sido seleccionadas
-   * por el usuario en el formulario.
+   * @property mercanciaSeleccionadasTablaData - Datos de la tabla de mercancías seleccionadas
+   * Representa una lista de objetos que contienen información sobre las mercancías seleccionadas por el usuario
    */
   public mercanciaSeleccionadasTablaData: SeleccionadasTabla[] = [];
 
-  // Notificación utilizada para mostrar mensajes o alertas en la interfaz.
+  /**
+   * @property nuevaNotificacion - Notificación utilizada para mostrar mensajes o alertas en la interfaz
+   */
   public nuevaNotificacion!: Notificacion;
 
-  // Arreglo que contiene los pedimentos registrados.
+  /**
+   * @property pedimentos - Arreglo que contiene los pedimentos registrados
+   */
   public pedimentos: Array<Pedimento> = [];
 
-  // Índice del pedimento marcado para eliminación.
-  public elementoParaEliminar!: number;
   /**
-   * Configuración de las columnas de la tabla de mercancías disponibles.
-   * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías disponibles.
+   * @property elementoParaEliminar - Índice del pedimento marcado para eliminación
+   */
+  public elementoParaEliminar!: number;
+  
+  /**
+   * @property headers - Configuración de las columnas de la tabla de mercancías disponibles
+   * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías disponibles
    */
   public headers: ConfiguracionColumna<ColumnasTabla>[] = [
     {
@@ -298,57 +325,56 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       orden: 6,
     },
   ];
+  
   /**
-   * Configuración de las columnas de la tabla de mercancías seleccionadas.
-   * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías seleccionadas.
+   * @property headersData - Configuración de las columnas de la tabla de mercancías seleccionadas
+   * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías seleccionadas
    */
   public headersData = HEADERS_DATA;
 
   /**
-   * Bandera para mostrar la tabla de cargar archivo.
+   * @property mostrarCargarArchivoTable - Bandera para mostrar la tabla de cargar archivo
    */
   mostrarCargarArchivoTable: boolean = false;
 
   /**
-   * Define los datos que se mostrarán en la tabla dinámica.
+   * @property datosTabla - Define los datos que se mostrarán en la tabla dinámica
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   datosTabla: any[] = [];
 
   /**
-   * Referencia al botón para cerrar el modal.
-   *
-   * Se utiliza para cerrar el modal de manera programada.
+   * @property closeModal - Referencia al botón para cerrar el modal
+   * Se utiliza para cerrar el modal de manera programada
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
-   * Referencia al elemento del modal de modificación.
-   *
-   * Se utiliza para abrir o cerrar el modal de modificación de mercancías.
+   * @property modalInstances - Referencia al elemento del modal de modificación
+   * Se utiliza para abrir o cerrar el modal de modificación de mercancías
    */
   modalInstances: Modal | null = null;
 
   /**
-   * Indica si se debe mostrar un mensaje de error relacionado con el registro.
-   * 
-   * Cuando es `true`, se muestra el error de registro en la interfaz de usuario.
-   * Cuando es `false`, el error no se muestra.
+   * @property mostrarErrorRegistro - Indica si se debe mostrar un mensaje de error relacionado con el registro
+   * Cuando es `true`, se muestra el error de registro en la interfaz de usuario
    */
   mostrarErrorRegistro: boolean = false;
+  
   /**
-   * Indica si se ha intentado validar el formulario
+   * @property validationAttempted - Indica si se ha intentado validar el formulario
    * Se usa para mostrar errores de validación aunque el campo no haya sido tocado
    */
   validationAttempted: boolean = false;
 
   /**
-   * Constructor del componente.
-   * @param registroService Servicio para obtener datos de catálogos.
-   * @param fb Constructor de formularios reactivos.
-   * @param store Tienda para gestionar el estado del trámite.
-   * @param query Consultas para obtener datos del estado del trámite.
-   * @param validacionesService Servicio para validar formularios.
+   * @constructor Constructor del componente CertificadoDeOrigenComponent
+   * @param registroService - Servicio para obtener datos de catálogos
+   * @param fb - Constructor de formularios reactivos de Angular
+   * @param store - Tienda para gestionar el estado del trámite 110201
+   * @param query - Query para consultas del estado del trámite
+   * @param validacionesService - Servicio para validaciones de formularios
+   * @param consultaioQuery - Query para consultas de estado de consulta
    */
   constructor(
     private registroService: RegistroService,
@@ -359,17 +385,17 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery
   ) { }
 
-
   /**
-   * Maneja el evento de clic para habilitar el formulario de edición.
-   * @param row Fila seleccionada.
+   * @method manejarClic - Maneja el evento de clic para habilitar el formulario de edición
+   * @param _row - Fila seleccionada
    */
   manejarClic(_row: unknown): void {
     this.esFormulario = true;
   }
+  
   /**
-   * Valida el formulario del destinatario.
-   * Marca todos los campos como tocados si el formulario es inválido.
+   * @method validarDestinatarioFormulario - Valida el formulario del destinatario
+   * Marca todos los campos como tocados si el formulario es inválido
    */
   validarDestinatarioFormulario(): void {
     if (this.registroForm.invalid) {
@@ -378,17 +404,18 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Valida el formulario de mercancías.
-   * Marca todos los campos como tocados si el formulario es inválido.
+   * @method validarMercanciaForm - Valida el formulario de mercancías
+   * Marca todos los campos como tocados si el formulario es inválido
    */
   validarMercanciaForm(): void {
     if (this.mercanciaForm.invalid) {
       this.mercanciaForm.markAllAsTouched();
     }
   }
+  
   /**
-   * Método que se ejecuta al inicializar el componente.
-   * Configura los formularios y obtiene los catálogos necesarios.
+   * @method ngOnInit - Método del ciclo de vida que se ejecuta al inicializar el componente
+   * Configura los formularios y obtiene los catálogos necesarios
    */
   ngOnInit(): void {
     this.mercanciatable();
@@ -420,8 +447,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       .subscribe();
     this.donanteDomicilio();
   }
+  
   /**
-   * 
+   * @method validarFormularios - Valida todos los formularios del componente 
    * @returns boolean
    * Valida todos los formularios del componente `CertificadoDeOrigenComponent`.
    * Si alguno de los formularios es inválido, marca todos los campos como tocados para mostrar los errores de validación.
@@ -517,7 +545,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Busca mercancías disponibles basándose en la descripción del tratado.
    * Verifica si la lista `Tratadodescripcion` incluye el valor '1' para determinar si hay mercancías disponibles.
    * Si el valor está presente, establece `hayMercanciasDisponibles` en `true`; de lo contrario, lo establece en `false`.
-   * Además, actualiza los catálogos necesarios llamando a los métodos `getTratado`, `getPais`, `getUMC`, `getUnidadMedida` y `getTipoFactura`.
+  /**
+   * @method buscarMercancias - Busca mercancías basado en los datos del formulario
+   * Además, actualiza los catálogos necesarios llamando a los métodos de obtención de catálogos
    */
   buscarMercancias(): void {
     const FORM_VALUES = this.registroForm.get('validacionForm')?.value;
@@ -534,8 +564,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Abre el modal para agregar una mercancía desde la tabla de mercancías disponibles.
-   * @param rowData Datos de la fila seleccionada de tipo ColumnasTabla
+   * @method abrirModalMercancia - Abre el modal para agregar una mercancía desde la tabla de mercancías disponibles
+   * @param rowData - Datos de la fila seleccionada de tipo ColumnasTabla
    */
   abrirModalMercancia(rowData: ColumnasTabla): void {
     if (rowData) {
@@ -879,17 +909,21 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Verifica si un campo del formulario es válido.
    * @param form Formulario reactivo.
-   * @param field Nombre del campo a validar.
-   * @returns `true` si el campo es válido, de lo contrario `false`.
+  /**
+   * @method isValid - Verifica si un campo del formulario es válido
+   * @param form - Formulario reactivo
+   * @param field - Nombre del campo a validar
+   * @returns boolean - `true` si el campo es válido, de lo contrario `false`
    */
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
+  
   /**
-   * Establece valores en el estado de la tienda.
-   * @param form Formulario reactivo.
-   * @param campo Nombre del campo del formulario.
-   * @param metodoNombre Método de la tienda para actualizar el estado.
+   * @method setValoresStore - Establece valores en el estado de la tienda
+   * @param form - Formulario reactivo
+   * @param campo - Nombre del campo del formulario
+   * @param metodoNombre - Método de la tienda para actualizar el estado
    */
   setValoresStore(
     form: FormGroup,
@@ -901,13 +935,10 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method validarFormulario
-   * @description
-   * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
-   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
-   * Si el componente hijo no está disponible, retorna `false`.
-   *
-   * @returns {boolean} Indica si el formulario es válido.
+   * @method validarFormulario - Valida el formulario de certificado de origen
+   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`
+   * Si el componente hijo no está disponible, retorna `false`
+   * @returns boolean - Indica si el formulario es válido
    */
   validarFormulario(): boolean {
     let isValid = true;
@@ -919,19 +950,23 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Obtiene el formulario de validación.
+   * @getter validacionForm - Obtiene el formulario de validación principal
+   * @returns FormGroup - Formulario de validación anidado
    */
   get validacionForm(): FormGroup {
     return this.registroForm.get('validacionForm') as FormGroup;
   }
+  
   /**
-   * Obtiene el formulario de validación de mercancías.
+   * @getter validacionMercanciaForm - Obtiene el formulario de validación de mercancías
+   * @returns FormGroup - Formulario de validación de mercancías anidado
    */
   get validacionMercanciaForm(): FormGroup {
     return this.mercanciaForm.get('validacionMercanciaForm') as FormGroup;
   }
+  
   /**
-   * Configura el formulario reactivo con los valores iniciales del estado.
+   * @method donanteDomicilio - Configura el formulario reactivo con los valores iniciales del estado
    */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
@@ -1195,8 +1230,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método que se ejecuta al destruir el componente.
-   * Cancela todas las suscripciones activas.
+   * @method ngOnDestroy - Método del ciclo de vida que se ejecuta al destruir el componente
+   * Cancela todas las suscripciones activas para evitar fugas de memoria
    */
   ngOnDestroy(): void {
     this.destroyed$.next(true);

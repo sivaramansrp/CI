@@ -24,7 +24,18 @@ import { RegistroService } from '../../services/registro.service';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
 
 /**
- * Componente que representa el formulario de datos del certificado en el trámite.
+ * @component DatosCertificadoComponent
+ * @description Componente Angular standalone que gestiona el formulario de datos del certificado
+ * @author Sistema VUCEM 3.0
+ * @version 1.0.0
+ * @since 2025
+ * 
+ * Este componente es responsable de:
+ * - Gestionar el formulario reactivo para datos del certificado
+ * - Validar campos obligatorios como idioma, entidad federativa y representación federal
+ * - Manejar la lógica de solo lectura según el estado de consulta
+ * - Integrar con el store de estado global del trámite 110201
+ * - Realizar validaciones dinámicas según la entidad federativa seleccionada
  */
 @Component({
   selector: 'app-datos-certificado',
@@ -39,92 +50,60 @@ import { Tramite110201Query } from '../../state/Tramite110201.query';
   styleUrl: './datos_certificado.component.css',
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
-  /**
-     * Subject para destruir notificador.
-     */
+  
+  /** Estado de consulta obtenido desde el query de consulta global */
   consultaDatos!: ConsultaioState;
-  /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
+  
+  /** Bandera que indica si el formulario está en modo solo lectura */
   soloLectura: boolean = false;
 
-  /**
-   * Indica si se ha intentado validar el formulario
-   * Se usa para mostrar errores de validación aunque el campo no haya sido tocado
-   */
+  /** Bandera que indica si se ha intentado validar el formulario para mostrar errores */
   validationAttempted: boolean = false;
-  /**
-   * Formulario reactivo para los datos del certificado.
-   */
+  
+  /** Instancia del formulario reactivo principal que contiene todos los controles */
   registroForm!: FormGroup;
 
-  /**
-   * Catálogo de idiomas.
-   */
+  /** Configuración del catálogo de idiomas para el componente select */
   idioma!: CatalogosSelect;
 
-  /**
-   * Catálogo de entidades federativas.
-   */
+  /** Configuración del catálogo de entidades federativas para el componente select */
   entidad!: CatalogosSelect;
 
-  /**
-   * Catálogo de representaciones federales.
-   */
+  /** Configuración del catálogo de representaciones federales para el componente select */
   representacion!: CatalogosSelect;
 
-  /**
-   * Estado actual de la solicitud.
-   */
+  /** Estado actual de la solicitud obtenido desde el store global */
   public solicitudState!: Solicitud110201State;
 
-  /**
-   * Datos de la entidad federativa proporcionados como entrada.
-   */
+  /** Datos de la entidad federativa recibidos como parámetro de entrada del componente padre */
   @Input() entidadFederativaData: unknown;
 
-  /**
-   * Indica si se requiere justificación.
-   */
+  /** Bandera que controla la visibilidad de la sección de justificación */
   isJustificacion: boolean = false;
 
-  /**
-   * Descripciones de las entidades federativas.
-   */
+  /** Array que contiene las descripciones de las entidades federativas */
   entidadDescripcion: unknown[] = [];
-  /**
-   * Notificador para destruir observables al destruir el componente.
-   * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
-   */
+  
+  /** Subject utilizado para cancelar suscripciones al destruir el componente */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  /**
-   * Opciones del catálogo de idiomas.
-   * Contiene una lista de objetos del catálogo de idiomas obtenidos desde el servicio.
-   */
+  /** Opciones del catálogo de idiomas obtenidas desde el modelo de registro */
   public optionsIdioma = OPTIONS_IDIOMA;
 
-  /**
-   * Opciones del catálogo de entidades federativas.
-   * Contiene una lista de objetos del catálogo de entidades federativas obtenidos desde el servicio.
-   */
+  /** Opciones del catálogo de entidades federativas obtenidas desde el modelo de registro */
   public optionsEntidad = OPTIONS_ENTIDAD_FEDERATIVA;
 
-
-  /**
-   * Opciones del catálogo de representaciones federales.
-   * Contiene una lista de objetos del catálogo de representaciones federales obtenidos desde el servicio.
-   */
+  /** Opciones del catálogo de representaciones federales obtenidas desde el modelo de registro */
   public optionsRepresentacion = OPTIONS_REPRESENTACION_FEDERAL;
 
   /**
-   * Constructor del componente.
-   * @param registroService Servicio para obtener datos de catálogos.
-   * @param fb Constructor de formularios reactivos.
-   * @param store Tienda para gestionar el estado del trámite.
-   * @param query Consultas para obtener datos del estado del trámite.
-   * @param validacionesService Servicio para validar formularios.
+   * Constructor del componente que inyecta las dependencias necesarias
+   * @param registroService - Servicio para obtener datos de catálogos desde la API
+   * @param fb - Constructor de formularios reactivos de Angular
+   * @param store - Store para gestionar el estado global del trámite 110201
+   * @param query - Query para obtener datos del estado del trámite
+   * @param validacionesService - Servicio para validaciones de formularios
+   * @param consultaioQuery - Query para obtener el estado de consulta global
    */
   constructor(
     private registroService: RegistroService,
@@ -134,6 +113,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery
   ) {
+    // Suscripción al estado de consulta para configurar modo solo lectura
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
@@ -147,8 +127,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Valida el formulario del destinatario.
-   * Marca todos los campos como tocados si el formulario es inválido.
+   * Valida el formulario del destinatario marcando todos los campos como tocados si es inválido
    */
   validarDestinatarioFormulario(): void {
     if (this.registroForm.invalid) {
@@ -157,10 +136,10 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método que se ejecuta al inicializar el componente.
-   * Obtiene los catálogos de idiomas, entidades y representaciones.
+   * Método del ciclo de vida OnInit que inicializa el componente y obtiene datos necesarios
    */
   ngOnInit(): void {
+    // Obtiene datos de registro desde el servicio
     this.registroService
       .getRegistroTomaMuestrasMercanciasData().pipe(
         takeUntil(this.destroyed$)
@@ -171,11 +150,13 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
         }
       });
 
+    // Inicializa catálogos y estado del formulario
     this.getIdioma();
     this.getEntidad();
     this.getRepresentacion();
     this.inicializarEstadoFormulario();
 
+    // Suscripción al estado de la solicitud desde el store
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -184,8 +165,10 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    
     this.donanteDomicilio();
 
+    // Lógica para mostrar sección de justificación según entidad federativa
     if (
       this.entidadDescripcion.includes('8') &&
       this.entidadFederativaData === 'DURANGO'
@@ -194,33 +177,27 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     } else {
       this.isJustificacion = false;
     }
-
   }
+  
   /**
-   * Valida el formulario de datos del certificado.
-   * @returns boolean
-   * Valida el formulario de datos del certificado.
-   * Si el formulario es válido, retorna `true`.
-   * Si el formulario es inválido, marca todos los campos como tocados y retorna `false`.
+   * Valida el formulario de datos del certificado y maneja el estado de validación
+   * @returns true si el formulario es válido, false en caso contrario
    */
   validarFormulariosDatos(): boolean {
-
     this.validationAttempted = true;
 
     if (this.registroForm.valid) {
       return true;
     }
     this.registroForm.markAllAsTouched();
-
     this.markAllControlsAsTouched(this.registroForm);
-
     this.validarDestinatarioFormulario();
     return false;
   }
 
   /**
-   * Recursively marks all form controls as touched, including those in nested FormGroups
-   * This is needed for custom components that implement ControlValueAccessor
+   * Marca recursivamente todos los controles de formulario como tocados, incluyendo FormGroups anidados
+   * @param formGroup - Grupo de formulario a procesar
    */
   private markAllControlsAsTouched(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
@@ -233,10 +210,10 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       }
     });
   }
+  
   /**
-     * Evalúa si se debe inicializar o cargar datos en el formulario.
-     * Además, obtiene la información del catálogo de mercancía.
-     */
+   * Evalúa si se debe inicializar o cargar datos en el formulario según el modo de lectura
+   */
   inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.guardarDatosFormulario();
@@ -246,8 +223,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Guarda los datos del formulario y configura el estado de habilitado/deshabilitado
    */
   guardarDatosFormulario(): void {
     this.donanteDomicilio();
@@ -257,8 +233,9 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       this.registroForm.enable();
     }
   }
+  
   /**
-   * Obtiene el catálogo de idiomas desde el servicio.
+   * Obtiene el catálogo de idiomas desde el servicio de registro
    */
   getIdioma(): void {
     this.registroService
@@ -269,7 +246,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene el catálogo de entidades desde el servicio.
+   * Obtiene el catálogo de entidades federativas desde el servicio de registro
    */
   getEntidad(): void {
     this.registroService
@@ -280,7 +257,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene el catálogo de representaciones desde el servicio.
+   * Obtiene el catálogo de representaciones federales desde el servicio de registro
    */
   getRepresentacion(): void {
     this.registroService
@@ -291,20 +268,20 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Verifica si un campo del formulario es válido.
-   * @param form Formulario reactivo.
-   * @param field Nombre del campo a validar.
-   * @returns `true` si el campo es válido, de lo contrario `false`.
+   * Verifica si un campo específico del formulario es válido
+   * @param form - Formulario reactivo a validar
+   * @param field - Nombre del campo a verificar
+   * @returns true si el campo es válido, false en caso contrario
    */
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
 
   /**
-   * Establece valores en el estado de la tienda.
-   * @param form Formulario reactivo.
-   * @param campo Nombre del campo del formulario.
-   * @param metodoNombre Método de la tienda para actualizar el estado.
+   * Establece valores en el store global y maneja lógica específica para entidades federativas
+   * @param form - Formulario reactivo del cual obtener el valor
+   * @param campo - Nombre del campo del formulario
+   * @param metodoNombre - Método del store a ejecutar para actualizar el estado
    */
   setValoresStore(
     form: FormGroup,
@@ -314,6 +291,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
 
+    // Lógica específica para mostrar justificación según entidad federativa
     if (VALOR === 8 && metodoNombre === 'setEntidad' && this.entidadFederativaData === 'DURANGO'
     ) {
       this.isJustificacion = true;
@@ -323,13 +301,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method validarFormulario
-   * @description
-   * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
-   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
-   * Si el componente hijo no está disponible, retorna `false`.
-   *
-   * @returns {boolean} Indica si el formulario es válido.
+   * Valida todos los formularios de datos del certificado
+   * @returns true si todos los formularios son válidos, false en caso contrario
    */
   validarFormularioDatos(): boolean {
     let isValid = true;
@@ -339,16 +312,16 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     return isValid;
   }
 
-
   /**
-   * Obtiene el formulario de validación.
+   * Getter que retorna el FormGroup de validación anidado dentro del formulario principal
+   * @returns FormGroup de validación
    */
   get validacionForm(): FormGroup {
     return this.registroForm.get('validacionForm') as FormGroup;
   }
 
   /**
-   * Configura el formulario reactivo con los valores iniciales del estado.
+   * Configura e inicializa el formulario reactivo con todos los controles y validaciones necesarias
    */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
@@ -363,14 +336,12 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
         justificacion: [{ value: this.solicitudState?.justificacion, disabled: this.soloLectura }, [Validators.required]],
       }),
     });
-
   }
+  
   /**
-   * Método que se ejecuta al destruir el componente.
-   * Cancela todas las suscripciones activas.
+   * Método del ciclo de vida OnDestroy que limpia suscripciones para evitar memory leaks
    */
   ngOnDestroy(): void {
-
     this.destroyed$.next(true);
     this.destroyed$.complete();
   }
