@@ -64,11 +64,11 @@ export interface Catalogo {
 
 
 /**
- * Represents the structure of a JSON response containing catalog data.
+ * Representa la estructura de una respuesta JSON que contiene datos de catálogo.
  *
- * @property codigo - The response code indicating the status of the request.
- * @property datos - An array of `Catalogo` objects containing the catalog data.
- * @property mensaje - A message providing additional information about the response.
+ * @property codigo - El código de respuesta que indica el estado de la solicitud.
+ * @property datos - Un arreglo de objetos `Catalogo` que contiene los datos del catálogo.
+ * @property mensaje - Un mensaje que proporciona información adicional sobre la respuesta.
  */
 export interface JsonResponseCatalogo {
   codigo: string
