@@ -29,12 +29,17 @@
           class="form-control"
           id="numero"
           formControlName="numero"
-          [ngClass]="{ 'is-invalid': isInvalid('numero') }"
+          [ngClass]="{ 'is-invalid': isInvalid('numero', formularioEmpresa) }"
           (change)="setValoresStore(formularioEmpresa, 'numero')"
         />
-        <div *ngIf="isInvalid('numero')" class="invalid-feedback">
+        <div *ngIf="isInvalid('numero', formularioEmpresa)" class="invalid-feedback">
+        <small *ngIf="formularioEmpresa.controls['numero'].errors?.['required']">
           Este campo es obligatorio.
-        </div>
+        </small>
+        <small *ngIf="formularioEmpresa.controls['numero'].errors?.['maxlength']">
+          El tamaño máximo es de 50 caracteres.
+        </small>
+      </div>
       </div>
     </div>
   
@@ -48,7 +53,7 @@
           [isDisabled]="esFormularioSoloLectura"
           (change)="setValoresStore(formularioEmpresa, 'tipoEmpresa')"
         ></app-catalogo-select>
-        <div *ngIf="isInvalid('tipoEmpresa')" class="invalid-feedback">
+        <div *ngIf="isInvalid('tipoEmpresa', formularioEmpresa)" class="invalid-feedback">
           Debe seleccionar un tipo de empresa.
         </div>
       </div>
@@ -64,11 +69,11 @@
           class="form-control"
           id="nombre"
           formControlName="nombre"
-          [ngClass]="{ 'is-invalid': isInvalid('nombre') }"
+          [ngClass]="{ 'is-invalid': isInvalid('nombre', formularioEmpresa) }"
           (change)="setValoresStore(formularioEmpresa, 'nombre')"
 
         />
-        <div *ngIf="isInvalid('nombre')" class="invalid-feedback">
+        <div *ngIf="isInvalid('nombre', formularioEmpresa)" class="invalid-feedback">
           Este campo es obligatorio.
         </div>
       </div>
@@ -83,12 +88,12 @@
             type="checkbox"
             id="lineaCheckbox"
             formControlName="lineaCheckbox"
-            [ngClass]="{ 'is-invalid': isInvalid('lineaCheckbox') }"
+            [ngClass]="{ 'is-invalid': isInvalid('lineaCheckbox', formularioEmpresa) }"
             (change)="setValoresStore(formularioEmpresa, 'lineaCheckbox')"            />
           <label class="form-check-label" for="lineaCheckbox">
             <span>Mixed</span>
           </label>
-          <div *ngIf="isInvalid('lineaCheckbox')" class="invalid-feedback">
+          <div *ngIf="isInvalid('lineaCheckbox', formularioEmpresa)" class="invalid-feedback">
             Debe seleccionar esta opción.
           </div>
         </div>
@@ -104,7 +109,7 @@
           [isDisabled]="esFormularioSoloLectura"
           (change)="setValoresStore(formularioEmpresa, 'paisOrigen') "
         ></app-catalogo-select>
-        <div *ngIf="isInvalid('paisOrigen')" class="invalid-feedback">
+        <div *ngIf="isInvalid('paisOrigen', formularioEmpresa)" class="invalid-feedback">
           Debe seleccionar un país de origen.
         </div>
       </div>
@@ -136,18 +141,25 @@
         <div class="col-md-12">
           <div class="form-group">
             <label class="form-label" for="direccionExportador"
-              >Dirección exportador*:</label
-            >
-            <input
+              >Dirección exportador<span
+                     [ngClass]="{'text-danger': isInvalid('direccionExportador',datosDelExportador)}"
+                     >*</span>:</label>
+            <textarea
               class="form-control"
               type="text"
               id="direccionExportador"
               formControlName="direccionExportador"
-              placeholder="PRUEBAS QA CDMX"
-              libUppercase
-              aria-labelledby="direccionExportador"
               (change) = "setValoresStore(datosDelExportador, 'direccionExportador')"
-            />
+              [ngClass]="{'is-invalid': isInvalid('direccionExportador',datosDelExportador)}"
+            ></textarea>
+              <div *ngIf="datosDelExportador.get('direccionExportador')?.touched && datosDelExportador.get('direccionExportador')?.invalid" class="text-danger">
+              <small *ngIf="datosDelExportador.get('direccionExportador')?.hasError('required')">
+                Este campo es obligatorio
+              </small>
+              <small *ngIf="datosDelExportador.get('direccionExportador')?.hasError('maxlength')">
+                El tamaño máximo es de 200 caracteres
+              </small>
+            </div>
           </div>
         </div>
       </div>
@@ -161,17 +173,28 @@
         <div class="col-md-12">
           <div class="form-group">
             <label class="form-label" for="nombreImportador"
-              >Nombre importador*:</label
+              >Nombre importador<span
+                     [ngClass]="{'text-danger': isInvalid('nombreImportador',datosDelImportador)}"
+                     >*</span>:</label
             >
             <input
-              class="form-control"
-              type="text"
-              id="nombreImportador"
-              formControlName="nombreImportador"
-              libUppercase
-              aria-labelledby="nombreImportador"
-              (change) = "setValoresStore(datosDelImportador, 'nombreImportador')"
+            class="form-control"
+            type="text"
+            id="nombreImportador"
+            formControlName="nombreImportador"
+            libUppercase
+            aria-labelledby="nombreImportador"
+            (change)="setValoresStore(datosDelImportador, 'nombreImportador')"
+            [ngClass]="{'is-invalid': isInvalid('nombreImportador', datosDelImportador)}"
             />
+            <div *ngIf="isInvalid('nombreImportador', datosDelImportador)" class="invalid-feedback">
+              <small *ngIf="datosDelImportador.controls['nombreImportador'].errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+              <small *ngIf="datosDelImportador.controls['nombreImportador'].errors?.['maxlength']">
+                El tamaño máximo es de 120 caracteres.
+              </small>
+            </div>
           </div>
         </div>
       </div>
@@ -180,18 +203,28 @@
         <div class="col-md-12">
           <div class="form-group">
             <label class="form-label" for="direccionImportador"
-              >Dirección importador*:</label
+              >Dirección importador<span
+                     [ngClass]="{'text-danger': isInvalid('direccionImportador',datosDelImportador)}"
+                     >*</span>:</label
             >
             <input
               class="form-control"
               type="text"
               id="direccionImportador"
               formControlName="direccionImportador"
-              placeholder=""
               libUppercase
               aria-labelledby="direccionImportador"
-              (change) = "setValoresStore(datosDelImportador, 'direccionImportador')"
+              (change)="setValoresStore(datosDelImportador, 'direccionImportador')"
+              [ngClass]="{'is-invalid': isInvalid('direccionImportador', datosDelImportador)}"
             />
+            <div *ngIf="isInvalid('direccionImportador', datosDelImportador)" class="invalid-feedback">
+              <small *ngIf="datosDelImportador.controls['direccionImportador'].errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+              <small *ngIf="datosDelImportador.controls['direccionImportador'].errors?.['maxlength']">
+                El tamaño máximo es de 120 caracteres.
+              </small>
+            </div>
           </div>
         </div>
       </div>
@@ -205,7 +238,9 @@
         <div class="col-md-12">
           <div class="form-group">
             <label class="form-label" for="numeroEnLetraDeLosLotes"
-              >Número en letra de los lotes*:</label
+              >Número en letra de los lotes<span
+                     [ngClass]="{'text-danger': isInvalid('numeroEnLetraDeLosLotes', datosDeLaRemesa)}"
+                     >*</span>:</label
             >
             <input
               class="form-control"
@@ -215,13 +250,17 @@
               libUppercase
               aria-labelledby="numeroEnLetraDeLosLotes"
               (change) = "setValoresStore(datosDeLaRemesa, 'numeroEnLetraDeLosLotes')"
+              [ngClass]="{'input-error': isInvalid('numeroEnLetraDeLosLotes', datosDeLaRemesa)}"
             />
-            <div *ngIf="esInvalido('numeroEnLetraDeLosLotes')" class="text-danger">
+            <div *ngIf="isInvalid('numeroEnLetraDeLosLotes', datosDeLaRemesa)" class="text-danger">
               <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotes'].errors?.['required']">
                 Este campo es obligatorio.
               </small>
               <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotes'].errors?.['pattern']">
                 Solo se permiten números.
+              </small>
+               <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotes'].errors?.['maxlength']">
+                El tamaño máximo es de 200 caracteres.
               </small>
             </div>
           </div>
@@ -232,7 +271,9 @@
         <div class="col-md-12">
           <div class="form-group">
             <label class="form-label" for="numeroEnLetraDeLosLotesEnIngles"
-              >Número en letra de los lotes en ingles*:</label
+              >Número en letra de los lotes en ingles<span
+                     [ngClass]="{'text-danger': isInvalid('numeroEnLetraDeLosLotesEnIngles', datosDeLaRemesa)}"
+                     >*</span>:</label
             >
             <input
               class="form-control"
@@ -243,6 +284,7 @@
               libUppercase
               aria-labelledby="numeroEnLetraDeLosLotesEnIngles"
               (change) = "setValoresStore(datosDeLaRemesa, 'numeroEnLetraDeLosLotesEnIngles')"
+              [ngClass]="{'input-error': isInvalid('numeroEnLetraDeLosLotesEnIngles', datosDeLaRemesa)}"
             />
             <div *ngIf="esInvalido('numeroEnLetraDeLosLotesEnIngles')" class="text-danger">
               <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotesEnIngles'].errors?.['required']">
@@ -260,7 +302,9 @@
         <div class="col-md-6">
           <div class="form-group">
             <label class="form-label" for="numeroDeFactura"
-              >Número de factura*:</label
+              >Número de factura<span
+                     [ngClass]="{'text-danger': isInvalid('numeroDeFactura', datosDeLaRemesa)}"
+                     >*</span>:</label
             >
             <input
               class="form-control"
@@ -271,6 +315,7 @@
               libUppercase
               aria-labelledby="numeroDeFactura"
               (change) = "setValoresStore(datosDeLaRemesa, 'numeroDeFactura')"
+              [ngClass]="{'input-error': isInvalid('numeroDeFactura', datosDeLaRemesa)}"
             />
             <div *ngIf="esInvalido('numeroDeFactura')" class="text-danger">
               <small *ngIf="datosDeLaRemesa.controls['numeroDeFactura'].errors?.['required']">
@@ -293,7 +338,9 @@
         <div class="col-md-6">
           <div class="form-group">
             <label class="form-label" for="cantidadEnQuilates"
-              >Cantidad en Quilates*:</label
+              >Cantidad en Quilates<span
+                     [ngClass]="{'text-danger': isInvalid('cantidadEnQuilates', datosDeLosDiamantes)}"
+                     >*</span>:</label
             >
             <input
               class="form-control"
@@ -303,6 +350,7 @@
               libUppercase
               aria-labelledby="cantidadEnQuilates"
               (change) = "setValoresStore(datosDeLosDiamantes, 'cantidadEnQuilates')"
+              [ngClass]="{'input-error': isInvalid('cantidadEnQuilates', datosDeLosDiamantes)}"
             />
           </div>
         </div>
@@ -310,7 +358,9 @@
         <div class="col-md-6">
           <div class="form-group">
             <label class="form-label" for="valorDeLosDiamantes"
-              >Valor de los diamantes*:</label
+              >Valor de los diamantes<span
+                     [ngClass]="{'text-danger': isInvalid('valorDeLosDiamantes', datosDeLosDiamantes)}"
+                     >*</span>:</label
             >
             <input
               class="form-control"
@@ -321,6 +371,7 @@
               libUppercase
               aria-labelledby="valorDeLosDiamantes"
               (change) = "setValoresStore(datosDeLosDiamantes, 'valorDeLosDiamantes')"
+              [ngClass]="{'input-error': isInvalid('valorDeLosDiamantes', datosDeLosDiamantes)}"
             />
           </div>
         </div>

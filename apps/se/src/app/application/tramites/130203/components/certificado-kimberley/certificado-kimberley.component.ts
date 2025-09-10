@@ -276,7 +276,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
         { value: this.seccionState?.especifique, disabled: true },
         [Validators.maxLength(20)],
       ],
-      numero: [this.seccionState?.numero, [Validators.required]],
+      numero: [this.seccionState?.numero, [Validators.required,Validators.maxLength(50)]],
       tipoEmpresa: [this.seccionState?.tipoEmpresa, [Validators.required]],
       nombre: [this.seccionState?.nombre, [Validators.required]],
       lineaCheckbox: this.seccionState?.lineaCheckbox,
@@ -289,25 +289,25 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
       ],
       direccionExportador: [
         this.seccionState?.direccionExportador,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(200)],
       ],
     });
 
     this.datosDelImportador = this.fb.group({
       nombreImportador: [
         this.seccionState?.nombreImportador,
-        [Validators.required],
+        [Validators.required,Validators.maxLength(120)],
       ],
       direccionImportador: [
         this.seccionState?.direccionImportador,
-        [Validators.required],
+        [Validators.required,Validators.maxLength(120)],
       ],
     });
 
     this.datosDeLaRemesa = this.fb.group({
       numeroEnLetraDeLosLotes: [
         this.seccionState?.numeroEnLetraDeLosLotes,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),Validators.maxLength(200)],
       ],
       numeroEnLetraDeLosLotesEnIngles: [
         this.seccionState?.numeroEnLetraDeLosLotesEnIngles,
@@ -367,12 +367,10 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * @param controlName Nombre del control.
    * @returns `true` si el control es inválido, de lo contrario `false`.
    */
-  isInvalid(controlName: string): boolean {
-    const CONTORL = this.formularioEmpresa.get(controlName);
-    return CONTORL
-      ? CONTORL.invalid && (CONTORL.dirty || CONTORL.touched)
-      : false;
-  }
+  isInvalid(controlName: string, formGroup: FormGroup = this.formularioEmpresa): boolean {
+  const CONTROL = formGroup.get(controlName);
+  return CONTROL ? CONTROL.invalid && (CONTROL.dirty || CONTROL.touched) : false;
+}
 
   /**
    * @description Verifica si un control del formulario es inválido.
