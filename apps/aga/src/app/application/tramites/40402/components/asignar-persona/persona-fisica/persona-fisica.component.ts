@@ -216,6 +216,9 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
    */
   onFilasSeleccionadas(filas: PersonaFisicaExtranjeraForm[]): void {
     this.selectedRows = filas;
+    if (filas.length === 0) {
+      this.indiceSeleccionado = null;
+    }
   }
 
   /**
@@ -401,7 +404,7 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
           tipoNotificacion: 'alert',
           categoria: 'INFORMACION',
           modo: 'html',
-          titulo: 'Registro agregado',
+          titulo: 'Alerta',
           mensaje: 'Datos guardados correctamente',
           cerrar: true,
           txtBtnAceptar: 'Aceptar',
@@ -426,12 +429,12 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
     }
 }
     /**
-     * Bandera para mostrar la notificación cuando ya existe un registro agregado.
+     * Bandera para mostrar la notificación cuando ya existe un Alerta.
      * @type {boolean}
      */
   mostrarNotificacionYaAgregada: boolean = false;
     /**
-     * Objeto de notificación que se muestra cuando ya existe un registro agregado.
+     * Objeto de notificación que se muestra cuando ya existe un Alerta.
      * @type {Notificacion}
      */
   notificacionYaAgregada!: Notificacion;
@@ -501,11 +504,45 @@ enAgregarClic(event: Event): void {
    * Elimina el registro seleccionado de la tabla.
    */
   eliminarRegistro(): void {
-    if (this.indiceSeleccionado !== null) {
-      this.personaFisicaExtranjeraTabla.splice(this.indiceSeleccionado, 1);
-      this.personaFisicaExtranjeraTabla = [...this.personaFisicaExtranjeraTabla];
-      this.tramite40402Store.setPersonaFisicaExtranjeraTabla(this.personaFisicaExtranjeraTabla);
+    if (this.indiceSeleccionado !== null || this.selectedRows.length > 0) {
+      const NOMBRES_A_ELIMINAR = new Set(this.selectedRows.map(p => p.nombrePFE).filter(Boolean));
+      const NSS_A_ELIMINAR = new Set(this.selectedRows.map(p => p.seguroNumero).filter(Boolean));
+      const COMBO_CORREO_NOMBRE_A_ELIMINAR = new Set(
+        this.selectedRows
+          .filter(p => p.correoPFE && p.nombrePFE)
+          .map(p => `${p.correoPFE}|${p.nombrePFE}`)
+      );
+
+      this.personaFisicaExtranjeraTabla = this.personaFisicaExtranjeraTabla.filter(persona => {
+        if (persona.nombrePFE && NOMBRES_A_ELIMINAR.has(persona.nombrePFE)) {
+          return false;
+        }
+        if (persona.seguroNumero && NSS_A_ELIMINAR.has(persona.seguroNumero)) {
+          return false;
+        }
+        if (persona.correoPFE && persona.nombrePFE) {
+          const COMBO_ID = `${persona.correoPFE}|${persona.nombrePFE}`;
+          if (COMBO_CORREO_NOMBRE_A_ELIMINAR.has(COMBO_ID)) {
+            return false;
+          }
+        }
+        return !this.selectedRows.includes(persona);
+      });
+      this.selectedRows = [];
       this.indiceSeleccionado = null;
+      if (this.personaFisicaExtranjeraForm) {
+        this.personaFisicaExtranjeraForm.reset();
+      }
+      this.tramite40402Store.setPersonaFisicaExtranjeraTabla(this.personaFisicaExtranjeraTabla);
+      // Mostrar modal de confirmación después de la eliminación
+      setTimeout(() => {
+        const MODAL = document.getElementById('confirmarEliminados');
+        if (MODAL) {
+          interface BootstrapModal { show: () => void; }
+          const BS_MODAL: BootstrapModal = new ((window as unknown) as { bootstrap: { Modal: new (el: HTMLElement) => BootstrapModal } }).bootstrap.Modal(MODAL);
+          BS_MODAL.show();
+        }
+      }, 300);
     }
   }
 

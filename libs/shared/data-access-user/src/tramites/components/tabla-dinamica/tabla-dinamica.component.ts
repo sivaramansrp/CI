@@ -95,6 +95,13 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
   @Input() tableId!: string;
 
   /**
+   * Indica si el estado actual es inválido.
+   * Cuando se establece en `true`, el componente reflejará un estado inválido.
+   * Este input puede utilizarse para activar estilos o mensajes de validación.
+   */
+  @Input() isInvalida: boolean = false;
+
+  /**
    * Propiedad privada que almacena un valor numérico relacionado con la selección de entrada.
    *
    * @private

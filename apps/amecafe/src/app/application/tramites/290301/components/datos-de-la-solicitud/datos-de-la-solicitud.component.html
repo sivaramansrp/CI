@@ -7,6 +7,9 @@
               <textarea class="form-control" id="justificacion" rows="2" height="50"
               placeholder="" style="height: 100px" formControlName="justificacion"
               (change)="setValoresStore(datosSolicitudForma,'justificacion', 'setJustificacion')"
+               [ngClass]="{
+      'is-invalid': datosSolicitudForma.get('justificacion')?.touched && datosSolicitudForma.get('justificacion')?.invalid,
+    }"
               [disabled]="esFormularioSoloLectura"
               ></textarea>
               <div *ngIf="datosSolicitudForma.get('justificacion')?.touched">
@@ -37,9 +40,8 @@
                         formControlName="productorDeCafe"
                         [layout]="'horizontal'"
                         (change)="handleProductorDeCafeChange()"
-                        (change)="setValoresStore(datosSolicitudForma,'productorDeCafe', 'setProductorDeCafe')"
                         [disabled]="esFormularioSoloLectura ? true : false">
-                    </app-input-radio>
+                        </app-input-radio>
                     </div>
             </div>
             
@@ -171,7 +173,25 @@
           placeholder="" style="height: 100px" formControlName="observaciones"
           (change)="setValoresStore(datosSolicitudForma,'observaciones', 'setObservaciones')"
           [disabled]="esFormularioSoloLectura"
+          [ngClass]="{
+          'is-invalid': datosSolicitudForma.get('observaciones')?.touched && datosSolicitudForma.get('observaciones')?.invalid,
+          'is-valid': datosSolicitudForma.get('observaciones')?.touched && datosSolicitudForma.get('observaciones')?.valid
+        }"
           ></textarea>
+          <div *ngIf="datosSolicitudForma.get('observaciones')?.touched">
+        <small
+          *ngIf="datosSolicitudForma.get('observaciones')?.hasError('required')"
+          class="text-danger"
+        >
+          Este campo es obligatorio.
+        </small>
+        <small
+          *ngIf="datosSolicitudForma.get('observaciones')?.hasError('maxlength')"
+          class="text-danger"
+        >
+          Solo se permiten 4000 caracteres.
+        </small>
+      </div>
         </div>
       </div>
    </div>

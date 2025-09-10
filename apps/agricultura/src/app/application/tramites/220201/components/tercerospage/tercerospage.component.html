@@ -2,6 +2,6 @@
     [cuerpoTablaExportador]="datosForma" [catalogosDatos]="catalogosDatos" (eliminarSeleccion)="handleEliminar()"
     (eliminarSeleccionEstinoTable)="handleEliminarExportador()"
     (abrirModalDestinatario)="abrirModalDestinatario($event)"
-    (abrirModalExportador)="abrirModalExportador($event)"></app-tercerosrelacionados>
+    (abrirModalExportador)="abrirModalExportador($event)" [destinatarioRequired]="true" [exportadorRequired]="true" #tercerosRelacionadosRef></app-tercerosrelacionados>
 
 <app-modal #modalRef></app-modal>

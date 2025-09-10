@@ -5,9 +5,9 @@ import {
 } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitud, ProductosCatalogosDatos } from '../../../../shared/models/datos-de-la-solicitue.model';
 
+import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

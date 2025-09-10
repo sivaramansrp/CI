@@ -65,6 +65,16 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   @ViewChild('modalRef') modalRef!: ModalComponent;
 
+    /**
+   * Referencia al componente de terceros relacionados.
+   * Permite acceder a los métodos y propiedades del componente TercerosrelacionadosComponent.
+   * 
+   * @public
+   * @type {TercerosrelacionadosComponent}
+   * @memberof TercerospageComponent
+   */
+  @ViewChild('tercerosRelacionadosRef') tercerosRelacionados!: TercerosrelacionadosComponent;
+
   /**
    * Indica si el formulario se encuentra en modo solo lectura.
    * Determina si el formulario debe mostrarse únicamente para lectura, sin permitir modificaciones.
@@ -196,4 +206,19 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.modalRef.abrir(AgregardestinatariofinalComponent);
   }
+
+  /**
+   * Método para validar el formulario de terceros relacionados.
+   * Delega la validación al componente hijo TercerosrelacionadosComponent.
+   * Retorna el estado de validación del formulario completo.
+   * 
+   * @public
+   * @method validarFormulario
+   * @memberof TercerospageComponent
+   * @returns {boolean} - True si el formulario es válido, false en caso contrario
+   */
+  validarFormulario(): boolean {
+    return this.tercerosRelacionados.validarFormulario();
+  }
+
 }
