@@ -28,6 +28,7 @@ import {
   INMEX_PLANTAS
 } from '../../constantes/federatarios-y-plantas.enum';
 
+import { Subject, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { FormControl } from '@angular/forms';
@@ -35,7 +36,6 @@ import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
 
 
 /**
@@ -581,6 +581,7 @@ agregarPlantas(): void {
  */
 obtenerEstados():void {
     this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      this.estadoOptionsConfig.estadosFederatarios = res.datos;
     });
     
   }

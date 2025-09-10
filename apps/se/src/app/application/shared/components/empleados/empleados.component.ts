@@ -353,9 +353,9 @@ export class EmpleadosComponent implements OnInit {
     eliminarDirectos(): void {
      if (this.selectedDirectosDatos?.length > 0) {
         this.selectedDirectosDatos.forEach(planta => {
-          const index = this.selectedDirectosDatos.findIndex(row => row === planta);
-          if (index !== -1) {
-            this.directosDatos.splice(index, 1);
+          const INDEX = this.selectedDirectosDatos.findIndex(row => row === planta);
+          if (INDEX !== -1) {
+            this.directosDatos.splice(INDEX, 1);
           }
       });
       this.directosDatos = [...this.directosDatos];

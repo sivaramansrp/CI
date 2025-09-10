@@ -824,10 +824,12 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         const INDICEALT = this.camposFormularioTipoPersona.findIndex(
           (ele) => ele.campo === ESTADO
         );
-        this.estados = datos;
+        
         this.camposFormularioTipoPersona[INDICEALT].opcionesCatalogo = datos;
-        if(this.camposFormularioDefault && this.camposFormularioDefault[INDICE].opcionesCatalogo)
+        if(this.camposFormularioDefault && this.camposFormularioDefault[INDICE].opcionesCatalogo){
           this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
+        }
+          
       });
   }
 
@@ -1432,6 +1434,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
  */
 obtenerEstados():void {
     this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      this.estados = res.datos;
     });
     
   }
