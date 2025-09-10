@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { AgregarDestinatarioFinalContenedoraComponent } from './agregar-destinatario-final-contenedora.component';
-import { Tramite240121Store } from '../../estados/tramite240121Store.store';
-import { Tramite240121Query } from '../../estados/tramite240121Query.query';
+import { Tramite240123Store } from '../../estados/tramite240123Store.store';
+import { Tramite240123Query } from '../../estados/tramite240123Query.query';
 
 describe('AgregarDestinatarioFinalContenedoraComponent (Jest)', () => {
   let component: AgregarDestinatarioFinalContenedoraComponent;
@@ -17,8 +17,8 @@ describe('AgregarDestinatarioFinalContenedoraComponent (Jest)', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        { provide: Tramite240121Store, useValue: mockTramiteStore },
-        { provide: Tramite240121Query, useValue: mockTramiteQuery },
+        { provide: Tramite240123Store, useValue: mockTramiteStore },
+        { provide: Tramite240123Query, useValue: mockTramiteQuery },
       ],
     });
 
