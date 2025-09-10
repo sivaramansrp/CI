@@ -1,35 +1,12 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  Notificacion,
-  NotificacionesComponent,
-  Pedimento,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import {
-  Solicitud220502State,
-  Solicitud220502Store,
-} from '../../estados/tramites220502.store';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Notificacion, NotificacionesComponent, Pedimento, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Solicitud220502State, Solicitud220502Store } from '../../estados/tramites220502.store';
+import { Subject, map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MercanciaTabla } from '../../models/medio-transporte.model';
 import { Solicitud220502Query } from '../../estados/tramites220502.query';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 /**
  * Componente para agregar mercancía.
  */

@@ -1,5 +1,4 @@
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogosSelect} from '@ng-mf/data-access-user';
 import { MercanciaTabla } from './medio-transporte.model';
 
 /**

@@ -96,7 +96,14 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   /** Propiedad de entrada para gestionar la selección del método de transporte. */
   @Input() mediodetransporte: CatalogosSelect = {} as CatalogosSelect;
 
-  inputMercanciaSelection:number = -1;
+  /**
+   * @description
+   * Índice de la mercancía seleccionada en la lista.
+   *
+   * El valor por defecto es `-1`, lo que indica que no hay
+   * ninguna mercancía seleccionada inicialmente.
+   */
+  inputMercanciaSelection: number = -1;
 
   /** Inyectar el ControlContainer principal para administrar los controles de formulario */
   parentContainer = inject(ControlContainer);
@@ -442,7 +449,10 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
         (item) => item.id === evento.id
       );
       if (INDEX !== -1) {
-        this.mercanciaLista[INDEX] = { ...this.mercanciaLista[INDEX], ...evento };
+        this.mercanciaLista[INDEX] = {
+          ...this.mercanciaLista[INDEX],
+          ...evento,
+        };
       }
       this.mercanciaLista = [...this.mercanciaLista];
     }
