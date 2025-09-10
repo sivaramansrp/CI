@@ -594,17 +594,26 @@
             </div>
           </div>
           }
-          <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="clasificacionToxicologica"
-              [label]="'Clasificación toxicológica'" [required]="true" name="clasificacionToxicologica" (change)="
-                setValoresStore(formMercancias, 'especificar', 'setEspecificar')"
-              [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <app-catalogo-select [catalogo]="estado" formControlName="clasificacionToxicologica"
+                  [label]="'Clasificación toxicológica'" [required]="true" name="clasificacionToxicologica" (change)="
+                    setValoresStore(formMercancias, 'especificar', 'setEspecificar')"
+                  [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="objetoImportacion"
-              [label]="'Objeto de la importación'" [required]="true" name="objetoImportacion" (change)="
-                setValoresStore(formMercancias, 'especificar', 'setEspecificar')"
-              [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+          
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <app-catalogo-select [catalogo]="estado" formControlName="objetoImportacion"
+                  [label]="'Objeto de la importación'" [required]="true" name="objetoImportacion" (change)="
+                    setValoresStore(formMercancias, 'especificar', 'setEspecificar')"
+                  [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+              </div>
+            </div>
           </div>
         </form>
       </div>
