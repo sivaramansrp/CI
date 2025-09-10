@@ -63,9 +63,9 @@
   <ng-titulo titulo="Otras Instancias para TLC-Uruguay" />
   <ng-alert [CONTENIDO]="mensajeUruguay.ADJUNTAR"></ng-alert>
   <div class="col-md-8">
-      <app-catalogo-select [catalogo]="criteriosInstaciasCatalogo" formControlName="criterioInstacias" [label]="'Criterio Otras instancias'" [required]="false"
+      <app-catalogo-select [catalogo]="criteriosInstanciasCatalogo" formControlName="criterioInstancias" [label]="'Criterio Otras instancias'" [required]="false"
         name="Criterio Otras instancias" [isDisabled]="esFormularioSoloLectura"
-        (change)="setValoresStore(formularioTratados,'criterioInstancia', 'setCriterioInstancia');getLabelFromCatalogData(criteriosInstaciasCatalogo,'criterioInstancia')"></app-catalogo-select>
+        (change)="setValoresStore(formularioTratados,'criterioInstancias', 'setCriterioInstancia');getLabelFromCatalogData(criteriosInstanciasCatalogo,'criterioInstancias')"></app-catalogo-select>
   </div>
 }
 

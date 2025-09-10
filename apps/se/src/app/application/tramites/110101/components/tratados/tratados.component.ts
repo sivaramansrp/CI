@@ -1,5 +1,5 @@
 
-import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, INSTANCIA_URUGUAY, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { AlertComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, INSTANCIA_URUGUAY, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
@@ -9,6 +9,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CatalogosTramiteService } from '../../services/catalogo.service';
 import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
+import { CriteriosOtrasInstanciasRequest } from '../../models/request/criterios-otras-instancias-request.model';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
 import { RegistroDeSolicitudesTabla} from '../../models/panallas110101.model';
@@ -75,7 +76,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
   isEditMode: boolean = false;
 
   /**
- * Vista instacia uruguay.
+ * Vista instancia uruguay.
  * Cuando es `true`, permite ver la vista.
  */
   isUruguay: boolean = false;
@@ -120,9 +121,9 @@ export class TratadosComponent implements OnInit, OnDestroy {
   public origenCatalogo: Catalogo[] = [];
 
   /**
-   * Catálogo de criterios otras instacias disponibles para selección en el componente.
+   * Catálogo de criterios otras instancias disponibles para selección en el componente.
    */
-  public criteriosInstaciasCatalogo: Catalogo[] = [];
+  public criteriosInstanciasCatalogo: Catalogo[] = [];
 
   /**
    * @property {boolean} mostrarTabla - Indica si se debe mostrar la tabla.
@@ -208,7 +209,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
       pais: [this.solicitudeState?.pais, Validators.required],
       tratado: [this.solicitudeState?.tratado, Validators.required],
       origen: [this.solicitudeState?.origen, Validators.required],
-      criterioInstacias: [this.solicitudeState?.criterio, Validators.required],
+      criterioInstancias: [this.solicitudeState?.criterio, Validators.required],
     });
   }
 
@@ -221,7 +222,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
   alerta = MENSAJE_ALERTA_TRATADOS;
 
   /**
-   * Mensaje de alerta para instacia de uruguay.
+   * Mensaje de alerta para instancia de uruguay.
    * 
    * @property {string} mensajeUruguay - El mensaje de alerta que se mostrará en el componente.
    */
@@ -255,10 +256,11 @@ export class TratadosComponent implements OnInit, OnDestroy {
   public getCatalogoPaisBloques(): void {
     this.catalogosTramiteService.getCatPaisBloques()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((response) => {
-        if (response.codigo === CodigoRespuesta.EXITO) {
-          // El backend manda "datos"
-          const DATOS = response.datos || [];
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            // El backend manda "datos"
+            const DATOS = response.datos || [];
 
           // Transformación a tu respuesta a response Catalogo
           this.paisCatalogo = DATOS.map((item, index) => ({
@@ -267,8 +269,34 @@ export class TratadosComponent implements OnInit, OnDestroy {
             clave: item.clave,
             bloque: item.bloque,
           }));
+        }else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error catalogo pais bloque.',
+            mensaje: response.causa || response.mensaje || 'Error catalogo de pais bloque',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
         }
-      });
+      },
+      error: (err) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: 'Error de conexión',
+          mensaje: 'No se pudo cargar el catálogo de países bloques',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+      }
+    });
   }
 
   /**
@@ -283,9 +311,10 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * @returns {void}
  */
   public getCatalogoTratadoAcuerdo(cvePais: string): void {
-    this.catalogosTramiteService.getCatTratadosAcuerdos(cvePais)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((response) => {
+  this.catalogosTramiteService.getCatTratadosAcuerdos(cvePais)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (response) => {
         if (response.codigo === CodigoRespuesta.EXITO) {
           // El backend manda "datos"
           const DATOS = response.datos || [];
@@ -296,9 +325,35 @@ export class TratadosComponent implements OnInit, OnDestroy {
             descripcion: item.descripcion,
             clave: item.clave,
           }));
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response?.error || 'Error tratado acuerdo.',
+            mensaje: response?.causa || response?.mensaje || 'Error catálogo de tratado acuerdo',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
         }
-      });
-  }
+      },
+      error: (err) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: 'Error de conexión',
+          mensaje: 'No se pudo cargar el catálogo de tratado acuerdo',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+      }
+    });
+}
 
   /**
    * @method getCatalogoTratadoAcuerdoBloque
@@ -314,10 +369,11 @@ export class TratadosComponent implements OnInit, OnDestroy {
   public getCatalogoTratadoAcuerdoBloque(cvePais: string): void {
     this.catalogosTramiteService.getCatTratadosAcuerdosBloque(cvePais)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((response) => {
-        if (response.codigo === CodigoRespuesta.EXITO) {
-          // El backend manda "datos"
-          const DATOS = response.datos || [];
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            // El backend manda "datos"
+            const DATOS = response.datos || [];
 
           // Transformación a tu respuesta a response Catalogo
           this.tratadoCatalogo = DATOS.map((item, index) => ({
@@ -325,8 +381,34 @@ export class TratadosComponent implements OnInit, OnDestroy {
             descripcion: item.descripcion,
             clave: item.clave,
           }));
+        }else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response?.error || 'Error tratado acuerdo bloque.',
+            mensaje: response?.causa || response?.mensaje || 'Error catálogo de tratado acuerdo bloque',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
         }
-      });
+      },
+      error: (err) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: 'Error de conexión',
+          mensaje: 'No se pudo cargar el catálogo de tratado acuerdo bloque',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+      }
+    });
   }
 
   /**
@@ -343,10 +425,11 @@ export class TratadosComponent implements OnInit, OnDestroy {
   public getCatalogoCriterios(idTratadoAcuerdo: string): void {
     this.catalogosTramiteService.getCatCriterios(idTratadoAcuerdo)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((response) => {
-        if (response.codigo === CodigoRespuesta.EXITO) {
-          // El backend manda "datos"
-          const DATOS = response.datos || [];
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            // El backend manda "datos"
+            const DATOS = response.datos || [];
 
           // Transformación a tu respuesta a response Catalogo
           this.origenCatalogo = DATOS.map((item, index) => ({
@@ -354,8 +437,34 @@ export class TratadosComponent implements OnInit, OnDestroy {
             descripcion: item.descripcion,
             clave: item.clave,
           }));
+        }else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error catálogo de criterios.',
+            mensaje: response.causa || response.mensaje || 'Error catálogo de criterios',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
         }
-      });
+      },
+      error: (err) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: 'Error de conexión',
+          mensaje: 'No se pudo cargar el catálogo de criterios',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+      }
+    });
   }
 
   /**
@@ -560,8 +669,8 @@ talbleData: RegistroDeSolicitudesTabla = {
       
           if(selectedOption.clave === "URY"){
             this.isUruguay = true;
+            this.criteriosOtrasInstancias();
             this.cd.detectChanges();
-            //AQUI se tira peticion de catalogo
           }
             
         break;
@@ -571,6 +680,49 @@ talbleData: RegistroDeSolicitudesTabla = {
       default:
         break;
     }
+  }
+
+  /** 
+   * @method criteriosOtrasInstancias
+   * @description Realiza una petición para obtener criterios de otras instancias.
+   * @return {void}
+   */
+  public criteriosOtrasInstancias(): void {
+    const PAYLOAD: CriteriosOtrasInstanciasRequest = {
+      paises: ['URY'],
+      otras_instancias: ['ACU', 'BMF']
+    };
+    this.catalogosTramiteService.postCatCriteriosOtrasInstancias(PAYLOAD)
+    .subscribe({
+      next: (resp) => {
+        if (resp.codigo !== CodigoRespuesta.EXITO) {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: resp.error || 'Error al generar la cadena original.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+        this.criteriosInstanciasCatalogo = resp.datos || [];
+      },
+      error: (error) => {
+        const MENSAJE = error?.error?.error || 'Error de conexión';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
+      }
+    });
   }
 
   /**

@@ -1,4 +1,4 @@
-import { AlertComponent, ConsultaioQuery, InputRadioComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, CategoriaMensaje, ConsultaioQuery, InputRadioComponent, Notificacion } from '@ng-mf/data-access-user';
 import { CatalogosTramiteService } from '../../services/catalogo.service';
 
 import { Component, OnDestroy, OnInit } from '@angular/core'; 
@@ -33,6 +33,14 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   ]
 })
 export class DatosAdicionalesComponent implements OnInit, OnDestroy {
+
+  /**
+     * Notificación actual que se muestra en el componente.
+     *
+     * Esta propiedad almacena los datos de la notificación que se mostrará al usuario.
+     * Se utiliza para configurar el tipo, categoría, mensaje y otros detalles de la notificación.
+     */
+    public nuevaNotificacion!: Notificacion;
 
   /**
    * Representa el formulario del componente.
@@ -206,10 +214,11 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
   public getEntidadFederativa(): void {
     this.catalogoTramiteService.getCatEntidadesFederativas()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((response) => {
-        if (response.codigo === CodigoRespuesta.EXITO) {
-          // El backend manda "datos"
-          const DATOS = response.datos || [];
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            // El backend manda "datos"
+            const DATOS = response.datos || [];
 
           // Transformación a tu respuesta a response Catalogo
           this.entidad = DATOS.map((item, index) => ({
@@ -217,8 +226,34 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
             descripcion: item.descripcion,
             clave: item.clave,
           }));
+        }else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error catálogo de entidad federativa.',
+            mensaje: response.causa || response.mensaje || 'Error catálogo de entidad federativa',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
         }
-      });
+      },
+      error: (err) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: 'Error al obtener catálogo de entidad federativa.',
+          mensaje: err?.mensaje || 'Error al obtener catálogo de entidad federativa.',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+      }
+    });
   }
 
   /**
@@ -235,10 +270,11 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
   public getRepresentacionFederal(cveEntidad: string): void {
     this.catalogoTramiteService.getCatRepresentacionFederal(cveEntidad)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((response) => {
-        if (response.codigo === CodigoRespuesta.EXITO) {
-          // El backend manda "datos"
-          const DATOS = response.datos || [];
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            // El backend manda "datos"
+            const DATOS = response.datos || [];
 
           // Transformación a tu respuesta a response Catalogo
           this.representacion = DATOS.map((item, index) => ({
@@ -246,8 +282,34 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
             descripcion: item.descripcion,
             clave: item.clave,
           }));
+        }else{
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error catálogo de representación federal.',
+            mensaje: response.causa || response.mensaje || 'Error catálogo de representación federal',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
         }
-      });
+      },
+      error: (err) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: 'Error al obtener catálogo de representación federal.',
+          mensaje: err?.mensaje || 'Error al obtener catálogo de representación federal.',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+      }
+    });
   }
 
   /**
