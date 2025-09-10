@@ -8,15 +8,16 @@
  */
 
 /** Importaciones necesarias para el acceso a datos de usuario y estados de consulta */
-import { AVISO, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { AVISO, ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 /** Importaciones del núcleo de Angular para componentes y ciclo de vida */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 /** Importaciones de RxJS para manejo de observables y operadores reactivos */
 import { Subject, map, takeUntil } from 'rxjs';
 /** Servicio para manejar el desistimiento de solicitudes del trámite */
 import { DesistimientoSolicitudService } from '../../services/desistimiento-solicitud.service';
 /** Store para gestionar el estado global del trámite 230301 */
 import { Solicitud230301Store } from '../../estados/tramites/tramites230301.store';
+import { SolicitudComponent } from '../../component/solicitud/solicitud.component';
 
 /**
  * @class PasoUnoComponent
@@ -105,6 +106,36 @@ export class PasoUnoComponent implements OnInit , OnDestroy{
    * ```
    */
   public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property {SolicitanteComponent} SolicitanteComponent
+   * @description
+   * Referencia al componente hijo SolicitanteComponent a través del selector 'solicitante'.
+   * Permite acceder a los métodos y propiedades del componente, especialmente para validar
+   * el formulario de datos del solicitante.
+   */
+  @ViewChild('solicitante') SolicitanteComponent!: SolicitanteComponent;
+
+  /**
+   * @property {SolicitudComponent} SolicitudComponent
+   * @description
+   * Referencia al componente hijo SolicitudComponent a través del selector 'solicitud'.
+   * Permite acceder a los métodos y propiedades del componente, especialmente para validar
+   * el formulario de datos de la solicitud de desistimiento.
+   */
+  @ViewChild('solicitud') SolicitudComponent!: SolicitudComponent;
+
+  /**
+   * @property {Array<{index: number, title: string, component: string}>} seccionesDeLaSolicitud
+   * @description
+   * Configuración de las secciones o pestañas que componen el formulario del primer paso.
+   * Cada elemento del array define una sección con su índice, título y nombre del componente asociado.
+   * Se utiliza para la navegación entre pestañas en la interfaz de usuario.
+   */
+  seccionesDeLaSolicitud = [
+    { index: 1, title: 'Solicitante', component: 'solicitante' },
+    { index: 2, title: 'Solicitud', component: 'solicitud' },
+  ];
 
   /**
    * @constructor
@@ -236,6 +267,39 @@ export class PasoUnoComponent implements OnInit , OnDestroy{
             this.desistimientoSolicitudService.actualizarEstadoFormulario(resp);
           }
         });
+  }
+  /**
+   * @method validarFormularios
+   * @description
+   * Valida todos los formularios contenidos en los componentes hijos del primer paso.
+   * Verifica tanto el formulario del solicitante como el de la solicitud de desistimiento.
+   * Si algún formulario es inválido, marca todos los campos como tocados para mostrar los mensajes de error.
+   * 
+   * @returns {boolean} true si todos los formularios son válidos, false si alguno es inválido o
+   * si alguna referencia a los componentes hijos no está disponible.
+   * @public
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.SolicitanteComponent?.form) {
+      if (this.SolicitanteComponent.form.invalid) {
+        this.SolicitanteComponent.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.SolicitudComponent) {
+      if (!this.SolicitudComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
   }
 
   /**
