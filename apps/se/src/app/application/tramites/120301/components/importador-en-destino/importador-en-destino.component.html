@@ -17,9 +17,9 @@
       </div>
       <div class="col-md-6">
         <div class="form-group">
-          <label class="form-label" for="cantidadTotalImportador"
-            >Valor (sin espacios, sin guiones)*:</label
-          >
+          <label class="form-label" for="cantidadTotalImportador">
+            Valor (sin espacios, sin guiones)<span [ngClass]="{'text-danger': importadorForm.get('cantidadTotalImportador')?.invalid && (importadorForm.get('cantidadTotalImportador')?.touched || importadorForm.get('cantidadTotalImportador')?.dirty)}">*</span>:
+          </label>
           <input
             class="form-control"
             value=""
@@ -38,13 +38,16 @@
               )
             "
           />
+          @if (importadorForm.get('cantidadTotalImportador')?.invalid && (importadorForm.get('cantidadTotalImportador')?.touched || importadorForm.get('cantidadTotalImportador')?.dirty)) {
+            <small class="text-danger">Este campo es obligatorio</small>
+          }
         </div>
       </div>
       <div class="col-md-6">
         <div class="form-group">
-          <label class="form-label" for="razonSocialImportador"
-            >Razón social*:</label
-          >
+          <label class="form-label" for="razonSocialImportador">
+            Razón social<span [ngClass]="{'text-danger': importadorForm.get('razonSocialImportador')?.invalid && (importadorForm.get('razonSocialImportador')?.touched || importadorForm.get('razonSocialImportador')?.dirty)}">*</span>:
+          </label>
           <input
             class="form-control"
             value=""
@@ -63,12 +66,15 @@
               )
             "
           />
+          @if (importadorForm.get('razonSocialImportador')?.invalid && (importadorForm.get('razonSocialImportador')?.touched || importadorForm.get('razonSocialImportador')?.dirty)) {
+            <small class="text-danger">Este campo es obligatorio</small>
+          }
         </div>
       </div>
       <div class="col-md-6"></div>
       <div class="col-md-6">
         <div class="form-group">
-          <label class="form-label" for="domicilio">Domicilio*:</label>
+          <label class="form-label" for="domicilio">Domicilio<span [ngClass]="{'text-danger': importadorForm.get('domicilio')?.invalid && (importadorForm.get('domicilio')?.touched || importadorForm.get('domicilio')?.dirty)}">*</span>:</label>
           <input
             class="form-control"
             value=""
@@ -83,13 +89,16 @@
               setValoresStore(importadorForm, 'domicilio', 'setDomicilio')
             "
           />
+          @if (importadorForm.get('domicilio')?.invalid && (importadorForm.get('domicilio')?.touched || importadorForm.get('domicilio')?.dirty)) {
+            <small class="text-danger">Este campo es obligatorio</small>
+          }
         </div>
       </div>
       <div class="col-md-6">
         <div class="form-group">
-          <label class="form-label" for="ciudadImportador"
-            >Ciudad (población, estado o provincia)*:</label
-          >
+          <label class="form-label" for="ciudadImportador">
+            Ciudad (población, estado o provincia)<span [ngClass]="{'text-danger': importadorForm.get('ciudadImportador')?.invalid && (importadorForm.get('ciudadImportador')?.touched || importadorForm.get('ciudadImportador')?.dirty)}">*</span>:
+          </label>
           <input
             class="form-control"
             value=""
@@ -108,11 +117,14 @@
               )
             "
           />
+          @if (importadorForm.get('ciudadImportador')?.invalid && (importadorForm.get('ciudadImportador')?.touched || importadorForm.get('ciudadImportador')?.dirty)) {
+            <small class="text-danger">Este campo es obligatorio</small>
+          }
         </div>
       </div>
       <div class="col-md-6">
         <div class="form-group">
-          <label class="form-label" for="cpImportador">C P*:</label>
+          <label class="form-label" for="cpImportador">C P<span [ngClass]="{'text-danger': importadorForm.get('cpImportador')?.invalid && (importadorForm.get('cpImportador')?.touched || importadorForm.get('cpImportador')?.dirty)}">*</span>:</label>
           <input
             class="form-control"
             value=""
@@ -127,11 +139,14 @@
               setValoresStore(importadorForm, 'cpImportador', 'setCpImportador')
             "
           />
+          @if (importadorForm.get('cpImportador')?.invalid && (importadorForm.get('cpImportador')?.touched || importadorForm.get('cpImportador')?.dirty)) {
+            <small class="text-danger">Este campo es obligatorio</small>
+          }
         </div>
       </div>
       <div class="col-md-6">
         <div class="form-group">
-          <label class="form-label" for="PaisImportador">País*:</label>
+          <label class="form-label" for="PaisImportador">País<span [ngClass]="{'text-danger': importadorForm.get('PaisImportador')?.invalid && (importadorForm.get('PaisImportador')?.touched || importadorForm.get('PaisImportador')?.dirty)}">*</span>:</label>
           <input
             class="form-control"
             value=""
@@ -150,6 +165,9 @@
               )
             "
           />
+          @if (importadorForm.get('PaisImportador')?.invalid && (importadorForm.get('PaisImportador')?.touched || importadorForm.get('PaisImportador')?.dirty)) {
+            <small class="text-danger">Este campo es obligatorio</small>
+          }
         </div>
       </div>
     </div>

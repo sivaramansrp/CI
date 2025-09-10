@@ -1,10 +1,10 @@
 <div class="container">
     <ng-titulo titulo="Asociar facturas a expedición"></ng-titulo>
-    <h6>Facturas disponible</h6>
+    <h6>Facturas disponibles</h6>
     <form [formGroup]="formularioAsociacionFactura">
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns" [datos]="facturasDisponible" ></app-tabla-dinamica>
-      <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5">
-        <label for="message" class="form-label">Cantidad asociada*:</label>
+      <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5 p-0">
+        <label for="message" class="form-label">Cantidad asociada<span [ngClass]="{'text-danger': formularioAsociacionFactura.get('cantidadFacturas')?.invalid && (formularioAsociacionFactura.get('cantidadFacturas')?.touched || formularioAsociacionFactura.get('cantidadFacturas')?.dirty)}">*</span>:</label>
         <input type="text" class="form-control" id="message" placeholder="" formControlName="cantidadFacturas"
         (change)="
           setValoresStore(
@@ -12,7 +12,9 @@
           'cantidadFacturas',
           'setCantidadFacturas'
           )"/>
-        <p>Kilogramo</p>
+        @if (formularioAsociacionFactura.get('cantidadFacturas')?.invalid && (formularioAsociacionFactura.get('cantidadFacturas')?.touched || formularioAsociacionFactura.get('cantidadFacturas')?.dirty)) {
+          <small class="text-danger">Este campo es obligatorio</small>
+        }
       </div>
   
       <div class="container text-end mt-5">

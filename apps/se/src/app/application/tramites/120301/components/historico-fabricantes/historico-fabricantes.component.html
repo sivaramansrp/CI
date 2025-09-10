@@ -41,9 +41,9 @@
     <div class="row">
       <ng-titulo titulo="Datos fabricante nacional"></ng-titulo>
       <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5">
-        <label for="message" class="form-label"
-          >Número de registro fiscal*:</label
-        >
+        <label for="message" class="form-label">
+          Número de registro fiscal<span [ngClass]="{'text-danger': historicoFabricantesForm.get('numeroRegistroFiscal')?.invalid && (historicoFabricantesForm.get('numeroRegistroFiscal')?.touched || historicoFabricantesForm.get('numeroRegistroFiscal')?.dirty)}">*</span>:
+        </label>
         <input type="text" class="form-control" id="message" placeholder="" formControlName="numeroRegistroFiscal" 
         (change)="
           setValoresStore(
@@ -51,6 +51,9 @@
           'numeroRegistroFiscal',
           'setNumeroRegistroFiscal'
           )"/>
+        @if (historicoFabricantesForm.get('numeroRegistroFiscal')?.invalid && (historicoFabricantesForm.get('numeroRegistroFiscal')?.touched || historicoFabricantesForm.get('numeroRegistroFiscal')?.dirty)) {
+          <small class="text-danger">Este campo es obligatorio</small>
+        }
       </div>
     </div>
       <div class="row mb-3">

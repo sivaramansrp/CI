@@ -37,7 +37,7 @@ import {
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
 
-import { ERROR_FORMA_ALERT } from '../../constantes/elegibilidad-de-textiles.enums';
+import { ERROR_FORMA_ALERT, REPRESENTACION_FEDERAL_NOTA } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
@@ -225,6 +225,12 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    * Permite la coordinación entre componentes para la navegación de la interfaz.
    */
   @Output() mostrarTabs: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  /**
+   * @property {string} representacionFederalNota
+   * Nota informativa sobre la representación federal.
+   */
+  public representacionFederalNota = REPRESENTACION_FEDERAL_NOTA;
 
   /**
    * @constructor

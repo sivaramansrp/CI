@@ -23,6 +23,8 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+
 
 import {
   ERROR_FORMA_ALERT,
@@ -58,6 +60,7 @@ import { ElegibilidadTextilesService } from '../../services/elegibilidad-textile
   styleUrl: './capturar-facturas.component.scss',
   standalone: true,
   imports: [
+    CommonModule,
     TituloComponent,
     ReactiveFormsModule,
     InputFechaComponent,

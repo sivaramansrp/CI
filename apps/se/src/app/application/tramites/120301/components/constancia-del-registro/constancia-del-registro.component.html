@@ -37,9 +37,7 @@
               (selectionChange)="onAnoConstanciaChange($event)"
             ></app-catalogo-select>
               @if(fitosanitarioForm.get('anoDeLaConstancia')?.invalid && (fitosanitarioForm.get('anoDeLaConstancia')?.touched || enviada)) {
-                <div class="text-danger small mt-1">
-                  Este campo es obligatorio.
-                </div>
+                <small class="text-danger mt-1">Este campo es obligatorio</small>
               }
           </div>
 
@@ -53,11 +51,7 @@
                 [disabled]="formularioDeshabilitado"
                 />
               @if(fitosanitarioForm.get('numeroDeLaConstancia')?.invalid && (fitosanitarioForm.get('numeroDeLaConstancia')?.touched || enviada)) {
-                <div class="text-danger">
-                  @if(fitosanitarioForm.get('numeroDeLaConstancia')?.errors?.['required']) {
-                    <small>Este campo es obligatorio</small>
-                  }
-                </div>
+                <small class="text-danger">Este campo es obligatorio</small>
               }
           </div>
         </div>
@@ -269,7 +263,7 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="typoRegimen">Clasificación de regimen:</label>
+                <label class="form-label" for="typoRegimen">Clasificación de régimen:</label>
                 <input
                   value=""
                   class="form-control"
@@ -433,8 +427,7 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-                <label class="text-label">El monto mostrado es de carácter informativo, no corresponde al saldo real debido a la realización de transacciones de forma 
-                  constante a nivel nacional</label>
+                <label class="text-label">{{representacionFederalNota}}</label>
             </div>
           </div>
           <div class="row pb-5">
