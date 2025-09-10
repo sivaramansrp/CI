@@ -257,6 +257,9 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.obtenerEstados();
     this.initFederatariosFormGroup();
+    this.obtenerRepresentacion();
+    this.obtenerActividad();
+    this.obtenerTipoDocumento(102);
     if (this.formularioDeshabilitado) {
       this.federatariosFormGroup.disable();
     }
@@ -582,6 +585,53 @@ agregarPlantas(): void {
 obtenerEstados():void {
     this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
       this.estadoOptionsConfig.estadosFederatarios = res.datos;
+    });
+    
+  }
+
+  /**
+   * Obtiene la representación de los estados federatarios desde el servicio `complimentosService`
+   * y actualiza la configuración de opciones de estados federatarios con los datos recibidos.
+   * 
+   * La suscripción se cancela automáticamente cuando el observable `destroyNotifier$` emite un valor,
+   * evitando posibles fugas de memoria.
+   */
+  obtenerRepresentacion():void {
+    this.complimentosService.getRepresentacion().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      return res;
+    });
+    
+  }
+
+  /**
+   * Obtiene la actividad productiva desde el servicio `complimentosService` y actualiza la propiedad
+   * `estadosFederatarios` en la configuración de opciones de estado.
+   * 
+   * La suscripción se gestiona para finalizar automáticamente cuando se emite el notifier `destroyNotifier$`.
+   * 
+   * @remarks
+   * Utiliza el método `getActividadProductiva` del servicio y espera que la respuesta contenga la propiedad `datos`.
+   */
+  obtenerActividad():void {
+    this.complimentosService.getActividadProductiva().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      this.estadoOptionsConfig.municipio=res.datos;
+
+    });
+    
+  }
+
+  /**
+   * Obtiene el tipo de documento asociado al identificador proporcionado.
+   * Realiza una petición al servicio `complimentosService` para recuperar los datos
+   * del tipo de documento y actualiza la configuración de opciones de estado (`estadoOptionsConfig.municipio`)
+   * con la respuesta obtenida.
+   *
+   * @param id - Identificador numérico del tipo de documento a consultar.
+   */
+   obtenerTipoDocumento(id:number):void {
+    this.complimentosService.getTipoDocumento(id).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      this.estadoOptionsConfig.municipio=res.datos;
+
     });
     
   }
