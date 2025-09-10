@@ -34,7 +34,7 @@
 
 <div class="row">
   <div class="col-md-12">
-    <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla"
+    <app-tabla-dinamica *ngIf="mostrarTabla" [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla"
       [datos]="registroDeSolicitudesTablaDatos" (listaDeFilaSeleccionada)="onSeleccionChange($event)"
       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
     </app-tabla-dinamica>
