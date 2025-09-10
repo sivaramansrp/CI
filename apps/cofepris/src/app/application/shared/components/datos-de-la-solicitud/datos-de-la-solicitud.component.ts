@@ -1,5 +1,5 @@
 import {
-  AICM,AIFA,
+  AICM, AIFA,
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
   DESHABILITADA_EN_INIT,
@@ -17,7 +17,6 @@ import {
   PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO,
-  PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL,
   REPRESENTANTE_LEGAL,
   SIN_ACCION_AL_INICIAR,
@@ -74,10 +73,9 @@ import { Subject, delay, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+import { ScianDataService } from '../../services/scian-data.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
-
-import { ScianDataService } from '../../services/scian-data.service';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -99,8 +97,7 @@ import { ScianDataService } from '../../services/scian-data.service';
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent
-  implements OnInit, OnDestroy, OnChanges
-{
+  implements OnInit, OnDestroy, OnChanges {
   /**
    * @property {Subject<void>} destroyNotifier$
    * Subject utilizado para cancelar suscripciones activas al destruir el componente.
@@ -212,7 +209,7 @@ export class DatosDeLaSolicitudComponent
    * Lista de regímenes disponibles.
    */
   public regimenDatos: Catalogo[] = [];
-  
+
   /**
    * @property {string} AICM
    * Constante que representa el Aeropuerto Internacional de la Ciudad de México (AICM).
@@ -330,7 +327,7 @@ export class DatosDeLaSolicitudComponent
    */
   public mostrarRFCCalle = true;
 
-  
+
 
   /**
    * @property {Catalogo[]} regimenLaMercanciaDatos
@@ -544,15 +541,15 @@ export class DatosDeLaSolicitudComponent
       txtBtnCancelar: '',
     };
 
-        this.consultaioQuery.selectConsultaioState$
-          .pipe(
-            takeUntil(this.destroyNotifier$),
-            map((seccionState) => { 
-              this.formularioDeshabilitado = seccionState.readonly;
-              this.esFormularioSoloLectura = seccionState.readonly;
-            })
-          )
-          .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -1180,7 +1177,7 @@ export class DatosDeLaSolicitudComponent
    * @param {string} campo - Nombre del campo a verificar.
    * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
    */
-  esCampoRequerido(campo: string): boolean { 
+  esCampoRequerido(campo: string): boolean {
     return this.elementosRequeridos?.includes(campo) ?? false;
   }
 
@@ -1479,7 +1476,19 @@ export class DatosDeLaSolicitudComponent
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+  
+  /**
+   * Retorna `true` si el control de formulario 'mercancias' es inválido y ha sido tocado o modificado.
+   * Útil para determinar cuándo mostrar errores de validación para el campo 'mercancias'.
+   *
+   * @returns {boolean} Indica si el control 'mercancias' es inválido y ha sido interactuado.
+   */
+  get isMercanciasInvalid(): boolean {
+    const CONTROL = this.datosSolicitudForm.get('mercancias');
+    return Boolean(CONTROL?.invalid && (CONTROL?.touched || CONTROL?.dirty));
+  }
 }
+
 /**
  * Valida que el valor del control sea una matriz no vacía.
  *
