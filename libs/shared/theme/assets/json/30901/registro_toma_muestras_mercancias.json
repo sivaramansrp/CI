@@ -4,7 +4,7 @@
   "tomaMuestraDespacho": 1,
   "descMotivoFaltaMuestra": 1,
   "comboFraccionConcatenada": 1,
-  "fraccionConcatenada": "",
+  "fraccionConcatenada": 1,
   "fracciondescripcion": "Vacas lecheras.",
   "comboNicos": 1,
   "nicoDescripcion": "1 - Para abasto, cuando la importación la realicen empacadoras Tipo Inspección Federal.",

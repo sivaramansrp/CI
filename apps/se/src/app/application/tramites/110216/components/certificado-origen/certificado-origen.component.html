@@ -197,8 +197,8 @@
       <button type="button" class="btn btn-primary ms-3" (click)="cargaArchivo()" [disabled]="soloLectura"> Carga por
         archivo </button>
     </div>
-    <div class="row mt-5">
-      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA" style="margin-top: 40px"></ng-alert>
+    <div class="row mt-5 text-center">
+      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA" class="mt-5"></ng-alert>
     </div>
     <ng-container>
       <div class="row mt-5">
@@ -354,6 +354,7 @@
             <div class="row mt-5">
               <div class="col-md-4">
                 <input-fecha [setFecha]="formularioMercancia.get('fecha')?.value" [datos]="fechaFacturaInput"
+                [mostrarErrores]="formularioMercancia.get('fecha')?.touched??false"
                   (valorCambiado)="cambioFechaFactura($event)" [isDisabled]="soloLectura"></input-fecha>
               </div>
               <div class="col-md-4">
@@ -372,6 +373,7 @@
                 <app-catalogo-select [catalogo]="optionsTipoFactura" [label]="'Tipo de factura'" id="tipoFactura"
                   formControlName="tipoFactura"
                   [required]="true"
+                  [markTouched]="formularioMercancia.get('tipoFactura')?.touched??false"
                   (change)=" setValoresStore( formularioMercancia, 'tipoFactura', 'setTipoFactura' ) "
                   [isDisabled]="soloLectura"></app-catalogo-select>
               </div>

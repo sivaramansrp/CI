@@ -5,7 +5,6 @@ import {
 } from '../../constants/datos-solicitud.enum';
 import {
   Catalogo,
-  CatalogoSelectComponent,
   ConsultaioQuery,
   InputRadioComponent,
   TipoPersona,
@@ -31,6 +30,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
