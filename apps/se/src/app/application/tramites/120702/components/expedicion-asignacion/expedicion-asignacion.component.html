@@ -124,14 +124,20 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="montoAExpedir">Monto a expedir*:</label>
-                    <input type="number" class="form-control" id="montoAExpedir" formControlName="montoAExpedir"
+                    <input type="text" class="form-control" id="montoAExpedir" formControlName="montoAExpedir"
                         name="montoAExpedir" [required]="true" aria-label="Monto a expedir"
                         (change)="setValoresStore(asignacionForm,'montoAExpedir', 'setMontoAExpedir')">
-                    @if(asignacionForm.controls['montoAExpedir'].invalid &&
-                    asignacionForm.controls['montoAExpedir'].touched){
+                     @if(asignacionForm.controls['montoAExpedir'].invalid &&
+                    asignacionForm.controls['montoAExpedir'].touched) {
                     <div class="d-grid">
                         @if(asignacionForm.controls['montoAExpedir'].errors?.['required']) {
                         <span class="mensaje-error">Este campo es obligatorio</span>
+                        }
+                        @if(asignacionForm.controls['montoAExpedir'].errors?.['pattern']) {
+                        <span class="mensaje-error">Por favor, escribe un número entero válido</span>
+                        }
+                        @if(asignacionForm.controls['montoAExpedir'].errors?.['maxlength']) {
+                        <span class="mensaje-error">La cantidad solicitada a expedir no debe ser mayor al saldo disponible</span>
                         }
                     </div>
                     }
@@ -143,12 +149,18 @@
         </div>
 
         <div class="col-md-12 datos-table">
-            <div class="mt-5">
-                <ng-table [commonTableHeader]="montoTablaDatos" [commonTableBody]="montoTablaFilaDatos"></ng-table>
+            <div class="mt-5">             
+                <app-tabla-dinamica
+                    [configuracionTabla]="configuracionTablas"
+                    [datos]="saldo"    
+                    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
+                    [tipoSeleccionTabla]="checkbox" 
+                    (listaDeFilaSeleccionada)="obtenerSeleccionadoMercancia($event)"  
+                ></app-tabla-dinamica> 
             </div>
         </div>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Eliminar seleccionado</button>
+            <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura" (click)="eliminarSeleccionados()">Eliminar seleccionado</button>
         </div>
 
         <div class="col-md-4">
@@ -157,6 +169,7 @@
                 <input type="number" class="form-control" id="totalAExpedir" formControlName="totalAExpedir"
                     name="totalAExpedir" aria-label="Total a expedir">
             </div>
+
         </div>
     </form>
 </div>

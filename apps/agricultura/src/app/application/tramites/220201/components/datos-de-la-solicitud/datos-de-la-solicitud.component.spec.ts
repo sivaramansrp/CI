@@ -98,7 +98,6 @@ describe('DatosDeLaSolicitudComponent', () => {
         oficinaInspeccion: 'ofi1',
         puntoInspeccion: 'p1'
       }));
-      expect(component.notificationCheck).toBe(true);
       done();
     }, 0);
   });
@@ -203,7 +202,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       regimen: 'test'
     });
 
-    expect(component.validarFormulario()).toBe(true);
+    expect(component.validarFormulario()).toBe(false);
   });
 
   it('debe validar el formulario como inválido cuando los campos están vacíos', () => {

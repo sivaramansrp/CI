@@ -6,6 +6,8 @@
  * @module certificadoZoosanitarioModel
  */
 
+import { DatosDeLaSolicitud, FilaSolicitud } from "./capturar-solicitud.model";
+
 /**
  * Interfaz para representar un paso dentro de un asistente tipo "wizard".
  * Contiene información sobre el índice del paso, su título, y si se encuentra activo o completado.
@@ -133,7 +135,7 @@ export interface RadioOpcion {
  * @property {string} [uso] - Uso o destino del producto (opcional).
  * @property {string} [tipoDeProducto] - Tipo de producto transportado (opcional).
  * @property {string} [tipoMercancia] - Tipo de mercancía, por ejemplo, "animal", "vegetal", etc. (opcional).
- */
+  */
 export interface DatosForma {
     /**
      * Nombre de la aduana por donde ingresa la mercancía.
@@ -220,3 +222,15 @@ export interface DatosForma {
      */
     tipoMercancia?: string;
 }
+
+/**
+ * Representa los datos de un formulario fitosanitario para trámites de importación o inspección.
+ * @interface DatosForma
+ * @property {string} aduanaDeIngreso - Nombre de la aduana por donde ingresa la mercancía.
+ * @property {string} oficinaDeInspeccion - Oficina responsable de la inspección.
+   */
+export interface SolicitudDataReq {
+  datosDeLaSolicitud: DatosDeLaSolicitud;
+  filaSolicitud: FilaSolicitud[];
+}
+

@@ -5,7 +5,7 @@
             [soloLectura]="consultaState.readonly" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
 
-    <div class="row mt-5">
+    <div class="row mt-5" style="margin-top: 7rem !important; margin-bottom: 6rem;">
         <div class="col-md-8"></div>
         <div class="col-md-4 text-end">
             <div class="btn-group">
@@ -30,7 +30,7 @@
          [soloLectura]="consultaState.readonly"   (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
     
-    <div class="row mt-5 text-end">
+    <div class="row mt-5 text-end" style="margin-top: 7rem !important;">
         <div>
             <button type="button" class="btn btn-danger me-2 btn-space" [disabled]="consultaState.readonly" (click)="eliminarSeleccionados()">Eliminar partida</button>
             <button type="button" class="btn btn-primary btn-space" [disabled]="consultaState.readonly">Modificar partida</button>

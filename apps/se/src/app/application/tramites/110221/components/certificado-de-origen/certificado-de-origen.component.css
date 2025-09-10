@@ -11,6 +11,9 @@
   align-items: center;
   gap: 10px;
 }
+.es-invalido {
+  border: 1px solid red;
+}
 
 .alert-with-checkbox input[type='checkbox'] {
   margin-right: 10px;
