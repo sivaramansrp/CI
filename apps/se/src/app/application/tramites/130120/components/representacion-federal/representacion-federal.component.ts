@@ -133,7 +133,6 @@ export class RepresentacionFederalComponent implements OnInit {
       .subscribe();
     await this.initActionFormBuild();
     this.obtenerEntidadSelectList();
-    this.obtenerRepresentacionSelectList();
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -142,7 +141,10 @@ export class RepresentacionFederalComponent implements OnInit {
         })
       )
       .subscribe();
-
+    const CVEENTIDAD = this.datosFederal.get('entidad_federativa')?.value;
+    if (CVEENTIDAD) {
+      this.onEntidadSeleccionado();
+    }
     if (this.esFormularioSoloLectura) {
       this.datosFederal.disable();
     }
@@ -155,7 +157,7 @@ export class RepresentacionFederalComponent implements OnInit {
   initActionFormBuild(): void {
     this.datosFederal = this.fb.group({
       entidad_federativa: [this.datosState.datosFederal.entidad_federativa, Validators.required],
-      representacion_federal: [this.datosState.datosFederal.representacion_federal, Validators.required]
+      representacion_federal: [{ value: this.datosState.datosFederal.representacion_federal || null, disabled: true }, Validators.required]
     });
   }
 
@@ -192,18 +194,45 @@ export class RepresentacionFederalComponent implements OnInit {
   }
 
   /**
+   * @method onEntidadSeleccionado
+   * @description Maneja el evento de selección de una entidad federativa, actualiza el store y obtiene las opciones de representación federal correspondientes.
+   */
+  onEntidadSeleccionado(): void {
+    const CVEENTIDAD = this.datosFederal.get('entidad_federativa')?.value;
+    this.store.setEntidad_federativa(CVEENTIDAD);
+    if (CVEENTIDAD) {
+      this.obtenerRepresentacionSelectList(CVEENTIDAD);
+    } else {
+      this.representacionOpcion = [];
+      this.datosFederal.get('representacion_federal')?.reset();
+      this.datosFederal.get('representacion_federal')?.disable();
+    }
+  }
+
+  /**
    * @method obtenerRepresentacionSelectList
    * @description Obtiene las opciones del catálogo de representación federal desde el servicio y las asigna al arreglo local.
    */
-  obtenerRepresentacionSelectList(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable(
-      'representacion_federal.json'
-    )
+  obtenerRepresentacionSelectList(cveEntidad: string): void {
+    this.catalogosService.getCatUnidadesAdministrativas(cveEntidad)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (data) => {
-          this.representacionOpcion = data as Catalogo[];
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO && resp.datos && resp.datos.length > 0) {
+            this.representacionOpcion = resp.datos;
+            this.datosFederal.get('representacion_federal')?.enable();
+          } else {
+            this.representacionOpcion = [];
+            this.datosFederal.get('representacion_federal')?.reset();
+            this.datosFederal.get('representacion_federal')?.disable();
+          }
         },
+        error: (err) => {
+          console.error('Error al cargar clasificación de régimen', err);
+          this.representacionOpcion = [];
+          this.datosFederal.get('representacion_federal')?.reset();
+          this.datosFederal.get('representacion_federal')?.disable();
+        }
       });
   }
 

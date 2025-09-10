@@ -121,12 +121,8 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     this.initActionFormBuild();
-
     this.cargarRegimenes();
-   
-
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -135,6 +131,10 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    const CVEREGIMEN = this.datosRealizer.get('regimen')?.value;
+    if (CVEREGIMEN) {
+      this.onRegimenSeleccionado();
+    }
   }
 
   /**
@@ -166,7 +166,10 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
     );
   }
 
-
+  /**
+   * @method obtenerRegimenSelectList
+   * @description Obtiene las opciones del catálogo de régimen desde el servicio y las asigna al arreglo local.
+   */
   cargarRegimenes(): void {
     this.catalogosService.getCatRegimenes().subscribe({
       next: (resp) => {
@@ -195,46 +198,49 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @method onRegimenSeleccionado
+   * @description Maneja el evento de selección de régimen, actualiza el store y carga las opciones de clasificación de régimen.
+   */
   onRegimenSeleccionado(): void {
-  const CVEREGIMEN = this.datosRealizer.get('regimen')?.value;
-
-  // Solo si hay valor válido
-  if (CVEREGIMEN) {
+    const CVEREGIMEN = this.datosRealizer.get('regimen')?.value;
     this.store.setregimen(CVEREGIMEN);
-    this.cargarClasificacionRegimen(CVEREGIMEN);
-  } else {
-    this.classificationRegimenOpciones = [];
-    this.datosRealizer.get('classificion_regimen')?.reset();
-    this.datosRealizer.get('classificion_regimen')?.disable();
+    if (CVEREGIMEN) {
+      this.cargarClasificacionRegimen(CVEREGIMEN);
+    } else {
+      this.classificationRegimenOpciones = [];
+      this.datosRealizer.get('classificion_regimen')?.reset();
+      this.datosRealizer.get('classificion_regimen')?.disable();
+    }
   }
-}
 
   /**
    * @method obtenerClassificionRegimenSelectList
    * @description Obtiene las opciones del catálogo de clasificación de régimen desde el servicio y las asigna al arreglo local.
    */
   cargarClasificacionRegimen(cveRegimen: string): void {
-  this.catalogosService.getCatCveRegimen(cveRegimen)
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (resp) => {
-        if (resp.codigo === CodigoRespuesta.EXITO && resp.datos && resp.datos.length > 0) {
-          this.classificationRegimenOpciones = resp.datos;
-          this.datosRealizer.get('classificion_regimen')?.enable();
-        } else {
+    this.catalogosService.getCatCveRegimen(cveRegimen)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO && resp.datos && resp.datos.length > 0) {
+            this.classificationRegimenOpciones = resp.datos;
+            this.datosRealizer.get('classificion_regimen')?.enable();
+          } else {
+            this.classificationRegimenOpciones = [];
+            this.datosRealizer.get('classificion_regimen')?.reset();
+            this.datosRealizer.get('classificion_regimen')?.disable();
+          }
+        },
+        error: (err) => {
+          console.error('Error al cargar clasificación de régimen', err);
           this.classificationRegimenOpciones = [];
           this.datosRealizer.get('classificion_regimen')?.reset();
           this.datosRealizer.get('classificion_regimen')?.disable();
         }
-      },
-      error: (err) => {
-        console.error('Error al cargar clasificación de régimen', err);
-        this.classificationRegimenOpciones = [];
-        this.datosRealizer.get('classificion_regimen')?.reset();
-        this.datosRealizer.get('classificion_regimen')?.disable();
-      }
-    });
-}
+      });
+  }
+  
   /**
    * @method ngOnDestroy
    * @description Limpia las suscripciones activas cuando el componente es destruido.
@@ -243,5 +249,4 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

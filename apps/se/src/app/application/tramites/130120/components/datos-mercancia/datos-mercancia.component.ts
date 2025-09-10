@@ -113,15 +113,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     await this.initActionFormBuild();
-    this.ObtenerTipoEntradaOpcion();
     this.ObtenerFraccionOpcion();
-    this.obtenerNicoOpcion();
-    this.obtenerUmtOpcion();
-    this.obtenerUmcOpcion();
+    this.ObtenerTipoEntradaOpcion();
     this.obtenerMonedaComercializacionOpcion();
     this.obternerPaisExportadorOpcion();
     this.obtenerPaisOrigenOpcion();
-
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -130,7 +126,10 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
+    const CVEFRACCION = this.datosMercanica.get('fraccion')?.value;
+    if (CVEFRACCION) {
+      this.onFraccionArancelariaSeleccionada();
+    }
     if (this.esFormularioSoloLectura) {
       this.datosMercanica.disable();
     }
@@ -146,11 +145,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       marca: [this.DatosState.datosMercanica.marca, [Validators.required, Validators.maxLength(256), Validators.pattern('^[a-zA-Z0-9 ]*$')]],
       tipo_entrada: [this.DatosState.datosMercanica.tipo_entrada, Validators.required],
       fraccion: [this.DatosState.datosMercanica.fraccion, Validators.required],
-      nico: [this.DatosState.datosMercanica.nico, Validators.required],
-      umt: [this.DatosState.datosMercanica.umt, Validators.required],
+      nico: [{ value: this.DatosState.datosMercanica.nico || null, disabled: true }, Validators.required],
+      umt: [{ value: this.DatosState.datosMercanica.umt || null, disabled: true }, Validators.required],
       factura_numero: [this.DatosState.datosMercanica.factura_numero, Validators.required],
       factura_fecha: [this.DatosState.datosMercanica.factura_fecha, Validators.required],
-      umc: [this.DatosState.datosMercanica.umc, Validators.required],
+      umc: [{ value: this.DatosState.datosMercanica.umc || null, disabled: true }, Validators.required],
       otro_umc: [{ value: this.DatosState.datosMercanica.otro_umc, disabled: true }, [Validators.required]],
       cantidad_umc: [this.DatosState.datosMercanica.cantidad_umc, Validators.required],
       factor_conversion: [{ value: this.DatosState.datosMercanica.factor_conversion, disabled: true }, Validators.required],
@@ -197,45 +196,119 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   /** @method ObtenerFraccionOpcion Carga las opciones del catálogo de fracción arancelaria. */
   ObtenerFraccionOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('fraccion.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.fraccionOpcion = data as Catalogo[];
-        },
-      });
+    this.catalogosService.getCatFraccionesArrancelarias().subscribe({
+      next: (resp) => {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
+          this.fraccionOpcion = resp.datos ?? [];
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: resp.error || 'Error al mostrar la firma.',
+            mensaje:
+              resp.causa ||
+              resp.mensaje ||
+              'Ocurrió un error al mostrar la firma.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar los regímenes', err);
+      }
+    });
+  }
+
+  /**
+   * @method onFraccionArancelariaSeleccionada Maneja la selección de una fracción arancelaria.
+   */
+  onFraccionArancelariaSeleccionada(): void {
+    const CVEFRACCION = this.datosMercanica.get('fraccion')?.value;
+    this.store.setFraccion(CVEFRACCION);
+    if (CVEFRACCION) {
+      this.obtenerUmtOpcion(CVEFRACCION);
+      this.obtenerNicoOpcion(CVEFRACCION);
+      this.obtenerUmcOpcion(CVEFRACCION);
+    } else {
+      this.umtOpcion = [];
+      this.datosMercanica.get('umt')?.reset();
+      this.datosMercanica.get('umt')?.disable();
+    }
   }
 
   /** @method obtenerNicoOpcion Carga las opciones del catálogo de NICO. */
-  obtenerNicoOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('fraccion.json')
+  obtenerNicoOpcion(cveFraccion: string): void {
+    this.catalogosService.getCatFraccionesArrancelariasSubdivisiones(cveFraccion)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (data) => {
-          this.nicoOpcion = data as Catalogo[];
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO && resp.datos && resp.datos.length > 0) {
+            this.nicoOpcion = resp.datos;
+            this.datosMercanica.get('nico')?.enable();
+          } else {
+            this.nicoOpcion = [];
+            this.datosMercanica.get('nico')?.reset();
+            this.datosMercanica.get('nico')?.disable();
+          }
         },
+        error: (err) => {
+          console.error('Error al cargar clasificación de régimen', err);
+          this.nicoOpcion = [];
+          this.datosMercanica.get('nico')?.reset();
+          this.datosMercanica.get('nico')?.disable();
+        }
       });
   }
 
   /** @method obtenerUmtOpcion Carga las opciones del catálogo de unidad de medida tarifaria. */
-  obtenerUmtOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('umt.json')
+  obtenerUmtOpcion(cveFraccion: string): void {
+    this.catalogosService.getCatUnidadesMedidasTarifarias(cveFraccion)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (data) => {
-          this.umtOpcion = data as Catalogo[];
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO && resp.datos && resp.datos.length > 0) {
+            this.umtOpcion = resp.datos;
+            this.datosMercanica.get('umt')?.enable();
+          } else {
+            this.umtOpcion = [];
+            this.datosMercanica.get('umt')?.reset();
+            this.datosMercanica.get('umt')?.disable();
+          }
         },
+        error: (err) => {
+          console.error('Error al cargar clasificación de régimen', err);
+          this.umtOpcion = [];
+          this.datosMercanica.get('umt')?.reset();
+          this.datosMercanica.get('umt')?.disable();
+        }
       });
   }
 
   /** @method obtenerUmcOpcion Carga las opciones del catálogo de unidad de medida comercial. */
-  obtenerUmcOpcion(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('umc.json')
+  obtenerUmcOpcion(cveFraccion: string): void {
+    this.catalogosService.getCatUnidadesMedida(cveFraccion)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (data) => {
-          this.umcOpcion = data as Catalogo[];
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO && resp.datos && resp.datos.length > 0) {
+            this.umcOpcion = resp.datos;
+            this.datosMercanica.get('umc')?.enable();
+          } else {
+            this.umcOpcion = [];
+            this.datosMercanica.get('umc')?.reset();
+            this.datosMercanica.get('umc')?.disable();
+          }
         },
+        error: (err) => {
+          console.error('Error al cargar clasificación de régimen', err);
+          this.umcOpcion = [];
+          this.datosMercanica.get('umc')?.reset();
+          this.datosMercanica.get('umc')?.disable();
+        }
       });
   }
 
