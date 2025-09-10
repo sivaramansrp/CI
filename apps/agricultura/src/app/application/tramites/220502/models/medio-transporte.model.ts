@@ -20,6 +20,7 @@ export interface MedioTransporte {
    * @interface MercanciaTabla
    */
   export interface MercanciaTabla {
+    id?: number;
     /** Identificación de la mercancía. */
     fraccionArancelaria: string; 
     /** Descripción de la mercancía. */
@@ -29,12 +30,12 @@ export interface MedioTransporte {
     /** Descripción adicional de la mercancía. */
     descripcion: string;
     /** Cantidad de mercancía a capturar. */
-    saldoACapturar: string;
+    saldoACapturar?: string;
     /** Unidad de medida de la mercancía. */
     unidaddeMedidaDeUMT: string;
     /** Cantidad total de mercancía en unidades de medida de transporte (UMT). */ 
     cantidadTotalUMT: string;
     /** Saldo pendiente de la mercancía. */
-    saldoPendiente: string; 
+    saldoPendiente?: string; 
   }
   

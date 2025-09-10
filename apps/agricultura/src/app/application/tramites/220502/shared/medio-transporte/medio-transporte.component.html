@@ -45,19 +45,47 @@
         (valueChange)="enCambioDeValor($event)"
       ></app-input-radio>
     </div>
+    <div class="col-md-12 mt-4 mb-3">
+      @if(solicitud220502State.esSolicitudFerros === 1) {
+      <ng-alert
+        class="text-center"
+        [CONTENIDO]="SALDO_PENDIENTE_NOTIFICACION"
+      ></ng-alert>
+      }
+    </div>
     <div class="col-md-12">
       <div class="form-field">
-        <label for="Datosdelamercancía" class="form-label"
+        <label for="Datosdelamercancía" class="form-label mb-5"
           >Datos de la mercancía:</label
         >
       </div>
     </div>
     <div class="col-md-12 mb100">
-      <ng-table
-        [commonTableHeader]="tableData.tableHeader"
-        [commonTableBody]="tableData.tableBody"
-      ></ng-table>
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="tipoSeleccionTabla"
+        [configuracionTabla]="mercanciaConfiguracionColumnas"
+        [datos]="mercanciaLista"
+        [inputSelection]="inputMercanciaSelection"
+        (listaDeFilaSeleccionada)="obtenerMercanciaLista($event)"
+      >
+      </app-tabla-dinamica>
     </div>
+    @if (solicitud220502State.esSolicitudFerros !== 2 && mercanciaLista.length >
+    0) {
+    <div class="row">
+      <div class="text-end">
+        <button
+          name="modificarSaldoMercancia"
+          id="btnSaldoMercancia"
+          class="btn btn-primary"
+          (click)="modificarSaldosMercancia()"
+          [disabled]="formularioDeshabilitado"
+        >
+          Modificar
+        </button>
+      </div>
+    </div>
+    } @if (solicitud220502State.esSolicitudFerros !== 2) {
     <div class="col-md-4">
       <div class="form-field">
         <label for="totalDeGuiasAmparadas" class="form-label"
@@ -77,5 +105,37 @@
         />
       </div>
     </div>
+    }
   </div>
 </fieldset>
+
+<!--Agregar Mercancía Popup-->
+<div
+  #modalModificarSaldoMercancia
+  class="modal fade"
+  id="modalModificarSaldoMercancia"
+  tabindex="-1"
+  aria-labelledby="modalModificarSaldoMercanciaLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <app-agregar-mercancia
+          [mercanciasDatos]="mercanciaSeleccionLista"
+          (actualizarMercancia)="actualizarMercanciaEnTabla($event)"
+        ></app-agregar-mercancia>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="eliminarPedimento($event)"
+  >
+  </lib-notificaciones>
+</section>
+}

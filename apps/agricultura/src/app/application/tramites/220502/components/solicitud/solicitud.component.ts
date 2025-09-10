@@ -25,6 +25,7 @@ import { CommonModule } from '@angular/common';
 import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { HistorialInspeccionFisicaComponent } from '../../shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
 import { MedioTransporteComponent } from '../../shared/medio-transporte/medio-transporte.component';
+import { MercanciaTabla } from '../../models/medio-transporte.model';
 import { PROCEDURE_ID } from '../../constantes/constantes';
 import { ResponsableInspeccionEnPuntoComponent } from '../../shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
 import { SolicitudDatosComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
@@ -126,6 +127,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   procedimiento: number = PROCEDURE_ID;
 
+  mercanciaLista: MercanciaTabla[] = [] as MercanciaTabla[];
+
   /**
    * @constructor
    * Inyecta los servicios necesarios para la creación y gestión del formulario,
@@ -208,6 +211,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.hMercanciaTabla = data.hMerchandise;
         this.dMercanciaBody = data.dMercancia;
         this.mediodetransporte = data.medioDeTransporte;
+        this.mercanciaLista = data.mercanciaLista;
       },
     });
   }

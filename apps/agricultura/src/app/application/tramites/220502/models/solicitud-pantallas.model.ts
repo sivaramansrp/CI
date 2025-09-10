@@ -1,5 +1,6 @@
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { MercanciaTabla } from './medio-transporte.model';
 
 /**
  * Interfaz que representa los detalles de la mercancía.
@@ -134,6 +135,17 @@ export interface CargarDatosIniciales {
 
   /** Medio de transporte */
   medioDeTransporte: CatalogosSelect;
+  /**
+   * @description
+   * Lista completa de objetos de tipo `MercanciaTabla` administrados por el componente.
+   *
+   * Esta colección contiene todas las mercancías registradas o cargadas desde el servicio
+   * y sirve como fuente de datos principal para mostrar en la tabla de mercancías.
+   *
+   * A diferencia de `mercanciaSeleccionLista`, que guarda únicamente las seleccionadas,
+   * esta propiedad representa el inventario total disponible.
+   */
+  mercanciaLista: MercanciaTabla[];
 }
 /**
  * Interfaz que representa los datos del trámite realizar.
