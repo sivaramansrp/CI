@@ -253,22 +253,22 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
   aduanasEntradaBotons = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn btn-default',
       funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn btn-primary',
       funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn btn-primary',
       funcion: (): void => this.crossList.toArray()[0].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
+      class: 'btn btn-default',
       funcion: (): void => this.crossList.toArray()[0].quitar('t'),
     },
   ];

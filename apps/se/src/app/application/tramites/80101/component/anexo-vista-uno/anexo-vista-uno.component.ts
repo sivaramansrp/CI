@@ -19,6 +19,7 @@ import { takeUntil } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ComplementarFraccionVistaComponent } from '../complementar-fraccion-vista/complementar-fraccion-vista.component';
 import { ContenedorProveedorClienteComponent } from '../contenedor-proveedor-cliente/contenedor-proveedor-cliente.component';
+import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { ProveedorPorArchivoVistaComponent } from '../proveedor-por-archivo-vista/proveedor-por-archivo-vista.component';
 import { ProyectoImmexVistaComponent } from '../proyecto-immex-vista/proyecto-immex-vista.component';
 
@@ -264,6 +265,12 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
   public anexoDosFormGroup!: FormGroup;
 
   /**
+   * Bandera que indica si actualmente hay datos en la tabla.
+   * Se utiliza para gestionar la lógica interna del componente relacionada con el contenido de la tabla.
+   */
+  tenerDatosDeTabla = false;
+
+  /**
    * Constructor del componente AnexoVistaUnoComponent.
    * @param {Router} router - Servicio de enrutamiento de Angular para navegar entre rutas.
    * @param {ActivatedRoute} activatedRoute - Servicio que proporciona información sobre la ruta activa.
@@ -276,6 +283,7 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     private store: Tramite80101Store,
     private query: Tramite80101Query,
     private fb: FormBuilder,
+    public nuevoProgramaIndustrialService: NuevoProgramaIndustrialService
   ) {}
 
   /**
@@ -509,6 +517,15 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
         this.anexoDosTablaLista = [...this.anexoDosTablaLista];
     }
   }
+  }
+
+  /**
+   * Maneja el cambio en los datos de la tabla actualizando el estado local y notificando al servicio.
+   * Sincroniza el valor con el servicio `nuevoProgramaIndustrialService`.
+   */
+  datosDeLaTablaCambiados(value: boolean): void {
+    this.tenerDatosDeTabla = value;
+    this.nuevoProgramaIndustrialService.setTieneDatosDeTabla(value);
   }
 
   /**

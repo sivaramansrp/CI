@@ -202,7 +202,7 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
  */
 export const FORMA_SOCIO: DatosCatalago[] = [
   {
-    labelNombre: 'Registro Federal de Contribuyentes',
+    labelNombre: 'Registro federal de contribuyentes',
     campo: 'rfc',
     class: 'col-md-6 col-10 mt-3',
     tipo_input: 'text',

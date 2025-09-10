@@ -115,14 +115,38 @@ describe('ImportadorExportadorService', () => {
     req.flush(mockResponse);
   });
 
-  it('should getDocumentos and update store', () => {
+  it('should run #getFinesDeMercancia()', () => {
     const mockResponse: RespuestaCatalogos = {
-      data: [{ id: 1, descripcion: 'Documento 1' }],
+      data: [
+        { id: 1, descripcion: 'Fin 1' },
+        { id: 2, descripcion: 'Fin 2' }
+      ],
       code: 0,
       message: ''
     };
+
+    service.getFinesDeMercancia().subscribe((response: RespuestaCatalogos) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('assets/json/10301/fines.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('should run #getDocumentos()', () => {
+    const mockResponse: RespuestaCatalogos = {
+      data: [
+        { id: 1, descripcion: 'Documento 1' },
+        { id: 2, descripcion: 'Documento 2' }
+      ],
+      code: 0,
+      message: ''
+    };
+
     const spy = jest.spyOn(store, 'setDocumentos');
-    service.getDocumentos().subscribe(response => {
+
+    service.getDocumentos().subscribe((response: RespuestaCatalogos) => {
       expect(response).toEqual(mockResponse);
       expect(spy).toHaveBeenCalledWith(mockResponse.data);
     });

@@ -16,6 +16,7 @@
           formControlName="claveReferencia"
           maxlength="9"
           [disabled]="esFormularioSoloLectura"
+          (input)="toUppercase('claveReferencia')"
         />
         <div class="error-message">
           <small *ngIf="pagoDerechosForm.get('claveReferencia')?.touched && pagoDerechosForm.get('claveReferencia')?.hasError('required')" class="text-danger">
@@ -36,6 +37,7 @@
           class="form-control"
           formControlName="cadenaDependencia"
           maxlength="14"
+          (input)="toUppercase('cadenaDependencia')"
           [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
@@ -55,6 +57,7 @@
           formControlName="banco"
           [label]="'Banco'"
           [required]="true"
+          [markTouched]="pagoDerechosForm.get('banco')?.touched??false"
           [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>   
       </div>
@@ -70,6 +73,7 @@
           class="form-control"
           formControlName="llavePago"
           maxlength="30"
+          (input)="toUppercase('llavePago')"
           [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
@@ -110,7 +114,7 @@
           class="form-control"
           formControlName="importePago"
           maxlength="16"
-          (input)="onImportePagoInput($event)"
+          (input)="toUppercase('importePago')"
           [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">

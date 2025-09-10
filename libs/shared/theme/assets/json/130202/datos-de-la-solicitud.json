@@ -38,5 +38,25 @@
   "observaciones": "Entrega urgente",
   "entidad": "6",
   "representacion": "1",
-  "mostrarTabla": true
+  "mostrarTabla": true,
+  "cantidadTotal":"15",
+  "valorTotalUSD":"27",
+  "tableBodyData": [
+        {
+        "cantidad": "10",
+        "unidadDeMedida": "Pieza",
+        "fraccionFrancelaria": "8703.23.01",
+        "descripcion": "Automóvil compacto",
+        "precioUnitarioUSD": "1.5",
+        "totalUSD": "15"
+        },
+        {
+        "cantidad": "5",
+        "unidadDeMedida": "Caja",
+        "fraccionFrancelaria": "8407.34.10",
+        "descripcion": "Motor de combustión interna",
+        "precioUnitarioUSD": "2.5",
+        "totalUSD": "12"
+        }
+  ]
 }

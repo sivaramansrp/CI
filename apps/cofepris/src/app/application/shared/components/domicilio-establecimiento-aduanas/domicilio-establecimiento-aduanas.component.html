@@ -115,10 +115,15 @@
   <div class="row">
     <div class="col-md-12">
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
+      (listaDeFilaSeleccionada)="onScianSeleccionChange($event)"
       [datos]="nicoTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
     </div>
     <div class="col-md-12 text-end mt-5">
-      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+      @if(nicoTablaDatos.length > 0) {
+        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="eliminarScian()">
+        Eliminar
+      </button>
+      }
       <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="abrirModalScian()">
         Agregar
       </button>
@@ -127,7 +132,7 @@
     <div class="row align-item-center">
       <div class="col-md-4 mt-5">
         <lib-input-check
-          [label]="'Aviso de funcionamiento:'"
+          [label]="'Aviso de funcionamiento*'"
           [id]="'avisoCheckbox'"
           [required]="true"
           formControlName="avisoCheckbox"
@@ -138,9 +143,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="licenciaSanitaria">{{licenseLabel}}
-            <span class="p-2" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente." placement="top">
-              <i class="bi bi-question-circle-fill"></i>
-            </span>
+            <span class="bi bi-question-circle-fill" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente." placement="top"></span>
           </label>
           <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
             formControlName="licenciaSanitaria" 
@@ -213,8 +216,7 @@
           <p class="text-muted m-0">* Campos obligatorios</p>
         </div>
         <div class="d-flex">
-          <button type="button" class="btn btn-default me-3" [disabled]="esFormularioSoloLectura ? true : false"
-          data-bs-dismiss="modal" (click)="limpiarScianForm()">
+          <button type="button" class="btn btn-default me-3" [disabled]="esFormularioSoloLectura ? true : false" (click)="limpiarScianForm()">
           Limpiar
         </button>
           <button type="button" class="btn btn-default me-3" [disabled]="esFormularioSoloLectura ? true : false"
@@ -299,7 +301,7 @@
           <div class="form-group">
             <label for="fraccionArancelaria">Fracción arancelaria*:</label>
             <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control"
-              (change)="setValoresStore(formMercancias, 'fraccionArancelaria', 'setFraccionArancelaria')" />
+              (change)="setValoresStore(formMercancias, 'fraccionArancelaria', 'setFraccionArancelaria'); obtenerFormaControlDatos('fraccionArancelaria')" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('fraccionArancelaria')?.touched">
                 <small class="mensaje-error" *ngIf="formMercancias.get('fraccionArancelaria')?.hasError('required')">
@@ -324,7 +326,7 @@
             <div class="col-md-6">
               <label for="cantidadUMT">Cantidad UMT*:</label>
               <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control"
-                (change)="setValoresStore(formMercancias, 'cantidadUMT', 'setCantidadUMT')" />
+                (change)="setValoresStore(formMercancias, 'cantidadUMT', 'setCantidadUMT'); obtenerFormaControlDatos('cantidadUMT')" />
               <div class="d-grid">
                 <div *ngIf="formMercancias.get('cantidadUMT')?.touched">
                   <small class="mensaje-error" *ngIf="formMercancias.get('cantidadUMT')?.hasError('required')">

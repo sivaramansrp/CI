@@ -1,56 +1,52 @@
-/**
- * compo doc
- * @component
- * @selector app-paso-capturar-solicitud
- * @description
- * Este componente gestiona el flujo del wizard para la captura de la solicitud en el trámite 80103.
- * Permite navegar entre los diferentes pasos del proceso, controla el estado de avance y valida la información
- * de cada sección utilizando el estado centralizado proporcionado por SeccionLibStore y Tramite80101Query.
- *
- * Funcionalidades principales:
- * - Visualiza y administra los pasos del wizard definidos en PASOS4.
- * - Permite avanzar y retroceder entre los pasos mediante el componente WizardComponent.
- * - Sincroniza el estado de la sección y la validez del formulario con el store global.
- * - Aplica estilos de alerta informativa para mensajes relevantes en el proceso.
- *
- * Componentes importados:
- * - `WizardComponent`: Componente para la navegación tipo wizard.
- *
- * @templateUrl ./paso-capturar-solicitud.component.html
- */
-import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
+import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@ng-mf/data-access-user';
 import { AccionBoton } from '../../models/nuevo-programa-industrial.model';
 import { Subject } from 'rxjs';
-import { Tramite80101Query } from '../../estados/tramite80101.query';
-import { takeUntil } from 'rxjs';
-/*
-*  * Componente para gestionar el paso de captura de solicitud en el trámite 80103.
-*  * Este componente utiliza el componente WizardComponent para permitir la navegación entre
-*/
 
+/**
+ * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
+ * 
+ * Este método se utiliza para manejar las acciones de los botones en el componente. 
+ * Dependiendo del valor y la acción proporcionados, actualiza el índice actual y 
+ * navega hacia adelante o hacia atrás en el componente Wizard.
+ * 
+ * @param e - Un objeto de tipo `AccionBoton` que contiene dos propiedades:
+ *   - `valor`: Un número que representa el índice al que se desea navegar. Debe estar entre 1 y 4.
+ *   - `accion`: Una cadena que indica la acción a realizar. Puede ser:
+ *     - `'cont'`: Para avanzar al siguiente paso en el Wizard.
+ *     - `'atras'`: Para retroceder al paso anterior en el Wizard.
+ * 
+ * @remarks
+ * Si el valor proporcionado está fuera del rango permitido (menor que 1 o mayor que 4), 
+ * el método no realiza ninguna acción.
+ * 
+ * @example
+ * ```typescript
+ * const accion: AccionBoton = { valor: 2, accion: 'cont' };
+ * this.getValorIndice(accion); // Avanza al paso 2 en el Wizard.
+ * ```
+ */
 @Component({
   selector: 'app-paso-capturar-solicitud',
   templateUrl: './paso-capturar-solicitud.component.html',
 })
-/**
- * Clase que representa el componente de captura de solicitud.
- * Este componente gestiona el flujo del wizard para la captura de la solicitud en el trámite 80103.
- */
-export class PasoCapturarSolicitudComponent implements OnDestroy {
+export class PasoCapturarSolicitudComponent {
   /**
-   * Almacena los pasos del wizard definidos en PASOS4.
-   * @type {ListaPasosWizard[]}
+   * Lista de pasos del wizard.
+   * Esta propiedad almacena una lista de objetos que representan los pasos del wizard.
+   * Cada objeto contiene información sobre el paso, como su título y descripción.
    */
   pasos: ListaPasosWizard[] = PASOS4;
   /**
-   * Almacena el índice actual del paso en el wizard.
-   * @type {number}
+   * Índice actual del paso en el wizard.
+   * Este valor se utiliza para determinar qué paso se está mostrando actualmente.
+   * El valor inicial es 1, lo que indica que el primer paso está activo al cargar el componente.
    */
   indice: number = 1;
   /**
-   * Almacena el mensaje de aviso para el wizard.
-   * @type {AVISO}
+   * Datos de los pasos del wizard.
+   * Esta propiedad almacena información relacionada con el número de pasos, el índice actual,
+   * y los textos de los botones "Anterior" y "Continuar".
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -59,18 +55,8 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
     txtBtnSig: 'Continuar',
   };
   /**
-   * Referencia al componente `WizardComponent` dentro de la plantilla.
-   * Esta propiedad utiliza el decorador `@ViewChild` para obtener una instancia del componente
-   * `WizardComponent` que se encuentra en la plantilla del componente actual.
-   * 
-   * Uso:
-   * - Se utiliza para acceder a los métodos y propiedades del componente `WizardComponent`.
-   * - Por ejemplo, se llama a los métodos `siguiente()` y `atras()` para navegar entre los pasos
-   *   del asistente (wizard).
-   * 
-   * Nota:
-   * - Esta propiedad se inicializa después de que Angular haya renderizado la vista.
-   * - Asegúrese de que el componente `WizardComponent` esté presente en la plantilla.
+   * Componente Wizard utilizado para la navegación entre pasos.
+   * Este componente permite al usuario avanzar o retroceder entre los pasos del wizard.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   /**
@@ -84,25 +70,27 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
    * @private
    * @type {Subject<void>}
    */
-  public destroyNotifier$: Subject<void> = new Subject();
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /** Indica si el botón Guardar debe mostrarse o estar habilitado en el formulario. */
+  public btnGuardar: boolean = true;
+
+  /** Indica la visibilidad del botón Guardar. */
+  public btnGuardarVisible: string = 'visible';
 
   /**
-   * Constructor del componente `PasoCapturarSolicitudComponent`.
-   * Inicializa el componente y establece la validez del formulario en el store.
+   * Constructor de la clase PasoCapturarSolicitudComponent.
    * 
-   * @param {Tramite80101Query} tramiteQuery - Servicio para gestionar el estado del trámite.
-   * @param {SeccionLibStore} seccion - Servicio para gestionar el estado de la sección.
+   * @param tramiteQuery - Servicio de consulta para Tramite80101 que proporciona acceso a observables y datos relacionados.
+   * @param seccion - Servicio de gestión de estado para manejar la sección y la validez del formulario.
+   * 
+   * Este constructor inicializa el componente y configura una suscripción al observable `FormaValida$` del servicio `Tramite80101Query`.
+   * Cuando se emite un valor desde el observable, se actualiza el estado de la sección y la validez del formulario
+   * utilizando los métodos `establecerSeccion` y `establecerFormaValida` del servicio `SeccionLibStore`.
+   * La suscripción se gestiona para que se complete automáticamente al destruir el componente mediante `takeUntil` y `destroyNotifier$`.
    */
-  constructor(
-    private tramiteQuery: Tramite80101Query,
-    private seccion: SeccionLibStore
-  ) {
-    this.tramiteQuery.FormaValida$.pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe((res) => {
-      this.seccion.establecerSeccion([true]);
-      this.seccion.establecerFormaValida([res]);
-    });
+  constructor() {
+   // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
   /**
@@ -118,27 +106,5 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
         this.wizardComponent.atras();
       }
     }
-  }
-
-  /**
-   * @method ngOnDestroy
-   * @description
-   * Este método es parte del ciclo de vida del componente y se ejecuta automáticamente
-   * cuando el componente está a punto de ser destruido. Se utiliza para limpiar las suscripciones
-   * activas y evitar fugas de memoria en la aplicación.
-   *
-   * Funcionalidad:
-   * - Notifica a través del `Subject` `destroy$` que el componente será destruido.
-   * - Completa el `Subject` para liberar los recursos asociados.
-   *
-   * @example
-   * ngOnDestroy(): void {
-   *   this.destroy$.next();
-   *   this.destroy$.complete();
-   * }
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
   }
 }

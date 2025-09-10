@@ -1,11 +1,11 @@
 import { Catalogo, CatalogoSelectComponent, InputFechaComponent, JSONResponse, REGEX_IMPORTE_PAGO, REGEX_LLAVE_DE_PAGO, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { INPUT_FECHA_CONFIG } from '../../services/certificados-licencias.enum';
 import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
 
@@ -56,6 +56,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
     public esFormularioSoloLectura: boolean = false;
 
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+    public consultaState!: ConsultaioState;
+
 
     /**
      * Constructor del componente `PagoDeDerechosComponent`.
@@ -73,6 +79,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     ) {
         this.consultaioQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.consultaState = seccionState;
           this.inicializarEstadoFormulario();
         })
       )
@@ -119,6 +126,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         fechaPago: [this.solicitudState?.fechaPago],
         importePago: [this.solicitudState?.importePago,Validators.pattern(REGEX_IMPORTE_PAGO)],
       });
+
+      if (this.consultaState.update) {
+        if (this.solicitudState?.fechaPago) {
+          this.formSolicitud.get('fechaPago')?.setValue(this.solicitudState?.['fechaPago']);
+        }
+      }
     }
   
     /**

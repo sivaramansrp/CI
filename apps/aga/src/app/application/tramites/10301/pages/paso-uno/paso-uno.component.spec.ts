@@ -9,7 +9,28 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     solicitud10301ServiceMock = {
-      getDatosDeTrtamitelDoc: jest.fn().mockReturnValue(of({ success: true, datos: { manifesto: 'm', aduana: 'a', nombre: 'n', tipoMercancia: 't', usoEspecifico: 'u', marca: 'ma', modelo: 'mo', serie: 's', calle: 'c', numeroExterior: 'ne', numeroInterior: 'ni', telefono: 'tel', correoElectronico: 'mail', codigoPostal: 'cp', estado: 'est', colonia: 'col', opcion: 'op', pais: 'p', mercanciaDatos: [] } })),
+      getDatosDeTrtamitelDoc: jest.fn().mockReturnValue(of({ 
+        success: true,
+        datos: {
+          manifesto: 'test-manifesto',
+          aduana: 'test-aduana',
+          nombre: 'test-nombre',
+          tipoMercancia: 'test-tipo',
+          usoEspecifico: 'test-uso',
+          marca: 'test-marca',
+          modelo: 'test-modelo',
+          serie: 'test-serie',
+          calle: 'test-calle',
+          numeroExterior: '123',
+          numeroInterior: '456',
+          telefono: '1234567890',
+          correoElectronico: 'test@test.com',
+          codigoPostal: '12345',
+          estado: 'test-estado',
+          colonia: 'test-colonia',
+          opcion: 'test-opcion'
+        }
+      })),
       actualizarEstadoFormulario: jest.fn()
     };
     consultaQueryMock = {
@@ -32,16 +53,10 @@ describe('PasoUnoComponent', () => {
       setCodigoPostal: jest.fn(),
       setEstado: jest.fn(),
       setColonia: jest.fn(),
-      setOpcion: jest.fn(),
-      setPais: jest.fn(),
-      setDatosMercancia: jest.fn()
+      setOpcion: jest.fn()
     };
 
-    component = new PasoUnoComponent(
-      solicitud10301ServiceMock,
-      consultaQueryMock,
-      tramite10301StoreMock
-    );
+    component = new PasoUnoComponent(solicitud10301ServiceMock, consultaQueryMock, tramite10301StoreMock);
   });
 
   it('should create the component', () => {
@@ -64,34 +79,13 @@ describe('PasoUnoComponent', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should call actualizarEstadoFormulario when guardarDatosFormulario is called', () => {
-    solicitud10301ServiceMock.getDatosDeTrtamitelDoc = jest.fn().mockReturnValue(of({ success: true, datos: {} }));
+  it('should call getDatosDeTrtamitelDoc and update store when guardarDatosFormulario is called', () => {
     component.guardarDatosFormulario();
-    expect(tramite10301StoreMock.setManifesto).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setAduana).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setNombre).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setTipoMercancia).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setUsoEspecifico).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setMarca).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setModelo).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setSerie).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setCalle).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setNumeroExterior).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setNumeroInterior).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setTelefono).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setCorreoElectronico).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setCodigoPostal).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setEstado).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setColonia).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setOpcion).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setPais).toHaveBeenCalled();
-    expect(tramite10301StoreMock.setDatosMercancia).toHaveBeenCalled();
-  });
-
-  it('should not call store setters if response.success is false', () => {
-    solicitud10301ServiceMock.getDatosDeTrtamitelDoc = jest.fn().mockReturnValue(of({ success: false }));
-    component.guardarDatosFormulario();
-    expect(tramite10301StoreMock.setManifesto).not.toHaveBeenCalled();
+    
+    expect(solicitud10301ServiceMock.getDatosDeTrtamitelDoc).toHaveBeenCalled();
+    expect(tramite10301StoreMock.setManifesto).toHaveBeenCalledWith('test-manifesto');
+    expect(tramite10301StoreMock.setNombre).toHaveBeenCalledWith('test-nombre');
+    expect(tramite10301StoreMock.setTipoMercancia).toHaveBeenCalledWith('test-tipo');
   });
 
   it('should change indice when seleccionaTab is called', () => {

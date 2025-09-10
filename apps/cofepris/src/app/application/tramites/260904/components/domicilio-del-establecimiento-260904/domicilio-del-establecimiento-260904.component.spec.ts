@@ -1,185 +1,377 @@
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DomicilioDelEstablecimiento260904Component } from './domicilio-del-establecimiento-260904.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { HttpClientModule } from '@angular/common/http';
+import { of, Subject } from 'rxjs';
+import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento/domicilio-del-establecimiento.service';
 import { Tramite260904Query } from '../../estados/tramite260904.query';
 import { Tramite260904Store } from '../../estados/tramite260904.store';
-import { of } from 'rxjs';
-import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento/domicilio-del-establecimiento.service';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-
-const mockTramiteQuery = {
-  selectTramite260904$: of({
-    codigoPostal: '12345',
-    estado: { id: '1', descripcion: 'CDMX' },
-    municipioOAlcaldia: 'Benito Juárez',
-    localidad: 'Del Valle',
-    colonias: 'Narvarte',
-    calle: 'Xola',
-    lada: '55',
-    telefono: '12345678',
-    avisoCheckbox: 'true',
-    regimen: { id: '1', descripcion: 'General' },
-    aduanasEntradas: { id: '1', descripcion: 'Aduana 1' },
-    aifaCheckbox: 'true',
-    manifests: 'true',
-    acuerdoPublico: 'Acuerdo',
-    rfc: 'RFC123',
-  }),
-};
-
-const mockDomicilioService = {
-  obtenerTablaDatos: jest.fn(() => of({ data: [{ id: 1 }] })),
-  obtenerEstadoList: jest.fn(() => of({ data: [{ id: 1, descripcion: 'Estado 1' }] })),
-  obtenerMercanciasDatos: jest.fn(() => of({ data: [{ id: 1 }] })),
-};
-
-const mockStore = {
-  setTramite260904State: jest.fn(),
-};
+import { Location } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { MERCANCIAS_DATA, NICO_TABLA, MercanciasInfo, NicoInfo } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 
 
 describe('DomicilioDelEstablecimiento260904Component', () => {
-  let component: DomicilioDelEstablecimiento260904Component;
-  let fixture: ComponentFixture<DomicilioDelEstablecimiento260904Component>;
+	let component: DomicilioDelEstablecimiento260904Component;
+	let fixture: ComponentFixture<DomicilioDelEstablecimiento260904Component>;
+	let serviceSpy: jest.Mocked<DomicilioDelEstablecimientoService>;
+	let querySpy: jest.Mocked<Tramite260904Query>;
+	let storeSpy: jest.Mocked<Tramite260904Store>;
+	let consultaioQuerySpy: jest.Mocked<ConsultaioQuery>;
+	let locationSpy: jest.Mocked<Location>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, DomicilioDelEstablecimiento260904Component,HttpClientTestingModule],
-      declarations: [],
-      providers: [
-        { provide: Tramite260904Query, useValue: mockTramiteQuery },
-        { provide: Tramite260904Store, useValue: mockStore },
-        { provide: DomicilioDelEstablecimientoService, useValue: mockDomicilioService },
-        provideHttpClientTesting(),
-      ]
-    }).compileComponents();
+	beforeEach(async () => {
+		serviceSpy = {
+			obtenerTablaDatos: jest.fn().mockReturnValue(of({ code: 200, data: [], message: '' })),
+			obtenerEstadoList: jest.fn().mockReturnValue(of({ code: 200, data: [], message: '' })),
+			obtenerMercanciasDatos: jest.fn().mockReturnValue(of({ code: 200, data: [], message: '' })),
+			getEntidad: jest.fn().mockReturnValue(of([])),
+			getRepresentacion: jest.fn().mockReturnValue(of([])),
+			buscarRepresentanteLegalPorRFC: jest.fn().mockReturnValue(of({})),
+		} as any;
+		const dummyTramite260904$ = of({});
+		querySpy = {
+			selectTramite260904$: dummyTramite260904$,
+		} as any;
+		storeSpy = {
+			setTramite260904State: jest.fn(),
+		} as any;
+		consultaioQuerySpy = {
+			selectConsultaioState$: of({ readonly: false }),
+		} as any;
+		locationSpy = {
+			back: jest.fn(),
+		} as any;
 
-    fixture = TestBed.createComponent(DomicilioDelEstablecimiento260904Component);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+		await TestBed.configureTestingModule({
+			imports: [
+				ReactiveFormsModule,
+				DomicilioDelEstablecimiento260904Component,
+				HttpClientTestingModule
+			],
+			declarations: [
 
-  it('should create component', () => {
-    expect(component).toBeTruthy();
-  });
+			],
+			providers: [
+				{ provide: DomicilioDelEstablecimientoService, useValue: serviceSpy },
+				{ provide: Tramite260904Query, useValue: querySpy },
+				{ provide: Tramite260904Store, useValue: storeSpy },
+				{ provide: ConsultaioQuery, useValue: consultaioQuerySpy },
+				{ provide: Location, useValue: locationSpy },
+			],
+		}).compileComponents();
 
-  it('should initialize forms correctly on ngOnInit', () => {
-    expect(component.form).toBeDefined();
-    expect(component.domicilio).toBeDefined();
-    expect(component.representanteLegal).toBeDefined();
-  });
+		fixture = TestBed.createComponent(DomicilioDelEstablecimiento260904Component);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should call obtenerTablaDatos and set data', () => {
-    component.obtenerTablaDatos();
-    expect(mockDomicilioService.obtenerTablaDatos).toHaveBeenCalled();
-    expect(component.nicoTablaDatos.length).toBeGreaterThan(0);
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
-  it('should call obtenerEstadoList and set data', () => {
-    component.obtenerEstadoList();
-    expect(mockDomicilioService.obtenerEstadoList).toHaveBeenCalled();
-    expect(component.estado.length).toBeGreaterThan(0);
-  });
+	it('should initialize forms and call service methods on ngOnInit', () => {
+		serviceSpy.getEntidad.mockReturnValue(of([]));
+		serviceSpy.getRepresentacion.mockReturnValue(of([]));
+		serviceSpy.obtenerTablaDatos.mockReturnValue(of({ code: 200, data: [], message: '' }));
+		serviceSpy.obtenerEstadoList.mockReturnValue(of({ code: 200, data: [], message: '' }));
+		serviceSpy.obtenerMercanciasDatos.mockReturnValue(of({ code: 200, data: [], message: '' }));
+		component.ngOnInit();
+		expect(serviceSpy.getEntidad).toHaveBeenCalled();
+		expect(serviceSpy.getRepresentacion).toHaveBeenCalled();
+		expect(serviceSpy.obtenerTablaDatos).toHaveBeenCalled();
+		expect(serviceSpy.obtenerEstadoList).toHaveBeenCalled();
+		expect(serviceSpy.obtenerMercanciasDatos).toHaveBeenCalled();
+	});
 
-  it('should call obtenerMercanciasDatos and set data', () => {
-    component.obtenerMercanciasDatos();
-    expect(mockDomicilioService.obtenerMercanciasDatos).toHaveBeenCalled();
-    expect(component.mercanciasTablaDatos.length).toBeGreaterThan(0);
-  });
+	it('should destroy subscriptions on ngOnDestroy', () => {
+		const nextSpy = jest.spyOn(component['destroy$'], 'next');
+		const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+		component.ngOnDestroy();
+		expect(nextSpy).toHaveBeenCalled();
+		expect(completeSpy).toHaveBeenCalled();
+	});
 
-  it('should set value in store using setValorStore', () => {
-  component.form.get('codigoPostal')?.setValue('99999');
-  component.setValorStore(component.form, 'codigoPostal');
-  expect(mockStore.setTramite260904State).toHaveBeenCalledWith({
-    codigoPostal: '99999',
-  });
-});
+	it('should create forms in crearFormulario', () => {
+		component.solicitudState = {
+			codigoPostal: '12345',
+			estado: null,
+			municipioOAlcaldia: 'test',
+			localidad: '',
+			colonias: '',
+			calle: '',
+			lada: '',
+			telefono: '',
+			entidad: null,
+			representacion: null,
+			licenciaSanitaria: '',
+			regimen: null,
+			aduanasEntradas: null,
+			importPermitNumberCNSNS: '',
+			acuerdoPublico: '',
+			rfc: '',
+			nombre: '',
+			apellidoPaterno: '',
+			apellidoMaterno: '',
+			avisoCheckbox: '',
+			aifaCheckbox: '',
+			manifests: '',
+			justificacion: '',
+			btonDeRadio: '',
+			rfcDel: '',
+			denominacion: '',
+			correo: '',
+			claveDeReferencia: '',
+			cadenaPagoDependencia: '',
+			clave: '',
+			llaveDePago: '',
+			fecPago: '',
+			impPago: '',
+			fabricanteTablaDatos: [],
+			proveedorTablaDatos: [],
+			destinatarioFinalTablaDatos: [],
+			facturadorTablaDatos: [],
+			scianConfigDatos: [],
+			claveScianModal: '',
+			claveDescripcionModal: '',
+		};
+		component.crearFormulario();
+		expect(component.form).toBeDefined();
+		expect(component.nicoTablaForm).toBeDefined();
+		expect(component.domicilio).toBeDefined();
+		expect(component.representanteLegal).toBeDefined();
+	});
 
+	it('should handle onBuscarRepresentanteLegal logic', () => {
+		component.crearFormulario();
+		const rfcControl = component.representanteLegal.get('rfc');
+		rfcControl?.setValue('');
+		rfcControl?.markAsTouched();
+		rfcControl?.setErrors({ invalid: true });
+		component.onBuscarRepresentanteLegal();
+		expect(component.enableLegalFields).toBeTruthy();
+		rfcControl?.setValue('validRFC');
+		rfcControl?.setErrors(null);
+		component.onBuscarRepresentanteLegal();
+		expect(component.enableLegalFields).toBeFalsy();
+	});
 
-  it('should retrieve values from the store on getValorStore', () => {
-    const spy = jest.spyOn(mockTramiteQuery.selectTramite260904$, 'subscribe');
-    component.getValorStore();
-    expect(spy).toBeDefined();
-  });
+	it('should set value in store with setValorStore', () => {
+		component.crearFormulario();
+		component.form.get('codigoPostal')?.setValue('99999');
+		component.setValorStore(component.form, 'codigoPostal');
+		expect(storeSpy.setTramite260904State).toHaveBeenCalledWith({ codigoPostal: '99999' });
+	});
 
-  it('should unsubscribe on destroy', () => {
-    const spy = jest.spyOn((component as any).destroy$, 'next');
-    component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
-  });
+	it('should mark manifests as touched and update store on onManifestsChange', () => {
+		component.crearFormulario();
+		component.onManifestsChange();
+		expect(component.domicilio.get('manifests')?.touched).toBeTruthy();
+		expect(storeSpy.setTramite260904State).toHaveBeenCalled();
+	});
 
-  it('should create form, domicilio, and representanteLegal with initial values from estadoSeleccionado', () => {
-  component.estadoSeleccionado = {
-    codigoPostal: '12345',
-    estado: { id: '1', descripcion: 'CDMX' },
-    municipioOAlcaldia: 'Benito Juárez',
-    localidad: 'Del Valle',
-    colonias: 'Narvarte',
-    calle: 'Xola',
-    lada: '55',
-    telefono: '12345678',
-    avisoCheckbox: 'true',
-    regimen: { id: '1', descripcion: 'General' },
-    aduanasEntradas: { id: '1', descripcion: 'Aduana 1' },
-    aifaCheckbox: 'true',
-    manifests: 'true',
-    acuerdoPublico: 'Acuerdo',
-    rfc: 'RFC123',
-  } as any;
+	it('should handle input events and set errors for form controls', () => {
+		component.crearFormulario();
+		const event = { target: { value: '123456789012' } } as any;
+		component.onCodigoPostalInput(event);
+		expect(component.form.get('codigoPostal')?.errors).toBeTruthy();
+		component.onMunicipioOAlcaldiaInput({ target: { value: 'a'.repeat(120) } } as any);
+		expect(component.form.get('municipioOAlcaldia')?.errors).toBeTruthy();
+		component.onLocalidadInput({ target: { value: 'a'.repeat(121) } } as any);
+		expect(component.form.get('localidad')?.errors).toBeTruthy();
+		component.onColoniasInput({ target: { value: 'a'.repeat(120) } } as any);
+		expect(component.form.get('colonias')?.errors).toBeTruthy();
+		component.onCalleInput({ target: { value: 'a'.repeat(100) } } as any);
+		expect(component.form.get('calle')?.errors).toBeTruthy();
+		component.onLadaInput({ target: { value: '12345' } } as any);
+		expect(component.form.get('lada')?.errors).toBeTruthy();
+		component.onTelefonoInput({ target: { value: '1'.repeat(30) } } as any);
+		expect(component.form.get('telefono')?.errors).toBeTruthy();
+		component.onRfcInput({ target: { value: '1'.repeat(13) } } as any);
+		expect(component.representanteLegal.get('rfc')?.errors).toBeTruthy();
+	});
 
-  component.crearFormulario();
+	it('should handle Mercancia row selection and modification', () => {
+		component.mercanciasTablaDatos = [
+			{
+				clasificacion: '', especificar: '', denominacionEspecifica: '', denominacionDistintiva: '', denominacionComun: '',
+				formaFarmaceutica: '', estadoFisico: '', fraccionArancelaria: '', descripcionFraccion: '', unidad: '', cantidadUMC: '',
+				unidadUMT: '', cantidadUMT: '', presentacion: '', numeroRegistro: '', paisDeOrigen: '', paisDeProcedencia: '',
+				tipoProducto: '', usoEspecifico: '', fechaCaducidad: ''
+			},
+			{
+				clasificacion: '', especificar: '', denominacionEspecifica: '', denominacionDistintiva: '', denominacionComun: '',
+				formaFarmaceutica: '', estadoFisico: '', fraccionArancelaria: '', descripcionFraccion: '', unidad: '', cantidadUMC: '',
+				unidadUMT: '', cantidadUMT: '', presentacion: '', numeroRegistro: '', paisDeOrigen: '', paisDeProcedencia: '',
+				tipoProducto: '', usoEspecifico: '', fechaCaducidad: ''
+			}
+		];
+		component.onMercanciaRowSelected([component.mercanciasTablaDatos[1]]);
+		expect(component.selectedMercanciaIndex).toBe(1);
+		component.onMercanciaRowSelected([]);
+		expect(component.selectedMercanciaIndex).toBeNull();
+		// onAgregarMercancia add
+		component.selectedMercanciaIndex = null;
+		component.mercanciasTablaDatos = [];
+		component.onAgregarMercancia({} as MercanciasInfo);
+		expect(component.mercanciasTablaDatos.length).toBe(1);
+		// onAgregarMercancia update
+		component.selectedMercanciaIndex = 0;
+		component.onAgregarMercancia({ test: true } as any);
+		expect(component.mercanciasTablaDatos[0]).toEqual({ test: true });
+	});
 
-  expect(component.form.get('codigoPostal')?.value).toBe('12345');
-  expect(component.form.get('municipioOAlcaldia')?.value).toBe('Benito Juárez');
-  expect(component.form.get('calle')?.value).toBe('Xola');
-  expect(component.domicilio.get('regimen')?.value).toEqual({ id: '1', descripcion: 'General' });
-  expect(component.domicilio.get('aduanasEntradas')?.value).toEqual({ id: '1', descripcion: 'Aduana 1' });
-  expect(component.representanteLegal.get('acuerdoPublico')?.value).toBe('Acuerdo');
-  expect(component.representanteLegal.get('rfc')?.value).toBe('RFC123');
-});
+	it('should handle Mercancia modal logic', () => {
+		component['modalSeleccionaRegistroMercanciaInstance'] = {
+			hide: jest.fn(),
+			toggle: jest.fn(),
+			show: jest.fn(),
+			handleUpdate: jest.fn(),
+			dispose: jest.fn()
+		};
+		component.cerrarSeleccionaRegistroMercanciaModal();
+		expect(component['modalSeleccionaRegistroMercanciaInstance'].hide).toHaveBeenCalled();
+		// mostrarSeleccionaRegistroMercancia
+		jest.spyOn(document, 'getElementById').mockReturnValue({} as any);
+		(window as any).bootstrap = { Modal: function () { return { show: jest.fn() }; } };
+		component.mostrarSeleccionaRegistroMercancia();
+		// onModificarMercancia
+		component.mercanciasTablaDatos = [{}, {}] as MercanciasInfo[];
+		component.datosMercanciaContenedoraComp = { mercanciaForm: { patchValue: jest.fn() } } as any;
+		component.onModificarMercancia(0);
+		expect(component.selectedMercanciaIndex).toBe(0);
+	});
 
-  it('should disable all controls when esFormularioSoloLectura is true', () => {
-  component.crearFormulario();
-  component.esFormularioSoloLectura = true;
-  component.inicializarEstadoFormulario();
+	it('should handle Mercancia delete logic', () => {
+		component.mercanciaEliminarIndex = 0;
+		component.mercanciasTablaDatos = [{}, {}] as MercanciasInfo[];
+		component['modalConfirmarEliminarMercanciaInstance'] = {
+			hide: jest.fn(),
+			toggle: jest.fn(),
+			show: jest.fn(),
+			handleUpdate: jest.fn(),
+			dispose: jest.fn()
+		};
+		component.aceptarEliminarMercancia();
+		expect(component.mercanciasTablaDatos.length).toBe(1);
+		component.cancelarEliminarMercancia();
+		expect(component['modalConfirmarEliminarMercanciaInstance'].hide).toHaveBeenCalled();
+	});
 
-  expect(component.form.get('codigoPostal')?.disabled).toBe(true);
-  expect(component.form.get('municipioOAlcaldia')?.disabled).toBe(true);
-  expect(component.domicilio.get('avisoCheckbox')?.disabled).toBe(true);
-  expect(component.representanteLegal.get('acuerdoPublico')?.disabled).toBe(true);
-  expect(component.representanteLegal.get('rfc')?.disabled).toBe(true);
-});
+	it('should handle SCIAN row selection and delete logic', () => {
+		component.nicoTablaDatos = [
+			{ clave_Scian: '', descripcion_Scian: '' },
+			{ clave_Scian: '', descripcion_Scian: '' }
+		];
+		component.onScianRowSelected([component.nicoTablaDatos[1]]);
+		expect(component.selectedScianIndex).toBe(1);
+		component.onScianRowSelected([]);
+		expect(component.selectedScianIndex).toBeNull();
+		// onEliminarScian
+		component['modalSeleccionaRegistroInstance'] = {
+			show: jest.fn(),
+			hide: jest.fn(),
+			toggle: jest.fn(),
+			handleUpdate: jest.fn(),
+			dispose: jest.fn()
+		};
+		component.onEliminarScian(null);
+		expect(component['modalSeleccionaRegistroInstance'].show).toHaveBeenCalled();
+		component['modalConfirmarEliminarScianInstance'] = {
+			show: jest.fn(),
+			hide: jest.fn(),
+			toggle: jest.fn(),
+			handleUpdate: jest.fn(),
+			dispose: jest.fn()
+		};
+		component.onEliminarScian(1);
+		expect(component['modalConfirmarEliminarScianInstance'].show).toHaveBeenCalled();
+		// aceptarEliminarScian
+		component.selectedScianIndex = 0;
+		component['modalConfirmarEliminarScianInstance'] = {
+			hide: jest.fn(),
+			show: jest.fn(),
+			toggle: jest.fn(),
+			handleUpdate: jest.fn(),
+			dispose: jest.fn()
+		};
+		component.aceptarEliminarScian();
+		expect(component.nicoTablaDatos.length).toBe(1);
+		expect(component['modalConfirmarEliminarScianInstance'].hide).toHaveBeenCalled();
+	});
 
-it('should enable all controls when esFormularioSoloLectura is false', () => {
-  component.crearFormulario();
-  component.esFormularioSoloLectura = false;
-  component.inicializarEstadoFormulario();
+	it('should update representacion options', () => {
+		component.allRepresentaciones = [{ id: 1, relacionadaUmtId: 2 }, { id: 2, relacionadaUmtId: 2 }] as any;
+		component.updateRepresentacionOptions(2 as any);
+		expect(component.representacion.length).toBeGreaterThan(0);
+		component.updateRepresentacionOptions(null);
+		expect(component.representacion.length).toBe(0);
+	});
 
-  expect(component.form.get('codigoPostal')?.enabled).toBe(true);
-  expect(component.form.get('municipioOAlcaldia')?.enabled).toBe(true);
-  expect(component.domicilio.get('avisoCheckbox')?.enabled).toBe(true);
-  expect(component.representanteLegal.get('acuerdoPublico')?.enabled).toBe(true);
-  expect(component.representanteLegal.get('rfc')?.enabled).toBe(true);
-});
+	it('should check esInvalido', () => {
+		component.crearFormulario();
 
-it('should update estadoSeleccionado when getValorStore is called', () => {
-  const testState = {
-    codigoPostal: '77777',
-    municipioOAlcaldia: 'Test Municipio'
-  } as any;
+		const entidadControl = component.nicoTablaForm.get('entidad');
+		expect(entidadControl).toBeTruthy();
 
-  // Create a new mock query with the updated selectTramite260904$ observable
-  const mockQueryWithNewState = {
-    selectTramite260904$: of(testState)
-  };
+		entidadControl?.setValue('');
+		entidadControl?.markAsTouched();
+		entidadControl?.setErrors({ required: true });
+		fixture.detectChanges();
 
-  // Replace the injected query with our new mock
-  component['tramite260904Query'] = mockQueryWithNewState as any;
-  component.getValorStore();
+		expect(component.esInvalido('entidad')).toBe(false);
+	});
 
-  expect(component.estadoSeleccionado).toEqual(testState);
-});
+	it('should add and clear SCIAN', () => {
+		component.crearFormulario();
+		component.entidad = [{ id: 1, descripcion: 'Entidad' } as any];
+		component.subRepresentacion = [{ id: 2, descripcion: 'Rep' } as any];
+		component.nicoTablaForm.get('entidad')?.setValue(1);
+		component.nicoTablaForm.get('representacion')?.setValue(2);
+		component['bootstrapModalNicoTablaInstance'] = {
+			hide: jest.fn(),
+			show: jest.fn(),
+			toggle: jest.fn(),
+			handleUpdate: jest.fn(),
+			dispose: jest.fn()
+		};
+		component.agregarScian();
+		expect(component.nicoTablaDatos.length).toBeGreaterThan(0);
+		component.limpiarScian();
+		expect(component.nicoTablaForm.get('entidad')?.value).toBeNull();
+	});
 
+	it('should cancel modals', () => {
+		component['bootstrapModalNicoTablaInstance'] = {
+			hide: jest.fn(),
+			show: jest.fn(),
+			toggle: jest.fn(),
+			handleUpdate: jest.fn(),
+			dispose: jest.fn()
+		};
+		component['bootstrapModalMercanciasInstance'] = {
+			hide: jest.fn(),
+			show: jest.fn(),
+			toggle: jest.fn(),
+			handleUpdate: jest.fn(),
+			dispose: jest.fn()
+		};
+		component.cancelar(true);
+		expect(component['bootstrapModalNicoTablaInstance'].hide).toHaveBeenCalled();
+		component.cancelar(false);
+		expect(component['bootstrapModalMercanciasInstance'].hide).toHaveBeenCalled();
+	});
+
+	it('should map MercanciasInfo to MercanciaForm and get empty MercanciaForm', () => {
+		const info: MercanciasInfo = {
+			clasificacion: 'A', especificar: 'B', denominacionEspecifica: 'C', denominacionDistintiva: 'D', denominacionComun: 'E',
+			tipoProducto: 'F', formaFarmaceutica: 'G', estadoFisico: 'H', fraccionArancelaria: 'I', descripcionFraccion: 'J',
+			unidadUMT: 'K', cantidadUMT: 'L', unidad: 'M', cantidadUMC: 'N', presentacion: 'O', numeroRegistro: 'P',
+			fechaCaducidad: 'Q', paisDeOrigen: 'R', paisDeProcedencia: 'S', usoEspecifico: 'T'
+		};
+		const form = DomicilioDelEstablecimiento260904Component.mapMercanciasInfoToForm(info);
+		expect(form.clasificacionProducto).toBe('A');
+		expect(DomicilioDelEstablecimiento260904Component.getEmptyMercanciaForm()).toBeDefined();
+	});
 });

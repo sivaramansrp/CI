@@ -66,7 +66,7 @@
         </div>
         <div class="row mb-5">
             <div class=" text-end mt-5">
-                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarSector()">Eliminar</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarSectorProducir()">Eliminar</button>
                 <button class="btn btn-primary" (click)="agregarProducir()" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>
@@ -83,6 +83,14 @@
         @if(espectaculoConfirmar){
             <lib-notificaciones [notificacionInput]="nuevaNotificacion"
             (confirmacionModal)="eliminarPedimentoDatos($event)"></lib-notificaciones>
+        }
+        @if(espectaculoAlertaProducir){
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+            (confirmacionModal)="eliminarPedimentoProducirAlerta($event)"></lib-notificaciones>
+        }
+        @if(espectaculoConfirmarProducir){
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+            (confirmacionModal)="eliminarPedimentoProducirDatos($event)"></lib-notificaciones>
         }
     </div>
 </div>

@@ -15,9 +15,9 @@
         <label class="form-label text-start estructura-accionaria-corporativa" for=""
           >El reporte de validación emitido en un periodo no mayor a 3 años a la
           fecha que se presente la solicitud, a través del cual acredite a la
-          solicitante como socio del programa CBP (C-TPAT), con estatus
+          solicitante como socio del programa CBP (CTPAT), con estatus
           certificado-validado, para cada una de las instalaciones validadas por
-          CBP (C-TPAT), así como anexar su correspondiente traducción simple al
+          CBP (CTPAT), así como anexar su correspondiente traducción simple al
           español.</label
         >
       </div>
@@ -29,8 +29,8 @@
       </div>
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
-          >Señale si autorizó a CBP (C-TPAT) a compartir información con México,
-          a través de su portal de C-TPAT o del mecanismo que la autoridad de
+          >Señale si autorizó a CBP (CTPAT) a compartir información con México,
+          a través de su portal de CTPAT o del mecanismo que la autoridad de
           dicho país haya definido.</label
         >
         <app-input-radio
@@ -47,10 +47,10 @@
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
           >Señale si las instalaciones que cuentan con la certificación de CBP
-          (C-TPAT) y de las cuales no se deberá de presentar el "Perfil de Auto
+          (CTPAT) y de las cuales no se deberá de presentar el "Perfil de Auto
           Transportista Terrestre", "Perfil de la empresa" o el "Perfil del
           Recinto Fiscalizado Estratégico", según corresponda, cumplen con los
-          estándares mínimos en materia de seguridad</label
+          estándares mínimos en materia de seguridad.</label
         >
         <app-input-radio
           [radioOptions]="opcionDeBotonDeRadio"
@@ -68,7 +68,7 @@
         <label class="form-label text-start"
           >Señale si a la fecha de la presentación de su solicitud se encuentra
           sujeta a un proceso de suspensión o cancelación por parte de CBP
-          (C-TPAT)</label
+          (CTPAT).</label
         >
         <app-input-radio
           [radioOptions]="opcionDeBotonDeRadio"
@@ -106,3 +106,6 @@
     </button>
   </div>
 </ng-template>
+<lib-notificaciones *ngIf="esHabilitarElDialogo" [notificacionInput]="nuevaNotificacion"
+   (confirmacionModal)="cerrarCTPATModal()">
+</lib-notificaciones>

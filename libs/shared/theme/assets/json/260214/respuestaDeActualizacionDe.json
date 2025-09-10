@@ -38,7 +38,7 @@
         "fechaDeCaducidad": "2025-01-01",
         "regimenLaMercancia": "Definitivo",
         "aduana": "Aduana Norte",
-        "manifiestosCasillaDeVerificacion": true
+        "manifesto": true
     },
     "scianConfigDatos": [
             {

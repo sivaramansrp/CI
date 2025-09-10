@@ -26,34 +26,15 @@
       </div>
   
       <ng-container>
-        @switch (indice) {
-        @case (1) {
-        <solicitante [tabindex]="1"></solicitante>
-        }
-        @case (2) {
-            @if(esDatosRespuesta) {
-        <app-datos-empresa [tabindex]="2"></app-datos-empresa>
-        <app-domicilio-del-establecimiento></app-domicilio-del-establecimiento>
-        }
-      }
-        @case (3) {
-            @if(esDatosRespuesta) {
-          <app-terceros-relacionados [tabindex]="3"></app-terceros-relacionados>
-        }
-      }
-        @case (4) {
-            @if(esDatosRespuesta) {
-          <app-pago-de-derechos [tabindex]="4"></app-pago-de-derechos>
-        }
-      }
-        @case (5) {
-            @if(esDatosRespuesta) {
-          <app-tramites-asociado [tabindex]="5"></app-tramites-asociado>
-        } 
-      }
-
-        }
+      <solicitante [tabindex]="1" [hidden]="indice !== 1"></solicitante>
+      <ng-container *ngIf="esDatosRespuesta">
+        <app-datos-empresa #datosDeLaSolicitudComponent (tipoTramiteChange)="onTipoTramiteChange($event)" [hidden]="indice !== 2"></app-datos-empresa>
+        <app-domicilio-del-establecimiento #domicilioDelEstablecimientoComponent [tipoTramite]="selectedTipoTramite" [hidden]="indice !== 2"></app-domicilio-del-establecimiento>
+        <app-terceros-relacionados-vista #tercerosRelacionadosVistaComponent [tabindex]="3" [tipoTramite]="selectedTipoTramite" [hidden]="indice !== 3"></app-terceros-relacionados-vista>
+        <app-pago-de-derechos #pagoDeDerechosComponent [tabindex]="4" [tipoTramite]="selectedTipoTramite" [hidden]="indice !== 4"></app-pago-de-derechos>
+        <app-tramites-asociado #tramitesAsociadoComponent [tabindex]="5" [tipoTramite]="selectedTipoTramite" [hidden]="indice !== 5"></app-tramites-asociado>
       </ng-container>
+    </ng-container>
     </div>
 </div>
   

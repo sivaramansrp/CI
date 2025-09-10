@@ -73,7 +73,7 @@
             <option [ngValue]="null">Selecciona una opción</option>
             <option *ngFor="let fraccion of fraccionArancelaria" [title]="fraccion.descripcion"
               [value]="fraccion.clave">
-              {{ fraccion.descripcion }}
+              {{ fraccion.clave + ' - ' + fraccion.descripcion | slice:0:70}}
             </option>
           </select>
           <div
@@ -125,7 +125,7 @@
           <label for="cantidadTarifaria" class="form-label">Cantidad*:</label>
           <input class="form-control onceEnterosDosdecimals"
             [ngClass]="isValid(datosMercancia, 'cantidadTarifaria') ? 'required' : ''" type="number"
-            formControlName="cantidadTarifaria" min="0" max="999999999.99"
+            formControlName="cantidadTarifaria" min="0" max="99999999999.99"
             (change)="setValoresStore(datosMercancia,'cantidadTarifaria', 'setCantidadTarifaria')"
             name="cantidadTarifaria" id="solicitud.mercancia.cantidadTarifaria"
             (change)="calcularUmtPrecioUnitario()" /> @if(datosMercancia.controls['cantidadTarifaria'].invalid &&
@@ -142,7 +142,7 @@
               title="En caso de no contar con valor factura proporciona el valor estimado"
               data-bs-toggle="tooltip"></span></label>
           <input class="form-control" [ngClass]="isValid(datosMercancia, 'valorFacturaUSD') ? 'required' : ''"
-            type="number" formControlName="valorFacturaUSD" min="0" max="999999999.999"
+            type="number" formControlName="valorFacturaUSD" min="0" max="99999999999.999"
             (change)="setValoresStore(datosMercancia,'valorFacturaUSD', 'setValorFacturaUSD')" name="valorFacturaUSD"
             id="valorFacturaUSD" (change)="calcularUmtPrecioUnitario()" />
           @if(datosMercancia.controls['valorFacturaUSD'].invalid && datosMercancia.controls['valorFacturaUSD'].touched)
@@ -156,7 +156,7 @@
       </div>
       <div class="row mb-3">
         <div class="col-md-8">
-          <label for="precioUnitarioUSD" class="form-label">Precio unitario en USD * :</label>
+          <label for="precioUnitarioUSD" class="form-label">Precio unitario en USD*:</label>
           <input class="form-control" [ngClass]="isValid(datosMercancia, 'precioUnitarioUSD') ? 'required' : ''"
             type="text" formControlName="precioUnitarioUSD"
             (change)="setValoresStore(datosMercancia,'precioUnitarioUSD', 'setPrecioUnitarioUSD')"
@@ -166,7 +166,7 @@
       <div class="row mb-3">
         <div class="col-md-8">
 
-          <label class="form-label" for="">País origen del acero/País origen de la mercancía:*</label>
+          <label class="form-label" for="">País origen del acero/País origen de la mercancía*:</label>
           <select class="form-control form-select" formControlName="paisOrigen" (change)="paisOrigenSeleccion()">
             <option [ngValue]="null">Selecciona una opción</option>
             <option *ngFor="let pais of paisDestino" [title]="pais.descripcion" [value]="pais.clave">
@@ -183,7 +183,7 @@
       <div class="row mb-3">
         <div class="col-md-8">
 
-          <label class="form-label" for="">País exportador:*</label>
+          <label class="form-label" for="">País exportador*:</label>
           <select class="form-control form-select" formControlName="paisDestino" (change)="paisDestinoSeleccion()">
             <option [ngValue]="null">Selecciona una opción</option>
             <option *ngFor="let pais of paisDestino" [title]="pais.descripcion" [value]="pais.clave">
@@ -199,7 +199,7 @@
       </div>
       <div class="row mb-3">
         <div class="col-md-4">
-          <label for="lote" class="form-label">Número de certificado de molino o de calidad:*
+          <label for="lote" class="form-label">Número de certificado de molino o de calidad*:
             <span class="bi bi-question-circle-fill" title="Número de certificado de molino o de calidad"
               data-bs-toggle="tooltip"></span>
           </label>
@@ -221,7 +221,7 @@
       <div class="row mb-4">
         <div class="col-md-8">
           <div class="form-group">
-            <label for="observaciones" class="form-label">Observaciones :</label>
+            <label for="observaciones" class="form-label">Observaciones:</label>
             <textarea cols="60" rows="5" class="form-control" formControlName="observaciones"
               (change)="setValoresStore(datosMercancia,'observaciones', 'setObservaciones')" id="valueTAObs"
               maxlength="250"></textarea>
@@ -238,7 +238,7 @@
       <div class="row mb-3" id="tipoPer" *ngIf="!mostrarComboMolinos">
         <div class="col-md-4">
           <div class="form-group">
-            <label for="tipoPersona" class="form-label">Tipo de persona * :</label>
+            <label for="tipoPersona" class="form-label">Tipo de persona*:</label>
             <div class="form-check">
               <input type="radio" value="pfisica" id="pfisica" class="form-check-input" formControlName="tipoPersona"
                 (change)="setValoresStore(datosProducto,'tipoPersona', 'setTipoPersona');personaFisica()">
@@ -280,7 +280,7 @@
       </div> @if(isVisibleFisica){ <div class="row mb-3">
         <div class="col-md-4">
           <div class="form-group">
-            <label for="nombre" class="form-label">Nombre(s) * :</label>
+            <label for="nombre" class="form-label">Nombre(s)*:</label>
             <input class="form-control" [ngClass]="isValid(datosProducto, 'nombre') ? 'required' : ''" type="text"
               name="nombre" id="nombre" formControlName="nombre" maxlength="200"
               (change)="setValoresStore(datosProducto,'nombre', 'setNombre')" />
@@ -291,7 +291,7 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label for="apellidoPaterno" class="form-label">Primer apellido * :</label>
+            <label for="apellidoPaterno" class="form-label">Primer apellido*:</label>
             <input class="form-control" [ngClass]="isValid(datosProducto, 'apellidoPaterno') ? 'required' : ''"
               type="text" name="apellidoPaterno" id="apellidoPaterno" formControlName="apellidoPaterno" maxlength="200"
               (change)="setValoresStore(datosProducto,'apellidoPaterno', 'setApellidoPaterno')" />
@@ -302,7 +302,7 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label for="apellidoMaterno" class="form-label">Segundo apellido :</label>
+            <label for="apellidoMaterno" class="form-label">Segundo apellido:</label>
             <input class="form-control" type="text" name="apellidoMaterno" id="apellidoMaterno"
               formControlName="apellidoMaterno" maxlength="200"
               (change)="setValoresStore(datosProducto,'apellidoMaterno', 'setApellidoMaterno')" />
@@ -311,7 +311,7 @@
       </div> } @if(isVisibleMoral){ <div class="row mb-3 pm">
         <div class="col-md-8">
           <div class="form-group">
-            <label for="razonSocial" class="form-label">Denominación o razón social * :</label>
+            <label for="razonSocial" class="form-label">Denominación o razón social*:</label>
             <input type="text" class="form-control" [ngClass]="isValid(datosProducto, 'razonSocial') ? 'required' : ''"
               name="razonSocial" id="razonSocial" formControlName="razonSocial" maxlength="250"
               (change)="setValoresStore(datosProducto,'razonSocial', 'setRazonSocial')" />
@@ -326,7 +326,7 @@
       <div class="row mb-3" style="margin-bottom:51px ">
         <div class="col-md-8">
           <div class="form-group">
-            <label for="domicilio" class="form-label">Domicilio * :</label>
+            <label for="domicilio" class="form-label">Domicilio*:</label>
             <textarea class="form-control" [ngClass]="isValid(datosProducto, 'domicilio') ? 'required' : ''"
               id="domicilio" name="domicilio" cols="50" rows="7" formControlName="domicilio" maxlength="1000"
               (change)="setValoresStore(datosProducto,'domicilio', 'setDomicilio')"></textarea>
@@ -345,7 +345,7 @@
           <div class="form-group">
 
 
-            <label class="form-label" for="">Estado*</label>
+            <label class="form-label" for="">Estado*:</label>
             <select class="form-control form-select" formControlName="estado" (change)="changeEntidad()">
               <option [ngValue]="null">Selecciona una opción</option>
               <option *ngFor="let estado of estado" [title]="estado.descripcion" [value]="estado.clave">
@@ -361,7 +361,7 @@
         <div class="col-md-4">
           <div class="form-group">
 
-            <label class="form-label" for="">Representación federal*</label>
+            <label class="form-label" for="">Representación federal*:</label>
             <select class="form-control form-select" formControlName="representacionFederal"
               (change)="representacionFederalSeleccion()">
               <option [ngValue]="null">Selecciona una opción</option>

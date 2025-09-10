@@ -6,16 +6,21 @@ import {
   InfoServicios,
   Servicio,
 } from '../models/nuevo-programa-industrial.model';
-import { Observable, map } from 'rxjs';
+import { Observable, map, take, tap } from 'rxjs';
 import {
   Tramite80101State,
   Tramite80101Store,
 } from '../estados/tramite80101.store';
+import { BehaviorSubject } from 'rxjs';
 import { CatalogoDatosIdx } from '../../../shared/models/federatarios-y-plantas.model';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
+import { Tramite80101Query } from '../estados/tramite80101.query';
+
+
 
 /**
  * Servicio para gestionar las operaciones relacionadas con el programa industrial.
@@ -26,6 +31,19 @@ import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabrica
   providedIn: 'root',
 })
 export class NuevoProgramaIndustrialService {
+
+  /**
+   * Subject que mantiene el estado actual sobre si la tabla tiene datos.
+   * Permite la suscripción reactiva a los cambios en la presencia de datos en la tabla.
+   */
+  private _tieneDatosDeTabla$ = new BehaviorSubject<boolean>(false);
+
+  /**
+   * Observable que expone el estado de si la tabla tiene datos.
+   * Se utiliza para que otros componentes puedan reaccionar a los cambios sin modificar el estado directamente.
+   */
+  public tieneDatosDeTabla$ = this._tieneDatosDeTabla$.asObservable();
+
   /**
    * Constructor de la clase NuevoProgramaIndustrialService.
    *
@@ -33,9 +51,19 @@ export class NuevoProgramaIndustrialService {
    */
   constructor(
     private readonly http: HttpClient,
-    public tramite80101Store: Tramite80101Store
+    public tramite80101Store: Tramite80101Store,
+    public httpService: HttpCoreService,
+    private Tramite80101Query:Tramite80101Query
   ) {
     // No se necesita lógica de inicialización adicional.
+  }
+
+  /**
+   * Actualiza el estado interno indicando si la tabla tiene datos.
+   * Emite el nuevo valor a todos los suscriptores del observable correspondiente.
+  */
+  setTieneDatosDeTabla(value: boolean): void {
+    this._tieneDatosDeTabla$.next(value);
   }
 
   /**
@@ -160,4 +188,12 @@ export class NuevoProgramaIndustrialService {
     );
   }
   
+getAllState() {
+return  this.Tramite80101Query.allStore$
+}
+
+dummyPost(body:any) {
+  return this.http.post('assets/json/80101/dummy-post.json', body);
+}
+
 }

@@ -49,7 +49,7 @@
                 Descripción de la mercancía*:
                 </label>
                 <textarea
-                class="form-control text-area-size"
+                class="form-control text_area text_height"
                 formControlName="descripcionExportacion"
                 rows="3"
                 maxlength="4000"
@@ -68,7 +68,7 @@
             <!-- Código arancelario* -->
             <div class="col-md-4">
             <div class="form-group">
-                <label class="form-label" for="codigo_arancelario">
+                <label class="form-label label_up" for="codigo_arancelario">
                 Código arancelario*:
                 </label>
                 <input
@@ -124,19 +124,18 @@
                 </label>
                 <input
                 class="form-control"
-                type="number"
+                type="text"
                 id="valor_usd"
                 placeholder=""
                 formControlName="valor_usd"
                 [disabled]="esFormularioSoloLectura"
                 [required]="true"
-                maxlength="14"
-                pattern="^[0-9]*$"
+                maxlength="17"
                 (change)="setValoresStore(datosExporta, 'valor_usd', 'setValor_usd')"
                 />
                 <div *ngIf="datosExporta.get('valor_usd')?.touched && datosExporta.get('valor_usd')?.invalid">
                 <small *ngIf="datosExporta.get('valor_usd')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
-                <small *ngIf="datosExporta.get('valor_usd')?.errors?.['pattern'] || datosExporta.get('valor_usd')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">El valor capturado no es válido.</small>
+                <small *ngIf="datosExporta.get('valor_usd')?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">El valor capturado no es válido.</small>
                 </div>
             </div>
             </div>
@@ -148,19 +147,18 @@
                 </label>
                 <input
                 class="form-control"
-                type="number"
+                type="text"
                 id="precio_unitario_usd"
                 placeholder=""
                 formControlName="precio_unitario_usd"
                 [disabled]="esFormularioSoloLectura"
                 [required]="true"
-                maxlength="14"
-                pattern="^[0-9]*$"
+                maxlength="17"
                 (change)="setValoresStore(datosExporta, 'precio_unitario_usd', 'setPrecio_unitario_usd')"
                 />
                 <div *ngIf="datosExporta.get('precio_unitario_usd')?.touched && datosExporta.get('precio_unitario_usd')?.invalid">
                 <small *ngIf="datosExporta.get('precio_unitario_usd')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
-                <small *ngIf="datosExporta.get('precio_unitario_usd')?.errors?.['pattern'] || datosExporta.get('precio_unitario_usd')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">El valor capturado no es válido.</small>
+                <small *ngIf="datosExporta.get('precio_unitario_usd')?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">El valor capturado no es válido.</small>
                 </div>
             </div>
             </div>

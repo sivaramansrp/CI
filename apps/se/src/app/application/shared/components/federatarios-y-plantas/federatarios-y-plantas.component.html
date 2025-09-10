@@ -51,15 +51,15 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="numeroDeActa">Número de acta*:</label>
-              <input class="form-control min-hgt" id="numeroDeActa" formControlName="numeroDeActa" type="text"
-                maxlength="6" [ngClass]="esValido(federatariosFormGroup, 'numeroDeActa') ? 'required' : ''"/>
+              <input class="form-control min-hgt" id="numeroDeActa" formControlName="numeroDeActa" type="number"
+                [attr.max]="999999" [ngClass]="esValido(federatariosFormGroup, 'numeroDeActa') ? 'required' : ''"/>
               <div
                 *ngIf="federatariosFormGroup.get('numeroDeActa')?.invalid && federatariosFormGroup.get('numeroDeActa')?.touched"
                 class="text-danger">
                 <small *ngIf="federatariosFormGroup.get('numeroDeActa')?.errors?.['required']">Este campo es
                   obligatorio.</small>
-                <small *ngIf="federatariosFormGroup.get('numeroDeActa')?.errors?.['maxlength']">El número de acta no
-                  puede exceder los 6 caracteres.</small>
+                <small *ngIf="federatariosFormGroup.get('numeroDeActa')?.errors?.['max']">El número de acta no
+                  puede exceder 999999.</small>
               </div>
             </div>
           </div>
@@ -74,7 +74,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="numeroDeNotaria">Número de notaría*:</label>
-              <input class="form-control min-hgt" id="numeroDeNotaria" formControlName="numeroDeNotaria" type="text"
+              <input class="form-control min-hgt" id="numeroDeNotaria" formControlName="numeroDeNotaria" type="number"
                 maxlength="6" [ngClass]="esValido(federatariosFormGroup, 'numeroDeNotaria') ? 'required' : ''"/>
               <div
                 *ngIf="federatariosFormGroup.get('numeroDeNotaria')?.invalid && federatariosFormGroup.get('numeroDeNotaria')?.touched"
@@ -95,7 +95,7 @@
           </div>
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="estadoOptionsConfig.municipio" formControlName="estadoOptions"
-              [label]="'Municipio o alcaldía'" [required]="true" name="estado"
+              [label]="'Municipio o alcaldía'" [required]="true" name="estadoOptions"
               [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
           </div>
         </div>
@@ -240,7 +240,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="p-1 pull-right">
-                      <button class="btn btn-danger end" [disabled]="formularioDeshabilitado ">Eliminar plantas</button>
+                      <button class="btn btn-danger end" [disabled]="formularioDeshabilitado " (click)="eliminarPlantas()">Eliminar plantas</button>
                     </div>
                   </div>
                 </div>

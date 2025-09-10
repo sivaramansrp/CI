@@ -356,7 +356,7 @@ public tarifaData: CatalogosSelect = {
       codigoPostal: [this.destruccionState.codigoPostal, Validators.required],
       cartaCupo: [this.destruccionState.cartaCupo, Validators.required],
       numeraDeAcuse: [this.destruccionState.numeraDeAcuse, Validators.required],
-      destruccionMercancia: [this.destruccionState.destruccionMercancia, Validators.required],
+      destruccionMercancia: [this.destruccionState.destruccionMercancia, Validators.required,Validators.maxLength(500)],
       merccanciaEntidadFederativa: [this.destruccionState.merccanciaEntidadFederativa, Validators.required],
       merccanciaAlcaldiaMunicipo: [this.destruccionState.merccanciaAlcaldiaMunicipo, Validators.required],
       merccanciaColonia: [this.destruccionState.merccanciaColonia, Validators.required],
@@ -372,7 +372,8 @@ public tarifaData: CatalogosSelect = {
       destruccionCalle: [this.destruccionState.destruccionCalle, Validators.required],
       destruccionNumeroExterior: [this.destruccionState.destruccionNumeroExterior, Validators.required],
       destruccionNumeroInterior: [this.destruccionState.destruccionNumeroInterior],
-      destruccionCodigoPostal: [this.destruccionState.destruccionCodigoPostal, Validators.required],
+      destruccionCodigoPostal: [this.destruccionState.destruccionCodigoPostal, [Validators.required, Validators.pattern('^([01]\\d|2[0-3]):([0-5]\\d)$')]
+],
       destruccionHora: [this.destruccionState.destruccionHora, Validators.required],
       desturccionProceso: [this.destruccionState.desturccionProceso, Validators.required],
       casofortuito: [this.destruccionState.casofortuito, Validators.required],

@@ -4,7 +4,7 @@
         <div class="col-md-4">
             <app-catalogo-select id="transporteIdMedio" [catalogo]="medioDeTransporte"
                 formControlName="medioDeTransporte" [label]="'Medio de transporte'" [required]="true"
-                [isDisabled]="formularioDeshabilitado" name="medioDeTransporte"
+                [isDisabled]="formularioDeshabilitado" name="medioDeTransporte" [markTouched]="medioTransporteForm.get('medioDeTransporte')?.touched ?? false"
                 (selectionChange)="medioDeTransporteSeleccion($event)"></app-catalogo-select>
         </div>
         <div class="col-md-4">

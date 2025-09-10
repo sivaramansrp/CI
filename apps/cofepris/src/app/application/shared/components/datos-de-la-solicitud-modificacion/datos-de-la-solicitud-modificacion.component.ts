@@ -1,5 +1,5 @@
 import { ALERT, AlertComponent, CrossListLable,CrosslistComponent } from '@libs/shared/data-access-user/src';
-import { AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CROSLISTA_DE_PAISES, ScianData } from '../../models/datos-modificacion.model';
 import { Catalogo, ConfiguracionColumna, Notificacion, NotificacionesComponent, Pedimento, TablaSeleccion } from '@libs/shared/data-access-user/src';
@@ -22,6 +22,7 @@ import { RepresentanteLegalRfcComponent } from '../representante-legal-rfc/repre
 import { SCIAN_DATA } from '../../constantes/datos-scian.enum';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 /**
  * @description
  * Componente que gestiona el formulario y las interacciones relacionadas con la modificación de datos de la solicitud.
@@ -43,12 +44,20 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
     AlertComponent,
     DatosDelEstablecimientoRFCComponent,
     RepresentanteLegalRfcComponent,
-    CrosslistComponent
+    CrosslistComponent,
+    TooltipModule
   ],
   templateUrl: './datos-de-la-solicitud-modificacion.component.html',
   styleUrl: './datos-de-la-solicitud-modificacion.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  /**
+   * @description
+   * Indica si el establecimiento no cuenta con licencia sanitaria.
+   */
+  public tieneNoLicenciaSanitaria: boolean = false;
   /**
    * @Input
    * Indica si los insumos están habilitados o no.
@@ -273,6 +282,13 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * Lista de países para la selección de origen.
    */
   public crosListaDePaises = CROSLISTA_DE_PAISES;
+
+  /**
+   * Indica si se ha seleccionado un establecimiento.
+   * Cuando es `true`, significa que el usuario ha seleccionado un establecimiento; cuando es `false`, no se ha seleccionado ninguno.
+   * @default false
+   */
+  public tieneSeleccionEstablecimiento: boolean = false;
   /**
    * Botones de acción para gestionar listas de países en la primera sección.
    */
@@ -360,9 +376,9 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
+      txtBtnCancelar: '',
     };
-
+    this.tieneSeleccionEstablecimiento = !this.tieneSeleccionEstablecimiento;
     this.elementoParaEliminar = i;
   }
   /**
@@ -470,6 +486,7 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
 
     if (this.datosSolicitudform && this.manifiestosRepresentanteForm && this.scianForm) {
       this.datosSolicitudform.disable();
+      this.datosSolicitudform.get('noLicenciaSanitaria')?.enable();
       this.manifiestosRepresentanteForm.disable();
       this.scianForm.disable();
     } else {
@@ -514,6 +531,26 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
   actualizarValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DatosSolicitudStore): void {
     const VALOR = form.get(campo)?.value;
     (this.datosSolicitudStore[metodoNombre] as (value: string | number) => void)(VALOR);
+  }
+
+  enControlCambioFormulario(event: Event,controlName: string): void {
+
+    const UPDATED_VALUE = {
+      [controlName]: this.datosSolicitudform.get(controlName)?.value,
+    };
+
+    if ((event.target as HTMLInputElement).checked) {
+      this.datosSolicitudform.get('noLicenciaSanitaria')?.disable();
+    } else {
+      this.datosSolicitudform.get('noLicenciaSanitaria')?.enable();
+    }
+
+    if (controlName === 'noLicenciaSanitaria' && UPDATED_VALUE['noLicenciaSanitaria'] !== '') {
+      this.tieneNoLicenciaSanitaria = true;
+      this.datosSolicitudform.get('noLicenciaSanitaria')?.enable();
+    } else if (controlName === 'noLicenciaSanitaria' && UPDATED_VALUE['noLicenciaSanitaria'] === '') {
+      this.tieneNoLicenciaSanitaria = false;
+    }
   }
 
   /**
@@ -614,6 +651,9 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+    if(this.tieneSeleccionEstablecimiento) {
+      this.datosSolicitudform.enable();
     }
   }
 
