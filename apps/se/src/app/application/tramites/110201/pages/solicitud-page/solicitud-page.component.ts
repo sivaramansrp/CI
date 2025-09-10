@@ -5,6 +5,8 @@ import {
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { ERROR_FORMA_ALERT } from '../../enum/certificado.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * Texto de alerta para terceros.
@@ -33,7 +35,7 @@ interface AccionBoton {
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
- })
+})
 /**
  * Componente que representa la página de solicitud.
  */
@@ -58,6 +60,27 @@ export class SolicitudPageComponent {
    */
   indice: number = 1;
 
+
+  /**
+    * @property {boolean} esFormaValido
+    * @description
+    * Indica si el formulario del paso actual es válido.
+    * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
+    */
+  esFormaValido: boolean = false;
+  /**
+    * @property {string} formErrorAlert
+    * @description
+    * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+    */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+  /**
+   * @property {PasoUnoComponent} pasoUnoComponent
+   * @description
+   * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
   /**
    * Referencia al componente del asistente (wizard).
    */
@@ -85,16 +108,64 @@ export class SolicitudPageComponent {
    * Obtiene el valor del índice de la acción del botón y controla la navegación del asistente.
    * @param e Acción del botón.
    */
-  getValorIndice(e: AccionBoton):void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+  getValorIndice(e: AccionBoton): void {
+
+    this.esFormaValido = false;
+
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ISVALID = this.validarTodosFormulariosPasoUno();
+      if (!ISVALID) {
+        this.esFormaValido = true;
+        return;
+      }
+    }
+
+    let indiceActualizado = e.valor;
+    if (e.accion === 'cont') {
+      indiceActualizado = e.valor + 1;
+    } else if (e.accion === 'ant') {
+      indiceActualizado = e.valor - 1;
+    }
+
+    // Validar que el nuevo índice esté dentro de los límites permitidos
+    if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+
+      // Actualizar el índice y datosPasos
+      this.indice = indiceActualizado;
+      this.datosPasos.indice = indiceActualizado;
+
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
     }
   }
+
+  /**
+     * @method validarTodosFormulariosPasoUno
+     * @description
+     * Valida todos los formularios del componente `PasoUnoComponent`.
+     * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
+     * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
+     * Retorna `true` si todos los formularios son válidos.
+     *
+     * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+     */
+  private validarTodosFormulariosPasoUno(): boolean {
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
+  }
+
 
   /**
    * Actualiza el estado de carga de archivo, permitiendo mostrar u ocultar el botón de continuar.

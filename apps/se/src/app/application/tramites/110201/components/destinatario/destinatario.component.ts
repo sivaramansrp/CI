@@ -113,6 +113,11 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
    * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /**
+   * Indica si se ha intentado validar el formulario
+   * Se usa para mostrar errores de validación aunque el campo no haya sido tocado
+   */
+  validationAttempted: boolean = false;
 
   /**
    * Constructor del componente.
@@ -191,6 +196,45 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe();
     this.donanteDomicilio();
   }
+
+  /**
+   * 
+   * @returns boolean
+   * Valida todos los formularios del componente `DestinatarioComponent`.
+   * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
+   * @returns boolean
+   */
+
+  validarFormularios(): boolean {
+
+    this.validationAttempted = true;
+
+    if (this.registroForm.valid) {
+      return true;
+    }
+    this.registroForm.markAllAsTouched();
+    this.markAllControlsAsTouched(this.registroForm);
+
+    this.validarDestinatarioFormulario();
+    return false;
+  }
+
+  /**
+   * Recursively marks all form controls as touched, including those in nested FormGroups
+   * This is needed for custom components that implement ControlValueAccessor
+   */
+  private markAllControlsAsTouched(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.get(key);
+      if (control instanceof FormGroup) {
+        this.markAllControlsAsTouched(control);
+      } else {
+        control?.markAsTouched();
+        control?.updateValueAndValidity();
+      }
+    });
+  }
+
   /**
    * Inicializa los tooltips después de que la vista se haya inicializado.
    * Utiliza Bootstrap para crear tooltips en los elementos con el atributo `data-bs-toggle="tooltip"`.
@@ -287,6 +331,24 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
+  * @method validarFormulario
+  * @description
+  * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
+  * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
+  * Si el componente hijo no está disponible, retorna `false`.
+  *
+  * @returns {boolean} Indica si el formulario es válido.
+  */
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (!this.validarFormularios()) {
+      isValid = false;
+    }
+    return isValid;
+  }
+
+
+  /**
    * Compara el país destino con el país/bloque del certificado de origen.
    * Si no coinciden, activa el error.
    */
@@ -314,20 +376,50 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
       validacionForm: this.fb.group({
         nacion: [{ value: this.solicitudState?.nacion, disabled: this.soloLectura }, [Validators.required]],
         transporte: [{ value: this.solicitudState?.transporte, disabled: this.soloLectura }, [Validators.required]],
-        nombre: [{ value: this.solicitudState?.nombre, disabled: this.soloLectura }, [Validators.required]],
-        apellidoPrimer: [{ value: this.solicitudState?.apellidoPrimer, disabled: this.soloLectura }, [Validators.required]],
-        apellidoSegundo: [{ value: this.solicitudState?.apellidoSegundo, disabled: this.soloLectura }, [Validators.required]],
+        nombre: [{ value: this.solicitudState?.nombre, disabled: this.soloLectura }],
+        apellidoPrimer: [{ value: this.solicitudState?.apellidoPrimer, disabled: this.soloLectura }],
+        apellidoSegundo: [{ value: this.solicitudState?.apellidoSegundo, disabled: this.soloLectura }],
         numeroFiscal: [{ value: this.solicitudState?.numeroFiscal, disabled: this.soloLectura }, [Validators.required]],
-        razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.soloLectura }, [Validators.required]],
+        razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.soloLectura }],
         ciudad: [{ value: this.solicitudState?.ciudad, disabled: this.soloLectura }, [Validators.required]],
         calle: [{ value: this.solicitudState?.calle, disabled: this.soloLectura }, [Validators.required]],
         numeroLetra: [{ value: this.solicitudState?.numeroLetra, disabled: this.soloLectura }, [Validators.required]],
-        lada: [{ value: this.solicitudState?.lada, disabled: this.soloLectura }, [Validators.required]],
-        telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.required, Validators.pattern(/^\d+$/)]],
+        lada: [{ value: this.solicitudState?.lada, disabled: this.soloLectura }],
+        telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.pattern(/^\d+$/)]],
         fax: [{ value: this.solicitudState?.fax, disabled: this.soloLectura }, [Validators.pattern(/^\d+$/)]],
         correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required, Validators.email]],
       }),
     });
+  }
+
+  /**
+   * Método que permite solo números en un campo de entrada.
+   * Filtra caracteres no numéricos y limita la longitud según el campo.
+   * @param event El evento de entrada del campo.
+   */
+  onlyNumbers(event: any): void {
+    const input = event.target;
+    const value = input.value;
+    const fieldName = input.getAttribute('formControlName');
+
+    // Filtrar solo números
+    const numericValue = value.replace(/[^0-9]/g, '');
+
+    // Establecer límites según el campo
+    let maxLength = 10; // por defecto para teléfono
+    if (fieldName === 'fax') {
+      maxLength = 20;
+    }
+
+    // Limitar la longitud
+    const limitedValue = numericValue.slice(0, maxLength);
+
+    // Actualizar el valor del campo
+    if (value !== limitedValue) {
+      input.value = limitedValue;
+      // Actualizar el FormControl
+      this.registroForm.get('validacionForm.' + fieldName)?.setValue(limitedValue);
+    }
   }
 
   /**
@@ -339,4 +431,17 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroyed$.next(true);
     this.destroyed$.complete();
   }
+
+  // /**
+  //  * Valida el formulario del destinatario.
+  //  * Marca todos los campos como tocados si el formulario es inválido.
+  //  * @returns `true` si el formulario es válido, de lo contrario `false`.
+  //  */
+  // validarFormularios(): boolean {
+  //   if (this.registroForm.valid) {
+  //     return true;
+  //   }
+  //   this.registroForm.markAllAsTouched();
+  //   return false;
+  // }
 }

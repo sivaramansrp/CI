@@ -48,6 +48,12 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   soloLectura: boolean = false;
+
+  /**
+   * Indica si se ha intentado validar el formulario
+   * Se usa para mostrar errores de validación aunque el campo no haya sido tocado
+   */
+  validationAttempted: boolean = false;
   /**
    * Formulario reactivo para los datos del certificado.
    */
@@ -191,6 +197,43 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
 
   }
   /**
+   * Valida el formulario de datos del certificado.
+   * @returns boolean
+   * Valida el formulario de datos del certificado.
+   * Si el formulario es válido, retorna `true`.
+   * Si el formulario es inválido, marca todos los campos como tocados y retorna `false`.
+   */
+  validarFormulariosDatos(): boolean {
+
+    this.validationAttempted = true;
+
+    if (this.registroForm.valid) {
+      return true;
+    }
+    this.registroForm.markAllAsTouched();
+
+    this.markAllControlsAsTouched(this.registroForm);
+
+    this.validarDestinatarioFormulario();
+    return false;
+  }
+
+  /**
+   * Recursively marks all form controls as touched, including those in nested FormGroups
+   * This is needed for custom components that implement ControlValueAccessor
+   */
+  private markAllControlsAsTouched(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.get(key);
+      if (control instanceof FormGroup) {
+        this.markAllControlsAsTouched(control);
+      } else {
+        control?.markAsTouched();
+        control?.updateValueAndValidity();
+      }
+    });
+  }
+  /**
      * Evalúa si se debe inicializar o cargar datos en el formulario.
      * Además, obtiene la información del catálogo de mercancía.
      */
@@ -224,7 +267,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
         this.optionsIdioma.catalogos = resp as Catalogo[];
       });
   }
-  
+
   /**
    * Obtiene el catálogo de entidades desde el servicio.
    */
@@ -277,9 +320,25 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     } else {
       this.isJustificacion = false;
     }
-
-
   }
+
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de certificado de origen utilizando el componente hijo `CertificadoDeOrigenComponent`.
+   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`.
+   * Si el componente hijo no está disponible, retorna `false`.
+   *
+   * @returns {boolean} Indica si el formulario es válido.
+   */
+  validarFormularioDatos(): boolean {
+    let isValid = true;
+    if (!this.validarFormulariosDatos()) {
+      isValid = false;
+    }
+    return isValid;
+  }
+
 
   /**
    * Obtiene el formulario de validación.
@@ -294,9 +353,9 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
       validacionForm: this.fb.group({
-        observaciones: [{ value: this.solicitudState?.observaciones, disabled: this.soloLectura }, [Validators.required]],
+        observaciones: [{ value: this.solicitudState?.observaciones, disabled: this.soloLectura }],
         presica: [{ value: this.solicitudState?.presica, disabled: this.soloLectura }, [Validators.required]],
-        presenta: [{ value: this.solicitudState?.presenta, disabled: this.soloLectura }, [Validators.required]],
+        presenta: [{ value: this.solicitudState?.presenta, disabled: this.soloLectura }],
         idioma: [{ value: this.solicitudState?.idioma, disabled: this.soloLectura }, [Validators.required]],
         entidad: [{ value: this.solicitudState?.entidad, disabled: this.soloLectura }, [Validators.required]],
         representacion: [{ value: this.solicitudState?.representacion, disabled: this.soloLectura }, [Validators.required]],
@@ -304,6 +363,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
         justificacion: [{ value: this.solicitudState?.justificacion, disabled: this.soloLectura }, [Validators.required]],
       }),
     });
+
   }
   /**
    * Método que se ejecuta al destruir el componente.
