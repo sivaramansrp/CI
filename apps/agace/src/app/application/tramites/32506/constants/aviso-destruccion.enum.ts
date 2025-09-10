@@ -281,3 +281,13 @@ export const TABLA_DESPERDICIO: {
  */
 export const HORA_DESTRUCCION =
   'Hora en la que se efectuar&aacute; la destrucci&oacute;n';
+
+/**
+ * @constant TITLE_NOTIFICATION
+ * @description
+ * Mensaje de advertencia que se muestra al usuario antes de culminar el trámite.
+ * Informa que debe verificar todos los datos capturados y los documentos adjuntos,
+ * ya que posteriormente a la firma no será posible modificar o eliminar la información.
+ */
+export const TITLE_NOTIFICATION =
+  'Se sugiere verificar todos los datos capturados y documentos adjuntos antes de culminar el trámite, ya que, en caso de existir algún error, no se podrá modificar o eliminar la información posterior a su firma.';
