@@ -1,9 +1,17 @@
 <div class="container">
+  @if (indice !== 2) {
   <div class="row">
     <div class="col-md-12">
       <h1>Retorno de importación temporal (formato general)</h1>
     </div>
-  </div>
+  </div>}
+  @if (indice === 2) {
+  <div class="=row">
+    <div class="col-md-12">
+      <h2>Cargar archivos</h2>
+      <ng-alert [CONTENIDO]="alerta" [CUSTOMECLASS]="infoAlert"></ng-alert>
+    </div>
+  </div>}
 
   <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
   <div>

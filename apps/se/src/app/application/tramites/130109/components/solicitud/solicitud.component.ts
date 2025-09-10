@@ -338,7 +338,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           [
             Validators.required,
             Validators.min(0),
-            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            SolicitudComponent.validarCatorceEnterosTresDecimalesUSD,
             Validators.maxLength(20),
           ],
         ],
@@ -361,7 +361,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           [
             Validators.required,
             Validators.min(0),
-            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            SolicitudComponent.validarCatorceEnterosTresDecimalesUSD,
             Validators.maxLength(20),
           ],
         ],
@@ -734,7 +734,23 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
         return null;
     }
+  /*
+    Valida que un número tenga como máximo 16 enteros y 3 decimales.
+    */
+    static validarCatorceEnterosTresDecimalesUSD(control: AbstractControl): ValidationErrors | null {
+      const VALOR = control.value;
+        if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
 
+        if (!/^\d*\.?\d*$/.test(VALOR)) {
+          return { noEsNumero: true };
+        }
+
+        if (!/^\d{1,16}(\.\d{1,3})?$/.test(VALOR)) {
+          return { validarCatorceEnterosTresDecimalesUSD: true };
+        }
+
+        return null;
+    }
       /**
      * Valida los formularios de mercancía y partidas de la mercancía antes de permitir la carga de un archivo.
      */

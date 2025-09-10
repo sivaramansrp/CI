@@ -61,7 +61,7 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   constructor(
     private datosTramiteService: DatosTramiteService,
     private service: TransportacionMaritimaService,
-    private consultaioQuery: ConsultaioQuery,
+    public consultaioQuery: ConsultaioQuery,
     private store: Tramite40402Store
   ) {
     // No hay lógica adicional en el constructor por ahora
