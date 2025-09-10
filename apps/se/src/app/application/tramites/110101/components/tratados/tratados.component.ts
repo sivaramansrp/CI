@@ -1,6 +1,6 @@
 
 import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -112,6 +112,14 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
   public origenCatalogo: Catalogo[] = [];
 
+  /**
+   * @property {boolean} mostrarTabla - Indica si se debe mostrar la tabla.
+   * Controla la visibilidad de la tabla disponibles en la interfaz.
+   * Se utiliza para alternar la visibilidad de la tabla según el estado de la aplicación.
+   */
+  mostrarTabla = true;
+
+
   public consultaState!: ConsultaioState;
     /**
      * Inicializa el TratadosComponent.
@@ -129,7 +137,8 @@ export class TratadosComponent implements OnInit, OnDestroy {
     private solicitanteQuery: Solicitante110101Query,
     private consultaioQuery: ConsultaioQuery,
     private pantallaService: PantallasSvcService,
-    private catalogosTramiteService: CatalogosTramiteService
+    private catalogosTramiteService: CatalogosTramiteService,
+    private cd: ChangeDetectorRef,
   ) { 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -341,31 +350,13 @@ export class TratadosComponent implements OnInit, OnDestroy {
  /**
      * Un array de objetos `RegistroDeSolicitudesTabla` que representa los datos para la tabla de solicitudes.
      */
-    public registroDeSolicitudesTablaDatos: RegistroDeSolicitudesTabla[] = [
-       {
-    pais: 'Mexico',
-    tratado: 'T-MEC',
-    origen: 'Nacional'
-  }
-    ];
+    public registroDeSolicitudesTablaDatos: RegistroDeSolicitudesTabla[] = [];
 
   /**
    * Datos de la tabla de tratados.
    * Este array contiene objetos de tipo `TratadosTabla` que representan los datos de los
    */
-    public tratadosTablaDatos: TratadosTabla[] = [
-      {
-        pais: 'Mexico',
-        tratado: 'T-MEC',
-        origen: 'Nacional',
-        normaOrigen: 'Norma 1',
-        requisitoEspecifico: 'Requisito 1',
-        calificacionSistema: 'Calificación A',
-        calificacionDictaminad: 'Dictaminado A',
-        otrasInstancias: 'Instancia 1',
-        procesoTransformacion: 'Proceso 1'
-      }
-    ];
+    public tratadosTablaDatos: TratadosTabla[] = [ ];
 
 /**
    * Tipo de selección utilizado en la tabla, definido como casillas de verificación (checkbox).
@@ -409,31 +400,34 @@ agregarTratado(): void {
     const ORIGEN_ID = this.formularioTratados.get('origen')?.value;
 
     
-    const PAIS_DESC = this.paisCatalogo.find(item => item.id.toString() === PAIS_ID)?.descripcion || '';
-    const TRATADO_DESC = this.tratadoCatalogo.find(item => item.id.toString() === TRATADO_ID)?.descripcion || '';
-    const ORIGENDESC = this.origenCatalogo.find(item => item.id.toString() === ORIGEN_ID)?.descripcion || '';
+    const PAIS_DESC = this.paisCatalogo.find(item => item.id.toString() === PAIS_ID) || null;
+    const TRATADO_DESC = this.tratadoCatalogo.find(item => item.id.toString() === TRATADO_ID) || null;
+    const ORIGENDESC = this.origenCatalogo.find(item => item.id.toString() === ORIGEN_ID) || null ;
 
     const ROW_DATA = {
-      pais: PAIS_DESC,
-      tratado: TRATADO_DESC,
-      origen: ORIGENDESC
+      pais: PAIS_DESC?.descripcion,
+      tratado: TRATADO_DESC?.descripcion,
+      origen: ORIGENDESC?.descripcion
     };
 
-   if (this.isEditMode && this.selectedRowIndex !== null && this.selectedRowIndex > -1) {
-  
-  const UPDATED_ROW = { ...this.registroDeSolicitudesTablaDatos[this.selectedRowIndex] };
-  if (PAIS_DESC){ UPDATED_ROW.pais = PAIS_DESC}
-  if (TRATADO_DESC) {UPDATED_ROW.tratado = TRATADO_DESC}
-  if (ORIGENDESC) {UPDATED_ROW.origen = ORIGENDESC}
-  this.registroDeSolicitudesTablaDatos[this.selectedRowIndex] = UPDATED_ROW;
+    if (this.isEditMode && this.selectedRowIndex !== null && this.selectedRowIndex > -1) {
+      
+      const UPDATED_ROW = { ...this.registroDeSolicitudesTablaDatos[this.selectedRowIndex] };
+      if (PAIS_DESC){ UPDATED_ROW.pais = PAIS_DESC.descripcion}
+      if (TRATADO_DESC) {UPDATED_ROW.tratado = TRATADO_DESC.descripcion}
+      if (ORIGENDESC) {UPDATED_ROW.origen = ORIGENDESC.descripcion}
+      this.registroDeSolicitudesTablaDatos[this.selectedRowIndex] = UPDATED_ROW;
 
-  this.isEditMode = false;
-  this.selectedRowIndex = null;
-  this.selectedRows = [];
-} else {
-  
-  this.registroDeSolicitudesTablaDatos.push(ROW_DATA);
-}
+      this.isEditMode = false;
+      this.selectedRowIndex = null;
+      this.selectedRows = [];
+    } else {
+      this.mostrarTabla = false;
+      this.registroDeSolicitudesTablaDatos.push(ROW_DATA);
+      this.cd.detectChanges();
+      this.mostrarTabla = true;
+     
+    }
     this.habilitarPestana.emit();
     this.formularioTratados.reset();
   }
@@ -462,6 +456,9 @@ modificarTratado(): void {
     tratado: TRATADO_ID,
     origen: ORIGEN_ID
   });
+  this.mostrarTabla = false;
+  this.cd.detectChanges();
+  this.mostrarTabla = true;
 }
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
@@ -541,7 +538,7 @@ talbleData: RegistroDeSolicitudesTabla = {
         }
         break;
       case 'tratado':
-        this.getCatalogoCriterios("550");
+        this.getCatalogoCriterios(selectedOption.clave || '');
         break;
       default:
         break;
