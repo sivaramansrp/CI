@@ -71,6 +71,7 @@ import {
 import { Subject, delay, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ScianDataService } from '../../services/scian-data.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -108,6 +109,14 @@ export class DatosDeLaSolicitudComponent
    * Configuración de la tabla SCIAN recibida como input.
    */
   @Input() public scianConfig!: ScianConfig<TablaScianConfig>;
+
+   /**
+   * Indica si existe un error en el campo de correo electrónico.
+   * 
+   * - `true`: Se muestra el mensaje de error de correo electrónico no válido.
+   * - `false`: No hay error, el correo electrónico es válido.
+   */
+  @Input() public correoElectronicoMensajeError: boolean = false;
 
   /**
    * @property {TablaMercanciasConfig<TablaMercanciasDatos>} tablaMercanciasConfig
@@ -717,11 +726,10 @@ export class DatosDeLaSolicitudComponent
       ],
       calle: [
         {
-          value: this.datosSolicitudFormState.calle,
-          disabled: true, // Disabled by default (as shown in screenshot)
-        },
-        [Validators.required]
-      ],
+        value:this.datosSolicitudFormState.calle,
+        disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento)
+      }, 
+      [Validators.required]],
       lada: [
         {
           value: this.datosSolicitudFormState.lada,
@@ -1106,7 +1114,7 @@ export class DatosDeLaSolicitudComponent
    * componentes o servicios que estén escuchando el evento emitido.
    */
   modificarDatos(): void {
-    if (this.tablaMercanciasLista.length === 0) {
+    if (this.tablaMercanciasLista.length > 1) {
       this.seleccionarFilaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -1119,7 +1127,7 @@ export class DatosDeLaSolicitudComponent
         txtBtnCancelar: '',
       };
       this.mostrarAlerta = true;
-    } else if (this.tablaMercanciasLista.length > 0) {
+    } else if (this.tablaMercanciasLista.length === 1) {
       this.datosDeTablaSeleccionados.emit({
         scianSeleccionados: this.scianLista,
         mercanciasSeleccionados: this.tablaMercanciasLista,
