@@ -24,6 +24,12 @@ export class ScianTablaComponent implements OnInit {
   @Output() scianSeleccionado: EventEmitter<TablaScianConfig> = new EventEmitter<TablaScianConfig>();
 
   /**
+   * Evento que emite el objeto o lista de objetos seleccionados de tipo `TablaScianConfig`.
+   * Se utiliza para notificar al componente padre cuando uno o más SCiAN han sido seleccionados.
+   */
+  @Output() scianSeleccionadoSpecific: EventEmitter<TablaScianConfig | TablaScianConfig[]> = new EventEmitter<TablaScianConfig | TablaScianConfig[]>();
+
+  /**
    * Identificador del procedimiento relacionado.
    * Este valor debe ser proporcionado por el componente padre.
    */
@@ -61,7 +67,10 @@ export class ScianTablaComponent implements OnInit {
    * Indica si la selección de un SCiAN hijo (niño) es requerida.
    */
   public scianNinoRequerido = true;
-
+  /**
+   * Indica si el campo de descripción está deshabilitado.
+   */
+  public disableDescripcion: boolean = false;
 
   /**
    * Almacena el mensaje de error para mostrar cuando el formulario es inválido.
@@ -114,6 +123,8 @@ export class ScianTablaComponent implements OnInit {
       PROCEDIMIENTOS_NO_PARA_ELEMENTO_DESCRIPCION_REQUERIDO.includes(this.idProcedimiento)
         ? false
         : true;
+
+    this.disableDescripcion = this.idProcedimiento === 260201 ? true : false;
   }
 
   /**
@@ -160,7 +171,17 @@ export class ScianTablaComponent implements OnInit {
         clave: this.scianNinoLista[0].descripcion,
         descripcion: this.scianForm.get('scianNino')?.value
       }
-      this.scianSeleccionado.emit(SCIAN_IDX);
+      if(this.idProcedimiento === 260201){
+        if(this.scianConfigDatos && this.scianConfigDatos.length > 0){
+          this.scianConfigDatos.push(SCIAN_IDX);
+          this.scianSeleccionadoSpecific.emit(this.scianConfigDatos);
+        }else{
+          this.scianSeleccionadoSpecific.emit(SCIAN_IDX);
+        }
+      }else{
+        this.scianSeleccionado.emit(SCIAN_IDX);
+      }
+
       this.ubicaccion.back();
     }
   }

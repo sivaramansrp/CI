@@ -1,6 +1,6 @@
-import { Catalogo, ConsultaioQuery, REG_X } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Catalogo, ConsultaioQuery, Notificacion } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite130112State,
@@ -11,11 +11,10 @@ import { HttpClient } from '@angular/common/http';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-material-de-investigacion-cientifica-pasos.enum';
 import { ImportacionMaterialDeInvestigacionCientificaService } from '../../services/importacion-material-de-investigacion-cientifica.service';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { PartidasDeLaMercanciaComponent } from '../partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130112/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
-import { REGEX_NUMERO_DECIMAL_ENTERO } from '@ng-mf/data-access-user';
-import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130112Query } from '../../estados/queries/tramite130112.query';
 import fractionValues from '@libs/shared/theme/assets/json/130112/fraccion_arancelaria.json';
@@ -37,6 +36,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Formulario reactivo principal para capturar los datos de la solicitud.
    */
   partidasDelaMercanciaForm!: FormGroup;
+    /*
+   * modificarPartidasDelaMercanciaForm
+   * Formulario reactivo para modificar las partidas.
+   */
+  modificarPartidasDelaMercanciaForm!: FormGroup;
 
   /**
    *  Formulario reactivo para los datos del trámite.
@@ -81,7 +85,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * mostrarTabla
    * Bandera para mostrar u ocultar la tabla dinámica.
    */
-  mostrarTabla = false;
+  mostrarTabla = true;
 
   /**
    * CHECKBOX
@@ -179,12 +183,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   selectRangoDias: string[] = [];
   /**
-   *  Objeto o constante que contiene los textos utilizados en la aplicación.
-   * @type {any}
-   */
-  TEXTOS = TEXTOS;
-
-  /**
    * @property {string} idProcedimiento
    * @description
    * Identificador del procedimiento.
@@ -203,6 +201,42 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Propiedad privada.
    */
   private seccionState!: Tramite130112State;
+    /**
+   * Indica si se debe mostrar el error de clasificación.
+   */
+  mostrarErrorClasificacion = true;
+
+  /*
+   * Indica si se debe mostrar el tooltip del valor de la factura en USD.
+   */
+  mostrarTooltipValorFacturaUSD = true;
+  /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de partidas de la mercancía.
+   */
+  mostrarErroresPartidas = false;
+
+  /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de mercancía.
+   */
+  mostrarErroresMercancia = false;
+
+  /*
+   * @descripcion Indica si se debe mostrar una notificación.
+   */
+  mostrarNotificacion = false;
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+
+  /**
+   * Referencia al componente `PartidasDeLaMercanciaComponent` dentro de la vista.
+   * Permite acceder a las propiedades y métodos públicos del componente hijo desde el componente padre.
+   */
+  @ViewChild(PartidasDeLaMercanciaComponent)
+  partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
+
   /**
    * Constructor del componente.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -219,7 +253,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private importacionMaterialDeInvestigacionCientificaService: ImportacionMaterialDeInvestigacionCientificaService,
     private consultaioQuery: ConsultaioQuery
   ) {
-    this.inicializarFormularios();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
@@ -233,26 +266,61 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    *  Ciclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
   ngOnInit(): void {
-    this.configuracionFormularioSuscripciones();
+    this.tramite130112Store.actualizarEstado({
+    solicitud: 'Inicial',
+    producto: 'Nuevo',
+    defaultSelect: 'Inicial',
+    defaultProducto: 'Nuevo'
+  });
+
+    this.inicializarEstadoFormulario();
     this.opcionesDeBusqueda();
-    this.formularioTotalCount();
-    this.obtenerTablaDatos();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
     this.listaDeFraccionDescripcion();
-
-    this.tramite130112Query.mostrarTabla$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((mostrarTabla) => {
-        this.mostrarTabla = mostrarTabla;
-      });
+    this.tramite130112Query.select(state => state.tableBodyData)
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      this.tableBodyData = data || [];
+    });
   }
 
+  
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormularios();
+    }
+  }
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormularios();
+  }
+  /**
+   * Se suscribe a los cambios del estado de la solicitud en el store de Tramite130111.
+   * Cada vez que el estado cambia, actualiza la propiedad interna `seccionState` con los nuevos datos.
+   * Esta suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
+   */
+  suscribirseAEstadoDeSolicitud(): void {
+    this.tramite130112Query.selectSolicitud$
+      ?.pipe(takeUntil(this.destroyed$))
+      .subscribe((data: Tramite130112State) => {
+        this.seccionState = data;
+      });
+  }
   /**
    *  Inicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
    */
   inicializarFormularios(): void {
+    this.suscribirseAEstadoDeSolicitud(); 
     this.formDelTramite = this.fb.group({
       solicitud: [this.seccionState?.solicitud, Validators.required],
       regimen: [this.seccionState?.regimen, Validators.required],
@@ -260,38 +328,56 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
 
     this.mercanciaForm = this.fb.group({
-      producto: [],
-      descripcion: [this.seccionState?.descripcion, [Validators.required]],
-      fraccion: [this.seccionState?.fraccion, Validators.required],
-      cantidad: [
-        this.seccionState?.cantidad,
-        [
-          Validators.required,
-          Validators.pattern(REG_X.SOLO_NUMEROS),
-          Validators.min(1),
+        producto: [this.seccionState?.producto],
+        descripcion: [
+         this.seccionState?.descripcion,
+          [
+            Validators.required,
+            SolicitudComponent.validarSinCaracterAnguloDerecho
+          ],
         ],
-      ],
-
-      valorFacturaUSD: [
-        this.seccionState?.valorFacturaUSD,
-        [
-          Validators.required,
-          Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
-          Validators.min(0.01),
+        fraccion: [this.seccionState?.fraccion, Validators.required],
+        cantidad: [
+          this.seccionState?.cantidad,
+          [
+            Validators.required,
+            SolicitudComponent.validarNumeroTresDecimales,
+            Validators.min(1),
+          ],
         ],
-      ],
-
-      unidadMedida: [this.seccionState?.unidadMedida, Validators.required],
-    });
+        valorFacturaUSD: [
+          this.seccionState?.valorFacturaUSD,
+          [
+            Validators.required,
+            SolicitudComponent.validarNumeroTresDecimales,
+            Validators.min(0.01),
+          ],
+        ],
+   
+        unidadMedida: [this.seccionState?.unidadMedida, Validators.required],
+      });
     this.partidasDelaMercanciaForm = this.fb.group({
-      cantidadPartidasDeLaMercancia: [
-        this.seccionState?.cantidadPartidasDeLaMercancia,
-        [
-          Validators.required,
-          Validators.pattern('^[0-9]+$'),
-          Validators.maxLength(18),
+         cantidadPartidasDeLaMercancia: [
+          this.seccionState?.cantidadPartidasDeLaMercancia,
+          [
+            Validators.required,
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            Validators.maxLength(18),
+          ],
         ],
-      ],
+        descripcionPartidasDeLaMercancia: [
+          this.seccionState?.descripcionPartidasDeLaMercancia,
+          [Validators.required, Validators.maxLength(255)],
+        ],
+        valorPartidaUSDPartidasDeLaMercancia: [
+          this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
+          [
+            Validators.required,
+            Validators.min(0),
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            Validators.maxLength(20),
+          ],
+        ],
       fraccionTigiePartidasDeLaMercancia: [
         this.seccionState?.fraccionTigiePartidasDeLaMercancia,
         [Validators.required, Validators.maxLength(255)],
@@ -299,27 +385,49 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       fraccionDescripcionPartidasDeLaMercancia: [
         this.seccionState?.fraccionDescripcionPartidasDeLaMercancia,
       ],
-      descripcionPartidasDeLaMercancia: [
-        this.seccionState?.descripcionPartidasDeLaMercancia,
+    
+    });
+    this.modificarPartidasDelaMercanciaForm = this.fb.group({
+         cantidadPartidasDeLaMercancia: [
+          this.seccionState?.cantidadPartidasDeLaMercancia,
+          [
+            Validators.required,
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            Validators.maxLength(18),
+          ],
+        ],
+        descripcionPartidasDeLaMercancia: [
+          this.seccionState?.descripcionPartidasDeLaMercancia,
+          [Validators.required, Validators.maxLength(255)],
+        ],
+        valorPartidaUSDPartidasDeLaMercancia: [
+          this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
+          [
+            Validators.required,
+            Validators.min(0),
+            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            Validators.maxLength(20),
+          ],
+        ],
+      fraccionTigiePartidasDeLaMercancia: [
+        this.seccionState?.fraccionTigiePartidasDeLaMercancia,
         [Validators.required, Validators.maxLength(255)],
       ],
-      valorPartidaUSDPartidasDeLaMercancia: [
-        this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
-        [
-          Validators.required,
-          Validators.min(0),
-          Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
-          Validators.maxLength(20),
-        ],
+      fraccionDescripcionPartidasDeLaMercancia: [
+        this.seccionState?.fraccionDescripcionPartidasDeLaMercancia,
       ],
+    
     });
-
+     this.formularioTotalCount(
+        String(this.seccionState?.cantidadTotal),
+        String(this.seccionState?.valorTotalUSD)
+      );
     this.paisForm = this.fb.group({
       bloque: [this.seccionState?.bloque],
-      usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
+      usoEspecifico: [this.seccionState?.usoEspecifico, [Validators.required, SolicitudComponent.validarSinCaracterAnguloDerecho]],
       justificacionImportacionExportacion: [
         this.seccionState?.justificacionImportacionExportacion,
-        [Validators.required],
+        [Validators.required, SolicitudComponent.validarSinCaracterAnguloDerecho],
       ],
       observaciones: [this.seccionState?.observaciones],
     });
@@ -328,68 +436,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       representacion: [this.seccionState?.representacion, Validators.required],
     });
   }
-  /**
-   *  Configura las suscripciones para actualizar formularios y almacenar estados.
-   */
-  configuracionFormularioSuscripciones(): void {
-    this.tramite130112Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.partidasDelaMercanciaForm.patchValue({
-            cantidadPartidasDeLaMercancia:
-              seccionState.cantidadPartidasDeLaMercancia,
-            fraccionTigiePartidasDeLaMercancia:
-              seccionState.fraccionTigiePartidasDeLaMercancia,
-            fraccionDescripcionPartidasDeLaMercancia:
-              seccionState.fraccionDescripcionPartidasDeLaMercancia,
-            valorPartidaUSDPartidasDeLaMercancia:
-              seccionState.valorPartidaUSDPartidasDeLaMercancia,
-            descripcionPartidasDeLaMercancia:
-              seccionState.descripcionPartidasDeLaMercancia,
-          });
-
-          this.formDelTramite.patchValue({
-            solicitud: seccionState.solicitud,
-            regimen: seccionState.regimen,
-            clasificacion: seccionState.clasificacion,
-          });
-
-          this.mercanciaForm.patchValue({
-            producto: seccionState.producto,
-            descripcion: seccionState.descripcion,
-            fraccion: seccionState.fraccion,
-            cantidad: seccionState.cantidad,
-            valorFacturaUSD: seccionState.valorFacturaUSD,
-            unidadMedida: seccionState.unidadMedida,
-          });
-
-          this.paisForm.patchValue({
-            bloque: seccionState.bloque,
-            usoEspecifico: seccionState.usoEspecifico,
-            justificacionImportacionExportacion:
-              seccionState.justificacionImportacionExportacion,
-            observaciones: seccionState.observaciones,
-          });
-
-          this.frmRepresentacionForm.patchValue({
-            entidad: seccionState.entidad,
-            representacion: seccionState.representacion,
-          });
-        })
-      )
-      .subscribe();
-  }
-  /**
+ 
+   /**
    * formularioTotalCount
    * Crea el formulario reactivo para capturar los totales de las partidas.
    */
-  formularioTotalCount(): void {
-    this.formForTotalCount = this.fb.group({
-      cantidadTotal: [{ value: '', disabled: true }],
-      valorTotalUSD: [{ value: '', disabled: true }],
-    });
-  }
+  formularioTotalCount(cantidadTotal: string , valorTotalUSD: string): void {
+  this.formForTotalCount = this.fb.group({
+    cantidadTotal: [{ value: cantidadTotal, disabled: true }],
+    valorTotalUSD: [{ value: valorTotalUSD, disabled: true }],
+  });
+}
 
   /**
    *  Solicita opciones configurables para los formularios desde archivos JSON.
@@ -440,44 +497,122 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Método para obtener los datos de la tabla dinámica.
-   * Este método realiza una solicitud al servicio `importacionMaterialDeInvestigacionCientificaService` para obtener los datos
-   * de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
-   *
-   * - Actualiza `tableBodyData` con los datos obtenidos.
-   * - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
-   * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
-   *
-   */
-  obtenerTablaDatos(): void {
-    this.importacionMaterialDeInvestigacionCientificaService
-      .getTablaDatos()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.tableBodyData = data;
-        if (this.esFormularioSoloLectura) {
-          this.formForTotalCount.patchValue({
-            cantidadTotal: data[0].cantidad,
-            valorTotalUSD: data[0].totalUSD,
-          });
-        }
-      });
-  }
 
   /**
    * validarYEnviarFormulario
    * Valida el formulario y muestra la tabla dinámica si es válido.
    */
-  validarYEnviarFormulario(): void {
-    this.mostrarTabla = true;
-    if (this.partidasDelaMercanciaForm.invalid) {
-      this.partidasDelaMercanciaForm.markAllAsTouched();
-    } else {
-      this.mostrarTabla = true;
-      this.tramite130112Store.actualizarEstado({ mostrarTabla: true });
+   validarYEnviarFormulario(): void {
+    ['cantidad', 'valorFacturaUSD'].forEach((controlName) => {
+      const CONTROL = this.mercanciaForm.get(controlName);
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        CONTROL.updateValueAndValidity();
+      }
+    });
+
+    if (
+      this.mercanciaForm.get('cantidad')?.invalid ||
+      this.mercanciaForm.get('valorFacturaUSD')?.invalid
+    ) {
+      this.mostrarErroresMercancia = true;
+      this.mostrarErroresPartidas = false;
+      return;
     }
+
+    this.mostrarErroresMercancia = false;
+
+    [
+      'cantidadPartidasDeLaMercancia',
+      'valorPartidaUSDPartidasDeLaMercancia',
+      'descripcionPartidasDeLaMercancia',
+      'fraccionTigiePartidasDeLaMercancia'
+    ].forEach((controlName) => {
+      const CONTROL = this.partidasDelaMercanciaForm.get(controlName);
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        CONTROL.updateValueAndValidity();
+      }
+    });
+
+    if (
+      this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')
+        ?.invalid ||
+      this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')
+        ?.invalid ||
+      this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')
+        ?.invalid ||
+      this.partidasDelaMercanciaForm.get('fraccionTigiePartidasDeLaMercancia')
+        ?.invalid
+    ) {
+      this.mostrarErroresPartidas = true;
+      return;
+    }
+
+    // Si fracción no tiene valor, mostrar popup y detener flujo
+  if (!this.mercanciaForm.get('fraccion')?.value || !this.partidasDelaMercanciaForm.get('fraccionDescripcionPartidasDeLaMercancia')?.value) {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'info',
+      modo: '',
+      titulo: '',
+      mensaje: 'Debes seleccionar una Fracción arancelaria',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm'
+    };
+    this.mostrarNotificacion = true;
+    return;
   }
+  const CURRENT_TABLE = this.tramite130112Query.getValue().tableBodyData || [];
+  const CANTIDAD = Number(this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value);
+  const TOTALUSD = Number(this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value);
+
+  const PRECIOUNITARIO_USD =
+    CANTIDAD && !isNaN(CANTIDAD) && !isNaN(TOTALUSD)
+      ? (TOTALUSD / CANTIDAD).toFixed(2)
+      : '';
+
+  const NEW_ROW: PartidasDeLaMercanciaModelo = {
+    id: Date.now().toString(),
+    cantidad: this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
+    totalUSD: this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
+    descripcion: this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
+    unidadDeMedida: this.unidadCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('unidadMedida')?.value))?.descripcion || '',
+    fraccionFrancelaria: this.fraccionCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('fraccion')?.value))?.descripcion || '',
+    precioUnitarioUSD: PRECIOUNITARIO_USD,
+    fraccionTigiePartidasDeLaMercancia: this.partidasDelaMercanciaForm.get('fraccionTigiePartidasDeLaMercancia')?.value,
+    fraccionDescripcionPartidasDeLaMercancia: this.partidasDelaMercanciaForm.get('fraccionDescripcionPartidasDeLaMercancia')?.value
+  };
+
+  const UPDATED_TABLE = [...CURRENT_TABLE, NEW_ROW];
+  this.tramite130112Store.actualizarEstado({ 
+    tableBodyData: UPDATED_TABLE, 
+    mostrarTabla: true 
+  });
+
+  this.tableBodyData = UPDATED_TABLE;
+  this.mostrarTabla = true;
+
+  const CANTIDAD_TOTAL = this.tableBodyData.reduce(
+  (sum, row) => sum + Number(row.cantidad),
+  0
+);
+const VALOR_TOTAL_USD = this.tableBodyData.reduce(
+  (sum, row) => sum + Number(row.totalUSD),
+  0
+);
+
+this.tramite130112Store.actualizarEstado({
+  cantidadTotal: String(CANTIDAD_TOTAL),
+  valorTotalUSD: String(VALOR_TOTAL_USD)
+});
+
+  this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
+  this.partidasDelaMercanciaForm.reset();
+  this.mostrarErroresPartidas = false;
+}
 
   /**
    * navegarParaModificarPartida
@@ -564,11 +699,26 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * setValoresStore
    * Establece valores en el store.
    */
-  setValoresStore($event: { form: FormGroup; campo: string }): void {
+ setValoresStore($event: { form: FormGroup; campo: string }): void {
     const VALOR = $event.form.get($event.campo)?.value;
-    this.tramite130112Store.actualizarEstado({ [$event.campo]: VALOR });
-    if ($event.campo === 'fraccion') {
-      this.tramite130112Store.actualizarEstado({ unidadMedida: '1' });
+
+    if ($event.campo === 'regimen') {
+      this.formDelTramite.get('clasificacion')?.setValue('');
+      this.mostrarErrorClasificacion = false;
+      this.tramite130112Store.actualizarEstado({
+        [$event.campo]: VALOR,
+        clasificacion: '',
+      });
+    } else {
+      this.tramite130112Store.actualizarEstado({ [$event.campo]: VALOR });
+      if ($event.campo === 'clasificacion' && VALOR) {
+        this.mostrarErrorClasificacion = true;
+      }
+    }
+
+   if ($event.campo === 'fraccion') {
+       this.mercanciaForm.get('unidadMedida')?.setValue('1'); 
+       this.tramite130112Store.actualizarEstado({ 'unidadMedida': '1' });
     }
   }
 
@@ -591,5 +741,195 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+  }
+   /**
+   * Valida que un número tenga como máximo tres decimales.
+   */
+  static validarNumeroTresDecimales(
+    control: AbstractControl
+  ): ValidationErrors | null {
+    const VALOR = control.value;
+    if (VALOR === null || VALOR === undefined || VALOR === '') {
+      return null;
+    }
+
+    if (!/^\d+(\.\d+)?$/.test(VALOR)) {
+      return { noEsNumero: true };
+    }
+
+    if (/^\d+\.\d{4,}$/.test(VALOR)) {
+      return { maximoTresDecimales: true };
+    }
+
+    return null;
+  }
+
+  /**
+   * Valida que un string no contenga el carácter de ángulo derecho (›).
+   */
+  static validarSinCaracterAnguloDerecho(
+    control: AbstractControl
+  ): ValidationErrors | null {
+    if (typeof control.value === 'string' && control.value.includes('›')) {
+      return { validarSinCaracterAnguloDerecho: true };
+    }
+    return null;
+  }
+
+  /*
+      Valida que un número tenga como máximo 14 enteros y 3 decimales.
+      */
+  static validarCatorceEnterosTresDecimales(
+    control: AbstractControl
+  ): ValidationErrors | null {
+    const VALOR = control.value;
+    if (VALOR === null || VALOR === undefined || VALOR === '') {
+      return null;
+    }
+
+    if (!/^\d*\.?\d*$/.test(VALOR)) {
+      return { noEsNumero: true };
+    }
+
+    if (!/^\d{1,14}(\.\d{1,3})?$/.test(VALOR)) {
+      return { validarCatorceEnterosTresDecimales: true };
+    }
+
+    return null;
+  }
+      /*
+    * Método que se ejecuta cuando se eliminan partidas de la tabla.
+    * Actualiza los datos de la tabla y recalcula los totales.  
+    */
+    onPartidasEliminadas(ids: string[]): void {
+      this.tableBodyData = this.tableBodyData.filter(row => !ids.includes(row.id));
+      this.mostrarTabla = this.tableBodyData.length > 0;
+
+      const CANTIDAD_TOTAL = this.tableBodyData.reduce(
+        (sum, row) => sum + Number(row.cantidad),
+        0
+      );
+      const VALOR_TOTAL_USD = this.tableBodyData.reduce(
+        (sum, row) => sum + Number(row.totalUSD),
+        0
+      );
+    this.tramite130112Store.actualizarEstado({
+       cantidadTotal: String(CANTIDAD_TOTAL),
+       valorTotalUSD: String(VALOR_TOTAL_USD)
+    });
+    this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
+      this.tramite130112Store.actualizarEstado({
+        tableBodyData: this.tableBodyData, 
+        mostrarTabla: this.mostrarTabla 
+      });
+    }
+
+      /**
+   * onModificarPartidaSeleccionada
+   * Maneja la modificación de una partida seleccionada.
+   * @param partida - La partida que se va a modificar.
+   */
+  onModificarPartidaSeleccionada(partida: PartidasDeLaMercanciaModelo) :void{
+    this.modificarPartidasDelaMercanciaForm.patchValue({
+    cantidadPartidasDeLaMercancia: partida.cantidad,
+    descripcionPartidasDeLaMercancia: partida.descripcion,
+    valorPartidaUSDPartidasDeLaMercancia: partida.totalUSD,
+    fraccionTigiePartidasDeLaMercancia: partida.fraccionTigiePartidasDeLaMercancia,
+    fraccionDescripcionPartidasDeLaMercancia: partida.fraccionDescripcionPartidasDeLaMercancia || ''
+  });
+  }
+  /**
+   * Valida los formularios de mercancía y partidas de la mercancía antes de permitir la carga de un archivo.
+   */
+  validarYCargarArchivo(): void {
+     ['cantidad', 'valorFacturaUSD'].forEach((controlName) => {
+      const CONTROL = this.mercanciaForm.get(controlName);
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        CONTROL.updateValueAndValidity();
+      }
+    });
+
+    if (
+      this.mercanciaForm.get('cantidad')?.invalid ||
+      this.mercanciaForm.get('valorFacturaUSD')?.invalid
+    ) {
+      this.mostrarErroresMercancia = true;
+      this.mostrarErroresPartidas = false;
+      return;
+    }
+
+    this.mostrarErroresMercancia = false;
+
+    [
+      'cantidadPartidasDeLaMercancia',
+      'valorPartidaUSDPartidasDeLaMercancia',
+      'descripcionPartidasDeLaMercancia',
+      'fraccionTigiePartidasDeLaMercancia'
+    ].forEach((controlName) => {
+      const CONTROL = this.partidasDelaMercanciaForm.get(controlName);
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        CONTROL.updateValueAndValidity();
+      }
+    });
+
+    if (
+      this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')
+        ?.invalid ||
+      this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')
+        ?.invalid ||
+      this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')
+        ?.invalid ||
+      this.partidasDelaMercanciaForm.get('fraccionTigiePartidasDeLaMercancia')
+        ?.invalid
+    ) {
+      this.mostrarErroresPartidas = true;
+      return;
+    }
+
+    if (!this.mercanciaForm.get('fraccion')?.value || !this.partidasDelaMercanciaForm.get('fraccionDescripcionPartidasDeLaMercancia')?.value) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'info',
+        modo: '',
+        titulo: '',
+        mensaje: 'Debes seleccionar una Fracción arancelaria',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-sm',
+      };
+      this.mostrarNotificacion = true;
+      return;
+    }
+
+      this.partidasDeLaMercanciaComponent.abrirCargarArchivoModalReal();
+    } 
+    
+    /**
+   * onPartidaModificada
+   * Maneja la modificación de una partida.
+   * @param partida - La partida que se va a modificar.
+   */
+  onPartidaModificada(partida: PartidasDeLaMercanciaModelo): void {
+    this.tableBodyData = this.tableBodyData.map(row =>
+      row.id === partida.id ? { ...row, ...partida } : row
+    );
+    this.tramite130112Store.actualizarEstado({ tableBodyData: this.tableBodyData });
+
+    const CANTIDAD_TOTAL = this.tableBodyData.reduce(
+      (sum, row) => sum + Number(row.cantidad),
+      0
+    );
+    const VALOR_TOTAL_USD = this.tableBodyData.reduce(
+      (sum, row) => sum + Number(row.totalUSD),
+      0
+    );
+    this.tramite130112Store.actualizarEstado({
+      cantidadTotal: String(CANTIDAD_TOTAL),
+      valorTotalUSD: String(VALOR_TOTAL_USD)
+    });
+    this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
   }
 }

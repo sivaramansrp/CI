@@ -64,7 +64,7 @@ jobs:
 
       - name: Update deployment YAML image tag
         run: |
-          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:.*|image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:${{ steps.get-version.outputs.VERSION }}|g" k8s/dashboard/*deployment*.yaml
+          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:.*|image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:${{ steps.get-version.outputs.VERSION }}|g" k8s/dashboard/*.yaml
 
       - name: Copy deployment files to server
         uses: appleboy/scp-action@v0.1.7
@@ -108,11 +108,36 @@ jobs:
               fi
             done
             docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }} ghcr.io
+
+            echo "Before image/container cleanup:"
+            docker images | grep $APP_NAME || true
+            docker ps -a | grep $APP_NAME || true
+
+            # Remove containers using the image
+            docker ps -a --filter "ancestor=ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG" -q | xargs -r docker rm -f
+
+            # Remove the old image if present
+            docker rmi -f ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG || true
+
+            # Prune all unused images, containers, and system resources to free up disk space
+            docker image prune -af || true
+            docker container prune -f || true
+            docker system prune -af || true
+
+            echo "After image/container cleanup:"
+            docker images | grep $APP_NAME || true
+            docker ps -a | grep $APP_NAME || true
+
+            # Always pull the latest image before deployment
             docker pull ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG
+
             grep "image: ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG" "$DEPLOYMENT_FILE"
+
+            # Ensure pods are always started with the latest image
             microk8s kubectl apply -f "$DEPLOYMENT_FILE"
             microk8s kubectl apply -f "$SERVICE_FILE"
             microk8s kubectl apply -f "$INGRESS_FILE"
+            # Force new pods with latest image
             microk8s kubectl rollout restart deployment modulefederation-$APP_NAME-deployment-dev -n default
             microk8s kubectl rollout status deployment modulefederation-$APP_NAME-deployment-dev -n default
             microk8s kubectl get pods | grep $APP_NAME
