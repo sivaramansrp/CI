@@ -7,7 +7,8 @@ import {
   TIPO_PERSONA_OPCIONES,
   TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE
 } from '../../constants/datos-solicitud.enum';
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, REGEX_RFC_FISICA, REGEX_RFC_MORAL, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, InputRadioComponent, REGEX_RFC_FISICA, REGEX_RFC_MORAL, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent,ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   DestinoFinal,
@@ -15,7 +16,6 @@ import {
 } from '../../models/terceros-relacionados.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
