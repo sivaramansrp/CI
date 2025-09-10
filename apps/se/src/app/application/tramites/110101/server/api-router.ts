@@ -63,6 +63,12 @@ export const API_GET_CAT_REPRESENTACION_FEDERAL= (CVEENTIDAD: string): string =>
 export const API_GET_CAT_DECLARACION_DATOS = (IDTIPOTRAMITE: string): string => `sat-t110101/catalogo/tipo-tramite/${IDTIPOTRAMITE}/declaraciones`;
 
 /**
+ * API para el catalogo de criterios otras instancias.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/get-criterios-otras-instancias
+ */
+export const API_GET_CAT_CRITERIOS_OTRAS_INSTANCIAS = `sat-t110101/catalogo/criterios-otras-instancias`;
+
+/**
  *  URLs de validacion de tratados y de tabla de tratados
  */
 
