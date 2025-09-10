@@ -390,11 +390,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     const REGIMEN_SELECCCIONADO = this.regimenesAnteriores.regimen_1 || 
                                           this.regimenesAnteriores.regimen_2 || 
                                           this.regimenesAnteriores.regimen_3;
-    const REGIMENs = REGIMEN_1 || REGIMEN_2 || REGIMEN_3;
+    const REGIMENS = REGIMEN_1 || REGIMEN_2 || REGIMEN_3;
 
-    if (REGIMEN_SELECCCIONADO && !REGIMENs) {
+    if (REGIMEN_SELECCCIONADO && !REGIMENS) {
       this.mostrarErrorDeseleccionRegimenes = true;
-    } else if (REGIMENs) {
+    } else if (REGIMENS) {
       this.mostrarErrorDeseleccionRegimenes = false;
     }
 
