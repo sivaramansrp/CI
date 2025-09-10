@@ -86,12 +86,13 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    * @default false
    */
   actualizacionCounsulta: boolean = false;
+
   /**
-    * Una constante que contiene el valor del objeto 'PROTESTA'.
+    * Una constante que contiene textos adicionales para el componente.
     * Se utiliza para almacenar datos adicionales relacionados con el componente.
     */
+  public textos?: string;
 
-  TEXTOS = PROTESTA;
   /**
    * Representa el estado actual del solicitante para el trámite 110101.
    * Esta propiedad contiene toda la información relevante y el estado del solicitante.
@@ -145,7 +146,7 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getEntidadFederativa();
-    this.getRepresentacionFederal();
+    this.getDeclaracionDatos();
     this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$), map((seccionState) => {
       this.solicitudeState = seccionState;
     })).subscribe();
@@ -221,25 +222,63 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method getRepresentacionFederal
+   * @description Obtiene el catálogo de la representación federal.
+   * @param cveEntidad - Clave de la entidad federativa para filtrar la representación federal.
+   * 
    * Recupera y establece la información de la entidad federativa.
    * El objeto de entidad incluye el nombre de la etiqueta, el estado requerido, la opción predeterminada,
    * y un catálogo de opciones disponibles.
    *
    * @returns {void}
    */
-  public getRepresentacionFederal(): void {
-    this.representacion = [
-      {
-        id: 1,
-        descripcion: 'CULIACAN',
-      },
-      {
-        id: 2,
-        descripcion: 'Opción 1',
-      }
-    ]
+  public getRepresentacionFederal(cveEntidad: string): void {
+    this.catalogoTramiteService.getCatRepresentacionFederal(cveEntidad)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response) => {
+        if (response.codigo === CodigoRespuesta.EXITO) {
+          // El backend manda "datos"
+          const DATOS = response.datos || [];
+
+          // Transformación a tu respuesta a response Catalogo
+          this.representacion = DATOS.map((item, index) => ({
+            id: index + 1,
+            descripcion: item.descripcion,
+            clave: item.clave,
+          }));
+        }
+      });
   }
 
+  /**
+   * @method onRepresentacionFederal
+   * @description Maneja el evento de selección de una representación federal.
+   * @param {Catalogo} selectedOption - La opción seleccionada de representación federal.
+   * @returns {void} No retorna ningún valor.
+   */
+  onRepresentacionFederal(selectedOption: Catalogo): void {
+    this.getRepresentacionFederal(selectedOption.clave || '');
+  }
+
+  /**
+   * @method getDeclaracionDatos
+   * @description Obtiene el catálogo de la declaración de datos.
+   * Recupera y establece la información de la declaración de datos.
+   * El objeto de declaración de datos incluye el nombre de la etiqueta y la descripción.
+   *
+   * @returns {void}
+   */
+  public getDeclaracionDatos(): void {
+    this.catalogoTramiteService.getCatDeclaracionDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response) => {
+        if (response.codigo === CodigoRespuesta.EXITO) {          
+         this.textos = response.datos?.[0]?.descripcion;
+        }else {
+        this.textos = PROTESTA.ADJUNTAR;}
+      });
+  }
+  
   /**
    * Establece el valor de un campo en el store de Tramite31601.
    * @param form - El grupo de formularios que contiene el campo.

@@ -51,6 +51,18 @@ export const API_GET_CAT_CRITERIOS= (IDTRATADOACUERDO: string): string => `sat-t
 export const API_GET_CAT_ENTIDADES_FEDERATIVAS = `sat-t110101/catalogo/entidades-federativas`;
 
 /**
+ * API para el catalogo de representación federal.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/consultar-representaciones-federales
+ */
+export const API_GET_CAT_REPRESENTACION_FEDERAL= (CVEENTIDAD: string): string => `sat-t110101/catalogo/entidad-federativa/${CVEENTIDAD}/representaciones-federales`;
+
+/**
+ * API para el catalogo de declaracion de datos.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/consulta-by-tipo-tramite
+ */
+export const API_GET_CAT_DECLARACION_DATOS = (IDTIPOTRAMITE: string): string => `sat-t110101/catalogo/tipo-tramite/${IDTIPOTRAMITE}/declaraciones`;
+
+/**
  *  URLs de validacion de tratados y de tabla de tratados
  */
 
@@ -65,3 +77,4 @@ export const API_POST_TRATADO_CRITERIO = `sat-t110101/solicitud/tratado/criterio
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/consultar-configuracion-tratados
 */
 export const API_POST_SOLICITUD_TRATADOS = `sat-t110101/solicitud/tratados/configuracion`;
+
