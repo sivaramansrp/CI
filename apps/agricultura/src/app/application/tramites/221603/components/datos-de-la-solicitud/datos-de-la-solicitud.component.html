@@ -1,28 +1,34 @@
-<div class="custom-table-wrapper">
-  <div class="container mt-2">
-    <div class="header">
-      <span
-        class="plus-icon"
-        tabindex="0"
-        (click)="toggleContent()"
-        (keyup.enter)="toggleContent()"
-        (keyup.space)="toggleContent()"
-        >+</span
-      >
-    </div>
-
-    <div *ngIf="mostrarContenido" class="content">
-      <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
-
-      <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary ms-3">Cargar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="container" [formGroup]="datosSolicitudForm">
   <div class="row">
+    <div class="col-md-12 accordion-bar">
+          <div class="panel-group ficha-collapse" id="accordion">
+            <div class="panel panel-default mt-5">
+                <div class="panel-heading" (click)="mostrar_colapsable()">
+                  <h4 class="panel-title">
+              <a aria-label="Repeat"><i class="bi bi-repeat" aria-hidden="true"></i></a>
+            </h4>
+                  <button type="button" class="collpase-button collapsed"
+                  [ngClass]="{ 'expanded': colapsable,'collapsed': !colapsable}" [disabled]="esFormularioSoloLectura" >
+                  </button>
+                </div>
+                @if(colapsable){
+                <div class="panel-collapse collapse in" [ngClass]="{ 'in': colapsable, 'collapse': !colapsable}" id="panel-01">
+                  <div class="panel-body">
+                      <div class="row mt-5">
+                        <div class="col-md-12">
+                            <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
+                            <div class="col-md-12 mt-5 d-flex justify-content-end">
+                             <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">Cargar</button>
+                            </div>                            
+                        </div>
+                        
+                      </div>
+                  </div>
+                </div>
+                }
+            </div>
+          </div>
+      </div>
     <div class="col-md-12">
       <div class="form-group">
         <label class="form-label" for="justificacionDescription">Justificación*:</label>
@@ -105,13 +111,8 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="guia">Número de guía:</label>
-        <input
-          class="form-control"
-          id="guia"
-          formControlName="guia"
-          type="number"
-          (change)="setValoresStore('guia', 'setGuia')"
-        />
+        <input class="form-control" id="guia" formControlName="guia" type="text" maxlength="50" size="29"
+            (change)="setValoresStore('guia', 'setGuia')"/>
       </div>
     </div>
 
@@ -120,6 +121,8 @@
         <app-catalogo-select
           [catalogo]="sanidadService.regimen"
           [label]="'Régimen'"
+          [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'" 
+          [tooltipQuestionCircle]="true"
           [required]="true"
           name="regimen"
           formControlName="regimen"
