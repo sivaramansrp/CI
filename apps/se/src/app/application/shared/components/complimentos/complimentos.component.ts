@@ -621,6 +621,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     this.getCatalogoEstado();
     this.loadComboUnidadMedida();
     this.getPais();
+    this.obtenerEstados();
 
     this.formaComplimentos.valueChanges
       .pipe(delay(100))
