@@ -4,7 +4,7 @@ import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { TratadoAcuerdoCriterioRequest } from "../models/request/tratado-criterio.request.model";
+import { TratadoAcuerdoCriterioRequest } from "../models/request/tratado-criterio-request.model";
 
 @Injectable({
   providedIn: 'root'
