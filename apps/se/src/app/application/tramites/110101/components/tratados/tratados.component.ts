@@ -538,7 +538,7 @@ talbleData: RegistroDeSolicitudesTabla = {
         }
         break;
       case 'tratado':
-        this.getCatalogoCriterios("550");
+        this.getCatalogoCriterios(selectedOption.clave || '');
         break;
       default:
         break;
