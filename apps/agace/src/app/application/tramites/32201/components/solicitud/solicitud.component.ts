@@ -368,35 +368,37 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
     }
   }  
-  
-  /**
+    /**
    * Valida la condición de Régimen aduanero y muestra popup si es necesario.
    * Condición 1: Si regimen_0 está seleccionado y NINGUNO de regimen_1, regimen_2 o regimen_3 está seleccionado.
    * Condición 2: Si cualquiera de los regímenes 1, 2 o 3 estaba seleccionado y ahora todos están deseleccionados.
+   * Condición 3: Si alguno de los regímenes 1, 2 o 3 está seleccionado, oculta el mensaje de error.
    */  
   private validarRegimenAduanero(): void {
-    const regimen0 = this.solicitudForm.get('regimen_0')?.value;
-    const regimen1 = this.solicitudForm.get('regimen_1')?.value;
-    const regimen2 = this.solicitudForm.get('regimen_2')?.value;
-    const regimen3 = this.solicitudForm.get('regimen_3')?.value;
+    const REGIMEN_0 = this.solicitudForm.get('regimen_0')?.value;
+    const REGIMEN_1 = this.solicitudForm.get('regimen_1')?.value;
+    const REGIMEN_2 = this.solicitudForm.get('regimen_2')?.value;
+    const REGIMEN_3 = this.solicitudForm.get('regimen_3')?.value;
 
-    if (regimen0) {
-      if (!regimen1 && !regimen2 && !regimen3) {
+    if (REGIMEN_0) {
+      if (!REGIMEN_1 && !REGIMEN_2 && !REGIMEN_3) {
         this.mostrarPopupRegimenAduanero();
       }
     }
 
-    const regimenesActuales = { regimen_1: regimen1, regimen_2: regimen2, regimen_3: regimen3 };
-    const teníaAlgunRegimenSeleccionado = this.regimenesAnteriores.regimen_1 || 
+    const REGIMEN_ACTUALES = { regimen_1: REGIMEN_1, regimen_2: REGIMEN_2, regimen_3: REGIMEN_3 };
+    const REGIMEN_SELECCCIONADO = this.regimenesAnteriores.regimen_1 || 
                                           this.regimenesAnteriores.regimen_2 || 
                                           this.regimenesAnteriores.regimen_3;
-    const tieneAlgunRegimenSeleccionado = regimen1 || regimen2 || regimen3;
+    const REGIMENs = REGIMEN_1 || REGIMEN_2 || REGIMEN_3;
 
-    if (teníaAlgunRegimenSeleccionado && !tieneAlgunRegimenSeleccionado) {
+    if (REGIMEN_SELECCCIONADO && !REGIMENs) {
       this.mostrarErrorDeseleccionRegimenes = true;
+    } else if (REGIMENs) {
+      this.mostrarErrorDeseleccionRegimenes = false;
     }
 
-    this.regimenesAnteriores = { ...regimenesActuales };
+    this.regimenesAnteriores = { ...REGIMEN_ACTUALES };
   }
   
   /**
@@ -447,8 +449,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.controlarCamposTextoGenerico(valor);
         });
       
-      const valorInicialRadio3 = this.solicitudForm.get('radio_3')?.value;
-      this.controlarCamposTextoGenerico(valorInicialRadio3);
+      const VALOR_INICIAL_RADIO = this.solicitudForm.get('radio_3')?.value;
+      this.controlarCamposTextoGenerico(VALOR_INICIAL_RADIO);
     }
   }
 
@@ -458,7 +460,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param valorRadio3 - El valor seleccionado en radio_3 ('si' o 'no')
    */
   private controlarCamposTextoGenerico(valorRadio3: string): void {
-    const camposTextoGenerico = [
+    const CAMPOS_TEXTO_GENERICO = [
       'textoGenerico10', 'textoGenerico11', 'textoGenerico12', 'textoGenerico13',
       'textoGenerico14', 'textoGenerico15', 'textoGenerico16', 'textoGenerico17',
       'textoGenerico18', 'textoGenerico19', 'textoGenerico20', 'textoGenerico21',
@@ -466,11 +468,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     ];
 
     if (valorRadio3 === 'si') {
-      camposTextoGenerico.forEach(campo => {
+      CAMPOS_TEXTO_GENERICO.forEach(campo => {
         this.solicitudForm.get(campo)?.enable();
       });
     } else {
-      camposTextoGenerico.forEach(campo => {
+      CAMPOS_TEXTO_GENERICO.forEach(campo => {
         this.solicitudForm.get(campo)?.disable();
       });
     }
