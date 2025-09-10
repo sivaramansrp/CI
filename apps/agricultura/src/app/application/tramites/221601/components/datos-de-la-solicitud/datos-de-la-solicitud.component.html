@@ -160,9 +160,14 @@
     </div>
     <div class="row m-0">
       <h6 class="fw-bold">Mercancías</h6>
-      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="mercancias"
-        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
-        [tipoSeleccionTabla]="checkbox"></app-tabla-dinamica>
+      <!-- Update the tabla-dinamica to handle selection -->
+      <app-tabla-dinamica 
+        [configuracionTabla]="configuracionTabla" 
+        [datos]="mercancias"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+        [tipoSeleccionTabla]="checkbox"
+        (listaDeFilaSeleccionada)="onMercanciaSelectionChange($event)">
+      </app-tabla-dinamica>
 
       <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
@@ -224,9 +229,9 @@
       <div class="row mb-3">
         <div class="col-md-4">
           <app-catalogo-select formControlName="fracciónArancelaria" [catalogo]="veterinario"
-            [label]="'Fracción arancelaria'">
+            [label]="'Fracción arancelaria'"
             [required]="true"
-            [placeholder]="'Seleccione un opción'"
+            [placeholder]="'Seleccione un opción'">
           </app-catalogo-select>
           <div class="d-grid">
             <div *ngIf="mercanciaForm.get('fracciónArancelaria')?.touched">
@@ -253,9 +258,9 @@
       </div>
       <div class="row mb-3">
         <div class="col-md-4">
-          <app-catalogo-select formControlName="nico" [catalogo]="veterinario" [label]="'Nico'">
+          <app-catalogo-select formControlName="nico" [catalogo]="veterinario" [label]="'Nico'"
             [required]="true"
-            [placeholder]="'Seleccione un opción'"
+            [placeholder]="'Seleccione una opción'">
           </app-catalogo-select>
 
           <div class="d-grid">
@@ -543,7 +548,7 @@
       </div>
 
       <div class="col-md-12 mt-4 d-flex justify-content-end">
-        <button class="btn btn-primary" type="button" (click)="cerrarModal()">Eliminar detalle</button>
+        <button class="btn btn-primary" type="button" (click)="eliminarDetalle()">Eliminar detalle</button>
         <button class="btn btn-primary ms-3" type="button" (click)="guardarMercancia()">Agregar detalle</button>
 
       </div>
@@ -555,7 +560,8 @@
           [configuracionTabla]="configuracionTablaDelLate" 
           [datos]="mercanciasdellate"
           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
-          [tipoSeleccionTabla]="checkbox">
+          [tipoSeleccionTabla]="checkbox"
+          (listaDeFilaSeleccionada)="onMercanciaSelectionChange($event)">
         </app-tabla-dinamica>
         <nav aria-label="Page navigation example">
           <ul class="pagination justify-content-center">
@@ -593,3 +599,20 @@
     </div>
   </div>
 </div>
+
+@if(confirmacionAlertaMercancia){
+<section>
+  <lib-notificaciones [notificacionInput]="notificacionMercancia"
+    (confirmacionModal)="onConfirmacionMercancia($event)">
+  </lib-notificaciones>
+</section>
+}
+
+@if(mostrarAlertaMercancia){
+<section>
+  <lib-notificaciones [notificacionInput]="notificacionMercancia" 
+    (confirmacionModal)="onAlertaMercancia()">
+  </lib-notificaciones>
+</section>
+}
+
