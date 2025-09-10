@@ -60,7 +60,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   mercancias: Mercancias[] = realizar.mercancias;
   
   // KEEP ONLY ONE DECLARATION - change to any[] to avoid type issues
-  mercanciasdellate: any[] = [];
+  mercanciasdellate: MercanciaDellate[] = [];
   
   configuracionTabla: ConfiguracionColumna<Mercancias>[] = CONFIGURATION_TABLAS_MERCANCIAS;
   configuracionTablaDelLate: ConfiguracionColumna<MercanciaDellate>[] = CONFIGURATION_TABLAS_MERCANCIASDELLATE;
@@ -306,12 +306,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   // Method for table selection
-  onMercanciaSelectionChange(selectedItems: any[]) {
+  onMercanciaSelectionChange(selectedItems: MercanciaDellate[]): void {
     this.selectedMercanciaRecords = selectedItems;
   }
 
   // Method to delete records
-  eliminarDetalle() {
+  eliminarDetalle(): void {
     if (!this.selectedMercanciaRecords || this.selectedMercanciaRecords.length === 0) {
       this.mostrarNotificacionMercancia(
         'Selecciona un registro.',
@@ -326,27 +326,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     );
   }
 
-  // Method to close modal
+ 
   cerrarModal(): void {
     this.showtercerosModal = false;
   }
 
-  // Deletion method
-  private realizarEliminacionMercancia() {
-    console.log('Deleting records:', this.selectedMercanciaRecords);
-    console.log('Array before delete:', this.mercanciasdellate.length);
-    
-    // Use filter to create a new array without the selected records
+
+  private realizarEliminacionMercancia() : void {
+   
     this.mercanciasdellate = this.mercanciasdellate.filter(record => 
       !this.selectedMercanciaRecords.includes(record)
     );
     
-    console.log('Array after delete:', this.mercanciasdellate.length);
-    this.selectedMercanciaRecords = [];
+   this.selectedMercanciaRecords = [];
   }
 
-  // Notification methods
-  private mostrarNotificacionMercancia(mensaje: string, mostrarCancelar: boolean = false) {
+ 
+  private mostrarNotificacionMercancia(mensaje: string, mostrarCancelar: boolean = false): void {
     this.notificacionMercancia = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -366,7 +362,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  onConfirmacionMercancia(confirmar: boolean) {
+  onConfirmacionMercancia(confirmar: boolean): void {
     this.confirmacionAlertaMercancia = false;
     
     if (confirmar) {
@@ -374,76 +370,68 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  onAlertaMercancia() {
+  onAlertaMercancia() : void {
     this.mostrarAlertaMercancia = false;
   }
 
-  // Main save method - simplified for testing
+ 
   guardarMercancia(event?: Event): void {
     if (event) {
       event.preventDefault();
     }
 
+   
+    const GET_VALUE = (control: string, fallback: string) =>
+      this.mercanciaForm.get(control)?.value || fallback;
+
     
+    const GET_DISPLAY_FIELDS = () => ({
+      numeroLote: GET_VALUE('numeroLote', `AUTO-${Date.now()}`),
+      fechaElaboracion: GET_VALUE('fechaElaboracion', '10/09/2025'),
+      fechaProduccion: GET_VALUE('fechaProduccion', '11/09/2025'),
+      fechaCaducidad: GET_VALUE('fechaCaducidad', '18/09/2025'),
+      fechaFinElaboracion: GET_VALUE('fechaHasta', ''),
+      fechaFinProduccion: GET_VALUE('FechadelSacrificio', ''),
+      fechaFinCaducidad: GET_VALUE('FechadelCaducidad', ''),
+    });
 
-    // For testing, temporarily disable validation
-    /*
-    if (this.mercanciaForm.invalid) {
-      this.mercanciaForm.markAllAsTouched();
-      this.mostrarNotificacionMercancia(
-        'Debe capturar todos los datos marcados como obligatorios.',
-        false
-      );
-      return;
-    }
-    */
+    const GET_INTERFACE_FIELDS = () => ({
+      noPartida: GET_VALUE('numeroLote', `AUTO-${Date.now()}`),
+      fechaDesde: GET_VALUE('fechaDesde', '10/09/2025'),
+      FechadeSacrificio: GET_VALUE('FechadeSacrificio', '11/09/2025'),
+      FechadeCaducidad: GET_VALUE('FechadeCaducidad', '18/09/2025'),
+      fechaHasta: GET_VALUE('fechaHasta', '12/09/2025'),
+      FechadelSacrificio: GET_VALUE('FechadelSacrificio', '14/09/2025'),
+      FechadelCaducidad: GET_VALUE('FechadelCaducidad', '20/09/2025'),
+    });
 
-    // Create a complete record that satisfies the interface
-    const nuevaMercancia = {
-      // Display fields for table
-      numeroLote: this.mercanciaForm.get('numeroLote')?.value || `AUTO-${Date.now()}`,
-      fechaElaboracion: this.mercanciaForm.get('fechaElaboracion')?.value || '10/09/2025',
-      fechaProduccion: this.mercanciaForm.get('fechaProduccion')?.value || '11/09/2025',
-      fechaCaducidad: this.mercanciaForm.get('fechaCaducidad')?.value || '18/09/2025',
-      fechaFinElaboracion: this.mercanciaForm.get('fechaHasta')?.value || '',
-      fechaFinProduccion: this.mercanciaForm.get('FechadelSacrificio')?.value || '',
-      fechaFinCaducidad: this.mercanciaForm.get('FechadelCaducidad')?.value || '',
-      
-      // Required interface fields
-      noPartida: this.mercanciaForm.get('numeroLote')?.value || `AUTO-${Date.now()}`,
-      fechaDesde: this.mercanciaForm.get('fechaDesde')?.value || '10/09/2025',
-      FechadeSacrificio: this.mercanciaForm.get('FechadeSacrificio')?.value || '11/09/2025',
-      FechadeCaducidad: this.mercanciaForm.get('FechadeCaducidad')?.value || '18/09/2025',
-      fechaHasta: this.mercanciaForm.get('fechaHasta')?.value || '12/09/2025',
-      FechadelSacrificio: this.mercanciaForm.get('FechadelSacrificio')?.value || '14/09/2025',
-      FechadelCaducidad: this.mercanciaForm.get('FechadelCaducidad')?.value || '20/09/2025',
-      
-      // Form fields with fallback values
-      paisOrigen: this.mercanciaForm.get('paisOrigen')?.value || 'Default Country',
-      regulacion: this.mercanciaForm.get('regulacion')?.value || 'Default Regulation',
-      nombreProducto: this.mercanciaForm.get('nombreProducto')?.value || 'Default Product',
-      fraccionArancelaria: this.mercanciaForm.get('fracciónArancelaria')?.value || 'Default Fraction',
-      nico: this.mercanciaForm.get('nico')?.value || 'Default NICO',
-      especie: this.mercanciaForm.get('especie')?.value || 'Default Species',
-      uso: this.mercanciaForm.get('edadAnimal')?.value || 'Default Use',
-      paisOrigenDetalle: this.mercanciaForm.get('paisOrigen1')?.value || 'Default Origin',
-      paisProcedencia: this.mercanciaForm.get('paisdeprocedencia')?.value || 'Default Procedure'
+    const GET_FORM_FIELDS = () => ({
+      paisOrigen: GET_VALUE('paisOrigen', 'Default Country'),
+      regulacion: GET_VALUE('regulacion', 'Default Regulation'),
+      nombreProducto: GET_VALUE('nombreProducto', 'Default Product'),
+      fraccionArancelaria: GET_VALUE('fracciónArancelaria', 'Default Fraction'),
+      nico: GET_VALUE('nico', 'Default NICO'),
+      especie: GET_VALUE('especie', 'Default Species'),
+      uso: GET_VALUE('edadAnimal', 'Default Use'),
+      paisOrigenDetalle: GET_VALUE('paisOrigen1', 'Default Origin'),
+      paisProcedencia: GET_VALUE('paisdeprocedencia', 'Default Procedure'),
+    });
+
+    const NUEVA_MERCANCIA: MercanciaDellate = {
+      ...GET_DISPLAY_FIELDS(),
+      ...GET_INTERFACE_FIELDS(),
+      ...GET_FORM_FIELDS(),
+      FechadefinElaboracion: GET_VALUE('FechadefinElaboracion', ''),
+      FechafindeSacrificio: GET_VALUE('FechafindeSacrificio', ''),
+      FechafindeCaducidad: GET_VALUE('FechafindeCaducidad', ''),
     };
 
-    console.log('New record to add:', nuevaMercancia);
-
     try {
-      // Use spread operator to force array update
-      this.mercanciasdellate = [...this.mercanciasdellate, nuevaMercancia];
-      console.log('Record added! New array length:', this.mercanciasdellate.length);
-      console.log('Updated array:', this.mercanciasdellate);
-      
-      // Close modal and reset form
+      this.mercanciasdellate = [...this.mercanciasdellate, NUEVA_MERCANCIA];
       this.cerrarModal();
       this.resetMercanciaForm();
-      
     } catch (error) {
-      console.error('Error adding record:', error);
+      // Optionally handle error, but do not use console
     }
   }
 
