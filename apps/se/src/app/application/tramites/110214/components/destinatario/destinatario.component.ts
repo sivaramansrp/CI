@@ -12,7 +12,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
 import { Tramite110214State } from '../../../../estados/tramites/tramite110214.store';
 import { Tramite110214Store } from '../../../../estados/tramites/tramite110214.store';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';

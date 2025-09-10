@@ -97,5 +97,13 @@ if (!EXISTE_TERCERO) {
   this.tercerosStore.setTerceros(this.personas); // Update Store (Optional)
   this.FormPersona.reset(); // Reset Form State
 }
-
-    
+# Validation Error and border
+default
+- The isInvalida input defaults to false.
+- You must explicitly pass a value from the parent to trigger the validation behavior.
+When `[isInvalida] = true`:
+- A red border is applied to the table.
+- A validation message (`"Este campo es obligatorio."`) is displayed below the table.
+Reference 
+- apps\cofepris\src\app\application\shared\components\datos-de-la-solicitud
+- Procedure 260214 – datos-de-la-solicitud

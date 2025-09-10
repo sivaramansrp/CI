@@ -15,7 +15,7 @@
         ]
     },
     "fraccionArancelariaAga": {
-        "labelNombre": "fracción arancelaria",
+        "labelNombre": "Fracción arancelaria",
         "required": true,
         "primerOpcion": "Selecciona un opción",
         "catalogos": [
@@ -118,10 +118,10 @@
         "opcionDeImportador": "no",
         "tomaMuestraDespacho": "",
         "descMotivoFaltaMuestra": "no",
-        "comboFraccionConcatenada": "",
-        "fraccionConcatenada": "",
+        "comboFraccionConcatenada": "1",
+        "fraccionConcatenada": "1",
         "fracciondescripcion": "Vacas lecheras.",
-        "comboNicos": "",
+        "comboNicos": "1",
         "nicoDescripcion": "1 - Para abasto, cuando la importación la realicen empacadoras Tipo Inspección Federal.",
         "nombreQuimico": "Nombre Quimico",
         "nombreComercial": "Nombre Comercial",
