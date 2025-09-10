@@ -1,5 +1,5 @@
 
-import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, INSTANCIA_URUGUAY, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
@@ -73,6 +73,13 @@ export class TratadosComponent implements OnInit, OnDestroy {
  * Cuando es `true`, permite editar los tratados seleccionados.
  */
   isEditMode: boolean = false;
+
+  /**
+ * Vista instacia uruguay.
+ * Cuando es `true`, permite ver la vista.
+ */
+  isUruguay: boolean = false;
+
   /**
    * Formulario reactivo para gestionar los tratados.
    * 
@@ -111,6 +118,11 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * Catálogo de países disponibles para selección en el componente.
    */
   public origenCatalogo: Catalogo[] = [];
+
+  /**
+   * Catálogo de criterios otras instacias disponibles para selección en el componente.
+   */
+  public criteriosInstaciasCatalogo: Catalogo[] = [];
 
   /**
    * @property {boolean} mostrarTabla - Indica si se debe mostrar la tabla.
@@ -195,7 +207,8 @@ export class TratadosComponent implements OnInit, OnDestroy {
     this.formularioTratados = this.fb.group({
       pais: [this.solicitudeState?.pais, Validators.required],
       tratado: [this.solicitudeState?.tratado, Validators.required],
-      origen: [this.solicitudeState?.origen, Validators.required]
+      origen: [this.solicitudeState?.origen, Validators.required],
+      criterioInstacias: [this.solicitudeState?.criterio, Validators.required],
     });
   }
 
@@ -206,6 +219,13 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
 
   alerta = MENSAJE_ALERTA_TRATADOS;
+
+  /**
+   * Mensaje de alerta para instacia de uruguay.
+   * 
+   * @property {string} mensajeUruguay - El mensaje de alerta que se mostrará en el componente.
+   */
+  mensajeUruguay = INSTANCIA_URUGUAY;
 
     /**
      * Obtiene los datos de los catálogos desde el servicio backend y actualiza las propiedades de catálogos del componente.
@@ -536,6 +556,14 @@ talbleData: RegistroDeSolicitudesTabla = {
         } else if (selectedOption.bloque === 'true') {
           this.getCatalogoTratadoAcuerdoBloque(selectedOption.clave || '');
         }
+         
+      
+          if(selectedOption.clave === "URY"){
+            this.isUruguay = true;
+            this.cd.detectChanges();
+            //AQUI se tira peticion de catalogo
+          }
+            
         break;
       case 'tratado':
         this.getCatalogoCriterios(selectedOption.clave || '');
