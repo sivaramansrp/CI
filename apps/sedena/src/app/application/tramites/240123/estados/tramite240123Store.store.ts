@@ -118,7 +118,7 @@ export class Tramite240123Store extends Store<Tramite240123State> {
     }));
   }
 
-  /**
+    /**
    * Agrega nuevos registros a la tabla de destinatarios finales.
    *
    * @method updateDestinatarioFinalTablaDatos
@@ -137,6 +137,7 @@ export class Tramite240123Store extends Store<Tramite240123State> {
       modificarDestinarioDatos: null
     }));
   }
+
 
   /**
    * Agrega nuevos registros a la tabla de proveedores.
