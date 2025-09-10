@@ -134,3 +134,8 @@ export const MODIFICAR_PARTIDAS_FORM = [
  
  
 ];
+/** Enum for the dynamic table fields in Tramite130102Store */
+export const ESPECIFICO_PREFILL: FraccionArancelariaProsec[] = [
+  { fraccionArancelariaProsec: 12345678, descripción: 'Ejemplo de fracción PROSEC' },
+  { fraccionArancelariaProsec: 87654321, descripción: 'Otro ejemplo' }
+];

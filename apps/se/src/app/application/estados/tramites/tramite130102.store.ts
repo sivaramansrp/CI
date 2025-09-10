@@ -412,4 +412,14 @@ public setCriterioDictamen(criterioDictamen: string):void {
       [fieldName]: value,
     }));
   }
+  /**
+ * Actualiza el estado con las fracciones arancelarias PROSEC proporcionadas.
+ * @param uso Lista de fracciones arancelarias a asignar en el estado.
+ */
+  public setUsoEspecificoTablas(uso: FraccionArancelariaProsec[]): void {
+  this.update(state => ({
+    ...state,
+    uso_especifico_tabla: uso
+  }));
+}
 }

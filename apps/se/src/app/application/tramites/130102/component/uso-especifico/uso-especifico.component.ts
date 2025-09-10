@@ -24,7 +24,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 import { ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
-import { FRACCIONES_ANARCIA_TABLA } from '../../constantes/octava-temporal.enum';
+import { ESPECIFICO_PREFILL, FRACCIONES_ANARCIA_TABLA } from '../../constantes/octava-temporal.enum';
 import { FraccionArancelariaProsec } from '../../models/octava-temporal.model';
 
 @Component({
@@ -108,7 +108,14 @@ filasSeleccionadas: FraccionArancelariaProsec[] = [];
            takeUntil(this.destroyNotifier$),
            map((seccionState) => {
              this.consultaState = seccionState;
-            
+              
+            if (this.consultaState.update) {        
+            this.tramite130102Store.update((state) => ({
+              ...state,
+              uso_especifico_tabla: ESPECIFICO_PREFILL
+            }));       
+            this.datosSocios = ESPECIFICO_PREFILL;
+           }
              this.inicializarEstadoFormulario();
            })
          )
