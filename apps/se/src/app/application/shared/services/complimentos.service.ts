@@ -76,7 +76,9 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
   );
   }
 
-  /**
+ 
+
+   /**
    * Obtiene el catálogo de estados desde el servidor.
    *
    * Realiza una petición HTTP GET al endpoint `/api/catalogo/estados` y retorna la respuesta
@@ -91,7 +93,51 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
     false
   );
   }
+  /**
+   * Obtiene el catálogo de estados desde el servidor.
+   *
+   * Realiza una petición HTTP GET al endpoint `/api/catalogo/estados` y retorna la respuesta
+   * como un observable de tipo `JsonResponseCatalogo`.
+   *
+   * @returns Observable que emite la respuesta del catálogo de estados.
+   */
+  getActividadProductiva(): Observable<JsonResponseCatalogo> {
+     return this.httpService.get<JsonResponseCatalogo>(
+    `${ENVIRONMENT.API_HOST}/api/catalogo/actividad-productiva-prosec`,
+    {},
+    false
+  );
+  }
 
+   /**
+   * Obtiene el catálogo de estados desde el servidor.
+   *
+   * Realiza una petición HTTP GET al endpoint `/api/catalogo/estados` y retorna la respuesta
+   * como un observable de tipo `JsonResponseCatalogo`.
+   *
+   * @returns Observable que emite la respuesta del catálogo de estados.
+   */
+  getRepresentacion(): Observable<JsonResponseCatalogo> {
+     return this.httpService.get<JsonResponseCatalogo>(
+    `${ENVIRONMENT.API_HOST}/api/catalogo/representacion-federal`,
+    {},
+    false
+  );
+}
+
+  /**
+   * Obtiene la información de un tipo de documento específico según su identificador.
+   *
+   * @param id - El identificador único del tipo de documento a consultar.
+   * @returns Un observable que emite la respuesta JSON con los datos del catálogo del tipo de documento.
+   */
+  getTipoDocumento(id:number): Observable<JsonResponseCatalogo> {
+     return this.httpService.get<JsonResponseCatalogo>(
+    `${ENVIRONMENT.API_HOST}/api/catalogo/tipo-documento/${id}`,
+    {},
+    false
+  );
+}
 /**
  * Establece la fila seleccionada del Anexo Uno.
  * Emite el nuevo valor a todos los suscriptores del observable correspondiente.
