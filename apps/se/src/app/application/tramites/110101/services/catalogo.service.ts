@@ -1,11 +1,15 @@
-import { API_GET_CAT_CRITERIOS, API_GET_CAT_DECLARACION_DATOS, API_GET_CAT_ENTIDADES_FEDERATIVAS, API_GET_CAT_PAIS_BLOQUES, API_GET_CAT_REPRESENTACION_FEDERAL, API_GET_CAT_TRATADOS_ACUERDO, API_GET_CAT_TRATADOS_ACUERDO_BLOQUE } from "../server/api-router";
+import { API_GET_CAT_CRITERIOS, API_GET_CAT_CRITERIOS_OTRAS_INSTANCIAS, API_GET_CAT_DECLARACION_DATOS, 
+        API_GET_CAT_ENTIDADES_FEDERATIVAS, API_GET_CAT_PAIS_BLOQUES, API_GET_CAT_REPRESENTACION_FEDERAL, 
+        API_GET_CAT_TRATADOS_ACUERDO, API_GET_CAT_TRATADOS_ACUERDO_BLOQUE } from "../server/api-router";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
 import { Catalogo } from "@libs/shared/data-access-user/src";
-import { DeclaracionDatosResponse } from "../models/response/declaracion-datos.response.model";
+import { CriteriosOtrasInstanciasRequest } from "../models/request/criterios-otras-instancias-request.model";
+import { DeclaracionDatosResponse } from "../models/response/declaracion-datos-response.model";
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+
 
 @Injectable({
   providedIn: 'root'
@@ -96,4 +100,14 @@ export class CatalogosTramiteService {
     const ENDPOINT = `${this.host}${API_GET_CAT_DECLARACION_DATOS('110101')}`;
     return this.http.get<BaseResponse<DeclaracionDatosResponse[]>>(ENDPOINT);
   }
+
+  /**
+   * Consulta el catálogo de criterios otras instancias.
+   * @returns Observable con la respuesta del servidor que contiene el catálogo
+   */
+  postCatCriteriosOtrasInstancias(PAYLOAD: CriteriosOtrasInstanciasRequest): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CAT_CRITERIOS_OTRAS_INSTANCIAS}`;
+    return this.http.post<BaseResponse<Catalogo[]>>(ENDPOINT, PAYLOAD);
+  }
+  
 }
