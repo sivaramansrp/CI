@@ -127,6 +127,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   procedimiento: number = PROCEDURE_ID;
 
+  /**
+   * @description
+   * Lista general de mercancías disponibles en el componente.
+   *
+   * Esta colección contiene todas las mercancías cargadas o registradas,
+   * y se utiliza como fuente principal para mostrar la tabla de mercancías
+   * en la interfaz de usuario.
+   *
+   * A diferencia de `mercanciaSeleccionLista`, que solo guarda las
+   * seleccionadas, esta propiedad mantiene el inventario completo.
+   *
+   * @type {MercanciaTabla[]}
+   */
   mercanciaLista: MercanciaTabla[] = [] as MercanciaTabla[];
 
   /**
