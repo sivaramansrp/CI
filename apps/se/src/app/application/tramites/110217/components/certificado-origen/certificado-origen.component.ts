@@ -2,8 +2,11 @@ import {
   AlertComponent,
   CatalogoSelectComponent,
   ConfiguracionColumna,
+  DECIMAL_22_4_REGEX,
   InputFecha,
   InputFechaComponent,
+  Notificacion,
+  NotificacionesComponent,
   REGEX_CORREO_ELECTRONICO,
   REGEX_SOLO_DIGITOS,
   TablaDinamicaComponent,
@@ -79,6 +82,7 @@ import { Tramite110217Query } from '../../../../estados/queries/tramite110217.qu
     AlertComponent,
     CatalogoSelectComponent,
     InputFechaComponent,
+    NotificacionesComponent,
     TooltipModule,
   ],
   providers: [ToastrService],
@@ -197,6 +201,13 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * Este texto se utiliza para advertir al usuario sobre ciertas acciones o restricciones.
    */
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
+
+  /**
+   * Configuración para la notificación modal.
+   *
+   * Se utiliza para mostrar notificaciones al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Referencia al elemento del modal para gestionar archivos.
@@ -533,28 +544,25 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       ],
       cantidad: [
         this.solicitudState?.formularioMercancia?.cantidad,
-        [Validators.required, Validators.pattern(/^\d+$/)],
+        [Validators.required, Validators.pattern(DECIMAL_22_4_REGEX)],
       ],
       pais: [this.solicitudState?.formularioMercancia?.pais, [Validators.required]],
       valorDelaMercancia: [
         this.solicitudState?.formularioMercancia?.valorDelaMercancia,
-        [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
+        [Validators.required, Validators.pattern(DECIMAL_22_4_REGEX)],
       ],
       complementoDelaDescripcion: [
         this.solicitudState?.formularioMercancia?.complementoDelaDescripcion,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(4000)],
       ],
       fecha: [
-        this.solicitudState?.formularioMercancia?.fecha,
-        [Validators.required],
+        this.solicitudState?.formularioMercancia?.fecha
       ],
       numeroFactura: [
-        this.solicitudState?.formularioMercancia?.numeroFactura,
-        [Validators.required],
+        this.solicitudState?.formularioMercancia?.numeroFactura
       ],
       tipoFactura: [
-        this.solicitudState?.formularioMercancia?.tipoFactura,
-        [Validators.required],
+        this.solicitudState?.formularioMercancia?.tipoFactura
       ],
     });
     
@@ -863,6 +871,38 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     if (this.modalInstances) {
       this.modalInstances.hide();
     }
+  }
+
+  /**
+   * Método para aceptar notificaciones del modal.
+   * 
+   * @param evento - Booleano que indica si la acción fue aceptada
+   */
+  acceptar(evento: boolean): void {
+    if (evento) {
+      // Si el usuario acepta, ejecutar la funcionalidad original del botón Agregar
+      this.activarModal(this.formularioMercancia);
+    }
+    // Limpiar la notificación
+    this.nuevaNotificacion = {} as Notificacion;
+  }
+
+  /**
+   * Método para mostrar una notificación de ejemplo.
+   * Este método puede ser llamado para mostrar la notificación antes del botón Agregar.
+   */
+  public mostrarNotificacion(): void {
+    this.nuevaNotificacion = {
+       tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'La lista de mercancías mostrada solamente contiene aquellas mercancías que tienen un registro de productos vigente para el tratado/acuerdo-país/bloque y cuya fracción arancelaria no está asociada a un cupo.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+    };
   }
 
   /**

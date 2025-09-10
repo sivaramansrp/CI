@@ -14,6 +14,7 @@ import {
   REGEX_CORREO_ELECTRONICO,
   REGEX_RFC_FISICA,
   TituloComponent,
+  ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import {
   NotificacionesComponent,
@@ -29,6 +30,7 @@ import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal
 import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
 import { ManifiestosComponent } from '../manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { RepresentanteLegalRfcComponent } from '../representante-legal-rfc/representante-legal-rfc.component';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 /**
  * Componente responsable de gestionar y mostrar los datos principales del formulario,
@@ -143,7 +145,9 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     private datosDomicilioLegalStore: DatosDomicilioLegalStore,
     private datosDomicilioLegalQuery: DatosDomicilioLegalQuery,
     private consultaioQuery: ConsultaioQuery,
-    private service: DatosDomicilioLegalService
+    private service: DatosDomicilioLegalService,
+    private servicioDeFormularioService: ServicioDeFormularioService,
+    private validacionesService: ValidacionesFormularioService
   ) {
     // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$
@@ -230,8 +234,25 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
         [Validators.required,Validators.pattern(REGEX_CORREO_ELECTRONICO)]
       ],
     });
-        this.inicializarEstadoFormulario();
+    this.servicioDeFormularioService.registerForm('datosSolicitudForm', this.forma);
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'datosSolicitudForm') {
+        this.forma.markAllAsTouched();
+      }
+    })
+    this.inicializarEstadoFormulario();
+  }
 
+  /**
+  * compo doc
+  * @method esValido
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param campo El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(campo: string): boolean | null {
+    return this.validacionesService.isValid(this.forma, campo);
   }
 
   /**
@@ -290,6 +311,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
         value: string | number | boolean
       ) => void
     )(VALOR);
+    this.servicioDeFormularioService.setFormValue('datosSolicitudForm', { [campo]: VALOR });
   }
 
   /**
