@@ -7,7 +7,7 @@
         <input class="form-control" id="codigoPostal" placeholder="" type="text" maxlength="12"
           formControlName="codigoPostal" (change)="
             setValoresStore(domicilio, 'codigoPostal', 'setCodigoPostal')
-          " />
+          " [ngClass]="esValido('codigoPostal') ? 'required' : ''" />
         <div *ngIf="domicilio.get('codigoPostal')?.touched && domicilio.get('codigoPostal')?.errors?.['required']"
           class="mensaje-error">
           Este campo es obligatorio
@@ -25,13 +25,14 @@
     <div class="col-md-4">
       <app-catalogo-select [catalogo]="estado" formControlName="estado" [label]="'Estado'" [required]="true"
         name="estado" [placeholder]="'Selecciona un valor'" (change)="setValoresStore(domicilio, 'estado', 'setEstado')"
-        [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+        [isDisabled]="esFormularioSoloLectura" [markTouched]="domicilio.get('estado')?.touched ?? false"></app-catalogo-select>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="muncipio">Municipio y alcaldía*:</label>
         <input class="form-control" id="muncipio" placeholder="" type="text" maxlength="120" formControlName="muncipio"
-          (change)="setValoresStore(domicilio, 'muncipio', 'setMuncipio')" />
+          (change)="setValoresStore(domicilio, 'muncipio', 'setMuncipio')" 
+          [ngClass]="esValido('muncipio') ? 'required' : ''" />
         <div *ngIf="domicilio.get('muncipio')?.touched && domicilio.get('muncipio')?.errors?.['required']"
           class="mensaje-error">
           Este campo es obligatorio.
@@ -60,7 +61,8 @@
       <div class="form-group">
         <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill mx-2" tooltip="Domicilio, calle, número interior, numero exterior, lote" placement="top"></span></label>
         <input class="form-control" id="calle" placeholder="" type="text" maxlength="100" formControlName="calle"
-          (change)="setValoresStore(domicilio, 'calle', 'setCalle')" />
+          (change)="setValoresStore(domicilio, 'calle', 'setCalle')" 
+          [ngClass]="esValido('calle') ? 'required' : ''"/>
         <div *ngIf="domicilio.get('calle')?.touched && domicilio.get('calle')?.errors?.['required']"
           class="mensaje-error">
           Este campo es obligatorio.
@@ -80,7 +82,8 @@
       <div class="form-group">
         <label class="form-label" for="telefono">Teléfono*:</label>
         <input class="form-control" id="telefono" placeholder="" type="number" maxlength="24" formControlName="telefono"
-          (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')" />
+          (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')" 
+          [ngClass]="esValido('telefono') ? 'required' : ''"/>
         <div *ngIf="domicilio.get('telefono')?.touched && domicilio.get('telefono')?.errors?.['required']"
           class="mensaje-error">
           Este campo es obligatorio.
@@ -99,8 +102,8 @@
     </app-tabla-dinamica>
 
     <div class="col-md-12 mt-5 d-flex justify-content-end">
-      <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
-      <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
+      <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+      <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
       <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent"
         [disabled]="esFormularioSoloLectura">
         Agregar
@@ -118,6 +121,11 @@
           <span>Aviso de funcionamiento*</span>
         </label>
       </div>
+      @if (domicilio.get('avisoCheckbox')?.touched && domicilio.get('avisoCheckbox')?.errors?.['required']) {
+        <div class="mensaje-error mt-2">
+          Este campo es obligatorio.
+        </div>
+      }
     </div>
     <div class="col-md-4">
       <div class="form-group">
@@ -130,7 +138,7 @@
                       'licenciaSanitaria',
                       'setLicenciaSanitaria'
                     )
-                  " />
+                  " [ngClass]="esValido('licenciaSanitaria') ? 'required' : ''"/>
         <div
           *ngIf="domicilio.get('licenciaSanitaria')?.touched && domicilio.get('licenciaSanitaria')?.errors?.['required']"
           class="mensaje-error">
