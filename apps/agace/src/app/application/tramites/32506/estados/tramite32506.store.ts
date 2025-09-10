@@ -131,7 +131,7 @@ export function createInitialState(): Tramite32506State {
       rfc: '',
     },
     avisoFormulario: {
-      adace: '',
+      adace: 'Occidente',
       valorProgramaImmex: '',
       valorAnioProgramaImmex: '',
       tipoAviso: '',
