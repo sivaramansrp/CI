@@ -411,19 +411,19 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'País'" [isDisabled]="true"
-              [isDisabled]="esFormularioSoloLectura" [required]="false" name="pais"></app-catalogo-select>
+               [required]="false" name="pais"></app-catalogo-select>
           </div>
 
           <div class="col-md-6">
             <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="entidadFederativa"
-              [label]="'Entidad Federativa'" [isDisabled]="true" [isDisabled]="esFormularioSoloLectura"
+              [label]="'Entidad federativa'" [isDisabled]="true" [isDisabled]="esFormularioSoloLectura"
               [required]="false" name="entidadFederativa" [placeholder]="'Selecciona una opción'"></app-catalogo-select>
           </div>
         </div>
         <!-- Action buttons -->
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-primary me-2" (click)="cerrarBuscarTercerosModal()">Cerrar</button>
-          <button type="button" class="btn btn-outline-secondary me-2"
+          <button type="button" class="btn btn-default me-2" (click)="cerrarBuscarTercerosModal()">Cerrar</button>
+          <button type="button" class="btn btn-danger me-2"
             (click)="limpiarBuscarTerceros()">Limpiar</button>
           <button type="button" class="btn btn-primary">Buscar</button>
         </div>
