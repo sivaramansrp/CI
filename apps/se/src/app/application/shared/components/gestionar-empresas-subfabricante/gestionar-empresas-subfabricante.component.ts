@@ -19,9 +19,11 @@ import {
 } from '@angular/forms';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { ContenedorComplementarPlantasComponent } from '../../../tramites/80101/component/contenedor-complementar-plantas/contenedor-complementar-plantas.component';
 import { Modal } from 'bootstrap';
+import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-gestionar-empresas-subfabricante',
   standalone: true,
@@ -92,14 +94,19 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
 
   @Input() tabIndex: number = 0;
 
+    /**
+     * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
+
+  
   /**
-   * Establece el estado del catálogo de las plantas subfabricantes.
-   * @param valor - Lista de estados del catálogo.
+   * Recibe un arreglo de objetos de tipo Catalogo que representa el estado actual del catálogo.
+   * Este input se utiliza para mostrar o manipular la información relacionada con el catálogo en el componente.
+   *
+   * @type {Catalogo[]}
    */
-  @Input()
-  set estadoCatalogo(valor: Catalogo[]) {
-    this._estadoCatalogo = valor;
-  }
+  @Input() estadoCatalogo!:Catalogo[];
 
   /**
    * Indica si se debe mostrar la tabla inicial.
@@ -109,14 +116,6 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
    * @default false
    */
   @Input() showTablaInicial: boolean = false;
-
-  /**
-   * Obtiene el estado del catálogo.
-   * @returns {Catalogo[]} - Lista de estados del catálogo.
-   */
-  get estadoCatalogo(): Catalogo[] {
-    return this._estadoCatalogo;
-  }
 
   /**
    * Establece los datos de las plantas subfabricantes disponibles en la tabla.
@@ -288,7 +287,7 @@ private modalRef: Modal | null = null;
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param fb - FormBuilder para la creación del formulario reactivo.
    */
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router,private complimentosService: ComplimentosService) {
     this.inicializarFormularioDatosSubcontratista();
   }
 
@@ -301,6 +300,7 @@ private modalRef: Modal | null = null;
     if (this.formularioDeshabilitado) {
       this._formularioDatosSubcontratista.disable();
     }
+    this.obtenerEstados();
   }
   /**
    * Inicializa el formulario de datos del subcontratista con los campos `rfc` y `estado`, ambos requeridos.
@@ -452,4 +452,16 @@ private modalRef: Modal | null = null;
     }
     
   }
+
+    /**
+   * Obtiene la lista de estados llamando al servicio `complimentosService`.
+   * Se suscribe al observable retornado por `getEstado()` y muestra la respuesta en la consola.
+   * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
+   */
+  obtenerEstados():void {
+      this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+        this.estadoCatalogo = res.datos;
+      });
+      
+    }
 }
