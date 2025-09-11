@@ -1,7 +1,7 @@
 /*
 /AnexoUnoSeccionComponent
 */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
@@ -44,6 +44,7 @@ import {
 } from '../../models/complimentos-seccion.model';
 import { CargaDeFraccionesComponent } from '../carga-de-fracciones/carga-de-fracciones.component';
 import { CargaPorArchivoComponent } from '../carga-por-archivo/carga-por-archivo.component';
+import { CargaProveedoresClientesComponent } from '../carga-proveedores-clientes/carga-proveedores-clientes.component';
 
 import { ComplementosSeccionState, ComplementosSeccionStore } from '../../../estados/tramites/complementos-seccion.store';
 import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
@@ -67,7 +68,8 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
     AlertComponent,
     NotificacionesComponent,
     CargaPorArchivoComponent,
-    CargaDeFraccionesComponent
+    CargaDeFraccionesComponent,
+    CargaProveedoresClientesComponent
   ],
   templateUrl: './anexo-uno-seccion.component.html',
   styleUrl: './anexo-uno-seccion.component.scss',
@@ -179,6 +181,22 @@ public mostrarProveedorPorArchivoPopup: boolean = false;
  * Se utiliza para controlar la visibilidad del componente emergente en la interfaz.  
  */
 public mostrarCargaDeFraccionesPopup: boolean = false;
+
+/** Controla la visibilidad del modal de carga por archivo. */
+public mostrarCargaPorArchivoModal: boolean = false;
+
+/** Controla la visibilidad del popup de proveedores y clientes. */
+public mostrarProveedorClientesPopup: boolean = false;
+
+/** Evento que emite la lista de productos del Anexo Uno cuando se devuelve la llamada. */
+@Output() obtenerAnexoUnoDevolverLaLlamada: EventEmitter<
+    AnexoUnoProducto[]
+  > = new EventEmitter<AnexoUnoProducto[]>(true);
+
+/** Evento que emite la lista de fracciones Anarelaria del Anexo Dos al devolver la llamada. */
+@Output() obtenerAnexoDosDevolverLaLlamada: EventEmitter<
+  AnexoFraccionAnarelaria[]
+> = new EventEmitter<AnexoFraccionAnarelaria[]>(true);
 
 /**
  * 
@@ -314,12 +332,8 @@ catagoriaSeleccionDatos: Catalogo[] = COMPLEMENTAR_FRACCION_CATALOGO_DATOS;
  */
 proyectoImmexTablaLista: ProyectoImmex[] = [];
 
-/**
- *  * compodoc
- * @property {AnexoUnoProducto[]} anexoUnoTablaLista
- * Lista de productos del Anexo Uno que se muestran en la tabla dinámica.
- */
-anexoUnoTablaLista: AnexoUnoProducto[] = [];
+/** Lista de productos para el Anexo Uno que se muestra en la tabla. */
+@Input() anexoUnoTablaLista: AnexoUnoProducto[] = [];
 
 /**
  *  * compodoc
@@ -335,12 +349,9 @@ proveedorTablaLista: ProveedorCliente[] = [];
  */
 fracionArancelaria: AnexoUnoEncabezado[] = [];
 
-/**
- *  * compodoc
- * @property {AnexoFraccionAnarelaria[]} anexoFraccionAnarelaria
- * Lista de datos relacionados con las fracciones arancelarias en el Anexo.
- */
-anexoFraccionAnarelaria: AnexoFraccionAnarelaria[] = [];
+/** Lista de fracciones anarelaria para el Anexo Fracción. */
+@Input() anexoFraccionAnarelaria: AnexoFraccionAnarelaria[] = [];
+
 
 /**
  *  * compodoc
@@ -371,6 +382,7 @@ agregarAnexoUno(): void {
 
     this.anexoUnoTablaLista.push({ ...DEFAULTS, ...FORM_DATA });
     this.anexoUnoTablaLista = [...this.anexoUnoTablaLista];
+    this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
     this.anexoUnoFormGroup.reset();
   } else {
     this.abrirUnoModal();
@@ -485,17 +497,18 @@ agregarFraccionAnarelaria(): void {
       ...DEFAULTS,
       anexoFraccionExportacion: FORM_DATA.fraccionArancelarias,
       anexoDescripcionComercialExportacion: FORM_DATA.anexoDosDescripcion,
-      anexoFraccionImportacion: '', // Provide appropriate value or leave as empty string
-      anexoDescripcionComercialImportacion: '', // Provide appropriate value or leave as empty string
-      catagoria: '', // Provide appropriate value or leave as empty string
-      valorEnMonedaMensual: '', // Provide appropriate value or leave as 0
-      valorEnMonedaAnual: '', // Provide appropriate value or leave as 0
-      volumenMensual: '', // Provide appropriate value or leave as 0
-      volumenAnual: '' // Provide appropriate value or leave as 0
+      anexoFraccionImportacion: '', 
+      anexoDescripcionComercialImportacion: '', 
+      catagoria: '', 
+      valorEnMonedaMensual: '', 
+      valorEnMonedaAnual: '', 
+      volumenMensual: '',
+      volumenAnual: ''
     };
 
     this.anexoFraccionAnarelaria.push(ROW);
     this.anexoFraccionAnarelaria = [...this.anexoFraccionAnarelaria]
+    this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoFraccionAnarelaria);
     this.anexoDosFormGroup.reset();
   } else {
     this.abrirDosModal();
@@ -661,7 +674,7 @@ abrirProveedorClienteModal(context: 'cliente' | 'proveedor'): void {
  */
 abrirProveedorPorArchivo(): void {
   if (this.selectedFraccionRowUno) {
-  this.mostrarProveedorPorArchivoPopup = true;
+  this.mostrarProveedorClientesPopup = true;
   } else {
      this.nuevaUnoNotificacion = {
       tipoNotificacion: 'alert',
@@ -678,11 +691,11 @@ abrirProveedorPorArchivo(): void {
 }
 
 /**
- * Método que habilita la visualización del popup para la carga de fracciones.
- * Establece la bandera correspondiente en `true` para mostrar el componente emergente.
+ * Método que habilita la visualización del modal para la carga por archivo.
+ * Establece la bandera correspondiente en `true` para mostrar el modal emergente.
  */
-abrirCargaDeFracciones(): void {
-  this.mostrarCargaDeFraccionesPopup = true;
+abrirCargaPorArchivo(): void {
+  this.mostrarCargaPorArchivoModal = true;
 }
 
 /**
@@ -700,6 +713,31 @@ cerrarProveedorPorArchivo(): void {
  */
 cerrarCargaDeFracciones(): void {
   this.mostrarCargaDeFraccionesPopup = false;
+}
+
+/**
+ * Método que maneja la aceptación de la carga por archivo.
+ * Cierra el modal de carga por archivo y abre el popup de carga de fracciones.
+ */
+onAceptarCargaPorArchivo(): void{
+  this.mostrarCargaPorArchivoModal = false;
+  this.mostrarCargaDeFraccionesPopup = true;
+}
+
+/**
+ * Método que maneja la cancelación de la carga por archivo.
+ * Cierra el modal de carga por archivo estableciendo la bandera en false.
+ */
+onCancelarCargaPorArchivo(): void {
+  this.mostrarCargaPorArchivoModal = false;
+}
+
+/**
+ * Método que cierra el popup de proveedores y clientes.
+ * Establece la bandera correspondiente en false para ocultar el popup.
+ */
+cerrarProveedorClientesPopup(): void {
+  this.mostrarProveedorClientesPopup = false;
 }
 
 /**

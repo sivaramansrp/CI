@@ -124,12 +124,22 @@
           id="Observaciones"
           formControlName="observaciones"
           (change)="setValoresStore(paisForm,'observaciones')"
-          maxLength = "512"
+          [ngClass]="{'textarea-error': esInvalido('observaciones')}"
         ></textarea>
+        <div
+        *ngIf="esInvalido('observaciones')"
+        class="text-danger"
+      >
+        <small *ngIf="paisForm.controls['observaciones'].errors?.['required']"
+          >Este campo es obligatorio.</small
+        >
+        <small *ngIf="paisForm.controls['observaciones'].hasError('maxlength')">
+               Por favor, no escribas más de 512 caracteres
+              </small>
       </div>
     </div>
   </div>
-
+</div>
   </form>
 </div>
 <lib-notificaciones

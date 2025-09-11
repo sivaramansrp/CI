@@ -1,6 +1,7 @@
 import * as XLSX from 'xlsx'; // Importa XLSX para leer archivos Excel
-import { AlertComponent, ConsultaioQuery, ConsultaioState, InputCheckComponent, Notificacion, NotificacionesComponent, TituloComponent, VALID_FILE_REGEX } from '@libs/shared/data-access-user/src';
+import { AlertComponent, InputCheckComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TituloComponent, VALID_FILE_REGEX } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud32201State, Tramite32201Store } from '../../estados/tramite32201.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -23,6 +24,7 @@ import { Tramite32201Query } from '../../estados/tramite32201.query';
     AlertComponent,
     InputCheckComponent,
     NotificacionesComponent,
+    InputRadioComponent
   ],
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
@@ -102,6 +104,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Opciones de radio.
+   */
+  radioOpcions = [
+    { label: 'Sí', value: 'si' },
+    { label: 'No', value: 'no' },
+  ];
+  textoRequisito = this.TEXTOS.TEXTO_REQUISITOS;
+
+  /**
+   * Indica si se debe mostrar un error cuando se deseleccionan todos los regímenes 1, 2 y 3
+   * después de haber estado seleccionados.
+   */
+  mostrarErrorDeseleccionRegimenes: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb - FormBuilder para crear formularios reactivos.
    * @param tramite32201Store - Store para manejar el estado del trámite.
@@ -124,6 +141,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
+  /**
+   * Propiedad para rastrear el estado anterior de los regímenes 1, 2 y 3
+   * para detectar cuando se deseleccionan después de haber estado seleccionados
+   */
+  private regimenesAnteriores = {
+    regimen_1: false,
+    regimen_2: false,
+    regimen_3: false
+  };
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -281,11 +308,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       FIELD_VALUE
     );
   }
+
   /**
    * Método para inicializar el formulario reactivo con los valores del estado de la solicitud.
    * Este método se llama al inicializar el componente y establece los valores del formulario
    * basándose en el estado actual de la solicitud.
-   */
+   */  
   donanteDomicilio(): void {
     this.solicitudForm = this.fb.group({
       regimen_0: [{value: this.solicitudState?.regimen_0, disabled: this.esFormularioSoloLectura}],
@@ -293,8 +321,289 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       regimen_2: [{value: this.solicitudState?.regimen_2, disabled: this.esFormularioSoloLectura}],
       regimen_3: [{value: this.solicitudState?.regimen_3, disabled: this.esFormularioSoloLectura}],
       manifiesto: [{value: this.solicitudState?.manifiesto, disabled: this.esFormularioSoloLectura}],
+      radio_1: [{value: this.solicitudState?.radio_1, disabled: this.esFormularioSoloLectura}],
+      radio_2: [{value: this.solicitudState?.radio_2, disabled: this.esFormularioSoloLectura}],
+      radio_3: [{value: this.solicitudState?.radio_3, disabled: this.esFormularioSoloLectura}],
+      valorAduana: [{value: this.solicitudState?.valorAduana, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico10: [{value: this.solicitudState.textoGenerico10, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico11: [{value: this.solicitudState.textoGenerico11, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico12: [{value: this.solicitudState.textoGenerico12, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico13: [{value: this.solicitudState.textoGenerico13, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico14: [{value: this.solicitudState.textoGenerico14, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico15: [{value: this.solicitudState.textoGenerico15, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico16: [{value: this.solicitudState.textoGenerico16, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico17: [{value: this.solicitudState.textoGenerico17, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico18: [{value: this.solicitudState.textoGenerico18, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico19: [{value: this.solicitudState.textoGenerico19, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico20: [{value: this.solicitudState.textoGenerico20, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico21: [{value: this.solicitudState.textoGenerico21, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico22: [{value: this.solicitudState.textoGenerico22, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico23: [{value: this.solicitudState.textoGenerico23, disabled: true}], // Inicialmente deshabilitado
+      textoGenerico24: [{value: this.solicitudState.textoGenerico24, disabled: true}], // Inicialmente deshabilitado
     });
+
+    this.configurarValidacionRegimen();
+    this.configurarValidacionRadio3();
   }
+
+  /**
+   * Configura la validación para los checkboxes de Régimen aduanero.
+   * Muestra un popup cuando regimen_0 está seleccionado y NINGUNO de los otros está seleccionado.
+   * También valida cuando se deseleccionan todos los regímenes 1, 2 y 3 después de haber estado seleccionados.
+   */
+  private configurarValidacionRegimen(): void {
+    if (!this.esFormularioSoloLectura) {
+      this.regimenesAnteriores = {
+        regimen_1: this.solicitudForm.get('regimen_1')?.value || false,
+        regimen_2: this.solicitudForm.get('regimen_2')?.value || false,
+        regimen_3: this.solicitudForm.get('regimen_3')?.value || false
+      };
+
+      ['regimen_0', 'regimen_1', 'regimen_2', 'regimen_3'].forEach(controlName => {
+        this.solicitudForm.get(controlName)?.valueChanges
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe(() => {
+            this.validarRegimenAduanero();
+          });
+      });
+    }
+  }  
+    /**
+   * Valida la condición de Régimen aduanero y muestra popup si es necesario.
+   * Condición 1: Si regimen_0 está seleccionado y NINGUNO de regimen_1, regimen_2 o regimen_3 está seleccionado.
+   * Condición 2: Si cualquiera de los regímenes 1, 2 o 3 estaba seleccionado y ahora todos están deseleccionados.
+   * Condición 3: Si alguno de los regímenes 1, 2 o 3 está seleccionado, oculta el mensaje de error.
+   */  
+  private validarRegimenAduanero(): void {
+    const REGIMEN_0 = this.solicitudForm.get('regimen_0')?.value;
+    const REGIMEN_1 = this.solicitudForm.get('regimen_1')?.value;
+    const REGIMEN_2 = this.solicitudForm.get('regimen_2')?.value;
+    const REGIMEN_3 = this.solicitudForm.get('regimen_3')?.value;
+
+    if (REGIMEN_0) {
+      if (!REGIMEN_1 && !REGIMEN_2 && !REGIMEN_3) {
+        this.mostrarPopupRegimenAduanero();
+      }
+    }
+
+    const REGIMEN_ACTUALES = { regimen_1: REGIMEN_1, regimen_2: REGIMEN_2, regimen_3: REGIMEN_3 };
+    const REGIMEN_SELECCCIONADO = this.regimenesAnteriores.regimen_1 || 
+                                          this.regimenesAnteriores.regimen_2 || 
+                                          this.regimenesAnteriores.regimen_3;
+    const REGIMENS = REGIMEN_1 || REGIMEN_2 || REGIMEN_3;
+
+    if (REGIMEN_SELECCCIONADO && !REGIMENS) {
+      this.mostrarErrorDeseleccionRegimenes = true;
+    } else if (REGIMENS) {
+      this.mostrarErrorDeseleccionRegimenes = false;
+    }
+
+    this.regimenesAnteriores = { ...REGIMEN_ACTUALES };
+  }
+  
+  /**
+   * Muestra un popup de advertencia para la condición de Régimen aduanero.
+   */
+  public mostrarPopupRegimenAduanero(): void {
+    this.confirmarNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe contar con IMMEX activo y vigente.',
+      cerrar: false,
+      tiempoDeEspera: 5000,
+      txtBtnAceptar: 'Acceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+  /**
+   * Maneja la confirmación del popup de régimen aduanero.
+   * @param confirmar - Indica si el usuario confirmó (true) o canceló (false)
+   */
+  public manejarConfirmacionRegimen(confirmar: boolean): void {
+    if (confirmar) {
+      this.deseleccionarRegimen0();
+    }
+    this.confirmarNotificacion = null as any;
+  }
+
+  /**
+   * Deselecciona el régimen 0 y actualiza el store.
+   */
+  private deseleccionarRegimen0(): void {
+    this.solicitudForm.get('regimen_0')?.setValue(false);
+    this.tramite32201Store.setRegimen_0(false);
+  }
+
+  /**
+   * Configura la validación para el radio_3 que controla la habilitación/deshabilitación
+   * de los campos textoGenerico y valorAduana.
+   */
+  private configurarValidacionRadio3(): void {
+    if (!this.esFormularioSoloLectura) {
+      this.solicitudForm.get('radio_3')?.valueChanges
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((valor) => {
+          this.controlarCamposTextoGenerico(valor);
+        });
+      
+      const VALOR_INICIAL_RADIO = this.solicitudForm.get('radio_3')?.value;
+      this.controlarCamposTextoGenerico(VALOR_INICIAL_RADIO);
+    }
+  }
+
+  /**
+   * Controla la habilitación/deshabilitación de los campos textoGenerico y valorAduana
+   * basado en el valor del radio_3.
+   * @param valorRadio3 - El valor seleccionado en radio_3 ('si' o 'no')
+   */
+  private controlarCamposTextoGenerico(valorRadio3: string): void {
+    const CAMPOS_TEXTO_GENERICO = [
+      'textoGenerico10', 'textoGenerico11', 'textoGenerico12', 'textoGenerico13',
+      'textoGenerico14', 'textoGenerico15', 'textoGenerico16', 'textoGenerico17',
+      'textoGenerico18', 'textoGenerico19', 'textoGenerico20', 'textoGenerico21',
+      'textoGenerico22', 'textoGenerico23', 'textoGenerico24', 'valorAduana'
+    ];
+
+    if (valorRadio3 === 'si') {
+      CAMPOS_TEXTO_GENERICO.forEach(campo => {
+        this.solicitudForm.get(campo)?.enable();
+      });
+    } else {
+      CAMPOS_TEXTO_GENERICO.forEach(campo => {
+        this.solicitudForm.get(campo)?.disable();
+      });
+    }
+  }
+
+  /** Actualiza el décimo texto genérico y recalcula el valor comercial */
+  actualizarTextoGenerico10(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico10(VALOR);
+    this.calcularValorComercial();
+  }
+
+  /** Actualiza el undécimo texto genérico y recalcula el valor aduanero */
+  actualizarTextoGenerico11(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico11(VALOR);
+    this.calcularValorAduana();
+  }
+
+  /** Actualiza el duodécimo texto genérico y recalcula el porcentaje */
+  actualizarTextoGenerico12(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico12(VALOR);
+    this.calcularValorPorcentaje();
+  }
+
+  /** Actualiza el decimotercer texto genérico y recalcula el valor comercial */
+  actualizarTextoGenerico13(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico13(VALOR);
+    this.calcularValorComercial();
+  }
+
+  /** Actualiza el decimocuarto texto genérico y recalcula el valor aduanero */
+  actualizarTextoGenerico14(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico14(VALOR);
+    this.calcularValorAduana();
+  }
+
+  /** Actualiza el decimoquinto texto genérico y recalcula el porcentaje */
+  actualizarTextoGenerico15(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico15(VALOR);
+    this.calcularValorPorcentaje();
+  }
+
+  /** Actualiza el decimosexto texto genérico y recalcula el valor comercial */
+  actualizarTextoGenerico16(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico16(VALOR);
+    this.calcularValorComercial();
+  }
+
+  /** Actualiza el decimoséptimo texto genérico y recalcula el valor aduanero */
+  actualizarTextoGenerico17(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico17(VALOR);
+    this.calcularValorAduana();
+  }
+
+  /** Actualiza el decimoctavo texto genérico y recalcula el porcentaje */
+  actualizarTextoGenerico18(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico18(VALOR);
+    this.calcularValorPorcentaje();
+  }
+
+  /** Actualiza el decimonoveno texto genérico y recalcula el valor comercial */
+  actualizarTextoGenerico19(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico19(VALOR);
+    this.calcularValorComercial();
+  }
+
+  /** Actualiza el vigésimo texto genérico y recalcula el valor aduanero */
+  actualizarTextoGenerico20(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico20(VALOR);
+    this.calcularValorAduana();
+  }
+
+  /** Actualiza el vigesimoprimer texto genérico y recalcula el porcentaje */
+  actualizarTextoGenerico21(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.tramite32201Store.setTextoGenerico21(VALOR);
+    this.calcularValorPorcentaje();
+  }
+
+  /** Calcula el valor comercial sumando los valores ingresados */
+  calcularValorComercial(): void {
+    const VALOR1 = this.solicitudForm.get('textoGenerico10')?.value;
+    const VALOR2 = this.solicitudForm.get('textoGenerico13')?.value;
+    const VALOR3 = this.solicitudForm.get('textoGenerico16')?.value;
+    const VALOR4 = this.solicitudForm.get('textoGenerico19')?.value;
+
+    if (VALOR1 || VALOR2 || VALOR3 || VALOR4) {
+      const VALOR_COMERCIAL =
+        Number(VALOR1) + Number(VALOR2) + Number(VALOR3) + Number(VALOR4);
+      this.tramite32201Store.setTextoGenerico22(VALOR_COMERCIAL);
+    }
+  }
+
+  /** Calcula el valor aduanero sumando los valores ingresados */
+  calcularValorAduana(): void {
+    const VALOR1 = this.solicitudForm.get('textoGenerico11')?.value;
+    const VALOR2 = this.solicitudForm.get('textoGenerico14')?.value;
+    const VALOR3 = this.solicitudForm.get('textoGenerico17')?.value;
+    const VALOR4 = this.solicitudForm.get('textoGenerico20')?.value;
+
+    if (VALOR1 || VALOR2 || VALOR3 || VALOR4) {
+      const VALOR_COMERCIAL =
+        Number(VALOR1) + Number(VALOR2) + Number(VALOR3) + Number(VALOR4);
+      this.tramite32201Store.setTextoGenerico23(VALOR_COMERCIAL);
+    }
+  }
+
+  /** Calcula el porcentaje basado en los valores ingresados */
+  calcularValorPorcentaje(): void {
+    const VALOR1 = this.solicitudForm.get('textoGenerico12')?.value;
+    const VALOR2 = this.solicitudForm.get('textoGenerico15')?.value;
+    const VALOR3 = this.solicitudForm.get('textoGenerico18')?.value;
+    const VALOR4 = this.solicitudForm.get('textoGenerico21')?.value;
+
+    if (VALOR1 || VALOR2 || VALOR3 || VALOR4) {
+      const VALOR_COMERCIAL =
+        Number(VALOR1) + Number(VALOR2) + Number(VALOR3) + Number(VALOR4);
+      this.tramite32201Store.setTextoGenerico24(VALOR_COMERCIAL);
+    }
+  }
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Completa el observable `destroyed$` para evitar fugas de memoria.
