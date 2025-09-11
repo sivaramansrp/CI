@@ -279,9 +279,8 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
    * returns {void}
    */
  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite140104Store): void {
-  const VALOR = form.get(campo)?.value; // Obtener el valor del campo especificado del formulario.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (this.tramite140104Store[metodoNombre] as (value: any) => void)(VALOR); 
+  const VALOR = form.get(campo)?.value;
+  (this.tramite140104Store[metodoNombre] as (value: unknown) => void)(VALOR); 
  }
 
   /**

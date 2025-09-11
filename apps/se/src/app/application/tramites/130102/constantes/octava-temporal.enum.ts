@@ -134,7 +134,9 @@ export const MODIFICAR_PARTIDAS_FORM = [
  
  
 ];
-/** Enum for the dynamic table fields in Tramite130102Store */
+/** Datos predefinidos de fracciones PROSEC para inicializar o probar formularios.  
+ * Incluye el número de fracción y su descripción.  
+ */
 export const ESPECIFICO_PREFILL: FraccionArancelariaProsec[] = [
   { fraccionArancelariaProsec: 12345678, descripción: 'Ejemplo de fracción PROSEC' },
   { fraccionArancelariaProsec: 87654321, descripción: 'Otro ejemplo' }
