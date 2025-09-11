@@ -95,7 +95,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * @property {Observable<Catalogo[]>} umcs$
    * @description Observable que emite la lista de UMCs disponibles.
    */
-  public fechaFinalInput: InputFecha = FECHA_FINAL;
+  public fechaFinal: InputFecha = FECHA_FINAL;
 
 
   /**
@@ -167,7 +167,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       umc: ['', [Validators.required]],
       valorMercancia: ['', [Validators.required]],
       complementoClasificacion: ['', [Validators.required]],
-      fechaFinal: ['',[Validators.required]],
+      fechaFinalInput: ['',[Validators.required]],
       numeroFactura: ['', [Validators.required]],
       tipoFactura: ['', [Validators.required]]
     });
@@ -248,7 +248,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    */
     public cambioFechaFinal(nuevo_valor: string): void {
 
-      this.mercanciaForm.get('fechaFinal')?.setValue(nuevo_valor);
+      this.mercanciaForm.get('fechaFinalInput')?.setValue(nuevo_valor);
       
     }
   
@@ -294,8 +294,8 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * Dispara el evento para guardar los datos del formulario y muestra una alerta.
    */
   aceptar(): void {
-    this.guardarClicado.emit(this.mercanciaForm.value);
-    this.store.setMercanciaTabla([this.mercanciaForm.value]);
+    this.guardarClicado.emit(this.mercanciaForm.getRawValue());
+    this.store.setMercanciaTabla([this.mercanciaForm.getRawValue()]);
     if (this.mostrarAlerta) {
       of(null)
         .pipe(

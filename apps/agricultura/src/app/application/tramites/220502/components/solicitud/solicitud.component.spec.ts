@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CatalogosSelect, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { of, Subject } from 'rxjs';
 import { CargarDatosIniciales } from '../../models/solicitud-pantallas.model';
 import {
@@ -134,7 +134,8 @@ describe('SolicitudComponent', () => {
       dSolicitud: [],
       hMerchandise: [],
       dMercancia: [],
-      medioDeTransporte: {} as any,
+      medioDeTransporte: {} as CatalogosSelect,
+      mercanciaLista: [],
     };
     mockSolicitudService.getData.mockReturnValue(of(mockData));
     component.cargarDatosIniciales();
