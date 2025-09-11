@@ -23,8 +23,6 @@ import { Injectable } from '@angular/core';
 import { PROC_80101 } from '../servers/api-route';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Tramite80101Query } from '../estados/tramite80101.query';
-import { PROC_80101 } from '../servers/api-route';
-
 
 
 /**
@@ -122,6 +120,37 @@ export class NuevoProgramaIndustrialService {
         )
 
         .pipe(map((response: PlantasSubfabricante[]) => response))
+    );
+  }
+
+   /**
+   * Obtiene la cadena original del trámite 130118.
+   * @param body Objeto que contiene los datos necesarios para generar la cadena original.
+   * @returns Un observable que emite la respuesta del servidor con la cadena original.
+   */
+  obtenerCadenaOriginal<T>(idSolicitud: string, body: CadenaOriginalRequest): Observable<BaseResponse<T>> {
+    return this.http.post<BaseResponse<T>>(PROC_80101.API_POST_CADENA_ORIGINAL(idSolicitud), body).pipe(
+      map((response) => response),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener la cadena original en ${PROC_80101.API_POST_CADENA_ORIGINAL(idSolicitud)}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
+ 
+  /**
+     * Envía una solicitud de firma electrónica.
+     * @param idSolicitud - ID de la solicitud a firmar.
+     * @param body - Cuerpo de la solicitud de firma.
+     * @returns Observable con la respuesta del servidor.
+     */
+  enviarFirma<T>(idSolicitud: string | number, body: FirmarRequest): Observable<BaseResponse<T>> {
+    return this.http.post<BaseResponse<T>>(PROC_80101.API_POST_FIRMA(String(idSolicitud)), body).pipe(
+      map(response => response),
+      catchError(() => {
+        const ERROR = new Error(`Error al firmar solicitud con ID ${idSolicitud}`);
+        return throwError(() => ERROR);
+      })
     );
   }
 

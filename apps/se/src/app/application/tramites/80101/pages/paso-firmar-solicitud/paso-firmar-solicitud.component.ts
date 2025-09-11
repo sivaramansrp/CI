@@ -127,7 +127,7 @@ export class PasoFirmarSolicitudComponent implements OnInit, OnDestroy {
       .subscribe();
 
     // Suscribirse a los cambios en el estado del trámite 130118
-    this.tramite180101Query.allStore$
+    this.tramite180101Query.allStoreData$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
