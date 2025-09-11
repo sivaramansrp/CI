@@ -840,12 +840,30 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   modificarMercancia(): void {
     const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
-    // Verificar si hay al menos un registro seleccionado
-    if (!SELECTED_DATA || SELECTED_DATA.length === 0) {
-      // Si no hay registros seleccionados, no realizar ninguna acción
+    const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
+    
+    // Verificar si no hay registros en la tabla
+    if (!TABLE_DATA || TABLE_DATA.length === 0) {
+      this.modificarMercanciaNotification();
+      this.moduloEmergente = true;
       return;
     }
-    // Si hay datos seleccionados, abrir el modal con el componente de agregar/modificar mercancía
+    
+    // Verificar si no hay registros seleccionados
+    if (!SELECTED_DATA || SELECTED_DATA.length === 0) {
+      this.modificarMercanciaNotification();
+      this.moduloEmergente = true;
+      return;
+    }
+    
+    // Verificar si hay más de un registro seleccionado
+    if (SELECTED_DATA.length > 1) {
+      this.modificarMercanciaNotification();
+      this.moduloEmergente = true;
+      return;
+    }
+    
+    // Si hay exactamente un dato seleccionado, abrir el modal con el componente de agregar/modificar mercancía
     this.modalRef.abrir(AgregarMercanciaComponent);
   }
 
@@ -855,22 +873,45 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   eliminarMercancia(): void {
-      const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
-      if (VALOR.length === 0) {
+      const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
+      const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
+      
+      // Verificar si no hay registros en la tabla
+      if (!TABLE_DATA || TABLE_DATA.length === 0) {
+        this.eliminarMercanciaNotification();
+        this.moduloEmergente = true;
         return;
       }
-      const FILTERED_VALOR = VALOR.filter(
-        (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
-      );
-      this.fitosanitarioStore.update(
-        (state) => ({
-          ...state,
-          tablaDatos: FILTERED_VALOR
-        })
-      );
       
-      // Limpiar selección después de eliminar
-      this.seleccionTabla([]);
+      // Verificar si no hay registros seleccionados
+      if (!SELECTED_DATA || SELECTED_DATA.length === 0) {
+        this.eliminarMercanciaNotification();
+        this.moduloEmergente = true;
+        return;
+      }
+      
+      // Si hay más de un registro seleccionado, mostrar mensaje de error
+      if (SELECTED_DATA.length > 1) {
+        this.eliminarMercanciaNotification();
+        this.moduloEmergente = true;
+        return;
+      }
+      
+      // Si hay exactamente un registro seleccionado, eliminar directamente
+      if (SELECTED_DATA.length === 1) {
+        const FILTERED_VALOR = TABLE_DATA.filter(
+          (item) => !SELECTED_DATA.includes(item)
+        );
+        this.fitosanitarioStore.update(
+          (state) => ({
+            ...state,
+            tablaDatos: FILTERED_VALOR
+          })
+        );
+        
+        // Limpiar selección después de eliminar
+        this.seleccionTabla([]);
+      }
   }
 
   /**
@@ -891,12 +932,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.moduloEmergente = false;
+    } else {
+      this.moduloEmergente = false;
     }
   }
 
   /**
   * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
-  * @method eliminarPedimento
+  * @method eliminarPedimentoDatos
   * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
   */
   eliminarPedimentoDatos(borrar: boolean): void {
@@ -915,9 +958,76 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           tablaDatos: FILTERED_VALOR
         })
       );
+      
+      // Limpiar selección después de eliminar
+      this.seleccionTabla([]);
     }
     else {
       this.eliminarDatosTabla = false;
     }
+  }
+
+  eliminarMercanciaNotification(): void {
+    const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
+    const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
+    
+    let mensaje = 'Selecciona un registro.';
+    
+    // Si no hay registros en la tabla
+    if (!TABLE_DATA || TABLE_DATA.length === 0) {
+      mensaje = 'Selecciona un registro.';
+    }
+    // Si no hay registros seleccionados pero hay registros en la tabla
+    else if (!SELECTED_DATA || SELECTED_DATA.length === 0) {
+      mensaje = 'Selecciona un registro.';
+    }
+    // Si hay múltiples registros seleccionados
+    else if (SELECTED_DATA.length > 1) {
+      mensaje = 'Selecciona un registro.';
+    }
+    
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+  modificarMercanciaNotification(): void {
+    const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
+    const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
+    
+    let mensaje = 'Selecciona sólo un registro para modificar.';
+    
+    // Si no hay registros en la tabla
+    if (!TABLE_DATA || TABLE_DATA.length === 0) {
+      mensaje = 'Selecciona sólo un registro para modificar.';
+    }
+    // Si no hay registros seleccionados pero hay registros en la tabla
+    else if (!SELECTED_DATA || SELECTED_DATA.length === 0) {
+      mensaje = 'Selecciona sólo un registro para modificar.';
+    }
+    // Si hay más de un registro seleccionado
+    else if (SELECTED_DATA.length > 1) {
+      mensaje = 'Selecciona sólo un registro para modificar.';
+    }
+    
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 }
