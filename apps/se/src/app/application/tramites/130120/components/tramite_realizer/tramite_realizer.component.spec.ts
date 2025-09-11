@@ -146,7 +146,11 @@ describe('TramiteRealizerComponent', () => {
         fechaDeInicio: '',
         estadoDelTramite: ''
       },
-    });
+      action_id: '',
+      current_user: '',
+      id_solicitud: '',
+      nombre_pagina: ''
+    } as any); 
     component.ngOnInit();
     expect(component.initActionFormBuild).toHaveBeenCalled();
   });

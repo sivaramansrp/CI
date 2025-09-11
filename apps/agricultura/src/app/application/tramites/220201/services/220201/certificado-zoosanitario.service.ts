@@ -8,13 +8,14 @@ import {
   ValidarEnvio,
 } from '../../models/220201/capturar-solicitud.model';
 
+import { Observable, map } from 'rxjs';
+import { DestinatarioForm } from '../../../220203/models/220203/importacion-de-acuicultura.module';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { Observable, map } from 'rxjs';
+import { SolicitudDataReq } from '../../models/220201/certificado-zoosanitario.model';
 import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
-import { DestinatarioForm } from '../../../220203/models/220203/importacion-de-acuicultura.module';
 
 /**
  * Servicio para la gestión de solicitudes del certificado zoosanitario.
@@ -220,6 +221,14 @@ export class CertificadoZoosanitarioServiceService {
  */
   obtenerRespuestaPorUrl(url: string): Observable<DatosDeLaSolicituds> {
     return this.http.get<DatosDeLaSolicituds>(`../../../../../assets/json/220201/${url}`);
+  }
+    /**
+ * @description Obtiene los datos de la solicitud a partir de una URL específica.
+ * @param {string} url - URL del archivo JSON que contiene los datos de la solicitud.
+ * @returns {Observable<DatosDeLaSolicitud>} Observable con los datos de la solicitud.
+ */
+  obtenerSolicitudDataUrl(url: string): Observable<SolicitudDataReq> {
+    return this.http.get<SolicitudDataReq>(`../../../../../assets/json/220201/${url}`);
   }
   /**
   * @description Obtiene todos los datos del formulario como observable.
