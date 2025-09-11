@@ -91,14 +91,17 @@
               appUppercase
               aria-labelledby="localidad"
               maxlength="120"
-              (input)="onLocalidadInput($event)"
-              (change)="setValorStore(form, 'localidad')"
-            />
-            <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.invalid" class="text-danger">
-              <div *ngIf="form.get('localidad')?.hasError('required')">
-                Por favor, corrija el localidad.
-              </div>
-            </div>
+          (input)="onLocalidadInput($event)"
+          (change)="setValorStore(form, 'localidad')"
+        />
+        <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.invalid" class="text-danger">
+          <div *ngIf="form.get('localidad')?.hasError('required')">
+            Este campo es obligatorio
+          </div>
+          <div *ngIf="form.get('localidad')?.hasError('pattern')">
+            El valor capturado no es válido.
+          </div>
+        </div>
           </div>
         </div>
 
@@ -593,11 +596,11 @@
               (input)="onRfcInput($event)"
               (change)="setValorStore(representanteLegal, 'rfc')" 
             />
-              <div *ngIf="esInvalido('rfc')" class="text-danger">
-              <small *ngIf="representanteLegal.get('rfc')?.errors?.['required']">
-                Este campo es obligatorio.
-              </small>
-          </div>
+         
+           <div *ngIf="representanteLegal.get('rfc')?.touched && representanteLegal.get('rfc')?.hasError('required')" class="text-danger">
+              Este campo es obligatorio.
+            </div>
+          
           </div>
         </div>
         <div class="col-md-3 mt-5">
