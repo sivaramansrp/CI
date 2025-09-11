@@ -86,7 +86,7 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
    * mostrarTabla
    * Bandera para mostrar u ocultar la tabla dinámica.
    */
-  @Input() mostrarTabla = false;
+  @Input() mostrarTabla = true;
   /**
    * filaSeleccionadaChange
    * Evento que emite las filas seleccionadas en la tabla dinámica.
