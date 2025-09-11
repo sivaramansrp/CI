@@ -158,6 +158,10 @@ export class TercerosRelacionadosModalComponent implements OnInit,OnDestroy {
       (this.tramite260701Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  /**
+   * Limpia el formulario `tercerosRelacionadosForm`, reseteando sus valores y estado.
+   * También restablece el objeto `radioObjeto` a su estado inicial con ambas opciones en `false`.
+   */
   public limpiarFormulario(): void {
     this.tercerosRelacionadosForm.reset();
     this.tercerosRelacionadosForm.markAsUntouched();
@@ -168,6 +172,11 @@ export class TercerosRelacionadosModalComponent implements OnInit,OnDestroy {
     }
   }
 
+  /** 
+   * Guarda el formulario si es válido y cierra el modal.
+   * Si el formulario es válido, emite los valores del formulario a través del Subject `onClose`
+   * y luego oculta el modal utilizando `bsModalRef.hide()`.
+   */
   public guardarFormulario(): void {
     if (!this.tercerosRelacionadosForm.invalid) {
       const FORM_VALOR = this.tercerosRelacionadosForm.value;
