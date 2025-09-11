@@ -19,6 +19,7 @@ import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Tramite80101Query } from '../estados/tramite80101.query';
+import { PROC_80101 } from '../servers/api-route';
 
 
 
@@ -53,7 +54,8 @@ export class NuevoProgramaIndustrialService {
     private readonly http: HttpClient,
     public tramite80101Store: Tramite80101Store,
     public httpService: HttpCoreService,
-    private Tramite80101Query:Tramite80101Query
+    private Tramite80101Query:Tramite80101Query,
+    
   ) {
     // No se necesita lógica de inicialización adicional.
   }
@@ -188,12 +190,22 @@ export class NuevoProgramaIndustrialService {
     );
   }
   
-getAllState() {
-return  this.Tramite80101Query.allStore$
+/**
+ * Obtiene todos los datos del estado almacenado en el store.
+ * @returns {Observable<Tramite80101State>} Observable con todos los datos del estado.
+ */
+getAllState(): Observable<Tramite80101State> {
+  return this.Tramite80101Query.allStoreData$;
 }
 
-dummyPost(body:any) {
-  return this.http.post('assets/json/80101/dummy-post.json', body);
+/**
+ * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+ * 
+ * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+ * @returns Observable con la respuesta de la solicitud POST.
+ */
+guardarDatosPost(body: any) {
+  return this.httpService.post<any>(PROC_80101.GUARDAR, { body: body });
 }
 
 }

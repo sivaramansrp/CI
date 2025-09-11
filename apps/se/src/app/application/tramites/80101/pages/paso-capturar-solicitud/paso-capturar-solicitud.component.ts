@@ -1,7 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@ng-mf/data-access-user';
 import { AccionBoton } from '../../models/nuevo-programa-industrial.model';
+import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { Subject } from 'rxjs';
+
 
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
@@ -89,7 +91,7 @@ export class PasoCapturarSolicitudComponent {
    * utilizando los métodos `establecerSeccion` y `establecerFormaValida` del servicio `SeccionLibStore`.
    * La suscripción se gestiona para que se complete automáticamente al destruir el componente mediante `takeUntil` y `destroyNotifier$`.
    */
-  constructor() {
+  constructor(private nuevoProgramaIndustrialService:NuevoProgramaIndustrialService) {
    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
@@ -107,4 +109,26 @@ export class PasoCapturarSolicitudComponent {
       }
     }
   }
+
+/**
+ * Obtiene los datos del store y los guarda utilizando el servicio.
+ */
+obtenerDatosDelStore(): void {
+  this.nuevoProgramaIndustrialService.getAllState().subscribe(data => {
+    this.guardar(data);
+  });
+}
+
+  /**
+   * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
+   * 
+   * @param data - Los datos que se desean guardar y enviar al servidor.
+   * @returns void
+   */
+  guardar(data:any): void {
+    this.nuevoProgramaIndustrialService.guardarDatosPost(data).subscribe(response => {
+      console.log('Datos enviados al servidor:', response);
+    });
+  }
+
 }

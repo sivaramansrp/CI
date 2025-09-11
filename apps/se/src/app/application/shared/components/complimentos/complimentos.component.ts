@@ -615,6 +615,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     this.getCatalogoEstado();
     this.loadComboUnidadMedida();
     this.getPais();
+    this.obtenerEstados();
 
     this.formaComplimentos.valueChanges
       .pipe(delay(100))
@@ -778,24 +779,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     ).contains('formaDatos');
   }
 
-  /**
-   * @description Obtiene el catálogo de países y actualiza las opciones de los campos del formulario.
-   * @returns {void}
-   */
-  getCatalogoPaises(): void {
-    this.catalogosServices
-      .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((datos) => {
-        const INDICE = this.camposFormulario.findIndex(
-          (ele) => ele.campo === PAIS
-        );
-        const INDICEALT = this.camposFormularioTipoPersona.findIndex(
-          (ele) => ele.campo === PAIS
-        );
-      //  this.camposFormularioTipoPersona[INDICEALT].opciones = datos;
-      });
-  }
+ 
 
   /**
   * method loadComboUnidadMedida
