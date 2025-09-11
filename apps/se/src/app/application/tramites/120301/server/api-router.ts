@@ -56,7 +56,7 @@ export const API_GET_IMPORTE_RECORD = 'sat-t120301/catalogo/importer-of-record';
  * API para consultar facturas-tpl tramite 120301.
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t120301/swagger-ui/index.html#/Servicios-Cupos/buscarFacturasDisponiblesTPL
  */
-export const API_GET_FACTURAS_TPL = 'sat-t120301/facturas-tpl';
+export const API_GET_FACTURAS_TPL = 'sat-t120301/facturas-tpl/disponibles';
 
 /**
  * API asociar facturas-tpl tramite 120301.
