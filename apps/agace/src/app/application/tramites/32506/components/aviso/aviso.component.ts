@@ -333,6 +333,21 @@ export class AvisoComponent implements OnInit, OnDestroy {
   consultaioState!: ConsultaioState;
 
   /**
+   * @name DESCARGAR_LINK
+   * @description
+   * Referencia al elemento `<a>` usado para disparar la descarga programática.
+   * Está marcada con el operador "!" porque la referencia se inicializa en tiempo de ejecución
+   * (por ejemplo con @ViewChild).
+   *
+   * Uso típico: en el template se añade `<a #descargarLink style="display:none"></a>` y en
+   * el componente se captura con `@ViewChild('descargarLink') DESCARGAR_LINK!: HTMLAnchorElement;`
+   *
+   * @type {HTMLAnchorElement}
+   * @memberof DownloadExcelComponent
+   */
+  DESCARGAR_LINK!: HTMLAnchorElement;
+
+  /**
    * Constructor del componente.
    *
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
@@ -1452,6 +1467,25 @@ export class AvisoComponent implements OnInit, OnDestroy {
       txtBtnCancelar: '',
     };
   }
+
+  /**
+   * @method descargarDatosCapturados
+   * @description
+   * Método que dispara la descarga de un archivo Excel ubicado en la carpeta `assets/pdf/`.
+   *
+   * Pasos que realiza:
+   *  1. Crea dinámicamente un elemento `<a>`.
+   *  2. Asigna la ruta al archivo Excel dentro de `assets`.
+   *  3. Define el nombre con el que se descargará el archivo.
+   *  4. Simula el clic en el enlace para iniciar la descarga automática.
+   */
+  descargarDatosCapturados(): void {
+    this.DESCARGAR_LINK = document.createElement('a');
+    this.DESCARGAR_LINK.href = 'assets/pdf/datosMercanciaDesperdicio.xlsx';
+    this.DESCARGAR_LINK.download = 'datosMercanciaDesperdicio.xlsx';
+    this.DESCARGAR_LINK.click();
+  }
+
   /**
    * @method ngOnDestroy
    * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

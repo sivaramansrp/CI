@@ -56,6 +56,6 @@ export const PASOS = [
     indice: 2,
     titulo: 'Firmar solicitud',
     activo: false,
-    completado: true
+    completado: false
   }
 ];

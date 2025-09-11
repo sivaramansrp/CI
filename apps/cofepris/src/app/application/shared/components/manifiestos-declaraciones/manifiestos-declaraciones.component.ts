@@ -150,6 +150,11 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     }
 
     this.servicioDeFormularioService.registerForm('manifiestosForm', this.manifiestos);
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'manifiestosForm') {
+        this.manifiestos.markAllAsTouched();
+      }
+    })
 }
   /**
    * @description
@@ -170,7 +175,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
       ) => void
     )(VALOR);
 
-    this.servicioDeFormularioService.setFormValue('domicilioForm', {
+    this.servicioDeFormularioService.setFormValue('manifiestosForm', {
         [campo]: VALOR,
       });
   }

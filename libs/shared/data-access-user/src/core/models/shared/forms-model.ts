@@ -55,6 +55,9 @@ export interface ModeloDeFormaDinamica {
   templateKey?: string; // for injecting dynamic content
   maxlength?: number | null; // maximum length for input fields
   esRequerido?: boolean; // is required field
+  marginLeft?:string,
+  divWidth?:string,         
+  buttonWidth?:string
 }
 
 export interface Validadores {

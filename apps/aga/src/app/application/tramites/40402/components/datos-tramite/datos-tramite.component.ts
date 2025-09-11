@@ -259,10 +259,16 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    * @param form - Formulario origen
    * @param campo - Nombre del campo
    * @param metodoNombre - Método del store a invocar
+   * @param valor - Valor a establecer
+   * @remarks Convierte a mayúsculas el valor si el campo es 'codIataIcao'
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite40402Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+    let valor = form.get(campo)?.value;
+    if (campo === 'codIataIcao' && typeof valor === 'string') {
+      valor = valor.toUpperCase();
+      form.get(campo)?.setValue(valor, { emitEvent: false });
+    }
+    (this.store[metodoNombre] as (value: unknown) => void)(valor);
   }
 
   /**
