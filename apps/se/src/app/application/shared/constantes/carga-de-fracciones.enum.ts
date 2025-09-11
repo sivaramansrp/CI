@@ -9,7 +9,7 @@ export const TEXTOS = {
               La primera línea del archivo debe contener los encabezados de cada uno de los campos que se cargarán dentro del sistema.`,
     PARA_3: `A continuación se define el orden de cada uno de los campos.`,
     CARGA_DE_ARCHIVOS: `Choose File`,
-    CARGA_DE_ARCHIVO_DE_TEXTO: `No files chosen`,
+    CARGA_DE_ARCHIVO_DE_TEXTO: `No file chosen`,
 }
 
 /**
