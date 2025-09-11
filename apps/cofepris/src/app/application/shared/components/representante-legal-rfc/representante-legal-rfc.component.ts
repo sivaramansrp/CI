@@ -80,13 +80,10 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.updateDatos = seccionState.update;
+          this.configurarGrupoForm(); // Configura el formulario reactivo.
         })
       )
-      .subscribe()
-
-   
-      this.configurarGrupoForm(); // Configura el formulario reactivo.
-  
+      .subscribe();
   }
   /**
    * Configura el formulario reactivo.
