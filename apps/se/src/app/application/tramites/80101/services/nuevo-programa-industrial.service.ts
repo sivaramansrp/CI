@@ -222,14 +222,4 @@ export class NuevoProgramaIndustrialService {
       })
     );
   }
-
-
-  getAllState() {
-    return this.Tramite80101Query.allStore$
-  }
-
-  dummyPost(body: any) {
-    return this.http.post('assets/json/80101/dummy-post.json', body);
-  }
-
 }
