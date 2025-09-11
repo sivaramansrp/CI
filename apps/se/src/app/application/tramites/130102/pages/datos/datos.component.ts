@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil} from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
@@ -8,7 +8,13 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
   templateUrl: './datos.component.html'
 })
 export class DatosComponent implements OnInit, OnDestroy {
-  
+      /**
+ * Evento que emite un valor booleano al componente padre.
+ * Se activa cuando el subíndice del child componente cambia.
+ * - true: el subíndice es 3 (mostrar alerta)
+ * - false: cualquier otro valor de subíndice
+ */
+   @Output() alertaEvento = new EventEmitter<boolean>();
     /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
   /*
@@ -72,6 +78,7 @@ export class DatosComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+    this.alertaEvento.emit(this.indice === 2);
   }
   /*
     * Método que se ejecuta al destruir el componente.

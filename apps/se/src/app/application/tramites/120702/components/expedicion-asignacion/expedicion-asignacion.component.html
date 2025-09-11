@@ -28,11 +28,12 @@
                 </div>
             </div>
             <div class="col-md-8 mt-5 d-flex justify-content-end">
-                <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Buscar</button>
+                <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="onBuscarClick()">Buscar</button>
             </div>
         </div>
-
+        @if (mostrarSecciones) {
         <!-- 2.Representación-federal -->
+         <div>
         <div class="representacion-federal mt-5">
             <ng-titulo titulo="Representación federal" />
             <div class="col-md-4">
@@ -171,5 +172,8 @@
             </div>
 
         </div>
+    
+        </div>
+    }
     </form>
 </div>
