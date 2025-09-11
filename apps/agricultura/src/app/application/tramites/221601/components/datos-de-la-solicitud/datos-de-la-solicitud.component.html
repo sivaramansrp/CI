@@ -161,6 +161,7 @@
     <div class="row m-0">
       <h6 class="fw-bold">Mercancías</h6>
       <!-- Update the tabla-dinamica to handle selection -->
+      <!-- Main mercancia table -->
       <app-tabla-dinamica 
         [configuracionTabla]="configuracionTabla" 
         [datos]="mercancias"
@@ -556,12 +557,13 @@
     <form>
       <div class="row">
         <h6 class="fw-bold">Detalle</h6>
+        <!-- Detalle table -->
         <app-tabla-dinamica 
           [configuracionTabla]="configuracionTablaDelLate" 
           [datos]="mercanciasdellate"
           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
           [tipoSeleccionTabla]="checkbox"
-          (listaDeFilaSeleccionada)="onMercanciaSelectionChange($event)">
+          (listaDeFilaSeleccionada)="onMercanciaDelLateSelectionChange($event)">
         </app-tabla-dinamica>
         <nav aria-label="Page navigation example">
           <ul class="pagination justify-content-center">

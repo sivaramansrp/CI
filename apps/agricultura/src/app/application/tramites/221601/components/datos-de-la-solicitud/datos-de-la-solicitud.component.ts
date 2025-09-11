@@ -79,6 +79,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public confirmacionAlertaMercancia: boolean = false;
   public notificacionMercancia!: Notificacion;
   public selectedMercanciaRecords: any[] = [];
+  public selectedMercanciaDelLateRecords: MercanciaDellate[] = [];
 
   // Date range properties
   opcionesRangoFecha = [
@@ -305,14 +306,25 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.showtercerosModal = !this.showtercerosModal;
   }
 
-  // Method for table selection
-  onMercanciaSelectionChange(selectedItems: MercanciaDellate[]): void {
+  // Add the missing cerrarModal method
+  cerrarModal(): void {
+    this.showtercerosModal = false;
+    this.resetMercanciaForm();
+  }
+
+  // Method for main mercancia table selection
+  onMercanciaSelectionChange(selectedItems: Mercancias[]): void {
     this.selectedMercanciaRecords = selectedItems;
   }
 
-  // Method to delete records
+  // Method for mercancia detalle table selection
+  onMercanciaDelLateSelectionChange(selectedItems: MercanciaDellate[]): void {
+    this.selectedMercanciaDelLateRecords = selectedItems;
+  }
+
+  // Method to delete records - update to use the correct array
   eliminarDetalle(): void {
-    if (!this.selectedMercanciaRecords || this.selectedMercanciaRecords.length === 0) {
+    if (!this.selectedMercanciaDelLateRecords || this.selectedMercanciaDelLateRecords.length === 0) {
       this.mostrarNotificacionMercancia(
         'Selecciona un registro.',
         false
@@ -326,22 +338,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     );
   }
 
- 
-  cerrarModal(): void {
-    this.showtercerosModal = false;
-  }
-
-
-  private realizarEliminacionMercancia() : void {
-   
+  private realizarEliminacionMercancia(): void {
     this.mercanciasdellate = this.mercanciasdellate.filter(record => 
-      !this.selectedMercanciaRecords.includes(record)
+      !this.selectedMercanciaDelLateRecords.includes(record)
     );
     
-   this.selectedMercanciaRecords = [];
+    this.selectedMercanciaDelLateRecords = [];
   }
 
- 
   private mostrarNotificacionMercancia(mensaje: string, mostrarCancelar: boolean = false): void {
     this.notificacionMercancia = {
       tipoNotificacion: 'alert',
@@ -380,11 +384,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       event.preventDefault();
     }
 
-   
     const GET_VALUE = (control: string, fallback: string) =>
       this.mercanciaForm.get(control)?.value || fallback;
 
-    
     const GET_DISPLAY_FIELDS = () => ({
       numeroLote: GET_VALUE('numeroLote', `AUTO-${Date.now()}`),
       fechaElaboracion: GET_VALUE('fechaElaboracion', '10/09/2025'),
@@ -400,9 +402,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       fechaDesde: GET_VALUE('fechaDesde', '10/09/2025'),
       FechadeSacrificio: GET_VALUE('FechadeSacrificio', '11/09/2025'),
       FechadeCaducidad: GET_VALUE('FechadeCaducidad', '18/09/2025'),
-      fechaHasta: GET_VALUE('fechaHasta', '12/09/2025'),
-      FechadelSacrificio: GET_VALUE('FechadelSacrificio', '14/09/2025'),
-      FechadelCaducidad: GET_VALUE('FechadelCaducidad', '20/09/2025'),
+      FechadefinElaboracion: GET_VALUE('fechaHasta', '12/09/2025'),
+      FechafindeSacrificio: GET_VALUE('FechadelSacrificio', '14/09/2025'),
+      FechafindeCaducidad: GET_VALUE('FechadelCaducidad', '20/09/2025'),
     });
 
     const GET_FORM_FIELDS = () => ({
@@ -421,17 +423,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ...GET_DISPLAY_FIELDS(),
       ...GET_INTERFACE_FIELDS(),
       ...GET_FORM_FIELDS(),
-      FechadefinElaboracion: GET_VALUE('FechadefinElaboracion', ''),
-      FechafindeSacrificio: GET_VALUE('FechafindeSacrificio', ''),
-      FechafindeCaducidad: GET_VALUE('FechafindeCaducidad', ''),
     };
 
     try {
       this.mercanciasdellate = [...this.mercanciasdellate, NUEVA_MERCANCIA];
-      this.cerrarModal();
       this.resetMercanciaForm();
+      
+      this.mostrarNotificacionMercancia(
+        'Detalle agregado correctamente.',
+        false
+      );
     } catch (error) {
-      // Optionally handle error, but do not use console
+      console.error('Error al agregar mercancía:', error);
+      this.mostrarNotificacionMercancia(
+        'Error al agregar el detalle. Por favor, intenta nuevamente.',
+        false
+      );
     }
   }
 
