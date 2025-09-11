@@ -495,13 +495,13 @@ export class TratadosComponent implements OnInit, OnDestroy {
 
  /** Configuración de la tabla de sectores */
     public configuracionTabla: ConfiguracionColumna<RegistroDeSolicitudesTabla>[] = [
-        { encabezado: 'Pais o bloque', clave: (item: RegistroDeSolicitudesTabla) => item.pais, orden: 1 },
+        { encabezado: 'País o bloque', clave: (item: RegistroDeSolicitudesTabla) => item.pais, orden: 1 },
         { encabezado: "Tratado o Acuerdo", clave: (item: RegistroDeSolicitudesTabla) => item.tratado, orden: 2 },
         { encabezado: "Criterio de origen", clave: (item: RegistroDeSolicitudesTabla) => item.origen, orden: 3 }
     ];
 
     public tablaSeleccionada: ConfiguracionColumna<TratadosTabla>[] = [
-      { encabezado: 'Pais o bloque', clave: (item: TratadosTabla) => item.pais, orden: 1 },
+      { encabezado: 'País o bloque', clave: (item: TratadosTabla) => item.pais, orden: 1 },
       { encabezado: "Tratado o Acuerdo", clave: (item: TratadosTabla) => item.tratado, orden: 2 },
       { encabezado: "Criterio de origen", clave: (item: TratadosTabla) => item.origen, orden: 3 },
       { encabezado: "Norma de origen", clave: (item: TratadosTabla) => item.normaOrigen, orden: 4 },
