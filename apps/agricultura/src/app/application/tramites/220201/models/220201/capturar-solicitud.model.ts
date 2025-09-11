@@ -333,6 +333,7 @@ export interface FilaSolicitud {
  * @property {string} proovedor Nombre del proveedor de la mercancía.
  */
 export interface SolicitudData {
+  id?: number;
   /**
    * Fecha en la que se creó la solicitud.
    */
@@ -564,4 +565,5 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
     seletedTerceros: params.seletedTerceros || {} as TercerosrelacionadosdestinoTable,
     seletedExdora: params.seletedExdora || {} as DestinatarioForm
   }
+  
 }

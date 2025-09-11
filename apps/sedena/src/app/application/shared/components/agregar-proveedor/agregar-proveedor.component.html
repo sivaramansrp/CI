@@ -9,6 +9,7 @@
         <app-input-radio
           [radioOptions]="tipoPersonaRadioOpciones"
           [isRequired]="true"
+          [showTooltip]="true"
           [layout]="'vertical'"
           formControlName="tipoPersona"
           (valueChange)="tipoPersonaCambioDeValor($event)"
@@ -17,9 +18,8 @@
       </div>
     </div>
 
-    <!-- Datos Personales -->
-    @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.FISICA ||
-    agregarProveedorForm.get('tipoPersona')?.untouched) {
+        <!-- Datos Personales -->
+    @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.FISICA || !agregarProveedorForm.get('tipoPersona')?.value) {
     <h4 class="mt-4">Datos personales</h4>
     <div class="row">
       <div class="col-md-4">
@@ -68,10 +68,9 @@
         </div>         
       </div>
     </div>
-    }    
+    }
 
-    @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.MORAL ||
-    agregarProveedorForm.get('tipoPersona')?.untouched) {
+    @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.MORAL || !agregarProveedorForm.get('tipoPersona')?.value) {
     <div class="row">
       <div class="form-group">
         <label
@@ -97,7 +96,8 @@
       </div>
     </div>
     }
-    
+
+
     <!-- Domicilio -->
     <div class="row">
       <h4 class="mt-4">Domicilio</h4>
@@ -107,7 +107,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
-          [isDisabled]="agregarProveedorForm.get('pais')?.disabled ?? false"
+          [isDisabled]="agregarProveedorForm.get('pais')?.disabled ?? false ||esFormularioSoloLectura"
         ></app-catalogo-select>
         <div class="error-message">
         <small *ngIf="agregarProveedorForm.get('pais')?.touched && agregarProveedorForm.get('pais')?.hasError('required')" class="text-danger">
@@ -149,11 +149,18 @@
 
     @if(campoObligatorio){
       <div class="row mt-3">
-        <div class="col-md-8">
-          <label class="form-label">Calle<span *ngIf="campoObligatorio">*</span>:</label>
-          <input type="text" class="form-control" formControlName="calle" maxlength="300" [disabled]="esFormularioSoloLectura"/>
-          <i class="fas fa-info-circle"></i>
+      <div class="col-md-8">
+        <label class="form-label">Calle<span *ngIf="campoObligatorio">*</span>:<span class="bi bi-question-circle-fill" tooltip="Domicilio, calle, número interior, número exterior, lote" data-bs-toggle="tooltip"></span></label>
+        <input type="text" class="form-control" formControlName="calle" maxlength="300"
+          [disabled]="esFormularioSoloLectura" />
+              <div class="error-message">
+          <small
+            *ngIf="agregarProveedorForm.get('calle')?.touched && agregarProveedorForm.get('calle')?.hasError('required')"
+            class="text-danger">
+            Este campo es obligatorio.
+          </small>
         </div>
+      </div>
         <div class="col-md-4">
           <label class="form-label">Número exterior<span *ngIf="campoObligatorio">*</span>:</label>
           <input
@@ -162,11 +169,11 @@
             formControlName="numeroExterior"
           />
         <div class="error-message">
-          <small *ngIf="agregarProveedorForm.get('calle')?.touched && agregarProveedorForm.get('calle')?.hasError('required')" class="text-danger">
-            Existen datos incorrectos que no cumplen con el formato esperado.
+          <small *ngIf="agregarProveedorForm.get('numeroExterior')?.touched && agregarProveedorForm.get('numeroExterior')?.hasError('required')" class="text-danger">
+            Este campo es obligatorio
           </small>
-          <small *ngIf="agregarProveedorForm.get('calle')?.touched && agregarProveedorForm.get('calle')?.hasError('maxlength')" class="text-danger">
-            Máximo 300 caracteres permitidos.
+          <small *ngIf="agregarProveedorForm.get('numeroExterior')?.touched && agregarProveedorForm.get('numeroExterior')?.hasError('maxlength')" class="text-danger">
+            Máximo 55 caracteres permitidos.
           </small>
         </div>          
         </div>
@@ -183,19 +190,18 @@
           </small>
         </div>          
         </div>
-        <div class="col-md-4">
-          <label class="form-label">Calle<span *ngIf="campoObligatorio">*</span>:</label>
-          <input type="text" class="form-control" formControlName="calle"  maxlength="300" [disabled]="esFormularioSoloLectura"/>
-          <i class="fas fa-info-circle"></i>
-          <div class="error-message">
-          <small *ngIf="agregarProveedorForm.get('calle')?.touched && agregarProveedorForm.get('calle')?.hasError('required')" class="text-danger">
+     <div class="col-md-4">
+        <label class="form-label">Calle<span *ngIf="campoObligatorio">*</span>:<span class="bi bi-question-circle-fill" tooltip="Domicilio, calle, número interior, número exterior, lote" data-bs-toggle="tooltip"></span></label>
+        <input type="text" class="form-control" formControlName="calle" maxlength="300"
+          [disabled]="esFormularioSoloLectura" />
+              <div class="error-message">
+          <small
+            *ngIf="agregarProveedorForm.get('calle')?.touched && agregarProveedorForm.get('calle')?.hasError('required')"
+            class="text-danger">
             Este campo es obligatorio.
           </small>
-          <small *ngIf="agregarProveedorForm.get('calle')?.touched && agregarProveedorForm.get('calle')?.hasError('maxlength')" class="text-danger">
-            Máximo 300 caracteres permitidos.
-          </small>
         </div>
-        </div>
+      </div>
         <div class="col-md-4">
           <label class="form-label">Número exterior*:</label>
           <input
@@ -246,24 +252,22 @@
         <label class="form-label">Teléfono:</label>
         <input type="text" class="form-control" formControlName="telefono" />
       </div>
-      <div class="col-md-4">
-        <label class="form-label">Correo electrónico:</label>
-        <input
-          type="email"
-          class="form-control"
-          formControlName="correoElectronico"
-          maxlength="320"
-          [disabled]="esFormularioSoloLectura"
-        />
+    <div class="col-md-4">
+        <label class="form-label">Correo electrónico:<span class="bi bi-question-circle-fill" tooltip="ejemplo@dominio.com" data-bs-toggle="tooltip"></span></label>
+        <input type="email" class="form-control" formControlName="correoElectronico" maxlength="320"
+          [disabled]="esFormularioSoloLectura" />
         <div class="error-message">
-          <small *ngIf="agregarProveedorForm.get('correoElectronico')?.touched && agregarProveedorForm.get('correoElectronico')?.hasError('email')" class="text-danger">
-            Por favor, escribe una dirección de correo válida.
+          <small
+            *ngIf="agregarProveedorForm.get('correoElectronico')?.touched && agregarProveedorForm.get('correoElectronico')?.hasError('email')"
+            class="text-danger">
+           Por favor, escribe una dirección de correo válida.
           </small>
-          <small *ngIf="agregarProveedorForm.get('correoElectronico')?.touched && agregarProveedorForm.get('correoElectronico')?.hasError('maxlength')" class="text-danger">
+          <small
+            *ngIf="agregarProveedorForm.get('correoElectronico')?.touched && agregarProveedorForm.get('correoElectronico')?.hasError('maxlength')"
+            class="text-danger">
             Máximo 320 caracteres permitidos.
           </small>
-        </div>        
-        <i class="fas fa-info-circle"></i>
+        </div>
       </div>
     </div>
 

@@ -60,7 +60,7 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
   public actualizarDatosDeLaSolicitud(datosDeLaSolicitud: DatosDeLaSolicitud): void {
     this.update(state => ({
       ...state,
-      datosDeLaSolicitud: datosDeLaSolicitud,
+      datosDeLaSolicitud: { ...datosDeLaSolicitud }
     }));
   }
 

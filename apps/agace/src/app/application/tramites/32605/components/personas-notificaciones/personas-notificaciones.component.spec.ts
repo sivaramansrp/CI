@@ -11,24 +11,22 @@ describe('PersonasNotificacionesComponent', () => {
 
   beforeEach(() => {
     solicitudService = {
-      obtenerPersonaTablaDatos: jest.fn()
+      obtenerPersonaTablaDatos: jest.fn(() => of())
     } as any;
 
-    const consultaioStateMock: ConsultaioState = {
-      procedureId: 'PROC-001',
-      parameter: 'param',
-      department: 'dept',
-      folioTramite: 'FT-12345',
-      tipoDeTramite: 'tipo1',
-      estadoDeTramite: 'activo',
-      readonly: false,
-      create: true,
-      update: true,
-      consultaioSolicitante: null
-    };
-
     consultaioQueryMock = {
-      selectConsultaioState$: of(consultaioStateMock)
+      selectConsultaioState$: of({
+        readonly: false,
+        procedureId: null,
+        parameter: null,
+        department: null,
+        folioTramite: null,
+        isReadonly: false,
+        solicitudId: null,
+        modulo: null,
+        folioSolicitud: null,
+        tipoPersona: null,
+      } as any)
     };
 
     component = new PersonasNotificacionesComponent(
@@ -88,7 +86,7 @@ describe('PersonasNotificacionesComponent', () => {
       create: false,
       update: false,
       consultaioSolicitante: null
-    };
+    } as any;
 
     consultaioQueryMock.selectConsultaioState$ = of(readonlyStateMock);
 

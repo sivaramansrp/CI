@@ -66,58 +66,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
   /*
    * Configuración de las columnas que se mostrarán en la tabla de tareas pendientes.
    */
-  public dePendientesConfiguracionTabla: ConfiguracionColumna<BandejaDeTareasPendientes>[] = [
-      {
-        encabezado: 'Folio trámite',
-        clave: (artículo:BandejaDeTareasPendientes) => artículo.folioTramite,
-        orden: 1,
-      },
-      {
-        encabezado: 'Tipo de trámite',
-        clave: (artículo:BandejaDeTareasPendientes) => artículo.tipoDeTramite,
-        orden: 2,
-      },
-      {
-        encabezado: 'Nombre tarea',
-        clave: (artículo:BandejaDeTareasPendientes) => artículo.nombreDeLaTarea,
-        orden: 3,
-      },
-      {
-        encabezado: 'Fecha de asignación',
-        clave: (artículo:BandejaDeTareasPendientes) => artículo.fechaDeAsignacion,
-        orden: 4,
-      },
-      {
-        encabezado: 'Estado de trámite',
-        clave: (artículo:BandejaDeTareasPendientes) => artículo.estadoDeTramite,
-        orden: 5,
-      },
-      {
-        encabezado: 'Departamento',
-        clave: (artículo:BandejaDeTareasPendientes) => artículo.departamento,
-        orden: 6,
-      },
-      {
-        encabezado: 'Número de procedimiento',
-        clave: (artículo:BandejaDeTareasPendientes) => artículo.numeroDeProcedimiento,
-        orden: 7,
-      },
-      {
-        encabezado: 'Origin',
-        clave: (artículo:BandejaDeTareasPendientes) => artículo.origin,
-        orden: 8,
-      },
-      {
-        encabezado: 'Fecha inicio trámite',
-        clave: (artículo:BandejaDeTareasPendientes) => artículo.fechaInicioTramite,
-        orden: 9,
-      },
-      {
-        encabezado: 'Días hábiles transcurridos',
-        clave: (artículo:BandejaDeTareasPendientes) => artículo.diasHabilesTranscurridos,
-        orden: 10,
-      }
-    ];
+  public dePendientesConfiguracionTabla: ConfiguracionColumna<BandejaDeTareasPendientes>[] = [];
   /**
    * Datos que se mostrarán en la tabla de tareas pendientes.
    */

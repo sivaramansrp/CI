@@ -8,7 +8,6 @@ import {
 } from '@angular/forms';
 import {
   Catalogo,
-  CatalogoSelectComponent,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
@@ -31,6 +30,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
 import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constantes/datos-solicitud.enum';
@@ -441,7 +441,7 @@ export class AgregarDestinatarioFinalComponent
       pais: [
         {
           value: this.elementosDeshabilitados.includes('pais')
-            ? '2'
+            ? '1'
             : this.obtenerValor('pais'),
           disabled: this.elementosDeshabilitados.includes('pais'),
         },

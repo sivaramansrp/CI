@@ -1,13 +1,16 @@
 <form [formGroup]="forma" *ngIf="esFormularioInicializado">
   <div class="row mt-5">
+    <div class="col-md-12">
+      <label>Señale el sector productivo o servicio al que pertenece</label>
+    </div>
     <div class="col-md-6">
       <div class="form-group">
-        <app-catalogo-select [catalogo]="sectorProductivoList" [label]="'Sector Productivo'" [placeholder]="'Seleccione un valor'" [required]="false" id="sector-productivo" formControlName="sectorProductivo" (change)=" setValoresStore(forma,'sectorProductivo'); manejarCamposMutuamenteExcluyentes('sectorProductivo', 'sectorServicio', $event); actualizarValidacionSector()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="sectorProductivoList" [label]="'Sector Productivo'" [placeholder]="'Seleccione una opción'" [required]="false" id="sector-productivo" formControlName="sectorProductivo" (change)=" setValoresStore(forma,'sectorProductivo'); manejarCamposMutuamenteExcluyentes('sectorProductivo', 'sectorServicio', $event); actualizarValidacionSector()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <app-catalogo-select [catalogo]="sectorServicio" [label]="'Servicio'" [placeholder]="'Seleccione un valor'" [required]="false" id="sector-servicio" formControlName="sectorServicio" (change)="setValoresStore(forma, 'sectorServicio'); manejarCamposMutuamenteExcluyentes('sectorServicio', 'sectorProductivo', $event); actualizarValidacionSector()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="sectorServicio" [label]="'Servicio'" [placeholder]="'Seleccione una opción'" [required]="false" id="sector-servicio" formControlName="sectorServicio" (change)="setValoresStore(forma, 'sectorServicio'); manejarCamposMutuamenteExcluyentes('sectorServicio', 'sectorProductivo', $event); actualizarValidacionSector()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
       </div>
     </div>
     <div class="col-md-12">
@@ -22,7 +25,7 @@
   <div class="row">
     <div class="col-md-12">
       <label class="form-label text-left">
-        <span class="text-danger">*</span> Señale si al momento de ingresar su solicitud si se encuentra al corriente en el cumplimiento de sus obligaciones fiscales y aduaneras </label>
+        <span class="text-danger">*</span> Señale si al momento de ingresar su solicitud si se encuentra al corriente en el cumplimiento de sus obligaciones fiscales y aduaneras. </label>
       <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="cumplimientoFiscalAduanero" (valueChange)="onSeleccionfalsa($event)" (change)="setValoresStore(forma,'cumplimientoFiscalAduanero')"></app-input-radio>
       <div *ngIf="esInvalido('cumplimientoFiscalAduanero')" class="text-danger mt-3">
         <b *ngIf="forma.controls['cumplimientoFiscalAduanero'].hasError('required')">Respuesta Obligatoria</b>
@@ -32,7 +35,7 @@
   <div class="row">
     <div class="col-md-12 pt-5">
       <label class="form-label text-left">
-        <span class="text-danger">*</span> Indique si autorizó al S A T hacer pública su opinión positiva sobre el cumplimiento de obligaciones fiscales </label>
+        <span class="text-danger">*</span> Indique si autorizó al S A T hacer pública su opinión positiva sobre el cumplimiento de obligaciones fiscales. </label>
       <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="autorizaOpinionSAT" (valueChange)="onSeleccionfalsa($event)" (change)="setValoresStore(forma,'autorizaOpinionSAT')"></app-input-radio>
       <div *ngIf="esInvalido('autorizaOpinionSAT')" class="text-danger mt-3">
         <b *ngIf="forma.controls['autorizaOpinionSAT'].hasError('required')">Respuesta Obligatoria</b>
@@ -42,7 +45,7 @@
   <div class="row">
     <div class="col-md-12 pt-5">
       <label class="form-label text-left">
-        <span class="text-danger">*</span> Señale si cuenta con empleados propios para realizar el proceso productivo o la prestación de servicios, registrado ante el I M S S </label>
+        <span class="text-danger">*</span> Señale si cuenta con empleados propios para realizar el proceso productivo o la prestación de servicios, registrado ante &nbsp;&nbsp;&nbsp; el I M S S. </label>
       <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="cuentaConEmpleadosPropios" (valueChange)="enCambioDeValor($event); onSeleccionfalsa($event, EMPLEADO_REQUISITO)" (change)="setValoresStore(forma,'cuentaConEmpleadosPropios')"></app-input-radio>
       <div *ngIf="esInvalido('cuentaConEmpleadosPropios')" class="text-danger mt-3">
         <b *ngIf="forma.controls['cuentaConEmpleadosPropios'].hasError('required')">Respuesta Obligatoria</b>
@@ -55,8 +58,8 @@
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label text-left">Número de empleados</label>
-        <input class="form-control" id="numero-de-empleadas" type="text" name="numeroDeEmpleadas" formControlName="numeroDeEmpleadas" (change)="setValoresStore(forma, 'numeroDeEmpleadas')" />
+        <label class="form-label text-left">Número de empleados:</label>
+        <input class="form-control" maxlength="8" id="numero-de-empleadas" type="text" name="numeroDeEmpleadas" formControlName="numeroDeEmpleadas" (change)="setValoresStore(forma, 'numeroDeEmpleadas')" />
         <div *ngIf="esInvalido('numeroDeEmpleadas')" class="text-danger mt-3">
           <b *ngIf="forma.controls['numeroDeEmpleadas'].hasError('required')"> Se debe agregar los datos del número de empleados propios del último bimestre </b>
         </div>
@@ -64,14 +67,17 @@
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <app-catalogo-select [catalogo]="bimestreList" [label]="'Bimestre'" [placeholder]="'Seleccione un valor'" [required]="true" id="bimestre" formControlName="bimestreUltimo" [isDisabled]="!this.radioSeleccionado || esFormularioSoloLectura" (change)="setValoresStore(forma, 'bimestreUltimo')"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="bimestreList" [label]="'Bimestre'" [placeholder]="'Seleccione un opción'" [required]="false" id="bimestre" formControlName="bimestreUltimo" [isDisabled]="!this.radioSeleccionado || esFormularioSoloLectura" (change)="setValoresStore(forma, 'bimestreUltimo')"></app-catalogo-select>
       </div>
+    </div>
+    <div class="col-md-12 text-center mt-4">
+      <label class="text-danger"><i>Se debe agregar los datos del número de empleados propios del último bimestre</i></label>
     </div>
   </div>
   <div class="row">
     <div class="col-md-12 pt-5">
       <label class="form-label text-left">
-        <span class="text-danger">*</span> Cumple con la obligación de retener y enterar el I S R de los trabajadores </label>
+        <span class="text-danger">*</span> Cumple con la obligación de retener y enterar el I S R de los trabajadores. </label>
       <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="retencionISRTrabajadores" (valueChange)="onSeleccionfalsa($event)" (change)="setValoresStore(forma,'retencionISRTrabajadores')"></app-input-radio>
       <div *ngIf="esInvalido('retencionISRTrabajadores')" class="text-danger mt-3">
         <b *ngIf="forma.controls['retencionISRTrabajadores'].hasError('required')">Respuesta Obligatoria</b>
@@ -81,7 +87,7 @@
   <div class="row">
     <div class="col-md-12 pt-5">
       <label class="form-label text-left">
-        <span class="text-danger">*</span> Acredita realizar el pago de cuotas obrero patronales </label>
+        <span class="text-danger">*</span> Acredita realizar el pago de cuotas obrero patronales. </label>
       <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="pagoCuotasIMSS" (valueChange)="onSeleccionfalsa($event); manejarPagoCuotasIMSS($event)" (change)="setValoresStore(forma,'pagoCuotasIMSS')"></app-input-radio>
       <div *ngIf="esInvalido('pagoCuotasIMSS')" class="text-danger mt-3">
         <b *ngIf="forma.controls['pagoCuotasIMSS'].hasError('required')">Respuesta Obligatoria</b>
@@ -96,7 +102,7 @@
   <div class="row">
     <div class="col-md-12 pt-2 mb-5">
       <label class="form-label text-left">
-        <span class="text-danger">*</span> Señale si al momento de ingresar su solicitud la empresa solicitante cuenta con subcontratación de servicios especializados o de ejecución de obras especializadas </label>
+        <span class="text-danger">*</span> Señale si al momento de ingresar su solicitud la empresa solicitante cuenta con subcontratación de servicios especializados o de ejecución de obras especializadas. </label>
       <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="cuentaConSubcontratacionEspecializada" (valueChange)="toggleTablaPorValor($event)" (change)="setValoresStore(forma,'cuentaConSubcontratacionEspecializada')"></app-input-radio>
       <div *ngIf="esInvalido('cuentaConSubcontratacionEspecializada')" class="text-danger mt-3">
         <b *ngIf="forma.controls['cuentaConSubcontratacionEspecializada'].hasError('required')">Debe agregar empleados propios ó subcontratados.</b>
@@ -168,7 +174,7 @@
   </div>
   <div class="row">
     <div class="col-md-12 pt-5">
-      <app-domicilios-rfc-solicitante #domiciliosRfcSolicitanteRef (reconocimientoMutuoCTPATChange)="onReconocimientoMutuoCTPATChanged($event)"></app-domicilios-rfc-solicitante>
+      <app-domicilios-rfc-solicitante #domiciliosRfcSolicitanteRef (reconocimientoMutuoCTPATChange)="onReconocimientoMutuoCTPATChanged($event)" (perfillRecinto)="perfillRecintoChange($event)"></app-domicilios-rfc-solicitante>
     </div>
   </div>
   <div class="row">
@@ -194,7 +200,7 @@
   <div class="row">
     <div class="col-md-12">
       <ng-titulo titulo="Clientes y Proveedores en el Extranjero"></ng-titulo>
-      <p>Anexe un archivo que contenga el nombre y dirección de sus clientes y proveedores en el extranjero directa o indirectamente vinculados con el régimen aduanero con el que se solicita el registro, con los que realizó operaciones de comercio exterior durante los últimos doce meses <br />Para descargar plantilla del archivo de excel de click <strong>aquí</strong>
+      <p>Anexe un archivo que contenga el nombre y dirección de sus clientes y proveedores en el extranjero directa o indirectamente vinculados con el régimen aduanero con el que se solicita el registro, con los que realizó operaciones de comercio exterior durante los últimos doce meses <br />Para descargar plantilla del archivo de excel de click <strong><a href="assets/pdf/plantilla_aviso_destruccion.xls">aquí</a></strong>
       </p>
     </div>
   </div>
@@ -209,7 +215,7 @@
   <div class="row">
     <div class="col-md-12">
       <ng-titulo titulo="Proveedores"></ng-titulo>
-      <p>Anexe un archivo que contenga el nombre y clave en el R F C de sus proveedores de insumos adquiridos en territorio nacional, vinculados al proceso bajo el régimen que solicita, de los últimos 6 meses <br />Para descargar la plantilla del archivo de excel de clic <strong>aquí</strong>
+      <p>Anexe un archivo que contenga el nombre y clave en el R F C de sus proveedores de insumos adquiridos en territorio nacional, vinculados al proceso bajo el régimen que solicita, de los últimos 6 meses <br />Para descargar la plantilla del archivo de excel de clic <strong><a href="assets/pdf/plantilla_aviso_destruccion.xls">aquí</a></strong>
       </p>
     </div>
   </div>
