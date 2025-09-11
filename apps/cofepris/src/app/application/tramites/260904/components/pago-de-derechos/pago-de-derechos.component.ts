@@ -161,7 +161,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       clave: [this.estadoSeleccionado.clave, Validators.required],
       llaveDePago: [
         this.estadoSeleccionado.llaveDePago,
-        [Validators.required, Validators.pattern(REGEX_LLAVE_DE_PAGO),],
+        [Validators.required, Validators.pattern('^[A-Z0-9]{10}$'),],
       ],
       fecPago: [
         this.estadoSeleccionado.fecPago,
