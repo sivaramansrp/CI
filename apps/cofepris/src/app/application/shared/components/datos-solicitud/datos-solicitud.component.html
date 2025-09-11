@@ -45,6 +45,7 @@
             placeholder=""
             type="text"
             formControlName="denominacion"
+            [ngClass]="esValido('denominacion') ? 'required' : ''"
             (change)="setValoresStore(forma, 'denominacion', 'setDenominacion')"
           />
            <div *ngIf="forma.get('denominacion')?.touched && forma.get('denominacion')?.errors?.['required']" class="mensaje-error">
@@ -63,6 +64,7 @@
             placeholder=""
             type="text"
             formControlName="correo"
+            [ngClass]="esValido('correo') ? 'required' : ''"
             (change)="setValoresStore(forma, 'correo', 'setCorreo')"
           />
            <div *ngIf="forma.get('correo')?.touched && forma.get('correo')?.errors?.['required']" class="mensaje-error">

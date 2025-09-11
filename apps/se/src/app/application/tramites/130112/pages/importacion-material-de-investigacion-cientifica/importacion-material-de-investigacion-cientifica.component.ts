@@ -1,5 +1,5 @@
+import { AVISO, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../enums/accion-botton.enum';
 import { PASOS_IMPORTACION } from '../../constants/importacion-material-de-investigacion-cientifica-pasos.enum';
 
@@ -16,6 +16,13 @@ import { PASOS_IMPORTACION } from '../../constants/importacion-material-de-inves
   templateUrl: './importacion-material-de-investigacion-cientifica.component.html',
 })
 export class ImportacionMaterialDeInvestigacionCientificaComponent {
+     /**
+   * @property {object} TEXTOS - Contiene constantes relacionadas con aviso y firma.
+   * Se utiliza para manejar textos estáticos en la aplicación.
+   */
+    public TEXTOS = {
+    AVISO,
+  };
   /**
    * @descripcion
    * Lista de pasos del asistente para el trámite.

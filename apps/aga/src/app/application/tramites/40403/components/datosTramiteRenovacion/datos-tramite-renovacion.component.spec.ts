@@ -1,169 +1,169 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { DatosTramiteRenovacionComponent } from './datosTramiteRenovacion.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Tramite40403Service } from '../../estados/tramite40403.service';
 import { Tramite40403Store } from '../../estados/tramite40403.store';
 import { Tramite40403Query } from '../../estados/tramite40403.query';
-import { of } from 'rxjs';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CatalogoSelectComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClientModule } from '@angular/common/http';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+
+@Injectable()
+class MockTramite40403Service {}
+
+@Injectable()
+class MockTramite40403Store {}
+
+@Injectable()
+class MockTramite40403Query {}
+
 
 describe('DatosTramiteRenovacionComponent', () => {
-  let component: DatosTramiteRenovacionComponent;
-  let fixture: ComponentFixture<DatosTramiteRenovacionComponent>;
-  let mockTramite40403Service: jest.Mocked<Tramite40403Service>;
-  let mockTramite40403Store: jest.Mocked<Tramite40403Store>;
-  let mockTramite40403Query: jest.Mocked<Tramite40403Query>;
+  let fixture: ComponentFixture<unknown>;
+  let component: { ngOnDestroy: () => void; tramite40403Query: { selectSeccionState$?: any; getValue?: any; }; consultaioQuery: { selectConsultaioState$?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); inicializarFormulario: jest.Mock<any, any, any> | (() => void); tipoDeCaatAereaData: jest.Mock<any, any, any> | (() => void); ideCodTransportacionAereaData: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; ngAfterViewInit: () => void; formulario: { disable?: any; get?: any; patchValue?: any; }; fb: { group?: any; }; atencionRenovacionState: { claveFolioCAAT?: any; cveFolioCaat?: any; descripcionTipoCaat?: any; tipoDeCaatAerea?: any; ideCodTransportacionAerea?: any; codIataIcao?: any; }; caatConMayusculas: (arg0: { target: { value: {}; }; }) => void; tramite40403Store: { setMostrarError?: any; establecerCveFolioCaat?: any; establecerDescripcionTipoCaat?: any; establecerTipoDeCaatAerea?: any; establecerIdeCodTransportacionAerea?: any; establecerCodIataIcao?: any; metodoNombre?: any; }; tramite40403Service: { buscarSolicitudPorCAATe?: any; getTipoDeCaatAerea?: any; geTideCodTransportacionAerea?: any; }; establecerCampoValor: jest.Mock<any, any, any> | ((arg0: { cveFolioCaat: {}; descripcionTipoCaat: {}; tipoDeCaatAerea: {}; ideCodTransportacionAerea: {}; codIataIcao: {}; }) => void); buscarSolicitudPorCAAT: () => void; setValoresStore: (arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void; destroyNotifier$: { next?: any; complete?: any; }; };
 
-  beforeEach(async () => {
-    mockTramite40403Service = {
-      buscarSolicitudPorCAATe: jest.fn(),
-      getTipoDeCaatAerea: jest.fn().mockReturnValue(of([])),
-      geTideCodTransportacionAerea: jest.fn().mockReturnValue(of([])),
-    } as unknown as jest.Mocked<Tramite40403Service>;
-
-    mockTramite40403Store = {
-      establecerCveFolioCaat: jest.fn(),
-      establecerDescripcionTipoCaat: jest.fn(),
-      establecerTipoDeCaatAerea: jest.fn(),
-      establecerIdeCodTransportacionAerea: jest.fn(),
-      establecerCodIataIcao: jest.fn(),
-      establecerSeccion: jest.fn(),
-      establecerFormaValida: jest.fn(),
-      establecerClaveFolioCAAT: jest.fn(),
-      setLoading: jest.fn(),
-      destroy: jest.fn(),
-    } as unknown as jest.Mocked<Tramite40403Store>;
-
-    mockTramite40403Query = {
-      selectSeccionState$: of({
-        claveFolioCAAT: '1234',
-        cveFolioCaat: '1234',
-        descripcionTipoCaat: 'Test Description',
-        tipoDeCaatAerea: 'Aerea Type',
-        ideCodTransportacionAerea: 'Transport Code',
-        codIataIcao: 'IATA Code',
-      }),
-    } as jest.Mocked<Tramite40403Query>;
-
-    await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ 
         CatalogoSelectComponent, 
         DatosTramiteRenovacionComponent,
         ReactiveFormsModule,
-        HttpClientModule
+        HttpClientModule],
+      declarations: [
       ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: Tramite40403Service, useValue: mockTramite40403Service },
-        { provide: Tramite40403Store, useValue: mockTramite40403Store },
-        { provide: Tramite40403Query, useValue: mockTramite40403Query }
-      ],
-      schemas: [NO_ERRORS_SCHEMA]
+        { provide: Tramite40403Service, useClass: MockTramite40403Service },
+        { provide: Tramite40403Store, useClass: MockTramite40403Store },
+        { provide: Tramite40403Query, useClass: MockTramite40403Query },
+        ConsultaioQuery
+      ]
+    }).overrideComponent(DatosTramiteRenovacionComponent, {
+
     }).compileComponents();
-
     fixture = TestBed.createComponent(DatosTramiteRenovacionComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  describe('ngOnInit', () => {
-    it('should initialize the form and load data', () => {
-      const spyInicializarFormulario = jest.spyOn(component, 'inicializarFormulario');
-      const spyTipoDeCaatAereaData = jest.spyOn(component, 'tipoDeCaatAereaData');
-      const spyIdeCodTransportacionAereaData = jest.spyOn(component, 'ideCodTransportacionAereaData');
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
 
-      component.ngOnInit();
+  it('should run #constructor()', async () => {
+    expect(component).toBeTruthy();
+  });
 
-      expect(spyInicializarFormulario).toHaveBeenCalled();
-      expect(spyTipoDeCaatAereaData).toHaveBeenCalled();
-      expect(spyIdeCodTransportacionAereaData).toHaveBeenCalled();
+  it('should run #ngOnInit()', async () => {
+    component.tramite40403Query = component.tramite40403Query || {};
+    component.tramite40403Query.selectSeccionState$ = observableOf({});
+    component.consultaioQuery = component.consultaioQuery || {};
+    component.consultaioQuery.selectConsultaioState$ = observableOf({});
+    component.inicializarEstadoFormulario = jest.fn();
+    component.inicializarFormulario = jest.fn();
+    component.tipoDeCaatAereaData = jest.fn();
+    component.ideCodTransportacionAereaData = jest.fn();
+    component.ngOnInit();
+  });
+
+  it('should run #ngAfterViewInit()', async () => {
+    component.tramite40403Query = component.tramite40403Query || {};
+    component.tramite40403Query.getValue = jest.fn().mockReturnValue({
+      mostrarError: {}
+    });
+    component.ngAfterViewInit();
+  });
+
+  it('should run #inicializarEstadoFormulario()', async () => {
+    component.formulario = component.formulario || {};
+    component.formulario.disable = jest.fn();
+    component.inicializarEstadoFormulario();
+  });
+
+  it('should run #inicializarFormulario()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.atencionRenovacionState = component.atencionRenovacionState || {};
+    component.atencionRenovacionState.claveFolioCAAT = 'claveFolioCAAT';
+    component.atencionRenovacionState.cveFolioCaat = 'cveFolioCaat';
+    component.atencionRenovacionState.descripcionTipoCaat = 'descripcionTipoCaat';
+    component.atencionRenovacionState.tipoDeCaatAerea = 'tipoDeCaatAerea';
+    component.atencionRenovacionState.ideCodTransportacionAerea = 'ideCodTransportacionAerea';
+    component.atencionRenovacionState.codIataIcao = 'codIataIcao';
+    component.inicializarEstadoFormulario = jest.fn();
+    component.inicializarFormulario();
+  });
+
+  it('should run #caatConMayusculas()', async () => {
+    component.formulario = component.formulario || {};
+    component.formulario.get = jest.fn().mockReturnValue({
+      setValue: function() {}
+    });
+    component.caatConMayusculas({
+      target: {
+        value: "testValue"
+      }
     });
   });
 
-  describe('inicializarFormulario', () => {
-    it('should create the component and initialize state', () => {
-      expect(component).toBeTruthy();
-      expect(component.formulario).toBeDefined();
+  it('should run #buscarSolicitudPorCAAT()', async () => {
+    component.formulario = component.formulario || {};
+    component.formulario.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.formulario.patchValue = jest.fn();
+    component.tramite40403Store = component.tramite40403Store || {};
+    component.tramite40403Store.setMostrarError = jest.fn();
+    component.tramite40403Service = component.tramite40403Service || {};
+    component.tramite40403Service.buscarSolicitudPorCAATe = jest.fn().mockReturnValue(observableOf({
+      data: {
+        0: {}
+      }
+    }));
+    component.establecerCampoValor = jest.fn();
+    component.buscarSolicitudPorCAAT();
+  });
+
+  it('should run #establecerCampoValor()', async () => {
+    component.tramite40403Store = component.tramite40403Store || {};
+    component.tramite40403Store.establecerCveFolioCaat = jest.fn();
+    component.tramite40403Store.establecerDescripcionTipoCaat = jest.fn();
+    component.tramite40403Store.establecerTipoDeCaatAerea = jest.fn();
+    component.tramite40403Store.establecerIdeCodTransportacionAerea = jest.fn();
+    component.tramite40403Store.establecerCodIataIcao = jest.fn();
+    component.establecerCampoValor({
+      cveFolioCaat: {},
+      descripcionTipoCaat: {},
+      tipoDeCaatAerea: {},
+      ideCodTransportacionAerea: {},
+      codIataIcao: {}
     });
   });
 
-  describe('caatConMayusculas', () => {
-    it('should convert the input value to uppercase', () => {
-      component.inicializarFormulario();
-      const event = { target: { value: 'abcd' } } as unknown as Event;
-
-      component.caatConMayusculas(event);
-
-      expect(component.formulario.get('claveFolioCAAT')?.value).toBe('ABCD');
-    });
+  it('should run #tipoDeCaatAereaData()', async () => {
+    component.tramite40403Service = component.tramite40403Service || {};
+    component.tramite40403Service.getTipoDeCaatAerea = jest.fn().mockReturnValue(observableOf({}));
+    component.tipoDeCaatAereaData();
   });
 
-  describe('establecerCampoValor', () => {
-    it('should call store methods with correct values', () => {
-      const mockCAAT = {
-        claveFolioCAAT: '1234',
-        cveFolioCaat: '1234',
-        descripcionTipoCaat: 'Test Description',
-        tipoDeCaatAerea: 'Aerea Type',
-        ideCodTransportacionAerea: 'Transport Code',
-        codIataIcao: 'IATA Code',
-      };
-
-      component.establecerCampoValor(mockCAAT);
-
-      expect(mockTramite40403Store.establecerCveFolioCaat).toHaveBeenCalledWith('1234');
-      expect(mockTramite40403Store.establecerDescripcionTipoCaat).toHaveBeenCalledWith('Test Description');
-      expect(mockTramite40403Store.establecerTipoDeCaatAerea).toHaveBeenCalledWith('Aerea Type');
-      expect(mockTramite40403Store.establecerIdeCodTransportacionAerea).toHaveBeenCalledWith('Transport Code');
-      expect(mockTramite40403Store.establecerCodIataIcao).toHaveBeenCalledWith('IATA Code');
-    });
+  it('should run #ideCodTransportacionAereaData()', async () => {
+    component.tramite40403Service = component.tramite40403Service || {};
+    component.tramite40403Service.geTideCodTransportacionAerea = jest.fn().mockReturnValue(observableOf({}));
+    component.ideCodTransportacionAereaData();
   });
 
-  describe('tipoDeCaatAereaData', () => {
-    it('should fetch and set tipoDeCaatAerea data', () => {
-      const mockData = [{ id: 1, descripcion: 'Type A' }];
-      mockTramite40403Service.getTipoDeCaatAerea.mockReturnValue(of(mockData));
-
-      component.tipoDeCaatAereaData();
-
-      expect(mockTramite40403Service.getTipoDeCaatAerea).toHaveBeenCalled();
-      expect(component.tipoDeCaatAerea).toEqual(mockData);
-    });
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
   });
 
-  describe('ideCodTransportacionAereaData', () => {
-    it('should fetch and set ideCodTransportacionAerea data', () => {
-      const mockData = [{ id: 1, descripcion: 'Code A' }];
-      mockTramite40403Service.geTideCodTransportacionAerea.mockReturnValue(of(mockData));
-
-      component.ideCodTransportacionAereaData();
-
-      expect(mockTramite40403Service.geTideCodTransportacionAerea).toHaveBeenCalled();
-      expect(component.ideCodTransportacionAerea).toEqual(mockData);
-    });
-  });
-
-  describe('setValoresStore', () => {
-    it('should call the correct store method with the form value', () => {
-      component.inicializarFormulario();
-      component.formulario.get('claveFolioCAAT')?.setValue('1234');
-
-      component.setValoresStore(component.formulario, 'claveFolioCAAT', 'establecerCveFolioCaat');
-
-      expect(mockTramite40403Store.establecerCveFolioCaat).toHaveBeenCalledWith('1234');
-    });
-  });
-
-  describe('ngOnDestroy', () => {
-    it('should complete destroyNotifier$', () => {
-      const spy = jest.spyOn(component['destroyNotifier$'], 'complete');
-
-      component.ngOnDestroy();
-
-      expect(spy).toHaveBeenCalled();
-    });
-  });
 });

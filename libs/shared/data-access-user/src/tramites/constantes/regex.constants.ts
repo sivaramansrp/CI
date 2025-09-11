@@ -975,3 +975,30 @@ export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
  * No permite caracteres especiales.
  */
 export const REGEX_LOCALIDAD = /^[a-zA-ZÀ-ÿ0-9\\s]+$/;
+
+/**
+ * Expresión regular para validar números decimales con hasta 17 dígitos enteros y hasta 4 decimales opcionales.
+ * 
+ * Esta expresión regular permite validar números que pueden contener:
+ * - Entre 1 y 17 dígitos enteros
+ * - Opcionalmente, un punto decimal seguido de entre 1 y 4 dígitos decimales
+ * 
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - \d{1,17}: Coincide con entre 1 y 17 dígitos enteros.
+ * - (\.\d{1,4})?: Coincide con un punto seguido de entre 1 y 4 dígitos decimales, opcional.
+ * - $: Aserción para el final de la cadena.
+ * 
+ * Ejemplos válidos:
+ * - "12345678901234567"
+ * - "123.4567"
+ * - "1.1"
+ * - "999999999999999999"
+ * 
+ * Ejemplos no válidos:
+ * - "123456789012345678" (más de 17 dígitos enteros)
+ * - "123.45678" (más de 4 decimales)
+ * - "abc" (no es un número)
+ * - ".1234" (falta de dígitos enteros)
+ */
+export const DECIMAL_22_4_REGEX = /^\d{1,17}(\.\d{1,4})?$/;
