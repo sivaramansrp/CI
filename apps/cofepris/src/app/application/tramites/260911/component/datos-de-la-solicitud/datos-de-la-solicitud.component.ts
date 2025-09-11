@@ -480,6 +480,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
       }
       return control.errors && control.touched;
     }
+    /**
+   * Devuelve los datos actuales del formulario principal y del establecimiento.
+   */
+  getData(): { [key: string]: unknown; datosDelEstablecimiento: { [key: string]: unknown } } {
+    return {
+      ...this.form?.value,
+      datosDelEstablecimiento: this.datosDelEstablecimiento?.value
+    };
+  }
+
+  /**
+   * Indica si ambos formularios son válidos.
+   */
+  isValid(): boolean {
+    return this.form?.valid && this.datosDelEstablecimiento?.valid;
+  }
   /**
    * Cierra el modal de selección de establecimiento.
    */

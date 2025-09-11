@@ -10,7 +10,7 @@
   </div>
     <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
     <div>
-  <app-paso-uno (tabChanged)="onPasoUnoTabChanged($event)"></app-paso-uno>
+  <app-paso-uno #pasoUno></app-paso-uno>
   <!-- Tab components are now only rendered inside paso-uno.component.html -->
       <!-- If you need to show paso-dos or paso-tres for other flows, you can use [hidden] or *ngIf with a condition -->
       <!-- <app-paso-dos [hidden]="!showPasoDos"></app-paso-dos> -->

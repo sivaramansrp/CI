@@ -425,6 +425,19 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
+   * Devuelve los datos actuales del formulario de pago de derechos.
+   */
+   getData(): Tramite260911State {
+    return this.pagoDeDerechosForm?.value as Tramite260911State;
+  }
+
+   /**
+   * Indica si el formulario de pago de derechos es válido.
+   */
+  isValid(): boolean {
+    return this.pagoDeDerechosForm?.valid ?? false;
+  }
+  /**
    * Método del ciclo de vida OnDestroy.
    * 
    * Se ejecuta cuando el componente va a ser destruido.

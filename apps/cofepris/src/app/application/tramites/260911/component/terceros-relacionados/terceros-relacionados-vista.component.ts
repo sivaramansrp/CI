@@ -521,4 +521,35 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
       )
     );
   }
+
+    /**
+   * Devuelve los datos actuales de todas las tablas de terceros relacionados.
+   */
+  getData(): {
+    fabricanteTablaDatos: Fabricante[];
+    destinatarioFinalTablaDatos: Destinatario[];
+    proveedorTablaDatos: Proveedor[];
+    facturadorTablaDatos: Facturador[];
+  } {
+    return {
+      fabricanteTablaDatos: this.fabricanteTablaDatos,
+      destinatarioFinalTablaDatos: this.destinatarioFinalTablaDatos,
+      proveedorTablaDatos: this.proveedorTablaDatos,
+      facturadorTablaDatos: this.facturadorTablaDatos
+    };
+  }
+
+  /**
+   * Indica si al menos una tabla de terceros relacionados tiene datos.
+   * Ajusta la lógica según tus requisitos de validación.
+   */
+  isValid(): boolean {
+    return (
+      (Array.isArray(this.fabricanteTablaDatos) && this.fabricanteTablaDatos.length > 0) ||
+      (Array.isArray(this.destinatarioFinalTablaDatos) && this.destinatarioFinalTablaDatos.length > 0) ||
+      (Array.isArray(this.proveedorTablaDatos) && this.proveedorTablaDatos.length > 0) ||
+      (Array.isArray(this.facturadorTablaDatos) && this.facturadorTablaDatos.length > 0)
+    );
+  }
+
 }

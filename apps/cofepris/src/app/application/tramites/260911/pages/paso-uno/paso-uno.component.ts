@@ -23,6 +23,15 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Solocitud260911Service } from '../../services/service260911.service';
 
+// Define the interface for the return type of getAllPasoUnoData
+export interface PasoUnoData {
+  datosDeLaSolicitud: ReturnType<DatosDeLaSolicitudComponent['getData']> | undefined;
+  domicilioDelEstablecimiento: ReturnType<DomicilioDelEstablecimientoComponent['getData']> | undefined;
+  tercerosRelacionados: ReturnType<TercerosRelacionadosVistaComponent['getData']> | undefined;
+  pagoDeDerechos: ReturnType<PagoDeDerechosComponent['getData']> | undefined;
+  tramitesAsociado: ReturnType<TramitesAsociadoComponent['getData']> | undefined;
+}
+
 /**
  * Componente que representa el primer paso en un proceso de múltiples pasos.
  * Gestiona la obtención y actualización de datos del formulario, así como la selección de pestañas.
@@ -205,14 +214,36 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Selecciona una pestaña estableciendo su índice.
    * @param i El índice de la pestaña a seleccionar.
-   */
   /**
-   * Selecciona una pestaña estableciendo su índice y emite el evento correspondiente.
-   * @param i Índice de la pestaña a seleccionar.
+     * 
+     * 
+     */
+    public getAllPasoUnoData(): PasoUnoData {
+    return {
+      datosDeLaSolicitud: this.datosDeLaSolicitudComponent?.getData?.(),
+      domicilioDelEstablecimiento: this.domicilioDelEstablecimientoComponent?.getData?.(),
+      tercerosRelacionados: this.tercerosRelacionadosVistaComponent?.getData?.(),
+      pagoDeDerechos: this.pagoDeDerechosComponent?.getData?.(),
+      tramitesAsociado: this.tramitesAsociadoComponent?.getData?.()
+    };
+  }
+
+   public isAllValid(): boolean {
+    return (
+      (!this.datosDeLaSolicitudComponent || this.datosDeLaSolicitudComponent.isValid?.()) &&
+      (!this.domicilioDelEstablecimientoComponent || this.domicilioDelEstablecimientoComponent.isValid?.()) &&
+      (!this.tercerosRelacionadosVistaComponent || this.tercerosRelacionadosVistaComponent.isValid?.()) &&
+      (!this.pagoDeDerechosComponent || this.pagoDeDerechosComponent.isValid?.()) &&
+      (!this.tramitesAsociadoComponent || this.tramitesAsociadoComponent.isValid?.())
+    );
+  }
+
+   /**
+   * Cambia la pestaña activa según el índice recibido.
+   * @param indice Número de la pestaña a seleccionar.
    */
-  seleccionaTab(i: number): void {
-  this.indice = i;
-  this.tabChanged.emit(i);
+  seleccionaTab(indice: number): void {
+    this.indice = indice;
   }
 
   /**

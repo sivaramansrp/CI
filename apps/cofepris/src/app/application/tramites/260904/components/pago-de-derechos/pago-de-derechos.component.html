@@ -11,11 +11,9 @@
               type="text"
               name="claveDeReferencia"
               formControlName="claveDeReferencia"
+              maxlength="50"
               (change)="setValoresStore(pagoDeDerechosForm,'claveDeReferencia')"
             />
-            <div *ngIf="esInvalido('claveDeReferencia')" class="text-danger">
-              <small *ngIf="pagoDeDerechosForm.controls['claveDeReferencia'].hasError('maxlength')">Máximo 50 caracteres.</small>
-          </div>
           </div>
         </div>
         <div class="col-md-4">

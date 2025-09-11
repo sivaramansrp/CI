@@ -238,127 +238,100 @@ export class PermisoSanitarioComponent {
    * Maneja el evento de continuar en el asistente, validando los campos y navegando entre pasos.
    * @param event Evento de acción de botón con el índice del paso.
    */
-  onContinuar(event: AccionBoton): void {
-    
-    const CURRENT_INDICE = event.valor;
-    
-    this.tramite260911Store._select(state => state as Tramite260911State).pipe(
-      map((state: Tramite260911State) => [
-        state.claveDeReferencia,
-        state.cadenaPagoDependencia,
-        state.clave,
-        state.llaveDePago,
-        state.fecPago,
-        state.impPago
-      ]),
-      take(1)
-    ).subscribe((fields: (string | null | undefined)[]) => {
-      const ANY_BLANK = fields.some((val: string | null | undefined) => val === null || val === undefined || val === '');
-      if (ANY_BLANK) {
-        this.showPaymentModal = true;
-        this.message = undefined;
-        this.cdr.detectChanges();
-        this.lastContinueEvent = event;
-        return;
-      }
-      
-      let isValid = false;
-      switch (CURRENT_INDICE) {
-        case 2: {
-          isValid = this.pasoUnoComponent?.datosDeLaSolicitudComponent?.form?.valid ?? false;
-          break;
-        }
-        case 3: {
-          const FABRICANTES = this.pasoUnoComponent?.tercerosRelacionadosVistaComponent?.fabricanteTablaDatos ?? [];
-          const DESTINATARIOS = this.pasoUnoComponent?.tercerosRelacionadosVistaComponent?.destinatarioFinalTablaDatos ?? [];
-          isValid = FABRICANTES.length > 0 && DESTINATARIOS.length > 0;
-          break;
-        }
-        case 4: {
-          isValid = this.pasoUnoComponent?.pagoDeDerechosComponent?.pagoDeDerechosForm?.valid ?? false;
-          break;
-        }
-        case 5: {
-          const ASOCIADOS = this.pasoUnoComponent?.tramitesAsociadoComponent?.acuseTablaDatos ?? [];
-          isValid = ASOCIADOS.length > 0;
-          break;
-        }
-        default: {
-          isValid = true;
-        }
-      }
-      if (!isValid) {
-        this.message = '¡Error de registro! Faltan campos por capturar.';
-        setTimeout(() => {
-          const ERROR_ELEMENT = document.querySelector('.error-message, .alert-danger');
-          if (ERROR_ELEMENT) {
-            ERROR_ELEMENT.scrollIntoView({ behavior: 'smooth' });
-          }
-        }, 100);
-        this.datosPasos.indice = CURRENT_INDICE;
-        this.datosPasos.txtBtnSig = 'Continuar';
-        return;
-      }
-      
-      this.message = undefined;
-      this.showPaymentModal = false;
-      this.getValorIndice(event);
-      this.datosPasos.indice = CURRENT_INDICE;
-      if (CURRENT_INDICE === 1) {
-        this.ocultarBtnAnterior = true;
-        this.datosPasos.txtBtnAnt = '';
-        this.datosPasos.txtBtnSig = 'Continuar';
-      } else {
-        this.ocultarBtnAnterior = false;
-        this.datosPasos.txtBtnAnt = 'Anterior';
-        this.datosPasos.txtBtnSig = 'Continuar';
-      }
-    });
+onContinuar(event: AccionBoton): void {
+  // 1. Validate all required fields except pago-de-derechos and tramitesAsociado
+  if (!this.pasoUnoComponent?.datosDeLaSolicitudComponent?.isValid?.()) {
+    this.goToTab(2, '¡Error de registro! Faltan campos por capturar.');
+    return;
+  }
+  if (!this.pasoUnoComponent?.tercerosRelacionadosVistaComponent?.isValid?.()) {
+    this.goToTab(3, '¡Error de registro! Faltan campos por capturar.');
+    return;
   }
 
-  /**
-   * Handler for No button in modal
-   */
-  /**
-   * Handler para el botón "No" en el modal de pago.
-   * Cierra el modal y navega al paso correspondiente si la validación es exitosa.
-   */
-  onPaymentModalNo(): void {
-    this.showPaymentModal = false;
-    this.lastContinueEvent = null;
-    
-    if (!this.validateAllRequiredFields()) {
-      
-      return;
-    }
-    
-    this.indice = 2;
-    this.datosPasos.indice = this.indice;
-    this.ocultarBtnAnterior = false;
-    this.datosPasos.txtBtnAnt = 'Anterior';
-    this.datosPasos.txtBtnSig = 'Continuar';
+  // 2. Now check pago-de-derechos
+  if (!this.pasoUnoComponent?.pagoDeDerechosComponent?.isValid?.()) {
+    // Show payment modal if payment fields are missing
+    this.showPaymentModal = true;
+    this.message = undefined;
+    this.cdr.detectChanges();
+    this.lastContinueEvent = event;
+    return;
   }
 
-  /**
-   * Handler for Yes button in modal
-   */
-  /**
-   * Handler para el botón "Sí" en el modal de pago.
-   * Cierra el modal y navega directamente al paso de pago.
-   */
-  onPaymentModalYes(): void {
-    this.showPaymentModal = false;
-    
-    this.indice = 4;
-    this.datosPasos.indice = 4;
-    if (this.pasoUnoComponent) {
-      this.pasoUnoComponent.indice = 4;
-    }
-    
-    this.ocultarBtnAnterior = true;
-    this.datosPasos.txtBtnAnt = '';
-    this.datosPasos.txtBtnSig = 'Continuar';
+  // 3. Now check tramitesAsociado
+  if (!this.pasoUnoComponent?.tramitesAsociadoComponent?.isValid?.()) {
+    this.goToTab(5, '¡Error de registro! Faltan campos por capturar.');
+    return;
   }
+
+  // 4. All validations passed, go to next main tab (Paso 2)
+  this.message = undefined;
+  this.showPaymentModal = false;
+  this.getValorIndice({ accion: 'cont', valor: this.indice + 1 });
+  this.datosPasos.indice = this.indice + 1;
+}
+
+onPaymentModalNo(): void {
+  this.showPaymentModal = false;
+  this.lastContinueEvent = null;
+  // Go to Pago de Derechos tab (index 4)
+  this.goToTab(4);
+}
+
+onPaymentModalYes(): void {
+  this.showPaymentModal = false;
+  this.lastContinueEvent = null;
+
+  // Validate all required fields again
+  if (!this.pasoUnoComponent?.datosDeLaSolicitudComponent?.isValid?.()) {
+    this.goToTab(2, '¡Error de registro! Faltan campos por capturar.');
+    return;
+  }
+  if (!this.pasoUnoComponent?.tercerosRelacionadosVistaComponent?.isValid?.()) {
+    this.goToTab(3, '¡Error de registro! Faltan campos por capturar.');
+    return;
+  }
+  if (!this.pasoUnoComponent?.pagoDeDerechosComponent?.isValid?.()) {
+    this.goToTab(4, '¡Error de registro! Faltan campos por capturar.');
+    return;
+  }
+  if (!this.pasoUnoComponent?.tramitesAsociadoComponent?.isValid?.()) {
+    this.goToTab(5, '¡Error de registro! Faltan campos por capturar.');
+    return;
+  }
+
+  // All validations passed, go to next main tab (Paso 2)
+  this.message = undefined;
+  this.showPaymentModal = false;
+  this.getValorIndice({ accion: 'cont', valor: this.indice + 1 });
+  this.datosPasos.indice = this.indice + 1;
+}
+
+/**
+ * Helper to go to a specific tab and show error if needed.
+ */
+private goToTab(tabIndex: number, errorMsg?: string): void {
+  this.indice = tabIndex;
+  this.datosPasos.indice = tabIndex;
+  if (this.pasoUnoComponent) {
+    this.pasoUnoComponent.indice = tabIndex;
+    if (typeof this.pasoUnoComponent.seleccionaTab === 'function') {
+      this.pasoUnoComponent.seleccionaTab(tabIndex);
+    }
+  }
+  if (errorMsg) {
+    this.message = errorMsg;
+    setTimeout(() => {
+      const ERROR_ELEMENT = document.querySelector('.error-message, .alert-danger');
+      if (ERROR_ELEMENT) {
+        ERROR_ELEMENT.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  } else {
+    this.message = undefined;
+  }
+}
   /**
    * Variable para almacenar mensajes de información o error.
    */

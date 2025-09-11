@@ -1465,4 +1465,38 @@ ngOnChanges(): void {
     this.agregarModalBox = false;
   }
 
+  /**
+   * Devuelve los datos actuales de los formularios principales del domicilio del establecimiento.
+   */
+  getData(): {
+    form: ReturnType<FormGroup['getRawValue']>;
+    domicilio: ReturnType<FormGroup['getRawValue']>;
+    representanteLegal: ReturnType<FormGroup['getRawValue']>;
+    nicoTablaForm: ReturnType<FormGroup['getRawValue']>;
+    mercanciasTablaDatos: MercanciasInfo[];
+    nicoTablaDatos: NicoInfo[];
+  } {
+    return {
+      form: this.form?.value,
+      domicilio: this.domicilio?.value,
+      representanteLegal: this.representanteLegal?.value,
+      nicoTablaForm: this.nicoTablaForm?.value,
+      mercanciasTablaDatos: this.mercanciasTablaDatos,
+      nicoTablaDatos: this.nicoTablaDatos
+    };
+  }
+
+  /**
+   * Indica si los formularios principales del domicilio del establecimiento son válidos.
+   */
+  isValid(): boolean {
+    return (
+      this.form?.valid &&
+      this.domicilio?.valid &&
+      this.representanteLegal?.valid &&
+      this.nicoTablaForm?.valid &&
+      Array.isArray(this.mercanciasTablaDatos) && this.mercanciasTablaDatos.length > 0
+    );
+  }
+
 }
