@@ -262,7 +262,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       orden: 4,
     },
     {
-      encabezado: 'Fecha de expedición de la factura',
+      encabezado: 'Fecha de emisión/expedición de la factura',
       clave: (fila) => fila.fechaExpedicionFactura,
       orden: 5,
     },

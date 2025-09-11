@@ -17,13 +17,13 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
-import { DatosPasos, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, SeccionLibStore } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT, PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 
 import { ListaPasosWizard } from '../../models/elegibilidad-de-textiles.model';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 /**
  * @interface AccionBoton
  * @description Interfaz que define la estructura de datos para manejar las acciones 

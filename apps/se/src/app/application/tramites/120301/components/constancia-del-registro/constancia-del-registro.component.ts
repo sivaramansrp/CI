@@ -342,7 +342,8 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
 
     this.initActionFormBuild();
 
-    // Obtenga el estado actual de solo lectura inmediatamente
+  // Obtenga el estado actual de solo lectura inmediatamente
+  // Filtering on input change removed; now only filters on Buscar button click
     const CURRENT_STATE = this.consultaioQuery.getValue();
     this.formularioDeshabilitado = CURRENT_STATE.readonly;
     
@@ -559,7 +560,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       if (ANO_CONTROL?.invalid || NUMEROCONTROL?.invalid) {
         return;
       }
-      // Obtener y filtrar datos
+      // Siempre obtener y filtrar datos desde el JSON por numeroDeLaConstancia
       this.ElegibilidadTextilesService.obtenerTablaDatos<ConstanciaTramiteConfiguracion>(
         'constancia-del-registro-tabla-asociados.json'
       )
@@ -571,6 +572,16 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: (filteredData) => {
+            if (!filteredData || filteredData.length === 0) {
+              // Mostrar el modal si no se encuentra ningún registro
+              const MODAL_ELEMENT = document.getElementById('confirmarBuscar');
+              if (MODAL_ELEMENT) {
+                const BS_MODAL = new (window as unknown as { bootstrap: { Modal: new (el: HTMLElement) => { show: () => void } } }).bootstrap.Modal(MODAL_ELEMENT);
+                BS_MODAL.show();
+              }
+              return;
+            }
+            // Si hay datos, mostrarlos en la tabla
             this.configuracionTablaDatos = filteredData;
             this.ElegibilidadDeTextilesStore.setdatosTablaConstanciaDelRegistro(
               filteredData
@@ -649,11 +660,18 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   filtrarDatos(
     datos: ConstanciaTramiteConfiguracion[]
   ): ConstanciaTramiteConfiguracion[] {
-    const ANO_DE_LA_CONSTANCIA =
-      this.fitosanitarioForm.get('anoDeLaConstancia')?.value || '';
-    const NUMERO_CONSTANCIA =
-      this.fitosanitarioForm.get('numeroDeLaConstancia')?.value || '';
-
+    const RADIO_VALUE = this.fitosanitarioForm.get('flexRadioRegistro')?.value;
+    const NUMERO_CONSTANCIA = this.fitosanitarioForm.get('numeroDeLaConstancia')?.value || '';
+    if (RADIO_VALUE === 'Especifico') {
+      // Only filter by numeroDeLaConstancia for Especifico
+      return datos.filter((ITEM) =>
+        NUMERO_CONSTANCIA
+          ? ITEM.numeroDeConstancia.toString() === NUMERO_CONSTANCIA.toString()
+          : true
+      );
+    }
+    // Lógica original para Todos y otros casos.
+    const ANO_DE_LA_CONSTANCIA = this.fitosanitarioForm.get('anoDeLaConstancia')?.value || '';
     return datos.filter((ITEM) => {
       const ANO_ITEM = new Date(ITEM.fechaInicioVigencia).getFullYear();
       const FILTRO_ANO = ANO_DE_LA_CONSTANCIA
