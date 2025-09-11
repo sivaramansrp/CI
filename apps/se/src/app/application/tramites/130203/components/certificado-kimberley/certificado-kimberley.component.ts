@@ -107,12 +107,24 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /*
+   * @description
+   * Indica si el catálogo de país de origen está deshabilitado.
+   */
+  disabledCatalogoPaisOrigen: boolean = false;
+
   /**
    * Estado interno de la sección actual del trámite 130110.
    * Utilizado para gestionar y almacenar la información relacionada con esta sección.
    * Propiedad privada.
    */
   private seccionState!: Tramite130203State;
+
+  /*
+  * @description
+  * Expresiones regulares para validaciones.
+  */
+  soloNumerosEnInputVar = true;
  
   /**
    * @description
@@ -322,11 +334,11 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     this.datosDeLosDiamantes = this.fb.group({
       cantidadEnQuilates: [
         this.seccionState?.cantidadEnQuilates,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(11)],
       ],
       valorDeLosDiamantes: [
         this.seccionState?.valorDeLosDiamantes,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(11)],
       ],
     });
   }
@@ -490,4 +502,33 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+
+/**
+ * @description
+ * Permite solo la entrada de números en el campo especificado del formulario.
+ * Elimina automáticamente cualquier carácter no numérico mientras el usuario escribe.
+ * @param evento Evento de entrada del campo.
+ * @param formulario FormGroup al que pertenece el control.
+ * @param nombreControl Nombre del control a limpiar.
+ */
+  soloNumerosEnInput = (evento: Event, formulario: FormGroup, nombreControl: string): void => {
+    const INPUT = evento.target as HTMLInputElement;
+    const VALOR = INPUT.value.replace(/[^0-9]/g, '');
+    formulario.get(nombreControl)?.setValue(VALOR, { emitEvent: false });
+
+    if(this.soloNumerosEnInputVar){
+      // Actualiza el store con el valor limpio
+    }
+  }
+  /*
+   * @description
+   * Maneja el evento de cambio del checkbox.
+   * Habilita o deshabilita el catálogo de país de origen basado en el estado del checkbox.
+   * @param event Evento de cambio del checkbox.
+   */
+  cambioAviso(event: Event): void {
+  const CHECKED = (event.target as HTMLInputElement).checked;
+  this.disabledCatalogoPaisOrigen = CHECKED;
+ }
+   
 }

@@ -22,7 +22,9 @@
       <ng-titulo titulo="Datos generales del certificado Kimberley"></ng-titulo>
       <div class="col-md-6">
         <label class="form-label" for="numero"
-          >Número del certificado Kimberley:</label
+          >Número del certificado Kimberley<span
+                     [ngClass]="{'text-danger': isInvalid('numero', formularioEmpresa)}"
+                     >*</span>:</label
         >
         <input
           type="text"
@@ -47,7 +49,7 @@
       <div class="col-md-6">
         <app-catalogo-select
           [catalogo]="paisesEmisores"
-          [label]="'País emisor del certificado Kimberley:'"
+          [label]="'País emisor del certificado Kimberley'"
           [required]="true"
           formControlName="tipoEmpresa"
           [isDisabled]="esFormularioSoloLectura"
@@ -62,7 +64,9 @@
     <div class="row mb-3">
       <div class="col-md-12">
         <label class="form-label" for="nombre"
-          >Nombre en inglés del país emisor del certificado Kimberley:</label
+          >Nombre en inglés del país emisor del certificado Kimberley<span
+                     [ngClass]="{'text-danger': isInvalid('nombre', formularioEmpresa)}"
+                     >*</span>:</label
         >
         <input
           type="text"
@@ -89,7 +93,8 @@
             id="lineaCheckbox"
             formControlName="lineaCheckbox"
             [ngClass]="{ 'is-invalid': isInvalid('lineaCheckbox', formularioEmpresa) }"
-            (change)="setValoresStore(formularioEmpresa, 'lineaCheckbox')"            />
+            (change)="cambioAviso($event)"
+            />
           <label class="form-check-label" for="lineaCheckbox">
             <span>Mixed</span>
           </label>
@@ -103,11 +108,10 @@
       <div class="col-md-6">
         <app-catalogo-select
           [catalogo]="paisesEmisores"
-          [label]="'País de origen:'"
-          [required]="true"
+          [label]="'País de origen'"
           formControlName="paisOrigen"
-          [isDisabled]="esFormularioSoloLectura"
-          (change)="setValoresStore(formularioEmpresa, 'paisOrigen') "
+          (change)="setValoresStore(formularioEmpresa, 'paisOrigen')"
+          [isDisabled]="esFormularioSoloLectura || disabledCatalogoPaisOrigen"
         ></app-catalogo-select>
         <div *ngIf="isInvalid('paisOrigen', formularioEmpresa)" class="invalid-feedback">
           Debe seleccionar un país de origen.
@@ -123,7 +127,9 @@
         <div class="col-md-12">
           <div class="form-group">
             <label class="form-label" for="nombreExportador"
-              >Nombre exportador*:</label
+              >Nombre exportador<span
+                     [ngClass]="{'text-danger': isInvalid('nombreExportador', datosDelExportador)}"
+                     >*</span>:</label
             >
             <input
               class="form-control"
@@ -242,16 +248,14 @@
                      [ngClass]="{'text-danger': isInvalid('numeroEnLetraDeLosLotes', datosDeLaRemesa)}"
                      >*</span>:</label
             >
-            <input
+            <textarea
               class="form-control"
               type="text"
               id="numeroEnLetraDeLosLotes"
               formControlName="numeroEnLetraDeLosLotes"
-              libUppercase
-              aria-labelledby="numeroEnLetraDeLosLotes"
               (change) = "setValoresStore(datosDeLaRemesa, 'numeroEnLetraDeLosLotes')"
               [ngClass]="{'input-error': isInvalid('numeroEnLetraDeLosLotes', datosDeLaRemesa)}"
-            />
+            ></textarea>
             <div *ngIf="isInvalid('numeroEnLetraDeLosLotes', datosDeLaRemesa)" class="text-danger">
               <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotes'].errors?.['required']">
                 Este campo es obligatorio.
@@ -275,17 +279,14 @@
                      [ngClass]="{'text-danger': isInvalid('numeroEnLetraDeLosLotesEnIngles', datosDeLaRemesa)}"
                      >*</span>:</label
             >
-            <input
+            <textarea
               class="form-control"
               type="text"
               id="numeroEnLetraDeLosLotesEnIngles"
               formControlName="numeroEnLetraDeLosLotesEnIngles"
-              placeholder=""
-              libUppercase
-              aria-labelledby="numeroEnLetraDeLosLotesEnIngles"
               (change) = "setValoresStore(datosDeLaRemesa, 'numeroEnLetraDeLosLotesEnIngles')"
               [ngClass]="{'input-error': isInvalid('numeroEnLetraDeLosLotesEnIngles', datosDeLaRemesa)}"
-            />
+            ></textarea>
             <div *ngIf="esInvalido('numeroEnLetraDeLosLotesEnIngles')" class="text-danger">
               <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotesEnIngles'].errors?.['required']">
                 Este campo es obligatorio.
@@ -349,9 +350,18 @@
               formControlName="cantidadEnQuilates"
               libUppercase
               aria-labelledby="cantidadEnQuilates"
+              (input)="soloNumerosEnInput($event, datosDeLosDiamantes, 'cantidadEnQuilates')"
               (change) = "setValoresStore(datosDeLosDiamantes, 'cantidadEnQuilates')"
-              [ngClass]="{'input-error': isInvalid('cantidadEnQuilates', datosDeLosDiamantes)}"
+              [ngClass]="{'is-invalid': isInvalid('cantidadEnQuilates', datosDeLosDiamantes)}"
             />
+            <div *ngIf="isInvalid('cantidadEnQuilates', datosDeLosDiamantes)" class="invalid-feedback">
+              <small *ngIf="datosDeLosDiamantes.controls['cantidadEnQuilates'].errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+              <small *ngIf="datosDeLosDiamantes.controls['cantidadEnQuilates'].errors?.['maxlength']">
+                El número debe tener 11 dígitos enteros
+              </small>
+            </div>
           </div>
         </div>
 
@@ -370,9 +380,18 @@
               placeholder=""
               libUppercase
               aria-labelledby="valorDeLosDiamantes"
+              (input)="soloNumerosEnInput($event, datosDeLosDiamantes, 'valorDeLosDiamantes')"
               (change) = "setValoresStore(datosDeLosDiamantes, 'valorDeLosDiamantes')"
-              [ngClass]="{'input-error': isInvalid('valorDeLosDiamantes', datosDeLosDiamantes)}"
+              [ngClass]="{'is-invalid': isInvalid('valorDeLosDiamantes', datosDeLosDiamantes)}"
             />
+            <div *ngIf="isInvalid('valorDeLosDiamantes', datosDeLosDiamantes)" class="invalid-feedback">
+            <small *ngIf="datosDeLosDiamantes.controls['valorDeLosDiamantes'].errors?.['required']">
+              Este campo es obligatorio.
+            </small>
+            <small *ngIf="datosDeLosDiamantes.controls['valorDeLosDiamantes'].errors?.['maxlength']">
+              El número debe tener 11 dígitos enteros
+            </small>
+          </div>
           </div>
         </div>
       </div>
