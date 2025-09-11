@@ -30,6 +30,7 @@ import { Router } from '@angular/router';
 
 import {Subject,map,takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../../tramites/80103/estados/tramite80101.store';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { Tramite80101Query } from '../../../tramites/80103/estados/tramite80101.query';
 /**
  * Componente para mostrar y gestionar subfabricantes y sus plantas.
@@ -121,23 +122,16 @@ export class EmpresasSubfabricantesComponent implements OnInit {
    */
   @Input() tabIndex: number = 0;
 
+ 
   /**
-   * Establece el estado del catálogo de las plantas subfabricantes.
-   * @param valor - Lista de estados del catálogo.
+   * Recibe un arreglo de objetos de tipo Catalogo que representa el estado actual del catálogo.
+   * Este input se utiliza para mostrar o manipular la información relacionada con el catálogo en el componente.
+   *
+   * @type {Catalogo[]}
    */
-  @Input()
-  set estadoCatalogo(valor: Catalogo[]) {
-    this._estadoCatalogo = valor;
-  }
+  @Input() estadoCatalogo!:Catalogo[];
 
-  /**
-   * Obtiene el estado del catálogo.
-   * @returns {Catalogo[]} - Lista de estados del catálogo.
-   */
-  get estadoCatalogo(): Catalogo[] {
-    return this._estadoCatalogo;
-  }
-
+  
   /**
    * Establece los datos de las plantas subfabricantes disponibles en la tabla.
    * @param valor - Lista de plantas subfabricante disponibles.
@@ -308,7 +302,7 @@ set formularioDatosSubcontratista(valor: FormGroup) {
    * @param fb - FormBuilder para la creación del formulario reactivo.
    */
   constructor(private fb: FormBuilder, private router: Router,private consultaioQuery: ConsultaioQuery, public query: Tramite80101Query,
-      private store: Tramite80101Store 
+      private store: Tramite80101Store,private complimentosService: ComplimentosService
   ) { 
        this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -328,6 +322,7 @@ set formularioDatosSubcontratista(valor: FormGroup) {
    */
   ngOnInit(): void {
     this.inicializarCertificadoFormulario();
+    this.obtenerEstados();
   }
  /**
    * Método para inicializar el formulario reactivo con los datos de la solicitud.
@@ -434,9 +429,9 @@ set formularioDatosSubcontratista(valor: FormGroup) {
    */
   agregarPlantas(): void {
     this.plantasDisponiblesSeleccionadas.forEach(planta => {
-      const index = this.datosTablaSubfabricantesDisponibles.findIndex(row => row === planta);
-      if (index !== -1) {
-      this.datosTablaSubfabricantesDisponibles.splice(index, 1);
+      const INDEX = this.datosTablaSubfabricantesDisponibles.findIndex(row => row === planta);
+      if (INDEX !== -1) {
+      this.datosTablaSubfabricantesDisponibles.splice(INDEX, 1);
       }
     });
     this.datosTablaSubfabricantesDisponibles = [...this.datosTablaSubfabricantesDisponibles];
@@ -490,5 +485,17 @@ set formularioDatosSubcontratista(valor: FormGroup) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
     }
+  }
+
+  /**
+ * Obtiene la lista de estados llamando al servicio `complimentosService`.
+ * Se suscribe al observable retornado por `getEstado()` y muestra la respuesta en la consola.
+ * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
+ */
+obtenerEstados():void {
+    this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      this.estadoCatalogo = res.datos;
+    });
+    
   }
 }
