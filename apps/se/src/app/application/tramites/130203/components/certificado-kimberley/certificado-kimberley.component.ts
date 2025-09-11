@@ -520,15 +520,6 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
       // Actualiza el store con el valor limpio
     }
   }
-  /*
-   * @description
-   * Maneja el evento de cambio del checkbox.
-   * Habilita o deshabilita el catálogo de país de origen basado en el estado del checkbox.
-   * @param event Evento de cambio del checkbox.
-   */
-  cambioAviso(event: Event): void {
-  const CHECKED = (event.target as HTMLInputElement).checked;
-  this.disabledCatalogoPaisOrigen = CHECKED;
- }
+ 
    
 }

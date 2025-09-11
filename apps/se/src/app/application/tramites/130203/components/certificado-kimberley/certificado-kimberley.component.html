@@ -93,7 +93,6 @@
             id="lineaCheckbox"
             formControlName="lineaCheckbox"
             [ngClass]="{ 'is-invalid': isInvalid('lineaCheckbox', formularioEmpresa) }"
-            (change)="cambioAviso($event)"
             />
           <label class="form-check-label" for="lineaCheckbox">
             <span>Mixed</span>
@@ -111,7 +110,7 @@
           [label]="'País de origen'"
           formControlName="paisOrigen"
           (change)="setValoresStore(formularioEmpresa, 'paisOrigen')"
-          [isDisabled]="esFormularioSoloLectura || disabledCatalogoPaisOrigen"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
         <div *ngIf="isInvalid('paisOrigen', formularioEmpresa)" class="invalid-feedback">
           Debe seleccionar un país de origen.
