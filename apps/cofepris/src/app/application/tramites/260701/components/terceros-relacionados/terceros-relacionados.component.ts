@@ -1,5 +1,5 @@
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ConfiguracionColumna, Destinatario, Fabricante260701,Notificacion,NotificacionesComponent,Pedimento,TERCEROS,TITULO_MODAL_AVISO, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Subject,map, takeUntil } from 'rxjs';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
@@ -28,6 +28,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
   imports: [CommonModule, TituloComponent, TablaDinamicaComponent, AlertComponent,NotificacionesComponent],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
 
@@ -206,6 +207,31 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
       }
     };
     this.modalRef = this.modalService.show(TercerosRelacionadosModalComponent, INITIAL_STATE);
+    this.modalRef.content.onClose.pipe(takeUntil(this.destroyNotifier$)).subscribe((result: Destinatario) => {
+      if (result) {
+        const FORM_VALOR = {
+            nombre: result?.nombre,
+            rfc: result?.rfc,
+            curp: result?.curp,
+            telefono: result?.telefono,
+            correoElectronico: result?.correoElectronico,
+            calle: result?.calle,
+            numeroExterior: result.numeroExterior,
+            numeroInterior: result.numeroInterior,
+            pais: result.pais,
+            colonia: result.colonia,
+            municipio: result.municipio,
+            localidad: result.localidad,
+            entidadFederativa: result.entidadFederativa,
+            estado: result.estado,
+            codigoPostal: result.codigoPostal,
+            coloniaEquivalente: result.coloniaEquivalente,
+        }
+        if(titulo === 'Destinatario (destino final)') {
+          this.destinatarioDatos = [...this.destinatarioDatos, FORM_VALOR];
+        }
+      }
+    });
   }
 
     /**
