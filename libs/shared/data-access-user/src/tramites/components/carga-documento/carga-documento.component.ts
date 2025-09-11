@@ -31,7 +31,7 @@ import {
   OPCIONAL,
   UNIDADES_DOCUMENTOS,
 } from '../../../core/enums/mensajes-documentos.enum';
-import { ErrorModelo, UploadDocumentResponse } from '../../../core/models/shared/cargar-documentos.model';
+import { ErrorModelo, UploadDocumentResponse, Usuario } from '../../../core/models/shared/cargar-documentos.model';
 import { Subject, catchError, interval, map, of, switchMap, takeUntil, takeWhile } from 'rxjs';
 import { CargarDocumentoService } from '../../../core/services/shared/cargar-documento/cargar-documento.service';
 import { CatalogoDocumentosService } from '../../../core/services/shared/catalogos/catalogo-documentos.service';
@@ -73,6 +73,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
    * @type {EventEmitter<void>}
    */
   @Input() regresarSeccionCargarDocumentoEvento!: EventEmitter<void>;
+
+  @Input() datosUsuario!: Usuario;
 
   /**
    * @description Evento para indicar que la carga de documentos se ha realizado.
@@ -211,12 +213,12 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
 
-    this.regresarSeccionCargarDocumentoEvento
-      .pipe(
-        takeUntilDestroyed(this.destroyRef$),
-        map(() => this.mostrarSeccionCargaArchivosAccion())
-      )
-      .subscribe();
+    // this.regresarSeccionCargarDocumentoEvento
+    //   .pipe(
+    //     takeUntilDestroyed(this.destroyRef$),
+    //     map(() => this.mostrarSeccionCargaArchivosAccion())
+    //   )
+    //   .subscribe();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -699,7 +701,7 @@ private validarCompletitudDocumentosObligatorios(): boolean {
       this.archivosCargando.opcionales = this.listadoArchivos.filter(
         (f) => f.tipo === 'opcional'
       );
-      this.cargarArchivos(this.listadoArchivos);
+      this.cargarArchivos(this.listadoArchivos, this.datosUsuario);
     }
   }
 
@@ -718,13 +720,26 @@ private validarCompletitudDocumentosObligatorios(): boolean {
           (f) => f.id_tipo_documento === doc
         ) as TipoDocumentos;
 
-        this.documentosOpcionalesSeleccionados.push(OPCIONAL);
+        // Crear una copia limpia del documento sin partes adicionales
+        const DOCUMENTO_LIMPIO: TipoDocumentos = {
+          ...OPCIONAL,
+          adicionales: [], // Siempre empezar con array vacío de adicionales
+          cargado: false,
+          error: []
+        };
+
+        this.documentosOpcionalesSeleccionados.push(DOCUMENTO_LIMPIO);
+        
+        // También asegurar que el catálogo original esté limpio
         const INDICE_OPCIONAL = this.catalogoDocumentosOpcionales.findIndex(
           (f) => f.id_tipo_documento === doc
         );
         if (INDICE_OPCIONAL !== -1) {
           this.catalogoDocumentosOpcionales[INDICE_OPCIONAL] = {
             ...this.catalogoDocumentosOpcionales[INDICE_OPCIONAL],
+            adicionales: [], // Resetear adicionales en el catálogo original
+            cargado: false,
+            error: []
           };
         }
       }
@@ -734,7 +749,6 @@ private validarCompletitudDocumentosObligatorios(): boolean {
       this.documentosOpcionalesSeleccionados
     );
     this.listDocOpcionalesAgregar = [];
-
   }
 
   /**
@@ -790,7 +804,9 @@ private validarCompletitudDocumentosObligatorios(): boolean {
             const INDICE_LISTADO: number = this.listadoArchivos.findIndex(
               (f) => f.id === adicional.id_tipo_documento && f.tipo === 'opcional'
             );
-            this.listadoArchivos.splice(INDICE_LISTADO, 1);
+            if (INDICE_LISTADO !== -1) {
+              this.listadoArchivos.splice(INDICE_LISTADO, 1);
+            }
           }
         );
       }
@@ -798,9 +814,20 @@ private validarCompletitudDocumentosObligatorios(): boolean {
       const INDICE_LISTADO: number = this.listadoArchivos.findIndex(
         (f) => f.id === item.id_tipo_documento && f.tipo === 'opcional'
       );
-      this.listadoArchivos.splice(INDICE_LISTADO, 1);
+      if (INDICE_LISTADO !== -1) {
+        this.listadoArchivos.splice(INDICE_LISTADO, 1);
+      }
 
       this.documentosOpcionalesSeleccionados.splice(INDICE, 1);
+      
+      // También limpiar las partes adicionales del catálogo original
+      // para que cuando se vuelva a agregar, empiece limpio
+      const INDICE_CATALOGO_ORIGINAL = this.catalogoDocumentosOpcionales.findIndex(
+        (f) => f.id_tipo_documento === item.id_tipo_documento
+      );
+      if (INDICE_CATALOGO_ORIGINAL !== -1) {
+        this.catalogoDocumentosOpcionales[INDICE_CATALOGO_ORIGINAL].adicionales = [];
+      }
     }
     const INDICE_AGREGAR: number = this.listDocOpcionalesAgregar.findIndex(
       (id) => id === item.id_tipo_documento
@@ -840,18 +867,18 @@ private validarCompletitudDocumentosObligatorios(): boolean {
    * Muestra la sección de carga de archivos y emite un evento para activar el botón de carga de archivos.
    * @returns {void}
    */
-  mostrarSeccionCargaArchivosAccion(): void {
-    this.mostrarSeccionCargaArchivos = true;
-    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(
-      (item) => item.cargado === true
-    );
+  // mostrarSeccionCargaArchivosAccion(): void {
+  //   this.mostrarSeccionCargaArchivos = true;
+  //   const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(
+  //     (item) => item.cargado === true
+  //   );
 
-    this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
-    this.cargaRealizada.emit(false);
-  }
+  //   this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+  //   this.cargaRealizada.emit(false);
+  // }
 
-cargarArchivos(archivosCargando: DocumentosParaCargar[]): void {
-  this.cargarDocumentoService.cargarDocumentos(archivosCargando).pipe(
+cargarArchivos(archivosCargando: DocumentosParaCargar[], datosUsuario: Usuario): void {
+  this.cargarDocumentoService.cargarDocumentos(archivosCargando, datosUsuario).pipe(
     switchMap((res: UploadDocumentResponse) => {
       if (res.error && res.codigo === 'UPSER001') {
         this.PDF_ERRORS = res.errores_modelo ?? [];

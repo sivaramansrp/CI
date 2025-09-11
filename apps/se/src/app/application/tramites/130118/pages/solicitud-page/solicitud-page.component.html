@@ -28,8 +28,9 @@
         }
         @case (2) {
           <app-paso-dos
-           [cargaArchivosEvento]="cargarArchivosEvento"
-          [regresarSeccionCargarDocumentoEvento]="regresarSeccionCargarDocumentoEvento"
+          [idTipoTRamite]="'130118'"
+          [datosUsuario]="datosUsuario"
+          [cargaArchivosEvento]="cargarArchivosEvento"
           (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
           (reenviarCargaRealizada)="cargaRealizada($event)"></app-paso-dos>
         }

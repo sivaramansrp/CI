@@ -63,3 +63,22 @@ export interface Firma {
   cadenaOriginal: string;
   fechaFirma: string;
 }
+
+export interface Usuario {
+  persona: {
+    claveUsuario: string;
+    rfc: string;
+    nombre: string;
+    apellidoPaterno: string;
+    apellidoMaterno: string;
+  };
+  firmaElectronica: {
+    cadenaOriginal: string;
+    certificado: string;
+    firma: string;
+  };
+  rolActual: string;
+  rfcSolicitante: string;
+  idSolicitud: number;
+  referenciaSolicitud: string;
+}

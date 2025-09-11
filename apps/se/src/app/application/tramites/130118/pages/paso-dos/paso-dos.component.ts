@@ -2,7 +2,7 @@
 import { Component, DestroyRef, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS, Usuario } from '@ng-mf/data-access-user';
 import { PeximService } from '../../services/pexim.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 /**
@@ -22,6 +22,8 @@ export class PasoDosComponent implements OnInit, OnDestroy {
  * @type {EventEmitter<void>}
  */
   @Input() cargaArchivosEvento!: EventEmitter<void>;
+
+  @Input() idTipoTRamite!: string;
   /**
    * Textos utilizados en el componente.
    */
@@ -78,6 +80,11 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   @Output() reenviarEventoCarga = new EventEmitter<boolean>();
 
   /**
+   * Servicio para gestionar los catálogos.
+   */
+  @Input() datosUsuario!: Usuario;
+
+  /**
    * Constructor del componente.
    * 
    * @param catalogosServices Servicio para gestionar los catálogos.
@@ -99,14 +106,14 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.regresarSeccionCargarDocumentoEvento
-      .pipe(
-        takeUntil(this.destroyed$),
-        map(() => {
-          this.reenviarRegresarSeccion.emit();
-        })
-      )
-      .subscribe();
+    // this.regresarSeccionCargarDocumentoEvento
+    //   .pipe(
+    //     takeUntil(this.destroyed$),
+    //     map(() => {
+    //       this.reenviarRegresarSeccion.emit();
+    //     })
+    //   )
+    //   .subscribe();
   }
 
   /**
