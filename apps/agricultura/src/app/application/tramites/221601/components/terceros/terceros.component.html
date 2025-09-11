@@ -381,15 +381,15 @@
         <div class="row mb-3" *ngIf="buscarTercerosForm.get('tipoPersonaBuscar')?.value === 'fisica'">
           <div class="col-md-4">
             <label class="form-label" for="nombreBuscar">Nombre:</label>
-            <input class="form-control" id="nombreBuscar" type="text" formControlName="nombre" />
+            <input class="form-control" id="nombreBuscar" type="text" formControlName="nombre"  maxlength="30"/>
           </div>
           <div class="col-md-4">
             <label class="form-label" for="apellidoPaternoBuscar">Apellido paterno:</label>
-            <input class="form-control" id="apellidoPaternoBuscar" type="text" formControlName="apellidoPaterno" />
+            <input class="form-control" id="apellidoPaternoBuscar" type="text" formControlName="apellidoPaterno"  maxlength="25"/>
           </div>
           <div class="col-md-4">
             <label class="form-label" for="apellidoMaternoBuscar">Apellido materno:</label>
-            <input class="form-control" id="apellidoMaternoBuscar" type="text" formControlName="apellidoMaterno" />
+            <input class="form-control" id="apellidoMaternoBuscar" type="text" formControlName="apellidoMaterno" maxlength="30" />
           </div>
         </div>
 
@@ -397,14 +397,14 @@
         <div class="row mb-3" *ngIf="buscarTercerosForm.get('tipoPersonaBuscar')?.value === 'moral'">
           <div class="col-md-8">
             <label class="form-label" for="razonSocialBuscar">Razón social:</label>
-            <input class="form-control" id="razonSocialBuscar" type="text" formControlName="razonSocial" />
+            <input class="form-control" id="razonSocialBuscar" type="text" formControlName="razonSocial" maxlength="150" />
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label" for="correoElectronicoBuscar">Correo electrónico:</label>
-            <input class="form-control" id="correoElectronicoBuscar" type="email" formControlName="correoElectronico" />
+            <input class="form-control" id="correoElectronicoBuscar" type="email" formControlName="correoElectronico" maxlength="30" />
           </div>
         </div>
 
@@ -430,7 +430,7 @@
       </form>
     </div>
     <div class="row">
-      <h6>Terceros</h6>
+      <h6 class="text-black fw-bold">Terceros</h6>
       <app-tabla-dinamica [configuracionTabla]="configuracionTablaDatos" [datos]="destinatario"
         [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
       </app-tabla-dinamica>

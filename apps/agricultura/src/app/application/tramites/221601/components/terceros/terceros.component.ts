@@ -360,11 +360,11 @@ export class TercerosComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.tipoPersonaForm = this.fb.group({
-      tipoPersona: [this.solicitudState.tipoPersona, Validators.required],
+      tipoPersona: [this.solicitudState.tipoPersona || null, Validators.required], // Remove default value
     });
 
     this.buscarTercerosForm = this.fb.group({
-      tipoPersonaBuscar: ['fisica'],
+      tipoPersonaBuscar: [null], // Remove default value 'fisica'
       nombre: [''],
       apellidoPaterno: [''],
       apellidoMaterno: [''],
@@ -400,6 +400,13 @@ export class TercerosComponent implements OnInit, OnDestroy {
       this.resetRadioStates();
       this.inputChecked(value);
     });
+    
+    // Initialize with no selection
+    this.resetRadioStates();
+    this.showFisicaRow = false;
+    this.showMoralRow = false;
+    this.showPlantaRow = false;
+    
     this.updateStoreWithFormData();
   }
 
@@ -452,20 +459,20 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @memberof TercerosComponent
    */
   handleTipoPersonaChange(tipoPersona: string): void {
+    // Reset all visibility first
+    this.showFisicaRow = false;
+    this.showMoralRow = false;
+    this.showPlantaRow = false;
+    
     if (tipoPersona === 'fisica') {
       this.showFisicaRow = true;
-      this.showMoralRow = false;
-      this.showPlantaRow = false;
       this.datosPersonales.enable();
     } else if (tipoPersona === 'moral') {
-      this.showFisicaRow = false;
       this.showMoralRow = true;
-      this.showPlantaRow = false;
       this.datosPersonales.enable();
     } else if (tipoPersona === 'planta') {
       this.showPlantaRow = true;
-      this.showFisicaRow = false;
-      this.showMoralRow = true;
+      this.showMoralRow = true; // Keep this if needed for planta
       this.datosPersonales.disable();
     }
   }
@@ -585,9 +592,9 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
   abrirBuscarTercerosModal(): void {
     this.showBuscarTercerosModal = true;
-    // Reset the search form
+    // Reset the search form without default selection
     this.buscarTercerosForm.reset({
-      tipoPersonaBuscar: 'fisica',
+      tipoPersonaBuscar: null, // No default selection
       pais: this.paisCatalogo[0].id,
       nombre: '',
       apellidoPaterno: '',
@@ -616,7 +623,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
   limpiarBuscarTerceros(): void {
     this.buscarTercerosForm.reset({
-      tipoPersonaBuscar: 'fisica',
+      tipoPersonaBuscar: null, // No default selection
       pais: this.paisCatalogo[0].id,
       nombre: '',
       apellidoPaterno: '',
