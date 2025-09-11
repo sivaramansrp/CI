@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { AlertComponent, Notificacion, NotificacionesComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, Notificacion, NotificacionesComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
@@ -151,6 +151,20 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
   estadoOptions: [] = [];
 
   /**
+   * Arreglo que contiene el catálogo de municipios.
+   * Cada elemento es de tipo `Catalogo`, representando la información de un municipio disponible.
+   */
+  municipioCatologo:Catalogo[]=[];
+
+  /**
+   * Arreglo que contiene las instancias del catálogo de representaciones.
+   * Cada elemento representa una opción disponible en el catálogo.
+   * 
+   * @type {Catalogo[]}
+   */
+  RepresentacionCatalogo: Catalogo[] = [];
+
+  /**
    * Texto para mostrar en la alerta
    * @property {string} textodAlerta
    */
@@ -260,6 +274,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
     this.obtenerRepresentacion();
     this.obtenerActividad();
     this.obtenerTipoDocumento(102);
+    this.obtenerMunicipio("BCN")
     if (this.formularioDeshabilitado) {
       this.federatariosFormGroup.disable();
     }
@@ -598,7 +613,7 @@ obtenerEstados():void {
    */
   obtenerRepresentacion():void {
     this.complimentosService.getRepresentacion().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-      return res;
+      this.RepresentacionCatalogo=res.datos
     });
     
   }
@@ -632,6 +647,22 @@ obtenerEstados():void {
     this.complimentosService.getTipoDocumento(id).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
       this.estadoOptionsConfig.municipio=res.datos;
 
+    });
+    
+  }
+
+  /**
+   * Obtiene el catálogo de municipios correspondientes a una entidad especificada.
+   * 
+   * Realiza una solicitud al servicio `complimentosService` para obtener los municipios
+   * asociados al parámetro `entidad`. Los resultados se asignan a la propiedad `municipioCatologo`.
+   * La suscripción se gestiona para finalizar automáticamente cuando se emite `destroyNotifier$`.
+   *
+   * @param entidad - Clave o nombre de la entidad para la cual se desean obtener los municipios.
+   */
+   obtenerMunicipio(entidad:string):void {
+    this.complimentosService.getmunicipio(entidad).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+  this.municipioCatologo = res.datos;
     });
     
   }

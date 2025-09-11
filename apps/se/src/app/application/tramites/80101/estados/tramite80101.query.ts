@@ -245,7 +245,7 @@ export class Tramite80101Query extends Query<Tramite80101State> {
 /**
  * Observable selector for retrieving the entire state.
  */
-allStore$ = this.select((state) => state);
+allStoreData$ = this.select((state) => state);
 
   /**
    * Constructor de la clase Tramite80101Query.

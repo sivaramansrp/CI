@@ -138,6 +138,36 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
     false
   );
 }
+
+  /**
+   * Obtiene el catálogo de municipios de México correspondientes a una entidad específica.
+   *
+   * @param cveEntidad - Clave numérica de la entidad federativa para la cual se desean obtener los municipios.
+   * @returns Un observable que emite la respuesta en formato `JsonResponseCatalogo` con el listado de municipios.
+   */
+  getmunicipio(cveEntidad:string): Observable<JsonResponseCatalogo> {
+     return this.httpService.get<JsonResponseCatalogo>(
+    `${ENVIRONMENT.API_HOST}/api/catalogo/municipios-mex/${cveEntidad}`,
+    {},
+    false
+  );
+}
+
+
+/**
+ * Obtiene la información de una categoría de tipo según el valor de la clave enumerada proporcionada.
+ *
+ * @param cveEnum - Clave enumerada que identifica el tipo de categoría a consultar.
+ * @returns Un observable que emite la respuesta JSON del catálogo correspondiente.
+ */
+ getTipCategoria(cveEnum:string): Observable<JsonResponseCatalogo> {
+     return this.httpService.get<JsonResponseCatalogo>(
+    `${ENVIRONMENT.API_HOST}/api/catalogo/tipo-categoria/${cveEnum}`,
+    {},
+    false
+  );
+}
+
 /**
  * Establece la fila seleccionada del Anexo Uno.
  * Emite el nuevo valor a todos los suscriptores del observable correspondiente.

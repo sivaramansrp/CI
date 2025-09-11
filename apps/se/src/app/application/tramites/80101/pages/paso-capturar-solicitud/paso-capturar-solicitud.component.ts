@@ -1,7 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@ng-mf/data-access-user';
 import { AccionBoton } from '../../models/nuevo-programa-industrial.model';
+import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { Subject } from 'rxjs';
+
 
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
@@ -89,8 +91,8 @@ export class PasoCapturarSolicitudComponent {
    * utilizando los métodos `establecerSeccion` y `establecerFormaValida` del servicio `SeccionLibStore`.
    * La suscripción se gestiona para que se complete automáticamente al destruir el componente mediante `takeUntil` y `destroyNotifier$`.
    */
-  constructor() {
-   // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService) {
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
   /**
@@ -107,4 +109,112 @@ export class PasoCapturarSolicitudComponent {
       }
     }
   }
+
+  /**
+   * Obtiene los datos del store y los guarda utilizando el servicio.
+   */
+  obtenerDatosDelStore(): void {
+    this.nuevoProgramaIndustrialService.getAllState().subscribe(data => {
+      this.guardar(data);
+    });
+  }
+
+  /**
+   * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
+   * 
+   * @param data - Los datos que se desean guardar y enviar al servidor.
+   * @returns void
+   */
+  guardar(data: any): void {
+    const PAYLOAD = {
+      "tipoDeSolicitud": "guardar",
+    "idSolicitud": 202781045,
+    "idTipoTramite": 80101,
+    "rfc": "AAL0409235E6",
+    "cveUnidadAdministrativa": "8101",
+    "costoTotal": 10000.5,
+    "certificadoSerialNumber": "1234567890ABCDEF",
+    "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
+    "numeroFolioTramiteOriginal": "TRM-2023-00001",
+    "nombre": "Juan",
+    "apPaterno": "Pérez",
+    "apMaterno": "López",
+    "telefono": "5551234567",
+    "planta": [],
+    "anexoII": [
+        {
+            "descripcion": "tblerow0",
+            "idTipoBien": 0,
+            "idBienComercial": 0,
+            "testado": true,
+            "contadorGrid": null,
+            "descripcionTestado": "tblerow1"
+        }
+    ],
+    "anexoIII": [
+        {
+            "descripcion": "CONTROL DE ENERGIA",
+            "idTipoBien": 0,
+            "idBienComercial": 0,
+            "testado": true,
+            "contadorGrid": null,
+            "descripcionTestado": null
+        }
+    ],
+    "mercanciaImportacion": [
+        {
+            "fraccionArancelaria": {
+                "fraccionPadre": "string",
+                "descripcionFraccionPadre": "string",
+                "tipoFraccion": "string",
+                "exenta": true,
+                "fraccionCompuesta": "string",
+                "claveFraccionPadre": "string",
+                "unidadMedida": "string",
+                "fraccionConcatenada": "string",
+                "descripcionTestado": "string",
+                "testado": true,
+                "tipoOperacion": "string",
+                "valorMonedaMensual": "string",
+                "valorMonedaAnual": "string",
+                "valorProduccionMensual": "string",
+                "valorProduccionAnual": "string",
+                "valorProduccionAnualSolicitada": "string",
+                "claveCategoria": "string",
+                "descripcionCategoria": "string",
+                "mensaje": "string",
+                "descripcionUsuario": "string",
+                "umt": "string",
+                "idFraccion": "string",
+                "idProducto": "string",
+                "idProductoPadre": "string",
+                "claveProductoExportacion": 0,
+                "descripcionServicio": "string",
+                "rowID": "string",
+                "cveFraccion": "61032301",
+                "capitulo": "string",
+                "partida": "string",
+                "subPartida": "string",
+                "descripcion": "string",
+                "fechaCaptura": "2025-09-07T12:43:35.647Z",
+                "fechaInicioVigencia": "2025-09-07T12:43:35.647Z",
+                "fechaFinVigencia": "2025-09-07T12:43:35.647Z",
+                "cveUsuario": "string",
+                "cveCapituloFraccion": "string",
+                "cvePartidaFraccion": "string",
+                "cveSubPartidaFraccion": "string",
+                "activo": true,
+                "activoAnexo28": true,
+                "decretoImmex": true
+            }
+        }
+    ],
+    "plantasSubmanufactureras": [],
+    "sociosAccionistas": []
+}
+    this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
+     return response;
+    });
+  }
+
 }
