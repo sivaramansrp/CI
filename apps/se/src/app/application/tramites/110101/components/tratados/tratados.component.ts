@@ -209,7 +209,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
       pais: [this.solicitudeState?.pais, Validators.required],
       tratado: [this.solicitudeState?.tratado, Validators.required],
       origen: [this.solicitudeState?.origen, Validators.required],
-      criterioInstancias: [this.solicitudeState?.criterio, Validators.required],
+      criterioInstancias: [this.solicitudeState?.criterio],
     });
   }
 
@@ -671,7 +671,7 @@ talbleData: RegistroDeSolicitudesTabla = {
             this.isUruguay = true;
             this.criteriosOtrasInstancias();
             this.cd.detectChanges();
-          }
+          } 
             
         break;
       case 'tratado':
