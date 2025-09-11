@@ -707,7 +707,10 @@ talbleData: RegistroDeSolicitudesTabla = {
             txtBtnCancelar: '',
           };
         }
-        this.criteriosInstanciasCatalogo = resp.datos || [];
+        this.criteriosInstanciasCatalogo = (resp.datos || []).map((item, index) => ({
+          id: index + 1,
+          descripcion: item, 
+        }));
       },
       error: (error) => {
         const MENSAJE = error?.error?.error || 'Error de conexión';

@@ -105,9 +105,9 @@ export class CatalogosTramiteService {
    * Consulta el catálogo de criterios otras instancias.
    * @returns Observable con la respuesta del servidor que contiene el catálogo
    */
-  postCatCriteriosOtrasInstancias(PAYLOAD: CriteriosOtrasInstanciasRequest): Observable<BaseResponse<Catalogo[]>> {
+  postCatCriteriosOtrasInstancias(PAYLOAD: CriteriosOtrasInstanciasRequest): Observable<BaseResponse<string[]>> {
     const ENDPOINT = `${this.host}${API_GET_CAT_CRITERIOS_OTRAS_INSTANCIAS}`;
-    return this.http.post<BaseResponse<Catalogo[]>>(ENDPOINT, PAYLOAD);
+    return this.http.post<BaseResponse<string[]>>(ENDPOINT, PAYLOAD);
   }
   
 }
