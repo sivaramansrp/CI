@@ -3,6 +3,7 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Service260212Service } from '../../services/service260212.service';
+import { TercerosRelacionadas260212State } from '../../../../estados/tramites/tramite260212.store';
 
 /**
  * @descripción
@@ -59,6 +60,7 @@ export class Datos260212Component implements OnInit, AfterViewInit, OnDestroy {
     if (this.consultaState.update) {
       this.guardarDatosFormulario();
       this.tercerosDatosFormulario();
+      this.tercerosTablaDatos();
     } else {
       this.esDatosRespuesta = true;
     }
@@ -109,6 +111,24 @@ export class Datos260212Component implements OnInit, AfterViewInit, OnDestroy {
         }
       });
   }
+
+  /**
+ * Obtiene los datos de terceros relacionados a través del servicio y actualiza el estado compartido.
+ * Si la respuesta es válida, marca que se recibió respuesta y actualiza el store con los datos obtenidos.
+ */
+  tercerosTablaDatos(): void {
+    this.service260212Service
+      .getTercerosRelacionadasData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp: TercerosRelacionadas260212State) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.service260212Service.setTerecerosRelacionadosState(resp);
+        }
+      });
+  }
+
   /**
    * Método que guarda los datos del formulario.
    * Se suscribe al servicio sanitario para obtener los datos de la solicitud

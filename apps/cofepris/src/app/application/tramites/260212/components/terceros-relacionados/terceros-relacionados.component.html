@@ -23,8 +23,8 @@
       <br />
 
    <div class="d-flex justify-content-end mt-3">
-  <button  class="btn btn-danger me-3" type="button"  (click)="eliminarFabricante()">Eliminar</button>
-  <button  class="btn btn-default me-3" type="button"  (click)="modificarFabricante()">Modificar</button>
+  <button  class="btn btn-danger me-3" type="button"  (click)="eliminarFabricante()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+  <button  class="btn btn-default me-3" type="button"  (click)="modificarFabricante()" [disabled]="esFormularioSoloLectura">Modificar</button>
   <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()" [disabled]="esFormularioSoloLectura">
     Agregar
   </button>
@@ -46,8 +46,8 @@
       <br />
 
       <div class="d-flex justify-content-end mt-3">
-  <button  class="btn btn-danger me-3" type="button" (click)="eliminarDestinario()">Eliminar</button>
-  <button  class="btn btn-default me-3" type="button" (click)="modificarDestinatario()">Modificar</button>
+  <button  class="btn btn-danger me-3" type="button" (click)="eliminarDestinario()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+  <button  class="btn btn-default me-3" type="button" (click)="modificarDestinatario()" [disabled]="esFormularioSoloLectura">Modificar</button>
   <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()" [disabled]="esFormularioSoloLectura">
     Agregar
   </button>
@@ -71,8 +71,8 @@
       <br />
 
       <div class="d-flex justify-content-end mt-3">
-  <button  class="btn btn-danger me-3" type="button"  (click)="eliminarProveedor()">Eliminar</button>
-  <button  class="btn btn-default me-3" type="button" (click)="modificarProveedor()">Modificar</button>
+  <button  class="btn btn-danger me-3" type="button"  (click)="eliminarProveedor()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+  <button  class="btn btn-default me-3" type="button" (click)="modificarProveedor()" [disabled]="esFormularioSoloLectura">Modificar</button>
   <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()" [disabled]="esFormularioSoloLectura">
     Agregar
   </button>
@@ -97,8 +97,8 @@
       <br />
 
       <div class="d-flex justify-content-end mt-3">
-  <button  class="btn btn-danger me-3" type="button"  (click)="eliminarFacturador()">Eliminar</button>
-  <button  class="btn btn-default me-3" type="button" (click)="modificarFacturador()">Modificar</button>
+  <button  class="btn btn-danger me-3" type="button"  (click)="eliminarFacturador()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+  <button  class="btn btn-default me-3" type="button" (click)="modificarFacturador()" [disabled]="esFormularioSoloLectura">Modificar</button>
   <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()" [disabled]="esFormularioSoloLectura">
     Agregar
   </button>
