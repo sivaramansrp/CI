@@ -97,7 +97,7 @@
     </div>
   </div>
   <div class="row">
-    <app-tabla-dinamica [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos"
+    <app-tabla-dinamica [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos" [isInvalida]="domicilio.invalid && domicilio.touched && nicoTablaDatos.length === 0"
       [tipoSeleccionTabla]="tablaSeleccionCheckbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
     </app-tabla-dinamica>
 
@@ -166,6 +166,7 @@
       [configuracionTabla]="mercanciasTabla"
       [datos]="mercanciasTablaDatos" 
       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+      [isInvalida]="domicilio.invalid && domicilio.touched && mercanciasTablaDatos.length === 0"
       (listaDeFilaSeleccionada)="seleccionarlistaSeccionMercancias($event)"
     ></app-tabla-dinamica>
 

@@ -210,6 +210,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.esFormularioActualizacion = seccionState.update;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe()
@@ -260,11 +261,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
  */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-
     if (this.esFormularioSoloLectura) {
       this.domicilio.disable();
-    } else {
-      this.domicilio.enable();
     }
   }
 
