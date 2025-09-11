@@ -1,4 +1,4 @@
-import { AlertComponent, Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import {
   AnexoDosConfiguartion,
   AnexoDosEncabezado,
@@ -184,6 +184,12 @@ export class AnexoUnoComponent implements OnInit, OnDestroy {
   public tenerDatosDeTabla: boolean = false;
 
   /**
+   * Arreglo que contiene las categorías del catálogo de tipo `Catalogo`.
+   * Se utiliza para almacenar y gestionar las diferentes categorías disponibles en el componente.
+   */
+  TipCategoriaCatalogo:Catalogo[]=[];
+
+  /**
    * Constructor de la clase AnexoUnoComponent
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos
    */
@@ -261,6 +267,7 @@ export class AnexoUnoComponent implements OnInit, OnDestroy {
    * deshabilita los grupos de formularios `anexoUnoFormGroup` y `anexoDosFormGroup`.
    */
   ngOnInit(): void {
+    this.obtenerTipCategoria('ENU_TIPO_CATEGORIA')
     if (this.formularioDeshabilitado) {
       this.anexoUnoFormGroup.disable();
       this.anexoDosFormGroup.disable();
@@ -455,6 +462,21 @@ export class AnexoUnoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Obtiene el catálogo de TipCategoria según el valor de la clave enumerada proporcionada.
+   * 
+   * @param cveEnum - Clave del enumerado para buscar el tipo de categoría.
+   * 
+   * Realiza una petición al servicio `complimentosService` para obtener los datos correspondientes
+   * y los asigna a la propiedad `TipCategoriaCatalogo`. La suscripción se gestiona para finalizar
+   * automáticamente cuando el componente se destruye.
+   */
+  obtenerTipCategoria(cveEnum:string):void{
+    this.complimentosService.getTipCategoria(cveEnum).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      this.TipCategoriaCatalogo=res.datos
+    });
+  }
+
 /**
  * Método del ciclo de vida que se ejecuta al destruir el componente.
  * Libera recursos notificando a los observables que deben finalizar suscripciones.
@@ -463,4 +485,6 @@ ngOnDestroy(): void {
   this.destroyNotifier$.next();
   this.destroyNotifier$.complete();
 }
+
+
 }
