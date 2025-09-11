@@ -105,8 +105,23 @@
           class="form-control"
           formControlName="descripcionFraccion"
           maxlength="1000"
+          [ngClass]="
+            (mercanciaForm.get('descripcionFraccion')?.invalid &&
+            mercanciaForm.get('descripcionFraccion')?.touched) ||
+            (formSubmissionAttempted && mercanciaForm.get('descripcionFraccion')?.disabled && 
+            (!mercanciaForm.get('descripcionFraccion')?.value || mercanciaForm.get('descripcionFraccion')?.value === ''))
+              ? 'required'
+              : ''
+          "
         />
-        @if ( mercanciaForm.get('descripcionFraccion')?.hasError('maxlength') &&
+        @if ((mercanciaForm.get('descripcionFraccion')?.hasError('required') &&
+        mercanciaForm.get('descripcionFraccion')?.touched) || 
+        (formSubmissionAttempted && mercanciaForm.get('descripcionFraccion')?.disabled && 
+        (!mercanciaForm.get('descripcionFraccion')?.value || mercanciaForm.get('descripcionFraccion')?.value === ''))) {
+        <div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
+        } @else if ( mercanciaForm.get('descripcionFraccion')?.hasError('maxlength') &&
         mercanciaForm.get('descripcionFraccion')?.touched){
         <div class="text-danger">
           Por favor, no escribas más de 1000 caracteres
@@ -222,7 +237,24 @@
             >
             </span>
           </label>
-          <input type="text" class="form-control" formControlName="umt" />
+          <input type="text" class="form-control" formControlName="umt" 
+            [ngClass]="
+            (mercanciaForm.get('umt')?.invalid &&
+            mercanciaForm.get('umt')?.touched) ||
+            (formSubmissionAttempted && mercanciaForm.get('umt')?.disabled && 
+            (!mercanciaForm.get('umt')?.value || mercanciaForm.get('umt')?.value === ''))
+              ? 'required'
+              : ''
+            "
+          />
+          @if ((mercanciaForm.get('umt')?.hasError('required') &&
+          mercanciaForm.get('umt')?.touched) || 
+          (formSubmissionAttempted && mercanciaForm.get('umt')?.disabled && 
+          (!mercanciaForm.get('umt')?.value || mercanciaForm.get('umt')?.value === ''))) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
         </div>
       </div>
 

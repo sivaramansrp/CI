@@ -167,6 +167,12 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
   formErrorAlert: string = '<strong>¡Error de registro! </strong> Faltan campos por capturar';
 
   /**
+   * Flag to track if form submission has been attempted
+   * Used to control when to show validation errors for disabled fields
+   */
+  formSubmissionAttempted: boolean = false;
+
+  /**
    * Constructor del componente.
    *
    * @param fb FormBuilder para crear formularios reactivos.
@@ -205,7 +211,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       requisito: ['', Validators.required],
       numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       fraccionArancelaria: ['', Validators.required],
-      descripcionFraccion: [{ value: '', disabled: true }],
+      descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
       nico: ['', Validators.required],
       descripcionNico: [{ value: '', disabled: true }],
       descripcion: [
@@ -213,7 +219,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)],
       ],
       cantidadUMT: ['', [Validators.required, MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
-      umt: [{ value: '', disabled: true }],
+      umt: [{ value: '', disabled: true }, Validators.required],
       cantidadUMC: ['', [Validators.required, MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
       umc: ['', Validators.required],
       uso: ['', Validators.required],
@@ -288,6 +294,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Utiliza el servicio de ubicación para retroceder una página.
    */
   cancelar(): void {
+    this.formSubmissionAttempted = false;
     this.cerrar.emit();
   }
 
@@ -296,6 +303,8 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
    */
   agregarAnimales(): void {
+    this.formSubmissionAttempted = true;
+    
     if (this.mercanciaForm.invalid) {
       this.mercanciaForm.markAllAsTouched();
       this.esFormaValido = true;
