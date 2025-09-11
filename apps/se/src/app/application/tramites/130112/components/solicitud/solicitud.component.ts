@@ -429,7 +429,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.seccionState?.justificacionImportacionExportacion,
         [Validators.required, SolicitudComponent.validarSinCaracterAnguloDerecho],
       ],
-      observaciones: [this.seccionState?.observaciones],
+      observaciones: [this.seccionState?.observaciones,Validators.maxLength(512)],
     });
     this.frmRepresentacionForm = this.fb.group({
       entidad: [this.seccionState?.entidad, Validators.required],

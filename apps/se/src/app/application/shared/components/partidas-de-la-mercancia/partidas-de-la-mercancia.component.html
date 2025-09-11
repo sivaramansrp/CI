@@ -268,7 +268,7 @@
                   <textarea class="form-control height" rows="3" id="descripcion"
                             formControlName="descripcionPartidasDeLaMercancia"
                             [maxlength]="254" aria-labelledby="descripcion"
-                            [ngClass]="{'is-invalid': mostrarErroresModal && modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid}" ></textarea>
+                            [ngClass]="{'input-error': mostrarErroresModal && modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid}" ></textarea>
                   <div *ngIf="mostrarErroresModal && modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.touched && modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid" class="text-danger">
                     <small *ngIf="modificarPartidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.hasError('required')">Debe agregar una descripción.</small>
                   </div>
