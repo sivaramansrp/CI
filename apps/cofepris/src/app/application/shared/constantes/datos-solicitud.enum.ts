@@ -705,7 +705,9 @@ export const DESCRIPCION_FRACCION_DESHABILITADO_VALOR =
  * @description Constante que representa el valor deshabilitado de la unidad de medida utilizada en la aplicación.
  * @type {string}
  * @valor "Kilogramo"
+ * @uso Utilizada para identificar solicitudes que requieren una unidad de medida específica.
  */
+
 export const UMT_DESHABILITADO_VALOR = 'Kilogramo';
 
 /** Mensaje mostrado cuando no hay fila seleccionada. */
