@@ -7,6 +7,7 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   CrosslistComponent,
+  NUMERICO_CON_PUNTO_REGEX,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
@@ -113,8 +114,8 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * @type {CrossListEtiqueta}
    */
   public usoNormaSeleccionadaLabel: CrossListEtiqueta = {
-    tituluDeLaIzquierda: 'Nombre científico',
-    derecha: 'Nombre científico seleccionado',
+    tituluDeLaIzquierda: 'Nombre científico:',
+    derecha: 'Nombre científico seleccionado:',
   };
 
   /**
@@ -173,6 +174,12 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
   formSubmissionAttempted: boolean = false;
 
   /**
+   * Flag to track if "Inspección Ocular" is selected
+   * Used to hide/show the "Requisito" field
+   */
+  isInspeccionOcularSelected: boolean = false;
+
+  /**
    * Constructor del componente.
    *
    * @param fb FormBuilder para crear formularios reactivos.
@@ -209,18 +216,18 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       id: [0],
       tipoRequisito: ['', Validators.required],
       requisito: ['', Validators.required],
-      numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+      numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9\s]*$/)]],
       fraccionArancelaria: ['', Validators.required],
       descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
       nico: ['', Validators.required],
       descripcionNico: [{ value: '', disabled: true }],
       descripcion: [
         '',
-        [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)],
+        [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9\s]*$/)],
       ],
-      cantidadUMT: ['', [Validators.required, MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
+      cantidadUMT: ['', [Validators.required, Validators.pattern(NUMERICO_CON_PUNTO_REGEX), MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
       umt: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMC: ['', [Validators.required, MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
+      cantidadUMC: ['', [Validators.required, Validators.pattern(NUMERICO_CON_PUNTO_REGEX), MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
       umc: ['', Validators.required],
       uso: ['', Validators.required],
       paisDeOrigen: ['', Validators.required],
@@ -233,6 +240,17 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       this.mercanciaForm.patchValue({
         ...this.formularioSolicitud
       });
+      
+      const TIPO_REQUISITO_VALUE = this.formularioSolicitud.tipoRequisito;
+      if (TIPO_REQUISITO_VALUE) {
+        const SELECTED_TIPO = this.catalogosDatos.tipoRequisitoList?.find(tipo => tipo.id.toString() === TIPO_REQUISITO_VALUE.toString());
+        if (SELECTED_TIPO?.descripcion === 'Inspección Ocular') {
+          this.isInspeccionOcularSelected = true;
+          const REQUISITO_CONTROL = this.mercanciaForm.get('requisito');
+          REQUISITO_CONTROL?.clearValidators();
+          REQUISITO_CONTROL?.updateValueAndValidity();
+        }
+      }
     }
   }
 
@@ -241,12 +259,42 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Aquí se completa el sujeto de destrucción para evitar fugas de memoria.
    */
   tipoSelecionada(event: Catalogo): void {
+    this.isInspeccionOcularSelected = event.descripcion === 'Inspección Ocular';
+    const REQUISITO_CONTROL = this.mercanciaForm.get('requisito');
+    if (this.isInspeccionOcularSelected) {
+      REQUISITO_CONTROL?.clearValidators();
+      REQUISITO_CONTROL?.setValue('');
+    } else {
+      REQUISITO_CONTROL?.setValidators([Validators.required]);
+    }
+    REQUISITO_CONTROL?.updateValueAndValidity();
+  }
+
+  /**
+   * Maneja la selección de fracción arancelaria.
+   * Actualiza automáticamente los campos relacionados cuando se selecciona una fracción arancelaria.
+   * @param event - El objeto de catálogo seleccionado que contiene la información de la fracción arancelaria
+   */
+  fraccionArancelariaSeleccionada(event: Catalogo): void {
     const FRACCION_SELECCIONADA = this.catalogosDatos.fraccionArancelariaList.find((fraccion) => fraccion.id === event.id);
     if (FRACCION_SELECCIONADA) {
       this.mercanciaForm.patchValue({
         descripcionFraccion: FRACCION_SELECCIONADA.descripcion,
-        descripcionNico: FRACCION_SELECCIONADA.descripcion,
         umt: FRACCION_SELECCIONADA.descripcion
+      });
+    }
+  }
+
+  /**
+   * Maneja la selección de un elemento del catálogo NICO.
+   * Busca el elemento NICO seleccionado en la lista de catálogos y actualiza
+   * @param event - El objeto de catálogo seleccionado que contiene la información del NICO
+   */
+  nicoSeleccionado(event: Catalogo): void {
+    const NICO_SELECCIONADO = this.catalogosDatos.nicoList.find((nico) => nico.id === event.id);
+    if (NICO_SELECCIONADO) {
+      this.mercanciaForm.patchValue({
+        descripcionNico: NICO_SELECCIONADO.descripcion
       });
     }
   }

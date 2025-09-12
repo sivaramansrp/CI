@@ -26,6 +26,7 @@
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 form-group">
+       <div *ngIf="!isInspeccionOcularSelected">
         <label class="form-label">Requisito*: </label>
         <input
           type="text"
@@ -46,6 +47,7 @@
         </div>
         }
       </div>
+     </div>
       <div class="col-md-4 form-group">
         <label class="form-label"
           >Número de certificado internacional*:
@@ -61,6 +63,7 @@
           class="form-control"
           formControlName="numeroCertificadoInternacional"
           maxlength="50"
+          title="Si la normatividad no le solicita el Certificado puede capturar NO APLICA ó N/A"
           [ngClass]="
             mercanciaForm.get('numeroCertificadoInternacional')?.invalid &&
             mercanciaForm.get('numeroCertificadoInternacional')?.touched
@@ -88,6 +91,7 @@
           name="fraccionArancelaria"
           [isDisabled]="mercanciaForm.disabled"
           [markTouched]="mercanciaForm.get('fraccionArancelaria')?.touched || false"
+          (selectionChange)="fraccionArancelariaSeleccionada($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 form-group">
@@ -140,6 +144,7 @@
           name="nico"
           [isDisabled]="mercanciaForm.disabled"
           [markTouched]="mercanciaForm.get('nico')?.touched || false"
+          (selectionChange)="nicoSeleccionado($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 form-group">
@@ -202,7 +207,14 @@
               : ''
           "
          />
-        @if ( mercanciaForm.get('cantidadUMT')?.hasError('maxDecimals') &&
+        @if ( mercanciaForm.get('cantidadUMT')?.hasError('pattern') &&
+        mercanciaForm.get('cantidadUMT')?.touched){
+        <div class="text-danger">
+          <small
+            >Por favor, escribe un valor menor o igual a 999999999999.999</small
+          >
+        </div>
+        } @else if ( mercanciaForm.get('cantidadUMT')?.hasError('maxDecimals') &&
         mercanciaForm.get('cantidadUMT')?.touched){
         <div class="text-danger">
           <small
@@ -268,6 +280,17 @@
               : ''
           "
          />
+        <div
+          *ngIf="
+            mercanciaForm.get('cantidadUMC')?.hasError('pattern') &&
+            mercanciaForm.get('cantidadUMC')?.touched
+          "
+          class="text-danger"
+        >
+          <small
+            >Por favor, escribe un valor menor o igual a 999999999999.999</small
+          >
+        </div>
         <div
           *ngIf="
             mercanciaForm.get('cantidadUMC')?.hasError('maxDecimals') &&
@@ -368,7 +391,7 @@
         <app-catalogo-select
           [catalogo]="catalogosDatos.paisDeProcedenciaList"
           formControlName="paisDeProcedencia"
-          [label]="'País de Procedencia'"
+          [label]="'País de procedencia'"
           [required]="true"
           name="paisDeProcedencia"
           [isDisabled]="mercanciaForm.disabled"
