@@ -80,6 +80,10 @@ export class PasoCapturarSolicitudComponent {
   /** Indica la visibilidad del botón Guardar. */
   public btnGuardarVisible: string = 'visible';
 
+  /**
+   * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private socioAccionistaBase: Readonly<Record<string, any>> = {
       "idPersonaPersonaSolicitudR": 0,
       "idSolicitud": 202734824,
@@ -176,9 +180,28 @@ export class PasoCapturarSolicitudComponent {
     });
   }
 
+  /**
+ * Construye un arreglo de socios/accionistas a partir de dos listas de entrada,
+ * utilizando un objeto base como plantilla y datos complementarios para completar
+ * los campos faltantes.
+ *
+ * @param arr1 Primer arreglo de socios/accionistas.
+ * @param arr2 Segundo arreglo de socios/accionistas.
+ * @param base Objeto base que sirve de plantilla para cada elemento del resultado.
+ * @param data Objeto con datos complementarios necesarios para completar el payload.
+ *
+ * @returns Un nuevo arreglo que contiene los objetos combinados y mapeados
+ *          con la información de los dos arreglos de entrada.
+ *
+ * @example
+ * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
+ */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
   buildSociosAccionistas(arr1: any[] = [], arr2: any[] = [], base: Record<string, any>, data: any): any[] {
-    const result: any[] = [];
-    const mapToPayload = (item: any): any => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const RESULT: any[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const MAP_TO_PAYLOAD = (item: any): any => ({
       ...base,
       nombre: item.nombre ?? '',
       apellidoPaterno: item.apellidoPaterno ?? '',
@@ -192,10 +215,10 @@ export class PasoCapturarSolicitudComponent {
       fecFallecimiento: data.datosComplimentos.formaCertificacion.fechaVigencia
     });
 
-    arr1.forEach(row => result.push(mapToPayload(row)));
-    arr2.forEach(row => result.push(mapToPayload(row)));
+    arr1.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
+    arr2.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
 
-    return result;
+    return RESULT;
   }
 
   /**
@@ -204,9 +227,9 @@ export class PasoCapturarSolicitudComponent {
    * @param data - Los datos que se desean guardar y enviar al servidor.
    * @returns void
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
     const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
-    console.log('SOCIO_ACCIONISTAS', SOCIO_ACCIONISTAS)
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
     "idSolicitud": 202781045,
