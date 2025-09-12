@@ -267,6 +267,20 @@ export class TercerosComponent implements OnInit, OnDestroy {
   destinatarioSeleccionado: Destinatario[] = [];
 
   /**
+   * Indica si se está editando un destinatario existente.
+   * @type {boolean}
+   * @default false
+   */
+  isEditingDestinatario: boolean = false;
+
+  /**
+   * Índice del destinatario que se está editando.
+   * @type {number}
+   * @default -1
+   */
+  editingDestinatarioIndex: number = -1;
+
+  /**
    * Constructor del componente TercerosComponent.
    * Inicializa los servicios necesarios y configura las suscripciones iniciales.
    * 
@@ -552,6 +566,186 @@ export class TercerosComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Modifica el destinatario seleccionado.
+   * Abre el modal con los datos del destinatario para edición.
+   * 
+   * @memberof TercerosComponent
+   */
+  modificarDestinatario(): void {
+    if (this.destinatarioSeleccionado.length === 0) {
+      return;
+    }
+
+    const DESTINATARIO_A_MODIFICAR = this.destinatarioSeleccionado[0];
+   this.editingDestinatarioIndex = this.destinatario.findIndex(dest => 
+      dest.nombreDenominacionORazonSocial === DESTINATARIO_A_MODIFICAR.nombreDenominacionORazonSocial &&
+      dest.correoElectronico === DESTINATARIO_A_MODIFICAR.correoElectronico
+    );
+
+    if (this.editingDestinatarioIndex === -1) {
+      return;
+    }
+
+    this.isEditingDestinatario = true;
+    this.cargarDatosDestinatarioParaEdicion(DESTINATARIO_A_MODIFICAR);
+    this.showtercerosModal = true;
+  }
+
+  /**
+   * Carga los datos del destinatario en el formulario para edición.
+   * 
+   * @param destinatario - Destinatario a cargar en el formulario
+   * @memberof TercerosComponent
+   */
+  private cargarDatosDestinatarioParaEdicion(destinatario: Destinatario): void {
+   
+    // Determine person type based on the name structure
+    const TIPO_PERSONA = this.determinarTipoPersona(destinatario.nombreDenominacionORazonSocial);
+   
+    
+    // Set person type and trigger change
+    this.tipoPersonaForm.patchValue({
+      tipoPersona: TIPO_PERSONA
+    });
+
+    // Manually trigger the radio change
+    this.cambiarRadioFisica(TIPO_PERSONA);
+
+    // Parse phone number
+    const TELEFONO_PARTS = destinatario.telefono ? destinatario.telefono.split('-') : ['', ''];
+    const LADA = TELEFONO_PARTS.length > 1 ? TELEFONO_PARTS[0] : '';
+    const TELEFONO = TELEFONO_PARTS.length > 1 ? TELEFONO_PARTS[1] : TELEFONO_PARTS[0];
+
+    // Find catalog IDs
+    const PAIS_ID = this.paisCatalogo.find(p => p.descripcion === destinatario.pais)?.id || this.paisCatalogo[0].id;
+    const ESTADO_ID = this.estadoCatalogo.find(e => e.descripcion === destinatario.entidadFederativa)?.id || '';
+    const MUNICIPIO_ID = this.municipioCatalogo.find(m => m.descripcion === destinatario.municipioOAlcaldia)?.id || '';
+    const COLONIA_ID = this.coloniaCatalogo.find(c => c.descripcion === destinatario.colonia)?.id || '';
+
+    // Set form values based on person type
+    if (TIPO_PERSONA === 'fisica') {
+      const NOMBRES = this.parsearNombreCompleto(destinatario.nombreDenominacionORazonSocial);
+      this.datosPersonales.patchValue({
+        nombre: NOMBRES.nombre,
+        primerApellido: NOMBRES.primerApellido,
+        segundoApellido: NOMBRES.segundoApellido,
+        social: '',
+        pais: PAIS_ID,
+        codigo: destinatario.codigoPostal,
+        estado: ESTADO_ID,
+        municipio: MUNICIPIO_ID,
+        colonia: COLONIA_ID,
+        calle: destinatario.calle,
+        exterior: destinatario.numeroExterior,
+        interior: destinatario.numeroInterior,
+        lada: LADA,
+        telefono: TELEFONO,
+        correoElectronico: destinatario.correoElectronico,
+        tif: ''
+      });
+    } else {
+      this.datosPersonales.patchValue({
+        nombre: '',
+        primerApellido: '',
+        segundoApellido: '',
+        social: destinatario.nombreDenominacionORazonSocial,
+        pais: PAIS_ID,
+        codigo: destinatario.codigoPostal,
+        estado: ESTADO_ID,
+        municipio: MUNICIPIO_ID,
+        colonia: COLONIA_ID,
+        calle: destinatario.calle,
+        exterior: destinatario.numeroExterior,
+        interior: destinatario.numeroInterior,
+        lada: LADA,
+        telefono: TELEFONO,
+        correoElectronico: destinatario.correoElectronico,
+        tif: ''
+      });
+    }
+
+   
+  }
+
+  /**
+   * Determina el tipo de persona basado en el nombre.
+   * 
+   * @param nombreCompleto - Nombre completo del destinatario
+   * @returns Tipo de persona ('fisica', 'moral', 'planta')
+   * @memberof TercerosComponent
+   */
+  private determinarTipoPersona(nombreCompleto: string): string {
+    
+    const PALABRAS = nombreCompleto.trim().split(' ').filter(p => p.length > 0);
+    
+  
+    const PALABRAS_MORALES = ['S.A.', 'S.R.L.', 'CORP', 'INC', 'LTDA', 'CIA'];
+    const ES_MORAL = PALABRAS_MORALES.some(palabra => nombreCompleto.toUpperCase().includes(palabra));
+    
+    if (ES_MORAL) {
+      return 'moral';
+    }
+  
+    if (nombreCompleto.toUpperCase().includes('TIF') || nombreCompleto.toUpperCase().includes('PLANTA')) {
+      return 'planta';
+    }
+    
+    
+    return PALABRAS.length >= 2 ? 'fisica' : 'moral';
+  }
+
+  /**
+   * Parsea el nombre completo para extraer nombre y apellidos.
+   * 
+   * @param nombreCompleto - Nombre completo a parsear
+   * @returns Objeto con nombre, primer apellido y segundo apellido
+   * @memberof TercerosComponent
+   */
+  private parsearNombreCompleto(nombreCompleto: string): { nombre: string; primerApellido: string; segundoApellido: string } {
+    const PALABRAS = nombreCompleto.trim().split(' ').filter(p => p.length > 0);
+    
+    return {
+      nombre: PALABRAS[0] || '',
+      primerApellido: PALABRAS[1] || '',
+      segundoApellido: PALABRAS[2] || ''
+    };
+  }
+
+  /**
+   * Elimina el destinatario seleccionado.
+   * Muestra confirmación antes de eliminar.
+   * 
+   * @memberof TercerosComponent
+   */
+  eliminarDestinatario(): void {
+    if (this.destinatarioSeleccionado.length === 0) {
+     
+      return;
+    }
+
+    // Show confirmation dialog
+    const CONFIRMAR = confirm('¿Está seguro de que desea eliminar este destinatario?');
+    
+    if (CONFIRMAR) {
+      const DESTINATARIO_A_ELIMINAR = this.destinatarioSeleccionado[0];
+    
+      const INDEX_TO_REMOVE = this.destinatario.findIndex(dest => 
+        dest.nombreDenominacionORazonSocial === DESTINATARIO_A_ELIMINAR.nombreDenominacionORazonSocial &&
+        dest.correoElectronico === DESTINATARIO_A_ELIMINAR.correoElectronico &&
+        dest.telefono === DESTINATARIO_A_ELIMINAR.telefono
+      );
+
+      if (INDEX_TO_REMOVE !== -1) {
+        this.destinatario.splice(INDEX_TO_REMOVE, 1);
+        
+        this.destinatarioSeleccionado = [];
+        
+        this.cdr.detectChanges();
+        } 
+    }
+  }
+
+  /**
    * Guarda un nuevo destinatario basado en los datos del formulario.
    * Crea un objeto destinatario y lo agrega a la lista.
    * Cierra el modal después de guardar.
@@ -559,15 +753,15 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @memberof TercerosComponent
    */
   guardarDestinatario(): void {
-    if (this.tipoPersonaForm.invalid || this.datosPersonales.invalid) {
+     if (this.tipoPersonaForm.invalid || this.datosPersonales.invalid) {
       this.tipoPersonaForm.markAllAsTouched();
       this.datosPersonales.markAllAsTouched();
+   
       return;
     }
 
     const FORM_VALUE = this.datosPersonales.value;
     const TIPO_PERSONA = this.tipoPersonaForm.get('tipoPersona')?.value;
-
     const PAIS_SELECCIONADO = this.paisCatalogo.find(item => item.id === Number(FORM_VALUE.pais));
     const ESTADO_SELECCIONADO = this.estadoCatalogo.find(item => item.id === Number(FORM_VALUE.estado));
     const MUNICIPIO_SELECCIONADO = this.municipioCatalogo.find(item => item.id === Number(FORM_VALUE.municipio));
@@ -576,7 +770,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     const NOMBRE_COMPLETO = TercerosComponent.obtenerNombreCompleto(FORM_VALUE, TIPO_PERSONA);
     const DOMICILIO_COMPLETO = TercerosComponent.obtenerDomicilioCompleto(FORM_VALUE, COLONIA_SELECCIONADA, MUNICIPIO_SELECCIONADO, ESTADO_SELECCIONADO);
 
-    const NUEVO_DESTINATARIO: Destinatario = {
+    const DESTINATARIO_DATA: Destinatario = {
       nombreDenominacionORazonSocial: NOMBRE_COMPLETO,
       telefono: FORM_VALUE.lada && FORM_VALUE.telefono ? `${FORM_VALUE.lada}-${FORM_VALUE.telefono}` : (FORM_VALUE.telefono || ''),
       correoElectronico: FORM_VALUE.correoElectronico || '',
@@ -590,70 +784,22 @@ export class TercerosComponent implements OnInit, OnDestroy {
       entidadFederativa: ESTADO_SELECCIONADO?.descripcion || '',
       codigoPostal: FORM_VALUE.codigo || ''
     };
-
-    this.destinatario = [...this.destinatario, NUEVO_DESTINATARIO];
+if (this.isEditingDestinatario && this.editingDestinatarioIndex !== -1) {
+     
+      this.destinatario[this.editingDestinatarioIndex] = DESTINATARIO_DATA;
+      
+    } else {
     
-    // Clear selection when new data is added
-    this.destinatarioSeleccionado = [];
+      this.destinatario = [...this.destinatario, DESTINATARIO_DATA];
+   }
+   this.isEditingDestinatario = false;
+    this.editingDestinatarioIndex = -1;
+     this.destinatarioSeleccionado = [];
     
     this.limpiarDatosFormulario();
     this.tipoPersonaForm.reset();
     this.resetRadioStates();
     this.showtercerosModal = false;
-    this.cdr.detectChanges();
-  }
-
-  private static obtenerNombreCompleto(
-    FORM_VALUE: { nombre?: string; primerApellido?: string; segundoApellido?: string; social?: string },
-    TIPO_PERSONA: string
-  ): string {
-    if (TIPO_PERSONA === 'fisica') {
-      const NOMBRE = FORM_VALUE.nombre || '';
-      const PRIMER_APELLIDO = FORM_VALUE.primerApellido || '';
-      const SEGUNDO_APELLIDO = FORM_VALUE.segundoApellido || '';
-      return `${NOMBRE} ${PRIMER_APELLIDO} ${SEGUNDO_APELLIDO}`.trim();
-    } else if (TIPO_PERSONA === 'moral' || TIPO_PERSONA === 'planta') {
-      return FORM_VALUE.social || '';
-    }
-    return '';
-  }
-
-  private static obtenerDomicilioCompleto(
-    FORM_VALUE: {
-      calle?: string;
-      exterior?: string;
-      interior?: string;
-      colonia?: string;
-      municipio?: string;
-      estado?: string;
-      codigo?: string;
-    },
-    COLONIA_SELECCIONADA: Catalogo | undefined,
-    MUNICIPIO_SELECCIONADO: Catalogo | undefined,
-    ESTADO_SELECCIONADO: Catalogo | undefined
-  ): string {
-    const CALLE = FORM_VALUE.calle || '';
-    const NUMERO_EXTERIOR = FORM_VALUE.exterior || '';
-    const NUMERO_INTERIOR = FORM_VALUE.interior || '';
-    const COLONIA = COLONIA_SELECCIONADA?.descripcion || '';
-    const MUNICIPIO = MUNICIPIO_SELECCIONADO?.descripcion || '';
-    const ESTADO = ESTADO_SELECCIONADO?.descripcion || '';
-    const CODIGO_POSTAL = FORM_VALUE.codigo || '';
-    return `${CALLE} ${NUMERO_EXTERIOR} ${NUMERO_INTERIOR ? `Int. ${NUMERO_INTERIOR}` : ''} ${COLONIA} ${MUNICIPIO} ${ESTADO} CP: ${CODIGO_POSTAL}`.trim().replace(/\s+/g, ' ');
-  }
-
-  /**
-   * Limpia todos los datos del formulario de datos personales.
-   * Fuerza la detección de cambios y resetea el formulario.
-   * 
-   * @memberof TercerosComponent
-   */
-  limpiarDatosFormulario(): void {
-    this.datosPersonales.reset();
-    // Reset to default values
-    this.datosPersonales.patchValue({
-      pais: this.paisCatalogo[0].id
-    });
     this.cdr.detectChanges();
   }
 
@@ -664,7 +810,19 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @memberof TercerosComponent
    */
   cancelarDestinatario(): void {
-    this.showtercerosModal = !this.showtercerosModal;
+  
+    this.isEditingDestinatario = false;
+    this.editingDestinatarioIndex = -1;
+    
+    this.showtercerosModal = false;
+    
+    // Clear forms
+    this.limpiarDatosFormulario();
+    this.tipoPersonaForm.reset();
+    this.resetRadioStates();
+    this.showFisicaRow = false;
+    this.showMoralRow = false;
+    this.showPlantaRow = false;
   }
 
   /**
@@ -674,6 +832,10 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @memberof TercerosComponent
    */
   tercerosAgregar(): void {
+    // Reset editing state
+    this.isEditingDestinatario = false;
+    this.editingDestinatarioIndex = -1;
+    
     this.showtercerosModal = true;
     // Reset forms when opening modal
     this.tipoPersonaForm.reset();
@@ -842,5 +1004,86 @@ export class TercerosComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+  }
+
+  /**
+   * Limpia todos los campos del formulario de datos personales.
+   * Resetea el formulario con valores por defecto.
+   * 
+   * @memberof TercerosComponent
+   */
+  limpiarDatosFormulario(): void {
+    this.datosPersonales.reset({
+      nombre: '',
+      primerApellido: '',
+      segundoApellido: '',
+      social: '',
+      pais: this.paisCatalogo[0].id,
+      codigo: '',
+      estado: '',
+      municipio: '',
+      colonia: '',
+      calle: '',
+      exterior: '',
+      interior: '',
+      lada: '',
+      telefono: '',
+      correoElectronico: '',
+      tif: ''
+    });
+    
+    // Mark all fields as untouched to clear validation messages
+    this.datosPersonales.markAsUntouched();
+    this.datosPersonales.markAsPristine();
+  }
+
+  /**
+   * Obtiene el nombre completo basado en el tipo de persona.
+   * Combina nombre y apellidos para persona física o retorna razón social para moral.
+   * 
+   * @param formValue - Valores del formulario
+   * @param tipoPersona - Tipo de persona ('fisica', 'moral', 'planta')
+   * @returns Nombre completo formateado
+   * @memberof TercerosComponent
+   */
+  private static obtenerNombreCompleto(formValue: any, tipoPersona: string): string {
+    if (tipoPersona === 'fisica') {
+      const NOMBRE = formValue.nombre || '';
+      const PRIMER_APELLIDO = formValue.primerApellido || '';
+      const SEGUNDO_APELLIDO = formValue.segundoApellido || '';
+      
+      return `${NOMBRE} ${PRIMER_APELLIDO} ${SEGUNDO_APELLIDO}`.trim();
+    } else {
+      return formValue.social || '';
+    }
+  }
+
+  /**
+   * Obtiene el domicilio completo concatenando todos los campos de dirección.
+   * 
+   * @param formValue - Valores del formulario
+   * @param colonia - Colonia seleccionada del catálogo
+   * @param municipio - Municipio seleccionado del catálogo
+   * @param estado - Estado seleccionado del catálogo
+   * @returns Domicilio completo formateado
+   * @memberof TercerosComponent
+   */
+  private static obtenerDomicilioCompleto(
+    formValue: any, 
+    colonia: Catalogo | undefined, 
+    municipio: Catalogo | undefined, 
+    estado: Catalogo | undefined
+  ): string {
+    const PARTES_DOMICILIO = [
+      formValue.calle,
+      formValue.exterior ? `#${formValue.exterior}` : '',
+      formValue.interior ? `Int. ${formValue.interior}` : '',
+      colonia?.descripcion,
+      municipio?.descripcion,
+      estado?.descripcion,
+      formValue.codigo
+    ].filter(parte => parte && parte.trim() !== '');
+
+    return PARTES_DOMICILIO.join(', ');
   }
 }
