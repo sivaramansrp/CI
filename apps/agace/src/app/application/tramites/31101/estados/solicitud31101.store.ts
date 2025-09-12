@@ -15,8 +15,16 @@ export interface Solicitud31101State {
   /** Concepto, valor numérico */
   concepto: number | string;
 
+  /**
+   * Identificador del concepto productivo seleccionado.
+   * Puede ser un número (ID) o una cadena (descripción).
+   */
   productivoConcepto: number | string;
 
+  /**
+   * Identificador del concepto de servicio seleccionado.
+   * Puede ser un número (ID) o una cadena (descripción).
+   */
   servicioConcepto: number | string;
 
   /** Número 3500, valor numérico */
@@ -573,10 +581,20 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
     this.update((state) => ({ ...state, concepto }));
   }
 
+  /**
+ * Actualiza el concepto productivo en el estado global.
+ *
+ * @param productivoConcepto - Valor del concepto productivo (puede ser un número como ID o una cadena como descripción).
+ */
   actualizarProductivoConcepto(productivoConcepto: number | string): void {
     this.update((state) => ({ ...state, productivoConcepto }));
   }
 
+  /**
+ * Actualiza el concepto de servicio en el estado global.
+ *
+ * @param servicioConcepto - Valor del concepto de servicio (puede ser un número como ID o una cadena como descripción).
+ */
   actualizarServicioConcepto(servicioConcepto: number | string): void {
     this.update((state) => ({ ...state, servicioConcepto }));
   }

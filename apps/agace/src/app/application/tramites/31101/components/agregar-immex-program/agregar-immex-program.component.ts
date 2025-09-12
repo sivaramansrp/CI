@@ -129,9 +129,6 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
 
     /** Obtiene los datos generales del catálogo */
     this.entidadFederativaCatalogo();
-
-    /** Obtiene los datos de la entidad federativa */
-    // this.conseguirEntidadFederativaDatos();
   }
 
   /** Inicializa el formulario */

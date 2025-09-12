@@ -11,7 +11,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-// Mocks for dependencies
 class SolicitudServiceMock {
   conseguirDatosGeneralesCatologo = jest.fn().mockReturnValue(
     of({

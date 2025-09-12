@@ -238,6 +238,10 @@ export interface TipoDeInversion {
  * Representa los domicilios relacionados con la empresa o instalación.
  */
 export interface Domicilios {
+  /**
+   * Identificador único del registro.
+   * Es opcional: si no se proporciona, el sistema puede generarlo automáticamente.
+   */
   id?: number;
 
   /** Indica si es instalación principal */
@@ -739,4 +743,3 @@ export interface GarantiaCatalogo {
    */
   creditoCatalogo: Catalogo[];
 }
-
