@@ -3,10 +3,10 @@
  */
 export interface FacturaTotalUnidadResponse {
     /** Cantidad numérica del ítem */
-    cantidad: number;
+    cantidad_factura: number;
     
     /** Valor total acumulado */
-    total: number;
+    total_equivalente: number;
     
     /** Unidad de medida (kg, lt, etc) */
     unidad_label: string;
