@@ -125,7 +125,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
    * @property destroyed$ - Notificador para destruir observables al destruir el componente
    * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria
    */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
    * @property validationAttempted - Indica si se ha intentado validar el formulario
@@ -208,7 +208,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.solicitudState = seccionState;
-          // Guardar el valor de país/bloque del certificado de origen para validación cruzada
           this.paisCertificadoOrigen = seccionState?.pais || null;
         })
       )
@@ -344,7 +343,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
-    // Si el campo cambiado es 'nacion', comparar con paisCertificadoOrigen
     if (campo === 'nacion') {
       this.compararPaisDestino(VALOR);
     }
@@ -370,7 +368,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
    * @param valorNacion - Valor del país seleccionado
    */
   compararPaisDestino(valorNacion: string): void {
-    // Si paisCertificadoOrigen no está definido, no mostrar error
     if (!this.paisCertificadoOrigen) {
       this.paisNoCoincide = false;
       return;
@@ -411,31 +408,26 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
-   * @method onlyNumbers - Permite solo números en un campo de entrada
+   * @method soloDigitos - Permite solo números en un campo de entrada
    * Filtra caracteres no numéricos y limita la longitud según el campo
    * @param event - El evento de entrada del campo
    */
-  onlyNumbers(event: Event): void {
+  soloDigitos(event: Event): void {
     const INPUT = (event.target as HTMLInputElement);
     const VALUE = INPUT.value;
     const FIELD_NAME = INPUT.getAttribute('formControlName');
 
-    // Filtrar solo números
     const NUMERIC_VALUE = VALUE.replace(/[^0-9]/g, '');
 
-    // Establecer límites según el campo
-    let maxLength = 10; // por defecto para teléfono
+    let maxLength = 10;
     if (FIELD_NAME === 'fax') {
       maxLength = 20;
     }
 
-    // Limitar la longitud
     const LIMITED_VALUE = NUMERIC_VALUE.slice(0, maxLength);
 
-    // Actualizar el valor del campo
     if (VALUE !== LIMITED_VALUE) {
       INPUT.value = LIMITED_VALUE;
-      // Actualizar el FormControl
       this.registroForm.get('validacionForm.' + FIELD_NAME)?.setValue(LIMITED_VALUE);
     }
   }

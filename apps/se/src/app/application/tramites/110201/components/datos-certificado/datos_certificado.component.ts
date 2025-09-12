@@ -113,7 +113,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery
   ) {
-    // Suscripción al estado de consulta para configurar modo solo lectura
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
@@ -139,7 +138,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Método del ciclo de vida OnInit que inicializa el componente y obtiene datos necesarios
    */
   ngOnInit(): void {
-    // Obtiene datos de registro desde el servicio
     this.registroService
       .getRegistroTomaMuestrasMercanciasData().pipe(
         takeUntil(this.destroyed$)
@@ -150,13 +148,11 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
         }
       });
 
-    // Inicializa catálogos y estado del formulario
     this.getIdioma();
     this.getEntidad();
     this.getRepresentacion();
     this.inicializarEstadoFormulario();
 
-    // Suscripción al estado de la solicitud desde el store
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -168,7 +164,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     
     this.donanteDomicilio();
 
-    // Lógica para mostrar sección de justificación según entidad federativa
     if (
       this.entidadDescripcion.includes('8') &&
       this.entidadFederativaData === 'DURANGO'
@@ -291,7 +286,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
 
-    // Lógica específica para mostrar justificación según entidad federativa
     if (VALOR === 8 && metodoNombre === 'setEntidad' && this.entidadFederativaData === 'DURANGO'
     ) {
       this.isJustificacion = true;

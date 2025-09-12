@@ -288,9 +288,17 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @property elementoParaEliminar - Índice del pedimento marcado para eliminación
    */
   public elementoParaEliminar!: number;
-  // selectedMercancia: any;
+  /**
+   * @property seleccionados - Arreglo que contiene las mercancías seleccionadas
+   */
   public seleccionados: SeleccionadasTabla[] = [];
+  /**
+   * @property mercanciasTablaDatos - Arreglo que contiene los datos de la tabla de mercancías
+   */
   mercanciasTablaDatos: SeleccionadasTabla[] = [];
+  /**
+   * @property ischecked - Indica si un elemento está seleccionado
+   */
   ischecked: boolean = false;
 
 
@@ -390,33 +398,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery
   ) { }
 
-  /**
-   * @method manejarClic - Maneja el evento de clic para habilitar el formulario de edición
-   * @param _row - Fila seleccionada
-   */
-  manejarClic(_row: unknown): void {
-    this.esFormulario = true;
-  }
-
-  /**
-   * @method validarDestinatarioFormulario - Valida el formulario del destinatario
-   * Marca todos los campos como tocados si el formulario es inválido
-   */
-  validarDestinatarioFormulario(): void {
-    if (this.registroForm.invalid) {
-      this.registroForm.markAllAsTouched();
-    }
-  }
-
-  /**
-   * @method validarMercanciaForm - Valida el formulario de mercancías
-   * Marca todos los campos como tocados si el formulario es inválido
-   */
-  validarMercanciaForm(): void {
-    if (this.mercanciaForm.invalid) {
-      this.mercanciaForm.markAllAsTouched();
-    }
-  }
 
   /**
    * @method ngOnInit - Método del ciclo de vida que se ejecuta al inicializar el componente
@@ -453,6 +434,33 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.donanteDomicilio();
   }
 
+  /**
+   * @method manejarClic - Maneja el evento de clic para habilitar el formulario de edición
+   * @param _row - Fila seleccionada
+   */
+  manejarClic(_row: unknown): void {
+    this.esFormulario = true;
+  }
+
+  /**
+   * @method validarDestinatarioFormulario - Valida el formulario del destinatario
+   * Marca todos los campos como tocados si el formulario es inválido
+   */
+  validarDestinatarioFormulario(): void {
+    if (this.registroForm.invalid) {
+      this.registroForm.markAllAsTouched();
+    }
+  }
+
+  /**
+   * @method validarMercanciaForm - Valida el formulario de mercancías
+   * Marca todos los campos como tocados si el formulario es inválido
+   */
+  validarMercanciaForm(): void {
+    if (this.mercanciaForm.invalid) {
+      this.mercanciaForm.markAllAsTouched();
+    }
+  }
   /**
    * @method validarFormularios - Valida todos los formularios del componente 
    * @returns boolean
@@ -574,24 +582,20 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    */
   abrirModalMercancia(rowData: ColumnasTabla): void {
     if (rowData) {
-      // Configurar el modal para agregar nueva mercancía
       this.esFormulario = true;
       this.esMercanciaEnEdicion = false;
 
-      // Cargar catálogos necesarios
       this.getTratado();
       this.getPais();
       this.getUMC();
       this.getUnidadMedida();
       this.getTipoFactura();
 
-      // Popuar el formulario con los datos de la mercancía disponible seleccionada
       this.mercanciaForm.patchValue({
         validacionMercanciaForm: {
           fraccionMercanciaArancelaria: rowData.fraccionArancelaria || '',
           nombreTecnico: rowData.nombreTecnico || '',
           nombreComercialDelaMercancia: rowData.nombreComercial || '',
-          // Los demás campos se dejan vacíos para que el usuario los complete
           cantidad: '',
           valorDelaMercancia: '',
           tipoFactura: '',
@@ -607,7 +611,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         },
       });
 
-      // Abrir el modal usando Bootstrap
       const BOOTSTRAP_MODAL = new (
         window as unknown as {
           bootstrap: { Modal: new (element: Element) => { show(): void } };
@@ -696,33 +699,34 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Modifica una mercancía existente.
    */
   modificar(): void {
-    if(this.ischecked){
-          this.abrirModalModificar();
+    if (this.ischecked) {
+      this.abrirModalModificar();
 
-    } else{
+    } else {
       this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'info',
-      titulo: 'Selección requerida',
-      mensaje: 'Debes seleccionar una mercancía',
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-    this.mostrarMensajeError = true;
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'info',
+        titulo: 'Selección requerida',
+        mensaje: 'Debes seleccionar una mercancía',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.mostrarMensajeError = true;
     }
   }
-
+/**
+ * Indica si se debe mostrar un mensaje de error.
+ * Cuando es `true`, se muestra el mensaje de error en la interfaz de usuario.
+ */
   abrirModalModificar(): void {
-    // Cargar catálogos necesarios si es necesario
     this.getTratado();
     this.getPais();
     this.getUMC();
     this.getUnidadMedida();
     this.getTipoFactura();
-    // Abrir el modal usando Bootstrap
     if (this.modalAgregar && this.modalAgregar.nativeElement) {
       const BOOTSTRAP_MODAL = new (
         window as unknown as {
@@ -748,7 +752,13 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.cargarArchivo = true;
     this.dataEvent.emit(true);
   }
-
+  /**
+   * Analiza un archivo CSV y extrae los datos de mercancías.
+   * @param csv Contenido del archivo CSV como una cadena de texto.
+   * Procesa el contenido del archivo CSV, separando las líneas y los valores.
+   * Mapea los datos a un formato estructurado y los asigna a la propiedad `mercanciaSeleccionadasTablaData`.
+   * Si se encuentran mercancías válidas, desactiva la bandera de error `mostrarErrorMercancias`.
+   */
   analizarGramaticalmenteCSV(csv: string): void {
     const LINES = csv.split('\n').filter((line) => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
@@ -780,7 +790,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       fechaFactura: articulo['fechaFactura'] || ''
     }));
 
-    // Hide the merchandise error if we have data
     if (this.mercanciaSeleccionadasTablaData.length > 0) {
       this.mostrarErrorMercancias = false;
     }
@@ -795,7 +804,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     ) as HTMLInputElement;
     const FILE = FILE_INPUT.files?.[0];
 
-    // Validar que se haya seleccionado un archivo
     if (!FILE) {
       this.abrirModal();
       return;
@@ -896,25 +904,20 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     const INPUT = event.target as HTMLInputElement;
     let valor = INPUT.value;
 
-    // Remover cualquier caracter que no sea número
     valor = valor.replace(/\D/g, '');
 
-    // Limitar a 8 dígitos
     if (valor.length > 8) {
       valor = valor.substring(0, 8);
     }
 
-    // Actualizar el valor del input
     INPUT.value = valor;
 
-    // Actualizar el valor del formulario
     this.registroForm.patchValue({
       validacionForm: {
         fraccionArancelaria: valor
       }
     });
 
-    // Actualizar el store
     this.setValoresStore(this.validacionForm, 'fraccionArancelaria', 'setFraccionArancelaria');
   }
   /**
@@ -988,137 +991,40 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @method donanteDomicilio - Configura el formulario reactivo con los valores iniciales del estado
    */
   donanteDomicilio(): void {
-    this.registroForm = this.fb.group({
-      validacionForm: this.fb.group({
-        tratado: [
-          { value: this.solicitudState?.tratado, disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        pais: [
-          { value: this.solicitudState?.pais, disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        fraccionArancelaria: [
-          {
-            value: this.solicitudState?.fraccionArancelaria,
-            disabled: this.soloLectura,
-          },
-          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.minLength(8), Validators.maxLength(8)],
-        ],
-        numeroRegistro: [
-          {
-            value: this.solicitudState?.numeroRegistro,
-            disabled: this.soloLectura,
-          },
-          [Validators.required],
-        ],
-        nombreComercial: [
-          {
-            value: this.solicitudState?.nombreComercial,
-            disabled: this.soloLectura,
-          },
-          [Validators.required],
-        ],
-        fechaInicial: [
-          {
-            value: this.solicitudState?.fechaInicial,
-            disabled: this.soloLectura,
-          },
-          [Validators.required],
-        ],
-        fechaFinal: [
-          {
-            value: this.solicitudState?.fechaFinal,
-            disabled: this.soloLectura,
-          },
-          [Validators.required],
-        ],
-        archivo: [
-          { value: this.solicitudState?.archivo, disabled: this.soloLectura },
-          [Validators.required],
-        ],
-      }),
-    });
-    this.mercanciaForm = this.fb.group({
-      validacionMercanciaForm: this.fb.group({
-        fraccionMercanciaArancelaria: [
-          { value: '', disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        nombreTecnico: [
-          { value: '', disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        nombreComercialDelaMercancia: [
-          { value: '', disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        criterioParaConferir: [
-          { value: '', disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        nombreEnIngles: [
-          { value: '', disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        marca: [
-          { value: this.solicitudState?.marca, disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        cantidad: [
-          { value: this.solicitudState?.cantidad, disabled: this.soloLectura },
-          [Validators.required, Validators.pattern(REGEX_CANTIDAD_15_4), Validators.maxLength(22)],
-        ],
-        umc: [
-          { value: this.solicitudState?.umc, disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        valorDelaMercancia: [
-          {
-            value: this.solicitudState?.valorDelaMercancia,
-            disabled: this.soloLectura,
-          },
-          [Validators.required, Validators.pattern(REGEX_CANTIDAD_15_4), Validators.maxLength(22)],
-        ],
-        complementoDelaDescripcion: [
-          {
-            value: this.solicitudState?.complementoDelaDescripcion,
-            disabled: this.soloLectura,
-          },
-          [Validators.required, Validators.maxLength(200)],
-        ],
-        masaBruta: [
-          { value: this.solicitudState?.masaBruta, disabled: this.soloLectura },
-          [Validators.required, Validators.pattern(REGEX_NUMERO_15_ENTEROS_4_DECIMALES), Validators.maxLength(22)],
-        ],
-        unidadMedida: [
-          {
-            value: this.solicitudState?.unidadMedida,
-            disabled: this.soloLectura,
-          },
-          [Validators.required],
-        ],
-        tipoFactura: [
-          {
-            value: this.solicitudState?.tipoFactura,
-            disabled: this.soloLectura,
-          },
-          [Validators.required],
-        ],
-        fecha: [
-          { value: this.solicitudState?.fecha, disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        numeroFactura: [
-          {
-            value: this.solicitudState?.numeroFactura,
-            disabled: this.soloLectura,
-          },
-          [Validators.required, Validators.maxLength(50)],
-        ],
-      }),
-    });
-  }
+  this.registroForm = this.fb.group({
+    validacionForm: this.fb.group({
+      tratado: [{ value: this.solicitudState?.tratado, disabled: this.soloLectura }, [Validators.required]],
+      pais: [{ value: this.solicitudState?.pais, disabled: this.soloLectura }, [Validators.required]],
+      fraccionArancelaria: [{ value: this.solicitudState?.fraccionArancelaria, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.minLength(8), Validators.maxLength(8)]],
+      numeroRegistro: [{ value: this.solicitudState?.numeroRegistro, disabled: this.soloLectura }, [Validators.required]],
+      nombreComercial: [{ value: this.solicitudState?.nombreComercial, disabled: this.soloLectura }, [Validators.required]],
+      fechaInicial: [{ value: this.solicitudState?.fechaInicial, disabled: this.soloLectura }, [Validators.required]],
+      fechaFinal: [{ value: this.solicitudState?.fechaFinal, disabled: this.soloLectura }, [Validators.required]],
+      archivo: [{ value: this.solicitudState?.archivo, disabled: this.soloLectura }, [Validators.required]],
+    }),
+  });
+
+  this.mercanciaForm = this.fb.group({
+    validacionMercanciaForm: this.fb.group({
+      fraccionMercanciaArancelaria: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
+      nombreTecnico: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
+      nombreComercialDelaMercancia: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
+      criterioParaConferir: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
+      nombreEnIngles: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
+      marca: [{ value: this.solicitudState?.marca, disabled: this.soloLectura }, [Validators.required]],
+      cantidad: [{ value: this.solicitudState?.cantidad, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_CANTIDAD_15_4), Validators.maxLength(22)]],
+      umc: [{ value: this.solicitudState?.umc, disabled: this.soloLectura }, [Validators.required]],
+      valorDelaMercancia: [{ value: this.solicitudState?.valorDelaMercancia, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_CANTIDAD_15_4), Validators.maxLength(22)]],
+      complementoDelaDescripcion: [{ value: this.solicitudState?.complementoDelaDescripcion, disabled: this.soloLectura }, [Validators.required, Validators.maxLength(200)]],
+      masaBruta: [{ value: this.solicitudState?.masaBruta, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_NUMERO_15_ENTEROS_4_DECIMALES), Validators.maxLength(22)]],
+      unidadMedida: [{ value: this.solicitudState?.unidadMedida, disabled: this.soloLectura }, [Validators.required]],
+      tipoFactura: [{ value: this.solicitudState?.tipoFactura, disabled: this.soloLectura }, [Validators.required]],
+      fecha: [{ value: this.solicitudState?.fecha, disabled: this.soloLectura }, [Validators.required]],
+      numeroFactura: [{ value: this.solicitudState?.numeroFactura, disabled: this.soloLectura }, [Validators.required, Validators.maxLength(50)]],
+    }),
+  });
+}
+
   /**
    * Obtiene los datos de la tabla de mercancías disponibles desde el servicio.
    * Realiza una suscripción al método `getSolicitudesTabla` del servicio `RegistroService`
@@ -1165,7 +1071,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       CONTROL?.setValue(valor, { emitEvent: false });
     }
   }
-  
+
   /**
    * Formatea el valor de la mercancía en el formulario para asegurar que tenga exactamente cuatro decimales.
    *
@@ -1177,31 +1083,33 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @remarks
    * Este método asume que el control 'validacionMercanciaForm.valorDelaMercancia' existe en el formulario 'mercanciaForm'.
    */
- formatearValorDelaMercancia(): void {
-  const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.valorDelaMercancia');
-  let VALOR = CONTROL?.value;
-  if (VALOR === null || VALOR === undefined || VALOR === '') return;
-  VALOR = VALOR.toString();
-  if (VALOR.length > 22) {
-    CONTROL?.setErrors({ maxlength: true });
-    return;
-  }
-  const REGEX = /^\d{1,15}(\.\d{0,4})?$/;
-  if (!REGEX.test(VALOR)) {
-    CONTROL?.setErrors({ pattern: true });
-    return;
-  }
-  if (!VALOR.includes('.')) {
-    VALOR = VALOR + '.0000';
-  } else {
-    const [ENTERO, DECIMALES = ''] = VALOR.split('.');
-    VALOR = ENTERO + '.' + DECIMALES.padEnd(4, '0').slice(0, 4);
+  formatearValorDelaMercancia(): void {
+    const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.valorDelaMercancia');
+    let VALOR = CONTROL?.value;
+    if (VALOR === null || VALOR === undefined || VALOR === '') {
+      return;
+    }
+    VALOR = VALOR.toString();
+    if (VALOR.length > 22) {
+      CONTROL?.setErrors({ maxlength: true });
+      return;
+    }
+    const REGEX = /^\d{1,15}(\.\d{0,4})?$/;
+    if (!REGEX.test(VALOR)) {
+      CONTROL?.setErrors({ pattern: true });
+      return;
+    }
+    if (!VALOR.includes('.')) {
+      VALOR = VALOR + '.0000';
+    } else {
+      const [ENTERO, DECIMALES = ''] = VALOR.split('.');
+      VALOR = ENTERO + '.' + DECIMALES.padEnd(4, '0').slice(0, 4);
+    }
+
+    CONTROL?.setValue(VALOR, { emitEvent: false });
+    CONTROL?.updateValueAndValidity({ emitEvent: false });
   }
 
-  CONTROL?.setValue(VALOR, { emitEvent: false });
-  CONTROL?.updateValueAndValidity({ emitEvent: false });
-}
-  
   /**
    * Formatea el valor del campo 'masaBruta' en el formulario 'mercanciaForm' para asegurar que tenga exactamente cuatro decimales.
    * 
@@ -1213,23 +1121,22 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Este método no realiza validaciones numéricas, solo formatea la cadena del valor.
    */
   formatearMasaBruta(): void {
-  const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.masaBruta');
-  let VALOR = CONTROL?.value;
-  if (VALOR !== null && VALOR !== undefined && VALOR !== '') {
-    VALOR = VALOR.toString();
-    if (/^\d*\.?\d*$/.test(VALOR)) {
-      if (!VALOR.includes('.')) {
-        VALOR = VALOR + '.0000';
-      } else {
-        const [ENTERO, DECIMALES] = VALOR.split('.');
-        VALOR = ENTERO + '.' + (DECIMALES + '0000').slice(0, 4);
+    const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.masaBruta');
+    let VALOR = CONTROL?.value;
+    if (VALOR !== null && VALOR !== undefined && VALOR !== '') {
+      VALOR = VALOR.toString();
+      if (/^\d*\.?\d*$/.test(VALOR)) {
+        if (!VALOR.includes('.')) {
+          VALOR = VALOR + '.0000';
+        } else {
+          const [ENTERO, DECIMALES] = VALOR.split('.');
+          VALOR = ENTERO + '.' + (DECIMALES + '0000').slice(0, 4);
+        }
+        CONTROL?.setValue(VALOR, { emitEvent: false });
       }
-      CONTROL?.setValue(VALOR, { emitEvent: false });
     }
   }
-}
 
-  // Elimina un pedimento si se confirma la acción.
   eliminarPedimento(borrar: boolean): void {
     this.ischecked = borrar;
     if (borrar && this.selectedRow) {
@@ -1242,7 +1149,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.nuevaNotificacion = null;
   }
 
-  // Abre el modal y configura la notificación para eliminar un pedimento.
   abrirModal(i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -1309,7 +1215,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   eliminarErrorMessage(event: boolean): void {
     if (event) {
       this.mercanciaSeleccionadasTablaData = this.mercanciaSeleccionadasTablaData.filter((item) => item.id !== this.selectedRow.id);
-      // this.store.setMercanciaSeleccionadasTablaData(this.mercanciaSeleccionadasTablaData);
       this.selectedRow = {} as SeleccionadasTabla;
     }
 

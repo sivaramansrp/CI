@@ -63,7 +63,7 @@
       </div>
       <div class="col-md-3 mb-3">
         <label>Teléfono:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="telefono" maxlength="10" (input)="onlyNumbers($event)" (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')" />
+        <input type="text" class="form-control" id="segundoApellido" formControlName="telefono" maxlength="10" (input)="soloDigitos($event)" (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')" />
       </div>
     </div>
     <div class="row">
