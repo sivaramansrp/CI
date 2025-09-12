@@ -1,30 +1,41 @@
-import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  InputRadioComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {
   DatosGeneralesDeLaSolicitudCatologo,
+  DatosGeneralesDeLaSolicitudRadioLista,
   Domicilios,
+  InputRadio,
 } from '../../models/solicitud.model';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud31101State,
+  Solicitud31101Store,
+} from '../../estados/solicitud31101.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DatosGeneralesDeLaSolicitudRadioLista } from '../../models/solicitud.model';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputRadio } from '../../models/solicitud.model';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solicitud31101Query } from '../../estados/solicitud31101.query';
-import { Solicitud31101State } from '../../estados/solicitud31101.store';
-import { Solicitud31101Store } from '../../estados/solicitud31101.store';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 /**
  * Componente para modificar el programa IMMEX.
  */
@@ -52,6 +63,15 @@ export class ModificarImmexProgramComponent
    */
   modificarImmexProgramForm!: FormGroup;
 
+  /**
+   * Lista de domicilios seleccionados.
+   *
+   * @type {Domicilios[]}
+   * @memberof Componente
+   *
+   * Esta propiedad se marca como `@Input()` para recibir desde un componente padre
+   * la lista de domicilios actualmente seleccionados en la interfaz.
+   */
   @Input() seleccionarDomiciliosDatos!: Domicilios[];
 
   /**
@@ -72,8 +92,28 @@ export class ModificarImmexProgramComponent
   /**
    *  Evento de salida para modificar el valor del programa IMMEX.
    */
-  @Output() modificarImmexValor = new EventEmitter<boolean>();
+  @Output() modificarImmexValor = new EventEmitter<Domicilios>();
 
+  /**
+   * Lista de domicilios.
+   *
+   * @type {Domicilios[]}
+   * @memberof Componente
+   *
+   * Contiene todos los domicilios asociados a la solicitud o entidad correspondiente.
+   */
+  DOMICILIOS!: Domicilios[];
+
+  /**
+   * Estado de la solicitud 31101.
+   *
+   * @type {Solicitud31101State}
+   * @memberof Componente
+   *
+   * Almacena la información completa de la solicitud actual desde el store.
+   * Se inicializa como un objeto vacío y se actualiza mediante suscripciones
+   * al store `Solicitud31101Store`.
+   */
   solicitud31101State: Solicitud31101State = {} as Solicitud31101State;
 
   /**
@@ -86,6 +126,9 @@ export class ModificarImmexProgramComponent
    *  Constructor del componente.
    * @param {FormBuilder} fb - Servicio de construcción de formularios reactivos.
    * @param {SolicitudService} solicitudService - Servicio de solicitud de datos.
+   * @param {Solicitud31101Store} solicitud31101Store - Store para manejar el estado de la solicitud 31101.
+   * @param {Solicitud31101Query} solicitud31101Query - Query para consultar el estado de la solicitud 31101.
+   * @param {ConsultaioQuery} consultaioQuery - Query para consultar el estado de la sección de consulta.
    */
   constructor(
     public fb: FormBuilder,
@@ -121,23 +164,53 @@ export class ModificarImmexProgramComponent
     this.inicializarEstadoFormulario();
   }
 
+  /**
+   * Detecta cambios en las propiedades de entrada (`@Input`) del componente.
+   *
+   * @param {SimpleChanges} changes - Objeto que contiene los cambios de las propiedades de entrada.
+   *
+   * Este método escucha cambios en `seleccionarDomiciliosDatos`. Cuando hay un cambio,
+   * actualiza la lista interna `DOMICILIOS` y sincroniza los valores correspondientes
+   * en el store `solicitud31101Store`, como:
+   * - instalaciones principales
+   * - municipio
+   * - tipo de instalación
+   * - entidad federativa
+   * - registro SESAT
+   * - dirección
+   * - código postal
+   * - proceso productivo
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes['seleccionarDomiciliosDatos'] &&
       changes['seleccionarDomiciliosDatos'].currentValue
     ) {
-      const DOMICILIOS = changes['seleccionarDomiciliosDatos'].currentValue;
-      this.modificarImmexProgramForm.patchValue({
-        instalacionesPrincipales:
-          DOMICILIOS.instalacionPrincipal === 'No' ? 0 : 1,
-        municipio: DOMICILIOS.municipioDelegacion,
-        tipoDeInstalacion: DOMICILIOS.tipoInstalacion,
-        federativa: DOMICILIOS.entidadFederativa,
-        registroSE: DOMICILIOS.registroSE,
-        desceripe: DOMICILIOS.desceripe,
-        codigoPostal: DOMICILIOS.codigoPostal,
-        procesoProductivo: DOMICILIOS.procesoProductivo,
-      });
+      this.DOMICILIOS = changes['seleccionarDomiciliosDatos'].currentValue;
+      this.solicitud31101Store.actualizarInstalacionesPrincipales(
+        this.DOMICILIOS?.[0]?.instalacionPrincipal
+      );
+      this.solicitud31101Store.actualizarMunicipio(
+        this.DOMICILIOS?.[0]?.municipioDelegacion
+      );
+      this.solicitud31101Store.actualizarTipoDeInstalacion(
+        this.DOMICILIOS?.[0]?.tipoInstalacion
+      );
+      this.solicitud31101Store.actualizarFederativa(
+        this.DOMICILIOS?.[0]?.entidadFederativa
+      );
+      this.solicitud31101Store.actualizarRegistroSE(
+        this.DOMICILIOS?.[0]?.registroSESAT
+      );
+      this.solicitud31101Store.actualizarDesceripe(
+        this.DOMICILIOS?.[0]?.direccion
+      );
+      this.solicitud31101Store.actualizarCodigoPostal(
+        this.DOMICILIOS?.[0]?.codigoPostal
+      );
+      this.solicitud31101Store.actualizarProcesoProductivo(
+        this.DOMICILIOS?.[0]?.procesoProductivo
+      );
     }
   }
 
@@ -167,6 +240,26 @@ export class ModificarImmexProgramComponent
     }
   }
 
+  /**
+   * Inicializa el formulario de modificación del programa IMMEX.
+   *
+   * Este método:
+   * 1. Crea el formulario `modificarImmexProgramForm` con los campos:
+   *    - instalacionesPrincipales
+   *    - municipio
+   *    - tipoDeInstalacion
+   *    - federativa
+   *    - registroSE
+   *    - desceripe
+   *    - codigoPostal
+   *    - procesoProductivo
+   *    Cada campo se inicializa con los valores actuales del estado `solicitud31101State`
+   *    y se aplican validaciones necesarias como `Validators.required` y `Validators.maxLength`.
+   *
+   * 2. Se suscribe al observable `selectSolicitud$` de `solicitud31101Query` para:
+   *    - Actualizar automáticamente los valores del formulario cuando cambia el estado global.
+   *    - Mantener el formulario sincronizado con la última información del store.
+   */
   inicializarFormulario(): void {
     this.modificarImmexProgramForm = this.fb.group({
       instalacionesPrincipales: [
@@ -211,6 +304,7 @@ export class ModificarImmexProgramComponent
       )
       .subscribe();
   }
+
   /**
    *  Obtiene los datos generales de las opciones de radio.
    */
@@ -247,13 +341,50 @@ export class ModificarImmexProgramComponent
       this.modificarImmexProgramForm.markAllAsTouched();
       return;
     }
+    const FORMVALOR = this.modificarImmexProgramForm.getRawValue();
+    const VALOR: Domicilios = {
+      instalacionPrincipal: FORMVALOR.instalacionesPrincipales,
+      cveTipoInstalacion: '',
+      tipoInstalacion: FORMVALOR.tipoDeInstalacion,
+      cveEntidadFederativa: '',
+      entidadFederativa: FORMVALOR.federativa,
+      cveDelegacionMunicipio: '',
+      municipioDelegacion: FORMVALOR.municipio,
+      direccion: FORMVALOR.desceripe,
+      codigoPostal: FORMVALOR.codigoPostal,
+      registroSESAT: FORMVALOR.registroSE,
+      procesoProductivo: FORMVALOR.procesoProductivo,
+      fechaModificacion: '',
+      cveEstatus: '',
+      estatus: '',
+      noExterior: '',
+      noInterior: '',
+      cveColonia: '',
+      calle: '',
+      descCol: '',
+      idRecinto: '',
+      numFolioAcuse: '',
+      observaciones: '',
+    };
+    if (this.DOMICILIOS[0].id) {
+      VALOR['id'] = this.DOMICILIOS[0].id;
+    }
+    this.modificarImmexValor.emit(VALOR);
     this.modificarImmexProgramForm.reset();
-    this.modificarImmexValor.emit(true);
   }
 
+  /**
+   * Cancela la edición del programa IMMEX.
+   *
+   * Este método:
+   * 1. Emite un valor `undefined` a través del `EventEmitter` `modificarImmexValor` para notificar
+   *    al componente padre que la edición ha sido cancelada.
+   * 2. Resetea el formulario `modificarImmexProgramForm`, limpiando todos los campos y dejando
+   *    el formulario en su estado inicial.
+   */
   cancelarImmexProgram(): void {
+    this.modificarImmexValor.emit(undefined);
     this.modificarImmexProgramForm.reset();
-    this.modificarImmexValor.emit(false);
   }
   /**
    * Verifica si un campo del formulario no es válido.

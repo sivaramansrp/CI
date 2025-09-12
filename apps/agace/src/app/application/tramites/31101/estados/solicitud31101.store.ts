@@ -16,6 +16,7 @@ export interface Solicitud31101State {
   concepto: number | string;
 
   productivoConcepto: number | string;
+
   servicioConcepto: number | string;
 
   /** Número 3500, valor numérico */
@@ -106,19 +107,19 @@ export interface Solicitud31101State {
   '3522': number | string;
 
   /** Clave de enumeración D0 */
-  claveEnumeracionD0: string;
+  claveEnumeracionD0: boolean;
 
   /** Clave de enumeración D1 */
-  claveEnumeracionD1: string;
+  claveEnumeracionD1: boolean;
 
   /** Clave de enumeración D2 */
-  claveEnumeracionD2: string;
+  claveEnumeracionD2: boolean;
 
   /** Clave de enumeración D3 */
-  claveEnumeracionD3: string;
+  claveEnumeracionD3: boolean;
 
   /** Clave de enumeración H */
-  claveEnumeracionH: string;
+  claveEnumeracionH: boolean;
 
   modalidadProgramaImmex: string | number;
 
@@ -131,20 +132,44 @@ export interface Solicitud31101State {
   /** Número 3523, valor numérico */
   '3523': number | string;
 
+  /**
+   * Campo genérico '3524', puede ser número o cadena.
+   */
   '3524': number | string;
 
+  /**
+   * Fecha de fin de vigencia 1.
+   */
   fechaFinVigencia1: string;
 
+  /**
+   * Número de autorización 1.
+   */
   numeroAutorizacion1: string;
 
+  /**
+   * Campo genérico '3525', puede ser número o cadena.
+   */
   '3525': number | string;
 
+  /**
+   * Campo genérico '3526', puede ser número o cadena.
+   */
   '3526': number | string;
 
+  /**
+   * Fecha de fin de vigencia 2.
+   */
   fechaFinVigencia2: string;
 
+  /**
+   * Número de autorización 2.
+   */
   numeroAutorizacion2: string;
 
+  /**
+   * Campo genérico '3527', puede ser número o cadena.
+   */
   '3527': number | string;
 
   /** Número 3528, valor numérico */
@@ -217,7 +242,7 @@ export interface Solicitud31101State {
   alerta2: boolean;
 
   /** Póliza de fianza actual, valor numérico */
-  polizaDeFianzaActual: number;
+  polizaDeFianzaActual: number | string;
 
   /** Número de folio, valor en cadena */
   numeroFolio: string;
@@ -331,7 +356,7 @@ export interface Solicitud31101State {
   municipio: string;
 
   /** Tipo de instalación representado por un número */
-  tipoDeInstalacion: number;
+  tipoDeInstalacion: number | string;
 
   /** Nombre de la entidad federativa donde se ubica */
   federativa: string;
@@ -347,6 +372,41 @@ export interface Solicitud31101State {
 
   /** Identificador del proceso productivo, puede ser un número o una descripción */
   procesoProductivo: number | string;
+
+  /**
+   * Póliza de fianza actual, puede ser número o cadena.
+   */
+  polizaFianzaActual: string | number;
+
+  /**
+   * Folio de la fianza.
+   */
+  folioFianza: string;
+
+  /**
+   * RFC de la institución afianzadora.
+   */
+  rfcAfianzadora: string;
+
+  /**
+   * Fecha de expedición de la fianza.
+   */
+  fechaExpedicionFianza: string;
+
+  /**
+   * Fecha de inicio de vigencia de la fianza.
+   */
+  fecInicioVigenciaFianza: string;
+
+  /**
+   * Fecha de fin de vigencia de la fianza.
+   */
+  fecFinVigenciaFianza: string;
+
+  /**
+   * Importe total de la fianza.
+   */
+  fianzaImporteTotal: string;
 }
 
 /**
@@ -393,11 +453,11 @@ export function createInitialSolicitudState(): Solicitud31101State {
     descInversion: '',
     '3521': 0,
     '3522': 0,
-    claveEnumeracionD0: '',
-    claveEnumeracionD1: '',
-    claveEnumeracionD2: '',
-    claveEnumeracionD3: '',
-    claveEnumeracionH: '',
+    claveEnumeracionD0: false,
+    claveEnumeracionD1: false,
+    claveEnumeracionD2: false,
+    claveEnumeracionD3: false,
+    claveEnumeracionH: false,
     modalidadProgramaImmex: '',
     textoGenerico4: '',
     textoGenerico5: '',
@@ -433,7 +493,7 @@ export function createInitialSolicitudState(): Solicitud31101State {
     textoGenerico23: '',
     textoGenerico24: '',
     alerta2: false,
-    polizaDeFianzaActual: 1,
+    polizaDeFianzaActual: '',
     numeroFolio: '',
     rfcInstitucion: '',
     fechaExpedicion: '',
@@ -463,12 +523,19 @@ export function createInitialSolicitudState(): Solicitud31101State {
     entidadFederativa: '',
     instalacionesPrincipales: 0,
     municipio: '',
-    tipoDeInstalacion: 0,
+    tipoDeInstalacion: '',
     federativa: '',
     registroSE: '',
     desceripe: '',
     codigoPostal: '',
     procesoProductivo: 0,
+    polizaFianzaActual: '',
+    folioFianza: '',
+    rfcAfianzadora: '',
+    fechaExpedicionFianza: '',
+    fecInicioVigenciaFianza: '',
+    fecFinVigenciaFianza: '',
+    fianzaImporteTotal: '',
   };
 }
 @Injectable({
@@ -660,27 +727,27 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
   }
 
   /** Actualiza la clave de enumeración D0 en el estado */
-  actualizarClaveEnumeracionD0(valor: string): void {
+  actualizarClaveEnumeracionD0(valor: boolean): void {
     this.update((state) => ({ ...state, claveEnumeracionD0: valor }));
   }
 
   /** Actualiza la clave de enumeración D1 en el estado */
-  actualizarClaveEnumeracionD1(valor: string): void {
+  actualizarClaveEnumeracionD1(valor: boolean): void {
     this.update((state) => ({ ...state, claveEnumeracionD1: valor }));
   }
 
   /** Actualiza la clave de enumeración D2 en el estado */
-  actualizarClaveEnumeracionD2(valor: string): void {
+  actualizarClaveEnumeracionD2(valor: boolean): void {
     this.update((state) => ({ ...state, claveEnumeracionD2: valor }));
   }
 
   /** Actualiza la clave de enumeración D3 en el estado */
-  actualizarClaveEnumeracionD3(valor: string): void {
+  actualizarClaveEnumeracionD3(valor: boolean): void {
     this.update((state) => ({ ...state, claveEnumeracionD3: valor }));
   }
 
   /** Actualiza la clave de enumeración H en el estado */
-  actualizarClaveEnumeracionH(valor: string): void {
+  actualizarClaveEnumeracionH(valor: boolean): void {
     this.update((state) => ({ ...state, claveEnumeracionH: valor }));
   }
 
@@ -703,34 +770,66 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
     this.update((state) => ({ ...state, '3523': valor }));
   }
 
+  /**
+   * Actualiza el valor del campo '3524'.
+   * @param valor Nuevo valor (número o cadena).
+   */
   actualizar3524(valor: number | string): void {
     this.update((state) => ({ ...state, '3524': valor }));
   }
 
+  /**
+   * Actualiza el valor del campo '3525'.
+   * @param valor Nuevo valor (número o cadena).
+   */
   actualizar3525(valor: number | string): void {
     this.update((state) => ({ ...state, '3525': valor }));
   }
 
+  /**
+   * Actualiza el valor del campo '3526'.
+   * @param valor Nuevo valor (número o cadena).
+   */
   actualizar3526(valor: number | string): void {
     this.update((state) => ({ ...state, '3526': valor }));
   }
 
+  /**
+   * Actualiza el valor del campo '3527'.
+   * @param valor Nuevo valor (número o cadena).
+   */
   actualizar3527(valor: number | string): void {
     this.update((state) => ({ ...state, '3527': valor }));
   }
 
+  /**
+   * Actualiza la fecha de fin de vigencia 1.
+   * @param valor Nueva fecha en formato string.
+   */
   actualizarFechaFinVigencia1(valor: string): void {
     this.update((state) => ({ ...state, fechaFinVigencia1: valor }));
   }
 
+  /**
+   * Actualiza el número de autorización 1.
+   * @param valor Nuevo valor de autorización.
+   */
   actualizarNumeroAutorizacion1(valor: string): void {
     this.update((state) => ({ ...state, numeroAutorizacion1: valor }));
   }
 
+  /**
+   * Actualiza la fecha de fin de vigencia 2.
+   * @param valor Nueva fecha en formato string.
+   */
   actualizarFechaFinVigencia2(valor: string): void {
     this.update((state) => ({ ...state, fechaFinVigencia2: valor }));
   }
 
+  /**
+   * Actualiza el número de autorización 2.
+   * @param valor Nuevo valor de autorización.
+   */
   actualizarNumeroAutorizacion2(valor: string): void {
     this.update((state) => ({ ...state, numeroAutorizacion2: valor }));
   }
@@ -851,7 +950,7 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
   }
 
   /** Actualiza el valor de la póliza de fianza actual en el estado */
-  actualizarPolizaDeFianzaActual(polizaDeFianzaActual: number): void {
+  actualizarPolizaDeFianzaActual(polizaDeFianzaActual: number | string): void {
     this.update((state) => ({
       ...state,
       polizaDeFianzaActual,
@@ -1084,7 +1183,7 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
   }
 
   /** Define el tipo de instalación según un identificador numérico */
-  actualizarTipoDeInstalacion(valor: number): void {
+  actualizarTipoDeInstalacion(valor: number | string): void {
     this.update((state) => ({ ...state, tipoDeInstalacion: valor }));
   }
 
@@ -1111,6 +1210,62 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
   /** Especifica el proceso productivo relacionado con la instalación */
   actualizarProcesoProductivo(valor: string | number): void {
     this.update((state) => ({ ...state, procesoProductivo: valor }));
+  }
+
+  /**
+   * Actualiza el número o identificador de la póliza de fianza actual.
+   * @param polizaFianzaActual Nuevo valor de la póliza (número o string).
+   */
+  actualizarPolizaFianzaActual(polizaFianzaActual: string | number): void {
+    this.update((state) => ({ ...state, polizaFianzaActual }));
+  }
+
+  /**
+   * Actualiza el folio de la fianza.
+   * @param folioFianza Nuevo folio de fianza.
+   */
+  actualizarFolioFianza(folioFianza: string): void {
+    this.update((state) => ({ ...state, folioFianza }));
+  }
+
+  /**
+   * Actualiza el RFC de la institución afianzadora.
+   * @param rfcAfianzadora Nuevo RFC de la afianzadora.
+   */
+  actualizarRfcAfianzadora(rfcAfianzadora: string): void {
+    this.update((state) => ({ ...state, rfcAfianzadora }));
+  }
+
+  /**
+   * Actualiza la fecha de expedición de la fianza.
+   * @param fechaExpedicionFianza Nueva fecha de expedición en formato string.
+   */
+  actualizarFechaExpedicionFianza(fechaExpedicionFianza: string): void {
+    this.update((state) => ({ ...state, fechaExpedicionFianza }));
+  }
+
+  /**
+   * Actualiza la fecha de inicio de vigencia de la fianza.
+   * @param fecInicioVigenciaFianza Nueva fecha de inicio en formato string.
+   */
+  actualizarFecInicioVigenciaFianza(fecInicioVigenciaFianza: string): void {
+    this.update((state) => ({ ...state, fecInicioVigenciaFianza }));
+  }
+
+  /**
+   * Actualiza la fecha de fin de vigencia de la fianza.
+   * @param fecFinVigenciaFianza Nueva fecha de fin en formato string.
+   */
+  actualizarFecFinVigenciaFianza(fecFinVigenciaFianza: string): void {
+    this.update((state) => ({ ...state, fecFinVigenciaFianza }));
+  }
+
+  /**
+   * Actualiza el importe total de la fianza.
+   * @param fianzaImporteTotal Nuevo importe total de la fianza.
+   */
+  actualizarFianzaImporteTotal(fianzaImporteTotal: string): void {
+    this.update((state) => ({ ...state, fianzaImporteTotal }));
   }
 
   /**

@@ -51,7 +51,12 @@
       </div>
       <div class="col-md-12">
         <ng-titulo titulo="Tipo sector" />
-        <label class="form-label mb-5">Tipo sector<span [ngClass]="noEsValido('tipoSector')? 'text-danger':''">*</span>:</label>
+        <label class="form-label mb-5"
+          >Tipo sector<span
+            [ngClass]="noEsValido('tipoSector') ? 'text-danger' : ''"
+            >*</span
+          >:</label
+        >
         <app-input-radio
           formControlName="tipoSector"
           [selectedValue]="datosGeneralesForm.get('tipoSector')?.value"
@@ -175,6 +180,7 @@
             [disabled]="esFormularioSoloLectura"
             id="btnBusqRfc"
             class="btn btn-primary me-5"
+            (click)="agregarRFCDato()"
           >
             Agregar
           </button>
@@ -185,12 +191,17 @@
           [tipoSeleccionTabla]="tipoSeleccionTabla"
           [configuracionTabla]="configuracionColumnas"
           [datos]="listaDeSubcontratistas"
+          [mode]="'client'"
+          [totalItems]="listaDeSubcontratistas.length"
+          [showPagination]="true"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="seleccionarSubContratistasDatos($event)"
         >
         </app-tabla-dinamica>
       </div>
       <div class="col-md-12">
         <div class="form-group pull-right">
+          @if(subContratistasDatos.length === 1){
           <button
             type="button"
             name="eliminar"
@@ -201,6 +212,7 @@
           >
             Eliminar
           </button>
+          }
         </div>
       </div>
       <div class="col-md-12 mt-4">
@@ -580,6 +592,10 @@
           [tipoSeleccionTabla]="tipoSeleccionTabla"
           [configuracionTabla]="seccionSociosICConfiguracionColumnas"
           [datos]="listaSeccionSociosIC"
+          [mode]="'client'"
+          [totalItems]="listaSeccionSociosIC.length"
+          [showPagination]="true"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="listaDeFilaSeleccionada($event)"
         >
         </app-tabla-dinamica>
@@ -700,12 +716,16 @@
       </div>
       <div class="col-md-4 mt-4">
         <label class="form-label text-start" for="valorenpesos"
-          >Valor en pesos<span [ngClass]="noEsValido('cantidadInversion') ? 'text-danger':''">*</span>:</label
+          >Valor en pesos<span
+            [ngClass]="noEsValido('cantidadInversion') ? 'text-danger' : ''"
+            >*</span
+          >:</label
         >
         <input
           class="form-control"
           type="text"
           size="80"
+          maxlength="18"
           id="valorenpesos"
           name="valorenpesos"
           formControlName="cantidadInversion"
@@ -718,13 +738,17 @@
       <div class="col-md-4 mt-4"></div>
       <div class="col-md-12 mt-4">
         <label class="form-label text-start" for="valorenpesos"
-          >Descripción general<span [ngClass]="noEsValido('descInversion') ? 'text-danger':''">*</span>:</label
+          >Descripción general<span
+            [ngClass]="noEsValido('descInversion') ? 'text-danger' : ''"
+            >*</span
+          >:</label
         >
         <input
           class="form-control"
           type="text"
           size="80"
           id="valorenpesos"
+          maxlength="700"
           name="valorenpesos"
           formControlName="descInversion"
           (change)="actualizarDescInversion($event)"
@@ -738,6 +762,10 @@
           [tipoSeleccionTabla]="tipoSeleccionTabla"
           [configuracionTabla]="tipoDeInversionConfiguracionColumnas"
           [datos]="tipoDeInversionDatos"
+          [mode]="'client'"
+          [totalItems]="tipoDeInversionDatos.length"
+          [showPagination]="true"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="seleccionarTipoSeleccionTabla($event)"
         >
         </app-tabla-dinamica>
@@ -817,7 +845,9 @@
                 [formControlName]="'claveEnumeracionD' + i"
                 class="form-check-input"
                 [id]="'regimen_valorPorDefecto' + i"
-                [readonly]="true"
+                (change)="
+                  seleccionarRegimenAduanero($event, 'claveEnumeracionD' + i)
+                "
               />
 
               <span class="ms-3">{{ regimen }}</span>
@@ -825,7 +855,7 @@
           </div>
         </div>
       </div>
-
+      @if(solicitud31101State.claveEnumeracionD0){
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
           >Indique todos los domicilios registrados ante el SAT de la persona
@@ -835,7 +865,8 @@
           de instalaciones).</label
         >
       </div>
-      <div class="col-md-4 mt-6 text-start">
+
+      <div class="col-md-6 mt-4 text-start">
         <app-catalogo-select
           formControlName="modalidadProgramaImmex"
           [catalogo]="modalidadDelProgramaIMMEX.catalogos"
@@ -854,6 +885,11 @@
           [tipoSeleccionTabla]="tipoSeleccionTabla"
           [configuracionTabla]="domiciliosConfiguracionColumnas"
           [datos]="domiciliosDatos"
+          [inputSelection]="inputSelection"
+          [mode]="'client'"
+          [totalItems]="domiciliosDatos.length"
+          [showPagination]="true"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="seleccionarDomiciliosLista($event)"
         >
         </app-tabla-dinamica>
@@ -900,6 +936,7 @@
           formControlName="textoGenerico4"
           type="text"
           size="80"
+          maxlength="30"
           id="textoGenerico4"
           name="textoGenerico4"
           (change)="actualizarTextoGenerico4($event)"
@@ -917,6 +954,7 @@
           formControlName="textoGenerico5"
           type="text"
           size="80"
+          maxlength="30"
           id="textoGenerico5"
           name="textoGenerico5"
           (change)="actualizarTextoGenerico5($event)"
@@ -940,6 +978,7 @@
           (valueChange)="actualizar3523($event)"
         ></app-input-radio>
       </div>
+      } @if(solicitud31101State.claveEnumeracionD1){
       <div class="col-md-12 mt-4">
         <label class="fw-0 text-start"
           >Señale si al momento de la presentación de su solicitud cuenta con la
@@ -1010,7 +1049,8 @@
           (valueChange)="actualizar3525($event)"
         ></app-input-radio>
       </div>
-
+      } @if(solicitud31101State.claveEnumeracionD2 ||
+      solicitud31101State.claveEnumeracionD3){
       <div class="col-md-12 mt-4">
         <label class="fw-0 text-start"
           >Señale si al momento de la presentación de su solicitud cuenta con la
@@ -1054,6 +1094,7 @@
           class="form-control"
           formControlName="numeroAutorizacion2"
           type="text"
+          maxlength="50"
           id="numeroAutorizacion2"
           name="numeroAutorizacion2"
           (change)="actualizarNumeroAutorizacion2($event)"
@@ -1081,7 +1122,7 @@
           (valueChange)="actualizar3527($event)"
         ></app-input-radio>
       </div>
-
+      }
       <div class="col-md-12">
         <ng-titulo titulo="Infraestructura" />
       </div>
@@ -1493,9 +1534,7 @@
   >
   </lib-notificaciones>
 </section>
-}
-
-@if (eliminarImmexNotificacion) {
+} @if (eliminarImmexNotificacion) {
 <section>
   <lib-notificaciones
     [notificacionInput]="eliminarImmexNotificacion"
@@ -1503,9 +1542,7 @@
   >
   </lib-notificaciones>
 </section>
-}
-
-@if (eliminadosCorrectamenteNotificacion) {
+} @if (eliminadosCorrectamenteNotificacion) {
 <section>
   <lib-notificaciones
     [notificacionInput]="eliminadosCorrectamenteNotificacion"
@@ -1514,7 +1551,6 @@
   </lib-notificaciones>
 </section>
 }
-
 
 <div
   class="modal fade"
@@ -1525,9 +1561,9 @@
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <app-miembro-de-la-empresa
+      <!-- <app-miembro-de-la-empresa
         (eventoActualizarMiembro)="eventoActualizarMiembro($event)"
-      ></app-miembro-de-la-empresa>
+      ></app-miembro-de-la-empresa> -->
     </div>
   </div>
 </div>
@@ -1541,7 +1577,8 @@
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <app-modificar-immex-program [seleccionarDomiciliosDatos]="seleccionarDomiciliosDatos"
+      <app-modificar-immex-program
+        [seleccionarDomiciliosDatos]="seleccionarDomiciliosDatos"
         (modificarImmexValor)="modificarImmexValor($event)"
       ></app-modificar-immex-program>
     </div>

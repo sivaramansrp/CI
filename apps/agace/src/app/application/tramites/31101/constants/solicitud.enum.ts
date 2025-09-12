@@ -1,4 +1,5 @@
 import {
+  CatalogosSelect,
   ConfiguracionColumna,
   InputFecha,
 } from '@libs/shared/data-access-user/src';
@@ -277,31 +278,88 @@ export const FECHA_DE_FIN_VIGENCIA: InputFecha = {
   habilitado: true,
 };
 
+/**
+ * Configuración para el campo "Tipo de inversión".
+ */
 export const TIPO_DE_INVERSION_CONFIG = {
+  /**
+   * Nombre que se mostrará en la interfaz de usuario.
+   */
   labelNombre: 'Tipo de inversión',
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: true,
+  /**
+   * Texto que se mostrará como primera opción en un select.
+   */
   primerOpcion: 'Selecciona una opción',
+  /**
+   * Lista de opciones disponibles para este campo.
+   */
   catalogos: [],
 };
 
-export const CONCEPTO = {
+/**
+ * Configuración para el campo "Concepto".
+ */
+export const CONCEPTO: CatalogosSelect = {
+  /**
+   * Nombre que se mostrará en la interfaz de usuario.
+   */
   labelNombre: 'Concepto',
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
+  /**
+   * Texto que se mostrará como primera opción en un select.
+   */
   primerOpcion: 'Selecciona una opción',
+  /**
+   * Lista de opciones disponibles para este campo.
+   */
   catalogos: [],
 };
 
+/**
+ * Configuración para el campo "Modalidad del programa IMMEX".
+ */
 export const MODALIDAD_DEL_PROGRAMA_IMMEX = {
+  /**
+   * Nombre que se mostrará en la interfaz de usuario.
+   */
   labelNombre: 'Seleccione el numero y modalidad del programa I M M E X',
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: false,
+  /**
+   * Texto que se mostrará como primera opción en un select.
+   */
   primerOpcion: 'Selecciona una opción',
+  /**
+   * Lista de opciones disponibles para este campo.
+   */
   catalogos: [],
 };
 
+/**
+ * Configuración para el tipo de sector.
+ */
 export const TIPO_SECTOR = {
+  /**
+   * Opciones del radio button para seleccionar el sector.
+   */
   radioOptions: [
     {
+      /**
+       * Etiqueta que se mostrará en la interfaz.
+       */
       label: 'Sector productivo',
+      /**
+       * Valor que representa esta opción.
+       */
       value: 1,
     },
     {
@@ -309,9 +367,15 @@ export const TIPO_SECTOR = {
       value: 2,
     },
   ],
+  /**
+   * Indica si el campo es obligatorio.
+   */
   isRequired: true,
 };
 
+/**
+ * Configuración para la modalidad de la garantía.
+ */
 export const MODALIDAD_DE_LA_GARANTIA_OPCION = {
   radioOptions: [
     {
@@ -326,6 +390,9 @@ export const MODALIDAD_DE_LA_GARANTIA_OPCION = {
   isRequired: true,
 };
 
+/**
+ * Configuración para el tipo de garantía.
+ */
 export const TIPO_DE_GARANTIA_OPCION = {
   radioOptions: [
     {
@@ -340,6 +407,9 @@ export const TIPO_DE_GARANTIA_OPCION = {
   isRequired: true,
 };
 
+/**
+ * Configuración para opciones de sí o no.
+ */
 export const SINO_OPCION = {
   radioOptions: [
     {
@@ -352,4 +422,156 @@ export const SINO_OPCION = {
     },
   ],
   isRequired: true,
+};
+
+/**
+ * Configuración para el catálogo de instituciones de crédito.
+ */
+export const INSTITUCION_CREDITO_CATALOGO = {
+  /**
+   * Nombre que se mostrará en la interfaz de usuario.
+   */
+  labelNombre: 'Nombre de la institución de crédito que emite el documento',
+  /**
+   * Indica si el campo es obligatorio.
+   */
+  required: true,
+  /**
+   * Texto que se mostrará como primera opción en un select.
+   */
+  primerOpcion: 'Selecciona una opción',
+  /**
+   * Lista de opciones disponibles para este campo.
+   */
+  catalogos: [],
+};
+
+/**
+ * Configuración del campo de fecha de expedición.
+ */
+export const CONFIGURACION_FECHA_DE_EXPEDICION: InputFecha = {
+  /**
+   * Etiqueta que se mostrará en la interfaz de usuario.
+   */
+  labelNombre: 'Fecha de expedición',
+  /**
+   * Indica si el campo es obligatorio.
+   */
+  required: true,
+  /**
+   * Indica si el campo está habilitado para edición.
+   */
+  habilitado: true,
+};
+
+/**
+ * Configuración del campo de fecha de inicio de vigencia.
+ */
+export const CONFIGURACION_FECHA_INICIO_VIGENCIA: InputFecha = {
+  /**
+   * Etiqueta que se mostrará en la interfaz de usuario.
+   */
+  labelNombre: 'Fecha de inicio de vigencia',
+  /**
+   * Indica si el campo es obligatorio.
+   */
+  required: true,
+  /**
+   * Indica si el campo está habilitado para edición.
+   */
+  habilitado: true,
+};
+
+/**
+ * Configuración del campo de fecha de fin de vigencia.
+ */
+export const CONFIGURACION_FECHA_FIN_VIGENCIA: InputFecha = {
+  /**
+   * Etiqueta que se mostrará en la interfaz de usuario.
+   */
+  labelNombre: 'Fecha de fin de vigencia',
+  /**
+   * Indica si el campo es obligatorio.
+   */
+  required: true,
+  /**
+   * Indica si el campo está habilitado para edición.
+   */
+  habilitado: true,
+};
+
+/**
+ * Configuración del catálogo de instituciones de fianza.
+ */
+export const INSTITUCION_FIANZA_CATALOGO = {
+  /**
+   * Etiqueta que se mostrará en la interfaz de usuario para el campo.
+   */
+  labelNombre: 'Nombre de la institución de fianza que emite el documento',
+  /**
+   * Indica si el campo es obligatorio.
+   */
+  required: true,
+  /**
+   * Texto de la primera opción del select.
+   */
+  primerOpcion: 'Selecciona una opción',
+  /**
+   * Lista de elementos del catálogo que se mostrará en el select.
+   */
+  catalogos: [],
+};
+
+/**
+ * Configuración de la fecha de expedición de la fianza.
+ */
+export const FIANZA_FECHA_DE_EXPEDICION: InputFecha = {
+  /**
+   * Etiqueta que se mostrará en la interfaz de usuario para el campo.
+   */
+  labelNombre: 'Fecha de expedición',
+  /**
+   * Indica si el campo es obligatorio.
+   */
+  required: false,
+  /**
+   * Indica si el campo está habilitado para edición.
+   */
+  habilitado: true,
+};
+
+/**
+ * Configuración de la fecha de inicio de vigencia de la fianza.
+ */
+export const FIANZA_FECHA_INICIO_VIGENCIA: InputFecha = {
+  /**
+   * Etiqueta que se mostrará en la interfaz de usuario para el campo.
+   */
+  labelNombre: 'Fecha de inicio de vigencia',
+  /**
+   * Indica si el campo es obligatorio.
+   */
+  required: false,
+  /**
+   * Indica si el campo está habilitado para edición.
+   */
+  habilitado: true,
+};
+
+/**
+ * Configuración de la fecha de fin de vigencia de la fianza.
+ */
+export const FIANZA_FECHA_FIN_VIGENCIA: InputFecha = {
+  /**
+   * Etiqueta que se mostrará en la interfaz de usuario para el campo.
+   */
+  labelNombre: 'Fecha de fin de vigencia',
+  /**
+   * Indica si el campo es obligatorio.
+   */
+  required: false,
+  /**
+   * Indica si el campo está habilitado para edición.
+   */
+  habilitado: true,
 };

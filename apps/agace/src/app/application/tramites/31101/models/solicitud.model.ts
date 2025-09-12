@@ -152,7 +152,7 @@ export interface DatosGeneralesDeLaSolicitudCatologo {
  */
 export interface SubContratistas {
   /** idRegistro del SubContratistas */
-  idRegistro?: string;
+  idRegistro?: number;
 
   /** RFC del subcontratista */
   rfc: string;
@@ -238,8 +238,8 @@ export interface TipoDeInversion {
  * Representa los domicilios relacionados con la empresa o instalación.
  */
 export interface Domicilios {
-  id? : number;
-  
+  id?: number;
+
   /** Indica si es instalación principal */
   instalacionPrincipal: string;
 
@@ -482,19 +482,19 @@ export interface Solicitud31101Model {
   '3522': number | string;
 
   /** Clave de enumeración D0 */
-  claveEnumeracionD0: string;
+  claveEnumeracionD0: boolean;
 
   /** Clave de enumeración D1 */
-  claveEnumeracionD1: string;
+  claveEnumeracionD1: boolean;
 
   /** Clave de enumeración D2 */
-  claveEnumeracionD2: string;
+  claveEnumeracionD2: boolean;
 
   /** Clave de enumeración D3 */
-  claveEnumeracionD3: string;
+  claveEnumeracionD3: boolean;
 
   /** Clave de enumeración H */
-  claveEnumeracionH: string;
+  claveEnumeracionH: boolean;
 
   modalidadProgramaImmex: string | number;
 
@@ -724,3 +724,19 @@ export interface Solicitud31101Model {
   /** Identificador del proceso productivo, puede ser un número o una descripción */
   procesoProductivo: number | string;
 }
+
+/**
+ * Interfaz que representa los catálogos de garantías disponibles.
+ */
+export interface GarantiaCatalogo {
+  /**
+   * Catálogo de opciones de fianza.
+   */
+  fianzaCatalogo: Catalogo[];
+
+  /**
+   * Catálogo de opciones de crédito.
+   */
+  creditoCatalogo: Catalogo[];
+}
+

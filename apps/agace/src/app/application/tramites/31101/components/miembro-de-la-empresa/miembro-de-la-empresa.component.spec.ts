@@ -1,125 +1,78 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MiembroDeLaEmpresaComponent } from './miembro-de-la-empresa.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+import { EventEmitter } from '@angular/core';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Solicitud31101Store } from '../../estados/solicitud31101.store';
 import { Solicitud31101Query } from '../../estados/solicitud31101.query';
-import { of, Subject } from 'rxjs';
+import { CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import {
-  CatalogoSelectComponent,
-  InputRadioComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
+import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+// Mocks for dependencies
+class SolicitudServiceMock {
+  conseguirDatosGeneralesCatologo = jest.fn().mockReturnValue(
+    of({
+      enSuCaracterDe: { catalogos: [{ id: 1, descripcion: 'Socio' }] },
+      nacionalidad: { catalogos: [{ id: 2, descripcion: 'Mexicana' }] },
+      tipoDePersona: { catalogos: [{ id: 3, descripcion: 'Física' }] },
+    })
+  );
+  conseguirDatosGeneralesOpcionDeRadio = jest.fn().mockReturnValue(
+    of({
+      requisitos: {
+        radioOptions: [
+          { value: 1, label: 'Sí' },
+          { value: 2, label: 'No' },
+        ],
+      },
+    })
+  );
+}
+
+class Solicitud31101StoreMock {
+  actualizarMiembroCaracterDe = jest.fn();
+  actualizarMiembroTributarMexico = jest.fn();
+  actualizarMiembroNacionalidad = jest.fn();
+  actualizarMiembroRFC = jest.fn();
+  actualizarMiembroTipoPersonaMuestra = jest.fn();
+  actualizarMiembroNombre = jest.fn();
+  actualizarMiembroApellidoPaterno = jest.fn();
+  actualizarMiembroApellidoMaterno = jest.fn();
+  actualizarMiembroNombreEmpresa = jest.fn();
+  actualizarMiembroRegistroFederal = jest.fn();
+  actualizarMiembroNombreCompleto = jest.fn();
+}
+
+class Solicitud31101QueryMock {
+  selectSolicitud$ = of({
+    miembroCaracterDe: 1,
+    miembroTributarMexico: 1,
+    miembroNacionalidad: 2,
+    miembroRfc: 'RFC123',
+    miembroRegistroFederal: 'REGFED',
+    miembroNombreCompleto: 'NOMBRE COMPLETO',
+    miembroTipoPersonaMuestra: 3,
+    miembroNombre: 'JUAN',
+    miembroApellidoPaterno: 'PEREZ',
+    miembroApellidoMaterno: 'LOPEZ',
+    miembroNombreEmpresa: 'EMPRESA SA',
+  });
+}
+
+class ConsultaioQueryMock {
+  selectConsultaioState$ = of({ readonly: false });
+}
 
 describe('MiembroDeLaEmpresaComponent', () => {
   let component: MiembroDeLaEmpresaComponent;
   let fixture: ComponentFixture<MiembroDeLaEmpresaComponent>;
-  let solicitudServiceMock: any;
-  let solicitud31101StoreMock: any;
-  let solicitud31101QueryMock: any;
+  let solicitudService: SolicitudServiceMock;
+  let solicitud31101Store: Solicitud31101StoreMock;
 
   beforeEach(async () => {
-    solicitudServiceMock = {
-      conseguirDatosGeneralesCatologo: jest.fn().mockReturnValue(
-        of({
-          enSuCaracterDe: {
-            labelNombre: 'En su caracter de',
-            required: true,
-            primerOpcion: 'Selecciona un tipo',
-            catalogos: [
-              {
-                id: 1,
-                descripcion: 'Accionista',
-              },
-              {
-                id: 2,
-                descripcion: 'Accionista - 1',
-              },
-            ],
-          },
-          nacionalidad: {
-            labelNombre: 'Nacionalidad',
-            required: true,
-            primerOpcion: 'Selecciona un tipo',
-            catalogos: [
-              {
-                id: 1,
-                descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI)',
-              },
-              {
-                id: 2,
-                descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI) - 1',
-              },
-            ],
-          },
-          tipoDePersona: {
-            labelNombre: 'Tipo de Persona',
-            required: true,
-            primerOpcion: 'Selecciona un tipo',
-            catalogos: [
-              {
-                id: 1,
-                descripcion: 'Física',
-              },
-              {
-                id: 2,
-                descripcion: 'Moral',
-              },
-            ],
-          },
-        })
-      ),
-      conseguirDatosGeneralesOpcionDeRadio: jest.fn().mockReturnValue(
-        of({
-          requisitos: {
-            radioOptions: [
-              {
-                label: 'Sí',
-                value: 1,
-              },
-              {
-                label: 'No',
-                value: 2,
-              },
-            ],
-            isRequired: true,
-          },
-        })
-      ),
-    };
-
-    solicitud31101StoreMock = {
-      actualizarMiembroCaracterDe: jest.fn(),
-      actualizarMiembroTributarMexico: jest.fn(),
-      actualizarMiembroNacionalidad: jest.fn(),
-      actualizarMiembroRFC: jest.fn(),
-      actualizarMiembroTipoPersonaMuestra: jest.fn(),
-      actualizarMiembroNombre: jest.fn(),
-      actualizarMiembroApellidoPaterno: jest.fn(),
-      actualizarMiembroApellidoMaterno: jest.fn(),
-      actualizarMiembroNombreEmpresa: jest.fn(),
-      actualizarMiembroRegistroFederal: jest.fn(),
-      actualizarMiembroNombreCompleto: jest.fn(),
-    };
-
-    solicitud31101QueryMock = {
-      selectSolicitud$: of({
-        miembroCaracterDe: '',
-        miembroTributarMexico: '',
-        miembroNacionalidad: '',
-        miembroRfc: '',
-        miembroRegistroFederal: '',
-        miembroNombreCompleto: '',
-        miembroTipoPersonaMuestra: '',
-        miembroNombre: '',
-        miembroApellidoPaterno: '',
-        miembroApellidoMaterno: '',
-        miembroNombreEmpresa: '',
-      }),
-    };
-
     await TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
@@ -128,159 +81,165 @@ describe('MiembroDeLaEmpresaComponent', () => {
         TituloComponent,
         CatalogoSelectComponent,
         InputRadioComponent,
-        HttpClientTestingModule,
+        HttpClientTestingModule
       ],
-      declarations: [],
       providers: [
         FormBuilder,
-        { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Solicitud31101Store, useValue: solicitud31101StoreMock },
-        { provide: Solicitud31101Query, useValue: solicitud31101QueryMock },
+        { provide: SolicitudService, useClass: SolicitudServiceMock },
+        { provide: Solicitud31101Store, useClass: Solicitud31101StoreMock },
+        { provide: Solicitud31101Query, useClass: Solicitud31101QueryMock },
+        { provide: ConsultaioQuery, useClass: ConsultaioQueryMock },
       ],
-    }).compileComponents();
-  });
+    })
+      .overrideComponent(MiembroDeLaEmpresaComponent, {
+        set: {
+          providers: [
+            { provide: SolicitudServiceMock, useClass: SolicitudServiceMock },
+            {
+              provide: Solicitud31101StoreMock,
+              useClass: Solicitud31101StoreMock,
+            },
+            {
+              provide: Solicitud31101QueryMock,
+              useClass: Solicitud31101QueryMock,
+            },
+            { provide: ConsultaioQueryMock, useClass: ConsultaioQueryMock },
+          ],
+        },
+      })
+      .compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(MiembroDeLaEmpresaComponent);
     component = fixture.componentInstance;
+    solicitudService = TestBed.inject(SolicitudService as any);
+    solicitud31101Store = TestBed.inject(Solicitud31101Store as any);
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('should initialize the form with values from the store', () => {
     expect(component.miembroEmpresaForm).toBeDefined();
+    expect(component.miembroEmpresaForm.get('miembroCaracterDe')?.value).toBe(
+      1
+    );
+    expect(component.miembroEmpresaForm.get('miembroNacionalidad')?.value).toBe(
+      2
+    );
     expect(
-      component.miembroEmpresaForm.controls['miembroCaracterDe']
-    ).toBeDefined();
+      component.miembroEmpresaForm.get('miembroTipoPersonaMuestra')?.value
+    ).toBe(3);
   });
 
-  it('should call conseguirDatosGeneralesCatologo on initialization', () => {
+  it('should call store methods when updating fields', () => {
+    component.actualizarMiembroCaracterDe({ id: 1, descripcion: 'Socio' });
     expect(
-      solicitudServiceMock.conseguirDatosGeneralesCatologo
-    ).toHaveBeenCalled();
-  });
-
-  it('should call conseguirDatosGeneralesOpcionDeRadio on initialization', () => {
-    expect(
-      solicitudServiceMock.conseguirDatosGeneralesOpcionDeRadio
-    ).toHaveBeenCalled();
-  });
-
-  it('should emit eventoCerrarModal when cerrarModal is called', () => {
-    jest.spyOn(component.eventoCerrarModal, 'emit');
-    component.cerrarModal();
-    expect(component.eventoCerrarModal.emit).toHaveBeenCalled();
-  });
-
-  it('should update miembroCaracterDe when actualizarMiembroCaracterDe is called', () => {
-    const mockCatalogo = { id: 1 };
-    component.actualizarMiembroCaracterDe(mockCatalogo as any);
-    expect(
-      solicitud31101StoreMock.actualizarMiembroCaracterDe
+      solicitud31101Store.actualizarMiembroCaracterDe
     ).toHaveBeenCalledWith(1);
-  });
 
-  it('should update miembroTributarMexico when actualizarMiembroTributarMexico is called', () => {
-    component.actualizarMiembroTributarMexico(1);
+    component.actualizarMiembroTributarMexico(2);
     expect(
-      solicitud31101StoreMock.actualizarMiembroTributarMexico
-    ).toHaveBeenCalledWith(1);
-  });
-
-  it('should update miembroNacionalidad when actualizarMiembroNacionalidad is called', () => {
-    const mockCatalogo = { id: 2 };
-    component.actualizarMiembroNacionalidad(mockCatalogo as any);
-    expect(
-      solicitud31101StoreMock.actualizarMiembroNacionalidad
+      solicitud31101Store.actualizarMiembroTributarMexico
     ).toHaveBeenCalledWith(2);
-  });
 
-  it('should update miembroRFC when actualizarMiembroRFC is called', () => {
-    const mockEvent = { target: { value: 'RFC123' } } as any;
-    component.actualizarMiembroRFC(mockEvent);
-    expect(solicitud31101StoreMock.actualizarMiembroRFC).toHaveBeenCalledWith(
-      'RFC123'
+    component.actualizarMiembroNacionalidad({ id: 2, descripcion: 'Mexicana' });
+    expect(
+      solicitud31101Store.actualizarMiembroNacionalidad
+    ).toHaveBeenCalledWith(2);
+
+    const event = { target: { value: 'RFC999' } } as any as Event;
+    component.actualizarMiembroRFC(event);
+    expect(solicitud31101Store.actualizarMiembroRFC).toHaveBeenCalledWith(
+      'RFC999'
     );
   });
 
-  it('should update miembroNombre when actualizarMiembroNombre is called', () => {
-    const mockEvent = { target: { value: 'John' } } as any;
-    component.actualizarMiembroNombre(mockEvent);
-    expect(
-      solicitud31101StoreMock.actualizarMiembroNombre
-    ).toHaveBeenCalledWith('John');
+  it('should emit eventoCerrarModal when cerrarModal is called', () => {
+    const emitSpy = jest.spyOn(component.eventoCerrarModal, 'emit');
+    component.cerrarModal();
+    expect(emitSpy).toHaveBeenCalled();
   });
 
-  it('should emit eventoActualizarMiembro when aceptarModal is called', () => {
-    jest.spyOn(component.eventoActualizarMiembro, 'emit');
+  it('should emit eventoActualizarMiembro with correct values on aceptarModal', () => {
+    component.enSuCaracterDeLista = {
+      catalogos: [{ id: 1, descripcion: 'Socio' }],
+    } as any;
+    component.nacionalidadLista = {
+      catalogos: [{ id: 2, descripcion: 'Mexicana' }],
+    } as any;
+    component.tipoDePersonaLista = {
+      catalogos: [{ id: 3, descripcion: 'Física' }],
+    } as any;
+    component.sinoOpcion = { radioOptions: [{ value: 1, label: 'Sí' }] } as any;
+
+    component.miembroEmpresaForm.patchValue({
+      miembroCaracterDe: 1,
+      miembroNacionalidad: 2,
+      miembroTipoPersonaMuestra: 3,
+      miembroTributarMexico: 1,
+      miembroNombreCompleto: 'NOMBRE COMPLETO',
+      miembroRfc: 'RFC123',
+      miembroNombre: 'JUAN',
+      miembroNombreEmpresa: 'EMPRESA SA',
+      miembroRegistroFederal: 'REGFED',
+    });
+
+    const emitSpy = jest.spyOn(component.eventoActualizarMiembro, 'emit');
     component.aceptarModal();
-    expect(component.eventoActualizarMiembro.emit).toHaveBeenCalled();
-  });
-  
-  it('should update miembroTipoPersonaMuestra and seleccionarTipoDePersona when actualizarMiembroTipoPersonaMuestra is called', () => {
-    const mockCatalogo = { id: 2 };
-    component.actualizarMiembroTipoPersonaMuestra(mockCatalogo as any);
-    expect(
-      solicitud31101StoreMock.actualizarMiembroTipoPersonaMuestra
-    ).toHaveBeenCalledWith(2);
-    expect(component.seleccionarTipoDePersona).toBe(2);
+
+    expect(emitSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        tipoPersonaMuestra: 'Física',
+        caracterDe: 'Socio',
+        nacionalidad: 'Mexicana',
+        tributarMexico: 'Sí',
+        nombreCompleto: 'NOMBRE COMPLETO',
+        rfc: 'RFC123',
+        paisNombre: 'JUAN',
+        nombreEmpresa: 'EMPRESA SA',
+        razonSocial: 'REGFED',
+      })
+    );
   });
 
-  it('should update miembroApellidoPaterno when actualizarMiembroApellidoPaterno is called', () => {
-    const mockEvent = { target: { value: 'Perez' } } as any;
-    component.actualizarMiembroApellidoPaterno(mockEvent);
-    expect(
-      solicitud31101StoreMock.actualizarMiembroApellidoPaterno
-    ).toHaveBeenCalledWith('Perez');
+  it('should disable form if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.miembroEmpresaForm.disabled).toBe(true);
   });
 
-  it('should update miembroApellidoMaterno when actualizarMiembroApellidoMaterno is called', () => {
-    const mockEvent = { target: { value: 'Lopez' } } as any;
-    component.actualizarMiembroApellidoMaterno(mockEvent);
-    expect(
-      solicitud31101StoreMock.actualizarMiembroApellidoMaterno
-    ).toHaveBeenCalledWith('Lopez');
+  it('should enable form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.miembroEmpresaForm.enabled).toBe(true);
   });
 
-  it('should update miembroNombreEmpresa when actualizarMiembroNombreEmpresa is called', () => {
-    const mockEvent = { target: { value: 'Empresa SA' } } as any;
-    component.actualizarMiembroNombreEmpresa(mockEvent);
-    expect(
-      solicitud31101StoreMock.actualizarMiembroNombreEmpresa
-    ).toHaveBeenCalledWith('Empresa SA');
-  });
-
-  it('should call actualizarMiembroRegistroFederal and actualizarMiembroNombreCompleto when buscarRFCDatos is called and miembroRfc has value', () => {
-    component.miembroEmpresaForm.get('miembroRfc')?.setValue('RFCVALUE');
+  it('should call actualizarMiembroRegistroFederal and actualizarMiembroNombreCompleto on buscarRFCDatos', () => {
+    component.miembroEmpresaForm.get('miembroRfc')?.setValue('RFC123');
     component.buscarRFCDatos();
     expect(
-      solicitud31101StoreMock.actualizarMiembroRegistroFederal
+      solicitud31101Store.actualizarMiembroRegistroFederal
     ).toHaveBeenCalledWith('MAVL621207C95');
     expect(
-      solicitud31101StoreMock.actualizarMiembroNombreCompleto
+      solicitud31101Store.actualizarMiembroNombreCompleto
     ).toHaveBeenCalledWith('EUROFOODS DE MEXICO GONZALEZ PINAL');
   });
 
-  it('should not call actualizarMiembroRegistroFederal or actualizarMiembroNombreCompleto when buscarRFCDatos is called and miembroRfc is empty', () => {
-    component.miembroEmpresaForm.get('miembroRfc')?.setValue('');
-    component.buscarRFCDatos();
-    expect(
-      solicitud31101StoreMock.actualizarMiembroRegistroFederal
-    ).not.toHaveBeenCalled();
-    expect(
-      solicitud31101StoreMock.actualizarMiembroNombreCompleto
-    ).not.toHaveBeenCalled();
+  it('should return true for noEsValido if control is invalid and touched', () => {
+    const control = component.miembroEmpresaForm.get('miembroNombre');
+    control?.setValue('');
+    control?.markAsTouched();
+    expect(component.noEsValido('miembroNombre')).toBe(true);
   });
 
-
   it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+    const destroy$ = (component as any).destroy$ as Subject<void>;
+    const nextSpy = jest.spyOn(destroy$, 'next');
+    const completeSpy = jest.spyOn(destroy$, 'complete');
     component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
 });

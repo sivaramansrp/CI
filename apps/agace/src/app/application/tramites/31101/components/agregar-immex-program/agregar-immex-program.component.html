@@ -25,6 +25,9 @@
           [tipoSeleccionTabla]="tipoSeleccionTabla"
           [configuracionTabla]="agregarImmexProgramConfiguracionColumnas"
           [datos]="domicilioslista"
+          [mode]="'client'"
+          [totalItems]="domicilioslista.length"
+          [showPagination]="true"
           (listaDeFilaSeleccionada)="seleccionarImmexProgramLista($event)"
         >
         </app-tabla-dinamica>
