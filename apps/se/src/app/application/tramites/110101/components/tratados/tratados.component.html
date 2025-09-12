@@ -1,10 +1,10 @@
 @if (consultaState.parameter !== "READ_PROCEDURE") {
-  <ng-titulo titulo="Datos generales del solicitante" />
+  <ng-titulo titulo="Tratados y criterios solicitados" />
 <ng-alert [CONTENIDO]="alerta.MENSAJE_ALERTA"></ng-alert>
 <form [formGroup]="formularioTratados">
   <div class="row">
     <div class="col-md-8">
-      <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'Pais o bloque'" [required]="true"
+      <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'País o bloque'" [required]="true"
         name="Pais o bloque" [isDisabled]="esFormularioSoloLectura"
         (change)="setValoresStore(formularioTratados,'pais', 'setPais');getLabelFromCatalogData(paisCatalogo,'pais')"
         (selectionChange)="onTratadoAcuerdo($event, 'pais')"></app-catalogo-select>
@@ -30,7 +30,7 @@
 @if (consultaState.parameter !== "READ_PROCEDURE") {
 <ng-alert [CONTENIDO]="'Para continuar con el trámite, deberá agregar por lo menos un tratado o acuerdo.'"></ng-alert>
 
-<h6 class="fs-4">Pais/bloque-tratado/acuerdo seleccionados por el solicitante</h6>
+<h6 class="fs-4">País/bloque-tratado/acuerdo seleccionados por el solicitante</h6>
 
 <div class="row">
   <div class="col-md-12">
