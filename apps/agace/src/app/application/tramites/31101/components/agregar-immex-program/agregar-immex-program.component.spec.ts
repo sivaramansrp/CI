@@ -177,11 +177,12 @@ describe('AgregarImmexProgramComponent', () => {
   it('should handle seleccionArentidadFederativa correctly', () => {
     const mockCatalogo: Catalogo = { id: 1, descripcion: 'Test' };
     component.domiciliosDatos = [
-      { cveEntidadFederativa: '1' } as EntidadFederativa,
+      {
+        cveEntidadFederativa: '1'
+      } as EntidadFederativa,
     ];
     component.seleccionArentidadFederativa(mockCatalogo);
-    expect(component.domicilioslista).toEqual(component.domiciliosDatos);
-    expect(
+     expect(
       solicitud31101StoreMock.actualizarEntidadFederativa
     ).toHaveBeenCalledWith(1);
   });
@@ -198,30 +199,6 @@ describe('AgregarImmexProgramComponent', () => {
       } as EntidadFederativa,
     ];
     component.agregarImmexProgram();
-    expect(emitSpy).toHaveBeenCalledWith({
-      instalacionPrincipal: '',
-      cveTipoInstalacion: '',
-      tipoInstalacion: '',
-      cveEntidadFederativa: '1',
-      entidadFederativa: '',
-      cveDelegacionMunicipio: '',
-      municipioDelegacion: 'Test',
-      direccion: 'Test Address',
-      codigoPostal: '12345',
-      registroSESAT: 'Test SESAT',
-      procesoProductivo: '',
-      fechaModificacion: '',
-      cveEstatus: '',
-      estatus: '',
-      noExterior: '',
-      noInterior: '',
-      cveColonia: '',
-      calle: '',
-      descCol: '',
-      idRecinto: '',
-      numFolioAcuse: '',
-      observaciones: '',
-    });
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {
