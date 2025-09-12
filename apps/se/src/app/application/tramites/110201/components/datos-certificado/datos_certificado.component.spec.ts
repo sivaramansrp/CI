@@ -144,8 +144,8 @@ describe('DatosCertificadoComponent', () => {
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const destroyNotifierNext = jest.spyOn(component.destroyNotifier$, 'next');
-    const destroyNotifierComplete = jest.spyOn(component.destroyNotifier$, 'complete');
+    const destroyNotifierNext = jest.spyOn(component.destroyed$, 'next');
+    const destroyNotifierComplete = jest.spyOn(component.destroyed$, 'complete');
     component.ngOnDestroy();
     expect(destroyNotifierNext).toHaveBeenCalled();
     expect(destroyNotifierComplete).toHaveBeenCalled();

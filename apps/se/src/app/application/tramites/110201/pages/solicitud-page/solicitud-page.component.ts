@@ -1,12 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import {
-  DatosPasos,
-} from '@ng-mf/data-access-user';
+import { DatosPasos } from '@ng-mf/data-access-user';
+import { ERROR_FORMA_ALERT } from '../../enum/certificado.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { ERROR_FORMA_ALERT } from '../../enum/certificado.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * Texto de alerta para terceros.

@@ -56,18 +56,18 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @property consultaDatos - Estado de consulta de datos para el componente
    */
   consultaDatos!: ConsultaioState;
-  
+
   /**
    * @property soloLectura - Indica si el formulario está en modo solo lectura
    * Cuando es `true`, los campos del formulario no se pueden editar
    */
   soloLectura: boolean = false;
-  
+
   /**
    * @property dataEvent - Evento para comunicar datos al componente padre
    */
   @Output() dataEvent = new EventEmitter<boolean>();
-  
+
   /**
    * @property TEXTO_DE_ALERTA - Texto de alerta mostrado en el componente
    */
@@ -177,7 +177,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @property solicitudState - Estado actual de la solicitud del trámite 110201
    */
   public solicitudState!: Solicitud110201State;
-  
+
   /**
    * @property TablaSeleccion - Tabla de selección de mercancías
    */
@@ -202,7 +202,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @property nombreArchivo - Nombre del archivo seleccionado para carga
    */
   nombreArchivo: string = '';
-  
+
   /**
    * @property fechaInicialInput - Configuración de la fecha inicial
    * Representa la configuración del campo de entrada para la fecha inicial en el formulario
@@ -220,12 +220,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Representa la configuración del campo de entrada para la fecha de la factura en el formulario
    */
   fechaFacturaInput: InputFecha = FECHAFACTURA;
-  
+
   /**
    * @property esFormulario - Indica si se está mostrando el formulario
    */
   esFormulario: boolean = false;
-  
+
   /**
    * @property destroyed$ - Notificador para destruir observables al destruir el componente
    * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria
@@ -237,7 +237,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Contiene una lista de objetos del catálogo de tratados obtenidos desde el servicio
    */
   public optionsTratado = OPTIONS_TRATADO;
-  
+
   /**
    * @property optionsPais - Opciones del catálogo de países
    * Contiene una lista de objetos del catálogo de países obtenidos desde el servicio
@@ -267,7 +267,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Representa una lista de objetos que contienen información sobre las mercancías disponibles para selección
    */
   public mercanciaDisponsiblesTablaDatos: ColumnasTabla[] = [];
-  
+
   /**
    * @property mercanciaSeleccionadasTablaData - Datos de la tabla de mercancías seleccionadas
    * Representa una lista de objetos que contienen información sobre las mercancías seleccionadas por el usuario
@@ -277,7 +277,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * @property nuevaNotificacion - Notificación utilizada para mostrar mensajes o alertas en la interfaz
    */
-  public nuevaNotificacion!: Notificacion;
+  public nuevaNotificacion: Notificacion | null = null;
 
   /**
    * @property pedimentos - Arreglo que contiene los pedimentos registrados
@@ -288,7 +288,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @property elementoParaEliminar - Índice del pedimento marcado para eliminación
    */
   public elementoParaEliminar!: number;
-  
+  // selectedMercancia: any;
+  public seleccionados: SeleccionadasTabla[] = [];
+  mercanciasTablaDatos: SeleccionadasTabla[] = [];
+  ischecked: boolean = false;
+
+
   /**
    * @property headers - Configuración de las columnas de la tabla de mercancías disponibles
    * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías disponibles
@@ -325,7 +330,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       orden: 6,
     },
   ];
-  
+
   /**
    * @property headersData - Configuración de las columnas de la tabla de mercancías seleccionadas
    * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías seleccionadas
@@ -360,7 +365,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Cuando es `true`, se muestra el error de registro en la interfaz de usuario
    */
   mostrarErrorRegistro: boolean = false;
-  
+
   /**
    * @property validationAttempted - Indica si se ha intentado validar el formulario
    * Se usa para mostrar errores de validación aunque el campo no haya sido tocado
@@ -392,7 +397,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   manejarClic(_row: unknown): void {
     this.esFormulario = true;
   }
-  
+
   /**
    * @method validarDestinatarioFormulario - Valida el formulario del destinatario
    * Marca todos los campos como tocados si el formulario es inválido
@@ -412,7 +417,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       this.mercanciaForm.markAllAsTouched();
     }
   }
-  
+
   /**
    * @method ngOnInit - Método del ciclo de vida que se ejecuta al inicializar el componente
    * Configura los formularios y obtiene los catálogos necesarios
@@ -447,7 +452,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       .subscribe();
     this.donanteDomicilio();
   }
-  
+
   /**
    * @method validarFormularios - Valida todos los formularios del componente 
    * @returns boolean
@@ -639,7 +644,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       NEW_ITEM,
     ];
 
-    // Also add to selected merchandise table and hide error
     const SELECTED_ITEM = {
       fraccionArancelaria: FORM_VALUES.fraccionMercanciaArancelaria,
       cantidad: FORM_VALUES.cantidad,
@@ -661,7 +665,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       SELECTED_ITEM
     ];
 
-    // Hide the merchandise error since we now have at least one item
     this.mostrarErrorMercancias = false;
 
     this.esMercanciaEnEdicion = true;
@@ -693,7 +696,23 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Modifica una mercancía existente.
    */
   modificar(): void {
-    this.abrirModalModificar();
+    if(this.ischecked){
+          this.abrirModalModificar();
+
+    } else{
+      this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'info',
+      titulo: 'Selección requerida',
+      mensaje: 'Debes seleccionar una mercancía',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarMensajeError = true;
+    }
   }
 
   abrirModalModificar(): void {
@@ -918,7 +937,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
-  
+
   /**
    * @method setValoresStore - Establece valores en el estado de la tienda
    * @param form - Formulario reactivo
@@ -956,7 +975,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   get validacionForm(): FormGroup {
     return this.registroForm.get('validacionForm') as FormGroup;
   }
-  
+
   /**
    * @getter validacionMercanciaForm - Obtiene el formulario de validación de mercancías
    * @returns FormGroup - Formulario de validación de mercancías anidado
@@ -964,7 +983,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   get validacionMercanciaForm(): FormGroup {
     return this.mercanciaForm.get('validacionMercanciaForm') as FormGroup;
   }
-  
+
   /**
    * @method donanteDomicilio - Configura el formulario reactivo con los valores iniciales del estado
    */
@@ -1141,12 +1160,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         valor = valor + '.0000';
       } else {
         const [ENTERO, DECIMALES] = valor.split('.');
-        valor = ENTERO + '.' + (DECIMALES + '0000').slice(0, 4);
+        valor = ENTERO + '.' + DECIMALES.padEnd(4, '0').slice(0, 4);
       }
       CONTROL?.setValue(valor, { emitEvent: false });
     }
   }
-
+  
   /**
    * Formatea el valor de la mercancía en el formulario para asegurar que tenga exactamente cuatro decimales.
    *
@@ -1158,21 +1177,31 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @remarks
    * Este método asume que el control 'validacionMercanciaForm.valorDelaMercancia' existe en el formulario 'mercanciaForm'.
    */
-  formatearValorDelaMercancia(): void {
-    const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.valorDelaMercancia');
-    let valor = CONTROL?.value;
-    if (valor !== null && valor !== undefined && valor !== '') {
-      valor = valor.toString();
-      if (!valor.includes('.')) {
-        valor = valor + '.0000';
-      } else {
-        const [ENTERO, DECIMALES] = valor.split('.');
-        valor = ENTERO + '.' + (DECIMALES + '0000').slice(0, 4);
-      }
-      CONTROL?.setValue(valor, { emitEvent: false });
-    }
+ formatearValorDelaMercancia(): void {
+  const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.valorDelaMercancia');
+  let VALOR = CONTROL?.value;
+  if (VALOR === null || VALOR === undefined || VALOR === '') return;
+  VALOR = VALOR.toString();
+  if (VALOR.length > 22) {
+    CONTROL?.setErrors({ maxlength: true });
+    return;
+  }
+  const REGEX = /^\d{1,15}(\.\d{0,4})?$/;
+  if (!REGEX.test(VALOR)) {
+    CONTROL?.setErrors({ pattern: true });
+    return;
+  }
+  if (!VALOR.includes('.')) {
+    VALOR = VALOR + '.0000';
+  } else {
+    const [ENTERO, DECIMALES = ''] = VALOR.split('.');
+    VALOR = ENTERO + '.' + DECIMALES.padEnd(4, '0').slice(0, 4);
   }
 
+  CONTROL?.setValue(VALOR, { emitEvent: false });
+  CONTROL?.updateValueAndValidity({ emitEvent: false });
+}
+  
   /**
    * Formatea el valor del campo 'masaBruta' en el formulario 'mercanciaForm' para asegurar que tenga exactamente cuatro decimales.
    * 
@@ -1184,33 +1213,33 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Este método no realiza validaciones numéricas, solo formatea la cadena del valor.
    */
   formatearMasaBruta(): void {
-    const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.masaBruta');
-    let valor = CONTROL?.value;
-    if (valor !== null && valor !== undefined && valor !== '') {
-      valor = valor.toString();
-      if (!valor.includes('.')) {
-        valor = valor + '.0000';
+  const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.masaBruta');
+  let VALOR = CONTROL?.value;
+  if (VALOR !== null && VALOR !== undefined && VALOR !== '') {
+    VALOR = VALOR.toString();
+    if (/^\d*\.?\d*$/.test(VALOR)) {
+      if (!VALOR.includes('.')) {
+        VALOR = VALOR + '.0000';
       } else {
-        const [ENTERO, DECIMALES] = valor.split('.');
-        valor = ENTERO + '.' + (DECIMALES + '0000').slice(0, 4);
+        const [ENTERO, DECIMALES] = VALOR.split('.');
+        VALOR = ENTERO + '.' + (DECIMALES + '0000').slice(0, 4);
       }
-      CONTROL?.setValue(valor, { emitEvent: false });
+      CONTROL?.setValue(VALOR, { emitEvent: false });
     }
   }
+}
 
   // Elimina un pedimento si se confirma la acción.
   eliminarPedimento(borrar: boolean): void {
-    if (borrar) {
-      // Si hay pedimentos para eliminar, eliminar del array
-      if (this.pedimentos && this.pedimentos.length > 0) {
-        this.pedimentos.splice(this.elementoParaEliminar, 1);
-      }
-      // Cerrar la notificación
-      this.nuevaNotificacion = null as any;
-    } else {
-      // Cerrar la notificación sin hacer nada
-      this.nuevaNotificacion = null as any;
+    this.ischecked = borrar;
+    if (borrar && this.selectedRow) {
+
+      this.mercanciaSeleccionadasTablaData = this.mercanciaSeleccionadasTablaData.filter((item) => item.id !== this.selectedRow.id);
+      this.selectedRow = null as unknown as SeleccionadasTabla;
+
     }
+    this.mostrarMensajeError = false;
+    this.nuevaNotificacion = null;
   }
 
   // Abre el modal y configura la notificación para eliminar un pedimento.
@@ -1227,6 +1256,67 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       txtBtnCancelar: '',
     }
     this.elementoParaEliminar = i;
+  }
+
+  public mostrarMensajeError: boolean = false;
+
+  selectedRow!: SeleccionadasTabla;
+
+  onFilaSeleccionadaradio(event: SeleccionadasTabla): void {
+    this.selectedRow = event;
+  }
+
+  cerrarEdicionMercancia(): void {
+
+    if (this.selectedRow) {
+      this.eliminarMensajeConfirmacion();
+    }
+    else {
+      this.errorMessageExportador();
+    }
+  }
+
+  errorMessageExportador(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'info',
+      titulo: 'Selección requerida',
+      mensaje: 'Debes seleccionar una mercancía',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarMensajeError = true;
+  }
+
+  eliminarMensajeConfirmacion(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'info',
+      titulo: 'Confirmación requerida',
+      mensaje: '¿Desea eliminar este dato?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.mostrarMensajeError = true;
+  }
+
+  eliminarErrorMessage(event: boolean): void {
+    if (event) {
+      this.mercanciaSeleccionadasTablaData = this.mercanciaSeleccionadasTablaData.filter((item) => item.id !== this.selectedRow.id);
+      // this.store.setMercanciaSeleccionadasTablaData(this.mercanciaSeleccionadasTablaData);
+      this.selectedRow = {} as SeleccionadasTabla;
+    }
+
+    if (this.modalInstances) {
+      this.modalInstances.hide();
+    }
+    this.mostrarMensajeError = false;
   }
 
   /**

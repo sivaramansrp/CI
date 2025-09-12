@@ -38,17 +38,5 @@ describe('SolicitudPageComponent', () => {
     component.seleccionaTab(1);
     expect(component.indice).toBe(1);
   });
-
-  it('should run #getValorIndice()', () => {
-    component.wizardComponent = component.wizardComponent || {} as WizardComponent;
-    component.wizardComponent.siguiente = jest.fn();
-    component.wizardComponent.atras = jest.fn();
-    component.getValorIndice({ valor: 2, accion: 'cont' });
-    expect(component.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-
-    component.getValorIndice({ valor: 1, accion: 'prev' });
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
+  
 });

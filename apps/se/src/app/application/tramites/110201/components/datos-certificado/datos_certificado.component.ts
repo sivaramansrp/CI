@@ -85,7 +85,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   entidadDescripcion: unknown[] = [];
   
   /** Subject utilizado para cancelar suscripciones al destruir el componente */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /** Opciones del catálogo de idiomas obtenidas desde el modelo de registro */
   public optionsIdioma = OPTIONS_IDIOMA;
@@ -201,12 +201,12 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   private markAllControlsAsTouched(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
-      const control = formGroup.get(key);
-      if (control instanceof FormGroup) {
-        this.markAllControlsAsTouched(control);
+      const CONTROL = formGroup.get(key);
+      if (CONTROL instanceof FormGroup) {
+        this.markAllControlsAsTouched(CONTROL);
       } else {
-        control?.markAsTouched();
-        control?.updateValueAndValidity();
+        CONTROL?.markAsTouched();
+        CONTROL?.updateValueAndValidity();
       }
     });
   }

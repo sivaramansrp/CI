@@ -56,13 +56,13 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
    * @property consultaDatos - Estado de consulta de datos para el componente
    */
   consultaDatos!: ConsultaioState;
-  
+
   /**
    * @property soloLectura - Indica si el formulario está en modo solo lectura
    * Cuando es `true`, los campos del formulario no se pueden editar
    */
   soloLectura: boolean = false;
-  
+
   /**
    * @property registroForm - Formulario reactivo para el destinatario con validaciones
    */
@@ -126,7 +126,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
    * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  
+
   /**
    * @property validationAttempted - Indica si se ha intentado validar el formulario
    * Se usa para mostrar errores de validación aunque el campo no haya sido tocado
@@ -243,12 +243,12 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   private markAllControlsAsTouched(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
-      const control = formGroup.get(key);
-      if (control instanceof FormGroup) {
-        this.markAllControlsAsTouched(control);
+      const CONTROL = formGroup.get(key);
+      if (CONTROL instanceof FormGroup) {
+        this.markAllControlsAsTouched(CONTROL);
       } else {
-        control?.markAsTouched();
-        control?.updateValueAndValidity();
+        CONTROL?.markAsTouched();
+        CONTROL?.updateValueAndValidity();
       }
     });
   }
@@ -264,7 +264,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
       return new Tooltip(tooltipTriggerEl as Element);
     });
   }
-  
+
   /**
    * @method inicializarEstadoFormulario - Evalúa si se debe inicializar o cargar datos en el formulario
    * Además, obtiene la información del catálogo de mercancía
@@ -276,7 +276,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
       this.donanteDomicilio();
     }
   }
-  
+
   /**
    * @method guardarDatosFormulario - Carga datos desde un archivo JSON y actualiza el store
    * Luego reinicializa el formulario con los valores actualizados desde el store
@@ -415,28 +415,28 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
    * Filtra caracteres no numéricos y limita la longitud según el campo
    * @param event - El evento de entrada del campo
    */
-  onlyNumbers(event: any): void {
-    const input = event.target;
-    const value = input.value;
-    const fieldName = input.getAttribute('formControlName');
+  onlyNumbers(event: Event): void {
+    const INPUT = (event.target as HTMLInputElement);
+    const VALUE = INPUT.value;
+    const FIELD_NAME = INPUT.getAttribute('formControlName');
 
     // Filtrar solo números
-    const numericValue = value.replace(/[^0-9]/g, '');
+    const NUMERIC_VALUE = VALUE.replace(/[^0-9]/g, '');
 
     // Establecer límites según el campo
     let maxLength = 10; // por defecto para teléfono
-    if (fieldName === 'fax') {
+    if (FIELD_NAME === 'fax') {
       maxLength = 20;
     }
 
     // Limitar la longitud
-    const limitedValue = numericValue.slice(0, maxLength);
+    const LIMITED_VALUE = NUMERIC_VALUE.slice(0, maxLength);
 
     // Actualizar el valor del campo
-    if (value !== limitedValue) {
-      input.value = limitedValue;
+    if (VALUE !== LIMITED_VALUE) {
+      INPUT.value = LIMITED_VALUE;
       // Actualizar el FormControl
-      this.registroForm.get('validacionForm.' + fieldName)?.setValue(limitedValue);
+      this.registroForm.get('validacionForm.' + FIELD_NAME)?.setValue(LIMITED_VALUE);
     }
   }
 
@@ -449,5 +449,5 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroyed$.complete();
   }
 
-  
+
 }

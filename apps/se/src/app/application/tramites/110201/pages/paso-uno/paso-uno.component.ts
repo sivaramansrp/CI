@@ -1,10 +1,10 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
-import { RegistroService } from '../../services/registro.service';
-import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
 import { CertificadoDeOrigenComponent } from '../../components/certificado-de-origen/certificado-de-origen.component';
+import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
+import { RegistroService } from '../../services/registro.service';
 
 /**
  * @component PasoUnoComponent
