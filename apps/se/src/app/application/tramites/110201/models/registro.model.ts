@@ -24,8 +24,8 @@ export interface ColumnasTabla {
  * Interfaz que define las columnas de la tabla de mercancías seleccionadas
  */
 export interface SeleccionadasTabla {
-    id?: number;
-
+  /** Identificador único de la mercancía seleccionada */
+  id?: number;
   /** Fracción arancelaria de la mercancía seleccionada */
   fraccionArancelaria: string;
   /** Cantidad de la mercancía */

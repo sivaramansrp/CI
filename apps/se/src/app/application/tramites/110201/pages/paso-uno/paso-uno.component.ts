@@ -79,14 +79,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Método del ciclo de vida OnInit que inicializa el componente y carga datos necesarios
    */
   ngOnInit(): void {
-    // Obtiene el catálogo de entidades federativas desde el servicio
     this.registro.getCatalogoById(21).subscribe((resp) => {
       this.entidadFederativa = resp;
       const DATA = JSON.parse(this.entidadFederativa.data);
       this.entidadFederativa = DATA?.domicilioFiscal?.entidadFederativa;
     });
 
-    // Suscripción al estado de consulta global para determinar modo de operación
     this.consultaQuery.selectConsultaioState$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
@@ -94,7 +92,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       })
     ).subscribe();
 
-    // Evalúa asincrónicamente si debe cargar datos existentes o inicializar formularios vacíos
     Promise.resolve().then(() => {
       if (this.consultaState.update) {
         this.guardarDatosFormularios();
@@ -126,8 +123,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   public validarFormularios(): boolean {
     let isValid = true;
-
-    // Validación del formulario de solicitante
     if (this.solicitante?.form) {
       if (this.solicitante.form.invalid) {
         this.solicitante.form.markAllAsTouched();
@@ -137,7 +132,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       isValid = false;
     }
 
-    // Validación del formulario de certificado de origen
     if (this.certificadoOrigen) {
       if (!this.certificadoOrigen.validarFormularios()) {
         isValid = false;
@@ -146,7 +140,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       isValid = false;
     }
 
-    // Validación del formulario de datos del certificado
     if (this.datosCertificado) {
       if (!this.datosCertificado.validarFormulariosDatos()) {
         isValid = false;
@@ -155,7 +148,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       isValid = false;
     }
 
-    // Validación del formulario de destinatario
     if (this.destinatario) {
       if (!this.destinatario.validarFormularios()) {
         isValid = false;

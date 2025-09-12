@@ -1,12 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
-import {
-  Catalogo,
-  ConsultaioQuery,
-  ConsultaioState,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent, CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { Catalogo,CatalogoSelectComponent,CatalogosSelect, REGEX_NUMEROS, REG_X, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -400,8 +394,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
         calle: [{ value: this.solicitudState?.calle, disabled: this.soloLectura }, [Validators.required]],
         numeroLetra: [{ value: this.solicitudState?.numeroLetra, disabled: this.soloLectura }, [Validators.required]],
         lada: [{ value: this.solicitudState?.lada, disabled: this.soloLectura }],
-        telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.pattern(/^\d+$/)]],
-        fax: [{ value: this.solicitudState?.fax, disabled: this.soloLectura }, [Validators.pattern(/^\d+$/)]],
+        telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.pattern(REG_X.REGEX_FRACCION_ARANCELARIA)]],
+        fax: [{ value: this.solicitudState?.fax, disabled: this.soloLectura }, [Validators.pattern(REG_X.REGEX_FRACCION_ARANCELARIA)]],
         correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required, Validators.email]],
       }),
     });
@@ -417,7 +411,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
     const VALUE = INPUT.value;
     const FIELD_NAME = INPUT.getAttribute('formControlName');
 
-    const NUMERIC_VALUE = VALUE.replace(/[^0-9]/g, '');
+    const NUMERIC_VALUE = VALUE.replace(REGEX_NUMEROS, '');
 
     let maxLength = 10;
     if (FIELD_NAME === 'fax') {

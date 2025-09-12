@@ -1,4 +1,4 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, Notificacion, NotificacionesComponent, Pedimento, REGEX_CANTIDAD_15_4, REGEX_NUMERO_15_ENTEROS_4_DECIMALES, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, Notificacion, NotificacionesComponent, Pedimento, REGEX_CANTIDAD_15_4, REGEX_NUMERO_15_ENTEROS_4_DECIMALES, REGEX_NUMERO_ENTERO, REGEX_SIN_DIGITOS, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ColumnasTabla, FECHAFACTURA, FECHAFINAL, FECHAINICIAL, OPTIONS_PAIS, OPTIONS_TIPO_FACTURA, OPTIONS_TRATADO, OPTIONS_UMC, OPTIONS_UNIDAD_MEDIDA, SeleccionadasTabla } from '../../models/registro.model';
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
@@ -300,6 +300,18 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @property ischecked - Indica si un elemento está seleccionado
    */
   ischecked: boolean = false;
+  
+  /**
+   * @property mostrarMensajeError
+   * Bandera que indica si se debe mostrar un mensaje de error al usuario.
+   */
+  public mostrarMensajeError: boolean = false;
+
+  /**
+   * @property selectedRow
+   * Almacena la fila seleccionada en la tabla de mercancías.
+   */
+  selectedRow!: SeleccionadasTabla;
 
 
   /**
@@ -904,7 +916,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     const INPUT = event.target as HTMLInputElement;
     let valor = INPUT.value;
 
-    valor = valor.replace(/\D/g, '');
+    valor = valor.replace(REGEX_SIN_DIGITOS, '');
 
     if (valor.length > 8) {
       valor = valor.substring(0, 8);
@@ -1125,7 +1137,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     let VALOR = CONTROL?.value;
     if (VALOR !== null && VALOR !== undefined && VALOR !== '') {
       VALOR = VALOR.toString();
-      if (/^\d*\.?\d*$/.test(VALOR)) {
+      if (REGEX_NUMERO_ENTERO.test(VALOR)) {
         if (!VALOR.includes('.')) {
           VALOR = VALOR + '.0000';
         } else {
@@ -1137,18 +1149,28 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @method eliminarPedimento
+   * Elimina un pedimento seleccionado de la tabla de mercancías si se confirma la acción.
+   * 
+   * @param borrar - Indica si se debe eliminar el registro seleccionado.
+   */
   eliminarPedimento(borrar: boolean): void {
     this.ischecked = borrar;
     if (borrar && this.selectedRow) {
-
       this.mercanciaSeleccionadasTablaData = this.mercanciaSeleccionadasTablaData.filter((item) => item.id !== this.selectedRow.id);
       this.selectedRow = null as unknown as SeleccionadasTabla;
-
     }
     this.mostrarMensajeError = false;
     this.nuevaNotificacion = null;
   }
 
+  /**
+   * @method abrirModal
+   * Abre un modal de notificación para mostrar un mensaje de error relacionado con la selección de archivo.
+   * 
+   * @param i - Índice del elemento a eliminar (por defecto 0).
+   */
   abrirModal(i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -1164,16 +1186,23 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.elementoParaEliminar = i;
   }
 
-  public mostrarMensajeError: boolean = false;
-
-  selectedRow!: SeleccionadasTabla;
-
+  /**
+   * @method onFilaSeleccionadaradio
+   * Evento que se ejecuta al seleccionar una fila con opción de radio.
+   * 
+   * @param event - Fila seleccionada en la tabla.
+   */
   onFilaSeleccionadaradio(event: SeleccionadasTabla): void {
     this.selectedRow = event;
   }
 
+  /**
+   * @method cerrarEdicionMercancia
+   * Cierra la edición de mercancía verificando si hay un registro seleccionado.
+   * Si hay selección, solicita confirmación de eliminación;
+   * en caso contrario, muestra mensaje de error.
+   */
   cerrarEdicionMercancia(): void {
-
     if (this.selectedRow) {
       this.eliminarMensajeConfirmacion();
     }
@@ -1182,6 +1211,10 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @method errorMessageExportador
+   * Muestra un mensaje de error cuando no se ha seleccionado ninguna mercancía.
+   */
   errorMessageExportador(): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -1197,6 +1230,11 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.mostrarMensajeError = true;
   }
 
+  /**
+   * @method eliminarMensajeConfirmacion
+   * Genera una notificación de confirmación para que el usuario decida
+   * si desea eliminar el registro seleccionado.
+   */
   eliminarMensajeConfirmacion(): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -1212,6 +1250,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.mostrarMensajeError = true;
   }
 
+  /**
+   * @method eliminarErrorMessage
+   * Maneja la acción de eliminación tras la confirmación en la notificación/modal.
+   * 
+   * @param event - Indica si el usuario confirmó la eliminación.
+   */
   eliminarErrorMessage(event: boolean): void {
     if (event) {
       this.mercanciaSeleccionadasTablaData = this.mercanciaSeleccionadasTablaData.filter((item) => item.id !== this.selectedRow.id);
@@ -1223,7 +1267,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     }
     this.mostrarMensajeError = false;
   }
-
   /**
    * @method ngOnDestroy - Método del ciclo de vida que se ejecuta al destruir el componente
    * Cancela todas las suscripciones activas para evitar fugas de memoria
