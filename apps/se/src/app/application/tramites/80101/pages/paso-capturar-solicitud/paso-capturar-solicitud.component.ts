@@ -80,6 +80,63 @@ export class PasoCapturarSolicitudComponent {
   /** Indica la visibilidad del botón Guardar. */
   public btnGuardarVisible: string = 'visible';
 
+  private socioAccionistaBase: Readonly<Record<string, any>> = {
+      "idPersonaPersonaSolicitudR": 0,
+      "idSolicitud": 202734824,
+      "nombre": "",
+      "apellidoMaterno": "",
+      "apellidoPaterno": "",
+      "razonSocial": "AGRICOLA ALPE S DE RL DE CV",
+      "rfc": "AAL0409235E6",
+      "curp": "",
+      "ideTipoPersonaSol": "TIPERS.SL",
+      "correoElectronico": "vucem.soporte.aplicativo@ultrasist.com.mx",
+      "cedulaProfesional": "",
+      "nss": "",
+      "telefono": "8154563",
+      "descripcionGiro": "Siembra, cultivo y cosecha de papa",
+      "cvePaisOrigen": "",
+      "idDireccionSol": 260833725,
+      "tipoPatenteAgente": "",
+      "recif": "",
+      "puesto": "",
+      "tipoAgente": "",
+      "numeroPatente": "",
+      "numeroIdentificacionFiscal": "",
+      "personaMoral": false,
+      "extranjero": false,
+      "organismoPublico": false,
+      "cveUsuario": "AAL0409235E6",
+      "paginaWeb": "",
+      "ideGenerica1": "",
+      "rfcExtranjero": "",
+      "codAutorizacion": "",
+      "actividadProductiva": "",
+      "estadoEvaluacionEntidad": "AUTORIZADO",
+      "estadoEntidad": "AUTORIZADO",
+      "original": false,
+      "modificado": false,
+      "numeroRegistro": "",
+      "concentimientoInstalacionRecuperacion": false,
+      "cveCatalogo": "",
+      "alquilado": false,
+      "volumenAlmacenaje": 0,
+      "capacidadAlmacenaje": 0,
+      "descripcionDetalladaActividadEconomica": "",
+      "activo": false,
+      "generico1": false,
+      "area": "",
+      "cveNacionalidad": "",
+      "clasificacionArancelaria": "",
+      "infoAdicional": false,
+      "montoImportacion": 0,
+      "montoExportacion": 0,
+      "pctParticAccionaria": 0,
+      "ampliacionModelos": false,
+      "ampliacionPaises": false,
+      "fecFallecimiento": "2025-09-07"
+  };
+
   /**
    * Constructor de la clase PasoCapturarSolicitudComponent.
    * 
@@ -119,6 +176,28 @@ export class PasoCapturarSolicitudComponent {
     });
   }
 
+  buildSociosAccionistas(arr1: any[] = [], arr2: any[] = [], base: Record<string, any>, data: any): any[] {
+    const result: any[] = [];
+    const mapToPayload = (item: any): any => ({
+      ...base,
+      nombre: item.nombre ?? '',
+      apellidoPaterno: item.apellidoPaterno ?? '',
+      apellidoMaterno: item.apellidoMaterno ?? '',
+      rfc: item.rfc ?? '',
+      correoElectronico: item.correoElectronico ?? '',
+      razonSocial: data.datosComplimentos.formaSocioAccionistas.formaDatos.razonSocial,
+      ideTipoPersonaSol: data.datosComplimentos.formaSocioAccionistas.tipoDePersona,
+      paginaWeb: data.datosComplimentos.datosGeneralis.paginaWWeb,
+      cveNacionalidad: data.datosComplimentos.formaSocioAccionistas.nationalidadMaxicana,
+      fecFallecimiento: data.datosComplimentos.formaCertificacion.fechaVigencia
+    });
+
+    arr1.forEach(row => result.push(mapToPayload(row)));
+    arr2.forEach(row => result.push(mapToPayload(row)));
+
+    return result;
+  }
+
   /**
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
    * 
@@ -126,6 +205,8 @@ export class PasoCapturarSolicitudComponent {
    * @returns void
    */
   guardar(data: any): void {
+    const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
+    console.log('SOCIO_ACCIONISTAS', SOCIO_ACCIONISTAS)
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
     "idSolicitud": 202781045,
@@ -210,7 +291,7 @@ export class PasoCapturarSolicitudComponent {
         }
     ],
     "plantasSubmanufactureras": [],
-    "sociosAccionistas": []
+    ...SOCIO_ACCIONISTAS
 }
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
      return response;
