@@ -28,10 +28,8 @@ describe('AgregardestinatarioComponent', () => {
     component = new AgregardestinatarioComponent(
       new FormBuilder(),
       tercerosService as TercerosrelacionadosService,
-      {} as any,
       importacionService as CertificadoZoosanitarioServiceService,
-      acuiculturaQuery as ZoosanitarioQuery,
-      {} as any
+      acuiculturaQuery as ZoosanitarioQuery
     );
 
     component.ngOnInit();

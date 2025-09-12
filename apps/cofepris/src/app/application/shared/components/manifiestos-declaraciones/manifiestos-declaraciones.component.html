@@ -25,5 +25,13 @@
         [layout]="'horizontal'"
         (change)="setValoresStore(manifiestos,'cumplimiento', 'setCumplimiento')"></app-input-radio>
     </div>
+    @if (manifiestos.get('cumplimiento')?.touched && manifiestos.get('cumplimiento')?.errors?.['required']) {
+      <div class="col-md-12">
+        <div class="mensaje-error mt-2">
+          Este campo es obligatorio.
+        </div>
+      </div>
+    }
+    
   </div>
 </form>

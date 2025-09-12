@@ -4,6 +4,7 @@
   [catalogosArray]="catalogosArray"
   [solicitudOpciones]="opcionesSolicitud"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
+  [mostrarErrorClasificacion]="mostrarErrorClasificacion"
   (setValoresStoreEvent)="setValoresStore($event)"
 ></app-datos-del-tramite>
 
@@ -14,11 +15,14 @@
   [unidadCatalogo]="unidadCatalogo"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (setValoresStoreEvent)="setValoresStore($event)"
+  [mostrarErrores]="mostrarErroresMercancia"
+  [mostrarTooltipValorFacturaUSD]="mostrarTooltipValorFacturaUSD"
 ></app-datos-de-la-mercancia>
 
 
 <app-partidas-de-la-mercancia
   [partidasDelaMercanciaForm]="partidasDelaMercanciaForm"
+  [modificarPartidasDelaMercanciaForm]="modificarPartidasDelaMercanciaForm"
   [formForTotalCount]="formForTotalCount"
   [tableHeaderData]="tableHeaderData"
   [tableBodyData]="tableBodyData"
@@ -26,9 +30,13 @@
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
   (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
-  (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
   [disabled]="disabledModificar()"
   (setValoresStoreEvent)="setValoresStore($event)"
+  [mostrarErrores]="mostrarErroresPartidas"
+  (validarAntesDeCargarArchivo)="validarYCargarArchivo()"
+  (partidasEliminadas)="onPartidasEliminadas($event)"
+  (modificarPartidaSeleccionada)="onModificarPartidaSeleccionada($event)"
+  (partidaModificada)="onPartidaModificada($event)" 
 ></app-partidas-de-la-mercancia>
 
 
@@ -50,3 +58,9 @@
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
 (setValoresStoreEvent)="setValoresStore($event)">
 </app-representacion>
+
+<lib-notificaciones
+  *ngIf="mostrarNotificacion"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="mostrarNotificacion = false">
+</lib-notificaciones>

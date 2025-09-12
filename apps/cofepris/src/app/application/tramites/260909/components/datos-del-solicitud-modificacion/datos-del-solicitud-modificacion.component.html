@@ -276,13 +276,14 @@
           [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX"
           formcontrolname="scian"
           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          (listaDeFilaSeleccionada)="onScianSeleccionados($event)"
         >
         </app-tabla-dinamica>
       </div>
     </div>
 
     <div class="d-flex justify-content-end">
-      @if(personaparas.length > 0) {
+      @if(scianSelecciona.length > 0) {
         <button type="button" class="btn btn-danger btn-space me-2">Eliminar</button>
       }
       <button
@@ -313,12 +314,8 @@
         <div class="form-group">
           <label class="form-label" for="licenciaSanitaria"
             >No. de licencia sanitaria:
-            <span
-              class="bi bi-question-circle-fill"
-              title="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente"
-              data-bs-toggle="tooltip"
-            ></span
-          ></label>
+            <span class="bi bi-question-circle-fill" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente" placement="top"></span>
+          </label>
           <input
             class="form-control"
             id="licenciaSanitaria"
@@ -369,9 +366,10 @@
         [configuracionTabla]="mercanciasTabla"
         [datos]="mercanciasTablaDatos"
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+        (listaDeFilaSeleccionada)="onMercanciasSeleccionados($event)"
       ></app-tabla-dinamica>
       <div class="container text-end mt-5">
-        @if(mercanciasTablaDatos.length > 0) {
+        @if(seleccionaMercancias.length > 0) {
           <button class="btn btn-default me-2">Eliminar</button>
           <button class="btn btn-default me-2">Modificar</button>
         }
@@ -415,7 +413,7 @@ aria-hidden="true"
               <app-catalogo-select
                 [catalogo]="scianJson"
                 [label]="'Clave S.C.I.A.N.*'"
-                [placeholder]="'Seleccione una valor'"
+                [placeholder]="'Seleccione una opción'"
                 formControlName="scian"
                 (change)="onContriloChange('scian')"
                    [isDisabled]="esFormularioSoloLectura"
@@ -424,21 +422,14 @@ aria-hidden="true"
           </div>
           <div class="row">
             <div class="col-md-8">
-              <label for="descripcionScian">Descripción del S.C.I.A.N.</label>
-              <input
-                type="text"
-                id="descripcionScianId"
+              <app-catalogo-select
+                [catalogo]="scianJson"
+                [label]="'Descripción del S.C.I.A.N.'"
+                [placeholder]="'Seleccione una opción'"
                 formControlName="descripcionScian"
-                class="form-control"
                 (change)="onContriloChange('descripcionScian')"
-              />
-              @if(scianForm.controls['descripcionScian'].invalid && scianForm.controls['descripcionScian'].touched) {
-                <div class="d-grid">
-                  @if(scianForm.controls['descripcionScian'].errors?.['required']) {
-                    <span class="mensaje-error">Este campo es obligatorio</span>
-                  }
-                </div>
-              }
+                   [isDisabled]="true"
+              ></app-catalogo-select>
             </div>
           </div>
         </div>

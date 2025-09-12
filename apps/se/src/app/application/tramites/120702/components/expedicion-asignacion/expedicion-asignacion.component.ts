@@ -1,7 +1,17 @@
 import {
+  CONFIGURATION_TABLA_MONTO,
+  INPUT_FECHA_FIN,
+  INPUT_FECHA_INICIO,
+  MONTO_DATOS,
+} from '../../constantes/expedicion-certificados-frontera.enum';
+import {
   Catalogo,
   CatalogoSelectComponent,
+  ConfiguracionColumna,
   InputFechaComponent,
+  REGEX_SOLO_DIGITOS,
+  TablaDinamicaComponent,
+  TablaSeleccion,
   TableComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
@@ -13,10 +23,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {
-  INPUT_FECHA_FIN,
-  INPUT_FECHA_INICIO,
-} from '../../constantes/expedicion-certificados-frontera.enum';
-import {
+  Monto,
   MontoExpedirTablaDatos,
   TablaDatos,
 } from '../../models/expedicion-certificados-frontera.models';
@@ -44,14 +51,37 @@ import { Tramite120702Query } from '../../estados/tramite120702.query';
     InputFechaComponent,
     ReactiveFormsModule,
     FormasDinamicasComponent,
-    TableComponent,
+    TableComponent,TablaDinamicaComponent
   ],
   templateUrl: './expedicion-asignacion.component.html',
   styleUrl: './expedicion-asignacion.component.scss',
 })
 export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
-
-  
+ /**
+ * Arreglo de montos que representa las filas de la tabla.
+ * Cada elemento corresponde a un registro de tipo `Monto`.
+ * Inicializado con los datos de `MONTO_DATOS`.
+ */
+ saldo: Monto[] =MONTO_DATOS; 
+ /**
+ * Configuración de las columnas de la tabla dinámica.
+ * Define encabezados, claves de acceso a los datos y orden de cada columna.
+ * Utiliza la constante `CONFIGURATION_TABLA_MONTO` para la inicialización.
+ */configuracionTablas: ConfiguracionColumna<Monto>[] = CONFIGURATION_TABLA_MONTO;
+   /**
+   * Propiedad que almacena un arreglo de objetos de tipo `Mercancia` seleccionados para ser guardados.
+   * @type {Monto[]}
+   */
+  public seleccionadaguardarClicado: Monto[] = [];
+   /**
+   * Configuración de las columnas de la tabla de exportadores.
+   * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
+   */
+  public checkbox = TablaSeleccion.CHECKBOX;
+    /**
+   * Bandera para mostrar u ocultar secciones después del botón "Buscar".
+   */
+  mostrarSecciones = false;
   /**
    * Estado de la consulta recibido como entrada desde el componente padre.
    */
@@ -228,7 +258,7 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
       fechaInicioVigencia: [{ value: '15/11/2024', disabled: true }],
       fechaFinVigencia: [{ value: '15/11/2025', disabled: true }],
       montoADisponible: [{ value: this.defaultMontoDisponible, disabled: true }],
-      montoAExpedir: ['', [Validators.required]],
+      montoAExpedir: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(15)]],
       totalAExpedir: [{ value: '', disabled: true }],
     });
 
@@ -277,7 +307,24 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
     });
     this.tramite120702Store.setFechaFin(nuevo_valor);
   }
-
+ /**
+ * Método que asigna un objeto de tipo `Mercancia` al arreglo de mercancías seleccionadas para guardar.
+ * @param {Mercancia} evento - Objeto de tipo `Mercancia` que ha sido seleccionado.
+ */
+  obtenerSeleccionadoMercancia(filas: Monto[]): void {
+  this.seleccionadaguardarClicado = filas;
+}
+  /**
+  * Método que elimina los objetos seleccionados del arreglo de mercancías guardadas.
+  * @remarks
+  * Este método verifica si hay elementos seleccionados antes de vaciar el arreglo `guardarClicado`.
+  */
+ eliminarSeleccionados(): void {
+  if (this.seleccionadaguardarClicado.length > 0) {
+    this.saldo = this.saldo.filter(item => !this.seleccionadaguardarClicado.includes(item));
+    this.seleccionadaguardarClicado = [];
+  }
+}
   /**
    * Procesa el valor del campo montoAExpedir y actualiza la tabla y valores dependientes.
    */
@@ -291,11 +338,11 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
       UPDATED_MONTO_DISPONIBLE >= 0 ? UPDATED_MONTO_DISPONIBLE : 0
     );
 
-    const MONTO_A_EXPEDIR_FILA = {
-      tbodyData: [MONTO_A_EXPEDIR],
+    const MONTO_A_EXPEDIR_FILA: Monto = {
+    Montoaexpedir: MONTO_A_EXPEDIR.toString(),
     };
-    this.montoTablaFilaDatos.push(MONTO_A_EXPEDIR_FILA);
-    this.montoTablaFilaDatos = JSON.parse(JSON.stringify(this.montoTablaFilaDatos));
+    this.saldo.push(MONTO_A_EXPEDIR_FILA);
+    this.saldo = [...this.saldo];  
 
     const TOTAL_A_EXPEDIR = this.asignacionForm.get('totalAExpedir')?.value || 0;
     this.asignacionForm.get('totalAExpedir')?.setValue(TOTAL_A_EXPEDIR + MONTO_A_EXPEDIR);
@@ -303,7 +350,12 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
     this.asignacionForm.get('montoAExpedir')?.setValue('');
     this.asignacionForm.get('montoAExpedir')?.markAsUntouched();
   }
-
+/**
+ * Método que se ejecuta al hacer clic en el botón "Buscar".
+ */
+onBuscarClick(): void {
+  this.mostrarSecciones = true; // Muestra el contenido que está debajo
+}
   /**
    * Método del ciclo de vida Angular que se ejecuta al destruir el componente.
    * Libera las suscripciones activas.

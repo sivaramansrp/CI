@@ -1,26 +1,32 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TercerosRelacionadosVistaComponent } from './terceros-relacionados-vista.component';
-import { Tramite260214Store } from '../../estados/tramite260214Store.store';
-import { Tramite260214Query } from '../../estados/tramite260214Query.query';
-import { TercerosRelacionadosFebService } from '../../../../shared/services/tereceros-relacionados-feb.service';
 import { of, Subject } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
+import { ImportacionDispositivosMedicosUsoService } from '../../services/importacion-dispositivos-medicos-uso.service';
+import { TercerosRelacionadosFebService } from '../../../../shared/services/tereceros-relacionados-feb.service';
+import { Tramite260214Query } from '../../estados/tramite260214Query.query';
+import { Tramite260214Store } from '../../estados/tramite260214Store.store';
 import {
   Fabricante,
   Destinatario,
   Proveedor,
   Facturador,
 } from '../../../../shared/models/terceros-relacionados.model';
-import { CommonModule } from '@angular/common';
-import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 
 describe('TercerosRelacionadosVistaComponent', () => {
   let component: TercerosRelacionadosVistaComponent;
-  let fixture: any;
+  let fixture: ComponentFixture<TercerosRelacionadosVistaComponent>;
   let tramiteStore: jest.Mocked<Tramite260214Store>;
   let tramiteQuery: jest.Mocked<Tramite260214Query>;
-  let tercerosService: jest.Mocked<TercerosRelacionadosFebService>;
+  let importacionService: jest.Mocked<ImportacionDispositivosMedicosUsoService>;
+
+  const mockFabricantes: Fabricante[] = [];
+  const mockDestinatarios: Destinatario[] = [];
+  const mockProveedores: Proveedor[] = [];
+  const mockFacturadores: Facturador[] = [];
 
   beforeEach(async () => {
     tramiteStore = {
@@ -35,36 +41,41 @@ describe('TercerosRelacionadosVistaComponent', () => {
     } as any;
 
     tramiteQuery = {
-      getFabricanteTablaDatos$: of([]),
-      getDestinatarioFinalTablaDatos$: of([]),
-      getProveedorTablaDatos$: of([]),
-      getFacturadorTablaDatos$: of([]),
+      getFabricanteTablaDatos$: of(mockFabricantes),
+      getDestinatarioFinalTablaDatos$: of(mockDestinatarios),
+      getProveedorTablaDatos$: of(mockProveedores),
+      getFacturadorTablaDatos$: of(mockFacturadores),
     } as any;
 
-    tercerosService = {
-      getFabricanteTablaDatos: jest.fn(() => of([])),
-      getDestinatarioTablaDatos: jest.fn(() => of([])),
-      getProveedorTablaDatos: jest.fn(() => of([])),
-      getFacturadorTablaDatos: jest.fn(() => of([])),
-      getFabricanteTablaDatos$: jest.fn(() => of([])),
+    importacionService = {
+      getFabricanteTablaDatos: jest.fn(() => of(mockFabricantes)),
+      getDestinatarioTablaDatos: jest.fn(() => of(mockDestinatarios)),
+      getProveedorTablaDatos: jest.fn(() => of(mockProveedores)),
+      getFacturadorTablaDatos: jest.fn(() => of(mockFacturadores)),
     } as any;
 
     await TestBed.configureTestingModule({
       imports: [
-        TercerosRelacionadosVistaComponent,
         CommonModule,
         TercerosRelacionadosComponent,
-        HttpClientTestingModule
+        TercerosRelacionadosVistaComponent,
+        HttpClientTestingModule,
       ],
+      declarations: [],
       providers: [
         { provide: Tramite260214Store, useValue: tramiteStore },
         { provide: Tramite260214Query, useValue: tramiteQuery },
-        { provide: TercerosRelacionadosFebService, useValue: tercerosService },
+        { provide: TercerosRelacionadosFebService, useValue: importacionService },
+        {
+          provide: ImportacionDispositivosMedicosUsoService,
+          useValue: importacionService,
+        },
         {
         provide: ActivatedRoute,
         useValue: {
+          params: of({ id: '123' }),
           queryParams: of({}),
-          snapshot: { paramMap: { get: () => null } },
+          snapshot: { paramMap: { get: () => '123' } },
         },
       },
       ],
@@ -72,6 +83,18 @@ describe('TercerosRelacionadosVistaComponent', () => {
 
     fixture = TestBed.createComponent(TercerosRelacionadosVistaComponent);
     component = fixture.componentInstance;
+    importacionService.getFabricanteTablaDatos.mockReturnValue(
+      of(mockFabricantes)
+    );
+    importacionService.getDestinatarioTablaDatos.mockReturnValue(
+      of(mockDestinatarios)
+    );
+    importacionService.getProveedorTablaDatos.mockReturnValue(
+      of(mockProveedores)
+    );
+    importacionService.getFacturadorTablaDatos.mockReturnValue(
+      of(mockFacturadores)
+    );
   });
 
   it('should create', () => {
@@ -79,144 +102,106 @@ describe('TercerosRelacionadosVistaComponent', () => {
   });
 
   it('should subscribe and set fabricanteTablaDatos', () => {
-    const fabricantes: Fabricante[] = [];
-    tramiteQuery.getFabricanteTablaDatos$ = of(fabricantes);
-    tramiteQuery.getDestinatarioFinalTablaDatos$ = of([]);
-    tramiteQuery.getProveedorTablaDatos$ = of([]);
-    tramiteQuery.getFacturadorTablaDatos$ = of([]);
     component.ngOnInit();
-    expect(component.fabricanteTablaDatos).toEqual(fabricantes);
+    expect(component.fabricanteTablaDatos).toEqual(mockFabricantes);
   });
 
   it('should subscribe and set destinatarioFinalTablaDatos', () => {
-    const destinatarios: Destinatario[] = [];
-    tramiteQuery.getFabricanteTablaDatos$ = of([]);
-    tramiteQuery.getDestinatarioFinalTablaDatos$ = of(destinatarios);
-    tramiteQuery.getProveedorTablaDatos$ = of([]);
-    tramiteQuery.getFacturadorTablaDatos$ = of([]);
     component.ngOnInit();
-    expect(component.destinatarioFinalTablaDatos).toEqual(destinatarios);
+    expect(component.destinatarioFinalTablaDatos).toEqual(mockDestinatarios);
   });
 
   it('should subscribe and set proveedorTablaDatos', () => {
-    const proveedores: Proveedor[] = [];
-    tramiteQuery.getFabricanteTablaDatos$ = of([]);
-    tramiteQuery.getDestinatarioFinalTablaDatos$ = of([]);
-    tramiteQuery.getProveedorTablaDatos$ = of(proveedores);
-    tramiteQuery.getFacturadorTablaDatos$ = of([]);
     component.ngOnInit();
-    expect(component.proveedorTablaDatos).toEqual(proveedores);
+    expect(component.proveedorTablaDatos).toEqual(mockProveedores);
   });
 
   it('should subscribe and set facturadorTablaDatos', () => {
-    const facturadores: Facturador[] = [];
-    tramiteQuery.getFabricanteTablaDatos$ = of([]);
-    tramiteQuery.getDestinatarioFinalTablaDatos$ = of([]);
-    tramiteQuery.getProveedorTablaDatos$ = of([]);
-    tramiteQuery.getFacturadorTablaDatos$ = of(facturadores);
     component.ngOnInit();
-    expect(component.facturadorTablaDatos).toEqual(facturadores);
+    expect(component.facturadorTablaDatos).toEqual(mockFacturadores);
   });
 
   it('should call addFabricantes with response', () => {
-    const fabricantes: Fabricante[] = [];
-    tercerosService.getFabricanteTablaDatos.mockReturnValue(of(fabricantes));
     const spy = jest.spyOn(component, 'addFabricantes');
-    component.loadData();
-    expect(spy).toHaveBeenCalledWith(fabricantes);
+    component.cargarDatos();
+    expect(spy).toHaveBeenCalledWith(mockFabricantes);
   });
 
   it('should call addDestinatarios with response', () => {
-    const destinatarios: Destinatario[] = [];
-    tercerosService.getDestinatarioTablaDatos.mockReturnValue(
-      of(destinatarios)
-    );
     const spy = jest.spyOn(component, 'addDestinatarios');
-    component.loadData();
-    expect(spy).toHaveBeenCalledWith(destinatarios);
+    component.cargarDatos();
+    expect(spy).toHaveBeenCalledWith(mockDestinatarios);
   });
 
   it('should call addProveedores with response', () => {
-    const proveedores: Proveedor[] = [];
-    tercerosService.getProveedorTablaDatos.mockReturnValue(of(proveedores));
     const spy = jest.spyOn(component, 'addProveedores');
-    component.loadData();
-    expect(spy).toHaveBeenCalledWith(proveedores);
+    component.cargarDatos();
+    expect(spy).toHaveBeenCalledWith(mockProveedores);
   });
 
   it('should call addFacturadores with response', () => {
-    const facturadores: Facturador[] = [];
-    tercerosService.getFacturadorTablaDatos.mockReturnValue(of(facturadores));
     const spy = jest.spyOn(component, 'addFacturadores');
-    component.loadData();
-    expect(spy).toHaveBeenCalledWith(facturadores);
+    component.cargarDatos();
+    expect(spy).toHaveBeenCalledWith(mockFacturadores);
   });
 
-  it('addFabricantes should call tramiteStore.updateFabricanteTablaDatos', () => {
-    const fabricantes: Fabricante[] = [];
-    component.addFabricantes(fabricantes);
+  it('addFabricantes should call updateFabricanteTablaDatos', () => {
+    component.addFabricantes(mockFabricantes);
     expect(tramiteStore.updateFabricanteTablaDatos).toHaveBeenCalledWith(
-      fabricantes
+      mockFabricantes
     );
   });
 
-  it('addDestinatarios should call tramiteStore.updateDestinatarioFinalTablaDatos', () => {
-    const destinatarios: Destinatario[] = [];
-    component.addDestinatarios(destinatarios);
+  it('addDestinatarios should call updateDestinatarioFinalTablaDatos', () => {
+    component.addDestinatarios(mockDestinatarios);
     expect(tramiteStore.updateDestinatarioFinalTablaDatos).toHaveBeenCalledWith(
-      destinatarios
+      mockDestinatarios
     );
   });
 
-  it('addProveedores should call tramiteStore.updateProveedorTablaDatos', () => {
-    const proveedores: Proveedor[] = [];
-    component.addProveedores(proveedores);
+  it('addProveedores should call updateProveedorTablaDatos', () => {
+    component.addProveedores(mockProveedores);
     expect(tramiteStore.updateProveedorTablaDatos).toHaveBeenCalledWith(
-      proveedores
+      mockProveedores
     );
   });
 
-  it('addFacturadores should call tramiteStore.updateFacturadorTablaDatos', () => {
-    const facturadores: Facturador[] = [];
-    component.addFacturadores(facturadores);
+  it('addFacturadores should call updateFacturadorTablaDatos', () => {
+    component.addFacturadores(mockFacturadores);
     expect(tramiteStore.updateFacturadorTablaDatos).toHaveBeenCalledWith(
-      facturadores
+      mockFacturadores
     );
   });
 
-  it('fabricanteEventoModificar should call tramiteStore.fabricanteTablaModificaDatos', () => {
-    const fabricantes: Fabricante[] = [];
-    component.fabricanteEventoModificar(fabricantes);
+  it('fabricanteEventoModificar should call fabricanteTablaModificaDatos', () => {
+    component.fabricanteEventoModificar(mockFabricantes);
     expect(tramiteStore.fabricanteTablaModificaDatos).toHaveBeenCalledWith(
-      fabricantes
+      mockFabricantes
     );
   });
 
-  it('destinatarioEventoModificar should call tramiteStore.destinatarioFinalTablaModificaDatos', () => {
-    const destinatarios: Destinatario[] = [];
-    component.destinatarioEventoModificar(destinatarios);
+  it('destinatarioEventoModificar should call destinatarioFinalTablaModificaDatos', () => {
+    component.destinatarioEventoModificar(mockDestinatarios);
     expect(
       tramiteStore.destinatarioFinalTablaModificaDatos
-    ).toHaveBeenCalledWith(destinatarios);
+    ).toHaveBeenCalledWith(mockDestinatarios);
   });
 
-  it('proveedorEventoModificar should call tramiteStore.proveedorTablaModificaDatos', () => {
-    const proveedores: Proveedor[] = [];
-    component.proveedorEventoModificar(proveedores);
+  it('proveedorEventoModificar should call proveedorTablaModificaDatos', () => {
+    component.proveedorEventoModificar(mockProveedores);
     expect(tramiteStore.proveedorTablaModificaDatos).toHaveBeenCalledWith(
-      proveedores
+      mockProveedores
     );
   });
 
-  it('facturadorEventoModificar should call tramiteStore.facturadorTablaModificaDatos', () => {
-    const facturadores: Facturador[] = [];
-    component.facturadorEventoModificar(facturadores);
+  it('facturadorEventoModificar should call facturadorTablaModificaDatos', () => {
+    component.facturadorEventoModificar(mockFacturadores);
     expect(tramiteStore.facturadorTablaModificaDatos).toHaveBeenCalledWith(
-      facturadores
+      mockFacturadores
     );
   });
 
-  it('should complete destroy$ on ngOnDestroy', () => {
+  it('should complete destroy$', () => {
     const destroy$ = (component as any).destroy$ as Subject<void>;
     const nextSpy = jest.spyOn(destroy$, 'next');
     const completeSpy = jest.spyOn(destroy$, 'complete');

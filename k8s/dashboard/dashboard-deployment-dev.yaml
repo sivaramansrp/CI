@@ -15,6 +15,7 @@ spec:
       containers:
       - name: modulefederation-dashboard-deployment-dev
         image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:1.0.32
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:

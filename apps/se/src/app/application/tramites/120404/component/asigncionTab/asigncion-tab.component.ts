@@ -4,13 +4,10 @@
  * incluyendo la inicialización, la obtención de datos y la gestión de los controles del formulario.
  * @module AsignciontabComponent
  */
-
+import { AbstractControl ,ValidationErrors} from '@angular/forms';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, } from '@angular/forms';
-
-import { AbstractControl ,ValidationErrors} from '@angular/forms';
-
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite120404State, Tramite120404Store } from '../../estados/store/tramite120404.store';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -20,9 +17,6 @@ import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/
 import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src';
 import { SolicitantetabComponent } from '../solicitantetab/solicitantetab.component';
 import { Tramite120404Query } from '../../estados/queries/tramite120404.query';
-
-
-
 /**
  * Componente para la gestión del formulario de asignación.
  * @selector app-asignciontab

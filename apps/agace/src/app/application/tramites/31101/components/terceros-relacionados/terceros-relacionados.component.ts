@@ -1,16 +1,17 @@
+import { Component, OnDestroy } from '@angular/core';
+import {
+  ConfiguracionColumna,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { HttpClientModule } from '@angular/common/http';
-import { OnDestroy } from '@angular/core';
 import { RECIBIR_NOTIFICACIONES_CONFIGURACION } from '../../constants/solicitud.enum';
 import { RecibirNotificaciones } from '../../models/solicitud.model';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente encargado de mostrar la lista de terceros relacionados

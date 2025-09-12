@@ -77,4 +77,15 @@ export class Tramite240105Query extends Query<Tramite240105State> {
   public getMercanciaTablaDatos$ = this.select(
     (state) => state.merccancialTablaDatos
   );
+
+    /**
+   * @method obtenerTercerosDatos$
+   * @description Devuelve los datos del destinatario o proveedor modificados desde el estado.
+   * Si no existen datos modificados, retorna null.
+   * 
+   * @returns {any | null} Los datos del destinatario o proveedor modificados, o null si no existen.
+   */
+  public obtenerTercerosDatos$ = this.select((state) => {
+    return state.modificarDestinarioDatos || state.modificarProveedorDatos || null;
+  });
 }

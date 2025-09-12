@@ -13,6 +13,10 @@ export interface BandejaDeTareasPendientes {
     current_user?: string;
     id_solicitud?: string;
     nombre_pagina?: string;
+    informacion_adicional?: string;
+    requerimiento?: string;
+    observacion?: string;
+    opinion?: string;
 }
 
 export interface SeleccionadoDepartamento {

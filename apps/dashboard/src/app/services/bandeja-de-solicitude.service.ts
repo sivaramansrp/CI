@@ -140,6 +140,10 @@ export class BandejaDeSolicitudeService {
               current_user: dato.current_user,
               id_solicitud: dato.id_solicitud,
               nombre_pagina: dato.nombre_pagina,
+              informacion_adicional: dato.informacion_adicional,
+              requerimiento: dato.estado_req_informacion,
+              observacion: dato.estado_observacion,
+              opinion: dato.estado_opinion,
             } as BandejaDeTareasPendientes)
         );
       }),

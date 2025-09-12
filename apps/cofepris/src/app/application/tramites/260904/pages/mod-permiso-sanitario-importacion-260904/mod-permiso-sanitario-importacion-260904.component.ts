@@ -313,10 +313,9 @@ export class ModPermisoSanitarioImportacion260904Component {
    * Maneja el evento de continuar en el asistente, validando los campos y navegando entre pasos.
    * @param event Evento de acción de botón con el índice del paso.
    */
-  onContinuar(event: AccionBoton): void {
-    
+   onContinuar(event: AccionBoton): void {
     const CURRENT_INDICE = event.valor;
-    
+
     type PaymentFieldValues = [
       string | null | undefined,
       string | null | undefined,
@@ -343,6 +342,23 @@ export class ModPermisoSanitarioImportacion260904Component {
         const ANY_BLANK: boolean = fields.some(
           (val: string | null | undefined) => val === null || val === undefined || val === ''
         );
+        // --- Pago de derechos: si algún campo está vacío, mostrar error específico ---
+        if (CURRENT_INDICE === 4 && ANY_BLANK) {
+          this.message = 'Todos los campos de pago son requeridos';
+          if (this.pagoDeDerechosComponent?.pagoDeDerechosForm) {
+            ModPermisoSanitarioImportacion260904Component.MARK_ALL_CONTROLS_TOUCHED_EVEN_IF_DISABLED(this.pagoDeDerechosComponent.pagoDeDerechosForm);
+          }
+          setTimeout(() => {
+            const ERROR_ELEMENT = document.querySelector('.error-message, .alert-danger');
+            if (ERROR_ELEMENT) {
+              ERROR_ELEMENT.scrollIntoView({ behavior: 'smooth' });
+            }
+          }, 100);
+          this.datosPasos.indice = CURRENT_INDICE;
+          this.datosPasos.txtBtnSig = 'Continuar';
+          return;
+        }
+
         if (ANY_BLANK) {
           this.showPaymentModal = true;
           this.message = undefined;
@@ -360,13 +376,12 @@ export class ModPermisoSanitarioImportacion260904Component {
           case 3: {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const FABRICANTES: unknown[] = this.pasoUnoComponent?.tercerosRelacionadosVistaComponent?.fabricanteTablaDatos ?? [];
-
             const DESTINATARIOS: unknown[] = this.pasoUnoComponent?.tercerosRelacionadosVistaComponent?.destinatarioFinalTablaDatos ?? [];
             isValid = FABRICANTES.length > 0 && DESTINATARIOS.length > 0;
             break;
           }
           case 4: {
-            isValid = this.pasoUnoComponent?.pagoDeDerechosComponent?.pagoDeDerechosForm?.valid ?? false;
+            isValid = this.pagoDeDerechosComponent?.pagoDeDerechosForm?.valid ?? false;
             break;
           }
           case 5: {
@@ -407,6 +422,7 @@ export class ModPermisoSanitarioImportacion260904Component {
       });
   }
 
+
   /**
    * Handler for No button in modal
    */
@@ -437,22 +453,114 @@ export class ModPermisoSanitarioImportacion260904Component {
    * Handler para el botón "Sí" en el modal de pago.
    * Cierra el modal y navega directamente al paso de pago.
    */
-  onPaymentModalYes(): void {
+    onPaymentModalYes(): void {
     this.showPaymentModal = false;
-    
-    this.indice = 4;
-    this.datosPasos.indice = 4;
-    if (this.pasoUnoComponent) {
-      this.pasoUnoComponent.indice = 4;
+
+    // Validar todos los campos requeridos de todas las pestañas excepto los de pago
+    let datosDeLaSolicitudValid = true;
+    let domicilioDelEstablecimientoValid = true;
+    let tercerosRelacionadosValid = true;
+    let tramitesAsociadoValid = true;
+
+    // Validar Datos de la Solicitud
+    if (this.pasoUnoComponent?.datosDeLaSolicitudComponent?.form) {
+      ModPermisoSanitarioImportacion260904Component.MARK_ALL_CONTROLS_TOUCHED_EVEN_IF_DISABLED(this.pasoUnoComponent.datosDeLaSolicitudComponent.form);
+      if (this.pasoUnoComponent.datosDeLaSolicitudComponent.datosDelEstablecimiento) {
+        ModPermisoSanitarioImportacion260904Component.MARK_ALL_CONTROLS_TOUCHED_EVEN_IF_DISABLED(this.pasoUnoComponent.datosDeLaSolicitudComponent.datosDelEstablecimiento);
+      }
+      datosDeLaSolicitudValid = this.pasoUnoComponent.datosDeLaSolicitudComponent.form.valid && this.pasoUnoComponent.datosDeLaSolicitudComponent.datosDelEstablecimiento.valid;
     }
-    
-    this.ocultarBtnAnterior = true;
-    this.datosPasos.txtBtnAnt = '';
+
+    // Validar Domicilio del Establecimiento
+    if (this.pasoUnoComponent?.domicilioDelEstablecimientoComponent?.form) {
+      ModPermisoSanitarioImportacion260904Component.MARK_ALL_CONTROLS_TOUCHED_EVEN_IF_DISABLED(this.pasoUnoComponent.domicilioDelEstablecimientoComponent.form);
+      domicilioDelEstablecimientoValid = this.pasoUnoComponent.domicilioDelEstablecimientoComponent.form.valid;
+      const DOMICILIO = this.pasoUnoComponent.domicilioDelEstablecimientoComponent.domicilio;
+      const REPRESENTANTE_LEGAL = this.pasoUnoComponent.domicilioDelEstablecimientoComponent.representanteLegal;
+      let DOMICILIO_FIELDS_VALID = true;
+      let REPRESENTANTE_LEGAL_FIELDS_VALID = true;
+      if (DOMICILIO) {
+        ['regimen', 'aduanasEntradas'].forEach(field => {
+          const CONTROL = DOMICILIO.get(field);
+          if (CONTROL) {
+            CONTROL.markAsTouched();
+            CONTROL.updateValueAndValidity();
+            if (CONTROL.invalid) {
+              DOMICILIO_FIELDS_VALID = false;
+            }
+          }
+        });
+      }
+      if (REPRESENTANTE_LEGAL) {
+        const FIELDS = ['acuerdoPublico', 'rfc', 'nombre', 'apellidoPaterno'];
+        const DISABLED_CONTROLS: import('@angular/forms').AbstractControl[] = [];
+        FIELDS.forEach(field => {
+          const CONTROL = REPRESENTANTE_LEGAL.get(field);
+          if (CONTROL && CONTROL.disabled) {
+            CONTROL.enable({ emitEvent: false });
+            DISABLED_CONTROLS.push(CONTROL);
+          }
+        });
+        FIELDS.forEach(field => {
+          const CONTROL = REPRESENTANTE_LEGAL.get(field);
+          if (CONTROL) {
+            CONTROL.markAsTouched();
+            CONTROL.updateValueAndValidity();
+            if (CONTROL.invalid) {
+              REPRESENTANTE_LEGAL_FIELDS_VALID = false;
+            }
+          }
+        });
+        DISABLED_CONTROLS.forEach(control => {
+          control.disable({ emitEvent: false });
+        });
+      }
+      domicilioDelEstablecimientoValid = domicilioDelEstablecimientoValid && DOMICILIO_FIELDS_VALID && REPRESENTANTE_LEGAL_FIELDS_VALID;
+    }
+
+    // Validar Terceros Relacionados
+    if (this.tercerosRelacionadosVistaComponent) {
+      const FABRICANTES = this.tercerosRelacionadosVistaComponent.fabricanteTablaDatos;
+      const DESTINATARIOS = this.tercerosRelacionadosVistaComponent.destinatarioFinalTablaDatos;
+      tercerosRelacionadosValid = FABRICANTES.length > 0 && DESTINATARIOS.length > 0;
+      const PROVEEDORES = this.tercerosRelacionadosVistaComponent.proveedorTablaDatos;
+      const FACTURADORES = this.tercerosRelacionadosVistaComponent.facturadorTablaDatos;
+      if (PROVEEDORES.length > 0) {
+        tercerosRelacionadosValid = true;
+      }
+      if (FACTURADORES.length > 0) {
+        tercerosRelacionadosValid = true;
+      }
+    }
+
+    // Validar Trámites Asociados
+    if (this.tramitesAsociadoComponent) {
+      const ASOCIADOS = this.tramitesAsociadoComponent.acuseTablaDatos;
+      tramitesAsociadoValid = ASOCIADOS.length > 0;
+    }
+
+    // Si algún campo requerido (excepto pago) no está lleno, mostrar error y quedarse en el tab actual
+    if (!datosDeLaSolicitudValid || !domicilioDelEstablecimientoValid || !tercerosRelacionadosValid || !tramitesAsociadoValid) {
+      this.message = '¡Error de registro! Faltan campos por capturar.';
+      setTimeout(() => {
+        const ERROR_ELEMENT = document.querySelector('.error-message, .alert-danger');
+        if (ERROR_ELEMENT) {
+          ERROR_ELEMENT.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+      return;
+    }
+
+    // Si todo está correcto, ir a Paso 2
+    this.indice = 2;
+    this.datosPasos.indice = 2;
+    this.ocultarBtnAnterior = false;
+    this.datosPasos.txtBtnAnt = 'Anterior';
     this.datosPasos.txtBtnSig = 'Continuar';
+    this.message = undefined;
   }
-  /**
-   * Variable para almacenar mensajes de información o error.
-   */
+
+ 
   /**
    * Variable para almacenar mensajes de información o error.
    */
