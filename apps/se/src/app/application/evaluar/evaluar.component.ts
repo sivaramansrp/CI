@@ -358,7 +358,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.consultaioStore.solicitanteConsultaio({
       folioDelTramite: this.guardarDatos?.folioTramite,
       fechaDeInicio: FECHA_DE_INICIO,
-      estadoDelTramite: this.guardarDatos?.estadoDeTramite
+      estadoDelTramite: this.guardarDatos?.estadoDeTramite,
+      tipoDeTramite: this.guardarDatos?.tipoDeTramite
     });
   }
   /**

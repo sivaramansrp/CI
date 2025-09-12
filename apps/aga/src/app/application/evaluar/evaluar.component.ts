@@ -1077,8 +1077,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.iniciarService.postIniciarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD).subscribe({
       next: (resp) => {
         if (resp.codigo === CodigoRespuesta.EXITO) {
-          this.dataIniciarDictamen = resp.datos ?? {} as IniciarDictamenResponse;
-          this.obtenerCriterios();
+          this.dataIniciarDictamen = resp.datos ?? {} as IniciarDictamenResponse;          
         }
 
       },
