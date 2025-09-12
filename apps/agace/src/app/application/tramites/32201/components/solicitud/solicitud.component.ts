@@ -110,6 +110,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     { label: 'Sí', value: 'si' },
     { label: 'No', value: 'no' },
   ];
+
+  /**
+   * Texto de requisito.
+   */
   textoRequisito = this.TEXTOS.TEXTO_REQUISITOS;
 
   /**
@@ -144,18 +148,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Llama a los métodos para obtener datos de establecimientos, empleados, domicilios e instalaciones.
-   */
+   */  
   ngOnInit(): void {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-          this.esFormularioSoloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
     this.tramite32201Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -164,8 +158,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.donanteDomicilio();
-    this.inicializarEstadoFormulario();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          if (this.solicitudState) {
+            this.inicializarEstadoFormulario();
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -178,11 +182,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   * @returns {void}
   */
   inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.donanteDomicilio();
+    if (!this.solicitudState) {
+      return;
     }
+    this.guardarDatosFormulario();   
   }
 
   /**
@@ -198,6 +201,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.configurarValidacionRadio3();
     }
   }
+
   /**
    * Método para cargar un archivo de proveedores.
    * Valida que el archivo sea de formato Excel (.xls o .xlsx) y verifica el número de columnas.
@@ -315,6 +319,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * basándose en el estado actual de la solicitud.
    */    
   donanteDomicilio(): void {
+    if (!this.solicitudState) {
+      return;
+    }
+
     this.solicitudForm = this.fb.group({
       regimen_0: [{value: this.solicitudState?.regimen_0, disabled: this.esFormularioSoloLectura}],
       regimen_1: [{value: this.solicitudState?.regimen_1, disabled: this.esFormularioSoloLectura}],
@@ -325,24 +333,26 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       radio_2: [{value: this.solicitudState?.radio_2, disabled: this.esFormularioSoloLectura}],
       radio_3: [{value: this.solicitudState?.radio_3, disabled: this.esFormularioSoloLectura}],
       valorAduana: [{value: this.solicitudState?.valorAduana, disabled: this.esFormularioSoloLectura}],
-      textoGenerico10: [{value: this.solicitudState.textoGenerico10, disabled: this.esFormularioSoloLectura}],
-      textoGenerico11: [{value: this.solicitudState.textoGenerico11, disabled: this.esFormularioSoloLectura}],
-      textoGenerico12: [{value: this.solicitudState.textoGenerico12, disabled: this.esFormularioSoloLectura}],
-      textoGenerico13: [{value: this.solicitudState.textoGenerico13, disabled: this.esFormularioSoloLectura}],
-      textoGenerico14: [{value: this.solicitudState.textoGenerico14, disabled: this.esFormularioSoloLectura}],
-      textoGenerico15: [{value: this.solicitudState.textoGenerico15, disabled: this.esFormularioSoloLectura}],
-      textoGenerico16: [{value: this.solicitudState.textoGenerico16, disabled: this.esFormularioSoloLectura}],
-      textoGenerico17: [{value: this.solicitudState.textoGenerico17, disabled: this.esFormularioSoloLectura}],
-      textoGenerico18: [{value: this.solicitudState.textoGenerico18, disabled: this.esFormularioSoloLectura}],
-      textoGenerico19: [{value: this.solicitudState.textoGenerico19, disabled: this.esFormularioSoloLectura}],
-      textoGenerico20: [{value: this.solicitudState.textoGenerico20, disabled: this.esFormularioSoloLectura}],
-      textoGenerico21: [{value: this.solicitudState.textoGenerico21, disabled: this.esFormularioSoloLectura}],
-      textoGenerico22: [{value: this.solicitudState.textoGenerico22, disabled: this.esFormularioSoloLectura}],
-      textoGenerico23: [{value: this.solicitudState.textoGenerico23, disabled: this.esFormularioSoloLectura}],
-      textoGenerico24: [{value: this.solicitudState.textoGenerico24, disabled: this.esFormularioSoloLectura}],
+      textoGenerico10: [{value: this.solicitudState?.textoGenerico10, disabled: this.esFormularioSoloLectura}],
+      textoGenerico11: [{value: this.solicitudState?.textoGenerico11, disabled: this.esFormularioSoloLectura}],
+      textoGenerico12: [{value: this.solicitudState?.textoGenerico12, disabled: this.esFormularioSoloLectura}],
+      textoGenerico13: [{value: this.solicitudState?.textoGenerico13, disabled: this.esFormularioSoloLectura}],
+      textoGenerico14: [{value: this.solicitudState?.textoGenerico14, disabled: this.esFormularioSoloLectura}],
+      textoGenerico15: [{value: this.solicitudState?.textoGenerico15, disabled: this.esFormularioSoloLectura}],
+      textoGenerico16: [{value: this.solicitudState?.textoGenerico16, disabled: this.esFormularioSoloLectura}],
+      textoGenerico17: [{value: this.solicitudState?.textoGenerico17, disabled: this.esFormularioSoloLectura}],
+      textoGenerico18: [{value: this.solicitudState?.textoGenerico18, disabled: this.esFormularioSoloLectura}],
+      textoGenerico19: [{value: this.solicitudState?.textoGenerico19, disabled: this.esFormularioSoloLectura}],
+      textoGenerico20: [{value: this.solicitudState?.textoGenerico20, disabled: this.esFormularioSoloLectura}],
+      textoGenerico21: [{value: this.solicitudState?.textoGenerico21, disabled: this.esFormularioSoloLectura}],
+      textoGenerico22: [{value: this.solicitudState?.textoGenerico22, disabled: this.esFormularioSoloLectura}],
+      textoGenerico23: [{value: this.solicitudState?.textoGenerico23, disabled: this.esFormularioSoloLectura}],
+      textoGenerico24: [{value: this.solicitudState?.textoGenerico24, disabled: this.esFormularioSoloLectura}],
     });
 
-    if (!this.esFormularioSoloLectura) {
+    if (this.esFormularioSoloLectura) {
+      this.solicitudForm.disable();
+    } else {
       this.configurarValidacionRegimen();
       this.configurarValidacionRadio3();
     }
