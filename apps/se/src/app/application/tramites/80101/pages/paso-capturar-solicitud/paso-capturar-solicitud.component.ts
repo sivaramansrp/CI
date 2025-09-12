@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@ng-mf/data-access-user';
-import { AccionBoton } from '../../models/nuevo-programa-industrial.model';
+import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { Subject } from 'rxjs';
 
@@ -126,94 +126,134 @@ export class PasoCapturarSolicitudComponent {
    * @returns void
    */
   guardar(data: any): void {
+    const ANEXOII: any[] = [];
+    const ANEXOIII: any[] = [];
+      data.annexoDosTres.anexoDosTablaLista.forEach((item: Anexo1) => {
+        ANEXOII.push({
+          descripcion: item.encabezadoFraccion,
+          idTipoBien: 0,
+          idBienComercial: 0,
+          testado: true,
+          contadorGrid: null,
+          descripcionTestado: item.encabezadoDescripcion
+        });
+      });
+      data.annexoDosTres.anexoTresTablaLista.forEach((item: Anexo1) => {
+        ANEXOIII.push({
+          descripcion: item.encabezadoFraccion,
+          idTipoBien: 0,
+          idBienComercial: 0,
+          testado: true,
+          contadorGrid: null,
+          descripcionTestado: item.encabezadoDescripcion
+        });
+      });
+    const PROVEEDOR_CLIENTE = (data.annexoUno.proveedorClienteDatosTabla as ProveedorClienteDatosTabla[]).map((item: ProveedorClienteDatosTabla) => ({
+      idProveedor: item.idProveedor,
+      paisOrigen: item.paisOrigen,
+      rfcProveedor: item.rfcProveedor,
+      razonProveedor: item.razonProveedor,
+      paisDestino: item.paisDestino,
+      rfcCliente: item.rfcClinte,
+      razonCliente: item.razonSocial,
+      domicilio: item.domicilio,
+      testado: item.testado,
+      idProductoP: item.idProductoP,
+      descTestado: item.descTestado
+    }));
+
+    const DATOSPARAS = {
+      anexoII: data.annexoUno.datosParaNavegar.encabezadoAnexoII,
+      tipo: data.annexoUno.datosParaNavegar.encabezadoTipo,
+      unidadMedida: data.annexoUno.datosParaNavegar.encabezadoAnexoII,
+      categoria: data.annexoUno.datosParaNavegar.encabezadoCategoria,
+      descripcion: data.annexoUno.datosParaNavegar.encabezadoDescripcionComercial,
+      valorMensual: data.annexoUno.datosParaNavegar.encabezadoVolumenMensual,
+      valorAnual: data.annexoUno.datosParaNavegar.encabezadoVolumenAnual,
+      volumenMensual: data.annexoUno.datosParaNavegar.encabezadoValorEnMonedaMensual,
+      volumenAnual: data.annexoUno.datosParaNavegar.encabezadoValorEnMonedaAnual,
+      testado: true,
+      fecFinVigencia: null,
+      volumenAnualSolicitado: null
+    }
+
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
-    "idSolicitud": 202781045,
-    "idTipoTramite": 80101,
-    "rfc": "AAL0409235E6",
-    "cveUnidadAdministrativa": "8101",
-    "costoTotal": 10000.5,
-    "certificadoSerialNumber": "1234567890ABCDEF",
-    "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
-    "numeroFolioTramiteOriginal": "TRM-2023-00001",
-    "nombre": "Juan",
-    "apPaterno": "Pérez",
-    "apMaterno": "López",
-    "telefono": "5551234567",
-    "planta": [],
-    "anexoII": [
+      "planta": [],
+      "anexoII": [...ANEXOII],
+      "anexoIII": [...ANEXOIII],
+      "mercanciaImportacion": [
         {
-            "descripcion": "tblerow0",
-            "idTipoBien": 0,
-            "idBienComercial": 0,
-            "testado": true,
-            "contadorGrid": null,
-            "descripcionTestado": "tblerow1"
+          "listaProveedores": [
+            ...PROVEEDOR_CLIENTE
+          ],
+          "complemento": {
+            ...DATOSPARAS
+          },
         }
-    ],
-    "anexoIII": [
-        {
-            "descripcion": "CONTROL DE ENERGIA",
-            "idTipoBien": 0,
-            "idBienComercial": 0,
-            "testado": true,
-            "contadorGrid": null,
-            "descripcionTestado": null
-        }
-    ],
-    "mercanciaImportacion": [
-        {
-            "fraccionArancelaria": {
-                "fraccionPadre": "string",
-                "descripcionFraccionPadre": "string",
-                "tipoFraccion": "string",
-                "exenta": true,
-                "fraccionCompuesta": "string",
-                "claveFraccionPadre": "string",
-                "unidadMedida": "string",
-                "fraccionConcatenada": "string",
-                "descripcionTestado": "string",
-                "testado": true,
-                "tipoOperacion": "string",
-                "valorMonedaMensual": "string",
-                "valorMonedaAnual": "string",
-                "valorProduccionMensual": "string",
-                "valorProduccionAnual": "string",
-                "valorProduccionAnualSolicitada": "string",
-                "claveCategoria": "string",
-                "descripcionCategoria": "string",
-                "mensaje": "string",
-                "descripcionUsuario": "string",
-                "umt": "string",
-                "idFraccion": "string",
-                "idProducto": "string",
-                "idProductoPadre": "string",
-                "claveProductoExportacion": 0,
-                "descripcionServicio": "string",
-                "rowID": "string",
-                "cveFraccion": "61032301",
-                "capitulo": "string",
-                "partida": "string",
-                "subPartida": "string",
-                "descripcion": "string",
-                "fechaCaptura": "2025-09-07T12:43:35.647Z",
-                "fechaInicioVigencia": "2025-09-07T12:43:35.647Z",
-                "fechaFinVigencia": "2025-09-07T12:43:35.647Z",
-                "cveUsuario": "string",
-                "cveCapituloFraccion": "string",
-                "cvePartidaFraccion": "string",
-                "cveSubPartidaFraccion": "string",
-                "activo": true,
-                "activoAnexo28": true,
-                "decretoImmex": true
-            }
-        }
-    ],
-    "plantasSubmanufactureras": [],
-    "sociosAccionistas": []
-}
+      ],
+      "plantasSubmanufactureras": [],
+      "sociosAccionistas": [{
+        "idPersonaPersonaSolicitudR": 0,
+        "idSolicitud": 202734824,
+        "nombre": "",
+        "apellidoMaterno": "",
+        "apellidoPaterno": "",
+        "razonSocial": "AGRICOLA ALPE S DE RL DE CV",
+        "rfc": "AAL0409235E6",
+        "curp": "",
+        "ideTipoPersonaSol": "TIPERS.SL",
+        "correoElectronico": "vucem.soporte.aplicativo@ultrasist.com.mx",
+        "cedulaProfesional": "",
+        "nss": "",
+        "telefono": "8154563",
+        "descripcionGiro": "Siembra, cultivo y cosecha de papa",
+        "cvePaisOrigen": "",
+        "idDireccionSol": 260833725,
+        "tipoPatenteAgente": "",
+        "recif": "",
+        "puesto": "",
+        "tipoAgente": "",
+        "numeroPatente": "",
+        "numeroIdentificacionFiscal": "",
+        "personaMoral": false,
+        "extranjero": false,
+        "organismoPublico": false,
+        "cveUsuario": "AAL0409235E6",
+        "paginaWeb": "",
+        "ideGenerica1": "",
+        "rfcExtranjero": "",
+        "codAutorizacion": "",
+        "actividadProductiva": "",
+        "estadoEvaluacionEntidad": "AUTORIZADO",
+        "estadoEntidad": "AUTORIZADO",
+        "original": false,
+        "modificado": false,
+        "numeroRegistro": "",
+        "concentimientoInstalacionRecuperacion": false,
+        "cveCatalogo": "",
+        "alquilado": false,
+        "volumenAlmacenaje": 0,
+        "capacidadAlmacenaje": 0,
+        "descripcionDetalladaActividadEconomica": "",
+        "activo": false,
+        "generico1": false,
+        "area": "",
+        "cveNacionalidad": "",
+        "clasificacionArancelaria": "",
+        "infoAdicional": false,
+        "montoImportacion": 0,
+        "montoExportacion": 0,
+        "pctParticAccionaria": 0,
+        "ampliacionModelos": false,
+        "ampliacionPaises": false,
+        "fecFallecimiento": "2025-09-07"
+      }]
+    }
+
+
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
-     return response;
+      return response;
     });
   }
 

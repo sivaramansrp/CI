@@ -3,6 +3,7 @@ import {
   AnexoUnoEncabezado,
   DatosAnexotressUno,
   DatosComplimento,
+  ProveedorClienteTabla,
 } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
   AnnexoDosTres,
@@ -336,6 +337,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
       encabezadoVolumenAnual: 0,
       encabezadoValorEnMercado: '',
     },
+    proveedorClienteDatosTabla:[],
     seccionActiva: '',
   },
 
@@ -905,6 +907,21 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       annexoUno: {
         ...state.annexoUno,
         seccionActiva: seccionActiva,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza la propiedad `proveedorClienteDatosTabla` dentro de `annexoUno` en el estado de la tienda.
+   *
+   * @param proveedorClienteDatosTabla - Arreglo de objetos de tipo `ProveedorClienteTabla` que representa los datos de proveedores y clientes para la tabla.
+   */
+  setProveedorClienteDatosTabla(proveedorClienteDatosTabla: ProveedorClienteTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        proveedorClienteDatosTabla: proveedorClienteDatosTabla,
       },
     }));
   }
