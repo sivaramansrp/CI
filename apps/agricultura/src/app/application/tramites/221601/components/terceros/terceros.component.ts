@@ -360,11 +360,11 @@ export class TercerosComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.tipoPersonaForm = this.fb.group({
-      tipoPersona: [this.solicitudState.tipoPersona || null, Validators.required], // Remove default value
+      tipoPersona: [this.solicitudState.tipoPersona || null, Validators.required],
     });
 
     this.buscarTercerosForm = this.fb.group({
-      tipoPersonaBuscar: [null], // Remove default value 'fisica'
+      tipoPersonaBuscar: [null],
       nombre: [''],
       apellidoPaterno: [''],
       apellidoMaterno: [''],
@@ -375,28 +375,28 @@ export class TercerosComponent implements OnInit, OnDestroy {
     });
 
     this.datosPersonales = this.fb.group({
-      nombre: [this.solicitudState.nombre, [Validators.required, Validators.maxLength(200)]],
-      primerApellido: [this.solicitudState.primerApellido, [Validators.required, Validators.maxLength(200)]],
-      segundoApellido: [this.solicitudState.segundoApellido, Validators.maxLength(200)],
-      social: [this.solicitudState.social, [Validators.required, Validators.maxLength(250)]],
-      pais: [this.solicitudState.pais, Validators.required],
-      codigo: [this.solicitudState.codigo, [Validators.minLength(5), Validators.maxLength(5)]],
-      estado: [this.solicitudState.estado, Validators.required],
-      municipio: [this.solicitudState.municipio, Validators.required],
-      colonia: [this.solicitudState.colonia],
-      calle: [this.solicitudState.calle, [Validators.required, Validators.maxLength(100)]],
-      exterior: [this.solicitudState.exterior, [Validators.required, Validators.maxLength(55)]],
-      interior: [this.solicitudState.interior, Validators.maxLength(55)],
-      lada: [this.solicitudState.lada, [TercerosComponent.phoneValidator, Validators.maxLength(5)]],
-      telefono: [this.solicitudState.telefono, [TercerosComponent.phoneValidator, Validators.maxLength(30)]],
-      correoElectronico: [this.solicitudState.correoElectronico, Validators.required],
-      tif: [this.solicitudState.tif],
+      nombre: [this.solicitudState.nombre || '', [Validators.maxLength(200)]],
+      primerApellido: [this.solicitudState.primerApellido || '', [Validators.maxLength(200)]],
+      segundoApellido: [this.solicitudState.segundoApellido || '', [Validators.maxLength(200)]],
+      social: [this.solicitudState.social || '', [Validators.maxLength(250)]],
+      pais: [this.solicitudState.pais || this.paisCatalogo[0].id, Validators.required],
+      codigo: [this.solicitudState.codigo || '', [Validators.minLength(5), Validators.maxLength(5)]],
+      estado: [this.solicitudState.estado || '', Validators.required],
+      municipio: [this.solicitudState.municipio || '', Validators.required],
+      colonia: [this.solicitudState.colonia || ''],
+      calle: [this.solicitudState.calle || '', [Validators.required, Validators.maxLength(100)]],
+      exterior: [this.solicitudState.exterior || '', [Validators.required, Validators.maxLength(55)]],
+      interior: [this.solicitudState.interior || '', [Validators.maxLength(55)]],
+      lada: [this.solicitudState.lada || '', [TercerosComponent.phoneValidator, Validators.maxLength(5)]],
+      telefono: [this.solicitudState.telefono || '', [TercerosComponent.phoneValidator, Validators.maxLength(30)]],
+      correoElectronico: [this.solicitudState.correoElectronico || '', [Validators.required, Validators.email]],
+      tif: [this.solicitudState.tif || ''],
     });
 
-    this.datosPersonales.get('pais')?.setValue(this.paisCatalogo[0].id);
+    // Set up conditional validators based on person type
     this.tipoPersonaForm.get('tipoPersona')?.valueChanges.subscribe(value => {
       this.handleTipoPersonaChange(value);
-    
+      this.updateConditionalValidators(value);
       this.resetRadioStates();
       this.inputChecked(value);
     });
@@ -408,6 +408,36 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.showPlantaRow = false;
     
     this.updateStoreWithFormData();
+  }
+
+  /**
+   * Updates validators based on person type selection
+   * @param tipoPersona - Selected person type
+   */
+  private updateConditionalValidators(tipoPersona: string): void {
+    const NOMBRECONTROL = this.datosPersonales.get('nombre');
+    const PRIMERAPELLIDOCONTROL = this.datosPersonales.get('primerApellido');
+    const SOCIALCONTROL = this.datosPersonales.get('social');
+
+    // Clear existing validators
+    NOMBRECONTROL?.clearValidators();
+    PRIMERAPELLIDOCONTROL?.clearValidators();
+    SOCIALCONTROL?.clearValidators();
+
+    if (tipoPersona === 'fisica') {
+      NOMBRECONTROL?.setValidators([Validators.required, Validators.maxLength(200)]);
+      PRIMERAPELLIDOCONTROL?.setValidators([Validators.required, Validators.maxLength(200)]);
+      SOCIALCONTROL?.setValidators([Validators.maxLength(250)]);
+    } else if (tipoPersona === 'moral' || tipoPersona === 'planta') {
+      SOCIALCONTROL?.setValidators([Validators.required, Validators.maxLength(250)]);
+      NOMBRECONTROL?.setValidators([Validators.maxLength(200)]);
+      PRIMERAPELLIDOCONTROL?.setValidators([Validators.maxLength(200)]);
+    }
+
+    // Update validity
+    NOMBRECONTROL?.updateValueAndValidity();
+    PRIMERAPELLIDOCONTROL?.updateValueAndValidity();
+    SOCIALCONTROL?.updateValueAndValidity();
   }
 
   /**
@@ -499,22 +529,49 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @memberof TercerosComponent
    */
   guardarDestinatario(): void {
-    // Validate form before saving
-    if (this.datosPersonales.invalid) {
+    
+    if (this.tipoPersonaForm.invalid || this.datosPersonales.invalid) {
+      this.tipoPersonaForm.markAllAsTouched();
       this.datosPersonales.markAllAsTouched();
       return;
     }
+
     const FORM_VALUE = this.datosPersonales.value;
+    const TIPO_PERSONA = this.tipoPersonaForm.get('tipoPersona')?.value;
+    
+    // Find selected catalogs
     const PAIS_SELECCIONADO = this.paisCatalogo.find(item => item.id === Number(FORM_VALUE.pais));
     const ESTADO_SELECCIONADO = this.estadoCatalogo.find(item => item.id === Number(FORM_VALUE.estado));
     const MUNICIPIO_SELECCIONADO = this.municipioCatalogo.find(item => item.id === Number(FORM_VALUE.municipio));
     const COLONIA_SELECCIONADA = this.coloniaCatalogo.find(item => item.id === Number(FORM_VALUE.colonia));
 
+    // Create name based on person type
+    let nombreCompleto = '';
+    if (TIPO_PERSONA === 'fisica') {
+      const nombre = FORM_VALUE.nombre || '';
+      const primerApellido = FORM_VALUE.primerApellido || '';
+      const segundoApellido = FORM_VALUE.segundoApellido || '';
+      nombreCompleto = `${nombre} ${primerApellido} ${segundoApellido}`.trim();
+    } else if (TIPO_PERSONA === 'moral' || TIPO_PERSONA === 'planta') {
+      nombreCompleto = FORM_VALUE.social || '';
+    }
+
+    // Create full address
+    const calle = FORM_VALUE.calle || '';
+    const numeroExterior = FORM_VALUE.exterior || '';
+    const numeroInterior = FORM_VALUE.interior || '';
+    const colonia = COLONIA_SELECCIONADA?.descripcion || '';
+    const municipio = MUNICIPIO_SELECCIONADO?.descripcion || '';
+    const estado = ESTADO_SELECCIONADO?.descripcion || '';
+    const codigoPostal = FORM_VALUE.codigo || '';
+    
+    const domicilioCompleto = `${calle} ${numeroExterior} ${numeroInterior ? `Int. ${numeroInterior}` : ''} ${colonia} ${municipio} ${estado} CP: ${codigoPostal}`.trim().replace(/\s+/g, ' ');
+
     const NUEVO_DESTINATARIO: Destinatario = {
-      nombreDenominacionORazonSocial: FORM_VALUE.nombre || FORM_VALUE.social || '',
-      telefono: FORM_VALUE.telefono || '',
+      nombreDenominacionORazonSocial: nombreCompleto,
+      telefono: FORM_VALUE.lada && FORM_VALUE.telefono ? `${FORM_VALUE.lada}-${FORM_VALUE.telefono}` : (FORM_VALUE.telefono || ''),
       correoElectronico: FORM_VALUE.correoElectronico || '',
-      domicilio: FORM_VALUE.domicilio || '',
+      domicilio: domicilioCompleto,
       calle: FORM_VALUE.calle || '',
       numeroExterior: FORM_VALUE.exterior || '',
       numeroInterior: FORM_VALUE.interior || '',
@@ -525,9 +582,16 @@ export class TercerosComponent implements OnInit, OnDestroy {
       codigoPostal: FORM_VALUE.codigo || ''
     };
 
+   
     this.destinatario = [...this.destinatario, NUEVO_DESTINATARIO];
+    
+   
     this.limpiarDatosFormulario();
+    this.tipoPersonaForm.reset();
+    this.resetRadioStates();
     this.showtercerosModal = false;
+    
+   
     this.cdr.detectChanges();
   }
 
@@ -538,8 +602,12 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @memberof TercerosComponent
    */
   limpiarDatosFormulario(): void {
-    this.cdr.detectChanges();
     this.datosPersonales.reset();
+    // Reset to default values
+    this.datosPersonales.patchValue({
+      pais: this.paisCatalogo[0].id
+    });
+    this.cdr.detectChanges();
   }
 
   /**
@@ -559,7 +627,19 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @memberof TercerosComponent
    */
   tercerosAgregar(): void {
-    this.showtercerosModal = !this.showtercerosModal;
+    this.showtercerosModal = true;
+    // Reset forms when opening modal
+    this.tipoPersonaForm.reset();
+    this.datosPersonales.reset();
+    this.datosPersonales.patchValue({
+      pais: this.paisCatalogo[0].id
+    });
+    this.resetRadioStates();
+    this.showFisicaRow = false;
+    this.showMoralRow = false;
+    this.showPlantaRow = false;
+    
+    console.log('Modal opened, current destinatarios:', this.destinatario);
   }
 
   /**
