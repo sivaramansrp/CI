@@ -435,6 +435,224 @@ export class TercerosComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Modifica el destinatario seleccionado.
+   * Abre el modal con los datos del destinatario para edición.
+   * 
+   * @memberof TercerosComponent
+   */
+  modificarDestinatario(): void {
+    if (this.destinatarioSeleccionado.length === 0) {
+      // Show notification that no item is selected
+      this.mostrarNotificacionEliminacion(
+        'Por favor selecciona un destinatario para modificar.',
+        false
+      );
+      return;
+    }
+
+    const DESTINATARIO_A_MODIFICAR = this.destinatarioSeleccionado[0];
+    this.editingDestinatarioIndex = this.destinatario.findIndex(dest => 
+      dest.nombreDenominacionORazonSocial === DESTINATARIO_A_MODIFICAR.nombreDenominacionORazonSocial &&
+      dest.correoElectronico === DESTINATARIO_A_MODIFICAR.correoElectronico &&
+      dest.telefono === DESTINATARIO_A_MODIFICAR.telefono
+    );
+
+    if (this.editingDestinatarioIndex === -1) {
+      this.mostrarNotificacionEliminacion(
+        'No se pudo encontrar el destinatario seleccionado.',
+        false
+      );
+      return;
+    }
+
+    console.log('Editando destinatario en índice:', this.editingDestinatarioIndex);
+    console.log('Datos del destinatario:', DESTINATARIO_A_MODIFICAR);
+
+    this.isEditingDestinatario = true;
+    this.cargarDatosDestinatarioParaEdicion(DESTINATARIO_A_MODIFICAR);
+    this.showtercerosModal = true;
+  }
+
+  /**
+   * Carga los datos del destinatario en el formulario para edición.
+   * 
+   * @param destinatario - Destinatario a cargar en el formulario
+   * @memberof TercerosComponent
+   */
+  private cargarDatosDestinatarioParaEdicion(destinatario: Destinatario): void {
+    console.log('Cargando datos para edición:', destinatario);
+    
+    // Determine person type based on the name structure
+    const TIPO_PERSONA = this.determinarTipoPersona(destinatario.nombreDenominacionORazonSocial);
+    
+    console.log('Tipo de persona determinado:', TIPO_PERSONA);
+    
+    // Set person type and trigger change
+    this.tipoPersonaForm.patchValue({
+      tipoPersona: TIPO_PERSONA
+    });
+
+    // Manually trigger the radio change and show appropriate fields
+    this.inputChecked(TIPO_PERSONA);
+    this.handleTipoPersonaChange(TIPO_PERSONA);
+
+    // Parse phone number
+    const TELEFONO_PARTS = destinatario.telefono ? destinatario.telefono.split('-') : ['', ''];
+    const LADA = TELEFONO_PARTS.length > 1 ? TELEFONO_PARTS[0] : '';
+    const TELEFONO = TELEFONO_PARTS.length > 1 ? TELEFONO_PARTS[1] : TELEFONO_PARTS[0];
+
+    // Find catalog IDs
+    const PAIS_ID = this.paisCatalogo.find(p => p.descripcion === destinatario.pais)?.id || this.paisCatalogo[0].id;
+    const ESTADO_ID = this.estadoCatalogo.find(e => e.descripcion === destinatario.entidadFederativa)?.id || '';
+    const MUNICIPIO_ID = this.municipioCatalogo.find(m => m.descripcion === destinatario.municipioOAlcaldia)?.id || '';
+    const COLONIA_ID = this.coloniaCatalogo.find(c => c.descripcion === destinatario.colonia)?.id || '';
+
+    // Set form values based on person type
+    if (TIPO_PERSONA === 'fisica') {
+      const NOMBRES = this.parsearNombreCompleto(destinatario.nombreDenominacionORazonSocial);
+      this.datosPersonales.patchValue({
+        nombre: NOMBRES.nombre,
+        primerApellido: NOMBRES.primerApellido,
+        segundoApellido: NOMBRES.segundoApellido,
+        social: '',
+        pais: PAIS_ID,
+        codigo: destinatario.codigoPostal,
+        estado: ESTADO_ID,
+        municipio: MUNICIPIO_ID,
+        colonia: COLONIA_ID,
+        calle: destinatario.calle,
+        exterior: destinatario.numeroExterior,
+        interior: destinatario.numeroInterior,
+        lada: LADA,
+        telefono: TELEFONO,
+        correoElectronico: destinatario.correoElectronico,
+        tif: ''
+      });
+    } else {
+      this.datosPersonales.patchValue({
+        nombre: '',
+        primerApellido: '',
+        segundoApellido: '',
+        social: destinatario.nombreDenominacionORazonSocial,
+        pais: PAIS_ID,
+        codigo: destinatario.codigoPostal,
+        estado: ESTADO_ID,
+        municipio: MUNICIPIO_ID,
+        colonia: COLONIA_ID,
+        calle: destinatario.calle,
+        exterior: destinatario.numeroExterior,
+        interior: destinatario.numeroInterior,
+        lada: LADA,
+        telefono: TELEFONO,
+        correoElectronico: destinatario.correoElectronico,
+        tif: ''
+      });
+    }
+
+    // Mark the form as pristine and untouched to avoid validation errors
+    this.datosPersonales.markAsPristine();
+    this.datosPersonales.markAsUntouched();
+    this.tipoPersonaForm.markAsPristine();
+    this.tipoPersonaForm.markAsUntouched();
+
+    console.log('Formulario cargado con valores:', this.datosPersonales.value);
+  }
+
+  /**
+   * Guarda un nuevo destinatario basado en los datos del formulario.
+   * Crea un objeto destinatario y lo agrega a la lista.
+   * Cierra el modal después de guardar.
+   * 
+   * @memberof TercerosComponent
+   */
+  guardarDestinatario(): void {
+    console.log('Guardando destinatario...');
+    console.log('Formulario válido:', this.tipoPersonaForm.valid && this.datosPersonales.valid);
+    console.log('Errores tipo persona:', this.tipoPersonaForm.errors);
+    console.log('Errores datos personales:', this.datosPersonales.errors);
+    
+    if (this.tipoPersonaForm.invalid || this.datosPersonales.invalid) {
+      this.tipoPersonaForm.markAllAsTouched();
+      this.datosPersonales.markAllAsTouched();
+      
+      console.log('Formulario inválido, no se puede guardar');
+      this.mostrarNotificacionEliminacion(
+        'Por favor completa todos los campos requeridos correctamente.',
+        false
+      );
+      return;
+    }
+
+    const FORM_VALUE = this.datosPersonales.value;
+    const TIPO_PERSONA = this.tipoPersonaForm.get('tipoPersona')?.value;
+    const PAIS_SELECCIONADO = this.paisCatalogo.find(item => item.id === Number(FORM_VALUE.pais));
+    const ESTADO_SELECCIONADO = this.estadoCatalogo.find(item => item.id === Number(FORM_VALUE.estado));
+    const MUNICIPIO_SELECCIONADO = this.municipioCatalogo.find(item => item.id === Number(FORM_VALUE.municipio));
+    const COLONIA_SELECCIONADA = this.coloniaCatalogo.find(item => item.id === Number(FORM_VALUE.colonia));
+
+    const NOMBRE_COMPLETO = TercerosComponent.obtenerNombreCompleto(FORM_VALUE, TIPO_PERSONA);
+    const DOMICILIO_COMPLETO = TercerosComponent.obtenerDomicilioCompleto(FORM_VALUE, COLONIA_SELECCIONADA, MUNICIPIO_SELECCIONADO, ESTADO_SELECCIONADO);
+
+    const DESTINATARIO_DATA: Destinatario = {
+      nombreDenominacionORazonSocial: NOMBRE_COMPLETO,
+      telefono: FORM_VALUE.lada && FORM_VALUE.telefono ? `${FORM_VALUE.lada}-${FORM_VALUE.telefono}` : (FORM_VALUE.telefono || ''),
+      correoElectronico: FORM_VALUE.correoElectronico || '',
+      domicilio: DOMICILIO_COMPLETO,
+      calle: FORM_VALUE.calle || '',
+      numeroExterior: FORM_VALUE.exterior || '',
+      numeroInterior: FORM_VALUE.interior || '',
+      pais: PAIS_SELECCIONADO?.descripcion || '',
+      colonia: COLONIA_SELECCIONADA?.descripcion || '',
+      municipioOAlcaldia: MUNICIPIO_SELECCIONADO?.descripcion || '',
+      entidadFederativa: ESTADO_SELECCIONADO?.descripcion || '',
+      codigoPostal: FORM_VALUE.codigo || ''
+    };
+
+    console.log('Datos del destinatario a guardar:', DESTINATARIO_DATA);
+
+    if (this.isEditingDestinatario && this.editingDestinatarioIndex !== -1) {
+      console.log('Modificando destinatario existente en índice:', this.editingDestinatarioIndex);
+      
+      // Create a new array with the modified item to ensure change detection
+      const NUEVO_ARRAY = [...this.destinatario];
+      NUEVO_ARRAY[this.editingDestinatarioIndex] = DESTINATARIO_DATA;
+      this.destinatario = NUEVO_ARRAY;
+      
+      console.log('Destinatario modificado exitosamente');
+      this.mostrarNotificacionEliminacion(
+        'Destinatario modificado correctamente.',
+        false
+      );
+    } else {
+      console.log('Agregando nuevo destinatario');
+      this.destinatario = [...this.destinatario, DESTINATARIO_DATA];
+      
+      console.log('Nuevo destinatario agregado exitosamente');
+      this.mostrarNotificacionEliminacion(
+        'Destinatario agregado correctamente.',
+        false
+      );
+    }
+
+    // Reset editing state
+    this.isEditingDestinatario = false;
+    this.editingDestinatarioIndex = -1;
+    this.destinatarioSeleccionado = [];
+    
+    // Close modal and clean forms
+    this.limpiarDatosFormulario();
+    this.tipoPersonaForm.reset();
+    this.resetRadioStates();
+    this.showtercerosModal = false;
+    
+    // Force change detection
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
+    
+    console.log('Lista actualizada de destinatarios:', this.destinatario);
+  }
+
+  /**
    * Updates validators based on person type selection
    * @param tipoPersona - Selected person type
    */
@@ -442,6 +660,10 @@ export class TercerosComponent implements OnInit, OnDestroy {
     const NOMBRECONTROL = this.datosPersonales.get('nombre');
     const PRIMERAPELLIDOCONTROL = this.datosPersonales.get('primerApellido');
     const SOCIALCONTROL = this.datosPersonales.get('social');
+    const CALLECONTROL = this.datosPersonales.get('calle');
+    const EXTERIORCONTROL = this.datosPersonales.get('exterior');
+    const CORREOCONTROL = this.datosPersonales.get('correoElectronico');
+    const ESTADOCONTROL = this.datosPersonales.get('estado');
 
     // Clear existing validators
     NOMBRECONTROL?.clearValidators();
@@ -458,10 +680,20 @@ export class TercerosComponent implements OnInit, OnDestroy {
       PRIMERAPELLIDOCONTROL?.setValidators([Validators.maxLength(200)]);
     }
 
+    // Keep existing validators for other fields
+    CALLECONTROL?.setValidators([Validators.required, Validators.maxLength(100)]);
+    EXTERIORCONTROL?.setValidators([Validators.required, Validators.maxLength(55)]);
+    CORREOCONTROL?.setValidators([Validators.required, Validators.email]);
+    ESTADOCONTROL?.setValidators([Validators.required]);
+
     // Update validity
     NOMBRECONTROL?.updateValueAndValidity();
     PRIMERAPELLIDOCONTROL?.updateValueAndValidity();
     SOCIALCONTROL?.updateValueAndValidity();
+    CALLECONTROL?.updateValueAndValidity();
+    EXTERIORCONTROL?.updateValueAndValidity();
+    CORREOCONTROL?.updateValueAndValidity();
+    ESTADOCONTROL?.updateValueAndValidity();
   }
 
   /**
@@ -577,18 +809,31 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
   modificarDestinatario(): void {
     if (this.destinatarioSeleccionado.length === 0) {
+      // Show notification that no item is selected
+      this.mostrarNotificacionEliminacion(
+        'Por favor selecciona un destinatario para modificar.',
+        false
+      );
       return;
     }
 
     const DESTINATARIO_A_MODIFICAR = this.destinatarioSeleccionado[0];
-   this.editingDestinatarioIndex = this.destinatario.findIndex(dest => 
+    this.editingDestinatarioIndex = this.destinatario.findIndex(dest => 
       dest.nombreDenominacionORazonSocial === DESTINATARIO_A_MODIFICAR.nombreDenominacionORazonSocial &&
-      dest.correoElectronico === DESTINATARIO_A_MODIFICAR.correoElectronico
+      dest.correoElectronico === DESTINATARIO_A_MODIFICAR.correoElectronico &&
+      dest.telefono === DESTINATARIO_A_MODIFICAR.telefono
     );
 
     if (this.editingDestinatarioIndex === -1) {
+      this.mostrarNotificacionEliminacion(
+        'No se pudo encontrar el destinatario seleccionado.',
+        false
+      );
       return;
     }
+
+    console.log('Editando destinatario en índice:', this.editingDestinatarioIndex);
+    console.log('Datos del destinatario:', DESTINATARIO_A_MODIFICAR);
 
     this.isEditingDestinatario = true;
     this.cargarDatosDestinatarioParaEdicion(DESTINATARIO_A_MODIFICAR);
@@ -602,18 +847,21 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @memberof TercerosComponent
    */
   private cargarDatosDestinatarioParaEdicion(destinatario: Destinatario): void {
-   
+    console.log('Cargando datos para edición:', destinatario);
+    
     // Determine person type based on the name structure
     const TIPO_PERSONA = this.determinarTipoPersona(destinatario.nombreDenominacionORazonSocial);
-   
+    
+    console.log('Tipo de persona determinado:', TIPO_PERSONA);
     
     // Set person type and trigger change
     this.tipoPersonaForm.patchValue({
       tipoPersona: TIPO_PERSONA
     });
 
-    // Manually trigger the radio change
-    this.cambiarRadioFisica(TIPO_PERSONA);
+    // Manually trigger the radio change and show appropriate fields
+    this.inputChecked(TIPO_PERSONA);
+    this.handleTipoPersonaChange(TIPO_PERSONA);
 
     // Parse phone number
     const TELEFONO_PARTS = destinatario.telefono ? destinatario.telefono.split('-') : ['', ''];
@@ -668,195 +916,13 @@ export class TercerosComponent implements OnInit, OnDestroy {
       });
     }
 
-   
-  }
+    // Mark the form as pristine and untouched to avoid validation errors
+    this.datosPersonales.markAsPristine();
+    this.datosPersonales.markAsUntouched();
+    this.tipoPersonaForm.markAsPristine();
+    this.tipoPersonaForm.markAsUntouched();
 
-  /**
-   * Determina el tipo de persona basado en el nombre.
-   * 
-   * @param nombreCompleto - Nombre completo del destinatario
-   * @returns Tipo de persona ('fisica', 'moral', 'planta')
-   * @memberof TercerosComponent
-   */
-  private determinarTipoPersona(nombreCompleto: string): string {
-    
-    const PALABRAS = nombreCompleto.trim().split(' ').filter(p => p.length > 0);
-    
-  
-    const PALABRAS_MORALES = ['S.A.', 'S.R.L.', 'CORP', 'INC', 'LTDA', 'CIA'];
-    const ES_MORAL = PALABRAS_MORALES.some(palabra => nombreCompleto.toUpperCase().includes(palabra));
-    
-    if (ES_MORAL) {
-      return 'moral';
-    }
-  
-    if (nombreCompleto.toUpperCase().includes('TIF') || nombreCompleto.toUpperCase().includes('PLANTA')) {
-      return 'planta';
-    }
-    
-    
-    return PALABRAS.length >= 2 ? 'fisica' : 'moral';
-  }
-
-  /**
-   * Parsea el nombre completo para extraer nombre y apellidos.
-   * 
-   * @param nombreCompleto - Nombre completo a parsear
-   * @returns Objeto con nombre, primer apellido y segundo apellido
-   * @memberof TercerosComponent
-   */
-  private parsearNombreCompleto(nombreCompleto: string): { nombre: string; primerApellido: string; segundoApellido: string } {
-    const PALABRAS = nombreCompleto.trim().split(' ').filter(p => p.length > 0);
-    
-    return {
-      nombre: PALABRAS[0] || '',
-      primerApellido: PALABRAS[1] || '',
-      segundoApellido: PALABRAS[2] || ''
-    };
-  }
-
-  /**
-   * Elimina el destinatario seleccionado.
-   * Muestra confirmación antes de eliminar usando el patrón de notificación.
-   * 
-   * @memberof TercerosComponent
-   */
-  eliminarDestinatario(): void {
-    console.log('Destinatarios seleccionados:', this.destinatarioSeleccionado);
-    console.log('Lista completa de destinatarios:', this.destinatario);
-    
-    if (this.destinatarioSeleccionado.length === 0) {
-      this.mostrarNotificacionEliminacion(
-        'Selecciona un registro.',
-        false
-      );
-      return;
-    }
-
-    this.mostrarNotificacionEliminacion(
-      '¿Estás seguro que deseas eliminar los registros marcados?',
-      true
-    );
-  }
-
-  /**
-   * Realiza la eliminación del destinatario después de la confirmación.
-   * 
-   * @memberof TercerosComponent
-   */
-  private realizarEliminacionDestinatario(): void {
-    if (this.destinatarioSeleccionado.length === 0) {
-      return;
-    }
-
-    const DESTINATARIO_A_ELIMINAR = this.destinatarioSeleccionado[0];
-    const ORIGINAL_LENGTH = this.destinatario.length;
-    
-    console.log('Eliminando destinatario:', DESTINATARIO_A_ELIMINAR);
-    console.log('Lista original (longitud):', ORIGINAL_LENGTH);
-
-    // Use filter to create a new array without the selected item - this ensures Angular detects the change
-    this.destinatario = this.destinatario.filter(dest => {
-      // Compare by unique properties to ensure accurate matching
-      const IS_SAME_NAME = dest.nombreDenominacionORazonSocial === DESTINATARIO_A_ELIMINAR.nombreDenominacionORazonSocial;
-      const IS_SAME_EMAIL = dest.correoElectronico === DESTINATARIO_A_ELIMINAR.correoElectronico;
-      const IS_SAME_PHONE = dest.telefono === DESTINATARIO_A_ELIMINAR.telefono;
-      
-      // Return false (exclude) if all properties match
-      return !(IS_SAME_NAME && IS_SAME_EMAIL && IS_SAME_PHONE);
-    });
-
-    console.log('Lista después del filtro (longitud):', this.destinatario.length);
-
-    // Clear the selection array completely
-    this.destinatarioSeleccionado = [];
-    
-    // Force multiple change detection cycles
-    this.cdr.markForCheck();
-    this.cdr.detectChanges();
-    
-    // Use setTimeout to ensure the UI updates
-    setTimeout(() => {
-      this.cdr.detectChanges();
-    }, 0);
-
-    // Check if deletion was successful
-    if (this.destinatario.length < ORIGINAL_LENGTH) {
-      this.mostrarNotificacionEliminacion(
-        'Destinatario eliminado correctamente.',
-        false
-      );
-      console.log('Eliminación exitosa');
-    } else {
-      this.mostrarNotificacionEliminacion(
-        'No se pudo eliminar el destinatario. Verifique que esté seleccionado.',
-        false
-      );
-      console.error('La eliminación falló - el array no cambió de tamaño');
-    }
-  }
-
-  /**
-   * Muestra la notificación de eliminación.
-   * 
-   * @param mensaje - Mensaje a mostrar
-   * @param mostrarCancelar - Si debe mostrar el botón cancelar
-   * @memberof TercerosComponent
-   */
-  private mostrarNotificacionEliminacion(mensaje: string, mostrarCancelar: boolean = false): void {
-    this.notificacionEliminacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: mensaje,
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: mostrarCancelar ? 'Cancelar' : '',
-    };
-    
-    if (mostrarCancelar) {
-      this.confirmacionAlertaEliminacion = true;
-    } else {
-      this.mostrarAlertaEliminacion = true;
-    }
-  }
-
-  /**
-   * Maneja la confirmación de eliminación.
-   * 
-   * @param confirmar - Si el usuario confirmó la eliminación
-   * @memberof TercerosComponent
-   */
-  onConfirmacionEliminacion(confirmar: boolean): void {
-    this.confirmacionAlertaEliminacion = false;
-    
-    if (confirmar) {
-      this.realizarEliminacionDestinatario();
-    }
-  }
-
-  /**
-   * Maneja el cierre de la alerta de eliminación.
-   * 
-   * @memberof TercerosComponent
-   */
-  onAlertaEliminacion(): void {
-    this.mostrarAlertaEliminacion = false;
-  }
-
-  // Remove the old confirmation methods as they're no longer needed
-  // confirmarEliminacion(): void { ... } - DELETE THIS
-  // cancelarEliminacion(): void { ... } - DELETE THIS
-
-  /**
-   * Cancela la eliminación del destinatario.
-   * 
-   * @memberof TercerosComponent
-   */
-  cancelarEliminacion(): void {
-    this.showDeleteConfirmModal = false;
+    console.log('Formulario cargado con valores:', this.datosPersonales.value);
   }
 
   /**
@@ -867,10 +933,20 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @memberof TercerosComponent
    */
   guardarDestinatario(): void {
-     if (this.tipoPersonaForm.invalid || this.datosPersonales.invalid) {
+    console.log('Guardando destinatario...');
+    console.log('Formulario válido:', this.tipoPersonaForm.valid && this.datosPersonales.valid);
+    console.log('Errores tipo persona:', this.tipoPersonaForm.errors);
+    console.log('Errores datos personales:', this.datosPersonales.errors);
+    
+    if (this.tipoPersonaForm.invalid || this.datosPersonales.invalid) {
       this.tipoPersonaForm.markAllAsTouched();
       this.datosPersonales.markAllAsTouched();
-   
+      
+      console.log('Formulario inválido, no se puede guardar');
+      this.mostrarNotificacionEliminacion(
+        'Por favor completa todos los campos requeridos correctamente.',
+        false
+      );
       return;
     }
 
@@ -898,69 +974,425 @@ export class TercerosComponent implements OnInit, OnDestroy {
       entidadFederativa: ESTADO_SELECCIONADO?.descripcion || '',
       codigoPostal: FORM_VALUE.codigo || ''
     };
-if (this.isEditingDestinatario && this.editingDestinatarioIndex !== -1) {
-     
-      this.destinatario[this.editingDestinatarioIndex] = DESTINATARIO_DATA;
+
+    console.log('Datos del destinatario a guardar:', DESTINATARIO_DATA);
+
+    if (this.isEditingDestinatario && this.editingDestinatarioIndex !== -1) {
+      console.log('Modificando destinatario existente en índice:', this.editingDestinatarioIndex);
       
+      // Create a new array with the modified item to ensure change detection
+      const NUEVO_ARRAY = [...this.destinatario];
+      NUEVO_ARRAY[this.editingDestinatarioIndex] = DESTINATARIO_DATA;
+      this.destinatario = NUEVO_ARRAY;
+      
+      console.log('Destinatario modificado exitosamente');
+      this.mostrarNotificacionEliminacion(
+        'Destinatario modificado correctamente.',
+        false
+      );
     } else {
-    
+      console.log('Agregando nuevo destinatario');
       this.destinatario = [...this.destinatario, DESTINATARIO_DATA];
-   }
-   this.isEditingDestinatario = false;
+      
+      console.log('Nuevo destinatario agregado exitosamente');
+      this.mostrarNotificacionEliminacion(
+        'Destinatario agregado correctamente.',
+        false
+      );
+    }
+
+    // Reset editing state
+    this.isEditingDestinatario = false;
     this.editingDestinatarioIndex = -1;
-     this.destinatarioSeleccionado = [];
+    this.destinatarioSeleccionado = [];
     
+    // Close modal and clean forms
     this.limpiarDatosFormulario();
     this.tipoPersonaForm.reset();
     this.resetRadioStates();
     this.showtercerosModal = false;
+    
+    // Force change detection
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
+    
+    console.log('Lista actualizada de destinatarios:', this.destinatario);
+  }
+
+  /**
+   * Updates validators based on person type selection
+   * @param tipoPersona - Selected person type
+   */
+  private updateConditionalValidators(tipoPersona: string): void {
+    const NOMBRECONTROL = this.datosPersonales.get('nombre');
+    const PRIMERAPELLIDOCONTROL = this.datosPersonales.get('primerApellido');
+    const SOCIALCONTROL = this.datosPersonales.get('social');
+    const CALLECONTROL = this.datosPersonales.get('calle');
+    const EXTERIORCONTROL = this.datosPersonales.get('exterior');
+    const CORREOCONTROL = this.datosPersonales.get('correoElectronico');
+    const ESTADOCONTROL = this.datosPersonales.get('estado');
+
+    // Clear existing validators
+    NOMBRECONTROL?.clearValidators();
+    PRIMERAPELLIDOCONTROL?.clearValidators();
+    SOCIALCONTROL?.clearValidators();
+
+    if (tipoPersona === 'fisica') {
+      NOMBRECONTROL?.setValidators([Validators.required, Validators.maxLength(200)]);
+      PRIMERAPELLIDOCONTROL?.setValidators([Validators.required, Validators.maxLength(200)]);
+      SOCIALCONTROL?.setValidators([Validators.maxLength(250)]);
+    } else if (tipoPersona === 'moral' || tipoPersona === 'planta') {
+      SOCIALCONTROL?.setValidators([Validators.required, Validators.maxLength(250)]);
+      NOMBRECONTROL?.setValidators([Validators.maxLength(200)]);
+      PRIMERAPELLIDOCONTROL?.setValidators([Validators.maxLength(200)]);
+    }
+
+    // Keep existing validators for other fields
+    CALLECONTROL?.setValidators([Validators.required, Validators.maxLength(100)]);
+    EXTERIORCONTROL?.setValidators([Validators.required, Validators.maxLength(55)]);
+    CORREOCONTROL?.setValidators([Validators.required, Validators.email]);
+    ESTADOCONTROL?.setValidators([Validators.required]);
+
+    // Update validity
+    NOMBRECONTROL?.updateValueAndValidity();
+    PRIMERAPELLIDOCONTROL?.updateValueAndValidity();
+    SOCIALCONTROL?.updateValueAndValidity();
+    CALLECONTROL?.updateValueAndValidity();
+    EXTERIORCONTROL?.updateValueAndValidity();
+    CORREOCONTROL?.updateValueAndValidity();
+    ESTADOCONTROL?.updateValueAndValidity();
+  }
+
+  /**
+   * Resets all radio button states
+   * @memberof TercerosComponent
+   */
+  private resetRadioStates(): void {
+    this.fisica = false;
+    this.moral = false;
+    this.planta = false;
+  }
+
+  /**
+   * Guarda los datos del formulario y configura el estado de solo lectura.
+   * Habilita o deshabilita los formularios según el estado de solo lectura.
+   * 
+   * @memberof TercerosComponent
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.tipoPersonaForm.disable();
+      this.datosPersonales.disable();
+    } else {
+      this.tipoPersonaForm.enable();
+      this.datosPersonales.enable();
+    }
+  }
+
+  /**
+   * Actualiza el store con los datos del formulario de datos personales.
+   * Sincroniza el estado local con el estado global de la aplicación.
+   * 
+   * @memberof TercerosComponent
+   */
+  updateStoreWithFormData(): void {
+    const UPDATE_PERSONALES_FORM: Solicitud221601State = {
+      ...this.solicitudState,
+      pais: this.datosPersonales.get('pais')?.value,
+    };
+    this.tramite221601Store.update(UPDATE_PERSONALES_FORM);
+  }
+
+  /**
+   * Maneja los cambios en el tipo de persona seleccionado.
+   * Controla la visibilidad de los diferentes tipos de formularios y campos.
+   * 
+   * @param tipoPersona - Tipo de persona seleccionado ('fisica', 'moral', 'planta')
+   * @memberof TercerosComponent
+   */
+  handleTipoPersonaChange(tipoPersona: string): void {
+    // Reset all visibility first
+    this.showFisicaRow = false;
+    this.showMoralRow = false;
+    this.showPlantaRow = false;
+    
+    if (tipoPersona === 'fisica') {
+      this.showFisicaRow = true;
+      this.datosPersonales.enable();
+    } else if (tipoPersona === 'moral') {
+      this.showMoralRow = true;
+      this.datosPersonales.enable();
+    } else if (tipoPersona === 'planta') {
+      this.showPlantaRow = true;
+      this.showMoralRow = true; // Keep this if needed for planta
+      this.datosPersonales.disable();
+    }
+  }
+
+  /**
+   * Establece valores en el store utilizando métodos dinámicos.
+   * Método genérico para actualizar cualquier campo en el store.
+   * 
+   * @param form - Formulario del cual obtener el valor
+   * @param campo - Nombre del campo a obtener
+   * @param metodoNombre - Nombre del método del store a ejecutar
+   * @memberof TercerosComponent
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite221601Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite221601Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Maneja la selección de exportadores desde la tabla dinámica.
+   * Actualiza la lista de exportadores seleccionados.
+   * 
+   * @param filas - Array de exportadores seleccionados por el usuario
+   * @memberof TercerosComponent
+   */
+  onExportadorSeleccionado(filas: Exportador[]): void {
+    this.exportadorSeleccionado = filas;
+  }
+
+  /**
+   * Maneja la selección de destinatarios desde la tabla dinámica.
+   * Actualiza la lista de destinatarios seleccionados.
+   * 
+   * @param filas - Array de destinatarios seleccionados por el usuario
+   * @memberof TercerosComponent
+   */
+  onDestinatarioSeleccionado(filas: Destinatario[]): void {
+    console.log('Destinatarios seleccionados:', filas);
+    this.destinatarioSeleccionado = [...filas]; // Create new array reference
     this.cdr.detectChanges();
   }
 
   /**
-   * Cancela la operación de agregar destinatario.
-   * Cierra el modal de terceros sin guardar cambios.
+   * Modifica el destinatario seleccionado.
+   * Abre el modal con los datos del destinatario para edición.
    * 
    * @memberof TercerosComponent
    */
-  cancelarDestinatario(): void {
-  
-    this.isEditingDestinatario = false;
-    this.editingDestinatarioIndex = -1;
-    
-    this.showtercerosModal = false;
-    
-    // Clear forms
-    this.limpiarDatosFormulario();
-    this.tipoPersonaForm.reset();
-    this.resetRadioStates();
-    this.showFisicaRow = false;
-    this.showMoralRow = false;
-    this.showPlantaRow = false;
+  modificarDestinatario(): void {
+    if (this.destinatarioSeleccionado.length === 0) {
+      // Show notification that no item is selected
+      this.mostrarNotificacionEliminacion(
+        'Por favor selecciona un destinatario para modificar.',
+        false
+      );
+      return;
+    }
+
+    const DESTINATARIO_A_MODIFICAR = this.destinatarioSeleccionado[0];
+    this.editingDestinatarioIndex = this.destinatario.findIndex(dest => 
+      dest.nombreDenominacionORazonSocial === DESTINATARIO_A_MODIFICAR.nombreDenominacionORazonSocial &&
+      dest.correoElectronico === DESTINATARIO_A_MODIFICAR.correoElectronico &&
+      dest.telefono === DESTINATARIO_A_MODIFICAR.telefono
+    );
+
+    if (this.editingDestinatarioIndex === -1) {
+      this.mostrarNotificacionEliminacion(
+        'No se pudo encontrar el destinatario seleccionado.',
+        false
+      );
+      return;
+    }
+
+    console.log('Editando destinatario en índice:', this.editingDestinatarioIndex);
+    console.log('Datos del destinatario:', DESTINATARIO_A_MODIFICAR);
+
+    this.isEditingDestinatario = true;
+    this.cargarDatosDestinatarioParaEdicion(DESTINATARIO_A_MODIFICAR);
+    this.showtercerosModal = true;
   }
 
   /**
-   * Abre el modal para agregar un nuevo tercero.
-   * Alterna el estado de visibilidad del modal de terceros.
+   * Carga los datos del destinatario en el formulario para edición.
+   * 
+   * @param destinatario - Destinatario a cargar en el formulario
+   * @memberof TercerosComponent
+   */
+  private cargarDatosDestinatarioParaEdicion(destinatario: Destinatario): void {
+    console.log('Cargando datos para edición:', destinatario);
+    
+    // Determine person type based on the name structure
+    const TIPO_PERSONA = this.determinarTipoPersona(destinatario.nombreDenominacionORazonSocial);
+    
+    console.log('Tipo de persona determinado:', TIPO_PERSONA);
+    
+    // Set person type and trigger change
+    this.tipoPersonaForm.patchValue({
+      tipoPersona: TIPO_PERSONA
+    });
+
+    // Manually trigger the radio change and show appropriate fields
+    this.inputChecked(TIPO_PERSONA);
+    this.handleTipoPersonaChange(TIPO_PERSONA);
+
+    // Parse phone number
+    const TELEFONO_PARTS = destinatario.telefono ? destinatario.telefono.split('-') : ['', ''];
+    const LADA = TELEFONO_PARTS.length > 1 ? TELEFONO_PARTS[0] : '';
+    const TELEFONO = TELEFONO_PARTS.length > 1 ? TELEFONO_PARTS[1] : TELEFONO_PARTS[0];
+
+    // Find catalog IDs
+    const PAIS_ID = this.paisCatalogo.find(p => p.descripcion === destinatario.pais)?.id || this.paisCatalogo[0].id;
+    const ESTADO_ID = this.estadoCatalogo.find(e => e.descripcion === destinatario.entidadFederativa)?.id || '';
+    const MUNICIPIO_ID = this.municipioCatalogo.find(m => m.descripcion === destinatario.municipioOAlcaldia)?.id || '';
+    const COLONIA_ID = this.coloniaCatalogo.find(c => c.descripcion === destinatario.colonia)?.id || '';
+
+    // Set form values based on person type
+    if (TIPO_PERSONA === 'fisica') {
+      const NOMBRES = this.parsearNombreCompleto(destinatario.nombreDenominacionORazonSocial);
+      this.datosPersonales.patchValue({
+        nombre: NOMBRES.nombre,
+        primerApellido: NOMBRES.primerApellido,
+        segundoApellido: NOMBRES.segundoApellido,
+        social: '',
+        pais: PAIS_ID,
+        codigo: destinatario.codigoPostal,
+        estado: ESTADO_ID,
+        municipio: MUNICIPIO_ID,
+        colonia: COLONIA_ID,
+        calle: destinatario.calle,
+        exterior: destinatario.numeroExterior,
+        interior: destinatario.numeroInterior,
+        lada: LADA,
+        telefono: TELEFONO,
+        correoElectronico: destinatario.correoElectronico,
+        tif: ''
+      });
+    } else {
+      this.datosPersonales.patchValue({
+        nombre: '',
+        primerApellido: '',
+        segundoApellido: '',
+        social: destinatario.nombreDenominacionORazonSocial,
+        pais: PAIS_ID,
+        codigo: destinatario.codigoPostal,
+        estado: ESTADO_ID,
+        municipio: MUNICIPIO_ID,
+        colonia: COLONIA_ID,
+        calle: destinatario.calle,
+        exterior: destinatario.numeroExterior,
+        interior: destinatario.numeroInterior,
+        lada: LADA,
+        telefono: TELEFONO,
+        correoElectronico: destinatario.correoElectronico,
+        tif: ''
+      });
+    }
+
+    // Mark the form as pristine and untouched to avoid validation errors
+    this.datosPersonales.markAsPristine();
+    this.datosPersonales.markAsUntouched();
+    this.tipoPersonaForm.markAsPristine();
+    this.tipoPersonaForm.markAsUntouched();
+
+    console.log('Formulario cargado con valores:', this.datosPersonales.value);
+  }
+
+  /**
+   * Guarda un nuevo destinatario basado en los datos del formulario.
+   * Crea un objeto destinatario y lo agrega a la lista.
+   * Cierra el modal después de guardar.
    * 
    * @memberof TercerosComponent
    */
-  tercerosAgregar(): void {
+  guardarDestinatario(): void {
+    console.log('Guardando destinatario...');
+    console.log('Formulario válido:', this.tipoPersonaForm.valid && this.datosPersonales.valid);
+    console.log('Errores tipo persona:', this.tipoPersonaForm.errors);
+    console.log('Errores datos personales:', this.datosPersonales.errors);
+    
+    if (this.tipoPersonaForm.invalid || this.datosPersonales.invalid) {
+      this.tipoPersonaForm.markAllAsTouched();
+      this.datosPersonales.markAllAsTouched();
+      
+      console.log('Formulario inválido, no se puede guardar');
+      this.mostrarNotificacionEliminacion(
+        'Por favor completa todos los campos requeridos correctamente.',
+        false
+      );
+      return;
+    }
+
+    const FORM_VALUE = this.datosPersonales.value;
+    const TIPO_PERSONA = this.tipoPersonaForm.get('tipoPersona')?.value;
+    const PAIS_SELECCIONADO = this.paisCatalogo.find(item => item.id === Number(FORM_VALUE.pais));
+    const ESTADO_SELECCIONADO = this.estadoCatalogo.find(item => item.id === Number(FORM_VALUE.estado));
+    const MUNICIPIO_SELECCIONADO = this.municipioCatalogo.find(item => item.id === Number(FORM_VALUE.municipio));
+    const COLONIA_SELECCIONADA = this.coloniaCatalogo.find(item => item.id === Number(FORM_VALUE.colonia));
+
+    const NOMBRE_COMPLETO = TercerosComponent.obtenerNombreCompleto(FORM_VALUE, TIPO_PERSONA);
+    const DOMICILIO_COMPLETO = TercerosComponent.obtenerDomicilioCompleto(FORM_VALUE, COLONIA_SELECCIONADA, MUNICIPIO_SELECCIONADO, ESTADO_SELECCIONADO);
+
+    const DESTINATARIO_DATA: Destinatario = {
+      nombreDenominacionORazonSocial: NOMBRE_COMPLETO,
+      telefono: FORM_VALUE.lada && FORM_VALUE.telefono ? `${FORM_VALUE.lada}-${FORM_VALUE.telefono}` : (FORM_VALUE.telefono || ''),
+      correoElectronico: FORM_VALUE.correoElectronico || '',
+      domicilio: DOMICILIO_COMPLETO,
+      calle: FORM_VALUE.calle || '',
+      numeroExterior: FORM_VALUE.exterior || '',
+      numeroInterior: FORM_VALUE.interior || '',
+      pais: PAIS_SELECCIONADO?.descripcion || '',
+      colonia: COLONIA_SELECCIONADA?.descripcion || '',
+      municipioOAlcaldia: MUNICIPIO_SELECCIONADO?.descripcion || '',
+      entidadFederativa: ESTADO_SELECCIONADO?.descripcion || '',
+      codigoPostal: FORM_VALUE.codigo || ''
+    };
+
+    console.log('Datos del destinatario a guardar:', DESTINATARIO_DATA);
+
+    if (this.isEditingDestinatario && this.editingDestinatarioIndex !== -1) {
+      console.log('Modificando destinatario existente en índice:', this.editingDestinatarioIndex);
+      
+      // Create a new array with the modified item to ensure change detection
+      const NUEVO_ARRAY = [...this.destinatario];
+      NUEVO_ARRAY[this.editingDestinatarioIndex] = DESTINATARIO_DATA;
+      this.destinatario = NUEVO_ARRAY;
+      
+      console.log('Destinatario modificado exitosamente');
+      this.mostrarNotificacionEliminacion(
+        'Destinatario modificado correctamente.',
+        false
+      );
+    } else {
+      console.log('Agregando nuevo destinatario');
+      this.destinatario = [...this.destinatario, DESTINATARIO_DATA];
+      
+      console.log('Nuevo destinatario agregado exitosamente');
+      this.mostrarNotificacionEliminacion(
+        'Destinatario agregado correctamente.',
+        false
+      );
+    }
+
     // Reset editing state
     this.isEditingDestinatario = false;
     this.editingDestinatarioIndex = -1;
+    this.destinatarioSeleccionado = [];
     
-    this.showtercerosModal = true;
-    // Reset forms when opening modal
+    // Close modal and clean forms
+    this.limpiarDatosFormulario();
     this.tipoPersonaForm.reset();
-    this.datosPersonales.reset();
-    this.datosPersonales.patchValue({
-      pais: this.paisCatalogo[0].id
-    });
     this.resetRadioStates();
-    this.showFisicaRow = false;
-    this.showMoralRow = false;
-    this.showPlantaRow = false;
+    this.showtercerosModal = false;
+    
+    // Force change detection
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
+    
+    console.log('Lista actualizada de destinatarios:', this.destinatario);
+  }
+
+  /**
+   * Cancela la eliminación del destinatario.
+   * 
+   * @memberof TercerosComponent
+   */
+  cancelarEliminacion(): void {
+    this.showDeleteConfirmModal = false;
   }
 
   /**
