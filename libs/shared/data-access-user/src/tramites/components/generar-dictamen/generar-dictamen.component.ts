@@ -111,6 +111,13 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    * Si es true, el título se muestra; si es false, el título se oculta.
    */
   @Input() public mostrarTitulo = true;
+
+  /**
+   * Indica si el anexo 222 se encuentra seleccionado o habilitado.
+   * 
+   * @defaultValue true
+   */
+  @Input() public anexo222se = true;
   /**
    * @constructor
    * @description Constructor del componente. Inicializa los servicios necesarios para la creación y validación del formulario de dictamen.
@@ -132,7 +139,7 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    */
   ngOnInit(): void {
     this.dictamenForm = this.fb.group({
-      cumplimiento: ['1'],
+      cumplimiento: ['', [Validators.required]],
       mensajeDictamen: ['', [
         Validators.required,
         GenerarDictamenComponent.noSoloEspacios,
@@ -199,7 +206,8 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    */
   private actualizarVisibilidadCamposFecha(valorCumplimiento: string): void {
     const ESDICTAMENACEPTADO = valorCumplimiento === 'SEDI.AC';
-    this.mostrarCamposFecha = ESDICTAMENACEPTADO;
+    // Actualizar la visibilidad de los campos de fecha
+    this.mostrarCamposFecha = false;
 
     // Actualizar validadores según la visibilidad
     const FECHAINICIOCONTROL = this.dictamenForm.get('fechaInicioVigenciaAutorizada');

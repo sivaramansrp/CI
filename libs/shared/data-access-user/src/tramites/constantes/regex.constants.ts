@@ -970,6 +970,13 @@ export const SOLO_REGEX_NUMEROS = /^[0-9]*$/;
 export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
 
 /**
+ * Expresión regular para validar nombres de localidades.
+ * Permite letras (incluyendo acentuadas), números y espacios.
+ * No permite caracteres especiales.
+ */
+export const REGEX_LOCALIDAD = /^[a-zA-ZÀ-ÿ0-9\\s]+$/;
+
+/**
  * Expresión regular para validar números decimales con hasta 17 dígitos enteros y hasta 4 decimales opcionales.
  * 
  * Esta expresión regular permite validar números que pueden contener:

@@ -9,7 +9,7 @@
   <div class="row mt-5">
     <div class="col-md-3">
       <h6>
-        Fabricante<span class="form-label" *ngIf="esCampoRequerido('fabricante')">*</span><span class="form-label">:</span>
+        Fabricante<span class="form-label" *ngIf="!esCampoRequerido('fabricante')">*</span><span class="form-label">:</span>
       </h6>
     </div>
   </div>
@@ -64,7 +64,7 @@
   </div>
   <div class="row mt-5">
     <div class="col-md-3">
-      <h6> Destinatario (destino final)<span class="form-label" *ngIf="esCampoRequerido('destinoFinal')">*</span><span class="form-label">:</span>
+      <h6> Destinatario (destino final)<span class="form-label" *ngIf="!esCampoRequerido('destinoFinal')">*</span><span class="form-label">:</span>
       </h6>
     </div>
   </div>
