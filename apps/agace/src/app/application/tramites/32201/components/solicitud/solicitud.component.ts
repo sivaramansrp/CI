@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { SOLICITUD_32201_ENUM } from '../../constantes/anexo';
 import { Tramite32201Query } from '../../estados/tramite32201.query';
 
-
 /**
  * Componente que representa la funcionalidad de la solicitud del trámite 32201.
  */
