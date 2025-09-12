@@ -52,7 +52,7 @@
     <div class="row">
       <div class="col-md-4">
        <app-catalogo-select [catalogo]="derechosList" formControlName="opinionPositiva" [label]="'Opinión positiva del SAT*'" [required]="false"
-          [isDisabled]="true"  name="opinionPositiva"></app-catalogo-select>
+          [isDisabled]="false"  name="opinionPositiva" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <input-fecha [datos]="INPUT_FECHA_CONFIG" [setFecha]="formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.value"
@@ -378,3 +378,9 @@
   </section>
 }
 
+@if (accionistasExtranjerosNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="accionistasExtranjerosNotificacion">
+    </lib-notificaciones>
+  </section>
+}

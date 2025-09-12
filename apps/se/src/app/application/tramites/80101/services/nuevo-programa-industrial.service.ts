@@ -6,20 +6,23 @@ import {
   InfoServicios,
   Servicio,
 } from '../models/nuevo-programa-industrial.model';
-import { Observable, map, take, tap } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import {
   Tramite80101State,
   Tramite80101Store,
 } from '../estados/tramite80101.store';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { BehaviorSubject } from 'rxjs';
+import { CadenaOriginalRequest } from '../../130118/model/request/cadena-original-request.model';
 import { CatalogoDatosIdx } from '../../../shared/models/federatarios-y-plantas.model';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
+import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
+import { Injectable } from '@angular/core';
+import { PROC_80101 } from '../servers/api-route';
+import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Tramite80101Query } from '../estados/tramite80101.query';
-
 
 
 /**
@@ -53,7 +56,8 @@ export class NuevoProgramaIndustrialService {
     private readonly http: HttpClient,
     public tramite80101Store: Tramite80101Store,
     public httpService: HttpCoreService,
-    private Tramite80101Query:Tramite80101Query
+    private Tramite80101Query:Tramite80101Query,
+    
   ) {
     // No se necesita lógica de inicialización adicional.
   }
@@ -114,8 +118,39 @@ export class NuevoProgramaIndustrialService {
         .get<PlantasSubfabricante[]>(
           'assets/json/80207/submanufactureras-disponibles-datos.json'
         )
-      
+
         .pipe(map((response: PlantasSubfabricante[]) => response))
+    );
+  }
+
+   /**
+   * Obtiene la cadena original del trámite 130118.
+   * @param body Objeto que contiene los datos necesarios para generar la cadena original.
+   * @returns Un observable que emite la respuesta del servidor con la cadena original.
+   */
+  obtenerCadenaOriginal<T>(idSolicitud: string, body: CadenaOriginalRequest): Observable<BaseResponse<T>> {
+    return this.http.post<BaseResponse<T>>(PROC_80101.API_POST_CADENA_ORIGINAL(idSolicitud), body).pipe(
+      map((response) => response),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener la cadena original en ${PROC_80101.API_POST_CADENA_ORIGINAL(idSolicitud)}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
+ 
+  /**
+     * Envía una solicitud de firma electrónica.
+     * @param idSolicitud - ID de la solicitud a firmar.
+     * @param body - Cuerpo de la solicitud de firma.
+     * @returns Observable con la respuesta del servidor.
+     */
+  enviarFirma<T>(idSolicitud: string | number, body: FirmarRequest): Observable<BaseResponse<T>> {
+    return this.http.post<BaseResponse<T>>(PROC_80101.API_POST_FIRMA(String(idSolicitud)), body).pipe(
+      map(response => response),
+      catchError(() => {
+        const ERROR = new Error(`Error al firmar solicitud con ID ${idSolicitud}`);
+        return throwError(() => ERROR);
+      })
     );
   }
 
@@ -188,12 +223,22 @@ export class NuevoProgramaIndustrialService {
     );
   }
   
-getAllState() {
-return  this.Tramite80101Query.allStore$
+/**
+ * Obtiene todos los datos del estado almacenado en el store.
+ * @returns {Observable<Tramite80101State>} Observable con todos los datos del estado.
+ */
+getAllState(): Observable<Tramite80101State> {
+  return this.Tramite80101Query.allStoreData$;
 }
 
-dummyPost(body:any) {
-  return this.http.post('assets/json/80101/dummy-post.json', body);
+/**
+ * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+ * 
+ * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+ * @returns Observable con la respuesta de la solicitud POST.
+ */
+guardarDatosPost(body: any) {
+  return this.httpService.post<any>(PROC_80101.GUARDAR, { body: body });
 }
 
 }

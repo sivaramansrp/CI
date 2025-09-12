@@ -78,7 +78,10 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
    * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
    */
   public checkbox = TablaSeleccion.CHECKBOX;
-  
+    /**
+   * Bandera para mostrar u ocultar secciones después del botón "Buscar".
+   */
+  mostrarSecciones = false;
   /**
    * Estado de la consulta recibido como entrada desde el componente padre.
    */
@@ -347,7 +350,12 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
     this.asignacionForm.get('montoAExpedir')?.setValue('');
     this.asignacionForm.get('montoAExpedir')?.markAsUntouched();
   }
-
+/**
+ * Método que se ejecuta al hacer clic en el botón "Buscar".
+ */
+onBuscarClick(): void {
+  this.mostrarSecciones = true; // Muestra el contenido que está debajo
+}
   /**
    * Método del ciclo de vida Angular que se ejecuta al destruir el componente.
    * Libera las suscripciones activas.
