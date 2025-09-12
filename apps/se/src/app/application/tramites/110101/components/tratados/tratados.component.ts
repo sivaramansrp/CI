@@ -591,11 +591,13 @@ agregarTratado(): void {
       is_bloque: false,
       tratados_agregados: this.respuestaServicioDatosTabla.map(item => ({
         id_criterio_tratado: item.id_criterio_tratado,
-        cve_grupo_criterio: item.cve_grupo_criterio,
-        id_bloque: item.id_bloque ?? undefined, 
+        id_bloque: item.id_bloque ?? null, 
         id_tratado_acuerdo: item.id_tratado_acuerdo,
+        cve_grupo_criterio: item.cve_grupo_criterio,
+        nombre_pais_bloque: item.nombre_pais_bloque,
+        tratado_nombre: item.tratado_nombre,
         cve_pais: item.cve_pais ?? undefined, 
-        nombre_pais: item.nombre_pais_bloque
+        mensaje_agregado: item.mensaje_agregado
       }))
     };
     this.tratadosSolicitudService.postTratadoCriterio(PAYLOAD)

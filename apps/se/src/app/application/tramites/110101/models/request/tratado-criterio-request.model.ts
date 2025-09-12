@@ -27,19 +27,25 @@ export interface TratadoAcuerdoCriterioRequest {
 export interface TratadoAgregado {
     /** ID del criterio del tratado */
     id_criterio_tratado?: number;
-    
+
+    /** ID del bloque comercial */
+    id_bloque?: number | null;
+
+    /** ID del tratado o acuerdo */
+    id_tratado_acuerdo?: number;
+
     /** Clave del grupo de criterio */
     cve_grupo_criterio?: string;
     
-    /** ID del bloque comercial */
-    id_bloque?: number;
-    
-    /** ID del tratado o acuerdo */
-    id_tratado_acuerdo?: number;
+    /** Nombre del país */
+    nombre_pais_bloque?: string;
+
+    /** Nombre del tratado */
+    tratado_nombre?: string;
     
     /** Clave del país */
-    cve_pais?: string;
+    cve_pais?: string | null;
     
-    /** Nombre del país */
-    nombre_pais?: string;
+    /** Mensaje agregado */
+    mensaje_agregado?: string | null;
 }
