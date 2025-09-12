@@ -529,7 +529,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @memberof TercerosComponent
    */
   guardarDestinatario(): void {
-    
     if (this.tipoPersonaForm.invalid || this.datosPersonales.invalid) {
       this.tipoPersonaForm.markAllAsTouched();
       this.datosPersonales.markAllAsTouched();
@@ -538,40 +537,20 @@ export class TercerosComponent implements OnInit, OnDestroy {
 
     const FORM_VALUE = this.datosPersonales.value;
     const TIPO_PERSONA = this.tipoPersonaForm.get('tipoPersona')?.value;
-    
-    // Find selected catalogs
+
     const PAIS_SELECCIONADO = this.paisCatalogo.find(item => item.id === Number(FORM_VALUE.pais));
     const ESTADO_SELECCIONADO = this.estadoCatalogo.find(item => item.id === Number(FORM_VALUE.estado));
     const MUNICIPIO_SELECCIONADO = this.municipioCatalogo.find(item => item.id === Number(FORM_VALUE.municipio));
     const COLONIA_SELECCIONADA = this.coloniaCatalogo.find(item => item.id === Number(FORM_VALUE.colonia));
 
-    // Create name based on person type
-    let nombreCompleto = '';
-    if (TIPO_PERSONA === 'fisica') {
-      const nombre = FORM_VALUE.nombre || '';
-      const primerApellido = FORM_VALUE.primerApellido || '';
-      const segundoApellido = FORM_VALUE.segundoApellido || '';
-      nombreCompleto = `${nombre} ${primerApellido} ${segundoApellido}`.trim();
-    } else if (TIPO_PERSONA === 'moral' || TIPO_PERSONA === 'planta') {
-      nombreCompleto = FORM_VALUE.social || '';
-    }
-
-    // Create full address
-    const calle = FORM_VALUE.calle || '';
-    const numeroExterior = FORM_VALUE.exterior || '';
-    const numeroInterior = FORM_VALUE.interior || '';
-    const colonia = COLONIA_SELECCIONADA?.descripcion || '';
-    const municipio = MUNICIPIO_SELECCIONADO?.descripcion || '';
-    const estado = ESTADO_SELECCIONADO?.descripcion || '';
-    const codigoPostal = FORM_VALUE.codigo || '';
-    
-    const domicilioCompleto = `${calle} ${numeroExterior} ${numeroInterior ? `Int. ${numeroInterior}` : ''} ${colonia} ${municipio} ${estado} CP: ${codigoPostal}`.trim().replace(/\s+/g, ' ');
+    const NOMBRE_COMPLETO = TercerosComponent.obtenerNombreCompleto(FORM_VALUE, TIPO_PERSONA);
+    const DOMICILIO_COMPLETO = TercerosComponent.obtenerDomicilioCompleto(FORM_VALUE, COLONIA_SELECCIONADA, MUNICIPIO_SELECCIONADO, ESTADO_SELECCIONADO);
 
     const NUEVO_DESTINATARIO: Destinatario = {
-      nombreDenominacionORazonSocial: nombreCompleto,
+      nombreDenominacionORazonSocial: NOMBRE_COMPLETO,
       telefono: FORM_VALUE.lada && FORM_VALUE.telefono ? `${FORM_VALUE.lada}-${FORM_VALUE.telefono}` : (FORM_VALUE.telefono || ''),
       correoElectronico: FORM_VALUE.correoElectronico || '',
-      domicilio: domicilioCompleto,
+      domicilio: DOMICILIO_COMPLETO,
       calle: FORM_VALUE.calle || '',
       numeroExterior: FORM_VALUE.exterior || '',
       numeroInterior: FORM_VALUE.interior || '',
@@ -582,17 +561,51 @@ export class TercerosComponent implements OnInit, OnDestroy {
       codigoPostal: FORM_VALUE.codigo || ''
     };
 
-   
     this.destinatario = [...this.destinatario, NUEVO_DESTINATARIO];
-    
-   
     this.limpiarDatosFormulario();
     this.tipoPersonaForm.reset();
     this.resetRadioStates();
     this.showtercerosModal = false;
-    
-   
     this.cdr.detectChanges();
+  }
+
+  private static obtenerNombreCompleto(
+    FORM_VALUE: { nombre?: string; primerApellido?: string; segundoApellido?: string; social?: string },
+    TIPO_PERSONA: string
+  ): string {
+    if (TIPO_PERSONA === 'fisica') {
+      const NOMBRE = FORM_VALUE.nombre || '';
+      const PRIMER_APELLIDO = FORM_VALUE.primerApellido || '';
+      const SEGUNDO_APELLIDO = FORM_VALUE.segundoApellido || '';
+      return `${NOMBRE} ${PRIMER_APELLIDO} ${SEGUNDO_APELLIDO}`.trim();
+    } else if (TIPO_PERSONA === 'moral' || TIPO_PERSONA === 'planta') {
+      return FORM_VALUE.social || '';
+    }
+    return '';
+  }
+
+  private static obtenerDomicilioCompleto(
+    FORM_VALUE: {
+      calle?: string;
+      exterior?: string;
+      interior?: string;
+      colonia?: string;
+      municipio?: string;
+      estado?: string;
+      codigo?: string;
+    },
+    COLONIA_SELECCIONADA: Catalogo | undefined,
+    MUNICIPIO_SELECCIONADO: Catalogo | undefined,
+    ESTADO_SELECCIONADO: Catalogo | undefined
+  ): string {
+    const CALLE = FORM_VALUE.calle || '';
+    const NUMERO_EXTERIOR = FORM_VALUE.exterior || '';
+    const NUMERO_INTERIOR = FORM_VALUE.interior || '';
+    const COLONIA = COLONIA_SELECCIONADA?.descripcion || '';
+    const MUNICIPIO = MUNICIPIO_SELECCIONADO?.descripcion || '';
+    const ESTADO = ESTADO_SELECCIONADO?.descripcion || '';
+    const CODIGO_POSTAL = FORM_VALUE.codigo || '';
+    return `${CALLE} ${NUMERO_EXTERIOR} ${NUMERO_INTERIOR ? `Int. ${NUMERO_INTERIOR}` : ''} ${COLONIA} ${MUNICIPIO} ${ESTADO} CP: ${CODIGO_POSTAL}`.trim().replace(/\s+/g, ' ');
   }
 
   /**
@@ -638,8 +651,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.showFisicaRow = false;
     this.showMoralRow = false;
     this.showPlantaRow = false;
-    
-    console.log('Modal opened, current destinatarios:', this.destinatario);
   }
 
   /**
