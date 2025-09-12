@@ -433,7 +433,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Maneja la confirmación del popup de régimen aduanero.
    * @param confirmar - Indica si el usuario confirmó (true) o canceló (false)
-   */    public manejarConfirmacionRegimen(confirmar: boolean): void {
+   */    
+  public manejarConfirmacionRegimen(confirmar: boolean): void {
     if (confirmar) {
       this.deseleccionarRegimen0();
     }
