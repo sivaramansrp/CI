@@ -9,34 +9,38 @@
         </div>
       </div>
   
-      <app-input-radio
-        [radioOptions]="radioOptions"
-        [selectedValue]="selectedValue"
-        [isRequired]="true"
-        (valueChange)="onValueChange($event)"
-        [layout]="'vertical'"
-        formControlName="exportadorFabricanteMismo"
-        (change)="
-          setValoresStore(
-          historicoFabricantesForm,
-          'exportadorFabricanteMismo',
-          'setExportadorFabricanteMismo'
-          )"
-      ></app-input-radio>
-      <h6>Fabricantes nacionales</h6>
-
-      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns" [datos]="fabricantesNacionales" ></app-tabla-dinamica>
-      <div class="container text-end mt-5">
-        <button class="btn btn-default me-2">Seleccionar</button>
-        <button class="btn btn-primary">Fabricante nuevo</button>
+      <div class="d-flex align-items-center gap-3 mb-3">
+          <lib-input-check
+            id="noCheckbox"
+            label="No"
+            [required]="true"
+            formControlName="exportadorFabricanteMismo"
+            (change)="mostrarOpcionNacional = historicoFabricantesForm.get('exportadorFabricanteMismo')?.value === true"
+          ></lib-input-check>
       </div>
-      <h6>Fabricante</h6>
-  
-      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns" [datos]="fabricantesNacionales" ></app-tabla-dinamica>
-      <div class="row mb-3">
-        <div class="d-flex justify-content-end mt-5">
-            <button type="button" class="btn btn-default">Eliminar</button>
+        <div class="d-flex align-items-center gap-3 mb-3" *ngIf="mostrarOpcionNacional">
+          <app-input-radio
+            [radioOptions]="radioOptions"
+            [selectedValue]="valorSeleccionado"
+            [isRequired]="true"
+            formControlName="tipoFabricante"
+            (valueChange)="valorSeleccionado = $event"
+          ></app-input-radio>
         </div>
+    @if (valorSeleccionado === 'Nacional' && mostrarOpcionNacional) {
+      <h6>Fabricantes nacionales</h6>
+      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns" [datos]="fabricantesNacionales" (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
+      <div class="container text-end mt-5">
+        <button class="btn btn-default me-2" type="button" (click)="alSeleccionarClick()">Seleccionar</button>
+        <button class="btn btn-primary" type="button">Fabricante nuevo</button>
+      </div>
+    <h6>Fabricante</h6>
+
+    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns" [datos]="fabricantesNacionales" ></app-tabla-dinamica>
+    <div class="row mb-3">
+      <div class="d-flex justify-content-end mt-5">
+          <button type="button" class="btn btn-default">Eliminar</button>
+      </div>
     </div>
     <div class="row">
       <ng-titulo titulo="Datos fabricante nacional"></ng-titulo>
@@ -63,5 +67,25 @@
             
         </div>
     </div>
+  }
     </form>
+
+    <!-- Confirmar Seleccionar Modal -->
+    <div id="confirmarSeleccionar" class="modal fade" tabindex="-1"
+      aria-labelledby="confirmarSeleccionarLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <label>Debes seleccionar un fabricante</label>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-primary"
+              data-bs-dismiss="modal">Aceptar</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>

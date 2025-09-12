@@ -1,4 +1,3 @@
-
 import { CommonModule } from '@angular/common';
 
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
@@ -15,7 +14,6 @@ import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import {
   CatalogosSelect,
   ConfiguracionColumna,
-  InputRadioComponent,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -23,7 +21,8 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-
+import { InputCheckComponent } from "@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component";
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/tipos-de-fabricante-exportador.json';
 import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
 
@@ -55,7 +54,7 @@ import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
  * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
  * @property {FormGroup} historicoFabricantesForm - Formulario reactivo para capturar datos de fabricantes.
  * @property {any[]} radioOptions - Opciones de radio para el formulario.
- * @property {string | number} selectedValue - Valor seleccionado del radio.
+ * @property {string | number} valorSeleccionado - Valor seleccionado del radio.
  * @property {string | number} defaultSelect - Valor por defecto del select.
  * @property {any[]} radioBoton - Opciones de radio para el formulario.
  * @property {TablaSeleccion} TablaSeleccion - Configuración para la selección de tablas.
@@ -67,7 +66,7 @@ import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
  * @method ngOnDestroy Limpia las suscripciones al destruir el componente.
  * @method initActionFormBuild Inicializa el formulario reactivo.
  * @method recuperarDatos Obtiene los datos de fabricantes nacionales.
- * @method onValueChange Maneja el cambio de valor del radio.
+ * @method alValorCambiar Maneja el cambio de valor del radio.
  * @method setValoresStore Establece valores en el store de textiles.
  *
  * @see ElegibilidadDeTextilesStore
@@ -85,11 +84,51 @@ import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
     TituloComponent,
     CommonModule,
     ReactiveFormsModule,
+    InputCheckComponent,
     InputRadioComponent,
-    TablaDinamicaComponent,
-  ],
+    TablaDinamicaComponent
+],
 })
 export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
+  /**
+   * Flag to show 'Nacional' option after 'No' is selected
+   */
+    mostrarOpcionNacional = false;
+  /**
+   * Getter to filter radio options based on selection.
+   * Shows only 'No' initially, and adds 'Nacional' when 'No' is selected.
+   */
+    get filteredRadioOptions(): Array<{ label: string; value: string }> {
+      if (this.mostrarOpcionNacional) {
+      return this.radioOptions;
+    }
+    return [this.radioOptions[0]];
+  }
+  /**
+   * Track selected fabricantes from the table
+   */
+  selectedFabricantes: HistoricoColumns[] = [];
+
+  /**
+   * Handle selection change from table
+   */
+  onSeleccionChange(_event: HistoricoColumns[]):void {
+  // The event should be the selected rows array from the table
+    this.selectedFabricantes = Array.isArray(_event) ? _event : [];
+  }
+
+  /**
+   * Handle 'Seleccionar' button click
+   */
+  alSeleccionarClick(): void {
+    if (this.selectedFabricantes.length === 0) {
+      const MODAL_ELEMENT = document.getElementById('confirmarSeleccionar');
+      if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = new window.bootstrap.Modal(MODAL_ELEMENT);
+        MODAL_INSTANCE.show();
+      }
+    }
+  }
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    * Propiedad de entrada que controla si todos los controles del formulario deben estar deshabilitados.
@@ -101,7 +140,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
 
   /**
    * @property {FormGroup} historicoFabricantesForm - El grupo de formularios para capturar los datos de los fabricantes.
-   * Formulario reactivo principal que contiene todos los controles necesarios para la gestión
+          alSeleccionarClick(): void {
    * del historial de fabricantes, incluyendo información fiscal, selecciones de tipo de fabricante
    * y datos de fabricantes nacionales. Maneja validaciones y sincronización con el estado global.
    */
@@ -133,7 +172,15 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   @Output() mostrarTabs: EventEmitter<boolean> = new EventEmitter<boolean>();  
 
   /**
-   * @property {any[]} radioOptions - Opciones de radio para el formulario de tipo de fabricante exportador.
+          valorSeleccionado: string | number = '';
+          // Alias for template compatibility
+          get valorSeleccionado(): string | number {
+            return this.valorSeleccionado;
+          }
+          // Alias for template compatibility
+          onSeleccionarClick(): void {
+            this.alSeleccionarClick();
+          }
    * Contiene las configuraciones y opciones disponibles para los controles de radio button
    * relacionados con el tipo de fabricante exportador. Se inicializa con datos estáticos
    * importados desde un archivo JSON externo que define las opciones de selección.
@@ -141,14 +188,14 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   radioOptions = radioOptionsData;
 
   /**
-   * @property {string | number} selectedValue - Valor seleccionado del radio button.
+   * @property {string | number} valorSeleccionado - Valor seleccionado del radio button.
    * Almacena el valor actualmente seleccionado en los controles de radio button del formulario.
    * Puede ser de tipo string o number dependiendo del tipo de opción seleccionada.
    * Se actualiza cuando el usuario cambia la selección en los controles de radio.
-   */
-  selectedValue: string | number = '';
-
-  /**
+          alValorCambiar(nuevoValor: number | string): void {
+            this.valorSeleccionado = nuevoValor;
+            if (nuevoValor === 'No') {
+              this.mostrarOpcionNacional = true;
    * @property {string | number} defaultSelect - Valor por defecto del control de selección.
    * Define el valor inicial que debe mostrarse en los controles de selección cuando
    * el componente se inicializa. Proporciona un estado predeterminado para la interfaz.
@@ -375,17 +422,28 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method onValueChange
+   * @property {string | number} valorSeleccionado - Valor seleccionado del radio button.
+   * Almacena el valor actualmente seleccionado en los controles de radio button del formulario.
+   */
+  valorSeleccionado: string | number = '';
+
+  /**
+   * @method alValorCambiar
    * @description Maneja el cambio de valor del radio button.
    * Se ejecuta cuando el usuario selecciona una nueva opción en los controles de radio button.
-   * Actualiza la propiedad selectedValue con el nuevo valor seleccionado,
+   * Actualiza la propiedad valorSeleccionado con el nuevo valor seleccionado,
    * lo que puede desencadenar cambios en la interfaz o validaciones adicionales.
    * Facilita la captura de la interacción del usuario con los controles de selección.
-   * @param {string | number} newValue - El nuevo valor seleccionado en el control de radio.
+   * @param {string | number} nuevoValor - El nuevo valor seleccionado en el control de radio.
    * @returns {void} No retorna ningún valor.
    */
-  onValueChange(newValue: number | string): void {
-    this.selectedValue = newValue;
+  alValorCambiar(nuevoValor: number | string): void {
+    this.valorSeleccionado = nuevoValor;
+    if (nuevoValor === 'No') {
+      this.mostrarOpcionNacional = true;
+    } else {
+      this.mostrarOpcionNacional = false;
+    }
   }
 
   /**
