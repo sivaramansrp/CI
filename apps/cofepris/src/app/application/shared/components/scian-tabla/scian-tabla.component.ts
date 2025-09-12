@@ -35,7 +35,11 @@ export class ScianTablaComponent implements OnInit {
    */
   @Input() public idProcedimiento!: number;
 
-
+  /**
+   * @property {TablaScianConfig[]} scianState
+   * @description
+   * Almacena el estado actual de la tabla SCIAN.
+   */
   @Input() public scianState!: TablaScianConfig[];
 
   /**
