@@ -6,7 +6,12 @@ import { EventEmitter } from '@angular/core';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Solicitud31101Store } from '../../estados/solicitud31101.store';
 import { Solicitud31101Query } from '../../estados/solicitud31101.query';
-import { CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import {
+  CatalogoSelectComponent,
+  ConsultaioQuery,
+  InputRadioComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -17,16 +22,6 @@ class SolicitudServiceMock {
       enSuCaracterDe: { catalogos: [{ id: 1, descripcion: 'Socio' }] },
       nacionalidad: { catalogos: [{ id: 2, descripcion: 'Mexicana' }] },
       tipoDePersona: { catalogos: [{ id: 3, descripcion: 'Física' }] },
-    })
-  );
-  conseguirDatosGeneralesOpcionDeRadio = jest.fn().mockReturnValue(
-    of({
-      requisitos: {
-        radioOptions: [
-          { value: 1, label: 'Sí' },
-          { value: 2, label: 'No' },
-        ],
-      },
     })
   );
 }
@@ -80,7 +75,7 @@ describe('MiembroDeLaEmpresaComponent', () => {
         TituloComponent,
         CatalogoSelectComponent,
         InputRadioComponent,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       providers: [
         FormBuilder,
@@ -112,6 +107,25 @@ describe('MiembroDeLaEmpresaComponent', () => {
     component = fixture.componentInstance;
     solicitudService = TestBed.inject(SolicitudService as any);
     solicitud31101Store = TestBed.inject(Solicitud31101Store as any);
+    component.enSuCaracterDeLista = {
+      labelNombre: 'Test',
+      required: true,
+      primerOpcion: '',
+      catalogos: [],
+    };
+    component.nacionalidadLista = {
+      labelNombre: 'Test',
+      required: true,
+      primerOpcion: '',
+      catalogos: [],
+    };
+    component.tipoDePersonaLista = {
+      labelNombre: 'Test',
+      required: true,
+      primerOpcion: '',
+      catalogos: [],
+    };
+
     fixture.detectChanges();
   });
 

@@ -119,17 +119,17 @@ export interface DatosGeneralesDeLaSolicitudCatologo {
   /**
    * Catálogo de opciones sobre el carácter del miembro.
    */
-  enSuCaracterDe: CatalogosSelect;
+  enSuCaracterDe: Catalogo[];
 
   /**
    * Catálogo de nacionalidades disponibles.
    */
-  nacionalidad: CatalogosSelect;
+  nacionalidad: Catalogo[];
 
   /**
    * Catálogo del tipo de persona en la solicitud.
    */
-  tipoDePersona: CatalogosSelect;
+  tipoDePersona: Catalogo[];
 
   /**
    * Catálogo de modalidades del programa IMMEX.

@@ -1,30 +1,44 @@
-import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  InputRadioComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  DatosGeneralesDeLaSolicitudCatologo,
+  InputRadio,
+  RadioOptions,
+  SeccionSociosIC,
+} from '../../models/solicitud.model';
+import {
+  EN_SU_CARACTER_DE,
+  NACIONALIDAD,
+  SINO_OPCION,
+  TIPO_DE_PERSONA,
+} from '../../constants/solicitud.enum';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud31101State,
+  Solicitud31101Store,
+} from '../../estados/solicitud31101.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { DatosGeneralesDeLaSolicitudCatologo } from '../../models/solicitud.model';
-import { DatosGeneralesDeLaSolicitudRadioLista } from '../../models/solicitud.model';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputRadio } from '../../models/solicitud.model';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { RadioOptions } from '../../models/solicitud.model';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SeccionSociosIC } from '../../models/solicitud.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solicitud31101Query } from '../../estados/solicitud31101.query';
-import { Solicitud31101State } from '../../estados/solicitud31101.store';
-import { Solicitud31101Store } from '../../estados/solicitud31101.store';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /** Componente que representa un miembro de la empresa */
 @Component({
@@ -58,19 +72,19 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
 
   /** Opción seleccionada para "Sí" o "No" */
-  sinoOpcion: InputRadio = {} as InputRadio;
+  sinoOpcion: InputRadio = SINO_OPCION;
 
   /** Estado actual de la solicitud 31101 */
   solicitud31101State: Solicitud31101State = {} as Solicitud31101State;
 
   /** Lista de opciones para el carácter del miembro */
-  enSuCaracterDeLista: CatalogosSelect = {} as CatalogosSelect;
+  enSuCaracterDeLista: CatalogosSelect = EN_SU_CARACTER_DE;
 
   /** Lista de opciones de nacionalidad */
-  nacionalidadLista: CatalogosSelect = {} as CatalogosSelect;
+  nacionalidadLista: CatalogosSelect = NACIONALIDAD;
 
   /** Lista de opciones para el tipo de persona */
-  tipoDePersonaLista: CatalogosSelect = {} as CatalogosSelect;
+  tipoDePersonaLista: CatalogosSelect = TIPO_DE_PERSONA;
 
   /** Evento para actualizar los datos del miembro de la empresa */
   @Output() eventoActualizarMiembro = new EventEmitter<SeccionSociosIC>();
@@ -81,7 +95,18 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
-  /** Constructor del componente */
+  /**
+   * Constructor del componente.
+   *
+   * Inicializa los servicios y estados necesarios para gestionar
+   * los formularios reactivos y la información de la solicitud.
+   *
+   * @param fb Servicio para manejar formularios reactivos.
+   * @param solicitudService Servicio para manejar solicitudes.
+   * @param solicitud31101Store Estado de la solicitud.
+   * @param solicitud31101Query Consultas sobre la solicitud.
+   * @param consultaioQuery Servicio para consultar información adicional.
+   */
   constructor(
     public fb: FormBuilder, // /** Servicio para manejar formularios reactivos */
     public solicitudService: SolicitudService, // /** Servicio para manejar solicitudes */
@@ -106,7 +131,6 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.conseguirDatosGeneralesCatologo(); // /** Obtiene los datos generales del catálogo */
-    this.conseguirDatosGeneralesOpcionDeRadio(); // /** Obtiene las opciones de radio */
   }
 
   /** Inicializa el formulario para gestionar datos del miembro de la empresa */
@@ -261,9 +285,9 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       .subscribe({
         /** Procesa la respuesta y asigna los valores correspondientes */
         next: (respuesta: DatosGeneralesDeLaSolicitudCatologo) => {
-          this.enSuCaracterDeLista = respuesta.enSuCaracterDe; // /** Lista de opciones para el carácter del miembro */
-          this.nacionalidadLista = respuesta.nacionalidad; // /** Lista de opciones de nacionalidad */
-          this.tipoDePersonaLista = respuesta.tipoDePersona; // /** Lista de opciones para el tipo de persona */
+          this.enSuCaracterDeLista.catalogos = respuesta.enSuCaracterDe; // /** Lista de opciones para el carácter del miembro */
+          this.nacionalidadLista.catalogos = respuesta.nacionalidad; // /** Lista de opciones de nacionalidad */
+          this.tipoDePersonaLista.catalogos = respuesta.tipoDePersona; // /** Lista de opciones para el tipo de persona */
         },
       });
   }
@@ -272,16 +296,6 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
    * Obtiene los datos generales correspondientes a las opciones de tipo de radio.
    * Asigna los valores recibidos a las propiedades correspondientes del componente.
    */
-  conseguirDatosGeneralesOpcionDeRadio(): void {
-    this.solicitudService
-      .conseguirDatosGeneralesOpcionDeRadio()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (respuesta: DatosGeneralesDeLaSolicitudRadioLista) => {
-          this.sinoOpcion = respuesta.requisitos;
-        },
-      });
-  }
 
   /**
    * Cierra el modal y emite el evento correspondiente.
@@ -407,7 +421,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
     /**
      * Obtiene la descripción de la nacionalidad del miembro.
      */
-    this.nacionalidadLista.catalogos.forEach((element: Catalogo) => {
+    this.nacionalidadLista?.catalogos.forEach((element: Catalogo) => {
       if (
         element.id === this.miembroEmpresaForm.get('miembroNacionalidad')?.value
       ) {
@@ -418,7 +432,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
     /**
      * Obtiene la descripción del tipo de persona.
      */
-    this.tipoDePersonaLista.catalogos.forEach((element: Catalogo) => {
+    this.tipoDePersonaLista?.catalogos.forEach((element: Catalogo) => {
       if (
         element.id ===
         this.miembroEmpresaForm.get('miembroTipoPersonaMuestra')?.value
@@ -430,7 +444,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
     /**
      * Obtiene la etiqueta de la opción de tributar en México.
      */
-    this.sinoOpcion.radioOptions.forEach((element: RadioOptions) => {
+    this.sinoOpcion?.radioOptions.forEach((element: RadioOptions) => {
       if (
         element.value ===
         this.miembroEmpresaForm.get('miembroTributarMexico')?.value

@@ -575,3 +575,68 @@ export const FIANZA_FECHA_FIN_VIGENCIA: InputFecha = {
    */
   habilitado: true,
 };
+/**
+ * Configuración del catálogo para el tipo de persona.
+ */
+export const TIPO_DE_PERSONA: CatalogosSelect = {
+  /**
+   * Etiqueta que se mostrará en la interfaz de usuario para el campo.
+   */
+  labelNombre: 'Tipo de Persona',
+  /**
+   * Indica si el campo es obligatorio.
+   */
+  required: true,
+  /**
+   * Texto que se mostrará como primera opción en el selector.
+   */
+  primerOpcion: 'Selecciona una opción',
+  /**
+   * Lista de opciones disponibles en el catálogo.
+   */
+  catalogos: [],
+};
+
+/**
+ * Configuración del catálogo para la nacionalidad.
+ */
+export const NACIONALIDAD: CatalogosSelect = {
+  /**
+   * Etiqueta que se mostrará en la interfaz de usuario para el campo.
+   */
+  labelNombre: 'Nacionalidad',
+  /**
+   * Indica si el campo es obligatorio.
+   */
+  required: true,
+  /**
+   * Texto que se mostrará como primera opción en el selector.
+   */
+  primerOpcion: 'Selecciona una opción',
+  /**
+   * Lista de opciones disponibles en el catálogo.
+   */
+  catalogos: [],
+};
+
+/**
+ * Configuración del catálogo para el carácter del miembro dentro de la empresa.
+ */
+export const EN_SU_CARACTER_DE: CatalogosSelect = {
+  /**
+   * Etiqueta que se mostrará en la interfaz de usuario para el campo.
+   */
+  labelNombre: 'En su caracter de',
+  /**
+   * Indica si el campo es obligatorio.
+   */
+  required: true,
+  /**
+   * Texto que se mostrará como primera opción en el selector.
+   */
+  primerOpcion: 'Selecciona una opción',
+  /**
+   * Lista de opciones disponibles en el catálogo.
+   */
+  catalogos: [],
+};
