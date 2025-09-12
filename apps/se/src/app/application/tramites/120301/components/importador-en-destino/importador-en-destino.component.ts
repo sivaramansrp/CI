@@ -267,23 +267,43 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
       tipo: [this.importadorState.tipo, Validators.required],
       cantidadTotalImportador: [
         this.importadorState.cantidadTotalImportador,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        [
+          Validators.required,
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+          Validators.minLength(11),
+          Validators.maxLength(11)
+        ],
       ],
       razonSocialImportador: [
         this.importadorState.razonSocialImportador,
-        Validators.required,
+        [
+          Validators.required,
+          Validators.maxLength(70)
+        ],
       ],
-      domicilio: [this.importadorState.domicilio, Validators.required],
+      domicilio: [
+        this.importadorState.domicilio,
+        [
+          Validators.required,
+          Validators.maxLength(70)
+        ],
+      ],
       ciudadImportador: [
         this.importadorState.ciudadImportador,
-        Validators.required,
+        [
+          Validators.required,
+          Validators.maxLength(35)
+        ],
       ],
       cpImportador: [
         this.importadorState.cpImportador,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        [
+          Validators.required,
+          Validators.maxLength(9)
+        ],
       ],
       PaisImportador: [
-        { value: this.importadorState.PaisImportador, disabled: true },
+        { value: this.importadorState.PaisImportador || 'ESTADOS UNIDOS DE AMERICA', disabled: true },
         Validators.required,
       ],
     });
@@ -366,6 +386,15 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
 
     this.mostrarTabs.emit(true);
   }
+    /**
+   * Guarda los datos editados del chofer nacional si el formulario es válido, emite el evento y cierra el modal.
+   * Si el formulario es inválido, muestra una notificación de alerta.
+   * @returns {void}
+   */
+  submitted = false;
+    guardarFilaEditada(): void {
+    this.submitted = true;
+    }
   /**
    * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.

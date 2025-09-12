@@ -38,9 +38,16 @@
               )
             "
           />
-          @if (importadorForm.get('cantidadTotalImportador')?.invalid && (importadorForm.get('cantidadTotalImportador')?.touched || importadorForm.get('cantidadTotalImportador')?.dirty)) {
-            <small class="text-danger">Este campo es obligatorio</small>
-          }
+              @if (importadorForm.get('cantidadTotalImportador')?.errors && (importadorForm.get('cantidadTotalImportador')?.touched || submitted || importadorForm.get('cantidadTotalImportador')?.dirty)) {
+                @if (importadorForm.get('cantidadTotalImportador')?.errors?.['required']) {
+                  <div class="text-danger">
+                    <small class="text-danger">Este campo es obligatorio.</small>
+                  </div>
+                }
+                @else if (importadorForm.get('cantidadTotalImportador')?.errors?.['pattern'] || importadorForm.get('cantidadTotalImportador')?.errors?.['minlength'] || importadorForm.get('cantidadTotalImportador')?.errors?.['maxlength']) {
+                  <small class="text-danger">Favor de captuar el formato correcto</small>
+                }
+              }
         </div>
       </div>
       <div class="col-md-6">
@@ -66,9 +73,13 @@
               )
             "
           />
-          @if (importadorForm.get('razonSocialImportador')?.invalid && (importadorForm.get('razonSocialImportador')?.touched || importadorForm.get('razonSocialImportador')?.dirty)) {
-            <small class="text-danger">Este campo es obligatorio</small>
-          }
+            @if (importadorForm.get('razonSocialImportador')?.errors && (importadorForm.get('razonSocialImportador')?.touched || importadorForm.get('razonSocialImportador')?.dirty)) {
+              @if (importadorForm.get('razonSocialImportador')?.errors?.['required']) {
+                <small class="text-danger">Este campo es obligatorio</small>
+              } @else if (importadorForm.get('razonSocialImportador')?.errors?.['maxlength']) {
+                <small class="text-danger">Por favor, no escribas más de 70 caracteres</small>
+              }
+            }
         </div>
       </div>
       <div class="col-md-6"></div>
@@ -89,8 +100,12 @@
               setValoresStore(importadorForm, 'domicilio', 'setDomicilio')
             "
           />
-          @if (importadorForm.get('domicilio')?.invalid && (importadorForm.get('domicilio')?.touched || importadorForm.get('domicilio')?.dirty)) {
-            <small class="text-danger">Este campo es obligatorio</small>
+          @if (importadorForm.get('domicilio')?.errors && (importadorForm.get('domicilio')?.touched || importadorForm.get('domicilio')?.dirty)) {
+            @if (importadorForm.get('domicilio')?.errors?.['required']) {
+              <small class="text-danger">Este campo es obligatorio</small>
+            } @else if (importadorForm.get('domicilio')?.errors?.['maxlength']) {
+              <small class="text-danger">Por favor, no escribas más de 70 caracteres</small>
+            }
           }
         </div>
       </div>
@@ -117,9 +132,13 @@
               )
             "
           />
-          @if (importadorForm.get('ciudadImportador')?.invalid && (importadorForm.get('ciudadImportador')?.touched || importadorForm.get('ciudadImportador')?.dirty)) {
-            <small class="text-danger">Este campo es obligatorio</small>
-          }
+            @if (importadorForm.get('ciudadImportador')?.errors && (importadorForm.get('ciudadImportador')?.touched || importadorForm.get('ciudadImportador')?.dirty)) {
+              @if (importadorForm.get('ciudadImportador')?.errors?.['required']) {
+                <small class="text-danger">Este campo es obligatorio</small>
+              } @else if (importadorForm.get('ciudadImportador')?.errors?.['maxlength']) {
+                <small class="text-danger">Por favor, no escribas más de 35 caracteres</small>
+              }
+            }
         </div>
       </div>
       <div class="col-md-6">
@@ -142,6 +161,13 @@
           @if (importadorForm.get('cpImportador')?.invalid && (importadorForm.get('cpImportador')?.touched || importadorForm.get('cpImportador')?.dirty)) {
             <small class="text-danger">Este campo es obligatorio</small>
           }
+            @if (importadorForm.get('cpImportador')?.errors && (importadorForm.get('cpImportador')?.touched || importadorForm.get('cpImportador')?.dirty)) {
+              @if (importadorForm.get('cpImportador')?.errors?.['required']) {
+                <small class="text-danger">Este campo es obligatorio</small>
+              } @else if (importadorForm.get('cpImportador')?.errors?.['maxlength']) {
+                <small class="text-danger">Por favor, no escribas más de 9 caracteres</small>
+              }
+            }
         </div>
       </div>
       <div class="col-md-6">
