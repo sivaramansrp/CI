@@ -1,5 +1,6 @@
 import { API_POST_TRATADO_CRITERIO } from "../server/api-router";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
+import { CriterioTratadoResponse } from "../models/response/tratado-criterio-response.model";
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
@@ -34,8 +35,8 @@ export class TratadosSolicitudService {
  * @param PAYLOAD - Datos de validación de criterios de tratado
  * @returns Observable con la respuesta de validación del servidor
  */
-  postTratadoCriterio(PAYLOAD: TratadoAcuerdoCriterioRequest): Observable<BaseResponse<null>> {
+  postTratadoCriterio(PAYLOAD: TratadoAcuerdoCriterioRequest): Observable<BaseResponse<CriterioTratadoResponse[]>> {
     const ENDPOINT = `${this.host}${API_POST_TRATADO_CRITERIO}`;
-    return this.http.post<BaseResponse<null>>(ENDPOINT, PAYLOAD);
+    return this.http.post<BaseResponse<CriterioTratadoResponse[]>>(ENDPOINT, PAYLOAD);
   }
 }

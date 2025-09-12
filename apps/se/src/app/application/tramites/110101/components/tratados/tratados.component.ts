@@ -1,5 +1,7 @@
 
 import { AlertComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, INSTANCIA_URUGUAY, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-response.model';
+
 import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
@@ -15,6 +17,8 @@ import { PantallasSvcService } from '../../services/pantallas-svc.service';
 import { RegistroDeSolicitudesTabla} from '../../models/panallas110101.model';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TratadoAcuerdoCriterioRequest } from '../../models/request/tratado-criterio-request.model';
+import { TratadosSolicitudService } from '../../services/tratados-solicitud.service';
 import { TratadosTabla } from '../../models/panallas110101.model';
 import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.json';
 
@@ -152,6 +156,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
     private pantallaService: PantallasSvcService,
     private catalogosTramiteService: CatalogosTramiteService,
     private cd: ChangeDetectorRef,
+    private tratadosSolicitudService: TratadosSolicitudService
   ) { 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -482,6 +487,11 @@ export class TratadosComponent implements OnInit, OnDestroy {
     public registroDeSolicitudesTablaDatos: RegistroDeSolicitudesTabla[] = [];
 
   /**
+   * Un array de objetos `CriterioTratadoResponse` que representa los datos para la tabla de solicitudes de la respuesta de validacion.
+  */
+  public respuestaServicioDatosTabla: CriterioTratadoResponse[] = [];
+
+  /**
    * Datos de la tabla de tratados.
    * Este array contiene objetos de tipo `TratadosTabla` que representan los datos de los
    */
@@ -533,11 +543,11 @@ agregarTratado(): void {
     const TRATADO_DESC = this.tratadoCatalogo.find(item => item.id.toString() === TRATADO_ID) || null;
     const ORIGENDESC = this.origenCatalogo.find(item => item.id.toString() === ORIGEN_ID) || null ;
 
-    const ROW_DATA = {
+    /* const ROW_DATA = {
       pais: PAIS_DESC?.descripcion,
       tratado: TRATADO_DESC?.descripcion,
       origen: ORIGENDESC?.descripcion
-    };
+    }; */
 
     if (this.isEditMode && this.selectedRowIndex !== null && this.selectedRowIndex > -1) {
       
@@ -551,16 +561,93 @@ agregarTratado(): void {
       this.selectedRowIndex = null;
       this.selectedRows = [];
     } else {
-      this.mostrarTabla = false;
-      this.registroDeSolicitudesTablaDatos.push(ROW_DATA);
-      this.cd.detectChanges();
-      this.mostrarTabla = true;
+    const DATOS_SELECCIONADOS: TratadoAcuerdoCriterioRequest = {
+      id_tratado_acuerdo: Number(TRATADO_DESC?.clave ?? 0),
+      clave_pais_bloque: PAIS_DESC?.clave,
+      criterio_certificado: ORIGENDESC?.clave,
+      requiere_juegos_o_surtidos: false,
+      is_bloque: PAIS_DESC?.bloque === 'true'
+    }
+    this.tratadoCriterioAgregar(DATOS_SELECCIONADOS);
      
     }
     this.habilitarPestana.emit();
     this.formularioTratados.reset();
   }
 }
+
+  /** 
+   * @method tratadoCriterioAgregar
+   * @description Realiza una petición para validar si se agrega los tratados.
+   * @return {void}
+   */
+  public tratadoCriterioAgregar(datos: TratadoAcuerdoCriterioRequest): void {
+    const PAYLOAD: TratadoAcuerdoCriterioRequest = {
+      id_tratado_acuerdo: datos.id_tratado_acuerdo,
+      clave_pais_bloque: datos.clave_pais_bloque,
+      criterio_certificado: datos.criterio_certificado,
+      requiere_juegos_o_surtidos: false,
+      is_bloque: false,
+      tratados_agregados: this.respuestaServicioDatosTabla.map(item => ({
+        id_criterio_tratado: item.id_criterio_tratado,
+        cve_grupo_criterio: item.cve_grupo_criterio,
+        id_bloque: item.id_bloque ?? undefined, 
+        id_tratado_acuerdo: item.id_tratado_acuerdo,
+        cve_pais: item.cve_pais ?? undefined, 
+        nombre_pais: item.nombre_pais_bloque
+      }))
+    };
+    this.tratadosSolicitudService.postTratadoCriterio(PAYLOAD)
+    .subscribe({
+      next: (resp) => {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
+          this.respuestaServicioDatosTabla = resp.datos ?? [];
+          this.mostrarTabla = false;
+          
+          //Llenado de tabla
+           this.registroDeSolicitudesTablaDatos = this.respuestaServicioDatosTabla.map(item => ({
+            pais: item.nombre_pais_bloque,
+            tratado: item.tratado_nombre,
+            origen: item.cve_grupo_criterio
+          }));
+          this.cd.detectChanges();
+          this.mostrarTabla = true;
+          
+        }else{
+           window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: resp.error || 'Error agregar tratado.',
+            mensaje:
+              resp.causa ||
+              resp.mensaje ||
+              'Error agregar tratado.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+       
+      },
+      error: (error) => {
+        const MENSAJE = error?.error?.error || 'Error de conexión';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
+      }
+    });
+  }
+
+
 /**
  * Modifica un tratado existente en la tabla.
  * Este método se activa cuando se selecciona una fila en la tabla.
