@@ -261,6 +261,12 @@ export class TercerosComponent implements OnInit, OnDestroy {
   exportadorSeleccionado: Exportador[];
 
   /**
+   * Lista de destinatarios seleccionados en la tabla.
+   * @type {Destinatario[]}
+   */
+  destinatarioSeleccionado: Destinatario[] = [];
+
+  /**
    * Constructor del componente TercerosComponent.
    * Inicializa los servicios necesarios y configura las suscripciones iniciales.
    * 
@@ -281,6 +287,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     private service: ZoosanitarioService
   ) {
     this.exportadorSeleccionado = [];
+    this.destinatarioSeleccionado = []; // Initialize destinatario selection
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -522,6 +529,29 @@ export class TercerosComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Maneja la selección de exportadores desde la tabla dinámica.
+   * Actualiza la lista de exportadores seleccionados.
+   * 
+   * @param filas - Array de exportadores seleccionados por el usuario
+   * @memberof TercerosComponent
+   */
+  onExportadorSeleccionado(filas: Exportador[]): void {
+    this.exportadorSeleccionado = filas;
+  }
+
+  /**
+   * Maneja la selección de destinatarios desde la tabla dinámica.
+   * Actualiza la lista de destinatarios seleccionados.
+   * 
+   * @param filas - Array de destinatarios seleccionados por el usuario
+   * @memberof TercerosComponent
+   */
+  onDestinatarioSeleccionado(filas: Destinatario[]): void {
+    this.destinatarioSeleccionado = filas;
+    this.cdr.detectChanges();
+  }
+
+  /**
    * Guarda un nuevo destinatario basado en los datos del formulario.
    * Crea un objeto destinatario y lo agrega a la lista.
    * Cierra el modal después de guardar.
@@ -562,6 +592,10 @@ export class TercerosComponent implements OnInit, OnDestroy {
     };
 
     this.destinatario = [...this.destinatario, NUEVO_DESTINATARIO];
+    
+    // Clear selection when new data is added
+    this.destinatarioSeleccionado = [];
+    
     this.limpiarDatosFormulario();
     this.tipoPersonaForm.reset();
     this.resetRadioStates();
@@ -651,17 +685,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.showFisicaRow = false;
     this.showMoralRow = false;
     this.showPlantaRow = false;
-  }
-
-  /**
-   * Maneja la selección de exportadores desde la tabla dinámica.
-   * Actualiza la lista de exportadores seleccionados.
-   * 
-   * @param filas - Array de exportadores seleccionados por el usuario
-   * @memberof TercerosComponent
-   */
-  onExportadorSeleccionado(filas: Exportador[]): void {
-    this.exportadorSeleccionado = filas;
   }
 
   /**

@@ -32,21 +32,30 @@
       [configuracionTabla]="configuracionTablaDatos" 
       [datos]="destinatario"
       [tipoSeleccionTabla]="checkbox" 
-      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
-    </app-tabla-dinamica>
-    
-    <nav aria-label="Page navigation example">
-      <ul class="pagination justify-content-center">
-        <li class="page-item"><a class="page-link">1</a></li>
-      </ul>
-    </nav>
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+      (listaDeFilaSeleccionada)="onDestinatarioSeleccionado($event)">
+  </app-tabla-dinamica>
+  
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item"><a class="page-link">1</a></li>
+    </ul>
+  </nav>
   </div>
 
-  <!-- Action buttons -->
-  <div class="col-md-12 mt-5 d-flex justify-content-end">
+  <!-- Action buttons for Destinatario - Show when no data exists -->
+  <div class="col-md-12 mt-5 d-flex justify-content-end" 
+       *ngIf="destinatario.length === 0">
     <button type="button" class="btn btn-primary ms-3" (click)="tercerosAgregar()"
       [disabled]="esFormularioSoloLectura">Agregar</button>
     <button type="button" class="btn btn-default ms-3" (click)="abrirBuscarTercerosModal()">Buscar</button>
+  </div>
+
+  <!-- Action buttons for Destinatario - Show when data exists and is selected -->
+  <div class="col-md-12 mt-5 d-flex justify-content-end"
+       *ngIf="destinatario.length > 0 && destinatarioSeleccionado?.length && destinatarioSeleccionado.length > 0">
+    <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">Modificar</button>
+    <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
   </div>
 
   <!-- Modal -->
