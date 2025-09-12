@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import {DatosDomicilioLegalState,DatosDomicilioLegalStore,} from '../../estados/stores/datos-domicilio-legal.store';
 import {FormBuilder,FormGroup,ReactiveFormsModule,Validators,} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -52,6 +52,7 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
     private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery,
     private consultaioQuery: ConsultaioQuery,
     private servicioDeFormularioService: ServicioDeFormularioService,
+    private validacionesService: ValidacionesFormularioService
   ) {
     //Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -79,13 +80,10 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.updateDatos = seccionState.update;
+          this.configurarGrupoForm(); // Configura el formulario reactivo.
         })
       )
-      .subscribe()
-
-   
-      this.configurarGrupoForm(); // Configura el formulario reactivo.
-  
+      .subscribe();
   }
   /**
    * Configura el formulario reactivo.
@@ -110,6 +108,11 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
     });
 
     this.servicioDeFormularioService.registerForm('representanteForm', this.representante);
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'representanteForm') {
+        this.representante.markAllAsTouched();
+      }
+    })
 
      /*
      * Si el formulario está en modo solo lectura, deshabilita todos los campos.
@@ -156,6 +159,18 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
     this.servicioDeFormularioService.setFormValue('representanteForm', {
         [campo]: VALOR,
       });
+  }
+
+  /**
+  * compo doc
+  * @method esValido
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param campo El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(campo: string): boolean | null {
+    return this.validacionesService.isValid(this.representante, campo);
   }
 
   /**

@@ -183,40 +183,43 @@ export class ContenedorDePasosComponent {
    *
    * @param {AccionBoton} e - Acción realizada en el botón (continuar o retroceder) y el índice del paso.
    */
-  getValorIndice(e: AccionBoton): void {
-    const VALIDO = this.pasoUnoComponent?.validarPasoUno();
-    if (VALIDO) {
-      if (e.valor > 0 && e.valor < 5) {
-        this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
-          e.valor
-        );
-        if (e.accion === 'cont') {
-          this.wizardComponent.siguiente();
-        } else {
-          this.wizardComponent.atras();
-        }
+  public getValorIndice(e: AccionBoton): void {
+    if (e.accion === 'cont') {
+      let isValid = true;
+
+      if (this.indice === 1 && this.pasoUnoComponent) {
+        isValid = this.pasoUnoComponent.validarPasoUno();
       }
-    } else {      
-      this.indice = 1;
-          this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
-          this.indice
-        );
-      this.mostrarAlerta = true;
-      this.MENSAJE_DE_ERROR = MENSAJE_DE_VALIDACION;
-    
-      this.seleccionarFilaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje: MENSAJE_DE_VALIDACION,
-        cerrar: true,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'SI',
-        txtBtnCancelar: 'NO',
+
+      if (!isValid) {
+        this.mostrarAlerta = true;
+        this.MENSAJE_DE_ERROR = MENSAJE_DE_VALIDACION;
+        this.seleccionarFilaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE_DE_VALIDACION,
+          cerrar: true,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'SI',
+          txtBtnCancelar: 'NO',
+        };
+
+        this.datosPasos.indice = this.indice;
+        return;
       }
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.siguiente();
+      return;
     }
+
+    this.indice = e.valor;
+    this.datosPasos.indice = this.indice;
+    this.wizardComponent.atras();
   }
+
   /**
    * @method obtenerNombreDelTítulo
    * Obtiene el título correspondiente al paso actual.

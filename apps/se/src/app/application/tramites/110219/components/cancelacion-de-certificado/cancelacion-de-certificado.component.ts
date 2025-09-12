@@ -198,11 +198,11 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
    * Encabezados de la tabla de certificados disponibles.
    */
   public headers: ConfiguracionColumna<ColumnasTabla>[] = [
-    { encabezado: 'Número de certificado', clave: (ele: ColumnasTabla) => ele.numeroCertificado, orden: 1 },
+    { encabezado: 'Numero de certificado', clave: (ele: ColumnasTabla) => ele.numeroCertificado, orden: 1 },
     { encabezado: 'Pais/Bloque', clave: (ele: ColumnasTabla) => ele.pais, orden: 2 },
     { encabezado: 'Tratado/Acuerdo', clave: (ele: ColumnasTabla) => ele.tratado, orden: 3 },
-    { encabezado: 'Fecha expedición', clave: (ele: ColumnasTabla) => ele.fechaExpedicion, orden: 4 },
-    { encabezado: 'Fecha vencimíento', clave: (ele: ColumnasTabla) => ele.fechaVencimiento, orden: 5 },
+    { encabezado: 'Fecha expedicion', clave: (ele: ColumnasTabla) => ele.fechaExpedicion, orden: 4 },
+    { encabezado: 'Fecha vencimiento', clave: (ele: ColumnasTabla) => ele.fechaVencimiento, orden: 5 },
   ];
 
   /**

@@ -78,7 +78,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly || true;
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
       .subscribe();

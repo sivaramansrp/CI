@@ -1,5 +1,5 @@
 import { AfterViewInit,Input,OnInit } from '@angular/core';
-import { AlertComponent, InputCheckComponent, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
+import { AlertComponent, InputCheckComponent, REGEX_LOCALIDAD, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ConsultaioQuery} from "@ng-mf/data-access-user";
@@ -1009,7 +1009,7 @@ ngOnChanges(): void {
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(12)]],
       estado: [this.solicitudState?.estado],
       municipioOAlcaldia: [this.solicitudState?.municipioOAlcaldia, [Validators.required, Validators.maxLength(120)]],
-      localidad: [this.solicitudState?.localidad, [Validators.maxLength(120)]],
+      localidad: ['', [Validators.required, Validators.pattern(REGEX_LOCALIDAD), Validators.maxLength(120)]],
       colonias: [this.solicitudState?.colonias, [Validators.maxLength(120)]],
       calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
       lada: [this.solicitudState?.lada, [Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(5)]],
@@ -1060,7 +1060,7 @@ ngOnChanges(): void {
     });
 
     this.representanteLegal = this.fb.group({
-      acuerdoPublico: [this.solicitudState?.acuerdoPublico],
+      acuerdoPublico:  [this.solicitudState?.acuerdoPublico || '1', [Validators.required]],
       rfc: [this.solicitudState?.rfc, [Validators.required, Validators.maxLength(13)]],
       nombre: [{ value: this.solicitudState?.nombre, disabled: true }, [Validators.required]],
       apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, [Validators.required]],

@@ -5,7 +5,7 @@
  * para la importación de artificios pirotécnicos.
  */
 export const TITULOMENSAJE =
-  'Solicitud de modificación de permiso ordinario para la importación de sustancias quimicas';
+  'Solicitud de Modificación de Permiso ordinario para la importación de artificios pirotécnicos';
 /**
  * @constant {string} TEXTOS_REQUISITOS
  * Texto que informa al usuario sobre el registro temporal de la solicitud,

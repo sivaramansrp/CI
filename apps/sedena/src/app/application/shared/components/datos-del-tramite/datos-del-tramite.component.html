@@ -108,7 +108,7 @@
       <div class="mb-3">
         <label for="usoFinal" class="form-label">
           Uso final de la mercancía*:
-          <span class="bi bi-question-circle-fill fs-4 m-1" title="Uso final de la mercancía" ata-bs-toggle="tooltip">
+          <span class="bi bi-question-circle-fill fs-4 m-1" title="lugar y evento donde se llevarán a cabo las actividades deportivas" ata-bs-toggle="tooltip">
           </span>
         </label>
         <textarea id="usoFinal" class="form-control" [maxLength]="1000" rows="3" formControlName="usoFinal" style="height: 90px"
@@ -168,14 +168,14 @@
           <div class="col-md-4">
             <app-input-radio [radioOptions]="periodoUnoSemestreOpciones" [isRequired]="true" [layout]="'horizontal'"
               [gap]="'10px'" formControlName="unoSemestre" (valueChange)="actualizarUnoSemestre($event)"
-              [disabled]="esFormularioSoloLectura"></app-input-radio>
+              [disabled]="esFormularioSoloLectura || (form.get('unoSemestre')?.disabled ?? false)"></app-input-radio>
           </div>
         </div>
     
         <div class="row">
           <div class="col-md-4">
             <lib-input-check [id]="'anoEnCurso'" [fontWeight]="true" [label]="'Año en curso:'" [required]="false" formControlName="anoEnCurso"
-              [isDisabled]="esFormularioSoloLectura"></lib-input-check>
+              [isDisabled]="esFormularioSoloLectura || (form.get('anoEnCurso')?.disabled ?? false)"></lib-input-check>
             <div class="error-message">
               <small class="text-danger" *ngIf="
                   form.get('anoEnCurso')?.touched &&
