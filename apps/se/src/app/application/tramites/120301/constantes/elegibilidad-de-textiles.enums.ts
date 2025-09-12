@@ -347,7 +347,7 @@ export const VALIDO = 'TodoValido'
  *
  * @constant {string}
  */
-export const REPRESENTACION_FEDERAL_NOTA = '*El monto mostrado es de carácter informativo, no corresponde al saldo real debido a la realización de transacciones de forma constante a nivel nacional';
+export const REPRESENTACION_FEDERAL_NOTA = '*El monto mostrado es de carácter informativo no corresponde al saldo real debido a la realización de transacciones de forma constante a nivel nacional.';
 
 /**
  * Constante que define el mensaje de error para validación de formularios.
