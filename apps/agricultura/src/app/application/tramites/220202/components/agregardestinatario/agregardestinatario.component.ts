@@ -240,7 +240,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
    * @method onGuardarDestinatario
    */
   onGuardarDestinatario(): void {
-    if (this.destinatarioForm.valid) {
+    if (this.isFormularioValido()) {
       const LISTA_DINAMICA: TercerosrelacionadosdestinoTable[] = [];
       LISTA_DINAMICA.push(this.destinatarioForm.value as TercerosrelacionadosdestinoTable);
       this.agriculturaApiService.updateTercerosRelacionado(LISTA_DINAMICA as TercerosrelacionadosdestinoTable[]);
@@ -273,6 +273,38 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
   }
 
   /**
+   * Verifica si el formulario es válido según el tipo de persona seleccionado.
+   * @method isFormularioValido
+   * @returns {boolean} True si el formulario es válido, false en caso contrario.
+   */
+  isFormularioValido(): boolean {
+    const TIPO_PERSONA = this.destinatarioForm.get('tipoMercancia')?.value;
+    
+    // Campos comunes siempre requeridos
+    const CAMPOS_COMUNES = ['pais', 'estado', 'calle', 'numeroExterior'];
+    const CAMPOS_COMUNES_VALIDOS = CAMPOS_COMUNES.every(campo => {
+      const CONTROL = this.destinatarioForm.get(campo);
+      return CONTROL?.valid;
+    });
+    
+    if (!CAMPOS_COMUNES_VALIDOS) {
+      return false;
+    }
+    
+    // Validación específica según tipo de persona
+    if (TIPO_PERSONA === 'no') {
+      // Moral: Solo razón social es requerida
+      const RAZON_SOCIAL = this.destinatarioForm.get('razonSocial');
+      return RAZON_SOCIAL?.valid === true;
+    }
+    
+    // Física: Nombre y primer apellido son requeridos
+    const NOMBRE = this.destinatarioForm.get('nombre');
+    const PRIMER_APELLIDO = this.destinatarioForm.get('primerApellido');
+    return NOMBRE?.valid === true && PRIMER_APELLIDO?.valid === true;
+  }
+
+  /**
    * Cambia la validación del campo razonSocial según el valor del radio tipoMercancia.
    * Si tipoMercancia es 'no', elimina los validadores; si es 'yes', agrega el validador requerido.
    * @method enCambioValorRadio
@@ -282,7 +314,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
     const NOMBRE_CTRL = this.destinatarioForm.get('nombre');
     const PRIMER_APELLIDO_CTRL = this.destinatarioForm.get('primerApellido');
 
-    if (this.destinatarioForm.value.tipoMercancia === 'no') {
+    if (this.destinatarioForm.get('tipoMercancia')?.value === 'no') {
       // Moral: Razón social es requerida, nombre y apellidos no
       RAZON_SOCIAL_CTRL?.setValidators([Validators.required]);
       RAZON_SOCIAL_CTRL?.updateValueAndValidity();
@@ -290,10 +322,12 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       NOMBRE_CTRL?.clearValidators();
       NOMBRE_CTRL?.setValue('');
       NOMBRE_CTRL?.updateValueAndValidity();
+      NOMBRE_CTRL?.markAsUntouched();
       
       PRIMER_APELLIDO_CTRL?.clearValidators();
       PRIMER_APELLIDO_CTRL?.setValue('');
       PRIMER_APELLIDO_CTRL?.updateValueAndValidity();
+      PRIMER_APELLIDO_CTRL?.markAsUntouched();
     } else {
       // Física: Nombre y apellidos son requeridos, razón social no
       NOMBRE_CTRL?.setValidators([Validators.required]);
@@ -305,6 +339,7 @@ export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
       RAZON_SOCIAL_CTRL?.clearValidators();
       RAZON_SOCIAL_CTRL?.setValue('');
       RAZON_SOCIAL_CTRL?.updateValueAndValidity();
+      RAZON_SOCIAL_CTRL?.markAsUntouched();
     }
   }
 }

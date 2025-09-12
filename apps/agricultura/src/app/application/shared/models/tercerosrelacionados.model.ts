@@ -108,6 +108,11 @@ export interface TercerosrelacionadosdestinoTable {
    * Planta del destinatario (opcional).
    */
   planta?: string;
+
+  /**
+   * Domicilio completo del destinatario (opcional).
+   */
+  domicilio?: string;
 }
 
 /**

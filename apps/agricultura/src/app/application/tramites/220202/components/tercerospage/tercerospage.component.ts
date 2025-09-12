@@ -113,13 +113,18 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.esFormularioSoloLectura = seccionState.readonly;
       });
       
-    this.agriculturaApiService.getAllDatosForma()
+    // Suscríbete reactivamente para almacenar cambios para terceros relacionados (destinatario)
+    this.fitosanitarioStore._select(state => state.tercerosRelacionados)
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((datosDeLaSolicitud) => {
-        if (datosDeLaSolicitud) {
-          this.personas = datosDeLaSolicitud.tercerosRelacionados;
-          this.datosForma = datosDeLaSolicitud.datosForma;
-        }
+      .subscribe((tercerosRelacionados) => {
+        this.personas = tercerosRelacionados || [];
+      });
+
+    // Suscribirse reactivamente para almacenar cambios en los datos del exportador
+    this.fitosanitarioStore._select(state => state.datosForma)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datosForma) => {
+        this.datosForma = datosForma || [];
       });
   }
 

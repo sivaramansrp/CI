@@ -24,7 +24,7 @@
         <div class="col-md-12">
           <ng-titulo titulo="Datos personales" />
         </div>
-        <div class="row" *ngIf="destinatarioForm.value.tipoMercancia === 'yes'">
+        <div class="row" *ngIf="destinatarioForm.get('tipoMercancia')?.value === 'yes'">
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="nombre">Nombre(s)*:</label>
@@ -113,7 +113,7 @@
             </div>
           </div>
         </div>
-        <div class="row" *ngIf="destinatarioForm.value.tipoMercancia === 'no'">
+        <div class="row" *ngIf="destinatarioForm.get('tipoMercancia')?.value === 'no'">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" for="razonSocial"
@@ -126,6 +126,7 @@
                 type="text"
                 libUppercase
                 formControlName="razonSocial"
+                maxlength="250"
               />
               <div
                 *ngIf="
@@ -138,7 +139,7 @@
               </div>
               <div
                 *ngIf="
-                  destinatarioForm.get('razonSocial')?.hasError('maxLength') &&
+                  destinatarioForm.get('razonSocial')?.hasError('maxlength') &&
                   destinatarioForm.get('razonSocial')?.touched
                 "
                 class="text-danger"
@@ -409,7 +410,7 @@
           <div class="col-md-12 justify-content-end d-flex">
             <button
               type="button"
-              class="btn btn-primary me-5"
+              class="btn btn-primary"
               [disabled]="esFormularioSoloLectura"
               (click)="onLimpiarDestinatario()"
             >
@@ -417,7 +418,7 @@
             </button>
             <button
               type="button"
-              class="btn btn-default me-5"
+              class="btn btn-default mx-3"
               [disabled]="esFormularioSoloLectura"
               (click)="onCancelarDestinatario()"
             >
@@ -426,7 +427,7 @@
             <button
               type="button"
               class="btn btn-danger"
-              [disabled]="destinatarioForm.invalid || esFormularioSoloLectura"
+              [disabled]="!isFormularioValido() || esFormularioSoloLectura"
               (click)="onGuardarDestinatario()"
             >
               Guardar

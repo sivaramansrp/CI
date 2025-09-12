@@ -104,13 +104,13 @@
       ></app-tabla-dinamica>
     </div>
 
-     <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaExportador.length === 0">
+     <div class="col-md-12 d-flex justify-content-end mt-4" *ngIf="cuerpoTablaExportador.length === 0">
         <button class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura"
             (click)="goToAgregarExportador()">Agregar</button>
         <button class="btn btn-default" [disabled]="esFormularioSoloLectura"
             (click)="buscarDestinatario()">Buscar</button>
     </div>
-    <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaExportador.length === 1">
+    <div class="col-md-12 d-flex justify-content-end mt-4" *ngIf="cuerpoTablaExportador.length === 1">
         <button class="btn btn-primary me-3"
             [disabled]="esFormularioSoloLectura || listaDeFilaSeleccionadaFinal.length === 0"
             (click)="modificarExportador()">Modificar</button>

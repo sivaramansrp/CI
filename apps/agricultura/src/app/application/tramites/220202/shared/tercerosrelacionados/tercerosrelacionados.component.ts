@@ -159,7 +159,7 @@ export class TercerosrelacionadosComponent {
    * @type {ConfiguracionColumna<TercerosrelacionadosTable>[]}
    */
   configuracionColumnasExportador: ConfiguracionColumna<TercerosrelacionadosdestinoTable>[] = [
-    { encabezado: 'Nombre/denominación o razón social', clave: (fila) => fila.nombre, orden: 1 },
+    { encabezado: 'Nombre/denominación o razón social', clave: (fila) => fila.razonSocial || fila.nombre || '', orden: 1 },
     { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
     { encabezado: 'Correo electrónico', clave: (fila) => fila.correo, orden: 3 },
     { encabezado: 'Domicilio', clave: (fila) => fila.razonSocial, orden: 4 },
@@ -171,7 +171,7 @@ export class TercerosrelacionadosComponent {
    * @type {ConfiguracionColumna<TercerosrelacionadosdestinoTable>[]}
    */
   configuracionColumnasDestino: ConfiguracionColumna<TercerosrelacionadosdestinoTable>[] = [
-    { encabezado: 'Nombre/denominación o razón social', clave: (fila) => fila.nombre, orden: 1 },
+    { encabezado: 'Nombre/denominación o razón social', clave: (fila) => fila.razonSocial || fila.nombre || '', orden: 1 },
     { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
     { encabezado: 'Correo electrónico', clave: (fila) => fila.correo, orden: 3 },
     { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 4 },

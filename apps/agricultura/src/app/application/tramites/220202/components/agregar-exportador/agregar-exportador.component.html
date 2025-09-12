@@ -150,15 +150,15 @@
               <textarea
                 class="form-control form-check-input"
                 [placeholder]="'Calle, No Ext, No Int, Ciudad, C.P'"
-                id="razonSocial"
-                formControlName="razonSocial"
+                id="domicilio"
+                formControlName="domicilio"
                 maxlength="4000"
                 rows="6"
                 style="height: 150px"
               >
               </textarea>
-              @if (destinatarioForm.get('razonSocial')?.hasError('required') &&
-              destinatarioForm.get('razonSocial')?.touched) {
+              @if (destinatarioForm.get('domicilio')?.hasError('required') &&
+              destinatarioForm.get('domicilio')?.touched) {
               <div class="text-danger">
                 <small>Este campo es obligatorio.</small>
               </div>
@@ -232,7 +232,7 @@
           <div class="col-md-12 justify-content-end d-flex">
             <button
               type="button"
-              class="btn btn-primary me-5"
+              class="btn btn-primary"
               [disabled]="esFormularioSoloLectura"
               (click)="onLimpiarDestinatario()"
             >
@@ -240,7 +240,7 @@
             </button>
             <button
               type="button"
-              class="btn btn-default me-5"
+              class="btn btn-default mx-3"
               [disabled]="esFormularioSoloLectura"
               (click)="onCancelarDestinatario()"
             >
