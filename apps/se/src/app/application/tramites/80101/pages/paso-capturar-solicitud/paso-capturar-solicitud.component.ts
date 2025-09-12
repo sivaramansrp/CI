@@ -297,7 +297,8 @@ export class PasoCapturarSolicitudComponent {
         }
     ],
     "plantasSubmanufactureras": [],
-    ...SOCIO_ACCIONISTAS
+    "socioAccionista":[...SOCIO_ACCIONISTAS]
+    
 }
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
       return response;
