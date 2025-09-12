@@ -28,19 +28,20 @@
   <!-- Destinatario table -->
   <div class="row">
     <h6>Destinatario (destino final)*</h6>
-   <app-tabla-dinamica 
+    <app-tabla-dinamica 
       [configuracionTabla]="configuracionTablaDatos" 
       [datos]="destinatario"
       [tipoSeleccionTabla]="checkbox" 
       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+     
       (listaDeFilaSeleccionada)="onDestinatarioSeleccionado($event)">
-  </app-tabla-dinamica>
-  
-  <nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-      <li class="page-item"><a class="page-link">1</a></li>
-    </ul>
-  </nav>
+    </app-tabla-dinamica>
+    
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item"><a class="page-link">1</a></li>
+      </ul>
+    </nav>
   </div>
 
   <!-- Action buttons for Destinatario - Show when no data exists -->
@@ -450,3 +451,20 @@
     </div>
   </app-modal>
 </div>
+
+<!-- Notification components - same pattern as datos-de-la-solicitud -->
+@if(confirmacionAlertaEliminacion){
+<section>
+  <lib-notificaciones [notificacionInput]="notificacionEliminacion"
+    (confirmacionModal)="onConfirmacionEliminacion($event)">
+  </lib-notificaciones>
+</section>
+}
+
+@if(mostrarAlertaEliminacion){
+<section>
+  <lib-notificaciones [notificacionInput]="notificacionEliminacion" 
+    (confirmacionModal)="onAlertaEliminacion()">
+  </lib-notificaciones>
+</section>
+}

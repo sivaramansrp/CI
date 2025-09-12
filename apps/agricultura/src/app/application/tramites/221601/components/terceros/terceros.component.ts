@@ -7,7 +7,9 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-  ValidacionesFormularioService
+  ValidacionesFormularioService,
+  Notificacion, 
+  NotificacionesComponent // Add these imports
 } from '@libs/shared/data-access-user/src';
 import {
   ChangeDetectorRef,
@@ -79,7 +81,8 @@ import Plantatif from '@libs/shared/theme/assets/json/221601/plantatif.json';
     CatalogoSelectComponent,
     ModalComponent,
     CommonModule,
-    InputRadioComponent
+    InputRadioComponent,
+    NotificacionesComponent // Add this import
   ],
   templateUrl: './terceros.component.html',
   styleUrls: ['./terceros.component.scss']
@@ -120,7 +123,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
   tipoPersonaForm!: FormGroup;
 
   /** 
-   * Formulario para búsqueda de terceros existentes en el sistema.
+   * Formulario para búsqueda de terceros existentes.
    * @type {FormGroup}
    */
   buscarTercerosForm!: FormGroup;
@@ -301,7 +304,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     private service: ZoosanitarioService
   ) {
     this.exportadorSeleccionado = [];
-    this.destinatarioSeleccionado = []; // Initialize destinatario selection
+    this.destinatarioSeleccionado = [];
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -561,7 +564,8 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @memberof TercerosComponent
    */
   onDestinatarioSeleccionado(filas: Destinatario[]): void {
-    this.destinatarioSeleccionado = filas;
+    console.log('Destinatarios seleccionados:', filas);
+    this.destinatarioSeleccionado = [...filas]; // Create new array reference
     this.cdr.detectChanges();
   }
 
@@ -713,36 +717,146 @@ export class TercerosComponent implements OnInit, OnDestroy {
 
   /**
    * Elimina el destinatario seleccionado.
-   * Muestra confirmación antes de eliminar.
+   * Muestra confirmación antes de eliminar usando el patrón de notificación.
    * 
    * @memberof TercerosComponent
    */
   eliminarDestinatario(): void {
+    console.log('Destinatarios seleccionados:', this.destinatarioSeleccionado);
+    console.log('Lista completa de destinatarios:', this.destinatario);
+    
     if (this.destinatarioSeleccionado.length === 0) {
-     
+      this.mostrarNotificacionEliminacion(
+        'Selecciona un registro.',
+        false
+      );
       return;
     }
 
-    // Show confirmation dialog
-    const CONFIRMAR = confirm('¿Está seguro de que desea eliminar este destinatario?');
-    
-    if (CONFIRMAR) {
-      const DESTINATARIO_A_ELIMINAR = this.destinatarioSeleccionado[0];
-    
-      const INDEX_TO_REMOVE = this.destinatario.findIndex(dest => 
-        dest.nombreDenominacionORazonSocial === DESTINATARIO_A_ELIMINAR.nombreDenominacionORazonSocial &&
-        dest.correoElectronico === DESTINATARIO_A_ELIMINAR.correoElectronico &&
-        dest.telefono === DESTINATARIO_A_ELIMINAR.telefono
-      );
+    this.mostrarNotificacionEliminacion(
+      '¿Estás seguro que deseas eliminar los registros marcados?',
+      true
+    );
+  }
 
-      if (INDEX_TO_REMOVE !== -1) {
-        this.destinatario.splice(INDEX_TO_REMOVE, 1);
-        
-        this.destinatarioSeleccionado = [];
-        
-        this.cdr.detectChanges();
-        } 
+  /**
+   * Realiza la eliminación del destinatario después de la confirmación.
+   * 
+   * @memberof TercerosComponent
+   */
+  private realizarEliminacionDestinatario(): void {
+    if (this.destinatarioSeleccionado.length === 0) {
+      return;
     }
+
+    const DESTINATARIO_A_ELIMINAR = this.destinatarioSeleccionado[0];
+    const ORIGINAL_LENGTH = this.destinatario.length;
+    
+    console.log('Eliminando destinatario:', DESTINATARIO_A_ELIMINAR);
+    console.log('Lista original (longitud):', ORIGINAL_LENGTH);
+
+    // Use filter to create a new array without the selected item - this ensures Angular detects the change
+    this.destinatario = this.destinatario.filter(dest => {
+      // Compare by unique properties to ensure accurate matching
+      const IS_SAME_NAME = dest.nombreDenominacionORazonSocial === DESTINATARIO_A_ELIMINAR.nombreDenominacionORazonSocial;
+      const IS_SAME_EMAIL = dest.correoElectronico === DESTINATARIO_A_ELIMINAR.correoElectronico;
+      const IS_SAME_PHONE = dest.telefono === DESTINATARIO_A_ELIMINAR.telefono;
+      
+      // Return false (exclude) if all properties match
+      return !(IS_SAME_NAME && IS_SAME_EMAIL && IS_SAME_PHONE);
+    });
+
+    console.log('Lista después del filtro (longitud):', this.destinatario.length);
+
+    // Clear the selection array completely
+    this.destinatarioSeleccionado = [];
+    
+    // Force multiple change detection cycles
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
+    
+    // Use setTimeout to ensure the UI updates
+    setTimeout(() => {
+      this.cdr.detectChanges();
+    }, 0);
+
+    // Check if deletion was successful
+    if (this.destinatario.length < ORIGINAL_LENGTH) {
+      this.mostrarNotificacionEliminacion(
+        'Destinatario eliminado correctamente.',
+        false
+      );
+      console.log('Eliminación exitosa');
+    } else {
+      this.mostrarNotificacionEliminacion(
+        'No se pudo eliminar el destinatario. Verifique que esté seleccionado.',
+        false
+      );
+      console.error('La eliminación falló - el array no cambió de tamaño');
+    }
+  }
+
+  /**
+   * Muestra la notificación de eliminación.
+   * 
+   * @param mensaje - Mensaje a mostrar
+   * @param mostrarCancelar - Si debe mostrar el botón cancelar
+   * @memberof TercerosComponent
+   */
+  private mostrarNotificacionEliminacion(mensaje: string, mostrarCancelar: boolean = false): void {
+    this.notificacionEliminacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: mostrarCancelar ? 'Cancelar' : '',
+    };
+    
+    if (mostrarCancelar) {
+      this.confirmacionAlertaEliminacion = true;
+    } else {
+      this.mostrarAlertaEliminacion = true;
+    }
+  }
+
+  /**
+   * Maneja la confirmación de eliminación.
+   * 
+   * @param confirmar - Si el usuario confirmó la eliminación
+   * @memberof TercerosComponent
+   */
+  onConfirmacionEliminacion(confirmar: boolean): void {
+    this.confirmacionAlertaEliminacion = false;
+    
+    if (confirmar) {
+      this.realizarEliminacionDestinatario();
+    }
+  }
+
+  /**
+   * Maneja el cierre de la alerta de eliminación.
+   * 
+   * @memberof TercerosComponent
+   */
+  onAlertaEliminacion(): void {
+    this.mostrarAlertaEliminacion = false;
+  }
+
+  // Remove the old confirmation methods as they're no longer needed
+  // confirmarEliminacion(): void { ... } - DELETE THIS
+  // cancelarEliminacion(): void { ... } - DELETE THIS
+
+  /**
+   * Cancela la eliminación del destinatario.
+   * 
+   * @memberof TercerosComponent
+   */
+  cancelarEliminacion(): void {
+    this.showDeleteConfirmModal = false;
   }
 
   /**
@@ -941,6 +1055,33 @@ if (this.isEditingDestinatario && this.editingDestinatarioIndex !== -1) {
    * description Indica si el tipo de persona es moral.
    */
   public moral = false;
+
+  /** 
+   * Control de visibilidad del modal de confirmación de eliminación.
+   * @type {boolean}
+   * @default false
+   */
+  showDeleteConfirmModal = false;
+
+  /** 
+   * Control de visibilidad de alerta de eliminación.
+   * @type {boolean}
+   * @default false
+   */
+  public mostrarAlertaEliminacion: boolean = false;
+
+  /** 
+   * Control de visibilidad de confirmación de alerta de eliminación.
+   * @type {boolean}
+   * @default false
+   */
+  public confirmacionAlertaEliminacion: boolean = false;
+
+  /** 
+   * Configuración de la notificación de eliminación.
+   * @type {Notificacion}
+   */
+  public notificacionEliminacion!: Notificacion;
 
   /**
      * method inputChecked
