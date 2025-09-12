@@ -1,5 +1,5 @@
 
-import { AlertComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, INSTANCIA_URUGUAY, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { AlertComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ConsultaioState,INSTANCIA_URUGUAY, InputCheckComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-response.model';
 
 import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
@@ -42,7 +42,8 @@ import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.
     CatalogoSelectComponent,
     ReactiveFormsModule,
     TablaDinamicaComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    InputCheckComponent
   ]
 })
 export class TratadosComponent implements OnInit, OnDestroy {
