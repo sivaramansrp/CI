@@ -729,14 +729,13 @@ this.mercanciaForm.get('validacionMercanciaForm')?.patchValue(event);
     this.getUMC();
     this.getUnidadMedida();
     this.getTipoFactura();
-
     const FORM_GROUP = this.mercanciaForm.get('validacionMercanciaForm');
     if (!FORM_GROUP?.valid) {
       FORM_GROUP?.markAllAsTouched();
       return;
     }
 
-    const FORM_VALUE = FORM_GROUP.value;
+    const FORM_VALUE = FORM_GROUP.getRawValue();
     const IS_NEW = FORM_VALUE.id === 0;
     const ROW: SeleccionadasTabla = {
       ...FORM_VALUE,
@@ -794,7 +793,7 @@ this.selectedRow = event;
    * Modifica una mercancía existente.
    */
   modificar(): void {
-if(this.selectedRow){
+if(this.selectedRow && this.mercanciaSeleccionadasTablaData.length > 0){
   this.mercanciaForm.get('validacionMercanciaForm')?.patchValue(this.selectedRow);
   this.modalInstance.show();
 }

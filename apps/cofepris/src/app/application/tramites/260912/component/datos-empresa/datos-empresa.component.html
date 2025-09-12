@@ -6,6 +6,7 @@
         <div class="panel panel-default">
           <div class="panel-heading" (click)="mostrar_colapsable()">
             <p class="panel-title espacio-extra">
+              <img src="assets/img/icons/data-copy.ico" height="24" width="24" alt="" style="vertical-align:middle; margin-right:8px;">
               Opciones de pre-llenado de Solicitud
             </p>
             <button type="button" class="collpase-button collapsed"
@@ -39,14 +40,14 @@
     <form [formGroup]="form">
       <h6>Seleccione el tipo de operación que desea realizar*:</h6>
       <div class="row px-3">
-      <app-input-radio [radioOptions]="btonDeRadio" [layout]="'horizontal'" formControlName="btonDeRadio"
-          (change)="setValorStore(form,'btonDeRadio')"></app-input-radio>
+      <app-input-radio 
+        [radioOptions]="btonDeRadio" 
+        [layout]="'horizontal'" 
+        formControlName="btonDeRadio"
+        (change)="setValorStore(form,'btonDeRadio'); tipoTramiteChange.emit(form.get('btonDeRadio')?.value)"></app-input-radio>
         <div *ngIf="form.get('btonDeRadio')?.invalid && form.get('btonDeRadio')?.touched" class="text-danger">
-          Por favor seleccione una opción.
+            Este campo es obligatorio
         </div>
-        <small *ngIf="form.controls['btonDeRadio'].errors?.['required']" class="text-danger">
-          Este campo es obligatorio.
-        </small>
       </div>
 
       <div class="row">
@@ -90,40 +91,66 @@
             <label class="form-label" for="rfcDel">RFC del responsable sanitario:</label>
             <input class="form-control" id="rfcDel" placeholder="" type="text" formControlName="rfcDel"
               (change)="setValorStore(datosDelEstablecimiento,'rfcDel')" />
+              <div
+            *ngIf="datosDelEstablecimiento.get('rfcDel')?.invalid && datosDelEstablecimiento.get('rfcDel')?.touched && datosDelEstablecimiento.get('rfcDel')?.errors?.['pattern']"
+            class="text-danger">
+              El RFC no tiene un formato valido.
+            </div> 
           </div>
         </div>
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" for="denominacion">Denominación o razón social*:</label>
-            <input class="form-control" id="denominacion" placeholder="" type="text" formControlName="denominacion"
+            <input 
+              class="form-control" 
+              id="denominacion" 
+              placeholder="" 
+              type="text" 
+              formControlName="denominacion"
+              maxlength="100"
               (change)="setValorStore(datosDelEstablecimiento,'denominacion')" />
             <div
               *ngIf="datosDelEstablecimiento.get('denominacion')?.invalid && datosDelEstablecimiento.get('denominacion')?.touched"
               class="text-danger">
-              La denominación es obligatoria.
+              Este campo es obligatorio.
             </div>
           </div>
         </div>
       </div>
-      <div class="row">
+   <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="correo">Correo electrónico*:
-              <span class="bi bi-question-circle-fill" title="Correo electrónico"
-                data-bs-toggle="tooltip"></span></label>
-            <input class="form-control" id="correo" placeholder="" type="text" formControlName="correo"
-              (change)="setValorStore(datosDelEstablecimiento,'correo')" />
-            <div
-              *ngIf="datosDelEstablecimiento.get('correo')?.invalid && datosDelEstablecimiento.get('correo')?.touched"
-              class="text-danger">
-              <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
-                Este campo es obligatorio
-              </span>
-              <span *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
-                El formato del correo electrónico no es válido.
-              </span>
-            </div>
+            <label class="form-label" for="correo"
+              >Correo electrónico*:
+              <span
+                class="bi bi-question-circle-fill"
+                data-bs-title="ejemplo@dominio.com"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+              ></span
+            ></label>
+            <input
+              class="form-control"
+              id="correo"
+              placeholder=""
+              type="email"
+              formControlName="correo"
+              maxlength="320"
+              (change)="setValorStore(datosDelEstablecimiento,'correo')"
+              (input)="validarLongitudMaxima('correo', 320)"
+              [ngClass]="isInvalid(datosDelEstablecimiento, 'correo') ? 'required' : ''"
+            />
+          <div *ngIf="isInvalid(datosDelEstablecimiento, 'correo')" class="text-danger">
+            <small *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
+              Este campo es obligatorio.
+            </small>
+            <small *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
+              El valor ingresado no es una dirección válida de correo electrónico
+            </small>
           </div>
+          
+
+      </div>
         </div>
       </div>
     </form>

@@ -1,7 +1,6 @@
 import {
   CODIGO_POSTAL,
   Catalogo,
-  CatalogoSelectComponent,
   REGEX_CORREO_ELECTRONICO,
   REGEX_IMPORTE_PAGO,
   REGEX_NOMBRE,
@@ -26,6 +25,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Facturador } from '../../models/terceros-relacionados.model';
 import { Subject } from 'rxjs';

@@ -6,7 +6,7 @@ import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { AtencionRenovacion40403State, Tramite40403Store } from '../../estados/tramite40403.store';
-import { SECCIONES_TRAMITE_40403 } from '../../constants/solicitud.enums';
+import { ERROR_FORMA_ALERT, SECCIONES_TRAMITE_40403 } from '../../constants/solicitud.enums';
 import { Tramite40403Query } from '../../estados/tramite40403.query';
 
 /**
@@ -57,6 +57,22 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * Referencia al componente del asistente (wizard) en la vista.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  /**
+   * @property {boolean} mostrarError
+   * @description
+   * Indica si se debe mostrar un mensaje de error en la interfaz.
+   * Se actualiza con el valor de `mostrarError` del estado de la sección.
+   * Controla la visualización de alertas de error cuando los formularios no son válidos.
+   */
+  mostrarError: boolean = false;
+
+  /**
+   * @property {Object} formErrorAlert
+   * @description
+   * Objeto que contiene la configuración del mensaje de error para formularios inválidos.
+   * Utiliza la constante `ERROR_FORMA_ALERT` definida en el archivo de enumeraciones del trámite.
+   */
+  public formErrorAlert = ERROR_FORMA_ALERT;
 
   /**
    * Datos relacionados con los pasos del asistente, como el número total de pasos y los textos de los botones.
@@ -95,6 +111,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.seccion = seccionState;
+          this.mostrarError = seccionState.mostrarError;
         })
       )
       .subscribe();

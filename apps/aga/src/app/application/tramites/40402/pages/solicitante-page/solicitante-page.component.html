@@ -26,7 +26,7 @@
           <app-paso-tres (anteriorPaso)="retrocederPaso()"></app-paso-tres> 
         } 
       }
-  <btn-continuar *ngIf="indice === 1" [datos]="datosPasos" (continuarEvento)="getValorIndice($event)" (click)="getValorIndice({accion: 'cont', valor: 1})"></btn-continuar>
+  <btn-continuar *ngIf="indice === 1" [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
   </div>
 </div>

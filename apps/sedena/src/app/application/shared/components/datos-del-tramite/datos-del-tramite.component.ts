@@ -14,6 +14,7 @@ import {
   PERIODO_UNO_SEMESTRE,
   PERMISO_ADUNA_TITULO,
   PERMISO_DEFINITIVO_TITULO,
+  PERMISO_DISABLE,
   PERMISO_JUSTIFICACION,
 } from '../../constants/datos-del-tramilte.enum';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -513,14 +514,14 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy ,OnChanges{
         Validators.required,
       ],
       unoSemestre: [
-        this.datosDelTramiteFormState?.unoSemestre ?? null,
+        { value: this.datosDelTramiteFormState?.unoSemestre ?? null, disabled: PERMISO_DISABLE.includes(this.idProcedimiento) },
         Validators.required,
       ],
       dosSemestre: [
         this.datosDelTramiteFormState?.dosSemestre ?? null,
         Validators.required,
       ],
-      anoEnCurso: [this.datosDelTramiteFormState?.anoEnCurso ?? false],
+      anoEnCurso: [{value:this.datosDelTramiteFormState?.anoEnCurso ?? false,disabled:PERMISO_DISABLE.includes(this.idProcedimiento)}],
       informacionConfidencial: [
         this.datosDelTramiteFormState?.informacionConfidencial ?? false,
       ],

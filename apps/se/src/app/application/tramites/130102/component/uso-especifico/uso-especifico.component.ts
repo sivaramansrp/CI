@@ -23,14 +23,14 @@ import { Tramite130102Query } from '../../../../estados/queries/tramite130102.qu
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
-import { ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
-import { FRACCIONES_ANARCIA_TABLA } from '../../constantes/octava-temporal.enum';
+import { ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { ESPECIFICO_PREFILL, FRACCIONES_ANARCIA_TABLA } from '../../constantes/octava-temporal.enum';
 import { FraccionArancelariaProsec } from '../../models/octava-temporal.model';
 
 @Component({
   selector: 'app-uso-especifico',
   standalone: true,
-  imports: [TituloComponent, CatalogoSelectComponent, TableComponent, ReactiveFormsModule, CommonModule,TablaDinamicaComponent],
+  imports: [TituloComponent, CatalogoSelectComponent, TableComponent, ReactiveFormsModule, CommonModule,TablaDinamicaComponent,NotificacionesComponent],
   templateUrl: './uso-especifico.component.html',
   styleUrl: './uso-especifico.component.scss'
 })
@@ -79,7 +79,15 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
    * Observable utilizado para cancelar suscripciones al destruir el componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+  /**  
+ * Filas seleccionadas en la tabla.  
+ * Contiene objetos de tipo `FraccionArancelariaProsec`.  
+ */  
+filasSeleccionadas: FraccionArancelariaProsec[] = []; 
+ /**
+   * Notificación para mostrar alertas al usuario.
+   */
+  alertaNotificacion!: Notificacion;
   /*
   * @description Estado actual de la consulta, obtenido desde el store.
   */
@@ -100,7 +108,14 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
            takeUntil(this.destroyNotifier$),
            map((seccionState) => {
              this.consultaState = seccionState;
-            
+              
+            if (this.consultaState.update) {        
+            this.tramite130102Store.update((state) => ({
+              ...state,
+              uso_especifico_tabla: ESPECIFICO_PREFILL
+            }));       
+            this.datosSocios = ESPECIFICO_PREFILL;
+           }
              this.inicializarEstadoFormulario();
            })
          )
@@ -285,7 +300,44 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
     const DESCRIPCION = this.catalogos.find((ele: Catalogo) => ele.id === Number(this.usoEspicificoForm.get('fraccionArancelariaProsec')?.value))?.descripcion;
     return DESCRIPCION ?? '';
   }
+  /**
+ * Actualiza las filas seleccionadas en la tabla.
+ * @param filas - Arreglo de objetos seleccionados de tipo `FraccionArancelariaProsec`.
+ */
+  alCambiarSeleccion(filas: FraccionArancelariaProsec[]):void {
+  this.filasSeleccionadas = filas;
+  }
+  /**
+ * Muestra una notificación de confirmación para eliminar las filas seleccionadas.
+ */
+eliminarSeleccionadas(): void {
+  if (!this.filasSeleccionadas?.length){
+  return;
+  } 
 
+  this.alertaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: 'Confirmación',
+    mensaje: '¿Desea eliminar los registros seleccionados?',
+    cerrar: false,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+  };
+}
+/**
+ * Ejecuta la acción de eliminación si el usuario confirma la notificación.
+ * @param aceptado - Indica si el usuario aceptó la acción.
+ */
+onConfirmacionModal(aceptado: boolean): void {
+  if (aceptado) {
+    this.datosSocios = this.datosSocios.filter(
+      fila => !this.filasSeleccionadas.includes(fila)
+    );
+    this.filasSeleccionadas = [];
+  }
+}
   /**
    * compo doc
    * @method ngOnDestroy

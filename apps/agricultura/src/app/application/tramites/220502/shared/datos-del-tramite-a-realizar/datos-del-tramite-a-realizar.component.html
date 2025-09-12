@@ -22,7 +22,7 @@
             formControlName="fechaInspeccion"
             [datos]="configuracionFechaInspeccion"
             (valorCambiado)="cambioFechaInspeccion($event)"
-            [isDisabled]="true"
+            [isDisabled]="procedimiento === 220502 ? false : true"
             [setFecha]="solicitud220502State.fechaInspeccion"
           ></input-fecha>
         </div>
