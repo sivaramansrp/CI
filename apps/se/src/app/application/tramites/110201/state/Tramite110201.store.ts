@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { SeleccionadasTabla } from '../models/registro.model';
 /**
  * Representa un catálogo con un identificador y una descripción.
  */
@@ -118,6 +119,17 @@ export function createInitialState(): Solicitud110201State {
 export class Tramite110201Store extends Store<Solicitud110201State> {
   constructor() {
     super(createInitialState());
+  }
+
+    /**
+   * Actualiza los datos de la solicitud en el estado.
+   * @param {DatosMercancia[]} mercanciaDatos - Lista de datos de la solicitud.
+   */
+  public setDatosMercancia(mercanciaSeleccionadasTablaData: SeleccionadasTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaSeleccionadasTablaData,
+    }));
   }
   /**
    * Establece el catálogo de tratados.
