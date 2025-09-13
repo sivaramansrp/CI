@@ -8,7 +8,7 @@
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="paisProc"
-          (change)="fetchPaisProc();setValoresStore(paisForm,'bloque', 'setBloque')"
+          (change)="setValoresStore(paisForm,'bloque', 'setBloque')"
           [label]="'Bloque'"
           [placeholder]="'Seleccione un bloque'"
           formControlName="bloque"

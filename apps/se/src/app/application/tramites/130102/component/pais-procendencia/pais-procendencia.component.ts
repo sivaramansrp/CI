@@ -24,7 +24,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CrosslistComponent } from 'libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
-import paisProcJson from 'libs/shared/theme/assets/json/130102/pais-procenia.json';
+
 
 
 import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
@@ -35,6 +35,8 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
 
 import { CROSLISTA_DE_PAISES } from '../../../130103/constantes/importacion-definitiva.enum';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
+import { PaisesBloqueCatalogo } from '../../models/octava-temporal.model';
 /**
  * Componente para la gestión de la selección de países de procedencia.
  */
@@ -95,7 +97,7 @@ export class PaisProcendenciaComponent implements OnInit {
   /**
    * Catálogo de países de procedencia.
    */
-  paisProc: Catalogo[] = paisProcJson;
+  paisProc: Catalogo[] = [];
 
   /**
    * Estado actual de la solicitud 130102, obtenido desde el store.
@@ -147,7 +149,8 @@ export class PaisProcendenciaComponent implements OnInit {
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
     private formularioRegistroService: FormularioRegistroService,
-        private consultaioQuery: ConsultaioQuery
+    private catOctavaTemporalService: CatOctavaTemporalService,
+    private consultaioQuery: ConsultaioQuery
   ) {
      this.consultaioQuery.selectConsultaioState$
          .pipe(
@@ -165,8 +168,8 @@ export class PaisProcendenciaComponent implements OnInit {
    * Inicializa el componente y configura el formulario.
    */
   ngOnInit() {
-  this.inicializarEstadoFormulario();
-    this.fetchPaisProc();
+    this.inicializarEstadoFormulario();
+    this.obtenerPaisesBloque();
     this.formularioRegistroService.registrarFormulario('paisForm', this.paisForm);
   }
     inicializarEstadoFormulario(): void {
@@ -252,17 +255,21 @@ export class PaisProcendenciaComponent implements OnInit {
     }
   }
 
-  /**
-   * Obtiene la lista de países de procedencia desde un archivo JSON.
+
+    /**
+   * Obtiene los regímenes desde el servicio CatOctavaTemporalService y actualiza el catálogo correspondiente.
    */
-  fetchPaisProc() {
-    this.http
-      .get<Catalogo[]>('/assets/json/130102/pais-procenia.json')
-      .subscribe((data) => {
-        this.paisProc = data;
-      });
+  obtenerPaisesBloque(): void {
+    this.catOctavaTemporalService.getPaisesBloque().subscribe((data) => {
+      this.paisProc = data.datos.filter(item => item.bloque ).map((item, index) => ({
+        id: index,
+        clave: item.clave,
+        descripcion: item.descripcion,
+      }));  
+    });
   }
 
+  
    /**
    * Validador que verifica que el valor del campo no tenga espacios al inicio ni al final.
    * 
