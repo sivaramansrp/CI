@@ -127,19 +127,27 @@ describe('MercanciaFormComponent', () => {
       }
     ];
     
+    // Mock the form control for 'requisito' field
+    const mockControl = {
+      clearValidators: jest.fn(),
+      setValue: jest.fn(),
+      setValidators: jest.fn(),
+      updateValueAndValidity: jest.fn()
+    };
+    
     component.mercanciaForm = component.mercanciaForm || {};
+    component.mercanciaForm.get = jest.fn().mockReturnValue(mockControl);
     component.mercanciaForm.patchValue = jest.fn();
     
     const mockEvent = {
-      id: 'test-id'
+      descripcion: 'Inspección Ocular'
     };
     
     component.tipoSelecionada(mockEvent);
-    expect(component.mercanciaForm.patchValue).toHaveBeenCalledWith({
-      descripcionFraccion: 'Test Description',
-      descripcionNico: 'Test Description',
-      umt: 'Test Description'
-    });
+    expect(component.mercanciaForm.get).toHaveBeenCalledWith('requisito');
+    expect(mockControl.clearValidators).toHaveBeenCalled();
+    expect(mockControl.setValue).toHaveBeenCalledWith('');
+    expect(mockControl.updateValueAndValidity).toHaveBeenCalled();
   });
 
   it('should run #limpiarAnimalesVivo()', async () => {

@@ -151,10 +151,17 @@ describe('AgregardestinatarioComponent', () => {
   });
 
   it('should run #onGuardarDestinatario()', async () => {
+    // Mock form controls for the destinatarioForm.get() method used in isFormularioValido()
+    const mockControl = {
+      valid: true,
+      value: 'yes'
+    };
+
     component.destinatarioForm = component.destinatarioForm || {};
     component.destinatarioForm.valid = true;
     component.destinatarioForm.value = { test: 'value' };
     component.destinatarioForm.markAllAsTouched = jest.fn();
+    component.destinatarioForm.get = jest.fn().mockReturnValue(mockControl);
     component.agriculturaApiService = component.agriculturaApiService || {};
     component.agriculturaApiService.updateTercerosRelacionado = jest.fn().mockReturnValue(observableOf({}));
     component.cerrar = component.cerrar || {};
@@ -167,9 +174,16 @@ describe('AgregardestinatarioComponent', () => {
   });
 
   it('should run #onGuardarDestinatario() when form is invalid', async () => {
+    // Mock form controls for the destinatarioForm.get() method used in isFormularioValido()
+    const mockControl = {
+      valid: false,
+      value: 'no'
+    };
+
     component.destinatarioForm = component.destinatarioForm || {};
     component.destinatarioForm.valid = false;
     component.destinatarioForm.markAllAsTouched = jest.fn();
+    component.destinatarioForm.get = jest.fn().mockReturnValue(mockControl);
     component.agriculturaApiService = component.agriculturaApiService || {};
     component.agriculturaApiService.updateTercerosRelacionado = jest.fn();
     component.cerrar = component.cerrar || {};
@@ -203,18 +217,26 @@ describe('AgregardestinatarioComponent', () => {
   });
 
   it('should run #enCambioValorRadio()', async () => {
+    const mockControl = {
+      updateValueAndValidity: jest.fn(),
+      setValue: jest.fn(),
+      clearValidators: jest.fn(),
+      setValidators: jest.fn(),
+      markAsUntouched: jest.fn(),
+      value: 'no'
+    };
+
     component.destinatarioForm = component.destinatarioForm || {};
-    component.destinatarioForm.get = jest.fn().mockReturnValue({
-      updateValueAndValidity: function() {},
-      setValue: function() {},
-      clearValidators: function() {},
-      setValidators: function() {}
-    });
+    component.destinatarioForm.get = jest.fn().mockReturnValue(mockControl);
     component.destinatarioForm.value = {
-      tipoMercancia: {}
+      tipoMercancia: 'no'
     };
     component.enCambioValorRadio();
-    expect(component.destinatarioForm.get).toHaveBeenCalled();
+    expect(component.destinatarioForm.get).toHaveBeenCalledWith('razonSocial');
+    expect(component.destinatarioForm.get).toHaveBeenCalledWith('nombre');
+    expect(component.destinatarioForm.get).toHaveBeenCalledWith('primerApellido');
+    expect(component.destinatarioForm.get).toHaveBeenCalledWith('tipoMercancia');
+    expect(mockControl.markAsUntouched).toHaveBeenCalled();
   });
 
 });

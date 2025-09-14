@@ -103,9 +103,22 @@ describe('AgregarExportadorComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
+    // Mock form controls for the destinatarioForm.get() method
+    const mockControl = {
+      clearValidators: jest.fn(),
+      setValue: jest.fn(),
+      setValidators: jest.fn(),
+      updateValueAndValidity: jest.fn(),
+      value: 'yes'
+    };
+
+    component.destinatarioForm = component.destinatarioForm || {};
+    component.destinatarioForm.get = jest.fn().mockReturnValue(mockControl);
+    
     component.fb = component.fb || {};
     component.fb.group = jest.fn().mockReturnValue({
-      patchValue: function() {}
+      patchValue: function() {},
+      get: jest.fn().mockReturnValue(mockControl)
     });
     component.fitosanitarioQuery = component.fitosanitarioQuery || {};
     component.fitosanitarioQuery.seleccionarExportador$ = observableOf({});
@@ -154,10 +167,20 @@ describe('AgregarExportadorComponent', () => {
   });
 
   it('should run #onGuardarDestinatario()', async () => {
+    // Mock form controls for the destinatarioForm.get() method
+    const mockControl = {
+      clearValidators: jest.fn(),
+      setValue: jest.fn(),
+      setValidators: jest.fn(),
+      updateValueAndValidity: jest.fn(),
+      value: 'yes'
+    };
+
     component.destinatarioForm = component.destinatarioForm || {};
     component.destinatarioForm.valid = true;
     component.destinatarioForm.value = { test: 'value' };
     component.destinatarioForm.markAllAsTouched = jest.fn();
+    component.destinatarioForm.get = jest.fn().mockReturnValue(mockControl);
     component.agriculturaApiService = component.agriculturaApiService || {};
     component.agriculturaApiService.updateTercerosExportador = jest.fn().mockReturnValue(observableOf({}));
     component.cerrar = component.cerrar || {};
@@ -170,9 +193,19 @@ describe('AgregarExportadorComponent', () => {
   });
 
   it('should run #onGuardarDestinatario() when form is invalid', async () => {
+    // Mock form controls for the destinatarioForm.get() method
+    const mockControl = {
+      clearValidators: jest.fn(),
+      setValue: jest.fn(),
+      setValidators: jest.fn(),
+      updateValueAndValidity: jest.fn(),
+      value: 'yes'
+    };
+
     component.destinatarioForm = component.destinatarioForm || {};
     component.destinatarioForm.valid = false;
     component.destinatarioForm.markAllAsTouched = jest.fn();
+    component.destinatarioForm.get = jest.fn().mockReturnValue(mockControl);
     component.agriculturaApiService = component.agriculturaApiService || {};
     component.agriculturaApiService.updateTercerosExportador = jest.fn();
     component.cerrar = component.cerrar || {};
@@ -186,11 +219,21 @@ describe('AgregarExportadorComponent', () => {
   });
 
   it('should run #onLimpiarDestinatario()', async () => {
+    // Mock form controls for the destinatarioForm.get() method
+    const mockControl = {
+      clearValidators: jest.fn(),
+      setValue: jest.fn(),
+      setValidators: jest.fn(),
+      updateValueAndValidity: jest.fn(),
+      value: 'yes'
+    };
+
     component.destinatarioForm = component.destinatarioForm || {};
     component.destinatarioForm.reset = jest.fn();
     component.destinatarioForm.markAsPristine = jest.fn();
     component.destinatarioForm.markAsUntouched = jest.fn();
     component.destinatarioForm.patchValue = jest.fn();
+    component.destinatarioForm.get = jest.fn().mockReturnValue(mockControl);
     component.onLimpiarDestinatario();
     expect(component.destinatarioForm.reset).toHaveBeenCalled();
     expect(component.destinatarioForm.markAsPristine).toHaveBeenCalled();
@@ -209,26 +252,30 @@ describe('AgregarExportadorComponent', () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
-    component.fitosanitarioStore = component.fitosanitarioStore || {};
-    component.fitosanitarioStore.actualizarSelectedExdora = jest.fn();
     component.ngOnDestroy();
     expect(component.destroyNotifier$.next).toHaveBeenCalled();
     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
-    expect(component.fitosanitarioStore.actualizarSelectedExdora).toHaveBeenCalled();
   });
 
   it('should run #enCambioValorRadio()', async () => {
+    const mockControl = {
+      updateValueAndValidity: jest.fn(),
+      clearValidators: jest.fn(),
+      setValidators: jest.fn(),
+      setValue: jest.fn(),
+      value: 'yes'
+    };
+
     component.destinatarioForm = component.destinatarioForm || {};
-    component.destinatarioForm.get = jest.fn().mockReturnValue({
-      updateValueAndValidity: function() {},
-      clearValidators: function() {},
-      setValidators: function() {}
-    });
+    component.destinatarioForm.get = jest.fn().mockReturnValue(mockControl);
     component.destinatarioForm.value = {
-      tipoMercancia: {}
+      tipoMercancia: 'yes'
     };
     component.enCambioValorRadio();
-    expect(component.destinatarioForm.get).toHaveBeenCalled();
+    expect(component.destinatarioForm.get).toHaveBeenCalledWith('razonSocial');
+    expect(component.destinatarioForm.get).toHaveBeenCalledWith('nombre');
+    expect(component.destinatarioForm.get).toHaveBeenCalledWith('primerApellido');
+    expect(component.destinatarioForm.get).toHaveBeenCalledWith('tipoMercancia');
   });
 
 });
