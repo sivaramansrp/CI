@@ -36,6 +36,7 @@
                 libUppercase
                 formControlName="nombre"
                 maxlength="200"
+                [ngClass]="isValid(destinatarioForm,'nombre') ? 'required' : ''"
               />
               @if( destinatarioForm.get('nombre')?.hasError('required') &&
               destinatarioForm.get('nombre')?.touched){
@@ -63,6 +64,7 @@
                 libUppercase
                 formControlName="primerApellido"
                 maxlength="200"
+                [ngClass]="isValid(destinatarioForm,'primerApellido') ? 'required' : ''"
               />
               @if (destinatarioForm.get('primerApellido')?.hasError('required')
               && destinatarioForm.get('primerApellido')?.touched) {
@@ -116,6 +118,7 @@
                 libUppercase
                 formControlName="razonSocial"
                 maxlength="250"
+                [ngClass]="isValid(destinatarioForm,'razonSocial') ? 'required' : ''"
               />
               @if (destinatarioForm.get('razonSocial')?.hasError('required') &&
               destinatarioForm.get('razonSocial')?.touched) {
@@ -140,23 +143,24 @@
               name="pais"
               [isDisabled]="false"
               formControlName="pais"
+              [markTouched]="destinatarioForm.get('pais')?.touched ?? false"
             ></app-catalogo-select>
           </div>
         </div>
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" for="razonSocial">Domicilio*:</label>
+              <label class="form-label" for="domicilio">Domicilio*:</label>
               <textarea
                 class="form-control form-check-input"
-                [placeholder]="'Calle, No Ext, No Int, Ciudad, C.P'"
+                placeholder="Calle, No Ext, No Int, Ciudad, C.P"
                 id="domicilio"
                 formControlName="domicilio"
                 maxlength="4000"
                 rows="6"
                 style="height: 150px"
-              >
-              </textarea>
+                [ngClass]="isValid(destinatarioForm,'domicilio') ? 'required' : ''"
+                ></textarea>
               @if (destinatarioForm.get('domicilio')?.hasError('required') &&
               destinatarioForm.get('domicilio')?.touched) {
               <div class="text-danger">
@@ -205,7 +209,7 @@
             <div class="form-group">
               <label class="form-label" for="correo"
                 >Correo electrónico:
-                <span class="bi bi-question-circle-fill mx-2" tooltip="ejemplo@dominio.com" placement="top"></span>
+                <span class="bi bi-question-circle-fill" tooltip="ejemplo@dominio.com" placement="top"></span>
               </label>
               <input
                 class="form-control"
@@ -240,7 +244,7 @@
             </button>
             <button
               type="button"
-              class="btn btn-default mx-3"
+              class="btn btn-default mx-2"
               [disabled]="esFormularioSoloLectura"
               (click)="onCancelarDestinatario()"
             >
@@ -249,7 +253,6 @@
             <button
               type="button"
               class="btn btn-danger"
-              [disabled]="destinatarioForm.invalid || esFormularioSoloLectura"
               (click)="onGuardarDestinatario()"
             >
               Guardar

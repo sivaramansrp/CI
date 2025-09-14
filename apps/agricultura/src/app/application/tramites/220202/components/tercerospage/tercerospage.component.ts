@@ -9,8 +9,8 @@
  */
 
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { Subject, takeUntil } from 'rxjs';
+import { TercerosRelacionados,TercerosrelacionadosExportadorTable, TercerosrelacionadosdestinoTable } from '../../models/220202/fitosanitario.model';
 import { AgregarExportadorComponent } from '../agregar-exportador/agregar-exportador.component';
 import { AgregardestinatarioComponent } from '../agregardestinatario/agregardestinatario.component';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
@@ -69,14 +69,14 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * Catálogos de datos de la solicitud, como países y estados.
    * @type {DatosDeLaSolicitud}
    */
-  catalogosDatos: DatosDeLaSolicitud = {} as DatosDeLaSolicitud;
+  catalogosDatos: TercerosRelacionados = {} as TercerosRelacionados;
 
   /**
    * Datos de la forma relacionados con terceros.
    * Esta propiedad almacena los datos específicos de la forma que se relacionan con los terceros.
-   * @type {TercerosrelacionadosdestinoTable[]}
+   * @type {TercerosrelacionadosExportadorTable[]}
    */
-  datosForma: TercerosrelacionadosdestinoTable[] = [];
+  datosForma: TercerosrelacionadosExportadorTable[] = [];
 
   /**
    * Indica si el formulario debe mostrarse en modo solo lectura.
