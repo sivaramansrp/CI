@@ -1,6 +1,7 @@
 <div class="col-md-12">
   <form [formGroup]="pagoDeDerechosForm">
     <ng-titulo titulo="Pago de derechos"></ng-titulo>
+
     <div class="row mt-2">
       <div class="col-md-4">
         <div class="form-group">
@@ -13,6 +14,9 @@
             (change)="setValoresStore(pagoDeDerechosForm, 'claveDeReferencia')"
           />
           <div *ngIf="esInvalido('claveDeReferencia')" class="text-danger">
+            <small *ngIf="pagoDeDerechosForm.get('claveDeReferencia')?.errors?.['required']">
+              Todos los campos de pago son requeridos.
+            </small>
             <small *ngIf="pagoDeDerechosForm.get('claveDeReferencia')?.errors?.['maxlength']">
               Máximo 50 caracteres.
             </small>
@@ -31,6 +35,9 @@
             (change)="setValoresStore(pagoDeDerechosForm, 'cadenaPagoDependencia')"
           />
           <div *ngIf="esInvalido('cadenaPagoDependencia')" class="text-danger">
+            <small *ngIf="pagoDeDerechosForm.get('cadenaPagoDependencia')?.errors?.['required']">
+              Todos los campos de pago son requeridos.
+            </small>
             <small *ngIf="pagoDeDerechosForm.get('cadenaPagoDependencia')?.errors?.['maxlength']">
               Máximo 50 caracteres.
             </small>
@@ -52,7 +59,7 @@
           </select>
           <div *ngIf="esInvalido('clave')" class="text-danger">
             <small *ngIf="pagoDeDerechosForm.get('clave')?.errors?.['required']">
-              Banco es obligatoria.
+              Todos los campos de pago son requeridos.
             </small>
           </div>
         </div>
@@ -74,7 +81,7 @@
           />
           <div *ngIf="esInvalido('llaveDePago')" class="text-danger">
             <small *ngIf="pagoDeDerechosForm.get('llaveDePago')?.errors?.['required']">
-              Llave de pago es obligatoria.
+              Todos los campos de pago son requeridos.
             </small>
             <small *ngIf="pagoDeDerechosForm.get('llaveDePago')?.errors?.['pattern']">
               Existen datos incorrectos que no cumplen con el formato esperado.
@@ -95,7 +102,7 @@
           />
           <div *ngIf="esInvalido('fecPago')" class="text-danger">
             <small *ngIf="pagoDeDerechosForm.get('fecPago')?.errors?.['required']">
-              Fecha de pago es obligatoria.
+              Todos los campos de pago son requeridos.
             </small>
             <small *ngIf="pagoDeDerechosForm.get('fecPago')?.errors?.['fechaLim']">
               La fecha de pago debe ser menor o igual a la fecha actual
@@ -116,6 +123,9 @@
             (change)="setValoresStore(pagoDeDerechosForm, 'impPago'); validarSinComas('impPago')"
           />
           <div *ngIf="esInvalido('impPago')" class="text-danger">
+            <small *ngIf="pagoDeDerechosForm.get('impPago')?.errors?.['required']">
+              Todos los campos de pago son requeridos.
+            </small>
             <small *ngIf="pagoDeDerechosForm.get('impPago')?.errors?.['noComa']">El campo no debe contener comas.</small>
             <small *ngIf="pagoDeDerechosForm.get('impPago')?.errors?.['pattern']">
               Por favor, escribe un número válido.

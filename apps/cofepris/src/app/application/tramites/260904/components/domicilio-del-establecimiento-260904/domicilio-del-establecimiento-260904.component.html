@@ -309,7 +309,7 @@
                   <app-catalogo-select
                   [catalogo]="subRepresentacion"
                   [label]="'Descripción del S.C.I.A.N.'"
-                  [required]="true"
+                  [required]="false"
                   name="representacion"
                   [isDisabled]="esFormularioSoloLectura "
                   formControlName="representacion"
@@ -378,8 +378,9 @@
               id="licenciaSanitaria" 
               placeholder="" 
               type="text"
-                formControlName="licenciaSanitaria"
-                [disabled]="domicilio.get('avisoCheckbox')?.value"
+              maxlength="20"
+              formControlName="licenciaSanitaria"
+              [disabled]="domicilio.get('avisoCheckbox')?.value"
               />
         </div>
       </div>
@@ -595,11 +596,14 @@
               maxlength="13"
               (input)="onRfcInput($event)"
               (change)="setValorStore(representanteLegal, 'rfc')" 
+              [ngClass]="{'is-invalid': representanteLegal.get('rfc')?.touched && representanteLegal.get('rfc')?.invalid}"
             />
          
-           <div *ngIf="representanteLegal.get('rfc')?.touched && representanteLegal.get('rfc')?.hasError('required')" class="text-danger">
-              Este campo es obligatorio.
+           <div *ngIf="representanteLegal.get('rfc')?.touched && representanteLegal.get('rfc')?.invalid" class="text-danger">
+            <div *ngIf="representanteLegal.get('rfc')?.hasError('required')">
+              Este campo es obligatorio
             </div>
+          </div>
           
           </div>
         </div>
