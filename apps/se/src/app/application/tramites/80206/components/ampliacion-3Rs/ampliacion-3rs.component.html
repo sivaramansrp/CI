@@ -15,7 +15,7 @@
 
                     <app-catalogo-select [catalogo]="reglaSeleccionada" [label]="'Seleccionar regla'" [required]="false"
                         name="seleccionarRegla" formControlName="seleccionarRegla" [isDisabled]="esFormularioSoloLectura"
-                        (selectionChange)="procesarDatosDelHijo($event)"></app-catalogo-select>
+                        (change)="procesarDatosDelHijo()"></app-catalogo-select>
 
                 </div>
 

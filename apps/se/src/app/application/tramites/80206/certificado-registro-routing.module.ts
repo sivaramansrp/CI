@@ -1,4 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';  
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 import { RegistroPageComponent } from './pages/registro-page/registro-page.component'; 
 /**
@@ -15,6 +16,14 @@ export const ROUTES_REGISTRO: Routes = [
   {
     path: 'registro',
     component: RegistroPageComponent,
+    canActivate: [IniciarTramiteResolver],
+    resolve: { iniciarResolverData: IniciarTramiteResolver },
+    data: {
+      iniciarConfig: {
+        procedureId: '80206'
+        }
+        
+    },
   },
   {
     path: '',

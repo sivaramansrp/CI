@@ -1,5 +1,5 @@
 
-import { CATALOGO_ESTADOS, CATALOGO_IMMEX, CATALOGO_NICO, CATALOGO_PAISES, COMUN_URL } from '../../servers/api-router';
+import { CATALOGO_ESTADOS, CATALOGO_IMMEX, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_SECTORES, CATALOGO_SELECCIONAR_REGLA, COMUN_URL } from '../../servers/api-router';
 import { BaseResponse } from '../../models/5701/base-response.model';
 import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
@@ -55,6 +55,26 @@ export class CatalogoServices {
    */
   nicosCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CATALOGO_NICO(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+    /*
+   * Obtiene el catálogo de seleccionarReglal ID del trámite.
+   * @param {string} tramite - El ID del trámite.
+   * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
+   */
+  seleccionarReglaCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_SELECCIONAR_REGLA(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+  
+    /*
+   * Obtiene el catálogo de sectores ID del trámite.
+   * @param {string} tramite - El ID del trámite.
+   * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
+   */
+  sectoresCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_SECTORES(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 }

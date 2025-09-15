@@ -19,17 +19,17 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { OnDestroy, OnInit } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80206.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { AmpliacionServiciosState } from '../../estados/tramite80206.store';
 import { CONFIGURACION_SECTOR } from "../../constantes/modificacion.constants";
+import { CatalogoServices } from'@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
-import { HttpClient } from '@angular/common/http';
 import { Input } from '@angular/core';
 import { Sector } from "../../models/datos-info.model";
-import { Subject } from 'rxjs';
 import { Tramite80206Store } from '../../estados/tramite80206.store';
 
 @Component({
@@ -123,11 +123,18 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    */
   mostrarAlerta: boolean = false;
 
+  tramiteID: string = '80101';
+
 /**
    * Mensaje mostrado en el modal de alerta.
    * @property {string} mensajeDeAlerta
    */
   mensajeDeAlerta: string = '';  
+    /**
+     * Suscripción para manejar observables.
+     * @property {Subscription} subscription
+     */
+    private subscription: Subscription = new Subscription();
    
 
   /**
@@ -142,7 +149,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
     private ampliacionServiciosService: AmpliacionServiciosService,
     private ampliacionServiciosQuery: AmpliacionServiciosQuery,
     private tramite80206Store: Tramite80206Store,
-    private readonly httpServicios: HttpClient
+    private catalogoServices: CatalogoServices
   ) {
     this.inicializarFormularioInfoRegistro();
   }
@@ -152,7 +159,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
-    this.obtenerReglaSelectList();
+    this.obtenerReglaSelectList(this.tramiteID);
     this.inicializarFormularioDesdeAlmacen();
     this.obtenerSectorSelectList();
     if (this.esFormularioSoloLectura) {
@@ -229,19 +236,22 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * Obtiene la lista de reglas para selección.
    * @method obtenerReglaSelectList
    */
-  obtenerReglaSelectList(): void {
-    this.ampliacionServiciosService
-      .obtenerReglaSelectList()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        const DATOS = data.data;
-        this.tramite80206Store.setReglaSeleccionada(DATOS);
-        this.ampliacionServiciosQuery.selectSolicitudTramite$
-          .pipe(takeUntil(this.destroyNotifier$))
-          .subscribe((sector: AmpliacionServiciosState) => {
-            this.reglaSeleccionada = sector.reglaSeleccionada;
-          });
-      });
+  obtenerReglaSelectList(tramite: string): void {
+  this.isSelectedRegla = false;
+    this.subscription.add(this.catalogoServices.seleccionarReglaCatalogo(tramite).pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((data) => {
+      const DATOS = data.datos as Catalogo[];
+      this.tramite80206Store.setReglaSeleccionada(DATOS);
+      
+      this.ampliacionServiciosQuery.selectSolicitudTramite$
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((sector: AmpliacionServiciosState) => {
+          this.reglaSeleccionada = sector.reglaSeleccionada;
+         
+        });
+    }));
+    
   }
 
   /**
@@ -249,20 +259,19 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * @method obtenerSectorSelectList
    */
   obtenerSectorSelectList(): void {
-    this.ampliacionServiciosService
-      .obtenerSectorSelectList()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        const DATOS = data.data;
-        this.tramite80206Store.setSectorDesplegable(DATOS);
-        this.ampliacionServiciosQuery.selectSolicitudTramite$
-          .pipe(takeUntil(this.destroyNotifier$))
-          .subscribe((sector: AmpliacionServiciosState) => {
-            this.sectorDesplegable = sector.sectorDesplegable;
-          });
-      });
+    this.subscription.add(this.catalogoServices.sectoresCatalogo(this.tramiteID).pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((data) => {
+      const DATOS = data.datos as Catalogo[];
+      this.tramite80206Store.setSectorDesplegable(DATOS);
+      this.ampliacionServiciosQuery.selectSolicitudTramite$
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((sector: AmpliacionServiciosState) => {
+          this.sectorDesplegable = sector.sectorDesplegable;
+        });
+    }));
   }
-
+  
   /**
    * Elimina servicios seleccionados del grid.
    * @method eliminarServiciosGrid
@@ -309,9 +318,10 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * @method procesarDatosDelHijo
    * @param {Catalogo | Catalogo[]} data - Datos recibidos.
    */
-  procesarDatosDelHijo(data: Catalogo): void {
-    this.formularioInfoRegistro.get('seleccionarRegla')?.setValue(data.id);
-    if (this.reglaSeleccionada && this.reglaSeleccionada.length > 0 && data.id === this.reglaSeleccionada[0].id) {
+  procesarDatosDelHijo(): void {
+    const DATA = this.formularioInfoRegistro.get('seleccionarRegla')?.value;
+    //this.formularioInfoRegistro.get('seleccionarRegla')?.setValue(DATA);
+    if (DATA === 'AGS') {
       this.isSelectedRegla = true;
     } else {
       this.isSelectedRegla = false;
@@ -320,7 +330,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
     }
     this.ampliacionServiciosService.enviarDeberiaMostrar(this.isSelectedRegla);
     this.tramite80206Store.setIsSelectedRegla(this.isSelectedRegla);
-    this.tramite80206Store.setSeleccionarRegla(data.id.toString() || '');
+    this.tramite80206Store.setSeleccionarRegla(DATA);
   }
 
   /**
