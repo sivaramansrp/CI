@@ -259,15 +259,15 @@ export class PaisProcendenciaComponent implements OnInit {
     /**
    * Obtiene los regímenes desde el servicio CatOctavaTemporalService y actualiza el catálogo correspondiente.
    */
-  obtenerPaisesBloque(): void {
-    this.catOctavaTemporalService.getPaisesBloque().subscribe((data) => {
-      this.paisProc = data.datos.filter(item => item.bloque ).map((item, index) => ({
-        id: index,
-        clave: item.clave,
-        descripcion: item.descripcion,
-      }));  
-    });
-  }
+    obtenerPaisesBloque(): void {
+      this.catOctavaTemporalService.getPaisesBloque().subscribe((data) => {
+        this.paisProc = data.datos.filter(item => item.bloque ).map((item, index) => ({
+          id: index,
+          clave: item.clave,
+          descripcion: item.descripcion,
+        }));  
+      });
+    }
 
   
    /**

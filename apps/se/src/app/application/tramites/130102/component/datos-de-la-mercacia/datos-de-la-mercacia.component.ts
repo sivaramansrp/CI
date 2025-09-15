@@ -29,11 +29,12 @@ import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/
 import { REG_X } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Solicitud130102State, Tramite130102Store } from '../../../130102/estados/tramites/tramite130102.store';
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
+import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
 
 
 /**
@@ -100,7 +101,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * compo doc
    * @property {Catalogo[]} fraccionF - Catálogo de fracciones arancelarias.
    */
-  fraccionF: Catalogo[] = fractionValues;
+  fraccionF: Catalogo[] = [];
 /** 
 * @description Estado de la solicitud 130102, obtenido desde el store.
 */
@@ -117,11 +118,13 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * @param {FormBuilder} fb - Constructor de formularios reactivos.
    */
   constructor(private http: HttpClient,
-     private fb: FormBuilder,
+    private fb: FormBuilder,
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
     private formularioRegistroService: FormularioRegistroService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catOctavaTemporalService: CatOctavaTemporalService
+
   ) {
     this.consultaioQuery.selectConsultaioState$
          .pipe(
@@ -140,10 +143,10 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * @description Inicializa el formulario con validaciones y carga datos de productos.
    */
   ngOnInit(): void {
-     this.inicializarEstadoFormulario();
-   
-   this.fetchProductoOptions();
-   this.formularioRegistroService.registrarFormulario('formDelLa', this.formDelLa);
+    this.inicializarEstadoFormulario();
+    this.fetchProductoOptions();
+    this.obtenerFracciones();
+    this.formularioRegistroService.registrarFormulario('formDelLa', this.formDelLa);
   }
   /**
    * compo doc
@@ -341,6 +344,17 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
     }
     return null;
   }
+
+  obtenerFracciones(): void {
+      this.catOctavaTemporalService.getFraccionArancelaria().subscribe((data) => {
+        this.fraccionF = data.datos.map((item, index) => ({
+          id: index,
+          clave: item.clave,
+          descripcion: item.descripcion,
+        }));  
+      });
+    }
+
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.
    * Emite y completa el observable para evitar fugas de memoria.

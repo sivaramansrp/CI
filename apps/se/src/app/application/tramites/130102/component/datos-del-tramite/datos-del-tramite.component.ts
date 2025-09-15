@@ -186,6 +186,7 @@ this.tramite130102Query.selectSolicitud$
       tipoDocumento: [''],
       fraccion: [this.solicitudState?.fraccion, [Validators.required]],
       regimen: [this.solicitudState?.regimen, [Validators.required]],
+      clasificacionRegimen: [this.solicitudState?.clasificacionRegimen, [Validators.required]],
     });
      if (this.esFormularioSoloLectura) {
     this.formDelTramite.disable();
@@ -204,6 +205,26 @@ this.tramite130102Query.selectSolicitud$
     (this.tramite130102Store[metodoNombre] as (value: string | number) => void)(VALOR);
     console.log(this.solicitudState);
   }
+
+  /**
+   *  Clasificación del régimen basado en el régimen seleccionado.
+   * @param {FormGroup} form - Formulario reactivo.
+   * 
+   *  
+   */
+  obtenerClaficacionRegimen(form: FormGroup): void {  
+    const cveRegimen = form.get('regimen')?.value;
+    if (cveRegimen) {
+      this.catOctavaTemporalService.getClasificacionRegimenes(cveRegimen).subscribe((data) => {
+        this.catalogosArray[1] = data.datos.map((item, index) => ({
+          id: index,  
+          clave: item.clave,
+          descripcion: item.descripcion,
+        }));
+      });
+    }
+  }
+
 
   /**
    * Maneja los cambios en la opción seleccionada.

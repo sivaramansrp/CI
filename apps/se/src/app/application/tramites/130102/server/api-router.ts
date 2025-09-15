@@ -2,7 +2,7 @@
  * API MS paara obtener los regimenes del tramite 130102.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/regimenes
  */
-export const API_GET_REGIMENES = 'sat-t130102/regimenes';
+export const API_GET_REGIMENES = 'sat-t130102/catalogo/regimenes';
 
 /**
  * API MS para obtener los bloques de paises del tramite 130102.
@@ -15,5 +15,24 @@ export const API_GET_BLOQUE_PAISES = 'sat-t130102/catalogo/paises/bloques';
  *  @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/catalogo/entidades-federativas
  * 
 */
-
 export const API_GET_ENTIDADES_FEDERATIVAS = 'sat-t130102/catalogo/entidades-federativas';
+
+/**
+ * API MS para obtener las fracciones arancelarias del tramite 130102.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/catalogo/pexim/fracciones-arancelarias?modoCarga=combo
+ */
+export const API_GET_FRACCION_ARANCELARIA = 'sat-t130102/catalogo/pexim/fracciones-arancelarias?modoCarga=combo';
+
+/**
+ * Constante para la clave del régimen.
+ * Debe ser reemplazada por la clave real del régimen.
+ */
+
+export const CVEREGIMEN = '{cveRegimen}';
+
+/**
+ * API MS para obtener las clasificaciones de un régimen específico del tramite 130102.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/catalogo/regimenes/{cveRegimen}/clasificacion
+ */
+
+export const API_GET_CLASIFICACION_REGIMEN = (CVEREGIMEN: string) : string => `sat-t130102/catalogo/regimenes/${CVEREGIMEN}/clasificacion`;

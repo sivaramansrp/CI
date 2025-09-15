@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { CatalogosResponse, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { Observable, catchError, map, throwError } from 'rxjs';
 
-import { API_GET_BLOQUE_PAISES, API_GET_ENTIDADES_FEDERATIVAS, API_GET_REGIMENES } from '../server/api-router';
+import { API_GET_BLOQUE_PAISES, API_GET_CLASIFICACION_REGIMEN, API_GET_ENTIDADES_FEDERATIVAS, API_GET_FRACCION_ARANCELARIA, API_GET_REGIMENES } from '../server/api-router';
 import { CatalogosBloquesResponse } from '../models/octava-temporal.model';
 
 @Injectable({
@@ -45,6 +45,22 @@ export class CatOctavaTemporalService {
     );
   }
 
+  getClasificacionRegimenes(cveRegimen?: string): Observable<CatalogosResponse> {
+    const ENDPOINT = cveRegimen ? `${this.host}` + API_GET_CLASIFICACION_REGIMEN(cveRegimen) : `${this.host}${API_GET_CLASIFICACION_REGIMEN('')}`; 
+    return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
+      map((response) => {
+        return response;      
+      }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+
   /*
     * Obtiene los países por bloque.  
     * @returns Observable con la respuesta del servidor.
@@ -65,6 +81,11 @@ export class CatOctavaTemporalService {
     );
   }
 
+  /*
+    * Obtiene las entidades federativas.    
+    * @returns Observable con la respuesta del servidor.
+  */  
+
   getEntidadesFederativas(): Observable<CatalogosResponse> {
     const ENDPOINT = `${this.host}${API_GET_ENTIDADES_FEDERATIVAS}`;
     return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
@@ -78,6 +99,27 @@ export class CatOctavaTemporalService {
         return throwError(() => ERROR);
       })
     );  
+  }
+
+  /**
+   * Obtiene las fracciones arancelarias.
+   * @returns Observable con la respuesta del servidor.
+   * 
+   */
+
+  getFraccionArancelaria(): Observable<CatalogosResponse> {
+    const ENDPOINT = `${this.host}${API_GET_FRACCION_ARANCELARIA}`;
+    return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
+      map((response) => {
+        return response;
+      }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );    
   }
 
 }
