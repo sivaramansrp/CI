@@ -151,7 +151,6 @@ describe('AgregardestinatarioComponent', () => {
   });
 
   it('should run #onGuardarDestinatario()', async () => {
-    // Mock form controls for the destinatarioForm.get() method used in isFormularioValido()
     const mockControl = {
       valid: true,
       value: 'yes'
@@ -174,7 +173,6 @@ describe('AgregardestinatarioComponent', () => {
   });
 
   it('should run #onGuardarDestinatario() when form is invalid', async () => {
-    // Mock form controls for the destinatarioForm.get() method used in isFormularioValido()
     const mockControl = {
       valid: false,
       value: 'no'

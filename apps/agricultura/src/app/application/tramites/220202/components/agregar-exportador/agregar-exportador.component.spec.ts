@@ -103,7 +103,6 @@ describe('AgregarExportadorComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
-    // Mock form controls for the destinatarioForm.get() method
     const mockControl = {
       clearValidators: jest.fn(),
       setValue: jest.fn(),
@@ -167,7 +166,6 @@ describe('AgregarExportadorComponent', () => {
   });
 
   it('should run #onGuardarDestinatario()', async () => {
-    // Mock form controls for the destinatarioForm.get() method
     const mockControl = {
       clearValidators: jest.fn(),
       setValue: jest.fn(),
@@ -193,7 +191,6 @@ describe('AgregarExportadorComponent', () => {
   });
 
   it('should run #onGuardarDestinatario() when form is invalid', async () => {
-    // Mock form controls for the destinatarioForm.get() method
     const mockControl = {
       clearValidators: jest.fn(),
       setValue: jest.fn(),
@@ -219,7 +216,6 @@ describe('AgregarExportadorComponent', () => {
   });
 
   it('should run #onLimpiarDestinatario()', async () => {
-    // Mock form controls for the destinatarioForm.get() method
     const mockControl = {
       clearValidators: jest.fn(),
       setValue: jest.fn(),
