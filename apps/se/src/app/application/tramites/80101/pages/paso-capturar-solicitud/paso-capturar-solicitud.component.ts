@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@ng-mf/data-access-user';
-import { AccionBoton } from '../../models/nuevo-programa-industrial.model';
+import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { Subject } from 'rxjs';
 
@@ -81,6 +81,67 @@ export class PasoCapturarSolicitudComponent {
   public btnGuardarVisible: string = 'visible';
 
   /**
+   * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private socioAccionistaBase: Readonly<Record<string, any>> = {
+      "idPersonaPersonaSolicitudR": 0,
+      "idSolicitud": 202734824,
+      "nombre": "",
+      "apellidoMaterno": "",
+      "apellidoPaterno": "",
+      "razonSocial": "AGRICOLA ALPE S DE RL DE CV",
+      "rfc": "AAL0409235E6",
+      "curp": "",
+      "ideTipoPersonaSol": "TIPERS.SL",
+      "correoElectronico": "vucem.soporte.aplicativo@ultrasist.com.mx",
+      "cedulaProfesional": "",
+      "nss": "",
+      "telefono": "8154563",
+      "descripcionGiro": "Siembra, cultivo y cosecha de papa",
+      "cvePaisOrigen": "",
+      "idDireccionSol": 260833725,
+      "tipoPatenteAgente": "",
+      "recif": "",
+      "puesto": "",
+      "tipoAgente": "",
+      "numeroPatente": "",
+      "numeroIdentificacionFiscal": "",
+      "personaMoral": false,
+      "extranjero": false,
+      "organismoPublico": false,
+      "cveUsuario": "AAL0409235E6",
+      "paginaWeb": "",
+      "ideGenerica1": "",
+      "rfcExtranjero": "",
+      "codAutorizacion": "",
+      "actividadProductiva": "",
+      "estadoEvaluacionEntidad": "AUTORIZADO",
+      "estadoEntidad": "AUTORIZADO",
+      "original": false,
+      "modificado": false,
+      "numeroRegistro": "",
+      "concentimientoInstalacionRecuperacion": false,
+      "cveCatalogo": "",
+      "alquilado": false,
+      "volumenAlmacenaje": 0,
+      "capacidadAlmacenaje": 0,
+      "descripcionDetalladaActividadEconomica": "",
+      "activo": false,
+      "generico1": false,
+      "area": "",
+      "cveNacionalidad": "",
+      "clasificacionArancelaria": "",
+      "infoAdicional": false,
+      "montoImportacion": 0,
+      "montoExportacion": 0,
+      "pctParticAccionaria": 0,
+      "ampliacionModelos": false,
+      "ampliacionPaises": false,
+      "fecFallecimiento": "2025-09-07"
+  };
+
+  /**
    * Constructor de la clase PasoCapturarSolicitudComponent.
    * 
    * @param tramiteQuery - Servicio de consulta para Tramite80101 que proporciona acceso a observables y datos relacionados.
@@ -120,124 +181,142 @@ export class PasoCapturarSolicitudComponent {
   }
 
   /**
+ * Construye un arreglo de socios/accionistas a partir de dos listas de entrada,
+ * utilizando un objeto base como plantilla y datos complementarios para completar
+ * los campos faltantes.
+ *
+ * @param arr1 Primer arreglo de socios/accionistas.
+ * @param arr2 Segundo arreglo de socios/accionistas.
+ * @param base Objeto base que sirve de plantilla para cada elemento del resultado.
+ * @param data Objeto con datos complementarios necesarios para completar el payload.
+ *
+ * @returns Un nuevo arreglo que contiene los objetos combinados y mapeados
+ *          con la información de los dos arreglos de entrada.
+ *
+ * @example
+ * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
+ */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+  buildSociosAccionistas(arr1: any[] = [], arr2: any[] = [], base: Record<string, any>, data: any): any[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const RESULT: any[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const MAP_TO_PAYLOAD = (item: any): any => ({
+      ...base,
+      nombre: item.nombre ?? '',
+      apellidoPaterno: item.apellidoPaterno ?? '',
+      apellidoMaterno: item.apellidoMaterno ?? '',
+      rfc: item.rfc ?? '',
+      correoElectronico: item.correoElectronico ?? '',
+      razonSocial: data.datosComplimentos.formaSocioAccionistas.formaDatos.razonSocial,
+      ideTipoPersonaSol: data.datosComplimentos.formaSocioAccionistas.tipoDePersona,
+      paginaWeb: data.datosComplimentos.datosGeneralis.paginaWWeb,
+      cveNacionalidad: data.datosComplimentos.formaSocioAccionistas.nationalidadMaxicana,
+      fecFallecimiento: data.datosComplimentos.formaCertificacion.fechaVigencia
+    });
+
+    arr1.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
+    arr2.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
+
+    return RESULT;
+  }
+
+
+ // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
+/**
+ * Construye el objeto `anexo` a partir de los datos proporcionados.
+ *
+ * @param data - Objeto de entrada que contiene la información necesaria para construir los anexos y sus tablas asociadas.
+ * @returns Un objeto con la estructura de los anexos, incluyendo ANEXOII, ANEXOIII, proveedorCliente y datosParaNavegar.
+ *
+ * - `ANEXOII` y `ANEXOIII`: Listas construidas a partir de los elementos de `anexoDosTablaLista` y `anexoTresTablaLista` respectivamente.
+ * - `proveedorCliente`: Lista de proveedores y clientes obtenida de `proveedorClienteDatosTabla`.
+ * - `datosParaNavegar`: Información adicional para navegación, construida desde `datosParaNavegar`.
+ *
+ * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
+ */
+ buildAnexo(data: any) {
+ 
+  const buildAnexoItem = (item: Anexo1) => ({
+    descripcion: item.encabezadoFraccion,
+    idTipoBien: 0,
+    idBienComercial: 0,
+    testado: true,
+    contadorGrid: null,
+    descripcionTestado: item.encabezadoDescripcion,
+  });
+
+  const buildProveedorCliente = (item: ProveedorClienteDatosTabla) => ({
+    idProveedor: item.idProveedor,
+    paisOrigen: item.paisOrigen,
+    rfcProveedor: item.rfcProveedor,
+    razonProveedor: item.razonProveedor,
+    paisDestino: item.paisDestino,
+    rfcCliente: item.rfcClinte,
+    razonCliente: item.razonSocial,
+    domicilio: item.domicilio,
+    testado: item.testado,
+    idProductoP: item.idProductoP,
+    descTestado: item.descTestado,
+  });
+
+  const buildDatosParaNavegar = (datos: any) => ({
+    anexoII: datos?.encabezadoAnexoII,
+    tipo: datos?.encabezadoTipo,
+    unidadMedida: datos?.encabezadoAnexoII,
+    categoria: datos?.encabezadoCategoria,
+    descripcion: datos?.encabezadoDescripcionComercial,
+    valorMensual: datos?.encabezadoVolumenMensual,
+    valorAnual: datos?.encabezadoVolumenAnual,
+    volumenMensual: datos?.encabezadoValorEnMonedaMensual,
+    volumenAnual: datos?.encabezadoValorEnMonedaAnual,
+    testado: true,
+    fecFinVigencia: null,
+    volumenAnualSolicitado: null,
+  });
+
+  return {
+    anexo: {
+      ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
+      ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
+      proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
+      datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
+    },
+  };
+}
+
+
+  /**
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
    * 
    * @param data - Los datos que se desean guardar y enviar al servidor.
    * @returns void
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
-
-const PLANTAS_SUBMANUFACTURERAS = data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar.map((item: any) => ({
-        idDomicilio: 0,
-        calle: item.calle,
-        numeroExterior: item.numExterior,
-        numeroInterior: item.numInterior,
-        codigoPostal: item.codigoPostal,
-        informacionExtra: item.informacionExtra ?? '',
-        clave: item.clave ?? '',
-        cveLocalidad: item.cveLocalidad ?? '',
-        cveDelegMun: item.delegacionMunicipio ?? '',
-        cveEntidad: item.entidadFederativa ?? '',
-        cvePais: item.pais ?? '',
-        ciudad: item.ciudad ?? '',
-        telefono: item.telefono ?? '',
-        fax: item.fax ?? '',
-        municipio: item.municipio ?? '',
-        colonia: item.colonia ?? '',
-        descUbicacion: item.descUbicacion ?? '',
-        cveCatalogo: item.cveCatalogo ?? '',
-        telefonos: item.telefonos ?? '',
-        tipoDomicilio: item.domicilioFiscalSolicitante ?? ''
-}));
-
-const PAYLOAD = {
+    const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
+    const ANEXO_ALL = this.buildAnexo(data);
+    const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
-    "idSolicitud": 202781045,
-    "idTipoTramite": 80101,
-    "rfc": "AAL0409235E6",
-    "cveUnidadAdministrativa": "8101",
-    "costoTotal": 10000.5,
-    "certificadoSerialNumber": "1234567890ABCDEF",
-    "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
-    "numeroFolioTramiteOriginal": "TRM-2023-00001",
-    "nombre": "Juan",
-    "apPaterno": "Pérez",
-    "apMaterno": "López",
-    "telefono": "5551234567",
-    "planta": [],
-    "anexoII": [
+      "planta": [],
+      "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
+      "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
+      "mercanciaImportacion": [
         {
-            "descripcion": "tblerow0",
-            "idTipoBien": 0,
-            "idBienComercial": 0,
-            "testado": true,
-            "contadorGrid": null,
-            "descripcionTestado": "tblerow1"
+          "listaProveedores": [
+            ...ANEXO_ALL.anexo.proveedorCliente
+          ],
+          "complemento": {
+            ...ANEXO_ALL.anexo.datosParaNavegar
+          },
         }
     ],
-    "anexoIII": [
-        {
-            "descripcion": "CONTROL DE ENERGIA",
-            "idTipoBien": 0,
-            "idBienComercial": 0,
-            "testado": true,
-            "contadorGrid": null,
-            "descripcionTestado": null
-        }
-    ],
-    "mercanciaImportacion": [
-        {
-            "fraccionArancelaria": {
-                "fraccionPadre": "string",
-                "descripcionFraccionPadre": "string",
-                "tipoFraccion": "string",
-                "exenta": true,
-                "fraccionCompuesta": "string",
-                "claveFraccionPadre": "string",
-                "unidadMedida": "string",
-                "fraccionConcatenada": "string",
-                "descripcionTestado": "string",
-                "testado": true,
-                "tipoOperacion": "string",
-                "valorMonedaMensual": "string",
-                "valorMonedaAnual": "string",
-                "valorProduccionMensual": "string",
-                "valorProduccionAnual": "string",
-                "valorProduccionAnualSolicitada": "string",
-                "claveCategoria": "string",
-                "descripcionCategoria": "string",
-                "mensaje": "string",
-                "descripcionUsuario": "string",
-                "umt": "string",
-                "idFraccion": "string",
-                "idProducto": "string",
-                "idProductoPadre": "string",
-                "claveProductoExportacion": 0,
-                "descripcionServicio": "string",
-                "rowID": "string",
-                "cveFraccion": "61032301",
-                "capitulo": "string",
-                "partida": "string",
-                "subPartida": "string",
-                "descripcion": "string",
-                "fechaCaptura": "2025-09-07T12:43:35.647Z",
-                "fechaInicioVigencia": "2025-09-07T12:43:35.647Z",
-                "fechaFinVigencia": "2025-09-07T12:43:35.647Z",
-                "cveUsuario": "string",
-                "cveCapituloFraccion": "string",
-                "cvePartidaFraccion": "string",
-                "cveSubPartidaFraccion": "string",
-                "activo": true,
-                "activoAnexo28": true,
-                "decretoImmex": true
-            }
-        }
-    ],
-    "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
-    "sociosAccionistas": []
+    "plantasSubmanufactureras": [],
+    "sociosAccionistas":[...SOCIO_ACCIONISTAS]
+    
 }
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
-     return response;
+      return response;
     });
   }
 

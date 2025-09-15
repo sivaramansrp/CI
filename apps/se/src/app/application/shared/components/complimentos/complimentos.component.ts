@@ -1449,7 +1449,6 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 obtenerEstados():void {
     this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
       this.estados = res.datos;
-    });
-    
+    }); 
   }
 }
