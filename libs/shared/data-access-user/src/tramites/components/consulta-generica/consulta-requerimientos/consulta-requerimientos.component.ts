@@ -2,12 +2,12 @@ import {
   BodyTablaRequerimiento,
   HeaderTablaRequerimientos,
 } from '../../../../core/models/shared/consulta-generica.model';
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CONSULTA_REQUERIMIENTOS } from '../../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
 import { FolioQuery } from '../../../../core/queries/folio.query';
-import { RequerimientosResponse } from "../../../../core/models/130118/requerimientos-response.model";
+import { RequerimientosResponse } from "../../../../core/models/shared/requerimientos-response.model";
 import { RequerimientosService } from '../../../../core/services/consultagenerica/requerimiento-service';
 import { Router } from '@angular/router';
 
@@ -46,15 +46,16 @@ export class ConsultarequerimientosComponent implements OnInit, OnChanges, OnDes
   public datosTablaRequerimientos: BodyTablaRequerimiento[] = [];
 
   /**
-   * Método para abrir el detalle del requerimiento.
-   */
-  public verDetalleRequerimiento = ConsultarequerimientosComponent.verDetalleRequerimiento;
-
-  /**
     * @property {RequerimientosResponse[]} requerimientos
     * @description Requerimientos de solicitud.
   */
   @Input() requerimientos: RequerimientosResponse[] = [];
+
+  /** 
+    * Evento que emite el ID del requerimiento seleccionado
+    * @output {number} idRequerimientoSeleccionado - ID del requerimiento seleccionado
+  */
+  @Output() idRequerimientoSeleccionado = new EventEmitter<number>();
 
   /**
    * Constructor de la clase ConsultarequerimientosComponent.
@@ -104,10 +105,8 @@ export class ConsultarequerimientosComponent implements OnInit, OnChanges, OnDes
    * @param {number} id - El id del requerimiento para visualizar el detalle.
    * @returns {void}
    */
-  static verDetalleRequerimiento(_id: number): void {
-    /**
-     * Aquí puedes implementar la lógica para abrir el detalle en una nueva pestaña.
-     */
+   verDetalleRequerimiento(id: number): void {
+    this.idRequerimientoSeleccionado.emit(id);
   }
 
   /**

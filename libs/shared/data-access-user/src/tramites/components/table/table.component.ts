@@ -26,6 +26,14 @@ import { FormsModule } from '@angular/forms';
   host: {}
 })
 export class TableComponent implements OnInit, OnChanges {
+
+  /**
+   * Indica si el estado actual es inválido.
+   * Cuando se establece en `true`, el componente reflejará un estado inválido.
+   * Este input puede utilizarse para activar estilos o mensajes de validación.
+   */
+  @Input() isInvalida: boolean = false;
+  
   @Input() enableScrollbar: boolean = false;
   /**
    * @description
@@ -127,7 +135,23 @@ export class TableComponent implements OnInit, OnChanges {
   this.tableData.tableBody = (this.tableData.tableBody || []).map(item =>
     item ? { ...item, selected: CHECKED } : item
   );
-  this.seleccionCambio.emit(CHECKED);
+  this.emitirCambioSeleccion();
+}
+
+/**
+ * Maneja el cambio de selección de una fila individual.
+ * Emite el evento seleccionCambio cuando cambia el estado de selección.
+ */
+onRowSelectionChange(): void {
+  this.emitirCambioSeleccion();
+}
+
+/**
+ * Emite el evento de cambio de selección indicando si hay alguna fila seleccionada.
+ */
+private emitirCambioSeleccion(): void {
+  const HAS_SELECTION = this.tableData.tableBody?.some(item => item?.selected) || false;
+  this.seleccionCambio.emit(HAS_SELECTION);
 }
  
 }

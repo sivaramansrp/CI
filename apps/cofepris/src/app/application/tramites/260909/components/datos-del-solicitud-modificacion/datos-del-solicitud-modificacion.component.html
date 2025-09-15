@@ -29,6 +29,7 @@
               class="form-control"
               formControlName="observaciones" 
               placeholder="Justificación"
+              maxlength="2000"
               (change)="enCambioDeControl('observaciones')"
             ></textarea>
           </div>
@@ -58,6 +59,7 @@
               id="establecimientoRFCResponsableSanitarioId"
               placeholder=""
               type="text"
+              maxlength="13"
               formControlName="establecimientoRFCResponsableSanitario"
               (change)="enCambioDeControl('establecimientoRFCResponsableSanitario')"
             />
@@ -73,6 +75,7 @@
               id="establecimientoRazonSocialId"
               placeholder=""
               type="text"
+              maxlength="100"
               formControlName="establecimientoRazonSocial"
               (change)="enCambioDeControl('establecimientoRazonSocial')"
             />
@@ -89,9 +92,9 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*: <span class="bi bi-question-circle-fill"
-              title="Correo electrónico"
-              data-bs-toggle="tooltip"></span></label>
+            <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*: 
+                <span class="bi bi-question-circle-fill" tooltip="ejemplo@correo.com" placement="top"></span>
+            </label>
             <input
               class="form-control"
               id="establecimientoCorreoElectronicoId"
@@ -115,6 +118,7 @@
               id="establecimientoDomicilioCodigoPostalId"
               appUppercase
            formControlName="establecimientoDomicilioCodigoPostal"
+           maxlength="12"
            (change)="enCambioDeControl('establecimientoDomicilioCodigoPostal')"
             />
           </div>
@@ -131,7 +135,7 @@
           <div class="form-group">
             <app-catalogo-select
               [catalogo]="estado"
-              [label]="'Estado*'"
+              [label]="'Estado'"
               name="estado"
               [required]="true"
               formControlName="establecimientoEstados"
@@ -153,6 +157,7 @@
               id="descripcionMunicipioId"
               appUppercase
               formControlName="descripcionMunicipio"
+              maxlength="120"
               (change)="enCambioDeControl('descripcionMunicipio')"
             />
           </div>
@@ -175,6 +180,7 @@
               type="text"
               id="localidad"
               formControlName="localidad"
+              maxlength="120"
               (change)="enCambioDeControl('localidad')"
             />
           </div>
@@ -182,11 +188,12 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="establishomentoColonias">Colonias:</label>
+            <label class="form-label" for="establishomentoColonias">Colonia:</label>
             <input
               class="form-control"
               type="text"
               id="establishomentoColoniasId"
+              maxlength="120"
               formControlName="establishomentoColonias"
               (change)="enCambioDeControl('establishomentoColonias')"
             />
@@ -199,19 +206,15 @@
           <div class="form-group">
             <label class="form-label" for="calle"
               >Calle*:
-              <span
-                class="bi bi-question-circle-fill"
-                title="Calle"
-                data-bs-toggle="tooltip"
-              
-              ></span
-            ></label>
+              <span class="bi bi-question-circle-fill" tooltip="Domicilio, calle, número interior, número exterior, lote" placement="top"></span>
+            </label>
             <input
               class="form-control"
               type="text"
               id="calle"
               appUppercase
               formControlName="calle"
+              maxlength="100"
                (change)="enCambioDeControl('calle')"
             />
           </div>
@@ -235,6 +238,7 @@
               id="lada"
               appUppercase
               formControlName ="lada"
+              maxlength="5"
               (change)="enCambioDeControl('lada')"
             />
           </div>
@@ -248,6 +252,7 @@
               id="telefono"
               appUppercase
               formControlName = "telefono"
+              maxlength="30"
               (change)="enCambioDeControl('telefono')"
             />
           </div>
@@ -271,13 +276,16 @@
           [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX"
           formcontrolname="scian"
           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          (listaDeFilaSeleccionada)="onScianSeleccionados($event)"
         >
         </app-tabla-dinamica>
       </div>
     </div>
 
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-default btn-space me-2">Eliminar</button>
+      @if(scianSelecciona.length > 0) {
+        <button type="button" class="btn btn-danger btn-space me-2">Eliminar</button>
+      }
       <button
         type="button"
         class="btn btn-primary btn-space"
@@ -294,11 +302,11 @@
     <div class="row align-item-center">
       <div class="col-md-4 mt-5">
         <lib-input-check
-        [label]="'Aviso de funcionamiento'"
+        [label]="'Aviso de funcionamiento:'"
         [id]="'avisoCheckbox'"
         [required]="true"
         formControlName="avisoCheckbox"
-         [isDisabled]="esFormularioSoloLectura"
+        [isDisabled]="esFormularioSoloLectura || tieneNoLicenciaSanitaria"
         (change)="toggleNoLicenciaSanitaria($event); enControlCambioFormulario('avisoCheckbox')"
       ></lib-input-check>
       </div>
@@ -306,12 +314,8 @@
         <div class="form-group">
           <label class="form-label" for="licenciaSanitaria"
             >No. de licencia sanitaria:
-            <span
-              class="bi bi-question-circle-fill"
-              title="No. de licencia sanitaria"
-              data-bs-toggle="tooltip"
-            ></span
-          ></label>
+            <span class="bi bi-question-circle-fill" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente" placement="top"></span>
+          </label>
           <input
             class="form-control"
             id="licenciaSanitaria"
@@ -319,6 +323,7 @@
             type="text"
             formControlName="noLicenciaSanitaria"
             (change)="enControlCambioFormulario('noLicenciaSanitaria')"
+            maxlength="20"
           />
         </div>
       </div>
@@ -332,6 +337,7 @@
           [required]="true"
           name="regimen"
           [tooltipQuestionCircle]="true"
+          [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
           formControlName="regimen"
           (change)="enControlCambioFormulario('regimen')"
              [isDisabled]="esFormularioSoloLectura"
@@ -360,10 +366,13 @@
         [configuracionTabla]="mercanciasTabla"
         [datos]="mercanciasTablaDatos"
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+        (listaDeFilaSeleccionada)="onMercanciasSeleccionados($event)"
       ></app-tabla-dinamica>
       <div class="container text-end mt-5">
-        <button class="btn btn-default me-2">Eliminar</button>
-        <button class="btn btn-default me-2">Modificar</button>
+        @if(seleccionaMercancias.length > 0) {
+          <button class="btn btn-default me-2">Eliminar</button>
+          <button class="btn btn-default me-2">Modificar</button>
+        }
         <button
           class="btn btn-primary me-2"
           data-bs-toggle="modal"
@@ -388,6 +397,7 @@
 
 <div 
 class="modal fade" 
+data-bs-keyboard="false" data-bs-backdrop="static"
 #establecimientoModal
 tabindex="-1"
 aria-labelledby="establecimientoModalLabel"
@@ -403,7 +413,7 @@ aria-hidden="true"
               <app-catalogo-select
                 [catalogo]="scianJson"
                 [label]="'Clave S.C.I.A.N.*'"
-                [placeholder]="'Seleccione una valor'"
+                [placeholder]="'Seleccione una opción'"
                 formControlName="scian"
                 (change)="onContriloChange('scian')"
                    [isDisabled]="esFormularioSoloLectura"
@@ -412,40 +422,33 @@ aria-hidden="true"
           </div>
           <div class="row">
             <div class="col-md-8">
-              <label for="descripcionScian">Descripción del S.C.I.A.N.</label>
-              <input
-                type="text"
-                id="descripcionScianId"
+              <app-catalogo-select
+                [catalogo]="scianJson"
+                [label]="'Descripción del S.C.I.A.N.'"
+                [placeholder]="'Seleccione una opción'"
                 formControlName="descripcionScian"
-                class="form-control"
                 (change)="onContriloChange('descripcionScian')"
-              />
-              @if(scianForm.controls['descripcionScian'].invalid && scianForm.controls['descripcionScian'].touched) {
-                <div class="d-grid">
-                  @if(scianForm.controls['descripcionScian'].errors?.['required']) {
-                    <span class="mensaje-error">Este campo es obligatorio</span>
-                  }
-                </div>
-              }
+                   [isDisabled]="true"
+              ></app-catalogo-select>
             </div>
           </div>
         </div>
-        <div class="modal-footer mt-5">
+        <div class="modal-footer mt-5 justify-content-end">
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-default"
             (click)="limpiarScianForm()"
           >
             Limpiar
           </button>
-          <button type="button" class="btn btn-primary" (click)="cerrarModal()" >
+          <button type="button" class="btn btn-default" (click)="cerrarModal()" >
             Cancelar
           </button>
           <button
             type="button"
             class="btn btn-primary"
           >
-            Guardar
+            Agregar
           </button>
         </div>
       </form>
@@ -457,6 +460,7 @@ aria-hidden="true"
   class="modal fade"
  #modalAddAgentMercancias
   tabindex="-1"
+  data-bs-keyboard="false" data-bs-backdrop="static"
   aria-labelledby="modalAddAgentMercanciasLabel"
   aria-hidden="true"
 >
@@ -495,6 +499,7 @@ aria-hidden="true"
               id="denominacionEspecifica"
               formControlName="denominacionEspecifica"
               class="form-control"
+              maxlength="1000"
             />
           </div>
           <div class="form-group">
@@ -506,6 +511,7 @@ aria-hidden="true"
               id="denominacionDistintiva"
               formControlName="denominacionDistintiva"
               class="form-control"
+              maxlength="1000"
             />
           </div>
           <div class="form-group">
@@ -517,6 +523,7 @@ aria-hidden="true"
               id="denominacionComun"
               formControlName="denominacionComun"
               class="form-control"
+              maxlength="120"
             />
           </div>
           <div class="form-group">
@@ -544,6 +551,8 @@ aria-hidden="true"
               id="fraccionArancelaria"
               formControlName="fraccionArancelaria"
               class="form-control"
+              maxlength="8"
+              (change)="setFormaControl()"
             />
           </div>
           <div class="form-group">
@@ -564,6 +573,7 @@ aria-hidden="true"
               id="cantidadUMT"
               formControlName="cantidadUMT"
               class="form-control"
+              maxlength="20"
             />
           </div>
           <div class="form-group">
@@ -582,6 +592,7 @@ aria-hidden="true"
               id="cantidadUMC"
               formControlName="cantidadUMC"
               class="form-control"
+              maxlength="20"
             />
           </div>
           <div class="form-group">
@@ -602,6 +613,7 @@ aria-hidden="true"
               id="presentacion"
               formControlName="presentacion"
               class="form-control"
+              maxlength="250"
             />
           </div>
           <div class="form-group">
@@ -611,11 +623,13 @@ aria-hidden="true"
               id="numeroRegistro"
               formControlName="numeroRegistro"
               class="form-control"
+              maxlength="15"
             />
           </div>
           <div class="form-group">
             <input-fecha
               [datos]="fechaCaducidadInput"
+              formControlName="fechaCaducidad"
               [setFecha]="formMercancias.get('fechaCaducidad')?.value"
               (valorCambiado)="cambioFechaFinal($event)"
             ></input-fecha>
@@ -631,7 +645,8 @@ aria-hidden="true"
                   <p class="panel-title">País de orígen</p>
                   <button
                     type="button"
-                    class="collpase-button collapsed"
+                    class="collpase-button" 
+                    [class.collapsed]="!colapsable"
                   ></button>
                 </div>
                 @if(colapsable){
@@ -639,7 +654,7 @@ aria-hidden="true"
                   <div class="panel-body">
                     <crosslist
                       [fechas]="seleccionarOrigenDelPais"
-                      [label]="paisDeProcedenciaLabel"
+                      [label]="paisDeOrigenLabel"
                       [botones]="paisDeProcedenciaBotons"
                     ></crosslist>
                   </div>
@@ -660,7 +675,8 @@ aria-hidden="true"
                   <p class="panel-title">País de procedencia</p>
                   <button
                     type="button"
-                    class="collpase-button collapsed"
+                    class="collpase-button" 
+                    [class.collapsed]="!colapsableDos"
                   ></button>
                 </div>
                 @if(colapsableDos){
@@ -689,7 +705,8 @@ aria-hidden="true"
                   <p class="panel-title">Uso específico</p>
                   <button
                     type="button"
-                    class="collpase-button collapsed"
+                    class="collpase-button" 
+                    [class.collapsed]="!colapsableTres"
                   ></button>
                 </div>
                 @if(colapsableTres){
@@ -697,7 +714,7 @@ aria-hidden="true"
                   <div class="panel-body">
                     <crosslist
                       [fechas]="seleccionarOrigenDelPaisTres"
-                      [label]="paisDeProcedenciaLabel"
+                      [label]="usoEspecificoLabel"
                       [botones]="paisDeProcedenciaBotonsTres"
                     ></crosslist>
                   </div>
@@ -709,13 +726,13 @@ aria-hidden="true"
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-default" (click)="limpiarFormulario()">
           Limpiar
         </button>
         <button type="button" class="btn btn-default" data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  (click)="agregarMercancia()">
           Agregar
         </button>
       </div>

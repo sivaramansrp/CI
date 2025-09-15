@@ -153,6 +153,11 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   @Input() procedimiento!: number;
 
   /**
+   * Indica si el formulario es válido.
+   */
+  @Input() formValida!: boolean;
+
+  /**
    * Evento que emite un valor booleano indicando si los certificados han sido autorizados.
    *
    * @event certificadosAutorizEmitido
@@ -209,7 +214,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
           ),
           fechaDeInspeccion: new FormControl(
             this.solicitud220502State.fechaDeInspeccion,
-            [Validators.required]
+            []
           ),
           fechaInspeccion: new FormControl(
             this.solicitud220502State.fechaInspeccion,
@@ -226,7 +231,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
             const FORM_GROUP = this.grupoFormularioPadre.get(
               this.claveDeControl
             ) as FormGroup;
-            if (this.solicitud220502State.certificadosAutorizados > 0) {
+            if (Number(this.solicitud220502State.certificadosAutorizados) > 0) {
               this.certificadosAutorizEmitido.emit(true);
             } else {
               this.certificadosAutorizEmitido.emit(false);
@@ -351,7 +356,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
     );
     this.puntoDeInspeccion = CATALOGOTEMPLATE(
       'Punto de inspección',
-      false,
+      true,
       data.puntoInspeccion
     );
     this.cdRef.detectChanges();

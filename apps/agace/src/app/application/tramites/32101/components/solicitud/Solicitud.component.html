@@ -87,7 +87,7 @@
     <div class="col-md-5">
       <input-fecha [datos]="fechaInicialInput"   (valorCambiado)="cambioFechaIngreso($event)" [setFecha]="registroForm.get('fechaInicialInput')?.value" [isDisabled]="soloLectura"></input-fecha>
       <div *ngIf="registroForm.get('fechaInicialInput')?.hasError('fechaInvalida')" class="text-danger">
-    The payment date must be less than or equal to the current date.
+    La fecha de pago debe ser menor o igual a la fecha actual.
   </div>
     </div>
     <div class="col-md-4">

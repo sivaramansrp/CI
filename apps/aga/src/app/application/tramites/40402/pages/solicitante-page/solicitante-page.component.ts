@@ -1,29 +1,35 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { PASOS, SECCIONES_TRAMITE_40402 } from '../../constants/solicitud.enums';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '../../constants/solicitud.enums';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+
+import {
+  CategoriaMensaje,
+  DatosPasos,
+  ListaPasosWizard,
+  Notificacion,
+  TipoNotificacionEnum,
+} from '@ng-mf/data-access-user';
+
 import { Subject } from 'rxjs';
+
+import { map, takeUntil } from 'rxjs/operators';
+
 import { Tramite40402Query } from '../../estados/tramite40402.query';
-import { Tramite40402Store } from '../../estados/tramite40402.store';
-import { Tramitenacionales40402State } from '../../estados/tramite40402.store';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { map } from 'rxjs/operators';
-import { takeUntil } from 'rxjs/operators';
+
+import {
+  Tramite40402Store,
+  Tramitenacionales40402State,
+} from '../../estados/tramite40402.store';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 /**
  * Interfaz que define la estructura de un botón de acción en el asistente.
  */
 interface AccionBoton {
-  /**
-   * Acción que se debe realizar (por ejemplo, "cont" para continuar o "atras" para retroceder).
-   */
+  /** Acción que se debe realizar (por ejemplo, "cont" para continuar o "atras" para retroceder). */
   accion: string;
-
-  /**
-   * Valor asociado al botón, que indica el índice del paso al que se debe mover el asistente.
-   */
+  /** Valor asociado al botón, que indica el índice del paso al que se debe mover el asistente. */
   valor: number;
 }
-
 @Component({
   selector: 'app-solicitante-page',
   templateUrl: './solicitante-page.component.html',
@@ -31,9 +37,52 @@ interface AccionBoton {
 })
 export class SolicitantePageComponent implements OnInit, OnDestroy {
   /**
+   * Configuración de notificación actual para mostrar al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Controla la visibilidad del modal de notificación.
+   */
+    btnContinuar: boolean = false;
+
+  /**
+  * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+  * const esValido = this.pasoUnoComponent.validateForms();
+  * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+  */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+  /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   * }
+   */
+  esFormaValido: boolean = false;
+
+  /**
+   * Método para retroceder el paso desde Paso Tres
+   */
+  retrocederPaso(): void {
+    if (this.indice > 1) {
+      this.indice--;
+      this.actualizarDatosPasos();
+    }
+  }
+  /**
+   * Actualiza los textos y datos de los botones según el paso actual
+   */
+  private actualizarDatosPasos(): void {
+    this.datosPasos = {
+      nroPasos: this.pasos.length,
+      indice: this.indice,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    };
+  }
+  /**
    * Lista de pasos del asistente (wizard) que se mostrarán en la página.
    */
-  pasos: Array<ListaPasosWizard> = PASOS;
+  pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
 
   /**
    * Índice actual del paso seleccionado en el asistente.
@@ -51,7 +100,9 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Referencia al componente del asistente (wizard) en la vista.
+   * ## wizardComponent
+   * 
+   * Referencia al componente `WizardComponent` en la plantilla.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
@@ -73,7 +124,9 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   constructor(
     private tramite40402Query: Tramite40402Query,
     private tramite40402Store: Tramite40402Store
-  ) {}
+  ) {
+    // Coloqué su lógica de constructor aquí.
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -88,17 +141,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.asignarSecciones();
-  }
-
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Limpia las suscripciones activas para evitar fugas de memoria.
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.actualizarDatosPasos();
   }
 
   /**
@@ -107,6 +150,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   seleccionadosTodos(i: number): void {
     this.indice = i;
+    this.actualizarDatosPasos();
   }
 
   /**
@@ -114,32 +158,45 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * @param e - Objeto que contiene la acción y el valor del índice.
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 6) {
+    this.esFormaValido = false;
+    // Validar antes de pasar del paso 1 al paso 2
+    if (e.accion === 'cont' && this.indice === 1) {
+      const ES_VALIDO = this.pasoUnoComponent
+        ? this.pasoUnoComponent.validarFormularios()
+        : true;
+      if (!ES_VALIDO) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: TipoNotificacionEnum.ALERTA,
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'modal-md',
+          titulo: '',
+          mensaje: 'Existen requisitos obligatorios en blanco o con errores.',
+          cerrar: false,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.btnContinuar = true;
+        this.indice = 1;
+        this.actualizarDatosPasos();
+        return; // Evitar pasar al siguiente paso
+      }
+    }
+    // Si es válida o no paso 1, permitir la navegación
+    if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+        this.wizardComponent?.siguiente();
       } else {
-        this.wizardComponent.atras();
+        this.wizardComponent?.atras();
       }
     }
   }
-
   /**
-   * Método para asignar las secciones existentes al store.
-   * Inicializa las secciones y su estado de validación.
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones activas para evitar fugas de memoria.
    */
-  private asignarSecciones(): void {
-    const SECCIONES: boolean[] = [];
-    const FORMA_VALIDA: boolean[] = [];
-
-    for (const LLAVE_SECCION of Object.keys(
-      SECCIONES_TRAMITE_40402.PASO_1
-    ) as Array<keyof typeof SECCIONES_TRAMITE_40402.PASO_1>) {
-      SECCIONES.push(SECCIONES_TRAMITE_40402.PASO_1[LLAVE_SECCION]);
-      FORMA_VALIDA.push(false);
-    }
-
-    this.tramite40402Store.establecerSeccion(SECCIONES);
-    this.tramite40402Store.establecerFormaValida(FORMA_VALIDA);
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -1,13 +1,25 @@
-import { CategoriaMensaje, FirmaElectronicaComponent, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
-import { Component, OnInit } from '@angular/core';
+import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, FirmaElectronicaComponent, Notificacion, NotificacionesComponent, TramiteFolioStore, base64ToHex, encodeToISO88591Hex, } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CadenaOriginalRequest } from '../core/models/confirmar-notificacion/request/generar-cadena-original-request.model';
+import { CadenaOriginalService } from '../core/services/confirmar-notificacion/CadenaOriginal.service';
 import { CommonModule } from '@angular/common';
 import { ConfirmarNotificacionIniciarResponse } from '../core/models/confirmar-notificacion/response/confirmar-notificacion-iniciar-response.model';
 import { ConfirmarNotificacionService } from '../core/services/confirmar-notificacion/confirmar-notificacion.service';
 import { DetallesFolioComponent } from '../shared/components/detalles-folio/detalles-folio.component';
+import { FirmaService } from '../core/services/confirmar-notificacion/firma.service';
 import { Location } from '@angular/common';
 import { NotificacionActoAdministrativoComponent } from '../shared/components/notificacion-acto-administrativo/notificacion-acto-administrativo.component';
 import { Router } from '@angular/router';
 import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { BodyTablaResolucion } from '@libs/shared/data-access-user/src/core/models/shared/consulta-generica.model';
+import { FirmaRequest } from '../core/models/confirmar-notificacion/request/firma-request.model';
+
+import { CodigoRespuesta, PasoNotificacion } from '../core/enum/se-core-enum';
+import { AcuseReciboComponent } from '../shared/components/acuse-recibo/acuse-recibo.component';
+import { FirmaConfirmarResponse } from '../core/models/confirmar-notificacion/response/confirmar-notificacion-response.model';
 
 /**
  * @component ConfirmarNotificacionComponent
@@ -27,12 +39,13 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     DetallesFolioComponent,
     NotificacionActoAdministrativoComponent,
     FirmaElectronicaComponent,
-    NotificacionesComponent
-],
+    NotificacionesComponent,
+    AcuseReciboComponent
+  ],
   templateUrl: './confirmar-notificacion.component.html',
   styleUrl: './confirmar-notificacion.component.scss',
 })
-export class ConfirmarNotificacionComponent implements OnInit {
+export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
   /**
    * @property indiceDePaso
    * @description
@@ -45,7 +58,24 @@ export class ConfirmarNotificacionComponent implements OnInit {
    *
    * @type {number}
    */
-  public indiceDePaso = 1;
+  public indiceDePaso = PasoNotificacion.CONFIRMAR_NOTIFICACION;
+
+  /**
+   * Enum para pasos de la notificación
+   */
+  PasoNotificacion = PasoNotificacion;
+
+  /**
+  * Folio del trámite que se está procesando.
+  * Este folio es único para cada trámite y se utiliza para identificarlo en el sistema.
+  */
+  folio: string = '';
+
+  /**
+  * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
+  * Se utiliza para completar el observable cuando el componente se destruye.
+  */
+  private destroy$ = new Subject<void>();
 
   /**
    * Datos de la notificación, que se pasan al componente NotificacionActoAdministrativo.
@@ -59,6 +89,47 @@ export class ConfirmarNotificacionComponent implements OnInit {
    */
   nuevaNotificacion: Notificacion | null = null;
 
+  /**
+  * Cadena original generada a partir de los datos del trámite.
+  * Esta cadena será firmada con el certificado digital y la llave privada proporcionados.
+  */
+  cadenaOriginal?: string;
+
+  /**
+     * @property {ConsultaioState} guardarDatos
+     * @description Estado actual del trámite consultado.
+     */
+  guardarDatos!: ConsultaioState;
+
+  /**
+   * @property {string} banderaVistaAcuse
+   * @description Estado para saber estado de la vista.
+  */
+   banderaVistaAcuse!: string;
+
+  /**
+   * Datos de la tabla.
+   * Contiene los registros que se mostrarán en la tabla.
+   * @type {BodyTablaResolucion[]}
+  */
+  datosTabla: BodyTablaResolucion[] = [];
+
+
+  /**
+* Objeto que contiene los datos reales de la firma electrónica generada después del proceso de firma.
+* Incluye:
+* - firma: Cadena de la firma generada (en base64).
+* - certSerialNumber: Número de serie del certificado digital.
+* - rfc: RFC extraído del certificado.
+* - fechaFin: Fecha de vencimiento del certificado.
+*/
+  datosFirmaReales!: {
+    firma: string;
+    certSerialNumber: string;
+    rfc: string;
+    fechaFin: string;
+  };
+
 
   /**
    * @constructor
@@ -67,7 +138,11 @@ export class ConfirmarNotificacionComponent implements OnInit {
   constructor(
     private router: Router,
     private confirmarNotificacionService: ConfirmarNotificacionService,
-    private location: Location,) {
+    private location: Location,
+    private consultaioQuery: ConsultaioQuery,
+    private firmaService: FirmaService,
+    private tramiteStore: TramiteFolioStore,
+    private cadenaOriginalService: CadenaOriginalService) {
     const CURRENT_NAVIGATION = this.router.getCurrentNavigation();
     if (CURRENT_NAVIGATION?.extras.state?.['isAcuseRecibo']) {
       this.indiceDePaso = 3;
@@ -75,6 +150,14 @@ export class ConfirmarNotificacionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.guardarDatos = seccionState;
+        })
+      )
+      .subscribe()
     this.getConfirmarNotificacion();
   }
 
@@ -87,6 +170,9 @@ export class ConfirmarNotificacionComponent implements OnInit {
    */
   alContinuar(): void {
     this.indiceDePaso = this.indiceDePaso + 1;
+    if (this.indiceDePaso === this.PasoNotificacion.FIRMAR) {
+      this.obtenerCadenaOriginal();
+    }
   }
 
   /**
@@ -98,9 +184,200 @@ export class ConfirmarNotificacionComponent implements OnInit {
    * @param {string} ev - Evento recibido (firmado).
    * @returns {void}
    */
-  obtieneFirma(ev: string): void {
-    this.indiceDePaso = 3;
+  obtieneFirma(firma: string): void {
+    if (!this.cadenaOriginal || !this.datosFirmaReales) {
+      console.error('Faltan datos para completar la firma');
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'toastr',
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'action',
+        titulo: 'Error',
+        mensaje: 'Faltan datos para completar la firma.',
+        cerrar: false,
+        txtBtnAceptar: '',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
+    const FIRMAHEX = base64ToHex(firma);
+    const NUMFOLIO = this.guardarDatos.folioTramite;
+
+    const PAYLOAD: FirmaRequest = {
+      id_accion: this.guardarDatos.action_id, // o el ID que corresponda
+      firma: {
+        cadena_original: CADENAHEX,
+        cert_serial_number: this.datosFirmaReales.certSerialNumber,
+        clave_usuario: this.datosFirmaReales.rfc,
+        fecha_firma: ConfirmarNotificacionComponent.formatFecha(new Date()), // fecha actual formateada
+        clave_rol: 'Solicitante',
+        sello: FIRMAHEX,
+      }
+    };
+
+    this.firmaService.postFirma(NUMFOLIO, PAYLOAD)
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((firmaResponse: BaseResponse<FirmaConfirmarResponse>) => {
+          if (firmaResponse.codigo !== CodigoRespuesta.EXITO || !firmaResponse.datos) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error al firmar la solicitud',
+              mensaje: firmaResponse.mensaje || firmaResponse.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            throw new Error('Firma no exitosa');
+          }else if (firmaResponse.codigo === CodigoRespuesta.EXITO){
+            if(firmaResponse.datos.tipo_acuse === "Resolucion"){
+              this.banderaVistaAcuse = firmaResponse.datos.tipo_acuse;
+              this.postResolucion(firmaResponse.datos.id_acuse);
+            }else{
+               this.postRequerimiento(firmaResponse.datos.id_acuse);
+            }
+          }
+ 
+        }),
+        tap(() => {
+          this.tramiteStore.establecerTramite(
+            this.folio,
+            firma
+          );
+          this.indiceDePaso = this.PasoNotificacion.ACUSES;
+        }),
+        catchError((error) => {
+          if (!this.nuevaNotificacion) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error inesperado',
+              mensaje: error?.error.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+          return of(null);
+        })
+      )
+      .subscribe();
   }
+
+  /**
+   * @method postResolucion
+   * @description Guarda la resolución del proceso actual
+   * 
+   * Realiza una petición al servicio para guardar la resolución
+   * del trámite. Si la respuesta es exitosa (código '00'), prepara
+   * los datos para el envío del acuse correspondiente.
+   * 
+   * @returns {void}
+ */
+  postResolucion(id_acuse: number): void {
+    this.confirmarNotificacionService.postResolucionGuardar(Number(this.guardarDatos.procedureId), id_acuse).subscribe({
+      next: (response) => {
+        if (response.codigo === CodigoRespuesta.EXITO && response.datos) {
+          this.datosTabla = [{
+              id: 1,
+              idDocumento: '1',
+              documento: response.datos.nombre_archivo ?? '',
+              urlPdf: response.datos.llave_archivo ?? ''
+            }];
+        } else {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error al obtener resolución',
+            mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error || 'Ocurrió un error al obtener resolución.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+           this.indiceDePaso = this.PasoNotificacion.FIRMAR;
+        }
+      },
+      error: (error) => {
+          if (!this.nuevaNotificacion) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error inesperado',
+              mensaje: error?.error.error || 'Ocurrió un error al obtener resolución.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+          this.indiceDePaso = this.PasoNotificacion.FIRMAR;
+      }
+    });
+  }
+
+  /**
+   * @method postRequerimiento
+   * @description Guarda el requerimiento del proceso actual
+   * 
+   * Realiza una petición al servicio para guardar el requerimiento
+   * del trámite. Si la respuesta es exitosa (código '00'), prepara
+   * los datos para el envío del acuse correspondiente.
+   * 
+   * @returns {void}
+ */
+  postRequerimiento(id_acuse: number): void {
+    this.confirmarNotificacionService.postRequerimientoGuardar(Number(this.guardarDatos.procedureId), id_acuse).subscribe({
+      next: (response) => {
+        if (response.codigo === CodigoRespuesta.EXITO && response.datos) {
+           this.datosTabla = [{
+              id: 1,
+              idDocumento: '1',
+              documento: response.datos.nombre_archivo ?? '',
+              urlPdf: response.datos.llave_archivo ?? ''
+            }];
+        } else {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error al obtener requerimiento',
+            mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error || 'Ocurrió un error al obtener requerimiento.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          this.indiceDePaso = this.PasoNotificacion.FIRMAR;
+        }
+      },
+      error: (error) => {
+          if (!this.nuevaNotificacion) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error inesperado',
+              mensaje: error?.error.error || 'Ocurrió un error al obtener requerimiento.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+          this.indiceDePaso = this.PasoNotificacion.FIRMAR;
+      }
+    });
+  }
+
 
   /**
    * @method cerrar
@@ -122,8 +399,8 @@ export class ConfirmarNotificacionComponent implements OnInit {
    * @returns {void}
    */
   getConfirmarNotificacion(): void {
-    const NUMFOLIO = '0201300101820252540000005';
-    this.confirmarNotificacionService.getIniciarNotificacion(NUMFOLIO).subscribe({
+    const NUMFOLIO = this.guardarDatos.folioTramite;
+    this.confirmarNotificacionService.getIniciarNotificacion(this.guardarDatos.procedureId, NUMFOLIO).subscribe({
       next: (response) => {
         if (response.codigo === '00') {
           this.notificacionData = response.datos ?? {} as ConfirmarNotificacionIniciarResponse;
@@ -141,9 +418,110 @@ export class ConfirmarNotificacionComponent implements OnInit {
           this.location.back();
         }
       },
-      error: (err) => {
-        console.error('Error al obtener la notificación:', err);
+      error: (error) => {
+       const MENSAJE = error?.error?.error || 'Error inesperado al consultar notificacion.';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
       }
     });
+  }
+
+  /**
+   * Método para obtener la cadena original del trámite.
+   * Este método se encarga de llamar al servicio correspondiente para generar la cadena original.
+   */
+  obtenerCadenaOriginal(): void {
+    const NUMFOLIO = this.guardarDatos.folioTramite;
+    const PAYLOAD: CadenaOriginalRequest = {
+      fecha_firma: ConfirmarNotificacionComponent.formatFecha(new Date()),
+      usuario: {
+        apellido_materno: 'Pérez',
+        rfc: 'MAVL621207C95',
+        nombre: 'José',
+        apellido_paterno: 'Hernández'
+      }
+    };
+    this.cadenaOriginalService.postCadenaOriginal(NUMFOLIO, PAYLOAD).subscribe({
+      next: (resp) => {
+        if (resp.codigo !== '00') {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: resp.error || 'Error al generar la cadena original.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          return;
+        }
+        this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
+      },
+      error: (error) => {
+        const MENSAJE = error?.error?.error || 'Error inesperado al iniciar trámite.';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
+      }
+    });
+  }
+
+
+  /** 
+   * Formatea una fecha a string en formato YYYY-MM-DD HH:MM:SS
+   * @param fecha - Fecha a formatear (string o objeto Date)
+   * @returns String con la fecha formateada
+   */
+  static formatFecha(fecha: string | Date): string {
+    const DATE_OBJ = new Date(fecha);
+    const PAD = (n: number): string => n.toString().padStart(2, '0');
+
+    const YYYY = DATE_OBJ.getFullYear();
+    const MM = PAD(DATE_OBJ.getMonth() + 1);
+    const DD = PAD(DATE_OBJ.getDate());
+    const HH = PAD(DATE_OBJ.getHours());
+    const MM_MINUTES = PAD(DATE_OBJ.getMinutes());
+    const SS = PAD(DATE_OBJ.getSeconds());
+
+    return `${YYYY}-${MM}-${DD} ${HH}:${MM_MINUTES}:${SS}`;
+  }
+
+  /**
+* Maneja el evento de firma y obtiene los datos de la firma.
+* @param datos - Objeto que contiene la firma, número de serie del certificado y RFC.
+*/
+  datosFirma(datos: {
+    firma: string;
+    certSerialNumber: string;
+    rfc: string;
+    fechaFin: string;
+  }): void {
+    this.datosFirmaReales = datos;
+    this.obtieneFirma(datos.firma);
+  }
+
+  /**
+   * Método para obtener la cadena original del trámite.
+   * Este método se encarga de llamar al servicio correspondiente para obtener la cadena original.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

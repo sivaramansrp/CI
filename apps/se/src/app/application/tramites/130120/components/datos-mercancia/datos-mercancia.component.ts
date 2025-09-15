@@ -144,15 +144,15 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       otro_umc: [{ value: this.DatosState.datosMercanica.otro_umc, disabled: true }, [Validators.required]],
       cantidad_umc: [this.DatosState.datosMercanica.cantidad_umc, Validators.required],
       factor_conversion: [{ value: this.DatosState.datosMercanica.factor_conversion, disabled: true }, Validators.required],
-      cantidad_umt: [this.DatosState.datosMercanica.cantidad_umt, Validators.required],
+      cantidad_umt: [{ value: this.DatosState.datosMercanica.cantidad_umt, disabled: true }, Validators.required],
       valor_factura: [this.DatosState.datosMercanica.valor_factura, Validators.required],
       moneda_comercializacion: [this.DatosState.datosMercanica.moneda_comercializacion, Validators.required],
-      valor_factura_usd: [this.DatosState.datosMercanica.valor_factura_usd, Validators.required],
-      precio_unitario_usd: [this.DatosState.datosMercanica.precio_unitario_usd, Validators.required],
+      valor_factura_usd: [{ value: this.DatosState.datosMercanica.valor_factura_usd, disabled: true }, Validators.required],
+      precio_unitario_usd: [{ value: this.DatosState.datosMercanica.precio_unitario_usd, disabled: true }, Validators.required],
       pais_exportador: [this.DatosState.datosMercanica.pais_exportador, Validators.required],
       pais_origen: [this.DatosState.datosMercanica.pais_origen, Validators.required],
       valor_total_factura: [this.DatosState.datosMercanica.valor_total_factura, Validators.required],
-      valor_total_factura_usd: [this.DatosState.datosMercanica.valor_total_factura_usd, Validators.required],
+      valor_total_factura_usd: [{ value: this.DatosState.datosMercanica.valor_total_factura_usd, disabled: true }, Validators.required],
     });
   }
 
@@ -257,7 +257,8 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   /** @method setTotalMercanciaImportar Calcula y actualiza el valor total de la factura en USD. */
   setTotalMercanciaImportar(): void {
     const DATOSMERCANICA = this.datosMercanica;
-    const VALORTOTALFACTURA = parseFloat(DATOSMERCANICA.get('valor_total_factura')?.value);
+    const VALARTOTALFACTURACONTROL = DATOSMERCANICA.get('valor_total_factura');
+    const VALORTOTALFACTURA = parseFloat(VALARTOTALFACTURACONTROL && VALARTOTALFACTURACONTROL.value ? VALARTOTALFACTURACONTROL.value : '0');
     const MONDEDACOMERCIALIZACION = DATOSMERCANICA.get('moneda_comercializacion');
     let RESULTADO;
     if (Number(MONDEDACOMERCIALIZACION?.value) === 2) {
@@ -278,13 +279,14 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     const MONDEDACOMERCIALIZACION = DATOSMERCANICA.get('moneda_comercializacion');
     const PRECIOUNITARIOUSDCONTROL = DATOSMERCANICA.get('precio_unitario_usd');
     let valorFacturaUsd = VALOR_FACTURA;
-    let precioUnitarioUsd;
     if (Number(MONDEDACOMERCIALIZACION?.value) === 2) {
-      valorFacturaUsd = VALOR_FACTURA * 3.32;
-      precioUnitarioUsd = DATOSMERCANICA.get('cantidad_umc')?.value ? (valorFacturaUsd / DATOSMERCANICA.get('cantidad_umc')?.value) : 0;
+      valorFacturaUsd = VALOR_FACTURA ? VALOR_FACTURA * 3.32 : 0;
     } else {
       valorFacturaUsd = Number(VALOR_FACTURA) * 1;
     }
+    const PRECIOUNITARUSD = (DATOSMERCANICA.get('cantidad_umc')?.value && valorFacturaUsd)
+      ? Number((valorFacturaUsd / DATOSMERCANICA.get('cantidad_umc')?.value).toFixed(2))
+      : 0;
     const VALORFACTURAUSDCONTROL = DATOSMERCANICA.get('valor_factura_usd');
     if (VALORFACTURAUSDCONTROL) {
       VALORFACTURAUSDCONTROL.setValue(valorFacturaUsd, { emitEvent: false });
@@ -292,7 +294,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       VALORFACTURAUSDCONTROL.markAsTouched();
     }
     if (PRECIOUNITARIOUSDCONTROL) {
-      PRECIOUNITARIOUSDCONTROL.setValue(precioUnitarioUsd, { emitEvent: false });
+      PRECIOUNITARIOUSDCONTROL.setValue(PRECIOUNITARUSD, { emitEvent: false });
       PRECIOUNITARIOUSDCONTROL.markAsDirty();
       PRECIOUNITARIOUSDCONTROL.markAsTouched();
     }

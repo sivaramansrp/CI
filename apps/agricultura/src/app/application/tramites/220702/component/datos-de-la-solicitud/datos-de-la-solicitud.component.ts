@@ -161,6 +161,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   TEXTOS = TEXTOS_220702;
 
+
+  /**
+   * Estado actual del trámite.
+   * 
+   * @remarks
+   * Esta propiedad almacena la información relacionada con el estado del trámite en curso.
+   * Se inicializa como un objeto vacío del tipo `TramiteState`.
+   */
   tramiteState: TramiteState={} as TramiteState;
 
   /**

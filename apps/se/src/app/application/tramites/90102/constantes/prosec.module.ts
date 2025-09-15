@@ -20,6 +20,8 @@ export const PASOS = [
 ];
 export const TEXTO = 'Para continuar con el tramite, debes agregar por lo menos una planta'
 
+export const MODALIDAD = 'Productor indirecto';
+
 export const PARATEXTO = 'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
 export const TEXTOS_REQUISITOS = {
     INSTRUCCIONES: `<h6>Instrucciones</h6>

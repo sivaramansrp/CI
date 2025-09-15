@@ -8,12 +8,12 @@
         <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-            <label class="form-label" for="contribuyentes">Registro federal de contribuyentes:</label>
+            <label class="form-label" for="contribuyentes">Registro federal de contribuyentes*:</label>
             <input type="text" 
             value=""
             class="form-control" 
             id="contribuyentes"  
-            placeholder="Registro federal de contribuyentes"
+            placeholder=""
             formControlName="contribuyentes"
             (change)="
                 setValoresStore(
@@ -24,18 +24,32 @@
             maxlength="13"
             soloLetrasNumeros
                 >
+                <div
+                *ngIf="productorIndirecto.get('contribuyentes')?.invalid && productorIndirecto.get('contribuyentes')?.touched">
+                <small class="mensaje-error">Este campo es obligatorio.</small>
+                </div>
             </div>
         </div>
         </div>
     </form>
     <div class="row mb-5">
         <div class=" text-end mt-5">
-            <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar Productor</button>
+            <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarProductor()">Eliminar Productor</button>
             <button class="btn btn-primary" (click)="agregarProductor()" [disabled]="esFormularioSoloLectura">Agregar Productor</button>
         </div>
     </div>
     <div class="row">
         <h6>Solicitud Prosec Productor Indirecto Tabla:</h6>
-        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="productorColumnsConfiguracion" [datos]="productorDato" ></app-tabla-dinamica>
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="productorColumnsConfiguracion" [datos]="productorDato" (listaDeFilaSeleccionada)="seleccionTabla($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+    </div>
+    <div>
+        @if(espectaculoAlerta){
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+            (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+        }
+        @if(espectaculoConfirmarAlerta){
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+            (confirmacionModal)="eliminarPedimentoDatos($event)"></lib-notificaciones>
+        }
     </div>
 </div>

@@ -14,6 +14,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
 import {
   PROCEDIMIENTOS_AYUDA_DECLARACIONES,
   PROCEDIMIENTOS_NUMERO_ES_DE_PERMISO_DECLARACIONES,
@@ -36,6 +37,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
     CommonModule,
     ReactiveFormsModule,
     CatalogoSelectComponent,
+    NotificacionesComponent
   ],
   templateUrl: './pais-procendencia.component.html',
   styleUrl: './pais-procendencia.component.scss',
@@ -102,6 +104,15 @@ export class PaisProcendenciaComponent implements OnInit, OnChanges {
   @Output() bloqueCambiar = new EventEmitter<number>();
 
   /**
+   * Indica si se debe mostrar la notificación de ayuda.
+   */
+  mostrarAyuda = false;
+  /**
+   * Instancia de la clase Notificacion utilizada para mostrar mensajes de ayuda relacionados con la notificación.
+   */
+  notificacionAyuda!: Notificacion;
+
+  /**
    * Evento emitido para establecer valores en el store.
    * @type {EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>}
    */
@@ -124,7 +135,7 @@ export class PaisProcendenciaComponent implements OnInit, OnChanges {
        * Clase CSS del botón.
        * @type {string}
        */
-      class: 'btn-primary',
+      class: 'btn-default',
       /**
        * Función para agregar todos los elementos.
        *
@@ -145,7 +156,7 @@ export class PaisProcendenciaComponent implements OnInit, OnChanges {
        * Clase CSS del botón.
        * @type {string}
        */
-      class: 'btn-default',
+      class: 'btn-primary',
       /**
        * Función para agregar la selección actual.
        *
@@ -166,7 +177,7 @@ export class PaisProcendenciaComponent implements OnInit, OnChanges {
        * Clase CSS del botón.
        * @type {string}
        */
-      class: 'btn-danger',
+      class: 'btn-primary',
       /**
        * Función para restar la selección actual.
        *
@@ -255,5 +266,38 @@ export class PaisProcendenciaComponent implements OnInit, OnChanges {
    */
   setValoresStore(form: FormGroup, campo: string): void {
     this.setValoresStoreEvent.emit({ form, campo });
+  }
+
+  /**
+   * Muestra una notificación de ayuda al usuario con información relevante sobre los requisitos mínimos para vehículos usados adaptados para personas físicas.
+   * Si el formulario está en modo solo lectura, no realiza ninguna acción.
+   */
+  abrirAyuda(): void {
+  if (this.esFormularioSoloLectura) {
+    return
+  }
+    this.notificacionAyuda = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: 'info',
+      modo: '',
+      titulo: 'Mensaje de ayuda',
+      mensaje: 'Para vehículos usados adaptados para personas físicas se deberá especificar como mínimo: marca, año modelo, modelo, numero de serie y especificaciones técnicas del vehiculo así como las características técnicas y/o descripción del equipo(s) aditamento(s) o dispositivo(s) integrado(s) al vehiculo.',
+      cerrar: true,
+      txtBtnAceptar: 'Cerrar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarAyuda = true;
+  }
+
+  /**
+   * @description Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control a verificar.
+   * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+   */
+  esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.paisForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
 }

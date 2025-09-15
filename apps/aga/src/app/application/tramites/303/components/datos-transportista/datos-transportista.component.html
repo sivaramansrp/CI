@@ -12,26 +12,12 @@
     </div>
     <div class="d-flex justify-content-lg-end h1">
       <div class="btn-group">
-        <button class="btn btn-default" type="button" (click)="modificarTransportista()">Modificar</button>
-        <button class="btn btn-default" type="button" (click)="eliminarTransportista()">Eliminar</button>
+        <button class="btn btn-default ms-2" type="button" (click)="modificarTransportista()">Modificar</button>
+        <button class="btn btn-default ms-2" type="button" (click)="eliminarTransportista()">Eliminar</button>
         <button type="button" class="btn btn-primary ms-2" (click)="agregarTransportista()">
           Agregar
         </button>
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <label class="control-label" for="cuentaImmex">Señale si se encuentra suspendida en el Padrón de Importadores o en
-        el Padón de Importadores de Sectores Especificos o Padrón de Exporadores Sextorial.*:</label>
-    </div>
-    <div class="col-md-2">
-      <input class="form-check-input me-3" type="radio" value="a" id="cuentaImmex_si">
-      <label class="control-label" for="cuentaImmex_si">Sí</label>
-    </div>
-    <div class="col-md-2">
-      <input class="form-check-input me-3" type="radio" value="aa" id="cuentaImmex_no">
-      <label class="control-label" for="cuentaImmex_no">No</label>
     </div>
   </div>
 </div>
@@ -40,4 +26,8 @@
   <lib-notificaciones [notificacionInput]="nuevaNotificacion">
   </lib-notificaciones>
 </section>
+}
+@if(registrarTrasportistaModal){
+<app-registro-trasportista (cerrar)="registrarTrasportistaModal = false">
+</app-registro-trasportista>
 }

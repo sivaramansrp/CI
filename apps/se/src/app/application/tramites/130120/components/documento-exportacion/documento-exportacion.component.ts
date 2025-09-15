@@ -132,8 +132,8 @@ export class DocumentoExportacionComponent implements OnInit, OnDestroy {
       descripcionExportacion: [this.datosState.datosExporta.descripcionExportacion, [Validators.required, Validators.maxLength(4000)]],
       codigo_arancelario: [this.datosState.datosExporta.codigo_arancelario, Validators.required],
       cantidad_umt: [this.datosState.datosExporta.cantidad_umt, Validators.required],
-      valor_usd: [this.datosState.datosExporta.valor_usd, Validators.required],
-      precio_unitario_usd: [this.datosState.datosExporta.precio_unitario_usd, Validators.required],
+      valor_usd: [this.datosState.datosExporta.valor_usd, [Validators.required, Validators.pattern(/^(?:\d{1,14}|\d{1,14}\.\d{1,2})$/)]],
+      precio_unitario_usd: [this.datosState.datosExporta.precio_unitario_usd, [Validators.required, Validators.pattern(/^(?:\d{1,14}|\d{1,14}\.\d{1,2})$/)]],
     });
   }
 

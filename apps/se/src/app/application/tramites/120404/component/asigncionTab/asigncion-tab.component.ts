@@ -4,10 +4,10 @@
  * incluyendo la inicialización, la obtención de datos y la gestión de los controles del formulario.
  * @module AsignciontabComponent
  */
-
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl ,ValidationErrors} from '@angular/forms';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite120404State, Tramite120404Store } from '../../estados/store/tramite120404.store';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -17,9 +17,6 @@ import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/
 import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src';
 import { SolicitantetabComponent } from '../solicitantetab/solicitantetab.component';
 import { Tramite120404Query } from '../../estados/queries/tramite120404.query';
-
-
-
 /**
  * Componente para la gestión del formulario de asignación.
  * @selector app-asignciontab
@@ -36,6 +33,17 @@ import { Tramite120404Query } from '../../estados/queries/tramite120404.query';
   styleUrls: ['./asigncion-tab.component.scss'],
 })
 export class AsignciontabComponent implements OnInit, OnDestroy {
+
+    /**
+     * Emisor de eventos para notificaciones de intentos de búsqueda
+     */
+  @Output() buscarIntento = new EventEmitter<{submitted: boolean, invalid: boolean}>();
+
+  /**
+   * Indicador para rastrear si el formulario ha sido enviado
+   */
+  submitted = false;
+
   /**
    * Sujeto para manejar la destrucción del componente.
    */
@@ -117,15 +125,48 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Validador personalizado para comprobar si el valor es un número válido
+   * @param control - El control de formulario a validar
+   * @returns ValidationErrors o null
+   */
+  private static numeroValidoValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) {
+      return null; // No validar valores vacíos, dejar que el validador 'required' lo maneje
+    }
+    
+    const VALUE = control.value.toString().trim();
+    const ISVALIDNUMBER = /^\d+$/.test(VALUE); // Solo permite dígitos
+
+    if (!ISVALIDNUMBER) {
+      return { 
+        numeroInvalido: { 
+          valor: VALUE 
+        } 
+      };
+    }
+    
+    return null;
+  }
+
+  /**
    * Inicializa el formulario de asignación.
    */
   initForm(): void {
-     this.obtenerEstadoSolicitud();
-      this.asignacionForm = this.fb.group({
+    this.obtenerEstadoSolicitud();
+    this.asignacionForm = this.fb.group({
       asignacionRadio: [this.solicitudState?.asignacionRadio || ''],
       asignacionsolitud: [this.solicitudState?.asignacionsolitud || '', Validators.required],
-      numTramite: [this.solicitudState?.numTramite || '', [Validators.required, Validators.maxLength(30)]],
+      numTramite: [
+        this.solicitudState?.numTramite || '', 
+        [
+          Validators.required, 
+          Validators.maxLength(30),
+          AsignciontabComponent.numeroValidoValidator
+        ]
+      ],
     });
+    
+  this.asignacionForm.updateValueAndValidity();
   }
   
 /**
@@ -168,6 +209,27 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Obtiene el mensaje de error para el campo numTramite
+   * @returns cadena con el mensaje de error correspondiente
+   */
+  getNumTramiteErrorMessage(): string {
+    const CONTROL = this.asignacionForm.get('numTramite');
+    if (CONTROL?.errors && CONTROL.touched) {
+      if (CONTROL.errors['required']) {
+        return 'Este campo es obligatorio';
+      }
+      if (CONTROL.errors['numeroInvalido']) {
+        const VALOR = CONTROL.errors['numeroInvalido'].valor;
+        return `El valor (${VALOR}) debe ser un número válido`;
+      }
+      if (CONTROL.errors['maxlength']) {
+        return 'El número no puede exceder 30 caracteres';
+      }
+    }
+    return '';
+  }
+
+  /**
    * Carga los datos del combo de unidad de medida.
    */
   loadComboUnidadMedida(): void {
@@ -187,6 +249,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
       this.asignacionForm.disable();
     } else { 
       this.asignacionForm.enable();
+ this.asignacionForm.updateValueAndValidity();
     } 
 }
   /**
@@ -195,6 +258,10 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
     this.tramite120404Store.establecerDatos({ [campo]: VALOR });
+     const CONTROL = form.get(campo);
+    if (CONTROL) {
+      CONTROL.updateValueAndValidity();
+    }
   }
 
   /**
@@ -205,12 +272,20 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   buscar(): void {
- if (this.asignacionForm.valid) {
-    this.buscarDatos = true;
-  } else {
-    this.asignacionForm.markAllAsTouched();
-    this.buscarDatos = false;
-  }
+    this.submitted = true;
+    this.asignacionForm.updateValueAndValidity();
+    const FORM = this.asignacionForm;
+    this.buscarIntento.emit({
+      submitted: this.submitted,
+      invalid: FORM.invalid
+    });
+
+    if (FORM.valid) {
+      this.buscarDatos = true;
+    } else {
+      this.asignacionForm.markAllAsTouched();
+      this.buscarDatos = false;
+    }
   }
 
   /**

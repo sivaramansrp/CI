@@ -16,7 +16,7 @@ export interface CapacidadInstalada {
 
 export const CAPACIDAD_INSTALADA = [
   {
-    encabezado: 'Planta',
+    encabezado: '#Planta',
     clave: (ele: CapacidadInstalada): string => ele.PLANTA,
     orden: 1,
   },

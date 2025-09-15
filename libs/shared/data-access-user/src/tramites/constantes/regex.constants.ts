@@ -1,7 +1,7 @@
 export const REG_X = {
   SOLO_NUMEROS: /^[0-9]+$/, // Permite solo números enteros
   DECIMALES_DOS_LUGARES: /^[0-9]+(\.[0-9]{1,2})?$/, // Permite números con hasta dos decimales
-  REGEX_FRACCION_ARANCELARIA: /^\d{4}\.\d{2}\.\d{2}$/, //Expresión regular para validar una fracción arancelaria con el formato ####.##.##.
+  REGEX_FRACCION_ARANCELARIA: /^\d+$/, //Expresión regular para validar una fracción arancelaria con el formato ####.##.##.
   ENTERO_12_DECIMAL_2: /^\d{1,12}(\.\d{0,2})?$/, // Hasta 12 enteros y 2 decimales
   SOLO_NUMEROS_Y_PUNTO: /^[0-9.]+$/, // Permite solo números y puntos
   NUMERO_DECIMAL_OPCIONAL: /^[0-9]+(\.[0-9]*)?$/, // Permite números enteros o decimales (decimales opcionales, sin límite de decimales)
@@ -121,6 +121,9 @@ export const REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL = /^(?!\s)(.*\S)?$/;
  */
 export const REGEX_SOLO_DIGITOS = /^\d+$/;
 
+
+export const REGEX_CANTIDAD_15_4 = /^\d{1,15}(\.\d{1,4})?$/;
+
 /**
  * Expresión regular para validar un número decimal con hasta 15 dígitos enteros y 4 decimales.
  *
@@ -131,6 +134,17 @@ export const REGEX_SOLO_DIGITOS = /^\d+$/;
  * - $: Aserción para el final de la cadena.
  */
 export const REGEX_PATRON_DECIMAL_15_4 = /^\d{0,15}(\.\d{1,4})?$/;
+
+/**
+ * Expresión regular para validar un número decimal con hasta 15 dígitos enteros y 4 decimales.
+ *
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - \d{0,15}: Coincide con entre 0 y 16 dígitos enteros.
+ * - (\.\d{1,4})?: Coincide con un punto seguido de entre 1 y 4 dígitos decimales, opcional.
+ * - $: Aserción para el final de la cadena.
+ */
+export const REGEX_PATRON_DECIMAL_16_4 = /^\d{0,16}(\.\d{1,4})?$/;
 
 /**
  * Expresión regular que valida un patrón alfanumérico.
@@ -355,6 +369,10 @@ export const REGEX_TELEFONO_DIGITOS = /^\d{10}$/;
  * Expresión regular para validar un número de teléfono de 10 dígitos.
  */
 export const TELEFONO_DIGITOS = /^[6789]\d{8}$/;
+/**
+ * Expresión regular para validar números enteros y decimales.
+ */
+export const REGEX_NUMERO_ENTERO = /^\d*\.?\d*$/;
 
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
@@ -482,14 +500,14 @@ export const REGEX_TODOS_CEROS = /^0+$/;
 
 
 /**
- * Expresión regular para validar números enteros con hasta 9 dígitos y opcionalmente dos decimales.
+ * Expresión regular para validar números enteros con hasta 11 dígitos y opcionalmente dos decimales.
  */
-export const REGEX_ONCE_ENTEROS_DOS_DECIMALES = /^(\d{1,9})(\.\d{1,2})?$/;
+export const REGEX_ONCE_ENTEROS_DOS_DECIMALES = /^(\d{1,11})(\.\d{1,2})?$/;
 
 /**
- * Expresión regular para validar números enteros con hasta 9 dígitos y opcionalmente tres decimales.
+ * Expresión regular para validar números enteros con hasta 11 dígitos y opcionalmente tres decimales.
  */
-export const REGEX_ONCE_ENTEROS_TRES_DECIMALES = /^(\d{1,9})(\.\d{1,3})?$/;
+export const REGEX_ONCE_ENTEROS_TRES_DECIMALES = /^(\d{1,11})(\.\d{1,3})?$/;
 /**
  * Expresión regular para validar números con hasta 15 dígitos enteros y 3 decimales.
  *
@@ -505,33 +523,45 @@ export const REGEX_ONCE_ENTEROS_TRES_DECIMALES = /^(\d{1,9})(\.\d{1,3})?$/;
  */
 
 export const REGEX_NUMERO_15_ENTEROS_3_DECIMALES = /^\d{1,15}(\.\d{1,3})?$/;
-/**
- * Expresión regular para validar un código postal de 5 dígitos.
- *
- * Esta expresión regular asegura que la entrada contenga exactamente 5 dígitos numéricos.
- *
- * Ejemplos válidos:
- * - "12345"
- *
- * Ejemplos no válidos:
- * - "1234" (menos de 5 dígitos)
- * - "123456" (más de 5 dígitos)
- * - "12a45" (contiene caracteres no numéricos)
- */
-export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
 
 /**
- * Expresión regular para validar un número de teléfono de 10 dígitos.
+ * Expresión regular para validar números con hasta 15 dígitos enteros y opcionalmente hasta 4 decimales.
+ *
+ * Formato permitido:
+ * - Hasta 15 dígitos antes del punto decimal.
+ * - Un punto decimal opcional seguido de hasta 4 dígitos decimales.
+ *
+ * Ejemplos válidos:
+ * - "123"
+ * - "123456789012345"
+ * - "123.4567"
+ * - "1.2"
+ *
+ * Ejemplos no válidos:
+ * - "1234567890123456" (más de 15 enteros)
+ * - "123.45678" (más de 4 decimales)
+ * - ".1234" (falta de dígitos enteros)
+ */
+export const REGEX_NUMERO_15_ENTEROS_4_DECIMALES = /^\d{1,15}(\.\d{1,4})?$/;
+
+
+/**
+ * Expresión regular para validar números con hasta 15 dígitos enteros y opcionalmente hasta 4 decimales.
  * 
- * Esta expresión regular asegura que la entrada contenga exactamente 10 dígitos numéricos.
+ * Formato permitido:
+ * - Hasta 15 dígitos antes del punto decimal.
+ * - Un punto decimal opcional seguido de hasta 4 dígitos decimales.
  * 
  * Ejemplos válidos:
- * - "1234567890"
+ * - 123
+ * - 123456789012345
+ * - 123.4567
+ * - 1.2
  * 
  * Ejemplos no válidos:
- * - "123456789" (menos de 10 dígitos)
- * - "12345678901" (más de 10 dígitos)
- * - "12345678a0" (contiene caracteres no numéricos)
+ * - 1234567890123456 (más de 15 enteros)
+ * - 123.45678 (más de 4 decimales)
+ * - .1234 (falta de dígitos enteros)
  */
 export const REGEX_VALID_UMT = /^\d{1,12}(\.\d{1,5})?$/
 
@@ -809,3 +839,170 @@ export const REGEX_NO_SOLO_NUMEROS = /^(?=.*\D).*$/;
  * Debe contener entre 8 y 20 caracteres alfanuméricos (letras y números).
  */
 export const CERTIFICATE_OF_ORIGIN_NUMBER = /^[A-Za-z0-9]{8,20}$/;
+
+/**
+ * Expresión regular para validar importes numéricos de hasta 16 dígitos.
+ * 
+ * Esta constante se utiliza para asegurar que el valor ingresado sea un número entero
+ * positivo, sin decimales ni separadores, y que contenga entre 1 y 16 dígitos.
+ * 
+ * Ejemplos válidos: "1", "1234567890123456"
+ * Ejemplos inválidos: "123.45", "abc", "12345678901234567"
+ */
+export const IMPORTE = /^\d{1,16}$/;
+/**
+ * Expresión regular para validar números decimales con hasta 13 dígitos enteros y exactamente 2 decimales.
+ *
+ * Ejemplos válidos:
+ * - "1234567890123.12"
+ * - "1.23"
+ *
+ * Ejemplos no válidos:
+ * - "12345678901234.12" (más de 13 dígitos enteros)
+ * - "123.1" (menos de 2 decimales)
+ * - "123" (sin decimales)
+ */
+export const REGEX_DECIMAL_16_TOTAL = /^\d{1,13}\.\d{2}$/;
+ 
+
+/**
+ * Expresión regular para validar números con hasta 6 dígitos enteros y opcionalmente hasta 6 decimales.
+ *
+ * Ejemplos válidos:
+ * - "123456"
+ * - "123.456789"
+ * - "1.1"
+ *
+ * Ejemplos no válidos:
+ * - "1234567" (más de 6 dígitos enteros)
+ * - "123.1234567" (más de 6 decimales)
+ * - "abc" (no es un número)
+ */
+export const MAX_DIGITS_VALIDATOR = /^(\d{1,6})(\.\d{1,6})?$/;
+
+/**
+ * Expresión regular para validar direcciones de correo electrónico.
+ * Permite letras minúsculas, números y los caracteres . _ % + - antes del @,
+ * seguido de un dominio y una extensión de 2 a 4 letras.
+ * Ejemplo válido: usuario@dominio.com
+ */
+export const EMAIL = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
+
+/**
+ * Expresión regular para validar direcciones de páginas web (URL).
+ * Permite URLs con o sin http(s), dominios válidos y rutas opcionales.
+ * Ejemplos válidos:
+ * - https://www.ejemplo.com
+ * - http://ejemplo.com
+ * - www.ejemplo.com
+ * - ejemplo.com/ruta
+ */
+export const WEBPAGE = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+/**
+ * Expresión regular para validar números con hasta 6 dígitos enteros y opcionalmente hasta 6 decimales.
+  */
+export const REGEX_SEIS_SIGNIFICATIVOS = /^(?:\d{1,6})(?:\.\d{1,6})?$|^\.\d{1,6}$/;
+
+/**
+ * Expresión regular para validar números que pueden ser enteros o decimales.
+ * Permite dígitos del 0 al 9 y un punto decimal opcional.
+ * Ejemplos válidos: "123", "123.45", "0.678"
+ * Ejemplos no válidos: "123.", ".45", "abc"
+ */
+export const REGEX_NUMERIC_ONLY = /^[0-9]*\.?[0-9]*$/;/*
+  * Expresión regular para validar un número de 8 dígitos.
+  * Esta expresión asegura que la cadena contenga exactamente 8 dígitos numéricos (0-9).
+  * Ejemplos válidos: "12345678", "00000001"
+  *   
+  * Ejemplos no válidos: "1234567" (menos de 8 dígitos), "123456789" (más de 8 dígitos), "1234abcd" (contiene letras)
+  */
+ export const EIGHT_DIGIT_NUMBER_REGEX = /^\d{8}$/;
+
+/**
+ * Expresión regular para validar un código postal compuesto por 1 a 12 dígitos.
+ * 
+ * Solo permite cadenas numéricas con una longitud entre 1 y 12 caracteres.
+ * 
+ * Ejemplos válidos:
+ * - "12345"
+ * - "987654321012"
+ * 
+ * Ejemplos no válidos:
+ * - "1234567890123" (más de 12 dígitos)
+ * - "12A45" (contiene caracteres no numéricos)
+ */
+export const CODIGO_POSTAL = /^\d{1,12}$/
+
+/**
+ * Expresión regular que permite únicamente números del 0 al 9.
+ *
+ * - Acepta cualquier cantidad de dígitos (incluido vacío).
+ * - No permite letras, espacios ni caracteres especiales.
+ *
+ * @constant
+ * @type {RegExp}
+ *
+ * @example
+ * SOLO_REGEX_NUMEROS.test("12345"); // true
+ * SOLO_REGEX_NUMEROS.test("abc");   // false
+ * SOLO_REGEX_NUMEROS.test("");      // true (cadena vacía)
+ */
+export const SOLO_REGEX_NUMEROS = /^[0-9]*$/;
+
+/**
+ * Expresión regular para validar un código postal de 5 dígitos.
+ * 
+ * Esta expresión regular asegura que la entrada contenga exactamente 5 dígitos numéricos.
+ * Es útil para validar códigos postales en formato estándar de México.
+ * 
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - \d{5}: Coincide con exactamente 5 dígitos.
+ * - $: Aserción para el final de la cadena.
+ * 
+ * Ejemplos válidos:
+ * - "12345"
+ * - "01000"
+ * - "99999"
+ * 
+ * Ejemplos no válidos:
+ * - "1234" (menos de 5 dígitos)
+ * - "123456" (más de 5 dígitos)
+ * - "12A45" (contiene caracteres no numéricos)
+ * - "12 345" (contiene espacios)
+ */
+export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
+
+/**
+ * Expresión regular para validar nombres de localidades.
+ * Permite letras (incluyendo acentuadas), números y espacios.
+ * No permite caracteres especiales.
+ */
+export const REGEX_LOCALIDAD = /^[a-zA-ZÀ-ÿ0-9\\s]+$/;
+
+/**
+ * Expresión regular para validar números decimales con hasta 17 dígitos enteros y hasta 4 decimales opcionales.
+ * 
+ * Esta expresión regular permite validar números que pueden contener:
+ * - Entre 1 y 17 dígitos enteros
+ * - Opcionalmente, un punto decimal seguido de entre 1 y 4 dígitos decimales
+ * 
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - \d{1,17}: Coincide con entre 1 y 17 dígitos enteros.
+ * - (\.\d{1,4})?: Coincide con un punto seguido de entre 1 y 4 dígitos decimales, opcional.
+ * - $: Aserción para el final de la cadena.
+ * 
+ * Ejemplos válidos:
+ * - "12345678901234567"
+ * - "123.4567"
+ * - "1.1"
+ * - "999999999999999999"
+ * 
+ * Ejemplos no válidos:
+ * - "123456789012345678" (más de 17 dígitos enteros)
+ * - "123.45678" (más de 4 decimales)
+ * - "abc" (no es un número)
+ * - ".1234" (falta de dígitos enteros)
+ */
+export const DECIMAL_22_4_REGEX = /^\d{1,17}(\.\d{1,4})?$/;

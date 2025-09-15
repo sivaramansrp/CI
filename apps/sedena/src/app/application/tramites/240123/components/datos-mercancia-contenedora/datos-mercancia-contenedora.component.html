@@ -50,7 +50,8 @@
 
         <div class="col-md-8">
           <label for="descFraccion" class="form-label">
-            Descripción de la fracción arancelaria*
+            Descripción de la fracción arancelaria*:
+            <span class="bi bi-question-circle-fill fs-4 m-1" title="Ingrese una fracción" ata-bs-toggle="tooltip"></span>
           </label>
           <textarea
             id="descFraccion"
@@ -94,7 +95,7 @@
         </div>
 
         <div class="col-md-4">
-          <label for="umt" class="form-label"> UMT* </label>
+          <label for="umt" class="form-label"> UMT*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Unidad de medida de la tarifa" ata-bs-toggle="tooltip"></span> </label>
           <input
             id="umt"
             type="text"
@@ -138,7 +139,7 @@
 
       <div class="row mb-3">
         <div class="col-md-4">
-          <label for="valorComercial" class="form-label"> Valor comercial* </label>
+          <label for="valorComercial" class="form-label"> *Valor comercial: </label>
           <input
             id="valorComercial"
             type="number"
@@ -183,7 +184,7 @@
               class="btn btn-primary ms-2"
               (click)="guardar()"
             >
-              Guardar
+              Agregar
             </button>
           </div>
         </div>

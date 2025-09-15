@@ -5,21 +5,27 @@
     </div>
     <div class="row mt-5 radios">
       <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado" [isRequired]="true"
-        [layout]="'horizontal'" formControlName="tipoOperacion"
+        [layout]="'horizontal'" formControlName="tipoOperacion" [disabled]="soloLectura"
         (change)="setValoresStore(validacionForm,'tipoOperacion', 'setTipoOperacion')"></app-input-radio>
     </div>
     <div class="row mt-5">
       <div class="col-md-6">
         <label>Justificación*:</label>
-        <textarea cols="80" rows="5" formControlName="justificacion" [disabled]="true"
+        <textarea cols="80" rows="5" formControlName="justificacion" [disabled]="soloLectura" maxlength="2000"
           (change)="setValoresStore(validacionForm,'justificacion', 'setJustificacion')"></textarea>
+          @if (validacionForm.get('justificacion')?.hasError('required') &&
+            validacionForm.get('justificacion')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            } 
       </div>
     </div>
     <ng-titulo titulo="Datos del establecimiento" />
     <div>
       <div class="text-end" *ngIf="esTipoOperacionSeleccionado">
         <button type="button" class="btn btn-primary" title="Selecciona para habilitar los campos del establecimiento"
-          data-bs-toggle="modal" data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()"
+          data-bs-toggle="modal" data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()" [disabled]="soloLectura"
           > Seleccionar establecimiento </button>
       </div> @if (nuevaNotificacion) { <section>
         <lib-notificaciones [notificacionInput]="nuevaNotificacion"
@@ -27,16 +33,33 @@
       </section> } <div class="row mt-5">
         <div class="col-md-8">
           <label for="razonSocial" class="form-label">Denominación o razón social*:</label>
-          <input type="text" class="form-control" size="68" formControlName="razonSocial" 
+          <input type="text" class="form-control" size="68" maxlength="100" formControlName="razonSocial" 
             (change)="setValoresStore(validacionForm,'razonSocial', 'setRazonSocial')" />
+            @if (validacionForm.get('razonSocial')?.hasError('required') &&
+            validacionForm.get('razonSocial')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            }
         </div>
         <div class="col-md-4">
-          <label for="correoElectronico" class="form-label">Correo electrónico: <span class="bi bi-question-circle-fill"
+          <label for="correoElectronico" class="form-label">Correo electrónico*: <span class="bi bi-question-circle-fill"
               title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
           </label>
           <input type="text" class="form-control" maxlength="320" formControlName="correoElectronico"
             
             (change)="setValoresStore(validacionForm,'correoElectronico', 'setCorreoElectronico')" />
+            @if (validacionForm.get('correoElectronico')?.hasError('required') &&
+            validacionForm.get('correoElectronico')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            } @else if (validacionForm.get('correoElectronico')?.hasError('pattern') &&
+            validacionForm.get('correoElectronico')?.touched) {
+            <div class="text-danger">
+              <small>Por favor, escribe una dirección de correo válida</small>
+            </div>
+            }
         </div>
       </div>
     </div>
@@ -49,20 +72,38 @@
         <input type="text" name="codigoPostal" class="form-control" maxlength="12" 
           formControlName="codigoPostal"
           (change)="setValoresStore(validacionMercanciaForm,'codigoPostal', 'setCodigoPostal')" />
+          @if (validacionMercanciaForm.get('codigoPostal')?.hasError('required') &&
+            validacionMercanciaForm.get('codigoPostal')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            } @else if (validacionMercanciaForm.get('codigoPostal')?.hasError('pattern') &&
+            validacionMercanciaForm.get('codigoPostal')?.touched) {
+            <div class="text-danger">
+              <small>Por favor, escribe un número entero válido</small>
+            </div>
+            }
       </div>
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Estado'" [required]="true"
+        <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Estado'" [required]="true" [isDisabled]="soloLectura"
            formControlName="estado"
           (change)="setValoresStore(validacionMercanciaForm,'estado', 'setEstado')"></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <label for="descripcionMunicipio" class="form-label">Municipio o alcaldía*:</label>
         <input type="text" class="form-control" maxlength="120" formControlName="municipio" 
-          (change)="setValoresStore(validacionMercanciaForm,'municipio', 'setMunicipio')" />
+          (change)="setValoresStore(validacionMercanciaForm,'municipio', 'setMunicipio')" 
+          />
+          @if (validacionMercanciaForm.get('municipio')?.hasError('required') &&
+            validacionMercanciaForm.get('municipio')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            }
       </div>
     </div>
     <div class="row mt-5">
-      <div class="alert alert-warning">
+      <div class="alert alert-warning text-center">
         <strong>¡Precaución!</strong> Debes capturar localidad y colonia
       </div>
     </div>
@@ -80,24 +121,44 @@
     </div>
     <div class="row">
       <div class="col-md-8">
-        <label for="calle" class="form-label">Calle*: <span class="bi bi-question-circle-fill"
-            title="Domicilio, calle, n&uacute;mero interior, n&uacute;mero exterior, lote"
-            data-bs-toggle="tooltip"></span>
+        <label for="calle" class="form-label">Calle*:
+          <span
+            class="bi bi-question-circle-fill"
+            tooltip="Domicilio, calle, número interior, numero exterior, lote"
+            placement="top">
+          </span>
         </label>
-        <input type="text" class="form-control" formControlName="calle" maxlength="90" 
+        <input type="text" class="form-control" formControlName="calle" maxlength="100" 
           (change)="setValoresStore(validacionMercanciaForm,'calle', 'setCalle')" />
+          @if (validacionMercanciaForm.get('calle')?.hasError('required') &&
+            validacionMercanciaForm.get('calle')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            }
       </div>
     </div>
     <div class="row">
       <div class="col-md-1">
         <label for="lada" class="form-label">Lada:</label>
-        <input type="text" class="form-control" formControlName="lada" 
+        <input type="text" name="lada" class="form-control" formControlName="lada" maxlength="5"
           (change)="setValoresStore(validacionMercanciaForm,'lada', 'setLada')" />
       </div>
       <div class="col-md-3">
         <label for="telefono" class="form-label">Teléfono*:</label>
-        <input type="text" class="form-control" formControlName="telefono" required="required" 
+        <input type="text" class="form-control" formControlName="telefono" required="required" maxlength="24"
           (change)="setValoresStore(validacionMercanciaForm,'telefono', 'setTelefono')" />
+          @if (validacionMercanciaForm.get('telefono')?.hasError('required') &&
+            validacionMercanciaForm.get('telefono')?.touched) {
+            <div class="text-danger">
+              <small>Este campo es obligatorio</small>
+            </div>
+            } @else if (validacionMercanciaForm.get('telefono')?.hasError('pattern') &&
+            validacionMercanciaForm.get('telefono')?.touched) {
+            <div class="text-danger">
+              <small>Por favor, escribe un número entero válido</small>
+            </div>
+            }
       </div>
     </div>
   </ng-container>
@@ -105,7 +166,7 @@
     <div class="col-md-12 mt-5">
       <label class="form-label mb-5" for="">S.C.I.A.N.*:</label>
       <div>
-        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezados"
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezados" [disableSeleccionTablaCheckBox]="soloLectura"
           
           (listaDeFilaSeleccionada)="setTablaSeleccionFabricante($event)" [datos]="certificadoDisponsiblesTablaDatos"
           (click)="verificarSeleccionCheckbox($event)"
@@ -115,9 +176,9 @@
     </div>
     <div class="row">
       <div class="col-md-12 text-end">
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminarScian"
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminarScian" [disabled]="soloLectura"
           (click)="eliminarMercanciaGrid()" > Eliminar </button>
-        <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalClaveScian"
+        <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalClaveScian" [disabled]="soloLectura"
           (click)="agregarMercanciaGrid()" > Agregar </button>
       </div>
     </div>
@@ -138,11 +199,11 @@
           <div class="modal-body">
             <div class="row">
               <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Clave S.C.I.A.N.'" [required]="true"
-                 formControlName="claveScian"
+                 formControlName="claveScian" [isDisabled]="soloLectura"
                 (change)="setValoresStore(validacionScionForm,'claveScian', 'setClaveScian')"></app-catalogo-select>
               <div class="row">
                 <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Descripción del S.C.I.A.N.'"
-                  [required]="false"  formControlName="descripcionScian"
+                  [required]="false"  formControlName="descripcionScian" [isDisabled]="soloLectura"
                   (change)="setValoresStore(validacionScionForm,'descripcionScian', 'setDescripcionScian')"></app-catalogo-select>
               </div>
             </div>
@@ -151,11 +212,11 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="pull-right">
-                  <button type="button" name="limpiarSCIAN" class="btn btn-danger" > Limpiar
+                  <button type="button" name="limpiarSCIAN" [disabled]="soloLectura" class="btn btn-danger" > Limpiar
                   </button>
-                  <button type="button" name="cancelar" class="btn btn-default ms-2" data-bs-dismiss="modal" #closeModal
+                  <button type="button" name="cancelar" class="btn btn-default ms-2" [disabled]="soloLectura" data-bs-dismiss="modal" #closeModal
                     > Cancelar </button>
-                  <button type="button" name="agregar" class="btn btn-primary ms-2" > Agregar
+                  <button type="button" name="agregar" class="btn btn-primary ms-2" [disabled]="soloLectura"> Agregar
                   </button>
                 </div>
               </div>
@@ -170,7 +231,7 @@
       <div class="col-md-4 mt-4">
         <div class="form-check mt-3">
           <lib-input-check [id]="'avisoDeFuncionamiento'" [label]="'Aviso de funcionamiento'" [required]="true"
-             formControlName="avisoDeFuncionamiento"
+             formControlName="avisoDeFuncionamiento" [isDisabled]="soloLectura"
             (change)="establecerAvisoDeFuncionamiento($event)"></lib-input-check>
         </div>
       </div>
@@ -189,12 +250,12 @@
     <div class="row mt-5">
       <div class="col-md-8">
         <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Régimen al que se destinarán la mercancías'"
-          [required]="true" [tooltipQuestionCircle]="true"  formControlName="regimen"
+          [required]="true" [tooltipQuestionCircle]="true"  formControlName="regimen" [isDisabled]="soloLectura"
           (change)="setValoresStore(validacionAduanaMercanciaForm,'regimen', 'setRegimen')"></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Aduana'" [required]="true"
-           formControlName="aduana"
+           formControlName="aduana" [isDisabled]="soloLectura"
           (change)="setValoresStore(validacionAduanaMercanciaForm,'aduana', 'setAduana')"></app-catalogo-select>
       </div>
     </div>
@@ -218,12 +279,12 @@
     <div class="col-md-12 mt-4">
       <label class="form-label mb-5" for="">mercancías*:</label>
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="mercanciasDatos"
-        [datos]="mercanciasConfiguracionTabla" 
+        [datos]="mercanciasConfiguracionTabla" [disableSeleccionTablaCheckBox]="soloLectura"
         (change)="setValoresStore(validacionDatosMercanciaForm,'mercancia', 'setMercancia')"></app-tabla-dinamica>
     </div>
     <div class="row mt-5">
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary ms-2 mb-5" data-bs-toggle="modal"
+        <button type="button" class="btn btn-primary ms-2 mb-5" data-bs-toggle="modal" [disabled]="soloLectura"
           data-bs-target="#modalAgregarMercancia"  (click)="agregarMercanciaGrid()"> Modificar
         </button>
       </div>
@@ -239,7 +300,7 @@
             <div class="row mt-5">
               <div class="col-md-8">
                 <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Clasificación del producto'"
-                  [required]="true"  formControlName="clasificacionProducto"
+                  [required]="true"  formControlName="clasificacionProducto" [isDisabled]="soloLectura"
                   (change)="setValoresStore(validacionDatosMercanciaForm,'clasificacionProducto', 'setClasificacionProducto')"></app-catalogo-select>
               </div>
             </div>
@@ -247,7 +308,7 @@
               <div class="col-md-8">
                 <app-catalogo-select [catalogo]="estadoCatalogo.catalogos"
                   [label]="'Especificar clasificación del producto'" [required]="true" 
-                  formControlName="especificarClasificacionProducto"
+                  formControlName="especificarClasificacionProducto" [isDisabled]="soloLectura"
                   (change)="setValoresStore(validacionDatosMercanciaForm,'especificarClasificacionProducto', 'setEspecificarClasificacionProducto')"></app-catalogo-select>
               </div>
             </div>
@@ -426,18 +487,24 @@
     <label class="form-label" for="">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en
       hacerlos públicos?*:</label>
     <app-input-radio [radioOptions]="opcionesRadioHacerlos" [selectedValue]="hercelosSeleccionados"
-      [layout]="'horizontal'" formControlName="hacerlosPublicos" 
+      [layout]="'horizontal'" formControlName="hacerlosPublicos" [disabled]="soloLectura"
       (change)="setValoresStore(datosDelEstablecimientoForm,'hacerlosPublicos', 'setHacerlosPublicos')"></app-input-radio>
   </div>
   <ng-titulo titulo="Representante legal" />
   <div class="row mt-5">
     <div class="col-md-4 mt-2">
       <label class="form-label" for="rfc">RFC*:</label>
-      <input class="form-control" type="text" formControlName="rfc" 
+      <input class="form-control" type="text" maxlength="13" formControlName="rfc" 
         (change)="setValoresStore(datosDelEstablecimientoForm,'rfc', 'setRFC')" />
+        @if (datosDelEstablecimientoForm.get('rfc')?.hasError('required') &&
+        datosDelEstablecimientoForm.get('rfc')?.touched) {
+        <div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
+        }
     </div>
     <div class="col-md-2 mt-5">
-      <button type="button" class="btn btn-primary" >Buscar</button>
+      <button type="button" class="btn btn-primary" [disabled]="soloLectura" (click)="buscarRFC()">Buscar</button>
     </div>
   </div>
   <div class="row mt-5">
@@ -455,3 +522,11 @@
     </div>
   </div>
 </form>
+
+@if (mostrarRfcAlerta) {
+<section>
+  <lib-notificaciones 
+  [notificacionInput]="nuevaRfcNotificacion" >
+  </lib-notificaciones>
+</section>
+}

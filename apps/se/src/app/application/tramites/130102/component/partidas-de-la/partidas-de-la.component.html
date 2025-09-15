@@ -30,7 +30,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="form-label" for="fraccionArancelariaTIGIE">Fracción Arancelaria TIGIE*:</label>
+                        <label class="form-label" for="fraccionArancelariaTIGIE">Fracción arancelaria TIGIE*:</label>
                         <input class="form-control" type="text" id="fraccionArancelariaTIGIE"
                             formControlName="fraccionArancelariaTIGIE" aria-labelledby="fraccionArancelariaTIGIE" (change)="setValoresStore(form,'fraccionArancelariaTIGIE', 'setFraccionArancelariaTIGIE')">
                             @if (esInvalido('fraccionArancelariaTIGIE')) {
@@ -51,7 +51,7 @@
                 </div>
                 <div class="col-md-4">
                     <app-catalogo-select [catalogo]="fraccionArancelariaTIGIE"  formControlName="fraccionArancelariaTIGIE_TIGIE"
-                    [required]="true" (change)="fraccionArancelariaTIGIESelection(); setValoresStore(form,'fraccionArancelariaTIGIE_TIGIE', 'setFraccionArancelariaTIGIE_TIGIE')"   [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
+                    [required]="true" (change)=" setValoresStore(form,'fraccionArancelariaTIGIE_TIGIE', 'setFraccionArancelariaTIGIE_TIGIE')"   [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                     @if (esInvalido('fraccionArancelariaTIGIE')) {
                         <div class="text-danger">
                           @if (form.controls['fraccionArancelariaTIGIE_TIGIE'].errors?.['required']) {
@@ -130,12 +130,12 @@
     <div class="row mt-5">
         <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES_PARA_PARTIDAS"></ng-alert>
         <div>
-            <h6>Mercancias</h6>
+            <h6>Partidas</h6>
         <app-tabla-dinamica
           [configuracionTabla]="configuracionTabla"
           [datos]="datosSocios"
           [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
           (listaDeFilaSeleccionada)="onPartidasSeleccion($event)"
         ></app-tabla-dinamica>
           
@@ -168,8 +168,8 @@
                     <div class="col-md-6 col-sm-6"></div>
                     <div class="col-md-6 col-sm-6 text-end">
                         <div class="btn-group">
-                            <button class="btn btn-primary me-2" type="button" (click)="eliminar()" [disabled]="esFormularioSoloLectura">Elimina Partida</button>
-                            <button class="btn btn-danger" type="button" (click)="abrirModalEditar()" [disabled]="esFormularioSoloLectura">Mofificar partida mercancia</button>
+                            <button class="btn btn-primary me-2" type="button" (click)="eliminar()" [disabled]="esFormularioSoloLectura">Eliminar partida</button>
+                            <button class="btn btn-danger" type="button" (click)="abrirModalEditar()" [disabled]="esFormularioSoloLectura">Modificar partida mercancia</button>
                         </div>
                     </div>
                 </div>
@@ -244,11 +244,32 @@
          (emitirCambioDeValor)="establecerCambioDeValor($event)"
         ></formas-dinamicas>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+       <div class="modal-footer custom-footer d-flex ">
+        <button type="button"  class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-primary" (click)="guardarEdicion()" >Guardar cambios</button>
       </div>
     </div>
   </div>
 </div>
- 
+
+<!-- Confirmation Modal -->
+@if(confirmacionAlerta){
+<section>
+  <lib-notificaciones
+    [notificacionInput]="seleccionarFilaNotificacion"
+    (confirmacionModal)="confirmarEliminacionSustancias($event)"
+  >
+  </lib-notificaciones>
+</section>
+}
+
+<!-- Success Modal -->
+@if(mostrarNotificacion){
+<section>
+  <lib-notificaciones
+    [notificacionInput]="notificacionEliminacionExitosa"
+    (confirmacionModal)="cerrarNotificacionEliminacion($event)"
+  >
+  </lib-notificaciones>
+</section>
+}

@@ -1,10 +1,3 @@
-import { CommonModule } from '@angular/common';
-
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-
-import { Subject, delay, map, takeUntil, tap } from 'rxjs';
-
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -16,15 +9,13 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-
-import { NicoService } from '../../servicios/nico/nico.service';
-import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
-
-import { ImmexRegistroQuery } from '../../estados/queries/tramite80203.query';
-import { ImmexRegistroStore } from '../../estados/tramites/tramite80203.store';
-
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   FRACCION_EXPORTACION,
   IMMEX_SERVICIO,
@@ -34,6 +25,15 @@ import {
   immexRegistroform,
   nicoInfo,
 } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ImmexRegistroQuery } from '../../estados/queries/tramite80203.query';
+import { ImmexRegistroStore } from '../../estados/tramites/tramite80203.store';
+import { Modal } from 'bootstrap';
+import { NicoService } from '../../servicios/nico/nico.service';
+import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 
 /**
  * @component
@@ -67,14 +67,11 @@ import {
  * @property {fraccionInfo[]} fraccionDatos - Array de datos fracción.
  * @property {nicoInfo[]} nicoDatos - Array de datos NICO.
  * @property {Catalogo[]} nico - Configuración para el select de unidad de medida.
- * @property {boolean} showFraccionExport - Estado de visibilidad de la tabla de fracción de exportación.
  * @property {boolean} showTableExport - Estado de visibilidad de la tabla de exportación.
  * @property {boolean} showTableImport - Estado de visibilidad de la tabla de importación.
  * @property {boolean} showTableFractionExp - Estado de visibilidad de la tabla de fracción de exportación.
  * @property {boolean} showTableNicoExp - Estado de visibilidad de la tabla NICO exportación.
  * @property {boolean} showTableNicoImp - Estado de visibilidad de la tabla NICO importación.
- * @property {boolean} showProductoImport - Estado de visibilidad de la sección de producto de importación.
- * @property {boolean} showCommodityImport - Estado de visibilidad de la sección de commodity de importación.
  * @property {boolean} esFormularioSoloLectura - Indica si el formulario debe mostrarse solo en modo de lectura.
  *
  * @method ngOnInit Inicializa el componente y obtiene los datos necesarios.
@@ -117,6 +114,20 @@ import {
   ],
 })
 export class Anexo1Component implements OnInit, OnDestroy {
+  /**
+   * Referencia al elemento del modal de importación de mercancía.
+   * Utilizado para mostrar u ocultar el modal mediante la API de Bootstrap.
+   */
+  @ViewChild('mercanciaImportacionModal')
+  mercanciaImportacionModal!: ElementRef;
+
+  /**
+   * Referencia al elemento del modal de exportación de mercancía.
+   * Utilizado para mostrar u ocultar el modal mediante la API de Bootstrap.
+   */
+  @ViewChild('mercanciaExportacionModal')
+  mercanciaExportacionModal!: ElementRef;
+
   /**
    * @property {FormGroup} immexRegistroform
    * @description Formulario principal del registro IMMEX.
@@ -222,13 +233,6 @@ export class Anexo1Component implements OnInit, OnDestroy {
   nico: Catalogo[] = [];
 
   /**
-   * @property {boolean} showFraccionExport
-   * @description Controla la visibilidad de la sección de fracción de exportación.
-   * Cuando es true, muestra la sección correspondiente en la interfaz.
-   */
-  showFraccionExport: boolean = false;
-
-  /**
    * @property {boolean} showTableExport
    * @description Controla la visibilidad de la tabla de exportación.
    * Cuando es true, muestra la tabla de datos de exportación.
@@ -264,20 +268,6 @@ export class Anexo1Component implements OnInit, OnDestroy {
   showTableNicoImp: boolean = false;
 
   /**
-   * @property {boolean} showProductoImport
-   * @description Controla la visibilidad de la sección de producto de importación.
-   * Cuando es true, muestra los campos relacionados con productos de importación.
-   */
-  showProductoImport: boolean = false;
-
-  /**
-   * @property {boolean} showCommodityImport
-   * @description Controla la visibilidad de la sección de commodity de importación.
-   * Cuando es true, muestra los campos relacionados con commodities de importación.
-   */
-  showCommodityImport: boolean = false;
-
-  /**
    * @private
    * @property {SeccionLibState} seccion
    * @description Estado de la sección actual obtenido del store.
@@ -294,6 +284,16 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @memberof Anexo1Component
    */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Indica si el formulario está en modo de actualización.
+   * Si es `true`, el formulario está en estado de edición/actualización de datos existentes.
+   * Si es `false`, el formulario está en modo de alta/nuevo registro.
+   *
+   * @type {boolean}
+   * @memberof Anexo1Component
+   */
+  esFormularioActualizacion: boolean = false;
 
   /**
    * @constructor
@@ -326,12 +326,12 @@ export class Anexo1Component implements OnInit, OnDestroy {
         map((seccionState) => {
           if (!seccionState.create && seccionState.procedureId === '80203') {
             this.esFormularioSoloLectura = seccionState.readonly;
+            this.esFormularioActualizacion = seccionState.update;
           }
           if (seccionState) {
             this.showTableExport = true;
             this.showTableImport = true;
             this.showTableFractionExp = true;
-            this.showCommodityImport = true;
           }
           this.inicializarEstadoFormulario();
         })
@@ -379,16 +379,17 @@ export class Anexo1Component implements OnInit, OnDestroy {
         this.immexRegitroAnexoState?.fraccionArancelariaExportacion || '',
         [],
       ],
+      // Add missing controls for template binding
       productoArancelariaExportacion: [
         this.immexRegitroAnexoState?.productoArancelariaExportacion || '',
         [],
       ],
-      fraccionArancelariaDesc: [
-        this.immexRegitroAnexoState?.fraccionArancelariaDesc || '',
-        [],
-      ],
       productoDescExportacion: [
         this.immexRegitroAnexoState?.productoDescExportacion || '',
+        [],
+      ],
+      fraccionArancelariaDesc: [
+        this.immexRegitroAnexoState?.fraccionArancelariaDesc || '',
         [],
       ],
       FraccionDescExportacion: [
@@ -571,6 +572,10 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @returns {void}
    */
   fetchData(): void {
+    const DEBE_MOSTRAR_TABLA = this.immexRegistroform.get(
+      'exportacionForm.permisoImmexDatos'
+    )?.value;
+
     this.permisoImmexDatosService
       .getDatos()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -588,27 +593,36 @@ export class Anexo1Component implements OnInit, OnDestroy {
             Array.isArray(RESPONSE_DATA.fraccionDatos) &&
             Array.isArray(RESPONSE_DATA.nicoDatos)
           ) {
-            this.immexTableDatos = RESPONSE_DATA.permisoImmexDatos;
+            const DEBE_MOSTRAR_DATOS =
+              DEBE_MOSTRAR_TABLA?.length > 0 ||
+              this.esFormularioSoloLectura ||
+              this.esFormularioActualizacion;
+
+            this.immexTableDatos = DEBE_MOSTRAR_DATOS
+              ? RESPONSE_DATA.permisoImmexDatos
+              : [];
+
+            this.fraccionTablaDatos = DEBE_MOSTRAR_DATOS
+              ? RESPONSE_DATA.fraccionDatos
+              : [];
+
             this.nicoTablaDatos = RESPONSE_DATA.nicoDatos;
-            this.fraccionTablaDatos = RESPONSE_DATA.fraccionDatos;
 
             this.permisoImmexDatos = RESPONSE_DATA.permisoImmexDatos;
             this.fraccionDatos = RESPONSE_DATA.fraccionDatos;
             this.nicoDatos = RESPONSE_DATA.nicoDatos;
 
-            if (this.permisoImmexDatos.length > 0) {
+            if (this.permisoImmexDatos.length > 0 && DEBE_MOSTRAR_DATOS) {
               this.immexRegistroform.get('exportacionForm')?.patchValue({
                 fraccionArancelariaExportacion:
                   this.permisoImmexDatos[0].IMMEX_Columna_3,
               });
             }
 
-            if (this.fraccionDatos.length > 0) {
+            if (this.fraccionDatos.length > 0 && DEBE_MOSTRAR_DATOS) {
               this.immexRegistroform.get('exportacionForm')?.patchValue({
                 productoArancelariaExportacion:
                   this.fraccionDatos[0].FRACCION_Columna_2,
-                productoDescExportacion:
-                  this.fraccionDatos[0].FRACCION_Columna_5,
                 FraccionDescExportacion:
                   this.fraccionDatos[0].FRACCION_Columna_5,
                 exportacionDescExportacion:
@@ -620,8 +634,6 @@ export class Anexo1Component implements OnInit, OnDestroy {
               this.immexRegistroform.get('importacionForm')?.patchValue({
                 commodityImportacion: this.permisoImmexDatos[0].IMMEX_Columna_3,
                 commodityDescImportacion:
-                  this.permisoImmexDatos[0].IMMEX_Columna_4,
-                commodityNicoDescImportacion:
                   this.permisoImmexDatos[0].IMMEX_Columna_4,
               });
             }
@@ -669,18 +681,6 @@ export class Anexo1Component implements OnInit, OnDestroy {
   }
 
   /**
-   * @method showFraccionExportacion
-   * @description Controla la visibilidad de la sección de fracción de exportación.
-   * Establece la propiedad showFraccionExport en true para mostrar la sección
-   * correspondiente en la interfaz de usuario.
-   *
-   * @returns {void}
-   */
-  showFraccionExportacion(): void {
-    this.showFraccionExport = true;
-  }
-
-  /**
    * @method showTableExportacion
    * @description Controla la visibilidad de la tabla de exportación.
    * Establece la propiedad showTableExport en true para mostrar la tabla
@@ -690,6 +690,39 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
   showTableExportacion(): void {
     this.showTableExport = true;
+    this.fetchData();
+  }
+
+  /**
+   * @method mostrarDetalleMercancia
+   * @description
+   * Muestra el modal de detalle de mercancía de importación.
+   * Utiliza la instancia de Bootstrap Modal para mostrar el cuadro de diálogo
+   * asociado al elemento mercanciaImportacionModal.
+   *
+   * @returns {void}
+   */
+  mostrarDetalleMercancia(): void {
+    const MODAL_INSTANCIA = new Modal(
+      this.mercanciaImportacionModal.nativeElement
+    );
+    MODAL_INSTANCIA.show();
+  }
+
+  /**
+   * @method mostrarDetalleMercanciaExportacion
+   * @description
+   * Muestra el modal de detalle de mercancía de exportación.
+   * Utiliza la instancia de Bootstrap Modal para mostrar el cuadro de diálogo
+   * asociado al elemento mercanciaExportacionModal.
+   *
+   * @returns {void}
+   */
+  mostrarDetalleMercanciaExportacion(): void {
+    const MODAL_INSTANCIA = new Modal(
+      this.mercanciaExportacionModal.nativeElement
+    );
+    MODAL_INSTANCIA.show();
   }
 
   /**
@@ -741,27 +774,60 @@ export class Anexo1Component implements OnInit, OnDestroy {
   }
 
   /**
-   * @method showProductoImportacion
-   * @description Controla la visibilidad de la sección de producto de importación.
-   * Establece la propiedad showProductoImport en true para mostrar los campos
-   * y controles relacionados con productos de importación en la interfaz de usuario.
+   * Alterna la visibilidad del cuadro de diálogo modal para el registro de enlaces operativos.
    *
-   * @returns {void}
+   * @description
+   * Oculta el modal si está visible actualmente. Utiliza la API de Bootstrap
+   * para obtener la instancia del modal y controlarlo programáticamente.
+   *
    */
-  showProductoImportacion(): void {
-    this.showProductoImport = true;
+  cambiarEstadoModal(): void {
+    const MODAL_INSTANCIA = Modal.getInstance(
+      this.mercanciaImportacionModal.nativeElement
+    );
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
   }
 
   /**
-   * @method showCommodityImportacion
-   * @description Controla la visibilidad de la sección de commodity de importación.
-   * Establece la propiedad showCommodityImport en true para mostrar los campos
-   * y controles relacionados con commodities de importación en la interfaz de usuario.
+   * Alterna la visibilidad del cuadro de diálogo modal para el registro de enlaces operativos.
    *
-   * @returns {void}
+   * @description
+   * Oculta el modal si está visible actualmente. Utiliza la API de Bootstrap
+   * para obtener la instancia del modal y controlarlo programáticamente.
+   *
    */
-  showCommodityImportacion(): void {
-    this.showCommodityImport = true;
+  cambiarEstadoModalExportacion(): void {
+    const MODAL_INSTANCIA = Modal.getInstance(
+      this.mercanciaExportacionModal.nativeElement
+    );
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
+    }
+  }
+  /**
+   * Cancela el cuadro de diálogo modal para el registro de enlaces operativos.
+   *
+   * @description
+   * Cierra el modal activo y restablece el formulario a su estado inicial.
+   * Se ejecuta cuando el usuario cancela la operación de agregar o editar
+   * un enlace operativo.
+   */
+  modalCancelar(): void {
+    this.cambiarEstadoModal();
+  }
+
+  /**
+   * Cancela el cuadro de diálogo modal para el registro de enlaces operativos de exportación.
+   *
+   * @description
+   * Cierra el modal activo de exportación y restablece el formulario a su estado inicial.
+   * Se ejecuta cuando el usuario cancela la operación de agregar o editar
+   * un enlace operativo de exportación.
+   */
+  modalCancelarExportacion(): void {
+    this.cambiarEstadoModalExportacion();
   }
 
   /**

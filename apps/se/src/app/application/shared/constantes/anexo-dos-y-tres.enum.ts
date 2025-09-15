@@ -106,7 +106,7 @@ Materiales primas, partes, componentes, materiales auxiliares, envases, material
  */
 export const ANEXO_I_SERVICIO = [
   {
-    encabezado: 'Fracción',
+    encabezado: '#Fracción',
     clave: (ele: AnexoUnoEncabezado): string => ele.encabezadoFraccion,
     orden: 1,
   },
@@ -138,14 +138,29 @@ export const ANEXO_I_SERVICIO = [
     orden: 6,
   },
   {
-    encabezado: 'Categoría',
+    encabezado: 'Categoria',
     clave: (ele: AnexoUnoEncabezado): string => ele.encabezadoCategoria,
     orden: 7,
   },
   {
-    encabezado: 'Valor en mercado',
-    clave: (ele: AnexoUnoEncabezado): string => ele.encabezadoValorEnMercado,
+    encabezado: 'Valor en moneda mensual',
+    clave: (ele: AnexoUnoEncabezado): number => ele.encabezadoValorEnMonedaMensual ?? 0,
     orden: 8,
+  },
+  {
+    encabezado: 'Valor en moneda anual',
+    clave: (ele: AnexoUnoEncabezado): number => ele.encabezadoValorEnMonedaAnual ?? 0,
+    orden: 9,
+  },
+  {
+    encabezado: 'Volumen mensual',
+    clave: (ele: AnexoUnoEncabezado): number => ele.encabezadoVolumenMensual ?? 0,
+    orden: 10,
+  },
+  {
+    encabezado: 'Volumen anual',
+    clave: (ele: AnexoUnoEncabezado): number => ele.encabezadoVolumenAnual ?? 0,
+    orden: 11,
   },
 ];
 
@@ -171,7 +186,7 @@ export const ANEXO_I_SERVICIO = [
  */
 export const ANEXO_IMPORTACION_SERVICIO = [
   {
-    encabezado: 'Fracción',
+    encabezado: '#Fracción',
     clave: (ele: AnexoDosEncabezado): string => ele.encabezadoFraccion,
     orden: 1,
   },
@@ -193,6 +208,60 @@ export const ANEXO_IMPORTACION_SERVICIO = [
       ele.encabezadoFraccionImportacion,
     orden: 4,
   },
+  {
+    encabezado: 'Descripción comercial',
+    clave: (ele: AnexoDosEncabezado): string =>
+      ele.encabezadoDescripcionComercialImportacion,
+    orden: 5,
+  },
+  {
+    encabezado: 'Anexo II',
+    clave: (ele: AnexoDosEncabezado): string =>
+      ele.encabezadoAnexoII ?? '',
+    orden: 6,
+  },
+  {
+    encabezado: 'Tipo',
+    clave: (ele: AnexoDosEncabezado): string =>
+      ele.encabezadoTipo ?? '',
+    orden: 7,
+  },
+  {
+    encabezado: 'UMT',
+    clave: (ele: AnexoDosEncabezado): string =>
+      ele.encabezadoUmt ?? '',
+    orden: 8,
+  },
+  {
+    encabezado: 'Categoria',
+    clave: (ele: AnexoDosEncabezado): string =>
+      ele.encabezadoCategoria ?? '',
+    orden: 9,
+  },
+  {
+    encabezado: 'Valor en moneda mensual',
+    clave: (ele: AnexoDosEncabezado): number => 
+      ele.encabezadoValorEnMonedaMensual ?? 0,
+    orden: 10,
+  },
+  {
+    encabezado: 'Valor en moneda anual',
+    clave: (ele: AnexoDosEncabezado): number => 
+      ele.encabezadoValorEnMonedaAnual ?? 0,
+    orden: 11,
+  },
+  {
+    encabezado: 'Volumen mensual',
+    clave: (ele: AnexoDosEncabezado): number => 
+      ele.encabezadoVolumenMensual ?? 0,
+    orden: 12,
+  },
+  {
+    encabezado: 'Volumen anual',
+    clave: (ele: AnexoDosEncabezado): number => 
+      ele.encabezadoVolumenAnual ?? 0,
+    orden: 13,
+  }
 ];
 
 

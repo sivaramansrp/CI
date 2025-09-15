@@ -55,7 +55,8 @@
       class="form-control min-hgt"
       id="turnos"
       formControlName="turnos"
-      type="text"
+      type="number"
+      maxlength="3"
       (change)="setValoresStore(capacidadForm, 'turnos', 'setTurnos')"
       />
       <div *ngIf="capacidadForm.get('turnos')?.invalid && capacidadForm.get('turnos')?.touched" class="text-danger">
@@ -68,7 +69,8 @@
         class="form-control min-hgt"
         id="horasPorTurno"
         formControlName="horasPorTurno"
-        type="text"
+        type="number"
+        maxlength="2"
         (change)="setValoresStore(capacidadForm, 'horasPorTurno', 'setHorasPorTurno')"
       />
       <div *ngIf="capacidadForm.get('horasPorTurno')?.invalid && capacidadForm.get('horasPorTurno')?.touched" class="text-danger">
@@ -85,7 +87,8 @@
         class="form-control min-hgt"
         id="cantidadEmpleados "
         formControlName="cantidadEmpleados"
-        type="text"
+        type="number"
+        maxlength="11"
           (change)="setValoresStore(capacidadForm, 'cantidadEmpleados', 'setCantidadEmpleados')"
       />
       <div *ngIf="capacidadForm.get('cantidadEmpleados')?.invalid && capacidadForm.get('cantidadEmpleados')?.touched" class="text-danger">
@@ -100,7 +103,8 @@
         class="form-control min-hgt"
         id="cantidadMaquinaria"
         formControlName="cantidadMaquinaria"
-        type="text"
+        type="number"
+        maxlength="11"
         (change)="setValoresStore(capacidadForm, 'cantidadMaquinaria', 'setCantidadMaquinaria')"
       />
       <div *ngIf="capacidadForm.get('cantidadMaquinaria')?.invalid && capacidadForm.get('cantidadMaquinaria')?.touched" class="text-danger">
@@ -119,6 +123,7 @@
         id="descripcionMaquinaria"
         formControlName="descripcionMaquinaria"
         placeholder=""
+        maxlength="300"
         (change)="setValoresStore(capacidadForm, 'descripcionMaquinaria', 'setDescripcionMaquinaria')"
       ></textarea>
       <div
@@ -138,7 +143,8 @@
       class="form-control min-hgt"
       id="capacidadInstaladaMensual"
       formControlName="capacidadInstaladaMensual"
-      type="text"
+      type="number"
+      maxlength="11"
       (change)="setValoresStore(capacidadForm, 'capacidadInstaladaMensual', 'setCapacidadInstaladaMensual')"
       />
       <div *ngIf="capacidadForm.get('capacidadInstaladaMensual')?.invalid && capacidadForm.get('capacidadInstaladaMensual')?.touched" class="text-danger">
@@ -207,11 +213,18 @@
       [configuracionTabla]="capacidadInstaladaEncabezado"
       [tipoSeleccionTabla]="constructorapacidadInstaladaTablaSeleccion"
       [datos]="capacidadInstaladaDatos"
+      (listaDeFilaSeleccionada)="onCapacidadInstaladaSeleccionadas($event)"
     ></app-tabla-dinamica>
   </div>
 
-  <div class="row my-5 mt-5">
+  <div class="row mt-5">
     <div class="col-12 container text-end mt-5">
+      <button class="btn btn-danger me-2" (click)="eliminarCapacidadInstalada()">Eliminar</button>
+      <button class="btn btn-primary" >Editar</button>
+    </div>
+  </div>
+  <div class="row my-5 mt-5">
+    <div class="col-12 container text-end mt-5 mb-5">
       <button class="btn btn-default me-2" (click)="regrasar()">
         Regresar a plantas
       </button>

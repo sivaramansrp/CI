@@ -145,7 +145,7 @@ export const ESTATUS_PAGADO = 'Pagado';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const MSG_REGISTRO_EXITOSO = (numeroSolicitud: string) =>
-  `<p>La solicitud ha quedado resgitrada con el número temporal ${numeroSolicitud ?? ''}. Este no tiene válidez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado al momento en que ésta sea firmada.</p>`;
+  `<p>La solicitud ha quedado regitrada con el número temporal ${numeroSolicitud ?? ''}. Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.</p>`;
 
 /**
  * @description Almacena el valor de un dia = 1
@@ -200,3 +200,10 @@ export const TIPO_OPERACION_EXPORTACION = 2;
  */
 export const URL_GENERAR_LINEA_CAPTURA =
   'https://pccem.mat.sat.gob.mx/PTSC/cet/FmpceContr/faces/resources/pages/pagos/formularioMultiplePago.jsf ';
+
+
+  export const TIPO_ENUM = {
+    IMPORTACION: "1",
+    EXPORTACION: "2",
+    TRANSITO: "3",
+  } as const;

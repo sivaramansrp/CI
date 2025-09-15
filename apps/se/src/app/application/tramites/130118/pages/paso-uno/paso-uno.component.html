@@ -5,7 +5,7 @@
           <a (click)="seleccionaTab(1)" (keyup.enter)="seleccionaTab(1)" (keydown.space)="seleccionaTab(1)" tabindex="0" data-toggle="tab" >Solicitante</a>
         </li>
         <li [ngClass]="indice === 2 ? 'active' : ''">
-          <a (click)="seleccionaTab(2)" (keyup.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)" tabindex="0" data-toggle="tab" >Datos de la solicitud</a>
+          <a (click)="seleccionaTab(2)" (keyup.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)" tabindex="0" data-toggle="tab" >Datos generales</a>
         </li>
       </ul>
   
@@ -15,7 +15,7 @@
         <solicitante></solicitante>
         }
         @case (2) {
-        <app-solicitud  [ocultarForm]="ocultarForm"></app-solicitud>
+        <app-solicitud [consultaState]="consultaState" [ocultarForm]="ocultarForm"></app-solicitud>
         }
         }
       </ng-container>

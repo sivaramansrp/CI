@@ -4,7 +4,12 @@ import {
   CatalogoSelectComponent,
   InputCheckComponent,
   InputFecha,
+  InputRadioComponent,
   Pedimento,
+  REGEX_CODIGO_POSTAL,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_TELEFONO_OPCIONAL,
+  SolicitanteService,
   TablaSeleccion,
   TituloComponent,
   ValidacionesFormularioService
@@ -12,13 +17,14 @@ import {
 import { ColumnasTabla, CrossList, FECHA_FINAL, FECHA_INICIAL, ListaClave, Mercancia } from '../../models/consulta.model';
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { CrosslistComponent, InputFechaComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { CrosslistComponent, InputFechaComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260704State, Tramite260704Store } from '../../estados/Tramite260704.store';
 import { CommonModule } from '@angular/common';
 import { ConsultaService } from '../../service/consulta.service';
 import { Modal } from 'bootstrap';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260704Query } from '../../estados/Tramite260704.query';
 /**
  * Componente que gestiona los datos de la solicitud.
@@ -39,8 +45,9 @@ import { Tramite260704Query } from '../../estados/Tramite260704.query';
     TituloComponent,
     CommonModule,
     NotificacionesComponent,
-    InputCheckComponent
-  ],
+    InputCheckComponent,
+    TooltipModule
+],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.css'],
 })
@@ -141,6 +148,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Bandera que indica si se seleccionó el tipo de operación.
    */
   esTipoOperacionSeleccionado: boolean = true;
+
+  /** Indica si se debe mostrar la alerta del RFC. */
+  mostrarRfcAlerta: boolean = false;
+
+  /** Nueva notificación relacionada con el RFC. */
+  public nuevaRfcNotificacion!: Notificacion;
 
   /**
    * Objeto CrossList para país de origen.
@@ -269,7 +282,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private query: Tramite260704Query,
     public fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private solicitanteService: SolicitanteService
   ) {
      this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -617,11 +631,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favorde capturar su establecimiento. Acerar',
+      mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
+      txtBtnCancelar: '',
     }
     this.elementoParaEliminar = i;
   }
@@ -702,17 +716,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       justificacion: [{ value: this.solicitudState?.justificacion, disabled: this.soloLectura }, [Validators.required]],
       establecimiento: [{ value: this.solicitudState?.establecimiento, disabled: this.soloLectura }, [Validators.required]],
       razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.soloLectura }, [Validators.required]],
-      correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required]],
+      correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
     }),
     validacionMercanciaForm: this.fb.group({
-      codigoPostal: [{ value: this.solicitudState?.codigoPostal, disabled: this.soloLectura }, [Validators.required]],
+      codigoPostal: [{ value: this.solicitudState?.codigoPostal, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_CODIGO_POSTAL)]],
       estado: [{ value: this.solicitudState?.estado, disabled: this.soloLectura }, [Validators.required]],
       municipio: [{ value: this.solicitudState?.municipio, disabled: this.soloLectura }, [Validators.required]],
       localidad: [{ value: this.solicitudState?.localidad, disabled: this.soloLectura }, [Validators.required]],
       colonia: [{ value: this.solicitudState?.colonia, disabled: this.soloLectura }, [Validators.required]],
       calle: [{ value: this.solicitudState?.calle, disabled: this.soloLectura }, [Validators.required]],
       lada: [{ value: this.solicitudState?.lada, disabled: this.soloLectura }, [Validators.required]],
-      telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.required]],
+      telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_TELEFONO_OPCIONAL)]],
     }),
     validacionScionForm: this.fb.group({
       scian: [{ value: this.solicitudState?.scian, disabled: this.soloLectura }, [Validators.required]],
@@ -764,6 +778,52 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.certificadoDisponsiblesTablaDatos.pop();
   }
 }
+
+  /**
+   * Busca los datos del contribuyente usando el RFC y auto-llena los campos de nombre.
+   */
+  buscarRFC(): void {
+    const RFC_VALUE = this.datosDelEstablecimientoForm.get('rfc')?.value;
+    if (!RFC_VALUE) {
+      this.abrirRfcModal();
+      return;
+    }
+
+    // Para demo purposes, usamos datos hardcodeados como en el ejemplo que enviaste
+    if (RFC_VALUE === 'MAVL621207C95') {
+      const VALORES_ACTUALIZADOS = {
+        nombreRazon: 'MARIA ALEJANDRA',
+        apellidoPaterno: 'VELASCO',
+        apellidoMaterno: 'LOPEZ'
+      };
+
+      // Auto-fill los campos
+      this.datosDelEstablecimientoForm.patchValue(VALORES_ACTUALIZADOS);
+
+      // Actualizar el store
+      this.store.setNombreRazon(VALORES_ACTUALIZADOS.nombreRazon);
+      this.store.setApellidoPaterno(VALORES_ACTUALIZADOS.apellidoPaterno);
+      this.store.setApellidoMaterno(VALORES_ACTUALIZADOS.apellidoMaterno);
+    } 
+  }
+
+    /**
+   * Abre el modal de RFC y muestra una notificación de alerta.
+   */
+  abrirRfcModal(): void {
+    this.mostrarRfcAlerta = true;
+    this.nuevaRfcNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe ingresar el RFC.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
 
   /**
    * Método del ciclo de vida que limpia las suscripciones para evitar fugas de memoria.

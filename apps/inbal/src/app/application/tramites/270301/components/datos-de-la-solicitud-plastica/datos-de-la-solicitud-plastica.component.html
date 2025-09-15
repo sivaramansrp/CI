@@ -145,10 +145,18 @@
             </div>
 
             <div class="clearfix"></div>
-
+            <ng-titulo titulo="Manifiesto" />
             <div class="manifiesto-container mt-4">
-                <ng-titulo titulo="Manifiesto" />
-                <ng-alert [CONTENIDO]="TEXTO_MANIFIESTO_ALERT"></ng-alert>
+                <div class="alert alert-info content-with-checkbox py-6">
+                  <div class="col-md">
+                    <input type="checkbox" id="manifiesto" 
+                    formControlName="manifiesto" [checked]="esFormularioSoloLectura" 
+                    [disabled]="esFormularioSoloLectura"
+                    (change)="setValoresStore(solicitudFormGroup,'manifiesto','setmanifiesto')"
+                    />
+                  </div>
+                  <div class="col-md-12">{{ TEXTO_MANIFIESTO_ALERT }} </div>
+                </div>
             </div>
         </form>
     </div>

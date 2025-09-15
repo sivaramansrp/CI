@@ -377,6 +377,33 @@ formatDecimal(controlName: string): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite110203Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+  /**
+ * Actualiza la primera mercancía de la lista con los valores del formulario.
+ * Valida que el formulario sea correcto antes de asignar los nuevos datos.
+ * Finalmente, cierra el modal después de guardar los cambios.
+ */
+onModificar(): void {
+  if (this.mercanciasForm.valid) {
+    const UPDATED_DATOS = this.mercanciasForm.value;
+
+    this.mercancias[0] = {
+      ...this.mercancias[0],
+      nombreComercial: UPDATED_DATOS.comercial,
+      nombreIngles: UPDATED_DATOS.ingles,
+      complementoClasificacion: UPDATED_DATOS.complemento,
+      marca: UPDATED_DATOS.marca,
+      valorMercancia: UPDATED_DATOS.valor,
+      cantidad: UPDATED_DATOS.cantidad,
+      umc: UPDATED_DATOS.comercializacion,
+      masaBruta: UPDATED_DATOS.bruta,
+      unidadMedidaMasaBruta: UPDATED_DATOS.medida,
+      numeroFactura: UPDATED_DATOS.factura,
+      tipoFactura: UPDATED_DATOS.tipo,
+      fechaExpedicion: UPDATED_DATOS.fecha,
+    };    
+    this.closeModal.nativeElement.click();
+  }
+}
 
   /**
    * Método que se ejecuta cuando el componente es destruido. Limpia los recursos y previene memory leaks.

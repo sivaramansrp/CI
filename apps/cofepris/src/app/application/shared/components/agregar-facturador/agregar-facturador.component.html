@@ -1,5 +1,12 @@
 <div class="container mt-4">
-  <ng-titulo titulo="Agregar facturador"></ng-titulo>
+   <ng-titulo
+    *ngIf="datoSeleccionado?.[0]?.tipoPersona; else agregarTitulo"
+    titulo="Modificar facturador"
+  ></ng-titulo>
+
+  <ng-template #agregarTitulo>
+    <ng-titulo titulo="Agregar facturador"></ng-titulo>
+  </ng-template>
   <form [formGroup]="agregarFacturadorForm">
     <!-- Datos Generales -->
     <h4>Datos generales</h4>

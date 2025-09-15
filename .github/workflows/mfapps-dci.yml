@@ -1,0 +1,155 @@
+name: Deploy Microfront App-DCI
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_name:
+        description: 'Microfront app name (e.g. crt-microfront)'
+        required: true
+        default: 'crt-microfront'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.get-version.outputs.VERSION }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Nx build
+        run: npx nx build
+
+      - name: Reset Nx cache
+        run: npx nx reset
+
+      - name: Get version from package.json
+        id: get-version
+        run: |
+          VERSION=$(jq -r .version package.json)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Update Docker Compose image tag
+        run: |
+          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:${{ steps.get-version.outputs.VERSION }}|" docker/modulefederation-${{ github.event.inputs.app_name }}.yml
+
+      - name: Build Docker image for microfront app
+        run: |
+          docker compose -f docker/modulefederation-${{ github.event.inputs.app_name }}.yml build --no-cache
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:${{ steps.get-version.outputs.VERSION }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from package.json
+        id: get-version
+        run: |
+          VERSION=$(jq -r .version package.json)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Debug:List yaml files before copy
+        run: |
+          echo "Showing YAML files in k8s/${{ github.event.inputs.app_name }}/"
+          ls -l k8s/${{ github.event.inputs.app_name }}/ || echo "Directory does not exist"
+          echo "Full find output:"
+          find k8s/${{ github.event.inputs.app_name }}/ || echo "Directory does not exist"
+
+      - name: Update deployment YAML image tag
+        run: |
+          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:.*|image: ghcr.io/vucem30/dockerized-modulefederation-${{ github.event.inputs.app_name }}:${{ steps.get-version.outputs.VERSION }}|" k8s/${{ github.event.inputs.app_name }}/*.yaml
+
+      - name: Copy deployment files to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          source: k8s/${{ github.event.inputs.app_name }}/*.yaml
+          target: ~/deployments/${{ github.event.inputs.app_name }}/
+          strip_components: 2
+
+      - name: List files on remote after copy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          script: |
+            ls -l ~/deployments/${{ github.event.inputs.app_name }}/
+
+      - name: SSH Deploy and Restart
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          script: |
+            set -e
+            APP_NAME="${{ github.event.inputs.app_name }}"
+            IMAGE_TAG="${{ steps.get-version.outputs.VERSION }}"
+            DEPLOY_DIR=~/deployments/$APP_NAME
+            DEPLOYMENT_FILE="${APP_NAME}-deployment-dev.yaml"
+            SERVICE_FILE="${APP_NAME}-service-dev.yaml"
+            INGRESS_FILE="${APP_NAME}-ingress-dev.yaml"
+            cd "$DEPLOY_DIR"
+            for FILE in "$DEPLOYMENT_FILE" "$SERVICE_FILE" "$INGRESS_FILE"; do
+              if [ ! -f "$FILE" ]; then
+                echo "ERROR: $FILE not found in $(pwd)"
+                ls -l
+                exit 1
+              fi
+            done
+            docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }} ghcr.io
+
+            echo "Before image/container cleanup:"
+            docker images | grep $APP_NAME || true
+            docker ps -a | grep $APP_NAME || true
+
+            # Remove any containers using the image
+            docker ps -a --filter "ancestor=ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG" -q | xargs -r docker rm -f
+
+            # Remove the old image if present
+            docker rmi -f ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG || true
+
+            # Remove all dangling and unused images and containers to free up space
+            docker image prune -af || true
+            docker container prune -f || true
+            docker system prune -af || true
+
+            echo "After image/container cleanup:"
+            docker images | grep $APP_NAME || true
+            docker ps -a | grep $APP_NAME || true
+
+            # Pull the new image
+            docker pull ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG
+
+            # Confirm YAML is using correct image
+            grep "image: ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG" "$DEPLOYMENT_FILE"
+
+            microk8s kubectl apply -f "$DEPLOYMENT_FILE"
+            microk8s kubectl apply -f "$SERVICE_FILE"
+            microk8s kubectl apply -f "$INGRESS_FILE"
+            microk8s kubectl rollout restart deployment modulefederation-$APP_NAME-deployment-dev -n default
+            microk8s kubectl get pods | grep $APP_NAME

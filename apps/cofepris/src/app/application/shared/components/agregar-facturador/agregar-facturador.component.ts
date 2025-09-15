@@ -1,17 +1,31 @@
 import {
+  CODIGO_POSTAL,
   Catalogo,
-  CatalogoSelectComponent,
   REGEX_CORREO_ELECTRONICO,
   REGEX_IMPORTE_PAGO,
   REGEX_NOMBRE,
-  REGEX_NUMEROS,
   REGEX_TELEFONO,
   TipoPersona,
-  TituloComponent
+  TituloComponent,
 } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Facturador } from '../../models/terceros-relacionados.model';
 import { Subject } from 'rxjs';
@@ -30,12 +44,14 @@ import { takeUntil } from 'rxjs/operators';
     CatalogoSelectComponent,
     ReactiveFormsModule,
     TituloComponent,
-    TooltipModule
+    TooltipModule,
   ],
   templateUrl: './agregar-facturador.component.html',
   styleUrl: './agregar-facturador.component.css',
 })
-export class AgregarFacturadorComponent implements OnInit, OnDestroy {
+export class AgregarFacturadorComponent
+  implements OnInit, OnDestroy, OnChanges
+{
   /**
    * Identificador del procedimiento actual.
    * Utilizado para controlar el flujo de la vista dependiendo del tipo de procedimiento.
@@ -81,7 +97,7 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    */
   facturadores: Facturador[] = [];
 
-   /**
+  /**
    * @property {Facturador | undefined} datoSeleccionado
    * Dato seleccionado que se pasará al componente hijo `AgregarDestinatarioComponent`.
    */
@@ -92,8 +108,6 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    * @property {EventEmitter<Facturador[]>} updateFacturadorTablaDatos
    */
   @Output() updateFacturadorTablaDatos = new EventEmitter<Facturador[]>();
-
-
 
   /**
    * Controla si el desplegable de nacionalidad está deshabilitado.
@@ -133,27 +147,42 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    */
   crearAgregarFormularioFacturador(): void {
     this.agregarFacturadorForm = this.fb.group({
-      tipoPersona: ['', Validators.required],
-      nombres: [this.obtenerValor('nombres'), [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
+      tipoPersona: [this.obtenerValor('tipoPersona'), [Validators.required]],
+      nombres: [
+        this.obtenerValor('nombres'),
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+      ],
       primerApellido: [
         this.obtenerValor('primerApellido'),
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)]
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
       ],
-      segundoApellido: [this.obtenerValor('segundoApellido'), [Validators.pattern(REGEX_NOMBRE)]],
-      pais: [this.obtenerValor('pais'), Validators.required],
-      estado: [this.obtenerValor('estadoLocalidad'), Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
-      codigoPostal: [this.obtenerValor('codigoPostal'),[Validators.pattern(REGEX_NUMEROS)]],
+      segundoApellido: [
+        this.obtenerValor('segundoApellido'),
+        [Validators.pattern(REGEX_NOMBRE)],
+      ],
+      pais: [this.obtenerValor('pais'), [Validators.required]],
+      estado: [
+        this.obtenerValor('estadoLocalidad'),
+        [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
+      ],
+      codigoPostal: [
+        this.obtenerValor('codigoPostal'),
+        [Validators.pattern(CODIGO_POSTAL)],
+      ],
       colonia: [this.obtenerValor('colonia')],
-      calle: [this.obtenerValor('calle'), Validators.required],
+      calle: [this.obtenerValor('calle'), [Validators.required]],
       numeroExterior: [
         this.obtenerValor('numeroExterior'),
-        Validators.required,
+        [Validators.required],
       ],
       numeroInterior: [this.obtenerValor('numeroInterior')],
       lada: [this.obtenerValor('lada')],
-      denominacionRazon: ['', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
+      denominacionRazon: [
+        '',
+        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+      ],
       telefono: [
-        { 
+        {
           value: this.elementosDeshabilitados.includes('telefono')
             ? '3461235'
             : this.obtenerValor('telefono'),
@@ -171,6 +200,40 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
         [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
       ],
     });
+  }
+
+  /**
+   * Ciclo de vida de Angular: `ngOnChanges`.
+   *
+   * @param {SimpleChanges} currentValue - Objeto que contiene los cambios detectados
+   * en las propiedades de entrada (`@Input`) del componente.
+   */
+  ngOnChanges(currentValue: SimpleChanges): void {
+    if (currentValue['datoSeleccionado']) {
+      this.datoSeleccionado = currentValue['datoSeleccionado'].currentValue;
+      setTimeout(() => {
+        if (this.datoSeleccionado?.[0]?.tipoPersona) {
+          this.agregarFacturadorForm?.enable();
+        }
+        this.agregarFacturadorForm.patchValue({
+          tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
+          nombres: this.datoSeleccionado?.[0]?.nombres,
+          primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
+          segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
+          pais: this.datoSeleccionado?.[0]?.pais,
+          estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
+          codigoPostal: this.datoSeleccionado?.[0]?.codigoPostal,
+          colonia: this.datoSeleccionado?.[0]?.colonia,
+          calle: this.datoSeleccionado?.[0]?.calle,
+          numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
+          numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
+          lada: this.datoSeleccionado?.[0]?.lada,
+          denominacionRazon: this.datoSeleccionado?.[0]?.nombreRazonSocial,
+          telefono: this.datoSeleccionado?.[0]?.telefono,
+          correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
+        });
+      }, 500);
+    }
   }
 
   /**
@@ -214,6 +277,8 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
       nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
     }
     const NUEVO_FACTURADOR: Facturador = {
+      nacionalidad: VALOR_FORMULARIO.nacionalidad,
+      tipoPersona: VALOR_FORMULARIO.tipoPersona,
       nombreRazonSocial: nombreRazonSocial,
       rfc: '',
       curp: '',
@@ -226,16 +291,20 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
       colonia: VALOR_FORMULARIO.colonia || '',
       municipioAlcaldia: '',
       localidad: '',
-      entidadFederativa: VALOR_FORMULARIO.estado || '',
-      estadoLocalidad: '',
+      entidadFederativa: '',
+      estadoLocalidad: VALOR_FORMULARIO.estado || '',
       codigoPostal: VALOR_FORMULARIO.codigoPostal || '',
       coloniaEquivalente: '',
-        nombres: VALOR_FORMULARIO.nombres,
+      nombres: VALOR_FORMULARIO.nombres,
       primerApellido: VALOR_FORMULARIO.primerApellido,
       segundoApellido: VALOR_FORMULARIO.segundoApellido,
       razonSocial: VALOR_FORMULARIO.razonSocial,
       lada: VALOR_FORMULARIO.lada,
     };
+
+    if (this.datoSeleccionado?.[0]?.id) {
+      NUEVO_FACTURADOR.id = this.datoSeleccionado[0].id;
+    }
 
     this.facturadores.push(NUEVO_FACTURADOR);
     this.updateFacturadorTablaDatos.emit(this.facturadores);
@@ -291,10 +360,13 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
         }
       );
     } else {
-       if (this.agregarFacturadorForm?.get('tipoPersona')?.value) {
+      if (this.agregarFacturadorForm?.get('tipoPersona')?.value) {
         Object.keys(this.agregarFacturadorForm.controls).forEach(
           (controlName) => {
-            if (controlName !== 'nacionalidad' && controlName !== 'tipoPersona') {
+            if (
+              controlName !== 'nacionalidad' &&
+              controlName !== 'tipoPersona'
+            ) {
               this.agregarFacturadorForm.get(controlName)?.reset();
             }
           }

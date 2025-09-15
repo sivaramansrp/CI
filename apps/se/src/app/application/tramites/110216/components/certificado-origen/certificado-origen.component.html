@@ -197,8 +197,8 @@
       <button type="button" class="btn btn-primary ms-3" (click)="cargaArchivo()" [disabled]="soloLectura"> Carga por
         archivo </button>
     </div>
-    <div class="row mt-5">
-      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA" style="margin-top: 40px"></ng-alert>
+    <div class="row mt-5 text-center">
+      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA" class="mt-5"></ng-alert>
     </div>
     <ng-container>
       <div class="row mt-5">
@@ -260,42 +260,42 @@
             <div class="row">
               <div class="col-md-4">
                 <label>Fracción arancelaria:</label>
-                <input type="text" required="true" class="form-control gray-glass" readonly
+                <input type="text" class="form-control gray-glass" [disabled]="true"
                   formControlName="fraccionMercanciaArancelaria"
                   (change)=" setValoresStore( formularioMercancia, 'fraccionMercanciaArancelaria', 'setFraccionMercanciaArancelaria' ) " />
               </div>
               <div class="col-md-8">
                 <label>Nombre comercial de la mercancía(igual que en la factura):</label>
-                <input type="text" required="true" class="form-control gray-glass"
-                  formControlName="nombreComercialDelaMercancia" readonly
+                <input type="text" class="form-control gray-glass"
+                  formControlName="nombreComercialDelaMercancia" [disabled]="true"
                   (change)=" setValoresStore( formularioMercancia, 'nombreComercialDelaMercancia', 'setNombreComercialDelaMercancia' ) " />
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-md-8">
                 <label>Nombre técnico:</label>
-                <input type="text" required="true" class="form-control gray-glass" formControlName="nombreTecnico"
+                <input type="text"[disabled]="true" class="form-control gray-glass" formControlName="nombreTecnico"
                   readonly (change)=" setValoresStore( formularioMercancia, 'nombreTecnico', 'setNombreTecnico' ) " />
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-md-8">
                 <label>Nomre en inglés:</label>
-                <input type="text" required="true" class="form-control gray-glass" formControlName="nombreEnIngles"
-                  readonly (change)=" setValoresStore( formularioMercancia, 'nombreEnIngles', 'setNombreEnIngles' ) " />
+                <input type="text"  class="form-control gray-glass" formControlName="nombreEnIngles"
+                  [disabled]="true" (change)=" setValoresStore( formularioMercancia, 'nombreEnIngles', 'setNombreEnIngles' ) " />
               </div>
               <div class="col-md-4">
                 <label>Otras instancias:</label>
-                <input type="text" required="true" class="form-control gray-glass" formControlName="otrasInstancias"
-                  readonly
+                <input type="text" class="form-control gray-glass" formControlName="otrasInstancias"
+                  [disabled]="true"
                   (change)=" setValoresStore( formularioMercancia, 'otrasInstancias', 'setOtrasInstancias' ) " />
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-md-4">
                 <label>Criterio para conferir origen:</label>
-                <input type="text" required="true" class="form-control gray-glass"
-                  formControlName="criterioParaConferir" readonly
+                <input type="text" class="form-control gray-glass"
+                  formControlName="criterioParaConferir" [disabled]="true"
                   (change)=" setValoresStore( formularioMercancia, 'criterioParaConferir', 'setCriterioParaConferir' ) " />
               </div>
             </div>
@@ -338,12 +338,12 @@
               </div>
               <div class="col-md-8">
                 <label>Complemento de la descripción*:</label>
-                <textarea rows="3" class="w-100" formControlName="complementoDelaDescripcion"
-                  [ngClass]="isValid(formularioMercancia,'complementoDelaDescripcion') ? 'required' : ''"
-                  (change)=" setValoresStore( formularioMercancia, 'complementoDelaDescripcion', 'setComplementoDelaDescripcion' ) "></textarea>
+                <textarea rows="3" class="w-100" formControlName="complementoDescripcion"
+                  [ngClass]="isValid(formularioMercancia,'complementoDescripcion') ? 'required' : ''"
+                  (change)=" setValoresStore( formularioMercancia, 'complementoDescripcion', 'setComplementoDelaDescripcion' ) "></textarea>
                         <div class="error-message col-md-12 ps-0">
                   <small
-                    *ngIf="formularioMercancia.get('complementoDelaDescripcion')?.touched && formularioMercancia.get('complementoDelaDescripcion')?.hasError('required')"
+                    *ngIf="formularioMercancia.get('complementoDescripcion')?.touched && formularioMercancia.get('complementoDescripcion')?.hasError('required')"
                     class="text-danger">
                     Este campo es obligatorio.
                   </small>
@@ -354,16 +354,26 @@
             <div class="row mt-5">
               <div class="col-md-4">
                 <input-fecha [setFecha]="formularioMercancia.get('fecha')?.value" [datos]="fechaFacturaInput"
+                [mostrarErrores]="formularioMercancia.get('fecha')?.touched??false"
                   (valorCambiado)="cambioFechaFactura($event)" [isDisabled]="soloLectura"></input-fecha>
               </div>
               <div class="col-md-4">
-                <label>N° factura:</label>
-                <input type="text" required="true" class="form-control" formControlName="numeroFactura"
+                <label>N° factura*:</label>
+                <input type="text" class="form-control" formControlName="numeroFactura" [ngClass]="isValid(formularioMercancia,'numeroFactura') ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'numeroFactura', 'setNumeroFactura' ) " />
+                       <div class="error-message col-md-12 ps-0">
+                  <small
+                    *ngIf="formularioMercancia.get('numeroFactura')?.touched && formularioMercancia.get('numeroFactura')?.hasError('required')"
+                    class="text-danger">
+                    Este campo es obligatorio.
+                  </small>
+                </div>
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="optionsTipoFactura" [label]="'Tipo de factura'" id="tipoFactura"
                   formControlName="tipoFactura"
+                  [required]="true"
+                  [markTouched]="formularioMercancia.get('tipoFactura')?.touched??false"
                   (change)=" setValoresStore( formularioMercancia, 'tipoFactura', 'setTipoFactura' ) "
                   [isDisabled]="soloLectura"></app-catalogo-select>
               </div>

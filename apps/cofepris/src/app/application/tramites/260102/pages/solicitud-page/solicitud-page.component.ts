@@ -1,15 +1,17 @@
-import { AccionBoton } from '@ng-mf/data-access-user';
+import {
+  AccionBoton,
+  DatosPasos,
+  ListaPasosWizard,
+  WizardComponent
+} from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/consumo-personal.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { ViewChild } from '@angular/core';
-import { WizardComponent } from '@ng-mf/data-access-user';
+
 /**
  * @component SolicitudPageComponent
  * @description Componente principal de la página de solicitud. Controla la navegación

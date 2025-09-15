@@ -56,6 +56,7 @@
           type="text"
           class="form-control"
           formControlName="numeroOperacion"
+          maxlength="30"
           [ngClass]="{ 'border-danger': mostrarError && registroForm.get('numeroOperacion')?.invalid }"
           (change)="
             setValoresStore(
@@ -88,6 +89,7 @@
           [catalogo]="bancoCatalogo.catalogos"
           [label]="'Banco'"
           formControlName="banco"
+          [markTouched]="registroForm.get('banco')?.touched ?? false"
           (change)="setValoresStore(registroForm, 'banco', 'setBanco')"
         ></app-catalogo-select>
       </div>
@@ -99,6 +101,7 @@
           type="text"
           class="form-control"
           formControlName="llave"
+          maxlength="20"
           [ngClass]="{ 'border-danger': mostrarError && registroForm.get('llave')?.invalid}"
           (change)="setValoresStore(registroForm, 'llave', 'setLlave')"
         />
@@ -121,6 +124,7 @@
           type="text"
           class="form-control gris-color"
           formControlName="importePago"
+          maxlength="16"
           readonly
         />
       </div>

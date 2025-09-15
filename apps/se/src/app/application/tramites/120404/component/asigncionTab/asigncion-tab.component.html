@@ -21,29 +21,33 @@
                         (change)="setValoresStore(asignacionForm,'asignacionsolitud')"
                         [isDisabled]="esFormularioSoloLectura">
                     </app-catalogo-select>
-                    <div *ngIf="isInvalid('asignacionsolitud')" class="mensaje-error">
-                        Este campo es obligatorio
-                    </div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group custom-clasifi-regimen-catalogo">
-                    <label for="clasificacionRegimen">Número de oficio de asignación*</label>
+                    <label for="clasificacionRegimen">Número de oficio de asignación*:</label>
                     <input type="text" class="form-control" formControlName="numTramite" id="numTramite"
+                        [class.is-invalid]="isInvalid('numTramite')"
                         (change)="setValoresStore(asignacionForm,'numTramite')">
-                    <div *ngIf="isInvalid('numTramite')" class="mensaje-error">
-                        Este campo es obligatorio
-                    </div>
                 </div>
+    @if(asignacionForm.controls['numTramite'].invalid && asignacionForm.controls['numTramite'].touched) {
+    <div class="d-grid">
+      @if(asignacionForm.controls['numTramite'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+      }
+      @if(asignacionForm.controls['numTramite'].errors?.['maxlength']) {
+        <span class="mensaje-error">El número de oficio no puede ser mayor a 30 caracteres</span>
+      }
+    </div>
+  }
             </div>
         </div>
         <div class="row mb-5">
             <div class="col-md-6"></div>
             <div class="col-md-6 text-end">
-                    <button class="btn btn-group btn-primary" type="button" (click)="buscar()">Buscar</button>
+                    <button class="btn btn-group btn-primary" type="button" (click)="buscar()" [disabled]="esFormularioSoloLectura">Buscar</button>
             </div>
         </div>
-
     </form>
 </div>
 <div *ngIf="buscarDatos">

@@ -290,12 +290,7 @@ export interface RespuestaContribuyenteTabla {
      * @type {string}
      */
     correoPFE: string;
-    
-    /**
-     * Acciones
-     * @type {string}
-     */
-    acciones: string;
+  
   
     /**
      * Código postal de la persona física extranjera
@@ -333,6 +328,11 @@ export interface RespuestaContribuyenteTabla {
    * @interface PersonaMoralExtranjeraForm
    */
   export interface PersonaMoralExtranjeraForm {
+  /**
+   * Ciudad de la persona moral extranjera
+   * @type {string}
+   */
+  ciudadPME?: string;
     /**
      * Denominación de la persona moral extranjera
      * @type {string}
@@ -536,12 +536,6 @@ export interface RespuestaContribuyenteTabla {
      * @type {string}
      */
     correoPFE: string;
-
-    /**
-     * Acciones
-     * @type {string}
-     */
-    acciones:string;
   
     /**
      * País de persona física extranjera

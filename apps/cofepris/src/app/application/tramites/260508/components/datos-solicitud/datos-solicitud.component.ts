@@ -1,5 +1,5 @@
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
 
 /**
@@ -27,4 +27,14 @@ export class DatosSolicitudComponent {
    * Indica si se debe mostrar la sección de Aduanas de Entrada
    */
   isAduanasEntradaVisible: boolean = true;
+
+  /**
+   * Indica si el solicitante tiene uso específico.
+   */
+  @Input() tieneUsoEspecifico: boolean = true;
+
+  /**
+   * Indica si se debe habilitar el domicilio.
+   */
+  tieneDomicilioHabilitar: boolean = true;
 }

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { WizardComponent } from '@ng-mf/data-access-user';
+import { AccionBoton } from '@ng-mf/data-access-user';
 
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
@@ -8,7 +9,7 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SolicitudPageComponent, HttpClientTestingModule],
+      declarations: [SolicitudPageComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudPageComponent);
@@ -20,38 +21,50 @@ describe('SolicitudPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have the correct initial title message', () => {
+  it('should initialize with correct title and index', () => {
     expect(component.tituloMensaje).toBe(
       'Permiso sanitario de importación de medicamentos con registro sanitario'
     );
+    expect(component.indice).toBe(1);
   });
 
-  it('should update the title message when getValorIndice is called', () => {
-    const accionBoton = { valor: 2, accion: 'cont' };
-    component.getValorIndice(accionBoton);
+  it('should change index with seleccionaTab', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+  });
+
+  it('should update index and title with getValorIndice (cont)', () => {
+    // Mock wizardComponent
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
+
+    const accion: AccionBoton = { valor: 2, accion: 'cont' };
+    component.getValorIndice(accion);
+
+    expect(component.indice).toBe(2);
     expect(component.tituloMensaje).toBe('Anexar requisitos');
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should change the indice when seleccionaTab is called', () => {
-    component.seleccionaTab(3);
-    expect(component.indice).toBe(3);
+  it('should update index and title with getValorIndice (atras)', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
+
+    const accion: AccionBoton = { valor: 1, accion: 'atras' };
+    component.getValorIndice(accion);
+
+    expect(component.indice).toBe(1);
+    expect(component.tituloMensaje).toBe(
+      'Permiso sanitario de importación de medicamentos con registro sanitario'
+    );
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should call wizardComponent.siguiente when getValorIndice is called with "cont" action', () => {
-    const spy = jest.spyOn(component.wizardComponent, 'siguiente');
-    const accionBoton = { valor: 2, accion: 'cont' };
-    component.getValorIndice(accionBoton);
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should call wizardComponent.atras when getValorIndice is called with "ant" action', () => {
-    const spy = jest.spyOn(component.wizardComponent, 'atras');
-    const accionBoton = { valor: 2, accion: 'ant' };
-    component.getValorIndice(accionBoton);
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should return the correct title for each step using obtenerNombreDelTítulo', () => {
+  it('obtenerNombreDelTítulo should return correct titles', () => {
     expect(SolicitudPageComponent.obtenerNombreDelTítulo(1)).toBe(
       'Permiso sanitario de importación de medicamentos con registro sanitario'
     );
@@ -61,7 +74,7 @@ describe('SolicitudPageComponent', () => {
     expect(SolicitudPageComponent.obtenerNombreDelTítulo(3)).toBe(
       'Firmar solicitud'
     );
-    expect(SolicitudPageComponent.obtenerNombreDelTítulo(4)).toBe(
+    expect(SolicitudPageComponent.obtenerNombreDelTítulo(99)).toBe(
       'Permiso sanitario de importación de medicamentos con registro sanitario'
     );
   });

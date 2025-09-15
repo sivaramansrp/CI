@@ -118,19 +118,61 @@
   "horaInspeccion": [
     {
       "id": 1,
-      "descripcion": "08:00 AM - 10:00 AM",
+      "descripcion": "00:00",
       "tam": "2 horas",
       "dpi": "INS001"
     },
     {
       "id": 2,
-      "descripcion": "10:00 AM - 12:00 PM",
+      "descripcion": "00:30",
       "tam": "2 horas",
       "dpi": "INS002"
     },
     {
       "id": 3,
-      "descripcion": "01:00 PM - 03:00 PM",
+      "descripcion": "01:00",
+      "tam": "2 horas",
+      "dpi": "INS003"
+    },
+    {
+      "id": 4,
+      "descripcion": "01:30",
+      "tam": "2 horas",
+      "dpi": "INS003"
+    },
+    {
+      "id": 5,
+      "descripcion": "02:00",
+      "tam": "2 horas",
+      "dpi": "INS003"
+    },
+    {
+      "id": 6,
+      "descripcion": "02:30",
+      "tam": "2 horas",
+      "dpi": "INS003"
+    },
+    {
+      "id": 7,
+      "descripcion": "03:00",
+      "tam": "2 horas",
+      "dpi": "INS003"
+    },
+    {
+      "id": 8,
+      "descripcion": "03:30",
+      "tam": "2 horas",
+      "dpi": "INS003"
+    },
+    {
+      "id": 9,
+      "descripcion": "04:00",
+      "tam": "2 horas",
+      "dpi": "INS003"
+    },
+    {
+      "id": 10,
+      "descripcion": "04:30",
       "tam": "2 horas",
       "dpi": "INS003"
     }
@@ -244,5 +286,17 @@
         "dpi": "transporte 3"
       }
     ]
-  }  
+  },
+  "mercanciaLista": [
+    {
+      "id": 1,
+      "fraccionArancelaria": "40012999",
+      "descripcionFraccion": "Los demás.",
+      "nico": "00",
+      "descripcion": "Los demás.",
+      "unidaddeMedidaDeUMT": "Kilogramo",
+      "cantidadTotalUMT": "20.15",
+      "saldoPendiente": "20.15"
+    }
+  ]
 }

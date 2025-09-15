@@ -9,7 +9,7 @@
   <div class="row mt-5">
     <div class="col-md-3">
       <h6>
-        Fabricante<span class="form-label" *ngIf="esCampoRequerido('fabricante')">*</span><span class="form-label">:</span>
+        Fabricante<span class="form-label" *ngIf="!esCampoRequerido('fabricante')">*</span><span class="form-label">:</span>
       </h6>
     </div>
   </div>
@@ -19,7 +19,7 @@
       [datos]="fabricanteTablaDatos"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
       (listaDeFilaSeleccionada)="fabricanteSeleccionadoDatos = $event"
-      [disableSeleccionTablaCheckBox]="formularioDeshabilitado ? true : false"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
     ></app-tabla-dinamica>
   </div>
 
@@ -27,42 +27,44 @@
     <div class="col-md-12">
       <div class="pull-right">
         @if (fabricanteSeleccionadoDatos.length > 0) {
-        <button
-          type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
-          (click)="modificarFabricante()"
-          [disabled]="formularioDeshabilitado ? true : false"
-        >
-          Modificar
-        </button>
+          @if (fabricanteSeleccionadoDatos.length === 1) {
+            <button
+              type="button"
+              name="modificarMercancias"
+              class="btn btn-default"
+              (click)="modificarFabricante()"
+              [disabled]="esFormularioSoloLectura ? true : false"
+            >
+              Modificar
+            </button>
+          }
         <button
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarFabricante()"
-          [disabled]="formularioDeshabilitado ? true : false"
+          [disabled]="esFormularioSoloLectura ? true : false"
         >
           Eliminar
         </button>
         }
+         
         <button
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          data-bs-toggle="modal"
-          data-bs-target="#modalAgregarMercancias"
-          (click)="irAAcciones('../agregar-fabricante')"
-          [disabled]="formularioDeshabilitado ? true : false"
+          (click)="irAAcciones('../agregar-fabricante',false)"
+          [disabled]="esFormularioSoloLectura ? true : false"
         >
           Agregar
         </button>
+       
       </div>
     </div>
   </div>
   <div class="row mt-5">
     <div class="col-md-3">
-      <h6> Destinatario (destino final)<span class="form-label" *ngIf="esCampoRequerido('destinoFinal')">*</span><span class="form-label">:</span>
+      <h6> Destinatario (destino final)<span class="form-label" *ngIf="!esCampoRequerido('destinoFinal')">*</span><span class="form-label">:</span>
       </h6>
     </div>
   </div>
@@ -72,7 +74,7 @@
       [datos]="destinatarioFinalTablaDatos"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
       (listaDeFilaSeleccionada)="destinatarioSeleccionadoDatos = $event"
-      [disableSeleccionTablaCheckBox]="formularioDeshabilitado ? true : false"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
     ></app-tabla-dinamica>
   </div>
 
@@ -80,33 +82,34 @@
     <div class="col-md-12">
       <div class="pull-right">
         @if (destinatarioSeleccionadoDatos.length > 0) {
-        <button
-          type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
-          (click)="modificarDestinatario()"
-          [disabled]="formularioDeshabilitado ? true : false"
-        >
-          Modificar
-        </button>
+          @if (destinatarioSeleccionadoDatos.length === 1) {
+          <button
+            type="button"
+            name="modificarMercancias"
+            class="btn btn-default"
+            (click)="modificarDestinatario()"
+            [disabled]="esFormularioSoloLectura ? true : false"
+          >
+            Modificar
+          </button>
+        }
         <button
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarDestinatario()"
-          [disabled]="formularioDeshabilitado ? true : false"
+          [disabled]="esFormularioSoloLectura ? true : false"
         >
           Eliminar
         </button>
         }
+        
         <button
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          data-bs-toggle="modal"
-          data-bs-target="#modalAgregarMercancias"
-          (click)="irAAcciones('../agregar-destinatario-final')"
-          [disabled]="formularioDeshabilitado ? true : false"
+          (click)="irAAcciones('../agregar-destinatario-final', false)"
+          [disabled]="esFormularioSoloLectura ? true : false"
         >
           Agregar
         </button>
@@ -122,7 +125,7 @@
       [datos]="proveedorTablaDatos"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
       (listaDeFilaSeleccionada)="proveedorSeleccionadoDatos = $event"
-      [disableSeleccionTablaCheckBox]="formularioDeshabilitado ? true : false"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
     ></app-tabla-dinamica>
   </div>
 
@@ -130,33 +133,34 @@
     <div class="col-md-12">
       <div class="pull-right">
         @if (proveedorSeleccionadoDatos.length > 0) {
-        <button
-          type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
-          (click)="modificarProveedor()"
-          [disabled]="formularioDeshabilitado ? true : false"
-        >
-          Modificar
-        </button>
+           @if (proveedorSeleccionadoDatos.length === 1) {
+            <button
+              type="button"
+              name="modificarMercancias"
+              class="btn btn-default"
+              (click)="modificarProveedor()"
+              [disabled]="esFormularioSoloLectura ? true : false"
+            >
+              Modificar
+            </button>
+          }
         <button
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarProveedor()"
-          [disabled]="formularioDeshabilitado ? true : false"
+          [disabled]="esFormularioSoloLectura ? true : false"
         >
           Eliminar
         </button>
         }
+        
         <button
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          data-bs-toggle="modal"
-          data-bs-target="#modalAgregarMercancias"
-          (click)="irAAcciones('../agregar-proveedor')"
-          [disabled]="formularioDeshabilitado ? true : false"
+          (click)="irAAcciones('../agregar-proveedor', false)"
+          [disabled]="esFormularioSoloLectura ? true : false"
         >
           Agregar
         </button>
@@ -171,7 +175,7 @@
       [datos]="facturadorTablaDatos"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
       (listaDeFilaSeleccionada)="facturadorSeleccionadoDatos = $event"
-      [disableSeleccionTablaCheckBox]="formularioDeshabilitado ? true : false"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
     ></app-tabla-dinamica>
   </div>
 
@@ -179,33 +183,34 @@
     <div class="col-md-12">
       <div class="pull-right">
         @if (facturadorSeleccionadoDatos.length > 0) {
-        <button
-          type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
-          (click)="modificarFacturador()"
-          [disabled]="formularioDeshabilitado ? true : false"
-        >
-          Modificar
-        </button>
+          @if (facturadorSeleccionadoDatos.length === 1) {
+            <button
+              type="button"
+              name="modificarMercancias"
+              class="btn btn-default"
+              (click)="modificarFacturador()"
+              [disabled]="esFormularioSoloLectura ? true : false"
+            >
+              Modificar
+            </button>
+          }
         <button
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarFacturador()"
-          [disabled]="formularioDeshabilitado ? true : false"
+          [disabled]="esFormularioSoloLectura ? true : false"
         >
           Eliminar
         </button>
         }
+         
         <button
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
-          data-bs-toggle="modal"
-          data-bs-target="#modalAgregarMercancias"
-          (click)="irAAcciones('../agregar-facturador')"
-          [disabled]="formularioDeshabilitado ? true : false"
+          (click)="irAAcciones('../agregar-facturador', false)"
+          [disabled]="esFormularioSoloLectura ? true : false"
         >
           Agregar
         </button>

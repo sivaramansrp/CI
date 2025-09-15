@@ -4,7 +4,7 @@
  * incluyendo la selección de pestañas.
  * @module SolicitanteAsigncionComponent
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { SolicitudService } from '../../services/solicitud.service';
@@ -23,6 +23,26 @@ import { SolicitudService } from '../../services/solicitud.service';
   styleUrls: ['./solicitante-entidad.component.scss'],
 })
 export class SolicitanteAsigncionComponent implements OnInit, OnDestroy {
+
+  /**
+     * @description
+     * Este componente maneja los datos del trámite 140103, permitiendo la visualización y edición de los datos del establecimiento.
+     * Utiliza un servicio para obtener y actualizar los datos del formulario.
+     */
+    @Input() showBuscarError: boolean = false;
+    /**
+     * @description
+     * Evento que se emite al intentar buscar datos.
+     * Contiene el estado del formulario (si fue enviado y si es inválido).
+     */
+    @Output() buscarIntento = new EventEmitter<{ submitted: boolean; invalid: boolean }>();
+    /**
+ * Evento que emite un valor booleano al componente padre.
+ * Se activa cuando el subíndice del child componente cambia.
+ * - true: el subíndice es 3 (mostrar alerta)
+ * - false: cualquier otro valor de subíndice
+ */
+   @Output() alertaEvento = new EventEmitter<boolean>();
   /**
    * Índice de la pestaña seleccionada.
    */
@@ -44,6 +64,7 @@ export class SolicitanteAsigncionComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+     this.alertaEvento.emit(this.indice === 2);
 
 
   }
@@ -92,6 +113,17 @@ export class SolicitanteAsigncionComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+  /**
+   * Método que se invoca al intentar buscar datos.
+   * Emite un evento con el estado del formulario (si fue enviado y si es inválido).
+   *
+   * @param event - Objeto que contiene el estado del formulario.
+   */
+  onBuscarIntento(event: { submitted: boolean; invalid: boolean }): void {
+    this.buscarIntento.emit(event);
+  }
+
   /**
    * Método de destrucción del componente.
    */

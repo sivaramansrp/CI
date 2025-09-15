@@ -25,6 +25,8 @@ import { CommonModule } from '@angular/common';
 import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { HistorialInspeccionFisicaComponent } from '../../shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
 import { MedioTransporteComponent } from '../../shared/medio-transporte/medio-transporte.component';
+import { MercanciaTabla } from '../../models/medio-transporte.model';
+import { PROCEDURE_ID } from '../../constantes/constantes';
 import { ResponsableInspeccionEnPuntoComponent } from '../../shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
 import { SolicitudDatosComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
 import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
@@ -114,6 +116,33 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   @Output() certificadosAutorizValor = new EventEmitter<boolean>(false);
 
   /**
+   * @property {number} procedimiento
+   * @description
+   * Almacena el identificador del procedimiento actual, asignado a partir de la
+   * constante `PROCEDURE_ID`.
+   * Se utiliza para asociar la lógica y las operaciones del componente con el
+   * trámite correspondiente.
+   *
+   * @default PROCEDURE_ID (220502)
+   */
+  procedimiento: number = PROCEDURE_ID;
+
+  /**
+   * @description
+   * Lista general de mercancías disponibles en el componente.
+   *
+   * Esta colección contiene todas las mercancías cargadas o registradas,
+   * y se utiliza como fuente principal para mostrar la tabla de mercancías
+   * en la interfaz de usuario.
+   *
+   * A diferencia de `mercanciaSeleccionLista`, que solo guarda las
+   * seleccionadas, esta propiedad mantiene el inventario completo.
+   *
+   * @type {MercanciaTabla[]}
+   */
+  mercanciaLista: MercanciaTabla[] = [] as MercanciaTabla[];
+
+  /**
    * @constructor
    * Inyecta los servicios necesarios para la creación y gestión del formulario,
    * así como para la obtención y consulta de datos de la solicitud.
@@ -195,6 +224,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.hMercanciaTabla = data.hMerchandise;
         this.dMercanciaBody = data.dMercancia;
         this.mediodetransporte = data.medioDeTransporte;
+        this.mercanciaLista = data.mercanciaLista;
       },
     });
   }

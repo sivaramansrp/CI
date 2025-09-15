@@ -6,7 +6,7 @@
       <!-- Clave de referencia -->
       <div class="col-md-4">
         <label for="claveReferencia" class="form-label"
-          >Clave de referencia:</label
+          >Clave de referencia<span *ngIf="campoRequerido">*</span>:</label
         >
         <input
           type="text"
@@ -33,7 +33,7 @@
       <!-- Cadena de la dependencia -->
       <div class="col-md-4">
         <label for="cadenaDependencia" class="form-label"
-          >Cadena de la dependencia:</label
+          >Cadena de la dependencia<span *ngIf="campoRequerido">*</span>:</label
         >
         <input
           type="text"
@@ -80,7 +80,7 @@
         <app-catalogo-select
           [catalogo]="estadosDatos"
           formControlName="estado"
-          [label]="'Estado/localidad'"
+          [label]="'Banco'"
           [required]="true"
           [isDisabled]="formularioDeshabilitado"
           (change)="
@@ -99,7 +99,7 @@
     <div class="row g-3 mt-2">
       <!-- Llave de pago -->
       <div class="col-md-4">
-        <label for="llavePago" class="form-label">Llave de pago:</label>
+        <label for="llavePago" class="form-label">Llave de pago<span *ngIf="campoRequerido">*</span>:</label>
         <input
           type="text"
           id="llavePago"
@@ -131,8 +131,8 @@
         name="fechaPago"
         (valorCambiado)="onFechaCambiada($event)"
         [setFecha]="pagoDerechosForm.get('fechaPago')?.value"
-        formControlName="fechaPago"
         [isDisabled]="formularioDeshabilitado"
+        [deshabilitarFuturas]="true"
         ></input-fecha>
 
         <div *ngIf="esInvalido('fechaPago')" class="text-danger">
@@ -144,7 +144,7 @@
 
       <!-- Importe de pago -->
       <div class="col-md-4">
-        <label for="importePago" class="form-label">Importe de pago:</label>
+        <label for="importePago" class="form-label">Importe de pago<span *ngIf="campoRequerido">*</span>:</label>
         <input
           type="text"
           id="importePago"
@@ -164,7 +164,10 @@
           <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['required']">
             Todos los campos de pago son requeridos
           </small>
-          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['pattern']">
+          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['invalidNumber']">
+            Por favor, escribe un número entero válido
+          </small>
+          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['tooManyDecimals']">
             Este campo solo permite números hasta dos decimales
           </small>
           </div>

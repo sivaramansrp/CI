@@ -40,7 +40,7 @@
   .header{
     display: flex;
     justify-content: center;
-    background-color: #000000b8;
+    background-color:#393c3e;
     color: white;
     height: 40px;
     align-items: center;
@@ -53,4 +53,11 @@
   .custom-identificacion{
     margin: -18px;
   }
-  
+
+  .custom-ms{
+    margin-left: 200px;
+  }
+
+  .required-field {
+  color: red;
+}

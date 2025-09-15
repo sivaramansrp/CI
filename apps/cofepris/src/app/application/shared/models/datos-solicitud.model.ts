@@ -192,6 +192,8 @@ export interface TablaMercanciasDatos {
   especifique?: string;
   especifiqueObligatorio?:string;
   fechaCaducidad?: string;
+    paisDeOriginDatos?: string[];
+  paisDeProcedenciaDatos?: string[];
 }
 
 /**
@@ -263,6 +265,7 @@ export interface DatosSolicitudFormState {
   regimen: string | number;
   adunasDeEntradas: string | number;
   aeropuerto: boolean;
+  aeropuertoDos?: boolean;
   publico: string;
   representanteRfc: string;
   representanteNombre: string;
@@ -275,7 +278,8 @@ export interface DatosSolicitudFormState {
   fechaDeCaducidad?: string;
   regimenLaMercancia?:string
   aduana?:string
-  manifesto?: boolean
+  manifesto?: boolean;
+  manifiestosCasillaDeVerificacion?: boolean;
 }
 
 /**

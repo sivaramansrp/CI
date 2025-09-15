@@ -1,11 +1,13 @@
+import { API_GET_DATOS_SOLICITANTE, API_GET_IDC_CONTRIBUYENTE, COMUN_URL } from '../../../servers/api-router';
 import { Observable, catchError, throwError } from 'rxjs';
-import { API_GET_IDC_CONTRIBUYENTE } from '../../../constants/api-constants';
 import { DatosGeneralesModel } from '../../../models/datos-generales.model';
-import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '../../../models/shared/catalogos.model';
 import { RFC_GENERICO } from '../../../constants/constantes-generales';
+import { SolicitanteEvaluarResponse } from '../../../models/datos-solicitante-evaluar.model';
+
+import { BaseResponse } from '../../../models/shared/base-response.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -14,7 +16,7 @@ export class SolicitanteService {
 
   constructor(private http: HttpClient) {
     // Lógica de inicialización si es necesario
-    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
@@ -45,5 +47,17 @@ export class SolicitanteService {
         return throwError(() => error);
       })
     );
+  }
+
+  /**
+   * Consulta los datos del solicitante y la información relacionada con un trámite.
+   *
+   * @param idSolicitud Identificador único de la solicitud a consultar.
+   * @returns Observable que emite un objeto `BaseResponse<SolicitanteEvaluarResponse>`
+   *          con los datos del solicitante, del trámite, domicilio y personas de notificación.
+   */
+  getSolicitanteEvaluar(tramite: string,idSolicitud: string): Observable<BaseResponse<SolicitanteEvaluarResponse>> {
+    const ENDPOINT = `${this.host}${API_GET_DATOS_SOLICITANTE(tramite,idSolicitud)}`;
+    return this.http.get<BaseResponse<SolicitanteEvaluarResponse>>(ENDPOINT);
   }
 }

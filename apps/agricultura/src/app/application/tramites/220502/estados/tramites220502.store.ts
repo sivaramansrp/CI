@@ -7,19 +7,19 @@ import { StoreConfig } from '@datorama/akita';
  */
 export interface Solicitud220502State {
   /** Cantidad de certificados autorizados pendientes. */
-  certificadosAutorizados: number;
+  certificadosAutorizados: number | string;
 
   /** Hora programada para la inspección. */
-  horaDeInspeccion: number;
+  horaDeInspeccion: number | string;
 
   /** Identificador numérico de la aduana de ingreso. */
-  aduanaDeIngreso: number;
+  aduanaDeIngreso: number | string;
 
   /** Identificador numérico de la oficina de Sanidad Agropecuaria. */
-  sanidadAgropecuaria: number;
+  sanidadAgropecuaria: number | string;
 
   /** Identificador numérico del punto de inspección. */
-  puntoDeInspeccion: number;
+  puntoDeInspeccion: number | string;
 
   /** Fecha programada para la inspección en formato de cadena (ej. 'YYYY-MM-DD'). */
   fechaDeInspeccion: string;
@@ -40,7 +40,7 @@ export interface Solicitud220502State {
   mercancia: string;
 
   /** Identificador numérico del tipo de contenedor. */
-  tipocontenedor: number;
+  tipocontenedor: number | string;
 
   /** Identificador numérico del medio de transporte. */
   transporteIdMedio: number;
@@ -138,6 +138,39 @@ export interface Solicitud220502State {
    * Folio de la solicitud.
    */
   foliodel: string;
+
+  /**
+   * Fracción arancelaria de la mercancía.
+   */
+  fraccionArancelaria: string;
+  /**
+   * Descripción de la fracción arancelaria.
+   */
+  descripcionFraccion: string;
+  /**
+   * Número de identificación de la mercancía (NICO).
+   */
+  nico: string;
+  /**
+   * Descripción de la mercancía.
+   */
+  descripcion: string;
+  /**
+   * Unidad de medida tarifaria de la mercancía.
+   */
+  unidaddeMedidaDeUMT: string;
+  /**
+   * Cantidad total de la unidad de medida tarifaria.
+   */
+  cantidadTotalUMT: string;
+  /**
+   * Saldo pendiente de la solicitud.
+   */
+  saldoPendiente: string;
+  /**
+   * Saldo a capturar.
+   */
+  saldoACapturar: string;
 }
 
 /**
@@ -147,18 +180,18 @@ export interface Solicitud220502State {
  */
 export function crearEstadoInicial(): Solicitud220502State {
   return {
-    certificadosAutorizados: 0,
-    horaDeInspeccion: 0,
-    aduanaDeIngreso: 0,
-    sanidadAgropecuaria: 0,
-    puntoDeInspeccion: 0,
+    certificadosAutorizados: '',
+    horaDeInspeccion: '',
+    aduanaDeIngreso: '',
+    sanidadAgropecuaria: '',
+    puntoDeInspeccion: '',
     fechaDeInspeccion: '',
     fechaInspeccion: '',
     nombre: '',
     primerapellido: '',
     segundoapellido: '',
     mercancia: '',
-    tipocontenedor: 0,
+    tipocontenedor: '',
     transporteIdMedio: 0,
     identificacionTransporte: '',
     esSolicitudFerros: '',
@@ -183,6 +216,15 @@ export function crearEstadoInicial(): Solicitud220502State {
     aduanaIngreso: -1,
     oficinaInspeccion: -1,
     puntoInspeccion: -1,
+
+    fraccionArancelaria: '',
+    descripcionFraccion: '',
+    nico: '',
+    descripcion: '',
+    unidaddeMedidaDeUMT: '',
+    cantidadTotalUMT: '',
+    saldoPendiente: '',
+    saldoACapturar: '',
   };
 }
 
@@ -204,7 +246,9 @@ export class Solicitud220502Store extends Store<Solicitud220502State> {
    *
    * @param certificadosAutorizados - Cantidad de certificados autorizados.
    */
-  public setCertificadosAutorizados(certificadosAutorizados: number): void {
+  public setCertificadosAutorizados(
+    certificadosAutorizados: number | string
+  ): void {
     this.update((state) => ({
       ...state,
       certificadosAutorizados,
@@ -216,7 +260,7 @@ export class Solicitud220502Store extends Store<Solicitud220502State> {
    *
    * @param horaDeInspeccion - Hora en la que se realizará la inspección.
    */
-  public setHoraDeInspeccion(horaDeInspeccion: number): void {
+  public setHoraDeInspeccion(horaDeInspeccion: number | string): void {
     this.update((state) => ({
       ...state,
       horaDeInspeccion,
@@ -228,7 +272,7 @@ export class Solicitud220502Store extends Store<Solicitud220502State> {
    *
    * @param aduanaDeIngreso - Código de la aduana de ingreso.
    */
-  public setAduanaDeIngreso(aduanaDeIngreso: number): void {
+  public setAduanaDeIngreso(aduanaDeIngreso: number | string): void {
     this.update((state) => ({
       ...state,
       aduanaDeIngreso,
@@ -240,7 +284,7 @@ export class Solicitud220502Store extends Store<Solicitud220502State> {
    *
    * @param sanidadAgropecuaria - Valor de sanidad agropecuaria.
    */
-  public setSanidadAgropecuaria(sanidadAgropecuaria: number): void {
+  public setSanidadAgropecuaria(sanidadAgropecuaria: number | string): void {
     this.update((state) => ({
       ...state,
       sanidadAgropecuaria,
@@ -252,7 +296,7 @@ export class Solicitud220502Store extends Store<Solicitud220502State> {
    *
    * @param puntoDeInspeccion - Código del punto de inspección.
    */
-  public setPuntoDeInspeccion(puntoDeInspeccion: number): void {
+  public setPuntoDeInspeccion(puntoDeInspeccion: number | string): void {
     this.update((state) => ({
       ...state,
       puntoDeInspeccion,
@@ -336,7 +380,7 @@ export class Solicitud220502Store extends Store<Solicitud220502State> {
    *
    * @param tipocontenedor - Código del tipo de contenedor.
    */
-  public setTipocontenedor(tipocontenedor: number): void {
+  public setTipocontenedor(tipocontenedor: number | string): void {
     this.update((state) => ({
       ...state,
       tipocontenedor,
@@ -651,6 +695,76 @@ export class Solicitud220502Store extends Store<Solicitud220502State> {
     this.update((state) => ({
       ...state,
       punto,
+    }));
+  }
+
+  /**
+   * Actualiza la fracción arancelaria de la mercancía.
+   */
+  public setFraccionArancelaria(fraccionArancelaria: string): void {
+    this.update((state) => ({
+      ...state,
+      fraccionArancelaria,
+    }));
+  }
+
+  /**
+   * Actualiza la descripción de la fracción arancelaria.
+   */
+  public setDescripcionFraccion(descripcionFraccion: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionFraccion,
+    }));
+  }
+
+  /**
+   * Actualiza el número de identificación de la mercancía (NICO).
+   */
+  public setNico(nico: string): void {
+    this.update((state) => ({
+      ...state,
+      nico,
+    }));
+  }
+
+  /**
+   * Actualiza la descripción de la mercancía.
+   */
+  public setDescripcion(descripcion: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcion,
+    }));
+  }
+
+  /**
+   * Actualiza la unidad de medida tarifaria de la mercancía.
+   */
+  public setUnidaddeMedidaDeUMT(unidaddeMedidaDeUMT: string): void {
+    this.update((state) => ({
+      ...state,
+      unidaddeMedidaDeUMT,
+    }));
+  }
+
+  /**
+   * Actualiza la cantidad total de la unidad de medida tarifaria.
+   */
+  public setCantidadTotalUMT(cantidadTotalUMT: string): void {
+    this.update((state) => ({
+      ...state,
+      cantidadTotalUMT,
+    }));
+  }
+
+  /**
+   * Actualiza el saldo pendiente de la solicitud.
+   */
+  public setSaldoPendiente(saldoPendiente: string): void {
+    this.update((state) => ({
+      ...state,
+      saldoPendiente,
     }));
   }
 

@@ -3,8 +3,9 @@
 [tablaMercanciasConfig]="tablaMercanciasConfig" [opcionConfig]="opcionConfig"
 [idProcedimiento]="idProcedimiento"
 [formularioDeshabilitado]="formularioDeshabilitado"
+[elementosRequeridos]="elementosRequeridos"
 (datasolicituActualizar)="datasolicituActualizar($event)"
 (opcionSeleccionado)="opcionSeleccionado($event)"
 (scianSeleccionado)="scianSeleccionado($event)"
 (mercanciasSeleccionado)="mercanciasSeleccionado($event)"
-(datosDeTablaSeleccionados)="datosDeTablaSeleccionados($event)"></app-datos-de-la-solicitud>
+(datosDeTablaSeleccionados)="datosDeTablaSeleccionados($event)" #DatosDeLaSolicitudComponent></app-datos-de-la-solicitud>

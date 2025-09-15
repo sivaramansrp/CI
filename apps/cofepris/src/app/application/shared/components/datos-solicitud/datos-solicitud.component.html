@@ -45,6 +45,7 @@
             placeholder=""
             type="text"
             formControlName="denominacion"
+            [ngClass]="esValido('denominacion') ? 'required' : ''"
             (change)="setValoresStore(forma, 'denominacion', 'setDenominacion')"
           />
            <div *ngIf="forma.get('denominacion')?.touched && forma.get('denominacion')?.errors?.['required']" class="mensaje-error">
@@ -56,14 +57,14 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="correo">Correo electrónico*:<span class="bi bi-question-circle-fill fs-4 m-1"
-            title="ejemplo@dominio.com" ata-bs-toggle="tooltip"></span></label>
+          <label class="form-label" for="correo">Correo electrónico*: <span class="bi bi-question-circle-fill mx-2" tooltip="ejemplo@dominio.com" placement="top"></span></label>
           <input
             class="form-control"
             id="correo"
             placeholder=""
             type="text"
             formControlName="correo"
+            [ngClass]="esValido('correo') ? 'required' : ''"
             (change)="setValoresStore(forma, 'correo', 'setCorreo')"
           />
            <div *ngIf="forma.get('correo')?.touched && forma.get('correo')?.errors?.['required']" class="mensaje-error">
@@ -83,7 +84,9 @@
     [isGarantiasOfrecidasVisible]="isGarantiasOfrecidasVisible"
     [esPaginacionVisible]="esPaginacionVisible"
     [tieneDomicilioHabilitar]="tieneDomicilioHabilitar"
-    [mostrarNumeroRegistro]="mostrarNumeroRegistro">
+    [mostrarNumeroRegistro]="mostrarNumeroRegistro"
+    [tieneUsoEspecifico]="tieneUsoEspecifico"
+    >
   </app-domicillo>
   <app-manifiestos></app-manifiestos>
   <app-representante-legal-rfc></app-representante-legal-rfc>

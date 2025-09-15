@@ -11,77 +11,99 @@
     <div class="mt-5">
       <h5>Fabricante:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="tablaEncabezadoData" [commonTableBody]="fabricanteRowData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+       
+       <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaFabricante"
+      [datos]="fabricanteTablaDatos"
+      [tipoSeleccionTabla]="checkbox"   
+      (listaDeFilaSeleccionada)="fabricanteSeleccionadoDatos = $event"   
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+    ></app-tabla-dinamica>  
       </div>
       <br />
 
-      <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showFabricanteButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
-        </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()" [disabled]="esFormularioSoloLectura">
-          Agregar
-        </button>
-      </div>
-    </div>
+   <div class="d-flex justify-content-end mt-3">
+  <button  class="btn btn-danger me-3" type="button"  (click)="eliminarFabricante()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+  <button  class="btn btn-default me-3" type="button"  (click)="modificarFabricante()" [disabled]="esFormularioSoloLectura">Modificar</button>
+  <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()" [disabled]="esFormularioSoloLectura">
+    Agregar
+  </button>
+</div>
 
     <!-- La mesa del destinatario en exhibición -->
     <div class="mt-5">
       <h5>Destinatario (destino final)*:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="tablaEncabezadoData" [commonTableBody]="destinatarioRowData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
-        </ng-table>
+      
+         <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaDestinatarioFinal"
+      [datos]="destinatarioFinalTablaDatos"
+      [tipoSeleccionTabla]="checkbox"
+      (listaDeFilaSeleccionada)="destinatarioSeleccionadoDatos = $event"      
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+    ></app-tabla-dinamica>
       </div>
       <br />
 
       <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showDestinatarioButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
-        </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()" [disabled]="esFormularioSoloLectura">
-          Agregar
-        </button>
-      </div>
+  <button  class="btn btn-danger me-3" type="button" (click)="eliminarDestinario()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+  <button  class="btn btn-default me-3" type="button" (click)="modificarDestinatario()" [disabled]="esFormularioSoloLectura">Modificar</button>
+  <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()" [disabled]="esFormularioSoloLectura">
+    Agregar
+  </button>
+</div>
     </div>
 
     <!-- La mesa del proveedor en exhibición -->
     <div class="mt-5">
       <h5>Proveedor:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="tablaEncabezadoData" [commonTableBody]="proveedorRowData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+        
+       <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaProveedor"
+      [datos]="proveedorTablaDatos"
+      [tipoSeleccionTabla]="checkbox"
+   (listaDeFilaSeleccionada)="proveedorSeleccionadoDatos = $event"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+    ></app-tabla-dinamica>
+
       </div>
       <br />
 
       <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showProveedorButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
-        </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()" [disabled]="esFormularioSoloLectura">
-          Agregar
-        </button>
-      </div>
+  <button  class="btn btn-danger me-3" type="button"  (click)="eliminarProveedor()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+  <button  class="btn btn-default me-3" type="button" (click)="modificarProveedor()" [disabled]="esFormularioSoloLectura">Modificar</button>
+  <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()" [disabled]="esFormularioSoloLectura">
+    Agregar
+  </button>
+</div>
+
     </div>
 
     <!-- La mesa del facturador en exhibición -->
     <div class="mt-5">
       <h5>Facturador:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="tablaEncabezadoData" [commonTableBody]="facturadorRowData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+       
+     <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaFacturador"
+      [datos]="facturadorTablaDatos"
+      [tipoSeleccionTabla]="checkbox"   
+      (listaDeFilaSeleccionada)="facturadorSeleccionadoDatos = $event"  
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+    ></app-tabla-dinamica>
+     
       </div>
       <br />
 
       <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showFacturadorButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
-        </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()" [disabled]="esFormularioSoloLectura">
-          Agregar
-        </button>
-      </div>
+  <button  class="btn btn-danger me-3" type="button"  (click)="eliminarFacturador()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+  <button  class="btn btn-default me-3" type="button" (click)="modificarFacturador()" [disabled]="esFormularioSoloLectura">Modificar</button>
+  <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()" [disabled]="esFormularioSoloLectura">
+    Agregar
+  </button>
+</div>
+
     </div>
   </div>
 </div>
@@ -411,7 +433,7 @@
                   <button type="button" class="btn btn-default ms-2" (click)="limpiarFabricanteForm()">
                     Limpiar
                   </button>
-                  <button type="button" class="btn btn-primary ms-2"  (click)="submitFabricanteForm()">
+                  <button type="button" class="btn btn-primary ms-2"  (click)="submitFabricantesForm()">
                     Guardar
                   </button>
                 </div>
@@ -661,7 +683,7 @@
                     <button type="button" class="btn btn-default ms-2" (click)="limpiarDestinatarioForm()">
                       Limpiar
                     </button>
-                    <button type="button" class="btn btn-primary ms-2" (click)="submitDestinatarioForm()">
+                    <button type="button" class="btn btn-primary ms-2" (click)="submitDestinatariosForm()">
                       Guardar
                     </button>
                   </div>
@@ -889,7 +911,7 @@
                 Limpiar
               </button>
               <button type="button" class="btn btn-primary ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight" (click)="submitProveedorForm()">
+                aria-controls="offcanvasRight" (click)="submitProveedoresForm()">
                 Guardar
               </button>
             </div>
@@ -1081,7 +1103,7 @@
                 Limpiar
               </button>
               <button type="button" class="btn btn-primary ms-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight" (click)="submitFacturadorForm()">
+                aria-controls="offcanvasRight" (click)="submitFacturadoresForm()">
                 Guardar
               </button>
             </div>
@@ -1089,3 +1111,11 @@
     </form>
   </div>
 </app-modal>
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+        (confirmacionModal)="eliminarPedimentoDatos($event)"></lib-notificaciones>
+
+</section>
+}

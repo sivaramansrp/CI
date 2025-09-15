@@ -1,34 +1,19 @@
 <div class="container">
     <div class="row">
         <ul class="nav nav-tabs">
-            <li [ngClass]="indice === 1 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
-            </li>
-            <li [ngClass]="indice === 2 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(2)">Domicilios de plantas</a>
-            </li>
-            <li [ngClass]="indice === 3 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Sectores y mercancías</a>
-            </li>
-            <li [ngClass]="indice === 4 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Productor indirecto</a>
+            <ul class="nav nav-tabs">
+                <li *ngFor="let tab of seccionesDeLaSolicitud" [ngClass]="indice === tab.index ? 'active' : ''">
+                <a data-toggle="tab" (click)="seleccionaTab(tab.index)" (keydown.enter)="seleccionaTab(tab.index)"
+                    tabindex="0">{{ tab.title }}</a>
             </li>
         </ul>
+    </ul>
+
         <ng-container>
-            @switch (indice) {
-            @case (1) {
-            <solicitante></solicitante>
-            }
-            @case (2) {
-                <app-domicilios-de-plantas [formularioDeshabilitado]="formularioDeshabilitado"></app-domicilios-de-plantas>
-            }
-            @case (3) {
-                <app-sectores-y-mercancias [formularioDeshabilitado]="formularioDeshabilitado"></app-sectores-y-mercancias>
-                }
-            @case (4) {
-                <app-productor-indirecto [formularioDeshabilitado]="formularioDeshabilitado"></app-productor-indirecto>
-                }
-            }
+            <solicitante #solicitanteRef [hidden]="indice !== 1"></solicitante>
+            <app-domicilios-de-plantas #domiciliosRef [hidden]="indice !== 2"></app-domicilios-de-plantas>
+            <app-sectores-y-mercancias #sectoresRef [hidden]="indice !== 3"></app-sectores-y-mercancias>
+            <app-productor-indirecto #productorIndirectoRef [hidden]="indice !== 4"></app-productor-indirecto>
         </ng-container>
     </div>
 </div>

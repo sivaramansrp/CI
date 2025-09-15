@@ -1,4 +1,4 @@
-import {ProductoTable,ScianTable} from '../models/aviso-model';
+import {ProductoTable,ScianTable, SolicitudTable} from '../models/aviso-model';
 /**
  * Contiene el aviso de privacidad simplificado con su correspondiente enlace al aviso integral.
  */
@@ -165,7 +165,7 @@ export const PRODUCTO_TABLA_CONFIGURACION =[{
   clave: (ele: ProductoTable): string | undefined => ele.clasificacionDelProducto,
   orden: 1
 }, {
-  encabezado: 'Tipo de product',
+  encabezado: 'Tipo de producto',
   clave: (ele: ProductoTable): string | undefined => ele.tipoDeProducto,
   orden: 2
 }, {
@@ -188,9 +188,22 @@ export const PRODUCTO_TABLA_CONFIGURACION =[{
   encabezado: '	País de orígen',
   clave: (ele: ProductoTable): string | undefined => ele.paisDeOrigen,
   orden: 7
-
-
-}]
+},
+{
+  encabezado: 'País de procedencia',
+  clave: (ele: ProductoTable): string | undefined => ele.paisDeProcedencia,
+  orden: 8
+}, {
+  encabezado: 'País de destino',
+  clave: (ele: ProductoTable): string | undefined => ele.paisDeDestino,
+  orden: 9
+},
+{
+  encabezado: 'Uso específico',
+  clave: (ele: ProductoTable): string | undefined => ele.usoEspecifico,
+  orden: 10
+}
+]
 
 export const SCIAN_TABLA_CONFIGURACION = [{
   encabezado: 'Clave S.C.I.A.N.',
@@ -201,3 +214,45 @@ export const SCIAN_TABLA_CONFIGURACION = [{
   clave: (ele: ScianTable): string | undefined => ele.descripcionScian,
   orden: 2
 }]; 
+
+/**
+ * @const SOLICITUD_TABLA_CONFIGURACION
+ * @description
+ * Configuración de columnas para la tabla de solicitudes.
+ * Define la estructura y comportamiento de cada columna en la tabla dinámica.
+ * @type {Array<{encabezado: string, clave: (ele: SolicitudTable) => string | undefined, orden: number}>}
+ */
+export const SOLICITUD_TABLA_CONFIGURACION = [{
+  encabezado: 'Fecha Creación',
+  clave: (ele: SolicitudTable): string | undefined => ele.fechaCreacion,
+  orden: 1
+}, {
+  encabezado: 'Mercancía',
+  clave: (ele: SolicitudTable): string | undefined => ele.mercancia,
+  orden: 2
+}, {
+  encabezado: 'Cantidad',
+  clave: (ele: SolicitudTable): string | undefined => ele.cantidad,
+  orden: 3
+}, {
+  encabezado: 'Proveedor',
+  clave: (ele: SolicitudTable): string | undefined => ele.proveedor,
+  orden: 4
+}]; 
+
+/**
+ * @constant ERROR_FORMA_ALERT
+ * @description
+ * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+ * Se utiliza para informar al usuario que debe completar todos los campos requeridos antes de continuar.
+ */
+export const ERROR_FORMA_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      ¡Error de registro! Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`

@@ -12,7 +12,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
 import { Tramite110214State } from '../../../../estados/tramites/tramite110214.store';
 import { Tramite110214Store } from '../../../../estados/tramites/tramite110214.store';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -265,4 +265,20 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   get grupoRepresentativo(): FormGroup {
     return this.registroFormulario.get('grupoRepresentativo') as FormGroup;
   }
+  /**
+   * Valida el formulario del destinatario.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, de lo contrario `false`.
+   */
+  public validarFormulario(): boolean {
+  let isValid = true;
+
+  if (this.registroFormulario.invalid) {
+    this.registroFormulario.markAllAsTouched();
+    isValid = false;
+  }
+
+
+  return isValid;
+}
 }

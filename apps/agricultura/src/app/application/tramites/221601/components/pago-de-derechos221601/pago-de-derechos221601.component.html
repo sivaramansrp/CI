@@ -40,8 +40,8 @@
           
           <div class="col-md-4">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="bancocatalogo" formControlName="banco" [label]="'Banco'" [isDisabled]="esFormularioSoloLectura" [placeholder]="'Seleccione un valor'"
-                [required]="true" name="banco" (change)="setValoresStore(pagoDerechosForm, 'banco', 'setBanco')">
+              <app-catalogo-select [catalogo]="bancocatalogo" formControlName="banco" [label]="'Banco'" [isDisabled]="esFormularioSoloLectura" [placeholder]="'Seleccione un opción'"
+                [required]="true" name="banco" (change)="setValoresStore(pagoDerechosForm, 'banco', 'setBanco')" >
               </app-catalogo-select>
             </div>
           </div>
@@ -49,7 +49,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="llave">Llave de pago*:</label>
+              <label class="form-label" for="llave">Llave de pago<span class="required-field">*</span>:</label>
               <input class="form-control" id="llave" type="text" [maxlength]="50"
                 formControlName="llave" (change)="setValoresStore(pagoDerechosForm, 'llave', 'setLlave')" />
             </div>

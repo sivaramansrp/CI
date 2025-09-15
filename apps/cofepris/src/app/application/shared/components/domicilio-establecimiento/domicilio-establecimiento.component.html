@@ -7,7 +7,7 @@
         <input class="form-control" id="codigoPostal" placeholder="" type="text" maxlength="12"
           formControlName="codigoPostal" (change)="
             setValoresStore(domicilio, 'codigoPostal', 'setCodigoPostal')
-          " />
+          " [ngClass]="esValido('codigoPostal') ? 'required' : ''" />
         <div *ngIf="domicilio.get('codigoPostal')?.touched && domicilio.get('codigoPostal')?.errors?.['required']"
           class="mensaje-error">
           Este campo es obligatorio
@@ -25,13 +25,14 @@
     <div class="col-md-4">
       <app-catalogo-select [catalogo]="estado" formControlName="estado" [label]="'Estado'" [required]="true"
         name="estado" [placeholder]="'Selecciona un valor'" (change)="setValoresStore(domicilio, 'estado', 'setEstado')"
-        [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+        [isDisabled]="esFormularioSoloLectura" [markTouched]="domicilio.get('estado')?.touched ?? false"></app-catalogo-select>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="muncipio">Municipio y alcaldía*:</label>
         <input class="form-control" id="muncipio" placeholder="" type="text" maxlength="120" formControlName="muncipio"
-          (change)="setValoresStore(domicilio, 'muncipio', 'setMuncipio')" />
+          (change)="setValoresStore(domicilio, 'muncipio', 'setMuncipio')" 
+          [ngClass]="esValido('muncipio') ? 'required' : ''" />
         <div *ngIf="domicilio.get('muncipio')?.touched && domicilio.get('muncipio')?.errors?.['required']"
           class="mensaje-error">
           Este campo es obligatorio.
@@ -58,10 +59,10 @@
   <div class="row">
     <div class="col-md-8">
       <div class="form-group">
-        <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Domicilio, calle, número interior, numero exterior, lote"
-            ata-bs-toggle="tooltip"></span></label>
+        <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill mx-2" tooltip="Domicilio, calle, número interior, numero exterior, lote" placement="top"></span></label>
         <input class="form-control" id="calle" placeholder="" type="text" maxlength="100" formControlName="calle"
-          (change)="setValoresStore(domicilio, 'calle', 'setCalle')" />
+          (change)="setValoresStore(domicilio, 'calle', 'setCalle')" 
+          [ngClass]="esValido('calle') ? 'required' : ''"/>
         <div *ngIf="domicilio.get('calle')?.touched && domicilio.get('calle')?.errors?.['required']"
           class="mensaje-error">
           Este campo es obligatorio.
@@ -81,7 +82,8 @@
       <div class="form-group">
         <label class="form-label" for="telefono">Teléfono*:</label>
         <input class="form-control" id="telefono" placeholder="" type="number" maxlength="24" formControlName="telefono"
-          (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')" />
+          (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')" 
+          [ngClass]="esValido('telefono') ? 'required' : ''"/>
         <div *ngIf="domicilio.get('telefono')?.touched && domicilio.get('telefono')?.errors?.['required']"
           class="mensaje-error">
           Este campo es obligatorio.
@@ -95,13 +97,13 @@
     </div>
   </div>
   <div class="row">
-    <app-tabla-dinamica [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos"
+    <app-tabla-dinamica [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos" [isInvalida]="domicilio.invalid && domicilio.touched && nicoTablaDatos.length === 0"
       [tipoSeleccionTabla]="tablaSeleccionCheckbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
     </app-tabla-dinamica>
 
     <div class="col-md-12 mt-5 d-flex justify-content-end">
-      <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
-      <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
+      <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+      <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
       <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent"
         [disabled]="esFormularioSoloLectura">
         Agregar
@@ -119,12 +121,16 @@
           <span>Aviso de funcionamiento*</span>
         </label>
       </div>
+      @if (domicilio.get('avisoCheckbox')?.touched && domicilio.get('avisoCheckbox')?.errors?.['required']) {
+        <div class="mensaje-error mt-2">
+          Este campo es obligatorio.
+        </div>
+      }
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria*:</label>
-         <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente'" data-bs-toggle="tooltip">
-         </span>
+        <span class="bi bi-question-circle-fill mx-2" tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente" placement="top"></span>
         <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
           formControlName="licenciaSanitaria" (change)="
                     setValoresStore(
@@ -132,7 +138,7 @@
                       'licenciaSanitaria',
                       'setLicenciaSanitaria'
                     )
-                  " />
+                  " [ngClass]="esValido('licenciaSanitaria') ? 'required' : ''"/>
         <div
           *ngIf="domicilio.get('licenciaSanitaria')?.touched && domicilio.get('licenciaSanitaria')?.errors?.['required']"
           class="mensaje-error">
@@ -155,8 +161,14 @@
     </div>
   </div>
   <div class="row mt-5">
-    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
-      [datos]="mercanciasTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+    <app-tabla-dinamica 
+      [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
+      [configuracionTabla]="mercanciasTabla"
+      [datos]="mercanciasTablaDatos" 
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+      [isInvalida]="domicilio.invalid && domicilio.touched && mercanciasTablaDatos.length === 0"
+      (listaDeFilaSeleccionada)="seleccionarlistaSeccionMercancias($event)"
+    ></app-tabla-dinamica>
 
     <div class="d-flex justify-content-center" *ngIf="esPaginacionVisible">
       <app-table-pagination [totalItems]="totalElementos" [itemsPerPage]="elementosPorPagina"
@@ -166,7 +178,12 @@
     </div>
 
     <div class="container text-end mt-5">
-
+      @if(mercanciasTablaDatos.length > 0) {
+      <button class="btn btn-default me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"
+        [disabled]="esFormularioSoloLectura" (click)="modificarMercancia()">Modificar</button>
+      <button class="btn btn-danger me-2" data-bs-toggle="modal"
+        [disabled]="esFormularioSoloLectura" (click)="eliminarMercancia()">Eliminar</button>
+      }
       <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"
         [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
@@ -269,7 +286,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="nombreComun">Nombre común*:</label>
+            <label for="nombreComun">Nombre común:</label>
             <input type="text" id="nombreComun" formControlName="nombreComun" class="form-control" (change)="
                 setValoresStore(
                   formMercancias,
@@ -307,6 +324,7 @@
               </small>
             </div>
           </div>
+        @if(tieneUsoEspecifico) {
           <div class="form-group">
             <label for="usoEspecifico" class="form-label text-start">Uso específico*:</label>
             <textarea id="usoEspecifico" class="form-control text-area-uso" formControlName="usoEspecifico" (change)="
@@ -328,10 +346,10 @@
               </small>
             </div>
           </div>
+          }
           <div class="form-group">
             <label for="fraccionArancelaria">Fracción arancelaria*:</label>
-            <span class="bi bi-question-circle-fill fs-4 m-1"  [title]="'Descripción numérica o desglose de un código de clasificación que otorga el sistema armonizado'" ata-bs-toggle="tooltip">
-            </span>
+            <span class="bi bi-question-circle-fill" tooltip="Descripción numérica o desglose de un código de clasificación que otorga el sistema armonizado" placement="top"></span>
             <input type="text" id="fraccionArancelaria" (focusout)="setDescripcionFraccion()" formControlName="fraccionArancelaria" class="form-control"
               (change)="
                 setValoresStore(
@@ -397,8 +415,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="UMT">UMT:</label>
-                <span class="bi bi-question-circle-fill fs-4 m-1" [title]="'Unidad de medida de la tarifa'" ata-bs-toggle="tooltip">
-                </span>
+                    <span class="bi bi-question-circle-fill mx-2" tooltip="Unidad de medida de la tarifa" placement="top"></span>
                 <input type="text" id="UMT" formControlName="UMT" class="form-control"
                   (change)="setValoresStore(formMercancias, 'UMT', 'setUMT')" />
               </div>
@@ -490,9 +507,9 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
+                <div class="panel-heading" (click)="mostrar_colapsable(1)" tabindex="0">
                   <p class="panel-title fw-bold">País de origen</p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisDeOriginColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsable) {
                 <div class="panel-collapse collapse in" id="panel-01">
@@ -509,17 +526,17 @@
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">
               <div class="panel panel-default">
-                <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
+                <div class="panel-heading" (click)="mostrar_colapsable(2)" tabindex="0">
                   <p class="panel-title fw-bold">
                     País donde se produce o fabrica el ingrediente activo
                   </p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisDoneFabricaColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsable) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotones" [isDisabled]="esFormularioSoloLectura"></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPaisDuos" [label]="paisDeProcedenciaLabel"
+                      [botones]="paisDeProcedenciaBotonesDuos" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
                 }
@@ -532,13 +549,13 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableDuos()" tabindex="0">
                   <p class="panel-title fw-bold">País donde se elabora el producto</p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisDoneProductoColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsableDuos) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPaisDuos" [label]="paisDeDondeLabel"
-                      [botones]="paisDeProcedenciaBotonesDuos" [isDisabled]="esFormularioSoloLectura"></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="paisDeDondeLabel"
+                      [botones]="paisDeProcedenciaBotonesTres" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
                 }
@@ -551,13 +568,13 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
                   <p class="panel-title fw-bold">País proveedor</p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisProveedorColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsableTres) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="paisOrigenLabel"
-                      [botones]="paisDeProcedenciaBotonesTres" [isDisabled]="esFormularioSoloLectura"></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPaisCuatro" [label]="paisOrigenLabel"
+                      [botones]="paisDeProcedenciaBotonesCuatro" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
                 }
@@ -572,13 +589,13 @@
                   <p class="panel-title fw-bold">
                     País de procedencia/País del último puerto de embarque
                   </p>
-                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
+                  <button type="button" class="collpase-button" [class.collapsed]="!paisProcedenciaDelColapsable" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsableTress) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPaisCuatro" [label]="paisEmbarqueLabel"
-                      [botones]="paisDeProcedenciaBotonesCuatro" [isDisabled]="esFormularioSoloLectura"></crosslist>
+                    <crosslist [fechas]="seleccionarOrigenDelPaisCinco" [label]="paisEmbarqueLabel"
+                      [botones]="paisDeProcedenciaBotonesCinco" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
                 }
@@ -586,17 +603,26 @@
             </div>
           </div>
           }
-          <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="clasificacionToxicologica"
-              [label]="'clasificación toxicológica'" [required]="true" name="clasificacionToxicologica" (change)="
-                setValoresStore(formMercancias, 'especificar', 'setEspecificar')"
-              [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <app-catalogo-select [catalogo]="estado" formControlName="clasificacionToxicologica"
+                  [label]="'Clasificación toxicológica'" [required]="true" name="clasificacionToxicologica" (change)="
+                    setValoresStore(formMercancias, 'especificar', 'setEspecificar')"
+                  [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="objetoImportacion"
-              [label]="'objeto de importación'" [required]="true" name="objetoImportacion" (change)="
-                setValoresStore(formMercancias, 'especificar', 'setEspecificar')"
-              [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+          
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <app-catalogo-select [catalogo]="estado" formControlName="objetoImportacion"
+                  [label]="'Objeto de la importación'" [required]="true" name="objetoImportacion" (change)="
+                    setValoresStore(formMercancias, 'especificar', 'setEspecificar')"
+                  [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+              </div>
+            </div>
           </div>
         </form>
       </div>

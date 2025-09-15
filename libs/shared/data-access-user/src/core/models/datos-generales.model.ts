@@ -7,6 +7,8 @@ export interface DatosGeneralesModel {
         rfc_solicitado: string;
         bo_id: string;
         person_id: string;
+        actividades: string;
+        grupo_empresas:string;
         identificacion: {
             tipo_persona: string;
             clave_segmento: string;

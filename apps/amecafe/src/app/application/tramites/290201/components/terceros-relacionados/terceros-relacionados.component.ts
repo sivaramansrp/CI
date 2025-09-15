@@ -13,7 +13,6 @@ import {
   ConsultaioQuery,
   ConsultaioState,
   InputRadioComponent,
-  REGEX_SOLO_DIGITOS,
   TablaSeleccion,
   TableComponent,
 } from '@libs/shared/data-access-user/src';
@@ -219,6 +218,8 @@ public coloniaData: CatalogosSelect = {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+    
+
     this.solicitud290201Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -232,7 +233,10 @@ public coloniaData: CatalogosSelect = {
     this.getEntidadFederativaData();
     this.getAlcaldiaMunicipo();
     this.getColonia();
-
+this.getDestinatarioData().then(() => {
+  this.tableData = this.newDestinatarioData.length > 0 ? [...this.newDestinatarioData] : [];
+  this.onTabSwitch();
+  });
     this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyed$),
@@ -254,16 +258,16 @@ public coloniaData: CatalogosSelect = {
       datosDelTramiteRealizar: this.fb.group({
         tipoPersona: [ this.destinatarioState?.tipoPersona,[Validators.required]],
         denominacion: [ this.destinatarioState?.denominacion, [Validators.required]],
-        nombre: [ this.destinatarioState?.denominacion, [Validators.required]],
-        primerApellido: [this.destinatarioState?.denominacion,[Validators.required]],
-           
-       segundoApellido: [ this.destinatarioState?.denominacion,[Validators.required] ],
-        domicilio: [this.destinatarioState?.domicilio, [Validators.required]],
+        nombre: [ this.destinatarioState?.nombre,],
+        primerApellido: [this.destinatarioState?.primerApellido,],
+        segundoApellido: [ this.destinatarioState?.segundoApellido],
+        domicilio: [this.destinatarioState?.domicilio, [Validators.required,Validators.maxLength(5),Validators.pattern('^[a-zA-Z0-9]*$')]],
         pais: [this.destinatarioState?.pais, [Validators.required]],
         codigopostal: [
           this.destinatarioState?.codigopostal,
-          [Validators.required, Validators.maxLength(12), Validators.pattern(REGEX_SOLO_DIGITOS)]],
-        telefono: [this.destinatarioState?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
+          [Validators.required, Validators.maxLength(12), Validators.pattern('^[0-9]*$')]],
+        telefono: [this.destinatarioState?.telefono, [Validators.required, Validators.maxLength(30), 
+          Validators.pattern('^[a-zA-Z0-9]*$')]],
         correoelectronico: [
           this.destinatarioState?.correoelectronico,
           [Validators.required, Validators.email]],
@@ -272,6 +276,7 @@ public coloniaData: CatalogosSelect = {
     });
 
   }
+  
 /**
    * Getter para obtener el tipo de persona seleccionado.
    */
@@ -352,25 +357,35 @@ get selectedTipoPersona(): string | undefined {
       });
   }
   /**
-   * Método para obtener los datos del destinatario.
-   * Utiliza el servicio `registrarsolicitud` para obtener los datos y los asigna a `tableData`.
+   * Método para restaurar la selección de filas en la tabla.
    */
-  getDestinatarioData(): void {
-    this.registrarsolicitud
-      .getDestinatarioData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        const FORMATTED_DATA = (data as unknown as FilaData2[]).map((row) => ({
-          ...row,
-          datosDelTramiteRealizar: {
-            ...row.datosDelTramiteRealizar,
-            tipoPersona: row.datosDelTramiteRealizar.tipoPersona || 'moral', 
-          },
-        }));
-          this.solicitud290201Store.setDatosDeTabla(FORMATTED_DATA);
-          this.tableData = FORMATTED_DATA;
-      });
-  }
+  getDestinatarioData(): Promise<void> {
+  return new Promise((resolve) => {
+    this.solicitud290201Store._select((state) => state.tableData).subscribe((data) => {
+      if (data && data.length > 0) {
+        this.tableData = [...data];
+
+        this.solicitud290201Store._select((state) => state.filaSeleccionadas).subscribe((selectedIds) => {
+          this.filaSeleccionadas = new Set(selectedIds || []);
+          this.tableData.forEach((row) => {
+            row.selected = this.filaSeleccionadas.has(row.id);
+          });
+        });
+
+        this.solicitud290201Store._select((state) => state.filaSeleccionada).subscribe((selectedRow) => {
+          this.filaSeleccionada = selectedRow;
+        });
+
+        
+        this.newDestinatarioData = [...this.tableData];
+        this.restoreSelection();
+      } else {
+        this.tableData = [];
+      }
+      resolve();
+    });
+  });
+}
 /**
  * Método para manejar el envío del formulario.
  */
@@ -397,7 +412,8 @@ enEnviar(): void {
     const INDEX = this.tableData.findIndex((row) => row.id === this.filaSeleccionada?.id);
     if (INDEX !== -1) {
       this.tableData[INDEX] = { ...this.tableData[INDEX], ...FORM_DATA, id: this.filaSeleccionada.id };
-      this.tableData = [...this.tableData];
+      this.newDestinatarioData[INDEX] = { ...this.newDestinatarioData[INDEX], ...FORM_DATA, id: this.filaSeleccionada.id };
+
     }
   } else {
       const NEW_ID = this.tableData.length > 0
@@ -406,7 +422,14 @@ enEnviar(): void {
 
       const NEW_ROW: FilaData2 = { ...FORM_DATA, id: NEW_ID };
       this.tableData = [...this.tableData, NEW_ROW];
+          this.newDestinatarioData = [...this.newDestinatarioData, NEW_ROW];
+
   }
+  
+
+  this.solicitud290201Store.setDatosDeTabla(this.tableData);
+  this.solicitud290201Store.setFilaSeleccionada(this.filaSeleccionada);
+  this.solicitud290201Store.setFilaSeleccionadas(Array.from(this.filaSeleccionadas));
 
   this.changeDetectorRef.detectChanges();
 
@@ -465,57 +488,132 @@ onLimpiar(): void {
    * @param event Evento del checkbox.
    */
  onfilaSeleccionadasChange(filaSeleccionadas: FilaData2[]): void {
-     
-     this.filaSeleccionadas = new Set(filaSeleccionadas.map((row) => row.id)); 
-     this.filaSeleccionada = filaSeleccionadas.length > 0 ? filaSeleccionadas[0] : null;
 
-     this.esFormularioVisible = false; 
+  this.filaSeleccionadas = new Set(filaSeleccionadas.map((row) => row.id));
+  this.filaSeleccionada = filaSeleccionadas.length > 0 ? filaSeleccionadas[0] : null;
 
-   
-   }
+  this.tableData.forEach((row) => {
+    row.selected = this.filaSeleccionadas.has(row.id);
+  });
+this.solicitud290201Store.setFilaSeleccionada(this.filaSeleccionada);
+  this.solicitud290201Store.setFilaSeleccionadas(Array.from(this.filaSeleccionadas));
+  this.changeDetectorRef.detectChanges();
+}
+  /**
+ * Método para restaurar la selección de filas en la tabla.
+ * Utiliza los datos del store para restaurar las filas seleccionadas y actualiza el estado del componente.
+ */
+restoreSelection(): void {
+
+  this.solicitud290201Store._select((state) => state.filaSeleccionadas).subscribe((selectedIds) => {
+
+    this.filaSeleccionadas = new Set(selectedIds || []);
+    this.tableData.forEach((row) => {
+      row.selected = this.filaSeleccionadas.has(row.id);
+    });
+  });
+
+   this.onfilaSeleccionadasChange(this.tableData.filter((row) => row.selected));
+
+
+        this.changeDetectorRef.detectChanges(); 
+
+  this.solicitud290201Store._select((state) => state.filaSeleccionada).subscribe((selectedRow) => {
+    this.filaSeleccionada = selectedRow;
+
+
+  });
+  this.populateFormWithSelectedRow();
+}
+
+
+/**
+ * Método para inicializar el estado del formulario.
+ */
+onTabSwitch(): void {
+  if (this.tableData.length === 0) {
+    this.getDestinatarioData().then(() => {
+      if (this.tableData.length > 0) {
+        this.restoreSelection();
+      }
+      
+    });
+    return;
+  }
+
+  this.restoreSelection();
+}
+
+/**
+ * Populates the form with the selected row's data if a row is selected.
+ */
+private populateFormWithSelectedRow(): void {
+  if (this.filaSeleccionada) {
+    this.destinatarioForm.patchValue({
+      datosDelTramiteRealizar: {
+        tipoPersona: this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona,
+        denominacion: this.filaSeleccionada.datosDelTramiteRealizar.denominacion,
+        domicilio: this.filaSeleccionada.datosDelTramiteRealizar.domicilio,
+        pais: this.paisData.catalogos.find(
+          (item: Catalogo) =>
+            this.filaSeleccionada &&
+            this.filaSeleccionada.datosDelTramiteRealizar &&
+            item.descripcion === this.filaSeleccionada.datosDelTramiteRealizar.pais
+        )?.id || '',
+        codigopostal: this.filaSeleccionada.datosDelTramiteRealizar.codigopostal,
+        telefono: this.filaSeleccionada.datosDelTramiteRealizar.telefono,
+        correoelectronico: this.filaSeleccionada.datosDelTramiteRealizar.correoelectronico,
+      },
+    });
+
+    this.esFormularioVisible = true; 
+  } 
+}
   /**
    * Método para modificar los datos de una fila seleccionada.
    */
   enModificar(): void {
-       const MODAL_ELEMENT = document.getElementById('destinatarioModalLabel');
-       if (MODAL_ELEMENT) {
-         const MODAL_INSTANCE = new Modal(MODAL_ELEMENT); 
-         MODAL_INSTANCE.show();
-       }
-       
-    if (!this.isPaisdatoscargados) {
-      return;
-    }
-    if (this.filaSeleccionada) {
-      const PAIS_ID = this.paisData.catalogos.find(
-        (item: Catalogo) =>
-          item.descripcion === this.filaSeleccionada?.datosDelTramiteRealizar?.pais ||
-          String(item.id) === String(this.filaSeleccionada?.datosDelTramiteRealizar?.pais)
-      )?.id;
+  this.esFormularioVisible = true; 
 
-
-      this.destinatarioForm.patchValue({
-        datosDelTramiteRealizar: {
-          tipoPersona: this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona || 'moral',
-          denominacion:this.filaSeleccionada.datosDelTramiteRealizar.denominacion,
-          domicilio: this.filaSeleccionada.datosDelTramiteRealizar.domicilio,
-          pais: PAIS_ID || '', 
-          codigopostal: this.filaSeleccionada.datosDelTramiteRealizar.codigopostal,
-          telefono: this.filaSeleccionada.datosDelTramiteRealizar.telefono,
-          correoelectronico:
-            this.filaSeleccionada.datosDelTramiteRealizar.correoelectronico,
-        },
-      });
-
-      this.tipoPersonaSeleccionada = this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona;
-      this.esFormularioVisible = true;
-    }
-  
+  const MODAL_ELEMENT = document.getElementById('destinatarioModalLabel');
+  if (!MODAL_ELEMENT) {
+    return;
   }
 
-  /**
-   * Método para eliminar una fila seleccionada.
-   */
+  if (!this.isPaisdatoscargados) {
+    return;
+  }
+
+  if (!this.filaSeleccionada) {
+    return;
+  }
+
+  const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+  MODAL_INSTANCE.show();
+
+  const PAIS_ID = this.paisData.catalogos.find(
+    (item: Catalogo) =>
+      item.descripcion === this.filaSeleccionada?.datosDelTramiteRealizar?.pais ||
+      String(item.id) === String(this.filaSeleccionada?.datosDelTramiteRealizar?.pais)
+  )?.id;
+
+  this.destinatarioForm.patchValue({
+    datosDelTramiteRealizar: {
+      tipoPersona: this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona || 'moral',
+      denominacion: this.filaSeleccionada.datosDelTramiteRealizar.denominacion,
+      domicilio: this.filaSeleccionada.datosDelTramiteRealizar.domicilio,
+      pais: PAIS_ID || '',
+      codigopostal: this.filaSeleccionada.datosDelTramiteRealizar.codigopostal,
+      telefono: this.filaSeleccionada.datosDelTramiteRealizar.telefono,
+      correoelectronico: this.filaSeleccionada.datosDelTramiteRealizar.correoelectronico,
+    },
+  });
+
+  this.tipoPersonaSeleccionada = this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona;
+
+  this.changeDetectorRef.detectChanges();
+}
+ 
  /**
  * Método para eliminar una fila seleccionada.
  */
@@ -630,6 +728,29 @@ get isPaisInvalid(): boolean {
     (this.destinatarioForm.get('datosDelTramiteRealizar.pais')?.invalid ?? false)
   );
 }
+
+
+
+/**
+ * Getter to check if the 'codigopostal' field is invalid due to 'maxlength'.
+ * 
+ * @returns {boolean} Returns `true` if the 'codigopostal' field has a 'maxlength' error, otherwise `false`.
+ */
+get isCodigoPostalInvalid(): boolean {
+      return this.destinatarioForm.get('datosDelTramiteRealizar.codigopostal')?.errors?.['maxlength'] ?? false;
+}
+
+/**
+ * Getter to check if the 'codigopostal' field is invalid due to 'pattern'.
+ * 
+ * @returns {boolean} Returns `true` if the 'codigopostal' field has a 'pattern' error, otherwise `false`.
+ */
+get isCodigoPostalPatternInvalid(): boolean {
+  const CONTROL = this.destinatarioForm.get('datosDelTramiteRealizar.codigopostal');
+  return CONTROL?.hasError('pattern') ?? false; 
+
+}
+
 /**
  * Método para mostrar el formulario de destinatarios.
  * 
@@ -643,6 +764,9 @@ onAgregar(): void {
         datosDelTramiteRealizar: {
             tipoPersona: '',
             denominacion: '',
+             nombre: '',
+      primerApellido: '',
+      segundoApellido: '',
             domicilio: '',
             pais: '',
             codigopostal: '',

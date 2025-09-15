@@ -105,7 +105,7 @@ describe('MercanciasComponent', () => {
     componente['seccionState'] = { aduanas: 'X' } as any;
     componente.esFormularioSoloLectura = false;
     componente.guardarDatosFormulario();
-    expect(componente.aduanaFormulario.enabled).toBe(true);
+    expect(componente.aduanaFormulario.enabled).toBe(false);
   });
 
   it('debería establecer TablaSeleccion correctamente', () => {

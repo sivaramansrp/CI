@@ -6,7 +6,7 @@
         "llavePago": "LLAVE987654",
         "fechaPago": "20/06/2024",
         "importePago": "1500.00",
-        "banco": "Banco Ejemplo"
+        "banco": "2"
     },
     "datosSolicitudFormState": {
         "rfcSanitario": "SAN123456789",
@@ -37,7 +37,8 @@
         "fechaDeFabricacio": "2024-01-01",
         "fechaDeCaducidad": "2025-01-01",
         "regimenLaMercancia": "Definitivo",
-        "aduana": "Aduana Norte"
+        "aduana": "Aduana Norte",
+        "manifesto": true
     },
     "scianConfigDatos": [
             {

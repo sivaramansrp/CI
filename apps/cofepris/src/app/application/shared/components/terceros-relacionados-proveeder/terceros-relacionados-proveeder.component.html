@@ -8,7 +8,7 @@
     ></ng-alert>
   </div>
   @if(habilitarProveedor===true ){
-  <div class="row mt-5"><h6>Proveedor :</h6></div>
+  <div class="row mt-5"><h6>Proveedor*:</h6></div>
   <div class="row mt-5">
     <app-tabla-dinamica
       [configuracionTabla]="configuracionTablaProveedor"
@@ -17,6 +17,9 @@
        (listaDeFilaSeleccionada)="proveedorSeleccionadoDatos=$event"
        [disableSeleccionTablaCheckBox]="formularioDeshabilitado ? true : false"
     ></app-tabla-dinamica>
+    <div *ngIf="tableErrorMeassageDispalyProveedor && proveedorTablaDatos.length === 0">
+          <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+        </div>
   </div>
 
   <div class="row mt-5">
@@ -59,8 +62,7 @@
   } @if(habilitarFabricante === true){
   <div class="row mt-5">
     <div class="col-md-3">
-        <h6>Fabricante
-          <span class="form-label" *ngIf="esCampoRequerido('fabricante')">*</span>
+        <h6>Fabricante*
           <span class="form-label">:</span>
         </h6>
     </div>
@@ -73,6 +75,9 @@
       (listaDeFilaSeleccionada)="fabricanteSeleccionadoDatos=$event"
        [disableSeleccionTablaCheckBox]="formularioDeshabilitado ? true : false"
     ></app-tabla-dinamica>
+    <div *ngIf="tableErrorMeassageDispalyFabricante && fabricanteTablaDatos.length === 0">
+          <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+        </div>
   </div>
 
 

@@ -1,7 +1,7 @@
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
@@ -25,7 +25,7 @@ import { Tramite40403Service } from '../../estados/tramite40403.service';
   templateUrl: './datos-tramite-renovacion.component.html',
   styleUrls: ['./datos-tramite-renovacion.component.scss'],
 })
-export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
+export class DatosTramiteRenovacionComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Formulario reactivo utilizado para capturar los datos del trámite.
    */
@@ -115,7 +115,18 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
     this.tipoDeCaatAereaData();
     this.ideCodTransportacionAereaData();
   }
-
+  /**
+   * @method ngAfterViewInit
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta después de que Angular ha inicializado completamente la vista del componente.
+   * Sincroniza el estado de la propiedad `mostrarError` del componente con el valor almacenado en el store del trámite.
+   * Obtiene el valor actual de `mostrarError` desde el store utilizando el query para mantener la coherencia en la UI.
+   * 
+   * @returns {void}
+   */
+  ngAfterViewInit(): void {
+    this.mostrarError = this.tramite40403Query.getValue().mostrarError;
+  }
 
   /**
   * @method inicializarEstadoFormulario
@@ -129,8 +140,6 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.formulario?.disable();
-    } else {
-      this.formulario?.enable();
     }
   }
 
@@ -183,9 +192,11 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
     const CLAVECAAT = this.formulario.get('claveFolioCAAT')?.value;
     if(!CLAVECAAT) {
       this.mostrarError = true;
+      this.tramite40403Store.setMostrarError(true);
     }
     else{
       this.mostrarError = false;
+      this.tramite40403Store.setMostrarError(false);
     this.tramite40403Service
       .buscarSolicitudPorCAATe()
       .pipe(takeUntil(this.destroyNotifier$))

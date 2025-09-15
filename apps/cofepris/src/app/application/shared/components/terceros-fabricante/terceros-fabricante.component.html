@@ -8,7 +8,8 @@
       <div class="mt-5" *ngIf="tabla.nombre === 'Fabricante'">
         <h5>Fabricante*:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData" (seleccionCambio)="onFabricanteSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+          <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData" (seleccionCambio)="onFabricanteSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          [isInvalida]="tercerosForm.touched && fabricanteRowData.length === 0"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
@@ -26,7 +27,8 @@
         <h5>Formulador*:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="formuladorHeaderData" [commonTableBody]="formuladorRowData" (seleccionCambio)="onFormuladorSeleccionCambio($event)" 
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          [isInvalida]="tercerosForm.touched && formuladorRowData.length === 0"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
@@ -43,7 +45,8 @@
       <div class="mt-5" *ngIf="tabla.nombre === 'Proveedor'">
         <h5>Proveedor*:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"  (seleccionCambio)="onProveedorSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+          <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"  (seleccionCambio)="onProveedorSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          [isInvalida]="tercerosForm.touched && proveedorRowData.length === 0"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
@@ -107,29 +110,31 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span>
+              <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
+              </span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">C.U.R.P. * : </label>
+              <label for="curp" class="form-label">C.U.R.P.*: </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
             </div>
           </div>
-          <div class="d-flex justify-content-center mt-3">
-            <button type="button" class="btn btn-primary w-40">Buscar</button>
-          </div>
+          @if(noContribuyente) {
+            <div class="d-flex justify-content-center mt-3">
+              <button type="button" class="btn btn-primary w-40" (click)="buscar(agregarFabricanteFormGroup)">Buscar</button>
+            </div>
+          }
         </div>
 
-        } @if (nacional && fisica || (!fisica && !moral && !noContribuyente)){
+        } @if (nacional && fisica || (!fisica && !moral && !noContribuyente) && !extranjero){
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
-                  ata-bs-toggle="tooltip"></span>
+              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
+                </span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
@@ -142,9 +147,11 @@
                 }
               </div>
             }
+            @if(fisica || moral || noContribuyente) {
             <div class="d-flex justify-content-end mt-2">
-              <button type="button" class="btn btn-primary w-50">Buscar</button>
+              <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarFabricanteFormGroup)">Buscar</button>
             </div>
+            }
           </div>
           <div class="col-md-4">
             <div class="form-group">
@@ -190,12 +197,12 @@
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
             <div class="d-flex justify-content-end mt-2">
-              <button type="button" class="btn btn-primary w-50">Buscar</button>
+              <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarFabricanteFormGroup)">Buscar</button>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">C.U.R.P. * : </label>
+              <label for="rfc" class="form-label">C.U.R.P.*: </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
             </div>
           </div>
@@ -210,7 +217,7 @@
             </div>
           </div>
         </div>
-        } @if (extranjero && moral || (!fisica && !moral && !noContribuyente)){
+        } @if (extranjero && (moral && !fisica && !noContribuyente)){
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
@@ -220,7 +227,7 @@
             </div>
           </div>
         </div>
-        } @if (extranjero && fisica){
+        } @if ((extranjero || (nacional && noContribuyente)) && (fisica || !moral)){
         <h5>Datos personales</h5>
         <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
@@ -391,8 +398,7 @@
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                  class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
+              <label class="form-label" for="correoElectronico">Correo electrónico:<span class="bi bi-question-circle-fill" tooltip="ejemplo@dominio.com" placement="top"></span></label>
               <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico"
                 name="correoElectronico" />
             </div>
@@ -407,10 +413,10 @@
           <!-- Últimos tres botones -->
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
-              <button type="button" class="btn btn-danger" (click)="toggleDivFabricante()">
+              <button type="button" class="btn btn-default" (click)="limpiar(agregarFabricanteFormGroup)">Limpiar</button>
+              <button type="button" class="btn btn-default" (click)="toggleDivFabricante()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default" (click)="limpiar(agregarFabricanteFormGroup)">Limpiar</button>
               <button type="button" class="btn btn-primary" (click)="submitFabricanteForm()">
                 Guardar
               </button>
@@ -467,20 +473,20 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span>
+              <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
+                </span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">C.U.R.P. * : </label>
+              <label for="curp" class="form-label">C.U.R.P.*: </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
             </div>
           </div>
           <div class="d-flex justify-content-center mt-3">
-            <button type="button" class="btn btn-primary w-40">Buscar</button>
+            <button type="button" class="btn btn-primary w-40" (click)="buscar(agregarFormuladorFormGroup)">Buscar</button>
           </div>
         </div>
 
@@ -494,12 +500,12 @@
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
             <div class="d-flex justify-content-end mt-2">
-              <button type="button" class="btn btn-primary w-50">Buscar</button>
+              <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarFormuladorFormGroup)">Buscar</button>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">C.U.R.P. * : </label>
+              <label for="rfc" class="form-label">C.U.R.P.*: </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
             </div>
           </div>
@@ -541,12 +547,12 @@
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
             <div class="d-flex justify-content-end mt-2">
-              <button type="button" class="btn btn-primary w-50">Buscar</button>
+              <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarFormuladorFormGroup)">Buscar</button>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">C.U.R.P. * : </label>
+              <label for="rfc" class="form-label">C.U.R.P.*: </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
             </div>
           </div>
@@ -662,11 +668,11 @@
                 </div>
               </div>
             </div>
-          } @if(extranjero){
+          }
           <div class="pl-0">
             <div class="col-md-4">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais"
+                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais" [isDisabled]="!fisica || !moral || !noContribuyente"
                   id="pais" formControlName="pais"></app-catalogo-select>
               </div>
             </div>
@@ -697,7 +703,6 @@
               </div>
             </div>
           </div>
-          }
 
           <div class="mt-5 p-0">
             <div class="col-md-8">
@@ -742,8 +747,7 @@
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                  class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
+              <label class="form-label" for="correoElectronico">Correo electrónico:<span class="bi bi-question-circle-fill" tooltip="ejemplo@dominio.com" placement="top"></span></label>
               <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico"
                 name="correoElectronico" />
             </div>
@@ -758,10 +762,10 @@
           <!-- Últimos tres botones -->
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
-              <button type="button" class="btn btn-danger" (click)="toggleDivFormulador()">
+              <button type="button" class="btn btn-default" (click)="limpiar(agregarFormuladorFormGroup)">Limpiar</button>
+              <button type="button" class="btn btn-default" (click)="toggleDivFormulador()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default" (click)="limpiar(agregarFormuladorFormGroup)">Limpiar</button>
               <button type="button" class="btn btn-primary" (click)="submitFormuladorForm()">
                 Guardar
               </button>
@@ -817,20 +821,20 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span>
+              <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
+                </span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">C.U.R.P. * : </label>
+              <label for="curp" class="form-label">C.U.R.P.*: </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
             </div>
           </div>
           <div class="d-flex justify-content-center mt-3">
-            <button type="button" class="btn btn-primary w-40">Buscar</button>
+            <button type="button" class="btn btn-primary w-40" (click)="buscar(agregarProveedorFormGroup)">Buscar</button>
           </div>
         </div>
 
@@ -844,12 +848,12 @@
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
             <div class="d-flex justify-content-end mt-2">
-              <button type="button" class="btn btn-primary w-50">Buscar</button>
+              <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarProveedorFormGroup)">Buscar</button>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">C.U.R.P. * : </label>
+              <label for="rfc" class="form-label">C.U.R.P.*: </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
             </div>
           </div>
@@ -891,12 +895,12 @@
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
             <div class="d-flex justify-content-end mt-2">
-              <button type="button" class="btn btn-primary w-50">Buscar</button>
+              <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarProveedorFormGroup)">Buscar</button>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">C.U.R.P. * : </label>
+              <label for="rfc" class="form-label">C.U.R.P.*: </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
             </div>
           </div>
@@ -1092,8 +1096,7 @@
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                  class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
+              <label class="form-label" for="correoElectronico">Correo electrónico:<span class="bi bi-question-circle-fill" tooltip="ejemplo@dominio.com" placement="top"></span></label>
               <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico"
                 name="correoElectronico" />
             </div>
@@ -1108,10 +1111,10 @@
           <!-- Últimos tres botones -->
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
-              <button type="button" class="btn btn-danger" (click)="toggleDivProveedor()">
+              <button type="button" class="btn btn-default" (click)="limpiar(agregarProveedorFormGroup)">Limpiar</button>
+              <button type="button" class="btn btn-default"(click)="toggleDivProveedor()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default" (click)="limpiar(agregarProveedorFormGroup)">Limpiar</button>
               <button type="button" class="btn btn-primary" (click)="submitProveedorForm()">
                 Guardar
               </button>

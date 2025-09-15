@@ -5,14 +5,14 @@ import { Subject, map, merge, takeUntil } from 'rxjs';
 
 import { CATALOGOS_ID, Catalogo, Catalogos, CategoriaMensaje, ConsultaioQuery, ConsultaioState, EntidadesFederativasService, FECHA_SALIDA, FraccionArancelariaService, InputFecha, Notificacion, PaisesService, REGEX_ONCE_ENTEROS_DOS_DECIMALES, REGEX_ONCE_ENTEROS_TRES_DECIMALES, RegimenService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
-import { PeximService } from '../../service/pexim.service';
+import { PeximService } from '../../services/pexim.service';
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
-import { GuardarService } from '../../../../core/services/130118/guardar.service';
+import { GuardarService } from '../../services/guardar.service';
 
-import { CatMolinoService } from '../../../../core/services/130118/catalogos/cat-molino.service';
-import { ConsultaSolicitudResponse } from '../../../../core/models/130118/response/consultar-solicitud-response.model';
-import { ConsultaSolicitudService } from '../../../../core/services/130118/consulta-solicitud.service';
+import { CatMolinoService } from '../../services/cat-molino.service';
+import { ConsultaSolicitudResponse } from '../../model/response/consultar-solicitud-response.model';
+import { ConsultaSolicitudService } from '../../services/consulta-solicitud.service';
 import moment from 'moment';
 
 /**
@@ -26,6 +26,13 @@ import moment from 'moment';
 })
 /*eslint class-methods-use-this: ["error", { "exceptMethods": ["truncar"] }] */
 export class SolicitudComponent implements OnInit, OnDestroy {
+
+  /**
+    * @property {ConsultaioState[]} consultaState
+    * @description Consulta solicitud.
+  */
+  @Input() consultaState!: ConsultaioState;
+  
 
   /**
    * Lista de catálogos de régimen de mercancía.
@@ -234,8 +241,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * para llenar un formulario y realizar diversas acciones basadas en los datos recibidos.
   */
   obtenerDataSolicitud(): void {
-    const FOLIO = '0201300101820251119000004';
-    this.consultaSolicitudService.getCriterios(FOLIO).subscribe({
+    const FOLIO = this.consultaState.folioTramite;
+    this.consultaSolicitudService.getDetalleSolicitud(Number(this.consultaState.procedureId), FOLIO).subscribe({
       next: (response) => {
         if (response?.codigo === '00' && response?.datos) {
           this.llenarFormularioDesdeRespuesta(response.datos);
@@ -411,18 +418,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         clasifiRegimen: [{ value: this.solicitudState?.clasifiRegimen || null, disabled: true }, Validators.required]
       }),
       datosMercancia: this.fb.group({
-        valueTA: [this.solicitudState?.valueTA, [Validators.maxLength(1000), Validators.required, Validators.pattern(/^[^~`^]*$/)]],
+        valueTA: [this.solicitudState?.valueTA, [Validators.maxLength(4000), Validators.required, Validators.pattern(/^[^~`^]*$/)]],
         fraccionArancelaria: [this.solicitudState?.fraccionArancelaria || null, Validators.required],
         nico: [{ value: this.solicitudState?.nico || null, disabled: true }, Validators.required],
         unidadMedidaTarifaria: [{ value: this.solicitudState?.unidadMedidaTarifaria || null, disabled: true }, Validators.required],
-        cantidadTarifaria: [this.solicitudState?.cantidadTarifaria, [Validators.min(0), Validators.required, Validators.max(999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
-        valorFacturaUSD: [this.solicitudState?.valorFacturaUSD, [Validators.min(0), Validators.max(999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES), Validators.required]],
+        cantidadTarifaria: [this.solicitudState?.cantidadTarifaria, [Validators.min(0), Validators.required, Validators.max(99999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
+        valorFacturaUSD: [this.solicitudState?.valorFacturaUSD, [Validators.min(0), Validators.max(99999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES), Validators.required]],
         precioUnitarioUSD: [{ value: this.solicitudState?.precioUnitarioUSD, disabled: true }],
         paisOrigen: [this.solicitudState?.paisOrigen || null, Validators.required],
         paisDestino: [this.solicitudState?.paisDestino || null, Validators.required],
         lote: [this.solicitudState?.lote, [Validators.maxLength(60), Validators.required]],
         fechaSalida: [this.solicitudState?.fechaSalida, [Validators.required]],
-        observaciones: [this.solicitudState?.observaciones, [Validators.maxLength(250)]],
+        observaciones: [this.solicitudState?.observaciones, [Validators.maxLength(4000)]],
         observacionMerc: this.solicitudState?.observacionMerc
       }),
       datosProducto: this.fb.group({
@@ -431,7 +438,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno ?? '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
         apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno ?? '', disabled: true }, [Validators.maxLength(200)]],
         razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: true }, [Validators.required, Validators.maxLength(250)]],
-        domicilio: [this.solicitudState?.domicilio, [Validators.maxLength(1000), Validators.required]]
+        domicilio: [this.solicitudState?.domicilio, [Validators.maxLength(4000), Validators.required]]
       }),
       registroFederal: this.fb.group({
         estado: [this.solicitudState?.estado || null, Validators.required],

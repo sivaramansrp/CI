@@ -5,6 +5,7 @@
   [solicitudOpciones]="opcionesSolicitud"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (setValoresStoreEvent)="setValoresStore($event)"
+  [mostrarErrorClasificacion]="mostrarErrorClasificacion"
 ></app-datos-del-tramite>
 
 <app-datos-de-la-mercancia
@@ -14,11 +15,14 @@
   [unidadCatalogo]="unidadCatalogo"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (setValoresStoreEvent)="setValoresStore($event)"
+  [mostrarErrores]="mostrarErroresMercancia"
+  [mostrarTooltipValorFacturaUSD]="mostrarTooltipValorFacturaUSD"
 ></app-datos-de-la-mercancia>
 
 
 <app-partidas-de-la-mercancia
   [partidasDelaMercanciaForm]="partidasDelaMercanciaForm"
+  [modificarPartidasDelaMercanciaForm]="modificarPartidasDelaMercanciaForm"
   [formForTotalCount]="formForTotalCount"
   [tableHeaderData]="tableHeaderData"
   [tableBodyData]="tableBodyData"
@@ -30,6 +34,10 @@
   (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
   [disabled]="disabledModificar()"
   (setValoresStoreEvent)="setValoresStore($event)"
+  (partidasEliminadas)="onPartidasEliminadas($event)"
+  (modificarPartidaSeleccionada)="onModificarPartidaSeleccionada($event)"
+  (validarAntesDeCargarArchivo)="validarYCargarArchivo()"
+  (partidaModificada)="onPartidaModificada($event)"
 ></app-partidas-de-la-mercancia>
 
 
@@ -47,7 +55,12 @@
 [frmRepresentacionForm]="frmRepresentacionForm"
 [entidadFederativa]="entidadFederativa"
 [representacionFederal]="representacionFederal"
-[TEXTOS]="TEXTOS"
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
 (setValoresStoreEvent)="setValoresStore($event)">
 </app-representacion>
+
+<lib-notificaciones
+  *ngIf="mostrarNotificacion"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="mostrarNotificacion = false">
+</lib-notificaciones>

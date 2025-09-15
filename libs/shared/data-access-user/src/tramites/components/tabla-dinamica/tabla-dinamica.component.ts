@@ -95,6 +95,13 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
   @Input() tableId!: string;
 
   /**
+   * Indica si el estado actual es inválido.
+   * Cuando se establece en `true`, el componente reflejará un estado inválido.
+   * Este input puede utilizarse para activar estilos o mensajes de validación.
+   */
+  @Input() isInvalida: boolean = false;
+
+  /**
    * Propiedad privada que almacena un valor numérico relacionado con la selección de entrada.
    *
    * @private
@@ -174,7 +181,7 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
    *
    * @type {number}
    */
-  idFilaSeleccionada!: number;
+  idFilaSeleccionada: number | null = null;
 
   /**
    * Almacena un array de los índices de las filas seleccionadas.
@@ -259,6 +266,8 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
         this.filtrarDatosLocal(SEARCH_VALOR);
       }
     });
+    // Si no se ha proporcionado un ID de tabla, se genera uno aleatorio.
+    this.tableId = this.tableId ? this.tableId : 'tabla_' + Math.floor(Math.random() * 1000000);
     this.getUpdatePagination();
   }
 
@@ -307,9 +316,15 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
    *
    * @returns {void} - No retorna nada, solo emite el evento con la fila seleccionada.
    */
-  seleccionarFila(id: number, fila: T): void {
-    this.idFilaSeleccionada = id;
-    this.filaSeleccionada.emit(fila); // Emite la fila seleccionada al componente padre
+  seleccionarFila(event: Event, id: number, fila: T): void {
+    const RADIO = event.target as HTMLInputElement;
+    if (RADIO.checked) {
+      this.idFilaSeleccionada = id;
+      this.filaSeleccionada.emit(fila); // Emite la fila seleccionada al componente padre
+    }
+    else {
+      this.idFilaSeleccionada = null; // Si se deselecciona, se limpia el idFilaSeleccionada
+    }
   }
 
   /**
@@ -468,6 +483,12 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
   ngOnChanges(cambios: SimpleChanges): void {
     if(cambios['datos']) {
       this.filasSeleccionadas = [];
+    }
+    if (
+      this.idFilaSeleccionada !== null &&
+      this.idFilaSeleccionada >= this.datos.length
+    ) {
+      this.idFilaSeleccionada = null;
     }
     this.getUpdatePagination();
   }

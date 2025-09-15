@@ -1,26 +1,15 @@
-import { AVISO } from '@ng-mf/data-access-user';
+import { AVISO, AlertComponent, BtnContinuarComponent, DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { PASOS, TEXTOS, TITLE_NOTIFICATION } from '../../constants/aviso-destruccion.enum';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite32506State, Tramite32506Store } from '../../estados/tramite32506.store';
 import { AccionBoton } from '../../models/aviso-destruccion.model';
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { Component } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { PASOS } from '../../constants/aviso-destruccion.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { TEXTOS } from '../../constants/aviso-destruccion.enum';
 import { Tramite32506Query } from '../../estados/tramite32506.query';
-import { Tramite32506State } from '../../estados/tramite32506.store';
-import { Tramite32506Store } from '../../estados/tramite32506.store';
-import { ViewChild } from '@angular/core';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente para gestionar la página del solicitante.
@@ -66,6 +55,14 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * en la interfaz del usuario.
    */
   TEXTOS = TEXTOS;
+
+  /**
+   * @property TITLE_NOTIFICATION
+   * @description
+   * Propiedad de instancia que hace referencia a la constante global `TITLE_NOTIFICATION`.
+   * Esto permite utilizar el mensaje de advertencia directamente en el template HTML.
+   */
+  TITLE_NOTIFICATION: string = TITLE_NOTIFICATION;
 
   /**
    * @property {any} AVISO

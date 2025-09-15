@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Notificacion, NotificacionesComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 import {
   CatalogoDatosIdx,
@@ -17,6 +17,11 @@ import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-in
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 
+import { CapacidadInstaladaComponent } from '../../../../shared/components/capacidad-instalada/capacidad-instalada.component';
+import { CargaPorArchivoComponent } from '../../../../shared/components/carga-por-archivo/carga-por-archivo.component';
+import { ComplementarPlantaComponent } from '../../../../shared/components/complementar-planta/complementar-planta.component';
+import { EmpleadosComponent } from '../../../../shared/components/empleados/empleados.component';
+import { MontosDeInversionComponent } from '../../../../shared/components/montos-de-inversion/montos-de-inversion.component';
 /**
  * Componente para la vista de federatarios y plantas
  * @export FederatariosYPlantasVistaComponent
@@ -24,7 +29,7 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
 @Component({
   selector: 'app-federatarios-y-plantas-vista',
   standalone: true,
-  imports: [CommonModule, FederatariosYPlantasComponent],
+  imports: [CommonModule, FederatariosYPlantasComponent,ComplementarPlantaComponent,MontosDeInversionComponent,EmpleadosComponent,CapacidadInstaladaComponent,CargaPorArchivoComponent,NotificacionesComponent],
   templateUrl: './federatarios-y-plantas-vista.component.html',
   styleUrl: './federatarios-y-plantas-vista.component.css',
 })
@@ -33,6 +38,11 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.Add commentMore actions
    */
   @Input() formularioDeshabilitado: boolean = false;
+
+  /**
+   * @property {boolean} esFormularioUpdate - Indica si el formulario está en modo de actualización.
+   */
+  @Input() esFormularioUpdate: boolean = false;
 
   /**
    * Datos de federatarios que se mostrarán en la tabla
@@ -88,16 +98,75 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
 
   /**
    * Lista de plantas IMMEX para mostrar en la tabla
+   * @property {PlantasImmex[]} plantasDisponiblesTablaLista
+   */
+  public plantasDisponiblesTablaLista$!: Observable<PlantasDisponibles[]>;
+
+  /**
+   * Lista de plantas IMMEX para mostrar en la tabla
    * @property {PlantasImmex[]} plantasImmexTablaLista
    */
   public plantasImmexTablaLista: PlantasImmex[] = [];
+
+  /**
+   * Lista de plantas IMMEX para mostrar en la tabla
+   * @property {PlantasImmex[]} plantasImmexTablaLista
+   */
+  public plantasImmexTablaLista$!: Observable<PlantasImmex[]>;
   /**
    * Lista de federatarios para mostrar en la tabla
    * @property {FederatariosEncabezado[]} federatariosTablaLista
    */
   public federatariosTablaLista$!: Observable<FederatariosEncabezado[]>;
 
+  /**
+   * Configuración del catálogo de estados para el formulario.
+   * @property {CatalogoDatosIdx} estadoOptionsConfig
+   */
   public estadoOptionsConfig!: CatalogoDatosIdx;
+
+  /**
+   * Controla la visibilidad del popup "Complementar Planta".
+   * @property {boolean} mostrarComplementarPlantaPopup
+   */
+  public mostrarComplementarPlantaPopup:boolean = false;
+
+  /**
+   * Controla la visibilidad del popup "Montos de Inversión".
+   * @property {boolean} mostrarMontosDeInversionPopup
+   */
+  public mostrarMontosDeInversionPopup:boolean = false;
+
+  /**
+   * Controla la visibilidad del popup "Empleados".
+   * @property {boolean} mostrarEmpleadosPopup
+   */
+  public mostrarEmpleadosPopup:boolean = false;
+
+  /**
+   * Controla la visibilidad del popup "Capacidad Instalada".
+   * @property {boolean} mostrarCapacidadInstaladaPopup
+   */
+  public mostrarCapacidadInstaladaPopup:boolean = false;
+
+  /**
+   * Controla la visibilidad del popup "Proveedor por Archivo".
+   * @property {boolean} mostrarProveedorPorArchivoPopup
+   */
+  public mostrarProveedorPorArchivoPopup:boolean = false;
+
+  /**
+   * Indica si la tabla contiene datos actualmente.
+   * Se emplea para controlar comportamientos o visualizaciones basadas en la presencia de datos.
+   */
+  tieneDatosDeTabla: boolean = false;
+
+  /**
+   * Instancia de la notificación que representa un nuevo evento o mensaje.
+   * Se utiliza para manejar y mostrar notificaciones dentro del componente.
+   */
+  public nuevaUnoNotificacion!: Notificacion;
+
   /**
    * Constructor de la clase FederatariosYPlantasVistaComponent.
    *
@@ -112,12 +181,8 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
     public nuevoProgramaIndustrialService: NuevoProgramaIndustrialService
   ) {
     this.federatariosTablaLista$ = this.query.selectDatosFederatarios$;
-    this.nuevoProgramaIndustrialService
-      .getFederataiosyPlantaCatalogosData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((resp) => {
-        this.estadoOptionsConfig = resp
-      });
+    this.plantasImmexTablaLista$ = this.query.selectDatosPlantasImmex$;
+    this.plantasDisponiblesTablaLista$ = this.query.selectDatosPlantasDisponibles$;
   }
 
   /**
@@ -132,6 +197,18 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
       .subscribe((datos) => {
         this.datosFederatarios = datos;
       });
+
+  this.nuevoProgramaIndustrialService.tieneDatosDeTabla$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((val: boolean) => {
+      this.tieneDatosDeTabla = val;
+    });
+    this.nuevoProgramaIndustrialService
+      .getFederataiosyPlantaCatalogosData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
+        this.estadoOptionsConfig = resp
+      });
   }
   /**
    * Establece los datos de los federatarios en el almacén.
@@ -141,6 +218,95 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
    */
   setFormaDatos(datos: FederatariosEncabezado): void {
     this.store.setFederatarios(datos);
+  }
+
+  /**
+   * Muestra el popup correspondiente según la ruta de acción recibida.
+   * 
+   * @param {string} ruta - Ruta de la acción que determina qué popup mostrar.
+   * 
+   * - '../complementar-plantas-acciones' → Muestra el popup de "Complementar Planta".
+   * - '../montos-inversion-acciones' → Muestra el popup de "Montos de Inversión".
+   * - '../empleados-acciones' → Muestra el popup de "Empleados".
+   * - '../capacidad-instalada-acciones' → Muestra el popup de "Capacidad Instalada".
+   * - '../proveedor-por-archivo' → Muestra el popup de "Proveedor por Archivo".
+   */
+onAccionSeccion(ruta: string):void {
+  if (ruta === '../complementar-plantas-acciones') {
+    this.mostrarComplementarPlantaPopup = true;
+  } else if (ruta === '../montos-inversion-acciones') {
+    this.mostrarMontosDeInversionPopup = true;
+  } else if (ruta === '../empleados-acciones') {
+    this.mostrarEmpleadosPopup = true;
+  } else if (ruta === '../capacidad-instalada-acciones') {
+    this.mostrarCapacidadInstaladaPopup = true;
+  } else if (ruta === '../proveedor-por-archivo'){
+    if(this.tieneDatosDeTabla){
+      this.mostrarProveedorPorArchivoPopup = true;
+    } else {
+      this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe ingresar las fracciones del producto para agregar la capacidad instalada.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+  }
+}
+
+  /**
+   * Cierra el popup de complementar planta.
+   * 
+   * Cambia la bandera `mostrarComplementarPlantaPopup` a `false`
+   * para ocultar el popup correspondiente.
+   */
+  cerrarComplementarPlanta(): void {
+    this.mostrarComplementarPlantaPopup = false;
+  }
+
+  /**
+   * Cierra el popup de montos de inversión.
+   * 
+   * Establece la variable `mostrarMontosDeInversionPopup` en `false`
+   * para ocultar el popup correspondiente en la interfaz.
+   */
+  cerrarMontosDeInversion(): void {
+    this.mostrarMontosDeInversionPopup = false;
+  }
+
+  /**
+   * Cierra el popup de empleados.
+   * 
+   * Cambia la variable `mostrarEmpleadosPopup` a `false` para ocultar
+   * el popup relacionado con la información de empleados.
+   */
+  cerrarEmpleados(): void {
+    this.mostrarEmpleadosPopup = false;
+  }
+
+  /**
+   * Cierra el popup de capacidad instalada.
+   * 
+   * Establece la variable `mostrarCapacidadInstaladaPopup` en `false`
+   * para ocultar el popup correspondiente en la interfaz.
+   */
+  cerrarCapacidadInstalada(): void {
+    this.mostrarCapacidadInstaladaPopup = false;
+  }
+
+  /**
+   * Cierra el popup de proveedor por archivo.
+   * 
+   * Cambia la variable `mostrarProveedorPorArchivoPopup` a `false`
+   * para ocultar el popup correspondiente en la interfaz.
+   */
+  cerrarProveedorPorArchivo(): void {
+    this.mostrarProveedorPorArchivoPopup = false;
   }
 
   /**

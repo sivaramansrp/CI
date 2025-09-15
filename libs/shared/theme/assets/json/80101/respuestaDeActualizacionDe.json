@@ -10,28 +10,34 @@
       "localizacion": "Ciudad de México, CDMX"
     },
     "obligacionesFiscales": {
-      "opinionPositiva": "Sí",
-      "fechaExpedicion": "15/052025",
+      "opinionPositiva": "1",
+      "fechaExpedicion": "20/05/2025",
       "aceptarObligacionFiscal": "Aceptado"
     },
     "formaModificaciones": {
       "nombreDelFederatario": "Juan Pérez",
-      "nombreDeNotaria": "Notaría 123",
+      "nombreDeNotaria": "123",
       "estado": "1",
-      "nombreDeActa": "Acta Constitutiva",
+      "nombreDeActa": "123",
       "fechaDeActa": "30/11/2023",
       "rfc": "ABC123456XYZ",
       "nombreDeRepresentante": "Laura Martínez"
     },
     "formaCertificacion": {
       "certificada": "Sí",
-      "fechaInicio": "01/10/2025",
-      "fechaVigencia": "01/10/2024"
+      "fechaInicio": "01/05/2025",
+      "fechaVigencia": "01/05/2024"
     },
     "formaSocioAccionistas": {
-      "nationalidadMaxicana": "Sí",
+      "nationalidadMaxicana": "No",
       "tipoDePersona": "Moral",
       "formaDatos": {
+        "taxId":"TAX0011223344",
+        "razonSocial":"Comercial Mexicana S.A. de C.V.",
+        "pais": "1",
+        "codigoPostal":"03100",
+        "estado":"Nuevo León",
+        "correoElectronico": "contacto@comercialmexicana.com",
         "socio1": "Carlos López",
         "socio2": "Ana García",
         "socio3": "Luis Torres"
@@ -44,7 +50,7 @@
       "rfc": "ABC123456XYZ",
       "taxId": "TAX9988776655",
       "razonSocial": "Comercial Mexicana S.A. de C.V.",
-      "pais": "México",
+      "pais": "1",
       "codigoPostal": "11560",
       "estado": "Ciudad de México",
       "correoElectronico": "contacto@comercialmexicana.com",
@@ -232,7 +238,13 @@
         "numExterior": 202,
         "numInterior": 10,
         "codigoPostal": 54321,
-        "colonia": "Polanco"
+        "colonia": "Polanco",
+        "municipio": "Miguel Hidalgo",
+        "entidadFederativa": "Ciudad de México",
+        "pais": "México",
+        "rfc": "22kk",
+        "domicilioFiscal": "Av. Reforma 456, Polanco, Miguel Hidalgo, CDMX",
+        "razonSocial": "Industrias MexTech S.A. de C.V."
       }
     ],
     "plantasSubfabricantesAgregar": [
@@ -241,7 +253,13 @@
         "numExterior": 101,
         "numInterior": 5,
         "codigoPostal": 12345,
-        "colonia": "Roma Norte"
+        "colonia": "Roma Norte",
+        "municipio": "Miguel Hidalgo",
+        "entidadFederativa": "Ciudad de México",
+        "pais": "México",
+        "rfc": "22kk",
+        "domicilioFiscal": "Av. Reforma 456, Polanco, Miguel Hidalgo, CDMX",
+        "razonSocial": "Industrias MexTech S.A. de C.V."
       }
     ],
     "plantasPorCompletar": []
@@ -273,10 +291,32 @@
     "nombre": "Ana",
     "primerApellido": "Gómez",
     "segundoApellido": "Pérez",
-    "numeroDeActa": "ACT-2025-002",
+    "numeroDeActa": "002",
     "fechaDelActa": "01/10/2025",
     "numeroDeNotaria": "456",
     "entidadFederativa": "1",
-    "municipioODelegacion": "1"
+    "municipioODelegacion": "1",
+    "estado":"1",
+    "estadoOptions":"101",
+    "estadoUno": "201",
+    "estadoDos": "101",
+    "estadoTres": "101"
+  },
+  "datosComplimento":{
+    "fraccionArancelaria": "fraccionArancelar",
+    "descripcion": "descripcion test"
+  },
+  "datosComplimentoDos":{
+    "fraccionArancelaria": "fraccionArance",
+    "descripcion": "descripcionXZS"
+  },
+  "datosAnexoTress":{
+    "fraccionArancelaria":"fraccionArancelari",
+  "descripcion": "descripcion CFRDFF"
+  },
+
+   "datosAnexoTressDos":{
+    "fraccionArancelaria":"fraccionArancelaria",
+  "descripcion": "descripcion test"
   }
 }

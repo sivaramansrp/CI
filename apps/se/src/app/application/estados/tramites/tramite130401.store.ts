@@ -50,6 +50,16 @@ export interface Tramite130401State {
    * Datos de la tabla de mercancías.
    */
   mercanciaTablaDatos: MercanciaTablaDatos[];
+
+  /**
+ * Campo que almacena la descripción solicitada para la mercancía.
+ *
+ * Este valor representa el texto ingresado o modificado por el usuario
+ * en el formulario de modificación de mercancías.
+ *
+ * @type {string}
+ */
+  descipcionSolicitada: string;
 }
 
 /**
@@ -86,7 +96,8 @@ export function createInitialState(): Tramite130401State {
       descripcion: '',
       descripcionModificacion: '',
     },
-    mercanciaTablaDatos: []
+    mercanciaTablaDatos: [],
+    descipcionSolicitada: ''
   };
 }
 
@@ -194,6 +205,21 @@ export class Tramite130401Store extends Store<Tramite130401State> {
     this.update((state) => ({
       ...state,
       mercanciaTablaDatos,
+    }));
+  }
+
+  /**
+   * Establece la descripción solicitada en el estado de la mercancía.
+   *
+   * Este método actualiza el `state` interno del store agregando o
+   * modificando la propiedad `descripcionSolicitada`.
+   *
+   * @param descripcionSolicitada - Texto de la descripción solicitada para la mercancía.
+   */
+  public setDescripcionSolicitada(descipcionSolicitada: string): void {
+    this.update((state) => ({
+      ...state,
+      descipcionSolicitada,
     }));
   }
 }

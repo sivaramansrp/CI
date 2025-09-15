@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { PasoUnoComponent } from './paso-uno.component';
@@ -102,7 +103,10 @@ describe('PasoUnoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [PasoUnoComponent],
+      imports: [
+        PasoUnoComponent,
+        HttpClientTestingModule
+      ],
       providers: [
         FormBuilder,
         { provide: EntregaActaService, useValue: entregaActaServiceMock },

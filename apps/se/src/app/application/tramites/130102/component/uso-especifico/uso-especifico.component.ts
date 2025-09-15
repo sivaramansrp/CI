@@ -23,14 +23,14 @@ import { Tramite130102Query } from '../../../../estados/queries/tramite130102.qu
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
-import { ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
-import { FRACCIONES_ANARCIA_TABLA } from '../../constantes/octava-temporal.enum';
+import { ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { ESPECIFICO_PREFILL, FRACCIONES_ANARCIA_TABLA } from '../../constantes/octava-temporal.enum';
 import { FraccionArancelariaProsec } from '../../models/octava-temporal.model';
 
 @Component({
   selector: 'app-uso-especifico',
   standalone: true,
-  imports: [TituloComponent, CatalogoSelectComponent, TableComponent, ReactiveFormsModule, CommonModule,TablaDinamicaComponent],
+  imports: [TituloComponent, CatalogoSelectComponent, TableComponent, ReactiveFormsModule, CommonModule,TablaDinamicaComponent,NotificacionesComponent],
   templateUrl: './uso-especifico.component.html',
   styleUrl: './uso-especifico.component.scss'
 })
@@ -79,7 +79,15 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
    * Observable utilizado para cancelar suscripciones al destruir el componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+  /**  
+ * Filas seleccionadas en la tabla.  
+ * Contiene objetos de tipo `FraccionArancelariaProsec`.  
+ */  
+filasSeleccionadas: FraccionArancelariaProsec[] = []; 
+ /**
+   * Notificación para mostrar alertas al usuario.
+   */
+  alertaNotificacion!: Notificacion;
   /*
   * @description Estado actual de la consulta, obtenido desde el store.
   */
@@ -100,7 +108,14 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
            takeUntil(this.destroyNotifier$),
            map((seccionState) => {
              this.consultaState = seccionState;
-            
+              
+            if (this.consultaState.update) {        
+            this.tramite130102Store.update((state) => ({
+              ...state,
+              uso_especifico_tabla: ESPECIFICO_PREFILL
+            }));       
+            this.datosSocios = ESPECIFICO_PREFILL;
+           }
              this.inicializarEstadoFormulario();
            })
          )
@@ -153,45 +168,41 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
   /**
    * @method inicializarFormulario
    * @description Inicializa el formulario reactivo y sus validaciones.
-   * @memberof UsoEspicificoComponent
    */
-  inicializarFormulario():void{
-      this.tramite130102Query.selectSolicitud$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {  
-        this.solicitudState = seccionState;
-        if (
-              this.solicitudState &&
-              typeof this.solicitudState === 'object' &&
-              this.solicitudState !== null &&
-              'uso_especifico_tabla' in this.solicitudState
-            ) {
-              const PRODUCTO = this.solicitudState['uso_especifico_tabla'] as FraccionArancelariaProsec[];
-              PRODUCTO.forEach((productoItem: FraccionArancelariaProsec) => {
-                const IS_ALREADY_ADDED = this.datosSocios.some(
-                (item: FraccionArancelariaProsec) => item.fraccionArancelariaProsec === productoItem.fraccionArancelariaProsec
-              );
-  
-              if (!IS_ALREADY_ADDED) {
-                this.datosSocios.push(productoItem);
-              }
-              });
-            }
-      })
-    )
-    .subscribe();
-
+  inicializarFormulario(): void {
+   
     this.usoEspicificoForm = this.formbuilt.group({
-      fraccionArancelariaProsec: [ this.solicitudState?.fraccionArancelariaProsec, Validators.required],
-      descripción: ['',[Validators.required,UsoEspicificoComponent.noLeadingSpacesValidator]],
-
+      fraccionArancelariaProsec: ['', Validators.required],
+      descripción: ['', [Validators.required, UsoEspicificoComponent.noLeadingSpacesValidator]],
     });
-    if (this.consultaState.readonly) {
+
+ this.tramite130102Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {  
+          this.solicitudState = seccionState;
+          
+          if (this.solicitudState?.['uso_especifico_tabla']) {
+            const PRODUCTOS = this.solicitudState['uso_especifico_tabla'] as FraccionArancelariaProsec[];
+            this.datosSocios = [...PRODUCTOS];
+          }
+          
+          if (this.solicitudState?.fraccionArancelariaProsec) {
+            this.usoEspicificoForm.patchValue({
+              fraccionArancelariaProsec: this.solicitudState.fraccionArancelariaProsec
+            });
+          }
+        })
+      )
+      .subscribe();
+
+   
+    if (this.consultaState?.readonly) {
       this.usoEspicificoForm.disable();
       this.obtenerRequisitosFraccionArancelariaEsquema();
     }
-    if (this.consultaState.update) {
+    
+    if (this.consultaState?.update) {
       this.obtenerRequisitosFraccionArancelariaEsquema();
     }
   }
@@ -251,14 +262,31 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
    * // Agrega una nueva entrada específica a la tabla dinámica y actualiza el estado del trámite.
    */
   public agregar(): void {
+   
     if (this.usoEspicificoForm.valid) {
-      const ESPECIFICO = {
-        fraccionArancelariaProsec: this.obtenerFraccionArancelariaProsec(),
-        descripción: this.usoEspicificoForm.get('descripción')?.value,
-      };
-      this.datosSocios?.push(ESPECIFICO);
-      this.tramite130102Store.setDynamicFieldValue('uso_especifico_tabla', this.datosSocios);
-      this.usoEspicificoForm.reset();
+     
+      const FRACCIONID = Number(this.usoEspicificoForm.get('fraccionArancelariaProsec')?.value);
+      const FRACCIONDESCRIPCION = this.obtenerFraccionArancelariaProsec();
+      const DESCRIPCION = this.usoEspicificoForm.get('descripción')?.value?.trim();
+
+      const EXISTS = this.datosSocios.some(item =>
+        item.fraccionArancelariaProsec === FRACCIONID
+      );
+
+      if (!EXISTS && FRACCIONID && DESCRIPCION) {
+        const ESPECIFICO: FraccionArancelariaProsec = {
+          fraccionArancelariaProsec: FRACCIONID,
+          descripción: DESCRIPCION,
+        };
+        this.datosSocios = [...this.datosSocios, ESPECIFICO];
+        this.tramite130102Store.setDynamicFieldValue('uso_especifico_tabla', this.datosSocios);
+         this.usoEspicificoForm.reset();
+        this.initializeFormDefaults();
+     
+      } 
+    } else {
+      
+      this.markFormGroupTouched();
     }
   }
 
@@ -272,7 +300,44 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
     const DESCRIPCION = this.catalogos.find((ele: Catalogo) => ele.id === Number(this.usoEspicificoForm.get('fraccionArancelariaProsec')?.value))?.descripcion;
     return DESCRIPCION ?? '';
   }
+  /**
+ * Actualiza las filas seleccionadas en la tabla.
+ * @param filas - Arreglo de objetos seleccionados de tipo `FraccionArancelariaProsec`.
+ */
+  alCambiarSeleccion(filas: FraccionArancelariaProsec[]):void {
+  this.filasSeleccionadas = filas;
+  }
+  /**
+ * Muestra una notificación de confirmación para eliminar las filas seleccionadas.
+ */
+eliminarSeleccionadas(): void {
+  if (!this.filasSeleccionadas?.length){
+  return;
+  } 
 
+  this.alertaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: 'Confirmación',
+    mensaje: '¿Desea eliminar los registros seleccionados?',
+    cerrar: false,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+  };
+}
+/**
+ * Ejecuta la acción de eliminación si el usuario confirma la notificación.
+ * @param aceptado - Indica si el usuario aceptó la acción.
+ */
+onConfirmacionModal(aceptado: boolean): void {
+  if (aceptado) {
+    this.datosSocios = this.datosSocios.filter(
+      fila => !this.filasSeleccionadas.includes(fila)
+    );
+    this.filasSeleccionadas = [];
+  }
+}
   /**
    * compo doc
    * @method ngOnDestroy
@@ -296,4 +361,26 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.complete();
   }
 
+  /**
+ * @method initializeFormDefaults
+ * @description Reinitializa los valores por defecto del formulario después del reset.
+ */
+private initializeFormDefaults(): void {
+  this.usoEspicificoForm.patchValue({
+    fraccionArancelariaProsec: '',
+    descripción: ''
+  });
+}
+
+/**
+ * @method markFormGroupTouched
+ * @description Marca todos los campos del formulario como tocados para mostrar errores de validación.
+ */
+private markFormGroupTouched(): void {
+  Object.keys(this.usoEspicificoForm.controls).forEach(key => {
+    const CONTROL = this.usoEspicificoForm.get(key);
+    CONTROL?.markAsTouched();
+    CONTROL?.updateValueAndValidity();
+  });
+}
 }

@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: front-vucem30-container-dev
-        image: ghcr.io/vucem30/dockerized-modulefederation-inah-microfront:1.0.0
+        image: ghcr.io/vucem30/dockerized-modulefederation-inah-microfront:1.0.3
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:

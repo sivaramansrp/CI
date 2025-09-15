@@ -19,7 +19,7 @@
         <div [ngClass]="{'col-md-7': tieneBandeja, 'col-md-4': !tieneBandeja}">
             <div class="d-flex align-items-baseline">
                 <label class="form-label" for="rfc">RFC:</label>
-                <span class="mt-3 ms-2">1242143432322</span>
+                <span class="mt-3 ms-2">{{rfcNombre}}</span>
             </div>
         </div>
     </div>
@@ -77,37 +77,10 @@
         <div class="col-md">
             <h4 class="mb-4">{{tablaTitulo}}</h4>
             <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="configuracionTablaDatos"
+                [showPagination]="true" [mode]="'client'" [totalItems]="configuracionTablaDatos.length" [itemsPerPage]="5"
+                [tableId]="'tabla-bandeja'" showSorting="true" [showSearch]="true" (searchChanged)="onSearchChanged($event)"
                 [acciones]="tablaAcciones" (filaClic)="onFilaClic($event)">
             </app-tabla-dinamica>
-        </div>
-    </div>
-
-    <div class="row mt-2 mb-4">
-  <div class="col-12">
-    <div class="pagination-footer-container">
-      <div class="pagination-footer-content">
-        <span class="text-muted fw-semibold ">Filas por página</span>
-
-        <select class="form-select form-select-sm pagination-select">
-          <option selected>5</option>
-          <option>10</option>
-          <option>25</option>
-        </select>
-
-        <span class="text-muted fw-semibold">1–5 de 10</span>
-
-        <button type="button" class="pagination-arrow disabled lg">&lt;</button>
-        <button type="button" class="pagination-arrow lg">&gt;</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-    } @else if(hasValidForm && !tieneConfiguracionTablaDatos) {
-    <div class="row mt-5">
-        <div class="col-md-12">
-            <h4 class="mb-4 text-center">No se encontraron datos</h4>
         </div>
     </div>
     }

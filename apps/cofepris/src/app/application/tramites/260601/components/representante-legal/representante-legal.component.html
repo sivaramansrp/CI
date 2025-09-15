@@ -25,11 +25,17 @@
             <label for="nombreOrazonsocial" class="form-label">Nombre o Razón Social*:</label>
             <input type="text" class="form-control" formControlName="nombreOrazonsocial" id="representanteLegalNombre"
                 (change)="setValoresStore(representanteLegalForm,'nombreOrazonsocial', 'setNombreOrazonsocial')">
+            <div *ngIf="representanteLegalForm.get('nombreOrazonsocial')?.touched">
+          <small *ngIf="representanteLegalForm.get('nombreOrazonsocial')?.errors?.['required'] || nombreOrazonsocialInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+        </div>
         </div>
         <div class="col-md-4">
-            <label for="apellidoPaterno" class="form-label">Apellido paterno:</label>
+            <label for="apellidoPaterno" class="form-label">Apellido paterno*:</label>
             <input type="text" class="form-control" formControlName="apellidoPaterno" id="representanteLegalApPaterno"
                 (change)="setValoresStore(representanteLegalForm,'apellidoPaterno', 'setApellidoPaterno')">
+                <div *ngIf="representanteLegalForm.get('apellidoPaterno')?.touched">
+          <small *ngIf="representanteLegalForm.get('apellidoPaterno')?.errors?.['required'] || apellidoPaternoInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+        </div>
         </div>
         <div class="col-md-4">
             <label for="apellidoMaterno" class="form-label">Apellido materno:</label>

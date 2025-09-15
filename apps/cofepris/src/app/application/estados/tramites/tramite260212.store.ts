@@ -2,9 +2,9 @@
 /**
  * Importaciones necesarias para el funcionamiento del store.
  */
+import { FabricanteDatos, TablaDatos } from '../../tramites/260212/models/permiso-maquila.models';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { TablaDatos } from '../../tramites/260212/models/permiso-maquila.models';
 
 /**
  * Interfaz que define el estado de los terceros relacionados para el trámite 260212.
@@ -27,6 +27,10 @@ export interface TercerosRelacionadas260212State {
    * Datos del facturador.
    */
   Facturador: TablaDatos[];
+  Fabricantes: FabricanteDatos[];
+  Proveedores: FabricanteDatos[];
+  Facturadores: FabricanteDatos[];
+  Destinatarios: FabricanteDatos[];
 }
 
 /**
@@ -40,7 +44,11 @@ export function createInitialState(): TercerosRelacionadas260212State {
     Fabricante: [],
     Destinatario: [],
     Proveedor: [],
-    Facturador: []
+    Facturador: [],
+    Fabricantes: [],
+    Destinatarios: [],
+    Proveedores: [],
+    Facturadores: []
   };
 }
 
@@ -52,7 +60,7 @@ export function createInitialState(): TercerosRelacionadas260212State {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite260212', resettable: true })
-export class Tramite260212Store extends Store<TercerosRelacionadas260212State> {
+export class Shared260212Store extends Store<TercerosRelacionadas260212State> {
 
   /**
    * Constructor del store.
@@ -61,6 +69,49 @@ export class Tramite260212Store extends Store<TercerosRelacionadas260212State> {
   constructor() {
     super(createInitialState());
   }
+  /**
+ * Actualiza la lista de fabricantes en el estado del store.
+ * @param fabricantes - Arreglo de objetos FabricanteDatos que se almacenarán en el store.
+ */
+public setFabricantes(fabricantes: FabricanteDatos[]): void {
+  this.update((state) => ({
+      ...state,
+      Fabricantes: fabricantes,
+    }));
+}
+
+/**
+ * Actualiza la lista de proveedores en el estado del store.
+ * @param proveedores - Arreglo de objetos FabricanteDatos que se almacenarán en el store.
+ */
+public setProveedors(proveedores: FabricanteDatos[]): void {
+   this.update((state) => ({
+      ...state,
+      Proveedores: proveedores,
+    }));
+}
+
+/**
+ * Actualiza la lista de facturadores en el estado del store.
+ * @param facturadores - Arreglo de objetos FabricanteDatos que se almacenarán en el store.
+ */
+public setFacturadors(facturadores: FabricanteDatos[]): void {
+  this.update((state) => ({
+      ...state,
+      Facturadores: facturadores,
+    }));
+}
+
+/**
+ * Actualiza la lista de destinatarios en el estado del store.
+ * @param destinatarios - Arreglo de objetos FabricanteDatos que se almacenarán en el store.
+ */
+public setDestinatarios(destinatarios: FabricanteDatos[]): void {
+  this.update((state) => ({
+      ...state,
+      Destinatarios: destinatarios,
+    }));
+}
 
   /**
    * Establece los datos del fabricante en el estado del store.

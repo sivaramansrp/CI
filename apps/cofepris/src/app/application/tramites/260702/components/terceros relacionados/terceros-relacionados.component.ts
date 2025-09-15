@@ -17,7 +17,7 @@ import { ReplaySubject } from 'rxjs';
 import {
   AlertComponent,
   CatalogoSelectComponent,
-  ConsultaioQuery,
+  
   Notificacion,
   NotificacionesComponent,
   Pedimento,
@@ -25,7 +25,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-
+import{ConsultaioQuery} from '@ng-mf/data-access-user';
 // Shared/Internal Libraries - @ng-mf
 import { Catalogo, CatalogosSelect } from '@ng-mf/data-access-user';
 
@@ -84,7 +84,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /** Conjunto de filas seleccionadas en la tabla */
-  selectedRows: Set<number> = new Set();
+  filasSeleccionadas: Set<number> = new Set();
 
   /** Fila seleccionada actualmente */
   selectedRow: Destinatario | null = null;
@@ -137,7 +137,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    */
   pedimentos: Array<Pedimento> = [];
   /** Datos de la tabla de destinatarios */
-  tableData: Destinatario[] = [];
+  tableData2: Destinatario[] = [];
 
   /** Configuración de las columnas de la tabla */
   destinatarioConfiguracionTabla = DESTINATARIO_CONFIGURACION_TABLA;
@@ -261,8 +261,13 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
     this.solicitud260702Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
-        map((seccionState: Solicitud260702State) => {
+         map((seccionState) => {
           this.agregarDestinatarioState = seccionState;
+          if (this.esFormularioSoloLectura && seccionState.tableData2) {
+            this.tableData2 = [...seccionState.tableData2];
+          } else if (seccionState.tableData2) {
+            this.tableData2 = [...seccionState.tableData2];
+          }
         })
       )
       .subscribe();
@@ -309,12 +314,12 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
         modo: 'action',
         titulo: '',
         mensaje: 'Datos eliminados correctamente',
-        cerrar: false,
+        cerrar: true,
         tiempoDeEspera: 0,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-    } else if (this.selectedRows && this.selectedRows.size > 0) {
+    } else if (this.filasSeleccionadas && this.filasSeleccionadas.size > 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -359,19 +364,32 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Guarda los datos del formulario en la tabla.
    */
-  onGuardar(): void {
-    const FORM_DATA = this.destinatarioForm.value;
-    if (FORM_DATA.agregarDestinatario) {
-      const DESTINATARIO = {
-        id: this.tableData.length + 1, 
-        ...FORM_DATA.agregarDestinatario,
-        ...FORM_DATA.datosPersonales, 
-        pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
-      };
-      this.tableData.push(DESTINATARIO);
+ onGuardar(): void {
+  const FORM_DATA = this.destinatarioForm.value;
+  if (FORM_DATA.agregarDestinatario && FORM_DATA.datosPersonales) {
+    const DESTINATARIO = {
+      id: this.editingRowId ?? this.tableData2.length + 1,
+      ...FORM_DATA.agregarDestinatario,
+      ...FORM_DATA.datosPersonales,
+      pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
+    };
+
+    if (this.editingRowId) {
+      this.tableData2 = this.tableData2.map(row =>
+        row.id === this.editingRowId ? DESTINATARIO : row
+      );
+      this.editingRowId = null;
+    } else {
+      this.tableData2 = [...this.tableData2, DESTINATARIO];
     }
     this.destinatarioForm.reset();
+    this.esFormularioVisible = false;
+        this.filasSeleccionadas.clear();
+
+  } else {
+    this.destinatarioForm.markAllAsTouched();
   }
+}
 
   /**
    * Obtiene el nombre del país a partir de su ID.
@@ -387,10 +405,10 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja el cambio de filas seleccionadas en la tabla.
-   * @param selectedRows Filas seleccionadas.
+   * @param filasSeleccionadas Filas seleccionadas.
    */
-  onSelectedRowsChange(selectedRows: Destinatario[]): void {
-    this.selectedRows = new Set(selectedRows.map((row) => row.id));
+  onfilasSeleccionadasChange(filasSeleccionadas: Destinatario[]): void {
+    this.filasSeleccionadas = new Set(filasSeleccionadas.map((row) => row.id));
     this.esFormularioVisible = false;
   }
 
@@ -398,22 +416,22 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
  * Elimina la mercancía seleccionada de la tabla.
  */
 eliminarMercancias(): void {
-  if (this.selectedRows.size === 1) {
-    const SELECTED_ID = Array.from(this.selectedRows)[0];
-    this.tableData = this.tableData.filter((row) => row.id !== SELECTED_ID);
-    this.selectedRows.clear();
+  if (this.filasSeleccionadas.size === 1) {
+    const SELECTED_ID = Array.from(this.filasSeleccionadas)[0];
+    this.tableData2 = this.tableData2.filter((row) => row.id !== SELECTED_ID);
+    this.filasSeleccionadas.clear();
   } else {
     console.warn('Debe seleccionar exactamente una fila para eliminar.');
   }
 }
-
+editingRowId: number | null = null;
   /**
    * Abre el formulario para modificar las mercancías seleccionadas.
    */
   openModificarMercancias(): void {
-    if (this.selectedRows.size === 1) {
-      const SELECTED_ID = Array.from(this.selectedRows)[0];
-      const SELECTED_ROW_DATA = this.tableData.find(
+    if (this.filasSeleccionadas.size === 1) {
+      const SELECTED_ID = Array.from(this.filasSeleccionadas)[0];
+      const SELECTED_ROW_DATA = this.tableData2.find(
         (row) => row.id === SELECTED_ID
       );
 
@@ -439,7 +457,7 @@ eliminarMercancias(): void {
             correoElectronico: SELECTED_ROW_DATA.correoElectronico,
           },
         });
-
+         this.editingRowId = SELECTED_ID;
         this.esFormularioVisible = true;
       } else {
         console.error('Selected row data not found.');
@@ -489,7 +507,7 @@ eliminarMercancias(): void {
    * Si hay filas seleccionadas, abre un modal para confirmar la eliminación.
    */
   onDeleted(): void {
-    if (this.selectedRows.size > 0) {
+    if (this.filasSeleccionadas.size > 0) {
       this.abrirModal();
     }
   }

@@ -4,26 +4,49 @@ import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
  * Interfaz que define la estructura de las columnas de la tabla de mercancías disponibles.
  */
 export interface ColumnasTabla {
-  fraccionArancelaria: string;
-  nombreTecnico: string;
-  nombreComercial: string;
-  numeroRegistroProductos: string;
-  fechaExpedicion: string;
-  fechaVencimiento: string;
+  fraccionMercanciaArancelaria?: string;
+  nombreTecnico?: string;
+  nombreComercialDelaMercancia?: string;
+  criterioParaConferir?: string;
+  nombreEnIngles?: string;
+  valordeContenidoRegional?: string;
+  cantidad?: string;
+  umc?: string;
+  valorDelaMercancia?: string;
+  complementoDelaDescripcion?: string;
+  numeroDeSerie?: string;
+  tipoFactura?: string;
+  fecha?: string;
+  numeroFactura?: string;
+  otrasInstancias?: string;
 }
 
 /**
  * Interfaz que define la estructura de las columnas de la tabla de mercancías seleccionadas.
  */
 export interface SeleccionadasTabla {
-  fraccionArancelaria: string;
+  id?: number;
+  fraccionMercanciaArancelaria?: string;
+  nombreTecnico?: string;
+  nombreComercialDelaMercancia?: string;
+  criterioParaConferir?: string;
+  nombreEnIngles?: string;
+  valordeContenidoRegional?: string;
   cantidad: string;
+  umc?: string;
+  valorDelaMercancia?: string;
+  complementoDelaDescripcion?: string;
+  numeroDeSerie?: string;
+  tipoFactura: string;
+  fecha?: string;
+  numeroFactura?: string;
+  otrasInstancias?: string;
+  fraccionArancelaria: string;
   unidadMedida: string;
   valorMercancia: string;
-  tipoFactura: string;
-  numFactura: string;
   complementoDescripcion: string;
   fechaFactura: string;
+  numFactura: string;
 }
 
 /**
@@ -48,7 +71,7 @@ export const FECHA_FINAL = {
  * Configuración para el campo de fecha de factura.
  */
 export const FECHA_FACTURA = {
-  labelNombre: 'Fecha fin',
+  labelNombre: 'Fecha de factura / Referencia /n Tipo de factura / Referencia: /n Tipo de factura / Referencia',
   required: true,
   habilitado: true,
 };
@@ -85,7 +108,7 @@ export interface RespuestaConsulta {
 export const HEADERS: ConfiguracionColumna<ColumnasTabla>[] = [
   {
     encabezado: 'Fracción arancelaria',
-    clave: (ele: ColumnasTabla) => ele.fraccionArancelaria,
+    clave: (ele: ColumnasTabla) => ele.fraccionMercanciaArancelaria,
     orden: 1,
   },
   {
@@ -95,22 +118,22 @@ export const HEADERS: ConfiguracionColumna<ColumnasTabla>[] = [
   },
   {
     encabezado: 'Nombre comercial',
-    clave: (ele: ColumnasTabla) => ele.nombreComercial,
+    clave: (ele: ColumnasTabla) => ele.nombreComercialDelaMercancia,
     orden: 3,
   },
   {
     encabezado: 'Número de registro de productos',
-    clave: (ele: ColumnasTabla) => ele.numeroRegistroProductos,
+    clave: (ele: ColumnasTabla) => ele.numeroDeSerie,
     orden: 4,
   },
   {
     encabezado: 'Fecha expedición',
-    clave: (ele: ColumnasTabla) => ele.fechaExpedicion,
+    clave: (ele: ColumnasTabla) => ele.fecha,
     orden: 5,
   },
   {
     encabezado: 'Fecha vencimíento',
-    clave: (ele: ColumnasTabla) => ele.fechaVencimiento,
+    clave: (ele: ColumnasTabla) => ele.fraccionMercanciaArancelaria,
     orden: 6,
   },
 ];

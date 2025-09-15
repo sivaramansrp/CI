@@ -16,7 +16,7 @@ describe('TercerosRelacionadosComponent', () => {
     pais: 'MX',
     telefono: '1234567890',
     correoElectronico: 'exp1@mail.com',
-    domoicilio: 'Calle 1',
+    domicilio: 'Calle 1',
   } as Exportador,
   {
     nombre: 'Exportador 2',
@@ -24,7 +24,7 @@ describe('TercerosRelacionadosComponent', () => {
     pais: 'US',
     telefono: '0987654321',
     correoElectronico: 'exp2@mail.com',
-    domoicilio: 'Calle 2',
+    domicilio: 'Calle 2',
   } as Exportador,
 ];
 

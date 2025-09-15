@@ -1,15 +1,17 @@
 /*
 /AnexoUnoSeccionComponent
 */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-
+import { Modal } from 'bootstrap';
 
 import {
   AlertComponent,
   Catalogo,
   CatalogoSelectComponent,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -40,6 +42,9 @@ import {
   ProveedorCliente,
   ProyectoImmex,
 } from '../../models/complimentos-seccion.model';
+import { CargaDeFraccionesComponent } from '../carga-de-fracciones/carga-de-fracciones.component';
+import { CargaPorArchivoComponent } from '../carga-por-archivo/carga-por-archivo.component';
+import { CargaProveedoresClientesComponent } from '../carga-proveedores-clientes/carga-proveedores-clientes.component';
 
 import { ComplementosSeccionState, ComplementosSeccionStore } from '../../../estados/tramites/complementos-seccion.store';
 import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
@@ -61,6 +66,10 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
     CatalogoSelectComponent,
     TituloComponent,
     AlertComponent,
+    NotificacionesComponent,
+    CargaPorArchivoComponent,
+    CargaDeFraccionesComponent,
+    CargaProveedoresClientesComponent
   ],
   templateUrl: './anexo-uno-seccion.component.html',
   styleUrl: './anexo-uno-seccion.component.scss',
@@ -117,6 +126,78 @@ public formularioProveedorCliente!: FormGroup;
   /** Indica si el formulario debe mostrarse en modo solo lectura.  
  *  Controla la habilitación o deshabilitación de los campos. */
   esFormularioSoloLectura: boolean = false;
+
+/**
+ * @property {Notificacion} nuevaUnoNotificacion
+ * @description Propiedad que almacena la configuración de la notificación para el contexto "Uno".
+ * Se utiliza para mostrar alertas o mensajes relacionados con las fracciones del anexo uno.
+ */
+public nuevaUnoNotificacion!: Notificacion;
+
+/**
+ * @property {Notificacion} nuevaDosNotificacion
+ * @description Propiedad que almacena la configuración de la notificación para el contexto "Dos".
+ * Se utiliza para mostrar alertas o mensajes relacionados con las fracciones del anexo dos.
+ */
+public nuevaDosNotificacion!: Notificacion;
+
+/**
+ * @property {AnexoUnoProducto | null} selectedFraccionRowUno
+ * @description Almacena la fracción arancelaria seleccionada del anexo uno.
+ * Puede ser un objeto de tipo `AnexoUnoProducto` o `null` si no hay selección.
+ */
+public selectedFraccionRowUno: AnexoUnoProducto | null = null;
+
+/**
+ * @property {AnexoFraccionAnarelaria | null} selectedFraccionRowDos
+ * @description Almacena la fracción arancelaria seleccionada del anexo dos.
+ * Puede ser un objeto de tipo `AnexoFraccionAnarelaria` o `null` si no hay selección.
+ */
+public selectedFraccionRowDos: AnexoFraccionAnarelaria | null = null;
+
+/**
+ * @property {'anexoUno' | 'anexoDos' | null} activeComplementarContext
+ * @description Indica el contexto activo para complementar fracciones arancelarias.
+ * Puede tomar los valores 'anexoUno', 'anexoDos' o `null` cuando no hay contexto activo.
+ */
+activeComplementarContext: 'anexoUno' | 'anexoDos' | null = null;
+
+/**
+ * @property {'cliente' | 'proveedor'} proveedorClienteModalContext
+ * @description Define el contexto actual del modal para seleccionar entre cliente o proveedor.
+ * Por defecto está establecido en 'cliente'.
+ */
+proveedorClienteModalContext: 'cliente' | 'proveedor' = 'cliente';
+
+/**
+ * @property {boolean} mostrarProveedorPorArchivoPopup
+ * @description Indica si el popup para seleccionar proveedor por archivo está visible o no.
+ * Valor inicial: `false` (oculto).
+ */
+public mostrarProveedorPorArchivoPopup: boolean = false;
+
+/**  
+ * Bandera booleana que indica si el popup para la carga de fracciones debe mostrarse.  
+ * Se utiliza para controlar la visibilidad del componente emergente en la interfaz.  
+ */
+public mostrarCargaDeFraccionesPopup: boolean = false;
+
+/** Controla la visibilidad del modal de carga por archivo. */
+public mostrarCargaPorArchivoModal: boolean = false;
+
+/** Controla la visibilidad del popup de proveedores y clientes. */
+public mostrarProveedorClientesPopup: boolean = false;
+
+/** Evento que emite la lista de productos del Anexo Uno cuando se devuelve la llamada. */
+@Output() obtenerAnexoUnoDevolverLaLlamada: EventEmitter<
+    AnexoUnoProducto[]
+  > = new EventEmitter<AnexoUnoProducto[]>(true);
+
+/** Evento que emite la lista de fracciones Anarelaria del Anexo Dos al devolver la llamada. */
+@Output() obtenerAnexoDosDevolverLaLlamada: EventEmitter<
+  AnexoFraccionAnarelaria[]
+> = new EventEmitter<AnexoFraccionAnarelaria[]>(true);
+
 /**
  * 
  * @constructor
@@ -251,12 +332,8 @@ catagoriaSeleccionDatos: Catalogo[] = COMPLEMENTAR_FRACCION_CATALOGO_DATOS;
  */
 proyectoImmexTablaLista: ProyectoImmex[] = [];
 
-/**
- *  * compodoc
- * @property {AnexoUnoProducto[]} anexoUnoTablaLista
- * Lista de productos del Anexo Uno que se muestran en la tabla dinámica.
- */
-anexoUnoTablaLista: AnexoUnoProducto[] = [];
+/** Lista de productos para el Anexo Uno que se muestra en la tabla. */
+@Input() anexoUnoTablaLista: AnexoUnoProducto[] = [];
 
 /**
  *  * compodoc
@@ -272,12 +349,9 @@ proveedorTablaLista: ProveedorCliente[] = [];
  */
 fracionArancelaria: AnexoUnoEncabezado[] = [];
 
-/**
- *  * compodoc
- * @property {AnexoFraccionAnarelaria[]} anexoFraccionAnarelaria
- * Lista de datos relacionados con las fracciones arancelarias en el Anexo.
- */
-anexoFraccionAnarelaria: AnexoFraccionAnarelaria[] = [];
+/** Lista de fracciones anarelaria para el Anexo Fracción. */
+@Input() anexoFraccionAnarelaria: AnexoFraccionAnarelaria[] = [];
+
 
 /**
  *  * compodoc
@@ -297,10 +371,109 @@ public anexoUnoAlerta = ANEXO_UNO_ALERTA;
 agregarAnexoUno(): void {
   if (this.anexoUnoFormGroup.valid) {
     const FORM_DATA = this.anexoUnoFormGroup.value;
+    const FRACCION = (this.anexoUnoTablaLista.length + 1).toString();
 
-    this.anexoUnoTablaLista.push(FORM_DATA);
+    const DEFAULTS = {
+      fraccion: FRACCION,
+      anexoII: 'NO SENSIBLE',
+      tipo: 'EXPORTACION',
+      umt: 'Pieza'
+    };
 
+    this.anexoUnoTablaLista.push({ ...DEFAULTS, ...FORM_DATA });
+    this.anexoUnoTablaLista = [...this.anexoUnoTablaLista];
+    this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
     this.anexoUnoFormGroup.reset();
+  } else {
+    this.abrirUnoModal();
+  }
+}
+
+/**
+ * @method abrirUnoModal
+ * @description Muestra una notificación de alerta indicando que es necesario introducir la fracción arancelaria.
+ * Configura los parámetros de la notificación con estilo y comportamiento específicos.
+ */
+  abrirUnoModal(): void {
+    this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Tiene que introducir la Fracción arancelaria',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+/**
+ * @method setAnexoUnoLista
+ * @description Establece la fila seleccionada para el listado de fracciones del 'anexoUno'.
+ * Asigna el evento recibido a la propiedad `selectedFraccionRowUno` o `null` si el evento es nulo.
+ * 
+ * @param {AnexoUnoProducto | null} event - Objeto que representa la fracción seleccionada o null.
+ */
+setAnexoUnoLista(event: AnexoUnoProducto | null): void{
+  this.selectedFraccionRowUno = event ? event : null;
+}
+
+/**
+ * @method abrirComplementarFraccionModalUno
+ * @description Abre el modal para complementar la fracción arancelaria del 'anexoUno' si hay una fracción seleccionada.
+ * Si no hay ninguna fracción seleccionada, muestra una notificación de advertencia solicitando la selección.
+ */
+abrirComplementarFraccionModalUno(): void {
+  if (this.selectedFraccionRowUno) {
+    this.activeComplementarContext = 'anexoUno';
+
+    const ELEMENTO_MODAL = document.getElementById('complementarFuncionModal');
+    if (ELEMENTO_MODAL){
+    const MODAL = new Modal(ELEMENTO_MODAL);
+    MODAL.show();
+    }
+  } else {
+    this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe seleccionar la fracción arancelaria del producto',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+}
+
+/**
+ * Abre el modal "Proyecto IMMEX" si hay una fracción seleccionada del Anexo Uno.
+ * Si no hay selección, muestra una notificación de alerta indicando que se debe seleccionar una fracción arancelaria.
+ */
+abrirProyectoImmexModal(): void {
+  if (this.selectedFraccionRowUno) {
+    this.activeComplementarContext = 'anexoUno';
+
+    const ELEMENTO_MODAL = document.getElementById('proyectoImmexModal');
+    if (ELEMENTO_MODAL) {
+      const MODAL = new Modal(ELEMENTO_MODAL);
+      MODAL.show();
+    }
+  } else {
+    this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe seleccionar la fracción arancelaria del producto',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 }
 
@@ -312,10 +485,342 @@ agregarAnexoUno(): void {
 agregarFraccionAnarelaria(): void {
   if (this.anexoDosFormGroup.valid) {
     const FORM_DATA = this.anexoDosFormGroup.value;
-    this.anexoFraccionAnarelaria.push(FORM_DATA);
+    const FRACCION = (this.anexoFraccionAnarelaria.length + 1).toString();
+    const DEFAULTS = {
+      anexoFraccion: FRACCION,
+      anexoDos: 'NO SENSIBLE',
+      tipo: 'IMPORTACION',
+      umt: 'Pieza'
+    };
+
+    const ROW: AnexoFraccionAnarelaria = {
+      ...DEFAULTS,
+      anexoFraccionExportacion: FORM_DATA.fraccionArancelarias,
+      anexoDescripcionComercialExportacion: FORM_DATA.anexoDosDescripcion,
+      anexoFraccionImportacion: '', 
+      anexoDescripcionComercialImportacion: '', 
+      catagoria: '', 
+      valorEnMonedaMensual: '', 
+      valorEnMonedaAnual: '', 
+      volumenMensual: '',
+      volumenAnual: ''
+    };
+
+    this.anexoFraccionAnarelaria.push(ROW);
+    this.anexoFraccionAnarelaria = [...this.anexoFraccionAnarelaria]
+    this.obtenerAnexoDosDevolverLaLlamada.emit(this.anexoFraccionAnarelaria);
     this.anexoDosFormGroup.reset();
   } else {
+    this.abrirDosModal();
     console.warn('El formulario no es válido. Por favor, complete todos los campos requeridos.');
+  }
+}
+
+/**
+ * @method abrirDosModal
+ * @description Muestra una notificación de alerta indicando que es necesario introducir la fracción arancelaria.
+ * Configura los parámetros de la notificación con estilo y comportamiento específicos.
+ */
+  abrirDosModal(): void {
+    this.nuevaDosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Tiene que introducir la Fracción arancelaria',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+/**
+ * @method setAnexoDosLista
+ * @description Establece la fila seleccionada para el listado de fracciones del 'anexoDos'.
+ * Asigna el evento recibido a la propiedad `selectedFraccionRowDos` o `null` si el evento es nulo.
+ * 
+ * @param {AnexoFraccionAnarelaria | null} event - Objeto que representa la fracción seleccionada o null.
+ */
+setAnexoDosLista(event: AnexoFraccionAnarelaria | null): void{
+  this.selectedFraccionRowDos = event ? event : null;
+}
+
+/**
+ * @method abrirComplementarFraccionModalDos
+ * @description Abre el modal para complementar la fracción arancelaria del 'anexoDos' si hay una fracción seleccionada.
+ * Si no hay ninguna fracción seleccionada, muestra una notificación de advertencia solicitando la selección.
+ */
+abrirComplementarFraccionModalDos(): void {
+  if (this.selectedFraccionRowDos) {
+    this.activeComplementarContext = 'anexoDos';
+
+    const ELEMENTO_MODAL = document.getElementById('complementarFuncionModal');
+    if (ELEMENTO_MODAL) {
+      const MODAL = new Modal(ELEMENTO_MODAL);
+      MODAL.show();
+    }
+  } else {
+    this.nuevaDosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe seleccionar la fracción arancelaria del producto',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+}
+
+/**
+ * @method guardarComplementarFraccion
+ * @description Valida y guarda los datos del formulario de complementar fracción según el contexto activo ('anexoUno' o 'anexoDos').
+ * Actualiza la lista correspondiente con los valores capturados en el formulario, incluyendo la categoría y valores mensuales y anuales.
+ * Si el formulario es válido, realiza la actualización y posteriormente resetea el formulario y cierra el modal correspondiente.
+ */
+guardarComplementarFraccion(): void {
+  if (this.complimentarForm.valid) {
+    const FORMULARIO_VALOR = this.complimentarForm.value;
+
+    let catDescripcion = '';
+    if (typeof FORMULARIO_VALOR.catagoria === 'object' && FORMULARIO_VALOR.catagoria !== null) {
+      catDescripcion = FORMULARIO_VALOR.catagoria.descripcion;
+    } else {
+      const CATAGORIA = this.catagoriaSeleccionDatos.find(cat => String(cat.id) === String(FORMULARIO_VALOR.catagoria));
+      catDescripcion = CATAGORIA ? CATAGORIA.descripcion : '';
+    }
+
+    if (this.activeComplementarContext === 'anexoUno' && this.selectedFraccionRowUno) {
+    const IDX = this.anexoUnoTablaLista.findIndex(row => row === this.selectedFraccionRowUno);
+    if (IDX !== -1) {
+      this.anexoUnoTablaLista[IDX] = {
+        ...this.anexoUnoTablaLista[IDX],
+        categoria:catDescripcion,
+        valorModedaMensual: FORMULARIO_VALOR.monedaNacionalMensual,
+        valorModedaAnual: FORMULARIO_VALOR.monedaNacionalDeDosPeriodos,
+        valorMensual: FORMULARIO_VALOR.volumenMensual,
+        valorAnual: FORMULARIO_VALOR.twoPeriodVolume
+      };
+      this.anexoUnoTablaLista = [...this.anexoUnoTablaLista];
+    }
+    } else if (this.activeComplementarContext === 'anexoDos' && this.selectedFraccionRowDos) {
+    const IDX = this.anexoFraccionAnarelaria.findIndex(row => row === this.selectedFraccionRowDos);
+    if (IDX !== -1) {
+      this.anexoFraccionAnarelaria[IDX] = {
+        ...this.anexoFraccionAnarelaria[IDX],
+        catagoria:catDescripcion,
+        valorEnMonedaMensual: FORMULARIO_VALOR.monedaNacionalMensual,
+        valorEnMonedaAnual: FORMULARIO_VALOR.monedaNacionalDeDosPeriodos,
+        volumenMensual: FORMULARIO_VALOR.volumenMensual,
+        volumenAnual: FORMULARIO_VALOR.twoPeriodVolume
+      };
+      this.anexoFraccionAnarelaria = [...this.anexoFraccionAnarelaria];
+    }
+  }
+    this.complimentarForm.reset();
+
+    const ELEMENTO_MODAL = document.getElementById('complementarFuncionModal');
+    if (ELEMENTO_MODAL) {
+      const MODAL = Modal.getOrCreateInstance(ELEMENTO_MODAL);
+      MODAL.hide();
+    }
+  } 
+}
+
+/**
+ * @method abrirProveedorClienteModal
+ * @description Abre el modal de proveedor o cliente según el contexto especificado.
+ * Establece el contexto actual y muestra el modal correspondiente si el elemento existe en el DOM.
+ * 
+ * @param {'cliente' | 'proveedor'} context - Define si el modal es para cliente o proveedor.
+ */
+abrirProveedorClienteModal(context: 'cliente' | 'proveedor'): void {
+
+ const SELECT_ROW =
+    context === 'cliente'
+      ? Boolean(this.selectedFraccionRowUno)
+      : Boolean(this.selectedFraccionRowDos);
+
+  if (SELECT_ROW) {
+    this.proveedorClienteModalContext = context;
+    const ELEMENTO_MODAL = document.getElementById('proveedorClienteModal');
+    if (ELEMENTO_MODAL) {
+      const MODAL = new Modal(ELEMENTO_MODAL);
+      MODAL.show();
+    }
+  } else {
+    this.nuevaDosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe seleccionar una fracción arancelaria para continuar',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+}
+
+/**
+ * @method abrirProveedorPorArchivo
+ * @description Abre el popup o ventana modal relacionado con la carga de proveedor por archivo,
+ * estableciendo la propiedad que controla su visibilidad a `true`.
+ */
+abrirProveedorPorArchivo(): void {
+  if (this.selectedFraccionRowUno) {
+  this.mostrarProveedorClientesPopup = true;
+  } else {
+     this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe ingresar las fracciones del producto y de la mercancia previamente',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+  }
+}
+}
+
+/**
+ * Método que habilita la visualización del modal para la carga por archivo.
+ * Establece la bandera correspondiente en `true` para mostrar el modal emergente.
+ */
+abrirCargaPorArchivo(): void {
+  this.mostrarCargaPorArchivoModal = true;
+}
+
+/**
+ * @method cerrarProveedorPorArchivo
+ * @description Cierra el popup o ventana modal relacionado con la carga de proveedor por archivo,
+ * estableciendo la propiedad que controla su visibilidad a `false`.
+ */
+cerrarProveedorPorArchivo(): void {
+  this.mostrarProveedorPorArchivoPopup = false;
+}
+
+/**
+ * Método que cierra el popup para la carga de fracciones.
+ * Cambia la bandera correspondiente a `false` para ocultar el componente emergente.
+ */
+cerrarCargaDeFracciones(): void {
+  this.mostrarCargaDeFraccionesPopup = false;
+}
+
+/**
+ * Método que maneja la aceptación de la carga por archivo.
+ * Cierra el modal de carga por archivo y abre el popup de carga de fracciones.
+ */
+onAceptarCargaPorArchivo(): void{
+  this.mostrarCargaPorArchivoModal = false;
+  this.mostrarCargaDeFraccionesPopup = true;
+}
+
+/**
+ * Método que maneja la cancelación de la carga por archivo.
+ * Cierra el modal de carga por archivo estableciendo la bandera en false.
+ */
+onCancelarCargaPorArchivo(): void {
+  this.mostrarCargaPorArchivoModal = false;
+}
+
+/**
+ * Método que cierra el popup de proveedores y clientes.
+ * Establece la bandera correspondiente en false para ocultar el popup.
+ */
+cerrarProveedorClientesPopup(): void {
+  this.mostrarProveedorClientesPopup = false;
+}
+
+/**
+ * @method selectedRowFields
+ * @description Getter que devuelve un objeto con los campos seleccionados de la fila activa
+ * según el contexto actual ('anexoUno' o 'anexoDos'). Si no hay una fila seleccionada en el contexto activo,
+ * devuelve un objeto vacío.
+ * @returns {Object} Un objeto con las propiedades: fraccionArancelaria, anexoII, tipo y umt, con valores
+ * extraídos de la fila seleccionada o cadenas vacías si no existen.
+ */
+get selectedRowFields(): { [key: string]: string } {
+  if (this.activeComplementarContext === 'anexoUno' && this.selectedFraccionRowUno) {
+    return {
+      fraccionArancelaria: this.selectedFraccionRowUno.fraccionArancelaria || '',
+      anexoII: this.selectedFraccionRowUno.anexoII || '',
+      tipo: this.selectedFraccionRowUno.tipo || '',
+      umt: this.selectedFraccionRowUno.umt || '',
+    };
+  }
+  if (this.activeComplementarContext === 'anexoDos' && this.selectedFraccionRowDos) {
+    return {
+      fraccionArancelaria: this.selectedFraccionRowDos.anexoFraccionExportacion || '',
+      anexoII: this.selectedFraccionRowDos.anexoDos || '',
+      tipo: this.selectedFraccionRowDos.tipo || '',
+      umt: this.selectedFraccionRowDos.umt || '',
+    };
+  }
+  return {};
+}
+
+/**
+ * @method eliminarAnexoUno
+ * @description Elimina la fracción seleccionada del listado de fracciones de exportación (Anexo 1),
+ * si hay una fila seleccionada. Si no se ha seleccionado ninguna fracción, muestra una notificación
+ * de advertencia al usuario indicando que debe seleccionar al menos una fracción para eliminar.
+ */
+eliminarAnexoUno(): void {
+  if (this.selectedFraccionRowUno) {
+    const INDEX = this.anexoUnoTablaLista.findIndex(row => row === this.selectedFraccionRowUno);
+    if (INDEX !== -1) {
+      this.anexoUnoTablaLista.splice(INDEX, 1);
+      this.anexoUnoTablaLista = [...this.anexoUnoTablaLista];
+    }
+  } else {
+    this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Seleccione la(s) fracción(es) de Exportación a eliminar',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+}
+
+/**
+ * @method eliminarAnexoDos
+ * @description Elimina la fracción seleccionada del listado de fracciones de exportación (Anexo 2),
+ * si hay una fila seleccionada. Si no se ha seleccionado ninguna fracción, muestra una notificación
+ * de advertencia al usuario indicando que debe seleccionar al menos una fracción para eliminar.
+ */
+eliminarAnexoDos(): void {
+  if (this.selectedFraccionRowDos) {
+    const INDEX = this.anexoFraccionAnarelaria.findIndex(row => row === this.selectedFraccionRowDos);
+    if (INDEX !== -1) {
+      this.anexoFraccionAnarelaria.splice(INDEX, 1);
+      this.anexoFraccionAnarelaria = [...this.anexoFraccionAnarelaria];
+    }
+  } else {
+    this.nuevaDosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Seleccione la(s) fracción(es) de Exportación a eliminar',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 }
 
@@ -445,8 +950,8 @@ public tipoDeDocumenteCatalog = ANEXO_I_SERVICIO_CATALOGO;
       )
       .subscribe();
     this.anexoUnoFormGroup = this.fb.group({
-      fraccionArancelaria: [this.solicitudState['fraccionArancelaria']],
-      descripcion: [this.solicitudState['descripcion']],
+      fraccionArancelaria: [this.solicitudState['fraccionArancelaria'], Validators.required],
+      descripcion: [this.solicitudState['descripcion'], [Validators.required, Validators.maxLength(1000)]],
     });
     this.formularioProveedorCliente = this.fb.group({
       descripcionComercial: [this.solicitudState['descripcionComercial'], Validators.required],
@@ -463,8 +968,8 @@ public tipoDeDocumenteCatalog = ANEXO_I_SERVICIO_CATALOGO;
       razonSocial: [this.solicitudState['razonSocial'], Validators.required],
     });
     this.anexoDosFormGroup = this.fb.group({
-      fraccionArancelarias: [this.solicitudState['fraccionArancelarias']],
-      anexoDosDescripcion: [this.solicitudState['anexoDosDescripcion']],
+      fraccionArancelarias: [this.solicitudState['fraccionArancelarias'], Validators.required],
+      anexoDosDescripcion: [this.solicitudState['anexoDosDescripcion'], [Validators.required, Validators.maxLength(1000)]],
     });
     this.complimentarForm = this.fb.group({
       catagoria: [this.solicitudState['catagoria'], Validators.required],

@@ -11,6 +11,9 @@
   align-items: center;
   gap: 10px;
 }
+.es-invalido {
+  border: 1px solid red;
+}
 
 .alert-with-checkbox input[type='checkbox'] {
   margin-right: 10px;
@@ -129,3 +132,9 @@ table {
   background-color: lightgrey;
 }
 
+.mt-6{
+  margin-top: 7rem;
+}
+.danger{
+  color: red;
+}

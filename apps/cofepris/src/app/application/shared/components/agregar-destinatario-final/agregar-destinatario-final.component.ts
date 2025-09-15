@@ -1,11 +1,23 @@
 import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
+import {
   Catalogo,
-  CatalogoSelectComponent,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
   REGEX_CORREO_ELECTRONICO,
   REGEX_NOMBRE,
+  REGEX_RFC_FISICA,
+  REGEX_RFC_MORAL,
   REGEX_TELEFONO,
   TipoPersona,
-  TituloComponent
+  TituloComponent,
 } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
 import {
@@ -15,21 +27,16 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  SimpleChanges,
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
 import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constantes/datos-solicitud.enum';
 import { Subject } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
-
 
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
@@ -46,13 +53,13 @@ import { takeUntil } from 'rxjs/operators';
     CatalogoSelectComponent,
     TituloComponent,
     TooltipModule,
+    NotificacionesComponent,
   ],
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',
 })
 export class AgregarDestinatarioFinalComponent
-  implements OnDestroy, OnInit, OnChanges
-{
+  implements OnDestroy, OnInit, OnChanges {
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -191,6 +198,31 @@ export class AgregarDestinatarioFinalComponent
   @Input() datoSeleccionado: Destinatario[] | undefined;
 
   /**
+   * Lista de destinatarios seleccionados que se reciben como entrada
+   * desde un componente padre.
+   *
+   * @input
+   * @type {Destinatario[] | undefined}
+   */
+  @Input() datoSeleccionadorfc: Destinatario[] | undefined;
+
+  /**
+   * Array con los datos de los pedimentos.
+   * Se utiliza para almacenar los pedimentos ingresados por el usuario.
+   */
+  pedimentos: Array<Pedimento> = [];
+
+  /**
+   * Elemento a eliminar de la tabla de pedimentos.
+   */
+  elementoParaEliminar!: number;
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
    * Crea el componente e inicializa el grupo de formulario.
    *
    * @param {FormBuilder} fb - Inyector de FormBuilder para crear formularios reactivos.
@@ -211,9 +243,39 @@ export class AgregarDestinatarioFinalComponent
    * Hook de ciclo de vida de Angular que se llama cuando se detectan cambios en las propiedades de entrada.
    * Llama al método `mostrarCamposNoContribuyente()`.
    */
-  ngOnChanges(): void {
+  ngOnChanges(currentValue: SimpleChanges): void {
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
+    if (currentValue['datoSeleccionado']) {
+      this.datoSeleccionado = currentValue['datoSeleccionado'].currentValue;
+      setTimeout(() => {
+        if (this.datoSeleccionado?.[0]?.tipoPersona) {
+          this.agregarDestinatarioFinal.enable();
+        }
+        this.agregarDestinatarioFinal?.patchValue({
+          tipoPersona: this.datoSeleccionado?.[0]?.tipoPersona,
+          rfc: this.datoSeleccionado?.[0]?.rfc,
+          curp: this.datoSeleccionado?.[0]?.curp,
+          nombres: this.datoSeleccionado?.[0]?.nombres,
+          primerApellido: this.datoSeleccionado?.[0]?.primerApellido,
+          segundoApellido: this.datoSeleccionado?.[0]?.segundoApellido,
+          razonSocial: this.datoSeleccionado?.[0]?.razonSocial,
+          pais: this.datoSeleccionado?.[0]?.pais,
+          estado: this.datoSeleccionado?.[0]?.estadoLocalidad,
+          municipio: this.datoSeleccionado?.[0]?.municipioAlcaldia,
+          localidad: this.datoSeleccionado?.[0]?.localidad,
+          codigoPostal: this.datoSeleccionado?.[0]?.codigoPostal,
+          colonia: this.datoSeleccionado?.[0]?.colonia,
+          calle: this.datoSeleccionado?.[0]?.calle,
+          numeroExterior: this.datoSeleccionado?.[0]?.numeroExterior,
+          numeroInterior: this.datoSeleccionado?.[0]?.numeroInterior,
+          lada: this.datoSeleccionado?.[0]?.lada,
+          telefono: this.datoSeleccionado?.[0]?.telefono,
+          correoElectronico: this.datoSeleccionado?.[0]?.correoElectronico,
+          coloniaOEquivalente: this.datoSeleccionado?.[0]?.coloniaEquivalente,
+        });
+      }, 500);
+    }
   }
 
   /**
@@ -229,13 +291,14 @@ export class AgregarDestinatarioFinalComponent
     if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
       nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
     } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
-      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
-        VALOR_FORMULARIO.primerApellido
-      } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido
+        } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
     } else {
       nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
     }
     const NUEVO_DESTINATARIO: Destinatario = {
+      nacionalidad: VALOR_FORMULARIO.nacionalidad,
+      tipoPersona: VALOR_FORMULARIO.tipoPersona,
       nombreRazonSocial: nombreRazonSocial,
       rfc: VALOR_FORMULARIO.rfc,
       curp: '',
@@ -258,8 +321,10 @@ export class AgregarDestinatarioFinalComponent
       razonSocial: VALOR_FORMULARIO.razonSocial,
       lada: VALOR_FORMULARIO.lada,
     };
-
-    this.destinatarios.push(NUEVO_DESTINATARIO);
+    if (this.datoSeleccionado?.[0]?.id) {
+      NUEVO_DESTINATARIO.id = this.datoSeleccionado[0].id;
+    }
+    this.destinatarios = [...this.destinatarios, NUEVO_DESTINATARIO];
     this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
     this.agregarDestinatarioFinal.reset();
     this.ubicaccion.back();
@@ -337,10 +402,9 @@ export class AgregarDestinatarioFinalComponent
    */
   crearAgregarFormularioAgregarDestinatarioFinal(): void {
     this.agregarDestinatarioFinal = this.fb.group({
-      tipoPersona: ['', Validators.required],
+      tipoPersona: ['', [Validators.required]],
       rfc: [
-        this.obtenerValor('rfc'),
-        [Validators.required, Validators.pattern(REGEX_NOMBRE)],
+        this.obtenerValor('rfc'), [Validators.required],
       ],
       nombres: [
         {
@@ -353,15 +417,15 @@ export class AgregarDestinatarioFinalComponent
       ],
       denominacionRazon: [
         this.obtenerValor('razonSocial'),
-        Validators.required,
-        Validators.pattern(REGEX_NOMBRE),
+        [Validators.required,
+        Validators.pattern(REGEX_NOMBRE)],
       ],
       primerApellido: [
         {
-          value: this.elementosDeshabilitados.includes('pais')
+          value: this.elementosDeshabilitados.includes('primerApellido')
             ? ''
             : this.obtenerValor('primerApellido'),
-          disabled: this.elementosDeshabilitados.includes('pais'),
+          disabled: this.elementosDeshabilitados.includes('primerApellido'),
         },
         [Validators.required, Validators.pattern(REGEX_NOMBRE)],
       ],
@@ -381,12 +445,15 @@ export class AgregarDestinatarioFinalComponent
             : this.obtenerValor('pais'),
           disabled: this.elementosDeshabilitados.includes('pais'),
         },
-        Validators.required,
+        [Validators.required],
       ],
-      estado: [this.obtenerValor('estadoLocalidad'), Validators.required],
-      municipio: [this.obtenerValor('municipioAlcaldia'), Validators.required],
-      localidad: [this.obtenerValor('localidad'), Validators.required],
-      codigoPostal: [this.obtenerValor('codigoPostal'), Validators.required],
+      estado: [this.obtenerValor('estadoLocalidad'), [Validators.required]],
+      municipio: [
+        this.obtenerValor('municipioAlcaldia'),
+        [Validators.required],
+      ],
+      localidad: [this.obtenerValor('localidad'), [Validators.required]],
+      codigoPostal: [this.obtenerValor('codigoPostal'), [Validators.required]],
       colonia: [
         this.obtenerValor('colonia'),
         !this.elementosNoRequeridos.includes('colonia')
@@ -435,6 +502,41 @@ export class AgregarDestinatarioFinalComponent
     return this.datoSeleccionado?.[0]?.[field as keyof Destinatario] ?? '';
   }
 
+
+  /**
+   * Validador personalizado para RFC según el tipo de persona (Física o Moral).
+   *
+   * @param TIPO_PERSONA El tipo de persona para el cual se debe validar el RFC.
+   * @returns Una función validadora que verifica si el valor cumple con el formato RFC correspondiente.
+   *          Si el valor es inválido, retorna un objeto con la clave de error específica.
+   *          Si el tipo de persona es desconocido o el valor está vacío, retorna null.
+   */
+  static rfcFisicaValidator(TIPO_PERSONA: TipoPersona): (CONTROL: AbstractControl) => ValidationErrors | null {
+    return (CONTROL: AbstractControl): ValidationErrors | null => {
+      const VALUE = CONTROL?.value;
+
+      if (!VALUE) {
+        return null;
+      }
+
+      let REGEX;
+      let ERROR_KEY;
+
+      if (TIPO_PERSONA === TipoPersona.FISICA) {
+        REGEX = REGEX_RFC_FISICA;
+        ERROR_KEY = { INVALID_RFC_FISICA: true };
+      } else if (TIPO_PERSONA === TipoPersona.MORAL) {
+        REGEX = REGEX_RFC_MORAL;
+        ERROR_KEY = { INVALID_RFC_MORAL: true };
+      } else {
+        return null;
+      }
+
+      return REGEX.test(VALUE) ? null : ERROR_KEY;
+    };
+
+  }
+
   /**
    * Valida elementos según el `idProcedimiento` y establece
    * las listas de elementos no válidos y añadidos.
@@ -464,6 +566,8 @@ export class AgregarDestinatarioFinalComponent
         break;
       case 260214:
         this.elementosRequeridos = ['calle', 'numeroExterior'];
+        this.elementosDeshabilitados = ['pais'];
+        this.elementosNoRequeridos = ['colonia'];
         break;
       default:
         this.elementosDeshabilitados = [];
@@ -512,6 +616,7 @@ export class AgregarDestinatarioFinalComponent
    * @returns {void} No retorna ningún valor.
    */
   changeNacionalidad(): void {
+    const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
     if (this.agregarDestinatarioFinal?.value?.tipoPersona === '') {
       Object.keys(this.agregarDestinatarioFinal.controls).forEach(
         (controlName) => {
@@ -523,6 +628,15 @@ export class AgregarDestinatarioFinalComponent
       );
     } else {
       if (this.agregarDestinatarioFinal?.get('tipoPersona')?.value) {
+        const RFC_CONTROL = this.agregarDestinatarioFinal.get('rfc');
+        if (RFC_CONTROL) {
+          RFC_CONTROL.setValidators([
+              Validators.required,
+            AgregarDestinatarioFinalComponent.rfcFisicaValidator(VALOR_FORMULARIO.tipoPersona)
+          ]);
+          RFC_CONTROL.markAsTouched();
+          RFC_CONTROL.updateValueAndValidity();
+        }
         Object.keys(this.agregarDestinatarioFinal.controls).forEach(
           (controlName) => {
             if (
@@ -538,6 +652,9 @@ export class AgregarDestinatarioFinalComponent
         (controlName) => {
           this.agregarDestinatarioFinal.get(controlName)?.enable();
           this.estaDeshabilitadoDesplegable = false;
+          this.agregarDestinatarioFinal.patchValue({
+            pais: 2
+          });
         }
       );
     }
@@ -573,6 +690,69 @@ export class AgregarDestinatarioFinalComponent
       this.localidadesDatos = this.localidadesTempDatos;
       this.coloniasDatos = this.coloniasTempDatos;
     }
+  }
+
+  /**
+   * Maneja el evento de cambio en el campo de RFC.
+   *
+   * @param {Event} event - Evento que se dispara al cambiar el valor del campo de entrada (input).
+   */
+  onChangeRfc(event: Event): void {
+    const RFC_VALUE = (event.target as HTMLInputElement).value;
+    this.datoSeleccionadorfc?.forEach((dato) => {
+      if (dato.rfc === RFC_VALUE) {
+        const PEDIMENTO = {
+          patente: 0,
+          pedimento: 0,
+          aduana: 0,
+          idTipoPedimento: 0,
+          descTipoPedimento: 'Por evaluar',
+          numero: '',
+          comprobanteValor: '',
+          pedimentoValidado: false,
+        };
+        this.abrirModal(
+          'La información proporcionada de la persona ya existe, favor de verificar.'
+        );
+        this.pedimentos.push(PEDIMENTO);
+      }
+    });
+  }
+
+  /**
+   * Elimina un elemento de la tabla de pedimento, si se confirma la acción.
+   * @param borrar Indica si se debe proceder con la eliminación.
+   * @returns {void}
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+
+  /**
+   * Elimina un elemento de la lista de pedimentos en la posición especificada.
+   *
+   * @param {number} i - El índice del elemento a eliminar.
+   *
+   * @remarks
+   * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
+   * y se abre el modal para mostrar un aviso al usuario.
+   */
+  abrirModal(mensaje: string, i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    this.elementoParaEliminar = i;
   }
 
   /**

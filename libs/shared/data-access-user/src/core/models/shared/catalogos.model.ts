@@ -60,6 +60,8 @@ export interface Catalogo {
   relacionadaAcotacionId?: number;
   /** Decripcion del titulo del select, cuando se requiera. */
   title?: string;
+  /** Decripcion del titulo del bloque, cuando se requiera. */
+  bloque?: string;
 }
 
 /**
@@ -165,14 +167,4 @@ export interface CatalogoTipoDocumento {
    * Descripción del documento.
    */
   description: string;
-}
-
-/**
- * Modelo que representa un número IMMEX.
- */
-export interface NumeroImmex {
-  /** Identificador único del número IMMEX */
-  id: string;
-  /** Descripción del número IMMEX */
-  descripcion: string;
 }

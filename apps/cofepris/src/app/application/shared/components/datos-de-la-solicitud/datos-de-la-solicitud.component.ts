@@ -1,6 +1,8 @@
 import {
+  AICM, AIFA,
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
+  DESHABILITADA_EN_INIT,
   MENSAJE_EMERGENTE_DE_CONFIRMACION,
   MENSAJE_SIN_FILA_SELECCIONADA,
   MODIFICADOR_MENSAJE_NO_FILA_SELECCIONADA,
@@ -15,10 +17,10 @@ import {
   PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO,
-  PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL,
   REPRESENTANTE_LEGAL,
-  TEXTO_MANIFESTO_Y_DECLARACIONES
+  SIN_ACCION_AL_INICIAR,
+  TEXTO_MANIFESTO_Y_DECLARACIONES,
 } from '../../constantes/datos-solicitud.enum';
 import {
   AbstractControl,
@@ -26,44 +28,52 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
+  CatalogoSelectComponent,
   InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_IMPORTE_PAGO,
   REGEX_RFC,
   REGEX_SOLO_DIGITOS,
   REGEX_SOLO_NUMEROS,
+  TablaDinamicaComponent,
   TablePaginationComponent,
+  TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import {
   Catalogo,
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
   OpcionConfig,
+  ScianConfig,
   TablaMercanciasConfig,
   TablaMercanciasDatos,
   TablaOpcionConfig,
+  TablaScianConfig,
 } from '../../models/datos-solicitud.model';
 import {
-  CatalogoSelectComponent,
-  REGEX_IMPORTE_PAGO,
-  TablaDinamicaComponent,
-  TituloComponent
-} from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import {
-  ScianConfig,
-  TablaScianConfig
-} from '../../models/datos-solicitud.model';
-import { delay, takeUntil } from 'rxjs/operators';
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import { Subject, delay, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { Subject } from 'rxjs';
+import { ScianDataService } from '../../services/scian-data.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
 
@@ -81,12 +91,13 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
     NotificacionesComponent,
     TooltipModule,
     InputRadioComponent,
-    TablePaginationComponent
+    TablePaginationComponent,
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
-export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+export class DatosDeLaSolicitudComponent
+  implements OnInit, OnDestroy, OnChanges {
   /**
    * @property {Subject<void>} destroyNotifier$
    * Subject utilizado para cancelar suscripciones activas al destruir el componente.
@@ -98,6 +109,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Configuración de la tabla SCIAN recibida como input.
    */
   @Input() public scianConfig!: ScianConfig<TablaScianConfig>;
+
+   /**
+   * Indica si existe un error en el campo de correo electrónico.
+   * 
+   * - `true`: Se muestra el mensaje de error de correo electrónico no válido.
+   * - `false`: No hay error, el correo electrónico es válido.
+   */
+  @Input() public correoElectronicoMensajeError: boolean = false;
 
   /**
    * @property {TablaMercanciasConfig<TablaMercanciasDatos>} tablaMercanciasConfig
@@ -190,6 +209,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Lista de regímenes disponibles.
    */
   public regimenDatos: Catalogo[] = [];
+
+  /**
+   * @property {string} AICM
+   * Constante que representa el Aeropuerto Internacional de la Ciudad de México (AICM).
+   */
+  AICM = AICM;
+  /**
+   * @property {string} AIFA
+   * Constante que representa el Aeropuerto Internacional Felipe Ángeles (AIFA).
+   */
+  AIFA = AIFA;
 
   /**
    * @property {Catalogo[]} adunasDeEntradasDatos
@@ -296,6 +326,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * o no, dependiendo de la lógica implementada en el componente.
    */
   public mostrarRFCCalle = true;
+
+
 
   /**
    * @property {Catalogo[]} regimenLaMercanciaDatos
@@ -439,6 +471,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   esPuntoYComa: boolean = false;
 
   /**
+   * @const SIN_ACCION_AL_INICIAR
+   * @description Lista de identificadores de procedimientos que no requieren acción al iniciar.
+   * @type {number[]}
+   */
+  sinAccionAlIniciar = SIN_ACCION_AL_INICIAR;
+
+  /**
+   * Indica si el trámite no requiere acción al iniciar.
+   */
+  esSinAccionAlIniciar: boolean = false;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * @property {boolean} esFormularioSoloLectura
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
    *
@@ -450,7 +500,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public router: Router,
     public activatedRoute: ActivatedRoute,
-    public datosSolicitudService: DatosSolicitudService
+    public datosSolicitudService: DatosSolicitudService,
+    private consultaioQuery: ConsultaioQuery,
+    private scianDataService: ScianDataService
   ) {
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
@@ -488,6 +540,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -496,7 +558,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
-     this.crearDatosSolicitudForm();
+    this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
     this.esManifesto =
       PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES.includes(
@@ -507,7 +569,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     )
       ? true
       : false;
-   
+
+    this.esSinAccionAlIniciar = SIN_ACCION_AL_INICIAR.includes(
+      this.idProcedimiento
+    );
+
     this.mostrarCorreoElectronico =
       PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC.includes(
         this.idProcedimiento
@@ -565,24 +631,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260103
         ? 'Municipio y alcaldía'
         : 'Municipio o alcaldía';
-
-    if (this.formularioDeshabilitado) {
-      this.datosSolicitudForm.disable();
-    }
   }
 
   /**
    * @method crearDatosSolicitudForm
-   * @description Crea y configura el formulario reactivo `datosSolicitudForm` con los campos necesarios
-   *              para capturar la información de la solicitud. Cada campo incluye validaciones como
-   *              longitud mínima, longitud máxima y obligatoriedad.
-   *
-   * @returns {void} Este método no retorna ningún valor.
+   * @description Crea y configura el formulario reactivo con campos específicos deshabilitados por defecto
    */
   crearDatosSolicitudForm(): void {
     this.datosSolicitudForm = this.fb.group({
       rfcSanitario: [
-        this.datosSolicitudFormState.rfcSanitario,
+        {
+          value: this.datosSolicitudFormState.rfcSanitario,
+          disabled: true, // Disabled by default (as shown in screenshot)
+        },
         [
           Validators.required,
           Validators.minLength(2),
@@ -591,7 +652,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       denominacionRazon: [
-        this.datosSolicitudFormState.denominacionRazon,
+        {
+          value: this.datosSolicitudFormState.denominacionRazon,
+          disabled: true, // Disabled by default (as shown in screenshot)
+        },
         [
           Validators.required,
           Validators.minLength(2),
@@ -599,16 +663,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       correoElectronico: [
-        this.datosSolicitudFormState.correoElectronico,
+        {
+          value: this.datosSolicitudFormState.correoElectronico,
+          disabled: true, // Disabled by default (as shown in screenshot)
+        },
         [
           Validators.required,
+          Validators.pattern(REGEX_CORREO_ELECTRONICO),
           Validators.minLength(2),
           Validators.maxLength(120),
-          Validators.email,
         ],
       ],
       codigoPostal: [
-        this.datosSolicitudFormState.codigoPostal,
+        {
+          value: this.datosSolicitudFormState.codigoPostal,
+          disabled: true, // Disabled by default (as shown in screenshot)
+        },
         [
           Validators.required,
           Validators.minLength(2),
@@ -617,16 +687,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       estado: [
-        this.datosSolicitudFormState.estado,
+        {
+          value: this.datosSolicitudFormState.estado,
+          disabled: false, // Keep enabled (dropdown is enabled in screenshot)
+        },
         [Validators.required, Validators.minLength(2)],
       ],
       municipioAlcaldia: [
         {
           value: this.datosSolicitudFormState.municipioAlcaldia,
-          disabled:
-            PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA.includes(
-              this.idProcedimiento
-            ),
+          disabled: true, // Disabled by default (as shown in screenshot)
         },
         [
           Validators.required,
@@ -635,90 +705,187 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       localidad: [
-        this.datosSolicitudFormState.localidad,
+        {
+          value: this.datosSolicitudFormState.localidad,
+          disabled: true, // Disabled by default (as shown in screenshot)
+        },
         [Validators.pattern(REGEX_IMPORTE_PAGO)],
       ],
-      colonia: [this.datosSolicitudFormState.colonia],
+      colonia: [
+        {
+          value: this.datosSolicitudFormState.colonia,
+          disabled: true, // Disabled by default (as shown in screenshot)
+        },
+      ],
       calleYNumero: [
-        this.datosSolicitudFormState.calleYNumero,
+        {
+          value: this.datosSolicitudFormState.calleYNumero,
+          disabled: false, // Keep enabled (not shown disabled in screenshot)
+        },
         [Validators.required],
       ],
-      calle: [this.datosSolicitudFormState.calle, [Validators.required]],
+      calle: [
+        {
+        value:this.datosSolicitudFormState.calle,
+        disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento)
+      }, 
+      [Validators.required]],
       lada: [
-        this.datosSolicitudFormState.lada,
+        {
+          value: this.datosSolicitudFormState.lada,
+          disabled: true, // Disabled by default (as shown in screenshot)
+        },
         [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
       telefono: [
-        this.datosSolicitudFormState.telefono,
+        {
+          value: this.datosSolicitudFormState.telefono,
+          disabled: true, // Disabled by default (as shown in screenshot)
+        },
         [
           Validators.required,
           Validators.maxLength(5),
           Validators.pattern(REGEX_SOLO_DIGITOS),
         ],
       ],
-      aviso: [this.datosSolicitudFormState.aviso],
+      aviso: [
+        {
+          value: this.datosSolicitudFormState.aviso,
+          disabled: false, 
+        }
+      ],
       licenciaSanitaria: [
-        this.datosSolicitudFormState.licenciaSanitaria,
+        {
+          value: this.datosSolicitudFormState.licenciaSanitaria,
+          disabled: false, // Keep enabled (not shown disabled in screenshot)
+        },
         [Validators.required],
       ],
-      regimen: [this.datosSolicitudFormState.regimen, [Validators.required]],
+      regimen: [
+        {
+          value: this.datosSolicitudFormState.regimen,
+          disabled: false, 
+        },
+        [Validators.required]
+      ],
       adunasDeEntradas: [
-        this.datosSolicitudFormState.adunasDeEntradas
-          ? this.datosSolicitudFormState.adunasDeEntradas
-          : '',
+        {
+          value: this.datosSolicitudFormState.adunasDeEntradas ? this.datosSolicitudFormState.adunasDeEntradas : '',
+          disabled: false, 
+        },
         [Validators.required],
       ],
       aeropuerto: [
-        this.datosSolicitudFormState.aeropuerto,
+        {
+          value: this.datosSolicitudFormState.aeropuerto,
+          disabled: false, // Keep enabled (checkboxes should be clickable)
+        },
         [Validators.required],
       ],
-      publico: [this.datosSolicitudFormState.publico, [Validators.required]],
+      aeropuertoDos: [
+        {
+          value: this.datosSolicitudFormState.aeropuertoDos,
+          disabled: false, // Keep enabled (checkboxes should be clickable)
+        },
+        [Validators.required],
+      ],
+      publico: [
+        {
+          value: this.datosSolicitudFormState.publico,
+          disabled: false, // Keep enabled (radio buttons should be selectable)
+        },
+        [Validators.required]
+      ],
       representanteRfc: [
-        this.datosSolicitudFormState.representanteRfc,
+        {
+          value: this.datosSolicitudFormState.representanteRfc,
+          disabled: false,
+        },
         [Validators.required],
       ],
       representanteNombre: [
         {
           value: this.datosSolicitudFormState.representanteNombre,
-          disabled:
-            PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL.includes(
-              this.idProcedimiento
-            ),
+          disabled: false,
         },
         [Validators.required],
       ],
       apellidoPaterno: [
         {
           value: this.datosSolicitudFormState.apellidoPaterno,
-          disabled: PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO.includes(
-            this.idProcedimiento
-          ),
+          disabled: false, 
         },
         [Validators.required],
       ],
       apellidoMaterno: [
         {
           value: this.datosSolicitudFormState.apellidoMaterno,
-          disabled: PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO.includes(
-            this.idProcedimiento
-          ),
+          disabled: false, 
         },
       ],
-      regimenLaMercancia: ['101', [Validators.required]],
-      aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
-      mercancias: [[], Validators.required],
+      regimenLaMercancia: [
+        {
+          value: this.datosSolicitudFormState.regimenLaMercancia,
+          disabled: false, 
+        },
+        [Validators.required]
+      ],
+      aduana: [
+        {
+          value: this.datosSolicitudFormState.aduana,
+          disabled: false, 
+        },
+        [Validators.required]
+      ],
+      mercancias: [
+        {
+          value: this.tablaMercanciasConfig.datos,
+          disabled: false,
+        },
+        matrizRequerida
+      ],
       manifesto: [
-        this.datosSolicitudFormState.manifesto,
+        {
+          value: this.datosSolicitudFormState.manifesto,
+          disabled: false,
+        },
+        [Validators.required],
+      ],
+      manifiestosCasillaDeVerificacion: [
+        {
+          value: this.datosSolicitudFormState.manifiestosCasillaDeVerificacion,
+          disabled: false,
+        },
         [Validators.required],
       ],
     });
+    if (this.formularioDeshabilitado) {
+      this.datosSolicitudForm.disable();
+    }
 
+  
     if (this.mostrarNotificacion) {
       const EMPTY = Object.entries(this.datosSolicitudFormState)
         .filter(([key]) => key !== 'publico')
         .every(([, value]) => !value);
       if (EMPTY) {
         this.alternarControlesDeFormulario(false);
+      }
+    }
+  }
+
+  /**
+   * @method ngOnChanges
+   * @description Hook que se ejecuta cuando cambian las propiedades de entrada del componente.
+   * Permite habilitar o deshabilitar los formularios según el modo de solo lectura.
+   * @param {SimpleChanges} changes - Cambios detectados en las propiedades de entrada.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['formularioDeshabilitado'] && this.datosSolicitudForm) {
+      if (this.formularioDeshabilitado) {
+        this.datosSolicitudForm.disable();
+      } else {
+        this.datosSolicitudForm.enable();
       }
     }
   }
@@ -906,7 +1073,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * - Redirige al usuario a la ruta '../scian-selecion'.
    */
   agregarScian(): void {
-    this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
+    if(this.idProcedimiento !== NUMERO_TRAMITE.TRAMITE_260201){
+      this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
+    }
+    this.scianDataService.updateScianData(this.scianConfig.datos);
     if (this.scianSeleccionado) {
       this.scianSeleccionado.emit(this.scianConfig.datos);
     }
@@ -944,7 +1114,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * componentes o servicios que estén escuchando el evento emitido.
    */
   modificarDatos(): void {
-    if (!this.tablaMercanciasLista.length) {
+    if (this.tablaMercanciasLista.length > 1) {
       this.seleccionarFilaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -957,15 +1127,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         txtBtnCancelar: '',
       };
       this.mostrarAlerta = true;
-      return;
+    } else if (this.tablaMercanciasLista.length === 1) {
+      this.datosDeTablaSeleccionados.emit({
+        scianSeleccionados: this.scianLista,
+        mercanciasSeleccionados: this.tablaMercanciasLista,
+        opcionSeleccionados: this.opcionLista,
+        opcionesColapsableState: this.opcionesColapsable,
+      });
+      this.irAAcciones('../mercancia-datos');
     }
-    this.datosDeTablaSeleccionados.emit({
-      scianSeleccionados: this.scianLista,
-      mercanciasSeleccionados: this.tablaMercanciasLista,
-      opcionSeleccionados: this.opcionLista,
-      opcionesColapsableState: this.opcionesColapsable,
-    });
-    this.irAAcciones('../mercancia-datos');
   }
 
   /**
@@ -1089,8 +1259,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
-    this.alternarControlesDeFormulario(true);
-
+    this.mostrarNotificacion = true;
     this.elementoParaEliminar = i;
   }
 
@@ -1137,6 +1306,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Método que se llama cuando se busca un RFC en el modal de búsqueda.
+   * Si el parámetro `buscar` es verdadero, se actualizan los campos del formulario
+   * con valores predeterminados relacionados con el representante.
+   *
+   * @param {boolean} buscar - Indica si se debe buscar el RFC del representante.
+   */
+  obtenerModalDeBuscar(buscar: boolean): void {
+    if (buscar) {
+      this.datosSolicitudForm.patchValue({
+        representanteRfc: 'REP123456789',
+        representanteNombre: 'EUROFOODS DE MEXICO',
+        apellidoPaterno: 'GONZALEZ',
+        apellidoMaterno: 'PINAL',
+      });
+      this.mostrarAlerta = false;
+    }
+  }
+  /**
    * Método que verifica si un campo debe ser habilitado o deshabilitado
    * según el procedimiento actual.
    *
@@ -1164,17 +1351,36 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Indica si se ha seleccionado un establecimiento.
+   * @property {boolean} establecimientoSeleccionado
+   */
+  public establecimientoSeleccionado: boolean = false;
+
+  /**
    * Método que se llama cuando se envía el formulario.
    */
   alternarControlesDeFormulario(enable: boolean): void {
+    if (!this.datosSolicitudForm) {
+      return;
+    }
+
     Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
+      
+      
+      if (controlName === 'estado') {
+        return;
+      }
+
       if (enable && this.controlYaDeshabilitado(controlName)) {
         CONTROL?.enable();
       } else {
         CONTROL?.disable();
       }
     });
+    
+   
+    this.establecimientoSeleccionado = enable;
   }
 
   /**
@@ -1182,7 +1388,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   abrirRfcModal(): void {
     this.mostrarRfcAlerta = true;
-    this.nuevaNotificacion = {
+    this.nuevaRfcNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
@@ -1202,8 +1408,34 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
+      this.habilitarCamposFormulario(); // Use the new method instead of alternarControlesDeFormulario
+      this.mostrarNotificacion = false; // Hide the notification
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
+  }
+
+  /**
+   * @method habilitarCamposFormulario
+   * @description Habilita todos los campos del formulario después de seleccionar establecimiento
+   */
+  private habilitarCamposFormulario(): void {
+    if (!this.datosSolicitudForm) {
+      return;
+    }
+
+    Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
+      const CONTROL = this.datosSolicitudForm.get(controlName);
+      
+      if (controlName === 'estado') {
+        return;
+      }
+
+     
+      if (this.controlYaDeshabilitado(controlName)) {
+        CONTROL?.enable();
+      }
+    });
+    this.establecimientoSeleccionado = true;
   }
 
   /**
@@ -1214,6 +1446,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public cambioDeValorIndique(value: string | number): void {
     this.predeterminadoSeleccionar = value;
+  }
+
+  /**
+   * @method formularioSolicitudValidacion
+   * Valida el formulario de solicitud verificando si todos los campos cumplen con las reglas de validación.
+   * Si el formulario es inválido, marca todos los controles como tocados para mostrar los mensajes de error.
+   *
+   * @returns {boolean} - Retorna `true` si el formulario es válido, de lo contrario `false`.
+   */
+  formularioSolicitudValidacion(): boolean {
+    if (this.datosSolicitudForm.valid) {
+      return true;
+    }
+    this.datosSolicitudForm.markAllAsTouched();
+    return false;
   }
 
   /**
@@ -1229,4 +1476,28 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+  
+  /**
+   * Retorna `true` si el control de formulario 'mercancias' es inválido y ha sido tocado o modificado.
+   * Útil para determinar cuándo mostrar errores de validación para el campo 'mercancias'.
+   *
+   * @returns {boolean} Indica si el control 'mercancias' es inválido y ha sido interactuado.
+   */
+  get isMercanciasInvalid(): boolean {
+    const CONTROL = this.datosSolicitudForm.get('mercancias');
+    return Boolean(CONTROL?.invalid && (CONTROL?.touched || CONTROL?.dirty));
+  }
+}
+
+/**
+ * Valida que el valor del control sea una matriz no vacía.
+ *
+ * @param {AbstractControl} control - El control de formulario a validar.
+ * @returns {ValidationErrors | null} - Retorna un objeto de errores si la validación falla, o `null` si pasa.
+ */
+export function matrizRequerida(
+  control: AbstractControl
+): ValidationErrors | null {
+  const VALUE = control.value;
+  return Array.isArray(VALUE) && VALUE.length === 0 ? { required: true } : null;
 }

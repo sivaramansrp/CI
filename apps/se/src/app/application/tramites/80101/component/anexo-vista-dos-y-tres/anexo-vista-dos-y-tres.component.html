@@ -3,9 +3,11 @@
   [anexoDosTablaLista]="anexoDosTablaLista"
   [anexoTresTablaLista]="anexoTresTablaLista"
   (obtenerAnexoDosDevolverLaLlamada)="obtenerAnexoDosDevolverLaLlamada($event)"
-  (obtenerAnexoTresDevolverLaLlamada)="
-    obtenerAnexoTresDevolverLaLlamada($event)
-  "
+  (obtenerAnexoTresDevolverLaLlamada)="obtenerAnexoTresDevolverLaLlamada($event)"
   [formularioDeshabilitado]="formularioDeshabilitado"
+  (anexoTressDatos)="modifierComplimentos($event)"
+  [formularioDatosSubcontratista]="anexoTressFormGroup"
+   (anexoTressDatosDos)="modifierComplimentosDos($event)"
+  [formularioDatosDosSubcontratista]="anexoTressDosFormGroup"
 >
 </app-anexo-dos-y-tres>

@@ -1,7 +1,7 @@
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject,delay, of, takeUntil } from 'rxjs';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { CommonModule } from '@angular/common';
 import { Mercancias } from '../../models/plantas-consulta.model';
@@ -28,7 +28,9 @@ export const FECHA_FINAL = {
     ReactiveFormsModule,
     CatalogoSelectComponent,
     CommonModule,
-    InputFechaComponent],
+    InputFechaComponent,
+    NotificacionesComponent
+  ],
   templateUrl: './mercancias-modal.component.html',
   styleUrl: './mercancias-modal.component.scss',
 })
@@ -68,6 +70,13 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * @description Evento emitido cuando el usuario hace clic en cerrar el modal de mercancías.
    */
   @Output() cerrarClicado = new EventEmitter();
+  /**
+   * @property {EventEmitter<any>} tablaSeleccionEvent
+   * @description
+   * Evento emitido cuando se realiza una selección en la tabla de mercancías del modal.
+   * Permite notificar al componente padre que se ha realizado una acción de selección en la tabla.
+   */
+  @Output() tablaSeleccionEvent = new EventEmitter();
 
 
   /**
@@ -86,7 +95,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * @property {Observable<Catalogo[]>} umcs$
    * @description Observable que emite la lista de UMCs disponibles.
    */
-  public fechaFinalInput: InputFecha = FECHA_FINAL;
+  public fechaFinal: InputFecha = FECHA_FINAL;
 
 
   /**
@@ -103,6 +112,14 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * Propiedad booleana que indica si hay mercancías disponibles.
    */
   private actualizandoFormulario = false;
+
+    /**
+   * @property {Notificacion} nuevaNotificacion
+   * @description
+   * Objeto que almacena la información de la notificación a mostrar en el modal de mercancías.
+   * Se utiliza para mostrar mensajes de alerta, éxito o información al usuario dentro del componente.
+   */
+  nuevaNotificacion!: Notificacion;
 
   /**
    * Constructor del componente MercanciasModalComponent.
@@ -121,7 +138,6 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
 
     this.tramiteQuery?.formMercancia$?.pipe(
       takeUntil(this.destroyNotifier$)).subscribe((estado) => {
-
       // eslint-disable-next-line dot-notation
       if (!this.actualizandoFormulario && estado && estado['fraccionNaladiSa02']) {
         this.actualizandoFormulario = true;
@@ -167,6 +183,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     if(this.esFormularioSoloLectura){
       this.mercanciaForm.disable();
     }
+    this.nuevaNotificacion = {} as Notificacion;
   }
   /**
    * @method parchearValoresDelFormulario
@@ -231,8 +248,8 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    */
     public cambioFechaFinal(nuevo_valor: string): void {
 
-      this.mercanciaForm.get('fechaFinal')?.setValue(nuevo_valor);
-      this.mercanciaForm.get('fechaFinal')?.markAsUntouched();
+      this.mercanciaForm.get('fechaFinalInput')?.setValue(nuevo_valor);
+      
     }
   
 
@@ -253,20 +270,46 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       );
   }
 
-  /**
-   * Dispara el evento para guardar los datos del formulario y muestra una alerta.
-   */
   activarModal(): void {
-    this.guardarClicado.emit(this.mercanciaForm.value);
+    if(this.mercanciaForm.valid){
     this.mostrarAlerta = true;
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: '',
+      mensaje: this.mensajeDeAlerta,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+    }
+    else{
+      this.mercanciaForm.markAllAsTouched();
+    }
   }
 
   /**
-   * Dispara el evento para cerrar el modal y oculta la alerta.
+   * Dispara el evento para guardar los datos del formulario y muestra una alerta.
    */
+  aceptar(): void {
+    this.guardarClicado.emit(this.mercanciaForm.getRawValue());
+    this.store.setMercanciaTabla([this.mercanciaForm.getRawValue()]);
+    if (this.mostrarAlerta) {
+      of(null)
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          delay(100))
+        .subscribe(() => {
+          this.cerrarModal();
+          this.tablaSeleccionEvent.emit(true);
+        });
+    }
+  }
   cerrarModal(): void {
     this.cerrarClicado.emit();
-    this.mostrarAlerta = false;
+      this.mostrarAlerta = false;
   }
 
   /**

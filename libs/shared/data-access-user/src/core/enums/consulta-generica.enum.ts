@@ -1,4 +1,4 @@
-import { BodyTablaAcuses, BodyTablaDictamenes, BodyTablaDocumentos, BodyTablaEnvioDigital, BodyTablaOpinion, BodyTablaOpiniones, BodyTablaRequerimiento, BodyTablaResolucion, BodyTablaTareasTramite } from "../models/shared/consulta-generica.model";
+import { BodyTablaAcuses, BodyTablaDictamenObservaciones, BodyTablaDictamenes, BodyTablaDocumentos, BodyTablaEnvioDigital, BodyTablaOpinion, BodyTablaOpiniones, BodyTablaRequerimiento, BodyTablaResolucion, BodyTablaTareasTramite } from "../models/shared/consulta-generica.model";
 
 /*
   * ============================
@@ -292,6 +292,39 @@ export const CONSULTA_ACUSES = {
       {
         key: 'estatus' as keyof BodyTablaOpiniones,
         valor: 'Estatus',
+      },
+    ],
+    accionesTablaOpinion: [
+      {
+        tipo: 'detalle',
+        label: 'Detalle',
+        icono: 'bi-arrow-bar-down',
+      },
+    ],
+  };
+
+   /**
+   * Constantes para la bandeja de observaciones dictamen.
+   * Se utiliza para mostrar la tabla de observaciones en el componente detalle dictamen.
+   * 
+   */
+  export const CONSULTA_DICTAMEN_OBSERVACIONES = {
+    encabezadoDictamenObservaciones: [
+      {
+        key: 'fechaObservacion' as keyof BodyTablaDictamenObservaciones,
+        valor: 'Fecha de observación',
+      },
+      {
+        key: 'fechaAtencion' as keyof BodyTablaDictamenObservaciones,
+        valor: 'Fecha de atención',
+      },
+      {
+        key: 'generadaPor' as keyof BodyTablaDictamenObservaciones,
+        valor: 'Generada por',
+      },
+      {
+        key: 'estatusObservacion' as keyof BodyTablaDictamenObservaciones,
+        valor: 'Estatus de la observación',
       },
     ],
     accionesTablaOpinion: [

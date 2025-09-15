@@ -1,19 +1,20 @@
-import { CatalogoSelectComponent, InputRadioComponent, REGEX_POSTAL, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AvisoOpcionesDeRadio, ResiduoPeligroso } from '../../models/aviso-catalogo.model';
+import { CatalogoSelectComponent, InputRadioComponent, REGEX_POSTAL, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
-import { map, takeUntil } from 'rxjs';
-import { AvisoOpcionesDeRadio } from '../../models/aviso-catalogo.model';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
 import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/datos-residuos-peligrosos.component';
 import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { Modal } from 'bootstrap';
-import { Subject } from 'rxjs';
 import { TEXTOS } from '../../constantes/aviso-retorno.enum';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
 
 /**
@@ -41,7 +42,7 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
     CatalogoSelectComponent,
     TituloComponent,
     ReactiveFormsModule,
-    TableComponent,
+    TablaDinamicaComponent,
     InputRadioComponent,
     DatosResiduosPeligrososComponent
   ],
@@ -91,6 +92,23 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /** Bandera que indica si el formulario es de solo lectura */
   public esFormularioSoloLectura: boolean = false;
 
+  /** Configuración de columnas para la tabla dinámica */
+  configuracionTabla: ConfiguracionColumna<ResiduoPeligroso>[] = [];
+
+  /** Datos para la tabla dinámica */
+  datosTabla: ResiduoPeligroso[] = [];
+
+  /** Enum de tipos de selección de tabla para uso en template */
+  TablaSeleccion = TablaSeleccion;
+
+  /** Lista de índices de filas seleccionadas en la tabla */
+  filasSeleccionadas: Set<number> = new Set();
+
+  /** Getter para verificar si hay filas seleccionadas */
+  get hayFilasSeleccionadas(): boolean {
+    return this.filasSeleccionadas.size > 0;
+  }
+
   /**
    * Constructor para inyección de dependencias
    * @param fb Constructor de formularios reactivos
@@ -121,6 +139,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.inicializarFormularioLugarReciclaje();
     this.inicializarFormularioEmpresaTransportista();
     this.inicializarFormularioPrecaucionesManejo();
+    this.inicializarConfiguracionTabla();
     this.recuperarValoresDesdeStore();
     this.configurarSuscripcionEstadoConsulta();
   }
@@ -200,6 +219,113 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       clave: ['', Validators.required],
       precaucionesManejo: ['', Validators.required]
     });
+  }
+
+  /**
+   * Inicializa la configuración de la tabla dinámica
+   */
+  private inicializarConfiguracionTabla(): void {
+    // Configuración de columnas para la tabla dinámica de residuos peligrosos
+    this.configuracionTabla = [
+      {
+        encabezado: 'Orígen del residuo',
+        clave: (item: ResiduoPeligroso): string => item.origenResiduoGeneracion,
+        orden: 1
+      },
+      {
+        encabezado: 'Fracción Arancelaria',
+        clave: (item: ResiduoPeligroso): string => item.fraccionArancelaria,
+        orden: 2
+      },
+      {
+        encabezado: 'NICO',
+        clave: (item: ResiduoPeligroso): string => item.nico,
+        orden: 3
+      },
+      {
+        encabezado: 'Acotación',
+        clave: (item: ResiduoPeligroso): string => item.acotacion,
+        orden: 4
+      },
+      {
+        encabezado: 'Nombre Residuo Peligroso',
+        clave: (item: ResiduoPeligroso): string => item.nombreResiduoPeligroso,
+        orden: 5
+      },
+      {
+        encabezado: 'Cantidad',
+        clave: (item: ResiduoPeligroso): string => item.cantidad,
+        orden: 6
+      },
+      {
+        encabezado: 'Cantidad letra',
+        clave: (item: ResiduoPeligroso): string => item.cantidadLetra,
+        orden: 7
+      },
+      {
+        encabezado: 'Unidad de medida',
+        clave: (item: ResiduoPeligroso): string => item.unidadMedida,
+        orden: 8
+      },
+      {
+        encabezado: 'Clave Clasificación',
+        clave: (item: ResiduoPeligroso): string => item.claveClasificacion,
+        orden: 9  
+      },
+      {
+        encabezado: 'Nombre Clasificación',
+        clave: (item: ResiduoPeligroso): string => item.nombreClasificacion,
+        orden: 10
+      },
+      {
+        encabezado: 'Descripción clasificación',
+        clave: (item: ResiduoPeligroso): string => item.descripcionClasificacion,
+        orden: 11
+      },
+      {
+        encabezado: 'Descripción otro Clasificación',
+        clave: (item: ResiduoPeligroso): string => item.descripcionOtraClasificacion,
+        orden: 12
+      },
+      {
+        encabezado: 'CRETI',
+        clave: (item: ResiduoPeligroso): string => item.creti,
+        orden: 13
+      },
+      {
+        encabezado: 'Estado físico',
+        clave: (item: ResiduoPeligroso): string => item.estadoFisico,
+        orden: 14
+      },
+      {
+        encabezado: 'Descripción otro estado físico',
+        clave: (item: ResiduoPeligroso): string => item.descripcionOtroEstadoFisico,
+        orden: 15
+      },
+      {
+        encabezado: 'No. de manifiesto',
+        clave: (item: ResiduoPeligroso): string => item.numeroManifiesto,
+        orden: 16
+      },
+      {
+        encabezado: 'Tipo de contenedor',
+        clave: (item: ResiduoPeligroso): string => item.tipoContenedor,
+        orden: 17
+      },
+      {
+        encabezado: 'Descripción otro contenedor',
+        clave: (item: ResiduoPeligroso): string => item.descripcionOtroContenedor,
+        orden: 18
+      },
+      {
+        encabezado: 'Capacidad',
+        clave: (item: ResiduoPeligroso): string => item.capacidad,
+        orden: 19
+      }
+    ];
+
+    // Inicializar con datos vacíos
+    this.datosTabla = [];
   }
 
   /**
@@ -351,6 +477,58 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.formularioLugarReciclaje.enable();
     this.formularioEmpresaTransportista.enable();
     this.formularioPrecaucionesManejo.enable();
+  }
+
+  /**
+   * Maneja el evento cuando se agrega un residuo peligroso desde el modal
+   * @param residuoData Datos del residuo peligroso agregado
+   */
+  onResiduoAgregado(residuoData: ResiduoPeligroso): void {
+    // Agregar el nuevo residuo directamente a los datos de la tabla
+    this.datosTabla = [...this.datosTabla, residuoData];
+  }
+
+  /**
+   * Maneja la selección de filas en la tabla dinámica
+   * @param filasSeleccionadas Array de elementos seleccionados
+   */
+  onFilasSeleccionadas(filasSeleccionadas: ResiduoPeligroso[]): void {
+    // Limpiar selecciones previas
+    this.filasSeleccionadas.clear();
+    
+    // Encontrar los índices de las filas seleccionadas
+    filasSeleccionadas.forEach(filaSeleccionada => {
+      const INDEX = this.datosTabla.findIndex(fila => 
+        fila.nico === filaSeleccionada.nico && 
+        fila.fraccionArancelaria === filaSeleccionada.fraccionArancelaria &&
+        fila.numeroManifiesto === filaSeleccionada.numeroManifiesto
+      );
+      if (INDEX !== -1) {
+        this.filasSeleccionadas.add(INDEX);
+      }
+    });
+  }
+
+  /**
+   * Borra las filas seleccionadas de la tabla
+   */
+  borrarFilasSeleccionadas(): void {
+    if (this.filasSeleccionadas.size === 0) {
+      return;
+    }
+
+    // Convertir a array y ordenar de mayor a menor para eliminar correctamente
+    const INDICES_A_ELIMINAR = Array.from(this.filasSeleccionadas).sort((a, b) => b - a);
+    
+    INDICES_A_ELIMINAR.forEach(index => {
+      this.datosTabla.splice(index, 1);
+    });
+
+    // Limpiar selecciones
+    this.filasSeleccionadas.clear();
+    
+    // Forzar actualización de la tabla
+    this.datosTabla = [...this.datosTabla];
   }
 
   /**

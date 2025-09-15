@@ -25,6 +25,73 @@ export interface ProductoTable {
   modelo: string;
   descripcionDelProducto: string;
   paisDeOrigen: string;
+  paisDeProcedencia: string;
+  paisDeDestino: string;
+  usoEspecifico: string;
+}
+
+/**
+ * @interface ProductoInput
+ * @description
+ * Interfaz que define la estructura de datos para un producto que se está ingresando o editando en el formulario.
+ */
+export interface ProductoInput {
+  /**
+   * Clave que representa la clasificación específica del producto.
+   */
+  cveEspecificoProductoClasifi: string;
+  
+  /**
+   * Clave que identifica el tipo de producto.
+   */
+  cveTipoProducto: string;
+  
+  /**
+   * Código de la fracción arancelaria asociada al producto.
+   */
+  fraccionArancelaria: string;
+  
+  /**
+   * Descripción textual de la fracción arancelaria.
+   * Campo opcional.
+   */
+  fraccionArancelariaDescripcion?: string;
+  
+  /**
+   * Modelo o versión específica del producto.
+   * Campo opcional.
+   */
+  modelo?: string;
+  
+  /**
+   * Descripción detallada del producto.
+   * Campo opcional.
+   */
+  productoDescripcion?: string;
+  
+  /**
+   * País de origen del producto.
+   * Campo opcional.
+   */
+  paisDeOrigen?: string;
+
+    /**
+   * País de procedencia del producto.
+   * Campo opcional que indica el país desde donde se envía o transporta el producto.
+   */
+  paisDeProcedencia?: string;
+  
+  /**
+   * País de destino del producto.
+   * Campo opcional que indica el país al que será enviado o donde será comercializado el producto.
+   */
+  paisDeDestino?: string;
+  
+  /**
+   * Uso específico que tendrá el producto.
+   * Campo opcional que describe la finalidad o aplicación particular del producto.
+   */
+  usoEspecifico?: string;
 }
 
 /**
@@ -35,6 +102,34 @@ export interface ProductoTable {
 export interface ScianTable {
   claveScian: string;
   descripcionScian: string;
+}
+
+/**
+ * @interface SolicitudTable
+ * @description
+ * Interfaz que define la estructura de datos para las solicitudes mostradas en la tabla dinámica.
+ * Contiene información básica sobre una solicitud de aviso sanitario.
+ */
+export interface SolicitudTable {
+  /**
+   * Fecha en que se creó la solicitud, en formato de texto.
+   */
+  fechaCreacion: string;
+
+  /**
+   * Nombre o descripción de la mercancía incluida en la solicitud.
+   */
+  mercancia: string;
+
+  /**
+   * Cantidad de la mercancía solicitada.
+   */
+  cantidad: string;
+
+  /**
+   * Nombre o identificador del proveedor de la mercancía.
+   */
+  proveedor: string;
 }
 
 /**

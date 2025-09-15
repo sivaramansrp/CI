@@ -47,25 +47,12 @@
       </ng-container>
     </div>
     <div class="row mt-5">
-      <div class="col-md-6">
-        <div>
-          <label for="radioPeriodo">Periodo:</label>
-        </div>
-        <div class="form-check">
-          <input type="radio" (change)="setValoresStore(formularioCertificado, 'blnPeriodo', 'setPeriodo')"
-            formControlName="blnPeriodo" id="periodo" value="0" class="form-check-input">
-          <label class="form-check-label" for="periodo"></label>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div>
-          <label for="radioUnaSolaImportacion">Una sola importación:</label>
-        </div>
-        <div class="form-check">
-          <input type="radio" (change)="setValoresStore(formularioCertificado, 'blnPeriodo', 'setPeriodo')"
-            formControlName="blnPeriodo" id="importacion" value="1" class="form-check-input">
-          <label class="form-check-label" for="importacion"></label>
-        </div>
+      <div class="mt-3 mb-3">
+        <app-input-radio 
+              [radioOptions]="radioOptions" 
+                [layout]="'horizontal'"
+            >
+            </app-input-radio>
       </div>
     </div>
 
@@ -74,13 +61,13 @@
         <ng-titulo titulo="Tratado y país o bloque" />
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="optionsTratado" [label]="'Tratado / Acuerdo'" [required]="true" id="tratado"
-            formControlName="tratado" [ngClass]="isValid(grupoTratado,'tratado') ? 'required' : ''"
+            formControlName="tratado" [markTouched]="grupoTratado.get('tratado')?.touched??false"
             (change)=" setValoresStore(grupoTratado, 'tratado', 'setGrupoTratadoTratado') "
             [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="optionsPais" [label]="'País / Bloque'" [required]="true" id="pais"
-            formControlName="pais" [ngClass]="isValid(grupoTratado,'pais') ? 'required' : ''"
+            formControlName="pais" [markTouched]="grupoTratado.get('pais')?.touched??false"
             (change)="setValoresStore(grupoTratado, 'pais', 'setGrupoTratadoPais')"
             [isDisabled]="soloLectura"></app-catalogo-select>
         </div>

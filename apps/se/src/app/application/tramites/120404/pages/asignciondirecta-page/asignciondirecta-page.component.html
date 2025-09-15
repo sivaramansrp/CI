@@ -3,13 +3,17 @@
       <div class="col-md-6">
         <h1>Asignación directa de cupo personas morales (ampliación)</h1>
       </div>
-  <app-wizard [listaPasos]="pasos"></app-wizard>
-       </div>
+    </div>
 
- <div>
-    @switch (indice) {
+  
+    <div class="col-md-12 mt-2" *ngIf="showBuscarError">
+<ng-alert [CONTENIDO]="TEXTOS.TEXTOS_BUSCAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
+      </div>
+
+    <app-wizard [listaPasos]="pasos"></app-wizard>
+   @switch (indice) {
     @case (1) {
-   <app-solicitante-entidad></app-solicitante-entidad>
+     <app-solicitante-entidad (buscarIntento)="onBuscarIntento($event)" (alertaEvento)="mostrarAlerta = $event"></app-solicitante-entidad>
      }
     @case (2) {
    <app-paso-dos></app-paso-dos>
@@ -18,8 +22,11 @@
       <app-paso-tres></app-paso-tres>
     }
   }
-  </div>
-  <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+    
+    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+     @if (mostrarAlerta) {
+ <ng-alert [CONTENIDO]="avisoContrnido"></ng-alert>
+}
 </div>
-  
+
 

@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, REGEX_CORREO_ELECTRONICO, TablaSeleccion } from '@ng-mf/data-access-user';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,7 @@ import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloCompon
 import { CONFIGURACION_PARA_PME_ENCABEZADO_DE_TABLA } from '../../../constants/transportacion-maritima.enum';
 import { PersonaMoralExtranjeraForm } from '../../../../40402/models/transportacion-maritima.model';
 import { TEXTOS } from '../../../constants/transportacion-maritima.enum';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite40402Query } from '../../../estados/tramite40402.query';
 import { Tramite40402Store } from '../../../estados/tramite40402.store';
 import { Tramitenacionales40402State } from '../../../estados/tramite40402.store';
@@ -25,70 +26,127 @@ import { TransportacionMaritimaService } from '../../../../40402/services/transp
     TablaDinamicaComponent,
     CatalogoSelectComponent,
     FormsModule,
-    ReactiveFormsModule
-  ],
+    ReactiveFormsModule,
+    TooltipModule,
+    NotificacionesComponent
+],
   templateUrl: './persona-moral.component.html',
   styleUrl: './persona-moral.component.css',
 })
 export class PersonaMoralComponent implements OnInit, OnDestroy {
   /**
+   * Almacena las filas seleccionadas para eliminación múltiple
+   */
+  filasSeleccionadas: PersonaMoralExtranjeraForm[] = [];
+  /**
+   * Maneja la selección de filas de la tabla (para selección múltiple)
+   */
+  onFilasSeleccionadas(filas: PersonaMoralExtranjeraForm[]): void {
+    this.filasSeleccionadas = filas;
+    if (filas.length === 0) {
+      this.indiceSeleccionado = null;
+    }
+  }
+
+  /**
+   * Elimina los registros seleccionados de la tabla
+   */
+  eliminarRegistrosSeleccionados(): void {
+    if (this.filasSeleccionadas.length === 0) {
+      // Opcional: mostrar notificación de que no hay registros seleccionados
+      return;
+    }
+    this.personaMoralExtranjeraTabla = this.personaMoralExtranjeraTabla.filter(
+      item => !this.filasSeleccionadas.includes(item)
+    );
+    this.tramite40402Store.setPersonaMoralExtranjeraTabla(this.personaMoralExtranjeraTabla);
+    this.filasSeleccionadas = [];
+    this.indiceSeleccionado = null;
+    // Mostrar modal de confirmación después de la eliminación
+    setTimeout(() => {
+      const MODAL = document.getElementById('confirmarEliminados');
+    if (MODAL) {
+        const WIN = window as unknown as { bootstrap: { Modal: new (modal: HTMLElement) => { show: () => void } } };
+        const BS_MODAL: { show: () => void } = new WIN.bootstrap.Modal(MODAL);
+        BS_MODAL.show();
+      }
+    }, 300);
+  }
+  /**
+   * Configuración de la tabla de selección.
+   * Utiliza el enum TablaSeleccion para la lógica de selección en la tabla.
+   */
+  TablaSeleccion = TablaSeleccion;
+  /**
+   * Índice del registro seleccionado en la tabla.
+   * Se utiliza para identificar el registro a modificar o eliminar.
+   */
+  indiceSeleccionado: number | null = null;
+
+  /**
    * Formulario reactivo para gestionar la información de personas morales extranjeras.
+   * Utiliza FormGroup para la validación y manejo de datos.
    */
   personaMoralExtranjeraForm!: FormGroup;
 
   /**
    * Catálogo de países disponibles.
    * @type {Catalogo[]}
+   * Se utiliza para el select de país en el formulario.
    */
   pais!: Catalogo[];
 
   /**
    * Configuración para el encabezado de tabla de personas morales extranjeras.
+   * Define las columnas y textos en español para la tabla.
    */
   configuracionParaPMEEncabezadoDeTabla = CONFIGURACION_PARA_PME_ENCABEZADO_DE_TABLA;
 
   /**
    * Tabla de datos de personas morales extranjeras.
    * @type {PersonaMoralExtranjeraForm[]}
-   * @description Almacena la información de las personas morales extranjeras agregadas.
+   * Almacena la información de las personas morales extranjeras agregadas.
    */
   personaMoralExtranjeraTabla: PersonaMoralExtranjeraForm[] = [];
 
   /**
-   * Textos estáticos para la interfaz de usuario.
+   * Textos estáticos para la interfaz de usuario en español.
    */
   TEXTOS = TEXTOS;
 
   /**
    * Referencia al botón de cerrar modal.
+   * Se utiliza para cerrar el modal de edición/agregado.
    */
-  @ViewChild('closeModal') closeModal!: ElementRef;
+  @ViewChild('cerrarModal') cerrarModal!: ElementRef;
 
   /**
    * Estado actual del trámite de transporte marítimo.
+   * Almacena los datos globales del trámite.
    */
   public transportacionMaritimaState!: Tramitenacionales40402State;
 
   /**
    * Subject para gestionar la destrucción de suscripciones.
+   * Evita fugas de memoria en el ciclo de vida del componente.
    */
   private destruirNotificador$: Subject<void> = new Subject();
 
   /**
    * @property {ConsultaioState} consultaDatos
-   * @description Datos de consulta obtenidos del estado global.
+   * Datos de consulta obtenidos del estado global.
    */
   consultaDatos!: ConsultaioState;
 
   /**
    * @property {boolean} esDatosRespuesta
-   * @description Indica si los datos son de respuesta y deben mostrarse.
+   * Indica si los datos son de respuesta y deben mostrarse.
    */
   public esDatosRespuesta: boolean = false;
 
   /**
    * @property {boolean} soloLectura
-   * @description Bandera que indica si el formulario debe estar en modo solo lectura.
+   * Bandera que indica si el formulario debe estar en modo solo lectura.
    * @default false
    */
   soloLectura: boolean = false;
@@ -162,7 +220,8 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
         this.transportacionMaritimaState?.correoPME,
         [
           Validators.required,
-          Validators.maxLength(320)
+          Validators.maxLength(320),
+          Validators.pattern(REGEX_CORREO_ELECTRONICO)
         ]
       ],
       paisPME: [
@@ -260,7 +319,6 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
     const PAIS = this.personaMoralExtranjeraForm.get('paisPME')?.value;
     this.tramite40402Store.setPaisPME(PAIS);
   }
-
   /**
    * Agrega una nueva persona moral extranjera a la tabla.
    * @param personaMoralExtranjeraFormDatos Datos del formulario
@@ -268,28 +326,175 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
    */
   agregarPME(personaMoralExtranjeraFormDatos: PersonaMoralExtranjeraForm): void {
     this.personaMoralExtranjeraForm.markAllAsTouched();
-    if (this.personaMoralExtranjeraForm.invalid) {
-      return;
+    this.personaMoralExtranjeraForm.updateValueAndValidity();
+
+    if (this.personaMoralExtranjeraForm.valid) {
+      const PAIS = this.pais?.find((pais) => pais.id === Number(personaMoralExtranjeraFormDatos.paisPME))?.descripcion;
+      const REGISTRO = {
+        denominacionPME: personaMoralExtranjeraFormDatos.denominacionPME,
+        paisPME: PAIS ?? '',
+        estadoPME: personaMoralExtranjeraFormDatos.estadoPME,
+        codigoPostalPME: personaMoralExtranjeraFormDatos.codigoPostalPME,
+        ciudadPME: personaMoralExtranjeraFormDatos.ciudadPME,
+        callePME: personaMoralExtranjeraFormDatos.callePME,
+        numeroExteriorPME: personaMoralExtranjeraFormDatos.numeroExteriorPME,
+        numeroInteriorPME: personaMoralExtranjeraFormDatos.numeroInteriorPME,
+        correoPME: personaMoralExtranjeraFormDatos.correoPME,
+        nombreDG: personaMoralExtranjeraFormDatos.nombreDG,
+        apellidoPaternoDG: personaMoralExtranjeraFormDatos.apellidoPaternoDG,
+        apellidoMaternoDG: personaMoralExtranjeraFormDatos.apellidoMaternoDG,
+        domicilioPME: `${personaMoralExtranjeraFormDatos.callePME} ${personaMoralExtranjeraFormDatos.numeroExteriorPME} ${personaMoralExtranjeraFormDatos.estadoPME} ${PAIS} ${personaMoralExtranjeraFormDatos.codigoPostalPME}`.trim()
+      };
+      const NUEVO_CUERPO_TABLA = [...this.personaMoralExtranjeraTabla];
+      if (this.indiceSeleccionado !== null) {
+        NUEVO_CUERPO_TABLA[this.indiceSeleccionado] = REGISTRO;
+      } else {
+        NUEVO_CUERPO_TABLA.push(REGISTRO);
+      }
+      this.personaMoralExtranjeraTabla = NUEVO_CUERPO_TABLA;
+      this.tramite40402Store.setPersonaMoralExtranjeraTabla(this.personaMoralExtranjeraTabla);
+      this.limpiarDatosPME();
+      this.indiceSeleccionado = null;
+      this.cerrarModalFunc();
+      // Mostrar notificación después de cerrar modal
+      setTimeout(() => {
+        this.alertaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'INFORMACION',
+          modo: 'action',
+          titulo: 'Alerta',
+          mensaje: 'Datos guardados correctamente',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.mostrarNotificacion = true;
+      }, 100);
+    } else {
+      // Mostrar notificación de alerta si el formulario no es válido
+      this.alertaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'INFORMACION',
+        modo: 'action',
+        titulo: 'Formulario inválido',
+        mensaje: 'Por favor verifique los campos obligatorios.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.mostrarNotificacion = true;
     }
+  }
 
-    const PAIS = this.pais?.find((pais) => pais.id === Number(personaMoralExtranjeraFormDatos.paisPME))?.descripcion;
+  /**
+   * Alerta de notificación para mostrar mensajes al usuario.
+   * @type {Notificacion}
+   */
+  public alertaNotificacion!: Notificacion;
+  
+  /**
+   * Bandera para mostrar la notificación de alerta en la interfaz.
+   * Cuando es true, se despliega el componente de notificación.
+   */
+  mostrarNotificacion: boolean = false;
+  /**
+   * Manejador para el evento de clic en el botón "Agregar".
+   * Si ya existe un registro en la tabla, muestra una notificación y no abre el modal.
+   * @param evento Evento de clic del botón
+   */
+  enAgregarClic(evento: Event): void {
+    if (this.personaMoralExtranjeraTabla.length > 0) {
+      evento.preventDefault();
+      evento.stopPropagation();
+      this.alertaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'INFORMACION',
+        modo: 'action',
+        titulo: 'Registro existente',
+        mensaje: 'Ya ha sido agregada a la solicitud una persona moral extranjera.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.mostrarNotificacion = true;
+    } else {
+      this.indiceSeleccionado = null;
+    }
+  }
+  /**
+   * Selecciona un registro de la tabla para modificar o eliminar.
+   */
+  /**
+   * Selecciona un registro de la tabla para modificar o eliminar.
+   * Puede recibir el índice o el objeto del registro.
+   */
+  seleccionarRegistro(registro: PersonaMoralExtranjeraForm | number): void {
+    if (typeof registro === 'number') {
+      this.indiceSeleccionado = registro;
+    } else {
+      const INDICE = this.personaMoralExtranjeraTabla.indexOf(registro);
+      this.indiceSeleccionado = INDICE !== -1 ? INDICE : null;
+    }
+  }
 
-    const NUEVO_CUERPO_TABLA = [...this.personaMoralExtranjeraTabla];
+  /**
+   * Elimina el registro seleccionado de la tabla.
+   */
+  eliminarRegistro(): void {
+    if (this.indiceSeleccionado !== null || this.filasSeleccionadas.length > 0) {
+      const DENOMINACIONES_A_ELIMINAR = new Set(this.filasSeleccionadas.map(p => p.denominacionPME).filter(Boolean));
+      const CORREOS_A_ELIMINAR = new Set(this.filasSeleccionadas.map(p => p.correoPME).filter(Boolean));
+      const COMBO_CORREO_DENOMINACION_A_ELIMINAR = new Set(
+        this.filasSeleccionadas
+          .filter(p => p.correoPME && p.denominacionPME)
+          .map(p => `${p.correoPME}|${p.denominacionPME}`)
+      );
 
-    NUEVO_CUERPO_TABLA.push({
-      denominacionPME: personaMoralExtranjeraFormDatos.denominacionPME,
-      paisPME: PAIS ?? '',
-      estadoPME: personaMoralExtranjeraFormDatos.estadoPME,
-      codigoPostalPME: personaMoralExtranjeraFormDatos.codigoPostalPME,
-      correoPME: personaMoralExtranjeraFormDatos.correoPME,
-      nombreDG: `${personaMoralExtranjeraFormDatos.nombreDG} ${personaMoralExtranjeraFormDatos.apellidoPaternoDG} ${personaMoralExtranjeraFormDatos.apellidoMaternoDG}`.trim(),
-      domicilioPME: `${personaMoralExtranjeraFormDatos.callePME} ${personaMoralExtranjeraFormDatos.numeroExteriorPME} ${personaMoralExtranjeraFormDatos.estadoPME} ${PAIS} ${personaMoralExtranjeraFormDatos.codigoPostalPME}`.trim(),
-    });
-    
-    this.personaMoralExtranjeraTabla = NUEVO_CUERPO_TABLA;
-    this.tramite40402Store.setPersonaMoralExtranjeraTabla(this.personaMoralExtranjeraTabla);
-    this.limpiarDatosPME();
-    this.cerrarModal();
+      this.personaMoralExtranjeraTabla = this.personaMoralExtranjeraTabla.filter(persona => {
+        if (persona.denominacionPME && DENOMINACIONES_A_ELIMINAR.has(persona.denominacionPME)) {
+          return false;
+        }
+        if (persona.correoPME && CORREOS_A_ELIMINAR.has(persona.correoPME)) {
+          return false;
+        }
+        if (persona.correoPME && persona.denominacionPME) {
+          const COMBO_ID = `${persona.correoPME}|${persona.denominacionPME}`;
+          if (COMBO_CORREO_DENOMINACION_A_ELIMINAR.has(COMBO_ID)) {
+            return false;
+          }
+        }
+        return !this.filasSeleccionadas.includes(persona);
+      });
+      this.filasSeleccionadas = [];
+      this.indiceSeleccionado = null;
+      if (this.personaMoralExtranjeraForm) {
+        this.personaMoralExtranjeraForm.reset();
+      }
+      this.tramite40402Store.setPersonaMoralExtranjeraTabla(this.personaMoralExtranjeraTabla);  
+    }
+  }
+
+  /**
+   * Abre el modal de modificación con los datos pre-cargados.
+   */
+  modificarRegistro(): void {
+    if (this.indiceSeleccionado !== null) {
+      const REGISTRO = this.personaMoralExtranjeraTabla[this.indiceSeleccionado];
+      this.personaMoralExtranjeraForm.patchValue({
+        denominacionPME: REGISTRO.denominacionPME,
+        correoPME: REGISTRO.correoPME,
+        paisPME: this.pais?.find(p => p.descripcion === REGISTRO.paisPME)?.id ?? '',
+        codigoPostalPME: REGISTRO.codigoPostalPME,
+        ciudadPME: REGISTRO.ciudadPME,
+        estadoPME: REGISTRO.estadoPME,
+        callePME: REGISTRO.callePME,
+        numeroExteriorPME: REGISTRO.numeroExteriorPME,
+        numeroInteriorPME: REGISTRO.numeroInteriorPME,
+            nombreDG: REGISTRO.nombreDG,
+            apellidoPaternoDG: REGISTRO.apellidoPaternoDG,
+            apellidoMaternoDG: REGISTRO.apellidoMaternoDG,
+      });
+    }
   }
 
   /**
@@ -324,9 +529,13 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
    * Cierra el modal mediante programación.
    * @returns {void}
    */
-  cerrarModal(): void {
-    if (this.closeModal) {
-      this.closeModal.nativeElement.click();
+  /**
+   * Cierra el modal mediante programación.
+   * @returns {void}
+   */
+  cerrarModalFunc(): void {
+    if (this.cerrarModal) {
+      this.cerrarModal.nativeElement.click();
     }
   }
 

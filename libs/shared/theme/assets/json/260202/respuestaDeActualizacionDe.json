@@ -4,9 +4,9 @@
     "cadenaDependencia": "DEP123456",
     "estado": "2",
     "llavePago": "LLAVE987654",
-    "fechaPago": "2024-06-20",
+    "fechaPago": "02/06/2024",
     "importePago": "1500.00",
-    "banco": "Banco Ejemplo"
+    "banco": "1"
   },
   "datosSolicitudFormState": {
     "rfcSanitario": "SAN123456789",
@@ -26,7 +26,8 @@
     "regimen": "101",
     "adunasDeEntradas": "101",
     "aeropuerto": true,
-    "publico": "no",
+    "manifesto": true,
+    "publico": "No",
     "representanteRfc": "REP123456789",
     "representanteNombre": "Juan",
     "apellidoPaterno": "Pérez",
@@ -34,8 +35,8 @@
     "marca": "MarcaEjemplo",
     "especifique": "Especificación adicional",
     "claveDeLos": "CLAVE123",
-    "fechaDeFabricacio": "2024-01-01",
-    "fechaDeCaducidad": "2025-01-01",
+    "fechaDeFabricacio": "01/01/2024",
+    "fechaDeCaducidad": "01/01/2024",
     "regimenLaMercancia": "Definitivo",
     "aduana": "Aduana Norte"
   },

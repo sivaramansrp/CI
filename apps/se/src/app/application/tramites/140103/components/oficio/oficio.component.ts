@@ -1,33 +1,25 @@
-import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, Notificacion, NotificacionesComponent, Pedimento, TituloComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, ConsultaioState, DatosPasos, ListaPasosWizard, Notificacion, NotificacionesComponent, Pedimento, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadosCancelar} from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { ConfiguracionItem } from '../../models/detalle';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DetalleComponent } from '../detalle/detalle.component';
+import { DevolverComponent } from '../devolver/devolver.component';
 import { HttpClient } from '@angular/common/http';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import oficiodata from '@libs/shared/theme/assets/json/140103/oficiotable.json';
 
-import { DevolverComponent } from '../devolver/devolver.component';
-
 import { ModalComponent } from '../model/modal.component';
+import { NUEVO_DATOS_CUPO } from '../../constants/detalle.enum';
+import { Tramite140103Query } from '../../../../estados/queries/tramite140103.query';
+import { Tramite140103Store } from '../../../../estados/tramites/tramite140103.store';
 
-/** Representa la configuración de un ítem de oficio con datos del certificado y su origen. */
-interface ConfiguracionItem {
-  folioOficioCertificado: string;
-  nombreRazonSocial: string;
-  estado: string;
-  fabricante: string;
-  importador: string;
-  unidadPrimaria: number;
-  montoExpediente: number;
-  montocancelar: number;
-  montoutilizado: number;
-}
+
 /**
  * Componente para gestionar la visualización y actualización de los datos de los oficios de certificados.
  * Este componente muestra una tabla con la información de los oficios y permite la interacción con un formulario
@@ -157,7 +149,9 @@ export class OficioComponent implements OnInit, OnDestroy{
    * Configuración del tipo de selección en la tabla (en este caso, se usa un checkbox).
    */
   TablaSeleccion = TablaSeleccion.CHECKBOX;
-
+   /** Almacena el estado actual de la consulta relacionada con el trámite.  
+ *  Contiene información necesaria para mostrar o procesar datos en el componente. */
+   public consultaState!:ConsultaioState;
   /**
    * Formulario reactivo que captura datos relacionados con el oficio, incluyendo
    * asignado, monto y cancelar.
@@ -186,13 +180,19 @@ export class OficioComponent implements OnInit, OnDestroy{
    * @param http - HttpClient utilizado para hacer solicitudes HTTP.
    * @param fb - FormBuilder utilizado para crear y gestionar el formulario reactivo.
    */
-  constructor(public http: HttpClient, public fb: FormBuilder,private consultaioQuery: ConsultaioQuery) {
+  constructor(public http: HttpClient, public fb: FormBuilder,private consultaioQuery: ConsultaioQuery,private tramite140103Store: Tramite140103Store,private tramite140103Query: Tramite140103Query,) {
             this.consultaioQuery.selectConsultaioState$
               .pipe(
                 takeUntil(this.destroyNotifier$),
                 map((seccionState) => {
                   this.esFormularioSoloLectura = seccionState.readonly;
                   this.inicializarEstadoFormulario();
+                      this.consultaState = seccionState;
+                      if (this.consultaState.update) {
+                       this.tramite140103Store.update((state) => ({
+                       ...state,                  
+                      certificados: [...state.certificados, NUEVO_DATOS_CUPO] }));
+        }
                 })
               )
               .subscribe();
@@ -238,6 +238,9 @@ export class OficioComponent implements OnInit, OnDestroy{
 
     /** Llama al método que configura el formulario según el estado de solo lectura. */
     this.inicializarEstadoFormulario();
+      this.tramite140103Query.select('certificados').subscribe((data: ConfiguracionItem[]) => {
+    this.Certificados = data;
+  });
 
   }
 /**

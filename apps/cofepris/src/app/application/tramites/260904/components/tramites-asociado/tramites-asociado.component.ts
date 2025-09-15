@@ -1,5 +1,5 @@
 // Importaciones necesarias de Angular y otros módulos.
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { Asociados } from '../../modelos/tramites-asociados.model';
@@ -26,6 +26,9 @@ import { TramitesAsociadosService } from '../../services/tramites-asociados.serv
   styleUrl: './tramites-asociado.component.scss', // Ruta al archivo SCSS para los estilos.
 })
 export class TramitesAsociadoComponent implements OnInit, OnDestroy {
+    @Input() disabled: boolean = false;
+  @Input() tipoTramite?: string;
+
  
   /**
    * Configuración de las columnas de la tabla dinámica.

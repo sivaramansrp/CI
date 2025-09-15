@@ -1,9 +1,10 @@
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { Component } from '@angular/core';
-import { Input } from '@angular/core';
+import { AlertComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Component, Input, OnDestroy } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+import { SagarpaService } from '../../../220501/services/sagarpa/sagarpa.service';
 import { Solicitud } from '../../models/solicitud-pantallas.model';
+import { Solicitud220501Store } from '../../../220501/estados/tramites220501.store';
 import { TEXTOS } from '../../../220501/constantes/texto-enum';
-import { TituloComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente que representa los datos de la solicitud.
@@ -18,7 +19,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 /**
  * Componente que representa los datos de la solicitud
  */ 
-export class SolicitudDatosComponent {
+export class SolicitudDatosComponent implements OnDestroy{
   /**
    * Obtiene los datos de enumeración y establece valores de TEXTOS
    */
@@ -38,9 +39,50 @@ export class SolicitudDatosComponent {
   @Input() tablaFilaDatos: Solicitud[] = [];
 
   /**
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */
+  private destroyed$ = new Subject<void>();
+
+  /**
+   * Constructor de la clase SolicitudDatosComponent.
+   * @param sagarpaService Servicio para interactuar con la API de Sagarpa.
+   * @param solicitud220501Store Store para gestionar el estado de la solicitud 220501.
+   */
+  constructor(
+    private sagarpaService: SagarpaService,
+    private solicitud220501Store: Solicitud220501Store
+  ) {}
+
+  /**
    * Alterna el panel plegable (expandir/contraer)
    */
   mostrarColapsable(): void {
     this.colapsable = !this.colapsable;
+  }
+
+  /**
+   * Método que se ejecuta al hacer clic en una fila de la tabla.
+   * Obtiene los datos del registro seleccionado.
+   * @returns {void}
+   */
+  alClicFila(): void {
+    this.sagarpaService.obtenerSeleccionadaRegistroDatos()
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((resultado) => {
+        this.sagarpaService.actualizarEstadoFormulario(resultado.solicitud220502State);
+        this.solicitud220501Store.setSagarpaState(resultado.solicitud220501State);
+      })
+    ).subscribe();
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

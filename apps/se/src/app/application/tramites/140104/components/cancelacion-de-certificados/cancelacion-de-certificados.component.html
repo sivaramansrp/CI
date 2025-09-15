@@ -2,8 +2,8 @@
   <div class="row">
     <ng-titulo [titulo]="'Buscar cupos'"></ng-titulo>
   </div>
-  <div class="row">
-    <form   [formGroup]="formularioGrupo">
+  <form   [formGroup]="formularioGrupo">
+  <div class="row">   
     <div class="col-md-4">
     <app-catalogo-select
     [catalogo]="regimenAduaneroList"
@@ -11,6 +11,7 @@
     [label]="'Régimen aduanero'"
     [required]="true"
     name="regimenAduanero"
+    (change)="setValoresStore(formularioGrupo,'regimenAduanero', 'setRegimenAduanero')"
   ></app-catalogo-select>
   </div>
   <div class="col-md-4">
@@ -20,6 +21,7 @@
     [label]="'Mecanismo de asignación'"
     [required]="true"
     name="mecanismoAsignacion"
+    (change)="setValoresStore(formularioGrupo,'mecanismoAsignacion', 'setMecanismoAsignacion')"
   ></app-catalogo-select>
   </div>
   <div class="col-md-4">
@@ -29,8 +31,11 @@
     [label]="'Tratado o bloque comercial'"
     [required]="false"
     name="tratadoBloqueComercial"
+    (change)="setValoresStore(formularioGrupo,'tratadoBloqueComercial', 'setTratadoBloqueComercial')"
   ></app-catalogo-select>
   </div>
+  </div>
+ <div class="row">
   <div class="col-md-4">
     <app-catalogo-select
     [catalogo]="nombreProductoList"
@@ -38,6 +43,7 @@
     [label]="'Nombre de producto'"
     [required]="false"
     name="nombreProducto"
+    (change)="setValoresStore(formularioGrupo,'nombreProducto', 'setNombreProducto')"
   ></app-catalogo-select>
   </div>
   <div class="col-md-4">
@@ -47,6 +53,7 @@
     [label]="'Nombre del subproducto'"
     [required]="false"
     name="nombreSubproducto"
+    (change)="setValoresStore(formularioGrupo,'nombreSubproducto', 'setNombreSubproducto')"
   ></app-catalogo-select>
   </div>
   <div class="col-md-4">
@@ -56,12 +63,11 @@
     [label]="'Representación federal'"
     [required]="false"
     name="representacionFederal"
+    (change)="setValoresStore(formularioGrupo,'representacionFederal', 'setRepresentacionFederal')"
   ></app-catalogo-select>
   </div>
-
-  </form>
-
   </div>
+   </form>
   
   <div class="row mt-3">
     <div class="col-md-12 d-flex justify-content-end mt-10">
@@ -298,6 +304,11 @@
           <h5>Certificados a cancelar</h5>
           <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasCertificadosACancelar"
             [datos]="CertificadosACancelarTabla"></app-tabla-dinamica>
+             <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><a class="page-link">1</a></li>
+        </ul>
+      </nav>
             <div class="row mt-2">
               <div class="col-md-12 d-flex justify-content-end">
                 <button type="button" class="btn btn-primary me-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"

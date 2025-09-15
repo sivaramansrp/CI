@@ -182,7 +182,7 @@
   <div class="modal fade" id="modal-alerta" tabindex="-1" aria-labelledby="modal-alertaLabel">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header black"></div>
+        <div class="modal-header"></div>
         <div class="modal-body">
           <p>Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.</p>
         </div>
@@ -195,7 +195,7 @@
   <div class="modal fade" id="modal-confirmar" tabindex="-1" aria-labelledby="modal-confirmarLabel">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header black"></div>
+        <div class="modal-header"></div>
         <div class="modal-body">
           <p>¿Estás seguro que deseas eliminar los registros marcados?</p>
         </div>
@@ -226,15 +226,15 @@
           <div class="col-md-12">
             <ng-titulo titulo="Clave S.C.I.A.N." />
           </div>
-          <div class="col-md-6 mt-4">
-            <app-catalogo-select [id]="'claveSCIAN'" [catalogo]="SCIANCatalogo.catalogos" [label]="SCIANCatalogo.labelNombre" [placeholder]="SCIANCatalogo.primerOpcion" [required]="SCIANCatalogo.required" formControlName="claveSCIAN" (selectionChange)="setClaveSCIAN($event)" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+          <div class="col-md-8 mt-4">
+            <app-catalogo-select [id]="'claveSCIAN'" [catalogo]="SCIANCatalogo.catalogos" [label]="SCIANCatalogo.labelNombre" [required]="SCIANCatalogo.required" formControlName="claveSCIAN" (selectionChange)="setClaveSCIAN($event)" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </div>
-          <div class="col-md-6 mt-4">
-            <app-catalogo-select [id]="'descSCIAN'" [catalogo]="SCIANDescCatalogo.catalogos" [label]="SCIANDescCatalogo.labelNombre" [placeholder]="SCIANDescCatalogo.primerOpcion" [required]="SCIANDescCatalogo.required" formControlName="claveSCIANDesc" (selectionChange)="setClaveSCIANDesc($event)" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+          <div class="col-md-8 mt-4">
+            <app-catalogo-select [id]="'descSCIAN'" [catalogo]="SCIANDescCatalogo.catalogos" [label]="SCIANDescCatalogo.labelNombre" [required]="SCIANDescCatalogo.required" formControlName="claveSCIANDesc" (selectionChange)="setClaveSCIANDesc($event)" [isDisabled]="true"></app-catalogo-select>
           </div>
           <div class="col-md-12 mt-5 mb-5 ml-5 text-end">
             <div class="btn-group">
-              <button class="btn btn-default ms-3" type="button" name="limpiar" id="limpiarSCIANModal" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura"> Limpiar </button>
+              <button class="btn btn-default ms-3" type="button" name="limpiar" id="limpiarSCIANModal" [disabled]="esFormularioSoloLectura" (click)="limpiarSCIAN();"> Limpiar </button>
               <button class="btn btn-danger ms-3" type="button" name="eliminar" id="cancelarSCIANModal" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura"> Cancelar </button>
               <button type="button" class="btn btn-primary ms-3" name="agregar" id="agregarSCIANModal" data-bs-dismiss="modal" (click)="agregarSCIAN();" [disabled]="esFormularioSoloLectura"> Agregar </button>
             </div>

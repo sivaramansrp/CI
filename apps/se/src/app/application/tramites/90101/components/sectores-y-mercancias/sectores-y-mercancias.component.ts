@@ -12,7 +12,7 @@
  * @import { SECTORCOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { AlertComponent, Catalogo, SoloNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, Notificacion, NotificacionesComponent, SoloNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
 import { FilaProducir, FilaSectors } from '../../models/prosec.module';
@@ -22,6 +22,7 @@ import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PARATEXTO } from '../../constantes/prosec.module';
 import { ProsecService } from '../../services/prosec.service';
@@ -49,7 +50,7 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
   templateUrl: './sectores-y-mercancias.component.html',
   styleUrl: './sectores-y-mercancias.component.scss',
   standalone: true,
-  imports: [ ReactiveFormsModule,AlertComponent, TablaDinamicaComponent, CatalogoSelectComponent, TituloComponent, CommonModule, forwardRef(() => SoloNumerosDirective), ]
+  imports: [ ReactiveFormsModule,AlertComponent, TablaDinamicaComponent, CatalogoSelectComponent, TituloComponent, CommonModule, forwardRef(() => SoloNumerosDirective), NotificacionesComponent ]
 })
 export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
 
@@ -153,6 +154,55 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * @property {FilaSectors[]} listSelectedView
+   * @description
+   * [ES] Arreglo que contiene los sectores seleccionados en la tabla dinámica para realizar acciones como eliminar.
+   */
+  listSelectedView: FilaSectors[] = [];
+
+  /**
+   * @property {FilaProducir[]} listSelectedProducir
+   * @description
+   * [ES] Arreglo que contiene las mercancías seleccionadas en la tabla dinámica para realizar acciones como eliminar.
+   */
+  listSelectedProducir: FilaProducir[] = [];
+
+  /**
+   * @property {boolean} espectaculoAlerta
+   * @description
+   * [ES] Indica si se debe mostrar una alerta relacionada con la validación o acciones sobre los sectores o mercancías.
+   */
+  espectaculoAlerta: boolean = false;
+  /**
+   * @property {boolean} espectaculoAlertaProducir
+   * @description
+   * [ES] Indica si se debe mostrar una alerta relacionada con la validación o acciones sobre las mercancías a producir.
+   * Se utiliza para controlar la visualización de mensajes de alerta específicos para la sección de mercancías.
+   */
+  espectaculoAlertaProducir: boolean = false;
+
+  /**
+   * @property {boolean} espectaculoConfirmar
+   * @description
+   * [ES] Indica si se debe mostrar el modal de confirmación para eliminar sectores o mercancías seleccionadas.
+   */
+  espectaculoConfirmar: boolean = false;
+  /**
+   * @property {boolean} espectaculoConfirmarProducir
+   * @description
+   * [ES] Indica si se debe mostrar el modal de confirmación para eliminar mercancías a producir seleccionadas.
+   * Se utiliza para controlar la visualización del diálogo de confirmación específico para la sección de mercancías.
+   */
+  espectaculoConfirmarProducir: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacion
+   * @description
+   * [ES] Objeto que contiene la información de la notificación a mostrar en el componente de notificaciones.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
    * @constructor
    * @description
    * [ES] Constructor del componente SectoresYMercanciasComponent. Inyecta las dependencias necesarias para la gestión de formularios, servicios y estados.
@@ -171,6 +221,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -203,14 +254,14 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.sectoresState = state as ProsecState;
+          this.sectors = state.sectorDatos as FilaSectors[];
+          this.producir = state.producirDatos as FilaProducir[];
+          this.initActionFormBuild();
         })
       )
       .subscribe();
     this.initActionFormBuild();
     this.obtenserListaEstado();
-    
-
-    this.seccionStore.establecerFormaValida([false]);
 
     this.sectoresYMercancias.statusChanges
       .pipe(
@@ -219,21 +270,28 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         tap((_value) => {
           if (this.sectoresYMercancias.valid) {
             this.AutorizacionProsecStore.setSectoresFromValida(true);
-            this.ProsecService.formValida();
+            
           }
         })
       )
       .subscribe();
-    if (this.formularioDeshabilitado) {
-      this.esFormularioSoloLectura = true;
-      this.inicializarEstadoFormulario();
-    }
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.sectors = Array.isArray(this.sectoresState.sectorDatos)
         ? this.sectoresState.sectorDatos as FilaSectors[]
         : [this.sectoresState.sectorDatos as FilaSectors];
     this.producir = Array.isArray(this.sectoresState.producirDatos)
       ? this.sectoresState.producirDatos as FilaProducir[]
       : [this.sectoresState.producirDatos as FilaProducir];
+
+    this.nuevaNotificacion = {} as Notificacion;
   }
 
   /**
@@ -248,11 +306,10 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.sectoresYMercancias.disable();
-      this.seccionStore.establecerFormaValida([true]);
+      
     }
     else {
       this.sectoresYMercancias.enable();
-      this.seccionStore.establecerFormaValida([false]);
     } 
   }
   
@@ -268,11 +325,11 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   initActionFormBuild(): void {
     this.sectoresYMercancias = this.fb.group({
       sector: [
-        this.sectoresState.Sector,
-        Validators.required
+        this.sectoresState.Sector
       ],
       Fraccion_arancelaria: [
-        this.sectoresState.Fraccion_arancelaria
+        { value: this.sectoresState.Fraccion_arancelaria, disabled: this.esFormularioSoloLectura },
+        Validators.required
       ],
     })
   }
@@ -366,7 +423,9 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarSector(): void {
+    if( this.sectoresYMercancias.get('sector')?.value.length > 0){
     this.recuperarDatos();
+    }
   }
 
   /**
@@ -377,7 +436,24 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarProducir(): void {
-    this.recuperarProducirDatos();
+    if (this.sectoresYMercancias.get('Fraccion_arancelaria')?.value === '') {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Se debe seleccionar un sector.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+    else {
+      this.espectaculoAlerta = false;
+      this.recuperarProducirDatos();
+    }
   }
 
   /**
@@ -392,6 +468,219 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    */
   sectorSeleccion(Sector: Catalogo): void {
     this.AutorizacionProsecStore.setActividadProductiva([Sector]);
+  }
+
+  /**
+   * @method seleccionarFila
+   * @description
+   * [ES] Actualiza la lista de sectores seleccionados en la tabla dinámica y sincroniza el estado en el store.
+   * @param {FilaSectors} row - Fila de sector seleccionada.
+   */
+  seleccionarFila(row: FilaSectors): void {
+    this.listSelectedView = row ? [row] : [];
+    this.AutorizacionProsecStore.update(
+      (state) => ({
+        ...state,
+        selectedSectorDatos: this.listSelectedView
+      })
+    );
+  }
+
+  /**
+   * @method seleccionarFilaProducir
+   * @description
+   * [ES] Actualiza la lista de mercancías seleccionadas en la tabla dinámica y sincroniza el estado en el store.
+   * @param {FilaProducir} row - Fila de mercancía seleccionada.
+   */
+  seleccionarFilaProducir(row: FilaProducir): void {
+    this.listSelectedProducir = row ? [row] : [];
+    this.AutorizacionProsecStore.update(
+      (state) => ({
+        ...state,
+        selectedProducirDatos: this.listSelectedProducir
+      })
+    );
+  }
+
+  /**
+   * @method eliminarSector
+   * @description
+   * [ES] Muestra una alerta si no hay sectores o mercancías seleccionadas para eliminar.
+   * Si hay sectores o mercancías seleccionadas, muestra una confirmación antes de eliminarlas.
+   */
+  eliminarSector(): void {
+    if (this.listSelectedView.length === 0) {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Seleccione el sector que desea eliminar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '', 
+      };
+    }
+    else if (this.listSelectedView.length > 0) {
+      this.espectaculoConfirmar = true;
+      this.espectaculoAlerta = false;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Está seguro que desea eliminar el sector seleccionado?',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+    }
+    
+  }
+  /**
+   * @method eliminarSectorProducir
+   * @description
+   * [ES] Muestra una alerta si no hay fracciones seleccionadas para eliminar.
+   * Si hay fracciones seleccionadas, muestra un diálogo de confirmación antes de eliminarlas.
+   * Configura las propiedades `espectaculoAlertaProducir` y `espectaculoConfirmarProducir` para controlar 
+   * la visualización de alertas y diálogos de confirmación específicos para las mercancías a producir.
+   * 
+   * @returns {void}
+   */
+  eliminarSectorProducir(): void {
+    if (this.listSelectedProducir.length === 0){
+      this.espectaculoAlertaProducir = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Seleccione la fraccion que desea eliminar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+    else if (this.listSelectedProducir.length > 0){
+      this.espectaculoConfirmarProducir = true;
+      this.espectaculoAlertaProducir = false;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Está seguro que desea eliminar la fracción seleccionada?',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+    }
+  }
+
+  /**
+   * @method eliminarPedimento
+   * @description
+   * [ES] Oculta la alerta de eliminación si el evento es verdadero.
+   * @param {boolean} event - Indica si se debe ocultar la alerta.
+   */
+  eliminarPedimento(event: boolean): void {
+    this.espectaculoAlerta = !event;
+  }
+
+  /**
+   * @method eliminarPedimentoProducirAlerta
+   * @description
+   * [ES] Controla la visibilidad de la alerta relacionada con las mercancías a producir.
+   * Si el evento recibido es verdadero, oculta la alerta (estableciendo `espectaculoAlertaProducir` a `false`).
+   * Si el evento es falso, muestra la alerta (estableciendo `espectaculoAlertaProducir` a `true`).
+   * 
+   * @param {boolean} event - Valor booleano que determina si se debe ocultar la alerta.
+   * @returns {void}
+   */
+  eliminarPedimentoProducirAlerta(event: boolean): void {
+    this.espectaculoAlertaProducir = !event;
+  }
+  /**
+   * @method eliminarPedimentoDatos
+   * @description
+   * [ES] Elimina los sectores o mercancías seleccionadas del estado y actualiza la lista en el store.
+   * @param {boolean} event - Indica si se debe proceder con la eliminación.
+   */
+  eliminarPedimentoDatos(event: boolean): void {
+    if (event && this.listSelectedView.length > 0) {
+      this.espectaculoConfirmar = false;
+      const VALOR = this.AutorizacionProsecStore.getValue().sectorDatos;
+      if (VALOR.length === 0) {
+        return;
+      }
+      const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.AutorizacionProsecStore.getValue().selectedSectorDatos?.includes(item)
+      );
+      this.AutorizacionProsecStore.update(
+        (state) => ({
+          ...state,
+          sectorDatos: FILTERED_VALOR,
+          selectedSectorDatos: [],
+        })
+      );
+      this.listSelectedView = [];
+    }
+  }
+
+  /**
+   * @method eliminarPedimentoProducirDatos
+   * @description
+   * [ES] Elimina las mercancías a producir seleccionadas del estado cuando el usuario confirma la eliminación.
+   * Si el evento recibido es verdadero y hay elementos seleccionados en `listSelectedProducir`:
+   * - Oculta el diálogo de confirmación.
+   * - Obtiene los datos actuales de mercancías a producir del store.
+   * - Filtra el arreglo para eliminar los elementos seleccionados.
+   * - Actualiza el store con el arreglo filtrado y limpia la selección.
+   * - Vacía la lista local de elementos seleccionados.
+   * 
+   * @param {boolean} event - Indica si se debe proceder con la eliminación (true) o cancelar (false).
+   * @returns {void}
+   */
+  eliminarPedimentoProducirDatos(event: boolean): void {
+    if (event && this.listSelectedProducir.length > 0) {
+      this.espectaculoConfirmarProducir = false;
+      const VALOR = this.AutorizacionProsecStore.getValue().producirDatos;
+      if (VALOR.length === 0) {
+        return;
+      }
+      const FILTERED_VALOR = VALOR.filter(
+        (item) => !this.AutorizacionProsecStore.getValue().selectedProducirDatos?.includes(item)
+      );
+      this.AutorizacionProsecStore.update(
+        (state) => ({
+          ...state,
+          producirDatos: FILTERED_VALOR,
+          selectedProducirDatos: [],
+        })
+      );
+      this.listSelectedProducir = [];
+    }
+  }
+
+    /**
+   * @method validarFormulario
+   * @description
+   * [ES] Valida el formulario de sectores y mercancías. Si el formulario es válido, retorna `true`.
+   * Si no es válido, marca todos los controles como tocados para mostrar los errores y retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (this.sectoresYMercancias.valid) {
+      return true;
+    }
+    this.sectoresYMercancias.markAllAsTouched();
+    return false
   }
 
   /**

@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { DatosTramiteService } from '../../services/datos-tramite.service';
+
 import { Tramite40402Store, Tramitenacionales40402State } from '../../estados/tramite40402.store';
 import { map, takeUntil } from 'rxjs';
-import { CAATSolicitud } from '../../models/transportacion-maritima.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
 import { Tramite40402Query } from '../../estados/tramite40402.query';
@@ -22,9 +23,81 @@ import { Tramite40402Service } from '../../estados/tramite40402.service';
 })
 export class DatosTramiteComponent implements OnInit, OnDestroy {
   /**
-   * Formulario reactivo para capturar datos del trámite
+   * Método público para marcar todos los controles como tocados (para que los padres llamen antes de la validación)
    */
-  formulario!: FormGroup;
+  public marcarTodoComoTocado(): void {
+    if (this.formulario) {
+      Object.values(this.formulario.controls).forEach(control => {
+        control.markAsTouched();
+      });
+    }
+  }
+
+  /**
+   * Valida el formulario y retorna si es válido
+   */
+  public validarFormularios(): boolean {
+    if (!this.formulario) { 
+      return false; 
+    }
+    Object.values(this.formulario.controls).forEach(control => control.markAsTouched());
+    const CAMPOS_REQUIRED = ['tipoDeCaatAerea', 'ideCodTransportacionAerea', 'codIataIcao'];
+    for (const FIELD of CAMPOS_REQUIRED) {
+      const CONTROL = this.formulario.get(FIELD);
+      if (!CONTROL || CONTROL.invalid || CONTROL.value === null || CONTROL.value === undefined || CONTROL.value === '') {
+        return false;
+      }
+    }
+    const VALID = this.formulario.valid;
+    return VALID;
+  }
+  /**
+   * Verifica si al menos un campo del formulario está lleno
+   * @returns true si algún campo tiene valor, false si todos están vacíos
+   */
+  hayCamposLlenos(): boolean {
+    if (!this.formulario) {
+      return false;
+    }
+    const CAMPOS = ['tipoDeCaatAerea', 'ideCodTransportacionAerea', 'codIataIcao'];
+    return CAMPOS.some(campo => {
+      const VALOR = this.formulario.get(campo)?.value;
+      return VALOR !== null && VALOR !== undefined && VALOR !== '';
+    });
+  }
+  /**
+   * Resetea el formulario a su estado inicial
+   */
+  limpiarFormulario(): void {
+    this.formulario.reset();
+    this.formulario.get('codIataIcao')?.markAsTouched();
+  }
+
+  /**
+   * Constructor del componente DatosTramiteComponent.
+   * Inicializa las dependencias necesarias para la gestión y validación de los datos del trámite.
+   *
+   * @param datosTramiteService Servicio compartido para la gestión del formulario de datos del trámite.
+   * @param fb Constructor de formularios reactivos.
+   * @param tramite40402Service Servicio para operaciones específicas del trámite 40402.
+   * @param consultaioQuery Consulta de estado global del trámite.
+   * @param tramite40402Query Consulta de estado específico del trámite 40402.
+   * @param store Almacenamiento y gestión de estado del trámite.
+   * @param cdr ChangeDetectorRef para la detección y actualización de cambios en la vista.
+   */
+  constructor(
+    private datosTramiteService: DatosTramiteService,
+    private fb: FormBuilder,
+    private tramite40402Service: Tramite40402Service,
+    private consultaioQuery: ConsultaioQuery,
+    private tramite40402Query: Tramite40402Query,
+    private store: Tramite40402Store,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  get formulario(): FormGroup {
+    return this.datosTramiteService.formulario;
+  }
   
   /**
    * Lista de códigos de transportación
@@ -72,23 +145,6 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   soloLectura: boolean = false;
 
   /**
-   * Constructor del componente
-   * 
-   * @param fb - Constructor de formularios reactivos
-   * @param tramite40402Service - Servicio para operaciones de trámite
-   * @param consultaioQuery - Consulta de estado de trámite
-   * @param tramite40402Query - Consulta de estado específico
-   * @param store - Almacenamiento de estado del trámite
-   */
-  constructor(
-    private fb: FormBuilder,
-    private tramite40402Service: Tramite40402Service,
-    private consultaioQuery: ConsultaioQuery,
-    private tramite40402Query: Tramite40402Query,
-    private store: Tramite40402Store
-  ) {}
-
-  /**
    * Inicialización del componente
    */
   ngOnInit(): void {
@@ -97,16 +153,15 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.transportacionMaritimaState = seccionState;
+          this.inicializarFormulario();
+          this.cargarCodigoTransportacion();
+          this.cargarTipoCaatAereo();
+          this.tipoDeCaatAereaData();
+          this.ideCodTransportacionAereaData();
         })
       )
       .subscribe();
 
-    this.inicializarFormulario();
-    this.cargarCodigoTransportacion();
-    this.cargarTipoCaatAereo();
-    this.tipoDeCaatAereaData();
-    this.ideCodTransportacionAereaData();
-    
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -123,20 +178,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo
    */
   private inicializarFormulario(): void {
-    this.formulario = this.fb.group({
-      idSolicitud: [''],
-      idPersonaSolicitud: [''],
-      ideGenerica1: [''],
-      claveFolioCAAT: ['', [Validators.required, Validators.maxLength(4)]],
-      cveFolioCaat: [''],
-      descripcionTipoCaat: [''],
-      tipoDeCaatAerea: [this.transportacionMaritimaState?.tipoDeCaatAerea],
-      ideCodTransportacionAerea: [this.transportacionMaritimaState?.ideCodTransportacionAerea],
-      codIataIcao: [this.transportacionMaritimaState?.codIataIcao],
-      fechaInicioVigencia: [''],
-      fechaFinVigencia: [''],
-    });
-    this.inicializarEstadoFormulario();
+  this.inicializarEstadoFormulario();
   }
 
   /**
@@ -188,36 +230,6 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Busca solicitud por clave CAAT
-   */
-  buscarSolicitudPorCAAT(): void {
-    if (this.formulario.valid) {
-      const CLAVE_FOLIO = this.formulario.get('claveFolioCAAT')?.value;
-      this.tramite40402Service
-        .buscarSolicitudPorCAATe(CLAVE_FOLIO)
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((respuesta: CAATSolicitud) => {
-          if (respuesta) {
-            this.formulario.patchValue({
-              idSolicitud: respuesta.idSolicitud || '',
-              idPersonaSolicitud: respuesta.idPersonaSolicitud || '',
-              ideGenerica1: respuesta.ideGenerica1 || '',
-              claveFolioCAAT: respuesta.claveFolioCAAT || '',
-              cveFolioCaat: respuesta.cveFolioCaat || '',
-              descripcionTipoCaat: respuesta.descripcionTipoCaat || '',
-              tipoDeCaatAerea: respuesta.tipoDeCaatAerea || '',
-              ideCodTransportacionAerea:
-                respuesta.ideCodTransportacionAerea || '',
-              codIataIcao: respuesta.codIataIcao || '',
-              fechaInicioVigencia: respuesta.fechaInicioVigencia || '',
-              fechaFinVigencia: respuesta.fechaFinVigencia || '',
-            });
-          }
-        });
-    }
-  }
-
-  /**
    * Carga datos de catálogo tipo CAAT aéreo
    */
   tipoDeCaatAereaData(): void {
@@ -242,23 +254,21 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Destrucción del componente
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
-
-  /**
    * Establece valores en el store
    * 
    * @param form - Formulario origen
    * @param campo - Nombre del campo
    * @param metodoNombre - Método del store a invocar
+   * @param valor - Valor a establecer
+   * @remarks Convierte a mayúsculas el valor si el campo es 'codIataIcao'
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite40402Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+    let valor = form.get(campo)?.value;
+    if (campo === 'codIataIcao' && typeof valor === 'string') {
+      valor = valor.toUpperCase();
+      form.get(campo)?.setValue(valor, { emitEvent: false });
+    }
+    (this.store[metodoNombre] as (value: unknown) => void)(valor);
   }
 
   /**
@@ -270,5 +280,22 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
     } else {
       this.formulario?.enable();
     }
+  }
+
+  /**
+   * Este método se utiliza para mostrar los errores del formulario.
+   * Marca todos los controles del formulario como tocados para que se muestren los errores de validación.
+   * 
+   * @returns {void}
+   */
+  public mostrarErrores(): void {
+    this.cdr.detectChanges();
+  }
+  /**
+   * Destrucción del componente
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -97,6 +97,13 @@ export class ProveedorClienteComponent implements OnChanges {
     PROVEEDOR_CLIENTE_TABLA_CONFIG;
 
   /**
+   * Evento que se emite al cerrar el popup.
+   * 
+   * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
+   */
+  @Output() cerrarPopup = new EventEmitter<void>();
+
+  /**
    * Constructor de la clase ProveedorClienteComponent.
    * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
@@ -180,7 +187,7 @@ export class ProveedorClienteComponent implements OnChanges {
       razonSocial:
         this.formularioProveedorCliente.get('razonSocialCliente')?.value,
     };
-    this.proveedorClienteTablsDatos.push(PROVEEDOR_CLIENTE);
+    this.proveedorClienteTablsDatos = [...this.proveedorClienteTablsDatos, PROVEEDOR_CLIENTE];
   }
 
   /**
@@ -241,7 +248,7 @@ export class ProveedorClienteComponent implements OnChanges {
    * @returns {void}
    */
   regrsarAnnexoI(): void {
-    this.ubicaccion.back();
+    this.cerrarPopup.emit();
     this.datosActualizadosProveedorCliente.emit(
       this.proveedorClienteTablsDatos
     );

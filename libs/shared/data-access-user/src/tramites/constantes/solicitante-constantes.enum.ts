@@ -383,4 +383,13 @@ export const FOLIO_DEL_TRAMITE= [
     validators: [],
     placeholder: '',
   },
+  {
+    labelNombre: 'Tipo de solicitud',
+    campo: 'tipoDeTramite',
+    class: 'col-md-12',
+    tipo_input: 'text',
+    disabled: true,
+    validators: [],
+    placeholder: '',
+  },
 ];

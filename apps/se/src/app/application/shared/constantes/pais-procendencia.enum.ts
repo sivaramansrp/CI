@@ -13,4 +13,4 @@ export const PROCEDIMIENTOS_NUMERO_ES_DE_PERMISO_DECLARACIONES = [130203];
  * Lista de identificadores de procedimientos que requieren ayuda en las declaraciones.
  * Se utiliza para mostrar información adicional o asistencia en el proceso de declaración.
  */
-export const PROCEDIMIENTOS_AYUDA_DECLARACIONES = [130203];
+export const PROCEDIMIENTOS_AYUDA_DECLARACIONES = [130203,130111];

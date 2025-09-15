@@ -9,7 +9,6 @@
         <app-catalogo-select
           [catalogo]="paisProc"
           (change)="fetchPaisProc();setValoresStore(paisForm,'bloque', 'setBloque')"
-          [tooltipQuestionCircle]="true"
           [label]="'Bloque'"
           [placeholder]="'Seleccione un bloque'"
           formControlName="bloque"
@@ -29,16 +28,15 @@
       [fechas]="selectRangoDias"
       [showSearchInput1]="true"
       [showSearchInput2]="true"
+      [searchInput1Label]="'País disponible:'"
+      [searchInput2Label]="'País seleccionado:'"
       [botonField]="botonField"
       [isDisabled]="esFormularioSoloLectura"
     ></crosslist>
   </div>
   <div class="row mt-4">
     <div class="col-md-8">
-      <div class="form-group">
-        <label for="descripcion" class="form-label required-star">
-        Justificación de la importación o exportación y el beneficio que se obtiene:
-    </label>
+      <div class="form-group">        
         <label for="descripcion">Justificación y beneficio que se obtiene*:</label>
         <textarea
           class="form-control"

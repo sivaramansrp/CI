@@ -63,8 +63,7 @@ export const GRID_CONTENEDORES: ConfiguracionColumna<GridContenedores>[] = [
   { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoContenedor, orden: 4 },
   { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
   { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 6 },
-  { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 7 },
-  { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 8 },
+  { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 7 }
 ];
 
 /**
@@ -86,8 +85,7 @@ export const CSV_DE_TABLA: ConfiguracionColumna<DatosDelCsvArchivo>[] = [
   { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoContenedor, orden: 4 },
   { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
   { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 6 },
-  { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 7 },
-  { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 8 },
+  { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 7 }
 ];
 
 /**
@@ -100,4 +98,12 @@ export const SOLICITUD_11202_ENUM = {
    * Texto de button.
    */
   ELGIR_DE_ARCHIVO: 'No se eligió ningún archivo'
+};
+
+export const ELGIR_DE_ARCHIVO = {
+  /**
+   * Descripción del archivo a elegir.
+   * @type {string}
+   */
+  ARCHIVO_DESCRIPCION: 'El archivo no tiene la extensión definida CSV, deberá de adjuntar el archivo correcto.'
 };

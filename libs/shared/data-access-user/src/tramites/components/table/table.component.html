@@ -1,5 +1,5 @@
 <div class="table-responsive" [ngClass]="{'enable-scrollbar': enableScrollbar}">
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped mb-2" [ngClass]="{ 'table-invalid': isInvalida }">
         <thead>
             <tr>
                 <th scope="col">
@@ -14,7 +14,7 @@
         <tbody>
             @for (data of tableData.tableBody; track $index) {
                 <tr>
-                    <td><input type="checkbox" [(ngModel)]="data.selected"  [disabled]="disableSeleccionTablaCheckBox" aria-label="Select Row"></td>
+                    <td><input type="checkbox" [(ngModel)]="data.selected" (change)="onRowSelectionChange()" [disabled]="disableSeleccionTablaCheckBox" aria-label="Select Row"></td>
                     @for (element of data.tbodyData; track $index) {
                         <td>{{element}}</td>
     
@@ -25,3 +25,9 @@
         </tbody>
     </table>
 </div>
+
+@if (isInvalida) {
+    <div class="mensaje-error mt-2">
+        Este campo es obligatorio
+    </div>
+}

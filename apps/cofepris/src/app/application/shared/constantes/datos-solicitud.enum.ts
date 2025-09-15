@@ -138,22 +138,10 @@ export const ALERTA_OPCIONS = `<p style="text-align: center;">Al dar doble-clic 
  * Esta constante puede ser utilizada en componentes o vistas donde se requiera mostrar
  * esta alerta como parte de un formulario o proceso de declaración.
  */
-export const ALERTA_DE_MANIFESTO_Y_DECLARACIONES = `<div class="row align-items-center justify-content-start py-2" style="background-color: #d9edf7;">
-  <div class="col-auto d-flex align-items-start pt-1">
-    <input class="form-check-input mt-1 me-3" type="checkbox" value="" id="manifiestosCasillaDeVerificacion">
-    <label class="form-check-label ms-2" for="manifiestosCasillaDeVerificacion" (click)="manifestoSellecionado()"> *</label>
-  </div>
- 
-  <div class="col" style="margin-left: 59px;">
-    <p class="mb-0">
-      Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su
+export const ALERTA_DE_MANIFESTO_Y_DECLARACIONES = `Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su
       cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una
       autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio
-      Exterior por los mecanismos de la misma.
-    </p>
-  </div>
-</div>
-`;
+      Exterior por los mecanismos de la misma.`;
 
 /**
  * Represents a constant array `PRODUCTO_TABLA` that defines the structure of a product table.
@@ -418,7 +406,7 @@ export const OCULTAR_FACTURADOR = [260102];
  * // Ejemplo de uso:
  */
 export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [
-  260216, 260208, 260209, 260213,
+  260216, 260208, 260209, 260213
 ];
 
 /**
@@ -433,7 +421,7 @@ export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [
  * }
  */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [
-  260102, 260301, 260302, 260304,
+  260301, 260302, 260304,
 ];
 
 /**
@@ -448,7 +436,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [
  * }
  */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO = [
-  260301, 260208, 260302, 260304, 260103, 260213,
+  260301, 260208, 260302, 260304, 260103, 260213,260102
 ];
 
 /**
@@ -490,7 +478,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS = [
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA = [
-   260214
+  260214
 ];
 
 /**
@@ -505,7 +493,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA = [
  * }
  */
 export const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA = [
-  260208, 260103,
+  260208, 260103,260102
 ];
 
 /**
@@ -528,7 +516,7 @@ export const REPRESENTANTE_LEGAL = [260208, 260213];
  */
 export const BANCO = [
   260104, 260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103, 260217, 260218,
-  260214, 260301
+  260214, 260301,260102,260202
 ];
 
 export const REQUIRED_BANCO = [260902];
@@ -552,7 +540,7 @@ export const DATOS_MERCANCIA_CAMPO = [260208, 260209];
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO = [
-  260301, 260207, 260201, 260302, 260304, 260103,
+  260301, 260207, 260201, 260302, 260304, 260103,260102, 260214
 ];
 
 /**
@@ -566,7 +554,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO = [
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO = [
-  260301, 260207, 260201, 260302, 260304, 260103,
+  260301, 260207, 260201, 260302, 260304, 260103,260102, 260214
 ];
 
 /**
@@ -581,8 +569,22 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO = [
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL = [
-  260301, 260207, 260201, 260302, 260304, 260103,
+  260301, 260207, 260201, 260302, 260304, 260103,260102, 260214
 ];
+
+/**
+ * @const DESHABILITADA_EN_INIT
+ * @description Lista de identificadores de procedimientos que deben ser deshabilitados en la inicialización.
+ * @type {number[]}
+ */
+export const DESHABILITADA_EN_INIT = [260302, 260214,260202];
+
+/**
+ * @const SIN_ACCION_AL_INICIAR
+ * @description Lista de identificadores de procedimientos que no requieren acción al iniciar.
+ * @type {number[]}
+ */
+export const SIN_ACCION_AL_INICIAR = [260304];
 
 /**
  * @const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE
@@ -605,6 +607,7 @@ export enum NUMERO_TRAMITE {
   TRAMITE_260205 = 260205,
   TRAMITE_260301 = 260301,
   TRAMITE_260103 = 260103,
+  TRAMITE_260201 = 260201
 }
 
 /**
@@ -702,7 +705,9 @@ export const DESCRIPCION_FRACCION_DESHABILITADO_VALOR =
  * @description Constante que representa el valor deshabilitado de la unidad de medida utilizada en la aplicación.
  * @type {string}
  * @valor "Kilogramo"
+ * @uso Utilizada para identificar solicitudes que requieren una unidad de medida específica.
  */
+
 export const UMT_DESHABILITADO_VALOR = 'Kilogramo';
 
 /** Mensaje mostrado cuando no hay fila seleccionada. */
@@ -732,7 +737,7 @@ export const MENSAJE_EMERGENTE_DE_CONFIRMACION =
  *  Identificadores de notificación.
  */
 export const MOSTRAR_NOTIFICACION = [
-  260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214, 260301, 260209
+  260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214, 260301, 260209,260205,260204,260202
 ];
 
 /**
@@ -760,7 +765,7 @@ export const TIPO_PRODUCTO_ESPECIAL = '3';
  * @remarks
  * Esta constante se utiliza para filtrar procedimientos que no deben ser considerados en el contexto de manifiestos y declaraciones.
  */
-export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260210, 260218, 260208, 260209, 260301, 260219];
+export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260210, 260218, 260208, 260209, 260301, 260219, 260216, 260302, 260304, 260205, 260203];
 
 /**
  * @const ES_PUNTO_Y_COMA
@@ -784,4 +789,22 @@ export const TEXTO_MANIFESTO_Y_DECLARACIONES = `Cumplo con los requisitos y norm
 /**
  * Constante que representa los procedimientos para los cuales se debe adjuntar un texto específico.
  */
-export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218, 260301];
+export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218, 260301]; 
+
+/**
+ * Constante que representa el código AIFA.
+ * @type {string}
+ * @value '104'
+ * @description Código utilizado para identificar AIFA en el sistema.
+ * @remarks Utilice esta constante para referirse a AIFA en diferentes partes de la aplicación.
+ */
+export const AIFA='104';
+
+/**
+ * Constante que representa el código AICM.
+ * @type {string}
+ * @value '103'
+ * @description Código utilizado para identificar AICM en el sistema.
+ * @remarks Utilice esta constante para referirse a AICM en diferentes partes de la aplicación.
+ */
+export const AICM='103';

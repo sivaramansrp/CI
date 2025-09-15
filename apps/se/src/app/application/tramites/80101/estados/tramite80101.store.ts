@@ -1,11 +1,14 @@
 import {
   AnexoEncabezado,
   AnexoUnoEncabezado,
+  DatosAnexotressUno,
+  DatosComplimento,
 } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
   AnnexoDosTres,
   AnnexoUno,
 } from '../models/nuevo-programa-industrial.model';
+import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoPaises } from '@ng-mf/data-access-user';
@@ -13,7 +16,6 @@ import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { DatosEmpresaExtranjera } from '../models/nuevo-programa-industrial.model';
 import { DatosSubcontratista } from '../../../shared/models/empresas-subfabricanta.model';
 import { EmpressaSubFabricantePlantas } from '../../../shared/models/empresas-subfabricanta.model';
-import { FederatariosEncabezado } from '../../../shared/models/federatarios-y-plantas.model';
 import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Servicio } from '../models/nuevo-programa-industrial.model';
@@ -104,6 +106,28 @@ export interface Tramite80101State {
   datosComplimentos: DatosComplimentos;
 
   /**
+   * Datos complementarios relacionados con el trámite.
+   */
+  datosComplimento: DatosComplimento;
+
+  
+  /**
+   * Datos complementarios relacionados con el trámite.
+   */
+  datosComplimentoDos: DatosComplimento;
+
+   /**
+   * Datos complementarios relacionados con el trámite.
+   */
+  datosAnexoTress: DatosAnexotressUno;
+
+     /**
+   * Datos complementarios relacionados con el trámite.
+   */
+  datosAnexoTressDos: DatosAnexotressUno;
+
+
+  /**
    * Tabla de datos complementarios de socios y accionistas.
    */
   tablaDatosComplimentos: SociaoAccionistas[];
@@ -142,6 +166,16 @@ export interface Tramite80101State {
    * Información detallada de federatarios.
    */
   datosFederatarios: FederatariosEncabezado;
+
+  /**
+   * Información detallada de plantas immex.
+   */
+  plantasImmexTablaLista: PlantasImmex[];
+
+  /**
+   * Información detallada de plantas disponibles.
+   */
+  plantasDisponiblesTablaLista: PlantasDisponibles[];
 }
 
 /**
@@ -206,6 +240,22 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     nombreEmpresaExt: '',
     direccionEmpresaExtranjera: '',
   },
+  datosComplimento:{
+    fraccionArancelaria: "",
+    descripcion: "",
+  },
+   datosComplimentoDos:{
+    fraccionArancelaria: "",
+    descripcion: "",
+  },
+  datosAnexoTress:{
+    fraccionArancelaria:"",
+  descripcion: ""
+  },
+  datosAnexoTressDos:{
+     fraccionArancelaria:"",
+  descripcion: ""
+  },
   datosComplimentos: {
     modalidad: 'Industrial',
     programaPreOperativo: '',
@@ -215,7 +265,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     },
     obligacionesFiscales: {
       opinionPositiva: 'Si',
-      fechaExpedicion: '',
+      fechaExpedicion: '15/02/2024',
       aceptarObligacionFiscal: '',
     },
     formaModificaciones: {
@@ -280,6 +330,10 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
       encabezadoTipo: '',
       encabezadoUmt: '',
       encabezadoCategoria: '',
+      encabezadoValorEnMonedaMensual: 0,
+      encabezadoValorEnMonedaAnual: 0,
+      encabezadoVolumenMensual: 0,
+      encabezadoVolumenAnual: 0,
       encabezadoValorEnMercado: '',
     },
     seccionActiva: '',
@@ -296,7 +350,14 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     numeroDeNotaria: '',
     entidadFederativa: '',
     municipioODelegacion: '',
+    estado: '',
+    estadoOptions: '',
+    estadoUno: '',
+    estadoDos: '',
+    estadoTres: ''
   },
+  plantasImmexTablaLista: [],
+  plantasDisponiblesTablaLista: []
 };
 
 /**
@@ -570,7 +631,35 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       return { ...state, datosComplimentos: VALUE };
     });
   }
+/**
+   * Actualiza el estado con los datos complementarios proporcionados.
+   *
+   * @param datosComplimento - Objeto que contiene los datos complementarios a actualizar.
+   *
+   * Este método combina los datos existentes en el estado con los nuevos datos proporcionados
+   * y actualiza el estado con el resultado.
+   */
+  setDatosComplimento(datosComplimento: DatosComplimento): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosComplimento, ...datosComplimento };
+      return { ...state, datosComplimento: VALUE };
+    });
+  }
 
+  /**
+   * Actualiza el estado with los datos complementarios proporcionados.
+   *
+   * @param datosComplimentoDos - Objeto que contiene los datos complementarios a actualizar.
+   *
+   * Este método combina los datos existentes en el estado con los nuevos datos proporcionados
+   * y actualiza el estado con el resultado.
+   */
+  setDatosComplimentoDos(datosComplimentoDos: DatosComplimento): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosComplimentoDos, ...datosComplimentoDos };
+      return { ...state, datosComplimentoDos: VALUE };
+    });
+  }
   /**
    * Establece los datos del subcontratista en el estado de la tienda.
    *
@@ -891,4 +980,65 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       ],
     }));
   }
+
+  /**
+   * Agrega un nuevo elemento de tipo `PlantasImmex` a la lista `plantasImmexTablaLista`
+   * en el estado actual de la tienda.
+   *
+   * @param formaFederatarios - El objeto de tipo `PlantasImmex` que se añadirá
+   * a la lista `plantasImmexTablaLista`.
+   */
+  setPlantasImmex(formaFederatarios: PlantasImmex): void {
+    this.update((state) => ({
+      ...state,
+      plantasImmexTablaLista: [
+        ...state.plantasImmexTablaLista,
+        formaFederatarios
+      ],
+    }));
+  }
+
+  /**
+   * Agrega un nuevo elemento de tipo `PlantasDisponibles` a la lista `plantasDisponiblesTablaLista`
+   * en el estado actual de la tienda.
+   *
+   * @param formaFederatarios - El objeto de tipo `PlantasDisponibles` que se añadirá
+   * a la lista `plantasDisponiblesTablaLista`.
+   */
+  setPlantasDisponibles(formaFederatarios: PlantasDisponibles): void {
+    this.update((state) => ({
+      ...state,
+      plantasDisponiblesTablaLista: [
+        ...state.plantasDisponiblesTablaLista,
+        formaFederatarios
+      ],
+    }));
+  }
+
+  /**
+   * Actualiza la propiedad `datosAnexoTress` en el store con los datos proporcionados.
+   * Fusiona el estado existente de `datosAnexoTress` con los nuevos valores recibidos.
+   *
+   * @param datosAnexoTress - Objeto que contiene los nuevos datos a fusionar en `datosAnexoTress`.
+   */
+  setDatosAnexoTres(datosAnexoTress: DatosAnexotressUno): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosAnexoTress, ...datosAnexoTress };
+      return { ...state, datosAnexoTress: VALUE };
+    });
+  }
+
+  /**
+   * Actualiza la propiedad `datosAnexoTressDos` en el store con los datos proporcionados.
+   * Fusiona el estado existente de `datosAnexoTressDos` con los nuevos valores recibidos.
+   *
+   * @param datosAnexoTressDos - Objeto que contiene los nuevos datos a fusionar en `datosAnexoTressDos`.
+   */
+  setDatosAnexoTresDos(datosAnexoTressDos: DatosAnexotressUno): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosAnexoTressDos, ...datosAnexoTressDos };
+      return { ...state, datosAnexoTressDos: VALUE };
+    });
+  }
+
 }

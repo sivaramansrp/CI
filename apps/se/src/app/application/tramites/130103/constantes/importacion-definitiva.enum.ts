@@ -370,6 +370,7 @@ export const USO_ESPECIFICO_DE_LA_MERCANCIA = [
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
     marginTop: 0,
+    tooltipQuestionCircle: true,
   },
   {
     id: 'uso_descripcion',
@@ -383,6 +384,7 @@ export const USO_ESPECIFICO_DE_LA_MERCANCIA = [
     validadores: [{ tipo: 'required' }],
     marcadorDePosicion: '',
     marginTop: 0,
+    tooltipQuestionCircle: true,
   },
 ];
 
@@ -532,7 +534,7 @@ export const PAIS_PROCEDENCIA = [
  */
 export const REPRESENTACION_FEDERAL = [
   {
-    id: 'entidad',
+    id: 'Entidad federativa*:',
     labelNombre: 'Entidad federativa',
     campo: 'entidad',
     clase: 'col-md-4',
@@ -680,4 +682,15 @@ export const ENCABEZADO_TABLA: ConfiguracionColumna<Partidas>[] = [
         clave: (artículo) => artículo.totalUsd,
         orden: 6,
       },
+    ];
+    /**
+ * @description Constante que contiene datos prellenados para la tabla de usos específicos.
+ * Cada objeto representa una fila con sus respectivos campos: id, fracción arancelaria PROSEC y descripción.
+ */
+    export const PREFILL_USO: Partidas[] = [
+      {
+        id: 10,
+        fraccionArancelariaProsec: '12345678',
+        descripcion: 'Nueva descripción',
+      }
     ];

@@ -1,11 +1,10 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
-import { Input, Output } from '@angular/core';
+import { Component, EventEmitter, OnChanges, OnInit } from '@angular/core';
+import { Input, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { AlertComponent, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Notificacion, NotificacionesComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
@@ -25,8 +24,11 @@ import { TEXTO_DE_ALERTA } from '../../models/federatarios-y-plantas.model';
 import {
   DEFAULT_ESTADOS,
   FECHA_DE_PAGO,
+  FECHA_DE_Tabla,
+  INMEX_PLANTAS
 } from '../../constantes/federatarios-y-plantas.enum';
 
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
@@ -49,12 +51,12 @@ import { Validators } from '@angular/forms';
     InputFechaComponent,
     CatalogoSelectComponent,
     FormsModule,
-    NotificacionesComponent
+    NotificacionesComponent,
   ],
   templateUrl: './federatarios-y-plantas.component.html',
   styleUrl: './federatarios-y-plantas.component.scss',
 })
-export class FederatariosYPlantasComponent implements OnInit {
+export class FederatariosYPlantasComponent implements OnInit, OnChanges {
   /**
    * Datos de federatarios que se mostrarán en la tabla
    * @property {FederatariosEncabezado} datosFederatarios
@@ -129,6 +131,17 @@ export class FederatariosYPlantasComponent implements OnInit {
   @Input() estadoOptionsConfig!: CatalogoDatosIdx;
 
   /**
+   * @property {boolean} esFormularioUpdate - Indica si el formulario está en modo de actualización.
+   */
+  @Input() esFormularioUpdate: boolean = false;
+
+  /**
+   * Emite eventos relacionados con acciones en la sección.
+   * @event accionSeccion
+   */
+  @Output() accionSeccion: EventEmitter<string> = new EventEmitter<string>();
+
+  /**
    * Opciones de estados disponibles
    * @property {[]} estadoOptions
    */
@@ -145,6 +158,12 @@ export class FederatariosYPlantasComponent implements OnInit {
    * @property {FormGroup} federatariosFormGroup
    */
   public federatariosFormGroup!: FormGroup;
+
+  /**
+   * Grupo de controles del formulario para federatarios
+   * @property {FormGroup} federatariosCatalogoGroup
+   */
+  public federatariosCatalogoGroup!: FormGroup;
 
   /**
    * Emisor de eventos para los datos del formulario de federatarios.
@@ -217,7 +236,7 @@ export class FederatariosYPlantasComponent implements OnInit {
    * @param {Router} router - Servicio de Angular para la navegación.
    * @param {ActivatedRoute} activatedRoute - Servicio de Angular para obtener información sobre la ruta actual.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private validacionesService: ValidacionesFormularioService) {}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -241,6 +260,21 @@ export class FederatariosYPlantasComponent implements OnInit {
   }
 
   /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Si el formulario está deshabilitado (`formularioDeshabilitado` es verdadero),
+   * deshabilita el grupo de controles `federatariosFormGroup` para evitar la interacción del usuario.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['estadoOptionsConfig'] && this.esFormularioUpdate) {
+      this.federatariosFormGroup.get('estado')?.setValue(this.estadoOptionsConfig.estadosFederatarios?.[0]?.id);
+      this.federatariosFormGroup.get('estadoOptions')?.setValue(this.estadoOptionsConfig.municipio?.[0]?.id);
+      this.federatariosCatalogoGroup.get('estadoUno')?.setValue(this.estadoOptionsConfig.estadoImmex?.[0]?.id);
+      this.federatariosCatalogoGroup.get('estadoDos')?.setValue(this.estadoOptionsConfig.municipio?.[0]?.id);
+      this.federatariosCatalogoGroup.get('estadoTres')?.setValue(this.estadoOptionsConfig.municipio?.[0]?.id);
+    }
+  }
+
+  /**
    * Inicializa el formulario de federatarios con sus campos y validaciones
    * @method initFederatariosFormGroup
    * @returns {void}
@@ -249,7 +283,7 @@ export class FederatariosYPlantasComponent implements OnInit {
     this.federatariosFormGroup = new FormGroup({
       nombre: new FormControl(
         this.datosFederatarios?.nombre,
-        [Validators.required, Validators.maxLength(20)]
+        [Validators.required, Validators.maxLength(28)]
       ),
       fechaInicioInput: new FormControl(this.datosFederatarios?.fechaDelActa,
         Validators.required
@@ -266,26 +300,58 @@ export class FederatariosYPlantasComponent implements OnInit {
       numeroDeNotaria: new FormControl(this.datosFederatarios?.numeroDeNotaria,
         [Validators.required, Validators.maxLength(6)]
       ),
-      estado: new FormControl('',
+      estado: new FormControl(this.datosFederatarios?.estado,
         Validators.required
       ),
-      estadoOptions: new FormControl('',
+      estadoOptions: new FormControl(this.datosFederatarios?.estadoOptions,
         Validators.required
       ),
+      
     });
+    this.federatariosCatalogoGroup = new FormGroup({
+      estadoUno: new FormControl(this.datosFederatarios?.estadoUno,
+        Validators.required
+      ),
+      estadoDos: new FormControl(this.datosFederatarios?.estadoDos,
+        Validators.required
+      ),
+      estadoTres: new FormControl(this.datosFederatarios?.estadoTres,
+        Validators.required
+      ),
+    })
   }
+
+  /**
+  * compo doc
+  * @method esValido
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param field El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(formgroup: FormGroup, campo: string): boolean | null {
+    return this.validacionesService.isValid(formgroup, campo);
+  }
+
   /**
    * Navega a la ruta de acciones
    * @param accionesPath
    */
   irAAcciones(accionesPath: string): void {
+    if (accionesPath === '../proveedor-por-archivo' && this.accionSeccion.observers.length > 0){
+    this.accionSeccion.emit(accionesPath);
+    return;
+    }
     if (!this.plantasImmexSeleccionadoDatos.length){
       this.abrirPlantasModal();
       return;
     }
-    this.router.navigate([accionesPath], {
-      relativeTo: this.activatedRoute,
-    });
+  /**
+   * Emite la acción seleccionada si existen observadores suscritos a `accionSeccion`.
+   */
+  if (this.accionSeccion.observers.length > 0) {
+    this.accionSeccion.emit(accionesPath);
+  }
   }
 
   /**
@@ -304,6 +370,11 @@ export class FederatariosYPlantasComponent implements OnInit {
    * @returns {void}
    */
   aggregarDatos(): void {
+    if (this.federatariosFormGroup.invalid) {
+      this.agregarUnoModal();
+      this.federatariosFormGroup.markAllAsTouched();
+      return;
+    }
     this.datosFormaFedratario.emit(this.federatariosFormGroup.value);
     this.federatariosFormGroup.reset();
   }
@@ -377,6 +448,22 @@ export class FederatariosYPlantasComponent implements OnInit {
       txtBtnCancelar: '',
     };
   }
+  /**
+   * Abre un modal para agregar un nuevo miembro federado.
+   */
+  agregarUnoModal(): void {
+    this.miembrosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Introduzca el Nombre completo y correcto del Notario.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
 
   /**
    * Método para manejar la selección de plantas IMMEX.
@@ -432,5 +519,47 @@ export class FederatariosYPlantasComponent implements OnInit {
       txtBtnCancelar: '',
     };
   }
+
+/**
+ * Searches and assigns available IMMEX plants data.
+ *
+ * This method sets the `plantasDisponiblesDatos` property with the value of `FECHA_DE_Tabla`.
+ * Typically used to update the list of available plants for IMMEX operations.
+ *
+ * @remarks
+ * Ensure that `FECHA_DE_Tabla` is defined and contains the expected data structure before calling this method.
+ */
+buscarPlantasImmex(): void {
+  this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
+}
+
+/**
+ * Adds IMMEX plant data to the `plantasImmexDatos` array.
+ * This method assigns the value of `INMEX_PLANTAS` to the `plantasImmexDatos` property.
+ *
+ * @remarks
+ * Ensure that `INMEX_PLANTAS` is properly defined and contains the expected plant data.
+ */
+agregarPlantas(): void {
+  this.plantasImmexDatos = [INMEX_PLANTAS];
+}
+
+/**
+   * Elimina todas las plantas seleccionadas, vaciando el arreglo `seleccionadas`.
+   * 
+   * @remarks
+   * Esta función se utiliza para limpiar la selección de plantas en el componente.
+   */
+  eliminarPlantas(): void {
+    if (this.plantasImmexSeleccionadoDatos?.length > 0) {
+      this.plantasImmexSeleccionadoDatos.forEach(planta => {
+        const INDEX = this.plantasImmexDatos.findIndex(row => row === planta);
+        if (INDEX !== -1) {
+          this.plantasImmexDatos.splice(INDEX, 1);
+        }
+    });
+    this.plantasImmexDatos = [...this.plantasImmexDatos];
+  }
+}
 
 }

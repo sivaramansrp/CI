@@ -86,6 +86,16 @@ export class ContenedorDePasosComponent {
   datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
 
   /**
+  * @property {PasoUnoComponent} pasoUnoComponent
+  * @description
+  * Referencia al componente hijo `PasoUnoComponent` mediante
+  * `@ViewChild`. Permite acceder a sus métodos y propiedades
+  * desde este componente padre.
+  */
+  @ViewChild(PasoUnoComponent)
+  pasoUnoComponent!: PasoUnoComponent;
+
+  /**
    * Referencia al componente hijo `PagoDeDerechosComponent`.
    *
    * Se obtiene mediante `@ViewChild` para poder interactuar con él de forma
@@ -127,7 +137,19 @@ export class ContenedorDePasosComponent {
    * Índice del paso actual en el wizard.
    */
   indice: number = 1;
-
+  /**
+ * @property {string} MENSAJE_DE_ERROR
+ * @description
+ * Propiedad usada para almacenar el mensaje de error actual.
+ * Se inicializa como cadena vacía y se actualiza en función
+ * de las validaciones o errores capturados en el flujo.
+ */
+  MENSAJE_DE_ERROR: string = '';
+  /**
+    * @property {string} infoAlert
+    * Clase CSS usada para mostrar alertas informativas.
+    */
+  public infoAlert = 'alert-danger text-center';
   /**
    * @property {WizardComponent} wizardComponent
    * Referencia al componente del wizard para controlar la navegación entre pasos.
@@ -161,16 +183,17 @@ export class ContenedorDePasosComponent {
    *
    * @param {AccionBoton} e - Acción realizada en el botón (continuar o retroceder) y el índice del paso.
    */
-  getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      this.tituloMensaje = ContenedorDePasosComponent.obtenerNombreDelTítulo(
-        e.valor
-      );
-      if (
-        this.datosDeLaSolicitudComponent.datosSolicitudForm.invalid &&
-        this.pagoDeDerechosComponent.formularioPagoDerechos.invalid
-      ) {
+  public getValorIndice(e: AccionBoton): void {
+    if (e.accion === 'cont') {
+      let isValid = true;
+
+      if (this.indice === 1 && this.pasoUnoComponent) {
+        isValid = this.pasoUnoComponent.validarPasoUno();
+      }
+
+      if (!isValid) {
+        this.mostrarAlerta = true;
+        this.MENSAJE_DE_ERROR = MENSAJE_DE_VALIDACION;
         this.seleccionarFilaNotificacion = {
           tipoNotificacion: 'alert',
           categoria: 'danger',
@@ -179,18 +202,22 @@ export class ContenedorDePasosComponent {
           mensaje: MENSAJE_DE_VALIDACION,
           cerrar: true,
           tiempoDeEspera: 2000,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
+          txtBtnAceptar: 'SI',
+          txtBtnCancelar: 'NO',
         };
-        this.mostrarAlerta = true;
+
+        this.datosPasos.indice = this.indice;
         return;
       }
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.siguiente();
+      return;
     }
+
+    this.indice = e.valor;
+    this.datosPasos.indice = this.indice;
+    this.wizardComponent.atras();
   }
 
   /**

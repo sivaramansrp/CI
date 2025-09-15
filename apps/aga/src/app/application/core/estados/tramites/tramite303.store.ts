@@ -1,6 +1,9 @@
 import { Store, StoreConfig } from "@datorama/akita";
 import { AgenteAduanal } from "../../models/303/agente-aduanal.model";
+import { ControlInventario } from "../../models/303/control-inventario.model";
+import { EnlaceOperativo } from "../../models/303/enlace-operativo.model";
 import { Injectable } from "@angular/core";
+import { RepresentanteLegal } from "../../models/303/representante-legal.model";
 import { Transportista } from "@libs/shared/data-access-user/src";
 
 export interface Tramite303Store {
@@ -68,6 +71,58 @@ export interface Tramite303Store {
      * Transportista a modificar en el trámite 303.
      */
     transportistaModificar?: Transportista;
+    /**
+     * Indica si se debe mostrar un campo para el número IMMEX.
+     */
+    immex: string;
+    /**
+     * Indica si se debe mostrar un campo para el padrón de importadores.
+     */
+    padron: string;
+    /**
+     * Indica si se debe mostrar un campo para el control de inventarios.
+     */
+    controlInventarios: string;
+    /**
+     * Indica si se debe mostrar un campo para el control de inventarios.
+     */
+    listaInventarios: ControlInventario[];
+    /**
+     * Indica si se debe mostrar un campo para la contabilidad.
+     */
+    contabilidad: string;
+    /**
+     * Indica si se debe mostrar un campo para el lugar de radicación.
+     */
+    lugarRadicacion: string;
+    /**
+     * Indica si se debe mostrar un campo para la interposición.
+     */
+    interposicion: string;
+    /**
+     * Indica si se debe mostrar un campo para el manifiesto 1.
+     */
+    checkboxManifiesto1: boolean;
+    /**
+     * Indica si se debe mostrar un campo para el manifiesto 2.
+     */
+    checkboxManifiesto2: boolean;
+    /**
+     * Indica si se debe mostrar un campo para el ingreso de informes.
+     */
+    ingresoInforme: string;
+    /**
+     * Lista de enlaces operativos asociados al trámite 303.
+     */
+    listaEnlaces: EnlaceOperativo[];
+    /**
+     * Representa el enlace operativo a modificar en el estado del trámite 303.
+     */
+    enlaceOperativoModificar?: EnlaceOperativo;
+    /**
+     * Representa al representante legal asociado al trámite 303.
+     */
+    representanteLegal?: RepresentanteLegal;
 }
 export function createInitialState(): Tramite303Store {
     return {
@@ -87,6 +142,19 @@ export function createInitialState(): Tramite303Store {
         mostrarSelectImmex: true,
         listaTransportistas: [],
         transportistaModificar: undefined,
+        immex: '',
+        padron: '',
+        controlInventarios: '',
+        listaInventarios: [],
+        contabilidad: '',
+        lugarRadicacion: '',
+        interposicion: '',
+        checkboxManifiesto1: false,
+        checkboxManifiesto2: false,
+        ingresoInforme: '',
+        listaEnlaces: [],
+        enlaceOperativoModificar: undefined,
+        representanteLegal: undefined
     };
 }
 
@@ -117,11 +185,16 @@ export class Tramite303StoreService extends Store<Tramite303Store> {
      * @param state Estado parcial del trámite 303 a establecer.
      * Este método actualiza el estado del trámite 303 con los valores proporcionados.
      */
-    setState(state: Partial<Tramite303Store>) {
+    setState(state: Partial<Tramite303Store>): void {
         this.state = { ...this.state, ...state };
         this.update(this.state);
     }
 
+    /**
+     * 
+     * @param indice Índice del trámite 303 a establecer en el estado.
+     * Este método actualiza el estado del índice del trámite 303.
+     */
     public setIndice(indice: number): void {
         this.update((state) => ({
             ...state,
@@ -290,4 +363,126 @@ export class Tramite303StoreService extends Store<Tramite303Store> {
             transportistaModificar: transportistaModificar,
         }));
     }
+
+    /**
+     * Establece el enlace operativo a modificar en el estado del trámite 303.
+     * @param enlaceOperativoModificar Enlace operativo a modificar.
+     */
+    public enlaceOperativoModificar(enlaceOperativoModificar: EnlaceOperativo): void {
+        this.update((state) => ({
+            ...state,
+            enlaceOperativoModificar: enlaceOperativoModificar,
+        }));
+    }
+
+    /**
+     * Establece el valor del padrón en el estado del trámite 303.
+     * @param padron Valor del padrón a establecer.
+     */
+    setPadronValue(padron: string): void {
+        this.update((state) => ({
+            ...state,
+            padron,
+        }));
+    }
+
+    /**
+     * Establece el valor del control de inventarios en el estado del trámite 303.
+     * @param controlInventarios Valor del control de inventarios a establecer.
+     */
+    setControlInventariosValue(controlInventarios: string): void {
+        this.update((state) => ({
+            ...state,
+            controlInventarios,
+        }));
+    }
+
+    /**
+     * Establece la lista de inventarios en el estado del trámite 303.
+     * @param listaInventarios Lista de inventarios a establecer.
+     */
+    setListaInventarios(listaInventarios: ControlInventario[]): void {
+        this.update((state) => ({
+            ...state,
+            listaInventarios,
+        }));
+    }
+
+    /**
+     * Establece el valor de la contabilidad en el estado del trámite 303.
+     * @param contabilidad Valor de la contabilidad a establecer.
+     */
+    setContabilidadValue(contabilidad: string): void {
+        this.update((state) => ({
+            ...state,
+            contabilidad,
+        }));
+    }
+
+    /**
+     * Establece el valor del ingreso de informe en el estado del trámite 303.
+     * @param ingresoInforme Valor del ingreso de informe a establecer.
+     */
+    setIngresoInformeValue(ingresoInforme: string): void {
+        this.update((state) => ({
+            ...state,
+            ingresoInforme,
+        }));
+    }
+
+    /**
+     * Establece el valor de la interposición en el estado del trámite 303.
+     * @param interposicion Valor de la interposición a establecer.
+     */
+    setInterposicionValue(interposicion: string): void {
+        this.update((state) => ({
+            ...state,
+            interposicion,
+        }));
+    }
+
+    /**
+     * Establece el valor del checkbox de manifiesto 1 en el estado del trámite 303.
+     * @param checkboxManifiesto1 Valor del checkbox de manifiesto 1 a establecer.
+     */
+    setCheckboxManifiesto1Value(checkboxManifiesto1: boolean): void {
+        this.update((state) => ({
+            ...state,
+            checkboxManifiesto1,
+        }));
+    }
+
+    /**
+     * Establece el valor del checkbox de manifiesto 2 en el estado del trámite 303.
+     * @param checkboxManifiesto2 Valor del checkbox de manifiesto 2 a establecer.
+     */
+    setCheckboxManifiesto2Value(checkboxManifiesto2: boolean): void {
+        this.update((state) => ({
+            ...state,
+            checkboxManifiesto2,
+        }));
+    }
+
+    /**
+     * Establece el representante legal en el estado del trámite 303.
+     * @param representanteLegal Representante legal a establecer.
+     */
+    setRepresentanteLegal(representanteLegal: RepresentanteLegal): void {
+        this.update((state) => ({
+            ...state,
+            representanteLegal,
+        }));
+    }
+
+    /**
+     * Establece la lista de enlaces operativos en el estado del trámite 303.
+     * @param listaEnlaces Lista de enlaces operativos a establecer.
+     */
+    setListaEnlaces(listaEnlaces: EnlaceOperativo[]): void {
+        this.update((state) => ({
+            ...state,
+            listaEnlaces,
+        }));
+    }
+
 }

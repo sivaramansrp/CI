@@ -28,9 +28,13 @@
   <!-- Destinatario table -->
   <div class="row">
     <h6>Destinatario (destino final)*</h6>
-    <app-tabla-dinamica [configuracionTabla]="configuracionTablaDatos" [datos]="destinatario"
-      [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+   <app-tabla-dinamica 
+      [configuracionTabla]="configuracionTablaDatos" 
+      [datos]="destinatario"
+      [tipoSeleccionTabla]="checkbox" 
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
     </app-tabla-dinamica>
+    
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
         <li class="page-item"><a class="page-link">1</a></li>
@@ -58,32 +62,15 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona"
-              [layout]="'horizontal'" (valueChange)="cambiarRadioFisica($event)"
+              [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)"
               (change)="setValoresStore(tipoPersonaForm,'tipoPersona','setTipoPersona')"></app-input-radio>
           </div>
-        </div>
-        <!-- <div class="row mb-3">
-          <div class="col-md-6">
-            <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-              value="fisica" id="fisica"
-              (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
-            <label for="fisica">Física</label>
-          </div>
-          <div class="col-md-6">
-            <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-              value="planta" id="planta"
-              (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
-            <label for="planta">Planta TIF</label>
+          <div class="col-md-6 custom-planta">
+            <app-input-radio [radioOptions]="Plantatif" [isRequired]="true" formControlName="tipoPersona"
+              [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)"
+             ></app-input-radio>
           </div>
         </div>
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-              value="moral" id="moral"
-              (change)="setValoresStore(tipoPersonaForm,'tipoPersona', 'setTipoPersona')" />
-            <label for="moral">Moral</label>
-          </div>
-        </div> -->
       </form>
 
       <!-- Planta TIF Search Block -->
@@ -102,7 +89,7 @@
           </div>
         </div>
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-default me-2" (click)="limpiarBusquedaTif()">Limpiar</button>
+          <button type="button" class="btn btn-danger ms-3 me-1" (click)="limpiarBusquedaTif()">Limpiar</button>
           <button type="button" class="btn btn-primary">Buscar</button>
         </div>
       </div>
@@ -170,7 +157,7 @@
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" for="social">Denominación/razón social:*</label>
+              <label class="form-label" for="social">Denominación/razón social*:</label>
               <input class="form-control" id="social" type="text" formControlName="social" maxlength="250" size="29"
                 (change)="setValoresStore(datosPersonales,'social', 'setSocial')" />
               <div class="d-grid">
@@ -199,16 +186,24 @@
               <label class="form-label" for="codigo">Código postal:</label>
               <input class="form-control" id="codigo" type="text" formControlName="codigo" maxlength="5" size="5"
                 (change)="setValoresStore(datosPersonales,'codigo', 'setCodigo')" />
+              <div class="d-grid">
+                <div *ngIf="datosPersonales.get('codigo')?.touched && datosPersonales.get('codigo')?.invalid">
+                  <div>
+                    @if (datosPersonales.get('codigo')?.hasError('maxlength')) {
+                      <small class="mensaje-error">
+                        Por favor, no escribas más de 5 caracteres
+                      </small>
+                    }
+                    @if (datosPersonales.get('codigo')?.hasError('minlength')) {
+                      <small class="mensaje-error">
+                        Por favor, no escribas menos de 5 caracteres
+                      </small>
+                    }
+                  </div>
+                </div>
             </div>
-
-            <div class="d-grid">
-              <div *ngIf="datosPersonales.get('codigo')?.touched">
-                <small class="mensaje-error" *ngIf="datosPersonales.get('codigo')?.hasError('maxlength')">
-                  El código postal no puede exceder los 5 caracteres.
-                </small>
-              </div>
             </div>
-          </div>
+         </div> 
           <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="estado" [label]="'Estado'"
@@ -222,16 +217,16 @@
           <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select [catalogo]="municipioCatalogo" formControlName="municipio"
-                [label]="'Municipio o Alcaldía:'" [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura"
-                [required]="true" name="municipio"
+                [label]="'Municipio o Alcaldía'" [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura"
+                [required]="false" name="municipio"
                 (change)="setValoresStore(datosPersonales, 'municipio', 'setMunicipio')">
               </app-catalogo-select>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="coloniaCatalogo" formControlName="colonia" [label]="'Colonia:'"
-                [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura" [required]="true" name="colonia"
+              <app-catalogo-select [catalogo]="coloniaCatalogo" formControlName="colonia" [label]="'Colonia'"
+                [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura" [required]="false" name="colonia"
                 (change)="setValoresStore(datosPersonales, 'colonia', 'setColonia')">
               </app-catalogo-select>
             </div>
@@ -261,7 +256,7 @@
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('exterior')?.touched">
                   <small class="mensaje-error" *ngIf="datosPersonales.get('exterior')?.hasError('required')">
-                    Este campo es obligatorio.
+                    Existen datos incorrectos que no cumplen con el formato esperado.
                   </small>
                   <small class="mensaje-error" *ngIf="datosPersonales.get('exterior')?.hasError('maxlength')">
                     Existen datos incorrectos que no cumplen con el formato esperado
@@ -292,31 +287,43 @@
             <div class="form-group">
               <label class="form-label" for="lada">Lada:</label>
               <input class="form-control" id="lada" type="text" formControlName="lada" maxlength="5" size="5"
-                (change)="setValoresStore(datosPersonales,'lada', 'setLada')" />
+                (change)="setValoresStore(datosPersonales,'lada', 'setLada')"
+                (input)="onNumericInput($event)" />
               <div class="d-grid">
-                <div *ngIf="datosPersonales.get('lada')?.touched">
+                <div *ngIf="datosPersonales.get('lada')?.touched && datosPersonales.get('lada')?.invalid">
                   <small class="mensaje-error" *ngIf="datosPersonales.get('lada')?.hasError('maxlength')">
                     La lada no puede exceder los 5 caracteres.
                   </small>
-                </div>
-              </div>
-            </div>
-
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="form-group">
-              <label class="form-label" for="telefono">Teléfono:</label>
-              <input class="form-control" id="telefono" type="text" formControlName="telefono" maxlength="30"
-                size="29" (change)="setValoresStore(datosPersonales,'telefono', 'setTelefono')" />
-              <div class="d-grid">
-                <div *ngIf="datosPersonales.get('telefono')?.touched">
-                  <small class="mensaje-error" *ngIf="datosPersonales.get('telefono')?.hasError('maxlength')">
+                  <small class="mensaje-error" *ngIf="datosPersonales.get('lada')?.hasError('pattern')">
                     Existen datos incorrectos que no cumplen con el formato esperado
                   </small>
                 </div>
               </div>
             </div>
-
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="form-group">
+              <label class="form-label" for="telefono">Teléfono:</label>
+              <input class="form-control" id="telefono" type="text" formControlName="telefono" maxlength="30"
+                size="29" (change)="setValoresStore(datosPersonales,'telefono', 'setTelefono')"
+                (input)="onNumericInput($event)" />
+              <div class="d-grid">
+                <div *ngIf="datosPersonales.get('telefono')?.touched && datosPersonales.get('telefono')?.invalid">
+                  <div>
+                    @if (datosPersonales.get('telefono')?.hasError('maxlength')) {
+                      <small class="mensaje-error">
+                        Existen datos incorrectos que no cumplen con el formato esperado
+                      </small>
+                    }
+                    @if (datosPersonales.get('telefono')?.hasError('pattern')) {
+                      <small class="mensaje-error">
+                        Existen datos incorrectos que no cumplen con el formato esperado
+                      </small>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="col-md-4 mb-3">
             <label class="form-label" for="correoElectronico">Correo electrónico:<span
@@ -404,13 +411,13 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'País'" [isDisabled]="true"
-              [isDisabled]="esFormularioSoloLectura" [required]="true" name="pais"></app-catalogo-select>
+              [isDisabled]="esFormularioSoloLectura" [required]="false" name="pais"></app-catalogo-select>
           </div>
 
           <div class="col-md-6">
             <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="entidadFederativa"
               [label]="'Entidad Federativa'" [isDisabled]="true" [isDisabled]="esFormularioSoloLectura"
-              [required]="true" name="entidadFederativa" [placeholder]="'Selecciona una valor'"></app-catalogo-select>
+              [required]="false" name="entidadFederativa" [placeholder]="'Selecciona una opción'"></app-catalogo-select>
           </div>
         </div>
         <!-- Action buttons -->
