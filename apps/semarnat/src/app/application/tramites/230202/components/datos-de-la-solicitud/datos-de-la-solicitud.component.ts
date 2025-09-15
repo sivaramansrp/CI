@@ -792,9 +792,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .agregarDetalle()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
+        console.log(respuesta);
         if (respuesta?.success) {
           respuesta.datos.id = this.datosDetalle.length + 1;
-          this.datosDetalle.push(respuesta.datos);
+          this.datosDetalle = [...this.datosDetalle, respuesta.datos];
           (
             this.store.setDatosDetalle as unknown as (
               valor: DatosDetalle[]
@@ -883,7 +884,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   agregarMercancia(): void {
     const DESCRIPCION_PRODUCTO = this.reexportacionForm.get('descripcionProducto')?.value;
-    if (!DESCRIPCION_PRODUCTO) {
+    if (DESCRIPCION_PRODUCTO) {
       if (this.modalConfirmacion) {
         const MODEL = new Modal(this.modalConfirmacion.nativeElement);
         MODEL.show();
