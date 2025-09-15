@@ -1,26 +1,17 @@
 import { AbstractControl, FormBuilder, ValidationErrors } from "@angular/forms";
-import { Catalogo, CatalogoLista, SolicitudTabla, SolicitudTablaDatos } from "../../models/autorizacion-importacion.model";
+import { Catalogo, CatalogoLista, SolicitudTabla } from "../../models/autorizacion-importacion.model";
 import { CatalogoSelectComponent,InputFecha,InputFechaComponent,NotificacionesComponent,Pedimento,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService} from "@libs/shared/data-access-user/src";
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { ConsultaioQuery, ConsultaioState } from "@ng-mf/data-access-user";
 import { FECHA_CARTAPORTE, FECHA_DESTINO, FECHA_IMPORTACION, FECHA_VENCIMIENTO, TABLA_DE_DATOS, TEXTOS } from "../../constants/autorizacion-importacion.enum";
+import { FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Subject, map, takeUntil } from "rxjs";
+import { Tramite6402State, Tramite6402Store } from "../../estados/tramite6402.store";
 import { AutorizacionImportacionService } from "../../services/autorizacion-importacion.service";
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
-import { ElementRef } from "@angular/core";
-import { FormGroup } from "@angular/forms";
 import { Modal } from 'bootstrap';
 import { Notificacion } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from "@angular/core";
-import { OnInit } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
-import { Subject } from "rxjs";
 import { Tramite6402Query } from "../../estados/tramite6402.query";
-import { Tramite6402State } from "../../estados/tramite6402.store";
-import { Tramite6402Store } from "../../estados/tramite6402.store";
-import { Validators } from "@angular/forms";
-import { ViewChild } from "@angular/core";
-import { map } from "rxjs";
-import { takeUntil } from "rxjs";
 /**
  * Componente para gestionar el aviso de traslado.
  * 
@@ -959,6 +950,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Consulta la mercancía seleccionada en la lista.
+   * 
+   * Si no hay ningún registro seleccionado en `filaSeleccionadaLista`, muestra una notificación de alerta
+   * indicando que se debe seleccionar un registro para consultar.
+   * 
+   * @remarks
+   * Esta función es utilizada para validar la selección de registros antes de proceder con la consulta de mercancía.
+   * Si no hay selección, se configura una notificación de tipo alerta para informar al usuario.
+   */
   consultarMercancia(): void {
     if (!this.filaSeleccionadaLista.length) {
       this.nuevaNotificacion = {
