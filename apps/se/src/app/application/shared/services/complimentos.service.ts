@@ -1,8 +1,7 @@
-import { BehaviorSubject, Observable, catchError, map, throwError } from 'rxjs';
-
-import { API_ROUTES} from '../servers/api-route';
 import { AnexoDosEncabezado, AnexoUnoEncabezado } from '../models/nuevo-programa-industrial.model';
+import { BehaviorSubject, Observable, catchError, map, throwError } from 'rxjs';
 import { Catalogo, HttpCoreService, JsonResponseCatalogo } from '@ng-mf/data-access-user';
+import { API_ROUTES} from '../servers/api-route';
 import { ENVIRONMENT } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -58,6 +57,16 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
   }
 
   /**
+   * Obtiene las rutas de la API específicas para el procedimiento actual.
+   * 
+   * @returns Un objeto con las rutas de la API generadas por la función `API_ROUTES` usando el procedimiento actual.
+   */
+  private get apiRoutes(): ReturnType<typeof API_ROUTES> {
+  return API_ROUTES(this._procedure);
+}
+
+
+  /**
      * @method getDatos
      * Método para obtener datos desde un archivo JSON.
      * @returns {Observable<unknown>} Un Observable que emite los datos obtenidos o un error.
@@ -77,9 +86,9 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
      * @returns Un Observable que emite la respuesta con un arreglo de países.
      */
      getPais(): Observable<JsonResponseCatalogo> {
-    const API = API_ROUTES(this._procedure);
+    
   return this.httpService.get<JsonResponseCatalogo>(
-  API.PAIS,
+ this.apiRoutes.PAIS,
     {},
     false
   );
@@ -96,9 +105,9 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
    * @returns Observable que emite la respuesta del catálogo de estados.
    */
   getEstado(): Observable<JsonResponseCatalogo> {
-    const API = API_ROUTES(this._procedure);
+    
      return this.httpService.get<JsonResponseCatalogo>(
-    API.ESTADO,
+   this.apiRoutes.ESTADO,
     {},
     false
   );
@@ -112,9 +121,9 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
    * @returns Observable que emite la respuesta del catálogo de estados.
    */
   getActividadProductiva(): Observable<JsonResponseCatalogo> {
-    const API = API_ROUTES(this._procedure);
+    
      return this.httpService.get<JsonResponseCatalogo>(
-    API.ActividadProductiva,
+    this.apiRoutes.ActividadProductiva,
     {},
     false
   );
@@ -129,9 +138,9 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
    * @returns Observable que emite la respuesta del catálogo de estados.
    */
   getRepresentacion(id:string): Observable<JsonResponseCatalogo> {
-    const API = API_ROUTES(this._procedure);
+    
      return this.httpService.get<JsonResponseCatalogo>(
-    `${API.RepresentacionFederal}/${id}`,
+    `${this.apiRoutes.RepresentacionFederal}/${id}`,
     {},
     false
   );
@@ -144,9 +153,9 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
    * @returns Un observable que emite la respuesta JSON con los datos del catálogo del tipo de documento.
    */
   getTipoDocumento(id:number): Observable<JsonResponseCatalogo> {
-    const API = API_ROUTES(this._procedure);
+    
      return this.httpService.get<JsonResponseCatalogo>(
-    `${API.TipoDocumento}/${id}`,
+    `${this.apiRoutes.TipoDocumento}/${id}`,
     {},
     false
   );
@@ -159,9 +168,9 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
    * @returns Un observable que emite la respuesta en formato `JsonResponseCatalogo` con el listado de municipios.
    */
   getmunicipio(cveEntidad:string): Observable<JsonResponseCatalogo> {
-    const API = API_ROUTES(this._procedure);
+    
      return this.httpService.get<JsonResponseCatalogo>(
-    `${API.municipiosMax}/${cveEntidad}`,
+    `${this.apiRoutes.municipiosMax}/${cveEntidad}`,
     {},
     false
   );
@@ -175,9 +184,9 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
  * @returns Un observable que emite la respuesta JSON del catálogo correspondiente.
  */
  getTipCategoria(cveEnum:string): Observable<JsonResponseCatalogo> {
-  const API = API_ROUTES(this._procedure);
+  
      return this.httpService.get<JsonResponseCatalogo>(
-    `${API.tipoCategoria}/${cveEnum}`,
+    `${this.apiRoutes.tipoCategoria}/${cveEnum}`,
     {},
     false
   );
