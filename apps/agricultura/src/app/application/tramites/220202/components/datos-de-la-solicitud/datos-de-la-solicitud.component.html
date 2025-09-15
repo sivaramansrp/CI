@@ -145,11 +145,11 @@
         </div>
     </form>
 
-    <div class="row mt-3">
+    <div class="row mt-5">
       <div class="col-md-12 d-flex justify-content-end">
-        <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura || !tieneRegistrosSeleccionados || cuerpoTabla.length === 0"  (click)="modificarMercancia()">Modificar</button>
-        <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura || !tieneRegistrosSeleccionados || cuerpoTabla.length === 0" (click)="eliminarMercancia()">Eliminar</button>
-        <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura" (click)="agregarMercancia()">Agregar</button>
+        <button type="button" class="btn btn-default"   (click)="modificarMercancia()">Modificar</button>
+        <button type="button" class="btn btn-danger ms-3"  (click)="eliminarMercancia()">Eliminar</button>
+        <button type="button" class="btn btn-primary ms-3" (click)="agregarMercancia()">Agregar</button>
       </div>
     </div>
 
