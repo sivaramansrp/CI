@@ -511,7 +511,16 @@ export class DomicilloComponent implements OnInit, OnDestroy {
       numeroPermiso: [this.solicitudState?.numeroPermiso],
 
     });
+    
+this.domicilio.get('licenciaSanitaria')?.valueChanges.subscribe(value => {
+    const AVIS0VALOR = this.domicilio.get('avisoCheckbox');
 
+    if (value && value.trim() !== '') {
+      AVIS0VALOR?.disable({ emitEvent: false });
+    } else {
+      AVIS0VALOR?.enable({ emitEvent: false });
+    }
+  });
     /**
      * Inicialización del formulario de agente.
      */

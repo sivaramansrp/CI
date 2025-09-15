@@ -22,11 +22,7 @@ import {
   Tramite260211Store
 } from '../../../../estados/tramites/tramite260211.store';
 import { Permiso260211Query } from '../../../../estados/queries/permiso260211.query'; // Import query for fetching data from the store.
-
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
-import moment from 'moment';
-
-
 /**
  * compondoc
  * component
