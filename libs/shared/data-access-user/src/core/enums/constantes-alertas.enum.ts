@@ -111,6 +111,11 @@ export const MENSAJE_ALERTA_TRATADOS = {
 </ul>
 `,
 };
+
+export const INSTANCIA_URUGUAY = {
+  ADJUNTAR: `<p>Seleccione al menos 1 de las opciones por lo cual cumple el criterio de otras instancias.</p>`,
+};
+
 export const ELVALORALERTA = {
   ADJUNTAR: `<p>El valor de la transacción debe ser mayor al valor de dólares para insumos/envases.</p>`,
 };

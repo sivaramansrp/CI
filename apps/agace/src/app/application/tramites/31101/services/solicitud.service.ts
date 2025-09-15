@@ -1,19 +1,23 @@
+import {
+  DatosGeneralesDeLaSolicitudCatologo,
+  DatosGeneralesDeLaSolicitudRadioLista,
+  DatosPorGarantia,
+  Domicilios,
+  EntidadFederativa,
+  GarantiaCatalogo,
+  ModificacionDenominacionRazonSocial,
+  RecibirNotificaciones,
+  SeccionSociosIC,
+  Solicitud31101Model,
+  SubContratistas,
+  TipoDeInversion,
+} from '../models/solicitud.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { DatosGeneralesDeLaSolicitudCatologo } from '../models/solicitud.model';
-import { DatosGeneralesDeLaSolicitudRadioLista } from '../models/solicitud.model';
-import { DatosPorGarantia } from '../models/solicitud.model';
-import { Domicilios } from '../models/solicitud.model';
-import { EntidadFederativa } from '../models/solicitud.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ModificacionDenominacionRazonSocial } from '../models/solicitud.model';
 import { Observable } from 'rxjs';
-import { RecibirNotificaciones } from '../models/solicitud.model';
-import { SeccionSociosIC } from '../models/solicitud.model';
-import { Solicitud31101Model } from '../models/solicitud.model';
 import { Solicitud31101Store } from '../estados/solicitud31101.store';
-import { SubContratistas } from '../models/solicitud.model';
-import { TipoDeInversion } from '../models/solicitud.model';
+
 
 /**
  * Servicio encargado de obtener los datos necesarios para el llenado del formulario
@@ -55,8 +59,8 @@ export class SolicitudService {
   /**
    * Obtiene el catálogo de nombres de instituciones.
    */
-  conseguirNombreInstitucionCatalogo(): Observable<CatalogosSelect> {
-    return this.http.get<CatalogosSelect>(
+  conseguirNombreInstitucionCatalogo(): Observable<GarantiaCatalogo> {
+    return this.http.get<GarantiaCatalogo>(
       'assets/json/31101/nombre-institucion-catalogo.json'
     );
   }

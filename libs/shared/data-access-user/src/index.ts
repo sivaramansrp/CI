@@ -214,3 +214,4 @@ export * from './tramites/constantes/regex.constants';
 export * from './core/servers/api-router';
 export * from './core/resolvers/iniciar-tramite.resolver';
 export * from './tramites/components/paso-firma/paso-firma.component';
+export * from './core/services/shared/catalogo.service';
