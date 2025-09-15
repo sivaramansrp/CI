@@ -503,3 +503,14 @@ export const API_GET_TABS = (TRAMITE: string, IDSOLICITUD: string) : string => `
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/estado-consulta-solicitud
  */
 export const API_GET_DATOS_SOLICITANTE = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/tramite/${IDSOLICITUD}/solicitud/solicitante`;
+
+/**
+ * API para obtener el estado de la solicitud del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original_1
+ */
+export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/genera-cadena-original`;
+/**
+ * API para firmar la solicitud del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/firmar
+ */
+export const API_POST_FIRMA = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/firmar`;

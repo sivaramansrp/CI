@@ -1,3 +1,4 @@
+import { API_POST_CADENA_ORIGINAL, API_POST_FIRMA } from '../../../servers/api-router';
 import { DocumentoResponse, DocumentosRequest } from '../../../models/shared/documentos-request.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, tap, throwError } from 'rxjs';
@@ -98,7 +99,7 @@ export class DocumentoService {
    * @returns Observable con la respuesta del servidor.
    */
   enviarFirma<T>(idSolicitud: string | number, body: FirmarRequest, procedure: number): Observable<BaseResponse<T>> {
-    const ENDPOINT = `${this.urlServerHost}/api/sat-t${procedure}/solicitud/${idSolicitud}/firmar`;
+    const ENDPOINT = `${this.urlServerHost}/api/` + API_POST_FIRMA(String(idSolicitud,), procedure);
     return this.http.post<BaseResponse<T>>(ENDPOINT, body).pipe(
       map(response => response),
       catchError(() => {
@@ -114,7 +115,7 @@ export class DocumentoService {
    * @returns Un observable que emite la respuesta del servidor con la cadena original.
    */
   obtenerCadenaOriginal<T>(idSolicitud: string, body: CadenaOriginalRequest, procedure: number): Observable<BaseResponse<T>> {
-    const ENDPOINT = `${this.urlServerHost}/api/sat-t${procedure}/solicitud/${idSolicitud}/genera-cadena-original`;
+    const ENDPOINT = `${this.urlServerHost}/api/` + API_POST_CADENA_ORIGINAL(idSolicitud, procedure);
 
     return this.http.post<BaseResponse<T>>(ENDPOINT, body).pipe(
       map((response) => response),
