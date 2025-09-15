@@ -78,3 +78,16 @@ export const CVE_FRACCION = '{cveFraccion}';
  * @returns 
  */
 export const API_GET_FRACCION_SUBDIVISIONES = (CVE_FRACCION: string) : string => `sat-t130102/catalogo/fraccion-arancelaria/${CVE_FRACCION}/subdiviciones`;
+
+/**
+ * Constante para la clave del esquema.
+ * Debe ser reemplazada por la clave real del esquema.
+ */
+const CVEESQUEMA = '{cveEsquema}';
+
+/**
+ * API MS para obtener las reglas de un esquema específico del tramite 130102.
+ * @param CVEESQUEMA - Clave del esquema.
+ * @returns 
+ */
+const API_GET_ESQUEMA_REGLA = (CVEESQUEMA: string) : string => `sat-t130102/esquema-regla/${CVEESQUEMA}/octava`;

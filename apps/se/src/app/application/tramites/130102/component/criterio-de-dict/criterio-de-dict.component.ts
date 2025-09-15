@@ -27,6 +27,7 @@ import { Tramite130102Query } from '../../../../estados/queries/tramite130102.qu
 
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
+import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
 
 /**
  * CriterioDeDictComponent es un componente que maneja la selección de solicitudes de mercancía.
@@ -57,7 +58,7 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
    * Solicitudes de mercancía disponibles.
    * @type {Catalogo[]} - Las solicitudes de mercancía disponibles.
    */
-  solicitudMercanciaLista: Catalogo[] = SolicitudMercanciaValues;
+  solicitudMercanciaLista: Catalogo[] = [];
 
   /**
    * Solicitud de mercancía seleccionada.
@@ -90,7 +91,8 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
     private formularioRegistroService: FormularioRegistroService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catOctavaTemporalService: CatOctavaTemporalService
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -110,6 +112,17 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
   fetchSolicitudMercancia(e: Catalogo): void {
     this.seleccionadaSolicitudMercancia = e;
   }
+
+
+  obtenerCatEsquemaRegla(cveEsquema: string): void {
+    this.catOctavaTemporalService.getEsquemaReglaOctava(cveEsquema).subscribe((data) => {
+      this.solicitudMercanciaLista = data.datos.map((item, index) => ({
+        id: index,
+        clave: item.clave,
+        descripcion: item.descripcion,
+      }));  
+    }); 
+  } 
 
   /**
    * Asigna un valor del formulario al store.
@@ -138,6 +151,7 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
       'frmCriterioDictamen',
       this.frmCriterioDictamen
     );
+    this.obtenerCatEsquemaRegla('2'); // 2 es el cveEsquema para octava temporal
   }
 /** 
     * Inicializa el formulario de criterio de dictamen.
