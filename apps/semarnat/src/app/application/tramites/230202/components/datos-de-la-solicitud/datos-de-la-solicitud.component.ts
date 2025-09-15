@@ -428,7 +428,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           {value: this.solicitudState?.colonia, disabled: this.soloLectura},
           Validators.required,
         ],
-        fechasSeleccionadas: this.solicitudState?.fechasSeleccionadas || this.fb.array([]),
+        fechasSeleccionadas: this.fb.array(
+          (this.solicitudState?.fechasSeleccionadas ?? []).map(f => this.fb.control(f))
+        ),
+        entidadesSeleccionadas: this.fb.array(
+          (this.solicitudState?.entidadesSeleccionadas ?? []).map(e => this.fb.control(e))
+        ),
       }),
     });
 
@@ -746,16 +751,36 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Obtiene el array del formulario 'entidadesSeleccionadas' del grupo de formulario  'datosServicio'.
+   *
+   * @returns {FormArray} El array de formulario 'entidadesSeleccionadas'.
+   */
+  get entidadesSeleccionadas(): FormArray {
+    return this.reexportacionForm.get('entidadesSeleccionadas') as FormArray;
+  }
+
+  /**
    * Actualiza la lista de fechas seleccionadas y las almacena en el estado.
    * 
    * @param fechas - Arreglo de fechas a agregar.
    * @returns void
    */
   changeCrosslist(fechas: string[]): void {
-    fechas.forEach((fecha) => {
-      this.fechasSeleccionadas.push(new FormControl(fecha));
-    });
+    const newArray = this.fb.array(fechas.map(fecha => this.fb.control(fecha)));
+    this.reexportacionForm.setControl('fechasSeleccionadas', newArray);
     this.store.setFechasSeleccionadas(fechas);
+  }
+
+  /**
+   * Actualiza la lista de entidades seleccionadas y las almacena en el estado.
+   * 
+   * @param entidades - Arreglo de entidades a agregar.
+   * @returns void
+   */
+  changeCrosslistEntidades(entidades: string[]): void {
+    const newArray = this.fb.array(entidades.map(entidad => this.fb.control(entidad)));
+    this.reexportacionForm.setControl('entidadesSeleccionadas', newArray);
+    this.store.setEntidadesSeleccionadas(entidades);
   }
 
   /**

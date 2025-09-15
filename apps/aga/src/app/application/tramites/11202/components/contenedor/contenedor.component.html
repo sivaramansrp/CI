@@ -46,7 +46,7 @@
                   datosContenedor,
                   'inicialesContenedor',
                   'setInicialesContenedor'
-                )"  [ngClass]="{'is-invalid': isInvalid('datosContenedor.inicialesContenedor')}"/>
+                )" [ngClass]="{'is-invalid': isInvalid('datosContenedor.inicialesContenedor')}"/>
               <div *ngIf="isInvalid('datosContenedor.inicialesContenedor') && solicitudForm.get('datosContenedor.inicialesContenedor')?.errors?.['required']" class="mensaje-error">
                 Este campo es obligatorio.
               </div>

@@ -37,9 +37,8 @@
           [fechas]="selectRangoDias"
           [label]="paisDeOrigenLabel"
           [botones]="paisDeOrigenBotons"
-          [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
+          [fechasSeleccionadas]="fechasSeleccionadas.value"
           [isDisabled]="soloLectura"
-          [formControlName]="'pais'"
           (fechasSeleccionadasChange)="changeCrosslist($event)"
         ></crosslist>
         <br />
@@ -50,8 +49,9 @@
           [fechas]="selectEntidades"
           [label]="entidadesLabel"
           [botones]="entidadesBotons"
-          [formControlName]="'entidades'"
+          [fechasSeleccionadas]="entidadesSeleccionadas.value"
           [isDisabled]="soloLectura"
+          (fechasSeleccionadasChange)="changeCrosslistEntidades($event)"
         ></crosslist>
         <div class="row">
           <div class="col-md-12">

@@ -30,11 +30,19 @@ export interface Solicitud230202State {
    * Lista de oficinas de aduanas.
    */
   aduana: Catalogo[] | null;
+
   /**
    * Lista de fechas seleccionadas.
    * Se utiliza para almacenar las fechas que el usuario ha seleccionado.
    */
   fechasSeleccionadas: string[];
+
+  /**
+   * Lista de entidades seleccionadas.
+   * Se utiliza para almacenar las entidades que el usuario ha seleccionado.
+   */
+  entidadesSeleccionadas: string[];
+
   /**
    * Lista de países.
    */
@@ -191,6 +199,7 @@ export function createInitialState(): Solicitud230202State {
     numeroDeCertificado: null,
     aduana: null,
     fechasSeleccionadas: [],
+    entidadesSeleccionadas: [],
     pais: null,
     entidades: null,
     descripcionProducto: null,
@@ -273,6 +282,17 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
+  /**
+   * Actualiza las entidades seleccionadas en el estado.
+   * @param {string[]} entidadesSeleccionadas - Lista de entidades seleccionadas.
+   */
+  public setEntidadesSeleccionadas(entidadesSeleccionadas: string[]): void {
+    this.update((state) => ({
+      ...state,
+      entidadesSeleccionadas,
+    }));
+  }
+  
   /**
    * Actualiza la lista de países en el estado.
    * @param {Catalogo[]} pais - Lista de países.
