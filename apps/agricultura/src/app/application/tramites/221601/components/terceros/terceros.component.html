@@ -450,21 +450,20 @@
       </app-tabla-dinamica>
     </div>
   </app-modal>
-</div>
 
-<!-- Notification components - same pattern as datos-de-la-solicitud -->
-@if(confirmacionAlertaEliminacion){
+  <!-- Notification components - same pattern as datos-de-la-solicitud -->
+  @if(confirmacionAlertaDestinatario){
 <section>
-  <lib-notificaciones [notificacionInput]="notificacionEliminacion"
-    (confirmacionModal)="onConfirmacionEliminacion($event)">
+  <lib-notificaciones [notificacionInput]="notificacionDestinatario"
+    (confirmacionModal)="onConfirmacionDestinatario($event)">
   </lib-notificaciones>
 </section>
 }
 
-@if(mostrarAlertaEliminacion){
+@if(mostrarAlertaDestinatario){
 <section>
-  <lib-notificaciones [notificacionInput]="notificacionEliminacion" 
-    (confirmacionModal)="onAlertaEliminacion()">
+  <lib-notificaciones [notificacionInput]="notificacionDestinatario" 
+    (confirmacionModal)="onAlertaDestinatario()">
   </lib-notificaciones>
 </section>
 }

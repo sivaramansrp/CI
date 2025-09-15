@@ -110,9 +110,9 @@ export class TercerosComponent implements OnInit, OnDestroy {
   editingDestinatarioIndex: number = -1;
 
   // Notification properties
-  public mostrarAlertaEliminacion: boolean = false;
-  public confirmacionAlertaEliminacion: boolean = false;
-  public notificacionEliminacion!: Notificacion;
+  public mostrarAlertaDestinatario: boolean = false;
+  public confirmacionAlertaDestinatario: boolean = false;
+  public notificacionDestinatario!: Notificacion;
 
   // Subject for component destruction
   private destroyed$ = new Subject<void>();
@@ -263,14 +263,67 @@ export class TercerosComponent implements OnInit, OnDestroy {
     console.log('Iniciando eliminación...');
     console.log('Destinatarios seleccionados:', this.destinatarioSeleccionado);
     
-    if (this.destinatarioSeleccionado.length === 0) {
-      this.mostrarNotificacionEliminacion('Por favor selecciona un destinatario para eliminar.');
+    if (!this.destinatarioSeleccionado || this.destinatarioSeleccionado.length === 0) {
+      this.mostrarNotificacionDestinatario(
+        'Selecciona un registro.',
+        false
+      );
       return;
     }
 
-    this.mostrarNotificacionEliminacion(
-      '¿Estás seguro de que deseas eliminar el destinatario seleccionado?',
+    this.mostrarNotificacionDestinatario(
+      '¿Estás seguro que deseas eliminar los registros marcados?',
       true
+    );
+  }
+
+  // Update the notification method to match the working pattern
+  private mostrarNotificacionDestinatario(mensaje: string, mostrarCancelar: boolean = false): void {
+    this.notificacionDestinatario = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: mostrarCancelar ? 'Cancelar' : '',
+    };
+    
+    if (mostrarCancelar) {
+      this.confirmacionAlertaDestinatario = true;
+    } else {
+      this.mostrarAlertaDestinatario = true;
+    }
+  }
+
+  // Update the confirmation method
+  onConfirmacionDestinatario(confirmar: boolean): void {
+    this.confirmacionAlertaDestinatario = false;
+    
+    if (confirmar) {
+      this.realizarEliminacionDestinatario();
+    }
+  }
+
+  onAlertaDestinatario(): void {
+    this.mostrarAlertaDestinatario = false;
+  }
+
+  // Update the actual deletion method
+  private realizarEliminacionDestinatario(): void {
+    this.destinatario = this.destinatario.filter(record => 
+      !this.destinatarioSeleccionado.includes(record)
+    );
+    
+    this.destinatarioSeleccionado = [];
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
+    
+    this.mostrarNotificacionDestinatario(
+      'Destinatario eliminado correctamente.',
+      false
     );
   }
 
@@ -284,89 +337,9 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.showtercerosModal = false;
   }
 
-  onConfirmacionEliminacion(confirmado: boolean): void {
-    console.log('Confirmación recibida:', confirmado);
-    this.confirmacionAlertaEliminacion = false;
-    
-    if (confirmado && this.destinatarioSeleccionado.length > 0) {
-      console.log('Procediendo con la eliminación...');
-      this.eliminarDestinatarioConfirmado();
-    } else {
-      console.log('Eliminación cancelada');
-      this.destinatarioSeleccionado = [];
-    }
-  }
-
-  onAlertaEliminacion(): void {
-    this.mostrarAlertaEliminacion = false;
-  }
-
-  eliminarDestinatarioConfirmado(): void {
-    if (this.destinatarioSeleccionado.length === 0) {
-      console.log('No hay destinatarios seleccionados para eliminar');
-      return;
-    }
-
-    const DESTINATARIO_A_ELIMINAR = this.destinatarioSeleccionado[0];
-    console.log('Eliminando destinatario:', DESTINATARIO_A_ELIMINAR);
-    console.log('Lista actual antes de eliminar:', this.destinatario);
-    
-    const INDEX = this.destinatario.findIndex((dest: Destinatario) => 
-      dest.nombreDenominacionORazonSocial === DESTINATARIO_A_ELIMINAR.nombreDenominacionORazonSocial &&
-      dest.correoElectronico === DESTINATARIO_A_ELIMINAR.correoElectronico &&
-      dest.telefono === DESTINATARIO_A_ELIMINAR.telefono
-    );
-
-    console.log('Índice encontrado:', INDEX);
-
-    if (INDEX !== -1) {
-      this.destinatario = this.destinatario.filter((_: Destinatario, i: number) => i !== INDEX);
-      this.destinatarioSeleccionado = [];
-      this.cdr.markForCheck();
-      this.cdr.detectChanges();
-      console.log('Lista después de eliminar:', this.destinatario);
-      this.mostrarNotificacionEliminacion('Destinatario eliminado correctamente.');
-    } else {
-      console.error('No se pudo encontrar el destinatario para eliminar');
-      this.mostrarNotificacionEliminacion('Error: No se pudo encontrar el destinatario para eliminar.');
-    }
-  }
-
-  mostrarNotificacionEliminacion(mensaje: string, esConfirmacion: boolean = false): void {
-    if (esConfirmacion) {
-      this.notificacionEliminacion = {
-        titulo: 'Confirmar eliminación',
-        mensaje: mensaje,
-        txtBtnCancelar: 'Cancelar',
-        tipoNotificacion: 'confirmacion',
-        categoria: 'eliminacion',
-        modo: 'modal',
-        cerrar: false,
-        tiempoDeEspera: 0,
-        txtBtnAceptar: 'Eliminar'
-      };
-      this.confirmacionAlertaEliminacion = true;
-      this.mostrarAlertaEliminacion = false;
-    } else {
-      this.notificacionEliminacion = {
-        titulo: 'Información',
-        mensaje: mensaje,
-        txtBtnCancelar: '',
-        tipoNotificacion: 'info',
-        categoria: 'informacion',
-        modo: 'modal',
-        cerrar: false,
-        tiempoDeEspera: 3000,
-        txtBtnAceptar: 'Aceptar'
-      };
-      this.mostrarAlertaEliminacion = true;
-      this.confirmacionAlertaEliminacion = false;
-    }
-  }
-
   modificarDestinatario(): void {
     if (this.destinatarioSeleccionado.length === 0) {
-      this.mostrarNotificacionEliminacion('Por favor selecciona un destinatario para modificar.');
+      this.mostrarNotificacionDestinatario('Por favor selecciona un destinatario para modificar.');
       return;
     }
 
@@ -378,7 +351,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     );
 
     if (this.editingDestinatarioIndex === -1) {
-      this.mostrarNotificacionEliminacion('No se pudo encontrar el destinatario seleccionado.');
+      this.mostrarNotificacionDestinatario('No se pudo encontrar el destinatario seleccionado.');
       return;
     }
 
@@ -486,7 +459,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     
     if (!this.tipoPersonaForm.get('tipoPersona')?.value) {
       console.log('Error: Tipo de persona no seleccionado');
-      this.mostrarNotificacionEliminacion('Por favor selecciona el tipo de persona.');
+      this.mostrarNotificacionDestinatario('Por favor selecciona el tipo de persona.');
       return;
     }
 
@@ -512,7 +485,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
         this.datosPersonales.markAllAsTouched();
         
         console.log('Formulario inválido, no se puede guardar');
-        this.mostrarNotificacionEliminacion('Por favor completa todos los campos requeridos correctamente.');
+        this.mostrarNotificacionDestinatario('Por favor completa todos los campos requeridos correctamente.');
         return;
       }
 
@@ -571,14 +544,14 @@ export class TercerosComponent implements OnInit, OnDestroy {
       NUEVO_ARRAY[this.editingDestinatarioIndex] = DESTINATARIO_DATA;
       this.destinatario = NUEVO_ARRAY;
       
-      console.log('Destinatario modificado exitosamente');
-      this.mostrarNotificacionEliminacion('Destinatario modificado correctamente.');
+      // console.log('Destinatario modificado exitosamente');
+      // this.mostrarNotificacionDestinatario('Destinatario modificado correctamente.');
     } else {
       console.log('Agregando nuevo destinatario');
       this.destinatario = [...this.destinatario, DESTINATARIO_DATA];
       
-      console.log('Nuevo destinatario agregado exitosamente');
-      this.mostrarNotificacionEliminacion('Destinatario agregado correctamente.');
+      // console.log('Nuevo destinatario agregado exitosamente');
+      // this.mostrarNotificacionDestinatario('Destinatario agregado correctamente.');
     }
 
     // Reset form state
