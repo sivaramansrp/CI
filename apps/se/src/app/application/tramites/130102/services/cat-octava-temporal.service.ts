@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { CatalogosResponse, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { Observable, catchError, map, throwError } from 'rxjs';
 
-import { API_GET_BLOQUE_PAISES, API_GET_CLASIFICACION_REGIMEN, API_GET_ENTIDADES_FEDERATIVAS, API_GET_FRACCION_ARANCELARIA, API_GET_REGIMENES, API_GET_UNIDADES_ADMINISTRATIVAS, API_GET_UNIDADES_MEDIDA } from '../server/api-router';
+import { API_GET_BLOQUE_PAISES, API_GET_CLASIFICACION_REGIMEN, API_GET_ENTIDADES_FEDERATIVAS, API_GET_FRACCION_ARANCELARIA, API_GET_FRACCION_SUBDIVISIONES, API_GET_REGIMENES, API_GET_UNIDADES_ADMINISTRATIVAS, API_GET_UNIDADES_MEDIDA } from '../server/api-router';
 import { CatalogosBloquesResponse } from '../models/octava-temporal.model';
 
 @Injectable({
@@ -125,6 +125,12 @@ export class CatOctavaTemporalService {
     );  
   }
 
+  /**
+   * Obtiene las unidades administrativas basadas en la entidad seleccionada.
+   * @param cveEntidad Clave de la entidad para obtener las unidades administrativas.
+   * @returns 
+   */
+
   getUnidadesAdministrativas(cveEntidad: string): Observable<CatalogosResponse> {
     const ENDPOINT = `${this.host}` + API_GET_UNIDADES_ADMINISTRATIVAS(cveEntidad); 
     return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
@@ -149,6 +155,21 @@ export class CatOctavaTemporalService {
 
   getFraccionArancelaria(): Observable<CatalogosResponse> {
     const ENDPOINT = `${this.host}${API_GET_FRACCION_ARANCELARIA}`;
+    return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
+      map((response) => {
+        return response;
+      }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );    
+  }
+
+  getDivisionesFraccionArancelaria(cveFraccion: string): Observable<CatalogosResponse> {
+    const ENDPOINT = `${this.host}` + API_GET_FRACCION_SUBDIVISIONES(cveFraccion);
     return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
       map((response) => {
         return response;

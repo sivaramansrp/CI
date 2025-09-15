@@ -26,6 +26,7 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
 import { ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { ESPECIFICO_PREFILL, FRACCIONES_ANARCIA_TABLA } from '../../constantes/octava-temporal.enum';
 import { FraccionArancelariaProsec } from '../../models/octava-temporal.model';
+import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
 
 @Component({
   selector: 'app-uso-especifico',
@@ -68,7 +69,7 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
    * @description Opciones del catálogo de fracción arancelaria.
    * @type {Catalogo[]}
    */
-  catalogos: Catalogo[] = fraccionOptionJson;
+  catalogos: Catalogo[] = [];
 
   /**
    * Estado actual de la solicitud 130102, obtenido desde el store.
@@ -101,7 +102,8 @@ filasSeleccionadas: FraccionArancelariaProsec[] = [];
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
     private formularioRegistroService: FormularioRegistroService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catOctavaTemporalService: CatOctavaTemporalService
   ) { 
    this.consultaioQuery.selectConsultaioState$
          .pipe(
@@ -136,7 +138,27 @@ filasSeleccionadas: FraccionArancelariaProsec[] = [];
       this.tramite130102Store.setDynamicFieldValue('uso_especifico_tabla', this.datosSocios);
       this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
     }
+    this.obtienerDivisionesFraccion('73121099');
   }
+
+
+  /**
+   * Obtiene las divisiones de la fracción arancelaria seleccionada y actualiza el catálogo.
+   * @param cveFraccion Clave de la fracción arancelaria para obtener las divisiones correspondientes.
+   * @returns void
+   *  
+   */
+  obtienerDivisionesFraccion(cveFraccion: string): void {
+    this.catOctavaTemporalService.getDivisionesFraccionArancelaria(cveFraccion).subscribe((data) => {
+        this.catalogos = data.datos.map((item, index) => ({
+          id: index,
+          clave: item.clave,
+          descripcion: item.descripcion,
+        }));  
+    });
+  }
+
+
 
   /**
    * @method inicializarEstadoFormulario

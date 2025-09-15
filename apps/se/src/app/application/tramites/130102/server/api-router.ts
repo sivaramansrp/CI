@@ -64,3 +64,17 @@ export const CVEFRACCION = '{cveFraccion}';
  * @returns 
  */
 export const API_GET_UNIDADES_MEDIDA = (CVEFRACCION: string) : string => `sat-t130102/catalogo/fraccion-arancelaria/${CVEFRACCION}/unidades-medida`;
+
+/**
+ * Constante para la clave de la fracción arancelaria.
+ * Debe ser reemplazada por la clave real de la fracción arancelaria.
+ */
+export const CVE_FRACCION = '{cveFraccion}';
+
+
+/**
+ * API MS para obtener las subdivisiones asociadas a una fracción arancelaria específica del tramite 130102.
+ * @param CVE_FRACCION - Clave de la fracción arancelaria.
+ * @returns 
+ */
+export const API_GET_FRACCION_SUBDIVISIONES = (CVE_FRACCION: string) : string => `sat-t130102/catalogo/fraccion-arancelaria/${CVE_FRACCION}/subdiviciones`;
