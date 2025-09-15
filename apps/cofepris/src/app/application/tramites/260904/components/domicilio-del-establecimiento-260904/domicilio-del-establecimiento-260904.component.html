@@ -448,7 +448,7 @@
 
         <lib-input-check 
           [id]="'aifaCheckbox'" 
-          [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
+          [label]="'Aeropuerto Internacional Ciudad de México (AICM).'"
           [required]="true" 
           formControlName="aifaCheckbox" 
           [isDisabled]="esFormularioSoloLectura || !!nicoTablaForm.get('entidad')?.disabled"
@@ -480,11 +480,11 @@
           (listaDeFilaSeleccionada)="onMercanciaRowSelected($event)">
         </app-tabla-dinamica>
         <div class="container text-end mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="selectedMercanciaIndex !== null && selectedMercanciaCount === 1 ? onModificarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Modificar</button>
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="selectedMercanciaIndex !== null ? onEliminarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Eliminar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura || buttonDisableForProrroga" (click)="selectedMercanciaIndex !== null && selectedMercanciaCount === 1 ? onModificarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura || buttonDisableForProrroga" (click)="selectedMercanciaIndex !== null ? onEliminarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Eliminar</button>
           <button 
             class="btn btn-primary me-2" 
-            [disabled]="esFormularioSoloLectura"
+            [disabled]="esFormularioSoloLectura || buttonDisableForProrroga"
             (click)="openMercanciaModal()"
           >
             Agregar
@@ -604,7 +604,7 @@
           </div>
         </div>
         <div class="col-md-3 mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="onBuscarRepresentanteLegal()">Buscar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura && buttonDisableForProrroga" (click)="onBuscarRepresentanteLegal()">Buscar</button>
         </div>
       </div>
 

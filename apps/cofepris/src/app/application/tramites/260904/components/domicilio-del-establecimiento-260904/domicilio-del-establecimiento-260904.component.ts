@@ -622,6 +622,8 @@ export class DomicilioDelEstablecimiento260904Component
   /** Estado actual de la solicitud proveniente del store */
   public solicitudState!: Tramite260904State;
 
+  buttonDisableForProrroga: boolean = true;
+
   /**
    * Controla si los campos de nombre, apellidoPaterno y apellidoMaterno están habilitados
    */
@@ -946,6 +948,8 @@ ngOnChanges(): void {
       this.representanteLegal?.get('apellidoPaterno')?.disable();
       this.representanteLegal?.get('apellidoMaterno')?.disable();
     } else if (this.tipoTramite === '0') {
+      this.buttonDisableForProrroga = true;
+      console.log('tipo value from on changes', this.tipoTramite);
       this.form?.disable();
       this.domicilio?.disable();
       this.representanteLegal?.disable();
@@ -1453,6 +1457,25 @@ ngOnChanges(): void {
   limpiarScian(): void {
     this.nicoTablaForm.reset();
   }
+
+  // Add to: domicilio-del-establecimiento-260904.component.ts
+
+public validateRequiredFields(): boolean {
+  if (!this.form) {
+    return true;
+    }
+  return this.form.valid;
+}
+
+public markAllFieldsTouched(): void {
+  if (this.form) {
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsTouched();
+      control.markAsDirty();
+      control.updateValueAndValidity();
+    });
+  }
+}
     /**
    * Navega a la ubicación anterior en el historial de navegación.
    * Utiliza el servicio de ubicación para retroceder una página.

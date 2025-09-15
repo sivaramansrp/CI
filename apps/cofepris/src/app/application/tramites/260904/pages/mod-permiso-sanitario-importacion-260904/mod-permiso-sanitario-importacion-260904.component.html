@@ -1,50 +1,49 @@
 <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <h1>
-          Modificación del permiso sanitario de importación de insumos para la
-          salud de medicamentos con registro sanitario
-        </h1>
-      </div>
+  <div class="row">
+    <div class="col-md-12">
+      <h1>
+        Modificación del permiso sanitario de importación de insumos para la
+        salud de medicamentos con registro sanitario
+      </h1>
     </div>
+  </div>
 
-     <div *ngIf="message" class="alert alert-danger error-message text-center" style="margin-bottom: 16px;">
-      {{ message }}
-    </div>
-  
-    <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
-    <div>
-      <app-paso-uno (tabChanged)="onPasoUnoTabChanged($event)"></app-paso-uno>
-      <!-- @switch (indice) { @case (1) {
-      <app-paso-uno></app-paso-uno>
-      } @case (2) {
-      <app-paso-dos></app-paso-dos>
-      } @case (3) {
-      <app-paso-tres></app-paso-tres>
-      } } -->
-      <!-- Tab components are now only rendered inside paso-uno.component.html -->
-      <!-- If you need to show paso-dos or paso-tres for other flows, you can use [hidden] or *ngIf with a condition -->
-      <!-- <app-paso-dos [hidden]="!showPasoDos"></app-paso-dos> -->
-      <!-- <app-paso-tres [hidden]="!showPasoTres"></app-paso-tres> -->
-    </div>
-    <btn-continuar [datos]="datosPasos" [ocultabotonAnterior]="ocultarBtnAnterior" (continuarEvento)="onContinuar($event)"></btn-continuar>
-    <ng-alert [CONTENIDO]="AVISO_DE_PRIVACIDAD"></ng-alert>
+  <div *ngIf="message" class="alert alert-danger error-message text-center" style="margin-bottom: 16px;">
+    {{ message }}
+  </div>
 
-    <!-- Modal para confirmación de pago -->
-    <div class="modal fade" [class.show]="showPaymentModal" [style.display]="showPaymentModal ? 'block' : 'none'" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title"></h5>
-          </div>
-          <div class="modal-body">
-            <p>¿Está seguro que su<br>solicitud no requiere los<br>datos del Pago de<br>derechos?</p>
-          </div>
-          <div class="modal-footer d-flex">
-            <button type="button" class="btn btn-secondary" (click)="onPaymentModalNo()">No</button>
-            <button type="button" class="btn btn-secondary" (click)="onPaymentModalYes()">Si</button>
-          </div>
+  <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
+
+  <div>
+    <app-paso-uno 
+      (tabChanged)="onPasoUnoTabChanged($event)" 
+      [subTabIndex]="subTabIndex">
+    </app-paso-uno>
+  </div>
+
+  <btn-continuar
+    [datos]="datosPasos"
+    [ocultabotonAnterior]="ocultarBtnAnterior"
+    *ngIf="shouldShowContinuarButton"
+    (continuarEvento)="onContinuar($event)">
+  </btn-continuar>
+
+  <ng-alert [CONTENIDO]="AVISO_DE_PRIVACIDAD"></ng-alert>
+
+  <div class="modal fade" [class.show]="showPaymentModal" [style.display]="showPaymentModal ? 'block' : 'none'" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar Pago</h5>
+        </div>
+        <div class="modal-body">
+          <p>¿Está seguro que su solicitud no requiere los datos del Pago de derechos?</p>
+        </div>
+        <div class="modal-footer d-flex">
+          <button type="button" class="btn btn-secondary" (click)="onPaymentModalNo()">No</button>
+          <button type="button" class="btn btn-primary" (click)="onPaymentModalYes()">Sí</button>
         </div>
       </div>
     </div>
+  </div>
 </div>
