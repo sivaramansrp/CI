@@ -271,7 +271,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.obtenerEstados();
     this.initFederatariosFormGroup();
-    this.obtenerRepresentacion();
+    this.obtenerRepresentacion('MEX');
     this.obtenerActividad();
     this.obtenerTipoDocumento(102);
     this.obtenerMunicipio("BCN")
@@ -611,8 +611,8 @@ obtenerEstados():void {
    * La suscripción se cancela automáticamente cuando el observable `destroyNotifier$` emite un valor,
    * evitando posibles fugas de memoria.
    */
-  obtenerRepresentacion():void {
-    this.complimentosService.getRepresentacion().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+  obtenerRepresentacion(id:string):void {
+    this.complimentosService.getRepresentacion(id).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
       this.RepresentacionCatalogo=res.datos
     });
     

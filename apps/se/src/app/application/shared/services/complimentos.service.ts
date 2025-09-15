@@ -121,10 +121,10 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
    *
    * @returns Observable que emite la respuesta del catálogo de estados.
    */
-  getRepresentacion(): Observable<JsonResponseCatalogo> {
+  getRepresentacion(id:string): Observable<JsonResponseCatalogo> {
     const API = API_ROUTES(this._procedure);
      return this.httpService.get<JsonResponseCatalogo>(
-    API.RepresentacionFederal,
+    `${API.RepresentacionFederal}/${id}`,
     {},
     false
   );
