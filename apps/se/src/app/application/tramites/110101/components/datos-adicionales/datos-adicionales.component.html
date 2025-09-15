@@ -45,7 +45,8 @@
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="entidad" [label]="'Entidad federativa'" [required]="true"
                     name="entidad" formControlName="entidad" [isDisabled]="esFormularioSoloLectura"
-                    (change)="setValoresStore(formulario, 'entidad', 'setEntidad')">
+                    (change)="setValoresStore(formulario, 'entidad', 'setEntidad')"
+                    (selectionChange)="onRepresentacionFederal($event)">
                 </app-catalogo-select>
             </div>
             <div class="col-md-4">
@@ -62,7 +63,7 @@
             <input class="form-check-input me-2" type="checkbox" id="protesta" [disabled]="esFormularioSoloLectura"
                 [checked]="esFormularioSoloLectura || actualizacionCounsulta">
             <span class="form-check-label" for="protesta">
-                {{ TEXTOS.ADJUNTAR }}
+                {{ textos }}
             </span>
         </div>
     </div>

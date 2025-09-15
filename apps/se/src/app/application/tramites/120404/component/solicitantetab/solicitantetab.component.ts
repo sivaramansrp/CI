@@ -5,15 +5,12 @@
  * @module SolicitantetabComponent
  */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {ListaPasosWizard, PASOS, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import {ListaPasosWizard, PASOS, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src';
-
 /**
  * Componente para la gestión del formulario de solicitante.
  * @selector app-solicitantetab

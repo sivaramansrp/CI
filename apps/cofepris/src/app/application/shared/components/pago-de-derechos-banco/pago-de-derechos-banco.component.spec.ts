@@ -120,18 +120,30 @@ describe('PagoDeDerechosBancoComponent', () => {
     expect(spy2).toHaveBeenCalled();
   });
 
-  describe('validarNumeroEntero', () => {
+  describe('validarNumeroDecimal', () => {
     it('should return null for integer', () => {
       const control = { value: '123' } as any;
-      expect(PagoDeDerechosBancoComponent.validarNumeroEntero(control)).toBeNull();
+      expect(PagoDeDerechosBancoComponent.validarNumeroDecimal(control)).toBeNull();
     });
-    it('should return error for non-integer', () => {
+    it('should return null for decimal with up to 2 places', () => {
       const control = { value: '123.45' } as any;
-      expect(PagoDeDerechosBancoComponent.validarNumeroEntero(control)).toEqual({ notWholeNumber: true });
+      expect(PagoDeDerechosBancoComponent.validarNumeroDecimal(control)).toBeNull();
+    });
+    it('should return null for decimal with 1 place', () => {
+      const control = { value: '123.5' } as any;
+      expect(PagoDeDerechosBancoComponent.validarNumeroDecimal(control)).toBeNull();
+    });
+    it('should return error for more than 2 decimal places', () => {
+      const control = { value: '123.456' } as any;
+      expect(PagoDeDerechosBancoComponent.validarNumeroDecimal(control)).toEqual({ invalidDecimal: true });
+    });
+    it('should return error for non-numeric input', () => {
+      const control = { value: 'abc' } as any;
+      expect(PagoDeDerechosBancoComponent.validarNumeroDecimal(control)).toEqual({ invalidDecimal: true });
     });
     it('should return null for empty', () => {
       const control = { value: '' } as any;
-      expect(PagoDeDerechosBancoComponent.validarNumeroEntero(control)).toBeNull();
+      expect(PagoDeDerechosBancoComponent.validarNumeroDecimal(control)).toBeNull();
     });
   });
 

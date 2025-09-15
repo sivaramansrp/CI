@@ -35,7 +35,7 @@ export const LOCALIDAD_COLONIA = {
 export const FECHA_DE_PAGO = {
   labelNombre: 'Fecha de caducidad',
   required: false,
-  habilitado: false,
+  habilitado: true,
 };
 
 export const TITULO_PASO_UNO = 'Solicitud de modificación y/o prórroga del permiso previo de importación de productos';

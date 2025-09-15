@@ -12,6 +12,9 @@ import {
   RegionesData,
 } from '../../models/filadata.model';
 import {
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
   ConsultaioQuery,
   ConsultaioState,
   InputRadioComponent,
@@ -35,6 +38,9 @@ import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 
 import { NacionalRegistroDelCafeExportadoresService } from '../../services/nacional-registro-del-cafe-exportadores.service';
 import { Solicitud290301Query } from '../../estados/tramite290301.query';
+
+import { ActivatedRoute, Router } from '@angular/router';
+import { Modal } from 'bootstrap';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -45,6 +51,7 @@ import { Solicitud290301Query } from '../../estados/tramite290301.query';
     InputRadioComponent,
     TablaDinamicaComponent,
     InputCheckComponent,
+    CatalogoSelectComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -52,6 +59,22 @@ import { Solicitud290301Query } from '../../estados/tramite290301.query';
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para los datos de la solicitud */
   datosSolicitudForma!: FormGroup;
+
+                                                                                                                                                          
+  /** Formulario reactivo para las regiones */
+  regionForm!: FormGroup;
+
+  /** Indica si se muestra el formulario de clave SCIAN */
+  public showregionForm: boolean = false;
+
+  /** Formulario reactivo para las regiones */
+  beneficiosForm!: FormGroup;
+
+  /** Formulario reactivo para los beneficios */
+  bodegaForm!: FormGroup;
+
+  /** Formulario reactivo para los exportadores de café */
+  cafeExportForm!: FormGroup;
 
   /** Opciones de radio para el formulario */
   radioOpcion = RADIO_OPCION;
@@ -102,7 +125,49 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   private subscriptions: Subscription[] = [];
+/** Conjunto de filas seleccionadas en la tabla */
+  filasSeleccionadas: Set<number> = new Set();
+  
+    /**
+     * Catálogo de productos de café.
+     * @type {CatalogosSelect}
+     */
+    productoCafe: CatalogosSelect = {
+      labelNombre: 'Tipo de café',
+      required: false,
+      primerOpcion: '',
+      catalogos: [],
+    };
+  
+    /**
+     * Catálogo de estados.
+     * @type {CatalogosSelect}
+     */
+    estado: CatalogosSelect = {
+      labelNombre: 'Estado',
+      required: false,
+      primerOpcion: '',
+      catalogos: [],
+    };
+  
+    /**
+     * Catálogo de tipos de café.
+     * @type {CatalogosSelect}
+     */
+    descripTipoCafe: CatalogosSelect = {
+      labelNombre: 'Cafe compra',
+      required: false,
+      primerOpcion: '',
+      catalogos: [],
+    };
 
+     propAlquil: CatalogosSelect = {
+    labelNombre: 'Propia o alquilada',
+    required: false,
+    primerOpcion: '',
+    catalogos: [],
+  };
+  
   constructor(
     /** Constructor para inicializar servicios y dependencias */
     private fb: FormBuilder,
@@ -111,7 +176,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private nacionalRegistroDelCafeExportadoresService: NacionalRegistroDelCafeExportadoresService,
     public solicitud290301Store: Solicitud290301Store,
     public solicitud290301Query: Solicitud290301Query,
-    private consultaioQuery: ConsultaioQuery) {}
+    private consultaioQuery: ConsultaioQuery,
+    private activatedRoute: ActivatedRoute,
+   private router: Router) {}
 
   /** Método que se ejecuta al inicializar el componente */
   ngOnInit(): void {
@@ -135,6 +202,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.getBeneficiosData();
     this.getBodegasData();
     this.getCafeExportadoresData();
+
+      this.cargarEstadoCatalog();
+    this.cargarProductoCafe();
+    this.cargarTipoDeCafe();
+    this.cargarPropiaAlquilada();
     
     this.consultaioQuery.selectConsultaioState$
     .pipe(
@@ -176,9 +248,260 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.dataDeLaSolicitudState?.informacionConfidencial,
       ],
     });
+      this.regionForm = this.fb.group({
+      estado: ['', [Validators.required]],
+      productoCafe: ['', [Validators.required]],
+      descRegionCompra: ['', [Validators.required, Validators.maxLength(200)]],
+      descripTipoCafe: ['', [Validators.required]],
+      volumen: ['', [Validators.required, Validators.min(1)]],
+    });
+
+    this.beneficiosForm = this.fb.group({
+      razonSocial: ['', [Validators.required, Validators.maxLength(200)]],
+      propAlquil: ['', [Validators.required]],
+      calle: ['', [Validators.required, Validators.maxLength(100)]],
+      numeroExterior: ['', Validators.required],
+      numeroInterior: ['', Validators.maxLength(50)],
+      colonia: ['', [Validators.required, Validators.maxLength(100)]],
+      estado: ['', Validators.required],
+      codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
+      capacidadAlmacenaje: ['', [Validators.required, Validators.maxLength(20)]],
+      volumenAlmacenaje: ['', [Validators.required]],
+    });
+
+     this.bodegaForm = this.fb.group({
+      razonSocial: ['', [Validators.required, Validators.maxLength(200)]],
+      propAlquil: ['', [Validators.required]],
+      calle: ['', [Validators.required, Validators.maxLength(100)]],
+      numeroExterior: ['', Validators.required],
+      numeroInterior: ['', Validators.maxLength(50)],
+      colonia: ['', [Validators.required, Validators.maxLength(100)]],
+      estado: ['', Validators.required],
+      codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
+      capacidadAlmacenaje: ['', [Validators.required, Validators.maxLength(20)]],
+    });
+
+    this.cafeExportForm = this.fb.group({
+      descripcionMercancia: ['', [Validators.required, Validators.maxLength(200)]],
+      propAlquil: ['', [Validators.required]],
+      porcentajeConcentracion: ['', [Validators.required, Validators.maxLength(50)]],
+    });
 
   }
- 
+
+  
+  /**
+ * Método para manejar el envío del formulario de exportadores de café.
+ * 
+ * Si el formulario es válido, se clonan los datos del formulario, se mapean
+ * a la estructura de datos de la tabla y se agregan a la tabla correspondiente.
+ * Luego, se reinicia el formulario y se cierra el modal asociado.
+ */
+onSubmitCafeExportForm(): void {
+
+  if (this.cafeExportForm.valid) {
+    // Clonar los datos del formulario
+    const FORM_DATA = { ...this.cafeExportForm.value };
+
+    // Mapear los datos del formulario a la estructura de datos de la tabla
+   const TABLE_DATA: CafeExportadoresData = {
+      id: this.cafeExportadoresTableDatos.length > 0
+        ? Math.max(...this.cafeExportadoresTableDatos.map((row) => row.id || 0)) + 1
+        : 1,
+      marcaComercial: FORM_DATA.descripcionMercancia,
+      clasificacion: FORM_DATA.propAlquil,
+      volumen: FORM_DATA.porcentajeConcentracion,
+    };
+
+    // Agregar los datos procesados a la tabla
+    this.cafeExportadoresTableDatos = [...this.cafeExportadoresTableDatos, TABLE_DATA];
+
+    // Reiniciar el formulario después del envío
+    this.cafeExportForm.reset();
+
+    // Cerrar el modal
+   const MODAL_ELEMENT_1 = document.getElementById('cafeExportFormModal');
+if (MODAL_ELEMENT_1) {
+  const MODAL_INSTANCE_1 = Modal.getInstance(MODAL_ELEMENT_1) || new Modal(MODAL_ELEMENT_1);
+  if (MODAL_INSTANCE_1) {
+    MODAL_INSTANCE_1.hide();
+  }
+}
+    // Eliminar los elementos de fondo del modal
+
+const BACKDROP_ELEMENTS = document.querySelectorAll('.modal-backdrop');
+BACKDROP_ELEMENTS.forEach((backdrop) => backdrop.remove());
+  } 
+}
+/**
+ * Método para manejar el envío del formulario de bodegas.
+ * 
+ * Si el formulario es válido, se clonan los datos del formulario, se mapean
+ * a la estructura de datos de la tabla y se agregan a la tabla correspondiente.
+ * Luego, se reinicia el formulario y se cierra el modal asociado.
+ */
+onSubmitBodegaForm(): void {
+
+  if (this.bodegaForm.valid) {
+    // Clonar los datos del formulario
+    const FORM_DATA = { ...this.bodegaForm.value };
+
+    // Mapear los datos del formulario a la estructura de datos de la tabla
+  const TABLE_DATA: BodegasData = {
+      id: this.bodegasTableDatos.length > 0
+        ? Math.max(...this.bodegasTableDatos.map((row) => row.id || 0)) + 1
+        : 1,
+      nombre: FORM_DATA.razonSocial,
+      calle: FORM_DATA.calle,
+      numeroExterior: FORM_DATA.numeroExterior,
+      numeroInterior: FORM_DATA.numeroInterior,
+      colonia: FORM_DATA.colonia,
+      estado: FORM_DATA.estado,
+      codigoPostal: FORM_DATA.codigoPostal,
+      propiaoAliquilada: FORM_DATA.propAlquil,
+      capacidad: FORM_DATA.capacidadAlmacenaje,
+    };
+
+
+    // Agregar los datos procesados a la tabla
+    this.bodegasTableDatos = [...this.bodegasTableDatos, TABLE_DATA];
+
+    // Reiniciar el formulario después del envío
+    this.bodegaForm.reset();
+
+    // Cerrar el modal
+    const MODAL_ELEMENT_1 = document.getElementById('bodegaFormModal');
+if (MODAL_ELEMENT_1) {
+  const MODAL_INSTANCE_1 = Modal.getInstance(MODAL_ELEMENT_1) || new Modal(MODAL_ELEMENT_1);
+  if (MODAL_INSTANCE_1) {
+    MODAL_INSTANCE_1.hide();
+  }
+}
+const BACKDROP_ELEMENTS = document.querySelectorAll('.modal-backdrop');
+BACKDROP_ELEMENTS.forEach((backdrop) => backdrop.remove());
+  } 
+}
+
+/** Método para manejar el envío del formulario de beneficios.
+ * 
+ * Si el formulario es válido, se clonan los datos del formulario, se mapean
+ * a la estructura de datos de la tabla y se agregan a la tabla correspondiente.
+ * Luego, se reinicia el formulario y se cierra el modal asociado.
+ */
+onSubmitBeneficiosForm(): void {
+
+  if (this.beneficiosForm.valid) {
+    // Clonar los datos del formulario
+    const FORM_DATA = { ...this.beneficiosForm.value };
+
+    // Mapear los datos del formulario a la estructura de datos de la tabla
+    const TABLE_DATA: BeneficiosData = {
+      id: this.beneficiosTableDatos.length > 0
+        ? Math.max(...this.beneficiosTableDatos.map((row) => row.id || 0)) + 1
+        : 1,
+      nombre: FORM_DATA.razonSocial,
+      calle: FORM_DATA.calle,
+      numeroExterior: FORM_DATA.numeroExterior,
+      numeroInterior: FORM_DATA.numeroInterior,
+      colonia: FORM_DATA.colonia,
+      estado: FORM_DATA.estado,
+      codigoPostal: FORM_DATA.codigoPostal,
+      propiaoAliquilada: FORM_DATA.propAlquil,
+      capacidad: FORM_DATA.capacidadAlmacenaje,
+      volumen: FORM_DATA.volumenAlmacenaje,
+    };
+
+    // Agregar los datos procesados a la tabla
+    this.beneficiosTableDatos = [...this.beneficiosTableDatos, TABLE_DATA];
+
+    // Reiniciar el formulario después del envío
+    this.beneficiosForm.reset();
+
+    // Cerrar el modal
+    const MODAL_ELEMENT_1 = document.getElementById('beneficiosFormModal');
+if (MODAL_ELEMENT_1) {
+  const MODAL_INSTANCE_1 = Modal.getInstance(MODAL_ELEMENT_1) || new Modal(MODAL_ELEMENT_1);
+  if (MODAL_INSTANCE_1) {
+    MODAL_INSTANCE_1.hide();
+  }
+}
+const BACKDROP_ELEMENTS = document.querySelectorAll('.modal-backdrop');
+BACKDROP_ELEMENTS.forEach((backdrop) => backdrop.remove());
+  } 
+}
+/** Método para manejar el envío del formulario de regiones.*/
+onSubmitRegionForm(): void {
+  if (this.regionForm.valid) {
+    const FORM_DATA = { ...this.regionForm.value };
+
+    const TABLE_DATA: RegionesData = {
+       id: this.regionesTableDatos.length > 0 
+        ? Math.max(...this.regionesTableDatos.map((row) => row.id || 0)) + 1
+      : 1,
+      estado: this.estado.catalogos.find(
+        (item: Catalogo) => String(item.id) === String(FORM_DATA.estado)
+      )?.descripcion || 'Not Found',
+      cafeCompra: this.productoCafe.catalogos.find(
+        (item: Catalogo) => String(item.id) === String(FORM_DATA.productoCafe)
+      )?.descripcion || 'Not Found',
+      region: FORM_DATA.descRegionCompra,
+      tipoDeCafe: this.descripTipoCafe.catalogos.find(
+        (item: Catalogo) => String(item.id) === String(FORM_DATA.descripTipoCafe)
+      )?.descripcion || 'Not Found',
+      volumen: FORM_DATA.volumen,
+    };
+
+    this.regionesTableDatos = [...this.regionesTableDatos, TABLE_DATA];
+
+    this.regionForm.reset();
+const MODAL_ELEMENT_4 = document.getElementById('regionFormModal');
+if (MODAL_ELEMENT_4) {
+  const MODAL_INSTANCE_4 = Modal.getInstance(MODAL_ELEMENT_4) || new Modal(MODAL_ELEMENT_4);
+  if (MODAL_INSTANCE_4) {
+    MODAL_INSTANCE_4.hide();
+  }
+}
+const BACKDROP_ELEMENTS = document.querySelectorAll('.modal-backdrop');
+BACKDROP_ELEMENTS.forEach((backdrop) => backdrop.remove());
+  } 
+}
+
+  /** Método para manejar el cambio de filas seleccionadas. */
+  onfilasSeleccionadasChange(filasSeleccionadas: RegionesData[] | BeneficiosData[] | CafeExportadoresData[] | BodegasData[]): void {
+    this.filasSeleccionadas = new Set(filasSeleccionadas.map((row) => row.id));
+  }
+
+  /** Método que se ejecuta al destruir el componente */
+  onDeletedRegionData(): void {
+    this.regionesTableDatos = this.regionesTableDatos.filter(
+      (row) => !this.filasSeleccionadas.has(row.id)
+    );
+    this.filasSeleccionadas.clear();
+  }
+
+  /** Método que se ejecuta al destruir el componente */
+  onDeletedbeneficiosData(): void {
+    this.beneficiosTableDatos = this.beneficiosTableDatos.filter(
+      (row) => !this.filasSeleccionadas.has(row.id)
+    );
+    this.filasSeleccionadas.clear();
+  }
+
+  /** Método que se ejecuta al destruir el componente */
+  onDeletedBodegasData(): void {
+    this.bodegasTableDatos = this.bodegasTableDatos.filter(
+      (row) => !this.filasSeleccionadas.has(row.id)
+    );
+    this.filasSeleccionadas.clear();
+  }
+
+  /** Método que se ejecuta al destruir el componente */
+  onDeletedCafeExportadoresData(): void {
+    this.cafeExportadoresTableDatos = this.cafeExportadoresTableDatos.filter(
+      (row) => !this.filasSeleccionadas.has(row.id)
+    );
+    this.filasSeleccionadas.clear();
+  }
   /**
    * Método para manejar el cambio del campo "productorDeCafe".
    * Este método habilita o deshabilita el campo "claveDelPadron"
@@ -205,7 +528,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
       }
     }
-  
+    this.setValoresStore(this.datosSolicitudForma, 'productorDeCafe', 'setProductorDeCafe');
+
   }
   /** Método para obtener los datos de las regiones */
   getRegionsData(): void {
@@ -261,6 +585,47 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    
 }
 
+    /** Carga el catálogo de productos de café.
+     */
+  cargarProductoCafe(): void {
+    this.nacionalRegistroDelCafeExportadoresService.cargarClasificacion()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.productoCafe.catalogos = data as Catalogo[];
+      });
+  }
+  
+    /**
+     * Carga el catálogo de tipos de café.
+     */
+   cargarTipoDeCafe(): void {
+    this.nacionalRegistroDelCafeExportadoresService.cargarTipoDeCafe()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.descripTipoCafe.catalogos = data as Catalogo[];
+      });
+  }
+  
+    /**
+     * Carga el catálogo de estados.
+     */
+    cargarEstadoCatalog(): void {
+    this.nacionalRegistroDelCafeExportadoresService.cargarEstadoCatalog()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.estado.catalogos = data as Catalogo[];
+      });
+  }
+
+    /** Carga el catálogo de propiedad (propia o alquilada).
+     */
+  cargarPropiaAlquilada(): void {
+    this.nacionalRegistroDelCafeExportadoresService.cargarTipoDeCafe()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.propAlquil.catalogos = data as Catalogo[];
+      });
+  }
   /**
    * Método para establecer valores en el store
    * @param form Formulario reactivo

@@ -173,6 +173,13 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * [ES] Indica si se debe mostrar una alerta relacionada con la validación o acciones sobre los sectores o mercancías.
    */
   espectaculoAlerta: boolean = false;
+  /**
+   * @property {boolean} espectaculoAlertaProducir
+   * @description
+   * [ES] Indica si se debe mostrar una alerta relacionada con la validación o acciones sobre las mercancías a producir.
+   * Se utiliza para controlar la visualización de mensajes de alerta específicos para la sección de mercancías.
+   */
+  espectaculoAlertaProducir: boolean = false;
 
   /**
    * @property {boolean} espectaculoConfirmar
@@ -180,6 +187,13 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * [ES] Indica si se debe mostrar el modal de confirmación para eliminar sectores o mercancías seleccionadas.
    */
   espectaculoConfirmar: boolean = false;
+  /**
+   * @property {boolean} espectaculoConfirmarProducir
+   * @description
+   * [ES] Indica si se debe mostrar el modal de confirmación para eliminar mercancías a producir seleccionadas.
+   * Se utiliza para controlar la visualización del diálogo de confirmación específico para la sección de mercancías.
+   */
+  espectaculoConfirmarProducir: boolean = false;
 
   /**
    * @property {Notificacion} nuevaNotificacion
@@ -509,20 +523,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         txtBtnCancelar: '', 
       };
     }
-    else if (this.listSelectedProducir.length === 0){
-      this.espectaculoAlerta = true;
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: '',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Seleccione la fraccion que desea eliminar.',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-    }
     else if (this.listSelectedView.length > 0) {
       this.espectaculoConfirmar = true;
       this.espectaculoAlerta = false;
@@ -538,9 +538,36 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         txtBtnCancelar: 'Cancelar',
       };
     }
+    
+  }
+  /**
+   * @method eliminarSectorProducir
+   * @description
+   * [ES] Muestra una alerta si no hay fracciones seleccionadas para eliminar.
+   * Si hay fracciones seleccionadas, muestra un diálogo de confirmación antes de eliminarlas.
+   * Configura las propiedades `espectaculoAlertaProducir` y `espectaculoConfirmarProducir` para controlar 
+   * la visualización de alertas y diálogos de confirmación específicos para las mercancías a producir.
+   * 
+   * @returns {void}
+   */
+  eliminarSectorProducir(): void {
+    if (this.listSelectedProducir.length === 0){
+      this.espectaculoAlertaProducir = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Seleccione la fraccion que desea eliminar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
     else if (this.listSelectedProducir.length > 0){
-      this.espectaculoConfirmar = true;
-      this.espectaculoAlerta = false;
+      this.espectaculoConfirmarProducir = true;
+      this.espectaculoAlertaProducir = false;
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -566,6 +593,19 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method eliminarPedimentoProducirAlerta
+   * @description
+   * [ES] Controla la visibilidad de la alerta relacionada con las mercancías a producir.
+   * Si el evento recibido es verdadero, oculta la alerta (estableciendo `espectaculoAlertaProducir` a `false`).
+   * Si el evento es falso, muestra la alerta (estableciendo `espectaculoAlertaProducir` a `true`).
+   * 
+   * @param {boolean} event - Valor booleano que determina si se debe ocultar la alerta.
+   * @returns {void}
+   */
+  eliminarPedimentoProducirAlerta(event: boolean): void {
+    this.espectaculoAlertaProducir = !event;
+  }
+  /**
    * @method eliminarPedimentoDatos
    * @description
    * [ES] Elimina los sectores o mercancías seleccionadas del estado y actualiza la lista en el store.
@@ -590,7 +630,25 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       );
       this.listSelectedView = [];
     }
-    else if (event && this.listSelectedProducir.length > 0) {
+  }
+
+  /**
+   * @method eliminarPedimentoProducirDatos
+   * @description
+   * [ES] Elimina las mercancías a producir seleccionadas del estado cuando el usuario confirma la eliminación.
+   * Si el evento recibido es verdadero y hay elementos seleccionados en `listSelectedProducir`:
+   * - Oculta el diálogo de confirmación.
+   * - Obtiene los datos actuales de mercancías a producir del store.
+   * - Filtra el arreglo para eliminar los elementos seleccionados.
+   * - Actualiza el store con el arreglo filtrado y limpia la selección.
+   * - Vacía la lista local de elementos seleccionados.
+   * 
+   * @param {boolean} event - Indica si se debe proceder con la eliminación (true) o cancelar (false).
+   * @returns {void}
+   */
+  eliminarPedimentoProducirDatos(event: boolean): void {
+    if (event && this.listSelectedProducir.length > 0) {
+      this.espectaculoConfirmarProducir = false;
       const VALOR = this.AutorizacionProsecStore.getValue().producirDatos;
       if (VALOR.length === 0) {
         return;

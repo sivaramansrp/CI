@@ -182,7 +182,7 @@
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="coloniasDatos" formControlName="colonia" [label]="'Colonia'"
           [placeholder]="'Selecciona un valor'" [isDisabled]="estaDeshabilitadoDesplegable"
-          [required]="!elementosNoRequeridos.includes('colonia')"></app-catalogo-select>
+          [required]="elementosNoRequeridos.includes('colonia')"></app-catalogo-select>
       </div>
     </div>
     }
@@ -190,7 +190,7 @@
     <div class="row mt-3">
       <div class="col-md-8">
         <label class="form-label">Calle</label>
-        <span class="form-label" *ngIf="elementosRequeridos.includes('calle')">
+        <span class="form-label" *ngIf="!elementosRequeridos.includes('calle')">
           <span [ngClass]="agregarDestinatarioFinal.controls['calle'].errors?.['required'] ? 'text-danger':''">*</span>
         </span>
         <span class="form-label">:</span>
@@ -206,7 +206,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Número exterior</label>
-        <span class="form-label" *ngIf="elementosRequeridos.includes('numeroExterior')">
+        <span class="form-label" *ngIf="!elementosRequeridos.includes('numeroExterior')">
           <span
             [ngClass]="agregarDestinatarioFinal.controls['numeroExterior'].errors?.['required'] ?  'text-danger':''">*</span>
         </span>

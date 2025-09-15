@@ -4,9 +4,8 @@
  * 
  * @module OctavaTemporalComponent
  */
-
+import { AVISO_CONTRNIDO, ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
 import { DatosPasos, WizardComponent } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard, WizardService } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -29,6 +28,26 @@ interface AccionBoton {
   templateUrl: './octava-temporal.component.html',
 })
 export class OctavaTemporalComponent implements OnInit, OnDestroy{
+     /**
+   * Clase CSS para la alerta de información.
+   */
+  infoAlert = 'alert-danger';
+    /**
+   * Controla si se debe mostrar la alerta en pantalla.
+   * Se activa cuando el subíndice del child componente es 3.
+   */
+  mostrarAlerta: boolean = false;
+ /**
+ * Contiene el texto del aviso de privacidad simplificado.
+ * 
+ * @constant {string} avisoContrnido
+ * Se inicializa con la propiedad `aviso` del objeto `AVISO_CONTRNIDO`.
+ * 
+ * Uso:
+ * - Mostrar el aviso de privacidad en la interfaz de usuario.
+ * - Reutilizar el contenido del aviso en distintos componentes.
+ */
+avisoContrnido = AVISO_CONTRNIDO.aviso;
   /**
    * Referencia al componente del asistente (wizard) para controlar su navegación.
    */

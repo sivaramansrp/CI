@@ -497,3 +497,33 @@ export const API_GET_ENVIO_DIGITAL = (NUMFOLIOTRAMITE: string) : string => `tram
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/estado-consulta-solicitud
  */
 export const API_GET_TABS = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/tramite/solicitud/${IDSOLICITUD}/estado`;
+
+/**
+ * API para Consultar los datos del solicitante
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/estado-consulta-solicitud
+ */
+export const API_GET_DATOS_SOLICITANTE = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/tramite/${IDSOLICITUD}/solicitud/solicitante`;
+
+/*
+ * API para obtener el catálogo de immex
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/immex
+ */
+export const CATALOGO_IMMEX = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/immex`;
+
+/*
+ * API para obtener el catálogo de estados
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/estados
+ */
+export const CATALOGO_ESTADOS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/estados`;
+
+/*
+ * API para obtener el catálogo de países
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises
+ */
+export const CATALOGO_PAISES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/paises`;
+
+/*
+ * API para obtener el catálogo de NICO
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/nico
+ */
+export const CATALOGO_NICO = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/nico`;

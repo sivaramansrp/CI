@@ -74,6 +74,7 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
         this.esFormularioSoloLectura = seccionState.readonly;
+        this.inicializarEstadoFormulario();
       })
     )
     .subscribe()
@@ -147,7 +148,7 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
         banco: [this.solicitudState?.banco],
         llaveDePago: [this.solicitudState?.llaveDePago,[Validators.required, Validators.maxLength(30)]],
         fechaPago: [this.solicitudState?.fechaPago,[Validators.required, PagoDeDerechosBancoComponent.validarFechaNoFutura]],
-        importePago: [this.solicitudState?.importePago,[Validators.required, Validators.maxLength(16),PagoDeDerechosBancoComponent.validarNumeroEntero]],
+        importePago: [this.solicitudState?.importePago,[Validators.required, Validators.maxLength(16),PagoDeDerechosBancoComponent.validarNumeroDecimal]],
       }),
     });
   }
@@ -231,12 +232,15 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
   get datosImportadorExportador(): FormGroup {
     return this.formSolicitud.get('datosImportadorExportador') as FormGroup;
   }
-  static validarNumeroEntero(control: AbstractControl): ValidationErrors | null {
+  static validarNumeroDecimal(control: AbstractControl): ValidationErrors | null {
     const VALOR = control.value;
-    if (VALOR === null || VALOR === '')
-      { return null;
-      }
-    return Number.isInteger(Number(VALOR)) ? null : { notWholeNumber: true };
+    if (VALOR === null || VALOR === '') {
+      return null;
+    }
+    
+    // Allow numbers with up to 2 decimal places
+    const REGEX = /^\d+(\.\d{1,2})?$/;
+    return REGEX.test(VALOR.toString()) ? null : { invalidDecimal: true };
   }
   static validarFechaNoFutura(control: AbstractControl): ValidationErrors | null {
     const FECHA_INGRESADA = new Date(control.value);

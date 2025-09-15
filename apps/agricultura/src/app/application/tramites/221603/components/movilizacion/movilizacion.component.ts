@@ -73,7 +73,7 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly || true;
+          this.esFormularioSoloLectura = seccionState.readonly;
           this.inicializarEstadoFormulario();
         })
       )
@@ -84,23 +84,7 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo con los valores actuales de la solicitud y carga los datos necesarios.
    */
   ngOnInit(): void {
-    this.Tramite221603Query.selectSolicitud$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((state: Solicitud221603State) => {
-        this.solicitudState = state;
-      });
-    this.sanidadService.inicializaMovilizacionDatosCatalogos();
-    this.inicializarFormulario();
-
-    this.sanidadService
-      .obtenerFormularioDatos()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((formularioDatos: FormularioDatos) => {
-        this.formularioDatos = formularioDatos;
-        this.rellenarValoresPredeterminados();
-      });
-
-    this.inicializarEstadoFormulario();
+    this.inicializarEstadoFormulario();   
   }
 
   /**
@@ -110,19 +94,57 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.medioForm.get('empresa')?.disable();
-      this.medioForm.get('transporte')?.disable();
+      this.guardarDatosFormulario();
     } else {
-      this.medioForm.get('empresa')?.enable();
-      this.medioForm.get('transporte')?.enable();
-    }
+      this.inicializarFormulario();
+    }  
   }
+
+    /**
+ * @method
+ * @name guardarDatosFormulario
+ * @description
+ * Inicializa los formularios y obtiene los datos de la tabla. 
+ * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`), 
+ * deshabilita o habilita todos los formularios del componente.
+ * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
+ * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
+ * 
+ * @returns {void}
+ */  
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+       this.medioForm.get('empresa')?.disable();
+       this.medioForm.get('transporte')?.disable();
+      } else {
+        this.medioForm.get('empresa')?.enable();
+        this.medioForm.get('transporte')?.enable();
+      } 
+  }
+
   /**
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    * Configura el formulario para gestionar los campos relacionados con la movilización, como medio, transporte,
    * verificación y empresa. También asigna valores predeterminados a algunos campos.
    */
-  private inicializarFormulario(): void {
+ inicializarFormulario(): void {
+ this.Tramite221603Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((state: Solicitud221603State) => {
+        this.solicitudState = state;
+      });
+    this.sanidadService.inicializaMovilizacionDatosCatalogos();
+
+    this.sanidadService
+      .obtenerFormularioDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((formularioDatos: FormularioDatos) => {
+        this.formularioDatos = formularioDatos;
+        this.rellenarValoresPredeterminados();
+      });
+
+
     this.medioForm = this.formBuilder.group({
       medio: [
         this.solicitudState?.medio ? this.solicitudState?.medio : 1,

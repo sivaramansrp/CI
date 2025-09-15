@@ -1,4 +1,4 @@
-import { CategoriaMensaje, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
+import { CategoriaMensaje, ConfiguracionColumna, Notificacion, NotificacionesComponent, REGEX_CORREO_ELECTRONICO_EXPORTADOR, TablaDinamicaComponent, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, REG_X } from '@ng-mf/data-access-user';
 import { ENLACE_OPERATIVO_TABLA, PANELS } from '../../constants/enlace-operativo-tabla.enum';
@@ -312,7 +312,7 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
     this.enlaceOperativoForm = this.fb.group({
       registro: [
         '',
-        [Validators.required, Validators.pattern(REG_X.RFC_13_ALFANUM)],
+        [Validators.required, Validators.pattern(REG_X.RFC_13_ALFANUM), Validators.maxLength(15)],
       ],
       rfc: [{ value: '', disabled: true }],
       nombre: [{ value: '', disabled: true }],
@@ -321,7 +321,7 @@ export class EnlaceOperativoComponent implements OnInit, OnDestroy {
       cuidad: [{ value: '', disabled: true }],
       cargo: [''],
       telefono: [''],
-      correoElectronico: ['', [Validators.email]],
+      correoElectronico: ['', [Validators.pattern(REGEX_CORREO_ELECTRONICO_EXPORTADOR), Validators.maxLength(320)]],
       suplente: [false],
     });
   }

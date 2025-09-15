@@ -10,6 +10,8 @@ import {
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, delay, takeUntil } from 'rxjs';
 import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
+import { CargaDeFraccionesComponent } from '../carga-de-fracciones/carga-de-fracciones.component';
+import { CargaProveedoresClientesComponent } from '../carga-proveedores-clientes/carga-proveedores-clientes.component';     
 import { CommonModule } from '@angular/common';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { EventEmitter } from '@angular/core';
@@ -31,7 +33,9 @@ import { Validators } from '@angular/forms';
     AlertComponent,
     ReactiveFormsModule,
     TablaDinamicaComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    CargaDeFraccionesComponent,
+    CargaProveedoresClientesComponent
   ],
   templateUrl: './anexo-uno.component.html',
   styleUrl: './anexo-uno.component.scss',
@@ -182,6 +186,24 @@ export class AnexoUnoComponent implements OnInit, OnDestroy {
    * Se utiliza para controlar la visualización o lógica relacionada con el contenido de la tabla.
    */
   public tenerDatosDeTabla: boolean = false;
+
+   /**
+   * Controla la visibilidad del modal para la carga de datos por archivo.
+   * Se utiliza para mostrar u ocultar el modal de carga por archivo según sea necesario.
+   */
+  public mostrarCargaPorArchivoModal = false;
+
+   /**
+   * Controla la visibilidad del popup para la carga de fracciones.
+   * Se utiliza para mostrar u ocultar el popup relacionado con la carga de fracciones en la interfaz.
+   */
+  public mostrarCargaDeFraccionesPopup: boolean = false;
+
+   /**
+   * Controla la visibilidad del popup de proveedor-clientes.
+   * Se utiliza para mostrar u ocultar el popup relacionado con la gestión de proveedores y clientes.
+   */
+  public mostrarProveedorClientesPopup: boolean = false;
 
   /**
    * Constructor de la clase AnexoUnoComponent
@@ -424,6 +446,36 @@ export class AnexoUnoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   setRuta(nombre: string, id: string): void {
+     if (id === 'IMPORT' && !this.datosImportacionSeleccionados) {
+      this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Debe seleccionar la fracción arancelaria del producto',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
+  }
+    if (id === 'EXPORT' && !this.datosExportacionSeleccionados) {
+      this.nuevaDosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Debe seleccionar la fracción arancelaria del producto',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
+  }
     if (nombre) {
       if (id === 'IMPORT') {
       if (
@@ -454,6 +506,81 @@ export class AnexoUnoComponent implements OnInit, OnDestroy {
       this.rutaLaFraccionDeComplemento.emit(RUTA_NOMBRE);
     }
   }
+
+/**
+* Abre el modal para la carga de datos por archivo.
+* Establece la propiedad `mostrarCargaPorArchivoModal` en `true` para mostrar el modal correspondiente.
+*/ 
+abrirCargaPorArchivo(): void {
+  this.mostrarCargaPorArchivoModal = true;
+}
+
+  /**
+   * Abre el popup para la carga de proveedores y clientes.
+   * 
+   * Si no se han seleccionado datos de importación (`datosImportacionSeleccionados` es falsy),
+   * muestra una notificación de alerta indicando que se deben ingresar primero
+   * las fracciones del producto y la mercancía.
+   * 
+   * Si los datos están presentes, establece `mostrarProveedorClientesPopup` en `true`
+   * para mostrar el popup correspondiente.
+   */
+abrirCargaProveedoresClientesPopup(): void {
+    if(!this.datosImportacionSeleccionados){
+     this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Debe ingresar las fracciones del producto y de la mercancía previamente',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  } else {
+    this.mostrarProveedorClientesPopup = true;
+  }
+}
+
+ /**
+   * Maneja la acción de aceptar la carga por archivo.
+   * 
+   * Cierra el modal de carga por archivo (`mostrarCargaPorArchivoModal`)
+   * y abre el popup para la carga de fracciones (`mostrarCargaDeFraccionesPopup`).
+   */
+onAceptarCargaPorArchivo(): void {
+  this.mostrarCargaPorArchivoModal = false;
+  this.mostrarCargaDeFraccionesPopup = true;
+}
+
+/**
+ * Maneja la acción de cancelar la carga por archivo.
+ * 
+ * Cierra el modal de carga por archivo estableciendo `mostrarCargaPorArchivoModal` en `false`.
+*/
+onCancelarCargaPorArchivo(): void {
+  this.mostrarCargaPorArchivoModal = false;
+}
+
+/**
+ * Cierra el popup de carga de fracciones.
+ * 
+ * Establece `mostrarCargaDeFraccionesPopup` en `false` para ocultar el popup correspondiente.
+ */
+cerrarCargaDeFracciones(): void {
+  this.mostrarCargaDeFraccionesPopup = false;
+}
+
+/**
+ * Cierra el popup de proveedores y clientes.
+ * 
+ * Establece `mostrarProveedorClientesPopup` en `false` para ocultar el popup correspondiente.
+ */
+cerrarProveedorClientesPopup(): void{
+  this.mostrarProveedorClientesPopup = false;
+}
 
 /**
  * Método del ciclo de vida que se ejecuta al destruir el componente.

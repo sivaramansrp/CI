@@ -3,6 +3,7 @@ import { Notificacion, NotificacionesComponent } from '@libs/shared/data-access-
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplimentosComponent } from '../../../../shared/components/complimentos/complimentos.component';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosComplimentos } from '../../../../shared/models/complimentos.model';
 import { SociaoAccionistas } from '../../../../shared/models/complimentos.model';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
@@ -25,6 +26,12 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
   styleUrl: './aggregar-complimentos.component.scss',
 })
 export class AggregarComplimentosComponent implements OnDestroy{
+
+  /**
+   * @property {ConsultaioState} consultaState - Estado actual relacionado con la consulta.
+   */
+  @Input() consultaState!: ConsultaioState;
+
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.Add commentMore actions
    */

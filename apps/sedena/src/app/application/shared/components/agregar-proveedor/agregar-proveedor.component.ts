@@ -5,7 +5,6 @@ import {
 } from '../../constants/datos-solicitud.enum';
 import {
   Catalogo,
-  CatalogoSelectComponent,
   ConsultaioQuery,
   InputRadioComponent,
   TipoPersona,
@@ -31,7 +30,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
  * @component AgregarProveedorComponent
@@ -48,6 +49,7 @@ import { DatosSolicitudService } from '../../services/datos-solicitud.service';
     ReactiveFormsModule,
     TituloComponent,
     InputRadioComponent,
+    TooltipModule
   ],
   templateUrl: './agregar-proveedor.component.html',
   styleUrl: './agregar-proveedor.component.scss',
@@ -111,7 +113,11 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @property {EventEmitter<boolean>} cancelarEventListener
    */
   @Output() cancelarEventListener = new EventEmitter<boolean>();
-
+  /**
+   * Evento que se emite cuando el usuario desea cancelar una acción.
+   * @property {EventEmitter<void>} cancelarEventListenerCancel
+   */
+  @Output() cancelarEventListenerCancel = new EventEmitter<void>();
   /**
    * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
    * Este input se utiliza para recibir la información necesaria desde el componente padre.
@@ -235,8 +241,11 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       this.agregarProveedorForm.get('tipoPersona')?.enable();
     }
     this.cargarDatos();
-    if (this.formaDatos) {
+    
+    if (this.formaDatos?.tipoPersona) {
       this.agregarProveedorForm.patchValue(this.formaDatos);
+      this.agregarProveedorForm.enable();
+      this.actualizarValidacionesPorTipoPersona(this.formaDatos.tipoPersona);
     }
   }
 
@@ -253,6 +262,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     const ESTADO = this.agregarProveedorForm.get('estado');
     const CODIGOPOSTAL = this.agregarProveedorForm.get('codigoPostal');
     const CALLE = this.agregarProveedorForm.get('calle');
+    const COLONIA = this.agregarProveedorForm.get('colonia');
     const NUMEROEXTERIOR = this.agregarProveedorForm.get('numeroExterior');
     if (this.campoObligatorio) {
       NOMBRES?.setValidators([Validators.required]);
@@ -260,6 +270,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       ESTADO?.setValidators([Validators.required]);
       CODIGOPOSTAL?.setValidators([Validators.required]);
       CALLE?.setValidators([Validators.required]);
+      COLONIA?.clearValidators();
       NUMEROEXTERIOR?.setValidators([Validators.required]);
     } else {
       NOMBRES?.clearValidators();
@@ -267,6 +278,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       ESTADO?.clearValidators();
       CODIGOPOSTAL?.clearValidators();
       CALLE?.clearValidators();
+      COLONIA?.clearValidators();
       NUMEROEXTERIOR?.clearValidators();
     }
     NOMBRES?.updateValueAndValidity();
@@ -274,6 +286,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     ESTADO?.updateValueAndValidity();
     CODIGOPOSTAL?.updateValueAndValidity();
     CALLE?.updateValueAndValidity();
+    COLONIA?.updateValueAndValidity();
     NUMEROEXTERIOR?.updateValueAndValidity();
   }
 
@@ -289,42 +302,86 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
         this.paisesDatos = data;
       });
   }
+  /**
+   * @method obtenerNombreRazonSocial
+   * @description Construye el nombre o razón social del proveedor basado en el tipo de persona.
+   * Si es física, concatena nombres y apellidos; si es moral, utiliza la denominación o razón social.
+   *
+   * @param {Proveedor} formValue - Objeto que contiene los valores del formulario.
+   * @returns {string} El nombre completo o razón social del proveedor.
+   */
+private obtenerNombreRazonSocial(formValue: Proveedor): string {
+  if (formValue.tipoPersona === this.tipoPersona.FISICA) {
+    const NOMBRES = formValue.nombres || '';
+    const APELLIDO1 = formValue.primerApellido || '';
+    const APELLIDO2 = formValue.segundoApellido || '';
+    return `${NOMBRES} ${APELLIDO1} ${APELLIDO2}`.trim();
+  } else if (formValue.tipoPersona === this.tipoPersona.MORAL) {
+    return (this.agregarProveedorForm?.get('denominacionRazon')?.value || '');
+  }
+  return '';
+}
+
+/**
+ * @method crearProveedorDesdeFormulario
+ * @description Crea un objeto `Proveedor` a partir de los valores del formulario.
+ *
+ * @returns {Proveedor} El objeto `Proveedor` creado.
+ */
+private crearProveedorDesdeFormulario(): Proveedor {
+  const FORM_VALUE = this.agregarProveedorForm.value;
+  const TIPO_PERSONA = FORM_VALUE.tipoPersona;
+
+  const EXISTING_INDEX = this.proveedores.findIndex(
+    d => d.id === FORM_VALUE.id
+  );
+
+  return {
+     id: EXISTING_INDEX !== -1
+      ? this.proveedores[EXISTING_INDEX].id
+      : this.proveedores.length + 1,
+    tipoPersona: TIPO_PERSONA,
+    nombreRazonSocial: this.obtenerNombreRazonSocial(FORM_VALUE),
+    rfc: '',
+    curp: '',
+    nombres: FORM_VALUE.nombres || '',
+    primerApellido: FORM_VALUE.primerApellido || '',
+    segundoApellido: FORM_VALUE.segundoApellido || '',
+    telefono: FORM_VALUE.telefono || '',
+    correoElectronico: FORM_VALUE.correoElectronico || '',
+    calle: FORM_VALUE.calle || '',
+    numeroExterior: FORM_VALUE.numeroExterior || '',
+    numeroInterior: FORM_VALUE.numeroInterior || '',
+    pais: FORM_VALUE.pais || '',
+    colonia: FORM_VALUE.colonia || '',
+    municipioAlcaldia: '',
+    localidad: '',
+    entidadFederativa: FORM_VALUE.estado || '',
+    estado: FORM_VALUE.estado || '',
+    estadoLocalidad: '',
+    codigoPostal: FORM_VALUE.codigoPostal || ''
+  };
+}
+
 
   /**
    * @method guardarProveedor
    * @description Toma los datos del formulario, crea un objeto `Proveedor`, lo agrega al arreglo
    * local, actualiza el store del trámite y luego limpia el formulario y regresa a la vista anterior.
    */
-  guardarProveedor(): void {
-    if (this.agregarProveedorForm.invalid) {
-      this.agregarProveedorForm.markAllAsTouched();
-      return;
-    }
-    const NUEVO_PROVEEDOR: Proveedor = {
-      nombreRazonSocial: `${this.agregarProveedorForm.value.nombres} ${this.agregarProveedorForm.value.primerApellido
-        } ${this.agregarProveedorForm.value.segundoApellido || ''}`.trim(),
-      rfc: '',
-      curp: '',
-      telefono: this.agregarProveedorForm.value.telefono || '',
-      correoElectronico:
-        this.agregarProveedorForm.value.correoElectronico || '',
-      calle: this.agregarProveedorForm.value.calle || '',
-      numeroExterior: this.agregarProveedorForm.value.numeroExterior || '',
-      numeroInterior: this.agregarProveedorForm.value.numeroInterior || '',
-      pais: this.agregarProveedorForm.value.pais || '',
-      colonia: this.agregarProveedorForm.value.colonia || '',
-      municipioAlcaldia: '',
-      localidad: '',
-      entidadFederativa: this.agregarProveedorForm.value.estado || '',
-      estadoLocalidad: '',
-      codigoPostal: this.agregarProveedorForm.value.codigoPostal || '',
-    };
-
-    this.proveedores = [...this.proveedores, NUEVO_PROVEEDOR];
-    this.updateProveedorTablaDatos.emit(this.proveedores);
-    this.agregarProveedorForm.reset();
-    this.ubicaccion.back();
+guardarProveedor(): void {
+  if (this.agregarProveedorForm.invalid) {
+    this.agregarProveedorForm.markAllAsTouched();
+    return;
   }
+
+  const NUEVO_PROVEEDOR = this.crearProveedorDesdeFormulario();
+  this.proveedores = [...this.proveedores, NUEVO_PROVEEDOR];
+  this.updateProveedorTablaDatos.emit(this.proveedores);
+   this.formaDatos = null;
+  this.agregarProveedorForm.reset();
+}
+
   /**
    * @method limpiarFormulario
    * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
@@ -343,6 +400,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
+    this.formaDatos = null;
+    this.cancelarEventListenerCancel.emit();
     this.cancelarEventListener.emit(true);
   }
   /**
@@ -355,7 +414,39 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     this.agregarProveedorForm.patchValue({
       tipoPersona: event,
     });
+    this.actualizarValidacionesPorTipoPersona(event);
   }
+
+  /**
+ * @method actualizarValidacionesPorTipoPersona
+ * @description Actualiza las validaciones de los campos del formulario según el tipo de persona seleccionado.
+ * @param {string | number} tipoPersona - El tipo de persona seleccionado (física o moral).
+ */
+  actualizarValidacionesPorTipoPersona(tipoPersona: string | number): void {
+    const FORM = this.agregarProveedorForm;
+    if (tipoPersona === TipoPersona.FISICA) {
+      FORM.get('denominacionRazon')?.clearValidators();
+
+      FORM.get('nombres')?.setValidators([Validators.required, Validators.maxLength(200)]);
+      FORM.get('primerApellido')?.setValidators([Validators.required, Validators.maxLength(200)]);
+      FORM.get('segundoApellido')?.setValidators([Validators.maxLength(200)]);
+    } else if (tipoPersona === TipoPersona.MORAL) {
+      FORM.get('nombres')?.clearValidators();
+      FORM.get('primerApellido')?.clearValidators();
+      FORM.get('segundoApellido')?.clearValidators();
+
+      FORM.get('denominacionRazon')?.setValidators([
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(254),
+      ]);
+    }
+
+    ['denominacionRazon', 'nombres', 'primerApellido', 'segundoApellido'].forEach((campo) => {
+      FORM.get(campo)?.updateValueAndValidity();
+    });
+  }
+
 
   /**
    * @method ngOnDestroy

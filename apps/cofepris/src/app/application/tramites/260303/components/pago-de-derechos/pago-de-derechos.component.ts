@@ -1,12 +1,13 @@
 import { Catalogo, CatalogoSelectComponent,InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioState } from '@ng-mf/data-access-user';
-import { FECHA_PAGO } from '../../services/certificados-licencias-permisos.enum';
+
+import { FECHA_PAGO, INPUT_FECHA_CONFIG } from '../../services/certificados-licencias-permisos.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
 /**
@@ -21,6 +22,13 @@ import { Tramite260303Query } from '../../../../estados/queries/260303/tramite26
   styleUrl: './pago-de-derechos.component.scss',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+
+
+   /**
+   * Constante para configurar el input de fecha.
+   * Define las propiedades del campo de entrada de fecha.
+   */
+    INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
 
   /**
 * @property consultaState
@@ -124,12 +132,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   public cerrarPagoDerechosForm(): void {
     this.pagoDerechosForm = this.fb.group({
-      claveDeReferencia: [this.solicitudState.claveDeReferencia],
-      cadenaDaLaDependencia: [this.solicitudState.cadenaDaLaDependencia],
+      claveDeReferencia: [this.solicitudState.claveDeReferencia, [Validators.required, Validators.maxLength(9)]],
+      cadenaDaLaDependencia: [this.solicitudState.cadenaDaLaDependencia, [Validators.required, Validators.maxLength(14)]],
       banco: [this.solicitudState.banco],
-      laveDePago: [this.solicitudState.laveDePago],
+      laveDePago: [this.solicitudState.laveDePago, [Validators.required, Validators.maxLength(30)]],
       fechaDePago: [this.solicitudState.fechaDePago],
-      importeDePago: [this.solicitudState.importeDePago],
+      importeDePago: [this.solicitudState.importeDePago, [Validators.required, Validators.maxLength(16), Validators.pattern(/^\d{1,13}(\.\d{0,2})?$/)]],
     });
   }
 
@@ -147,19 +155,36 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Actualiza la fecha final de pago en el formulario y en el store.
-   *
-   * Este método establece el valor de fecha proporcionado en el campo 'fechaDePago'
-   * del `pagoDerechosForm`, marca el campo como no tocado y actualiza
-   * la fecha de pago en el `tramite260303Store`.
-   *
-   * @param nuevoValor - El nuevo valor de fecha a establecer para la fecha de pago.
-   */
-  public cambioFechaFinal(nuevoValor: string): void {
-    this.pagoDerechosForm.get('fechaDePago')?.setValue(nuevoValor);
-    this.pagoDerechosForm.get('fechaDePago')?.markAsUntouched();
-    this.tramite260303Store.setFechaDePago(nuevoValor);
+/**
+ * Método para cambiar la fecha final.
+ * @param nuevo_valor Nuevo valor de la fecha final.
+ */
+fechaFuturaSeleccionada = false;
+  cambioFechaFinal(nuevo_valor: string): void {
+    this.pagoDerechosForm.patchValue({
+      fecha: nuevo_valor,
+    });
+   this.tramite260303Store.setFechaDePago(nuevo_valor);
+  this.pagoDerechosForm.get('fecha')?.setValue(nuevo_valor);
+
+  let seleccionada: Date | null = null;
+  if (nuevo_valor && nuevo_valor.includes('/')) {
+    const [DAY, MONTH, YEAR] = nuevo_valor.split('/').map(Number);
+    seleccionada = new Date(YEAR, MONTH - 1, DAY);
+  } else {
+    seleccionada = new Date(nuevo_valor); 
+  }
+
+  const HOY = new Date();
+  HOY.setHours(0, 0, 0, 0);
+
+  if (seleccionada && seleccionada > HOY) {
+    this.fechaFuturaSeleccionada = true;
+    this.pagoDerechosForm.get('fecha')?.setErrors({ futureDate: true });
+  } else {
+    this.fechaFuturaSeleccionada = false;
+    this.pagoDerechosForm.get('fecha')?.setErrors(null);
+  }
   }
 
   /**
