@@ -221,6 +221,71 @@ export class PasoCapturarSolicitudComponent {
     return RESULT;
   }
 
+
+ // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
+/**
+ * Construye el objeto `anexo` a partir de los datos proporcionados.
+ *
+ * @param data - Objeto de entrada que contiene la información necesaria para construir los anexos y sus tablas asociadas.
+ * @returns Un objeto con la estructura de los anexos, incluyendo ANEXOII, ANEXOIII, proveedorCliente y datosParaNavegar.
+ *
+ * - `ANEXOII` y `ANEXOIII`: Listas construidas a partir de los elementos de `anexoDosTablaLista` y `anexoTresTablaLista` respectivamente.
+ * - `proveedorCliente`: Lista de proveedores y clientes obtenida de `proveedorClienteDatosTabla`.
+ * - `datosParaNavegar`: Información adicional para navegación, construida desde `datosParaNavegar`.
+ *
+ * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
+ */
+ buildAnexo(data: any) {
+ 
+  const buildAnexoItem = (item: Anexo1) => ({
+    descripcion: item.encabezadoFraccion,
+    idTipoBien: 0,
+    idBienComercial: 0,
+    testado: true,
+    contadorGrid: null,
+    descripcionTestado: item.encabezadoDescripcion,
+  });
+
+  const buildProveedorCliente = (item: ProveedorClienteDatosTabla) => ({
+    idProveedor: item.idProveedor,
+    paisOrigen: item.paisOrigen,
+    rfcProveedor: item.rfcProveedor,
+    razonProveedor: item.razonProveedor,
+    paisDestino: item.paisDestino,
+    rfcCliente: item.rfcClinte,
+    razonCliente: item.razonSocial,
+    domicilio: item.domicilio,
+    testado: item.testado,
+    idProductoP: item.idProductoP,
+    descTestado: item.descTestado,
+  });
+
+  const buildDatosParaNavegar = (datos: any) => ({
+    anexoII: datos?.encabezadoAnexoII,
+    tipo: datos?.encabezadoTipo,
+    unidadMedida: datos?.encabezadoAnexoII,
+    categoria: datos?.encabezadoCategoria,
+    descripcion: datos?.encabezadoDescripcionComercial,
+    valorMensual: datos?.encabezadoVolumenMensual,
+    valorAnual: datos?.encabezadoVolumenAnual,
+    volumenMensual: datos?.encabezadoValorEnMonedaMensual,
+    volumenAnual: datos?.encabezadoValorEnMonedaAnual,
+    testado: true,
+    fecFinVigencia: null,
+    volumenAnualSolicitado: null,
+  });
+
+  return {
+    anexo: {
+      ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
+      ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
+      proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
+      datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
+    },
+  };
+}
+
+
   /**
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
    * 
@@ -230,74 +295,24 @@ export class PasoCapturarSolicitudComponent {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
     const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
-    const ANEXOII: any[] = [];
-    const ANEXOIII: any[] = [];
-      data.annexoDosTres.anexoDosTablaLista.forEach((item: Anexo1) => {
-        ANEXOII.push({
-          descripcion: item.encabezadoFraccion,
-          idTipoBien: 0,
-          idBienComercial: 0,
-          testado: true,
-          contadorGrid: null,
-          descripcionTestado: item.encabezadoDescripcion
-        });
-      });
-      data.annexoDosTres.anexoTresTablaLista.forEach((item: Anexo1) => {
-        ANEXOIII.push({
-          descripcion: item.encabezadoFraccion,
-          idTipoBien: 0,
-          idBienComercial: 0,
-          testado: true,
-          contadorGrid: null,
-          descripcionTestado: item.encabezadoDescripcion
-        });
-      });
-    const PROVEEDOR_CLIENTE = (data.annexoUno.proveedorClienteDatosTabla as ProveedorClienteDatosTabla[]).map((item: ProveedorClienteDatosTabla) => ({
-      idProveedor: item.idProveedor,
-      paisOrigen: item.paisOrigen,
-      rfcProveedor: item.rfcProveedor,
-      razonProveedor: item.razonProveedor,
-      paisDestino: item.paisDestino,
-      rfcCliente: item.rfcClinte,
-      razonCliente: item.razonSocial,
-      domicilio: item.domicilio,
-      testado: item.testado,
-      idProductoP: item.idProductoP,
-      descTestado: item.descTestado
-    }));
-
-    const DATOSPARAS = {
-      anexoII: data.annexoUno.datosParaNavegar.encabezadoAnexoII,
-      tipo: data.annexoUno.datosParaNavegar.encabezadoTipo,
-      unidadMedida: data.annexoUno.datosParaNavegar.encabezadoAnexoII,
-      categoria: data.annexoUno.datosParaNavegar.encabezadoCategoria,
-      descripcion: data.annexoUno.datosParaNavegar.encabezadoDescripcionComercial,
-      valorMensual: data.annexoUno.datosParaNavegar.encabezadoVolumenMensual,
-      valorAnual: data.annexoUno.datosParaNavegar.encabezadoVolumenAnual,
-      volumenMensual: data.annexoUno.datosParaNavegar.encabezadoValorEnMonedaMensual,
-      volumenAnual: data.annexoUno.datosParaNavegar.encabezadoValorEnMonedaAnual,
-      testado: true,
-      fecFinVigencia: null,
-      volumenAnualSolicitado: null
-    }
-
+    const ANEXO_ALL = this.buildAnexo(data);
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
       "planta": [],
-      "anexoII": [...ANEXOII],
-      "anexoIII": [...ANEXOIII],
+      "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
+      "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
       "mercanciaImportacion": [
         {
           "listaProveedores": [
-            ...PROVEEDOR_CLIENTE
+            ...ANEXO_ALL.anexo.proveedorCliente
           ],
           "complemento": {
-            ...DATOSPARAS
+            ...ANEXO_ALL.anexo.datosParaNavegar
           },
         }
     ],
     "plantasSubmanufactureras": [],
-    "socioAccionista":[...SOCIO_ACCIONISTAS]
+    "sociosAccionistas":[...SOCIO_ACCIONISTAS]
     
 }
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {

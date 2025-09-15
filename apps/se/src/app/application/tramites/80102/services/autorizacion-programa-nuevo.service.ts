@@ -5,14 +5,18 @@ import { Tramite80102State, Tramite80102Store } from '../estados/tramite80102.st
 import { CatalogoDatosIdx } from '../../../shared/models/federatarios-y-plantas.model';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { HttpClient } from '@angular/common/http';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
+import { PROC_80102 } from '../servers/api-route';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
+import { Tramite80102Query } from '../estados/tramite80102.query';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AutorizacionProgrmaNuevoService {
- constructor(private readonly http: HttpClient, public tramite80102Store: Tramite80102Store) {
+ constructor(private readonly http: HttpClient, public tramite80102Store: Tramite80102Store,
+  private tramite80102Query:Tramite80102Query,public httpService: HttpCoreService,) {
    // No se necesita lógica de inicialización adicional.
   }
 
@@ -123,5 +127,23 @@ getRegistroTomaMuestrasMercanciasData(): Observable<Tramite80102State> {
       'assets/json/80101/federatarios-y-plantas-catalogos.json'
     );
   }
+
+/**
+ * Obtiene todos los datos del estado almacenado en el store.
+ * @returns {Observable<Tramite80101State>} Observable con todos los datos del estado.
+ */
+getAllState(): Observable<Tramite80102State> {
+  return this.tramite80102Query.allStoreData$;
+}
+
+/**
+ * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+ * 
+ * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+ * @returns Observable con la respuesta de la solicitud POST.
+ */
+guardarDatosPost(body: any) {
+  return this.httpService.post<any>(PROC_80102.GUARDAR, { body: body });
+}
 
 }
