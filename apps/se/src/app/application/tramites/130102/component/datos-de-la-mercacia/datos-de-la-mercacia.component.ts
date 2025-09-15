@@ -345,6 +345,11 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
     return null;
   }
 
+
+  /**
+   * Método para obtener las fracciones arancelarias desde el servicio CatOctavaTemporalService.
+   * Actualiza el catálogo de fracciones arancelarias con los datos obtenidos.
+   */
   obtenerFracciones(): void {
       this.catOctavaTemporalService.getFraccionArancelaria().subscribe((data) => {
         this.fraccionF = data.datos.map((item, index) => ({
@@ -354,6 +359,33 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
         }));  
       });
     }
+
+  /**
+   * Método para obtener las unidades de medida asociadas a una fracción arancelaria específica.
+   * Actualiza el catálogo de unidades de medida con los datos obtenidos.
+   * @param cveFraccion Clave de la fracción arancelaria para obtener las unidades de medida asociadas.
+   */
+  obtenerUnidadesMedida(cveFraccion: string): void {
+      this.catOctavaTemporalService.getUnidadesMedida(cveFraccion).subscribe((data) => {
+        this.Unidad = data.datos.map((item, index) => ({    
+          id: index,
+          clave: item.clave,
+          descripcion: item.descripcion,
+        }));  
+      });
+    }
+
+  /**
+   * Maneja el cambio en la fracción arancelaria seleccionada.
+   * Obtiene las unidades de medida asociadas a la fracción seleccionada.
+   * @param formDelLa Formulario reactivo que contiene el campo de fracción arancelaria.
+   */
+  onChangeFraccion(formDelLa: FormGroup): void {
+    const CVE_FRACCION = formDelLa.get('fraccionArancelaria')?.value;
+    this.obtenerUnidadesMedida(CVE_FRACCION);
+  }
+  
+  
 
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.

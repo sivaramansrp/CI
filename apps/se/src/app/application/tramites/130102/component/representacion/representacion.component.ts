@@ -186,9 +186,9 @@ inicializarEstadoFormulario(): void {
     this.entidadFederativaLista = data;
   });*/
     this.obtenerEntidadesFederativas();
-    this.formularioRegistroService.getRepresentacionesFederales().subscribe(data => {
+  /* this.formularioRegistroService.getRepresentacionesFederales().subscribe(data => {
     this.representacionFederalLista = data;
-  });
+  });*/
   }
 
     /**
@@ -209,6 +209,7 @@ inicializarEstadoFormulario(): void {
    */
   fetchEntidadFederativa(e: Catalogo): void {
     this.seleccionadaEntidadFederativa = e;
+    console.log(this.seleccionadaEntidadFederativa);
   }
 
   /*
@@ -224,6 +225,33 @@ inicializarEstadoFormulario(): void {
         descripcion: item.descripcion,
       }));  
     });
+  }
+
+  /**
+   * Obtiene las unidades administrativas basadas en la entidad seleccionada.
+   * @param cveEntidad Clave de la entidad para obtener las unidades administrativas.
+   * @returns void
+   */
+  obtenerUnidadesAdministrativas(cveEntidad: string): void {
+    this.catOctavaTemporalService.getUnidadesAdministrativas(cveEntidad).subscribe((data) => {
+      this.representacionFederalLista = data.datos.map((item, index) => ({  
+        id: index,
+        clave: item.clave,
+        descripcion: item.descripcion,
+      }));  
+    });
+  }
+
+  /**
+   * maneja el cambio en la selección de la entidad federativa y actualiza las unidades administrativas.
+   * @param form - Formulario reactivo.
+   * @return void
+   */
+  onChangeEntidad(form: FormGroup): void {
+    const cveEntidad = form.get('entidad')?.value;
+    if (cveEntidad) {
+      this.obtenerUnidadesAdministrativas(cveEntidad);
+    }
   }
 
   /**

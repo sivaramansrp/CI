@@ -52,7 +52,7 @@
         [catalogo]="fraccionF"
         [label]="'Fracción arancelaria'"
         [required]="true"
-        (change)="fetchFraccion();setValoresStore(formDelLa,'fraccionArancelaria', 'setFraccionArancelaria')"
+        (change)="fetchFraccion();setValoresStore(formDelLa,'fraccionArancelaria', 'setFraccionArancelaria'); onChangeFraccion(formDelLa)"
         [placeholder]="'Seleccione un documento'"
         formControlName="fraccionArancelaria"
         [isDisabled]="esFormularioSoloLectura ? true : false"

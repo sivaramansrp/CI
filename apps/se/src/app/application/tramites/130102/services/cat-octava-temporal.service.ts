@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { CatalogosResponse, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { Observable, catchError, map, throwError } from 'rxjs';
 
-import { API_GET_BLOQUE_PAISES, API_GET_CLASIFICACION_REGIMEN, API_GET_ENTIDADES_FEDERATIVAS, API_GET_FRACCION_ARANCELARIA, API_GET_REGIMENES } from '../server/api-router';
+import { API_GET_BLOQUE_PAISES, API_GET_CLASIFICACION_REGIMEN, API_GET_ENTIDADES_FEDERATIVAS, API_GET_FRACCION_ARANCELARIA, API_GET_REGIMENES, API_GET_UNIDADES_ADMINISTRATIVAS, API_GET_UNIDADES_MEDIDA } from '../server/api-router';
 import { CatalogosBloquesResponse } from '../models/octava-temporal.model';
 
 @Injectable({
@@ -45,6 +45,11 @@ export class CatOctavaTemporalService {
     );
   }
 
+  /**
+   * Obtiene las clasificaciones de los regímenes.
+   * @param cveRegimen Clave del régimen para filtrar las clasificaciones.
+   * @returns 
+   */
   getClasificacionRegimenes(cveRegimen?: string): Observable<CatalogosResponse> {
     const ENDPOINT = cveRegimen ? `${this.host}` + API_GET_CLASIFICACION_REGIMEN(cveRegimen) : `${this.host}${API_GET_CLASIFICACION_REGIMEN('')}`; 
     return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
@@ -60,12 +65,31 @@ export class CatOctavaTemporalService {
     );
   }
 
+  /**
+   * Obtiene las unidades de medida asociadas a una fracción arancelaria específica.
+   * @param cveFraccion Clave de la fracción arancelaria.
+   * @returns 
+   */
+  getUnidadesMedida(cveFraccion: string): Observable<CatalogosResponse> {
+    const ENDPOINT = `${this.host}` + API_GET_UNIDADES_MEDIDA(cveFraccion);
+    return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
+      map((response) => {
+        return response;  
+      }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );
+  }   
+
 
   /*
     * Obtiene los países por bloque.  
     * @returns Observable con la respuesta del servidor.
-    */
-
+  */
   getPaisesBloque(): Observable<CatalogosBloquesResponse> {
     const ENDPOINT = `${this.host}${API_GET_BLOQUE_PAISES}`;
     return this.http.get<CatalogosBloquesResponse>(ENDPOINT).pipe(
@@ -100,6 +124,22 @@ export class CatOctavaTemporalService {
       })
     );  
   }
+
+  getUnidadesAdministrativas(cveEntidad: string): Observable<CatalogosResponse> {
+    const ENDPOINT = `${this.host}` + API_GET_UNIDADES_ADMINISTRATIVAS(cveEntidad); 
+    return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
+      map((response) => {
+        return response;      
+      }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
 
   /**
    * Obtiene las fracciones arancelarias.

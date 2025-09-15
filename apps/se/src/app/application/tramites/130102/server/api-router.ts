@@ -18,6 +18,20 @@ export const API_GET_BLOQUE_PAISES = 'sat-t130102/catalogo/paises/bloques';
 export const API_GET_ENTIDADES_FEDERATIVAS = 'sat-t130102/catalogo/entidades-federativas';
 
 /**
+ * Constante para la clave de la entidad.
+ * Debe ser reemplazada por la clave real de la entidad.
+ */
+export const CVEENTIDAD = '{cveEntidad}';
+
+/**
+ * API MS para obtener las unidades administrativas de una entidad federativa específica del tramite 130102.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/swagger-ui/index.html#/Catalogos/consulta-unidades-administrativas
+ * @param CVEENTIDAD - Clave de la entidad federativa.
+ * @returns 
+ */
+export const API_GET_UNIDADES_ADMINISTRATIVAS = (CVEENTIDAD: string) : string => `sat-t130102/catalogo/entidad-federativa/${CVEENTIDAD}/unidades-administrativas`;
+
+/**
  * API MS para obtener las fracciones arancelarias del tramite 130102.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/catalogo/pexim/fracciones-arancelarias?modoCarga=combo
  */
@@ -36,3 +50,17 @@ export const CVEREGIMEN = '{cveRegimen}';
  */
 
 export const API_GET_CLASIFICACION_REGIMEN = (CVEREGIMEN: string) : string => `sat-t130102/catalogo/regimenes/${CVEREGIMEN}/clasificacion`;
+
+/**
+ * Constante para la clave de la fracción arancelaria.
+ * Debe ser reemplazada por la clave real de la fracción arancelaria.
+ */
+export const CVEFRACCION = '{cveFraccion}';
+
+/**
+ * aPI MS para obtener las unidades de medida asociadas a una fracción arancelaria específica del tramite 130102.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/catalogo/fraccion-arancelaria/17011405/unidades-medida
+ * @param CVEFRACCION - Clave de la fracción arancelaria.
+ * @returns 
+ */
+export const API_GET_UNIDADES_MEDIDA = (CVEFRACCION: string) : string => `sat-t130102/catalogo/fraccion-arancelaria/${CVEFRACCION}/unidades-medida`;
