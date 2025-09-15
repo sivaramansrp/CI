@@ -1,7 +1,7 @@
 /**
  * Importaciones necesarias para el funcionamiento del componente.
  */
-import { CatalogoResponse, CatalogoSelectComponent, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoResponse, InputFecha } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
@@ -14,6 +14,8 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
 import { ESTADOS_DATA, FECHA_DE_PAGO } from '../../constantes/permiso-maquila.enum';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 /**
  * Componente que gestiona el pago de derechos.
  * Utiliza un formulario reactivos para recopilar datos del usuario.
@@ -116,7 +118,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo y el estado del componente.
    */
   ngOnInit(): void {
-  
+    this.pagoDerechos = this.fb.group({
+      claveDeReferncia: ['', [Validators.required]],
+      cadenaDeLaDependencia: ['', [Validators.required]],
+      banco: ['', [Validators.required]],
+      llaveDePago: ['', [Validators.required]],
+      fechaDePago: ['', [Validators.required]],
+      importeDePago: ['', [Validators.required]],
+    });
+    
      this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroy$),
@@ -161,15 +171,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Sincroniza el formulario con el estado global y carga los datos del selector.
    */
   actualizarEstado(): void {
-      this.pagoDerechos = this.fb.group({
-      claveDeReferncia: ['', [Validators.required]],
-      cadenaDeLaDependencia: ['', [Validators.required]],
-      banco: ['', [Validators.required]],
-      llaveDePago: ['', [Validators.required]],
-      fechaDePago: ['', [Validators.required]],
-      importeDePago: ['', [Validators.required]],
-    });
-   
     this.selectedBanco$.subscribe((selectedBanco) => {
       if (selectedBanco) {
         this.pagoDerechos.get('banco')?.setValue(selectedBanco);
