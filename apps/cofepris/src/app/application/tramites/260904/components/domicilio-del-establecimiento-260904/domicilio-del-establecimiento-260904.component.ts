@@ -949,7 +949,6 @@ ngOnChanges(): void {
       this.representanteLegal?.get('apellidoMaterno')?.disable();
     } else if (this.tipoTramite === '0') {
       this.buttonDisableForProrroga = true;
-      console.log('tipo value from on changes', this.tipoTramite);
       this.form?.disable();
       this.domicilio?.disable();
       this.representanteLegal?.disable();
@@ -1458,18 +1457,47 @@ ngOnChanges(): void {
     this.nicoTablaForm.reset();
   }
 
-  // Add to: domicilio-del-establecimiento-260904.component.ts
 
 public validateRequiredFields(): boolean {
-  if (!this.form) {
-    return true;
-    }
-  return this.form.valid;
+    let isValid = true;
+  if (this.form && this.form.invalid) {
+    isValid = false;
+    this.form.markAllAsTouched();
+  }
+  
+  if (this.domicilio && this.domicilio.invalid) {
+    isValid = false;
+    this.domicilio.markAllAsTouched();
+  }
+
+  if (this.representanteLegal && this.representanteLegal.invalid) {
+    isValid = false;
+    this.representanteLegal.markAllAsTouched();
+  }
+  
+  return isValid;
 }
 
 public markAllFieldsTouched(): void {
-  if (this.form) {
+ if (this.form) {
     Object.values(this.form.controls).forEach(control => {
+      control.markAsTouched();
+      control.markAsDirty();
+      control.updateValueAndValidity();
+    });
+  }
+  
+  if (this.domicilio) {
+    Object.values(this.domicilio.controls).forEach(control => {
+      control.markAsTouched();
+      control.markAsDirty();
+      control.updateValueAndValidity();
+    });
+  }
+  
+  // Mark representanteLegal form fields as touched
+  if (this.representanteLegal) {
+    Object.values(this.representanteLegal.controls).forEach(control => {
       control.markAsTouched();
       control.markAsDirty();
       control.updateValueAndValidity();
