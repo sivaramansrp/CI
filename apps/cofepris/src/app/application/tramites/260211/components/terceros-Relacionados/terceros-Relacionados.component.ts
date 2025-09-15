@@ -1,52 +1,73 @@
-import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { SanitarioService } from '../../services/sanitario.service';
-
+import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
+import { CONFIGURATION_TABLA_FABRICANTE, TABLA_ROWDATA } from '../../constantes/derechos.model';
+import { FabricanteDatos, TERCEROS_DATAS } from '../../models/permiso-sanitario.enum';
+import {InputRadioComponent , TituloComponent } from '@libs/shared/data-access-user/src';
 import { TablaDatos } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
 
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Terceros260211State, Terceros260211Store } from '../../../../estados/tramites/terceros260211.store';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
-
-
-import { Sanitario260215Store } from '../../../../estados/tramites/sanitario.store'
-
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 
-
-import {InputRadioComponent , TituloComponent } from '@libs/shared/data-access-user/src';
-
-import { TableComponent } from '@ng-mf/data-access-user';
-
+import { ConfiguracionColumna, ConsultaioQuery, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../model/modal.component';
-
+import { Sanitario260215Store } from '../../../../estados/tramites/sanitario.store';
+import { SanitarioService } from '../../services/sanitario.service';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { Terceros260211Query } from '../../../../estados/queries/terceros260211.query';
 import nacionalidadRedio from '@libs/shared/theme/assets/json/260211/nacionalidadRedio.json';
-
 import tipoPersonaoptions from '@libs/shared/theme/assets/json/260211/tipoPersonaoptions.json';
 
-import {Subject, map,takeUntil } from 'rxjs';
-
-import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
-import { TERCEROS_DATAS } from '../../models/permiso-sanitario.enum';
-import { Terceros260211Query } from '../../../../estados/queries/terceros260211.query';
-import { Terceros260211State } from '../../../../estados/tramites/terceros260211.store';
  
 const TERCEROS_TEXTO_DE_ALERTA =
-  'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
+   `
+  <div class="text-center">
+    Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.
+  </div>
+  `;
 
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
-  imports: [CommonModule,CatalogoSelectComponent,TituloComponent,TableComponent,ReactiveFormsModule,AlertComponent,FormsModule,ModalComponent,InputRadioComponent],
+  imports: [CommonModule,CatalogoSelectComponent,NotificacionesComponent,TituloComponent,TableComponent,TablaDinamicaComponent,ReactiveFormsModule,AlertComponent,FormsModule,ModalComponent,InputRadioComponent],
   templateUrl: './terceros-Relacionados.component.html',
   styleUrl: './terceros-Relacionados.component.scss',
  
 })
 export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
-
+  /**
+  * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaFabricante
+  * Configuración de columnas para la tabla de fabricantes.
+  */
+  configuracionTablaFabricante: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
+    /**
+   * Lista de fabricantes obtenida desde un archivo JSON.
+   * Cada fabricante contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
+   */
+  fabricanteTablaDatos: FabricanteDatos[] = [...TABLA_ROWDATA];
+   /**
+   * Índice de la fila de facturador actualmente en edición.
+   * Si está definido, indica que se debe modificar esa fila en lugar de agregar una nueva.
+   */
+  editFacturadorIndex?: number;
+  /**
+  * Configuración de las columnas de la tabla de exportadores.
+  * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
+  */
+  public checkbox = TablaSeleccion.CHECKBOX;
+    /**
+ * @property {string} rutaAcciones
+ * Ruta relativa hacia la sección de acciones.
+ */
+  /**
+   * Lista de fabricantes seleccionados en la tabla.
+   * Se utiliza para operaciones como modificar o eliminar un fabricante específico.
+   */
+  public fabricanteSeleccionadoDatos: FabricanteDatos[] = [];
     /**
      * Estado de la solicitud obtenido desde el store.
      */
@@ -93,7 +114,21 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    * @description Controla si se muestra o no el formulario para agregar un proveedor.
    */
   showProveedor = false;
-
+  /**
+   * Índice de la fila de destinatario actualmente en edición.
+   * Si está definido, indica que se debe modificar esa fila en lugar de agregar una nueva.
+   */
+  editDestinatarioIndex?: number;
+  /**
+   * Índice de la fila de fabricante actualmente en edición.
+   * Si está definido, indica que se debe modificar esa fila en lugar de agregar una nueva.
+   */
+  editFabricanteIndex?: number;
+  /**
+   * Índice de la fila de proveedor actualmente en edición.
+   * Si está definido, indica que se debe modificar esa fila en lugar de agregar una nueva.
+   */
+  editProveedorIndex?: number;
   /**
    * Indicador de visibilidad para la sección del formulario de facturador.
    * Inicialmente no visible (`false`).
@@ -101,7 +136,11 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    * @description Controla si se muestra o no el formulario para agregar un facturador.
    */
   showFacturador = false;
-
+  /**
+   * @property {string[]} tablaEncabezadoData
+   * Encabezado de la tabla que muestra los datos de terceros relacionados.
+   */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Indicador de visibilidad para los botones del formulario de fabricante.
    * Inicialmente no visible (`false`).
@@ -229,7 +268,37 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
    * @description Se utiliza para validar y procesar los datos del facturador.
    */
   agregarFacturadorFormGroup!: FormGroup;
-
+ /**
+   * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaProveedor
+   * Configuración de columnas para la tabla de proveedores.
+   */
+  configuracionTablaProveedor: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
+  /**
+   * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaFacturador
+   * Configuración de columnas para la tabla de facturadores.
+   */
+  configuracionTablaFacturador: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
+  
+  /**
+   * Lista de facturadores obtenida desde un archivo JSON.
+   * Cada facturador contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
+   */
+  facturadorTablaDatos: FabricanteDatos[] = [...TABLA_ROWDATA];
+    /**
+   * Lista de facturadores seleccionados en la tabla.
+   * Se utiliza para operaciones como modificar o eliminar un facturador específico.
+   */
+  public facturadorSeleccionadoDatos: FabricanteDatos[] = [];
+ /**
+   * Lista de proveedores obtenida desde un archivo JSON.
+   * Cada proveedor contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
+   */
+  proveedorTablaDatos: FabricanteDatos[] = [...TABLA_ROWDATA];
+  /**
+   * Lista de proveedores seleccionados en la tabla.
+   * Se utiliza para operaciones como modificar o eliminar un proveedor específico.
+   */
+  public proveedorSeleccionadoDatos: FabricanteDatos[] = [];
   /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
@@ -244,6 +313,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
     private service: SanitarioService,
      private consultaioQuery: ConsultaioQuery,     
      private terceros260211Query: Terceros260211Query,
+     private tereceros260211store:Terceros260211Store
   ) {
      /**
          * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -765,7 +835,21 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
           ?.enable();
       });
   }
-
+ /**
+   * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaDestinatarioFinal
+   * Configuración de columnas para la tabla de destinatarios finales.
+   */
+  configuracionTablaDestinatarioFinal: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
+  /**
+   * Lista de destinatarios finales obtenida desde un archivo JSON.
+   * Cada destinatario contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
+   */
+  destinatarioFinalTablaDatos: FabricanteDatos[] = [...TABLA_ROWDATA];
+  /**
+   * Lista de destinatarios seleccionados en la tabla.
+   * Se utiliza para operaciones como modificar o eliminar un destinatario específico.
+   */
+  public destinatarioSeleccionadoDatos: FabricanteDatos[] = [];
   /**
    * Encabezados para la tabla de fabricantes.
    * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
@@ -1008,7 +1092,14 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
     this.showTableDiv = !this.showTableDiv;
     this.showFacturador = !this.showFacturador;
   }
-
+  /** Limpia y deshabilita todos los campos del formulario de fabricante, excepto el de nacionalidad. */
+  limpiarFacturadorForm(): void {
+    this.agregarFacturadorFormGroup.reset();
+    Object.keys(this.agregarFacturadorFormGroup.controls).forEach(controlName => {
+      this.agregarFacturadorFormGroup.get(controlName)?.disable();
+    });
+    this.agregarFacturadorFormGroup.get('tipoPersona')?.enable();
+  }
   /**
    * Texto de alerta para los terceros relacionados.
    * Indica que las tablas con asterisco son obligatorias.
@@ -1492,6 +1583,298 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
   static telefonoValidator(control: AbstractControl): ValidationErrors | null {
     const PATTERN = /^([0-9A-Za-z\-() ])*$/;
     return PATTERN.test(control.value) ? null : { invalidTelefono: true };
+  }
+   /**
+   * Elimina los datos del pedimento.
+   * @param borrar Indica si se deben eliminar los datos seleccionados.
+   * Elimina los datos del pedimento.
+   * @param borrar Indica si se deben eliminar los datos seleccionados.
+   */
+  eliminarPedimentoDatos(borrar: boolean): void {
+    if (borrar) {
+      // Filtra los datos, eliminando los seleccionados
+      this.fabricanteTablaDatos = this.fabricanteTablaDatos.filter(
+        res => !this.fabricanteSeleccionadoDatos.includes(res)
+      );
+      // Limpia la selección
+      this.fabricanteSeleccionadoDatos = [];
+      this.tereceros260211store.setFabricantes(this.fabricanteTablaDatos);
+    }
+  }
+   /**
+   * Elimina los fabricantes seleccionados de la tabla.
+   */
+  eliminarFabricante(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Confirma la eliminación?',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+  }
+   /**
+ * Permite modificar un fabricante seleccionado en la tabla.
+ * Si no hay ningún fabricante seleccionado, la función retorna.
+ * Obtiene la fila seleccionada, guarda su índice para edición,
+ * habilita el formulario y lo rellena con los datos de la fila seleccionada.
+ */
+  modificarFabricante(): void {
+    if (!(this.fabricanteSeleccionadoDatos || []).length) { return }
+
+    const SELECCIONADA = this.fabricanteSeleccionadoDatos[0];
+    this.editFabricanteIndex = this.fabricanteTablaDatos.indexOf(SELECCIONADA);
+
+    this.agregarFabricanteFormGroup.enable();
+    this.agregarFabricanteFormGroup.patchValue(SELECCIONADA);
+    this.showTableDiv = !this.showTableDiv;
+    this.showFabricante = !this.showFabricante;
+
+  }
+   /** Limpia y deshabilita todos los campos del formulario de fabricante, excepto el de nacionalidad. */
+  limpiarFabricanteForm(): void {
+    this.agregarFabricanteFormGroup.reset();
+    Object.keys(this.agregarFabricanteFormGroup.controls).forEach(controlName => {
+      this.agregarFabricanteFormGroup.get(controlName)?.disable();
+    });
+    this.agregarFabricanteFormGroup.get('tercerosNacionalidad')?.enable();
+  }
+    /**
+ * Envía el formulario de fabricantes, agrega un nuevo registro a `fabricanteTablaDatos`,
+ * reinicia y desactiva los campos del formulario excepto 'tipoPersona' y 'tercerosNacionalidad',
+ * y alterna la visibilidad de las secciones del componente.
+ */
+  submitFabricantesForm(): void {
+    const NUEVO: FabricanteDatos = {
+      nombre: this.agregarFabricanteFormGroup.get('nombre')?.value || '',
+      rfc: this.agregarFabricanteFormGroup.get('rfc')?.value || '',
+      curp: this.agregarFabricanteFormGroup.get('curp')?.value || '',
+      telefono: this.agregarFabricanteFormGroup.get('telefono')?.value || '',
+      correo: this.agregarFabricanteFormGroup.get('correoElectronico')?.value || '',
+      calle: this.agregarFabricanteFormGroup.get('calle')?.value || '',
+      numeroExterior: this.agregarFabricanteFormGroup.get('numeroExterior')?.value || '',
+      numeroInterior: this.agregarFabricanteFormGroup.get('numeroInterior')?.value || '',
+      pais: this.agregarFabricanteFormGroup.get('pais')?.value || '',
+      colonia: this.agregarFabricanteFormGroup.get('colonia')?.value || '',
+      municipio: this.agregarFabricanteFormGroup.get('municipioAlcaldia')?.value || '',
+      localidad: this.agregarFabricanteFormGroup.get('localidad')?.value || '',
+      entidadFederativa: this.agregarFabricanteFormGroup.get('entidadFederativa')?.value || '',
+      estado: this.agregarFabricanteFormGroup.get('estadoLocalidad')?.value || '',
+      codigoPostal: this.agregarFabricanteFormGroup.get('codigoPostaloEquivalente')?.value || '',
+      coloniaEquivalente: this.agregarFabricanteFormGroup.get('coloniaEquivalente')?.value || '',      
+    };
+    if (this.editFabricanteIndex !== undefined) {
+      this.fabricanteTablaDatos[this.editFabricanteIndex] = NUEVO;
+      this.editFabricanteIndex = undefined;
+    } else {
+      this.fabricanteTablaDatos = [...this.fabricanteTablaDatos, NUEVO];
+    }
+    this.agregarFabricanteFormGroup.reset();
+    Object.keys(this.agregarFabricanteFormGroup.controls).forEach(key => {
+      if (key !== 'tipoPersona' && key !== 'tercerosNacionalidad') {
+        this.agregarFabricanteFormGroup.controls[key].disable();
+      }
+    });
+    this.tereceros260211store.setFabricantes(this.fabricanteTablaDatos);
+    /**
+        * Cambia la visibilidad de las secciones del componente.
+        */
+    this.showTableDiv = !this.showTableDiv;
+    this.showFabricante = !this.showFabricante;
+    this.fabricanteSeleccionadoDatos = [];
+
+  }
+    /**
+   * Elimina los destinatarioFinalTablaDatos de la tabla.
+   */
+  eliminarDestinario(): void {
+    // Filtra los datos, eliminando los seleccionados
+    this.destinatarioFinalTablaDatos = this.destinatarioFinalTablaDatos.filter(
+      f => !this.destinatarioSeleccionadoDatos.includes(f)
+    );
+    // Limpia la selección
+    this.destinatarioSeleccionadoDatos = [];
+    this.tereceros260211store.setDestinatarios(this.destinatarioFinalTablaDatos);
+  }
+  
+  /** Limpia y deshabilita todos los campos del formulario de destinatario, excepto el de tipoPersona. */
+  limpiarDestinatarioForm(): void {
+    this.agregarDestinatarioFormGroup.reset();
+    Object.keys(this.agregarDestinatarioFormGroup.controls).forEach(controlName => {
+      this.agregarDestinatarioFormGroup.get(controlName)?.disable();
+    });
+    this.agregarDestinatarioFormGroup.get('tipoPersona')?.enable();
+     }
+    /**
+   * Envía el formulario de destinatarios, agrega un nuevo registro a `destinatarioFinalTablaDatos`,
+   * reinicia y desactiva los campos del formulario excepto 'tipoPersona' y 'tercerosNacionalidad',
+   * y alterna la visibilidad de las secciones del componente.
+   */
+  submitDestinatariosForm(): void {
+    const NUEVO = { ...this.agregarDestinatarioFormGroup.getRawValue() };
+    if (this.editDestinatarioIndex !== undefined) {
+      this.destinatarioFinalTablaDatos[this.editDestinatarioIndex] = NUEVO;
+      this.editDestinatarioIndex = undefined;
+    } else {
+      this.destinatarioFinalTablaDatos = [...this.destinatarioFinalTablaDatos, NUEVO];
+    }
+
+    this.agregarDestinatarioFormGroup.reset();
+
+    Object.keys(this.agregarDestinatarioFormGroup.controls).forEach(key => {
+      if (key !== 'tipoPersona' && key !== 'tercerosNacionalidad') {
+        this.agregarDestinatarioFormGroup.controls[key].disable();
+      }
+    });
+    this.tereceros260211store.setDestinatarios(this.destinatarioFinalTablaDatos);
+    this.showTableDiv = !this.showTableDiv;
+    this.showDestinatario = !this.showDestinatario;
+    this.destinatarioSeleccionadoDatos = [];
+  }
+    /**
+   * Permite modificar un destinatario seleccionado en la tabla.
+   * Si no hay ningún destinatario seleccionado, la función retorna.
+   * Obtiene la fila seleccionada, guarda su índice para edición,
+   * habilita el formulario y lo rellena con los datos de la fila seleccionada.
+   */
+  modificarDestinatario(): void {
+    if (!(this.destinatarioSeleccionadoDatos || []).length) { return }
+    const SELECCIONADO = this.destinatarioSeleccionadoDatos[0];
+    this.editDestinatarioIndex = this.destinatarioFinalTablaDatos.indexOf(SELECCIONADO);
+    this.agregarDestinatarioFormGroup.enable();
+    this.agregarDestinatarioFormGroup.patchValue(SELECCIONADO);
+    this.showTableDiv = !this.showTableDiv;
+    this.showDestinatario = !this.showDestinatario;
+  }
+    /**
+   * Elimina los proveedorSeleccionadoDatos de la tabla.
+   */
+  eliminarProveedor(): void {
+    // Filtra los datos, eliminando los seleccionados
+    this.proveedorTablaDatos = this.proveedorTablaDatos.filter(
+      f => !this.proveedorSeleccionadoDatos.includes(f)
+    );
+    // Limpia la selección
+    this.proveedorSeleccionadoDatos = [];
+    this.tereceros260211store.setProveedors(this.proveedorTablaDatos);
+  }
+    /**
+   * Envía el formulario de proveedores, agrega un nuevo registro a `proveedorTablaDatos`,
+   * reinicia y desactiva los campos del formulario excepto 'tipoPersona' y 'tercerosNacionalidad',
+   * y alterna la visibilidad de las secciones del componente.
+   */
+  submitProveedoresForm(): void {
+
+    const NUEVO = { ...this.agregarProveedorFormGroup.getRawValue() };
+
+
+
+    if (this.editProveedorIndex !== undefined) {
+      this.proveedorTablaDatos[this.editProveedorIndex] = NUEVO;
+      this.editProveedorIndex = undefined;
+    } else {
+      this.proveedorTablaDatos = [...this.proveedorTablaDatos, NUEVO];
+    }
+
+
+    this.agregarProveedorFormGroup.reset();
+
+
+    Object.keys(this.agregarProveedorFormGroup.controls).forEach(key => {
+      if (key !== 'tipoPersona' && key !== 'tercerosNacionalidad') {
+        this.agregarProveedorFormGroup.controls[key].disable();
+      }
+    });
+
+    this.tereceros260211store.setProveedors(this.proveedorTablaDatos);
+    this.showTableDiv = !this.showTableDiv;
+    this.showProveedor = !this.showProveedor;
+    this.proveedorSeleccionadoDatos = [];
+  }
+    /**
+   * Permite modificar un proveedor seleccionado en la tabla.
+   * Si no hay ningún proveedor seleccionado, la función retorna.
+   * Obtiene la fila seleccionada, guarda su índice para edición,
+   * habilita el formulario y lo rellena con los datos de la fila seleccionada.
+   */
+  modificarProveedor(): void {
+    if (!(this.proveedorSeleccionadoDatos || []).length) { return }
+    const SELECCIONADO = this.proveedorSeleccionadoDatos[0];
+    this.editProveedorIndex = this.proveedorTablaDatos.indexOf(SELECCIONADO);
+    this.agregarProveedorFormGroup.enable();
+    this.agregarProveedorFormGroup.patchValue(SELECCIONADO);
+    this.showTableDiv = !this.showTableDiv;
+    this.showProveedor = !this.showProveedor;
+  }
+  /** Limpia y deshabilita todos los campos del formulario de fabricante, excepto el de nacionalidad. */
+  limpiarProveedorForm(): void {
+    this.agregarProveedorFormGroup.reset();
+    Object.keys(this.agregarProveedorFormGroup.controls).forEach(controlName => {
+      this.agregarProveedorFormGroup.get(controlName)?.disable();
+    });
+    this.agregarProveedorFormGroup.get('tipoPersona')?.enable();
+  }
+    /**
+   * Envía el formulario de facturadores, agrega un nuevo registro a `facturadorTablaDatos`,
+   * reinicia y desactiva los campos del formulario excepto 'tipoPersona' y 'tercerosNacionalidad',
+   * y alterna la visibilidad de las secciones del componente.
+   */
+  submitFacturadoresForm(): void {
+
+    const NUEVO = { ...this.agregarFacturadorFormGroup.getRawValue() };
+
+
+    if (this.editFacturadorIndex !== undefined) {
+      this.facturadorTablaDatos[this.editFacturadorIndex] = NUEVO;
+      this.editFacturadorIndex = undefined;
+    } else {
+
+      this.facturadorTablaDatos = [...this.facturadorTablaDatos, NUEVO];
+    }
+
+
+    this.agregarFacturadorFormGroup.reset();
+
+
+    Object.keys(this.agregarFacturadorFormGroup.controls).forEach(key => {
+      if (key !== 'tipoPersona' && key !== 'tercerosNacionalidad') {
+        this.agregarFacturadorFormGroup.controls[key].disable();
+      }
+    });
+    this.tereceros260211store.setFacturadors(this.facturadorTablaDatos);
+    this.showTableDiv = !this.showTableDiv;
+    this.showFacturador = !this.showFacturador;
+    this.facturadorSeleccionadoDatos = [];
+  }
+  /**
+   * Elimina los facturadorSeleccionadoDatos de la tabla.
+   */
+  eliminarFacturador(): void {
+    // Filtra los datos, eliminando los seleccionados
+    this.facturadorTablaDatos = this.facturadorTablaDatos.filter(
+      f => !this.facturadorSeleccionadoDatos.includes(f)
+    );
+    // Limpia la selección
+    this.facturadorSeleccionadoDatos = [];
+    this.tereceros260211store.setFacturadors(this.facturadorTablaDatos);
+  }
+  /**
+   * Permite modificar un facturador seleccionado en la tabla.
+   * Si no hay ningún facturador seleccionado, la función retorna.
+   * Obtiene la fila seleccionada, guarda su índice para edición,
+   * habilita el formulario y lo rellena con los datos de la fila seleccionada.
+   */
+  modificarFacturador(): void {
+    if (!this.facturadorSeleccionadoDatos || this.facturadorSeleccionadoDatos.length === 0) { return }
+    const SELECT_ROW = this.facturadorSeleccionadoDatos[0];
+    this.editFacturadorIndex = this.facturadorTablaDatos.indexOf(SELECT_ROW);
+    this.showTableDiv = !this.showTableDiv;
+    this.showFacturador = !this.showFacturador;
+    this.agregarFacturadorFormGroup.enable();
+    this.agregarFacturadorFormGroup.patchValue(SELECT_ROW);
   }
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.

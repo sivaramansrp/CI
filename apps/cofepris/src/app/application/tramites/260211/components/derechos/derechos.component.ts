@@ -8,7 +8,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { FECHA_DE_PAGO } from '../../constantes/derechos.model';
 
 
-import { FormBuilder, FormGroup } from '@angular/forms'; // Import FormBuilder and FormGroup for reactive forms.
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // Import FormBuilder and FormGroup for reactive forms.
 
 import { Catalogo, TituloComponent } from '@ng-mf/data-access-user'; // Import Catalogo and TituloComponent from shared library.
 import { ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsModule for reactive form handling.
@@ -24,6 +24,7 @@ import {
 import { Permiso260211Query } from '../../../../estados/queries/permiso260211.query'; // Import query for fetching data from the store.
 
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
+import moment from 'moment';
 
 
 /**
@@ -192,10 +193,10 @@ if (this.esFormularioSoloLectura) {
     this.derechosForm = this.fb.group({
       referencia: [this.solicitudState?.referencia], 
       cadenaDependencia: [this.solicitudState?.cadenaDependencia], 
-      Llave: [this.solicitudState?.Llave], 
+      Llave: [this.solicitudState?.Llave, Validators.pattern(/^\d+$/)], 
       banco: [this.solicitudState?.banco], 
       deFetch: [this.solicitudState?.deFetch], 
-      importe: [this.solicitudState?.importe], 
+      importe: [this.solicitudState?.importe, Validators.pattern(/^\d+$/)], 
     });
   }
  /**

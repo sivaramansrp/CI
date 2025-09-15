@@ -11,7 +11,7 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery,ConsultaioState} from '@ng-mf/data-access-user';
 
 import {
   Component,
@@ -188,6 +188,10 @@ export class DomicilloComponent implements OnInit, OnDestroy {
     // Indica que ningún elemento ha sido seleccionado
     this.noSeleccionado = true;
   }
+    /*
+  * @description Estado actual de la consulta, obtenido desde el store.
+  */
+  public consultaState!: ConsultaioState;
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
@@ -215,6 +219,12 @@ export class DomicilloComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.consultaState = seccionState;
+
+            if (this.consultaState.update) {               
+           this.obtenerTablaDatos();     
+           
+           }
 
           this.inicializarEstadoFormulario();
         })
@@ -359,8 +369,7 @@ export class DomicilloComponent implements OnInit, OnDestroy {
    * Método que se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario();
-    this.obtenerTablaDatos();
+    this.inicializarEstadoFormulario();   
     this.obtenerMercanciasDatos();
 
 
