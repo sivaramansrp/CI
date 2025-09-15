@@ -16,10 +16,14 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import certificadosACancelarDatos from '@libs/shared/theme/assets/json/140104/certificados-a-cancelar.json';
 import certificadosDisponiblesDatos from '@libs/shared/theme/assets/json/140104/certificados-disponibles.json';
-import cuposDisponiblesDatos from '@libs/shared/theme/assets/json/140104/cupos-disponibles.json';
 import { map } from 'rxjs';
+
+import catalogoDatos from '@libs/shared/theme/assets/json/140104/catalogos.json';
 import mecanismoAsignacionDatos from '@libs/shared/theme/assets/json/140104/mecanismo-asignacion.json';
 import regimenAduaneroListDatos from '@libs/shared/theme/assets/json/140104/regimen-aduanero-list.json';
+
+import { Tramite140104State, Tramite140104Store } from '../../estados/Tramite140104.store';
+import { Tramite140104Query } from '../../estados/Tramite140104.query';
 import { takeUntil } from 'rxjs';
 
 @Component({
@@ -139,7 +143,12 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
    * Formulario para mostrar montos asociados.
    */
   montoForm: FormGroup;
-
+   /**
+   * compodoc
+   * property {Solicitud260211State} solicitudState
+   * description Estado actual de la solicitud.
+   */
+  public solicitudState!: Tramite140104State;
   /**
    * Formulario para la cancelación (motivo de cancelación).
    */
@@ -153,16 +162,28 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService,
         private consultaQuery: ConsultaioQuery,
-    private desistimientoQuery: DesistimientoQuery
+    private desistimientoQuery: DesistimientoQuery,
+    private tramite140104Store: Tramite140104Store,
+    private tramite140104Query: Tramite140104Query,
+
   ) {
-    // Formulario de búsqueda
+     // Suscripción al estado de la solicitud
+    this.tramite140104Query.selectTramite$
+      .pipe(
+        takeUntil(this.destroyNotificationSubject$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    // Formulario de búsqueda    
     this.formularioGrupo = new FormGroup({
-      regimenAduanero: new FormControl('', Validators.required),
-      mecanismoAsignacion: new FormControl('', Validators.required),
-      tratadoBloqueComercial: new FormControl(''),
-      nombreProducto: new FormControl(''),
-      nombreSubproducto: new FormControl(''),
-      representacionFederal: new FormControl(''),
+      regimenAduanero: new FormControl(this.solicitudState.regimenAduanero, Validators.required),
+      mecanismoAsignacion: new FormControl(this.solicitudState.mecanismoAsignacion, Validators.required),
+      tratadoBloqueComercial: new FormControl(this.solicitudState.tratadoBloqueComercial),
+      nombreProducto: new FormControl(this.solicitudState.nombreProducto),
+      nombreSubproducto: new FormControl(this.solicitudState.nombreSubproducto),
+      representacionFederal: new FormControl(this.solicitudState.representacionFederal),
     });
 
     // Formulario para datos del producto
@@ -197,6 +218,10 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.mecanismoAsignacionList = mecanismoAsignacionDatos as Catalogo[];
     this.regimenAduaneroList = regimenAduaneroListDatos as Catalogo[];
+    this.tratadoBloqueComercialList=catalogoDatos as Catalogo[];
+    this.nombreProductoList=catalogoDatos as Catalogo[];
+    this.nombreSubproductoList=catalogoDatos as Catalogo[];
+    this.representacionFederalList=catalogoDatos as Catalogo[];
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotificationSubject$),
@@ -225,15 +250,38 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
    */
   public buscar(_event: Event): void {
  if (!this.formularioGrupo.valid) {
-      this.servicioDeMensajesService.establecerMostrarAlerta(true);
+      this.servicioDeMensajesService.establecerMostrarAlerta(true);    
     } else {
       this.servicioDeMensajesService.establecerMostrarAlerta(false);    
-    this.mostrarDetalleDelCupo = true;
-    this.cuposDisponiblesTabla = [cuposDisponiblesDatos as CuposDisponibles];
+    this.mostrarDetalleDelCupo = true;     
+     const ESTADO_DATOS = this.tramite140104Query.getValue();
+     this.cuposDisponiblesTabla = [
+        {
+          cupo: '001',
+          nombre_de_producto: ESTADO_DATOS.nombreProducto,
+          nombre_del_subproducto: ESTADO_DATOS.nombreSubproducto,
+          mecanismo_de_asignación: ESTADO_DATOS.mecanismoAsignacion,
+          tipo_cupo: 'Anual'
+        }
+      ]
     this.CertificadosDisponiblesTabla = [certificadosDisponiblesDatos as CertificadosDisponibles];
     this.CertificadosACancelarTabla = [certificadosACancelarDatos as CertificadosDisponibles];
     }
   }
+ /**
+   * compodoc
+   * method setValoresStore
+   * description Actualiza el valor de un campo en el almacén de estado.
+   * Este método se utiliza para sincronizar los valores del formulario con el estado global de la aplicación.
+   * param {FormGroup} form - El formulario reactivo que contiene los datos.
+   * param {string} campo - El nombre del campo que se desea actualizar.
+   * param {keyof Sanitario260211Store} metodoNombre - El método del almacén que se invocará para actualizar el valor.
+   * returns {void}
+   */
+ setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite140104Store): void {
+  const VALOR = form.get(campo)?.value;
+  (this.tramite140104Store[metodoNombre] as (value: unknown) => void)(VALOR); 
+ }
 
   /**
    * Maneja la selección de registros. Envía un mensaje de selección activa y limpia la intención de devolver facturas.

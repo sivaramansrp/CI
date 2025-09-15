@@ -40,11 +40,16 @@
       </div>
       <ol>
         <li *ngFor="let dia of semana" class="day-name"> {{dia | slice:0:3}}</li>
-        <li (click)="!isFutureDate(day) && clickDay(day)" *ngFor="let day of mountSelect; let first = first"
-          [style.gridColumnStart]="first ? day?.indexWeek : 'auto'" class="day"
-          [class.activo]="day?.value === this.Formulario.get('dia')?.value" [class.disabled]="isFutureDate(day)">
-          <span>{{ day?.value }}</span>
-        </li>
+        <li
+  (click)="!isDisabledDay(day) && clickDay(day)"
+  *ngFor="let day of mountSelect; let first = first"
+  [style.gridColumnStart]="first ? day?.indexWeek : 'auto'"
+  class="day"
+  [class.activo]="day?.value === this.Formulario.get('dia')?.value"
+  [class.disabled]="isDisabledDay(day)">
+  <span>{{ day?.value }}</span>
+</li>
+
       
       </ol>
     </div>

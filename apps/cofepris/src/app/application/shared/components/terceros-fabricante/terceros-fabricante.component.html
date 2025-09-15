@@ -8,7 +8,8 @@
       <div class="mt-5" *ngIf="tabla.nombre === 'Fabricante'">
         <h5>Fabricante*:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData" (seleccionCambio)="onFabricanteSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+          <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData" (seleccionCambio)="onFabricanteSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          [isInvalida]="tercerosForm.touched && fabricanteRowData.length === 0"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
@@ -26,7 +27,8 @@
         <h5>Formulador*:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="formuladorHeaderData" [commonTableBody]="formuladorRowData" (seleccionCambio)="onFormuladorSeleccionCambio($event)" 
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          [isInvalida]="tercerosForm.touched && formuladorRowData.length === 0"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
@@ -43,7 +45,8 @@
       <div class="mt-5" *ngIf="tabla.nombre === 'Proveedor'">
         <h5>Proveedor*:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"  (seleccionCambio)="onProveedorSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+          <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"  (seleccionCambio)="onProveedorSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          [isInvalida]="tercerosForm.touched && proveedorRowData.length === 0"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
@@ -121,7 +124,7 @@
           </div>
           @if(noContribuyente) {
             <div class="d-flex justify-content-center mt-3">
-              <button type="button" class="btn btn-primary w-40">Buscar</button>
+              <button type="button" class="btn btn-primary w-40" (click)="buscar(agregarFabricanteFormGroup)">Buscar</button>
             </div>
           }
         </div>
@@ -146,7 +149,7 @@
             }
             @if(fisica || moral || noContribuyente) {
             <div class="d-flex justify-content-end mt-2">
-              <button type="button" class="btn btn-primary w-50">Buscar</button>
+              <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarFabricanteFormGroup)">Buscar</button>
             </div>
             }
           </div>
@@ -194,7 +197,7 @@
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
             <div class="d-flex justify-content-end mt-2">
-              <button type="button" class="btn btn-primary w-50">Buscar</button>
+              <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarFabricanteFormGroup)">Buscar</button>
             </div>
           </div>
           <div class="col-md-4">
@@ -483,7 +486,7 @@
             </div>
           </div>
           <div class="d-flex justify-content-center mt-3">
-            <button type="button" class="btn btn-primary w-40">Buscar</button>
+            <button type="button" class="btn btn-primary w-40" (click)="buscar(agregarFormuladorFormGroup)">Buscar</button>
           </div>
         </div>
 
@@ -497,7 +500,7 @@
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
             <div class="d-flex justify-content-end mt-2">
-              <button type="button" class="btn btn-primary w-50">Buscar</button>
+              <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarFormuladorFormGroup)">Buscar</button>
             </div>
           </div>
           <div class="col-md-4">
@@ -544,7 +547,7 @@
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
             <div class="d-flex justify-content-end mt-2">
-              <button type="button" class="btn btn-primary w-50">Buscar</button>
+              <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarFormuladorFormGroup)">Buscar</button>
             </div>
           </div>
           <div class="col-md-4">
@@ -831,7 +834,7 @@
             </div>
           </div>
           <div class="d-flex justify-content-center mt-3">
-            <button type="button" class="btn btn-primary w-40">Buscar</button>
+            <button type="button" class="btn btn-primary w-40" (click)="buscar(agregarProveedorFormGroup)">Buscar</button>
           </div>
         </div>
 
@@ -845,7 +848,7 @@
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
             <div class="d-flex justify-content-end mt-2">
-              <button type="button" class="btn btn-primary w-50">Buscar</button>
+              <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarProveedorFormGroup)">Buscar</button>
             </div>
           </div>
           <div class="col-md-4">
@@ -892,7 +895,7 @@
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
             <div class="d-flex justify-content-end mt-2">
-              <button type="button" class="btn btn-primary w-50">Buscar</button>
+              <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarProveedorFormGroup)">Buscar</button>
             </div>
           </div>
           <div class="col-md-4">

@@ -9,7 +9,7 @@
  */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { REPRESENTACION_FEDERAL_DECLARACIONES, TEXTOS } from '../../constantes/representacion-federal.enum';
+import { INSTRUCCIONES_REPRESENTACION_FEDERAL_POR_PROCEDIMIENTO, REPRESENTACION_FEDERAL_DECLARACIONES, TEXTOS } from '../../constantes/representacion-federal.enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
@@ -72,6 +72,8 @@ export class RepresentacionComponent implements OnInit {
    */
   @Input() public idProcedimiento!: number;
 
+  instruccionMensaje: string = '';
+
   /**
    * Evento emitido para establecer valores en el store.
    * @type {EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>}
@@ -95,6 +97,11 @@ export class RepresentacionComponent implements OnInit {
   ngOnInit(): void {
     this.esRepresentacionFederal =
       REPRESENTACION_FEDERAL_DECLARACIONES.includes(this.idProcedimiento);
+
+    this.instruccionMensaje =
+      INSTRUCCIONES_REPRESENTACION_FEDERAL_POR_PROCEDIMIENTO[this.idProcedimiento] ||
+      this.TEXTOS.INSTRUCCIONES_REPRESENTACION_FEDERAL;
+
     if (this.esFormularioSoloLectura) {
       this.frmRepresentacionForm.disable();
     } else if (!this.esFormularioSoloLectura) {

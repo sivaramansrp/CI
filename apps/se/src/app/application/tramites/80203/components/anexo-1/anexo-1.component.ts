@@ -1,16 +1,12 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
-  CategoriaMensaje,
   ConfiguracionColumna,
   ConsultaioQuery,
-  Notificacion,
-  NotificacionesComponent,
   SeccionLibQuery,
   SeccionLibState,
   TablaDinamicaComponent,
   TablaSeleccion,
-  TipoNotificacionEnum,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import {
@@ -115,7 +111,6 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
     ReactiveFormsModule,
     TablaDinamicaComponent,
     CatalogoSelectComponent,
-    NotificacionesComponent,
   ],
 })
 export class Anexo1Component implements OnInit, OnDestroy {
@@ -130,7 +125,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * Referencia al elemento del modal de exportación de mercancía.
    * Utilizado para mostrar u ocultar el modal mediante la API de Bootstrap.
    */
-  @ViewChild('mercanciaexportacionModal')
+  @ViewChild('mercanciaExportacionModal')
   mercanciaExportacionModal!: ElementRef;
 
   /**
@@ -238,34 +233,6 @@ export class Anexo1Component implements OnInit, OnDestroy {
   nico: Catalogo[] = [];
 
   /**
-   * Indica si el campo tiene un valor asignado.
-   * @type {boolean}
-   */
-  tieneValor: boolean = false;
-
-  /**
-   * Indica si el botón de guardar está habilitado.
-   * @type {boolean}
-   */
-  habilitarGuardar: boolean = false;
-
-  /**
-   * Indica si el botón/agregar está activado.
-   * @type {boolean}
-   */
-  agregarActivado: boolean = false;
-
-  /**
-   * Configuración de notificación actual para mostrar al usuario.
-   *
-   * @description
-   * Almacena la configuración de la notificación que se mostrará
-   * en modales de confirmación, error o información.
-   *
-   */
-  public nuevaNotificacion!: Notificacion;
-
-  /**
    * @property {boolean} showTableExport
    * @description Controla la visibilidad de la tabla de exportación.
    * Cuando es true, muestra la tabla de datos de exportación.
@@ -319,6 +286,16 @@ export class Anexo1Component implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * Indica si el formulario está en modo de actualización.
+   * Si es `true`, el formulario está en estado de edición/actualización de datos existentes.
+   * Si es `false`, el formulario está en modo de alta/nuevo registro.
+   *
+   * @type {boolean}
+   * @memberof Anexo1Component
+   */
+  esFormularioActualizacion: boolean = false;
+
+  /**
    * @constructor
    * @description
    * Constructor del componente Anexo1Component.
@@ -349,6 +326,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
         map((seccionState) => {
           if (!seccionState.create && seccionState.procedureId === '80203') {
             this.esFormularioSoloLectura = seccionState.readonly;
+            this.esFormularioActualizacion = seccionState.update;
           }
           if (seccionState) {
             this.showTableExport = true;
@@ -597,6 +575,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
     const DEBE_MOSTRAR_TABLA = this.immexRegistroform.get(
       'exportacionForm.permisoImmexDatos'
     )?.value;
+
     this.permisoImmexDatosService
       .getDatos()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -614,25 +593,33 @@ export class Anexo1Component implements OnInit, OnDestroy {
             Array.isArray(RESPONSE_DATA.fraccionDatos) &&
             Array.isArray(RESPONSE_DATA.nicoDatos)
           ) {
-            this.immexTableDatos = DEBE_MOSTRAR_TABLA
+            const DEBE_MOSTRAR_DATOS =
+              DEBE_MOSTRAR_TABLA?.length > 0 ||
+              this.esFormularioSoloLectura ||
+              this.esFormularioActualizacion;
+
+            this.immexTableDatos = DEBE_MOSTRAR_DATOS
               ? RESPONSE_DATA.permisoImmexDatos
               : [];
-            this.nicoTablaDatos = RESPONSE_DATA.nicoDatos;
-            this.fraccionTablaDatos = DEBE_MOSTRAR_TABLA
+
+            this.fraccionTablaDatos = DEBE_MOSTRAR_DATOS
               ? RESPONSE_DATA.fraccionDatos
               : [];
+
+            this.nicoTablaDatos = RESPONSE_DATA.nicoDatos;
+
             this.permisoImmexDatos = RESPONSE_DATA.permisoImmexDatos;
             this.fraccionDatos = RESPONSE_DATA.fraccionDatos;
             this.nicoDatos = RESPONSE_DATA.nicoDatos;
 
-            if (this.permisoImmexDatos.length > 0 && DEBE_MOSTRAR_TABLA) {
+            if (this.permisoImmexDatos.length > 0 && DEBE_MOSTRAR_DATOS) {
               this.immexRegistroform.get('exportacionForm')?.patchValue({
                 fraccionArancelariaExportacion:
                   this.permisoImmexDatos[0].IMMEX_Columna_3,
               });
             }
 
-            if (this.fraccionDatos.length > 0 && DEBE_MOSTRAR_TABLA) {
+            if (this.fraccionDatos.length > 0 && DEBE_MOSTRAR_DATOS) {
               this.immexRegistroform.get('exportacionForm')?.patchValue({
                 productoArancelariaExportacion:
                   this.fraccionDatos[0].FRACCION_Columna_2,
@@ -703,7 +690,6 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
   showTableExportacion(): void {
     this.showTableExport = true;
-    this.agregarActivado = true;
     this.fetchData();
   }
 
@@ -717,119 +703,26 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @returns {void}
    */
   mostrarDetalleMercancia(): void {
-    this.cerrarModal();
-    if (
-      this.immexTableDatos.length === 0 ||
-      !this.immexRegistroform.get('exportacionForm.permisoImmexDatos')?.value
-    ) {
-      this.abrirMultipleSeleccionPopup(
-        '',
-        'Debe seleccionar un permiso immex.'
-      );
-      this.tieneValor = true;
-      return;
-    }
-    if (
-      this.mercanciaImportacionModal &&
+    const MODAL_INSTANCIA = new Modal(
       this.mercanciaImportacionModal.nativeElement
-    ) {
-      const MODAL_INSTANCIA = new Modal(
-        this.mercanciaImportacionModal.nativeElement
-      );
-      MODAL_INSTANCIA.show();
-    }
+    );
+    MODAL_INSTANCIA.show();
   }
 
-  mostrarDetalleMercanciaExportacion(): void {
-    this.cerrarModal();
-    if (
-      this.fraccionTablaDatos.length === 0 ||
-      !this.immexRegistroform.get('exportacionForm.permisoImmexDatos')?.value
-    ) {
-      this.abrirMultipleSeleccionPopup(
-        '',
-        'Debe seleccionar un permiso immex.'
-      );
-      this.tieneValor = true;
-      return;
-    }
-    if (
-      this.mercanciaExportacionModal &&
-      this.mercanciaExportacionModal.nativeElement
-    ) {
-      const MODAL_INSTANCIA = new Modal(
-        this.mercanciaExportacionModal.nativeElement
-      );
-      MODAL_INSTANCIA.show();
-    }
-  }
   /**
-   * Método para cerrar el modal de confirmación.
+   * @method mostrarDetalleMercanciaExportacion
+   * @description
+   * Muestra el modal de detalle de mercancía de exportación.
+   * Utiliza la instancia de Bootstrap Modal para mostrar el cuadro de diálogo
+   * asociado al elemento mercanciaExportacionModal.
+   *
    * @returns {void}
    */
-  cerrarModal(): void {
-    this.tieneValor = false;
-    this.habilitarGuardar = false;
-  }
-
-  guardarCambios(): void {
-    const IMPORTACION_FORM = this.immexRegistroform.get('importacionForm');
-    const CANDIAD_ANUAL = Number(IMPORTACION_FORM?.get('candiadAnual')?.value);
-    const CAPACIDAD_PERIODO = Number(
-      IMPORTACION_FORM?.get('capacidadPeriodo')?.value
+  mostrarDetalleMercanciaExportacion(): void {
+    const MODAL_INSTANCIA = new Modal(
+      this.mercanciaExportacionModal.nativeElement
     );
-    const CANDIDAD_POR_PERIODO = Number(
-      IMPORTACION_FORM?.get('candidadPorPeriodo')?.value
-    );
-    if (
-      CANDIAD_ANUAL === 0 &&
-      CAPACIDAD_PERIODO === 0 &&
-      CANDIDAD_POR_PERIODO === 0
-    ) {
-      this.cerrarModal();
-      this.abrirMultipleSeleccionPopup(
-        '',
-        'Las cantidades deben tener un valor mayor a cero.'
-      );
-      this.habilitarGuardar = true;
-      return;
-    }
-
-    // Lógica para agregar o actualizar
-    if (this.agregarActivado) {
-      // Lógica para agregar
-      // ...
-    } else {
-      // Lógica para actualizar
-      // ...
-    }
-  }
-
-  /**
-   * @method abrirMultipleSeleccionPopup
-   * Muestra un popup de notificación con contenido dinámico.
-   * Este método permite personalizar el título, mensaje y etiquetas de los botones del popup.
-   * @param titulo - Título del popup
-   * @param mensaje - Mensaje a mostrar en el popup
-   * @param txtBtnAceptar - Texto del botón de aceptar (opcional, por defecto 'Cerrar')
-   * @param txtBtnCancelar - Texto del botón de cancelar (opcional, por defecto '')
-   */
-  abrirMultipleSeleccionPopup(
-    titulo: string,
-    mensaje: string,
-    txtBtnAceptar: string = 'Aceptar',
-    txtBtnCancelar: string = ''
-  ): void {
-    this.nuevaNotificacion = {
-      tipoNotificacion: TipoNotificacionEnum.ALERTA,
-      categoria: CategoriaMensaje.ALERTA,
-      modo: 'modal',
-      titulo: titulo,
-      mensaje: mensaje,
-      cerrar: false,
-      txtBtnAceptar: txtBtnAceptar,
-      txtBtnCancelar: txtBtnCancelar,
-    };
+    MODAL_INSTANCIA.show();
   }
 
   /**

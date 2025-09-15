@@ -17,6 +17,8 @@ import { SociaoAccionistas } from '../../../shared/models/complimentos.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
+import { AnexoFraccionAnarelaria, AnexoUnoProducto } from '../../../shared/models/complimentos-seccion.model';
+
 /**
  * Representa el estado de Tramite80101 en la aplicación.
  * 
@@ -144,8 +146,8 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
       localizacion: '',
     },
     obligacionesFiscales: {
-      opinionPositiva: 'Si',
-      fechaExpedicion: '2025-03-15',
+      opinionPositiva: 'SI',
+      fechaExpedicion: '15/02/2024',
       aceptarObligacionFiscal: '',
     },
     formaModificaciones: {
@@ -765,7 +767,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    * Este método actualiza el estado del componente añadiendo o reemplazando 
    * los datos de la tabla de importación en la propiedad `annexoUno`.
    */
-  setImportarDatosTabla(importarDatosTabla:AnexoUnoEncabezado[]):void{
+  setImportarDatosTabla(importarDatosTabla:AnexoUnoProducto[]):void{
     this.update((state) => ({
       ...state,
       annexoUno: {
@@ -781,7 +783,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    *
    * @param exportarDatosTabla - Un arreglo de objetos de tipo `AnexoDosEncabezado` que contiene los datos a exportar.
    */
-  setExportarDatosTabla(exportarDatosTabla:AnexoDosEncabezado[]):void{
+  setExportarDatosTabla(exportarDatosTabla:AnexoFraccionAnarelaria[]):void{
     this.update((state) => ({
       ...state,
       annexoUno: {
