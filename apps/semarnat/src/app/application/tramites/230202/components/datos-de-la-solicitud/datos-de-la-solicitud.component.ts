@@ -365,13 +365,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene el grupo de formulario de exención de impuestos.
-   */
-  get reexportacionForm(): FormGroup {
-    return this.solicitudForm.get('reexportacionForm') as FormGroup;
-  }
-
-  /**
    * Obtiene el grupo de formulario de datos de mercancía.
    */
   inicializarFormulario(): void {
@@ -580,6 +573,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   get datosMercancia(): FormGroup {
     return this.solicitudForm.get('datosMercancia') as FormGroup;
+  }
+
+  /**
+   * Obtiene el grupo de formulario de exención de impuestos.
+   */
+  get reexportacionForm(): FormGroup {
+    return this.solicitudForm.get('reexportacionForm') as FormGroup;
   }
 
   /**
@@ -883,8 +883,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Si hay descripción del producto, muestra el modal para agregar mercancías.
    */
   agregarMercancia(): void {
-    const DESCRIPCION_PRODUCTO = this.reexportacionForm.get('descripcionProducto')?.value;
-    if (DESCRIPCION_PRODUCTO) {
+    const SELECTED_PRODUCTO = this.solicitudForm.get('reexportacionForm.descripcionProducto')?.value;
+    if (!SELECTED_PRODUCTO) {
       if (this.modalConfirmacion) {
         const MODEL = new Modal(this.modalConfirmacion.nativeElement);
         MODEL.show();
