@@ -30,7 +30,7 @@
     >
       {{ placeholder ? placeholder : 'Seleccione una opción' }}
     </option>
-    <option *ngFor="let option of catalogo" [value]="option.id">
+    <option *ngFor="let option of catalogo" [value]="option.clave">
       {{ option.descripcion }}
     </option>
   </select>
