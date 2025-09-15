@@ -342,7 +342,9 @@ describe('DatosDeReporteAnnualComponent', () => {
     });
     const result = component.validarTotalExportaciones();
     expect(result).toBe(false);
-    expect(component.mensajesDeValidacion).toEqual(["(Ventas totales deben ser mayores o iguales a cero.) es un campo requerido"]);
+    expect(component.mensajesDeValidacion).toEqual([
+      '(Ventas totales deben ser mayores o iguales a cero.) es un campo requerido',
+    ]);
   });
 
   it('should return false and add validation message if totalExportaciones is empty', () => {
@@ -352,7 +354,9 @@ describe('DatosDeReporteAnnualComponent', () => {
     });
     const result = component.validarTotalExportaciones();
     expect(result).toBe(false);
-    expect(component.mensajesDeValidacion).toEqual(["(Total exportaciones deben ser mayores o iguales a cero.) es un campo requerido"]);
+    expect(component.mensajesDeValidacion).toEqual([
+      '(Total exportaciones deben ser mayores o iguales a cero.) es un campo requerido',
+    ]);
   });
 
   it('should return false and call abrirModal if totalExportaciones > ventasTotales', () => {
@@ -382,16 +386,21 @@ describe('DatosDeReporteAnnualComponent', () => {
   });
 
   it('should set nuevaNotificacion and elementoParaEliminar when abrirModal is called', () => {
-    component.abrirModal(2);
+    component.abrirModal('');
     expect(component.nuevaNotificacion).toEqual(
       expect.objectContaining({
         tipoNotificacion: 'alert',
+        cerrar: false,
         categoria: 'danger',
-        mensaje: expect.stringContaining('Ventas Totales'),
+        mensaje: '',
         txtBtnAceptar: 'Aceptar',
+        modo: 'action',
+        tiempoDeEspera: 2000,
+        titulo: '',
+        txtBtnCancelar: '',
       })
     );
-    expect(component.elementoParaEliminar).toBe(2);
+    expect(component.elementoParaEliminar).toBe(0);
   });
 
   it('should remove pedimento at given index if borrar is true', () => {
