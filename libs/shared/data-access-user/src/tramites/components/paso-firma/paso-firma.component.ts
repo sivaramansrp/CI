@@ -28,12 +28,6 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   /**
-  * URL del servicio o endpoint al que se realizará la solicitud relacionada con la firma.
-  * Puede ser utilizado para enviar la firma generada o para obtener la cadena original.
-  */
-  url: string = '';
-
-  /**
   * Cadena original generada a partir de los datos del trámite.
   * Esta cadena será firmada con el certificado digital y la llave privada proporcionados.
   */
@@ -71,8 +65,47 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
     rfc: string;
     fechaFin: string;
   };
+  /**
+   * Identificador único de la solicitud de trámite que se está procesando.
+   * Este valor se recibe desde el componente padre y se utiliza para:
+   * - Generar la cadena original del documento
+   * - Enviar la firma electrónica al servicio correspondiente
+   * - Identificar la solicitud en las llamadas a la API
+   * 
+   * @example
+   * ```html
+   * <paso-firma [idSolicitud]="123456"></paso-firma>
+   * ```
+   */
   @Input() idSolicitud: number | null = null;
+
+  /**
+   * Código numérico que identifica el tipo de procedimiento o trámite.
+   * Este valor se utiliza para:
+   * - Determinar el endpoint específico en las llamadas al servicio
+   * - Configurar el comportamiento del proceso de firma según el tipo de trámite
+   * - Validar permisos y reglas de negocio específicas del procedimiento
+   * 
+   * @example
+   * ```html
+   * <paso-firma [procedure]="11201"></paso-firma>
+   * ```
+   */
   @Input() procedure: number = 0;
+
+  /**
+   * URL del procedimiento actual utilizada para la navegación entre pasos del trámite.
+   * Se usa para:
+   * - Construir la ruta de navegación al acuse de recibo después de la firma exitosa
+   * - Reemplazar la URL actual con la del siguiente paso en el flujo
+   * - Mantener la coherencia en la navegación del proceso de trámite
+   * 
+   * @example
+   * ```html
+   * <paso-firma procedureUrl="solicitud-11201"></paso-firma>
+   * ```
+   */
+  @Input() procedureUrl: string = '';
   /**
    * Constructor del componente.
    * @param router Servicio de enrutamiento.
@@ -87,12 +120,6 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
    * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
    */
   ngOnInit(): void {
-
-    // Obtener la URL actual y separar los segmentos
-    const URL_ACTUAL = this.router.url;
-    const URL_SEPARADA = URL_ACTUAL.split('/');
-    this.url = URL_SEPARADA.slice(0, 3).join('/');
-
     // Obtener la cadena original del trámite
     this.obtenerCadenaOriginal();
   }
@@ -231,7 +258,7 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
             firma,
             this.idSolicitud ?? 0
           );
-          this.router.navigate([`${this.url}/acuse`]);
+          this.router.navigate([this.router.url.replace(this.procedureUrl, 'acuse')]);
         }),
         catchError((error) => {
           console.error('Error en el proceso de firma:', error);
