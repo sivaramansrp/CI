@@ -4,13 +4,15 @@ import {
   CatalogoSelectComponent,
   ConfiguracionColumna,
   InputRadioComponent,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
   ValidacionesFormularioService,
-  Notificacion, 
-  NotificacionesComponent
+
 } from '@libs/shared/data-access-user/src';
+import { Notificacion } from '@libs/shared/data-access-user/src';
+
 import {
   ChangeDetectorRef,
   Component,
@@ -71,13 +73,13 @@ import Plantatif from '@libs/shared/theme/assets/json/221601/plantatif.json';
   styleUrls: ['./terceros.component.scss']
 })
 export class TercerosComponent implements OnInit, OnDestroy {
- 
+
   public paisCatalogo: Catalogo[] = realizar.pais;
   public estadoCatalogo: Catalogo[] = realizar.estado;
   public municipioCatalogo: Catalogo[] = realizar.municipio;
   public coloniaCatalogo: Catalogo[] = realizar.colonia;
-  
-  
+
+
   Plantatif = [Plantatif];
   datosPersonales!: FormGroup;
   tipoPersonaForm!: FormGroup;
@@ -92,7 +94,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
   numeroEstablecimientoTif: string = '';
   exportadorSeleccionado: Exportador[] = [];
   destinatarioSeleccionado: Destinatario[] = [];
-   isEditingDestinatario: boolean = false;
+  isEditingDestinatario: boolean = false;
   editingDestinatarioIndex: number = -1;
   public mostrarAlertaDestinatario: boolean = false;
   public confirmacionAlertaDestinatario: boolean = false;
@@ -214,7 +216,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
       this.resetRadioStates();
       this.inputChecked(value);
     });
-    
+
     this.resetRadioStates();
     this.updateStoreWithFormData();
   }
@@ -231,7 +233,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
   }
 
   eliminarDestinatario(): void {
- if (!this.destinatarioSeleccionado || this.destinatarioSeleccionado.length === 0) {
+    if (!this.destinatarioSeleccionado || this.destinatarioSeleccionado.length === 0) {
       this.mostrarNotificacionDestinatario(
         'Selecciona un registro.',
         false
@@ -249,14 +251,14 @@ export class TercerosComponent implements OnInit, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
-      titulo: '',
+      titulo: 'MENSAJE',
       mensaje: mensaje,
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: mostrarCancelar ? 'Cancelar' : '',
     };
-    
+
     if (mostrarCancelar) {
       this.confirmacionAlertaDestinatario = true;
     } else {
@@ -265,7 +267,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
   }
   onConfirmacionDestinatario(confirmar: boolean): void {
     this.confirmacionAlertaDestinatario = false;
-    
+
     if (confirmar) {
       this.realizarEliminacionDestinatario();
     }
@@ -274,17 +276,17 @@ export class TercerosComponent implements OnInit, OnDestroy {
   onAlertaDestinatario(): void {
     this.mostrarAlertaDestinatario = false;
   }
- private realizarEliminacionDestinatario(): void {
-    this.destinatario = this.destinatario.filter(record => 
+  private realizarEliminacionDestinatario(): void {
+    this.destinatario = this.destinatario.filter(record =>
       !this.destinatarioSeleccionado.includes(record)
     );
-    
+
     this.destinatarioSeleccionado = [];
     this.cdr.markForCheck();
     this.cdr.detectChanges();
-    
+
     this.mostrarNotificacionDestinatario(
-      'Destinatario eliminado correctamente.',
+      'Datos eliminados correctamente.',
       false
     );
   }
@@ -306,7 +308,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     }
 
     const DESTINATARIO_A_MODIFICAR = this.destinatarioSeleccionado[0];
-    this.editingDestinatarioIndex = this.destinatario.findIndex(dest => 
+    this.editingDestinatarioIndex = this.destinatario.findIndex(dest =>
       dest.nombreDenominacionORazonSocial === DESTINATARIO_A_MODIFICAR.nombreDenominacionORazonSocial &&
       dest.correoElectronico === DESTINATARIO_A_MODIFICAR.correoElectronico &&
       dest.telefono === DESTINATARIO_A_MODIFICAR.telefono
@@ -322,8 +324,8 @@ export class TercerosComponent implements OnInit, OnDestroy {
   }
 
   private cargarDatosDestinatarioParaEdicion(destinatario: Destinatario): void {
- const TIPO_PERSONA = this.determinarTipoPersona(destinatario.nombreDenominacionORazonSocial);
-     this.tipoPersonaForm.patchValue({
+    const TIPO_PERSONA = TercerosComponent.determinarTipoPersona(destinatario.nombreDenominacionORazonSocial);
+    this.tipoPersonaForm.patchValue({
       tipoPersona: TIPO_PERSONA
     });
 
@@ -340,7 +342,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     const COLONIA_ID = this.coloniaCatalogo.find((c: Catalogo) => c.descripcion === destinatario.colonia)?.id || '';
 
     if (TIPO_PERSONA === 'fisica') {
-      const NOMBRES = this.parsearNombreCompleto(destinatario.nombreDenominacionORazonSocial);
+      const NOMBRES = TercerosComponent.parsearNombreCompleto(destinatario.nombreDenominacionORazonSocial);
       this.datosPersonales.patchValue({
         nombre: NOMBRES.nombre,
         primerApellido: NOMBRES.primerApellido,
@@ -384,17 +386,17 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.datosPersonales.markAsUntouched();
     this.tipoPersonaForm.markAsPristine();
     this.tipoPersonaForm.markAsUntouched();
-  
+
   }
 
-  private determinarTipoPersona(nombreCompleto: string): string {
+  private static determinarTipoPersona(nombreCompleto: string): string {
     const PALABRAS = nombreCompleto.trim().split(' ').filter(palabra => palabra.length > 0);
     return PALABRAS.length >= 2 ? 'fisica' : 'moral';
   }
 
-  private parsearNombreCompleto(nombreCompleto: string): {nombre: string, primerApellido: string, segundoApellido: string} {
+  private static parsearNombreCompleto(nombreCompleto: string): { nombre: string, primerApellido: string, segundoApellido: string } {
     const PARTES = nombreCompleto.trim().split(' ').filter(parte => parte.length > 0);
-    
+
     return {
       nombre: PARTES[0] || '',
       primerApellido: PARTES[1] || '',
@@ -404,16 +406,16 @@ export class TercerosComponent implements OnInit, OnDestroy {
 
   guardarDestinatario(): void {
     if (!this.tipoPersonaForm.get('tipoPersona')?.value) {
-   this.mostrarNotificacionDestinatario('Por favor selecciona el tipo de persona.');
+      this.mostrarNotificacionDestinatario('Por favor selecciona el tipo de persona.');
       return;
     }
-   const TIPO_PERSONA = this.tipoPersonaForm.get('tipoPersona')?.value;
-   this.updateConditionalValidators(TIPO_PERSONA);
-   setTimeout(() => {
+    const TIPO_PERSONA = this.tipoPersonaForm.get('tipoPersona')?.value;
+    this.updateConditionalValidators(TIPO_PERSONA);
+    setTimeout(() => {
       Object.keys(this.datosPersonales.controls).forEach(key => {
         const CONTROL = this.datosPersonales.get(key);
         if (CONTROL?.invalid) {
-
+          CONTROL.markAsTouched();
         }
       });
 
@@ -435,7 +437,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     const ESTADO_SELECCIONADO = this.estadoCatalogo.find((item: Catalogo) => item.id === Number(FORM_VALUE.estado));
     const MUNICIPIO_SELECCIONADO = this.municipioCatalogo.find((item: Catalogo) => item.id === Number(FORM_VALUE.municipio));
     const COLONIA_SELECCIONADA = this.coloniaCatalogo.find((item: Catalogo) => item.id === Number(FORM_VALUE.colonia));
-     const NOMBRE_COMPLETO = TercerosComponent.obtenerNombreCompleto(FORM_VALUE, TIPO_PERSONA);
+    const NOMBRE_COMPLETO = TercerosComponent.obtenerNombreCompleto(FORM_VALUE, TIPO_PERSONA);
     const DOMICILIO_COMPLETO = TercerosComponent.obtenerDomicilioCompleto(FORM_VALUE, COLONIA_SELECCIONADA, MUNICIPIO_SELECCIONADO, ESTADO_SELECCIONADO);
     const DESTINATARIO_DATA: Destinatario = {
       nombreDenominacionORazonSocial: NOMBRE_COMPLETO,
@@ -452,33 +454,28 @@ export class TercerosComponent implements OnInit, OnDestroy {
       codigoPostal: FORM_VALUE.codigo || ''
     };
 
-   if (this.isEditingDestinatario && this.editingDestinatarioIndex !== -1) {
+    if (this.isEditingDestinatario && this.editingDestinatarioIndex !== -1) {
       const NUEVO_ARRAY = [...this.destinatario];
       NUEVO_ARRAY[this.editingDestinatarioIndex] = DESTINATARIO_DATA;
       this.destinatario = NUEVO_ARRAY;
-  } else {
-    
+    } else {
+
       this.destinatario = [...this.destinatario, DESTINATARIO_DATA];
-   }
+    }
     this.isEditingDestinatario = false;
     this.editingDestinatarioIndex = -1;
     this.destinatarioSeleccionado = [];
-    
+
     this.limpiarDatosFormulario();
     this.tipoPersonaForm.reset();
     this.resetRadioStates();
     this.showtercerosModal = false;
-    
+
     this.cdr.markForCheck();
     this.cdr.detectChanges();
-    
-    console.log('Lista actualizada de destinatarios:', this.destinatario);
-    console.log('=== GUARDADO COMPLETADO ===');
   }
 
   private updateConditionalValidators(tipoPersona: string): void {
-    console.log('Actualizando validadores para tipo:', tipoPersona);
-    
     const NOMBRECONTROL = this.datosPersonales.get('nombre');
     const PRIMERAPELLIDOCONTROL = this.datosPersonales.get('primerApellido');
     const SOCIALCONTROL = this.datosPersonales.get('social');
@@ -500,18 +497,18 @@ export class TercerosComponent implements OnInit, OnDestroy {
     MUNICIPIOCONTROL?.clearValidators();
 
     if (tipoPersona === 'fisica') {
-      console.log('Aplicando validadores para persona física');
+
       NOMBRECONTROL?.setValidators([Validators.required, Validators.maxLength(200)]);
       PRIMERAPELLIDOCONTROL?.setValidators([Validators.required, Validators.maxLength(200)]);
       SOCIALCONTROL?.setValidators([Validators.maxLength(250)]);
     } else if (tipoPersona === 'moral' || tipoPersona === 'planta') {
-      console.log('Aplicando validadores para persona moral/planta');
+
       SOCIALCONTROL?.setValidators([Validators.required, Validators.maxLength(250)]);
       NOMBRECONTROL?.setValidators([Validators.maxLength(200)]);
       PRIMERAPELLIDOCONTROL?.setValidators([Validators.maxLength(200)]);
     }
 
-    // Common validators (always required)
+
     CALLECONTROL?.setValidators([Validators.required, Validators.maxLength(100)]);
     EXTERIORCONTROL?.setValidators([Validators.required, Validators.maxLength(55)]);
     CORREOCONTROL?.setValidators([Validators.required, Validators.email]);
@@ -530,7 +527,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
     PAISCONTROL?.updateValueAndValidity();
     MUNICIPIOCONTROL?.updateValueAndValidity();
 
-    console.log('Validadores actualizados');
   }
 
   private resetRadioStates(): void {
@@ -562,7 +558,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.showFisicaRow = false;
     this.showMoralRow = false;
     this.showPlantaRow = false;
-    
+
     if (tipoPersona === 'fisica') {
       this.showFisicaRow = true;
       this.datosPersonales.enable();
@@ -586,15 +582,12 @@ export class TercerosComponent implements OnInit, OnDestroy {
   }
 
   onDestinatarioSeleccionado(filas: Destinatario[]): void {
-    console.log('Destinatarios seleccionados:', filas);
     this.destinatarioSeleccionado = [...filas];
     this.cdr.detectChanges();
   }
 
   public inputChecked(checkBoxName: string): void {
-    console.log('Input checked called with:', checkBoxName);
     this.resetRadioStates();
-    
     if (checkBoxName === 'fisica') {
       this.fisica = true;
     } else if (checkBoxName === 'moral') {
@@ -602,7 +595,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     } else if (checkBoxName === 'planta') {
       this.planta = true;
     }
-    
+
     this.tipoPersonaForm.get('tipoPersona')?.setValue(checkBoxName, { emitEvent: false });
     this.updateConditionalValidators(checkBoxName);
     this.handleTipoPersonaChange(checkBoxName);
@@ -704,27 +697,39 @@ export class TercerosComponent implements OnInit, OnDestroy {
       correoElectronico: '',
       tif: ''
     });
-    
+
     this.datosPersonales.markAsUntouched();
     this.datosPersonales.markAsPristine();
   }
 
-  private static obtenerNombreCompleto(formValue: any, tipoPersona: string): string {
+  private static obtenerNombreCompleto(
+    formValue: {
+      nombre?: string;
+      primerApellido?: string;
+      segundoApellido?: string;
+      social?: string;
+    },
+    tipoPersona: string
+  ): string {
     if (tipoPersona === 'fisica') {
       const NOMBRE = formValue.nombre || '';
       const PRIMER_APELLIDO = formValue.primerApellido || '';
       const SEGUNDO_APELLIDO = formValue.segundoApellido || '';
-      
+
       return `${NOMBRE} ${PRIMER_APELLIDO} ${SEGUNDO_APELLIDO}`.trim();
-    } else {
-      return formValue.social || '';
     }
+    return formValue.social || '';
   }
 
   private static obtenerDomicilioCompleto(
-    formValue: any, 
-    colonia: Catalogo | undefined, 
-    municipio: Catalogo | undefined, 
+    formValue: {
+      calle?: string;
+      exterior?: string;
+      interior?: string;
+      codigo?: string;
+    },
+    colonia: Catalogo | undefined,
+    municipio: Catalogo | undefined,
     estado: Catalogo | undefined
   ): string {
     const PARTES_DOMICILIO = [

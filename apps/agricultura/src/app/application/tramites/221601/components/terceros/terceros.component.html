@@ -28,15 +28,11 @@
   <!-- Destinatario table -->
   <div class="row">
     <h6>Destinatario (destino final)*</h6>
-    <app-tabla-dinamica 
-      [configuracionTabla]="configuracionTablaDatos" 
-      [datos]="destinatario"
-      [tipoSeleccionTabla]="checkbox" 
-      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-     
+    <app-tabla-dinamica [configuracionTabla]="configuracionTablaDatos" [datos]="destinatario"
+      [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       (listaDeFilaSeleccionada)="onDestinatarioSeleccionado($event)">
     </app-tabla-dinamica>
-    
+
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
         <li class="page-item"><a class="page-link">1</a></li>
@@ -45,8 +41,7 @@
   </div>
 
   <!-- Action buttons for Destinatario - Show when no data exists -->
-  <div class="col-md-12 mt-5 d-flex justify-content-end" 
-       *ngIf="destinatario.length === 0">
+  <div class="col-md-12 mt-5 d-flex justify-content-end" *ngIf="destinatario.length === 0">
     <button type="button" class="btn btn-primary ms-3" (click)="tercerosAgregar()"
       [disabled]="esFormularioSoloLectura">Agregar</button>
     <button type="button" class="btn btn-default ms-3" (click)="abrirBuscarTercerosModal()">Buscar</button>
@@ -54,18 +49,19 @@
 
   <!-- Action buttons for Destinatario - Show when data exists and is selected -->
   <div class="col-md-12 mt-5 d-flex justify-content-end"
-       *ngIf="destinatario.length > 0 && destinatarioSeleccionado?.length && destinatarioSeleccionado.length > 0">
-    <button type="button" class="btn btn-primary ms-3" (click)="modificarDestinatario()" 
-          [disabled]="esFormularioSoloLectura">Modificar</button>
-    <button type="button" class="btn btn-danger ms-3" (click)="eliminarDestinatario()" 
-          [disabled]="esFormularioSoloLectura">Eliminar</button>
+    *ngIf="destinatario.length > 0 && destinatarioSeleccionado?.length && destinatarioSeleccionado.length > 0">
+    <button type="button" class="btn btn-primary ms-3" (click)="modificarDestinatario()"
+      [disabled]="esFormularioSoloLectura">Modificar</button>
+    <button type="button" class="btn btn-danger ms-3" (click)="eliminarDestinatario()"
+      [disabled]="esFormularioSoloLectura">Eliminar</button>
   </div>
 
   <!-- Modal -->
   <app-modal [active]="showtercerosModal">
     <div>
       <form [formGroup]="tipoPersonaForm" class="form">
-        <ng-titulo [titulo]="isEditingDestinatario ? 'Modificar destinatario (destino final)' : 'Agregar destinatario (destino final)'" />
+        <ng-titulo
+          [titulo]="isEditingDestinatario ? 'Modificar destinatario (destino final)' : 'Agregar destinatario (destino final)'" />
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label">Tipo persona*:</label>
@@ -79,8 +75,7 @@
           </div>
           <div class="col-md-6 custom-planta">
             <app-input-radio [radioOptions]="Plantatif" [isRequired]="true" formControlName="tipoPersona"
-              [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)"
-             ></app-input-radio>
+              [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)"></app-input-radio>
           </div>
         </div>
       </form>
@@ -127,8 +122,8 @@
           <div class="col-md-4 mb-3">
             <div class="form-group">
               <label class="form-label" for="primerApellido">Primer apellido*:</label>
-              <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido" maxlength="200"
-                (change)="setValoresStore(datosPersonales,'primerApellido', 'setPrimerApellido')" />
+              <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido"
+                maxlength="200" (change)="setValoresStore(datosPersonales,'primerApellido', 'setPrimerApellido')" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('primerApellido')?.touched">
                   <small class="mensaje-error" *ngIf="datosPersonales.get('primerApellido')?.hasError('maxlength')">
@@ -142,8 +137,8 @@
           <div class="col-md-4 mb-3">
             <div class="form-group">
               <label class="form-label" for="segundoApellido">Segundo apellido:</label>
-              <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido" maxlength="200"
-                (change)="setValoresStore(datosPersonales,'segundoApellido', 'setSegundoApellido')" />
+              <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido"
+                maxlength="200" (change)="setValoresStore(datosPersonales,'segundoApellido', 'setSegundoApellido')" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('segundoApellido')?.touched">
                   <small class="mensaje-error" *ngIf="datosPersonales.get('segundoApellido')?.hasError('maxlength')">
@@ -202,20 +197,20 @@
                 <div *ngIf="datosPersonales.get('codigo')?.touched && datosPersonales.get('codigo')?.invalid">
                   <div>
                     @if (datosPersonales.get('codigo')?.hasError('maxlength')) {
-                      <small class="mensaje-error">
-                        Por favor, no escribas más de 5 caracteres
-                      </small>
+                    <small class="mensaje-error">
+                      Por favor, no escribas más de 5 caracteres
+                    </small>
                     }
                     @if (datosPersonales.get('codigo')?.hasError('minlength')) {
-                      <small class="mensaje-error">
-                        Por favor, no escribas menos de 5 caracteres
-                      </small>
+                    <small class="mensaje-error">
+                      Por favor, no escribas menos de 5 caracteres
+                    </small>
                     }
                   </div>
                 </div>
+              </div>
             </div>
-            </div>
-         </div> 
+          </div>
           <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="estado" [label]="'Estado'"
@@ -299,8 +294,7 @@
             <div class="form-group">
               <label class="form-label" for="lada">Lada:</label>
               <input class="form-control" id="lada" type="text" formControlName="lada" maxlength="5" size="5"
-                (change)="setValoresStore(datosPersonales,'lada', 'setLada')"
-                (input)="onNumericInput($event)" />
+                (change)="setValoresStore(datosPersonales,'lada', 'setLada')" (input)="onNumericInput($event)" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('lada')?.touched && datosPersonales.get('lada')?.invalid">
                   <small class="mensaje-error" *ngIf="datosPersonales.get('lada')?.hasError('maxlength')">
@@ -316,21 +310,21 @@
           <div class="col-md-3 mb-3">
             <div class="form-group">
               <label class="form-label" for="telefono">Teléfono:</label>
-              <input class="form-control" id="telefono" type="text" formControlName="telefono" maxlength="30"
-                size="29" (change)="setValoresStore(datosPersonales,'telefono', 'setTelefono')"
+              <input class="form-control" id="telefono" type="text" formControlName="telefono" maxlength="30" size="29"
+                (change)="setValoresStore(datosPersonales,'telefono', 'setTelefono')"
                 (input)="onNumericInput($event)" />
               <div class="d-grid">
                 <div *ngIf="datosPersonales.get('telefono')?.touched && datosPersonales.get('telefono')?.invalid">
                   <div>
                     @if (datosPersonales.get('telefono')?.hasError('maxlength')) {
-                      <small class="mensaje-error">
-                        Existen datos incorrectos que no cumplen con el formato esperado
-                      </small>
+                    <small class="mensaje-error">
+                      Existen datos incorrectos que no cumplen con el formato esperado
+                    </small>
                     }
                     @if (datosPersonales.get('telefono')?.hasError('pattern')) {
-                      <small class="mensaje-error">
-                        Existen datos incorrectos que no cumplen con el formato esperado
-                      </small>
+                    <small class="mensaje-error">
+                      Existen datos incorrectos que no cumplen con el formato esperado
+                    </small>
                     }
                   </div>
                 </div>
@@ -395,15 +389,17 @@
         <div class="row mb-3" *ngIf="buscarTercerosForm.get('tipoPersonaBuscar')?.value === 'fisica'">
           <div class="col-md-4">
             <label class="form-label" for="nombreBuscar">Nombre:</label>
-            <input class="form-control" id="nombreBuscar" type="text" formControlName="nombre"  maxlength="30"/>
+            <input class="form-control" id="nombreBuscar" type="text" formControlName="nombre" maxlength="30" />
           </div>
           <div class="col-md-4">
             <label class="form-label" for="apellidoPaternoBuscar">Apellido paterno:</label>
-            <input class="form-control" id="apellidoPaternoBuscar" type="text" formControlName="apellidoPaterno"  maxlength="25"/>
+            <input class="form-control" id="apellidoPaternoBuscar" type="text" formControlName="apellidoPaterno"
+              maxlength="25" />
           </div>
           <div class="col-md-4">
             <label class="form-label" for="apellidoMaternoBuscar">Apellido materno:</label>
-            <input class="form-control" id="apellidoMaternoBuscar" type="text" formControlName="apellidoMaterno" maxlength="30" />
+            <input class="form-control" id="apellidoMaternoBuscar" type="text" formControlName="apellidoMaterno"
+              maxlength="30" />
           </div>
         </div>
 
@@ -411,21 +407,23 @@
         <div class="row mb-3" *ngIf="buscarTercerosForm.get('tipoPersonaBuscar')?.value === 'moral'">
           <div class="col-md-8">
             <label class="form-label" for="razonSocialBuscar">Razón social:</label>
-            <input class="form-control" id="razonSocialBuscar" type="text" formControlName="razonSocial" maxlength="150" />
+            <input class="form-control" id="razonSocialBuscar" type="text" formControlName="razonSocial"
+              maxlength="150" />
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label" for="correoElectronicoBuscar">Correo electrónico:</label>
-            <input class="form-control" id="correoElectronicoBuscar" type="email" formControlName="correoElectronico" maxlength="30" />
+            <input class="form-control" id="correoElectronicoBuscar" type="email" formControlName="correoElectronico"
+              maxlength="30" />
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'País'" [isDisabled]="true"
-               [required]="false" name="pais"></app-catalogo-select>
+              [required]="false" name="pais"></app-catalogo-select>
           </div>
 
           <div class="col-md-6">
@@ -437,8 +435,7 @@
         <!-- Action buttons -->
         <div class="d-flex justify-content-end">
           <button type="button" class="btn btn-default me-2" (click)="cerrarBuscarTercerosModal()">Cerrar</button>
-          <button type="button" class="btn btn-danger me-2"
-            (click)="limpiarBuscarTerceros()">Limpiar</button>
+          <button type="button" class="btn btn-danger me-2" (click)="limpiarBuscarTerceros()">Limpiar</button>
           <button type="button" class="btn btn-primary">Buscar</button>
         </div>
       </form>
@@ -453,17 +450,16 @@
 
   <!-- Notification components - same pattern as datos-de-la-solicitud -->
   @if(confirmacionAlertaDestinatario){
-<section>
-  <lib-notificaciones [notificacionInput]="notificacionDestinatario"
-    (confirmacionModal)="onConfirmacionDestinatario($event)">
-  </lib-notificaciones>
-</section>
-}
+  <section>
+    <lib-notificaciones [notificacionInput]="notificacionDestinatario"
+      (confirmacionModal)="onConfirmacionDestinatario($event)">
+    </lib-notificaciones>
+  </section>
+  }
 
-@if(mostrarAlertaDestinatario){
-<section>
-  <lib-notificaciones [notificacionInput]="notificacionDestinatario" 
-    (confirmacionModal)="onAlertaDestinatario()">
-  </lib-notificaciones>
-</section>
-}
+  @if(mostrarAlertaDestinatario){
+  <section>
+    <lib-notificaciones [notificacionInput]="notificacionDestinatario" (confirmacionModal)="onAlertaDestinatario()">
+    </lib-notificaciones>
+  </section>
+  }
