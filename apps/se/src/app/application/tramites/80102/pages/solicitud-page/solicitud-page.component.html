@@ -21,6 +21,8 @@
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
         [btnGuardar]="true"
+        [btnGuardarVisible]="btnGuardarVisible"
+        (btnGuardarClicked)="obtenerDatosDelStore()"
       ></btn-continuar>
     </div>
   </div>

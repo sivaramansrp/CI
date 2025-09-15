@@ -272,6 +272,11 @@ export class Tramite80102Query extends Query<Tramite80102State> {
   selectplantasImmexTablaLista$ = this.select(
     (state) => state.plantasImmexTablaLista
   );
+  
+  /**
+ * Observable selector for retrieving the entire state.
+ */
+allStoreData$ = this.select((state) => state);
 
   /**
    * @description Constructor de la clase `Tramite80102Query`.
