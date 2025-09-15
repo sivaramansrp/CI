@@ -126,7 +126,31 @@ export class PasoCapturarSolicitudComponent {
    * @returns void
    */
   guardar(data: any): void {
-    const PAYLOAD = {
+
+const PLANTAS_SUBMANUFACTURERAS = data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar.map((item: any) => ({
+        idDomicilio: 0,
+        calle: item.calle,
+        numeroExterior: item.numExterior,
+        numeroInterior: item.numInterior,
+        codigoPostal: item.codigoPostal,
+        informacionExtra: item.informacionExtra ?? '',
+        clave: item.clave ?? '',
+        cveLocalidad: item.cveLocalidad ?? '',
+        cveDelegMun: item.delegacionMunicipio ?? '',
+        cveEntidad: item.entidadFederativa ?? '',
+        cvePais: item.pais ?? '',
+        ciudad: item.ciudad ?? '',
+        telefono: item.telefono ?? '',
+        fax: item.fax ?? '',
+        municipio: item.municipio ?? '',
+        colonia: item.colonia ?? '',
+        descUbicacion: item.descUbicacion ?? '',
+        cveCatalogo: item.cveCatalogo ?? '',
+        telefonos: item.telefonos ?? '',
+        tipoDomicilio: item.domicilioFiscalSolicitante ?? ''
+}));
+
+const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
     "idSolicitud": 202781045,
     "idTipoTramite": 80101,
@@ -209,7 +233,7 @@ export class PasoCapturarSolicitudComponent {
             }
         }
     ],
-    "plantasSubmanufactureras": [],
+    "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
     "sociosAccionistas": []
 }
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
