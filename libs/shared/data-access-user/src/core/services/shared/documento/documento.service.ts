@@ -2,7 +2,9 @@ import { DocumentoResponse, DocumentosRequest } from '../../../models/shared/doc
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { BaseResponse } from '../../../models/5701/base-response.model';
+import { CadenaOriginalRequest } from '../../../models/shared/cadena-original-request.model';
 import { ENVIRONMENT } from '../../../../enviroments/enviroment';
+import { FirmarRequest } from '../../../models/shared/firma-electronica/request/firmar-request.model';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -84,6 +86,40 @@ export class DocumentoService {
       tap(response => response),
       catchError(() => {
         const ERROR = new Error(`Error al obtener datos de firma: ${ENDPOINT}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+  /**
+   * Envía una solicitud de firma electrónica.
+   * @param idSolicitud - ID de la solicitud a firmar.
+   * @param body - Cuerpo de la solicitud de firma.
+   * @returns Observable con la respuesta del servidor.
+   */
+  enviarFirma<T>(idSolicitud: string | number, body: FirmarRequest, procedure: number): Observable<BaseResponse<T>> {
+    const ENDPOINT = `${this.urlServerHost}/api/sat-t${procedure}/solicitud/${idSolicitud}/firmar`;
+    return this.http.post<BaseResponse<T>>(ENDPOINT, body).pipe(
+      map(response => response),
+      catchError(() => {
+        const ERROR = new Error(`Error al firmar solicitud con ID ${idSolicitud}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
+
+  /**
+   * Obtiene la cadena original del trámite 130118.
+   * @param body Objeto que contiene los datos necesarios para generar la cadena original.
+   * @returns Un observable que emite la respuesta del servidor con la cadena original.
+   */
+  obtenerCadenaOriginal<T>(idSolicitud: string, body: CadenaOriginalRequest, procedure: number): Observable<BaseResponse<T>> {
+    const ENDPOINT = `${this.urlServerHost}/api/sat-t${procedure}/solicitud/${idSolicitud}/genera-cadena-original`;
+
+    return this.http.post<BaseResponse<T>>(ENDPOINT, body).pipe(
+      map((response) => response),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener la cadena original en ${ENDPOINT}`);
         return throwError(() => ERROR);
       })
     );

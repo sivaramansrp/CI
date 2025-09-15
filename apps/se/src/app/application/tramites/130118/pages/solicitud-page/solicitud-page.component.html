@@ -41,7 +41,7 @@
           (reenviarCargaRealizada)="cargaRealizada($event)"></app-paso-dos>
         }
         @case (3) {
-          <app-paso-tres></app-paso-tres>
+          <paso-firma [idSolicitud]="this.solicitudState.idSolicitud" [procedure]="130118"></paso-firma>
         }
       }
 
