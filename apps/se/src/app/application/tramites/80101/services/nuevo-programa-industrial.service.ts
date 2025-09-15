@@ -15,6 +15,7 @@ import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shar
 import { BehaviorSubject } from 'rxjs';
 import { CadenaOriginalRequest } from '../../130118/model/request/cadena-original-request.model';
 import { CatalogoDatosIdx } from '../../../shared/models/federatarios-y-plantas.model';
+import { ComplimentosService } from '../../../shared/services/complimentos.service';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 import { HttpClient } from '@angular/common/http';
@@ -23,8 +24,6 @@ import { Injectable } from '@angular/core';
 import { PROC_80101 } from '../servers/api-route';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Tramite80101Query } from '../estados/tramite80101.query';
-import { PROC_80101 } from '../servers/api-route';
-import { ComplimentosService } from '../../../shared/services/complimentos.service';
 
 
 
