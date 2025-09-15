@@ -286,5 +286,17 @@
         "dpi": "transporte 3"
       }
     ]
-  }
+  },
+  "mercanciaLista": [
+    {
+      "id": 1,
+      "fraccionArancelaria": "40012999",
+      "descripcionFraccion": "Los demás.",
+      "nico": "00",
+      "descripcion": "Los demás.",
+      "unidaddeMedidaDeUMT": "Kilogramo",
+      "cantidadTotalUMT": "20.15",
+      "saldoPendiente": "20.15"
+    }
+  ]
 }

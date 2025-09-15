@@ -3,7 +3,7 @@ import {
   AnexoUnoEncabezado,
   ProveedorClienteTabla,
 } from '../../../../shared/models/nuevo-programa-industrial.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ProveedorClienteComponent } from '../../../../shared/components/proveedor-cliente/proveedor-cliente.component';
@@ -48,6 +48,11 @@ export class ContenedorProveedorClienteComponent implements OnDestroy, OnInit {
    * @property {Subject<void>} destroyNotifier$
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+/**
+ * Evento que se emite para cerrar el popup.
+ */
+  @Output() cerrarPopup = new EventEmitter<void>();
 
   /**
    * Constructor de la clase ContenedorProveedorClienteComponent.

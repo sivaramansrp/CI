@@ -20,7 +20,7 @@ export interface Tramite130203State {
   cantidad: string;
 
   /** Valor de la partida en dólares estadounidenses. */
-  valorPartidaUSD: number;
+  valorPartidaUSD: string;
 
   /** Unidad de medida del producto. */
   unidadMedida: string;
@@ -47,7 +47,7 @@ export interface Tramite130203State {
   cantidadPartidasDeLaMercancia: string;
 
   /** Valor de la partida en dólares estadounidenses para las partidas de la mercancía. */
-  valorPartidaUSDPartidasDeLaMercancia: number;
+  valorPartidaUSDPartidasDeLaMercancia: string;
 
   /** Descripción de las partidas de la mercancía. */
   descripcionPartidasDeLaMercancia: string;
@@ -129,6 +129,18 @@ export interface Tramite130203State {
 
   /** Nombre relacionado con el trámite. */
   nombre: string;
+  /**
+   * Datos del cuerpo de la tabla dinámica.
+   */
+  tableBodyData: PartidasDeLaMercanciaModelo[];
+  /**
+   * Cantidad total de partidas de la mercancía.
+   */
+  cantidadTotal: string;
+  /*
+  Valor total en USD de las partidas de la mercancía.
+  */
+  valorTotalUSD: string;
 }
 
 /**
@@ -146,13 +158,13 @@ export function createInitialState(): Tramite130203State {
     producto: '',
     descripcion: '',
     cantidad: '',
-    valorPartidaUSD: 0,
+    valorPartidaUSD: '',
     unidadMedida: '',
     defaultProducto: 'Nuevo',
     regimen: '',
     clasificacion: '',
     cantidadPartidasDeLaMercancia: '',
-    valorPartidaUSDPartidasDeLaMercancia: 0,
+    valorPartidaUSDPartidasDeLaMercancia: '',
     descripcionPartidasDeLaMercancia: '',
     valorFacturaUSD: '',
     bloque: '',
@@ -180,6 +192,9 @@ export function createInitialState(): Tramite130203State {
     tipoEmpresa: '',
     lineaCheckbox: false,
     nombre: '',
+    tableBodyData: [],
+    cantidadTotal: '',
+    valorTotalUSD: ''
   };
 }
 

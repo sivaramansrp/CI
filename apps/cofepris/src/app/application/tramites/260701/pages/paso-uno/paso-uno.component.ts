@@ -97,5 +97,12 @@ export class PasoUnoComponent implements OnInit {
           }
         }
       });
+      this.certificadosLicenciasSvc.getRepresentLegalaConsulta().pipe(takeUntil(this.destroyNotifier$)).subscribe({
+        next: (response) => {
+          if (response) {
+            this.certificadosLicenciasSvc.actualizarRepresentLegala(response);
+          }
+        }
+      });
     }
 }

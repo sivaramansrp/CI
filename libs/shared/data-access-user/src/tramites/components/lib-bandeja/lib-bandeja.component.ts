@@ -453,17 +453,15 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
   revisarTipoDeSolicitud(): void {
     const TIPO_SOLICITUD = this.bandejaSolicitudeFormGroup?.controls['tipoSolicitud']?.value;
 
-    if (TIPO_SOLICITUD === TipoSolicitud.SOLICITANTE) {
-      // Lógica para el tipo de solicitud "Solicitante"
+    if (TIPO_SOLICITUD === TipoSolicitud.SOLICITANTE || TIPO_SOLICITUD === TipoSolicitud.ADMIN) {
+      // Lógica para el tipo de solicitud "Solicitante y Admin"
 
       this.configuracionTabla = TABLADECONFIGUACIONSOLICITANTE as unknown as ConfiguracionColumna<T>[];
 
     } else if (TIPO_SOLICITUD === TipoSolicitud.FUNCIONARIO) {
       // Lógica para el tipo de solicitud "Funcionario"
       this.configuracionTabla = TABLADECONFIGUACIONFUNCIONARIO as unknown as ConfiguracionColumna<T>[];
-    } else if (TIPO_SOLICITUD === TipoSolicitud.ADMIN) {
-      // Lógica para el tipo de solicitud "Admin"
-    }
+    } 
   }
 
   /**

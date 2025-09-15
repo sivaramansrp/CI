@@ -74,6 +74,7 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
         this.esFormularioSoloLectura = seccionState.readonly;
+        this.inicializarEstadoFormulario();
       })
     )
     .subscribe()
