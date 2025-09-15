@@ -34,8 +34,12 @@ const PROCEDURE = '/sat-t80101';
 /**
  * Rutas de la API para el procedimiento 80101
  */
-export const API_ROUTES = {
-    ESTADO: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/estado`,
-    PAIS: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/paises`,
-   
-};
+export const API_ROUTES = (procedure: string=PROCEDURE) => ({
+    ESTADO: `${BASE_URL}${API}${CATALOGO}/estados`,
+    PAIS: `${BASE_URL}${API}${CATALOGO}/paises`,
+    ActividadProductiva: `${BASE_URL}${API}/${procedure}${CATALOGO}/actividad-productiva-prosec`,
+    RepresentacionFederal: `${BASE_URL}${API}/${procedure}${CATALOGO}/representacion-federal`,
+    TipoDocumento: `${BASE_URL}${API}/${procedure}${CATALOGO}/tipo-documento`,
+    municipiosMax: `${BASE_URL}${API}/${procedure}${CATALOGO}/municipio-mex`,
+    tipoCategoria: `${BASE_URL}${API}/${procedure}${CATALOGO}/tipo-categoria`
+});

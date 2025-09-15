@@ -20,6 +20,7 @@ import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabrica
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Tramite80101Query } from '../estados/tramite80101.query';
 import { PROC_80101 } from '../servers/api-route';
+import { ComplimentosService } from '../../../shared/services/complimentos.service';
 
 
 
@@ -55,9 +56,11 @@ export class NuevoProgramaIndustrialService {
     public tramite80101Store: Tramite80101Store,
     public httpService: HttpCoreService,
     private Tramite80101Query:Tramite80101Query,
+    private complimentosService:ComplimentosService
     
   ) {
     // No se necesita lógica de inicialización adicional.
+    this.setProcedure();
   }
 
   /**
@@ -206,6 +209,17 @@ getAllState(): Observable<Tramite80101State> {
  */
 guardarDatosPost(body: any) {
   return this.httpService.post<any>(PROC_80101.GUARDAR, { body: body });
+}
+
+/**
+ * Establece el procedimiento actual para la gestión de trámites industriales.
+ * Asigna el identificador de procedimiento 'st_t80101' y lo configura en el servicio de cumplimientos.
+ *
+ * @returns {void} No retorna ningún valor.
+ */
+setProcedure():void{
+  const PROCEDURE='sat-t80101'
+  this.complimentosService.setProcedure(PROCEDURE);
 }
 
 }
