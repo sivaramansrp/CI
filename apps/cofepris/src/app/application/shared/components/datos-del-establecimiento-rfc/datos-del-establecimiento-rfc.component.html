@@ -13,9 +13,12 @@
       </div>
       <div class="d-grid">
         <div *ngIf="datosDelForm.controls['rfcDel'].invalid && datosDelForm.controls['rfcDel'].touched">
-      <span *ngIf="datosDelForm.controls['rfcDel'].errors?.['maxlength']" class="mensaje-error">
-        El texto excede el límite de caracteres permitido.
-      </span>
+          <span *ngIf="datosDelForm.controls['rfcDel'].errors?.['maxlength']" class="mensaje-error">
+            El texto excede el límite de caracteres permitido.
+          </span>
+          <span *ngIf="datosDelForm.controls['rfcDel'].errors?.['pattern']" class="mensaje-error">
+            Existen datos incorrectos que no cumplen con el formato esperado.
+          </span>
         </div>
       </div>
     </div>
@@ -28,13 +31,16 @@
         (change)="setValoresStore(datosDelForm,'denominacionRazonSocial', 'setDenominacionRazonSocial')">
         </div>
         <div class="d-grid">
-          <div *ngIf="datosDelForm.controls['denominacionRazonSocial'].invalid && datosDelForm.controls['denominacionRazonSocial'].touched">
-        <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['required']" class="mensaje-error">
-          Este campo es obligatorio.
-        </span>
-        <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['maxlength']" class="mensaje-error">
-          El texto excede el límite de caracteres permitido.
-        </span>
+        <div *ngIf="datosDelForm.controls['denominacionRazonSocial'].invalid && datosDelForm.controls['denominacionRazonSocial'].touched">
+            <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['required']" class="mensaje-error">
+              Este campo es obligatorio.
+            </span>
+            <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['maxlength']" class="mensaje-error">
+              El texto excede el límite de caracteres permitido.
+            </span>
+            <span *ngIf="datosDelForm.controls['denominacionRazonSocial'].errors?.['pattern']" class="mensaje-error">
+              Existen datos incorrectos que no cumplen con el formato esperado.
+            </span>
           </div>
         </div>
       </div>
@@ -52,12 +58,15 @@
       </div>
       <div class="d-grid">
         <div *ngIf="datosDelForm.controls['correoElectronico'].invalid && datosDelForm.controls['correoElectronico'].touched">
-      <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['required']" class="mensaje-error">
-        Este campo es obligatorio.
-      </span>
-      <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['maxlength']" class="mensaje-error">
-        Por favor, escribe una dirección de correo válida
-      </span>
+          <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['required']" class="mensaje-error">
+            Este campo es obligatorio.
+          </span>
+          <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['maxlength']" class="mensaje-error">
+            Por favor, escribe una dirección de correo válida
+          </span>
+            <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['pattern']" class="mensaje-error">
+              Por favor, escribe una dirección de correo válida
+            </span>
         </div>
       </div>
     </div>

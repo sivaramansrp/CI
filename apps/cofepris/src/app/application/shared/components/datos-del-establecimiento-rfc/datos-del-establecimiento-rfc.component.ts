@@ -1,7 +1,7 @@
 import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { EMAIL, NotificacionesComponent,Pedimento, REGEX_REEMPLAZAR, REGEX_RFC, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NotificacionesComponent, Pedimento, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CommonModule } from '@angular/common';
@@ -133,11 +133,13 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe()
-    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+    this.servicioDeFormularioService.formTouched$.pipe(
+        takeUntil(this.destroyNotifier$),
+        map((formName) => {
       if (formName === 'datosDelEstablecimientoRFCForm') {
         this.datosDelForm.markAllAsTouched();
       }
-    });
+    })).subscribe();
     this.configurarGrupoForm(); // Configura el grupo de formularios con los valores iniciales.
   }
   /**
@@ -210,9 +212,9 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
      * */
 
     this.datosDelForm = this.fb.group({
-      rfcDel: [this.solicitudState?.rfcDel, [Validators.maxLength(13)]],
-      denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial, [Validators.required, Validators.maxLength(100)]],
-      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(320)]]
+      rfcDel: [this.solicitudState?.rfcDel, [Validators.maxLength(13),Validators.pattern(REGEX_RFC)]],
+      denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial, [Validators.required, Validators.maxLength(100), Validators.pattern(REGEX_REEMPLAZAR)]],
+      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.pattern(EMAIL), Validators.maxLength(320)]]
     });
 
     this.servicioDeFormularioService.registerForm('datosDelEstablecimientoRFCForm', this.datosDelForm);
