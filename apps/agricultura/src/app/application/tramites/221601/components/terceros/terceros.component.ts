@@ -71,57 +71,35 @@ import Plantatif from '@libs/shared/theme/assets/json/221601/plantatif.json';
   styleUrls: ['./terceros.component.scss']
 })
 export class TercerosComponent implements OnInit, OnDestroy {
-  // Catalog properties
+ 
   public paisCatalogo: Catalogo[] = realizar.pais;
   public estadoCatalogo: Catalogo[] = realizar.estado;
   public municipioCatalogo: Catalogo[] = realizar.municipio;
   public coloniaCatalogo: Catalogo[] = realizar.colonia;
   
-  // Plant data
+  
   Plantatif = [Plantatif];
-
-  // Form properties
   datosPersonales!: FormGroup;
   tipoPersonaForm!: FormGroup;
   buscarTercerosForm!: FormGroup;
-
-  // Modal visibility controls
   showtercerosModal = false;
   showBuscarTercerosModal = false;
-
-  // Row visibility controls
   showFisicaRow: boolean = false;
   showMoralRow: boolean = false;
   showPlantaRow: boolean = false;
-
-  // Form readonly state
   esFormularioSoloLectura: boolean = false;
-
-  // TIF establishment fields
   nombreEstablecimientoTif: string = '';
   numeroEstablecimientoTif: string = '';
-
-  // Selected items arrays
   exportadorSeleccionado: Exportador[] = [];
   destinatarioSeleccionado: Destinatario[] = [];
-
-  // Edit state
-  isEditingDestinatario: boolean = false;
+   isEditingDestinatario: boolean = false;
   editingDestinatarioIndex: number = -1;
-
-  // Notification properties
   public mostrarAlertaDestinatario: boolean = false;
   public confirmacionAlertaDestinatario: boolean = false;
   public notificacionDestinatario!: Notificacion;
-
-  // Subject for component destruction
   private destroyed$ = new Subject<void>();
   private destroyNotifier$: Subject<void> = new Subject();
-
-  // Options for tipo persona radio buttons
   tipoPersonaOptions: PreOperativo[] = [];
-
-  // Table configuration
   public checkbox = TablaSeleccion.CHECKBOX;
   configuracionTabla: ConfiguracionColumna<Exportador>[] = CONFIGURATION_TABLA_DATOS;
   destinatario: Destinatario[] = [];
@@ -129,8 +107,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud221601State;
   TEXTOS: string = MENSAJE_TABLA_OBLIGATORIA;
   exportador: Exportador[] = realizar.exportador;
-
-  // Radio button states
   public planta = false;
   public fisica = false;
   public moral = false;
@@ -242,28 +218,20 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.resetRadioStates();
     this.updateStoreWithFormData();
   }
-
   tercerosAgregar(): void {
-    console.log('Agregando nuevo tercero');
     this.isEditingDestinatario = false;
     this.editingDestinatarioIndex = -1;
     this.limpiarDatosFormulario();
     this.tipoPersonaForm.reset();
     this.resetRadioStates();
-    
-    // Reset form visibility
     this.showFisicaRow = false;
     this.showMoralRow = false;
     this.showPlantaRow = false;
-    
     this.showtercerosModal = true;
   }
 
   eliminarDestinatario(): void {
-    console.log('Iniciando eliminación...');
-    console.log('Destinatarios seleccionados:', this.destinatarioSeleccionado);
-    
-    if (!this.destinatarioSeleccionado || this.destinatarioSeleccionado.length === 0) {
+ if (!this.destinatarioSeleccionado || this.destinatarioSeleccionado.length === 0) {
       this.mostrarNotificacionDestinatario(
         'Selecciona un registro.',
         false
@@ -276,8 +244,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
       true
     );
   }
-
-  // Update the notification method to match the working pattern
   private mostrarNotificacionDestinatario(mensaje: string, mostrarCancelar: boolean = false): void {
     this.notificacionDestinatario = {
       tipoNotificacion: 'alert',
@@ -297,8 +263,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
       this.mostrarAlertaDestinatario = true;
     }
   }
-
-  // Update the confirmation method
   onConfirmacionDestinatario(confirmar: boolean): void {
     this.confirmacionAlertaDestinatario = false;
     
@@ -310,9 +274,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
   onAlertaDestinatario(): void {
     this.mostrarAlertaDestinatario = false;
   }
-
-  // Update the actual deletion method
-  private realizarEliminacionDestinatario(): void {
+ private realizarEliminacionDestinatario(): void {
     this.destinatario = this.destinatario.filter(record => 
       !this.destinatarioSeleccionado.includes(record)
     );
@@ -354,23 +316,14 @@ export class TercerosComponent implements OnInit, OnDestroy {
       this.mostrarNotificacionDestinatario('No se pudo encontrar el destinatario seleccionado.');
       return;
     }
-
-    console.log('Editando destinatario en índice:', this.editingDestinatarioIndex);
-    console.log('Datos del destinatario:', DESTINATARIO_A_MODIFICAR);
-
     this.isEditingDestinatario = true;
     this.cargarDatosDestinatarioParaEdicion(DESTINATARIO_A_MODIFICAR);
     this.showtercerosModal = true;
   }
 
   private cargarDatosDestinatarioParaEdicion(destinatario: Destinatario): void {
-    console.log('Cargando datos para edición:', destinatario);
-    
-    const TIPO_PERSONA = this.determinarTipoPersona(destinatario.nombreDenominacionORazonSocial);
-    
-    console.log('Tipo de persona determinado:', TIPO_PERSONA);
-    
-    this.tipoPersonaForm.patchValue({
+ const TIPO_PERSONA = this.determinarTipoPersona(destinatario.nombreDenominacionORazonSocial);
+     this.tipoPersonaForm.patchValue({
       tipoPersona: TIPO_PERSONA
     });
 
@@ -431,8 +384,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.datosPersonales.markAsUntouched();
     this.tipoPersonaForm.markAsPristine();
     this.tipoPersonaForm.markAsUntouched();
-
-    console.log('Formulario cargado con valores:', this.datosPersonales.value);
+  
   }
 
   private determinarTipoPersona(nombreCompleto: string): string {
@@ -451,40 +403,23 @@ export class TercerosComponent implements OnInit, OnDestroy {
   }
 
   guardarDestinatario(): void {
-    console.log('=== INICIANDO GUARDADO DESTINATARIO ===');
-    console.log('Tipo persona form:', this.tipoPersonaForm.value);
-    console.log('Datos personales form:', this.datosPersonales.value);
-    console.log('Tipo persona válido:', this.tipoPersonaForm.valid);
-    console.log('Datos personales válido:', this.datosPersonales.valid);
-    
     if (!this.tipoPersonaForm.get('tipoPersona')?.value) {
-      console.log('Error: Tipo de persona no seleccionado');
-      this.mostrarNotificacionDestinatario('Por favor selecciona el tipo de persona.');
+   this.mostrarNotificacionDestinatario('Por favor selecciona el tipo de persona.');
       return;
     }
-
-    const TIPO_PERSONA = this.tipoPersonaForm.get('tipoPersona')?.value;
-    console.log('Tipo persona seleccionado:', TIPO_PERSONA);
-
-    this.updateConditionalValidators(TIPO_PERSONA);
-
-    setTimeout(() => {
-      console.log('Después de actualizar validadores:');
-      console.log('Tipo persona válido:', this.tipoPersonaForm.valid);
-      console.log('Datos personales válido:', this.datosPersonales.valid);
-      
+   const TIPO_PERSONA = this.tipoPersonaForm.get('tipoPersona')?.value;
+   this.updateConditionalValidators(TIPO_PERSONA);
+   setTimeout(() => {
       Object.keys(this.datosPersonales.controls).forEach(key => {
-        const control = this.datosPersonales.get(key);
-        if (control?.invalid) {
-          console.log(`Campo ${key} inválido:`, control.errors);
+        const CONTROL = this.datosPersonales.get(key);
+        if (CONTROL?.invalid) {
+
         }
       });
 
       if (this.tipoPersonaForm.invalid || this.datosPersonales.invalid) {
         this.tipoPersonaForm.markAllAsTouched();
         this.datosPersonales.markAllAsTouched();
-        
-        console.log('Formulario inválido, no se puede guardar');
         this.mostrarNotificacionDestinatario('Por favor completa todos los campos requeridos correctamente.');
         return;
       }
@@ -494,32 +429,14 @@ export class TercerosComponent implements OnInit, OnDestroy {
   }
 
   private procesarGuardadoDestinatario(): void {
-    console.log('=== PROCESANDO GUARDADO ===');
-    
     const FORM_VALUE = this.datosPersonales.value;
     const TIPO_PERSONA = this.tipoPersonaForm.get('tipoPersona')?.value;
-    
-    console.log('Valores del formulario:', FORM_VALUE);
-    console.log('Tipo de persona:', TIPO_PERSONA);
-
     const PAIS_SELECCIONADO = this.paisCatalogo.find((item: Catalogo) => item.id === Number(FORM_VALUE.pais));
     const ESTADO_SELECCIONADO = this.estadoCatalogo.find((item: Catalogo) => item.id === Number(FORM_VALUE.estado));
     const MUNICIPIO_SELECCIONADO = this.municipioCatalogo.find((item: Catalogo) => item.id === Number(FORM_VALUE.municipio));
     const COLONIA_SELECCIONADA = this.coloniaCatalogo.find((item: Catalogo) => item.id === Number(FORM_VALUE.colonia));
-
-    console.log('Catálogos encontrados:', {
-      pais: PAIS_SELECCIONADO,
-      estado: ESTADO_SELECCIONADO,
-      municipio: MUNICIPIO_SELECCIONADO,
-      colonia: COLONIA_SELECCIONADA
-    });
-
-    const NOMBRE_COMPLETO = TercerosComponent.obtenerNombreCompleto(FORM_VALUE, TIPO_PERSONA);
+     const NOMBRE_COMPLETO = TercerosComponent.obtenerNombreCompleto(FORM_VALUE, TIPO_PERSONA);
     const DOMICILIO_COMPLETO = TercerosComponent.obtenerDomicilioCompleto(FORM_VALUE, COLONIA_SELECCIONADA, MUNICIPIO_SELECCIONADO, ESTADO_SELECCIONADO);
-
-    console.log('Nombre completo generado:', NOMBRE_COMPLETO);
-    console.log('Domicilio completo generado:', DOMICILIO_COMPLETO);
-
     const DESTINATARIO_DATA: Destinatario = {
       nombreDenominacionORazonSocial: NOMBRE_COMPLETO,
       telefono: FORM_VALUE.lada && FORM_VALUE.telefono ? `${FORM_VALUE.lada}-${FORM_VALUE.telefono}` : (FORM_VALUE.telefono || ''),
@@ -535,26 +452,14 @@ export class TercerosComponent implements OnInit, OnDestroy {
       codigoPostal: FORM_VALUE.codigo || ''
     };
 
-    console.log('Datos del destinatario a guardar:', DESTINATARIO_DATA);
-
-    if (this.isEditingDestinatario && this.editingDestinatarioIndex !== -1) {
-      console.log('Modificando destinatario existente en índice:', this.editingDestinatarioIndex);
-      
+   if (this.isEditingDestinatario && this.editingDestinatarioIndex !== -1) {
       const NUEVO_ARRAY = [...this.destinatario];
       NUEVO_ARRAY[this.editingDestinatarioIndex] = DESTINATARIO_DATA;
       this.destinatario = NUEVO_ARRAY;
-      
-      // console.log('Destinatario modificado exitosamente');
-      // this.mostrarNotificacionDestinatario('Destinatario modificado correctamente.');
-    } else {
-      console.log('Agregando nuevo destinatario');
+  } else {
+    
       this.destinatario = [...this.destinatario, DESTINATARIO_DATA];
-      
-      // console.log('Nuevo destinatario agregado exitosamente');
-      // this.mostrarNotificacionDestinatario('Destinatario agregado correctamente.');
-    }
-
-    // Reset form state
+   }
     this.isEditingDestinatario = false;
     this.editingDestinatarioIndex = -1;
     this.destinatarioSeleccionado = [];
