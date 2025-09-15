@@ -683,3 +683,14 @@ export const ENCABEZADO_TABLA: ConfiguracionColumna<Partidas>[] = [
         orden: 6,
       },
     ];
+    /**
+ * @description Constante que contiene datos prellenados para la tabla de usos específicos.
+ * Cada objeto representa una fila con sus respectivos campos: id, fracción arancelaria PROSEC y descripción.
+ */
+    export const PREFILL_USO: Partidas[] = [
+      {
+        id: 10,
+        fraccionArancelariaProsec: '12345678',
+        descripcion: 'Nueva descripción',
+      }
+    ];

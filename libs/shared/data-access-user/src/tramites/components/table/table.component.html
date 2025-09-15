@@ -1,5 +1,5 @@
 <div class="table-responsive" [ngClass]="{'enable-scrollbar': enableScrollbar}">
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped mb-2" [ngClass]="{ 'table-invalid': isInvalida }">
         <thead>
             <tr>
                 <th scope="col">
@@ -25,3 +25,9 @@
         </tbody>
     </table>
 </div>
+
+@if (isInvalida) {
+    <div class="mensaje-error mt-2">
+        Este campo es obligatorio
+    </div>
+}

@@ -1,5 +1,5 @@
 import { AfterViewInit,Input,OnInit } from '@angular/core';
-import { AlertComponent, InputCheckComponent, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
+import { AlertComponent, InputCheckComponent, REGEX_LOCALIDAD, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ConsultaioQuery} from "@ng-mf/data-access-user";
@@ -622,6 +622,8 @@ export class DomicilioDelEstablecimiento260904Component
   /** Estado actual de la solicitud proveniente del store */
   public solicitudState!: Tramite260904State;
 
+  buttonDisableForProrroga: boolean = true;
+
   /**
    * Controla si los campos de nombre, apellidoPaterno y apellidoMaterno están habilitados
    */
@@ -946,6 +948,7 @@ ngOnChanges(): void {
       this.representanteLegal?.get('apellidoPaterno')?.disable();
       this.representanteLegal?.get('apellidoMaterno')?.disable();
     } else if (this.tipoTramite === '0') {
+      this.buttonDisableForProrroga = true;
       this.form?.disable();
       this.domicilio?.disable();
       this.representanteLegal?.disable();
@@ -1009,7 +1012,7 @@ ngOnChanges(): void {
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(12)]],
       estado: [this.solicitudState?.estado],
       municipioOAlcaldia: [this.solicitudState?.municipioOAlcaldia, [Validators.required, Validators.maxLength(120)]],
-      localidad: [this.solicitudState?.localidad, [Validators.maxLength(120)]],
+      localidad: ['', [Validators.required, Validators.pattern(REGEX_LOCALIDAD), Validators.maxLength(120)]],
       colonias: [this.solicitudState?.colonias, [Validators.maxLength(120)]],
       calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
       lada: [this.solicitudState?.lada, [Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(5)]],
@@ -1060,7 +1063,7 @@ ngOnChanges(): void {
     });
 
     this.representanteLegal = this.fb.group({
-      acuerdoPublico: [this.solicitudState?.acuerdoPublico],
+      acuerdoPublico:  [this.solicitudState?.acuerdoPublico || '1', [Validators.required]],
       rfc: [this.solicitudState?.rfc, [Validators.required, Validators.maxLength(13)]],
       nombre: [{ value: this.solicitudState?.nombre, disabled: true }, [Validators.required]],
       apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, [Validators.required]],
@@ -1279,6 +1282,26 @@ ngOnChanges(): void {
       }
     }
 
+  
+
+/**
+ * Maneja el evento de entrada en el campo de licencia sanitaria.
+ * 
+ * Si el valor ingresado no está vacío ni compuesto solo por espacios,
+ * desmarca el checkbox 'avisoCheckbox' en el formulario 'domicilio'.
+ * Luego, actualiza el valor de 'licenciaSanitaria' en el store correspondiente.
+ * 
+ * @param event Evento de entrada del usuario en el campo de licencia sanitaria.
+ */
+onLicenciaSanitariaInput(event: Event): void {
+  const INPUT_ELEMENT = event.target as HTMLInputElement;
+  const VALUE = INPUT_ELEMENT.value;
+  if (VALUE && VALUE.trim() !== '') {
+    this.domicilio.get('avisoCheckbox')?.setValue(false);
+  }
+  this.setValorStore(this.domicilio, 'licenciaSanitaria');
+}
+
     /**
      * Maneja el evento de input del campo telefono para validar en tiempo real
      * @param event Evento de input del campo
@@ -1453,6 +1476,54 @@ ngOnChanges(): void {
   limpiarScian(): void {
     this.nicoTablaForm.reset();
   }
+
+
+public validateRequiredFields(): boolean {
+    let isValid = true;
+  if (this.form && this.form.invalid) {
+    isValid = false;
+    this.form.markAllAsTouched();
+  }
+  
+  if (this.domicilio && this.domicilio.invalid) {
+    isValid = false;
+    this.domicilio.markAllAsTouched();
+  }
+
+  if (this.representanteLegal && this.representanteLegal.invalid) {
+    isValid = false;
+    this.representanteLegal.markAllAsTouched();
+  }
+  
+  return isValid;
+}
+
+public markAllFieldsTouched(): void {
+ if (this.form) {
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsTouched();
+      control.markAsDirty();
+      control.updateValueAndValidity();
+    });
+  }
+  
+  if (this.domicilio) {
+    Object.values(this.domicilio.controls).forEach(control => {
+      control.markAsTouched();
+      control.markAsDirty();
+      control.updateValueAndValidity();
+    });
+  }
+  
+  // Mark representanteLegal form fields as touched
+  if (this.representanteLegal) {
+    Object.values(this.representanteLegal.controls).forEach(control => {
+      control.markAsTouched();
+      control.markAsDirty();
+      control.updateValueAndValidity();
+    });
+  }
+}
     /**
    * Navega a la ubicación anterior en el historial de navegación.
    * Utiliza el servicio de ubicación para retroceder una página.

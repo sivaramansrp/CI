@@ -29,6 +29,10 @@ import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-
   styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
+  /*
+   * Indica si se debe mostrar el tooltip del valor de la factura en USD.
+   */
+  mostrarTooltipValorFacturaUSD = true;
   /**
    * form
    * Formulario reactivo principal para capturar los datos de la solicitud.

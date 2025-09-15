@@ -4,13 +4,14 @@ import {
   ListaDeDatosFinal,
   Movilizacion,
   PagoDeDerechos,
+  TercerosrelacionadosExportadorTable,
+  TercerosrelacionadosdestinoTable,
   createDatosState,
 } from '../models/220202/fitosanitario.model';
 
 import { Injectable } from '@angular/core';
 
 import { Store, StoreConfig } from '@datorama/akita';
-import { TercerosrelacionadosdestinoTable } from '../../../shared/models/tercerosrelacionados.model';
 
 @Injectable({
   providedIn: 'root',
@@ -162,12 +163,12 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
   }
 
   /**
-   * Actualiza el store con la lista de terceros relacionados.
-   * @method updateTercerosRelacionados
-   * @param {TercerosrelacionadosTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
+   * Actualiza el store con la lista de terceros exportadores.
+   * @method updateTercerosExportador
+   * @param {TercerosrelacionadosExportadorTable[]} tercerosRelacionados Lista de terceros exportadores.
    */
   public updateTercerosExportador(
-    tercerosRelacionados: TercerosrelacionadosdestinoTable[]
+    tercerosRelacionados: TercerosrelacionadosExportadorTable[]
   ): void {
     this.update((state) => ({
       ...state,
@@ -178,7 +179,7 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
   /**
   * Actualiza el store con los datos de movilización nacional.
   * @method actualizarDatosParaMovilizacionNacional
-  * @param {DatosParaMovilizacionNacional} datosParaMovilizacionNacional Datos de movilización nacional.
+  * @param {TercerosrelacionadosdestinoTable} datosParaMovilizacionNacional Datos de movilización nacional.
   */
   public actualizarSelectedExdora(datosParaMovilizacionNacional: TercerosrelacionadosdestinoTable): void {
     this.update(state => ({
