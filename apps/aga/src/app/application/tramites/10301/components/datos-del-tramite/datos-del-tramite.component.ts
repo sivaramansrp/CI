@@ -1,22 +1,20 @@
-import {
-  AlertComponent,
+import { AlertComponent,
   CatalogoSelectComponent,
   ConfiguracionColumna,
-  ConsultaioQuery,
-  ConsultaioState,
   CrosslistComponent,
   InputRadioComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-  ValidacionesFormularioService,
-} from '@ng-mf/data-access-user';
+  ValidacionesFormularioService
+} from '@libs/shared/data-access-user/src'
 import {
   Catalogo,
   Solicitud10301State,
   Tramite10301Store,
 } from '../../estados/tramite10301.store';
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosMercancia, RespuestaCatalog } from '../../models/importador-exportador.model';
 import {
   FormArray,

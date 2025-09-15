@@ -5,9 +5,19 @@ import { NgModule } from '@angular/core';
 
 const ROUTES: Routes = [
   {
+      path: 'cafe-exportadores',
+      component: CafeExportadoresComponent,
+    },
+    
+    {
+      path: 'cafe-de-exportadores',
+      component: CafeExportadoresComponent,
+    },
+  {
     path:'cafeExportadores',
     component: CafeExportadoresComponent
-  }
+  },
+  
 ];
 
 @NgModule({
