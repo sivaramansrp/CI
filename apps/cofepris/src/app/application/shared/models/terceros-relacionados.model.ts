@@ -95,11 +95,6 @@ export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] 
       clave: (fila) => fila.codigoPostal,
       orden: 15,
     },
-    {
-      encabezado: 'Colonia o equivalente',
-      clave: (fila) => fila.coloniaEquivalente,
-      orden: 16,
-    },
   ];
 
 /**
@@ -276,11 +271,6 @@ export const PROVEEDOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Proveedor>[] =
       encabezado: 'Código postal',
       clave: (fila) => fila.codigoPostal,
       orden: 15,
-    },
-    {
-      encabezado: 'Colonia o equivalente',
-      clave: (fila) => fila.coloniaEquivalente,
-      orden: 16,
     },
   ];
 
