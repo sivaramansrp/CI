@@ -754,6 +754,18 @@ export class AnexoComponent implements OnInit, OnDestroy {
     modalCancelar(): void {
       this.cambiarEstadoModal();
     }
+      /**
+     * Cancela el cuadro de diálogo modal para el registro de enlaces operativos.
+     *
+     * @description
+     * Cierra el modal activo y restablece el formulario a su estado inicial.
+     * Se ejecuta cuando el usuario cancela la operación de agregar o editar
+     * un enlace operativo.
+     */
+    modalGuardar(): void {
+      this.cambiarEstadoModal();
+    }
+  
   
     /**
      * Cancela el cuadro de diálogo modal para el registro de enlaces operativos de exportación.
@@ -766,7 +778,10 @@ export class AnexoComponent implements OnInit, OnDestroy {
     modalCancelarExportacion(): void {
       this.cambiarEstadoModalExportacion();
     }
-  
+
+  guardar(): void {
+         this.cambiarEstadoModalExportacion();
+  }
     /**
      * @method disableFormControls
      * @description Deshabilita controles específicos del formulario relacionados con la exportación e importación.
