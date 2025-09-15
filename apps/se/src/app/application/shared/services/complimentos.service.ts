@@ -26,6 +26,13 @@ public anexoUnoFilaSeleccionada$ = this._anexoUnoFilaSeleccionada$.asObservable(
  * Facilita la comunicación reactiva cuando cambia la selección de filas en el Anexo Dos.
  */
 private _anexoDosFilaSeleccionada$ = new BehaviorSubject<AnexoDosEncabezado | null>(null);
+
+/**
+ * Almacena el nombre o identificador del procedimiento actual.
+ * 
+ * @private
+ */
+private _procedure: string = '';
 /**
  * Observable que expone la fila seleccionada del Anexo Dos.
  * Permite a otros componentes reaccionar a los cambios en la selección de filas sin modificar el estado directamente.
@@ -192,8 +199,13 @@ setAnexoDosFilaSeleccionada(row: AnexoDosEncabezado | null): void {
   this._anexoDosFilaSeleccionada$.next(row);
 }
 
-private _procedure: string = '';
 
+
+/**
+ * Establece el procedimiento actual.
+ * 
+ * @param procedure - El nombre del procedimiento a asignar.
+ */
 setProcedure(procedure: string): void {
   this._procedure = procedure;
 

@@ -3,6 +3,7 @@ import { InfoServicios, Servicio } from '../models/autorizacion-programa-nuevo.m
 import { Observable, map } from 'rxjs';
 import { Tramite80102State, Tramite80102Store } from '../estados/tramite80102.store';
 import { CatalogoDatosIdx } from '../../../shared/models/federatarios-y-plantas.model';
+import { ComplimentosService } from '../../../shared/services/complimentos.service';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { HttpClient } from '@angular/common/http';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
@@ -16,8 +17,8 @@ import { Tramite80102Query } from '../estados/tramite80102.query';
 })
 export class AutorizacionProgrmaNuevoService {
  constructor(private readonly http: HttpClient, public tramite80102Store: Tramite80102Store,
-  private tramite80102Query:Tramite80102Query,public httpService: HttpCoreService,) {
-   // No se necesita lógica de inicialización adicional.
+  private tramite80102Query:Tramite80102Query,public httpService: HttpCoreService,private complimentosService:ComplimentosService) {
+   this.setProcedure();
   }
 
   /**
@@ -144,6 +145,17 @@ getAllState(): Observable<Tramite80102State> {
  */
 guardarDatosPost(body: any) {
   return this.httpService.post<any>(PROC_80102.GUARDAR, { body: body });
+}
+
+/**
+ * Establece el procedimiento actual para la gestión de trámites industriales.
+ * Asigna el identificador de procedimiento 'st_t80101' y lo configura en el servicio de cumplimientos.
+ *
+ * @returns {void} No retorna ningún valor.
+ */
+setProcedure():void{
+  const PROCEDURE='sat-t80102'
+  this.complimentosService.setProcedure(PROCEDURE);
 }
 
 }
