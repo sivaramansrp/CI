@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { CatalogosResponse, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { Observable, catchError, map, throwError } from 'rxjs';
 
-import { API_GET_BLOQUE_PAISES, API_GET_REGIMENES } from '../server/api-router';
+import { API_GET_BLOQUE_PAISES, API_GET_ENTIDADES_FEDERATIVAS, API_GET_REGIMENES } from '../server/api-router';
 import { CatalogosBloquesResponse } from '../models/octava-temporal.model';
 
 @Injectable({
@@ -63,6 +63,21 @@ export class CatOctavaTemporalService {
         return throwError(() => ERROR);
       })
     );
+  }
+
+  getEntidadesFederativas(): Observable<CatalogosResponse> {
+    const ENDPOINT = `${this.host}${API_GET_ENTIDADES_FEDERATIVAS}`;
+    return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
+      map((response) => {
+        return response;
+      }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );  
   }
 
 }

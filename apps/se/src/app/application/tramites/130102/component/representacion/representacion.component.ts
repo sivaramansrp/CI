@@ -21,6 +21,7 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { Catalogo, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
 
 /**
  * RepresentacionComponent es un componente que maneja la selección de entidades federativas y representaciones federales.
@@ -92,7 +93,8 @@ export class RepresentacionComponent implements OnInit, OnDestroy {
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
     private formularioRegistroService: FormularioRegistroService,
-     private consultaioQuery: ConsultaioQuery
+    private catOctavaTemporalService: CatOctavaTemporalService,
+    private consultaioQuery: ConsultaioQuery
     
   ) {
     this.consultaioQuery.selectConsultaioState$
@@ -180,10 +182,11 @@ inicializarEstadoFormulario(): void {
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
     this.formularioRegistroService.registrarFormulario('frmRepresentacion', this.frmRepresentacion);
-  this.formularioRegistroService.getEntidadesFederativas().subscribe(data => {
+  /*this.formularioRegistroService.getEntidadesFederativas().subscribe(data => {
     this.entidadFederativaLista = data;
-  });
-   this.formularioRegistroService.getRepresentacionesFederales().subscribe(data => {
+  });*/
+    this.obtenerEntidadesFederativas();
+    this.formularioRegistroService.getRepresentacionesFederales().subscribe(data => {
     this.representacionFederalLista = data;
   });
   }
@@ -206,6 +209,21 @@ inicializarEstadoFormulario(): void {
    */
   fetchEntidadFederativa(e: Catalogo): void {
     this.seleccionadaEntidadFederativa = e;
+  }
+
+  /*
+  * Obtiene las opciones de entidades federativas.    
+  * @returns void
+  * @description Obtiene las opciones de entidades federativas.
+  */
+  obtenerEntidadesFederativas(): void {
+    this.catOctavaTemporalService.getEntidadesFederativas().subscribe((data) => {
+      this.entidadFederativaLista = data.datos.map((item, index) => ({
+        id: index,
+        clave: item.clave,
+        descripcion: item.descripcion,
+      }));  
+    });
   }
 
   /**
