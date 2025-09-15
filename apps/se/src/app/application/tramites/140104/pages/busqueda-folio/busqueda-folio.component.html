@@ -5,7 +5,7 @@
         <form [formGroup]="montoACancelarForm">
             <div class="row">
                 <div class="col-md-8">
-                    <label class="form-label" for="monto">  <span class="text-danger">*</span>Monto a cancelar <span class="text-secondary fw-normal"><i>(en unidades primarias)</i></span></label>
+                    <label class="form-label" for="monto">  <span class="text-danger">*</span>Monto a cancelar <span class="text-secondary fw-normal"><i>(en unidades primarias) :</i></span></label>
                     <input type="text" class="form-control" id="monto" formControlName="monto">
                @if(montoACancelarForm.controls['monto'].invalid && montoACancelarForm.controls['monto'].touched) {
               <div class="d-grid">
@@ -44,8 +44,7 @@
                     <input type="text" class="form-control" id="folioDelOficioDeCertificado" formControlName="folioDelOficioDeCertificado">
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label" for="montoDisponible">Monto disponible <span class="text-secondary fw-normal"><i>(en unidades primarias)</i></span>:
-                    </label>
+                    <label class="form-label" for="montoDisponible">Monto disponible <span class="text-secondary fw-normal"><i>(en unidades primarias) :</i></span></label>
                     <input type="text" class="form-control" id="montoDisponible" formControlName="montoDisponible">
                 </div> 
             </div>
@@ -72,7 +71,7 @@
                         <form [formGroup]="cantidadADevolver">
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <label class="form-label text-start" for="cantidad">Cantidad a devolver <span class="text-secondary fw-normal"><i>(en unidades primarias)</i></span>:</label><br/>
+                                    <label class="form-label text-start" for="cantidad">Cantidad a devolver <span class="text-secondary fw-normal"><i>(en unidades primarias) :</i></span></label><br/>
                                     <input
                                       class="form-control"
                                       id="cantidad"

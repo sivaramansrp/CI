@@ -369,6 +369,10 @@ export const REGEX_TELEFONO_DIGITOS = /^\d{10}$/;
  * Expresión regular para validar un número de teléfono de 10 dígitos.
  */
 export const TELEFONO_DIGITOS = /^[6789]\d{8}$/;
+/**
+ * Expresión regular para validar números enteros y decimales.
+ */
+export const REGEX_NUMERO_ENTERO = /^\d*\.?\d*$/;
 
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
@@ -968,6 +972,13 @@ export const SOLO_REGEX_NUMEROS = /^[0-9]*$/;
  * - "12 345" (contiene espacios)
  */
 export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
+
+/**
+ * Expresión regular para validar nombres de localidades.
+ * Permite letras (incluyendo acentuadas), números y espacios.
+ * No permite caracteres especiales.
+ */
+export const REGEX_LOCALIDAD = /^[a-zA-ZÀ-ÿ0-9\\s]+$/;
 
 /**
  * Expresión regular para validar números decimales con hasta 17 dígitos enteros y hasta 4 decimales opcionales.

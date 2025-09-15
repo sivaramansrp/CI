@@ -681,13 +681,6 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
         ];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
-        case 260604:
-          this.elementosNoValidos = [
-            'presentacion',
-            'numeroRegistroSanitario',
-            'fechaCaducidad',
-          ];
-          break;
       default:
         if (this.detalleMercancia) {
           this.elementosNoValidos = [
@@ -824,7 +817,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    *
    * @returns void
    */
-  crearMercanciaForm(): void {
+  crearMercanciaForm(): void { 
     const PAIS_DE_ORIGEN = this.obtenerValor('paisDeOriginDatos') || [];
     const USO_ESPECIFICOS = this.obtenerValor('usoEspecifico') || [];
     const PAIS_DE_PROCEDENCIA =
@@ -896,9 +889,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       descripcionFraccion: [
         {
           value: this.obtenerValor('descripcionFraccion'),
-          disabled: this.elementosDeshabilitados.includes(
-            'descripcionFraccion'
-          ),
+          disabled: true,
         },
         [Validators.required],
       ],
@@ -912,7 +903,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       cantidadUmt: [
         {
           value: this.obtenerValor('cantidadUmt'),
-          disabled: this.elementosDeshabilitados.includes('cantidadUmt'),
+          disabled: true,
         },
         [Validators.required],
       ],
@@ -1153,10 +1144,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    */
   cambiarFraccionArancelaria(): void {
     const FRACCION = this.mercanciaForm.get('fraccionArancelaria')?.value;
-    if (!FRACCION) {
+    if (!FRACCION || FRACCION.length < 8) {
       this.mercanciaForm.get('descripcionFraccion')?.setValue('');
-    } else if (FRACCION && this.mercanciaForm.get('cantidadUmt')?.disabled) {
-      if(FRACCION.length === 8){
+      this.mercanciaForm.get('cantidadUmt')?.setValue('');
+    } else if(FRACCION.length === 8){
         if (isNaN(Number(FRACCION))) {
           this.abrirModal();
         } else {
@@ -1168,7 +1159,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
             ?.setValue(UMT_DESHABILITADO_VALOR);
         }
       }
-    }
+    
   }
   /**
    * Valida la longitud de la fracción arancelaria ingresada en el formulario.

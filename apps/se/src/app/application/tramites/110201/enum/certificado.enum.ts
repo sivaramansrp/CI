@@ -66,3 +66,20 @@ export const HEADER_MAP_DATOS: { [key: string]: string } = {
     'Complemento descripción': 'complementoDescripcion',
     'Fecha factura': 'fechaFactura',
 };
+
+/**
+ * @constant ERROR_FORMA_ALERT
+ * @description
+ * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+ * Se utiliza para informar al usuario que debe completar todos los campos requeridos antes de continuar.
+ */
+export const ERROR_FORMA_ALERT =
+  `
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      <strong>¡Error de registro!</strong>Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`

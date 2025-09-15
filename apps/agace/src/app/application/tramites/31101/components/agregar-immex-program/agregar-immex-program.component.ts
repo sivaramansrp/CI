@@ -1,29 +1,30 @@
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  ConfiguracionColumna,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+} from '@libs/shared/data-access-user/src';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { Domicilios, EntidadFederativa } from '../../models/solicitud.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  Solicitud31101State,
+  Solicitud31101Store,
+} from '../../estados/solicitud31101.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AGREGAR_IMMEX_CONFIGURACION } from '../../constants/solicitud.enum';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { Domicilios } from '../../models/solicitud.model';
-import { EntidadFederativa } from '../../models/solicitud.model';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solicitud31101Query } from '../../estados/solicitud31101.query';
-import { Solicitud31101State } from '../../estados/solicitud31101.store';
-import { Solicitud31101Store } from '../../estados/solicitud31101.store';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /** Configuración del componente AgregarImmexProgram
  * Archivo de plantilla que define la vista del componente
@@ -73,6 +74,14 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
   /** Lista de domicilios seleccionados */
   domicilioslista: EntidadFederativa[] = [] as EntidadFederativa[];
 
+  /**
+   * Lista de programas IMMEX seleccionados.
+   *
+   * Representa un arreglo de entidades federativas asociadas
+   * al programa IMMEX que el usuario ha seleccionado.
+   */
+  seleccionarImmexProgram: EntidadFederativa[] = [] as EntidadFederativa[];
+
   /** Estado de la solicitud */
   solicitud31101State: Solicitud31101State = {} as Solicitud31101State;
 
@@ -82,6 +91,18 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Constructor del componente.
+   *
+   * Inicializa las dependencias principales necesarias para el manejo del formulario
+   * y la gestión del estado de la solicitud.
+   *
+   * @param fb               Servicio de FormBuilder para crear y administrar formularios reactivos.
+   * @param solicitudService Servicio encargado de la lógica de negocio relacionada con las solicitudes.
+   * @param solicitud31101Store Almacén (store) para gestionar el estado de la solicitud 31101.
+   * @param solicitud31101Query Consultas (query) para obtener el estado actual de la solicitud 31101.
+   * @param consultaioQuery  Consultas (query) para obtener información relacionada con el contexto de consulta.
+   */
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
@@ -108,9 +129,6 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
 
     /** Obtiene los datos generales del catálogo */
     this.entidadFederativaCatalogo();
-
-    /** Obtiene los datos de la entidad federativa */
-    this.conseguirEntidadFederativaDatos();
   }
 
   /** Inicializa el formulario */
@@ -144,6 +162,19 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Inicializa el formulario `agregarImmexProgramForm` y configura sus controles.
+   *
+   * - Crea un formulario reactivo con el campo `entidadFederativa`, inicializado
+   *   a partir del estado actual (`solicitud31101State`).
+   * - Se suscribe al observable `selectSolicitud$` de `solicitud31101Query` para:
+   *   - Obtener los cambios en la solicitud.
+   *   - Actualizar el estado local `solicitud31101State`.
+   *   - Reflejar dichos cambios en el formulario mediante `patchValue`.
+   *
+   * La suscripción se mantiene activa hasta que se emite `destroy$`,
+   * lo que asegura la limpieza de recursos y evita fugas de memoria.
+   */
   inicializarFormulario(): void {
     this.agregarImmexProgramForm = this.fb.group({
       entidadFederativa: [this.solicitud31101State.entidadFederativa],
@@ -177,39 +208,77 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
 
   /** Maneja la selección de entidad federativa */
   seleccionArentidadFederativa(evento: Catalogo): void {
-    this.domicilioslista = this.domiciliosDatos;
+    this.conseguirEntidadFederativaDatos();
     this.solicitud31101Store.actualizarEntidadFederativa(evento.id);
+  }
+
+  /**
+   * Asigna la lista de programas IMMEX seleccionados.
+   *
+   * Actualiza la propiedad `seleccionarImmexProgram` con el arreglo de
+   * entidades federativas recibido como parámetro.
+   *
+   * @param evento Arreglo de entidades federativas seleccionadas.
+   */
+  seleccionarImmexProgramLista(evento: EntidadFederativa[]): void {
+    this.seleccionarImmexProgram = evento;
   }
 
   /** Agrega un programa IMMEX y emite los datos */
   agregarImmexProgram(): void {
-    const VALOR = {
-      instalacionPrincipal: '',
-      cveTipoInstalacion: '',
-      tipoInstalacion: '',
-      cveEntidadFederativa: this.domicilioslista[0].cveEntidadFederativa,
-      entidadFederativa: '',
-      cveDelegacionMunicipio: '',
-      municipioDelegacion: this.domicilioslista[0].municipioDelegacion,
-      direccion: this.domicilioslista[0].direccion,
-      codigoPostal: this.domicilioslista[0].codigoPostal,
-      registroSESAT: this.domicilioslista[0].registroSESAT,
-      procesoProductivo: '',
-      fechaModificacion: '',
-      cveEstatus: '',
-      estatus: '',
-      noExterior: '',
-      noInterior: '',
-      cveColonia: '',
-      calle: '',
-      descCol: '',
-      idRecinto: '',
-      numFolioAcuse: '',
-      observaciones: '',
-    };
+    if (this.seleccionarImmexProgram.length > 0) {
+      const VALOR: Domicilios = {
+        instalacionPrincipal: this.seleccionarImmexProgram?.[0]
+          ?.instalacionPrincipal
+          ? this.seleccionarImmexProgram?.[0]?.instalacionPrincipal
+          : '',
+        cveTipoInstalacion: '',
+        tipoInstalacion: this.seleccionarImmexProgram?.[0]?.tipoInstalacion
+          ? this.seleccionarImmexProgram?.[0]?.tipoInstalacion
+          : '',
+        cveEntidadFederativa: '',
+        entidadFederativa: this.seleccionarImmexProgram[0].entidadFederativa,
+        cveDelegacionMunicipio: '',
+        municipioDelegacion:
+          this.seleccionarImmexProgram[0].municipioDelegacion,
+        direccion: this.seleccionarImmexProgram[0].direccion,
+        codigoPostal: this.seleccionarImmexProgram[0].codigoPostal,
+        registroSESAT: this.seleccionarImmexProgram[0].registroSESAT,
+        procesoProductivo: '',
+        fechaModificacion: '',
+        cveEstatus: '',
+        estatus: '',
+        noExterior: '',
+        noInterior: '',
+        cveColonia: '',
+        calle: '',
+        descCol: '',
+        idRecinto: '',
+        numFolioAcuse: '',
+        observaciones: '',
+      };
+      /** Emite el valor agregado */
+      this.agregarImmexValor.emit(VALOR);
+      this.seleccionarImmexProgram = [];
+      this.domicilioslista = [];
+      this.agregarImmexProgramForm.reset();
+    }
+  }
 
-    /** Emite el valor agregado */
-    this.agregarImmexValor.emit(VALOR);
+  /**
+   * Cancela la captura del programa IMMEX.
+   *
+   * - Reinicia el formulario `agregarImmexProgramForm`.
+   * - Limpia la lista de domicilios (`domicilioslista`).
+   * - Vacía la lista de programas seleccionados (`seleccionarImmexProgram`).
+   * - Emite el evento `agregarImmexValor` con `undefined` para notificar
+   *   la cancelación a componentes padres o suscriptores.
+   */
+  cancelarImmexProgram(): void {
+    this.agregarImmexProgramForm.reset();
+    this.domicilioslista = [];
+    this.seleccionarImmexProgram = [];
+    this.agregarImmexValor.emit(undefined);
   }
 
   /** Obtiene los datos de la entidad federativa desde el servicio */
@@ -219,7 +288,7 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (respuesta: EntidadFederativa[]) => {
-          this.domiciliosDatos = respuesta;
+          this.domicilioslista = respuesta;
         },
       });
   }

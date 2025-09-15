@@ -20,10 +20,16 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
 
+import { ComplementarFraccionVistaComponent } from '../complementar-fraccion-vista/complementar-fraccion-vista.component';
+import { ContenedorProveedorClienteComponent } from '../contenedor-proveedor-cliente/contenedor-proveedor-cliente.component';
+import { ProveedorPorArchivoVistaComponent } from '../proveedor-por-archivo-vista/proveedor-por-archivo-vista.component';
+import { ProyectoImmexVistaComponent } from '../proyecto-immex-vista/proyecto-immex-vista.component';
+
+
 @Component({
   selector: 'app-contenedor-annexo-uno',
   standalone: true,
-  imports: [CommonModule, AnexoUnoComponent],
+  imports: [CommonModule, AnexoUnoComponent,ContenedorProveedorClienteComponent,ComplementarFraccionVistaComponent,ProyectoImmexVistaComponent,ProveedorPorArchivoVistaComponent],
   templateUrl: './contenedor-annexo-uno.component.html',
   styleUrl: './contenedor-annexo-uno.component.scss',
 })
@@ -105,6 +111,30 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
    * Cuando es verdadero, los campos del formulario no pueden ser editados por el usuario.
    */
   public esFormularioSoloLectura: boolean = false;
+
+   /**
+   * Controla la visibilidad del popup de proveedor-cliente.
+   * Se utiliza para mostrar u ocultar el popup correspondiente en la interfaz.
+   */
+  public mostrarProveedorClientePopup: boolean = false;
+
+  /**
+   * Controla la visibilidad del popup de complementar fracción.
+   * Se utiliza para mostrar u ocultar el popup correspondiente en la interfaz.
+   */
+  public mostrarComplementarFraccionPopup: boolean = false;
+
+  /**
+   * Controla la visibilidad del popup de proyecto IMMEX.
+   * Se utiliza para mostrar u ocultar el popup correspondiente en la interfaz.
+   */
+  public mostrarProyectoImmexPopup: boolean = false;
+
+  /**
+   * Controla la visibilidad del popup de proveedor por archivo.
+   * Se utiliza para mostrar u ocultar el popup correspondiente en la interfaz.
+   */
+  public mostrarProveedorPorArchivoPopup: boolean = false;
 
   /**
    * Constructor de la clase ContenedorAnnexoUnoComponent.
@@ -249,18 +279,52 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public rutaLaFraccionDeComplemento(event: RutaNombre): void {
-    if (
-      event &&
-      event.catagoria &&
-      event.id &&
-      (event.datos || event.catagoria === 'proveedor-por-archivo')
-    ) {
+    if (event && event.catagoria && event.id && event.datos) {
       this.store.setAnnexoUnoSeccionActiva(event.id);
       this.store.setDatosParaNavegar(event.datos);
-      this.router.navigate([`../${event.catagoria}`], {
-        relativeTo: this.activatedRoute,
-      });
+
+      if (event && event.catagoria === 'complementar-fraccion' && event.datos) {
+        this.mostrarComplementarFraccionPopup = true;
+      } else if (event.catagoria === 'contenedor-proveedor-cliente') {
+        this.mostrarProveedorClientePopup = true;
+      } else if (event.catagoria === 'proyecto-immex') {
+        this.mostrarProyectoImmexPopup = true;
+      } else if (event.catagoria === 'proveedor-por-archivo') {
+        this.mostrarProveedorPorArchivoPopup = true;
+      }
     }
+  }
+
+/**
+ * Cierra el popup para complementar la fracción.
+ * Establece la bandera `mostrarComplementarFraccionPopup` en `false` para ocultar el popup.
+ */
+   cerrarComplementarFraccion(): void {
+    this.mostrarComplementarFraccionPopup = false;
+  }
+
+/**
+ * Cierra el contenedor o popup de proveedor-cliente.
+ * Establece la bandera `mostrarProveedorClientePopup` en `false` para ocultar el contenedor.
+ */
+  cerrarContenedorProveedorCliente(): void {
+    this.mostrarProveedorClientePopup = false;
+  }
+
+/**
+ * Cierra el popup del proyecto IMMEX.
+ * Establece la bandera `mostrarProyectoImmexPopup` en `false` para ocultar el popup.
+ */
+  cerrarProyectoImmex(): void {
+    this.mostrarProyectoImmexPopup = false;
+  }
+
+/**
+ * Cierra el popup de proveedor por archivo.
+ * Establece la bandera `mostrarProveedorPorArchivoPopup` en `false` para ocultar el popup.
+ */
+  cerrarProveedorPorArchivo(): void {
+    this.mostrarProveedorPorArchivoPopup = false;
   }
 
   /**

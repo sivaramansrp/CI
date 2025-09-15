@@ -57,7 +57,7 @@
               <label for="descripcion" class="form-label">Motivo de cancelación*:</label>
               <textarea class="form-control" rows="6" id="descripcion" formControlName="descripcion"
                 maxlength="450"
-                [ngClass]="isValid(formCancelorSolicitud,'descripcion') ? 'required' : ''"
+                
                 (change)="onDescripcionChange()"></textarea>
               <div *ngIf="formCancelorSolicitud.get('descripcion')?.invalid && formCancelorSolicitud.get('descripcion')?.touched" class="text-danger">
                 Este campo es obligatorio

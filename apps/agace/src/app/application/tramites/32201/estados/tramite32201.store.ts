@@ -58,7 +58,7 @@ export interface Solicitud32201State {
    * El valor de valorAduana.
    * Indica el valor aduana.
    */
-  valorAduana?: string;
+  valorAduana?: string | undefined;
 
   /** Texto genérico 10, valor numérico */
   textoGenerico10: number | string;
@@ -303,7 +303,7 @@ export class Tramite32201Store extends Store<Solicitud32201State> {
    * 
    * @param {string} valorAduana - El valor de valorAduana.
    */
-  public setValorAduana(valorAduana: string): void {
+  public setValorAduana(valorAduana: string | undefined): void {
     this.update((state) => ({
       ...state,
       valorAduana,

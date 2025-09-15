@@ -15,3 +15,14 @@ export const ERROR_FORMA_ALERT =
   </div>
 </div>
 `;
+
+/**
+ * Genera el mensaje HTML que se muestra cuando una solicitud ha sido registrada exitosamente.
+ * Incluye el número temporal de la solicitud y una advertencia sobre su validez legal.
+ * @param numeroSolicitud Número temporal asignado a la solicitud.
+ * @returns {string} Mensaje HTML de registro exitoso.
+ */
+export const MSG_REGISTRO_EXITOSO = (numeroSolicitud: string): string =>
+  `<div class="d-flex justify-content-center text-center">
+    <p>La solicitud ha quedado regitrada con el número temporal ${numeroSolicitud ?? ''}. Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.</p>
+  </div>`;
