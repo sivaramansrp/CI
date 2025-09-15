@@ -106,7 +106,7 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
    *
    * @type {Catalogo[]}
    */
-  @Input() estadoCatalogo!:Catalogo[];
+  estadoCatalogo!:Catalogo[];
 
   /**
    * Indica si se debe mostrar la tabla inicial.
