@@ -1282,6 +1282,26 @@ ngOnChanges(): void {
       }
     }
 
+  
+
+/**
+ * Maneja el evento de entrada en el campo de licencia sanitaria.
+ * 
+ * Si el valor ingresado no está vacío ni compuesto solo por espacios,
+ * desmarca el checkbox 'avisoCheckbox' en el formulario 'domicilio'.
+ * Luego, actualiza el valor de 'licenciaSanitaria' en el store correspondiente.
+ * 
+ * @param event Evento de entrada del usuario en el campo de licencia sanitaria.
+ */
+onLicenciaSanitariaInput(event: Event): void {
+  const INPUT_ELEMENT = event.target as HTMLInputElement;
+  const VALUE = INPUT_ELEMENT.value;
+  if (VALUE && VALUE.trim() !== '') {
+    this.domicilio.get('avisoCheckbox')?.setValue(false);
+  }
+  this.setValorStore(this.domicilio, 'licenciaSanitaria');
+}
+
     /**
      * Maneja el evento de input del campo telefono para validar en tiempo real
      * @param event Evento de input del campo

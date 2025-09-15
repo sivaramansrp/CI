@@ -348,43 +348,46 @@
     </div>
   </div>
   <form [formGroup]="domicilio">
-    <div class="row align-item-center">
-      <div class="col-md-4 mt-5">
-        <lib-input-check 
-          [id]="'avisoCheckbox'" 
-          [label]="'Aviso de funcionamiento:'" 
-          [required]="true"
+  
+<div class="row align-item-center">
+  <div class="col-md-4 mt-5">
+    <lib-input-check 
+      [id]="'avisoCheckbox'" 
+      [label]="'Aviso de funcionamiento:'" 
+      [required]="true"
       formControlName="avisoCheckbox" 
-      [isDisabled]="esFormularioSoloLectura"
+      [isDisabled]="esFormularioSoloLectura || !!domicilio.get('licenciaSanitaria')?.value"
       (change)="setValorStore(domicilio, 'avisoCheckbox')"
     ></lib-input-check>
-
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="licenciaSanitaria"
-          >No. de licencia sanitaria:
-            <span 
-              class="bi bi-question-circle-fill" 
-              title="Número de la autorización
-                    indicado en el documento
-                    emitido por la autoridad
-                    sanitaria competente"
-              data-bs-toggle="tooltip"
-              ></span
-            ></label>
-            <input 
-              class="form-control" 
-              id="licenciaSanitaria" 
-              placeholder="" 
-              type="text"
-              maxlength="20"
-              formControlName="licenciaSanitaria"
-              [disabled]="domicilio.get('avisoCheckbox')?.value"
-              />
-        </div>
-      </div>
+  </div>
+  <div class="col-md-4">
+    <div class="form-group">
+      <label class="form-label" for="licenciaSanitaria"
+      >No. de licencia sanitaria:
+        <span 
+          class="bi bi-question-circle-fill" 
+          title="Número de la autorización
+                indicado en el documento
+                emitido por la autoridad
+                sanitaria competente"
+          data-bs-toggle="tooltip"
+          ></span
+        ></label>
+        <input 
+          class="form-control" 
+          id="licenciaSanitaria" 
+          placeholder="" 
+          type="text"
+          maxlength="20"
+          formControlName="licenciaSanitaria"
+          (input)="onLicenciaSanitariaInput($event)"
+          (change)="setValorStore(domicilio, 'licenciaSanitaria')"
+          [disabled]="domicilio.get('avisoCheckbox')?.value"
+          />
     </div>
+  </div>
+</div>
+
 
     <div class="row">
       <div class="col-md-4">
