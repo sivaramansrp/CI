@@ -36,6 +36,13 @@ export class ScianTablaComponent implements OnInit {
   @Input() public idProcedimiento!: number;
 
   /**
+   * @property {TablaScianConfig[]} scianState
+   * @description
+   * Almacena el estado actual de la tabla SCIAN.
+   */
+  @Input() public scianState!: TablaScianConfig[];
+
+  /**
    * @property {TablaScianConfig[]} scianConfigDatos
    * @description
    * Almacena la configuración de la tabla SCIAN.
@@ -114,9 +121,10 @@ export class ScianTablaComponent implements OnInit {
    * con base en el tipo de procedimiento.
    */
   ngOnInit(): void {
+    // Inicializa el formulario reactivo con controles y validaciones.
     this.scianForm = this.fb.group({
-      clave: ['', Validators.required],
-      scianNino: ['', Validators.required],
+      clave: [this.obtenerValor('clave'), Validators.required],
+      scianNino: [this.obtenerValor('descripcion'), Validators.required],
     });
 
     this.scianNinoRequerido =
@@ -126,7 +134,14 @@ export class ScianTablaComponent implements OnInit {
 
     this.disableDescripcion = this.idProcedimiento === 260201 ? true : false;
   }
-
+  /**
+   * Obtiene el valor de un campo específico en el estado del SCiAN.
+   * @param campo - Clave del campo cuyo valor se desea obtener.
+   * @returns 
+   */
+obtenerValor(campo: keyof TablaScianConfig): string | null {
+  return this.scianState?.[0]?.[campo] ?? null;
+}
   /**
    * Maneja el evento cuando se selecciona un elemento del catálogo.
    * Filtra la lista de elementos SCIAN para encontrar el elemento correspondiente

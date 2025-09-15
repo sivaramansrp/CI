@@ -4,7 +4,7 @@ import {
   ComplimentarFraccion,
   ComplimentarFraccionResoponse,
 } from '../../../../shared/models/nuevo-programa-industrial.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplementarFraccionComponent } from '../../../../shared/components/complementar-fraccion/complementar-fraccion.component';
@@ -63,6 +63,11 @@ export class ComplementarFraccionVistaComponent implements OnInit, OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   public esFormularioSoloLectura: boolean = false; 
+
+/**
+ * Evento que se emite para cerrar el popup.
+ */
+  @Output() cerrarPopup = new EventEmitter<void>();
 
   /**
    * Constructor de la clase ComplementarFraccionVistaComponent.

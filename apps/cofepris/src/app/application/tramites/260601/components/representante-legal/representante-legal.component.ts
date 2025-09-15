@@ -304,8 +304,8 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     if (this.representanteLegalForm.valid) {
       valid = true;
     }
-    this.nombreOrazonsocialInvalid = !(this.representanteLegalForm.get('nombreOrazonsocial')?.valid);
-    this.apellidoPaternoInvalid = !(this.representanteLegalForm.get('apellidoPaterno')?.valid);
+    this.nombreOrazonsocialInvalid = !(this.avisoSanitarioState.nombreOrazonsocial);
+    this.apellidoPaternoInvalid = !(this.avisoSanitarioState.apellidoPaterno);
     this.representanteLegalForm.markAllAsTouched();
     return valid;
   }

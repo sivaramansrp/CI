@@ -6,9 +6,11 @@ import { NgModule } from '@angular/core';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 import {
+  AlertComponent,
   BtnContinuarComponent,
   CrosslistComponent,
   InputRadioComponent,
+  NotificacionesComponent,
   SolicitanteComponent,
   TablaDinamicaComponent,
   TituloComponent,
@@ -49,7 +51,9 @@ import { ToastrService } from 'ngx-toastr';
     PaisProcendenciaComponent,
     RepresentacionComponent,
     CrosslistComponent,
-    CertificadoKimberleyComponent
+    CertificadoKimberleyComponent,
+    AlertComponent,
+    NotificacionesComponent
   ],
    providers: [ToastrService],
 })
