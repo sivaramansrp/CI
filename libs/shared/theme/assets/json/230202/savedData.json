@@ -2,8 +2,8 @@
   "numeroDeCertificado": "1",
   "aduana": "2",
   "fechasSeleccionadas": [],
-  "pais": [{ "id": 1, "descripcion": "AFGANISTAN" }],
-  "entidades": [{ "id": 1, "descripcion": "CHIAPAS" }],
+  "pais": [{ "id": 2, "descripcion": "ALBANIA (REPUBLICA DE)" }],
+  "entidades": [{ "id": 1, "descripcion": "BAJA CALIFORNIA" }],
   "descripcionProducto": "2",
   "datosSolicitud": [
     {
