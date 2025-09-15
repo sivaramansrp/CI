@@ -147,6 +147,7 @@ export class Datos260212Component implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     }
+    
   /**
     * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
     * Libera recursos y cancela suscripciones.
