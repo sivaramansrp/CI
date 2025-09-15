@@ -60,7 +60,7 @@
               @if(datosMercancia.controls['valueTA'].errors?.['pattern']) { <span class="mensaje-error">Por favor,
                 corrige la descripción/dirección</span> } </div> } @if
             (FormSolicitud.get('datosMercancia.valueTA')?.hasError('maxlength')){ <div class="text-danger"> Por favor,
-              no escriba más de 1000 caracteres. </div> }
+              no escriba más de 4000 caracteres. </div> } 
           </div>
         </div>
       </div>
@@ -73,7 +73,7 @@
             <option [ngValue]="null">Selecciona una opción</option>
             <option *ngFor="let fraccion of fraccionArancelaria" [title]="fraccion.descripcion"
               [value]="fraccion.clave">
-              {{ fraccion.descripcion }}
+              {{ fraccion.clave + ' - ' + fraccion.descripcion | slice:0:70}}
             </option>
           </select>
           <div
@@ -224,10 +224,12 @@
             <label for="observaciones" class="form-label">Observaciones:</label>
             <textarea cols="60" rows="5" class="form-control" formControlName="observaciones"
               (change)="setValoresStore(datosMercancia,'observaciones', 'setObservaciones')" id="valueTAObs"
-              maxlength="250"></textarea>
+              maxlength="4001"></textarea>
             <input type="hidden" id="valueHiddenObsv" name="observacionMerc" formControlName="observacionMerc"
               (change)="setValoresStore(datosMercancia,'observacionMerc', 'setObservacionMerc')"
               [value]="escapeHtmlQuotes(FormSolicitud.get('datosMercancia.observaciones')?.value)">
+              @if (FormSolicitud.get('datosMercancia.observaciones')?.hasError('maxlength')){ <div class="text-danger"> Por favor,
+              no escriba más de 4000 caracteres. </div> }
           </div>
         </div>
       </div>
@@ -282,30 +284,36 @@
           <div class="form-group">
             <label for="nombre" class="form-label">Nombre(s)*:</label>
             <input class="form-control" [ngClass]="isValid(datosProducto, 'nombre') ? 'required' : ''" type="text"
-              name="nombre" id="nombre" formControlName="nombre" maxlength="200"
+              name="nombre" id="nombre" formControlName="nombre" maxlength="201"
               (change)="setValoresStore(datosProducto,'nombre', 'setNombre')" />
             @if(datosProducto.controls['nombre'].invalid && datosProducto.controls['nombre'].touched) { <div
               class="d-grid"> @if(datosProducto.controls['nombre'].errors?.['required']) { <span
-                class="mensaje-error">Este campo es obligatorio.</span> } </div> }
+                class="mensaje-error">Este campo es obligatorio.</span> } </div> } 
+              @if (FormSolicitud.get('datosProducto.nombre')?.hasError('maxlength')){ <div class="text-danger"> Por favor,
+              no escriba más de 200 caracteres. </div> }
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="apellidoPaterno" class="form-label">Primer apellido*:</label>
             <input class="form-control" [ngClass]="isValid(datosProducto, 'apellidoPaterno') ? 'required' : ''"
-              type="text" name="apellidoPaterno" id="apellidoPaterno" formControlName="apellidoPaterno" maxlength="200"
+              type="text" name="apellidoPaterno" id="apellidoPaterno" formControlName="apellidoPaterno" maxlength="201"
               (change)="setValoresStore(datosProducto,'apellidoPaterno', 'setApellidoPaterno')" />
             @if(datosProducto.controls['apellidoPaterno'].invalid && datosProducto.controls['apellidoPaterno'].touched)
             { <div class="d-grid"> @if(datosProducto.controls['apellidoPaterno'].errors?.['required']) { <span
-                class="mensaje-error">Este campo es obligatorio.</span> } </div> }
+                class="mensaje-error">Este campo es obligatorio.</span> } </div> } 
+              @if (FormSolicitud.get('datosProducto.apellidoPaterno')?.hasError('maxlength')){ <div class="text-danger"> Por favor,
+              no escriba más de 200 caracteres. </div> }
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="apellidoMaterno" class="form-label">Segundo apellido:</label>
             <input class="form-control" type="text" name="apellidoMaterno" id="apellidoMaterno"
-              formControlName="apellidoMaterno" maxlength="200"
+              formControlName="apellidoMaterno" maxlength="201"
               (change)="setValoresStore(datosProducto,'apellidoMaterno', 'setApellidoMaterno')" />
+              @if (FormSolicitud.get('datosProducto.apellidoMaterno')?.hasError('maxlength')){ <div class="text-danger"> Por favor,
+              no escriba más de 200 caracteres. </div> }
           </div>
         </div>
       </div> } @if(isVisibleMoral){ <div class="row mb-3 pm">
@@ -313,11 +321,13 @@
           <div class="form-group">
             <label for="razonSocial" class="form-label">Denominación o razón social*:</label>
             <input type="text" class="form-control" [ngClass]="isValid(datosProducto, 'razonSocial') ? 'required' : ''"
-              name="razonSocial" id="razonSocial" formControlName="razonSocial" maxlength="250"
+              name="razonSocial" id="razonSocial" formControlName="razonSocial" maxlength="255"
               (change)="setValoresStore(datosProducto,'razonSocial', 'setRazonSocial')" />
             @if(datosProducto.controls['razonSocial'].invalid && datosProducto.controls['razonSocial'].touched) { <div
               class="d-grid"> @if(datosProducto.controls['razonSocial'].errors?.['required']) { <span
                 class="mensaje-error">Este campo es obligatorio.</span> } </div> }
+              @if (FormSolicitud.get('datosProducto.razonSocial')?.hasError('maxlength')){ <div class="text-danger"> Por favor,
+              no escriba más de 254 caracteres. </div> }
           </div>
         </div>
       </div> } <div class="row mb-3">
@@ -328,11 +338,13 @@
           <div class="form-group">
             <label for="domicilio" class="form-label">Domicilio*:</label>
             <textarea class="form-control" [ngClass]="isValid(datosProducto, 'domicilio') ? 'required' : ''"
-              id="domicilio" name="domicilio" cols="50" rows="7" formControlName="domicilio" maxlength="1000"
+              id="domicilio" name="domicilio" cols="50" rows="7" formControlName="domicilio" maxlength="4001"
               (change)="setValoresStore(datosProducto,'domicilio', 'setDomicilio')"></textarea>
             @if(datosProducto.controls['domicilio'].invalid && datosProducto.controls['domicilio'].touched) { <div
               class="d-grid"> @if(datosProducto.controls['domicilio'].errors?.['required']) { <span
-                class="mensaje-error">Este campo es obligatorio.</span> } </div> }
+                class="mensaje-error">Este campo es obligatorio.</span> } </div> } @if
+            (FormSolicitud.get('datosProducto.domicilio')?.hasError('maxlength')){ <div class="text-danger"> Por favor,
+              no escriba más de 4000 caracteres. </div> }
           </div>
         </div>
       </div>

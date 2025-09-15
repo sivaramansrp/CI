@@ -8,7 +8,6 @@ import {
 } from '@angular/forms';
 import {
   Catalogo,
-  CatalogoSelectComponent,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
@@ -36,6 +35,7 @@ import {
   STR_NACIONAL,
 } from '../../constantes/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
+import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados.model';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';

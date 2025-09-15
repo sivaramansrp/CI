@@ -219,6 +219,15 @@ export const AGGREGAR_MERCANCIA_PAISE_OCULTAR = [240108];
 export const PERMISO_JUSTIFICACION = [240308, 240405, 240305, 240411, 240407, 240321];
 
 /**
+ * @constant
+ * @name PERMISO_JUSTIFICACION
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos relacionados con permisos de justificación específicos.
+ * Este valor es utilizado en el sistema para identificar trámites que requieren justificación.
+ */
+export const PERMISO_DISABLE = [240305];
+
+/**
  * Constante que define una lista de permisos generales que deben ser ocultados.
  * 
  * @const OCULTAR_PERMISO_GENERAL

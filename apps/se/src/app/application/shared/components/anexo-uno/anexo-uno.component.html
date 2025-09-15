@@ -60,7 +60,7 @@
         </button>
         <button
           class="btn btn-primary"
-          (click)="setRuta('proveedor-por-archivo', 'IMPORT')"
+          (click)="abrirCargaPorArchivo()"
         [disabled]="formularioDeshabilitado">
           Carga por archivo
         </button>
@@ -102,7 +102,7 @@
 
       <button
         class="btn btn-primary"
-        (click)="setRuta('proveedor-por-archivo', 'IMPORT')"
+        (click)="abrirCargaProveedoresClientesPopup()"
       [disabled]="formularioDeshabilitado">
         Proveedor Cliente por Archivo
       </button>
@@ -209,3 +209,37 @@
     </lib-notificaciones>
 </section>
 }
+
+<div *ngIf="mostrarCargaPorArchivoModal" class="modal-backdrop">
+  <div class="modal-dialog">
+    <div class="modal-content p-0">
+      <div class="modal-header-custom">
+      </div>
+      <div class="p-4">
+        <div>
+          Al cargar el archivo perdera la información que haya capturado de las fracciones de importación/exportación
+        </div>
+        <div class="text-end mt-4">
+          <button class="btn btn-default" (click)="onCancelarCargaPorArchivo()">Cancelar</button>
+          <button class="btn btn-primary me-2" (click)="onAceptarCargaPorArchivo()">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="mostrarCargaDeFraccionesPopup">
+  <div class="tab-modal-overlay">
+    <div class="tab-modal-content">
+      <app-carga-de-fracciones (cerrarPopup)="cerrarCargaDeFracciones()"></app-carga-de-fracciones>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="mostrarProveedorClientesPopup">
+  <div class="tab-modal-overlay">
+    <div class="tab-modal-content">
+      <app-carga-proveedores-clientes (cerrarPopup)="cerrarProveedorClientesPopup()"></app-carga-proveedores-clientes>
+    </div>
+  </div>
+</ng-container>

@@ -207,7 +207,7 @@
         <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura" (click)="modificarDomicilio()"> Modificar </button>
         <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-primary ms-3" [disabled]="false"
           (click)="abiertoDomicilio()"> Agregar </button>
-        <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura"> Descargar datos
+        <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura" (click)="descargarDatosCapturados()"> Descargar datos
           capturados </button>
       </div>
     </div> @if(avisoFormulario.get('tipoCarga')?.value===TIPACA[1].value){ <div id="divCargaMasiva">

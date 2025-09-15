@@ -418,7 +418,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         clasifiRegimen: [{ value: this.solicitudState?.clasifiRegimen || null, disabled: true }, Validators.required]
       }),
       datosMercancia: this.fb.group({
-        valueTA: [this.solicitudState?.valueTA, [Validators.maxLength(1000), Validators.required, Validators.pattern(/^[^~`^]*$/)]],
+        valueTA: [this.solicitudState?.valueTA, [Validators.maxLength(4000), Validators.required, Validators.pattern(/^[^~`^]*$/)]],
         fraccionArancelaria: [this.solicitudState?.fraccionArancelaria || null, Validators.required],
         nico: [{ value: this.solicitudState?.nico || null, disabled: true }, Validators.required],
         unidadMedidaTarifaria: [{ value: this.solicitudState?.unidadMedidaTarifaria || null, disabled: true }, Validators.required],
@@ -429,7 +429,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         paisDestino: [this.solicitudState?.paisDestino || null, Validators.required],
         lote: [this.solicitudState?.lote, [Validators.maxLength(60), Validators.required]],
         fechaSalida: [this.solicitudState?.fechaSalida, [Validators.required]],
-        observaciones: [this.solicitudState?.observaciones, [Validators.maxLength(250)]],
+        observaciones: [this.solicitudState?.observaciones, [Validators.maxLength(4000)]],
         observacionMerc: this.solicitudState?.observacionMerc
       }),
       datosProducto: this.fb.group({
@@ -438,7 +438,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno ?? '', disabled: true }, [Validators.required, Validators.maxLength(200)]],
         apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno ?? '', disabled: true }, [Validators.maxLength(200)]],
         razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: true }, [Validators.required, Validators.maxLength(250)]],
-        domicilio: [this.solicitudState?.domicilio, [Validators.maxLength(1000), Validators.required]]
+        domicilio: [this.solicitudState?.domicilio, [Validators.maxLength(4000), Validators.required]]
       }),
       registroFederal: this.fb.group({
         estado: [this.solicitudState?.estado || null, Validators.required],

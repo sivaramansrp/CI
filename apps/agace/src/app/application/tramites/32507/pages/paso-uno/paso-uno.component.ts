@@ -1,8 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  ConsultaioQuery,
-  ConsultaioState,
-} from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery ,ConsultaioState} from '@ng-mf/data-access-user';
 import {
   Tramite32507State,
   Tramite32507Store,
@@ -12,12 +9,10 @@ import { AvisoComponent } from '../../components/aviso/aviso.component';
 import { CommonModule } from '@angular/common';
 import { EntregaActaService } from '../../services/entrega-acta.service';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
 import { Tramite32507Query } from '../../../../estados/queries/tramite32507.query';
 
-
-//import { AvisoComponent } from '../../components/aviso/aviso.component';
 
 /**
  * Componente PasoUnoComponent
@@ -35,9 +30,9 @@ import { Tramite32507Query } from '../../../../estados/queries/tramite32507.quer
   styleUrl: './paso-uno.component.scss',
   imports: [
     CommonModule,
-    SolicitanteComponent,
     ReactiveFormsModule,
     AvisoComponent,
+    SolicitanteComponent
   ],
   standalone: true,
 })

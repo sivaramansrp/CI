@@ -76,6 +76,14 @@ export class Tramite80102Query extends Query<Tramite80102State> {
   selectTiempoPrograma$ = this.select((state) => state.tiempoPrograma);
 
   /**
+   * Selecciona los datos de las plantas disponibles del estado.
+   */
+
+  selectDatosFederatariosFormulario$ = this.select(
+    (state) => state.datosFederatarios
+  );
+
+  /**
    * @description
    * Selecciona el estado `plantasSubfabricantesAgregar` del estado global de la aplicación.
    *

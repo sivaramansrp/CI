@@ -203,8 +203,8 @@
         
               <span
                 class="mensaje-error"
-                *ngIf="formSolicitud.get('datosImportadorExportador.importePago')?.errors?.['notWholeNumber']">
-                Por favor, escribe un número entero válido
+                *ngIf="formSolicitud.get('datosImportadorExportador.importePago')?.errors?.['invalidDecimal']">
+                Este campo solo permite números hasta dos decimales
               </span>
             }
           </div>
