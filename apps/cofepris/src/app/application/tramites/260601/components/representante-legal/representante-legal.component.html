@@ -30,7 +30,7 @@
         </div>
         </div>
         <div class="col-md-4">
-            <label for="apellidoPaterno" class="form-label">Apellido paterno:</label>
+            <label for="apellidoPaterno" class="form-label">Apellido paterno*:</label>
             <input type="text" class="form-control" formControlName="apellidoPaterno" id="representanteLegalApPaterno"
                 (change)="setValoresStore(representanteLegalForm,'apellidoPaterno', 'setApellidoPaterno')">
                 <div *ngIf="representanteLegalForm.get('apellidoPaterno')?.touched">

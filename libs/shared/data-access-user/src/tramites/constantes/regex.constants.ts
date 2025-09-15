@@ -369,6 +369,10 @@ export const REGEX_TELEFONO_DIGITOS = /^\d{10}$/;
  * Expresión regular para validar un número de teléfono de 10 dígitos.
  */
 export const TELEFONO_DIGITOS = /^[6789]\d{8}$/;
+/**
+ * Expresión regular para validar números enteros y decimales.
+ */
+export const REGEX_NUMERO_ENTERO = /^\d*\.?\d*$/;
 
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
@@ -1002,3 +1006,55 @@ export const REGEX_LOCALIDAD = /^[a-zA-ZÀ-ÿ0-9\\s]+$/;
  * - ".1234" (falta de dígitos enteros)
  */
 export const DECIMAL_22_4_REGEX = /^\d{1,17}(\.\d{1,4})?$/;
+
+/**
+ * Expresión regular para validar cadenas que contengan únicamente números y puntos decimales.
+ * 
+ * Esta expresión regular permite:
+ * - Dígitos del 0 al 9
+ * - Punto decimal (.)
+ * - Cadena vacía
+ * - Cualquier combinación de números y puntos
+ * 
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - [0-9.]*: Coincide con cero o más caracteres que sean dígitos (0-9) o puntos (.).
+ * - $: Aserción para el final de la cadena.
+ * 
+ * Ejemplos válidos:
+ * - "123.45"
+ * - "123"
+ * - ".45"
+ * - "123."
+ * - ""
+ * - "12.34.56" (múltiples puntos)
+ * 
+ * Ejemplos no válidos:
+ * - "123.45a" (contiene letras)
+ * - "123,45" (contiene coma)
+ * - "123-45" (contiene guión)
+ * - "123 45" (contiene espacios)
+ */
+export const NUMERICO_CON_PUNTO_REGEX = /^[0-9.]*$/;
+
+/**
+ * Expresión regular para validar descripciones que contengan únicamente letras, números y espacios.
+ * 
+ * Esta expresión permite:
+ * - Letras mayúsculas y minúsculas (a-z, A-Z)
+ * - Dígitos (0-9)
+ * - Espacios en blanco
+ * - Cadena vacía
+ * 
+ * Ejemplos válidos:
+ * - "Descripcion 123"
+ * - "ABC test 456"
+ * - "123"
+ * - ""
+ * 
+ * Ejemplos no válidos:
+ * - "Descripción@123" (contiene @)
+ * - "Test-case" (contiene -)
+ * - "Descripción_válida" (contiene _)
+ */
+export const REGEX_DESCRIPCION = /^[a-zA-Z0-9\s]*$/;

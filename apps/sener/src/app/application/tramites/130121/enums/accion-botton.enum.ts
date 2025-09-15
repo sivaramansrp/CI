@@ -33,4 +33,23 @@ export interface AccionBoton {
    */
   valor: number;
 }
+
+export interface Catalogo {
+  /** Identificador único del catálogo. */
+  id: number;
+  /** Descripción del catálogo. */
+  descripcion: string;
+  /** Clave opcional del catálogo. */
+  clave?: string;
+  /** Tamaño opcional del catálogo. */
+  relacionadaUmtId?: number;
+  /** Identificador relacionado con acotación opcional. */
+  relacionadaAcotacionId?: number;
+  /** Decripcion del titulo del select, cuando se requiera. */
+  title?: string;
+  /** Decripcion del titulo del bloque, cuando se requiera. */
+  bloque?: string;
+  /** Acotación adicional, cuando se requiera. */
+  acotacion?: string;
+}
  
