@@ -1036,3 +1036,25 @@ export const DECIMAL_22_4_REGEX = /^\d{1,17}(\.\d{1,4})?$/;
  * - "123 45" (contiene espacios)
  */
 export const NUMERICO_CON_PUNTO_REGEX = /^[0-9.]*$/;
+
+/**
+ * Expresión regular para validar descripciones que contengan únicamente letras, números y espacios.
+ * 
+ * Esta expresión permite:
+ * - Letras mayúsculas y minúsculas (a-z, A-Z)
+ * - Dígitos (0-9)
+ * - Espacios en blanco
+ * - Cadena vacía
+ * 
+ * Ejemplos válidos:
+ * - "Descripcion 123"
+ * - "ABC test 456"
+ * - "123"
+ * - ""
+ * 
+ * Ejemplos no válidos:
+ * - "Descripción@123" (contiene @)
+ * - "Test-case" (contiene -)
+ * - "Descripción_válida" (contiene _)
+ */
+export const REGEX_DESCRIPCION = /^[a-zA-Z0-9\s]*$/;

@@ -910,7 +910,10 @@ export interface TercerosrelacionadosdestinoTable {
   coloniaDescripcion?: string;
 }
 
-
+/**
+ * Información del exportador relacionado con el trámite fitosanitario.
+ * @interface TercerosrelacionadosExportadorTable
+ */
 export interface TercerosrelacionadosExportadorTable {
 
   /**

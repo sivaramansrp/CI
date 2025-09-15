@@ -127,7 +127,6 @@ describe('MercanciaFormComponent', () => {
       }
     ];
     
-    // Mock the form control for 'requisito' field
     const mockControl = {
       clearValidators: jest.fn(),
       setValue: jest.fn(),

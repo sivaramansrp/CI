@@ -967,6 +967,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @description 
+   * Genera una notificación de error para la operación de eliminar mercancía.
+   * Esta función valida el estado actual de la selección de datos en la tabla y muestra un mensaje
+   * @method eliminarMercanciaNotification
+   * @returns {void} No retorna ningún valor, pero actualiza la propiedad `nuevaNotificacion`
+   */
   eliminarMercanciaNotification(): void {
     const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
     const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;
@@ -999,6 +1006,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     };
   }
 
+  /**
+   * @description Genera una notificación de error para la operación de modificar mercancía.
+   * Esta función valida el estado actual de la selección de datos en la tabla y muestra un mensaje
+   * @method modificarMercanciaNotification
+   * @returns {void} No retorna ningún valor, pero actualiza la propiedad `nuevaNotificacion`
+   */
   modificarMercanciaNotification(): void {
     const SELECTED_DATA = this.fitosanitarioStore.getValue().selectedDatos;
     const TABLE_DATA = this.fitosanitarioStore.getValue().tablaDatos;

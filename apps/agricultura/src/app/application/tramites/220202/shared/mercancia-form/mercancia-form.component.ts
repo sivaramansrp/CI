@@ -8,6 +8,7 @@ import {
   CatalogoSelectComponent,
   CrosslistComponent,
   NUMERICO_CON_PUNTO_REGEX,
+  REGEX_DESCRIPCION,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
@@ -168,14 +169,14 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
   formErrorAlert: string = '<strong>¡Error de registro! </strong> Faltan campos por capturar';
 
   /**
-   * Flag to track if form submission has been attempted
-   * Used to control when to show validation errors for disabled fields
+    * Marca para rastrear si se intentó enviar el formulario.
+    * Se utiliza para controlar cuándo mostrar errores de validación en campos deshabilitados.
    */
   formSubmissionAttempted: boolean = false;
 
   /**
-   * Flag to track if "Inspección Ocular" is selected
-   * Used to hide/show the "Requisito" field
+    * Marcar para rastrear si se  selecciona "Inspección Ocular"
+    * Se utiliza para ocultar/mostrar el campo "Requisito"
    */
   isInspeccionOcularSelected: boolean = false;
 
@@ -216,14 +217,14 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       id: [0],
       tipoRequisito: ['', Validators.required],
       requisito: ['', Validators.required],
-      numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9\s]*$/)]],
+      numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(REGEX_DESCRIPCION)]],
       fraccionArancelaria: ['', Validators.required],
       descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
       nico: ['', Validators.required],
       descripcionNico: [{ value: '', disabled: true }],
       descripcion: [
         '',
-        [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9\s]*$/)],
+        [Validators.required, Validators.maxLength(1000), Validators.pattern(REGEX_DESCRIPCION)],
       ],
       cantidadUMT: ['', [Validators.required, Validators.pattern(NUMERICO_CON_PUNTO_REGEX), MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
       umt: [{ value: '', disabled: true }, Validators.required],
