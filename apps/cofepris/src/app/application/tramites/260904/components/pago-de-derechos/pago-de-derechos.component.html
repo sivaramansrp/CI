@@ -1,12 +1,6 @@
 <div class="col-md-12">
   <form [formGroup]="pagoDeDerechosForm">
     <ng-titulo titulo="Pago de derechos"></ng-titulo>
-
-    <!-- Banner for partial fill error (Case 4) -->
-    <div *ngIf="showPagoRequiredErrorBanner()" class="alert alert-danger">
-      Todos los campos de pago son requeridos.
-    </div>
-
     <div class="row mt-2">
       <div class="col-md-4">
         <div class="form-group">
