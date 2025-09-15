@@ -59,7 +59,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   public pagoDeDerechosForm!: FormGroup;
   
   /** Subject para manejar la destrucción de suscripciones */
-  private destroyed$ = new Subject<void>();
+  public destroyed$ = new Subject<void>();
   
   /** Estado seleccionado del trámite 260904 */
   estadoSeleccionado!: Tramite260904State;
@@ -284,9 +284,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     CTRL.updateValueAndValidity({ emitEvent: false });
   }
 
-  /**
-   * Resetea el formulario de pago de derechos a su estado inicial.
-   * Limpia todos los campos, restablece su estado y actualiza el store.
+   /**
+   * Resetea todos los campos del formulario de pago de derechos y actualiza el store.
+   * Marca los controles como pristine y untouched para ocultar errores de campos requeridos después de borrar.
+   * Se invoca al hacer clic en el botón "Borrar datos del pago".
    */
   public resetPagoDeDerechos(): void {
     if (!this.pagoDeDerechosForm) { return; }

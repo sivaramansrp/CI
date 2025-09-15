@@ -290,12 +290,12 @@ export class ModPermisoSanitarioImportacion260904Component implements AfterViewI
           state.fecPago,
           state.impPago
         ];
-        const ALL_BLANK = PAYMENT_FIELDS.every(val => val === null || val === undefined || val === '');
-        const ANY_BLANK = PAYMENT_FIELDS.some(val => val === null || val === undefined || val === '');
+        // const ALL_BLANK = PAYMENT_FIELDS.every(val => val === null || val === undefined || val === '');
+        // const ANY_BLANK = PAYMENT_FIELDS.some(val => val === null || val === undefined || val === '');
 
-        if (ANY_BLANK && !ALL_BLANK) {
-          this.forceMarkPagoFields('Todos los campos de pago son requeridos');
-        }
+        // if (ANY_BLANK && !ALL_BLANK) {
+        //   this.forceMarkPagoFields('Todos los campos de pago son requeridos');
+        // }
       });
   }
 
