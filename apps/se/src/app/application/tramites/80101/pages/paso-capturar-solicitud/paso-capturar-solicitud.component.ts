@@ -1,8 +1,8 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@libs/shared/data-access-user/src';
+import { Subject, take } from 'rxjs';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
-import { Subject } from 'rxjs';
 
 
 /**
@@ -175,7 +175,9 @@ export class PasoCapturarSolicitudComponent {
    * Obtiene los datos del store y los guarda utilizando el servicio.
    */
   obtenerDatosDelStore(): void {
-    this.nuevoProgramaIndustrialService.getAllState().subscribe(data => {
+    this.nuevoProgramaIndustrialService.getAllState()
+    .pipe(take(1))
+    .subscribe(data => {
       this.guardar(data);
     });
   }
