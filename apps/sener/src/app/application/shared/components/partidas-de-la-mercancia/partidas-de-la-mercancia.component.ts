@@ -3,6 +3,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
+import {NotificacionesComponent} from '@ng-mf/data-access-user';
+import { Notificacion } from '@ng-mf/data-access-user';
+import {OCULTAR_PROVEEDOR } from '../../constantes/empleados.enum';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../constantes/partidas-de-la-mercancia.enum';
 
 import { PartidasDeLaMercanciaModelo } from '../../models/partidas-de-la-mercancia.model';
@@ -27,6 +30,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
     ReactiveFormsModule,
     TituloComponent,
     TablaDinamicaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
@@ -75,11 +79,25 @@ export class PartidasDeLaMercanciaComponent {
    */
   @Input() tableBodyData: PartidasDeLaMercanciaModelo[] = [];
 
+  datosDelSubfabricanteSeleccionado: PartidasDeLaMercanciaModelo[] = [];
+
   /**
    * @property {boolean} mostrarTabla
    * @description Bandera para mostrar u ocultar la tabla dinámica.
    */
   @Input() mostrarTabla = false;
+
+  @Input() idProcedominto!:number;
+
+  idNumeroProcedimiento=OCULTAR_PROVEEDOR;
+
+  /**
+     * @public
+     * @property {Notificacion} nuevaNotificacion
+     * @description Representa una nueva notificación que se utilizará en el componente.
+     * @command Este campo debe ser inicializado antes de su uso.
+     */
+  public nuevaNotificacion!: Notificacion;
 
   /**
  * Indica si el formulario ha sido enviado.
@@ -150,6 +168,45 @@ export class PartidasDeLaMercanciaComponent {
    */
   validarYEnviarFormulario(): void {
     this.validarYEnviarFormularioEvent.emit();
+    if(this.partidasDelaMercanciaForm.value.cantidadModificar===''||this.partidasDelaMercanciaForm.value.cantidadModificar<=0){
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje:"La cantidad no debe ser igual a 0",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
+    }
+    else if(this.partidasDelaMercanciaForm.value.descripcionModificar===''){
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje:"Debe agregar una descripción",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
+    }
+    else if(this.partidasDelaMercanciaForm.value.valorPartidaUSDPartidasDeLaMercancia===''||this.partidasDelaMercanciaForm.value.valorPartidaUSDPartidasDeLaMercancia===0){
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje:"Debe agregar el valor en dolares de la partida.",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
+    }
   }
 
   /**
@@ -169,9 +226,52 @@ export class PartidasDeLaMercanciaComponent {
    * @description Navega para modificar una partida específica, emitiendo un evento.
    */
   navegarParaModificarPartida(): void {
+    if( this.datosDelSubfabricanteSeleccionado.length===0){
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje:"Debe seleccionar un elemento",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }}
+    else {
     const MODALELEMENT = this.modalModificarPartidaRef.nativeElement;
     const MODALINSTANCE = new Modal(MODALELEMENT);
-    MODALINSTANCE.show();
+    MODALINSTANCE.show();}
+    
+  }
+  
+/**
+   * @method formularioSolicitudValidacion
+   * Valida el formulario de solicitud verificando si todos los campos cumplen con las reglas de validación.
+   * Si el formulario es inválido, marca todos los controles como tocados para mostrar los mensajes de error.
+   *
+   * @returns {boolean} - Retorna `true` si el formulario es válido, de lo contrario `false`.
+   */
+formularioSolicitudValidacion(): boolean {
+  if (this.partidasDelaMercanciaForm.valid) {
+    return true;
+  }
+  this.partidasDelaMercanciaForm.markAllAsTouched();
+  return false;
+}
+
+  /**
+   * Obtiene el registro seleccionado de la tabla de subfabricantes disponibles.
+   * @method obtenerRegistroSeleccionado
+   * @param {SubfabricanteDireccionModelo[]} event - Evento con los datos del registro seleccionado.
+   */
+  obtenerRegistroSeleccionado(event: PartidasDeLaMercanciaModelo[]): void {
+    if (event.length > 0) {
+      this.datosDelSubfabricanteSeleccionado = event;
+    } else {
+      
+      this.datosDelSubfabricanteSeleccionado = [];
+    }
   }
 
   /**
@@ -203,7 +303,46 @@ export class PartidasDeLaMercanciaComponent {
  */
 
   onModificarPartida(): void {
-    if (this.partidasDelaMercanciaForm.valid) {
+    if(this.partidasDelaMercanciaForm.value.cantidadModificar===''||this.partidasDelaMercanciaForm.value.cantidadModificar<=0){
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje:"La cantidad no debe ser igual a 0",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
+    }
+    else if(this.partidasDelaMercanciaForm.value.descripcionModificar===''){
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje:"Debe agregar una descripción",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
+    }
+    else if(this.partidasDelaMercanciaForm.value.valorPartidaUSDPartidasDeLaMercancia===''||this.partidasDelaMercanciaForm.value.valorPartidaUSDPartidasDeLaMercancia===0){
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje:"Debe agregar el valor en dolares de la partida.",
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
+    }
+    else if (this.partidasDelaMercanciaForm.valid ) {
       const MODALELEMENT = this.modalModificarPartidaRef.nativeElement;
       const MODALINSTANCE = Modal.getOrCreateInstance(MODALELEMENT);
       MODALINSTANCE.hide();

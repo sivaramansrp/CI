@@ -527,3 +527,13 @@ export const CATALOGO_PAISES = (TRAMITE: string) : string => `sat-t${TRAMITE}/ca
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/nico
  */
 export const CATALOGO_NICO = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/nico`;
+/**
+ * API para obtener el estado de la solicitud del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original_1
+ */
+export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/genera-cadena-original`;
+/**
+ * API para firmar la solicitud del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/firmar
+ */
+export const API_POST_FIRMA = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/firmar`;

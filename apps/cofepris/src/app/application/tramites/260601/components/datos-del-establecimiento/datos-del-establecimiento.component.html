@@ -47,14 +47,18 @@
                 (change)="setValoresStore(datosDelEstablecimientoForm,'correoElectronico', 'setCorreoElectronico')">
             <div *ngIf="datosDelEstablecimientoForm.get('correoElectronico')?.touched">
             <small *ngIf="datosDelEstablecimientoForm.get('correoElectronico')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
-            <small *ngIf="datosDelEstablecimientoForm.get('correoElectronico')?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">El valor ingresado no es una dirección válida de correo electrónico</small>
+            <small *ngIf="datosDelEstablecimientoForm.get('correoElectronico')?.errors?.['email']" class="text-danger espaciador-campo-pequeño">El valor ingresado no es una dirección válida de correo electrónico</small>
             </div>
         </div>
     </div>
 </div>
+@if(espectaculoPopup){
+    <lib-notificaciones [notificacionInput]="nuevaNotificacionEliminar"
+    (confirmacionModal)="cerrarPopupEspectaculo($event)"></lib-notificaciones>
+}
 
 <!--Domicillo del establecimiento-->
-<ng-titulo titulo="Domicillo del establecimiento"></ng-titulo>
+<ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
 
 <div [formGroup]="domicilloDelEstablecimientoForm">
     <div class="row">
@@ -65,6 +69,7 @@
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'codigoPostal', 'setCodigoPostal')">
                 <div *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.touched">
             <small *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.errors?.['required'] || codigoPostalInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            <small *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">Por favor, escribe un número entero válido</small>
             </div>
         </div>
         <div class="col-md-4">
@@ -123,6 +128,9 @@
             <label for="lada" class="form-label">Lada:</label>
             <input type="text" name="lada" id="lada" class="form-control" formControlName="lada"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'lada', 'setLada')">
+                <div *ngIf="domicilloDelEstablecimientoForm.get('lada')?.touched">
+            <small *ngIf="domicilloDelEstablecimientoForm.get('lada')?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">Por favor, escribe un número entero válido</small>
+            </div>
         </div>
         <div class="col-md-3">
             <label for="telefono" class="form-label">Teléfono:</label>
@@ -130,6 +138,7 @@
                 maxlength="30" (change)="setValoresStore(domicilloDelEstablecimientoForm,'telefono', 'setTelefono')">
                 <div *ngIf="domicilloDelEstablecimientoForm.get('telefono')?.touched && domicilloDelEstablecimientoForm.get('telefono')?.invalid">
             <small *ngIf="domicilloDelEstablecimientoForm.get('telefono')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            <small *ngIf="domicilloDelEstablecimientoForm.get('telefono')?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">Por favor, escribe un número entero válido</small>
             </div>
         </div>
     </div>
@@ -154,7 +163,7 @@
           <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
         </div>
 
-    <div class="row">
+    <div class="row" *ngIf="!habilitarEstado">
         <div class="col-md-8"></div>
         <div class="col-md-4 text-end">
             <div class="btn-group">

@@ -165,7 +165,7 @@ export const PRODUCTO_TABLA_CONFIGURACION =[{
   clave: (ele: ProductoTable): string | undefined => ele.clasificacionDelProducto,
   orden: 1
 }, {
-  encabezado: 'Tipo de product',
+  encabezado: 'Tipo de producto',
   clave: (ele: ProductoTable): string | undefined => ele.tipoDeProducto,
   orden: 2
 }, {
@@ -188,9 +188,22 @@ export const PRODUCTO_TABLA_CONFIGURACION =[{
   encabezado: '	País de orígen',
   clave: (ele: ProductoTable): string | undefined => ele.paisDeOrigen,
   orden: 7
-
-
-}]
+},
+{
+  encabezado: 'País de procedencia',
+  clave: (ele: ProductoTable): string | undefined => ele.paisDeProcedencia,
+  orden: 8
+}, {
+  encabezado: 'País de destino',
+  clave: (ele: ProductoTable): string | undefined => ele.paisDeDestino,
+  orden: 9
+},
+{
+  encabezado: 'Uso específico',
+  clave: (ele: ProductoTable): string | undefined => ele.usoEspecifico,
+  orden: 10
+}
+]
 
 export const SCIAN_TABLA_CONFIGURACION = [{
   encabezado: 'Clave S.C.I.A.N.',

@@ -92,3 +92,11 @@ export const FECHA_FIN_VIGENCIA = {
   required: true,
   habilitado: true,
 };
+
+/**
+ * @const PROCEDIMIENTOS_NO_PARA_ELEMENTO_TABLA
+ * @description Lista de identificadores de procedimientos que no deben ser utilizados
+ *              para elementos de tabla en la aplicación.
+ * @type {number[]}
+ */
+export const OCULTAR_PROVEEDOR = 130121;

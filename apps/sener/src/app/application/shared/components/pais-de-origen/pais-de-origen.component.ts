@@ -258,6 +258,34 @@ export class PaisDeOrigenComponent implements OnChanges {
   setValoresStore(form: FormGroup, campo: string): void {
     this.setValoresStoreEvent.emit({ form, campo });
   }
+ /**
+   * @method esInvalido
+   * @description Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control a verificar.
+   * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+   */
+ esInvalido(nombreControl: string): boolean {
+  const CONTROL = this.paisForm.get(nombreControl);
+  return CONTROL
+    ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+    : false;
+}
+
+/**
+   * @method formularioSolicitudValidacion
+   * Valida el formulario de solicitud verificando si todos los campos cumplen con las reglas de validación.
+   * Si el formulario es inválido, marca todos los controles como tocados para mostrar los mensajes de error.
+   *
+   * @returns {boolean} - Retorna `true` si el formulario es válido, de lo contrario `false`.
+   */
+formularioSolicitudValidacion(): boolean {
+  if (this.paisForm.valid) {
+    return true;
+  }
+  this.paisForm.markAllAsTouched();
+  return false;
+}
+
 
   /**
    * @metodo

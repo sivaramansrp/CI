@@ -178,6 +178,12 @@ export class PaginasComponent implements OnInit, OnDestroy {
         } else if (!this.esFormaValido) {
           this.indice = e.valor;
           this.datosPasos.indice = e.valor;
+          this.servicioDeFormularioService.markFormAsTouched('datosDelEstablecimientoRFCForm');
+          this.servicioDeFormularioService.markFormAsTouched('domicilioForm');
+          this.servicioDeFormularioService.markFormAsTouched('manifiestosForm');
+          this.servicioDeFormularioService.markFormAsTouched('representanteForm');
+          this.servicioDeFormularioService.markFormAsTouched('representanteForm');
+          this.servicioDeFormularioService.markFormAsTouched('derechosForm');
         }
       }
     } else {
