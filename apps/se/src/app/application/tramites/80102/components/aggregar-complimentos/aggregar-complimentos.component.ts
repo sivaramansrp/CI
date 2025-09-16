@@ -1,4 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   DatosComplimentos,
   SociaoAccionistas,
@@ -6,7 +7,6 @@ import {
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplimentosComponent } from '../../../../shared/components/complimentos/complimentos.component';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
 
@@ -32,6 +32,11 @@ import { Tramite80102Store } from '../../estados/tramite80102.store';
  * para limpiar las suscripciones al destruirse.
  * */
 export class AggregarComplimentosComponent implements OnDestroy {
+  /**
+   * @property {ConsultaioState} consultaState - Estado actual relacionado con la consulta.
+   */
+  @Input() consultaState!: ConsultaioState;
+    
   /**
    * Datos de los complementos.
    * @type {DatosComplimentos}

@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, DatosPasos, InputFecha, InputFechaComponent, ListaPasosWizard, PASOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, DatosPasos, InputFecha, ListaPasosWizard, PASOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FECHA_EXPEDICION, FECHA_VENCIMIENTO, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -11,7 +11,7 @@ import { Tramite110219Query } from '../../estados/Tramite110219.query';
 /** 
  * Texto de alerta que se muestra para la tabla de mercancías del certificado.
  */
-const TEXTO_DE_ALERTA_MERCANCIAS = 'Mercancias del Certificado';
+const TEXTO_DE_ALERTA_MERCANCIAS = 'Mercancías del Certificado';
 
 /** 
  * Texto de alerta que se muestra para la tabla de productores asociados al certificado.
@@ -24,7 +24,7 @@ const TEXTO_DE_ALERTA_PRODUCTORES = 'Productores asociados';
 @Component({
   selector: 'app-certificado-de-origen',
   standalone: true,
-  imports: [CommonModule, TituloComponent, AlertComponent, TablaDinamicaComponent, ReactiveFormsModule, InputFechaComponent, BtnContinuarComponent],
+  imports: [CommonModule, TituloComponent, AlertComponent, TablaDinamicaComponent, ReactiveFormsModule, BtnContinuarComponent],
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.css',
 })
@@ -317,7 +317,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     ciudad: [{ value: this.solicitudState?.ciudad, disabled: this.soloLectura }, [Validators.required]],
     fax: [{ value: this.solicitudState?.fax, disabled: this.soloLectura }, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
     correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required, Validators.email]],
-  }),
+    nombreRepresentante: [{ value: '', disabled: true }],
+    empresaRepresentante: [{ value: '', disabled: true }],
+    telefonoRepresentante: [{ value: '', disabled: true }],
+    faxRepresentante: [{ value: '', disabled: true }],
+    correoElectronicoRepresentante: [{ value: '', disabled: true }]
+  })
 });
   }
 

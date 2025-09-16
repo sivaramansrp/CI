@@ -72,9 +72,9 @@
           </div>
           <div class="row mb-3">
             <div class="col-md-4">
-              <input-fecha [datos]="fechaFinalInput" [setFecha]="mercanciaForm.get('fechaFinal')?.value" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
-              <div *ngIf="mercanciaForm.get('fechaFinal')?.touched && mercanciaForm.get('fechaFinal')?.invalid">
-                <small *ngIf="mercanciaForm.get('fechaFinal')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+              <input-fecha [datos]="fechaFinal" [setFecha]="mercanciaForm.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+              <div *ngIf="mercanciaForm.get('fechaFinalInput')?.touched && mercanciaForm.get('fechaFinalInput')?.invalid">
+                <small *ngIf="mercanciaForm.get('fechaFinalInput')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
               </div>
             </div>
             <div class="col-md-4 mt-3">

@@ -1,5 +1,6 @@
 import { BehaviorSubject, Observable, catchError, map, throwError } from 'rxjs';
 
+import { API_ROUTES} from '../servers/api-route';
 import { AnexoDosEncabezado, AnexoUnoEncabezado } from '../models/nuevo-programa-industrial.model';
 import { Catalogo, HttpCoreService, JsonResponseCatalogo } from '@ng-mf/data-access-user';
 import { ENVIRONMENT } from '../../../environments/environment';
@@ -25,6 +26,13 @@ public anexoUnoFilaSeleccionada$ = this._anexoUnoFilaSeleccionada$.asObservable(
  * Facilita la comunicación reactiva cuando cambia la selección de filas en el Anexo Dos.
  */
 private _anexoDosFilaSeleccionada$ = new BehaviorSubject<AnexoDosEncabezado | null>(null);
+
+/**
+ * Almacena el nombre o identificador del procedimiento actual.
+ * 
+ * @private
+ */
+private _procedure: string = '';
 /**
  * Observable que expone la fila seleccionada del Anexo Dos.
  * Permite a otros componentes reaccionar a los cambios en la selección de filas sin modificar el estado directamente.
@@ -69,8 +77,9 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
      * @returns Un Observable que emite la respuesta con un arreglo de países.
      */
      getPais(): Observable<JsonResponseCatalogo> {
+    const API = API_ROUTES(this._procedure);
   return this.httpService.get<JsonResponseCatalogo>(
-    `${ENVIRONMENT.API_HOST}/api/catalogo/paises`,
+  API.PAIS,
     {},
     false
   );
@@ -87,8 +96,9 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
    * @returns Observable que emite la respuesta del catálogo de estados.
    */
   getEstado(): Observable<JsonResponseCatalogo> {
+    const API = API_ROUTES(this._procedure);
      return this.httpService.get<JsonResponseCatalogo>(
-    `${ENVIRONMENT.API_HOST}/api/catalogo/estados`,
+    API.ESTADO,
     {},
     false
   );
@@ -102,8 +112,9 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
    * @returns Observable que emite la respuesta del catálogo de estados.
    */
   getActividadProductiva(): Observable<JsonResponseCatalogo> {
+    const API = API_ROUTES(this._procedure);
      return this.httpService.get<JsonResponseCatalogo>(
-    `${ENVIRONMENT.API_HOST}/api/catalogo/actividad-productiva-prosec`,
+    API.ActividadProductiva,
     {},
     false
   );
@@ -117,9 +128,10 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
    *
    * @returns Observable que emite la respuesta del catálogo de estados.
    */
-  getRepresentacion(): Observable<JsonResponseCatalogo> {
+  getRepresentacion(id:string): Observable<JsonResponseCatalogo> {
+    const API = API_ROUTES(this._procedure);
      return this.httpService.get<JsonResponseCatalogo>(
-    `${ENVIRONMENT.API_HOST}/api/catalogo/representacion-federal`,
+    `${API.RepresentacionFederal}/${id}`,
     {},
     false
   );
@@ -132,8 +144,9 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
    * @returns Un observable que emite la respuesta JSON con los datos del catálogo del tipo de documento.
    */
   getTipoDocumento(id:number): Observable<JsonResponseCatalogo> {
+    const API = API_ROUTES(this._procedure);
      return this.httpService.get<JsonResponseCatalogo>(
-    `${ENVIRONMENT.API_HOST}/api/catalogo/tipo-documento/${id}`,
+    `${API.TipoDocumento}/${id}`,
     {},
     false
   );
@@ -146,8 +159,9 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
    * @returns Un observable que emite la respuesta en formato `JsonResponseCatalogo` con el listado de municipios.
    */
   getmunicipio(cveEntidad:string): Observable<JsonResponseCatalogo> {
+    const API = API_ROUTES(this._procedure);
      return this.httpService.get<JsonResponseCatalogo>(
-    `${ENVIRONMENT.API_HOST}/api/catalogo/municipios-mex/${cveEntidad}`,
+    `${API.municipiosMax}/${cveEntidad}`,
     {},
     false
   );
@@ -161,8 +175,9 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
  * @returns Un observable que emite la respuesta JSON del catálogo correspondiente.
  */
  getTipCategoria(cveEnum:string): Observable<JsonResponseCatalogo> {
+  const API = API_ROUTES(this._procedure);
      return this.httpService.get<JsonResponseCatalogo>(
-    `${ENVIRONMENT.API_HOST}/api/catalogo/tipo-categoria/${cveEnum}`,
+    `${API.tipoCategoria}/${cveEnum}`,
     {},
     false
   );
@@ -183,4 +198,17 @@ setAnexoUnoFilaSeleccionada(row: AnexoUnoEncabezado | null): void {
 setAnexoDosFilaSeleccionada(row: AnexoDosEncabezado | null): void {
   this._anexoDosFilaSeleccionada$.next(row);
 }
+
+
+
+/**
+ * Establece el procedimiento actual.
+ * 
+ * @param procedure - El nombre del procedimiento a asignar.
+ */
+setProcedure(procedure: string): void {
+  this._procedure = procedure;
+
+}
+
 }

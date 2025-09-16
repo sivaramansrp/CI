@@ -296,6 +296,29 @@ export class PasoCapturarSolicitudComponent {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
+const PLANTAS_SUBMANUFACTURERAS = data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar.map((item: any) => ({
+        idDomicilio: 0,
+        calle: item.calle,
+        numeroExterior: item.numExterior,
+        numeroInterior: item.numInterior,
+        codigoPostal: item.codigoPostal,
+        informacionExtra: item.informacionExtra ?? '',
+        clave: item.clave ?? '',
+        cveLocalidad: item.cveLocalidad ?? '',
+        cveDelegMun: item.delegacionMunicipio ?? '',
+        cveEntidad: item.entidadFederativa ?? '',
+        cvePais: item.pais ?? '',
+        ciudad: item.ciudad ?? '',
+        telefono: item.telefono ?? '',
+        fax: item.fax ?? '',
+        municipio: item.municipio ?? '',
+        colonia: item.colonia ?? '',
+        descUbicacion: item.descUbicacion ?? '',
+        cveCatalogo: item.cveCatalogo ?? '',
+        telefonos: item.telefonos ?? '',
+        tipoDomicilio: item.domicilioFiscalSolicitante ?? ''
+}));
+
     const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
     const ANEXO_ALL = this.buildAnexo(data);
     const PAYLOAD = {
@@ -313,7 +336,7 @@ export class PasoCapturarSolicitudComponent {
           },
         }
     ],
-    "plantasSubmanufactureras": [],
+    "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
     "sociosAccionistas":[...SOCIO_ACCIONISTAS]
     
 }

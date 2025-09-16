@@ -60,25 +60,31 @@ describe('SolicitantePageComponent', () => {
   /**
    * Verifica que el componente se haya creado correctamente.
    */
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
   /**
    * Verifica que el método `ngOnInit` se inicialice correctamente.
    */
-  it('should initialize properly on ngOnInit()', () => {
-    jest.spyOn(component as any, 'asignarSecciones');
-
-    component.ngOnInit();
-
-    expect((component as any).asignarSecciones).toHaveBeenCalled();
-  });
+    it('debe establecer la sección y actualizar datosPasos en ngOnInit', () => {
+      const mockSeccion = {
+        pasos: ['step1', 'step2'],
+        currentStep: 2,
+        seccion: [true, false],
+        formaValida: [true, false]
+      };
+      Tramite40402QueryMock.selectSeccionState$ = observableOf(mockSeccion);
+      component.ngOnInit();
+      expect(component.seccion).toEqual(mockSeccion);
+      expect(component.datosPasos.nroPasos).toBe(component.pasos.length);
+      expect(component.datosPasos.indice).toBe(component.indice);
+    });
 
   /**
    * Verifica que el método `getValorIndice` se llame y active la navegación del asistente.
    */
-  it('should call getValorIndice() and trigger wizard navigation', () => {
+  it('debe llamar a getValorIndice() y activar la navegación del asistente', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
@@ -90,12 +96,4 @@ describe('SolicitantePageComponent', () => {
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  /**
-   * Verifica que el método `asignarSecciones` asigne las secciones correctamente.
-   */
-  it('should assign sections correctly using asignarSecciones()', () => {
-    (component as any).asignarSecciones();
-    expect(tramite40402StoreMock.establecerSeccion).toHaveBeenCalled();
-    expect(tramite40402StoreMock.establecerFormaValida).toHaveBeenCalled();
-  });
 });

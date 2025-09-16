@@ -2,6 +2,8 @@ import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/
 import { InfoServicios, Servicio } from '../models/autorizacion-programa-nuevo.model';
 import { Observable, map } from 'rxjs';
 import { Tramite80102State, Tramite80102Store } from '../estados/tramite80102.store';
+import { CatalogoDatosIdx } from '../../../shared/models/federatarios-y-plantas.model';
+import { ComplimentosService } from '../../../shared/services/complimentos.service';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { HttpClient } from '@angular/common/http';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
@@ -15,8 +17,8 @@ import { Tramite80102Query } from '../estados/tramite80102.query';
 })
 export class AutorizacionProgrmaNuevoService {
  constructor(private readonly http: HttpClient, public tramite80102Store: Tramite80102Store,
-  private tramite80102Query:Tramite80102Query,public httpService: HttpCoreService,) {
-   // No se necesita lógica de inicialización adicional.
+  private tramite80102Query:Tramite80102Query,public httpService: HttpCoreService,private complimentosService:ComplimentosService) {
+   this.setProcedure();
   }
 
   /**
@@ -100,6 +102,34 @@ getRegistroTomaMuestrasMercanciasData(): Observable<Tramite80102State> {
 }
 
 /**
+   * Obtiene los datos del catálogo de federatarios y plantas desde un archivo JSON local.
+   *
+   * Este método realiza una solicitud HTTP GET para recuperar los datos del catálogo
+   * almacenados en el archivo `federatarios-y-plantas-catalogos.json` ubicado en la
+   * carpeta de activos (`assets/json/80101/`). Los datos recuperados se devuelven como
+   * un observable de tipo `CatalogoDatosIdx`.
+   *
+   * @returns {Observable<CatalogoDatosIdx>} Un observable que emite los datos del catálogo
+   * de federatarios y plantas.
+   *
+   * @example
+   * this.nuevoProgramaIndustrialService.getFederataiosyPlantaCatalogosData()
+   *   .subscribe((datos: CatalogoDatosIdx) => {
+   *     console.log('Datos del catálogo:', datos);
+   *   });
+   *
+   * @remarks
+   * Este método es útil para cargar información estática de catálogos que se utiliza
+   * en la aplicación, como listas de federatarios y plantas. Asegúrese de que el archivo
+   * JSON exista en la ubicación especificada para evitar errores de carga.
+   */
+  getFederataiosyPlantaCatalogosData(): Observable<CatalogoDatosIdx> {
+    return this.http.get<CatalogoDatosIdx>(
+      'assets/json/80101/federatarios-y-plantas-catalogos.json'
+    );
+  }
+
+/**
  * Obtiene todos los datos del estado almacenado en el store.
  * @returns {Observable<Tramite80101State>} Observable con todos los datos del estado.
  */
@@ -115,6 +145,17 @@ getAllState(): Observable<Tramite80102State> {
  */
 guardarDatosPost(body: any) {
   return this.httpService.post<any>(PROC_80102.GUARDAR, { body: body });
+}
+
+/**
+ * Establece el procedimiento actual para la gestión de trámites industriales.
+ * Asigna el identificador de procedimiento 'st_t80101' y lo configura en el servicio de cumplimientos.
+ *
+ * @returns {void} No retorna ningún valor.
+ */
+setProcedure():void{
+  const PROCEDURE='sat-t80102'
+  this.complimentosService.setProcedure(PROCEDURE);
 }
 
 }

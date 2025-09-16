@@ -193,12 +193,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     mercanciasDisponibles: boolean = true;
 
     /**
-     * @descripcion
-     * Indica si hay mercancías disponibles en la tabla.
-     */
-    mercanciasDisponiblesTabla: boolean = true;
-
-    /**
    * @property modifyModal
    * @tipo {ElementRef}
    * @descripcion

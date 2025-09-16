@@ -369,6 +369,10 @@ export const REGEX_TELEFONO_DIGITOS = /^\d{10}$/;
  * Expresión regular para validar un número de teléfono de 10 dígitos.
  */
 export const TELEFONO_DIGITOS = /^[6789]\d{8}$/;
+/**
+ * Expresión regular para validar números enteros y decimales.
+ */
+export const REGEX_NUMERO_ENTERO = /^\d*\.?\d*$/;
 
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
@@ -893,7 +897,7 @@ export const EMAIL = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
  * - www.ejemplo.com
  * - ejemplo.com/ruta
  */
-export const WEBPAGE = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+export const WEBPAGE = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})(:[0-9]{1,5})?(\/[^\s]*)?$/i;
 /**
  * Expresión regular para validar números con hasta 6 dígitos enteros y opcionalmente hasta 6 decimales.
   */
@@ -968,3 +972,37 @@ export const SOLO_REGEX_NUMEROS = /^[0-9]*$/;
  * - "12 345" (contiene espacios)
  */
 export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
+
+/**
+ * Expresión regular para validar nombres de localidades.
+ * Permite letras (incluyendo acentuadas), números y espacios.
+ * No permite caracteres especiales.
+ */
+export const REGEX_LOCALIDAD = /^[a-zA-ZÀ-ÿ0-9\\s]+$/;
+
+/**
+ * Expresión regular para validar números decimales con hasta 17 dígitos enteros y hasta 4 decimales opcionales.
+ * 
+ * Esta expresión regular permite validar números que pueden contener:
+ * - Entre 1 y 17 dígitos enteros
+ * - Opcionalmente, un punto decimal seguido de entre 1 y 4 dígitos decimales
+ * 
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - \d{1,17}: Coincide con entre 1 y 17 dígitos enteros.
+ * - (\.\d{1,4})?: Coincide con un punto seguido de entre 1 y 4 dígitos decimales, opcional.
+ * - $: Aserción para el final de la cadena.
+ * 
+ * Ejemplos válidos:
+ * - "12345678901234567"
+ * - "123.4567"
+ * - "1.1"
+ * - "999999999999999999"
+ * 
+ * Ejemplos no válidos:
+ * - "123456789012345678" (más de 17 dígitos enteros)
+ * - "123.45678" (más de 4 decimales)
+ * - "abc" (no es un número)
+ * - ".1234" (falta de dígitos enteros)
+ */
+export const DECIMAL_22_4_REGEX = /^\d{1,17}(\.\d{1,4})?$/;

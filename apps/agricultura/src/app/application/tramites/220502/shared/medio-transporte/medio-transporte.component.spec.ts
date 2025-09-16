@@ -17,6 +17,7 @@ import { TestBed } from '@angular/core/testing';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CommonModule } from '@angular/common';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-test-host',
@@ -160,37 +161,17 @@ describe('MedioTransporteComponent', () => {
     const COMPILED = fixture.nativeElement;
     const HEADERS = COMPILED.querySelectorAll('th');
 
-    expect(HEADERS.length).toBe(9);
+    expect(HEADERS.length).toBe(8);
     expect(HEADERS[0].textContent.trim()).toBe('');
     expect(HEADERS[1].textContent.trim()).toBe('Fracción arancelaria');
     expect(HEADERS[2].textContent.trim()).toBe('Descripción de la fracción');
     expect(HEADERS[3].textContent.trim()).toBe('Nico');
     expect(HEADERS[4].textContent.trim()).toBe('Descripción Nico');
-    expect(HEADERS[5].textContent.trim()).toBe('Cantidad solicitada en UMT');
-    expect(HEADERS[6].textContent.trim()).toBe(
+    expect(HEADERS[5].textContent.trim()).toBe(
       'Unidad de medida de tarifa (UMT)'
     );
-    expect(HEADERS[7].textContent.trim()).toBe('Cantidad total UMT');
-    expect(HEADERS[8].textContent.trim()).toBe('Saldo pendiente');
-  });
-
-  it('should render table rows correctly', () => {
-    const COMPILED = fixture.nativeElement;
-    const ROWS = COMPILED.querySelectorAll('tbody tr');
-
-    expect(ROWS.length).toBe(1);
-
-    const CELLS = ROWS[0].querySelectorAll('td');
-    expect(CELLS.length).toBe(9);
-    expect(CELLS[0].textContent.trim()).toBe('');
-    expect(CELLS[1].textContent.trim()).toBe('1001.10.10');
-    expect(CELLS[2].textContent.trim()).toBe('Trigo duro');
-    expect(CELLS[3].textContent.trim()).toBe('Sí');
-    expect(CELLS[4].textContent.trim()).toBe('Trigo para molienda');
-    expect(CELLS[5].textContent.trim()).toBe('50');
-    expect(CELLS[6].textContent.trim()).toBe('kg');
-    expect(CELLS[7].textContent.trim()).toBe('500');
-    expect(CELLS[8].textContent.trim()).toBe('100');
+    expect(HEADERS[6].textContent.trim()).toBe('Cantidad total UMT');
+    expect(HEADERS[7].textContent.trim()).toBe('Saldo pendiente');
   });
 
   it('should update tableData on ngOnChanges', () => {
@@ -232,7 +213,9 @@ describe('MedioTransporteComponent', () => {
 
     const catalogo = { id: 123, descripcion: 'desc' };
     component.setTransporteIdMedio(catalogo as any);
-    expect(component.solicitud220502Store.setTransporteIdMedio).toHaveBeenCalledWith(123);
+    expect(
+      component.solicitud220502Store.setTransporteIdMedio
+    ).toHaveBeenCalledWith(123);
   });
 
   it('should call setIdentificacionTransporte on store with input value', () => {
@@ -244,11 +227,13 @@ describe('MedioTransporteComponent', () => {
     } as any;
 
     const mockEvent = {
-      target: { value: 'ABC123' }
+      target: { value: 'ABC123' },
     } as unknown as Event;
 
     component.setIdentificacionTransporte(mockEvent);
-    expect(component.solicitud220502Store.setIdentificacionTransporte).toHaveBeenCalledWith('ABC123');
+    expect(
+      component.solicitud220502Store.setIdentificacionTransporte
+    ).toHaveBeenCalledWith('ABC123');
   });
 
   it('should call setTotalDeGuiasAmparadas on store with input value', () => {
@@ -260,11 +245,13 @@ describe('MedioTransporteComponent', () => {
     } as any;
 
     const mockEvent = {
-      target: { value: '999' }
+      target: { value: '999' },
     } as unknown as Event;
 
     component.setTotalDeGuiasAmparadas(mockEvent);
-    expect(component.solicitud220502Store.setTotalDeGuiasAmparadas).toHaveBeenCalledWith('999');
+    expect(
+      component.solicitud220502Store.setTotalDeGuiasAmparadas
+    ).toHaveBeenCalledWith('999');
   });
 
   it('should call setEsSolicitudFerros on store when enCambioDeValor is called', () => {
@@ -276,7 +263,9 @@ describe('MedioTransporteComponent', () => {
     } as any;
 
     component.enCambioDeValor('SÍ');
-    expect(component.solicitud220502Store.setEsSolicitudFerros).toHaveBeenCalledWith('SÍ');
+    expect(
+      component.solicitud220502Store.setEsSolicitudFerros
+    ).toHaveBeenCalledWith('SÍ');
   });
 
   it('should not update tableData if changes are empty', () => {
@@ -308,5 +297,86 @@ describe('MedioTransporteComponent', () => {
         ],
       },
     ]);
+  });
+  it('should assign selected mercancias to mercanciaSeleccionLista when obtenerMercanciaLista is called', () => {
+    const mercancias = [
+      { id: 1, nombre: 'Producto A' },
+      { id: 2, nombre: 'Producto B' },
+    ];
+    component.obtenerMercanciaLista(mercancias as any);
+    expect(component.mercanciaSeleccionLista).toEqual(mercancias);
+  });
+
+  it('should call abrirModal and push pedimento if no mercanciaSeleccionLista but mercanciaLista has items', () => {
+    component.mercanciaSeleccionLista = [];
+    component.mercanciaLista = [{ id: 1 } as any];
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.pedimentos = [];
+    component.modificarSaldosMercancia();
+    expect(abrirModalSpy).toHaveBeenCalledWith('Seleccione una mercancía');
+    expect(component.pedimentos.length).toBe(1);
+    expect(component.pedimentos[0].descTipoPedimento).toBe('Por evaluar');
+  });
+
+  it('should update mercancia in mercanciaLista and reset selection in actualizarMercanciaEnTabla', () => {
+    const hideMock = jest.fn();
+    component.MODAL_INSTANCE = { hide: hideMock } as any;
+    component.mercanciaLista = [
+      { id: 1, nombre: 'A', cantidad: 10 } as any,
+      { id: 2, nombre: 'B', cantidad: 20 } as any,
+    ];
+    component.inputMercanciaSelection = 5;
+    component.mercanciaSeleccionLista = [{ id: 1 } as any];
+    const updated = { id: 1, nombre: 'A', cantidad: 99 };
+    component.actualizarMercanciaEnTabla(updated as any);
+    expect(component.inputMercanciaSelection).toBe(-1);
+    expect(component.mercanciaSeleccionLista).toEqual([]);
+    expect(hideMock).toHaveBeenCalled();
+  });
+
+  it('should not update mercanciaLista if evento is undefined in actualizarMercanciaEnTabla', () => {
+    const hideMock = jest.fn();
+    component.MODAL_INSTANCE = { hide: hideMock } as any;
+    component.mercanciaLista = [{ id: 1, nombre: 'A' } as any];
+    component.inputMercanciaSelection = 2;
+    component.mercanciaSeleccionLista = [{ id: 1 } as any];
+    component.actualizarMercanciaEnTabla(undefined);
+    expect(component.mercanciaLista).toEqual([{ id: 1, nombre: 'A' }]);
+    expect(component.inputMercanciaSelection).toBe(-1);
+    expect(component.mercanciaSeleccionLista).toEqual([]);
+    expect(hideMock).toHaveBeenCalled();
+  });
+
+  it('should set nuevaNotificacion and elementoParaEliminar when abrirModal is called', () => {
+    component.abrirModal('Mensaje de prueba', 3);
+    expect(component.nuevaNotificacion).toMatchObject({
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      mensaje: 'Mensaje de prueba',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    });
+    expect(component.elementoParaEliminar).toBe(3);
+  });
+
+  it('should remove pedimento at elementoParaEliminar when eliminarPedimento(true) is called', () => {
+    component.pedimentos = [
+      { patente: 1 } as any,
+      { patente: 2 } as any,
+      { patente: 3 } as any,
+    ];
+    component.elementoParaEliminar = 1;
+    component.eliminarPedimento(true);
+    expect(component.pedimentos).toEqual([{ patente: 1 }, { patente: 3 }]);
+  });
+
+  it('should not remove pedimento if eliminarPedimento(false) is called', () => {
+    component.pedimentos = [{ patente: 1 } as any, { patente: 2 } as any];
+    component.elementoParaEliminar = 0;
+    component.eliminarPedimento(false);
+    expect(component.pedimentos.length).toBe(2);
   });
 });

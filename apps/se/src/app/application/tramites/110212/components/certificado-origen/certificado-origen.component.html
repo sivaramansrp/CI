@@ -65,7 +65,7 @@
     </div>
 
   <ng-container formGroupName="grupoCertificadoOrigen">
-    <div class="row">
+    <div class="row" *ngIf="solicitudState?.tercerOperador">
       <ng-titulo titulo="Domicilio del tercer operador" />
       <div class="row">
         <div class="col-md-4">

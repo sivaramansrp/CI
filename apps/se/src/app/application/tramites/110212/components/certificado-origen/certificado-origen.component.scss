@@ -51,3 +51,15 @@
 .modal-footer {
     margin: 0px 25px 25px 0px;
 }
+
+::ng-deep app-catalogo-select.required {
+    border: none !important;
+}
+
+::ng-deep app-catalogo-select.required .form-select {
+    border: #fe4a47 1px solid !important;
+}
+
+::ng-deep app-catalogo-select .form-label {
+    border: none !important;
+}

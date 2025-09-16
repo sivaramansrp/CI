@@ -15,3 +15,8 @@ td {
     white-space: nowrap; // Evita el salto de línea en el texto
     text-align: left; // Alinea el texto a la izquierda
 }
+
+.table-invalid {
+  border-collapse: separate;
+  border: 1px solid #dc3545;
+}

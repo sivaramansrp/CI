@@ -1,5 +1,6 @@
 import { Row, Rows } from '../models/pago-de-derechos.model';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { MercanciaTabla } from '../models/medio-transporte.model';
 import { MercanciasLista } from '../models/datos-generales.model';
 
 /**
@@ -713,3 +714,65 @@ export const TIPO_CONTENEDOR = {
  * @type {number}
  */
 export const PROCEDURE_ID = 220502;
+
+/**
+ * @description
+ * Mensaje que indica al usuario la obligación de declarar la cantidad
+ * que ingresa en cada parcialidad por fracción arancelaria.
+ *
+ * También informa que la columna **"Saldo pendiente"** mostrará el saldo
+ * disponible para las siguientes parcialidades.
+ *
+ * Se utiliza como texto de notificación o ayuda contextual en la interfaz.
+ */
+export const SALDO_PENDIENTE_NOTIFICACION =
+  'Debes declarar la cantidad que ingresa en esta parcialidad por cada fracción arancelaria. La columna "Saldo pendiente" mostrará el saldo disponible para las siguientes parcialidades.';
+
+/**
+ * @description
+ * Configuración de las columnas de la tabla de mercancías.
+ *
+ * Cada objeto dentro del arreglo define:
+ * - **encabezado**: Texto que se mostrará en la cabecera de la tabla.
+ * - **clave**: Función que extrae el valor correspondiente del objeto `MercanciaTabla`.
+ * - **orden**: Posición de la columna en la tabla.
+ *
+ * Se utiliza para construir dinámicamente la tabla de mercancías en la vista.
+ */
+export const MERCANICA_CONFIGURACION: ConfiguracionColumna<MercanciaTabla>[] = [
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (item: MercanciaTabla) => item.fraccionArancelaria,
+    orden: 1,
+  },
+  {
+    encabezado: 'Descripción de la fracción',
+    clave: (item: MercanciaTabla) => item.descripcionFraccion,
+    orden: 2,
+  },
+  {
+    encabezado: 'Nico',
+    clave: (item: MercanciaTabla) => item.nico,
+    orden: 3,
+  },
+  {
+    encabezado: 'Descripción Nico',
+    clave: (item: MercanciaTabla) => item.descripcion,
+    orden: 4,
+  },
+  {
+    encabezado: 'Unidad de medida de tarifa (UMT)',
+    clave: (item: MercanciaTabla) => item.unidaddeMedidaDeUMT,
+    orden: 5,
+  },
+  {
+    encabezado: 'Cantidad total UMT',
+    clave: (item: MercanciaTabla) => item.cantidadTotalUMT,
+    orden: 6,
+  },
+  {
+    encabezado: 'Saldo pendiente',
+    clave: (item: MercanciaTabla) => item.saldoPendiente,
+    orden: 6,
+  },
+];

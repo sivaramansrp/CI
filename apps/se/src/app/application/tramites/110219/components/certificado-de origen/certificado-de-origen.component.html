@@ -24,10 +24,12 @@
         <input type="number" required="true" formControlName="certificadoDeOrigen" class="form-control gris-color" readonly />
       </div>
       <div class="col-md-4">
-        <input-fecha [setFecha]="cancelacionForm.get('validacionForm.fechaExpedicion')?.value" [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
+        <label>Fecha de expedición:</label>
+        <input type="number" required="true" formControlName="fechaExpedicion" class="form-control gris-color" readonly />
       </div>
       <div class="col-md-4">
-        <input-fecha [setFecha]="cancelacionForm.get('validacionForm.fechaVencimiento')?.value" [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
+        <label>Fecha de vencimiento:</label>
+        <input type="number" required="true" formControlName="fechaVencimiento" class="form-control gris-color" readonly />
       </div>
     </div>
     <div class="row mt-5">
@@ -85,7 +87,7 @@
         <input type="text" formControlName="numeroLetra" class="form-control gris-color" readonly />
       </div>
       <div class="col-md-3 mb-3">
-        <label>Telefono:</label>
+        <label>Teléfono:</label>
         <input type="text" formControlName="telefono" class="form-control gris-color" readonly/>
       </div>
     </div>
@@ -103,15 +105,43 @@
         <input type="text" formControlName="correoElectronico" class="form-control gris-color" readonly />
       </div>
     </div>
-    <div class="row mt-5" style="text-align: center;">
-      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA_MERCANCIAS"></ng-alert>
+    <div class="row mt-5">
+      <ng-alert class="alert-text" [CONTENIDO]="TEXTO_DE_ALERTA_MERCANCIAS"></ng-alert>
     </div>
     <div class="table-container centered-table-wrapper mt-5">
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED" [configuracionTabla]="encabezadosMercancias"
         [datos]="mercanciaCertificadoTablaDatos" [disableSeleccionTablaCheckBox]="soloLectura? true : false" ></app-tabla-dinamica>
     </div>
-    <div class="row mt-5" style="text-align: center;">
-      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA_PRODUCTORES"></ng-alert>
+
+  <ng-container>
+    <ng-titulo titulo="Representante Legal" />
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Nombre(s):</label>
+        <input type="text" formControlName="nombreRepresentante" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Empresa:</label>
+        <input type="text" formControlName="empresaRepresentante" class="form-control" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Correo electrónico:</label>
+        <input type="text" formControlName="correoElectronicoRepresentante" class="form-control" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Fax:</label>
+        <input type="text" formControlName="faxRepresentante" class="form-control" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Teléfono:</label>
+        <input type="text" formControlName="telefonoRepresentante" class="form-control" />
+      </div>
+    </div>
+  </ng-container>
+
+
+    <div class="row mt-5">
+      <ng-alert class="alert-text" [CONTENIDO]="TEXTO_DE_ALERTA_PRODUCTORES"></ng-alert>
     </div>
     <div class="table-container centered-table-wrapper mt-5">
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"

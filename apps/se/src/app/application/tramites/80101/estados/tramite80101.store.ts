@@ -31,6 +31,8 @@ import { StoreConfig } from '@datorama/akita';
  * Representa el estado de Tramite80101.
  */
 export interface Tramite80101State {
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
   /**
    * Información del registro de servicios.
    */
@@ -211,6 +213,7 @@ export interface Tramite80101State {
  * - `tablaDatosFederatarios`: Tabla de datos de fedatarios públicos.
  */
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
+  idSolicitud: 0,
   infoRegistro: {
     seleccionaLaModalidad: '',
     folio: '',
@@ -266,7 +269,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     },
     obligacionesFiscales: {
       opinionPositiva: 'Si',
-      fechaExpedicion: '',
+      fechaExpedicion: '15/02/2024',
       aceptarObligacionFiscal: '',
     },
     formaModificaciones: {
@@ -376,7 +379,17 @@ export class Tramite80101Store extends Store<Tramite80101State> {
   constructor() {
     super(INITIAL_AMPLIACION_SERVICIOS_STATE);
   }
-
+  /**
+    * Guarda el ID de la solicitud en el estado.
+    *
+    * @param idSolicitud - El ID de la solicitud que se va a guardar.
+    */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
   /**
    * Establece la información de registro en el estado de la tienda.
    *

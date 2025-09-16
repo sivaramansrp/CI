@@ -12,6 +12,7 @@
         <div class="col-md-6">
           <app-catalogo-select class="row-margen-agrega" [label]="'Idioma'" [catalogo]="idiomas" [required]="true"
             name="estado" formControlName="idioma" (selectionChange)="idiomaSeleccion()"
+            [markTouched]="formDatosCertificado.get('idioma')?.touched??false"
             [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
@@ -20,11 +21,13 @@
         <div class="col-md-6">
           <app-catalogo-select class="row-margen-agrega" [label]="'Entidad federativa'" [catalogo]="entidadFederativas"
             [required]="true" name="estado" formControlName="entidadFederativa"
+              [markTouched]="formDatosCertificado.get('entidadFederativa')?.touched??false"
             (selectionChange)="entidadFederativaSeleccion()" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-6">
           <app-catalogo-select class="row-margen-agrega" [label]="'Representación federal'"
             [catalogo]="representacionFederal" [required]="true" name="estado" formControlName="representacionFederal"
+              [markTouched]="formDatosCertificado.get('representacionFederal')?.touched??false"
             (selectionChange)="representacionFederalSeleccion()" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>

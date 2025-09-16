@@ -3,6 +3,8 @@ import { Catalogo, CatalogoPaises } from "@ng-mf/data-access-user";
 import { AnexoDosEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
 import { PlantasSubfabricante } from "../../../shared/models/empresas-subfabricanta.model";
 
+import { AnexoFraccionAnarelaria, AnexoUnoProducto } from "../../../shared/models/complimentos-seccion.model";
+
 /**
  * Representa la estructura de datos para un servicio IMMEX.
  * 
@@ -131,9 +133,9 @@ export interface AnnexoDosTres{
  * - `seccionActiva`: Cadena que indica la sección activa actual.
  */
 export interface AnnexoUno{
-  exportarDatosTabla: AnexoDosEncabezado[];
-  importarDatosTabla:AnexoUnoEncabezado[];
-  datosParaNavegar:AnexoUnoEncabezado | AnexoDosEncabezado ;
+  exportarDatosTabla: AnexoFraccionAnarelaria[];
+  importarDatosTabla:AnexoUnoProducto[];
+  datosParaNavegar:AnexoUnoEncabezado | AnexoDosEncabezado;
   seccionActiva: string;
 }
 /**
