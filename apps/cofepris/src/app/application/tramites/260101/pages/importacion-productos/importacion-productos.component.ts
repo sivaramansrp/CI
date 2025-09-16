@@ -1,5 +1,6 @@
-import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
+import { PAGO_DE_DERECHOS } from '../../constantes/constantes';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -34,7 +35,8 @@ interface AccionBoton {
     PasoDosComponent,
     PasoTresComponent,
     BtnContinuarComponent,
-    WizardComponent
+    WizardComponent,
+    AlertComponent,
   ],
 })
 /**
@@ -42,6 +44,14 @@ interface AccionBoton {
  * Este componente gestiona el flujo de importación de productos mediante un wizard de múltiples pasos.
  */
 export class ImportacionProductosComponent {
+  /**
+   * Representa el estado actual del pago de derechos.
+   *
+   * Inicialmente se establece con el valor `ADJUNTAR` de la enumeración `PAGO_DE_DERECHOS`.
+   *
+   * @type {string}
+   */
+  PAGO_DE_DERECHOS: string = PAGO_DE_DERECHOS.ADJUNTAR;
   /**
    * Lista de pasos del wizard.
    * Utiliza la configuración predefinida en el objeto `PASOS`.
