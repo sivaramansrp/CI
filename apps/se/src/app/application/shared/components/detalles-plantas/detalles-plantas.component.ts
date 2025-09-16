@@ -106,7 +106,6 @@ export class DetallesPlantasComponent {
    */
   regresarPlantas(): void {
     this.alRegresarPlantas.emit();
-    this.ubicaccion.back();
   }
 
   /**

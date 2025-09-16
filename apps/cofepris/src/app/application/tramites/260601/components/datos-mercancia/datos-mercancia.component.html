@@ -26,6 +26,9 @@
                         <input type="text" name="nombreProducto" id="nombreProducto" class="form-control"
                             formControlName="nombreProducto"
                             (change)="setValoresStore(agregarMercanciaForm,'nombreProducto', 'setNombreProducto')">
+                        <div *ngIf="agregarMercanciaForm.get('nombreProducto')?.touched && agregarMercanciaForm.get('nombreProducto')?.invalid">
+                        <small *ngIf="agregarMercanciaForm.get('nombreProducto')?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">Por favor, no escribas más de 120 caracteres</small>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -47,8 +50,9 @@
                         <label for="fraccionArancelaria" class="form-label">Fracción arancelaria*: <span
                                 class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span></label>
                         <input type="text" name="fraccionArancelaria" id="fraccionArancelaria" class="form-control"
-                            formControlName="fraccionArancelaria"
+                            formControlName="fraccionArancelaria" maxlength="8"
                             (change)="setValoresStore(agregarMercanciaForm,'fraccionArancelaria', 'setFraccionArancelaria')">
+                        <small *ngIf="agregarMercanciaForm.get('fraccionArancelaria')?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">Por favor, sólo escribe dígitos</small>
                     </div>
                 </div>
                 <div class="row">
@@ -94,24 +98,22 @@
                                     <div class="panel-body">
                                         <!-- País de orígen -->
                                         <ng-container *ngIf="i === 0">
-                                            <crosslist #crosslistPaisOrigen
-                                            [fechas]="seleccionarPaisOrigen"
-                                            [showSearchInput1]="true"
-                                            [showSearchInput2]="true"
-                                            [botonField]="botones"
-                                            [isDisabled]="esFormularioSoloLectura"
-                                            [label]="paisOrigenCrosslistDatos.label"></crosslist>
+                                            <crosslist #crosslistPaisOrigen [fechas]="seleccionarPaisOrigen"
+                                            [label]="paisOrigenCrosslistDatos.label"
+                                            [fechasSeleccionadas]="seleccionadaPaisOrigen"
+                                            [botones]="botones" (fechasSeleccionadasChange)="
+                                                paisChange($event)
+                                            " [isDisabled]="esFormularioSoloLectura"></crosslist>
                                         </ng-container>
 
                                         <!-- País de procedencia -->
                                         <ng-container *ngIf="i === 1">
-                                            <crosslist #crosslistPaisProcedencia
-                                            [fechas]="seleccionarPaisProcedencia"
-                                            [showSearchInput1]="true"
-                                            [showSearchInput2]="true"
-                                            [botonField]="campoBotones"
-                                            [isDisabled]="esFormularioSoloLectura"
-                                            [label]="paisProcedencisCrosslistDatos.label"></crosslist>
+                                            <crosslist #crosslistPaisProcedencia [fechas]="seleccionarPaisProcedencia"
+                                            [label]="paisProcedencisCrosslistDatos.label"
+                                            [fechasSeleccionadas]="seleccionadaPaisProcedencia"
+                                            [botones]="campoBotones" (fechasSeleccionadasChange)="
+                                                paisDeProcedenciaChange($event)
+                                            " [isDisabled]="esFormularioSoloLectura"></crosslist>
                                             
                                         </ng-container>
                                     </div>
@@ -142,14 +144,12 @@
                                 @if(colapsable){
                                 <div class="panel-collapse collapse in" id="panel-01">
                                     <div class="panel-body">
-                                        <crosslist 
-                                        #crosslistUsoEspecifico
-                                        [fechas]="seleccionarUsoEspecifico"
-                                        [showSearchInput1]="true"
-                                        [showSearchInput2]="true"
-                                        [botonField]="UsoBotones"
-                                        [isDisabled]="esFormularioSoloLectura"
-                                        [label]="usoEspecificoCrosslistDatos.label"></crosslist>
+                                        <crosslist #crosslistUsoEspecifico [fechas]="seleccionarUsoEspecifico"
+                                            [label]="usoEspecificoCrosslistDatos.label"
+                                            [fechasSeleccionadas]="seleccionadaUsoEspecifico"
+                                            [botones]="UsoBotones" (fechasSeleccionadasChange)="
+                                                usoEspecificoChange($event)
+                                            " [isDisabled]="esFormularioSoloLectura"></crosslist>
                                     </div>
                                 </div>
                                 }

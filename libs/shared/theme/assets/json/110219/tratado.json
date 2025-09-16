@@ -42,5 +42,49 @@
   {
     "id": 10,
     "descripcion": "ESTONIA (REPUBLICA DE)"
+  },
+  {
+    "id": 11,
+    "descripcion": "ALEMANIA (REPUBLICA FEDERAL DE)"
+  },
+  {
+    "id": 12,
+    "descripcion": "AUSTRIA (REPUBLICA DE)"
+  },
+  {
+    "id": 13,
+    "descripcion": "BELGICA (REINO DE)"
+  },
+  {
+    "id": 14,
+    "descripcion": "BULGARIA (REPUBLICA DE)"
+  },
+  {
+    "id": 15,
+    "descripcion": "CHIPRE (ISLA DE)"
+  },
+  {
+    "id": 16,
+    "descripcion": "COMUNIDAD EUROPEA"
+  },
+  {
+    "id": 17,
+    "descripcion": "CROACIA (REPUBLICA DE)"
+  },
+  {
+    "id": 18,
+    "descripcion": "DINAMARCA (REINO DE)"
+  },
+  {
+    "id": 19,
+    "descripcion": "ESLOVENIA (REPUBLICA DE)"
+  },
+  {
+    "id": 20,
+    "descripcion": "ESPANA (REINO DE)"
+  },
+  {
+    "id": 21,
+    "descripcion": "ESTONIA (REPUBLICA DE)"
   }
   ]

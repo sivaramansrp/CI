@@ -5,6 +5,7 @@ import {
   Notificacion,
   NotificacionesComponent,
   Pedimento,
+  REG_X,
   TablaCampoSeleccion,
   TablaConEntradaComponent,
   TablaDinamicaComponent,
@@ -20,6 +21,9 @@ import {
 import {
   MENSAJES_EXPORTACIONES_TOTALS,
   MENSAJES_VENTAS_TOTALES,
+  TOTAL_EXPORTACIONES_MENSAJES,
+  VALIDATORS_MENSAJES,
+  VENTAS_TOTALES_MENSAJES,
 } from '../../constantes/solicitud150102.enum';
 import {
   Solicitud150102State,
@@ -228,11 +232,19 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
   mensajesDeValidacion: string[] = [];
 
   /**
+   * Indica si la tabla de bienes producidos está activa o visible.
+   *
+   * @type {boolean}
+   */
+  bienesTablaProducidos: boolean = false;
+
+  /**
    * @description Constructor que inicializa las dependencias necesarias.
    * @param fb Instancia del FormBuilder para la creación de formularios reactivos.
    * @param solicitud150102Store Store que maneja el estado de la solicitud.
    * @param solicitud150102Query Query para seleccionar datos de la solicitud.
    * @param solicitudService Servicio para obtener datos de la solicitud.
+   * @param consultaioQuery Query para seleccionar el estado del formulario.
    */
   constructor(
     public fb: FormBuilder,
@@ -305,14 +317,20 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
     this.formReporteAnnual = this.fb.group({
       ventasTotales: [
         { value: this.solicitud150102State.ventasTotales, disabled: false },
-        [Validators.maxLength(16)],
+        [
+          Validators.maxLength(16),
+          Validators.pattern(REG_X.SOLO_NUMEROS_Y_PUNTO),
+        ],
       ],
       totalExportaciones: [
         {
           value: this.solicitud150102State.totalExportaciones,
           disabled: false,
         },
-        [Validators.maxLength(16)],
+        [
+          Validators.maxLength(16),
+          Validators.pattern(REG_X.SOLO_NUMEROS_Y_PUNTO),
+        ],
       ],
       totalImportaciones: [
         {
@@ -379,6 +397,12 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    * @param evento Evento de entrada con el valor ingresado.
    */
   obtenerVentasTotales(evento: Event): void {
+    const VENTAS_TOTALES_CONTROL = this.formReporteAnnual?.get('ventasTotales');
+    if (VENTAS_TOTALES_CONTROL) {
+      if (VENTAS_TOTALES_CONTROL?.invalid && VENTAS_TOTALES_CONTROL?.touched) {
+        this.abrirModal(VENTAS_TOTALES_MENSAJES);
+      }
+    }
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud150102Store.actualizarVentasTotales(VALOR);
     this.calcularReporteAnnual();
@@ -389,6 +413,17 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    * @param evento Evento de entrada con el valor ingresado.
    */
   obtenerTotalExportaciones(evento: Event): void {
+    const TOTAL_EXPORTACIONES_CONTROL =
+      this.formReporteAnnual?.get('totalExportaciones');
+    if (TOTAL_EXPORTACIONES_CONTROL) {
+      if (
+        TOTAL_EXPORTACIONES_CONTROL?.invalid &&
+        TOTAL_EXPORTACIONES_CONTROL?.touched
+      ) {
+        this.abrirModal(TOTAL_EXPORTACIONES_MENSAJES);
+        return;
+      }
+    }
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud150102Store.actualizarTotalExportaciones(VALOR);
     this.calcularReporteAnnual();
@@ -407,19 +442,19 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
     this.mensajesDeValidacion = [];
     const VENTASTOTALES = this.formReporteAnnual.get('ventasTotales')?.value;
     if (!VENTASTOTALES) {
-      this.abrirModal();
+      this.abrirModal(VALIDATORS_MENSAJES);
       this.mensajesDeValidacion.push(MENSAJES_VENTAS_TOTALES);
       return false;
     }
     const EXPORTACIONESTOTALS =
       this.formReporteAnnual.get('totalExportaciones')?.value;
     if (!EXPORTACIONESTOTALS) {
-      this.abrirModal();
+      this.abrirModal(VALIDATORS_MENSAJES);
       this.mensajesDeValidacion.push(MENSAJES_EXPORTACIONES_TOTALS);
       return false;
     }
     if (Number(VENTASTOTALES) < Number(EXPORTACIONESTOTALS)) {
-      this.abrirModal();
+      this.abrirModal(VALIDATORS_MENSAJES);
       return false;
     }
     return true;
@@ -507,14 +542,13 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    *
    * @param i Índice del elemento a eliminar. Valor predeterminado: 0.
    */
-  abrirModal(i: number = 0): void {
+  abrirModal(mensaje: string, i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje:
-        'Las Ventas Totales deben ser mayores o iguales al Total de Exportaciones.',
+      mensaje: mensaje,
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -530,6 +564,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
+      this.nuevaNotificacion = undefined as unknown as Notificacion;
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }

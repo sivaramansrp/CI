@@ -4,7 +4,6 @@ import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@ng-mf/da
 import { Subject, take } from 'rxjs';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 
-
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
  * 
