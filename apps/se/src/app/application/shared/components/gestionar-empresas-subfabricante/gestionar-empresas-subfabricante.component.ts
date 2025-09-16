@@ -447,15 +447,25 @@ private modalRef: Modal | null = null;
     }
   }
 
-  /**
+
+   /**
    * Emite el evento para complementar las plantas seleccionadas.
    * @returns {void}
    */
   complementarPlantas(): void {
     if (this.plantasSeleccionadas.length > 0) {
       this.plantasPorComplementar.emit(this.plantasSeleccionadas);
+      this.showComplementarModal = true;
     }
     
+  }
+
+/**
+ * Cierra el modal complementario.
+ * Establece la variable de visibilidad del modal en false.
+ */
+  cerrarComplementarModal(): void {
+    this.showComplementarModal = false;
   }
 
     /**

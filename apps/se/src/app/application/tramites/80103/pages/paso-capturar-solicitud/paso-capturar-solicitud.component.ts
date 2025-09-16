@@ -79,6 +79,8 @@ export class PasoCapturarSolicitudComponent {
  * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
  */
   public infoAlert = 'alert-info';
+
+  idSolicitud: number=0;
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
    * @private
