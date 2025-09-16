@@ -12,7 +12,7 @@ import {
   PASOS,
   TITULOMENSAJE,
 } from '../../constantes/autorizacion-programa-nuevo.enum';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, take } from 'rxjs';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
@@ -585,7 +585,9 @@ export class SolicitudPageComponent implements OnDestroy {
    * Obtiene los datos del store y los guarda utilizando el servicio.
    */
   obtenerDatosDelStore(): void {
-    this.autorizacionProgrmaNuevoService.getAllState().subscribe(data => {
+    this.autorizacionProgrmaNuevoService.getAllState()
+    .pipe(take(1))
+    .subscribe(data => {
       this.guardar(data);
     });
   }

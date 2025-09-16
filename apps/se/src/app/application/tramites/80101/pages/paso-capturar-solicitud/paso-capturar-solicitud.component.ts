@@ -184,7 +184,9 @@ export class PasoCapturarSolicitudComponent {
    * Obtiene los datos del store y los guarda utilizando el servicio.
    */
   obtenerDatosDelStore(): void {
-    this.nuevoProgramaIndustrialService.getAllState().subscribe(data => {
+    this.nuevoProgramaIndustrialService.getAllState()
+    .pipe(take(1))
+    .subscribe(data => {
       this.guardar(data);
     });
   }

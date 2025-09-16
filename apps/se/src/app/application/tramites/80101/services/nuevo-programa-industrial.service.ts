@@ -1,5 +1,6 @@
 import {
   Catalogo,
+  JsonResponseCatalogo,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import {
@@ -255,5 +256,7 @@ setProcedure():void{
   const PROCEDURE='sat-t80101'
   this.complimentosService.setProcedure(PROCEDURE);
 }
+
+
 
 }

@@ -1,4 +1,4 @@
-import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Catalogo, JsonResponseCatalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { InfoServicios, Servicio } from '../models/autorizacion-programa-nuevo.model';
 import { Observable, map } from 'rxjs';
 import { Tramite80102State, Tramite80102Store } from '../estados/tramite80102.store';
@@ -156,6 +156,23 @@ guardarDatosPost(body: any) {
 setProcedure():void{
   const PROCEDURE='sat-t80102'
   this.complimentosService.setProcedure(PROCEDURE);
+}
+
+/**
+ * Obtiene información del servicio IMMEX desde el catálogo correspondiente.
+ *
+ * Realiza una solicitud HTTP GET al endpoint definido en `apiRoutes.servicoImex`
+ * y retorna la respuesta como un observable de tipo `JsonResponseCatalogo`.
+ *
+ * @returns Observable que emite la respuesta del catálogo IMMEX.
+ */
+getServicoImmex(): Observable<JsonResponseCatalogo> {
+  
+     return this.httpService.get<JsonResponseCatalogo>(
+    PROC_80102.servicoImex,
+    {},
+    false
+  );
 }
 
 }

@@ -282,6 +282,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     private readonly autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
     private catalogosServices: CatalogosService, private consultaQuery: ConsultaioQuery
   ) {
+   
     this.formulario = this.fb.group({
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
     });
@@ -315,6 +316,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.maxLength(300)],
       ],
     });
+     this.obtainorServico();
   }
 
   /**
@@ -456,9 +458,9 @@ export class ServiciosComponent implements OnInit, OnDestroy {
         // También puedes asignarlo directamente al componente si lo necesitas, pero es mejor usar el store para mantener la reactividad
         this.Tramite80102Query.selectAduanaDeIngreso$.subscribe(
           (aduanaDeIngreso) => {
-            this.aduanaDeIngreso = aduanaDeIngreso;
-            if (this.aduanaDeIngreso?.length) {
-              this.formulario.get('entidadFederativa')?.setValue(this.aduanaDeIngreso[0].id);
+            // this.aduanaDeIngreso = aduanaDeIngreso;
+            if (aduanaDeIngreso?.length) {
+              this.formulario.get('entidadFederativa')?.setValue(aduanaDeIngreso[0].id);
             }
           }
         );
@@ -728,6 +730,13 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+obtainorServico():void{
+  this.autorizacionProgrmaNuevoService.getServicoImmex().pipe(takeUntil(this.destroyNotifier$)).subscribe((data)=>{
+  this.aduanaDeIngreso=data.datos;
+  });
+}
+
 
   /**
   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

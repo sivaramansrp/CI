@@ -469,6 +469,7 @@ private modalRef: Modal | null = null;
   }
 
     /**
+  /**
    * Obtiene la lista de estados llamando al servicio `complimentosService`.
    * Se suscribe al observable retornado por `getEstado()` y muestra la respuesta en la consola.
    * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.

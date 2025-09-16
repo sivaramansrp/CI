@@ -20,6 +20,12 @@
      <paso-firma [idSolicitud]="idSolicitud" [procedure]="80103" [procedureUrl]="'nuevo-programa-industrial/action'"></paso-firma> 
     }
     }
-    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+    <btn-continuar
+      [datos]="datosPasos"
+      (continuarEvento)="getValorIndice($event)"
+      [btnGuardar]="true" 
+      [btnGuardarVisible]="btnGuardarVisible"
+      (btnGuardarClicked)="obtenerDatosDelStore()"
+    ></btn-continuar>
   </div>
 </div>
