@@ -303,6 +303,12 @@ set formularioDatosSubcontratista(valor: FormGroup) {
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+/**
+ * Indica si se deben mostrar los detalles de la planta en la interfaz.
+ * Valor booleano que controla la visibilidad del componente de detalles.
+ */
+  public showDetallesPlanta: boolean = false;
   /**
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param fb - FormBuilder para la creación del formulario reactivo.
@@ -486,9 +492,14 @@ set formularioDatosSubcontratista(valor: FormGroup) {
    * @returns {void} Este método no devuelve ningún valor.
    */
   abrirDialogoComplementarPlanta(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
+    this.showDetallesPlanta = true;
+  }
+
+/**
+ * Cierra el modal de detalles de la planta.
+ * Establece showDetallesPlanta en false para ocultar el componente.
+ */
+  cerrarDetallesModal(): void {
+    this.showDetallesPlanta = false;  
   }
 }

@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { DatosSubcontratista, PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -123,6 +123,12 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    * @type {ConfiguracionColumna<PlantasSubfabricante>[]}
    */
   configuracionTablaSeleccionadas: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION
+
+/**
+ * Índice de la pestaña activa recibido como entrada.
+ * Se utiliza para controlar la pestaña mostrada, con valor por defecto 0.
+ */
+ @Input() tabIndex: number = 0;
 
   /**
    * Constructor de la clase EmpresasSubfabricanteComponent.
@@ -348,7 +354,9 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
       if(complementarPlantas){
         this.store.setPlantasPorCompletar(complementarPlantas);
       }
-      this.router.navigate(['../complementar-plantas'], { relativeTo: this.activatedRoute });
+      if (this.tabIndex) {
+        this.store.setindicePrevioRuta(this.tabIndex);
+    }
     }
   
     /**
