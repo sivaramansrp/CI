@@ -46,11 +46,12 @@ import {
   TERCEROS_RELACIONADOS_TABLE_BODY_DATA,
   TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
 } from '../../enum/permiso.enum';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef,Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil, } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import { Modal } from 'bootstrap';
 import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260215/nacionalidad-options.json';
 import { Sanitario260215Store } from '../../estados/tramites/sanitario260215.store';
@@ -94,6 +95,16 @@ const TERCEROS_TEXTO_DE_ALERTA =
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+  /**
+   * Datos de encabezado para la tabla de terceros relacionados.
+   * Utiliza datos predefinidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
+   */
+  @ViewChild('showFacturadorRef') showFacturadorRef!: ElementRef;
+  /**
+   * Datos de encabezado para la tabla de terceros relacionados.
+   * Utiliza datos predefinidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
+   */
+  @ViewChild('showFabricanteRef') showFabricanteRef!: ElementRef;
   /**
    * Indicador de visibilidad para la sección de la tabla.
    * Inicialmente visible (`true`).
@@ -299,6 +310,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Valor por defecto para el campo de tipo de persona.
    */
   public tipoPersonaValue = "fisica";
+
   /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite, el servicio de terceros y la consulta de estado.
@@ -312,7 +324,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private sanitario260215Store: Sanitario260215Store,
     private service: ServiciosPermisoSanitarioService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private cdr: ChangeDetectorRef
   ) {
     /**
             * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -383,7 +396,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      * Crea el formulario reactivos para agregar un fabricante.
      * Cada campo tiene sus propias validaciones.
      */
-    this.agregarFabricanteFormGroup = this.fb.group({
+  this.agregarFabricanteFormGroup = this.fb.group({
       /**
        * Nacionalidad del tercero.
        */
@@ -490,18 +503,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * Correo electrónico del tercero.
        */
       correoElectronico: new FormControl({ value: '', disabled: true }),
-      /**
-       * Código del extranjero.
-       */
-      extranjeroCodigo: new FormControl('', [Validators.required]),
-      /**
-       * Estado del extranjero.
-       */
-      extranjeroEstado: new FormControl('', [Validators.required]),
-      /**
-       * Colonia del extranjero.
-       */
-      extranjeroColonia: new FormControl({ value: '', disabled: true }, [Validators.required]),
+
+      extranjeroColonia: new FormControl({ value: '', disabled: true }),
+    
     });
 
   }
@@ -989,12 +993,90 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
 
   /**
+   * Deshabilita un campo específico en el formulario de Fabricante.
+   * Limpia las validaciones y actualiza el estado del campo.
+   */
+  private disableField(field: string): void {
+  const CONTROL = this.agregarFabricanteFormGroup.get(field);
+  if (CONTROL) {
+    CONTROL.clearValidators();
+    CONTROL.disable({ emitEvent: false });
+    CONTROL.updateValueAndValidity({ emitEvent: false });
+  }
+}
+  /**
    * Envía el formulario de Fabricante y actualiza los datos en el store.
    * Obtiene los valores seleccionados de los dropdowns y crea una nueva fila para la tabla.
    *
    * @description Este método es llamado al enviar el formulario de agregar un fabricante.
    */
-  submitFabricanteForm(): void {
+  submitFabricanteForm(): void {  
+  const TIPO_PERSONA = this.agregarFabricanteFormGroup.get('tipoPersona')?.value;
+  const NACIONALIDAD = this.agregarFabricanteFormGroup.get('tercerosNacionalidad')?.value;
+
+   if (NACIONALIDAD === 'nacional' && TIPO_PERSONA === 'fisica') {
+    [
+      'denominacionRazonSocial',
+      'entidadFederativa',
+      'coloniaoEquivalente',
+      'extranjeroCodigo',
+      'extranjeroEstado',
+      'extranjeroColonia'
+    ].forEach(field => this.disableField(field));
+  }
+  if (NACIONALIDAD === 'nacional' && TIPO_PERSONA === 'moral') {
+    [
+      'curp',
+      'nombre',
+      'primerApellido',
+      'segundoApellido',
+      'entidadFederativa',
+      'codigoPostaloEquivalente',
+      'coloniaoEquivalente',
+      'extranjeroCodigo',
+      'extranjeroEstado',
+      'extranjeroColonia'
+    ].forEach(field => this.disableField(field));
+  }
+
+   if (NACIONALIDAD === 'extranjero' && TIPO_PERSONA === 'moral') {
+    [
+      'rfc',
+      'curp',
+      'nombre',
+      'primerApellido',
+      'segundoApellido',
+      'municipioAlcaldia',
+      'localidad',
+      'entidadFederativa',
+      'colonia',
+      'extranjeroCodigo',
+      'extranjeroEstado',
+      'extranjeroColonia'
+    ].forEach(field => this.disableField(field));
+  }
+
+  if (NACIONALIDAD === 'extranjero' && TIPO_PERSONA === 'fisica') {
+    [
+      'rfc',
+      'curp',
+      'denominacionRazonSocial',
+      'municipioAlcaldia',
+      'localidad',
+      'entidadFederativa',
+      'colonia',
+      'extranjeroCodigo',
+      'extranjeroEstado',
+      'extranjeroColonia'
+    ].forEach(field => this.disableField(field));
+  }
+
+    if (this.agregarFabricanteFormGroup.invalid) {
+    this.agregarFabricanteFormGroup.markAllAsTouched();
+    return;
+  }
+
+  
     /**
      * Obtiene los valores de LADA y TELEFONO del formulario.
      */
@@ -1141,11 +1223,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      */
     this.sanitario260215Store.setFabricante(this.fabricanteRowData);
 
+    const MODAL_EL = this.showFabricanteRef.nativeElement;
+    const MODAL_INSTANCE = Modal.getInstance(MODAL_EL) || new Modal(MODAL_EL);
+    MODAL_INSTANCE.hide();
+
+  document.body.classList.remove('modal-open');
+  document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+
     /**
      * Cambia la visibilidad de las secciones del componente.
      */
      this.showTableDiv = !this.showTableDiv;
-     this.showFabricante = !this.showFabricante;
+    
   }
 
   /**
@@ -1370,13 +1459,16 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.showProveedor = !this.showProveedor;
   }
 
+  //  @ViewChild('showFacturador') showFacturadorModal!: ElementRef;
+    //  @ViewChild('showFacturadorRef', { static: false }) showFacturadorRef!: ElementRef;
+
   /**
    * Envía el formulario de Facturador y actualiza los datos en el store.
    * Crea una nueva fila para la tabla con los datos del formulario.
    *
    * @description Este método es llamado al enviar el formulario de agregar un facturador.
    */
-  submitFacturadorForm(): void {
+  submitFacturadorForm(): void { 
     /**
      * Crea una nueva fila para la tabla con los datos del formulario.
      */
@@ -1406,17 +1498,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     /**
      * Agrega la nueva fila a la lista de filas del facturador.
      */
-    this.facturadorRowData.push(FACTURADOR_FILA);
+   this.facturadorRowData.push(FACTURADOR_FILA);
     /**
      * Actualiza el estado del store con los nuevos datos del facturador.
      */
-    this.sanitario260215Store.setFacturador(this.facturadorRowData);
+   this.sanitario260215Store.setFacturador(this.facturadorRowData);
 
-    /**
-     * Cambia la visibilidad de las secciones del componente.
-     */
-    this.showTableDiv = !this.showTableDiv;
-    this.showFacturador = !this.showFacturador;
+   this.showTableDiv = !this.showTableDiv;
+   this.showFacturador = !this.showFacturador;
   }
 
   /**
