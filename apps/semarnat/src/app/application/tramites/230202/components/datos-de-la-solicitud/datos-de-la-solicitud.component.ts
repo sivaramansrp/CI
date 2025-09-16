@@ -778,8 +778,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns void
    */
   changeCrosslist(fechas: string[]): void {
-    const newArray = this.fb.array(fechas.map(fecha => this.fb.control(fecha)));
-    this.reexportacionForm.setControl('fechasSeleccionadas', newArray);
+    const FECHA = this.fb.array(fechas.map(fecha => this.fb.control(fecha)));
+    this.reexportacionForm.setControl('fechasSeleccionadas', FECHA);
     this.store.setFechasSeleccionadas(fechas);
   }
 
@@ -790,8 +790,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns void
    */
   changeCrosslistEntidades(entidades: string[]): void {
-    const newArray = this.fb.array(entidades.map(entidad => this.fb.control(entidad)));
-    this.reexportacionForm.setControl('entidadesSeleccionadas', newArray);
+    const FECHA = this.fb.array(entidades.map(entidad => this.fb.control(entidad)));
+    this.reexportacionForm.setControl('entidadesSeleccionadas', FECHA);
     this.store.setEntidadesSeleccionadas(entidades);
   }
 
@@ -804,7 +804,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .agregarDetalle()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
-        console.log(respuesta);
         if (respuesta?.success) {
           respuesta.datos.id = this.datosDetalle.length + 1;
           this.datosDetalle = [...this.datosDetalle, respuesta.datos];
