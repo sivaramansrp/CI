@@ -5,6 +5,7 @@ import { Subject, take } from 'rxjs';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { takeUntil } from 'rxjs';
+import { Tramite80101Store } from '../../estados/tramite80101.store';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 
 @Component({
@@ -62,6 +63,12 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
 
   /** Indica la visibilidad del botón Guardar. */
   public btnGuardarVisible: string = 'visible';
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se utiliza para rastrear la solicitud en curso.
+   */
+  idSolicitud: number=0;
 
   /**
    * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
@@ -133,7 +140,8 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
   constructor(
     private tramiteQuery: Tramite80101Query,
     private seccion: SeccionLibStore,
-    private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService
+    private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
+    private tramite80105Store: Tramite80101Store
   ) {
     this.tramiteQuery.FormaValida$.pipe(
       takeUntil(this.destroyNotifier$)
@@ -198,6 +206,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
     "sociosAccionistas":[...SOCIO_ACCIONISTAS]
     };
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
+      this.tramite80105Store.setIdSolicitud(response.idSolicitud || 0);
       return response;
     });
   }

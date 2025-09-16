@@ -25,6 +25,7 @@ import { Subject, take } from 'rxjs';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { takeUntil } from 'rxjs';
+import { Tramite80101Store } from '../../estados/tramite80101.store';
 /*
 *  * Componente para gestionar el paso de captura de solicitud en el trámite 80103.
 *  * Este componente utiliza el componente WizardComponent para permitir la navegación entre
@@ -163,7 +164,8 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
   constructor(
     private tramiteQuery: Tramite80101Query,
     private seccion: SeccionLibStore,
-    private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService
+    private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
+    private tramite80103Store: Tramite80101Store
   ) {
     this.tramiteQuery.FormaValida$.pipe(
       takeUntil(this.destroyNotifier$)
@@ -178,6 +180,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
    * @param e - event$: Acción del botón.
    */
   getValorIndice(e: AccionBoton): void {
+    this.obtenerDatosDelStore()
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -331,6 +334,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
     "sociosAccionistas":[...SOCIO_ACCIONISTAS]
     };
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
+      this.tramite80103Store.setIdSolicitud(response.idSolicitud || 0);
       return response;
     });
   }

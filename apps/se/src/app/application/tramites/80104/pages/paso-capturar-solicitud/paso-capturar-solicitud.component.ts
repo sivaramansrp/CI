@@ -3,6 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@ng-mf/data-access-user';
 import { Subject, take } from 'rxjs';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
+import { Tramite80101Store } from '../../estados/tramite80101.store';
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
  * 
@@ -43,6 +44,12 @@ export class PasoCapturarSolicitudComponent {
    * El valor inicial es 1, lo que indica que el primer paso está activo al cargar el componente.
    */
   indice: number = 1;
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se utiliza para referenciar la solicitud en curso.
+   */
+  idSolicitud: number = 0;
   /**
    * Datos de los pasos del wizard.
    * Esta propiedad almacena información relacionada con el número de pasos, el índice actual,
@@ -149,7 +156,7 @@ export class PasoCapturarSolicitudComponent {
    * utilizando los métodos `establecerSeccion` y `establecerFormaValida` del servicio `SeccionLibStore`.
    * La suscripción se gestiona para que se complete automáticamente al destruir el componente mediante `takeUntil` y `destroyNotifier$`.
    */
-  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService) {
+  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,private tramite80104Store: Tramite80101Store) {
   //
   }
 
@@ -158,6 +165,7 @@ export class PasoCapturarSolicitudComponent {
    * @param e - event$: Acción del botón.
    */
   getValorIndice(e: AccionBoton): void {
+    this.obtenerDatosDelStore();
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -208,6 +216,7 @@ export class PasoCapturarSolicitudComponent {
     "sociosAccionistas":[...SOCIO_ACCIONISTAS]
     };
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
+      this.tramite80104Store.setIdSolicitud(response.idSolicitud || 0);
       return response;
     });
   }
