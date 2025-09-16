@@ -512,9 +512,10 @@ export class DomicilloComponent implements OnInit, OnDestroy {
 
     });
     
-this.domicilio.get('licenciaSanitaria')?.valueChanges.subscribe(value => {
+this.domicilio.get('licenciaSanitaria')?.valueChanges
+  .pipe(takeUntil(this.destroyed$))
+  .subscribe((value: string) => {
     const AVIS0VALOR = this.domicilio.get('avisoCheckbox');
-
     if (value && value.trim() !== '') {
       AVIS0VALOR?.disable({ emitEvent: false });
     } else {

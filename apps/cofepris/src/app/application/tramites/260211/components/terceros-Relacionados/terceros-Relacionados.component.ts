@@ -1,5 +1,5 @@
 import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
-import { CONFIGURATION_TABLA_FABRICANTE, TABLA_ROWDATA } from '../../constantes/derechos.model';
+import { CONFIGURATION_TABLA_FABRICANTE, TABLA_ROWDATA, TERCEROS_TEXTO_DE_ALERTA } from '../../constantes/derechos.model';
 import { FabricanteDatos, TERCEROS_DATAS } from '../../models/permiso-sanitario.enum';
 import {InputRadioComponent , TituloComponent } from '@libs/shared/data-access-user/src';
 import { TablaDatos } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
@@ -23,12 +23,7 @@ import nacionalidadRedio from '@libs/shared/theme/assets/json/260211/nacionalida
 import tipoPersonaoptions from '@libs/shared/theme/assets/json/260211/tipoPersonaoptions.json';
 
  
-const TERCEROS_TEXTO_DE_ALERTA =
-   `
-  <div class="text-center">
-    Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.
-  </div>
-  `;
+
 
 @Component({
   selector: 'app-terceros-relacionados',

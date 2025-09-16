@@ -89,4 +89,16 @@ export const TABLA_ROWDATA: FabricanteDatos[] = [
     coloniaEquivalente:"sdw"
   }
 ];
-
+/**
+ * @constant {string} TERCEROS_TEXTO_DE_ALERTA
+ * 
+ * Texto HTML de alerta que se muestra en la interfaz.
+ * Indica al usuario que las tablas marcadas con un asterisco (*) son obligatorias
+ * y que debe agregarse al menos un registro en ellas.
+ */
+export const TERCEROS_TEXTO_DE_ALERTA =
+   `
+  <div class="text-center">
+    Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.
+  </div>
+  `;
