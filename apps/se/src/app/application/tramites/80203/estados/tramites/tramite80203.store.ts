@@ -95,6 +95,8 @@ export function createInitialState(): ImmexRegistroState {
              * @default 0
              */
             permisoImmexDatos: 0,
+
+            productoImportacion:'',
             
             /**
              * @description Código de fracción arancelaria para exportación, inicializado como cadena vacía.

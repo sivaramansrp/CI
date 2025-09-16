@@ -20,6 +20,7 @@ import {
   CatalogoSelectComponent,
   ConsultaioQuery,
   CrosslistComponent,
+  REGEX_SOLO_NUMEROS,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { CrossList, MercanciaCrossList } from '../../models/aviso-model';
@@ -460,7 +461,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       ],
       nombreProducto: [
         this.avisoSanitarioState?.nombreProducto,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(120)],
       ],
       marca: [this.avisoSanitarioState?.marca, [Validators.required]],
       cveTipoProducto: [
@@ -469,7 +470,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       ],
       fraccionArancelaria: [
         this.avisoSanitarioState?.fraccionArancelaria,
-        [Validators.required],
+        [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS)],
       ],
       fraccionArancelariaDescripcion: [
         {
@@ -679,11 +680,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   paisChange(event: string[]): void {
-    const VALUE = event[0];
-    this.seleccionadaPaisOrigen = [VALUE];
-    this.agregarMercanciaForm.patchValue({
-      cvePais: VALUE,
-    });
+    this.seleccionadaPaisOrigen = event
   }
 
   /**
@@ -695,11 +692,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   paisDeProcedenciaChange(event: string[]): void {
-    const PROCEDENCIA_VALUE = event[0];
-    this.seleccionadaPaisProcedencia = [PROCEDENCIA_VALUE];
-    this.agregarMercanciaForm.patchValue({
-      cvePaisDeProcedencia: PROCEDENCIA_VALUE,
-    });
+    this.seleccionadaPaisProcedencia = event;
   }
 
   /**
@@ -711,11 +704,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   usoEspecificoChange(event: string[]): void {
-    const VALUE = event[0];
-    this.seleccionadaUsoEspecifico = [VALUE];
-    this.agregarMercanciaForm.patchValue({
-      cveUsoEspecifico: VALUE,
-    });
+    this.seleccionadaUsoEspecifico = event;
   }
 
   /**
