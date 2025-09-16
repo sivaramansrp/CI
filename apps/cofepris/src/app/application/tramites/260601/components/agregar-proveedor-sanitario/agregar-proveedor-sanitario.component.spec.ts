@@ -99,6 +99,10 @@ describe('AgregarProveedorSanitarioComponent', () => {
         create: false,
         update: false,
         consultaioSolicitante: null,
+        action_id: '',
+        current_user: '',
+        id_solicitud: '',
+        nombre_pagina: '',
       }),
     };
 
