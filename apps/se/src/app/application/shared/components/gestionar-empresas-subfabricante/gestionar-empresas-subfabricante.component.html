@@ -102,16 +102,13 @@
       
     </button>
 
-<div class="modal fade" id="complementarPlanta" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"
-  aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <app-contenedor-complementar-plantas (guadarEvent)="setGuardar()"></app-contenedor-complementar-plantas>
-      </div>
+<ng-container *ngIf="showComplementarModal">
+  <div class="tab-modal-overlay">
+    <div class="tab-modal-content">
+      <app-contenedor-complementar-plantas (guadarEvent)="setGuardar()" (alRegresarPlantas)="cerrarComplementarModal()"></app-contenedor-complementar-plantas>
     </div>
   </div>
-</div>
+</ng-container>
 
     <button
       type="button"

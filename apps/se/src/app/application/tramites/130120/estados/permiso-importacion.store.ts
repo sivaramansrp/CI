@@ -136,16 +136,16 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
 
     /**
      * Actualiza la fracción arancelaria.
-     * @method setfracción
+     * @method setfraccion
      * @description Actualiza la fracción arancelaria.
-     * @param {string} fracción - Fracción arancelaria.
+     * @param {string} fraccion - Fracción arancelaria.
      */
     public setFraccion(fraccion: string): void {
         this.update((state) => ({
             ...state,
             datosMercanica: {
                 ...state.datosMercanica,
-                fracción: fraccion,
+                fraccion: fraccion,
             }
         }));
     }

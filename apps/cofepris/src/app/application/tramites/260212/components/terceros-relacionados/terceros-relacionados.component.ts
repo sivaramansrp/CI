@@ -722,7 +722,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       localidad: this.agregarFabricanteFormGroup.get('localidad')?.value || '',
       entidadFederativa: this.agregarFabricanteFormGroup.get('entidadFederativa')?.value || '',
       estado: this.agregarFabricanteFormGroup.get('estadoLocalidad')?.value || '',
-      codigoPostal: this.agregarFabricanteFormGroup.get('codigoPostaloEquivalente')?.value || ''
+      codigoPostal: this.agregarFabricanteFormGroup.get('codigoPostaloEquivalente')?.value || '',
+      coloniaEquivalente: this.agregarFabricanteFormGroup.get('coloniaoEquivalente')?.value || ''
     };
     if (this.editFabricanteIndex !== undefined) {
       this.fabricanteTablaDatos[this.editFabricanteIndex] = NUEVO;
@@ -1269,9 +1270,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           this.agregarFabricanteFormGroup.get(controlName)?.enable();
         });
       }
-
       if (this.agregarFabricanteFormGroup.get('tercerosNacionalidad')?.value === '1' && this.agregarFabricanteFormGroup.get('tipoPersona')?.value) {
-        this.agregarFabricanteFormGroup.get('pais')?.setValue(this.paisDropdownData?.[0]?.id);
+        this.agregarFabricanteFormGroup.get('pais')?.setValue('1');
       } else {
         this.agregarFabricanteFormGroup.get('pais')?.setValue('');
       }
@@ -1882,6 +1882,43 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   esInvalido(formgroupo: FormGroup, campo: string): boolean | null {
     const CAMPO = formgroupo.get(campo);
     return CAMPO ? CAMPO.invalid && CAMPO.touched : null;
+  }
+
+  /** Maneja la selección de filas en la tabla de Fabricante.
+   * Actualiza los datos seleccionados de fabricantes.
+   *
+   * @param event Datos de las filas seleccionadas.
+   */
+  onFacturadorSeleccionados(event: FabricanteDatos[]): void {
+    this.facturadorSeleccionadoDatos = event;
+  }
+
+  /** 
+   * Maneja la selección de filas en la tabla de Proveedor.
+   * Actualiza los datos seleccionados de proveedores.
+   *
+   * @param event Datos de las filas seleccionadas.
+   */
+  onProveedorSeleccionados(event: FabricanteDatos[]): void {
+    this.proveedorSeleccionadoDatos = event;
+  }
+
+  /** 
+   * Maneja la selección de filas en la tabla de Destinatario.
+   * Actualiza los datos seleccionados de destinatarios.
+   * @param event Datos de las filas seleccionadas.
+   */
+  onDestinatarioSeleccionados(event: FabricanteDatos[]): void {
+    this.destinatarioSeleccionadoDatos = event;
+  }
+
+  /** 
+   * Maneja la selección de filas en la tabla de Fabricante.
+   * Actualiza los datos seleccionados de fabricantes.
+   * @param event Datos de las filas seleccionadas.
+   */
+  onFabricanteSeleccionados(event: FabricanteDatos[]): void {
+    this.fabricanteSeleccionadoDatos = event;
   }
 
   /*

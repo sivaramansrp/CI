@@ -19,3 +19,10 @@
   margin-top: -15px !important;
   margin-bottom: -5px !important;
 }
+input.ng-invalid.ng-touched {
+  border: 1px solid red;
+}
+
+.custom-row {
+  margin-left: -7px;
+}
