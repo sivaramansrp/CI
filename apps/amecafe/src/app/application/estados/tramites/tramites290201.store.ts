@@ -9,6 +9,7 @@ import { FilaData2 } from '../../tramites/290201/models/fila-model';
  */
 export interface Solicitud290201State {
 
+  nombredeagencia: string;
   /**
    * Forma del café seleccionada.
    */
@@ -254,6 +255,7 @@ filaSeleccionada: FilaData2 | null;
 }
 export function createInitialSolicitudState(): Solicitud290201State {
   return {
+    nombredeagencia: '',
     /**
      * Forma del café seleccionada.
      */
@@ -499,6 +501,17 @@ tableData: [],
 export class Solicitud290201Store extends Store<Solicitud290201State> {
   constructor() {
     super(createInitialSolicitudState());
+  }
+
+  /**
+   * Actualiza el estado con el nombre de la agencia.
+   * @param nombredeagencia Nombre de la agencia.
+   */
+  public setNombredeagencia(nombredeagencia: string): void {
+    this.update((state) => ({
+      ...state,
+      nombredeagencia,
+    }));
   }
 
   /**

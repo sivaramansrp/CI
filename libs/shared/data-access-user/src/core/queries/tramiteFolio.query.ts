@@ -53,4 +53,11 @@ export class TramiteFolioQueries extends Query<TramiteFolioState> {
   getIdSolicitud(): number {
     return this.getValue()?.idSolicitud ?? 0;
   }
+  /**
+   * @description Función para obtener el código de procedimiento del trámite.
+   * @returns Un número que representa el código del procedimiento, o 0 si no está definido.
+   */
+  getProcedure(): number {
+    return this.getValue()?.procedure ?? 0;
+  }
 }

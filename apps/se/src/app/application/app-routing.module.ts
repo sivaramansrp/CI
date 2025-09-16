@@ -1,4 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
+import { AcusePageComponent } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const ROUTES: Routes = [
@@ -717,6 +718,10 @@ const ROUTES: Routes = [
     path: 'datos-generales-tramite',
     loadComponent: () =>
       import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
+  },
+  {
+    path: 'acuse',
+    component: AcusePageComponent,
   },
 ];
 
