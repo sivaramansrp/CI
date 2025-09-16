@@ -47,6 +47,7 @@ import {
   TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
 } from '../../enum/permiso.enum';
 import { ChangeDetectorRef,Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { EXTRANJERO_FISICA, EXTRANJERO_MORAL, NACIONAL_FISICA, NACIONAL_MORAL, TablaDatos } from '../../models/permiso-sanitario.model';
 import { Subject, map, takeUntil, } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
@@ -56,7 +57,6 @@ import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260215/nacionalidad-options.json';
 import { Sanitario260215Store } from '../../estados/tramites/sanitario260215.store';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
-import { TablaDatos } from '../../models/permiso-sanitario.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260215/tipo-persona-options.json';
 
@@ -1015,60 +1015,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   const NACIONALIDAD = this.agregarFabricanteFormGroup.get('tercerosNacionalidad')?.value;
 
    if (NACIONALIDAD === 'nacional' && TIPO_PERSONA === 'fisica') {
-    [
-      'denominacionRazonSocial',
-      'entidadFederativa',
-      'coloniaoEquivalente',
-      'extranjeroCodigo',
-      'extranjeroEstado',
-      'extranjeroColonia'
-    ].forEach(field => this.disableField(field));
+    NACIONAL_FISICA.forEach(field => this.disableField(field));
   }
   if (NACIONALIDAD === 'nacional' && TIPO_PERSONA === 'moral') {
-    [
-      'curp',
-      'nombre',
-      'primerApellido',
-      'segundoApellido',
-      'entidadFederativa',
-      'codigoPostaloEquivalente',
-      'coloniaoEquivalente',
-      'extranjeroCodigo',
-      'extranjeroEstado',
-      'extranjeroColonia'
-    ].forEach(field => this.disableField(field));
+   NACIONAL_MORAL.forEach(field => this.disableField(field));
   }
 
    if (NACIONALIDAD === 'extranjero' && TIPO_PERSONA === 'moral') {
-    [
-      'rfc',
-      'curp',
-      'nombre',
-      'primerApellido',
-      'segundoApellido',
-      'municipioAlcaldia',
-      'localidad',
-      'entidadFederativa',
-      'colonia',
-      'extranjeroCodigo',
-      'extranjeroEstado',
-      'extranjeroColonia'
-    ].forEach(field => this.disableField(field));
+    EXTRANJERO_MORAL.forEach(field => this.disableField(field));
   }
 
   if (NACIONALIDAD === 'extranjero' && TIPO_PERSONA === 'fisica') {
-    [
-      'rfc',
-      'curp',
-      'denominacionRazonSocial',
-      'municipioAlcaldia',
-      'localidad',
-      'entidadFederativa',
-      'colonia',
-      'extranjeroCodigo',
-      'extranjeroEstado',
-      'extranjeroColonia'
-    ].forEach(field => this.disableField(field));
+  EXTRANJERO_FISICA.forEach(field => this.disableField(field));
   }
 
     if (this.agregarFabricanteFormGroup.invalid) {
@@ -1458,9 +1416,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.showTableDiv = !this.showTableDiv;
     this.showProveedor = !this.showProveedor;
   }
-
-  //  @ViewChild('showFacturador') showFacturadorModal!: ElementRef;
-    //  @ViewChild('showFacturadorRef', { static: false }) showFacturadorRef!: ElementRef;
 
   /**
    * Envía el formulario de Facturador y actualiza los datos en el store.
