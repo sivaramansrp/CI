@@ -644,6 +644,10 @@ get isCantidadInvalid(): boolean {
     (this.dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.touched ?? false)
   );
 }
+/** Getter para verificar si el campo 'cantidadutilizada' es inválido y ha sido tocado.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'cantidadutilizada' es inválido y ha sido tocado, de lo contrario, devuelve `false`.
+ */
 get isCantidadUtilizadaInvalid(): boolean {
   return (
     (this.dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.invalid ?? false) &&
@@ -682,6 +686,10 @@ get isLoteInvalid(): boolean {
 get isCantidadPatternInvalid(): boolean {
   return this.dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.errors?.['pattern'] ?? false;
 }
+/** Getter to check if the 'cantidadutilizada' field has a 'pattern' error.
+ * 
+ * @returns {boolean} Returns `true` if the 'cantidadutilizada' field has a 'pattern' error, otherwise `false`.
+ */
 get isCantidadUtilizadaPatternInvalid(): boolean {
   return this.dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.errors?.['pattern'] ?? false;
 }
