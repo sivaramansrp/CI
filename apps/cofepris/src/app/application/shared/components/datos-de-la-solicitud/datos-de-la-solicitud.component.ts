@@ -306,8 +306,16 @@ export class DatosDeLaSolicitudComponent
    * @type {boolean}
    */
   public mostrarRepresentanteLegal = true;
-
+  /**
+   * Indica si se debe mostrar la sección del representante legal en la interfaz.
+   * @type {boolean}
+   */
   public MostrarRepresentanteLegal = true;
+/**
+   * @property {boolean} esProcedimiento260210
+   * @description Indica si el procedimiento actual corresponde al código 260210.
+   * 
+   */
   public esProcedimiento260210: boolean = false;
 
   /**
