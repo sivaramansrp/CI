@@ -2,7 +2,7 @@ import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nu
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@libs/shared/data-access-user/src';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
-import { Subject } from 'rxjs';
+import { Subject, take } from 'rxjs';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 
 
