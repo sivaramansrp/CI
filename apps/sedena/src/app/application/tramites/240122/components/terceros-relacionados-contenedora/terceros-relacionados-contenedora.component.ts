@@ -227,4 +227,9 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
     this.modalComponent.cerrar();
      
   }
+
+  eliminarDestinatarioFinal(datos: DestinoFinal): void {
+    this.destinatarioFinalTablaDatos = this.destinatarioFinalTablaDatos.filter(d => d.id !== datos.id);
+    this.tramiteStore.updateDestinatarioFinalTablaDatos(this.destinatarioFinalTablaDatos);
+  }
 }
