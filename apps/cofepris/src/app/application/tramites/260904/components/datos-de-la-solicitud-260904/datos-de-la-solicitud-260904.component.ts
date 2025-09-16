@@ -102,6 +102,13 @@ export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy, Aft
    */
   esFormularioSoloLectura: boolean = false;
 
+  
+  /**
+   * Indica si el botón debe desactivarse para permitir la prórroga.
+   * Cuando es `true`, el botón estará deshabilitado y no se podrá solicitar una prórroga.
+   */
+  botonDesactivarParaProrrogar:boolean = false;
+
    /**
    * Controla la visibilidad del modal de establecimiento.
    */
@@ -281,8 +288,10 @@ export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy, Aft
     if (this.isRadioButtonSelected) {
       if (value === '0') {
         this.enableProrrogaOnly();
+        this.botonDesactivarParaProrrogar = true;
       } else {
         this.enableSections();
+        this.botonDesactivarParaProrrogar = false;
       }
     } else {
       this.disableSections();
@@ -444,6 +453,26 @@ export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy, Aft
       }
     );
   }
+
+  // Add these methods to your component class
+openEstablecimientoModal(): void {
+  this.mostrarModal = true; // Use 'this' to reference the class property
+  const MODAL_ELEMENT = document.getElementById('establecimientoModal');
+  if (MODAL_ELEMENT) {
+    type BootstrapModalConstructor = new (element: Element) => { show: () => void };
+    const BOOTSTRAP_MODAL_CTOR = (window as unknown as { bootstrap?: { Modal?: BootstrapModalConstructor } }).bootstrap?.Modal;
+    if (BOOTSTRAP_MODAL_CTOR) {
+      const MODAL_INSTANCE = new BOOTSTRAP_MODAL_CTOR(MODAL_ELEMENT);
+      MODAL_INSTANCE.show();
+    }
+  }
+}
+
+closeEstablecimientoModal(): void {
+  // Add any additional logic needed when closing the modal
+  this.mostrarModal = false;
+
+}
 
 
   /**

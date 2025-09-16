@@ -128,6 +128,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
    */
   esFormularioSoloLectura = false;
 
+  botonDesactivarParaProrrogar:boolean= false;
+
   /**
    * Subject para manejar la destrucción del componente.
    */
@@ -194,11 +196,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
     this.isDestinatarioFinalTablaDatosDisabled = false;
     this.isProveedorTablaDatosDisabled = false;
     this.isFacturadorTablaDatosDisabled = false;
+    this.botonDesactivarParaProrrogar =false;
   } else {
     this.isFabricanteTablaDatosDisabled = true;
     this.isDestinatarioFinalTablaDatosDisabled = true;
     this.isProveedorTablaDatosDisabled = true;
     this.isFacturadorTablaDatosDisabled = true;
+    this.botonDesactivarParaProrrogar = true;
   }
 }
   /**

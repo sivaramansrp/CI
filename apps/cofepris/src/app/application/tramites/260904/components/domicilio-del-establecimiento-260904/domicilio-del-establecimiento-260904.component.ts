@@ -622,7 +622,7 @@ export class DomicilioDelEstablecimiento260904Component
   /** Estado actual de la solicitud proveniente del store */
   public solicitudState!: Tramite260904State;
 
-  buttonDisableForProrroga: boolean = true;
+  botonDesactivarParaProrrogar: boolean =false;
 
   /**
    * Controla si los campos de nombre, apellidoPaterno y apellidoMaterno están habilitados
@@ -914,6 +914,7 @@ ngOnChanges(): void {
   if (this.tipoTramite === '1' || this.tipoTramite === '2') {
     this.isMercanciasTableDisabled = false;
     this.isNicoTablaDisabled = false;
+    this.botonDesactivarParaProrrogar = false;
   } else {
     this.isMercanciasTableDisabled = true;
     this.isNicoTablaDisabled = true;
@@ -937,7 +938,7 @@ ngOnChanges(): void {
       this.form?.enable();
       this.domicilio?.enable();
       this.representanteLegal?.enable();
-      // Enable dropdowns
+     
       this.form?.get('estado')?.enable();
       this.nicoTablaForm?.get('entidad')?.enable();
       this.nicoTablaForm?.get('representacion')?.enable();
@@ -948,7 +949,7 @@ ngOnChanges(): void {
       this.representanteLegal?.get('apellidoPaterno')?.disable();
       this.representanteLegal?.get('apellidoMaterno')?.disable();
     } else if (this.tipoTramite === '0') {
-      this.buttonDisableForProrroga = true;
+      this.botonDesactivarParaProrrogar = true;
       this.form?.disable();
       this.domicilio?.disable();
       this.representanteLegal?.disable();
@@ -961,6 +962,7 @@ ngOnChanges(): void {
       this.domicilio?.get('regimen')?.disable();
       this.domicilio?.get('aduanasEntradas')?.disable();
     }
+    
     const AVISO_CHECKBOX_VALUE = this.domicilio?.get('avisoCheckbox')?.value;
     const LICENCIA_SANITARIA_CONTROL = this.domicilio?.get('licenciaSanitaria');
     if (LICENCIA_SANITARIA_CONTROL) {

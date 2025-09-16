@@ -67,7 +67,7 @@ export class ModPermisoSanitarioImportacion260904Component implements AfterViewI
   showPaymentModal: boolean = false;
   
   /** Almacena el último evento de continuar para procesarlo después del modal */
-  private lastContinueEvent: AccionBoton | null = null;
+  public lastContinueEvent: AccionBoton | null = null;
   
   /** Mensaje de error o información para mostrar al usuario */
   message: string | undefined;
@@ -91,7 +91,7 @@ export class ModPermisoSanitarioImportacion260904Component implements AfterViewI
    * @param cdr - Servicio de detección de cambios de Angular
    * @param tramite260904Store - Store de estado específico para el trámite 260904
    */
-  constructor(private cdr: ChangeDetectorRef, private tramite260904Store: Tramite260904Store) {}
+  constructor(private cdr: ChangeDetectorRef, public tramite260904Store: Tramite260904Store) {}
 
   /**
    * Hook de ciclo de vida que se ejecuta después de inicializar las vistas.
@@ -122,7 +122,7 @@ export class ModPermisoSanitarioImportacion260904Component implements AfterViewI
    * Método privado que actualiza la visibilidad del botón anterior.
    * También actualiza los datos de configuración de pasos.
    */
-  private updateAnteriorButtonVisibility(): void {
+  public updateAnteriorButtonVisibility(): void {
     this.ocultarBtnAnterior = this.indice === 1;
     this.datosPasos = {
       ...this.datosPasos,

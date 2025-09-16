@@ -230,9 +230,9 @@
     <div class="mt-3">
     </div>
     <div class="container text-end mt-5">
-  <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="onEliminarScian(selectedScianIndex === null ? null : selectedScianIndex)">Eliminar</button>
+  <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" [hidden]="botonDesactivarParaProrrogar" (click)="onEliminarScian(selectedScianIndex === null ? null : selectedScianIndex)">Eliminar</button>
   <!-- Modal shown when NO row is selected -->
-  <div class="modal fade" id="modalSeleccionaRegistro" tabindex="-1" aria-labelledby="modalSeleccionaRegistroLabel" aria-hidden="true">
+  <div class="modal fade" id="modalSeleccionaRegistro" tabindex="-1"aria-labelledby="modalSeleccionaRegistroLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -269,6 +269,7 @@
         class="btn btn-primary me-2" 
         [disabled]="esFormularioSoloLectura"
         (click)="openScianModal()"
+        [hidden]="botonDesactivarParaProrrogar"
       >
         Agregar
       </button>
@@ -452,7 +453,7 @@
 
         <lib-input-check 
           [id]="'aifaCheckbox'" 
-          [label]="'Aeropuerto Internacional Ciudad de México (AICM).'"
+          [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
           [required]="true" 
           formControlName="aifaCheckbox" 
           [isDisabled]="esFormularioSoloLectura || !!nicoTablaForm.get('entidad')?.disabled"
@@ -484,11 +485,12 @@
           (listaDeFilaSeleccionada)="onMercanciaRowSelected($event)">
         </app-tabla-dinamica>
         <div class="container text-end mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura || buttonDisableForProrroga" (click)="selectedMercanciaIndex !== null && selectedMercanciaCount === 1 ? onModificarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Modificar</button>
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura || buttonDisableForProrroga" (click)="selectedMercanciaIndex !== null ? onEliminarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Eliminar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" [hidden]="botonDesactivarParaProrrogar" (click)="selectedMercanciaIndex !== null && selectedMercanciaCount === 1 ? onModificarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" [hidden]="botonDesactivarParaProrrogar" (click)="selectedMercanciaIndex !== null ? onEliminarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Eliminar</button>
           <button 
             class="btn btn-primary me-2" 
-            [disabled]="esFormularioSoloLectura || buttonDisableForProrroga"
+            [disabled]="esFormularioSoloLectura"
+            [hidden]="botonDesactivarParaProrrogar"
             (click)="openMercanciaModal()"
           >
             Agregar
@@ -611,7 +613,7 @@
           </div>
         </div>
         <div class="col-md-3 mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura && buttonDisableForProrroga" (click)="onBuscarRepresentanteLegal()">Buscar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" [hidden]="botonDesactivarParaProrrogar" (click)="onBuscarRepresentanteLegal()">Buscar</button>
         </div>
       </div>
 

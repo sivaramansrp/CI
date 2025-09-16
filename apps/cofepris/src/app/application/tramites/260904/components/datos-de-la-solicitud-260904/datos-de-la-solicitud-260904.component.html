@@ -20,7 +20,7 @@
                 <div class="col-md-6"></div>
                 <div class="col-md-6 text-end">
                   <div class="btn-group">
-                    <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" type="button">
+                    <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" [hidden]="botonDesactivarParaProrrogar" type="button">
                       Copiar datos en una Nueva Solicitud
                     </button>
                   </div>
@@ -80,8 +80,9 @@
           <button
             type="button"
             class="btn btn-primary"
-            (click)="toggleFormControls()"
+            (click)="openEstablecimientoModal()"
             [disabled]="esFormularioSoloLectura"
+            [hidden]="botonDesactivarParaProrrogar"
           >
             Seleccionar establecimiento
           </button>
@@ -178,5 +179,24 @@
         </div>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- Modal para Seleccionar Establecimiento -->
+<div class="modal fade" id="establecimientoModal" tabindex="-1" role="dialog" aria-labelledby="establecimientoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="establecimientoModalLabel"></h5>
+      </div>
+      <div class="modal-body">
+        <p>Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.</p>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="closeEstablecimientoModal()">
+          Aceptar
+        </button>
+      </div>
+    </div>
   </div>
 </div>
