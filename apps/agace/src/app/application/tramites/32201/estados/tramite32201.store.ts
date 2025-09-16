@@ -438,6 +438,7 @@ export class Tramite32201Store extends Store<Solicitud32201State> {
       ...state,
       textoGenerico22,
     }));
+    console.log('Texto genérico 22 actualizado:', textoGenerico22);
   }
 
   /**
