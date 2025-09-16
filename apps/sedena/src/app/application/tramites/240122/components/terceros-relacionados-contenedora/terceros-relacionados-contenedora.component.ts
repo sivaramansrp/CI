@@ -1,4 +1,3 @@
-import { ActivatedRoute, Router } from '@angular/router';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -112,8 +111,6 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
   constructor(
     private tramiteQuery: Tramite240122Query,
     private tramiteStore: Tramite240122Store,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
     private readonly consultaioQuery: ConsultaioQuery
   ) { }
 
@@ -170,8 +167,10 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    * @returns {void}
    */
   modificarDestinarioDatos(datos: DestinoFinal): void {
+      this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
     this.tramiteStore.actualizarDatosDestinatario(datos);
-    this.irAAcciones();
   }
 
   /**
@@ -183,19 +182,6 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    */
   modificarProveedorDatos(datos: Proveedor): void {
     this.tramiteStore.actualizarDatosProveedor(datos);
-    this.irAAcciones();
-  }
-
-  /**
-   * Navega a una ruta relativa dentro del flujo actual.
-   * 
-   * @method irAAcciones
-   * @returns {void}
-   */
-  irAAcciones(): void {
-    this.router.navigate(['../agregar-destino-final'], {
-      relativeTo: this.activatedRoute,
-    });
   }
 
   /**
@@ -237,6 +223,8 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    * @returns {void}
    */
   cerrarModal(): void {
+     this.tramiteStore.actualizarDatosDestinatario({} as DestinoFinal);
     this.modalComponent.cerrar();
+     
   }
 }

@@ -134,7 +134,6 @@ public updateTabSeleccionado(tabSeleccionado: number): void {
     this.update((state) => ({
       ...state,
       destinatarioFinalTablaDatos: [
-        ...state.destinatarioFinalTablaDatos,
         ...newDestinatarios,
       ],
     }));
