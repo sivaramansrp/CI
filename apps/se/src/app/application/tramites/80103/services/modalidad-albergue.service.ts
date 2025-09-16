@@ -1,17 +1,27 @@
-import { AmpliacionServiciosResponse , CatalogoResponso, InfoServicios, PlantasSubfabricanteResponse} from '../models/nuevo-programa-industrial.model';
+import { AmpliacionServiciosResponse , CatalogoResponso, InfoServicios} from '../models/nuevo-programa-industrial.model';
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 import { Observable, map } from 'rxjs';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { HttpClient } from '@angular/common/http';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
+import { PROC_80103 } from '../servers/api-route';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
+import { Tramite80101Query } from '../estados/tramite80101.query';
+import { Tramite80101State } from '../estados/tramite80101.store';
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class NuevoProgramaIndustrialService {
- constructor(private readonly http: HttpClient) {
+
+ constructor(
+    private readonly http: HttpClient,
+    private tramite80101Query: Tramite80101Query,
+    public httpService: HttpCoreService
+  ) {
    // No se necesita lógica de inicialización adicional.
   }
 
@@ -71,5 +81,23 @@ export class NuevoProgramaIndustrialService {
   obtenerComplimentos(): Observable<DatosComplimentos> {
   return this.http.get<DatosComplimentos>("assets/json/80102/datos-complimentos.json");
 }
+
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<Tramite80101State>} Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<Tramite80101State> {
+    return this.tramite80101Query.allStoreData$;
+  }
+
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   * 
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_80103.GUARDAR, { body: body });
+  }
 
 }

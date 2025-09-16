@@ -1,3 +1,4 @@
+import { Anexo1, ProveedorClienteDatosTabla } from '../../models/autorizacion-programa-nuevo.model';
 import {
   BtnContinuarComponent,
   DatosPasos,
@@ -10,13 +11,12 @@ import {
   PASOS,
   TITULOMENSAJE,
 } from '../../constantes/autorizacion-programa-nuevo.enum';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, take } from 'rxjs';
+import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
-import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
-import { Anexo1, ProveedorClienteDatosTabla } from '../../models/autorizacion-programa-nuevo.model';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -210,7 +210,9 @@ export class SolicitudPageComponent implements OnDestroy {
    * Obtiene los datos del store y los guarda utilizando el servicio.
    */
   obtenerDatosDelStore(): void {
-    this.autorizacionProgrmaNuevoService.getAllState().subscribe(data => {
+    this.autorizacionProgrmaNuevoService.getAllState()
+    .pipe(take(1))
+    .subscribe(data => {
       this.guardar(data);
     });
   }
