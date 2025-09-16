@@ -273,6 +273,11 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
    */
   plantasSeleccionadas: PlantasSubfabricante[] = [];
 
+/**  
+ * Indica si el modal complementario debe mostrarse.  
+ * Valor booleano utilizado para controlar la visibilidad del modal.
+ */
+  public showComplementarModal = false;
 
 /**
  * Reference to the currently open modal instance.

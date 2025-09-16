@@ -17,295 +17,438 @@ import { ZoosanitarioService } from '../../service/zoosanitario.service';
 
 import { INPUT_FECHA_CONFIGURACION } from '@libs/shared/data-access-user/src/core/enums/221601/fecha.enum';
 
+import { Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 
 /**
- * Componente que gestiona la visualización y el manejo de los datos de la solicitud 221601, incluyendo 
- * la gestión de mercancías y la visualización de una tabla dinámica con los requisitos y detalles de las mercancías.
+ * Componente para la captura y gestión de datos de solicitud del trámite zoosanitario 221601.
  * 
- * Este componente utiliza formularios reactivos para capturar los datos de la solicitud y gestionar el estado
- * de los campos. También incluye la opción de mostrar/ocultar contenido relacionado con la solicitud.
+ * Este componente maneja la información principal de la solicitud incluyendo:
+ * - Datos generales de la solicitud
+ * - Captura y gestión de mercancías
+ * - Validación de formularios
+ * - Notificaciones y alertas
  * 
- * @component
  * @example
+ * ```html
  * <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
+ * ```
  * 
- * @imports
- * - `TituloComponent`: Componente para mostrar el título en la interfaz.
- * - `FormsModule`: Módulo necesario para trabajar con formularios basados en plantillas.
- * - `ReactiveFormsModule`: Módulo necesario para trabajar con formularios reactivos en Angular.
- * - `TablaDinamicaComponent`: Componente para la visualización de tablas dinámicas.
- * - `CatalogoSelectComponent`: Componente para seleccionar valores de un catálogo.
- * - `AlertComponent`: Componente para mostrar alertas.
- * - `CommonModule`: Módulo común de Angular que permite utilizar directivas comunes como `ngIf`, `ngFor`, etc.
- * 
+ * @export
+ * @class DatosDeLaSolicitudComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
  */
-
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
   imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
     TituloComponent,
     TablaDinamicaComponent,
-    FormsModule,
-    ReactiveFormsModule,
     CatalogoSelectComponent,
     AlertComponent,
-    CommonModule,
     InputRadioComponent,
     ModalComponent,
-    InputFechaComponent
+    InputFechaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss']
 })
-
-/**
- * Componente que maneja la visualización y actualización de los datos relacionados con la solicitud 221601.
- * Utiliza un formulario reactivo para capturar y persistir la información relacionada con la solicitud.
- * También incluye un modal para mostrar las mercancías y gestionar ciertos campos del formulario.
- * 
- * @class
- * @implements OnInit, OnDestroy
- * @example
- * <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
- * 
- * @constructor
- * El componente se inicializa con un formulario reactivo que gestiona los datos de la solicitud, como justificación,
- * aduana, oficina y punto. También maneja la visualización de la tabla dinámica que contiene la lista de mercancías.
- * 
- * @property {FormGroup} datosSolicitudForm - Formulario reactivo que gestiona los datos de la solicitud, como justificación,
- * aduana, oficina, etc.
- * @property {Catalogo[]} regimen - Lista de opciones de régimen obtenidas del catálogo.
- * @property {Mercancia[]} mercancias - Lista de mercancías obtenidas de un catálogo.
- * @property {ConfiguracionColumna<Mercancia>[]} configuracionTabla - Configuración de las columnas para la tabla dinámica.
- * @property {Solicitud221601State} solicitudState - Estado de la solicitud 221601 que contiene los valores actuales de la solicitud.
- * @property {string} TEXTOS - Contiene los datos relacionados con la solicitud (generalmente un texto descriptivo).
- * @property {boolean} showContent - Controla la visibilidad del contenido relacionado con la solicitud.
- * 
- * @method toggleContent() - Método que cambia la visibilidad del contenido asociado a la solicitud.
- * @method ngOnInit() - Inicializa el formulario reactivo y carga los datos de la solicitud.
- * @method setValoresStore() - Actualiza el store del trámite con el valor de un campo específico del formulario.
- * @method ngOnDestroy() - Se ejecuta cuando el componente es destruido. Limpia los recursos y previene memory leaks.
- */
-
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
-  /**
-   * property tipoPersonaOptions
-   * description Opciones para el tipo de persona (física o moral).
-   */
-  tipoPersonaOptions: PreOperativo[] = [];
-  /** Modal para mostrar la información de terceros */
   
-   showtercerosModal = false;
-
-    /**
-      * Constante para configurar el input de fecha.
-      * Define las propiedades del campo de entrada de fecha.
-      */
-       INPUT_FECHA_CONFIGURACION = INPUT_FECHA_CONFIGURACION;
-
-/** Indica si el formulario debe mostrarse en modo solo lectura.  
- *  Controla la habilitación o deshabilitación de los campos. */
- esFormularioSoloLectura: boolean = false;
   /**
-   * Lista de opciones de régimen obtenidas de un catálogo.
-   */
-  public regimen: Catalogo[] = realizar.regimen;
-
-  /**
-   * Lista de opciones de veterinarios obtenidas de un catálogo.
-   */
-  public veterinario: Catalogo[] = realizar.veterinario;
-  /**
-   * Lista de opciones de establecimientos obtenidas de un catálogo.
-   */
-  public establecimiento: Catalogo[] = realizar.establecimiento;
-  /**
-   * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
-   */
-  public solicitudState!: Solicitud221601State;
-
-  /**
-   * Formulario reactivo que gestiona los datos de la solicitud.
-   */
-  datosSolicitudForm!: FormGroup;
-
-  /**
-   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   * Subject para manejar la destrucción de observables y evitar memory leaks
+   * @private
+   * @type {Subject<void>}
+   * @memberof DatosDeLaSolicitudComponent
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Constante para definir el tipo de selección de tabla (checkbox).
+   * Opciones disponibles para el tipo de persona en formularios pre-operativos
+   * @type {PreOperativo[]}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  tipoPersonaOptions: PreOperativo[] = [];
+
+  /**
+   * Controla la visibilidad del modal de terceros
+   * @type {boolean}
+   * @default false
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  showtercerosModal = false;
+
+  /**
+   * Configuración para componentes de fecha
+   * @type {any}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  INPUT_FECHA_CONFIGURACION = INPUT_FECHA_CONFIGURACION;
+
+  /**
+   * Indica si el formulario está en modo solo lectura
+   * @type {boolean}
+   * @default false
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Catálogo de opciones para régimen
+   * @type {Catalogo[]}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  public regimen: Catalogo[] = realizar.regimen;
+
+  /**
+   * Catálogo de opciones para veterinario
+   * @type {Catalogo[]}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  public veterinario: Catalogo[] = realizar.veterinario;
+
+  /**
+   * Catálogo de opciones para establecimiento
+   * @type {Catalogo[]}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  public establecimiento: Catalogo[] = realizar.establecimiento;
+
+  /**
+   * Estado actual de la solicitud 221601
+   * @type {Solicitud221601State}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  public solicitudState!: Solicitud221601State;
+
+  /**
+   * Formulario reactivo para los datos de la solicitud
+   * @type {FormGroup}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  datosSolicitudForm!: FormGroup;
+
+  /**
+   * Configuración para selección por checkbox en tablas
+   * @type {TablaSeleccion}
+   * @memberof DatosDeLaSolicitudComponent
    */
   public checkbox = TablaSeleccion.CHECKBOX;
 
   /**
-   * Texto que contiene los datos de la solicitud.
+   * Texto para la sección de datos de solicitud
+   * @type {string}
+   * @memberof DatosDeLaSolicitudComponent
    */
   TEXTOS: string = DATOS_SOLICITUD;
 
   /**
-   * Constante que almacena el valor de la mercancía capturada.
+   * Texto para la sección de captura de mercancía
+   * @type {string}
+   * @memberof DatosDeLaSolicitudComponent
    */
   MERCANCIA: string = CAPTURA_MERCANCIA;
 
-
   /**
-   * Variable para mostrar u ocultar el contenido de la solicitud.
+   * Controla la visibilidad del contenido principal
+   * @type {boolean}
+   * @default true
+   * @memberof DatosDeLaSolicitudComponent
    */
   showContent = true;
 
   /**
-   * Lista de mercancías obtenidas del catálogo.
+   * Lista de mercancías disponibles del archivo JSON
+   * @type {Mercancias[]}
+   * @memberof DatosDeLaSolicitudComponent
    */
   mercancias: Mercancias[] = realizar.mercancias;
 
-   /**
-   * Lista de mercancías detalladas (rellenar con datos válidos o dejar como array vacío si no existen datos).
+  /**
+   * Lista de mercancías del late (detalle)
+   * @type {MercanciaDellate[]}
+   * @memberof DatosDeLaSolicitudComponent
    */
   mercanciasdellate: MercanciaDellate[] = [];
 
   /**
-   * Configuración de las columnas para la tabla dinámica que muestra las mercancías.
+   * Configuración de columnas para la tabla de mercancías
+   * @type {ConfiguracionColumna<Mercancias>[]}
+   * @memberof DatosDeLaSolicitudComponent
    */
   configuracionTabla: ConfiguracionColumna<Mercancias>[] = CONFIGURATION_TABLAS_MERCANCIAS;
 
- /**
-   * Configuración de las columnas para la tabla dinámica que muestra las mercancías.
+  /**
+   * Configuración de columnas para la tabla de mercancías del late
+   * @type {ConfiguracionColumna<MercanciaDellate>[]}
+   * @memberof DatosDeLaSolicitudComponent
    */
   configuracionTablaDelLate: ConfiguracionColumna<MercanciaDellate>[] = CONFIGURATION_TABLAS_MERCANCIASDELLATE;
 
   /**
-* Indica si se deben mostrar las opciones de prellenado en la interfaz de usuario.
-*/
+   * Controla la visibilidad de opciones de prellenado
+   * @type {boolean}
+   * @default true
+   * @memberof DatosDeLaSolicitudComponent
+   */
   mostrarOpcionesDePrellenado: boolean = true;
 
   /**
-   * Texto de los manifiestos.
+   * Controla si las secciones son plegables
+   * @type {boolean}
+   * @default true
+   * @memberof DatosDeLaSolicitudComponent
    */
   plegable: boolean = true;
 
   /**
-   * Referencia al elemento del modal.
+   * Referencia al elemento modal para agregar mercancías
+   * @type {ElementRef}
+   * @memberof DatosDeLaSolicitudComponent
    */
   @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
 
   /**
-   * Opciones de botón de radio.
+   * Opciones disponibles para botones de radio
+   * @type {any}
+   * @memberof DatosDeLaSolicitudComponent
    */
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
-   * @variable valorSeleccionado
+   * Valor seleccionado por defecto para radio buttons
    * @type {string}
-   * @description Almacena el valor seleccionado por defecto, que en este caso es 'Productos y Subproductos'.
+   * @default 'Productos y Subproductos'
+   * @memberof DatosDeLaSolicitudComponent
    */
   valorSeleccionado: string = 'Productos y Subproductos';
-  
+
   /**
-   * Constructor del componente. Inicializa el formulario reactivo y configura las dependencias necesarias.
+   * Indica si la persona física está seleccionada
+   * @type {boolean}
+   * @default false
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  public fisica = false;
+
+  /**
+   * Indica si la persona moral está seleccionada
+   * @type {boolean}
+   * @default false
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  public moral = false;
+
+  /**
+   * Indica si se ha seleccionado una fecha futura
+   * @type {boolean}
+   * @default false
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  fechaFuturaSeleccionada = false;
+
+  /**
+   * Controla la visibilidad del modal de mercancía
+   * @type {boolean}
+   * @default false
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  showMercanciaModal = false;
+
+  /**
+   * Controla la visibilidad de la alerta de mercancía
+   * @type {boolean}
+   * @default false
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  public mostrarAlertaMercancia: boolean = false;
+
+  /**
+   * Controla la confirmación de la alerta de mercancía
+   * @type {boolean}
+   * @default false
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  public confirmacionAlertaMercancia: boolean = false;
+
+  /**
+   * Objeto de notificación para mercancía
+   * @type {Notificacion}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  public notificacionMercancia!: Notificacion;
+
+  /**
+   * Registros de mercancía seleccionados
+   * @type {any[]}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public selectedMercanciaRecords: any[] = [];
+
+  /**
+   * Registros de mercancía del late seleccionados
+   * @type {MercanciaDellate[]}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  public selectedMercanciaDelLateRecords: MercanciaDellate[] = [];
+
+  /**
+   * Opciones para el rango de fechas
+   * @type {Array<{value: string, label: string}>}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  opcionesRangoFecha = [
+    { value: 'No', label: 'No' },
+    { value: 'Si', label: 'Sí' }
+  ];
+
+  /**
+   * Controla la visibilidad del rango de fechas
+   * @type {boolean}
+   * @default false
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  mostrarRangoFechas = false;
+
+  /**
+   * Indica si la opción "Sí" está seleccionada
+   * @type {boolean}
+   * @default false
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  opcionSiSeleccionada = false;
+
+  /**
+   * Formulario reactivo para la captura de mercancía
+   * @type {FormGroup}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  mercanciaForm = this.fb.group({
+    paisOrigen: ['', Validators.required],
+    regulacion: ['', Validators.required],
+    nombreProducto: ['', [Validators.required, Validators.maxLength(50)]],
+    fracciónArancelaria: ['', Validators.required],
+    unidad2: ['', Validators.required],
+    nico: ['', Validators.required],
+    unidad1: [''], // Not required based on UI
+    observaciones: [''], // Not required
+    cantidadUmt: ['', Validators.required],
+    umt: ['', Validators.required],
+    cantidadUmc: ['', Validators.required],
+    umc: ['', Validators.required],
+    especie: ['', Validators.required],
+    edadAnimal: ['', Validators.required],
+    paisOrigen1: ['', Validators.required],
+    paisdeprocedencia: ['', Validators.required],
+    tipoProducto: [''],
+    presentacion: [''], // Not required based on UI
+    cantidadPresentacion: [''], // Not required based on UI
+    tipoPresentacion: [''],
+    tipoPlanta: [''],
+    plantaAutorizadaOrigen: [''],
+    nombreLote: [''], // Not required based on UI
+    tipoPersona: ['fisica'],
+    fechaElaboracion: [''],
+    fechaProduccion: [''],
+    fechaCaducidad: [''],
+    tipoEspecie: [''],
+    fecha: [''],
+    numeroLote: [''],
+    rangoFecha: ['No'],
+    fechaDesde: [''],
+    fechaHasta: [''],
+    FechadeCaducidad: [''],
+    FechadelCaducidad: [''],
+    FechadeSacrificio: [''],
+    FechadelSacrificio: ['']
+  });
+
+  /**
+   * Constructor del componente
    * 
-   * @param fb - FormBuilder utilizado para crear el formulario reactivo.
-   * @param tramite221601Store - Store que gestiona los valores persistentes del trámite 221601.
-   * @param tramite221601Query - Query que se utiliza para obtener el estado actual de la solicitud 221601.
+   * @param {FormBuilder} fb - Constructor de formularios reactivos
+   * @param {Tramite221601Store} tramite221601Store - Store para el trámite 221601
+   * @param {Tramite221601Query} tramite221601Query - Query para el trámite 221601
+   * @param {ConsultaioQuery} consultaioQuery - Query para consultas
+   * @param {ValidacionesFormularioService} validacionesService - Servicio de validaciones
+   * @param {ZoosanitarioService} service - Servicio zoosanitario
+   * @memberof DatosDeLaSolicitudComponent
    */
   constructor(
     private fb: FormBuilder,
     private tramite221601Store: Tramite221601Store,
     private tramite221601Query: Tramite221601Query,
-      private consultaioQuery: ConsultaioQuery,
-        private validacionesService: ValidacionesFormularioService, 
-        private service: ZoosanitarioService 
+    private consultaioQuery: ConsultaioQuery,
+    private validacionesService: ValidacionesFormularioService, 
+    private service: ZoosanitarioService 
   ) {
-    // Constructor que inyecta las dependencias necesarias
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-         
-         
-           this.inicializarCombinacionFormulario();
+          this.inicializarCombinacionFormulario();
         })
       )
       .subscribe()
   }
 
   /**
-   * Método que abre o cierra el contenido de la solicitud.
+   * Alterna la visibilidad del contenido principal
+   * 
+   * @public
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
    */
   public toggleContent(): void {
     this.showContent = !this.showContent;
   }
 
   /**
- * Alterna el estado de la propiedad `plegable` entre verdadero y falso.
- * Esto se utiliza para mostrar u ocultar un elemento colapsable en la interfaz de usuario.
- */
+   * Controla la visibilidad de las secciones colapsables
+   * 
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
   mostrarColapsable(): void {
     this.plegable = !this.plegable;
   }
 
   /**
-   * Método que se ejecuta cuando el componente es inicializado.
+   * Método de inicialización del componente
+   * Configura el formulario y carga las opciones de radio
    * 
-   * Inicializa el formulario reactivo y carga los datos necesarios para la solicitud.
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
    */
   ngOnInit(): void {
-   this.inicializarCombinacionFormulario();
-     this.cargarRadio();
+    this.inicializarCombinacionFormulario();
+    this.cargarRadio();
   }
 
-  showMercanciaModal = false;
-
-mercanciaForm = this.fb.group({
-  paisOrigen: ['', Validators.required],
-  regulacion: ['', Validators.required],
-  nombreProducto: ['', Validators.required, Validators.maxLength(50)],
-  fracciónArancelaria: ['', Validators.required],
-  unidad2: ['', Validators.required, { disabled: true }],
-  nico: ['', Validators.required],
-  unidad1: ['',{ disabled: true }],
-  observaciones: [''],
-  cantidadUmt: ['', Validators.required],
-  umt: ['', Validators.required,{disabled:true}],
-  cantidadUmc: ['', Validators.required],
-  umc: ['', Validators.required],
-  especie: ['', Validators.required],
-  edadAnimal: ['', Validators.required],
-  paisOrigen1: ['', Validators.required],
-  paisdeprocedencia: ['', Validators.required],
-  tipoProducto: [''],
-  presentacion: ['', Validators.required],
-  cantidadPresentacion: ['', Validators.required],
-  tipoPresentacion: [''],
-  tipoPlanta: [''],
-  plantaAutorizadaOrigen: [''],
-  nombreLote: [''],
-  //  tipoPersona: [this.solicitudState?.tipoPersona || 'fisica', Validators.required],
-  tipoPersona: ['fisica', Validators.required],
-  fechaElaboracion: [''],
-  fechaProduccion: [''],
-  fechaCaducidad: [''],
-  tipoEspecie: [''],
-  fecha: [''], // <-- Add this line to define the 'fecha' control
-  numeroLote: [''],
-  rangoFecha: ['No'], // Default to "No"
-  fechaDesde: [''],
-  fechaHasta: [''],
-  FechadeCaducidad: [''],
-  FechadelCaducidad: [''],
-  FechadeSacrificio: [''],
-  FechadelSacrificio: ['']
-});
-
+  /**
+   * Método de destrucción del componente
+   * Limpia las suscripciones para evitar memory leaks
+   * 
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 
   /**
-   * Método para inicializar el formulario reactivo con los datos de la solicitud.
+   * Inicializa la combinación de formularios según el estado de solo lectura
    * 
-   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
-   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
+   * @private
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
    */
   inicializarCombinacionFormulario(): void {
     if (this.esFormularioSoloLectura) {
@@ -314,9 +457,15 @@ mercanciaForm = this.fb.group({
      this.inicializarFormulario()
     }  
   }
-  /** Inicializa los datos del formulario suscribiéndose al estado del trámite.  
- *  Asigna el estado actual al modelo local del componente. */
-   inicializarFormulario(): void {
+
+  /**
+   * Inicializa el formulario principal con los datos del estado
+   * 
+   * @private
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  inicializarFormulario(): void {
     this.tramite221601Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -348,42 +497,45 @@ mercanciaForm = this.fb.group({
     this.datosSolicitudForm.get('capturaMercancia')?.setValue(this.valorSeleccionado);
     this.updateStoreWithFormData();
   }
-    /**
-   * @comdoc
-   * Guarda los datos del formulario de combinación requerida.
+
+  /**
+   * Guarda los datos del formulario y maneja el estado de solo lectura
    * 
-   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
-   * - Si el formulario es de solo lectura, lo deshabilita.
-   * - Si no es de solo lectura, lo habilita.
-   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   * @private
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
    */
   guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-        this.datosSolicitudForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.datosSolicitudForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosSolicitudForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.datosSolicitudForm.enable();
+    }
   }
 
-    cargarRadio(): void {
+  /**
+   * Carga las opciones de radio button desde el servicio
+   * 
+   * @private
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  cargarRadio(): void {
     this.service.obtenerRadiooption()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         this.tipoPersonaOptions = resp;
       });
   }
+
   /**
- * Actualiza el estado del store `tramite221601Store` con los datos del formulario `MedioForm`.
- *
- * Extrae los valores de los campos `transporte` y `empresa` del formulario y los fusiona con el
- * estado actual `solicitudState`, creando un nuevo objeto que se usa para actualizar el store.
- *
- * @private
- * @returns void
- */
+   * Actualiza el store con los datos del formulario
+   * 
+   * @private
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
   updateStoreWithFormData(): void {
     const UPDATED_FORM_DATA: Solicitud221601State = {
       ...this.solicitudState,
@@ -392,25 +544,15 @@ mercanciaForm = this.fb.group({
       punto: this.datosSolicitudForm.get('punto')?.value,     
       capturaMercancia: this.datosSolicitudForm.get('capturaMercancia')?.value,   
     };
-    // Actualiza el store con el estado modificado
     this.tramite221601Store.update(UPDATED_FORM_DATA);
   }
-  /**
-   * property fisica
-   * description Indica si el tipo de persona es física.
-   */
-  public fisica = false;
 
   /**
-   * property moral
-   * description Indica si el tipo de persona es moral.
-   */
-  public moral = false;
-
-  /**
-   * method inputChecked
-   * description Cambia el estado de los checkboxes según el tipo de persona.
-   * param checkBoxName Nombre del checkbox seleccionado.
+   * Maneja la selección de checkboxes para tipo de persona
+   * 
+   * @param {string} checkBoxName - Nombre del checkbox seleccionado
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
    */
   public inputChecked(checkBoxName: string): void {
     if (checkBoxName === 'fisica') {
@@ -421,67 +563,72 @@ mercanciaForm = this.fb.group({
       this.moral = true;
     }
   }
+
   /**
-   * method cambiarRadioFisica
-   * description Cambia el estado del radio button según el valor seleccionado.
-   * param value Valor seleccionado.
+   * Cambia el valor del radio button para persona física
+   * 
+   * @param {string | number} value - Valor seleccionado
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
    */
   cambiarRadioFisica(value: string | number): void {
     const VALOR_SELECCIONADO = value as string;
     this.inputChecked(VALOR_SELECCIONADO);
   }
+
   /**
-   * Método que actualiza los valores del store con los datos del formulario.
+   * Establece valores en el store usando métodos dinámicos
    * 
-   * @param form - Formulario reactivo con los datos actuales.
-   * @param campo - El campo que debe actualizarse en el store.
-   * @param metodoNombre - El nombre del método en el store que se debe invocar.
+   * @param {FormGroup} form - Formulario de origen
+   * @param {string} campo - Campo a actualizar
+   * @param {keyof Tramite221601Store} metodoNombre - Método del store a ejecutar
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite221601Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite221601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-   /**
-
- * Método para cambiar la fecha final.
-
- * @param nuevo_valor Nuevo valor de la fecha final.
-
- */
-fechaFuturaSeleccionada = false;
-  cambioFechaFinal(nuevo_valor: string): void {
+  /**
+   * Maneja el cambio de fecha final con validación de fechas futuras
+   * 
+   * @param {string} nuevoValor - Nueva fecha seleccionada
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  cambioFechaFinal(nuevoValor: string): void {
     this.mercanciaForm.patchValue({
-      fecha: nuevo_valor,
+      fechaCaducidad: nuevoValor
     });
-   this.tramite221601Store.setFecha(nuevo_valor);
-  this.mercanciaForm.get('fecha')?.setValue(nuevo_valor);
+    this.tramite221601Store.setFecha(nuevoValor);
 
-  let seleccionada: Date | null = null;
-  if (nuevo_valor && nuevo_valor.includes('/')) {
-    const [DAY, MONTH, YEAR] = nuevo_valor.split('/').map(Number);
-    seleccionada = new Date(YEAR, MONTH - 1, DAY);
-  } else {
-    seleccionada = new Date(nuevo_valor); 
+    let seleccionada: Date | null = null;
+    if (nuevoValor && nuevoValor.includes('/')) {
+      const [DAY, MONTH, YEAR] = nuevoValor.split('/').map(Number);
+      seleccionada = new Date(YEAR, MONTH - 1, DAY);
+    } else {
+      seleccionada = new Date(nuevoValor); 
+    }
+
+    const HOY = new Date();
+    HOY.setHours(0, 0, 0, 0);
+
+    if (seleccionada && seleccionada > HOY) {
+      this.fechaFuturaSeleccionada = true;
+      this.mercanciaForm.get('fechaCaducidad')?.setErrors({ futureDate: true });
+    } else {
+      this.fechaFuturaSeleccionada = false;
+      this.mercanciaForm.get('fechaCaducidad')?.setErrors(null);
+    }
   }
 
-  const HOY = new Date();
-  HOY.setHours(0, 0, 0, 0);
-
-  if (seleccionada && seleccionada > HOY) {
-    this.fechaFuturaSeleccionada = true;
-    this.mercanciaForm.get('fecha')?.setErrors({ futureDate: true });
-  } else {
-    this.fechaFuturaSeleccionada = false;
-    this.mercanciaForm.get('fecha')?.setErrors(null);
-  }
-  }
-
-/**
- * Método para abrir dialogo mercancías.
- * 
- * @returns {void}
- */
+  /**
+   * Abre el diálogo modal para agregar mercancías
+   * 
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
   abrirDialogoMercancias(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
@@ -490,28 +637,33 @@ fechaFuturaSeleccionada = false;
   }
 
   /**
- * @description Cambia el valor de un campo del formulario.
- * @param {string} nombreControl Nombre del campo del formulario.
- * @param {string} valor Nuevo valor a asignar.
- */
+   * Cambia el valor de un radio button específico
+   * 
+   * @param {string} nombreControl - Nombre del control a cambiar
+   * @param {string} valor - Nuevo valor
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
   cambioValorRadio(nombreControl: string, valor: string): void {
     this.datosSolicitudForm.patchValue({
       [nombreControl]: valor,
     });
     this.valorSeleccionado = valor;
   }
+
   /**
-   * Método que se ejecuta cuando se selecciona un exportador en la tabla.
+   * Cancela la operación del modal de destinatarios
    * 
-   * @param filas - Filas seleccionadas del exportador.
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
    */
- cancelarDestinatario(): void {
+  cancelarDestinatario(): void {
     this.showtercerosModal = !this.showtercerosModal;
   }
 
-/**
-   * Toggles the visibility of the "terceros" modal.
-   *
+  /**
+   * Abre el modal para agregar terceros
+   * 
    * @returns {void}
    * @memberof DatosDeLaSolicitudComponent
    */
@@ -519,94 +671,235 @@ fechaFuturaSeleccionada = false;
     this.showtercerosModal = !this.showtercerosModal;
   }
 
-
-/**
- * Saves the merchandise information if the form is valid.
- *
- * This method checks the validity of the `mercanciaForm` and, if valid,
- * maps all required properties of the merchandise using the form values
- * and default values as needed.
- *
- * @returns {void}
- *
- * @memberof DatosDeLaSolicitudComponent
- */
-guardarMercancia(event?: Event): void {
- 
-  if (event) {
-    event.preventDefault();
-  }
-
-const NUEVAMERCANCIA : MercanciaDellate = {
-    noPartida: this.mercanciaForm.get('numeroLote')?.value || 'N/A',
-    fechaDesde: this.mercanciaForm.get('fechaDesde')?.value || this.mercanciaForm.get('fechaElaboracion')?.value || '',
-    FechadeSacrificio: this.mercanciaForm.get('FechadeSacrificio')?.value || this.mercanciaForm.get('fechaProduccion')?.value || '',
-    FechadeCaducidad: this.mercanciaForm.get('FechadeCaducidad')?.value || this.mercanciaForm.get('fechaCaducidad')?.value || '',
-    FechadefinElaboracion: this.mercanciaForm.get('fechaHasta')?.value || '',
-    FechafindeSacrificio: this.mercanciaForm.get('FechadelSacrificio')?.value || '',
-    FechafindeCaducidad: this.mercanciaForm.get('FechadelCaducidad')?.value || ''
-  };
-
-this.mercanciasdellate = [...this.mercanciasdellate, NUEVAMERCANCIA];
-this.resetMercanciaForm();
-}
-
-/**
- * Resets the merchandise form to its initial state
- */
-private resetMercanciaForm(): void {
-  this.mercanciaForm.reset();
-  this.mercanciaForm.patchValue({
-    rangoFecha: 'No', // Reset to default value
-    tipoPersona: 'fisica' // Reset to default value
-  });
-  
-  // Reset the visibility flags
-  this.mostrarRangoFechas = false;
-  this.opcionSiSeleccionada = false;
-}
-
   /**
-   * Closes the modal for adding merchandise.
-   *
-   * This method hides the modal by toggling the `showtercerosModal` property.
-   *
+   * Cierra el modal y resetea el formulario de mercancía
+   * 
    * @returns {void}
-   *
    * @memberof DatosDeLaSolicitudComponent
    */
-cerrarModal(): void {
-  this.showtercerosModal = false;
-}
-/**
-   * Método que se ejecuta cuando el componente es destruido. Limpia los recursos y previene memory leaks.
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+  cerrarModal(): void {
+    this.showtercerosModal = false;
+    this.resetMercanciaForm();
   }
 
   /**
-   * Opciones para el radio button de rango de fechas
+   * Maneja el cambio de selección en la tabla de mercancías
+   * 
+   * @param {Mercancias[]} selectedItems - Items seleccionados
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
    */
-  opcionesRangoFecha = [
-    { value: 'No', label: 'No' },
-    { value: 'Si', label: 'Sí' }
-  ];
+  onMercanciaSelectionChange(selectedItems: Mercancias[]): void {
+    this.selectedMercanciaRecords = selectedItems;
+  }
 
   /**
-   * Indicates if date range fields should be shown (when "No" is selected)
+   * Maneja el cambio de selección en la tabla de mercancías del late
+   * 
+   * @param {MercanciaDellate[]} selectedItems - Items seleccionados
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
    */
-  mostrarRangoFechas = false;
+  onMercanciaDelLateSelectionChange(selectedItems: MercanciaDellate[]): void {
+    this.selectedMercanciaDelLateRecords = selectedItems;
+  }
 
   /**
-   * Indicates if "Sí" option is selected
+   * Elimina los detalles de mercancía seleccionados
+   * Muestra confirmación antes de proceder
+   * 
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
    */
-  opcionSiSeleccionada = false;
+  eliminarDetalle(): void {
+    if (!this.selectedMercanciaDelLateRecords || this.selectedMercanciaDelLateRecords.length === 0) {
+      this.mostrarNotificacionMercancia(
+        'Selecciona un registro.',
+        false
+      );
+      return;
+    }
+
+    this.mostrarNotificacionMercancia(
+      '¿Estás seguro que deseas eliminar los registros marcados?',
+      true
+    );
+  }
 
   /**
-   * Handles radio button change for date range option
-   * @param valor - Selected value ('Si' or 'No')
+   * Realiza la eliminación física de las mercancías seleccionadas
+   * 
+   * @private
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  private realizarEliminacionMercancia(): void {
+    this.mercanciasdellate = this.mercanciasdellate.filter(record => 
+      !this.selectedMercanciaDelLateRecords.includes(record)
+    );
+    
+    this.selectedMercanciaDelLateRecords = [];
+  }
+
+  /**
+   * Muestra una notificación relacionada con mercancías
+   * 
+   * @private
+   * @param {string} mensaje - Mensaje a mostrar
+   * @param {boolean} [mostrarCancelar=false] - Si mostrar botón cancelar
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  private mostrarNotificacionMercancia(mensaje: string, mostrarCancelar: boolean = false): void {
+    this.notificacionMercancia = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: mostrarCancelar ? 'Cancelar' : '',
+    };
+    
+    if (mostrarCancelar) {
+      this.confirmacionAlertaMercancia = true;
+    } else {
+      this.mostrarAlertaMercancia = true;
+    }
+  }
+
+  /**
+   * Maneja la confirmación de notificaciones de mercancía
+   * 
+   * @param {boolean} confirmar - Si el usuario confirmó la acción
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  onConfirmacionMercancia(confirmar: boolean): void {
+    this.confirmacionAlertaMercancia = false;
+    
+    if (confirmar) {
+      this.realizarEliminacionMercancia();
+    }
+  }
+
+  /**
+   * Maneja el cierre de alertas de mercancía
+   * 
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  onAlertaMercancia() : void {
+    this.mostrarAlertaMercancia = false;
+  }
+
+  /**
+   * Guarda una nueva mercancía en la lista
+   * Valida los datos y muestra notificaciones correspondientes
+   * 
+   * @param {Event} [event] - Evento del formulario (opcional)
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  guardarMercancia(event?: Event): void {
+    if (event) {
+      event.preventDefault();
+    }
+
+    const GET_VALUE = (control: string, fallback: string) =>
+      this.mercanciaForm.get(control)?.value || fallback;
+
+    const GET_DISPLAY_FIELDS = () => ({
+      numeroLote: GET_VALUE('numeroLote', `AUTO-${Date.now()}`),
+      fechaElaboracion: GET_VALUE('fechaElaboracion', '10/09/2025'),
+      fechaProduccion: GET_VALUE('fechaProduccion', '11/09/2025'),
+      fechaCaducidad: GET_VALUE('fechaCaducidad', '18/09/2025'),
+      fechaFinElaboracion: GET_VALUE('fechaHasta', ''),
+      fechaFinProduccion: GET_VALUE('FechadelSacrificio', ''),
+      fechaFinCaducidad: GET_VALUE('FechadelCaducidad', ''),
+    });
+
+    const GET_INTERFACE_FIELDS = () => ({
+      noPartida: GET_VALUE('numeroLote', `AUTO-${Date.now()}`),
+      fechaDesde: GET_VALUE('fechaDesde', '10/09/2025'),
+      FechadeSacrificio: GET_VALUE('FechadeSacrificio', '11/09/2025'),
+      FechadeCaducidad: GET_VALUE('FechadeCaducidad', '18/09/2025'),
+      FechadefinElaboracion: GET_VALUE('fechaHasta', '12/09/2025'),
+      FechafindeSacrificio: GET_VALUE('FechadelSacrificio', '14/09/2025'),
+      FechafindeCaducidad: GET_VALUE('FechadelCaducidad', '20/09/2025'),
+    });
+
+    const GET_FORM_FIELDS = () => ({
+      paisOrigen: GET_VALUE('paisOrigen', 'Default Country'),
+      regulacion: GET_VALUE('regulacion', 'Default Regulation'),
+      nombreProducto: GET_VALUE('nombreProducto', 'Default Product'),
+      fraccionArancelaria: GET_VALUE('fracciónArancelaria', 'Default Fraction'),
+      nico: GET_VALUE('nico', 'Default NICO'),
+      especie: GET_VALUE('especie', 'Default Species'),
+      uso: GET_VALUE('edadAnimal', 'Default Use'),
+      paisOrigenDetalle: GET_VALUE('paisOrigen1', 'Default Origin'),
+      paisProcedencia: GET_VALUE('paisdeprocedencia', 'Default Procedure'),
+    });
+
+    const NUEVA_MERCANCIA: MercanciaDellate = {
+      ...GET_DISPLAY_FIELDS(),
+      ...GET_INTERFACE_FIELDS(),
+      ...GET_FORM_FIELDS(),
+    };
+
+    try {
+      this.mercanciasdellate = [...this.mercanciasdellate, NUEVA_MERCANCIA];
+      this.resetMercanciaForm();
+      
+      this.mostrarNotificacionMercancia(
+        'Detalle agregado correctamente.',
+        false
+      );
+    } catch (error) {
+      console.error('Error al agregar mercancía:', error);
+      this.mostrarNotificacionMercancia(
+        'Error al agregar el detalle. Por favor, intenta nuevamente.',
+        false
+      );
+    }
+  }
+
+  /**
+   * Limpia todos los registros de mercancías
+   * 
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  clearAllRecords(): void {
+    this.mercanciasdellate = [];
+  }
+
+  /**
+   * Resetea el formulario de mercancía a sus valores por defecto
+   * 
+   * @private
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  private resetMercanciaForm(): void {
+    this.mercanciaForm.reset();
+    this.mercanciaForm.patchValue({
+      rangoFecha: 'No',
+      tipoPersona: 'fisica'
+    });
+    
+    this.mostrarRangoFechas = false;
+    this.opcionSiSeleccionada = false;
+  }
+
+  /**
+   * Cambia la opción del rango de fechas y actualiza la UI
+   * 
+   * @param {string} valor - Valor seleccionado ('Si' o 'No')
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
    */
   cambiarOpcionRangoFecha(valor: string): void {
     this.mercanciaForm.patchValue({
@@ -616,108 +909,83 @@ cerrarModal(): void {
     if (valor === 'No') {
       this.mostrarRangoFechas = true;
       this.opcionSiSeleccionada = false;
-      // Clear single date fields when "No" is selected
-      this.mercanciaForm.patchValue({
-        fechaElaboracion: '',
-        fechaProduccion: '',
-        fechaCaducidad: ''
-      });
     } else if (valor === 'Si') {
       this.mostrarRangoFechas = false;
       this.opcionSiSeleccionada = true;
-      // Clear date range fields when "Sí" is selected
-      this.mercanciaForm.patchValue({
-        fechaDesde: '',
-        fechaHasta: ''
-      });
     }
   }
 
+  // Métodos para manejo de fechas específicas
+
   /**
-   * Handles date change for "Desde" field
-   * @param nuevoValor - New date value
+   * Maneja el cambio de fecha desde
+   * @param {string} nuevoValor - Nueva fecha
+   * @returns {void}
    */
   cambioFechaDesde(nuevoValor: string): void {
-    this.mercanciaForm.patchValue({
-      fechaDesde: nuevoValor
-    });
-    this.tramite221601Store.setFechaDesde(nuevoValor);
-  }
-  /**
-   * Handles date change for "Caducidad" field
-   * @param nuevoValor - New date value
-   */
-  cambioFechadeCaducidad(nuevoValor: string): void {
-      this.mercanciaForm.patchValue({
-      FechadeCaducidad: nuevoValor
-    });
-    this.tramite221601Store.setFechadeCaducidad(nuevoValor);
+    this.mercanciaForm.patchValue({ fechaDesde: nuevoValor });
   }
 
   /**
-   * Handles date change for "Hasta" field
-   * @param nuevoValor - New date value
+   * Maneja el cambio de fecha hasta
+   * @param {string} nuevoValor - Nueva fecha
+   * @returns {void}
    */
   cambioFechaHasta(nuevoValor: string): void {
-    this.mercanciaForm.patchValue({
-      fechaHasta: nuevoValor
-    });
-    this.tramite221601Store.setFechaHasta(nuevoValor);
+    this.mercanciaForm.patchValue({ fechaHasta: nuevoValor });
   }
 
   /**
-   * Handles date change for "Fecha de elaboración" field
-   * @param nuevoValor - New date value
-   */
-  cambioFechaElaboracion(nuevoValor: string): void {
-    this.mercanciaForm.patchValue({
-      fechaElaboracion: nuevoValor
-    });
-    this.tramite221601Store.setFechaElaboracion(nuevoValor);
-  }
-
-  /**
-   * Handles date change for "Fecha de producción" field
-   * @param nuevoValor - New date value
-   */
-  cambioFechaProduccion(nuevoValor: string): void {
-    this.mercanciaForm.patchValue({
-      fechaProduccion: nuevoValor
-    });
-    this.tramite221601Store.setFechaProduccion(nuevoValor);
-  }
-
-  /**
-   * Handles date change for "Fecha de caducidad" field
-   * @param nuevoValor - New date value
-   */
-  cambioFechadelCaducidad(nuevoValor: string): void {
-    this.mercanciaForm.patchValue({
-      FechadelCaducidad: nuevoValor
-    });
-    this.tramite221601Store.setFechadelCaducidad(nuevoValor);
-  }
-
-  /**
-   * Handles date change for "Fecha de sacrificio" field
-   * @param nuevoValor - New date value
+   * Maneja el cambio de fecha de sacrificio
+   * @param {string} nuevoValor - Nueva fecha
+   * @returns {void}
    */
   cambioFechadeSacrificio(nuevoValor: string): void {
-    this.mercanciaForm.patchValue({
-      FechadeSacrificio: nuevoValor
-    });
-    this.tramite221601Store.setFechadeSacrificio(nuevoValor);
+    this.mercanciaForm.patchValue({ FechadeSacrificio: nuevoValor });
   }
 
   /**
-   * Handles date change for "Fecha de sacrificio" field
-   * @param nuevoValor - New date value
+   * Maneja el cambio de fecha del sacrificio
+   * @param {string} nuevoValor - Nueva fecha
+   * @returns {void}
    */
   cambioFechadelSacrificio(nuevoValor: string): void {
-    this.mercanciaForm.patchValue({
-      FechadelSacrificio: nuevoValor
-    });
-    this.tramite221601Store.setFechadelSacrificio(nuevoValor);
+    this.mercanciaForm.patchValue({ FechadelSacrificio: nuevoValor });
   }
 
+  /**
+   * Maneja el cambio de fecha de caducidad
+   * @param {string} nuevoValor - Nueva fecha
+   * @returns {void}
+   */
+  cambioFechadeCaducidad(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({ FechadeCaducidad: nuevoValor });
+  }
+
+  /**
+   * Maneja el cambio de fecha de la caducidad
+   * @param {string} nuevoValor - Nueva fecha
+   * @returns {void}
+   */
+  cambioFechadelCaducidad(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({ FechadelCaducidad: nuevoValor });
+  }
+
+  /**
+   * Maneja el cambio de fecha de elaboración
+   * @param {string} nuevoValor - Nueva fecha
+   * @returns {void}
+   */
+  cambioFechaElaboracion(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({ fechaElaboracion: nuevoValor });
+  }
+
+  /**
+   * Maneja el cambio de fecha de producción
+   * @param {string} nuevoValor - Nueva fecha
+   * @returns {void}
+   */
+  cambioFechaProduccion(nuevoValor: string): void {
+    this.mercanciaForm.patchValue({ fechaProduccion: nuevoValor });
+  }
 }

@@ -4,7 +4,8 @@ import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
+import { Shared260212Store } from '../../../estados/tramites/tramite260212.store';
+import { TercerosRelacionadas260212State } from '../../../estados/tramites/tramite260212.store';
 /**
  * Servicio encargado de manejar la lógica y comunicación relacionada con el trámite 260212.
  * Proporciona métodos para actualizar el estado del formulario y obtener datos de consulta.
@@ -27,7 +28,7 @@ export class Service260212Service {
    * @param http Cliente HTTP para realizar peticiones.
    * @param tramite260212Store Almacén de estado para el trámite 260212.
    */
-  constructor(private http: HttpClient, private tramite260212Store: Tramite260212Store,private terceros260211Store: Terceros260211Store) {
+  constructor(private http: HttpClient, private tramite260212Store: Tramite260212Store,private terceros260211Store: Terceros260211Store, private shared260212Store: Shared260212Store) {
     // Lógica de inicialización si es necesario
   }
 
@@ -116,6 +117,29 @@ export class Service260212Service {
   this.terceros260211Store.setEstado(DATOS.estado);
   this.terceros260211Store.setEntidadFederativa(DATOS.entidadFederativa);
 }
+
+/**
+ * Obtiene los datos de terceros relacionados desde un archivo JSON local.
+ * Retorna un observable con el estado de los datos de terceros relacionados.
+ * Se utiliza para inicializar el formulario con datos precargados de fabricantes, proveedores, facturadores y destinatarios.
+ * @returns Observable con el estado de terceros relacionados para el trámite 260212.
+ */
+  getTercerosRelacionadasData(): Observable<TercerosRelacionadas260212State> {
+    return this.http.get<TercerosRelacionadas260212State>('assets/json/260212/consultaTercerosConsulta.json');
+  }
+
+  /**
+ * Actualiza el estado compartido de terceros relacionados en el store.
+ * Asigna los valores de fabricantes, proveedores, facturadores y destinatarios recibidos en el objeto de datos.
+ * @param DATOS Estado de terceros relacionados para el trámite 260212.
+ */
+  setTerecerosRelacionadosState(DATOS: TercerosRelacionadas260212State): void {
+    this.shared260212Store.setFabricantes(DATOS.Fabricantes);
+    this.shared260212Store.setProveedors(DATOS.Proveedores);
+    this.shared260212Store.setFacturadors(DATOS.Facturadores);
+    this.shared260212Store.setDestinatarios(DATOS.Destinatarios);
+  }
+
   /**
    * Obtiene los datos de consulta para el registro de toma de muestras de mercancías.
    * @returns Observable con el estado del trámite 260212.
@@ -123,6 +147,7 @@ export class Service260212Service {
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260212State> {
     return this.http.get<Tramite260212State>('assets/json/260212/consulta.json');
   }
+
   /**
  * Obtiene los datos de terceros desde un archivo JSON local.
  * Retorna un observable con el estado de los datos del formulario.

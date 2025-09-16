@@ -523,4 +523,15 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
       )
     );
   }
+
+// eslint-disable-next-line class-methods-use-this
+public validateRequiredFields(): boolean {
+  // No required fields in this component
+  return true;
+}
+
+// eslint-disable-next-line class-methods-use-this
+public markAllFieldsTouched(): void {
+  // No fields to mark as touched in this component
+}
 }

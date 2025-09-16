@@ -1,19 +1,19 @@
 {
     "datos": [
         {
-            "id": "Aéreo",
+            "id": 0,
             "descripcion": "Aéreo"
         },
         {
-            "id": "Marítimo",
+            "id": 1,
             "descripcion": "Marítimo"
         },
         {
-            "id": "Ferroviario",
+            "id": 2,
             "descripcion": "Ferroviario"
         },
         {
-            "id": "Carretero",
+            "id": 3,
             "descripcion": "Carretero"
         }
     ]
