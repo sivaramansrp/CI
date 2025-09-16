@@ -32,7 +32,7 @@ const TRAMITE = ENVIRONMENT.TRAMITE_URL;
 const PROCEDURE = '/sat-t80101';
 
 /**
- * Rutas de la API para el procedimiento 80101
+ * Rutas de la API para el procedimiento 80102
  */
 export const PROC_80101 = {
     ESTADO: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/estado`,

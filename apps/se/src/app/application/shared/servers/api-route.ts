@@ -41,5 +41,6 @@ export const API_ROUTES = (procedure: string=PROCEDURE) => ({
     RepresentacionFederal: `${BASE_URL}${API}/${procedure}${CATALOGO}/representacion-federal`,
     TipoDocumento: `${BASE_URL}${API}/${procedure}${CATALOGO}/tipo-documento`,
     municipiosMax: `${BASE_URL}${API}/${procedure}${CATALOGO}/municipio-mex`,
-    tipoCategoria: `${BASE_URL}${API}/${procedure}${CATALOGO}/tipo-categoria`
+    tipoCategoria: `${BASE_URL}${API}/${procedure}${CATALOGO}/tipo-categoria`,
+    servicoImex: `${BASE_URL}${API}/${procedure}${CATALOGO}/servicios-immex`
 });

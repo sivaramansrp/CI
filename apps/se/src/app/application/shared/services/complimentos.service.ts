@@ -193,6 +193,23 @@ public anexoDosFilaSeleccionada$ = this._anexoDosFilaSeleccionada$.asObservable(
 }
 
 /**
+ * Obtiene información del servicio IMMEX desde el catálogo correspondiente.
+ *
+ * Realiza una solicitud HTTP GET al endpoint definido en `apiRoutes.servicoImex`
+ * y retorna la respuesta como un observable de tipo `JsonResponseCatalogo`.
+ *
+ * @returns Observable que emite la respuesta del catálogo IMMEX.
+ */
+getServicoImmex(): Observable<JsonResponseCatalogo> {
+  
+     return this.httpService.get<JsonResponseCatalogo>(
+    this.apiRoutes.servicoImex,
+    {},
+    false
+  );
+}
+
+/**
  * Establece la fila seleccionada del Anexo Uno.
  * Emite el nuevo valor a todos los suscriptores del observable correspondiente.
  */
@@ -219,5 +236,7 @@ setProcedure(procedure: string): void {
   this._procedure = procedure;
 
 }
+
+
 
 }

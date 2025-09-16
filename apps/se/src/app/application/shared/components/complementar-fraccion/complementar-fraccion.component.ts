@@ -158,4 +158,6 @@ export class ComplementarFraccionComponent implements OnInit {
   regresar(): void {
     this.cerrarPopup.emit();
   }
+
+  
 }
