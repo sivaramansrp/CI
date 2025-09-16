@@ -459,6 +459,14 @@ private modalRef: Modal | null = null;
     
   }
 
+/**
+ * Cierra el modal complementario.
+ * Establece la variable de visibilidad del modal en false.
+ */
+  cerrarComplementarModal(): void {
+    this.showComplementarModal = false;
+  }
+    
     /**
    * Obtiene la lista de estados llamando al servicio `complimentosService`.
    * Se suscribe al observable retornado por `getEstado()` y muestra la respuesta en la consola.
@@ -470,12 +478,4 @@ private modalRef: Modal | null = null;
       });
       
     }
-    
-/**
- * Cierra el modal complementario.
- * Establece la variable de visibilidad del modal en false.
- */
-  cerrarComplementarModal(): void {
-    this.showComplementarModal = false;
   }
-}

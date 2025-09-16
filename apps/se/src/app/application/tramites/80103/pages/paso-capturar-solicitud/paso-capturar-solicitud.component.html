@@ -20,6 +20,12 @@
     <app-paso-firmar-solicitud></app-paso-firmar-solicitud>
     }
     }
-    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+    <btn-continuar
+      [datos]="datosPasos"
+      (continuarEvento)="getValorIndice($event)"
+      [btnGuardar]="true" 
+      [btnGuardarVisible]="btnGuardarVisible"
+      (btnGuardarClicked)="obtenerDatosDelStore()"
+    ></btn-continuar>
   </div>
 </div>
