@@ -390,7 +390,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * Tipo de selección de la tabla (radio o checkbox).
    * @type {TablaSeleccion}
    */
-  tablaSeleccion: TablaSeleccion = TablaSeleccion.RADIO;
+  tablaSeleccion: TablaSeleccion = this.guardarClicado?.length > 0 ? TablaSeleccion.RADIO : TablaSeleccion.UNDEFINED;
 
   /**
    * Datos del formulario, recibidos a través de la propiedad `@Input()`.

@@ -545,7 +545,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
       ],
       telefono: [
         { value: this.avisoSanitarioState?.telefono, disabled: true },
-        [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS)],
+        [ Validators.pattern(REGEX_SOLO_NUMEROS)],
       ],
       avisoFuncionamiento: [this.avisoSanitarioState?.avisoFuncionamiento],
       cveRegimenes: [
