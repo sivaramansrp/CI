@@ -679,16 +679,18 @@ get isLoteInvalid(): boolean {
   );
 }
 /**
- * Getter to check if the 'cantidad' field has a 'pattern' error.
+ * Getter para verificar si el campo 'cantidad' tiene un error de patrón.
  * 
- * @returns {boolean} Returns `true` if the 'cantidad' field has a 'pattern' error, otherwise `false`.
+ * @returns {boolean} Devuelve `true` si el campo 'cantidad' tiene un error de patrón, de lo contrario, devuelve `false`.
  */
 get isCantidadPatternInvalid(): boolean {
   return this.dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.errors?.['pattern'] ?? false;
 }
-/** Getter to check if the 'cantidadutilizada' field has a 'pattern' error.
+
+/**
+ * Getter para verificar si el campo 'cantidadutilizada' tiene un error de patrón.
  * 
- * @returns {boolean} Returns `true` if the 'cantidadutilizada' field has a 'pattern' error, otherwise `false`.
+ * @returns {boolean} Devuelve `true` si el campo 'cantidadutilizada' tiene un error de patrón, de lo contrario, devuelve `false`.
  */
 get isCantidadUtilizadaPatternInvalid(): boolean {
   return this.dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.errors?.['pattern'] ?? false;
