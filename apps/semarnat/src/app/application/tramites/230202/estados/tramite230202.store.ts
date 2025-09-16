@@ -103,6 +103,11 @@ export interface Solicitud230202State {
   nombreComun: Catalogo[] | null;
 
   /**
+   * Otro nombre común del producto, si aplica.
+   */
+  otroNombreComun: string;
+
+  /**
    * Lista de unidades de medida.
    */
   unidadDeMedida: Catalogo[] | null;
@@ -212,6 +217,7 @@ export function createInitialState(): Solicitud230202State {
     genero: null,
     especie: null,
     nombreComun: null,
+    otroNombreComun: '',
     unidadDeMedida: null,
     lungarDeEntrada: '',
     medioDeTransporte: null,
@@ -292,7 +298,7 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
       entidadesSeleccionadas,
     }));
   }
-  
+
   /**
    * Actualiza la lista de países en el estado.
    * @param {Catalogo[]} pais - Lista de países.
@@ -424,6 +430,17 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     this.update((state) => ({
       ...state,
       nombreComun,
+    }));
+  }
+
+  /**
+   * Actualiza el otro nombre común en el estado.
+   * @param {string} otroNombreComun - Otro nombre común.
+   */
+  public setOtroNombreComun(otroNombreComun: string): void {
+    this.update((state) => ({
+      ...state,
+      otroNombreComun,
     }));
   }
 

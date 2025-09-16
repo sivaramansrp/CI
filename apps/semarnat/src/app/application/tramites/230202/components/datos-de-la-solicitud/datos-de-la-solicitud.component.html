@@ -243,7 +243,8 @@
                 ></app-catalogo-select>
               </div>
               <div class="col-md-8">
-                <label>Descripción de la fracción arancelaria*:</label>
+                <label>Descripción de la fracción arancelaria<span [ngClass]="agregarMercanciasForm.get('datosMercancia.descripcionfraccionArancelaria')?.invalid && 
+                  agregarMercanciasForm.get('datosMercancia.descripcionfraccionArancelaria')?.touched ? 'text-danger' : ''">*</span>:</label>
                 <input
                   type="text"
                   class="form-control"
@@ -330,12 +331,16 @@
                   ></app-catalogo-select>
                 </div>
               </div>
-            </div>
-            <div class="row">
+            </div>            
+            <div *ngIf="mostrarOtroNombreComun" class="row">
               <div class="col-md-4">
-                <div *ngIf="mostrarOtroNombreComun" class="form-group mt-2">
-                  <label for="otroNombreComun">Otro:</label>
+                <div class="form-group mt-2">
+                  <label for="otroNombreComun">Otro<span [ngClass]="agregarMercanciasForm.get('datosMercancia.otroNombreComun')?.invalid && 
+                    agregarMercanciasForm.get('datosMercancia.otroNombreComun')?.touched ? 'text-danger' : ''">*</span>:</label>
                   <input type="text" formControlName="otroNombreComun" id="otroNombreComun" class="form-control" />
+                  <div *ngIf="isInvalid('otroNombreComun')" class="mensaje-error">
+                    Este campo es obligatorio.
+                  </div>
                 </div>
               </div>
             </div>
