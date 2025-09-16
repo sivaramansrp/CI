@@ -2,7 +2,7 @@
 /**
  * Este componente maneja la lógica y la interfaz de usuario para la página de solicitud,
  */
-import { AccionBoton, PASOS } from '../../constantes/certificado-sgp.enum';
+import { AccionBoton, ERROR_FORMA_ALERT, PASOS } from '../../constantes/certificado-sgp.enum';
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 import { CapturarSolicitudComponent } from '../capturar-solicitud/capturar-solicitud.component';
@@ -78,6 +78,14 @@ export class SolicitudPageComponent {
    * lo que activa la visualización de mensajes de error en la interfaz.
    */
   esFormaValido: boolean = false;
+  /**
+   * @property {Object} formErrorAlert
+   * @description
+   * Objeto que contiene la configuración del mensaje de error para formularios inválidos.
+   * Utiliza la constante `ERROR_FORMA_ALERT` definida en las enumeraciones del certificado SGP.
+   * Define el título, mensaje y opciones de visualización para la alerta de error de validación de formularios.
+   */
+  public formErrorAlert = ERROR_FORMA_ALERT;
 
 
   /**
