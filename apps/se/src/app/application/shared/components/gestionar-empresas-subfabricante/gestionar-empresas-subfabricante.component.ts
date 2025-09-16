@@ -273,6 +273,11 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
    */
   plantasSeleccionadas: PlantasSubfabricante[] = [];
 
+/**  
+ * Indica si el modal complementario debe mostrarse.  
+ * Valor booleano utilizado para controlar la visibilidad del modal.
+ */
+  public showComplementarModal = false;
 
 /**
  * Reference to the currently open modal instance.
@@ -449,9 +454,21 @@ private modalRef: Modal | null = null;
   complementarPlantas(): void {
     if (this.plantasSeleccionadas.length > 0) {
       this.plantasPorComplementar.emit(this.plantasSeleccionadas);
+      this.showComplementarModal = true;
     }
     
   }
+
+/**
+ * Cierra el modal complementario.
+ * Establece la variable de visibilidad del modal en false.
+ */
+  cerrarComplementarModal(): void {
+    this.showComplementarModal = false;
+  }
+    }
+    
+  
 
     /**
    * Obtiene la lista de estados llamando al servicio `complimentosService`.
@@ -464,4 +481,3 @@ private modalRef: Modal | null = null;
       });
       
     }
-}

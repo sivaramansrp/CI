@@ -76,7 +76,9 @@
     "permisoGeneral": "PG-2024-001",
     "usoFinal": "Comercialización",
     "aduanasSeleccionadas": ["Aduana 1", "Aduana 2"],
-    "paisDestino": "Estados Unidos"
+    "paisDestino": "Estados Unidos",
+    "anoEnCurso": true,
+    "unoSemestre": "dosSemestre"
   },
     "justificacionTramiteFormState" :{
       "justificacion":"valor ficticio"

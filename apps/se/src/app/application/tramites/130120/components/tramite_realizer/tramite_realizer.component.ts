@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, CatalogosService, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogosService, CategoriaMensaje, Notificacion, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -8,6 +8,9 @@ import { DatosGrupos } from '../../models/permiso-importacion-modification.model
 import { PermisoImportacionService } from '../../services/permiso-importacion.service';
 import { PermisoImportacionStore } from '../../estados/permiso-importacion.store';
 import { Tramite130120Query } from '../../estados/permiso-importacion.query';
+
+import { CatalogosTramiteService } from '../../services/catalogosTramite.service';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 
 /**
  * @component
@@ -54,6 +57,11 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
   datosRealizer!: FormGroup;
 
   /**
+    * Nueva notificación para mostrar mensajes de error o información al usuario.
+    */
+  nuevaNotificacion: Notificacion | null = null;
+
+  /**
    * @property {Catalogo[]} regimenOpciones
    * @description Opciones disponibles para el campo de régimen.
    */
@@ -90,14 +98,15 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
   public realizarState!: DatosGrupos
 
   constructor(
-    public readonly fb: FormBuilder, 
+    public readonly fb: FormBuilder,
     public store: PermisoImportacionStore,
     public query: Tramite130120Query,
     public seccionStore: SeccionLibStore,
     public catalogosServicios: CatalogosService,
     public permisoImportacionService: PermisoImportacionService,
-    public consultaQuery: ConsultaioQuery
-  ) {}
+    public consultaQuery: ConsultaioQuery,
+    private catalogosService: CatalogosTramiteService
+  ) { }
 
   /**
    * @method ngOnInit
@@ -112,12 +121,8 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     this.initActionFormBuild();
-
-    this.obtenerRegimenSelectList();
-    this.obtenerClassificionRegimenSelectList();
-
+    this.cargarRegimenes();
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -126,6 +131,10 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    const CVEREGIMEN = this.datosRealizer.get('regimen')?.value;
+    if (CVEREGIMEN) {
+      this.onRegimenSeleccionado();
+    }
   }
 
   /**
@@ -135,7 +144,7 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
   initActionFormBuild(): void {
     this.datosRealizer = this.fb.group({
       regimen: [this.realizarState.datosRealizer.regimen, Validators.required],
-      classificion_regimen: [this.realizarState.datosRealizer.classificion_regimen, Validators.required],
+      classificion_regimen: [{ value: this.realizarState.datosRealizer.classificion_regimen || null, disabled: true }, Validators.required],
     });
   }
 
@@ -161,30 +170,77 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
    * @method obtenerRegimenSelectList
    * @description Obtiene las opciones del catálogo de régimen desde el servicio y las asigna al arreglo local.
    */
-  obtenerRegimenSelectList(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('regimen.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.regimenOpciones = data as Catalogo[];
-        },
-      });
+  cargarRegimenes(): void {
+    this.catalogosService.getCatRegimenes().subscribe({
+      next: (resp) => {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
+          this.regimenOpciones = resp.datos ?? [];
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: resp.error || 'Error al mostrar la firma.',
+            mensaje:
+              resp.causa ||
+              resp.mensaje ||
+              'Ocurrió un error al mostrar la firma.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar los regímenes', err);
+      }
+    });
+  }
+
+  /**
+   * @method onRegimenSeleccionado
+   * @description Maneja el evento de selección de régimen, actualiza el store y carga las opciones de clasificación de régimen.
+   */
+  onRegimenSeleccionado(): void {
+    const CVEREGIMEN = this.datosRealizer.get('regimen')?.value;
+    this.store.setregimen(CVEREGIMEN);
+    if (CVEREGIMEN) {
+      this.cargarClasificacionRegimen(CVEREGIMEN);
+    } else {
+      this.classificationRegimenOpciones = [];
+      this.datosRealizer.get('classificion_regimen')?.reset();
+      this.datosRealizer.get('classificion_regimen')?.disable();
+    }
   }
 
   /**
    * @method obtenerClassificionRegimenSelectList
    * @description Obtiene las opciones del catálogo de clasificación de régimen desde el servicio y las asigna al arreglo local.
    */
-  obtenerClassificionRegimenSelectList(): void {
-    this.permisoImportacionService.obtenerMenuDesplegable('classificion_regimen.json')
+  cargarClasificacionRegimen(cveRegimen: string): void {
+    this.catalogosService.getCatCveRegimen(cveRegimen)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (data) => {
-          this.classificationRegimenOpciones = data as Catalogo[];
+        next: (resp) => {
+          if (resp.codigo === CodigoRespuesta.EXITO && resp.datos && resp.datos.length > 0) {
+            this.classificationRegimenOpciones = resp.datos;
+            this.datosRealizer.get('classificion_regimen')?.enable();
+          } else {
+            this.classificationRegimenOpciones = [];
+            this.datosRealizer.get('classificion_regimen')?.reset();
+            this.datosRealizer.get('classificion_regimen')?.disable();
+          }
         },
+        error: (err) => {
+          console.error('Error al cargar clasificación de régimen', err);
+          this.classificationRegimenOpciones = [];
+          this.datosRealizer.get('classificion_regimen')?.reset();
+          this.datosRealizer.get('classificion_regimen')?.disable();
+        }
       });
   }
-
+  
   /**
    * @method ngOnDestroy
    * @description Limpia las suscripciones activas cuando el componente es destruido.
@@ -193,5 +249,4 @@ export class TramiteRealizerComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

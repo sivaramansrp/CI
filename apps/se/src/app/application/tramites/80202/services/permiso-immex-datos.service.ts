@@ -3,10 +3,11 @@
  * @description Servicio para obtener los datos del permiso IMMEX.
  */
 import { HttpClient } from '@angular/common/http';
-import { ImmexAmpliacionSensiblesState } from '../estados/immex-ampliacion-sensibles.store';
 import { ImmexAmpliacionSensiblesStore } from '../estados/immex-ampliacion-sensibles.store';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { immexRegistroform } from '../../80203/modelos/immex-registro-de-solicitud-modality.model';
+
 
 @Injectable({
   providedIn: 'root'
@@ -43,16 +44,17 @@ export class PermisoImmexDatosService {
    *
    * @memberof PermisoImmexDatosService
    */
-  getRegistroTomaMuestrasMercanciasData(): Observable<ImmexAmpliacionSensiblesState> {
-    return this.httpClient.get<ImmexAmpliacionSensiblesState>('assets/json/80202/immexRegistro.json');
+  getRegistroTomaMuestrasMercanciasData(): Observable<immexRegistroform> {
+    return this.httpClient.get<immexRegistroform>('assets/json/80202/immexRegistro.json');
   }
 
-  /**
-   * Actualiza el estado del formulario de la solicitud en el store con la información proporcionada.
-   * Cada propiedad del objeto recibido es asignada al store correspondiente.
+   /**
+   * Actualiza el estado del formulario en el store de Akita con los datos proporcionados.
+   * @param {immexRegistroform} DATOS - Datos del formulario de registro IMMEX.
+   * @returns {void}
    */
-  actualizarEstadoFormulario(DATOS: ImmexAmpliacionSensiblesState): void {
-    this.tramite80202Store.actualizarEstado(DATOS);
+  actualizarEstadoFormulario(DATOS: immexRegistroform): void {
+    this.tramite80202Store.setImmexRegistro(DATOS);
   }
 
 }

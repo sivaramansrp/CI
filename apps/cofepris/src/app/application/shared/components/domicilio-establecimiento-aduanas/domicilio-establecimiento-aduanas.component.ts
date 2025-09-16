@@ -288,16 +288,16 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
   * Etiqueta de la lista de fechas.
   * */
   public paisDeOrigenLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de origen',
-    derecha: 'País(es) seleccionado(s)*',
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
     * Etiqueta de la lista de fechas.
     * */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionado(s)*',
+    tituluDeLaIzquierda: 'País de procedencia:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
@@ -363,6 +363,12 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       )
       .subscribe()
 
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'domicilioForm') {
+        this.domicilio.markAllAsTouched();
+      }
+    });
+
   }
 
   /**
@@ -395,10 +401,10 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       localidad: [this.solicitudState?.localidad],
       colonia: [this.solicitudState?.colonia],
       calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
-      lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30)]],
+      lada: [this.solicitudState?.lada, [Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30),Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox],
-      licenciaSanitaria: [this.solicitudState?.licenciaSanitaria, [Validators.required, Validators.maxLength(20)]],
+      licenciaSanitaria: [this.solicitudState?.licenciaSanitaria, [Validators.required, Validators.maxLength(50)]],
     });
 
     /** 

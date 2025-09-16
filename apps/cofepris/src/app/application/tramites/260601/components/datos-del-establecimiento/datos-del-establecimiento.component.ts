@@ -17,7 +17,7 @@ import {
   AvisoSanitarioState,
   Tramite260601Store,
 } from '../../../../estados/tramites/tramite260601.store';
-import { Catalogo, ConsultaioQuery, REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, REGEX_SOLO_NUMEROS } from '@ng-mf/data-access-user';
 
 import {
   FormArray,
@@ -366,6 +366,21 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
    * Se utiliza para mostrar mensajes de error específicos en la interfaz.
    */
   calleInvalid: boolean = false;
+ /**
+   * @property {boolean} espectaculoPopup
+   * @description
+   * Controla la visibilidad del popup de notificación para acciones relacionadas con espectáculos.
+   * Cuando es `true`, se muestra un mensaje de notificación al usuario.
+   */
+  espectaculoPopup: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacionEliminar
+   * @description
+   * Objeto que contiene la información de la notificación que se muestra cuando se intenta eliminar un elemento.
+   * Se utiliza específicamente para mostrar mensajes de confirmación o error en operaciones de eliminación.
+   */
+  public nuevaNotificacionEliminar!: Notificacion;
 
   /**
    * Constructor del componente. Utilizado para inyectar servicios necesarios.
@@ -409,6 +424,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
     this.inicializarEstadoFormulario();
 
     this.nuevaNotificacion = {} as Notificacion;
+    this.nuevaNotificacionEliminar = {} as Notificacion;
     this.tramite260601Query.selectSeccionState$
     .pipe(
       takeUntil(this.destruirNotificador$),
@@ -476,13 +492,6 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
       this.domicilloDelEstablecimientoForm.disable();
       this.scianForm.disable();
       this.manifiestosForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.datosDelEstablecimientoForm.enable();
-      this.domicilloDelEstablecimientoForm.enable();
-      this.scianForm.enable();
-      this.manifiestosForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
   }
 
@@ -495,21 +504,19 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
         {
           value: this.avisoSanitarioState?.RFCResponsableSanitario,
           disabled: true,
-        },
+        }
       ],
       razonSocial: [
-        { value: this.avisoSanitarioState?.razonSocial, disabled: true },
-        Validators.required,
+        { value: this.avisoSanitarioState?.razonSocial, disabled: true }
       ],
       correoElectronico: [
-        { value: this.avisoSanitarioState?.correoElectronico, disabled: true },
-        [Validators.maxLength(320), Validators.pattern(REGEX_REEMPLAZAR)],
+        { value: this.avisoSanitarioState?.correoElectronico || '', disabled: true }
       ],
     });
     this.domicilloDelEstablecimientoForm = this.fb.group({
       codigoPostal: [
         { value: this.avisoSanitarioState?.codigoPostal, disabled: true },
-        [Validators.required, Validators.maxLength(12)],
+        [Validators.required, Validators.maxLength(12),Validators.pattern(REGEX_SOLO_NUMEROS)],
       ],
       cveEstado: [
         { value: this.avisoSanitarioState?.cveEstado, disabled: true },
@@ -533,10 +540,12 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
         { value: this.avisoSanitarioState?.calle, disabled: true },
         [Validators.required, Validators.maxLength(90)],
       ],
-      lada: [{ value: this.avisoSanitarioState?.lada, disabled: true }],
+      lada: [{ value: this.avisoSanitarioState?.lada, disabled: true },
+        [Validators.pattern(REGEX_SOLO_NUMEROS),Validators.maxLength(5)]
+      ],
       telefono: [
         { value: this.avisoSanitarioState?.telefono, disabled: true },
-        [Validators.required, Validators.maxLength(30)],
+        [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS)],
       ],
       avisoFuncionamiento: [this.avisoSanitarioState?.avisoFuncionamiento],
       cveRegimenes: [
@@ -560,7 +569,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
       ),
       informacionConfidencial: [
         this.avisoSanitarioState?.informacionConfidencial,
-        Validators.required,
+        [Validators.required],
       ],
     });
   }
@@ -731,8 +740,11 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
    * Habilita todos los campos en los formularios del establecimiento y domicilio.
    */
   aceptar(): void {
+    this.datosDelEstablecimientoForm.get('razonSocial')?.setValidators([Validators.required]);
+    this.datosDelEstablecimientoForm.updateValueAndValidity();
+    this.datosDelEstablecimientoForm.get('correoElectronico')?.setValidators([Validators.maxLength(320), Validators.email]);
+    this.datosDelEstablecimientoForm.updateValueAndValidity();
     this.datosDelEstablecimientoForm.enable();
-
     // Habilitar todos los campos en el formulario Domicilio del Establecimiento
     this.domicilloDelEstablecimientoForm.enable();
     this.habilitarEstado = false;
@@ -827,6 +839,18 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
    * */
   eliminarScianGrid(): void {
     if (!this.scianSeleccionados?.length) {
+      this.espectaculoPopup = true;
+      this.nuevaNotificacionEliminar = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona un registro.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
       return;
     }
   
@@ -843,7 +867,21 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
   
     this.tramite260601Store?.setScianTabla?.(DATOS_ACTUALIZADOS);
   }
-
+  /**
+   * @method cerrarPopupEspectaculo
+   * @description
+   * Cierra el popup de espectáculo cuando el usuario interactúa con él.
+   * Si el evento recibido es true, oculta el popup estableciendo la propiedad espectaculoPopup a false.
+   * Este método es llamado por el componente de notificación cuando el usuario hace clic en el botón de aceptar.
+   * 
+   * @param {boolean} event - Valor booleano que indica si se debe cerrar el popup.
+   * @returns {void}
+   */
+  cerrarPopupEspectaculo(event: boolean): void{
+    if(event){
+      this.espectaculoPopup = false;
+    }
+  }
     /**
    * @method agregarSCIAN
    * @description
@@ -929,7 +967,10 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
       descripcionDeLaFraccion: data.fraccionArancelariaDescripcion ?? '',
       modelo: data.modelo ?? '',
       descripcionDelProducto: data.productoDescripcion ?? '',
-      paisDeOrigen: data.paisDeOrigen ?? ''
+      paisDeOrigen: data.paisDeOrigen ?? '',
+      paisDeProcedencia: data.paisDeProcedencia ?? '',
+      paisDeDestino: data.paisDeDestino ?? '',
+      usoEspecifico: data.usoEspecifico ?? ''
     };
     this.productoBodyData = [NEW_ARRAY] as ProductoTable[];
     this.tramite260601Store.setProductoTabla(this.productoBodyData);
@@ -972,7 +1013,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, AfterViewInit, 
    */
   validarFormularios(): boolean {
     let valid = false
-    if (this.datosDelEstablecimientoForm.valid &&
+    if (this.avisoSanitarioState?.razonSocial &&
       this.domicilloDelEstablecimientoForm.valid &&
       this.scianForm.valid &&
       this.manifiestosForm.valid

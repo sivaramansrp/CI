@@ -41,11 +41,11 @@ import {
   TablaDatos,
 } from '../../models/permiso-maquila.models';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Shared260212Store } from '../../../../estados/tramites/tramite260212.store';
 import { Terceros260211Query } from '../../../../estados/queries/terceros260211.query';
 import { Terceros260211State } from '../../../../estados/tramites/terceros260211.store';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260212Query } from '../../../../estados/queries/tramite260212.query';
-import { Tramite260212Store } from '../../../../estados/tramites/tramite260212.store';
 
 /**
  * Texto de alerta para los terceros relacionados.
@@ -411,7 +411,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private tramite260212Store: Tramite260212Store,
+    private tramite260212Store: Shared260212Store,
     private tercerosService: TercerosService,
     private consultaioQuery: ConsultaioQuery,
     private terceros260211Query: Terceros260211Query,

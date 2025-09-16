@@ -1,11 +1,11 @@
+import {ImmexAmpliacionSensiblesStore, ImmexRegistroState } from './immex-ampliacion-sensibles.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
-import { ImmexAmpliacionSensiblesState } from './immex-ampliacion-sensibles.store';
-import { ImmexAmpliacionSensiblesStore } from './immex-ampliacion-sensibles.store';
+
 
 @Injectable({ providedIn: 'root' })
-export class ImmexAmpliacionSensiblesQuery extends Query<ImmexAmpliacionSensiblesState> {
+export class ImmexAmpliacionSensiblesQuery extends Query<ImmexRegistroState> {
   /**
    * Observable que selecciona el estado completo de la solicitud.
    * 
@@ -24,5 +24,15 @@ export class ImmexAmpliacionSensiblesQuery extends Query<ImmexAmpliacionSensible
    */
   constructor(protected override store: ImmexAmpliacionSensiblesStore) {
     super(store);
+    
   }
+    /**
+     * @propiedad selectImmexRegistro$
+     * @tipo Observable<ImmexRegistroState>
+     * @descripción Selector que permite obtener el estado completo de `ImmexRegistroState`.
+     */
+    selectImmexRegistro$ = this.select((state) => {
+        return state;
+    });
+
 }
