@@ -307,6 +307,9 @@ export class DatosDeLaSolicitudComponent
    */
   public mostrarRepresentanteLegal = true;
 
+  public MostrarRepresentanteLegal = true;
+  public esProcedimiento260210: boolean = false;
+
   /**
    * @property {boolean} mostrarRFCSanitario
    * Controla la visibilidad del campo de RFC sanitario en el formulario.
@@ -558,6 +561,7 @@ export class DatosDeLaSolicitudComponent
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+     this.esProcedimiento260210 = this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260210;
     this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
     this.esManifesto =
@@ -822,6 +826,7 @@ export class DatosDeLaSolicitudComponent
           value: this.datosSolicitudFormState.apellidoMaterno,
           disabled: false, 
         },
+        // Note: apellidoMaterno is not required for any procedure
       ],
       regimenLaMercancia: [
         {
@@ -932,21 +937,25 @@ export class DatosDeLaSolicitudComponent
    * Busca el RFC del representante en el formulario y, si existe,
    * actualiza los campos relacionados con el nombre, apellido paterno
    * y apellido materno del representante con valores predeterminados.
-   *
-   * @remarks
-   * Este método verifica si el campo 'representanteRfc' tiene un valor
-   * en el formulario `datosSolicitudForm`. Si el valor está presente,
-   * se actualizan los campos 'representanteNombre', 'apellidoPaterno'
-   * y 'apellidoMaterno' con datos específicos.
    */
   buscarRepresentanteRfc(): void {
-    const RFC = this.datosSolicitudForm.get('representanteRfc')?.value;
-    if (RFC) {
-      this.datosSolicitudForm.patchValue({
-        representanteNombre: 'EUROFOODS DE MEXICO',
-        apellidoPaterno: 'GONZALEZ',
-        apellidoMaterno: 'PINAL',
-      });
+    const RFC_VALUE = this.datosSolicitudForm.get('representanteRfc')?.value;
+    if (RFC_VALUE) {
+      if (this.esProcedimiento260210) {
+      
+        this.datosSolicitudForm.patchValue({
+          representanteNombre: 'EUROFOODS DE MEXICO',
+          apellidoPaterno: 'GONZALEZ',
+          apellidoMaterno: 'PINAL',
+        });
+      } else {
+      
+        this.datosSolicitudForm.patchValue({
+          representanteNombre: 'EUROFOODS DE MEXICO',
+          apellidoPaterno: 'GONZALEZ',
+          apellidoMaterno: 'PINAL',
+        });
+      }
     } else {
       this.abrirRfcModal();
     }

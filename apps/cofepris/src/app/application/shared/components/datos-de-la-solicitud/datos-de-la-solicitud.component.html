@@ -322,7 +322,7 @@
       </div>
       <div class="col-md-4">
         <div class="form-check mt-4">
-          <label class="form-label mx-1" for="licenciaSanitaria"><b>No. de licencia sanitaria</b><span
+          <label class="form-label mx-1" for="licenciaSanitaria"><b>No.de licencia sanitaria</b><span
               *ngIf="esCampoRequerido('licenciaSanitaria')">*</span>:</label>
           <span
             tooltip="Número de la autorización indicado en el  documento emitido por la autoridad sanitaria competente">
@@ -520,12 +520,20 @@
 
     @if(mostrarRepresentanteLegal) {
     <ng-titulo titulo="Representante legal" class="mt-4"></ng-titulo>
-
+    
+    <!-- First row: RFC/Solicitud de comentarios field -->
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="representanteRfc">RFC*:</label>
-          <input class="form-control" id="representanteRfc" type="text" maxlength="13"
+          <label class="form-label" for="representanteRfc">
+            @if(esProcedimiento260210) {
+              Solicitud de comentarios*:
+            } @else {
+              RFC*:
+            }
+          </label>
+          <input class="form-control" id="representanteRfc" type="text" 
+            [maxlength]="esProcedimiento260210 ? 500 : 13"
             formControlName="representanteRfc" [ngClass]="
               isValid(datosSolicitudForm, 'representanteRfc') ? 'required' : ''
             " />
@@ -542,15 +550,15 @@
         </button>
       </div>
     </div>
-    <div class="row mt-2">
+
+    <!-- Second row: Name fields (for all procedures) -->
+    <div class="row mt-3">
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="representanteNombre">Nombre o Razón Social*:</label>
-          <input class="form-control" id="representanteNombre" type="text" formControlName="representanteNombre"
-            [ngClass]="
-              isValid(datosSolicitudForm, 'representanteNombre')
-                ? 'required'
-                : ''
+          <input class="form-control" id="representanteNombre" type="text" maxlength="100"
+            formControlName="representanteNombre" [ngClass]="
+              isValid(datosSolicitudForm, 'representanteNombre') ? 'required' : ''
             " />
           <div class="mensaje-error"
             *ngIf="datosSolicitudForm.get('representanteNombre')?.errors?.['required'] && datosSolicitudForm.get('representanteNombre')?.touched">
@@ -561,8 +569,8 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
-
-          <input class="form-control" id="apellidoPaterno" type="text" formControlName="apellidoPaterno" [ngClass]="
+          <input class="form-control" id="apellidoPaterno" type="text" maxlength="50"
+            formControlName="apellidoPaterno" [ngClass]="
               isValid(datosSolicitudForm, 'apellidoPaterno') ? 'required' : ''
             " />
           <div class="mensaje-error"
@@ -574,11 +582,13 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
-          <input class="form-control" id="apellidoMaterno" type="text" formControlName="apellidoMaterno" />
+          <input class="form-control" id="apellidoMaterno" type="text" maxlength="50"
+            formControlName="apellidoMaterno" />
         </div>
       </div>
     </div>
     }
+
     <ng-template #campoCorreoElectronico>
       <div class="form-group">
         <label class="form-label" for="correoElectronico">Correo electrónico
@@ -612,6 +622,7 @@
     </ng-template>
   </form>
 </div>
+
 @if(confirmacionAlerta){
 <section>
   <lib-notificaciones [notificacionInput]="seleccionarFilaNotificacion"
