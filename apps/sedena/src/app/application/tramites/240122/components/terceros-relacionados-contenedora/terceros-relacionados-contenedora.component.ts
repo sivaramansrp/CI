@@ -181,6 +181,9 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    * @returns {void}
    */
   modificarProveedorDatos(datos: Proveedor): void {
+       this.modalComponent.abrir(AgregarProveedorContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
     this.tramiteStore.actualizarDatosProveedor(datos);
   }
 
@@ -231,5 +234,9 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
   eliminarDestinatarioFinal(datos: DestinoFinal): void {
     this.destinatarioFinalTablaDatos = this.destinatarioFinalTablaDatos.filter(d => d.id !== datos.id);
     this.tramiteStore.updateDestinatarioFinalTablaDatos(this.destinatarioFinalTablaDatos);
+  }
+   eliminarProveedorContenedoraFinal(datos: Proveedor): void {
+    this.proveedorTablaDatos = this.proveedorTablaDatos.filter(d => d.id !== datos.id);
+    this.tramiteStore.updateProveedorTablaDatos(this.proveedorTablaDatos);
   }
 }
