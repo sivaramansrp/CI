@@ -810,7 +810,7 @@ ngOnChanges(changes: SimpleChanges):void {
         categoria: 'danger',
         modo: 'action',
         titulo: '',
-        mensaje: 'No hay elementos seleccionados para eliminar.',
+        mensaje: 'Debes seleccionar una mercancía',
         cerrar: true,
         tiempoDeEspera: 3000,
         txtBtnAceptar: 'Aceptar',
