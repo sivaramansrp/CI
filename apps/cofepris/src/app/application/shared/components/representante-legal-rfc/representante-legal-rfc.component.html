@@ -11,7 +11,11 @@
                         placeholder=""
                         type="text"
                         formControlName="rfc"
-                        [ngClass]="esValido('rfc') ? 'required' : ''"
+                        [ngClass]="{
+                            'required': esValido('rfc'),
+                            'tiene-invalido': representante.get('rfc')?.invalid && representante.get('rfc')?.touched
+                        }"
+                         maxlength="13"
                         (change)="setValoresStore(representante,'rfc', 'setRfc')"
                     />
                     <p *ngIf="representante.get('rfc')?.touched && representante.get('rfc')?.hasError('required')" class="mensaje-error">

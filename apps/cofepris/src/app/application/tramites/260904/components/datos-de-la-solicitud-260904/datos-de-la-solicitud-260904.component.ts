@@ -513,6 +513,25 @@ export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy, Aft
     this.form.markAllAsTouched();
     this.datosDelEstablecimiento.markAllAsTouched();
   }
+
+  // Add to: datos-de-la-solicitud-260904.component.ts
+
+public validateRequiredFields(): boolean {
+  if (!this.form) {
+    return true;
+  }
+  return this.form.valid;
+}
+
+public markAllFieldsTouched(): void {
+  if (this.form) {
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsTouched();
+      control.markAsDirty();
+      control.updateValueAndValidity();
+    });
+  }
+}
   /**
    * @inheritdoc
    * @description

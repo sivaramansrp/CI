@@ -132,7 +132,7 @@ export const TABLA_DE_DATOS: {
     },
     {
       encabezado: 'Descripción de la mercancía',
-      clave: (ele: SolicitudTabla) => ele.descripcionMercancia,
+      clave: (ele: SolicitudTabla) => ele.modalDescMercancia,
       orden: 5
     }
   ],

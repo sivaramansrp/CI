@@ -150,7 +150,7 @@ export const CARGA_MERCANCIA_SELECCIONADAS = [
     orden: 7, // Orden en que se mostrará la columna
   },
   {
-    encabezado: 'Tipo de fractura', // Título de la columna
+    encabezado: 'Tipo de factura', // Título de la columna
     clave: (ele: Mercancia): string | undefined => ele.tipoFactura, // Función que devuelve el nombre técnico de la mercancía
     orden: 8, // Orden en que se mostrará la columna
   },

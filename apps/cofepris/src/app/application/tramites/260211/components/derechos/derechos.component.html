@@ -39,6 +39,14 @@
                   formControlName="Llave" 
                   (change)="setValoresStore(derechosForm,'Llave', 'setLlave')">
               </div>
+               
+      @if(derechosForm.get('Llave')?.invalid && derechosForm.get('Llave')?.touched) {
+        <div class="mensaje-error">
+          @if(derechosForm.get('Llave')?.errors?.['pattern']) {
+            <span>Existen datos incorrectos que no cumplen con el formato esperado</span>
+          }
+        </div>
+      }
             </div>
             <div class="col-md-4">
                 <div class="form-group">
@@ -49,6 +57,7 @@
          (change)="setValoresStore(derechosForm,'deFetch', 'settipoFetch')" 
              [isDisabled]="esFormularioSoloLectura ? true : false"
         ></input-fecha>
+  
                   </div>
               </div>
               <div class="col-md-4">
@@ -57,6 +66,14 @@
                   <input class="form-control" id="importe" placeholder="" type="text"
                     formControlName="importe" (change)="setValoresStore(derechosForm,'importe', 'setimporte')">
                 </div>
+                   
+      @if(derechosForm.get('importe')?.invalid && derechosForm.get('importe')?.touched) {
+        <div class="mensaje-error">
+            @if(derechosForm.get('importe')?.errors?.['pattern']) {
+            <span>Por favor escribe un número entero válido</span>
+          }
+        </div>
+      }
               </div>
           </div>
           

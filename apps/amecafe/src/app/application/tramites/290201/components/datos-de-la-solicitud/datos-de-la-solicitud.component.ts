@@ -61,6 +61,7 @@ MOCK_SOLICITUD: Solicitud = {
   tipos: '2',
   calidad: '3',
   procesos: '2',
+  nombredeagencia: 'Agencia XYZ',
   certifications: '1',
   adunadesalida: '2',
   paisdestino: '1',
