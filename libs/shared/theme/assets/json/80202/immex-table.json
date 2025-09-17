@@ -2,23 +2,13 @@
     "permisoImmexDatos": [
      {
   "numero": 1,
-  "fraccionArancelaria": "6205.20.01",
-  "umt": "kg",
-  "descripcionTigie": "Camisas de fibras sintéticas o artificiales, para hombres o niños",
-  "cantidadAnual": 12000,
-  "capacidadInstalada": 1000,
-  "cantidadPorPeriodo": 500
-},
-{
-  "numero": 2,
-  "fraccionArancelaria": "6205.20.01",
+  "fraccionArancelaria": "72162101",
   "umt": "kg",
   "descripcionTigie": "Camisas de fibras sintéticas o artificiales, para hombres o niños",
   "cantidadAnual": 12000,
   "capacidadInstalada": 1000,
   "cantidadPorPeriodo": 500
 }
-
 
     ],
     "fraccionDatos": [

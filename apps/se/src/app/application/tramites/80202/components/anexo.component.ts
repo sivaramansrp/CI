@@ -343,9 +343,9 @@ export class AnexoComponent implements OnInit, OnDestroy {
   
     private createImportacionFormGroup(): FormGroup {
       return this.fb.group({
-      fraccionArancelaria: [{value: this.immexRegitroAnexoState?.fraccionArancelaria || '', disabled: this.esFormularioSoloLectura}, Validators.required],               
-      umt: [{value: this.immexRegitroAnexoState?.umt || '', disabled: this.esFormularioSoloLectura}, Validators.required],
-      descripcion: [{value: this.immexRegitroAnexoState?.descripcion || '', disabled: this.esFormularioSoloLectura}, Validators.required],                      
+      fraccionArancelaria: [{value: this.immexRegitroAnexoState?.fraccionArancelaria || '', disabled: true}, Validators.required],               
+      umt: [{value: this.immexRegitroAnexoState?.umt || '', disabled:true}, Validators.required],
+      descripcion: [{value: this.immexRegitroAnexoState?.descripcion || '', disabled:true}, Validators.required],                      
       cantidadAnual: [{value: this.immexRegitroAnexoState?.cantidadAnual || '', disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.pattern('^[0-9]+$')]],
       capacidadInstalada: [{value: this.immexRegitroAnexoState?.capacidadInstalada || '', disabled: this.esFormularioSoloLectura}, [Validators.required,Validators.pattern('^[0-9]+$')]],
       cantidadPorPeriodo: [{value: this.immexRegitroAnexoState?.cantidadPorPeriodo || '', disabled: this.esFormularioSoloLectura}, [Validators.required,Validators.pattern('^[0-9]+$')]], 
