@@ -12,23 +12,23 @@
  * @since 2025
  */
 
-import { HECHOS_SERVICIO, MercanciaForm } from '../../modelos/acta-de-hechos.model';
+import { HECHOS_TABLA_COLUMNAS, HechosDatosTabla } from '../../modelos/acta-de-hechos.model';
+import { TramiteState, TramiteStore } from '../../estados/tramite32516Store.store';
 import { ALFANUMERICO_ESPACIO } from '@libs/shared/data-access-user/src';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosService } from '../../servicios/catalogo.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ElementRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { HechosInfo } from '../../modelos/acta-de-hechos.model';
 import { HechosTablaServicios } from '../../servicios/hechos-tabla.service';
 import { Input } from '@angular/core';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { Location } from '@angular/common';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -36,19 +36,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { SeccionLibState } from '@libs/shared/data-access-user/src';
-import { SolicitudForm } from '../../modelos/acta-de-hechos.model';
 import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { TramiteState } from '../../estados/tramite32516Store.store';
-import { TramiteStore } from '../../estados/tramite32516Store.store';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { TramiteStoreQuery } from '../../estados/tramite32516Query.query';
 import { ViewChild } from '@angular/core';
-import { delay } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
-import { tap } from 'rxjs/operators';
 
 import { Validators } from '@angular/forms';
 /**
@@ -169,16 +164,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
   mercanciaForm!: FormGroup;
 
-  /**
-   * Estado actual de la mercancía basado en el modelo `MercanciaForm`.
-   * 
-   * Contiene la información manejada dentro del componente y se sincroniza
-   * con el store global del trámite para mantener la consistencia de datos.
-   * 
-   * @type {MercanciaForm}
-   * @memberof MercanciasDestruidasFormaComponent
-   */
-  mercanciaState!: MercanciaForm;
+
 
   /**
    * Estado actual de la solicitud basado en el modelo `SolicitudForm`.
@@ -189,7 +175,9 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * @type {SolicitudForm}
    * @memberof TipoDeAvisoComponent
    */
-  solicitudState!: SolicitudForm;
+  solicitudState!: TramiteState;
+
+  datosTabla: HechosDatosTabla[] = [];
 
   // ========================================
   // PROPIEDADES DE CONFIGURACIÓN
@@ -270,10 +258,10 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * incluyendo nombres, tipos de datos, filtros y ordenamiento.
    * Utiliza la configuración importada desde `HECHOS_SERVICIO`.
    * 
-   * @type {ConfiguracionColumna<HechosInfo>[]}
+   * @type {ConfiguracionColumna<HechosDatosTabla>[]}
    * @memberof TipoDeAvisoComponent
    */
-  hechosTabla: ConfiguracionColumna<HechosInfo>[] = HECHOS_SERVICIO;
+  hechosTabla: ConfiguracionColumna<HechosDatosTabla>[] = HECHOS_TABLA_COLUMNAS;
 
   /**
    * Datos procesados para la tabla de hechos.
@@ -282,11 +270,11 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * listos para su visualización en la interfaz de usuario.
    * Se actualiza mediante llamadas al servicio `HechosTablaServicios`.
    * 
-   * @type {HechosInfo[]}
+   * @type {HechosDatosTabla[]}
    * @memberof TipoDeAvisoComponent
    */
-  hechosTableDatos: HechosInfo[] = [];
-
+  hechosTableDatos: HechosDatosTabla[] = [];
+  
   /**
    * Array que contiene las filas seleccionadas de la tabla de hechos.
    * 
@@ -294,10 +282,10 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * Utilizado para controlar la visibilidad del botón "Eliminar" y para realizar
    * operaciones sobre las filas seleccionadas.
    * 
-   * @type {HechosInfo[]}
+   * @type {HechosDatosTabla[]}
    * @memberof TipoDeAvisoComponent
    */
-  filasSeleccionadas: HechosInfo[] = [];
+  filasSeleccionadas: HechosDatosTabla[] = [];
 
   /**
    * Referencia al botón de cerrar modal.
@@ -391,7 +379,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
+        
         })
       )
       .subscribe();
@@ -410,7 +398,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * @returns {void}
    * @memberof TipoDeAvisoComponent
    */
-  inicializarEstadoFormulario(): void {
+  inicializarEstadoFormulario(): void {    
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
@@ -457,21 +445,12 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * @memberof TipoDeAvisoComponent
    */
   inicializarFormulario(): void {
-    this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState.SolicitudState;
-        })
-      )
-      .subscribe();
-
     this.solicitudForm = this.fb.group({
-      cantidadBienes: ['', [Validators.required]],
-      descripcionGenerica1: ['', [Validators.required]],
-      descripcionGenerica2: ['', [Validators.required]],
-      descripcionGenerica3: ['', [Validators.required, Validators.maxLength(250), Validators.pattern(ALFANUMERICO_ESPACIO)],],
-      capacidadAlmacenamiento: ['', [Validators.required]],
+      descripcionGenerica1: [this.solicitudState?.descripcionGenerica1, [Validators.required]],
+      descripcionGenerica2: [this.solicitudState?.descripcionGenerica2, [Validators.required, Validators.maxLength(250), Validators.pattern(ALFANUMERICO_ESPACIO)],],
+      descripcionGenerica3: [this.solicitudState?.descripcionGenerica3, [Validators.required]],
+      capacidadAlmacenamiento: [this.solicitudState?.capacidadAlmacenamiento, [Validators.required]],
+      cantidadBienes: [this.solicitudState?.cantidadBienes, [Validators.required]],
     });
 
     this.mercanciaForm = this.fb.group({
@@ -540,112 +519,21 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
-    this.tramiteStoreQuery.selectSolicitudTramite$
+     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.solicitudState = seccionState.SolicitudState;
+          this.solicitudState = seccionState;
+          this.datosTabla = this.solicitudState?.tableDatos || [];
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
 
-    this.handleConditionalValidation();
-    this.obtenerListasDesplegables();
+    this.obtenerHechosSelectList();
     this.obtenerLevantarActaDesplegables();
     this.radioOpcion = this.catalogosService.RadioOpcion;
     this.obtenerUnidadDesplegable();
-
-    /**
-     * Suscripción a cambios en el estado de la solicitud de trámite.
-     * 
-     * Observa los cambios en el store del trámite y actualiza el formulario
-     * con los nuevos datos cuando el estado cambia.
-     * 
-     * @memberof TipoDeAvisoComponent
-     */
-    this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState: TramiteState) => {
-          if (seccionState) {
-            this.solicitudState = seccionState?.SolicitudState;
-            this.solicitudForm.patchValue(this.solicitudState);
-          }
-        })
-      )
-      .subscribe();
-
-    /**
-     * Suscripción a cambios en el estado del formulario.
-     * 
-     * Observa los cambios en el estado de validación del formulario y,
-     * después de un breve retraso, actualiza el estado en el store.
-     * El retraso previene actualizaciones excesivas durante la escritura.
-     * 
-     * @memberof TipoDeAvisoComponent
-     */
-    this.solicitudForm.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap(() => {
-          const ACTIVE_STATE = { ...this.solicitudForm.value };
-          this.tramiteStore.setSolicitudTramite(ACTIVE_STATE);
-        })
-      )
-      .subscribe();
-
-    /**
-     * Suscripción a cambios en el estado de la sección.
-     * 
-     * Observa los cambios en el estado de la sección y almacena
-     * la información actualizada en la propiedad local.
-     * 
-     * @memberof TipoDeAvisoComponent
-     */
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
-  }
-
-  // ========================================
-  // MÉTODOS DE VALIDACIÓN
-  // ========================================
-
-  /**
-   * Configura la validación condicional para el campo descripcionGenerica3.
-   * 
-   * Establece un observable que observa los cambios en el campo `cantidadBienes`
-   * y dinámicamente agrega o remueve validadores del campo `descripcionGenerica3`
-   * según el valor seleccionado.
-   * 
-   * Lógica de validación:
-   * - Si `cantidadBienes` es '1': Se agrega validador `required` a `descripcionGenerica3`
-   * - Si `cantidadBienes` es diferente de '1': Se remueven todos los validadores
-   * 
-   * @private
-   * @returns {void}
-   * @memberof TipoDeAvisoComponent
-   */
-  private handleConditionalValidation(): void {
-    this.solicitudForm
-      .get('cantidadBienes')
-      ?.valueChanges.subscribe((value) => {
-        const DESCRIPCION_GENERICA_3 = this.solicitudForm.get(
-          'descripcionGenerica3'
-        );
-        if (value === '1') {
-          DESCRIPCION_GENERICA_3?.setValidators([Validators.required]);
-        } else {
-          DESCRIPCION_GENERICA_3?.clearValidators();
-        }
-        DESCRIPCION_GENERICA_3?.updateValueAndValidity();
-      });
   }
 
   // ========================================
@@ -730,44 +618,14 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * en la tabla. Actualiza el array de filas seleccionadas que se utiliza para
    * controlar las operaciones de eliminación.
    * 
-   * @param {HechosInfo[]} filasSeleccionadas - Array de filas seleccionadas por el usuario
+   * @param {HechosDatosTabla[]} filasSeleccionadas - Array de filas seleccionadas por el usuario
    * @returns {void}
    * @memberof TipoDeAvisoComponent
    */
-  onSeleccionChange(filasSeleccionadas: HechosInfo[]): void {
+  onSeleccionChange(filasSeleccionadas: HechosDatosTabla[]): void {
     this.filasSeleccionadas = filasSeleccionadas;
   }
 
-  /**
-   * Busca y carga los datos para la tabla de hechos.
-   * 
-   * Realiza una llamada al servicio `HechosTablaServicios` para obtener
-   * los datos de hechos y actualiza la propiedad `hechosTableDatos` con
-   * la información obtenida. Incluye validación para asegurar que la
-   * respuesta contiene un array válido.
-   * 
-   * Estructura esperada de la respuesta:
-   * ```typescript
-   * {
-   *   hechosApiDatos: HechosInfo[]
-   * }
-   * ```
-   * 
-   * @returns {void}
-   * @memberof TipoDeAvisoComponent
-   */
-  buscarDatos(): void {
-    this.hechosTablaServicios
-      .obtenerDatos()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response: { hechosApiDatos: HechosInfo[] }) => {
-          if (response && Array.isArray(response.hechosApiDatos)) {
-            this.hechosTableDatos = response.hechosApiDatos;
-          }
-        },
-      });
-  }
 
   // ========================================
   // MÉTODOS DE LIMPIEZA Y DESTRUCCIÓN
@@ -815,60 +673,6 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
           this.unidadMedida = data;
         },
       });
-  }
-
-  /**
-   * Agrega una nueva mercancía a la tabla de hechos.
-   * @returns {void}
-   * @memberof TipoDeAvisoComponent
-   */
-  agregarMercancia(): void {
-    if (this.mercanciaForm.valid) {
-      const NUEVA_MERCANCIA: HechosInfo = {
-        TABLA_Columna_1: this.mercanciaForm.get('consecutivo')?.value || '',
-        TABLA_Columna_2: this.mercanciaForm.get('descripcion')?.value || '',
-        TABLA_Columna_3: this.mercanciaForm.get('cantidad')?.value || '',
-        TABLA_Columna_4: this.mercanciaForm.get('unidadMedida')?.value || '',
-        TABLA_Columna_5: this.mercanciaForm.get('peso')?.value || '',
-        estatus: true
-      };
-
-      // Agregar la nueva mercancía a la tabla
-      this.hechosTableDatos = [...this.hechosTableDatos, NUEVA_MERCANCIA];
-
-      // Resetear el formulario
-      this.mercanciaForm.reset();
-
-      // Cerrar el modal
-      this.closeModal.nativeElement.click();
-    } else {
-      // Marcar todos los campos como touched para mostrar errores
-      Object.keys(this.mercanciaForm.controls).forEach(key => {
-        this.mercanciaForm.get(key)?.markAsTouched();
-      });
-    }
-  }
-
-  /**
-   * Elimina las mercancías seleccionadas de la tabla.
-   * 
-   * Este método filtra la tabla de datos para remover las filas que están
-   * actualmente seleccionadas. Después de eliminar, limpia el array de
-   * filas seleccionadas.
-   * 
-   * @returns {void}
-   * @memberof TipoDeAvisoComponent
-   */
-  eliminarMercanciasSeleccionadas(): void {
-    if (this.filasSeleccionadas.length > 0) {
-      // Filtrar los datos para remover las filas seleccionadas
-      this.hechosTableDatos = this.hechosTableDatos.filter(
-        item => !this.filasSeleccionadas.includes(item)
-      );
-
-      // Limpiar la selección
-      this.filasSeleccionadas = [];
-    }
   }
 
   /**

@@ -1,4 +1,3 @@
-import { MercanciasDestruidasFormaComponent } from './components/mercancias-destruidas-forma/mercancias-destruidas-forma.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
@@ -27,16 +26,7 @@ const ROUTES: Routes = [
   {
     path: 'solicitud',
     component: SolicitudPageComponent,
-  },
-  /**
-   * Ruta para el formulario de mercancías destruidas.
-   * @path 'mercancias-destruidas-forma'
-   * @component MercanciasDestruidasFormaComponent
-   */
-  {
-    path: 'mercancias-destruidas-forma',
-    component: MercanciasDestruidasFormaComponent,
-  },
+  }
 ];
 
 /**

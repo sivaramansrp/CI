@@ -4,10 +4,16 @@
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
-          <app-catalogo-select [label]="'Aviso del que procede el acta de hechos'" [catalogo]="actaDeHechos"
-            [placeholder]="'Selecciona un valor'" formControlName="descripcionGenerica1" [required]="true"
-            name="actaDeHechos" [isDisabled]="esFormularioSoloLectura"
-            [tooltipQuestionCircle]="true"></app-catalogo-select>
+          <app-catalogo-select 
+            [label]="'Aviso del que procede el acta de hechos'" 
+            [catalogo]="actaDeHechos"
+            [placeholder]="'Selecciona un valor'" 
+            formControlName="descripcionGenerica1" 
+            [required]="true"
+            name="actaDeHechos" 
+            [isDisabled]="esFormularioSoloLectura"
+            [tooltipQuestionCircle]="true"
+            ></app-catalogo-select>
         </div>
       </div>
     </div>
@@ -70,10 +76,13 @@
       <div class="col-md-12 mt-4">
         <div class="table-responsive">
           <div class="table-container">
-            <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox"
-              [configuracionTabla]="hechosTabla" [datos]="hechosTableDatos"
+            <app-tabla-dinamica 
+              [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+              [configuracionTabla]="hechosTabla"
+              [datos]="datosTabla"
               (listaDeFilaSeleccionada)="onSeleccionChange($event)"
-              [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+              [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+              ></app-tabla-dinamica>
           </div>
         </div>
       </div>
@@ -82,13 +91,12 @@
     <!-- Botones Agregar -->
     <div class="row">
       <div class="col-md-12">
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end mt-4">
           <button type="button" class="btn btn-primary me-2" 
             data-bs-toggle="modal" data-bs-target="#modalMercancias"
             [disabled]="esFormularioSoloLectura">Agregar</button>
           <button type="button" class="btn btn-danger" 
             *ngIf="filasSeleccionadas.length > 0"
-            (click)="eliminarMercanciasSeleccionadas()"
             [disabled]="esFormularioSoloLectura">Eliminar</button>
         </div>
       </div>
@@ -177,7 +185,7 @@
         </div>
       </div>
       <div class="modal-footer custom-footer mt-4">
-        <button type="submit" class="btn btn-primary mx-2" (click)="agregarMercancia()">
+        <button type="submit" class="btn btn-primary mx-2">
           Agregar
         </button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeModal (click)="cancelarMercancia()">

@@ -7,8 +7,8 @@
  *
  * @module TramiteStore
  */
-import { HechosInfo, MercanciaForm, SolicitudForm } from '../modelos/acta-de-hechos.model';
 import { Store, StoreConfig } from '@datorama/akita';
+import { HechosDatosTabla } from '../modelos/acta-de-hechos.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -20,23 +20,12 @@ import { Injectable } from '@angular/core';
  * @interface TramiteState
  */
 export interface TramiteState {
-    /**
-     * @property {SolicitudForm} SolicitudState
-     * Estado del formulario de solicitud que contiene la información básica del trámite.
-     */
-    SolicitudState: SolicitudForm;
-
-    /**
-     * @property {MercanciaForm} MercanciaState
-     * Estado del formulario de mercancías que contiene los detalles de los productos.
-     */
-    MercanciaState: MercanciaForm;
-
-    /**
-     * @property {HechosInfo[]} HechosTableData
-     * Array que contiene los datos de la tabla de hechos para mostrar en la tabla dinámica.
-     */
-    HechosTableData: HechosInfo[];
+    descripcionGenerica1: string,
+    descripcionGenerica2: string,
+    descripcionGenerica3: string,
+    capacidadAlmacenamiento: boolean,
+    cantidadBienes: boolean,
+    tableDatos?: HechosDatosTabla[];
 }
 
 /**
@@ -50,73 +39,12 @@ export interface TramiteState {
  */
 export function createInitialState(): TramiteState {
     return {
-        SolicitudState: {
-          /**
-           * @property {string} descripcionGenerica1
-           * Primera descripción genérica de la solicitud.
-           */
-          descripcionGenerica1: '',
-
-          /**
-           * @property {string} descripcionGenerica2
-           * Segunda descripción genérica de la solicitud.
-           */
-          descripcionGenerica2: '',
-
-          /**
-           * @property {string} descripcionGenerica3
-           * Tercera descripción genérica de la solicitud.
-           */
-          descripcionGenerica3: '',
-
-          /**
-           * @property {string} capacidadAlmacenamiento
-           * Capacidad de almacenamiento requerida.
-           */
-          capacidadAlmacenamiento: '',
-
-          /**
-           * @property {string} cantidadBienes
-           * Cantidad de bienes en la solicitud.
-           */
-          cantidadBienes: ''
-        },
-        MercanciaState: {
-          /**
-           * @property {number|null} consecutivo
-           * Número consecutivo de la mercancía.
-           */
-          consecutivo: null,
-
-          /**
-           * @property {string} descripcion
-           * Descripción detallada de la mercancía.
-           */
-          descripcion: '',
-
-          /**
-           * @property {number|null} cantidad
-           * Cantidad de la mercancía.
-           */
-          cantidad: null,
-
-          /**
-           * @property {string} unidadMedida
-           * Unidad de medida para la mercancía.
-           */
-          unidadMedida: '',
-
-          /**
-           * @property {number|null} peso
-           * Peso de la mercancía.
-           */
-          peso: null
-        },
-        /**
-         * @property {HechosInfo[]} HechosTableData
-         * Array de datos para la tabla de hechos.
-         */
-        HechosTableData: []
+        descripcionGenerica1: '',
+        descripcionGenerica2: '',
+        descripcionGenerica3: '',
+        capacidadAlmacenamiento: false,
+        cantidadBienes: false,
+        tableDatos: []
     };
 }
 
@@ -155,10 +83,10 @@ export class TramiteStore extends Store<TramiteState> {
      * @param {SolicitudForm} SolicitudState - Datos actualizados del formulario de solicitud.
      * @returns {void}
      */
-    public setSolicitudTramite(SolicitudState: SolicitudForm): void {
+    public setDescripcionGenerica1(descripcionGenerica1: string): void {
         this.update((state) => ({
             ...state,
-            SolicitudState,
+            descripcionGenerica1,
         }));
     }
 
@@ -172,33 +100,13 @@ export class TramiteStore extends Store<TramiteState> {
      * @param {MercanciaForm} MercanciaState - Datos actualizados del formulario de mercancías.
      * @returns {void}
      */
-    public setMercanciaTramite(MercanciaState: MercanciaForm): void {
+    public setDescripcionGenerica2(descripcionGenerica2: string): void {
         this.update((state) => ({
             ...state,
-            MercanciaState,
+            descripcionGenerica2,
         }));
     }
 
-    /**
-     * Agrega un nuevo elemento a la tabla de hechos.
-     *
-     * Este método permite agregar un nuevo registro de hechos al array de datos de la tabla.
-     * Utiliza el patrón inmutable de Akita para garantizar la integridad del estado.
-     *
-     * @method addHechosTableData
-     * @param {HechosInfo} hecho - Nuevo registro de hechos a agregar.
-     * @returns {void}
-     */
-    public addHechosTableData(hecho: HechosInfo): void {
-        
-        this.update((state) => {
-            const NEW_DATA = [...state.HechosTableData, hecho];
-            return {
-                ...state,
-                HechosTableData: NEW_DATA,
-            };
-        });
-    }
 
     /**
      * Actualiza completamente el array de datos de la tabla de hechos.
@@ -210,10 +118,49 @@ export class TramiteStore extends Store<TramiteState> {
      * @param {HechosInfo[]} hechosData - Array completo de datos de hechos.
      * @returns {void}
      */
-    public setHechosTableData(hechosData: HechosInfo[]): void {
+    public setDescripcionGenerica3(descripcionGenerica3: string): void {
         this.update((state) => ({
             ...state,
-            HechosTableData: hechosData,
+            descripcionGenerica3,
+        }));
+    }
+
+    /**
+     * Establece el indicador de capacidad de almacenamiento para el trámite.
+     *
+     * @param capacidadAlmacenamiento - Valor booleano que indica si la capacidad de almacenamiento está disponible o habilitada
+     * @returns void
+     */
+    public setCapacidadAlmacenamiento(capacidadAlmacenamiento: boolean): void {
+        this.update((state) => ({
+            ...state,
+            capacidadAlmacenamiento,
+        }));
+    }
+
+    /**
+     * Establece el indicador de cantidad de bienes para el trámite.
+     *
+     * @param cantidadBienes - Valor booleano que indica si la cantidad de bienes está disponible o habilitada
+     * @returns void
+     */
+    public setCantidadBienes(cantidadBienes: boolean): void {
+        this.update((state) => ({
+            ...state,
+            cantidadBienes,
+        }));
+    }
+
+    /**
+     * Actualiza completamente el array de datos de la tabla de hechos.
+     *
+     * @param tableDatos - Array completo de datos de hechos
+     * @returns void
+     */
+    public setHechosTablaDatos(tableDatos: HechosDatosTabla[]): void {
+        this.update((state) => ({
+            ...state, 
+            tableDatos,
         }));
     }
 }
