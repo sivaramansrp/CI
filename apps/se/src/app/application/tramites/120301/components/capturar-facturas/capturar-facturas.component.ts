@@ -33,7 +33,6 @@ import {
 } from '../../constantes/elegibilidad-de-textiles.enums';
 
 import {
-  REGEX_PATRON_DECIMAL_2,
   REGEX_SOLO_DIGITOS,
 } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
@@ -426,24 +425,24 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
      */
     initActionFormBuild(): void {
     this.facturaForm = this.fb.group({
-      numeroFactura: [this.capturarState.numeroFactura, Validators.required],
+      numeroFactura: [{value: this.capturarState.numeroFactura}, [Validators.required, Validators.maxLength(50)]],
       cantidadTotal: [
-        this.capturarState.cantidadTotal,
-        [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],
+        {value: this.capturarState.cantidadTotal},
+        [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
       unidadDeMedida: [{value: '1', disabled: true}, Validators.required],
       valorDolares: [
-        this.capturarState.valorDolares,
-        [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],
+        {value: this.capturarState.valorDolares},
+        [Validators.required],
       ],
-      taxId: [this.capturarState.taxId],
-      razonSocial: [this.capturarState.razonSocial, Validators.required],
+      taxId: [{value: this.capturarState.taxId}, [Validators.maxLength(35)]],
+      razonSocial: [{value: this.capturarState.razonSocial}, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(70)]],
       domicilio: [this.capturarState.domicilio || '5th Avenue 123 New York NY México 12345'],
-      calle: [this.capturarState.calle, Validators.required],
-      ciudad: [this.capturarState.ciudad, Validators.required],
+      calle: [{value:this.capturarState.calle}, [Validators.required, Validators.maxLength(70)]],
+      ciudad: [{value:this.capturarState.ciudad}, [Validators.required, Validators.maxLength(35)]],
       cp: [
-        this.capturarState.cp,
-        [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
+        {value: this.capturarState.cp},
+        [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(9)],
       ],
       pais: [
         { value: this.capturarState.pais || 'ESTADOS UNIDOS DE AMERICA', disabled: true },
@@ -684,6 +683,12 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Guarda los datos editados del chofer nacional si el formulario es válido, emite el evento y cierra el modal.
+   * Si el formulario es inválido, muestra una notificación de alerta.
+   * @returns {void}
+   */
+  enviada = true;
+  /**
    * @method guardarFactura
    * @description
    * Agrega una nueva factura o actualiza una existente en la tabla de facturas.
@@ -695,6 +700,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   guardarFactura(): void {
+    this.enviada = true;
     Object.keys(this.facturaForm.controls).forEach(_key => {
       // No operativo: se eliminó la asignación de variables no utilizadas anteriormente para corregir errores de pelusa
     });

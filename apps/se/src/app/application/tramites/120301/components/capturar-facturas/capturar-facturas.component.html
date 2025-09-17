@@ -43,13 +43,13 @@
                   <div class="form-group">
                     <label class="form-label" for="numeroFactura">
                       Número de la factura<span [ngClass]="{
-                          'text-danger':
+                          'mensaje-error':
                             facturaForm.get('numeroFactura')?.invalid &&
                             (facturaForm.get('numeroFactura')?.touched ||
                               facturaForm.get('numeroFactura')?.dirty)
                         }">*</span>:
                     </label>
-                    <input class="form-control" value="" id="numeroFactura" placeholder="" type="text" libUppercase
+                    <input class="form-control" value="" id="numeroFactura" placeholder="" maxlength="50" size="20" type="text" libUppercase
                       name="numeroFactura" formControlName="numeroFactura" (change)="
                         setValoresStore(
                           facturaForm,
@@ -57,24 +57,24 @@
                           'setNumeroFactura'
                         )
                       " />
-                    @if (facturaForm.get('numeroFactura')?.invalid &&
-                    (facturaForm.get('numeroFactura')?.touched ||
-                    facturaForm.get('numeroFactura')?.dirty)) {
-                    <small class="text-danger">Este campo es obligatorio</small>
-                    }
+                        @if (facturaForm.get('numeroFactura')?.hasError('required') && (facturaForm.get('numeroFactura')?.touched || facturaForm.get('numeroFactura')?.dirty)) {
+                          <small class="mensaje-error">Este campo es obligatorio</small>
+                        } @else if (facturaForm.get('numeroFactura')?.hasError('maxlength') && facturaForm.get('numeroFactura')?.touched) {
+                          <span class="mensaje-error">Por favor, no escribas más de 50 caracteres</span>
+                        }
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="form-group">
                     <label class="form-label" for="cantidadTotal">
                       Cantidad total<span [ngClass]="{
-                          'text-danger':
+                          'mensaje-error':
                             facturaForm.get('cantidadTotal')?.invalid &&
                             (facturaForm.get('cantidadTotal')?.touched ||
                               facturaForm.get('cantidadTotal')?.dirty)
                         }">*</span>:
                     </label>
-                    <input class="form-control" value="" id="cantidadTotal" placeholder="" type="text" libUppercase
+                    <input class="form-control" value="" id="cantidadTotal" placeholder="" size="20" type="text" libUppercase
                       name="cantidadTotal" formControlName="cantidadTotal" (change)="
                         setValoresStore(
                           facturaForm,
@@ -82,11 +82,11 @@
                           'setCantidadTotal'
                         )
                       " />
-                    @if (facturaForm.get('cantidadTotal')?.invalid &&
-                    (facturaForm.get('cantidadTotal')?.touched ||
-                    facturaForm.get('cantidadTotal')?.dirty)) {
-                    <small class="text-danger">Este campo es obligatorio</small>
-                    }
+                        @if (facturaForm.get('cantidadTotal')?.hasError('required') && (facturaForm.get('cantidadTotal')?.touched || facturaForm.get('cantidadTotal')?.dirty)) {
+                          <small class="mensaje-error">Este campo es obligatorio</small>
+                        } @else if (facturaForm.get('cantidadTotal')?.hasError('pattern') && facturaForm.get('cantidadTotal')?.touched) {
+                          <span class="mensaje-error">Por favor, sólo escribe dígitos</span>
+                        }                      
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -105,22 +105,21 @@
                       <input-fecha [setFecha]="facturaForm.get('fechaExpedicionFactura')?.value" [datos]="fechaInicioInputs" (valorCambiado)="onFechaExpedicionFacturaChange($event)"></input-fecha>
                     </ng-container>
                   </div>
-                  @if(facturaForm.get('fechaExpedicionFactura')?.invalid &&
-                    (facturaForm.get('fechaExpedicionFactura')?.touched || facturaForm.get('fechaExpedicionFactura')?.dirty)) {
-                    <small class="text-danger">Este campo es obligatorio</small>
+                  @if(facturaForm.get('fechaExpedicionFactura')?.hasError('required') && (facturaForm.get('fechaExpedicionFactura')?.touched || facturaForm.get('fechaExpedicionFactura')?.dirty)) {
+                    <small class="mensaje-error">Este campo es obligatorio</small>
                   }
                 </div>
                 <div class="col-md-4">
                   <div class="form-group">
                     <label class="form-label" for="valorDolares">
                       Valor en dólares<span [ngClass]="{
-                          'text-danger':
+                          'mensaje-error':
                             facturaForm.get('valorDolares')?.invalid &&
                             (facturaForm.get('valorDolares')?.touched ||
                               facturaForm.get('valorDolares')?.dirty)
                         }">*</span>:
                     </label>
-                    <input class="form-control" value="" id="valorDolares" placeholder="" type="text" libUppercase
+                    <input class="form-control" value="" id="valorDolares" placeholder="" size="20" type="text" libUppercase
                       name="valorDolares" formControlName="valorDolares" (change)="
                         setValoresStore(
                           facturaForm,
@@ -128,11 +127,9 @@
                           'setValorDolares'
                         )
                       " />
-                    @if (facturaForm.get('valorDolares')?.invalid &&
-                    (facturaForm.get('valorDolares')?.touched ||
-                    facturaForm.get('valorDolares')?.dirty)) {
-                    <small class="text-danger">Este campo es obligatorio</small>
-                    }
+                        @if (facturaForm.get('valorDolares')?.hasError('required') && (facturaForm.get('valorDolares')?.touched || facturaForm.get('valorDolares')?.dirty)) {
+                          <small class="mensaje-error">Este campo es obligatorio</small>
+                        }
                   </div>
                 </div>
               </div>
@@ -149,13 +146,18 @@
                           libUppercase name="taxId" formControlName="taxId" (change)="
                             setValoresStore(facturaForm, 'taxId', 'setTaxId')
                           " />
+                        @if (facturaForm.get('taxId')?.invalid &&
+                          (facturaForm.get('taxId')?.touched ||
+                          facturaForm.get('taxId')?.dirty)) {
+                          <small class="mensaje-error">Por favor, no escribas más de 35 caracteres</small>
+                        }
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label class="form-label" for="razonSocial">
                           Razón social<span [ngClass]="{
-                              'text-danger':
+                              'mensaje-error':
                                 facturaForm.get('razonSocial')?.invalid &&
                                 (facturaForm.get('razonSocial')?.touched ||
                                   facturaForm.get('razonSocial')?.dirty)
@@ -169,17 +171,19 @@
                               'setRazonSocial'
                             )
                           " />
-                        @if (facturaForm.get('razonSocial')?.invalid &&
-                        (facturaForm.get('razonSocial')?.touched ||
-                        facturaForm.get('razonSocial')?.dirty)) {
-                        <small class="text-danger">Este campo es obligatorio</small>
-                        }
+                            @if (facturaForm.get('razonSocial')?.hasError('required') && (facturaForm.get('razonSocial')?.touched || facturaForm.get('razonSocial')?.dirty)) {
+                              <small class="mensaje-error">Este campo es obligatorio</small>
+                            } @else if (facturaForm.get('razonSocial')?.hasError('maxlength') && (facturaForm.get('razonSocial')?.touched || facturaForm.get('razonSocial')?.dirty)) {
+                              <small class="mensaje-error">Por favor, no escribas más de 70 caracteres</small>
+                            } @else if (facturaForm.get('razonSocial')?.hasError('pattern') && facturaForm.get('razonSocial')?.touched) {
+                              <span class="mensaje-error">Por favor, sólo escribe dígitos</span>
+                            }
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label class="form-label" for="calle">Calle<span [ngClass]="{
-                              'text-danger':
+                              'mensaje-error':
                                 facturaForm.get('calle')?.invalid &&
                                 (facturaForm.get('calle')?.touched ||
                                   facturaForm.get('calle')?.dirty)
@@ -188,10 +192,10 @@
                           name="calle" formControlName="calle" (change)="
                             setValoresStore(facturaForm, 'calle', 'setCalle')
                           " />
-                        @if (facturaForm.get('calle')?.invalid &&
-                        (facturaForm.get('calle')?.touched ||
-                        facturaForm.get('calle')?.dirty)) {
-                        <small class="text-danger">Este campo es obligatorio</small>
+                        @if (facturaForm.get('calle')?.hasError('required') && (facturaForm.get('calle')?.touched || facturaForm.get('calle')?.dirty)) {
+                          <small class="mensaje-error">Este campo es obligatorio</small>
+                        } @else if (facturaForm.get('calle')?.hasError('maxlength') && (facturaForm.get('calle')?.touched || facturaForm.get('calle')?.dirty)) {
+                          <small class="mensaje-error">Por favor, no escribas más de 70 caracteres</small>
                         }
                       </div>
                     </div>
@@ -199,7 +203,7 @@
                       <div class="form-group">
                         <label class="form-label" for="ciudad">
                           Ciudad (población, estado o provincia)<span [ngClass]="{
-                              'text-danger':
+                              'mensaje-error':
                                 facturaForm.get('ciudad')?.invalid &&
                                 (facturaForm.get('ciudad')?.touched ||
                                   facturaForm.get('ciudad')?.dirty)
@@ -209,33 +213,38 @@
                           libUppercase name="ciudad" formControlName="ciudad" (change)="
                             setValoresStore(facturaForm, 'ciudad', 'setCiudad')
                           " />
-                        @if (facturaForm.get('ciudad')?.invalid &&
-                        (facturaForm.get('ciudad')?.touched ||
-                        facturaForm.get('ciudad')?.dirty)) {
-                        <small class="text-danger">Este campo es obligatorio</small>
-                        }
+                            @if (facturaForm.get('ciudad')?.hasError('required') && (facturaForm.get('ciudad')?.touched || facturaForm.get('ciudad')?.dirty)) {
+                              <small class="mensaje-error">Este campo es obligatorio</small>
+                            } @else if (facturaForm.get('ciudad')?.hasError('maxlength') && (facturaForm.get('ciudad')?.touched || facturaForm.get('ciudad')?.dirty)) {
+                              <small class="mensaje-error">Por favor, no escribas más de 35 caracteres</small>
+                            } @else if (facturaForm.get('ciudad')?.hasError('pattern') && facturaForm.get('ciudad')?.touched) {
+                              <span class="mensaje-error">Por favor, sólo escribe dígitos</span>
+                            }
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label class="form-label" for="cp">CP<span [ngClass]="{
-                              'text-danger':
+                              'mensaje-error':
                                 facturaForm.get('cp')?.invalid &&
                                 (facturaForm.get('cp')?.touched ||
                                   facturaForm.get('cp')?.dirty)
                             }">*</span>:</label>
                         <input class="form-control" value="" id="cp" placeholder="" type="text" libUppercase name="cp"
                           formControlName="cp" (change)="setValoresStore(facturaForm, 'cp', 'setCp')" />
-                        @if (facturaForm.get('cp')?.invalid &&
-                        (facturaForm.get('cp')?.touched || facturaForm.get('cp')?.dirty)) {
-                        <small class="text-danger">Este campo es obligatorio</small>
-                        }
+                            @if (facturaForm.get('cp')?.hasError('required') && (facturaForm.get('cp')?.touched || facturaForm.get('cp')?.dirty)) {
+                              <small class="mensaje-error">Este campo es obligatorio</small>
+                            } @else if (facturaForm.get('cp')?.hasError('maxlength') && (facturaForm.get('cp')?.touched || facturaForm.get('cp')?.dirty)) {
+                              <small class="mensaje-error">Por favor, no escribas más de 9 caracteres</small>
+                            } @else if (facturaForm.get('cp')?.hasError('pattern') && facturaForm.get('cp')?.touched) {
+                              <span class="mensaje-error">Por favor, sólo escribe dígitos</span>
+                            }                       
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label class="form-label" for="pais">País<span [ngClass]="{
-                              'text-danger':
+                              'mensaje-error':
                                 facturaForm.get('pais')?.invalid &&
                                 (facturaForm.get('pais')?.touched ||
                                   facturaForm.get('pais')?.dirty)
@@ -247,7 +256,7 @@
                         @if (facturaForm.get('pais')?.invalid &&
                         (facturaForm.get('pais')?.touched ||
                         facturaForm.get('pais')?.dirty)) {
-                        <div class="text-danger small">
+                        <div class="mensaje-error small">
                           Este campo es obligatorio
                         </div>
                         }
