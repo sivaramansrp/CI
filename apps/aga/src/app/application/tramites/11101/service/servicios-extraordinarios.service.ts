@@ -117,6 +117,20 @@ export class TramiteFolioService {
   getEntidadfederativa(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/11101/entidades.json`);
   }
+
+  /**
+   * Obtenga una lista ficticia de alcadilamunicipio
+   */
+  getAlcadilamunicipio(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/municipios.json`);
+  }
+
+  /**
+   * Obtenga una lista ficticia de colonia
+   */
+  getColonia(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/colonias.json`);
+  }
   
 }
 

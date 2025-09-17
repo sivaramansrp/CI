@@ -76,6 +76,16 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
   entidadadfederativa!: Catalogo[];
 
   /**
+   * Lista de catálogos disponibles para alcadilamunicipio.
+   */
+  alcadilamunicipio!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para colonia.
+   */
+  colonia!: Catalogo[];
+
+  /**
    * Constructor de la clase. Inicializa el FormBuilder.
    * @param {FormBuilder} formBuilder - Servicio para construir formularios reactivos.
    * @param {Tramite11101Query} query - Servicio para consultar el estado del trámite.
@@ -219,6 +229,24 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Maneja la selección del alcadilamunicipio.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  alcadilamunicipioSeleccion(): void {
+    const ALCADILAMUNICIPIO = this.avisoForm.get('alcadilamunicipio')?.value;
+    this.store.setAlcadilamunicipio(ALCADILAMUNICIPIO);
+  }
+
+  /**
+   * Maneja la selección de la colonia.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  coloniaSeleccion(): void {
+    const COLONIA = this.avisoForm.get('colonia')?.value;
+    this.store.setColonia(COLONIA);
+  }
+
+  /**
    * Inicializa los catálogos necesarios para el componente.
    */
   inicializaCatalogos(): void {
@@ -230,8 +258,26 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
         })
       );
 
+    const ALCADILAMUNICIPIO$ = this.tramiteService
+      .getAlcadilamunicipio()
+      .pipe(
+        map((resp) => {
+          this.alcadilamunicipio = resp.data;
+        })
+      );
+
+    const COLONIA$ = this.tramiteService
+      .getColonia()
+      .pipe(
+        map((resp) => {
+          this.colonia = resp.data;
+        })
+      );
+
       merge(
-        ENTIDADFEDERATIVA$
+        ENTIDADFEDERATIVA$,
+        ALCADILAMUNICIPIO$,
+        COLONIA$
       )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe();
