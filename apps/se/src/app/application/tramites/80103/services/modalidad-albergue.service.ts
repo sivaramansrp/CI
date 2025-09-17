@@ -1,7 +1,7 @@
 import { AmpliacionServiciosResponse , CatalogoResponso, InfoServicios} from '../models/nuevo-programa-industrial.model';
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-
 import { Observable, map } from 'rxjs';
+import { ComplimentosService } from '../../../shared/services/complimentos.service';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { HttpClient } from '@angular/common/http';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
@@ -20,9 +20,27 @@ export class NuevoProgramaIndustrialService {
  constructor(
     private readonly http: HttpClient,
     private tramite80101Query: Tramite80101Query,
-    public httpService: HttpCoreService
+    public httpService: HttpCoreService,
+    private complimentosService: ComplimentosService
   ) {
    // No se necesita lógica de inicialización adicional.
+   this.setProcedure();
+   this.setProcedureNo();
+  }
+
+  /**
+   * Establece el procedimiento actual para la gestión de trámites industriales.
+   * Asigna el identificador de procedimiento 'st_t80101' y lo configura en el servicio de cumplimientos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  setProcedure():void{
+    const PROCEDURE='sat-t80103'
+    this.complimentosService.setProcedure(PROCEDURE);
+  }
+
+  setProcedureNo(): void {
+    this.complimentosService.setProcedureNo('80103');
   }
 
   /**
