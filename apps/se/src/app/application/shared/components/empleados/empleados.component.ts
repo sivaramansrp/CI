@@ -1,6 +1,6 @@
+import { CEDULAS_OPTIONS, DIRECTOS, Directos } from '../../constantes/empleados.enum';
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { DIRECTOS, Directos } from '../../constantes/empleados.enum';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -62,7 +62,7 @@ export class EmpleadosComponent implements OnInit {
    * Opciones disponibles para cédulas.
    * @property {Array} cedulasOptions
    */
-  cedulasOptions = [];
+  cedulasOptions = CEDULAS_OPTIONS;
 
   /**
    * Tipo de selección para la tabla de empleados directos.

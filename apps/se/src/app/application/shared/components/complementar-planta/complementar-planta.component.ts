@@ -12,8 +12,9 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 
-import { CATALOGO_TIPO,COMPLEMENTO_DE_PLANTA } from '../../constantes/complementar-planta.enum';
+import { CATALOGO_TIPO,COMPLEMENTO_DE_PLANTA, PERMANCERA_OPTIONS } from '../../constantes/complementar-planta.enum';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { FECHA_DE_FIN_DE_VIGENCIA } from '../../constantes/complementar-planta.enum';
 import { FECHA_DE_FIRMA } from '../../constantes/complementar-planta.enum';
 import { Location } from '@angular/common';
@@ -43,7 +44,7 @@ export class ComplementarPlantaComponent implements OnInit {
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
    */
   constructor(private ubicaccion: Location, private fb: FormBuilder,private complementarStore: ComplementarStore,
-    private complementarQuery: ComplementarQuery,) {
+    private complementarQuery: ComplementarQuery, private complimentosService: ComplimentosService,) {
         this.complementarQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -70,7 +71,7 @@ export class ComplementarPlantaComponent implements OnInit {
    * Opciones disponibles para mercancía programa.
    * @property {Array} permaneceraMercanciaProgramaOptions
    */
-   permaneceraMercanciaProgramaOptions =CATALOGO_TIPO;
+   permaneceraMercanciaProgramaOptions = PERMANCERA_OPTIONS;
 
 
   /**
@@ -156,7 +157,25 @@ export class ComplementarPlantaComponent implements OnInit {
    */
   ngOnInit(): void {
     this.inicializarFormulario();
+    if (!(this.solicitudState.tipoDocumentoOptions.length)) {
+      this.obtenerTipoDocumentoOptions(102);
+    } else {
+      this.documentoOptions = [...this.solicitudState.tipoDocumentoOptions];
+    }
   }
+
+  /** Obtiene y actualiza las opciones del catálogo de tipo de categoría desde el servicio. */
+  obtenerTipoDocumentoOptions(id: number): void {
+    this.complimentosService.getTipoDocumento(id)
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    )
+    .subscribe((res) => {
+      this.complementarStore.setTipoDocumentoOptions(res.datos);
+      this.documentoOptions = res.datos;
+    });
+  }
+
 /**
    * Método que actualiza el store con los valores del formulario.
    * 

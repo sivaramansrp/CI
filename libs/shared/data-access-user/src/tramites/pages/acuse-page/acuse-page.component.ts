@@ -54,6 +54,14 @@ export class AcusePageComponent implements OnInit {
 
 
   idSolicitud!: number;
+  /**
+   * Código del procedimiento o trámite que se está procesando.
+   * Valor 0 indica que no hay procedimiento definido.
+   * 
+   * @type {number}
+   * @default 0
+   */
+  procedure:number=0;
 
   constructor(
     private tramiteQueries: TramiteFolioQueries,
@@ -74,5 +82,6 @@ export class AcusePageComponent implements OnInit {
     this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
 
      this.idSolicitud = this.tramiteQueries.getIdSolicitud();
+     this.procedure = this.tramiteQueries.getProcedure();
   }
 }

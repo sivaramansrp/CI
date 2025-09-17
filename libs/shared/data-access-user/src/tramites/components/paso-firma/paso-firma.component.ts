@@ -256,7 +256,8 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
           this.tramiteStore.establecerTramite(
             this.folio,
             firma,
-            this.idSolicitud ?? 0
+            this.idSolicitud ?? 0,
+            this.procedure
           );
           this.router.navigate([this.router.url.replace(this.procedureUrl, 'acuse')]);
         }),
