@@ -93,7 +93,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    */
   importadorForm!: FormGroup;
 
-    /**
+  /**
    * @property {string} formularioAlertaError
    * @description
    * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
@@ -206,51 +206,51 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor
    * @implements {OnInit}
    */
-  ngOnInit(): void {
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccionState = seccionState;
-        })
-      )
-      .subscribe();
+    ngOnInit(): void {
+      this.seccionQuery.selectSeccionState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.seccionState = seccionState;
+          })
+        )
+        .subscribe();
 
-    this.ElegibilidadDeTextilesQuery.selectTextile$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((state) => {
-          this.importadorState = state as TextilesState;
-        })
-      )
-      .subscribe();
+      this.ElegibilidadDeTextilesQuery.selectTextile$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((state) => {
+            this.importadorState = state as TextilesState;
+          })
+        )
+        .subscribe();
 
-    this.initActionFormBuild();
-    this.obtenerListasDesplegables();
+      this.initActionFormBuild();
+      this.obtenerListasDesplegables();
 
-    this.seccionStore.establecerFormaValida([false]);
+      this.seccionStore.establecerFormaValida([false]);
 
-    this.importadorForm.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap((_value) => {
-          if (this.importadorForm.valid) {
-            this.ElegibilidadDeTextilesStore.setFormaValida([
-              ...this.importadorState.formaValida,
-              { id: 4, descripcion: 'TodoValido' },
-            ]);
-          }
-          this.seccionStore.establecerSeccion([true]);
-          this.seccionStore.establecerFormaValida([true]);
-        })
-      )
-      .subscribe();
+      this.importadorForm.statusChanges
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          delay(10),
+          tap((_value) => {
+            if (this.importadorForm.valid) {
+              this.ElegibilidadDeTextilesStore.setFormaValida([
+                ...this.importadorState.formaValida,
+                { id: 4, descripcion: 'TodoValido' },
+              ]);
+            }
+            this.seccionStore.establecerSeccion([true]);
+            this.seccionStore.establecerFormaValida([true]);
+          })
+        )
+        .subscribe();
 
-    if (this.formularioDeshabilitado) {
-      this.importadorForm.disable();
+      if (this.formularioDeshabilitado) {
+        this.importadorForm.disable();
+      }
     }
-  }
 
   /**
    * @method initActionFormBuild
@@ -391,10 +391,10 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * Si el formulario es inválido, muestra una notificación de alerta.
    * @returns {void}
    */
-  submitted = false;
+  enviada = false;
     guardarFilaEditada(): void {
-    this.submitted = true;
-    }
+    this.enviada = true;
+  }
   /**
    * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.
@@ -407,8 +407,8 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor
    * @implements {OnDestroy}
    */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
 }

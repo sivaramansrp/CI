@@ -82,13 +82,30 @@ interface AccionBoton {
   templateUrl: './elegibilidad-textiles.component.html',
 })
 export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
-    /**
+  /**
+   * @property {boolean} mostrarOtraPestana
+   * @description
+   * Controla la visibilidad de pestañas adicionales y la alerta de validación en el wizard.
+   * Se utiliza para mostrar u ocultar secciones extra según la lógica del proceso, igual que en paso-uno.component.html.
+   * @default false
+   */
+  mostrarOtraPestana: boolean = false;
+
+  /**
+   * @property {string} formularioAlertaError
+   * @description
    * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   * Se utiliza para informar al usuario sobre campos requeridos o errores en el formulario.
+   * @default ERROR_FORMA_ALERT
    */
   public formularioAlertaError = ERROR_FORMA_ALERT;
 
   /**
+   * @property {boolean} esFormaValido
+   * @description
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   * Si es true, se muestra la alerta de error; si es false, no se muestra.
+   * @default false
    */
   esFormaValido: boolean = false;
   /**
@@ -180,8 +197,21 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-    /**
-   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+  /**
+   * @property {PasoUnoComponent} pasoUnoComponent
+   * @description
+   * Referencia al componente hijo `PasoUnoComponent` obtenida mediante ViewChild.
+   * Permite acceder a los métodos públicos del componente hijo, especialmente para validar formularios
+   * y controlar la navegación entre pasos del wizard de elegibilidad de textiles.
+   * Es utilizada para invocar validaciones y obtener el estado de los formularios del primer paso.
+   * @type {PasoUnoComponent}
+   * @viewChild
+   * @memberof ElegibilidadTextilesComponent
+   * @example
+   * ```typescript
+   * // Validar todos los formularios del paso uno
+   * const esValido = this.pasoUnoComponent.validarTodosLosFormularios();
+   * ```
    */
   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 

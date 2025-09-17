@@ -91,34 +91,56 @@ import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
 })
 export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   /**
-   * Flag to show 'Nacional' option after 'No' is selected
+   * @property {boolean} mostrarOpcionNacional
+   * @description
+   * Bandera que indica si se debe mostrar la opción 'Nacional' en los radio buttons.
+   * Se activa cuando el usuario selecciona 'No' en el control de radio, permitiendo mostrar opciones adicionales.
+   * Es utilizada para controlar la lógica de visualización dinámica en el formulario.
    */
-    mostrarOpcionNacional = false;
+  mostrarOpcionNacional = false;
   /**
-   * Getter to filter radio options based on selection.
-   * Shows only 'No' initially, and adds 'Nacional' when 'No' is selected.
+   * @property {Array<{label: string; value: string}>} filteredRadioOptions
+   * @description
+   * Getter que filtra las opciones de radio según la selección actual.
+   * Inicialmente muestra solo la opción 'No', y agrega 'Nacional' cuando se selecciona 'No'.
+   * Permite controlar dinámicamente las opciones disponibles en el formulario.
+   * @returns {Array<{label: string; value: string}>} Opciones filtradas para el radio button.
    */
-    get filteredRadioOptions(): Array<{ label: string; value: string }> {
-      if (this.mostrarOpcionNacional) {
+  get filteredRadioOptions(): Array<{ label: string; value: string }> {
+    if (this.mostrarOpcionNacional) {
       return this.radioOptions;
     }
     return [this.radioOptions[0]];
   }
   /**
-   * Track selected fabricantes from the table
+   * @property {HistoricoColumns[]} selectedFabricantes
+   * @description
+   * Almacena los fabricantes seleccionados en la tabla dinámica.
+   * Se actualiza cada vez que el usuario selecciona o deselecciona filas en la tabla de fabricantes nacionales.
+   * Permite gestionar la selección para acciones posteriores como asociar o eliminar fabricantes.
    */
   selectedFabricantes: HistoricoColumns[] = [];
 
   /**
-   * Handle selection change from table
+   * @method onSeleccionChange
+   * @description
+   * Maneja el cambio de selección en la tabla de fabricantes.
+   * Actualiza la propiedad selectedFabricantes con las filas seleccionadas por el usuario.
+   * @param {HistoricoColumns[]} _event - Arreglo de fabricantes seleccionados desde la tabla.
+   * @returns {void} No retorna ningún valor.
    */
-  onSeleccionChange(_event: HistoricoColumns[]):void {
-  // The event should be the selected rows array from the table
+  onSeleccionChange(_event: HistoricoColumns[]): void {
+    // El evento debe ser la matriz de filas seleccionadas de la tabla.
     this.selectedFabricantes = Array.isArray(_event) ? _event : [];
   }
 
   /**
-   * Handle 'Seleccionar' button click
+   * @method alSeleccionarClick
+   * @description
+   * Maneja el evento de clic en el botón 'Seleccionar'.
+   * Si no hay fabricantes seleccionados, muestra un modal de confirmación para advertir al usuario.
+   * Utiliza Bootstrap Modal para la visualización del mensaje.
+   * @returns {void} No retorna ningún valor.
    */
   alSeleccionarClick(): void {
     if (this.selectedFabricantes.length === 0) {
@@ -134,6 +156,15 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * Propiedad de entrada que controla si todos los controles del formulario deben estar deshabilitados.
    * Cuando es true, impide la edición de cualquier campo del formulario de histórico de fabricantes.
    * Se utiliza para casos donde el formulario debe ser de solo lectura o en estados de visualización.
+   */
+  /**
+   * @property {boolean} formularioDeshabilitado
+   * @description
+   * Propiedad de entrada que indica si el formulario debe estar deshabilitado.
+   * Cuando es true, todos los controles del formulario se muestran en modo solo lectura y no permiten edición.
+   * Se utiliza para controlar el estado de edición del formulario en función del contexto del trámite.
+   * @input
+   * @default false
    */
   @Input()
   formularioDeshabilitado: boolean = false;
@@ -172,15 +203,6 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   @Output() mostrarTabs: EventEmitter<boolean> = new EventEmitter<boolean>();  
 
   /**
-          valorSeleccionado: string | number = '';
-          // Alias for template compatibility
-          get valorSeleccionado(): string | number {
-            return this.valorSeleccionado;
-          }
-          // Alias for template compatibility
-          onSeleccionarClick(): void {
-            this.alSeleccionarClick();
-          }
    * Contiene las configuraciones y opciones disponibles para los controles de radio button
    * relacionados con el tipo de fabricante exportador. Se inicializa con datos estáticos
    * importados desde un archivo JSON externo que define las opciones de selección.
@@ -505,12 +527,15 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     );
   }
 
-    /**
-   * Método para continuar al siguiente paso, validando el campo cantidadFacturas.
-   * Si el formulario es inválido, muestra el mensaje de error y no permite continuar.
-   * Si es válido, limpia el error y permite continuar.
+  /**
+   * @method continuar
+   * @description
+   * Método para continuar al siguiente paso del trámite, validando el formulario de fabricantes.
+   * Marca todos los campos como tocados y actualiza la validez del formulario.
+   * Si el formulario es inválido, muestra un mensaje de error y no permite avanzar.
+   * Si el formulario es válido, limpia el error y emite el evento para mostrar las pestañas siguientes.
+   * @returns {void} No retorna ningún valor.
    */
-
   continuar(): void {
     this.historicoFabricantesForm.markAllAsTouched();
     this.historicoFabricantesForm.updateValueAndValidity();

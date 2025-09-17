@@ -1,264 +1,318 @@
 <div class="container">
-  <form [formGroup]="facturaForm">
+  <div class="col-md-12">
+    <ng-titulo titulo="Datos de la factura" />
+  </div>
+  <div class="row mt-5">
     <div class="col-md-12">
-      <ng-titulo titulo="Datos de la factura" />
+      <label for="mercancia">Facturas asociadas</label>
     </div>
-    <div class="row mt-5">
-      <div class="col-md-12">
-        <label for="mercancia">Facturas asociadas</label>
-      </div>
-      <div class="col-md-12">
-        <app-tabla-dinamica
-          [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
-          [configuracionTabla]="tableColumns"
-          [datos]="facturas"
-        ></app-tabla-dinamica>
-      </div>
+    <div class="col-md-12">
+      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
+        [datos]="facturas" (listaDeFilaSeleccionada)="onFilasSeleccionadas($event)"
+        (filaSeleccionada)="seleccionarRegistro($event)"></app-tabla-dinamica>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <ng-titulo titulo="Datos de la factura" />
-      </div>
-      <div class="row mt-5">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="numeroFactura">
-              Número de la factura<span [ngClass]="{'text-danger': facturaForm.get('numeroFactura')?.invalid && (facturaForm.get('numeroFactura')?.touched || facturaForm.get('numeroFactura')?.dirty)}">*</span>:
-            </label>
-            <input
-              class="form-control"
-              value=""
-              id="numeroFactura"
-              placeholder=""
-              type="text"
-              libUppercase
-              name="numeroFactura"
-              formControlName="numeroFactura"
-              (change)="
-                setValoresStore(
-                  facturaForm,
-                  'numeroFactura',
-                  'setNumeroFactura'
-                )
-              "
-            />
-            @if (facturaForm.get('numeroFactura')?.invalid && (facturaForm.get('numeroFactura')?.touched || facturaForm.get('numeroFactura')?.dirty)) {
-              <small class="text-danger">Este campo es obligatorio</small>
-            }            
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="cantidadTotal">
-              Cantidad total<span [ngClass]="{'text-danger': facturaForm.get('cantidadTotal')?.invalid && (facturaForm.get('cantidadTotal')?.touched || facturaForm.get('cantidadTotal')?.dirty)}">*</span>:
-            </label>
-            <input
-              class="form-control"
-              value=""
-              id="cantidadTotal"
-              placeholder=""
-              type="text"
-              libUppercase
-              name="cantidadTotal"
-              formControlName="cantidadTotal"
-              (change)="
-                setValoresStore(
-                  facturaForm,
-                  'cantidadTotal',
-                  'setCantidadTotal'
-                )
-              "
-            />
-            @if (facturaForm.get('cantidadTotal')?.invalid && (facturaForm.get('cantidadTotal')?.touched || facturaForm.get('cantidadTotal')?.dirty)) {
-              <small class="text-danger">Este campo es obligatorio</small>
-            }            
-          </div>
-        </div>
-        <div class="col-md-4">
-          <app-catalogo-select
-            [isDisabled]="formularioDeshabilitado"
-            [catalogo]="unidadDeMedida"
-            formControlName="unidadDeMedida"
-            [label]="'Unidad de medida'"
-            [required]="true"
-            name="unidadDeMedida"
-            (change)="
-              setValoresStore(
-                facturaForm,
-                'unidadDeMedida',
-                'setUnidadDeMedida'
-              )
-            "
-          ></app-catalogo-select>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group capturar-factura-datepicker">
-            <input-fecha
-              [setFecha]="facturaForm.get('fechaExpedicionFactura')?.value"
-              [datos]="fechaInicioInputs"
-              formControlName="fechaExpedicionFactura"
-            >
-            </input-fecha>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="valorDolares">
-              Valor en dólares<span [ngClass]="{'text-danger': facturaForm.get('valorDolares')?.invalid && (facturaForm.get('valorDolares')?.touched || facturaForm.get('valorDolares')?.dirty)}">*</span>:
-            </label>
-            <input
-              class="form-control"
-              value=""
-              id="valorDolares"
-              placeholder=""
-              type="text"
-              libUppercase
-              name="valorDolares"
-              formControlName="valorDolares"
-              (change)="
-                setValoresStore(facturaForm, 'valorDolares', 'setValorDolares')
-              "
-            />
-            @if (facturaForm.get('valorDolares')?.invalid && (facturaForm.get('valorDolares')?.touched || facturaForm.get('valorDolares')?.dirty)) {
-              <small class="text-danger">Este campo es obligatorio</small>
-            }
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="row mb-6">
-          <div class="col-md-12">
-            <ng-titulo titulo="Datos del emisor/consignatario" />
-          </div>
-          <div class="row mt-5">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label" for="taxId">TAX ID:</label>
-                <input
-                  class="form-control"
-                  value=""
-                  class="form-control"
-                  id="taxId"
-                  placeholder=""
-                  type="text"
-                  libUppercase
-                  name="taxId"
-                  formControlName="taxId"
-                  (change)="setValoresStore(facturaForm, 'taxId', 'setTaxId')"
-                />
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label" for="razonSocial">
-                  Razón social<span [ngClass]="{'text-danger': facturaForm.get('razonSocial')?.invalid && (facturaForm.get('razonSocial')?.touched || facturaForm.get('razonSocial')?.dirty)}">*</span>:
-                </label>
-                <input
-                  class="form-control"
-                  value=""
-                  id="razonSocial"
-                  placeholder=""
-                  type="text"
-                  libUppercase
-                  name="razonSocial"
-                  formControlName="razonSocial"
-                  (change)="
-                    setValoresStore(
-                      facturaForm,
-                      'razonSocial',
-                      'setRazonSocial'
-                    )
-                  "
-                />
-                @if (facturaForm.get('razonSocial')?.invalid && (facturaForm.get('razonSocial')?.touched || facturaForm.get('razonSocial')?.dirty)) {
-                  <small class="text-danger">Este campo es obligatorio</small>
-                }
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label" for="calle">Calle<span [ngClass]="{'text-danger': facturaForm.get('calle')?.invalid && (facturaForm.get('calle')?.touched || facturaForm.get('calle')?.dirty)}">*</span>:</label>
-                <input
-                  class="form-control"
-                  value=""
-                  id="calle"
-                  placeholder=""
-                  type="text"
-                  libUppercase
-                  name="calle"
-                  formControlName="calle"
-                  (change)="setValoresStore(facturaForm, 'calle', 'setCalle')"
-                />
-                @if (facturaForm.get('calle')?.invalid && (facturaForm.get('calle')?.touched || facturaForm.get('calle')?.dirty)) {
-                  <small class="text-danger">Este campo es obligatorio</small>
-                }
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label" for="ciudad">
-                  Ciudad (población, estado o provincia)<span [ngClass]="{'text-danger': facturaForm.get('ciudad')?.invalid && (facturaForm.get('ciudad')?.touched || facturaForm.get('ciudad')?.dirty)}">*</span>:
-                </label>
-                <input
-                  class="form-control"
-                  value=""
-                  class="form-control"
-                  id="ciudad"
-                  placeholder=""
-                  type="text"
-                  libUppercase
-                  name="ciudad"
-                  formControlName="ciudad"
-                  (change)="setValoresStore(facturaForm, 'ciudad', 'setCiudad')"
-                />
-                @if (facturaForm.get('ciudad')?.invalid && (facturaForm.get('ciudad')?.touched || facturaForm.get('ciudad')?.dirty)) {
-                  <small class="text-danger">Este campo es obligatorio</small>
-                }
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label" for="cp">CP<span [ngClass]="{'text-danger': facturaForm.get('cp')?.invalid && (facturaForm.get('cp')?.touched || facturaForm.get('cp')?.dirty)}">*</span>:</label>
-                <input
-                  class="form-control"
-                  value=""
-                  id="cp"
-                  placeholder=""
-                  type="text"
-                  libUppercase
-                  name="cp"
-                  formControlName="cp"
-                  (change)="setValoresStore(facturaForm, 'cp', 'setCp')"
-                />
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label" for="pais">País<span [ngClass]="{'text-danger': facturaForm.get('pais')?.invalid && (facturaForm.get('pais')?.touched || facturaForm.get('pais')?.dirty)}">*</span>:</label>
-                <input
-                  class="form-control"
-                  value=""
-                  id="pais"
-                  placeholder=""
-                  type="text"
-                  libUppercase
-                  name="pais"
-                  formControlName="pais"
-                  (change)="setValoresStore(facturaForm, 'pais', 'setPais')"
-                />
-                @if (facturaForm.get('pais')?.invalid && (facturaForm.get('pais')?.touched || facturaForm.get('pais')?.dirty)) {
-                  <div class="text-danger small">Este campo es obligatorio</div>
-                }             
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="container text-end mt-5">
-          <button class="btn btn-default me-2">Limpiar</button>
-          <button class="btn btn-default me-2">Agregar</button>
-          <button class="btn btn-primary me-2">Cerrar</button>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-end mt-3">
+        <button type="button" class="btn btn-danger" [disabled]="!puedeEliminar" (click)="abrirModalEliminar()">
+          Eliminar seleccionado
+        </button>
+        <button type="button" name="Modificar" class="btn btn-default ms-2" [disabled]="!puedeModificar"
+          data-bs-toggle="modal" data-bs-target="#modalAgregar" (click)="abrirModalModificar()">
+          Modificar
+        </button>
+        <button type="button" name="Agregar" class="btn btn-primary ms-2" data-bs-toggle="modal"
+          data-bs-target="#modalAgregar" (click)="abrirModalAgregar()">
+          Agregar
+        </button>
       </div>
     </div>
-  </form>
+  </div>
+  <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-body">
+          <form [formGroup]="facturaForm">
+            <div class="row">
+              <div class="col-md-12">
+                <ng-titulo titulo="Datos de la factura" />
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label" for="numeroFactura">
+                      Número de la factura<span [ngClass]="{
+                          'text-danger':
+                            facturaForm.get('numeroFactura')?.invalid &&
+                            (facturaForm.get('numeroFactura')?.touched ||
+                              facturaForm.get('numeroFactura')?.dirty)
+                        }">*</span>:
+                    </label>
+                    <input class="form-control" value="" id="numeroFactura" placeholder="" type="text" libUppercase
+                      name="numeroFactura" formControlName="numeroFactura" (change)="
+                        setValoresStore(
+                          facturaForm,
+                          'numeroFactura',
+                          'setNumeroFactura'
+                        )
+                      " />
+                    @if (facturaForm.get('numeroFactura')?.invalid &&
+                    (facturaForm.get('numeroFactura')?.touched ||
+                    facturaForm.get('numeroFactura')?.dirty)) {
+                    <small class="text-danger">Este campo es obligatorio</small>
+                    }
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label" for="cantidadTotal">
+                      Cantidad total<span [ngClass]="{
+                          'text-danger':
+                            facturaForm.get('cantidadTotal')?.invalid &&
+                            (facturaForm.get('cantidadTotal')?.touched ||
+                              facturaForm.get('cantidadTotal')?.dirty)
+                        }">*</span>:
+                    </label>
+                    <input class="form-control" value="" id="cantidadTotal" placeholder="" type="text" libUppercase
+                      name="cantidadTotal" formControlName="cantidadTotal" (change)="
+                        setValoresStore(
+                          facturaForm,
+                          'cantidadTotal',
+                          'setCantidadTotal'
+                        )
+                      " />
+                    @if (facturaForm.get('cantidadTotal')?.invalid &&
+                    (facturaForm.get('cantidadTotal')?.touched ||
+                    facturaForm.get('cantidadTotal')?.dirty)) {
+                    <small class="text-danger">Este campo es obligatorio</small>
+                    }
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <app-catalogo-select [isDisabled]="true || formularioDeshabilitado" [catalogo]="unidadDeMedida" formControlName="unidadDeMedida"
+                    [label]="'Unidad de medida'" [required]="true" name="unidadDeMedida" (change)="
+                      setValoresStore(
+                        facturaForm,
+                        'unidadDeMedida',
+                        'setUnidadDeMedida'
+                      )
+                    "></app-catalogo-select>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group capturar-factura-datepicker">
+                    <ng-container *ngIf="showFechaExpedicionFactura">
+                      <input-fecha [setFecha]="facturaForm.get('fechaExpedicionFactura')?.value" [datos]="fechaInicioInputs" (valorCambiado)="onFechaExpedicionFacturaChange($event)"></input-fecha>
+                    </ng-container>
+                  </div>
+                  @if(facturaForm.get('fechaExpedicionFactura')?.invalid &&
+                    (facturaForm.get('fechaExpedicionFactura')?.touched || facturaForm.get('fechaExpedicionFactura')?.dirty)) {
+                    <small class="text-danger">Este campo es obligatorio</small>
+                  }
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label" for="valorDolares">
+                      Valor en dólares<span [ngClass]="{
+                          'text-danger':
+                            facturaForm.get('valorDolares')?.invalid &&
+                            (facturaForm.get('valorDolares')?.touched ||
+                              facturaForm.get('valorDolares')?.dirty)
+                        }">*</span>:
+                    </label>
+                    <input class="form-control" value="" id="valorDolares" placeholder="" type="text" libUppercase
+                      name="valorDolares" formControlName="valorDolares" (change)="
+                        setValoresStore(
+                          facturaForm,
+                          'valorDolares',
+                          'setValorDolares'
+                        )
+                      " />
+                    @if (facturaForm.get('valorDolares')?.invalid &&
+                    (facturaForm.get('valorDolares')?.touched ||
+                    facturaForm.get('valorDolares')?.dirty)) {
+                    <small class="text-danger">Este campo es obligatorio</small>
+                    }
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="row mb-6">
+                  <div class="col-md-12">
+                    <ng-titulo titulo="Datos del emisor/consignatario" />
+                  </div>
+                  <div class="row mt-5">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label" for="taxId">TAX ID:</label>
+                        <input class="form-control" value="" class="form-control" id="taxId" placeholder="" type="text"
+                          libUppercase name="taxId" formControlName="taxId" (change)="
+                            setValoresStore(facturaForm, 'taxId', 'setTaxId')
+                          " />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label" for="razonSocial">
+                          Razón social<span [ngClass]="{
+                              'text-danger':
+                                facturaForm.get('razonSocial')?.invalid &&
+                                (facturaForm.get('razonSocial')?.touched ||
+                                  facturaForm.get('razonSocial')?.dirty)
+                            }">*</span>:
+                        </label>
+                        <input class="form-control" value="" id="razonSocial" placeholder="" type="text" libUppercase
+                          name="razonSocial" formControlName="razonSocial" (change)="
+                            setValoresStore(
+                              facturaForm,
+                              'razonSocial',
+                              'setRazonSocial'
+                            )
+                          " />
+                        @if (facturaForm.get('razonSocial')?.invalid &&
+                        (facturaForm.get('razonSocial')?.touched ||
+                        facturaForm.get('razonSocial')?.dirty)) {
+                        <small class="text-danger">Este campo es obligatorio</small>
+                        }
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label" for="calle">Calle<span [ngClass]="{
+                              'text-danger':
+                                facturaForm.get('calle')?.invalid &&
+                                (facturaForm.get('calle')?.touched ||
+                                  facturaForm.get('calle')?.dirty)
+                            }">*</span>:</label>
+                        <input class="form-control" value="" id="calle" placeholder="" type="text" libUppercase
+                          name="calle" formControlName="calle" (change)="
+                            setValoresStore(facturaForm, 'calle', 'setCalle')
+                          " />
+                        @if (facturaForm.get('calle')?.invalid &&
+                        (facturaForm.get('calle')?.touched ||
+                        facturaForm.get('calle')?.dirty)) {
+                        <small class="text-danger">Este campo es obligatorio</small>
+                        }
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label" for="ciudad">
+                          Ciudad (población, estado o provincia)<span [ngClass]="{
+                              'text-danger':
+                                facturaForm.get('ciudad')?.invalid &&
+                                (facturaForm.get('ciudad')?.touched ||
+                                  facturaForm.get('ciudad')?.dirty)
+                            }">*</span>:
+                        </label>
+                        <input class="form-control" value="" class="form-control" id="ciudad" placeholder="" type="text"
+                          libUppercase name="ciudad" formControlName="ciudad" (change)="
+                            setValoresStore(facturaForm, 'ciudad', 'setCiudad')
+                          " />
+                        @if (facturaForm.get('ciudad')?.invalid &&
+                        (facturaForm.get('ciudad')?.touched ||
+                        facturaForm.get('ciudad')?.dirty)) {
+                        <small class="text-danger">Este campo es obligatorio</small>
+                        }
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label" for="cp">CP<span [ngClass]="{
+                              'text-danger':
+                                facturaForm.get('cp')?.invalid &&
+                                (facturaForm.get('cp')?.touched ||
+                                  facturaForm.get('cp')?.dirty)
+                            }">*</span>:</label>
+                        <input class="form-control" value="" id="cp" placeholder="" type="text" libUppercase name="cp"
+                          formControlName="cp" (change)="setValoresStore(facturaForm, 'cp', 'setCp')" />
+                        @if (facturaForm.get('cp')?.invalid &&
+                        (facturaForm.get('cp')?.touched || facturaForm.get('cp')?.dirty)) {
+                        <small class="text-danger">Este campo es obligatorio</small>
+                        }
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label" for="pais">País<span [ngClass]="{
+                              'text-danger':
+                                facturaForm.get('pais')?.invalid &&
+                                (facturaForm.get('pais')?.touched ||
+                                  facturaForm.get('pais')?.dirty)
+                            }">*</span>:</label>
+                        <input class="form-control" value="" id="pais" placeholder="" type="text" libUppercase
+                          name="pais" formControlName="pais" (change)="
+                            setValoresStore(facturaForm, 'pais', 'setPais')
+                          " />
+                        @if (facturaForm.get('pais')?.invalid &&
+                        (facturaForm.get('pais')?.touched ||
+                        facturaForm.get('pais')?.dirty)) {
+                        <div class="text-danger small">
+                          Este campo es obligatorio
+                        </div>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer custom-footer mt-4 justify-content-end">
+          <div class="row">
+            <div class="col-md-12">
+              <button class="btn btn-default me-2" type="button" (click)="limpiarFacturaForm()">
+                Limpiar
+              </button>
+              <button class="btn btn-primary me-2" type="button" (click)="guardarFactura()"
+                >
+                {{ modalMode === 'modificar' ? 'Guardar' : 'Agregar' }}
+              </button>
+              <button class="btn btn-default me-2" type="button" data-bs-dismiss="modal">
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Confirmar Eliminar Seleccion Modal-->
+  <div id="confirmarEliminarSeleccion" class="modal fade" tabindex="-1"
+    aria-labelledby="confirmarEliminarSeleccionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <label>Seleccione el monto a eliminar.</label>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+            Aceptar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Agregar Factura Modal-->
+   <div id="modalAgregarRegistro" class="modal fade" tabindex="-1" aria-labelledby="modalExitoPersonaFisicaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        <span class="contenido-mensaje">Datos guardados correctamente</span>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

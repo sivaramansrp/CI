@@ -38,7 +38,7 @@
               )
             "
           />
-              @if (importadorForm.get('cantidadTotalImportador')?.errors && (importadorForm.get('cantidadTotalImportador')?.touched || submitted || importadorForm.get('cantidadTotalImportador')?.dirty)) {
+              @if (importadorForm.get('cantidadTotalImportador')?.errors && (importadorForm.get('cantidadTotalImportador')?.touched || enviada || importadorForm.get('cantidadTotalImportador')?.dirty)) {
                 @if (importadorForm.get('cantidadTotalImportador')?.errors?.['required']) {
                   <div class="text-danger">
                     <small class="text-danger">Este campo es obligatorio.</small>

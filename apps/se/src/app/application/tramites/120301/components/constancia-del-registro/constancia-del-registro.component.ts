@@ -343,7 +343,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     this.initActionFormBuild();
 
   // Obtenga el estado actual de solo lectura inmediatamente
-  // Filtering on input change removed; now only filters on Buscar button click
+  // Se eliminó el filtrado por cambio de entrada; ahora solo filtra al hacer clic en el botón Buscar
     const CURRENT_STATE = this.consultaioQuery.getValue();
     this.formularioDeshabilitado = CURRENT_STATE.readonly;
     
@@ -663,7 +663,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     const RADIO_VALUE = this.fitosanitarioForm.get('flexRadioRegistro')?.value;
     const NUMERO_CONSTANCIA = this.fitosanitarioForm.get('numeroDeLaConstancia')?.value || '';
     if (RADIO_VALUE === 'Especifico') {
-      // Only filter by numeroDeLaConstancia for Especifico
+      // Solo filtrar por numeroDeLaConstancia para Especifico
       return datos.filter((ITEM) =>
         NUMERO_CONSTANCIA
           ? ITEM.numeroDeConstancia.toString() === NUMERO_CONSTANCIA.toString()

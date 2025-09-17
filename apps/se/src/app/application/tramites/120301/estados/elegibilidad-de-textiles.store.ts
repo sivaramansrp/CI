@@ -111,6 +111,13 @@ export interface TextilesState {
    * @description País de origen o ubicación del exportador.
    */
   pais: string;
+
+  /** 
+   * Fecha de expedición de la factura.
+   * @type {string}
+   * @description Fecha en que se expidió la factura, en formato ISO.
+   */
+  fechaExpedicionFactura: string;
   
   /** 
    * Registro seleccionado en el formulario.
@@ -428,6 +435,7 @@ export function createInitialState(): TextilesState {
   anoDeLaConstancia: '',
   datosTablaConstanciaDelRegistro: [],
   guardarBandera: false,
+  fechaExpedicionFactura: '',
 };
 }
 

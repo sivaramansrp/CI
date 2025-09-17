@@ -37,7 +37,7 @@
               (selectionChange)="onAnoConstanciaChange($event)"
             ></app-catalogo-select>
               @if(fitosanitarioForm.get('anoDeLaConstancia')?.invalid && (fitosanitarioForm.get('anoDeLaConstancia')?.touched || enviada)) {
-                <small class="text-danger mt-1">Este campo es obligatorio</small>
+                <small class="text-danger mt-1">Año del oficio de asignación es un campo requerido</small>
               }
           </div>
 
@@ -58,8 +58,8 @@
         </div>
       }
 
-        <div class="container text-end mt-5">
-          <button class="btn btn-default me-2" [disabled]="formularioDeshabilitado" (click)="buscarEvaluar()">Buscar</button>
+        <div class="text-end mt-5">
+          <button class="btn btn-primary" [disabled]="formularioDeshabilitado" (click)="buscarEvaluar()">Buscar</button>
         </div>
       </div>
 
@@ -432,8 +432,8 @@
             </div>
           </div>
           <div class="row pb-5">
-            <div class="container text-end mt-5">
-              <button [disabled]="formularioDeshabilitado" (click)="guardarEvaluate()" class="btn btn-default me-2">Guardar</button>
+            <div class="text-end mt-5">
+              <button [disabled]="formularioDeshabilitado" (click)="guardarEvaluate()" class="btn btn-primary">Guardar</button>
             </div>
           </div>
         </div>
