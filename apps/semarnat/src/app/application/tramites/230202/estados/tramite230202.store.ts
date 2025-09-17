@@ -30,11 +30,19 @@ export interface Solicitud230202State {
    * Lista de oficinas de aduanas.
    */
   aduana: Catalogo[] | null;
+
   /**
    * Lista de fechas seleccionadas.
    * Se utiliza para almacenar las fechas que el usuario ha seleccionado.
    */
   fechasSeleccionadas: string[];
+
+  /**
+   * Lista de entidades seleccionadas.
+   * Se utiliza para almacenar las entidades que el usuario ha seleccionado.
+   */
+  entidadesSeleccionadas: string[];
+
   /**
    * Lista de países.
    */
@@ -93,6 +101,11 @@ export interface Solicitud230202State {
    * Lista de nombres comunes del producto.
    */
   nombreComun: Catalogo[] | null;
+
+  /**
+   * Otro nombre común del producto, si aplica.
+   */
+  otroNombreComun: string;
 
   /**
    * Lista de unidades de medida.
@@ -191,6 +204,7 @@ export function createInitialState(): Solicitud230202State {
     numeroDeCertificado: null,
     aduana: null,
     fechasSeleccionadas: [],
+    entidadesSeleccionadas: [],
     pais: null,
     entidades: null,
     descripcionProducto: null,
@@ -203,6 +217,7 @@ export function createInitialState(): Solicitud230202State {
     genero: null,
     especie: null,
     nombreComun: null,
+    otroNombreComun: '',
     unidadDeMedida: null,
     lungarDeEntrada: '',
     medioDeTransporte: null,
@@ -270,6 +285,17 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     this.update((state) => ({
       ...state,
       fechasSeleccionadas,
+    }));
+  }
+
+  /**
+   * Actualiza las entidades seleccionadas en el estado.
+   * @param {string[]} entidadesSeleccionadas - Lista de entidades seleccionadas.
+   */
+  public setEntidadesSeleccionadas(entidadesSeleccionadas: string[]): void {
+    this.update((state) => ({
+      ...state,
+      entidadesSeleccionadas,
     }));
   }
 
@@ -404,6 +430,17 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     this.update((state) => ({
       ...state,
       nombreComun,
+    }));
+  }
+
+  /**
+   * Actualiza el otro nombre común en el estado.
+   * @param {string} otroNombreComun - Otro nombre común.
+   */
+  public setOtroNombreComun(otroNombreComun: string): void {
+    this.update((state) => ({
+      ...state,
+      otroNombreComun,
     }));
   }
 
