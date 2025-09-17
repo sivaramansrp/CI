@@ -96,8 +96,8 @@
                  <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
                   <label for="description">Descripción:</label>
                   <textarea class="form-control" id="description" formControlName="descripcion" rows="5"
-                    placeholder=""></textarea>
-                     <small *ngIf="immexRegistroform.get('importacionForm.descripcion')?.touched && immexRegistroform.get('importacionForm.descripcion')?.hasError('required')" class="text-danger">
+                    placeholder="" style="height: 100px;"></textarea>
+                     <small *ngIf="immexRegistroform.get('importacionForm.descripcion')?.touched && immexRegistroform.get('importacionForm.descripcion')?.hasError('required')" class="text-danger" >
       La descripción es obligatoria.
                      </small>
                     </div>
