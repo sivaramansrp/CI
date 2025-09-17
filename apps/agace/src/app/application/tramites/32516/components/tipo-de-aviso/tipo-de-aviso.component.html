@@ -97,7 +97,8 @@
             [disabled]="esFormularioSoloLectura">Agregar</button>
           <button type="button" class="btn btn-danger" 
             *ngIf="filasSeleccionadas.length > 0"
-            [disabled]="esFormularioSoloLectura">Eliminar</button>
+            [disabled]="esFormularioSoloLectura"
+            (click)="eliminarFilasSeleccionadas()">Eliminar</button>
         </div>
       </div>
     </div>
@@ -185,7 +186,7 @@
         </div>
       </div>
       <div class="modal-footer custom-footer mt-4">
-        <button type="submit" class="btn btn-primary mx-2">
+        <button type="submit" class="btn btn-primary mx-2" (click)="agregarMercancia()">
           Agregar
         </button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeModal (click)="cancelarMercancia()">

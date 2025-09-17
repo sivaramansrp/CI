@@ -460,7 +460,6 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       unidadMedida: ['', [Validators.required]],
       peso: ['', [Validators.required]],
     });
-
   }
 
   // ========================================
@@ -518,7 +517,6 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * @memberof TipoDeAvisoComponent
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario();
      this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -684,6 +682,81 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     this.mercanciaForm.reset();
   }
 
+  /**
+   * Agrega una nueva mercancía a la tabla de datos.
+   * Valida el formulario, crea un nuevo registro y lo añade a la tabla.
+   * @returns {void}
+   * @memberof TipoDeAvisoComponent
+   */
+  agregarMercancia(): void {
+    if (this.mercanciaForm.valid) {
+      // Obtener la unidad de medida seleccionada
+      const UNIDAD_SELECCIONADA = this.unidadMedida.find(
+        unidad => unidad.id === parseInt(this.mercanciaForm.value.unidadMedida, 10)
+      );
 
+      // Crear nuevo objeto de datos para la tabla
+      const NUEVA_MERCANCIA: HechosDatosTabla = {
+        consecutivo: this.mercanciaForm.value.consecutivo,
+        descripcion: this.mercanciaForm.value.descripcion,
+        descripcionDeMercancia: this.mercanciaForm.value.cantidad,
+        cantidad: this.mercanciaForm.value.cantidad,
+        unidadMedida: UNIDAD_SELECCIONADA?.descripcion || this.mercanciaForm.value.unidadMedida,
+        peso: this.mercanciaForm.value.peso,
+      };
+
+      // Agregar a la tabla de datos
+      this.datosTabla = [...this.datosTabla, NUEVA_MERCANCIA];
+      
+      // Actualizar el store con los nuevos datos
+      this.actualizarDatosEnStore();
+      
+      // Resetear el formulario
+      this.mercanciaForm.reset();
+      
+      // Cerrar el modal
+      if (this.closeModal) {
+        this.closeModal.nativeElement.click();
+      }
+    } else {
+      // Marcar todos los campos como touched para mostrar errores de validación
+      Object.keys(this.mercanciaForm.controls).forEach(key => {
+        this.mercanciaForm.get(key)?.markAsTouched();
+      });
+    }
+  }
+
+  /**
+   * Elimina las filas seleccionadas de la tabla de datos.
+   * @returns {void}
+   * @memberof TipoDeAvisoComponent
+   */
+  eliminarFilasSeleccionadas(): void {
+    if (this.filasSeleccionadas.length > 0) {
+      // Filtrar los datos eliminando las filas seleccionadas
+      this.datosTabla = this.datosTabla.filter(item => 
+        !this.filasSeleccionadas.some(selected => 
+          selected.consecutivo === item.consecutivo && 
+          selected.descripcion === item.descripcion
+        )
+      );
+      
+      // Limpiar la selección
+      this.filasSeleccionadas = [];
+      
+      // Actualizar el store con los nuevos datos
+      this.actualizarDatosEnStore();
+    }
+  }
+
+  /**
+   * Actualiza los datos en el store de la aplicación.
+   * @private
+   * @returns {void}
+   * @memberof TipoDeAvisoComponent
+   */
+  private actualizarDatosEnStore(): void {
+    this.tramiteStore.setHechosTablaDatos(this.datosTabla);
+  }
 
 }
