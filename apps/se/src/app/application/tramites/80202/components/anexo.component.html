@@ -11,9 +11,9 @@
             placeholder="" />
         </div>
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarPermisoImmex()">Eliminar</button>
+          <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura ||immexTableDatos.length === 0 " (click)="eliminarPermisoImmex()">Eliminar</button>
           <button class="btn btn-primary" (click)="showTableExportacion()"
-            [disabled]="esFormularioSoloLectura">Agregar</button>
+            [disabled]="esFormularioSoloLectura || immexTableDatos.length === 1 ">Agregar</button>
         </div>
       </div>
       <div class="row  mt-5" *ngIf="showTableExport">
@@ -43,13 +43,13 @@
           </div>
         </div>
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura" >Eliminar</button>
-          <button class="btn btn-primary" (click)="showTableFractionExport()"
+          <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarFraccionExportacion()">Eliminar</button>
+          <button class="btn btn-primary" (click)="showTableImportacion()"
             [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
         <div class="row  mt-5" *ngIf="showTableFractionExp">
           <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="fraccionExportacionTabla"
-            [datos]="fraccionTablaDatos" [disableSeleccionTablaRadio]="esFormularioSoloLectura" >
+            [datos]="fraccionTablaDatos" [disableSeleccionTablaRadio]="esFormularioSoloLectura" (filaSeleccionada)="onFilaSeleccionadas($event)" >
           </app-tabla-dinamica>
           <div class="container text-end mt-5">
             <button class="btn btn-primary me-2" (click)="mostrarDetalleMercanciaExportacion()"
@@ -70,6 +70,13 @@
     <lib-notificaciones [notificacionInput]="nuevaNotificacion"
       (confirmacionModal)="eliminarPedimentoDatoss($event)"></lib-notificaciones>
     }
+        @if(nuevaNotificacion && !eliminarDatosTablaExportacion && !eliminarDatosTabla){
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+    ></lib-notificaciones>
+        }
+   
+     
+ 
 </div>
 
 
@@ -219,7 +226,7 @@
                     [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
                 </div>
                 <div class="container text-start mt-5">
-                  <button class="btn btn-danger me-2">Eliminar Nico</button>
+                  <button class="btn btn-danger me-2" (click)="eliminarNico()">Eliminar Nico</button>
                 </div>
               </div>
             </div>
