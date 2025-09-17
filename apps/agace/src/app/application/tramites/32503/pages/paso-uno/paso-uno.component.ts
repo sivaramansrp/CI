@@ -1,10 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { AvisoComponent } from '../../components/aviso/aviso.component';
 import { AvisoTrasladoService } from '../../services/aviso-traslado.service';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { Tramite32503Query } from '../../../../estados/queries/tramite32503.query';
 import { Tramite32503State } from '../../../../estados/tramites/tramite32503.store';
@@ -34,6 +33,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
    * del solicitante dentro de la plantilla.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+  /**
+   * Referencia al componente `AvisoComponent`.
+   * 
+   * Esta propiedad utiliza `@ViewChild` para obtener una referencia al componente
+   * del aviso dentro de la plantilla.
+   */
+  @ViewChild(AvisoComponent) aviso!: AvisoComponent;
 
   /**
    * Índice de la pestaña activa.
@@ -161,6 +168,60 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
     this.indice = i;
     this.store.setPestanaActiva(this.indice);
     this.obtenerTipoPersona();
+  }
+
+  /**
+   * @method triggerValidation
+   * @description Método público para activar la validación en todos los componentes del paso.
+   * @returns {boolean} true si todos los formularios son válidos, false en caso contrario.
+   */
+  public triggerValidation(): boolean {
+    let IS_VALID = true;
+
+    // Validar el componente Solicitante si está disponible
+    if (this.solicitante) {
+      const SOLICITANTE_VALID = PasoUnoComponent.validateSolicitanteData(this.tramiteState);
+      IS_VALID = IS_VALID && SOLICITANTE_VALID;
+    }
+
+    // Validar el componente Aviso si está disponible
+    if (this.aviso) {
+      const AVISO_VALID = this.aviso.activarValidacionFormulario();
+      IS_VALID = IS_VALID && AVISO_VALID;
+
+      // If validation fails and we're not on the Aviso tab, switch to it
+      if (!AVISO_VALID && this.indice !== 2) {
+        this.seleccionaTab(2);
+      }
+    }
+
+    return IS_VALID;
+  }
+
+  /**
+   * @method validateSolicitanteData
+   * @description Método estático para validar los datos del solicitante desde el estado.
+   * @param {Tramite32503State} tramiteState - Estado del trámite con los datos del solicitante.
+   * @returns {boolean} true si los datos del solicitante son válidos, false en caso contrario.
+   */
+  static validateSolicitanteData(tramiteState: Tramite32503State): boolean {
+    if (!tramiteState?.datosSolicitante) {
+      return false;
+    }
+
+    const SOLICITANTE = tramiteState.datosSolicitante;
+
+    // Verificar campos obligatorios del solicitante
+    const REQUIRED_FIELDS = ['tipoPersona', 'rfc', 'nombres', 'apellidoPaterno'];
+
+    for (const FIELD of REQUIRED_FIELDS) {
+      const VALUE = SOLICITANTE[FIELD as keyof typeof SOLICITANTE];
+      if (!VALUE || (typeof VALUE === 'string' && VALUE.trim() === '')) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /**
