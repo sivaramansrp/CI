@@ -814,7 +814,24 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
       MODAL_INSTANCE.show();
     }
   }
-
+  /**
+   * @method eliminarFacturasAsociadas
+   * @description
+   * Elimina las facturas asociadas seleccionadas de la tabla.
+   * Si no hay filas seleccionadas, no realiza ninguna acción.
+   * Actualiza el arreglo de facturas asociadas, limpia la selección y deja la tabla actualizada.
+   * No recibe parámetros y no retorna ningún valor.
+   * @returns {void} No retorna ningún valor.
+   */
+  eliminarFacturasAsociadas(): void {
+    if (this.seleccionadasParaEliminar.length === 0) {
+      return;
+    }
+    this.facturas = this.facturas.filter(
+      item => !this.seleccionadasParaEliminar.includes(item)
+    );
+    this.seleccionadasParaEliminar = [];
+  }
   /**
    * @property {boolean} puedeModificar
    * @description
