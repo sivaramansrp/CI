@@ -261,6 +261,23 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
         }
       );
   }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de búsqueda de certificado de origen.
+   * Comprueba si el formulario es válido según las reglas de validación configuradas.
+   * Si el formulario es válido, retorna `true`.
+   * Si el formulario es inválido, marca todos los controles como "tocados" para mostrar los errores de validación y retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (this.buscarCertificadoDeOrigenFrom.valid) {
+      return true;
+    }
+    this.buscarCertificadoDeOrigenFrom.markAllAsTouched();
+    return false
+  }
 
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.
