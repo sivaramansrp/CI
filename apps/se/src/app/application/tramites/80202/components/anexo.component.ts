@@ -547,12 +547,12 @@ export class AnexoComponent implements OnInit, OnDestroy {
   
               if (this.permisoImmexDatos.length > 0) {
                 this.immexRegistroform.get('importacionForm')?.patchValue({
-                    fraccionArancelaria:this.immexRegitroAnexoState?.fraccionArancelaria || '',
-      umt:  this.immexRegitroAnexoState?.umt || '',
-      descripcion: this.immexRegitroAnexoState?.descripcion || '',
-      cantidadAnual:  this.immexRegitroAnexoState?.cantidadAnual || '',
-      capacidadInstalada: this.immexRegitroAnexoState?.capacidadInstalada || '',
-      cantidadPorPeriodo:  this.immexRegitroAnexoState?.cantidadPorPeriodo || '',
+                    fraccionArancelaria:this.immexTableDatos[0]?.fraccionArancelaria || '',
+      umt:  this.immexTableDatos[0]?.umt || '',
+      descripcion: this.immexTableDatos[0]?.descripcionTigie || '',
+      cantidadAnual:  this.immexTableDatos[0]?.cantidadAnual || '',
+      capacidadInstalada: this.immexTableDatos[0]?.capacidadInstalada || '',
+      cantidadPorPeriodo:  this.immexTableDatos[0]?.cantidadPorPeriodo || '',
                 });
              
               }
