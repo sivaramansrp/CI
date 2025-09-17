@@ -64,6 +64,8 @@ export class PasoUnoCsComponent implements OnInit {
   */
    indice: number = 1;
 
+ public formularioDeshabilitado: boolean = false;
+
 /**
  * 
  * @param seccionStore 
@@ -107,7 +109,8 @@ export class PasoUnoCsComponent implements OnInit {
           takeUntil(this.destroyNotifier$))
           .subscribe((seccionState) => {
             this.consultaState = seccionState
-            if (this.consultaState.update) {
+            this.formularioDeshabilitado = seccionState.readonly;
+            if (this.consultaState.update || this.consultaState.readonly) {
                this.guardarDatosFormulario();
                } else {
                 this.esDatosRespuesta = true;

@@ -26,9 +26,12 @@ export class PasoUnoCsComponent implements OnInit, OnDestroy {
   */
    configuracionDosDatos: ConfiguracionColumna<FraccionArancelariaDescripcion>[] =CONFIGURACION_DOS_DATOS
 
-
-
+  /*
+  * Almacena la configuración de las pestañas del primer paso.
+  */
   indice: number = 1;
+
+  public formularioDeshabilitado: boolean = false;
 
 
   constructor(private seccionStore: SeccionLibStore, private solocitud80105Service: Solocitud80105Service,

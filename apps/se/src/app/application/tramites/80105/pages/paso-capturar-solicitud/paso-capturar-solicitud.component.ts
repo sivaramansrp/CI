@@ -1,6 +1,6 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Subject, take } from 'rxjs';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
@@ -59,6 +59,8 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
    * @type {Subject<void>}
    */
   destroyNotifier$: Subject<void> = new Subject();
+
+  public btnGuardar: boolean = true;
 
   /** Indica la visibilidad del botón Guardar. */
   public btnGuardarVisible: string = 'visible';
