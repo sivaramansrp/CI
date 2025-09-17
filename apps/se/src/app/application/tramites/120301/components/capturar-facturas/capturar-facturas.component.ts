@@ -300,7 +300,11 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     },
     {
       encabezado: 'Unidad de medida',
-      clave: (fila) => fila.unidadMedida,
+      clave: (fila): string => {
+        const UNIDAD_CATALOGO: Catalogo[] = this.unidadDeMedida || [];
+        const UNIDAD = UNIDAD_CATALOGO.find((item) => String(item.id) === String(fila.unidadMedida));
+        return UNIDAD ? UNIDAD.descripcion : String(fila.unidadMedida);
+      },
       orden: 7,
     },
     {
@@ -587,13 +591,13 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   abrirModalAgregar(): void {
-    const MODAL_ELEMENT = document.getElementById('modalAgregar');
-    if (MODAL_ELEMENT && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+    const ELEMENTO_MODAL = document.getElementById('modalAgregar');
+    if (ELEMENTO_MODAL && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
       document.querySelectorAll('.modal-backdrop').forEach(bd => bd.parentNode?.removeChild(bd));
       document.body.classList.remove('modal-open');
-      const OLD_INSTANCE = window.bootstrap.Modal.getInstance(MODAL_ELEMENT);
-      if (OLD_INSTANCE) {
-        OLD_INSTANCE.hide();
+      const INSTANCIA_ANTIGUA = window.bootstrap.Modal.getInstance(ELEMENTO_MODAL);
+      if (INSTANCIA_ANTIGUA) {
+        INSTANCIA_ANTIGUA.hide();
       }
     }
     this.modalMode = 'agregar';
@@ -607,8 +611,8 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.facturaForm.get('unidadDeMedida')?.disable();
       this.facturaForm.get('pais')?.disable();
-      if (MODAL_ELEMENT && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const MODAL_INSTANCE = new window.bootstrap.Modal(MODAL_ELEMENT);
+      if (ELEMENTO_MODAL && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+        const MODAL_INSTANCE = new window.bootstrap.Modal(ELEMENTO_MODAL);
         MODAL_INSTANCE.show();
       }
     });
@@ -625,13 +629,13 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   abrirModalModificar(): void {
-    const MODAL_ELEMENT = document.getElementById('modalAgregar');
-    if (MODAL_ELEMENT && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+    const ELEMENTO_MODAL = document.getElementById('modalAgregar');
+    if (ELEMENTO_MODAL && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
       document.querySelectorAll('.modal-backdrop').forEach(bd => bd.parentNode?.removeChild(bd));
       document.body.classList.remove('modal-open');
-      const OLD_INSTANCE = window.bootstrap.Modal.getInstance(MODAL_ELEMENT);
-      if (OLD_INSTANCE) {
-        OLD_INSTANCE.hide();
+      const INSTANCIA_ANTIGUA = window.bootstrap.Modal.getInstance(ELEMENTO_MODAL);
+      if (INSTANCIA_ANTIGUA) {
+        INSTANCIA_ANTIGUA.hide();
       }
     }
     if (this.indiceSeleccionado !== null) {
@@ -640,12 +644,12 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
       if (FACTURA) {
         this.facturaForm.reset();
         this.facturaForm.get('unidadDeMedida')?.enable();
-        this.populateFacturaForm(FACTURA);
+        this.poblarFacturaForm(FACTURA);
         setTimeout(() => {
           this.facturaForm.get('unidadDeMedida')?.disable();
           this.facturaForm.get('pais')?.disable();
-          if (MODAL_ELEMENT && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-            const MODAL_INSTANCE = new window.bootstrap.Modal(MODAL_ELEMENT);
+          if (ELEMENTO_MODAL && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+            const MODAL_INSTANCE = new window.bootstrap.Modal(ELEMENTO_MODAL);
             MODAL_INSTANCE.show();
           }
         });
@@ -655,9 +659,15 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Helper to populate facturaForm fields from a CapturarColumns object
+   * Rellena los campos del formulario de factura (`facturaForm`) con los valores de un objeto `CapturarColumns`.
+   * Este método se utiliza para cargar los datos de una factura seleccionada en el formulario de edición,
+   * asegurando que cada control del formulario reciba el valor correspondiente del modelo.
+   * Si algún valor está ausente en el objeto, se asigna un valor por defecto adecuado.
+   *
+   * @param {CapturarColumns} FACTURA - El objeto de factura cuyos datos se van a cargar en el formulario.
+   * @returns {void} No retorna ningún valor.
    */
-  private populateFacturaForm(FACTURA: CapturarColumns): void {
+  private poblarFacturaForm(FACTURA: CapturarColumns): void {
     this.facturaForm.get('numeroFactura')?.setValue(FACTURA.numeroDeLaFactura ?? '');
     this.facturaForm.get('razonSocial')?.setValue(FACTURA.razonSocial ?? '');
     this.facturaForm.get('domicilio')?.setValue(FACTURA.domicilio ?? '');
@@ -739,9 +749,9 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     }
 
     setTimeout(() => {
-      const MODAL_ELEMENT = document.getElementById('modalAgregar');
-      if (MODAL_ELEMENT && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const MODAL_INSTANCE = window.bootstrap.Modal.getInstance(MODAL_ELEMENT);
+      const ELEMENTO_MODAL = document.getElementById('modalAgregar');
+      if (ELEMENTO_MODAL && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+        const MODAL_INSTANCE = window.bootstrap.Modal.getInstance(ELEMENTO_MODAL);
         if (MODAL_INSTANCE) {
           MODAL_INSTANCE.hide();
         }
@@ -837,16 +847,16 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    */
   abrirModalEliminar(): void {
     if (!Array.isArray(this.selectedRows) || this.selectedRows.length === 0) {
-      const MODAL_ELEMENT = document.getElementById('confirmarEliminarSeleccion');
-      if (MODAL_ELEMENT && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const MODAL_INSTANCE = new window.bootstrap.Modal(MODAL_ELEMENT);
+      const ELEMENTO_MODAL = document.getElementById('confirmarEliminarSeleccion');
+      if (ELEMENTO_MODAL && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+        const MODAL_INSTANCE = new window.bootstrap.Modal(ELEMENTO_MODAL);
         MODAL_INSTANCE.show();
       }
       return;
     }
-    const MODAL_ELEMENT = document.getElementById('confirmarEliminar');
-    if (MODAL_ELEMENT && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-      const MODAL_INSTANCE = new window.bootstrap.Modal(MODAL_ELEMENT);
+    const ELEMENTO_MODAL = document.getElementById('confirmarEliminar');
+    if (ELEMENTO_MODAL && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+      const MODAL_INSTANCE = new window.bootstrap.Modal(ELEMENTO_MODAL);
       MODAL_INSTANCE.show();
     }
   }
@@ -862,9 +872,9 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   /**
    * @method eliminarFacturasAsociadas
    * @description
-   * Elimina las facturas asociadas seleccionadas de la tabla y limpia el fondo modal persistente si existe.
+   * Elimina las facturas asociadas seleccionadas de la tabla y limpia el TELONES_DE_FONDO modal persistente si existe.
    * Si no hay filas seleccionadas, no realiza ninguna acción.
-   * Actualiza el arreglo de facturas asociadas, limpia la selección y elimina el fondo modal si está presente.
+   * Actualiza el arreglo de facturas asociadas, limpia la selección y elimina el TELONES_DE_FONDO modal si está presente.
    * @returns {void} No retorna ningún valor.
    */
   eliminarFacturasAsociadas(): void {
@@ -877,14 +887,14 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     this.seleccionadasParaEliminar = [];
     // Cerrar el modal de eliminar si está abierto
     setTimeout(() => {
-      const MODAL_ELEMENT = document.getElementById('confirmarEliminar');
-      if (MODAL_ELEMENT && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const MODAL_INSTANCE = window.bootstrap.Modal.getInstance(MODAL_ELEMENT) || new window.bootstrap.Modal(MODAL_ELEMENT);
+      const ELEMENTO_MODAL = document.getElementById('confirmarEliminar');
+      if (ELEMENTO_MODAL && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+        const MODAL_INSTANCE = window.bootstrap.Modal.getInstance(ELEMENTO_MODAL) || new window.bootstrap.Modal(ELEMENTO_MODAL);
         MODAL_INSTANCE.hide();
       }
-      // Eliminar el fondo modal persistente si está presente
-      const BACKDROPS = document.querySelectorAll('.modal-backdrop');
-      BACKDROPS.forEach(bd => bd.parentNode?.removeChild(bd));
+      // Eliminar el TELONES_DE_FONDO modal persistente si está presente
+      const TELONES_DE_FONDO = document.querySelectorAll('.modal-backdrop');
+      TELONES_DE_FONDO.forEach(bd => bd.parentNode?.removeChild(bd));
       document.body.classList.remove('modal-open');
     }, 350);
   }
@@ -906,7 +916,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @returns {boolean} `true` si se puede eliminar, `false` en caso contrario.
    */
   get puedeEliminar(): boolean {
-    return this.selectedRows.length > 0;
+    return this.indiceSeleccionado !== null && this.selectedRows.length === 1;
   }
   /**
    * @method continuar
