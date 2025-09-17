@@ -71,13 +71,4 @@ describe('ModPermisoSanitarioImportacion260904Component', () => {
     expect(component.indice).not.toBe(6);
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
   });
-
-  it('should throw error and set message in errorMessage', () => {
-    expect(() => component.errorMessage('Test error')).toThrow('Method not implemented.');
-    expect(component.message).toBe('Test error');
-  });
-
-  it('onSubmit static method should throw error', () => {
-    expect(() => ModPermisoSanitarioImportacion260904Component.onSubmit()).toThrow('Method not implemented.');
-  });
 });

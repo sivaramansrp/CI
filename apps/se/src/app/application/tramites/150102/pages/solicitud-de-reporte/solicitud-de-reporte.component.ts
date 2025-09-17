@@ -8,6 +8,7 @@ import {
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from '../datos/datos.component';
+import { PAGO_DE_DERECHOS } from '../../constantes/solicitud150102.enum';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { REPORTE_ANUAL_PASOS } from '../../enums/reporte-anual.enum';
 
@@ -43,11 +44,20 @@ interface AccionBoton {
     PasoTresComponent,
     AlertComponent,
     BtnContinuarComponent,
+    AlertComponent,
   ], // Importa el componente Wizard para su uso en este componente
   templateUrl: './solicitud-de-reporte.component.html', // Ruta del archivo de plantilla HTML
   styleUrl: './solicitud-de-reporte.component.scss', // Ruta del archivo de estilos
 })
 export class SolicitudDeReporteComponent {
+  /**
+   * Representa el estado actual del pago de derechos.
+   *
+   * Inicialmente se establece con el valor `ADJUNTAR` de la enumeración `PAGO_DE_DERECHOS`.
+   *
+   * @type {string}
+   */
+  PAGO_DE_DERECHOS: string = PAGO_DE_DERECHOS.ADJUNTAR;
   /**
    * Mensaje de error a mostrar.
    */

@@ -1,4 +1,5 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
@@ -27,6 +28,7 @@ import { ToastrService } from 'ngx-toastr';
     DatosSolicitudComponent
   ],
   imports: [
+    AlertComponent,
     CommonModule,
     PermisoDeHidrocarburosRoutingModule,
     WizardComponent,

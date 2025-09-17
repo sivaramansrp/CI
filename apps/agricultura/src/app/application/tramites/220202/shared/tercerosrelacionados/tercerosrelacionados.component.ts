@@ -26,17 +26,19 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {
-  DatosDeLaSolicitud,
-  RadioOpcion,
-} from '../../models/220202/fitosanitario.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   OPCION_DE_BOTON_DE_RADIO,
   SELECCIONADO,
 } from '../../constantes/220202/fitosanitario.enums';
+import {
+  RadioOpcion,
+  TercerosRelacionados,
+  TercerosrelacionadosExportadorTable,
+  TercerosrelacionadosdestinoTable,
+} from '../../models/220202/fitosanitario.model';
 import { CommonModule } from '@angular/common';
-import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+
 
 /**
  * Componente para la gestión de terceros relacionados.
@@ -92,9 +94,9 @@ export class TercerosrelacionadosComponent {
 
   /**
    * Catálogos de datos de la solicitud, como países y estados.
-   * @type {DatosDeLaSolicitud}
+   * @type {TercerosRelacionados}
    */
-  @Input() catalogosDatos: DatosDeLaSolicitud = {} as DatosDeLaSolicitud;
+  @Input() catalogosDatos: TercerosRelacionados = {} as TercerosRelacionados;
 
   /**
    * Indica si el formulario debe mostrarse en modo solo lectura.
@@ -112,9 +114,9 @@ export class TercerosrelacionadosComponent {
   @Input() cuerpoTablaDestino: TercerosrelacionadosdestinoTable[] = [];
   /**
    * Cuerpo de la tabla de exportadores.
-   * @type {TercerosrelacionadosTable[]}
+   * @type {TercerosrelacionadosExportadorTable[]}
    */
-  @Input() cuerpoTablaExportador: TercerosrelacionadosdestinoTable[] = [];
+  @Input() cuerpoTablaExportador: TercerosrelacionadosExportadorTable[] = [];
 
   /**
   * Evento emitido para abrir el modal de destinatario.
@@ -126,7 +128,7 @@ export class TercerosrelacionadosComponent {
    * Evento emitido para abrir el modal de exportador.
    * @type {EventEmitter<TercerosrelacionadosdestinoTable>}
    */
-  @Output() abrirModalExportador = new EventEmitter<TercerosrelacionadosdestinoTable>();
+  @Output() abrirModalExportador = new EventEmitter<TercerosrelacionadosExportadorTable>();
 
   /**
    * Evento emitido al eliminar una selección de destinatarios.
@@ -152,18 +154,18 @@ export class TercerosrelacionadosComponent {
    * Lista de filas seleccionadas de destinatarios finales.
    * @type {TercerosrelacionadosdestinoTable[]}
    */
-  listaDeFilaSeleccionadaFinal: TercerosrelacionadosdestinoTable[] = [];
+  listaDeFilaSeleccionadaFinal: TercerosrelacionadosExportadorTable[] = [];
 
   /**
    * Configuración de las columnas para la tabla de exportadores.
    * @type {ConfiguracionColumna<TercerosrelacionadosTable>[]}
    */
-  configuracionColumnasExportador: ConfiguracionColumna<TercerosrelacionadosdestinoTable>[] = [
-    { encabezado: 'Nombre/denominación o razón social', clave: (fila) => fila.nombre, orden: 1 },
+  configuracionColumnasExportador: ConfiguracionColumna<TercerosrelacionadosExportadorTable>[] = [
+    { encabezado: 'Nombre/denominación o razón social', clave: (fila) => fila.razonSocial || fila.nombre || '', orden: 1 },
     { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
     { encabezado: 'Correo electrónico', clave: (fila) => fila.correo, orden: 3 },
-    { encabezado: 'Domicilio', clave: (fila) => fila.razonSocial, orden: 4 },
-    { encabezado: 'País', clave: (fila) => fila.pais, orden: 5 },
+    { encabezado: 'Domicilio', clave: (fila) => fila.domicilio, orden: 4 },
+    { encabezado: 'País', clave: (fila) => this.obtenerDescripcionPais(fila.pais), orden: 5 },
   ];
 
   /**
@@ -171,16 +173,16 @@ export class TercerosrelacionadosComponent {
    * @type {ConfiguracionColumna<TercerosrelacionadosdestinoTable>[]}
    */
   configuracionColumnasDestino: ConfiguracionColumna<TercerosrelacionadosdestinoTable>[] = [
-    { encabezado: 'Nombre/denominación o razón social', clave: (fila) => fila.nombre, orden: 1 },
+    { encabezado: 'Nombre/denominación o razón social', clave: (fila) => fila.razonSocial || fila.nombre || '', orden: 1 },
     { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
     { encabezado: 'Correo electrónico', clave: (fila) => fila.correo, orden: 3 },
     { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 4 },
     { encabezado: 'Número exterior', clave: (fila) => fila.numeroExterior, orden: 5 },
     { encabezado: 'Número interior', clave: (fila) => fila.numeroInterior, orden: 6 },
-    { encabezado: 'País', clave: (fila) => fila.pais, orden: 7 },
-    { encabezado: 'Colonia', clave: (fila) => fila.colonia, orden: 8 },
-    { encabezado: 'Municipio o alcaldía', clave: (fila) => fila.municipio, orden: 9 },
-    { encabezado: 'Entidad federativa', clave: (fila) => fila.estado, orden: 10 },
+    { encabezado: 'País', clave: (fila) => fila.paisDescripcion || this.obtenerDescripcionPais(fila.pais), orden: 7 },
+    { encabezado: 'Colonia', clave: (fila) => fila.coloniaDescripcion || this.obtenerDescripcionColonia(fila.colonia), orden: 8 },
+    { encabezado: 'Municipio o alcaldía', clave: (fila) => fila.municipioDescripcion || this.obtenerDescripcionMunicipio(fila.municipio), orden: 9 },
+    { encabezado: 'Entidad federativa', clave: (fila) => fila.estadoDescripcion || this.obtenerDescripcionEstado(fila.estado), orden: 10 },
     { encabezado: 'Código postal', clave: (fila) => fila.codigoPostal, orden: 11 },
   ];
 
@@ -204,7 +206,7 @@ export class TercerosrelacionadosComponent {
    * Evento emitido al eliminar una selección de destinatarios.
    * @type {EventEmitter<TercerosrelacionadosdestinoTable[]>}
    */
-  @Output() eliminarSeleccionEstinoTable: EventEmitter<TercerosrelacionadosdestinoTable[]> = new EventEmitter();
+  @Output() eliminarSeleccionEstinoTable: EventEmitter<TercerosrelacionadosExportadorTable[]> = new EventEmitter();
 
   /**
    * Formulario reactivo para búsqueda de destinatarios.
@@ -289,7 +291,7 @@ export class TercerosrelacionadosComponent {
    * @method onSeleccionDestinatario
    */
   onSeleccionDestinatarioFinal(
-    filas: TercerosrelacionadosdestinoTable[]
+    filas: TercerosrelacionadosExportadorTable[]
   ): void {
     this.listaDeFilaSeleccionadaFinal = filas;
   }
@@ -383,6 +385,46 @@ export class TercerosrelacionadosComponent {
       this.eliminarDatoExportador = false;
     }
 
+  }
+
+  /**
+   * Obtiene la descripción del país a partir de su ID.
+   * @param paisId ID del país a buscar
+   * @returns Descripción del país o el ID si no se encuentra
+   * @method obtenerDescripcionPais
+   */
+  obtenerDescripcionPais(paisId: string): string {
+    return this.catalogosDatos?.paises?.find(p => p.id?.toString() === paisId?.toString())?.descripcion || paisId || '';
+  }
+
+  /**
+   * Obtiene la descripción del estado a partir de su ID.
+   * @param estadoId ID del estado a buscar
+   * @returns Descripción del estado o el ID si no se encuentra
+   * @method obtenerDescripcionEstado
+   */
+  obtenerDescripcionEstado(estadoId: string): string {
+    return this.catalogosDatos?.estados?.find(e => e.id?.toString() === estadoId?.toString())?.descripcion || estadoId || '';
+  }
+
+  /**
+   * Obtiene la descripción del municipio a partir de su ID.
+   * @param municipioId ID del municipio a buscar
+   * @returns Descripción del municipio o el ID si no se encuentra
+   * @method obtenerDescripcionMunicipio
+   */
+  obtenerDescripcionMunicipio(municipioId: string | undefined): string {
+    return this.catalogosDatos?.municipio?.find(m => m.id?.toString() === municipioId?.toString())?.descripcion || municipioId || '';
+  }
+
+  /**
+   * Obtiene la descripción de la colonia a partir de su ID.
+   * @param coloniaId ID de la colonia a buscar
+   * @returns Descripción de la colonia o el ID si no se encuentra
+   * @method obtenerDescripcionColonia
+   */
+  obtenerDescripcionColonia(coloniaId: string | undefined): string {
+    return this.catalogosDatos?.colonias?.find(c => c.id?.toString() === coloniaId?.toString())?.descripcion || coloniaId || '';
   }
 
 }

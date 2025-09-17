@@ -15,6 +15,7 @@ import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/avi
 import { AccionBoton } from '../../enums/accion-botton.enum';
 
 import { PASOS_EXPORTACION } from '../../constants/permiso-de-hidrocarburos.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 @Component({
   selector: 'app-permiso-de-hidrocarburos',
@@ -34,15 +35,44 @@ export class PermisoDeHidrocarburosComponent {
   indice: number = 1;
 
   /**
+ * @property {string} MENSAJE_DE_ERROR
+ * @description
+ * Propiedad usada para almacenar el mensaje de error actual.
+ * Se inicializa como cadena vacía y se actualiza en función
+ * de las validaciones o errores capturados en el flujo.
+ */
+  MENSAJE_DE_ERROR: string ='<div>Faltan campos por capturar.</div>';
+
+  /**
+    * @property {string} infoAlert
+    * Clase CSS usada para mostrar alertas informativas.
+    */
+  public infoAlert = 'alert-danger text-center';
+
+
+
+  /**
    * Índice de la pestaña actual.
    */
   tabIndex: number = 1;
+
+   /**
+ * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+ * }
+ */
+  esFormaValido: boolean = false;
 
   /**
    * Instancia del componente WizardComponent.
    * Se utiliza para gestionar la navegación entre los pasos del asistente.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+ 
 
   /**
    * Objeto que contiene la configuración y datos de los pasos del asistente.
@@ -69,6 +99,7 @@ export class PermisoDeHidrocarburosComponent {
    * @param {AccionBoton} e - Objeto que contiene el valor del paso y la acción a realizar.
    */
   getValorIndice(e: AccionBoton): void {
+    /*
     if (e.valor > 0 && e.valor < 4) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -76,7 +107,32 @@ export class PermisoDeHidrocarburosComponent {
       } else {
         this.wizardComponent.atras();
       }
-    }
+    }*/
+      if (e.accion === 'cont') {
+        let isValid = true;
+  
+          if (this.indice === 1 && this.pasoUnoComponent) {
+          isValid = this.pasoUnoComponent.validarPasoUno();
+        }
+        if (!isValid) {
+          this.esFormaValido = true;
+          this.datosPasos.indice = this.indice;
+          return;
+        }
+  
+        this.esFormaValido = false;
+        this.indice = e.valor;
+        this.datosPasos.indice = this.indice;
+  
+        this.wizardComponent.siguiente();
+        return;
+      }
+  
+        this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.atras();
+  
+  
   }
   
   /**

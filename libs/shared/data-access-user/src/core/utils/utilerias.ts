@@ -275,3 +275,23 @@ export function dateLessThanOrEqualToday(control: AbstractControl): ValidationEr
         return `${DAY.padStart(2, '0')}/${MONTH.padStart(2, '0')}/${YEAR}`;
     }
 
+/**
+   * Formatea una fecha a un string en el formato 'YYYY-MM-DD HH:mm:ss'.
+   * @param fecha - Fecha a formatear, puede ser un string o un objeto Date.
+   * @returns String formateado de la fecha.
+   */
+export function formatFecha(fecha: string | Date): string {
+    const DATE_OBJ = new Date(fecha);
+    const PAD = (n: number): string => n.toString().padStart(2, '0');
+
+    const YYYY = DATE_OBJ.getFullYear();
+    const MM = PAD(DATE_OBJ.getMonth() + 1);
+    const DD = PAD(DATE_OBJ.getDate());
+    const HH = PAD(DATE_OBJ.getHours());
+    const MM_MINUTES = PAD(DATE_OBJ.getMinutes());
+    const SS = PAD(DATE_OBJ.getSeconds());
+
+    return `${YYYY}-${MM}-${DD} ${HH}:${MM_MINUTES}:${SS}`;
+}
+    
+
