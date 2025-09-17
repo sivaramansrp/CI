@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AvisoComponent } from './aviso.component';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Subject, of } from 'rxjs';
 import { Tramite32503Store } from '../../../../estados/tramites/tramite32503.store';
@@ -9,6 +9,13 @@ import { Modal } from 'bootstrap';
 import { AvisoTabla, MercanciaTabla } from "../../models/aviso-traslado.model";
 import { provideHttpClient } from '@angular/common/http';
 import { AvisoTrasladoService } from '../../services/aviso-traslado.service';
+
+jest.mock('bootstrap', () => ({
+  Modal: jest.fn().mockImplementation(() => ({
+    show: jest.fn(),
+    hide: jest.fn()
+  }))
+}));
 
 
 
@@ -73,8 +80,6 @@ describe('AvisoComponent', () => {
         "cantidad": "50",
         "claveUnidadMedida": "Botella",
         "valorUSD": "2555",
-        "descripcionMercancia": "certificado",
-        "descripcionProceso": "certificado",
         "numPedimentoExportacion": "certificado",
         "numPedimentoImportacion": "certificado"
       },
@@ -85,8 +90,6 @@ describe('AvisoComponent', () => {
         "cantidad": "50",
         "claveUnidadMedida": "Botella",
         "valorUSD": "2555",
-        "descripcionMercancia": "certificado",
-        "descripcionProceso": "certificado",
         "numPedimentoExportacion": "certificado",
         "numPedimentoImportacion": "certificado"
       }
@@ -144,22 +147,6 @@ describe('AvisoComponent', () => {
     component.verificaTipoAviso();
     expect(component.avisoFormulario.get('datosAviso.idTransaccion')?.disabled).toBeTruthy();
     expect(component.avisoFormulario.get('datosAviso.motivoProrroga')?.disabled).toBeTruthy();
-  });
-
-  it('should open the domicilio modal when abiertoDomicilio is called', () => {
-    const modalElement = fixture.debugElement.nativeElement.querySelector('#modalDomicilio');
-    component.modalDomicilio = { nativeElement: modalElement };
-    const modalInstanceSpy = jest.spyOn(Modal.prototype, 'show');
-    component.abiertoDomicilio();
-    expect(modalInstanceSpy).toHaveBeenCalled();
-  });
-
-  it('should open the mercancia modal when abiertoMercancia is called', () => {
-    const modalElement = fixture.debugElement.nativeElement.querySelector('#modalMercancia');
-    component.modalMercancia = { nativeElement: modalElement };
-    const modalInstanceSpy = jest.spyOn(Modal.prototype, 'show');
-    component.abiertoMercancia();
-    expect(modalInstanceSpy).toHaveBeenCalled();
   });
 
   it('should filter out selected rows when eliminarDomicilio is called', () => {
@@ -283,8 +270,6 @@ describe('AvisoComponent', () => {
       cantidad: "cantidad",
       claveUnidadMedida: "claveUnidadMedida",
       valorUSD: "valorUSD",
-      descripcionMercancia: "descripcionMercancia",
-      descripcionProceso: "descripcionProceso",
       numPedimentoExportacion: "numPedimentoExportacion",
       numPedimentoImportacion: "numPedimentoImportacion",
     }];
@@ -353,7 +338,7 @@ describe('AvisoComponent', () => {
     const form = new FormBuilder().group({
       testField: [''],
     });
-    component.sanitizeAlphanumeric(form, 'testField', mockEvent);
+    component.desinfectarAlfanumerico(form, 'testField', mockEvent);
     expect(form.get('testField')?.value).toBe('abc123');
   });
 
@@ -376,7 +361,7 @@ describe('AvisoComponent', () => {
     const form = new FormBuilder().group({
       testField: [''],
     });
-    component.sanitizeNumeric(form, 'testField', mockEvent);
+    component.desinfectarNumerico(form, 'testField', mockEvent);
     expect(form.get('testField')?.value).toBe('123');
   });
 
@@ -420,6 +405,563 @@ describe('AvisoComponent', () => {
     });
     component.onArchivoMasivoSeleccionado(mockEvent);
     expect(component.avisoFormulario.get('archivoMasivo')?.value).toBeNull();
+  });
+
+  it('should return adaceFormulario group', () => {
+    component.avisoFormulario = new FormBuilder().group({
+      adaceFormulario: new FormBuilder().group({
+        adace: ['test']
+      })
+    });
+    const result = component.adaceFormulario;
+    expect(result).toBeTruthy();
+    expect(result.get('adace')?.value).toBe('test');
+  });
+
+  it('should return datosEmpresa group', () => {
+    component.avisoFormulario = new FormBuilder().group({
+      datosEmpresa: new FormBuilder().group({
+        valorProgramaImmex: ['123']
+      })
+    });
+    const result = component.datosEmpresa;
+    expect(result).toBeTruthy();
+    expect(result.get('valorProgramaImmex')?.value).toBe('123');
+  });
+
+  it('should return datosAviso group', () => {
+    component.avisoFormulario = new FormBuilder().group({
+      datosAviso: new FormBuilder().group({
+        tipoAviso: ['inicial']
+      })
+    });
+    const result = component.datosAviso;
+    expect(result).toBeTruthy();
+    expect(result.get('tipoAviso')?.value).toBe('inicial');
+  });
+
+  it('should return direccionOrigen group', () => {
+    component.avisoFormulario = new FormBuilder().group({
+      direccionOrigen: new FormBuilder().group({
+        nombreComercial: ['test']
+      })
+    });
+    const result = component.direccionOrigen;
+    expect(result).toBeTruthy();
+    expect(result.get('nombreComercial')?.value).toBe('test');
+  });
+
+  it('should hide modal when cerrarModalDomicilio is called', () => {
+    const hideModalSpy = jest.spyOn(AvisoComponent as any, 'hideModal');
+    component.modalDomicilio = { nativeElement: document.createElement('div') } as any;
+    component.cerrarModalDomicilio();
+    expect(hideModalSpy).toHaveBeenCalledWith(component.modalDomicilio);
+  });
+
+  it('should hide modal when cerrarModalMercancia is called', () => {
+    const hideModalSpy = jest.spyOn(AvisoComponent as any, 'hideModal');
+    component.modalMercancia = { nativeElement: document.createElement('div') } as any;
+    component.cerrarModalMercancia();
+    expect(hideModalSpy).toHaveBeenCalledWith(component.modalMercancia);
+  });
+
+  it('should activate form validation and return true if form is valid', () => {
+    component.avisoFormulario = new FormBuilder().group({
+      test: ['test', []]
+    });
+    component.domicilioFormulario = new FormBuilder().group({
+      test: ['test', []]
+    });
+    component.mercanciaFormulario = new FormBuilder().group({
+      test: ['test', []]
+    });
+    
+    const result = component.activarValidacionFormulario();
+    expect(result).toBe(true);
+  });
+
+  it('should activate form validation and return false if form is invalid', () => {
+    component.avisoFormulario = new FormBuilder().group({
+      test: ['', [Validators.required]]
+    });
+    component.domicilioFormulario = new FormBuilder().group({
+      test: ['test', []]
+    });
+    component.mercanciaFormulario = new FormBuilder().group({
+      test: ['test', []]
+    });
+    
+    const result = component.activarValidacionFormulario();
+    expect(result).toBe(false);
+  });
+
+  it('should mark nested FormGroup controls as touched', () => {
+    const nestedForm = new FormBuilder().group({
+      nested: ['test']
+    });
+    const mainForm = new FormBuilder().group({
+      main: ['test'],
+      nestedGroup: nestedForm
+    });
+    
+    component['marcarGrupoFormularioTocado'](mainForm);
+    
+    expect(mainForm.get('main')?.touched).toBe(true);
+    expect(mainForm.get('nestedGroup')?.touched).toBe(true);
+    expect(nestedForm.get('nested')?.touched).toBe(true);
+  });
+
+  it('should return required error message', () => {
+    const form = new FormBuilder().group({
+      test: ['', [Validators.required]]
+    });
+    form.get('test')?.markAsTouched();
+    
+    const result = AvisoComponent.obtenerMensajeError(form, 'test');
+    expect(result).toBe('Este campo es obligatorio.');
+  });
+
+  it('should return minlength error message', () => {
+    const form = new FormBuilder().group({
+      test: ['ab', [Validators.minLength(5)]]
+    });
+    form.get('test')?.markAsTouched();
+    
+    const result = AvisoComponent.obtenerMensajeError(form, 'test');
+    expect(result).toBe('Debe tener al menos 5 caracteres.');
+  });
+
+  it('should return maxlength error message', () => {
+    const form = new FormBuilder().group({
+      test: ['abcdefghijk', [Validators.maxLength(5)]]
+    });
+    form.get('test')?.markAsTouched();
+    
+    const result = AvisoComponent.obtenerMensajeError(form, 'test');
+    expect(result).toBe('No debe exceder 5 caracteres.');
+  });
+
+  it('should return max error message for cantidad field', () => {
+    const form = new FormBuilder().group({
+      cantidad: ['999999999999999', [Validators.max(999999999999.99)]]
+    });
+    form.get('cantidad')?.markAsTouched();
+    
+    const result = AvisoComponent.obtenerMensajeError(form, 'cantidad');
+    expect(result).toBe('Por favor, escribe un valor menor a igual a 999999999999.99');
+  });
+
+  it('should return max error message for valorUSD field', () => {
+    const form = new FormBuilder().group({
+      valorUSD: ['999999999999999', [Validators.max(999999999999.99)]]
+    });
+    form.get('valorUSD')?.markAsTouched();
+    
+    const result = AvisoComponent.obtenerMensajeError(form, 'valorUSD');
+    expect(result).toBe('Por favor, escribe un valor menor a igual a 999999999999.99');
+  });
+
+  it('should return max error message for other fields', () => {
+    const form = new FormBuilder().group({
+      other: ['100', [Validators.max(50)]]
+    });
+    form.get('other')?.markAsTouched();
+    
+    const result = AvisoComponent.obtenerMensajeError(form, 'other');
+    expect(result).toBe('El valor debe ser menor o igual a 50.');
+  });
+
+  it('should return pattern error message', () => {
+    const form = new FormBuilder().group({
+      test: ['invalid', [Validators.pattern(/^[0-9]+$/)]]
+    });
+    form.get('test')?.markAsTouched();
+    
+    const result = AvisoComponent.obtenerMensajeError(form, 'test');
+    expect(result).toBe('El formato ingresado no es válido.');
+  });
+
+  it('should return generic error message for unknown errors', () => {
+    const form = new FormBuilder().group({
+      test: ['test']
+    });
+    form.get('test')?.markAsTouched();
+    form.get('test')?.setErrors({ customError: true });
+    
+    const result = AvisoComponent.obtenerMensajeError(form, 'test');
+    expect(result).toBe('Este campo contiene errores.');
+  });
+
+  it('should return null if control is not touched or invalid', () => {
+    const form = new FormBuilder().group({
+      test: ['test']
+    });
+    
+    const result = AvisoComponent.obtenerMensajeError(form, 'test');
+    expect(result).toBeNull();
+  });
+
+  it('should return null if control does not exist', () => {
+    const form = new FormBuilder().group({
+      test: ['test']
+    });
+    
+    const result = AvisoComponent.obtenerMensajeError(form, 'nonexistent');
+    expect(result).toBeNull();
+  });
+
+  it('should open domicilio modal for modification with complete data', () => {
+    const showModalSpy = jest.spyOn(AvisoComponent as any, 'showModal');
+    component.modalDomicilio = { nativeElement: document.createElement('div') } as any;
+    component.filaSeleccionadaLista = [{
+      id: 1,
+      rfc: 'TEST123',
+      nombreComercial: 'Test',
+      entidadFederativa: 'Estado',
+      alcaldioOMuncipio: 'Municipio',
+      colonia: 'Colonia'
+    }];
+    component.datosCompletosAvisos = {
+      1: {
+        rfc: 'TEST123',
+        nombreComercial: 'Test',
+        claveEntidadFederativa: 'Estado',
+        claveDelegacionMunicipio: 'Municipio',
+        claveColonia: 'Colonia',
+        calle: 'Calle Test',
+        numeroExterior: '123',
+        numeroInterior: '456',
+        codigoPostal: '12345'
+      }
+    };
+    
+    component.abiertoDomicilio(true);
+    expect(showModalSpy).toHaveBeenCalledWith(component.modalDomicilio);
+  });
+
+  it('should open domicilio modal for modification without complete data', () => {
+    const showModalSpy = jest.spyOn(AvisoComponent as any, 'showModal');
+    component.modalDomicilio = { nativeElement: document.createElement('div') } as any;
+    component.filaSeleccionadaLista = [{
+      id: 1,
+      rfc: 'TEST123',
+      nombreComercial: 'Test',
+      entidadFederativa: 'Estado',
+      alcaldioOMuncipio: 'Municipio',
+      colonia: 'Colonia'
+    }];
+    component.datosCompletosAvisos = {};
+    
+    component.abiertoDomicilio(true);
+    expect(showModalSpy).toHaveBeenCalledWith(component.modalDomicilio);
+  });
+
+  it('should open domicilio modal for adding new record', () => {
+    const showModalSpy = jest.spyOn(AvisoComponent as any, 'showModal');
+    component.modalDomicilio = { nativeElement: document.createElement('div') } as any;
+    
+    component.abiertoDomicilio(false);
+    expect(showModalSpy).toHaveBeenCalledWith(component.modalDomicilio);
+  });
+
+  it('should open mercancia modal for modification with complete data', () => {
+    component.modalMercancia = { nativeElement: document.createElement('div') } as any;
+    component.filaSeleccionadaMercanciaLista = [{
+      id: 1,
+      claveFraccionArancelaria: 'TEST123',
+      nico: '01',
+      cantidad: '10',
+      claveUnidadMedida: 'KG',
+      valorUSD: '100',
+      numPedimentoExportacion: '123',
+      numPedimentoImportacion: '456'
+    }];
+    component.datosCompletosMercancias = {
+      1: {
+        claveFraccionArancelaria: 'TEST123',
+        nico: '01',
+        cantidad: '10',
+        claveUnidadMedida: 'KG',
+        valorUSD: '100',
+        descripcionMercancia: 'Descripción',
+        descripcionProceso: 'Proceso',
+        numPedimentoExportacion: '123',
+        numPedimentoImportacion: '456'
+      }
+    };
+    
+    component.abiertoMercancia(true);
+    expect(component.mostrarAlertaValidacionMercancia).toBe(false);
+    expect(Modal).toHaveBeenCalled();
+  });
+
+  it('should open mercancia modal for modification without complete data', () => {
+    component.modalMercancia = { nativeElement: document.createElement('div') } as any;
+    component.filaSeleccionadaMercanciaLista = [{
+      id: 1,
+      claveFraccionArancelaria: 'TEST123',
+      nico: '01',
+      cantidad: '10',
+      claveUnidadMedida: 'KG',
+      valorUSD: '100',
+      numPedimentoExportacion: '123',
+      numPedimentoImportacion: '456'
+    }];
+    component.datosCompletosMercancias = {};
+    
+    component.abiertoMercancia(true);
+    expect(component.mostrarAlertaValidacionMercancia).toBe(false);
+    expect(Modal).toHaveBeenCalled();
+  });
+
+  it('should reset form when opening mercancia modal for adding', () => {
+    component.modalMercancia = { nativeElement: document.createElement('div') } as any;
+    component.mercanciaFormulario = new FormBuilder().group({
+      test: ['test']
+    });
+    const resetSpy = jest.spyOn(component.mercanciaFormulario, 'reset');
+    
+    component.abiertoMercancia(false);
+    expect(resetSpy).toHaveBeenCalled();
+    expect(Modal).toHaveBeenCalled();
+  });
+
+  it('should handle abiertoMercancia when modal element is not available', () => {
+    component.modalMercancia = undefined as any;
+    
+    expect(() => component.abiertoMercancia(false)).not.toThrow();
+  });
+
+  it('should use window.bootstrap.Modal when available', () => {
+    const mockBootstrapModal = jest.fn().mockImplementation(() => ({
+      show: jest.fn()
+    }));
+    
+    (window as any).bootstrap = {
+      Modal: mockBootstrapModal
+    };
+    
+    component.modalMercancia = { nativeElement: document.createElement('div') } as any;
+    component.abiertoMercancia(false);
+    
+    expect(mockBootstrapModal).toHaveBeenCalledWith(component.modalMercancia.nativeElement);
+    
+    delete (window as any).bootstrap;
+  });
+
+  it('should add test mercancia', () => {
+    component.tablaDeMercancia.datos = [];
+    
+    component.pruebaAgregarMercancia();
+    
+    expect(component.tablaDeMercancia.datos.length).toBe(1);
+    expect(component.tablaDeMercancia.datos[0].claveFraccionArancelaria).toBe('TEST123');
+  });
+
+  it('should show validation alert and mark fields as touched when mercancia form is invalid', () => {
+    component.mercanciaFormulario = new FormBuilder().group({
+      claveFraccionArancelaria: ['', [Validators.required]],
+      nico: ['', [Validators.required]]
+    });
+    
+    component.agregarMercancia();
+    
+    expect(component.mostrarAlertaValidacionMercancia).toBe(true);
+    expect(component.mercanciaFormulario.get('claveFraccionArancelaria')?.touched).toBe(true);
+    expect(component.mercanciaFormulario.get('nico')?.touched).toBe(true);
+  });
+
+  it('should show validation alert and mark fields as touched when domicilio form is invalid', () => {
+    component.domicilioFormulario = new FormBuilder().group({
+      rfc: ['', [Validators.required]],
+      claveEntidadFederativa: ['', [Validators.required]]
+    });
+    
+    component.agregarDomicilio();
+    
+    expect(component.mostrarAlertaValidacionDomicilio).toBe(true);
+    expect(component.domicilioFormulario.get('rfc')?.touched).toBe(true);
+    expect(component.domicilioFormulario.get('claveEntidadFederativa')?.touched).toBe(true);
+  });
+
+  it('should return early when eliminarMercancia is called with no selected items', () => {
+    component.filaSeleccionadaMercanciaLista = [];
+    
+    component.eliminarMercancia();
+    
+    expect(component.elementoParaEliminar).toBeUndefined();
+  });
+
+  it('should return early when eliminarDomicilio is called with no selected items', () => {
+    component.filaSeleccionadaLista = [];
+    
+    component.eliminarDomicilio();
+    
+    expect(component.elementoParaEliminar).toBeUndefined();
+  });
+
+  it('should not eliminate anything when eliminarPedimento is called with false', () => {
+    component.tablaDeMercancia.datos = tablaDeMercancia;
+    component.filaSeleccionadaMercanciaLista = [tablaDeMercancia[0]];
+    
+    component.eliminarPedimento(false);
+    
+    expect(component.tablaDeMercancia.datos.length).toBe(2);
+  });
+
+  it('should configure notification when abrirModal is called', () => {
+    component.abrirModal();
+    
+    expect(component.nuevaNotificacion).toEqual({
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'El registro fue agregado correctamente.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    });
+  });
+
+  it('should configure notification when eliminarModal is called', () => {
+    component.eliminarModal();
+    
+    expect(component.nuevaNotificacion1).toEqual({
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Desea eliminar el registro seleccionado?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    });
+  });
+
+  it('should call validacionesService.isValid', () => {
+    const mockValidacionesService = {
+      isValid: jest.fn().mockReturnValue(true)
+    };
+    (component as any).validacionesService = mockValidacionesService;
+    
+    const form = new FormBuilder().group({
+      test: ['test']
+    });
+    
+    const result = component.isValid(form, 'test');
+    
+    expect(mockValidacionesService.isValid).toHaveBeenCalledWith(form, 'test');
+    expect(result).toBe(true);
+  });
+
+  it('should enable fields when tipo aviso is not inicial', () => {
+    component.avisoFormulario = new FormBuilder().group({
+      datosAviso: new FormBuilder().group({
+        tipoAviso: ['modificacion'],
+        idTransaccion: [''],
+        motivoProrroga: ['']
+      })
+    });
+    
+    component.verificaTipoAviso();
+    
+    expect(component.avisoFormulario.get('datosAviso.idTransaccion')?.enabled).toBe(true);
+    expect(component.avisoFormulario.get('datosAviso.motivoProrroga')?.enabled).toBe(true);
+  });
+
+  it('should handle error in showModal', () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const mockElementRef = {
+      nativeElement: null
+    } as any;
+    
+    (AvisoComponent as any).showModal(mockElementRef);
+    
+    expect(consoleSpy).toHaveBeenCalledWith('Error showing modal:', expect.any(Error));
+    consoleSpy.mockRestore();
+  });
+
+  it('should handle error in hideModal', () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const mockElementRef = {
+      nativeElement: null
+    } as any;
+    
+    (AvisoComponent as any).hideModal(mockElementRef);
+    
+    expect(consoleSpy).toHaveBeenCalledWith('Error hiding modal:', expect.any(Error));
+    consoleSpy.mockRestore();
+  });
+
+  it('should successfully show modal', () => {
+    const mockElement = {
+      classList: { add: jest.fn() },
+      style: { display: '' },
+      setAttribute: jest.fn(),
+      removeAttribute: jest.fn()
+    };
+    const mockElementRef = {
+      nativeElement: mockElement
+    } as any;
+    
+    const mockBackdrop = {
+      className: '',
+      onclick: null
+    };
+    const createElementSpy = jest.spyOn(document, 'createElement').mockReturnValue(mockBackdrop as any);
+    const appendChildSpy = jest.spyOn(document.body, 'appendChild').mockImplementation();
+    const querySelectorAllSpy = jest.spyOn(document, 'querySelectorAll').mockReturnValue([] as any);
+    
+    (AvisoComponent as any).showModal(mockElementRef);
+    
+    expect(mockElement.classList.add).toHaveBeenCalledWith('show');
+    expect(mockElement.style.display).toBe('block');
+    expect(createElementSpy).toHaveBeenCalledWith('div');
+    
+    createElementSpy.mockRestore();
+    appendChildSpy.mockRestore();
+    querySelectorAllSpy.mockRestore();
+  });
+
+  it('should successfully hide modal', () => {
+    const mockElement = {
+      classList: { remove: jest.fn() },
+      style: { display: '' },
+      setAttribute: jest.fn(),
+      removeAttribute: jest.fn()
+    };
+    const mockElementRef = {
+      nativeElement: mockElement
+    } as any;
+    
+    const mockBackdrops = [{
+      remove: jest.fn()
+    }];
+    const querySelectorAllSpy = jest.spyOn(document, 'querySelectorAll').mockReturnValue(mockBackdrops as any);
+    
+    (AvisoComponent as any).hideModal(mockElementRef);
+    
+    expect(mockElement.classList.remove).toHaveBeenCalledWith('show');
+    expect(mockElement.style.display).toBe('none');
+    expect(mockBackdrops[0].remove).toHaveBeenCalled();
+    
+    querySelectorAllSpy.mockRestore();
+  });
+
+  it('should subscribe to consultaioQuery on ngOnInit', () => {
+    const mockConsultaioQuery = {
+      selectConsultaioState$: of({
+        readonly: true
+      })
+    };
+    (component as any).consultaioQuery = mockConsultaioQuery;
+    
+    component.ngOnInit();
+    
+    expect(component.soloLectura).toBe(true);
   });
 
 });
