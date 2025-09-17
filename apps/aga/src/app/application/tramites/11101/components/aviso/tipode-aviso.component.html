@@ -4,7 +4,8 @@
       <form [formGroup]="avisoForm">
         <div class="row">
           <div class="col-md-4">
-            <label class="form-label" for="numero-de-registro">Número de registro:</label>
+            <label class="form-label" for="numero-de-registro">Número de registro<span [ngClass]="avisoForm.get('numeroderegistro')?.invalid && 
+              avisoForm.get('numeroderegistro')?.touched ? 'text-danger' : ''">*</span>:</label>
             <input type="text" class="form-control" id="numero-de-registro" formControlName="numeroderegistro" readonly />
           </div>
         </div>
@@ -40,35 +41,45 @@
       <form [formGroup]="avisoForm">
         <div class="row">
           <div class="col-md-4">
-            <label class="form-label" for="entidad-federativa">Entidad Federativa*:</label>
-            <input type="text" class="form-control" id="entidad-federativa" formControlName="entidadadfederativa" readonly />
+            <app-catalogo-select [catalogo]="entidadadfederativa" formControlName="entidadadfederativa" [label]="'Entidad Federativa'"
+              [placeholder]="'Seleccione una opción'" [required]="true" [markTouched]="avisoForm.get('entidadadfederativa')?.touched??false"
+              (change)="entidadadFederativaSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+            <!-- <label class="form-label" for="entidad-federativa">Entidad Federativa<span [ngClass]="avisoForm.get('entidadadfederativa')?.invalid && 
+              avisoForm.get('entidadadfederativa')?.touched ? 'text-danger' : ''">*</span>:</label>
+            <input type="text" class="form-control" id="entidad-federativa" formControlName="entidadadfederativa" readonly /> -->
           </div>
           <div class="col-md-4">
-            <label class="form-label" for="alcaldia-municipio">Alcaldía/Municipio*:</label>
+            <label class="form-label" for="alcaldia-municipio">Alcaldía o Municipio<span [ngClass]="avisoForm.get('alcadilamunicipio')?.invalid && 
+              avisoForm.get('alcadilamunicipio')?.touched ? 'text-danger' : ''">*</span>:</label>
             <input type="text" class="form-control" id="alcaldia-municipio" formControlName="alcadilamunicipio" readonly />
           </div>
           <div class="col-md-4">
-            <label class="form-label" for="colonia">Colonia*:</label>
+            <label class="form-label" for="colonia">Colonia<span [ngClass]="avisoForm.get('colonia')?.invalid && 
+              avisoForm.get('colonia')?.touched ? 'text-danger' : ''">*</span>:</label>
             <input type="text" class="form-control" id="colonia" formControlName="colonia" readonly />
           </div>
           <div class="col-md-4">
-            <label class="form-label" for="codigo-postal">Código Postal*:</label>
+            <label class="form-label" for="codigo-postal">Código Postal<span [ngClass]="avisoForm.get('codigopostal')?.invalid && 
+              avisoForm.get('codigopostal')?.touched ? 'text-danger' : ''">*</span>:</label>
             <input type="text" class="form-control" id="codigo-postal" formControlName="codigopostal" readonly />
           </div>
           <div class="col-md-4">
-            <label class="form-label" for="calle">Calle*:</label>
+            <label class="form-label" for="calle">Calle<span [ngClass]="avisoForm.get('calle')?.invalid && 
+              avisoForm.get('calle')?.touched ? 'text-danger' : ''">*</span>:</label>
             <input type="text" class="form-control" id="calle" formControlName="calle" readonly />
           </div>
           <div class="col-md-4">
-            <label class="form-label" for="numero-exterior">Número y/o letra exterior*:</label>
+            <label class="form-label" for="numero-exterior">Número y/o letra exterior<span [ngClass]="avisoForm.get('numeroletraexterior')?.invalid && 
+              avisoForm.get('numeroletraexterior')?.touched ? 'text-danger' : ''">*</span>:</label>
             <input type="text" class="form-control" id="numero-exterior" formControlName="numeroletraexterior" readonly />
           </div>
           <div class="col-md-4">
-            <label class="form-label" for="numero-interior">Número y/o letra interior*:</label>
+            <label class="form-label" for="numero-interior">Número y/o letra interior:</label>
             <input type="text" class="form-control" id="numero-interior" formControlName="numeroletrainterior" readonly />
           </div>
           <div class="col-md-4">
-            <label class="form-label" for="entre-calle">Entre calle*:</label>
+            <label class="form-label" for="entre-calle">Entre calle<span [ngClass]="avisoForm.get('entrecalle')?.invalid && 
+              avisoForm.get('entrecalle')?.touched ? 'text-danger' : ''">*</span>:</label>
             <input type="text" class="form-control" id="entre-calle" formControlName="entrecalle" readonly />
           </div>
           <div class="col-md-4">

@@ -1,7 +1,8 @@
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, merge, takeUntil } from 'rxjs';
 import { Tramite11101Store, Tramitenacionales11101State } from '../../estados/tramite11101.store';
 import { CommonModule } from '@angular/common';
 import { MercanciaComponent } from '../mercancia/mercancia.component';
@@ -36,7 +37,7 @@ import { TramiteFolioService } from '../../service/servicios-extraordinarios.ser
   templateUrl: './tipode-aviso.component.html',
   styleUrls: ['./tipode-aviso.component.scss'],
   standalone: true,
-  imports: [TituloComponent, FormsModule, ReactiveFormsModule, MercanciaComponent, CommonModule]
+  imports: [TituloComponent, FormsModule, ReactiveFormsModule, MercanciaComponent, CommonModule, CatalogoSelectComponent]
 })
 export class TipodeAvisoComponent implements OnInit, OnDestroy {
 
@@ -53,20 +54,26 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
   avisoForm!: FormGroup;
 
   /**
-* Subject para destruir notificador.
-*/
+  * Subject para destruir notificador.
+  */
   consultaDatos!: ConsultaioState;
 
   /**
-* Indica si el formulario se encuentra en modo solo lectura.
-* Si es `true`, los controles del formulario estarán deshabilitados para evitar modificaciones.
-*/
-  esFormularioSoloLectura: boolean = false
+  * Indica si el formulario se encuentra en modo solo lectura.
+  * Si es `true`, los controles del formulario estarán deshabilitados para evitar modificaciones.
+  */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Indica si la opción manual está actualmente seleccionada.
    * Se utiliza para alternar elementos de la interfaz o lógica basada en el estado de selección manual.
    */
-  isManualSelected: boolean = false
+  isManualSelected: boolean = false;
+
+  /**
+   * Lista de catálogos disponibles para aduanas.
+   */
+  entidadadfederativa!: Catalogo[];
 
   /**
    * Constructor de la clase. Inicializa el FormBuilder.
@@ -85,7 +92,7 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private formBuilder: FormBuilder,
     private query: Tramite11101Query,
-    private service: TramiteFolioService,
+    private tramiteService: TramiteFolioService,
     private store: Tramite11101Store
   ) {
     this.consultaioQuery.selectConsultaioState$
@@ -117,7 +124,8 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
       map((seccionState) => {
         this.solicitudState = seccionState;
       })).subscribe()
-    this.donanteDomicilio()
+    this.donanteDomicilio();
+    this.inicializaCatalogos();
   }
 
   /**
@@ -126,11 +134,12 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
 */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.guardarDatosDelFormulario();
+      this.avisoForm.disable();
     } else {
-      this.datosDeAvisoForm()
+      this.avisoForm.enable();
     }
   }
+
   /**
  * Inicializa el formulario reactivo para capturar los datos del aviso.
  * 
@@ -201,40 +210,32 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
   }
 
   /**
-* Habilita o deshabilita el formulario según el modo de solo lectura.
-*
-* Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`),
-* deshabilita todos los controles del formulario para evitar modificaciones.
-* Si no está en modo solo lectura, habilita todos los controles del formulario para permitir la edición.
-*/
-  guardarDatosDelFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.avisoForm.disable();
-    } else {
-      this.avisoForm.enable();
-    }
+   * Maneja la selección de la aduana.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  entidadadFederativaSeleccion(): void {
+    const ENTIDADFEDERATIVA = this.avisoForm.get('entidadadfederativa')?.value;
+    this.store.setEntidadadfederativa(ENTIDADFEDERATIVA);
   }
 
   /**
-   * Establece los valores del formulario utilizando datos simulados.
+   * Inicializa los catálogos necesarios para el componente.
    */
-  datosDeAvisoForm(): void {
-    if (this.esFormularioSoloLectura && this.avisoForm) {
-      this.avisoForm.get('numeroderegistro')?.disable();
-      this.avisoForm.get('NobmreDenominationRazonSocial')?.disable();
-      this.avisoForm.get('Telefono')?.disable();
-      this.avisoForm.get('correoelectronico')?.disable();
-      this.avisoForm.get('entidadadfederativa')?.disable();
-      this.avisoForm.get('alcadilamunicipio')?.disable();
-      this.avisoForm.get('colonia')?.disable();
-      this.avisoForm.get('codigopostal')?.disable();
-      this.avisoForm.get('calle')?.disable();
-      this.avisoForm.get('numeroletraexterior')?.disable();
-      this.avisoForm.get('numeroletrainterior')?.disable();
-      this.avisoForm.get('entrecalle')?.disable();
-      this.avisoForm.get('ycalle')?.disable();
+  inicializaCatalogos(): void {
+    const ENTIDADFEDERATIVA$ = this.tramiteService
+      .getEntidadfederativa()
+      .pipe(
+        map((resp) => {
+          this.entidadadfederativa = resp.data;
+        })
+      );
+
+      merge(
+        ENTIDADFEDERATIVA$
+      )
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe();
     }
-  }
 
   /**
    * Cambia el modo entre manual y carga masiva.
@@ -246,6 +247,22 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
       this.cargaMasiva = !isManual;
     }
   }
+
+  /**
+   * Establece los valores en el store.
+   * @param form El formulario del cual se obtienen los valores.
+   * @param campo El campo del formulario.
+   * @param metodoNombre El nombre del método en el store.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite11101Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: string) => void)(VALOR);
+  }
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Se utiliza para limpiar las suscripciones.

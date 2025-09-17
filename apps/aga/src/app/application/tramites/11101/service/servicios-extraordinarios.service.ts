@@ -1,5 +1,5 @@
 import { Tramite11101Store, Tramitenacionales11101State } from '../estados/tramite11101.store';
-import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { ENVIRONMENT, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -100,15 +100,24 @@ export class TramiteFolioService {
     this.store.setEntrecalle(DATOS.entrecalle);
     this.store.setYcalle(DATOS.ycalle);
   }
+
   /**
- * Obtiene los datos del trámite desde un archivo JSON local.
- * @returns Observable con el estado del trámite nacional (Tramitenacionales11101State).
- */
+   * Obtiene los datos del trámite desde un archivo JSON local.
+   * @returns Observable con el estado del trámite nacional (Tramitenacionales11101State).
+   */
   public getDatosDeTrtamitelDoc(): Observable<Tramitenacionales11101State> {
     return this.http.get<Tramitenacionales11101State>(
       '/assets/json/11101/aviso-tramite-data.json'
     );
   }
+
+  /**
+   * Obtenga una lista ficticia de entidadfederativa
+   */
+  getEntidadfederativa(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/entidades.json`);
+  }
+  
 }
 
 
