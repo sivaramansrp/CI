@@ -231,7 +231,7 @@ export const IMMEX_SERVICIO = [
      * @param {immexInfo} ele - Objeto con información del permiso IMMEX
      * @returns {string} Número secuencial del registro
      */
-    clave: (ele: immexInfo) => ele.numero,
+    clave: (ele: immexInfo) => ele.IMMEX_Columna_1,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -243,13 +243,13 @@ export const IMMEX_SERVICIO = [
      * @description Encabezado para la columna del número de permiso IMMEX
      * @type {string}
      */
-    encabezado: 'Fracción arancelaria',
+    encabezado: 'Número permiso',
     /**
      * @description Función extractora para obtener el número oficial del permiso IMMEX
      * @param {immexInfo} ele - Objeto con información del permiso IMMEX
      * @returns {string} Número oficial del permiso otorgado por la Secretaría de Economía
      */
-    clave: (ele: immexInfo) => ele.fraccionArancelaria,
+    clave: (ele: immexInfo) => ele.IMMEX_Columna_2,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -261,13 +261,13 @@ export const IMMEX_SERVICIO = [
      * @description Encabezado para la columna de fracción arancelaria
      * @type {string}
      */
-    encabezado: 'UMT',
+    encabezado: 'Fracción arancelaria',
     /**
      * @description Función extractora para obtener el código de fracción arancelaria
      * @param {immexInfo} ele - Objeto con información del permiso IMMEX
      * @returns {string} Código de fracción arancelaria según la TIGIE
      */
-    clave: (ele: immexInfo) => ele.umt,
+    clave: (ele: immexInfo) => ele.IMMEX_Columna_3,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -285,7 +285,7 @@ export const IMMEX_SERVICIO = [
      * @param {immexInfo} ele - Objeto con información del permiso IMMEX
      * @returns {string} Descripción oficial según la Tarifa de Importación y Exportación
      */
-    clave: (ele: immexInfo) => ele.descripcionTigie,
+    clave: (ele: immexInfo) => ele.IMMEX_Columna_4,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -297,13 +297,13 @@ export const IMMEX_SERVICIO = [
      * @description Encabezado para la columna de Unidad de Medida Técnica
      * @type {string}
      */
-    encabezado: 'Cantidad anual',
+    encabezado: 'UMT',
     /**
      * @description Función extractora para obtener la Unidad de Medida Técnica
      * @param {immexInfo} ele - Objeto con información del permiso IMMEX
      * @returns {string} Unidad de Medida Técnica aplicable al producto
      */
-    clave: (ele: immexInfo) => ele.cantidadAnual,
+    clave: (ele: immexInfo) => ele.IMMEX_Columna_5,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -315,13 +315,13 @@ export const IMMEX_SERVICIO = [
      * @description Encabezado para la columna de cantidad por periodo
      * @type {string}
      */
-    encabezado: 'Capacidad instalada por periodo # ',
+    encabezado: 'Cantidad por periodo #',
     /**
      * @description Función extractora para obtener la cantidad autorizada por periodo
      * @param {immexInfo} ele - Objeto con información del permiso IMMEX
      * @returns {string} Cantidad autorizada para el periodo especificado
      */
-    clave: (ele: immexInfo) => ele.capacidadInstalada,
+    clave: (ele: immexInfo) => ele.IMMEX_Columna_6,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -333,19 +333,37 @@ export const IMMEX_SERVICIO = [
      * @description Encabezado para la columna de fecha de inicio de vigencia
      * @type {string}
      */
-    encabezado: 'Cantidad por periodo #',
+    encabezado: 'Fecha inicio vigencia',
     /**
      * @description Función extractora para obtener la fecha de inicio de vigencia del permiso
      * @param {immexInfo} ele - Objeto con información del permiso IMMEX
      * @returns {string} Fecha de inicio de vigencia en formato establecido
      */
-    clave: (ele: immexInfo) => ele.cantidadPorPeriodo,
+    clave: (ele: immexInfo) => ele.IMMEX_Columna_7,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
     orden: 7,
-  }
+  },
+  {
+    /**
+     * @description Encabezado para la columna de fecha fin de vigencia
+     * @type {string}
+     */
+    encabezado: 'Fecha fin vigencia',
+    /**
+     * @description Función extractora para obtener la fecha de fin de vigencia del permiso
+     * @param {immexInfo} ele - Objeto con información del permiso IMMEX
+     * @returns {string} Fecha de fin de vigencia en formato establecido
+     */
+    clave: (ele: immexInfo) => ele.IMMEX_Columna_8,
+    /**
+     * @description Orden de presentación de la columna en la tabla
+     * @type {number}
+     */
+    orden: 8,
+  },
 ];
 
 /**
@@ -360,28 +378,80 @@ export const IMMEX_SERVICIO = [
  * @module Tramites.IMMEX.Interfaces
  */
 export interface immexInfo {
-  /** Número secuencial */
-  numero: number;
+  /**
+   * @description Número secuencial o identificador único del registro en la tabla.
+   * Proporciona un identificador numérico secuencial para facilitar la referencia y ordenamiento de los registros.
+   * @type {string}
+   * @example "1"
+   * @required
+   */
+  IMMEX_Columna_1: string;
 
-  /** Fracción arancelaria (Tariff classification) */
-  fraccionArancelaria: string;
+  /**
+   * @description Número oficial del permiso IMMEX otorgado por la Secretaría de Economía.
+   * Identificador único del permiso bajo el programa de Industria Manufacturera, Maquiladora y de Servicios de Exportación.
+   * @type {string}
+   * @example "IMX-2023-001234"
+   * @required
+   */
+  IMMEX_Columna_2: string;
 
-  /** Unidad de Medida de la Tarifa (UMT) */
-  umt: string;
+  /**
+   * @description Código de fracción arancelaria según la Tarifa de Importación y Exportación.
+   * Clasificación numérica oficial que identifica el tipo de mercancía conforme a la nomenclatura internacional.
+   * @type {string}
+   * @example "6205.20.01"
+   * @required
+   */
+  IMMEX_Columna_3: string;
 
-  /** Descripción de la TIGIE */
-  descripcionTigie: string;
+  /**
+   * @description Descripción oficial de la mercancía según la Tarifa de la Ley de los Impuestos Generales de Importación y Exportación (TIGIE).
+   * Texto descriptivo oficial que especifica las características de la mercancía según la clasificación arancelaria vigente.
+   * @type {string}
+   * @example "Camisas de fibras sintéticas o artificiales, para hombres o niños"
+   * @required
+   */
+  IMMEX_Columna_4: string;
 
-  /** Cantidad anual */
-  cantidadAnual: number;
+  /**
+   * @description Unidad de Medida Técnica (UMT) aplicable al producto o mercancía.
+   * Especifica la unidad de medida oficial utilizada para cuantificar la mercancía en operaciones de comercio exterior.
+   * @type {string}
+   * @example "Pieza"
+   * @required
+   */
+  IMMEX_Columna_5: string;
 
-  /** Capacidad instalada por periodo # */
-  capacidadInstalada: number;
+  /**
+   * @description Cantidad autorizada para importar o exportar durante un periodo específico.
+   * Volumen o cantidad máxima permitida bajo el permiso IMMEX para el periodo de vigencia establecido.
+   * @type {string}
+   * @example "10000"
+   * @required
+   */
+  IMMEX_Columna_6: string;
 
-  /** Cantidad por periodo # */
-  cantidadPorPeriodo: number;
+  /**
+   * @description Fecha de inicio de vigencia del permiso IMMEX en formato establecido.
+   * Fecha a partir de la cual el permiso IMMEX es válido y puede ser utilizado para operaciones de comercio exterior.
+   * @type {string}
+   * @format date
+   * @example "2023-01-15"
+   * @required
+   */
+  IMMEX_Columna_7: string;
+
+  /**
+   * @description Fecha de fin de vigencia del permiso IMMEX en formato establecido.
+   * Fecha hasta la cual el permiso IMMEX es válido y puede ser utilizado para operaciones de comercio exterior.
+   * @type {string}
+   * @format date
+   * @example "2025-01-15"
+   * @required
+   */
+  IMMEX_Columna_8: string;
 }
-
 
 /**
  * @constant FRACCION_EXPORTACION

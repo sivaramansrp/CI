@@ -1,25 +1,25 @@
 {
     "permisoImmexDatos": [
-      {
-        "IMMEX_Columna_1": "01",
-        "IMMEX_Columna_2": "IM23377137",
-        "IMMEX_Columna_3": "72012001",
-        "IMMEX_Columna_4": "Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso",
-        "IMMEX_Columna_5": "Kilogramo",
-        "IMMEX_Columna_6": "10",
-        "IMMEX_Columna_7": "28/12/203",
-        "estatus": true
-      },
-      {
-        "IMMEX_Columna_1": "02",
-        "IMMEX_Columna_2": "IM56789234",
-        "IMMEX_Columna_3": "72015010",
-        "IMMEX_Columna_4": "Hierro y acero sin alear en lingotes",
-        "IMMEX_Columna_5": "Tonelada",
-        "IMMEX_Columna_6": "25",
-        "IMMEX_Columna_7": "15/05/2025",
-        "estatus": false
-      }
+     {
+  "numero": 1,
+  "fraccionArancelaria": "6205.20.01",
+  "umt": "kg",
+  "descripcionTigie": "Camisas de fibras sintéticas o artificiales, para hombres o niños",
+  "cantidadAnual": 12000,
+  "capacidadInstalada": 1000,
+  "cantidadPorPeriodo": 500
+},
+{
+  "numero": 2,
+  "fraccionArancelaria": "6205.20.01",
+  "umt": "kg",
+  "descripcionTigie": "Camisas de fibras sintéticas o artificiales, para hombres o niños",
+  "cantidadAnual": 12000,
+  "capacidadInstalada": 1000,
+  "cantidadPorPeriodo": 500
+}
+
+
     ],
     "fraccionDatos": [
       {

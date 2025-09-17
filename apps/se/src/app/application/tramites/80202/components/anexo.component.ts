@@ -17,16 +17,16 @@ import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 
-import { FRACCION_EXPORTACION, IMMEX_SERVICIO,NICO_TABLA,fraccionInfo, immexInfo, immexRegistroform } from '../../80203/modelos/immex-registro-de-solicitud-modality.model';
 
+import { FRACCION_EXPORTACION, IMMEX_SERVICIO,ImmexRegistroform,NICO_TABLA,NicoInfo,fraccionInfo, immexInfo} from '../models/immex-ampliacion-sensibles.model';
 import { delay, map, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensibles.query';
-import { ImmexRegistroStore } from '../../80203/estados/tramites/tramite80203.store';
+import { ImmexAmpliacionSensiblesStore } from '../estados/immex-ampliacion-sensibles.store';
 import { Modal } from 'bootstrap';
-import { NicoInfo } from '../models/immex-ampliacion-sensibles.model';
 import { NicoService } from '../services/nico.service';
 import { PermisoImmexDatosService } from '../services/permiso-immex-datos.service';
 import { Subject } from 'rxjs';
@@ -75,7 +75,7 @@ export class AnexoComponent implements OnInit, OnDestroy {
      * @property {immexRegistroform} immexRegitroAnexoState
      * @description Estado del formulario de registro IMMEX.
      */
-    immexRegitroAnexoState!: immexRegistroform;
+    immexRegitroAnexoState!: ImmexRegistroform;
   
     /**
      * @property {TablaSeleccion} tablaSeleccionRadio
@@ -252,7 +252,7 @@ export class AnexoComponent implements OnInit, OnDestroy {
       public permisoImmexDatosService: PermisoImmexDatosService,
       public readonly nicoService: NicoService,
       public immexRegistroQuery: ImmexAmpliacionSensiblesQuery,
-      public immexRegistroStore: ImmexRegistroStore,
+      public immexRegistroStore:ImmexAmpliacionSensiblesStore ,
       public seccionQuery: SeccionLibQuery,
       public seccionStore: SeccionLibStore,
       public readonly consultaQuery: ConsultaioQuery
@@ -343,34 +343,12 @@ export class AnexoComponent implements OnInit, OnDestroy {
   
     private createImportacionFormGroup(): FormGroup {
       return this.fb.group({
-        permisoImmexDatos: [
-          this.immexRegitroAnexoState.permisoImmexDatos || [],
-          [],
-        ],
-        fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
-        nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
-        commodityImportacion: [
-          this.immexRegitroAnexoState?.commodityImportacion || '',
-          [],
-        ],
-        commodityDescImportacion: [
-          this.immexRegitroAnexoState?.commodityDescImportacion || '',
-          [],
-        ],
-        commodityNicoDescImportacion: [
-          this.immexRegitroAnexoState?.commodityNicoDescImportacion || '',
-          [],
-        ],
-        candiadAnual: [this.immexRegitroAnexoState?.candiadAnual || '', []],
-        capacidadPeriodo: [
-          this.immexRegitroAnexoState?.capacidadPeriodo || '',
-          [],
-        ],
-        candidadPorPeriodo: [
-          this.immexRegitroAnexoState?.candidadPorPeriodo || '',
-          [],
-        ],
-        Nico: [this.immexRegitroAnexoState?.Nico || '', []],
+      fraccionArancelaria: [{value: this.immexRegitroAnexoState?.fraccionArancelaria || '', disabled: this.esFormularioSoloLectura}, Validators.required],               
+      umt: [{value: this.immexRegitroAnexoState?.umt || '', disabled: this.esFormularioSoloLectura}, Validators.required],
+      descripcion: [{value: this.immexRegitroAnexoState?.descripcion || '', disabled: this.esFormularioSoloLectura}, Validators.required],                      
+      cantidadAnual: [{value: this.immexRegitroAnexoState?.cantidadAnual || '', disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.pattern('^[0-9]+$')]],
+      capacidadInstalada: [{value: this.immexRegitroAnexoState?.capacidadInstalada || '', disabled: this.esFormularioSoloLectura}, [Validators.required,Validators.pattern('^[0-9]+$')]],
+      cantidadPorPeriodo: [{value: this.immexRegitroAnexoState?.cantidadPorPeriodo || '', disabled: this.esFormularioSoloLectura}, [Validators.required,Validators.pattern('^[0-9]+$')]], 
       });
     }
   
@@ -431,7 +409,7 @@ export class AnexoComponent implements OnInit, OnDestroy {
       this.immexRegistroQuery.selectImmexRegistro$
         .pipe(
           takeUntil(this.destroyNotifier$),
-          map((seccionState: { immexRegistro: immexRegistroform }) => {
+          map((seccionState: { immexRegistro: ImmexRegistroform }) => {
             if (seccionState) {
               this.immexRegitroAnexoState = seccionState.immexRegistro;
               this.immexRegistroform.patchValue(this.immexRegitroAnexoState);
