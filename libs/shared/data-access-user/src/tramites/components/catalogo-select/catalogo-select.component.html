@@ -17,6 +17,7 @@
   <select
     class="form-select form-control"
     [id]="id"
+    [disabled]="isDisabled"
     formControlName="selectControl"
     title="Seleccione una opción"
     (change)="handleChange($event)"

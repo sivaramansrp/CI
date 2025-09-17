@@ -324,5 +324,11 @@ export class CatalogoSelectComponent
    */
   setDisabledState?(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
+    const control = this.formSelect.get('selectControl');
+    if (isDisabled) {
+      control?.disable({ emitEvent: false });
+    } else {
+      control?.enable({ emitEvent: false });
+    }
   }
 }

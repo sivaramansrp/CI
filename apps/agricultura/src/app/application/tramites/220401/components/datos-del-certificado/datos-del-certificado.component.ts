@@ -156,11 +156,8 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    * Inicialización del componente.
    */
   ngOnInit(): void {
-this.inicializarCertificadoFormulario();
-
-
-
-      }
+    this.inicializarCertificadoFormulario();
+  }
 
   /**
    * Inicializa el formulario del certificado según el modo de la vista.
@@ -191,8 +188,8 @@ this.inicializarCertificadoFormulario();
         this.datosdelForm.disable();
         this.formGroup1.disable();
       } else {
-        this.datosdelForm.enable();
-        this.formGroup1.enable();
+        // this.datosdelForm.enable();
+        // this.formGroup1.enable();
       } 
   }
 
@@ -227,7 +224,7 @@ this.inicializarCertificadoFormulario();
     this.catalogConfigs.forEach((config) => {
       this.formGroup1.addControl(
         config.controlName,
-        new FormControl('', Validators.required)
+        new FormControl({value: '', disabled: config.disabled}, Validators.required)
       );
     });
     this.loaddataDelegacionesData();
@@ -263,7 +260,8 @@ this.inicializarCertificadoFormulario();
         numeroTotal:[''],
         condiciones:['',Validators.required],
         cantidadTotal:[''],
-        tipoEmbalaje:['']
+        tipoEmbalaje:[''],
+        uso:['',Validators.required],
       })
       
       this._pantallas220401Service.getPaisOrigen().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
@@ -304,7 +302,26 @@ this.inicializarCertificadoFormulario();
   
    onValueChange(value: string | number):void {
         this.defaultSelect = value.toString();
+        if(value === 'Oficinacentral'){
+          this.formGroup1.get('delegacionesControl')?.disable();
+          this.formGroup1.get('delegacionesControl2')?.disable();
+          this.formGroup1.get('delegacionesControl3')?.enable();
+          this.formGroup1.get('delegacionesControl')?.reset();
+          this.formGroup1.get('delegacionesControl2')?.reset();
+        }else if(value === 'Establecimiento'){
+          this.formGroup1.get('delegacionesControl')?.disable();
+          this.formGroup1.get('delegacionesControl2')?.enable();
+          this.formGroup1.get('delegacionesControl3')?.disable();
+          this.formGroup1.get('delegacionesControl')?.reset();
+          this.formGroup1.get('delegacionesControl3')?.reset();
+        }else if(value === 'Oficina'){
+          this.formGroup1.get('delegacionesControl')?.enable();
+          this.formGroup1.get('delegacionesControl2')?.disable();
+          this.formGroup1.get('delegacionesControl3')?.disable();
+          this.formGroup1.get('delegacionesControl2')?.reset();
+          this.formGroup1.get('delegacionesControl3')?.reset();
       }
+    }
   
     /**
      * Carga los datos de delegaciones desde el servicio y actualiza la configuración de catálogos.
@@ -356,6 +373,7 @@ this.inicializarCertificadoFormulario();
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
       primerOpcion: '',
+      disabled: true
     },
     {
       catalogo: this.delegacionesJson,
@@ -364,6 +382,7 @@ this.inicializarCertificadoFormulario();
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
       primerOpcion: '',
+      disabled: true
     },
     {
       catalogo: this.delegacionesJson,
@@ -372,6 +391,7 @@ this.inicializarCertificadoFormulario();
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
       primerOpcion: '',
+      disabled: true
     },
     {
       catalogo: this.delegacionesJson,
@@ -380,6 +400,7 @@ this.inicializarCertificadoFormulario();
       required: false,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
       primerOpcion: '',
+      disabled: false
     },
   ];
 
@@ -531,8 +552,8 @@ this.inicializarCertificadoFormulario();
     
  cerrarModal(): void {
  if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.hide();
+      const MODAL_INSTANCE = Modal.getInstance(this.modalElement.nativeElement);
+      MODAL_INSTANCE?.hide();
     }
 }
  
