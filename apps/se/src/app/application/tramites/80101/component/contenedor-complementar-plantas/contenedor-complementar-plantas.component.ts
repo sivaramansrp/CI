@@ -67,6 +67,12 @@ export class ContenedorComplementarPlantasComponent implements OnInit, OnDestroy
    * @param activatedRoute - Servicio para acceder a información sobre la ruta activa.
    */
 
+/**
+ * Evento emitido al regresar a la vista de plantas.
+ * No emite ningún dato, solo notifica la acción.
+ */
+  @Output() alRegresarPlantas = new EventEmitter<void>();
+
   /**
    * Constructor de la clase ComplementarPlantaComponent.
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
@@ -105,7 +111,7 @@ export class ContenedorComplementarPlantasComponent implements OnInit, OnDestroy
    * Utiliza el enrutador para redirigir al usuario a la página de solicitud.
    */
   regressarPlantas(): void {
-    this.router.navigate(['../solicitud'], { relativeTo: this.activatedRoute });
+    this.alRegresarPlantas.emit();
   }
 
   /**

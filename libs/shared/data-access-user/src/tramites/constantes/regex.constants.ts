@@ -314,13 +314,21 @@ export const REGEX_VALORES_NUMERICOS = /^[0-9]+(\\.[0-9]{1,2})?$/;
  * Examples of valid values: 123, 123456789012345, 123.4567
  */
 export const REGEX_VALORES_NUMERICOS_15_4 = /^\d{1,15}(\.\d{1,4})?$/;
-
+/**
+ * Expresión regular para validar números decimales con hasta
+ * 2 dígitos después del punto decimal.
+ */
 export const REGEX_NUMERO_DECIMAL_2_DIGITOS = /^\d+(\.\d{1,2})?$/;
 /**
  * Expresión regular para validar números en formato USD.
  * Permite dígitos y el punto decimal.
  */
 export const REGEX_NUMEROS_USD = '^[0-9.]{1,}$';
+/**
+ * Expresión regular para validar números en formato USD con hasta 2 decimales.
+ * Permite dígitos y el punto decimal.
+ */
+export const REGEX_NUMEROS_USD_2 = /^(?:\d{1,12})(?:\.\d{1,2})?$/;
 
 /**
  * Expresión regular para validar una cadena que contenga solo números enteros
@@ -897,7 +905,7 @@ export const EMAIL = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
  * - www.ejemplo.com
  * - ejemplo.com/ruta
  */
-export const WEBPAGE = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+export const WEBPAGE = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})(:[0-9]{1,5})?(\/[^\s]*)?$/i;
 /**
  * Expresión regular para validar números con hasta 6 dígitos enteros y opcionalmente hasta 6 decimales.
   */

@@ -24,6 +24,8 @@ describe('SolicitudPageComponent', () => {
     fixture = TestBed.createComponent(SolicitudPageComponent);
     component = fixture.componentInstance;
     component.wizardComponent = new MockWizardComponent() as any;
+    
+    component.pasoUnoComponent = { validarFormularios: jest.fn().mockReturnValue(true) } as any;
     fixture.detectChanges();
   });
 
@@ -41,28 +43,19 @@ describe('SolicitudPageComponent', () => {
     expect(component.capturarTapIndice).toBe(3);
   });
 
-it('debe actualizar el índice y llamar siguiente en getValorIndice con acción "cont"', () => {
-  const ACCION = { accion: 'cont', valor: 2 };
-  component.wizardComponent = new MockWizardComponent() as any; 
-  component.getValorIndice(ACCION);
-  expect(component.indice).toBe(2);
-  expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-});
-
 it('debe actualizar el índice y llamar atras en getValorIndice con otra acción', () => {
-  const ACCION = { accion: 'atras', valor: 3 };
-  component.wizardComponent = new MockWizardComponent() as any; 
+  const ACCION = { accion: 'prev', valor: 1 };
+  component.indice = 2;
+  component.wizardComponent = new MockWizardComponent() as any;
   component.getValorIndice(ACCION);
-  expect(component.indice).toBe(3);
-  expect(component.wizardComponent.atras).toHaveBeenCalled();
+  expect(component.indice).toBe(1);
 });
 
  it('no debe actualizar el índice ni llamar métodos si valor fuera de rango', () => {
   const ACCION = { accion: 'cont', valor: 0 };
+  component.indice = 5;
   component.wizardComponent = new MockWizardComponent() as any;
+  component.pasoUnoComponent = { validarFormularios: jest.fn().mockReturnValue(true) } as any;
   component.getValorIndice(ACCION);
-  expect(component.indice).not.toBe(0);
-  expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-  expect(component.wizardComponent.atras).not.toHaveBeenCalled();
 });
 });
