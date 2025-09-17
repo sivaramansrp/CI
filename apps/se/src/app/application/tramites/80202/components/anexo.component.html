@@ -78,11 +78,18 @@
                   <label for="candiad-anual">Fracción arancelaria:</label>
                   <input type="text" class="form-control" id="candiad-anual" formControlName="fraccionArancelaria"
                     placeholder="" [required]="true" />
+                      <small *ngIf="immexRegistroform.get('importacionForm.fraccionArancelaria')?.touched && immexRegistroform.get('importacionForm.fraccionArancelaria')?.hasError('required')" class="text-danger">
+      La fracción arancelaria es obligatoria.
+                      </small>
                 </div>
                 <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
                   <label for="capacidad-periodo">UMT</label>
                   <input type="text" class="form-control" id="capacidad-periodo" formControlName="umt"
                     placeholder="" [required]="true" />
+                    <small *ngIf="immexRegistroform.get('importacionForm.umt')?.touched && immexRegistroform.get('importacionForm.umt')?.hasError('required')" class="text-danger">
+      La unidad de medida (UMT) es obligatoria.
+                    </small>
+
                 </div>
                 </div>
                 <div class="row">
@@ -90,7 +97,11 @@
                   <label for="description">Descripción:</label>
                   <textarea class="form-control" id="description" formControlName="descripcion" rows="5"
                     placeholder=""></textarea>
+                     <small *ngIf="immexRegistroform.get('importacionForm.descripcion')?.touched && immexRegistroform.get('importacionForm.descripcion')?.hasError('required')" class="text-danger">
+      La descripción es obligatoria.
+                     </small>
                     </div>
+                    
                 </div>
               </div>
              <div class="row">
@@ -99,16 +110,40 @@
                   <label for="fraccion-arancelaria-import">Cantidad anual*:</label>
                   <input type="text" class="form-control" id="fraccion-arancelaria-import"
                     formControlName="cantidadAnual" placeholder="" />
+                      <div *ngIf="immexRegistroform.get('importacionForm.cantidadAnual')?.touched">
+      <small *ngIf="immexRegistroform.get('importacionForm.cantidadAnual')?.hasError('required')" class="text-danger">
+        La cantidad anual es obligatoria.
+      </small>
+      <small *ngIf="immexRegistroform.get('importacionForm.cantidadAnual')?.hasError('pattern')" class="text-danger">
+        La cantidad anual debe ser un número válido.
+      </small>
+    </div>
                 </div>
                  <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
                   <label for="fraccion-arancelaria-import">Capacidad instalada por periodo #*:</label>
                   <input type="text" class="form-control" id="fraccion-arancelaria-import"
                     formControlName="capacidadInstalada" placeholder="" />
+                      <div *ngIf="immexRegistroform.get('importacionForm.capacidadInstalada')?.touched">
+      <small *ngIf="immexRegistroform.get('importacionForm.capacidadInstalada')?.hasError('required')" class="text-danger">
+        La capacidad instalada es obligatoria.
+      </small>
+      <small *ngIf="immexRegistroform.get('importacionForm.capacidadInstalada')?.hasError('pattern')" class="text-danger">
+        La capacidad instalada debe ser un número válido.
+      </small>
+    </div>
                 </div>  
                  <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
                   <label for="fraccion-arancelaria-import">Cantidad por periodo #*:</label>
                   <input type="text" class="form-control" id="fraccion-arancelaria-import"
                     formControlName="cantidadPorPeriodo" placeholder="" />
+                      <div *ngIf="immexRegistroform.get('importacionForm.cantidadPorPeriodo')?.touched">
+      <small *ngIf="immexRegistroform.get('importacionForm.cantidadPorPeriodo')?.hasError('required')" class="text-danger">
+        La cantidad por periodo es obligatoria.
+      </small>
+      <small *ngIf="immexRegistroform.get('importacionForm.cantidadPorPeriodo')?.hasError('pattern')" class="text-danger">
+        La cantidad por periodo debe ser un número válido.
+      </small>
+    </div>
                 </div> 
                 </div>
                
@@ -117,12 +152,13 @@
           </div>
         </form>
         <footer class="footer d-flex py-5 gap-3 justify-content-end">
-          <button type="button" class="btn btn-danger" (click)="modalCancelar()">
-            Regresar
-          </button>
-          <button type="button" class="btn btn-primary" (click)="modalGuardar()">
+           <button type="button" class="btn btn-primary" (click)="modalGuardar()">
             Guardar
           </button>
+          <button type="button" class="btn btn-danger" (click)="modalCancelar()">
+            Cancelar
+          </button>
+         
         </footer>
       </div>
     </div>

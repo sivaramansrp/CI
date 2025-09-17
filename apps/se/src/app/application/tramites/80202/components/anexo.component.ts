@@ -347,7 +347,7 @@ export class AnexoComponent implements OnInit, OnDestroy {
       umt: [{value: this.immexRegitroAnexoState?.umt || '', disabled:true}, Validators.required],
       descripcion: [{value: this.immexRegitroAnexoState?.descripcion || '', disabled:true}, Validators.required],                      
       cantidadAnual: [{value: this.immexRegitroAnexoState?.cantidadAnual || '', disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.pattern('^[0-9]+$')]],
-      capacidadInstalada: [{value: this.immexRegitroAnexoState?.capacidadInstalada || '', disabled: this.esFormularioSoloLectura}, [Validators.required,Validators.pattern('^[0-9]+$')]],
+      capacidadInstalada: this.immexRegitroAnexoState?.umt || '',
       cantidadPorPeriodo: [{value: this.immexRegitroAnexoState?.cantidadPorPeriodo || '', disabled: this.esFormularioSoloLectura}, [Validators.required,Validators.pattern('^[0-9]+$')]], 
       });
     }
@@ -547,10 +547,14 @@ export class AnexoComponent implements OnInit, OnDestroy {
   
               if (this.permisoImmexDatos.length > 0) {
                 this.immexRegistroform.get('importacionForm')?.patchValue({
-                  commodityImportacion: this.permisoImmexDatos[0].IMMEX_Columna_3,
-                  commodityDescImportacion:
-                    this.permisoImmexDatos[0].IMMEX_Columna_4,
+                    fraccionArancelaria:this.immexRegitroAnexoState?.fraccionArancelaria || '',
+      umt:  this.immexRegitroAnexoState?.umt || '',
+      descripcion: this.immexRegitroAnexoState?.descripcion || '',
+      cantidadAnual:  this.immexRegitroAnexoState?.cantidadAnual || '',
+      capacidadInstalada: this.immexRegitroAnexoState?.capacidadInstalada || '',
+      cantidadPorPeriodo:  this.immexRegitroAnexoState?.cantidadPorPeriodo || '',
                 });
+             
               }
             }
           },
@@ -741,7 +745,15 @@ export class AnexoComponent implements OnInit, OnDestroy {
      * un enlace operativo.
      */
     modalGuardar(): void {
-      this.cambiarEstadoModal();
+      if(this.immexRegistroform.get('importacionForm')?.valid ){
+ this.cambiarEstadoModal();
+ this.immexTableDatos = [];
+ this.immexTableDatos.push(this.immexRegistroform.get('importacionForm')?.value) ;
+      }
+      else{
+        this.immexRegistroform.get('importacionForm')?.markAllAsTouched();
+      }
+     
     }
   
   
