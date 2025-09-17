@@ -1,18 +1,18 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
-import { Subject, take } from 'rxjs';
+import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
+import { map, Subject, take } from 'rxjs';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { takeUntil } from 'rxjs';
-import { Tramite80101Store } from '../../estados/tramite80101.store';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 
 @Component({
   selector: 'app-paso-capturar-solicitud',
   templateUrl: './paso-capturar-solicitud.component.html',
 })
-export class PasoCapturarSolicitudComponent implements OnDestroy {
+export class PasoCapturarSolicitudComponent implements OnDestroy,OnInit {
   /**
    * Almacena los pasos del wizard definidos en PASOS4.
    * @type {ListaPasosWizard[]}
@@ -130,6 +130,11 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
       "fecFallecimiento": "2025-09-07"
   };
 
+   /**
+   * URL de la página actual.
+   */
+  public solicitudState!: Tramite80101State;
+
   /**
    * Constructor del componente `PasoCapturarSolicitudComponent`.
    * Inicializa el componente y establece la validez del formulario en el store.
@@ -141,7 +146,8 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
     private tramiteQuery: Tramite80101Query,
     private seccion: SeccionLibStore,
     private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
-    private tramite80105Store: Tramite80101Store
+    private tramite80105Store: Tramite80101Store,
+    private tramite80105Query: Tramite80101Query
   ) {
     this.tramiteQuery.FormaValida$.pipe(
       takeUntil(this.destroyNotifier$)
@@ -149,6 +155,24 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
       this.seccion.establecerSeccion([true]);
       this.seccion.establecerFormaValida([res]);
     });
+  }
+
+
+ /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al observable `selectSeccionState$` para escuchar cambios en el estado de la sección,
+   * actualizando la propiedad `solicitudState` con el nuevo estado recibido.
+   * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`,
+   * evitando fugas de memoria.
+   */
+ngOnInit(): void {
+    this.tramite80105Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      ).subscribe();
   }
 
   /**
@@ -188,7 +212,26 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
     const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
     const ANEXO_ALL = this.buildAnexo(data);
     const PAYLOAD = {
-      "tipoDeSolicitud": "guardar",
+        "tipoDeSolicitud": "guardar",
+      "idSolicitud": 202781045,
+    "idTipoTramite": 80105,
+    "rfc": "AAL0409235E6",
+    "cveUnidadAdministrativa": "8101",
+    "costoTotal": 10000.5,
+    "certificadoSerialNumber": "1234567890ABCDEF",
+    "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
+    "numeroFolioTramiteOriginal": "TRM-2023-00001",
+    "nombre": "Juan",
+    "apPaterno": "Pérez",
+    "apMaterno": "López",
+    "telefono": "5551234567",
+    "discriminator_value": "80105",
+    "discriminatorValue": "80105",
+     "domicilio": {
+    },
+    "solicitante": {
+        
+    },
       "planta": [],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
@@ -206,7 +249,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
     "sociosAccionistas":[...SOCIO_ACCIONISTAS]
     };
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
-      this.tramite80105Store.setIdSolicitud(response.idSolicitud || 0);
+      this.tramite80105Store.setIdSolicitud(response.datos.id_solicitud || 0);
       return response;
     });
   }
