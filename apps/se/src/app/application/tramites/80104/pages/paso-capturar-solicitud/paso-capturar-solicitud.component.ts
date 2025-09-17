@@ -1,8 +1,10 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Subject, take } from 'rxjs';
+import { Subject, map, take, takeUntil } from 'rxjs';
+import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
+import { Tramite80101Query } from '../../estados/tramite80101.query';
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
  * 
@@ -30,7 +32,7 @@ import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergu
   selector: 'app-paso-capturar-solicitud',
   templateUrl: './paso-capturar-solicitud.component.html',
 })
-export class PasoCapturarSolicitudComponent {
+export class PasoCapturarSolicitudComponent implements OnInit {
   /**
    * Lista de pasos del wizard.
    * Esta propiedad almacena una lista de objetos que representan los pasos del wizard.
@@ -43,6 +45,12 @@ export class PasoCapturarSolicitudComponent {
    * El valor inicial es 1, lo que indica que el primer paso está activo al cargar el componente.
    */
   indice: number = 1;
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se utiliza para referenciar la solicitud en curso.
+   */
+  idSolicitud: number = 0;
   /**
    * Datos de los pasos del wizard.
    * Esta propiedad almacena información relacionada con el número de pasos, el índice actual,
@@ -138,6 +146,11 @@ export class PasoCapturarSolicitudComponent {
       "fecFallecimiento": "2025-09-07"
   };
 
+   /**
+   * URL de la página actual.
+   */
+  public solicitudState!: Tramite80101State;
+
   /**
    * Constructor de la clase PasoCapturarSolicitudComponent.
    * 
@@ -149,8 +162,27 @@ export class PasoCapturarSolicitudComponent {
    * utilizando los métodos `establecerSeccion` y `establecerFormaValida` del servicio `SeccionLibStore`.
    * La suscripción se gestiona para que se complete automáticamente al destruir el componente mediante `takeUntil` y `destroyNotifier$`.
    */
-  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService) {
+  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
+    private tramite80104Store: Tramite80101Store,private tramite80104Query: Tramite80101Query,) {
   //
+  }
+
+
+   /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al observable `selectSeccionState$` para escuchar cambios en el estado de la sección,
+   * actualizando la propiedad `solicitudState` con el nuevo estado recibido.
+   * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`,
+   * evitando fugas de memoria.
+   */
+ngOnInit(): void {
+    this.tramite80104Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      ).subscribe();
   }
 
   /**
@@ -158,6 +190,7 @@ export class PasoCapturarSolicitudComponent {
    * @param e - event$: Acción del botón.
    */
   getValorIndice(e: AccionBoton): void {
+    this.obtenerDatosDelStore();
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -190,7 +223,26 @@ export class PasoCapturarSolicitudComponent {
     const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
     const ANEXO_ALL = this.buildAnexo(data);
     const PAYLOAD = {
-      "tipoDeSolicitud": "guardar",
+       "tipoDeSolicitud": "guardar",
+      "idSolicitud": 202781045,
+    "idTipoTramite": 80104,
+    "rfc": "AAL0409235E6",
+    "cveUnidadAdministrativa": "8101",
+    "costoTotal": 10000.5,
+    "certificadoSerialNumber": "1234567890ABCDEF",
+    "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
+    "numeroFolioTramiteOriginal": "TRM-2023-00001",
+    "nombre": "Juan",
+    "apPaterno": "Pérez",
+    "apMaterno": "López",
+    "telefono": "5551234567",
+    "discriminator_value": "80104",
+    "discriminatorValue": "80104",
+     "domicilio": {
+    },
+    "solicitante": {
+        
+    },
       "planta": [],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
@@ -208,6 +260,7 @@ export class PasoCapturarSolicitudComponent {
     "sociosAccionistas":[...SOCIO_ACCIONISTAS]
     };
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
+      this.tramite80104Store.setIdSolicitud(response.datos.id_solicitud || 0);
       return response;
     });
   }

@@ -64,7 +64,13 @@ export class NuevoProgramaIndustrialService {
   ) {
     // No se necesita lógica de inicialización adicional.
     this.setProcedure();
+    this.setProcedureNo();
   }
+
+  setProcedureNo(): void {
+    this.complimentosService.setProcedureNo('80101');
+  }
+
 
   /**
    * Actualiza el estado interno indicando si la tabla tiene datos.
@@ -241,8 +247,8 @@ getAllState(): Observable<Tramite80101State> {
  * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
  * @returns Observable con la respuesta de la solicitud POST.
  */
-guardarDatosPost(body: any) {
-  return this.httpService.post<any>(PROC_80101.GUARDAR, { body: body });
+guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
+  return this.httpService.post<Record<string, unknown>>(PROC_80101.GUARDAR, { body: body });
 }
 
 /**
@@ -255,5 +261,7 @@ setProcedure():void{
   const PROCEDURE='sat-t80101'
   this.complimentosService.setProcedure(PROCEDURE);
 }
+
+
 
 }

@@ -2,6 +2,7 @@ import { AmpliacionImmexDropdownItem, AmpliacionServiciosResponse, InfoServicios
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { Observable, map } from 'rxjs';
 import { PlantasSubfabricante, RespuestaSubfabricantes } from '../../../shared/models/empresas-subfabricanta.model';
+import { ComplimentosService } from '../../../shared/services/complimentos.service';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { HttpClient } from '@angular/common/http';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
@@ -13,9 +14,29 @@ import { Tramite80101State } from '../estados/tramite80101.store';
 @Injectable({
   providedIn: 'root',
 })
+
 export class NuevoProgramaIndustrialService {
- constructor(private readonly http: HttpClient, private tramite80101Query: Tramite80101Query, public httpService: HttpCoreService) {
-   // No se necesita lógica de inicialización adicional.
+
+ constructor(private readonly http: HttpClient, private tramite80101Query: Tramite80101Query, public httpService: HttpCoreService, private complimentosService: ComplimentosService
+  ) {
+  // No se necesita lógica de inicialización adicional.
+  this.setProcedure();
+  this.setProcedureNo();
+  }
+
+  setProcedureNo(): void {
+    this.complimentosService.setProcedureNo('80105');
+  }
+
+  /**
+  * Establece el procedimiento actual para la gestión de trámites industriales.
+  * Asigna el identificador de procedimiento 'st_t80101' y lo configura en el servicio de cumplimientos.
+  *
+  * @returns {void} No retorna ningún valor.
+  */
+  setProcedure():void{
+    const PROCEDURE='sat-t80105'
+    this.complimentosService.setProcedure(PROCEDURE);
   }
 
   /**
@@ -26,7 +47,7 @@ export class NuevoProgramaIndustrialService {
     return this.http
     .get<AmpliacionServiciosResponse>("assets/json/80205/ampliacion-servicios.json")
     .pipe(map((res: AmpliacionServiciosResponse) => res.data.infoServicios));
-}
+  }
    
   /**
    * Obtiene la lista de selección de ingreso desde un archivo JSON.
@@ -99,7 +120,7 @@ getEstadosCatalogo(): Observable<Catalogo> {
    * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
    * @returns Observable con la respuesta de la solicitud POST.
    */
-  guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
-    return this.httpService.post<Record<string, unknown>>(PROC_80105.GUARDAR, { body: body });
+  guardarDatosPost(body: any): Observable<any> {
+    return this.httpService.post<any>(PROC_80105.GUARDAR, { body: body });
   }
 }

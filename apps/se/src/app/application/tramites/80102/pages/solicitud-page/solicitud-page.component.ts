@@ -3,15 +3,17 @@ import {
   BtnContinuarComponent,
   DatosPasos,
   ListaPasosWizard,
+  PasoFirmaComponent,
   SeccionLibStore,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   PASOS,
   TITULOMENSAJE,
 } from '../../constantes/autorizacion-programa-nuevo.enum';
-import { Subject, take } from 'rxjs';
+import { Tramite80102State, Tramite80102Store } from '../../estados/tramite80102.store';
+import { map, Subject, take, takeUntil } from 'rxjs';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
@@ -43,13 +45,14 @@ interface AccionBoton {
     PasoDosComponent,
     BtnContinuarComponent,
     PasoTresComponent,
+    PasoFirmaComponent
   ],
   standalone: true,
 })
 /**
  * Componente que representa la página de solicitud.
  */
-export class SolicitudPageComponent implements OnDestroy {
+export class SolicitudPageComponent implements OnDestroy, OnInit {
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
    * @private
@@ -88,13 +91,38 @@ export class SolicitudPageComponent implements OnDestroy {
    */
   tituloMensaje: string = TITULOMENSAJE;
 
+  /**
+   * URL de la página actual.
+   */
+  public solicitudState!: Tramite80102State;
+
   constructor(
-    private tramiteQuery: Tramite80102Query,
     private seccion: SeccionLibStore,
     private autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
+    private tramite80102Store: Tramite80102Store,
+    private tramite80102Query: Tramite80102Query
   ) {
     // Constructor del componente
   }
+
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al observable `selectSeccionState$` para escuchar cambios en el estado de la sección,
+   * actualizando la propiedad `solicitudState` con el nuevo estado recibido.
+   * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`,
+   * evitando fugas de memoria.
+   */
+  ngOnInit(): void {
+    this.tramite80102Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      ).subscribe();
+  }
+
   /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
@@ -105,11 +133,19 @@ export class SolicitudPageComponent implements OnDestroy {
 
   /** Indica la visibilidad del botón Guardar. */
   public btnGuardarVisible: string = 'visible';
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se utiliza para referenciar la solicitud en curso.
+   */
+  idSolicitud: number = 0;
+
   /**
    * Obtiene el valor del índice de la acción del botón.
    * @param e Acción del botón.
    */
   getValorIndice(e: AccionBoton): void {
+    this.obtenerDatosDelStore();
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -738,7 +774,26 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase, data);
     const PLANTAS = this.buildPlantas(data.empressaSubFabricantePlantas.plantasAgregar, this.plantasBase, data);
     const PAYLOAD = {
-      "tipoDeSolicitud": "guardar",
+       "tipoDeSolicitud": "guardar",
+      "idSolicitud": 202781045,
+    "idTipoTramite": 80102,
+    "rfc": "AAL0409235E6",
+    "cveUnidadAdministrativa": "8101",
+    "costoTotal": 10000.5,
+    "certificadoSerialNumber": "1234567890ABCDEF",
+    "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
+    "numeroFolioTramiteOriginal": "TRM-2023-00001",
+    "nombre": "Juan",
+    "apPaterno": "Pérez",
+    "apMaterno": "López",
+    "telefono": "5551234567",
+    "discriminator_value": "80102",
+    "discriminatorValue": "80102",
+     "domicilio": {
+    },
+    "solicitante": {
+        
+    },
       "planta": [...PLANTAS],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
@@ -757,6 +812,7 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     
 }
     this.autorizacionProgrmaNuevoService.guardarDatosPost(PAYLOAD).subscribe(response => {
+      this.tramite80102Store.setIdSolicitud(response.datos.id_solicitud || 0);
       return response;
     });
   }

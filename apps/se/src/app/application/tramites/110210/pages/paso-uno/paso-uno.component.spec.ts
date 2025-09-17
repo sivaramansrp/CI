@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { PasoUnoComponent } from './paso-uno.component';
 import {
@@ -9,6 +9,7 @@ import {
   SolicitanteComponent
 } from '@ng-mf/data-access-user';
 import { HttpClientModule } from '@angular/common/http';
+import { DuplicadoDeCertificadoComponent } from '../duplicado-de-certificado/duplicado-de-certificado.component';
 
 @Component({
   selector: 'solicitante',
@@ -26,8 +27,9 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent, MockSolicitanteComponent],
-      imports: [HttpClientModule]
+      declarations: [PasoUnoComponent, MockSolicitanteComponent, DuplicadoDeCertificadoComponent],
+      imports: [HttpClientModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   });
 

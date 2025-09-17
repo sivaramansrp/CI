@@ -46,6 +46,8 @@ import { StoreConfig } from '@datorama/akita';
  * @property {FederatariosEncabezado[]} tablaDatosFederatarios - Tabla de datos de fedatarios públicos.
  */
 export interface Tramite80101State {
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
   infoRegistro: Servicios;
   aduanaDeIngreso: Catalogo[];
   datosImmex: Servicio[];
@@ -227,7 +229,9 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   },
 
   indicePrevioRuta: 0,
-  tablaDatosFederatarios: []
+  tablaDatosFederatarios: [],
+  idSolicitud: 0,
+
 };
 
 /**
@@ -842,4 +846,18 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       return { ...state, datosAnexoTressDos: VALUE };
     });
   }
+
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
 }

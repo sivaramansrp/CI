@@ -1,4 +1,4 @@
-import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Catalogo, JsonResponseCatalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { InfoServicios, Servicio } from '../models/autorizacion-programa-nuevo.model';
 import { Observable, map } from 'rxjs';
 import { Tramite80102State, Tramite80102Store } from '../estados/tramite80102.store';
@@ -19,6 +19,11 @@ export class AutorizacionProgrmaNuevoService {
  constructor(private readonly http: HttpClient, public tramite80102Store: Tramite80102Store,
   private tramite80102Query:Tramite80102Query,public httpService: HttpCoreService,private complimentosService:ComplimentosService) {
    this.setProcedure();
+   this.setProcedureNo();
+  }
+
+   setProcedureNo(): void {
+    this.complimentosService.setProcedureNo('80102');
   }
 
   /**
@@ -143,8 +148,8 @@ getAllState(): Observable<Tramite80102State> {
  * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
  * @returns Observable con la respuesta de la solicitud POST.
  */
-guardarDatosPost(body: any) {
-  return this.httpService.post<any>(PROC_80102.GUARDAR, { body: body });
+guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
+  return this.httpService.post<Record<string, unknown>>(PROC_80102.GUARDAR, { body: body });
 }
 
 /**
@@ -156,6 +161,23 @@ guardarDatosPost(body: any) {
 setProcedure():void{
   const PROCEDURE='sat-t80102'
   this.complimentosService.setProcedure(PROCEDURE);
+}
+
+/**
+ * Obtiene información del servicio IMMEX desde el catálogo correspondiente.
+ *
+ * Realiza una solicitud HTTP GET al endpoint definido en `apiRoutes.servicoImex`
+ * y retorna la respuesta como un observable de tipo `JsonResponseCatalogo`.
+ *
+ * @returns Observable que emite la respuesta del catálogo IMMEX.
+ */
+getServicoImmex(): Observable<JsonResponseCatalogo> {
+  
+     return this.httpService.get<JsonResponseCatalogo>(
+    PROC_80102.servicoImex,
+    {},
+    false
+  );
 }
 
 }

@@ -2,6 +2,7 @@ import { AmpliacionServiciosResponse , CatalogoResponso, InfoServicios, PlantasS
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 import { Observable, map } from 'rxjs';
+import { ComplimentosService } from '../../../shared/services/complimentos.service';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { HttpClient } from '@angular/common/http';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
@@ -15,10 +16,27 @@ import { Tramite80101State } from '../estados/tramite80101.store';
   providedIn: 'root',
 })
 export class NuevoProgramaIndustrialService {
- constructor(private readonly http: HttpClient, private tramite80101Query: Tramite80101Query, public httpService: HttpCoreService) {
-   // No se necesita lógica de inicialización adicional.
-  }
+ constructor(private readonly http: HttpClient, private tramite80101Query: Tramite80101Query, public httpService: HttpCoreService, private complimentosService: ComplimentosService
+   ) {
+    // No se necesita lógica de inicialización adicional.
+    this.setProcedure();
+    this.setProcedureNo();
+   }
 
+   setProcedureNo(): void {
+    this.complimentosService.setProcedureNo('80104');
+  }
+ 
+   /**
+    * Establece el procedimiento actual para la gestión de trámites industriales.
+    * Asigna el identificador de procedimiento 'st_t80101' y lo configura en el servicio de cumplimientos.
+    *
+    * @returns {void} No retorna ningún valor.
+    */
+   setProcedure():void{
+     const PROCEDURE='sat-t80104'
+     this.complimentosService.setProcedure(PROCEDURE);
+   }
   /**
    * Obtiene los datos de ampliación de servicios desde un archivo JSON.
    * @returns {Observable<any>} - Observable con los datos obtenidos.
@@ -84,8 +102,8 @@ getSubfabricantesDisponibles(): Observable<PlantasSubfabricante[]> {
    * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
    * @returns Observable con la respuesta de la solicitud POST.
    */
-  guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
-    return this.httpService.post<Record<string, unknown>>(PROC_80104.GUARDAR, { body: body });
+  guardarDatosPost(body:any): Observable<any> {
+    return this.httpService.post<any>(PROC_80104.GUARDAR, { body: body });
   }
 
 }
