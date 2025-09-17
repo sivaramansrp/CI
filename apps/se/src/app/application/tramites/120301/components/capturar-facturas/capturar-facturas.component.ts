@@ -587,6 +587,15 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   abrirModalAgregar(): void {
+    const MODAL_ELEMENT = document.getElementById('modalAgregar');
+    if (MODAL_ELEMENT && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.parentNode?.removeChild(bd));
+      document.body.classList.remove('modal-open');
+      const OLD_INSTANCE = window.bootstrap.Modal.getInstance(MODAL_ELEMENT);
+      if (OLD_INSTANCE) {
+        OLD_INSTANCE.hide();
+      }
+    }
     this.modalMode = 'agregar';
     this.indiceSeleccionado = null;
     this.facturaForm.reset();
@@ -598,8 +607,11 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.facturaForm.get('unidadDeMedida')?.disable();
       this.facturaForm.get('pais')?.disable();
+      if (MODAL_ELEMENT && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+        const MODAL_INSTANCE = new window.bootstrap.Modal(MODAL_ELEMENT);
+        MODAL_INSTANCE.show();
+      }
     });
-    // Abra modal a través de Bootstrap o lógica angular si es necesario
   }
 
   /**
@@ -613,28 +625,52 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   abrirModalModificar(): void {
+    const MODAL_ELEMENT = document.getElementById('modalAgregar');
+    if (MODAL_ELEMENT && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.parentNode?.removeChild(bd));
+      document.body.classList.remove('modal-open');
+      const OLD_INSTANCE = window.bootstrap.Modal.getInstance(MODAL_ELEMENT);
+      if (OLD_INSTANCE) {
+        OLD_INSTANCE.hide();
+      }
+    }
     if (this.indiceSeleccionado !== null) {
       this.modalMode = 'modificar';
       const FACTURA = this.facturas[this.indiceSeleccionado];
       if (FACTURA) {
         this.facturaForm.reset();
         this.facturaForm.get('unidadDeMedida')?.enable();
-        // Asigne propiedades de CapturarColumns para formar controles perfectamente
-        this.facturaForm.get('numeroFactura')?.setValue(FACTURA.numeroDeLaFactura ?? '');
-        this.facturaForm.get('razonSocial')?.setValue(FACTURA.razonSocial ?? '');
-        this.facturaForm.get('domicilio')?.setValue(FACTURA.domicilio ?? '');
-        this.facturaForm.get('fechaExpedicionFactura')?.setValue(FACTURA.fechaExpedicionFactura ?? '');
-        this.facturaForm.get('cantidadTotal')?.setValue(FACTURA.cantidadTotal ?? '');
-        this.facturaForm.get('cantidadDisponible')?.setValue(FACTURA.cantidadDisponible ?? '');
-        this.facturaForm.get('unidadDeMedida')?.setValue(FACTURA.unidadMedida ?? '1');
-        this.facturaForm.get('valorDolares')?.setValue(FACTURA.valorDolares ?? '');
-
+        this.populateFacturaForm(FACTURA);
         setTimeout(() => {
           this.facturaForm.get('unidadDeMedida')?.disable();
           this.facturaForm.get('pais')?.disable();
+          if (MODAL_ELEMENT && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+            const MODAL_INSTANCE = new window.bootstrap.Modal(MODAL_ELEMENT);
+            MODAL_INSTANCE.show();
+          }
         });
       }
     }
+
+  }
+
+  /**
+   * Helper to populate facturaForm fields from a CapturarColumns object
+   */
+  private populateFacturaForm(FACTURA: CapturarColumns): void {
+    this.facturaForm.get('numeroFactura')?.setValue(FACTURA.numeroDeLaFactura ?? '');
+    this.facturaForm.get('razonSocial')?.setValue(FACTURA.razonSocial ?? '');
+    this.facturaForm.get('domicilio')?.setValue(FACTURA.domicilio ?? '');
+    this.facturaForm.get('fechaExpedicionFactura')?.setValue(FACTURA.fechaExpedicionFactura ?? '');
+    this.facturaForm.get('cantidadTotal')?.setValue(FACTURA.cantidadTotal ?? '');
+    this.facturaForm.get('cantidadDisponible')?.setValue(FACTURA.cantidadDisponible ?? FACTURA.cantidadTotal ?? '');
+    this.facturaForm.get('unidadDeMedida')?.setValue(FACTURA.unidadMedida ?? '1');
+    this.facturaForm.get('valorDolares')?.setValue(FACTURA.valorDolares ?? '');
+    this.facturaForm.get('taxId')?.setValue(FACTURA.taxId ?? '');
+    this.facturaForm.get('calle')?.setValue(FACTURA.calle ?? '');
+    this.facturaForm.get('ciudad')?.setValue(FACTURA.ciudad ?? '');
+    this.facturaForm.get('cp')?.setValue(FACTURA.cp ?? '');
+    this.facturaForm.get('pais')?.setValue(FACTURA.pais ?? 'ESTADOS UNIDOS DE AMERICA');
   }
 
   /**
@@ -687,32 +723,32 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
       cantidadDisponible: DATOS['cantidadDisponible'] ?? DATOS['cantidadTotal'],
       unidadMedida: DATOS['unidadDeMedida'],
       valorDolares: DATOS['valorDolares'],
+      taxId: DATOS['taxId'],
+      calle: DATOS['calle'],
+      ciudad: DATOS['ciudad'],
+      cp: DATOS['cp'],
+      pais: DATOS['pais'],
     };
     if (this.modalMode === 'agregar') {
       this.facturas = [...this.facturas, NUEVA_FACTURA];
+      this.indiceSeleccionado = null;
     } else if (this.modalMode === 'modificar' && this.indiceSeleccionado !== null) {
       this.facturas[this.indiceSeleccionado] = NUEVA_FACTURA;
       this.facturas = [...this.facturas];
+      this.indiceSeleccionado = null;
     }
-    this.indiceSeleccionado = null;
+
     setTimeout(() => {
       const MODAL_ELEMENT = document.getElementById('modalAgregar');
-      if (MODAL_ELEMENT && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const MODAL_INSTANCE = window.bootstrap.Modal.getInstance(MODAL_ELEMENT) || new window.bootstrap.Modal(MODAL_ELEMENT);
-        MODAL_INSTANCE.hide();
+      if (MODAL_ELEMENT && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+        const MODAL_INSTANCE = window.bootstrap.Modal.getInstance(MODAL_ELEMENT);
+        if (MODAL_INSTANCE) {
+          MODAL_INSTANCE.hide();
+        }
       }
-      // Eliminar el fondo modal persistente si está presente
-      setTimeout(() => {
-        const BACKDROPS = document.querySelectorAll('.modal-backdrop');
-        BACKDROPS.forEach(bd => bd.parentNode?.removeChild(bd));
-        document.body.classList.remove('modal-open');
-      }, 350);
-      // Mostrar modal de alerta de éxito del estilo Persona Física
-      const AGREGAR_REGISTRO_MODAL = document.getElementById('modalAgregar');
-      if (AGREGAR_REGISTRO_MODAL && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const AGREGAR_REGISTRO_INSTANCE = window.bootstrap.Modal.getInstance(AGREGAR_REGISTRO_MODAL) || new window.bootstrap.Modal(AGREGAR_REGISTRO_MODAL);
-        AGREGAR_REGISTRO_INSTANCE.show();
-      }
+
+      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.parentNode?.removeChild(bd));
+      document.body.classList.remove('modal-open');
     }, 300);
   }
 
@@ -823,6 +859,14 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * No recibe parámetros y no retorna ningún valor.
    * @returns {void} No retorna ningún valor.
    */
+  /**
+   * @method eliminarFacturasAsociadas
+   * @description
+   * Elimina las facturas asociadas seleccionadas de la tabla y limpia el fondo modal persistente si existe.
+   * Si no hay filas seleccionadas, no realiza ninguna acción.
+   * Actualiza el arreglo de facturas asociadas, limpia la selección y elimina el fondo modal si está presente.
+   * @returns {void} No retorna ningún valor.
+   */
   eliminarFacturasAsociadas(): void {
     if (this.seleccionadasParaEliminar.length === 0) {
       return;
@@ -831,6 +875,18 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
       item => !this.seleccionadasParaEliminar.includes(item)
     );
     this.seleccionadasParaEliminar = [];
+    // Cerrar el modal de eliminar si está abierto
+    setTimeout(() => {
+      const MODAL_ELEMENT = document.getElementById('confirmarEliminar');
+      if (MODAL_ELEMENT && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+        const MODAL_INSTANCE = window.bootstrap.Modal.getInstance(MODAL_ELEMENT) || new window.bootstrap.Modal(MODAL_ELEMENT);
+        MODAL_INSTANCE.hide();
+      }
+      // Eliminar el fondo modal persistente si está presente
+      const BACKDROPS = document.querySelectorAll('.modal-backdrop');
+      BACKDROPS.forEach(bd => bd.parentNode?.removeChild(bd));
+      document.body.classList.remove('modal-open');
+    }, 350);
   }
   /**
    * @property {boolean} puedeModificar

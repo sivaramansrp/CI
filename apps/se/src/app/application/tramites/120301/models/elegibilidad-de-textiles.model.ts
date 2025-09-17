@@ -339,6 +339,16 @@ export interface CapturarColumns {
   unidadMedida: string;
   /** Valor en dólares estadounidenses */
   valorDolares: string;
+  /** TAX ID del emisor */
+  taxId?: string;
+  /** Calle del domicilio fiscal */
+  calle?: string;
+  /** Ciudad del domicilio fiscal */
+  ciudad?: string;
+  /** Código postal del domicilio fiscal */
+  cp?: string;
+  /** País del domicilio fiscal */
+  pais?: string;
 }
 
 /**
