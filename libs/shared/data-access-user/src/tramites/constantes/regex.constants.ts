@@ -905,7 +905,7 @@ export const EMAIL = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
  * - www.ejemplo.com
  * - ejemplo.com/ruta
  */
-export const WEBPAGE = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+export const WEBPAGE = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})(:[0-9]{1,5})?(\/[^\s]*)?$/i;
 /**
  * Expresión regular para validar números con hasta 6 dígitos enteros y opcionalmente hasta 6 decimales.
   */
