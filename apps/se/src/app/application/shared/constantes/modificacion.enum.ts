@@ -296,3 +296,12 @@ export const CONFIGURACION_MERCANCIA_TABLA = [
  * @type {number[]}
  */
 export const FECHA_ID = [ 110204,110223 ];
+/**
+ * @constant REQUIREDA
+ * @description
+ * Arreglo de identificadores de procedimiento para los cuales ciertos campos son requeridos.
+ * Se utiliza para establecer validaciones adicionales en formularios cuando el ID del procedimiento
+ * coincide con algún valor de este arreglo.
+ * @type {number[]}
+ */
+export const REQUIREDA = [110204,110205];
