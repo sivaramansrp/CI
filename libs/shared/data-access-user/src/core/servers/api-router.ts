@@ -254,13 +254,13 @@ export const IDSOLICITUD = '{idSolicitud}';
  * API para guardar el acuse de una solicitud.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/guardar-documento
  */
-export const API_POST_GUARDAR_ACUSE = `sat-t130118/solicitud/${IDSOLICITUD}/acuse/guardar`;
+export const API_POST_GUARDAR_ACUSE = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/acuse/guardar`;
 
 /**
  * API para generar la vista previa del acuse de una solicitud.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-documento
  */
-export const API_POST_VISTA_PREVIA = `sat-t130118/solicitud/${IDSOLICITUD}/acuse/vista-previa`;
+export const API_POST_VISTA_PREVIA = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/acuse/vista-previa`;
 
 /**
  * API para obtener los documentos
