@@ -804,7 +804,18 @@ export class AnexoComponent implements OnInit, OnDestroy {
         .get('importacionForm.commodityNicoDescImportacion')
         ?.disable();
     }
-  
+
+  onFilaSeleccionada(event: any):void{
+    console.log('Fila seleccionada:', event);
+    // Update the form with selected row data
+    if (event && event.length > 0) {
+      this.immexRegistroform.get('importacionForm')?.patchValue({
+        fraccionArancelaria: event[0]?.fraccionArancelaria || '',
+        umt: event[0]?.umt || '',
+        descripcion: event[0]?.descripcionTigie || '',
+      });
+    }
+  }
     /**
      * @method ngOnDestroy
      * @description Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.

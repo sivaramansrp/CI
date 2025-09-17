@@ -2,7 +2,8 @@
   <!-- Pasos para la sección de exportación -->
   <form [formGroup]="immexRegistroform">
     <div formGroupName="exportacionForm">
-      <ng-titulo titulo="Permiso Immex"></ng-titulo>
+      <ng-titulo titulo="Fracción arancelaria de importación(sensibles)
+"></ng-titulo>
       <div class="row">
         <div class="col-6 col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6">
           <label for="permiso-immex">Fracción arancelaria de importación(sensibles):</label>
@@ -17,7 +18,7 @@
       </div>
       <div class="row  mt-5" *ngIf="showTableExport">
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla"
-          [datos]="immexTableDatos" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
+          [datos]="immexTableDatos" [disableSeleccionTablaRadio]="esFormularioSoloLectura" (filaSeleccionada)="onFilaSeleccionada($event)" ></app-tabla-dinamica>
 
         <div class="container text-end mt-5">
           <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura"
@@ -48,7 +49,7 @@
         </div>
         <div class="row  mt-5" *ngIf="showTableFractionExp">
           <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="fraccionExportacionTabla"
-            [datos]="fraccionTablaDatos" [disableSeleccionTablaRadio]="esFormularioSoloLectura">
+            [datos]="fraccionTablaDatos" [disableSeleccionTablaRadio]="esFormularioSoloLectura" >
           </app-tabla-dinamica>
           <div class="container text-end mt-5">
             <button class="btn btn-primary me-2" (click)="mostrarDetalleMercanciaExportacion()"
