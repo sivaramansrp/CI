@@ -61,8 +61,8 @@ export class IniciarTramiteResolver implements Resolve<IniciarResolverResult | b
       switchMap((perfilUsuario) => {
         // Construir el payload con datos del usuario o valores por defecto
         const PAYLOAD: IniciarRequest = {
-          rfcSolicitante: perfilUsuario?.rfc || 'ABC123456789212', // RFC del usuario o fallback
-          rolActual: 'CapturistaGubernamental',
+          rfc_solicitante: perfilUsuario?.rfc || 'ABC123456789212', // RFC del usuario o fallback
+          rol_actual: 'CapturistaGubernamental',
           folioPrograma: "FOL123456",
           idTipoTramite:Number(INICIAR_CONFIG?.procedureId),
           discriminador:INICIAR_CONFIG?.procedureId // Valor estándar
