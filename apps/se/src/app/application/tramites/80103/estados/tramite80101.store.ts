@@ -70,7 +70,9 @@ export interface Tramite80101State {
   tablaDatosComplimentos: SociaoAccionistas[];
   tablaDatosComplimentosExtranjera: SociaoAccionistas[];
 
+  /** Contiene los datos del primer anexo Tress. */
   datosAnexoTress: DatosAnexotressUno;
+  /** Contiene los datos del segundo anexo Tress. */
   datosAnexoTressDos: DatosAnexotressUno;
 
   empressaSubFabricantePlantas: EmpressaSubFabricantePlantas;

@@ -61,6 +61,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy,OnInit {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+  /** Indica si el botón Guardar está habilitado o visible. */
   public btnGuardar: boolean = true;
 
   /** Indica la visibilidad del botón Guardar. */

@@ -64,6 +64,7 @@ export class PasoUnoCsComponent implements OnInit {
   */
    indice: number = 1;
 
+   /** Indica si el formulario está deshabilitado. */
  public formularioDeshabilitado: boolean = false;
 
 /**
