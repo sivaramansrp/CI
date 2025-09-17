@@ -1,10 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Solicitud260910Query } from '../../estados/tramites260910.query';
 import { Solicitud260910State } from '../../estados/tramites260910.store';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
-import { Subject } from 'rxjs';
+import { TercerosRelacionados } from '../../models/solicitud-datos.model';
+import { TercerosRelacionadosFabSeccionComponent } from '../../../../shared/components/terceros-relacionados-fab-seccion/terceros-relacionados-fab-seccion.component';
 
 /**
  * Componente para gestionar el primer paso de un proceso.
@@ -53,6 +55,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   solicitud260910State: Solicitud260910State = {} as Solicitud260910State;
 
   /**
+   * Referencia a una lista de componentes `TercerosRelacionadosFabSeccionComponent`.
+   */ 
+  @ViewChildren(TercerosRelacionadosFabSeccionComponent)
+  tercerosRelacionadosComponents!: QueryList<TercerosRelacionadosFabSeccionComponent>;
+
+  /**
    * Constructor del componente.
    * @param {SolicitudDatosService} service - Servicio para obtener datos de solicitud
    * @param {ConsultaioQuery} consultaioQuery - Query para acceder al estado de consulta
@@ -60,8 +68,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   constructor(
     private service: SolicitudDatosService,
     private consultaioQuery: ConsultaioQuery,
-    private fb: FormBuilder
-  ) { }
+    private fb: FormBuilder,
+    public solicitud260910Query: Solicitud260910Query
+  ) {
+    this.solicitud260910Query.seleccionarSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((respuesta: Solicitud260910State) => {
+          this.solicitud260910State = respuesta;
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Inicializa el componente configurando las suscripciones necesarias.
@@ -126,6 +144,32 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       this.esDatosRespuesta = true;
     }
+  }
+
+  /**
+   * Recopila los valores actuales de los formularios hijos.
+   * @returns {tercerosRelacionados?: TercerosRelacionados[]} Objeto con los valores del formulario
+   */
+  collectFormValues(): {
+      tercerosRelacionados?: TercerosRelacionados[];
+    } {
+      const FORM_VALUES = {
+        tercerosRelacionados: this.tercerosRelacionadosComponents?.map(
+          (component) => ({
+            facturador: component.agregarFacturadorFormGroup?.value,
+            fabricante: component.agregarFabricanteFormGroup?.value,
+            destinatario: component.agregarDestinatarioFormGroup?.value,
+            proveedor: component.agregarProveedorFormGroup?.value,
+          })
+        ) as TercerosRelacionados[], // Fetch data from TercerosRelacionadosFabSeccionComponent        
+      };
+      
+    this.service.updateFormData(
+      'tercerosRelacionados',
+      FORM_VALUES.tercerosRelacionados
+    );
+
+    return FORM_VALUES;
   }
 
   /**

@@ -3,41 +3,104 @@
     <div class="col-md-12">
       <div class="panel-group ficha-collapse" id="accordion">
         <div class="panel panel-default">
-          <div class="panel-heading" (click)="mostrarColapsable()" (keyup.enter)="mostrarColapsable()" tabindex="0">
-            <h6 class="panel-title">
+          <div
+            class="panel-heading"
+            (click)="mostrarColapsable()"
+            (keyup.enter)="mostrarColapsable()"
+            tabindex="0"
+          >
+            <h6 class="panel-title word-spacing-10">
               <h6>
                 <a aria-label="Repeat">
                   <i class="bi bi-clipboard2-fill" aria-hidden="true"></i>
-                </a> Opciones de pre-llenado de Solicitud
+                </a>
+                Opciones de pre-llenado de Solicitud
               </h6>
             </h6>
-            <button type="button" class="collpase-button {{(!colapsable) ? 'collapsed' : '' }}" (keydown)="mostrarColapsable()" [disabled]="esFormularioSoloLectura"></button>
-          </div> @if(colapsable){ <div class="panel-collapse collapse in" id="panel-01">
+            <button
+              type="button"
+              class="collpase-button {{ !colapsable ? 'collapsed' : '' }}"
+              (keydown)="mostrarColapsable()"
+              [disabled]="esFormularioSoloLectura"
+            ></button>
+          </div>
+          @if(colapsable){
+          <div class="panel-collapse collapse in" id="panel-01">
             <div class="panel-body">
               <ng-alert [CONTENIDO]="TEXTOS.TEXTOS_SOLICITUD"></ng-alert>
               <div class="col-md-12 mr-0">
                 <label for="solicitud">Solicitud</label>
               </div>
               <div class="col-md-12">
-                <app-tabla-dinamica [tipoSeleccionTabla]="solicitudSeleccionTabla" [datos]="solicitudDatos" [configuracionTabla]="solicitudConfiguracionTabla"></app-tabla-dinamica>
-              </div> @if(solicitud260910State.tipoOperacion === 'MOD' || solicitud260910State.tipoOperacion === 'MYP') { <div class="col-md-12 mt-4 d-flex justify-content-end align-items-end">
+                <app-tabla-dinamica
+                  [tipoSeleccionTabla]="solicitudSeleccionTabla"
+                  [datos]="solicitudDatos"
+                  [configuracionTabla]="solicitudConfiguracionTabla"
+                ></app-tabla-dinamica>
+              </div>
+              @if(solicitud260910State.tipoOperacion === 'MOD' ||
+              solicitud260910State.tipoOperacion === 'MYP') {
+              <div
+                class="col-md-12 mt-4 d-flex justify-content-end align-items-end"
+              >
                 <div class="btn-group">
-                  <button class="btn btn-primary ms-2" type="button" [disabled]="esFormularioSoloLectura"> Copiar datos en una Nueva Solcitud </button>
+                  <button
+                    class="btn btn-primary ms-2"
+                    type="button"
+                    [disabled]="esFormularioSoloLectura"
+                  >
+                    Copiar datos en una Nueva Solcitud
+                  </button>
                 </div>
-              </div> }
+              </div>
+              }
             </div>
-          </div> }
+          </div>
+          }
         </div>
       </div>
     </div>
     <div class="col-md-12">
-      <label class="form-label" for="tipoOperacion">Seleccione el tipo de operaci&oacute;n que desea realizar*:</label>
-      <app-input-radio [radioOptions]="tipoOperacionRadioOptions" [selectedValue]="solicitudForm.get('tipoOperacion')?.value" [isRequired]="true" [layout]="'horizontal'" formControlName="tipoOperacion" (valueChange)="setTipoOperacion($event)"></app-input-radio>
+      <label class="form-label" for="tipoOperacion"
+        >Seleccione el tipo de operaci&oacute;n que desea realizar*:</label
+      >
+      <app-input-radio
+        [radioOptions]="tipoOperacionRadioOptions"
+        [selectedValue]="solicitudForm.get('tipoOperacion')?.value"
+        [isRequired]="true"
+        [layout]="'horizontal'"
+        formControlName="tipoOperacion"
+        (valueChange)="setTipoOperacion($event)"
+      ></app-input-radio>
     </div>
     <div class="col-md-12">
       <div class="form-group">
-        <label class="form-label" for="observaciones">Justificación*:</label>
-        <textarea class="form-control cstm-ht" id="observaciones" formControlName="observaciones" (change)="setValoresStore(solicitudForm,'observaciones', 'setObservaciones')" rows="5" cols="70"></textarea>
+        <label class="form-label" for="observaciones"
+          >Justificación
+          <span
+            for="asterisk"
+            [ngClass]="
+              esValido(solicitudForm, 'observaciones') ? 'require' : ''
+            "
+            >*</span
+          >:</label
+        >
+        <textarea
+          class="form-control cstm-ht"
+          id="observaciones"
+          formControlName="observaciones"
+          [ngClass]="esValido(solicitudForm, 'observaciones') ? 'required' : ''"
+          (change)="
+            setValoresStore(solicitudForm, 'observaciones', 'setObservaciones')
+          "
+          rows="5"
+          cols="70"
+          maxlength="2000"
+        ></textarea>
+        @if (solicitudForm.controls['observaciones'].errors?.['required'] &&
+        solicitudForm.controls['observaciones'].touched) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
       </div>
     </div>
     <div class="col-md-12">
@@ -45,98 +108,402 @@
     </div>
     <div class="col-md-12">
       <div class="text-end">
-        <button type="button" class="btn btn-primary" name="seleccionarEstablecimiento" id="btnEstablecimiento" title="Selecciona para habilitar los campos del establecimiento" data-bs-toggle="modal" data-bs-target="#modal-alerta" (click)="seleccionarEstablecimiento()" [disabled]="esFormularioSoloLectura">Seleccionar establecimiento</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          name="seleccionarEstablecimiento"
+          id="btnEstablecimiento"
+          title="Selecciona para habilitar los campos del establecimiento"
+          data-bs-toggle="modal"
+          data-bs-target="#modal-alerta"
+          (click)="seleccionarEstablecimiento()"
+          [disabled]="esFormularioSoloLectura"
+        >
+          Seleccionar establecimiento
+        </button>
       </div>
     </div>
     <div class="col-md-4 mt-4">
-      <label class="form-label" for="rfcSanitario">RFC del responsable sanitario*:</label>
-      <input class="form-control" id="rfcSanitario" placeholder="" type="text" formControlName="rfcSanitario" />
+      <label class="form-label" for="rfcSanitario"
+        >RFC del responsable sanitario<span
+          for="asterisk"
+          [ngClass]="esValido(solicitudForm, 'rfcSanitario') ? 'require' : ''"
+          >*</span
+        >:</label
+      >
+      <input
+        class="form-control"
+        id="rfcSanitario"
+        placeholder=""
+        type="text"
+        maxlength="13"
+        [ngClass]="esValido(solicitudForm, 'rfcSanitario') ? 'required' : ''"
+        formControlName="rfcSanitario"
+      />
+      @if (solicitudForm.controls['rfcSanitario'].errors?.['required'] &&
+      solicitudForm.controls['rfcSanitario'].touched) {
+      <span class="mensaje-error">Este campo es obligatorio</span>
+      } @if (solicitudForm.controls['rfcSanitario'].errors?.['pattern'] &&
+      (solicitudForm.controls['rfcSanitario'].touched ||
+      solicitudForm.controls['rfcSanitario'].dirty)) {
+      <span class="mensaje-error">El RFC no tiene un formato válido.</span>
+      }
     </div>
     <div class="col-md-8 mt-4">
-      <label class="form-label" for="razonSocial">Denominación o razón social*:</label>
-      <input class="form-control" id="razonSocial" placeholder="" type="text" formControlName="razonSocial" />
+      <label class="form-label" for="razonSocial"
+        >Denominación o razón social<span
+          for="asterisk"
+          [ngClass]="esValido(solicitudForm, 'razonSocial') ? 'require' : ''"
+          >*</span
+        >:</label
+      >
+      <input
+        class="form-control"
+        id="razonSocial"
+        placeholder=""
+        type="text"
+        maxlength="100"
+        formControlName="razonSocial"
+        [ngClass]="esValido(solicitudForm, 'razonSocial') ? 'required' : ''"
+      />
+      @if (solicitudForm.controls['razonSocial'].errors?.['required'] &&
+      solicitudForm.controls['razonSocial'].touched) {
+      <span class="mensaje-error">Este campo es obligatorio</span>
+      } @if (solicitudForm.controls['razonSocial'].errors?.['pattern'] &&
+      (solicitudForm.controls['razonSocial'].touched ||
+      solicitudForm.controls['razonSocial'].dirty)) {
+      <span class="mensaje-error"
+        >Por favor, corrige la descripción/dirección.</span
+      >
+      }
     </div>
     <div class="col-md-4 mt-4">
-      <label class="form-label" for="correoElectronico">Correo electrónico*:</label>
-      <input class="form-control" id="correoElectronico" placeholder="" type="text" formControlName="correoElectronico" />
+      <label class="form-label" for="correoElectronico"
+        >Correo electrónico<span
+          for="asterisk"
+          [ngClass]="
+            esValido(solicitudForm, 'correoElectronico') ? 'require' : ''
+          "
+          >*</span
+        >:
+        <span tooltip="ejemplo@dominio.com"
+          ><i class="bi bi-question-circle-fill"></i
+        ></span>
+      </label>
+      <input
+        class="form-control"
+        id="correoElectronico"
+        placeholder=""
+        type="text"
+        formControlName="correoElectronico"
+        [ngClass]="
+          esValido(solicitudForm, 'correoElectronico') ? 'required' : ''
+        "
+      />
+      @if (solicitudForm.controls['correoElectronico'].errors?.['required'] &&
+      solicitudForm.controls['correoElectronico'].touched) {
+      <span class="mensaje-error">Este campo es obligatorio</span>
+      } @if (solicitudForm.controls['correoElectronico'].errors?.['pattern'] &&
+      (solicitudForm.controls['correoElectronico'].touched ||
+      solicitudForm.controls['correoElectronico'].dirty)) {
+      <span class="mensaje-error"
+        >El valor Ingresado no es una dirección válida de correo
+        electrónico</span
+      >
+      }
     </div>
     <div class="col-md-12">
       <ng-titulo titulo="Domicilio del establecimiento" />
     </div>
     <div class="col-md-4 mt-4">
-      <label class="form-label" for="codigoPostal">Código postal*:</label>
-      <input class="form-control" id="codigoPostal" placeholder="" type="number" formControlName="codigoPostal" />
+      <label class="form-label" for="codigoPostal"
+        >Código postal<span
+          for="asterisk"
+          [ngClass]="esValido(solicitudForm, 'codigoPostal') ? 'require' : ''"
+          >*</span
+        >:</label
+      >
+      <input
+        class="form-control"
+        id="codigoPostal"
+        placeholder=""
+        type="text"
+        formControlName="codigoPostal"
+        maxlength="12"
+        [ngClass]="esValido(solicitudForm, 'codigoPostal') ? 'required' : ''"
+      />
+      @if (solicitudForm.controls['codigoPostal'].errors?.['required'] &&
+      solicitudForm.controls['codigoPostal'].touched) {
+      <span class="mensaje-error">Este campo es obligatorio</span>
+      } @if (solicitudForm.controls['codigoPostal'].errors?.['pattern'] &&
+      (solicitudForm.controls['codigoPostal'].touched ||
+      solicitudForm.controls['codigoPostal'].dirty)) {
+      <span class="mensaje-error"
+        >Por favor, escribe un número entero válido</span
+      >
+      }
     </div>
     <div class="col-md-4 mt-4">
-      <app-catalogo-select [id]="'estado'" [catalogo]="estadoCatalogo.catalogos" [label]="estadoCatalogo.labelNombre" [placeholder]="estadoCatalogo.primerOpcion" [required]="estadoCatalogo.required" formControlName="estado" (selectionChange)="setEstado($event)" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+      <app-catalogo-select
+        [id]="'estado'"
+        [catalogo]="estadoCatalogo.catalogos"
+        [label]="estadoCatalogo.labelNombre"
+        [placeholder]="estadoCatalogo.primerOpcion"
+        [required]="estadoCatalogo.required"
+        formControlName="estado"
+        (selectionChange)="setEstado($event)"
+        [isDisabled]="esFormularioSoloLectura"
+      ></app-catalogo-select>
     </div>
     <div class="col-md-4 mt-4">
-      <label class="form-label" for="municipio">Municipio y alcaldía*:</label>
-      <input class="form-control" id="municipio" placeholder="" type="text" formControlName="municipio" />
+      <label class="form-label" for="municipio"
+        >Municipio y alcaldía<span
+          for="asterisk"
+          [ngClass]="esValido(solicitudForm, 'municipio') ? 'require' : ''"
+          >*</span
+        >:</label
+      >
+      <input
+        class="form-control"
+        id="municipio"
+        placeholder=""
+        type="text"
+        formControlName="municipio"
+        maxlength="120"
+        [ngClass]="esValido(solicitudForm, 'municipio') ? 'required' : ''"
+      />
+      @if (solicitudForm.controls['municipio'].errors?.['required'] &&
+      solicitudForm.controls['municipio'].touched) {
+      <span class="mensaje-error">Este campo es obligatorio</span>
+      }
     </div>
     <div class="col-md-4 mt-4">
       <label class="form-label" for="localidad">Localidad:</label>
-      <input class="form-control" id="Localidad" placeholder="" type="text" formControlName="localidad" />
+      <input
+        class="form-control"
+        id="Localidad"
+        placeholder=""
+        type="text"
+        formControlName="localidad"
+        maxlength="120"
+      />
     </div>
     <div class="col-md-4 mt-4">
-      <label class="form-label" for="colonia">Colonia*:</label>
-      <input class="form-control" id="colonia" placeholder="" type="text" formControlName="colonia" />
+      <label class="form-label" for="colonia"
+        >Colonia:</label
+      >
+      <input
+        class="form-control"
+        id="colonia"
+        placeholder=""
+        type="text"
+        formControlName="colonia"
+        maxlength="120"
+      />
     </div>
     <div class="col-md-8 mt-4">
-      <label class="form-label" for="calle">Calle*: <span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span>
+      <label class="form-label" for="calle"
+        >Calle<span
+          for="asterisk"
+          [ngClass]="esValido(solicitudForm, 'calle') ? 'require' : ''"
+          >*</span
+        >:
+        <span
+          tooltip="Domicilio, calle, n&uacute;mero interior, n&uacute;mero exterior, lote"
+          ><i class="bi bi-question-circle-fill"></i
+        ></span>
       </label>
-      <input class="form-control" id="calle" placeholder="" type="text" formControlName="calle" />
+      <input
+        class="form-control"
+        id="calle"
+        placeholder=""
+        type="text"
+        formControlName="calle"
+        maxlength="100"
+        [ngClass]="esValido(solicitudForm, 'calle') ? 'required' : ''"
+      />
+      @if (solicitudForm.controls['calle'].errors?.['required'] &&
+      solicitudForm.controls['calle'].touched) {
+      <span class="mensaje-error">Este campo es obligatorio</span>
+      }
     </div>
     <div class="row">
       <div class="col-md-1 mt-4">
         <label class="form-label" for="lada">Lada:</label>
-        <input class="form-control" id="lada" placeholder="" type="number" formControlName="lada" />
+        <input
+          class="form-control"
+          id="lada"
+          placeholder=""
+          type="text"
+          maxlength="5"
+          formControlName="lada"
+        />
+        @if (solicitudForm.controls['lada'].errors?.['pattern'] &&
+        (solicitudForm.controls['lada'].touched ||
+        solicitudForm.controls['lada'].dirty)) {
+        <span class="mensaje-error"
+          >Por favor, escribe un número entero válido</span
+        >
+        }
       </div>
       <div class="col-md-3 mt-4">
-        <label class="form-label" for="telefono">Teléfono*:</label>
-        <input class="form-control" id="telefono" placeholder="" type="number" formControlName="telefono" />
+        <label class="form-label" for="telefono"
+          >Teléfono<span
+            for="asterisk"
+            [ngClass]="esValido(solicitudForm, 'telefono') ? 'require' : ''"
+            >*</span
+          >:</label
+        >
+        <input
+          class="form-control"
+          id="telefono"
+          placeholder=""
+          type="text"
+          formControlName="telefono"
+          maxlength="30"
+          [ngClass]="esValido(solicitudForm, 'telefono') ? 'required' : ''"
+        />
+        @if (solicitudForm.controls['telefono'].errors?.['required'] &&
+        solicitudForm.controls['telefono'].touched) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        } @if (solicitudForm.controls['telefono'].errors?.['pattern'] &&
+        (solicitudForm.controls['telefono'].touched ||
+        solicitudForm.controls['telefono'].dirty)) {
+        <span class="mensaje-error"
+          >Por favor, escribe un número entero válido</span
+        >
+        }
       </div>
     </div>
     <div class="col-md-12 mt-5">
       <label class="form-label mb-5" for="">S.C.I.A.N.*:</label>
-      <app-tabla-dinamica [tipoSeleccionTabla]="SCIANSeleccionTabla" [datos]="SCIANDatos" (listaDeFilaSeleccionada)="getSCIANDatos($event)" [configuracionTabla]="SCIANConfiguracionTabla" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="SCIANSeleccionTabla"
+        [datos]="SCIANDatos"
+        (listaDeFilaSeleccionada)="getSCIANDatos($event)"
+        [configuracionTabla]="SCIANConfiguracionTabla"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+      ></app-tabla-dinamica>
     </div>
     <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
       <div class="btn-group">
-        <button class="btn btn-default ms-3" type="button" name="eliminar" id="eliminarSCIAN" data-bs-toggle="modal" data-bs-target="#modal-confirmar" (click)="confirmarEliminarMercancias('SCIAN')" [disabled]="esFormularioSoloLectura"> Eliminar </button>
-        <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modal-agregar-scian" (click)="openAgregarSCIAN()" [disabled]="esFormularioSoloLectura"> Agregar </button>
+        <button
+          class="btn btn-danger ms-3"
+          type="button"
+          name="eliminar"
+          id="eliminarSCIAN"
+          (click)="confirmarEliminarMercancias('SCIAN')"
+          [disabled]="esFormularioSoloLectura"
+        >
+          Eliminar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary ms-3"
+          data-bs-toggle="modal"
+          data-bs-target="#modal-agregar-scian"
+          (click)="openAgregarSCIAN()"
+          [disabled]="esFormularioSoloLectura"
+        >
+          Agregar
+        </button>
       </div>
     </div>
     <div class="col-md-4 mt-4">
       <div class="form-check mt-3">
-        <lib-input-check [id]="'avisoDeFuncionamiento'" [label]="'Aviso de funcionamiento'" [required]="true" formControlName="avisoDeFuncionamiento" (change)="setAvisoDeFuncionamiento()" [isDisabled]="esFormularioSoloLectura"></lib-input-check>
+        <lib-input-check
+          [id]="'avisoDeFuncionamiento'"
+          [label]="'Aviso de funcionamiento:'"
+          [required]="true"
+          formControlName="avisoDeFuncionamiento"
+          (change)="setAvisoDeFuncionamiento()"
+          [isDisabled]="esFormularioSoloLectura"
+        ></lib-input-check>
       </div>
     </div>
     <div class="col-md-4 mt-4">
-      <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria: <span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span>
+      <label class="form-label" for="licenciaSanitaria"
+        >No. de licencia sanitaria:
+        <span
+          tooltip="Número de la autorización indicado en el documento emitido por la autoridad sanitaria competente"
+          ><i class="bi bi-question-circle-fill"></i
+        ></span>
       </label>
-      <input class="form-control" id="licenciaSanitaria" placeholder="" type="text" formControlName="licenciaSanitaria" (change)="setLicenciaSanitaria($event)" />
-    </div>
-    <div class="col-md-6 mt-4">
-      <div class="form-check mt-3">
-        <lib-input-check [id]="'liveFreshFrozen'" [label]="'Marcar en caso de que sea VIVO/FRESCO/ENHIELADO'" [required]="true" formControlName="liveFreshFrozen" (change)="setLiveFreshFrozen()" [isDisabled]="esFormularioSoloLectura"></lib-input-check>
-      </div>
+      <input
+        class="form-control"
+        id="licenciaSanitaria"
+        placeholder=""
+        type="text"
+        formControlName="licenciaSanitaria"
+        (change)="setLicenciaSanitaria($event)"
+      />
     </div>
     <div class="col-md-8 mt-4">
-      <app-catalogo-select [id]="'regimenCatalogo'" [catalogo]="regimenCatalogo.catalogos" [label]="regimenCatalogo.labelNombre" [placeholder]="regimenCatalogo.primerOpcion" [required]="regimenCatalogo.required" formControlName="regimen" (selectionChange)="setRegimen($event)" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+      <app-catalogo-select
+        [id]="'regimenCatalogo'"
+        [catalogo]="regimenCatalogo.catalogos"
+        [label]="regimenCatalogo.labelNombre"
+        [placeholder]="regimenCatalogo.primerOpcion"
+        [required]="regimenCatalogo.required"
+        formControlName="regimen"
+        (selectionChange)="setRegimen($event)"
+        [tooltipQuestionCircle]="true"
+        tooltipQuestionCircleText="Régimen al que se destinará la mercancia"
+        [isDisabled]="esFormularioSoloLectura"
+      ></app-catalogo-select>
     </div>
     <div class="col-md-4 mt-4">
-      <app-catalogo-select [id]="'aduana'" [catalogo]="aduanaCatalogo.catalogos" [label]="aduanaCatalogo.labelNombre" [placeholder]="aduanaCatalogo.primerOpcion" [required]="aduanaCatalogo.required" formControlName="aduana" (selectionChange)="setAduana($event)" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+      <app-catalogo-select
+        [id]="'aduana'"
+        [catalogo]="aduanaCatalogo.catalogos"
+        [label]="aduanaCatalogo.labelNombre"
+        [placeholder]="aduanaCatalogo.primerOpcion"
+        [required]="aduanaCatalogo.required"
+        formControlName="aduana"
+        (selectionChange)="setAduana($event)"
+        [isDisabled]="esFormularioSoloLectura"
+      ></app-catalogo-select>
     </div>
     <div class="col-md-12 mt-4">
       <label class="form-label mb-5" for="">Mercancías*:</label>
-      <app-tabla-dinamica [tipoSeleccionTabla]="mercanciasSeleccionTabla" [datos]="mercanciasDatos" (listaDeFilaSeleccionada)="getMercanciasDatos($event)" [configuracionTabla]="mercanciasConfiguracionTabla" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="mercanciasSeleccionTabla"
+        [datos]="mercanciasDatos"
+        (listaDeFilaSeleccionada)="getMercanciasDatos($event)"
+        [configuracionTabla]="mercanciasConfiguracionTabla"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+      ></app-tabla-dinamica>
     </div>
     <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
       <div class="btn-group">
-        <button type="button" class="btn btn-default btn-space" data-bs-toggle="modal" data-bs-target="#modal-agregar-mercancias" (click)="openModificarMercancias()" [disabled]="esFormularioSoloLectura"> Modificar </button>
-        <button class="btn btn-default ms-3" type="button" name="eliminar" id="eliminarMercancias" data-bs-toggle="modal" data-bs-target="#modal-confirmar" (click)="confirmarEliminarMercancias('Mercancias')" [disabled]="esFormularioSoloLectura"> Eliminar </button>
-        <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modal-agregar-mercancias" (click)="openAgregarMercancias()" [disabled]="esFormularioSoloLectura"> Agregar </button>
+        <button
+          type="button"
+          class="btn btn-default btn-space"
+          (click)="openModificarMercancias()"
+          [disabled]="esFormularioSoloLectura"
+        >
+          Modificar
+        </button>
+        <button
+          class="btn btn-danger ms-3"
+          type="button"
+          name="eliminar"
+          id="eliminarMercancias"
+          (click)="confirmarEliminarMercancias('Mercancias')"
+          [disabled]="esFormularioSoloLectura"
+        >
+          Eliminar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary ms-3"
+          data-bs-toggle="modal"
+          data-bs-target="#modalAgregarMercancias"
+          (click)="openAgregarMercancias()"
+          [disabled]="esFormularioSoloLectura"
+        >
+          Agregar
+        </button>
       </div>
     </div>
     <div class="col-md-12 mt-4">
@@ -144,55 +511,147 @@
       <div class="alert alert-info">
         <label style="font-weight: normal">
           <div class="col-md-1 mt-5">
-            <input type="checkbox" class="mt-5" formControlName="manifesto" (change)="setManifesto($event)" id="manifesto" />
-            <b> *</b>
+            <input
+              type="checkbox"
+              class="mt-5"
+              formControlName="manifesto"
+              (change)="setManifesto($event)"
+              id="manifesto"
+            />
+            <div class="manifiesto">
+              <label for="asterisk" class="fw-bold">*</label>
+            </div>
           </div>
-          <div class="col-md-11 mt-4"> Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma. </div>
+          <div class="col-md-11 mt-4">
+            Cumplo con los requisitos y normatividad aplicable, sin que me
+            eximan de que la autoridad sanitaria verifique su cumplimiento, esto
+            sin perjuicio de las sanciones en que puedo incurrir por falsedad de
+            declaraciones dadas a una autoridad. Asimismo acepto que la
+            notificación de este trámite, sea a través de la Ventanilla Única de
+            Comercio Exterior por los mecanismos de la misma.
+          </div>
         </label>
       </div>
     </div>
     <div class="col-md-12 mt-4">
-      <label class="form-label" for="">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
-      <app-input-radio [radioOptions]="hacerlosRadioOptions" [selectedValue]="solicitudForm.get('hacerlos')?.value" [isRequired]="true" [layout]="'horizontal'" formControlName="hacerlos" (valueChange)="setHacerlos($event)"></app-input-radio>
+      <label class="form-label" for=""
+        >Los datos o anexos pueden contener información confidencial ¿Está de
+        acuerdo en hacerlos públicos?*:</label
+      >
+      <app-input-radio
+        [radioOptions]="hacerlosRadioOptions"
+        [selectedValue]="solicitudForm.get('hacerlos')?.value"
+        [isRequired]="true"
+        [layout]="'horizontal'"
+        formControlName="hacerlos"
+        (valueChange)="setHacerlos($event)"
+      ></app-input-radio>
     </div>
     <div class="col-md-12">
       <ng-titulo titulo="Representante legal" />
     </div>
     <div class="col-md-4 mt-2">
-      <label class="form-label" for="rfc">RFC*:</label>
-      <input class="form-control" id="rfc" placeholder="" type="text" formControlName="rfc" (change)="setRFC($event)" />
+      <label class="form-label" for="rfc"
+        >RFC<span
+          for="asterisk"
+          [ngClass]="esValido(solicitudForm, 'rfc') ? 'require' : ''"
+          >*</span
+        >:</label
+      >
+      <input
+        class="form-control"
+        id="rfc"
+        placeholder=""
+        type="text"
+        formControlName="rfc"
+        maxlength="13"
+        [ngClass]="esValido(solicitudForm, 'rfc') ? 'required' : ''"
+        (change)="setRFC($event)"
+      />
+      @if (solicitudForm.controls['rfc'].errors?.['required'] &&
+      solicitudForm.controls['rfc'].touched) {
+      <span class="mensaje-error">Este campo es obligatorio</span>
+      }
     </div>
     <div class="col-md-2 mt-4 buscar-btn">
-      <button type="button" class="btn btn-default btn-space" [disabled]="esFormularioSoloLectura">Buscar</button>
+      <button
+        type="button"
+        class="btn btn-default btn-space"
+        [disabled]="esFormularioSoloLectura"
+      >
+        Buscar
+      </button>
     </div>
     <div class="col-md-6 mt-4"></div>
     <div class="col-md-4 mt-4">
-      <label class="form-label" for="legalRazonSocial">Nombre o Razón Social*:</label>
-      <input class="form-control" id="legalRazonSocial" placeholder="" type="text" formControlName="legalRazonSocial" />
+      <label class="form-label" for="legalRazonSocial"
+        >Nombre o Razón Social*:</label
+      >
+      <input
+        class="form-control"
+        id="legalRazonSocial"
+        placeholder=""
+        type="text"
+        formControlName="legalRazonSocial"
+      />
     </div>
     <div class="col-md-4 mt-4">
       <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
-      <input class="form-control" id="apellidoPaterno" placeholder="" type="text" formControlName="apellidoPaterno" />
+      <input
+        class="form-control"
+        id="apellidoPaterno"
+        placeholder=""
+        type="text"
+        formControlName="apellidoPaterno"
+      />
     </div>
     <div class="col-md-4 mt-4">
       <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
-      <input class="form-control" id="apellidoMaterno" placeholder="" type="text" formControlName="apellidoMeterno" />
+      <input
+        class="form-control"
+        id="apellidoMaterno"
+        placeholder=""
+        type="text"
+        formControlName="apellidoMeterno"
+      />
     </div>
   </div>
-  <div class="modal fade" id="modal-alerta" tabindex="-1" aria-labelledby="modal-alertaLabel">
+  <div
+    class="modal fade"
+    id="modal-alerta"
+    tabindex="-1"
+    aria-labelledby="modal-alertaLabel"
+  >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header"></div>
         <div class="modal-body">
-          <p>Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.</p>
+          <p>
+            Por el momento no hay comunicación con el Sistema de COFEPRIS, favor
+            de capturar su establecimiento.
+          </p>
         </div>
         <div class="modal-footer custom-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura">Aceptar</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            #closeModal
+            [disabled]="esFormularioSoloLectura"
+          >
+            Aceptar
+          </button>
         </div>
       </div>
     </div>
   </div>
-  <div class="modal fade" id="modal-confirmar" tabindex="-1" aria-labelledby="modal-confirmarLabel">
+  <div
+    class="modal fade"
+    id="modal-confirmar"
+    #modalConfirmar
+    tabindex="-1"
+    aria-labelledby="modal-confirmarLabel"
+  >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header"></div>
@@ -201,24 +660,53 @@
         </div>
         <div class="modal-footer custom-footer">
           <div class="btn-group">
-            <button class="btn btn-danger ms-3" type="button" name="eliminar" id="cancelarConfirmar" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura"> Cancelar </button>
-            <button type="button" class="btn btn-primary ms-3" data-bs-dismiss="modal" #closeModal (click)="seleccionaTipo(seleccionadoTipo);" [disabled]="esFormularioSoloLectura">Aceptar</button>
+            <button
+              class="btn btn-danger ms-3"
+              type="button"
+              name="eliminar"
+              id="cancelarConfirmar"
+              data-bs-dismiss="modal"
+              [disabled]="esFormularioSoloLectura"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary ms-3"
+              data-bs-dismiss="modal"
+              #closeModal
+              (click)="seleccionaTipo(seleccionadoTipo)"
+              [disabled]="esFormularioSoloLectura"
+            >
+              Aceptar
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="col-md-12">
-    <div class="modal fade" id="modal-agregar-mercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel">
+    <div
+      class="modal fade"
+      id="modal-agregar-mercancias"
+      #modalAgregarMercancias
+      tabindex="-1"
+      aria-labelledby="modalAgregarMercanciasLabel"
+    >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <app-mercancias-datos></app-mercancias-datos>
+          <app-mercancias-datos [mercancia]="seleccionadaMercancia" (modificar)="onMercanciaModificada($event)"></app-mercancias-datos>
         </div>
       </div>
     </div>
   </div>
 </form>
-<div class="modal fade" id="modal-agregar-scian" tabindex="-1" aria-labelledby="SCIANLabel">
+<div
+  class="modal fade"
+  id="modal-agregar-scian"
+  tabindex="-1"
+  aria-labelledby="SCIANLabel"
+>
   <form [formGroup]="claveSCIANForm">
     <div class="col-md-12">
       <div class="modal-dialog modal-dialog-centered">
@@ -227,16 +715,59 @@
             <ng-titulo titulo="Clave S.C.I.A.N." />
           </div>
           <div class="col-md-8 mt-4">
-            <app-catalogo-select [id]="'claveSCIAN'" [catalogo]="SCIANCatalogo.catalogos" [label]="SCIANCatalogo.labelNombre" [required]="SCIANCatalogo.required" formControlName="claveSCIAN" (selectionChange)="setClaveSCIAN($event)" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+            <app-catalogo-select
+              [id]="'claveSCIAN'"
+              [catalogo]="SCIANCatalogo.catalogos"
+              [label]="SCIANCatalogo.labelNombre"
+              [required]="SCIANCatalogo.required"
+              formControlName="claveSCIAN"
+              (selectionChange)="setClaveSCIAN($event)"
+              [isDisabled]="esFormularioSoloLectura"
+            ></app-catalogo-select>
           </div>
           <div class="col-md-8 mt-4">
-            <app-catalogo-select [id]="'descSCIAN'" [catalogo]="SCIANDescCatalogo.catalogos" [label]="SCIANDescCatalogo.labelNombre" [required]="SCIANDescCatalogo.required" formControlName="claveSCIANDesc" (selectionChange)="setClaveSCIANDesc($event)" [isDisabled]="true"></app-catalogo-select>
+            <app-catalogo-select
+              [id]="'descSCIAN'"
+              [catalogo]="SCIANDescCatalogo.catalogos"
+              [label]="SCIANDescCatalogo.labelNombre"
+              formControlName="claveSCIANDesc"
+              (selectionChange)="setClaveSCIANDesc($event)"
+              [isDisabled]="true"
+            ></app-catalogo-select>
           </div>
           <div class="col-md-12 mt-5 mb-5 ml-5 text-end">
             <div class="btn-group">
-              <button class="btn btn-default ms-3" type="button" name="limpiar" id="limpiarSCIANModal" [disabled]="esFormularioSoloLectura" (click)="limpiarSCIAN();"> Limpiar </button>
-              <button class="btn btn-danger ms-3" type="button" name="eliminar" id="cancelarSCIANModal" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura"> Cancelar </button>
-              <button type="button" class="btn btn-primary ms-3" name="agregar" id="agregarSCIANModal" data-bs-dismiss="modal" (click)="agregarSCIAN();" [disabled]="esFormularioSoloLectura"> Agregar </button>
+              <button
+                class="btn btn-default ms-3"
+                type="button"
+                name="limpiar"
+                id="limpiarSCIANModal"
+                [disabled]="esFormularioSoloLectura"
+                (click)="limpiarSCIAN()"
+              >
+                Limpiar
+              </button>
+              <button
+                class="btn btn-default ms-3"
+                type="button"
+                name="eliminar"
+                id="cancelarSCIANModal"
+                data-bs-dismiss="modal"
+                [disabled]="esFormularioSoloLectura"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary ms-3"
+                name="agregar"
+                id="agregarSCIANModal"
+                data-bs-dismiss="modal"
+                (click)="agregarSCIAN()"
+                [disabled]="esFormularioSoloLectura"
+              >
+                Agregar
+              </button>
             </div>
           </div>
         </div>

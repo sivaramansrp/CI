@@ -1,5 +1,5 @@
+import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { ConsultaDatos, DatosDeSolicitud, RespuestaConsulta } from '../models/solicitud-datos.model';
-import { Observable, catchError, throwError } from 'rxjs';
 import { Asociados } from '../models/asociados.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { ClavesDeLotes } from '../models/claves-de-lotes.model';
@@ -8,6 +8,7 @@ import { DestinatarioCatalogos } from '../models/destinatario.model';
 import { DestinatarioImitar } from '../models/mercancia.model';
 import { Fabricante } from '../models/fabricante.model';
 import { Facturador } from '../models/facturador.model';
+import { FormData } from '../models/solicitud-datos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../models/mercancia.model';
@@ -339,4 +340,44 @@ export class SolicitudDatosService {
     this.solicitudStore.setFolioOriginal(DATOS?.folioOriginal);
   }
 
+  /**
+   * `formDataSubject` es un BehaviorSubject que almacena el estado actual de los datos del formulario.
+   * Inicializa con valores `null` para cada sección del formulario.
+   */
+  private formDataSubject = new BehaviorSubject<FormData>({
+    tercerosRelacionados: null // Información de terceros relacionados
+  });
+
+  /**
+   * `formData$` es un observable que expone los datos del formulario.
+   * Los componentes pueden suscribirse a este observable para recibir actualizaciones en tiempo real.
+   */
+  formData$ = this.formDataSubject.asObservable();
+
+  /**
+   * Método para actualizar una sección específica de los datos del formulario.
+   * 
+   * @template TKey - Tipo de la clave de la sección que se desea actualizar.
+   * @param section - La clave de la sección que se actualizará (por ejemplo, `solicitanteData`).
+   * @param data - Los datos que se asignarán a la sección especificada.
+   */
+  updateFormData<TKey extends keyof FormData>(section: TKey, data: FormData[TKey]): void {
+    // Obtiene el estado actual de los datos del formulario
+    const CURRENT_DATA = this.formDataSubject.value;
+
+    // Actualiza la sección especificada con los nuevos datos
+    CURRENT_DATA[section] = data;
+
+    // Emite los datos actualizados a través del BehaviorSubject
+    this.formDataSubject.next(CURRENT_DATA);
+  }
+
+  /**
+   * Método para obtener el estado actual de los datos del formulario.
+   * 
+   * @returns Un objeto de tipo `FormData` que contiene los datos actuales de todas las secciones del formulario.
+   */
+  getFormData(): FormData {
+    return this.formDataSubject.value;
+  }
 }
