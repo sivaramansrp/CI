@@ -7,9 +7,13 @@ import {
   DatosComplimento,
   RutaNombre,
 } from '../../models/nuevo-programa-industrial.model';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, delay, takeUntil } from 'rxjs';
 import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
+import { CargaDeFraccionesComponent } from '../carga-de-fracciones/carga-de-fracciones.component';
+import { CargaProveedoresClientesComponent } from '../carga-proveedores-clientes/carga-proveedores-clientes.component';     
 import { CommonModule } from '@angular/common';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -19,7 +23,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
-import { delay, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-anexo-uno',
@@ -30,12 +33,14 @@ import { delay, Subject, takeUntil } from 'rxjs';
     AlertComponent,
     ReactiveFormsModule,
     TablaDinamicaComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    CargaDeFraccionesComponent,
+    CargaProveedoresClientesComponent
   ],
   templateUrl: './anexo-uno.component.html',
   styleUrl: './anexo-uno.component.scss',
 })
-export class AnexoUnoComponent implements OnInit {
+export class AnexoUnoComponent implements OnInit, OnDestroy {
   public anexoUnoAlerta = ANEXO_UNO_ALERTA;
   public anexoUnoFormGroup!: FormGroup;
   public anexoDosFormGroup!: FormGroup;
@@ -93,7 +98,11 @@ export class AnexoUnoComponent implements OnInit {
   @Output() rutaLaFraccionDeComplemento: EventEmitter<RutaNombre> =
     new EventEmitter<RutaNombre>();
 
-
+  /**
+   * Evento que emite un booleano cuando hay un cambio en los datos de la tabla.
+   * Útil para notificar al componente padre sobre modificaciones en la tabla.
+   */
+  @Output() tieneCambioDeDatosDeTabla = new EventEmitter<boolean>();
 
   /**
    * Emits events containing `DatosComplimento` data to notify parent components of changes or updates.
@@ -173,10 +182,34 @@ export class AnexoUnoComponent implements OnInit {
   public nuevaUnoNotificacion!: Notificacion;
 
   /**
+   * Indica si la tabla actualmente tiene datos.
+   * Se utiliza para controlar la visualización o lógica relacionada con el contenido de la tabla.
+   */
+  public tenerDatosDeTabla: boolean = false;
+
+   /**
+   * Controla la visibilidad del modal para la carga de datos por archivo.
+   * Se utiliza para mostrar u ocultar el modal de carga por archivo según sea necesario.
+   */
+  public mostrarCargaPorArchivoModal = false;
+
+   /**
+   * Controla la visibilidad del popup para la carga de fracciones.
+   * Se utiliza para mostrar u ocultar el popup relacionado con la carga de fracciones en la interfaz.
+   */
+  public mostrarCargaDeFraccionesPopup: boolean = false;
+
+   /**
+   * Controla la visibilidad del popup de proveedor-clientes.
+   * Se utiliza para mostrar u ocultar el popup relacionado con la gestión de proveedores y clientes.
+   */
+  public mostrarProveedorClientesPopup: boolean = false;
+
+  /**
    * Constructor de la clase AnexoUnoComponent
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private complimentosService: ComplimentosService) {
     this.crearFormularioAnexoUno();
     this.crearFormularioAnexoDos();
   }
@@ -297,6 +330,8 @@ export class AnexoUnoComponent implements OnInit {
     this.anexoUnoTablaLista = this.anexoUnoTablaLista.filter((idx) => {
       return idx !== this.datosImportacionSeleccionados;
     });
+    this.tenerDatosDeTabla = this.anexoUnoTablaLista.length > 0;
+    this.tieneCambioDeDatosDeTabla.emit(this.tenerDatosDeTabla);
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
   }
 
@@ -339,6 +374,8 @@ export class AnexoUnoComponent implements OnInit {
     this.anexoUnoFormGroup.reset();
     // Reinicia el formulario después de agregar el objeto
     this.anexoUnoTablaLista = [...this.anexoUnoTablaLista, OBJECTO_IDX];
+    this.tenerDatosDeTabla = this.anexoUnoTablaLista.length > 0;
+    this.tieneCambioDeDatosDeTabla.emit(this.tenerDatosDeTabla);
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
   }
 
@@ -384,6 +421,8 @@ export class AnexoUnoComponent implements OnInit {
    */
   setAnexoUnoLista(event: AnexoUnoEncabezado): void {
     this.datosImportacionSeleccionados = event;
+    this.complimentosService.setAnexoUnoFilaSeleccionada(event);
+    this.complimentosService.setAnexoDosFilaSeleccionada(null);
     //this.obtenerAnexoUnoDevolverLaLlamada.emit(LISTA_SELECCIONADA);
   }
 
@@ -396,6 +435,8 @@ export class AnexoUnoComponent implements OnInit {
    */
   setAnexoDosLista(event: AnexoDosEncabezado): void {
     this.datosExportacionSeleccionados = event;
+    this.complimentosService.setAnexoDosFilaSeleccionada(event);
+    this.complimentosService.setAnexoUnoFilaSeleccionada(null);
   }
 
   /**
@@ -405,7 +446,55 @@ export class AnexoUnoComponent implements OnInit {
    * @returns {void}
    */
   setRuta(nombre: string, id: string): void {
+     if (id === 'IMPORT' && !this.datosImportacionSeleccionados) {
+      this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Debe seleccionar la fracción arancelaria del producto',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
+  }
+    if (id === 'EXPORT' && !this.datosExportacionSeleccionados) {
+      this.nuevaDosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Debe seleccionar la fracción arancelaria del producto',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
+  }
     if (nombre) {
+      if (id === 'IMPORT') {
+      if (
+        this.datosImportacionSeleccionados &&
+        'encabezadoFraccionArancelaria' in this.datosImportacionSeleccionados
+      ) {
+        this.complimentosService.setAnexoUnoFilaSeleccionada(this.datosImportacionSeleccionados as AnexoUnoEncabezado);
+      } else {
+        this.complimentosService.setAnexoUnoFilaSeleccionada(null);
+      }
+      this.complimentosService.setAnexoDosFilaSeleccionada(null);
+    } else if (id === 'EXPORT') {
+      if (this.datosExportacionSeleccionados && 'encabezadoFraccionExportacion' in this.datosExportacionSeleccionados) {
+        this.complimentosService.setAnexoDosFilaSeleccionada(this.datosExportacionSeleccionados as AnexoDosEncabezado);
+      } else {
+        this.complimentosService.setAnexoDosFilaSeleccionada(null);
+      }
+      this.complimentosService.setAnexoUnoFilaSeleccionada(null);
+    }
       const RUTA_NOMBRE: RutaNombre = {
         catagoria: nombre,
         id: id,
@@ -417,4 +506,88 @@ export class AnexoUnoComponent implements OnInit {
       this.rutaLaFraccionDeComplemento.emit(RUTA_NOMBRE);
     }
   }
+
+/**
+* Abre el modal para la carga de datos por archivo.
+* Establece la propiedad `mostrarCargaPorArchivoModal` en `true` para mostrar el modal correspondiente.
+*/ 
+abrirCargaPorArchivo(): void {
+  this.mostrarCargaPorArchivoModal = true;
+}
+
+  /**
+   * Abre el popup para la carga de proveedores y clientes.
+   * 
+   * Si no se han seleccionado datos de importación (`datosImportacionSeleccionados` es falsy),
+   * muestra una notificación de alerta indicando que se deben ingresar primero
+   * las fracciones del producto y la mercancía.
+   * 
+   * Si los datos están presentes, establece `mostrarProveedorClientesPopup` en `true`
+   * para mostrar el popup correspondiente.
+   */
+abrirCargaProveedoresClientesPopup(): void {
+    if(!this.datosImportacionSeleccionados){
+     this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Debe ingresar las fracciones del producto y de la mercancía previamente',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  } else {
+    this.mostrarProveedorClientesPopup = true;
+  }
+}
+
+ /**
+   * Maneja la acción de aceptar la carga por archivo.
+   * 
+   * Cierra el modal de carga por archivo (`mostrarCargaPorArchivoModal`)
+   * y abre el popup para la carga de fracciones (`mostrarCargaDeFraccionesPopup`).
+   */
+onAceptarCargaPorArchivo(): void {
+  this.mostrarCargaPorArchivoModal = false;
+  this.mostrarCargaDeFraccionesPopup = true;
+}
+
+/**
+ * Maneja la acción de cancelar la carga por archivo.
+ * 
+ * Cierra el modal de carga por archivo estableciendo `mostrarCargaPorArchivoModal` en `false`.
+*/
+onCancelarCargaPorArchivo(): void {
+  this.mostrarCargaPorArchivoModal = false;
+}
+
+/**
+ * Cierra el popup de carga de fracciones.
+ * 
+ * Establece `mostrarCargaDeFraccionesPopup` en `false` para ocultar el popup correspondiente.
+ */
+cerrarCargaDeFracciones(): void {
+  this.mostrarCargaDeFraccionesPopup = false;
+}
+
+/**
+ * Cierra el popup de proveedores y clientes.
+ * 
+ * Establece `mostrarProveedorClientesPopup` en `false` para ocultar el popup correspondiente.
+ */
+cerrarProveedorClientesPopup(): void{
+  this.mostrarProveedorClientesPopup = false;
+}
+
+/**
+ * Método del ciclo de vida que se ejecuta al destruir el componente.
+ * Libera recursos notificando a los observables que deben finalizar suscripciones.
+ */
+ngOnDestroy(): void {
+  this.destroyNotifier$.next();
+  this.destroyNotifier$.complete();
+}
 }

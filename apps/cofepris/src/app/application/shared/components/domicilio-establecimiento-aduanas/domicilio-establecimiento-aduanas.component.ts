@@ -205,6 +205,11 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    */
   nicoTablaDatos: NicoInfo[] = [];
 
+  /** Lista de elementos seleccionados en la tabla SCIAN.
+   * @type {NicoInfo[]}
+   */
+  public seleccionaScian: NicoInfo[] = [];
+
   /**
    * Tabla de selección de checkbox.
    */
@@ -283,16 +288,16 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
   * Etiqueta de la lista de fechas.
   * */
   public paisDeOrigenLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de origen',
-    derecha: 'País(es) seleccionado(s)*',
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
     * Etiqueta de la lista de fechas.
     * */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionado(s)*',
+    tituluDeLaIzquierda: 'País de procedencia:',
+    derecha: 'País(es) seleccionado(s)*:',
   };
 
   /**
@@ -332,14 +337,16 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          if(seccionState.readonly || seccionState.update) {
+             this.obtenerTablaDatos();
+            this.obtenerMercanciasDatos();
+          }
         })
       )
       .subscribe()
 
     this.obtenerEstadoList();
     this.obtenerEstadoDescripcionList();
-    this.obtenerTablaDatos();
-    this.obtenerMercanciasDatos();
     this.configurarGrupoForm(); // Configura el grupo de formularios con los valores iniciales.
 
     this.datosDomicilioService.event$
@@ -355,6 +362,12 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
         })
       )
       .subscribe()
+
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'domicilioForm') {
+        this.domicilio.markAllAsTouched();
+      }
+    });
 
   }
 
@@ -388,10 +401,10 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       localidad: [this.solicitudState?.localidad],
       colonia: [this.solicitudState?.colonia],
       calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
-      lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30)]],
+      lada: [this.solicitudState?.lada, [Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
+      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30),Validators.pattern(/^-?(0|[1-9]\d*)?$/)]],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox],
-      licenciaSanitaria: [this.solicitudState?.licenciaSanitaria, [Validators.required, Validators.maxLength(20)]],
+      licenciaSanitaria: [this.solicitudState?.licenciaSanitaria, [Validators.required, Validators.maxLength(50)]],
     });
 
     /** 
@@ -681,6 +694,26 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
   onSeleccionChange(event: MercanciasInfo[]): void {
     this.seleccionados = event;
   }
+
+  /** 
+   * Método que se ejecuta al enviar el formulario de domicilio.
+   * Actualiza el estado del store
+   */
+  onScianSeleccionChange(event: NicoInfo[]): void {
+    this.seleccionaScian = event;
+  }
+
+  /*
+   * Método que se ejecuta al enviar el formulario de domicilio.
+   * Actualiza el estado del store con los valores del formulario de domicilio.
+   */
+  eliminarScian(): void {
+    this.nicoTablaDatos = this.nicoTablaDatos.filter(
+      item => !this.seleccionaScian.map(sel => sel.clave_Scian).includes(item.clave_Scian) &&
+        !this.seleccionaScian.map(sel => sel.descripcion_Scian).includes(item.descripcion_Scian)
+    );
+    this.seleccionaScian = [];
+  }
   /**
    * Método que se ejecuta al enviar el formulario de domicilio.
    * Actualiza el estado del store con los valores del formulario de domicilio.
@@ -740,13 +773,19 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     }
   }
 
-  /**
-   * Método que se ejecuta al cambiar la fracción arancelaria.
-   * Actualiza los valores de descripción de fracción y UMT en el formulario de mercancías.
+  /**   
+   * Método para obtener el valor de un control de formulario específico y actualizar otros campos relacionados.
+   * @param formcontrol - El nombre del control de formulario cuyo valor se desea obtener.
    */
-  onFraccionChange(): void {
-    this.formMercancias.get('descripcionFraccion')?.setValue('Fracción válida');
-    this.formMercancias.get('UMT')?.setValue('KG');
+  public obtenerFormaControlDatos(formcontrol: string): void {
+    const VALOR = this.formMercancias.get(formcontrol)?.value;
+    if(VALOR !== '') {
+      if(formcontrol === 'fraccionArancelaria') {
+        this.formMercancias.get('descripcionFraccion')?.setValue('Etanal (acetaldehído). Nota: El número CAS de este producto es 75-07-0.');
+      } else if(formcontrol === 'cantidadUMT') {
+        this.formMercancias.get('UMT')?.setValue('Kilogramos');
+      }
+    }
   }
 
   /**

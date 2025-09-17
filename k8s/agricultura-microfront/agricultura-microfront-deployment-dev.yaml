@@ -15,6 +15,7 @@ spec:
       containers:
       - name: modulefederation-agricultura-microfront-deployment-dev
         image: ghcr.io/vucem30/dockerized-modulefederation-agricultura-microfront:1.0.30
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:

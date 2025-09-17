@@ -104,6 +104,10 @@ export interface TercerosrelacionadosdestinoTable {
    * Correo electrónico del destinatario (opcional).
    */
   correo?: string;
+  /**
+   * Planta del destinatario (opcional).
+   */
+  planta?: string;
 }
 
 /**

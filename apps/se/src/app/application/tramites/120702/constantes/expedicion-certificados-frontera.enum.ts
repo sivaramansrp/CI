@@ -1,3 +1,5 @@
+import { Monto } from "../models/expedicion-certificados-frontera.models";
+
 /**
  * Lista de pasos del proceso de expedición de certificados en frontera.
  * Cada paso incluye un índice, título, y su estado (activo y completado).
@@ -222,3 +224,25 @@ export const INFORMACION_DESCRIPCION_CUPO = [
     marginTop: 3,
   },
 ];
+/**
+ * Configuración de las columnas de la tabla de montos a expedir.
+ * Cada objeto define:
+ * - `encabezado`: el nombre que se mostrará en la columna.
+ * - `clave`: función para obtener el valor del objeto `Monto` correspondiente a la columna.
+ * - `orden`: posición de la columna en la tabla.
+ */
+export const CONFIGURATION_TABLA_MONTO = [
+  {
+    encabezado: 'Monto a expedir',
+    clave: (item: Monto): string => item.Montoaexpedir,
+    orden: 1
+  }
+];
+/**
+ * Datos iniciales de la tabla de montos a expedir.
+ * Cada elemento es un objeto `Monto` que representa una fila de la tabla.
+ */
+export const MONTO_DATOS: Monto[] = [
+  {
+    Montoaexpedir: '10',
+  },]

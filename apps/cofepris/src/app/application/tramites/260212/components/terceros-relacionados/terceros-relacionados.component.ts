@@ -3,7 +3,7 @@
  */
 import { CommonModule } from '@angular/common';
 
-import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import {
@@ -27,8 +27,8 @@ import {
 } from '@angular/forms';
 import { TercerosService } from '../../services/terceros.service';
 
-import { 
-  CONFIGURATION_TABLA_FABRICANTE, 
+import {
+  CONFIGURATION_TABLA_FABRICANTE,
   NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO,
   PERSONA_OPCIONES_DE_BOTON_DE_RADIO,
   TABLA_ROWDATA
@@ -41,11 +41,11 @@ import {
   TablaDatos,
 } from '../../models/permiso-maquila.models';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Shared260212Store } from '../../../../estados/tramites/tramite260212.store';
 import { Terceros260211Query } from '../../../../estados/queries/terceros260211.query';
 import { Terceros260211State } from '../../../../estados/tramites/terceros260211.store';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260212Query } from '../../../../estados/queries/tramite260212.query';
-import { Tramite260212Store } from '../../../../estados/tramites/tramite260212.store';
 
 /**
  * Texto de alerta para los terceros relacionados.
@@ -77,7 +77,8 @@ const TERCEROS_TEXTO_DE_ALERTA =
     ModalComponent,
     CatalogoSelectComponent,
     InputRadioComponent,
-    TooltipModule,TablaDinamicaComponent
+    TooltipModule, TablaDinamicaComponent,
+    NotificacionesComponent
   ],
 })
 
@@ -86,112 +87,116 @@ const TERCEROS_TEXTO_DE_ALERTA =
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
-  
- /**
- * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaFabricante
- * Configuración de columnas para la tabla de fabricantes.
- */
-configuracionTablaFabricante: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
-
-/**
- * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaDestinatarioFinal
- * Configuración de columnas para la tabla de destinatarios finales.
- */
-configuracionTablaDestinatarioFinal: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
-
-/**
- * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaProveedor
- * Configuración de columnas para la tabla de proveedores.
- */
-configuracionTablaProveedor: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
-
-/**
- * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaFacturador
- * Configuración de columnas para la tabla de facturadores.
- */
-configuracionTablaFacturador: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
-
-/**
- * Lista de fabricantes obtenida desde un archivo JSON.
- * Cada fabricante contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
- */
-fabricanteTablaDatos: FabricanteDatos[] =[...TABLA_ROWDATA] ;
-
-/**
- * Lista de destinatarios finales obtenida desde un archivo JSON.
- * Cada destinatario contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
- */
-destinatarioFinalTablaDatos: FabricanteDatos[] =[...TABLA_ROWDATA] ;
-
-/**
- * Lista de proveedores obtenida desde un archivo JSON.
- * Cada proveedor contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
- */
-proveedorTablaDatos: FabricanteDatos[] =[...TABLA_ROWDATA] ;
-
-/**
- * Lista de facturadores obtenida desde un archivo JSON.
- * Cada facturador contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
- */
-facturadorTablaDatos: FabricanteDatos[] =[...TABLA_ROWDATA] ;
-
-
-    /**
-   * @property {string} rutaAcciones
-   * Ruta relativa hacia la sección de acciones.
+  /**
+   * @property {string[]} tablaEncabezadoData
+   * Encabezado de la tabla que muestra los datos de terceros relacionados.
    */
-/**
- * Lista de fabricantes seleccionados en la tabla.
- * Se utiliza para operaciones como modificar o eliminar un fabricante específico.
- */
-public fabricanteSeleccionadoDatos: FabricanteDatos[] = [];
+  public nuevaNotificacion!: Notificacion;
+  /**
+  * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaFabricante
+  * Configuración de columnas para la tabla de fabricantes.
+  */
+  configuracionTablaFabricante: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
 
-/**
- * Lista de destinatarios seleccionados en la tabla.
- * Se utiliza para operaciones como modificar o eliminar un destinatario específico.
- */
-public destinatarioSeleccionadoDatos: FabricanteDatos[] = [];
-
-/**
- * Lista de proveedores seleccionados en la tabla.
- * Se utiliza para operaciones como modificar o eliminar un proveedor específico.
- */
-public proveedorSeleccionadoDatos: FabricanteDatos[] = [];
-
-/**
- * Lista de facturadores seleccionados en la tabla.
- * Se utiliza para operaciones como modificar o eliminar un facturador específico.
- */
-public facturadorSeleccionadoDatos: FabricanteDatos[] = [];
-
-/**
- * Índice de la fila de facturador actualmente en edición.
- * Si está definido, indica que se debe modificar esa fila en lugar de agregar una nueva.
- */
-editFacturadorIndex?: number;
-
-/**
- * Índice de la fila de proveedor actualmente en edición.
- * Si está definido, indica que se debe modificar esa fila en lugar de agregar una nueva.
- */
-editProveedorIndex?: number;
-
-/**
- * Índice de la fila de destinatario actualmente en edición.
- * Si está definido, indica que se debe modificar esa fila en lugar de agregar una nueva.
- */
-editDestinatarioIndex?: number;
-
-/**
- * Índice de la fila de fabricante actualmente en edición.
- * Si está definido, indica que se debe modificar esa fila en lugar de agregar una nueva.
- */
-editFabricanteIndex?: number;
-
-   /**
-   * Configuración de las columnas de la tabla de exportadores.
-   * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
+  /**
+   * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaDestinatarioFinal
+   * Configuración de columnas para la tabla de destinatarios finales.
    */
+  configuracionTablaDestinatarioFinal: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
+
+  /**
+   * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaProveedor
+   * Configuración de columnas para la tabla de proveedores.
+   */
+  configuracionTablaProveedor: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
+
+  /**
+   * @property {ConfiguracionColumna<FabricanteDatos>[]} configuracionTablaFacturador
+   * Configuración de columnas para la tabla de facturadores.
+   */
+  configuracionTablaFacturador: ConfiguracionColumna<FabricanteDatos>[] = CONFIGURATION_TABLA_FABRICANTE;
+
+  /**
+   * Lista de fabricantes obtenida desde un archivo JSON.
+   * Cada fabricante contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
+   */
+  fabricanteTablaDatos: FabricanteDatos[] = [...TABLA_ROWDATA];
+
+  /**
+   * Lista de destinatarios finales obtenida desde un archivo JSON.
+   * Cada destinatario contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
+   */
+  destinatarioFinalTablaDatos: FabricanteDatos[] = [...TABLA_ROWDATA];
+
+  /**
+   * Lista de proveedores obtenida desde un archivo JSON.
+   * Cada proveedor contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
+   */
+  proveedorTablaDatos: FabricanteDatos[] = [...TABLA_ROWDATA];
+
+  /**
+   * Lista de facturadores obtenida desde un archivo JSON.
+   * Cada facturador contiene información como nombre, RFC, CURP, teléfono, correo electrónico y dirección.
+   */
+  facturadorTablaDatos: FabricanteDatos[] = [...TABLA_ROWDATA];
+
+
+  /**
+ * @property {string} rutaAcciones
+ * Ruta relativa hacia la sección de acciones.
+ */
+  /**
+   * Lista de fabricantes seleccionados en la tabla.
+   * Se utiliza para operaciones como modificar o eliminar un fabricante específico.
+   */
+  public fabricanteSeleccionadoDatos: FabricanteDatos[] = [];
+
+  /**
+   * Lista de destinatarios seleccionados en la tabla.
+   * Se utiliza para operaciones como modificar o eliminar un destinatario específico.
+   */
+  public destinatarioSeleccionadoDatos: FabricanteDatos[] = [];
+
+  /**
+   * Lista de proveedores seleccionados en la tabla.
+   * Se utiliza para operaciones como modificar o eliminar un proveedor específico.
+   */
+  public proveedorSeleccionadoDatos: FabricanteDatos[] = [];
+
+  /**
+   * Lista de facturadores seleccionados en la tabla.
+   * Se utiliza para operaciones como modificar o eliminar un facturador específico.
+   */
+  public facturadorSeleccionadoDatos: FabricanteDatos[] = [];
+
+  /**
+   * Índice de la fila de facturador actualmente en edición.
+   * Si está definido, indica que se debe modificar esa fila en lugar de agregar una nueva.
+   */
+  editFacturadorIndex?: number;
+
+  /**
+   * Índice de la fila de proveedor actualmente en edición.
+   * Si está definido, indica que se debe modificar esa fila en lugar de agregar una nueva.
+   */
+  editProveedorIndex?: number;
+
+  /**
+   * Índice de la fila de destinatario actualmente en edición.
+   * Si está definido, indica que se debe modificar esa fila en lugar de agregar una nueva.
+   */
+  editDestinatarioIndex?: number;
+
+  /**
+   * Índice de la fila de fabricante actualmente en edición.
+   * Si está definido, indica que se debe modificar esa fila en lugar de agregar una nueva.
+   */
+  editFabricanteIndex?: number;
+
+  /**
+  * Configuración de las columnas de la tabla de exportadores.
+  * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
+  */
   public checkbox = TablaSeleccion.CHECKBOX;
   /**
    * Indica si el formulario debe mostrarse solo en modo de lectura.
@@ -199,7 +204,7 @@ editFabricanteIndex?: number;
    *
    * @description Cuando es verdadero, el usuario no puede editar los campos del formulario.
    */
- public esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Indicador de visibilidad para la sección de la tabla.
@@ -370,32 +375,32 @@ editFabricanteIndex?: number;
   agregarFacturadorFormGroup!: FormGroup;
 
   /** Subject para destruir el componente */
-    private destroy$ = new Subject<void>();
+  private destroy$ = new Subject<void>();
 
-    /**
-   * @property desactivarCampos
-   * @type {boolean}
-   * @public
-   * @description
-   * Indica si los campos del formulario deben estar desactivados (no editables).
-   * Se utiliza para controlar la habilitación o deshabilitación de los campos según la lógica del componente.
-   * Por defecto, los campos están desactivados (`true`).
-   *
-   * @example
-   * this.desactivarCampos = false; // Habilita los campos
-   * this.desactivarCampos = true;  // Deshabilita los campos
-   */
+  /**
+ * @property desactivarCampos
+ * @type {boolean}
+ * @public
+ * @description
+ * Indica si los campos del formulario deben estar desactivados (no editables).
+ * Se utiliza para controlar la habilitación o deshabilitación de los campos según la lógica del componente.
+ * Por defecto, los campos están desactivados (`true`).
+ *
+ * @example
+ * this.desactivarCampos = false; // Habilita los campos
+ * this.desactivarCampos = true;  // Deshabilita los campos
+ */
   public desactivarCampos: boolean = true;
-   /**
-     * Estado de la solicitud obtenido desde el store.
-     */
-    public solicitudStates!: Terceros260211State;
-    /**
-     * Notificador para destruir observables y evitar memory leaks.
-     * @private
-     * @type {Subject<void>}
-     */
-    private destroyNotifier$: Subject<void> = new Subject();
+  /**
+    * Estado de la solicitud obtenido desde el store.
+    */
+  public solicitudStates!: Terceros260211State;
+  /**
+   * Notificador para destruir observables y evitar memory leaks.
+   * @private
+   * @type {Subject<void>}
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
@@ -406,13 +411,13 @@ editFabricanteIndex?: number;
    */
   constructor(
     private fb: FormBuilder,
-    private tramite260212Store: Tramite260212Store,
+    private tramite260212Store: Shared260212Store,
     private tercerosService: TercerosService,
     private consultaioQuery: ConsultaioQuery,
-         private terceros260211Query: Terceros260211Query,
-           private tramite260212Query:Tramite260212Query
-       
-  ) {}
+    private terceros260211Query: Terceros260211Query,
+    private tramite260212Query: Tramite260212Query
+
+  ) { }
 
   /**
    * Ciclo de vida que se ejecuta al iniciar el componente.
@@ -428,7 +433,7 @@ editFabricanteIndex?: number;
         })
       )
       .subscribe();
-    
+
     this.tercerosService.getEncabezadoDeTabla().subscribe((data: unknown) => {
       if (typeof data === 'object' && data !== null && 'columns' in data) {
         this.tablaEncabezadoData = (data as { columns: string[] }).columns;
@@ -440,12 +445,12 @@ editFabricanteIndex?: number;
  * Si los arreglos del store contienen elementos, se asignan a las propiedades correspondientes
  * del componente para mostrarlos en la tabla.
  */
-   this.tramite260212Query.selectTereceros$.subscribe(state => {
-    this.fabricanteTablaDatos = state.Fabricantes;
-    this.proveedorTablaDatos = state.Proveedores;
-    this.facturadorTablaDatos = state.Facturadores;
-    this.destinatarioFinalTablaDatos = state.Destinatarios;
-  });
+    this.tramite260212Query.selectTereceros$.subscribe(state => {
+      this.fabricanteTablaDatos = state.Fabricantes;
+      this.proveedorTablaDatos = state.Proveedores;
+      this.facturadorTablaDatos = state.Facturadores;
+      this.destinatarioFinalTablaDatos = state.Destinatarios;
+    });
     /**
      * Obtiene los datos para los selectores desde el servicio de terceros.
      * Actualiza la propiedad `dropdownData` con los datos obtenidos.
@@ -501,11 +506,11 @@ editFabricanteIndex?: number;
     /**
      * Inicializa los formularios reactivos para agregar terceros.
      */
-     this.terceros260211Query.selectSolicitud$
+    this.terceros260211Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.solicitudStates = seccionState;         
+          this.solicitudStates = seccionState;
         })
       )
       .subscribe();
@@ -514,54 +519,75 @@ editFabricanteIndex?: number;
     this.initializeAgregarProveedorFormGroup();
     this.initializeAgregarFacturadorFormGroup();
   }
-/**
- * Elimina los fabricantes seleccionados de la tabla.
- */
-eliminarFabricante(): void {
-  // Filtra los datos, eliminando los seleccionados
-  this.fabricanteTablaDatos = this.fabricanteTablaDatos.filter(
-    f => !this.fabricanteSeleccionadoDatos.includes(f)
-  );
-  // Limpia la selección
-  this.fabricanteSeleccionadoDatos = [];
-  this.tramite260212Store.setFabricantes(this.fabricanteTablaDatos);
-}
-/**
- * Elimina los destinatarioFinalTablaDatos de la tabla.
- */
-eliminarDestinario(): void {
-  // Filtra los datos, eliminando los seleccionados
-  this.destinatarioFinalTablaDatos = this.destinatarioFinalTablaDatos.filter(
-    f => !this.destinatarioSeleccionadoDatos.includes(f)
-  );
-  // Limpia la selección
-  this.destinatarioSeleccionadoDatos = [];
-  this.tramite260212Store.setDestinatarios(this.destinatarioFinalTablaDatos);
-}
-/**
- * Elimina los proveedorSeleccionadoDatos de la tabla.
- */
-eliminarProveedor(): void {
-  // Filtra los datos, eliminando los seleccionados
-  this.proveedorTablaDatos = this.proveedorTablaDatos.filter(
-    f => !this.proveedorSeleccionadoDatos.includes(f)
-  );
-  // Limpia la selección
-  this.proveedorSeleccionadoDatos = [];
-  this.tramite260212Store.setProveedors(this.proveedorTablaDatos);
-}
-/**
- * Elimina los facturadorSeleccionadoDatos de la tabla.
- */
-eliminarFacturador(): void {
-  // Filtra los datos, eliminando los seleccionados
-  this.facturadorTablaDatos = this.facturadorTablaDatos.filter(
-    f => !this.facturadorSeleccionadoDatos.includes(f)
-  );
-  // Limpia la selección
-  this.facturadorSeleccionadoDatos = [];
-  this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
-}
+  /**
+   * Elimina los fabricantes seleccionados de la tabla.
+   */
+  eliminarFabricante(): void {
+
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Confirma la eliminación?',
+      cerrar: true,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+  }
+  /**
+   * Elimina los datos del pedimento.
+   * @param borrar Indica si se deben eliminar los datos seleccionados.
+   * Elimina los datos del pedimento.
+   * @param borrar Indica si se deben eliminar los datos seleccionados.
+   */
+  eliminarPedimentoDatos(borrar: boolean): void {
+    if (borrar) {
+      // Filtra los datos, eliminando los seleccionados
+      this.fabricanteTablaDatos = this.fabricanteTablaDatos.filter(
+        res => !this.fabricanteSeleccionadoDatos.includes(res)
+      );
+      // Limpia la selección
+      this.fabricanteSeleccionadoDatos = [];
+      this.tramite260212Store.setFabricantes(this.fabricanteTablaDatos);
+    }
+  }
+  /**
+   * Elimina los destinatarioFinalTablaDatos de la tabla.
+   */
+  eliminarDestinario(): void {
+    // Filtra los datos, eliminando los seleccionados
+    this.destinatarioFinalTablaDatos = this.destinatarioFinalTablaDatos.filter(
+      f => !this.destinatarioSeleccionadoDatos.includes(f)
+    );
+    // Limpia la selección
+    this.destinatarioSeleccionadoDatos = [];
+    this.tramite260212Store.setDestinatarios(this.destinatarioFinalTablaDatos);
+  }
+  /**
+   * Elimina los proveedorSeleccionadoDatos de la tabla.
+   */
+  eliminarProveedor(): void {
+    // Filtra los datos, eliminando los seleccionados
+    this.proveedorTablaDatos = this.proveedorTablaDatos.filter(
+      f => !this.proveedorSeleccionadoDatos.includes(f)
+    );
+    // Limpia la selección
+    this.proveedorSeleccionadoDatos = [];
+    this.tramite260212Store.setProveedors(this.proveedorTablaDatos);
+  }
+  /**
+   * Elimina los facturadorSeleccionadoDatos de la tabla.
+   */
+  eliminarFacturador(): void {
+    // Filtra los datos, eliminando los seleccionados
+    this.facturadorTablaDatos = this.facturadorTablaDatos.filter(
+      f => !this.facturadorSeleccionadoDatos.includes(f)
+    );
+    // Limpia la selección
+    this.facturadorSeleccionadoDatos = [];
+    this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
+  }
   /**
    * Inicializa el formulario para agregar un fabricante.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
@@ -579,100 +605,100 @@ eliminarFacturador(): void {
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl({value: this.solicitudStates.tipoPersona, disabled: true}, [Validators.required]),
+      tipoPersona: new FormControl({ value: this.solicitudStates.tipoPersona, disabled: true }, [Validators.required]),
       /**
        * RFC del tercero.
        * Requiere validación adicional mediante `rfcValidator`.
        */
-      rfc: new FormControl({value: this.solicitudStates.rfc, disabled: true}, [Validators.required, this.rfcValidator]),
+      rfc: new FormControl({ value: this.solicitudStates.rfc, disabled: true }, [Validators.required, this.rfcValidator]),
       /**
        * CURP del tercero.
        * Requiere validación adicional mediante `curpValidator`.
        */
-      curp: new FormControl({value: this.solicitudStates.curp, disabled: true}, [ this.curpValidator]),
+      curp: new FormControl({ value: this.solicitudStates.curp, disabled: true }, [this.curpValidator]),
       /**
        * Nombre del tercero.
        */
-      nombre: new FormControl({value: this.solicitudStates.nombre, disabled: true}, [Validators.required]),
+      nombre: new FormControl({ value: this.solicitudStates.nombre, disabled: true }, [Validators.required]),
       /**
        *Primer Apellido del tercero.
        */
-      primerApellido: new FormControl({value: this.solicitudStates.primerApellido, disabled: true}, [Validators.required]),
+      primerApellido: new FormControl({ value: this.solicitudStates.primerApellido, disabled: true }, [Validators.required]),
       /**
        * Segundo Apellido del tercero.
        */
-      segundoApellido: new FormControl({value:  this.solicitudStates.segundoApellido, disabled: true}, [Validators.required]),
+      segundoApellido: new FormControl({ value: this.solicitudStates.segundoApellido, disabled: true }, [Validators.required]),
       /**
        * Denominación o razón social del tercero.
        */
-      denominacionRazonSocial: new FormControl({value:  this.solicitudStates.denominacionRazonSocial, disabled: true}, [Validators.required]),
+      denominacionRazonSocial: new FormControl({ value: this.solicitudStates.denominacionRazonSocial, disabled: true }, [Validators.required]),
       /**
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl({value:this.solicitudStates.pais, disabled: true}, [
+      pais: new FormControl({ value: this.solicitudStates.pais, disabled: true }, [
         Validators.required,
         this.requiredPaisValidator,
       ]),
 
-      extranjeroColonia: new FormControl({value:  this.solicitudStates.extranjeroColonia, disabled: true}, [Validators.required]),
+      extranjeroColonia: new FormControl({ value: this.solicitudStates.extranjeroColonia, disabled: true }, [Validators.required]),
 
-      extranjeroCodigo: new FormControl({value:  this.solicitudStates.extranjeroCodigo, disabled: true}, [Validators.required]),
+      extranjeroCodigo: new FormControl({ value: this.solicitudStates.extranjeroCodigo, disabled: true }, [Validators.required]),
 
-      extranjeroEstado: new FormControl({value:  this.solicitudStates.extranjeroEstado, disabled: true}, [Validators.required]),
+      extranjeroEstado: new FormControl({ value: this.solicitudStates.extranjeroEstado, disabled: true }, [Validators.required]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl({value:  this.solicitudStates.estadoLocalidad, disabled: true}, [Validators.required]),
+      estadoLocalidad: new FormControl({ value: this.solicitudStates.estadoLocalidad, disabled: true }, [Validators.required]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl({value:  this.solicitudStates.municipioAlcaldia, disabled: true}, [Validators.required]),
+      municipioAlcaldia: new FormControl({ value: this.solicitudStates.municipioAlcaldia, disabled: true }, [Validators.required]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl({value:  this.solicitudStates.localidad, disabled: true}),
+      localidad: new FormControl({ value: this.solicitudStates.localidad, disabled: true }),
       /**
        * Entidad federativa del tercero.
        */
-      entidadFederativa: new FormControl({value:  this.solicitudStates.entidadFederativa, disabled: true}),
+      entidadFederativa: new FormControl({ value: this.solicitudStates.entidadFederativa, disabled: true }),
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl({value:  this.solicitudStates.codigoPostaloEquivalente, disabled: true}, [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({ value: this.solicitudStates.codigoPostaloEquivalente, disabled: true }, [Validators.required]),
       /**
        * Colonia del tercero.
        */
-      colonia: new FormControl({value: this.solicitudStates.colonia, disabled: true}),
+      colonia: new FormControl({ value: this.solicitudStates.colonia, disabled: true }),
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl({value: this.solicitudStates.coloniaoEquivalente, disabled: true}),
+      coloniaoEquivalente: new FormControl({ value: this.solicitudStates.coloniaoEquivalente, disabled: true }),
       /**
        * Calle del tercero.
        */
-      calle: new FormControl({value:  this.solicitudStates.calle, disabled: true}, [Validators.required]),
+      calle: new FormControl({ value: this.solicitudStates.calle, disabled: true }, [Validators.required]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl({value:  this.solicitudStates.numeroExterior, disabled: true}, [Validators.required]),
+      numeroExterior: new FormControl({ value: this.solicitudStates.numeroExterior, disabled: true }, [Validators.required]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl({value:  this.solicitudStates.numeroInterior, disabled: true}),
+      numeroInterior: new FormControl({ value: this.solicitudStates.numeroInterior, disabled: true }),
       /**
        * Lada del tercero.
        */
-      lada: new FormControl({value:  this.solicitudStates.lada, disabled: true}),
+      lada: new FormControl({ value: this.solicitudStates.lada, disabled: true }),
       /**
        * Teléfono del tercero.
        * Requiere validación adicional mediante `telefonoValidator`.
        */
-      telefono: new FormControl({value:  this.solicitudStates.telefono, disabled: true}, [this.telefonoValidator]),
+      telefono: new FormControl({ value: this.solicitudStates.telefono, disabled: true }, [this.telefonoValidator]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl({value:  this.solicitudStates.correoElectronico, disabled: true}),
+      correoElectronico: new FormControl({ value: this.solicitudStates.correoElectronico, disabled: true }),
     });
   }
   /**
@@ -680,136 +706,137 @@ eliminarFacturador(): void {
  * reinicia y desactiva los campos del formulario excepto 'tipoPersona' y 'tercerosNacionalidad',
  * y alterna la visibilidad de las secciones del componente.
  */
-submitFabricantesForm(): void {
-  const NUEVO: FabricanteDatos = {
-    nombre: this.agregarFabricanteFormGroup.get('nombre')?.value || '',
-    rfc: this.agregarFabricanteFormGroup.get('rfc')?.value || '',
-    curp: this.agregarFabricanteFormGroup.get('curp')?.value || '',
-    telefono: this.agregarFabricanteFormGroup.get('telefono')?.value || '',
-    correo: this.agregarFabricanteFormGroup.get('correoElectronico')?.value || '',
-    calle: this.agregarFabricanteFormGroup.get('calle')?.value || '',
-    numeroExterior: this.agregarFabricanteFormGroup.get('numeroExterior')?.value || '',
-    numeroInterior: this.agregarFabricanteFormGroup.get('numeroInterior')?.value || '',
-    pais: this.agregarFabricanteFormGroup.get('pais')?.value || '',
-    colonia: this.agregarFabricanteFormGroup.get('colonia')?.value || '',
-    municipio: this.agregarFabricanteFormGroup.get('municipioAlcaldia')?.value || '',
-    localidad: this.agregarFabricanteFormGroup.get('localidad')?.value || '',
-    entidadFederativa: this.agregarFabricanteFormGroup.get('entidadFederativa')?.value || '',
-    estado: this.agregarFabricanteFormGroup.get('estadoLocalidad')?.value || '',
-    codigoPostal: this.agregarFabricanteFormGroup.get('codigoPostaloEquivalente')?.value || ''
-  };
-  if (this.editFabricanteIndex !== undefined) {
-    this.fabricanteTablaDatos[this.editFabricanteIndex] = NUEVO;
-    this.editFabricanteIndex = undefined;
-  } else {
-    this.fabricanteTablaDatos = [...this.fabricanteTablaDatos, NUEVO];
-  }
-  this.agregarFabricanteFormGroup.reset();
-  Object.keys(this.agregarFabricanteFormGroup.controls).forEach(key => {
-  if (key !== 'tipoPersona' && key !== 'tercerosNacionalidad') {
-    this.agregarFabricanteFormGroup.controls[key].disable();
-  }
-});
- this.tramite260212Store.setFabricantes(this.fabricanteTablaDatos);
- /**
-     * Cambia la visibilidad de las secciones del componente.
-     */
+  submitFabricantesForm(): void {
+    const NUEVO: FabricanteDatos = {
+      nombre: this.agregarFabricanteFormGroup.get('nombre')?.value || '',
+      rfc: this.agregarFabricanteFormGroup.get('rfc')?.value || '',
+      curp: this.agregarFabricanteFormGroup.get('curp')?.value || '',
+      telefono: this.agregarFabricanteFormGroup.get('telefono')?.value || '',
+      correo: this.agregarFabricanteFormGroup.get('correoElectronico')?.value || '',
+      calle: this.agregarFabricanteFormGroup.get('calle')?.value || '',
+      numeroExterior: this.agregarFabricanteFormGroup.get('numeroExterior')?.value || '',
+      numeroInterior: this.agregarFabricanteFormGroup.get('numeroInterior')?.value || '',
+      pais: this.agregarFabricanteFormGroup.get('pais')?.value || '',
+      colonia: this.agregarFabricanteFormGroup.get('colonia')?.value || '',
+      municipio: this.agregarFabricanteFormGroup.get('municipioAlcaldia')?.value || '',
+      localidad: this.agregarFabricanteFormGroup.get('localidad')?.value || '',
+      entidadFederativa: this.agregarFabricanteFormGroup.get('entidadFederativa')?.value || '',
+      estado: this.agregarFabricanteFormGroup.get('estadoLocalidad')?.value || '',
+      codigoPostal: this.agregarFabricanteFormGroup.get('codigoPostaloEquivalente')?.value || '',
+      coloniaEquivalente: this.agregarFabricanteFormGroup.get('coloniaoEquivalente')?.value || ''
+    };
+    if (this.editFabricanteIndex !== undefined) {
+      this.fabricanteTablaDatos[this.editFabricanteIndex] = NUEVO;
+      this.editFabricanteIndex = undefined;
+    } else {
+      this.fabricanteTablaDatos = [...this.fabricanteTablaDatos, NUEVO];
+    }
+    this.agregarFabricanteFormGroup.reset();
+    Object.keys(this.agregarFabricanteFormGroup.controls).forEach(key => {
+      if (key !== 'tipoPersona' && key !== 'tercerosNacionalidad') {
+        this.agregarFabricanteFormGroup.controls[key].disable();
+      }
+    });
+    this.tramite260212Store.setFabricantes(this.fabricanteTablaDatos);
+    /**
+        * Cambia la visibilidad de las secciones del componente.
+        */
     this.showTableDiv = !this.showTableDiv;
     this.showFabricante = !this.showFabricante;
     this.fabricanteSeleccionadoDatos = [];
 
-}
-/**
- * Envía el formulario de destinatarios, agrega un nuevo registro a `destinatarioFinalTablaDatos`,
- * reinicia y desactiva los campos del formulario excepto 'tipoPersona' y 'tercerosNacionalidad',
- * y alterna la visibilidad de las secciones del componente.
- */
-submitDestinatariosForm():void {
- const NUEVO = { ...this.agregarDestinatarioFormGroup.getRawValue() };
-   if (this.editDestinatarioIndex !== undefined) {
-    this.destinatarioFinalTablaDatos[this.editDestinatarioIndex] = NUEVO;
-    this.editDestinatarioIndex = undefined;
-  } else {
-    this.destinatarioFinalTablaDatos = [...this.destinatarioFinalTablaDatos, NUEVO];
   }
-
-  this.agregarDestinatarioFormGroup.reset();
-
-  Object.keys(this.agregarDestinatarioFormGroup.controls).forEach(key => {
-    if (key !== 'tipoPersona' && key !== 'tercerosNacionalidad') {
-      this.agregarDestinatarioFormGroup.controls[key].disable();
+  /**
+   * Envía el formulario de destinatarios, agrega un nuevo registro a `destinatarioFinalTablaDatos`,
+   * reinicia y desactiva los campos del formulario excepto 'tipoPersona' y 'tercerosNacionalidad',
+   * y alterna la visibilidad de las secciones del componente.
+   */
+  submitDestinatariosForm(): void {
+    const NUEVO = { ...this.agregarDestinatarioFormGroup.getRawValue() };
+    if (this.editDestinatarioIndex !== undefined) {
+      this.destinatarioFinalTablaDatos[this.editDestinatarioIndex] = NUEVO;
+      this.editDestinatarioIndex = undefined;
+    } else {
+      this.destinatarioFinalTablaDatos = [...this.destinatarioFinalTablaDatos, NUEVO];
     }
-  });
-  this.tramite260212Store.setDestinatarios(this.destinatarioFinalTablaDatos);
-  this.showTableDiv = !this.showTableDiv;
-  this.showDestinatario = !this.showDestinatario;
-   this.destinatarioSeleccionadoDatos = [];
-}
-/**
- * Envía el formulario de proveedores, agrega un nuevo registro a `proveedorTablaDatos`,
- * reinicia y desactiva los campos del formulario excepto 'tipoPersona' y 'tercerosNacionalidad',
- * y alterna la visibilidad de las secciones del componente.
- */
-submitProveedoresForm(): void {
- 
-  const NUEVO = { ...this.agregarProveedorFormGroup.getRawValue() };
 
-  
-  
-  if (this.editProveedorIndex !== undefined) {
-    this.proveedorTablaDatos[this.editProveedorIndex] = NUEVO;
-    this.editProveedorIndex = undefined;
-  } else {
-    this.proveedorTablaDatos = [...this.proveedorTablaDatos, NUEVO];
+    this.agregarDestinatarioFormGroup.reset();
+
+    Object.keys(this.agregarDestinatarioFormGroup.controls).forEach(key => {
+      if (key !== 'tipoPersona' && key !== 'tercerosNacionalidad') {
+        this.agregarDestinatarioFormGroup.controls[key].disable();
+      }
+    });
+    this.tramite260212Store.setDestinatarios(this.destinatarioFinalTablaDatos);
+    this.showTableDiv = !this.showTableDiv;
+    this.showDestinatario = !this.showDestinatario;
+    this.destinatarioSeleccionadoDatos = [];
   }
+  /**
+   * Envía el formulario de proveedores, agrega un nuevo registro a `proveedorTablaDatos`,
+   * reinicia y desactiva los campos del formulario excepto 'tipoPersona' y 'tercerosNacionalidad',
+   * y alterna la visibilidad de las secciones del componente.
+   */
+  submitProveedoresForm(): void {
 
- 
-  this.agregarProveedorFormGroup.reset();
+    const NUEVO = { ...this.agregarProveedorFormGroup.getRawValue() };
 
- 
-  Object.keys(this.agregarProveedorFormGroup.controls).forEach(key => {
-    if (key !== 'tipoPersona' && key !== 'tercerosNacionalidad') {
-      this.agregarProveedorFormGroup.controls[key].disable();
+
+
+    if (this.editProveedorIndex !== undefined) {
+      this.proveedorTablaDatos[this.editProveedorIndex] = NUEVO;
+      this.editProveedorIndex = undefined;
+    } else {
+      this.proveedorTablaDatos = [...this.proveedorTablaDatos, NUEVO];
     }
-  });
 
-  this.tramite260212Store.setProveedors(this.proveedorTablaDatos);
-  this.showTableDiv = !this.showTableDiv;
-  this.showProveedor = !this.showProveedor;
-   this.proveedorSeleccionadoDatos = [];
-}
-/**
- * Envía el formulario de facturadores, agrega un nuevo registro a `facturadorTablaDatos`,
- * reinicia y desactiva los campos del formulario excepto 'tipoPersona' y 'tercerosNacionalidad',
- * y alterna la visibilidad de las secciones del componente.
- */
-submitFacturadoresForm(): void {
 
-  const NUEVO = { ...this.agregarFacturadorFormGroup.getRawValue() };
+    this.agregarProveedorFormGroup.reset();
 
-  
-   if (this.editFacturadorIndex !== undefined) {
+
+    Object.keys(this.agregarProveedorFormGroup.controls).forEach(key => {
+      if (key !== 'tipoPersona' && key !== 'tercerosNacionalidad') {
+        this.agregarProveedorFormGroup.controls[key].disable();
+      }
+    });
+
+    this.tramite260212Store.setProveedors(this.proveedorTablaDatos);
+    this.showTableDiv = !this.showTableDiv;
+    this.showProveedor = !this.showProveedor;
+    this.proveedorSeleccionadoDatos = [];
+  }
+  /**
+   * Envía el formulario de facturadores, agrega un nuevo registro a `facturadorTablaDatos`,
+   * reinicia y desactiva los campos del formulario excepto 'tipoPersona' y 'tercerosNacionalidad',
+   * y alterna la visibilidad de las secciones del componente.
+   */
+  submitFacturadoresForm(): void {
+
+    const NUEVO = { ...this.agregarFacturadorFormGroup.getRawValue() };
+
+
+    if (this.editFacturadorIndex !== undefined) {
       this.facturadorTablaDatos[this.editFacturadorIndex] = NUEVO;
-    this.editFacturadorIndex = undefined;
-  } else {
-    
-    this.facturadorTablaDatos = [...this.facturadorTablaDatos, NUEVO];
-  }
+      this.editFacturadorIndex = undefined;
+    } else {
 
- 
-  this.agregarFacturadorFormGroup.reset();
-
-  
-  Object.keys(this.agregarFacturadorFormGroup.controls).forEach(key => {
-    if (key !== 'tipoPersona' && key !== 'tercerosNacionalidad') {
-      this.agregarFacturadorFormGroup.controls[key].disable();
+      this.facturadorTablaDatos = [...this.facturadorTablaDatos, NUEVO];
     }
-  });
-this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
-  this.showTableDiv = !this.showTableDiv;
-  this.showFacturador = !this.showFacturador;
-  this.facturadorSeleccionadoDatos = [];
-}
+
+
+    this.agregarFacturadorFormGroup.reset();
+
+
+    Object.keys(this.agregarFacturadorFormGroup.controls).forEach(key => {
+      if (key !== 'tipoPersona' && key !== 'tercerosNacionalidad') {
+        this.agregarFacturadorFormGroup.controls[key].disable();
+      }
+    });
+    this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
+    this.showTableDiv = !this.showTableDiv;
+    this.showFacturador = !this.showFacturador;
+    this.facturadorSeleccionadoDatos = [];
+  }
 
   /**
    * Inicializa el formulario para agregar un destinatario.
@@ -824,87 +851,87 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
       /**
        * Tipo de persona (física o moral).
        */
-      tipoPersona: new FormControl( this.solicitudStates.tipoPersona, [Validators.required]),
+      tipoPersona: new FormControl(this.solicitudStates.tipoPersona, [Validators.required]),
       /**
        * RFC del destinatario.
        */
-      rfc: new FormControl({value:  this.solicitudStates.rfc, disabled: true}, [Validators.required]),
+      rfc: new FormControl({ value: this.solicitudStates.rfc, disabled: true }, [Validators.required]),
       /**
        * CURP del destinatario.
        */
-      curp: new FormControl({value: this.solicitudStates.curp, disabled: true}, [Validators.required]),
+      curp: new FormControl({ value: this.solicitudStates.curp, disabled: true }, [Validators.required]),
       /**
        * Denominación o razón social del destinatario.
        */
-      denominacionRazonSocial: new FormControl({value:  this.solicitudStates.denominacionRazonSocial, disabled: true}, [Validators.required]),
-       /**
-       * Nombre del tercero.
-       */
-      nombre: new FormControl({value:  this.solicitudStates.nombre, disabled: true}, [Validators.required]),
+      denominacionRazonSocial: new FormControl({ value: this.solicitudStates.denominacionRazonSocial, disabled: true }, [Validators.required]),
+      /**
+      * Nombre del tercero.
+      */
+      nombre: new FormControl({ value: this.solicitudStates.nombre, disabled: true }, [Validators.required]),
       /**
        *Primer Apellido del tercero.
        */
-      primerApellido: new FormControl({value:  this.solicitudStates.primerApellido, disabled: true}, [Validators.required]),
+      primerApellido: new FormControl({ value: this.solicitudStates.primerApellido, disabled: true }, [Validators.required]),
       /**
        * Segundo Apellido del tercero.
        */
-      segundoApellido: new FormControl({value: this.solicitudStates.segundoApellido, disabled: true}, [Validators.required]),
+      segundoApellido: new FormControl({ value: this.solicitudStates.segundoApellido, disabled: true }, [Validators.required]),
       /**
        * País del destinatario.
        */
-      pais: new FormControl({value: this.solicitudStates.pais, disabled: true}, [Validators.required]),
+      pais: new FormControl({ value: this.solicitudStates.pais, disabled: true }, [Validators.required]),
       /**
        * Estado o localidad del destinatario.
        */
-      estadoLocalidad: new FormControl({value: this.solicitudStates.estadoLocalidad, disabled: true}, [Validators.required]),
+      estadoLocalidad: new FormControl({ value: this.solicitudStates.estadoLocalidad, disabled: true }, [Validators.required]),
       /**
        * Municipio o alcaldía del destinatario.
        */
-      municipioAlcaldia: new FormControl({value: this.solicitudStates.municipioAlcaldia, disabled: true}, [Validators.required]),
+      municipioAlcaldia: new FormControl({ value: this.solicitudStates.municipioAlcaldia, disabled: true }, [Validators.required]),
       /**
        * Localidad del destinatario.
        */
-      localidad: new FormControl({value: this.solicitudStates.localidad, disabled: true}),
+      localidad: new FormControl({ value: this.solicitudStates.localidad, disabled: true }),
       /**
        * Entidad federativa del destinatario.
        */
-      entidadFederativa: new FormControl({value: this.solicitudStates.entidadFederativa, disabled: true}, [Validators.required]),
+      entidadFederativa: new FormControl({ value: this.solicitudStates.entidadFederativa, disabled: true }, [Validators.required]),
       /**
        * Código postal del destinatario.
        */
-      codigoPostaloEquivalente: new FormControl({value: this.solicitudStates.codigoPostaloEquivalente, disabled: true}, [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({ value: this.solicitudStates.codigoPostaloEquivalente, disabled: true }, [Validators.required]),
       /**
        * Colonia del destinatario.
        */
-      colonia: new FormControl({value: this.solicitudStates.colonia, disabled: true}),
+      colonia: new FormControl({ value: this.solicitudStates.colonia, disabled: true }),
       /**
        * Colonia equivalente del destinatario.
        */
-      coloniaoEquivalente: new FormControl({value:this.solicitudStates.coloniaoEquivalente, disabled: true}),
+      coloniaoEquivalente: new FormControl({ value: this.solicitudStates.coloniaoEquivalente, disabled: true }),
       /**
        * Calle del destinatario.
        */
-      calle: new FormControl({value: this.solicitudStates.calle, disabled: true}, [Validators.required]),
+      calle: new FormControl({ value: this.solicitudStates.calle, disabled: true }, [Validators.required]),
       /**
        * Número exterior del destinatario.
        */
-      numeroExterior: new FormControl({value: this.solicitudStates.numeroExterior, disabled: true}, [Validators.required]),
+      numeroExterior: new FormControl({ value: this.solicitudStates.numeroExterior, disabled: true }, [Validators.required]),
       /**
        * Número interior del destinatario.
        */
-      numeroInterior: new FormControl({value: this.solicitudStates.numeroExterior, disabled: true}),
+      numeroInterior: new FormControl({ value: this.solicitudStates.numeroExterior, disabled: true }),
       /**
        * Lada del destinatario.
        */
-      lada: new FormControl({value: this.solicitudStates.lada, disabled: true}),
+      lada: new FormControl({ value: this.solicitudStates.lada, disabled: true }),
       /**
        * Teléfono del destinatario.
        */
-      telefono: new FormControl({value: this.solicitudStates.telefono, disabled: true}),
+      telefono: new FormControl({ value: this.solicitudStates.telefono, disabled: true }),
       /**
        * Correo electrónico del destinatario.
        */
-      correoElectronico: new FormControl({value: this.solicitudStates.correoElectronico, disabled: true}),
+      correoElectronico: new FormControl({ value: this.solicitudStates.correoElectronico, disabled: true }),
     });
   }
 
@@ -925,59 +952,59 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
       /**
        * Nombre del proveedor.
        */
-      nombre: new FormControl({value: this.solicitudStates.nombre, disabled: true}, [Validators.required]),
+      nombre: new FormControl({ value: this.solicitudStates.nombre, disabled: true }, [Validators.required]),
       /**
        * Primer apellido del proveedor.
        */
-      primerApellido: new FormControl({value: this.solicitudStates.primerApellido, disabled: true}, [Validators.required]),
+      primerApellido: new FormControl({ value: this.solicitudStates.primerApellido, disabled: true }, [Validators.required]),
       /**
        * Denominación o razón social del proveedor.
        */
-      denominacionRazonSocial: new FormControl({value: this.solicitudStates.denominacionRazonSocial, disabled: true}, [Validators.required]),
+      denominacionRazonSocial: new FormControl({ value: this.solicitudStates.denominacionRazonSocial, disabled: true }, [Validators.required]),
       /**
        * Segundo apellido del proveedor (opcional).
        */
-      segundoApellido: new FormControl({value: this.solicitudStates.segundoApellido, disabled: true}),
+      segundoApellido: new FormControl({ value: this.solicitudStates.segundoApellido, disabled: true }),
       /**
        * País del proveedor.
        */
-      pais: new FormControl({value: this.solicitudStates.pais,disabled: true}, [Validators.required]),
+      pais: new FormControl({ value: this.solicitudStates.pais, disabled: true }, [Validators.required]),
       /**
        * Estado del proveedor.
        */
-      estado: new FormControl({value: this.solicitudStates.estado, disabled: true}, [Validators.required]),
+      estado: new FormControl({ value: this.solicitudStates.estado, disabled: true }, [Validators.required]),
       /**
        * Código postal del proveedor (opcional).
        */
-      codigoPostaloEquivalente: new FormControl({value: this.solicitudStates.codigoPostaloEquivalente, disabled: true}),
+      codigoPostaloEquivalente: new FormControl({ value: this.solicitudStates.codigoPostaloEquivalente, disabled: true }),
       /**
        * Colonia equivalente del proveedor (opcional).
        */
-      coloniaoEquivalente: new FormControl({value: this.solicitudStates.coloniaoEquivalente, disabled: true}),
+      coloniaoEquivalente: new FormControl({ value: this.solicitudStates.coloniaoEquivalente, disabled: true }),
       /**
        * Calle del proveedor.
        */
-      calle: new FormControl({value: this.solicitudStates.calle, disabled: true}, [Validators.required]),
+      calle: new FormControl({ value: this.solicitudStates.calle, disabled: true }, [Validators.required]),
       /**
        * Número exterior del proveedor.
        */
-      numeroExterior: new FormControl({value: this.solicitudStates.numeroExterior, disabled: true}, [Validators.required]),
+      numeroExterior: new FormControl({ value: this.solicitudStates.numeroExterior, disabled: true }, [Validators.required]),
       /**
        * Número interior del proveedor (opcional).
        */
-      numeroInterior: new FormControl({value: this.solicitudStates.numeroInterior, disabled: true}),
+      numeroInterior: new FormControl({ value: this.solicitudStates.numeroInterior, disabled: true }),
       /**
        * Lada del proveedor (opcional).
        */
-      lada: new FormControl({value: this.solicitudStates.lada, disabled: true}),
+      lada: new FormControl({ value: this.solicitudStates.lada, disabled: true }),
       /**
        * Teléfono del proveedor (opcional).
        */
-      telefono: new FormControl({value: this.solicitudStates.telefono, disabled: true}),
+      telefono: new FormControl({ value: this.solicitudStates.telefono, disabled: true }),
       /**
        * Correo electrónico del proveedor (opcional).
        */
-      correoElectronico: new FormControl({value: this.solicitudStates.correoElectronico, disabled: true}),
+      correoElectronico: new FormControl({ value: this.solicitudStates.correoElectronico, disabled: true }),
     });
   }
 
@@ -998,63 +1025,63 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
       /**
        * Nombre del facturador.
        */
-      nombre: new FormControl({value: this.solicitudStates.nombre, disabled: true}, [Validators.required]),
+      nombre: new FormControl({ value: this.solicitudStates.nombre, disabled: true }, [Validators.required]),
       /**
        * Primer apellido del facturador.
        */
-      primerApellido: new FormControl({value: this.solicitudStates.primerApellido, disabled: true}, [Validators.required]),
+      primerApellido: new FormControl({ value: this.solicitudStates.primerApellido, disabled: true }, [Validators.required]),
       /**
        * Denominación o razón social del facturador.
        */
-      denominacionRazonSocial: new FormControl({value: this.solicitudStates.denominacionRazonSocial, disabled: true}, [Validators.required]),
+      denominacionRazonSocial: new FormControl({ value: this.solicitudStates.denominacionRazonSocial, disabled: true }, [Validators.required]),
       /**
        * Segundo apellido del facturador (opcional).
        */
-      segundoApellido: new FormControl({value: this.solicitudStates.segundoApellido, disabled: true}),
+      segundoApellido: new FormControl({ value: this.solicitudStates.segundoApellido, disabled: true }),
       /**
        * País del facturador.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl({ value: this.solicitudStates.pais,disabled: true}, [
+      pais: new FormControl({ value: this.solicitudStates.pais, disabled: true }, [
         Validators.required,
         this.requiredPaisValidator,
       ]),
       /**
        * Estado del facturador.
        */
-      estado: new FormControl({value: this.solicitudStates.estado, disabled: true}, [Validators.required]),
+      estado: new FormControl({ value: this.solicitudStates.estado, disabled: true }, [Validators.required]),
       /**
        * Código postal del facturador (opcional).
        */
-      codigoPostaloEquivalente: new FormControl({value: this.solicitudStates.codigoPostaloEquivalente, disabled: true}),
+      codigoPostaloEquivalente: new FormControl({ value: this.solicitudStates.codigoPostaloEquivalente, disabled: true }),
       /**
        * Colonia equivalente del facturador (opcional).
        */
-      coloniaoEquivalente: new FormControl({value: this.solicitudStates.coloniaoEquivalente, disabled: true}),
+      coloniaoEquivalente: new FormControl({ value: this.solicitudStates.coloniaoEquivalente, disabled: true }),
       /**
        * Calle del facturador.
        */
-      calle: new FormControl({value: this.solicitudStates.calle, disabled: true}, [Validators.required]),
+      calle: new FormControl({ value: this.solicitudStates.calle, disabled: true }, [Validators.required]),
       /**
        * Número exterior del facturador.
        */
-      numeroExterior: new FormControl({value: this.solicitudStates.numeroExterior, disabled: true}, [Validators.required]),
+      numeroExterior: new FormControl({ value: this.solicitudStates.numeroExterior, disabled: true }, [Validators.required]),
       /**
        * Número interior del facturador (opcional).
        */
-      numeroInterior: new FormControl({value: this.solicitudStates.numeroInterior, disabled: true}),
+      numeroInterior: new FormControl({ value: this.solicitudStates.numeroInterior, disabled: true }),
       /**
        * Lada del facturador (opcional).
        */
-      lada: new FormControl({value: this.solicitudStates.lada, disabled: true}),
+      lada: new FormControl({ value: this.solicitudStates.lada, disabled: true }),
       /**
        * Teléfono del facturador (opcional).
        */
-      telefono: new FormControl({value: this.solicitudStates.telefono, disabled: true}),
+      telefono: new FormControl({ value: this.solicitudStates.telefono, disabled: true }),
       /**
        * Correo electrónico del facturador (opcional).
        */
-      correoElectronico: new FormControl({value: this.solicitudStates.correoElectronico, disabled: true}),
+      correoElectronico: new FormControl({ value: this.solicitudStates.correoElectronico, disabled: true }),
     });
   }
 
@@ -1091,27 +1118,27 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de fabricantes.
    */
   fabricanteRowData: TablaDatos[] = [
-     {
-    tbodyData: [
-      'Laboratorios S.A.',
-      'LAB123456789',
-      'CURP123456HDFRRL01',
-      '55-12345678',
-      'contacto@laboratorios.com',
-      'Calle 1',
-      '100',
-      '2',
-      'México',
-      'Centro',
-      'CDMX',
-      'CDMX',
-      'CDMX',
-      'CDMX',
-      'CDMX',
-      '06000'
-    ]
-  }
-  
+    {
+      tbodyData: [
+        'Laboratorios S.A.',
+        'LAB123456789',
+        'CURP123456HDFRRL01',
+        '55-12345678',
+        'contacto@laboratorios.com',
+        'Calle 1',
+        '100',
+        '2',
+        'México',
+        'Centro',
+        'CDMX',
+        'CDMX',
+        'CDMX',
+        'CDMX',
+        'CDMX',
+        '06000'
+      ]
+    }
+
   ];
 
   /**
@@ -1138,7 +1165,7 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
       'CDMX',
       'CDMX',
       '07000'
-      ]
+    ]
   }];
 
   /**
@@ -1149,25 +1176,25 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
    */
   proveedorRowData: TablaDatos[] = [
     {
-    tbodyData: [
-      'Proveedor Global S.A.',
-      'PRO123456789',
-      'CURPPROV001',
-      '55-11223344',
-      'contacto@proveedor.com',
-      'Av. Comercio',
-      '150',
-      '10',
-      'México',
-      'Colonia Industrial',
-      'CDMX',
-      'CDMX',
-      'CDMX',
-      'CDMX',
-      'CDMX',
-      '06500'
+      tbodyData: [
+        'Proveedor Global S.A.',
+        'PRO123456789',
+        'CURPPROV001',
+        '55-11223344',
+        'contacto@proveedor.com',
+        'Av. Comercio',
+        '150',
+        '10',
+        'México',
+        'Colonia Industrial',
+        'CDMX',
+        'CDMX',
+        'CDMX',
+        'CDMX',
+        'CDMX',
+        '06500'
       ]
-  }
+    }
   ];
 
   /**
@@ -1178,25 +1205,25 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
    */
   facturadorRowData: TablaDatos[] = [
     {
-    tbodyData: [
-      'Facturador Uno S.A.',
-      'FAC123456789',
-      'CURPFACT001',
-      '55-99887766',
-      'facturas@uno.com',
-      'Calle Factura',
-      '400',
-      '12',
-      'México',
-      'Colonia Centro',
-      'CDMX',
-      'CDMX',
-      'CDMX',
-      'CDMX',
-      'CDMX',
-      '08000'
+      tbodyData: [
+        'Facturador Uno S.A.',
+        'FAC123456789',
+        'CURPFACT001',
+        '55-99887766',
+        'facturas@uno.com',
+        'Calle Factura',
+        '400',
+        '12',
+        'México',
+        'Colonia Centro',
+        'CDMX',
+        'CDMX',
+        'CDMX',
+        'CDMX',
+        'CDMX',
+        '08000'
       ]
-  },
+    },
   ];
 
   /**
@@ -1224,16 +1251,16 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
      */
     if (formGroupName === 'Facturador') {
       Object.keys(this.agregarFacturadorFormGroup.controls).forEach(controlName => {
-          this.agregarFacturadorFormGroup.get(controlName)?.enable();
+        this.agregarFacturadorFormGroup.get(controlName)?.enable();
       });
     } else if (formGroupName === 'Proveedor') {
       Object.keys(this.agregarProveedorFormGroup.controls).forEach(controlName => {
-          this.agregarProveedorFormGroup.get(controlName)?.enable();
+        this.agregarProveedorFormGroup.get(controlName)?.enable();
       });
     } else if (formGroupName === 'Destinatario') {
       Object.keys(this.agregarDestinatarioFormGroup.controls).forEach(controlName => {
-          this.agregarDestinatarioFormGroup.get(controlName)?.enable();
-          this.agregarDestinatarioFormGroup.get(controlName)?.setValue('');
+        this.agregarDestinatarioFormGroup.get(controlName)?.enable();
+        this.agregarDestinatarioFormGroup.get(controlName)?.setValue('');
       });
       this.desactivarCampos = false;
       this.agregarDestinatarioFormGroup.get('tipoPersona')?.setValue(checkBoxValue);
@@ -1243,9 +1270,8 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
           this.agregarFabricanteFormGroup.get(controlName)?.enable();
         });
       }
-
       if (this.agregarFabricanteFormGroup.get('tercerosNacionalidad')?.value === '1' && this.agregarFabricanteFormGroup.get('tipoPersona')?.value) {
-        this.agregarFabricanteFormGroup.get('pais')?.setValue(this.paisDropdownData?.[0]?.id);
+        this.agregarFabricanteFormGroup.get('pais')?.setValue('1');
       } else {
         this.agregarFabricanteFormGroup.get('pais')?.setValue('');
       }
@@ -1283,8 +1309,8 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
   }
 
   /** Limpia y deshabilita todos los campos del formulario de fabricante, excepto el de nacionalidad. */
-  limpiarFabricanteForm(): void { 
-    this.agregarFabricanteFormGroup.reset();  
+  limpiarFabricanteForm(): void {
+    this.agregarFabricanteFormGroup.reset();
     Object.keys(this.agregarFabricanteFormGroup.controls).forEach(controlName => {
       this.agregarFabricanteFormGroup.get(controlName)?.disable();
     });
@@ -1292,7 +1318,7 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
   }
 
   /** Limpia y deshabilita todos los campos del formulario de destinatario, excepto el de tipoPersona. */
-  limpiarDestinatarioForm(): void {   
+  limpiarDestinatarioForm(): void {
     this.agregarDestinatarioFormGroup.reset();
     Object.keys(this.agregarDestinatarioFormGroup.controls).forEach(controlName => {
       this.agregarDestinatarioFormGroup.get(controlName)?.disable();
@@ -1302,22 +1328,22 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
   }
 
   /** Limpia y deshabilita todos los campos del formulario de fabricante, excepto el de nacionalidad. */
-  limpiarProveedorForm(): void {   
+  limpiarProveedorForm(): void {
     this.agregarProveedorFormGroup.reset();
-     Object.keys(this.agregarProveedorFormGroup.controls).forEach(controlName => {
+    Object.keys(this.agregarProveedorFormGroup.controls).forEach(controlName => {
       this.agregarProveedorFormGroup.get(controlName)?.disable();
     });
     this.agregarProveedorFormGroup.get('tipoPersona')?.enable();
   }
 
   /** Limpia y deshabilita todos los campos del formulario de fabricante, excepto el de nacionalidad. */
-  limpiarFacturadorForm(): void {   
+  limpiarFacturadorForm(): void {
     this.agregarFacturadorFormGroup.reset();
-       Object.keys(this.agregarFacturadorFormGroup.controls).forEach(controlName => {
+    Object.keys(this.agregarFacturadorFormGroup.controls).forEach(controlName => {
       this.agregarFacturadorFormGroup.get(controlName)?.disable();
     });
     this.agregarFacturadorFormGroup.get('tipoPersona')?.enable();
-  } 
+  }
   /**
    * Cambia la visibilidad del formulario de Destinatario.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
@@ -1348,7 +1374,7 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
-    this.showFacturador = !this.showFacturador;    
+    this.showFacturador = !this.showFacturador;
   }
 
   /**
@@ -1481,8 +1507,8 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
          * Teléfono del fabricante, incluyendo lada.
          */
         this.agregarFabricanteFormGroup.value.lada +
-          '-' +
-          this.agregarFabricanteFormGroup.value.telefono,
+        '-' +
+        this.agregarFabricanteFormGroup.value.telefono,
 
         /**
          * Correo electrónico del fabricante.
@@ -1591,8 +1617,8 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
         this.agregarProveedorFormGroup.value.rfc,
         this.agregarProveedorFormGroup.value.curp,
         this.agregarProveedorFormGroup.value.lada +
-          '-' +
-          this.agregarProveedorFormGroup.value.telefono,
+        '-' +
+        this.agregarProveedorFormGroup.value.telefono,
         this.agregarProveedorFormGroup.value.correoElectronico,
         this.agregarProveedorFormGroup.value.calle,
         this.agregarProveedorFormGroup.value.numeroExterior,
@@ -1630,63 +1656,63 @@ this.tramite260212Store.setFacturadors(this.facturadorTablaDatos);
  * Obtiene la fila seleccionada, guarda su índice para edición,
  * habilita el formulario y lo rellena con los datos de la fila seleccionada.
  */
-modificarFabricante(): void {
-  if (!(this.fabricanteSeleccionadoDatos || []).length) {return}
+  modificarFabricante(): void {
+    if (!(this.fabricanteSeleccionadoDatos || []).length) { return }
 
-  const SELECCIONADA = this.fabricanteSeleccionadoDatos[0];
-  this.editFabricanteIndex = this.fabricanteTablaDatos.indexOf(SELECCIONADA);
+    const SELECCIONADA = this.fabricanteSeleccionadoDatos[0];
+    this.editFabricanteIndex = this.fabricanteTablaDatos.indexOf(SELECCIONADA);
 
-  this.agregarFabricanteFormGroup.enable();
-  this.agregarFabricanteFormGroup.patchValue(SELECCIONADA);
-  this.showTableDiv = !this.showTableDiv;
-  this.showFabricante = !this.showFabricante;
+    this.agregarFabricanteFormGroup.enable();
+    this.agregarFabricanteFormGroup.patchValue(SELECCIONADA);
+    this.showTableDiv = !this.showTableDiv;
+    this.showFabricante = !this.showFabricante;
 
-}
-/**
- * Permite modificar un destinatario seleccionado en la tabla.
- * Si no hay ningún destinatario seleccionado, la función retorna.
- * Obtiene la fila seleccionada, guarda su índice para edición,
- * habilita el formulario y lo rellena con los datos de la fila seleccionada.
- */
-modificarDestinatario(): void {
-  if (!(this.destinatarioSeleccionadoDatos || []).length) {return}
-  const SELECCIONADO = this.destinatarioSeleccionadoDatos[0];
-  this.editDestinatarioIndex = this.destinatarioFinalTablaDatos.indexOf(SELECCIONADO);
-  this.agregarDestinatarioFormGroup.enable();
-  this.agregarDestinatarioFormGroup.patchValue(SELECCIONADO);
-  this.showTableDiv = !this.showTableDiv;
-  this.showDestinatario = !this.showDestinatario;  
-}
-/**
- * Permite modificar un proveedor seleccionado en la tabla.
- * Si no hay ningún proveedor seleccionado, la función retorna.
- * Obtiene la fila seleccionada, guarda su índice para edición,
- * habilita el formulario y lo rellena con los datos de la fila seleccionada.
- */
-modificarProveedor(): void {
-  if (!(this.proveedorSeleccionadoDatos || []).length) {return}
-  const SELECCIONADO = this.proveedorSeleccionadoDatos[0];
-  this.editProveedorIndex = this.proveedorTablaDatos.indexOf(SELECCIONADO);
-  this.agregarProveedorFormGroup.enable();
-  this.agregarProveedorFormGroup.patchValue(SELECCIONADO);
-  this.showTableDiv = !this.showTableDiv;
-  this.showProveedor = !this.showProveedor;
-}
-/**
- * Permite modificar un facturador seleccionado en la tabla.
- * Si no hay ningún facturador seleccionado, la función retorna.
- * Obtiene la fila seleccionada, guarda su índice para edición,
- * habilita el formulario y lo rellena con los datos de la fila seleccionada.
- */
-modificarFacturador(): void {
-  if (!this.facturadorSeleccionadoDatos || this.facturadorSeleccionadoDatos.length === 0){return}   
-  const SELECT_ROW = this.facturadorSeleccionadoDatos[0];
-  this.editFacturadorIndex = this.facturadorTablaDatos.indexOf(SELECT_ROW); 
-  this.showTableDiv = !this.showTableDiv;
-  this.showFacturador = !this.showFacturador; 
-  this.agregarFacturadorFormGroup.enable();
-  this.agregarFacturadorFormGroup.patchValue(SELECT_ROW);
-}
+  }
+  /**
+   * Permite modificar un destinatario seleccionado en la tabla.
+   * Si no hay ningún destinatario seleccionado, la función retorna.
+   * Obtiene la fila seleccionada, guarda su índice para edición,
+   * habilita el formulario y lo rellena con los datos de la fila seleccionada.
+   */
+  modificarDestinatario(): void {
+    if (!(this.destinatarioSeleccionadoDatos || []).length) { return }
+    const SELECCIONADO = this.destinatarioSeleccionadoDatos[0];
+    this.editDestinatarioIndex = this.destinatarioFinalTablaDatos.indexOf(SELECCIONADO);
+    this.agregarDestinatarioFormGroup.enable();
+    this.agregarDestinatarioFormGroup.patchValue(SELECCIONADO);
+    this.showTableDiv = !this.showTableDiv;
+    this.showDestinatario = !this.showDestinatario;
+  }
+  /**
+   * Permite modificar un proveedor seleccionado en la tabla.
+   * Si no hay ningún proveedor seleccionado, la función retorna.
+   * Obtiene la fila seleccionada, guarda su índice para edición,
+   * habilita el formulario y lo rellena con los datos de la fila seleccionada.
+   */
+  modificarProveedor(): void {
+    if (!(this.proveedorSeleccionadoDatos || []).length) { return }
+    const SELECCIONADO = this.proveedorSeleccionadoDatos[0];
+    this.editProveedorIndex = this.proveedorTablaDatos.indexOf(SELECCIONADO);
+    this.agregarProveedorFormGroup.enable();
+    this.agregarProveedorFormGroup.patchValue(SELECCIONADO);
+    this.showTableDiv = !this.showTableDiv;
+    this.showProveedor = !this.showProveedor;
+  }
+  /**
+   * Permite modificar un facturador seleccionado en la tabla.
+   * Si no hay ningún facturador seleccionado, la función retorna.
+   * Obtiene la fila seleccionada, guarda su índice para edición,
+   * habilita el formulario y lo rellena con los datos de la fila seleccionada.
+   */
+  modificarFacturador(): void {
+    if (!this.facturadorSeleccionadoDatos || this.facturadorSeleccionadoDatos.length === 0) { return }
+    const SELECT_ROW = this.facturadorSeleccionadoDatos[0];
+    this.editFacturadorIndex = this.facturadorTablaDatos.indexOf(SELECT_ROW);
+    this.showTableDiv = !this.showTableDiv;
+    this.showFacturador = !this.showFacturador;
+    this.agregarFacturadorFormGroup.enable();
+    this.agregarFacturadorFormGroup.patchValue(SELECT_ROW);
+  }
   /**
    * Envía el formulario de Facturador y actualiza los datos en el store.
    * Crea una nueva fila para la tabla con los datos del formulario.
@@ -1715,8 +1741,8 @@ modificarFacturador(): void {
         this.agregarFacturadorFormGroup.value.rfc,
         this.agregarFacturadorFormGroup.value.curp,
         this.agregarFacturadorFormGroup.value.lada +
-          '-' +
-          this.agregarFacturadorFormGroup.value.telefono,
+        '-' +
+        this.agregarFacturadorFormGroup.value.telefono,
         this.agregarFacturadorFormGroup.value.correoElectronico,
         this.agregarFacturadorFormGroup.value.calle,
         this.agregarFacturadorFormGroup.value.numeroExterior,
@@ -1848,14 +1874,51 @@ modificarFacturador(): void {
     return PATTERN.test(control.value) ? null : { invalidTelefono: true };
   }
 
-   /**
-   * Verifica si el control del formulario es inválido y ha sido tocado.
-   * @returns {boolean | null} `true` si el control es inválido y tocado, `null` si no existe el control.
-   */
+  /**
+  * Verifica si el control del formulario es inválido y ha sido tocado.
+  * @returns {boolean | null} `true` si el control es inválido y tocado, `null` si no existe el control.
+  */
   // eslint-disable-next-line class-methods-use-this
   esInvalido(formgroupo: FormGroup, campo: string): boolean | null {
     const CAMPO = formgroupo.get(campo);
     return CAMPO ? CAMPO.invalid && CAMPO.touched : null;
+  }
+
+  /** Maneja la selección de filas en la tabla de Fabricante.
+   * Actualiza los datos seleccionados de fabricantes.
+   *
+   * @param event Datos de las filas seleccionadas.
+   */
+  onFacturadorSeleccionados(event: FabricanteDatos[]): void {
+    this.facturadorSeleccionadoDatos = event;
+  }
+
+  /** 
+   * Maneja la selección de filas en la tabla de Proveedor.
+   * Actualiza los datos seleccionados de proveedores.
+   *
+   * @param event Datos de las filas seleccionadas.
+   */
+  onProveedorSeleccionados(event: FabricanteDatos[]): void {
+    this.proveedorSeleccionadoDatos = event;
+  }
+
+  /** 
+   * Maneja la selección de filas en la tabla de Destinatario.
+   * Actualiza los datos seleccionados de destinatarios.
+   * @param event Datos de las filas seleccionadas.
+   */
+  onDestinatarioSeleccionados(event: FabricanteDatos[]): void {
+    this.destinatarioSeleccionadoDatos = event;
+  }
+
+  /** 
+   * Maneja la selección de filas en la tabla de Fabricante.
+   * Actualiza los datos seleccionados de fabricantes.
+   * @param event Datos de las filas seleccionadas.
+   */
+  onFabricanteSeleccionados(event: FabricanteDatos[]): void {
+    this.fabricanteSeleccionadoDatos = event;
   }
 
   /*

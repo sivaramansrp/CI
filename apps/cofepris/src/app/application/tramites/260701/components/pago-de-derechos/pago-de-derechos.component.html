@@ -50,7 +50,6 @@
                     [catalogo]="bancoCatalogo"
                     formControlName="banco"
                     [label]="'Banco'"
-                    [isDisabled]="esFormularioSoloLectura"
                     [required]="true"
                     (change)="setValoresStore(formSolicitud,'banco', 'setBanco')">
                   </app-catalogo-select>
@@ -88,9 +87,9 @@
             <div class="col-md-4">
               <div class="form-group">
                 <input-fecha
+                    [isDisabled]="esFormularioSoloLectura"
                     [datos]="INPUT_FECHA_CONFIG"
-                    [setFecha]="
-                    formSolicitud.get('datosImportadorExportador.fechaPago') ?.value">
+                    [setFecha]="formSolicitud.get('fechaPago') ?.value">
                 </input-fecha>
               </div>
             </div>

@@ -261,7 +261,7 @@ this.getDestinatarioData().then(() => {
         nombre: [ this.destinatarioState?.nombre,],
         primerApellido: [this.destinatarioState?.primerApellido,],
         segundoApellido: [ this.destinatarioState?.segundoApellido],
-        domicilio: [this.destinatarioState?.domicilio, [Validators.required,Validators.pattern('^[a-zA-Z0-9]*$')]],
+        domicilio: [this.destinatarioState?.domicilio, [Validators.required,Validators.maxLength(5),Validators.pattern('^[a-zA-Z0-9]*$')]],
         pais: [this.destinatarioState?.pais, [Validators.required]],
         codigopostal: [
           this.destinatarioState?.codigopostal,

@@ -40,7 +40,7 @@ export interface SolicitudTabla {
   /**
    * Descripción de la mercancía del Solicitud.
    */
-  descripcionMercancia: string;
+  modalDescMercancia: string;
 
 }
 

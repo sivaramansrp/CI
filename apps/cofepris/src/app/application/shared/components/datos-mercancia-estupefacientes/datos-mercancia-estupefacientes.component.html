@@ -329,20 +329,40 @@
         </div>
       </div>
     </div>
-
-    <div class="row mb-5">
-      <div class="col-md-10 ml-2">
-        <app-catalogo-select
-          [catalogo]="paisDeProcedenciaDatos"
-          formControlName="paisDeProcedencia"
-          [label]="'País de procedencia'"
-          [required]="true"
-          name="paisDeProcedencia"
-        ></app-catalogo-select>
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <div class="panel-group ficha-collapse" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading" (click)="mostrarColapsable(3)">
+              <h4 class="panel-title">
+                <a> País de Procedencia</a>
+              </h4>
+              <button
+                type="button"
+                class="collpase-button"
+                [class.collapsed]="!usoEspesificoColapsable"
+              ></button>
+            </div>
+            @if(usoEspesificoColapsable){
+            <div class="panel-collapse collapse in" id="panel-01">
+              <div class="panel-body">
+                <crosslist
+                  [fechas]="usoEspesificoDatos"
+                  [label]="UsoEspesificoLabel"
+                  [fechasSeleccionadas]="seleccionadasUsoEspesificoDatos"
+                  (fechasSeleccionadasChange)="
+                    usoEspesificoSeleccionadasChange($event)
+                  "
+                  [botones]="paisDeProcedenciaBotonsTres"
+                ></crosslist>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="row mt-3">
+<div class="row mt-3">
       <div class="col-md-12">
         <div class="panel-group ficha-collapse" id="accordion">
           <div class="panel panel-default">

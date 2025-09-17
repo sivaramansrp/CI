@@ -4,7 +4,7 @@ import { RegistroService } from '../../services/registro.service';
 import { Tramite110201Store } from '../../state/Tramite110201.store';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
 import { ValidacionesFormularioService, Catalogo, CatalogoSelectComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 
 describe('DatosCertificadoComponent', () => {
@@ -18,11 +18,22 @@ describe('DatosCertificadoComponent', () => {
 
   beforeEach(async () => {
     registroServiceMock = {
-      getIdioma: jest.fn().mockReturnValue(of({ code: 200, data: [{ id: 1, nombre: 'Español' }] })),
-      getEntidad: jest.fn().mockReturnValue(of({ code: 200, data: [{ id: 1, nombre: 'Entidad' }] })),
-      getRepresentacion: jest.fn().mockReturnValue(of({ code: 200, data: [{ id: 1, nombre: 'Representación' }] })),
+      getIdioma: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Español', clave: 'ES' }])),
+      getEntidad: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Ciudad de México', clave: 'CDMX' }])),
+      getRepresentacion: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Representación Federal', clave: 'RF' }])),
+      getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue(of({})),
+      actualizarEstadoFormulario: jest.fn(),
     };
-    tramiteStoreMock = {};
+    tramiteStoreMock = {
+      setIdioma: jest.fn(),
+      setEntidad: jest.fn(),
+      setRepresentacion: jest.fn(),
+      setObservaciones: jest.fn(),
+      setPresica: jest.fn(),
+      setPresenta: jest.fn(),
+      setCasillaVerificacion: jest.fn(),
+      setJustificacion: jest.fn(),
+    };
     tramiteQueryMock = {
       selectSolicitud$: of({}),
     };
@@ -47,6 +58,26 @@ describe('DatosCertificadoComponent', () => {
 
     fixture = TestBed.createComponent(DatosCertificadoComponent);
     component = fixture.componentInstance;
+    
+    component.optionsIdioma = {
+      labelNombre: 'Idioma',
+      required: true,
+      primerOpcion: 'Selecciona un valor',
+      catalogos: [],
+    };
+    component.optionsEntidad = {
+      labelNombre: 'Entidad Federativa',
+      required: true,
+      primerOpcion: 'Selecciona un valor',
+      catalogos: [],
+    };
+    component.optionsRepresentacion = {
+      labelNombre: 'Representación Federal',
+      required: true,
+      primerOpcion: 'Selecciona un valor',
+      catalogos: [],
+    };
+    
     fixture.detectChanges();
   });
 
@@ -144,8 +175,8 @@ describe('DatosCertificadoComponent', () => {
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const destroyNotifierNext = jest.spyOn(component.destroyNotifier$, 'next');
-    const destroyNotifierComplete = jest.spyOn(component.destroyNotifier$, 'complete');
+    const destroyNotifierNext = jest.spyOn(component.destroyed$, 'next');
+    const destroyNotifierComplete = jest.spyOn(component.destroyed$, 'complete');
     component.ngOnDestroy();
     expect(destroyNotifierNext).toHaveBeenCalled();
     expect(destroyNotifierComplete).toHaveBeenCalled();
@@ -168,5 +199,174 @@ describe('DatosCertificadoComponent', () => {
     component.entidadFederativaData = 'OTRO';
     component.ngOnInit();
     expect(component.isJustificacion).toBe(false);
+  });
+
+  it('should call actualizarEstadoFormulario when getRegistroTomaMuestrasMercanciasData returns response', () => {
+    const mockResponse = { data: 'test' };
+    registroServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(mockResponse));
+    
+    component.ngOnInit();
+    
+    expect(registroServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith(mockResponse);
+  });
+
+  it('should not call actualizarEstadoFormulario when getRegistroTomaMuestrasMercanciasData returns null', () => {
+    registroServiceMock.actualizarEstadoFormulario.mockClear();
+    registroServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(null));
+    
+    const newFixture = TestBed.createComponent(DatosCertificadoComponent);
+    const newComponent = newFixture.componentInstance;
+    
+    newComponent.optionsIdioma = {
+      labelNombre: 'Idioma',
+      required: true,
+      primerOpcion: 'Selecciona un valor',
+      catalogos: [],
+    };
+    newComponent.optionsEntidad = {
+      labelNombre: 'Entidad Federativa',
+      required: true,
+      primerOpcion: 'Selecciona un valor',
+      catalogos: [],
+    };
+    newComponent.optionsRepresentacion = {
+      labelNombre: 'Representación Federal',
+      required: true,
+      primerOpcion: 'Selecciona un valor',
+      catalogos: [],
+    };
+    
+    newFixture.detectChanges();
+    
+    expect(registroServiceMock.actualizarEstadoFormulario).not.toHaveBeenCalled();
+  });
+
+  it('should update catalog options with service responses', () => {
+    const mockIdiomas = [{ id: 1, nombre: 'Español', clave: 'ES' }];
+    const mockEntidades = [{ id: 1, nombre: 'CDMX', clave: 'CDMX' }];
+    const mockRepresentaciones = [{ id: 1, nombre: 'Federal', clave: 'FED' }];
+
+    registroServiceMock.getIdioma.mockReturnValue(of(mockIdiomas));
+    registroServiceMock.getEntidad.mockReturnValue(of(mockEntidades));
+    registroServiceMock.getRepresentacion.mockReturnValue(of(mockRepresentaciones));
+
+    component.getIdioma();
+    component.getEntidad();
+    component.getRepresentacion();
+
+    expect(component.optionsIdioma.catalogos).toEqual(mockIdiomas);
+    expect(component.optionsEntidad.catalogos).toEqual(mockEntidades);
+    expect(component.optionsRepresentacion.catalogos).toEqual(mockRepresentaciones);
+  });
+
+  it('should validate form correctly in validarFormulariosDatos', () => {
+    component.isJustificacion = true; 
+    component.donanteDomicilio();
+    
+    component.registroForm.get('validacionForm.presica')?.setValue('test presica');
+    component.registroForm.get('validacionForm.idioma')?.setValue('ES');
+    component.registroForm.get('validacionForm.entidad')?.setValue(1);
+    component.registroForm.get('validacionForm.representacion')?.setValue(1);
+    component.registroForm.get('validacionForm.casillaVerificacion')?.setValue(true);
+    component.registroForm.get('validacionForm.justificacion')?.setValue('test justificacion');
+
+    const result = component.validarFormulariosDatos();
+    expect(result).toBe(true);
+    expect(component.validationAttempted).toBe(true);
+  });
+
+  it('should validate form correctly when justification is not required', () => {
+    component.isJustificacion = false;
+    component.donanteDomicilio();
+    
+    component.registroForm.get('validacionForm.presica')?.setValue('test presica');
+    component.registroForm.get('validacionForm.idioma')?.setValue('ES');
+    component.registroForm.get('validacionForm.entidad')?.setValue(1);
+    component.registroForm.get('validacionForm.representacion')?.setValue(1);
+    component.registroForm.get('validacionForm.casillaVerificacion')?.setValue(true);
+    
+    component.registroForm.get('validacionForm.justificacion')?.clearValidators();
+    component.registroForm.get('validacionForm.justificacion')?.updateValueAndValidity();
+
+    const result = component.validarFormulariosDatos();
+    expect(result).toBe(true);
+    expect(component.validationAttempted).toBe(true);
+  });
+
+  it('should return false and mark all touched when form is invalid in validarFormulariosDatos', () => {
+    component.donanteDomicilio();
+    const markAllAsTouchedSpy = jest.spyOn(component.registroForm, 'markAllAsTouched');
+    const validarDestinatarioSpy = jest.spyOn(component, 'validarDestinatarioFormulario');
+
+    const result = component.validarFormulariosDatos();
+    
+    expect(result).toBe(false);
+    expect(markAllAsTouchedSpy).toHaveBeenCalled();
+    expect(validarDestinatarioSpy).toHaveBeenCalled();
+    expect(component.validationAttempted).toBe(true);
+  });
+
+  it('should call validarFormulariosDatos in validarFormularioDatos', () => {
+    const validarSpy = jest.spyOn(component, 'validarFormulariosDatos').mockReturnValue(true);
+    
+    const result = component.validarFormularioDatos();
+    
+    expect(validarSpy).toHaveBeenCalled();
+    expect(result).toBe(true);
+  });
+
+  it('should return false in validarFormularioDatos when validarFormulariosDatos returns false', () => {
+    const validarSpy = jest.spyOn(component, 'validarFormulariosDatos').mockReturnValue(false);
+    
+    const result = component.validarFormularioDatos();
+    
+    expect(validarSpy).toHaveBeenCalled();
+    expect(result).toBe(false);
+  });
+
+  it('should disable form when soloLectura is true in guardarDatosFormulario', () => {
+    component.soloLectura = true;
+    component.donanteDomicilio();
+    
+    component.guardarDatosFormulario();
+    
+    expect(component.registroForm.disabled).toBe(true);
+  });
+
+  it('should enable form when soloLectura is false in guardarDatosFormulario', () => {
+    component.soloLectura = false;
+    component.donanteDomicilio();
+    
+    component.guardarDatosFormulario();
+    
+    expect(component.registroForm.enabled).toBe(true);
+  });
+
+  it('should populate form with solicitudState data in donanteDomicilio', () => {
+    component.solicitudState = {
+      observaciones: 'Test observaciones',
+      presica: 'Test presica',
+      presenta: 'Test presenta',
+      idioma: 'ES',
+      entidad: 1,
+      representacion: 1,
+      casillaVerificacion: true,
+      justificacion: 'Test justificacion'
+    } as any;
+    
+    component.donanteDomicilio();
+    
+    expect(component.registroForm.get('validacionForm.observaciones')?.value).toBe('Test observaciones');
+    expect(component.registroForm.get('validacionForm.presica')?.value).toBe('Test presica');
+    expect(component.registroForm.get('validacionForm.idioma')?.value).toBe('ES');
+  });
+
+  it('should handle markAllControlsAsTouched for nested FormGroups', () => {
+    component.donanteDomicilio();
+    const updateValueAndValiditySpy = jest.spyOn(component.registroForm.get('validacionForm.idioma')!, 'updateValueAndValidity');
+    
+    component['markAllControlsAsTouched'](component.registroForm);
+    
+    expect(updateValueAndValiditySpy).toHaveBeenCalled();
   });
 });

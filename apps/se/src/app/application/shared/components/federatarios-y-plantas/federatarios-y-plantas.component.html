@@ -74,7 +74,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="numeroDeNotaria">Número de notaría*:</label>
-              <input class="form-control min-hgt" id="numeroDeNotaria" formControlName="numeroDeNotaria" type="text"
+              <input class="form-control min-hgt" id="numeroDeNotaria" formControlName="numeroDeNotaria" type="number"
                 maxlength="6" [ngClass]="esValido(federatariosFormGroup, 'numeroDeNotaria') ? 'required' : ''"/>
               <div
                 *ngIf="federatariosFormGroup.get('numeroDeNotaria')?.invalid && federatariosFormGroup.get('numeroDeNotaria')?.touched"

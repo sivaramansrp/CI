@@ -114,6 +114,10 @@ export interface Tramite80102State {
   tablaDatosFederatarios: FederatariosEncabezado[];
   plantasImmexTablaLista: PlantasImmex[];
   plantasDisponiblesTablaLista: PlantasDisponibles[];
+  /**
+   * Información detallada de federatarios.
+   */
+  datosFederatarios: FederatariosEncabezado;
 }
 
 /**
@@ -360,6 +364,21 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
   tablaDatosFederatarios: [],
   plantasImmexTablaLista: [],
   plantasDisponiblesTablaLista: [],
+  datosFederatarios: {
+    nombre: '',
+    primerApellido: '',
+    segundoApellido: '',
+    numeroDeActa: '',
+    fechaDelActa: '',
+    numeroDeNotaria: '',
+    entidadFederativa: '',
+    municipioODelegacion: '',
+    estado: '',
+    estadoOptions: '',
+    estadoUno: '',
+    estadoDos: '',
+    estadoTres: '',
+  }
 };
 
 

@@ -1,11 +1,11 @@
-import { AlertComponent,Catalogo,CatalogoSelectComponent,CatalogosSelect,ConfiguracionColumna,InputFecha,REGEX_NUMERO_15_ENTEROS_3_DECIMALES,REGEX_PATRON_DECIMAL_2,REGEX_SOLO_DIGITOS,TablaDinamicaComponent,TablaSeleccion,TableBodyData,TableComponent,TituloComponent,ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
- import { ColumnasTabla, FECHAFACTURA, FECHAFINAL, FECHAINICIAL, OPTIONS_PAIS, OPTIONS_TIPO_FACTURA, OPTIONS_TRATADO, OPTIONS_UMC, OPTIONS_UNIDAD_MEDIDA, SeleccionadasTabla} from '../../models/registro.model';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, Notificacion, NotificacionesComponent, Pedimento, REGEX_CANTIDAD_15_4, REGEX_NUMERO_15_ENTEROS_4_DECIMALES, REGEX_NUMERO_ENTERO, REGEX_SIN_DIGITOS, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ColumnasTabla, FECHAFACTURA, FECHAFINAL, FECHAINICIAL, OPTIONS_PAIS, OPTIONS_TIPO_FACTURA, OPTIONS_TRATADO, OPTIONS_UMC, OPTIONS_UNIDAD_MEDIDA, SeleccionadasTabla } from '../../models/registro.model';
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import {ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
-import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators} from '@angular/forms';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HEADERS_DATA, HEADER_MAP_DATOS } from '../../enum/certificado.enum';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { Solicitud110201State,Tramite110201Store } from '../../state/Tramite110201.store';
+import { Solicitud110201State, Tramite110201Store } from '../../state/Tramite110201.store';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { Modal } from 'bootstrap';
@@ -17,8 +17,21 @@ import mercanciaTable from '@libs/shared/theme/assets/json/110201/mercancia.json
 
 const TERCEROS_TEXTO_DE_ALERTA =
   'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
+
 /**
- * Componente que representa el formulario de certificado de origen en el trámite.
+ * @component CertificadoDeOrigenComponent (Enhanced)
+ * @description Componente responsable de gestionar el formulario de certificado de origen en el trámite 110201.
+ * Proporciona funcionalidades para captura de datos del certificado, gestión de mercancías y validaciones.
+ * Incluye formularios reactivos, tablas dinámicas, modales y manejo de archivos CSV.
+ * @implements OnInit, OnDestroy
+ * @features
+ * - Formularios reactivos con validaciones
+ * - Gestión de mercancías disponibles y seleccionadas
+ * - Modal para agregar/editar mercancías
+ * - Carga masiva de mercancías via CSV
+ * - Validación de fechas y datos
+ * - Integración con catálogos de países, tratados y unidades
+ * @dependencies FormBuilder, Store, ValidacionesService, RegistroService
  */
 @Component({
   selector: 'app-certificado-de-origen',
@@ -33,223 +46,277 @@ const TERCEROS_TEXTO_DE_ALERTA =
     AlertComponent,
     TablaDinamicaComponent,
     InputFechaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.css',
 })
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
-   * Subject para destruir notificador.
+   * @property consultaDatos - Estado de consulta de datos para el componente
    */
   consultaDatos!: ConsultaioState;
+
   /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
+   * @property soloLectura - Indica si el formulario está en modo solo lectura
+   * Cuando es `true`, los campos del formulario no se pueden editar
    */
   soloLectura: boolean = false;
+
   /**
-   * Evento para comunicar datos al componente padre.
+   * @property dataEvent - Evento para comunicar datos al componente padre
    */
   @Output() dataEvent = new EventEmitter<boolean>();
+
   /**
-   * Texto de alerta mostrado en el componente.
+   * @property TEXTO_DE_ALERTA - Texto de alerta mostrado en el componente
    */
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
 
   /**
-   * Formulario reactivo para los datos del certificado.
+   * @property registroForm - Formulario reactivo para los datos del certificado
    */
   registroForm!: FormGroup;
 
   /**
-   * Formulario reactivo para los datos de la mercancía.
+   * @property mercanciaForm - Formulario reactivo para los datos de la mercancía
    */
   mercanciaForm!: FormGroup;
 
   /**
-   * Referencia al modal para agregar/editar mercancía.
+   * @property modalAgregar - Referencia al modal para agregar/editar mercancía
    */
   @ViewChild('modalAgregar') modalAgregar!: ElementRef;
 
   /**
-   * Catálogo de países.
+   * @property pais - Catálogo de países disponibles
    */
   pais!: CatalogosSelect;
 
   /**
-   * Catálogo de tratados.
+   * @property tratado - Catálogo de tratados comerciales
    */
   tratado!: CatalogosSelect;
 
   /**
-   * Catálogo de unidades de medida comercial (UMC).
+   * @property umc - Catálogo de unidades de medida comercial (UMC)
    */
   umc!: CatalogosSelect;
 
   /**
-   * Catálogo de unidades de medida.
+   * @property unidadMedida - Catálogo de unidades de medida
    */
   unidadMedida!: CatalogosSelect;
 
   /**
-   * Catálogo de tipos de factura.
+   * @property tipoFactura - Catálogo de tipos de factura
    */
   tipoFactura!: CatalogosSelect;
 
   /**
-   * Indica si se debe mostrar el formulario para cargar un archivo.
+   * @property cargarArchivo - Indica si se debe mostrar el formulario para cargar un archivo
    */
   cargarArchivo: boolean = false;
 
   /**
-   * Indica si se deben mostrar errores en el formulario.
+   * @property mostrarErrores - Indica si se deben mostrar errores en el formulario
    */
   mostrarErrores: boolean = false;
 
   /**
-   * Indica si hay mercancías disponibles.
+   * @property mostrarErrorMercancias - Indica si se deben mostrar errores para mercancías seleccionadas
+   */
+  mostrarErrorMercancias: boolean = false;
+
+  /**
+   * @property hayMercanciasDisponibles - Indica si hay mercancías disponibles
    */
   hayMercanciasDisponibles: boolean = false;
 
   /**
-   * Indica si se está editando una mercancía.
+   * @property esMercanciaEnEdicion - Indica si se está editando una mercancía
    */
   esMercanciaEnEdicion = false;
 
   /**
-   * Datos de la tabla de mercancías disponibles.
+   * @property getMercanciaDisponsibleTableData - Datos de la tabla de mercancías disponibles
    */
   public getMercanciaDisponsibleTableData = mercanciaDisponsibleTable;
 
   /**
-   * Datos de la tabla de mercancías seleccionadas.
+   * @property getmercanciaSeleccionadasTable - Datos de la tabla de mercancías seleccionadas
    */
   public getmercanciaSeleccionadasTable = mercanciaSeleccionadasTable;
 
   /**
-   * Datos de la tabla de mercancías.
+   * @property getMercanciaTable - Datos de la tabla de mercancías
    */
   public getMercanciaTable = mercanciaTable;
 
   /**
-   * Lista de mercancías disponibles.
+   * @property mercanciasdisponibles - Lista de mercancías disponibles
    */
   public mercanciasdisponibles: string[] = [];
 
   /**
-   * Encabezados de las tablas.
+   * @property encabezadosTablas - Encabezados de las tablas
    */
   public encabezadosTablas: string[] = [];
 
   /**
-   * Encabezados de la tabla de mercancías.
+   * @property mercanciasHeader - Encabezados de la tabla de mercancías
    */
   public mercanciasHeader: string[] = [];
 
   /**
-   * Cuerpo de la tabla de mercancías.
+   * @property mercanciasBody - Cuerpo de la tabla de mercancías
    */
   public mercanciasBody: TableBodyData[] = [];
 
   /**
-   * Estado actual de la solicitud.
+   * @property solicitudState - Estado actual de la solicitud del trámite 110201
    */
   public solicitudState!: Solicitud110201State;
+
   /**
-   * Tabla de selección de mercancías.
+   * @property TablaSeleccion - Tabla de selección de mercancías
    */
   TablaSeleccion = TablaSeleccion;
 
   /**
-   * Descripciones de los tratados.
+   * @property Tratadodescripcion - Descripciones de los tratados comerciales
    */
   Tratadodescripcion: unknown[] = [];
 
   /**
-   * Valores de las unidades de medida.
+   * @property unidadMedidaValue - Valores de las unidades de medida
    */
   unidadMedidaValue: unknown[] = [];
 
   /**
-   * Tratado seleccionado.
+   * @property seleccioneTratado - Tratado comercial seleccionado
    */
   seleccioneTratado: string | null = null;
 
   /**
-   * Nombre del archivo seleccionado.
+   * @property nombreArchivo - Nombre del archivo seleccionado para carga
    */
   nombreArchivo: string = '';
+
   /**
-   * Configuración de la fecha inicial.
-   * Representa la configuración del campo de entrada para la fecha inicial en el formulario.
+   * @property fechaInicialInput - Configuración de la fecha inicial
+   * Representa la configuración del campo de entrada para la fecha inicial en el formulario
    */
   fechaInicialInput: InputFecha = FECHAINICIAL;
 
   /**
-   * Configuración de la fecha final.
-   * Representa la configuración del campo de entrada para la fecha final en el formulario.
+   * @property fechaFinalInput - Configuración de la fecha final
+   * Representa la configuración del campo de entrada para la fecha final en el formulario
    */
   fechaFinalInput: InputFecha = FECHAFINAL;
 
   /**
-   * Configuración de la fecha de la factura.
-   * Representa la configuración del campo de entrada para la fecha de la factura en el formulario.
+   * @property fechaFacturaInput - Configuración de la fecha de la factura
+   * Representa la configuración del campo de entrada para la fecha de la factura en el formulario
    */
   fechaFacturaInput: InputFecha = FECHAFACTURA;
+
   /**
-   * Indica si se está mostrando el formulario.
+   * @property esFormulario - Indica si se está mostrando el formulario
    */
   esFormulario: boolean = false;
+
   /**
-   * Notificador para destruir observables al destruir el componente.
-   * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
+   * @property destroyed$ - Notificador para destruir observables al destruir el componente
+   * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
-   * Opciones del catálogo de tratados.
-   * Contiene una lista de objetos del catálogo de tratados obtenidos desde el servicio.
+   * @property optionsTratado - Opciones del catálogo de tratados comerciales
+   * Contiene una lista de objetos del catálogo de tratados obtenidos desde el servicio
    */
   public optionsTratado = OPTIONS_TRATADO;
+
   /**
-   * Opciones del catálogo de países.
-   * Contiene una lista de objetos del catálogo de países obtenidos desde el servicio.
+   * @property optionsPais - Opciones del catálogo de países
+   * Contiene una lista de objetos del catálogo de países obtenidos desde el servicio
    */
   public optionsPais = OPTIONS_PAIS;
 
   /**
-   * Opciones del catálogo de unidades de medida comercial (UMC).
-   * Contiene una lista de objetos del catálogo de UMC obtenidos desde el servicio.
+   * @property optionsUMC - Opciones del catálogo de unidades de medida comercial (UMC)
+   * Contiene una lista de objetos del catálogo de UMC obtenidos desde el servicio
    */
   public optionsUMC = OPTIONS_UMC;
 
   /**
-   * Opciones del catálogo de unidades de medida.
-   * Contiene una lista de objetos del catálogo de unidades de medida obtenidos desde el servicio.
+   * @property optionsUnidadMedida - Opciones del catálogo de unidades de medida
+   * Contiene una lista de objetos del catálogo de unidades de medida obtenidos desde el servicio
    */
   optionsUnidadMedida = OPTIONS_UNIDAD_MEDIDA;
 
   /**
-   * Opciones del catálogo de tipos de factura.
-   * Contiene una lista de objetos del catálogo de tipos de factura obtenidos desde el servicio.
+   * @property optionsTipoFactura - Opciones del catálogo de tipos de factura
+   * Contiene una lista de objetos del catálogo de tipos de factura obtenidos desde el servicio
    */
   optionsTipoFactura = OPTIONS_TIPO_FACTURA;
 
   /**
-   * Datos de la tabla de mercancías disponibles.
-   * Representa una lista de objetos que contienen información sobre las mercancías disponibles
-   * para ser seleccionadas en el formulario.
+   * @property mercanciaDisponsiblesTablaDatos - Datos de la tabla de mercancías disponibles
+   * Representa una lista de objetos que contienen información sobre las mercancías disponibles para selección
    */
   public mercanciaDisponsiblesTablaDatos: ColumnasTabla[] = [];
+
   /**
-   * Datos de la tabla de mercancías seleccionadas.
-   * Representa una lista de objetos que contienen información sobre las mercancías que han sido seleccionadas
-   * por el usuario en el formulario.
+   * @property mercanciaSeleccionadasTablaData - Datos de la tabla de mercancías seleccionadas
+   * Representa una lista de objetos que contienen información sobre las mercancías seleccionadas por el usuario
    */
   public mercanciaSeleccionadasTablaData: SeleccionadasTabla[] = [];
+
   /**
-   * Configuración de las columnas de la tabla de mercancías disponibles.
-   * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías disponibles.
+   * @property nuevaNotificacion - Notificación utilizada para mostrar mensajes o alertas en la interfaz
+   */
+  public nuevaNotificacion: Notificacion | null = null;
+
+  /**
+   * @property pedimentos - Arreglo que contiene los pedimentos registrados
+   */
+  public pedimentos: Array<Pedimento> = [];
+
+  /**
+   * @property elementoParaEliminar - Índice del pedimento marcado para eliminación
+   */
+  public elementoParaEliminar!: number;
+  /**
+   * @property seleccionados - Arreglo que contiene las mercancías seleccionadas
+   */
+  public seleccionados: SeleccionadasTabla[] = [];
+  /**
+   * @property mercanciasTablaDatos - Arreglo que contiene los datos de la tabla de mercancías
+   */
+  mercanciasTablaDatos: SeleccionadasTabla[] = [];
+  /**
+   * @property ischecked - Indica si un elemento está seleccionado
+   */
+  ischecked: boolean = false;
+  
+  /**
+   * @property mostrarMensajeError
+   * Bandera que indica si se debe mostrar un mensaje de error al usuario.
+   */
+  public mostrarMensajeError: boolean = false;
+
+  /**
+   * @property selectedRow
+   * Almacena la fila seleccionada en la tabla de mercancías.
+   */
+  selectedRow!: SeleccionadasTabla;
+
+
+  /**
+   * @property headers - Configuración de las columnas de la tabla de mercancías disponibles
+   * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías disponibles
    */
   public headers: ConfiguracionColumna<ColumnasTabla>[] = [
     {
@@ -278,49 +345,61 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       orden: 5,
     },
     {
-      encabezado: 'Fecha vencimíento',
+      encabezado: 'Fecha vencimiento',
       clave: (ele: ColumnasTabla) => ele.fechaVencimiento,
       orden: 6,
     },
   ];
+
   /**
-   * Configuración de las columnas de la tabla de mercancías seleccionadas.
-   * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías seleccionadas.
+   * @property headersData - Configuración de las columnas de la tabla de mercancías seleccionadas
+   * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías seleccionadas
    */
   public headersData = HEADERS_DATA;
 
   /**
-   * Bandera para mostrar la tabla de cargar archivo.
+   * @property mostrarCargarArchivoTable - Bandera para mostrar la tabla de cargar archivo
    */
   mostrarCargarArchivoTable: boolean = false;
 
   /**
-   * Define los datos que se mostrarán en la tabla dinámica.
+   * @property datosTabla - Define los datos que se mostrarán en la tabla dinámica
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   datosTabla: any[] = [];
 
   /**
-   * Referencia al botón para cerrar el modal.
-   *
-   * Se utiliza para cerrar el modal de manera programada.
+   * @property closeModal - Referencia al botón para cerrar el modal
+   * Se utiliza para cerrar el modal de manera programada
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
-   * Referencia al elemento del modal de modificación.
-   *
-   * Se utiliza para abrir o cerrar el modal de modificación de mercancías.
+   * @property modalInstances - Referencia al elemento del modal de modificación
+   * Se utiliza para abrir o cerrar el modal de modificación de mercancías
    */
   modalInstances: Modal | null = null;
 
   /**
-   * Constructor del componente.
-   * @param registroService Servicio para obtener datos de catálogos.
-   * @param fb Constructor de formularios reactivos.
-   * @param store Tienda para gestionar el estado del trámite.
-   * @param query Consultas para obtener datos del estado del trámite.
-   * @param validacionesService Servicio para validar formularios.
+   * @property mostrarErrorRegistro - Indica si se debe mostrar un mensaje de error relacionado con el registro
+   * Cuando es `true`, se muestra el error de registro en la interfaz de usuario
+   */
+  mostrarErrorRegistro: boolean = false;
+
+  /**
+   * @property validationAttempted - Indica si se ha intentado validar el formulario
+   * Se usa para mostrar errores de validación aunque el campo no haya sido tocado
+   */
+  validationAttempted: boolean = false;
+
+  /**
+   * @constructor Constructor del componente CertificadoDeOrigenComponent
+   * @param registroService - Servicio para obtener datos de catálogos
+   * @param fb - Constructor de formularios reactivos de Angular
+   * @param store - Tienda para gestionar el estado del trámite 110201
+   * @param query - Query para consultas del estado del trámite
+   * @param validacionesService - Servicio para validaciones de formularios
+   * @param consultaioQuery - Query para consultas de estado de consulta
    */
   constructor(
     private registroService: RegistroService,
@@ -329,47 +408,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     private query: Tramite110201Query,
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery
-  ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-          this.soloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
-  }
-  /**
-   * Maneja el evento de clic para habilitar el formulario de edición.
-   * @param row Fila seleccionada.
-   */
-  manejarClic(_row: unknown): void {
-    this.esFormulario = true;
-  }
-  /**
-   * Valida el formulario del destinatario.
-   * Marca todos los campos como tocados si el formulario es inválido.
-   */
-  validarDestinatarioFormulario(): void {
-    if (this.registroForm.invalid) {
-      this.registroForm.markAllAsTouched();
-    }
-  }
+  ) { }
+
 
   /**
-   * Valida el formulario de mercancías.
-   * Marca todos los campos como tocados si el formulario es inválido.
-   */
-  validarMercanciaForm(): void {
-    if (this.mercanciaForm.invalid) {
-      this.mercanciaForm.markAllAsTouched();
-    }
-  }
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   * Configura los formularios y obtiene los catálogos necesarios.
+   * @method ngOnInit - Método del ciclo de vida que se ejecuta al inicializar el componente
+   * Configura los formularios y obtiene los catálogos necesarios
    */
   ngOnInit(): void {
     this.mercanciatable();
@@ -389,7 +433,75 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.donanteDomicilio();
+  }
+
+  /**
+   * @method manejarClic - Maneja el evento de clic para habilitar el formulario de edición
+   * @param _row - Fila seleccionada
+   */
+  manejarClic(_row: unknown): void {
+    this.esFormulario = true;
+  }
+
+  /**
+   * @method validarDestinatarioFormulario - Valida el formulario del destinatario
+   * Marca todos los campos como tocados si el formulario es inválido
+   */
+  validarDestinatarioFormulario(): void {
+    if (this.registroForm.invalid) {
+      this.registroForm.markAllAsTouched();
+    }
+  }
+
+  /**
+   * @method validarMercanciaForm - Valida el formulario de mercancías
+   * Marca todos los campos como tocados si el formulario es inválido
+   */
+  validarMercanciaForm(): void {
+    if (this.mercanciaForm.invalid) {
+      this.mercanciaForm.markAllAsTouched();
+    }
+  }
+  /**
+   * @method validarFormularios - Valida todos los formularios del componente 
+   * @returns boolean
+   * Valida todos los formularios del componente `CertificadoDeOrigenComponent`.
+   * Si alguno de los formularios es inválido, marca todos los campos como tocados para mostrar los errores de validación.
+   * Retorna `true` si todos los formularios son válidos, de lo contrario retorna `false`.
+   */
+  validarFormularios(): boolean {
+    this.validationAttempted = true;
+    let isValid = true;
+
+    this.mostrarErrorMercancias = false;
+
+    if (!this.registroForm.valid) {
+      this.registroForm.markAllAsTouched();
+      isValid = false;
+    }
+
+    if (!this.mercanciaForm.valid) {
+      this.mercanciaForm.markAllAsTouched();
+      isValid = false;
+    }
+
+    if (!this.mercanciaSeleccionadasTablaData || this.mercanciaSeleccionadasTablaData.length === 0) {
+      this.mostrarErrorMercancias = true;
+      isValid = false;
+    }
+
+    return isValid;
   }
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
@@ -411,8 +523,10 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.donanteDomicilio();
     if (this.soloLectura) {
       this.registroForm.disable();
+      this.mercanciaForm.disable();
     } else {
       this.registroForm.enable();
+      this.mercanciaForm.enable();
     }
   }
   /**
@@ -456,7 +570,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Busca mercancías disponibles basándose en la descripción del tratado.
    * Verifica si la lista `Tratadodescripcion` incluye el valor '1' para determinar si hay mercancías disponibles.
    * Si el valor está presente, establece `hayMercanciasDisponibles` en `true`; de lo contrario, lo establece en `false`.
-   * Además, actualiza los catálogos necesarios llamando a los métodos `getTratado`, `getPais`, `getUMC`, `getUnidadMedida` y `getTipoFactura`.
+  /**
+   * @method buscarMercancias - Busca mercancías basado en los datos del formulario
+   * Además, actualiza los catálogos necesarios llamando a los métodos de obtención de catálogos
    */
   buscarMercancias(): void {
     const FORM_VALUES = this.registroForm.get('validacionForm')?.value;
@@ -473,29 +589,25 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Abre el modal para agregar una mercancía desde la tabla de mercancías disponibles.
-   * @param rowData Datos de la fila seleccionada de tipo ColumnasTabla
+   * @method abrirModalMercancia - Abre el modal para agregar una mercancía desde la tabla de mercancías disponibles
+   * @param rowData - Datos de la fila seleccionada de tipo ColumnasTabla
    */
   abrirModalMercancia(rowData: ColumnasTabla): void {
     if (rowData) {
-      // Configurar el modal para agregar nueva mercancía
       this.esFormulario = true;
       this.esMercanciaEnEdicion = false;
 
-      // Cargar catálogos necesarios
       this.getTratado();
       this.getPais();
       this.getUMC();
       this.getUnidadMedida();
       this.getTipoFactura();
 
-      // Popuar el formulario con los datos de la mercancía disponible seleccionada
       this.mercanciaForm.patchValue({
         validacionMercanciaForm: {
           fraccionMercanciaArancelaria: rowData.fraccionArancelaria || '',
           nombreTecnico: rowData.nombreTecnico || '',
           nombreComercialDelaMercancia: rowData.nombreComercial || '',
-          // Los demás campos se dejan vacíos para que el usuario los complete
           cantidad: '',
           valorDelaMercancia: '',
           tipoFactura: '',
@@ -511,7 +623,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         },
       });
 
-      // Abrir el modal usando Bootstrap
       const BOOTSTRAP_MODAL = new (
         window as unknown as {
           bootstrap: { Modal: new (element: Element) => { show(): void } };
@@ -525,27 +636,54 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Agrega una mercancía al formulario.
    */
   agregar(): void {
-    if (this.mercanciaForm.valid) {
-      this.esMercanciaEnEdicion = true;
-      this.esFormulario = true;
-
-      const FORM_VALUES = this.mercanciaForm.value.validacionMercanciaForm;
-
-      // Create the new item
-      const NEW_ITEM: ColumnasTabla = {
-        fraccionArancelaria: FORM_VALUES.fraccionMercanciaArancelaria,
-        nombreTecnico: FORM_VALUES.nombreTecnico,
-        nombreComercial: FORM_VALUES.nombreComercialDelaMercancia,
-        numeroRegistroProductos: FORM_VALUES.numeroRegistroProductos || '',
-        fechaExpedicion: FORM_VALUES.fechaExpedicion || '', 
-        fechaVencimiento: FORM_VALUES.fechaVencimiento || ''
-      };
-
-      this.mercanciaDisponsiblesTablaDatos = [
-        ...this.mercanciaDisponsiblesTablaDatos,
-        NEW_ITEM,
-      ];
+    if (this.mercanciaForm.invalid) {
+      this.mostrarErrorRegistro = true;
+      this.mercanciaForm.markAllAsTouched();
+      return;
     }
+    this.mostrarErrorRegistro = false;
+
+    const FORM_VALUES = this.mercanciaForm.value.validacionMercanciaForm;
+
+    const NEW_ITEM: ColumnasTabla = {
+      fraccionArancelaria: FORM_VALUES.fraccionMercanciaArancelaria,
+      nombreTecnico: FORM_VALUES.nombreTecnico,
+      nombreComercial: FORM_VALUES.nombreComercialDelaMercancia,
+      numeroRegistroProductos: FORM_VALUES.numeroRegistroProductos || '',
+      fechaExpedicion: FORM_VALUES.fechaExpedicion || '',
+      fechaVencimiento: FORM_VALUES.fechaVencimiento || ''
+    };
+
+    this.mercanciaDisponsiblesTablaDatos = [
+      ...this.mercanciaDisponsiblesTablaDatos,
+      NEW_ITEM,
+    ];
+
+    const SELECTED_ITEM = {
+      fraccionArancelaria: FORM_VALUES.fraccionMercanciaArancelaria,
+      cantidad: FORM_VALUES.cantidad,
+      unidadMedida: FORM_VALUES.unidadMedida?.toString() || '',
+      valorMercancia: FORM_VALUES.valorDelaMercancia,
+      nombreTecnico: FORM_VALUES.nombreTecnico,
+      nombreComercial: FORM_VALUES.nombreComercialDelaMercancia,
+      numeroRegistroProductos: FORM_VALUES.numeroRegistroProductos || '',
+      fechaExpedicion: FORM_VALUES.fechaExpedicion || '',
+      fechaVencimiento: FORM_VALUES.fechaVencimiento || '',
+      tipoFactura: FORM_VALUES.tipoFactura?.toString() || '',
+      numFactura: FORM_VALUES.numeroFactura,
+      complementoDescripcion: FORM_VALUES.complementoDelaDescripcion,
+      fechaFactura: FORM_VALUES.fecha || ''
+    };
+
+    this.mercanciaSeleccionadasTablaData = [
+      ...this.mercanciaSeleccionadasTablaData,
+      SELECTED_ITEM
+    ];
+
+    this.mostrarErrorMercancias = false;
+
+    this.esMercanciaEnEdicion = true;
+    this.esFormulario = true;
     this.cerrarModal();
   }
 
@@ -555,6 +693,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Este método utiliza la referencia al botón de cierre del modal para cerrarlo.
    */
   cerrarModal(): void {
+    this.mostrarErrorRegistro = false;
     if (this.closeModal) {
       this.closeModal.nativeElement.click();
     }
@@ -564,6 +703,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Cancela la edición de una mercancía.
    */
   cancelar(): void {
+    this.mostrarErrorRegistro = false;
     this.esMercanciaEnEdicion = true;
     this.esFormulario = false;
   }
@@ -571,17 +711,34 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Modifica una mercancía existente.
    */
   modificar(): void {
-    this.abrirModalModificar();
-  }
+    if (this.ischecked) {
+      this.abrirModalModificar();
 
+    } else {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'info',
+        titulo: 'Selección requerida',
+        mensaje: 'Debes seleccionar una mercancía',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.mostrarMensajeError = true;
+    }
+  }
+/**
+ * Indica si se debe mostrar un mensaje de error.
+ * Cuando es `true`, se muestra el mensaje de error en la interfaz de usuario.
+ */
   abrirModalModificar(): void {
-    // Cargar catálogos necesarios si es necesario
     this.getTratado();
     this.getPais();
     this.getUMC();
     this.getUnidadMedida();
     this.getTipoFactura();
-    // Abrir el modal usando Bootstrap
     if (this.modalAgregar && this.modalAgregar.nativeElement) {
       const BOOTSTRAP_MODAL = new (
         window as unknown as {
@@ -607,7 +764,13 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.cargarArchivo = true;
     this.dataEvent.emit(true);
   }
-
+  /**
+   * Analiza un archivo CSV y extrae los datos de mercancías.
+   * @param csv Contenido del archivo CSV como una cadena de texto.
+   * Procesa el contenido del archivo CSV, separando las líneas y los valores.
+   * Mapea los datos a un formato estructurado y los asigna a la propiedad `mercanciaSeleccionadasTablaData`.
+   * Si se encuentran mercancías válidas, desactiva la bandera de error `mostrarErrorMercancias`.
+   */
   analizarGramaticalmenteCSV(csv: string): void {
     const LINES = csv.split('\n').filter((line) => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
@@ -638,6 +801,10 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       complementoDescripcion: articulo['complementoDescripcion'] || '',
       fechaFactura: articulo['fechaFactura'] || ''
     }));
+
+    if (this.mercanciaSeleccionadasTablaData.length > 0) {
+      this.mostrarErrorMercancias = false;
+    }
   }
   /**
    * Muestra errores en el formulario y desactiva la carga de archivos.
@@ -648,6 +815,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       'archivoAdjuntar'
     ) as HTMLInputElement;
     const FILE = FILE_INPUT.files?.[0];
+
+    if (!FILE) {
+      this.abrirModal();
+      return;
+    }
+
     if (FILE) {
       const READER = new FileReader();
       READER.onload = (e): void => {
@@ -733,6 +906,32 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     const FILE = INPUT.files && INPUT.files[0];
     this.nombreArchivo = FILE ? FILE.name : 'No se eligió ningún archivo';
   }
+
+  /**
+   * Valida y formatea la entrada de fracción arancelaria.
+   * Solo permite números y limita la entrada a 8 dígitos.
+   * @param event Evento del input
+   */
+  onFraccionArancelariaInput(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    let valor = INPUT.value;
+
+    valor = valor.replace(REGEX_SIN_DIGITOS, '');
+
+    if (valor.length > 8) {
+      valor = valor.substring(0, 8);
+    }
+
+    INPUT.value = valor;
+
+    this.registroForm.patchValue({
+      validacionForm: {
+        fraccionArancelaria: valor
+      }
+    });
+
+    this.setValoresStore(this.validacionForm, 'fraccionArancelaria', 'setFraccionArancelaria');
+  }
   /**
    * Maneja el envío del formulario.
    */
@@ -744,17 +943,21 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Verifica si un campo del formulario es válido.
    * @param form Formulario reactivo.
-   * @param field Nombre del campo a validar.
-   * @returns `true` si el campo es válido, de lo contrario `false`.
+  /**
+   * @method isValid - Verifica si un campo del formulario es válido
+   * @param form - Formulario reactivo
+   * @param field - Nombre del campo a validar
+   * @returns boolean - `true` si el campo es válido, de lo contrario `false`
    */
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
+
   /**
-   * Establece valores en el estado de la tienda.
-   * @param form Formulario reactivo.
-   * @param campo Nombre del campo del formulario.
-   * @param metodoNombre Método de la tienda para actualizar el estado.
+   * @method setValoresStore - Establece valores en el estado de la tienda
+   * @param form - Formulario reactivo
+   * @param campo - Nombre del campo del formulario
+   * @param metodoNombre - Método de la tienda para actualizar el estado
    */
   setValoresStore(
     form: FormGroup,
@@ -764,153 +967,76 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
   /**
-   * Obtiene el formulario de validación.
+   * @method validarFormulario - Valida el formulario de certificado de origen
+   * Retorna `true` si el formulario es válido, de lo contrario retorna `false`
+   * Si el componente hijo no está disponible, retorna `false`
+   * @returns boolean - Indica si el formulario es válido
+   */
+  validarFormulario(): boolean {
+    let isValid = true;
+    if (!this.validarFormularios()) {
+      isValid = false;
+    }
+    return isValid;
+  }
+
+
+  /**
+   * @getter validacionForm - Obtiene el formulario de validación principal
+   * @returns FormGroup - Formulario de validación anidado
    */
   get validacionForm(): FormGroup {
     return this.registroForm.get('validacionForm') as FormGroup;
   }
+
   /**
-   * Obtiene el formulario de validación de mercancías.
+   * @getter validacionMercanciaForm - Obtiene el formulario de validación de mercancías
+   * @returns FormGroup - Formulario de validación de mercancías anidado
    */
   get validacionMercanciaForm(): FormGroup {
     return this.mercanciaForm.get('validacionMercanciaForm') as FormGroup;
   }
+
   /**
-   * Configura el formulario reactivo con los valores iniciales del estado.
+   * @method donanteDomicilio - Configura el formulario reactivo con los valores iniciales del estado
    */
   donanteDomicilio(): void {
-    this.registroForm = this.fb.group({
-      validacionForm: this.fb.group({
-        tratado: [
-          { value: this.solicitudState?.tratado, disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        pais: [
-          { value: this.solicitudState?.pais, disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        fraccionArancelaria: [
-          {
-            value: this.solicitudState?.fraccionArancelaria,
-            disabled: this.soloLectura,
-          },
-          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
-        ],
-        numeroRegistro: [
-          {
-            value: this.solicitudState?.numeroRegistro,
-            disabled: this.soloLectura,
-          },
-          [Validators.required],
-        ],
-        nombreComercial: [
-          {
-            value: this.solicitudState?.nombreComercial,
-            disabled: this.soloLectura,
-          },
-          [Validators.required],
-        ],
-        fechaInicial: [
-          {
-            value: this.solicitudState?.fechaInicial,
-            disabled: this.soloLectura,
-          },
-          [Validators.required],
-        ],
-        fechaFinal: [
-          {
-            value: this.solicitudState?.fechaFinal,
-            disabled: this.soloLectura,
-          },
-          [Validators.required],
-        ],
-        archivo: [
-          { value: this.solicitudState?.archivo, disabled: this.soloLectura },
-          [Validators.required],
-        ],
-      }),
-    });
-    this.mercanciaForm = this.fb.group({
-      validacionMercanciaForm: this.fb.group({
-        fraccionMercanciaArancelaria: [
-          { value: '', disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        nombreTecnico: [
-          { value: '', disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        nombreComercialDelaMercancia: [
-          { value: '', disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        criterioParaConferir: [
-          { value: '', disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        nombreEnIngles: [
-          { value: '', disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        marca: [
-          { value: this.solicitudState?.marca, disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        cantidad: [
-          { value: this.solicitudState?.cantidad, disabled: this.soloLectura },
-          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
-        ],
-        umc: [
-          { value: this.solicitudState?.umc, disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        valorDelaMercancia: [
-          {
-            value: this.solicitudState?.valorDelaMercancia,
-            disabled: this.soloLectura,
-          },
-          [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],
-        ],
-        complementoDelaDescripcion: [
-          {
-            value: this.solicitudState?.complementoDelaDescripcion,
-            disabled: this.soloLectura,
-          },
-          [Validators.required],
-        ],
-        masaBruta: [
-          { value: this.solicitudState?.masaBruta, disabled: this.soloLectura },
-          [Validators.required, Validators.pattern(REGEX_NUMERO_15_ENTEROS_3_DECIMALES)],
-        ],
-        unidadMedida: [
-          {
-            value: this.solicitudState?.unidadMedida,
-            disabled: this.soloLectura,
-          },
-          [Validators.required],
-        ],
-        tipoFactura: [
-          {
-            value: this.solicitudState?.tipoFactura,
-            disabled: this.soloLectura,
-          },
-          [Validators.required],
-        ],
-        fecha: [
-          { value: this.solicitudState?.fecha, disabled: this.soloLectura },
-          [Validators.required],
-        ],
-        numeroFactura: [
-          {
-            value: this.solicitudState?.numeroFactura,
-            disabled: this.soloLectura,
-          },
-          [Validators.required],
-        ],
-      }),
-    });
-  }
+  this.registroForm = this.fb.group({
+    validacionForm: this.fb.group({
+      tratado: [{ value: this.solicitudState?.tratado, disabled: this.soloLectura }, [Validators.required]],
+      pais: [{ value: this.solicitudState?.pais, disabled: this.soloLectura }, [Validators.required]],
+      fraccionArancelaria: [{ value: this.solicitudState?.fraccionArancelaria, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.minLength(8), Validators.maxLength(8)]],
+      numeroRegistro: [{ value: this.solicitudState?.numeroRegistro, disabled: this.soloLectura }, [Validators.required]],
+      nombreComercial: [{ value: this.solicitudState?.nombreComercial, disabled: this.soloLectura }, [Validators.required]],
+      fechaInicial: [{ value: this.solicitudState?.fechaInicial, disabled: this.soloLectura }, [Validators.required]],
+      fechaFinal: [{ value: this.solicitudState?.fechaFinal, disabled: this.soloLectura }, [Validators.required]],
+      archivo: [{ value: this.solicitudState?.archivo, disabled: this.soloLectura }, [Validators.required]],
+    }),
+  });
+
+  this.mercanciaForm = this.fb.group({
+    validacionMercanciaForm: this.fb.group({
+      fraccionMercanciaArancelaria: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
+      nombreTecnico: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
+      nombreComercialDelaMercancia: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
+      criterioParaConferir: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
+      nombreEnIngles: [{ value: '', disabled: this.soloLectura }, [Validators.required]],
+      marca: [{ value: this.solicitudState?.marca, disabled: this.soloLectura }, [Validators.required]],
+      cantidad: [{ value: this.solicitudState?.cantidad, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_CANTIDAD_15_4), Validators.maxLength(22)]],
+      umc: [{ value: this.solicitudState?.umc, disabled: this.soloLectura }, [Validators.required]],
+      valorDelaMercancia: [{ value: this.solicitudState?.valorDelaMercancia, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_CANTIDAD_15_4), Validators.maxLength(22)]],
+      complementoDelaDescripcion: [{ value: this.solicitudState?.complementoDelaDescripcion, disabled: this.soloLectura }, [Validators.required, Validators.maxLength(200)]],
+      masaBruta: [{ value: this.solicitudState?.masaBruta, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_NUMERO_15_ENTEROS_4_DECIMALES), Validators.maxLength(22)]],
+      unidadMedida: [{ value: this.solicitudState?.unidadMedida, disabled: this.soloLectura }, [Validators.required]],
+      tipoFactura: [{ value: this.solicitudState?.tipoFactura, disabled: this.soloLectura }, [Validators.required]],
+      fecha: [{ value: this.solicitudState?.fecha, disabled: this.soloLectura }, [Validators.required]],
+      numeroFactura: [{ value: this.solicitudState?.numeroFactura, disabled: this.soloLectura }, [Validators.required, Validators.maxLength(50)]],
+    }),
+  });
+}
+
   /**
    * Obtiene los datos de la tabla de mercancías disponibles desde el servicio.
    * Realiza una suscripción al método `getSolicitudesTabla` del servicio `RegistroService`
@@ -932,9 +1058,218 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     });
   }
 
+
   /**
-   * Método que se ejecuta al destruir el componente.
-   * Cancela todas las suscripciones activas.
+   * Formatea el valor del campo 'cantidad' en el formulario 'mercanciaForm' para asegurar que tenga exactamente cuatro decimales.
+   *
+   * - Si el valor es un número entero o no contiene decimales, se le agregan '.0000'.
+   * - Si el valor ya contiene decimales, se ajusta para que tenga exactamente cuatro cifras decimales, rellenando con ceros si es necesario.
+   * - No emite eventos de cambio al actualizar el valor del control.
+   *
+   * @remarks
+   * Este método no realiza validaciones sobre el valor numérico, solo sobre el formato de los decimales.
+   */
+  formatearCantidad(): void {
+    const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.cantidad');
+    let valor = CONTROL?.value;
+    if (valor !== null && valor !== undefined && valor !== '') {
+      valor = valor.toString();
+      if (!valor.includes('.')) {
+        valor = valor + '.0000';
+      } else {
+        const [ENTERO, DECIMALES] = valor.split('.');
+        valor = ENTERO + '.' + DECIMALES.padEnd(4, '0').slice(0, 4);
+      }
+      CONTROL?.setValue(valor, { emitEvent: false });
+    }
+  }
+
+  /**
+   * Formatea el valor de la mercancía en el formulario para asegurar que tenga exactamente cuatro decimales.
+   *
+   * - Si el valor no contiene decimales, se le agregan '.0000'.
+   * - Si el valor ya contiene decimales, se ajusta para que tenga exactamente cuatro dígitos decimales,
+   *   rellenando con ceros si es necesario o truncando si hay más de cuatro.
+   * - El valor formateado se establece en el control del formulario sin emitir eventos.
+   *
+   * @remarks
+   * Este método asume que el control 'validacionMercanciaForm.valorDelaMercancia' existe en el formulario 'mercanciaForm'.
+   */
+  formatearValorDelaMercancia(): void {
+    const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.valorDelaMercancia');
+    let VALOR = CONTROL?.value;
+    if (VALOR === null || VALOR === undefined || VALOR === '') {
+      return;
+    }
+    VALOR = VALOR.toString();
+    if (VALOR.length > 22) {
+      CONTROL?.setErrors({ maxlength: true });
+      return;
+    }
+    const REGEX = /^\d{1,15}(\.\d{0,4})?$/;
+    if (!REGEX.test(VALOR)) {
+      CONTROL?.setErrors({ pattern: true });
+      return;
+    }
+    if (!VALOR.includes('.')) {
+      VALOR = VALOR + '.0000';
+    } else {
+      const [ENTERO, DECIMALES = ''] = VALOR.split('.');
+      VALOR = ENTERO + '.' + DECIMALES.padEnd(4, '0').slice(0, 4);
+    }
+
+    CONTROL?.setValue(VALOR, { emitEvent: false });
+    CONTROL?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  /**
+   * Formatea el valor del campo 'masaBruta' en el formulario 'mercanciaForm' para asegurar que tenga exactamente cuatro decimales.
+   * 
+   * - Si el valor no contiene decimales, se le agregan '.0000'.
+   * - Si el valor ya contiene decimales, se ajusta para que tenga exactamente cuatro dígitos decimales, rellenando con ceros si es necesario.
+   * - El valor formateado se establece en el control sin emitir eventos.
+   * 
+   * @remarks
+   * Este método no realiza validaciones numéricas, solo formatea la cadena del valor.
+   */
+  formatearMasaBruta(): void {
+    const CONTROL = this.mercanciaForm.get('validacionMercanciaForm.masaBruta');
+    let VALOR = CONTROL?.value;
+    if (VALOR !== null && VALOR !== undefined && VALOR !== '') {
+      VALOR = VALOR.toString();
+      if (REGEX_NUMERO_ENTERO.test(VALOR)) {
+        if (!VALOR.includes('.')) {
+          VALOR = VALOR + '.0000';
+        } else {
+          const [ENTERO, DECIMALES] = VALOR.split('.');
+          VALOR = ENTERO + '.' + (DECIMALES + '0000').slice(0, 4);
+        }
+        CONTROL?.setValue(VALOR, { emitEvent: false });
+      }
+    }
+  }
+
+  /**
+   * @method eliminarPedimento
+   * Elimina un pedimento seleccionado de la tabla de mercancías si se confirma la acción.
+   * 
+   * @param borrar - Indica si se debe eliminar el registro seleccionado.
+   */
+  eliminarPedimento(borrar: boolean): void {
+    this.ischecked = borrar;
+    if (borrar && this.selectedRow) {
+      this.mercanciaSeleccionadasTablaData = this.mercanciaSeleccionadasTablaData.filter((item) => item.id !== this.selectedRow.id);
+      this.selectedRow = null as unknown as SeleccionadasTabla;
+    }
+    this.mostrarMensajeError = false;
+    this.nuevaNotificacion = null;
+  }
+
+  /**
+   * @method abrirModal
+   * Abre un modal de notificación para mostrar un mensaje de error relacionado con la selección de archivo.
+   * 
+   * @param i - Índice del elemento a eliminar (por defecto 0).
+   */
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debes seleccionar un archivo(txt o csv)',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+    this.elementoParaEliminar = i;
+  }
+
+  /**
+   * @method onFilaSeleccionadaradio
+   * Evento que se ejecuta al seleccionar una fila con opción de radio.
+   * 
+   * @param event - Fila seleccionada en la tabla.
+   */
+  onFilaSeleccionadaradio(event: SeleccionadasTabla): void {
+    this.selectedRow = event;
+  }
+
+  /**
+   * @method cerrarEdicionMercancia
+   * Cierra la edición de mercancía verificando si hay un registro seleccionado.
+   * Si hay selección, solicita confirmación de eliminación;
+   * en caso contrario, muestra mensaje de error.
+   */
+  cerrarEdicionMercancia(): void {
+    if (this.selectedRow) {
+      this.eliminarMensajeConfirmacion();
+    }
+    else {
+      this.errorMessageExportador();
+    }
+  }
+
+  /**
+   * @method errorMessageExportador
+   * Muestra un mensaje de error cuando no se ha seleccionado ninguna mercancía.
+   */
+  errorMessageExportador(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'info',
+      titulo: 'Selección requerida',
+      mensaje: 'Debes seleccionar una mercancía',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.mostrarMensajeError = true;
+  }
+
+  /**
+   * @method eliminarMensajeConfirmacion
+   * Genera una notificación de confirmación para que el usuario decida
+   * si desea eliminar el registro seleccionado.
+   */
+  eliminarMensajeConfirmacion(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'info',
+      titulo: 'Confirmación requerida',
+      mensaje: '¿Desea eliminar este dato?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.mostrarMensajeError = true;
+  }
+
+  /**
+   * @method eliminarErrorMessage
+   * Maneja la acción de eliminación tras la confirmación en la notificación/modal.
+   * 
+   * @param event - Indica si el usuario confirmó la eliminación.
+   */
+  eliminarErrorMessage(event: boolean): void {
+    if (event) {
+      this.mercanciaSeleccionadasTablaData = this.mercanciaSeleccionadasTablaData.filter((item) => item.id !== this.selectedRow.id);
+      this.selectedRow = {} as SeleccionadasTabla;
+    }
+
+    if (this.modalInstances) {
+      this.modalInstances.hide();
+    }
+    this.mostrarMensajeError = false;
+  }
+  /**
+   * @method ngOnDestroy - Método del ciclo de vida que se ejecuta al destruir el componente
+   * Cancela todas las suscripciones activas para evitar fugas de memoria
    */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
