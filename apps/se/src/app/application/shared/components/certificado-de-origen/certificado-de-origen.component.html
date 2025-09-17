@@ -17,11 +17,38 @@
                           (change)="setValoresStore(
                             'formCertificado',
                         'si',
-                        'setFormCertificadoGenric')"
+                        'setFormFormCertificado')"
                           [isDisabled]="esFormularioSoloLectura"></lib-input-check>
                         </div>
                     </div>
                 </div>
+                     <div class="row">
+      <div
+        class="col-md-6"
+        *ngIf="!formCertificado.get('si')?.value && fechaBoton"
+      >
+       <label class="form-label" for="nombres">Periodo:</label>
+      <div>
+      <input type="radio" class="form-check-input mt-1" id="rangoDeFecha" value="periodo" formControlName="rangoDeFecha"  (change)="setValoresStore(
+                            'formCertificado',
+                        'rangoDeFecha',
+                        'setFormFormCertificado')"  />
+      </div>
+      </div>
+         <div
+        class="col-md-6"
+        *ngIf="!formCertificado.get('si')?.value && fechaBoton"
+      >
+       <label class="form-label" for="nombres">Una sola importación:</label>
+      <div>
+        <input type="radio" class="form-check-input mt-1" id="rangoDeFecha" value="sola" formControlName="rangoDeFecha" (change)="setValoresStore(
+                            'formCertificado',
+                        'rangoDeFecha',
+                        'setFormCertificadoGenric')"  />
+        </div>
+         
+      </div>
+      </div>
             }
         </div>
 

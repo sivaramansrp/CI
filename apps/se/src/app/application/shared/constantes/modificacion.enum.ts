@@ -296,3 +296,11 @@ export const CONFIGURACION_MERCANCIA_TABLA = [
  * @type {number[]}
  */
 export const FECHA_ID = [ 110204,110223 ];
+/**
+ * @constant BOTON_DE_OPCION_VER
+ * @description
+ * Arreglo que contiene los identificadores de procedimiento que requieren el campo de fecha en la configuración.
+ * Se utiliza para determinar si se debe mostrar o procesar el campo de fecha en los formularios relacionados.
+ * @type {number[]}
+ */
+export const BOTON_DE_OPCION_VER =[110221];

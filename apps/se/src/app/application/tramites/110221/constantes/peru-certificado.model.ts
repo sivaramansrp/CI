@@ -79,3 +79,6 @@ export const ELEMENTOS_REQUERIDOS = [
   'calle',
   'numeroLetra'
 ];
+
+
+export const IDPROCEDIMIENTO = 110221;

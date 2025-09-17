@@ -3,6 +3,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
+import { Mercancias } from '../models/plantas-consulta.model';
 
 /**
  * @interface Tramite110221State
@@ -38,12 +39,17 @@ export interface RepresentanteLegalForm{
 }
 
 export interface Tramite110221State {
+  
   /**
-   * @property {Object} formCertificado - Datos del formulario principal de certificado.
-   * @description
-   * Contiene información básica del certificado, como entidad federativa, bloque, nombre comercial, registro de producto, fracción arancelaria y fechas.
+   * Objeto que contiene datos del formulario de mercancía.
+   * Las claves pueden contener valores de tipo undefined, boolean, string, number u objeto.
    */
-  formCertificado: { [key: string]: unknown};
+  mercanciaForm: { [key: string]: undefined | boolean | string | number | object };
+  /**
+   * Objeto que contiene datos del formulario del certificado.
+   * Las claves pueden contener valores de tipo undefined, boolean, string, number u objeto.
+   */
+  formCertificado: { [key: string]: undefined | boolean | string | number | object };
   /**
    * @property {Catalogo} estado - Estado seleccionado.
    * @description
@@ -232,7 +238,17 @@ export interface Tramite110221State {
   numeroFactura: string;
   mercanciaSeleccionadasTablaData:SeleccionadasTabla[],
   mercanciaDisponsiblesTablaDatos:ColumnasTabla[],
-  valordeContenidoRegional:string
+  valordeContenidoRegional:string,
+    /** Lista de catálogos para la alta de planta. */
+  altaPlanta: Catalogo[],
+   /** Lista de catálogos que representan facturas disponibles. */
+  factura: Catalogo[];
+  
+    /** Lista de mercancías encontradas o buscadas. */
+    buscarMercancia: Mercancias[];
+    
+  /** Lista de catálogos que representan unidades de medida comercial (UMCs). */
+  umcs: Catalogo[];
 }
 
 /**
@@ -248,21 +264,16 @@ export interface Tramite110221State {
  */
 export function createInitialState(): Tramite110221State {
   return {
-    formCertificado: {
-      si: false,
-      entidadFederativa: '',
-      bloque: '',
-      nombreComercialForm: '',
-      registroProductoForm: '',
-      fraccionArancelariaForm: '',
-      fechaInicioInput: '',
-      fechaFinalInput: '',
-      nombres: '',
-      primerApellido: '',
-      segundoApellido: '',
-      numeroDeRegistroFiscal: '',
-      razonSocial: '',
-    },
+  formCertificado: {
+    entidadFederativa: '',
+    tercerOperador: false,
+    bloque: '',
+    nombreComercialForm: '',
+    registroProductoForm: '',
+    fraccionArancelariaForm: '',
+    fechaInicioInput: '',
+    fechaFinalInput: '',
+  },
     estado: {
       id: -1,
       descripcion: '',
@@ -348,7 +359,29 @@ export function createInitialState(): Tramite110221State {
     valordeContenidoRegional:'',
   destinatarioForm: {} as DestinatarioForm,
   domicilioForm: {} as DomicilioForm,
-  representanteLegalForm: {} as RepresentanteLegalForm
+  representanteLegalForm: {} as RepresentanteLegalForm,
+   buscarMercancia: [],
+   altaPlanta:[],
+     mercanciaForm: {
+    fraccionNaladi: '',
+    fraccionNaladiSa93: '',
+    fraccionNaladiSa96: '',
+    fraccionNaladiSa02: '',
+    nombreTecnico: '',
+    nombreComercial: '',
+    normaOrigen: '',
+    id: '',
+    cantidad: '',
+    umc: '',
+    tipoFactura: '',
+    valorMercancia: '',
+    fechaFinalInput: '',
+    numeroFactura: '',
+    nalad: '',
+    complementoClasificacion: '',
+  },
+  factura:[],
+  umcs:[]
   };
 }
 
@@ -373,11 +406,10 @@ export class Tramite110221Store extends Store<Tramite110221State> {
   }
 
   /**
-   * @descripcion
-   * Actualiza los datos del formulario de certificado.
-   * @param values - Valores a actualizar en el formulario.
+   * Actualiza los valores del formulario principal del certificado.
+   * @param values Clave/valor con campos del formulario.
    */
-  setFormCertificado(values: { [key: string]: unknown}): void {
+  setFormCertificado(values: { [key: string]: undefined | boolean | string | number | object }): void {
     this.update((state) => ({
       formCertificado: {
         ...state.formCertificado,
@@ -674,20 +706,6 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
   }
 
   /**
-   * @descripcion
-   * Actualiza los datos del formulario de certificado de manera genérica.
-   * @param values - Objeto que contiene los valores a actualizar en el formulario de certificado.
-   */
-  setFormCertificadoGenric(values: { [key: string]: unknown}): void {    
-    this.update((state) => ({
-      formCertificado: {
-        ...state.formCertificado,
-        ...values,
-      },
-    }));
-  }
-
-  /**
    * Actualiza el estado del store con los valores proporcionados.
    * Valores a actualizar en el estado.
    */
@@ -754,5 +772,55 @@ setFormDatosCertificado(values: { [key: string]: unknown }): void {
       ...state,
       representanteLegalForm,
     }));
+  }
+
+    /**
+   * Establece las plantas disponibles para alta.
+   * @param altaPlanta Lista de plantas.
+   */
+  setaltaPlanta(altaPlanta: Catalogo[]): void {
+    this.update((state) => ({ ...state, altaPlanta }));
+  }
+    /**
+     * Establece los resultados de mercancía obtenidos por búsqueda.
+     * @param buscarMercancia Lista de resultados de tipo `Mercancia`.
+     */
+    setbuscarMercancia(buscarMercancia: Mercancias[]): void {
+      this.update((state) => ({ ...state, buscarMercancia }));
+    }
+      /**
+   * Actualiza los valores del formulario de mercancía.
+   * @param values Clave/valor con información sobre la mercancía.
+   */
+  setFormMercancia(values: { [key: string]: undefined | boolean | string | number | object }): void {
+    this.update((state) => ({
+      mercanciaForm: {
+        ...state.mercanciaForm,
+        ...values,
+      },
+    }));
+  }
+    /**
+   * Actualiza la lista de facturas.
+   * @param factura Arreglo de objetos `Catalogo`.
+   */
+  setFactura(factura: Catalogo[]): void {
+    this.update((state) => ({ ...state, factura }));
+  }
+
+  /**
+   * Actualiza la lista de UMCs disponibles.
+   * @param umcs Lista de catálogos con unidades de medida.
+   */
+  setUmc(umcs: Catalogo[]): void {
+    this.update((state) => ({ ...state, umcs }));
+  }
+    /**
+   * Actualiza la lista de UMCs disponibles.
+   * @param mercanciaTabla Lista de catálogos con unidades de medida.
+   */
+  
+  public setMercanciaTabla(mercanciaTabla: Mercancia[]): void {
+    this.update((state) => ({ ...state, mercanciaTabla }));
   }
 }

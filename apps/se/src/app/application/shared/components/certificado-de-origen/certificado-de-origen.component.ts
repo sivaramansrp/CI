@@ -1,6 +1,6 @@
 import { AbstractControl,FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors,ValidatorFn, Validators} from '@angular/forms';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent,Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
+import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Component,ElementRef,EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { CommonModule } from '@angular/common';
@@ -290,6 +290,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   fechaFin: boolean = false;
   
   /**
+   * @property {boolean} fechaFin
+   * @description
+   * Indica si el campo de fecha fin debe mostrarse en el formulario, dependiendo del procedimiento.
+   */
+  fechaBoton: boolean = false;
+  /**
    * Indicates whether the domicile information should be displayed.
    * Set to `true` to show domicile details; otherwise, set to `false`.
    */
@@ -488,6 +494,7 @@ tableErrorMensajeError: boolean = false;
  createForm(): void {
     this.formCertificado =this.fb.group({
       si: [false],
+      rangoDeFecha:[],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
   bloque: ['', [Validators.required, Validators.min(0)]],
   fraccionArancelariaForm: ['', [Validators.maxLength(8),Validators.pattern(EIGHT_DIGIT_NUMBER_REGEX)]],
@@ -688,6 +695,7 @@ ngOnChanges(changes: SimpleChanges):void {
    */
   ngOnInit(): void {
     this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
+    this.fechaBoton = BOTON_DE_OPCION_VER.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
     this.nuevaNotificacion = {} as Notificacion
     this.inicializarFormularioArchivo();
