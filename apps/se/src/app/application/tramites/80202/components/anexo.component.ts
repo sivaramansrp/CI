@@ -5,6 +5,8 @@ import {
   CatalogoSelectComponent,
   ConfiguracionColumna,
   ConsultaioQuery,
+  Notificacion,
+  NotificacionesComponent,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -47,10 +49,12 @@ import { Subject } from 'rxjs';
     ReactiveFormsModule,
     TablaDinamicaComponent,
     TituloComponent,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    NotificacionesComponent
   ],
 })
 export class AnexoComponent implements OnInit, OnDestroy {
+  selectedRowData: immexInfo | null = null;
     /**
      * Referencia al elemento del modal de importación de mercancía.
      * Utilizado para mostrar u ocultar el modal mediante la API de Bootstrap.
@@ -231,6 +235,13 @@ export class AnexoComponent implements OnInit, OnDestroy {
      * @memberof Anexo1Component
      */
     esFormularioActualizacion: boolean = false;
+      /**
+   * Representa una nueva notificación que será utilizada en el componente.
+   * @type {Notificacion}
+   */
+  public nuevaNotificacion!: Notificacion;
+  eliminarDatosTabla:boolean=false;
+  eliminarDatosTablaExportacion:boolean=false;
   
     /**
      * @constructor
@@ -343,12 +354,12 @@ export class AnexoComponent implements OnInit, OnDestroy {
   
     private createImportacionFormGroup(): FormGroup {
       return this.fb.group({
-      fraccionArancelaria: [{value: this.immexRegitroAnexoState?.fraccionArancelaria || '', disabled: true}, Validators.required],               
-      umt: [{value: this.immexRegitroAnexoState?.umt || '', disabled:true}, Validators.required],
-      descripcion: [{value: this.immexRegitroAnexoState?.descripcion || '', disabled:true}, Validators.required],                      
-      cantidadAnual: [{value: this.immexRegitroAnexoState?.cantidadAnual || '', disabled: this.esFormularioSoloLectura}, [Validators.required, Validators.pattern('^[0-9]+$')]],
-      capacidadInstalada: this.immexRegitroAnexoState?.umt || '',
-      cantidadPorPeriodo: [{value: this.immexRegitroAnexoState?.cantidadPorPeriodo || '', disabled: this.esFormularioSoloLectura}, [Validators.required,Validators.pattern('^[0-9]+$')]], 
+      fraccionArancelaria: [{value:this.immexRegitroAnexoState?.fraccionArancelaria || '', disabled: true}, [Validators.required]],               
+      umt: [{value:this.immexRegitroAnexoState?.umt || '', disabled: true}, [Validators.required]],
+      descripcionTigie: [{value:this.immexRegitroAnexoState?.descripcionTigie || '' , disabled: true}, [Validators.required]],                      
+      cantidadAnual: [this.immexRegitroAnexoState?.cantidadAnual|| '', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      capacidadInstalada: [this.immexRegitroAnexoState?.capacidadInstalada || '',[ Validators.required]], 
+      cantidadPorPeriodo: [this.immexRegitroAnexoState?.cantidadPorPeriodo || '' , [Validators.required,Validators.pattern('^[0-9]+$')]], 
       });
     }
   
@@ -412,7 +423,6 @@ export class AnexoComponent implements OnInit, OnDestroy {
           map((seccionState: { immexRegistro: ImmexRegistroform }) => {
             if (seccionState) {
               this.immexRegitroAnexoState = seccionState.immexRegistro;
-              this.immexRegistroform.patchValue(this.immexRegitroAnexoState);
             }
           })
         )
@@ -437,7 +447,6 @@ export class AnexoComponent implements OnInit, OnDestroy {
           })
         )
         .subscribe();
-      this.fetchData();
       this.obtenerListasDesplegables();
       this.disableFormControls();
   
@@ -496,6 +505,7 @@ export class AnexoComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe({
           next: (response) => {
+            
             const RESPONSE_DATA = response as unknown as {
               permisoImmexDatos: immexInfo[];
               fraccionDatos: fraccionInfo[];
@@ -511,11 +521,7 @@ export class AnexoComponent implements OnInit, OnDestroy {
               const DEBE_MOSTRAR_DATOS =
                 DEBE_MOSTRAR_TABLA?.length > 0 ||
                 this.esFormularioSoloLectura ||
-                this.esFormularioActualizacion;
-  
-              this.immexTableDatos = DEBE_MOSTRAR_DATOS
-                ? RESPONSE_DATA.permisoImmexDatos
-                : [];
+                this.esFormularioActualizacion
   
               this.fraccionTablaDatos = DEBE_MOSTRAR_DATOS
                 ? RESPONSE_DATA.fraccionDatos
@@ -546,14 +552,8 @@ export class AnexoComponent implements OnInit, OnDestroy {
               }
   
               if (this.permisoImmexDatos.length > 0) {
-                this.immexRegistroform.get('importacionForm')?.patchValue({
-                    fraccionArancelaria:this.immexTableDatos[0]?.fraccionArancelaria || '',
-      umt:  this.immexTableDatos[0]?.umt || '',
-      descripcion: this.immexTableDatos[0]?.descripcionTigie || '',
-      cantidadAnual:  this.immexTableDatos[0]?.cantidadAnual || '',
-      capacidadInstalada: this.immexTableDatos[0]?.capacidadInstalada || '',
-      cantidadPorPeriodo:  this.immexTableDatos[0]?.cantidadPorPeriodo || '',
-                });
+                this.immexRegistroform.get('importacionForm')?.patchValue(RESPONSE_DATA.permisoImmexDatos[0])
+                this.mostrarDetalleMercancia();
              
               }
             }
@@ -626,6 +626,58 @@ export class AnexoComponent implements OnInit, OnDestroy {
         this.mercanciaImportacionModal.nativeElement
       );
       MODAL_INSTANCIA.show();
+    }
+    eliminarPermisoImmex():void{
+      if(this.selectedRowData !== null && this.immexTableDatos.length > 0){
+this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Está seguro que desea eliminar estos datos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+      this.immexRegistroform.get('importacionForm')?.reset();
+      this.immexRegistroform.get('importacionForm')?.markAsUntouched();
+      this.immexRegistroform.get('importacionForm')?.markAsPristine();
+      this.eliminarDatosTablaExportacion=true;
+      }
+      else{
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe seleccionar un dato para eliminar',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar:'',
+          txtBtnCancelar: 'Aceptar',
+        };
+      this.eliminarDatosTablaExportacion=true;
+      }
+       
+    
+    }
+     mostrarDetalleMercanciaSelect(): void {
+        this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Está seguro que desea eliminar estos datos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar:'',
+      txtBtnCancelar: 'Aceptar',
+    };
+
+       this.eliminarDatosTabla=true;
+    
+     
     }
   
     /**
@@ -748,7 +800,7 @@ export class AnexoComponent implements OnInit, OnDestroy {
       if(this.immexRegistroform.get('importacionForm')?.valid ){
  this.cambiarEstadoModal();
  this.immexTableDatos = [];
- this.immexTableDatos.push(this.immexRegistroform.get('importacionForm')?.value) ;
+ this.immexTableDatos.push(this.immexRegistroform.get('importacionForm')?.getRawValue()) ;
       }
       else{
         this.immexRegistroform.get('importacionForm')?.markAllAsTouched();
@@ -805,16 +857,8 @@ export class AnexoComponent implements OnInit, OnDestroy {
         ?.disable();
     }
 
-  onFilaSeleccionada(event: any):void{
-    console.log('Fila seleccionada:', event);
-    // Update the form with selected row data
-    if (event && event.length > 0) {
-      this.immexRegistroform.get('importacionForm')?.patchValue({
-        fraccionArancelaria: event[0]?.fraccionArancelaria || '',
-        umt: event[0]?.umt || '',
-        descripcion: event[0]?.descripcionTigie || '',
-      });
-    }
+  onFilaSeleccionada(event: immexInfo):void{
+    this.selectedRowData=event;
   }
     /**
      * @method ngOnDestroy
@@ -829,4 +873,28 @@ export class AnexoComponent implements OnInit, OnDestroy {
       this.destroyNotifier$.next();
       this.destroyNotifier$.complete();
     }
+
+    eliminarPedimentoDatos(borrar: boolean):void{
+        this.nuevaNotificacion = {} as Notificacion;
+      this.eliminarDatosTabla=false;
+    
+       if(this.selectedRowData !== null && borrar){
+ const MODAL_INSTANCIA = new Modal(
+        this.mercanciaImportacionModal.nativeElement
+      );
+      MODAL_INSTANCIA.show();
+      }
+      
+    }
+
+    eliminarPedimentoDatoss(borrar: boolean):void{
+      if(borrar){
+ this.nuevaNotificacion = {} as Notificacion;
+  this.immexTableDatos =[];
+      this.selectedRowData=null;
+      }
+     
+      this.eliminarDatosTablaExportacion=false;
+    
+  }
 }
