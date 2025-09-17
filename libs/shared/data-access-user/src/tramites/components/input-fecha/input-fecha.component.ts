@@ -50,6 +50,14 @@ export class InputFechaComponent implements OnInit, OnChanges {
   @Input({ required: true }) datos!: InputFecha;
 
   /**
+   * Indica si sólo se requiere el campo "colón".
+   *
+   * @type {boolean}
+   * @default false
+   */
+  @Input() onlyColonRequired: boolean = false;
+
+  /**
    * Indica si se debe mostrar el ícono de ayuda (círculo con signo de interrogación).
    */
   @Input() tooltipQuestionCircle: boolean = false;

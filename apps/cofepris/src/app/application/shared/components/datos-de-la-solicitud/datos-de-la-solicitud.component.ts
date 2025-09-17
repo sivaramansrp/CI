@@ -1,5 +1,6 @@
 import {
-  AICM, AIFA,
+  AICM,
+  AIFA,
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
   DESHABILITADA_EN_INIT,
@@ -19,6 +20,7 @@ import {
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL,
   REPRESENTANTE_LEGAL,
+  REPRESENTANTE_LEGAL_EN_INIT,
   SIN_ACCION_AL_INICIAR,
   TEXTO_MANIFESTO_Y_DECLARACIONES,
 } from '../../constantes/datos-solicitud.enum';
@@ -44,6 +46,7 @@ import {
   REGEX_RFC,
   REGEX_SOLO_DIGITOS,
   REGEX_SOLO_NUMEROS,
+  TablaAcciones,
   TablaDinamicaComponent,
   TablePaginationComponent,
   TituloComponent,
@@ -97,7 +100,8 @@ import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json'
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent
-  implements OnInit, OnDestroy, OnChanges {
+  implements OnInit, OnDestroy, OnChanges
+{
   /**
    * @property {Subject<void>} destroyNotifier$
    * Subject utilizado para cancelar suscripciones activas al destruir el componente.
@@ -110,9 +114,9 @@ export class DatosDeLaSolicitudComponent
    */
   @Input() public scianConfig!: ScianConfig<TablaScianConfig>;
 
-   /**
+  /**
    * Indica si existe un error en el campo de correo electrónico.
-   * 
+   *
    * - `true`: Se muestra el mensaje de error de correo electrónico no válido.
    * - `false`: No hay error, el correo electrónico es válido.
    */
@@ -142,6 +146,11 @@ export class DatosDeLaSolicitudComponent
    * Estado colapsable inicial para mostrar u ocultar ciertas secciones.
    */
   @Input() public opcionesColapsableState!: boolean;
+
+  @Output() accioneSolitudValor = new EventEmitter<{
+    row: TablaOpcionConfig;
+    column: string;
+  }>();
 
   /**
    * @property {number} idProcedimiento
@@ -327,8 +336,6 @@ export class DatosDeLaSolicitudComponent
    */
   public mostrarRFCCalle = true;
 
-
-
   /**
    * @property {Catalogo[]} regimenLaMercanciaDatos
    * Lista de regímenes relacionados con la mercancía.
@@ -371,7 +378,21 @@ export class DatosDeLaSolicitudComponent
    */
   @Input() public elementosRequeridos!: string[];
 
+  /**
+   * Etiqueta que se muestra en el formulario para el campo de municipio o alcaldía.
+   *
+   * @type {string}
+   * @default 'Municipio o alcaldía'
+   */
   public etiquetaMunicipio: string = 'Municipio o alcaldía';
+
+  /**
+   * Lista de acciones disponibles para la tabla.
+   *
+   * @type {TablaAcciones[]}
+   * @default []
+   */
+  @Input() tablaAcciones: TablaAcciones[] = [];
 
   /**
    * Controla la visibilidad del modal de alerta.
@@ -489,12 +510,17 @@ export class DatosDeLaSolicitudComponent
   public esFormularioSoloLectura: boolean = false;
 
   /**
-   * @constructor
-   * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
+   * Constructor del componente.
    *
-   * @param fb - FormBuilder para crear el formulario reactivo.
-   * @param router - Servicio de enrutamiento.
-   * @param activatedRoute - Ruta actual activa.
+   * Inyecta los servicios y dependencias necesarias para la construcción del formulario,
+   * la navegación y la consulta de datos.
+   *
+   * @param fb - Servicio de Angular para la creación y manejo de formularios reactivos.
+   * @param router - Servicio de enrutamiento para la navegación entre páginas.
+   * @param activatedRoute - Proporciona acceso a la ruta activa, incluyendo parámetros.
+   * @param datosSolicitudService - Servicio para gestionar la información de la solicitud.
+   * @param consultaioQuery - Servicio para la consulta de datos relacionados con la solicitud.
+   * @param scianDataService - Servicio para la obtención de datos del catálogo SCIAN.
    */
   constructor(
     public fb: FormBuilder,
@@ -726,10 +752,11 @@ export class DatosDeLaSolicitudComponent
       ],
       calle: [
         {
-        value:this.datosSolicitudFormState.calle,
-        disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento)
-      }, 
-      [Validators.required]],
+          value: this.datosSolicitudFormState.calle,
+          disabled: DESHABILITADA_EN_INIT.includes(this.idProcedimiento),
+        },
+        [Validators.required],
+      ],
       lada: [
         {
           value: this.datosSolicitudFormState.lada,
@@ -751,8 +778,8 @@ export class DatosDeLaSolicitudComponent
       aviso: [
         {
           value: this.datosSolicitudFormState.aviso,
-          disabled: false, 
-        }
+          disabled: false,
+        },
       ],
       licenciaSanitaria: [
         {
@@ -764,14 +791,16 @@ export class DatosDeLaSolicitudComponent
       regimen: [
         {
           value: this.datosSolicitudFormState.regimen,
-          disabled: false, 
+          disabled: false,
         },
-        [Validators.required]
+        [Validators.required],
       ],
       adunasDeEntradas: [
         {
-          value: this.datosSolicitudFormState.adunasDeEntradas ? this.datosSolicitudFormState.adunasDeEntradas : '',
-          disabled: false, 
+          value: this.datosSolicitudFormState.adunasDeEntradas
+            ? this.datosSolicitudFormState.adunasDeEntradas
+            : '',
+          disabled: false,
         },
         [Validators.required],
       ],
@@ -794,7 +823,7 @@ export class DatosDeLaSolicitudComponent
           value: this.datosSolicitudFormState.publico,
           disabled: false, // Keep enabled (radio buttons should be selectable)
         },
-        [Validators.required]
+        [Validators.required],
       ],
       representanteRfc: [
         {
@@ -806,43 +835,43 @@ export class DatosDeLaSolicitudComponent
       representanteNombre: [
         {
           value: this.datosSolicitudFormState.representanteNombre,
-          disabled: false,
+          disabled: REPRESENTANTE_LEGAL_EN_INIT.includes(this.idProcedimiento),
         },
         [Validators.required],
       ],
       apellidoPaterno: [
         {
           value: this.datosSolicitudFormState.apellidoPaterno,
-          disabled: false, 
+          disabled: REPRESENTANTE_LEGAL_EN_INIT.includes(this.idProcedimiento),
         },
         [Validators.required],
       ],
       apellidoMaterno: [
         {
           value: this.datosSolicitudFormState.apellidoMaterno,
-          disabled: false, 
+          disabled: REPRESENTANTE_LEGAL_EN_INIT.includes(this.idProcedimiento),
         },
       ],
       regimenLaMercancia: [
         {
           value: this.datosSolicitudFormState.regimenLaMercancia,
-          disabled: false, 
+          disabled: false,
         },
-        [Validators.required]
+        [Validators.required],
       ],
       aduana: [
         {
           value: this.datosSolicitudFormState.aduana,
-          disabled: false, 
+          disabled: false,
         },
-        [Validators.required]
+        [Validators.required],
       ],
       mercancias: [
         {
           value: this.tablaMercanciasConfig.datos,
           disabled: false,
         },
-        matrizRequerida
+        matrizRequerida,
       ],
       manifesto: [
         {
@@ -863,7 +892,6 @@ export class DatosDeLaSolicitudComponent
       this.datosSolicitudForm.disable();
     }
 
-  
     if (this.mostrarNotificacion) {
       const EMPTY = Object.entries(this.datosSolicitudFormState)
         .filter(([key]) => key !== 'publico')
@@ -887,6 +915,14 @@ export class DatosDeLaSolicitudComponent
       } else {
         this.datosSolicitudForm.enable();
       }
+    }
+    if (
+      changes['datosSolicitudFormState'].currentValue &&
+      this.datosSolicitudForm
+    ) {
+      this.datosSolicitudForm.patchValue(
+        changes['datosSolicitudFormState'].currentValue
+      );
     }
   }
 
@@ -1073,7 +1109,7 @@ export class DatosDeLaSolicitudComponent
    * - Redirige al usuario a la ruta '../scian-selecion'.
    */
   agregarScian(): void {
-    if(this.idProcedimiento !== NUMERO_TRAMITE.TRAMITE_260201){
+    if (this.idProcedimiento !== NUMERO_TRAMITE.TRAMITE_260201) {
       this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
     }
     this.scianDataService.updateScianData(this.scianConfig.datos);
@@ -1366,8 +1402,7 @@ export class DatosDeLaSolicitudComponent
 
     Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
-      
-      
+
       if (controlName === 'estado') {
         return;
       }
@@ -1378,8 +1413,7 @@ export class DatosDeLaSolicitudComponent
         CONTROL?.disable();
       }
     });
-    
-   
+
     this.establecimientoSeleccionado = enable;
   }
 
@@ -1425,12 +1459,11 @@ export class DatosDeLaSolicitudComponent
 
     Object.keys(this.datosSolicitudForm.controls).forEach((controlName) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
-      
+
       if (controlName === 'estado') {
         return;
       }
 
-     
       if (this.controlYaDeshabilitado(controlName)) {
         CONTROL?.enable();
       }
@@ -1464,6 +1497,21 @@ export class DatosDeLaSolicitudComponent
   }
 
   /**
+   * Emite el evento de acción seleccionada en la solicitud.
+   *
+   * @param event - Objeto que contiene la fila (`row`) de tipo `TablaOpcionConfig`
+   * y la columna (`column`) que disparó la acción.
+   *
+   * @emits accioneSolitudValor - Envía el evento al componente padre con la información de la acción.
+   */
+  accionesSolitudValor(event: {
+    row: TablaOpcionConfig;
+    column: string;
+  }): void {
+    this.accioneSolitudValor.emit(event);
+  }
+
+  /**
    * Emite un evento con los datos seleccionados de la tabla.
    *
    * Este método recopila las listas seleccionadas de SCIAN, mercancías y opciones,
@@ -1476,7 +1524,7 @@ export class DatosDeLaSolicitudComponent
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-  
+
   /**
    * Retorna `true` si el control de formulario 'mercancias' es inválido y ha sido tocado o modificado.
    * Útil para determinar cuándo mostrar errores de validación para el campo 'mercancias'.
