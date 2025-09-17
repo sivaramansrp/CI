@@ -120,7 +120,7 @@ getEstadosCatalogo(): Observable<Catalogo> {
    * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
    * @returns Observable con la respuesta de la solicitud POST.
    */
-  guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
-    return this.httpService.post<Record<string, unknown>>(PROC_80105.GUARDAR, { body: body });
+  guardarDatosPost(body: any): Observable<any> {
+    return this.httpService.post<any>(PROC_80105.GUARDAR, { body: body });
   }
 }

@@ -23,6 +23,9 @@ export interface Solicitud {
   /** Procesos */
   procesos?: string;
 
+  /** Nombre de la agencia */
+  nombredeagencia?: string;
+
   /** Certificaciones */
   certifications?: string;
 

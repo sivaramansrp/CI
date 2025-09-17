@@ -3,6 +3,7 @@ import {
   BtnContinuarComponent,
   DatosPasos,
   ListaPasosWizard,
+  PasoFirmaComponent,
   SeccionLibStore,
   WizardComponent,
 } from '@ng-mf/data-access-user';
@@ -17,6 +18,7 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
+import { Tramite80102Store } from '../../estados/tramite80102.store';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -43,6 +45,7 @@ interface AccionBoton {
     PasoDosComponent,
     BtnContinuarComponent,
     PasoTresComponent,
+    PasoFirmaComponent
   ],
   standalone: true,
 })
@@ -92,6 +95,7 @@ export class SolicitudPageComponent implements OnDestroy {
     private tramiteQuery: Tramite80102Query,
     private seccion: SeccionLibStore,
     private autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
+    private tramite80102Store: Tramite80102Store,
   ) {
     // Constructor del componente
   }
@@ -105,11 +109,19 @@ export class SolicitudPageComponent implements OnDestroy {
 
   /** Indica la visibilidad del botón Guardar. */
   public btnGuardarVisible: string = 'visible';
+
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se utiliza para referenciar la solicitud en curso.
+   */
+  idSolicitud: number = 0;
+
   /**
    * Obtiene el valor del índice de la acción del botón.
    * @param e Acción del botón.
    */
   getValorIndice(e: AccionBoton): void {
+    this.obtenerDatosDelStore();
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -757,6 +769,7 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     
 }
     this.autorizacionProgrmaNuevoService.guardarDatosPost(PAYLOAD).subscribe(response => {
+      this.tramite80102Store.setIdSolicitud(response.idSolicitud || 0);
       return response;
     });
   }
