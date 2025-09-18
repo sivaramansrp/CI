@@ -981,7 +981,20 @@ estatus:true
       this.eliminarDatosTabla=false;
     
        if(this.selectedRowData !== null && borrar){
-        this.immexRegistroform.get('importacionForm')?.patchValue(this.selectedRowData);
+        this.immexRegistroform.get('importacionForm')?.patchValue({
+          fraccionArancelaria: this.selectedRowData?.fraccionArancelaria || '',
+          umt: this.selectedRowData?.umt || '',
+          descripcionTigie: this.selectedRowData?.descripcionTigie || '',
+          cantidadAnual: this.selectedRowData?.cantidadAnual || '',
+          capacidadInstalada: this.selectedRowData?.capacidadInstalada || '',
+          cantidadPorPeriodo: this.selectedRowData?.cantidadPorPeriodo || '',
+          Nicos:   this.immexRegistroform
+        .get('importacionForm.Nicos')
+        ?.value() || '',
+          productoDescExportacions:  this.immexRegistroform
+        .get('importacionForm.productoDescExportacions')
+        ?.value() || '',
+        });
  const MODAL_INSTANCIA = new Modal(
         this.mercanciaImportacionModal.nativeElement
       );
