@@ -29,6 +29,11 @@
               placeholder=""
               style="height: 100px"
               formControlName="justification"
+              [ngClass]="{
+                'is-invalid':
+                  datosDelTramiteRealizar.get('justification')?.invalid &&
+                  datosDelTramiteRealizar.get('justification')?.touched
+              }"
               (change)="
                 setValoresStore(
                   datosDelTramiteRealizar,
@@ -38,6 +43,20 @@
               "
               [disabled]="esFormularioSoloLectura"
             ></textarea>
+            <div
+    *ngIf="
+      datosDelTramiteRealizar.get('justification')?.invalid &&
+      datosDelTramiteRealizar.get('justification')?.touched
+    "
+    class="text-danger"
+  >
+    <small *ngIf="datosDelTramiteRealizar.get('justification')?.errors?.['required']">
+      Este campo es obligatorio.
+    </small>
+    <small *ngIf="datosDelTramiteRealizar.get('justification')?.errors?.['maxlength']">
+      La justificación no debe exceder los 2000 caracteres.
+    </small>
+  </div>
           </div>
         </div>
       </div>
@@ -128,6 +147,9 @@
             <small *ngIf="datosDelTramiteRealizar.get('denominacion')?.errors?.['required']">
               Este campo es obligatorio.
             </small>
+             <small *ngIf="datosDelTramiteRealizar.get('denominacion')?.errors?.['maxlength']">
+      La denominación o razón social no debe exceder los 100 caracteres.
+    </small>
           </div>
         </div>
       </div>
@@ -184,7 +206,7 @@
       <ng-titulo titulo="Domicilio del establecimiento" />
       <div class="row">
         <div class="col-md-4 mb-3">
-          <label class="form-label" for="codigopostal">Codigo postal:</label>
+          <label class="form-label" for="codigopostal">Codigo postal*:</label>
           <input
             class="form-control"
             id="codigopostal"
@@ -246,13 +268,18 @@
         </div>
         <div class="col-md-4 mb-3">
           <label class="form-label" for="municipoyalcaldia"
-            >Municipio y alcaldia:</label
+            >Municipio y alcaldia*:</label
           >
           <input
             class="form-control"
             id="municipoyalcaldia"
             type="text"
             formControlName="municipoyalcaldia"
+            [ngClass]="{
+      'is-invalid':
+        datosDelTramiteRealizar.get('municipoyalcaldia')?.invalid &&
+        datosDelTramiteRealizar.get('municipoyalcaldia')?.touched
+    }"
             (change)="
               setValoresStore(
                 datosDelTramiteRealizar,
@@ -262,6 +289,19 @@
             "
             [disabled]="esFormularioSoloLectura"
           />
+           <div
+    *ngIf="
+      datosDelTramiteRealizar.get('municipoyalcaldia')?.invalid &&
+      datosDelTramiteRealizar.get('municipoyalcaldia')?.touched
+    "
+    class="text-danger"
+  >
+    <small
+      *ngIf="datosDelTramiteRealizar.get('municipoyalcaldia')?.errors?.['required']"
+    >
+      Este campo es obligatorio.
+    </small>
+  </div>
         </div>
       </div>
       <ng-alert
@@ -299,11 +339,6 @@
             class="text-danger"
           >
             <small
-              *ngIf="datosDelTramiteRealizar.get('localidad')?.errors?.['required']"
-            >
-              Este campo es obligatorio.
-            </small>
-            <small
               *ngIf="datosDelTramiteRealizar.get('localidad')?.errors?.['maxlength']"
             >
               La localidad no debe exceder los 120 caracteres.
@@ -311,7 +346,7 @@
             <small
               *ngIf="datosDelTramiteRealizar.get('localidad')?.errors?.['pattern']"
             >
-              Por favor, no uses caracteres especiales.
+              El valor capturado no es válido.
             </small>
           </div>
         </div>
@@ -348,7 +383,13 @@
       </div>
       <div class="row">
         <div class="col-md-8">
-          <label class="form-label" for="calle">Calle*:</label>
+          <label class="form-label" for="calle">Calle*:
+             <span
+      class="bi bi-question-circle-fill"
+      title="Domicilio, calle, número interior, número exterior, lote"
+      data-bs-toggle="tooltip"
+    ></span>
+          </label>
           <input
             class="form-control"
             id="calle"
@@ -372,6 +413,9 @@
   "
   class="text-danger"
 >
+ <small *ngIf="datosDelTramiteRealizar.get('calle')?.errors?.['required']">
+      Este campo es obligatorio.
+    </small>
   <small *ngIf="datosDelTramiteRealizar.get('calle')?.errors?.['maxlength']">
     La calle no debe exceder los 100 caracteres.
   </small>
@@ -405,39 +449,12 @@
   "
   class="text-danger"
 >
-  <small *ngIf="datosDelTramiteRealizar.get('lada')?.errors?.['required']">
-    Este campo es obligatorio.
-  </small>
-  <small *ngIf="datosDelTramiteRealizar.get('lada')?.errors?.['minlength'] || datosDelTramiteRealizar.get('lada')?.errors?.['maxlength']">
-    La lada debe tener exactamente 5 números.
-  </small>
+
   <small *ngIf="datosDelTramiteRealizar.get('lada')?.errors?.['pattern']">
     Por favor, ingresa solo números.
   </small>
 </div>
-          <div
-            *ngIf="
-              datosDelTramiteRealizar.get('lada')?.invalid &&
-              datosDelTramiteRealizar.get('lada')?.touched
-            "
-            class="text-danger"
-          >
-            <small
-              *ngIf="datosDelTramiteRealizar.get('lada')?.errors?.['required']"
-            >
-              Este campo es obligatorio.
-            </small>
-            <small
-              *ngIf="datosDelTramiteRealizar.get('lada')?.errors?.['minlength'] || datosDelTramiteRealizar.get('lada')?.errors?.['maxlength']"
-            >
-              La lada debe tener exactamente 5 números.
-            </small>
-            <small
-              *ngIf="datosDelTramiteRealizar.get('lada')?.errors?.['pattern']"
-            >
-              Por favor, ingresa solo números.
-            </small>
-          </div>
+        
         </div>
         <div class="col-md-4">
           <label class="form-label" for="telefono">Telefono*:</label>
@@ -500,7 +517,7 @@
       <button class="btn btn-danger"
         type="button" (click)="onDelete()" [disabled]="esFormularioSoloLectura">Eliminar</button>
         <button class="btn btn-primary me-2"
-        type="submit" (click)="onAgregar()" [disabled]="esFormularioSoloLectura">Agregar</button>
+        type="submit" (click)="onAgregar()" [disabled]="esFormularioSoloLectura" data-bs-target="#claveScianModal">Agregar</button>
     </div>
 </div>
 @if (nuevaNotificacion) {
@@ -510,65 +527,84 @@
   </lib-notificaciones>
   </section>
   }
-<div *ngIf="showClavaScianForm">
-  <ng-titulo titulo="Clave S.C.I.A.N" />
-<form [formGroup]="clavaScianForm" (ngSubmit)="onSubmit()">
-  <ng-container formGroupName="claveScianG"> 
-      <div class="row">
-          <div class="col-md-4 mb-3">
-              <div class="form-group">
+
+<!-- Modal Structure -->
+<div
+  class="modal fade"
+  id="claveScianModal"
+  tabindex="-1"
+  aria-labelledby="claveScianModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="claveScianModalLabel">Clave S.C.I.A.N</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="clavaScianForm" (ngSubmit)="onSubmit()">
+          <ng-container formGroupName="claveScianG">
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <div class="form-group">
                   <app-catalogo-select
-                  id="claveScianData"
-                  formControlName="claveScian"
-                  [catalogo]="claveScianData.catalogos"
-                  [label]="'Clave S.C.I.A.N'"
-                  [required]="true"
-                  (change)="
-                  setValoresStore(
-                    clavaScianForm,
-                    'claveScian',
-                    'setClaveScian'
-                  )
-                "
-                [isDisabled]="esFormularioSoloLectura"
-                ></app-catalogo-select>
+                    id="claveScianData"
+                    formControlName="claveScian"
+                    [catalogo]="claveScianData.catalogos"
+                    [label]="'Clave S.C.I.A.N'"
+                    [required]="true"
+                    [isDisabled]="esFormularioSoloLectura"
+                  ></app-catalogo-select>
+                </div>
               </div>
-           </div>
-      </div>
-      <div class="row">
-          <div class="col-md-4 mb-3">
-              <div class="form-group">
+            </div>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <div class="form-group">
                   <app-catalogo-select
-                  id="descripcionDelScianData"
-                  formControlName="descripcionDelScian"
-                  [catalogo]="descripcionDelScianData.catalogos"
-                  [label]="'Descripcion del S.C.I.A.N'"
-                  [required]="true"
-                  (change)="
-                  setValoresStore(
-                    clavaScianForm,
-                    'descripcionDelScian',
-                    'setDescripcionDelScian'
-                  )
-                "
-                [isDisabled]="esFormularioSoloLectura"
-                ></app-catalogo-select>
+                    id="descripcionDelScianData"
+                    formControlName="descripcionDelScian"
+                    [catalogo]="descripcionDelScianData.catalogos"
+                    [label]="'Descripcion del S.C.I.A.N'"
+                    [required]="true"
+                    [isDisabled]="esFormularioSoloLectura"
+                  ></app-catalogo-select>
+                </div>
               </div>
-           </div>
+            </div>
+          </ng-container>
+          <div class="col-md-12 d-flex justify-content-end">
+            <div class="btn-group">
+              <button
+                class="btn btn-danger"
+                type="button"
+                data-bs-dismiss="modal"
+                (click)="onCancelar()"
+              >
+                Cancelar
+              </button>
+              <button
+                class="btn btn-primary me-2"
+                type="button"
+                (click)="onLimpiar()"
+              >
+                Limpiar
+              </button>
+              <button class="btn btn-primary me-2" type="submit">
+                Agregar
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
-  </ng-container>
-  <div class="col-md-12 d-flex justify-content-end">
-      <div class="btn-group">
-        <button class="btn btn-danger"
-          type="button" (click)="onCancelar()" [disabled]="esFormularioSoloLectura">Cancelar</button>
-          <button class="btn btn-primary me-2"
-          type="button" (click)="onLimpiar()" [disabled]="esFormularioSoloLectura">Limpiar</button>
-          <button class="btn btn-primary me-2"
-          type="submit" [disabled]="esFormularioSoloLectura">Agregar</button>
-      </div>
-    
+    </div>
   </div>
-  </form>
 </div>
 
     <ng-container formGroupName="datosDelTramiteRealizar">
@@ -604,6 +640,7 @@
             id="licenciaSanitaria"
             placeholder=""
             type="text"
+              maxlength="20"
             formControlName="licenciaSanitaria"
             (change)="
               setValoresStore(
@@ -877,12 +914,6 @@
    </div>
    <div class="col-md-12 d-flex justify-content-end">
     <button type="button" class="btn btn-primary me-2" name="eliminar" id="btneliminar"(click)="onEliminar()" [disabled]="esFormularioSoloLectura">Eliminar</button>
-    @if (nuevaNotificacion) {
-      <section>
-      <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
-      </lib-notificaciones>
-      </section>
-      }
     <button type="button" class="btn btn-primary me-2" name="modificar" id="btnmodificar"  (click)="onModificar()" [disabled]="esFormularioSoloLectura">Modificar</button>
     
     <button type="button" class="btn btn-primary me-2" name="agregar" id="btnagregar" (click)="onAdd()" [disabled]="esFormularioSoloLectura">Agregar</button>
@@ -924,12 +955,37 @@
               type="text"
               formControlName="rfc"
               [value]="rfc" 
+              [ngClass]="{
+      'is-invalid':
+        datosDelTramiteRealizar.get('rfc')?.invalid &&
+        datosDelTramiteRealizar.get('rfc')?.touched
+    }"
               (change)="
                 setValoresStore(datosDelTramiteRealizar, 'rfc', 'setRfc')
               "
+              
               [disabled]="esFormularioSoloLectura"
             />
-          </div>
+         
+           <div
+            class="validation-container"
+    *ngIf="
+      datosDelTramiteRealizar.get('rfc')?.invalid &&
+      datosDelTramiteRealizar.get('rfc')?.touched
+    "
+    class="text-danger"
+  >
+    <small *ngIf="datosDelTramiteRealizar.get('rfc')?.errors?.['required']">
+      Este campo es obligatorio.
+    </small>
+    <small *ngIf="datosDelTramiteRealizar.get('rfc')?.errors?.['maxlength']">
+      El RFC no debe exceder los 13 caracteres.
+    </small>
+    <small *ngIf="datosDelTramiteRealizar.get('rfc')?.errors?.['pattern']">
+      El RFC solo debe contener caracteres alfanuméricos.
+    </small>
+           </div>
+  </div>
           <div class="col-md-2 mt-4">
             <button type="button" class="btn btn-primary" (click)="getSolicitudData()" [disabled]="esFormularioSoloLectura">Buscar</button>
           </div>
@@ -953,6 +1009,7 @@
               "
               [disabled]="esFormularioSoloLectura"
             />
+            
           </div>
           <div class="col-md-4 mt-4">
             <label class="form-label" for="apellidoPaterno"
