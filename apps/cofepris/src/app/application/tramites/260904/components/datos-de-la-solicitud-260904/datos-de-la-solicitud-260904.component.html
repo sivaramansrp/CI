@@ -20,7 +20,11 @@
                 <div class="col-md-6"></div>
                 <div class="col-md-6 text-end">
                   <div class="btn-group">
-                    <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" [hidden]="botonDesactivarParaProrrogar" type="button">
+                    <button class="btn btn-primary me-2" 
+                    [disabled]="esFormularioSoloLectura" 
+                    *ngIf="!botonDesactivarParaProrrogar"
+                    (click)="restaurarDatosPrellenados()"
+                    type="button">
                       Copiar datos en una Nueva Solicitud
                     </button>
                   </div>
@@ -44,8 +48,8 @@
           formControlName="btonDeRadio"
           (change)="setValorStore(form,'btonDeRadio'); tipoTramiteChange.emit(form.get('btonDeRadio')?.value)"
         ></app-input-radio>
-               <div *ngIf="form.get('btonDeRadio')?.invalid && form.get('btonDeRadio')?.touched" class="text-danger">
-            Este campo es obligatorio
+        <div *ngIf="form.get('btonDeRadio')?.invalid && (form.get('btonDeRadio')?.touched || form.get('btonDeRadio')?.dirty) && form.get('btonDeRadio')?.errors?.['required']" class="text-danger">
+          Este campo es obligatorio
         </div>
       </div>
 
@@ -82,7 +86,7 @@
             class="btn btn-primary"
             (click)="openEstablecimientoModal()"
             [disabled]="esFormularioSoloLectura"
-            [hidden]="botonDesactivarParaProrrogar"
+            *ngIf="!botonDesactivarParaProrrogar"
           >
             Seleccionar establecimiento
           </button>
