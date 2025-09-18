@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Catalogo, ConfiguracionColumna, CrossListLable, CrosslistComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ConsultaioQuery,ConsultaioState} from '@ng-mf/data-access-user';
@@ -109,12 +108,12 @@ export class DomicilloComponent implements OnInit, OnDestroy {
    * Lista de filas seleccionadas del componente tabla de NICO.
    * Se utiliza para manejar la selección de filas en la tabla.
    */
-  selectedRowsEvent: any[] = [];
+  selectedRowsEvent: MercanciasInfo[] = [];
   /*
    * Lista de filas seleccionadas del componente tabla de mercancías.
    * Se utiliza para manejar la selección de filas en la tabla de mercancías.
    */
-  selectedRows: any[] = [];
+  selectedRows: NicoInfo[] = [];
   /**
    * Notificación para mostrar mensajes al usuario.
    */
@@ -123,7 +122,7 @@ export class DomicilloComponent implements OnInit, OnDestroy {
     * Maneja el evento de cambio de selección en la tabla de NICO.
     * @param selected Lista de filas seleccionadas.
     */
-  onSeleccionChangeEvent(selected: any[]): void {
+  onSeleccionChangeEvent(selected: MercanciasInfo[]): void {
     this.selectedRowsEvent = selected;
     if (this.selectedRowsEvent.length === 1) {
       this.noSeleccionado = false;
@@ -135,7 +134,7 @@ export class DomicilloComponent implements OnInit, OnDestroy {
   /** 
    Recibe los seleccionados del componente tabla
   */
-  onSeleccionChange(selected: any[]): void {
+  onSeleccionChange(selected: NicoInfo[]): void {
     this.selectedRows = selected;
   }
   /**
@@ -656,7 +655,7 @@ this.domicilio.get('licenciaSanitaria')?.valueChanges
     this.setValoresStore(this.domicilio, 'licenciaSanitaria', 'setLicenciaSanitaria');
 
     const VALOR = form.get(campo)?.value;
-    (this.tramite260211Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite260211Store[metodoNombre] as (value: string | number | boolean) => void)(VALOR);
   }
 
 
@@ -689,7 +688,7 @@ this.domicilio.get('licenciaSanitaria')?.valueChanges
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260211Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite260211Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite260211Store[metodoNombre] as (value: string | number | boolean) => void)(VALOR);
   }
 
   /**
