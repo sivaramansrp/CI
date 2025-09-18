@@ -121,20 +121,7 @@ export class BandejaAcusesComponent implements OnChanges, OnDestroy {
     if (changes['acusesResolucion'] && changes['acusesResolucion'].currentValue) {
       this.getAcuses();
       this.getResolucion();
-    } else {
-      this.acusesService
-        .getAcuses()
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data) => {
-          this.datosTablaAcuse = data;
-        });
-      this.resolucionesService
-        .getResoluciones()
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data) => {
-          this.datosTablaResolucion = data;
-        });
-    }
+    } 
   }
   /**
    * Método `ngOnDestroy()`.

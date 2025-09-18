@@ -60,7 +60,7 @@ export function createInitialState(): TercerosRelacionadas260212State {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite260212', resettable: true })
-export class Tramite260212Store extends Store<TercerosRelacionadas260212State> {
+export class Shared260212Store extends Store<TercerosRelacionadas260212State> {
 
   /**
    * Constructor del store.

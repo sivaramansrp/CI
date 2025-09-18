@@ -35,7 +35,7 @@ export const AUTH_ROUTE = {
  * @param procedureId - ID del procedimiento del trámite
  * @returns URL completa para el endpoint de inicialización
  */
-export const CONSTRUIR_ENDPOINT_INICIAR = (procedureId: string): string => { return `${COMUN_URL.BASE_URL}sat-t${procedureId}/solicitud/iniciar` }
+export const CONSTRUIR_ENDPOINT_INICIAR = (procedureId: string): string => { return `${COMUN_URL.BASE_URL}sat-t${procedureId}/registro-solicitud/iniciar` }
 
 
 
@@ -254,13 +254,13 @@ export const IDSOLICITUD = '{idSolicitud}';
  * API para guardar el acuse de una solicitud.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/guardar-documento
  */
-export const API_POST_GUARDAR_ACUSE = `sat-t130118/solicitud/${IDSOLICITUD}/acuse/guardar`;
+export const API_POST_GUARDAR_ACUSE = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/acuse/guardar`;
 
 /**
  * API para generar la vista previa del acuse de una solicitud.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-documento
  */
-export const API_POST_VISTA_PREVIA = `sat-t130118/solicitud/${IDSOLICITUD}/acuse/vista-previa`;
+export const API_POST_VISTA_PREVIA = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/acuse/vista-previa`;
 
 /**
  * API para obtener los documentos
@@ -503,3 +503,37 @@ export const API_GET_TABS = (TRAMITE: string, IDSOLICITUD: string) : string => `
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/estado-consulta-solicitud
  */
 export const API_GET_DATOS_SOLICITANTE = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/tramite/${IDSOLICITUD}/solicitud/solicitante`;
+
+/*
+ * API para obtener el catálogo de immex
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/immex
+ */
+export const CATALOGO_IMMEX = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/immex`;
+
+/*
+ * API para obtener el catálogo de estados
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/estados
+ */
+export const CATALOGO_ESTADOS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/estados`;
+
+/*
+ * API para obtener el catálogo de países
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises
+ */
+export const CATALOGO_PAISES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/paises`;
+
+/*
+ * API para obtener el catálogo de NICO
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/nico
+ */
+export const CATALOGO_NICO = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/nico`;
+/**
+ * API para obtener el estado de la solicitud del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original_1
+ */
+export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/genera-cadena-original`;
+/**
+ * API para firmar la solicitud del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/firmar
+ */
+export const API_POST_FIRMA = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/firmar`;

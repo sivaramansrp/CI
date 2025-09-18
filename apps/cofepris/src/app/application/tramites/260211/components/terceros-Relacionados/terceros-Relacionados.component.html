@@ -8,20 +8,27 @@
     <div class="mt-5">
       <h5>Fabricante:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData"
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></ng-table>
+ 
+              <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaFabricante"
+      [datos]="fabricanteTablaDatos"
+      [tipoSeleccionTabla]="checkbox"   
+      (listaDeFilaSeleccionada)="fabricanteSeleccionadoDatos = $event"   
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+    ></app-tabla-dinamica> 
       </div>
       <br />
 
-      <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showFabricanteButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
-        </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()"
-          [disabled]="esFormularioSoloLectura">
-          Agregar
-        </button>
+      <div class="d-flex justify-content-end mt-3">   
+          @if (fabricanteSeleccionadoDatos.length > 0) {     
+      <button  class="btn btn-danger me-3" type="button"  (click)="eliminarFabricante()" >Eliminar</button>
+          }
+          @if (fabricanteSeleccionadoDatos.length === 1){
+      <button  class="btn btn-default me-3" type="button"  (click)="modificarFabricante()">Modificar</button>
+          }
+          <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()" [disabled]="esFormularioSoloLectura">
+        Agregar
+      </button>
       </div>
     </div>
 
@@ -29,21 +36,29 @@
     <div class="mt-5">
       <h5>Destinatario (destino final)*:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="destinatarioHeaderData" [commonTableBody]="destinatarioRowData"
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
-        </ng-table>
+       
+
+      <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaDestinatarioFinal"
+      [datos]="destinatarioFinalTablaDatos"
+      [tipoSeleccionTabla]="checkbox"
+      (listaDeFilaSeleccionada)="destinatarioSeleccionadoDatos = $event"      
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+    ></app-tabla-dinamica>
+       
       </div>
       <br />
 
       <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showDestinatarioButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
-        </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()"
-          [disabled]="esFormularioSoloLectura">
-          Agregar
-        </button>
+        @if (destinatarioSeleccionadoDatos.length > 0) {  
+      <button  class="btn btn-danger me-3" type="button" (click)="eliminarDestinario()">Eliminar</button>
+        }
+      @if (destinatarioSeleccionadoDatos.length === 1){ 
+  <button  class="btn btn-default me-3" type="button" (click)="modificarDestinatario()">Modificar</button>
+      }
+  <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()" [disabled]="esFormularioSoloLectura">
+    Agregar
+  </button>
       </div>
     </div>
 
@@ -51,20 +66,26 @@
     <div class="mt-5">
       <h5>Proveedor:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></ng-table>
+        <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaProveedor"
+      [datos]="proveedorTablaDatos"
+      [tipoSeleccionTabla]="checkbox"
+   (listaDeFilaSeleccionada)="proveedorSeleccionadoDatos = $event"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+    ></app-tabla-dinamica>
       </div>
       <br />
 
       <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showProveedorButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
-        </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()"
-          [disabled]="esFormularioSoloLectura">
-          Agregar
-        </button>
+           @if (proveedorSeleccionadoDatos.length > 0) {  
+        <button  class="btn btn-danger me-3" type="button"  (click)="eliminarProveedor()">Eliminar</button>
+           }
+         @if (proveedorSeleccionadoDatos.length === 1){ 
+  <button  class="btn btn-default me-3" type="button" (click)="modificarProveedor()">Modificar</button>
+         }
+  <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()" [disabled]="esFormularioSoloLectura">
+    Agregar
+  </button>
       </div>
     </div>
 
@@ -72,20 +93,27 @@
     <div class="mt-5">
       <h5>Facturador:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="facturadorHeaderData" [commonTableBody]="facturadorRowData"
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></ng-table>
+   
+               <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaFacturador"
+      [datos]="facturadorTablaDatos"
+      [tipoSeleccionTabla]="checkbox"   
+      (listaDeFilaSeleccionada)="facturadorSeleccionadoDatos = $event"  
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+    ></app-tabla-dinamica>
       </div>
       <br />
 
       <div class="d-flex justify-content-end mt-3">
-        <div *ngIf="showFacturadorButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
-        </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()"
-          [disabled]="esFormularioSoloLectura">
-          Agregar
-        </button>
+         @if (facturadorSeleccionadoDatos.length > 0) {  
+       <button  class="btn btn-danger me-3" type="button"  (click)="eliminarFacturador()">Eliminar</button>
+         }
+       @if (facturadorSeleccionadoDatos.length === 1){ 
+  <button  class="btn btn-default me-3" type="button" (click)="modificarFacturador()">Modificar</button>
+       }
+  <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()" [disabled]="esFormularioSoloLectura">
+    Agregar
+  </button>
       </div>
     </div>
 
@@ -136,6 +164,9 @@
                   ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+                 @if (agregarFabricanteFormGroup.get('rfc')?.hasError('required') && agregarFabricanteFormGroup.get('rfc')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
         </div>
@@ -147,6 +178,9 @@
             <div class="form-group">
               <label for="nombre" class="form-label">Nombre(s)*: </label>
               <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+                @if (agregarFabricanteFormGroup.get('nombre')?.hasError('required') && agregarFabricanteFormGroup.get('nombre')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
 
@@ -155,6 +189,9 @@
               <label class="form-label" for="primerApellido">Primer apellido*:</label>
               <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
                 class="form-control" />
+               @if (agregarFabricanteFormGroup.get('primerApellido')?.hasError('required') && agregarFabricanteFormGroup.get('primerApellido')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
 
@@ -176,6 +213,9 @@
                   title="R.F.C" ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+                @if (agregarFabricanteFormGroup.get('curp')?.hasError('required') && agregarFabricanteFormGroup.get('curp')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
         </div>
@@ -186,6 +226,9 @@
               <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
               <input type="text" class="form-control" id="denominacionRazonSocial"
                 formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                  @if (agregarFabricanteFormGroup.get('denominacionRazonSocial')?.hasError('required') && agregarFabricanteFormGroup.get('denominacionRazonSocial')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
         </div>
@@ -198,6 +241,9 @@
               <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
               <input type="text" class="form-control" id="denominacionRazonSocial"
                 formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                  @if (agregarFabricanteFormGroup.get('denominacionRazonSocial')?.hasError('required') && agregarFabricanteFormGroup.get('denominacionRazonSocial')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
         </div>
@@ -210,6 +256,9 @@
             <div class="form-group">
               <label for="nombre" class="form-label">Nombre(s)*: </label>
               <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+                @if (agregarFabricanteFormGroup.get('nombre')?.hasError('required') && agregarFabricanteFormGroup.get('nombre')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
 
@@ -218,6 +267,9 @@
               <label class="form-label" for="primerApellido">Primer apellido*:</label>
               <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
                 class="form-control" />
+                   @if (agregarFabricanteFormGroup.get('primerApellido')?.hasError('required') && agregarFabricanteFormGroup.get('primerApellido')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
 
@@ -309,6 +361,9 @@
                 <label for="extranjeroEstado" class="form-label">Estado*: </label>
                 <input type="text" id="extranjeroEstado" formControlName="extranjeroEstado" name="extranjeroEstado"
                   class="form-control" />
+                    @if (agregarFabricanteFormGroup.get('extranjeroEstado')?.hasError('required') && agregarFabricanteFormGroup.get('extranjeroEstado')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
               </div>
             </div>
 
@@ -338,6 +393,9 @@
                 <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
                     title="Calle" ata-bs-toggle="tooltip"></span></label>
                 <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+                 @if (agregarFabricanteFormGroup.get('calle')?.hasError('required') && agregarFabricanteFormGroup.get('calle')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
               </div>
             </div>
 
@@ -347,6 +405,9 @@
                 </label>
                 <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control"
                   name="numeroExterior" />
+                     @if (agregarFabricanteFormGroup.get('numeroExterior')?.hasError('required') && agregarFabricanteFormGroup.get('numeroExterior')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
               </div>
             </div>
           </div>
@@ -394,10 +455,10 @@
               <button type="button" class="btn btn-danger" (click)="toggleDivFabricante()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default">
+              <button type="button" class="btn btn-default" (click)="limpiarFabricanteForm()">
                 Limpiar
               </button>
-              <button type="button" class="btn btn-primary" (click)="submitFabricanteForm()">
+              <button type="button" class="btn btn-primary" (click)="submitFabricantesForm()">
                 Guardar
               </button>
             </div>
@@ -436,6 +497,9 @@
                   ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+               @if (agregarDestinatarioFormGroup.get('rfc')?.hasError('required') && agregarDestinatarioFormGroup.get('rfc')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           
         </div>
@@ -449,6 +513,9 @@
                   title="C.U.R.P" ata-bs-toggle="tooltip"></span>
               </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+               @if (agregarDestinatarioFormGroup.get('curp')?.hasError('required') && agregarDestinatarioFormGroup.get('curp')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
         </div>
@@ -461,6 +528,9 @@
               <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
               <input type="text" class="form-control" id="denominacionRazonSocial"
                 formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                  @if (agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.hasError('required') && agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
         </div>
@@ -526,6 +596,9 @@
               <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
                   title="Calle" ata-bs-toggle="tooltip"></span></label>
               <input type="text" id="calle" formControlName="calle" class="form-control" name="calle" />
+                 @if (agregarDestinatarioFormGroup.get('calle')?.hasError('required') && agregarDestinatarioFormGroup.get('calle')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
 
@@ -535,6 +608,9 @@
               </label>
               <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control"
                 name="numeroExterior" />
+                  @if (agregarDestinatarioFormGroup.get('numeroExterior')?.hasError('required') && agregarDestinatarioFormGroup.get('numeroExterior')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
 
@@ -580,10 +656,10 @@
               <button type="button" class="btn btn-danger" (click)="toggleDivDestinatario()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default">
+              <button type="button" class="btn btn-default"(click)="limpiarDestinatarioForm()">
                 Limpiar
               </button>
-              <button type="button" class="btn btn-primary" (click)="submitDestinatarioForm()">
+              <button type="button" class="btn btn-primary" (click)="submitDestinatariosForm()">
                 Guardar
               </button>
             </div>
@@ -621,6 +697,9 @@
           <div class="form-group">
             <label for="nombre" class="form-label">Nombre(s)*: </label>
             <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+              @if (agregarProveedorFormGroup.get('nombre')?.hasError('required') && agregarProveedorFormGroup.get('nombre')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
           </div>
         </div>
 
@@ -629,6 +708,9 @@
             <label class="form-label" for="primerApellido">Primer apellido*:</label>
             <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
               class="form-control" />
+                @if (agregarProveedorFormGroup.get('primerApellido')?.hasError('required') && agregarProveedorFormGroup.get('primerApellido')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
           </div>
         </div>
 
@@ -649,6 +731,9 @@
             <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
             <input type="text" class="form-control" id="denominacionRazonSocial"
               formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+               @if (agregarProveedorFormGroup.get('denominacionRazonSocial')?.hasError('required') && agregarProveedorFormGroup.get('denominacionRazonSocial')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
           </div>
         </div>
       </div>
@@ -671,6 +756,9 @@
           <div class="form-group">
             <label class="form-label" for="estado">Estado*:</label>
             <input class="form-control" type="text" id="estado" formControlName="estado" name="estado" />
+                @if (agregarProveedorFormGroup.get('estado')?.hasError('required') && agregarProveedorFormGroup.get('estado')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
           </div>
         </div>
 
@@ -698,6 +786,9 @@
             <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Calle"
                 ata-bs-toggle="tooltip"></span></label>
             <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+               @if (agregarProveedorFormGroup.get('calle')?.hasError('required') && agregarProveedorFormGroup.get('calle')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
           </div>
         </div>
 
@@ -707,6 +798,9 @@
             </label>
             <input type="text" class="form-control" id="numeroExterior" formControlName="numeroExterior"
               name="numeroExterior" />
+                  @if (agregarProveedorFormGroup.get('numeroExterior')?.hasError('required') && agregarProveedorFormGroup.get('numeroExterior')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
           </div>
         </div>
 
@@ -751,10 +845,10 @@
             <button type="button" class="btn btn-danger" (click)="toggleDivProveedor()">
               Cancelar
             </button>
-            <button type="button" class="btn btn-default">
+            <button type="button" class="btn btn-default" (click)="limpiarProveedorForm()">
               Limpiar
             </button>
-            <button type="button" class="btn btn-primary" (click)="submitProveedorForm()">
+            <button type="button" class="btn btn-primary" (click)="submitProveedoresForm()">
               Guardar
             </button>
           </div>
@@ -790,6 +884,9 @@
             <div class="form-group">
               <label for="nombre" class="form-label">Nombre(s)*: </label>
               <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+               @if (agregarFacturadorFormGroup.get('nombre')?.hasError('required') && agregarFacturadorFormGroup.get('nombre')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
 
@@ -798,6 +895,9 @@
               <label class="form-label" for="primerApellido">Primer apellido*:</label>
               <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
                 class="form-control" />
+                  @if (agregarFacturadorFormGroup.get('primerApellido')?.hasError('required') && agregarFacturadorFormGroup.get('primerApellido')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
 
@@ -818,6 +918,9 @@
               <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
               <input type="text" class="form-control" id="denominacionRazonSocial"
                 formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                   @if (agregarFacturadorFormGroup.get('denominacionRazonSocial')?.hasError('required') && agregarFacturadorFormGroup.get('denominacionRazonSocial')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
         </div>
@@ -839,6 +942,9 @@
             <div class="form-group">
               <label class="form-label" for="estado">Estado*:</label>
               <input class="form-control" type="text" id="estado" formControlName="estado" name="estado" />
+               @if (agregarFacturadorFormGroup.get('estado')?.hasError('required') && agregarFacturadorFormGroup.get('estado')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
 
@@ -866,6 +972,9 @@
               <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
                   title="Calle" ata-bs-toggle="tooltip"></span></label>
               <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+                 @if (agregarFacturadorFormGroup.get('calle')?.hasError('required') && agregarFacturadorFormGroup.get('calle')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
 
@@ -875,6 +984,9 @@
               </label>
               <input type="text" id="numeroExterior" formControlName="numeroExterior" name="numeroExterior"
                 class="form-control" />
+                 @if (agregarFacturadorFormGroup.get('numeroExterior')?.hasError('required') && agregarFacturadorFormGroup.get('numeroExterior')?.touched) {
+                      <div class="mensaje-error">Este campo es obligatorio.</div>
+                    }
             </div>
           </div>
 
@@ -919,10 +1031,10 @@
               <button type="button" class="btn btn-danger" (click)="toggleDivFacturador()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default">
+              <button type="button" class="btn btn-default" (click)="limpiarFacturadorForm()">
                 Limpiar
               </button>
-              <button type="button" class="btn btn-primary" (click)="submitFacturadorForm()">
+              <button type="button" class="btn btn-primary" (click)="submitFacturadoresForm()">
                 Guardar
               </button>
             </div>
@@ -933,3 +1045,10 @@
 
   </div>
 </app-modal>
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+        (confirmacionModal)="eliminarPedimentoDatos($event)"></lib-notificaciones>
+
+</section>
+}

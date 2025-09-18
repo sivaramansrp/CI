@@ -367,7 +367,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     this.consultaioStore.solicitanteConsultaio({
       folioDelTramite: this.guardarDatos?.folioTramite,
       fechaDeInicio: FECHA_DE_INICIO,
-      estadoDelTramite: this.guardarDatos?.estadoDeTramite
+      estadoDelTramite: this.guardarDatos?.estadoDeTramite,
+      tipoDeTramite: this.guardarDatos?.tipoDeTramite
     });
   }
   /**
@@ -403,7 +404,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
  */
   getTabs(): void {
-    this.tabsSolicitudServiceTsService.getTabs(130118, this.guardarDatos.id_solicitud)
+    this.tabsSolicitudServiceTsService.getTabs(this.tramite, this.guardarDatos.id_solicitud)
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
@@ -453,7 +454,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
  */
   getEvaluacionTramite(): void {
-    this.evaluarSolicitudService.getEvaluacionTramite(130118, this.guardarDatos.folioTramite)
+    this.evaluarSolicitudService.getEvaluacionTramite(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
@@ -505,7 +506,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
  */
   getPrepararEvaluacion(opcion: string): void {
-    this.evaluarSolicitudService.postPrepararEvaluacion(130118, this.guardarDatos.folioTramite, opcion)
+    this.evaluarSolicitudService.postPrepararEvaluacion(this.tramite, this.guardarDatos.folioTramite, opcion)
       .subscribe({
         next: (response) => {
           if (response.codigo !== '00') {
@@ -554,7 +555,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
  */
   getDocumentosSolicitud(): void {
-    this.tabsSolicitudServiceTsService.getDocumentosSolicitud(130118, this.guardarDatos.id_solicitud)
+    this.tabsSolicitudServiceTsService.getDocumentosSolicitud(this.tramite, this.guardarDatos.id_solicitud)
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
@@ -604,7 +605,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getRequerimientos(): void {
-    this.tabsSolicitudServiceTsService.getRequerimientos(130118, this.guardarDatos.folioTramite)
+    this.tabsSolicitudServiceTsService.getRequerimientos(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
@@ -654,7 +655,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getDictamenes(): void {
-    this.tabsSolicitudServiceTsService.getDictamenes(130118, this.guardarDatos.folioTramite)
+    this.tabsSolicitudServiceTsService.getDictamenes(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
@@ -704,7 +705,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
  */
   getTareasSolicitud(): void {
-    this.tabsSolicitudServiceTsService.getTareasSolicitud(130118, this.guardarDatos.folioTramite)
+    this.tabsSolicitudServiceTsService.getTareasSolicitud(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
@@ -751,7 +752,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getOpiniones(): void {
-    this.tabsSolicitudServiceTsService.getOpiniones(130118, this.guardarDatos.folioTramite)
+    this.tabsSolicitudServiceTsService.getOpiniones(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
@@ -799,7 +800,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getAcusesResolucion(): void {
-    this.tabsSolicitudServiceTsService.getAcusesResolucion(130118, this.guardarDatos.folioTramite)
+    this.tabsSolicitudServiceTsService.getAcusesResolucion(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
@@ -844,7 +845,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @description Método para obtener el envío digital asociado a un trámite.
    */
   getEnvioDigital(): void {
-    this.tabsSolicitudServiceTsService.getEnvioDigital(130118, this.guardarDatos.folioTramite)
+    this.tabsSolicitudServiceTsService.getEnvioDigital(this.tramite, this.guardarDatos.folioTramite)
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
@@ -944,7 +945,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       considera_capturista: true
     };
 
-    this.evaluarSolicitudService.postOpcionesEvaluacion(130118, this.guardarDatos.folioTramite, PAYLOAD)
+    this.evaluarSolicitudService.postOpcionesEvaluacion(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
@@ -1073,11 +1074,10 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       id_accion: this.guardarDatos.action_id
     };
 
-    this.iniciarService.postIniciarDictamen(130118, this.guardarDatos.folioTramite, PAYLOAD).subscribe({
+    this.iniciarService.postIniciarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD).subscribe({
       next: (resp) => {
         if (resp.codigo === CodigoRespuesta.EXITO) {
-          this.dataIniciarDictamen = resp.datos ?? {} as IniciarDictamenResponse;
-          this.obtenerCriterios();
+          this.dataIniciarDictamen = resp.datos ?? {} as IniciarDictamenResponse;          
         }
 
       },
@@ -1107,7 +1107,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerCriterios(): void {
-    this.guardarService.getCriterios(130118, this.guardarDatos.id_solicitud).subscribe({
+    this.guardarService.getCriterios(this.tramite, this.guardarDatos.id_solicitud).subscribe({
       next: (resp) => {
         this.conformidadDictamen = resp.datos ?? {} as CriteriosResponse;
       },
@@ -1133,7 +1133,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
    * Realiza una petición al servicio `GuardarDictamenService` para recuperar los sentidos disponibles.
    */
   getSentidosDisponibles(): void {
-    this.guardarService.getSentidosDisponibles('130118', this.guardarDatos.folioTramite).subscribe({
+    this.guardarService.getSentidosDisponibles(String(this.tramite), String(this.guardarDatos.folioTramite)).subscribe({
       next: (resp) => {
         this.opcionesSentidosDispobles = resp.datos ?? [];
       },
@@ -1185,7 +1185,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       texto_dictamen: this.conformidadDictamen.texto_dictamen
     };
 
-    this.guardarService.postGuadarDictamen(130118, this.guardarDatos.folioTramite, PAYLOAD)
+    this.guardarService.postGuadarDictamen(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (resp) => {
           if (resp.codigo === CodigoRespuesta.EXITO) {
@@ -1269,7 +1269,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       },
     };
 
-    this.guardarService.postFirmarMostrar(130118, this.guardarDatos.folioTramite, PAYLOAD)
+    this.guardarService.postFirmarMostrar(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (resp) => {
           if (resp.codigo === CodigoRespuesta.EXITO) {
@@ -1407,7 +1407,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.firmarDictamenService.postFirmarDictamen(130118, NUMFOLIO, PAYLOAD)
+    this.firmarDictamenService.postFirmarDictamen(this.tramite, NUMFOLIO, PAYLOAD)
       .pipe(
         takeUntil(this.destroyNotifier$),
         tap((firmaResponse: BaseResponse<null>) => {
@@ -1496,7 +1496,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       id_accion: this.guardarDatos.action_id
     };
 
-    this.iniciarService.postIniciarRequerimiento(130118, this.guardarDatos.folioTramite, PAYLOAD)
+    this.iniciarService.postIniciarRequerimiento(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (resp) => {
           this.dataIniciarRequerimiento = resp.datos ?? {} as IniciarRequerimientoResponse;
@@ -1536,7 +1536,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       alcance_requerimiento: 'X0XX',
     };
 
-    this.guardarRequerimientoService.postGuardarRequerimiento(130118, this.guardarDatos.folioTramite, PAYLOAD)
+    this.guardarRequerimientoService.postGuardarRequerimiento(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (resp) => {
           if (resp.codigo === CodigoRespuesta.EXITO) {
@@ -1610,7 +1610,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.guardarRequerimientoService.postMostrarFirma(130118, this.guardarDatos.folioTramite, PAYLOAD)
+    this.guardarRequerimientoService.postMostrarFirma(this.tramite, this.guardarDatos.folioTramite, PAYLOAD)
       .subscribe({
         next: (resp) => {
           if (resp.codigo === CodigoRespuesta.EXITO) {
@@ -1703,7 +1703,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       requiere_autorizador: false
     };
 
-    this.firmarRequermientoService.postFirmarRequerimiento(130118, NUMFOLIO, PAYLOAD)
+    this.firmarRequermientoService.postFirmarRequerimiento(this.tramite, NUMFOLIO, PAYLOAD)
       .pipe(
         takeUntil(this.destroyNotifier$),
         tap((firmaResponse: BaseResponse<null>) => {

@@ -29,8 +29,8 @@ export class DocumentosService {
    * @param idSolicitud Identificador de la solicitud
    * @returns Observable con la respuesta del servidor
    */
-  guardarAcuse(idSolicitud: string): Observable<BaseResponse<null>> {
-    const ENDPOINT = `${this.host}` + API_POST_GUARDAR_ACUSE.replace(IDSOLICITUD, idSolicitud);
+  guardarAcuse(idSolicitud: string, procedure: number): Observable<BaseResponse<null>> {
+    const ENDPOINT = `${this.host}` + API_POST_GUARDAR_ACUSE(idSolicitud, procedure);
 
     return this.http.post<BaseResponse<null>>(ENDPOINT, null).pipe(
       catchError(() => {
@@ -45,8 +45,8 @@ export class DocumentosService {
    * @param idSolicitud Identificador de la solicitud
    * @returns Observable con la respuesta del servidor que contiene el documento
    */
-  vistaPrevia(idSolicitud: string): Observable<BaseResponse<DocumentoResponse>> {
-    const ENDPOINT = `${this.host}` + API_POST_VISTA_PREVIA.replace(IDSOLICITUD, idSolicitud);
+  vistaPrevia(idSolicitud: string, procedure: number): Observable<BaseResponse<DocumentoResponse>> {
+    const ENDPOINT = `${this.host}` + API_POST_VISTA_PREVIA(idSolicitud, procedure);
 
     return this.http.post<BaseResponse<DocumentoResponse>>(ENDPOINT, null).pipe(
       catchError(() => {

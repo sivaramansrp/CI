@@ -10,9 +10,17 @@ import { NgModule } from '@angular/core';
 import { ProveedorPorArchivoVistaComponent } from './components/proveedor-por-archivo-vista/proveedor-por-archivo-vista.component';
 import { ProyectoImmexVistaComponent } from './components/proyecto-immex-vista/proyecto-immex-vista.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 
 const ROUTES: Routes = [
    {
+    canActivate: [IniciarTramiteResolver],
+        resolve: { iniciarResolverData: IniciarTramiteResolver },
+        data: {
+          iniciarConfig: {
+            procedureId: '80102'
+          }
+        },
       path: 'solicitud',
       component: SolicitudPageComponent,
     },

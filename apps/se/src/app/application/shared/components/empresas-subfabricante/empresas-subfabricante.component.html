@@ -62,8 +62,7 @@
   </div>
 
   <div class="row justify-content-end">
-    <button type="button" class="btn btn-danger col-auto mt-3 complementar-margin-right" data-bs-toggle="modal"
-      data-bs-target="#complementarPlanta" (click)="abrirDialogoComplementarPlanta()" [disabled]="esFormularioSoloLectura">
+    <button type="button" class="btn btn-danger col-auto mt-3 complementar-margin-right" (click)="abrirDialogoComplementarPlanta()" [disabled]="esFormularioSoloLectura">
       Complementar planta
 
     </button>
@@ -75,13 +74,11 @@
   </div>
 
 </div>
-<div class="modal fade" id="complementarPlanta" tabindex="-1" aria-labelledby="complementarPlantaLable"
-  aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <app-detalles-plantas></app-detalles-plantas>
-      </div>
+
+<ng-container *ngIf="showDetallesPlanta">
+  <div class="tab-modal-overlay">
+    <div class="tab-modal-content">
+      <app-detalles-plantas (alRegresarPlantas)="cerrarDetallesModal()"></app-detalles-plantas>
     </div>
   </div>
-</div>
+</ng-container>

@@ -17,9 +17,9 @@
     <app-paso-dos></app-paso-dos>
     }
     @case (3) {
-    <app-paso-firmar-solicitud></app-paso-firmar-solicitud>
+     <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="80101" [procedureUrl]="'nuevo-programa-industrial/action'"></paso-firma>
     }
     }
-    <btn-continuar [datos]="datosPasos" [btnGuardar]="btnGuardar" [btnGuardarVisible]="btnGuardarVisible" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+    <btn-continuar [datos]="datosPasos" [btnGuardar]="btnGuardar" [btnGuardarVisible]="btnGuardarVisible" (continuarEvento)="getValorIndice($event)" (btnGuardarClicked)="obtenerDatosDelStore()"></btn-continuar>
   </div>
 </div>

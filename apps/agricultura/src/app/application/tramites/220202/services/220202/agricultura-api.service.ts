@@ -11,6 +11,7 @@ import {
   ListaDeDatosFinal,
   Movilizacion,
   PagoDeDerechos,
+  TercerosrelacionadosExportadorTable,
   TercerosrelacionadosTable,
 } from '../../models/220202/fitosanitario.model';
 import { Observable, map } from 'rxjs';
@@ -59,7 +60,7 @@ export class AgriculturaApiService {
    * @memberof AgriculturaApiService
    */
   updateTercerosExportador(
-    datosForma: TercerosrelacionadosdestinoTable[]
+    datosForma: TercerosrelacionadosExportadorTable[]
   ): void {
     this.fitosanitarioStore.updateTercerosExportador(datosForma);
   }

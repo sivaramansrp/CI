@@ -2,7 +2,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { TercerosRelacionadoesComponent } from './terceros-Relacionados.component';
 import { SanitarioService } from '../../services/sanitario.service';
-import { Tramite260212Store } from '../../../../estados/tramites/tramite260212.store';
+import { Shared260212Store } from '../../../../estados/tramites/tramite260212.store';
 import { of } from 'rxjs';
 
 describe('TercerosRelacionadoesComponent', () => {
@@ -27,7 +27,7 @@ describe('TercerosRelacionadoesComponent', () => {
         ReactiveFormsModule,
         TercerosRelacionadoesComponent,
       ],
-      providers: [FormBuilder,Tramite260212Store, { provide: SanitarioService, useValue: tercerosMockService }],
+      providers: [FormBuilder,Shared260212Store, { provide: SanitarioService, useValue: tercerosMockService }],
     }).compileComponents();
 
 

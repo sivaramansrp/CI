@@ -25,6 +25,9 @@ export interface ProductoTable {
   modelo: string;
   descripcionDelProducto: string;
   paisDeOrigen: string;
+  paisDeProcedencia: string;
+  paisDeDestino: string;
+  usoEspecifico: string;
 }
 
 /**
@@ -71,6 +74,24 @@ export interface ProductoInput {
    * Campo opcional.
    */
   paisDeOrigen?: string;
+
+    /**
+   * País de procedencia del producto.
+   * Campo opcional que indica el país desde donde se envía o transporta el producto.
+   */
+  paisDeProcedencia?: string;
+  
+  /**
+   * País de destino del producto.
+   * Campo opcional que indica el país al que será enviado o donde será comercializado el producto.
+   */
+  paisDeDestino?: string;
+  
+  /**
+   * Uso específico que tendrá el producto.
+   * Campo opcional que describe la finalidad o aplicación particular del producto.
+   */
+  usoEspecifico?: string;
 }
 
 /**
