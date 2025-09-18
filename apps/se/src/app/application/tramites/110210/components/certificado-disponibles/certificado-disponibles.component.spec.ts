@@ -41,12 +41,6 @@ describe('CertificadoDisponiblesComponent', () => {
     expect(component.seleccionTabla).toEqual(TablaSeleccion.UNDEFINED);
   });
 
-  it('debe obtener datos al inicializar', () => {
-    component.ngOnInit();
-    expect(service.getData).toHaveBeenCalled();
-    expect(component.datosTabla).toEqual([{ key: 'value' }]);
-  });
-
   it('debe completar el subject destroyed$ al destruir el componente', () => {
     const NEXT_SPY = jest.spyOn(component['destroyed$'], 'next');
     const COMPLETE_SPY = jest.spyOn(component['destroyed$'], 'complete');

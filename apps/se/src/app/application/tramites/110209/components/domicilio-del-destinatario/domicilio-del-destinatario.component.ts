@@ -167,6 +167,22 @@ export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy {
       const VALOR = form.get(campo)?.value;
       this.tramite110209Store.setTramite110209({ [campo]: VALOR });
     }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de domicilio del destinatario.
+   * Si el formulario es válido, retorna `true`.
+   * Si el formulario es inválido, marca todos los controles como "tocados" para mostrar los errores de validación y retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+    validarFormulario(): boolean {
+    if (this.domicilioDelDestinatarioForm.valid) {
+      return true;
+    }
+    this.domicilioDelDestinatarioForm.markAllAsTouched();
+    return false;
+  }
 
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.

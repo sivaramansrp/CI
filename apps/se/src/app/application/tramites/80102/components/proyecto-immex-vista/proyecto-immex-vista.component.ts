@@ -35,12 +35,6 @@ export class ProyectoImmexVistaComponent implements OnInit, OnDestroy {
   public proyectoImmexDatos: PoryectoDatos = PROYECTO_DATOS;
 
   /**
-   * Datos del catálogo de documentos.
-   * @type {Catalogo[]}
-   */
-  public documentoCatalogDatos: Catalogo[] = DOCUMENTO_CATALOGO_DATOS;
-
-  /**
    * Configuración del proyecto IMMEX.
    * @type {Object}
    * @property {TablaSeleccion} proyectoImmexSeleccionCheckBox - Selección de tabla del proyecto IMMEX.

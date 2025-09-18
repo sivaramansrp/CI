@@ -1,16 +1,11 @@
+import { Catalogo, CatalogosSelect, InputFecha } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { InputFecha } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState, REGEX_LLAVE_PAGO, REGEX_SOLO_NUMEROS, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Solicitud260910State, Solicitud260910Store } from '../../estados/tramites260910.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Solicitud260910Query } from '../../estados/tramites260910.query';
-import { Solicitud260910State } from '../../estados/tramites260910.store';
-import { Solicitud260910Store } from '../../estados/tramites260910.store';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar el registro del pago de derechos.
@@ -37,7 +32,7 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    * Configuración para el campo de fecha de pago.
    */
   fechaPago: InputFecha = {
-    labelNombre: 'Fecha de pago',
+    labelNombre: 'Fecha de pago:',
     required: false,
     habilitado: true,
   };
@@ -70,13 +65,15 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    * @param solicitud260910Store Almacén para estado de solicitud
    * @param solicitud260910Query Consulta para estado de solicitud
    * @param consultaQuery Consulta para estado de consulta
+   * @param validacionesService Servicio para validar formularios.
    */
   constructor(
     public fb: FormBuilder,
     public solicitudDatosService: SolicitudDatosService,
     public solicitud260910Store: Solicitud260910Store,
     public solicitud260910Query: Solicitud260910Query,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private validacionesService: ValidacionesFormularioService
   ) {
     this.obtenerPagoDerechos();
   }
@@ -95,17 +92,17 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   private inicializarFormulario(): void {
     this.pagoDeDerechosForm = this.fb.group({
       /** Clave de referencia del pago */
-      claveDeReferencia: [this.solicitud260910State.claveDeReferencia],
+      claveDeReferencia: [this.solicitud260910State.claveDeReferencia, [Validators.maxLength(9)]],
       /** Cadena de dependencia asociada al pago */
-      cadenaDeDependencia: [this.solicitud260910State.cadenaDeDependencia],
+      cadenaDeDependencia: [this.solicitud260910State.cadenaDeDependencia, [Validators.maxLength(14)]],
       /** Banco seleccionado para el pago */
       banco: [this.solicitud260910State.banco],
       /** Llave de pago proporcionada por el sistema */
-      liaveDePago: [this.solicitud260910State.liaveDePago],
+      liaveDePago: [this.solicitud260910State.liaveDePago, [Validators.maxLength(30), Validators.pattern(REGEX_LLAVE_PAGO)]],
       /** Fecha en la que se realizó el pago */
       fechaDePago: [this.solicitud260910State.fechaDePago],
       /** Importe total del pago realizado */
-      importeDePago: [this.solicitud260910State.importeDePago],
+      importeDePago: [this.solicitud260910State.importeDePago, [Validators.maxLength(16), Validators.pattern(REGEX_SOLO_NUMEROS)]],
     });
 
     this.solicitud260910Query.seleccionarSolicitud$
@@ -221,6 +218,16 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
       this.pagoDeDerechosForm.enable();
     }
   }
+
+  /**
+     * Método para validar el formulario.
+     * @param form Formulario a validar.
+     * @param field Campo a validar.
+     * @returns {boolean} Regresa un booleano si el campo es válido o no.
+     */
+    esValido(form: FormGroup, field: string): boolean {
+      return this.validacionesService.isValid(form, field) === true;
+    }
 
   /**
    * Destrucción del componente.

@@ -37,26 +37,39 @@
     <div class="col-md-6">
       <div class="form-group">
         <label for="descripcion" class="form-label"
-          >Uso(s) específico(s) de la mercancía*:</label
+          >Uso(s) específico(s) de la mercancía<span 
+          [ngStyle]="{
+            color:
+              paisForm.controls['usoEspecifico'].invalid &&
+              paisForm.controls['usoEspecifico'].touched
+                ? 'red'
+                : 'black'
+          }"
+        >*</span>:</label
         >
         <textarea
           class="form-control resize-disable"
+          [ngStyle]="{
+            borderColor:
+              paisForm.controls['usoEspecifico'].invalid &&
+              paisForm.controls['usoEspecifico'].touched
+                ? 'red'
+                : ''
+          }"
           cols="80" rows="3"
           id="usoEspecifico"
           placeholder=""
           formControlName="usoEspecifico"
           (change)="setValoresStore(paisForm,'usoEspecifico')"
         ></textarea>
-        <div
-        *ngIf="
-          paisForm.controls['usoEspecifico'].invalid &&
-          paisForm.controls['usoEspecifico'].touched
-        "
-        class="text-danger"
-      >
+        <div *ngIf="esInvalido('usoEspecifico')" class="text-danger">
+        
         <small *ngIf="paisForm.controls['usoEspecifico'].errors?.['required']"
           >Este campo es obligatorio.</small
         >
+        <small *ngIf="paisForm.controls['usoEspecifico'].errors?.['pattern']">
+          Por favor, corrige la descripción/dirección
+        </small>
         </div>
       </div>
     </div>
@@ -65,26 +78,39 @@
     <div class="col-md-6">
       <div class="form-group">
         <label for="justificacionImportacionExportacion" class="form-label"
-          >Justificación y beneficio que se obtiene*:</label
+          >Justificación y beneficio que se obtiene<span 
+          [ngStyle]="{
+            color:
+              paisForm.controls['justificacionImportacionExportacion'].invalid &&
+              paisForm.controls['justificacionImportacionExportacion'].touched
+                ? 'red'
+                : 'black'
+          }"
+        >*</span>:</label
         >
         <textarea
           class="form-control resize-disable"
+          [ngStyle]="{
+            borderColor:
+              paisForm.controls['justificacionImportacionExportacion'].invalid &&
+              paisForm.controls['justificacionImportacionExportacion'].touched
+                ? 'red'
+                : ''
+          }"
           cols="80" rows="3"
           id="justificacionImportacionExportacion"
           placeholder=""
           formControlName="justificacionImportacionExportacion"
           (change)="setValoresStore(paisForm,'justificacionImportacionExportacion')"
         ></textarea>
-        <div
-        *ngIf="
-          paisForm.controls['justificacionImportacionExportacion'].invalid &&
-          paisForm.controls['justificacionImportacionExportacion'].touched
-        "
-        class="text-danger"
-      >
+        <div *ngIf="esInvalido('justificacionImportacionExportacion')" class="text-danger">
+        
         <small *ngIf="paisForm.controls['justificacionImportacionExportacion'].errors?.['required']"
           >Este campo es obligatorio.</small
         >
+        <small *ngIf="paisForm.controls['justificacionImportacionExportacion'].errors?.['pattern']">
+          Por favor, corrige la descripción/dirección
+        </small>
         </div>
       </div>
     </div>
@@ -102,6 +128,13 @@
           formControlName="observaciones"
           (change)="setValoresStore(paisForm,'observaciones')"
         ></textarea>
+        <div *ngIf="esInvalido('observaciones')" class="text-danger">
+        
+        <small *ngIf="paisForm.controls['observaciones'].errors?.['pattern']">
+          Por favor, corrige la descripción/dirección
+        </small>
+        </div>
+        
       </div>
     </div>
   </div>

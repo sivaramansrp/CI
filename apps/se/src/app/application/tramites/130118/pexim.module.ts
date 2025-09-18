@@ -19,6 +19,8 @@ import { ToastrService } from 'ngx-toastr';
 
 import { NotificacionesComponent } from "@ng-mf/data-access-user";
 
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
+
 @NgModule({
   declarations: [
     PasoUnoComponent,
@@ -49,6 +51,7 @@ import { NotificacionesComponent } from "@ng-mf/data-access-user";
     AnexarDocumentosComponent,
     NotificacionesComponent,
     forwardRef(() => CargaDocumentoComponent),
+    PasoFirmaComponent
 ],
   exports: [
     SolicitudComponent

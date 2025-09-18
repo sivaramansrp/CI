@@ -3,12 +3,12 @@
  * Importa interfaces compartidas de catálogos y tablas de selección
  * desde la librería de acceso a datos del usuario.
  */
-import { Catalogo, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { FEDERATARIOS,FederatariosEncabezado,PLANTAS_DIPONIBLES,PLANTAS_IMMEX,PlantasDisponibles,PlantasImmex} from '../../../../shared/models/federatarios-y-plantas.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-planta/federatarios-y-plantas.component';
 import { Observable } from 'rxjs';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 /**
@@ -69,9 +69,6 @@ export class FederatariosYPlantasVistaComponent {
    * @property {PlantasImmex[]} plantasImmexTablaLista
    */
   public plantasImmexTablaLista: PlantasImmex[] = [];
-  /** Catálogo simulado de estados disponible para el formulario.  
- * Contiene actualmente solo el estado de Jalisco como ejemplo. */
-  public estadosCatalogos: Catalogo[] = [{ "id": 1, "descripcion": "JALISCO" }];
     /**
    * Lista de federatarios para mostrar en la tabla
    * @property {FederatariosEncabezado[]} federatariosTablaLista
