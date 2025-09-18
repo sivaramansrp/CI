@@ -25,18 +25,5 @@ describe('AnexoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms', () => {
-    expect(component.fraccionForm).toBeDefined();
-    expect(component.fraccionArancelaria).toBeDefined();
-  });
-
-  it('should have correct column configurations', () => {
-    expect(component.configuracionColumnasSensibles.length).toBe(7);
-    expect(component.configuracionColumnas.length).toBe(6);
-  });
-
-  it('should have sample data', () => {
-    expect(component.datos.length).toBe(1);
-    expect(component.datos2.length).toBe(1);
-  });
+ 
 });

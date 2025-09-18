@@ -10,7 +10,6 @@ import { FormsModule } from '@angular/forms';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { ModificarDestinatarioComponent } from './components/modificar-destinatario/modificar-destinatario.component';
 import { ModificarMercanciasComponent } from './components/mercancias-datos/mercancias-datos.component';
 import { NgModule } from '@angular/core';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
@@ -25,10 +24,11 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudDatosComponent } from './components/solicitud-datos/solicitud-datos.component';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TableComponent } from '@libs/shared/data-access-user/src';
-import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
+import { TercerosRelacionadosFabSeccionComponent } from '../../shared/components/terceros-relacionados-fab-seccion/terceros-relacionados-fab-seccion.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TramitesAsociadosComponent } from './components/tramites-asociados/tramites-asociados.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { forwardRef } from '@angular/core';
@@ -42,8 +42,6 @@ import { forwardRef } from '@angular/core';
     SolicitudDatosComponent,
     ModificarMercanciasComponent,
     PagoDerechosComponent,
-    TercerosRelacionadosComponent,
-    ModificarDestinatarioComponent,
     TramitesAsociadosComponent
   ],
   imports: [
@@ -67,6 +65,8 @@ import { forwardRef } from '@angular/core';
     forwardRef(() => NotificacionesComponent),
     forwardRef(() => InputCheckComponent),
     ToastrModule.forRoot(),
+    TooltipModule,
+    TercerosRelacionadosFabSeccionComponent
   ],
   providers: [ToastrService, CatalogosService],
 })

@@ -39,8 +39,9 @@
                 <ng-titulo titulo="Folio original" />
                 <div class="row">
                   <div class="col-md-8">
+                    <label for="folio">Folio:</label>
                     <div class="form-group">
-                      <input class="form-control" type="text" id="folioOriginal" name="folioOriginal" formControlName="folioOriginal" [attr.disabled]="true" />
+                      <input class="form-control" type="text" id="folioOriginal" name="folioOriginal" formControlName="folioOriginal" />
                     </div>
                   </div>
                 </div>
@@ -55,7 +56,7 @@
         }
         @case(3) {
           @if(esDatosRespuesta) {
-            <app-terceros-relacionados></app-terceros-relacionados>
+            <app-terceros-relacionados-fab-seccion></app-terceros-relacionados-fab-seccion>
           }
         }
         @case(4) {

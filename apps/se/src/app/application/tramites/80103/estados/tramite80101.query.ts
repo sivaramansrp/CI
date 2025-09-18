@@ -7,6 +7,14 @@ import { Query } from '@datorama/akita';
  * Clase que extiende de Query para manejar el estado de Tramite80101.
  */
 export class Tramite80101Query extends Query<Tramite80101State> {
+
+ /**
+   * Selecciona el estado completo de la solicitud
+   */
+  selectSeccionState$ = this.select((state) => {
+    return state;
+  });
+
       /**
    * Selecciona el estado completo de la solicitud
    */
@@ -187,6 +195,23 @@ export class Tramite80101Query extends Query<Tramite80101State> {
   selectDatosFederatarios$ = this.select(
     (state) => state.tablaDatosFederatarios
   );
+
+/**
+ * Observable que selecciona el estado `datosAnexoTress` desde el store.
+ * Se utiliza para obtener los datos del Anexo Tres de manera reactiva.
+ */
+  selectDatosAnexoTres$ = this.select((state) => state.datosAnexoTress);
+
+/**
+ * Observable que selecciona el estado `datosAnexoTressDos` desde el store.
+ * Permite acceder de forma reactiva a los datos del Anexo Tress Dos.
+ */
+  selectDatosAnexoTressDos$ = this.select((state) => state.datosAnexoTressDos);
+
+  /**
+  * Observable selector for retrieving the entire state.
+  */
+  allStoreData$ = this.select((state) => state);
 
   /**
    * Constructor de la clase Tramite80101Query.

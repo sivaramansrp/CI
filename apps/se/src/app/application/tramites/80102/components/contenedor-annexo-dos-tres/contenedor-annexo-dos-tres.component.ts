@@ -1,15 +1,15 @@
+import { AnexoEncabezado, DatosAnexotressUno } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, takeUntil } from 'rxjs/operators';
 import { ANEXO_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { AnexoDosYTresComponent } from '../../../../shared/components/anexo-dos-y-tres.component/anexo-dos-y-tres.component';
-import { AnexoEncabezado, DatosAnexotressUno } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-contenedor-annexo-dos-tres',
@@ -126,7 +126,7 @@ export class ContenedorAnnexoDosTresComponent implements OnInit, OnDestroy {
           this.anexoTresTablaLista = anexoTresTablaLista;
         }
       });
-      this.inicializarFormularioDatosSubcontratista();
+    this.inicializarFormularioDatosSubcontratista();
     this.obtenerDatosDelAlmacen();
     this.inicializarFormularioDatosDosSubcontratista();
     this.obtenerDatosDelAlmacenDos();

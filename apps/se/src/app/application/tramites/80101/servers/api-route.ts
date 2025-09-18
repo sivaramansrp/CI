@@ -32,14 +32,17 @@ const TRAMITE = ENVIRONMENT.TRAMITE_URL;
 const PROCEDURE = '/sat-t80101';
 
 /**
- * Rutas de la API para el procedimiento 80101
+ * Rutas de la API para el procedimiento 80102
  */
 export const PROC_80101 = {
-    ESTADO: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/estado`,
-    PAIS: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/pais`,
-    NICO: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/nico`,
-    POST_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/guardar`,
-    GET_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/acuse`,
-    CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${TRAMITE}/consulta/${id}`,
-    OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`
+    ESTADO: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/estado`,
+    PAIS: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/pais`,
+    NICO: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/nico`,
+    POST_FORM_DATA: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/guardar`,
+    GET_FORM_DATA: `${BASE_URL}${API}${PROCEDURE}${SOLICITUD}/acuse`,
+    CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/consulta/${id}`,
+    OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`,
+    GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
+    API_POST_CADENA_ORIGINAL : (IDSOLICITUD: string) : string => `${BASE_URL}${API}${PROCEDURE}/solicitud/${IDSOLICITUD}/genera-cadena-original`,
+    API_POST_FIRMA : (IDSOLICITUD: string) : string => `${BASE_URL}${API}${PROCEDURE}/solicitud/${IDSOLICITUD}/firmar`
 };

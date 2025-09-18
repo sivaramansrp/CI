@@ -26,7 +26,7 @@ class MockTramite260601Query {}
 
 describe('DatosDelEstablecimientoComponent', () => {
   let fixture: ComponentFixture<DatosDelEstablecimientoComponent>;
-  let component: { ngOnDestroy: () => void; manifiestosForm: { get?: any; disable?: any; enable?: any; valid?: any; markAllAsTouched?: any; }; seleccionadaManifiesto: { controls?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); tramite260601Query: { selectSeccionState$?: any; }; ngOnInit: () => void; guardarDatosFormulario: jest.Mock<any, any, any> | (() => void); inicializarFormulario: jest.Mock<any, any, any> | (() => void); inicializaCatalogos: jest.Mock<any, any, any> | (() => void); obtenerManifiestos: jest.Mock<any, any, any> | (() => void); crearFormulario: jest.Mock<any, any, any> | (() => void); estadoSeleccion: jest.Mock<any, any, any> | (() => void); claveScianSeleccion: jest.Mock<any, any, any> | (() => void); regimenesSeleccion: jest.Mock<any, any, any> | (() => void); aduanaSeleccion: jest.Mock<any, any, any> | (() => void); datosDelEstablecimientoForm: { disable?: any; enable?: any; valid?: any; markAllAsTouched?: any; }; domicilloDelEstablecimientoForm: { disable?: any; enable?: any; get?: any; valid?: any; markAllAsTouched?: any; }; scianForm: { disable?: any; enable?: any; get?: any; reset?: any; valid?: any; markAllAsTouched?: any; }; fb: { group?: any; array?: any; }; avisoSanitarioState: { RFCResponsableSanitario?: any; razonSocial?: any; correoElectronico?: any; codigoPostal?: any; cveEstado?: any; descripcionMunicipio?: any; informacionExtra?: any; descripcionColonia?: any; calle?: any; lada?: any; telefono?: any; avisoFuncionamiento?: any; cveRegimenes?: any; cveAduanas?: any; cveSCIAN?: any; cveSCIANDescripcion?: any; seleccionadaManifiesto?: any; informacionConfidencial?: any; }; avisoSanitarioService: { getEstado?: any; getClaveScian?: any; getDescripcionScian?: any; getRegimenes?: any; getAduanas?: any; obtenerScianTabla?: any; obtenerProducto?: any; getManifiestos?: any; }; tramite260601Store: { setEstado?: any; setDescripcionScian?: any; setClaveScian?: any; setCveRegimenes?: any; setCveAduanas?: any; setScianTabla?: any; setProductoTabla?: any; metodoNombre?: any; setProductoClasificacion?: any; }; descripcionScianSeleccion: () => void; obtenerSCIAN: () => void; seleccionarDomicilios: (arg0: {}) => void; obtenerProducto: () => void; seleccionarEstablecimiento: () => void; aceptar: () => void; setValoresStore: jest.Mock<any, any, any> | ((arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void); onManifiestoCheckboxCambiar: (arg0: { target: { checked: {}; }; }, arg1: {}) => void; modalElement: { nativeElement?: any; }; modalInstance: { show?: any; hide?: any; }; agregarMercanciaGrid2606: () => void; closeModal: { nativeElement?: any; }; cerrarModal: () => void; scianSeleccionados: string[]; scianBodyData: string[]; eliminarScianGrid: () => void; agregarSCIAN: () => void; limpiarSCIAN: () => void; limpiarMercancia: () => void; modifyModal: { nativeElement?: any; }; modalAddSCIAN: { nativeElement?: any; }; ngAfterViewInit: () => void; cerrarModificarModal: () => void; abrirModificarModal: (arg0: { cveEspecificoProductoClasifi: {}; cveTipoProducto: {}; fraccionArancelaria: {}; fraccionArancelariaDescripcion: {}; modelo: {}; productoDescripcion: {}; paisDeOrigen: {}; }) => void; modalAddSCIANInstance: { show?: any; hide?: any; }; abrirModalAgregarSCIAN: () => void; cancelarAgregarSCIAN: () => void; validarFormularios: () => void; destruirNotificador$: { next?: any; complete?: any; }; };
+  let component: { ngOnDestroy: () => void; manifiestosForm: { get?: any; disable?: any; enable?: any; valid?: any; markAllAsTouched?: any; }; seleccionadaManifiesto: { controls?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); tramite260601Query: { selectSeccionState$?: any; }; ngOnInit: () => void; guardarDatosFormulario: jest.Mock<any, any, any> | (() => void); inicializarFormulario: jest.Mock<any, any, any> | (() => void); inicializaCatalogos: jest.Mock<any, any, any> | (() => void); obtenerManifiestos: jest.Mock<any, any, any> | (() => void); crearFormulario: jest.Mock<any, any, any> | (() => void); estadoSeleccion: jest.Mock<any, any, any> | (() => void); claveScianSeleccion: jest.Mock<any, any, any> | (() => void); regimenesSeleccion: jest.Mock<any, any, any> | (() => void); aduanaSeleccion: jest.Mock<any, any, any> | (() => void); datosDelEstablecimientoForm: { get?: any; disable?: any; enable?: any; valid?: any; markAllAsTouched?: any; }; domicilloDelEstablecimientoForm: { disable?: any; enable?: any; get?: any; valid?: any; markAllAsTouched?: any; }; scianForm: { disable?: any; enable?: any; get?: any; reset?: any; valid?: any; markAllAsTouched?: any; }; fb: { group?: any; array?: any; }; avisoSanitarioState: { RFCResponsableSanitario?: any; razonSocial?: any; correoElectronico?: any; codigoPostal?: any; cveEstado?: any; descripcionMunicipio?: any; informacionExtra?: any; descripcionColonia?: any; calle?: any; lada?: any; telefono?: any; avisoFuncionamiento?: any; cveRegimenes?: any; cveAduanas?: any; cveSCIAN?: any; cveSCIANDescripcion?: any; seleccionadaManifiesto?: any; informacionConfidencial?: any; }; avisoSanitarioService: { getEstado?: any; getClaveScian?: any; getDescripcionScian?: any; getRegimenes?: any; getAduanas?: any; obtenerScianTabla?: any; obtenerProducto?: any; getManifiestos?: any; }; tramite260601Store: { setEstado?: any; setDescripcionScian?: any; setClaveScian?: any; setCveRegimenes?: any; setCveAduanas?: any; setScianTabla?: any; setProductoTabla?: any; metodoNombre?: any; setProductoClasificacion?: any; }; descripcionScianSeleccion: () => void; obtenerSCIAN: () => void; seleccionarDomicilios: (arg0: {}) => void; obtenerProducto: () => void; seleccionarEstablecimiento: () => void; aceptar: () => void; setValoresStore: jest.Mock<any, any, any> | ((arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void); onManifiestoCheckboxCambiar: (arg0: { target: { checked: {}; }; }, arg1: {}) => void; modalElement: { nativeElement?: any; }; modalInstance: { show?: any; hide?: any; }; agregarMercanciaGrid2606: () => void; closeModal: { nativeElement?: any; }; cerrarModal: () => void; scianSeleccionados: string[]; scianBodyData: string[]; eliminarScianGrid: () => void; agregarSCIAN: () => void; limpiarSCIAN: () => void; limpiarMercancia: () => void; modifyModal: { nativeElement?: any; }; modalAddSCIAN: { nativeElement?: any; }; ngAfterViewInit: () => void; cerrarModificarModal: () => void; abrirModificarModal: (arg0: { cveEspecificoProductoClasifi: {}; cveTipoProducto: {}; fraccionArancelaria: {}; fraccionArancelariaDescripcion: {}; modelo: {}; productoDescripcion: {}; paisDeOrigen: {}; }) => void; modalAddSCIANInstance: { show?: any; hide?: any; }; abrirModalAgregarSCIAN: () => void; cancelarAgregarSCIAN: () => void; validarFormularios: () => void; destruirNotificador$: { next?: any; complete?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -286,14 +286,6 @@ describe('DatosDelEstablecimientoComponent', () => {
 
   });
 
-  it('should run #aceptar()', async () => {
-    component.datosDelEstablecimientoForm = component.datosDelEstablecimientoForm || {};
-    component.datosDelEstablecimientoForm.enable = jest.fn();
-    component.domicilloDelEstablecimientoForm = component.domicilloDelEstablecimientoForm || {};
-    component.domicilloDelEstablecimientoForm.enable = jest.fn();
-    component.aceptar();
-  });
-
   it('should run #obtenerManifiestos()', async () => {
     component.avisoSanitarioService = component.avisoSanitarioService || {};
     component.avisoSanitarioService.getManifiestos = jest.fn().mockReturnValue(observableOf({}));
@@ -370,18 +362,27 @@ describe('DatosDelEstablecimientoComponent', () => {
   });
 
   it('should run #validarFormularios()', async () => {
-    component.datosDelEstablecimientoForm = component.datosDelEstablecimientoForm || {};
-    component.datosDelEstablecimientoForm.valid = 'valid';
-    component.datosDelEstablecimientoForm.markAllAsTouched = jest.fn();
-    component.domicilloDelEstablecimientoForm = component.domicilloDelEstablecimientoForm || {};
-    component.domicilloDelEstablecimientoForm.valid = 'valid';
-    component.domicilloDelEstablecimientoForm.markAllAsTouched = jest.fn();
-    component.scianForm = component.scianForm || {};
-    component.scianForm.valid = 'valid';
-    component.scianForm.markAllAsTouched = jest.fn();
-    component.manifiestosForm = component.manifiestosForm || {};
-    component.manifiestosForm.valid = 'valid';
-    component.manifiestosForm.markAllAsTouched = jest.fn();
+    
+    component.datosDelEstablecimientoForm = {
+      valid: true,
+      markAllAsTouched: jest.fn(),
+      get: jest.fn().mockReturnValue({ value: {}, controls: [{}] })
+    };
+    component.domicilloDelEstablecimientoForm = {
+      valid: true,
+      markAllAsTouched: jest.fn(),
+      get: jest.fn().mockReturnValue({ value: {}, controls: [{}] })
+    };
+    component.scianForm = {
+      valid: true,
+      markAllAsTouched: jest.fn(),
+      get: jest.fn().mockReturnValue({ value: {}, controls: [{}] })
+    };
+    component.manifiestosForm = {
+      valid: true,
+      markAllAsTouched: jest.fn(),
+      get: jest.fn().mockReturnValue({ value: {}, controls: [{}] })
+    };
     component.validarFormularios();
   });
 

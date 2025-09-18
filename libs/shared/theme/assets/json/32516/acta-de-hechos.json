@@ -1,31 +1,10 @@
-{
-  "code": 200,
-  "data": [
+[
     {
-      "id": 1,
-      "descripcion": "Acta de hechos 4.5.15 de las RGCE: Aviso de destrucción de mercancía destinada al régimen de depósito fiscal",
-      "value": "Acta de hechos 4.5.15 de las RGCE: Aviso de destruccion de mercancia destinada al regimen de deposito fiscal"
+      "clave": 1,
+      "descripcion": "Acta de hechos 4.5.15 de las RGCE: Aviso de destrucción de mercancía destinada al régimen de depósito fiscal"
     },
     {
-      "id": 2,
-      "descripcion": "Acta de hechos 4.2.8 de las RGCE: Aviso para la destrucción de mercancías importadas temporalmente para competencias y eventos deportivos",
-      "value": "Acta de hechos 4.2.8 de las RGCE: Aviso para la destrucción de mercancías importadas temporalmente para competencias y eventos deportivos"
-    },
-    {
-      "id": 3,
-      "descripcion": "Acta de hechos 4.2.8 de las RGCE: Aviso de la destrucción de mercancías importadas temporalmente para competencias y eventos de automovilismo deportivo",
-      "value": "Acta de hechos 4.2.8 de las RGCE: Aviso de la destrucción de mercancías importadas temporalmente para competencias y eventos de automovilismo deportivo"
-    },
-    {
-      "id": 4,
-      "descripcion": "Acta de hechos 4.5.22 de las RGCE",
-      "value": "Acta de hechos 4.5.22 de las RGCE"
-    },
-    {
-      "id": 5,
-      "descripcion": "Acta de hechos 2.2.7 de las RGCE",
-      "value": "Acta de hechos 2.2.7 de las RGCE"
+      "clave": 2,
+      "descripcion": "Acta de hechos 4.5.15 de las RGCE: Aviso de destrucción de mercancía destinada al régimen de depósito fiscal"
     }
-  ],
-  "message": "Consulta exitosa"
-}
+]

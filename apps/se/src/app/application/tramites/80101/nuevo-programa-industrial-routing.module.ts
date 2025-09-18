@@ -12,6 +12,7 @@ import { ContenedorProveedorClienteComponent } from './component/contenedor-prov
 import { ProveedorPorArchivoVistaComponent } from './component/proveedor-por-archivo-vista/proveedor-por-archivo-vista.component';
 import { ProyectoImmexVistaComponent } from './component/proyecto-immex-vista/proyecto-immex-vista.component';
 
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { PasoCapturarSolicitudComponent } from './pages/paso-capturar-solicitud/paso-capturar-solicitud.component';
 
 const ROUTES: Routes = [
@@ -21,6 +22,13 @@ const ROUTES: Routes = [
     redirectTo: 'action',
   },
   {
+    canActivate: [IniciarTramiteResolver],
+    resolve: { iniciarResolverData: IniciarTramiteResolver },
+    data: {
+      iniciarConfig: {
+        procedureId: '80101'
+      }
+    },
     path: 'action',
     component: PasoCapturarSolicitudComponent,
   },
@@ -66,4 +74,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class NuevoProgramaIndustrialRoutingModule {}
+export class NuevoProgramaIndustrialRoutingModule { }
