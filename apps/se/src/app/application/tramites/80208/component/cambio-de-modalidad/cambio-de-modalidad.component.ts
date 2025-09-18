@@ -534,7 +534,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   getServiciosImmx(): void {
     this.modalidadService.getServiciosImmx().subscribe((data) => {
-      this.serviciosImmx = data.data;  
+      this.serviciosImmx = data.datos;
     });
   }
 
@@ -551,7 +551,10 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   getCambioDeModalidad(): void {
     this.modalidadService.getCambioDeModalidad().subscribe((data) => {
-      this.cambioDeModalidad = data.cambioModalidad.data;
+      this.cambioDeModalidad = data.datos.map((item: any) => ({
+      id: item.clave,
+      descripcion: item.descripcion
+    }));
       const SELECCIONADAID =
         this.cambioDeModalidadForm.get('cambioDeModalidad')?.value;
       if (SELECCIONADAID) {
@@ -597,8 +600,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   seleccionarDesplegable(): void {
    
-       this.toggleServiciosImmx(
-        this.cambioDeModalidadForm.value.cambioDeModalidad.toString());
+       this.toggleServiciosImmx(this.cambioDeModalidadForm.value.cambioDeModalidad.toString());
   this.cambioModalidadStore.actualizarEstado({
         cambioModalidad: this.cambioDeModalidadForm.value.cambioDeModalidad.toString()
       });
