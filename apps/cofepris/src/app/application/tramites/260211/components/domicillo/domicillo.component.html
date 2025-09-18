@@ -79,8 +79,7 @@
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false" [datos]="nicoTablaDatos"
             (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
         <div class="container text-end mt-5">
-            <button class="btn btn-default me-2" (click)="eliminarSeleccionados()"
-                [disabled]="selectedRows.length === 0">Eliminar</button>
+            <button class="btn btn-default me-2" (click)="eliminarSeleccionados()">Eliminar</button>
             <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent"
                 [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
@@ -150,9 +149,9 @@
         <div class="container text-end mt-5">
             <button class="btn btn-default me-2" (click)="modificarMercancia()" data-bs-toggle="modal"
                 data-bs-target="#modalAddAgentMercancias"
-                [disabled]="esFormularioSoloLectura || noSeleccionado">Modificar</button>
+                [disabled]="esFormularioSoloLectura">Modificar</button>
             <button class="btn btn-default me-2" (click)="eliminarMercanciaSeleccionados()"
-                [disabled]="esFormularioSoloLectura || noSeleccionado">Eliminar</button>
+                [disabled]="esFormularioSoloLectura">Eliminar</button>
             <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"
                 [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
@@ -197,12 +196,12 @@
 
 <div class="modal fade" id="modalAddAgentMercancias" tabindex="-1" aria-labelledby="modalAddAgentMercanciasLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw;">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered"  style="max-width: 70vw;">
+        <div class="modal-content" >
             <div class="modal-header">
                 <h4 class="modal-title">Datos mercancías</h4>
             </div>
-            <div class="modal-body modal-height">
+            <div class="modal-body">
                 <form [formGroup]="formMercancias">
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="estado" formControlName="clasificacion"
@@ -370,3 +369,10 @@
         </div>
     </div>
 </div>
+
+<!-- @if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+  </section>
+} -->

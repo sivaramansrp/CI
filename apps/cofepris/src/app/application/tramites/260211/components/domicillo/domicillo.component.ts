@@ -170,6 +170,7 @@ export class DomicilloComponent implements OnInit, OnDestroy {
    *  Elimina las filas seleccionadas
    *  */
   eliminarSeleccionados(): void {
+    
     this.nicoTablaDatos = this.nicoTablaDatos.filter(
       (row) => !this.selectedRows.includes(row)
     );
@@ -340,24 +341,24 @@ export class DomicilloComponent implements OnInit, OnDestroy {
    * Etiqueta para el crosslist de país de origen.
    */
   public paisDeOrigenLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de orígen*',
-    derecha: 'País(es) seleccionados*',
+    tituluDeLaIzquierda: 'País de orígen:',
+    derecha: 'País(es) seleccionados:',
   };
 
   /**
    * Etiqueta para el crosslist de país de procedencia.
    */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia*',
-    derecha: 'País(es) seleccionados*',
+    tituluDeLaIzquierda: 'País de procedencia:',
+    derecha: 'País(es) seleccionados:',
   };
 
   /**
    * Etiqueta para el crosslist de uso específico.
    */
   public usoEspecificoLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Uso específico*',
-    derecha: 'Uso(s) específico(s) seleccionado(s)*',
+    tituluDeLaIzquierda: 'Uso específico:',
+    derecha: 'Uso(s) específico(s) seleccionado(s):',
   };
 
   /**
