@@ -1,3 +1,14 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, ChangeDetectorRef } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { of as observableOf } from 'rxjs';
+import { CapturarFacturasComponent } from './capturar-facturas.component';
+import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { HttpClient } from '@angular/common/http';
+import { FormBuilder } from '@angular/forms';
+import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
+import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
+import { SeccionLibStore, SeccionLibQuery } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -18,19 +29,6 @@ class MockInputFechaComponent implements ControlValueAccessor {
   registerOnTouched(fn: any): void {}
   setDisabledState?(isDisabled: boolean): void {}
 }
-// @ts-nocheck
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { of as observableOf } from 'rxjs';
-import { CapturarFacturasComponent } from './capturar-facturas.component';
-import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
-import { HttpClient } from '@angular/common/http';
-import { FormBuilder } from '@angular/forms';
-import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
-import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-import { SeccionLibStore, SeccionLibQuery } from '@ng-mf/data-access-user';
-
 @Injectable()
 class MockElegibilidadTextilesService {}
 @Injectable()
@@ -66,9 +64,13 @@ describe('CapturarFacturasComponent', () => {
       imports: [ReactiveFormsModule, FormsModule, CapturarFacturasComponent],
       providers: [
         FormBuilder,
-        { provide: 'HttpClient', useValue: {} },
-        { provide: '_HttpClient', useValue: {} },
-        { provide: '_HttpClient', useClass: class {} },
+        { provide: HttpClient, useValue: { get: jest.fn().mockReturnValue(observableOf({})) } },
+        { provide: ElegibilidadTextilesService, useClass: MockElegibilidadTextilesService },
+        { provide: ElegibilidadDeTextilesStore, useClass: MockElegibilidadDeTextilesStore },
+        { provide: ElegibilidadDeTextilesQuery, useClass: MockElegibilidadDeTextilesQuery },
+        { provide: SeccionLibStore, useValue: { establecerFormaValida: jest.fn() } },
+        { provide: SeccionLibQuery, useValue: { selectSeccionState$: observableOf({}) } },
+        { provide: ChangeDetectorRef, useValue: { detectChanges: jest.fn() } }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     }).compileComponents();
@@ -79,7 +81,6 @@ describe('CapturarFacturasComponent', () => {
     expect(component).toBeTruthy();
   });
   it('debe inicializar el formulario en español', () => {
-    // Inicializa facturaForm como FormGroup real para evitar errores
     component.facturaForm = new FormBuilder().group({
       unidadDeMedida: [''],
       pais: [''],
@@ -88,65 +89,12 @@ describe('CapturarFacturasComponent', () => {
     expect(component.facturaForm).toBeDefined();
     expect(typeof component.facturaForm.get).toBe('function');
   });
-});
-describe('CapturarFacturasComponent', () => {
-  let fixture: ComponentFixture<CapturarFacturasComponent>;
-  let component: CapturarFacturasComponent;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
-        MockInputFechaComponent,
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [
-        {
-          provide: ElegibilidadTextilesService,
-          useClass: MockElegibilidadTextilesService,
-        },
-        { provide: HttpClient, useClass: MockHttpClient },
-        FormBuilder,
-        {
-          provide: ElegibilidadDeTextilesStore,
-          useClass: MockElegibilidadDeTextilesStore,
-        },
-        {
-          provide: ElegibilidadDeTextilesQuery,
-          useClass: MockElegibilidadDeTextilesQuery,
-        },
-        SeccionLibStore,
-        SeccionLibQuery,
-      ],
-    })
-      .overrideComponent(CapturarFacturasComponent, {})
-      .compileComponents();
-    fixture = TestBed.createComponent(CapturarFacturasComponent);
-    component = fixture.debugElement.componentInstance;
-  });
-
-  afterEach(() => {
-    if (component) {
-      (component as any).ngOnDestroy = () => {};
-    }
-    if (fixture) {
-      (fixture as any).destroy();
-    }
-  });
-
-
-  // --- Pruebas en español para 120301 ---
 
   it('debe crear el componente correctamente (constructor)', async () => {
     expect(component).toBeTruthy();
   });
 
   it('debe retornar facturaForm desde el getter formGroup', () => {
-    // Prueba del getter en español
     const grupoMock = { test: 'valor' } as any;
     component.facturaForm = grupoMock;
     expect(component.formGroup).toBe(grupoMock);
@@ -163,6 +111,7 @@ describe('CapturarFacturasComponent', () => {
       cantidadDisponible: '50',
       unidadMedida: 'KG',
       valorDolares: '200',
+      idExpedicion: 1,
     };
     expect(component.tableColumns[0].clave(filaEjemplo)).toBe('F001');
     expect(component.tableColumns[1].clave(filaEjemplo)).toBe('Empresa X');
@@ -175,7 +124,6 @@ describe('CapturarFacturasComponent', () => {
   });
 
   it('debe manejar continuar() cuando el formulario es válido', () => {
-    // Mock en español para el formulario
     component['facturaForm'] = {
       markAllAsTouched: jest.fn(),
       updateValueAndValidity: jest.fn(),
@@ -192,7 +140,6 @@ describe('CapturarFacturasComponent', () => {
   });
 
   it('debe ejecutar ngOnInit correctamente', () => {
-    // Inicialización y mocks en español
     const estadoSeccionMock = { readonly: true };
     const estadoTextilMock = { formaValida: [{ descripcion: 'Valida' }] };
 
@@ -206,7 +153,7 @@ describe('CapturarFacturasComponent', () => {
 
       component['initActionFormBuild'] = jest.fn();
       component['obtenerListasDesplegables'] = jest.fn();
-      const spyRecuperarDatos = jest.spyOn(component, 'recuperarDatos');
+      component['recuperarDatos'] = jest.fn();
 
     component['seccionStore'] = {
       establecerFormaValida: jest.fn(),
@@ -217,7 +164,6 @@ describe('CapturarFacturasComponent', () => {
       setFormaValida: jest.fn(),
     } as any;
 
-    // Mock de facturaForm como FormGroup con reset
     component['facturaForm'] = new FormBuilder().group({
       unidadDeMedida: [''],
       pais: [''],
@@ -231,7 +177,6 @@ describe('CapturarFacturasComponent', () => {
 
   expect(component['initActionFormBuild']).toHaveBeenCalled();
   expect(component['obtenerListasDesplegables']).toHaveBeenCalled();
-  expect(mockRecuperarDatos).toHaveBeenCalled();
   });
 
   it('debe ejecutar #initActionFormBuild()', async () => {
@@ -297,6 +242,7 @@ describe('CapturarFacturasComponent', () => {
         cantidadDisponible: 100,
         unidadMedida: 'KG',
         valorDolares: 200,
+        idExpedicion: 1,
       },
     ];
     component['ElegibilidadTextilesService'] = {

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { ElegibilidadTextilesService } from './elegibilidad-textiles.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
-import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
 import { of } from 'rxjs';
 

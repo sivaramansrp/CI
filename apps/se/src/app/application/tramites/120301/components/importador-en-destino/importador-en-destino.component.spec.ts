@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output, ChangeDetectorRef } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -15,6 +15,7 @@ import { HttpClient } from '@angular/common/http';
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { SeccionLibStore, SeccionLibQuery } from '@ng-mf/data-access-user';
+import { ImporteRecordService } from '../../services/catalogos/importe-record.service';
 
 @Injectable()
 class MockElegibilidadTextilesService {}
@@ -28,7 +29,30 @@ class MockHttpClient {
 class MockElegibilidadDeTextilesStore {}
 
 @Injectable()
-class MockElegibilidadDeTextilesQuery {}
+class MockElegibilidadDeTextilesQuery {
+  selectTextile$ = observableOf({
+    tipo: '',
+    cantidadTotalImportador: '',
+    razonSocialImportador: '',
+    domicilio: '',
+    ciudadImportador: '',
+    codigoPostal: '',
+    pais: '',
+    formaValida: []
+  });
+}
+
+@Injectable()
+class MockImporteRecordService {
+  getImporteRecord() {
+    return observableOf([]);
+  }
+}
+
+@Injectable()
+class MockChangeDetectorRef {
+  detectChanges() {}
+}
 
 
 describe('ImportadorEnDestinoComponent', () => {
@@ -48,20 +72,33 @@ describe('ImportadorEnDestinoComponent', () => {
         { provide: HttpClient, useClass: MockHttpClient },
         { provide: ElegibilidadDeTextilesStore, useClass: MockElegibilidadDeTextilesStore },
         { provide: ElegibilidadDeTextilesQuery, useClass: MockElegibilidadDeTextilesQuery },
-        SeccionLibStore,
-        SeccionLibQuery
+        { provide: SeccionLibStore, useValue: { establecerSeccion: jest.fn(), establecerFormaValida: jest.fn() } },
+        { provide: SeccionLibQuery, useValue: { selectSeccionState$: observableOf({}) } },
+        { provide: ImporteRecordService, useClass: MockImporteRecordService },
+        { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef }
       ]
-    }).overrideComponent(ImportadorEnDestinoComponent, {
-
     }).compileComponents();
     fixture = TestBed.createComponent(ImportadorEnDestinoComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    
+    (component as any).importadorState = {
+      tipo: '',
+      cantidadTotalImportador: '',
+      razonSocialImportador: '',
+      domicilio: '',
+      ciudadImportador: '',
+      codigoPostal: '',
+      pais: '',
+      formaValida: []
+    };
   });
   it('debe crear el componente correctamente', () => {
     expect(component).toBeTruthy();
+    component.ngOnInit();
     expect(component.importadorForm).toBeDefined();
   });
   it('debe inicializar correctamente el formulario y lógica de estado', () => {
+    component.ngOnInit();
     expect(component.importadorForm).toBeDefined();
     component.importadorState = { formaValida: [] };
     component.ElegibilidadDeTextilesStore = { setFormaValida: jest.fn() };
@@ -69,9 +106,12 @@ describe('ImportadorEnDestinoComponent', () => {
       establecerSeccion: jest.fn(),
       establecerFormaValida: jest.fn()
     };
-    const tapFn = (fn) => fn();
-    component.importadorForm.statusChanges = { pipe: () => ({ subscribe: tapFn }) };
-    component.importadorForm.valid = true;
+    
+    component.importadorForm = {
+      valid: true,
+      statusChanges: { pipe: () => ({ subscribe: (fn) => fn() }) }
+    } as any;
+    
     if (component.importadorForm.valid) {
       component.ElegibilidadDeTextilesStore.setFormaValida([
         ...component.importadorState.formaValida,
@@ -179,9 +219,10 @@ describe('ImportadorEnDestinoComponent', () => {
     component.seccionQuery.selectSeccionState$ = observableOf({});
     component.ElegibilidadDeTextilesQuery = component.ElegibilidadDeTextilesQuery || {};
     component.ElegibilidadDeTextilesQuery.selectTextile$ = observableOf({});
-    component.importadorForm = component.importadorForm || {};
-    component.importadorForm.statusChanges = observableOf({});
-    component.importadorForm.valid = 'valid';
+    component.importadorForm = {
+      valid: true,
+      statusChanges: observableOf({})
+    } as any;
     component.ElegibilidadDeTextilesStore = component.ElegibilidadDeTextilesStore || {};
     component.ElegibilidadDeTextilesStore.setFormaValida = jest.fn();
     component.obtenerListasDesplegables = jest.fn();
@@ -228,3 +269,4 @@ describe('ImportadorEnDestinoComponent', () => {
 
     expect(component.ElegibilidadDeTextilesStore.someMethod).toHaveBeenCalled();
   });
+});
