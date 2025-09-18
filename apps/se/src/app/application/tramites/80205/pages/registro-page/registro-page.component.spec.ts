@@ -81,9 +81,7 @@ describe('RegistroPageComponent', () => {
       accion: {},
       valor: {}
     });
-    // expect(component.pasoUnoComponent.validarTodosLosFormularios).toHaveBeenCalled();
-    // expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    // expect(component.wizardComponent.atras).toHaveBeenCalled();
+    
   });
 
   it('should run #enTabChange()', async () => {
@@ -97,8 +95,7 @@ describe('RegistroPageComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    
   });
 
 });
