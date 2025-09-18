@@ -4,6 +4,8 @@ import {
 } from '../../constantes/modificacion.enum';
 import {
   Catalogo,
+  CatalogoSelectComponent,
+  CatalogoServices,
   ConsultaioQuery,
   FormularioDinamico,
   TablaDinamicaComponent,
@@ -28,7 +30,6 @@ import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.
 import { AmpliacionServiciosState } from '../../estados/tramite80205.store';
 import { AmpliacionServiciosStore } from '../../estados/tramite80205.store';
 import { ApiResponse } from '../../models/datos-info.model';
-import {CatalogoSelectComponent} from'@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -207,6 +208,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
   
+  tramiteID:string='80205';
 
   /**
    * Constructor del componente.
@@ -218,6 +220,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private ampliacionServiciosService: AmpliacionServiciosService,
+    private catalogoServices: CatalogoServices,
     private ampliacionServiciosQuery: AmpliacionServiciosQuery,
     private ampliacionServiciosStore: AmpliacionServiciosStore,
     private readonly httpServicios: HttpClient,
@@ -286,7 +289,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
-    this.obtenerIngresoSelectList();
+    this.obtenerIngresoSelectList(this.tramiteID);
     this.getDatos();
     this.suscribirseADatosImmex();
     this.suscribirseADatos();
@@ -483,7 +486,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * Obtiene la lista de selección de ingreso.
    * @method obtenerIngresoSelectList
    */
-  obtenerIngresoSelectList(): void {
+  obtenerIngresoSelectList(tramite:string): void {
     /**
      * Obtiene la lista de selección de ingreso desde el servicio `ampliacionServiciosService`
      * y actualiza el estado global con los datos obtenidos.
@@ -492,10 +495,10 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
      * @returns {void} Este método no retorna ningún valor.
      */
     this.subscription.add(
-      this.ampliacionServiciosService
-        .obtenerIngresoSelectList()
+      this.catalogoServices
+        .immexCatalogo(tramite)
         .subscribe((data) => {
-          const DATOS = data as Catalogo[];
+          const DATOS = data.datos as Catalogo[];
 
           // Actualiza el estado global con la lista de aduanas de ingreso.
           this.ampliacionServiciosStore.setAduanaDeIngreso(DATOS);
@@ -551,16 +554,16 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    */
 
   agregarServiciosAmpliacion(): void {
-    const descripcion = this.recibioDatos[0]?.descripcion;
-    const tipode = this.recibioDatos[0]?.tipode;
-  
-    if (!descripcion || !tipode || descripcion === '-1' || tipode === '-1') {
+    const DESCRIPCION = this.recibioDatos[0]?.descripcion;
+    const TIPODE = this.recibioDatos[0]?.tipode;
+
+    if (!DESCRIPCION || !TIPODE || DESCRIPCION === '-1' || TIPODE === '-1') {
       return;
     }
   
     const CUERPODATOS = {
-      descripiónDelServicio: descripcion,
-      tipode: tipode,
+      descripiónDelServicio: DESCRIPCION,
+      tipode: TIPODE,
     };
   
     this.ampliacionServiciosStore.setDatosImmex([
@@ -638,9 +641,9 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @param {any} data - Datos recibidos.
    */
   procesarDatosDelHijo(): void {
-    const SELECTED_DATOS= this.aduanaDeIngreso.find(item => item.id == this.formulario.value.entidadFederativa);
+    const SELECTED_DATOS= this.formulario.value.entidadFederativa;
     const DATOS={id: this.formulario.value.entidadFederativa,descripcion:"abcd"};
-    this.recibioDatos= [{ descripcion:SELECTED_DATOS?.descripcion, tipode:"Servicio" }];
+    this.recibioDatos= [{ descripcion:SELECTED_DATOS, tipode:"Servicio" }];
     this.ampliacionServiciosStore.setAduanaDeIngresoSeleccion(DATOS as Catalogo);
   }
 

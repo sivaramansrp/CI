@@ -506,9 +506,9 @@ export const API_GET_DATOS_SOLICITANTE = (TRAMITE: string, IDSOLICITUD: string) 
 
 /*
  * API para obtener el catálogo de immex
- * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/immex
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/servicios-immex
  */
-export const CATALOGO_IMMEX = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/immex`;
+export const CATALOGO_IMMEX = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/servicios-immex`;
 
 /*
  * API para obtener el catálogo de estados

@@ -29,17 +29,7 @@ export class AmpliacionServiciosService {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .pipe(map((res: any) => res.data));
 }
-   
-  /**
-   * Obtiene la lista de selección de ingreso desde un archivo JSON.
-   * @returns {Observable<any>} - Observable con los datos obtenidos.
-   */
-  obtenerIngresoSelectList(): Observable<Catalogo[]> {
-    return this.http
-    .get<Catalogo[]>("assets/json/80205/ampliacion-IMMEX-dropdown.json")
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .pipe(map((res: any) => res.data));
-  }
+
   /**
    * Actualiza el estado del formulario con los datos proporcionados.
    * @param DATOS - Objeto que contiene los datos a actualizar en el estado del formulario.
