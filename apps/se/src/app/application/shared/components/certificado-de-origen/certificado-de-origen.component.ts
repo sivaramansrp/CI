@@ -511,11 +511,11 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
       correo: [''],
       correoElectronico: [''],
       // New form controls for procedure 110222
-      calle1: [''],
-      numeroLetra1: [''],
-      ciudad1: [''],
+      calle1: ['',Validators.required],
+      numeroLetra1: ['',Validators.required],
+      ciudad1: ['',Validators.required],
       pais1: [''],
-      correo1: [''],
+      correo1: ['',Validators.required],
       telefono1: [''],
       fax1: ['']
     },

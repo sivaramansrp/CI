@@ -129,13 +129,28 @@
               <label class="form-label" for="calle1">Calle*:</label>
               <input type="text" id="calle1" class="form-control" formControlName="calle1"
                 (change)="setValoresStore('formCertificado','calle1','setFormCertificadoGenric')" />
+                @if(formCertificado.controls['calle1'].invalid && (formCertificado.controls['calle1'].touched ||
+          formCertificado.controls['calle1'].dirty)) {
+          <div class="d-grid">
+            @if(formCertificado.controls['calle1'].errors?.['required']) {
+            <span class="mensaje-error">Este campo es obligatorio</span>
+            }</div>
+          }
             </div>
+            
           </div>
           <div class="col-md-4">
             <div class="form-group">
              <label class="form-label" for="numeroLetra1">Número y/o letra*:</label>
             <input type="text" id="numeroLetra1" class="form-control" formControlName="numeroLetra1"
               (change)="setValoresStore('formCertificado','numeroLetra1','setFormCertificadoGenric')" />
+                @if(formCertificado.controls['numeroLetra1'].invalid && (formCertificado.controls['numeroLetra1'].touched ||
+          formCertificado.controls['numeroLetra1'].dirty)) {
+          <div class="d-grid">
+            @if(formCertificado.controls['numeroLetra1'].errors?.['required']) {
+            <span class="mensaje-error">Este campo es obligatorio</span>
+            }</div>
+          }
             </div>
           </div>
         </div>
@@ -146,11 +161,17 @@
               <label class="form-label" for="ciudad1">Ciudad (población, estado o provincia)*:</label>
               <input type="text" id="ciudad1" class="form-control" formControlName="ciudad1"
                 (change)="setValoresStore('formCertificado','ciudad1','setFormCertificadoGenric')" />
+                @if(formCertificado.controls['ciudad1'].invalid && (formCertificado.controls['ciudad1'].touched || formCertificado.controls['ciudad1'].dirty)) {
+          <div class="d-grid">
+            @if(formCertificado.controls['ciudad1'].errors?.['required']) {
+            <span class="mensaje-error">Este campo es obligatorio</span>
+            }</div>
+          }
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="paises || []" [label]="'País'" name="pais" formControlName="pais1"
+              <app-catalogo-select [catalogo]="paises || []" [label]="'País'" name="pais1" formControlName="pais1"
                 (change)="setValoresStore('formCertificado','pais1','setFormCertificadoGenric')"
                 [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
             </div>
@@ -163,11 +184,17 @@
               <label class="form-label" for="correo1">Correo electrónico*:</label>
               <input type="email" id="correo1" class="form-control" formControlName="correo1"
                 (change)="setValoresStore('formCertificado','correo1','setFormCertificadoGenric')" />
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="telefono1">Teléfono:</label>
+                @if(formCertificado.controls['correo1'].invalid && (formCertificado.controls['correo1'].touched || formCertificado.controls['correo1'].dirty)) {
+          <div class="d-grid">
+            @if(formCertificado.controls['correo1'].errors?.['required']) {
+            <span class="mensaje-error">Este campo es obligatorio</span>
+            }</div>
+          }
+        </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="telefono1">Teléfono:</label>
               <input type="text" id="telefono1" class="form-control" formControlName="telefono1"
                 (change)="setValoresStore('formCertificado','telefono1','setFormCertificadoGenric')" />
             </div>
