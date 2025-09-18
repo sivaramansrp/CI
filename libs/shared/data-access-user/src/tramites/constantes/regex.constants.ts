@@ -1058,3 +1058,31 @@ export const NUMERICO_CON_PUNTO_REGEX = /^[0-9.]*$/;
  * - "Descripción_válida" (contiene _)
  */
 export const REGEX_DESCRIPCION = /^[a-zA-Z0-9\s]*$/;
+
+/**
+ * Expresión regular para validar una "llave pago".
+ * 
+ * Esta expresión regular valida que la cadena consista exactamente en 10 caracteres,
+ * permitiendo únicamente letras mayúsculas (A-Z) o dígitos (0-9).
+ *
+ * @ejemplo
+ * // Ejemplos válidos
+ * REGEX_LLAVE_PAGO.test('AB12CD34EF'); // true
+ * REGEX_LLAVE_PAGO.test('1234567890'); // true
+ * 
+ * @ejemplo
+ * // Ejemplos no válidos
+ * REGEX_LLAVE_PAGO.test('abc123'); // false (demasiado corta, minúsculas)
+ * REGEX_LLAVE_PAGO.test('ABCDEFGHIJK'); // false (demasiado larga)
+ * REGEX_LLAVE_PAGO.test('AB12-CD34E'); // false (contiene carácter inválido '-')
+ */
+export const REGEX_LLAVE_PAGO = /^[A-Z0-9]{10}$/;
+
+/**
+ * Expresión regular para validar direcciones de correo electrónico.
+ * Admite múltiples correos separados por comas.
+ * Ejemplo
+ * válido:
+ * usuario@dominio.com, usuario2@dominio.com
+ * */
+export const REGEX_CORREO = /^[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4}(\,[[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4})*$/i;
