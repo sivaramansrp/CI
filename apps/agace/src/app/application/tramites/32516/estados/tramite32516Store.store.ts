@@ -20,11 +20,17 @@ import { Injectable } from '@angular/core';
  * @interface TramiteState
  */
 export interface TramiteState {
+    /** Primera descripción genérica del trámite */
     descripcionGenerica1: string,
+    /** Segunda descripción genérica del trámite */
     descripcionGenerica2: string,
+    /** Tercera descripción genérica del trámite */
     descripcionGenerica3: string,
+    /** Indicador de capacidad de almacenamiento disponible */
     capacidadAlmacenamiento: boolean,
+    /** Indicador de cantidad de bienes disponible */
     cantidadBienes: boolean,
+    /** Array opcional de datos de la tabla de hechos */
     tableDatos?: HechosDatosTabla[];
 }
 
@@ -39,11 +45,17 @@ export interface TramiteState {
  */
 export function createInitialState(): TramiteState {
     return {
+        /** Valor inicial vacío para la primera descripción genérica */
         descripcionGenerica1: '',
+        /** Valor inicial vacío para la segunda descripción genérica */
         descripcionGenerica2: '',
+        /** Valor inicial vacío para la tercera descripción genérica */
         descripcionGenerica3: '',
+        /** Estado inicial deshabilitado para capacidad de almacenamiento */
         capacidadAlmacenamiento: false,
+        /** Estado inicial deshabilitado para cantidad de bienes */
         cantidadBienes: false,
+        /** Array inicial vacío para los datos de la tabla de hechos */
         tableDatos: []
     };
 }

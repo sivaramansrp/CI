@@ -86,19 +86,46 @@ export const HECHOS_TABLA_COLUMNAS = [
   },
 ];
 
+/**
+ * Interfaz que define el estado de la solicitud del trámite.
+ * 
+ * Contiene los campos principales del formulario de solicitud
+ * utilizados en el trámite 32516 para el manejo de actas de hechos.
+ * 
+ * @export
+ * @interface SolicitudState
+ */
 export interface SolicitudState {
+  /** Primera descripción genérica de la solicitud */
   descripcionGenerica1: string;
+  /** Segunda descripción genérica de la solicitud */
   descripcionGenerica2: string;
+  /** Tercera descripción genérica de la solicitud */
   descripcionGenerica3: string;
+  /** Información sobre la capacidad de almacenamiento */
   capacidadAlmacenamiento: string;
+  /** Información sobre la cantidad de bienes */
   cantidadBienes: string;
 }
 
+
+/**
+ * Interfaz que define la estructura de datos para la tabla de hechos.
+ * Representa cada fila de información en la tabla de mercancías
+ * @export
+ * @interface HechosDatosTabla
+ */
 export interface HechosDatosTabla {
+  /** Número consecutivo del registro en la tabla */
   consecutivo: string;
+  /** Descripción detallada de la mercancía */
   descripcion: string;
+  /** Descripción específica de la mercancía */
   descripcionDeMercancia: string;
+  /** Cantidad de la mercancía registrada */
   cantidad: string;
+  /** Unidad de medida utilizada para la mercancía */
   unidadMedida: string;
+  /** Peso total de la mercancía en kilogramos */
   peso: string;
 }

@@ -177,6 +177,12 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
   solicitudState!: TramiteState;
 
+  /**
+   * Array de datos para la tabla de hechos del trámite.
+   * Contiene la información de las mercancías destruidas que se muestran en la tabla dinámica.
+   * @type {HechosDatosTabla[]}
+   * @memberof TipoDeAvisoComponent
+   */
   datosTabla: HechosDatosTabla[] = [];
 
   // ========================================
