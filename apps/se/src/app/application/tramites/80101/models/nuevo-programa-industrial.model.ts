@@ -324,3 +324,18 @@ export interface ProveedorClienteDatosTabla {
        encabezadoFraccion: string; 
       encabezadoDescripcion: string
      }
+
+      export interface AnexoDosItem {
+      idProveedor: number;
+      paisOrigen: string;
+      rfcProveedor: string;
+      razonProveedor: string;
+      paisDestino: string;
+      rfcCliente: string;
+      razonCliente: string;
+      domicilio: string;
+      testado: boolean;
+      idProductoP: number;
+      descTestado: string;
+    }
+
