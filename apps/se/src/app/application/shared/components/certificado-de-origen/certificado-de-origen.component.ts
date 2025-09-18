@@ -518,7 +518,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
       fax: [''],
       correo: [''],
       correoElectronico: [''],
-      // New form controls for procedure 110222
+      // Nuevos controles de formulario para el procedimiento 110222
       calle1: ['',Validators.required],
       numeroLetra1: ['',Validators.required],
       ciudad1: ['',Validators.required],
