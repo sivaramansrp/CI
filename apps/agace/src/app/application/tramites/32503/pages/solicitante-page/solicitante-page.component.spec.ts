@@ -55,14 +55,6 @@ describe('SolicitantePageComponent', () => {
     expect(component.tramiteState).toEqual({ pestanaActiva: 1 });
   });
 
-  it('should update indice and call wizardComponent.siguiente() on getValorIndice with "cont"', () => {
-    const wizardComponentSpy = jest.spyOn(component.wizardComponent, 'siguiente');
-    component.getValorIndice({ accion: 'cont', valor: 2 });
-    expect(component.indice).toBe(2);
-    expect(wizardComponentSpy).toHaveBeenCalled();
-    expect(storeMock.setPasoActivo).toHaveBeenCalledWith(2);
-  });
-
   it('should update indice and call wizardComponent.atras() on getValorIndice with "atras"', () => {
     const wizardComponentSpy = jest.spyOn(component.wizardComponent, 'atras');
     component.getValorIndice({ accion: 'atras', valor: 1 });

@@ -1,4 +1,4 @@
-import { AnexoEncabezado, AnexoUnoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoEncabezado, AnexoUnoEncabezado, DatosAnexotressUno } from '../../../shared/models/nuevo-programa-industrial.model';
 import { AnnexoDosTres, AnnexoUno } from '../models/nuevo-programa-industrial.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -67,6 +67,11 @@ export interface Tramite80101State {
 
   tablaDatosComplimentos: SociaoAccionistas[];
   tablaDatosComplimentosExtranjera: SociaoAccionistas[];
+
+  /** Contiene los datos del primer anexo Tress. */
+  datosAnexoTress: DatosAnexotressUno;
+  /** Contiene los datos del segundo anexo Tress. */
+  datosAnexoTressDos: DatosAnexotressUno;
 
   empressaSubFabricantePlantas: EmpressaSubFabricantePlantas;
   annexoDosTres: AnnexoDosTres,
@@ -137,6 +142,14 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     entidadFederativaEmpresaExt: '',
     nombreEmpresaExt: '',
     direccionEmpresaExtranjera: '',
+  },
+  datosAnexoTress:{
+    fraccionArancelaria:"",
+  descripcion: ""
+  },
+  datosAnexoTressDos:{
+     fraccionArancelaria:"",
+  descripcion: ""
   },
   datosComplimentos: {
     modalidad: 'Servicios',
@@ -809,6 +822,33 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       tablaDatosFederatarios: [...state.tablaDatosFederatarios, formaFederatarios],
     }));
   }
+
+    /**
+   * Actualiza la propiedad `datosAnexoTress` en el store con los datos proporcionados.
+   * Fusiona el estado existente de `datosAnexoTress` con los nuevos valores recibidos.
+   *
+   * @param datosAnexoTress - Objeto que contiene los nuevos datos a fusionar en `datosAnexoTress`.
+   */
+  setDatosAnexoTres(datosAnexoTress: DatosAnexotressUno): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosAnexoTress, ...datosAnexoTress };
+      return { ...state, datosAnexoTress: VALUE };
+    });
+  }
+
+  /**
+   * Actualiza la propiedad `datosAnexoTressDos` en el store con los datos proporcionados.
+   * Fusiona el estado existente de `datosAnexoTressDos` con los nuevos valores recibidos.
+   *
+   * @param datosAnexoTressDos - Objeto que contiene los nuevos datos a fusionar en `datosAnexoTressDos`.
+   */
+  setDatosAnexoTresDos(datosAnexoTressDos: DatosAnexotressUno): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosAnexoTressDos, ...datosAnexoTressDos };
+      return { ...state, datosAnexoTressDos: VALUE };
+    });
+  }
+
 
   /**
    * Guarda el ID de la solicitud en el estado.

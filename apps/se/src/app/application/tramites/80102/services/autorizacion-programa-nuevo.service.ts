@@ -151,7 +151,6 @@ getAllState(): Observable<Tramite80102State> {
 guardarDatosPost(body: any): Observable<any> {
   return this.httpService.post<any>(PROC_80102.GUARDAR, { body: body });
 }
-
 /**
  * Establece el procedimiento actual para la gestión de trámites industriales.
  * Asigna el identificador de procedimiento 'st_t80101' y lo configura en el servicio de cumplimientos.

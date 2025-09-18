@@ -117,10 +117,12 @@ describe('MercanciasModalComponent', () => {
 
   it('should run #activarModal()', async () => {
     component.guardarClicado = component.guardarClicado || {};
-    component.guardarClicado.emit = jest.fn(); ``
+    component.guardarClicado.emit = jest.fn();
     component.mercanciaForm = component.mercanciaForm || {};
     component.mercanciaForm.value = 'value';
+    component.mercanciaForm.markAllAsTouched = jest.fn();
     component.activarModal();
+    expect(component.mercanciaForm.markAllAsTouched).toHaveBeenCalled();
   });
 
   it('should run #cerrarModal()', async () => {

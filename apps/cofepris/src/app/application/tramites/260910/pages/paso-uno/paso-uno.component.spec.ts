@@ -21,7 +21,6 @@ describe('PasoUnoComponent', () => {
   let mockConsultaioQuery: any;
 
   beforeEach(async () => {
-
     mockConsultaioQuery = {
       selectConsultaioState$: of({ update: true }),
     };
@@ -127,4 +126,42 @@ describe('PasoUnoComponent', () => {
     // Verificar que no se llamó nuevamente al servicio
     expect(mockSolicitudDatosService.getDatosConsulta).toHaveBeenCalledTimes(1);
   }));
+
+  it('should call actualizarEstadoFormulario and set form values when success is true', () => {
+    const mockResponse = {
+      success: true,
+      datos: {
+        folioDeDesistimiento: 'ABC123',
+        folioOriginal: 'XYZ789',
+      },
+    };
+
+    mockSolicitudDatosService.getDatosConsulta.mockReturnValue(of(mockResponse));
+
+    component.fetchGetDatosConsulta();
+
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(mockSolicitudDatosService.actualizarEstadoFormulario).toHaveBeenCalledWith(mockResponse.datos);
+    expect(component.solicitudForm.get('folioDeDesistimiento')?.value).toBe('ABC123');
+    expect(component.solicitudForm.get('folioOriginal')?.value).toBe('XYZ789');
+  });
+
+  it('should not call actualizarEstadoFormulario when success is false', () => {
+    const mockResponse = {
+      success: false,
+      datos: {
+        folioDeDesistimiento: 'ABC123',
+        folioOriginal: 'XYZ789',
+      },
+    };
+
+    mockSolicitudDatosService.getDatosConsulta.mockReturnValue(of(mockResponse));
+
+    component.fetchGetDatosConsulta();
+
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(mockSolicitudDatosService.actualizarEstadoFormulario).toHaveBeenCalled();
+    expect(component.solicitudForm.get('folioDeDesistimiento')?.value).toBe('ABC123');
+    expect(component.solicitudForm.get('folioOriginal')?.value).toBe('XYZ789');
+  });
 });

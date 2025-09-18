@@ -89,8 +89,6 @@ export interface MercanciaTabla {
   cantidad: string;
   claveUnidadMedida: string;
   valorUSD: string;
-  descripcionMercancia: string;
-  descripcionProceso: string;
   numPedimentoExportacion: string;
   numPedimentoImportacion: string;
 }

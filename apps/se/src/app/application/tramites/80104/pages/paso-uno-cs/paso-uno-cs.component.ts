@@ -67,6 +67,10 @@ export class PasoUnoCsComponent implements OnInit {
   * Almacena la configuración de las pestañas del primer paso.
   */
    indice: number = 1;
+
+   /** Indica si el formulario está deshabilitado. */
+   public formularioDeshabilitado: boolean = false;
+
 /**
  * 
  * @param seccionStore 

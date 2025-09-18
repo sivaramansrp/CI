@@ -9,7 +9,7 @@ import {
   REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
   REGEX_IMPORTE_PAGO,
   REGEX_NUMEROS,
-  REGEX_NUMEROS_USD,
+  REGEX_NUMEROS_USD_2,
   REGEX_REEMPLAZAR,
   REGEX_SOLO_NUMEROS,
   TablaDinamicaComponent,
@@ -18,7 +18,7 @@ import {
   ValidacionesFormularioService
 } from "@libs/shared/data-access-user/src";
 import { AvisoTabla, AvisoTablaDatos, Catalogo, CatalogoLista, MercanciaTabla, MercanciaTablaDatos } from "../../models/aviso-traslado.model";
-import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { ENCABEZADAS_TABLA, FECHA_INGRESO, TABLA_DE_MERCANCIA, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-traslado.enum";
 import { AvisoTrasladoService } from "../../services/aviso-traslado.service";
 import { CommonModule } from "@angular/common";
@@ -121,6 +121,42 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * Contiene los datos de las filas seleccionadas por el usuario.
   */
   filaSeleccionadaLista: AvisoTabla[] = [];
+
+  /**
+   * @property {Record<number, any>} datosCompletosAvisos
+   * @description Almacena los datos completos de los avisos incluyendo información de dirección.
+   * Se utiliza para mantener datos adicionales que no están en la interfaz AvisoTabla.
+   * La clave es el ID del aviso y el valor contiene todos los datos del formulario.
+  */
+  datosCompletosAvisos: Record<number, {
+    rfc: string;
+    nombreComercial: string;
+    claveEntidadFederativa: string;
+    claveDelegacionMunicipio: string;
+    claveColonia: string;
+    calle: string;
+    numeroExterior: string;
+    numeroInterior: string;
+    codigoPostal: string;
+  }> = {};
+
+  /**
+   * @property {Record<number, any>} datosCompletosMercancias
+   * @description Almacena los datos completos de las mercancías incluyendo toda la información del formulario.
+   * Se utiliza para mantener datos adicionales para permitir la modificación completa.
+   * La clave es el ID de la mercancía y el valor contiene todos los datos del formulario.
+  */
+  datosCompletosMercancias: Record<number, {
+    claveFraccionArancelaria: string;
+    nico: string;
+    cantidad: string;
+    claveUnidadMedida: string;
+    valorUSD: string;
+    descripcionMercancia: string;
+    descripcionProceso: string;
+    numPedimentoExportacion: string;
+    numPedimentoImportacion: string;
+  }> = {};
   /**
    * @property {ElementRef} modalDomicilio
    * @description Referencia al elemento del modal de domicilio en la plantilla HTML.
@@ -236,6 +272,9 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * Expresión regular para validar y reemplazar números.
    */
   REGEX_NUMEROS = REGEX_NUMEROS;
+  /**
+   * Estado de la consulta
+   */
   consultaDatos!: ConsultaioState;
   /**
    * Lista de pedimentos asociados al aviso.
@@ -249,9 +288,46 @@ export class AvisoComponent implements OnInit, OnDestroy {
   soloLectura: boolean = false;
 
   /**
+   * @property {boolean} mostrarAlertaValidacionDomicilio
+   * @description Indica si se debe mostrar la alerta de validación en el modal de domicilio.
+   * @default false
+   */
+  mostrarAlertaValidacionDomicilio: boolean = false;
+
+  /**
+   * @property {boolean} mostrarAlertaValidacionMercancia
+   * @description Indica si se debe mostrar la alerta de validación en el modal de mercancía.
+   * @default false
+   */
+  mostrarAlertaValidacionMercancia: boolean = false;
+
+  /**
    * Índice del elemento a eliminar.
    */
   public elementoParaEliminar!: number;
+
+  /**
+   * @method cerrarModalDomicilio
+   * @description Método para cerrar el modal de domicilio.
+   * @returns {void}
+   */
+  cerrarModalDomicilio(): void {
+    if (this.modalDomicilio) {
+      AvisoComponent.hideModal(this.modalDomicilio);
+    }
+  }
+
+  /**
+   * @method cerrarModalMercancia
+   * @description Método para cerrar el modal de mercancía.
+   * @returns {void}
+   */
+  cerrarModalMercancia(): void {
+    if (this.modalMercancia) {
+      AvisoComponent.hideModal(this.modalMercancia);
+    }
+  }
+
   /**
    * Constructor del componente.
    * 
@@ -270,6 +346,45 @@ export class AvisoComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
   ) {
     // El constructor se utiliza para la inyección de dependencias.
+  }
+
+  /**
+   * @method activarValidacionFormulario
+   * @description Método público para activar la validación del formulario y mostrar errores.
+   * Marca todos los campos como touched para mostrar los mensajes de error.
+   * @returns {boolean} true si el formulario es válido, false en caso contrario.
+   */
+  public activarValidacionFormulario(): boolean {
+    // Marcar todos los campos del formulario principal como touched
+    this.marcarGrupoFormularioTocado(this.avisoFormulario);
+    
+    // Marcar todos los campos del formulario de domicilio como touched
+    this.marcarGrupoFormularioTocado(this.domicilioFormulario);
+    
+    // Marcar todos los campos del formulario de mercancía como touched
+    this.marcarGrupoFormularioTocado(this.mercanciaFormulario);
+    
+    // Retornar si el formulario principal es válido
+    return this.avisoFormulario.valid;
+  }
+
+  /**
+   * @method marcarGrupoFormularioTocado
+   * @description Marca todos los controles de un FormGroup como touched.
+   * @param {FormGroup} formGroup - El FormGroup a marcar como touched.
+   */
+  private marcarGrupoFormularioTocado(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(field => {
+      const CONTROL = formGroup.get(field);
+      if (CONTROL) {
+        CONTROL.markAsTouched({ onlySelf: true });
+        
+        // Si es un FormGroup anidado, marcarlo recursivamente
+        if (CONTROL instanceof FormGroup) {
+          this.marcarGrupoFormularioTocado(CONTROL);
+        }
+      }
+    });
   }
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -571,9 +686,9 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.mercanciaFormulario = this.fb.group({
       claveFraccionArancelaria: [this.tramiteState?.mercanciaFormulario?.claveFraccionArancelaria || '', Validators.required],
       nico: [this.tramiteState?.mercanciaFormulario?.nico || '', [Validators.required, Validators.maxLength(2), Validators.pattern(REGEX_SOLO_NUMEROS)]],
-      cantidad: [this.tramiteState?.mercanciaFormulario?.cantidad || '', [Validators.required, Validators.pattern(REGEX_NUMEROS_USD)]],
+      cantidad: [this.tramiteState?.mercanciaFormulario?.cantidad || '', [Validators.required, Validators.pattern(REGEX_NUMEROS_USD_2), Validators.max(999999999999.99)]],
       claveUnidadMedida: [this.tramiteState?.mercanciaFormulario?.claveUnidadMedida || '', Validators.required],
-      valorUSD: [this.tramiteState?.mercanciaFormulario?.valorUSD || '', [Validators.required, Validators.pattern(REGEX_NUMEROS_USD)]],
+      valorUSD: [this.tramiteState?.mercanciaFormulario?.valorUSD || '', [Validators.required, Validators.pattern(REGEX_NUMEROS_USD_2), Validators.max(999999999999.99)]],
       descripcionMercancia: [this.tramiteState?.mercanciaFormulario?.descripcionMercancia || '', [Validators.required, Validators.maxLength(250)]],
       descripcionProceso: [this.tramiteState?.mercanciaFormulario?.descripcionProceso || '', [Validators.required, Validators.maxLength(250)]],
       numPedimentoExportacion: [this.tramiteState?.mercanciaFormulario?.numPedimentoExportacion || '', [Validators.required, Validators.maxLength(15)]],
@@ -593,6 +708,56 @@ export class AvisoComponent implements OnInit, OnDestroy {
   isValid(form: FormGroup, field: string): boolean | null {
     return this.validacionesService.isValid(form, field);
   }
+  /**
+   * @method obtenerMensajeError
+   * @description Método estático para obtener el mensaje de error de un campo específico de un formulario.
+   * 
+   * - Devuelve el mensaje de error apropiado según el tipo de validación que falló.
+   *
+   * @param {FormGroup} form - Formulario reactivo que contiene el campo a validar.
+   * @param {string} field - Nombre del campo a validar.
+   * @returns {string | null} Retorna el mensaje de error correspondiente o `null` si no hay errores.
+   */
+  static obtenerMensajeError(form: FormGroup, field: string): string | null {
+    const CONTROL = form.get(field);
+    if (!CONTROL || !CONTROL.touched || !CONTROL.invalid) {
+      return null;
+    }
+
+    if (CONTROL.hasError('required')) {
+      return 'Este campo es obligatorio.';
+    }
+
+    if (CONTROL.hasError('minlength')) {
+      const REQUIRED_LENGTH = CONTROL.errors?.['minlength']?.requiredLength;
+      return `Debe tener al menos ${REQUIRED_LENGTH} caracteres.`;
+    }
+
+    if (CONTROL.hasError('maxlength')) {
+      const REQUIRED_LENGTH = CONTROL.errors?.['maxlength']?.requiredLength;
+      return `No debe exceder ${REQUIRED_LENGTH} caracteres.`;
+    }
+
+    if (CONTROL.hasError('max')) {
+      if (field === 'cantidad' || field === 'valorUSD') {
+        return 'Por favor, escribe un valor menor a igual a 999999999999.99';
+      }
+      const MAX_VALUE = CONTROL.errors?.['max']?.max;
+      return `El valor debe ser menor o igual a ${MAX_VALUE}.`;
+    }
+
+    if (CONTROL.hasError('pattern')) {
+      return 'El formato ingresado no es válido.';
+    }
+
+    return 'Este campo contiene errores.';
+  }
+
+  /**
+   * @property {Function} obtenerMensajeError
+   * @description Propiedad pública que expone el método estático obtenerMensajeError para uso en el template.
+   */
+  public obtenerMensajeError = AvisoComponent.obtenerMensajeError;
   /**
    * @method cambioFechaIngreso
    * @description Método para actualizar la fecha de traslado en el formulario y en el store.
@@ -645,7 +810,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     if (this.filaSeleccionadaMercanciaLista.length === 0) {
       return;
     }
-    
+
     this.elementoParaEliminar = 1;
     this.eliminarModal();
   }
@@ -662,7 +827,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     if (this.filaSeleccionadaLista.length === 0) {
       return;
     }
-    
+
     this.elementoParaEliminar = 2;
     this.eliminarModal();
   }
@@ -686,46 +851,192 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
   }
   /**
+   * @method showModal
+   * @description Helper method to safely show Bootstrap modals with compatibility handling.
+   * @param {ElementRef} modalElement - The modal element reference to show.
+   * @returns {void}
+   */
+  private static showModal(modalElement: ElementRef): void {
+    try {
+      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('padding-right');
+      
+      const MODAL_EL = modalElement.nativeElement;
+      
+      MODAL_EL.classList.add('show');
+      MODAL_EL.style.display = 'block';
+      MODAL_EL.setAttribute('aria-modal', 'true');
+      MODAL_EL.removeAttribute('aria-hidden');
+      
+      const BACKDROP = document.createElement('div');
+      BACKDROP.className = 'modal-backdrop fade show';
+      BACKDROP.onclick = (): void => {
+        AvisoComponent.hideModal(modalElement);
+      };
+      document.body.appendChild(BACKDROP);
+      
+      document.body.classList.add('modal-open');
+      
+    } catch (error) {
+      console.error('Error showing modal:', error);
+    }
+  }
+
+  /**
+   * @method hideModal
+   * @description Helper method to hide Bootstrap modals.
+   * @param {ElementRef} modalElement - The modal element reference to hide.
+   * @returns {void}
+   */
+  private static hideModal(modalElement: ElementRef): void {
+    try {
+      const MODAL_EL = modalElement.nativeElement;
+      
+      MODAL_EL.classList.remove('show');
+      MODAL_EL.style.display = 'none';
+      MODAL_EL.setAttribute('aria-hidden', 'true');
+      MODAL_EL.removeAttribute('aria-modal');
+      
+      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('padding-right');
+      
+    } catch (error) {
+      console.error('Error hiding modal:', error);
+    }
+  }
+
+  /**
    * @method abiertoDomicilio
    * @description Método para abrir el modal de domicilio.
    * 
    * - Utiliza la referencia al modal de domicilio para mostrarlo en la interfaz.
+   * - Si es para modificar (esModificacion = true), pre-carga los datos del registro seleccionado.
+   * - Si es para agregar (esModificacion = false), resetea el formulario para que esté limpio.
    *
+   * @param {boolean} esModificacion - Indica si el modal se abre para modificar (true) o agregar (false) un registro.
    * @returns {void}
    */
-  abiertoDomicilio(): void {
-    this.domicilioFormulario.reset();
+  abiertoDomicilio(esModificacion: boolean = false): void {
+    this.mostrarAlertaValidacionDomicilio = false;
+    
+    if (esModificacion && this.filaSeleccionadaLista && this.filaSeleccionadaLista.length > 0) {
+      const REGISTRO_SELECCIONADO = this.filaSeleccionadaLista[0];
+      const DATOS_COMPLETOS = this.datosCompletosAvisos[REGISTRO_SELECCIONADO.id];
+
+      if (DATOS_COMPLETOS) {
+        this.domicilioFormulario.patchValue({
+          rfc: DATOS_COMPLETOS.rfc || '',
+          nombreComercial: DATOS_COMPLETOS.nombreComercial || '',
+          claveEntidadFederativa: DATOS_COMPLETOS.claveEntidadFederativa || '',
+          claveDelegacionMunicipio: DATOS_COMPLETOS.claveDelegacionMunicipio || '',
+          claveColonia: DATOS_COMPLETOS.claveColonia || '',
+          calle: DATOS_COMPLETOS.calle || '',
+          numeroExterior: DATOS_COMPLETOS.numeroExterior || '',
+          numeroInterior: DATOS_COMPLETOS.numeroInterior || '',
+          codigoPostal: DATOS_COMPLETOS.codigoPostal || ''
+        });
+      } else {
+        this.domicilioFormulario.patchValue({
+          rfc: REGISTRO_SELECCIONADO.rfc || '',
+          nombreComercial: REGISTRO_SELECCIONADO.nombreComercial || '',
+          claveEntidadFederativa: REGISTRO_SELECCIONADO.entidadFederativa || '',
+          claveDelegacionMunicipio: REGISTRO_SELECCIONADO.alcaldioOMuncipio || '',
+          claveColonia: REGISTRO_SELECCIONADO.colonia || '',
+          calle: '',
+          numeroExterior: '',
+          numeroInterior: '',
+          codigoPostal: ''
+        });
+      }
+    } else {
+      this.domicilioFormulario.reset();
+    }
 
     if (this.modalDomicilio) {
-      const MODAL_INSTANCE = new Modal(this.modalDomicilio.nativeElement);
-      MODAL_INSTANCE.show();
+      AvisoComponent.showModal(this.modalDomicilio);
     }
   }
+  /**
+   * @method precargarDatosMercancia
+   * @description Método auxiliar para pre-cargar los datos de mercancía en el formulario.
+   * 
+   * @param {MercanciaTabla} registroSeleccionado - Registro seleccionado de la tabla.
+   * @returns {void}
+   */
+  private precargarDatosMercancia(registroSeleccionado: MercanciaTabla): void {
+    const DATOS_COMPLETOS = this.datosCompletosMercancias[registroSeleccionado.id];
+
+    if (DATOS_COMPLETOS) {
+      this.mercanciaFormulario.patchValue({
+        claveFraccionArancelaria: DATOS_COMPLETOS.claveFraccionArancelaria || '',
+        nico: DATOS_COMPLETOS.nico || '',
+        cantidad: DATOS_COMPLETOS.cantidad || '',
+        claveUnidadMedida: DATOS_COMPLETOS.claveUnidadMedida || '',
+        valorUSD: DATOS_COMPLETOS.valorUSD || '',
+        descripcionMercancia: DATOS_COMPLETOS.descripcionMercancia || '',
+        descripcionProceso: DATOS_COMPLETOS.descripcionProceso || '',
+        numPedimentoExportacion: DATOS_COMPLETOS.numPedimentoExportacion || '',
+        numPedimentoImportacion: DATOS_COMPLETOS.numPedimentoImportacion || ''
+      });
+    } else {
+      this.mercanciaFormulario.patchValue({
+        claveFraccionArancelaria: registroSeleccionado.claveFraccionArancelaria || '',
+        nico: registroSeleccionado.nico || '',
+        cantidad: registroSeleccionado.cantidad || '',
+        claveUnidadMedida: registroSeleccionado.claveUnidadMedida || '',
+        valorUSD: registroSeleccionado.valorUSD || '',
+        numPedimentoExportacion: registroSeleccionado.numPedimentoExportacion || '',
+        numPedimentoImportacion: registroSeleccionado.numPedimentoImportacion || ''
+      });
+    }
+  }
+
   /**
    * @method abiertoMercancia
    * @description Método para abrir el modal de mercancía.
    * 
    * - Utiliza la referencia al modal de mercancía para mostrarlo en la interfaz.
-   * - Resetea el formulario para asegurar que esté limpio al abrir el modal.
+   * - Si es para modificar (esModificacion = true), pre-carga los datos del registro seleccionado.
+   * - Si es para agregar (esModificacion = false), resetea el formulario para que esté limpio.
    *
+   * @param {boolean} esModificacion - Indica si el modal se abre para modificar (true) o agregar (false) un registro.
    * @returns {void}
    */
-  abiertoMercancia(): void {
-    if (this.mercanciaFormulario) {
-      this.mercanciaFormulario.reset();
+  abiertoMercancia(esModificacion: boolean = false): void {
+    this.mostrarAlertaValidacionMercancia = false;
+    
+    if (esModificacion && this.filaSeleccionadaMercanciaLista && this.filaSeleccionadaMercanciaLista.length > 0) {
+      const REGISTRO_SELECCIONADO = this.filaSeleccionadaMercanciaLista[0];
+      this.precargarDatosMercancia(REGISTRO_SELECCIONADO);
+    } else {
+      if (this.mercanciaFormulario) {
+        this.mercanciaFormulario.reset();
+      }
     }
 
     if (this.modalMercancia) {
-      const MODAL_INSTANCE = new Modal(this.modalMercancia.nativeElement);
-      MODAL_INSTANCE.show();
+      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.remove());
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('padding-right');
+      
+      const WIN = window as Window & { bootstrap?: { Modal?: typeof Modal } };
+      if (WIN.bootstrap && WIN.bootstrap.Modal) {
+        const MODAL_INSTANCE = new WIN.bootstrap.Modal(this.modalMercancia.nativeElement);
+        MODAL_INSTANCE.show();
+      } else {
+        const MODAL_INSTANCE = new Modal(this.modalMercancia.nativeElement);
+        MODAL_INSTANCE.show();
+      }
     }
   }
   /**
-   * @method testAgregarMercancia
+   * @method pruebaAgregarMercancia
    * @description Método temporal para probar la funcionalidad de agregar mercancía.
    * @returns {void}
    */
-  testAgregarMercancia(): void {
+  pruebaAgregarMercancia(): void {
     const TEST_MERCANCIA: MercanciaTabla = {
       id: this.tablaDeMercancia.datos.length + 1,
       claveFraccionArancelaria: 'TEST123',
@@ -733,8 +1044,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
       cantidad: '10',
       claveUnidadMedida: 'KG',
       valorUSD: '100',
-      descripcionMercancia: 'Mercancía de prueba',
-      descripcionProceso: 'Proceso de prueba',
       numPedimentoExportacion: '123456789012345',
       numPedimentoImportacion: '543210987654321'
     };
@@ -753,11 +1062,23 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   agregarMercancia(): void {
     if (this.mercanciaFormulario.valid) {
+      this.mostrarAlertaValidacionMercancia = false;
+      
       const VALORES_DE_FORMULARIO = this.mercanciaFormulario.value;
       const SIGUIENTE_ID = this.tablaDeMercancia.datos.length + 1;
 
       const NUEVA_MERCANCIA: MercanciaTabla = {
         id: SIGUIENTE_ID,
+        claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
+        nico: VALORES_DE_FORMULARIO.nico,
+        cantidad: VALORES_DE_FORMULARIO.cantidad,
+        claveUnidadMedida: VALORES_DE_FORMULARIO.claveUnidadMedida,
+        valorUSD: VALORES_DE_FORMULARIO.valorUSD,
+        numPedimentoExportacion: VALORES_DE_FORMULARIO.numPedimentoExportacion,
+        numPedimentoImportacion: VALORES_DE_FORMULARIO.numPedimentoImportacion
+      };
+
+      this.datosCompletosMercancias[SIGUIENTE_ID] = {
         claveFraccionArancelaria: VALORES_DE_FORMULARIO.claveFraccionArancelaria,
         nico: VALORES_DE_FORMULARIO.nico,
         cantidad: VALORES_DE_FORMULARIO.cantidad,
@@ -774,6 +1095,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
       this.mercanciaFormulario.reset();
       this.closeMercancia?.nativeElement?.click();
     } else {
+      this.mostrarAlertaValidacionMercancia = true;
+      
       Object.keys(this.mercanciaFormulario.controls).forEach(key => {
         this.mercanciaFormulario.get(key)?.markAsTouched();
       });
@@ -789,10 +1112,13 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   agregarDomicilio(): void {
     if (this.domicilioFormulario.valid) {
+      this.mostrarAlertaValidacionDomicilio = false;
+      
       const VALORES_DE_FORMULARIO = this.domicilioFormulario.value;
+      const NUEVO_ID = Date.now();
 
       const NUEVO_DOMICILIO = {
-        id: Date.now(),
+        id: NUEVO_ID,
         rfc: VALORES_DE_FORMULARIO.rfc,
         nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
         entidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
@@ -800,18 +1126,32 @@ export class AvisoComponent implements OnInit, OnDestroy {
         colonia: VALORES_DE_FORMULARIO.claveColonia
       };
 
+      this.datosCompletosAvisos[NUEVO_ID] = {
+        rfc: VALORES_DE_FORMULARIO.rfc,
+        nombreComercial: VALORES_DE_FORMULARIO.nombreComercial,
+        claveEntidadFederativa: VALORES_DE_FORMULARIO.claveEntidadFederativa,
+        claveDelegacionMunicipio: VALORES_DE_FORMULARIO.claveDelegacionMunicipio,
+        claveColonia: VALORES_DE_FORMULARIO.claveColonia,
+        calle: VALORES_DE_FORMULARIO.calle,
+        numeroExterior: VALORES_DE_FORMULARIO.numeroExterior,
+        numeroInterior: VALORES_DE_FORMULARIO.numeroInterior,
+        codigoPostal: VALORES_DE_FORMULARIO.codigoPostal
+      };
+
       this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, NUEVO_DOMICILIO];
 
       this.domicilioFormulario.reset();
       this.closeDomicilio.nativeElement.click();
     } else {
+      this.mostrarAlertaValidacionDomicilio = true;
+      
       Object.keys(this.domicilioFormulario.controls).forEach(key => {
         this.domicilioFormulario.get(key)?.markAsTouched();
       });
     }
   }
   /**
-   * @method sanitizeAlphanumeric
+   * @method desinfectarAlfanumerico
    * @description Método para limpiar un campo de formulario, eliminando caracteres no alfanuméricos.
    * 
    * - Reemplaza caracteres no permitidos en el valor del campo y actualiza el formulario.
@@ -821,7 +1161,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @param {Event} event - Evento que contiene el valor ingresado por el usuario.
    * @returns {void}
    */
-  sanitizeAlphanumeric(form: FormGroup, control: string, event: Event): void {
+  desinfectarAlfanumerico(form: FormGroup, control: string, event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
     const REEMPLAZAR = INPUT?.value.replace(this.REGEX_REEMPLAZAR, '');
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
@@ -843,7 +1183,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
   }
   /**
-   * @method sanitizeNumeric
+   * @method desinfectarNumerico
    * @description Método para limpiar un campo de formulario, eliminando caracteres no numéricos.
    * 
    * - Reemplaza caracteres no permitidos en el valor del campo y actualiza el formulario.
@@ -853,7 +1193,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @param {Event} event - Evento que contiene el valor ingresado por el usuario.
    * @returns {void}
    */
-  sanitizeNumeric(form: FormGroup, control: string, event: Event): void {
+  desinfectarNumerico(form: FormGroup, control: string, event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
     const REEMPLAZAR = INPUT?.value.replace(this.REGEX_NUMEROS, '');
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
