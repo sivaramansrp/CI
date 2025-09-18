@@ -6,9 +6,9 @@ export const API_GET_REGIMENES = 'sat-t130102/catalogo/regimenes';
 
 /**
  * API MS para obtener los bloques de paises del tramite 130102.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/catalogo/paises/bloques
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/bloques
  */
-export const API_GET_BLOQUE_PAISES = 'sat-t130102/catalogo/paises/bloques';
+export const API_GET_BLOQUE_PAISES = 'sat-t130102/bloques';
 
 /*
  * API MS para obtener las entidades federativas del tramite 130102.

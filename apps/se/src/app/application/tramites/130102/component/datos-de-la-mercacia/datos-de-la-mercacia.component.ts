@@ -355,7 +355,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
         this.fraccionF = data.datos.map((item, index) => ({
           id: index,
           clave: item.clave,
-          descripcion: item.descripcion,
+          descripcion: `${item.clave} - ${item.descripcion}`,
         }));  
       });
     }
@@ -382,6 +382,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    */
   onChangeFraccion(formDelLa: FormGroup): void {
     const CVE_FRACCION = formDelLa.get('fraccionArancelaria')?.value;
+    console.log(CVE_FRACCION);
     this.obtenerUnidadesMedida(CVE_FRACCION);
   }
   
