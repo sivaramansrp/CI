@@ -41,7 +41,12 @@ export interface AcuseYResolucionesFolioTramite {
  * @property {string} PaisDestino - País de destino (duplicado, revisar si es necesario).
  * @property {string} unidadMedidaCategoriaTextil - Unidad de medida de la categoría textil.
  * @property {string} factorConversionCategoriaTextil - Factor de conversión de la categoría textil.
- */
+ * @property {number} idAsignacion - Identificador único de la asignación (opcional).
+ * @property {number} idMecanismoAsignacion - Identificador del mecanismo de asignación (opcional).
+ * @property {number} idCategoriaTextil - Identificador de la categoría textil (opcional).
+ * @property {string} cvePais - Clave del país asociado (opcional).
+ * @property {number} idFraccionHtsUsa - Identificador de la fracción HTS USA (opcional).
+*/
 export interface ConstanciaTramiteConfiguracion {
   numeroDeConstancia: string;
   fraccionArancelaria: string;
@@ -62,4 +67,9 @@ export interface ConstanciaTramiteConfiguracion {
   PaisDestino: string;
   unidadMedidaCategoriaTextil: string;
   factorConversionCategoriaTextil: string;
+  idAsignacion?: number;
+  idMecanismoAsignacion?: number;
+  idCategoriaTextil?:number;
+  cvePais?:string;
+  idFraccionHtsUsa?: number;
 }

@@ -2,7 +2,8 @@
     <ng-titulo titulo="Asociar facturas a expedición"></ng-titulo>
     <h6>Facturas disponible</h6>
     <form [formGroup]="formularioAsociacionFactura">
-      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns" [datos]="facturasDisponible" ></app-tabla-dinamica>
+      <app-tabla-dinamica  *ngIf="mostrarTabla" [tipoSeleccionTabla]="TablaSeleccion.RADIO" 
+      [configuracionTabla]="tableColumns" [datos]="facturasDisponible" (filaSeleccionada)="guardadoFila($event)"></app-tabla-dinamica>
       <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5">
         <label for="message" class="form-label">Cantidad asociada*:</label>
         <input type="text" class="form-control" id="message" placeholder="" formControlName="cantidadFacturas"
@@ -12,17 +13,18 @@
           'cantidadFacturas',
           'setCantidadFacturas'
           )"/>
-        <p>Kilogramo</p>
+        <p>{{filaSeleccionada?.unidadMedida}}</p>
       </div>
   
       <div class="container text-end mt-5">
-        <button class="btn btn-default me-2">Asociar</button>
+        <button class="btn btn-default me-2" (click)="asociarEvaluate()">Asociar</button>
       </div>
       <h6>Facturas asociadas</h6>
-      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="asociadastableColumns" [datos]="facturasAsociadas" ></app-tabla-dinamica>
+      <app-tabla-dinamica *ngIf="mostrarTabla" [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="asociadastableColumns" [datos]="facturasAsociadas" 
+      (filaSeleccionada)="guardadoFilaAsociada($event)"></app-tabla-dinamica>
       <div class="row mb-5">
         <div class="d-flex justify-content-end mt-3">
-            <button type="submit" class="btn btn-primary ">Eliminar seleccionado</button>
+            <button type="submit" class="btn btn-primary " (click)="eliminarSeleccionado()">Eliminar seleccionado</button>
             
         </div>
     </div>
@@ -38,7 +40,7 @@
             )"/>
         </div>
         <div class="col-6 ">
-          <label for="message" class="form-label">Metros cuadrados equivalentes:</label>
+          <label for="message" class="form-label">{{labelUnidad +'s'}} equivalentes:</label>
           <input type="text" class="form-control" id="message" placeholder="" formControlName="metrosCuadradosEquivalentes"
           (change)="
             setValoresStore(

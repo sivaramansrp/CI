@@ -373,7 +373,7 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
   inicializarFormularioDatosSubcontratista(): void {
     this.formularioDatosSubcontratista = this.fb.group({
       rfc: ['', Validators.required],
-      estado: ['1', Validators.required],
+      estado: ['', Validators.required],
     });
   }
 

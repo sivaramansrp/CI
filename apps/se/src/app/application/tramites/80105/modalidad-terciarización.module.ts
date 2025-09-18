@@ -4,6 +4,7 @@ import {
   BtnContinuarComponent,
   CatalogoSelectComponent,
   FirmaElectronicaComponent,
+  PasoFirmaComponent,
   SharedModule,
   SolicitanteComponent,
   TituloComponent,
@@ -62,7 +63,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CapacidadInstaladaComponent,
     AggregarComplimentosComponent,
     EmpresasSubfabricanteComponent,
-    EmpresasTerciarizadaasComponent
+    EmpresasTerciarizadaasComponent,
+    PasoFirmaComponent
   ],
 })
 export class ModalidadTerciarizaciónModule { }

@@ -49,7 +49,6 @@ textarea.form-control {
   padding-left: 6% !important;
   padding-right: 6% !important;
   padding-bottom: 5% !important;
-
 }
 
 .buscar-btn {
@@ -61,10 +60,26 @@ textarea.form-control {
   justify-content: center;
 }
 
-#modal-alerta .modal-header, #modal-confirmar .modal-header {
+#modal-alerta .modal-header,
+#modal-confirmar .modal-header {
   height: 50px;
 }
 
 #modal-alerta .modal-dialog {
   max-width: 315px !important;
+}
+
+.require {
+  color: #ce0923;
+  font-weight: bold;
+}
+
+.manifiesto {
+  text-align: justify;
+  margin: -23px 0px 0px 23px;
+  font-weight: 600;
+}
+
+.word-spacing-10 {
+  word-spacing: 10px;
 }

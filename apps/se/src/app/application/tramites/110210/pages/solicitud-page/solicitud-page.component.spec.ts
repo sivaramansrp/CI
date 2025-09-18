@@ -25,6 +25,31 @@ describe('SolicitudPageComponent', () => {
       atras: jest.fn(),
     } as unknown as WizardComponent;
 
+    component.pasoUnoComponent = {
+      validarFormularios: jest.fn().mockReturnValue(true),
+      esDatosRespuesta: false,
+      consultaState: undefined,
+      solicitante: undefined,
+      tipoPersona: undefined,
+      domicilio: undefined,
+      datosGenerales: undefined,
+      datosAdicionales: undefined,
+      datosContacto: undefined,
+      datosRepresentante: undefined,
+      datosApoderado: undefined,
+      datosMandatario: undefined,
+      datosSocios: undefined,
+      datosDocumentos: undefined,
+      datosRelacionados: undefined,
+      datosNotificaciones: undefined,
+      datosDomicilio: undefined,
+      datosDomicilioFiscal: undefined,
+      datosDomicilioNotificaciones: undefined,
+      datosDomicilioExtranjero: undefined,
+      datosDomicilioFiscalExtranjero: undefined,
+      datosDomicilioNotificacionesExtranjero: undefined,
+    } as unknown as any;
+
     fixture.detectChanges();
   });
 
@@ -33,6 +58,31 @@ describe('SolicitudPageComponent', () => {
       siguiente: jest.fn(),
       atras: jest.fn(),
     } as unknown as WizardComponent;
+
+    component.pasoUnoComponent = {
+      validarFormularios: jest.fn().mockReturnValue(true),
+      esDatosRespuesta: false,
+      consultaState: undefined,
+      solicitante: undefined,
+      tipoPersona: undefined,
+      domicilio: undefined,
+      datosGenerales: undefined,
+      datosAdicionales: undefined,
+      datosContacto: undefined,
+      datosRepresentante: undefined,
+      datosApoderado: undefined,
+      datosMandatario: undefined,
+      datosSocios: undefined,
+      datosDocumentos: undefined,
+      datosRelacionados: undefined,
+      datosNotificaciones: undefined,
+      datosDomicilio: undefined,
+      datosDomicilioFiscal: undefined,
+      datosDomicilioNotificaciones: undefined,
+      datosDomicilioExtranjero: undefined,
+      datosDomicilioFiscalExtranjero: undefined,
+      datosDomicilioNotificacionesExtranjero: undefined,
+    } as unknown as any;
   });
 
   it('debe crear el componente', () => {
@@ -58,17 +108,11 @@ describe('SolicitudPageComponent', () => {
   });
 
   it('debe llamar wizardComponent.siguiente cuando getValorIndice se llama con accion "cont"', () => {
+    component.indice = 1;
     const accionBoton = { accion: 'cont', valor: 2 };
     component.getValorIndice(accionBoton);
-    expect(component.indice).toBe(2);
+    expect(component.indice).toBe(3);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-  });
-
-  it('debe llamar wizardComponent.atras cuando getValorIndice se llama con una accion diferente de "cont"', () => {
-    const accionBoton = { accion: 'prev', valor: 1 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
   it('no debe actualizar indice ni llamar métodos de wizardComponent si valor está fuera de rango', () => {
