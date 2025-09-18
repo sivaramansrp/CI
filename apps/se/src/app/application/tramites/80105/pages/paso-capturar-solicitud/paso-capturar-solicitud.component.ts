@@ -133,7 +133,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy,OnInit {
       "fecFallecimiento": "2025-09-07"
   };
 
-  private basePlantasControladoras: unknown[] =
+  private basePlantasTerciarizadoras: unknown[] =
   [
     {
         "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
@@ -315,7 +315,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy,OnInit {
             }
         ]
     }
-  ];
+];
 
    /**
    * URL de la página actual.
@@ -397,11 +397,11 @@ ngOnInit(): void {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
     const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
-    const PLANTAS_CONTROLADORAS = PasoCapturarSolicitudComponent.buildPlantasControladoras(data.empresasSeleccionadas, this.basePlantasControladoras);
+    const PLANTAS_TERCIARIZADORAS = PasoCapturarSolicitudComponent.buildPlantasControladoras(data.empresasSeleccionadas, this.basePlantasTerciarizadoras);
     const ANEXO_ALL = this.buildAnexo(data);
     const PAYLOAD = {
-        "tipoDeSolicitud": "guardar",
-      "idSolicitud": 202781045,
+    "tipoDeSolicitud": "guardar",
+    "idSolicitud": 202781045,
     "idTipoTramite": 80105,
     "rfc": "AAL0409235E6",
     "cveUnidadAdministrativa": "8101",
@@ -438,7 +438,7 @@ ngOnInit(): void {
     "solicitud": {
       "anexoI": [...ANEXO_ALL.anexo.tableDos]
     },
-    "plantasControladoras": PLANTAS_CONTROLADORAS
+    "plantasTerciarizadoras": PLANTAS_TERCIARIZADORAS
     };
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
       this.tramite80105Store.setIdSolicitud(response.datos.id_solicitud || 0);
