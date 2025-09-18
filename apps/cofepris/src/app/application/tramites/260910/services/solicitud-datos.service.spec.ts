@@ -3,11 +3,14 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SolicitudDatosService } from './solicitud-datos.service';
 import { Solicitud260910Store } from '../estados/tramites260910.store';
 import { ConsultaDatos } from '../models/solicitud-datos.model';
+import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
 
 describe('SolicitudDatosService', () => {
   let service: SolicitudDatosService;
   let solicitudStoreMock: jest.Mocked<Solicitud260910Store>;
-
+  let httpClient: jest.Mocked<HttpClient>;
+  
   beforeEach(() => {
     // Create a fully mocked store with all required methods
     const mockStore = {
@@ -95,6 +98,9 @@ describe('SolicitudDatosService', () => {
 
     service = TestBed.inject(SolicitudDatosService);
     solicitudStoreMock = TestBed.inject(Solicitud260910Store) as jest.Mocked<Solicitud260910Store>;
+    httpClient = TestBed.inject(HttpClient) as jest.Mocked<HttpClient>;
+
+    httpClient.get = jest.fn().mockReturnValue(of({}));
   });
 
   it('should update the store with all provided data', () => {
@@ -336,5 +342,45 @@ describe('SolicitudDatosService', () => {
     expect(solicitudStoreMock.setImporteDePago).toHaveBeenCalledWith(mockData.importeDePago);
     expect(solicitudStoreMock.setFolioDeDesistimiento).toHaveBeenCalledWith(mockData.folioDeDesistimiento);
     expect(solicitudStoreMock.setFolioOriginal).toHaveBeenCalledWith(mockData.folioOriginal);
+  });
+
+  it('should call correct URL for obtenerDatosDeSolicitud', () => {
+    service.obtenerDatosDeSolicitud().subscribe();
+
+    expect(httpClient.get).toHaveBeenCalledWith(
+      '../../../assets/json/260910/solicitud-datos.json'
+    );
+  });
+
+  it('should call correct URL for obtenerSolicitud', () => {
+    service.obtenerSolicitud().subscribe();
+
+    expect(httpClient.get).toHaveBeenCalledWith(
+      '../../../assets/json/260910/solicitud.json'
+    );
+  });
+
+  it('should call correct URL for obtenerRegimenDestinaraListo', () => {
+    service.obtenerRegimenDestinaraListo().subscribe();
+
+    expect(httpClient.get).toHaveBeenCalledWith(
+      '../../../assets/json/260910/regimen-destinaran.json'
+    );
+  });
+
+  it('should call correct URL for obtenerAduanaListo', () => {
+    service.obtenerAduanaListo().subscribe();
+
+    expect(httpClient.get).toHaveBeenCalledWith(
+      '../../../assets/json/260910/aduana.json'
+    );
+  });
+
+  it('should call correct URL for obtenerEstadoCatalogo', () => {
+    service.obtenerEstadoCatalogo().subscribe();
+
+    expect(httpClient.get).toHaveBeenCalledWith(
+      '../../../assets/json/260910/estado-catalogo.json'
+    );
   });
 });
