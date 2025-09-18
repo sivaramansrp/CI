@@ -123,7 +123,10 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    */
   mostrarAlerta: boolean = false;
 
-  tramiteID: string = '80101';
+  /**
+   * @description Identificador del trámite asociado a la ampliación de 3Rs.
+   */
+  tramiteID: string = '80206';
 
 /**
    * Mensaje mostrado en el modal de alerta.
@@ -320,8 +323,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    */
   procesarDatosDelHijo(): void {
     const DATA = this.formularioInfoRegistro.get('seleccionarRegla')?.value;
-    //this.formularioInfoRegistro.get('seleccionarRegla')?.setValue(DATA);
-    if (DATA === 'AGS') {
+    if (DATA === 'Regla 3RsA') {
       this.isSelectedRegla = true;
     } else {
       this.isSelectedRegla = false;

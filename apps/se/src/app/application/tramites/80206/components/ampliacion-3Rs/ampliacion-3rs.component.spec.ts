@@ -121,27 +121,50 @@ describe('Ampliacion3RsComponent (Jest en español)', () => {
     expect(svc.enviarDeberiaMostrar).toHaveBeenCalledWith(true);
   });
 
-  it('debería obtener reglas y actualizar el store en obtenerReglaSelectList()', () => {
-    svc.obtenerReglaSelectList.mockReturnValue(of({ data: [{ id: 7, descripcion: 'R7' }] }));
-    (query as any).selectSolicitudTramite$ = of({ reglaSeleccionada: [{ id: 99, descripcion: 'RX' }] });
+it('debería obtener reglas y actualizar el store en obtenerReglaSelectList()', () => {
+  const mockReglas = [{ id: 7, descripcion: 'R7' }];
+  component['catalogoServices'] = {
+    seleccionarReglaCatalogo: jest.fn().mockReturnValue(of({ datos: mockReglas }))
+  } as any;
 
-    component.obtenerReglaSelectList();
+  (component as any).ampliacionServiciosQuery = {
+    selectSolicitudTramite$: of({ reglaSeleccionada: [{ id: 99, descripcion: 'RX' }] })
+  };
 
-    expect(svc.obtenerReglaSelectList).toHaveBeenCalled();
-    expect(store.setReglaSeleccionada).toHaveBeenCalledWith([{ id: 7, descripcion: 'R7' }]);
-    expect(component.reglaSeleccionada).toEqual([{ id: 99, descripcion: 'RX' }]);
-  });
+  component['tramite80206Store'] = {
+    setReglaSeleccionada: jest.fn()
+  } as any;
 
-  it('debería obtener sectores y actualizar el store en obtenerSectorSelectList()', () => {
-    svc.obtenerSectorSelectList.mockReturnValue(of({ data: [{ id: 55, descripcion: 'S55' }] }));
-    (query as any).selectSolicitudTramite$ = of({ sectorDesplegable: [{ id: 77, descripcion: 'S77' }] });
+  component.obtenerReglaSelectList('someTramite');
 
-    component.obtenerSectorSelectList();
+  expect(component['catalogoServices'].seleccionarReglaCatalogo).toHaveBeenCalledWith('someTramite');
+  expect(component['tramite80206Store'].setReglaSeleccionada).toHaveBeenCalledWith(mockReglas);
+  expect(component.reglaSeleccionada).toEqual([{ id: 99, descripcion: 'RX' }]);
+});
 
-    expect(svc.obtenerSectorSelectList).toHaveBeenCalled();
-    expect(store.setSectorDesplegable).toHaveBeenCalledWith([{ id: 55, descripcion: 'S55' }]);
-    expect(component.sectorDesplegable).toEqual([{ id: 77, descripcion: 'S77' }]);
-  });
+it('debería obtener sectores y actualizar el store en obtenerSectorSelectList()', () => {
+  const mockSectores = [{ id: 55, descripcion: 'S55' }];
+  component['catalogoServices'] = {
+    sectoresCatalogo: jest.fn().mockReturnValue(of({ datos: mockSectores }))
+  } as any;
+
+  (component as any).ampliacionServiciosQuery = {
+    selectSolicitudTramite$: of({ sectorDesplegable: [{ id: 77, descripcion: 'S77' }] })
+  };
+
+  component['tramite80206Store'] = {
+    setSectorDesplegable: jest.fn()
+  } as any;
+
+  // Use string if your component expects string
+  component['tramiteID'] = '123';
+
+  component.obtenerSectorSelectList();
+
+  expect(component['catalogoServices'].sectoresCatalogo).toHaveBeenCalledWith('123');
+  expect(component['tramite80206Store'].setSectorDesplegable).toHaveBeenCalledWith(mockSectores);
+  expect(component.sectorDesplegable).toEqual([{ id: 77, descripcion: 'S77' }]);
+});
 
   it('debería eliminar filas seleccionadas en eliminarServiciosGrid()', () => {
     component.datosSector = [
@@ -176,30 +199,41 @@ describe('Ampliacion3RsComponent (Jest en español)', () => {
     expect(component.domiciliosSeleccionados).not.toBe(entrada); // copia (spread)
   });
 
-  it('debería procesar datos del hijo con coincidencia de regla (isSelectedRegla=true)', () => {
-    component.reglaSeleccionada = [{ id: 5, descripcion: 'R5' }] as any;
+ it('debería procesar datos del hijo con coincidencia de regla (isSelectedRegla=true)', () => {
+  // Arrange: reglaSeleccionada tiene un objeto con id 5
+  component.reglaSeleccionada = [{ id: 5, descripcion: 'R5' }] as any;
+  // Simula que el usuario seleccionó la regla con id 5
+  component.formularioInfoRegistro.get('seleccionarRegla')?.setValue(5);
 
-    component.procesarDatosDelHijo({ id: 5 } as any);
+  // Act
+  component.procesarDatosDelHijo();
 
-    expect(component.isSelectedRegla).toBe(true);
-    expect(svc.enviarDeberiaMostrar).toHaveBeenCalledWith(true);
-    expect(store.setIsSelectedRegla).toHaveBeenCalledWith(true);
-    expect(store.setSeleccionarRegla).toHaveBeenCalledWith('5');
-    expect(component.formularioInfoRegistro.get('seleccionarRegla')?.value).toBe(5);
-  });
+  // Assert
+  expect(component.isSelectedRegla).toBe(true);
+  expect(component.mostrarAlerta).toBe(false);
+  expect(svc.enviarDeberiaMostrar).toHaveBeenCalledWith(true);
+  expect(store.setIsSelectedRegla).toHaveBeenCalledWith(true);
+  expect(store.setSeleccionarRegla).toHaveBeenCalledWith('5');
+  expect(component.formularioInfoRegistro.get('seleccionarRegla')?.value).toBe(5);
+});
 
-  it('debería procesar datos del hijo sin coincidencia de regla (isSelectedRegla=false) y mostrar alerta', () => {
-    component.reglaSeleccionada = [{ id: 10, descripcion: 'R10' }] as any;
+it('debería procesar datos del hijo sin coincidencia de regla (isSelectedRegla=false) y mostrar alerta', () => {
+  // Arrange: reglaSeleccionada tiene un objeto con id 10
+  component.reglaSeleccionada = [{ id: 10, descripcion: 'R10' }] as any;
+  // Simula que el usuario seleccionó una regla que NO existe en reglaSeleccionada
+  component.formularioInfoRegistro.get('seleccionarRegla')?.setValue(99);
 
-    component.procesarDatosDelHijo({ id: 99 } as any);
+  // Act
+  component.procesarDatosDelHijo();
 
-    expect(component.isSelectedRegla).toBe(false);
-    expect(svc.enviarDeberiaMostrar).toHaveBeenCalledWith(false);
-    expect(store.setIsSelectedRegla).toHaveBeenCalledWith(false);
-    expect(store.setSeleccionarRegla).toHaveBeenCalledWith('99');
-    expect(component.mostrarAlerta).toBe(true);
-    expect((component as any).mensajeDeAlerta).toBeTruthy(); // tiene algún mensaje
-  });
+  // Assert
+  expect(component.isSelectedRegla).toBe(false);
+  expect(component.mostrarAlerta).toBe(true);
+  expect((component as any).mensajeDeAlerta).toBeTruthy();
+  expect(svc.enviarDeberiaMostrar).toHaveBeenCalledWith(false);
+  expect(store.setIsSelectedRegla).toHaveBeenCalledWith(false);
+  expect(store.setSeleccionarRegla).toHaveBeenCalledWith('99');
+});
 
   it('debería cambiar el sector en cambioDeSector()', () => {
     const dato = { id: 123, descripcion: 'Sector 123' } as any;
