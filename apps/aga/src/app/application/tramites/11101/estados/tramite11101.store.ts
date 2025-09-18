@@ -1,4 +1,4 @@
-import { Store,StoreConfig } from '@datorama/akita';
+import { Store, StoreConfig } from '@datorama/akita';
 import { DiscripccionDeLaMercanciaForm } from '../models/transportacion-maritima.model';
 import { Injectable } from '@angular/core';
 
@@ -6,30 +6,31 @@ import { Injectable } from '@angular/core';
  * Modelo de estado para el trámite 11101.
  */
 export interface Tramitenacionales11101State {
-  numeroderegistro: string;
-  NobmreDenominationRazonSocial: string;
-  rfctaxid: string;
-  Telefono: string;
-  correoelectronico: string;
-  entidadadfederativa: string;
-  alcadilamunicipio: string;
-  colonia: string;
-  codigopostal: string;
-  calle: string;
-  numeroletraexterior: string;
-  numeroletrainterior: string;
-  entrecalle: string;
-  ycalle: string;
+    numeroderegistro: string;
+    NobmreDenominationRazonSocial: string;
+    rfctaxid: string;
+    Telefono: string;
+    correoelectronico: string;
+    entidadadfederativa: string;
+    alcadilamunicipio: string;
+    colonia: string;
+    codigopostal: string;
+    calle: string;
+    numeroletraexterior: string;
+    numeroletrainterior: string;
+    entrecalle: string;
+    ycalle: string;
+    radioDomicilio: string;
 
-  /**
-   * Lista que indica el estado de cada sección del formulario (true si está activa, false si no).
-   */
-  seccion: boolean[];
+    /**
+     * Lista que indica el estado de cada sección del formulario (true si está activa, false si no).
+     */
+    seccion: boolean[];
 
-  /**
-   * Lista que indica si cada sección del formulario es válida (true si es válida, false si no).
-   */
-  formaValida: boolean[];
+    /**
+     * Lista que indica si cada sección del formulario es válida (true si es válida, false si no).
+     */
+    formaValida: boolean[];
 
 
     /**
@@ -104,22 +105,22 @@ export interface Tramitenacionales11101State {
      */
     numeroInteriorPFE?: string;
 
-      /**
-       * Tabla de descripción de la mercancía.
-       * @type {discripccionDeLaMercanciaForm[]}
-       */
-      discripccionDeLaMercanciaTabla?: DiscripccionDeLaMercanciaForm[];
-  
-      /**
-       * Tabla de personas morales extranjeras.
-       * @type {discripccionDeLaMercanciaForm[]}
-       */
-      discripccionDeLaMercanciaForm?: DiscripccionDeLaMercanciaForm[];
-          /**
-     * Denominación de la persona moral extranjera.
-     * @type {string}
+    /**
+     * Tabla de descripción de la mercancía.
+     * @type {discripccionDeLaMercanciaForm[]}
      */
-      denominacionPME?: string;
+    discripccionDeLaMercanciaTabla?: DiscripccionDeLaMercanciaForm[];
+
+    /**
+     * Tabla de personas morales extranjeras.
+     * @type {discripccionDeLaMercanciaForm[]}
+     */
+    discripccionDeLaMercanciaForm?: DiscripccionDeLaMercanciaForm[];
+    /**
+* Denominación de la persona moral extranjera.
+* @type {string}
+*/
+    denominacionPME?: string;
 
     /**
      * Correo electrónico de la persona moral extranjera.
@@ -194,52 +195,53 @@ export interface Tramitenacionales11101State {
  * @returns El estado inicial del trámite.
  */
 export function createTramiteState(): Tramitenacionales11101State {
-  return {
-    seccion: [],
-    formaValida: [],
+    return {
+        seccion: [],
+        formaValida: [],
 
-    seguroNumero: '',
-    nombrePFE: '',
-    apellidoPaternoPFE: '',
-    apellidoMaternoPFE: '',
-    correoPFE: '',
-    paisPFE: '',
-    codigoPostalPFE: '',
-    ciudadPFE: '',
-    estadoPFE: '',
-    callePFE: '',
-    numeroExteriorPFE: '',
-    numeroInteriorPFE: '',
+        seguroNumero: '',
+        nombrePFE: '',
+        apellidoPaternoPFE: '',
+        apellidoMaternoPFE: '',
+        correoPFE: '',
+        paisPFE: '',
+        codigoPostalPFE: '',
+        ciudadPFE: '',
+        estadoPFE: '',
+        callePFE: '',
+        numeroExteriorPFE: '',
+        numeroInteriorPFE: '',
 
-    discripccionDeLaMercanciaTabla: [],
+        discripccionDeLaMercanciaTabla: [],
 
-    denominacionPME: '',
-    correoPME: '',
-    paisPME: '',
-    codigoPostalPME: '',
-    ciudadPME: '',
-    estadoPME: '',
-    callePME: '',
-    numeroExteriorPME: '',
-    numeroInteriorPME: '',
-    nombreDG: '',
-    apellidoPaternoDG: '',
-    apellidoMaternoDG: '',
-    numeroderegistro: '',
-    NobmreDenominationRazonSocial: '',
-    rfctaxid: '',
-    Telefono: '',
-    correoelectronico: '',
-    entidadadfederativa: '',
-    alcadilamunicipio: '',
-    colonia: '',
-    codigopostal: '',
-    calle: '',
-    numeroletraexterior: '',
-    numeroletrainterior: '',
-    entrecalle: '',
-    ycalle: ''
-};
+        denominacionPME: '',
+        correoPME: '',
+        paisPME: '',
+        codigoPostalPME: '',
+        ciudadPME: '',
+        estadoPME: '',
+        callePME: '',
+        numeroExteriorPME: '',
+        numeroInteriorPME: '',
+        nombreDG: '',
+        apellidoPaternoDG: '',
+        apellidoMaternoDG: '',
+        numeroderegistro: '',
+        NobmreDenominationRazonSocial: '',
+        rfctaxid: '',
+        Telefono: '',
+        correoelectronico: '',
+        entidadadfederativa: '',
+        alcadilamunicipio: '',
+        colonia: '',
+        codigopostal: '',
+        calle: '',
+        numeroletraexterior: '',
+        numeroletrainterior: '',
+        entrecalle: '',
+        ycalle: '',
+        radioDomicilio: '',
+    };
 }
 
 /**
@@ -248,189 +250,189 @@ export function createTramiteState(): Tramitenacionales11101State {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'tramite11101', resettable: true })
 export class Tramite11101Store extends Store<Tramitenacionales11101State> {
-  /**
-   * Constructor del almacén.
-   * Inicializa el estado con los valores predeterminados.
-   */
-  constructor() {
-    super(createTramiteState());
-  }
+    /**
+     * Constructor del almacén.
+     * Inicializa el estado con los valores predeterminados.
+     */
+    constructor() {
+        super(createTramiteState());
+    }
 
- /**
- * Establece el número de registro.
- * @param numeroderegistro - Número de registro a asignar al estado.
- */
-public setNumeroderegistro(numeroderegistro: string): void {
-    this.update((state) => ({
-        ...state,
-        numeroderegistro,
-    }));
-}
+    /**
+    * Establece el número de registro.
+    * @param numeroderegistro - Número de registro a asignar al estado.
+    */
+    public setNumeroderegistro(numeroderegistro: string): void {
+        this.update((state) => ({
+            ...state,
+            numeroderegistro,
+        }));
+    }
 
-/**
- * Establece el nombre, denominación o razón social.
- * @param NobmreDenominationRazonSocial - Nombre, denominación o razón social a asignar al estado.
- */
-public setNobmreDenominationRazonSocial(NobmreDenominationRazonSocial: string): void {
-    this.update((state) => ({
-        ...state,
-        NobmreDenominationRazonSocial,
-    }));
-}
+    /**
+     * Establece el nombre, denominación o razón social.
+     * @param NobmreDenominationRazonSocial - Nombre, denominación o razón social a asignar al estado.
+     */
+    public setNobmreDenominationRazonSocial(NobmreDenominationRazonSocial: string): void {
+        this.update((state) => ({
+            ...state,
+            NobmreDenominationRazonSocial,
+        }));
+    }
 
-/**
- * Establece el RFC o Tax ID.
- * @param rfctaxid - RFC o identificación fiscal a asignar al estado.
- */
-public setRfctaxid(rfctaxid: string): void {
-    this.update((state) => ({
-        ...state,
-        rfctaxid,
-    }));
-}
+    /**
+     * Establece el RFC o Tax ID.
+     * @param rfctaxid - RFC o identificación fiscal a asignar al estado.
+     */
+    public setRfctaxid(rfctaxid: string): void {
+        this.update((state) => ({
+            ...state,
+            rfctaxid,
+        }));
+    }
 
-/**
- * Establece el número de teléfono.
- * @param Telefono - Teléfono a asignar al estado.
- */
-public setTelefono(Telefono: string): void {
-    this.update((state) => ({
-        ...state,
-        Telefono,
-    }));
-}
+    /**
+     * Establece el número de teléfono.
+     * @param Telefono - Teléfono a asignar al estado.
+     */
+    public setTelefono(Telefono: string): void {
+        this.update((state) => ({
+            ...state,
+            Telefono,
+        }));
+    }
 
-/**
- * Establece el correo electrónico.
- * @param correoelectronico - Correo electrónico a asignar al estado.
- */
-public setCorreoelectronico(correoelectronico: string): void {
-    this.update((state) => ({
-        ...state,
-        correoelectronico,
-    }));
-}
+    /**
+     * Establece el correo electrónico.
+     * @param correoelectronico - Correo electrónico a asignar al estado.
+     */
+    public setCorreoelectronico(correoelectronico: string): void {
+        this.update((state) => ({
+            ...state,
+            correoelectronico,
+        }));
+    }
 
-/**
- * Establece la entidad federativa.
- * @param entidadadfederativa - Entidad federativa a asignar al estado.
- */
-public setEntidadadfederativa(entidadadfederativa: string): void {
-    this.update((state) => ({
-        ...state,
-        entidadadfederativa,
-    }));
-}
+    /**
+     * Establece la entidad federativa.
+     * @param entidadadfederativa - Entidad federativa a asignar al estado.
+     */
+    public setEntidadadfederativa(entidadadfederativa: string): void {
+        this.update((state) => ({
+            ...state,
+            entidadadfederativa,
+        }));
+    }
 
-/**
- * Establece la alcaldía o municipio.
- * @param alcadilamunicipio - Alcaldía o municipio a asignar al estado.
- */
-public setAlcadilamunicipio(alcadilamunicipio: string): void {
-    this.update((state) => ({
-        ...state,
-        alcadilamunicipio,
-    }));
-}
+    /**
+     * Establece la alcaldía o municipio.
+     * @param alcadilamunicipio - Alcaldía o municipio a asignar al estado.
+     */
+    public setAlcadilamunicipio(alcadilamunicipio: string): void {
+        this.update((state) => ({
+            ...state,
+            alcadilamunicipio,
+        }));
+    }
 
-/**
- * Establece la colonia.
- * @param colonia - Colonia a asignar al estado.
- */
-public setColonia(colonia: string): void {
-    this.update((state) => ({
-        ...state,
-        colonia,
-    }));
-}
+    /**
+     * Establece la colonia.
+     * @param colonia - Colonia a asignar al estado.
+     */
+    public setColonia(colonia: string): void {
+        this.update((state) => ({
+            ...state,
+            colonia,
+        }));
+    }
 
-/**
- * Establece el código postal.
- * @param codigopostal - Código postal a asignar al estado.
- */
-public setCodigopostal(codigopostal: string): void {
-    this.update((state) => ({
-        ...state,
-        codigopostal,
-    }));
-}
+    /**
+     * Establece el código postal.
+     * @param codigopostal - Código postal a asignar al estado.
+     */
+    public setCodigopostal(codigopostal: string): void {
+        this.update((state) => ({
+            ...state,
+            codigopostal,
+        }));
+    }
 
-/**
- * Establece la calle.
- * @param calle - Calle a asignar al estado.
- */
-public setCalle(calle: string): void {
-    this.update((state) => ({
-        ...state,
-        calle,
-    }));
-}
+    /**
+     * Establece la calle.
+     * @param calle - Calle a asignar al estado.
+     */
+    public setCalle(calle: string): void {
+        this.update((state) => ({
+            ...state,
+            calle,
+        }));
+    }
 
-/**
- * Establece el número o letra exterior.
- * @param numeroletraexterior - Número o letra exterior a asignar al estado.
- */
-public setNumeroletraexterior(numeroletraexterior: string): void {
-    this.update((state) => ({
-        ...state,
-        numeroletraexterior,
-    }));
-}
+    /**
+     * Establece el número o letra exterior.
+     * @param numeroletraexterior - Número o letra exterior a asignar al estado.
+     */
+    public setNumeroletraexterior(numeroletraexterior: string): void {
+        this.update((state) => ({
+            ...state,
+            numeroletraexterior,
+        }));
+    }
 
-/**
- * Establece el número o letra interior.
- * @param numeroletrainterior - Número o letra interior a asignar al estado.
- */
-public setNumeroletrainterior(numeroletrainterior: string): void {
-    this.update((state) => ({
-        ...state,
-        numeroletrainterior,
-    }));
-}
+    /**
+     * Establece el número o letra interior.
+     * @param numeroletrainterior - Número o letra interior a asignar al estado.
+     */
+    public setNumeroletrainterior(numeroletrainterior: string): void {
+        this.update((state) => ({
+            ...state,
+            numeroletrainterior,
+        }));
+    }
 
-/**
- * Establece la calle entre la cual se encuentra.
- * @param entrecalle - Calle entre la cual se encuentra el domicilio.
- */
-public setEntrecalle(entrecalle: string): void {
-    this.update((state) => ({
-        ...state,
-        entrecalle,
-    }));
-}
+    /**
+     * Establece la calle entre la cual se encuentra.
+     * @param entrecalle - Calle entre la cual se encuentra el domicilio.
+     */
+    public setEntrecalle(entrecalle: string): void {
+        this.update((state) => ({
+            ...state,
+            entrecalle,
+        }));
+    }
 
-/**
- * Establece la calle adicional (y calle).
- * @param ycalle - Otra calle cercana al domicilio.
- */
-public setYcalle(ycalle: string): void {
-    this.update((state) => ({
-        ...state,
-        ycalle,
-    }));
-}
- 
-  /**
-   * Actualiza el estado de las secciones del formulario.
-   * @param seccion - Lista que indica el estado de cada sección (true si está activa, false si no).
-   */
-  public establecerSeccion(seccion: boolean[]): void {
-    this.update((state) => ({
-      ...state,
-      seccion,
-    }));
-  }
+    /**
+     * Establece la calle adicional (y calle).
+     * @param ycalle - Otra calle cercana al domicilio.
+     */
+    public setYcalle(ycalle: string): void {
+        this.update((state) => ({
+            ...state,
+            ycalle,
+        }));
+    }
 
-  /**
-   * Actualiza el estado de validación de las secciones del formulario.
-   * @param formaValida - Lista que indica si cada sección del formulario es válida (true si es válida, false si no).
-   */
-  public establecerFormaValida(formaValida: boolean[]): void {
-    this.update((state) => ({
-      ...state,
-      formaValida,
-    }));
-  }
+    /**
+     * Actualiza el estado de las secciones del formulario.
+     * @param seccion - Lista que indica el estado de cada sección (true si está activa, false si no).
+     */
+    public establecerSeccion(seccion: boolean[]): void {
+        this.update((state) => ({
+            ...state,
+            seccion,
+        }));
+    }
+
+    /**
+     * Actualiza el estado de validación de las secciones del formulario.
+     * @param formaValida - Lista que indica si cada sección del formulario es válida (true si es válida, false si no).
+     */
+    public establecerFormaValida(formaValida: boolean[]): void {
+        this.update((state) => ({
+            ...state,
+            formaValida,
+        }));
+    }
 
 
     /**
@@ -589,159 +591,171 @@ public setYcalle(ycalle: string): void {
         }));
     }
 
-      /**
-       * Establece la tabla de persona moral extranjera en el estado.
-       * @param personaMoralExtranjeraTabla - Tabla de persona moral extranjera.
-       * @description Establece la tabla de persona moral extranjera en el estado.
-       */
-      public setPersonaMoralExtranjeraTabla(DiscripccionDeLaMercanciaTabla: DiscripccionDeLaMercanciaForm[]): void {
-          this.update((state) => ({
-              ...state,
-              DiscripccionDeLaMercanciaTabla,
-          }));
-      }
- 
+    /**
+     * Establece la tabla de persona moral extranjera en el estado.
+     * @param personaMoralExtranjeraTabla - Tabla de persona moral extranjera.
+     * @description Establece la tabla de persona moral extranjera en el estado.
+     */
+    public setPersonaMoralExtranjeraTabla(DiscripccionDeLaMercanciaTabla: DiscripccionDeLaMercanciaForm[]): void {
+        this.update((state) => ({
+            ...state,
+            DiscripccionDeLaMercanciaTabla,
+        }));
+    }
+
     /**
      * Establece la denominación de la persona moral extranjera en el estado.
      * @param denominacionPME - Denominación de la persona moral extranjera.
      * @description Establece la denominación de la persona moral extranjera en el estado.
      */
     public setDenominacionPME(denominacionPME: string): void {
-      this.update((state) => ({
-          ...state,
-          denominacionPME,
-      }));
-  }
+        this.update((state) => ({
+            ...state,
+            denominacionPME,
+        }));
+    }
 
-  /**
-   * Establece el correo electrónico de la persona moral extranjera en el estado.
-   * @param correoPME - Correo electrónico de la persona moral extranjera.
-   * @description Establece el correo electrónico de la persona moral extranjera en el estado.
-   */
-  public setCorreoPME(correoPME: string): void {
-      this.update((state) => ({
-          ...state,
-          correoPME,
-      }));
-  }
+    /**
+     * Establece el correo electrónico de la persona moral extranjera en el estado.
+     * @param correoPME - Correo electrónico de la persona moral extranjera.
+     * @description Establece el correo electrónico de la persona moral extranjera en el estado.
+     */
+    public setCorreoPME(correoPME: string): void {
+        this.update((state) => ({
+            ...state,
+            correoPME,
+        }));
+    }
 
-  /**
-   * Establece el país de la persona moral extranjera en el estado.
-   * @param paisPME - País de la persona moral extranjera.
-   * @description Establece el país de la persona moral extranjera en el estado.
-   */
-  public setPaisPME(paisPME: number | string): void {
-      this.update((state) => ({
-          ...state,
-          paisPME,
-      }));
-  }
+    /**
+     * Establece el país de la persona moral extranjera en el estado.
+     * @param paisPME - País de la persona moral extranjera.
+     * @description Establece el país de la persona moral extranjera en el estado.
+     */
+    public setPaisPME(paisPME: number | string): void {
+        this.update((state) => ({
+            ...state,
+            paisPME,
+        }));
+    }
 
-  /**
-   * Establece el código postal de la persona moral extranjera en el estado.
-   * @param codigoPostalPME - Código postal de la persona moral extranjera.
-   * @description Establece el código postal de la persona moral extranjera en el estado.
-   */
-  public setCodigoPostalPME(codigoPostalPME: string): void {
-      this.update((state) => ({
-          ...state,
-          codigoPostalPME,
-      }));
-  }
+    /**
+     * Establece el código postal de la persona moral extranjera en el estado.
+     * @param codigoPostalPME - Código postal de la persona moral extranjera.
+     * @description Establece el código postal de la persona moral extranjera en el estado.
+     */
+    public setCodigoPostalPME(codigoPostalPME: string): void {
+        this.update((state) => ({
+            ...state,
+            codigoPostalPME,
+        }));
+    }
 
-  /**
-   * Establece la ciudad de la persona moral extranjera en el estado.
-   * @param ciudadPME - Ciudad de la persona moral extranjera.
-   * @description Establece la ciudad de la persona moral extranjera en el estado.
-   */
-  public setCiudadPME(ciudadPME: string): void {
-      this.update((state) => ({
-          ...state,
-          ciudadPME,
-      }));
-  }
+    /**
+     * Establece la ciudad de la persona moral extranjera en el estado.
+     * @param ciudadPME - Ciudad de la persona moral extranjera.
+     * @description Establece la ciudad de la persona moral extranjera en el estado.
+     */
+    public setCiudadPME(ciudadPME: string): void {
+        this.update((state) => ({
+            ...state,
+            ciudadPME,
+        }));
+    }
 
-  /**
-   * Establece el estado de la persona moral extranjera en el estado.
-   * @param estadoPME - Estado de la persona moral extranjera.
-   * @description Establece el estado de la persona moral extranjera en el estado.
-   */
-  public setEstadoPME(estadoPME: string): void {
-      this.update((state) => ({
-          ...state,
-          estadoPME,
-      }));
-  }
+    /**
+     * Establece el estado de la persona moral extranjera en el estado.
+     * @param estadoPME - Estado de la persona moral extranjera.
+     * @description Establece el estado de la persona moral extranjera en el estado.
+     */
+    public setEstadoPME(estadoPME: string): void {
+        this.update((state) => ({
+            ...state,
+            estadoPME,
+        }));
+    }
 
-  /**
-   * Establece la calle de la persona moral extranjera en el estado.
-   * @param callePME - Calle de la persona moral extranjera.
-   * @description Establece la calle de la persona moral extranjera en el estado.
-   */
-  public setCallePME(callePME: string): void {
-      this.update((state) => ({
-          ...state,
-          callePME,
-      }));
-  }
+    /**
+     * Establece la calle de la persona moral extranjera en el estado.
+     * @param callePME - Calle de la persona moral extranjera.
+     * @description Establece la calle de la persona moral extranjera en el estado.
+     */
+    public setCallePME(callePME: string): void {
+        this.update((state) => ({
+            ...state,
+            callePME,
+        }));
+    }
 
-  /**
-   * Establece el número exterior de la persona moral extranjera en el estado.
-   * @param numeroExteriorPME - Número exterior de la persona moral extranjera.
-   * @description Establece el número exterior de la persona moral extranjera en el estado.
-   */
-  public setNumeroExteriorPME(numeroExteriorPME: string): void {
-      this.update((state) => ({
-          ...state,
-          numeroExteriorPME,
-      }));
-  }
+    /**
+     * Establece el estado del radio de domicilio.
+     * @param radioDomicilio - Estado del radio de domicilio (true si es manual, false si es carga masiva).
+     * @description Establece el estado del radio de domicilio en el estado.
+     */
+    public setRadioDomicilio(radioDomicilio: string): void {
+        this.update((state) => ({
+            ...state,
+            radioDomicilio,
+        }));
+    }
 
-  /**
-   * Establece el número interior de la persona moral extranjera en el estado.
-   * @param numeroInteriorPME - Número interior de la persona moral extranjera.
-   * @description Establece el número interior de la persona moral extranjera en el estado.
-   */
-  public setNumeroInteriorPME(numeroInteriorPME: string): void {
-      this.update((state) => ({
-          ...state,
-          numeroInteriorPME,
-      }));
-  }
+    /**
+     * Establece el número exterior de la persona moral extranjera en el estado.
+     * @param numeroExteriorPME - Número exterior de la persona moral extranjera.
+     * @description Establece el número exterior de la persona moral extranjera en el estado.
+     */
+    public setNumeroExteriorPME(numeroExteriorPME: string): void {
+        this.update((state) => ({
+            ...state,
+            numeroExteriorPME,
+        }));
+    }
 
-  /**
-   * Establece el nombre del director general de la persona moral extranjera en el estado.
-   * @param nombreDG - Nombre del director general de la persona moral extranjera.
-   * @description Establece el nombre del director general de la persona moral extranjera en el estado.
-   */
-  public setNombreDG(nombreDG: string): void {
-      this.update((state) => ({
-          ...state,
-          nombreDG,
-      }));
-  }
+    /**
+     * Establece el número interior de la persona moral extranjera en el estado.
+     * @param numeroInteriorPME - Número interior de la persona moral extranjera.
+     * @description Establece el número interior de la persona moral extranjera en el estado.
+     */
+    public setNumeroInteriorPME(numeroInteriorPME: string): void {
+        this.update((state) => ({
+            ...state,
+            numeroInteriorPME,
+        }));
+    }
 
-  /**
-   * Establece el apellido paterno del director general de la persona moral extranjera en el estado.
-   * @param apellidoPaternoDG - Apellido paterno del director general de la persona moral extranjera.
-   * @description Establece el apellido paterno del director general de la persona moral extranjera en el estado.
-   */
-  public setApellidoPaternoDG(apellidoPaternoDG: string): void {
-      this.update((state) => ({
-          ...state,
-          apellidoPaternoDG,
-      }));
-  }
+    /**
+     * Establece el nombre del director general de la persona moral extranjera en el estado.
+     * @param nombreDG - Nombre del director general de la persona moral extranjera.
+     * @description Establece el nombre del director general de la persona moral extranjera en el estado.
+     */
+    public setNombreDG(nombreDG: string): void {
+        this.update((state) => ({
+            ...state,
+            nombreDG,
+        }));
+    }
 
-  /**
-   * Establece el apellido materno del director general de la persona moral extranjera en el estado.
-   * @param apellidoMaternoDG - Apellido materno del director general de la persona moral extranjera.
-   * @description Establece el apellido materno del director general de la persona moral extranjera en el estado.
-   */
-  public setApellidoMaternoDG(apellidoMaternoDG: string): void {
-      this.update((state) => ({
-          ...state,
-          apellidoMaternoDG,
-      }));
-  }     
+    /**
+     * Establece el apellido paterno del director general de la persona moral extranjera en el estado.
+     * @param apellidoPaternoDG - Apellido paterno del director general de la persona moral extranjera.
+     * @description Establece el apellido paterno del director general de la persona moral extranjera en el estado.
+     */
+    public setApellidoPaternoDG(apellidoPaternoDG: string): void {
+        this.update((state) => ({
+            ...state,
+            apellidoPaternoDG,
+        }));
+    }
+
+    /**
+     * Establece el apellido materno del director general de la persona moral extranjera en el estado.
+     * @param apellidoMaternoDG - Apellido materno del director general de la persona moral extranjera.
+     * @description Establece el apellido materno del director general de la persona moral extranjera en el estado.
+     */
+    public setApellidoMaternoDG(apellidoMaternoDG: string): void {
+        this.update((state) => ({
+            ...state,
+            apellidoMaternoDG,
+        }));
+    }
 }

@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -37,7 +37,7 @@ import { TramiteFolioService } from '../../service/servicios-extraordinarios.ser
   templateUrl: './tipode-aviso.component.html',
   styleUrls: ['./tipode-aviso.component.scss'],
   standalone: true,
-  imports: [TituloComponent, FormsModule, ReactiveFormsModule, MercanciaComponent, CommonModule, CatalogoSelectComponent]
+  imports: [TituloComponent, FormsModule, ReactiveFormsModule, MercanciaComponent, CommonModule, CatalogoSelectComponent, InputRadioComponent]
 })
 export class TipodeAvisoComponent implements OnInit, OnDestroy {
 
@@ -86,6 +86,14 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
   colonia!: Catalogo[];
 
   /**
+   * Opciones de radio.
+   */
+  radioOpcions = [
+    { label: 'Manual', value: 'manual' },
+    { label: 'Carga masiva', value: 'cargamasiva' }
+  ];
+
+  /**
    * Constructor de la clase. Inicializa el FormBuilder.
    * @param {FormBuilder} formBuilder - Servicio para construir formularios reactivos.
    * @param {Tramite11101Query} query - Servicio para consultar el estado del trámite.
@@ -110,7 +118,7 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.esFormularioSoloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario()
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe()
@@ -214,6 +222,9 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
       ycalle: [
         this.solicitudState?.ycalle,
         [Validators.maxLength(100)]
+      ],
+      radioDomicilio: [
+        this.solicitudState?.radioDomicilio
       ]
     });
     this.inicializarEstadoFormulario();
