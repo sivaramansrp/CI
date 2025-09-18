@@ -34,3 +34,7 @@ textarea {
       min-height: 80px; /* Reduce aún más la altura mínima para pantallas muy pequeñas */
   }
 }
+
+.is-invalid {
+  border: 1px solid red;
+}

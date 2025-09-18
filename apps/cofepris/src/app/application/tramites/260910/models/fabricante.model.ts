@@ -1,49 +1,85 @@
 /**
- * Interfaz que representa la información de un fabricante.
- */
+ * Representa los datos del fabricante.
+ * */
 export interface Fabricante {
-  /** Nombre del fabricante. */
+  /**
+   * Nacionalidad del fabricante.
+   */
+  tercerosNacionalidad: string;
+  /**
+   * Tipo de persona (física o moral).
+   */
+  tipoPersona: string;
+  /**
+   * Nombre del fabricante.
+   */
   nombre: string;
-
-  /** Registro Federal de Contribuyentes (RFC) del fabricante. */
-  rfc: string;
-
-  /** Clave Única de Registro de Población (CURP) del fabricante. */
-  curp: string;
-
-  /** Número telefónico de contacto del fabricante. */
-  telefono: string;
-
-  /** Dirección de correo electrónico del fabricante. */
-  correoElectronico: string;
-
-  /** Nombre de la calle donde se encuentra el fabricante. */
-  calle: string;
-
-  /** Número exterior del domicilio del fabricante. */
-  numeroExterior: string;
-
-  /** Número interior del domicilio del fabricante, si aplica. */
-  numeroInterior: string;
-
-  /** País donde está ubicado el fabricante. */
+  /**
+   * Primer apellido del fabricante.
+   */
+  primerApellido: string;
+  /**
+   * Segundo apellido del fabricante.
+   */
+  segundoApellido: string;
+  /**
+   * País donde se encuentra el fabricante.
+   */
   pais: string;
-
-  /** Colonia donde se encuentra el fabricante. */
-  colonia: string;
-
-  /** Municipio donde se encuentra el fabricante. */
-  municipio: string;
-
-  /** Localidad específica del domicilio del fabricante. */
+  /**
+   * Estado en el extranjero del fabricante.
+   */
+  extranjeroEstado: string;
+  /**
+   * Estado o localidad del fabricante.
+   */
+  estadoLocalidad: string;
+  /**
+   * Municipio o alcaldía del fabricante.
+   */
+  municipioAlcaldia: string;
+  /**
+   * Localidad del fabricante.
+   */
   localidad: string;
-
-  /** Estado donde se encuentra el fabricante. */
-  estado: string;
-
-  /** Segundo estado o subdivisión administrativa (si aplica). */
-  estado2: string;
-
-  /** Código postal del domicilio del fabricante. */
-  codigo: string;
+  /**
+   * Entidad federativa del fabricante.
+   */
+  entidadFederativa: string;
+  /**
+   * Código postal del fabricante.
+   */
+  codigoPostaloEquivalente: string;
+  /**
+   * Colonia del fabricante.
+   */
+  colonia: string;
+  /**
+   * Colonia equivalente del fabricante.
+   */
+  coloniaoEquivalente: string;
+  /**
+   * Calle del fabricante.
+   */
+  calle: string;
+  /**
+   * Número exterior del fabricante.
+   */
+  numeroExterior: string;
+  /**
+   * Número interior del fabricante.
+   */
+  numeroInterior: string;
+  /**
+   * Lada del teléfono del fabricante.
+   */
+  lada: string;
+  /**
+   * Teléfono del fabricante.
+   */
+  telefono: string;
+  /**
+   * Correo electrónico del fabricante.
+   */
+  correoElectronico: string;
 }

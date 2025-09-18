@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { DatosSolicitudComponent } from '../../components/datos-solicitud/datos-solicitud.component';
 import { PermisoDeHidrocarburosService } from '../../services/permiso-de-hidrocarburos.service';
 import { Solocitud130121Service } from '../../services/service130121.service';
+import { ViewChild } from '@angular/core';
 
 /**
  * Componente PasoUnoComponent
@@ -48,6 +50,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  * @memberof PasoUnoComponent
  */
   public consultaState!: ConsultaioState;
+/**
+   * Referencia al componente `solicitudComponent`.
+   */
+@ViewChild('solicitudComponent', { static: false }) solicitudComponent: DatosSolicitudComponent | undefined;
 
   /**
    * Actualiza el índice de la pestaña seleccionada.
@@ -99,6 +105,23 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       this.esDatosRespuesta = true;
     }
+  }
+ /*
+  /**
+   * Valida el primer paso del formulario.
+   *
+   * Este método verifica si el componente hijo `solicitudComponent` está definido y llama a su método
+   * `validarContenedor` para realizar la validación del formulario. Si el componente no está definido,
+   * retorna `false` por defecto.
+   *
+   * @returns {boolean} - Retorna `true` si el formulario es válido, de lo contrario `false`.
+   * @memberof PasoUnoComponent
+   */
+  
+  validarPasoUno(): boolean {
+    return (
+      this.solicitudComponent?.validarContenedor() ?? false
+    );
   }
 
   /**

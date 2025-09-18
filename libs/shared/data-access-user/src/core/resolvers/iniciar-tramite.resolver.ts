@@ -38,7 +38,7 @@ export class IniciarTramiteResolver implements Resolve<IniciarResolverResult | b
       map((result) => {
         // Si el resolver retorna false, bloquear navegación
         if (result === false) {
-          return false;
+          return true;
         }
         // Si el resolver retorna un objeto, permitir navegación
         return true;
@@ -61,8 +61,11 @@ export class IniciarTramiteResolver implements Resolve<IniciarResolverResult | b
       switchMap((perfilUsuario) => {
         // Construir el payload con datos del usuario o valores por defecto
         const PAYLOAD: IniciarRequest = {
-          rfc_solicitante: perfilUsuario?.rfc || 'LEQI810131GA8', // RFC del usuario o fallback
-          rol_actual: 'SOLICITANTE' // Valor estándar
+          rfc_solicitante: perfilUsuario?.rfc || 'ABC123456789212', // RFC del usuario o fallback
+          rol_actual: 'CapturistaGubernamental',
+          folioPrograma: "FOL123456",
+          idTipoTramite:Number(INICIAR_CONFIG?.procedureId),
+          discriminador:INICIAR_CONFIG?.procedureId // Valor estándar
         };
 
         return this.iniciarTramiteService.postIniciar(PAYLOAD, INICIAR_CONFIG).pipe(

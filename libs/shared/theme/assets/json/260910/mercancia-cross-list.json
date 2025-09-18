@@ -1,8 +1,8 @@
 {
     "paisOrigenCrossList": {
         "label": {
-            "tituluDeLaIzquierda": "Pais de origen",
-            "derecha": "Pais(es) seleccionado(s)"
+            "tituluDeLaIzquierda": "País de origen:",
+            "derecha": "País(es) seleccionado(s)*:"
         },
         "fechas": [
             "ANGUILA",
@@ -16,8 +16,8 @@
     },
     "paisProcedencisCrossList": {
         "label": {
-            "tituluDeLaIzquierda": "Pais de origen",
-            "derecha": "Pais(es) seleccionado(s)"
+            "tituluDeLaIzquierda": "País de procedencia:",
+            "derecha": "País(es) seleccionado(s)*:"
         },
         "fechas": [
             "ANGUILA",
@@ -31,8 +31,8 @@
     },
     "usoEspecificoCrossList": {
         "label": {
-            "tituluDeLaIzquierda": "Uso especifico:",
-            "derecha": "Uso especifico seleccionado*:"
+            "tituluDeLaIzquierda": "Uso específico:",
+            "derecha": "Uso específico seleccionado*:"
         },
         "fechas": [
             "ANGUILA",

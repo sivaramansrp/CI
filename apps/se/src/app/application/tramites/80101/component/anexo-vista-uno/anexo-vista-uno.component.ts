@@ -1,5 +1,5 @@
 import { ANEXO_II_SERVICIO, ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
-import { AnexoDosEncabezado, DatosComplimento } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoDosEncabezado, DatosComplimento, ProveedorClienteTabla } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { Component, Input } from '@angular/core';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
@@ -526,6 +526,15 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
   datosDeLaTablaCambiados(value: boolean): void {
     this.tenerDatosDeTabla = value;
     this.nuevoProgramaIndustrialService.setTieneDatosDeTabla(value);
+  }
+
+/**
+ * Actualiza los datos de la tabla de proveedor/cliente en el store.
+ *
+ * @param event - Arreglo de objetos de tipo ProveedorClienteTabla que contiene los datos a establecer en la tabla.
+ */
+ public datosActualizadosProveedorCliente($event: ProveedorClienteTabla[]): void {
+   this.store.setProveedorClienteDatosTabla($event);
   }
 
   /**

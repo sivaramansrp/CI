@@ -27,7 +27,7 @@ import { Subject } from 'rxjs';
   templateUrl: './shared-pago-derechos.component.html',
   styleUrl: './shared-pago-derechos.component.scss',
 })
-export class SharedPagoDerechosComponent {
+export class SharedPagoDerechosComponent implements OnInit, OnDestroy {
   /** Indica si se debe mostrar la notificación de alerta en el componente. */
   @Input() mostrarNotificacionAlerta: boolean = false;
 
@@ -79,6 +79,12 @@ export class SharedPagoDerechosComponent {
    */
   public DEBES_CAPTURAR = DEBES_CAPTURAR.CONTENIDO; 
 
+  /** Expresión regular para validar números con hasta dos decimales.
+   * Permite números enteros y decimales con un punto o coma como separador decimal.
+   * Ejemplos válidos: 123, 123.45, -123, -123,45
+   */
+  public numRegex = /^-?\d*[.,]?\d{0,2}$/;
+
   /**
    * constructor
    * param {FormBuilder} fb - Constructor para formularios reactivos.
@@ -118,6 +124,12 @@ export class SharedPagoDerechosComponent {
       )
       .subscribe()
 
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'derechosForm') {
+        this.derechosForm.markAllAsTouched();
+      }
+    });
+
     this.configurarGrupoForm(); // Configura el formulario reactivo.
     this.loadComboUnidadMedida(); // Carga la lista de derechos.
   }
@@ -153,7 +165,7 @@ export class SharedPagoDerechosComponent {
         this.solicitudState?.importePago,
         [
           Validators.required,
-          Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/), Validators.maxLength(16)
+          Validators.pattern(this.numRegex), Validators.maxLength(16)
         ]
       ],
     });

@@ -36,9 +36,10 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="valorPartidaUSD">Valor partida USD:</label>
-            <input class="form-control" type="number" id="valorPartidaUSD"
+            <input class="form-control" type="text" id="valorPartidaUSD"  title="En caso de no contar con Valor Factura proporcionar el Valor Estimado
+            " maxlength="20"
               formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" (change)="
-                setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia')
+                setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia') 
               " />
             <div *ngIf="formularioEnviado && partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].invalid" class="text-danger">
               <small
@@ -114,7 +115,7 @@
       <h6>Partidas</h6>
       <div>
         <app-tabla-dinamica [configuracionTabla]="tableHeaderData" [datos]="tableBodyData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
-          [tipoSeleccionTabla]="CHECKBOX">
+          [tipoSeleccionTabla]="CHECKBOX" (listaDeFilaSeleccionada)="obtenerRegistroSeleccionado($event)" >
         </app-tabla-dinamica>
       </div>
 
@@ -162,8 +163,8 @@
                     <div class="row mt-4">
                       <div class="col-md-8">
                         <div class="form-group">
-                          <label class="form-label" for="cantidad">Cantidad*:</label>
-                          <input class="form-control" type="text" id="cantidad" formControlName="cantidadModificar"
+                          <label class="form-label" for="cantidad">Cantidad<span *ngIf="idProcedominto!== idNumeroProcedimiento">*</span>:</label>
+                          <input class="form-control" type="text" id="cantidad" formControlName="cantidadModificar" maxlength="15"
                             appUppercase aria-labelledby="cantidad" />
                           <div *ngIf="esInvalido('cantidadModificar')" class="text-danger">
                             <small
@@ -182,7 +183,7 @@
                     <div class="row mt-4">
                       <div class="col-md-8">
                         <div class="form-group">
-                          <label class="form-label" for="descripcion">Descripción*:</label>
+                          <label class="form-label" for="descripcion">Descripción<span *ngIf="idProcedominto!== idNumeroProcedimiento">*</span>:</label>
                           <textarea class="form-control height" rows="3" id="descripcion"
                             formControlName="descripcionModificar" aria-labelledby="descripcion"></textarea>
                           <div *ngIf="esInvalido('descripcionModificar')" class="text-danger">
@@ -198,8 +199,8 @@
                     <div class="row mt-4">
                       <div class="col-md-8">
                         <div class="form-group">
-                          <label class="form-label" for="valorPartidaUSD">Valor USD partida*:</label>
-                          <input class="form-control" type="number" id="valorPartidaUSD"
+                          <label class="form-label" for="valorPartidaUSD">Valor USD partida<span *ngIf="idProcedominto!==idNumeroProcedimiento">*</span>:</label>
+                          <input class="form-control" type="text" id="valorPartidaUSD" maxlength="20"
                             formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" />
                           <div *ngIf="esInvalido('valorPartidaUSDPartidasDeLaMercancia')" class="text-danger">
                             <small
@@ -242,3 +243,6 @@
     </div>
   </div>
 </div>
+@if(nuevaNotificacion){
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" ></lib-notificaciones>
+  }  
