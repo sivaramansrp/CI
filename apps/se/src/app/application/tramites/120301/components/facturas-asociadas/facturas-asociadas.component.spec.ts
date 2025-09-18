@@ -58,6 +58,7 @@ const fullTextilesStateStub: TextilesState = {
   razonSocialImportador: '',
   domicilio: '',
   ciudadImportador: '',
+  fechaExpedicionFactura: '',
   cpImportador: '',
   PaisImportador: '',
   formaValida: [],
@@ -121,6 +122,7 @@ describe('FormularioAsociacionFacturaComponent', () => {
               cantidadDisponible: '80',
               unidadMedida: 'm2',
               valorDolares: '500',
+              idExpedicion: 1,
             },
             {
               numeroDeLaFactura: 'F2',
@@ -131,6 +133,7 @@ describe('FormularioAsociacionFacturaComponent', () => {
               cantidadDisponible: '150',
               unidadMedida: 'kg',
               valorDolares: '1000',
+              idExpedicion: 1,
             },
           ];
           return of(facturasDisponible);
@@ -147,6 +150,8 @@ describe('FormularioAsociacionFacturaComponent', () => {
               cantidadDisponible: '40',
               unidadMedida: 'm2',
               valorDolares: '250',
+              idExpedicion: 1,
+              idFacturaExpedicion: 101,
             },
           ];
           return of(facturasAsociadas);
@@ -234,9 +239,16 @@ describe('FormularioAsociacionFacturaComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(serviceMock.obtenerTablaDatos).toHaveBeenCalledWith('facturas-asociadas.json');
-    expect(component.facturasAsociadas.length).toBe(1);
-    expect(component.facturasAsociadas[0].numeroDeLaFactura).toBe('FA1');
+  // Verifica que obtenerTablaDatos haya sido llamado con 'facturas-asociadas.json' en alguna de las llamadas
+  const calls = (serviceMock.obtenerTablaDatos as jest.Mock).mock.calls;
+
+  const calledWithAsociadas = calls.some(call => call[0] === 'facturas-asociadas.json');
+  if (!calledWithAsociadas) {
+
+    fail(`obtenerTablaDatos was not called with 'facturas-asociadas.json'. Calls: ${JSON.stringify(calls)}`);
+  }
+  expect(component.facturasAsociadas.length).toBe(1);
+  expect(component.facturasAsociadas[0].numeroDeLaFactura).toBe('FA1');
   }));
 
   it('debe llamar a setValoresStore con el valor correcto', () => {

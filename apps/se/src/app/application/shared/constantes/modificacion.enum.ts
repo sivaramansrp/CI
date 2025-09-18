@@ -150,7 +150,7 @@ export const CARGA_MERCANCIA_SELECCIONADAS = [
     orden: 7, // Orden en que se mostrará la columna
   },
   {
-    encabezado: 'Tipo de fractura', // Título de la columna
+    encabezado: 'Tipo de factura', // Título de la columna
     clave: (ele: Mercancia): string | undefined => ele.tipoFactura, // Función que devuelve el nombre técnico de la mercancía
     orden: 8, // Orden en que se mostrará la columna
   },
@@ -296,3 +296,12 @@ export const CONFIGURACION_MERCANCIA_TABLA = [
  * @type {number[]}
  */
 export const FECHA_ID = [ 110204,110223 ];
+/**
+ * @constant REQUIREDA
+ * @description
+ * Arreglo de identificadores de procedimiento para los cuales ciertos campos son requeridos.
+ * Se utiliza para establecer validaciones adicionales en formularios cuando el ID del procedimiento
+ * coincide con algún valor de este arreglo.
+ * @type {number[]}
+ */
+export const REQUIREDA = [110204,110205];

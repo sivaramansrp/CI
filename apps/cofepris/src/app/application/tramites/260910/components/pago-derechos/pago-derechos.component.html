@@ -14,6 +14,7 @@
         placeholder=""
         type="text"
         formControlName="claveDeReferencia"
+        maxlength="9"
         (change)="setClaveDeReferencia($event)"
       />
     </div>
@@ -28,6 +29,7 @@
         placeholder=""
         type="text"
         formControlName="cadenaDeDependencia"
+        maxlength="14"
         (change)="setCadenaDeDependencia($event)"
       />
     </div>
@@ -47,15 +49,26 @@
     </div>
 
     <div class="col-md-4 mt-3">
-      <label class="form-label" for="liaveDePago">Liave de pago:</label>
+      <label class="form-label" for="liaveDePago">Llave de pago:</label>
       <input
         class="form-control"
         id="liaveDePago"
         placeholder=""
         type="text"
+        [ngClass]="
+              esValido(pagoDeDerechosForm, 'liaveDePago')
+                ? 'required'
+                : ''
+            "
         formControlName="liaveDePago"
+        maxlength="30"
         (change)="setLiaveDePago($event)"
       />
+      @if (pagoDeDerechosForm.get('liaveDePago')?.errors?.['pattern'] &&
+      (pagoDeDerechosForm.get('liaveDePago')?.touched ||
+      pagoDeDerechosForm.get('liaveDePago')?.dirty)) {
+        <span class="mensaje-error">Solo se permiten 10 caracteres en mayúsculas y números.</span>
+      }
     </div>
 
     <div class="col-md-4 mt-3">
@@ -72,14 +85,25 @@
         class="form-control"
         id="importeDePago"
         placeholder=""
-        type="number"
+        type="text"
+        [ngClass]="
+              esValido(pagoDeDerechosForm, 'importeDePago')
+                ? 'required'
+                : ''
+            "
         formControlName="importeDePago"
+        maxlength="16"
         (change)="setImporteDePago($event)"
       />
+      @if (pagoDeDerechosForm.get('importeDePago')?.errors?.['pattern'] &&
+      (pagoDeDerechosForm.get('importeDePago')?.touched ||
+      pagoDeDerechosForm.get('importeDePago')?.dirty)) {
+        <span class="mensaje-error">Por favor, escribe un número entero válido</span>
+      }
     </div>
 
     <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
-      <button class="btn btn-default" type="button">
+      <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">
         Borrar datos del pago
       </button>
     </div>

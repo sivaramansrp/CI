@@ -271,6 +271,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
         },
         [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
       ],
+      municipioAlcaldia: [this.obtenerValor('municipioAlcaldia')],
+      localidad: [this.obtenerValor('localidad')],
     });
   }
 
@@ -339,7 +341,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
         ]);
       this.agregarProveedorForm
         .get('curp')
-        ?.setValidators([Validators.required]);
+        ?.setValidators([Validators.required, Validators.pattern(/^[A-Za-z]{4}\d{6}[HM][A-Za-z]{5}\d{2}$/)]);
     } else {
       this.agregarProveedorForm.get('nacionalidad')?.clearValidators();
       this.agregarProveedorForm.get('rfc')?.clearValidators();
@@ -361,6 +363,9 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
         this.elementosRequeridos = ['estado'];
         break;
       case 260214:
+        this.elementosRequeridos = ['estado'];
+        break;
+      case 260601:
         this.elementosRequeridos = ['estado'];
         break;
       default:

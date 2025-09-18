@@ -349,6 +349,10 @@ export interface CapturarColumns {
   cp?: string;
   /** País del domicilio fiscal */
   pais?: string;
+  /** ID único de la expedición */
+  idExpedicion: number;
+  /** ID único de la factura de expedición */
+  idFacturaExpedicion?: number;
 }
 
 /**
@@ -383,6 +387,10 @@ export interface AsociadasTableColumns {
   unidadMedida: string;
   /** Valor proporcional en dólares */
   valorDolares: string;
+  /** ID único de la factura de expedición */
+  idFacturaExpedicion: number;
+  /** ID único de la expedición asociada */
+  idExpedicion: number;
 }
 
 /**

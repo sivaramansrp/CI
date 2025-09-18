@@ -183,6 +183,22 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
       const VALOR = form.get(campo)?.value;
       this.tramite110209Store.setTramite110209({ [campo]: VALOR });
     }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de datos del destinatario.
+   * Si el formulario es válido, retorna `true`.
+   * Si el formulario es inválido, marca todos los controles como "tocados" para mostrar los errores de validación y retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+    validarFormulario(): boolean {
+    if (this.datosDelDestinatarioForm.valid) {
+      return true;
+    }
+    this.datosDelDestinatarioForm.markAllAsTouched();
+    return false;
+  }
     /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.
    * Completa el subject destroyed$ para desuscribirse de todos los observables.

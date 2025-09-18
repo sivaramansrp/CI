@@ -6,7 +6,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="claveDeReferencia">Clave de referencia*:</label>
+              <label class="form-label" for="claveDeReferencia">Pago Clave Referencia*:</label>
               <input class="form-control" id="claveDeReferencia" formControlName="claveDeReferencia" type="text"
                 [ngClass]="isValid(pagodeDerechos,'claveDeReferencia') ? 'required' : ''"
                 (change)="setValoresStore(pagodeDerechos,'claveDeReferencia', 'setClaveDeReferencia')" />
@@ -14,7 +14,7 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="cadenaPagoDependencia">Cadena de la dependencia*:</label>
+              <label class="form-label" for="cadenaPagoDependencia">Pago Cadena Dependencia*:</label>
               <input class="form-control" id="cadenaPagoDependencia" formControlName="cadenaPagoDependencia" type="text"
                 [ngClass]="isValid(pagodeDerechos,'cadenaPagoDependencia') ? 'required' : ''"
                 (change)="setValoresStore(pagodeDerechos,'cadenaPagoDependencia', 'setCadenaPagoDependencia')"

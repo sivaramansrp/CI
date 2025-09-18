@@ -4,36 +4,29 @@
  * Incluye un formulario para capturar los datos del importador y funcionalidades adicionales.
  * Gestiona la validación, sincronización con el store global y el estado de la sección.
  */
-
-import { HttpClient } from '@angular/common/http';
-
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-
-import { Subject, delay, map, takeUntil, tap } from 'rxjs';
-
 import {
   Catalogo,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
 } from '@ng-mf/data-access-user';
-
-import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   ElegibilidadDeTextilesStore,
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { ERROR_FORMA_ALERT } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
-
+import { HttpClient } from '@angular/common/http';
+import { ImporteRecordService } from '../../services/catalogos/importe-record.service';
+import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
  * @component ImportadorEnDestinoComponent
@@ -133,7 +126,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * al archivo 'tipo.json'. Cada elemento del catálogo contiene la información necesaria
    * para poblar el dropdown de tipos de importador disponibles en el sistema.
    */
-  tipoData: Catalogo[] = [];
+  tipoData!: Catalogo[];
 
   /**
    * @property {Subject<void>} destroyNotifier$ - Sujeto para manejar la destrucción de suscripciones.
@@ -153,7 +146,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * Incluye datos como tipo, cantidades, información de contacto y ubicación.
    * @private
    */
-  private importadorState!: TextilesState;
+  public importadorState!: TextilesState;
 
   /**
    * @property {SeccionLibState} seccionState - Estado actual de la sección.
@@ -189,6 +182,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
+    private importeRecordService: ImporteRecordService,
     private cdr: ChangeDetectorRef
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
@@ -333,10 +327,18 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor
    */
   obtenerIngresoSelectList(): void {
-    this.ElegibilidadTextilesService.obtenerMenuDesplegable('tipo.json')
+    this.importeRecordService.getImporteRecord()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.tipoData = data as Catalogo[];
+      .subscribe({
+        next: (data) => {
+          if (data.codigo === '00') {
+            this.tipoData = data.datos || [];
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+          this.tipoData = [];
+        }
       });
   }
 

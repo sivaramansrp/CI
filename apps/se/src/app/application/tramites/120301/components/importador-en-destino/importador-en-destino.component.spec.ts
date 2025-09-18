@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -57,32 +57,36 @@ describe('ImportadorEnDestinoComponent', () => {
     fixture = TestBed.createComponent(ImportadorEnDestinoComponent);
     component = fixture.debugElement.componentInstance;
   });
-  it('debe llamar a setFormaValida, establecerSeccion, establecerFormaValida cuando el formulario es válido', () => {
-      component.importadorForm = new FormGroup({});
-      Object.defineProperty(component.importadorForm, 'valid', { get: () => true });
-      component.importadorState = { formaValida: [] };
-      component.ElegibilidadDeTextilesStore = { setFormaValida: jest.fn() };
-      component.seccionStore = {
-        establecerSeccion: jest.fn(),
-        establecerFormaValida: jest.fn()
-      };
-      const tapFn = (fn) => fn();
-      component.importadorForm.statusChanges = { pipe: () => ({ subscribe: tapFn }) };
-      if (component.importadorForm.valid) {
-        component.ElegibilidadDeTextilesStore.setFormaValida([
-          ...component.importadorState.formaValida,
-          { id: 4, descripcion: 'TodoValido' },
-        ]);
-      }
-      component.seccionStore.establecerSeccion([true]);
-      component.seccionStore.establecerFormaValida([true]);
-      expect(component.ElegibilidadDeTextilesStore.setFormaValida).toHaveBeenCalledWith([
+  it('debe crear el componente correctamente', () => {
+    expect(component).toBeTruthy();
+    expect(component.importadorForm).toBeDefined();
+  });
+  it('debe inicializar correctamente el formulario y lógica de estado', () => {
+    expect(component.importadorForm).toBeDefined();
+    component.importadorState = { formaValida: [] };
+    component.ElegibilidadDeTextilesStore = { setFormaValida: jest.fn() };
+    component.seccionStore = {
+      establecerSeccion: jest.fn(),
+      establecerFormaValida: jest.fn()
+    };
+    const tapFn = (fn) => fn();
+    component.importadorForm.statusChanges = { pipe: () => ({ subscribe: tapFn }) };
+    component.importadorForm.valid = true;
+    if (component.importadorForm.valid) {
+      component.ElegibilidadDeTextilesStore.setFormaValida([
         ...component.importadorState.formaValida,
         { id: 4, descripcion: 'TodoValido' },
       ]);
-      expect(component.seccionStore.establecerSeccion).toHaveBeenCalledWith([true]);
-      expect(component.seccionStore.establecerFormaValida).toHaveBeenCalledWith([true]);
-    });
+    }
+    component.seccionStore.establecerSeccion([true]);
+    component.seccionStore.establecerFormaValida([true]);
+    expect(component.ElegibilidadDeTextilesStore.setFormaValida).toHaveBeenCalledWith([
+      ...component.importadorState.formaValida,
+      { id: 4, descripcion: 'TodoValido' },
+    ]);
+    expect(component.seccionStore.establecerSeccion).toHaveBeenCalledWith([true]);
+    expect(component.seccionStore.establecerFormaValida).toHaveBeenCalledWith([true]);
+  });
 
   it('debe deshabilitar el formulario si formularioDeshabilitado es verdadero', () => {
       component.importadorForm = new FormGroup({});
@@ -224,5 +228,3 @@ describe('ImportadorEnDestinoComponent', () => {
 
     expect(component.ElegibilidadDeTextilesStore.someMethod).toHaveBeenCalled();
   });
-
-});

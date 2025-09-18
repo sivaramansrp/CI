@@ -29,11 +29,11 @@ import { Injectable } from '@angular/core';
  * ```
  */
 export interface TextilesState {
-      /**
-     * @property {FitosanitarioForm} FitosanitarioForm
-     * Estado del formulario de solicitud que contiene la información básica del trámite.
-     */
-    SolicitudState: FitosanitarioForm;
+  /**
+ * @property {FitosanitarioForm} FitosanitarioForm
+ * Estado del formulario de solicitud que contiene la información básica del trámite.
+ */
+  SolicitudState: FitosanitarioForm;
 
   /** 
    * Número de factura asociado al trámite.

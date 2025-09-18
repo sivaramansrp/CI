@@ -18,13 +18,16 @@
       [tipoSeleccionTabla]="checkbox"   
       (listaDeFilaSeleccionada)="fabricanteSeleccionadoDatos = $event"   
       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+      (listaDeFilaSeleccionada)="onFabricanteSeleccionados($event)"
     ></app-tabla-dinamica>  
       </div>
       <br />
 
    <div class="d-flex justify-content-end mt-3">
-  <button  class="btn btn-danger me-3" type="button"  (click)="eliminarFabricante()">Eliminar</button>
-  <button  class="btn btn-default me-3" type="button"  (click)="modificarFabricante()">Modificar</button>
+    @if (fabricanteSeleccionadoDatos.length > 0) {
+      <button  class="btn btn-danger me-3" type="button"  (click)="eliminarFabricante()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+      <button  class="btn btn-default me-3" type="button"  (click)="modificarFabricante()" [disabled]="esFormularioSoloLectura">Modificar</button>
+    }
   <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()" [disabled]="esFormularioSoloLectura">
     Agregar
   </button>
@@ -41,13 +44,16 @@
       [tipoSeleccionTabla]="checkbox"
       (listaDeFilaSeleccionada)="destinatarioSeleccionadoDatos = $event"      
       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+      (listaDeFilaSeleccionada)="onDestinatarioSeleccionados($event)"
     ></app-tabla-dinamica>
       </div>
       <br />
 
       <div class="d-flex justify-content-end mt-3">
-  <button  class="btn btn-danger me-3" type="button" (click)="eliminarDestinario()">Eliminar</button>
-  <button  class="btn btn-default me-3" type="button" (click)="modificarDestinatario()">Modificar</button>
+        @if (destinatarioSeleccionadoDatos.length > 0) {
+          <button  class="btn btn-danger me-3" type="button" (click)="eliminarDestinario()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button  class="btn btn-default me-3" type="button" (click)="modificarDestinatario()" [disabled]="esFormularioSoloLectura">Modificar</button>
+        }
   <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()" [disabled]="esFormularioSoloLectura">
     Agregar
   </button>
@@ -65,14 +71,18 @@
       [tipoSeleccionTabla]="checkbox"
    (listaDeFilaSeleccionada)="proveedorSeleccionadoDatos = $event"
       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+      (listaDeFilaSeleccionada)="onProveedorSeleccionados($event)"
     ></app-tabla-dinamica>
 
       </div>
       <br />
 
       <div class="d-flex justify-content-end mt-3">
-  <button  class="btn btn-danger me-3" type="button"  (click)="eliminarProveedor()">Eliminar</button>
-  <button  class="btn btn-default me-3" type="button" (click)="modificarProveedor()">Modificar</button>
+        @if (proveedorSeleccionadoDatos.length > 0) {
+          <button  class="btn btn-danger me-3" type="button"  (click)="eliminarProveedor()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button  class="btn btn-default me-3" type="button" (click)="modificarProveedor()" [disabled]="esFormularioSoloLectura">Modificar</button>
+
+        }
   <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()" [disabled]="esFormularioSoloLectura">
     Agregar
   </button>
@@ -91,14 +101,17 @@
       [tipoSeleccionTabla]="checkbox"   
       (listaDeFilaSeleccionada)="facturadorSeleccionadoDatos = $event"  
       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+      (listaDeFilaSeleccionada)="onFacturadorSeleccionados($event)"
     ></app-tabla-dinamica>
      
       </div>
       <br />
 
       <div class="d-flex justify-content-end mt-3">
-  <button  class="btn btn-danger me-3" type="button"  (click)="eliminarFacturador()">Eliminar</button>
-  <button  class="btn btn-default me-3" type="button" (click)="modificarFacturador()">Modificar</button>
+        @if (facturadorSeleccionadoDatos.length > 0) {
+          <button  class="btn btn-danger me-3" type="button"  (click)="eliminarFacturador()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button  class="btn btn-default me-3" type="button" (click)="modificarFacturador()" [disabled]="esFormularioSoloLectura">Modificar</button>
+        }
   <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()" [disabled]="esFormularioSoloLectura">
     Agregar
   </button>

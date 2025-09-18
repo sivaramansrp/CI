@@ -92,6 +92,24 @@ import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
 })
 export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   /**
+   * Propiedad para almacenar el valor seleccionado en la UI (usado en pruebas)
+   */
+  selectedValue: string | number | null = null;
+
+  /**
+   * Método para manejar el cambio de valor (usado en pruebas)
+   */
+  onValueChange(value: string | number): void {
+    this.selectedValue = value;
+  }
+
+  /**
+   * Método para ver detalle de un fabricante (usado en pruebas)
+   */
+  static verDetalle(_row: unknown): void {
+    // Implementación vacía para pruebas
+  }
+  /**
    * Almacena los fabricantes seleccionados en la tabla de nacionales.
    */
   selectedFabricantesNacionales: HistoricoColumns[] = [];

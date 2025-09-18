@@ -52,6 +52,26 @@ class SafeHtmlPipe implements PipeTransform {
 }
 
 describe('ConstanciaDelRegistroComponent', () => {
+  let component: ConstanciaDelRegistroComponent;
+  let fixture: ComponentFixture<ConstanciaDelRegistroComponent>;
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ConstanciaDelRegistroComponent, ReactiveFormsModule, FormsModule],
+      declarations: [],
+      providers: [FormBuilder, { provide: '_HttpClient', useValue: {} }, { provide: 'HttpClient', useValue: {} }],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
+    }).compileComponents();
+    fixture = TestBed.createComponent(ConstanciaDelRegistroComponent);
+    component = fixture.componentInstance;
+  });
+  it('debe crear el componente correctamente', () => {
+    expect(component).toBeTruthy();
+  });
+  it('debe inicializar el formulario en español', () => {
+    expect(component.fitosanitarioForm).toBeDefined();
+  });
+});
+describe('ConstanciaDelRegistroComponent', () => {
   it('debe cubrir continuar() con formulario inválido', () => {
     component.fitosanitarioForm = {
       markAllAsTouched: jest.fn(),

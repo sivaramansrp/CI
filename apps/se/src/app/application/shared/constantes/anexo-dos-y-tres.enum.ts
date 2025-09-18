@@ -106,7 +106,7 @@ Materiales primas, partes, componentes, materiales auxiliares, envases, material
  */
 export const ANEXO_I_SERVICIO = [
   {
-    encabezado: 'Fracción',
+    encabezado: '#Fracción',
     clave: (ele: AnexoUnoEncabezado): string => ele.encabezadoFraccion,
     orden: 1,
   },
@@ -186,7 +186,7 @@ export const ANEXO_I_SERVICIO = [
  */
 export const ANEXO_IMPORTACION_SERVICIO = [
   {
-    encabezado: 'Fracción',
+    encabezado: '#Fracción',
     clave: (ele: AnexoDosEncabezado): string => ele.encabezadoFraccion,
     orden: 1,
   },

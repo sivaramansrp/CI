@@ -611,8 +611,8 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
       this.facturaForm.get('unidadDeMedida')?.disable();
       this.facturaForm.get('pais')?.disable();
       if (ELEMENTO_MODAL && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const MODAL_INSTANCE = new window.bootstrap.Modal(ELEMENTO_MODAL);
-        MODAL_INSTANCE.show();
+        const INSTANCIA_MODAL = new window.bootstrap.Modal(ELEMENTO_MODAL);
+        INSTANCIA_MODAL.show();
       }
     });
   }
@@ -648,8 +648,8 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
           this.facturaForm.get('unidadDeMedida')?.disable();
           this.facturaForm.get('pais')?.disable();
           if (ELEMENTO_MODAL && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-            const MODAL_INSTANCE = new window.bootstrap.Modal(ELEMENTO_MODAL);
-            MODAL_INSTANCE.show();
+            const INSTANCIA_MODAL = new window.bootstrap.Modal(ELEMENTO_MODAL);
+            INSTANCIA_MODAL.show();
           }
         });
       }
@@ -744,6 +744,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
       ciudad: DATOS['ciudad'],
       cp: DATOS['cp'],
       pais: DATOS['pais'],
+      idExpedicion: DATOS['idExpedicion']
     };
     if (this.modalMode === 'agregar') {
       this.facturas = [...this.facturas, NUEVA_FACTURA];
@@ -757,9 +758,9 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       const ELEMENTO_MODAL = document.getElementById('modalAgregar');
       if (ELEMENTO_MODAL && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const MODAL_INSTANCE = window.bootstrap.Modal.getInstance(ELEMENTO_MODAL);
-        if (MODAL_INSTANCE) {
-          MODAL_INSTANCE.hide();
+        const INSTANCIA_MODAL = window.bootstrap.Modal.getInstance(ELEMENTO_MODAL);
+        if (INSTANCIA_MODAL) {
+          INSTANCIA_MODAL.hide();
         }
       }
 
@@ -855,15 +856,15 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     if (!Array.isArray(this.selectedRows) || this.selectedRows.length === 0) {
       const ELEMENTO_MODAL = document.getElementById('confirmarEliminarSeleccion');
       if (ELEMENTO_MODAL && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const MODAL_INSTANCE = new window.bootstrap.Modal(ELEMENTO_MODAL);
-        MODAL_INSTANCE.show();
+        const INSTANCIA_MODAL = new window.bootstrap.Modal(ELEMENTO_MODAL);
+        INSTANCIA_MODAL.show();
       }
       return;
     }
     const ELEMENTO_MODAL = document.getElementById('confirmarEliminar');
     if (ELEMENTO_MODAL && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-      const MODAL_INSTANCE = new window.bootstrap.Modal(ELEMENTO_MODAL);
-      MODAL_INSTANCE.show();
+      const INSTANCIA_MODAL = new window.bootstrap.Modal(ELEMENTO_MODAL);
+      INSTANCIA_MODAL.show();
     }
   }
   /**
@@ -895,8 +896,8 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       const ELEMENTO_MODAL = document.getElementById('confirmarEliminar');
       if (ELEMENTO_MODAL && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const MODAL_INSTANCE = window.bootstrap.Modal.getInstance(ELEMENTO_MODAL) || new window.bootstrap.Modal(ELEMENTO_MODAL);
-        MODAL_INSTANCE.hide();
+        const INSTANCIA_MODAL = window.bootstrap.Modal.getInstance(ELEMENTO_MODAL) || new window.bootstrap.Modal(ELEMENTO_MODAL);
+        INSTANCIA_MODAL.hide();
       }
       // Eliminar el TELONES_DE_FONDO modal persistente si está presente
       const TELONES_DE_FONDO = document.querySelectorAll('.modal-backdrop');

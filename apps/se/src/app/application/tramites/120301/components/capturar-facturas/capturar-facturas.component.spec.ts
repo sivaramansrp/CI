@@ -59,6 +59,37 @@ class SafeHtmlPipe implements PipeTransform {
 }
 
 describe('CapturarFacturasComponent', () => {
+  let component: CapturarFacturasComponent;
+  let fixture: ComponentFixture<CapturarFacturasComponent>;
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, FormsModule, CapturarFacturasComponent],
+      providers: [
+        FormBuilder,
+        { provide: 'HttpClient', useValue: {} },
+        { provide: '_HttpClient', useValue: {} },
+        { provide: '_HttpClient', useClass: class {} },
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
+    }).compileComponents();
+    fixture = TestBed.createComponent(CapturarFacturasComponent);
+    component = fixture.componentInstance;
+  });
+  it('debe crear el componente correctamente', () => {
+    expect(component).toBeTruthy();
+  });
+  it('debe inicializar el formulario en español', () => {
+    // Inicializa facturaForm como FormGroup real para evitar errores
+    component.facturaForm = new FormBuilder().group({
+      unidadDeMedida: [''],
+      pais: [''],
+      fechaExpedicionFactura: ['']
+    });
+    expect(component.facturaForm).toBeDefined();
+    expect(typeof component.facturaForm.get).toBe('function');
+  });
+});
+describe('CapturarFacturasComponent', () => {
   let fixture: ComponentFixture<CapturarFacturasComponent>;
   let component: CapturarFacturasComponent;
 
@@ -107,18 +138,23 @@ describe('CapturarFacturasComponent', () => {
     }
   });
 
-  it('debe ejecutar el constructor()', async () => {
+
+  // --- Pruebas en español para 120301 ---
+
+  it('debe crear el componente correctamente (constructor)', async () => {
     expect(component).toBeTruthy();
   });
+
   it('debe retornar facturaForm desde el getter formGroup', () => {
-    const mockFormGroup = { test: 'value' } as any;
-    component.facturaForm = mockFormGroup;
-    expect(component.formGroup).toBe(mockFormGroup);
+    // Prueba del getter en español
+    const grupoMock = { test: 'valor' } as any;
+    component.facturaForm = grupoMock;
+    expect(component.formGroup).toBe(grupoMock);
   });
 
-  it('debe tener el mapeo correcto de tableColumns', () => {
+  it('debe mapear correctamente las columnas de la tabla', () => {
     expect(component.tableColumns.length).toBe(8);
-    const sampleRow = {
+    const filaEjemplo = {
       numeroDeLaFactura: 'F001',
       razonSocial: 'Empresa X',
       domicilio: 'CDMX',
@@ -128,19 +164,18 @@ describe('CapturarFacturasComponent', () => {
       unidadMedida: 'KG',
       valorDolares: '200',
     };
-    expect(component.tableColumns[0].clave(sampleRow)).toBe('F001');
-    expect(component.tableColumns[1].clave(sampleRow)).toBe('Empresa X');
-    expect(component.tableColumns[2].clave(sampleRow)).toBe('CDMX');
-    expect(component.tableColumns[3].clave(sampleRow)).toBe('2025-01-01');
-    expect(component.tableColumns[4].clave(sampleRow)).toBe('100');
-    expect(component.tableColumns[5].clave(sampleRow)).toBe('50');
-    expect(component.tableColumns[6].clave(sampleRow)).toBe('KG');
-    expect(component.tableColumns[7].clave(sampleRow)).toBe('200');
+    expect(component.tableColumns[0].clave(filaEjemplo)).toBe('F001');
+    expect(component.tableColumns[1].clave(filaEjemplo)).toBe('Empresa X');
+    expect(component.tableColumns[2].clave(filaEjemplo)).toBe('CDMX');
+    expect(component.tableColumns[3].clave(filaEjemplo)).toBe('2025-01-01');
+    expect(component.tableColumns[4].clave(filaEjemplo)).toBe('100');
+    expect(component.tableColumns[5].clave(filaEjemplo)).toBe('50');
+    expect(component.tableColumns[6].clave(filaEjemplo)).toBe('KG');
+    expect(component.tableColumns[7].clave(filaEjemplo)).toBe('200');
   });
 
-
-
   it('debe manejar continuar() cuando el formulario es válido', () => {
+    // Mock en español para el formulario
     component['facturaForm'] = {
       markAllAsTouched: jest.fn(),
       updateValueAndValidity: jest.fn(),
@@ -156,21 +191,22 @@ describe('CapturarFacturasComponent', () => {
     expect(component['mostrarTabs'].emit).toHaveBeenCalledWith(true);
   });
 
-  it('debe ejecutar #ngOnInit()', () => {
-    const mockSeccionState = { readonly: true };
-    const mockTextileState = { formaValida: [{ descripcion: 'Valida' }] };
+  it('debe ejecutar ngOnInit correctamente', () => {
+    // Inicialización y mocks en español
+    const estadoSeccionMock = { readonly: true };
+    const estadoTextilMock = { formaValida: [{ descripcion: 'Valida' }] };
 
     component['seccionQuery'] = {
-      selectSeccionState$: observableOf(mockSeccionState),
+      selectSeccionState$: observableOf(estadoSeccionMock),
     } as any;
 
     component['ElegibilidadDeTextilesQuery'] = {
-      selectTextile$: observableOf(mockTextileState),
+      selectTextile$: observableOf(estadoTextilMock),
     } as any;
 
-    component['initActionFormBuild'] = jest.fn();
-    component['obtenerListasDesplegables'] = jest.fn();
-    component['recuperarDatos'] = jest.fn();
+      component['initActionFormBuild'] = jest.fn();
+      component['obtenerListasDesplegables'] = jest.fn();
+      const spyRecuperarDatos = jest.spyOn(component, 'recuperarDatos');
 
     component['seccionStore'] = {
       establecerFormaValida: jest.fn(),
@@ -181,21 +217,21 @@ describe('CapturarFacturasComponent', () => {
       setFormaValida: jest.fn(),
     } as any;
 
-    component['facturaForm'] = {
-      statusChanges: observableOf({}),
-      valid: true,
-      disable: jest.fn(),
-    } as any;
+    // Mock de facturaForm como FormGroup con reset
+    component['facturaForm'] = new FormBuilder().group({
+      unidadDeMedida: [''],
+      pais: [''],
+      fechaExpedicionFactura: ['']
+    });
 
     component['formularioDeshabilitado'] = true;
+    component['capturarState'] = estadoTextilMock as any;
 
-  component['capturarState'] = mockTextileState as any;
+  component.ngOnInit();
 
-    component.ngOnInit();
-
-    expect(component['initActionFormBuild']).toHaveBeenCalled();
-    expect(component['obtenerListasDesplegables']).toHaveBeenCalled();
-    expect(component['recuperarDatos']).toHaveBeenCalled();
+  expect(component['initActionFormBuild']).toHaveBeenCalled();
+  expect(component['obtenerListasDesplegables']).toHaveBeenCalled();
+  expect(mockRecuperarDatos).toHaveBeenCalled();
   });
 
   it('debe ejecutar #initActionFormBuild()', async () => {

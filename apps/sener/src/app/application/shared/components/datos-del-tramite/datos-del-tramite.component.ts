@@ -123,6 +123,22 @@ export class DatosDelTramiteComponent implements OnInit{
   }
 
   /**
+   * @method formularioSolicitudValidacion
+   * Valida el formulario de solicitud verificando si todos los campos cumplen con las reglas de validación.
+   * Si el formulario es inválido, marca todos los controles como tocados para mostrar los mensajes de error.
+   *
+   * @returns {boolean} - Retorna `true` si el formulario es válido, de lo contrario `false`.
+   */
+  formularioSolicitudValidacion(): boolean {
+    if (this.form.valid) {
+      return true;
+    }
+    this.form.markAllAsTouched();
+    return false;
+  }
+
+
+  /**
    * @description Emite un evento para actualizar valores en el almacén.
    * Este método se utiliza para notificar al componente padre sobre los cambios realizados
    * en un campo específico del formulario.

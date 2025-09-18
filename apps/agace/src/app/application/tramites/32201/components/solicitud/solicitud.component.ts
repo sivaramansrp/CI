@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { SOLICITUD_32201_ENUM } from '../../constantes/anexo';
 import { Tramite32201Query } from '../../estados/tramite32201.query';
 
-
 /**
  * Componente que representa la funcionalidad de la solicitud del trámite 32201.
  */
@@ -110,6 +109,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     { label: 'Sí', value: 'si' },
     { label: 'No', value: 'no' },
   ];
+
+  /**
+   * Texto de requisito.
+   */
   textoRequisito = this.TEXTOS.TEXTO_REQUISITOS;
 
   /**
@@ -129,18 +132,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private tramite32201Store: Tramite32201Store,
     private tramite32201Query: Tramite32201Query,
     private consultaioQuery: ConsultaioQuery
-  ) {
-   this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-          this.esFormularioSoloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
-  }
+  ) { }
 
   /**
    * Propiedad para rastrear el estado anterior de los regímenes 1, 2 y 3
@@ -155,7 +147,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Llama a los métodos para obtener datos de establecimientos, empleados, domicilios e instalaciones.
-   */
+   */  
   ngOnInit(): void {
     this.tramite32201Query.selectSolicitud$
       .pipe(
@@ -165,8 +157,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.donanteDomicilio();
-    this.inicializarEstadoFormulario();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          if (this.solicitudState) {
+            this.inicializarEstadoFormulario();
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -179,13 +181,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   * @returns {void}
   */
   inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.donanteDomicilio();
+    if (!this.solicitudState) {
+      return;
     }
+    this.guardarDatosFormulario();   
   }
-
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
@@ -196,8 +196,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.solicitudForm.disable();
     } else {
       this.solicitudForm.enable();
+      this.configurarValidacionRadio3();
+      this.solicitudForm.get('textoGenerico22')?.disable();
+      this.solicitudForm.get('textoGenerico23')?.disable();
+      this.solicitudForm.get('textoGenerico24')?.disable();
     }
   }
+
   /**
    * Método para cargar un archivo de proveedores.
    * Valida que el archivo sea de formato Excel (.xls o .xlsx) y verifica el número de columnas.
@@ -313,8 +318,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Método para inicializar el formulario reactivo con los valores del estado de la solicitud.
    * Este método se llama al inicializar el componente y establece los valores del formulario
    * basándose en el estado actual de la solicitud.
-   */  
+   */    
   donanteDomicilio(): void {
+    if (!this.solicitudState) {
+      return;
+    }
+
     this.solicitudForm = this.fb.group({
       regimen_0: [{value: this.solicitudState?.regimen_0, disabled: this.esFormularioSoloLectura}],
       regimen_1: [{value: this.solicitudState?.regimen_1, disabled: this.esFormularioSoloLectura}],
@@ -324,26 +333,30 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       radio_1: [{value: this.solicitudState?.radio_1, disabled: this.esFormularioSoloLectura}],
       radio_2: [{value: this.solicitudState?.radio_2, disabled: this.esFormularioSoloLectura}],
       radio_3: [{value: this.solicitudState?.radio_3, disabled: this.esFormularioSoloLectura}],
-      valorAduana: [{value: this.solicitudState?.valorAduana, disabled: true}], // Inicialmente deshabilitado
-      textoGenerico10: [{value: this.solicitudState.textoGenerico10, disabled: true}], // Inicialmente deshabilitado
-      textoGenerico11: [{value: this.solicitudState.textoGenerico11, disabled: true}], // Inicialmente deshabilitado
-      textoGenerico12: [{value: this.solicitudState.textoGenerico12, disabled: true}], // Inicialmente deshabilitado
-      textoGenerico13: [{value: this.solicitudState.textoGenerico13, disabled: true}], // Inicialmente deshabilitado
-      textoGenerico14: [{value: this.solicitudState.textoGenerico14, disabled: true}], // Inicialmente deshabilitado
-      textoGenerico15: [{value: this.solicitudState.textoGenerico15, disabled: true}], // Inicialmente deshabilitado
-      textoGenerico16: [{value: this.solicitudState.textoGenerico16, disabled: true}], // Inicialmente deshabilitado
-      textoGenerico17: [{value: this.solicitudState.textoGenerico17, disabled: true}], // Inicialmente deshabilitado
-      textoGenerico18: [{value: this.solicitudState.textoGenerico18, disabled: true}], // Inicialmente deshabilitado
-      textoGenerico19: [{value: this.solicitudState.textoGenerico19, disabled: true}], // Inicialmente deshabilitado
-      textoGenerico20: [{value: this.solicitudState.textoGenerico20, disabled: true}], // Inicialmente deshabilitado
-      textoGenerico21: [{value: this.solicitudState.textoGenerico21, disabled: true}], // Inicialmente deshabilitado
-      textoGenerico22: [{value: this.solicitudState.textoGenerico22, disabled: true}], // Inicialmente deshabilitado
-      textoGenerico23: [{value: this.solicitudState.textoGenerico23, disabled: true}], // Inicialmente deshabilitado
-      textoGenerico24: [{value: this.solicitudState.textoGenerico24, disabled: true}], // Inicialmente deshabilitado
+      valorAduana: [{value: this.solicitudState?.valorAduana, disabled: this.esFormularioSoloLectura}],
+      textoGenerico10: [{value: this.solicitudState?.textoGenerico10, disabled: this.esFormularioSoloLectura}],
+      textoGenerico11: [{value: this.solicitudState?.textoGenerico11, disabled: this.esFormularioSoloLectura}],
+      textoGenerico12: [{value: this.solicitudState?.textoGenerico12, disabled: this.esFormularioSoloLectura}],
+      textoGenerico13: [{value: this.solicitudState?.textoGenerico13, disabled: this.esFormularioSoloLectura}],
+      textoGenerico14: [{value: this.solicitudState?.textoGenerico14, disabled: this.esFormularioSoloLectura}],
+      textoGenerico15: [{value: this.solicitudState?.textoGenerico15, disabled: this.esFormularioSoloLectura}],
+      textoGenerico16: [{value: this.solicitudState?.textoGenerico16, disabled: this.esFormularioSoloLectura}],
+      textoGenerico17: [{value: this.solicitudState?.textoGenerico17, disabled: this.esFormularioSoloLectura}],
+      textoGenerico18: [{value: this.solicitudState?.textoGenerico18, disabled: this.esFormularioSoloLectura}],
+      textoGenerico19: [{value: this.solicitudState?.textoGenerico19, disabled: this.esFormularioSoloLectura}],
+      textoGenerico20: [{value: this.solicitudState?.textoGenerico20, disabled: this.esFormularioSoloLectura}],
+      textoGenerico21: [{value: this.solicitudState?.textoGenerico21, disabled: this.esFormularioSoloLectura}],      
+      textoGenerico22: [{value: this.solicitudState?.textoGenerico22, disabled: true}],
+      textoGenerico23: [{value: this.solicitudState?.textoGenerico23, disabled: true}],
+      textoGenerico24: [{value: this.solicitudState?.textoGenerico24, disabled: true}],
     });
 
-    this.configurarValidacionRegimen();
-    this.configurarValidacionRadio3();
+    if (this.esFormularioSoloLectura) {
+      this.solicitudForm.disable();
+    } else {
+      this.configurarValidacionRegimen();
+      this.configurarValidacionRadio3();
+    }
   }
 
   /**
@@ -368,6 +381,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
     }
   }  
+
     /**
    * Valida la condición de Régimen aduanero y muestra popup si es necesario.
    * Condición 1: Si regimen_0 está seleccionado y NINGUNO de regimen_1, regimen_2 o regimen_3 está seleccionado.
@@ -421,7 +435,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Maneja la confirmación del popup de régimen aduanero.
    * @param confirmar - Indica si el usuario confirmó (true) o canceló (false)
-   */
+   */    
   public manejarConfirmacionRegimen(confirmar: boolean): void {
     if (confirmar) {
       this.deseleccionarRegimen0();
@@ -458,14 +472,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Controla la habilitación/deshabilitación de los campos textoGenerico y valorAduana
    * basado en el valor del radio_3.
    * @param valorRadio3 - El valor seleccionado en radio_3 ('si' o 'no')
-   */
+   */  
   private controlarCamposTextoGenerico(valorRadio3: string): void {
     const CAMPOS_TEXTO_GENERICO = [
       'textoGenerico10', 'textoGenerico11', 'textoGenerico12', 'textoGenerico13',
       'textoGenerico14', 'textoGenerico15', 'textoGenerico16', 'textoGenerico17',
       'textoGenerico18', 'textoGenerico19', 'textoGenerico20', 'textoGenerico21',
-      'textoGenerico22', 'textoGenerico23', 'textoGenerico24', 'valorAduana'
+      'valorAduana'
     ];
+
+    if (this.esFormularioSoloLectura) {
+      CAMPOS_TEXTO_GENERICO.forEach(campo => {
+        this.solicitudForm.get(campo)?.disable();
+      });
+      return;
+    }
 
     if (valorRadio3 === 'si') {
       CAMPOS_TEXTO_GENERICO.forEach(campo => {
@@ -569,11 +590,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     const VALOR3 = this.solicitudForm.get('textoGenerico16')?.value;
     const VALOR4 = this.solicitudForm.get('textoGenerico19')?.value;
 
-    if (VALOR1 || VALOR2 || VALOR3 || VALOR4) {
-      const VALOR_COMERCIAL =
-        Number(VALOR1) + Number(VALOR2) + Number(VALOR3) + Number(VALOR4);
-      this.tramite32201Store.setTextoGenerico22(VALOR_COMERCIAL);
-    }
+    const VALOR_COMERCIAL = (Number(VALOR1) || 0) + (Number(VALOR2) || 0) + (Number(VALOR3) || 0) + (Number(VALOR4) || 0);
+    this.tramite32201Store.setTextoGenerico22(VALOR_COMERCIAL);
+    this.solicitudForm.get('textoGenerico22')?.setValue(VALOR_COMERCIAL, { emitEvent: false });
   }
 
   /** Calcula el valor aduanero sumando los valores ingresados */
@@ -583,11 +602,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     const VALOR3 = this.solicitudForm.get('textoGenerico17')?.value;
     const VALOR4 = this.solicitudForm.get('textoGenerico20')?.value;
 
-    if (VALOR1 || VALOR2 || VALOR3 || VALOR4) {
-      const VALOR_COMERCIAL =
-        Number(VALOR1) + Number(VALOR2) + Number(VALOR3) + Number(VALOR4);
-      this.tramite32201Store.setTextoGenerico23(VALOR_COMERCIAL);
-    }
+    const VALOR_ADUANERO = (Number(VALOR1) || 0) + (Number(VALOR2) || 0) + (Number(VALOR3) || 0) + (Number(VALOR4) || 0);
+    this.tramite32201Store.setTextoGenerico23(VALOR_ADUANERO);
+    this.solicitudForm.get('textoGenerico23')?.setValue(VALOR_ADUANERO, { emitEvent: false });
   }
 
   /** Calcula el porcentaje basado en los valores ingresados */
@@ -597,11 +614,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     const VALOR3 = this.solicitudForm.get('textoGenerico18')?.value;
     const VALOR4 = this.solicitudForm.get('textoGenerico21')?.value;
 
-    if (VALOR1 || VALOR2 || VALOR3 || VALOR4) {
-      const VALOR_COMERCIAL =
-        Number(VALOR1) + Number(VALOR2) + Number(VALOR3) + Number(VALOR4);
-      this.tramite32201Store.setTextoGenerico24(VALOR_COMERCIAL);
-    }
+    const VALOR_PORCENTAJE = (Number(VALOR1) || 0) + (Number(VALOR2) || 0) + (Number(VALOR3) || 0) + (Number(VALOR4) || 0);
+    this.tramite32201Store.setTextoGenerico24(VALOR_PORCENTAJE);
+    this.solicitudForm.get('textoGenerico24')?.setValue(VALOR_PORCENTAJE, { emitEvent: false });
   }
 
   /**
