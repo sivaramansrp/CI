@@ -160,7 +160,8 @@ export const CONFIGURATION_TABLA_FABRICANTE = [
   { encabezado: 'Localidad', clave: (item: FabricanteDatos): string => item.localidad, orden: 12 },
   { encabezado: 'Entidad federativa', clave: (item: FabricanteDatos): string => item.entidadFederativa, orden: 13 },
   { encabezado: 'Estado/localidad', clave: (item: FabricanteDatos): string => item.estado, orden: 14 },
-  { encabezado: 'Código postal', clave: (item: FabricanteDatos): string => item.codigoPostal, orden: 15 }
+  { encabezado: 'Código postal', clave: (item: FabricanteDatos): string => item.codigoPostal, orden: 15 },
+  { encabezado: 'Colonia o equivalente', clave: (item: FabricanteDatos): string => item.coloniaEquivalente, orden: 16 }
 ];
 /**
  * @description
@@ -184,6 +185,7 @@ export const TABLA_ROWDATA: FabricanteDatos[] = [
     localidad: "CDMX",
     entidadFederativa: "CDMX",
     estado: "CDMX",
-    codigoPostal: "06000"
+    codigoPostal: "06000",
+    coloniaEquivalente: "Centro histórico"
   }
 ];

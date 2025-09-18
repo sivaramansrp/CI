@@ -10,7 +10,7 @@
           id="formasdelcafeData"
           formControlName="formasdelcafe"
           [catalogo]="formasdelcafeData.catalogos"
-          [label]="'Formas Del Cafe'"
+          [label]="'Formas del café'"
           [placeholder]="formasdelcafeData.primerOpcion"
           [required]="true"
           (change)="setValoresStore(datosDelTramiteRealizar,'formasdelcafe', 'setFormasDelCafe')"
@@ -77,6 +77,16 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <div class="form-group">
+               <label class="form-label" for="nombredeagencia">Nombre de agencia*:</label>
+               <input class="form-control"  placeholder="" type="text" formControlName="nombredeagencia" id="nombredeagencia"
+               (change)="setValoresStore(datosDelTramiteRealizar,'nombredeagencia','setNombredeagencia')"
+               [disabled]="esFormularioSoloLectura">
+            </div>
+     </div>
+    </div>
     <ng-titulo titulo="Destino" />
     <div class="col-md-4">
       <div class="form-group">
@@ -98,7 +108,7 @@
       id="paisdestinoData"
       formControlName="paisdestino"
       [catalogo]="paisdestinoData.catalogos"
-      [label]="'Pais destino'"
+      [label]="'País destino'"
       [placeholder]="paisdestinoData.primerOpcion"
       [required]="true"
       (change)="setValoresStore(datosDelTramiteRealizar,'paisdestino', 'setPaisdestino')"

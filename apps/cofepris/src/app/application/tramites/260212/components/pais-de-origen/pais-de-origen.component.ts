@@ -2,9 +2,10 @@ import { Component, QueryList, ViewChildren } from '@angular/core';
 import { CrossListLable,CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
-import Procedencia from '@libs/shared/theme/assets/json/260212/pis-de-procedencia.json'
+import PaisDeProdencia from '@libs/shared/theme/assets/json/260212/paise-de-prodencia.json';
+import Procedencia from '@libs/shared/theme/assets/json/260212/pis-de-procedencia.json';
+import UsoEspecifico from '@libs/shared/theme/assets/json/260212/uso-espacio.json';
 
-export const TIPO_T: string = 't';
 
 @Component({
   selector: 'app-pais-de-origen',
@@ -25,14 +26,15 @@ export class PaisDeOrigenComponent {
  * Arreglo para almacenar el rango de días seleccionables.
  */
   selectRangoDias = Procedencia;
-  /**
- * Arreglo para almacenar las fechas seleccionadas por el usuario.
- */
-  fechasSeleccionadas: string[] = Procedencia;
-  /**
-   * Arreglo para almacenar los datos relacionados con las fechas.
-   */
-  fechasDatos: string[] = Procedencia;
+  /** 
+   * Arreglo para almacenar los países de procedencia seleccionables.
+  */
+  selectPaisDeProcedencia: string[] = PaisDeProdencia || [];
+
+  /** 
+   * Arreglo para almacenar los usos específicos seleccionables.
+  */
+  selectUsoEspecifico: string[] = UsoEspecifico || [];
 
   /**
    * Constructor de la clase PaisDeOriginComponent.
@@ -110,61 +112,80 @@ export class PaisDeOrigenComponent {
   /**
    * Configuración de los botones y sus respectivas funciones para manipular las selecciones.
    */
-  botones = [
+  paisDeOrigenBotones = [
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.forEach(cmp => cmp.agregar('t')),
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.forEach(cmp => cmp.agregar('')),
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.forEach(cmp => cmp.quitar('')),
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.forEach(cmp => cmp.quitar('t')),
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
     },
   ];
 
 
-  /**
-   * Agrega elementos a la lista de fechas según el tipo especificado.
-   * @param {string} tipo - Tipo de acción a realizar.
+  /**   
+   * Configuración de los botones y sus respectivas funciones para manipular las selecciones.
    */
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  agregar(tipo: string) {
-    if (tipo === TIPO_T) {
-      this.fechasSeleccionadas = [...this.selectRangoDias];
-      this.fechasDatos = [];
-    } else {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const fechaValor = this.fecha.value.map(Number);
-      this.fechasSeleccionadas?.push(this.fechasDatos[fechaValor]);
-      this.fechasDatos.splice(fechaValor, 1);
-    }
-  }
+  paisDeProcedenciaBotones = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[1].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[1].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[1].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[1].quitar('t'),
+    },
+  ];
 
-  /**
-   * Elimina elementos de la lista de fechas según el tipo especificado.
-   * @param {string} tipo - Tipo de acción a realizar.
+  /**   
+   * Configuración de los botones y sus respectivas funciones para manipular las selecciones.
    */
-  quitar(tipo = ''): void {
-    if (tipo === TIPO_T) {
-      this.fechasDatos = [...this.fechasSeleccionadas];
-      this.fechasSeleccionadas = [];
-    } else {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const fechaValor = this.fechaSeleccionada?.value.map(Number);
-      this.fechasDatos.push(this.fechasSeleccionadas[fechaValor]);
-      this.fechasSeleccionadas?.splice(fechaValor, 1);
-    }
-  }
+  usoEspecificoBotones = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+    },
+  ];
 
 }

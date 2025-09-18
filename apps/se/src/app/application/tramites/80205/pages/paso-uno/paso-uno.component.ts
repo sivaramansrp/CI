@@ -1,9 +1,11 @@
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
+import { AmpliacionServiciosComponent } from '../../components/ampliacion-servicios/ampliacion-servicios.component';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { ViewChild } from '@angular/core';
 
 /**
  * Componente PasoUnoComponent.
@@ -28,6 +30,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
 
   public esDatosRespuesta: boolean = false;
+
+  /**
+   * Referencia al componente `solicitudComponent`.
+   */
+  @ViewChild('solicitudComponent', { static: false }) solicitudComponent: AmpliacionServiciosComponent | undefined;
+
+  /**
 
   /**
    * Estado de la consulta actual.
@@ -90,6 +99,27 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
      
       }
     });
+}
+
+/**
+   * Valida todos los formularios del paso uno.
+   * 
+   * Este método valida principalmente el formulario de solicitante que es el único
+   * obligatorio. Los otros formularios solo se validan si están disponibles.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
+public validarTodosLosFormularios(): boolean {
+  let allFormsValid = true;
+  if (this.indice >= 2 && this.solicitudComponent) {
+  
+     if (!(this.solicitudComponent?.datosImmex.length>0) ) {
+      allFormsValid = false;
+    }
+
+  }
+  return allFormsValid ;
+
 }
 
   /**

@@ -622,6 +622,8 @@ export class DomicilioDelEstablecimiento260904Component
   /** Estado actual de la solicitud proveniente del store */
   public solicitudState!: Tramite260904State;
 
+  buttonDisableForProrroga: boolean = true;
+
   /**
    * Controla si los campos de nombre, apellidoPaterno y apellidoMaterno están habilitados
    */
@@ -946,6 +948,7 @@ ngOnChanges(): void {
       this.representanteLegal?.get('apellidoPaterno')?.disable();
       this.representanteLegal?.get('apellidoMaterno')?.disable();
     } else if (this.tipoTramite === '0') {
+      this.buttonDisableForProrroga = true;
       this.form?.disable();
       this.domicilio?.disable();
       this.representanteLegal?.disable();
@@ -1279,6 +1282,26 @@ ngOnChanges(): void {
       }
     }
 
+  
+
+/**
+ * Maneja el evento de entrada en el campo de licencia sanitaria.
+ * 
+ * Si el valor ingresado no está vacío ni compuesto solo por espacios,
+ * desmarca el checkbox 'avisoCheckbox' en el formulario 'domicilio'.
+ * Luego, actualiza el valor de 'licenciaSanitaria' en el store correspondiente.
+ * 
+ * @param event Evento de entrada del usuario en el campo de licencia sanitaria.
+ */
+onLicenciaSanitariaInput(event: Event): void {
+  const INPUT_ELEMENT = event.target as HTMLInputElement;
+  const VALUE = INPUT_ELEMENT.value;
+  if (VALUE && VALUE.trim() !== '') {
+    this.domicilio.get('avisoCheckbox')?.setValue(false);
+  }
+  this.setValorStore(this.domicilio, 'licenciaSanitaria');
+}
+
     /**
      * Maneja el evento de input del campo telefono para validar en tiempo real
      * @param event Evento de input del campo
@@ -1453,6 +1476,54 @@ ngOnChanges(): void {
   limpiarScian(): void {
     this.nicoTablaForm.reset();
   }
+
+
+public validateRequiredFields(): boolean {
+    let isValid = true;
+  if (this.form && this.form.invalid) {
+    isValid = false;
+    this.form.markAllAsTouched();
+  }
+  
+  if (this.domicilio && this.domicilio.invalid) {
+    isValid = false;
+    this.domicilio.markAllAsTouched();
+  }
+
+  if (this.representanteLegal && this.representanteLegal.invalid) {
+    isValid = false;
+    this.representanteLegal.markAllAsTouched();
+  }
+  
+  return isValid;
+}
+
+public markAllFieldsTouched(): void {
+ if (this.form) {
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsTouched();
+      control.markAsDirty();
+      control.updateValueAndValidity();
+    });
+  }
+  
+  if (this.domicilio) {
+    Object.values(this.domicilio.controls).forEach(control => {
+      control.markAsTouched();
+      control.markAsDirty();
+      control.updateValueAndValidity();
+    });
+  }
+  
+  // Mark representanteLegal form fields as touched
+  if (this.representanteLegal) {
+    Object.values(this.representanteLegal.controls).forEach(control => {
+      control.markAsTouched();
+      control.markAsDirty();
+      control.updateValueAndValidity();
+    });
+  }
+}
     /**
    * Navega a la ubicación anterior en el historial de navegación.
    * Utiliza el servicio de ubicación para retroceder una página.

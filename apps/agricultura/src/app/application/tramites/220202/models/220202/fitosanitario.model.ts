@@ -1,7 +1,7 @@
 import { CROSLISTA_DE_DATOS } from '../../constantes/220202/fitosanitario.enums';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { PersonaTerceros } from '@libs/shared/data-access-user/src';
-import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+
 
 /**
  * Representa una lista de pasos en un asistente (wizard).
@@ -164,7 +164,7 @@ export interface ListaDeDatosFinal {
     /**
      * Datos de la forma relacionados con terceros.
      */
-    datosForma: TercerosrelacionadosdestinoTable[];
+    datosForma: TercerosrelacionadosExportadorTable[];
 
     /**
      * que deben ser considerados para operaciones de uso compartido o validaciones cruzadas.
@@ -707,6 +707,32 @@ export interface DatosDeLaSolicitud {
     estados: Catalogo[];
 }
 
+
+/**
+ * Interfaz que define la estructura de datos para la información de la solicitud.
+ * @interface DatosDeLaSolicitud
+ */
+export interface TercerosRelacionados {
+    /**
+     * Catálogo de países.
+     */
+    paises: Catalogo[];
+    /**
+     * Catálogo de estados.
+     */
+    estados: Catalogo[];
+
+    /**
+     * Catálogo de municipios o alcaldías.
+     */
+    municipio: Catalogo[];
+
+    /**
+     * Catálogo de colonias.
+     */
+    colonias: Catalogo[];
+}
+
 /**
  * Interfaz que define la estructura de datos para la información de mercancías.
  * @interface DatosMercancia
@@ -782,4 +808,161 @@ export interface CrossListEtiqueta {
     tituluDeLaIzquierda: string;
     /** Contenido que se muestra en la parte derecha */
     derecha: string;
+}
+
+/**
+ * Modelo de datos para un destinatario relacionado.
+ * @interface
+ */
+export interface TercerosrelacionadosdestinoTable {
+  /**
+   * Tipo de persona (Física/Moral).
+   */
+  tipoMercancia: string;
+  /**
+   * Nombre(s) del destinatario.
+   */
+  nombre: string;
+  /**
+   * Primer apellido del destinatario.
+   */
+  primerApellido: string;
+  /**
+   * Segundo apellido del destinatario (opcional).
+   */
+  segundoApellido?: string;
+  /**
+   * Denominación o razón social del destinatario.
+   */
+  razonSocial: string;
+  /**
+   * País del destinatario.
+   */
+  pais: string;
+  /**
+   * Código postal del destinatario.
+   */
+  codigoPostal: string;
+  /**
+   * Estado del destinatario.
+   */
+  estado: string;
+  /**
+   * Municipio del destinatario (opcional).
+   */
+  municipio?: string;
+  /**
+   * Colonia del destinatario (opcional).
+   */
+  colonia?: string;
+  /**
+   * Calle del destinatario.
+   */
+  calle: string;
+  /**
+   * Número exterior del domicilio del destinatario.
+   */
+  numeroExterior: string;
+  /**
+   * Número interior del domicilio del destinatario (opcional).
+   */
+  numeroInterior?: string;
+  /**
+   * Lada telefónica del destinatario (opcional).
+   */
+  lada?: string;
+  /**
+   * Teléfono del destinatario (opcional).
+   */
+  telefono?: string;
+  /**
+   * Correo electrónico del destinatario (opcional).
+   */
+  correo?: string;
+  /**
+   * Planta del destinatario (opcional).
+   */
+  planta?: string;
+
+  /**
+   * Domicilio completo del destinatario (opcional).
+   */
+  domicilio?: string;
+
+  /**
+   * Descripción del municipio (para mostrar en tabla).
+   */
+  municipioDescripcion?: string;
+  
+  /**
+   * Descripción del estado (para mostrar en tabla).
+   */
+  estadoDescripcion?: string;
+  
+  /**
+   * Descripción del país (para mostrar en tabla).
+   */
+  paisDescripcion?: string;
+  
+  /**
+   * Descripción de la colonia (para mostrar en tabla).
+   */
+  coloniaDescripcion?: string;
+}
+
+/**
+ * Información del exportador relacionado con el trámite fitosanitario.
+ * @interface TercerosrelacionadosExportadorTable
+ */
+export interface TercerosrelacionadosExportadorTable {
+
+  /**
+   * Tipo de persona (Física/Moral).
+   */
+  tipoMercancia: string;
+
+  /**
+   * Nombre(s) del destinatario.
+   */
+  nombre: string;
+
+  /**
+   * Denominación o razón social del destinatario.
+   */
+  razonSocial: string;
+
+  /**
+   * País del destinatario.
+   */
+  pais: string;
+
+  /**
+   * Teléfono del destinatario (opcional).
+   */
+  telefono?: string;
+
+  /**
+   * Domicilio completo del destinatario (opcional).
+   */
+  domicilio?: string;
+
+  /**
+   * Correo electrónico del destinatario (opcional).
+   */
+  correo?: string;
+  
+  /**
+   * Primer apellido del destinatario.
+   */
+  primerApellido: string;
+
+  /**
+   * Segundo apellido del destinatario (opcional).
+   */
+  segundoApellido?: string;
+
+  /**
+   * Lada telefónica del destinatario (opcional).
+   */
+  lada?: string;
 }
