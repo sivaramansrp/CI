@@ -339,6 +339,10 @@ export interface CapturarColumns {
   unidadMedida: string;
   /** Valor en dólares estadounidenses */
   valorDolares: string;
+  /** ID único de la factura de expedición */
+  idFacturaExpedicion: number;
+  /** ID expedicion */
+  idExpedicion: number;
 }
 
 /**
@@ -373,6 +377,10 @@ export interface AsociadasTableColumns {
   unidadMedida: string;
   /** Valor proporcional en dólares */
   valorDolares: string;
+  /** ID único de la factura de expedición */
+  idFacturaExpedicion: number;
+  /** ID único de la expedición asociada */
+  idExpedicion: number;
 }
 
 /**

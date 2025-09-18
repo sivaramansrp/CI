@@ -2,7 +2,9 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, FormularioDinamico, PERSONA_MORAL_NACIONAL, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CertificadoDeOrigenComponent } from '../certificado-de-origen/certificado-de-origen.component';
 import { DomicilioTablaService } from '../../services/domicilio-tabla/domicilioTabla.service';
+import { DuplicadoDeCertificadoComponent } from '../duplicado-de-certificado/duplicado-de-certificado.component';
 
 /**
  * @descripcion
@@ -65,6 +67,29 @@ public consultaState!: ConsultaioState;
  * cuando el componente se destruye.
  */
 private destroyed$ = new Subject<void>();
+  /**
+   * @property {SolicitanteComponent} Solicitante
+   * @description
+   * Referencia al componente hijo `SolicitanteComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario del solicitante.
+   */
+  @ViewChild('Solicitante') Solicitante!: SolicitanteComponent;
+
+  /**
+   * @property {DuplicadoDeCertificadoComponent} Duplicado
+   * @description
+   * Referencia al componente hijo `DuplicadoDeCertificadoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de duplicado de certificado.
+   */
+  @ViewChild('Duplicado') Duplicado!: DuplicadoDeCertificadoComponent;
+
+  /**
+   * @property {CertificadoDeOrigenComponent} certificado
+   * @description
+   * Referencia al componente hijo `CertificadoDeOrigenComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de certificado de origen.
+   */
+  @ViewChild('certificado') certificado!: CertificadoDeOrigenComponent;
 
   /**
  * Constructor del componente.
@@ -151,5 +176,40 @@ constructor(
         this.service.actualizarEstadoFormulario(resp);
         }
       });
+  }
+  /**
+   * @method validarFormularios
+   * @description
+   * Valida todos los formularios de los componentes hijos en el orden siguiente:
+   * - Solicitante
+   * - Duplicado de certificado
+   * 
+   * Para cada componente, verifica si está disponible y si su formulario es válido.
+   * Si algún formulario es inválido, marca sus controles como "tocados" para mostrar los errores de validación.
+   * Si algún componente no está disponible o su formulario es inválido, establece `isValid` a `false`.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` si alguno no lo es o si falta algún componente.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.Duplicado) {
+      if (!this.Duplicado.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
   }
 }

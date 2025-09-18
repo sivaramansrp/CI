@@ -46,9 +46,12 @@ import { CargaDeFraccionesComponent } from '../carga-de-fracciones/carga-de-frac
 import { CargaPorArchivoComponent } from '../carga-por-archivo/carga-por-archivo.component';
 import { CargaProveedoresClientesComponent } from '../carga-proveedores-clientes/carga-proveedores-clientes.component';
 
+import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { ComplementosSeccionState, ComplementosSeccionStore } from '../../../estados/tramites/complementos-seccion.store';
 import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
+import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { ComplementosSeccionQuery } from '../../../estados/queries/complementos-seccion.query';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * compodoc
@@ -199,6 +202,11 @@ public mostrarProveedorClientesPopup: boolean = false;
 > = new EventEmitter<AnexoFraccionAnarelaria[]>(true);
 
 /**
+   * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
+   */
+  public complementarState!: ComplementarState;
+
+/**
  * 
  * @constructor
  * @description Constructor que inicializa el componente y el servicio FormBuilder para crear formularios reactivos.
@@ -206,8 +214,11 @@ public mostrarProveedorClientesPopup: boolean = false;
  */
 constructor(private fb: FormBuilder,
   private complementosSeccionStore: ComplementosSeccionStore,
-      private complementosSeccionQuery: ComplementosSeccionQuery,
-        private consultaioQuery: ConsultaioQuery
+  private complementosSeccionQuery: ComplementosSeccionQuery,
+  private consultaioQuery: ConsultaioQuery,
+  private complimentosService: ComplimentosService,
+  private complementarStore: ComplementarStore,
+  private complementarQuery: ComplementarQuery
 ){ 
        this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -226,8 +237,72 @@ constructor(private fb: FormBuilder,
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
+    this.complementarQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.complementarState = seccionState as ComplementarState;
+        })
+      )
+      .subscribe();
+
     this.inicializarCertificadoFormulario();
+
+    if (!(this.complementarState.tipoCategoriaOptions.length)) {
+      this.obtenertipoCatagoriaOptions('ENU_TIPO_CATEGORIA');
+    } else {
+      this.catagoriaSeleccionDatos = [...this.complementarState.tipoCategoriaOptions];
+    }
+    
+    if (!(this.complementarState.paisOptions.length)) {
+      this.obtenerPaisOptions();
+    } else {
+      this.paisDestinoCatalog = [...this.complementarState.paisOptions];
+    }
+
+    if (!(this.complementarState.tipoDocumentoOptions.length)) {
+      this.obtenerTipoDocumentoOptions(102);
+    } else {
+      this.tipoDeDocumenteCatalog = [...this.complementarState.tipoDocumentoOptions];
+    }
   }
+
+  /** Obtiene y actualiza las opciones del catálogo de tipo de categoría desde el servicio. */
+  obtenertipoCatagoriaOptions(tipo: string): void {
+    this.complimentosService.getTipoCategoria(tipo)
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    )
+    .subscribe((res) => {
+      this.complementarStore.setTipoCategoriaOptions(res.datos);
+      this.catagoriaSeleccionDatos = res.datos;
+    });
+  }
+
+  /** Obtiene y actualiza las opciones del catálogo de pais desde el servicio. */
+  obtenerPaisOptions(): void {
+    this.complimentosService.getPais()
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    )
+    .subscribe((res) => {
+      this.complementarStore.setPaisOptions(res.datos);
+      this.paisDestinoCatalog = res.datos;
+    });
+  }
+
+  /** Obtiene y actualiza las opciones del catálogo de tipo de documento desde el servicio. */
+  obtenerTipoDocumentoOptions(id: number): void {
+     this.complimentosService.getTipoDocumento(id)
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    )
+    .subscribe((res) => {
+      this.complementarStore.setTipoDocumentoOptions(res.datos);
+      this.tipoDeDocumenteCatalog = res.datos;
+    });
+  }
+
  /**
    * Método para inicializar el formulario reactivo con los datos de la solicitud.
    * 
@@ -304,7 +379,7 @@ actualizarControl(formName: string, controlName: string): void {
 
   // Actualizar la tienda o el servicio con el valor actualizado
   this.complementosSeccionStore.update(UPDATED_VALUE);
-
+  this.complementosSeccionStore.setDynamicFieldValue(controlName, UPDATED_VALUE[controlName]);
   
 }
 /**
@@ -323,7 +398,7 @@ ngOnDestroy(): void {
  * @property {Catalogo[]} catagoriaSeleccionDatos
  * Datos del catálogo utilizados para la selección de categorías en la sección de complementos.
  */
-catagoriaSeleccionDatos: Catalogo[] = COMPLEMENTAR_FRACCION_CATALOGO_DATOS;
+catagoriaSeleccionDatos: Catalogo[] = [];
 
 /**
  *  * compodoc
@@ -914,14 +989,14 @@ tablaProyectoImmex = TABLA_PROYECTO_IMMEX;
  * @property {Catalogo[]} paisDestinoCatalog
  * Catálogo que contiene los datos de los países de destino.
  */
-public paisDestinoCatalog = PAIS_DESTINO_CATALOG;
+public paisDestinoCatalog: Catalogo[] = [];
 
 /**
  * compodoc
  * @property {Catalogo[]} tipoDeDocumenteCatalog
  * Catálogo que contiene los datos de los tipos de documentos disponibles.
  */
-public tipoDeDocumenteCatalog = ANEXO_I_SERVICIO_CATALOGO;
+public tipoDeDocumenteCatalog: Catalogo[] = [];
 
   /**
    * Estado de la solicitud 250101, que contiene los valores actuales de la solicitud.

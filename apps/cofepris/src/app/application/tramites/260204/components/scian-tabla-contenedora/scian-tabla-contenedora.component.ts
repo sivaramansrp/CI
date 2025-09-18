@@ -1,8 +1,10 @@
+import { Component, OnInit } from '@angular/core';
+import { Subject,map,takeUntil } from 'rxjs';
+import { Tramite260204State, Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ScianTablaComponent } from '../../../../shared/components/scian-tabla/scian-tabla.component';
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
-import { Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
+import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
 
 /**
  * Componente `ScianTablaContenedoraComponent` que actúa como contenedor para la tabla SCIAN.
@@ -35,8 +37,20 @@ import { Tramite260204Store } from '../../estados/stores/tramite260204Store.stor
   templateUrl: './scian-tabla-contenedora.component.html',
   styleUrl: './scian-tabla-contenedora.component.scss',
 })
-export class ScianTablaContenedoraComponent {
+export class ScianTablaContenedoraComponent implements OnInit {
 
+   /**
+     * @property {Subject<void>} destroyNotifier$
+     * Subject utilizado para limpiar las suscripciones activas al destruir el componente.
+     * @private
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
+
+      /**
+       * @property {Tramite260204State} tramiteState
+       * Estado completo del trámite, que contiene información como la tabla de mercancías.
+       */
+      public tramiteState!: Tramite260204State;
   /**
    * Constructor de la clase ScianTablaContenedoraComponent.
    * 
@@ -46,8 +60,25 @@ export class ScianTablaContenedoraComponent {
    * @param tramite260204Store - Servicio inyectado que proporciona acceso y manejo del estado
    * relacionado con el trámite 260204.
    */
-  constructor(private tramite260204Store: Tramite260204Store){}
+  constructor(private tramite260204Store: Tramite260204Store,
+    private tramite260204Query: Tramite260204Query,
+  ){}
 
+    /**
+     * @method ngOnInit
+     * @description Hook del ciclo de vida que se ejecuta al inicializar el componente.
+     * Se suscribe al estado del trámite y guarda su valor localmente para uso posterior.
+     */
+    ngOnInit(): void {
+      this.tramite260204Query.selectTramiteState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.tramiteState = seccionState;
+          })
+        )
+        .subscribe();
+    }
   /**
    * Representa la configuración seleccionada de la tabla SCIAN.
    * 

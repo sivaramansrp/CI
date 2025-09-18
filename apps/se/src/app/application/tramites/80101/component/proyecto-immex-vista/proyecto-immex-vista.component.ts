@@ -34,12 +34,7 @@ export class ProyectoImmexVistaComponent {
    *              inicializados con un valor predeterminado definido en `PROYECTO_DATOS`.
    */
   public proyectoImmexDatos: PoryectoDatos = PROYECTO_DATOS;
-  /**
-   * Arreglo que contiene los datos del catálogo de documentos.
-   * Este catálogo se utiliza para gestionar y mostrar información relacionada
-   * con los documentos disponibles en el sistema.
-   */
-  public documentoCatalogDatos: Catalogo[] = DOCUMENTO_CATALOGO_DATOS;
+
   /**
    * Lista de encabezados del proyecto IMMEX.
    * 

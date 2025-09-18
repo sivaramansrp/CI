@@ -603,11 +603,11 @@ export const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE = [
  * @property {number} TRAMITE_260205 - Representa el número de trámite 260205.
  * @property {number} TRAMITE_260301 - Representa el número de trámite 260301.
  */
-export enum NUMERO_TRAMITE {
-  TRAMITE_260205 = 260205,
-  TRAMITE_260301 = 260301,
-  TRAMITE_260103 = 260103,
-  TRAMITE_260201 = 260201
+export const NUMERO_TRAMITE = {
+  TRAMITE_260103: 260103,
+  TRAMITE_260201: 260201,
+  TRAMITE_260301: 260301,
+  TRAMITE_260210: 260210
 }
 
 /**
@@ -705,7 +705,9 @@ export const DESCRIPCION_FRACCION_DESHABILITADO_VALOR =
  * @description Constante que representa el valor deshabilitado de la unidad de medida utilizada en la aplicación.
  * @type {string}
  * @valor "Kilogramo"
+ * @uso Utilizada para identificar solicitudes que requieren una unidad de medida específica.
  */
+
 export const UMT_DESHABILITADO_VALOR = 'Kilogramo';
 
 /** Mensaje mostrado cuando no hay fila seleccionada. */

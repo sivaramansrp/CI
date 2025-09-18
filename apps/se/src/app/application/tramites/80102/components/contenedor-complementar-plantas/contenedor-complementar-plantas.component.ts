@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DetallesPlantasComponent } from '../../../../shared/components/detalles-plantas/detalles-plantas.component';
@@ -42,6 +42,13 @@ export class ContenedorComplementarPlantasComponent
    */
   plantasSeleccionadas: PlantasSubfabricante[] = [];
 
+/**
+ * Evento emitido al regresar a la vista de plantas.
+ * No emite ningún dato, solo notifica la acción.
+ */
+  @Output() alRegresarPlantas = new EventEmitter<void>();
+  
+
   /**
    * Constructor de la clase ContenedorComplementarPlantasComponent.
    * @param {Tramite80102Query} query - Servicio para consultar el estado del trámite.
@@ -71,7 +78,7 @@ export class ContenedorComplementarPlantasComponent
  * @returns {void}
  */
   regresarPlantas(): void {
-    this.ubicaccion.back();
+    this.alRegresarPlantas.emit();
   }
 
   /**

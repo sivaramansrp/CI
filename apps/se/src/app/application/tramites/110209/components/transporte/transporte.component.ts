@@ -172,6 +172,22 @@ export class TransporteComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de datos del destinatario.
+   * Si el formulario es válido, retorna `true`.
+   * Si el formulario es inválido, marca todos los controles como "tocados" para mostrar los errores de validación y retorna `false`.
+   *
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (this.transporteForm.valid) {
+      return true;
+    }
+    this.transporteForm.markAllAsTouched();
+    return false;
+  }
 
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.

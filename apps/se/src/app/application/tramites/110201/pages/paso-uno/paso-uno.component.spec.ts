@@ -77,5 +77,308 @@ it('should call guardarDatosFormularios if consultaState.update is true', async 
     expect(registroServiceMock.actualizarEstadoFormulario).toHaveBeenCalled();
     expect(component.esDatosRespuesta).toBe(true);
   });
+
+  describe('validarFormularios', () => {
+    it('should return true when all child components are valid', () => {
+      // Mock all child components with valid forms
+      component.solicitante = {
+        form: { invalid: false, markAllAsTouched: jest.fn() }
+      } as any;
+      
+      component.certificadoOrigen = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.datosCertificado = {
+        validarFormulariosDatos: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.destinatario = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      const result = component.validarFormularios();
+      
+      expect(result).toBe(true);
+    });
+
+    it('should return false when solicitante form is invalid', () => {
+      component.solicitante = {
+        form: { invalid: true, markAllAsTouched: jest.fn() }
+      } as any;
+      
+      component.certificadoOrigen = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.datosCertificado = {
+        validarFormulariosDatos: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.destinatario = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      const result = component.validarFormularios();
+      
+      expect(result).toBe(false);
+      expect(component.solicitante.form.markAllAsTouched).toHaveBeenCalled();
+    });
+
+    it('should return false when solicitante component is not available', () => {
+      component.solicitante = null as any;
+      
+      component.certificadoOrigen = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.datosCertificado = {
+        validarFormulariosDatos: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.destinatario = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      const result = component.validarFormularios();
+      
+      expect(result).toBe(false);
+    });
+
+    it('should return false when certificadoOrigen component is not available', () => {
+      component.solicitante = {
+        form: { invalid: false, markAllAsTouched: jest.fn() }
+      } as any;
+      
+      component.certificadoOrigen = null as any;
+      
+      component.datosCertificado = {
+        validarFormulariosDatos: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.destinatario = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      const result = component.validarFormularios();
+      
+      expect(result).toBe(false);
+    });
+
+    it('should return false when certificadoOrigen validation fails', () => {
+      component.solicitante = {
+        form: { invalid: false, markAllAsTouched: jest.fn() }
+      } as any;
+      
+      component.certificadoOrigen = {
+        validarFormularios: jest.fn().mockReturnValue(false)
+      } as any;
+      
+      component.datosCertificado = {
+        validarFormulariosDatos: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.destinatario = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      const result = component.validarFormularios();
+      
+      expect(result).toBe(false);
+    });
+
+    it('should return false when datosCertificado component is not available', () => {
+      component.solicitante = {
+        form: { invalid: false, markAllAsTouched: jest.fn() }
+      } as any;
+      
+      component.certificadoOrigen = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.datosCertificado = null as any;
+      
+      component.destinatario = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      const result = component.validarFormularios();
+      
+      expect(result).toBe(false);
+    });
+
+    it('should return false when datosCertificado validation fails', () => {
+      component.solicitante = {
+        form: { invalid: false, markAllAsTouched: jest.fn() }
+      } as any;
+      
+      component.certificadoOrigen = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.datosCertificado = {
+        validarFormulariosDatos: jest.fn().mockReturnValue(false)
+      } as any;
+      
+      component.destinatario = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      const result = component.validarFormularios();
+      
+      expect(result).toBe(false);
+    });
+
+    it('should return false when destinatario component is not available', () => {
+      component.solicitante = {
+        form: { invalid: false, markAllAsTouched: jest.fn() }
+      } as any;
+      
+      component.certificadoOrigen = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.datosCertificado = {
+        validarFormulariosDatos: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.destinatario = null as any;
+
+      const result = component.validarFormularios();
+      
+      expect(result).toBe(false);
+    });
+
+    it('should return false when destinatario validation fails', () => {
+      component.solicitante = {
+        form: { invalid: false, markAllAsTouched: jest.fn() }
+      } as any;
+      
+      component.certificadoOrigen = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.datosCertificado = {
+        validarFormulariosDatos: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.destinatario = {
+        validarFormularios: jest.fn().mockReturnValue(false)
+      } as any;
+
+      const result = component.validarFormularios();
+      
+      expect(result).toBe(false);
+    });
+
+    it('should return false when solicitante form is undefined', () => {
+      component.solicitante = {
+        form: undefined
+      } as any;
+      
+      component.certificadoOrigen = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.datosCertificado = {
+        validarFormulariosDatos: jest.fn().mockReturnValue(true)
+      } as any;
+      
+      component.destinatario = {
+        validarFormularios: jest.fn().mockReturnValue(true)
+      } as any;
+
+      const result = component.validarFormularios();
+      
+      expect(result).toBe(false);
+    });
+
+    it('should return false when multiple components are invalid', () => {
+      component.solicitante = {
+        form: { invalid: true, markAllAsTouched: jest.fn() }
+      } as any;
+      
+      component.certificadoOrigen = {
+        validarFormularios: jest.fn().mockReturnValue(false)
+      } as any;
+      
+      component.datosCertificado = {
+        validarFormulariosDatos: jest.fn().mockReturnValue(false)
+      } as any;
+      
+      component.destinatario = {
+        validarFormularios: jest.fn().mockReturnValue(false)
+      } as any;
+
+      const result = component.validarFormularios();
+      
+      expect(result).toBe(false);
+      expect(component.solicitante.form.markAllAsTouched).toHaveBeenCalled();
+    });
+  });
+
+  describe('seleccionaTab', () => {
+    it('should set indice to the provided value', () => {
+      component.seleccionaTab(3);
+      expect(component.indice).toBe(3);
+    });
+
+    it('should change indice from default value', () => {
+      component.indice = 1;
+      component.seleccionaTab(2);
+      expect(component.indice).toBe(2);
+    });
+
+    it('should accept any numeric value', () => {
+      component.seleccionaTab(0);
+      expect(component.indice).toBe(0);
+      
+      component.seleccionaTab(5);
+      expect(component.indice).toBe(5);
+      
+      component.seleccionaTab(-1);
+      expect(component.indice).toBe(-1);
+    });
+  });
+
+  describe('cargaArchivo', () => {
+    it('should emit true when called with true', () => {
+      jest.spyOn(component.archivo, 'emit');
+      
+      component.cargaArchivo(true);
+      
+      expect(component.archivo.emit).toHaveBeenCalledWith(true);
+    });
+
+    it('should emit false when called with false', () => {
+      jest.spyOn(component.archivo, 'emit');
+      
+      component.cargaArchivo(false);
+      
+      expect(component.archivo.emit).toHaveBeenCalledWith(false);
+    });
+
+    it('should emit the exact value passed as parameter', () => {
+      jest.spyOn(component.archivo, 'emit');
+      
+      component.cargaArchivo(true);
+      expect(component.archivo.emit).toHaveBeenCalledWith(true);
+      
+      component.cargaArchivo(false);
+      expect(component.archivo.emit).toHaveBeenCalledWith(false);
+    });
+  });
+
+  describe('ngOnDestroy', () => {
+    it('should call next and complete on destroyNotifier$', () => {
+      jest.spyOn(component.destroyNotifier$, 'next');
+      jest.spyOn(component.destroyNotifier$, 'complete');
+      
+      component.ngOnDestroy();
+      
+      expect(component.destroyNotifier$.next).toHaveBeenCalled();
+      expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    });
+  });
   
 });

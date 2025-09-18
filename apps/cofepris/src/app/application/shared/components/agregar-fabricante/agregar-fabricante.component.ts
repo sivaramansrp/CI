@@ -12,6 +12,7 @@ import {
   NotificacionesComponent,
   Pedimento,
   REGEX_CORREO_ELECTRONICO,
+  REGEX_IMPORTE_PAGO,
   REGEX_NOMBRE,
   REGEX_RFC_FISICA,
   REGEX_RFC_MORAL,
@@ -369,7 +370,7 @@ export class AgregarFabricanteComponent
       ],
       curp: [
         this.obtenerValor('curp'),
-        this.estaOculto ? [] : Validators.required,
+        this.estaOculto ? [] : [Validators.required, Validators.pattern(/^[A-Za-z]{4}\d{6}[HM][A-Za-z]{5}\d{2}$/)]
       ],
       nombres: [
         this.obtenerValor('nombres'),
@@ -403,7 +404,7 @@ export class AgregarFabricanteComponent
             : this.obtenerValor('estadoLocalidad'),
           disabled: this.elementosDeshabilitados.includes('estado'),
         },
-        [Validators.required],
+        [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
       ],
       municipio: [
         {
@@ -423,7 +424,7 @@ export class AgregarFabricanteComponent
       codigoPostal: [
         this.obtenerValor('codigoPostal'),
         !this.elementosNoRequeridos.includes('codigoPostal')
-          ? [Validators.required]
+          ? [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)]
           : [],
       ],
       colonia: [
