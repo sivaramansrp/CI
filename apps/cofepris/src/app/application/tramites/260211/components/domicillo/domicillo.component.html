@@ -159,7 +159,7 @@
 
 </form>
 
-<div class="modal fade" id="modalAddAgent" tabindex="-1" aria-labelledby="modalAddAgentLabel" aria-hidden="true">
+<div class="modal fade" #modalAddAgent id="modalAddAgent" tabindex="-1" aria-labelledby="modalAddAgentLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content overflow-auto">
             <div class="modal-header">
@@ -171,14 +171,17 @@
                         <app-catalogo-select [catalogo]="estado" formControlName="claveScianModal"
                             [label]="'Clave S.C.I.A.N.'" [required]="true" name="claveScianModal"
                             (change)="setValoresStore(formAgente,'claveScianModal', 'setClaveScianModal')"
-                            [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
+                            [isDisabled]="esFormularioSoloLectura ? true : false"
+                            [markTouched]="formAgente.get('claveScianModal')?.touched??false"></app-catalogo-select>
                     </div>
                     <div class="form-group">
-                        <app-catalogo-select [catalogo]="estado" formControlName="claveDescripcionModal"
-                            [label]="'Descripción del S.C.I.A.N.'" [required]="false" name="claveDescripcionModal"
-                            [isDisabled]="esFormularioSoloLectura ? true : false"
-                            (change)="setValoresStore(formAgente,'claveDescripcionModal', 'setClaveDescripcionModal')"></app-catalogo-select>
-                    </div>
+                        <label for="descripcionModal">Descripción del S.C.I.A.N.*:</label>
+                        <input type="text" id="claveDescripcionModal" formControlName="claveDescripcionModal" class="form-control"
+                            (change)="setValoresStore(formAgente,'claveDescripcionModal', 'setClaveDescripcionModal')">
+                        <div *ngIf="formAgente.get('claveDescripcionModal')?.touched && formAgente.get('claveDescripcionModal')?.invalid" class="text-danger">
+                            <small *ngIf="formAgente.get('claveDescripcionModal')?.errors?.['required']">Este campo es obligatorio</small>
+                        </div>
+                        </div>
                 </form>
             </div>
             <div class="modal-footer custom-footer d-flex justify-content-between align-items-center w-100">
@@ -186,7 +189,7 @@
                 <div>
                     <button type="button" class="btn btn-default me-2" (click)="limpiarFormAgente()">Limpiar</button>
                     <button type="button" class="btn btn-default me-2" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                    <button type="button" class="btn btn-primary" 
                         (click)="agregarFilaScian()">Agregar</button>
                 </div>
             </div>
@@ -370,9 +373,9 @@
     </div>
 </div>
 
-<!-- @if (nuevaNotificacion) {
+@if (nuevaNotificacion) {
   <section>
-    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"  (confirmacionModal)="eliminarPedimentoDatos($event)">
     </lib-notificaciones>
   </section>
-} -->
+}
