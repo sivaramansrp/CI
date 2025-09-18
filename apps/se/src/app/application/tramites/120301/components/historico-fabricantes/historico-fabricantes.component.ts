@@ -14,6 +14,7 @@ import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import {
   CatalogosSelect,
   ConfiguracionColumna,
+  REGEX_RFC,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -91,6 +92,109 @@ import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
 })
 export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   /**
+   * Almacena los fabricantes seleccionados en la tabla de nacionales.
+   */
+  selectedFabricantesNacionales: HistoricoColumns[] = [];
+
+  /**
+   * Maneja el cambio de selección en la tabla de fabricantes nacionales.
+   */
+  onSeleccionNacionalChange(event: HistoricoColumns[]): void {
+    this.selectedFabricantesNacionales = Array.isArray(event) ? event : [];
+  }
+  /**
+   * @method abrirModalEliminar
+   * @description Abre el modal de confirmación para eliminar fabricantes asociados.
+   */
+  abrirModalEliminar(): void {
+    // Reference 'this' to satisfy ESLint
+    if (this.selectedFabricantesNacionales.length === 0) {
+      const MODAL_ELEMENT = document.getElementById('confirmarSeleccionar');
+      if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = new window.bootstrap.Modal(MODAL_ELEMENT);
+        MODAL_INSTANCE.show();
+      }
+      return;
+    }
+    // Agrega los seleccionados a fabricantesAsociados si no están ya
+    this.selectedFabricantesNacionales.forEach(fab => {
+      if (!this.fabricantesAsociados.some(a => a.numeroRegistroFiscal === fab.numeroRegistroFiscal)) {
+        this.fabricantesAsociados.push(fab);
+      }
+    });
+    this.historicoFabricantesForm.get('fabricantesAsociados')?.setValue(this.fabricantesAsociados);
+    // Limpia la selección nacional
+    this.selectedFabricantesNacionales = [];
+    this.cdr.detectChanges();
+
+    const ELEMENTO_MODAL = document.getElementById('confirmarEliminarFabricante');
+    const WIN = window as typeof window & { bootstrap?: { Modal: new (el: HTMLElement) => { show: () => void } } };
+    if (ELEMENTO_MODAL && WIN.bootstrap && typeof WIN.bootstrap.Modal === 'function') {
+      const INSTANCIA_MODAL = new WIN.bootstrap.Modal(ELEMENTO_MODAL);
+      INSTANCIA_MODAL.show();
+    }
+  }
+        /**
+         * Indica si el botón de eliminar debe estar habilitado.
+         * El botón se habilita si hay al menos un fabricante seleccionado en la tabla de asociados.
+         * @returns {boolean} `true` si se puede eliminar, `false` en caso contrario.
+         */
+        get puedeEliminar(): boolean {
+          return this.selectedFabricantes.length > 0;
+        }
+
+  /**
+   * @method eliminarFabricantesAsociados
+   * @description Elimina los fabricantes seleccionados de la lista de asociados.
+   */
+  eliminarFabricantesAsociados(): void {
+    if (this.selectedFabricantes.length === 0) {
+      return;
+    }
+    // Elimina los seleccionados de fabricantesAsociados
+    this.fabricantesAsociados = this.fabricantesAsociados.filter(f =>
+      !this.selectedFabricantes.some(sel => sel.numeroRegistroFiscal === f.numeroRegistroFiscal)
+    );
+    this.historicoFabricantesForm.get('fabricantesAsociados')?.setValue(this.fabricantesAsociados);
+    // Limpia la selección
+    this.selectedFabricantes = [];
+    this.cdr.detectChanges();
+
+    // Oculta el modal manualmente para eliminar el backdrop después de actualizar el DOM
+    setTimeout(() => {
+      const ELEMENTO_MODAL = document.getElementById('confirmarEliminarFabricante');
+      const VENTANA = window as typeof window & { bootstrap?: { Modal: new (el: HTMLElement) => { hide: () => void } } };
+      if (ELEMENTO_MODAL && VENTANA.bootstrap && typeof VENTANA.bootstrap.Modal === 'function') {
+        const INSTANCIA_MODAL = new VENTANA.bootstrap.Modal(ELEMENTO_MODAL);
+        INSTANCIA_MODAL.hide();
+      }
+
+      const FONDOS_MODAL = document.querySelectorAll('.modal-backdrop');
+      FONDOS_MODAL.forEach(fondo => fondo.parentNode?.removeChild(fondo));
+    }, 100);
+  }
+  /**
+   * @method asociadasFabricanteNuevo
+   * @description Busca el fabricante por numeroRegistroFiscal en el JSON y lo muestra en la tabla fabricantesAsociados.
+   */
+  asociadasFabricanteNuevo(): void {
+    const NUMERO_REGISTRO_FISCAL = this.historicoFabricantesForm.get('numeroRegistroFiscal')?.value;
+    if (!NUMERO_REGISTRO_FISCAL) {
+      this.fabricantesAsociados = [];
+      this.historicoFabricantesForm.get('fabricantesAsociados')?.setValue([]);
+      return;
+    }
+    // Buscar en fabricantesNacionales el registro con el RFC dado
+    const ENCONTRO = this.fabricantesNacionales.find(f => f.numeroRegistroFiscal === NUMERO_REGISTRO_FISCAL);
+    if (ENCONTRO) {
+      this.fabricantesAsociados = [ENCONTRO];
+      this.historicoFabricantesForm.get('fabricantesAsociados')?.setValue([ENCONTRO]);
+    } else {
+      this.fabricantesAsociados = [];
+      this.historicoFabricantesForm.get('fabricantesAsociados')?.setValue([]);
+    }
+  }
+  /**
    * @property {boolean} mostrarOpcionNacional
    * @description
    * Bandera que indica si se debe mostrar la opción 'Nacional' en los radio buttons.
@@ -120,6 +224,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * Permite gestionar la selección para acciones posteriores como asociar o eliminar fabricantes.
    */
   selectedFabricantes: HistoricoColumns[] = [];
+  fabricantesAsociados: HistoricoColumns[] = [];
 
   /**
    * @method onSeleccionChange
@@ -143,12 +248,29 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   alSeleccionarClick(): void {
-    if (this.selectedFabricantes.length === 0) {
-      const MODAL_ELEMENT = document.getElementById('confirmarSeleccionar');
-      if (MODAL_ELEMENT) {
-        const MODAL_INSTANCE = new window.bootstrap.Modal(MODAL_ELEMENT);
-        MODAL_INSTANCE.show();
+    if (this.selectedFabricantesNacionales.length === 0) {
+      const ELEMENTO_MODAL = document.getElementById('confirmarSeleccionar');
+      if (ELEMENTO_MODAL) {
+        const INSTANCIA_MODAL = new window.bootstrap.Modal(ELEMENTO_MODAL);
+        INSTANCIA_MODAL.show();
       }
+      return;
+    }
+    // Agrega los seleccionados a fabricantesAsociados si no están ya
+    this.selectedFabricantesNacionales.forEach(fab => {
+      if (!this.fabricantesAsociados.some(a => a.numeroRegistroFiscal === fab.numeroRegistroFiscal)) {
+        this.fabricantesAsociados.push(fab);
+      }
+    });
+    this.historicoFabricantesForm.get('fabricantesAsociados')?.setValue(this.fabricantesAsociados);
+    // Limpia la selección nacional
+    this.selectedFabricantesNacionales = [];
+    this.cdr.detectChanges();
+    // Opcional: cerrar modal si se usó para selección
+    const ELEMENTO_MODAL = document.getElementById('confirmarSeleccionar');
+    if (ELEMENTO_MODAL) {
+      const FONDOS_MODAL = document.querySelectorAll('.modal-backdrop');
+      FONDOS_MODAL.forEach(fondo => fondo.parentNode?.removeChild(fondo));
     }
   }
   /**
@@ -368,6 +490,10 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     this.initActionFormBuild();
     this.recuperarDatos();
 
+    // Ensure fabricantesAsociados is blank initially
+    this.fabricantesAsociados = [];
+    this.historicoFabricantesForm.get('fabricantesAsociados')?.setValue([]);
+
     this.historicoFabricantesForm.statusChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -416,9 +542,10 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
       ],
       numeroRegistroFiscal: [
         this.historicoState.numeroRegistroFiscal,
-        [Validators.required, Validators.minLength(5)],
+        [Validators.required, Validators.minLength(5), Validators.pattern(REGEX_RFC)],
       ],
       fabricantesNacionales: [[]],
+      fabricantesAsociados: [[]],
     });
   }
 

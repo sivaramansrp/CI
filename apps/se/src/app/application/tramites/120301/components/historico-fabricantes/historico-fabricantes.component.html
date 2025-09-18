@@ -1,6 +1,6 @@
 <div class="container">
+  <form [formGroup]="historicoFabricantesForm">
     <ng-titulo titulo="Histórico fabricantes" />
-    <form [formGroup]="historicoFabricantesForm">
       <div class="row">
         <div class="col-md-12">
           <label for="Tipo_de_Certificado"
@@ -32,47 +32,76 @@
 
     @if (valorSeleccionado === 'Nacional' && mostrarOpcionNacional) {
       <h6>Fabricantes nacionales</h6>
-      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns" [datos]="fabricantesNacionales" (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
+  <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns" [datos]="fabricantesNacionales" (listaDeFilaSeleccionada)="onSeleccionNacionalChange($event)"></app-tabla-dinamica>
       <div class="container text-end mt-5">
         <button class="btn btn-default me-2" type="button" (click)="alSeleccionarClick()">Seleccionar</button>
-        <button class="btn btn-primary" type="button">Fabricante nuevo</button>
+        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modalAgregar">Fabricante nuevo</button>
       </div>
     <h6>Fabricante</h6>
 
-    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns" [datos]="fabricantesNacionales" ></app-tabla-dinamica>
+  <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns" [datos]="fabricantesAsociados" (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
     <div class="row mb-3">
       <div class="d-flex justify-content-end mt-5">
-          <button type="button" class="btn btn-default">Eliminar</button>
+      <button type="button" class="btn btn-danger" [disabled]="!puedeEliminar" (click)="abrirModalEliminar()">Eliminar</button>
       </div>
     </div>
-    <div class="row">
-      <ng-titulo titulo="Datos fabricante nacional"></ng-titulo>
-      <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5">
-        <label for="message" class="form-label">
-          Número de registro fiscal<span [ngClass]="{'text-danger': historicoFabricantesForm.get('numeroRegistroFiscal')?.invalid && (historicoFabricantesForm.get('numeroRegistroFiscal')?.touched || historicoFabricantesForm.get('numeroRegistroFiscal')?.dirty)}">*</span>:
-        </label>
-        <input type="text" class="form-control" id="message" placeholder="" formControlName="numeroRegistroFiscal" 
-        (change)="
-          setValoresStore(
-          historicoFabricantesForm,
-          'numeroRegistroFiscal',
-          'setNumeroRegistroFiscal'
-          )"/>
-        @if (historicoFabricantesForm.get('numeroRegistroFiscal')?.invalid && (historicoFabricantesForm.get('numeroRegistroFiscal')?.touched || historicoFabricantesForm.get('numeroRegistroFiscal')?.dirty)) {
-          <small class="text-danger">Este campo es obligatorio</small>
-        }
-      </div>
-    </div>
-      <div class="row mb-3">
-        <div class="d-flex justify-content-end mt-3">
-            <button type="button" class="btn btn-default me-2">Cancelar</button>
-            <button type="submit" class="btn btn-primary ">Agreagar</button>
-            
+
+    <!-- Confirmar Eliminación Modal -->
+    <div id="confirmarEliminarFabricante" class="modal fade" tabindex="-1"
+      aria-labelledby="confirmarEliminarFabricanteLabel" aria-hidden="true">
+      <div class="modal-dialog modal-md eliminar-modal" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <label>¿Está seguro que desea eliminar los fabricantes seleccionados?</label>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary"
+              data-bs-dismiss="modal" (click)="eliminarFabricantesAsociados()">Aceptar</button>
+          </div>
         </div>
+      </div>
     </div>
   }
-    </form>
-
+    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="row">
+              <ng-titulo titulo="Datos fabricante nacional"></ng-titulo>
+              <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5">
+                <label for="message" class="form-label">
+                  Número de registro fiscal<span [ngClass]="{'text-danger': historicoFabricantesForm.get('numeroRegistroFiscal')?.invalid && (historicoFabricantesForm.get('numeroRegistroFiscal')?.touched || historicoFabricantesForm.get('numeroRegistroFiscal')?.dirty)}">*</span>:
+                </label>
+                <input type="text" class="form-control" id="message" placeholder="" formControlName="numeroRegistroFiscal" 
+                (change)="
+                  setValoresStore(
+                  historicoFabricantesForm,
+                  'numeroRegistroFiscal',
+                  'setNumeroRegistroFiscal'
+                  )"/>
+                @if (historicoFabricantesForm.get('numeroRegistroFiscal')?.invalid && (historicoFabricantesForm.get('numeroRegistroFiscal')?.touched || historicoFabricantesForm.get('numeroRegistroFiscal')?.dirty)) {
+                  <small class="text-danger">Este campo es obligatorio</small>
+                } @else if (historicoFabricantesForm.get('numeroRegistroFiscal')?.hasError('pattern')) {
+                  <small class="text-danger">Por favor, introduzca un RFC correcto</small>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer custom-footer mt-4 justify-content-end">
+            <div class="row">
+              <div class="col-md-12">
+                <button type="button" class="btn btn-default me-2" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary" (click)="asociadasFabricanteNuevo()" data-bs-dismiss="modal">Agregar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Confirmar Seleccionar Modal -->
     <div id="confirmarSeleccionar" class="modal fade" tabindex="-1"
       aria-labelledby="confirmarSeleccionarLabel" aria-hidden="true">
@@ -91,4 +120,5 @@
         </div>
       </div>
     </div>
+    </form>
   </div>
