@@ -188,8 +188,8 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
         this.datosdelForm.disable();
         this.formGroup1.disable();
       } else {
-        // this.datosdelForm.enable();
-        // this.formGroup1.enable();
+        this.datosdelForm.enable();
+        this.formGroup1.enable();
       } 
   }
 
