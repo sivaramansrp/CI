@@ -590,15 +590,6 @@ export interface fraccionInfo {
   FRACCION_Columna_6: string;
 
   /**
-   * @description Campo adicional para información específica de la fracción arancelaria.
-   * Puede utilizarse para almacenar datos complementarios, observaciones o referencias asociadas a la fracción.
-   * @type {string}
-   * @example "Observaciones adicionales"
-   * @optional
-   */
-  FRACCION_Columna_7: string;
-
-  /**
    * @description Indicador del estado activo (true) o inactivo (false) del registro de fracción.
    * Bandera booleana que determina si la fracción está habilitada para operaciones o ha sido desactivada.
    * @type {boolean}
@@ -660,7 +651,7 @@ export const FRACCION_EXPORTACION = [
      * @description Encabezado para la columna del código de fracción arancelaria
      * @type {string}
      */
-    encabezado: 'Fracción arancelaria',
+    encabezado: 'Fracción de importación',
     /**
      * @description Función extractora para obtener el código oficial de fracción arancelaria
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
@@ -678,7 +669,7 @@ export const FRACCION_EXPORTACION = [
      * @description Encabezado para la columna de mercancía de importación relacionada
      * @type {string}
      */
-    encabezado: 'Mercancía de importación',
+    encabezado: 'Fracción de exportación',
     /**
      * @description Función extractora para obtener la descripción de mercancía de importación
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
@@ -725,7 +716,7 @@ export const FRACCION_EXPORTACION = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 5,
+    orden: 6,
   },
   {
     /**
@@ -743,25 +734,7 @@ export const FRACCION_EXPORTACION = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 6,
-  },
-  {
-    /**
-     * @description Encabezado para la columna de solicitud de baja de fracción
-     * @type {string}
-     */
-    encabezado: 'Solicita baja',
-    /**
-     * @description Función extractora para obtener información de solicitud de baja
-     * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
-     * @returns {string} Información de solicitud de baja asociada a la fracción
-     */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_7,
-    /**
-     * @description Orden de presentación de la columna en la tabla
-     * @type {number}
-     */
-    orden: 7,
+    orden: 5,
   }
 ];
 /**

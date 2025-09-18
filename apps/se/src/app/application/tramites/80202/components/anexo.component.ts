@@ -896,13 +896,10 @@ FRACCION_Columna_4
 "Kilogramo",
 FRACCION_Columna_5
 : 
-"Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso",
+this.immexRegistroform.get('exportacionForm')?.getRawValue().FraccionDescExportacion,
 FRACCION_Columna_6
 : 
 "FRACC EXP 1 SENASICA",
-FRACCION_Columna_7
-: 
-"",
 estatus:true
     }
     
@@ -969,9 +966,10 @@ estatus:true
        if(this.selectedRowData !== null && borrar){
         this.immexRegistroform.get('importacionForm')?.patchValue(this.selectedRowData);
  const MODAL_INSTANCIA = new Modal(
-        this.mercanciaImportacionModal.nativeElement
+        this.mercanciaExportacionModal.nativeElement
       );
       MODAL_INSTANCIA.show();
+   
       }
       
       
