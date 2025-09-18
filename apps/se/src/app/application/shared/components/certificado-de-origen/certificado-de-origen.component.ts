@@ -510,7 +510,14 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
       fax: [''],
       correo: [''],
       correoElectronico: [''],
-
+      // New form controls for procedure 110222
+      calle1: [''],
+      numeroLetra1: [''],
+      ciudad1: [''],
+      pais1: [''],
+      correo1: [''],
+      telefono1: [''],
+      fax1: ['']
     },
       { validators: CertificadoDeOrigenComponent.dateRangeValidator(this) }
     );
@@ -529,7 +536,6 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
     if (!PRIMER_APELLIDO || !CALLE || !NUMERO_LETRA) { return; }
 
     if (this.idProcedimiento === 110205) {
-
       PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
       CALLE.setValidators([Validators.maxLength(90)]);
       NUMERO_LETRA.setValidators([Validators.maxLength(30)]);
@@ -544,6 +550,46 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
     NUMERO_LETRA.updateValueAndValidity();
   }
 
+  /**
+ * Aplica validaciones específicas para los campos del domicilio del tercer operador en el procedimiento 110222.
+ * 
+ * @remarks
+ * Este método establece validaciones obligatorias para los campos específicos del procedimiento 110222.
+ */
+  applyTercerOperadorValidation(): void {
+    if (this.idProcedimiento === 110222) {
+      const CALLE1 = this.formCertificado.get('calle1');
+      const NUMERO_LETRA1 = this.formCertificado.get('numeroLetra1');
+      const CIUDAD1 = this.formCertificado.get('ciudad1');
+      const PAIS1 = this.formCertificado.get('pais1');
+      const CORREO1 = this.formCertificado.get('correo1');
+
+      if (CALLE1) {
+        CALLE1.setValidators([Validators.required, Validators.maxLength(90)]);
+        CALLE1.updateValueAndValidity();
+      }
+
+      if (NUMERO_LETRA1) {
+        NUMERO_LETRA1.setValidators([Validators.required, Validators.maxLength(30)]);
+        NUMERO_LETRA1.updateValueAndValidity();
+      }
+
+      if (CIUDAD1) {
+        CIUDAD1.setValidators([Validators.required, Validators.maxLength(100)]);
+        CIUDAD1.updateValueAndValidity();
+      }
+
+      if (PAIS1) {
+        PAIS1.setValidators([Validators.required]);
+        PAIS1.updateValueAndValidity();
+      }
+
+      if (CORREO1) {
+        CORREO1.setValidators([Validators.required, Validators.email, Validators.maxLength(100)]);
+        CORREO1.updateValueAndValidity();
+      }
+    }
+  }
 
   /**
 * Evalúa si se debe inicializar o cargar datos en el formulario.
@@ -689,6 +735,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
   ngOnInit(): void {
     this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
+    this.applyTercerOperadorValidation(); // Add validation for procedure 110222
     this.nuevaNotificacion = {} as Notificacion
     this.inicializarFormularioArchivo();
   }
