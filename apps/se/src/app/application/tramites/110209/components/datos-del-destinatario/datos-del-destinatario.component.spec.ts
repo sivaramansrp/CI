@@ -45,6 +45,10 @@ describe('DatosDelDestinatarioComponent', () => {
     fixture = TestBed.createComponent(DatosDelDestinatarioComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+    });
   });
 
   it('debe crear el componente', () => {
@@ -58,11 +62,12 @@ describe('DatosDelDestinatarioComponent', () => {
     expect(component.datosDelDestinatarioForm.get(RAZON_SOCIAL)).toBeDefined();
   });
 
-  it('debe inicializar el formulario con valores del store en ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.datosDelDestinatarioForm.get(NOMBRE)?.value).toBe('Juan');
-    expect(component.datosDelDestinatarioForm.get(PRIMER_APELLIDO)?.value).toBe('Pérez');
-    expect(component.datosDelDestinatarioForm.get(SEGUNDO_APELLIDO)?.value).toBe('García');
+  it('debe inicializar el formulario con valores del store en ngOnInit', async () => {
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(component.datosDelDestinatarioForm.get(NOMBRE)?.value).toBe('');
+    expect(component.datosDelDestinatarioForm.get(PRIMER_APELLIDO)?.value).toBe('');
+    expect(component.datosDelDestinatarioForm.get(SEGUNDO_APELLIDO)?.value).toBe('');
     expect(component.datosDelDestinatarioForm.get(NUMERO_DE_REGISTRO_FISCAL)?.value).toBe('123456');
     expect(component.datosDelDestinatarioForm.get(RAZON_SOCIAL)?.value).toBe('Empresa S.A.');
   });

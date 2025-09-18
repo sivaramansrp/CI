@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { AlertComponent, Notificacion, NotificacionesComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, Notificacion, NotificacionesComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
@@ -28,12 +28,15 @@ import {
   INMEX_PLANTAS
 } from '../../constantes/federatarios-y-plantas.enum';
 
+import { Subject, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
+
 
 /**
  * Componente para los federatarios y plantas
@@ -148,6 +151,20 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
   estadoOptions: [] = [];
 
   /**
+   * Arreglo que contiene el catálogo de municipios.
+   * Cada elemento es de tipo `Catalogo`, representando la información de un municipio disponible.
+   */
+  municipioCatologo:Catalogo[]=[];
+
+  /**
+   * Arreglo que contiene las instancias del catálogo de representaciones.
+   * Cada elemento representa una opción disponible en el catálogo.
+   * 
+   * @type {Catalogo[]}
+   */
+  RepresentacionCatalogo: Catalogo[] = [];
+
+  /**
    * Texto para mostrar en la alerta
    * @property {string} textodAlerta
    */
@@ -232,11 +249,19 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
   public plantasNotificacion!: Notificacion;
 
   /**
+     * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+     * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+     *
+     * @property {Subject<void>} destroyNotifier$
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Constructor de la clase FederatariosYPlantasComponent.
    * @param {Router} router - Servicio de Angular para la navegación.
    * @param {ActivatedRoute} activatedRoute - Servicio de Angular para obtener información sobre la ruta actual.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private validacionesService: ValidacionesFormularioService) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private validacionesService: ValidacionesFormularioService,private complimentosService: ComplimentosService) {}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -244,7 +269,12 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
    * deshabilita el grupo de controles `federatariosFormGroup` para evitar la interacción del usuario.
    */
   ngOnInit(): void {
+    this.obtenerEstados();
     this.initFederatariosFormGroup();
+    this.obtenerRepresentacion('MEX');
+    this.obtenerActividad();
+    this.obtenerTipoDocumento(102);
+    this.obtenerMunicipio("BCN")
     if (this.formularioDeshabilitado) {
       this.federatariosFormGroup.disable();
     }
@@ -561,5 +591,80 @@ agregarPlantas(): void {
     this.plantasImmexDatos = [...this.plantasImmexDatos];
   }
 }
+
+/**
+ * Obtiene la lista de estados llamando al servicio `complimentosService`.
+ * Se suscribe al observable retornado por `getEstado()` y muestra la respuesta en la consola.
+ * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
+ */
+obtenerEstados():void {
+    this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      this.estadoOptionsConfig.estadosFederatarios = res.datos;
+    });
+    
+  }
+
+  /**
+   * Obtiene la representación de los estados federatarios desde el servicio `complimentosService`
+   * y actualiza la configuración de opciones de estados federatarios con los datos recibidos.
+   * 
+   * La suscripción se cancela automáticamente cuando el observable `destroyNotifier$` emite un valor,
+   * evitando posibles fugas de memoria.
+   */
+  obtenerRepresentacion(id:string):void {
+    this.complimentosService.getRepresentacion(id).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      this.RepresentacionCatalogo=res.datos
+    });
+    
+  }
+
+  /**
+   * Obtiene la actividad productiva desde el servicio `complimentosService` y actualiza la propiedad
+   * `estadosFederatarios` en la configuración de opciones de estado.
+   * 
+   * La suscripción se gestiona para finalizar automáticamente cuando se emite el notifier `destroyNotifier$`.
+   * 
+   * @remarks
+   * Utiliza el método `getActividadProductiva` del servicio y espera que la respuesta contenga la propiedad `datos`.
+   */
+  obtenerActividad():void {
+    this.complimentosService.getActividadProductiva().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      this.estadoOptionsConfig.municipio=res.datos;
+
+    });
+    
+  }
+
+  /**
+   * Obtiene el tipo de documento asociado al identificador proporcionado.
+   * Realiza una petición al servicio `complimentosService` para recuperar los datos
+   * del tipo de documento y actualiza la configuración de opciones de estado (`estadoOptionsConfig.municipio`)
+   * con la respuesta obtenida.
+   *
+   * @param id - Identificador numérico del tipo de documento a consultar.
+   */
+   obtenerTipoDocumento(id:number):void {
+    this.complimentosService.getTipoDocumento(id).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      this.estadoOptionsConfig.municipio=res.datos;
+
+    });
+    
+  }
+
+  /**
+   * Obtiene el catálogo de municipios correspondientes a una entidad especificada.
+   * 
+   * Realiza una solicitud al servicio `complimentosService` para obtener los municipios
+   * asociados al parámetro `entidad`. Los resultados se asignan a la propiedad `municipioCatologo`.
+   * La suscripción se gestiona para finalizar automáticamente cuando se emite `destroyNotifier$`.
+   *
+   * @param entidad - Clave o nombre de la entidad para la cual se desean obtener los municipios.
+   */
+   obtenerMunicipio(entidad:string):void {
+    this.complimentosService.getmunicipio(entidad).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+  this.municipioCatologo = res.datos;
+    });
+    
+  }
 
 }

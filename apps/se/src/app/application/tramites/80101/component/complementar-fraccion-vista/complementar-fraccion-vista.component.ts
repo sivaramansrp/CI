@@ -29,12 +29,6 @@ export class ComplementarFraccionVistaComponent {
    */
   public complimentarDatos!: ComplimentarFraccionResoponse;
   /**
-   * Datos seleccionados de la categoría que se utilizan para complementar la fracción.
-   * Esta propiedad almacena un arreglo de objetos del tipo `Catalogo`, 
-   * inicializado con los datos definidos en `COMPLEMENTAR_FRACCION_CATALOGO_DATOS`.
-   */
-  public catagoriaSeleccionDatos: Catalogo[] = COMPLEMENTAR_FRACCION_CATALOGO_DATOS;
-  /**
    * Datos utilizados para complementar la fracción en el componente.
    * 
    * @type {ComplimentarFraccion}

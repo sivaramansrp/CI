@@ -269,7 +269,7 @@
             [tooltipQuestionCircleText]="'Fecha aproximada de la importación de la mercancía'"
             (valorCambiado)="cambioFechaDeIngreso($event)"
             [setFecha]="mercanciaST.get('fechaInicio')?.value"
-            
+            [deshabilitarPasadas]="true"
           ></input-fecha>
           @if (isValid(mercanciaST,'fechaInicio')) {
           <div class="mensaje-error"><span style="color: red;">Este campo es obligatorio.</span></div>

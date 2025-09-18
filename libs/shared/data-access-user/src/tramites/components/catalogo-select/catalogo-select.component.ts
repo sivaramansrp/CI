@@ -257,15 +257,21 @@ export class CatalogoSelectComponent
    * @returns void
    */
   handleChange(event: Event): void {
-    const VALUE = (event.target as HTMLSelectElement).value;
-    const SELECTED_OPTION = this.catalogo.find(
-      (option) => option.id === Number(VALUE)
-    );
-    if (SELECTED_OPTION) {
-      this.selectionChange.emit(SELECTED_OPTION);
-    }
-    this.onChange(VALUE);
+  
+  const VALUE = (event.target as HTMLSelectElement).value;
+
+  // Buscar por id o clave
+  const SELECTED_OPTION = this.catalogo.find(
+    (option) =>
+      option.id?.toString() === VALUE || option.clave?.toString() === VALUE
+  );
+
+  if (SELECTED_OPTION) {
+    this.selectionChange.emit(SELECTED_OPTION);
   }
+  this.onChange(VALUE);
+}
+
 
   /**
    * Escribe un valor en el control del formulario si es diferente al actual.
@@ -322,13 +328,16 @@ export class CatalogoSelectComponent
    * @param isDisabled - Indica si el componente debe estar deshabilitado.
    * @returns void
    */
-  setDisabledState?(isDisabled: boolean): void {
-    this.isDisabled = isDisabled;
-    const control = this.formSelect.get('selectControl');
+  setDisabledState(isDisabled: boolean): void {
+  this.isDisabled = isDisabled;
+  const CONTROL = this.formSelect.get('selectControl');
+  if (CONTROL) {
     if (isDisabled) {
-      control?.disable({ emitEvent: false });
+      CONTROL.disable({ emitEvent: false });
     } else {
-      control?.enable({ emitEvent: false });
+      CONTROL.enable({ emitEvent: false });
     }
   }
+}
+
 }

@@ -1,13 +1,15 @@
-import { AL_DAR, AlertComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AL_DAR, AlertComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DomicilloDelComponent } from '../domicillo-del/domicillo-del.component';
-import { ManifiestosComponent } from '../manifiestos/manifiestos.component';
-import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
+import { ManifiestosComponent } from '../../../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
+import { RepresentanteLegalComponent } from '../../../../shared/components/representante-legal/representante-legal.component';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
 /**
  * Componente que representa la sección de datos de la solicitud en el formulario.
@@ -27,7 +29,9 @@ import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
     DomicilloDelComponent,
     ManifiestosComponent,
     RepresentanteLegalComponent,
-    InputRadioComponent
+    InputRadioComponent,
+    NotificacionesComponent,
+    TooltipModule
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -83,6 +87,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public esFormularioSoloLectura: boolean = false;
 
   /**
+   * Indica si se ha hecho clic en la opción de tener selección.
+   */
+  public tieneSeleccionClicked: boolean = false;
+
+  /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
    * Constructor del componente DatosDeLaSolicitudComponent.
    * 
    * @param fb - Instancia de FormBuilder utilizada para crear y gestionar formularios reactivos.
@@ -93,7 +109,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     public readonly fb: FormBuilder,
     private tramite260701Store: Tramite260701Store,
     private tramite260701Query: Tramite260701Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private certificadosLicenciasSvc: CertificadosLicenciasService
   ) {
     /**
       * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -155,13 +172,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public toggleFormControls(): void {
-    Object.keys(this.forma.controls).forEach((controlName) => {
-      const CONTROL = this.forma.get(controlName);
-      if (CONTROL?.disabled) {
-        CONTROL.enable();
-      }
-    });
-
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+    this.tieneSeleccionClicked = !this.tieneSeleccionClicked;
   }
 
   /**
@@ -205,6 +227,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.forma.get('tipoOperacion')?.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.forma.get('tipoOperacion')?.enable();
+    }
+  }
+
+  /**
+   * Maneja la eliminación de un pedimento basado en la confirmación del usuario.
+   * Si `borrar` es verdadero, emite un evento para notificar la eliminación y habilita los controles del formulario.
+   * @param borrar Indica si se debe proceder con la eliminación del pedimento.
+   */
+  public eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      Object.keys(this.forma.controls).forEach((controlName) => {
+        const CONTROL = this.forma.get(controlName);
+        if (CONTROL?.disabled) {
+          CONTROL.enable();
+        }
+      });
+      this.certificadosLicenciasSvc.emitEvent(this.tieneSeleccionClicked);
     }
   }
 

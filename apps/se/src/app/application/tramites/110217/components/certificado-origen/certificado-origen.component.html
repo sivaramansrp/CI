@@ -74,7 +74,7 @@
 
     @if(solicitudState.tercerOperador){
     <div class="row">
-      <ng-titulo titulo="Domicilio del tracer operador" />
+      <ng-titulo titulo="Domicilio del tercer operador" />
       <ng-container formGroupName="grupoDeDomicilio">
         <div class="row">
           <div class="col-md-4">
@@ -344,11 +344,17 @@
 				        <div class="text-danger">
 					      <small>Este campo es obligatorio</small>
 				        </div>
+                } @else if (formularioMercancia.get('cantidad')?.hasError('pattern') &&
+                formularioMercancia.get('cantidad')?.touched) {
+                  <div class="text-danger">
+                    <small>El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales</small>
+                  </div>
                 }
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="optionsPais" [label]="'UMC'" [required]="true" id="pais" formControlName="pais"
                   [tooltipQuestionCircle]="true" [ngClass]="isValid(formularioMercancia,'pais') ? 'required' : ''"
+                  [markTouched]="formularioMercancia.get('pais')?.touched ?? false"
                   (change)=" setValoresStore(formularioMercancia, 'pais', 'setPais') "></app-catalogo-select>
               </div>
 
@@ -363,8 +369,13 @@
                 @if (formularioMercancia.get('valorDelaMercancia')?.hasError('required') &&
 				        formularioMercancia.get('valorDelaMercancia')?.touched) {
 				        <div class="text-danger">
-					      <small>Este campo es obligatorio..</small>
+					      <small>Este campo es obligatorio</small>
 				        </div>
+                } @else if (formularioMercancia.get('valorDelaMercancia')?.hasError('pattern') &&
+                formularioMercancia.get('valorDelaMercancia')?.touched) {   
+                  <div class="text-danger">
+                    <small>El valor debe ser un número con hasta 15 dígitos enteros y hasta 4 dígitos decimales</small>
+                  </div>
                 }
               </div>
               <div class="col-md-8">
@@ -376,8 +387,13 @@
                 @if (formularioMercancia.get('complementoDelaDescripcion')?.hasError('required') &&
 				        formularioMercancia.get('complementoDelaDescripcion')?.touched) {
 				        <div class="text-danger">
-					      <small>Este campo es obligatorio..</small>
+					      <small>Este campo es obligatorio</small>
 				        </div>
+                } @else if (formularioMercancia.get('complementoDelaDescripcion')?.hasError('maxlength') &&
+                formularioMercancia.get('complementoDelaDescripcion')?.touched) {
+                  <div class="text-danger">
+                    <small>Por favor, no escribas más de 4000 caracteres</small>
+                  </div>
                 }
               </div>
             </div>
@@ -386,35 +402,16 @@
               <div class="col-md-4">
                 <input-fecha [setFecha]="formularioMercancia.get('fecha')?.value" [datos]="fechaFacturaInput"
                   (valorCambiado)="cambioFechaFactura($event)" [isDisabled]="soloLectura" [deshabilitarFuturas]="true"></input-fecha>
-                @if (formularioMercancia.get('fecha')?.invalid && formularioMercancia.get('fecha')?.touched) {
-                <div class="text-danger">
-                  @if (formularioMercancia.get('fecha')?.errors?.['required']) {
-                  <small>Este campo es obligatorio.</small>
-                  }
-                  @if (formularioMercancia.get('fecha')?.errors?.['futureDate']) {
-                  <small>No se pueden seleccionar fechas futuras.</small>
-                  }
-                </div>
-                }
               </div>
               <div class="col-md-4">
-                <label>N° factura<span [ngClass]="formularioMercancia.get('numeroFactura')?.invalid && formularioMercancia.get('numeroFactura')?.touched ? 'text-danger' : ''">*</span>:</label>
+                <label>N° factura:</label>
                 <input type="text" required="true" class="form-control" formControlName="numeroFactura" maxlength="36"
-                  [ngClass]="formularioMercancia.get('numeroFactura')?.invalid && formularioMercancia.get('numeroFactura')?.touched ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'numeroFactura', 'setNumeroFactura' ) "
                   [disabled]="soloLectura" />
-
-                @if (formularioMercancia.get('numeroFactura')?.hasError('required') &&
-				        formularioMercancia.get('numeroFactura')?.touched) {
-				        <div class="text-danger">
-					      <small>Este campo es obligatorio</small>
-				        </div>
-                }
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="optionsTipoFactura" [label]="'Tipo de factura'" [required]="true"
+                <app-catalogo-select [catalogo]="optionsTipoFactura" [label]="'Tipo de factura'"
                   id="tipoFactura" formControlName="tipoFactura" [isDisabled]="soloLectura"
-                  [ngClass]="isValid(formularioMercancia,'tipoFactura') ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'tipoFactura', 'setTipoFactura' ) "></app-catalogo-select>
               </div>
 
@@ -427,10 +424,14 @@
       <div class="modal-footer custom-footer mt-4">
         <button type="button" class="btn btn-default" [disabled]="soloLectura" data-bs-dismiss="modal" #closeModal (click)="cerrarModal()">
           Cancelar </button>
-        <button type="submit" class="btn btn-primary" [disabled]="soloLectura" (click)="activarModal(formularioMercancia)"> 
+        <button type="submit" class="btn btn-primary" [disabled]="soloLectura" (click)="mostrarNotificacion()"> 
           Agregar 
         </button>
       </div>
+
+      @if(nuevaNotificacion){
+        <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="acceptar($event)"></lib-notificaciones>
+        }
     </div>
   </div>
 </div>

@@ -83,6 +83,8 @@ export interface DomicilioState {
   apellidoPaterno: string;
   /** Apellido materno del representante legal. */
   apellidoMaterno: string;
+  /** Cumplimiento de obligaciones fiscales del representante legal. */
+  cumplimiento: string;
 
 }
 
@@ -171,6 +173,8 @@ export function createInitialState(): DomicilioState {
     apellidoPaterno: '',
     /** Apellido materno del representante legal. */
     apellidoMaterno: '',
+    /** Cumplimiento de obligaciones fiscales del representante legal. */
+    cumplimiento: ''
   };
 }
 
@@ -640,6 +644,17 @@ export class DomicilioStore extends Store<DomicilioState> {
     this.update((state) => ({
       ...state,
       apellidoMaterno,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el cumplimiento de obligaciones fiscales del representante legal.
+   * @param cumplimiento El cumplimiento a establecer.
+   */
+  public setCumplimiento(cumplimiento: string): void {
+    this.update((state) => ({
+      ...state,
+      cumplimiento,
     }));
   }
 

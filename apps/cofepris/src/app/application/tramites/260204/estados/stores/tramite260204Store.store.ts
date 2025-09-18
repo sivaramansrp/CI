@@ -192,7 +192,8 @@ export function createInitialState(): Tramite260204State {
       regimen: '',
       adunasDeEntradas: '',
       aeropuerto: false,
-      publico: 'si',
+      manifesto: false,
+      publico: '',
       representanteRfc: '',
       representanteNombre: '',
       apellidoPaterno: '',
@@ -220,7 +221,12 @@ export function createInitialState(): Tramite260204State {
       paisDeProcedenciaDatos: [],
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
-    scianConfigDatos: [], // SCIAN_TABLA_DATA
+    scianConfigDatos: [
+      {
+        clave: '',
+        descripcion: '',
+      }
+    ],
     tablaMercanciasConfigDatos: PRODUCTO_TABLA_DATA,
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],

@@ -1,17 +1,19 @@
 @if (consultaState.parameter !== "READ_PROCEDURE") {
-  <ng-titulo titulo="Datos generales del solicitante" />
+  <ng-titulo titulo="Tratados y criterios solicitados" />
 <ng-alert [CONTENIDO]="alerta.MENSAJE_ALERTA"></ng-alert>
 <form [formGroup]="formularioTratados">
   <div class="row">
     <div class="col-md-8">
-      <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'Pais o bloque'" [required]="true"
+      <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'País o bloque'" [required]="true"
         name="Pais o bloque" [isDisabled]="esFormularioSoloLectura"
-        (change)="setValoresStore(formularioTratados,'pais', 'setPais');getLabelFromCatalogData(paisCatalogo,'pais')"></app-catalogo-select>
+        (change)="setValoresStore(formularioTratados,'pais', 'setPais');getLabelFromCatalogData(paisCatalogo,'pais')"
+        (selectionChange)="onTratadoAcuerdo($event, 'pais')"></app-catalogo-select>
     </div>
     <div class="col-md-8">
       <app-catalogo-select [catalogo]="tratadoCatalogo" formControlName="tratado" [label]="'Tratado o Acuerdo'"
         [required]="true" name="Tratado o Acuerdo" [isDisabled]="esFormularioSoloLectura"
-        (change)="setValoresStore(formularioTratados,'tratado', 'setTratado');getLabelFromCatalogData(tratadoCatalogo,'tratado')"></app-catalogo-select>
+        (change)="setValoresStore(formularioTratados,'tratado', 'setTratado');getLabelFromCatalogData(tratadoCatalogo,'tratado')"
+        (selectionChange)="onTratadoAcuerdo($event, 'tratado')"></app-catalogo-select>
     </div>
     <div class="col-md-8">
       <app-catalogo-select [catalogo]="origenCatalogo" formControlName="origen" [label]="'Criterio de origen'"
@@ -28,11 +30,11 @@
 @if (consultaState.parameter !== "READ_PROCEDURE") {
 <ng-alert [CONTENIDO]="'Para continuar con el trámite, deberá agregar por lo menos un tratado o acuerdo.'"></ng-alert>
 
-<h6 class="fs-4">Pais/bloque-tratado/acuerdo seleccionados por el solicitante</h6>
+<h6 class="fs-4">País/bloque-tratado/acuerdo seleccionados por el solicitante</h6>
 
 <div class="row">
   <div class="col-md-12">
-    <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla"
+    <app-tabla-dinamica *ngIf="mostrarTabla" [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla"
       [datos]="registroDeSolicitudesTablaDatos" (listaDeFilaSeleccionada)="onSeleccionChange($event)"
       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false">
     </app-tabla-dinamica>
@@ -56,6 +58,30 @@
   </app-tabla-dinamica>
 </div>
 }
+
+@if (isUruguay) {
+  <ng-titulo titulo="Otras Instancias para TLC-Uruguay" />
+  <ng-alert [CONTENIDO]="mensajeUruguay.ADJUNTAR"></ng-alert>
+   <form [formGroup]="formularioTratados">
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <lib-input-check [label]="'Acumulación'" [required]="false" [id]="'acumulación'"></lib-input-check>
+      </div>
+      <div class="col-md-4">
+        <lib-input-check [label]="'Bienes y Materiales Fungibles'" [required]="false" [id]="'bienes'"></lib-input-check>
+      </div>
+      <div class="col-md-4">
+        <lib-input-check [label]="'Materiales Intermedios'" [required]="false" [id]="'intermedio'"></lib-input-check>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <app-catalogo-select [catalogo]="criteriosInstanciasCatalogo" formControlName="criterioInstancias" [label]="'Criterio Otras instancias'" [required]="false"
+        name="Criterio Otras instancias" [isDisabled]="esFormularioSoloLectura"
+        (change)="setValoresStore(formularioTratados,'criterioInstancias', 'setCriterioInstancia');getLabelFromCatalogData(criteriosInstanciasCatalogo,'criterioInstancias')"></app-catalogo-select>
+      </div>
+   </form>
+}
+
 @if (nuevaNotificacion) {
 <section>
   <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">

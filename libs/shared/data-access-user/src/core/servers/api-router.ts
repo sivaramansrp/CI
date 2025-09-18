@@ -41,7 +41,7 @@ export const CONSTRUIR_ENDPOINT_INICIAR = (procedureId: string): string => { ret
 
 /**
  * API para recuperar el catálogo de aduanas
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/Aduana./consulta-cat%C3%A1logo-aduanas
+ * @see https://api-v30.cloud-ultrasist.net/api/catalogo/swagger-ui/index.html#/Aduana./consulta-cat%C3%A1logo-aduanas
  */
 export const API_GET_ADUANA = 'catalogo/aduanas';
 /**
@@ -51,7 +51,7 @@ export const CLAVE_ADUANA_QUERY = '{claveAduana}';
 /**
  * API para recuperar el catálogo de aduanas
  * @param CLAVE_ADUANA_QUERY La clave de la aduana seleccionada por el usuario
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/Aduana./consulta-cat%C3%A1logo-aduanas
+ * @see https://api-v30.cloud-ultrasist.net/api/catalogo/swagger-ui/index.html#/Aduana./consulta-cat%C3%A1logo-aduanas
  */
 export const API_GET_SECCION_ADUANA = `catalogo/seccion-aduanas/${CLAVE_ADUANA_QUERY}`;
 /**
@@ -61,12 +61,12 @@ export const CLAVE_PATENTE_QUERY = '{clavePatente}';
 /**
  * API para recuperar los recintos inherentes de una aduana.
  * @param CLAVE_ADUANA_QUERY El clave de la aduana seleccionada por el usuario.
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/patente/swagger-ui/index.html
+ * @see https://api-v30.cloud-ultrasist.net/api/patente/swagger-ui/index.html
  */
 export const API_GET_RECINTO = `catalogo/recintos-fiscalizados/${CLAVE_ADUANA_QUERY}`;
 /**
  * API para obtener el catálogo de tipo de equipo en el trasnporte ferroviario.
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/Tipos%20de%20equipo./consulta-tipos-equipo
+ * @see https://api-v30.cloud-ultrasist.net/api/catalogo/swagger-ui/index.html#/Tipos%20de%20equipo./consulta-tipos-equipo
  */
 export const API_GET_TIPO_EQUIPO = 'catalogo/busca/tipo-equipo';
 /**
@@ -76,7 +76,7 @@ export const TIPO_TRANSPORTE = '{tipoTransporte}';
 /**
  * API para validar el número BL de transporte ferroviario. y obtener los datos:
  * Tipo de equipo, Iniciales de equipo y Npumero de equipo.
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/privado/swagger-ui/index.html#/Privado%20Validaciones/validaFerro
+ * @see https://api-v30.cloud-ultrasist.net/api/privado/swagger-ui/index.html#/Privado%20Validaciones/validaFerro
  */
 export const API_CONSULTAR_VALIDACION = `privado/${TIPO_TRANSPORTE}/valida`;
 /**
@@ -86,7 +86,7 @@ export const RFC_QUERY = '{rfc}';
 /**
  * API que permite verificar si el RFC proporcionado es válido.
  * @param RFC_QUERY EL RFC
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/swagger-ui/index.html#/RFC/valida-rfc
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t5701/swagger-ui/index.html#/RFC/valida-rfc
  */
 export const API_GET_VALIDA_RFC = `sat-t5701/rfc/valida/${RFC_QUERY}`;
 
@@ -108,7 +108,7 @@ export const TIPO_TRAMITE_QUERY = '{tipoTramite}';
  * API para validar si un RFC tiene certificaciones vigentes.
  * @param TIPO_TRAMITE_QUERY El tipo de trámite
  * @param RFC_QUERY El RFC del solicitante
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/Certificaciones/valida-certificaciones
+ * @see https://api-v30.cloud-ultrasist.net/api/catalogo/swagger-ui/index.html#/Certificaciones/valida-certificaciones
  */
 export const API_GET_VALIDA_CERTIFICACIONES = `catalogo/valida-certificaciones/${TIPO_TRAMITE_QUERY}/${RFC_QUERY}`;
 /**
@@ -127,14 +127,14 @@ export const API_GET_VALIDA_LINEA_PAGO = `pago/sea/${LINEA_PAGO_QUERY}`;
 export const API_GET_PARAMETRO_MONTO = `sat-t5701/parametro/monto`;
 /**
  * API para guardar la solicitud
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/swagger-ui/index.html#/Solicitud/guardar
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t5701/swagger-ui/index.html#/Solicitud/guardar
  */
 export const API_POST_SOLICITUD = 'sat-t5701/guardar';
 
 /**
  * ID del trámite a eliminar.
  * Este ID se debe reemplazar por el ID del trámite que se desea eliminar.
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/swagger-ui/index.html#/Tramite/elimina-tramite-pendiente-by-id
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t5701/swagger-ui/index.html#/Tramite/elimina-tramite-pendiente-by-id
  */
 export const ID_TRAMITE = '{idTramite}';
 
@@ -151,32 +151,32 @@ export const TRAMITE = '{numeroTramite}';
 /**
  * API  para obtener el catálogo de cdocumentos obligatorios, según el trámite.
  * @param TRAMITE el trámite seleccionado por el usuario.
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/tramite/5701/documentos?especifico=false
+ * @see https://api-v30.cloud-ultrasist.net/api/tramite/5701/documentos?especifico=false
  */
 export const API_GET_DOCUMENTOS_OBLIGATORIOS = `tramite/{numeroTramite}/documentos`;
 
 /**
  * API para recuperar el catálogo de paises
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/Pa%C3%ADs/consulta-paises-activos
+ * @see https://api-v30.cloud-ultrasist.net/api/catalogo/swagger-ui/index.html#/Pa%C3%ADs/consulta-paises-activos
  */
 export const API_GET_PAISES = 'catalogo/paises';
 
 /**
  * API para generar la cadena original de un trámite.
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/tramite-flujo/swagger-ui/index.html#/Cadena/generar
+ * @see https://api-v30.cloud-ultrasist.net/api/tramite-flujo/swagger-ui/index.html#/Cadena/generar
  */
 export const API_GENERAR_CADENA_ORIGINAL =
   'api/tramite/solicitud/genera-cadena-original';
 
 /**
  * API para enviar una firma electrónica.
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/firma/swagger-ui/index.html#/Firma/firmar
+ * @see https://api-v30.cloud-ultrasist.net/api/firma/swagger-ui/index.html#/Firma/firmar
  */
 export const API_ENVIAR_FIRMA = 'api/tramite/firmar';
 
 /**
  * API para recuperar las tareas por usuario.
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20tarea/consultar-tareas-servicio
+ * @see https://api-v30.cloud-ultrasist.net/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20tarea/consultar-tareas-servicio
  */
 export const API_GET_BANDEJATAREA = 'bandeja-tarea/usuario/tarea';
 
@@ -254,13 +254,13 @@ export const IDSOLICITUD = '{idSolicitud}';
  * API para guardar el acuse de una solicitud.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/guardar-documento
  */
-export const API_POST_GUARDAR_ACUSE = `sat-t130118/solicitud/${IDSOLICITUD}/acuse/guardar`;
+export const API_POST_GUARDAR_ACUSE = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/acuse/guardar`;
 
 /**
  * API para generar la vista previa del acuse de una solicitud.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-documento
  */
-export const API_POST_VISTA_PREVIA = `sat-t130118/solicitud/${IDSOLICITUD}/acuse/vista-previa`;
+export const API_POST_VISTA_PREVIA = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/acuse/vista-previa`;
 
 /**
  * API para obtener los documentos
@@ -272,7 +272,7 @@ export const API_GET_DOCUMENTOS130118 = 'sat-t130118/solicitud/documentos';
  * Ruta de la API para obtener la información del contribuyente IDC.
  * Utiliza el RFC genérico como parte de la URL.
  *
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/idc/swagger-ui/index.html#/idc-ws-end-point-controller/informacionContribuyente
+ * @see https://api-v30.cloud-ultrasist.net/api/idc/swagger-ui/index.html#/idc-ws-end-point-controller/informacionContribuyente
  */
 export const API_GET_IDC_CONTRIBUYENTE = `idc/contribuyente/${RFC_GENERICO}/informacion`;
 
@@ -503,3 +503,37 @@ export const API_GET_TABS = (TRAMITE: string, IDSOLICITUD: string) : string => `
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Consulta-Solicitud/estado-consulta-solicitud
  */
 export const API_GET_DATOS_SOLICITANTE = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/tramite/${IDSOLICITUD}/solicitud/solicitante`;
+
+/*
+ * API para obtener el catálogo de immex
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/immex
+ */
+export const CATALOGO_IMMEX = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/immex`;
+
+/*
+ * API para obtener el catálogo de estados
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/estados
+ */
+export const CATALOGO_ESTADOS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/estados`;
+
+/*
+ * API para obtener el catálogo de países
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises
+ */
+export const CATALOGO_PAISES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/paises`;
+
+/*
+ * API para obtener el catálogo de NICO
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/nico
+ */
+export const CATALOGO_NICO = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/nico`;
+/**
+ * API para obtener el estado de la solicitud del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original_1
+ */
+export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/genera-cadena-original`;
+/**
+ * API para firmar la solicitud del tramite 130118.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/firmar
+ */
+export const API_POST_FIRMA = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/firmar`;

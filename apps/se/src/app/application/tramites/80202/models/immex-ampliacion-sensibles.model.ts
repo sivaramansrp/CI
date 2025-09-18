@@ -88,3 +88,44 @@ export interface TablaFraccionDeImportacion {
   descripcionComercial: string;
   descripcion: string;
 }
+
+/**
+ * @interface nicoInfo
+ * @description Interfaz que define la estructura de la información de NICO (Nomenclatura de Identificación de Commodities).
+ * Representa los datos de clasificación de materias primas y productos básicos utilizados en el comercio internacional,
+ * proporcionando una base estandarizada para la identificación de commodities en operaciones IMMEX.
+ *
+ * @author Sistema VUCEM 3.0
+ * @version 1.0.0
+ * @since 2025
+ * @module Tramites.IMMEX.Interfaces.NICO
+ */
+export interface NicoInfo {
+  /**
+   * @description Código NICO único que identifica el tipo de commodity o materia prima.
+   * Código alfanumérico estandarizado que clasifica de manera única cada tipo de commodity utilizado en comercio internacional.
+   * @type {string}
+   * @example "520100"
+   * @required
+   */
+  NICO_Columna_1: string;
+
+  /**
+   * @description Descripción detallada del commodity asociado al código NICO.
+   * Texto descriptivo completo que especifica las características y naturaleza del commodity o materia prima.
+   * @type {string}
+   * @example "Algodón sin cardar ni peinar"
+   * @required
+   */
+  NICO_Columna_2: string;
+
+  /**
+   * @description Indicador del estado activo (true) o inactivo (false) del código NICO.
+   * Bandera booleana que determina si el código NICO está vigente y disponible para su uso en operaciones comerciales.
+   * @type {boolean}
+   * @default true
+   * @example true
+   * @required
+   */
+  estatus: boolean;
+}

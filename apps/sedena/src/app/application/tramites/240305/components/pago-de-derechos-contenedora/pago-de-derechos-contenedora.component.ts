@@ -2,6 +2,7 @@ import { Subject, map} from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
@@ -29,6 +30,20 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @property {Subject<void>} unsubscribe$
    */
   private unsubscribe$ = new Subject<void>();
+
+  /**
+   * Identificador único del procedimiento asociado al trámite 240305.
+   * Este valor se utiliza para identificar específicamente el trámite de pago de derechos.
+   * 
+   * @remarks
+   * El valor se obtiene de la constante NUMERO_TRAMITE.TRAMITE_240305 que define
+   * el identificador numérico para este tipo de trámite específico.
+   * 
+   * @type {number}
+   * @memberof PagoDeDerechosContenedoraComponent
+   */
+  idProcedimiento :number = NUMERO_TRAMITE.TRAMITE_240305;
+  
 
   /**
    * Estado actual del formulario de pago de derechos.

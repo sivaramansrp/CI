@@ -1,70 +1,82 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CertificadoDeOrigenComponent } from '../../components/certificado-de-origen/certificado-de-origen.component';
+import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
+import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
 import { RegistroService } from '../../services/registro.service';
 
-
 /**
- * Componente que representa el primer paso del trámite.
+ * @component PasoUnoComponent
+ * @description Componente Angular que gestiona el primer paso del asistente del trámite 110201
+ * @author Sistema VUCEM 3.0
+ * @version 1.0.0
+ * @since 2025
+ * 
+ * Este componente es responsable de:
+ * - Gestionar las pestañas del primer paso del asistente (Solicitante, Certificado de Origen, Destinatario, Datos Certificado)
+ * - Coordinar la validación de todos los formularios del paso uno
+ * - Manejar la navegación entre las diferentes secciones del paso
+ * - Emitir eventos de estado de carga de archivos al componente padre
+ * - Gestionar el estado de consulta y la carga inicial de datos
+ * - Integrar múltiples componentes hijo para formar un flujo completo
  */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styles: ``,
-  })
-export class PasoUnoComponent implements OnInit,OnDestroy {
-   /**
-   * Evento para comunicar al componente padre si se está cargando un archivo.
-   */
+})
+export class PasoUnoComponent implements OnInit, OnDestroy {
+  
+  /** Evento que comunica al componente padre el estado de carga de archivos */
   @Output() archivo = new EventEmitter<boolean>();
-  /**
-   * Catálogo de entidades federativas.
-   */
+  
+  /** Datos del catálogo de entidades federativas obtenidos del servicio */
   entidadFederativa!: { data: string } | null;
-  /**
-   * Tipo de persona seleccionada.
-   */
+  
+  /** Identificador numérico del tipo de persona seleccionada en el formulario */
   tipoPersona!: number;
 
-  /**
-   * Configuración del formulario dinámico para la persona.
-   */
+  /** Array de configuración para generar formularios dinámicos de datos personales */
   persona: FormularioDinamico[] = [];
 
-  /**
-   * Configuración del formulario dinámico para el domicilio fiscal.
-   */
+  /** Array de configuración para generar formularios dinámicos de domicilio fiscal */
   domicilioFiscal: FormularioDinamico[] = [];
 
-  /**
-   * Índice del paso actual.
-   */
+  /** Índice que controla qué pestaña está actualmente visible en el asistente */
   indice: number = 1;
- /**
-   * Subject para notificar la destrucción del componente y cancelar suscripciones.
-   */
+  
+  /** Subject utilizado para cancelar suscripciones observables al destruir el componente */
   public destroyNotifier$: Subject<void> = new Subject();
 
-  /**
-   * Estado de la consulta obtenido desde el store.
-   */
+  /** Estado global de consulta obtenido desde el store para controlar modo lectura/edición */
   public consultaState!: ConsultaioState;
 
-  /**
-   * Indica si existen datos de respuesta del servidor para actualizar el formulario.
-   */
+  /** Bandera que indica si existen datos de respuesta del servidor para precargar formularios */
   public esDatosRespuesta: boolean = false;
+  
+  /** Referencia al componente hijo SolicitanteComponent para acceso a sus métodos y propiedades */
+  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  
+  /** Referencia al componente hijo CertificadoDeOrigenComponent para validación y control */
+  @ViewChild('CertificadoOrigen') certificadoOrigen!: CertificadoDeOrigenComponent;
+  
+  /** Referencia al componente hijo DatosCertificadoComponent para gestión de datos del certificado */
+  @ViewChild('DatosCertificado') datosCertificado!: DatosCertificadoComponent;
+
+  /** Referencia al componente hijo DestinatarioComponent para manejo de información del destinatario */
+  @ViewChild('Destinatario') destinatario!: DestinatarioComponent;
   /**
-   * Constructor del componente.
-   * @param registro Servicio para obtener datos de catálogos.
+   * Constructor del componente que inyecta las dependencias necesarias
+   * @param registro - Servicio para obtener datos de catálogos desde la API
+   * @param consultaQuery - Query para acceder al estado global de consulta
    */
   constructor(private registro: RegistroService, private consultaQuery: ConsultaioQuery) {
-    // El constructor se utiliza para la inyección de dependencias.
+    // Constructor utilizado para inyección de dependencias sin lógica adicional
   }
-  
+
   /**
-   * Método que se ejecuta al inicializar el componente.
-   * Obtiene el catálogo de entidades federativas y lo procesa.
+   * Método del ciclo de vida OnInit que inicializa el componente y carga datos necesarios
    */
   ngOnInit(): void {
     this.registro.getCatalogoById(21).subscribe((resp) => {
@@ -73,7 +85,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       this.entidadFederativa = DATA?.domicilioFiscal?.entidadFederativa;
     });
 
-     this.consultaQuery.selectConsultaioState$.pipe(
+    this.consultaQuery.selectConsultaioState$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
         this.consultaState = seccionState;
@@ -81,16 +93,16 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     ).subscribe();
 
     Promise.resolve().then(() => {
-    if (this.consultaState.update) {
-      this.guardarDatosFormularios();
-    } else {
-      this.esDatosRespuesta = true;
-    }
-  });
+      if (this.consultaState.update) {
+        this.guardarDatosFormularios();
+      } else {
+        this.esDatosRespuesta = true;
+      }
+    });
   }
-/**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+  
+  /**
+   * Carga datos desde el servicio y actualiza el estado de formularios con información persistida
    */
   guardarDatosFormularios(): void {
     this.registro
@@ -104,27 +116,70 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
         }
       });
   }
+
   /**
-   * Selecciona una pestaña del asistente.
-   * @param i Índice de la pestaña a seleccionar.
+   * Valida todos los formularios del paso uno incluyendo solicitante, certificado, datos y destinatario
+   * @returns true si todos los formularios son válidos, false en caso contrario
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+    if (this.solicitante?.form) {
+      if (this.solicitante.form.invalid) {
+        this.solicitante.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.certificadoOrigen) {
+      if (!this.certificadoOrigen.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosCertificado) {
+      if (!this.datosCertificado.validarFormulariosDatos()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.destinatario) {
+      if (!this.destinatario.validarFormularios()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  /**
+   * Cambia la pestaña activa del asistente según el índice proporcionado
+   * @param i - Índice numérico de la pestaña a activar
    */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-   /**
-   * Emite un evento al componente padre indicando si se está cargando un archivo.
-   * @param data Valor booleano que indica el estado de carga de archivo.
+  
+  /**
+   * Emite evento al componente padre para comunicar el estado de carga de archivos
+   * @param data - Booleano que indica si hay una operación de carga de archivo en progreso
    */
   cargaArchivo(data: boolean): void {
     this.archivo.emit(data);
   }
+  
   /**
-   * Método que se ejecuta al destruir el componente.
-   * Cancela las suscripciones y libera recursos.
+   * Método del ciclo de vida OnDestroy que limpia recursos y previene memory leaks
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

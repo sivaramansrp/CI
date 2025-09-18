@@ -278,10 +278,10 @@ export const INITIAL_STATE: TramiteState = {
 
   /** Estado de validación de los diferentes formularios */
   formaValida: {
-    certificado: false,
-    datos: false,
-    destinatrio: false,
-    datosDestinatario: false,
+    certificado: true,
+    datos: true,
+    destinatrio: true,
+    datosDestinatario: true,
   },
 
   /** Formulario de información del certificado */

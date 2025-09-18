@@ -67,7 +67,7 @@
             type="radio"
             formControlName="tipoPersona"
             [value]="tipoPersona.NO_CONTRIBUYENTE"
-            (change)="changeNacionalidad()"
+            (change)="changeTipoPersona()"
           />
           No contribuyente
         </div>
@@ -119,6 +119,9 @@
           >
             Este campo es obligatorio
           </small>
+          <small *ngIf="agregarFabricanteForm.controls['curp'].errors?.['pattern']">
+            Existen datos incorrectos que no cumplen con el formato esperado.
+          </small>
         </div>
       </div>
       }
@@ -146,7 +149,7 @@
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
-        <label class="form-label">Nombre(s)*:</label>
+        <label class="form-label">Nombre(s)<span [ngClass]="agregarFabricanteForm.controls['nombres'].errors?.['required'] && agregarFabricanteForm.controls['nombres'].touched ? 'text-danger' : ''">*</span>:</label>
         <input
           type="text"
           [maxlength]="200"
@@ -168,7 +171,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido*:</label>
+        <label class="form-label">Primer apellido<span [ngClass]="agregarFabricanteForm.controls['primerApellido'].errors?.['required'] && agregarFabricanteForm.controls['primerApellido'].touched ? 'text-danger' : ''">*</span>:</label>
         <input
           type="text"
           class="form-control"
@@ -214,6 +217,9 @@
           >Denominación/razón
           social@if(agregarFabricanteForm.controls['razonSocial'].errors?.['required']){
           <span class="text-danger">*</span>
+          }
+          @else{
+            <span>*</span>
           }:</label
         >
         <input
@@ -274,6 +280,11 @@
           >
             Este campo es obligatorio
           </small>
+          <small
+            *ngIf="agregarFabricanteForm.controls['estado'].errors?.['pattern']"
+          >
+            Existen datos incorrectos que no cumplen con el formato esperado.
+          </small>
         </div>
       </div>
 
@@ -291,6 +302,139 @@
     <!-- Domicilio -->
     @else{
     <h4 class="mt-5">Domicilio</h4>
+    @if(habilitarContribuyente === true ){
+      <div *ngIf="agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr" class="row mt-5">
+      <div class="col-md-4">
+        <label class="form-label">País<span [ngClass]="agregarFabricanteForm.controls['pais'].errors?.['required'] && agregarFabricanteForm.controls['pais'].touched ? 'text-danger' : ''">*</span>:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="pais"
+          [ngClass]="esInvalido('pais') ? 'required' : ''"
+        />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Estado/localidad<span [ngClass]="agregarFabricanteForm.controls['estado'].errors?.['required'] && agregarFabricanteForm.controls['estado'].touched ? 'text-danger' : ''">*</span>:</label>
+        <input
+          type="text"
+          class="form-control"
+          maxlength="255"
+          formControlName="estado"
+          [ngClass]="esInvalido('estado') ? 'required' : ''"
+        />
+        <div *ngIf="esInvalido('estado')" class="text-danger">
+          <small
+            *ngIf="agregarFabricanteForm.controls['estado'].errors?.['required']"
+          >
+            Este campo es obligatorio
+          </small>
+           <small
+            *ngIf="agregarFabricanteForm.controls['estado'].errors?.['pattern']"
+          >
+            Existen datos incorrectos que no cumplen con el formato esperado.
+          </small>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Municipio/alcaldía<span [ngClass]="agregarFabricanteForm.controls['municipio'].errors?.['required'] && agregarFabricanteForm.controls['municipio'].touched ? 'text-danger' : ''">*</span>:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="municipio"
+          maxlength="120"
+        />
+      </div>
+      </div>
+      <div *ngIf="agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'" class="row mt-3">
+          <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="paisesDatos"
+          formControlName="pais"
+          [label]="'País'"
+          [required]="true"
+          [placeholder]="'Selecciona un valor'"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Estado<span [ngClass]="agregarFabricanteForm.controls['estado'].errors?.['required'] && agregarFabricanteForm.controls['estado'].touched ? 'text-danger' : ''">*</span>:</label>
+        <input
+          type="text"
+          class="form-control"
+          maxlength="255"
+          formControlName="estado"
+          [ngClass]="esInvalido('estado') ? 'required' : ''"
+        />
+        <div *ngIf="esInvalido('estado')" class="text-danger">
+          <small
+            *ngIf="agregarFabricanteForm.controls['estado'].errors?.['required']"
+          >
+            Este campo es obligatorio
+          </small>
+           <small
+            *ngIf="agregarFabricanteForm.controls['estado'].errors?.['pattern']"
+          >
+            Existen datos incorrectos que no cumplen con el formato esperado.
+          </small>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Código postal o equivalente<span [ngClass]="agregarFabricanteForm.controls['codigoPostal'].errors?.['required'] && agregarFabricanteForm.controls['codigoPostal'].touched ? 'text-danger' : ''">*</span>:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="codigoPostal"
+          maxlength="12"
+        />
+        <div class="text-danger">
+           <small
+            *ngIf="agregarFabricanteForm.controls['codigoPostal'].errors?.['pattern']"
+          >
+            Existen datos incorrectos que no cumplen con el formato esperado.
+          </small>
+        </div>
+      </div>
+
+      </div>
+      @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr){
+      <div class="row">
+        <div class="col-md-4">
+        <label class="form-label">Localidad<span [ngClass]="agregarFabricanteForm.controls['localidad'].errors?.['required'] && agregarFabricanteForm.controls['localidad'].touched ? 'text-danger' : ''">*</span>:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="localidad"
+          maxlength="12"
+        />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Código postal o equivalente<span [ngClass]="agregarFabricanteForm.controls['codigoPostal'].errors?.['required'] && agregarFabricanteForm.controls['codigoPostal'].touched ? 'text-danger' : ''">*</span>:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="codigoPostal"
+          maxlength="12"
+        />
+        <div class="text-danger">
+           <small
+            *ngIf="agregarFabricanteForm.controls['codigoPostal'].errors?.['pattern']"
+          >
+            Existen datos incorrectos que no cumplen con el formato esperado.
+          </small>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Colonia<span [ngClass]="agregarFabricanteForm.controls['colonia'].errors?.['required'] && agregarFabricanteForm.controls['colonia'].touched ? 'text-danger' : ''">*</span>:</label>
+        <input
+          type="text"
+          class="form-control"
+          maxlength="100"
+          formControlName="colonia"
+        />
+      </div>
+      </div>
+      }
+    }
+    @else{
     <div class="row mt-5">
       <div class="col-md-4">
         <app-catalogo-select
@@ -361,6 +505,7 @@
         ></app-catalogo-select>
       </div>
     </div>
+    }
     } @if(mostarColoniaOEquivalente &&
     agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'){
     <div class="col-md-4 mx-auto pl-0 mt-3">
@@ -378,7 +523,7 @@
       <div class="col-md-8">
         <label class="form-label"
           >Calle@if(agregarFabricanteForm.controls['calle'].errors?.['required']){
-          <span class="text-danger">*</span>
+          <span [ngClass]="agregarFabricanteForm.controls['calle'].errors?.['required'] && agregarFabricanteForm.controls['calle'].touched ? 'text-danger' : ''">*</span>
           }:</label
         >
         <span tooltip="Domicilio, calle, número interior, número exterior, lote"
@@ -403,7 +548,7 @@
         <label class="form-label"
           >Número
           exterior@if(agregarFabricanteForm.controls['numeroExterior'].errors?.['required']){
-          <span class="text-danger">*</span>
+          <span [ngClass]="agregarFabricanteForm.controls['numeroExterior'].errors?.['required'] && agregarFabricanteForm.controls['numeroExterior'].touched ? 'text-danger' : ''">*</span>
           }:</label
         >
         <input
@@ -422,7 +567,7 @@
         </div>
       </div>
     </div>
-
+    
     <div class="row mt-3">
       <div class="col-md-4">
         <label class="form-label">Número interior:</label>

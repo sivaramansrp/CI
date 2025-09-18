@@ -314,13 +314,21 @@ export const REGEX_VALORES_NUMERICOS = /^[0-9]+(\\.[0-9]{1,2})?$/;
  * Examples of valid values: 123, 123456789012345, 123.4567
  */
 export const REGEX_VALORES_NUMERICOS_15_4 = /^\d{1,15}(\.\d{1,4})?$/;
-
+/**
+ * Expresión regular para validar números decimales con hasta
+ * 2 dígitos después del punto decimal.
+ */
 export const REGEX_NUMERO_DECIMAL_2_DIGITOS = /^\d+(\.\d{1,2})?$/;
 /**
  * Expresión regular para validar números en formato USD.
  * Permite dígitos y el punto decimal.
  */
 export const REGEX_NUMEROS_USD = '^[0-9.]{1,}$';
+/**
+ * Expresión regular para validar números en formato USD con hasta 2 decimales.
+ * Permite dígitos y el punto decimal.
+ */
+export const REGEX_NUMEROS_USD_2 = /^(?:\d{1,12})(?:\.\d{1,2})?$/;
 
 /**
  * Expresión regular para validar una cadena que contenga solo números enteros
@@ -369,6 +377,10 @@ export const REGEX_TELEFONO_DIGITOS = /^\d{10}$/;
  * Expresión regular para validar un número de teléfono de 10 dígitos.
  */
 export const TELEFONO_DIGITOS = /^[6789]\d{8}$/;
+/**
+ * Expresión regular para validar números enteros y decimales.
+ */
+export const REGEX_NUMERO_ENTERO = /^\d*\.?\d*$/;
 
 /**
  * Expresión regular para validar un código postal de 5 dígitos.
@@ -893,7 +905,7 @@ export const EMAIL = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
  * - www.ejemplo.com
  * - ejemplo.com/ruta
  */
-export const WEBPAGE = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+export const WEBPAGE = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})(:[0-9]{1,5})?(\/[^\s]*)?$/i;
 /**
  * Expresión regular para validar números con hasta 6 dígitos enteros y opcionalmente hasta 6 decimales.
   */
@@ -968,3 +980,89 @@ export const SOLO_REGEX_NUMEROS = /^[0-9]*$/;
  * - "12 345" (contiene espacios)
  */
 export const REGEX_CODIGO_POSTAL = /^\d{5}$/;
+
+/**
+ * Expresión regular para validar nombres de localidades.
+ * Permite letras (incluyendo acentuadas), números y espacios.
+ * No permite caracteres especiales.
+ */
+export const REGEX_LOCALIDAD = /^[a-zA-ZÀ-ÿ0-9\\s]+$/;
+
+/**
+ * Expresión regular para validar números decimales con hasta 17 dígitos enteros y hasta 4 decimales opcionales.
+ * 
+ * Esta expresión regular permite validar números que pueden contener:
+ * - Entre 1 y 17 dígitos enteros
+ * - Opcionalmente, un punto decimal seguido de entre 1 y 4 dígitos decimales
+ * 
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - \d{1,17}: Coincide con entre 1 y 17 dígitos enteros.
+ * - (\.\d{1,4})?: Coincide con un punto seguido de entre 1 y 4 dígitos decimales, opcional.
+ * - $: Aserción para el final de la cadena.
+ * 
+ * Ejemplos válidos:
+ * - "12345678901234567"
+ * - "123.4567"
+ * - "1.1"
+ * - "999999999999999999"
+ * 
+ * Ejemplos no válidos:
+ * - "123456789012345678" (más de 17 dígitos enteros)
+ * - "123.45678" (más de 4 decimales)
+ * - "abc" (no es un número)
+ * - ".1234" (falta de dígitos enteros)
+ */
+export const DECIMAL_22_4_REGEX = /^\d{1,17}(\.\d{1,4})?$/;
+
+/**
+ * Expresión regular para validar cadenas que contengan únicamente números y puntos decimales.
+ * 
+ * Esta expresión regular permite:
+ * - Dígitos del 0 al 9
+ * - Punto decimal (.)
+ * - Cadena vacía
+ * - Cualquier combinación de números y puntos
+ * 
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - [0-9.]*: Coincide con cero o más caracteres que sean dígitos (0-9) o puntos (.).
+ * - $: Aserción para el final de la cadena.
+ * 
+ * Ejemplos válidos:
+ * - "123.45"
+ * - "123"
+ * - ".45"
+ * - "123."
+ * - ""
+ * - "12.34.56" (múltiples puntos)
+ * 
+ * Ejemplos no válidos:
+ * - "123.45a" (contiene letras)
+ * - "123,45" (contiene coma)
+ * - "123-45" (contiene guión)
+ * - "123 45" (contiene espacios)
+ */
+export const NUMERICO_CON_PUNTO_REGEX = /^[0-9.]*$/;
+
+/**
+ * Expresión regular para validar descripciones que contengan únicamente letras, números y espacios.
+ * 
+ * Esta expresión permite:
+ * - Letras mayúsculas y minúsculas (a-z, A-Z)
+ * - Dígitos (0-9)
+ * - Espacios en blanco
+ * - Cadena vacía
+ * 
+ * Ejemplos válidos:
+ * - "Descripcion 123"
+ * - "ABC test 456"
+ * - "123"
+ * - ""
+ * 
+ * Ejemplos no válidos:
+ * - "Descripción@123" (contiene @)
+ * - "Test-case" (contiene -)
+ * - "Descripción_válida" (contiene _)
+ */
+export const REGEX_DESCRIPCION = /^[a-zA-Z0-9\s]*$/;

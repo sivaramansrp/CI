@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { FabricanteDatos } from '../../tramites/260211/models/permiso-sanitario.enum';
 import { Injectable } from '@angular/core';
 
 /**
@@ -35,6 +36,10 @@ export interface Terceros260211State {
   codigoPostaloEquivalentes: string;
   estado: string;
   entidadFederativa: string;
+  Fabricantes: FabricanteDatos[];
+  Proveedores: FabricanteDatos[];
+  Facturadores: FabricanteDatos[];
+  Destinatarios: FabricanteDatos[];
     
     }
 /**
@@ -70,7 +75,11 @@ export function createInitialState(): Terceros260211State {
     coloniaoEquivalenteLabel: '',
     codigoPostaloEquivalentes: '',
     estado: '',
-    entidadFederativa: ''
+    entidadFederativa: '',
+    Fabricantes: [],
+     Destinatarios: [],
+    Proveedores: [],
+    Facturadores: []
     };
 }
 
@@ -91,6 +100,48 @@ export class Terceros260211Store extends Store<Terceros260211State> {
     super(createInitialState());
 
   }
+    /**
+ * Actualiza la lista de fabricantes en el estado del store.
+ * @param fabricantes - Arreglo de objetos FabricanteDatos que se almacenarán en el store.
+ */
+public setFabricantes(fabricantes: FabricanteDatos[]): void {
+  this.update((state) => ({
+      ...state,
+      Fabricantes: fabricantes,
+    }));
+}
+/**
+ * Actualiza la lista de proveedores en el estado del store.
+ * @param proveedores - Arreglo de objetos FabricanteDatos que se almacenarán en el store.
+ */
+public setProveedors(proveedores: FabricanteDatos[]): void {
+   this.update((state) => ({
+      ...state,
+      Proveedores: proveedores,
+    }));
+}
+
+/**
+ * Actualiza la lista de facturadores en el estado del store.
+ * @param facturadores - Arreglo de objetos FabricanteDatos que se almacenarán en el store.
+ */
+public setFacturadors(facturadores: FabricanteDatos[]): void {
+  this.update((state) => ({
+      ...state,
+      Facturadores: facturadores,
+    }));
+}
+
+/**
+ * Actualiza la lista de destinatarios en el estado del store.
+ * @param destinatarios - Arreglo de objetos FabricanteDatos que se almacenarán en el store.
+ */
+public setDestinatarios(destinatarios: FabricanteDatos[]): void {
+  this.update((state) => ({
+      ...state,
+      Destinatarios: destinatarios,
+    }));
+}
  /**
  * Actualiza el estado con el valor proporcionado.
  * Se utiliza para definir la entidad estatal seleccionada.
