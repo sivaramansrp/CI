@@ -1,15 +1,18 @@
 // Componente para la vista de los anexos dos y tres en el trámite 80103
+import { AnexoEncabezado, DatosAnexotressUno } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { Component, Input } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subject, map } from 'rxjs';
 import { ANEXO_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { AnexoDosYTresComponent } from '../../../../shared/components/anexo-dos-y-tres.component/anexo-dos-y-tres.component';
-import { AnexoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
+import { Tramite80104Query } from '../../../../estados/queries/tramite80104.query';
 import { takeUntil } from 'rxjs';
 /*
   * Componente para mostrar la vista de los anexos dos y tres en el trámite 80103.
@@ -35,6 +38,11 @@ import { takeUntil } from 'rxjs';
   * @implements {OnDestroy}
   */
 export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.Add commentMore actions
+   */
+   @Input() formularioDeshabilitado: boolean = false;
+
   /**
    * Lista de encabezados del anexo dos.
    * @type {AnexoEncabezado[]}
@@ -69,14 +77,43 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
    * @property {Subject<void>} destroyNotifier$
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es verdadero, los campos del formulario no pueden ser editados por el usuario.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Instancia del grupo de formulario para gestionar los controles y validación de la sección "Anexo Tres".
+   * Este FormGroup se utiliza para encapsular los campos del formulario y su lógica de validación
+   */
+  public anexoTressFormGroup!: FormGroup;
+
+  /**
+   * Instancia del grupo de formulario para gestionar los controles y validación de la sección "Anexo Tres".
+   * Este FormGroup se utiliza para encapsular los campos del formulario y su lógica de validación
+   */
+  public anexoTressDosFormGroup!: FormGroup;
+
 /*
   * Constructor del componente.
   * @param {Tramite80101Query} query - Consulta para obtener los datos de los anexos.
 */
   constructor(private query: Tramite80101Query,
-    private store: Tramite80101Store
+    private query80104: Tramite80104Query,
+    private store: Tramite80101Store,
+     private fb: FormBuilder,
+     private consultaQuery: ConsultaioQuery
   ) {
-   
+        this.consultaQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+            })
+          )
+          .subscribe()
   }
 /*
   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -100,6 +137,76 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
           this.anexoTresTablaLista = anexoTresTablaLista;
         }
       });
+    this.inicializarFormularioDatosSubcontratista();
+    this.obtenerDatosDelAlmacen();
+    this.inicializarFormularioDatosDosSubcontratista();
+    this.obtenerDatosDelAlmacenDos();
+  }
+
+/**
+ * Obtiene los datos almacenados desde el estado `selectSolicitud$` y los asigna al formulario `anexoTressFormGroup`
+ * y a la lista `anexoDosTablaLista`. Se asegura de limpiar la suscripción con `destroyNotifier$`.
+ */
+  obtenerDatosDelAlmacen(): void {
+    this.query80104.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((state) => {
+        this.anexoTressFormGroup.setValue({
+          fraccionArancelaria: state.fraccionArancelaria,
+          descripcion: state.descripcion
+        });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.anexoDosTablaLista = (state.anexoDos || []).map((item: any) => ({
+          ...item,
+          encabezadoFraccion: item.fraccionArancelaria ?? '',
+          encabezadoDescripcion: item.descripcion ?? '',
+          estatus: item.estatus ?? ''
+        }));
+      });
+  }
+
+/**
+ * Recupera datos desde el estado `selectSolicitud$` y los asigna al formulario `anexoTressDosFormGroup`
+ * y a la lista `anexoTresTablaLista`. Utiliza `destroyNotifier$` para gestionar la suscripción de forma segura.
+ */
+  obtenerDatosDelAlmacenDos(): void {
+    this.query80104.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((state) => {
+        this.anexoTressDosFormGroup.setValue({
+          fraccionArancelaria: state.fraccionTres,
+          descripcion: state.descripcionTres
+        });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.anexoTresTablaLista = (state.anexoTres || []).map((item: any) => ({
+          ...item,
+          encabezadoFraccion: item.fraccionArancelaria ?? '',
+          encabezadoDescripcion: item.descripcion ?? '',
+          estatus: item.estatus ?? ''
+        }));
+      });
+  }
+
+    /**
+     * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
+     * @method inicializarFormularioDatosSubcontratista
+     */
+  inicializarFormularioDatosSubcontratista(): void {
+    this.anexoTressFormGroup = this.fb.group({
+      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
+    });
+  }
+
+    /**
+     * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
+     * @method inicializarFormularioDatosSubcontratista
+     */
+  inicializarFormularioDatosDosSubcontratista(): void {
+    this.anexoTressDosFormGroup = this.fb.group({
+      fraccionArancelaria: ['', [Validators.required, Validators.maxLength(10)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(1000)]],
+    });
   }
 
   /**
@@ -120,6 +227,26 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
   obtenerAnexoTresDevolverLaLlamada(event: AnexoEncabezado[]): void {
     this.anexoTresTablaLista = event ? event : [];
     this.store.setAnnexoTresTableLista(this.anexoTresTablaLista);
+  }
+
+  /**
+     * Modifica los datos de los cumplimientos y los almacena en el estado.
+     *
+     * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
+     * @returns void
+     */
+  modifierComplimentos(complimentos: DatosAnexotressUno): void {
+    this.store.setDatosAnexoTres(complimentos);
+  }
+
+/**
+     * Modifica los datos de los cumplimientos y los almacena en el estado.
+     *
+     * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
+     * @returns void
+     */
+  modifierComplimentosDos(complimentos: DatosAnexotressUno): void {
+    this.store.setDatosAnexoTresDos(complimentos);
   }
 
     /**

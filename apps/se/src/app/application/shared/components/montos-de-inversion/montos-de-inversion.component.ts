@@ -3,6 +3,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
+import { ComplimentosService } from '../../services/complimentos.service';
 
 import { CATALOGO_TIPO,COMPLEMENTO_DE_PLANTA} from '../../constantes/complementar-planta.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
@@ -86,7 +87,7 @@ export class MontosDeInversionComponent implements OnInit {
    * @param {FormBuilder} fb - Servicio para construcción de formularios
    */
   constructor(private fb: FormBuilder, private ubicaccion: Location,private complementarStore: ComplementarStore,
-      private complementarQuery: ComplementarQuery) {
+      private complementarQuery: ComplementarQuery, private complimentosService: ComplimentosService,) {
     
   }
    /**
@@ -95,7 +96,24 @@ export class MontosDeInversionComponent implements OnInit {
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
-  this.createMontosDeInversionForm();
+    this.createMontosDeInversionForm();
+    if (!(this.solicitudState.tipoInversionOptions.length)) {
+      this.obtenerTipoMontoOptions('ENU_TIPO_MONTO_INVERSION');
+    } else {
+      this.tipoOptions = [...this.solicitudState.tipoInversionOptions];
+    }
+  }
+
+  /** Obtiene y actualiza las opciones del catálogo de tipo de monto desde el servicio. */
+  obtenerTipoMontoOptions(tipo: string): void {
+    this.complimentosService.getTipoInversion(tipo)
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    )
+    .subscribe((res) => {
+      this.complementarStore.setTipoInversionOptions(res.datos);
+      this.tipoOptions = res.datos;
+    });
   }
 
   /**

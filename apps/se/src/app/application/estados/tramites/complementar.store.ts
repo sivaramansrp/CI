@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 
 /**
@@ -41,8 +42,10 @@ export interface ComplementarState {
   capacidadInstaladaAnual: string;
   calculoCapacidadInstalada: string;
   capacidadUtilizadaPct: string;
-  
-
+  tipoDocumentoOptions: Catalogo[];
+  tipoInversionOptions: Catalogo[];
+  tipoCategoriaOptions: Catalogo[];
+  paisOptions: Catalogo[];
 }
 
 /**
@@ -84,6 +87,10 @@ export function createInitialState(): ComplementarState {
   capacidadInstaladaAnual: '',
   calculoCapacidadInstalada: '',
   capacidadUtilizadaPct: '',
+  tipoDocumentoOptions: [],
+  tipoInversionOptions: [],
+  tipoCategoriaOptions: [],
+  paisOptions: [],
   };
 }
 /**
@@ -414,6 +421,49 @@ public setCapacidadUtilizadaPct(capacidadUtilizadaPct: string): void {
   }));
 }
 
+/**
+ * Establece el porcentaje de capacidad utilizada.
+ * Se compara con la capacidad total para evaluar eficiencia operativa.
+ */
+public setTipoDocumentoOptions(tipoDocumentoOptions: Catalogo[]): void {
+  this.update((state) => ({
+    ...state,
+    tipoDocumentoOptions,
+  }));
+}
+
+/**
+ * Establece el porcentaje de capacidad utilizada.
+ * Se compara con la capacidad total para evaluar eficiencia operativa.
+ */
+public setTipoInversionOptions(tipoInversionOptions: Catalogo[]): void {
+  this.update((state) => ({
+    ...state,
+    tipoInversionOptions,
+  }));
+}
+
+/**
+ * Establece el porcentaje de capacidad utilizada.
+ * Se compara con la capacidad total para evaluar eficiencia operativa.
+ */
+public setTipoCategoriaOptions(tipoCategoriaOptions: Catalogo[]): void {
+  this.update((state) => ({
+    ...state,
+    tipoCategoriaOptions,
+  }));
+}
+
+/**
+ * Establece el porcentaje de capacidad utilizada.
+ * Se compara con la capacidad total para evaluar eficiencia operativa.
+ */
+public setPaisOptions(paisOptions: Catalogo[]): void {
+  this.update((state) => ({
+    ...state,
+    paisOptions,
+  }));
+}
 
 
 }

@@ -63,7 +63,7 @@
               </div>
             </div>
             <div class="col-md-6">
-              <label for="complementoClasificacion">Complemento de la clasificación*:</label>
+              <label for="complementoClasificacion">Complemento de la descripción*:</label>
               <textarea class="mb-4 h-20 w-100 form-control" formControlName="complementoClasificacion" rows="2"></textarea>
               <div *ngIf="mercanciaForm.get('complementoClasificacion')?.touched && mercanciaForm.get('complementoClasificacion')?.invalid">
                 <small *ngIf="mercanciaForm.get('complementoClasificacion')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>

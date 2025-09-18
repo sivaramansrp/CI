@@ -236,3 +236,24 @@ export interface ConsultaDatos {
     folioOriginal: string;
   }
   
+  /**
+   *  
+   * Agrupa los datos de terceros relacionados.
+   * */
+  export interface TercerosRelacionados {
+    facturador: Facturador; // Datos del facturador
+    fabricante: Fabricante; // Datos del fabricante
+    destinatario: Destinatario; // Datos del destinatario
+    proveedor: Proveedor; // Datos del proveedor
+  }
+
+  /**
+   * Interfaz que representa la estructura de datos para el formulario.
+   */
+  export interface FormData {
+    /**
+     * Terceros relacionados en el formulario.
+     */
+    tercerosRelacionados: TercerosRelacionados[] | null;
+  }
+  

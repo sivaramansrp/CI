@@ -1,5 +1,5 @@
 
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CapturarSolicitudComponent } from './pages/capturar-solicitud/capturar-solicitud.component';
 import { CertificadoSGPRoutingModule } from './certificado-sgp-routing.module';
 import { CommonModule } from '@angular/common';
@@ -35,7 +35,8 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     BtnContinuarComponent,
     DatosDelCertificadoComponent,
     RegistroDeMercanciaComponent,
-    DomicilioDelDestinatarioComponent
+    DomicilioDelDestinatarioComponent,
+    AlertComponent
 ],
   providers: [ToastrService],
 })
