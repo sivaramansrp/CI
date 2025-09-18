@@ -1,11 +1,13 @@
 import { CAPACIDAD_INSTALADA, CapacidadInstalada } from '../../constantes/capacidad-instalada.enum';
-import { CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent,} from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent,} from '@libs/shared/data-access-user/src';
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
+import { ComplementosSeccionQuery } from '../../../estados/queries/complementos-seccion.query';
+import { ComplementosSeccionState } from '../../../estados/tramites/complementos-seccion.store';
 import { Location } from '@angular/common';
 
 /**
@@ -46,6 +48,11 @@ export class CapacidadInstaladaComponent implements OnInit {
    * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
    */
     @Output() cerrarPopup = new EventEmitter<void>();
+
+    /**
+   * Estado de la solicitud 250101, que contiene los valores actuales de la solicitud.
+   */
+  public complementosSeccionState!: ComplementosSeccionState;
     
 
   /**
@@ -53,7 +60,7 @@ export class CapacidadInstaladaComponent implements OnInit {
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador
    */
   constructor(private ubicaccion: Location, private fb: FormBuilder,private complementarStore: ComplementarStore,
-      private complementarQuery: ComplementarQuery,) {
+      private complementarQuery: ComplementarQuery, private complementosSeccionQuery: ComplementosSeccionQuery,) {
     
   }
    /**
@@ -62,6 +69,24 @@ export class CapacidadInstaladaComponent implements OnInit {
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
+    this.complementosSeccionQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.complementosSeccionState = seccionState as ComplementosSeccionState;
+          if (this.complementosSeccionState['fraccionArancelaria']) {
+            this.fraccionArancelariaProductoTerminadoCatlogo.push({
+              id: 1,
+              descripcion: typeof this.complementosSeccionState['fraccionArancelaria'] === 'string'
+                ? this.complementosSeccionState['fraccionArancelaria']
+                : (typeof this.complementosSeccionState['fraccionArancelaria'] === 'object' && this.complementosSeccionState['fraccionArancelaria'] !== null && 'descripcion' in this.complementosSeccionState['fraccionArancelaria']
+                  ? (this.complementosSeccionState['fraccionArancelaria'] as { descripcion: string }).descripcion
+                  : '')
+            })
+          }
+        })
+      )
+      .subscribe();
     this.inicializarFormulario();
     if(!this.capacidadInstaladaDatos){
       this.capacidadInstaladaDatos = [];
@@ -95,7 +120,7 @@ export class CapacidadInstaladaComponent implements OnInit {
    * Catálogo de fracciones arancelarias de producto terminado
    * @property {any[]} fraccionArancelariaProductoTerminadoCatlogo
    */
-  fraccionArancelariaProductoTerminadoCatlogo = [{ "id": 1, "descripcion": "GUADALAJARA" }];
+  fraccionArancelariaProductoTerminadoCatlogo: Catalogo[] = [];
 
   /**
    * Vuelve a la ubicación anterior en el historial del navegador
@@ -245,9 +270,9 @@ limpiar(): void {
   eliminarCapacidadInstalada(): void {
    if (this.SelectedInstaladaDatos?.length > 0) {
       this.SelectedInstaladaDatos.forEach(planta => {
-        const index = this.capacidadInstaladaDatos.findIndex(row => row === planta);
-        if (index !== -1) {
-          this.capacidadInstaladaDatos.splice(index, 1);
+        const INDEX = this.capacidadInstaladaDatos.findIndex(row => row === planta);
+        if (INDEX !== -1) {
+          this.capacidadInstaladaDatos.splice(INDEX, 1);
         }
     });
     this.capacidadInstaladaDatos = [...this.capacidadInstaladaDatos];

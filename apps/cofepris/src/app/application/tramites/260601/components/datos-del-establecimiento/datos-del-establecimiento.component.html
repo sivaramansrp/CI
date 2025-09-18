@@ -27,7 +27,7 @@
                 (change)="setValoresStore(datosDelEstablecimientoForm,'RFCResponsableSanitario', 'setRFCResponsableSanitario')">
         </div>
         <div class="col-md-8">
-            <label for="razonSocial" class="form-label">Denominación o razón social*:</label>
+            <label for="razonSocial" class="form-label">Denominación o razón social<span [ngClass]="datosDelEstablecimientoForm.get('razonSocial')?.touched && datosDelEstablecimientoForm.get('razonSocial')?.invalid && datosDelEstablecimientoForm.get('razonSocial')?.errors?.['required'] || razonInvalid ? 'text-danger' : ''">*</span>:</label>
             <input type="text" class="form-control" formControlName="razonSocial" id="razonSocial" size="68"
                 (change)="setValoresStore(datosDelEstablecimientoForm,'razonSocial', 'setRazonSocial')">
             <div *ngIf="datosDelEstablecimientoForm.get('razonSocial')?.touched">
@@ -63,7 +63,7 @@
 <div [formGroup]="domicilloDelEstablecimientoForm">
     <div class="row">
         <div class="col-md-4">
-            <label for="codigoPostal" class="form-label">Código postal*:</label>
+            <label for="codigoPostal" class="form-label">Código postal<span [ngClass]="domicilloDelEstablecimientoForm.get('codigoPostal')?.touched && domicilloDelEstablecimientoForm.get('codigoPostal')?.invalid && domicilloDelEstablecimientoForm.get('codigoPostal')?.errors?.['required'] || codigoPostalInvalid ? 'text-danger' : ''">*</span>:</label>
             <input type="text" name="codigoPostal" id="codigoPostal" class="form-control" formControlName="codigoPostal"
                 maxlength="12"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'codigoPostal', 'setCodigoPostal')">
@@ -81,7 +81,7 @@
             <input type="hidden" name="clave" id="idClaveEntidadFederativa">
         </div>
         <div class="col-md-4">
-            <label for="descripcionMunicipio" class="form-label">Municipio o alcaldía*:</label>
+            <label for="descripcionMunicipio" class="form-label">Municipio o alcaldía<span [ngClass]="domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.touched && domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.invalid && domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.errors?.['required'] || descripcionMunicipioInvalid ? 'text-danger' : ''">*</span>:</label>
             <input type="text" name="descripcionMunicipio" id="descripcionMunicipio" class="form-control"
                 formControlName="descripcionMunicipio" maxlength="120"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'descripcionMunicipio', 'setDescripcionMunicipio')">
@@ -92,7 +92,7 @@
     </div>
     <div class="row">
         <div class="col-md-4">
-            <label for="informacionExtra" class="form-label">Localidad*:</label>
+            <label for="informacionExtra" class="form-label">Localidad<span [ngClass]="domicilloDelEstablecimientoForm.get('informacionExtra')?.touched && domicilloDelEstablecimientoForm.get('informacionExtra')?.invalid && domicilloDelEstablecimientoForm.get('informacionExtra')?.errors?.['required'] || informacionExtraInvalid ? 'text-danger' : ''">*</span>:</label>
             <input type="text" name="informacionExtra" id="informacionExtra" class="form-control"
                 formControlName="informacionExtra" maxlength="120"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'informacionExtra', 'setInformacionExtra')">
@@ -101,7 +101,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <label for="descripcionColonia" class="form-label">Colonia*:</label>
+            <label for="descripcionColonia" class="form-label">Colonia<span [ngClass]="domicilloDelEstablecimientoForm.get('descripcionColonia')?.touched && domicilloDelEstablecimientoForm.get('descripcionColonia')?.invalid && domicilloDelEstablecimientoForm.get('descripcionColonia')?.errors?.['required'] || descripcionColoniaInvalid ? 'text-danger' : ''">*</span>:</label>
             <input type="text" name="descripcionColonia" id="descripcionColonia" class="form-control"
                 formControlName="descripcionColonia" maxlength="120"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'descripcionColonia', 'setDescripcionColonia')">
@@ -112,7 +112,7 @@
     </div>
     <div class="row">
         <div class="col-md-8">
-            <label for="calle" class="form-label">Calle*: <span
+            <label for="calle" class="form-label">Calle<span [ngClass]="domicilloDelEstablecimientoForm.get('calle')?.touched && domicilloDelEstablecimientoForm.get('calle')?.invalid && domicilloDelEstablecimientoForm.get('calle')?.errors?.['required'] || calleInvalid ? 'text-danger' : ''">*</span>: <span
                     tooltip="Domicilio, calle, n&uacute;mero interior, n&uacute;mero exterior, lote"
                     data-bs-toggle="tooltip">
                 <i class="bi bi-question-circle-fill"></i></span></label>
@@ -149,7 +149,7 @@
 
     <!--Datos S.C.I.A.N.-->
 
-    <label class="form-label scian">S.C.I.A.N.*:</label>
+    <label class="form-label scian">S.C.I.A.N.<span [ngClass]="tableErrorMeassageDispalySCIAN ? 'text-danger' : ''">*</span>:</label>
 
     <app-tabla-dinamica 
     [tipoSeleccionTabla]="tablaSeleccion" 
@@ -246,7 +246,7 @@
         </div>
     </div>
 
-    <label class="form-label scian">Datos del producto*:</label>
+    <label class="form-label scian">Datos del producto<span [ngClass]="tableErrorMeassageDispalyProducto ? 'text-danger' : ''">*</span>:</label>
 
     <app-tabla-dinamica  [datos]="productoBodyData"
      [tipoSeleccionTabla]="tablaSeleccion" 
@@ -279,12 +279,12 @@
     @for (manifiesto of manifiestos; let i = $index; track i) {
     <div class="row">
         <div class="col-md-12">
-            <div class="alert alert-info">
+            <div class="alert alert-info" style="margin-bottom: 0px;">
                 <input class="form-check-input" type="checkbox" [id]="'manifiesto-' + i"
                     [value]="manifiesto.declaracion.clave" [checked]="seleccionadaManifiesto.value[i]" class="required"  [disabled]="esFormularioSoloLectura"
                     (change)="onManifiestoCheckboxCambiar($event, i)" />
                 <div class="manifiesto-descripcion">
-                    <label>* {{manifiesto.declaracion.descripcion}}</label>
+                    <label><span [ngClass]="CheckboxError ? 'text-danger' : ''">*</span> {{manifiesto.declaracion.descripcion}}</label>
                 </div>
             </div>
             <div *ngIf="CheckboxError">

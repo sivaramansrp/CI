@@ -1099,6 +1099,4 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
     this.nuevaNotificacion = {} as Notificacion;
   }
 
-  
-
 }
