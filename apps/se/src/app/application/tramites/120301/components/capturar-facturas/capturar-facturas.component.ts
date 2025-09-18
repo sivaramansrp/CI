@@ -620,8 +620,20 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
         txtBtnCancelar: '',
       };
     }
+    if (this.facturaSeleccionada.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Solo puede eliminar una factura a la vez.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
     const IDS_A_ELIMINAR = this.facturaSeleccionada.map(factura => factura.id_factura_expedicion).filter(id => id !== null) as number[];
-    this.facturasAsociadasService.deleteFacturaTpl(IDS_A_ELIMINAR[0]).subscribe({
+    this.facturasAsociadasService.deleteFactura(IDS_A_ELIMINAR[0]).subscribe({
       next: (response) => {
         if (response.codigo === '00') {
           this.nuevaNotificacion = {

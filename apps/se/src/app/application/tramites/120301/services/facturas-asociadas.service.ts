@@ -1,7 +1,5 @@
-import { API_DELETE_FACTURAS_TPL_ELIMINAR, API_GET_FACTURAS_TPL, API_GET_FACTURAS_TPL_ALL, API_GET_FACTURAS_TPL_ASOCIADAS, API_GET_FACTURAS_TPL_TOTAL_UNIDAD, API_POST_FACTURAS_TPL_AGREGAR, API_POST_FACTURAS_TPL_ASOCIAR, IDEXPEDICION } from '../server/api-router';
+import { API_DELETE_FACTURAS_TPL, API_DELETE_FACTURAS_TPL_ELIMINAR, API_GET_FACTURAS_TPL, API_GET_FACTURAS_TPL_ALL, API_GET_FACTURAS_TPL_ASOCIADAS, API_GET_FACTURAS_TPL_TOTAL_UNIDAD, API_POST_FACTURAS_TPL_AGREGAR, API_POST_FACTURAS_TPL_ASOCIAR, IDEXPEDICION } from '../server/api-router';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { FacturaTotalUnidadResponse } from '../models/response/facturas-tpl-unidad-total-response.model';
@@ -9,8 +7,11 @@ import { FacturaTplAsociadaResponse } from '../models/response/facturas-tpl-asoc
 import { FacturaTplCapturaRequest } from '../models/request/facturas-tpl-captura-requet.model';
 import { FacturasTplAsociadasRequest } from '../models/request/facturas-tpl-asociadas-request.model';
 import { FacturasTplCapturaResponse } from '../models/response/facturas-tpl-captura-response.model';
+import { FacturasTplEliminarRequest } from '../models/request/facturas-tpl-eliminar-request.model';
 import { FacturasTplResponse } from '../models/response/facturas-tpl-response.model';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -117,9 +118,11 @@ export class FacturasAsociadasService {
    * @returns Observable con la respuesta del servidor que incluye 
    *          el resultado de la operación de eliminación.
  */
-  deleteFacturaTpl(id_factura_expedicion: number): Observable<BaseResponse<FacturaTplAsociadaResponse>> {
-    const ENDPOINT = `${this.host}` + API_DELETE_FACTURAS_TPL_ELIMINAR(id_factura_expedicion.toString());
-    return this.http.delete<BaseResponse<FacturaTplAsociadaResponse>>(ENDPOINT);
+  deleteFacturaTpl(PAYLOAD: FacturasTplEliminarRequest[]): Observable<BaseResponse<FacturaTplAsociadaResponse>> {
+    const ENDPOINT = `${this.host}` + API_DELETE_FACTURAS_TPL_ELIMINAR;
+    return this.http.request<BaseResponse<FacturaTplAsociadaResponse>>('delete', ENDPOINT, {
+      body: PAYLOAD
+    });
   }
 
   /**
@@ -186,4 +189,8 @@ export class FacturasAsociadasService {
     return this.http.post<BaseResponse<null>>(ENDPOINT, body);
   }
 
+  deleteFactura(id_factura: number): Observable<BaseResponse<void>> {
+    const ENDPOINT = `${this.host}${API_DELETE_FACTURAS_TPL(id_factura.toString())}`;
+    return this.http.delete<BaseResponse<void>>(ENDPOINT);
+  }
 }
