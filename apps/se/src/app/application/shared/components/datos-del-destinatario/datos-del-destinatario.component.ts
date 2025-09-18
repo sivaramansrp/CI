@@ -102,7 +102,7 @@ export class DatosDelDestinatarioComponent implements OnDestroy, OnInit,OnChange
    */
   createForm(): void {
     this.formDatosDelDestinatario = this.fb.group({
-      nombres: ['', [Validators.maxLength(20)]],
+      nombres: ['', [Validators.maxLength(20), Validators.required]],
       primerApellido: ['', [ Validators.maxLength(20)]],
       segundoApellido: ['', [Validators.maxLength(20)]],
       numeroDeRegistroFiscal: ['',[Validators.maxLength(30),Validators.required]],
