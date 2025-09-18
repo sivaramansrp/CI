@@ -79,8 +79,7 @@
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false" [datos]="nicoTablaDatos"
             (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
         <div class="container text-end mt-5">
-            <button class="btn btn-default me-2" (click)="eliminarSeleccionados()"
-                [disabled]="selectedRows.length === 0">Eliminar</button>
+            <button class="btn btn-default me-2" (click)="eliminarSeleccionados()">Eliminar</button>
             <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent"
                 [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
@@ -150,9 +149,9 @@
         <div class="container text-end mt-5">
             <button class="btn btn-default me-2" (click)="modificarMercancia()" data-bs-toggle="modal"
                 data-bs-target="#modalAddAgentMercancias"
-                [disabled]="esFormularioSoloLectura || noSeleccionado">Modificar</button>
+                [disabled]="esFormularioSoloLectura">Modificar</button>
             <button class="btn btn-default me-2" (click)="eliminarMercanciaSeleccionados()"
-                [disabled]="esFormularioSoloLectura || noSeleccionado">Eliminar</button>
+                [disabled]="esFormularioSoloLectura">Eliminar</button>
             <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"
                 [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
@@ -160,7 +159,7 @@
 
 </form>
 
-<div class="modal fade" id="modalAddAgent" tabindex="-1" aria-labelledby="modalAddAgentLabel" aria-hidden="true">
+<div class="modal fade" #modalAddAgent id="modalAddAgent" tabindex="-1" aria-labelledby="modalAddAgentLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content overflow-auto">
             <div class="modal-header">
@@ -172,14 +171,17 @@
                         <app-catalogo-select [catalogo]="estado" formControlName="claveScianModal"
                             [label]="'Clave S.C.I.A.N.'" [required]="true" name="claveScianModal"
                             (change)="setValoresStore(formAgente,'claveScianModal', 'setClaveScianModal')"
-                            [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
+                            [isDisabled]="esFormularioSoloLectura ? true : false"
+                            [markTouched]="formAgente.get('claveScianModal')?.touched??false"></app-catalogo-select>
                     </div>
                     <div class="form-group">
-                        <app-catalogo-select [catalogo]="estado" formControlName="claveDescripcionModal"
-                            [label]="'Descripción del S.C.I.A.N.'" [required]="false" name="claveDescripcionModal"
-                            [isDisabled]="esFormularioSoloLectura ? true : false"
-                            (change)="setValoresStore(formAgente,'claveDescripcionModal', 'setClaveDescripcionModal')"></app-catalogo-select>
-                    </div>
+                        <label for="descripcionModal">Descripción del S.C.I.A.N.*:</label>
+                        <input type="text" id="claveDescripcionModal" formControlName="claveDescripcionModal" class="form-control"
+                            (change)="setValoresStore(formAgente,'claveDescripcionModal', 'setClaveDescripcionModal')">
+                        <div *ngIf="formAgente.get('claveDescripcionModal')?.touched && formAgente.get('claveDescripcionModal')?.invalid" class="text-danger">
+                            <small *ngIf="formAgente.get('claveDescripcionModal')?.errors?.['required']">Este campo es obligatorio</small>
+                        </div>
+                        </div>
                 </form>
             </div>
             <div class="modal-footer custom-footer d-flex justify-content-between align-items-center w-100">
@@ -187,7 +189,7 @@
                 <div>
                     <button type="button" class="btn btn-default me-2" (click)="limpiarFormAgente()">Limpiar</button>
                     <button type="button" class="btn btn-default me-2" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                    <button type="button" class="btn btn-primary" 
                         (click)="agregarFilaScian()">Agregar</button>
                 </div>
             </div>
@@ -197,12 +199,12 @@
 
 <div class="modal fade" id="modalAddAgentMercancias" tabindex="-1" aria-labelledby="modalAddAgentMercanciasLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw;">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-lg-custom">
+        <div class="modal-content" >
             <div class="modal-header">
                 <h4 class="modal-title">Datos mercancías</h4>
             </div>
-            <div class="modal-body modal-height">
+            <div class="modal-body">
                 <form [formGroup]="formMercancias">
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="estado" formControlName="clasificacion"
@@ -370,3 +372,10 @@
         </div>
     </div>
 </div>
+
+@if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"  (confirmacionModal)="eliminarPedimentoDatos($event)">
+    </lib-notificaciones>
+  </section>
+}
