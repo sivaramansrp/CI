@@ -9,7 +9,7 @@
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [datos]="fabricanteDatos"
-  (listaDeFilaSeleccionada)="onSelectedRowsChange($event, 'fabricante')"
+  (listaDeFilaSeleccionada)="enCambioDeFilasSeleccionadas($event, 'fabricante')"
              [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           >
           </app-tabla-dinamica>
@@ -18,17 +18,17 @@
           <div class="btn-group">
            <div>
             <button
-  *ngIf="selectedRowsFabricante.size > 0"
+  *ngIf="filasSeleccionadasFabricante.size > 0"
             class="btn btn-default"
               class="btn btn-default 3"
               type="button"
               data-bs-toggle="modal"
-             (click)="onDeleted('fabricante')"
+             (click)="enEliminado('fabricante')"
             >
               Eliminar
             </button>
             <button
-  *ngIf="currentTable && selectedRowsFabricante.size === 1 && currentTable === 'fabricante'"
+  *ngIf="currentTable && filasSeleccionadasFabricante.size === 1 && currentTable === 'fabricante'"
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarDestinatario"
@@ -64,7 +64,7 @@
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [datos]="destinatarioDatos"
-  (listaDeFilaSeleccionada)="onSelectedRowsChange($event, 'destinatario')"
+  (listaDeFilaSeleccionada)="enCambioDeFilasSeleccionadas($event, 'destinatario')"
              [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           >
           </app-tabla-dinamica>
@@ -73,17 +73,17 @@
           <div class="btn-group">
             <div>
               <button
-            *ngIf="selectedRowsDestinatario.size > 0"
+            *ngIf="filasSeleccionadasDestinatario.size > 0"
             class="btn btn-default"
               class="btn btn-default 3"
               type="button"
               data-bs-toggle="modal"
-              (click)="onDeleted('destinatario')"
+              (click)="enEliminado('destinatario')"
             >
               Eliminar
             </button>
             <button
-  *ngIf="currentTable && selectedRowsDestinatario.size === 1 && currentTable === 'destinatario'"
+  *ngIf="currentTable && filasSeleccionadasDestinatario.size === 1 && currentTable === 'destinatario'"
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarDestinatario"
@@ -111,7 +111,7 @@
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [datos]="proveedorDatos"
-  (listaDeFilaSeleccionada)="onSelectedRowsChange($event, 'proveedor')"
+  (listaDeFilaSeleccionada)="enCambioDeFilasSeleccionadas($event, 'proveedor')"
              [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
              
              >
@@ -121,17 +121,17 @@
           <div class="btn-group">
            <div>
               <button
-            *ngIf="selectedRowsProveedor.size > 0"
+            *ngIf="filasSeleccionadasProveedor.size > 0"
             class="btn btn-default"
               class="btn btn-default 3"
               type="button"
               data-bs-toggle="modal"
-               (click)="onDeleted('proveedor')"
+               (click)="enEliminado('proveedor')"
             >
               Eliminar
             </button>
             <button
-  *ngIf="currentTable && selectedRowsProveedor.size === 1 && currentTable === 'proveedor'"
+  *ngIf="currentTable && filasSeleccionadasProveedor.size === 1 && currentTable === 'proveedor'"
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarDestinatario"
@@ -159,7 +159,7 @@
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [datos]="facturadorDatos"
-  (listaDeFilaSeleccionada)="onSelectedRowsChange($event, 'facturador')"
+  (listaDeFilaSeleccionada)="enCambioDeFilasSeleccionadas($event, 'facturador')"
              [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           >
           </app-tabla-dinamica>
@@ -169,17 +169,17 @@
           <div class="btn-group">
            <div>
               <button
-            *ngIf="selectedRowsFacturador.size > 0"
+            *ngIf="filasSeleccionadasFacturador.size > 0"
             class="btn btn-default"
               class="btn btn-default 3"
               type="button"
               data-bs-toggle="modal"
-            (click)="onDeleted('facturador')"
+            (click)="enEliminado('facturador')"
             >
               Eliminar
             </button>
             <button
-          *ngIf="currentTable && selectedRowsFacturador.size === 1 && currentTable === 'facturador'"
+          *ngIf="currentTable && filasSeleccionadasFacturador.size === 1 && currentTable === 'facturador'"
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarDestinatario"

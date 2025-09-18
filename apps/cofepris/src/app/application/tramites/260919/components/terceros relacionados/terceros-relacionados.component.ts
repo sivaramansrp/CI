@@ -101,22 +101,22 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   /** 
  * Conjunto de filas seleccionadas en la tabla de fabricantes.
  */
-selectedRowsFabricante: Set<number> = new Set();
+filasSeleccionadasFabricante: Set<number> = new Set();
 
 /** 
  * Conjunto de filas seleccionadas en la tabla de destinatarios.
  */
-selectedRowsDestinatario: Set<number> = new Set();
+filasSeleccionadasDestinatario: Set<number> = new Set();
 
 /** 
  * Conjunto de filas seleccionadas en la tabla de proveedores.
  */
-selectedRowsProveedor: Set<number> = new Set();
+filasSeleccionadasProveedor: Set<number> = new Set();
 
 /** 
  * Conjunto de filas seleccionadas en la tabla de facturadores.
  */
-selectedRowsFacturador: Set<number> = new Set();
+filasSeleccionadasFacturador: Set<number> = new Set();
 
   /** Fila seleccionada actualmente */
   selectedRow: FilaTablaData | null = null;
@@ -408,20 +408,20 @@ selectedRowsFacturador: Set<number> = new Set();
    *
    * @param selectedRows Filas seleccionadas en la tabla.
    */
- onSelectedRowsChange(selectedRows: FilaTablaData[], tableName: string): void {
+ enCambioDeFilasSeleccionadas(selectedRows: FilaTablaData[], tableName: string): void {
   this.currentTable = tableName;
   switch (tableName) {
     case 'fabricante':
-      this.selectedRowsFabricante = new Set(selectedRows.map((row) => row.id));
+      this.filasSeleccionadasFabricante = new Set(selectedRows.map((row) => row.id));
       break;
     case 'destinatario':
-      this.selectedRowsDestinatario = new Set(selectedRows.map((row) => row.id));
+      this.filasSeleccionadasDestinatario = new Set(selectedRows.map((row) => row.id));
       break;
     case 'proveedor':
-      this.selectedRowsProveedor = new Set(selectedRows.map((row) => row.id));
+      this.filasSeleccionadasProveedor = new Set(selectedRows.map((row) => row.id));
       break;
     case 'facturador':
-      this.selectedRowsFacturador = new Set(selectedRows.map((row) => row.id));
+      this.filasSeleccionadasFacturador = new Set(selectedRows.map((row) => row.id));
       break;
     default:
       console.error('Invalid table name');
@@ -430,22 +430,22 @@ selectedRowsFacturador: Set<number> = new Set();
   /**
    * Maneja el evento de eliminación de filas seleccionadas.
    */
-onDeleted(tableName: string): void {
+enEliminado(tableName: string): void {
   this.currentTable = tableName;
 
   let selectedRows: Set<number>;
   switch (this.currentTable) {
     case 'fabricante':
-      selectedRows = this.selectedRowsFabricante;
+      selectedRows = this.filasSeleccionadasFabricante;
       break;
     case 'destinatario':
-      selectedRows = this.selectedRowsDestinatario;
+      selectedRows = this.filasSeleccionadasDestinatario;
       break;
     case 'proveedor':
-      selectedRows = this.selectedRowsProveedor;
+      selectedRows = this.filasSeleccionadasProveedor;
       break;
     case 'facturador':
-      selectedRows = this.selectedRowsFacturador;
+      selectedRows = this.filasSeleccionadasFacturador;
       break;
     default:
       console.error('Invalid table selection:', this.currentTable);
@@ -480,16 +480,16 @@ onDeleted(tableName: string): void {
 
   switch (this.currentTable) {
     case 'fabricante':
-      selectedRows = this.selectedRowsFabricante;
+      selectedRows = this.filasSeleccionadasFabricante;
       break;
     case 'destinatario':
-      selectedRows = this.selectedRowsDestinatario;
+      selectedRows = this.filasSeleccionadasDestinatario;
       break;
     case 'proveedor':
-      selectedRows = this.selectedRowsProveedor;
+      selectedRows = this.filasSeleccionadasProveedor;
       break;
     case 'facturador':
-      selectedRows = this.selectedRowsFacturador;
+      selectedRows = this.filasSeleccionadasFacturador;
       break;
     default:
       console.error('Invalid table selection:', this.currentTable);
@@ -695,25 +695,25 @@ eliminarMercancias(): void {
 
   switch (this.currentTable) {
     case 'fabricante':
-      selectedRows = this.selectedRowsFabricante;
+      selectedRows = this.filasSeleccionadasFabricante;
       this.fabricanteDatos = this.fabricanteDatos.filter(
         (row) => !selectedRows.has(row.id)
       );
       break;
     case 'destinatario':
-      selectedRows = this.selectedRowsDestinatario;
+      selectedRows = this.filasSeleccionadasDestinatario;
       this.destinatarioDatos = this.destinatarioDatos.filter(
         (row) => !selectedRows.has(row.id)
       );
       break;
     case 'proveedor':
-      selectedRows = this.selectedRowsProveedor;
+      selectedRows = this.filasSeleccionadasProveedor;
       this.proveedorDatos = this.proveedorDatos.filter(
         (row) => !selectedRows.has(row.id)
       );
       break;
     case 'facturador':
-      selectedRows = this.selectedRowsFacturador;
+      selectedRows = this.filasSeleccionadasFacturador;
       this.facturadorDatos = this.facturadorDatos.filter(
         (row) => !selectedRows.has(row.id)
       );
