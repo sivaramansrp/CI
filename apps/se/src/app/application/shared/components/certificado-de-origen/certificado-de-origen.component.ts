@@ -9,8 +9,11 @@ import { FormularioSi } from '../../models/certificado-origen.model';
 import { Mercancia } from '../../models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
+
+import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from "ngx-toastr";
+
+import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 
 
 /**
@@ -79,7 +82,7 @@ export const FECHA_FIN = {
 })
 
 export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChanges {
-  /**
+ /**
  * Título mostrado en el componente.  
  * Puede ser personalizado desde el componente padre mediante [title].  
  * Si no se proporciona, se mostrará el valor por defecto: "Validación inicial del certificado de circulación de mercancías".
@@ -180,6 +183,11 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * @type {Mercancia[]}
    */
   @Input() tableData!: Mercancia[];
+
+   /**
+     * property {Catalogo[]} derechosList - Lista de derechos obtenida del servicio.
+     */
+    public derechosList!: Catalogo[];
 
   /**
    * Propiedad de entrada que recibe los datos de la mercancia guardada.
@@ -470,7 +478,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * Constructor del componente. Inicializa el formulario reactivo con los controles necesarios y sus validaciones.
    * @param fb FormBuilder para la creación del formulario reactivo.
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private service: CertificadoValidacionService) {
 
     this.actualizarDatosFormularioSolicitud();
   }
@@ -548,6 +556,18 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
     PRIMER_APELLIDO.updateValueAndValidity();
     CALLE.updateValueAndValidity();
     NUMERO_LETRA.updateValueAndValidity();
+  }
+
+   /**
+   * method loadComboUnidadMedida
+   * description Carga la lista de derechos desde el servicio.
+   */
+  loadComboUnidadMedida(): void {
+    this.service.getDatos() // Llama al servicio para obtener los datos.
+      .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
+      .subscribe((data): void => { // Maneja los datos recibidos.
+        this.derechosList = data as Catalogo[]; // Asigna los datos a la lista de derechos.
+      });
   }
 
   /**
@@ -738,6 +758,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
     this.applyTercerOperadorValidation(); // Add validation for procedure 110222
     this.nuevaNotificacion = {} as Notificacion
     this.inicializarFormularioArchivo();
+    this.loadComboUnidadMedida();
   }
   validarFormularios(): boolean {
     if (this.formCertificado.valid) {
@@ -1077,5 +1098,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
     }
     this.nuevaNotificacion = {} as Notificacion;
   }
+
+  
 
 }

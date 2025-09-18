@@ -171,7 +171,7 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="paises || []" [label]="'País'" name="pais1" formControlName="pais1"
+              <app-catalogo-select [catalogo]="derechosList" [label]="'País'" name="pais1" formControlName="pais1"
                 (change)="setValoresStore('formCertificado','pais1','setFormCertificadoGenric')"
                 [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
             </div>
