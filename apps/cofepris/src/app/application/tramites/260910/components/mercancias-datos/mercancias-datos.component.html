@@ -28,8 +28,7 @@
         (change)="setDistintiva($event)" />
     </div>
     <div class="col-md-8 mt-3">
-      <label class="form-label" for="cientifico">Denominación o nombre cientifico*:<span
-          class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span></label>
+      <label class="form-label" for="cientifico">Denominación o nombre científico*: <span tooltip="Denominación común internacional o genérica"><i class="bi bi-question-circle-fill"></i></span></label>
       <input class="form-control" id="cientifico" placeholder="" type="text" formControlName="cientifico"
         (change)="setCientifico($event)" />
     </div>
@@ -55,8 +54,7 @@
       </app-catalogo-select>
     </div>
     <div class="col-md-8 mt-3">
-      <label class="form-label" for="fraccionArancelaria">Fracción arancelaria*: <span
-          class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span>
+      <label class="form-label" for="fraccionArancelaria">Fracción arancelaria*: <span tooltip="Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado"><i class="bi bi-question-circle-fill"></i></span>
       </label>
       <input class="form-control" id="fraccionArancelaria" placeholder="" type="text"
         formControlName="fraccionArancelaria" (change)="setFraccionArancelaria($event)" />
@@ -73,8 +71,7 @@
         (change)="setCantidadUMT($event)" />
     </div>
     <div class="col-md-4 mt-3">
-      <label class="form-label" for="umt">UMT*: <span class="bi bi-question-circle-fill" title=""
-          data-bs-toggle="tooltip"></span>
+      <label class="form-label" for="umt">UMT*: <span tooltip="Unidad de medida de la tarifa"><i class="bi bi-question-circle-fill"></i></span>
       </label>
       <input class="form-control" id="umt" placeholder="" type="text" formControlName="umt" />
     </div>
@@ -87,6 +84,8 @@
     <div class="col-md-4 mt-3">
       <app-catalogo-select [id]="'umc'" [catalogo]="umcCatalogo.catalogos" [label]="umcCatalogo.labelNombre"
         [placeholder]="umcCatalogo.primerOpcion" [required]="umcCatalogo.required" formControlName="umc"
+        [tooltipQuestionCircle]="true"
+        tooltipQuestionCircleText="Unidad de medida de comercialización"
         (selectionChange)="setUMC($event)">
       </app-catalogo-select>
     </div>
@@ -113,13 +112,13 @@
       <div class="panel-group ficha-collapse" id="accordion">
         <div class="panel panel-default">
           <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
-            <h4 class="panel-title">País de origen</h4>
+            <h4 class="panel-title">País de de origen</h4>
             <button type="button" class="collpase-button collapsed"></button>
           </div>
           @if(paisOrigen){
           <div class="panel-collapse collapse in" id="panel-01">
             <div class="panel-body">
-              <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"></crosslist>
+              <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas" [botones]="paisDeOrigenBotons"></crosslist>
             </div>
           </div>
           }
@@ -137,7 +136,7 @@
           @if(paisProcedencisColapsable){
           <div class="panel-collapse collapse in" id="panel-01">
             <div class="panel-body">
-              <crosslist [label]="paisProcedencisCrossList.label" [fechas]="paisProcedencisCrossList.fechas">
+              <crosslist [label]="paisProcedencisCrossList.label" [fechas]="paisProcedencisCrossList.fechas" [botones]="paisDeProcedenciaBotons">
               </crosslist>
             </div>
           </div>
@@ -151,13 +150,13 @@
       <div class="panel-group ficha-collapse" id="accordion">
         <div class="panel panel-default">
           <div class="panel-heading" (click)="usoEspecificoColapsable()" tabindex="0">
-            <h4 class="panel-title">Uso especifico</h4>
+            <h4 class="panel-title">Uso específico</h4>
             <button type="button" class="collpase-button collapsed"></button>
           </div>
           @if(usoEspecifico){
           <div class="panel-collapse collapse in" id="panel-01">
             <div class="panel-body">
-              <crosslist [fechas]="usoEspecificoCrossList.fechas" [label]="usoEspecificoCrossList.label">
+              <crosslist [fechas]="usoEspecificoCrossList.fechas" [label]="usoEspecificoCrossList.label" [botones]="usoEspecificoBotons">
               </crosslist>
             </div>
           </div>
@@ -168,12 +167,11 @@
 
     <div class="col-md-12 d-flex justify-content-end align-items-end">
       <div class="btn-group">
-        <button type="button" class="btn btn-default btn-space">
-          Modificar
+        <button type="button" class="btn btn-default btn-space ms-3" data-bs-dismiss="modal" >
+          Cancelar
         </button>
-        <button class="btn btn-default ms-3" type="button">Eliminar</button>
-        <button type="button" class="btn btn-primary ms-3" data-bs-dismiss="modal" (click)="agregarMercanias()">
-          Agregar
+        <button type="button" class="btn btn-primary ms-3" data-bs-dismiss="modal" (click)="modificarMercanias()">
+          Modificar
         </button>
       </div>
     </div>

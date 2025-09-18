@@ -46,56 +46,6 @@ export class ConsultaDatosService {
     // Se puede agregar aquí la lógica del constructor si es necesario
    }
 
-     /**
-   * Actualiza los datos de la solicitud en el store del trámite.
-   *
-   * Este método permite actualizar específicamente el estado de la solicitud
-   * dentro del store del trámite 32516, manteniendo la consistencia de los datos
-   * a través de toda la aplicación.
-   *
-   * @param {TramiteState['SolicitudState']} solicitud - Objeto que contiene los datos de la solicitud a actualizar
-   * @returns {void}
-   * 
-   * @example
-   * ```typescript
-   * const datosSolicitud = {
-   *   numeroSolicitud: '123456',
-   *   fechaSolicitud: new Date(),
-   *   // ... otros campos de la solicitud
-   * };
-   * this.consultaDatosService.updateSolicitud(datosSolicitud);
-   * ```
-   */
-  updateSolicitud(solicitud: TramiteState['SolicitudState']): void {
-    this.tramiteStore.setSolicitudTramite(solicitud);
-  }
-
-  /**
-   * Actualiza los datos de mercancía/región en el store del trámite.
-   *
-   * Este método permite actualizar específicamente el estado de la mercancía
-   * o información regional dentro del store del trámite 32516. Los datos de mercancía
-   * incluyen información relevante sobre el producto, región de origen, y otros
-   * datos relacionados con la mercancía del trámite.
-   *
-   * @param {TramiteState['MercanciaState']} mercanciaForma - Objeto que contiene los datos de mercancía/región a actualizar
-   * @returns {void}
-   * 
-   * @example
-   * ```typescript
-   * const datosMercancia = {
-   *   tipoMercancia: 'Electrónicos',
-   *   region: 'Norte',
-   *   peso: 150.5,
-   *   // ... otros campos de mercancía
-   * };
-   * this.consultaDatosService.updateRegion(datosMercancia);
-   * ```
-   */
-  updateRegion(mercanciaForma: TramiteState['MercanciaState']): void {
-    this.tramiteStore.setMercanciaTramite(mercanciaForma);
-  }
-
     /**
    * Actualiza el estado completo del formulario en el store del trámite.
    *
@@ -127,10 +77,11 @@ export class ConsultaDatosService {
    * ```
    */
   actualizarEstadoFormulario(DATOS: TramiteState): void {
-    this.tramiteStore.setSolicitudTramite(DATOS.SolicitudState);
-    this.tramiteStore.setMercanciaTramite(DATOS.MercanciaState);
+    this.tramiteStore.update((state) => ({
+      ...state,
+      ...DATOS
+    }))
   }
-
   /**
    * Obtiene los datos de la solicitud desde un archivo JSON externo.
    *

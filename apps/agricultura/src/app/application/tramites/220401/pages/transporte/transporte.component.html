@@ -14,11 +14,21 @@
                 <input class="form-control" id="identificationDelTransporte" formControlName="identificationDelTransporte"
                   placeholder="" type="text" (change)="setValoresStore(transporteForm,'identificationDelTransporte', 'setidentificationDelTransporte')">
               </div>
+              @if (
+                transporteForm.controls['identificationDelTransporte'].invalid &&
+                transporteForm.controls['identificationDelTransporte'].touched
+                ) {
+                <div class="text-danger small">
+                  @if (transporteForm.controls['identificationDelTransporte'].errors?.['maxlength']) {
+                  <div>Por favor, no escribas más de 50 caracteres</div>
+                  }
+                </div>
+                }
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="numerodeContenedor">Número de Contenedor:</label>
-                  <input class="form-control" id="numerodeContenedor" placeholder="" type="text"
+                  <input class="form-control" id="numerodeContenedor" placeholder="" maxlength="20" type="text"
                     formControlName="numerodeContenedor" [ngClass]="isValid(transporteForm, 'numerodeContenedor') ? 'required' : ''"  (change)="setValoresStore(transporteForm,'numerodeContenedor','setnumerodeContenedor')">
                 </div>
               </div>
@@ -34,21 +44,10 @@
             <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="numerodeFlejes">Número de Flejes:</label>
-                  <input class="form-control" id="numerodeFlejes" placeholder="" type="text"
+                  <input class="form-control" id="numerodeFlejes" maxlength="100" placeholder="" type="text"
                     formControlName="numerodeFlejes" [ngClass]="isValid(transporteForm, 'numerodeFlejes') ? 'required' : ''" (change)="setValoresStore(transporteForm,'numerodeFlejes','setnumerodeFlejes')">
                 </div>
               </div>
-          </div>
-          <div class="row mt-5 mb-2">
-            <div class="col-md-8">
-                <p>* Campos obligatorios</p>
-            </div>
-            <div class="col-md-4">
-              <div class="btn-group">
-                <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura? true : false">Guardar</button>
-                <button class="btn btn-danger" type="button" [disabled]="esFormularioSoloLectura? true : false">Continuar</button>
-              </div>
-            </div>
-          </div>   
+          </div> 
       </form>
   </div>

@@ -8,13 +8,14 @@ import { TramiteState } from '../estados/tramite32516Store.store';
 describe('ConsultaDatosService', () => {
   let service: ConsultaDatosService;
   let httpMock: HttpTestingController;
-  let tramiteStore: { setSolicitudTramite: jest.Mock; setMercanciaTramite: jest.Mock };
+  let tramiteStore: { setSolicitudTramite: jest.Mock; setMercanciaTramite: jest.Mock; update: jest.Mock };
   let seccionStore: SeccionLibStore;
 
   beforeEach(() => {
     tramiteStore = {
       setSolicitudTramite: jest.fn(),
-      setMercanciaTramite: jest.fn()
+      setMercanciaTramite: jest.fn(),
+      update: jest.fn()
     };
     seccionStore = {} as any;
 
@@ -39,33 +40,28 @@ describe('ConsultaDatosService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should update solicitud in store', () => {
-    const solicitud = { foo: 'bar' } as any;
-    service.updateSolicitud(solicitud);
-    expect(tramiteStore.setSolicitudTramite).toHaveBeenCalledWith(solicitud);
-  });
-
-  it('should update region (mercancia) in store', () => {
-    const mercancia = { bar: 'baz' } as any;
-    service.updateRegion(mercancia);
-    expect(tramiteStore.setMercanciaTramite).toHaveBeenCalledWith(mercancia);
-  });
-
   it('should update full formulario state in store', () => {
     const datos: TramiteState = {
-      SolicitudState: { a: 1 } as any,
-      MercanciaState: { b: 2 } as any
-    } as any;
+      descripcionGenerica1: 'Test 1',
+      descripcionGenerica2: 'Test 2',
+      descripcionGenerica3: 'Test 3',
+      capacidadAlmacenamiento: true,
+      cantidadBienes: false,
+      tableDatos: []
+    };
     service.actualizarEstadoFormulario(datos);
-    expect(tramiteStore.setSolicitudTramite).toHaveBeenCalledWith(datos.SolicitudState);
-    expect(tramiteStore.setMercanciaTramite).toHaveBeenCalledWith(datos.MercanciaState);
+    expect(tramiteStore.update).toHaveBeenCalled();
   });
 
   it('should get datos de la solicitud from JSON', () => {
-    const mockData = {
-      SolicitudState: { x: 1 },
-      MercanciaState: { y: 2 }
-    } as unknown as TramiteState;
+    const mockData: TramiteState = {
+      descripcionGenerica1: 'Test 1',
+      descripcionGenerica2: 'Test 2',
+      descripcionGenerica3: 'Test 3',
+      capacidadAlmacenamiento: true,
+      cantidadBienes: false,
+      tableDatos: []
+    };
     let result: TramiteState | undefined;
     service.getDatosDeLaSolicitudData().subscribe(data => (result = data));
 

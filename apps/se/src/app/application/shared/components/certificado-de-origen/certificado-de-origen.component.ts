@@ -1,16 +1,19 @@
-import { AbstractControl,FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors,ValidatorFn, Validators} from '@angular/forms';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent,Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
-import { Component,ElementRef,EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { CommonModule } from '@angular/common';
-import {EIGHT_DIGIT_NUMBER_REGEX} from '@ng-mf/data-access-user'
+import { EIGHT_DIGIT_NUMBER_REGEX } from '@ng-mf/data-access-user'
 import { FormularioSi } from '../../models/certificado-origen.model';
 import { Mercancia } from '../../models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
+
+import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from "ngx-toastr";
+
+import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 
 
 /**
@@ -72,20 +75,20 @@ export const FECHA_FIN = {
     AlertComponent,
     NotificacionesComponent,
     forwardRef(() => SoloLetrasNumerosDirective),
-  ],  
+  ],
   templateUrl: './certificado-de-origen.component.html',
-  providers:[ToastrService],
+  providers: [ToastrService],
   styleUrl: './certificado-de-origen.component.scss'
 })
 
-export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges {
-  /**
+export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChanges {
+ /**
  * Título mostrado en el componente.  
  * Puede ser personalizado desde el componente padre mediante [title].  
  * Si no se proporciona, se mostrará el valor por defecto: "Validación inicial del certificado de circulación de mercancías".
  */
-    @Input() title: string = 'Validación inicial del certificado de circulación de mercancías';
-    
+  @Input() title: string = 'Validación inicial del certificado de circulación de mercancías';
+
   /**
    * Propiedad de entrada que recibe un arreglo de menús desplegables.
    * @type {MenusDesplegables[]}
@@ -119,26 +122,26 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * Indica si hay mercancías disponibles para su procesamiento o visualización.
    * @type {boolean}
    */
-  @Input() mercanciasDisponibles!:boolean;
-     /**
-     * @public
-     * @property {Notificacion} nuevaNotificacion
-     * @description Representa una nueva notificación que se utilizará en el componente.
-     * @command Este campo debe ser inicializado antes de su uso.
-     */
-     public nuevaNotificacion!: Notificacion;
-      /**
-     * @public
-     * @property {Notificacion} nuevaNotificacion
-     * @description Representa una nueva notificación que se utilizará en el componente.
-     * @command Este campo debe ser inicializado antes de su uso.
-     */
-      public nuevaNotificacionUno!: Notificacion;
+  @Input() mercanciasDisponibles!: boolean;
+  /**
+  * @public
+  * @property {Notificacion} nuevaNotificacion
+  * @description Representa una nueva notificación que se utilizará en el componente.
+  * @command Este campo debe ser inicializado antes de su uso.
+  */
+  public nuevaNotificacion!: Notificacion;
+  /**
+ * @public
+ * @property {Notificacion} nuevaNotificacion
+ * @description Representa una nueva notificación que se utilizará en el componente.
+ * @command Este campo debe ser inicializado antes de su uso.
+ */
+  public nuevaNotificacionUno!: Notificacion;
 
-     /**
-   * @descripcion
-   * Mensaje de alerta que se muestra al usuario.
-   */
+  /**
+* @descripcion
+* Mensaje de alerta que se muestra al usuario.
+*/
   mensajeDeAlerta: string = 'Los datos marcados con asterisco son obligatorios. Favor de capturarlos.';
 
 
@@ -160,12 +163,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    */
   @Input() paisBloqu!: Catalogo[];
 
-    /**
-   * @property {Catalogo[]} paises
-   * @description
-   * Propiedad de entrada que recibe el arreglo de países disponibles para seleccionar en el formulario.
-   * Se utiliza para mostrar opciones de país en los menús desplegables del componente.
-   */
+  /**
+ * @property {Catalogo[]} paises
+ * @description
+ * Propiedad de entrada que recibe el arreglo de países disponibles para seleccionar en el formulario.
+ * Se utiliza para mostrar opciones de país en los menús desplegables del componente.
+ */
   @Input() paises!: Catalogo[];
 
   /**
@@ -180,6 +183,11 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * @type {Mercancia[]}
    */
   @Input() tableData!: Mercancia[];
+
+   /**
+     * property {Catalogo[]} derechosList - Lista de derechos obtenida del servicio.
+     */
+    public derechosList!: Catalogo[];
 
   /**
    * Propiedad de entrada que recibe los datos de la mercancia guardada.
@@ -248,14 +256,14 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * @type {Mercancia[]}
    */
   public seleccionadaguardarClicado: Mercancia[] = [];
-/**
- * @descripcion
- * Representa la mercancía seleccionada actualmente para ser guardada.  
- * Inicialmente se define como un objeto vacío tipado como `Mercancia`.
- *
- * @type {Mercancia}
- */
-    public seletedccionadaguardarClicado: Mercancia = {} as Mercancia;
+  /**
+   * @descripcion
+   * Representa la mercancía seleccionada actualmente para ser guardada.  
+   * Inicialmente se define como un objeto vacío tipado como `Mercancia`.
+   *
+   * @type {Mercancia}
+   */
+  public seletedccionadaguardarClicado: Mercancia = {} as Mercancia;
 
   /**
    * Formulario reactivo utilizado para la gestión de los datos del certificado.
@@ -288,7 +296,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    * Indica si el campo de fecha fin debe mostrarse en el formulario, dependiendo del procedimiento.
    */
   fechaFin: boolean = false;
-  
+
   /**
    * Indicates whether the domicile information should be displayed.
    * Set to `true` to show domicile details; otherwise, set to `false`.
@@ -301,7 +309,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   */
   TEXTOS = TEXTOS_REQUISITOS;
 
-  
+
 
   /**
    * Subject para gestionar el ciclo de vida del componente y cancelar las suscripciones.
@@ -314,19 +322,19 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
      * 
      * Se utiliza para abrir o cerrar el modal de archivos.
      */
-    @ViewChild('modalArchivo') modalArchivo!: ElementRef;
-    /**
-   * Nombre del archivo seleccionado.
-   * 
-   * Contiene el nombre del archivo que el usuario ha seleccionado para adjuntar.
-   */
-    nombreArchivo: string = '';
+  @ViewChild('modalArchivo') modalArchivo!: ElementRef;
+  /**
+ * Nombre del archivo seleccionado.
+ * 
+ * Contiene el nombre del archivo que el usuario ha seleccionado para adjuntar.
+ */
+  nombreArchivo: string = '';
 
-      /**
-   * Formulario para gestionar los archivos adjuntos.
-   * 
-   * Permite capturar y validar los datos relacionados con los archivos adjuntos.
-   */
+  /**
+* Formulario para gestionar los archivos adjuntos.
+* 
+* Permite capturar y validar los datos relacionados con los archivos adjuntos.
+*/
   formularioArchivo!: FormGroup;
 
 
@@ -361,29 +369,29 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
    */
   datos: Mercancia[] = [];
 
-   /**
-     * Muestra el modal para cargar un archivo.
-     * 
-     * Este método utiliza el modal de Bootstrap para mostrar el modal de carga de archivos.
-     */
-    cargaArchivo(): void {
-      if (this.modalArchivo) {
-        const MODAL_INSTANCE = new Modal(this.modalArchivo.nativeElement);
-        MODAL_INSTANCE.show();
-      }
+  /**
+    * Muestra el modal para cargar un archivo.
+    * 
+    * Este método utiliza el modal de Bootstrap para mostrar el modal de carga de archivos.
+    */
+  cargaArchivo(): void {
+    if (this.modalArchivo) {
+      const MODAL_INSTANCE = new Modal(this.modalArchivo.nativeElement);
+      MODAL_INSTANCE.show();
     }
+  }
 
   /**
    * Estado de la selección de la tabla.
    * @type {TablaSeleccion}
    */
   seleccionTabla = TablaSeleccion.UNDEFINED;
-    /**
-   * Referencia al botón para cerrar el modal.
-   * 
-   * Se utiliza para cerrar el modal de manera programada.
-   */
-    @ViewChild('closeModal') closeModal!: ElementRef;
+  /**
+ * Referencia al botón para cerrar el modal.
+ * 
+ * Se utiliza para cerrar el modal de manera programada.
+ */
+  @ViewChild('closeModal') closeModal!: ElementRef;
 
 
   /**
@@ -426,51 +434,51 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit,OnChanges
   @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
     false
   );
- /**
- * @descripcion
- * Evento que se emite cuando se hace clic en **guardar** en la tabla de mercancías.
- * Envía un arreglo de objetos `Mercancia` hacia el componente padre.
- */
-/**
- * @descripcion
- * Evento de salida que se emite cuando el usuario hace clic en **guardar**.
- *
- * @detalle
- * Envía al componente padre un arreglo de objetos `Mercancia` con la información
- * que debe procesarse o almacenarse.
- *
- * @ejemplo
- * ```html
- * <app-datos-certificado
- *   (guardarClicadoChange)="onGuardar($event)">
- * </app-datos-certificado>
- * ```
- *
- * @event guardarClicadoChange
- * @type {EventEmitter<Mercancia[]>}
- */
-@Output() guardarClicadoChange = new EventEmitter<Mercancia[]>();
+  /**
+  * @descripcion
+  * Evento que se emite cuando se hace clic en **guardar** en la tabla de mercancías.
+  * Envía un arreglo de objetos `Mercancia` hacia el componente padre.
+  */
+  /**
+   * @descripcion
+   * Evento de salida que se emite cuando el usuario hace clic en **guardar**.
+   *
+   * @detalle
+   * Envía al componente padre un arreglo de objetos `Mercancia` con la información
+   * que debe procesarse o almacenarse.
+   *
+   * @ejemplo
+   * ```html
+   * <app-datos-certificado
+   *   (guardarClicadoChange)="onGuardar($event)">
+   * </app-datos-certificado>
+   * ```
+   *
+   * @event guardarClicadoChange
+   * @type {EventEmitter<Mercancia[]>}
+   */
+  @Output() guardarClicadoChange = new EventEmitter<Mercancia[]>();
 
-/**
- * @descripcion
- * Evento que se emite cuando una mercancía es **seleccionada** en la tabla.
- * Envía el objeto `Mercancia` seleccionado al componente padre.
- */
-@Output() seleccionado = new EventEmitter<Mercancia>();
+  /**
+   * @descripcion
+   * Evento que se emite cuando una mercancía es **seleccionada** en la tabla.
+   * Envía el objeto `Mercancia` seleccionado al componente padre.
+   */
+  @Output() seleccionado = new EventEmitter<Mercancia>();
 
-/**
- * @descripcion
- * Bandera para indicar si hay un error de validación en la tabla.
- * Se utiliza para mostrar mensajes de error al usuario.
- */
-tableErrorMensajeError: boolean = false;
+  /**
+   * @descripcion
+   * Bandera para indicar si hay un error de validación en la tabla.
+   * Se utiliza para mostrar mensajes de error al usuario.
+   */
+  tableErrorMensajeError: boolean = false;
 
 
   /**
    * Constructor del componente. Inicializa el formulario reactivo con los controles necesarios y sus validaciones.
    * @param fb FormBuilder para la creación del formulario reactivo.
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private service: CertificadoValidacionService) {
 
     this.actualizarDatosFormularioSolicitud();
   }
@@ -485,35 +493,42 @@ tableErrorMensajeError: boolean = false;
    * @command
    * Utilice este método para inicializar el formulario antes de interactuar con los datos del certificado.
    */
- createForm(): void {
-    this.formCertificado =this.fb.group({
+  createForm(): void {
+    this.formCertificado = this.fb.group({
       si: [false],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
-  bloque: ['', [Validators.required, Validators.min(0)]],
-  fraccionArancelariaForm: ['', [Validators.maxLength(8),Validators.pattern(EIGHT_DIGIT_NUMBER_REGEX)]],
-  registroProductoForm: ['', [Validators.maxLength(12)]],
-  nombreComercialForm: ['', [Validators.maxLength(200)]],
-  fechaInicioInput: [''],
-  fechaFinalInput: [''],
-  nombres: ['', [Validators.maxLength(20)]],
-  primerApellido: ['', [Validators.maxLength(20)]],
-  segundoApellido: ['', [Validators.maxLength(20)]],
-  numeroDeRegistroFiscal: ['', [Validators.required,Validators.maxLength(30)]],
-  razonSocial: [''],
-  calle: ['', [Validators.maxLength(90)]],
-  numeroLetra: ['', [Validators.maxLength(30)]],
-    numeroLetras: ['', [Validators.maxLength(30)]],
-  pais: [''],
-  ciudad: [''],
-  lada: [''],
-  telefono: [''],
-  fax:[''],
-  correo:[''],
-  correoElectronico:[''],
-
+      bloque: ['', [Validators.required, Validators.min(0)]],
+      fraccionArancelariaForm: ['', [Validators.maxLength(8), Validators.pattern(EIGHT_DIGIT_NUMBER_REGEX)]],
+      registroProductoForm: ['', [Validators.maxLength(12)]],
+      nombreComercialForm: ['', [Validators.maxLength(200)]],
+      fechaInicioInput: [''],
+      fechaFinalInput: [''],
+      nombres: ['', [Validators.maxLength(20)]],
+      primerApellido: ['', [Validators.maxLength(20)]],
+      segundoApellido: ['', [Validators.maxLength(20)]],
+      numeroDeRegistroFiscal: ['', [Validators.required, Validators.maxLength(30)]],
+      razonSocial: [''],
+      calle: ['', [Validators.maxLength(90)]],
+      numeroLetra: ['', [Validators.maxLength(30)]],
+      numeroLetras: ['', [Validators.maxLength(30)]],
+      pais: [''],
+      ciudad: [''],
+      lada: [''],
+      telefono: [''],
+      fax: [''],
+      correo: [''],
+      correoElectronico: [''],
+      // Nuevos controles de formulario para el procedimiento 110222
+      calle1: ['',Validators.required],
+      numeroLetra1: ['',Validators.required],
+      ciudad1: ['',Validators.required],
+      pais1: [''],
+      correo1: ['',Validators.required],
+      telefono1: [''],
+      fax1: ['']
     },
-    { validators: CertificadoDeOrigenComponent.dateRangeValidator(this) } 
-  );
+      { validators: CertificadoDeOrigenComponent.dateRangeValidator(this) }
+    );
   }
   /* * Aplica las validaciones al campo 'primerApellido', 'calle' y 'numeroLetra' del formulario.
     * 
@@ -529,7 +544,6 @@ tableErrorMensajeError: boolean = false;
     if (!PRIMER_APELLIDO || !CALLE || !NUMERO_LETRA) { return; }
 
     if (this.idProcedimiento === 110205) {
-    
       PRIMER_APELLIDO.setValidators([Validators.maxLength(20)]);
       CALLE.setValidators([Validators.maxLength(90)]);
       NUMERO_LETRA.setValidators([Validators.maxLength(30)]);
@@ -538,21 +552,73 @@ tableErrorMensajeError: boolean = false;
       CALLE.setValidators([Validators.required, Validators.maxLength(90)]);
       NUMERO_LETRA.setValidators([Validators.required, Validators.maxLength(30)]);
     }
-  
+
     PRIMER_APELLIDO.updateValueAndValidity();
     CALLE.updateValueAndValidity();
     NUMERO_LETRA.updateValueAndValidity();
   }
-  
-  
+
+   /**
+   * method loadComboUnidadMedida
+   * description Carga la lista de derechos desde el servicio.
+   */
+  loadComboUnidadMedida(): void {
+    this.service.getDatos() // Llama al servicio para obtener los datos.
+      .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
+      .subscribe((data): void => { // Maneja los datos recibidos.
+        this.derechosList = data as Catalogo[]; // Asigna los datos a la lista de derechos.
+      });
+  }
+
+  /**
+ * Aplica validaciones específicas para los campos del domicilio del tercer operador en el procedimiento 110222.
+ * 
+ * @remarks
+ * Este método establece validaciones obligatorias para los campos específicos del procedimiento 110222.
+ */
+  applyTercerOperadorValidation(): void {
+    if (this.idProcedimiento === 110222) {
+      const CALLE1 = this.formCertificado.get('calle1');
+      const NUMERO_LETRA1 = this.formCertificado.get('numeroLetra1');
+      const CIUDAD1 = this.formCertificado.get('ciudad1');
+      const PAIS1 = this.formCertificado.get('pais1');
+      const CORREO1 = this.formCertificado.get('correo1');
+
+      if (CALLE1) {
+        CALLE1.setValidators([Validators.required, Validators.maxLength(90)]);
+        CALLE1.updateValueAndValidity();
+      }
+
+      if (NUMERO_LETRA1) {
+        NUMERO_LETRA1.setValidators([Validators.required, Validators.maxLength(30)]);
+        NUMERO_LETRA1.updateValueAndValidity();
+      }
+
+      if (CIUDAD1) {
+        CIUDAD1.setValidators([Validators.required, Validators.maxLength(100)]);
+        CIUDAD1.updateValueAndValidity();
+      }
+
+      if (PAIS1) {
+        PAIS1.setValidators([Validators.required]);
+        PAIS1.updateValueAndValidity();
+      }
+
+      if (CORREO1) {
+        CORREO1.setValidators([Validators.required, Validators.email, Validators.maxLength(100)]);
+        CORREO1.updateValueAndValidity();
+      }
+    }
+  }
+
   /**
 * Evalúa si se debe inicializar o cargar datos en el formulario.
 */
   inicializarEstadoFormulario(): void {
     if (!this.formCertificado) {
-      this.createForm();   
+      this.createForm();
     }
-   
+
     if (this.esFormularioSoloLectura) {
       this.formCertificado.disable();
     }
@@ -567,14 +633,14 @@ tableErrorMensajeError: boolean = false;
    * @param {SimpleChanges} changes - Objeto que contiene los cambios en las propiedades de entrada.
    * @returns {void}
    */
-ngOnChanges(changes: SimpleChanges):void {
-  if (changes['datosForm']?.currentValue) {
-    if (!this.formCertificado) {
-      this.createForm();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['datosForm']?.currentValue) {
+      if (!this.formCertificado) {
+        this.createForm();
+      }
+      this.formCertificado.patchValue(this.datosForm);
     }
-    this.formCertificado.patchValue(this.datosForm);
   }
-}
   /**
  * Inicializa el formulario para gestionar archivos.
  * 
@@ -616,20 +682,20 @@ ngOnChanges(changes: SimpleChanges):void {
   tipoSeleccion(estado: Catalogo): void {
     this.paisBloquEvent.emit(estado);
   }
-/**
- * Validador personalizado para asegurar que la fecha de inicio no sea posterior a la fecha final.
- *  * @param componente La instancia del componente que contiene el formulario.
- * @returns Un objeto de errores de validación si la fecha de inicio es posterior a la fecha final, o null si no hay errores.
- * @remarks
- * Este validador se utiliza para validar un rango de fechas en un formulario reactivo de Angular.
- * Asegura que la fecha de inicio no sea posterior a la fecha final.
- * @command
- * Utilice este validador en la configuración del formulario para aplicar la validación de rango de fechas.
- * Por ejemplo, en el método `createForm()`, agregue `{ validators: CertificadoDeOrigenComponent.dateRangeValidator(this) }` al grupo del formulario.
- * */
+  /**
+   * Validador personalizado para asegurar que la fecha de inicio no sea posterior a la fecha final.
+   *  * @param componente La instancia del componente que contiene el formulario.
+   * @returns Un objeto de errores de validación si la fecha de inicio es posterior a la fecha final, o null si no hay errores.
+   * @remarks
+   * Este validador se utiliza para validar un rango de fechas en un formulario reactivo de Angular.
+   * Asegura que la fecha de inicio no sea posterior a la fecha final.
+   * @command
+   * Utilice este validador en la configuración del formulario para aplicar la validación de rango de fechas.
+   * Por ejemplo, en el método `createForm()`, agregue `{ validators: CertificadoDeOrigenComponent.dateRangeValidator(this) }` al grupo del formulario.
+   * */
   verificarRFCDos(): void {
-   
-    if ( this.formCertificado.get('fraccionArancelariaForm')?.errors?.['pattern']) {
+
+    if (this.formCertificado.get('fraccionArancelariaForm')?.errors?.['pattern']) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -643,43 +709,43 @@ ngOnChanges(changes: SimpleChanges):void {
       };
     }
     else {
-     this.buscarMercancia();
+      this.buscarMercancia();
     }
   }
 
-   /**
-   * Maneja la selección de un archivo en el input de carga de archivos.
-   * 
-   * Este método actualiza el nombre del archivo seleccionado en la propiedad `nombreArchivo`.
-   * 
-   * @param {Event} event - El evento generado al seleccionar un archivo.
-   */
-   alSeleccionarArchivo(event: Event): void {
+  /**
+  * Maneja la selección de un archivo en el input de carga de archivos.
+  * 
+  * Este método actualiza el nombre del archivo seleccionado en la propiedad `nombreArchivo`.
+  * 
+  * @param {Event} event - El evento generado al seleccionar un archivo.
+  */
+  alSeleccionarArchivo(event: Event): void {
     const INPUT = event.target as HTMLInputElement;
     const FILE = INPUT?.files ? INPUT.files[0] : null;
     this.nombreArchivo = FILE ? FILE.name : 'Sin archivos seleccionados';
   }
-    /**
-   * Cierra el modal activo.
-   * 
-   * Este método utiliza la referencia al botón de cierre del modal para cerrarlo.
-   */
-    cerrarModal(): void {
-      if (this.closeModal) {
-        this.closeModal.nativeElement.click();
-      }
+  /**
+ * Cierra el modal activo.
+ * 
+ * Este método utiliza la referencia al botón de cierre del modal para cerrarlo.
+ */
+  cerrarModal(): void {
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
     }
-   /**
-   * Envía los datos y cierra el modal.
-   * 
-   * Este método realiza el envío de datos y cierra el modal de manera programada.
-   */
-   enviar(): void {
+  }
+  /**
+  * Envía los datos y cierra el modal.
+  * 
+  * Este método realiza el envío de datos y cierra el modal de manera programada.
+  */
+  enviar(): void {
     this.cerrarModal();
-    
+
   }
 
-  
+
   /**
    * @inheritdoc
    * 
@@ -689,15 +755,17 @@ ngOnChanges(changes: SimpleChanges):void {
   ngOnInit(): void {
     this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
+    this.applyTercerOperadorValidation(); // Add validation for procedure 110222
     this.nuevaNotificacion = {} as Notificacion
     this.inicializarFormularioArchivo();
+    this.loadComboUnidadMedida();
   }
-   validarFormularios(): boolean {
-  if(this.formCertificado.valid){
-    return true;
-  }
-  this.formCertificado.markAllAsTouched();
-  return false;
+  validarFormularios(): boolean {
+    if (this.formCertificado.valid) {
+      return true;
+    }
+    this.formCertificado.markAllAsTouched();
+    return false;
   }
 
   /**
@@ -737,20 +805,20 @@ ngOnChanges(changes: SimpleChanges):void {
    * Método que emite un evento para buscar la mercancia.
    */
   buscarMercancia(): void {
-    if((this.formCertificado.get('entidadFederativa')?.value !== '' && this.formCertificado.get('entidadFederativa')?.value !== null)&&(this.formCertificado.get('bloque')?.value!=='' && this.formCertificado.get('bloque')?.value !== null)){
+    if ((this.formCertificado.get('entidadFederativa')?.value !== '' && this.formCertificado.get('entidadFederativa')?.value !== null) && (this.formCertificado.get('bloque')?.value !== '' && this.formCertificado.get('bloque')?.value !== null)) {
       this.setbuscarMercanciaEvent.emit(true);
     }
-    else{
+    else {
       this.abrirModaldos();
     }
   }
-   /**
-   * Abre un modal con una notificación configurada.
-   * 
-   * @command abrirModal
-   * @description Este método configura y muestra un modal con una notificación de alerta.
-   */
-   public abrirModaldos(): void {
+  /**
+  * Abre un modal con una notificación configurada.
+  * 
+  * @command abrirModal
+  * @description Este método configura y muestra un modal con una notificación de alerta.
+  */
+  public abrirModaldos(): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -801,16 +869,16 @@ ngOnChanges(changes: SimpleChanges):void {
    * @returns {void}
    */
   abrirModal(): void {
-    if(this.seleccionadaguardarClicado.length > 0){
-  this.filaClics.emit(this.seletedccionadaguardarClicado);
+    if (this.seleccionadaguardarClicado.length > 0) {
+      this.filaClics.emit(this.seletedccionadaguardarClicado);
     }
-    else{
-       this.nuevaNotificacion = {
+    else {
+      this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
         titulo: '',
-        mensaje: 'No hay elementos seleccionados para eliminar.',
+        mensaje: 'Debes seleccionar una mercancía',
         cerrar: true,
         tiempoDeEspera: 3000,
         txtBtnAceptar: 'Aceptar',
@@ -860,10 +928,10 @@ ngOnChanges(changes: SimpleChanges):void {
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Sí',
         txtBtnCancelar: 'No',
-        };
-     
+      };
+
     }
-    else{
+    else {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -890,16 +958,16 @@ ngOnChanges(changes: SimpleChanges):void {
     return (formGroup: AbstractControl): ValidationErrors | null => {
       const START_DATE = formGroup.get('fechaInicioInput')?.value;
       const END_DATE = formGroup.get('fechaFinalInput')?.value;
-  
+
       if (START_DATE && END_DATE) {
         const [START_DAY, START_MONTH, START_YEAR] = START_DATE.split('/').map(Number);
         const [END_DAY, END_MONTH, END_YEAR] = END_DATE.split('/').map(Number);
-  
+
         const PARSED_START_DATE = new Date(START_YEAR, START_MONTH - 1, START_DAY);
         const PARSE_END_DATE = new Date(END_YEAR, END_MONTH - 1, END_DAY);
-  
+
         if (PARSED_START_DATE > PARSE_END_DATE) {
-          
+
           component.nuevaNotificacionUno = {
             tipoNotificacion: 'alert',
             categoria: 'danger',
@@ -911,11 +979,11 @@ ngOnChanges(changes: SimpleChanges):void {
             txtBtnAceptar: 'Aceptar',
             txtBtnCancelar: '',
           };
-  
+
           return { dateRangeInvalid: true };
         }
       }
-  
+
       return null;
     };
   }
@@ -957,78 +1025,78 @@ ngOnChanges(changes: SimpleChanges):void {
  * }
  * ```
  */
- validatorCheck(): boolean {
-  if (!this.formCertificado) {
-    return false;
+  validatorCheck(): boolean {
+    if (!this.formCertificado) {
+      return false;
+    }
+
+    const CONTROL_NOMBRES = this.formCertificado.get('nombres');
+    const CONTROL_PRIMER_APELLIDO = this.formCertificado.get('primerApellido');
+    const CONTROL_NUMERO_REGISTRO = this.formCertificado.get('numeroDeRegistroFiscal');
+    const CONTROL_RAZON_SOCIAL = this.formCertificado.get('razonSocial');
+
+    if (this.formCertificado.get('si')?.value) {
+      CONTROL_NOMBRES?.setValidators([Validators.required, Validators.maxLength(20)]);
+      CONTROL_PRIMER_APELLIDO?.setValidators([Validators.required, Validators.maxLength(20)]);
+      CONTROL_NUMERO_REGISTRO?.setValidators([Validators.required, Validators.maxLength(30)]);
+      CONTROL_RAZON_SOCIAL?.setValidators([Validators.required, Validators.maxLength(200)]);
+    } else {
+      CONTROL_NOMBRES?.clearValidators();
+      CONTROL_PRIMER_APELLIDO?.clearValidators();
+      CONTROL_NUMERO_REGISTRO?.clearValidators();
+      CONTROL_RAZON_SOCIAL?.clearValidators();
+    }
+
+    // 🔹 Update all
+    CONTROL_NOMBRES?.updateValueAndValidity();
+    CONTROL_PRIMER_APELLIDO?.updateValueAndValidity();
+    CONTROL_NUMERO_REGISTRO?.updateValueAndValidity();
+    CONTROL_RAZON_SOCIAL?.updateValueAndValidity();
+
+    const IS_REGISTRO_FORM_VALID = this.formCertificado.valid;
+
+    if (!IS_REGISTRO_FORM_VALID) {
+      this.formCertificado.markAllAsTouched();
+    }
+
+    if (this.guardarClicado.length === 0) {
+      this.tableErrorMensajeError = true;
+      return false;
+    }
+
+    return IS_REGISTRO_FORM_VALID;
   }
+  /**
+   * @descripcion
+   * Elimina de la lista `guardarClicado` los elementos previamente seleccionados
+   * cuando se recibe un evento de confirmación, y notifica el cambio al componente padre.
+   *
+   * @detalle
+   * - Obtiene los IDs de los elementos seleccionados en `seleccionadaguardarClicado`.
+   * - Filtra `guardarClicado` eliminando los que coincidan con esos IDs.
+   * - Emite el evento `guardarClicadoChange` con la nueva lista de mercancías.
+   * - Reinicia la notificación (`nuevaNotificacion`) a un objeto vacío.
+   *
+   * @param {boolean} event  
+   * Indica si se debe proceder con la eliminación (`true`) o no (`false`).
+   *
+   * @returns {void}  
+   * No retorna ningún valor.
+   *
+   * @ejemplo
+   * ```ts
+   * this.eliminarErrorMessage(true); // Elimina los elementos seleccionados
+   * this.eliminarErrorMessage(false); // No realiza ninguna acción
+   * ```
+   */
+  eliminarErrorMessage(event: boolean): void {
 
-  const CONTROL_NOMBRES = this.formCertificado.get('nombres');
-  const CONTROL_PRIMER_APELLIDO = this.formCertificado.get('primerApellido');
-  const CONTROL_NUMERO_REGISTRO = this.formCertificado.get('numeroDeRegistroFiscal');
-  const CONTROL_RAZON_SOCIAL = this.formCertificado.get('razonSocial');
-
-  if (this.formCertificado.get('si')?.value) {
-    CONTROL_NOMBRES?.setValidators([Validators.required, Validators.maxLength(20)]);
-    CONTROL_PRIMER_APELLIDO?.setValidators([Validators.required, Validators.maxLength(20)]);
-    CONTROL_NUMERO_REGISTRO?.setValidators([Validators.required, Validators.maxLength(30)]);
-    CONTROL_RAZON_SOCIAL?.setValidators([Validators.required, Validators.maxLength(200)]);
-  } else {
-    CONTROL_NOMBRES?.clearValidators();
-    CONTROL_PRIMER_APELLIDO?.clearValidators();
-    CONTROL_NUMERO_REGISTRO?.clearValidators();
-    CONTROL_RAZON_SOCIAL?.clearValidators();
-  }
-
-  // 🔹 Update all
-  CONTROL_NOMBRES?.updateValueAndValidity();
-  CONTROL_PRIMER_APELLIDO?.updateValueAndValidity();
-  CONTROL_NUMERO_REGISTRO?.updateValueAndValidity();
-  CONTROL_RAZON_SOCIAL?.updateValueAndValidity();
-
-  const IS_REGISTRO_FORM_VALID = this.formCertificado.valid;
-
-  if (!IS_REGISTRO_FORM_VALID) {
-    this.formCertificado.markAllAsTouched();
-  }
-
-  if (this.guardarClicado.length === 0) {
-    this.tableErrorMensajeError = true;
-    return false;
-  }
-
-  return IS_REGISTRO_FORM_VALID;
-}
-/**
- * @descripcion
- * Elimina de la lista `guardarClicado` los elementos previamente seleccionados
- * cuando se recibe un evento de confirmación, y notifica el cambio al componente padre.
- *
- * @detalle
- * - Obtiene los IDs de los elementos seleccionados en `seleccionadaguardarClicado`.
- * - Filtra `guardarClicado` eliminando los que coincidan con esos IDs.
- * - Emite el evento `guardarClicadoChange` con la nueva lista de mercancías.
- * - Reinicia la notificación (`nuevaNotificacion`) a un objeto vacío.
- *
- * @param {boolean} event  
- * Indica si se debe proceder con la eliminación (`true`) o no (`false`).
- *
- * @returns {void}  
- * No retorna ningún valor.
- *
- * @ejemplo
- * ```ts
- * this.eliminarErrorMessage(true); // Elimina los elementos seleccionados
- * this.eliminarErrorMessage(false); // No realiza ninguna acción
- * ```
- */
-eliminarErrorMessage(event:boolean): void {
-
-  if(event){
- const IDS_A_ELIMINAR = this.seleccionadaguardarClicado.map(m => m.id);
+    if (event) {
+      const IDS_A_ELIMINAR = this.seleccionadaguardarClicado.map(m => m.id);
       this.guardarClicado = this.guardarClicado.filter(m => !IDS_A_ELIMINAR.includes(m.id));
-        this.guardarClicadoChange.emit(this.guardarClicado);
+      this.guardarClicadoChange.emit(this.guardarClicado);
+    }
+    this.nuevaNotificacion = {} as Notificacion;
   }
-  this.nuevaNotificacion = {} as Notificacion;
-}
 
 }
