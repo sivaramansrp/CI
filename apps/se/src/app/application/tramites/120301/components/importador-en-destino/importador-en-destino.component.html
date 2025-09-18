@@ -158,9 +158,6 @@
               setValoresStore(importadorForm, 'cpImportador', 'setCpImportador')
             "
           />
-          @if (importadorForm.get('cpImportador')?.invalid && (importadorForm.get('cpImportador')?.touched || importadorForm.get('cpImportador')?.dirty)) {
-            <small class="text-danger">Este campo es obligatorio</small>
-          }
             @if (importadorForm.get('cpImportador')?.errors && (importadorForm.get('cpImportador')?.touched || importadorForm.get('cpImportador')?.dirty)) {
               @if (importadorForm.get('cpImportador')?.errors?.['required']) {
                 <small class="text-danger">Este campo es obligatorio</small>
