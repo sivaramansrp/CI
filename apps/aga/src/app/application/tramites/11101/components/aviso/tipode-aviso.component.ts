@@ -5,7 +5,6 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { Tramite11101Store, Tramitenacionales11101State } from '../../estados/tramite11101.store';
 import { CommonModule } from '@angular/common';
-import { MercanciaComponent } from '../mercancia/mercancia.component';
 import { Tramite11101Query } from '../../estados/tramite11101.query';
 import { TramiteFolioService } from '../../service/servicios-extraordinarios.service';
 import { DiscripccionDeLaMercanciaForm } from '../../models/transportacion-maritima.model';
@@ -39,7 +38,7 @@ import { CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA } from '../../constants/merc
   templateUrl: './tipode-aviso.component.html',
   styleUrls: ['./tipode-aviso.component.scss'],
   standalone: true,
-  imports: [TituloComponent, FormsModule, ReactiveFormsModule, MercanciaComponent, CommonModule, CatalogoSelectComponent, InputRadioComponent, TablaDinamicaComponent]
+  imports: [TituloComponent, FormsModule, ReactiveFormsModule, CommonModule, CatalogoSelectComponent, InputRadioComponent, TablaDinamicaComponent]
 })
 export class TipodeAvisoComponent implements OnInit, OnDestroy {
 
