@@ -79,8 +79,8 @@ export const API_GET_CAT_CRITERIOS_OTRAS_INSTANCIAS = `sat-t110101/catalogo/crit
 export const API_POST_TRATADO_CRITERIO = `sat-t110101/solicitud/tratado/criterio`;
 
 /**
- * API para tabla tratados.
+ * API para configuracion tratados.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/consultar-configuracion-tratados
 */
-export const API_POST_SOLICITUD_TRATADOS = `sat-t110101/solicitud/tratados/configuracion`;
+export const API_POST_SOLICITUD_TRATADOS_CONFIGURACION = `sat-t110101/solicitud/tratados/configuracion`;
 

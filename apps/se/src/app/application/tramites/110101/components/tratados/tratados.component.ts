@@ -11,6 +11,8 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CatalogosTramiteService } from '../../services/catalogo.service';
 import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
+import { CriterioConfiguracionRequest } from '../../models/request/tratado-configuracion-request.model';
+import { CriterioConfiguracionResponse } from '../../models/response/tratado-configuracion-request.model';
 import { CriteriosOtrasInstanciasRequest } from '../../models/request/criterios-otras-instancias-request.model';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
@@ -291,16 +293,17 @@ export class TratadosComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        const MENSAJE = err?.error?.error || 'Error catalogo pais bloque.';
         this.nuevaNotificacion = {
           tipoNotificacion: 'toastr',
-          categoria: CategoriaMensaje.ERROR,
+          categoria: 'error',
           modo: 'action',
-          titulo: 'Error de conexión',
-          mensaje: 'No se pudo cargar el catálogo de países bloques',
+          titulo: '',
+          mensaje: MENSAJE,
           cerrar: false,
           txtBtnAceptar: '',
           txtBtnCancelar: '',
-        };
+        }
       }
     });
   }
@@ -347,16 +350,17 @@ export class TratadosComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        const MENSAJE = err?.error?.error || 'Error tratado acuerdo.';
         this.nuevaNotificacion = {
           tipoNotificacion: 'toastr',
-          categoria: CategoriaMensaje.ERROR,
+          categoria: 'error',
           modo: 'action',
-          titulo: 'Error de conexión',
-          mensaje: 'No se pudo cargar el catálogo de tratado acuerdo',
+          titulo: '',
+          mensaje: MENSAJE,
           cerrar: false,
           txtBtnAceptar: '',
           txtBtnCancelar: '',
-        };
+        }
       }
     });
 }
@@ -403,16 +407,17 @@ export class TratadosComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        const MENSAJE = err?.error?.error || 'Error tratado acuerdo bloque.';
         this.nuevaNotificacion = {
           tipoNotificacion: 'toastr',
-          categoria: CategoriaMensaje.ERROR,
+          categoria: 'error',
           modo: 'action',
-          titulo: 'Error de conexión',
-          mensaje: 'No se pudo cargar el catálogo de tratado acuerdo bloque',
+          titulo: '',
+          mensaje: MENSAJE,
           cerrar: false,
           txtBtnAceptar: '',
           txtBtnCancelar: '',
-        };
+        }
       }
     });
   }
@@ -459,16 +464,17 @@ export class TratadosComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        const MENSAJE = err?.error?.error || 'Error catálogo de criterios.';
         this.nuevaNotificacion = {
           tipoNotificacion: 'toastr',
-          categoria: CategoriaMensaje.ERROR,
+          categoria: 'error',
           modo: 'action',
-          titulo: 'Error de conexión',
-          mensaje: 'No se pudo cargar el catálogo de criterios',
+          titulo: '',
+          mensaje: MENSAJE,
           cerrar: false,
           txtBtnAceptar: '',
           txtBtnCancelar: '',
-        };
+        }
       }
     });
   }
@@ -491,6 +497,11 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * Un array de objetos `CriterioTratadoResponse` que representa los datos para la tabla de solicitudes de la respuesta de validacion.
   */
   public respuestaServicioDatosTabla: CriterioTratadoResponse[] = [];
+
+  /**
+   * Un array de objetos `CriterioConfiguracionResponse` que representa los datos para la la configuracion de los tratados agregados.
+  */
+  public respuestaTratadosConfiguracion?: CriterioConfiguracionResponse;
 
   /**
    * Datos de la tabla de tratados.
@@ -544,19 +555,33 @@ agregarTratado(): void {
     const TRATADO_DESC = this.tratadoCatalogo.find(item => item.id.toString() === TRATADO_ID) || null;
     const ORIGENDESC = this.origenCatalogo.find(item => item.id.toString() === ORIGEN_ID) || null ;
 
-    /* const ROW_DATA = {
-      pais: PAIS_DESC?.descripcion,
-      tratado: TRATADO_DESC?.descripcion,
-      origen: ORIGENDESC?.descripcion
-    }; */
-
     if (this.isEditMode && this.selectedRowIndex !== null && this.selectedRowIndex > -1) {
+      const SELECTED_ITEM = this.respuestaServicioDatosTabla[this.selectedRowIndex];
+
+      this.respuestaServicioDatosTabla = this.respuestaServicioDatosTabla.filter(
+        item => item.id_criterio_tratado !== SELECTED_ITEM.id_criterio_tratado
+      );
       
-      const UPDATED_ROW = { ...this.registroDeSolicitudesTablaDatos[this.selectedRowIndex] };
-      if (PAIS_DESC){ UPDATED_ROW.pais = PAIS_DESC.descripcion}
-      if (TRATADO_DESC) {UPDATED_ROW.tratado = TRATADO_DESC.descripcion}
-      if (ORIGENDESC) {UPDATED_ROW.origen = ORIGENDESC.descripcion}
-      this.registroDeSolicitudesTablaDatos[this.selectedRowIndex] = UPDATED_ROW;
+      const PAYLOAD: TratadoAcuerdoCriterioRequest = {
+        id_tratado_acuerdo: Number(TRATADO_DESC?.clave ?? 0),
+        clave_pais_bloque: PAIS_DESC?.clave,
+        criterio_certificado: ORIGENDESC?.clave,
+        requiere_juegos_o_surtidos: false,
+        is_bloque: PAIS_DESC?.bloque === 'true',
+        tratados_agregados: this.respuestaServicioDatosTabla.map(item => ({
+          id_criterio_tratado: item.id_criterio_tratado,
+          id_bloque: item.id_bloque ?? null, 
+          id_tratado_acuerdo: item.id_tratado_acuerdo,
+          cve_grupo_criterio: item.cve_grupo_criterio,
+          nombre_pais_bloque: item.nombre_pais_bloque,
+          tratado_nombre: item.tratado_nombre,
+          cve_tratado_acuerdo: item.cve_tratado_acuerdo ?? null,
+          cve_pais: item.cve_pais ?? null,
+          mensaje_agregado: item.mensaje_agregado
+        }))
+      };
+
+      this.tratadoCriterioAgregar(PAYLOAD);
 
       this.isEditMode = false;
       this.selectedRowIndex = null;
@@ -596,6 +621,7 @@ agregarTratado(): void {
         cve_grupo_criterio: item.cve_grupo_criterio,
         nombre_pais_bloque: item.nombre_pais_bloque,
         tratado_nombre: item.tratado_nombre,
+        cve_tratado_acuerdo: item.cve_tratado_acuerdo,
         cve_pais: item.cve_pais ?? undefined, 
         mensaje_agregado: item.mensaje_agregado
       }))
@@ -615,6 +641,14 @@ agregarTratado(): void {
           }));
           this.cd.detectChanges();
           this.mostrarTabla = true;
+
+          const PAYLOADRESPUESTA: CriterioConfiguracionRequest[] = this.respuestaServicioDatosTabla.map(item => ({
+            cve_grupo_criterio: item.cve_grupo_criterio,
+            cve_tratado_acuerdo: item.cve_tratado_acuerdo ?? '',
+            cve_pais: item.cve_pais ?? '',
+            id_tratado_acuerdo: item.id_tratado_acuerdo
+          }));
+          this.configuracion(PAYLOADRESPUESTA);
           
         }else{
            window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -635,7 +669,60 @@ agregarTratado(): void {
        
       },
       error: (error) => {
-        const MENSAJE = error?.error?.error || 'Error de conexión';
+        const MENSAJE = error?.error?.error || 'Error agregar tratado.';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
+      }
+    });
+  }
+
+  /**
+   * @method configuracion
+   * @description Realiza la configuración adicional de criterios para los tratados agregados.
+   *              Envía una solicitud POST con los datos de configuración y maneja la respuesta.
+   * @param {CriterioConfiguracionRequest[]} datos - Array de objetos con datos de configuración de criterios
+   * @return {void}
+   */
+  configuracion(datos:CriterioConfiguracionRequest[]): void{
+    const PAYLOAD: CriterioConfiguracionRequest[] = datos.map(item => ({
+      cve_grupo_criterio: item.cve_grupo_criterio,
+      cve_tratado_acuerdo: item.cve_tratado_acuerdo,
+      cve_pais: item.cve_pais,
+      id_tratado_acuerdo: item.id_tratado_acuerdo
+    }));
+    this.tratadosSolicitudService.postTratadoConfiguracion(PAYLOAD)
+    .subscribe({
+      next: (resp) => {
+        if (resp.codigo === CodigoRespuesta.EXITO) {
+          this.respuestaTratadosConfiguracion = resp.datos;
+        }else{
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: resp.error || 'Error configuracion tratado.',
+            mensaje:
+              resp.causa ||
+              resp.mensaje ||
+              'Error configuracion tratado.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+       
+      },
+      error: (error) => {
+        const MENSAJE = error?.error?.error || 'Error configuracion tratado';
         this.nuevaNotificacion = {
           tipoNotificacion: 'toastr',
           categoria: 'error',
@@ -863,6 +950,15 @@ eliminarTratado(): void {
   this.registroDeSolicitudesTablaDatos = this.registroDeSolicitudesTablaDatos.filter(
     row => !this.selectedRows.includes(row)
   );
+
+  this.respuestaServicioDatosTabla = this.respuestaServicioDatosTabla.filter(
+    item => !this.selectedRows.some(sel =>
+      sel.pais === item.nombre_pais_bloque &&
+      sel.tratado === item.tratado_nombre &&
+      sel.origen === item.cve_grupo_criterio
+    )
+  );
+
   this.selectedRows = [];
 }
 
