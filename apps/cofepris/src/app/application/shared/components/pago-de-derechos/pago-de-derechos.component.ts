@@ -86,7 +86,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * @type {boolean}
    * @default false
    */
-  @Input() onlyColonRequired: boolean = false;
+  @Input() soloDosPuntosRequeridos: boolean = false;
 
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.

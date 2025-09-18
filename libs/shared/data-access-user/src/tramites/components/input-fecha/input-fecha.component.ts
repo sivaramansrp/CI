@@ -55,7 +55,7 @@ export class InputFechaComponent implements OnInit, OnChanges {
    * @type {boolean}
    * @default false
    */
-  @Input() onlyColonRequired: boolean = false;
+  @Input() soloDosPuntosRequeridos: boolean = false;
 
   /**
    * Indica si se debe mostrar el ícono de ayuda (círculo con signo de interrogación).
