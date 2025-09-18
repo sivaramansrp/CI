@@ -107,3 +107,16 @@ export const API_POST_FACTURAS_TPL_AGREGAR = (IDSOLICITUD: string): string => `s
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t120301/swagger-ui/index.html#/Servicios-Cupos/eliminarFactura
  */
 export const API_DELETE_FACTURAS_TPL = (IDFACTURAEXPEDICION: string): string => `api/sat-t120301/factura/${IDFACTURAEXPEDICION}`;
+
+/**
+ * Api para consultar el histórico de fabricantes del tramite 120301.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t120301/swagger-ui/index.html#/Servicios-Cupos/listarFabricantes
+ *
+ */
+export const API_GET_HISTORICO_FABRICANTES = (tipoFabricante:string, idSolicitud: string) : string => `sat-t120301/fabricantes/${tipoFabricante}/${idSolicitud}`;
+
+/**
+ * Api para consultar un fabricante nacional por su RFC del tramite 120301.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t120301/swagger-ui/index.html#/Servicios-Cupos/getFabricanteNacional
+ */
+export const API_GET_FABIRCANTE_NACIONAL = (RFC: string) : string => `sat-t120301/fabricante-nacional/${RFC}`;
