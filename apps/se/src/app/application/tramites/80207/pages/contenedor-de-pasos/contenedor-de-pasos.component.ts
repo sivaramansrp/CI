@@ -2,14 +2,15 @@ import { Component, OnDestroy, ViewChild } from '@angular/core';
 import {
   DatosPasos,
   ListaPasosWizard,
-  SeccionLibStore,
-  WizardComponent,
+  SeccionLibStore, 
 } from '@ng-mf/data-access-user';
 import { AVISO } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/pasos.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Subject } from 'rxjs';
 import { Tramites80207Queries } from '../../estados/tramite80207.query';
 import { takeUntil } from 'rxjs/operators';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * @fileoverview Componente para la gestión del contenedor de pasos.
@@ -72,6 +73,12 @@ export class ContenedorDePasosComponent implements OnDestroy {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+ 
+
+  /**
    * Datos de los pasos del wizard.
    * @property {DatosPasos} datosPasos
    */
@@ -113,7 +120,7 @@ export class ContenedorDePasosComponent implements OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((res) => {
         this.seccion.establecerSeccion([true]);
-        this.seccion.establecerFormaValida([res]);
+        this.seccion.establecerFormaValida([true]);
       });
   }
 
@@ -128,14 +135,27 @@ export class ContenedorDePasosComponent implements OnDestroy {
    * @returns {void}
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
+   
+   if(e.accion==='cont'){
+    let isValid=true;
+    if (this.indice === 1 && this.pasoUnoComponent) {
+      isValid = this.pasoUnoComponent.validarTodosLosFormularios();
     }
+    if (!isValid) {
+      
+      this.datosPasos.indice = this.indice;
+      return;
+    }
+    this.indice = e.valor;
+        this.datosPasos.indice = this.indice;
+        this.wizardComponent.siguiente();
+        return;
+   }   
+   
+   this.indice = e.valor;
+   this.datosPasos.indice = this.indice;
+   this.wizardComponent.atras();
+
   }
   /**
    * Método que se ejecuta al destruir el componente.

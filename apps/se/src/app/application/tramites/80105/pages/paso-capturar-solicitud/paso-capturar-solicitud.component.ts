@@ -5,6 +5,7 @@ import { Subject, map, take } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
+import basePlantasTerciarizadoras from '@libs/shared/theme/assets/json/80105/basePlantasTerciarizadoras.json';
 import { takeUntil } from 'rxjs';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 
@@ -133,6 +134,8 @@ export class PasoCapturarSolicitudComponent implements OnDestroy,OnInit {
       "fecFallecimiento": "2025-09-07"
   };
 
+  private basePlantasTerciarizadoras: unknown[] = Array.isArray(basePlantasTerciarizadoras) ? basePlantasTerciarizadoras : [];
+
    /**
    * URL de la página actual.
    */
@@ -213,10 +216,11 @@ ngOnInit(): void {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
     const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
+    const PLANTAS_TERCIARIZADORAS = PasoCapturarSolicitudComponent.buildPlantasControladoras(data.empresasSeleccionadas, this.basePlantasTerciarizadoras);
     const ANEXO_ALL = this.buildAnexo(data);
     const PAYLOAD = {
-        "tipoDeSolicitud": "guardar",
-      "idSolicitud": 202781045,
+    "tipoDeSolicitud": "guardar",
+    "idSolicitud": 202781045,
     "idTipoTramite": 80105,
     "rfc": "AAL0409235E6",
     "cveUnidadAdministrativa": "8101",
@@ -249,7 +253,11 @@ ngOnInit(): void {
         }
     ],
     "plantasSubmanufactureras": [],
-    "sociosAccionistas":[...SOCIO_ACCIONISTAS]
+    "sociosAccionistas":[...SOCIO_ACCIONISTAS],
+    "solicitud": {
+      "anexoI": [...ANEXO_ALL.anexo.tableDos]
+    },
+    "plantasTerciarizadoras": PLANTAS_TERCIARIZADORAS
     };
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
       this.tramite80105Store.setIdSolicitud(response.datos.id_solicitud || 0);
@@ -296,6 +304,33 @@ ngOnInit(): void {
 
     return RESULT;
   }
+
+  /**
+ * Build plantasControladoras by taking the base array
+ * and appending the length of each key in empresasSeleccionadas
+ * to every planta item.
+ *
+ * @param empresasSeleccionadas  Object with keys whose values are arrays
+ * @param basePlantas            Existing plantasControladoras array
+ */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static buildPlantasControladoras(empresasSeleccionadas: any[], basePlantas: unknown[]): unknown[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const RESULT: any[] = [];
+
+    empresasSeleccionadas.forEach(emp => {
+      basePlantas.forEach(planta => {
+        const PLANTA = (planta && typeof planta === 'object') ? planta : {};
+        RESULT.push({
+          ...PLANTA,
+          razonSocial: emp.razonSocial ?? '',
+          rfc: emp.registroFederalContribuyentes ?? ''
+        });
+      });
+    });
+    return RESULT;
+  }
+
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
       /**
@@ -349,6 +384,21 @@ ngOnInit(): void {
           fecFinVigencia: null,
           volumenAnualSolicitado: null,
         });
+           const anexoDos: any = [];
+
+    (data.annexoUno?.exportarDatosTabla || []).forEach((item: any) => {
+      anexoDos.push({
+        fraccionExportacion: item.encabezadoFraccionExportacion,
+        fraccionImportacion: item.encabezadoFraccionImportacion,
+        descFraccionImpo: item.encabezadoDescripcionComercial,
+        claveFraccionAnexo: item.encabezadoAnexoII,
+        idProducto: item.encabezadoIdProducto,
+        fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
+        fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
+        fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
+        categoriaFraccion: item.encabezadoCategoria,
+      });
+    });
       
         return {
           anexo: {
@@ -356,6 +406,7 @@ ngOnInit(): void {
             ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
             proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
             datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
+            tableDos: anexoDos
           },
         };
       }

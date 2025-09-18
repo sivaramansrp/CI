@@ -6,6 +6,7 @@ import { CatalogoPaises } from '@ng-mf/data-access-user';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { DatosEmpresaExtranjera} from '../models/nuevo-programa-industrial.model';
 import { DatosSubcontratista } from '../../../shared/models/empresas-subfabricanta.model';
+import { DisponsibleFiscal } from '../../../shared/models/empresas.model';
 import { EmpressaSubFabricantePlantas } from '../../../shared/models/empresas-subfabricanta.model';
 import { FederatariosEncabezado } from '../../../shared/models/federatarios-y-plantas.model';
 import { Injectable } from '@angular/core';
@@ -80,6 +81,7 @@ export interface Tramite80101State {
   
   indicePrevioRuta: number;
   tablaDatosFederatarios: FederatariosEncabezado[]
+  empresasSeleccionadas: DisponsibleFiscal[];
 }
 
 /**
@@ -234,6 +236,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   indicePrevioRuta: 0,
   tablaDatosFederatarios: [],
   idSolicitud: 0,
+  empresasSeleccionadas: [],
 };
 
 /**
@@ -860,4 +863,15 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       idSolicitud,
     }));
   }
+
+  /**
+     * Establece la lista de empresas seleccionadas en el estado.
+     * @param empresasSeleccionadas - Arreglo de empresas seleccionadas.
+     */
+      public setSeleccionadas(empresasSeleccionadas: DisponsibleFiscal[]):void {
+        this.update((state) => ({
+          ...state,
+          empresasSeleccionadas,
+        }));
+      }
 }

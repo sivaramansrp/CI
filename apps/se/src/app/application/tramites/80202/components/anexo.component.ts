@@ -5,6 +5,8 @@ import {
   CatalogoSelectComponent,
   ConfiguracionColumna,
   ConsultaioQuery,
+  Notificacion,
+  NotificacionesComponent,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -17,16 +19,16 @@ import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 
-import { FRACCION_EXPORTACION, IMMEX_SERVICIO,NICO_TABLA,fraccionInfo, immexInfo, immexRegistroform } from '../../80203/modelos/immex-registro-de-solicitud-modality.model';
 
+import { FRACCION_EXPORTACION, IMMEX_SERVICIO,ImmexRegistroform,NICO_TABLA,NicoInfo,fraccionInfo, immexInfo} from '../models/immex-ampliacion-sensibles.model';
 import { delay, map, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensibles.query';
-import { ImmexRegistroStore } from '../../80203/estados/tramites/tramite80203.store';
+import { ImmexAmpliacionSensiblesStore } from '../estados/immex-ampliacion-sensibles.store';
 import { Modal } from 'bootstrap';
-import { NicoInfo } from '../models/immex-ampliacion-sensibles.model';
 import { NicoService } from '../services/nico.service';
 import { PermisoImmexDatosService } from '../services/permiso-immex-datos.service';
 import { Subject } from 'rxjs';
@@ -47,10 +49,14 @@ import { Subject } from 'rxjs';
     ReactiveFormsModule,
     TablaDinamicaComponent,
     TituloComponent,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    NotificacionesComponent
   ],
 })
 export class AnexoComponent implements OnInit, OnDestroy {
+  fraccionInfoSelected:fraccionInfo | null = null;
+  selectedRowData: immexInfo | null = null;
+  showTableNicoExps:boolean=false;
     /**
      * Referencia al elemento del modal de importación de mercancía.
      * Utilizado para mostrar u ocultar el modal mediante la API de Bootstrap.
@@ -75,7 +81,7 @@ export class AnexoComponent implements OnInit, OnDestroy {
      * @property {immexRegistroform} immexRegitroAnexoState
      * @description Estado del formulario de registro IMMEX.
      */
-    immexRegitroAnexoState!: immexRegistroform;
+    immexRegitroAnexoState!: ImmexRegistroform;
   
     /**
      * @property {TablaSeleccion} tablaSeleccionRadio
@@ -221,6 +227,8 @@ export class AnexoComponent implements OnInit, OnDestroy {
      * @memberof Anexo1Component
      */
     esFormularioSoloLectura: boolean = false;
+
+    firstloadCompleted:boolean= false;
   
     /**
      * Indica si el formulario está en modo de actualización.
@@ -231,6 +239,13 @@ export class AnexoComponent implements OnInit, OnDestroy {
      * @memberof Anexo1Component
      */
     esFormularioActualizacion: boolean = false;
+      /**
+   * Representa una nueva notificación que será utilizada en el componente.
+   * @type {Notificacion}
+   */
+  public nuevaNotificacion!: Notificacion;
+  eliminarDatosTabla:boolean=false;
+  eliminarDatosTablaExportacion:boolean=false;
   
     /**
      * @constructor
@@ -252,7 +267,7 @@ export class AnexoComponent implements OnInit, OnDestroy {
       public permisoImmexDatosService: PermisoImmexDatosService,
       public readonly nicoService: NicoService,
       public immexRegistroQuery: ImmexAmpliacionSensiblesQuery,
-      public immexRegistroStore: ImmexRegistroStore,
+      public immexRegistroStore:ImmexAmpliacionSensiblesStore ,
       public seccionQuery: SeccionLibQuery,
       public seccionStore: SeccionLibStore,
       public readonly consultaQuery: ConsultaioQuery
@@ -343,34 +358,14 @@ export class AnexoComponent implements OnInit, OnDestroy {
   
     private createImportacionFormGroup(): FormGroup {
       return this.fb.group({
-        permisoImmexDatos: [
-          this.immexRegitroAnexoState.permisoImmexDatos || [],
-          [],
-        ],
-        fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
-        nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
-        commodityImportacion: [
-          this.immexRegitroAnexoState?.commodityImportacion || '',
-          [],
-        ],
-        commodityDescImportacion: [
-          this.immexRegitroAnexoState?.commodityDescImportacion || '',
-          [],
-        ],
-        commodityNicoDescImportacion: [
-          this.immexRegitroAnexoState?.commodityNicoDescImportacion || '',
-          [],
-        ],
-        candiadAnual: [this.immexRegitroAnexoState?.candiadAnual || '', []],
-        capacidadPeriodo: [
-          this.immexRegitroAnexoState?.capacidadPeriodo || '',
-          [],
-        ],
-        candidadPorPeriodo: [
-          this.immexRegitroAnexoState?.candidadPorPeriodo || '',
-          [],
-        ],
-        Nico: [this.immexRegitroAnexoState?.Nico || '', []],
+      fraccionArancelaria: [{value:this.immexRegitroAnexoState?.fraccionArancelaria || '', disabled: true}, [Validators.required]],               
+      umt: [{value:this.immexRegitroAnexoState?.umt || '', disabled: true}, [Validators.required]],
+      descripcionTigie: [{value:this.immexRegitroAnexoState?.descripcionTigie || '' , disabled: true}, [Validators.required]],                      
+      cantidadAnual: [this.immexRegitroAnexoState?.cantidadAnual|| '', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      capacidadInstalada: [this.immexRegitroAnexoState?.capacidadInstalada || '',[ Validators.required]], 
+      cantidadPorPeriodo: [this.immexRegitroAnexoState?.cantidadPorPeriodo || '' , [Validators.required,Validators.pattern('^[0-9]+$')]], 
+            Nicos: [this.immexRegitroAnexoState?.Nicos || '' ], 
+            productoDescExportacions: [{value: this.immexRegitroAnexoState?.productoDescExportacions || '', disabled: true}],
       });
     }
   
@@ -431,15 +426,14 @@ export class AnexoComponent implements OnInit, OnDestroy {
       this.immexRegistroQuery.selectImmexRegistro$
         .pipe(
           takeUntil(this.destroyNotifier$),
-          map((seccionState: { immexRegistro: immexRegistroform }) => {
+          map((seccionState: { immexRegistro: ImmexRegistroform }) => {
             if (seccionState) {
               this.immexRegitroAnexoState = seccionState.immexRegistro;
-              this.immexRegistroform.patchValue(this.immexRegitroAnexoState);
             }
           })
         )
         .subscribe();
-      this.immexRegistroform.statusChanges
+      this.immexRegistroform.valueChanges
         .pipe(
           takeUntil(this.destroyNotifier$),
           delay(10),
@@ -459,7 +453,6 @@ export class AnexoComponent implements OnInit, OnDestroy {
           })
         )
         .subscribe();
-      this.fetchData();
       this.obtenerListasDesplegables();
       this.disableFormControls();
   
@@ -518,6 +511,7 @@ export class AnexoComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe({
           next: (response) => {
+            
             const RESPONSE_DATA = response as unknown as {
               permisoImmexDatos: immexInfo[];
               fraccionDatos: fraccionInfo[];
@@ -533,15 +527,11 @@ export class AnexoComponent implements OnInit, OnDestroy {
               const DEBE_MOSTRAR_DATOS =
                 DEBE_MOSTRAR_TABLA?.length > 0 ||
                 this.esFormularioSoloLectura ||
-                this.esFormularioActualizacion;
+                this.esFormularioActualizacion
   
-              this.immexTableDatos = DEBE_MOSTRAR_DATOS
-                ? RESPONSE_DATA.permisoImmexDatos
-                : [];
-  
-              this.fraccionTablaDatos = DEBE_MOSTRAR_DATOS
-                ? RESPONSE_DATA.fraccionDatos
-                : [];
+              // this.fraccionTablaDatos = DEBE_MOSTRAR_DATOS
+              //   ? RESPONSE_DATA.fraccionDatos
+              //   : [];
   
               this.nicoTablaDatos = RESPONSE_DATA.nicoDatos;
   
@@ -549,30 +539,11 @@ export class AnexoComponent implements OnInit, OnDestroy {
               this.fraccionDatos = RESPONSE_DATA.fraccionDatos;
               this.nicoDatos = RESPONSE_DATA.nicoDatos;
   
-              if (this.permisoImmexDatos.length > 0 && DEBE_MOSTRAR_DATOS) {
-                this.immexRegistroform.get('exportacionForm')?.patchValue({
-                  fraccionArancelariaExportacion:
-                    this.permisoImmexDatos[0].IMMEX_Columna_3,
-                });
-              }
-  
-              if (this.fraccionDatos.length > 0 && DEBE_MOSTRAR_DATOS) {
-                this.immexRegistroform.get('exportacionForm')?.patchValue({
-                  productoArancelariaExportacion:
-                    this.fraccionDatos[0].FRACCION_Columna_2,
-                  FraccionDescExportacion:
-                    this.fraccionDatos[0].FRACCION_Columna_5,
-                  exportacionDescExportacion:
-                    this.fraccionDatos[0].FRACCION_Columna_6,
-                });
-              }
   
               if (this.permisoImmexDatos.length > 0) {
-                this.immexRegistroform.get('importacionForm')?.patchValue({
-                  commodityImportacion: this.permisoImmexDatos[0].IMMEX_Columna_3,
-                  commodityDescImportacion:
-                    this.permisoImmexDatos[0].IMMEX_Columna_4,
-                });
+                this.immexRegistroform.get('importacionForm')?.patchValue(RESPONSE_DATA.permisoImmexDatos[0])
+                this.mostrarDetalleMercancia();
+             
               }
             }
           },
@@ -645,6 +616,58 @@ export class AnexoComponent implements OnInit, OnDestroy {
       );
       MODAL_INSTANCIA.show();
     }
+    eliminarPermisoImmex():void{
+      if(this.selectedRowData !== null && this.immexTableDatos.length > 0){
+this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Está seguro que desea eliminar estos datos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+      this.immexRegistroform.get('importacionForm')?.reset();
+      this.immexRegistroform.get('importacionForm')?.markAsUntouched();
+      this.immexRegistroform.get('importacionForm')?.markAsPristine();
+      this.eliminarDatosTablaExportacion=true;
+      }
+      else{
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe seleccionar un dato para eliminar',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar:'Aceptar',
+          txtBtnCancelar: '',
+        };
+  
+      }
+       
+    
+    }
+     mostrarDetalleMercanciaSelect(): void {
+        this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Está seguro que desea eliminar estos datos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar:'Aceptar',
+      txtBtnCancelar: '',
+    };
+this.firstloadCompleted=false;
+       this.eliminarDatosTabla=true;
+    
+     
+    }
   
     /**
      * @method mostrarDetalleMercanciaExportacion
@@ -656,10 +679,33 @@ export class AnexoComponent implements OnInit, OnDestroy {
      * @returns {void}
      */
     mostrarDetalleMercanciaExportacion(): void {
-      const MODAL_INSTANCIA = new Modal(
+      if(this.fraccionTablaDatos.length === 1 && this.fraccionInfoSelected !== null){
+        this.immexRegistroform.get('exportacionForm')?.patchValue({
+   productoArancelariaExportacion: this.fraccionInfoSelected?.FRACCION_Columna_2,
+   description: this.fraccionInfoSelected?.FRACCION_Columna_5,
+   Nico:this.fraccionInfoSelected?.FRACCION_Columna_1 || 1,
+   productoDescExportacion: this.fraccionInfoSelected?.FRACCION_Columna_6,
+
+        })
+ const MODAL_INSTANCIA = new Modal(
         this.mercanciaExportacionModal.nativeElement
       );
       MODAL_INSTANCIA.show();
+      }
+      else {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe seleccionar al menos una fracción antes de continuar',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+      }
+     
     }
   
     /**
@@ -671,20 +717,69 @@ export class AnexoComponent implements OnInit, OnDestroy {
      * @returns {void}
      */
     showTableImportacion(): void {
-      this.showTableImport = true;
-    }
+      if(this.immexRegistroform.get('exportacionForm.fraccionArancelariaExportacion')?.value && this.immexRegistroform.get('exportacionForm.FraccionDescExportacion')?.value && this.selectedRowData !== null){
+       const DEBE_MOSTRAR_TABLA = this.immexRegistroform.get(
+        'exportacionForm.permisoImmexDatos'
+      )?.value;
   
-    /**
-     * @method showTableFractionExport
-     * @description Controla la visibilidad de la tabla de fracción de exportación.
-     * Establece la propiedad showTableFractionExp en true para mostrar la tabla
-     * específica de fracciones arancelarias de exportación en la interfaz de usuario.
-     *
-     * @returns {void}
-     */
-    showTableFractionExport(): void {
-      this.showTableFractionExp = true;
+      this.permisoImmexDatosService
+        .getDatos()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response) => {
+            
+            const RESPONSE_DATA = response as unknown as {
+              permisoImmexDatos: immexInfo[];
+              fraccionDatos: fraccionInfo[];
+              nicoDatos: NicoInfo[];
+            };
+  
+            if (
+              RESPONSE_DATA &&
+              Array.isArray(RESPONSE_DATA.permisoImmexDatos) &&
+              Array.isArray(RESPONSE_DATA.fraccionDatos) &&
+              Array.isArray(RESPONSE_DATA.nicoDatos)
+            ) {
+              this.fraccionTablaDatos = RESPONSE_DATA.fraccionDatos || [];
+            }
+          },
+        });
+     
     }
+    else{
+     this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Está seguro que desea eliminar estos datos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar:'Aceptar',
+      txtBtnCancelar: '',
+    };
+    }
+  }
+  eliminarFraccionExportacion():void{
+    if(this.fraccionTablaDatos.length > 0){
+   this.fraccionTablaDatos = [];
+      this.immexRegistroform.get('exportacionForm')?.reset();
+      }
+      else{
+         this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Está seguro que desea eliminar estos datos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar:'Aceptar',
+      txtBtnCancelar: '',
+    };
+      }
+    }
+
   
     /**
      * @method showTableNicoExport
@@ -697,6 +792,18 @@ export class AnexoComponent implements OnInit, OnDestroy {
     showTableNicoExport(): void {
       this.showTableNicoExp = true;
     }
+    /**
+     * @method showTableNicoExport
+     * @description Controla la visibilidad de la tabla NICO de exportación.
+     * Establece la propiedad showTableNicoExp en true para mostrar la tabla
+     * de códigos NICO relacionados con exportación en la interfaz de usuario.
+     *
+     * @returns {void}
+     */
+    showTableNicoExports(): void {
+      this.showTableNicoExps = true;
+    }
+  
   
     /**
      * @method showTableNicoImport
@@ -763,7 +870,16 @@ export class AnexoComponent implements OnInit, OnDestroy {
      * un enlace operativo.
      */
     modalGuardar(): void {
-      this.cambiarEstadoModal();
+      if(this.immexRegistroform.get('importacionForm')?.valid ){
+ this.cambiarEstadoModal();
+ this.immexTableDatos = [];
+ this.immexTableDatos.push(this.immexRegistroform.get('importacionForm')?.getRawValue()) ;
+ this.immexRegistroform.get('importacionForm')?.reset()
+      }
+      else{
+        this.immexRegistroform.get('importacionForm')?.markAllAsTouched();
+      }
+     
     }
   
   
@@ -776,12 +892,40 @@ export class AnexoComponent implements OnInit, OnDestroy {
      * un enlace operativo de exportación.
      */
     modalCancelarExportacion(): void {
+         this.immexRegistroform.get('exportacionForm')?.reset();
+         this.showTableNicoExp = false;
       this.cambiarEstadoModalExportacion();
     }
 
   guardar(): void {
+    const DATA:fraccionInfo ={
+FRACCION_Columna_1
+: 
+this.immexRegistroform.get('exportacionForm')?.getRawValue().Nico,
+FRACCION_Columna_2
+: 
+"72012001",
+FRACCION_Columna_3
+: 
+"72012001",
+FRACCION_Columna_4
+: 
+"Kilogramo",
+FRACCION_Columna_5
+: 
+"Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso",
+FRACCION_Columna_6
+: 
+"FRACC EXP 1 SENASICA",
+estatus:true
+    }
+    
+    this.fraccionTablaDatos.push(DATA) ;
+    this.immexRegistroform.get('exportacionForm')?.reset();
+      this.showTableNicoExp = false;
          this.cambiarEstadoModalExportacion();
   }
+
     /**
      * @method disableFormControls
      * @description Deshabilita controles específicos del formulario relacionados con la exportación e importación.
@@ -814,7 +958,10 @@ export class AnexoComponent implements OnInit, OnDestroy {
         .get('importacionForm.commodityNicoDescImportacion')
         ?.disable();
     }
-  
+
+  onFilaSeleccionada(event: immexInfo):void{
+    this.selectedRowData=event;
+  }
     /**
      * @method ngOnDestroy
      * @description Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
@@ -828,4 +975,57 @@ export class AnexoComponent implements OnInit, OnDestroy {
       this.destroyNotifier$.next();
       this.destroyNotifier$.complete();
     }
+
+    eliminarPedimentoDatos(borrar: boolean):void{
+        this.nuevaNotificacion = {} as Notificacion;
+      this.eliminarDatosTabla=false;
+    
+       if(this.selectedRowData !== null && borrar){
+        this.immexRegistroform.get('importacionForm')?.patchValue({
+          fraccionArancelaria: this.selectedRowData?.fraccionArancelaria || '',
+          umt: this.selectedRowData?.umt || '',
+          descripcionTigie: this.selectedRowData?.descripcionTigie || '',
+          cantidadAnual: this.selectedRowData?.cantidadAnual || '',
+          capacidadInstalada: this.selectedRowData?.capacidadInstalada || '',
+          cantidadPorPeriodo: this.selectedRowData?.cantidadPorPeriodo || '',
+          Nicos:   this.immexRegistroform
+        .get('importacionForm.Nicos')
+        ?.value() || '',
+          productoDescExportacions:  this.immexRegistroform
+        .get('importacionForm.productoDescExportacions')
+        ?.value() || '',
+        });
+ const MODAL_INSTANCIA = new Modal(
+        this.mercanciaImportacionModal.nativeElement
+      );
+      this.firstloadCompleted=true;
+      MODAL_INSTANCIA.show();
+      }
+      
+      
+    }
+
+    eliminarPedimentoDatoss(borrar: boolean):void{
+      if(borrar && this.selectedRowData !== null){
+ this.nuevaNotificacion = {} as Notificacion;
+  this.immexTableDatos =[];
+      this.selectedRowData=null;
+      this.firstloadCompleted=false;
+      }
+     
+      this.eliminarDatosTablaExportacion=false;
+    
+  }
+descripcionValorActualizar():void{
+  this.immexRegistroform.get('importacionForm')?.patchValue({
+    productoDescExportacions: "Acero inoxidable laminado en frío, espesor 2mm, acabado brillante, grado 304L, para aplicaciones industriales y construcción naval"
+  });
+}
+  eliminarNico():void{
+    this.showTableNicoExp = false;
+  }
+  onFilaSeleccionadas(event:fraccionInfo):void{
+this.fraccionInfoSelected = event;
+
+  }
 }

@@ -143,7 +143,7 @@ export const FORMULARIO_DATOS_SOLICITUD = [
             { tipo: 'required' }
         ],
         marcadorDePosicion: '',
-        valorPredeterminado: '',
+        valorPredeterminado:'10/02/2025',
         marginTop: 0,
         habilitado: true,
         row: 2
