@@ -28,13 +28,18 @@ export interface DomicilioForm {
 }
 
 export interface RepresentanteLegalForm{
-  lugar: string;
   nombreRepresentante: string;
-  empresa: string;
+  lugar: string;
+  calle: string;
+  numero: string;
+  pais: string;
+  ciudad: string;
   cargo: string;
-  lada: string;
-  telefono: string;
-  fax: string;
+  empresa: string;
+  numeroRegistroFiscal: string;
+  lada?: string;
+  telefono?: string;
+  fax?: string;
   correoElectronico: string;
 }
 

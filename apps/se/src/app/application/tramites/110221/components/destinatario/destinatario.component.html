@@ -166,7 +166,24 @@
   <ng-container formGroupName="representanteLegalForm">
     <ng-titulo titulo="Datos del representante legal del exportador" />
     <div class="row">
-      <div class="col-md-8 mb-3">
+            <div class="col-md-8 mb-3">
+<label>Nombre del representante legal del exportador*:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="nombreRepresentante"
+          maxlength="70"
+          formControlName="nombreRepresentante"
+          (change)="setrepresentanteLegalForm()"
+        />
+        <small
+          class="mensaje-error"
+          *ngIf="registroForm.get('representanteLegalForm.nombreRepresentante')?.errors?.['required'] && (registroForm.get('representanteLegalForm.nombreRepresentante')?.touched || registroForm.get('representanteLegalForm.lugar')?.dirty)"
+        >
+          Este campo es obligatorio.
+            </small>
+      </div>
+      <div class="col-md-4 mb-3">
         <label>Lugar*:</label>
         <input
           type="text"
@@ -186,76 +203,143 @@
     </div>
     <div class="row">
       <div class="col-md-8 mb-3">
-        <label>Nombre del representante legal del exportador*:</label>
+        <label>Calle*:</label>
         <input
           type="text"
           class="form-control"
-          id="nombreRepresentante"
+          id="calle"
           maxlength="70"
-          formControlName="nombreRepresentante"
+          formControlName="calle"
           (change)="setrepresentanteLegalForm()"
         />
-        <div
+        <small
           class="mensaje-error"
-          *ngIf="registroForm.get('representanteLegalForm.nombreRepresentante')?.errors?.['required'] && (registroForm.get('representanteLegalForm.nombreRepresentante')?.touched || registroForm.get('representanteLegalForm.nombreRepresentante')?.dirty)"
+          *ngIf="registroForm.get('representanteLegalForm.calle')?.errors?.['required'] && (registroForm.get('representanteLegalForm.calle')?.touched || registroForm.get('representanteLegalForm.calle')?.dirty)"
         >
           Este campo es obligatorio.
-        </div>
+        </small>
+      </div>
+            <div class="col-md-4 mb-3">
+        <label>Número y/o letra*:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="numero"
+          maxlength="70"
+          formControlName="numero"
+          (change)="setrepresentanteLegalForm()"
+        />
+        <small
+          class="mensaje-error"
+          *ngIf="registroForm.get('representanteLegalForm.numero')?.errors?.['required'] && (registroForm.get('representanteLegalForm.numero')?.touched || registroForm.get('representanteLegalForm.numero')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </small>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-4 mb-3">
+      <div class="row">
+      <div class="col-md-8 mb-3">
+     <app-catalogo-select [catalogo]="optionsPaisDestino" [label]="'País'" [required]="true"
+            placeholder="Selecciona un valor" id="pais" formControlName="pais"
+            (change)="setdomicilioForm()" [isDisabled]="soloLectura" [markTouched]="registroForm.get('representanteLegalForm.pais')?.errors?.['required'] && (registroForm.get('representanteLegalForm.pais')?.touched || registroForm.get('representanteLegalForm.pais')?.dirty)"></app-catalogo-select>
+      </div>
+            <div class="col-md-4 mb-3">
+        <label>Ciudad (población, estado o provincial)*:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="ciudad"
+          maxlength="70"
+          formControlName="ciudad"
+          (change)="setrepresentanteLegalForm()"
+        />
+        <small
+          class="mensaje-error"
+          *ngIf="registroForm.get('representanteLegalForm.ciudad')?.errors?.['required'] && (registroForm.get('representanteLegalForm.ciudad')?.touched || registroForm.get('representanteLegalForm.ciudad')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </small>
+      </div>
+    </div>
+         <div class="row">
+      <div class="col-md-8 mb-3">
+        <label>Cargo*:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="cargo"
+          maxlength="70"
+          formControlName="cargo"
+          (change)="setrepresentanteLegalForm()"
+        />
+        <small
+          class="mensaje-error"
+          *ngIf="registroForm.get('representanteLegalForm.cargo')?.errors?.['required'] && (registroForm.get('representanteLegalForm.cargo')?.touched || registroForm.get('representanteLegalForm.cargo')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </small>
+      </div>
+            <div class="col-md-4 mb-3">
         <label>Empresa*:</label>
         <input
           type="text"
           class="form-control"
           id="empresa"
-          maxlength="90"
+          maxlength="70"
           formControlName="empresa"
           (change)="setrepresentanteLegalForm()"
         />
-        <div
+        <small
           class="mensaje-error"
           *ngIf="registroForm.get('representanteLegalForm.empresa')?.errors?.['required'] && (registroForm.get('representanteLegalForm.empresa')?.touched || registroForm.get('representanteLegalForm.empresa')?.dirty)"
         >
           Este campo es obligatorio.
-        </div>
+        </small>
       </div>
-      <div class="col-md-4 mb-3">
-        <label>Cargo*:</label>
+    </div>
+    <div class="row">
+       <div class="col-md-4 mb-3">
+        <label>Número de registro fiscal*:</label>
         <input
           type="text"
           class="form-control"
-          maxlength="70"
-          id="cargo"
-          formControlName="cargo"
+          id="numeroRegistroFiscal"
+          maxlength="20"
+          formControlName="numeroRegistroFiscal"
           (change)="setrepresentanteLegalForm()"
         />
         <div
           class="mensaje-error"
-          *ngIf="registroForm.get('representanteLegalForm.cargo')?.errors?.['required'] && (registroForm.get('representanteLegalForm.cargo')?.touched || registroForm.get('representanteLegalForm.cargo')?.dirty)"
+          *ngIf="registroForm.get('representanteLegalForm.numeroRegistroFiscal')?.errors?.['required'] && (registroForm.get('representanteLegalForm.numeroRegistroFiscal')?.touched || registroForm.get('representanteLegalForm.numeroRegistroFiscal')?.dirty)"
         >
           Este campo es obligatorio.
         </div>
       </div>
-      <div class="col-md-1 mb-3">
+       <div class="col-md-1 mb-3">
         <label>Lada:</label>
         <input
           type="text"
           class="form-control"
-          id="segundoApellido"
-          maxlength="5"
+          id="lada"
+          maxlength="20"
           formControlName="lada"
           (change)="setrepresentanteLegalForm()"
         />
+        <div
+          class="mensaje-error"
+          *ngIf="registroForm.get('representanteLegalForm.lada')?.errors?.['required'] && (registroForm.get('representanteLegalForm.lada')?.touched || registroForm.get('representanteLegalForm.lada')?.dirty)"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
+
       <div class="col-md-3 mb-3">
         <label>Teléfono*:</label>
         <input
           type="text"
-          maxlength="20"
           class="form-control"
-          id="segundoApellido"
+          id="telefono"
+          maxlength="20"
           formControlName="telefono"
           (change)="setrepresentanteLegalForm()"
         />
@@ -266,9 +350,7 @@
           Este campo es obligatorio.
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4 mb-3">
+       <div class="col-md-4 mb-3">
         <label>Fax*:</label>
         <input
           type="text"
@@ -285,6 +367,8 @@
           Este campo es obligatorio.
         </div>
       </div>
+    </div>
+    <div class="row">
       <div class="col-md-4 mb-3">
         <label>Correo electrónico*:</label>
         <span
