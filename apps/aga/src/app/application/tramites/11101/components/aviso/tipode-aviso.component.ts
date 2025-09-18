@@ -390,12 +390,15 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
    * Si el formulario es de solo lectura, actualiza los estados correspondientes.
    */
   setManual(): void {
-    const RADIO_DOMICILIO = this.avisoForm.get('radioDomicilio')?.value;
-    if (RADIO_DOMICILIO === 'manual') {
-      this.isManualSelected = true;
-    } else {
-      this.isManualSelected = false;
-    }
+    const RADIO_DOMICILIO = this.avisoForm?.get('radioDomicilio')?.value;
+    this.isManualSelected = RADIO_DOMICILIO === 'manual';
+  }
+
+  /**
+   * Limpiar formulario.
+   */
+  limpiar(): void {
+    this.mercanciaForm.reset();
   }
 
   /**
@@ -411,6 +414,11 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: string) => void)(VALOR);
+    
+    // If the field being updated is radioDomicilio, update the visibility
+    if (campo === 'radioDomicilio') {
+      this.setManual();
+    }
   }
 
   /**
