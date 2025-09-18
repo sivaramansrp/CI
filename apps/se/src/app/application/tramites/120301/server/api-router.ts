@@ -20,7 +20,7 @@ export const API_GET_ANIOS_AUTORIZACION = 'sat-t120301/catalogo/anios/autorizaci
  * Id asignacion que se utilizará en las consultas.
  * Este valor debe ser reemplazado por el id asignacion correspondiente.
  */
-export const IDASIGNACION= '{idAsignacion}';
+export const IDASIGNACION = '{idAsignacion}';
 
 /**
  * API para consultar la unidad administrativa asociada a una asignación tramite 120301.
@@ -68,7 +68,7 @@ export const API_POST_FACTURAS_TPL_ASOCIAR = 'sat-t120301/facturas-tpl/asociar';
  * Id expedicion que se utilizará en las consultas.
  * Este valor debe ser reemplazado por el id asignacion correspondiente.
  */
-export const IDEXPEDICION= '{idExpedicion}';
+export const IDEXPEDICION = '{idExpedicion}';
 
 /**
  * API para facturas asociadas tramite 120301.
@@ -86,4 +86,18 @@ export const API_GET_FACTURAS_TPL_TOTAL_UNIDAD = `sat-t120301/factura-asociada/$
  * API para eliminar facturas-tpl asociadas tramite 120301.
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t120301/swagger-ui/index.html#/Servicios-Cupos/eliminarFactura
  */
-export const API_DELETE_FACTURAS_TPL_ELIMINAR = 'sat-t120301/expedicion-factura';
+export const API_DELETE_FACTURAS_TPL_ELIMINAR = (idFacturaExpedicion: string): string => `api/sat-t120301/factura/${idFacturaExpedicion}`;
+
+/**
+ * API para consultar todas las facturas TPL del tramite 120301.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t120301/swagger-ui/index.html#/Servicios-Cupos/buscarFacturasTPL
+ */
+export const API_GET_FACTURAS_TPL_ALL = 'sat-t120301/facturas-tpl';
+
+/**
+ * @param IDSOLICITUD Id de la solicitud.
+ * API para agregar facturas TPL al tramite 120301.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t120301/swagger-ui/index.html#/Servicios-Cupos/agregarFacturaTPL
+ */
+export const API_POST_FACTURAS_TPL_AGREGAR = (IDSOLICITUD: string): string => `sat-t120301/facturas/${IDSOLICITUD}/agregar-factura-tpl`;
+

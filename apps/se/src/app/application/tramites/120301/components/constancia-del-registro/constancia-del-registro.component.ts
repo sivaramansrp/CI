@@ -645,6 +645,8 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         fila.fechaInicioVigencia = DATOS.fecha_inicio_vigencia;
         fila.fechaFinVigencia = DATOS.fecha_fin_vigencia;
         this.tramite120301.setIdentificadorRegimen(DATOS.identificador_regimen);
+        this.tramite120301.setPaisOrigenDestino(DATOS.pais_origen_destino);
+        this.tramite120301.setUnidadMedida(DATOS.unidad_medida);
       }
 
 
@@ -792,6 +794,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         if (response?.codigo === '00' && response?.datos) {
           const DATOS = response.datos;
           this.tramite120301.setIdExpedicion(DATOS.id_expedicion);
+          this.tramite120301.setIdSolicitud(DATOS.id_solicitud);
           this.mostrarTabs.emit(true);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {

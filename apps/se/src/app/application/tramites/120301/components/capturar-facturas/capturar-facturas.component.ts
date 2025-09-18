@@ -1,21 +1,10 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-
-import { HttpClient } from '@angular/common/http';
-
-import { Subject, delay, map, takeUntil, tap } from 'rxjs';
-
 import {
   Catalogo,
   CatalogoSelectComponent,
-  ConfiguracionColumna,
   InputFecha,
   InputFechaComponent,
+  Notificacion,
+  NotificacionesComponent,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -23,31 +12,36 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   ERROR_FORMA_ALERT,
   EXPEDICION_FACTURA_FECHA,
   VALIDO,
 } from '../../constantes/elegibilidad-de-textiles.enums';
-
-import {
-  REGEX_PATRON_DECIMAL_2,
-  REGEX_SOLO_DIGITOS,
-} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-
 import {
   ElegibilidadDeTextilesStore,
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
-
-import { CapturarColumns } from '../../models/elegibilidad-de-textiles.model';
-
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  REGEX_PATRON_DECIMAL_2,
+  REGEX_SOLO_DIGITOS,
+} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+import { CONFIGURACION_ENCABEZADO_FACTURAS } from '../../constantes/elegibilidad-de-textiles.enums';
+import { CommonModule } from '@angular/common';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-
-import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { FacturaTplCapturaRequest } from '../../models/request/facturas-tpl-captura-requet.model';
+import { FacturasAsociadasService } from '../../services/facturas-asociadas.service';
+import { FacturasTplCapturaResponse } from '../../models/response/facturas-tpl-captura-response.model';
+import { Solicitud120301State } from '../../estados/tramites/tramite120301.store';
+import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
 import { UnidadMedidaService } from '../../services/catalogos/unidad-medida.service';
-
-
 
 /**
  * @component CapturarFacturasComponent
@@ -59,30 +53,15 @@ import { UnidadMedidaService } from '../../services/catalogos/unidad-medida.serv
   templateUrl: './capturar-facturas.component.html',
   styleUrl: './capturar-facturas.component.scss',
   standalone: true,
-  imports: [
-    TituloComponent,
-    ReactiveFormsModule,
-    InputFechaComponent,
-    CatalogoSelectComponent,
-    TablaDinamicaComponent,
-  ],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, InputFechaComponent, CatalogoSelectComponent, TablaDinamicaComponent, NotificacionesComponent],
 })
 export class CapturarFacturasComponent implements OnInit, OnDestroy {
-  /**
-   * Getter para exponer el FormGroup principal como 'formGroup' para integración con el padre.
-   */
-  public get formGroup(): FormGroup {
-    return this.facturaForm;
-  }
-  /**
-   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
-   */
+  /**  Getter para exponer el FormGroup principal como 'formGroup' para integración con el padre.*/
+  public get formGroup(): FormGroup { return this.facturaForm; }
+  /** @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado. */
   @Input()
   formularioDeshabilitado: boolean = false;
-
-  /**
-   * @property {FormGroup} facturaForm - El grupo de formularios para capturar los datos de las facturas.
-   */
+  /** @property {FormGroup} facturaForm - El grupo de formularios para capturar los datos de las facturas. */
   facturaForm!: FormGroup;
 
   /**
@@ -110,9 +89,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    */
   @Output() mostrarTabs: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  /**
-   * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
-   */
+  /** @property {string[]} selectRangoDias - Array de rangos de días seleccionables. */
   selectRangoDias: string[] = [];
 
   /**
@@ -131,24 +108,33 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @property {CapturarColumns[]} facturas - Array de datos de facturas para mostrar en la tabla.
    * Contiene la información de todas las facturas capturadas que se visualizan en la tabla dinámica.
    */
-  facturas: CapturarColumns[] = [];
-
+  facturas: FacturasTplCapturaResponse[] = [];
+  /**
+   *  @property {CapturarColumns[]} facturaSeleccionada - Array de facturas seleccionadas en la tabla. 
+   */
+  facturaSeleccionada: FacturasTplCapturaResponse[] = [];
+  /**  
+   * @property {CapturasColumns} facturaModificar - Objeto que contiene los datos de la factura a modificar. 
+   */
+  facturaModificar!: FacturasTplCapturaResponse;
   /**
    * @property {Subject<void>} destroyNotifier$ - Notificador para cancelar suscripciones y evitar fugas de memoria.
    * Utilizado con operadores como `takeUntil`.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * @property {TextilesState} capturarState - Estado actual relacionado con la captura de datos textiles.
-   */
+  /**  @property {TextilesState} capturarState - Estado actual relacionado con la captura de datos textiles. */
   private capturarState!: TextilesState;
 
-  /**
-   * @property {SeccionLibState} seccionState - Estado actual de la sección en el módulo de librerías.
-   */
+  /**  @property {SeccionLibState} seccionState - Estado actual de la sección en el módulo de librerías. */
   private seccionState!: SeccionLibState;
 
+  /**
+     * @property {Solicitud120301State} solicitudState - Estado de la solicitud en el store de Akita.
+     * Almacena el estado completo de la solicitud según la arquitectura Akita,
+     * incluyendo todos los datos relevantes para el manejo del estado de la aplicación.
+     * Se actualiza mediante los correspondientes stores y queries de Akita.
+     */
+  public solicitudState!: Solicitud120301State;
   /**
    * @property {TablaSeleccion} TablaSeleccion - Referencia a la enumeración o constante `TablaSeleccion`
    * para su uso en la plantilla o lógica del componente.
@@ -161,48 +147,22 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * Define la estructura, encabezados y orden de las columnas que se mostrarán en la tabla de facturas.
    * Cada elemento especifica el encabezado, la clave de acceso a los datos y el orden de visualización.
    */
-  tableColumns: ConfiguracionColumna<CapturarColumns>[] = [
-    {
-      encabezado: 'Número de la factura',
-      clave: (fila) => fila.numeroDeLaFactura,
-      orden: 1,
-    },
-    {
-      encabezado: 'Razón social',
-      clave: (fila) => fila.razonSocial,
-      orden: 2,
-    },
-    {
-      encabezado: 'Domicilio',
-      clave: (fila) => fila.domicilio,
-      orden: 3,
-    },
-    {
-      encabezado: 'Fecha de expedición de la factura',
-      clave: (fila) => fila.fechaExpedicionFactura,
-      orden: 4,
-    },
-    {
-      encabezado: 'Cantidad total',
-      clave: (fila) => fila.cantidadTotal,
-      orden: 5,
-    },
-    {
-      encabezado: 'Cantidad disponible',
-      clave: (fila) => fila.cantidadDisponible,
-      orden: 6,
-    },
-    {
-      encabezado: 'Unidad de medida',
-      clave: (fila) => fila.unidadMedida,
-      orden: 7,
-    },
-    {
-      encabezado: 'Valor en dólares',
-      clave: (fila) => fila.valorDolares,
-      orden: 8,
-    },
-  ];
+  tableColumns = CONFIGURACION_ENCABEZADO_FACTURAS;
+  /**
+   * @property {boolean} agregarFacturas - Bandera que indica si se deben agregar nuevas facturas.
+   * Controla la visualización del formulario para agregar facturas.
+   */
+  agregarFacturas: boolean = false;
+  /**
+   * @property {boolean} tablaFactura - Bandera que indica si se debe mostrar la tabla de facturas.
+   * Controla la visualización de la tabla que lista las facturas capturadas.
+   */
+  tablaFactura: boolean = true;
+  /**
+     * Notificación que se muestra al usuario en caso de error o éxito en el proceso de firma.
+     * Incluye información sobre el tipo de notificación, categoría, título y mensaje.
+     */
+  nuevaNotificacion!: Notificacion;
 
   /**
    * @constructor
@@ -219,15 +179,15 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @param {ChangeDetectorRef} cdr - ChangeDetectorRef para detectar cambios en la vista.
    */
   constructor(
-    private ElegibilidadTextilesService: ElegibilidadTextilesService,
-    private readonly httpServicios: HttpClient,
     private readonly fb: FormBuilder,
     private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
     private unidadMedidaService: UnidadMedidaService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private facturasAsociadasService: FacturasAsociadasService,
+    private tramite120301Query: Tramite120301Query,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -241,6 +201,13 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   ngOnInit(): void {
+    this.tramite120301Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      ).subscribe();
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -260,9 +227,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     this.initActionFormBuild();
     this.obtenerListasDesplegables();
     this.recuperarDatos();
-
     this.seccionStore.establecerFormaValida([false]);
-
     this.facturaForm.statusChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -308,8 +273,8 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
         this.capturarState.cantidadTotal,
         [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],
       ],
-      unidadDeMedida: [this.capturarState.unidadDeMedida, Validators.required],
-      fechaInicioInput: [''],
+      unidadDeMedida: [{ value: this.capturarState.unidadDeMedida, disabled: false }, Validators.required],
+      fechaExpedicionFactura: ['', Validators.required],
       valorDolares: [
         this.capturarState.valorDolares,
         [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],
@@ -322,13 +287,10 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
         this.capturarState.cp,
         [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
-      pais: [
-        { value: this.capturarState.pais, disabled: true },
-        [Validators.required],
-      ],
-      fechaExpedicionFactura: ['2025-04-30'],
+      pais: [{ value: this.solicitudState.pais_origen_destino || this.capturarState.pais, disabled: true }, Validators.required],
     });
   }
+
   /**
    * @property {Catalogo[]} unidadDeMedida - Configuración para el select de unidad de medida.
    * Array que contiene las opciones disponibles para el campo de unidad de medida en el formulario.
@@ -390,6 +352,15 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
         next: (data) => {
           if (data.codigo === '00') {
             this.unidadDeMedida = data.datos || [];
+            if (this.solicitudState?.unidadMedida) {
+              const MATCH = this.unidadDeMedida.find(
+                (item) => item.descripcion?.toLowerCase() === this.solicitudState.unidadMedida.toLowerCase()
+              );
+              if (MATCH) {
+                this.facturaForm.get('unidadDeMedida')?.setValue(MATCH.clave || '');
+                this.ElegibilidadDeTextilesStore.setUnidadDeMedida(MATCH.clave || '');
+              }
+            }
           }
         },
         error: (error) => {
@@ -408,16 +379,25 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   recuperarDatos(): void {
-    this.ElegibilidadTextilesService.obtenerTablaDatos<CapturarColumns>(
-      'capturar-facturas.json'
-    )
+    this.facturasAsociadasService
+      .getFacturasTplAll(
+        "AAL0409235E6",
+        this.solicitudState.idExpedicion,
+        this.solicitudState.identificadorRegimen
+      )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
-          if (response && Array.isArray(response)) {
-            this.facturas = response as CapturarColumns[];
+          if (response.codigo === '00' && response.datos) {
+            this.facturas = response.datos;
+          } else {
+            this.facturas = [];
           }
         },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+          this.facturas = [];
+        }
       });
   }
 
@@ -430,7 +410,6 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     this.facturaForm.markAllAsTouched();
     this.facturaForm.updateValueAndValidity();
     this.cdr.detectChanges();
-
     if (!this.facturaForm.valid) {
       this.formularioAlertaError = ERROR_FORMA_ALERT;
       this.esFormaValido = true;
@@ -440,7 +419,6 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     this.esFormaValido = false;
     this.formularioAlertaError = '';
     window.scrollTo(0, 0);
-
     this.mostrarTabs.emit(true);
   }
 
@@ -455,5 +433,271 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * @method VisualizarAgregar
+   * @description Método para cambiar la vista y permitir la captura de una nueva factura.
+   * Cambia las banderas internas para mostrar el formulario de captura y ocultar la tabla de facturas.
+   * @returns {void} No retorna ningún valor.
+   */
+  VisualizarAgregarFactura(): void {
+    this.agregarFacturas = true;
+    this.tablaFactura = false;
+  }
+
+  /**
+   * @method agregarFactura
+   * @description Método para cambiar la vista y permitir la captura de una nueva factura.
+   * Cambia las banderas internas para mostrar el formulario de captura y ocultar la tabla de facturas.
+   * @returns {void} No retorna ningún valor.
+   */
+  agregarModificarFactura(): void {
+    this.facturaForm.markAllAsTouched();
+    this.facturaForm.updateValueAndValidity();
+    this.cdr.detectChanges();
+
+    if (!this.facturaForm.valid) {
+      this.formularioAlertaError = ERROR_FORMA_ALERT;
+      this.esFormaValido = true;
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    this.formularioAlertaError = '';
+    this.esFormaValido = false;
+
+    const RAWFECHA = this.facturaForm.get('fechaExpedicionFactura')?.value;
+    let fechaFormateada = '';
+
+    if (RAWFECHA) {
+      const PARTES = RAWFECHA.split('/');
+      if (PARTES.length === 3) {
+        const [DIA, MES, ANIO] = PARTES;
+        fechaFormateada = `${ANIO}-${MES.padStart(2, '0')}-${DIA.padStart(2, '0')}`;
+      } else {
+        const FECHAOBJ = new Date(RAWFECHA);
+        fechaFormateada = FECHAOBJ.toISOString().split('T')[0];
+      }
+    }
+
+    const FACTURA: FacturaTplCapturaRequest = {
+      id_factura_expedicion: this.facturaModificar?.id_factura_expedicion || null,
+      num_factura: this.facturaForm.get('numeroFactura')?.value,
+      fecha_expedicion: fechaFormateada,
+      razon_social_consig_emisor: this.facturaForm.get('razonSocial')?.value,
+      ide_regimen: this.solicitudState.identificadorRegimen ?? '',
+      cantidad: this.facturaForm.get('cantidadTotal')?.value,
+      importe_dolares: this.facturaForm.get('valorDolares')?.value,
+      domicilio: this.facturaForm.get('calle')?.value,
+      cve_unidad_medida: this.facturaForm.get('unidadDeMedida')?.value,
+      tax_id: this.facturaForm.get('taxId')?.value,
+      ciudad: this.facturaForm.get('ciudad')?.value,
+      cp: this.facturaForm.get('cp')?.value,
+      pais: this.facturaForm.get('pais')?.value,
+    };
+
+    this.facturasAsociadasService.postFacturasTplAgregar(this.solicitudState.idSolicitud, FACTURA).subscribe({
+      next: (response) => {
+        if (response.codigo === '00') {
+          this.agregarFacturas = false;
+          this.tablaFactura = true;
+          this.recuperarDatos();
+          this.limpiarFormulario();
+        } else {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: `No se pudo agregar la factura: ${response.mensaje}`,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          this.nuevaNotificacion = { ...this.nuevaNotificacion };
+          this.formularioAlertaError = `No se pudo agregar la factura: ${response.mensaje}`;
+          this.esFormaValido = true;
+        }
+      },
+      error: (error) => {
+        console.error('Error al agregar la factura:', error);
+        this.formularioAlertaError = 'Error inesperado al agregar la factura.';
+        this.esFormaValido = true;
+      }
+    });
+  }
+
+  /**
+   * @method modificarFactura
+   * @description Método para cambiar la vista y permitir la modificación de una factura existente.
+   * Cambia las banderas internas para mostrar el formulario de captura y ocultar la tabla de facturas.
+   * @returns {void} No retorna ningún valor.
+   */
+  visualizarModificarFactura(): void {
+    if (!this.facturaSeleccionada || this.facturaSeleccionada.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe seleccionar una factura para modificar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    if (this.facturaSeleccionada.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Solo puede modificar una factura a la vez.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    this.agregarFacturas = true;
+    this.tablaFactura = false;
+
+    const FACTURA_SELECCIONADA = this.facturaSeleccionada[0];
+    this.facturaModificar = FACTURA_SELECCIONADA;
+    // Buscar la unidad de medida en el catálogo
+    let unidadClave: string | null = null;
+    if (FACTURA_SELECCIONADA.descripcion && this.unidadDeMedida?.length > 0) {
+      const MATCH = this.unidadDeMedida.find(
+        (item) => item.descripcion?.toLowerCase() === FACTURA_SELECCIONADA.descripcion.toLowerCase()
+      );
+      if (MATCH) {
+        unidadClave = MATCH.clave || null;
+      }
+    }
+
+    let fechaFormateada = '';
+    if (FACTURA_SELECCIONADA.fecha_expedicion) {
+      const PARTES = FACTURA_SELECCIONADA.fecha_expedicion.split(' ')[0].split('-'); // ["DD", "MM", "YYYY"]
+      if (PARTES.length === 3) {
+        fechaFormateada = `${PARTES[0]}/${PARTES[1]}/${PARTES[2]}`;
+      }
+    }
+
+    this.facturaForm.patchValue({
+      numeroFactura: FACTURA_SELECCIONADA.num_factura,
+      razonSocial: FACTURA_SELECCIONADA.razon_social_consig_emisor,
+      calle: FACTURA_SELECCIONADA.direccion_consig_emisor,
+      fechaExpedicionFactura: fechaFormateada,
+      cantidadTotal: FACTURA_SELECCIONADA.cantidad,
+      unidadDeMedida: unidadClave,
+      valorDolares: FACTURA_SELECCIONADA.imp_dls,
+    });
+
+    this.facturaSeleccionada = [];
+  }
+
+  /**
+   * @method eliminarSeleccionados
+   * @description Método para cancelar la acción de agregar o modificar facturas.
+   * Cambia las banderas internas para ocultar el formulario de captura y mostrar la tabla de facturas.
+   * @returns {void} No retorna ningún valor.
+   */
+  eliminarSeleccionados(): void {
+    this.agregarFacturas = false;
+    if (!this.facturaSeleccionada || this.facturaSeleccionada.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe seleccionar al menos una factura para eliminar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
+    const IDS_A_ELIMINAR = this.facturaSeleccionada.map(factura => factura.id_factura_expedicion).filter(id => id !== null) as number[];
+    this.facturasAsociadasService.deleteFacturaTpl(IDS_A_ELIMINAR[0]).subscribe({
+      next: (response) => {
+        if (response.codigo === '00') {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'success',
+            modo: 'action',
+            titulo: '',
+            mensaje: 'Factura(s) eliminada(s) correctamente.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          this.recuperarDatos();
+          this.facturaSeleccionada = [];
+        }
+      },
+      error: (error) => {
+        console.error('Error al eliminar la factura:', error);
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'success',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Error inesperado al eliminar la(s) factura(s).',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+      }
+    });
+  }
+
+  /**
+   * @method limpiarFormulario
+   * @description Método para limpiar el formulario de captura de facturas.
+   * Resetea todos los campos del formulario y limpia cualquier mensaje de error o estado de validación.
+   * @returns {void} No retorna ningún valor.
+   */
+  limpiarFormulario(): void {
+    const PAIS_ACTUAL = this.facturaForm.get('pais')?.value;
+    const UNIDAD_MEDIDA = this.facturaForm.get('unidadDeMedida')?.value;
+    this.facturaForm.reset();
+    this.facturaForm.get('pais')?.setValue(PAIS_ACTUAL);
+    this.facturaForm.get('pais')?.disable();
+    this.facturaForm.get('unidadDeMedida')?.setValue(UNIDAD_MEDIDA);
+    this.facturaForm.get('unidadDeMedida')?.disable();
+
+    this.formularioAlertaError = '';
+    this.esFormaValido = false;
+  }
+
+  /**
+   * @method cerrarFormulario
+   * @description Método para cerrar el formulario de captura de facturas.
+   * Cambia las banderas internas para ocultar el formulario y mostrar la tabla de facturas.
+   */
+  cerrarFormulario(): void {
+    this.agregarFacturas = false;
+    this.tablaFactura = true;
+
+    // Guardar valor actual de campos a conservar
+    const PAIS_ACTUAL = this.facturaForm.get('pais')?.value;
+    const UNIDAD_MEDIDA = this.facturaForm.get('unidadDeMedida')?.value;
+
+    // Resetear el formulario
+    this.facturaForm.reset();
+
+    // Restaurar valor de los campos a conservar
+    this.facturaForm.get('pais')?.setValue(PAIS_ACTUAL);
+    this.facturaForm.get('unidadDeMedida')?.setValue(UNIDAD_MEDIDA);
+
+    // Si el campo debe seguir deshabilitado
+    this.facturaForm.get('pais')?.disable();
+    this.facturaForm.get('unidadDeMedida')?.disable();
+
+    this.formularioAlertaError = '';
+    this.esFormaValido = false;
   }
 }
