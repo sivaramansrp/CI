@@ -45,6 +45,8 @@ import { CapturarColumns } from '../../models/elegibilidad-de-textiles.model';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { UnidadMedidaService } from '../../services/catalogos/unidad-medida.service';
+
 
 
 /**
@@ -83,13 +85,13 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    */
   facturaForm!: FormGroup;
 
-    /**
-   * @property {string} formularioAlertaError
-   * @description
-   * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
-   * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
-   * Vacío cuando el formulario es válido.
-   */
+  /**
+ * @property {string} formularioAlertaError
+ * @description
+ * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
+ * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
+ * Vacío cuando el formulario es válido.
+ */
   public formularioAlertaError: string = '';
 
   /**
@@ -107,7 +109,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * Permite la coordinación entre componentes para la navegación de la interfaz.
    */
   @Output() mostrarTabs: EventEmitter<boolean> = new EventEmitter<boolean>();
-    
+
   /**
    * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
    */
@@ -224,6 +226,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
+    private unidadMedidaService: UnidadMedidaService,
     private cdr: ChangeDetectorRef
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
@@ -331,15 +334,15 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * Array que contiene las opciones disponibles para el campo de unidad de medida en el formulario.
    * Se carga dinámicamente desde el servicio al inicializar el componente.
    */
-  unidadDeMedida: Catalogo[] = [];
-  
+  unidadDeMedida!: Catalogo[];
+
   /**
    * @property {InputFecha} fechaInicioInputs - Configuración para el input de fecha de expedición de la factura.
    * Contiene la configuración específica para el campo de fecha, incluyendo formato,
    * validaciones y restricciones de fechas permitidas.
    */
   fechaInicioInputs: InputFecha = EXPEDICION_FACTURA_FECHA;
-  
+
   /**
    * @method obtenerListasDesplegables
    * @description Obtiene las listas desplegables necesarias para el formulario.
@@ -381,14 +384,18 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   obtenerIngresoSelectList(): void {
-    this.ElegibilidadTextilesService.obtenerMenuDesplegable(
-      'unidad-de-medida.json'
-    )
+    this.unidadMedidaService.getUnidadMedida()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (data) => {
-          this.unidadDeMedida = data as Catalogo[];
+          if (data.codigo === '00') {
+            this.unidadDeMedida = data.datos || [];
+          }
         },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+          this.unidadDeMedida = [];
+        }
       });
   }
 
@@ -419,7 +426,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * Si el formulario es inválido, muestra el mensaje de error y no permite continuar.
    * Si es válido, limpia el error y permite continuar.
    */
-    continuar(): void {
+  continuar(): void {
     this.facturaForm.markAllAsTouched();
     this.facturaForm.updateValueAndValidity();
     this.cdr.detectChanges();
@@ -436,7 +443,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
 
     this.mostrarTabs.emit(true);
   }
-  
+
   /**
    * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.

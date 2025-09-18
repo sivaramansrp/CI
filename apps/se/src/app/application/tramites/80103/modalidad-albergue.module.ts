@@ -4,6 +4,7 @@ import {
   BtnContinuarComponent,
   CatalogoSelectComponent,
   FirmaElectronicaComponent,
+  PasoFirmaComponent,
   SharedModule,
   SolicitanteComponent,
   TituloComponent,
@@ -72,6 +73,7 @@ import { AnexoTresComponent } from '../../shared/components/anexo-tres/anexo-tre
     ComplementosSeccionComponent,
     AnexoUnoSeccionComponent,
     AnexoTresComponent,
+    PasoFirmaComponent
   ],
 })
 export class ModalidadAlbergueModule {}

@@ -13,20 +13,10 @@
       </ul>
   
       <ng-container>
-        @switch (indice) {
-        @case (1) {
-        <solicitante #Solicitante></solicitante>
-        }
-        @case (2) {
+        <solicitante #Solicitante [hidden]="indice !== 1"></solicitante>
           @if(esDatosRespuesta){
-        <app-duplicado-de-certificado (rowClicked)="enableCertificadoTab()"></app-duplicado-de-certificado>
-          }
-        }
-        @case (3) {
-          @if(esDatosRespuesta){
-          <app-certificado-de-origen></app-certificado-de-origen>
-          }
-          }
+        <app-duplicado-de-certificado #Duplicado [hidden]="indice !== 2" (rowClicked)="enableCertificadoTab()"></app-duplicado-de-certificado>
+        <app-certificado-de-origen #certificado [hidden]="indice !== 3"></app-certificado-de-origen>
         }
       </ng-container>
     </div>

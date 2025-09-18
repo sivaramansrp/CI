@@ -299,13 +299,13 @@
                                 <app-catalogo-select [catalogo]="unidadMedida" [label]="'UMC'" [required]="true"
                                     name="unidadMedida" formControlName="unidadMedida"
                                     (change)="unidadMedidaSeleccion()" [isDisabled]="formularioDeshabilitado"
-                                    [tooltipQuestionCircle]="true"></app-catalogo-select>
+                                    [tooltipQuestionCircle]="true" [tooltipQuestionCircleText]="'Unidad de Medida Comercial'"></app-catalogo-select>
                             </div>
                             <div class="col-md-2">
                                 <app-catalogo-select [catalogo]="UMT" [label]="'UMT'" [required]="true" name="UMT"
                                     formControlName="UMT" (change)="umtSeleccion()"
                                     [isDisabled]="formularioDeshabilitado"
-                                    [tooltipQuestionCircle]="true"></app-catalogo-select>
+                                    [tooltipQuestionCircle]="true" [tooltipQuestionCircleText]="'Unidad de Medida de la Tarifa'"></app-catalogo-select>
                             </div>
                             }
                             @if(registroDeDonacionState.seleccionadaTipoDeMercancia === 1) {

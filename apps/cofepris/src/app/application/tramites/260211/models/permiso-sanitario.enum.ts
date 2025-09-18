@@ -17,3 +17,25 @@ export interface ProductoResponse {
   { id: 3, descripcion: 'BAJA CALIFORNIA SUR' },
   { id: 4, descripcion: 'CAMPECHE' }
 ];
+/**
+ * Interfaz que representa los datos de un fabricante.
+ * Contiene la información de identificación, contacto y domicilio.
+ */
+export interface FabricanteDatos {
+  nombre: string;
+  rfc: string;
+  curp: string;
+  telefono: string;
+  correo: string;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  pais: string;
+  colonia: string;
+  municipio: string;
+  localidad: string;
+  entidadFederativa: string;
+  estado: string;
+  codigoPostal: string;
+  coloniaEquivalente: string;
+}

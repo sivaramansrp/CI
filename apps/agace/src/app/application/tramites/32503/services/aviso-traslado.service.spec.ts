@@ -121,8 +121,6 @@ describe('AvisoTrasladoService', () => {
                 "cantidad": "50",
                 "claveUnidadMedida": "Botella",
                 "valorUSD": "2555",
-                "descripcionMercancia": "certificado",
-                "descripcionProceso": "certificado",
                 "numPedimentoExportacion": "certificado",
                 "numPedimentoImportacion": "certificado"
             }]

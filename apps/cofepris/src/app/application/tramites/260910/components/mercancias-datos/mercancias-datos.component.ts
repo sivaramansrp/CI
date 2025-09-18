@@ -1,26 +1,14 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogosSelect, ConfiguracionColumna, CrosslistComponent, InputFecha, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { CrossList, MercanciaCatalogos, MercanciaCrossList } from '../../models/mercancia.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Solicitud260910State, Solicitud260910Store } from '../../estados/tramites260910.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ClavesDeLotes } from '../../models/claves-de-lotes.model';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { CrossList } from '../../models/mercancia.model';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputFecha } from '@libs/shared/data-access-user/src';
 import { Mercancia } from '../../models/mercancia.model';
-import { MercanciaCatalogos } from '../../models/mercancia.model';
-import { MercanciaCrossList } from '../../models/mercancia.model';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Solicitud260910Query } from '../../estados/tramites260910.query';
-import { Solicitud260910State } from '../../estados/tramites260910.store';
-import { Solicitud260910Store } from '../../estados/tramites260910.store';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
-import { Subject } from 'rxjs';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 /**
  * Componente ModificarMercanciasComponent.
  * Este componente gestiona la lógica y funcionalidad para la modificación de mercancías en el sistema.
@@ -30,7 +18,12 @@ import { takeUntil } from 'rxjs';
   templateUrl: './mercancias-datos.component.html',
   styleUrl: './mercancias-datos.component.scss',
 })
-export class ModificarMercanciasComponent implements OnInit, OnDestroy {
+export class ModificarMercanciasComponent implements OnChanges, OnInit, OnDestroy {
+  /**
+   * Referencias a los componentes de listas cruzadas.
+   */
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+
   /**
    * Catálogo de productos disponibles.
    * Inicializado como un objeto vacío.
@@ -120,7 +113,7 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    * Incluye nombre de etiqueta, estado de requerido y habilitación.
    */
   fechaCaducidad: InputFecha = {
-    labelNombre: 'Fecha de Caducidad',
+    labelNombre: 'Fecha de caducidad',
     required: false,
     habilitado: true,
   };
@@ -182,6 +175,94 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    * Utilizado para liberar recursos relacionados con las suscripciones activas.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Botones de acción para administrar listas de países en el país de origen
+   */
+  paisDeOrigenBotons = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+    },
+  ];
+
+  /**
+   * Botones de acción para gestionar listas de países en el país de procedencia.
+   */
+  paisDeProcedenciaBotons = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[1].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[1].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => this.crossList.toArray()[1].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[1].quitar('t'),
+    },
+  ];
+
+  /**
+   * Botones de acción para gestionar listas de países en el uso específico.
+   */
+  usoEspecificoBotons = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => this.crossList.toArray()[2].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+    },
+  ];
+
+  /**
+   * Catálogos relacionados con la información de la mercancía.
+   */
+  @Input() mercancia!: Mercancia | null;
+  
+  /**
+   * Evento emitido cuando se modifica una mercancía.
+   */
+  @Output() modificar = new EventEmitter<Mercancia>();
 
   /**
    * Constructor del componente.
@@ -328,6 +409,14 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * Actualiza el formulario cuando cambia la entrada `mercancia`.
+   */
+  ngOnChanges(): void {
+    if (this.mercancia) {
+      this.datosMercanciaForm.patchValue(this.mercancia);
+    }
+  }
   
   /**
    * Obtiene datos de mercancías desde el servicio y actualiza la descripción de la fracción arancelaria
@@ -529,28 +618,21 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
 
   
   /**
-   * Agrega una mercancía al estado utilizando los datos del formulario.
+   * Modifica o agrega los datos de la mercancía en el estado utilizando los valores del formulario reactivo.
+   * Si mercancia existe (editar), modifica; si es null (agregar), agrega un nuevo registro.
    */
-  agregarMercanias(): void {
+  modificarMercanias(): void {
     const OBJETO_JSON = {
-      clasificaionProductos: this.datosMercanciaForm.get(
-        'clasificaionProductos'
-      )?.value,
-      especificarProducto: this.datosMercanciaForm.get('especificarProducto')
-        ?.value,
-      nombreProductoEspecifico: this.datosMercanciaForm.get(
-        'nombreProductoEspecifico'
-      )?.value,
+      clasificaionProductos: this.datosMercanciaForm.get('clasificaionProductos')?.value,
+      especificarProducto: this.datosMercanciaForm.get('especificarProducto')?.value,
+      nombreProductoEspecifico: this.datosMercanciaForm.get('nombreProductoEspecifico')?.value,
       distintiva: this.datosMercanciaForm.get('distintiva')?.value,
       cientifico: this.datosMercanciaForm.get('cientifico')?.value,
       tipoProducto: this.datosMercanciaForm.get('tipoProducto')?.value,
       farmaceutica: this.datosMercanciaForm.get('farmaceutica')?.value,
       fisico: this.datosMercanciaForm.get('fisico')?.value,
-      fraccionArancelaria: this.datosMercanciaForm.get('fraccionArancelaria')
-        ?.value,
-      descripcionFraccionArancelaria: this.datosMercanciaForm.get(
-        'descripcionFraccionArancelaria'
-      )?.value,
+      fraccionArancelaria: this.datosMercanciaForm.get('fraccionArancelaria')?.value,
+      descripcionFraccionArancelaria: this.datosMercanciaForm.get('descripcionFraccionArancelaria')?.value,
       cantidadUMT: this.datosMercanciaForm.get('cantidadUMT')?.value,
       umt: this.datosMercanciaForm.get('umt')?.value,
       cantidadUMC: this.datosMercanciaForm.get('cantidadUMC')?.value,
@@ -563,7 +645,19 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
       usoEspecifico: 'usoEspecifico',
     };
 
-    this.solicitud260910Store.addMercanciasDatos(OBJETO_JSON);
+    if (this.mercancia) {
+      // Buscar el índice de la mercancía a modificar
+      const MERCANCIAS = [...this.solicitud260910Store._value().mercanciasDatos];
+      const ID = MERCANCIAS.findIndex(m => m === this.mercancia);
+      if (ID !== -1) {
+        MERCANCIAS[ID] = { ...MERCANCIAS[ID], ...OBJETO_JSON };
+        this.solicitud260910Store.setMercanciasDatos(MERCANCIAS);
+      }
+    } else {
+      // Agregar nuevo registro
+      const MERCANCIAS = [...this.solicitud260910Store._value().mercanciasDatos, OBJETO_JSON];
+      this.solicitud260910Store.setMercanciasDatos(MERCANCIAS);
+    }
   }
 
   

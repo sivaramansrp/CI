@@ -1,16 +1,14 @@
+import {Subject,map,takeUntil } from 'rxjs';
 import { AnexoComponent } from '../../components/anexo.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConsultaioQuery} from '@ng-mf/data-access-user';
 import { ConsultaioState} from '@ng-mf/data-access-user';
-import { ImmexAmplicationSensibleDatosDelFormulario } from '../../models/immex-ampliacion-sensibles.model';
+import { ImmexRegistroform } from '../../models/immex-ampliacion-sensibles.model';
 import { OnInit } from '@angular/core';
 import { PermisoImmexDatosService } from '../../services/permiso-immex-datos.service';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-paso-uno',
@@ -85,7 +83,7 @@ export class PasoUnoComponent implements OnInit {
         this.esDatosRespuesta = true;
         // Use the correct property from resp that matches ImmexAmplicationSensibleDatosDelFormulario
         this.permisoImmexDatosService.actualizarEstadoFormulario(
-          (resp as unknown as ImmexAmplicationSensibleDatosDelFormulario) || {}
+          (resp as unknown as ImmexRegistroform) || {}
         );
         }
       });

@@ -3,7 +3,7 @@
  * Importa módulos y dependencias necesarias para formularios reactivos, gestión de estado y suscripciones.
  */
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnDestroy,OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy,OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud80104State, Tramite80104Store } from '../../../estados/tramites/tramite80104.store';
 import { Subject,map,takeUntil } from 'rxjs';
@@ -36,6 +36,8 @@ import { Tramite80104Query } from '../../../estados/queries/tramite80104.query';
  * Implementa OnInit y OnDestroy para inicializar datos y limpiar suscripciones.
  */
 export class EmpresasComponent implements OnInit, OnDestroy {
+
+  @Output() seleccionadasDatos: EventEmitter<DisponsibleFiscal[]> = new EventEmitter();
 
   /**
    * Título para la sección de empresas.
@@ -232,6 +234,7 @@ export class EmpresasComponent implements OnInit, OnDestroy {
     this.disponibles = [];
     this.tramite80104Store.setDisponibles([]);
     this.tramite80104Store.setSeleccionadas(this.seleccionadas);
+    this.seleccionadasDatos.emit(this.seleccionadas);
   }
 
   /**
