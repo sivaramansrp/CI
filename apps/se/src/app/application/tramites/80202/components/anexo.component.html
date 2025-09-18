@@ -162,7 +162,36 @@
       </small>
     </div>
                 </div> 
+            @if(firstloadCompleted){
+              <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+                  <app-catalogo-select [label]="'Nico *'" [catalogo]="nico" formControlName="Nicos" 
+                    [placeholder]="'Selecciona un valor'" name="Nico"
+                    [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                 </div>
+                <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
+                  <label for="description-nico">Descripción Nico:</label>
+                  <textarea class="form-control" id="description-nico" formControlName="productoDescExportacions"
+                    rows="5" placeholder="" [disabled]="true"></textarea>
+                </div>       
+              }
+                </div>
+                  @if(firstloadCompleted){
+                      <div class="col-12 container text-end mt-5">
+                <button class="btn btn-primary" (click)="showTableNicoExports()"
+                  [disabled]="esFormularioSoloLectura">Agregar Nico</button>
+              </div>
+                 <div class="row  mt-5" *ngIf="showTableNicoExps">
+                <h6>Nicos</h6>
+                <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
+                  <app-tabla-dinamica *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+                    [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos"
+                    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+                </div>
+                <div class="container text-start mt-5">
+                  <button class="btn btn-danger me-2" (click)="eliminarNico()">Eliminar Nico</button>
+                </div>
+              </div>
+            }
                
               </div>
             </div>

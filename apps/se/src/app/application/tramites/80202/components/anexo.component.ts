@@ -56,6 +56,7 @@ import { Subject } from 'rxjs';
 export class AnexoComponent implements OnInit, OnDestroy {
   fraccionInfoSelected:fraccionInfo | null = null;
   selectedRowData: immexInfo | null = null;
+  showTableNicoExps:boolean=false;
     /**
      * Referencia al elemento del modal de importación de mercancía.
      * Utilizado para mostrar u ocultar el modal mediante la API de Bootstrap.
@@ -226,6 +227,8 @@ export class AnexoComponent implements OnInit, OnDestroy {
      * @memberof Anexo1Component
      */
     esFormularioSoloLectura: boolean = false;
+
+    firstloadCompleted:boolean= false;
   
     /**
      * Indica si el formulario está en modo de actualización.
@@ -361,6 +364,8 @@ export class AnexoComponent implements OnInit, OnDestroy {
       cantidadAnual: [this.immexRegitroAnexoState?.cantidadAnual|| '', [Validators.required, Validators.pattern('^[0-9]+$')]],
       capacidadInstalada: [this.immexRegitroAnexoState?.capacidadInstalada || '',[ Validators.required]], 
       cantidadPorPeriodo: [this.immexRegitroAnexoState?.cantidadPorPeriodo || '' , [Validators.required,Validators.pattern('^[0-9]+$')]], 
+            Nicos: [this.immexRegitroAnexoState?.Nicos || '' ], 
+            productoDescExportacions: [{value: this.immexRegitroAnexoState?.productoDescExportacions || '', disabled: true}],
       });
     }
   
@@ -658,7 +663,7 @@ this.nuevaNotificacion = {
       txtBtnAceptar:'Aceptar',
       txtBtnCancelar: '',
     };
-
+this.firstloadCompleted=false;
        this.eliminarDatosTabla=true;
     
      
@@ -787,6 +792,18 @@ this.nuevaNotificacion = {
     showTableNicoExport(): void {
       this.showTableNicoExp = true;
     }
+    /**
+     * @method showTableNicoExport
+     * @description Controla la visibilidad de la tabla NICO de exportación.
+     * Establece la propiedad showTableNicoExp en true para mostrar la tabla
+     * de códigos NICO relacionados con exportación en la interfaz de usuario.
+     *
+     * @returns {void}
+     */
+    showTableNicoExports(): void {
+      this.showTableNicoExps = true;
+    }
+  
   
     /**
      * @method showTableNicoImport
@@ -896,7 +913,7 @@ FRACCION_Columna_4
 "Kilogramo",
 FRACCION_Columna_5
 : 
-this.immexRegistroform.get('exportacionForm')?.getRawValue().FraccionDescExportacion,
+"Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso",
 FRACCION_Columna_6
 : 
 "FRACC EXP 1 SENASICA",
@@ -966,10 +983,10 @@ estatus:true
        if(this.selectedRowData !== null && borrar){
         this.immexRegistroform.get('importacionForm')?.patchValue(this.selectedRowData);
  const MODAL_INSTANCIA = new Modal(
-        this.mercanciaExportacionModal.nativeElement
+        this.mercanciaImportacionModal.nativeElement
       );
+      this.firstloadCompleted=true;
       MODAL_INSTANCIA.show();
-   
       }
       
       

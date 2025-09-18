@@ -145,6 +145,9 @@ export interface NicoInfo {
  * @module Tramites.IMMEX
  */
 export interface ImmexRegistroform {
+  Nicos:string;
+  
+  productoDescExportacions:string;
   /**
    * @description Cantidad de productos que se pueden producir o procesar en un periodo específico.
    * Este campo especifica la capacidad productiva expresada como cantidad por periodo determinado.
@@ -356,6 +359,7 @@ export interface ImmexRegistroform {
   /** Cantidad por periodo # */
   cantidadPorPeriodo: number;
   descripcion:string;
+  
 }
 export interface immexInfo {
   /** Número secuencial */

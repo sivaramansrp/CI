@@ -89,6 +89,8 @@ export function createInitialState(): ImmexRegistroState {
      * y las cadenas en ''.
      */
     immexRegistro: {
+        Nicos:'',
+        productoDescExportacions:'',
       // Datos generales
       permisoImmexDatos: 0,
       numero: 0,
