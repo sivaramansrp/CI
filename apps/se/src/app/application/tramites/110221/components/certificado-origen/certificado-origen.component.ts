@@ -180,7 +180,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
      * @descripcion
      * Indica si hay mercancías disponibles.
      */
-    mercanciasDisponibles: boolean = false;
+    mercanciasDisponibles: boolean = true;
 
     /**
      * @descripcion

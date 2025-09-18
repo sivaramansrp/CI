@@ -471,6 +471,7 @@
                 [datos]="tableData || []" (filaClic)="abrirModificarModal($event)"  ></app-tabla-dinamica>
             </div>
         }
+      
         @else{
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tableData || []"
             [tipoSeleccionTabla]="seleccionTabla" (filaClic)="abrirModificarModal($event)"></app-tabla-dinamica>
@@ -503,16 +504,21 @@
                     </div>
                 }
 
-                @if (mercanciasDisponibles) {
+                @if (mercanciasDisponibles &&  idProcedimiento !== 110221) {
                     <div class="row">
                         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="cargaMercanciaConfiguracionTabla"
                         [datos]="guardarClicado || []" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"  [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
                         <span class="mensaje-error" *ngIf="tableErrorMensajeError && guardarClicado.length === 0">Por favor, necesitas agregar un valor en la tabla dinámica</span>
-                    </div>
-                  
-                       
-                    
-                } @else {
+                    </div>    
+                }
+                  @else if(idProcedimiento === 110221){
+ <div class="row">
+                        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="cargaMercanciaConfiguracionTablaDisponible"
+                        [datos]="guardarClicado || []" (filaSeleccionada)="obtenerSeleccionadoMercancia($event)"  [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
+                        <span class="mensaje-error" *ngIf="tableErrorMensajeError && guardarClicado.length === 0">Por favor, necesitas agregar un valor en la tabla dinámica</span>
+                    </div> 
+                } 
+                @else {
                     <div class="row">
                         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="configuracionTablaMercancia"
                         [datos]="guardarClicado || []"  [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>

@@ -241,7 +241,7 @@
       <div class="col-md-8 mb-3">
      <app-catalogo-select [catalogo]="optionsPaisDestino" [label]="'País'" [required]="true"
             placeholder="Selecciona un valor" id="pais" formControlName="pais"
-            (change)="setdomicilioForm()" [isDisabled]="soloLectura" [markTouched]="registroForm.get('representanteLegalForm.pais')?.errors?.['required'] && (registroForm.get('representanteLegalForm.pais')?.touched || registroForm.get('representanteLegalForm.pais')?.dirty)"></app-catalogo-select>
+              (change)="setrepresentanteLegalForm()" [isDisabled]="soloLectura" [markTouched]="registroForm.get('representanteLegalForm.pais')?.errors?.['required'] && (registroForm.get('representanteLegalForm.pais')?.touched || registroForm.get('representanteLegalForm.pais')?.dirty)"></app-catalogo-select>
       </div>
             <div class="col-md-4 mb-3">
         <label>Ciudad (población, estado o provincial)*:</label>

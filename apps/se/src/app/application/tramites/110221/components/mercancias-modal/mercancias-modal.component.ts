@@ -18,7 +18,7 @@ import { ValidarInicialmenteCertificadoService } from '../../services/validar-in
  * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
  */
 export const FECHA_FINAL = {
-  labelNombre: 'Fecha de factura',
+  labelNombre: 'Fecha de factura / Referencia / Tipo de factura / Referencia',
   required: true,
   habilitado: true,
 };
@@ -157,20 +157,19 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.mercanciaForm = this.fb.group({
-      fraccionNaladi: [{ value: '', disabled: true }],
-      fraccionNaladiSa93: [{ value: '', disabled: true }],
-      fraccionNaladiSa96: [{ value: '', disabled: true }],
-      fraccionNaladiSa02: [{ value: '', disabled: true }],
-      nombreComercial: [{ value: '', disabled: true }],
-      nombreTecnico: [{ value: '', disabled: true }],
-      normaOrigen: [{ value: '', disabled: true }],
-      cantidad: ['',[Validators.required]],
-      umc: ['', [Validators.required]],
-      valorMercancia: ['', [Validators.required]],
-      complementoClasificacion: ['', [Validators.required]],
-      fechaFinalInput: ['',[Validators.required]],
-      numeroFactura: ['', [Validators.required]],
-      tipoFactura: ['', [Validators.required]]
+     fraccionArancelaria: [{value: '', disabled: true}],
+      nombreComercial: [{value: '', disabled: true}],
+      nombreTecnico: [{value: '', disabled: true}],
+      criterioTratoPreferencial: [{value:'',disabled:true}],
+      valorContenidoRegional: [{value:'',disabled:true}],
+      otrasInstancias: [{value:'',disabled:true}],
+      cantidad: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,3})?$/)]],
+      umc: ['', Validators.required],
+      complementoDescripcion: ['',[Validators.required]],
+      valorMercancia: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]], 
+      fechaFactura: ['', Validators.required],
+      numeroFactura: ['', Validators.required],
+      selectValour: ['',Validators.required]
     });
 
     this.parchearValoresDelFormulario();
@@ -195,21 +194,20 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
 
     if (this.datosSeleccionados) {
       this.mercanciaForm.patchValue({
-        fraccionNaladi: this.datosSeleccionados.fraccionNaladi,
-        fraccionNaladiSa93: this.datosSeleccionados.fraccionNaladiSa93,
-        fraccionNaladiSa96: this.datosSeleccionados.fraccionNaladiSa96,
-        fraccionNaladiSa02: this.datosSeleccionados.fraccionNaladiSa02,
-        nombreComercial: this.datosSeleccionados.nombreComercial,
-        nombreTecnico: this.datosSeleccionados.nombreTecnico,
-        normaOrigen: this.datosSeleccionados.normaOrigen,
-        cantidad: this.datosSeleccionados.cantidad,
-        umc: this.datosSeleccionados.umc,
-        valorMercancia: this.datosSeleccionados.valorMercancia,
-        complementoClasificacion: this.datosSeleccionados.complementoClasificacion,
-        fechaFinalInput: this.datosSeleccionados.fechaFinalInput,
-        numeroFactura: this.datosSeleccionados.numeroFactura,
-        tipoFactura: this.datosSeleccionados.tipoFactura
-      });
+  fraccionArancelaria: this.datosSeleccionados.fraccionArancelaria,
+  nombreComercial: this.datosSeleccionados.nombreComercial,
+  nombreTecnico: this.datosSeleccionados.nombreTecnico,
+  criterioTratoPreferencial: this.datosSeleccionados.criterioTratoPreferencial,
+  valorContenidoRegional: this.datosSeleccionados.valorContenidoRegional,
+  otrasInstancias: this.datosSeleccionados.otrasInstancias,
+  cantidad: this.datosSeleccionados.cantidad,
+  umc: this.datosSeleccionados.umc,
+  complementoDescripcion: this.datosSeleccionados.complementoDescripcion,
+  valorMercancia: this.datosSeleccionados.valorMercancia,
+  fechaFactura: this.datosSeleccionados.fechaFactura,
+  numeroFactura: this.datosSeleccionados.numeroFactura,
+  selectValour: this.datosSeleccionados.selectValour
+});
     }
   }
   /**
@@ -248,9 +246,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * @param nuevo_valor Nuevo valor de la fecha final.
    */
     public cambioFechaFinal(nuevo_valor: string): void {
-
-      this.mercanciaForm.get('fechaFinalInput')?.setValue(nuevo_valor);
-      
+      this.mercanciaForm.get('fechaFactura')?.setValue(nuevo_valor);
     }
   
 
@@ -287,6 +283,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     }
     }
     else{
+    
       this.mercanciaForm.markAllAsTouched();
     }
   }
