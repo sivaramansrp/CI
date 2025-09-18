@@ -21,6 +21,20 @@ export interface Tramitenacionales11101State {
     entrecalle: string;
     ycalle: string;
     radioDomicilio: string;
+    estado: string;
+    cantidad: string;
+    formaParteDePatrimonio: string;
+    descripcion: string;
+    valor: string;
+    unidadmedida: string;
+    fraccionarancelaria: string;
+    nico: string;
+    marca: string;
+    modelo: string;
+    numerodeserie: string;
+    fin: string;
+    moneda: string;
+    especifique: string;
 
     /**
      * Lista que indica el estado de cada sección del formulario (true si está activa, false si no).
@@ -198,7 +212,6 @@ export function createTramiteState(): Tramitenacionales11101State {
     return {
         seccion: [],
         formaValida: [],
-
         seguroNumero: '',
         nombrePFE: '',
         apellidoPaternoPFE: '',
@@ -241,6 +254,20 @@ export function createTramiteState(): Tramitenacionales11101State {
         entrecalle: '',
         ycalle: '',
         radioDomicilio: '',
+        estado: '',
+        cantidad: '',
+        formaParteDePatrimonio: '',
+        descripcion: '',
+        valor: '',
+        unidadmedida: '',
+        fraccionarancelaria: '',
+        nico: '',
+        marca: '',
+        modelo: '',
+        numerodeserie: '',
+        fin: '',
+        moneda: '',
+        especifique: ''
     };
 }
 
@@ -758,4 +785,159 @@ export class Tramite11101Store extends Store<Tramitenacionales11101State> {
             apellidoMaternoDG,
         }));
     }
+
+    /**
+     * Establece el estado de la persona física.
+     * @param estado - Estado de la persona física a asignar al estado.
+     */
+    public setEstado(estado: string): void {
+        this.update((state) => ({
+            ...state,
+            estado,
+        }));
+    }
+
+    /**
+     * Establece la cantidad.
+     * @param cantidad - Cantidad a asignar al estado.
+     */
+    public setCantidad(cantidad: string): void {
+        this.update((state) => ({
+            ...state,
+            cantidad,
+        }));
+    }
+
+    /**
+     * Establece la forma en que parte del patrimonio.
+     * @param formaParteDePatrimonio - Forma en que parte del patrimonio a asignar al estado.
+     */
+    public setFormaParteDePatrimonio(formaParteDePatrimonio: string): void {
+        this.update((state) => ({
+            ...state,
+            formaParteDePatrimonio,
+        }));
+    }
+
+    /**
+     * Establece la descripción.
+     * @param descripcion - Descripción a asignar al estado.
+     */
+    public setDescripcion(descripcion: string): void {
+        this.update((state) => ({
+            ...state,
+            descripcion,
+        }));
+    }
+
+    /**
+     * Establece el valor.
+     * @param valor - Valor a asignar al estado.
+     */
+    public setValor(valor: string): void {
+        this.update((state) => ({
+            ...state,
+            valor,
+        }));
+    }
+
+    /**
+     * Establece la unidad de medida.
+     * @param unidadmedida - Unidad de medida a asignar al estado.
+     */
+    public setUnidadmedida(unidadmedida: string): void {
+        this.update((state) => ({
+            ...state,
+            unidadmedida,
+        }));
+    }
+
+    /**
+     * Establece la fracción arancelaria.
+     * @param fraccionarancelaria - Fracción arancelaria a asignar al estado.
+     */
+    public setFraccionarancelaria(fraccionarancelaria: string): void {
+        this.update((state) => ({
+            ...state,
+            fraccionarancelaria,
+        }));
+    }
+
+    /**
+     * Establece el NICO.
+     * @param nico - NICO a asignar al estado.
+     */
+    public setNico(nico: string): void {
+        this.update((state) => ({
+            ...state,
+            nico,
+        }));
+    }
+
+    /**
+     * Establece la marca.
+     * @param marca - Marca a asignar al estado.
+     */
+    public setMarca(marca: string): void {
+        this.update((state) => ({
+            ...state,
+            marca,
+        }));
+    }
+
+    /**
+     * Establece el modelo.
+     * @param modelo - Modelo a asignar al estado.
+     */
+    public setModelo(modelo: string): void {
+        this.update((state) => ({
+            ...state,
+            modelo,
+        }));
+    }
+
+    /**
+     * Establece el número de serie.
+     * @param numerodeserie - Número de serie a asignar al estado.
+     */
+    public setNumerodeserie(numerodeserie: string): void {
+        this.update((state) => ({
+            ...state,
+            numerodeserie,
+        }));
+    }
+
+    /**
+     * Establece el fin.
+     * @param fin - Fin a asignar al estado.
+     */
+    public setFin(fin: string): void {
+        this.update((state) => ({
+            ...state,
+            fin,
+        }));
+    }
+
+    /**
+     * Establece la moneda.
+     * @param moneda - Moneda a asignar al estado.
+     */
+    public setMoneda(moneda: string): void {
+        this.update((state) => ({
+            ...state,
+            moneda,
+        }));
+    }
+
+    /**
+     * Establece la especificación.
+     * @param especifique - Especificación a asignar al estado.
+     */
+    public setEspecifique(especifique: string): void {
+        this.update((state) => ({
+            ...state,
+            especifique,
+        }));
+    }
+
 }

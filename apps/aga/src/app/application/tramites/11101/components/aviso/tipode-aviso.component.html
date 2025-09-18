@@ -1,122 +1,180 @@
 <div class="container">
-    <div class="container1">
-      <ng-titulo [titulo]="'Aviso'"></ng-titulo>
-      <form [formGroup]="avisoForm">
-        <div class="row">
-          <div class="col-md-4">
-            <label class="form-label" for="numero-de-registro">Número de registro<span [ngClass]="avisoForm.get('numeroderegistro')?.invalid && 
+  <form [formGroup]="avisoForm">
+    <ng-titulo [titulo]="'Aviso'"></ng-titulo>
+    <div class="row">
+      <div class="col-md-4">
+        <label class="form-label" for="numero-de-registro">Número de registro<span [ngClass]="avisoForm.get('numeroderegistro')?.invalid && 
               avisoForm.get('numeroderegistro')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <input type="text" class="form-control" id="numero-de-registro" formControlName="numeroderegistro" />
-          </div>
-        </div>
-      </form>
+        <input type="text" class="form-control" id="numero-de-registro" formControlName="numeroderegistro" />
+      </div>
     </div>
   
-    <div class="container2">
-      <ng-titulo [titulo]="'Datos del Donante Extranjero'"></ng-titulo>
-      <form [formGroup]="avisoForm">
-        <div class="row">
-          <div class="col-md-6">
-            <label class="form-label" for="nombre-denominacion">Nombre/Denominación o Razón Social:</label>
-            <input type="text" class="form-control" id="nombre-denominacion" formControlName="NobmreDenominationRazonSocial" />
-          </div>
-          <div class="col-md-4">
-            <label class="form-label" for="rfc-tax-id">RFC/TAX ID:</label>
-            <input type="text" class="form-control" id="rfc-tax-id" formControlName="rfctaxid" />
-          </div>
-          <div class="col-md-4">
-            <label class="form-label" for="telefono">Teléfono:</label>
-            <input type="text" class="form-control" id="telefono" formControlName="Telefono" />
-          </div>
-          <div class="col-md-4">
-            <label class="form-label" for="correo-electronico">Correo electrónico:</label>
-            <input type="text" class="form-control" id="correo-electronico" formControlName="correoelectronico" />
-          </div>
-        </div>
-      </form>
+    <ng-titulo [titulo]="'Datos del Donante Extranjero'"></ng-titulo>
+    <div class="row">
+      <div class="col-md-6">
+        <label class="form-label" for="nombre-denominacion">Nombre/Denominación o Razón Social:</label>
+        <input type="text" class="form-control" id="nombre-denominacion"
+          formControlName="NobmreDenominationRazonSocial" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="rfc-tax-id">RFC/TAX ID:</label>
+        <input type="text" class="form-control" id="rfc-tax-id" formControlName="rfctaxid" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="telefono">Teléfono:</label>
+        <input type="text" class="form-control" id="telefono" formControlName="Telefono" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="correo-electronico">Correo electrónico:</label>
+        <input type="text" class="form-control" id="correo-electronico" formControlName="correoelectronico" />
+      </div>
     </div>
-  
-    <div class="container3">
-      <ng-titulo [titulo]="'Domicilio Fiscal del Donante Extranjero'"></ng-titulo>
-      <form [formGroup]="avisoForm">
-        <div class="row">
-          <div class="col-md-4">
-            <app-catalogo-select [catalogo]="entidadadfederativa" formControlName="entidadadfederativa" [label]="'Entidad Federativa'"
-              [placeholder]="'Seleccione una opción'" [required]="true" [markTouched]="avisoForm.get('entidadadfederativa')?.touched??false"
-              (change)="entidadadFederativaSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
-          </div>
-          <div class="col-md-4">
-            <app-catalogo-select [catalogo]="alcadilamunicipio" formControlName="alcadilamunicipio" [label]="'Alcaldía o Municipio'"
-              [placeholder]="'Seleccione una opción'" [required]="true" [markTouched]="avisoForm.get('alcadilamunicipio')?.touched??false"
-              (change)="alcadilamunicipioSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
-          </div>
-          <div class="col-md-4">
-            <app-catalogo-select [catalogo]="colonia" formControlName="colonia" [label]="'Colonia'"
-              [placeholder]="'Seleccione una opción'" [required]="true" [markTouched]="avisoForm.get('colonia')?.touched??false"
-              (change)="coloniaSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
-          </div>
-          <div class="col-md-4">
-            <label class="form-label" for="codigo-postal">Código Postal<span [ngClass]="avisoForm.get('codigopostal')?.invalid && 
+
+    <ng-titulo [titulo]="'Domicilio Fiscal del Donante Extranjero'"></ng-titulo>
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="entidadadfederativa" formControlName="entidadadfederativa"
+          [label]="'Entidad Federativa'" [placeholder]="'Seleccione una opción'" [required]="true"
+          [markTouched]="avisoForm.get('entidadadfederativa')?.touched??false" (change)="entidadadFederativaSeleccion()"
+          [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="alcadilamunicipio" formControlName="alcadilamunicipio"
+          [label]="'Alcaldía o Municipio'" [placeholder]="'Seleccione una opción'" [required]="true"
+          [markTouched]="avisoForm.get('alcadilamunicipio')?.touched??false" (change)="alcadilamunicipioSeleccion()"
+          [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="colonia" formControlName="colonia" [label]="'Colonia'"
+          [placeholder]="'Seleccione una opción'" [required]="true"
+          [markTouched]="avisoForm.get('colonia')?.touched??false" (change)="coloniaSeleccion()"
+          [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="codigo-postal">Código Postal<span [ngClass]="avisoForm.get('codigopostal')?.invalid && 
               avisoForm.get('codigopostal')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <input type="text" class="form-control" id="codigo-postal" formControlName="codigopostal" />
-          </div>
-          <div class="col-md-4">
-            <label class="form-label" for="calle">Calle<span [ngClass]="avisoForm.get('calle')?.invalid && 
+        <input type="text" class="form-control" id="codigo-postal" formControlName="codigopostal" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <label class="form-label" for="calle">Calle<span [ngClass]="avisoForm.get('calle')?.invalid && 
               avisoForm.get('calle')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <input type="text" class="form-control" id="calle" formControlName="calle" />
-          </div>
-          <div class="col-md-4">
-            <label class="form-label" for="numero-exterior">Número y/o letra exterior<span [ngClass]="avisoForm.get('numeroletraexterior')?.invalid && 
+        <input type="text" class="form-control" id="calle" formControlName="calle" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="numero-exterior">Número y/o letra exterior<span [ngClass]="avisoForm.get('numeroletraexterior')?.invalid && 
               avisoForm.get('numeroletraexterior')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <input type="text" class="form-control" id="numero-exterior" formControlName="numeroletraexterior" />
-          </div>
-          <div class="col-md-4">
-            <label class="form-label" for="numero-interior">Número y/o letra interior:</label>
-            <input type="text" class="form-control" id="numero-interior" formControlName="numeroletrainterior" />
-          </div>
-          <div class="col-md-4">
-            <label class="form-label" for="entre-calle">Entre calle<span [ngClass]="avisoForm.get('entrecalle')?.invalid && 
+        <input type="text" class="form-control" id="numero-exterior" formControlName="numeroletraexterior" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="numero-interior">Número y/o letra interior:</label>
+        <input type="text" class="form-control" id="numero-interior" formControlName="numeroletrainterior" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <label class="form-label" for="entre-calle">Entre calle<span [ngClass]="avisoForm.get('entrecalle')?.invalid && 
               avisoForm.get('entrecalle')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <input type="text" class="form-control" id="entre-calle" formControlName="entrecalle" />
+        <input type="text" class="form-control" id="entre-calle" formControlName="entrecalle" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="y-calle">Y calle:</label>
+        <input type="text" class="form-control" id="y-calle" formControlName="ycalle" />
+      </div>
+    </div>
+
+    <div class="row mt-5 mb-3">
+        <app-input-radio [radioOptions]="radioOpcions" [isBold]="true" formControlName="radioDomicilio"
+          [layout]="'horizontal'" (change)="setValoresStore(avisoForm, 'radioDomicilio', 'setRadioDomicilio')"
+          [disabled]="esFormularioSoloLectura"></app-input-radio>
+    </div>
+  </form>
+
+  <!-- Descripción de la mercancia section -->
+ 
+    <ng-titulo titulo="Descripción de la mercancia" />
+    <form [formGroup]="mercanciaForm">
+      <div class="row">
+        <div class="col-md-4">
+          <label class="form-label" for="estado">Estado*:</label>
+          <input type="text" class="form-control" id="estado" formControlName="estado" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="cantidad">Cantidad*:</label>
+          <input type="number" class="form-control" id="cantidad" formControlName="cantidad" />
+        </div>
+        
+        <div class="col-md-4">
+          <label class="form-label" for="formaParteDePatrimonio">Forma parte de su patrimonio*:</label>
+          <input type="text" class="form-control" id="formaParteDePatrimonio"
+            formControlName="formapartadepatrimonia" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="descripcion" >Descripcion*:</label>
+          <textarea class="form-control" rows="2" id="descripcion" formControlName="descripcion" style="resize: vertical; overflow: hidden;"></textarea>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="valor">Valor*:</label>
+          <input type="text" class="form-control" id="valor" formControlName="valor" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="unida-de-medida">Unidad de medida*:</label>
+          <input type="text" class="form-control" id="unida-de-medida" formControlName="unidadmedida" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="fraccion-arancelaria">Fracción arancelaria*:</label>
+          <input type="number" class="form-control" id="fraccion-arancelaria" formControlName="fraccionarancelaria" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="nico">Nico*:</label>
+          <input type="text" class="form-control" id="nico" formControlName="nico" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="marca">Marca*:</label>
+          <input type="text" class="form-control" id="marca" formControlName="marca" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="modelo">Modelo*:</label>
+          <input type="text" class="form-control" id="modelo" formControlName="modelo" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="numero-de-serie">Numero de serie*:</label>
+          <input type="text" class="form-control" id="numero-de-serie" formControlName="numerodeserie" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="moneda">Moneda*:</label>
+          <input type="text" class="form-control" id="moneda" formControlName="moneda" />
+        </div>
+      </div>
+
+        <ng-titulo titulo="Fines a que se destinará la mercancía" />
+        <div class="row">
+          <div class="col-md-3">
+            <label class="form-label" for="fin">Fin*:</label>
+            <input type="text" class="form-control" id="fin" formControlName="fin" />
           </div>
-          <div class="col-md-4">
-            <label class="form-label" for="y-calle">Y calle:</label>
-            <input type="text" class="form-control" id="y-calle" formControlName="ycalle" />
+          <div class="col-md-9">
+            <label class="form-label" for="especifique">Especifique*:</label>
+            <textarea class="form-control" rows="2" id="especifique" formControlName="especifique" style="resize: vertical; overflow: hidden;"></textarea>
           </div>
         </div>
-  
-          <div class="col-md-12 row">
-            <div class="col-md-6">
-              <app-input-radio [radioOptions]="radioOpcions" [isBold]="true" formControlName="radioDomicilio" [layout]="'horizontal'"
-                (change)="setValoresStore(avisoForm, 'radioDomicilio', 'setRadioDomicilio')"
-                [disabled]="esFormularioSoloLectura"></app-input-radio>
-            </div>
+      <div class="row mt-5 mb-5">
+        <div class="col-md-12">
+          <div class="d-flex justify-content-end">
+            <button type="button" name="Limpiar" class="btn btn-default"> Limpiar </button>
+            <button type="button" name="Agregar" class="btn btn-primary ms-2"> Agregar </button>
+            <button type="button" name="Eliminar" class="btn btn-danger ms-2"> Eliminar </button>
           </div>
-          <!-- <div class="row mt-3">
-            <div class="col-md-6">
-              <label for="manual" class="m-3">Manual</label>
-              <input
-                type="radio"
-                name="check"
-                id="manual"
-                (change)="setManual(true)"
-                [disabled]="esFormularioSoloLectura"
-              />
-              <label for="carga" class="m-3">Carga masiva</label>
-              <input
-                type="radio"
-                name="check"
-                id="carga"
-                (change)="setManual(false)"
-                [disabled]="esFormularioSoloLectura"
-              />
-            </div>
-          </div> -->
-      </form>
-    </div>
-  
-    <ng-container *ngIf="isManualSelected">
-      <app-mercancia></app-mercancia>
-    </ng-container>
+        </div>
+      </div>
+    </form>
   </div>
-  
+
+  <div class="row mt-5">
+      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+        [configuracionTabla]="configuracionParaPFEEncabezadoDeTabla"
+        [datos]="discripccionDeLaMercanciaForm"></app-tabla-dinamica>
+  </div>

@@ -1,5 +1,4 @@
-<div class="conatiner">
-    <div class="container1">
+    <div class="col-md-12">
         <ng-titulo titulo="Descripción de la mercancia" />
         <form [formGroup]="mercanciaForm">
             <div class="row">
@@ -56,7 +55,7 @@
             </div>
         </form>
     </div>
-    <div class="container2">
+    <div class="col-md-12">
         <ng-titulo titulo="Fines a que se destinará la mercancía" />
         <form [formGroup]="mercanciaForm">
             <div class="row">
@@ -71,14 +70,12 @@
             </div>
         </form>
     </div>
-    <div class="container3 mt-5">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="pull-right">
-                    <button type="button" name="Limpiar" class="btn btn-default"> Limpiar </button>
-                    <button type="button" name="Agregar" class="btn btn-primary ms-2"> Agregar </button>
-                    <button type="button" name="Eliminar" class="btn btn-danger ms-2"> Eliminar </button>
-                </div>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="pull-right">
+                <button type="button" name="Limpiar" class="btn btn-default"> Limpiar </button>
+                <button type="button" name="Agregar" class="btn btn-primary ms-2"> Agregar </button>
+                <button type="button" name="Eliminar" class="btn btn-danger ms-2"> Eliminar </button>
             </div>
         </div>
     </div>
@@ -89,4 +86,3 @@
                 [datos]="discripccionDeLaMercanciaForm"></app-tabla-dinamica>
         </div>
     </div>
-</div>

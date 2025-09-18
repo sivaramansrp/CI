@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,6 +8,8 @@ import { CommonModule } from '@angular/common';
 import { MercanciaComponent } from '../mercancia/mercancia.component';
 import { Tramite11101Query } from '../../estados/tramite11101.query';
 import { TramiteFolioService } from '../../service/servicios-extraordinarios.service';
+import { DiscripccionDeLaMercanciaForm } from '../../models/transportacion-maritima.model';
+import { CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA } from '../../constants/mercancia.enum';
 
 /**
  * Componente Angular para gestionar el formulario de aviso en el trámite 11101.
@@ -37,7 +39,7 @@ import { TramiteFolioService } from '../../service/servicios-extraordinarios.ser
   templateUrl: './tipode-aviso.component.html',
   styleUrls: ['./tipode-aviso.component.scss'],
   standalone: true,
-  imports: [TituloComponent, FormsModule, ReactiveFormsModule, MercanciaComponent, CommonModule, CatalogoSelectComponent, InputRadioComponent]
+  imports: [TituloComponent, FormsModule, ReactiveFormsModule, MercanciaComponent, CommonModule, CatalogoSelectComponent, InputRadioComponent, TablaDinamicaComponent]
 })
 export class TipodeAvisoComponent implements OnInit, OnDestroy {
 
@@ -94,6 +96,29 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
   ];
 
   /**
+   * Formulario reactivo para capturar los datos de la mercancía.
+   * @type {FormGroup}
+   */
+  mercanciaForm!: FormGroup;
+
+  /**
+   * Lista de descripciones de la mercancía.
+   * @type {discripccionDeLaMercanciaForm[]}
+   */
+  discripccionDeLaMercanciaForm: DiscripccionDeLaMercanciaForm[] = [];
+  
+  /**
+   * Configuración para el persona moral nacional encabezado de la tabla.
+   */
+  configuracionParaPFEEncabezadoDeTabla = CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA;
+  
+  /**
+   * Enumeración para la selección de tablas.
+   * @type {typeof TablaSeleccion}
+   */
+  tablaSeleccion = TablaSeleccion;
+  
+  /**
    * Constructor de la clase. Inicializa el FormBuilder.
    * @param {FormBuilder} formBuilder - Servicio para construir formularios reactivos.
    * @param {Tramite11101Query} query - Servicio para consultar el estado del trámite.
@@ -112,36 +137,39 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
     private query: Tramite11101Query,
     private tramiteService: TramiteFolioService,
     private store: Tramite11101Store
-  ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-          this.esFormularioSoloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe()
-  }
+  ) {}
+
   /**
    * Estado de la solicitud que contiene los datos del formulario.
    * @type {Tramitenacionales11101State}
    */
   public solicitudState!: Tramitenacionales11101State;
+
   /**
    * Notificador para cancelar suscripciones activas al destruir el componente.
    * Se emite un valor y se completa en el método `ngOnDestroy` para evitar fugas de memoria.
    */
   private destroyNotifier$: Subject<void> = new Subject<void>();
+
   /**
    * Método de inicialización del componente.
    * Configura el formulario reactivo con los campos necesarios.
    */
   ngOnInit(): void {
-    this.query.selectSeccionState$.pipe(takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.solicitudState = seccionState;
-      })).subscribe()
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        }))
+      .subscribe();
+    this.query.selectSeccionState$
+      .pipe(takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        }))
+        .subscribe()
     this.donanteDomicilio();
     this.inicializaCatalogos();
   }
@@ -153,8 +181,10 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.avisoForm.disable();
+      this.mercanciaForm.disable();
     } else {
       this.avisoForm.enable();
+      this.mercanciaForm.enable();
     }
   }
 
@@ -227,6 +257,67 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
         this.solicitudState?.radioDomicilio
       ]
     });
+
+    this.mercanciaForm = this.formBuilder.group({
+      estado: [
+        this.solicitudState?.estado,
+        [Validators.required, Validators.maxLength(20)]
+      ],
+      cantidad: [
+        this.solicitudState?.cantidad,
+        [Validators.required, Validators.min(1)]
+      ],
+      formapartadepatrimonia: [
+        this.solicitudState?.formaParteDePatrimonio,
+        [Validators.required]
+      ],
+      descripcion: [
+        this.solicitudState?.descripcion,
+        [Validators.required, Validators.maxLength(200)]
+      ],
+      valor: [
+        this.solicitudState?.valor,
+        [Validators.required, Validators.min(1)]
+      ],
+      unidadmedida: [
+        this.solicitudState?.unidadmedida,
+        [Validators.required, Validators.maxLength(50)]
+      ],
+      fraccionarancelaria: [
+        this.solicitudState?.fraccionarancelaria,
+        [Validators.required, Validators.min(1), Validators.max(99999999)]
+      ],
+      nico: [
+        this.solicitudState?.nico,
+        [Validators.required, Validators.min(0)]
+      ],
+      marca: [
+        this.solicitudState?.marca,
+        [Validators.required, Validators.maxLength(50)]
+      ],
+      modelo: [
+        this.solicitudState?.modelo,
+        [Validators.required, Validators.maxLength(50)]
+      ],
+      numerodeserie: [
+        this.solicitudState?.numerodeserie,
+        [Validators.required, Validators.min(1)]
+      ],
+      fin: [
+        this.solicitudState?.fin,
+        [Validators.required, Validators.maxLength(100)]
+      ],
+      moneda: [
+        this.solicitudState?.moneda,
+        [Validators.required, Validators.maxLength(50)]
+      ],
+      especifique: [
+        this.solicitudState?.especifique,
+        [Validators.maxLength(200)]
+      ]
+    });
+
+    this.setManual();
     this.inicializarEstadoFormulario();
   }
 
@@ -296,12 +387,14 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
 
   /**
    * Cambia el modo entre manual y carga masiva.
-   * @param {boolean} isManual - Indica si el modo manual debe ser seleccionado.
+   * Si el formulario es de solo lectura, actualiza los estados correspondientes.
    */
-  setManual(isManual: boolean): void {
-    if (this.esFormularioSoloLectura) {
-      this.isManualSelected = isManual;
-      this.cargaMasiva = !isManual;
+  setManual(): void {
+    const RADIO_DOMICILIO = this.avisoForm.get('radioDomicilio')?.value;
+    if (RADIO_DOMICILIO === 'manual') {
+      this.isManualSelected = true;
+    } else {
+      this.isManualSelected = false;
     }
   }
 
