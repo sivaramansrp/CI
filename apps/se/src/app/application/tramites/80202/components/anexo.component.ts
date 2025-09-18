@@ -433,7 +433,7 @@ export class AnexoComponent implements OnInit, OnDestroy {
           })
         )
         .subscribe();
-      this.immexRegistroform.statusChanges
+      this.immexRegistroform.valueChanges
         .pipe(
           takeUntil(this.destroyNotifier$),
           delay(10),
@@ -683,7 +683,7 @@ this.firstloadCompleted=false;
         this.immexRegistroform.get('exportacionForm')?.patchValue({
    productoArancelariaExportacion: this.fraccionInfoSelected?.FRACCION_Columna_2,
    description: this.fraccionInfoSelected?.FRACCION_Columna_5,
-   Nico:this.fraccionInfoSelected?.FRACCION_Columna_1,
+   Nico:this.fraccionInfoSelected?.FRACCION_Columna_1 || 1,
    productoDescExportacion: this.fraccionInfoSelected?.FRACCION_Columna_6,
 
         })
@@ -997,12 +997,17 @@ estatus:true
  this.nuevaNotificacion = {} as Notificacion;
   this.immexTableDatos =[];
       this.selectedRowData=null;
+      this.firstloadCompleted=false;
       }
      
       this.eliminarDatosTablaExportacion=false;
     
   }
-
+descripcionValorActualizar():void{
+  this.immexRegistroform.get('importacionForm')?.patchValue({
+    productoDescExportacions: "Acero inoxidable laminado en frío, espesor 2mm, acabado brillante, grado 304L, para aplicaciones industriales y construcción naval"
+  });
+}
   eliminarNico():void{
     this.showTableNicoExp = false;
   }
