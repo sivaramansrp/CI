@@ -83,7 +83,7 @@
   <div class="row">
     <div class="col-md-12">
         <div class="pull-right"> 
-            <button name="eliminarServicio" (click)="eliminarServiciosGrid()" class="btn btn-danger"  [disabled]="esFormularioSoloLectura">
+            <button name="eliminarServicio" (click)="doConfirmEliminar()" class="btn btn-danger"  [disabled]="esFormularioSoloLectura">
                 Eliminar
             </button>
             <button name="agregarServicio" (click)="agregarServiciosAmpliacion()" class="btn btn-primary mx-2" [disabled]="esFormularioSoloLectura">
@@ -101,7 +101,7 @@
 </div>
 <div class="my-4">
 
-<app-tabla-dinamica  [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarDomicilios($event)"  [configuracionTabla]="configuracionTablaServicio" [disableSeleccionTablaRadio]="esFormularioSoloLectura"
+<app-tabla-dinamica #tablaA [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarDomicilios($event)" [filasSeleccionadas]="mercanciasSeleccionados" [configuracionTabla]="configuracionTablaServicio" [disableSeleccionTablaRadio]="esFormularioSoloLectura"
 [datos]="datosImmex"></app-tabla-dinamica>
 <div class="row">
     <div class="col-md-8">
@@ -111,7 +111,7 @@
     </div>  
 </div>
 <div class="my-4">
- <app-tabla-dinamica  [tipoSeleccionTabla]="tablaSeleccion"   [configuracionTabla]="configuracionTablaServicio" [datos]="datosImmex" [disableSeleccionTablaRadio]="esFormularioSoloLectura"
+ <app-tabla-dinamica #tablaB [tipoSeleccionTabla]="tablaSeleccion"   [configuracionTabla]="configuracionTablaServicio" [datos]="datosAutorizados" [filasSeleccionadas]="tablaDosSeleccionados"(filaSeleccionada)="seleccionarAutorizados($event)" [disableSeleccionTablaRadio]="esFormularioSoloLectura"
     ></app-tabla-dinamica></div>
 
 <div class="row">
@@ -147,10 +147,10 @@
   <div class="row my-4">
     <div class="col-md-12">    
         <div class="pull-right">
-            <button name="eliminar" (click)="eliminarEmpresasNacionales()" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
+            <button name="eliminar" (click)="doEliminarDos()" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
                 Eliminar
             </button>
-            <button name="agregar" (click)="actualizaGridEmpresasNacionales()" class="btn btn-primary mx-2" [disabled]="esFormularioSoloLectura">
+            <button name="agregar" (click)="doAgregarDos()" class="btn btn-primary mx-2" [disabled]="esFormularioSoloLectura">
                 Agregar
             </button> 
         </div>
@@ -166,7 +166,21 @@
     </div>  
 </div>
 
-<app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarEmpresas($event)"  [configuracionTabla]="configuracionTabla" [disableSeleccionTablaRadio]="esFormularioSoloLectura"
+<app-tabla-dinamica  #tablaC [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarEmpresas($event)"  [configuracionTabla]="configuracionTabla" [disableSeleccionTablaRadio]="esFormularioSoloLectura"
 [datos]="datos"></app-tabla-dinamica>
 
 </div>
+
+@if(nuevaNotificacion){
+    <lib-notificaciones *ngIf="esHabilitarElDialogo" [notificacionInput]="nuevaNotificacion" (confirmacionModal)="cerrarModal()"></lib-notificaciones>
+    
+    <lib-notificaciones *ngIf="esEliminar" [notificacionInput]="nuevaNotificacion" (confirmacionModal)="cerrarModalEliminar($event)"></lib-notificaciones>
+    <lib-notificaciones *ngIf="noRowSelected" [notificacionInput]="nuevaNotificacion" (confirmacionModal)="cerrarNoRow()"></lib-notificaciones>
+
+    <lib-notificaciones *ngIf="esAgregarDos" [notificacionInput]="nuevaNotificacion" (confirmacionModal)="cerrarModalAgregar()"></lib-notificaciones>
+    <lib-notificaciones *ngIf="esEliminarDos" [notificacionInput]="nuevaNotificacion" (confirmacionModal)="cerrarEliminarDos($event)"></lib-notificaciones>
+    <lib-notificaciones *ngIf="rowNotSeleccionada" [notificacionInput]="nuevaNotificacion" (confirmacionModal)="cerrarNotSeleccainda()"></lib-notificaciones>
+
+    
+
+}  
