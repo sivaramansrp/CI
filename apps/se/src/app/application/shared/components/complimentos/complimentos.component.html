@@ -1,16 +1,14 @@
 <form class="complimentos-container container" [formGroup]="formaComplimentos">
-  @if (consultaState && consultaState.parameter !== 'READ_PROCEDURE') {
-    <div class="row">
-      <ng-titulo titulo="Datos de la solicitude" />
+  <div class="row">
+    <ng-titulo titulo="Datos de la solicitude" />
 
-      <div class="row">
-        <div class="col-md-4">
-          <label for="modalidad">Modalidad:</label>
-          <input type="text" id="modalidad" name="modalidad" class="form-control" formControlName="modalidad" />
-        </div>
+    <div class="row">
+      <div class="col-md-4">
+        <label for="modalidad">Modalidad:</label>
+        <input type="text" id="modalidad" name="modalidad" class="form-control" formControlName="modalidad" />
       </div>
     </div>
-  }
+  </div>
   <div class="row">
     <ng-titulo titulo="Programa Pre operativo" />
     <div class="col-md-12">
@@ -52,26 +50,24 @@
     <div class="row">
       <div class="col-md-4">
        <app-catalogo-select [catalogo]="derechosList" formControlName="opinionPositiva" [label]="'Opinión positiva del SAT*'" [required]="false"
-          [isDisabled]="false"  name="opinionPositiva" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
+          [isDisabled]="true"  name="opinionPositiva"></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <input-fecha [datos]="INPUT_FECHA_CONFIG" [setFecha]="formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.value"
           (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="formularioDeshabilitado">
         </input-fecha>
       </div>
-      @if (consultaState && consultaState.parameter !== 'READ_PROCEDURE') {
-        <div class="col-12 mt-5">
-          <div class="alert alert-info text-start">
-            <label class="d-flex align-items-start">
-              <input id="filaSeleccion" class="cursor-pointer custom-checkbox me-5 mt-5" type="checkbox"
-                aria-label="Seleccionar" formControlName="aceptarObligacionFiscal" />
-              <span class="fw-normal">* Compromiso de ventas anuales por un valor superios a 500,000 dólares de los Estados Unidos de
-                América, o su equivalente en moneda nacional, o bien facturar exportaciones, cuando menos por el 10% de su
-                facturación total.</span>
-            </label>
-          </div>
+      <div class="col-12 mt-5">
+        <div class="alert alert-info text-start">
+          <label class="d-flex align-items-start">
+            <input id="filaSeleccion" class="cursor-pointer custom-checkbox me-5 mt-4" type="checkbox"
+              aria-label="Seleccionar" formControlName="aceptarObligacionFiscal" />
+            <span>* Compromiso de ventas anuales por un valor superios a 500,000 dólares de los Estados Unidos de
+              América, o su equivalente en moneda nacional, o bien facturar exportaciones, cuando menos por el 10% de su
+              facturación total.</span>
+          </label>
         </div>
-      }
+      </div>
     </div>
   </div>
 
@@ -378,9 +374,3 @@
   </section>
 }
 
-@if (accionistasExtranjerosNotificacion) {
-  <section>
-    <lib-notificaciones [notificacionInput]="accionistasExtranjerosNotificacion">
-    </lib-notificaciones>
-  </section>
-}
