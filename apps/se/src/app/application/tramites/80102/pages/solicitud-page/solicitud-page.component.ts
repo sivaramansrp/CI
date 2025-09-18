@@ -754,6 +754,7 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
       rfc: item.rfc,
       domicilio: item.domicilioFiscal,
       razonSocial: item.razonSocial,
+      
     });
 
     arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
@@ -772,6 +773,7 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
     const ANEXO_ALL = this.buildAnexo(data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase, data);
+    
     const PLANTAS = this.buildPlantas(data.empressaSubFabricantePlantas.plantasAgregar, this.plantasBase, data);
     const PAYLOAD = {
        "tipoDeSolicitud": "guardar",
