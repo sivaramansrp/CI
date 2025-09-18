@@ -1,6 +1,7 @@
-import { BehaviorSubject, Subject,map, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject,Subscription,map, takeUntil } from 'rxjs';
 import {
   Catalogo,
+  CatalogoServices,
   ConfiguracionColumna,
   ConsultaioQuery,
   TablaDinamicaComponent,
@@ -163,6 +164,15 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
    */
   campoDeshabilitar:boolean= false;
 
+     /**
+     * Suscripción para manejar observables.
+     * @property {Subscription} subscription
+     */
+    private subscription: Subscription = new Subscription();
+   
+    tramiteId: string = '80207';
+ 
+
   /**
    * Constructor del componente que inyecta los servicios necesarios para la creación del formulario
    * y la inicialización de datos.
@@ -177,7 +187,9 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
     private subfabricanteDatosService: SubfabricanteService,
     public query: Tramites80207Queries,
     private store: Tramites80207Store,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catalogoService: CatalogoServices
+
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -198,7 +210,7 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
     this.inicializarEstadoFormulario();
     this.obtenerDatosDeRegistro();
     this.obtenerDatosDelAlmacen();
-    this.obtenerListaEstado();
+    this.obtenerListaEstado(this.tramiteId);
   }
 
   /**
@@ -369,16 +381,21 @@ listaDeSubfabricantesPorEliminar:PlantasDireccionModelo[] = [];
    * Obtiene la lista de estados desde el servicio y actualiza la propiedad estadoCatalogo.
    * @method obtenerListaEstado
    */
-  obtenerListaEstado(): void {
-    this.subfabricanteDatosService
-      .obtenerListaEstado()
+  obtenerListaEstado(tramite: string): void {
+    this.subscription.add(
+      this.catalogoService
+      .estadosCatalogo(tramite)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((response) => {
+        const DATOS = response.datos as Catalogo[];
+        
         if (response) {
-          this.estadoCatalogo = response.data;
+          this.estadoCatalogo = DATOS;
         }
-      });
+      })
+    );
   }
+  
 
   /**
    * Obtiene la lista de subfabricantes disponibles desde el servicio y actualiza las cabeceras y datos de la tabla correspondiente.
