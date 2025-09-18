@@ -107,12 +107,11 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * @description Abre el modal de confirmación para eliminar fabricantes asociados.
    */
   abrirModalEliminar(): void {
-    // Reference 'this' to satisfy ESLint
     if (this.selectedFabricantesNacionales.length === 0) {
       const MODAL_ELEMENT = document.getElementById('confirmarSeleccionar');
       if (MODAL_ELEMENT) {
-        const MODAL_INSTANCE = new window.bootstrap.Modal(MODAL_ELEMENT);
-        MODAL_INSTANCE.show();
+        const INSTANCIA_MODAL = new window.bootstrap.Modal(MODAL_ELEMENT);
+        INSTANCIA_MODAL.show();
       }
       return;
     }
@@ -192,6 +191,37 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     } else {
       this.fabricantesAsociados = [];
       this.historicoFabricantesForm.get('fabricantesAsociados')?.setValue([]);
+    }
+  }
+
+      /**
+   * @method abrirModalAgregar
+   * @description Abre el modal para agregar fabricante, o muestra error si ya existe uno asociado.
+   */
+  abrirModalAgregar(): void {
+    // Sólo proceder si se selecciona un registro
+    if (!this.selectedFabricantesNacionales.length) {
+      // Opcionalmente, mostrar una modal o no hacer nada.
+      return;
+    }
+    const SELECCIONADO = this.selectedFabricantesNacionales[0];
+    const EXISTE = SELECCIONADO && SELECCIONADO.numeroRegistroFiscal
+      ? this.fabricantesAsociados.some(f => f.numeroRegistroFiscal === SELECCIONADO.numeroRegistroFiscal)
+      : false;
+    if (EXISTE) {
+      const MODAL_EXISTENTE = document.getElementById('modalFabricanteExistente');
+      if (MODAL_EXISTENTE) {
+        const WIN = window as typeof window & { bootstrap: { Modal: new (el: HTMLElement) => { show: () => void } } };
+        const INSTANCIA_MODAL = new WIN.bootstrap.Modal(MODAL_EXISTENTE);
+        INSTANCIA_MODAL.show();
+      }
+      return;
+    }
+    const MODAL_AGREGAR = document.getElementById('modalAgregar');
+    if (MODAL_AGREGAR) {
+      const WIN = window as typeof window & { bootstrap: { Modal: new (el: HTMLElement) => { show: () => void } } };
+      const INSTANCIA_MODAL = new WIN.bootstrap.Modal(MODAL_AGREGAR);
+      INSTANCIA_MODAL.show();
     }
   }
   /**
@@ -490,7 +520,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     this.initActionFormBuild();
     this.recuperarDatos();
 
-    // Ensure fabricantesAsociados is blank initially
+    // Asegúrese de que fabricantesAsociados esté en blanco inicialmente
     this.fabricantesAsociados = [];
     this.historicoFabricantesForm.get('fabricantesAsociados')?.setValue([]);
 
