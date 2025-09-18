@@ -5,6 +5,7 @@ import { Subject, map, take, takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
+import basePlantasControladoras from '@libs/shared/theme/assets/json/80104/basePlantasControladoras.json';
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
  * 
@@ -145,6 +146,8 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       "ampliacionPaises": false,
       "fecFallecimiento": "2025-09-07"
   };
+
+  private basePlantasControladoras: unknown[] = Array.isArray(basePlantasControladoras) ? basePlantasControladoras : [];
 
       private plantasBase: Readonly<Record<string, any>> = {
      "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
@@ -430,11 +433,12 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
     const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
+    const PLANTAS_CONTROLADORAS = PasoCapturarSolicitudComponent.buildPlantasControladoras(data.empresasSeleccionadas, this.basePlantasControladoras);
     const PLANTAS = this.buildPlantas(data.tablaDatosFederatarios, this.plantasBase, data);
     const ANEXO_ALL = this.buildAnexo(data);
     const PAYLOAD = {
-       "tipoDeSolicitud": "guardar",
-      "idSolicitud": 202781045,
+    "tipoDeSolicitud": "guardar",
+    "idSolicitud": 202781045,
     "idTipoTramite": 80104,
     "rfc": "AAL0409235E6",
     "cveUnidadAdministrativa": "8101",
@@ -467,12 +471,43 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
         }
     ],
     "plantasSubmanufactureras": [],
-    "sociosAccionistas":[...SOCIO_ACCIONISTAS]
+    "sociosAccionistas":[...SOCIO_ACCIONISTAS],
+    "solicitud": {
+      "anexoI": [...ANEXO_ALL.anexo.tableDos]
+    },
+    "plantasControladoras": PLANTAS_CONTROLADORAS
     };
+
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
       this.tramite80104Store.setIdSolicitud(response.datos.id_solicitud || 0);
       return response;
     });
+  }
+
+  /**
+ * Build plantasControladoras by taking the base array
+ * and appending the length of each key in empresasSeleccionadas
+ * to every planta item.
+ *
+ * @param empresasSeleccionadas  Object with keys whose values are arrays
+ * @param basePlantas            Existing plantasControladoras array
+ */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static buildPlantasControladoras(empresasSeleccionadas: any[], basePlantas: unknown[]): unknown[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const RESULT: any[] = [];
+
+    empresasSeleccionadas.forEach(emp => {
+      basePlantas.forEach(planta => {
+        const PLANTA = (planta && typeof planta === 'object') ? planta : {};
+        RESULT.push({
+          ...PLANTA,
+          razonSocial: emp.razonSocial ?? '',
+          rfc: emp.registroFederalContribuyentes ?? ''
+        });
+      });
+    });
+    return RESULT;
   }
 
   /**
@@ -567,6 +602,21 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
         fecFinVigencia: null,
         volumenAnualSolicitado: null,
       });
+      const anexoDos: any = [];
+
+    (data.annexoUno?.exportarDatosTabla || []).forEach((item: any) => {
+      anexoDos.push({
+        fraccionExportacion: item.encabezadoFraccionExportacion,
+        fraccionImportacion: item.encabezadoFraccionImportacion,
+        descFraccionImpo: item.encabezadoDescripcionComercial,
+        claveFraccionAnexo: item.encabezadoAnexoII,
+        idProducto: item.encabezadoIdProducto,
+        fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
+        fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
+        fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
+        categoriaFraccion: item.encabezadoCategoria,
+      });
+    });
     
       return {
         anexo: {
@@ -574,6 +624,7 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
           ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
           proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
           datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
+          tableDos: anexoDos
         },
       };
     }

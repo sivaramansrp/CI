@@ -4,7 +4,6 @@ import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { MercanciasDestruidasFormaComponent } from './components/mercancias-destruidas-forma/mercancias-destruidas-forma.component';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
@@ -60,7 +59,6 @@ import { ActaDeHechosRoutingModule } from './acta-de-hechos-routing.module';
     TablaDinamicaComponent,
     SolicitanteComponent,
     TipoDeAvisoComponent,
-    MercanciasDestruidasFormaComponent
   ],
 
   /**

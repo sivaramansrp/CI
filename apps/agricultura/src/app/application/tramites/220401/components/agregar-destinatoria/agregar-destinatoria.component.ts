@@ -56,14 +56,14 @@ export class AgregarDestinatoriaComponent implements OnInit {
     this.getPais();
       this.destinatarioForm = this.fb.group({
       tipoPersona: ['fisica'],
-      nombre: [''],
-      primerApellido: [''],
+      nombre: ['',Validators.required],
+      primerApellido: ['', Validators.required],
       segundoApellido: [''],
-      denominacion: [''],
+      denominacion: ['', Validators.required],
       pais: [''],
       domicilio: [''],
-        lada: ['', [Validators.pattern('^[0-9]{4}$'), Validators.maxLength(4)]],
-      telefono: [''],
+      lada: ['', [Validators.pattern('^[0-9]{4}$'), Validators.maxLength(4)]],
+      telefono: ['',Validators.pattern(/^\+?[0-9\s\-]{7,15}$/)],
       correoElectronico: ['', [Validators.email]],
     });
   }
