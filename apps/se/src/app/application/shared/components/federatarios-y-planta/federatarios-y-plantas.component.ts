@@ -332,6 +332,7 @@ plantasForm!: FormGroup;
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
+    this.obtenerImex();
     this.federatoriosQuery.selectSolicitud$
     .pipe(
       takeUntil(this.destroyNotifier$),
