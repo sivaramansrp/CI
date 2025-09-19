@@ -593,7 +593,6 @@ const PLANTAS = this.buildPlantas(data.tablaDatosFederatarios, this.plantasBase,
       "solicitud": {
         "anexoI": [...ANEXO_ALL.anexo.tableDos]
       }
-
     }
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
       this.tramite80101Store.setIdSolicitud(response.datos.id_solicitud || 0);
