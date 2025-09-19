@@ -31,6 +31,8 @@ import {
   ViewChild,
 } from '@angular/core';
 
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import {
   CONFIGURACION_COLUMNAS_MERCANCIAS,
   CONFIGURACION_COLUMNAS_SOLI,
@@ -43,7 +45,6 @@ import {
 } from '../../constants/constantes.enum';
 
 import { FilaData, FilaData2 } from '../../models/fila-modal';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import {
   Solicitud260919State,
@@ -67,7 +68,6 @@ import { CrossList, MercanciasInfo } from '../../models/mercancia.model';
 import {
   REGEX_IMPORTE_PAGO,
   REGEX_LLAVE_DE_PAGO_DE_DERECHO,
-  REGEX_SOLO_DIGITOS,
   REGEX_SOLO_NUMEROS,
 } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
@@ -177,6 +177,7 @@ claveScianState!: Solicitud260919State;
    */
   public infoAlert = 'alert-warning';
 
+  /** Configuración de datos del estado físico */
   rfc: string = 'MAVL621207C95';
 
   /** Indica si el país de origen es colapsable */
@@ -317,6 +318,7 @@ private modalElement: HTMLElement | null = null;
         
         this.inicializarEstadoFormulario();
   }
+
 /**
  * Método para eliminar los pedimentos seleccionados.
  * @param borrar - Indica si se deben eliminar los pedimentos seleccionados.
@@ -330,12 +332,15 @@ private modalElement: HTMLElement | null = null;
         return !this.filasSeleccionadas.has(Number(ROW_ID));
       });
 
+ this.mercanciasData = this.mercanciasData.filter((row) => {
+      return !this.filasSeleccionadas.has(row.id);
+    });
+      
       // Borrar la selección y la notificación
       this.filasSeleccionadas.clear();
       this.nuevaNotificacion = null;
     }
   }
-
   /** 
  * Método para abrir un modal.
  * @param i - Índice del elemento relacionado con el modal (por defecto 0).
@@ -357,7 +362,7 @@ private modalElement: HTMLElement | null = null;
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: 'Cancelar',
+        txtBtnCancelar: '',
       };
     } else if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
       // No hay filas seleccionadas
@@ -370,7 +375,7 @@ private modalElement: HTMLElement | null = null;
         cerrar: false,
         tiempoDeEspera: 2000,
         txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: 'Cancelar',
+        txtBtnCancelar: '',
       };
     } else {
       // Hay filas seleccionadas
@@ -389,6 +394,8 @@ private modalElement: HTMLElement | null = null;
 
     this.elementoParaEliminar = i;
   }
+
+  
   /** Configuración del formulario con validaciones para los campos del trámite. */
   createForm(): void {
     this.dataDeLaSolicitudForm = this.fb.group({
@@ -401,7 +408,7 @@ private modalElement: HTMLElement | null = null;
             value: this.dataDeLaSolicitudState.justification || '',
             disabled: true,
           },
-          [Validators.maxLength(2000)],
+          [Validators.required,Validators.maxLength(2000)],
         ],
         rfcDel: [
           this.dataDeLaSolicitudState?.rfcDel,
@@ -448,9 +455,8 @@ private modalElement: HTMLElement | null = null;
           this.dataDeLaSolicitudState?.lada,
           [
             Validators.required,
-            Validators.minLength(5),
             Validators.maxLength(5),
-            Validators.pattern(REGEX_SOLO_NUMEROS),
+            Validators.pattern(/^[0-9]+$/),
           ],
         ],
         telefono: [
@@ -458,7 +464,7 @@ private modalElement: HTMLElement | null = null;
           [
             Validators.required,
             Validators.maxLength(30),
-            Validators.pattern(REGEX_SOLO_DIGITOS),
+            Validators.pattern(/^[0-9]+$/),
           ],
         ],
         avisoDeFuncionamiento: [
@@ -476,7 +482,11 @@ private modalElement: HTMLElement | null = null;
           Validators.required,
         ],
         aduana: [this.dataDeLaSolicitudState?.aduana, Validators.required],
-        rfc: [this.dataDeLaSolicitudState?.rfc || this.rfc],
+        rfc: [this.dataDeLaSolicitudState?.rfc || this.rfc, [
+        Validators.required,
+        Validators.maxLength(13), 
+        Validators.pattern('^[a-zA-Z0-9]*$') 
+      ]],
         legalRazonSocial: [this.dataDeLaSolicitudState?.legalRazonSocial],
         apellidoPaterno: [this.dataDeLaSolicitudState?.apellidoPaterno],
         apellidoMaterno: [this.dataDeLaSolicitudState?.apellidoMaterno],
@@ -633,6 +643,7 @@ private modalElement: HTMLElement | null = null;
         this.claveScianData.catalogos = data as Catalogo[];
       });
   }
+  /** Inicializa el estado del formulario según si es de solo lectura o no */
   getClasificacionDelProductoData(): void {
     this.importarDeRemediosHerbals
       .getClasificacionDelProductoData()
@@ -825,9 +836,22 @@ onAdd(): void {
   /** Método para manejar la adición de una nueva clave SCIAN */
   onAgregar(): void {
     this.showClavaScianForm = true;
+    
+     setTimeout(() => {
+        const MODAL_ELEMENT = document.getElementById('claveScianModal');
+        if (MODAL_ELEMENT) {
+          const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
+          MODAL_INSTANCE.show(); 
+        }
+      }, 0);
   }
   /** Método para manejar el envío del formulario de clave SCIAN */
   onSubmit(): void {
+      const MODAL_ELEMENT = document.getElementById('claveScianModal');
+  if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
+    MODAL_INSTANCE.hide(); 
+  }
     const FORM_DATA = { ...this.clavaScianForm.value };
     FORM_DATA.claveScianG.claveScian =
       this.claveScianData.catalogos.find(
@@ -976,36 +1000,20 @@ this.tableData = [...this.tableData, FORM_DATA];
   /** Método para manejar la eliminación de filas seleccionadas */
   onEliminar(): void {
     if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Selecciona un registro',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: 'Cancelar',
-      };
-      console.warn('No rows selected for deletion.');
-      return;
+      const MODAL_ELEMENT = document.getElementById('seleccionaRegistroModal');
+      if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+        MODAL_INSTANCE.show();
+      }
+    } else {
+      const MODAL_ELEMENT = document.getElementById('confirmarEliminarModal');
+      if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+        MODAL_INSTANCE.show();
+      }
     }
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'warning',
-      modo: 'action',
-      titulo: '',
-      mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
-    };
-    this.mercanciasData = this.mercanciasData.filter(
-      (row) => !this.filasSeleccionadas.has(row.id)
-    );
-    this.filasSeleccionadas.clear();
-  }
+    this.abrirModal();
+        }
 
 inicializarEstadoFormulario(): void {
   if (this.esFormularioSoloLectura) {

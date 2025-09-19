@@ -5,6 +5,7 @@ import { Subject, map, take } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
+import basePlantasTerciarizadoras from '@libs/shared/theme/assets/json/80105/basePlantasTerciarizadoras.json';
 import { takeUntil } from 'rxjs';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 
@@ -133,6 +134,189 @@ export class PasoCapturarSolicitudComponent implements OnDestroy,OnInit {
       "fecFallecimiento": "2025-09-07"
   };
 
+  private basePlantasTerciarizadoras: unknown[] = Array.isArray(basePlantasTerciarizadoras) ? basePlantasTerciarizadoras : [];
+
+    private plantasBase: Readonly<Record<string, any>> = {
+     "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
+            "clavePlanta": "0",
+            "claveAduana": null,
+            "superficie": null,
+            "ubicacionColindancias": null,
+            "capacidadProduccion": null,
+            "capacidadProduccionUtilizada": 0,
+            "tipoLocal": null,
+            "tipoEstablecimiento": null,
+            "ubicacionEstablecimiento": null,
+            "domicilio": 260910315,
+            "empresaSolicitante": 332682,
+            "rfcRecinto": null,
+            "numeroLicencia": null,
+            "avisoFuncionamiento": null,
+            "rfcResponsableSanitario": null,
+            "correoElectronico": null,
+            "fecFinVigencia": "2025-09-05",
+            "testado": false,
+            "estadoEvaluacionEntidad": "AUTORIZADO",
+            "estadoEntidad": "AUTORIZADO",
+            "original": null,
+            "modificado": null,
+            "tipoBodega": null,
+            "tipoDeposito": null,
+            "marbetesPrecintos": null,
+            "idSolicitudRecursiva": null,
+            "idRecintoRecursiva": null,
+            "claveSidefi": null,
+            "nacional": null,
+            "numeroMovimientoVs": null,
+            "descripcionNumeroBodega": null,
+            "blnActivo": null,
+            "booleanAlquilado": null,
+            "blnCertificada": null,
+            "blnGenerico1": null,
+            "capacidadMaxAlmacenamiento": null,
+            "cveUnidadAdministrativa": null,
+            "cveUnidadMedidaCapacidad": null,
+            "cveUnidadMedidaVolumen": null,
+            "descripcionCertificador": null,
+            "fechaInicioVigencia": "2025-09-05",
+            "idAlmacenadoraMercancia": null,
+            "idPersonaSolicitud": null,
+            "tipoInmueble": null,
+            "idTipoRecinto": "TIREC.03",
+            "rfcCertificador": null,
+            "superficieEtr": null,
+            "superficieMarbetes": null,
+            "volumenManejoRecinto": null,
+            "idRecinto": 1,
+            "errorImmex": null,
+            "domiciliosMontoInversion": [
+                {
+                    "claveTipo": "TIMI.EQ",
+                    "descripcion": "EWR WERWER",
+                    "cantidad": "34",
+                    "monto": "54",
+                    "testado": true,
+                    "fecFinVigencia": "2025-09-05"
+                }
+            ],
+            "domiciliosEmpleados": [
+                {
+                    "totalEmpleados": "45",
+                    "directos": "25",
+                    "cedula": "SI",
+                    "fechaCedula": "2025-09-05",
+                    "indirectos": "20",
+                    "contrato": "435",
+                    "objetoContrato": "RET ERT",
+                    "fechaFirma": "2025-09-05",
+                    "fechaFinVigenciaFirma": "2025-09-05",
+                    "rfcEmpresa": "AAL970927390",
+                    "razonEmpresa": "ALMEXA",
+                    "testado": true,
+                    "fecFinVigencia": "2025-09-05"
+                }
+            ],
+            "domiciliosCapacidad": [
+                {
+                    "idServicio": 10,
+                    "claveFraccion": "1_84199",
+                    "unidadMedida": "pieza",
+                    "descripcion": "EXPP",
+                    "capacidadEfectiva": "90",
+                    "turnos": "22",
+                    "horasTurno": "6",
+                    "cantidadEmpleados": "33",
+                    "cantidadMaquinaria": "33",
+                    "descripcionMaquinaria": "GSD",
+                    "capacidadMensual": "3242",
+                    "capacidadAnual": "2343",
+                    "calculo": "48.1",
+                    "testado": true,
+                    "fecFinVigencia": "2025-09-05"
+                }
+            ],
+            "complementoPlanta": {
+                "amparoPrograma": "SI",
+                "tipoDoc": "TID.CA",
+                "descripcionTipoDoc": null,
+                "fechaFirmaDoc": "04/09/2025",
+                "fechaFinVigenciaDoc": "04/09/2025",
+                "rfcFirmante": null,
+                "razonFirmante": null,
+                "rfcFirmanteDos": null,
+                "razonFirmanteDos": null,
+                "tipoDocResp": "TICCOR.CC",
+                "descripcionTipoDocResp": null,
+                "fechaFirmaDocResp": "04/09/2025",
+                "fechaFinVigenciaDocResp": "04/09/2025",
+                "rfcFirmanteResp": null,
+                "razonFirmanteResp": null,
+                "rfcFirmanteRespDos": null,
+                "razonFirmanteRespDos": null,
+                "testado": true,
+                "fecFinVigencia": "2025-09-05"
+            },
+            "firmantes": [
+                {
+                    "idPersonaPersonaSolicitudR": 0,
+                    "idSolicitud": 0,
+                    "nombre": "AGRICOLA ALPE S DE RL DE CV",
+                    "apellidoMaterno": "string",
+                    "apellidoPaterno": "string",
+                    "razonSocial": "TIPERS.SL",
+                    "rfc": "AAL0409235E6",
+                    "curp": "string",
+                    "ideTipoPersonaSol": "string",
+                    "correoElectronico": "vucem.soporte.aplicativo@ultrasist.com.mx",
+                    "cedulaProfesional": "string",
+                    "nss": "260833725",
+                    "telefono": "8154563",
+                    "descripcionGiro": "Siembra, cultivo y cosecha de papa",
+                    "cvePaisOrigen": "str",
+                    "idDireccionSol": 0,
+                    "tipoPatenteAgente": "string",
+                    "recif": "string",
+                    "puesto": "string",
+                    "tipoAgente": "string",
+                    "numeroPatente": "str",
+                    "numeroIdentificacionFiscal": "AAL0409235E6",
+                    "personaMoral": true,
+                    "extranjero": true,
+                    "organismoPublico": true,
+                    "cveUsuario": "string",
+                    "paginaWeb": "string",
+                    "ideGenerica1": "string",
+                    "rfcExtranjero": "string",
+                    "codAutorizacion": "stri",
+                    "actividadProductiva": "string",
+                    "estadoEvaluacionEntidad": "AUTORIZADO",
+                    "estadoEntidad": "AUTORIZADO",
+                    "original": true,
+                    "modificado": true,
+                    "numeroRegistro": "string",
+                    "concentimientoInstalacionRecuperacion": true,
+                    "cveCatalogo": "string",
+                    "alquilado": true,
+                    "volumenAlmacenaje": 0,
+                    "capacidadAlmacenaje": 0,
+                    "descripcionDetalladaActividadEconomica": "string",
+                    "activo": true,
+                    "generico1": true,
+                    "area": "string",
+                    "cveNacionalidad": "str",
+                    "clasificacionArancelaria": "string",
+                    "infoAdicional": true,
+                    "montoImportacion": 0,
+                    "montoExportacion": 0,
+                    "pctParticAccionaria": 0,
+                    "ampliacionModelos": true,
+                    "ampliacionPaises": true,
+                    "fecFallecimiento": "2025-09-05",
+                    "idDomicilio": 0
+                }
+            ]
+  }
+
    /**
    * URL de la página actual.
    */
@@ -204,6 +388,33 @@ ngOnInit(): void {
     });
   }
 
+        // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const RESULT: any[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   const MAP_TO_PAYLOAD = (item: any): any => ({
+  ...base,
+  entidadFederativa: item.estado,
+  municipioDelegacion: item.estadoOptions,
+  fechaActa: item.fechaDelActa,
+  nombreNotario: item.nombre,
+  numeroActa: item.numeroDeActa,
+  numeroNotaria: item.numeroDeNotaria,
+  apellidoPaterno: item.primerApellido,
+  apellidoMaterno: item.segundoApellido,
+  estadoEntidad: item.entidadFederativa,
+  cvePaisOrigen: item.pais,
+  rfc: item.rfc,
+  domicilio: item.domicilioFiscal,
+  razonSocial: item.razonSocial,
+});
+      
+
+    arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
+
+    return RESULT;
+}
   /**
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
    * 
@@ -213,10 +424,12 @@ ngOnInit(): void {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
     const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
+    const PLANTAS_TERCIARIZADORAS = PasoCapturarSolicitudComponent.buildPlantasControladoras(data.empresasSeleccionadas, this.basePlantasTerciarizadoras);
+    const PLANTAS = this.buildPlantas(data.tablaDatosFederatarios, this.plantasBase, data);
     const ANEXO_ALL = this.buildAnexo(data);
     const PAYLOAD = {
-        "tipoDeSolicitud": "guardar",
-      "idSolicitud": 202781045,
+    "tipoDeSolicitud": "guardar",
+    "idSolicitud": 202781045,
     "idTipoTramite": 80105,
     "rfc": "AAL0409235E6",
     "cveUnidadAdministrativa": "8101",
@@ -235,7 +448,7 @@ ngOnInit(): void {
     "solicitante": {
         
     },
-      "planta": [],
+      "planta": [...PLANTAS],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
       "mercanciaImportacion": [
@@ -249,7 +462,11 @@ ngOnInit(): void {
         }
     ],
     "plantasSubmanufactureras": [],
-    "sociosAccionistas":[...SOCIO_ACCIONISTAS]
+    "sociosAccionistas":[...SOCIO_ACCIONISTAS],
+    "solicitud": {
+      "anexoI": [...ANEXO_ALL.anexo.tableDos]
+    },
+    "plantasTerciarizadoras": PLANTAS_TERCIARIZADORAS
     };
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
       this.tramite80105Store.setIdSolicitud(response.datos.id_solicitud || 0);
@@ -296,6 +513,33 @@ ngOnInit(): void {
 
     return RESULT;
   }
+
+  /**
+ * Build plantasControladoras by taking the base array
+ * and appending the length of each key in empresasSeleccionadas
+ * to every planta item.
+ *
+ * @param empresasSeleccionadas  Object with keys whose values are arrays
+ * @param basePlantas            Existing plantasControladoras array
+ */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static buildPlantasControladoras(empresasSeleccionadas: any[], basePlantas: unknown[]): unknown[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const RESULT: any[] = [];
+
+    empresasSeleccionadas.forEach(emp => {
+      basePlantas.forEach(planta => {
+        const PLANTA = (planta && typeof planta === 'object') ? planta : {};
+        RESULT.push({
+          ...PLANTA,
+          razonSocial: emp.razonSocial ?? '',
+          rfc: emp.registroFederalContribuyentes ?? ''
+        });
+      });
+    });
+    return RESULT;
+  }
+
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
       /**
@@ -349,6 +593,21 @@ ngOnInit(): void {
           fecFinVigencia: null,
           volumenAnualSolicitado: null,
         });
+           const anexoDos: any = [];
+
+    (data.annexoUno?.exportarDatosTabla || []).forEach((item: any) => {
+      anexoDos.push({
+        fraccionExportacion: item.encabezadoFraccionExportacion,
+        fraccionImportacion: item.encabezadoFraccionImportacion,
+        descFraccionImpo: item.encabezadoDescripcionComercial,
+        claveFraccionAnexo: item.encabezadoAnexoII,
+        idProducto: item.encabezadoIdProducto,
+        fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
+        fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
+        fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
+        categoriaFraccion: item.encabezadoCategoria,
+      });
+    });
       
         return {
           anexo: {
@@ -356,6 +615,7 @@ ngOnInit(): void {
             ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
             proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
             datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
+            tableDos: anexoDos
           },
         };
       }
