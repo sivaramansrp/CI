@@ -597,8 +597,23 @@ export class AnexoComponent implements OnInit, OnDestroy {
      * @returns {void}
      */
     showTableExportacion(): void {
+      if(this.immexRegistroform.get('immexRegistroform.permisoImmexDatos')?.value.trim() !== '' ){
       this.showTableExport = true;
       this.fetchData();
+      }
+      else{
+        this.nuevaNotificacion={
+            tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Tiene que introducir laFracción arancelaria',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+        }
+      }
     }
   
     /**
@@ -979,7 +994,6 @@ estatus:true
     eliminarPedimentoDatos(borrar: boolean):void{
         this.nuevaNotificacion = {} as Notificacion;
       this.eliminarDatosTabla=false;
-    
        if(this.selectedRowData !== null && borrar){
         this.immexRegistroform.get('importacionForm')?.patchValue({
           fraccionArancelaria: this.selectedRowData?.fraccionArancelaria || '',
@@ -988,12 +1002,8 @@ estatus:true
           cantidadAnual: this.selectedRowData?.cantidadAnual || '',
           capacidadInstalada: this.selectedRowData?.capacidadInstalada || '',
           cantidadPorPeriodo: this.selectedRowData?.cantidadPorPeriodo || '',
-          Nicos:   this.immexRegistroform
-        .get('importacionForm.Nicos')
-        ?.value() || '',
-          productoDescExportacions:  this.immexRegistroform
-        .get('importacionForm.productoDescExportacions')
-        ?.value() || '',
+          Nicos:   this.immexRegistroform.get('importacionForm.Nicos')?.value|| '',
+          productoDescExportacions:  this.immexRegistroform.get('importacionForm.productoDescExportacions')?.value || '',
         });
  const MODAL_INSTANCIA = new Modal(
         this.mercanciaImportacionModal.nativeElement

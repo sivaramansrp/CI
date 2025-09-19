@@ -6,14 +6,14 @@
 "></ng-titulo>
       <div class="row">
         <div class="col-6 col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6">
-          <label for="permiso-immex">Fracción arancelaria de importación(sensibles):</label>
+          <label for="permiso-immex">Fracción arancelaria:</label>
           <input type="text" class="form-control" id="permiso-immex" formControlName="permisoImmexDatos"
             placeholder="" />
         </div>
         <div class="col-12 container text-end mt-5">
           <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura ||immexTableDatos.length === 0 " (click)="eliminarPermisoImmex()">Eliminar</button>
           <button class="btn btn-primary" (click)="showTableExportacion()"
-            [disabled]="esFormularioSoloLectura || immexTableDatos.length === 1 ">Agregar</button>
+            [disabled]="esFormularioSoloLectura || immexTableDatos.length === 1">Agregar</button>
         </div>
       </div>
       <div class="row  mt-5" *ngIf="showTableExport">
