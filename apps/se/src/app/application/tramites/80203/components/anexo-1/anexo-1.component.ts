@@ -1,6 +1,7 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
+  CatalogoServices,
   ConfiguracionColumna,
   ConsultaioQuery,
   SeccionLibQuery,
@@ -127,6 +128,11 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
   @ViewChild('mercanciaExportacionModal')
   mercanciaExportacionModal!: ElementRef;
+
+  /**
+   * ID del trámite actual.
+   */
+  tramiteId: string = '80203';
 
   /**
    * @property {FormGroup} immexRegistroform
@@ -318,7 +324,8 @@ export class Anexo1Component implements OnInit, OnDestroy {
     public immexRegistroStore: ImmexRegistroStore,
     public seccionQuery: SeccionLibQuery,
     public seccionStore: SeccionLibStore,
-    public readonly consultaQuery: ConsultaioQuery
+    public readonly consultaQuery: ConsultaioQuery,
+    public catalogoService: CatalogoServices
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -675,8 +682,33 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerIngresoSelectList(): void {
-    this.nicoService.obtenerMenuDesplegable('nico.json').subscribe((data) => {
-      this.nico = data as Catalogo[];
+    const CLAVE_FRACCION = '72162101'; // Unused variable, removed to fix lint error
+    this.catalogoService.nicosCatalogo(this.tramiteId, CLAVE_FRACCION)
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((datos) => {
+        // Transform the response to add nicoDescription
+        const TRANSFORMED_DATOS = {
+          ...datos,
+          datos: (datos.datos ?? []).map((item: Catalogo) => ({
+            ...item,
+            nicoDescription: item.descripcion,
+            descripcion: item.clave
+          }))
+        };
+        return TRANSFORMED_DATOS;
+      })
+    )
+    .subscribe((datos)=>{
+      this.nico = datos.datos as Catalogo[];
+    })
+  }
+
+  /* Actualiza el formulario con los datos seleccionados de NICO
+  */
+  cambioSeleccionNico(params: Catalogo, childForm:string, fieldname: string): void {
+    this.immexRegistroform.get(childForm)?.patchValue({
+      [fieldname]: params.nicoDescription,
     });
   }
 

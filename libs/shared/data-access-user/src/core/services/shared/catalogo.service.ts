@@ -53,8 +53,8 @@ export class CatalogoServices {
    * @param {string} tramite - El ID del trámite.
    * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
    */
-  nicosCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host}${CATALOGO_NICO(tramite)}`;
+  nicosCatalogo(tramite: string, claveFraccion: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_NICO(tramite, claveFraccion)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 }

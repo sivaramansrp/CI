@@ -35,7 +35,7 @@ export const AUTH_ROUTE = {
  * @param procedureId - ID del procedimiento del trámite
  * @returns URL completa para el endpoint de inicialización
  */
-export const CONSTRUIR_ENDPOINT_INICIAR = (procedureId: string): string => { return `${COMUN_URL.BASE_URL}sat-t${procedureId}/solicitud/iniciar` }
+export const CONSTRUIR_ENDPOINT_INICIAR = (procedureId: string): string => { return `${COMUN_URL.BASE_URL}sat-t${procedureId}/registro-solicitud/iniciar` }
 
 
 
@@ -524,9 +524,10 @@ export const CATALOGO_PAISES = (TRAMITE: string) : string => `sat-t${TRAMITE}/ca
 
 /*
  * API para obtener el catálogo de NICO
- * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/nico
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t80203/catalogo/nicos/producto-exportacion/72162101
+ 
  */
-export const CATALOGO_NICO = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/nico`;
+export const CATALOGO_NICO = (TRAMITE: string, claveFraccion: string) : string => `sat-t${TRAMITE}/catalogo/nicos/producto-exportacion/${claveFraccion}`;
 /**
  * API para obtener el estado de la solicitud del tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original_1

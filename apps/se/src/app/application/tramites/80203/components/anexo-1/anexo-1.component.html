@@ -104,7 +104,7 @@
               <div class="col-12 mt-5">
                 <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
                   <app-catalogo-select [label]="'Nico'" [catalogo]="nico" formControlName="Nico" [required]="true"
-                    name="Nico" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                    name="Nico" [isDisabled]="esFormularioSoloLectura" (selectionChange)="cambioSeleccionNico($event,'importacionForm','commodityNicoDescImportacion')"></app-catalogo-select>
                 </div>
                 <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
                   <label for="description-nico">Descripción Nico:</label>
@@ -165,11 +165,11 @@
                 <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
                   <app-catalogo-select [label]="'Nico'" [catalogo]="nico" formControlName="Nico" [required]="true"
                     [placeholder]="'Selecciona un valor'" name="Nico"
-                    [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                    [isDisabled]="esFormularioSoloLectura" (selectionChange)="cambioSeleccionNico($event, 'exportacionForm', 'exportacionDescExportacion')"></app-catalogo-select>
                 </div>
                 <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
                   <label for="description-nico">Descripción Nico:</label>
-                  <textarea class="form-control" id="description-nico" formControlName="productoDescExportacion"
+                  <textarea class="form-control" id="description-nico" formControlName="exportacionDescExportacion"
                     rows="5" placeholder=""></textarea>
                 </div>
               </div>

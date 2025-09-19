@@ -61,8 +61,11 @@ export class IniciarTramiteResolver implements Resolve<IniciarResolverResult | b
       switchMap((perfilUsuario) => {
         // Construir el payload con datos del usuario o valores por defecto
         const PAYLOAD: IniciarRequest = {
-          rfc_solicitante: perfilUsuario?.rfc || 'LEQI810131GA8', // RFC del usuario o fallback
-          rol_actual: 'SOLICITANTE' // Valor estándar
+          rfcSolicitante: perfilUsuario?.rfc || 'AAL0409235E6', // RFC del usuario o fallback
+          rolActual: 'SOLICITANTE', // Valor estándar
+          idTipoTramite: INICIAR_CONFIG?.procedureId || '', // ID del trámite desde la configuración
+          discriminador: INICIAR_CONFIG?.procedureId || '',
+          folioPrograma: 'FOL123456'
         };
 
         return this.iniciarTramiteService.postIniciar(PAYLOAD, INICIAR_CONFIG).pipe(
