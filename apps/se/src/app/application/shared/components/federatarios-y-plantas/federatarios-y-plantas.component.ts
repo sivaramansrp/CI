@@ -256,6 +256,8 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
      */
     private destroyNotifier$: Subject<void> = new Subject();
 
+    estadoImmex: Catalogo[] = [];
+
   /**
    * Constructor de la clase FederatariosYPlantasComponent.
    * @param {Router} router - Servicio de Angular para la navegación.
@@ -274,7 +276,8 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
     this.obtenerRepresentacion('MEX');
     this.obtenerActividad();
     this.obtenerTipoDocumento(102);
-    this.obtenerMunicipio("BCN")
+    this.obtenerMunicipio("BCN");
+    this.obtenerImex("MEX");
     if (this.formularioDeshabilitado) {
       this.federatariosFormGroup.disable();
     }
@@ -663,6 +666,18 @@ obtenerEstados():void {
    obtenerMunicipio(entidad:string):void {
     this.complimentosService.getmunicipio(entidad).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
   this.municipioCatologo = res.datos;
+    });
+    
+  }
+
+  /**
+   * Obtiene el estado IMEX de una entidad específica y actualiza la propiedad `estadoImmex` con los datos recibidos.
+   * 
+   * @param entidad - El identificador de la entidad para la cual se desea obtener el estado IMEX.
+   */
+  obtenerImex(entidad:string):void {
+    this.complimentosService.getEstadoImex(entidad).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+  this.estadoImmex = res.datos;
     });
     
   }
