@@ -12,14 +12,16 @@ import {
   PASOS,
   TITULOMENSAJE,
 } from '../../constantes/autorizacion-programa-nuevo.enum';
+import { Subject, map, take, takeUntil } from 'rxjs';
 import { Tramite80102State, Tramite80102Store } from '../../estados/tramite80102.store';
-import { map, Subject, take, takeUntil } from 'rxjs';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
-
+import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
+import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
+import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accionistas.json';
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
@@ -95,6 +97,12 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
    * URL de la página actual.
    */
   public solicitudState!: Tramite80102State;
+
+  /** Listado de empresas nacionales utilizadas en el formulario de solicitud. */
+  private empresasNacionales = empresasNacionales;
+  
+  /** Listado de empresas  extranjeras utilizadas en el formulario de solicitud. */
+  private empresasExtranjeras = empresasExtranjeras;
 
   constructor(
     private seccion: SeccionLibStore,
@@ -185,62 +193,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
    * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private socioAccionistaBase: Readonly<Record<string, any>> = {
-      "idPersonaPersonaSolicitudR": 0,
-      "idSolicitud": 202734824,
-      "nombre": "",
-      "apellidoMaterno": "",
-      "apellidoPaterno": "",
-      "razonSocial": "AGRICOLA ALPE S DE RL DE CV",
-      "rfc": "AAL0409235E6",
-      "curp": "",
-      "ideTipoPersonaSol": "TIPERS.SL",
-      "correoElectronico": "vucem.soporte.aplicativo@ultrasist.com.mx",
-      "cedulaProfesional": "",
-      "nss": "",
-      "telefono": "8154563",
-      "descripcionGiro": "Siembra, cultivo y cosecha de papa",
-      "cvePaisOrigen": "",
-      "idDireccionSol": 260833725,
-      "tipoPatenteAgente": "",
-      "recif": "",
-      "puesto": "",
-      "tipoAgente": "",
-      "numeroPatente": "",
-      "numeroIdentificacionFiscal": "",
-      "personaMoral": false,
-      "extranjero": false,
-      "organismoPublico": false,
-      "cveUsuario": "AAL0409235E6",
-      "paginaWeb": "",
-      "ideGenerica1": "",
-      "rfcExtranjero": "",
-      "codAutorizacion": "",
-      "actividadProductiva": "",
-      "estadoEvaluacionEntidad": "AUTORIZADO",
-      "estadoEntidad": "AUTORIZADO",
-      "original": false,
-      "modificado": false,
-      "numeroRegistro": "",
-      "concentimientoInstalacionRecuperacion": false,
-      "cveCatalogo": "",
-      "alquilado": false,
-      "volumenAlmacenaje": 0,
-      "capacidadAlmacenaje": 0,
-      "descripcionDetalladaActividadEconomica": "",
-      "activo": false,
-      "generico1": false,
-      "area": "",
-      "cveNacionalidad": "",
-      "clasificacionArancelaria": "",
-      "infoAdicional": false,
-      "montoImportacion": 0,
-      "montoExportacion": 0,
-      "pctParticAccionaria": 0,
-      "ampliacionModelos": false,
-      "ampliacionPaises": false,
-      "fecFallecimiento": "2025-09-07"
-  };
+  private socioAccionistaBase: any[] = socioAccionistas;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private plantasSubmanufacturerasBase: Readonly<Record<string, any>> = {
@@ -622,10 +575,8 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
  * utilizando un objeto base como plantilla y datos complementarios para completar
  * los campos faltantes.
  *
- * @param arr1 Primer arreglo de socios/accionistas.
- * @param arr2 Segundo arreglo de socios/accionistas.
+ * @param data Primer arreglo de socios/accionistas.
  * @param base Objeto base que sirve de plantilla para cada elemento del resultado.
- * @param data Objeto con datos complementarios necesarios para completar el payload.
  *
  * @returns Un nuevo arreglo que contiene los objetos combinados y mapeados
  *          con la información de los dos arreglos de entrada.
@@ -634,27 +585,49 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
  * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
  */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildSociosAccionistas(arr1: any[] = [], arr2: any[] = [], base: Record<string, any>, data: any): any[] {
+  buildSociosAccionistas(data: Record<string, any>, base: any[]): any[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+          paginaWeb: data['datosComplimentos'].datosGeneralis.paginaWWeb,
+          numeroRegistro: data['datosComplimentos'].formaModificaciones.nombreDeActa,
+          capacidadAlmacenaje: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
+          rfc:  data['datosComplimentos'].formaModificaciones.rfc ?? ''
+        });
+      });
+    return RESULT;
+  }
+
+  /**
+ * Build plantasControladoras by taking the base array
+ * and appending the length of each key in empresasSeleccionadas
+ * to every planta item.
+ *
+ * @param array  Object with keys whose values are arrays
+ * @param base            Existing plantasControladoras array
+ */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static buildComplementosTablaPayload(array: any[], base: unknown[]): unknown[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const MAP_TO_PAYLOAD = (item: any): any => ({
-      ...base,
-      nombre: item.nombre ?? '',
-      apellidoPaterno: item.apellidoPaterno ?? '',
-      apellidoMaterno: item.apellidoMaterno ?? '',
-      rfc: item.rfc ?? '',
-      correoElectronico: item.correoElectronico ?? '',
-      razonSocial: data.datosComplimentos.formaSocioAccionistas.formaDatos.razonSocial,
-      ideTipoPersonaSol: data.datosComplimentos.formaSocioAccionistas.tipoDePersona,
-      paginaWeb: data.datosComplimentos.datosGeneralis.paginaWWeb,
-      cveNacionalidad: data.datosComplimentos.formaSocioAccionistas.nationalidadMaxicana,
-      fecFallecimiento: data.datosComplimentos.formaCertificacion.fechaVigencia
+    const RESULT: any[] = [];
+
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+          rfc: arr.rfc || arr.taxId,
+          correoElectronico: arr.correoElectronico,
+          razonSocial: arr.razonSocial,
+          nombre: arr.nombre,
+          apellidoPaterno: arr.apellidoPaterno,
+          apellidoMaterno: arr.apellidoMaterno,
+        });
+      });
     });
-
-    arr1.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-    arr2.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-
     return RESULT;
   }
 
@@ -740,19 +713,18 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
   };
 }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
 buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const MAP_TO_PAYLOAD = (item: any): any => ({
       ...base,
-      tipoLocal: item.colonia,
-      estadoEntidad: item.entidadFederativa,
-      cvePaisOrigen: item.pais,
-      rfc: item.rfc,
-      domicilio: item.domicilioFiscal,
-      razonSocial: item.razonSocial,
+      estadoEntidad: item.entidadFederativa ?? '',
+      cvePaisOrigen: item.pais ?? '',
+      rfc: item.rfc ?? '',
+      domicilio: item.domicilioFiscal ?? '',
+      razonSocial: item.razonSocial ?? '',
     });
 
     arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
@@ -797,14 +769,16 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
-    const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
+    const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data, this.socioAccionistaBase);
+    const EMPRESAS_NACIONALES = SolicitudPageComponent.buildComplementosTablaPayload(data.tablaDatosComplimentos, this.empresasNacionales);
+    const EMPRESAS_EXTRANJERAS = SolicitudPageComponent.buildComplementosTablaPayload(data.tablaDatosComplimentosExtranjera, this.empresasExtranjeras);
     const PLANTAS = this.buildPlantas(data.tablaDatosFederatarios, this.plantasBase, data);
     const ANEXO_ALL = this.buildAnexo(data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase, data);
     
     const PAYLOAD = {
-       "tipoDeSolicitud": "guardar",
-      "idSolicitud": 202781045,
+    "tipoDeSolicitud": "guardar",
+    "idSolicitud": 202781045,
     "idTipoTramite": 80102,
     "rfc": "AAL0409235E6",
     "cveUnidadAdministrativa": "8101",
@@ -837,7 +811,9 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
         }
     ],
     "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
-    "sociosAccionistas":[...SOCIO_ACCIONISTAS],
+    "sociosAccionistas": SOCIO_ACCIONISTAS,
+    "empresasNacionales": EMPRESAS_NACIONALES,
+    "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
     "solicitud": {
         "anexoI": [...ANEXO_ALL.anexo.tableDos]
       }
