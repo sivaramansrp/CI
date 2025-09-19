@@ -249,7 +249,11 @@ ngOnInit(): void {
         }
     ],
     "plantasSubmanufactureras": [],
-    "sociosAccionistas":[...SOCIO_ACCIONISTAS]
+    "sociosAccionistas":[...SOCIO_ACCIONISTAS],
+      "solicitud": {
+        "anexoI": [...ANEXO_ALL.anexo.tableDos]
+      }
+    
     };
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
       this.tramite80105Store.setIdSolicitud(response.datos.id_solicitud || 0);
@@ -349,6 +353,21 @@ ngOnInit(): void {
           fecFinVigencia: null,
           volumenAnualSolicitado: null,
         });
+           const anexoDos: any = [];
+
+    (data.annexoUno?.exportarDatosTabla || []).forEach((item: any) => {
+      anexoDos.push({
+        fraccionExportacion: item.encabezadoFraccionExportacion,
+        fraccionImportacion: item.encabezadoFraccionImportacion,
+        descFraccionImpo: item.encabezadoDescripcionComercial,
+        claveFraccionAnexo: item.encabezadoAnexoII,
+        idProducto: item.encabezadoIdProducto,
+        fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
+        fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
+        fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
+        categoriaFraccion: item.encabezadoCategoria,
+      });
+    });
       
         return {
           anexo: {
@@ -356,6 +375,7 @@ ngOnInit(): void {
             ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
             proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
             datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
+            tableDos: anexoDos
           },
         };
       }
