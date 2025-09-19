@@ -19,6 +19,8 @@
               <h4>Solicitud</h4>
               <app-tabla-dinamica [configuracionTabla]="opcionConfig.configuracionTabla" [datos]="opcionConfig.datos"
                 (listaDeFilaSeleccionada)="opcionLista = $event"
+                [acciones]="tablaAcciones"
+                (alternarValor)="accionesSolitudValor($event)"
                 [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
             </div>
           </div>
