@@ -495,9 +495,13 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
    * Agrega una nueva mercancía a la lista si el formulario es válido.
    */
   agregar(): void {
+    console.log('Agregar mercancía');
+    console.log(this.mercanciaForm.valid);
     if (this.mercanciaForm.valid) {
+      console.log('inside if');
       this.tramiteService.agregar().pipe(takeUntil(this.destroyNotifier$)).subscribe(
         (respuesta) => {
+          console.log('Respuesta del servicio:', respuesta);
           if (respuesta?.success) {
             this.discripccionDeLaMercanciaForm = [...this.discripccionDeLaMercanciaForm, ...respuesta.datos];
             (this.store.setPersonaFisicaExtranjeraTabla as (valor: DiscripccionDeLaMercanciaForm[]) => void)(this.discripccionDeLaMercanciaForm);

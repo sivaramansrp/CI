@@ -173,6 +173,7 @@ export class TramiteFolioService {
    * @returns Observable con la respuesta del servidor en formato JSONResponse.
    */
   agregar(): Observable<RespuestaMercancia> {
+    console.log('Servicio agregar llamado');
     return this.http.get<RespuestaMercancia>(`assets/json/11101/agregar.json`);
   }
   
