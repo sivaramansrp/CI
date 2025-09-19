@@ -7,7 +7,6 @@ import { Injectable } from '@angular/core';
 export interface Solicitud11106State {
   /**
    * Campo checkbox: La autorización es nula
-   * Este es el único campo que existe en el formulario de solicitud 11106
    */
   laAutorizacionEsNula: boolean;
 }

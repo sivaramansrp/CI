@@ -6,7 +6,7 @@
   >
     <ng-titulo titulo="Cancelación donaciones" />
     <div class="col-md-12">
-      <ng-container formGroupName="cancelacionDonaciones">
+      <ng-container>
         <label>Datos requeridos*:</label>
         <div class="alert alert-info">
           <div class="form-check">
@@ -15,6 +15,8 @@
               class="form-check-input"
               formControlName="laAutorizacionEsNula"
               id="laAutorizacionEsNula"
+              [disabled]="esFormularioSoloLectura"
+              (change)="setValoresStore('laAutorizacionEsNula')"
             />
             <label class="form-check-label" for="laAutorizacionEsNula" style="font-weight: normal">
               *Para así convenir a mis intereses solicito se deje sin efectos la

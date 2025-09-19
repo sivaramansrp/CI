@@ -10,44 +10,24 @@ import { Query } from '@datorama/akita';
 @Injectable({ providedIn: 'root' })
 export class Solicitud11106Query extends Query<Solicitud11106State> {
 
-  /**
-   * @description Observable que expone el estado completo de la solicitud.
-   * Puede ser utilizado para reaccionar ante cualquier cambio en el estado.
-   */
-  seleccionarSolicitud$ = this.select((state) => {
-    return state;
-  });
+    /**
+     * @description Constructor que inyecta el store asociado a la solicitud 11106.
+     * Se pasa al constructor de la clase padre `Query`.
+     * @param store Instancia del store `Solicitud11106Store` que contiene el estado de la solicitud.
+     */
+    constructor(
+        protected override store: Solicitud11106Store
+    ) {
+        super(store);
+    }
 
-  /**
-   * @description Observable que expone específicamente el valor del checkbox "laAutorizacionEsNula".
-   * Útil para reactividad específica a este campo crítico del formulario.
-   */
-  seleccionarAutorizacionEsNula$ = this.select((state) => state.laAutorizacionEsNula);
-
-  /**
-   * @description Constructor que inyecta el store asociado a la solicitud 11106.
-   * Se pasa al constructor de la clase padre `Query`.
-   * @param store Instancia del store `Solicitud11106Store` que contiene el estado de la solicitud.
-   */
-  constructor(
-    protected override store: Solicitud11106Store
-  ) {
-    super(store);
-  }
-
-  /**
-   * @description Método para obtener el estado actual de manera síncrona.
-   * @returns {Solicitud11106State} El estado actual de la solicitud.
-   */
-  public obtenerEstadoActual(): Solicitud11106State {
-    return this.getValue();
-  }
-
-  /**
-   * @description Método para obtener solo el valor actual del checkbox "laAutorizacionEsNula".
-   * @returns {boolean} El valor actual del checkbox.
-   */
-  public obtenerAutorizacionEsNula(): boolean {
-    return this.getValue().laAutorizacionEsNula;
-  }
+    /**
+     * @description
+     * Observable que permite seleccionar y observar el estado completo de la solicitud 11106.
+     * @type {Observable<Solicitud11106State>}
+     * @memberof Solicitud11106Query
+     */
+    seleccionarAutorizacionEsNula$ = this.select((state) => {
+        return state;
+    });
 }

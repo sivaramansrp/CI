@@ -1,9 +1,10 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Solicitud11106State, Solicitud11106Store } from '../../estados/solicitud11106.store';
+import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solicitud11106Query } from '../../estados/solicitud11106.query';
-import { Solicitud11106Store } from '../../estados/solicitud11106.store';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 @Component({
@@ -23,6 +24,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   solicitudForm!: FormGroup;
 
+  esFormularioSoloLectura: boolean = false;
+
+    /**
+   * Estado de la solicitud de la sección 11106.
+   */
+  public solicitudState!: Solicitud11106State;
+
   /**
    * Sujeto utilizado como notificador para la destrucción del componente.
    */
@@ -40,9 +48,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   constructor(
     public formBuilder: FormBuilder,
     private store: Solicitud11106Store,
-    private query: Solicitud11106Query
+    private query: Solicitud11106Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   
@@ -55,58 +71,83 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * 
    */
   ngOnInit(): void {
-    this.solicitudForm = this.formBuilder.group({
-      cancelacionDonaciones: this.formBuilder.group({
-        laAutorizacionEsNula: [{ value: false, disabled: false }],
-      }),
-    });
-    
-    // Suscribirse al estado del store para sincronizar con el formulario
     this.query.seleccionarAutorizacionEsNula$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((laAutorizacionEsNula) => {
-        this.solicitudForm
-          .get('cancelacionDonaciones')
-          ?.get('laAutorizacionEsNula')
-          ?.setValue(laAutorizacionEsNula, { emitEvent: false });
-      });
-
-    // Escuchar cambios en el formulario y actualizar el store
-    this.solicitudForm
-      .get('cancelacionDonaciones')
-      ?.get('laAutorizacionEsNula')
-      ?.valueChanges
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((value) => {
-        this.store.setLaAutorizacionEsNula(value);
-      });
-    
-    this.setFormValues();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
+
   /**
-   * @method setFormValues
-   * @description Establece los valores iniciales del formulario `solicitudForm` 
-   * utilizando datos del store de Akita en lugar de constantes predefinidas.
-   * En este caso, configura el valor del campo `laAutorizacionEsNula` 
-   * dentro de `cancelacionDonaciones` con el valor del store.
+   * @description
+   * Inicializa el estado del formulario basado en si es de solo lectura o no.
+   * Si es de solo lectura, guarda los datos del formulario; de lo contrario,
+   * inicializa el formulario normalmente.
    * 
-   * @returns {void} No retorna ningún valor.
+   * @method inicializarEstadoFormulario
+   * @memberof SolicitudComponent
+   * @returns {void}
    */
-  setFormValues(): void {
-    const CURRENT_VALUE = this.query.obtenerAutorizacionEsNula();
-    this.solicitudForm
-      .get('cancelacionDonaciones')
-      ?.get('laAutorizacionEsNula')
-      ?.setValue(CURRENT_VALUE);
+  inicializarEstadoFormulario(): void {    
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+
+  /**
+   * @description
+   * Guarda los datos del formulario e inicializa el formulario.
+   * Después de inicializar, habilita o deshabilita el formulario
+   * dependiendo del estado de solo lectura.
+   * 
+   * @method guardarDatosFormulario
+   * @memberof SolicitudComponent
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.solicitudForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.solicitudForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
   }
 
   /**
-   * @description Obtiene el formulario reactivo correspondiente a la sección de cancelación de donaciones.
-   * @returns {FormGroup} El grupo de formulario asociado a 'cancelacionDonaciones'.
+   * @description
+   * Inicializa el formulario reactivo `solicitudForm` utilizando FormBuilder.
+   * Configura el control `laAutorizacionEsNula` con el valor inicial del estado
+   * de la solicitud.
+   * 
+   * @method inicializarFormulario
+   * @memberof SolicitudComponent
+   * @returns {void}
    */
-  get cancelacionDonaciones(): FormGroup {
-    return this.solicitudForm.get('cancelacionDonaciones') as FormGroup;
+  inicializarFormulario(): void {
+     this.solicitudForm = this.formBuilder.group({
+        laAutorizacionEsNula: [{ value: this.solicitudState?.laAutorizacionEsNula, disabled: false }],
+    });
+  }
+
+  /**
+   * Actualiza un valor en el estado global utilizando el almacén.
+   * @param campo Nombre del campo a actualizar.
+   */
+  setValoresStore(
+    campo: string
+  ): void {
+    const VALOR = this.solicitudForm.get(campo)?.value;
+    this.store.setLaAutorizacionEsNula(VALOR);
   }
 
   /**
@@ -148,5 +189,4 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-  
 }
