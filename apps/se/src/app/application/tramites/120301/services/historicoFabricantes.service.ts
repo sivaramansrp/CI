@@ -31,9 +31,9 @@ export class HistoricoFabricantesService {
    * @param idSolicitud ID de la solicitud asociada al fabricante.
    * @returns Observable con la respuesta del servidor que contiene el histórico de fabricantes.
    */
-  getFabricantes(tipoFabricante: string, idSolicitud: string): Observable<BaseResponse<FabricanteResponse[]>> {
-    const ENDPOINT = `${this.host}${API_GET_HISTORICO_FABRICANTES(tipoFabricante, idSolicitud)}`;
-    return this.http.get<BaseResponse<FabricanteResponse[]>>(ENDPOINT);
+  getFabricantes(tipoFabricante: string, idSolicitud: number): Observable<BaseResponse<FabricanteResponse>> {
+    const ENDPOINT = `${this.host}${API_GET_HISTORICO_FABRICANTES(tipoFabricante, idSolicitud.toString())}`;
+    return this.http.get<BaseResponse<FabricanteResponse>>(ENDPOINT);
   }
 
   /**

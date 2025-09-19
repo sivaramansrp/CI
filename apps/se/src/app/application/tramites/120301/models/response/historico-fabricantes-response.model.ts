@@ -1,8 +1,18 @@
 /**
+ * Modelo reponse para los fabricantes
+ */
+export interface FabricanteResponse{
+  /** Lista de fabricantes */
+  fabricante: Fabricante[];
+
+  /** Tipo de fabricantes */
+  tipo_fabricante: string;
+}
+/**
  * Modelo que representa la respuesta del servicio de histórico de fabricantes.
  * Este modelo se utiliza para mapear los datos recibidos desde la API correspondiente.
  */
-export interface FabricanteResponse {
+export interface Fabricante {
   /** Representa el nombre completo del fabricante. */
   razon_social?: string;
 

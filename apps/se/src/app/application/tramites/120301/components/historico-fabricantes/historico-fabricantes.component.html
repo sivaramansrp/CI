@@ -1,6 +1,6 @@
 <div class="container">
-  <ng-titulo titulo="Histórico fabricantes" />
   @if (isFabricantes) {
+  <ng-titulo titulo="Histórico fabricantes" />
   <form [formGroup]="historicoFabricantesForm">
     <div class="row">
       <div class="col-md-12">
@@ -8,37 +8,40 @@
       </div>
     </div>
 
-    <app-input-radio [radioOptions]="radioOptions" [selectedValue]="selectedValue" [isRequired]="true"
-      (valueChange)="onValueChange($event)" [layout]="'vertical'" 
-      (change)="
+    <app-input-radio [radioOptions]="radioOptions" [selectedValue]="historicoFabricantesForm.get('exportadorFabricanteMismo')?.value" [isRequired]="true"
+      (valueChange)="onValueChange($event)" [layout]="'vertical'"  (change)="
           setValoresStore(
           historicoFabricantesForm,
           'exportadorFabricanteMismo',
           'setExportadorFabricanteMismo'
           )"></app-input-radio>
     @if (isNacional) {
-    <app-input-radio [radioOptions]="radioOptionsNacional" [selectedValue]="selectValueNacional" [isRequired]="true"
+    <app-input-radio [radioOptions]="radioOptionsNacional" [selectedValue]="historicoFabricantesForm.get('exportadorFabricanteNacional')?.value" [isRequired]="true"
       (valueChange)="onValueChangeNacional($event)" [layout]="'vertical'"
-      ></app-input-radio>
+      (change)="setValoresStore(
+          historicoFabricantesForm,
+          'exportadorFabricanteNacional',
+          'setExportadorFabricanteNacional'
+          )"></app-input-radio>
     }
     @if(isNacionalTabla){
     <div>
       <h6>Fabricantes nacionales</h6>
 
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
-        [datos]="fabricantesNacionales"></app-tabla-dinamica>
+        [datos]="fabricantesNacionales" (listaDeFilaSeleccionada)="onSeleccionFabricantesNacionales($event)"></app-tabla-dinamica>
       <div class="container text-end mt-5">
-        <button class="btn btn-default me-2">Seleccionar</button>
+        <button class="btn btn-default me-2" [disabled]="!seleccionFabricantesNacionales || seleccionFabricantesNacionales.length === 0"
+          (click)="seleccionarFabricantes()">Seleccionar</button>
         <button class="btn btn-primary" (click)="fabricanteNuevo()">Fabricante nuevo</button>
       </div>
       <h6>Fabricante</h6>
 
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
-        [datos]="fabricante"
-        (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
+        [datos]="fabricante" (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
       <div class="row mb-3">
         <div class="d-flex justify-content-end mt-5">
-          <button type="button" class="btn btn-default" (click)="eliminarSeleccionados()">Eliminar</button>
+          <button type="button" class="btn btn-default" [disabled]="!fabricante || fabricante.length === 0" (click)="eliminarSeleccionados()">Eliminar</button>
         </div>
       </div>
     </div>
@@ -46,22 +49,21 @@
 
   </form>
   }@else{
-   <form [formGroup]="historicoFabricantesForm">
-  <div class="row">
-    <ng-titulo titulo="Datos fabricante nacional"></ng-titulo>
-    <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5">
-      <label for="message" class="form-label">Número de registro fiscal*:</label>
-      <input type="text" class="form-control" id="message" placeholder="" formControlName="numeroRegistroFiscal"
-         />
+  <form [formGroup]="historicoFabricantesForm">
+    <div class="row">
+      <ng-titulo titulo="Datos fabricante nacional"></ng-titulo>
+      <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5">
+        <label for="message" class="form-label">Número de registro fiscal*:</label>
+        <input type="text" class="form-control" id="message" placeholder="" formControlName="numeroRegistroFiscal" />
+      </div>
     </div>
-  </div>
-  <div class="row mb-3">
-    <div class="d-flex justify-content-end mt-3">
-      <button type="button" class="btn btn-default me-2" (click)="cancelar()">Cancelar</button>
-      <button type="button" class="btn btn-primary " (click)="onSubmitRfc()">Agregar</button>
+    <div class="row mb-3">
+      <div class="d-flex justify-content-end mt-3">
+        <button type="button" class="btn btn-default me-2" (click)="cancelar()">Cancelar</button>
+        <button type="button" class="btn btn-primary " (click)="onSubmitRfc()">Agregar</button>
 
+      </div>
     </div>
-  </div>
   </form>
   }
 

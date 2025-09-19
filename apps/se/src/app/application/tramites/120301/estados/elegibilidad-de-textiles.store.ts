@@ -1,7 +1,8 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { ConstanciaTramiteConfiguracion } from '@libs/shared/data-access-user/src/core/models/shared/acuse-y-resoluciones-folio-tramite.model';
-import { FitosanitarioForm } from '../models/elegibilidad-de-textiles.model';
+
+import { FitosanitarioForm, HistoricoColumns } from '../models/elegibilidad-de-textiles.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -41,6 +42,10 @@ export interface TextilesState {
    * @description Identificador único de la factura comercial relacionada con los textiles.
    */
   numeroFactura: string;
+
+  exportadorFabricanteNacional : string;
+
+  listaFabricantes: HistoricoColumns[];
   
   /** 
    * Cantidad total de textiles.
@@ -385,6 +390,8 @@ export function createInitialState(): TextilesState {
   return {
   SolicitudState: {} as FitosanitarioForm,
   numeroFactura: '',
+  exportadorFabricanteNacional : '',
+  listaFabricantes:[],
   cantidadTotal: '',
   unidadDeMedida: '',
   fechaInicioInput: '',
@@ -1571,6 +1578,38 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
     this.update((state) => ({
       ...state,
       exportadorFabricanteMismo,
+    }));
+  }
+
+  /**
+   * @method setExportadorFabricanteNacional
+   * @description Actualiza el estado del exportador/fabricante nacional en el store.
+   * Utiliza el patrón de actualización inmutables para modificar el estado,
+   * preservando las demás propiedades del estado actual.
+   * @param {string} exportadorFabricanteNacional - El nuevo valor para la propiedad
+   * exportadorFabricanteNacional en el estado del store.
+   * @returns {void} No retorna ningún valor.
+   */
+   public setExportadorFabricanteNacional(exportadorFabricanteNacional: string): void {
+    this.update((state) => ({
+      ...state,
+      exportadorFabricanteNacional,
+    }));
+  }
+
+  /**
+   * @method setListaFabricantes
+   * @description Actualiza la lista de fabricantes en el store.
+   * Realiza una actualización inmutable del estado, manteniendo todas las
+   * propiedades existentes y reemplazando solamente la lista de fabricantes.
+   * @param {HistoricoColumns[]} listaFabricantes - Array de objetos HistoricoColumns
+   * que representa la nueva lista de fabricantes a almacenar en el estado.
+   * @returns {void} No retorna ningún valor.
+   */
+  public setListaFabricantes(listaFabricantes: HistoricoColumns[]): void {
+    this.update((state) => ({
+      ...state,
+      listaFabricantes,
     }));
   }
 

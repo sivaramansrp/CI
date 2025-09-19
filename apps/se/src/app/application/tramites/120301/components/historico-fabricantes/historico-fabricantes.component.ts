@@ -38,6 +38,7 @@ import {
   ElegibilidadDeTextilesStore,
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
+import { Solicitud120301State, Tramite120301Store } from '../../estados/tramites/tramite120301.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
@@ -123,6 +124,17 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * Filas seleccionadas para eliminar de la lista
    */
   seleccionados: HistoricoColumns[] = [];
+
+  /**
+  * @property {HistoricoColumns[]} seleccionFabricantesNacionales
+  * Filas seleccionadas para eliminar de la lista
+  */
+  seleccionFabricantesNacionales: HistoricoColumns[] = [];
+
+  /**
+   * Recuperado de datos del state
+   */
+  public solicitudState!: Solicitud120301State;
 
   /**
    * @property {boolean} esFormaValido
@@ -318,7 +330,8 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     private seccionQuery: SeccionLibQuery,
     private elegibilidadTextilesService: ElegibilidadTextilesService,
     private cdr: ChangeDetectorRef,
-    private historicoFabricantesService: HistoricoFabricantesService
+    private historicoFabricantesService: HistoricoFabricantesService,
+    private tramiteStore: Tramite120301Store
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -334,6 +347,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   ngOnInit(): void {
+    this.solicitudState = this.tramiteStore.getValue(); // Akita getValue()
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -351,7 +365,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.initActionFormBuild();
-    
+
 
     this.historicoFabricantesForm.statusChanges
       .pipe(
@@ -383,6 +397,25 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     if (this.formularioDeshabilitado) {
       this.historicoFabricantesForm.disable();
     }
+
+    if (this.historicoState.exportadorFabricanteMismo) {
+      this.isNacional = true;
+    }
+    if (this.historicoState.exportadorFabricanteNacional) {
+      const IDSOLICITUD = this.solicitudState.idSolicitud;
+      this.isNacionalTabla = true;
+
+      const TIPO_FABRICANTE = this.historicoFabricantesForm.get('exportadorFabricanteNacional')?.value === 'Nacional'
+        ? 'NACIONAL'
+        : this.historicoFabricantesForm.get('exportadorFabricanteNacional')?.value;
+
+      this.recuperarDatos(TIPO_FABRICANTE, IDSOLICITUD);
+    }
+
+    if (this.historicoState.listaFabricantes?.length > 0) {
+      this.fabricante = [...this.historicoState.listaFabricantes];
+      this.isFabricantes = true;
+    }
   }
 
   /**
@@ -398,6 +431,9 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     this.historicoFabricantesForm = this.fb.group({
       exportadorFabricanteMismo: [
         this.historicoState.exportadorFabricanteMismo,
+      ],
+      exportadorFabricanteNacional: [
+        this.historicoState.exportadorFabricanteNacional,
       ],
       numeroRegistroFiscal: [
         this.historicoState.numeroRegistroFiscal,
@@ -417,7 +453,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * nacional disponible en el sistema.
    * @returns {void} No retorna ningún valor.
    */
-  recuperarDatos(tipoFabricante: string, idSolicitud: string): void {
+  recuperarDatos(tipoFabricante: string, idSolicitud: number): void {
     this.historicoFabricantesService
       .getFabricantes(tipoFabricante, idSolicitud)
       .pipe(
@@ -426,8 +462,9 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (resp) => {
           if (resp.codigo === '00' && resp.datos) {
-            // Mapeamos la respuesta del backend al formato de la tabla
-            this.fabricantesNacionales = resp.datos.map((f) => ({
+            const FABRICANTES = resp.datos.fabricante ?? [];
+
+            this.fabricantesNacionales = FABRICANTES.map((f) => ({
               nombreFabricante: f.razon_social ?? '',
               numeroRegistroFiscal: f.clave_fabricante ?? '',
               direccion: f.direccion ?? '',
@@ -458,8 +495,49 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   onValueChange(newValue: number | string): void {
+    this.historicoFabricantesForm.get('exportadorFabricanteMismo')?.setValue(newValue)
     this.selectedValue = newValue;
     this.isNacional = true;
+  }
+
+  /**
+   * @method onSeleccionFabricantesNacionales
+   * @description Maneja la selección de fabricantes nacionales desde un componente externo.
+   * Almacena la lista de fabricantes nacionales seleccionados en una propiedad de la clase
+   * para su posterior procesamiento. Este método actúa como callback para recibir datos
+   * de selección múltiple desde otros componentes.
+   * @param {HistoricoColumns[]} seleccion - Array de objetos HistoricoColumns que representan
+   * los fabricantes nacionales seleccionados por el usuario.
+   * @returns {void} No retorna ningún valor.
+   */
+  onSeleccionFabricantesNacionales(seleccion: HistoricoColumns[]): void {
+    this.seleccionFabricantesNacionales = seleccion;
+  }
+
+  /**
+   * @method seleccionarFabricantes
+   * @description Procesa y agrega los fabricantes nacionales previamente seleccionados
+   * a la lista principal de fabricantes. Valida que exista una selección previa y evita
+   * duplicados basándose en el número de registro fiscal. Al finalizar el proceso,
+   * limpia la selección temporal para prepararse para nuevas selecciones.
+   * @returns {void} No retorna ningún valor.
+   * @throws No lanza excepciones explícitas, pero retorna temprano si no hay selección.
+   */
+  seleccionarFabricantes(): void {
+    if (!this.seleccionFabricantesNacionales || this.seleccionFabricantesNacionales.length === 0) {
+      return;
+    }
+
+    // Agregar seleccionados evitando duplicados
+    this.seleccionFabricantesNacionales.forEach(fab => {
+      const EXISTE = this.fabricante.some(f => f.numeroRegistroFiscal === fab.numeroRegistroFiscal);
+      if (!EXISTE) {
+        this.fabricante = [...this.fabricante, fab];
+      }
+    });
+
+    // Opcional: limpiar selección
+    this.seleccionFabricantesNacionales = [];
   }
 
   /**
@@ -471,13 +549,14 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * @param newValue - El nuevo valor seleccionado en el control de radio.
    */
   onValueChangeNacional(newValue: number | string): void {
+    this.historicoFabricantesForm.get('exportadorFabricanteNacional')?.setValue(newValue);
     this.selectValueNacional = newValue;
 
     let tipoFabricante = '';
     if (newValue === 'Nacional') {
       tipoFabricante = 'NACIONAL';
     }
-    const IDSOLICITUD = '12345'
+    const IDSOLICITUD = this.solicitudState.idSolicitud
     this.isNacionalTabla = true;
     this.recuperarDatos(tipoFabricante, IDSOLICITUD);
 
@@ -488,7 +567,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * Cambia la bandera isFabricantes a false para mostrar el formulario
    * y ocultar la lista de fabricantes existentes.
    */
-  fabricanteNuevo(): void{
+  fabricanteNuevo(): void {
     this.isFabricantes = false;
   }
 
@@ -497,7 +576,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * Cambia la bandera isFabricantes a true para ocultar el formulario
    * y mostrar nuevamente la lista de fabricantes existentes.
    */
-  cancelar(): void{
+  cancelar(): void {
     this.isFabricantes = true;
   }
 
@@ -592,63 +671,65 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * y contiene datos, actualiza la interfaz para mostrar los fabricantes.
    */
   onSubmitRfc(): void {
-  if (this.historicoFabricantesForm.invalid) {
-    this.historicoFabricantesForm.markAllAsTouched();
-    return;
+    if (this.historicoFabricantesForm.invalid) {
+      this.historicoFabricantesForm.markAllAsTouched();
+      return;
+    }
+
+    const RFC = this.historicoFabricantesForm.get('numeroRegistroFiscal')?.value;
+
+    this.historicoFabricantesService
+      .getFabricanteNacional(RFC)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo === '00' && resp.datos) {
+            this.isFabricantes = true;
+            const FAB = resp.datos;
+
+            // Mapear respuesta → HistoricoColumns
+            const NUEVO_FABRICANTE: HistoricoColumns = {
+              nombreFabricante: FAB.razon_social
+                ? FAB.razon_social
+                : `${FAB.nombre ?? ''} ${FAB.apellido_paterno ?? ''} ${FAB.apellido_materno ?? ''}`.trim(),
+              numeroRegistroFiscal: FAB.rfc,
+              direccion: FAB.domicilio
+                ? `${FAB.domicilio.calle ?? ''} ${FAB.domicilio.num_exterior ?? ''}, ${FAB.domicilio.colonia ?? ''}, ${FAB.domicilio.entidad_federativa ?? ''}, ${FAB.domicilio.pais?.nombre ?? ''}`
+                : '',
+              correoElectrónico: FAB.correo_electronico ?? '',
+              telefono: FAB.telefono ?? '',
+            };
+
+            // Limpiar la tabla y agregar
+            this.fabricante = [...this.fabricante, NUEVO_FABRICANTE];
+            this.ElegibilidadDeTextilesStore.setListaFabricantes(this.fabricante);
+          } else {
+            console.error('Error en la búsqueda:', resp.mensaje);
+          }
+        },
+        error: (err) => {
+          console.error('Error en la petición:', err);
+        },
+      });
   }
 
-  const RFC = this.historicoFabricantesForm.get('numeroRegistroFiscal')?.value;
-
-  this.historicoFabricantesService
-    .getFabricanteNacional(RFC)
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (resp) => {
-        if (resp.codigo === '00' && resp.datos) {
-          this.isFabricantes = true;
-           const FAB = resp.datos;
-
-          // Mapear respuesta → HistoricoColumns
-          const NUEVO_FABRICANTE: HistoricoColumns = {
-            nombreFabricante: FAB.razon_social
-              ? FAB.razon_social
-              : `${FAB.nombre ?? ''} ${FAB.apellido_paterno ?? ''} ${FAB.apellido_materno ?? ''}`.trim(),
-            numeroRegistroFiscal: FAB.rfc,
-            direccion: FAB.domicilio
-              ? `${FAB.domicilio.calle ?? ''} ${FAB.domicilio.num_exterior ?? ''}, ${FAB.domicilio.colonia ?? ''}, ${FAB.domicilio.entidad_federativa ?? ''}, ${FAB.domicilio.pais?.nombre ?? ''}`
-              : '',
-            correoElectrónico: FAB.correo_electronico ?? '',
-            telefono: FAB.telefono ?? '',
-          };
-
-          // Limpiar la tabla y agregar
-           this.fabricante = [...this.fabricante, NUEVO_FABRICANTE];
-        } else {
-          console.error('Error en la búsqueda:', resp.mensaje);
-        }
-      },
-      error: (err) => {
-        console.error('Error en la petición:', err);
-      },
-    });
-}
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-onSeleccionChange(event: HistoricoColumns[]) {
-  this.seleccionados = event;
-}
-
-/**
- * Eliminar filas seleccionadas de la tabla
- */
-eliminarSeleccionados(): void {
-  if (this.seleccionados.length > 0) {
-    this.fabricante = this.fabricante.filter(
-      f => !this.seleccionados.some(sel => sel.numeroRegistroFiscal === f.numeroRegistroFiscal)
-    );
-    this.seleccionados = [];
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  onSeleccionChange(event: HistoricoColumns[]) {
+    this.seleccionados = event;
   }
-}
+
+  /**
+   * Eliminar filas seleccionadas de la tabla
+   */
+  eliminarSeleccionados(): void {
+    if (this.seleccionados.length > 0) {
+      this.fabricante = this.fabricante.filter(
+        f => !this.seleccionados.some(sel => sel.numeroRegistroFiscal === f.numeroRegistroFiscal)
+      );
+      this.seleccionados = [];
+    }
+    this.ElegibilidadDeTextilesStore.setListaFabricantes(this.fabricante);
+  }
 
 
   /**
