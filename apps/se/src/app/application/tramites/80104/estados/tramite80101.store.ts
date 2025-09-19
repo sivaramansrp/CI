@@ -1,5 +1,5 @@
 import { AnexoEncabezado, AnexoUnoEncabezado, DatosAnexotressUno } from '../../../shared/models/nuevo-programa-industrial.model';
-import { AnnexoDosTres, AnnexoUno } from '../models/nuevo-programa-industrial.model';
+import { AnnexoDosTres, AnnexoUno, DisponsibleFiscal } from '../models/nuevo-programa-industrial.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoPaises } from '@libs/shared/data-access-user/src';
@@ -78,7 +78,8 @@ export interface Tramite80101State {
   annexoUno: AnnexoUno,
   
   indicePrevioRuta: number;
-  tablaDatosFederatarios: FederatariosEncabezado[]
+  tablaDatosFederatarios: FederatariosEncabezado[],
+  empresasSeleccionadas: DisponsibleFiscal[];
 }
 
 /**
@@ -233,7 +234,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   indicePrevioRuta: 0,
   tablaDatosFederatarios: [],
   idSolicitud: 0,
-
+  empresasSeleccionadas: [],
 };
 
 /**
@@ -861,5 +862,16 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       idSolicitud,
     }));
   }
+    
+  /**
+   * Establece la lista de empresas seleccionadas en el estado.
+   * @param empresasSeleccionadas - Arreglo de empresas seleccionadas.
+   */
+    public setSeleccionadas(empresasSeleccionadas: DisponsibleFiscal[]):void {
+      this.update((state) => ({
+        ...state,
+        empresasSeleccionadas,
+      }));
+    }
 
 }
