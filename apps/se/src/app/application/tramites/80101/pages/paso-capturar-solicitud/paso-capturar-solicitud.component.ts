@@ -631,6 +631,8 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
         fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
         fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
         categoriaFraccion: item.encabezadoCategoria,
+        tipoFraccion:item.encabezadoTipo,
+        umt:item.encabezadoUmt
       });
     });
 

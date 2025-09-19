@@ -256,6 +256,10 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
      */
     private destroyNotifier$: Subject<void> = new Subject();
 
+    /**
+     * Arreglo que contiene los elementos del catálogo de estado IMMEX.
+     * Cada elemento representa una opción disponible en el catálogo.
+     */
     estadoImmex: Catalogo[] = [];
 
   /**
