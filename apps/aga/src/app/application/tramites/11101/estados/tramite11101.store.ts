@@ -35,6 +35,7 @@ export interface Tramitenacionales11101State {
     fin: string;
     moneda: string;
     especifique: string;
+    consecutivo: string;
 
     /**
      * Lista que indica el estado de cada sección del formulario (true si está activa, false si no).
@@ -267,7 +268,8 @@ export function createTramiteState(): Tramitenacionales11101State {
         numerodeserie: '',
         fin: '',
         moneda: '',
-        especifique: ''
+        especifique: '',
+        consecutivo: '',
     };
 }
 
@@ -937,6 +939,17 @@ export class Tramite11101Store extends Store<Tramitenacionales11101State> {
         this.update((state) => ({
             ...state,
             especifique,
+        }));
+    }
+
+    /**
+     * Establece el consecutivo.
+     * @param consecutivo - Consecutivo a asignar al estado.
+     */
+    public setConsecutivo(consecutivo: string): void {
+        this.update((state) => ({
+            ...state,
+            consecutivo,
         }));
     }
 

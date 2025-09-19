@@ -290,8 +290,8 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
       cantidad: [
         this.solicitudState?.cantidad,
         [Validators.required, Validators.min(1)]
-      ],
-      formapartadepatrimonia: [
+      ],      
+      formaParteDePatrimonio: [
         this.solicitudState?.formaParteDePatrimonio,
         [Validators.required]
       ],
@@ -338,6 +338,9 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
       especifique: [
         this.solicitudState?.especifique,
         [Validators.maxLength(200)]
+      ],
+      consecutivo: [
+        this.solicitudState?.consecutivo
       ]
     });
 
@@ -373,7 +376,7 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
   }
 
   formaParteDePatrimonioSeleccion(): void {
-    const FORMAPARTADEPATRIMONIA = this.mercanciaForm.get('formapartadepatrimonia')?.value;
+    const FORMAPARTADEPATRIMONIA = this.mercanciaForm.get('formapartadepatrimonio')?.value;
     this.store.setFormaParteDePatrimonio(FORMAPARTADEPATRIMONIA);
   }
 
@@ -486,6 +489,26 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
   setManual(): void {
     const RADIO_DOMICILIO = this.avisoForm?.get('radioDomicilio')?.value;
     this.isManualSelected = RADIO_DOMICILIO === 'manual';
+  }
+
+  /**
+   * Agrega una nueva mercancía a la lista si el formulario es válido.
+   */
+  agregar(): void {
+    if (this.mercanciaForm.valid) {
+      this.tramiteService.agregar().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+        (respuesta) => {
+          if (respuesta?.success) {
+            this.discripccionDeLaMercanciaForm = [...this.discripccionDeLaMercanciaForm, ...respuesta.datos];
+            (this.store.setPersonaFisicaExtranjeraTabla as (valor: DiscripccionDeLaMercanciaForm[]) => void)(this.discripccionDeLaMercanciaForm);
+            this.store.setPersonaFisicaExtranjeraTabla(this.discripccionDeLaMercanciaForm);
+            this.mercanciaForm.reset();
+            this.mercanciaForm.markAsUntouched();
+            this.mercanciaForm.markAsPristine();
+          }
+        }
+      );
+    }
   }
 
   /**

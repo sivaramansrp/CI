@@ -3,6 +3,7 @@ import { ENVIRONMENT, RespuestaCatalogos } from '@libs/shared/data-access-user/s
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { RespuestaMercancia } from '../models/transportacion-maritima.model';
 
 /**
  * Representa la estructura estandarizada de una respuesta JSON para los servicios extraordinarios.
@@ -165,6 +166,14 @@ export class TramiteFolioService {
    */
   getEstado(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/11101/estado.json`);
+  }
+
+  /**
+   * Simula la adición de una nueva mercancía extraordinaria.
+   * @returns Observable con la respuesta del servidor en formato JSONResponse.
+   */
+  agregar(): Observable<RespuestaMercancia> {
+    return this.http.get<RespuestaMercancia>(`assets/json/11101/agregar.json`);
   }
   
 }
