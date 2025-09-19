@@ -1,4 +1,4 @@
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { DatosGeneralesDeLaSolicitudCatologo } from '../models/solicitud.model';
 import { DatosGeneralesDeLaSolicitudDatos } from '../models/solicitud.model';
 import { DatosGeneralesDeLaSolicitudRadioLista } from '../models/solicitud.model';
@@ -55,8 +55,8 @@ export class SolicitudService {
   /**
    * Obtiene el catálogo de nombres de instituciones.
    */
-  conseguirNombreInstitucionCatalogo(): Observable<CatalogosSelect> {
-    return this.http.get<CatalogosSelect>(
+  conseguirNombreInstitucionCatalogo(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
       'assets/json/31301/nombre-institucion-catalogo.json'
     );
   }

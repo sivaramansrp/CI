@@ -1,5 +1,5 @@
+import { Catalogo, CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CapturarElTextoLibre } from '../models/datos-tramite.model';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { FormaRequerimiento } from '../models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -110,8 +110,8 @@ export class AutoridadService {
    *
    * @returns {Observable<CatalogosSelect>} Un observable que emite los datos del catálogo de tipos de documentos.
    */
-  getTiposDocumentos(): Observable<CatalogosSelect> {
-    return this.http.get<CatalogosSelect>(
+  getTiposDocumentos(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
       'assets/json/32401/tipos-documentos.json'
     );
   }

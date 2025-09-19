@@ -235,15 +235,14 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * @returns HTML en forma de string con los mensajes de error formateados.
    */
   generarValidacionHTML(): string {
-    const ERRORES_HTML = this.mensajesDeValidacion
-      .map(
-        (message, index) => `
+    const MENSAJES_UNICOS = [...new Set(this.mensajesDeValidacion)];
+    const ERRORES_HTML = MENSAJES_UNICOS.map(
+      (message, index) => `
         <div class="validation-wrapper">
           <span class="validation-index">${index + 1}.</span>
           <span class="validation-message">${message}</span>
         </div>`
-      )
-      .join('');
+    ).join('');
     const HTML = `
     <div class="validation-title">Corrija los siguientes errores:</div>
     ${ERRORES_HTML}

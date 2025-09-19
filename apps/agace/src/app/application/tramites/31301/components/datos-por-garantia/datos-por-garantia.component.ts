@@ -1,15 +1,34 @@
 import {
+  CONFIGURACION_FECHA_FIN_ACTUAL_VIGENCIA,
+  CONFIGURACION_FECHA_FIN_ANTERIOR_VIGENCIA,
+  CONFIGURACION_FECHA_FIN_VIGENCIA,
+  CONFIGURACION_FECHA_INICIO_ACTUAL_VIGENCIA,
+  CONFIGURACION_FECHA_INICIO_ANTERIOR_VIGENCIA,
+  CONFIGURACION_FECHA_INICIO_VIGENCIA,
+  NOMBRE_INSTITUCION_ACTUAL_CATALOGO,
+  NOMBRE_INSTITUCION_ANTERIOR_CATALOGO,
+  NOMBRE_INSTITUCION_CATALOGO,
+} from '../../constants/constants.enum';
+import {
   Catalogo,
   CatalogoSelectComponent,
   CatalogosSelect,
   InputFecha,
   InputFechaComponent,
-  TituloComponent
+  TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud31301State, Solicitud31301Store } from '../../estados/solicitud31301.store';
-import { Subject,map, takeUntil } from 'rxjs';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud31301State,
+  Solicitud31301Store,
+} from '../../estados/solicitud31301.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosPorGarantia } from '../../models/solicitud.model';
@@ -30,7 +49,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     TituloComponent,
     CatalogoSelectComponent,
     InputFechaComponent,
-    TooltipModule
+    TooltipModule,
   ],
   providers: [SolicitudService],
   templateUrl: './datos-por-garantia.component.html',
@@ -45,22 +64,67 @@ export class DatosPorGarantiaComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para mostrar los datos de la póliza de fianza */
   polizaDeFianzaForm!: FormGroup;
 
+  /**
+   * Formulario reactivo que contiene los datos de la póliza de fianza anterior.
+   * Se utiliza para gestionar y validar la información ingresada o recuperada
+   * relacionada con la póliza previa.
+   *
+   * @type {FormGroup}
+   */
+  polizaDeFianzaAnteriorForm!: FormGroup;
+
+  /**
+   * Formulario reactivo que contiene los datos de la póliza de fianza actual.
+   * Se utiliza para gestionar y validar la información ingresada o editada
+   * relacionada con la póliza vigente.
+   *
+   * @type {FormGroup}
+   */
+  polizaDeFianzaActualForm!: FormGroup;
+
   /** Catálogo de instituciones para selección de nombre */
-  nombreInstitucionCatalogo: CatalogosSelect = {} as CatalogosSelect;
+  nombreInstitucionCatalogo: CatalogosSelect = NOMBRE_INSTITUCION_CATALOGO;
+
+  /**
+   * Catálogo de opciones que contiene las instituciones para la póliza de fianza anterior.
+   * Se utiliza para mostrar las opciones disponibles en el formulario correspondiente.
+   *
+   * @type {CatalogosSelect}
+   */
+  nombreInstitucionAnteriorCatalogo: CatalogosSelect =
+    NOMBRE_INSTITUCION_ANTERIOR_CATALOGO;
+
+  /**
+   * Catálogo de opciones que contiene las instituciones para la póliza de fianza actual.
+   * Se utiliza para mostrar las opciones disponibles en el formulario correspondiente.
+   *
+   * @type {CatalogosSelect}
+   */
+  nombreInstitucionActualCatalogo: CatalogosSelect =
+    NOMBRE_INSTITUCION_ACTUAL_CATALOGO;
 
   /** Configuración para el campo de fecha de fin de vigencia */
-  configuracionFechaFinVigencia: InputFecha = {
-    labelNombre: 'Fecha fin de la ampliacion',
-    required: true,
-    habilitado: false,
-  };
+  configuracionFechaFinVigencia: InputFecha = CONFIGURACION_FECHA_FIN_VIGENCIA;
 
   /** Configuración para el campo de fecha de inicio de vigencia */
-  configuracionFechaInicioVigencia: InputFecha = {
-    labelNombre: 'Fecha inicio de la ampliación',
-    required: true,
-    habilitado: false,
-  };
+  configuracionFechaInicioVigencia: InputFecha =
+    CONFIGURACION_FECHA_INICIO_VIGENCIA;
+
+  /** Configuración para el campo de fecha de fin de vigencia */
+  configuracionFechaFinAnteriorVigencia: InputFecha =
+    CONFIGURACION_FECHA_FIN_ANTERIOR_VIGENCIA;
+
+  /** Configuración para el campo de fecha de inicio de vigencia */
+  configuracionFechaInicioAnteriorVigencia: InputFecha =
+    CONFIGURACION_FECHA_INICIO_ANTERIOR_VIGENCIA;
+
+  /** Configuración para el campo de fecha de fin de vigencia */
+  configuracionFechaFinActualVigencia: InputFecha =
+    CONFIGURACION_FECHA_FIN_ACTUAL_VIGENCIA;
+
+  /** Configuración para el campo de fecha de inicio de vigencia */
+  configuracionFechaInicioActualVigencia: InputFecha =
+    CONFIGURACION_FECHA_INICIO_ACTUAL_VIGENCIA;
 
   /** Subject usado para destruir suscripciones al finalizar el componente */
   public destroy$: Subject<void> = new Subject<void>();
@@ -126,6 +190,8 @@ export class DatosPorGarantiaComponent implements OnInit, OnDestroy {
       this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
     } else {
       this.inicializarFormulario();
+      this.inicializarFormularioAnterior();
+      this.inicializarFormularioActual();
     }
   }
 
@@ -135,6 +201,8 @@ export class DatosPorGarantiaComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
+    this.inicializarFormularioAnterior();
+    this.inicializarFormularioActual();
     if (this.esFormularioSoloLectura) {
       this.polizaDeFianzaForm.disable();
     } else if (!this.esFormularioSoloLectura) {
@@ -151,9 +219,9 @@ export class DatosPorGarantiaComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.polizaDeFianzaForm = this.fb.group({
-      polizaDeFianzaActual: [this.solicitud31301State.polizaDeFianzaActual],
+      polizaDeFianza: [this.solicitud31301State.polizaDeFianza],
       numeroFolio: [
-        { value: this.solicitud31301State.numeroFolio, disabled: true },
+        { value: this.solicitud31301State.numeroFolio, disabled: false },
         [Validators.maxLength(250)],
       ],
       rfcInstitucion: [
@@ -196,16 +264,220 @@ export class DatosPorGarantiaComponent implements OnInit, OnDestroy {
         map((respuesta: Solicitud31301State) => {
           this.solicitud31301State = respuesta;
           this.polizaDeFianzaForm.patchValue({
-            polizaDeFianzaActual: this.solicitud31301State.polizaDeFianzaActual,
+            polizaDeFianza: this.solicitud31301State.polizaDeFianza,
             numeroFolio: this.solicitud31301State.numeroFolio,
             rfcInstitucion: this.solicitud31301State.rfcInstitucion,
             fechaExpedicion: this.solicitud31301State.fechaExpedicion,
             fechaInicioVigenciaNo:
               this.solicitud31301State.fechaInicioVigenciaNo,
             fechaFinVigenciaNo: this.solicitud31301State.fechaFinVigenciaNo,
-            fechaInicioVigencia: this.solicitud31301State.fechaFinVigenciaNo,
+            fechaInicioVigencia: this.solicitud31301State.fechaInicioVigencia,
             fechaFinVigencia: this.solicitud31301State.fechaFinVigencia,
             importeTotal: this.solicitud31301State.importeTotal,
+          });
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Inicializa el formulario de la póliza de fianza anterior con los valores obtenidos del estado `solicitud31301State`.
+   *
+   * - Define los controles del formulario con valores iniciales y validaciones específicas como `Validators.maxLength`.
+   * - Los campos sensibles se inicializan en estado *disabled* (solo lectura).
+   * - Se suscribe al estado global (`solicitud31301Query.selectSolicitud$`) para mantener el formulario sincronizado
+   *   con cualquier cambio en los datos de la solicitud.
+   *
+   * Este método garantiza que el formulario refleje siempre la información más actualizada proveniente del store.
+   *
+   * @returns {void}
+   */
+  inicializarFormularioAnterior(): void {
+    this.polizaDeFianzaAnteriorForm = this.fb.group({
+      polizaDeFianzaAnterior: [this.solicitud31301State.polizaDeFianzaAnterior],
+      numeroFolioAnterior: [
+        { value: this.solicitud31301State.numeroFolioAnterior, disabled: true },
+        [Validators.maxLength(250)],
+      ],
+      rfcInstitucionAnterior: [
+        {
+          value: this.solicitud31301State.rfcInstitucionAnterior,
+          disabled: true,
+        },
+        [Validators.maxLength(250)],
+      ],
+      fechaExpedicionAnterior: [
+        {
+          value: this.solicitud31301State.fechaExpedicionAnterior,
+          disabled: true,
+        },
+        [Validators.maxLength(10)],
+      ],
+      fechaInicioVigenciaNoAnterior: [
+        {
+          value: this.solicitud31301State.fechaInicioVigenciaNoAnterior,
+          disabled: true,
+        },
+        [Validators.maxLength(10)],
+      ],
+      fechaFinVigenciaNoAnterior: [
+        {
+          value: this.solicitud31301State.fechaFinVigenciaNoAnterior,
+          disabled: true,
+        },
+        [Validators.maxLength(10)],
+      ],
+      fechaInicioVigenciaAnterior: [
+        {
+          value: this.solicitud31301State.fechaInicioVigenciaAnterior,
+          disabled: true,
+        },
+        [Validators.maxLength(10)],
+      ],
+      fechaFinVigenciaAnterior: [
+        {
+          value: this.solicitud31301State.fechaFinVigenciaAnterior,
+          disabled: true,
+        },
+        [Validators.maxLength(10)],
+      ],
+      importeTotalAnterior: [
+        {
+          value: this.solicitud31301State.importeTotalAnterior,
+          disabled: true,
+        },
+        [Validators.maxLength(20)],
+      ],
+    });
+
+    // Suscripción al estado global para actualizar el formulario con nuevos valores
+    this.solicitud31301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((respuesta: Solicitud31301State) => {
+          this.solicitud31301State = respuesta;
+          this.polizaDeFianzaAnteriorForm.patchValue({
+            polizaDeFianzaAnterior:
+              this.solicitud31301State.polizaDeFianzaAnterior,
+            numeroFolioAnterior: this.solicitud31301State.numeroFolioAnterior,
+            rfcInstitucionAnterior:
+              this.solicitud31301State.rfcInstitucionAnterior,
+            fechaExpedicionAnterior:
+              this.solicitud31301State.fechaExpedicionAnterior,
+            fechaInicioVigenciaNoAnterior:
+              this.solicitud31301State.fechaInicioVigenciaNoAnterior,
+            fechaFinVigenciaNoAnterior:
+              this.solicitud31301State.fechaFinVigenciaNoAnterior,
+            fechaInicioVigenciaAnterior:
+              this.solicitud31301State.fechaInicioVigenciaAnterior,
+            fechaFinVigenciaAnterior:
+              this.solicitud31301State.fechaFinVigenciaAnterior,
+            importeTotalAnterior: this.solicitud31301State.importeTotalAnterior,
+          });
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Inicializa el formulario de la póliza de fianza actual con los valores obtenidos del estado `solicitud31301State`.
+   *
+   * - Configura los controles del formulario con valores iniciales y validaciones (`Validators.maxLength`).
+   * - Algunos campos se establecen en modo *disabled* para evitar edición, según las reglas de negocio (por ejemplo,
+   *   `montoAmpliaActual` se deshabilita cuando `tipoDeEndoso === 4`).
+   * - Se suscribe al estado global (`solicitud31301Query.selectSolicitud$`) para mantener sincronizado el formulario
+   *   con los cambios en los datos de la solicitud.
+   *
+   * @returns {void}
+   */
+  inicializarFormularioActual(): void {
+    this.polizaDeFianzaActualForm = this.fb.group({
+      polizaDeFianzaActual: [this.solicitud31301State.polizaDeFianzaActual],
+      numeroFolioActual: [
+        { value: this.solicitud31301State.numeroFolioActual, disabled: true },
+        [Validators.maxLength(250)],
+      ],
+      rfcInstitucionActual: [
+        {
+          value: this.solicitud31301State.rfcInstitucionActual,
+          disabled: true,
+        },
+        [Validators.maxLength(250)],
+      ],
+      fechaExpedicionActual: [
+        {
+          value: this.solicitud31301State.fechaExpedicionActual,
+          disabled: true,
+        },
+        [Validators.maxLength(10)],
+      ],
+      fechaInicioVigenciaNoActual: [
+        {
+          value: this.solicitud31301State.fechaInicioVigenciaNoActual,
+          disabled: true,
+        },
+        [Validators.maxLength(10)],
+      ],
+      fechaFinVigenciaNoActual: [
+        {
+          value: this.solicitud31301State.fechaFinVigenciaNoActual,
+          disabled: true,
+        },
+        [Validators.maxLength(10)],
+      ],
+      fechaInicioVigenciaActual: [
+        {
+          value: this.solicitud31301State.fechaInicioVigenciaActual,
+          disabled: true,
+        },
+        [Validators.maxLength(10)],
+      ],
+      fechaFinVigenciaActual: [
+        {
+          value: this.solicitud31301State.fechaFinVigenciaActual,
+          disabled: true,
+        },
+        [Validators.maxLength(10)],
+      ],
+      montoAmpliaActual: [
+        {
+          value: this.solicitud31301State.montoAmpliaActual,
+          disabled: this.solicitud31301State.tipoDeEndoso === 4 ? true : false,
+        },
+        [Validators.maxLength(20)],
+      ],
+      montoGarantizadoActual: [
+        {
+          value: this.solicitud31301State.montoGarantizadoActual,
+          disabled: true,
+        },
+        [Validators.maxLength(20)],
+      ],
+    });
+
+    // Suscripción al estado global para actualizar el formulario con nuevos valores
+    this.solicitud31301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((respuesta: Solicitud31301State) => {
+          this.solicitud31301State = respuesta;
+          this.polizaDeFianzaForm.patchValue({
+            polizaDeFianzaActual: this.solicitud31301State.polizaDeFianzaActual,
+            numeroFolioActual: this.solicitud31301State.numeroFolioActual,
+            rfcInstitucionActual: this.solicitud31301State.rfcInstitucionActual,
+            fechaExpedicionActual:
+              this.solicitud31301State.fechaExpedicionActual,
+            fechaInicioVigenciaNoActual:
+              this.solicitud31301State.fechaInicioVigenciaNoActual,
+            fechaFinVigenciaNoActual:
+              this.solicitud31301State.fechaFinVigenciaNoActual,
+            fechaInicioVigenciaActual:
+              this.solicitud31301State.fechaInicioVigenciaActual,
+            fechaFinVigenciaActual:
+              this.solicitud31301State.fechaFinVigenciaActual,
+            montoAmpliaActual: this.solicitud31301State.montoAmpliaActual,
+            montoGarantizadoActual:
+              this.solicitud31301State.montoGarantizadoActual,
           });
         })
       )
@@ -219,6 +491,32 @@ export class DatosPorGarantiaComponent implements OnInit, OnDestroy {
    * @param evento Elemento seleccionado del catálogo
    */
   seleccionaNombreInstitucion(evento: Catalogo): void {
+    this.solicitud31301Store?.actualizarpolizaDeFianza(evento.id);
+  }
+
+  /**
+   * Selecciona la institución anterior de la póliza de fianza.
+   *
+   * Llama al store para actualizar el identificador de la institución
+   * seleccionada en la póliza de fianza anterior.
+   *
+   * @param evento - Objeto de tipo `Catalogo` que contiene la información de la institución seleccionada.
+   * @returns {void}
+   */
+  seleccionaNombreInstitucionAnterior(evento: Catalogo): void {
+    this.solicitud31301Store.actualizarPolizaDeFianzaAnterior(evento.id);
+  }
+
+  /**
+   * Selecciona la institución actual de la póliza de fianza.
+   *
+   * Llama al store para actualizar el identificador de la institución
+   * seleccionada en la póliza de fianza actual.
+   *
+   * @param evento - Objeto de tipo `Catalogo` que contiene la información de la institución seleccionada.
+   * @returns {void}
+   */
+  seleccionaNombreInstitucionActual(evento: Catalogo): void {
     this.solicitud31301Store.actualizarPolizaDeFianzaActual(evento.id);
   }
 
@@ -231,8 +529,10 @@ export class DatosPorGarantiaComponent implements OnInit, OnDestroy {
       .conseguirNombreInstitucionCatalogo()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (respuesta: CatalogosSelect) => {
-          this.nombreInstitucionCatalogo = respuesta;
+        next: (respuesta: Catalogo[]) => {
+          this.nombreInstitucionCatalogo.catalogos = respuesta;
+          this.nombreInstitucionAnteriorCatalogo.catalogos = respuesta;
+          this.nombreInstitucionActualCatalogo.catalogos = respuesta;
         },
       });
   }
@@ -247,31 +547,10 @@ export class DatosPorGarantiaComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (respuesta: DatosPorGarantia) => {
-          this.solicitud31301Store.actualizarPolizaDeFianzaActual(
-            respuesta.polizaDeFianzaActual
-          );
-          this.solicitud31301Store.actualizarNumeroFolio(respuesta.numeroFolio);
-          this.solicitud31301Store.actualizarRfcInstitucion(
-            respuesta.rfcInstitucion
-          );
-          this.solicitud31301Store.actualizarFechaExpedicion(
-            respuesta.fechaExpedicion
-          );
-          this.solicitud31301Store.actualizarFechaInicioVigenciaNo(
-            respuesta.fechaInicioVigenciaNo
-          );
-          this.solicitud31301Store.actualizarFechaFinVigenciaNo(
-            respuesta.fechaFinVigenciaNo
-          );
-          this.solicitud31301Store.actualizarFechaInicioVigencia(
-            respuesta.fechaInicioVigencia
-          );
-          this.solicitud31301Store.actualizarFechaFinVigencia(
-            respuesta.fechaFinVigencia
-          );
-          this.solicitud31301Store.actualizarImporteTotal(
-            respuesta.importeTotal
-          );
+          this.solicitud31301Store.update((state) => ({
+            ...state,
+            ...respuesta,
+          }));
         },
       });
   }
