@@ -186,6 +186,15 @@ export class TratadosComponent implements OnInit, OnDestroy {
         this.solicitudeState = seccionState;
     })).subscribe();
     this.inicializarFormularioTratados();
+    if (this.solicitudeState.respuestaServicioDatosTabla.length) {
+      this.respuestaServicioDatosTabla = this.solicitudeState.respuestaServicioDatosTabla
+
+      this.registroDeSolicitudesTablaDatos = this.respuestaServicioDatosTabla.map(item => ({
+        pais: item.nombre_pais_bloque,
+        tratado: item.tratado_nombre,
+        origen: item.cve_grupo_criterio
+      }));
+    }
   }
 
   /**
@@ -214,10 +223,10 @@ export class TratadosComponent implements OnInit, OnDestroy {
      */
   public inicializarFormulario(): void {
     this.formularioTratados = this.fb.group({
-      pais: [this.solicitudeState?.pais, Validators.required],
-      tratado: [this.solicitudeState?.tratado, Validators.required],
-      origen: [this.solicitudeState?.origen, Validators.required],
-      criterioInstancias: [this.solicitudeState?.criterio],
+      pais: [Validators.required],
+      tratado: [ Validators.required],
+      origen: [ Validators.required],
+      criterioInstancias: [],
     });
   }
 
@@ -642,6 +651,7 @@ agregarTratado(): void {
           this.cd.detectChanges();
           this.mostrarTabla = true;
 
+          this.tramite110101Store.setRespuestaServicioDatosTabla(this.respuestaServicioDatosTabla);
           const PAYLOADRESPUESTA: CriterioConfiguracionRequest[] = this.respuestaServicioDatosTabla.map(item => ({
             cve_grupo_criterio: item.cve_grupo_criterio,
             cve_tratado_acuerdo: item.cve_tratado_acuerdo ?? '',
@@ -703,6 +713,8 @@ agregarTratado(): void {
       next: (resp) => {
         if (resp.codigo === CodigoRespuesta.EXITO) {
           this.respuestaTratadosConfiguracion = resp.datos;
+          this.tramite110101Store.clearRespuestaServicioDatosConfiguracion();
+          this.tramite110101Store.setRespuestaServicioDatosConfiguracion(this.respuestaTratadosConfiguracion ?? {} as CriterioConfiguracionResponse);
         }else{
           window.scrollTo({ top: 0, behavior: 'smooth' });
           this.nuevaNotificacion = {
@@ -958,6 +970,8 @@ eliminarTratado(): void {
       sel.origen === item.cve_grupo_criterio
     )
   );
+  this.tramite110101Store.clearRespuestaServicioDatosTabla();
+  this.tramite110101Store.setRespuestaServicioDatosTabla(this.respuestaServicioDatosTabla);
 
   this.selectedRows = [];
 }

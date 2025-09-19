@@ -1,3 +1,6 @@
+import { CriterioConfiguracionResponse } from '../../models/response/tratado-configuracion-request.model';
+import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-response.model';
+
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -43,6 +46,12 @@ export interface Solicitante110101State {
   exportadorAutorizado: boolean;
     /** Información seleccionada en los radios del formulario por el solicitante. */
   informacionRadios: string;
+
+  /** Datos de la tabla de respuesta del servicio */
+  respuestaServicioDatosTabla: CriterioTratadoResponse[];
+
+  /** Datos de configuracion tratados */
+  respuestaServiceConfiguracion: CriterioConfiguracionResponse;
 }
 
 
@@ -73,7 +82,39 @@ export function createSolicitanteInitialState(): Solicitante110101State {
     representacion: '',
     metodoSeparacion: false,
     exportadorAutorizado: false,
-    informacionRadios: '' 
+    informacionRadios: '',
+    respuestaServicioDatosTabla: [],
+    respuestaServiceConfiguracion: {
+      mostrar_datos_mercancia: false,
+      mostrar_insumos: false,
+      mostrar_empaques: false,
+      mostrar_otras_instancias: false,
+      mostrar_otras_instancias_alianza_p: false,
+      mostrar_tipo_metodo_alianza_p: false,
+      mostrar_juegos_y_surtidos_alianza_p: false,
+      mostrar_acumulacion_alianza_p: false,
+      mostrar_juegos_y_surtidos: false,
+      mostrar_tipo_metodo: false,
+      mostrar_nombre_ingles: false,
+      mostrar_precio_franco_fabrica: false,
+      mostrar_clasificacion_aladi: false,
+      mostrar_valor_transaccional_fob: false,
+      mostrar_exportador_autorizado: false,
+      mostrar_procesos_mercancia_par4: false,
+      mostrar_pais_insumo: false,
+      mostrar_exportador_autorizado_jpn: false,
+      mostrar_tipo_metodo_panama: false,
+      mostrar_tipo_metodo_no_obligatorio_panama: false,
+      mostrar_tipo_metodo_panama_uruguay: false,
+      mostrar_encabezado_uruguay: false,
+      mostrar_costo_neto_fob: false,
+      mostrar_otras_instancias_peru: false,
+      mostrar_otras_instancias_uruguay: false,
+      mostrar_naladi: false,
+      mostrar_naladisa_93: false,
+      mostrar_naladisa_96: false,
+      mostrar_naladisa_02: false
+    }
   };
 }
 
@@ -298,4 +339,45 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con la respuesta de la tabla.
+   * @param datosTabla - El array de criterios de tratado.
+   */
+  public setRespuestaServicioDatosTabla(datosTabla: CriterioTratadoResponse[]): void {
+    this.update((state) => ({
+      ...state,
+      respuestaServicioDatosTabla: datosTabla,
+    }));
+  }
+
+  /**
+   * Limpia la tabla de criterios.
+   */
+  public clearRespuestaServicioDatosTabla(): void {
+    this.update((state) => ({
+      ...state,
+      respuestaServicioDatosTabla: [],
+    }));
+  }
+
+  /**
+   * Actualiza el estado con la respuesta de la configuracion.
+   * @param datosConfiguracion - El array de criterios de tratado.
+   */
+  public setRespuestaServicioDatosConfiguracion(datosConfiguracion: CriterioConfiguracionResponse): void {
+    this.update((state) => ({
+      ...state,
+      respuestaServiceConfiguracion: datosConfiguracion,
+    }));
+  }
+
+   /**
+   * Limpia la configuracion de tratados.
+   */
+  public clearRespuestaServicioDatosConfiguracion(): void {
+    this.update((state) => ({
+      ...state,
+      respuestaServiceConfiguracion: {} as CriterioConfiguracionResponse,
+    }));
+  }
 }
