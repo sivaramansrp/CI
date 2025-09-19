@@ -1010,6 +1010,11 @@ export class Tramite80101Store extends Store<Tramite80101State> {
     }));
   }
 
+  /**
+   * Establece la lista de plantas disponibles en el estado de la tienda.
+   *
+   * @param plantas - Una lista de objetos de tipo `PlantasDisponibles` que se asignará al estado.
+   */
   setPlantasDisponiblesTablaLista(plantas: PlantasDisponibles[]): void {
     this.update((state) => ({
       ...state,
@@ -1017,6 +1022,11 @@ export class Tramite80101Store extends Store<Tramite80101State> {
     }));
   }
 
+  /**
+   * Establece la lista de plantas IMMEX en el estado de la tienda.
+   *
+   * @param plantasImmex - Una lista de objetos de tipo `PlantasImmex` que se asignará al estado.
+   */
   setPlantasImmexTablaLista(plantasImmex: PlantasImmex[]): void {
     this.update((state) => ({
       ...state,

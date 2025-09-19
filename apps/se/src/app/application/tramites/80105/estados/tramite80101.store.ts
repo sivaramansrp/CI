@@ -1,5 +1,6 @@
 import { AnexoEncabezado, AnexoUnoEncabezado, DatosAnexotressUno } from '../../../shared/models/nuevo-programa-industrial.model';
 import { AnnexoDosTres, AnnexoUno } from '../models/nuevo-programa-industrial.model';
+import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoPaises } from '@ng-mf/data-access-user';
@@ -8,7 +9,6 @@ import { DatosEmpresaExtranjera} from '../models/nuevo-programa-industrial.model
 import { DatosSubcontratista } from '../../../shared/models/empresas-subfabricanta.model';
 import { DisponsibleFiscal } from '../../../shared/models/empresas.model';
 import { EmpressaSubFabricantePlantas } from '../../../shared/models/empresas-subfabricanta.model';
-import { FederatariosEncabezado } from '../../../shared/models/federatarios-y-plantas.model';
 import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Servicio } from '../models/nuevo-programa-industrial.model';
@@ -80,7 +80,15 @@ export interface Tramite80101State {
   annexoUno: AnnexoUno,
   
   indicePrevioRuta: number;
-  tablaDatosFederatarios: FederatariosEncabezado[]
+  tablaDatosFederatarios: FederatariosEncabezado[];
+  /**
+   * Información detallada de plantas IMMEX.
+   */
+  plantasImmexTablaLista: PlantasImmex[];
+  /** 
+   * Información detallada de plantas disponibles. 
+   */
+  plantasDisponiblesTablaLista: PlantasDisponibles[];
   empresasSeleccionadas: DisponsibleFiscal[];
 }
 
@@ -235,6 +243,8 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
 
   indicePrevioRuta: 0,
   tablaDatosFederatarios: [],
+  plantasImmexTablaLista: [],
+  plantasDisponiblesTablaLista: [],
   idSolicitud: 0,
   empresasSeleccionadas: [],
 };
@@ -825,6 +835,30 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       tablaDatosFederatarios: [...state.tablaDatosFederatarios, formaFederatarios],
     }));
   }
+
+    /**
+     * Agrega un nuevo conjunto de datos a la tabla de plantas disponibles en el estado.
+     * 
+     * @param plantas - Un arreglo de objetos de tipo `PlantasDisponibles` que se agregarán a la tabla.
+     */
+    setPlantasDisponiblesTablaLista(plantas: PlantasDisponibles[]): void {
+      this.update((state) => ({
+        ...state,
+        plantasDisponiblesTablaLista: [...state.plantasDisponiblesTablaLista, ...plantas],
+      }));
+    }
+  
+    /**
+     * Agrega un nuevo conjunto de datos a la tabla de plantas IMMEX en el estado.
+     * 
+     * @param plantasImmex - Un arreglo de objetos de tipo `PlantasImmex` que se agregarán a la tabla.
+     */
+    setPlantasImmexTablaLista(plantasImmex: PlantasImmex[]): void {
+      this.update((state) => ({
+        ...state,
+        plantasImmexTablaLista: [...state.plantasImmexTablaLista, ...plantasImmex],
+      }));
+    }
 
       /**
    * Actualiza la propiedad `datosAnexoTress` en el store con los datos proporcionados.

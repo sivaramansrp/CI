@@ -189,9 +189,14 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
   @Output() datosFormaFedratario: EventEmitter<FederatariosEncabezado> =
     new EventEmitter<FederatariosEncabezado>(true);
 
-
+  /**
+   * Emisor de eventos para los datos de plantas disponibles.
+   */
   @Output() datosPlantaDisponibles: EventEmitter<PlantasDisponibles[]> = new EventEmitter<PlantasDisponibles[]>(true);
 
+  /** 
+   * Emisor de eventos para los datos de plantas IMMEX. 
+   */
   @Output() datosPlantasImmex: EventEmitter<PlantasImmex[]> = new EventEmitter<PlantasImmex[]>(true);
 
 
