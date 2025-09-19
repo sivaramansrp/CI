@@ -1,6 +1,26 @@
 <div class="container">
     <form [formGroup]="formulario">
+         
+    @if(isProcesoTransformacion){
+        <ng-titulo titulo = "Proceso de Transformación (ACE-53/PAR-4)" />
+        <ng-alert [CONTENIDO]="mensajeDeSeleccion.MENSAJE"></ng-alert>
+        <div class="col-md-12">
+            <app-input-radio formControlName="procesoTransformacion" [radioOptions]="seleccionarTransformacion" [layout]="'horizontal'"></app-input-radio>
+        </div>
+    }
 
+    @if(isJuegosSurtidos){
+        <ng-titulo titulo = "Juegos o Surtidos" />
+        <label for="nombreJuegoSurtido" class="form-label">Descripción del juego o surtido*:</label>
+        <input type="text" id="nombreJuegoSurtido" 
+                class="form-control" 
+                formControlName="descripcionJuegoSurtido">
+        <label for="preguntaCondicion" class="form-label">¿Cumple con la condición de ser Juego o Surtido para el Acuerdo México-Perú?:</label>
+        <ng-alert [CONTENIDO]="condiciones.CONDICION"></ng-alert>
+        <div class="col-md-12">
+            <app-input-radio formControlName="juegoSurtido" [radioOptions]="opciones" [layout]="'horizontal'"></app-input-radio>
+        </div>
+    }
     <ng-titulo titulo="Información Opcional para UE y AELC" />
     <div class="row">
         <div class="col-md-8">

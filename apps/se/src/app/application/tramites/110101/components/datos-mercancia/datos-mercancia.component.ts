@@ -1,12 +1,15 @@
+import { CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ELVALORALERTA, Notificacion, NotificacionesComponent, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TablePaginationComponent } from '@ng-mf/data-access-user';
+import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, ConsultaioQuery, ELVALORALERTA, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TablePaginationComponent } from '@ng-mf/data-access-user';
 import { DATOS_MERCANCIA_MODAL_FORM, ENVASES_TABLA, INSUMOS_TABLA, MODAL_TABLA } from '../constante110101.enum';
 import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla } from '../../models/panallas110101.model';
+import { DatosMercanciaService } from '../../services/datos-mercancia.service';
+
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { INTRODUZCA_NUMERO, REQUERIDO } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
-import { Subject,map, takeUntil } from 'rxjs';
+import { Subject,debounceTime,distinctUntilChanged,map, takeUntil } from 'rxjs';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
@@ -27,9 +30,16 @@ import mercancia from '@libs/shared/theme/assets/json/110101/mercancia.json'
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
   standalone: true,
-  imports: [TituloComponent, CommonModule, AlertComponent, ReactiveFormsModule, TablaDinamicaComponent, TablePaginationComponent, FormasDinamicasComponent]
+  imports: [TituloComponent, CommonModule, AlertComponent, ReactiveFormsModule, TablaDinamicaComponent, TablePaginationComponent, FormasDinamicasComponent, NotificacionesComponent]
 })
 export class DatosMercanciaComponent implements OnInit, OnDestroy {
+  /**
+     * Notificación actual que se muestra en el componente.
+     *
+     * Esta propiedad almacena los datos de la notificación que se mostrará al usuario.
+     * Se utiliza para configurar el tipo, categoría, mensaje y otros detalles de la notificación.
+     */
+  public nuevaNotificacion!: Notificacion ;
   /**
    * Referencia al elemento modal para agregar mercancías.
    */
@@ -157,9 +167,29 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * const grupo = this.ninoFormGroup;
   * grupo.get('campo').setValue('nuevo valor');
   */
-  get ninoFormGroup(): FormGroup {
-    return this.forma.get('ninoFormGroup') as FormGroup;
-  }
+  private fraccionSuscrito = false;
+
+get ninoFormGroup(): FormGroup {
+  const GRUPO = this.forma.get('ninoFormGroup') as FormGroup;
+
+    if (GRUPO && !this.fraccionSuscrito) {
+      const FRACCIONCONTROL = GRUPO.get('fraccionArancelaria');
+      if (FRACCIONCONTROL) {
+        FRACCIONCONTROL.valueChanges
+          .pipe(
+            debounceTime(500),
+            distinctUntilChanged()
+          )
+          .subscribe(valor => {
+            if (valor && valor.length >= 15) {
+              this.consultaArancelariaPartida(valor);
+            }
+          });
+        this.fraccionSuscrito = true; 
+      }
+    }
+  return GRUPO;
+}
 
   /**
    * Una cadena que representa la clase CSS para una alerta de advertencia.
@@ -249,6 +279,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     private tramite110101Store: Tramite110101Store,
     private solicitanteQuery: Solicitante110101Query,
     private consultaioQuery: ConsultaioQuery,
+    private datosMercanciaService: DatosMercanciaService
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -455,6 +486,60 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     } else {
       this.ninoFormGroup.markAllAsTouched();
     }
+  }
+
+  /**
+   * @method consultaArancelariaPartida
+   * @description Consulta la fracción arancelaria de una partida específica. 
+   * Utiliza el servicio `DatosMercanciaService` para realizar la consulta.
+   * Si la respuesta es exitosa, actualiza los campos del formulario `ninoFormGroup` con los datos obtenidos.
+   * En caso de error, muestra una notificación con el mensaje correspondiente.
+   * 
+   */
+  consultaArancelariaPartida(valor: string): void {
+    this.datosMercanciaService.getFraccionArancelariaPartida(valor)
+    .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.ninoFormGroup.patchValue({
+            capitulo: response.datos?.cve_capitulo_fraccion,
+            descripcionCapitulo: response.datos?.nombre_capitulo,
+            partida: response.datos?.cve_partida_fraccion,
+            descripcionPartida: response.datos?.nombre_partida,
+            subpartida: response.datos?.cve_subpartida_fraccion,
+            descripcionSubpartida: response.datos?.nombre_subpartida,
+            descripcionFraccionArancelaria: response.datos?.descripcion,
+          })
+        }else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error en la consulta de la fracción arancelaria.',
+            mensaje: response.causa || response.mensaje || 'Error en la consulta de la fracción arancelaria.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      },
+      error: (error) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const MENSAJE = error?.error?.error || 'Error en la consulta de la fracción arancelaria.';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+      }
+    });
   }
 
   /**

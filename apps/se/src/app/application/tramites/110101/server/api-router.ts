@@ -17,6 +17,12 @@ export const CVETRATADOACUERDO = '{cveTratadoAcuerdo}';
 export const IDTRATADOACUERDO = '{idTratadoAcuerdo}';
 
 /**
+ * cveFraccion de la solicitud que se utilizará en las consultas.
+ * Este valor debe ser reemplazado por el cveFraccion real de la solicitud.
+ */
+export const CVEFRACCION = '{cveFraccion}';
+
+/**
  *  URLs de catalogos
  */
 
@@ -84,3 +90,12 @@ export const API_POST_TRATADO_CRITERIO = `sat-t110101/solicitud/tratado/criterio
 */
 export const API_POST_SOLICITUD_TRATADOS_CONFIGURACION = `sat-t110101/solicitud/tratados/configuracion`;
 
+/**
+ *  URLs de tab datos mercancia
+ */
+
+/**
+ * API para consultar los datos de la fracción arancelaria partida.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/consultar-datos-fraccion-arancelaria
+ */
+export const API_GET_FRACCION_ARANCELARIA_PARTIDA = (CVEFRACCION: string): string => `sat-t110101/fraccion-arancelaria/${CVEFRACCION}/partida`;
