@@ -5,10 +5,10 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { Tramite11101Store, Tramitenacionales11101State } from '../../estados/tramite11101.store';
 import { CommonModule } from '@angular/common';
+import { CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA } from '../../constants/mercancia.enum';
+import { DiscripccionDeLaMercanciaForm } from '../../models/transportacion-maritima.model';
 import { Tramite11101Query } from '../../estados/tramite11101.query';
 import { TramiteFolioService } from '../../service/servicios-extraordinarios.service';
-import { DiscripccionDeLaMercanciaForm } from '../../models/transportacion-maritima.model';
-import { CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA } from '../../constants/mercancia.enum';
 
 /**
  * Componente Angular para gestionar el formulario de aviso en el trámite 11101.
@@ -173,7 +173,7 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
    * Notificador para cancelar suscripciones activas al destruir el componente.
    * Se emite un valor y se completa en el método `ngOnDestroy` para evitar fugas de memoria.
    */
-  private destroyNotifier$: Subject<void> = new Subject<void>();
+  public destroyNotifier$: Subject<void> = new Subject<void>();
 
   /**
    * Método de inicialización del componente.
@@ -375,26 +375,41 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
     this.store.setColonia(COLONIA);
   }
 
+  /**
+   * Maneja la selección de la formapartadepatrimonio.
+   */
   formaParteDePatrimonioSeleccion(): void {
     const FORMAPARTADEPATRIMONIA = this.mercanciaForm.get('formapartadepatrimonio')?.value;
     this.store.setFormaParteDePatrimonio(FORMAPARTADEPATRIMONIA);
   }
 
+  /**
+   * Maneja la selección de la unidadmedida.
+   */
   unidadmedidaSeleccion(): void {
     const UNIDADMEDIDA = this.mercanciaForm.get('unidadmedida')?.value;
     this.store.setUnidadmedida(UNIDADMEDIDA);
   }
 
+  /**
+   * Maneja la selección de la moneda.
+   */
   monedaSeleccion(): void {
     const MONEDA = this.mercanciaForm.get('moneda')?.value;
     this.store.setMoneda(MONEDA);
   }
 
+  /**
+   * Maneja la selección del fin.
+   */
   finSeleccion(): void {
     const FIN = this.mercanciaForm.get('fin')?.value;
     this.store.setFin(FIN);
   }
 
+  /**
+   * Maneja la selección del estado.
+   */
   estadoSeleccion(): void {
     const ESTADO = this.mercanciaForm.get('estado')?.value;
     this.store.setEstado(ESTADO);
@@ -490,6 +505,7 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
     const RADIO_DOMICILIO = this.avisoForm?.get('radioDomicilio')?.value;
     this.isManualSelected = RADIO_DOMICILIO === 'manual';
   }
+  
   /**
    * Agrega una nueva mercancía a la lista si el formulario es válido.
    */
