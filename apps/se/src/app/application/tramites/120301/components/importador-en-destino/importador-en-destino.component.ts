@@ -20,13 +20,13 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { REGEX_CAPTURA_CBP, REGEX_CAPTURA_IRS, REGEX_CAPTURA_USDA, REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { ERROR_FORMA_ALERT } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { HttpClient } from '@angular/common/http';
 import { ImporteRecordService } from '../../services/catalogos/importe-record.service';
-import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
  * @component ImportadorEnDestinoComponent
@@ -241,6 +241,42 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
+    this.importadorForm.get('tipo')?.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((valorSeleccionado: string) => {
+        const CANTIDADCTRL = this.importadorForm.get('cantidadTotalImportador');
+        if (!CANTIDADCTRL) {
+          return;
+        }
+
+        switch (valorSeleccionado) {
+          case 'IOR.IRS':
+            CANTIDADCTRL.setValidators([
+              Validators.required,
+              Validators.pattern(REGEX_CAPTURA_IRS),
+            ]);
+            break;
+          case 'IOR.CBP':
+            CANTIDADCTRL.setValidators([
+              Validators.required,
+              Validators.pattern(REGEX_CAPTURA_CBP),
+            ]);
+            break;
+          case 'IOR.SSS':
+            CANTIDADCTRL.setValidators([
+              Validators.required,
+              Validators.pattern(REGEX_CAPTURA_USDA),
+            ]);
+            break;
+          default:
+            // Si no coincide, dejamos solo requerido
+            CANTIDADCTRL.setValidators([Validators.required]);
+            break;
+        }
+
+        CANTIDADCTRL.updateValueAndValidity();
+      });
+
     if (this.formularioDeshabilitado) {
       this.importadorForm.disable();
     }
@@ -261,7 +297,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
       tipo: [this.importadorState.tipo, Validators.required],
       cantidadTotalImportador: [
         this.importadorState.cantidadTotalImportador,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        Validators.required, // Se ajustará dinámicamente
       ],
       razonSocialImportador: [
         this.importadorState.razonSocialImportador,

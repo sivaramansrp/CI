@@ -595,6 +595,10 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
       cantidadTotal: FACTURA_SELECCIONADA.cantidad,
       unidadDeMedida: unidadClave,
       valorDolares: FACTURA_SELECCIONADA.imp_dls,
+      taxId: FACTURA_SELECCIONADA.tax_id_consig_emisor,
+      ciudad: FACTURA_SELECCIONADA.ciudad_consig_emisor,
+      cp: FACTURA_SELECCIONADA.cp_consig_emisor,
+      pais: FACTURA_SELECCIONADA.pais_consig_emisor,
     });
 
     this.facturaSeleccionada = [];

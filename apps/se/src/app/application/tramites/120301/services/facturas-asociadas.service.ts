@@ -149,7 +149,7 @@ export class FacturasAsociadasService {
         const RAW_DATA = Array.isArray(resp.datos) ? resp.datos : [];
         const FACTURAS: FacturasTplCapturaResponse[] = (RAW_DATA ?? []).map((item: FacturasTplCapturaResponse) => ({
           cantidad: item.cantidad,
-          cantidad_devolucion: item.cantidad_devolucion, 
+          cantidad_devolucion: item.cantidad_devolucion,
           cantidad_disponible: item.cantidad_disponible,
           cantidad_total: item.cantidad_total,
           descripcion: item.descripcion,
@@ -159,7 +159,11 @@ export class FacturasAsociadasService {
           imp_dls: item.imp_dls,
           num_factura: item.num_factura,
           razon_social_consig_emisor: item.razon_social_consig_emisor,
-          suma_cantidad_devolucion: item.suma_cantidad_devolucion
+          suma_cantidad_devolucion: item.suma_cantidad_devolucion,
+          pais_consig_emisor: item.pais_consig_emisor,
+          cp_consig_emisor: item.cp_consig_emisor,
+          ciudad_consig_emisor: item.ciudad_consig_emisor,
+          tax_id_consig_emisor: item.tax_id_consig_emisor
         }));
         const BASERESPONSE: BaseResponse<FacturasTplCapturaResponse[]> = {
           codigo: resp.codigo ?? '200',

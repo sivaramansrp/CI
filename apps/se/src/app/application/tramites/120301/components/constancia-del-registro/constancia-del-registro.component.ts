@@ -371,7 +371,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     if (this.formularioDeshabilitado) {
       this.fitosanitarioForm.disable();
     } else {
-      this.fitosanitarioForm.enable();
+      this.fitosanitarioForm.disable();
     }
 
     this.consultaioQuery.selectConsultaioState$
@@ -384,7 +384,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
             if (consultaState.readonly) {
               this.fitosanitarioForm.disable();
             } else {
-              this.fitosanitarioForm.enable();
+              this.fitosanitarioForm.disable();
             }
           }
         })
