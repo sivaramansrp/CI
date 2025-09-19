@@ -24,14 +24,12 @@ import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/
 import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, take } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
-import { Subject, map, take } from 'rxjs';
-import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
+import { USUARIO_INFO } from '../../constantes/nuevo-programa.enum';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
 import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
 import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accionistas.json';
-import { USUARIO_INFO } from '../../constantes/nuevo-programa.enum';
 import { takeUntil } from 'rxjs';
 
 /*
