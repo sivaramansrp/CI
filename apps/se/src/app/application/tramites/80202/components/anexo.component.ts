@@ -64,6 +64,9 @@ export class AnexoComponent implements OnInit, OnDestroy {
     @ViewChild('mercanciaImportacionModal')
     mercanciaImportacionModal!: ElementRef;
   
+    fraccionInfoSelectedNico:NicoInfo[] | null = null;
+
+    selectedRowDataNico:NicoInfo[] | null = null;
     /**
      * Referencia al elemento del modal de exportación de mercancía.
      * Utilizado para mostrar u ocultar el modal mediante la API de Bootstrap.
@@ -1137,6 +1140,7 @@ eliminarNicos():void{
   }
 }
   eliminarNico():void{
+    
     this.showTableNicoExp = false;
   }
   onFilaSeleccionadas(event:fraccionInfo):void{
@@ -1147,5 +1151,9 @@ this.fraccionInfoSelected = event;
   const INPUT = event.target as HTMLInputElement;
   INPUT.value = INPUT.value.replace(/[^0-9]/g, ''); // remove non-numeric chars
   this.immexRegistroform.get(`${formGroupName}.${controlName}`)?.setValue(INPUT.value, { emitEvent: false });
+}
+
+seleccionTabla(event: NicoInfo[]):void{
+  this.fraccionInfoSelectedNico = event;
 }
 }
