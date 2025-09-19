@@ -81,6 +81,24 @@ import { ImportadorEnDestinoComponent } from '../../components/importador-en-des
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
+   * @property {EventEmitter<boolean>} mostrarOtraPestanaChange
+   * @description
+   * Evento de salida que notifica al componente padre cuando cambia el estado de visibilidad de pestañas adicionales.
+   * Se emite un valor booleano (`true` para mostrar, `false` para ocultar) cada vez que el usuario realiza una acción
+   * que afecta la visualización de pestañas extra en el flujo del trámite.
+   * Permite la comunicación entre el componente hijo y el padre para coordinar la interfaz de usuario.
+   * @public
+   * @memberof PasoUnoComponent
+   * @example
+   * ```typescript
+   * // En el componente padre
+   * <app-paso-uno (mostrarOtraPestanaChange)="onCambioPestana($event)"></app-paso-uno>
+   * // En el hijo
+   * this.mostrarOtraPestanaChange.emit(true);
+   * ```
+   */
+  @Output() mostrarOtraPestanaChange = new EventEmitter<boolean>();
+  /**
    * @property {number} indice
    * @description Índice de la pestaña actualmente seleccionada en el paso uno.
    * @default 1
@@ -134,10 +152,26 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Maneja el evento emitido por el componente hijo para mostrar pestañas adicionales.
    * @param event Valor booleano emitido por el hijo.
    */
+  /**
+   * @method onMostrarTabs
+   * @description
+   * Maneja el evento emitido por el componente hijo para mostrar u ocultar pestañas adicionales.
+   * Si el evento es verdadero, habilita la visualización de la pestaña extra y avanza el índice a la pestaña de facturas asociadas.
+   * Si el evento es falso, oculta la pestaña adicional. En ambos casos, emite el cambio al componente padre mediante mostrarOtraPestanaChange.
+   * @param {boolean} event - Valor booleano que indica si se deben mostrar las pestañas adicionales.
+   * @returns {void} No retorna ningún valor.
+   * @example
+   * // Desde el hijo: this.mostrarTabs.emit(true);
+   * // Desde el padre: <app-paso-uno (mostrarOtraPestanaChange)="onCambioPestana($event)"></app-paso-uno>
+   */
   public onMostrarTabs(event: boolean): void {
     if (event) {
       this.mostrarOtraPestana = true;
       this.indice = 3; // Avanza a la siguiente tab (Facturas asociadas)
+      this.mostrarOtraPestanaChange.emit(this.mostrarOtraPestana);
+    } else {
+      this.mostrarOtraPestana = false;
+      this.mostrarOtraPestanaChange.emit(this.mostrarOtraPestana);
     }
   }
   /**
