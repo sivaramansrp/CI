@@ -7,7 +7,7 @@ import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { DatosEmpresaExtranjera} from '../models/nuevo-programa-industrial.model';
 import { DatosSubcontratista } from '../../../shared/models/empresas-subfabricanta.model';
 import { EmpressaSubFabricantePlantas } from '../../../shared/models/empresas-subfabricanta.model';
-import { FederatariosEncabezado } from '../../../shared/models/federatarios-y-plantas.model';
+import { FederatariosEncabezado, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Servicio } from '../models/nuevo-programa-industrial.model';

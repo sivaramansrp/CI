@@ -155,7 +155,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private plantasSubmanufacturerasBase: Readonly<Record<string, any>> = {
-     "idPlanta": "123",
+            "idPlanta": "123",
             "calle": "Main St",
             "numeroInterior": "A",
             "numeroExterior": "10",
