@@ -418,133 +418,6 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
             ]
   }
 
-    private plantasBase: Readonly<Record<string, any>> = {
-            "idPlanta": "123",
-            "calle": "Main St",
-            "numeroInterior": "A",
-            "numeroExterior": "10",
-            "codigoPostal": "12345",
-            "colonia": "Centro",
-            "delegacionMunicipio": "MunicipioX",
-            "entidadFederativa": "EntidadY",
-            "pais": "Mexico",
-            "rfc": "RFC123456",
-            "domicilioFiscal": "Fiscal Address",
-            "razonSocial": "Empresa S.A.",
-            "claveEntidadFederativa": "EF01",
-            "clavePlantaEmpresa": "PLT01",
-            "clavePais": "MX",
-            "claveDelegacionMunicipio": "DM01",
-            "estatus": true,
-            "desEstatus": "Activo",
-            "localidad": "Localidad1",
-            "telefono": "5551234567",
-            "fax": "5557654321",
-            "idDireccion": "DIR123",
-            "testadoP": 1,
-            "empresaCalle": "Empresa St",
-            "empresaNumeroInterior": "B",
-            "empresaNumeroExterior": "20",
-            "empresaCodigoPostal": "54321",
-            "empresaColonia": "EmpColonia",
-            "empresaDelegacionMunicipio": "EmpMunicipio",
-            "empresaEntidadFederativa": "EmpEntidad",
-            "empresaPais": "Mexico",
-            "empresaClaveEntidadFederativa": "EF02",
-            "empresaClavePlantaEmpresa": "PLT02",
-            "empresaClavePais": "MX",
-            "empresaClaveDelegacionMunicipio": "DM02",
-            "empresaCorreoElectronico": "empresa@email.com",
-            "empresaTipo": "Tipo1",
-            "permaneceMercancia": "Si",
-            "rfcActivo": "RFC654321",
-            "domiciliosInscritos": "2",
-            "personaMoralISR": "Si",
-            "opinionSAT": "Positiva",
-            "fecha32D": "2024-06-01",
-            "firmantes": [
-                {
-                    "idPlantaF": "FIRM01",
-                    "tipoFirmante": "Representante Legal",
-                    "descTipoFirmante": "Legal Representative"
-                }
-            ],
-            "datosComplementarios": [
-                {
-                    "idPlantaC": "C01",
-                    "idDato": "D01",
-                    "amparoPrograma": "ProgramaX",
-                    "tipoDocumento": "DocType1",
-                    "descDocumento": "Documento de respaldo",
-                    "descripcionOtro": "Otro documento",
-                    "documentoRespaldo": "Respaldo.pdf",
-                    "descDocRespaldo": "Descripción respaldo",
-                    "respaldoOtro": "Otro respaldo",
-                    "fechaFirma": "2024-01-01",
-                    "fechaVigencia": "2025-01-01",
-                    "fechaFirmaRespaldo": "2024-01-02",
-                    "fechaVigenciaRespaldo": "2025-01-02"
-                }
-            ],
-            "montos": [
-                {
-                    "idPlantaM": "M01",
-                    "idMonto": "MON01",
-                    "tipo": "Inversión",
-                    "descTipo": "Inversión inicial",
-                    "cantidad": "1000",
-                    "descripcion": "Monto de inversión",
-                    "monto": "500000",
-                    "testado": "1",
-                    "descTestado": "Testado OK"
-                }
-            ],
-            "listaCapacidad": [
-                {
-                    "idPlantaCa": "CA01",
-                    "idCapacidad": "CAP01",
-                    "claveServicio": "1",
-                    "descripcionServicio": "Servicio de producción",
-                    "cveTipoServicio": "TS01",
-                    "tipoServicio": "Producción",
-                    "fraccion": "FR01",
-                    "fraccionVista": "Fracción Vista",
-                    "umt": "UMT01",
-                    "descripcion": "Capacidad instalada",
-                    "capacidadEfectiva": "10000",
-                    "calculo": "Manual",
-                    "turnos": "3",
-                    "horasTurno": "8",
-                    "cantidadEmpleados": "50",
-                    "cantidadMaquinaria": "10",
-                    "descripcionMaquinaria": "Maquinaria industrial",
-                    "capacidadMensual": "300000",
-                    "capacidadAnual": "3600000",
-                    "testado": "1",
-                    "descTestado": "Testado OK"
-                }
-            ],
-            "datosEmpleados": [
-                {
-                    "idPlantaE": "E01",
-                    "idEmpleados": "EMP01",
-                    "totalEmpleados": "100",
-                    "directos": "80",
-                    "cedula": "CED123",
-                    "fechaCedula": "2024-01-10",
-                    "indirectos": "20",
-                    "contrato": "ContratoX",
-                    "objetoContrato": "Objeto del contrato",
-                    "fechaFirma": "2024-01-15",
-                    "fechaFinVigencia": "2025-01-15",
-                    "rfcEmpresa": "RFCEMP123",
-                    "razonEmpresa": "Empresa Empleadora",
-                    "testado": "1",
-                    "descTestado": "Testado OK"
-                }
-            ]
-        }
-
    /**
    * URL de la página actual.
    */
@@ -811,25 +684,6 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>, data: 
     return RESULT;
 }
 
-// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const MAP_TO_PAYLOAD = (item: any): any => ({
-      ...base,
-      estadoEntidad: item.entidadFederativa ?? '',
-      cvePaisOrigen: item.pais ?? '',
-      rfc: item.rfc ?? '',
-      domicilio: item.domicilioFiscalSolicitante ?? '',
-      razonSocial: item.razonSocial ?? '',
-    });
-
-    arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-
-    return RESULT;
-}
-
   /**
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
    * 
@@ -844,7 +698,6 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     const PLANTAS = this.buildPlantas(data.tablaDatosFederatarios, this.plantasBase, data);
     const ANEXO_ALL = this.buildAnexo(data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase, data);
-    const PLANTAS = this.buildPlantas(data.tablaDatosFederatarios, this.plantasBase, data);
     const PAYLOAD = {
     "tipoDeSolicitud": "guardar",
     "idSolicitud": 202781045,

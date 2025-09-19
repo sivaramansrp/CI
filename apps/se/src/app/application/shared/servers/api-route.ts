@@ -37,8 +37,8 @@ const PROCEDURE_NO = '80101';
  * Rutas de la API para el procedimiento 80101
  */
 export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PROCEDURE_NO) => ({
-    ESTADO: `${BASE_URL}${API}${CATALOGO}/estados`,
-    PAIS: `${BASE_URL}${API}${CATALOGO}/paises`,
+    ESTADO: `${BASE_URL}${API}/${procedure}${CATALOGO}/estados`,
+    PAIS: `${BASE_URL}${API}/${procedure}${CATALOGO}/paises`,
     ActividadProductiva: `${BASE_URL}${API}/${procedure}${CATALOGO}/actividad-productiva-prosec`,
     RepresentacionFederal: `${BASE_URL}${API}/${procedure}${CATALOGO}/representacion-federal`,
     TipoDocumento: `${BASE_URL}${API}/${procedure}${CATALOGO}/tipo-documento/${procedureNo}`,
