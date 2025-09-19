@@ -724,7 +724,6 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     for (const FIELD of REQUIRED_FIELDS) {
       const CONTROL = this.facturaForm.get(FIELD);
       if (!CONTROL || CONTROL.invalid || CONTROL.value === null || CONTROL.value === undefined || CONTROL.value === '') {
-        //console.log('Blocking submission due to field:', FIELD, 'value:', CONTROL?.value, 'errors:', CONTROL?.errors);
         // Opcionalmente, desplácese hasta el primer campo no válido o muestre un mensaje.
         return;
       }
