@@ -1,10 +1,11 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { DatosPasos, ListaPasosWizard, PASOS4, Usuario, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, take, takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
+import { USUARIO_INFO } from '../../constantes/nuevo-programa.enum';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
 import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
 import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accionistas.json';
@@ -77,6 +78,34 @@ export class PasoCapturarSolicitudComponent implements OnInit {
  * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
  */
   public infoAlert = 'alert-info';
+
+
+  
+    /**
+     * Evento que se emite para cargar archivos.
+     * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+     */
+    cargarArchivosEvento = new EventEmitter<void>();
+  
+    /**
+     * Evento que se emite para regresar a la sección de carga de documentos.
+     * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
+     */
+    regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+  
+    /**
+   * Indica si el botón para cargar archivos está habilitado.
+   */
+    activarBotonCargaArchivos: boolean = false;
+  
+    /**
+   * Indica si la sección de carga de documentos está activa.
+   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+   */
+    seccionCargarDocumentos: boolean = true;
+
+    datosUsuario: Usuario = USUARIO_INFO;
+    
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
    * @private
@@ -755,6 +784,60 @@ const PLANTAS = this.buildPlantas(data.tablaDatosFederatarios, this.plantasBase,
       this.tramite80101Store.setIdSolicitud(response.datos.id_solicitud || 0);
       return response;
     });
+  }
+
+
+
+  
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
   }
 
 }
