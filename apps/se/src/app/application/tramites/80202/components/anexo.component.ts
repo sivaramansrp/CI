@@ -664,6 +664,13 @@ this.nuevaNotificacion = {
       this.immexRegistroform.get('importacionForm')?.reset();
       this.immexRegistroform.get('importacionForm')?.markAsUntouched();
       this.immexRegistroform.get('importacionForm')?.markAsPristine();
+      this.immexRegistroform.get('exportacionForm')?.reset();
+      this.immexRegistroform.get('exportacionForm')?.markAsUntouched();
+      this.immexRegistroform.get('exportacionForm')?.markAsPristine();
+      this.immexTableDatos = [];
+      this.fraccionTablaDatos = [];
+      this.selectedRowData = null;
+      this.fraccionInfoSelected = null;
       this.eliminarDatosTablaExportacion=true;
       }
       else{
@@ -721,8 +728,8 @@ this.nuevaNotificacion = {
         this.immexRegistroform.get('exportacionForm')?.patchValue({
    productoArancelariaExportacion: this.fraccionInfoSelected?.FRACCION_Columna_2,
    description: this.fraccionInfoSelected?.FRACCION_Columna_5,
-   Nico:this.fraccionInfoSelected?.FRACCION_Columna_1 || 1,
-   productoDescExportacion: this.fraccionInfoSelected?.FRACCION_Columna_6,
+   Nico:this.immexRegistroform.get('exportacionForm.Nico')?.value || '',
+   productoDescExportacion: this.immexRegistroform.get('exportacionForm.productoDescExportacion')?.value || '',
         })
  const MODAL_INSTANCIA = new Modal(
         this.mercanciaExportacionModal.nativeElement
@@ -743,6 +750,12 @@ this.nuevaNotificacion = {
         };
       }
      
+    }
+    onDescriptionChange():void{
+      this.immexRegistroform.get('exportacionForm')?.patchValue({
+        productoDescExportacion: "Razón social de la empresa",
+      })
+    
     }
   
     /**
@@ -832,7 +845,25 @@ this.nuevaNotificacion = {} as Notificacion;
      * @returns {void}
      */
     showTableNicoExport(): void {
-      this.showTableNicoExp = true;
+      if(this.immexRegistroform.get('exportacionForm.Nico')?.value === '' || this.immexRegistroform.get('exportacionForm.productoDescExportacion')?.value === '' ){
+           this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe seleccionar un valor nico.',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.eliminarDatosTablaNicoExp = true;
+      }
+      else{
+        this.eliminarDatosTablaNicoExp = false;
+this.showTableNicoExp = true;
+      }
+      
     }
     /**
      * @method showTableNicoExport

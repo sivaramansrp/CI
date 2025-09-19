@@ -241,19 +241,19 @@
                 <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
                   <label for="description">Descripción:</label>
                   <textarea class="form-control" id="description" formControlName="productoDescExportacion" rows="5"
-                    placeholder=""></textarea>
+                    placeholder="" style="height:100px" ></textarea>
                 </div>
               </div>
               <div class="col-12 mt-5">
                 <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
                   <app-catalogo-select [label]="'Nico'" [catalogo]="nico" formControlName="Nico" [required]="true"
                     [placeholder]="'Selecciona un valor'" name="Nico"
-                    [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                    [isDisabled]="esFormularioSoloLectura" (change)="onDescriptionChange()"></app-catalogo-select>
                 </div>
                 <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
                   <label for="description-nico">Descripción Nico:</label>
                   <textarea class="form-control" id="description-nico" formControlName="productoDescExportacion"
-                    rows="5" placeholder=""></textarea>
+                    rows="5" placeholder=""  style="height:100px"></textarea>
                 </div>
               </div>
               <div class="col-12 container text-end mt-5">
@@ -275,14 +275,18 @@
           </div>
         </form>
         <footer class="footer d-flex py-5 gap-3 justify-content-end">
-          <button type="button" class="btn btn-danger" (click)="modalCancelarExportacion()">
-            Regresar
-          </button>
-          <button type="button" class="btn btn-primary" (click)="guardar()">
+           <button type="button" class="btn btn-primary" (click)="guardar()">
             Guardar
+          </button>
+          <button type="button" class="btn btn-danger" (click)="modalCancelarExportacion()">
+            Cancelar
           </button>
         </footer>
       </div>
+       @if(nuevaNotificacion && eliminarDatosTablaNicoExp){
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+    ></lib-notificaciones>
+        }
     </div>
   </div>
 </div>
