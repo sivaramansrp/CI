@@ -277,7 +277,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
     this.obtenerActividad();
     this.obtenerTipoDocumento(102);
     this.obtenerMunicipio("BCN");
-    this.obtenerImex("MEX");
+    this.obtenerImex();
     if (this.formularioDeshabilitado) {
       this.federatariosFormGroup.disable();
     }
@@ -675,8 +675,8 @@ obtenerEstados():void {
    * 
    * @param entidad - El identificador de la entidad para la cual se desea obtener el estado IMEX.
    */
-  obtenerImex(entidad:string):void {
-    this.complimentosService.getEstadoImex(entidad).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+  obtenerImex():void {
+    this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
   this.estadoImmex = res.datos;
     });
     
