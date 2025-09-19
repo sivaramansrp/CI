@@ -267,9 +267,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
    * @return {void} No retorna nada.
    */
   getListaDocumentoOpcionales(): void {
-    const TRAMITE = '5701';
     this.catalogoDocumentosService
-      .getDocumentosObligatorios(TRAMITE, { especifico: true })
+      .getDocumentosObligatorios(this.idTipoTRamite, { especifico: true })
       .pipe(
         takeUntilDestroyed(this.destroyRef$),
         map((response) => {
