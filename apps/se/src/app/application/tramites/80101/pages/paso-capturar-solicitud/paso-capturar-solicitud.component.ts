@@ -1,12 +1,13 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@libs/shared/data-access-user/src';
+import { Subject, map, take, takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
-import { map, Subject, take, takeUntil } from 'rxjs';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
-
-
+import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
+import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
+import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accionistas.json';
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
  * 
@@ -93,62 +94,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private socioAccionistaBase: Readonly<Record<string, any>> = {
-    "idPersonaPersonaSolicitudR": 0,
-    "idSolicitud": 202734824,
-    "nombre": "",
-    "apellidoMaterno": "",
-    "apellidoPaterno": "",
-    "razonSocial": "AGRICOLA ALPE S DE RL DE CV",
-    "rfc": "AAL0409235E6",
-    "curp": "",
-    "ideTipoPersonaSol": "TIPERS.SL",
-    "correoElectronico": "vucem.soporte.aplicativo@ultrasist.com.mx",
-    "cedulaProfesional": "",
-    "nss": "",
-    "telefono": "8154563",
-    "descripcionGiro": "Siembra, cultivo y cosecha de papa",
-    "cvePaisOrigen": "",
-    "idDireccionSol": 260833725,
-    "tipoPatenteAgente": "",
-    "recif": "",
-    "puesto": "",
-    "tipoAgente": "",
-    "numeroPatente": "",
-    "numeroIdentificacionFiscal": "",
-    "personaMoral": false,
-    "extranjero": false,
-    "organismoPublico": false,
-    "cveUsuario": "AAL0409235E6",
-    "paginaWeb": "",
-    "ideGenerica1": "",
-    "rfcExtranjero": "",
-    "codAutorizacion": "",
-    "actividadProductiva": "",
-    "estadoEvaluacionEntidad": "AUTORIZADO",
-    "estadoEntidad": "AUTORIZADO",
-    "original": false,
-    "modificado": false,
-    "numeroRegistro": "",
-    "concentimientoInstalacionRecuperacion": false,
-    "cveCatalogo": "",
-    "alquilado": false,
-    "volumenAlmacenaje": 0,
-    "capacidadAlmacenaje": 0,
-    "descripcionDetalladaActividadEconomica": "",
-    "activo": false,
-    "generico1": false,
-    "area": "",
-    "cveNacionalidad": "",
-    "clasificacionArancelaria": "",
-    "infoAdicional": false,
-    "montoImportacion": 0,
-    "montoExportacion": 0,
-    "pctParticAccionaria": 0,
-    "ampliacionModelos": false,
-    "ampliacionPaises": false,
-    "fecFallecimiento": "2025-09-07"
-  };
+  private socioAccionistaBase: any[] = socioAccionistas;
 
         private plantasBase: Readonly<Record<string, any>> = {
      "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
@@ -331,6 +277,8 @@ export class PasoCapturarSolicitudComponent implements OnInit {
             ]
   }
 
+  private empresasNacionales = empresasNacionales;
+  private empresasExtranjeras = empresasExtranjeras;
 
   /**
   * URL de la página actual.
@@ -412,27 +360,49 @@ export class PasoCapturarSolicitudComponent implements OnInit {
  * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
  */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildSociosAccionistas(arr1: any[] = [], arr2: any[] = [], base: Record<string, any>, data: any): any[] {
+  buildSociosAccionistas(data: Record<string, any>, base: any[]): any[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+          paginaWeb: data['datosComplimentos'].datosGeneralis.paginaWWeb,
+          numeroRegistro: data['datosComplimentos'].formaModificaciones.nombreDeActa,
+          capacidadAlmacenaje: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
+          rfc:  data['datosComplimentos'].formaModificaciones.rfc ?? ''
+        });
+      });
+    return RESULT;
+  }
+
+  /**
+ * Build plantasControladoras by taking the base array
+ * and appending the length of each key in empresasSeleccionadas
+ * to every planta item.
+ *
+ * @param array  Object with keys whose values are arrays
+ * @param base            Existing plantasControladoras array
+ */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static buildComplementosTablaPayload(array: any[], base: unknown[]): unknown[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const MAP_TO_PAYLOAD = (item: any): any => ({
-      ...base,
-      nombre: item.nombre ?? '',
-      apellidoPaterno: item.apellidoPaterno ?? '',
-      apellidoMaterno: item.apellidoMaterno ?? '',
-      rfc: item.rfc ?? '',
-      correoElectronico: item.correoElectronico ?? '',
-      razonSocial: data.datosComplimentos.formaSocioAccionistas.formaDatos.razonSocial,
-      ideTipoPersonaSol: data.datosComplimentos.formaSocioAccionistas.tipoDePersona,
-      paginaWeb: data.datosComplimentos.datosGeneralis.paginaWWeb,
-      cveNacionalidad: "MEX",
-      fecFallecimiento: data.datosComplimentos.formaCertificacion.fechaVigencia
+    const RESULT: any[] = [];
+
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+          rfc: arr.rfc || arr.taxId,
+          correoElectronico: arr.correoElectronico,
+          razonSocial: arr.razonSocial,
+          nombre: arr.nombre,
+          apellidoPaterno: arr.apellidoPaterno,
+          apellidoMaterno: arr.apellidoMaterno,
+        });
+      });
     });
-
-    arr1.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-    arr2.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-
     return RESULT;
   }
 
@@ -578,11 +548,13 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
 const PLANTAS = this.buildPlantas(data.tablaDatosFederatarios, this.plantasBase, data);
 
 
-    const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
+    const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data, this.socioAccionistaBase);
+    const EMPRESAS_NACIONALES = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentos, this.empresasNacionales);
+    const EMPRESAS_EXTRANJERAS = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentosExtranjera, this.empresasExtranjeras);
     const ANEXO_ALL = this.buildAnexo(data);
     const PAYLOAD = {
-      "tipoDeSolicitud": "guardar",
-      "idSolicitud": 202781045,
+    "tipoDeSolicitud": "guardar",
+    "idSolicitud": 202781045,
     "idTipoTramite": 80101,
     "rfc": "AAL0409235E6",
     "cveUnidadAdministrativa": "8101",
@@ -615,11 +587,12 @@ const PLANTAS = this.buildPlantas(data.tablaDatosFederatarios, this.plantasBase,
         }
       ],
       "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
-      "sociosAccionistas": [...SOCIO_ACCIONISTAS],
+      "sociosAccionistas": SOCIO_ACCIONISTAS,
+      "empresasNacionales": EMPRESAS_NACIONALES,
+      "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
       "solicitud": {
         "anexoI": [...ANEXO_ALL.anexo.tableDos]
       }
-
     }
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
       this.tramite80101Store.setIdSolicitud(response.datos.id_solicitud || 0);
