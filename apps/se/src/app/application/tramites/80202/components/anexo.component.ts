@@ -1140,8 +1140,24 @@ eliminarNicos():void{
   }
 }
   eliminarNico():void{
-    
-    this.showTableNicoExp = false;
+    if(this.fraccionInfoSelectedNico !== null && this.nicoTablaDatos.length > 0){
+      this.eliminarDatosTablaNicoExp= false;
+        this.showTableNicoExp = false;
+    }
+  else{
+     this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe elegir al menos un nico para eliminar.',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.eliminarDatosTablaNicoExp =true;
+  }
   }
   onFilaSeleccionadas(event:fraccionInfo):void{
 this.fraccionInfoSelected = event;

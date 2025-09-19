@@ -8,7 +8,7 @@
         <div class="col-6 col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6">
           <label for="permiso-immex">Fracción arancelaria:</label>
           <input type="text" class="form-control" id="permiso-immex" formControlName="permisoImmexDatos"
-            placeholder="" (input)="onNumberInput($event, 'exportacionForm', 'permisoImmexDatos')" />
+            placeholder="" (input)="onNumberInput($event, 'exportacionForm', 'permisoImmexDatos')" [maxlength]="10" />
         </div>
         <div class="col-12 container text-end mt-5">
           <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarPermisoImmex()">Eliminar</button>
@@ -32,7 +32,7 @@
           <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
             <label for="fraccion-arancelaria-exportacion">Fracción arancelaria:</label>
             <input type="text" class="form-control" formControlName="fraccionArancelariaExportacion"
-              id="fraccion-arancelaria-exportacion" placeholder="" (input)="onNumberInput($event, 'exportacionForm', 'fraccionArancelariaExportacion')" />
+              id="fraccion-arancelaria-exportacion" placeholder="" (input)="onNumberInput($event, 'exportacionForm', 'fraccionArancelariaExportacion')"[maxlength]="10" />
           </div>
         </div>
         <div class="col-12 mt-5">
