@@ -25,6 +25,10 @@
           [tipoSeleccionTabla]="tipoSeleccionTabla"
           [configuracionTabla]="agregarImmexProgramConfiguracionColumnas"
           [datos]="domicilioslista"
+          [mode]="'client'"
+          [totalItems]="domicilioslista.length"
+          [showPagination]="true"
+          (listaDeFilaSeleccionada)="seleccionarImmexProgramLista($event)"
         >
         </app-tabla-dinamica>
       </div>
@@ -34,9 +38,7 @@
             type="button"
             id="Iceptar"
             class="btn btn-primary ms-3"
-            data-bs-dismiss="modal"
             [disabled]="esFormularioSoloLectura"
-            #closeModal
             (click)="agregarImmexProgram()"
           >
             Aceptar
@@ -46,8 +48,7 @@
             id="cancelar"
             [disabled]="esFormularioSoloLectura"
             class="btn btn-danger ms-3"
-            data-bs-dismiss="modal"
-            #closeModal
+            (click)="cancelarImmexProgram()"
           >
             Cancelar
           </button>

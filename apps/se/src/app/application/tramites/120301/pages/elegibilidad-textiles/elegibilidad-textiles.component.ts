@@ -15,14 +15,16 @@
  */
 
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-
+import { CategoriaMensaje, Notificacion, } from '@ng-mf/data-access-user';
 import { DatosPasos, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
-
-import { PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
-
+import { ERROR_FORMA_ALERT, PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
+import { IniciarRequest } from '../../models/request/iniciar-request.model';
+import { IniciarService } from '../../services/iniciar.service';
 import { ListaPasosWizard } from '../../models/elegibilidad-de-textiles.model';
-
+import { Location } from '@angular/common';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * @interface AccionBoton
@@ -49,7 +51,7 @@ interface AccionBoton {
    * @example 'cont' | 'prev' | 'back'
    */
   accion: string;
-  
+
   /**
    * @property {number} valor
    * @description Índice del paso de destino en el wizard (comenzando desde 1)
@@ -82,6 +84,15 @@ interface AccionBoton {
   templateUrl: './elegibilidad-textiles.component.html',
 })
 export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
+    /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formularioAlertaError = ERROR_FORMA_ALERT;
+
+  /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  esFormaValido: boolean = false;
   /**
    * @property {FormGroup} formGroup
    * @description Grupo de formularios reactivos de Angular que maneja todos los datos 
@@ -128,6 +139,12 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
   pasos: Array<ListaPasosWizard> = PASOS;
 
   /**
+   * @property {Notificacion | null} nuevaNotificacion
+   * @description Objeto que representa una notificación para el usuario.
+   */
+  nuevaNotificacion: Notificacion | null = null;
+
+  /**
    * @property {string | null} tituloMensaje
    * @description Título principal que se muestra en la cabecera del wizard.
    * Proporciona contexto al usuario sobre el tipo de trámite que está realizando.
@@ -170,6 +187,11 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
    * ```
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+    /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
   /**
    * @property {number} indice
@@ -241,7 +263,11 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
    * @see {@link FormGroup} - Documentación de FormGroup de Angular
    * @see {@link FormControl} - Documentación de FormControl de Angular
    */
-  constructor(private seccionStore: SeccionLibStore) {
+  constructor(
+    private iniciarService: IniciarService,
+    private location: Location,
+    private seccionStore: SeccionLibStore, 
+    public ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore) {
     this.formGroup = new FormGroup({
       campo1: new FormControl(''),
       campo2: new FormControl(''),
@@ -274,14 +300,46 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
    * @throws {Error} No lanza errores explícitamente, pero valida el rango de valores
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+    // Si la acción es continuar, validar formularios del paso actual
+    if (e.accion === 'cont') {
+      let isValid = true;
+      
+      // Validar formularios del paso 1 antes de continuar
+      if (this.indice === 1 && this.pasoUnoComponent) {
+        isValid = this.pasoUnoComponent.validarTodosLosFormularios();
       }
+      
+      // Si los formularios no son válidos, mostrar error y no continuar
+      if (!isValid) {
+        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+        window.scrollTo(0, 0);
+        return;
+      }
+      
+      this.esFormaValido = false;
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      
+      // Avanzar al siguiente paso
+      this.wizardComponent.siguiente();
+      this.ElegibilidadDeTextilesStore.setPestanaActiva(this.indice);
+      return;
     }
+
+    // Para botón "Anterior" - actualizar índice sin validación
+    this.indice = e.valor;
+    this.datosPasos.indice = this.indice;
+    this.wizardComponent.atras();
+    this.ElegibilidadDeTextilesStore.setPestanaActiva(this.indice);
+  }
+
+  /**
+   * Método que se ejecuta cuando cambia de tab en paso-uno.
+   * Oculta el mensaje de error de validación.
+   */
+  onTabChanged(): void {
+    this.esFormaValido = false;
   }
 
   /**
@@ -351,10 +409,58 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
    * }
    * ```
    */
-  ngOnInit(): void {
+  ngOnInit():void {
     this.datosPasos.indice = 1;
     this.indice = 1;
     this.asignarSecciones();
+    this.iniciar();
+  }
+
+  /**
+   * @method iniciar
+   * @description Método que inicia el trámite 120301 enviando una solicitud
+   * al servicio IniciarService. Maneja la respuesta del servidor
+   */
+  iniciar(): void {
+    const PAYLOAD: IniciarRequest = {
+      rfc_solicitante: 'LEQI810131GA8',
+      rol_actual: 'SOLICITANTE'
+    };
+
+    // Realiza la solicitud de inicio del trámite
+    this.iniciarService.postIniciar(PAYLOAD).subscribe({
+      next: (response) => {
+        if (response.codigo !== '00') {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error al iniciar el trámite.',
+            mensaje:
+              response.causa ||
+              response.mensaje ||
+              'Ocurrió un error al guardar la solicitud.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          this.location.back();
+        }
+      },
+      error: (error) => {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: '',
+          mensaje: error?.error?.error || 'Error inesperado al iniciar el trámite.',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+        this.location.back();
+      }
+    });
   }
 
   /**

@@ -1,5 +1,6 @@
-import { FormGroup } from '@angular/forms';
+import { FormGroup, ValidatorFn } from '@angular/forms';
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 /**
  * @Injectable
@@ -19,6 +20,25 @@ export class ServicioDeFormularioService {
  * @type {Map<string, FormGroup>}
  */
   private forms = new Map<string, FormGroup>();
+
+  /**
+   * @property formTouchedNotifier
+   * @description
+   * Notificador privado basado en `Subject` que emite el nombre del formulario cuando este ha sido marcado como "tocado".
+   * Permite a los componentes suscribirse y reaccionar a los cambios de estado de los formularios.
+   * @type {Subject<string>}
+   */
+  private formTouchedNotifier = new Subject<string>();
+
+  /**
+   * @property formTouched$
+   * @description
+   * Observable público que expone los eventos emitidos por `formTouchedNotifier`.  
+   * Permite a los componentes suscribirse para detectar cuándo un formulario ha sido marcado como "tocado".
+   * El valor emitido es un `string` que corresponde al nombre del formulario afectado.
+   * @type {Observable<string>}
+   */
+  public formTouched$ = this.formTouchedNotifier.asObservable();
 
   /**
  * @method registerForm
@@ -51,7 +71,7 @@ export class ServicioDeFormularioService {
  * @param {string} name - El nombre único del formulario.
  * @param {Record<string, string | object>} value - Un objeto que contiene los valores a establecer en el formulario.
  */
-  setFormValue(name: string, value: Record<string, string | object>): void {
+  setFormValue(name: string, value: Record<string, string | object | boolean>): void {
     const FORMA = this.getForm(name);
     if (FORMA) {
       FORMA.patchValue(value);
@@ -96,16 +116,45 @@ export class ServicioDeFormularioService {
   }
 
   /**
- * @method removeControl
- * @description
- * Elimina un control específico de un formulario dinámico registrado en el servicio.
- * @param {string} formName - El nombre único del formulario.
- * @param {string} controlName - El nombre del control a eliminar del formulario.
- */
-removeControl(formName: string, controlName: string): void {
-  const FORMA = this.getForm(formName);
-  if (FORMA && FORMA.contains(controlName)) {
-    FORMA.removeControl(controlName);
+   * @method removeControl
+   * @description
+   * Elimina un control específico de un formulario dinámico registrado en el servicio.
+   * @param {string} formName - El nombre único del formulario.
+   * @param {string} controlName - El nombre del control a eliminar del formulario.
+   */
+  removeControl(formName: string, controlName: string): void {
+    const FORMA = this.getForm(formName);
+    if (FORMA && FORMA.contains(controlName)) {
+      FORMA.removeControl(controlName);
+    }
   }
-}
+
+  /**
+   * @method updateControlValidator
+   * @description
+   * Actualiza los validadores de un control específico de un formulario dinámico registrado en el servicio.
+   * @param {string} formName - El nombre único del formulario.
+   * @param {string} controlName - El nombre del control a actualizar en el formulario.
+   * @param {ValidatorFn[]} validators - Los validadores a establecer en el control.
+   */
+  updateControlValidator(formName: string, controlName: string, validators: ValidatorFn[] = []): void {
+    const FORMA = this.getForm(formName);
+    const CONTROL = FORMA?.get(controlName);
+
+    if (CONTROL) {
+      CONTROL.setValidators(validators);
+      CONTROL.updateValueAndValidity();
+    }
+  }
+
+  /**
+   * @method markFormAsTouched
+   * @description
+   * Actualiza los validadores de un control específico de un formulario dinámico registrado en el servicio.
+   * @param {string} formName - El nombre único del formulario.
+   */
+  markFormAsTouched(formName: string): void {
+    this.formTouchedNotifier.next(formName);
+  }
+
 }

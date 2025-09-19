@@ -107,12 +107,24 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /*
+   * @description
+   * Indica si el catálogo de país de origen está deshabilitado.
+   */
+  disabledCatalogoPaisOrigen: boolean = false;
+
   /**
    * Estado interno de la sección actual del trámite 130110.
    * Utilizado para gestionar y almacenar la información relacionada con esta sección.
    * Propiedad privada.
    */
   private seccionState!: Tramite130203State;
+
+  /*
+  * @description
+  * Expresiones regulares para validaciones.
+  */
+  soloNumerosEnInputVar = true;
  
   /**
    * @description
@@ -276,7 +288,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
         { value: this.seccionState?.especifique, disabled: true },
         [Validators.maxLength(20)],
       ],
-      numero: [this.seccionState?.numero, [Validators.required]],
+      numero: [this.seccionState?.numero, [Validators.required,Validators.maxLength(50)]],
       tipoEmpresa: [this.seccionState?.tipoEmpresa, [Validators.required]],
       nombre: [this.seccionState?.nombre, [Validators.required]],
       lineaCheckbox: this.seccionState?.lineaCheckbox,
@@ -289,25 +301,25 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
       ],
       direccionExportador: [
         this.seccionState?.direccionExportador,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(200)],
       ],
     });
 
     this.datosDelImportador = this.fb.group({
       nombreImportador: [
         this.seccionState?.nombreImportador,
-        [Validators.required],
+        [Validators.required,Validators.maxLength(120)],
       ],
       direccionImportador: [
         this.seccionState?.direccionImportador,
-        [Validators.required],
+        [Validators.required,Validators.maxLength(120)],
       ],
     });
 
     this.datosDeLaRemesa = this.fb.group({
       numeroEnLetraDeLosLotes: [
         this.seccionState?.numeroEnLetraDeLosLotes,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),Validators.maxLength(200)],
       ],
       numeroEnLetraDeLosLotesEnIngles: [
         this.seccionState?.numeroEnLetraDeLosLotesEnIngles,
@@ -322,11 +334,11 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     this.datosDeLosDiamantes = this.fb.group({
       cantidadEnQuilates: [
         this.seccionState?.cantidadEnQuilates,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(11)],
       ],
       valorDeLosDiamantes: [
         this.seccionState?.valorDeLosDiamantes,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(11)],
       ],
     });
   }
@@ -367,12 +379,10 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * @param controlName Nombre del control.
    * @returns `true` si el control es inválido, de lo contrario `false`.
    */
-  isInvalid(controlName: string): boolean {
-    const CONTORL = this.formularioEmpresa.get(controlName);
-    return CONTORL
-      ? CONTORL.invalid && (CONTORL.dirty || CONTORL.touched)
-      : false;
-  }
+  isInvalid(controlName: string, formGroup: FormGroup = this.formularioEmpresa): boolean {
+  const CONTROL = formGroup.get(controlName);
+  return CONTROL ? CONTROL.invalid && (CONTROL.dirty || CONTROL.touched) : false;
+}
 
   /**
    * @description Verifica si un control del formulario es inválido.
@@ -492,4 +502,33 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+
+/**
+ * @description
+ * Permite solo la entrada de números en el campo especificado del formulario.
+ * Elimina automáticamente cualquier carácter no numérico mientras el usuario escribe.
+ * @param evento Evento de entrada del campo.
+ * @param formulario FormGroup al que pertenece el control.
+ * @param nombreControl Nombre del control a limpiar.
+ */
+  soloNumerosEnInput = (evento: Event, formulario: FormGroup, nombreControl: string): void => {
+    const INPUT = evento.target as HTMLInputElement;
+    const VALOR = INPUT.value.replace(/[^0-9]/g, '');
+    formulario.get(nombreControl)?.setValue(VALOR, { emitEvent: false });
+
+    if(this.soloNumerosEnInputVar){
+      // Actualiza el store con el valor limpio
+    }
+  }
+  /*
+   * @description
+   * Maneja el evento de cambio del checkbox.
+   * Habilita o deshabilita el catálogo de país de origen basado en el estado del checkbox.
+   * @param event Evento de cambio del checkbox.
+   */
+  cambioAviso(event: Event): void {
+  const CHECKED = (event.target as HTMLInputElement).checked;
+  this.disabledCatalogoPaisOrigen = CHECKED;
+ }
+   
 }

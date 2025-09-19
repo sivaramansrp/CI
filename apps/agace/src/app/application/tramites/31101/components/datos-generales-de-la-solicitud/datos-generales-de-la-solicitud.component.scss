@@ -12,7 +12,7 @@
 }
 
 .modal-dialog {
-  max-width: 1220px !important;
+  max-width: 1300px !important;
 }
 
 ::ng-deep p {
@@ -35,10 +35,6 @@
   margin: 0px 25px 25px 0px;
 }
 
-textarea.form-control {
-  height: 0% !important;
-}
-
 .modal-content {
   padding-left: 6% !important;
   padding-right: 6% !important;
@@ -46,5 +42,10 @@ textarea.form-control {
 }
 
 .no-resize{
-  resize: none;
+  resize: none !important;
+  overflow: hidden; 
+}
+
+.fw-0 {
+  font-weight: normal !important;
 }

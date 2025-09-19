@@ -12,6 +12,7 @@
   [formularioDatosSubcontratista]="anexoUnoFormGroup"
   [formularioDatosSubcontratistaDos]="anexoDosFormGroup"
   (complimentosDatosDos)="modifierDosComplimentos($event)"
+  (tieneCambioDeDatosDeTabla)="datosDeLaTablaCambiados($event)"
 >
 </app-anexo-uno>
 
@@ -26,7 +27,7 @@
 <ng-container *ngIf="mostrarProveedorClientePopup">
   <div class="modal-overlay">
     <div class="modal-content">
-      <app-contenedor-proveedor-cliente (cerrarPopup)="cerrarContenedorProveedorCliente()"></app-contenedor-proveedor-cliente>
+      <app-contenedor-proveedor-cliente (datosActualizadosProveedorClient)="datosActualizadosProveedorCliente($event)" (cerrarPopup)="cerrarContenedorProveedorCliente()"></app-contenedor-proveedor-cliente>
     </div>
   </div>
 </ng-container>

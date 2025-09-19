@@ -45,17 +45,15 @@
           id="usoEspecifico"
           formControlName="usoEspecifico"
           (change)="setValoresStore(paisForm,'usoEspecifico')"
+          [ngClass]="{'textarea-error': esInvalido('usoEspecifico')}"
         ></textarea>
-        <div
-        *ngIf="
-          paisForm.controls['usoEspecifico'].invalid &&
-          paisForm.controls['usoEspecifico'].touched
-        "
-        class="text-danger"
-      >
-        <small *ngIf="paisForm.controls['usoEspecifico'].errors?.['required']"
-          >Este campo es obligatorio</small
-        >
+        <div *ngIf="esInvalido('usoEspecifico')" class="text-danger">
+          <small *ngIf="paisForm.controls['usoEspecifico'].errors?.['required']"
+            >Este campo es obligatorio</small
+          >
+          <small *ngIf="paisForm.controls['usoEspecifico'].errors?.['validarSinCaracterAnguloDerecho']">
+          Por favor, corrige la descripción/dirección
+        </small>
         </div>
       </div>
     </div>
@@ -75,17 +73,15 @@
           id="justificacionImportacionExportacion"
           formControlName="justificacionImportacionExportacion"
           (change)="setValoresStore(paisForm,'justificacionImportacionExportacion')"
+          [ngClass]="{'textarea-error': esInvalido('justificacionImportacionExportacion')}"
         ></textarea>
-        <div
-        *ngIf="
-          paisForm.controls['justificacionImportacionExportacion'].invalid &&
-          paisForm.controls['justificacionImportacionExportacion'].touched
-        "
-        class="text-danger"
-      >
-        <small *ngIf="paisForm.controls['justificacionImportacionExportacion'].errors?.['required']"
-          >Este campo es obligatorio</small
-        >
+        <div *ngIf="esInvalido('justificacionImportacionExportacion')"  class="text-danger">
+          <small *ngIf="paisForm.controls['justificacionImportacionExportacion'].errors?.['required']"
+            >Este campo es obligatorio</small
+          >
+          <small *ngIf="paisForm.controls['justificacionImportacionExportacion'].errors?.['validarSinCaracterAnguloDerecho']">
+            Por favor, corrige la descripción/dirección
+        </small>
         </div>
       </div>
     </div>
@@ -128,12 +124,22 @@
           id="Observaciones"
           formControlName="observaciones"
           (change)="setValoresStore(paisForm,'observaciones')"
-          maxLength = "512"
+          [ngClass]="{'textarea-error': esInvalido('observaciones')}"
         ></textarea>
+        <div
+        *ngIf="esInvalido('observaciones')"
+        class="text-danger"
+      >
+        <small *ngIf="paisForm.controls['observaciones'].errors?.['required']"
+          >Este campo es obligatorio.</small
+        >
+        <small *ngIf="paisForm.controls['observaciones'].hasError('maxlength')">
+               Por favor, no escribas más de 512 caracteres
+              </small>
       </div>
     </div>
   </div>
-
+</div>
   </form>
 </div>
 <lib-notificaciones

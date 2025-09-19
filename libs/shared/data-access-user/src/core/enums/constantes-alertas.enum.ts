@@ -111,6 +111,11 @@ export const MENSAJE_ALERTA_TRATADOS = {
 </ul>
 `,
 };
+
+export const INSTANCIA_URUGUAY = {
+  ADJUNTAR: `<p>Seleccione al menos 1 de las opciones por lo cual cumple el criterio de otras instancias.</p>`,
+};
+
 export const ELVALORALERTA = {
   ADJUNTAR: `<p>El valor de la transacción debe ser mayor al valor de dólares para insumos/envases.</p>`,
 };
@@ -127,6 +132,10 @@ export const FECHA_SALIDA = {
 
 export const TXT_ALERTA_ACUSE = (folio: string): string => {
   return `Tu solicitud ha sido registrada con el siguiente número de folio:  < ${folio} >`;
+};
+
+export const TXT_ALERTA_ACUSE_RECIBO = (folio: string): string => {
+  return `El requerimiento se registró exitosamente con el folio de requerimiento  < ${folio} >`;
 };
 
 export const TITULO_ACUSE = 'Acuse(s)';
@@ -255,7 +264,7 @@ Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo do
 export const LASTABLA = {
   Importante: `
     <div class="text-center">
-      <p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>
+      <p class="m-0">Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>
     </div>
   `
 };

@@ -20,8 +20,11 @@
           <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select [catalogo]="tipoSolicitud" formControlName="tipoDeCancelacion"
-                [label]="'Tipo de cancelacion'" [isDisabled]="esFormularioSoloLectura" [required]="true" name="tipoDeCancelacion"
+                [label]="'Tipo de cancelacion'" [isDisabled]="esFormularioSoloLectura" [required]="true" [mostrarErrores]="false" name="tipoDeCancelacion"
                 (change)="tipoSolicitudSeleccion()"></app-catalogo-select>
+            </div>
+            <div *ngIf="formCancelorSolicitud.get('tipoDeCancelacion')?.invalid && formCancelorSolicitud.get('tipoDeCancelacion')?.touched" class="text-danger">
+              Este campo es obligatorio
             </div>
           </div>
         </div>
@@ -54,7 +57,7 @@
               <label for="descripcion" class="form-label">Motivo de cancelación*:</label>
               <textarea class="form-control" rows="6" id="descripcion" formControlName="descripcion"
                 maxlength="450"
-                [ngClass]="isValid(formCancelorSolicitud,'descripcion') ? 'required' : ''"
+                
                 (change)="onDescripcionChange()"></textarea>
               <div *ngIf="formCancelorSolicitud.get('descripcion')?.invalid && formCancelorSolicitud.get('descripcion')?.touched" class="text-danger">
                 Este campo es obligatorio

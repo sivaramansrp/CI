@@ -21,7 +21,7 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <div class="form-group">
-              <label class="form-label d-flex align-items-center" for="rfc">
+              <label class="form-label" for="rfc">
                 <strong>RFC:</strong>
                 <span class="p-2" tooltip="Registro Federal de Contribuyentes" placement="top">
                   <i class="bi bi-question-circle-fill"></i>
@@ -38,7 +38,7 @@
           </div>
         </div>
         <div class="row mb-3">
-          <div class="col-12">
+          <div class="col-md-12">
             <div class="form-group">
               <label class="form-label" for="actividad"><strong>Actividad económica preponderante:</strong></label>
               <input type="text" class="form-control" id="actividad" value="{{ datosGenerales?.datos?.actividades || '' }}" disabled>
@@ -46,7 +46,7 @@
           </div>
         </div>
         <div class="row mb-3">
-          <div class="col-12">
+          <div class="col-md-12">
             <div class="form-group">
               <label class="form-label" for="correo"><strong>Correo electrónico:</strong></label>
               <input type="email" class="form-control" id="correo" value="{{ datosGenerales?.datos?.identificacion?.email || '' }}" disabled>
@@ -181,7 +181,6 @@
 
   <div class="form" formGroupName="domicilioFiscal">
     <ng-titulo titulo="Domicilio fiscal del solicitante" />
-    <div class="row">
     <!-- Primera fila: País, Código postal, Estado -->
     <div class="row mb-3">
       <div class="col-md-4">
@@ -354,6 +353,5 @@
         </div>
       </div>
     </div>
-  </div>
   </div>
 </form>

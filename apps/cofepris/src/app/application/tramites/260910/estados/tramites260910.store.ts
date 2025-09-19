@@ -32,7 +32,7 @@ export interface Solicitud260910State {
   codigoPostal: string;
 
   /** Identificador del estado asociado con el domicilio. */
-  estado: number;
+  estado: number | string;
 
   /** Municipio donde reside el solicitante. */
   municipio: string;
@@ -53,10 +53,10 @@ export interface Solicitud260910State {
   telefono: number;
 
   /** Número clave SCIAN. */
-  claveSCIAN: number;
+  claveSCIAN: number | string;
 
   /** Número Clave descripcion del SCIAN. */
-  claveSCIANDesc: number;
+  claveSCIANDesc: number | string;
 
   /** Indicador sobre si existe aviso de funcionamiento. */
   avisoDeFuncionamiento: boolean;
@@ -68,10 +68,10 @@ export interface Solicitud260910State {
   liveFreshFrozen: boolean;
 
   /** Régimen fiscal asociado al solicitante. */
-  regimen: number;
+  regimen: number | string;
 
   /** Aduana asociada al trámite. */
-  aduana: number;
+  aduana: number | string;
 
   /** Acción relacionada con la solicitud ("hacerlos"). */
   hacerlos: string | number;
@@ -101,7 +101,7 @@ export interface Solicitud260910State {
   clasificaionProductos: string;
 
   /** Especificación del producto representada por un identificador numérico. */
-  especificarProducto: number;
+  especificarProducto: number | string;
 
   /** Nombre específico del producto asociado con la solicitud. */
   nombreProductoEspecifico: string;
@@ -113,13 +113,13 @@ export interface Solicitud260910State {
   cientifico: string;
 
   /** Tipo de producto representado por un identificador numérico. */
-  tipoProducto: number;
+  tipoProducto: number | string;
 
   /** Forma farmacéutica */
-  farmaceutica: number;
+  farmaceutica: number | string;
 
   /** Estado físico */
-  fisico: number;
+  fisico: number | string;
 
   /** Fracción arancelaria del producto. */
   fraccionArancelaria: string;
@@ -137,7 +137,7 @@ export interface Solicitud260910State {
   cantidadUMC: string;
 
   /** Unidad de Medida de Comercialización (UMC). */
-  umc: number;
+  umc: number | string;
 
   /** Presentación Farmacéutica o tipo de envase */
   presentacionFarmaceutica: string;
@@ -212,7 +212,7 @@ export interface Solicitud260910State {
   cadenaDeDependencia: string;
 
   /** Banco asociado al trámite, representado por un identificador numérico. */
-  banco: number;
+  banco: number | string;
 
   /** Llave de pago asociada al trámite. */
   liaveDePago: string;
@@ -243,20 +243,20 @@ export function createInitialState(): Solicitud260910State {
     razonSocial: '',
     correoElectronico: '',
     codigoPostal: '',
-    estado: 0,
+    estado: '',
     municipio: '',
     localidad: '',
     colonia: '',
     calle: '',
     lada: 0,
     telefono: 0,
-    claveSCIAN: 0,
-    claveSCIANDesc: 0,
+    claveSCIAN: '',
+    claveSCIANDesc: '',
     avisoDeFuncionamiento: false,
     licenciaSanitaria: '',
     liveFreshFrozen: false,
-    regimen: 0,
-    aduana: 0,
+    regimen: '',
+    aduana: '',
     hacerlos: '',
     rfc: '',
     legalRazonSocial: '',
@@ -266,19 +266,19 @@ export function createInitialState(): Solicitud260910State {
     SCIANDatos: [],
     manifesto: false,
     clasificaionProductos: '',
-    especificarProducto: 0,
+    especificarProducto: '',
     nombreProductoEspecifico: '',
     distintiva: '',
     cientifico: '',
-    tipoProducto: 0,
-    farmaceutica: 0,
-    fisico: 0,
+    tipoProducto: '',
+    farmaceutica: '',
+    fisico: '',
     fraccionArancelaria: '',
     descripcionFraccionArancelaria: '',
     cantidadUMT: '',
     umt: '',
     cantidadUMC: '',
-    umc: 0,
+    umc: '',
     presentacionFarmaceutica: '',
     registroSanitario: 0,
     fechaCaducidad: '',
@@ -303,12 +303,12 @@ export function createInitialState(): Solicitud260910State {
     facturadorDatos: [],
     claveDeReferencia: '',
     cadenaDeDependencia: '',
-    banco: 0,
+    banco: '',
     liaveDePago: '',
     fechaDePago: '',
     importeDePago: '',
     folioDeDesistimiento: '',
-    folioOriginal: ''
+    folioOriginal: '0402600201020254006000002'
   };
 }
 
@@ -400,7 +400,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza el estado asociado al domicilio.
    * @param estado - Nuevo identificador para el estado.
    */
-  public setEstado(estado: number): void {
+  public setEstado(estado: number | string): void {
     this.update((state) => ({
       ...state,
       estado
@@ -510,7 +510,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza el régimen fiscal asociado al trámite.
    * @param regimen - Nuevo identificador para el régimen fiscal.
    */
-  public setRegimen(regimen: number): void {
+  public setRegimen(regimen: number | string): void {
     this.update((state) => ({
       ...state,
       regimen
@@ -521,7 +521,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza la aduana asociada al trámite.
    * @param aduana - Nuevo identificador para la aduana.
    */
-  public setAduana(aduana: number): void {
+  public setAduana(aduana: number | string): void {
     this.update((state) => ({
       ...state,
       aduana
@@ -532,7 +532,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza la clave SCIAN asociada al trámite.
    * @param claveSCIAN - Nuevo identificador para la clave SCIAN.
    */
-  public setClaveSCIAN(claveSCIAN: number): void {
+  public setClaveSCIAN(claveSCIAN: number | string): void {
     this.update((state) => ({
       ...state,
       claveSCIAN
@@ -543,7 +543,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza la descripción de la clave SCIAN asociada al trámite.
    * @param claveSCIANDesc - Nuevo identificador para la descripción de la clave SCIAN.
    */
-  public setClaveSCIANDesc(claveSCIANDesc: number): void {
+  public setClaveSCIANDesc(claveSCIANDesc: number | string): void {
     this.update((state) => ({
       ...state,
       claveSCIANDesc
@@ -628,10 +628,10 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   }
 
   /**
-   * Agrega una nueva mercancía al estado.
+   * Modifica una mercancía en el estado.
    * @param newMercancia - Objeto de mercancía que será añadido.
    */
-  public addMercanciasDatos(newMercancia: Mercancia): void {
+  public modificarMercanciasDatos(newMercancia: Mercancia): void {
     this.update((state) => ({
       ...state,
       mercanciasDatos: [...state.mercanciasDatos, newMercancia]
@@ -690,7 +690,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza el identificador del producto especificado en el estado.
    * @param especificarProducto - Nuevo identificador para el producto.
    */
-  public setEspecificarProducto(especificarProducto: number): void {
+  public setEspecificarProducto(especificarProducto: number | string): void {
     this.update((state) => ({
       ...state,
       especificarProducto
@@ -734,7 +734,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza el tipo de producto en el estado.
    * @param tipoProducto - Nuevo identificador para el tipo de producto.
    */
-  public setTipoProducto(tipoProducto: number): void {
+  public setTipoProducto(tipoProducto: number | string): void {
     this.update((state) => ({
       ...state,
       tipoProducto
@@ -745,7 +745,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza la forma farmacéutica en el estado.
    * @param farmaceutica - Nuevo valor para la forma farmacéutica.
    */
-  public setFarmaceutica(farmaceutica: number): void {
+  public setFarmaceutica(farmaceutica: number | string): void {
     this.update((state) => ({
       ...state,
       farmaceutica
@@ -756,7 +756,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza el estado físico en el estado.
    * @param fisico - Nuevo valor para el estado físico.
    */
-  public setFisico(fisico: number): void {
+  public setFisico(fisico: number | string): void {
     this.update((state) => ({
       ...state,
       fisico
@@ -822,7 +822,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza la unidad UMC en el estado.
    * @param umc - Nuevo identificador para la unidad UMC.
    */
-  public setUmc(umc: number): void {
+  public setUmc(umc: number | string): void {
     this.update((state) => ({
       ...state,
       umc
@@ -1039,19 +1039,6 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   }
 
   /**
-   * Elimina un destinatario específico del estado.
-   * @param destinatarioToRemove - Objeto del destinatario a eliminar.
-   */
-  public removeDestinatarioDato(destinatarioToRemove: Destinatario): void {
-    this.update((state) => ({
-      ...state,
-      destinatarioDatos: state.destinatarioDatos.filter(
-        (destinatario) => destinatario.rfc !== destinatarioToRemove.rfc
-      )
-    }));
-  }
-
-  /**
    * Actualiza los datos de fabricante en el estado.
    * @param fabricanteDatos - Nuevo arreglo con los datos de fabricante.
    */
@@ -1160,7 +1147,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza el banco asociado al trámite en el estado.
    * @param banco - Nuevo identificador para el banco.
    */
-  public setBanco(banco: number): void {
+  public setBanco(banco: number | string): void {
     this.update((state) => ({
       ...state,
       banco

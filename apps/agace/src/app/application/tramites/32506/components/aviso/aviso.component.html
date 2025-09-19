@@ -204,10 +204,10 @@
       <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura"
           (click)="eliminarDomicilio()"> Eliminar </button>
-        <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura"> Modificar </button>
+        <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura" (click)="modificarDomicilio()"> Modificar </button>
         <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-primary ms-3" [disabled]="false"
           (click)="abiertoDomicilio()"> Agregar </button>
-        <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura"> Descargar datos
+        <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura" (click)="descargarDatosCapturados()"> Descargar datos
           capturados </button>
       </div>
     </div> @if(avisoFormulario.get('tipoCarga')?.value===TIPACA[1].value){ <div id="divCargaMasiva">
@@ -332,7 +332,7 @@
             <div class="row">
               <div class="col-md-6">
                 <input-hora formControlName="horaDestruccion"
-                  [label]=" 'Hora en la que se efectuar&aacute; la destrucci&oacute;n' " [required]="true"
+                  [label]="HORA_DESTRUCCION" [required]="true"
                   [inputId]="'horaDestruccion'"
                   (change)=" setValoresStore( domicilioFormulario, 'horaDestruccion', 'setHoraDestruccion' ) "></input-hora>
               </div>
@@ -548,9 +548,9 @@
                 </div>
               </div>
               <div class="col-md-4 mb-2">
-                <label for="pedimento" class="form-label">Número del pedimento de importación definitiva a región o franja fronteriza.</label>
-                <span class="require">*</span>
-                <label for="pedimento">:</label>
+                <label for="pedimento" class="form-label text-left">Número del pedimento de importación definitiva a región o franja fronteriza.<span class="require">*</span>
+                <span for="pedimento">:</span></label>
+                
                 <div>
                   <input type="text" formControlName="pedimento" id="pedimento" class="form-control"
                     [ngClass]=" isValid(pedimentoFormulario, 'pedimento') ? 'required' : '' "

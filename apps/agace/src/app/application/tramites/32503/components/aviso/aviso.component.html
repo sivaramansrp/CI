@@ -5,6 +5,9 @@
         <div class="col-md-4">
           <label for="adace" class="form-label">ADACE:</label>
           <input class="form-control" [ngClass]="isValid(adaceFormulario, 'adace') ? 'required' : ''" type="text" formControlName="adace" name="adace" id="adace" (change)="setValoresStore(avisoFormulario, 'adace', 'setAvisoFormularioAdace')" />
+          @if (obtenerMensajeError(adaceFormulario, 'adace')) {
+            <div class="text-danger mt-1">{{ obtenerMensajeError(adaceFormulario, 'adace') }}</div>
+          }
         </div>
       </div>
     </ng-container>
@@ -15,14 +18,20 @@
           <label for="valorProgramaImmex"> Número de programa IMMEX </label>
           <span class="require">*</span>
           <label for="puntos">:</label>
-          <input id="valorProgramaImmex" name="valorProgramaImmex" class="form-control" [ngClass]="isValid(datosEmpresa, 'valorProgramaImmex') ? 'required' : ''" type="text" maxlength="9" formControlName="valorProgramaImmex" (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorProgramaImmex',$event)" (change)="setValoresStore(datosEmpresa, 'valorProgramaImmex', 'setAvisoFormularioValorProgramaImmex')" />
+          <input id="valorProgramaImmex" name="valorProgramaImmex" class="form-control" [ngClass]="isValid(datosEmpresa, 'valorProgramaImmex') ? 'required' : ''" type="text" maxlength="9" formControlName="valorProgramaImmex" (keyup)="desinfectarAlfanumerico(datosEmpresa,'valorProgramaImmex',$event)" (change)="setValoresStore(datosEmpresa, 'valorProgramaImmex', 'setAvisoFormularioValorProgramaImmex')" />
+          @if (obtenerMensajeError(datosEmpresa, 'valorProgramaImmex')) {
+            <div class="text-danger mt-1">{{ obtenerMensajeError(datosEmpresa, 'valorProgramaImmex') }}</div>
+          }
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label for="valorAnioProgramaImmex">Año de programa IMMEX</label>
             <span class="require">*</span>
             <label for="puntos">:</label>
-            <input id="valorAnioProgramaImmex" name="valorAnioProgramaImmex" class="form-control" type="text" maxlength="4" formControlName="valorAnioProgramaImmex" [ngClass]="isValid(datosEmpresa, 'valorAnioProgramaImmex') ? 'required' : ''" (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorAnioProgramaImmex',$event)" (change)="setValoresStore(datosEmpresa, 'valorAnioProgramaImmex', 'setAvisoFormularioValorAnioProgramaImmex')" />
+            <input id="valorAnioProgramaImmex" name="valorAnioProgramaImmex" class="form-control" type="text" maxlength="4" formControlName="valorAnioProgramaImmex" [ngClass]="isValid(datosEmpresa, 'valorAnioProgramaImmex') ? 'required' : ''" (keyup)="desinfectarAlfanumerico(datosEmpresa,'valorAnioProgramaImmex',$event)" (change)="setValoresStore(datosEmpresa, 'valorAnioProgramaImmex', 'setAvisoFormularioValorAnioProgramaImmex')" />
+            @if (obtenerMensajeError(datosEmpresa, 'valorAnioProgramaImmex')) {
+              <div class="text-danger mt-1">{{ obtenerMensajeError(datosEmpresa, 'valorAnioProgramaImmex') }}</div>
+            }
           </div>
         </div>
       </div>
@@ -50,12 +59,18 @@
             <label for="puntos">:</label>
           </div>
           <div>
-            <input id="idTransacccion" name="idTransaccion" type="text" maxlength="25" class="form-control" formControlName="idTransaccion" [ngClass]="isValid(datosAviso, 'idTransaccion') ? 'required' : ''" (keyup)="sanitizeAlphanumeric(datosAviso,'idTransaccion',$event)" (change)="setValoresStore(datosAviso, 'idTransaccion', 'setAvisoFormularioTransaccion')" />
+            <input id="idTransacccion" name="idTransaccion" type="text" maxlength="25" class="form-control" formControlName="idTransaccion" [ngClass]="isValid(datosAviso, 'idTransaccion') ? 'required' : ''" (keyup)="desinfectarAlfanumerico(datosAviso,'idTransaccion',$event)" (change)="setValoresStore(datosAviso, 'idTransaccion', 'setAvisoFormularioTransaccion')" />
+            @if (obtenerMensajeError(datosAviso, 'idTransaccion')) {
+              <div class="text-danger mt-1">{{ obtenerMensajeError(datosAviso, 'idTransaccion') }}</div>
+            }
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group datepicker-group">
             <input-fecha [datos]="fechaInicioInput" [setFecha]="avisoFormulario.get('datosAviso.fechaTranslado')?.value" (valorCambiado)="cambioFechaIngreso($event)" [isDisabled]="soloLectura"></input-fecha>
+            @if (obtenerMensajeError(datosAviso, 'fechaTranslado')) {
+              <div class="text-danger mt-1">{{ obtenerMensajeError(datosAviso, 'fechaTranslado') }}</div>
+            }
           </div>
         </div>
       </div>
@@ -68,6 +83,9 @@
           </div>
           <div>
             <textarea id="motivoProrroga" name="motivoProrroga" rows="5" class="form-control textarea" [ngClass]="isValid(datosAviso, 'motivoProrroga') ? 'required' : ''" formControlName="motivoProrroga" [maxlength]="250" (change)="setValoresStore(datosAviso, 'motivoProrroga', 'setAvisoFormularioMotivoProrroga')"></textarea>
+            @if (obtenerMensajeError(datosAviso, 'motivoProrroga')) {
+              <div class="text-danger mt-1">{{ obtenerMensajeError(datosAviso, 'motivoProrroga') }}</div>
+            }
           </div>
         </div>
       </div>
@@ -86,12 +104,21 @@
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="entidadFederativa" [label]="'Entidad federativa'" [required]="true" id="claveEntidadFederativa" formControlName="claveEntidadFederativa" [ngClass]="isValid(direccionOrigen,'claveEntidadFederativa') ? 'required' : ''" (change)="setValoresStore(direccionOrigen, 'claveEntidadFederativa', 'setAvisoFormularioEntidadFederativa')" [isDisabled]="soloLectura"></app-catalogo-select>
+          @if (obtenerMensajeError(direccionOrigen, 'claveEntidadFederativa')) {
+            <div class="text-danger mt-1">{{ obtenerMensajeError(direccionOrigen, 'claveEntidadFederativa') }}</div>
+          }
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="delegacionMunicipio" [label]="'Alcaldía o Municipio'" [required]="true" id="claveDelegacionMunicipio" formControlName="claveDelegacionMunicipio" [ngClass]="isValid(direccionOrigen,'claveDelegacionMunicipio') ? 'required' : ''" (change)="setValoresStore(direccionOrigen, 'claveDelegacionMunicipio', 'setAvisoFormularioDelegacionMunicipio')" [isDisabled]="soloLectura"></app-catalogo-select>
+          @if (obtenerMensajeError(direccionOrigen, 'claveDelegacionMunicipio')) {
+            <div class="text-danger mt-1">{{ obtenerMensajeError(direccionOrigen, 'claveDelegacionMunicipio') }}</div>
+          }
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="colonia" [label]="'Colonia'" [required]="true" id="claveColonia" formControlName="claveColonia" [ngClass]="isValid(direccionOrigen,'claveColonia') ? 'required' : ''" (change)="setValoresStore(direccionOrigen, 'claveColonia', 'setAvisoFormularioColonia')" [isDisabled]="soloLectura"></app-catalogo-select>
+          @if (obtenerMensajeError(direccionOrigen, 'claveColonia')) {
+            <div class="text-danger mt-1">{{ obtenerMensajeError(direccionOrigen, 'claveColonia') }}</div>
+          }
         </div>
         <div class="col-md-4">
           <div>
@@ -101,6 +128,9 @@
           </div>
           <div>
             <input id="calle" name="calle" type="text" class="form-control" maxlength="250" formControlName="calle" [ngClass]="isValid(direccionOrigen,'calle') ? 'required' : ''" (change)="setValoresStore(direccionOrigen, 'calle', 'setAvisoFormularioCalle')" />
+            @if (obtenerMensajeError(direccionOrigen, 'calle')) {
+              <div class="text-danger mt-1">{{ obtenerMensajeError(direccionOrigen, 'calle') }}</div>
+            }
           </div>
         </div>
         <div class="col-md-4">
@@ -111,6 +141,9 @@
           </div>
           <div>
             <input id="numeroExterior" name="numeroExterior" type="text" class="form-control" maxlength="15" formControlName="numeroExterior" [ngClass]="isValid(direccionOrigen,'numeroExterior') ? 'required' : ''" (keyup)="desinfectarAlfanumericoConEspacio(direccionOrigen,'numeroExterior',$event)" (change)="setValoresStore(direccionOrigen, 'numeroExterior', 'setAvisoFormularioNumeroExterior')" />
+            @if (obtenerMensajeError(direccionOrigen, 'numeroExterior')) {
+              <div class="text-danger mt-1">{{ obtenerMensajeError(direccionOrigen, 'numeroExterior') }}</div>
+            }
           </div>
         </div>
         <div class="col-md-4">
@@ -129,7 +162,10 @@
             <label for="puntos">:</label>
           </div>
           <div>
-            <input id="codigoPostal" name="codigoPostal" type="text" class="form-control validanumericos" maxlength="5" formControlName="codigoPostal" (keyup)="sanitizeNumeric(direccionOrigen,'codigoPostal',$event)" [ngClass]="isValid(direccionOrigen,'codigoPostal') ? 'required' : ''" (change)="setValoresStore(direccionOrigen, 'codigoPostal', 'setAvisoFormularioCodigoPostal')" />
+            <input id="codigoPostal" name="codigoPostal" type="text" class="form-control validanumericos" maxlength="5" formControlName="codigoPostal" (keyup)="desinfectarNumerico(direccionOrigen,'codigoPostal',$event)" [ngClass]="isValid(direccionOrigen,'codigoPostal') ? 'required' : ''" (change)="setValoresStore(direccionOrigen, 'codigoPostal', 'setAvisoFormularioCodigoPostal')" />
+            @if (obtenerMensajeError(direccionOrigen, 'codigoPostal')) {
+              <div class="text-danger mt-1">{{ obtenerMensajeError(direccionOrigen, 'codigoPostal') }}</div>
+            }
           </div>
         </div>
       </div>
@@ -147,12 +183,15 @@
             <app-input-radio [radioOptions]="TIPACA" id="tipoCarga" formControlName="tipoCarga" (change)="setValoresStore(avisoFormulario, 'tipoCarga', 'setAvisoFormularioTipoCarga')"></app-input-radio>
           </div>
         </div>
+        @if (obtenerMensajeError(avisoFormulario, 'tipoCarga')) {
+          <div class="text-danger mt-1">{{ obtenerMensajeError(avisoFormulario, 'tipoCarga') }}</div>
+        }
       </div>
     </div> @if(avisoFormulario.get('tipoCarga')?.value===TIPACA[1].value){ <div id="divCargaMasiva">
       <div class="row">
-        <ng-titulo titulo="Plantilla de Carga Masiva" />
+        <ng-titulo titulo="Plantilla de carga masiva" />
       </div>
-      <ng-alert [CONTENIDO]="TEXTOS.TIPO_CARGO"></ng-alert>
+      <ng-alert class="text-center" [CONTENIDO]="TEXTOS.TIPO_CARGO"></ng-alert>
       <div class="row">
         <div class="col-md-12">
           <div id="errorArchivoAjax"></div>
@@ -175,9 +214,9 @@
     <div class="row">
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas" [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)" [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura" (click)="eliminarDomicilio()"> Eliminar </button>
-        <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura"> Modificar </button>
-        <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura" (click)="abiertoDomicilio()"> Agregar </button>
+        <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura || !filaSeleccionadaLista || filaSeleccionadaLista.length === 0" (click)="eliminarDomicilio()"> Eliminar </button>
+        <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura || !filaSeleccionadaLista || filaSeleccionadaLista.length === 0" (click)="abiertoDomicilio(true)"> Modificar </button>
+        <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura" (click)="abiertoDomicilio(false)"> Agregar </button>
       </div>
     </div> }
   </form>
@@ -187,6 +226,11 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
+        @if (mostrarAlertaValidacionDomicilio) {
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            Debe registrar correctamente datos del domicilio de la planta o bodega de destino de las mercancías.
+          </div>
+        }
         <form [formGroup]="domicilioFormulario">
           <ng-titulo titulo="Datos de quien recibe las mercancías para llevar a cabo procesos de reparación o mantenimiento, análisis y pruebas, calibración o diseño" />
           <ng-container>
@@ -199,6 +243,9 @@
                 </div>
                 <div>
                   <input id="rfc" name="rfc" class="form-control" maxlength="13" formControlName="rfc" [ngClass]="isValid(domicilioFormulario, 'rfc') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'rfc', 'setDomicilioFormularioRfc')" />
+                  @if (obtenerMensajeError(domicilioFormulario, 'rfc')) {
+                    <div class="text-danger mt-1">{{ obtenerMensajeError(domicilioFormulario, 'rfc') }}</div>
+                  }
                 </div>
               </div>
             </div>
@@ -213,16 +260,28 @@
                 </div>
                 <div>
                   <input id="nombrePlanta" name="nombreComercial" type="text" class="form-control" maxlength="250" formControlName="nombreComercial" [ngClass]="isValid(domicilioFormulario,'nombreComercial') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'nombreComercial', 'setDomicilioFormularioNombreComercial')" />
+                  @if (obtenerMensajeError(domicilioFormulario, 'nombreComercial')) {
+                    <div class="text-danger mt-1">{{ obtenerMensajeError(domicilioFormulario, 'nombreComercial') }}</div>
+                  }
                 </div>
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="entidadFederativa" [label]="'Entidad federativa'" [required]="true" id="claveEntidadFederativa" formControlName="claveEntidadFederativa" [ngClass]="isValid(domicilioFormulario,'claveEntidadFederativa') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'claveEntidadFederativa', 'setDomicilioFormularioEntidadFederativa')" [isDisabled]="soloLectura"></app-catalogo-select>
+                @if (obtenerMensajeError(domicilioFormulario, 'claveEntidadFederativa')) {
+                  <div class="text-danger mt-1">{{ obtenerMensajeError(domicilioFormulario, 'claveEntidadFederativa') }}</div>
+                }
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="delegacionMunicipio" [label]="'Alcaldía o Municipio'" [required]="true" id="claveDelegacionMunicipio" formControlName="claveDelegacionMunicipio" [ngClass]="isValid(domicilioFormulario,'claveDelegacionMunicipio') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'claveDelegacionMunicipio', 'setDomicilioFormularioDelegacionMunicipio')" [isDisabled]="soloLectura"></app-catalogo-select>
+                @if (obtenerMensajeError(domicilioFormulario, 'claveDelegacionMunicipio')) {
+                  <div class="text-danger mt-1">{{ obtenerMensajeError(domicilioFormulario, 'claveDelegacionMunicipio') }}</div>
+                }
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="colonia" [label]="'Colonia'" [required]="true" id="claveColonia" formControlName="claveColonia" [ngClass]="isValid(domicilioFormulario,'claveColonia') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'claveColonia', 'setDomicilioFormularioColonia')" [isDisabled]="soloLectura"></app-catalogo-select>
+                @if (obtenerMensajeError(domicilioFormulario, 'claveColonia')) {
+                  <div class="text-danger mt-1">{{ obtenerMensajeError(domicilioFormulario, 'claveColonia') }}</div>
+                }
               </div>
               <div class="col-md-4">
                 <div>
@@ -232,6 +291,9 @@
                 </div>
                 <div>
                   <input id="calle" name="calle" type="text" class="form-control" maxlength="250" formControlName="calle" [ngClass]="isValid(domicilioFormulario,'calle') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'calle', 'setDomicilioFormularioCalle')" />
+                  @if (obtenerMensajeError(domicilioFormulario, 'calle')) {
+                    <div class="text-danger mt-1">{{ obtenerMensajeError(domicilioFormulario, 'calle') }}</div>
+                  }
                 </div>
               </div>
               <div class="col-md-4">
@@ -242,6 +304,9 @@
                 </div>
                 <div>
                   <input id="numeroExterior" name="numeroExterior" type="text" class="form-control" maxlength="15" formControlName="numeroExterior" [ngClass]="isValid(domicilioFormulario,'numeroExterior') ? 'required' : ''" (keyup)="desinfectarAlfanumericoConEspacio(domicilioFormulario,'numeroExterior',$event)" (change)="setValoresStore(domicilioFormulario, 'numeroExterior', 'setDomicilioFormularioNumeroExterior')" />
+                  @if (obtenerMensajeError(domicilioFormulario, 'numeroExterior')) {
+                    <div class="text-danger mt-1">{{ obtenerMensajeError(domicilioFormulario, 'numeroExterior') }}</div>
+                  }
                 </div>
               </div>
               <div class="col-md-4">
@@ -260,7 +325,10 @@
                   <label for="puntos">:</label>
                 </div>
                 <div>
-                  <input id="codigoPostal" name="codigoPostal" type="text" class="form-control validanumericos" maxlength="5" formControlName="codigoPostal" (keyup)="sanitizeNumeric(domicilioFormulario,'codigoPostal',$event)" [ngClass]="isValid(domicilioFormulario,'codigoPostal') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'codigoPostal', 'setDomicilioFormularioCodigoPostal')" />
+                  <input id="codigoPostal" name="codigoPostal" type="text" class="form-control validanumericos" maxlength="5" formControlName="codigoPostal" (keyup)="desinfectarNumerico(domicilioFormulario,'codigoPostal',$event)" [ngClass]="isValid(domicilioFormulario,'codigoPostal') ? 'required' : ''" (change)="setValoresStore(domicilioFormulario, 'codigoPostal', 'setDomicilioFormularioCodigoPostal')" />
+                  @if (obtenerMensajeError(domicilioFormulario, 'codigoPostal')) {
+                    <div class="text-danger mt-1">{{ obtenerMensajeError(domicilioFormulario, 'codigoPostal') }}</div>
+                  }
                 </div>
               </div>
             </div>
@@ -269,15 +337,15 @@
           <ng-container>
             <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeMercancia.encabezadas" [datos]="tablaDeMercancia.datos" (listaDeFilaSeleccionada)="filaSeleccionadaMercancia($event)" [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
             <div class="d-flex justify-content-end">
-              <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura" (click)="eliminarMercancia()"> Eliminar </button>
-              <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura"> Modificar </button>
-              <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura" (click)="abiertoMercancia()"> Agregar </button>
+              <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura || !filaSeleccionadaMercanciaLista || filaSeleccionadaMercanciaLista.length === 0" (click)="eliminarMercancia()"> Eliminar </button>
+              <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura || !filaSeleccionadaMercanciaLista || filaSeleccionadaMercanciaLista.length === 0" (click)="abiertoMercancia(true)"> Modificar </button>
+              <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura" (click)="abiertoMercancia(false)"> Agregar </button>
             </div>
           </ng-container>
         </form>
       </div>
       <div class="modal-footer custom-footer mt-4 justify-content-end">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeDomicilio [disabled]="soloLectura"> Cancelar </button>
+        <button type="button" class="btn btn-danger" (click)="cerrarModalDomicilio()" #closeDomicilio [disabled]="soloLectura"> Cancelar </button>
         <button type="submit" class="btn btn-primary" (click)="agregarDomicilio()" [disabled]="soloLectura"> Agregar </button>
       </div>
     </div>
@@ -291,19 +359,31 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
+        @if (mostrarAlertaValidacionMercancia) {
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+             Debe registrar correctamente datos del domicilio de la planta o bodega de destino de las mercancías.
+          </div>
+        }
         <form [formGroup]="mercanciaFormulario">
           <ng-titulo titulo="Datos de la mercancía que se trasladará" />
           <ng-container>
             <div class="row">
               <div class="col-md-4 mb-2">
                 <app-catalogo-select [catalogo]="fraccionArancelaria" [label]="'Fracción arancelaria'" [required]="true" id="claveFraccionArancelaria" formControlName="claveFraccionArancelaria" [ngClass]="isValid(mercanciaFormulario,'claveFraccionArancelaria') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario, 'claveFraccionArancelaria', 'setFraccionArancelaria')" [isDisabled]="soloLectura"></app-catalogo-select>
+                @if (obtenerMensajeError(mercanciaFormulario, 'claveFraccionArancelaria')) {
+                  <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'claveFraccionArancelaria') }}</div>
+                }
               </div>
               <div class="col-md-4 mb-2">
+                
                 <label for="nico">NICO</label>
                 <span class="require">*</span>
                 <label for="nico">:</label>
                 <div>
-                  <input type="text" id="nico" formControlName="nico" class="form-control" maxlength="2" [ngClass]="isValid(mercanciaFormulario,'nico') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'nico', 'setMercanciaFormularioNico')" />
+                  <input type="number" id="nico" formControlName="nico" class="form-control" maxlength="2" [ngClass]="isValid(mercanciaFormulario,'nico') ? 'required' : ''" (keyup)="desinfectarNumerico(mercanciaFormulario,'nico',$event)" (change)="setValoresStore(mercanciaFormulario,'nico', 'setMercanciaFormularioNico')" />
+                  @if (obtenerMensajeError(mercanciaFormulario, 'nico')) {
+                    <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'nico') }}</div>
+                  }
                 </div>
               </div>
             </div>
@@ -313,30 +393,42 @@
                 <span class="require">*</span>
                 <label for="cantidad">:</label>
                 <div>
-                  <input type="text" formControlName="cantidad" id="cantidad" class="form-control" [ngClass]="isValid(mercanciaFormulario,'cantidad') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'cantidad', 'setMercanciaFormularioCantidad')" />
+                  <input type="number" formControlName="cantidad" id="cantidad" class="form-control" [ngClass]="isValid(mercanciaFormulario,'cantidad') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'cantidad', 'setMercanciaFormularioCantidad')" />
+                  @if (obtenerMensajeError(mercanciaFormulario, 'cantidad')) {
+                    <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'cantidad') }}</div>
+                  }
                 </div>
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida'" [required]="true" id="claveUnidadMedida" formControlName="claveUnidadMedida" [ngClass]="isValid(mercanciaFormulario,'claveUnidadMedida') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario, 'claveUnidadMedida', 'setMercanciaFormularioUnidadMedida')" [isDisabled]="soloLectura"></app-catalogo-select>
+                @if (obtenerMensajeError(mercanciaFormulario, 'claveUnidadMedida')) {
+                  <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'claveUnidadMedida') }}</div>
+                }
               </div>
               <div class="col-md-4 mb-2">
                 <label for="valorUSD">Valor USD</label>
                 <span class="require">*</span>
                 <label for="valorUSD">:</label>
                 <div>
-                  <input type="text" formControlName="valorUSD" id="valorUSD" class="form-control" [ngClass]="isValid(mercanciaFormulario,'valorUSD') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'valorUSD', 'setMercanciaFormularioValor')" />
+                  <input type="number" formControlName="valorUSD" id="valorUSD" class="form-control" [ngClass]="isValid(mercanciaFormulario,'valorUSD') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'valorUSD', 'setMercanciaFormularioValor')" />
+                  @if (obtenerMensajeError(mercanciaFormulario, 'valorUSD')) {
+                    <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'valorUSD') }}</div>
+                  }
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-12 mb-2">
                 <div>
-                  <label for="descripcionMercancia">Descripción de la Mercancía</label>
+                  <label for="descripcionMercancia">Descripción de la mercancía</label>
                   <span class="require">*</span>
                   <label for="descripcionMercancia">:</label>
                 </div>
                 <div>
                   <input type="text" class="form-control" formControlName="descripcionMercancia" id="descripcionMercancia" maxlength="250" [ngClass]="isValid(mercanciaFormulario,'descripcionMercancia') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'descripcionMercancia', 'setMercanciaFormularioDescripcionMercancia')">
+                  @if (obtenerMensajeError(mercanciaFormulario, 'descripcionMercancia')) {
+                    <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'descripcionMercancia') }}</div>
+                  }
                 </div>
               </div>
             </div>
@@ -349,6 +441,9 @@
                 </div>
                 <div>
                   <input type="text" class="form-control" formControlName="descripcionProceso" id="descripcionProceso" maxlength="250" [ngClass]="isValid(mercanciaFormulario,'descripcionProceso') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'descripcionProceso', 'setMercanciaFormularioDescripcionProceso')">
+                  @if (obtenerMensajeError(mercanciaFormulario, 'descripcionProceso')) {
+                    <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'descripcionProceso') }}</div>
+                  }
                 </div>
               </div>
             </div>
@@ -361,6 +456,9 @@
                 </div>
                 <div>
                   <input type="text" class="form-control" formControlName="numPedimentoExportacion" id="numPedimentoExportacion" maxlength="15" [ngClass]="isValid(mercanciaFormulario,'numPedimentoExportacion') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'numPedimentoExportacion', 'setMercanciaFormularioPedimentoExportacion')" />
+                  @if (obtenerMensajeError(mercanciaFormulario, 'numPedimentoExportacion')) {
+                    <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'numPedimentoExportacion') }}</div>
+                  }
                 </div>
               </div>
             </div>
@@ -373,6 +471,9 @@
                 </div>
                 <div>
                   <input type="text" class="form-control" formControlName="numPedimentoImportacion" id="numPedimentoImportacion" maxlength="15" [ngClass]="isValid(mercanciaFormulario,'numPedimentoImportacion') ? 'required' : ''" (change)="setValoresStore(mercanciaFormulario,'numPedimentoImportacion', 'setMercanciaFormularioPedimentoImportacion')" />
+                  @if (obtenerMensajeError(mercanciaFormulario, 'numPedimentoImportacion')) {
+                    <div class="text-danger mt-1">{{ obtenerMensajeError(mercanciaFormulario, 'numPedimentoImportacion') }}</div>
+                  }
                 </div>
               </div>
             </div>
@@ -380,7 +481,7 @@
         </form>
       </div>
       <div class="modal-footer custom-footer mt-4 justify-content-end">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeMercancia [disabled]="soloLectura"> Cancelar </button>
+        <button type="button" class="btn btn-danger" (click)="cerrarModalMercancia()" #closeMercancia [disabled]="soloLectura"> Cancelar </button>
         <button type="submit" class="btn btn-primary" (click)="agregarMercancia()" [disabled]="soloLectura"> Agregar </button>
       </div>
     </div>

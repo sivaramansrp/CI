@@ -1,5 +1,5 @@
+import { AVISO_CONTRNIDO, DatosPasos, ListaPasosWizard, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT, PASOS } from "../../constantes/modificacion.enum";
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
@@ -91,11 +91,17 @@ export class SolicitudPageComponent {
    */
   public infoAlert = 'alert-info';
 
-  /**
-   * Una constante que contiene el valor del objeto 'PAGO_DE_DERECHOS'.
-   * Esta constante se usa para almacenar textos y valores relacionados con el pago de derechos.
-   */
-  TEXTOS = PAGO_DE_DERECHOS;
+/**
+ * Contiene el texto del aviso de privacidad simplificado.
+ * 
+ * @constant {string} avisoContrnido
+ * Se inicializa con la propiedad `aviso` del objeto `AVISO_CONTRNIDO`.
+ * 
+ * Uso:
+ * - Mostrar el aviso de privacidad en la interfaz de usuario.
+ * - Reutilizar el contenido del aviso en distintos componentes.
+ */
+avisoContrnido = AVISO_CONTRNIDO.aviso;
 
   /**
    * Selecciona una pestaña del asistente (wizard).

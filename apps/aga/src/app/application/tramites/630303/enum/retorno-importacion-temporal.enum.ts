@@ -143,7 +143,7 @@ export const FORMULARIO_DATOS_SOLICITUD = [
             { tipo: 'required' }
         ],
         marcadorDePosicion: '',
-        valorPredeterminado: '',
+        valorPredeterminado:'10/02/2025',
         marginTop: 0,
         habilitado: true,
         row: 2
@@ -527,3 +527,7 @@ export const FORMULARIO_DATOS_PRORROGA = [
         row: 2
     }
 ];
+
+export const TODOS_PASOS = {
+    Importante: `<p>La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.</p>`,
+  };

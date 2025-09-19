@@ -1,4 +1,4 @@
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';

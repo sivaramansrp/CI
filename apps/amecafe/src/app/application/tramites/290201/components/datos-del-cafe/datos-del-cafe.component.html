@@ -68,7 +68,9 @@
                (change)="setValoresStore(datosDelTramiteRealizar,'cantidadutilizada','setCantidadutilizada')"
                [disabled]="esFormularioSoloLectura"
                [ngClass]="{
-                'is-invalid': esCantidadUtilizadaExcede
+                'is-invalid': esCantidadUtilizadaExcede ||
+                  dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.invalid &&
+                  dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.touched
               }"
                >
             @if(esCantidadUtilizadaExcede) {
@@ -76,6 +78,17 @@
                    La Cantidad Utilizada debe ser menor a la cantidad Facturada
                </small>
             }
+             <small
+      *ngIf="
+        dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.hasError('pattern') &&
+        dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.touched
+      "
+      class="text-danger"
+    >
+      Por favor, sólo escribe dígitos
+    </small>
+    
+        
             </div>
          </div>
          <div class="col-md-6 mb-3">
@@ -207,14 +220,36 @@
                  </div>
                  <div class="col-md-8 mb-3">
                     <div class="form-group">
-                       <label class="form-label" for="otrasmarcas">Otras marcas*:</label>
+                       <label class="form-label" for="otrasmarcas">Otras marcás*:</label>
                        <input class="form-control" required="true" placeholder="" type="text" formControlName="otrasmarcas" id="otrasmarcas"
                        (change)="setValoresStore(datosDelTramiteRealizar,'otrasmarcas','setOtrasmarcas')"
-                       [disabled]="esFormularioSoloLectura">
+                       [disabled]="esFormularioSoloLectura"
+                         [ngClass]="{
+        'is-invalid': dataCafeForm.get('datosDelTramiteRealizar.otrasmarcas')?.invalid &&
+                      dataCafeForm.get('datosDelTramiteRealizar.otrasmarcas')?.touched
+      }">
+                       <small
+      *ngIf="
+        dataCafeForm.get('datosDelTramiteRealizar.otrasmarcas')?.hasError('pattern') &&
+        dataCafeForm.get('datosDelTramiteRealizar.otrasmarcas')?.touched
+      "
+      class="text-danger"
+    >
+      Por favor, sólo escribe dígitos
+    </small>
+    <small
+      *ngIf="
+        dataCafeForm.get('datosDelTramiteRealizar.otrasmarcas')?.hasError('required') &&
+        dataCafeForm.get('datosDelTramiteRealizar.otrasmarcas')?.touched
+      "
+      class="text-danger"
+    >
+      Este campo es obligatorio
+    </small>
                     </div>
                  </div>
             </div>
-            <ng-titulo titulo="Caracteristicas Especiales" />
+            <ng-titulo titulo="Características Especiales" />
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <div class="form-group">

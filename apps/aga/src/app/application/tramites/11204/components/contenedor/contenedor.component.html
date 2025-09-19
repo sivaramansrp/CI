@@ -40,7 +40,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
-                                [placeholder]="aduana.primerOpcion" formControlName="aduana"
+                                [placeholder]="aduana.primerOpcion" formControlName="aduana" [required]="true"
                                 (change)="onChange('aduana', $event)" [isDisabled]="soloLectura"></app-catalogo-select>
                                 <div *ngIf="isInvalid('aduana') && solicitudForm.controls['aduana'].errors?.['required']" class="mensaje-error">
                                     Este campo es obligatorio.
@@ -102,7 +102,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="contenedores.catalogos" [label]="contenedores.labelNombre"
-                            [placeholder]="contenedores.primerOpcion" formControlName="contenedores"
+                            [placeholder]="contenedores.primerOpcion" formControlName="contenedores" [required]="true"
                             (change)="setValoresStore(solicitudForm,'contenedores', 'setContenedores')" [isDisabled]="soloLectura"></app-catalogo-select>
                             <div *ngIf="isInvalid('contenedores')" class="mensaje-error">
                                 Este campo es obligatorio.
@@ -121,12 +121,12 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
-                            <input-fecha [datos]="fechaIngreso" (valorCambiado)="cambioFechaIngreso($event)" [isDisabled]="soloLectura"></input-fecha>
+                            <input-fecha [datos]="fechaIngreso" [setFecha]="solicitudForm.get('fechaIngreso')?.value" (valorCambiado)="cambioFechaIngreso($event)" [isDisabled]="soloLectura"></input-fecha>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
-                            <input-fecha [datos]="vigencia" (valorCambiado)="cambioVigencia($event)" [isDisabled]="soloLectura"></input-fecha>
+                            <input-fecha [datos]="vigencia" [setFecha]="solicitudForm.get('vigencia')?.value" (valorCambiado)="cambioVigencia($event)" [isDisabled]="soloLectura"></input-fecha>
                             <div *ngIf="isInvalid('vigencia') && solicitudForm.controls['vigencia'].errors?.['required']" class="mensaje-error">
                                 Este campo es obligatorio.
                             </div>
@@ -275,7 +275,7 @@
             <div class="modal-content">
                 <ng-titulo titulo="Cargar archivo" />
                 <div class="modal-body justify-content-start mb-5">
-                    <label for="archivoSeleccionado" class="form-label">Archivo:</label>   
+                    <label for="archivoSeleccionado" class="form-label">Subir archivo:</label>   
                     <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado">
                 </div>
                 <div class="modal-footer justify-content-end">

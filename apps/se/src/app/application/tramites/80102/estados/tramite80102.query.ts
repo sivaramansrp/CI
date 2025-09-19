@@ -8,6 +8,13 @@ import { Query } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
 export class Tramite80102Query extends Query<Tramite80102State> {
+
+   /**
+   * Selecciona el estado completo de la solicitud
+   */
+  selectSeccionState$ = this.select((state) => {
+    return state;
+  });
   /**
    * @description Selector para obtener la información del registro.
    */
@@ -74,6 +81,14 @@ export class Tramite80102Query extends Query<Tramite80102State> {
    * @returns Un observable que emite el valor de `tiempoPrograma`.
    */
   selectTiempoPrograma$ = this.select((state) => state.tiempoPrograma);
+
+  /**
+   * Selecciona los datos de las plantas disponibles del estado.
+   */
+
+  selectDatosFederatariosFormulario$ = this.select(
+    (state) => state.datosFederatarios
+  );
 
   /**
    * @description
@@ -272,6 +287,11 @@ export class Tramite80102Query extends Query<Tramite80102State> {
   selectplantasImmexTablaLista$ = this.select(
     (state) => state.plantasImmexTablaLista
   );
+
+  /**
+ * Observable selector for retrieving the entire state.
+ */
+allStoreData$ = this.select((state) => state);
 
   /**
    * @description Constructor de la clase `Tramite80102Query`.

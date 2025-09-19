@@ -26,6 +26,8 @@ export class DatosTransportistaComponent implements OnDestroy, OnInit {
   public tramiteConsultado?: Tramite303Store;
   /** Notificación a mostrar al usuario */
   public nuevaNotificacion!: Notificacion;
+  /** Estado del modal de registro de transportista */
+  registrarTrasportistaModal = false;
   /**
    * Constructor para el componente de datos del transportista.
    * @param tramite303Query - Consulta para el trámite 303.
@@ -56,7 +58,7 @@ export class DatosTransportistaComponent implements OnDestroy, OnInit {
    * Redirige al usuario a la página de registro de transportista.
    */
   agregarTransportista(): void {
-    this.router.navigate(['aga/despacho-mercancias/registro-trasportista']);
+    this.registrarTrasportistaModal = true;
   }
 
   /**

@@ -1,9 +1,16 @@
 <div class="page">
   <div class="container">
     <div class="row">
+      @if(indice === 1){
       <div class="col-md-12">
         <h2>Aviso automático de importación de productos siderúrgicos</h2>
       </div>
+      }
+      @if(indice === 2){
+        <div class="col-md-12">
+          <h1>Cargar archivos</h1>
+        </div>
+      }
 
       @if (!esValido) {
         <ng-alert [CONTENIDO]="ALERTA" [CUSTOMECLASS]="infoError"></ng-alert>
@@ -35,7 +42,7 @@
           (reenviarCargaRealizada)="cargaRealizada($event)"></app-paso-dos>
         }
         @case (3) {
-          <app-paso-tres></app-paso-tres>
+          <paso-firma [idSolicitud]="this.solicitudState.idSolicitud" [procedure]="130118" [procedureUrl]="'solicitud'"></paso-firma>
         }
       }
 

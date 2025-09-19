@@ -27,25 +27,24 @@
         <div class="row alinear-inferior">
           <div class="col-md-6">
             <app-catalogo-select
-              [catalogo]="paisesDatos"
+              [catalogo]="anios"
               formControlName="anoDeLaConstancia"
               [label]="'Año de la Constancia de registro'"
               [required]="true"
               [isDisabled]="formularioDeshabilitado"
-              [primerOptionValue]="-1"
               [placeholder]="'Seleccione un año'"
               (change)="onAnoConstanciaChangeFromSelect($event)"
               (selectionChange)="onAnoConstanciaChange($event)"
             ></app-catalogo-select>
-              @if (fitosanitarioForm.get('anoDeLaConstancia')?.touched && fitosanitarioForm.get('anoDeLaConstancia')?.invalid) {
-                <div class="text-danger">
-                  Año de la Constancia de registro is mandatory
+              @if(fitosanitarioForm.get('anoDeLaConstancia')?.invalid && (fitosanitarioForm.get('anoDeLaConstancia')?.touched || enviada)) {
+                <div class="text-danger small mt-1">
+                  Este campo es obligatorio.
                 </div>
               }
           </div>
 
           <div class="col-md-6">
-              <label class="form-label">Número de la constancia de registro</label>
+              <label class="form-label">Número de la constancia de registro<span class="require" [ngClass]="fitosanitarioForm.get('numeroDeLaConstancia')?.touched && fitosanitarioForm.get('numeroDeLaConstancia')?.invalid ? 'require-error' : ''">*</span>:</label>
               <input 
                 type="text" 
                 required="true" 
@@ -53,9 +52,11 @@
                 formControlName="numeroDeLaConstancia"
                 [disabled]="formularioDeshabilitado"
                 />
-              @if (fitosanitarioForm.get('numeroDeLaConstancia')?.touched && fitosanitarioForm.get('numeroDeLaConstancia')?.invalid) {
+              @if(fitosanitarioForm.get('numeroDeLaConstancia')?.invalid && (fitosanitarioForm.get('numeroDeLaConstancia')?.touched || enviada)) {
                 <div class="text-danger">
-                  Número de la constancia de registro is mandatory
+                  @if(fitosanitarioForm.get('numeroDeLaConstancia')?.errors?.['required']) {
+                    <small>Este campo es obligatorio</small>
+                  }
                 </div>
               }
           </div>

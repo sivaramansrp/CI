@@ -1,11 +1,11 @@
-import { Catalogo, CatalogoSelectComponent, FECHA_FINAL_VIGENCIA, FECHA_FINAL_VIGENCIA_DEL_CUPO, FECHA_INICIO_VIGENCIA, FECHA_INICIO_VIGENCIA_DEL_CUPO, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_ALTO, REGEX_NUMEROS, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { ConsultaioQuery, ValidacionesFormularioService  } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, FECHA_FINAL_VIGENCIA, FECHA_FINAL_VIGENCIA_DEL_CUPO, FECHA_INICIO_VIGENCIA, FECHA_INICIO_VIGENCIA_DEL_CUPO, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_ALTO, REGEX_NUMEROS, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, NO_ERRORS_SCHEMA, OnDestroy, Output } from '@angular/core';
 import { ExpedicionCertificadosAsignacion120202State, Tramite120202Store } from '../../../estados/tramites/tramite120202.store';
 import { ExpedirMonto, NumeroOficioAsignacionDetalleRespquesta } from '../../../tramites/120202/models/expedicion-certificados-asignacion.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CONFIGURACION_PARA_ENCABEZADO_DE_EXPEDIR_MONTO_TABLA } from '../../../tramites/120202/constantes/expedicion-certificados-asignacion-constantes.enum';
+import { ConsultaioQuery  } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { ExpedicionCertificadosAsignacionService } from '../../../tramites/120202/services/expedicion-certificados-asignacion/expedicion-certificados-asignacion.service';
 import { Tramite120202Query } from '../../../estados/queries/tramite120202.query';
@@ -25,6 +25,7 @@ import { Tramite120202Query } from '../../../estados/queries/tramite120202.query
     InputFechaComponent,
     NotificacionesComponent
   ],
+  schemas: [NO_ERRORS_SCHEMA],
   templateUrl: './expedicion-certificados-asignacion-directa.component.html',
   styleUrl: './expedicion-certificados-asignacion-directa.component.scss',
 })

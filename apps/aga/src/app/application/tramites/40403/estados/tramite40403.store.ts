@@ -45,6 +45,14 @@ export interface AtencionRenovacion40403State {
    * Código IATA/ICAO.
    */
   codIataIcao?: string;
+  /**
+   * @property {boolean} mostrarError
+   * @description
+   * Indica si se debe mostrar un mensaje de error en la interfaz del usuario.
+   * Se utiliza para controlar la visualización de alertas o notificaciones de error 
+   * cuando hay validaciones fallidas en los formularios del trámite.
+   */
+  mostrarError: boolean
 }
 
 /**
@@ -61,7 +69,8 @@ export function createTramiteState(): AtencionRenovacion40403State {
     descripcionTipoCaat: '',
     tipoDeCaatAerea: '',
     ideCodTransportacionAerea: '',
-    codIataIcao: ''
+    codIataIcao: '',
+    mostrarError: false
   };
 }
 
@@ -172,6 +181,22 @@ export class Tramite40403Store extends Store<AtencionRenovacion40403State> {
     this.update((state) => ({
       ...state,
       codIataIcao,
+    }));
+  }
+  /**
+   * @method setMostrarError
+   * @description
+   * Actualiza el estado de visualización de errores en la interfaz del usuario.
+   * Modifica la propiedad `mostrarError` del estado para controlar cuándo se muestran
+   * las alertas o notificaciones de error en los formularios del trámite.
+   *
+   * @param {boolean} mostrarError - Valor booleano que indica si se deben mostrar los errores (true) o no (false).
+   * @returns {void}
+   */
+  public setMostrarError(mostrarError: boolean): void {
+    this.update((state) => ({
+      ...state,
+      mostrarError,
     }));
   }
 }

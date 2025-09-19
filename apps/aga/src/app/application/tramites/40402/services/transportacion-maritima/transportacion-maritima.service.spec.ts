@@ -19,14 +19,14 @@ describe('TransportacionMaritimaService', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // Ensure no outstanding HTTP requests
+    httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('debe ser creado', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch the country catalog (getPaisCatalogo)', () => {
+  it('debería obtener el catálogo de países (getPaisCatalogo)', () => {
     const mockResponse: RespuestaCatalogos = { code: 200, data: [{ id: 1, descripcion: 'México' }], message: 'Success' };
 
     service.getPaisCatalogo().subscribe((response) => {
@@ -38,7 +38,7 @@ describe('TransportacionMaritimaService', () => {
     req.flush(mockResponse);
   });
 
-  it('should fetch the state catalog (getEstadoCatalogo)', () => {
+  it('debería obtener el catálogo de estados (getEstadoCatalogo)', () => {
     const mockResponse: RespuestaCatalogos = { code: 200, data: [{ id: 1, descripcion: 'Estado' }], message: 'Success' };
 
     service.getEstadoCatalogo().subscribe((response) => {
@@ -50,7 +50,7 @@ describe('TransportacionMaritimaService', () => {
     req.flush(mockResponse);
   });
 
-  it('should fetch the municipality catalog (getMunicipioCatalogo)', () => {
+  it('debería obtener el catálogo de municipios (getMunicipioCatalogo)', () => {
     const mockResponse: RespuestaCatalogos = { code: 200, data: [{ id: 1, descripcion: 'Municipio' }], message: 'Success' };
 
     service.getMunicipioCatalogo().subscribe((response) => {
@@ -62,7 +62,7 @@ describe('TransportacionMaritimaService', () => {
     req.flush(mockResponse);
   });
 
-  it('should fetch the colony catalog (getColoniaCatalogo)', () => {
+  it('debería obtener el catálogo de colonias (getColoniaCatalogo)', () => {
     const mockResponse: RespuestaCatalogos = { code: 200, data: [{ id: 1, descripcion: 'Colonia' }], message: 'Success' };
 
     service.getColoniaCatalogo().subscribe((response) => {
@@ -74,9 +74,9 @@ describe('TransportacionMaritimaService', () => {
     req.flush(mockResponse);
   });
 
-  it('should fetch the CAAT company catalog (obtenerBuscarEmpresaCaat)', () => {
-    const mockResponse: RespuestaCaatTabla = { 
-      code: 200, 
+  it('debería obtener el catálogo de empresas CAAT (obtenerBuscarEmpresaCaat)', () => {
+    const mockResponse: RespuestaCaatTabla = {
+      code: 200,
       data: [
         { 
           rfc: 'RFC123',
@@ -99,4 +99,95 @@ describe('TransportacionMaritimaService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
+
+    it('debería obtener los datos del contribuyente PFN (buscarContribuyentePFN)', () => {
+      const mockResponse: RespuestaContribuyenteTabla = {
+        code: 200,
+        data: [
+          {
+            nombrePFN: 'Juan',
+            rfcPFN: 'RFC456',
+            apellidoPaternoPFN: 'Perez',
+            apellidoMaternoPFN: 'Gomez',
+            paisPFN: 'México',
+            codigoPostalPFN: '03100',
+            estadoPFN: 'CDMX',
+            municipioPFN: 'Benito Juárez',
+            localidadPFN: 'Del Valle',
+            coloniaPFN: 'Del Valle',
+            callePFN: 'Insurgentes',
+            numeroExteriorPFN: '123',
+            numeroInteriorPFN: 'A',
+            domicilioPFN: 'Insurgentes 123, Del Valle, CDMX',
+          }
+        ],
+        message: 'Success'
+      };
+
+      service.buscarContribuyentePFN().subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpMock.expectOne('assets/json/40402/buscar-contribuyente-pfn-datos.json');
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('debería obtener los datos del contribuyente PMN (buscarContribuyentePMN)', () => {
+      const mockResponse: RespuestaContribuyentePMNTabla = {
+        code: 200,
+        data: [
+          {
+            rfcPMN: 'RFC789',
+            denominacionPMN: 'Empresa Moral',
+            correoPMN: 'contacto@empresamoral.com',
+            paisPMN: 'México',
+            codigoPostalPMN: '03100',
+            estadoPMN: 'CDMX',
+            municipioPMN: 'Benito Juárez',
+            localidadPMN: 'Del Valle',
+            coloniaPMN: 'Del Valle',
+            callePMN: 'Insurgentes',
+            numeroExteriorPMN: '456',
+            numeroInteriorPMN: 'B',
+            nombreDirectorGeneral: 'Carlos López',
+            apellidoPaternoDirectorGeneral: 'López',
+            apellidoMaternoDirectorGeneral: 'Martínez',
+            domicilioPMN: 'Insurgentes 456, Del Valle, CDMX',
+          }
+        ],
+        message: 'Success'
+      };
+
+      service.buscarContribuyentePMN().subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpMock.expectOne('assets/json/40402/buscar-contribuyente-pmn-datos.json');
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('debería obtener los datos de consulta (getDatosConsulta)', () => {
+      const mockResponse = {
+        success: true,
+        datos: {
+          seguroNumero: 'SN123',
+          nombrePFE: 'Ana',
+          apellidoPaternoPFE: 'Martínez',
+          apellidoMaternoPFE: 'García',
+          correoPFE: 'ana.martinez@example.com',
+          paisPFE: 'España',
+        },
+        message: 'Consulta exitosa'
+      };
+
+      service.getDatosConsulta().subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpMock.expectOne('assets/json/40402/consulta_40402.json');
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
 });

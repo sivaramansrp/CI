@@ -338,6 +338,31 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
    * @memberof PagoDeDerechoComponent
    */
   validarFormulario(): boolean {
+    if (!this.esFormularioSoloLectura && this.pagoForm.value.exentoPago === 'si') {
+      this.pagoForm.get('justificacion')?.setValidators([Validators.required]);
+      this.pagoForm.get('fechaPago')?.setValidators([Validators.required]);
+      this.pagoForm.get('claveReferencia')?.clearValidators();
+      this.pagoForm.get('cadenaDependencia')?.clearValidators();
+      this.pagoForm.get('banco')?.clearValidators();
+      this.pagoForm.get('llavePago')?.clearValidators();
+      this.pagoForm.get('importePago')?.clearValidators();
+    } else if (!this.esFormularioSoloLectura && this.pagoForm.value.exentoPago === 'no') {
+      this.pagoForm.get('justificacion')?.clearValidators();
+      this.pagoForm.get('claveReferencia')?.clearValidators();
+      this.pagoForm.get('cadenaDependencia')?.clearValidators();
+      this.pagoForm.get('banco')?.setValidators([Validators.required]);
+      this.pagoForm.get('llavePago')?.setValidators([
+        Validators.required,
+        Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
+        Validators.maxLength(30)
+      ]);
+      this.pagoForm.get('importePago')?.clearValidators();
+      this.pagoForm.get('fechaPago')?.clearValidators();
+    }
+    Object.keys(this.pagoForm.controls).forEach(key => {
+      this.pagoForm.get(key)?.updateValueAndValidity();
+    });
+
     if (this.pagoForm.valid) {
       return true;
     }

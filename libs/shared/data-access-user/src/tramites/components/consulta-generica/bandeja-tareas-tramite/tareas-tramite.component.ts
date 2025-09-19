@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { FolioQuery } from '../../../../core/queries/folio.query';
 
 
-import { TareasSolicitud } from '../../../../core/models/130118/consulta-tareas-response.model';
+import { TareasSolicitud } from '../../../../core/models/shared/consulta-tareas-response.model';
 import { TareasTramiteService } from '../../../../core/services/consultagenerica/tareas-tramite-service';
 
 

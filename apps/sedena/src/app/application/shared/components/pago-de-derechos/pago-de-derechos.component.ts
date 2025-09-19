@@ -235,6 +235,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     if (this.pagoDerechosForm.invalid) {
       this.pagoDerechosForm.markAllAsTouched();
     }
+    this.pagoDerechosForm.reset();
+    this.pagoDerechosForm.markAsPristine();
   }
 
   /**
@@ -274,8 +276,34 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       .get('importePago')
       ?.setValue(INPUT.value, { emitEvent: false });
   }
+  /*
+  * @method ngOnDestroy
+  * @description Hook del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones activas para evitar fugas de memoria.
+   *
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+   * @method toUppercase
+   * @description Convierte el valor de un control a mayúsculas si es necesario.
+   *
+   * @param {string} controlName - El nombre del control a modificar.
+   *
+   * @returns {void}
+   */
+  toUppercase(controlName: string): void {
+  const CONTROL = this.pagoDerechosForm.get(controlName);
+  if (CONTROL && CONTROL.value) {
+    const UPPERCASED = CONTROL.value.toUpperCase();
+    if (CONTROL.value !== UPPERCASED) {
+      CONTROL.setValue(UPPERCASED, { emitEvent: false });
+    }
+  }
+}
+
 }

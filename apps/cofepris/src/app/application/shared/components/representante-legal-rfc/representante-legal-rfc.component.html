@@ -11,15 +11,22 @@
                         placeholder=""
                         type="text"
                         formControlName="rfc"
+                        [ngClass]="{
+                            'required': esValido('rfc'),
+                            'tiene-invalido': representante.get('rfc')?.invalid && representante.get('rfc')?.touched
+                        }"
+                         maxlength="13"
                         (change)="setValoresStore(representante,'rfc', 'setRfc')"
                     />
-                    <div *ngIf="representante.get('rfc')?.touched && representante.get('rfc')?.hasError('required')" class="text-danger">
+                    <p *ngIf="representante.get('rfc')?.touched && representante.get('rfc')?.hasError('required')" class="mensaje-error">
                         Este campo es obligatorio.
-                    </div>
+                    </p>
                 </div>
             </div>
-            <div class="col-md-4">
-                <button class="btn btn-primary me-2" (click)="obtenerValor()" [disabled]="esFormularioSoloLectura ? true : false">Buscar</button>
+            <div class="col-md-4 d-flex align-items-center">
+                <div>
+                    <button class="btn btn-primary me-2" (click)="obtenerValor()" [disabled]="esFormularioSoloLectura ? true : false">Buscar</button>
+                </div>
             </div>
         </div>
         <div class="row">

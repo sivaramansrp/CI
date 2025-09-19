@@ -138,6 +138,39 @@ export interface Solicitud220502State {
    * Folio de la solicitud.
    */
   foliodel: string;
+
+  /**
+   * Fracción arancelaria de la mercancía.
+   */
+  fraccionArancelaria: string;
+  /**
+   * Descripción de la fracción arancelaria.
+   */
+  descripcionFraccion: string;
+  /**
+   * Número de identificación de la mercancía (NICO).
+   */
+  nico: string;
+  /**
+   * Descripción de la mercancía.
+   */
+  descripcion: string;
+  /**
+   * Unidad de medida tarifaria de la mercancía.
+   */
+  unidaddeMedidaDeUMT: string;
+  /**
+   * Cantidad total de la unidad de medida tarifaria.
+   */
+  cantidadTotalUMT: string;
+  /**
+   * Saldo pendiente de la solicitud.
+   */
+  saldoPendiente: string;
+  /**
+   * Saldo a capturar.
+   */
+  saldoACapturar: string;
 }
 
 /**
@@ -183,6 +216,15 @@ export function crearEstadoInicial(): Solicitud220502State {
     aduanaIngreso: -1,
     oficinaInspeccion: -1,
     puntoInspeccion: -1,
+
+    fraccionArancelaria: '',
+    descripcionFraccion: '',
+    nico: '',
+    descripcion: '',
+    unidaddeMedidaDeUMT: '',
+    cantidadTotalUMT: '',
+    saldoPendiente: '',
+    saldoACapturar: '',
   };
 }
 
@@ -204,7 +246,9 @@ export class Solicitud220502Store extends Store<Solicitud220502State> {
    *
    * @param certificadosAutorizados - Cantidad de certificados autorizados.
    */
-  public setCertificadosAutorizados(certificadosAutorizados: number | string): void {
+  public setCertificadosAutorizados(
+    certificadosAutorizados: number | string
+  ): void {
     this.update((state) => ({
       ...state,
       certificadosAutorizados,
@@ -651,6 +695,76 @@ export class Solicitud220502Store extends Store<Solicitud220502State> {
     this.update((state) => ({
       ...state,
       punto,
+    }));
+  }
+
+  /**
+   * Actualiza la fracción arancelaria de la mercancía.
+   */
+  public setFraccionArancelaria(fraccionArancelaria: string): void {
+    this.update((state) => ({
+      ...state,
+      fraccionArancelaria,
+    }));
+  }
+
+  /**
+   * Actualiza la descripción de la fracción arancelaria.
+   */
+  public setDescripcionFraccion(descripcionFraccion: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionFraccion,
+    }));
+  }
+
+  /**
+   * Actualiza el número de identificación de la mercancía (NICO).
+   */
+  public setNico(nico: string): void {
+    this.update((state) => ({
+      ...state,
+      nico,
+    }));
+  }
+
+  /**
+   * Actualiza la descripción de la mercancía.
+   */
+  public setDescripcion(descripcion: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcion,
+    }));
+  }
+
+  /**
+   * Actualiza la unidad de medida tarifaria de la mercancía.
+   */
+  public setUnidaddeMedidaDeUMT(unidaddeMedidaDeUMT: string): void {
+    this.update((state) => ({
+      ...state,
+      unidaddeMedidaDeUMT,
+    }));
+  }
+
+  /**
+   * Actualiza la cantidad total de la unidad de medida tarifaria.
+   */
+  public setCantidadTotalUMT(cantidadTotalUMT: string): void {
+    this.update((state) => ({
+      ...state,
+      cantidadTotalUMT,
+    }));
+  }
+
+  /**
+   * Actualiza el saldo pendiente de la solicitud.
+   */
+  public setSaldoPendiente(saldoPendiente: string): void {
+    this.update((state) => ({
+      ...state,
+      saldoPendiente,
     }));
   }
 

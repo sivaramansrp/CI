@@ -1,20 +1,32 @@
-<div class="container">
+<div class="container mercancia-form-container">
+  <div class="row">
+    <div class="col-12">
+      @if (esFormaValido) {
+      <div
+        class="alert alert-info alert-danger text-center"
+        [innerHTML]="formErrorAlert"
+      ></div>
+      }
+    </div>
+  </div>
   <form [formGroup]="mercanciaForm">
     <ng-titulo titulo="Datos mercancía" />
 
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="tipoRequisitoList"
+          [catalogo]="catalogosDatos.tipoRequisitoList"
           formControlName="tipoRequisito"
-          [label]="'Tipo requisito'"
+          [label]="'Tipo de requisito'"
           [required]="true"
           name="tipoRequisito"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('tipoRequisito')?.touched || false"
           (selectionChange)="tipoSelecionada($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 form-group">
+       <div *ngIf="!isInspeccionOcularSelected">
         <label class="form-label">Requisito*: </label>
         <input
           type="text"
@@ -35,9 +47,10 @@
         </div>
         }
       </div>
+     </div>
       <div class="col-md-4 form-group">
         <label class="form-label"
-          >Número certificado internacional*:
+          >Número de certificado internacional*:
           <span
             class="bi bi-question-circle-fill"
             tooltip="Si la normatividad no le solicita el Certificado puede capturar NO APLICA"
@@ -50,6 +63,7 @@
           class="form-control"
           formControlName="numeroCertificadoInternacional"
           maxlength="50"
+          title="Si la normatividad no le solicita el Certificado puede capturar NO APLICA ó N/A"
           [ngClass]="
             mercanciaForm.get('numeroCertificadoInternacional')?.invalid &&
             mercanciaForm.get('numeroCertificadoInternacional')?.touched
@@ -70,12 +84,14 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="fraccionArancelariaList"
+          [catalogo]="catalogosDatos.fraccionArancelariaList"
           formControlName="fraccionArancelaria"
           [label]="'Fracción arancelaria'"
           [required]="true"
           name="fraccionArancelaria"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('fraccionArancelaria')?.touched || false"
+          (selectionChange)="fraccionArancelariaSeleccionada($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 form-group">
@@ -93,8 +109,23 @@
           class="form-control"
           formControlName="descripcionFraccion"
           maxlength="1000"
+          [ngClass]="
+            (mercanciaForm.get('descripcionFraccion')?.invalid &&
+            mercanciaForm.get('descripcionFraccion')?.touched) ||
+            (formSubmissionAttempted && mercanciaForm.get('descripcionFraccion')?.disabled && 
+            (!mercanciaForm.get('descripcionFraccion')?.value || mercanciaForm.get('descripcionFraccion')?.value === ''))
+              ? 'required'
+              : ''
+          "
         />
-        @if ( mercanciaForm.get('descripcionFraccion')?.hasError('maxlength') &&
+        @if ((mercanciaForm.get('descripcionFraccion')?.hasError('required') &&
+        mercanciaForm.get('descripcionFraccion')?.touched) || 
+        (formSubmissionAttempted && mercanciaForm.get('descripcionFraccion')?.disabled && 
+        (!mercanciaForm.get('descripcionFraccion')?.value || mercanciaForm.get('descripcionFraccion')?.value === ''))) {
+        <div class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
+        } @else if ( mercanciaForm.get('descripcionFraccion')?.hasError('maxlength') &&
         mercanciaForm.get('descripcionFraccion')?.touched){
         <div class="text-danger">
           Por favor, no escribas más de 1000 caracteres
@@ -106,12 +137,14 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="nicoList"
+          [catalogo]="catalogosDatos.nicoList"
           formControlName="nico"
           [label]="'Nico'"
           [required]="true"
           name="nico"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('nico')?.touched || false"
+          (selectionChange)="nicoSeleccionado($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 form-group">
@@ -166,8 +199,22 @@
     <div class="row mt-5">
       <div class="col-md-4 form-group">
         <label class="form-label">Cantidad UMT*:</label>
-        <input type="text" class="form-control" formControlName="cantidadUMT" />
-        @if ( mercanciaForm.get('cantidadUMT')?.hasError('maxDecimals') &&
+        <input type="text" class="form-control" formControlName="cantidadUMT"
+           [ngClass]="
+            mercanciaForm.get('cantidadUMT')?.invalid &&
+            mercanciaForm.get('cantidadUMT')?.touched
+              ? 'required'
+              : ''
+          "
+         />
+        @if ( mercanciaForm.get('cantidadUMT')?.hasError('pattern') &&
+        mercanciaForm.get('cantidadUMT')?.touched){
+        <div class="text-danger">
+          <small
+            >Por favor, escribe un valor menor o igual a 999999999999.999</small
+          >
+        </div>
+        } @else if ( mercanciaForm.get('cantidadUMT')?.hasError('maxDecimals') &&
         mercanciaForm.get('cantidadUMT')?.touched){
         <div class="text-danger">
           <small
@@ -202,13 +249,48 @@
             >
             </span>
           </label>
-          <input type="text" class="form-control" formControlName="umt" />
+          <input type="text" class="form-control" formControlName="umt" 
+            [ngClass]="
+            (mercanciaForm.get('umt')?.invalid &&
+            mercanciaForm.get('umt')?.touched) ||
+            (formSubmissionAttempted && mercanciaForm.get('umt')?.disabled && 
+            (!mercanciaForm.get('umt')?.value || mercanciaForm.get('umt')?.value === ''))
+              ? 'required'
+              : ''
+            "
+          />
+          @if ((mercanciaForm.get('umt')?.hasError('required') &&
+          mercanciaForm.get('umt')?.touched) || 
+          (formSubmissionAttempted && mercanciaForm.get('umt')?.disabled && 
+          (!mercanciaForm.get('umt')?.value || mercanciaForm.get('umt')?.value === ''))) {
+          <div class="text-danger">
+            <small>Este campo es obligatorio</small>
+          </div>
+          }
         </div>
       </div>
 
       <div class="col-md-4 form-group">
         <label class="form-label">Cantidad UMC*:</label>
-        <input type="text" class="form-control" formControlName="cantidadUMC" />
+        <input type="text" class="form-control" formControlName="cantidadUMC"
+          [ngClass]="
+            mercanciaForm.get('cantidadUMC')?.invalid &&
+            mercanciaForm.get('cantidadUMC')?.touched
+              ? 'required'
+              : ''
+          "
+         />
+        <div
+          *ngIf="
+            mercanciaForm.get('cantidadUMC')?.hasError('pattern') &&
+            mercanciaForm.get('cantidadUMC')?.touched
+          "
+          class="text-danger"
+        >
+          <small
+            >Por favor, escribe un valor menor o igual a 999999999999.999</small
+          >
+        </div>
         <div
           *ngIf="
             mercanciaForm.get('cantidadUMC')?.hasError('maxDecimals') &&
@@ -247,33 +329,38 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="umcList"
+          [catalogo]="catalogosDatos.umcList"
           formControlName="umc"
           [label]="'UMC'"
           [required]="true"
           name="umc"
+          [tooltipQuestionCircle]="true"
+          [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('umc')?.touched || false"
         ></app-catalogo-select>
       </div>
 
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="usoList"
+          [catalogo]="catalogosDatos.usoList"
           formControlName="uso"
           [label]="'Uso'"
           [required]="true"
           name="uso"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('uso')?.touched || false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="usoList"
+          [catalogo]="catalogosDatos.tipoDeProductoList"
           formControlName="tipoProducto"
           [label]="'Tipo de producto'"
           [required]="true"
           name="tipoProducto"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('tipoProducto')?.touched || false"
         ></app-catalogo-select>
       </div>
     </div>
@@ -291,22 +378,24 @@
 
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="paisOrigenList"
-          formControlName="paisOrigen"
+          [catalogo]="catalogosDatos.paisOrigenList"
+          formControlName="paisDeOrigen"
           [label]="'País de origen'"
           [required]="true"
-          name="paisOrigen"
+          name="paisDeOrigen"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('paisDeOrigen')?.touched || false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="paisDeProcedenciaList"
+          [catalogo]="catalogosDatos.paisDeProcedenciaList"
           formControlName="paisDeProcedencia"
-          [label]="'País De Procedencia'"
+          [label]="'País de procedencia'"
           [required]="true"
           name="paisDeProcedencia"
           [isDisabled]="mercanciaForm.disabled"
+          [markTouched]="mercanciaForm.get('paisDeProcedencia')?.touched || false"
         ></app-catalogo-select>
       </div>
     </div>
@@ -339,7 +428,7 @@
         >
           Limpiar
         </button>
-        <button type="button" class="btn btn-default ms-3" (click)="cancelar()">
+        <button type="button" class="btn btn-danger ms-3" (click)="cancelar()">
           Cancelar
         </button>
         <button

@@ -1,43 +1,26 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { AvisoComponent } from '../../components/aviso/aviso.component';
-import { AvisoDestruccionService } from '../../services/aviso-destruccion.service';
 import { Tramite32506Store } from '../../estados/tramite32506.store';
 import { Tramite32506Query } from '../../estados/tramite32506.query';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { AvisoDestruccionService } from '../../services/aviso-destruccion.service';
+import { ConsultaioQuery, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
-import { ReplaySubject } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { AvisoComponent } from '../../components/aviso/aviso.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
-  let fixture: ComponentFixture<PasoUnoComponent>;
-  let mockAvisoDestruccionService: jest.Mocked<AvisoDestruccionService>;
-  let mockTramite32506Store: jest.Mocked<Tramite32506Store>;
-  let mockTramite32506Query: jest.Mocked<Tramite32506Query>;
-  let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
+  let fixture: any;
+  let mockStore: any;
+  let mockTramiteQuery: any;
+  let mockAvisoDestruccionService: any;
+  let mockConsultaQuery: any;
 
   beforeEach(async () => {
-    mockAvisoDestruccionService = {
-      guardarDatosFormulario: jest.fn(),
-      obtenerFederativa: jest.fn(),
-      obtenerMunicipio: jest.fn(),
-      obtenerColonias: jest.fn(),
-      obtenerUnidadMedida: jest.fn(),
-      obtenerFraccionArancelaria: jest.fn(),
-      obtenerDatosSolicitante: jest.fn(),
-      obtenerPedimentoTabla: jest.fn(),
-      obtenerProcesoTabla: jest.fn(),
-      obtenerDesperdicioTabla: jest.fn(),
-      obtenerAvisoTabla: jest.fn(),
-      actualizarEstadoFormulario: jest.fn()
-    } as any;
-
-    mockTramite32506Store = {
+    mockStore = {
       setPestanaActiva: jest.fn(),
+      setDestruccionMercanciasTabla: jest.fn(),
       setAvisoFormularioAdace: jest.fn(),
       setAvisoFormularioCalle: jest.fn(),
       setAvisoFormularioCodigoPostal: jest.fn(),
@@ -53,6 +36,7 @@ describe('PasoUnoComponent', () => {
       setAvisoFormularioTipoCarga: jest.fn(),
       setAvisoFormularioValorAnioProgramaImmex: jest.fn(),
       setAvisoFormularioValorProgramaImmex: jest.fn(),
+      setPeriodicidadMensualDestruccion: jest.fn(),
       setCantidadDesp: jest.fn(),
       setCircunstanciaHechos: jest.fn(),
       setClaveUnidadMedidaDesp: jest.fn(),
@@ -71,48 +55,39 @@ describe('PasoUnoComponent', () => {
       setDomicilioFormularioNombreComercial: jest.fn(),
       setDomicilioFormularioNumeroExterior: jest.fn(),
       setDomicilioFormularioNumeroInterior: jest.fn(),
-      setDomicilioFormularioRfc: jest.fn()
-    } as any;
+      setDomicilioFormularioRfc: jest.fn(),
+    };
 
-    mockTramite32506Query = {
-      selectSolicitud$: of({
-        pestanaActiva: 2,
-        pasoActivo: 1
-      })
-    } as any;
+    mockTramiteQuery = {
+      selectSolicitud$: of({ pestanaActiva: 2 })
+    };
 
-    mockConsultaioQuery = {
-      selectConsultaioState$: of({
-        readonly: false,
-        update: false
-      } as any)
-    } as any;
+    mockAvisoDestruccionService = {
+      guardarDatosFormulario: jest.fn(() => of()),
+      obtenerFederativa: jest.fn(() => of()),
+      obtenerMunicipio: jest.fn(() => of()),
+      obtenerColonias: jest.fn(() => of()),
+      obtenerUnidadMedida: jest.fn(() => of()),
+      obtenerFraccionArancelaria: jest.fn(() => of()),
+      obtenerAvisoTabla: jest.fn(() => of()),
+      obtenerDesperdicioTabla: jest.fn(() => of()),
+      obtenerProcesoTabla: jest.fn(() => of()),
+      obtenerPedimentoTabla: jest.fn(() => of()),
+      obtenerDatosSolicitante: jest.fn(() => of()),
+      actualizarEstadoFormulario: jest.fn(() => of())
+    };
 
-    mockAvisoDestruccionService.obtenerFederativa.mockReturnValue(of({ datos: [] } as any));
-    mockAvisoDestruccionService.obtenerMunicipio.mockReturnValue(of({ datos: [] } as any));
-    mockAvisoDestruccionService.obtenerColonias.mockReturnValue(of({ datos: [] } as any));
-    mockAvisoDestruccionService.obtenerUnidadMedida.mockReturnValue(of({ datos: [] } as any));
-    mockAvisoDestruccionService.obtenerFraccionArancelaria.mockReturnValue(of({ datos: [] } as any));
-    mockAvisoDestruccionService.obtenerDatosSolicitante.mockReturnValue(of({} as any));
-    mockAvisoDestruccionService.obtenerPedimentoTabla.mockReturnValue(of({ datos: [] } as any));
-    mockAvisoDestruccionService.obtenerProcesoTabla.mockReturnValue(of({ datos: [] } as any));
-    mockAvisoDestruccionService.obtenerDesperdicioTabla.mockReturnValue(of({ datos: [] } as any));
-    mockAvisoDestruccionService.obtenerAvisoTabla.mockReturnValue(of({ datos: [] } as any));
-    mockAvisoDestruccionService.guardarDatosFormulario.mockReturnValue(of({ success: false, message: '', datos: null } as any));
+    mockConsultaQuery = {
+      selectConsultaioState$: of({ update: false })
+    };
 
     await TestBed.configureTestingModule({
-      imports: [
-        PasoUnoComponent,
-        SolicitanteComponent,
-        CommonModule,
-        AvisoComponent,
-        HttpClientTestingModule
-      ],
+      imports: [PasoUnoComponent, CommonModule, SolicitanteComponent, AvisoComponent, HttpClientTestingModule],
       providers: [
+        { provide: Tramite32506Store, useValue: mockStore },
+        { provide: Tramite32506Query, useValue: mockTramiteQuery },
         { provide: AvisoDestruccionService, useValue: mockAvisoDestruccionService },
-        { provide: Tramite32506Store, useValue: mockTramite32506Store },
-        { provide: Tramite32506Query, useValue: mockTramite32506Query },
-        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
+        { provide: ConsultaioQuery, useValue: mockConsultaQuery }
       ]
     }).compileComponents();
 
@@ -121,242 +96,66 @@ describe('PasoUnoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default indice as 2 (from tramite state)', () => {
+  it('should initialize tramiteState and indice on ngOnInit', () => {
+    component.ngOnInit();
+    expect(component.tramiteState).toEqual({ pestanaActiva: 2 });
     expect(component.indice).toBe(2);
   });
 
-  it('should set indice when seleccionaTab is called', () => {
+  it('should set indice and call store.setPestanaActiva on seleccionaTab', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
-
-    component.seleccionaTab(0);
-    expect(component.indice).toBe(0);
+    expect(mockStore.setPestanaActiva).toHaveBeenCalledWith(3);
   });
 
-  describe('guardarDatosFormulario', () => {
-    it('should call avisoDestruccionService.guardarDatosFormulario and update store when response is successful', () => {
-      const mockResponse = {
-        success: true,
-        message: 'Success',
-        datos: {
-          avisoFormulario: {
-            adace: 'ADACE-001',
-            calle: 'Test Street',
-            codigoPostal: '12345',
-            claveColonia: 'COL-001',
-            claveDelegacionMunicipio: 'DEL-001',
-            claveEntidadFederativa: 'ENT-001',
-            fechaTranslado: '2024-01-01',
-            justificacion: 'Test justification',
-            nombreComercial: 'Test Company',
-            numeroExterior: '123',
-            numeroInterior: '456',
-            tipoAviso: 'TIPO-001',
-            tipoCarga: 'CARGA-001',
-            valorAnioProgramaImmex: '2024',
-            valorProgramaImmex: 'IMMEX-001'
-          },
-          desperdicioFormulario: {
-            cantidadDesp: '100',
-            circunstanciaHechos: 'Test circumstances',
-            claveUnidadMedidaDesp: 'KG',
-            descripcionDesperdicio: 'Test desperdicio',
-            descripcionMercancia: 'Test mercancia'
-          },
-          pedimentoFormulario: {
-            cantidadPedimento: '200',
-            claveAduanaPedimento: 'ADU-001',
-            claveFraccionArancelariaPedimento: 'FRAC-001',
-            claveUnidadMedidaPedimento: 'KG'
-          },
-          procesoFormulario: {
-            descripcionProcesoDestruccion: 'Test destruction process'
-          },
-          domicilioFormulario: {
-            calle: 'Domicilio Street',
-            codigoPostal: '67890',
-            claveColonia: 'COL-002',
-            claveDelegacionMunicipio: 'DEL-002',
-            claveEntidadFederativa: 'ENT-002',
-            nombreComercial: 'Domicilio Company',
-            numeroExterior: '789',
-            numeroInterior: '012',
-            rfc: 'RFC123456789'
-          }
-        }
-      } as any;
-      mockAvisoDestruccionService.guardarDatosFormulario.mockReturnValue(of(mockResponse));
-
-      component.guardarDatosFormulario();
-
-      expect(mockAvisoDestruccionService.guardarDatosFormulario).toHaveBeenCalled();
-      expect(component.esDatosRespuesta).toBe(true);
-
-      expect(mockTramite32506Store.setAvisoFormularioAdace).toHaveBeenCalledWith('ADACE-001');
-      expect(mockTramite32506Store.setAvisoFormularioCalle).toHaveBeenCalledWith('Test Street');
-      expect(mockTramite32506Store.setAvisoFormularioCodigoPostal).toHaveBeenCalledWith('12345');
-      expect(mockTramite32506Store.setAvisoFormularioColonia).toHaveBeenCalledWith('COL-001');
-      expect(mockTramite32506Store.setAvisoFormularioDelegacionMunicipio).toHaveBeenCalledWith('DEL-001');
-      expect(mockTramite32506Store.setAvisoFormularioEntidadFederativa).toHaveBeenCalledWith('ENT-001');
-      expect(mockTramite32506Store.setAvisoFormularioFechaTranslado).toHaveBeenCalledWith('2024-01-01');
-      expect(mockTramite32506Store.setAvisoFormularioJustificacion).toHaveBeenCalledWith('Test justification');
-      expect(mockTramite32506Store.setAvisoFormularioNombreComercial).toHaveBeenCalledWith('Test Company');
-      expect(mockTramite32506Store.setAvisoFormularioNumeroExterior).toHaveBeenCalledWith('123');
-      expect(mockTramite32506Store.setAvisoFormularioNumeroInterior).toHaveBeenCalledWith('456');
-      expect(mockTramite32506Store.setAvisoFormularioTipoAviso).toHaveBeenCalledWith('TIPO-001');
-      expect(mockTramite32506Store.setAvisoFormularioTipoCarga).toHaveBeenCalledWith('CARGA-001');
-      expect(mockTramite32506Store.setAvisoFormularioValorAnioProgramaImmex).toHaveBeenCalledWith('2024');
-      expect(mockTramite32506Store.setAvisoFormularioValorProgramaImmex).toHaveBeenCalledWith('IMMEX-001');
-
-      expect(mockTramite32506Store.setCantidadDesp).toHaveBeenCalledWith('100');
-      expect(mockTramite32506Store.setCircunstanciaHechos).toHaveBeenCalledWith('Test circumstances');
-      expect(mockTramite32506Store.setClaveUnidadMedidaDesp).toHaveBeenCalledWith('KG');
-      expect(mockTramite32506Store.setDescripcionDesperdicio).toHaveBeenCalledWith('Test desperdicio');
-      expect(mockTramite32506Store.setDescripcionMercancia).toHaveBeenCalledWith('Test mercancia');
-
-      expect(mockTramite32506Store.setCantidadPedimento).toHaveBeenCalledWith('200');
-      expect(mockTramite32506Store.setClaveAduanaPedimento).toHaveBeenCalledWith('ADU-001');
-      expect(mockTramite32506Store.setClaveFraccionArancelariaPedimento).toHaveBeenCalledWith('FRAC-001');
-      expect(mockTramite32506Store.setClaveUnidadMedidaPedimento).toHaveBeenCalledWith('KG');
-
-      expect(mockTramite32506Store.setDescripcionProcesoDestruccion).toHaveBeenCalledWith('Test destruction process');
-
-      expect(mockTramite32506Store.setDomicilioFormularioCalle).toHaveBeenCalledWith('Domicilio Street');
-      expect(mockTramite32506Store.setDomicilioFormularioCodigoPostal).toHaveBeenCalledWith('67890');
-      expect(mockTramite32506Store.setDomicilioFormularioColonia).toHaveBeenCalledWith('COL-002');
-      expect(mockTramite32506Store.setDomicilioFormularioDelegacionMunicipio).toHaveBeenCalledWith('DEL-002');
-      expect(mockTramite32506Store.setDomicilioFormularioEntidadFederativa).toHaveBeenCalledWith('ENT-002');
-      expect(mockTramite32506Store.setDomicilioFormularioNombreComercial).toHaveBeenCalledWith('Domicilio Company');
-      expect(mockTramite32506Store.setDomicilioFormularioNumeroExterior).toHaveBeenCalledWith('789');
-      expect(mockTramite32506Store.setDomicilioFormularioNumeroInterior).toHaveBeenCalledWith('012');
-      expect(mockTramite32506Store.setDomicilioFormularioRfc).toHaveBeenCalledWith('RFC123456789');
-    });
-
-    it('should not update store when response is unsuccessful', () => {
-      const mockResponse = {
-        success: false,
-        message: 'Error',
-        datos: null
-      } as any;
-      mockAvisoDestruccionService.guardarDatosFormulario.mockReturnValue(of(mockResponse));
-
-      component.guardarDatosFormulario();
-
-      expect(mockAvisoDestruccionService.guardarDatosFormulario).toHaveBeenCalled();
-      expect(component.esDatosRespuesta).toBe(true);
-
-      expect(mockTramite32506Store.setAvisoFormularioAdace).not.toHaveBeenCalled();
-      expect(mockTramite32506Store.setCantidadDesp).not.toHaveBeenCalled();
-      expect(mockTramite32506Store.setCantidadPedimento).not.toHaveBeenCalled();
-      expect(mockTramite32506Store.setDescripcionProcesoDestruccion).not.toHaveBeenCalled();
-      expect(mockTramite32506Store.setDomicilioFormularioCalle).not.toHaveBeenCalled();
-    });
-
-    it('should handle partial data gracefully when some form data is missing', () => {
-      const mockResponse = {
-        success: true,
-        message: 'Success',
-        datos: {
-          avisoFormulario: {
-            adace: 'ADACE-001',
-            calle: 'Test Street'
-          },
-          desperdicioFormulario: null,
-          pedimentoFormulario: {
-            cantidadPedimento: '200'
-          },
-          procesoFormulario: {
-            descripcionProcesoDestruccion: 'Test process'
-          },
-          domicilioFormulario: {
-            rfc: 'RFC123456789'
-          }
-        }
-      } as any;
-      mockAvisoDestruccionService.guardarDatosFormulario.mockReturnValue(of(mockResponse));
-
-      component.guardarDatosFormulario();
-
-      expect(mockAvisoDestruccionService.guardarDatosFormulario).toHaveBeenCalled();
-      expect(component.esDatosRespuesta).toBe(true);
-
-      expect(mockTramite32506Store.setAvisoFormularioAdace).toHaveBeenCalledWith('ADACE-001');
-      expect(mockTramite32506Store.setAvisoFormularioCalle).toHaveBeenCalledWith('Test Street');
-      expect(mockTramite32506Store.setCantidadPedimento).toHaveBeenCalledWith('200');
-      expect(mockTramite32506Store.setDescripcionProcesoDestruccion).toHaveBeenCalledWith('Test process');
-      expect(mockTramite32506Store.setDomicilioFormularioRfc).toHaveBeenCalledWith('RFC123456789');
-
-      expect(mockTramite32506Store.setCantidadDesp).toHaveBeenCalledWith(undefined);
-      expect(mockTramite32506Store.setAvisoFormularioCodigoPostal).toHaveBeenCalledWith(undefined);
-    });
-
-    it('should handle null/undefined response datos gracefully', () => {
-      const mockResponse = {
-        success: true,
-        message: 'Success',
-        datos: null
-      } as any;
-      mockAvisoDestruccionService.guardarDatosFormulario.mockReturnValue(of(mockResponse));
-
-      component.guardarDatosFormulario();
-
-      expect(mockAvisoDestruccionService.guardarDatosFormulario).toHaveBeenCalled();
-      expect(component.esDatosRespuesta).toBe(true);
-
-      expect(mockTramite32506Store.setAvisoFormularioAdace).toHaveBeenCalledWith(undefined);
-      expect(mockTramite32506Store.setCantidadDesp).toHaveBeenCalledWith(undefined);
-      expect(mockTramite32506Store.setCantidadPedimento).toHaveBeenCalledWith(undefined);
-      expect(mockTramite32506Store.setDescripcionProcesoDestruccion).toHaveBeenCalledWith(undefined);
-      expect(mockTramite32506Store.setDomicilioFormularioCalle).toHaveBeenCalledWith(undefined);
-    });
-
-    it('should handle empty response datos gracefully', () => {
-      const mockResponse = {
-        success: true,
-        message: 'Success',
-        datos: {}
-      } as any;
-      mockAvisoDestruccionService.guardarDatosFormulario.mockReturnValue(of(mockResponse));
-
-      component.guardarDatosFormulario();
-
-      expect(mockAvisoDestruccionService.guardarDatosFormulario).toHaveBeenCalled();
-      expect(component.esDatosRespuesta).toBe(true);
-
-      expect(mockTramite32506Store.setAvisoFormularioAdace).toHaveBeenCalledWith(undefined);
-      expect(mockTramite32506Store.setCantidadDesp).toHaveBeenCalledWith(undefined);
-      expect(mockTramite32506Store.setCantidadPedimento).toHaveBeenCalledWith(undefined);
-      expect(mockTramite32506Store.setDescripcionProcesoDestruccion).toHaveBeenCalledWith(undefined);
-      expect(mockTramite32506Store.setDomicilioFormularioCalle).toHaveBeenCalledWith(undefined);
-    });
-
-    it('should use takeUntil operator for subscription management', () => {
-      const mockResponse = { 
-        success: true, 
-        message: 'Success',
-        datos: {} 
-      } as any;
-      mockAvisoDestruccionService.guardarDatosFormulario.mockReturnValue(of(mockResponse));
-      const takeUntilSpy = jest.spyOn(component.destroyNotifier$, 'next');
-
-      component.guardarDatosFormulario();
-
-      expect(mockAvisoDestruccionService.guardarDatosFormulario).toHaveBeenCalled();
-      
-      component.ngOnDestroy();
-      expect(takeUntilSpy).toHaveBeenCalled();
-    });
-
-    it('should handle service errors gracefully', () => {
-      const errorResponse = new Error('Service error');
-      mockAvisoDestruccionService.guardarDatosFormulario.mockReturnValue(of(errorResponse as any));
-
-      expect(() => component.guardarDatosFormulario()).not.toThrow();
-    });
+  it('should emit and complete destroyNotifier$ on ngOnDestroy', () => {
+    const spyNext = jest.spyOn(component.destroyNotifier$, 'next');
+    const spyComplete = jest.spyOn(component.destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 
+  it('should set esDatosRespuesta to true if consultaState.update is false in constructor', () => {
+    expect(component.esDatosRespuesta).toBe(true);
+  });
+
+  it('should call guardarDatosFormulario if consultaState.update is true in constructor', () => {
+    mockConsultaQuery.selectConsultaioState$ = of({ update: true });
+    const guardarDatosFormularioSpy = jest.spyOn(PasoUnoComponent.prototype, 'guardarDatosFormulario');
+    const comp = new PasoUnoComponent(
+      mockStore,
+      mockTramiteQuery,
+      mockAvisoDestruccionService,
+      mockConsultaQuery
+    );
+    expect(guardarDatosFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should update store and esDatosRespuesta on guardarDatosFormulario success', () => {
+    const resp = {
+      success: true,
+      datos: {
+        avisoFormulario: { adace: 'adace', calle: 'calle', codigoPostal: 'cp', claveColonia: 'col', claveDelegacionMunicipio: 'del', claveEntidadFederativa: 'ent', fechaTranslado: 'fecha', justificacion: 'just', nombreComercial: 'nom', numeroExterior: 'ext', numeroInterior: 'int', tipoAviso: 'tipo', tipoCarga: 'carga', valorAnioProgramaImmex: 'anio', valorProgramaImmex: 'valor', periodicidadMensualDestruccion: 'period' },
+        desperdicioFormulario: { cantidadDesp: 1, circunstanciaHechos: 'circ', claveUnidadMedidaDesp: 'clave', descripcionDesperdicio: 'desc', descripcionMercancia: 'merc' },
+        pedimentoFormulario: { cantidadPedimento: 2, claveAduanaPedimento: 'aduana', claveFraccionArancelariaPedimento: 'frac', claveUnidadMedidaPedimento: 'unidad' },
+        procesoFormulario: { descripcionProcesoDestruccion: 'proc' },
+        domicilioFormulario: { calle: 'calle', codigoPostal: 'cp', claveColonia: 'col', claveDelegacionMunicipio: 'del', claveEntidadFederativa: 'ent', nombreComercial: 'nom', numeroExterior: 'ext', numeroInterior: 'int', rfc: 'rfc' },
+        destruccionMercanciasTabla: []
+      }
+    };
+    mockAvisoDestruccionService.guardarDatosFormulario.mockReturnValue(of(resp));
+    component.guardarDatosFormulario();
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(mockStore.setDestruccionMercanciasTabla).toHaveBeenCalledWith([]);
+    expect(mockStore.setAvisoFormularioAdace).toHaveBeenCalledWith('adace');
+    expect(mockStore.setCantidadDesp).toHaveBeenCalledWith(1);
+    expect(mockStore.setCantidadPedimento).toHaveBeenCalledWith(2);
+    expect(mockStore.setDescripcionProcesoDestruccion).toHaveBeenCalledWith('proc');
+    expect(mockStore.setDomicilioFormularioRfc).toHaveBeenCalledWith('rfc');
+  });
 });

@@ -8,11 +8,11 @@ import {
 } from '@angular/forms';
 import {
   Catalogo,
-  CatalogoSelectComponent,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
   REGEX_CORREO_ELECTRONICO,
+  REGEX_IMPORTE_PAGO,
   REGEX_NOMBRE,
   REGEX_RFC_FISICA,
   REGEX_RFC_MORAL,
@@ -36,6 +36,7 @@ import {
   STR_NACIONAL,
 } from '../../constantes/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
+import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados.model';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
@@ -366,11 +367,10 @@ export class AgregarFabricanteComponent
       tipoPersona: [this.obtenerValor('tipoPersona'), Validators.required],
       rfc: [
         this.obtenerValor('rfc'),
-        [Validators.required, Validators.maxLength(13)],
       ],
       curp: [
         this.obtenerValor('curp'),
-        this.estaOculto ? [] : Validators.required,
+        this.estaOculto ? [] : [Validators.required, Validators.pattern(/^[A-Za-z]{4}\d{6}[HM][A-Za-z]{5}\d{2}$/)]
       ],
       nombres: [
         this.obtenerValor('nombres'),
@@ -391,11 +391,11 @@ export class AgregarFabricanteComponent
       pais: [
         {
           value: this.elementosDeshabilitados.includes('pais')
-            ? '2'
+            ? ''
             : this.obtenerValor('pais'),
           disabled: this.elementosDeshabilitados.includes('pais'),
         },
-        Validators.required,
+        [Validators.required],
       ],
       estado: [
         {
@@ -404,7 +404,7 @@ export class AgregarFabricanteComponent
             : this.obtenerValor('estadoLocalidad'),
           disabled: this.elementosDeshabilitados.includes('estado'),
         },
-        Validators.required,
+        [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
       ],
       municipio: [
         {
@@ -413,7 +413,7 @@ export class AgregarFabricanteComponent
             : this.obtenerValor('municipioAlcaldia'),
           disabled: this.elementosDeshabilitados.includes('municipio'),
         },
-        Validators.required,
+        [Validators.required],
       ],
       localidad: [
         this.obtenerValor('localidad'),
@@ -424,7 +424,7 @@ export class AgregarFabricanteComponent
       codigoPostal: [
         this.obtenerValor('codigoPostal'),
         !this.elementosNoRequeridos.includes('codigoPostal')
-          ? [Validators.required]
+          ? [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)]
           : [],
       ],
       colonia: [
@@ -436,7 +436,7 @@ export class AgregarFabricanteComponent
       calle: [this.obtenerValor('calle'), Validators.required],
       numeroExterior: [
         this.obtenerValor('numeroExterior'),
-        Validators.required,
+        [Validators.required],
       ],
       numeroInterior: [this.obtenerValor('numeroInterior')],
       lada: [this.obtenerValor('lada')],
@@ -798,7 +798,25 @@ export class AgregarFabricanteComponent
     }
   }
 
+  /**
+   * @method changeTipoPersona
+   * @description Cambia el estado de los controles del formulario según el tipo de persona seleccionado.
+   * Si el tipo de persona es física, habilita el campo RFC; si es moral, lo deshabilita.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
   changeTipoPersona(): void {
+    const VALOR_FORMULARIO = this.agregarFabricanteForm.getRawValue();
+
+    const RFC_CONTROL = this.agregarFabricanteForm.get('rfc');
+    if (RFC_CONTROL) {
+      RFC_CONTROL.setValidators([
+        Validators.required,
+        AgregarFabricanteComponent.rfcFisicaValidator(VALOR_FORMULARIO.tipoPersona)
+      ]);
+      RFC_CONTROL.markAsTouched();
+      RFC_CONTROL.updateValueAndValidity();
+    }
     if (
       this.agregarFabricanteForm?.get('tipoPersona')?.value === '' ||
       this.agregarFabricanteForm?.get('tipoPersona')?.value === undefined

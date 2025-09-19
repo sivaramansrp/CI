@@ -1,6 +1,6 @@
+import { CEDULAS_OPTIONS, DIRECTOS, Directos } from '../../constantes/empleados.enum';
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { DIRECTOS, Directos } from '../../constantes/empleados.enum';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -62,7 +62,7 @@ export class EmpleadosComponent implements OnInit {
    * Opciones disponibles para cédulas.
    * @property {Array} cedulasOptions
    */
-  cedulasOptions = [];
+  cedulasOptions = CEDULAS_OPTIONS;
 
   /**
    * Tipo de selección para la tabla de empleados directos.
@@ -81,6 +81,12 @@ export class EmpleadosComponent implements OnInit {
    * @property {Array} directosDatos
    */
   directosDatos!: Directos[];
+
+  /**
+   * Datos para la tabla de empleados directos.
+   * @property {Array} selectedDirectosDatos
+   */
+  selectedDirectosDatos!: Directos[];
 
   /**
    * Configuración de la fecha de cédula.
@@ -320,5 +326,40 @@ export class EmpleadosComponent implements OnInit {
     this.setDirectosValidation();
     this.setIndirectosValidation();
   }
+
+  /**
+     * Maneja la selección de capacidades instaladas.
+     * 
+     * @param capacidadInstalada - Arreglo de objetos `CapacidadInstalada` seleccionados.
+     * Si el arreglo contiene elementos, actualiza la propiedad `SelectedInstaladaDatos` con la selección.
+     */
+    onDirectosSeleccionadas(DirectosDatos: Directos[]): void {
+      if (DirectosDatos.length > 0) {
+        this.selectedDirectosDatos = DirectosDatos;
+      }
+    }
+  
+    /**
+     * Elimina las capacidades instaladas seleccionadas de la lista `capacidadInstaladaDatos`.
+     * 
+     * Recorre el arreglo `SelectedInstaladaDatos` y elimina cada elemento correspondiente
+     * de `capacidadInstaladaDatos` si existe. Al finalizar, actualiza la referencia del arreglo
+     * para asegurar la detección de cambios en Angular.
+     *
+     * @remarks
+     * Esta función asume que `SelectedInstaladaDatos` y `capacidadInstaladaDatos` son arreglos
+     * de objetos comparables mediante igualdad estricta (`===`).
+     */
+    eliminarDirectos(): void {
+     if (this.selectedDirectosDatos?.length > 0) {
+        this.selectedDirectosDatos.forEach(planta => {
+          const INDEX = this.selectedDirectosDatos.findIndex(row => row === planta);
+          if (INDEX !== -1) {
+            this.directosDatos.splice(INDEX, 1);
+          }
+      });
+      this.directosDatos = [...this.directosDatos];
+    }
+    }
   
 }

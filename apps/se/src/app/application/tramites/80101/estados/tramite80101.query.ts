@@ -16,6 +16,14 @@ import { Query } from '@datorama/akita';
  * Clase que extiende de Query para manejar el estado de Tramite80101.
  */
 export class Tramite80101Query extends Query<Tramite80101State> {
+
+   /**
+   * Selecciona el estado completo de la solicitud
+   */
+  selectSeccionState$ = this.select((state) => {
+    return state;
+  });
+
   /**
    * Selecciona la información de registro del estado.
    */
@@ -227,6 +235,25 @@ export class Tramite80101Query extends Query<Tramite80101State> {
   selectDatosFederatariosFormulario$ = this.select(
     (state) => state.datosFederatarios
   );
+
+  /**
+   * Selecciona los datos de los fedatarios del estado.
+   */
+  selectDatosPlantasImmex$ = this.select(
+    (state) => state.plantasImmexTablaLista
+  );
+
+  /**
+   * Selecciona los datos de los fedatarios del estado.
+   */
+  selectDatosPlantasDisponibles$ = this.select(
+    (state) => state.plantasDisponiblesTablaLista
+  );
+
+/**
+ * Observable selector for retrieving the entire state.
+ */
+allStoreData$ = this.select((state) => state);
 
   /**
    * Constructor de la clase Tramite80101Query.

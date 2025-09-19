@@ -3,7 +3,9 @@
  * @description Este componente es responsable de manejar el formulario del certificado de registro.
  * Incluye un formulario para capturar los datos del certificado de registro y funcionalidades adicionales.
  */
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
 import {
   FormBuilder,
   FormGroup,
@@ -11,7 +13,7 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, catchError, forkJoin, map, of, takeUntil } from 'rxjs';
 
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/mostrar.json';
 
@@ -34,9 +36,16 @@ import {
   ElegibilidadDeTextilesStore,
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
-
+import { AnioConstanciaService } from '../../services/catalogos/anio-constancia.service';
+import { ERROR_FORMA_ALERT } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { GuardadoService } from '../../services/guardado.service';
+import { ParcialRequest } from '../../models/request/parcialRequest.model';
+import { TplDetalleRequest } from '../../models/request/tpl-detalle-request.model';
+import { TplRequest } from '../../models/request/tpl-request.model';
+import { TplService } from '../../services/Tpl.service';
+import { Tramite120301Store } from '../../estados/tramites/tramite120301.store';
 
 /**
  * @component ConstanciaDelRegistroComponent
@@ -55,7 +64,6 @@ import { ElegibilidadTextilesService } from '../../services/elegibilidad-textile
  * @property {FormGroup} ConstanciaDelRegistro - Formulario para datos adicionales del certificado de registro.
  * @property {any} radioOptions - Opciones de radio cargadas desde un archivo JSON.
  * @property {string | number} selectedValue - Valor seleccionado en las opciones de radio.
- * @property {string[]} tableColumns - Encabezados de columnas de la tabla.
  * @property {ConfiguracionColumna<ConstanciaTramiteConfiguracion>[]} configuracionTabla - Configuración de columnas de la tabla de datos.
  * @property {ConstanciaTramiteConfiguracion[]} configuracionTablaDatos - Datos de la tabla de constancias de trámite.
  * @property {Catalogo[]} paisesDatos - Datos del catálogo de países.
@@ -89,6 +97,7 @@ import { ElegibilidadTextilesService } from '../../services/elegibilidad-textile
     InputRadioComponent,
     TablaDinamicaComponent,
     CatalogoSelectComponent,
+    CommonModule,
   ],
 })
 export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
@@ -101,12 +110,34 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   formularioDeshabilitado: boolean = false;
 
   /**
+   * @property {boolean} enviada - Indica si el formulario ha sido enviado para mostrar errores.
+   */
+  enviada: boolean = false;
+
+  /**
    * @property {FormGroup} fitosanitarioForm - El grupo de formularios para capturar los datos del certificado de registro.
    * Formulario reactivo principal que contiene todos los controles necesarios para la captura
    * de información relacionada con la constancia del registro fitosanitario.
    * Incluye validaciones y manejo de estado para cada campo del formulario.
    */
   fitosanitarioForm!: FormGroup;
+
+  /**
+   * @property {string} formularioAlertaError
+   * @description
+   * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
+   * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
+   * Vacío cuando el formulario es válido.
+   */
+  public formularioAlertaError: string = '';
+
+  /**
+   * @property {boolean} esFormaValido
+   * @description
+   * Bandera booleana que indica si el formulario tiene errores de validación.
+   * Si es `true`, se muestra el mensaje de error; si es `false`, el formulario es válido y no se muestra la alerta.
+   */
+  public esFormaValido: boolean = false;
 
   /**
    * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
@@ -170,21 +201,6 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   private seccionState!: SeccionLibState;
 
   /**
-   * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
-   * Define los títulos de las columnas que se mostrarán en la tabla de datos.
-   * Se utiliza como referencia para la configuración visual de la tabla.
-   * Incluye información sobre constancias, fracciones arancelarias, regímenes, países y fechas.
-   */
-  tableColumns = [
-    'Número de constancia de registro',
-    'Fracción arancelaria',
-    'Clasificación del regimen',
-    'País destino/origen',
-    'Fecha inicio vigencia',
-    'Fecha fin vigencia',
-  ];
-
-  /**
    * @property {ConstanciaTramiteConfiguracion[]} configuracionTablaDatos - Datos de la tabla de constancias de trámite.
    * Arreglo que almacena toda la información de las constancias de trámite que se muestran en la tabla.
    * Se actualiza dinámicamente mediante consultas al servicio y filtrado de datos.
@@ -209,6 +225,28 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   public guardarBandera: boolean = false;
 
   /**
+   * @property {Catalogo[]} anios - Lista de años obtenidos del catálogo.
+   * Almacena los años disponibles para la constancia de registro, obtenidos desde el servicio.
+   * Se utiliza para permitir al usuario seleccionar un año específico en el formulario.
+   */
+  anios!: Catalogo[];
+
+  /**
+  * @property {number | undefined} idAsignacion - Identificador único de la asignación.
+  * Almacena el ID de la asignación actual registro de solicitud parcial.
+  * Es undefined cuando se crea una nueva solicitud parcial.
+  * Se utiliza para el guardado parcial de la solicitud.
+  */
+  public idAsignacion!: number | undefined;
+
+  /**
+   * @property {string} cveUnidadAdministrativa - Clave de la unidad administrativa.
+   * Contiene el identificador único de la unidad administrativa asociada al catalogo de francion arancelaria.
+   * Su valor se obtiene del catalogo de francion arancelaria.
+   */
+  public cveUnidadAdministrativa!: string;
+
+  /**
    * @property {EventEmitter<boolean>} mostrarTabs - Emite un valor booleano para mostrar las pestañas adicionales.
    * EventEmitter que comunica al componente padre cuándo debe mostrar las pestañas de navegación.
    * Se activa cuando el usuario completa exitosamente el proceso de guardado o validación.
@@ -229,6 +267,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    * @param {SeccionLibQuery} seccionQuery - Query para consultar y suscribirse al estado de las secciones.
    * @param {ElegibilidadTextilesService} ElegibilidadTextilesService - Servicio de dominio para manejar la lógica de negocio de elegibilidad de textiles.
    * @param {ConsultaioQuery} consultaioQuery - Query para consultar el estado de solo lectura del trámite.
+   * @param {ChangeDetectorRef} cdr - Referencia al ChangeDetectorRef para manejar la detección de cambios.
    */
   constructor(
     private fb: FormBuilder,
@@ -237,7 +276,12 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
     private ElegibilidadTextilesService: ElegibilidadTextilesService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private anioConstanciaService: AnioConstanciaService,
+    private tplService: TplService,
+    private guardadoService: GuardadoService,
+    private tramite120301: Tramite120301Store,
+    private cdr: ChangeDetectorRef
   ) {
     // Lógica del constructor si es necesario
   }
@@ -251,7 +295,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    */
   configuracionTabla: ConfiguracionColumna<ConstanciaTramiteConfiguracion>[] = [
     {
-      encabezado: 'Numero de constancia de registro',
+      encabezado: 'Número de constancia de registro',
       clave: (artículo) => artículo.numeroDeConstancia,
       orden: 1,
     },
@@ -261,7 +305,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       orden: 2,
     },
     {
-      encabezado: 'Clasificación del regimen',
+      encabezado: 'Clasificación del régimen',
       clave: (artículo) => artículo.clasificacionDelRegimen,
       orden: 3,
     },
@@ -316,18 +360,13 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.ElegibilidadTextilesService.obtenerListaPaises()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.paisesDatos = data;
-      });
 
     this.initActionFormBuild();
 
     // Obtenga el estado actual de solo lectura inmediatamente
     const CURRENT_STATE = this.consultaioQuery.getValue();
     this.formularioDeshabilitado = CURRENT_STATE.readonly;
-    
+
     // Aplicar el estado del formulario inicial según el valor de solo lectura actual
     if (this.formularioDeshabilitado) {
       this.fitosanitarioForm.disable();
@@ -352,9 +391,90 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
+    this.catAnios();
     this.seccionStore.establecerFormaValida([false]);
     this.seccionStore.establecerSeccion([true]);
     this.seccionStore.establecerFormaValida([true]);
+  }
+
+  /**
+   * @method catAnios
+   * @description Obtiene el catálogo de años desde el servicio AnioConstanciaService.
+   */
+  catAnios(): void {
+    this.anioConstanciaService.getAnios().subscribe({
+      next: (response) => {
+        if (response.codigo === '00') {
+          this.anios = response.datos || [];
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener los años:', error);
+        this.anios = [];
+      }
+    });
+  }
+
+  /**
+   * @method cargaDatosTabla
+   * @description Carga los datos en la tabla de constancias del registro.
+   * Realiza una petición al servicio TplService con los parámetros del formulario,
+   * y actualiza la configuración de la tabla con los datos recibidos.
+   * Maneja errores y casos donde no se obtienen datos válidos.
+   * @returns {void} No retorna ningún valor.
+   */
+  cargaDatosTabla(): void {
+    const PAYLOAD: TplRequest = {
+      rfc: 'AAL0409235E6',
+      tipo_busqueda: this.fitosanitarioForm.get('flexRadioRegistro')?.value,
+      num_folio_asignacion_tpl: this.fitosanitarioForm.get('numeroDeLaConstancia')?.value,
+      anio: this.fitosanitarioForm.get('anoDeLaConstancia')?.value,
+    };
+
+    this.tplService.posTpl(PAYLOAD).subscribe({
+      next: (response) => {
+        if (response?.codigo === '00' && response?.datos) {
+          const TPL = response.datos;
+          this.configuracionTablaDatos = TPL.map(item => ({
+            numeroDeConstancia: item.num_constancia,
+            fraccionArancelaria: item.fraccion_arancelaria,
+            clasificacionDelRegimen: item.clasificacion_regimen,
+            paisDestino: item.pais,
+            categoriaTextil: item.desc_categoria_textil,
+            fechaInicioVigencia: item.fecha_inicio,
+            fechaFinVigencia: item.fecha_fin,
+
+            estado: '',
+            representacionFederal: '',
+            descripcionProducto: '',
+            tratado: '',
+            subproducto: '',
+            mecanismo: '',
+            typoCategoria: '',
+            typoRegimen: '',
+            descripcionCategoriaTextil: '',
+            PaisDestino: '',
+            unidadMedidaCategoriaTextil: '',
+            factorConversionCategoriaTextil: '',
+
+            idAsignacion: item.id_asignacion,
+            idMecanismoAsignacion: item.id_mecanismo_asignacion,
+            idCategoriaTextil: item.id_categoria_textil,
+            cvePais: item.cve_pais,
+            idFraccionHtsUsa: item.id_fraccion_hts_usa
+          }));
+        } else {
+          // Mostrar mensaje de error
+          this.configuracionTablaDatos = [];
+          console.error('Error al obtener datos:', response?.mensaje);
+        }
+      },
+      error: (err) => {
+        this.configuracionTablaDatos = [];
+        console.error('Error en la petición postTpl:', err);
+      }
+    });
+
   }
 
   /**
@@ -474,50 +594,100 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     if (!fila) {
       return;
     }
+
     const ANO_DE_LA_CONSTANCIA =
       this.fitosanitarioForm.get('anoDeLaConstancia')?.value;
     const NUMERO_DE_LA_CONSTANCIA = this.fitosanitarioForm.get(
       'numeroDeLaConstancia'
     )?.value;
-    const FORM_VALUES = {
-      anoDeLaConstancia: ANO_DE_LA_CONSTANCIA ? ANO_DE_LA_CONSTANCIA : '',
-      numeroDeLaConstancia: NUMERO_DE_LA_CONSTANCIA
-        ? NUMERO_DE_LA_CONSTANCIA
-        : '',
-      estado: fila.estado || '',
-      representacionFederal: fila.representacionFederal || '',
-      fraccionArancelaria: fila.fraccionArancelaria || '',
-      descripcionProducto: fila.descripcionProducto || '',
-      tratado: fila.tratado || '',
-      subproducto: fila.subproducto || '',
-      mecanismo: fila.mecanismo || '',
-      typoCategoria: fila.typoCategoria || '',
-      typoRegimen: fila.typoRegimen || '',
-      descripcionCategoriaTextil: fila.descripcionCategoriaTextil || '',
-      PaisDestino: fila.PaisDestino || '',
-      unidadMedidaCategoriaTextil: fila.unidadMedidaCategoriaTextil || '',
-      factorConversionCategoriaTextil:
-        fila.factorConversionCategoriaTextil || '',
-      fechaInicioVigencia: fila.fechaInicioVigencia || '',
-      fechaFinVigencia: fila.fechaFinVigencia || '',
+
+    const PAYLOAD: TplDetalleRequest = {
+      id_mecanismo_asignacion: fila.idMecanismoAsignacion ?? 0,
+      cve_fraccion: fila.fraccionArancelaria,
+      codigo_pais: fila.cvePais ?? '',
+      id_categoria_textil: fila.idCategoriaTextil ?? 0,
+      id_fraccion_hts_usa: fila.idFraccionHtsUsa ?? 0
     };
-    this.fitosanitarioForm.patchValue(FORM_VALUES);
-    Object.keys(FORM_VALUES).forEach((key) => {
-      if (this.fitosanitarioForm.get(key)) {
-        if (key !== 'anoDeLaConstancia' && key !== 'numeroDeLaConstancia') {
-          // Deshabilitar solo si no está en modo de solo lectura
-          if (!this.formularioDeshabilitado) {
-            this.fitosanitarioForm.get(key)?.disable();
+    this.idAsignacion = fila.idAsignacion;
+    forkJoin({
+      representacion: this.tplService.getRepresentacionFederal(fila.idAsignacion ?? 0).pipe(
+        catchError(err => {
+          console.error('Error en representacion:', err);
+          return of(null);
+        })
+      ),
+      detalle: this.tplService.postTplDetalle(PAYLOAD).pipe(
+        catchError(err => {
+          console.error('Error en detalle:', err);
+          return of(null);
+        })
+      )
+    }).subscribe(({ representacion, detalle }) => {
+      if (representacion?.codigo === '00' && representacion?.datos) {
+        const REPRESENTACIONFEDERAL = representacion.datos;
+        fila.estado = REPRESENTACIONFEDERAL.nombre_entidad;
+        fila.representacionFederal = REPRESENTACIONFEDERAL.nombre;
+        this.cveUnidadAdministrativa = REPRESENTACIONFEDERAL.clave;
+      }
+
+      if (detalle?.codigo === '00' && detalle?.datos) {
+        const DATOS = detalle.datos;
+        fila.descripcionProducto = DATOS.descripcion_producto;
+        fila.tratado = DATOS.tratado_bloque;
+        fila.subproducto = DATOS.clasificacion_subproducto;
+        fila.mecanismo = DATOS.mecanismo_asignacion;
+        fila.typoCategoria = DATOS.categoria_textil;
+        fila.typoRegimen = DATOS.regimen;
+        fila.descripcionCategoriaTextil = DATOS.descripcion_categoria_textil;
+        fila.PaisDestino = DATOS.pais_origen_destino;
+        fila.unidadMedidaCategoriaTextil = DATOS.unidad_medida;
+        fila.factorConversionCategoriaTextil = DATOS.factor_conversion.toString();
+        fila.fechaInicioVigencia = DATOS.fecha_inicio_vigencia;
+        fila.fechaFinVigencia = DATOS.fecha_fin_vigencia;
+        this.tramite120301.setIdentificadorRegimen(DATOS.identificador_regimen);
+      }
+
+
+
+      const FORM_VALUES = {
+        anoDeLaConstancia: ANO_DE_LA_CONSTANCIA ? ANO_DE_LA_CONSTANCIA : '',
+        numeroDeLaConstancia: NUMERO_DE_LA_CONSTANCIA
+          ? NUMERO_DE_LA_CONSTANCIA
+          : '',
+        estado: fila.estado,
+        representacionFederal: fila.representacionFederal,
+        fraccionArancelaria: fila.fraccionArancelaria || '',
+        descripcionProducto: fila.descripcionProducto || '',
+        tratado: fila.tratado || '',
+        subproducto: fila.subproducto || '',
+        mecanismo: fila.mecanismo || '',
+        typoCategoria: fila.typoCategoria || '',
+        typoRegimen: fila.typoRegimen || '',
+        descripcionCategoriaTextil: fila.descripcionCategoriaTextil || '',
+        PaisDestino: fila.PaisDestino || '',
+        unidadMedidaCategoriaTextil: fila.unidadMedidaCategoriaTextil || '',
+        factorConversionCategoriaTextil: fila.factorConversionCategoriaTextil || '',
+        fechaInicioVigencia: fila.fechaInicioVigencia || '',
+        fechaFinVigencia: fila.fechaFinVigencia || '',
+      };
+      this.fitosanitarioForm.patchValue(FORM_VALUES);
+      Object.keys(FORM_VALUES).forEach((key) => {
+        if (this.fitosanitarioForm.get(key)) {
+          if (key !== 'anoDeLaConstancia' && key !== 'numeroDeLaConstancia') {
+            // Deshabilitar solo si no está en modo de solo lectura
+            if (!this.formularioDeshabilitado) {
+              this.fitosanitarioForm.get(key)?.disable();
+            }
           }
         }
-      }
-    });
-    this.ElegibilidadDeTextilesStore.update((state) => ({
-      ...state,
-      ...FORM_VALUES,
-    }));
-    this.guardarBandera = true;
-    this.ElegibilidadDeTextilesStore.setguardarBandera(true);
+      });
+      this.ElegibilidadDeTextilesStore.update((state) => ({
+        ...state,
+        ...FORM_VALUES,
+      }));
+      this.guardarBandera = true;
+      this.ElegibilidadDeTextilesStore.setguardarBandera(true);
+    })
   }
 
   /**
@@ -530,15 +700,8 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   buscarEvaluar(): void {
-    const ANO_CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
-    const NUMEROCONTROL = this.fitosanitarioForm.get('numeroDeLaConstancia');
-    
-    ANO_CONTROL?.markAsTouched();
-    NUMEROCONTROL?.markAsTouched();
-    if (ANO_CONTROL?.invalid || NUMEROCONTROL?.invalid) {
-      return;
-    }
-    this.recuperarDatosAsociadas();
+
+    this.cargaDatosTabla();
     const ANO_DE_LA_CONSTANCIA =
       this.fitosanitarioForm.get('anoDeLaConstancia')?.value;
     const NUMERO_DE_LA_CONSTANCIA = this.fitosanitarioForm.get(
@@ -554,6 +717,50 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       ...state,
       ...FORM_VALUES,
     }));
+    this.enviada = true;
+    const RADIO_VALUE = this.fitosanitarioForm.get('flexRadioRegistro')?.value;
+    if (RADIO_VALUE === 'Especifico') {
+      // Validar campos requeridos
+      const ANO_CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
+      const NUMEROCONTROL = this.fitosanitarioForm.get('numeroDeLaConstancia');
+      ANO_CONTROL?.markAsTouched();
+      NUMEROCONTROL?.markAsTouched();
+      if (ANO_CONTROL?.invalid || NUMEROCONTROL?.invalid) {
+        return;
+      }
+      // Obtener y filtrar datos
+      this.ElegibilidadTextilesService.obtenerTablaDatos<ConstanciaTramiteConfiguracion>(
+        'constancia-del-registro-tabla-asociados.json'
+      )
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((response) =>
+            this.filtrarDatos(response as ConstanciaTramiteConfiguracion[])
+          )
+        )
+        .subscribe({
+          next: (filteredData) => {
+            this.configuracionTablaDatos = filteredData;
+            this.ElegibilidadDeTextilesStore.setdatosTablaConstanciaDelRegistro(
+              filteredData
+            );
+          },
+        });
+    } else {
+      // Obtener todos los datos de 'Todos' u otros valores
+      this.ElegibilidadTextilesService.obtenerTablaDatos<ConstanciaTramiteConfiguracion>(
+        'constancia-del-registro-tabla-asociados.json'
+      )
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (allData) => {
+            this.configuracionTablaDatos = allData as ConstanciaTramiteConfiguracion[];
+            this.ElegibilidadDeTextilesStore.setdatosTablaConstanciaDelRegistro(
+              this.configuracionTablaDatos
+            );
+          },
+        });
+    }
   }
 
   /**
@@ -566,8 +773,37 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    * @fires mostrarTabs Evento que indica al componente padre que debe mostrar las pestañas de navegación.
    */
   guardarEvaluate(): void {
-    this.mostrarTabs.emit(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const PAYLOAD: ParcialRequest = {
+      id_solicitud: null,
+      id_asignacion: this.idAsignacion ?? null,
+      boolean_generico: null,
+      ide_generica_1: null,
+      descripcion_generica_2: null,
+      ide_generica_2: null,
+      solicitante: {
+        rfc: 'AAL0409235E6',
+        certificado_serial_number: ''
+      },
+      cve_unidad_administrativa: this.cveUnidadAdministrativa,
+      id_expedicion: null
+    };
+    this.guardadoService.postGuardadoParcial(PAYLOAD).subscribe({
+      next: (response) => {
+        if (response?.codigo === '00' && response?.datos) {
+          const DATOS = response.datos;
+          this.tramite120301.setIdExpedicion(DATOS.id_expedicion);
+          this.mostrarTabs.emit(true);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          console.error('Error al obtener datos:', response?.mensaje);
+        }
+      },
+      error: (err) => {
+        console.error('Error en la guardado parcial:', err);
+      }
+    });
+
+
   }
 
   /**
@@ -629,6 +865,70 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     });
   }
 
+
+  /**
+   * @method onAnoConstanciaChange
+   * @description Maneja el evento de cambio de selección en el catálogo de años de constancia.
+   * Marca el control del formulario como tocado y actualiza el valor en el store.
+   * @param {Catalogo} selectedOption - La opción seleccionada del catálogo.
+   * @returns {void} No retorna ningún valor.
+   */
+  onAnoConstanciaChange(selectedOption: Catalogo): void {
+    const CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
+    if (CONTROL && selectedOption) {
+      const VALUE = selectedOption.id?.toString() || '';
+      CONTROL.setValue(VALUE);
+      CONTROL.markAsTouched();
+      CONTROL.updateValueAndValidity();
+
+      this.ElegibilidadDeTextilesStore.setAnoDeLaConstancia(VALUE);
+    }
+  }
+
+  /**
+   * @method onAnoConstanciaChangeFromSelect
+   * @description Maneja el evento de cambio regular del dropdown cuando selectionChange no funciona.
+   * @param {Event} event - El evento de cambio del dropdown.
+   * @returns {void} No retorna ningún valor.
+   */
+  onAnoConstanciaChangeFromSelect(event: Event): void {
+    const SELECT_ELEMENT = event.target as HTMLSelectElement;
+    const VALUE = SELECT_ELEMENT.value;
+
+    if (VALUE && VALUE !== '-1') {
+      const CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
+      if (CONTROL) {
+        CONTROL.setValue(VALUE);
+        CONTROL.markAsTouched();
+        CONTROL.updateValueAndValidity();
+
+        this.ElegibilidadDeTextilesStore.setAnoDeLaConstancia(VALUE);
+      }
+    }
+  }
+  /**
+ * Método para continuar al siguiente paso, validando el campo cantidadFacturas.
+ * Si el formulario es inválido, muestra el mensaje de error y no permite continuar.
+ * Si es válido, limpia el error y permite continuar.
+ */
+  continuar(): void {
+    this.enviada = true;
+    this.fitosanitarioForm.markAllAsTouched();
+    this.fitosanitarioForm.updateValueAndValidity();
+    this.cdr.detectChanges();
+
+    if (!this.fitosanitarioForm.valid) {
+      this.formularioAlertaError = ERROR_FORMA_ALERT;
+      this.esFormaValido = true;
+      window.scrollTo(0, 0);
+      return;
+    }
+    this.esFormaValido = false;
+    this.formularioAlertaError = '';
+    window.scrollTo(0, 0);
+
+    this.mostrarTabs.emit(true);
+  }
   /**
    * @method ngOnDestroy
    * @description
@@ -647,46 +947,5 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-  }
-
-  /**
-   * @method onAnoConstanciaChange
-   * @description Maneja el evento de cambio de selección en el catálogo de años de constancia.
-   * Marca el control del formulario como tocado y actualiza el valor en el store.
-   * @param {Catalogo} selectedOption - La opción seleccionada del catálogo.
-   * @returns {void} No retorna ningún valor.
-   */
-  onAnoConstanciaChange(selectedOption: Catalogo): void {
-    const CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
-    if (CONTROL && selectedOption) {
-      const VALUE = selectedOption.id?.toString() || '';
-      CONTROL.setValue(VALUE);
-      CONTROL.markAsTouched();
-      CONTROL.updateValueAndValidity();
-      
-      this.ElegibilidadDeTextilesStore.setAnoDeLaConstancia(VALUE);
-    }
-  }
-
-  /**
-   * @method onAnoConstanciaChangeFromSelect
-   * @description Maneja el evento de cambio regular del dropdown cuando selectionChange no funciona.
-   * @param {Event} event - El evento de cambio del dropdown.
-   * @returns {void} No retorna ningún valor.
-   */
-  onAnoConstanciaChangeFromSelect(event: Event): void {
-    const SELECT_ELEMENT = event.target as HTMLSelectElement;
-    const VALUE = SELECT_ELEMENT.value;
-    
-    if (VALUE && VALUE !== '-1') {
-      const CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
-      if (CONTROL) {
-        CONTROL.setValue(VALUE);
-        CONTROL.markAsTouched();
-        CONTROL.updateValueAndValidity();
-
-        this.ElegibilidadDeTextilesStore.setAnoDeLaConstancia(VALUE);
-      }
-    }
   }
 }

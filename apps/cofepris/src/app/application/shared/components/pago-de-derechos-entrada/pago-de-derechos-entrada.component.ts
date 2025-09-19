@@ -5,7 +5,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FECHA_PAGO, MAXLENGTH,PAGO } from '../../constantes/permiso-importacion-biologica.enum';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CatalogoResponse, CatalogoSelectComponent, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { PermisoImportacionBiologicaState, PermisoImportacionBiologicaStore } from '../../estados/permiso-importacion-biologica.store';
@@ -156,9 +156,9 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
   claveDeReferncia: [''],
   cadenaDeLaDependencia: [''],
   banco: [''],
-  llaveDePago: [''],
-  fechaDePago: [''],
-  importeDePago:['']
+  llaveDePago: ['',[Validators.required]],
+  fechaDePago: ['',[Validators.required]],
+  importeDePago:['',[Validators.required]]
 
  });
 
@@ -167,7 +167,6 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * Obtiene los datos para el selector de opciones desde el servicio.
    */
   ngOnInit(): void {
-
     this.inicializarCertificadoFormulario();
   }
 

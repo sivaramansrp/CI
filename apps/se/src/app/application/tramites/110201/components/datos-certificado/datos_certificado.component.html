@@ -1,4 +1,4 @@
-<form [formGroup]="registroForm" (ngSubmit)="validarDestinatarioFormulario()">
+<form [formGroup]="registroForm">
   <ng-container formGroupName="validacionForm">
     <ng-titulo titulo="Datos del certificado" />
     <div class="row">
@@ -11,9 +11,12 @@
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Presica*:</label>
+        <label>Precisa*:</label>
         <div class="col-md-12 align-text-area">
           <textarea cols="80" rows="5" formControlName="presica" (change)="setValoresStore(validacionForm, 'presica', 'setPresica')"></textarea>
+        </div>
+        <div *ngIf="registroForm.get('validacionForm.presica')?.invalid && registroForm.get('validacionForm.presica')?.touched" class="text-danger">
+          <small *ngIf="registroForm.get('validacionForm.presica')?.errors?.['required']">Este campo es obligatorio.</small>
         </div>
       </div>
     </div>
@@ -26,8 +29,11 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4 mb-3">
-        <app-catalogo-select [catalogo]="optionsIdioma.catalogos" [label]="'Idioma'" [required]="true" id="idioma" formControlName="idioma" (change)="setValoresStore(validacionForm, 'idioma', 'setIdioma')"></app-catalogo-select>
+     <div class="col-md-4 mb-3">
+        <app-catalogo-select [catalogo]="optionsIdioma.catalogos" [label]="'Idioma'" [required]="true" id="idioma" formControlName="idioma" (change)="setValoresStore(validacionForm, 'idioma', 'setIdioma')" [isDisabled]="soloLectura" [markTouched]="validationAttempted"></app-catalogo-select>
+        <div *ngIf="registroForm.get('validacionForm.idioma')?.invalid && (registroForm.get('validacionForm.idioma')?.touched)" class="text-danger">
+          <small *ngIf="registroForm.get('validacionForm.idioma')?.errors?.['required']">Este campo es obligatorio.</small>
+        </div>
       </div>
       <ng-container *ngIf="isJustificacion">
         <ng-titulo titulo="Justificación para obtención del certificado" />
@@ -38,11 +44,17 @@
           <label style="font-weight: bold">
             <input type="checkbox" formControlName="casillaVerificacion" (change)=" setValoresStore( validacionForm, 'casillaVerificacion', 'setCheckbox' ) " /> Sí </label>
         </div>
+        <div *ngIf="registroForm.get('validacionForm.casillaVerificacion')?.invalid && registroForm.get('validacionForm.casillaVerificacion')?.touched" class="text-danger">
+          <small *ngIf="registroForm.get('validacionForm.casillaVerificacion')?.errors?.['required']">Debe seleccionar esta opción.</small>
+        </div>
         <div class="row">
           <div class="col-md-4 mb-3">
             <label>Justificación*:</label>
             <div class="col-md-12 align-text-area">
               <textarea cols="80" rows="5" formControlName="justificacion" (change)=" setValoresStore( validacionForm, 'justificacion', 'setJustificacion' ) "></textarea>
+            </div>
+            <div *ngIf="registroForm.get('validacionForm.justificacion')?.invalid && registroForm.get('validacionForm.justificacion')?.touched" class="text-danger">
+              <small *ngIf="registroForm.get('validacionForm.justificacion')?.errors?.['required']">Este campo es obligatorio.</small>
             </div>
           </div>
         </div>
@@ -50,10 +62,16 @@
       <ng-titulo titulo="Representación federal" />
       <div class="row">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="optionsEntidad.catalogos" [label]="'Entidad federativa'" [required]="true" formControlName="entidad" (change)="setValoresStore(validacionForm, 'entidad', 'setEntidad')"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="optionsEntidad.catalogos" [label]="'Entidad federativa'" [required]="true" formControlName="entidad" (change)="setValoresStore(validacionForm, 'entidad', 'setEntidad')" [isDisabled]="soloLectura" [markTouched]="validationAttempted"></app-catalogo-select>
+          <div *ngIf="registroForm.get('validacionForm.entidad')?.invalid && registroForm.get('validacionForm.entidad')?.touched" class="text-danger">
+            <small>Este campo es obligatorio.</small>
+          </div>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="optionsRepresentacion.catalogos" [label]="'Representación federal'" [required]="true" formControlName="representacion" (change)="setValoresStore( validacionForm, 'representacion', 'setRepresentacion' ) "></app-catalogo-select>
+          <app-catalogo-select [catalogo]="optionsRepresentacion.catalogos" [label]="'Representación federal'" [required]="true" formControlName="representacion" (change)="setValoresStore( validacionForm, 'representacion', 'setRepresentacion' ) " [isDisabled]="soloLectura" [markTouched]="validationAttempted"></app-catalogo-select>
+          <div *ngIf="registroForm.get('validacionForm.representacion')?.invalid && registroForm.get('validacionForm.representacion')?.touched" class="text-danger">
+            <small>Este campo es obligatorio.</small>
+          </div>
         </div>
       </div>
     </div>

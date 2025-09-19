@@ -38,8 +38,9 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 import { EmpresasSubfabricantesComponent } from '../../../../shared/components/empresas-subfabricante/empresas-subfabricante.component';
-import { Tramite80101Query } from '../../../80103/estados/tramite80101.query';
-import { Tramite80101Store } from '../../../80103/estados/tramite80101.store';
+import { Tramite80101Query } from '../../estados/tramite80101.query';
+import { Tramite80101Store } from '../../estados/tramite80101.store';
+
 /*
   * Componente para gestionar la sección de empresas subfabricantes en el trámite 80103.
   *
@@ -263,7 +264,7 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
       .getSubfabricantesDisponibles()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((response: PlantasSubfabricante[]) => {
-        if (response.length > 0) {
+        if (response?.length > 0) {
           this.store.setPlantasBuscadas(response)
         }
       });

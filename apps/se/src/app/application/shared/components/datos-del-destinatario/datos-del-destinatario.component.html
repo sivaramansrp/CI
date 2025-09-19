@@ -5,12 +5,24 @@
           <div *ngIf="campoDestinatario; else defaultTemplate">
             <div class="col-md-8 form-group">
               <label class="form-label" for="nombres">Nombre(s)*:</label>
-              <input type="text" id="nombres" class="form-control" formControlName="nombres" (change)="setValoresStore('formDatosDelDestinatario','nombres','setFormDatosDelDestinatario')" />
+              <input type="text" id="nombres" class="form-control" formControlName="nombres" (change)="setValoresStore('formDatosDelDestinatario','nombres','setFormDatosDelDestinatario')" [maxlength]="150" />
+              <div *ngIf="formDatosDelDestinatario.controls['nombres'].invalid && formDatosDelDestinatario.controls['nombres'].touched">
+                <div class="d-grid">
+                  <span class="mensaje-error" *ngIf="formDatosDelDestinatario.controls['nombres'].errors?.['required']">Este campo es obligatorio</span>
+                  <span class="mensaje-error" *ngIf="formDatosDelDestinatario.controls['nombres'].errors?.['maxlength']">Por favor, no escribas más de 150 caracteres</span>
+                </div>
+              </div>
             </div>
             <div class="col-md-4 form-group">
               <label class="form-label" for="numeroDeRegistroFiscal">Número de registro fiscal*:</label>
-              <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal" (change)="setValoresStore('formDatosDelDestinatario','numeroDeRegistroFiscal','setFormDatosDelDestinatario')" />
+              <input type="text" id="numeroDeRegistroFiscal" class="form-control" formControlName="numeroDeRegistroFiscal" [maxlength]="32" (change)="setValoresStore('formDatosDelDestinatario','numeroDeRegistroFiscal','setFormDatosDelDestinatario')" />
+              <div *ngIf="formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].invalid && formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].touched">
+                <div class="d-grid">
+                  <span class="mensaje-error" *ngIf="formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].errors?.['required']">Este campo es obligatorio</span>
+                  <span class="mensaje-error" *ngIf="formDatosDelDestinatario.controls['numeroDeRegistroFiscal'].errors?.['maxlength']">Por favor, no escribas más de 32 caracteres</span>
+                </div>
             </div>
+          </div>
           </div>
           <ng-template #defaultTemplate>
             <div class="col-md-4 form-group">

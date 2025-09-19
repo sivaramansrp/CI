@@ -1,14 +1,14 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import {
   AnimalesEventos,
-  AnimalesFormularioSolicitud,
-  DatosDeLaSolicitud,
   Sensible,
 } from '../../../../shared/models/datos-de-la-solicitue.model';
 import {
   Catalogo,
   CatalogoSelectComponent,
   CrosslistComponent,
+  NUMERICO_CON_PUNTO_REGEX,
+  REGEX_DESCRIPCION,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
@@ -29,6 +29,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import {
   CrossListEtiqueta,
+  DatosMercancia,
   FilaSolicitud,
   ListaDeDatosFinal,
 } from '../../models/220202/fitosanitario.model';
@@ -48,6 +49,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     TooltipModule
   ],
   templateUrl: './mercancia-form.component.html',
+  styleUrls: ['./mercancia-form.component.scss']
 })
 export class MercanciaFormComponent implements OnInit, OnDestroy {
 
@@ -80,57 +82,9 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Datos de la solicitud que se recibirán como entrada en el componente.
    * @type {DatosDeLaSolicitud}
    */
-  @Input() catalogosDatos: DatosDeLaSolicitud = {} as DatosDeLaSolicitud;
+  @Input() catalogosDatos: DatosMercancia = {} as DatosMercancia;
 
   @Output() cerrar = new EventEmitter<void>();
-
-  /**
-   * Lista de tipos de requisito disponibles para el selector correspondiente en el formulario.
-   * @type {Catalogo[]}
-   */
-  public tipoRequisitoList: Catalogo[] = [];
-
-  /**
-   * Lista de fracciones arancelarias disponibles para el selector correspondiente en el formulario.
-   * @type {Catalogo[]}
-   */
-  public fraccionArancelariaList: Catalogo[] = [];
-
-  /**
-   * Lista de NICO (Número de Identificación Comercial) disponibles para el selector correspondiente en el formulario.
-   * @type {Catalogo[]}
-   */
-  public nicoList: Catalogo[] = [];
-
-  /**
-   * Lista de Unidades de Medida de Tarifa (UMT) disponibles para el selector correspondiente en el formulario.
-   * @type {Catalogo[]}
-   */
-  public umtList: Catalogo[] = [];
-
-  /**
-   * Lista de Unidades de Medida Comercial (UMC) disponibles para el selector correspondiente en el formulario.
-   * @type {Catalogo[]}
-   */
-  public umcList: Catalogo[] = [];
-
-  /**
-   * Lista de usos disponibles para el selector correspondiente en el formulario.
-   * @type {Catalogo[]}
-   */
-  public usoList: Catalogo[] = [];
-
-  /**
-   * Lista de países de origen disponibles para el selector correspondiente en el formulario.
-   * @type {Catalogo[]}
-   */
-  public paisOrigenList: Catalogo[] = [];
-
-  /**
-   * Lista de países de procedencia disponibles para el selector correspondiente en el formulario.
-   * @type {Catalogo[]}
-   */
-  public paisDeProcedenciaList: Catalogo[] = [];
 
   /**
    * Lista de datos sensibles que se mostrarán en la tabla de detalles de animales vivos.
@@ -146,7 +100,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    *
    * @type {AnimalesFormularioSolicitud}
    */
-  @Input() formularioSolicitud!: AnimalesFormularioSolicitud;
+  @Input() formularioSolicitud!: FilaSolicitud;
 
   /**
    * Evento que se emite cuando se agregan datos al formulario de solicitud de animales vivos.
@@ -161,8 +115,8 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * @type {CrossListEtiqueta}
    */
   public usoNormaSeleccionadaLabel: CrossListEtiqueta = {
-    tituluDeLaIzquierda: 'Nombre científico',
-    derecha: 'Nombre científico seleccionado',
+    tituluDeLaIzquierda: 'Nombre científico:',
+    derecha: 'Nombre científico seleccionado:',
   };
 
   /**
@@ -201,6 +155,32 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
   public usoCrossListDatos: string[] = [];
 
   /**
+   * Indica si el formulario tiene errores de validación.
+   *
+   * Se utiliza para mostrar/ocultar el alert de errores en el modal.
+   */
+  esFormaValido: boolean = false;
+
+  /**
+   * Mensaje de error del formulario para mostrar en el alert.
+   *
+   * Contiene el HTML del mensaje de error a mostrar cuando hay validaciones fallidas.
+   */
+  formErrorAlert: string = '<strong>¡Error de registro! </strong> Faltan campos por capturar';
+
+  /**
+    * Marca para rastrear si se intentó enviar el formulario.
+    * Se utiliza para controlar cuándo mostrar errores de validación en campos deshabilitados.
+   */
+  formSubmissionAttempted: boolean = false;
+
+  /**
+    * Marcar para rastrear si se  selecciona "Inspección Ocular"
+    * Se utiliza para ocultar/mostrar el campo "Requisito"
+   */
+  isInspeccionOcularSelected: boolean = false;
+
+  /**
    * Constructor del componente.
    *
    * @param fb FormBuilder para crear formularios reactivos.
@@ -222,75 +202,56 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Aquí se crea el formulario reactivo y se configuran los campos necesarios.
    */
   ngOnInit(): void {
-    // Cargar todos los catálogos necesarios
-    this.cargarTodosLosCatalogos();
+    this.crearFormulario();
 
     this.fitosanitarioQuery
       .select((state: ListaDeDatosFinal) => state.usoCrossListDatos)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: string[]) => {
         this.usoCrossListDatos = datos;
-      });
+    });
+  }
+
+  crearFormulario(): void {
     this.mercanciaForm = this.fb.group({
+      id: [0],
       tipoRequisito: ['', Validators.required],
       requisito: ['', Validators.required],
-      numeroCertificadoInternacional: [
-        '',
-        [Validators.required, Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)],
-      ],
+      numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(REGEX_DESCRIPCION)]],
       fraccionArancelaria: ['', Validators.required],
-      descripcionFraccion: [{ value: '', disabled: true }],
+      descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
       nico: ['', Validators.required],
       descripcionNico: [{ value: '', disabled: true }],
       descripcion: [
         '',
-        [Validators.required, Validators.maxLength(1000), Validators.pattern(/^[a-zA-Z0-9]*$/)],
+        [Validators.required, Validators.maxLength(1000), Validators.pattern(REGEX_DESCRIPCION)],
       ],
-      cantidadUMT: ['', [Validators.required, MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
-      umt: [{ value: '', disabled: true }],
-      cantidadUMC: ['', [Validators.required, MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
+      cantidadUMT: ['', [Validators.required, Validators.pattern(NUMERICO_CON_PUNTO_REGEX), MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
+      umt: [{ value: '', disabled: true }, Validators.required],
+      cantidadUMC: ['', [Validators.required, Validators.pattern(NUMERICO_CON_PUNTO_REGEX), MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
       umc: ['', Validators.required],
       uso: ['', Validators.required],
-      tipoProducto: ['', Validators.required],
-      numeroDeLote: ['', [Validators.maxLength(16)]],
-      paisOrigen: ['', Validators.required],
+      paisDeOrigen: ['', Validators.required],
       paisDeProcedencia: ['', Validators.required],
+      tipoProducto: [''],
+      numeroDeLote: ['']
     });
 
     if (this.formularioSolicitud) {
       this.mercanciaForm.patchValue({
         ...this.formularioSolicitud
       });
-    }
-
-    const ID = this.route.snapshot.paramMap.get('id');
-    if (ID) {
-      this.fitosanitarioQuery.seleccionarDatosSeleccionados$
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((selectedData: FilaSolicitud[]) => {
-          const FOUND = selectedData[0]; // Tomar el primer elemento seleccionado
-          if (FOUND) {
-            this.mercanciaForm.patchValue({
-              tipoRequisito: FOUND.tipoRequisito || '1',
-              requisito: FOUND.requisito || '',
-              numeroCertificadoInternacional: FOUND.numeroCertificadoInternacional || '',
-              fraccionArancelaria: FOUND.fraccionArancelaria || '',
-              descripcionFraccion: FOUND.descripcionFraccion || '',
-              nico: FOUND.nico || '',
-              descripcionNico: FOUND.descripcionNico || '',
-              descripcion: FOUND.descripcion || '',
-              cantidadUMT: FOUND.cantidadUMT || '',
-              umt: FOUND.umt || '',
-              cantidadUMC: FOUND.cantidadUMC || '',
-              umc: FOUND.umc || '',
-              uso: FOUND.uso || '',
-              tipoProducto: FOUND.tipoDeProducto || '',
-              numeroDeLote: FOUND.numeroDeLote || '',
-              paisOrigen: FOUND.paisDeOrigen || '',
-              paisDeProcedencia: FOUND.paisDeProcedencia || '',
-            });
-          }
-        });
+      
+      const TIPO_REQUISITO_VALUE = this.formularioSolicitud.tipoRequisito;
+      if (TIPO_REQUISITO_VALUE) {
+        const SELECTED_TIPO = this.catalogosDatos.tipoRequisitoList?.find(tipo => tipo.id.toString() === TIPO_REQUISITO_VALUE.toString());
+        if (SELECTED_TIPO?.descripcion === 'Inspección Ocular') {
+          this.isInspeccionOcularSelected = true;
+          const REQUISITO_CONTROL = this.mercanciaForm.get('requisito');
+          REQUISITO_CONTROL?.clearValidators();
+          REQUISITO_CONTROL?.updateValueAndValidity();
+        }
+      }
     }
   }
 
@@ -299,85 +260,44 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Aquí se completa el sujeto de destrucción para evitar fugas de memoria.
    */
   tipoSelecionada(event: Catalogo): void {
-    const FRACCION_SELECCIONADA = this.fraccionArancelariaList.find((fraccion) => fraccion.id === event.id);
+    this.isInspeccionOcularSelected = event.descripcion === 'Inspección Ocular';
+    const REQUISITO_CONTROL = this.mercanciaForm.get('requisito');
+    if (this.isInspeccionOcularSelected) {
+      REQUISITO_CONTROL?.clearValidators();
+      REQUISITO_CONTROL?.setValue('');
+    } else {
+      REQUISITO_CONTROL?.setValidators([Validators.required]);
+    }
+    REQUISITO_CONTROL?.updateValueAndValidity();
+  }
+
+  /**
+   * Maneja la selección de fracción arancelaria.
+   * Actualiza automáticamente los campos relacionados cuando se selecciona una fracción arancelaria.
+   * @param event - El objeto de catálogo seleccionado que contiene la información de la fracción arancelaria
+   */
+  fraccionArancelariaSeleccionada(event: Catalogo): void {
+    const FRACCION_SELECCIONADA = this.catalogosDatos.fraccionArancelariaList.find((fraccion) => fraccion.id === event.id);
     if (FRACCION_SELECCIONADA) {
       this.mercanciaForm.patchValue({
         descripcionFraccion: FRACCION_SELECCIONADA.descripcion,
-        descripcionNico: FRACCION_SELECCIONADA.descripcion,
         umt: FRACCION_SELECCIONADA.descripcion
       });
     }
   }
 
   /**
-   * @description Carga todos los catálogos necesarios para los selectores del formulario.
-   * @method cargarTodosLosCatalogos
-   * @returns {void}
+   * Maneja la selección de un elemento del catálogo NICO.
+   * Busca el elemento NICO seleccionado en la lista de catálogos y actualiza
+   * @param event - El objeto de catálogo seleccionado que contiene la información del NICO
    */
-  cargarTodosLosCatalogos(): void {
-    // Cargar tipo de requisito
-    this.agriculturaApiService
-      .obtenerSelectorList('nombre.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((tipoList) => {
-        this.tipoRequisitoList = tipoList as Catalogo[];
+  nicoSeleccionado(event: Catalogo): void {
+    const NICO_SELECCIONADO = this.catalogosDatos.nicoList.find((nico) => nico.id === event.id);
+    if (NICO_SELECCIONADO) {
+      this.mercanciaForm.patchValue({
+        descripcionNico: NICO_SELECCIONADO.descripcion
       });
-
-    // Cargar fracción arancelaria
-    this.agriculturaApiService
-      .obtenerSelectorList('nombre.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.fraccionArancelariaList = data as Catalogo[];
-      });
-
-    // Cargar NICO
-    this.agriculturaApiService
-      .obtenerSelectorList('nombre.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.nicoList = data as Catalogo[];
-      });
-
-    // Cargar UMT
-    this.agriculturaApiService
-      .obtenerSelectorList('nombre.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.umtList = data as Catalogo[];
-      });
-
-    // Cargar UMC
-    this.agriculturaApiService
-      .obtenerSelectorList('nombre.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.umcList = data as Catalogo[];
-      });
-
-    // Cargar uso
-    this.agriculturaApiService
-      .obtenerSelectorList('nombre.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.usoList = data as Catalogo[];
-      });
-
-    // Cargar país de origen
-    this.agriculturaApiService
-      .obtenerSelectorList('nombre.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.paisOrigenList = data as Catalogo[];
-      });
-
-    // Cargar país de procedencia
-    this.agriculturaApiService
-      .obtenerSelectorList('nombre.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.paisDeProcedenciaList = data as Catalogo[];
-      });
+    }
   }
 
   /**
@@ -388,22 +308,22 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
   aduanasEntradaBotons = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
+      class: 'btn btn-default',
       funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
+      class: 'btn btn-primary',
       funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
+      class: 'btn btn-primary',
       funcion: (): void => this.crossList.toArray()[0].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
-      class: 'btn-default',
+      class: 'btn btn-default',
       funcion: (): void => this.crossList.toArray()[0].quitar('t'),
     },
   ];
@@ -423,6 +343,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Utiliza el servicio de ubicación para retroceder una página.
    */
   cancelar(): void {
+    this.formSubmissionAttempted = false;
     this.cerrar.emit();
   }
 
@@ -431,13 +352,22 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Actualmente no implementa ninguna funcionalidad, pero se puede extender en el futuro.
    */
   agregarAnimales(): void {
-    this.agregarDatosFormulario.emit(
-      {
-        formulario: this.mercanciaForm.getRawValue(),
-        tablaDatos: this.sensiblesTablaDatos
-      }
-    );
-    this.cerrar.emit();
+    this.formSubmissionAttempted = true;
+    
+    if (this.mercanciaForm.invalid) {
+      this.mercanciaForm.markAllAsTouched();
+      this.esFormaValido = true;
+    }
+    else {
+      this.agregarDatosFormulario.emit(
+        {
+          formulario: this.mercanciaForm.getRawValue(),
+          tablaDatos: this.sensiblesTablaDatos
+        }
+      );
+      this.cerrar.emit();
+      this.esFormaValido = false;
+    }
   }
 
   /**

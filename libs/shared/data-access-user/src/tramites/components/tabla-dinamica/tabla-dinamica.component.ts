@@ -95,6 +95,13 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
   @Input() tableId!: string;
 
   /**
+   * Indica si el estado actual es inválido.
+   * Cuando se establece en `true`, el componente reflejará un estado inválido.
+   * Este input puede utilizarse para activar estilos o mensajes de validación.
+   */
+  @Input() isInvalida: boolean = false;
+
+  /**
    * Propiedad privada que almacena un valor numérico relacionado con la selección de entrada.
    *
    * @private
@@ -549,6 +556,18 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
     const VALOR = (event.target as HTMLInputElement).value;
     this.searchSubject.next(VALOR);
   }
+
+  /** Deselect all selected rows and radio */
+public clearSelection(): void {
+  this.idFilaSeleccionada = null;
+  this._inputSelection = null!;
+  this.filasSeleccionadas = [];
+  this.listaDeFilaSeleccionada.emit([]);
+
+  if (this.tipoSeleccionTabla === TablaSeleccion.RADIO) {
+    this.filaSeleccionada.emit(null as any);  // Or create a separate deselect output if needed
+  }
+}
 
   /**
  * Método del ciclo de vida que se ejecuta al destruir el componente.

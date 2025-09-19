@@ -18,10 +18,12 @@
         <br />
   
         <div class="d-flex justify-content-end mt-3">
-          <div>
-            <button class="btn btn-danger mx-2" type="button"  (click)="eliminarSeleccionadosFabricante()" [disabled]="esFormularioSoloLectura" >Eliminar</button>
-            <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura"   (click)="onModificarFabricante()">Modificar</button>
-          </div>
+          @if(selectedFabricanteRows.length > 0) {
+            <div>
+              <button class="btn btn-danger mx-2" type="button"  (click)="eliminarSeleccionadosFabricante()" [disabled]="esFormularioSoloLectura" >Eliminar</button>
+              <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura"   (click)="onModificarFabricante()">Modificar</button>
+            </div>
+          }
           <button type="button" class="btn btn-primary mx-2" (click)="toggleDivFabricante()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
@@ -39,10 +41,12 @@
         <br />
   
         <div class="d-flex justify-content-end mt-3">
-          <div >
-            <button class="btn btn-danger mx-2" type="button" (click)="eliminarSeleccionadosDestinatario()" [disabled]="esFormularioSoloLectura">Eliminar</button>
-            <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura"  (click)="onModificarDestinatario()">Modificar</button>
-          </div>
+          @if(selectedDestinatarioRows.length > 0) {
+            <div>
+                <button class="btn btn-danger mx-2" type="button" (click)="eliminarSeleccionadosDestinatario()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura"  (click)="onModificarDestinatario()">Modificar</button>
+            </div>
+          }
           <button type="button" class="btn btn-primary mx-2" (click)="toggleDivDestinatario()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
@@ -60,10 +64,12 @@
         <br />
   
         <div class="d-flex justify-content-end mt-3">
-          <div >
-            <button class="btn btn-danger mx-2" type="button" (click)="eliminarSeleccionadosProveedor()" [disabled]="esFormularioSoloLectura">Eliminar</button>
-            <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura"  (click)="onModificarProveedor()">Modificar</button>
-          </div>
+          @if(selectedProveedorRows.length > 0) {
+            <div>
+              <button class="btn btn-danger mx-2" type="button" (click)="eliminarSeleccionadosProveedor()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+              <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura"  (click)="onModificarProveedor()">Modificar</button>
+            </div>
+          }
           <button type="button" class="btn btn-primary mx-2" (click)="toggleDivProveedor()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
@@ -81,10 +87,12 @@
         <br />
   
         <div class="d-flex justify-content-end mt-3">
-          <div >
-            <button class="btn btn-danger mx-2" type="button" (click)="eliminarSeleccionadosFacturador()" [disabled]="esFormularioSoloLectura">Eliminar</button>
-            <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura" (click)="onModificarFacturador()">Modificar</button>
-          </div>
+          @if(selectedFacturadorRows.length > 0) {
+            <div>
+              <button class="btn btn-danger mx-2" type="button" (click)="eliminarSeleccionadosFacturador()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+              <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura" (click)="onModificarFacturador()">Modificar</button>
+            </div>
+          }
           <button type="button" class="btn btn-primary mx-2" (click)="toggleDivFacturador()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
@@ -121,7 +129,7 @@
             <div>
               <h6>Tipo persona*:</h6>
               <div class="mt-2">
-                <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'"
+                <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'" [showTooltip]="true"
                   formControlName="tipoPersona" (valueChange)="tipoPersonaChecked($event, 'Fabricante')"></app-input-radio>
               </div>
               <ng-container *ngIf="agregarFabricanteFormGroup.get('tipoPersona')?.invalid && (agregarFabricanteFormGroup.get('tipoPersona')?.touched || agregarFabricanteFormGroup.get('tipoPersona')?.dirty)">
@@ -140,10 +148,10 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
-                    ata-bs-toggle="tooltip"></span>
+                <label for="rfc" class="form-label">R.F.C*:
+                    <span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyentes" placement="top"></span>
                 </label>
-                <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+                <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" maxlength="15" />
                 <ng-container *ngIf="agregarFabricanteFormGroup.get('rfc')?.invalid && (agregarFabricanteFormGroup.get('rfc')?.touched || agregarFabricanteFormGroup.get('rfc')?.dirty)">
                   <div class="text-danger small">
                     <div *ngIf="agregarFabricanteFormGroup.get('rfc')?.errors?.['required']">El RFC es obligatorio.</div>
@@ -160,7 +168,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label for="nombre" class="form-label">Nombre(s)*: </label>
-                <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+                <input type="text" id="nombre" formControlName="nombre" name="nombre" maxlength="200" class="form-control" />
                 <ng-container *ngIf="agregarFabricanteFormGroup.get('nombre')?.invalid && (agregarFabricanteFormGroup.get('nombre')?.touched || agregarFabricanteFormGroup.get('nombre')?.dirty)">
                   <div class="text-danger small">El nombre es obligatorio.</div>
                 </ng-container>
@@ -171,7 +179,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="primerApellido">Primer apellido*:</label>
-                <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
+                <input type="text" id="primerApellido" formControlName="primerApellido" maxlength="200" name="primerApellido"
                   class="form-control" />
                   <ng-container *ngIf="agregarFabricanteFormGroup.get('primerApellido')?.invalid && (agregarFabricanteFormGroup.get('primerApellido')?.touched || agregarFabricanteFormGroup.get('primerApellido')?.dirty)">
                     <div class="text-danger small">El primer apellido es obligatorio.</div>
@@ -182,11 +190,8 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
-                <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
+                <input type="text" id="segundoApellido" formControlName="segundoApellido" maxlength="200" name="segundoApellido"
                   class="form-control" />
-                  <ng-container *ngIf="agregarFabricanteFormGroup.get('segundoApellido')?.invalid && (agregarFabricanteFormGroup.get('segundoApellido')?.touched || agregarFabricanteFormGroup.get('segundoApellido')?.dirty)">
-                    <div class="text-danger small">El segundo apellido es obligatorio.</div>
-                  </ng-container>
               </div>
             </div>
           </div>
@@ -196,8 +201,8 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Title" ata-bs-toggle="tooltip"></span>
+                <label for="curp" class="form-label">R.F.C*:
+                    <span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyentes" placement="top"></span>
                 </label>
                 <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
                 <ng-container *ngIf="agregarFabricanteFormGroup.get('curp')?.invalid && (agregarFabricanteFormGroup.get('curp')?.touched || agregarFabricanteFormGroup.get('curp')?.dirty)">
@@ -248,7 +253,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label for="nombre" class="form-label">Nombre(s)*: </label>
-                <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+                <input type="text" id="nombre" formControlName="nombre" maxlength="200" name="nombre" class="form-control" />
               </div>
               <ng-container *ngIf="agregarFabricanteFormGroup.get('nombre')?.invalid && (agregarFabricanteFormGroup.get('nombre')?.touched || agregarFabricanteFormGroup.get('nombre')?.dirty)">
                 <div class="text-danger small">El nombre es obligatorio.</div>
@@ -258,7 +263,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="primerApellido">Primer apellido*:</label>
-                <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
+                <input type="text" id="primerApellido" formControlName="primerApellido" maxlength="200" name="primerApellido"
                   class="form-control" />
                   <ng-container *ngIf="agregarFabricanteFormGroup.get('primerApellido')?.invalid && (agregarFabricanteFormGroup.get('primerApellido')?.touched || agregarFabricanteFormGroup.get('primerApellido')?.dirty)">
                     <div class="text-danger small">El primer apellido es obligatorio.</div>
@@ -269,11 +274,8 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
-                <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
+                <input type="text" id="segundoApellido" formControlName="segundoApellido" maxlength="200" name="segundoApellido"
                   class="form-control" />
-                  <ng-container *ngIf="agregarFabricanteFormGroup.get('segundoApellido')?.invalid && (agregarFabricanteFormGroup.get('segundoApellido')?.touched || agregarFabricanteFormGroup.get('segundoApellido')?.dirty)">
-                    <div class="text-danger small">El segundo apellido es obligatorio.</div>
-                  </ng-container>
               </div>
             </div>
           </div>
@@ -366,7 +368,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="extranjeroEstado" class="form-label">Estado*: </label>
-                  <input type="text" id="extranjeroEstado" formControlName="extranjeroEstado" name="extranjeroEstado"
+                  <input type="text" id="extranjeroEstado" formControlName="extranjeroEstado" maxlength="255" name="extranjeroEstado"
                     class="form-control" />
                     <div
                     class="text-danger"
@@ -380,7 +382,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="extranjeroCodigo">Código postal o equivalente:</label>
-                  <input type="text" id="extranjeroCodigo" name="extranjeroCodigo" class="form-control" />
+                  <input type="text" id="extranjeroCodigo" maxlength="12" name="extranjeroCodigo" class="form-control" />
                 </div>
               </div>
   
@@ -389,7 +391,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="extranjeroColonia">Colonia o equivalente:</label>
-                  <input class="form-control" type="text" id="extranjeroColonia" name="extranjeroColonia" />
+                  <input class="form-control" type="text" maxlength="100" id="extranjeroColonia" name="extranjeroColonia" />
                 </div>
               </div>
             </div>
@@ -398,9 +400,10 @@
             <div class="mt-5 p-0">
               <div class="col-md-8">
                 <div class="form-group">
-                  <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                      title="Title" ata-bs-toggle="tooltip"></span></label>
-                  <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+                  <label class="form-label" for="calle">Calle*:
+                    <span class="bi bi-question-circle-fill" tooltip="Domicilio, calle, número interior, número exterior, lote" placement="top"></span>
+                  </label>
+                  <input type="text" class="form-control" id="calle" maxlength="100" formControlName="calle" name="calle" />
                   <ng-container *ngIf="agregarFabricanteFormGroup.get('calle')?.invalid && (agregarFabricanteFormGroup.get('calle')?.touched || agregarFabricanteFormGroup.get('calle')?.dirty)">
                     <div class="text-danger small">La calle es obligatoria.</div>
                   </ng-container>
@@ -411,7 +414,7 @@
                 <div class="form-group">
                   <label for="numeroExterior" class="form-label">Número exterior*:
                   </label>
-                  <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control"
+                  <input type="text" id="numeroExterior" formControlName="numeroExterior" maxlength="55" class="form-control"
                     name="numeroExterior" />
                     <ng-container *ngIf="agregarFabricanteFormGroup.get('numeroExterior')?.invalid && (agregarFabricanteFormGroup.get('numeroExterior')?.touched || agregarFabricanteFormGroup.get('numeroExterior')?.dirty)">
                       <div class="text-danger small">El número exterior es obligatorio.</div>
@@ -424,7 +427,7 @@
             <div class="col-md-4 mt-5">
               <div class="form-group">
                 <label class="form-label" for="numeroInterior">Número interior:</label>
-                <input class="form-control" type="text" id="numeroInterior" formControlName="numeroInterior"
+                <input class="form-control" type="text" id="numeroInterior" formControlName="numeroInterior" maxlength="55"
                   name="numeroInterior" />
               </div>
             </div>
@@ -432,22 +435,23 @@
             <div class="col-md-1 mt-5">
               <div class="form-group">
                 <label class="form-label" for="lada">Lada:</label>
-                <input class="form-control" type="text" id="lada" formControlName="lada" name="lada" />
+                <input class="form-control" type="text" id="lada" formControlName="lada" name="lada" maxlength="5" />
               </div>
             </div>
   
             <div class="col-md-3 mt-5">
               <div class="form-group">
                 <label class="form-label" for="telefono">Teléfono:</label>
-                <input class="form-control" type="text" id="telefono" formControlName="telefono" name="telefono" />
+                <input class="form-control" type="text" id="telefono" formControlName="telefono" maxlength="24" name="telefono" />
               </div>
             </div>
   
             <div class="col-md-4 mt-5">
               <div class="form-group">
-                <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                    class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
-                <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico"
+                <label class="form-label" for="correoElectronico">Correo electrónico:
+                  <span class="bi bi-question-circle-fill" tooltip="ejemplo@dominio.com" placement="top"></span>
+                </label>
+                <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico" maxlength="320"
                   name="correoElectronico" />
               </div>
             </div>
@@ -494,7 +498,7 @@
             <div>
               <h6>Tipo persona*:</h6>
               <div class="mt-2">
-                <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'"
+                <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'" [showTooltip]="true"
                   formControlName="tipoPersona" (valueChange)="tipoPersonaChecked($event, 'Destinatario')"></app-input-radio>
                   <ng-container *ngIf="agregarDestinatarioFormGroup.get('tipoPersona')?.invalid && (agregarDestinatarioFormGroup.get('tipoPersona')?.touched || agregarDestinatarioFormGroup.get('tipoPersona')?.dirty)">
                     <div class="text-danger small">El tipo de persona es obligatorio.</div>
@@ -509,10 +513,10 @@
         <div class="row">
           <div class="col-md-4 p-2">
             <div class="form-group">
-              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
-                  ata-bs-toggle="tooltip"></span>
+              <label for="rfc" class="form-label">R.F.C*:
+                  <span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyentes" placement="top"></span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" maxlength="15" name="rfc" />
               <ng-container *ngIf="agregarDestinatarioFormGroup.get('rfc')?.invalid && (agregarDestinatarioFormGroup.get('rfc')?.touched || agregarDestinatarioFormGroup.get('rfc')?.dirty)">
                 <div class="text-danger small">
                   <div *ngIf="agregarDestinatarioFormGroup.get('rfc')?.errors?.['required']">El RFC es obligatorio.</div>
@@ -543,7 +547,7 @@
             <div class="col-md-8">
               <div class="form-group">
                 <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
-                <input type="text" class="form-control" id="denominacionRazonSocial"
+                <input type="text" class="form-control" id="denominacionRazonSocial" maxlength="254"
                   formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
                   <div class="text-danger" *ngIf="agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.touched && agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.invalid">
                     La denominación o razón social es obligatoria.
@@ -620,9 +624,10 @@
   
             <div class="col-md-8">
               <div class="form-group">
-                <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Title" ata-bs-toggle="tooltip"></span></label>
-                <input type="text" id="calle" formControlName="calle" class="form-control" name="calle" />
+                <label class="form-label" for="calle">Calle*:            
+                  <span class="bi bi-question-circle-fill" tooltip="Domicilio, calle, número interior, número exterior, lote" placement="top"></span>
+                </label>
+                <input type="text" id="calle" formControlName="calle" maxlength="100" class="form-control" name="calle" />
                 <div class="text-danger" *ngIf="agregarDestinatarioFormGroup.get('calle')?.touched && agregarDestinatarioFormGroup.get('calle')?.invalid">
                   La calle es obligatoria.
                 </div>
@@ -633,7 +638,7 @@
               <div class="form-group">
                 <label for="numeroExterior" class="form-label">Número exterior*:
                 </label>
-                <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control"
+                <input type="text" id="numeroExterior" formControlName="numeroExterior" maxlength="55" class="form-control"
                   name="numeroExterior" />
                   <div
                   class="text-danger mt-1"
@@ -647,7 +652,7 @@
             <div class="col-md-4 mt-5">
               <div class="form-group">
                 <label class="form-label" for="numeroInterior">Número interior:</label>
-                <input type="text" id="numeroInterior" formControlName="numeroInterior" class="form-control"
+                <input type="text" id="numeroInterior" formControlName="numeroInterior" maxlength="55" class="form-control"
                   name="numeroInterior" />
               </div>
             </div>
@@ -655,22 +660,23 @@
             <div class="col-md-1 mt-5">
               <div class="form-group">
                 <label class="form-label" for="lada">Lada:</label>
-                <input type="text" id="lada" formControlName="lada" class="form-control" name="lada" />
+                <input type="text" id="lada" formControlName="lada" maxlength="5" class="form-control" name="lada" />
               </div>
             </div>
   
             <div class="col-md-3 mt-5">
               <div class="form-group">
                 <label class="form-label" for="telefono">Teléfono:</label>
-                <input type="text" id="telefono" formControlName="telefono" class="form-control" name="telefono" />
+                <input type="text" id="telefono" formControlName="telefono" maxlength="24" class="form-control" name="telefono" />
               </div>
             </div>
   
             <div class="col-md-4 mt-5">
               <div class="form-group">
-                <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                    class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
-                <input type="text" id="correoElectronico" formControlName="correoElectronico" class="form-control"
+                <label class="form-label" for="correoElectronico">Correo electrónico:
+                  <span class="bi bi-question-circle-fill" tooltip="ejemplo@dominio.com" placement="top"></span>
+                </label>
+                <input type="text" id="correoElectronico" formControlName="correoElectronico" maxlength="320" class="form-control"
                   name="correoElectronico" />
               </div>
             </div>
@@ -716,7 +722,7 @@
             <div>
               <h6>Tipo persona*:</h6>
               <div class="mt-2">
-                <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'"
+                <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'" [showTooltip]="true"
                   formControlName="tipoPersona" (valueChange)="tipoPersonaChecked($event, 'Proveedor')"></app-input-radio>
               </div>
             </div>
@@ -730,7 +736,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="nombre" class="form-label">Nombre(s)*: </label>
-              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+              <input type="text" id="nombre" formControlName="nombre" maxlength="200" name="nombre" class="form-control" />
               <ng-container *ngIf="agregarProveedorFormGroup.get('nombre')?.invalid && (agregarProveedorFormGroup.get('nombre')?.touched || agregarProveedorFormGroup.get('nombre')?.dirty)">
                 <div class="text-danger small">El nombre es obligatorio.</div>
               </ng-container>
@@ -740,7 +746,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="primerApellido">Primer apellido*:</label>
-              <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
+              <input type="text" id="primerApellido" maxlength="200" formControlName="primerApellido" name="primerApellido"
                 class="form-control" />
                 <ng-container *ngIf="agregarProveedorFormGroup.get('primerApellido')?.invalid && (agregarProveedorFormGroup.get('primerApellido')?.touched || agregarProveedorFormGroup.get('primerApellido')?.dirty)">
                   <div class="text-danger small">El primer apellido es obligatorio.</div>
@@ -751,11 +757,8 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
-              <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
+              <input type="text" id="segundoApellido" maxlength="200" formControlName="segundoApellido" name="segundoApellido"
                 class="form-control" />
-                <ng-container *ngIf="agregarProveedorFormGroup.get('segundoApellido')?.invalid && (agregarProveedorFormGroup.get('segundoApellido')?.touched || agregarProveedorFormGroup.get('segundoApellido')?.dirty)">
-                  <div class="text-danger small">El segundo apellido es obligatorio.</div>
-                </ng-container>
             </div>
           </div>
         </div>
@@ -767,7 +770,7 @@
             <div class="form-group">
               <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
               <input type="text" class="form-control" id="denominacionRazonSocial"
-                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" maxlength="254" />
                 <ng-container *ngIf="agregarProveedorFormGroup.get('denominacionRazonSocial')?.invalid && (agregarProveedorFormGroup.get('denominacionRazonSocial')?.touched || agregarProveedorFormGroup.get('denominacionRazonSocial')?.dirty)">
                   <div class="text-danger small">La denominación o razón social es obligatoria.</div>
                 </ng-container>
@@ -791,7 +794,7 @@
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <label class="form-label" for="estado">Estado*:</label>
-              <input class="form-control" type="text" id="estado" formControlName="estado" name="estado" />
+              <input class="form-control" type="text" id="estado" maxlength="255" formControlName="estado" name="estado" />
               <div
               class="text-danger"
               *ngIf="agregarProveedorFormGroup.get('estado')?.touched && agregarProveedorFormGroup.get('estado')?.invalid"
@@ -804,21 +807,15 @@
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <label class="form-label" for="codigoPostaloEquivalente">Código postal o equivalente*:</label>
-              <input class="form-control" type="text" id="codigoPostaloEquivalente"
+              <input class="form-control" type="text" id="codigoPostaloEquivalente" maxlength="12"
                 formControlName="codigoPostaloEquivalente" name="codigoPostaloEquivalente" />
-                <div
-                class="text-danger mt-1"
-                *ngIf="agregarProveedorFormGroup.get('codigoPostaloEquivalente')?.touched &&
-                       agregarProveedorFormGroup.get('codigoPostaloEquivalente')?.invalid">
-                El código postal es obligatorio.
-              </div>
             </div>
           </div>
   
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <label class="form-label" for="coloniaoEquivalente">Colonia o equivalente:</label>
-              <input class="form-control" type="text" id="coloniaoEquivalente" formControlName="coloniaoEquivalente"
+              <input class="form-control" type="text" id="coloniaoEquivalente" maxlength="100" formControlName="coloniaoEquivalente"
                 name="coloniaoEquivalente" />
             </div>
           </div>
@@ -826,9 +823,10 @@
           <div class="clearfix"></div>
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
-                  ata-bs-toggle="tooltip"></span></label>
-              <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+              <label class="form-label" for="calle">Calle*:
+                  <span class="bi bi-question-circle-fill" tooltip="Domicilio, calle, número interior, número exterior, lote" placement="top"></span>
+              </label>
+              <input type="text" class="form-control" id="calle" maxlength="100" formControlName="calle" name="calle" />
               <ng-container *ngIf="agregarProveedorFormGroup.get('calle')?.invalid && (agregarProveedorFormGroup.get('calle')?.touched || agregarProveedorFormGroup.get('calle')?.dirty)">
                 <div class="text-danger small">La calle es obligatoria.</div>
               </ng-container>
@@ -839,7 +837,7 @@
             <div class="form-group">
               <label for="numeroExterior" class="form-label">Número exterior*:
               </label>
-              <input type="text" class="form-control" id="numeroExterior" formControlName="numeroExterior"
+              <input type="text" class="form-control" id="numeroExterior" maxlength="55" formControlName="numeroExterior"
                 name="numeroExterior" />
                 <ng-container *ngIf="agregarProveedorFormGroup.get('numeroExterior')?.invalid && (agregarProveedorFormGroup.get('numeroExterior')?.touched || agregarProveedorFormGroup.get('numeroExterior')?.dirty)">
                   <div class="text-danger small">El número exterior es obligatorio.</div>
@@ -850,7 +848,7 @@
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <label class="form-label" for="numeroInterior">Número interior:</label>
-              <input type="text" class="form-control" id="numeroInterior" formControlName="numeroInterior"
+              <input type="text" class="form-control" id="numeroInterior" maxlength="55" formControlName="numeroInterior"
                 name="numeroInterior" />
             </div>
           </div>
@@ -858,22 +856,23 @@
           <div class="col-md-1 mt-5">
             <div class="form-group">
               <label class="form-label" for="lada">Lada:</label>
-              <input type="text" class="form-control" id="lada" formControlName="lada" name="lada" />
+              <input type="text" class="form-control" id="lada" maxlength="5" formControlName="lada" name="lada" />
             </div>
           </div>
   
           <div class="col-md-3 mt-5">
             <div class="form-group">
               <label class="form-label" for="telefono">Teléfono:</label>
-              <input type="text" class="form-control" id="telefono" formControlName="telefono" name="telefono" />
+              <input type="text" class="form-control" id="telefono" maxlength="24" formControlName="telefono" name="telefono" />
             </div>
           </div>
   
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                  class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
-              <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico"
+              <label class="form-label" for="correoElectronico">Correo electrónico:
+                <span class="bi bi-question-circle-fill" tooltip="ejemplo@dominio.com" placement="top"></span>
+              </label>
+              <input type="text" class="form-control" maxlength="320" id="correoElectronico" formControlName="correoElectronico"
                 name="correoElectronico" />
             </div>
           </div>
@@ -918,7 +917,7 @@
             <div>
               <h6>Tipo persona*:</h6>
               <div class="mt-2">
-                <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'"
+                <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'" [showTooltip]="true"
                   formControlName="tipoPersona" (valueChange)="tipoPersonaChecked($event, 'Facturador' )"></app-input-radio>
                   <ng-container *ngIf="agregarFacturadorFormGroup.get('tipoPersona')?.invalid && (agregarFacturadorFormGroup.get('tipoPersona')?.touched || agregarFacturadorFormGroup.get('tipoPersona')?.dirty)">
                     <div class="text-danger small">El tipo de persona es obligatorio.</div>
@@ -936,7 +935,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label for="nombre" class="form-label">Nombre(s)*: </label>
-                <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+                <input type="text" id="nombre" formControlName="nombre" maxlength="200" name="nombre" class="form-control" />
               </div>
               <ng-container *ngIf="agregarFacturadorFormGroup.get('nombre')?.invalid && (agregarFacturadorFormGroup.get('nombre')?.touched || agregarFacturadorFormGroup.get('nombre')?.dirty)">
                 <div class="text-danger small">El nombre es obligatorio.</div>
@@ -946,7 +945,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="primerApellido">Primer apellido*:</label>
-                <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
+                <input type="text" id="primerApellido" formControlName="primerApellido" maxlength="200" name="primerApellido"
                   class="form-control" />
               </div>
             </div>
@@ -954,7 +953,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
-                <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
+                <input type="text" id="segundoApellido" formControlName="segundoApellido" maxlength="200" name="segundoApellido"
                   class="form-control" />
               </div>
             </div>
@@ -966,7 +965,7 @@
             <div class="col-md-8">
               <div class="form-group">
                 <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
-                <input type="text" class="form-control" id="denominacionRazonSocial"
+                <input type="text" class="form-control" id="denominacionRazonSocial" maxlength="254"
                   formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
               </div>
             </div>
@@ -985,7 +984,7 @@
             <div class="col-md-4 mt-5">
               <div class="form-group">
                 <label class="form-label" for="estado">Estado*:</label>
-                <input class="form-control" type="text" id="estado" formControlName="estado" name="estado" />
+                <input class="form-control" type="text" id="estado" maxlength="255" formControlName="estado" name="estado" />
                 <div
                 class="text-danger"
                 *ngIf="agregarFacturadorFormGroup.get('estado')?.touched && agregarFacturadorFormGroup.get('estado')?.invalid"
@@ -998,7 +997,7 @@
             <div class="col-md-4 mt-5">
               <div class="form-group">
                 <label class="form-label" for="codigoPostaloEquivalente">Código postal o equivalente*:</label>
-                <input class="form-control" type="text" id="codigoPostaloEquivalente"
+                <input class="form-control" type="text" id="codigoPostaloEquivalente" maxlength="12"
                   formControlName="codigoPostaloEquivalente" name="codigoPostaloEquivalente" />
               </div>
             </div>
@@ -1006,7 +1005,7 @@
             <div class="col-md-4 mt-5">
               <div class="form-group">
                 <label class="form-label" for="coloniaoEquivalente">Colonia o equivalente:</label>
-                <input class="form-control" type="text" id="coloniaoEquivalente" formControlName="coloniaoEquivalente"
+                <input class="form-control" type="text" id="coloniaoEquivalente" maxlength="100" formControlName="coloniaoEquivalente"
                   name="coloniaoEquivalente" />
               </div>
             </div>
@@ -1014,9 +1013,10 @@
             <div class="clearfix"></div>
             <div class="col-md-8">
               <div class="form-group">
-                <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Title" ata-bs-toggle="tooltip"></span></label>
-                <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+                <label class="form-label" for="calle">Calle*:
+                    <span class="bi bi-question-circle-fill" tooltip="Domicilio, calle, número interior, número exterior, lote" placement="top"></span>
+                </label>
+                <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" maxlength="100" />
                 <div class="text-danger" *ngIf="agregarFacturadorFormGroup.get('calle')?.touched && agregarFacturadorFormGroup.get('calle')?.invalid">
                   La calle es obligatoria.
                 </div>
@@ -1028,7 +1028,7 @@
               <div class="form-group">
                 <label for="numeroExterior" class="form-label">Número exterior*:
                 </label>
-                <input type="text" id="numeroExterior" formControlName="numeroExterior" name="numeroExterior"
+                <input type="text" id="numeroExterior" formControlName="numeroExterior" maxlength="55" name="numeroExterior"
                   class="form-control" />
                   <ng-container *ngIf="agregarFacturadorFormGroup.get('numeroExterior')?.invalid && (agregarFacturadorFormGroup.get('numeroExterior')?.touched || agregarFacturadorFormGroup.get('numeroExterior')?.dirty)">
                     <div class="text-danger small">El número exterior es obligatorio.</div>
@@ -1039,7 +1039,7 @@
             <div class="col-md-4 mt-5">
               <div class="form-group">
                 <label class="form-label" for="numeroInterior">Número interior:</label>
-                <input type="text" id="numeroInterior" formControlName="numeroInterior" name="numeroInterior"
+                <input type="text" id="numeroInterior" formControlName="numeroInterior" maxlength="55" name="numeroInterior"
                   class="form-control" />
               </div>
             </div>
@@ -1047,22 +1047,23 @@
             <div class="col-md-1 mt-5">
               <div class="form-group">
                 <label class="form-label" for="lada">Lada:</label>
-                <input class="form-control" type="text" id="lada" formControlName="lada" name="lada" />
+                <input class="form-control" type="text" id="lada" formControlName="lada" maxlength="5" name="lada" />
               </div>
             </div>
   
             <div class="col-md-3 mt-5">
               <div class="form-group">
                 <label class="form-label" for="telefono">Teléfono:</label>
-                <input class="form-control" type="text" id="telefono" formControlName="telefono" name="telefono" />
+                <input class="form-control" type="text" id="telefono" formControlName="telefono" maxlength="24" name="telefono" />
               </div>
             </div>
   
             <div class="col-md-4 mt-5">
               <div class="form-group">
-                <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                    class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
-                <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico"
+                <label class="form-label" for="correoElectronico">Correo electrónico:
+                      <span class="bi bi-question-circle-fill" tooltip="ejemplo@dominio.com" placement="top"></span>
+                </label>
+                <input class="form-control" type="text" id="correoElectronico" maxlength="320" formControlName="correoElectronico"
                   name="correoElectronico" />
               </div>
             </div>

@@ -1,9 +1,10 @@
-import { Catalogo, ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CertificadoDisponibles, ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { BuscarCertificadoDeOrigenService } from '../../services/buscar-certificado-de-origen/buscarCertificadoDeOrigen.service';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CertificadoDisponiblesService } from '../../services/certificado-disponibles/certificadoDisponibles.service';
 import { CommonModule } from '@angular/common';
 
 import { Tramite110210State, Tramite110210Store } from '../../estados/store/tramite110210.store';
@@ -76,7 +77,8 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
     private service: BuscarCertificadoDeOrigenService, 
     private tramite110210Store: Tramite110210Store, 
     private tramite110210Query: Tramite110210Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private certificadoService: CertificadoDisponiblesService
   ) {
     
      this.consultaioQuery.selectConsultaioState$
@@ -243,10 +245,38 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
   actualizaGridComercializadoresProductos(): void {
     const IDSOLICITUD = this.buscarCertificadoDeOrigenFrom.get('solicitud.idSolicitud')?.value;
     if (IDSOLICITUD === null) {
-      this.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.enable();
+      this.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.enable(); 
     } else {
       this.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.disable();
     }
+     this.certificadoService.getData().pipe(
+        takeUntil(this.destroyed$)
+      ).subscribe(
+        (data: CertificadoDisponibles[]) => {
+            const CVEREGISTROPRODUCTOR = this.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.value;
+            const CERTIFICADOS = data.filter(cert => cert.numeroDeCertificado === CVEREGISTROPRODUCTOR);
+            if (CERTIFICADOS.length > 0) {
+            this.tramite110210Store.setCertificadosDisponibles(CERTIFICADOS);
+            }
+        }
+      );
+  }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de búsqueda de certificado de origen.
+   * Comprueba si el formulario es válido según las reglas de validación configuradas.
+   * Si el formulario es válido, retorna `true`.
+   * Si el formulario es inválido, marca todos los controles como "tocados" para mostrar los errores de validación y retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (this.buscarCertificadoDeOrigenFrom.valid) {
+      return true;
+    }
+    this.buscarCertificadoDeOrigenFrom.markAllAsTouched();
+    return false
   }
 
   /**

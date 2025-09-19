@@ -4,6 +4,7 @@ import {
   BtnContinuarComponent,
   CatalogoSelectComponent,
   FirmaElectronicaComponent,
+  PasoFirmaComponent,
   SharedModule,
   SolicitanteComponent,
   TituloComponent,
@@ -73,7 +74,8 @@ import { ModalidadControlodoraRoutingModule } from './modalidad-controlodora-rou
     ComplementosSeccionComponent,
     AnexoUnoSeccionComponent,
     AnexoTresComponent,
-    EmpresasControladasComponent
+    EmpresasControladasComponent,
+    PasoFirmaComponent
   ],
 })
 export class ModalidadControlodoraModule {}

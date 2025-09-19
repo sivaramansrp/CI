@@ -1,7 +1,8 @@
 {
   "tipoRequisitoList": [
-    { "id": 1, "descripcion": "Sanitario" },
-    { "id": 2, "descripcion": "Ambiental" }
+    { "id": 1, "descripcion": "Inspección Ocular" },
+    { "id": 2, "descripcion": "Número de Oficio de Regulación Fitosanitaria" },
+    { "id": 3, "descripcion": "Número de combinación" }
   ],
   "requisitoList": [
     { "id": 1, "descripcion": "Certificado de calidad" },
@@ -38,5 +39,9 @@
   "paisDeProcedenciaList": [
     { "id": 1, "descripcion": "Brasil", "clave": "BR" },
     { "id": 2, "descripcion": "Canadá", "clave": "CA" }
+  ],
+  "tipoDeProductoList": [
+    { "id": 1, "descripcion": "Producto 1" },
+    { "id": 2, "descripcion": "Producto 2" }
   ]
 }

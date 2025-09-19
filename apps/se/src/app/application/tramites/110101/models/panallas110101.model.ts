@@ -7,9 +7,9 @@
  * @property origen - El origen de la solicitud.
  */
 export interface RegistroDeSolicitudesTabla {
-    pais: string;
-    tratado: string;
-    origen: string;
+    pais?: string;
+    tratado?: string;
+    origen?: string;
 }
 
 /**

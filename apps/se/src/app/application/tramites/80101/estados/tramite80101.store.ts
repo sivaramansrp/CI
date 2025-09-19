@@ -3,11 +3,13 @@ import {
   AnexoUnoEncabezado,
   DatosAnexotressUno,
   DatosComplimento,
+  ProveedorClienteTabla,
 } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
   AnnexoDosTres,
   AnnexoUno,
 } from '../models/nuevo-programa-industrial.model';
+import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoPaises } from '@ng-mf/data-access-user';
@@ -15,7 +17,6 @@ import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { DatosEmpresaExtranjera } from '../models/nuevo-programa-industrial.model';
 import { DatosSubcontratista } from '../../../shared/models/empresas-subfabricanta.model';
 import { EmpressaSubFabricantePlantas } from '../../../shared/models/empresas-subfabricanta.model';
-import { FederatariosEncabezado } from '../../../shared/models/federatarios-y-plantas.model';
 import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Servicio } from '../models/nuevo-programa-industrial.model';
@@ -30,6 +31,8 @@ import { StoreConfig } from '@datorama/akita';
  * Representa el estado de Tramite80101.
  */
 export interface Tramite80101State {
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
   /**
    * Información del registro de servicios.
    */
@@ -166,6 +169,16 @@ export interface Tramite80101State {
    * Información detallada de federatarios.
    */
   datosFederatarios: FederatariosEncabezado;
+
+  /**
+   * Información detallada de plantas immex.
+   */
+  plantasImmexTablaLista: PlantasImmex[];
+
+  /**
+   * Información detallada de plantas disponibles.
+   */
+  plantasDisponiblesTablaLista: PlantasDisponibles[];
 }
 
 /**
@@ -200,6 +213,7 @@ export interface Tramite80101State {
  * - `tablaDatosFederatarios`: Tabla de datos de fedatarios públicos.
  */
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
+  idSolicitud: 0,
   infoRegistro: {
     seleccionaLaModalidad: '',
     folio: '',
@@ -255,7 +269,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     },
     obligacionesFiscales: {
       opinionPositiva: 'Si',
-      fechaExpedicion: '',
+      fechaExpedicion: '15/02/2024',
       aceptarObligacionFiscal: '',
     },
     formaModificaciones: {
@@ -326,6 +340,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
       encabezadoVolumenAnual: 0,
       encabezadoValorEnMercado: '',
     },
+    proveedorClienteDatosTabla:[],
     seccionActiva: '',
   },
 
@@ -340,7 +355,14 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     numeroDeNotaria: '',
     entidadFederativa: '',
     municipioODelegacion: '',
+    estado: '',
+    estadoOptions: '',
+    estadoUno: '',
+    estadoDos: '',
+    estadoTres: ''
   },
+  plantasImmexTablaLista: [],
+  plantasDisponiblesTablaLista: []
 };
 
 /**
@@ -357,7 +379,17 @@ export class Tramite80101Store extends Store<Tramite80101State> {
   constructor() {
     super(INITIAL_AMPLIACION_SERVICIOS_STATE);
   }
-
+  /**
+    * Guarda el ID de la solicitud en el estado.
+    *
+    * @param idSolicitud - El ID de la solicitud que se va a guardar.
+    */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
   /**
    * Establece la información de registro en el estado de la tienda.
    *
@@ -893,6 +925,21 @@ export class Tramite80101Store extends Store<Tramite80101State> {
   }
 
   /**
+   * Actualiza la propiedad `proveedorClienteDatosTabla` dentro de `annexoUno` en el estado de la tienda.
+   *
+   * @param proveedorClienteDatosTabla - Arreglo de objetos de tipo `ProveedorClienteTabla` que representa los datos de proveedores y clientes para la tabla.
+   */
+  setProveedorClienteDatosTabla(proveedorClienteDatosTabla: ProveedorClienteTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        proveedorClienteDatosTabla: proveedorClienteDatosTabla,
+      },
+    }));
+  }
+
+  /**
    * Establece los datos necesarios para la navegación en el estado de la aplicación.
    *
    * @param datosParaNavegar - Objeto que contiene los datos para navegar,
@@ -965,6 +1012,40 @@ export class Tramite80101Store extends Store<Tramite80101State> {
   }
 
   /**
+   * Agrega un nuevo elemento de tipo `PlantasImmex` a la lista `plantasImmexTablaLista`
+   * en el estado actual de la tienda.
+   *
+   * @param formaFederatarios - El objeto de tipo `PlantasImmex` que se añadirá
+   * a la lista `plantasImmexTablaLista`.
+   */
+  setPlantasImmex(formaFederatarios: PlantasImmex): void {
+    this.update((state) => ({
+      ...state,
+      plantasImmexTablaLista: [
+        ...state.plantasImmexTablaLista,
+        formaFederatarios
+      ],
+    }));
+  }
+
+  /**
+   * Agrega un nuevo elemento de tipo `PlantasDisponibles` a la lista `plantasDisponiblesTablaLista`
+   * en el estado actual de la tienda.
+   *
+   * @param formaFederatarios - El objeto de tipo `PlantasDisponibles` que se añadirá
+   * a la lista `plantasDisponiblesTablaLista`.
+   */
+  setPlantasDisponibles(formaFederatarios: PlantasDisponibles): void {
+    this.update((state) => ({
+      ...state,
+      plantasDisponiblesTablaLista: [
+        ...state.plantasDisponiblesTablaLista,
+        formaFederatarios
+      ],
+    }));
+  }
+
+  /**
    * Actualiza la propiedad `datosAnexoTress` en el store con los datos proporcionados.
    * Fusiona el estado existente de `datosAnexoTress` con los nuevos valores recibidos.
    *
@@ -989,5 +1070,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       return { ...state, datosAnexoTressDos: VALUE };
     });
   }
+
+
 
 }

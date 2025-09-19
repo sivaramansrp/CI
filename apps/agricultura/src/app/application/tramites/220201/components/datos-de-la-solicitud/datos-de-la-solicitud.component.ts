@@ -57,6 +57,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @property {string} TEXTOS
    */
   TEXTOS: string = TEXTOS;
+  /**
+   * Constantes de texto.
+   * @property {string} TEXTOS
+   */
+  mensajeErrorTabla: boolean = false;
 
   /**
    * Grupo de formularios principal.
@@ -172,7 +177,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Utiliza la enumeración TablaSeleccion para definir el tipo de selección.
    * @type {TablaSeleccion}
    */
-  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
 
   /**
    * @description
@@ -239,12 +244,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   seleccionado: string = SELECCIONADO;
 
-  /**
-   * @description Indica si la notificación ha sido verificada o marcada.
-   * @type {boolean}
-   * @memberof DatosDeLaSolicitudComponent
-   */
-  notificationCheck: boolean = false;
+
   listSelectedView: FilaSolicitud[] = [];
 
   /**
@@ -268,30 +268,35 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   cuerpoTablaSolicitud: SolicitudData[] = [
     {
+      id:1,
       fechaCreacion: '2025-06-17 10:30:00',
       mercancia: 'Laptop HP',
       cantidad: 5,
       proovedor: 'Tech Solutions Inc.'
     },
     {
+      id:2,
       fechaCreacion: '2025-06-16 14:15:30',
       mercancia: 'Monitor Dell 27"',
       cantidad: 10,
       proovedor: 'Global Electronics'
     },
     {
+      id:3,
       fechaCreacion: '2025-06-15 09:00:00',
       mercancia: 'Teclado Mecánico RGB',
       cantidad: 8,
       proovedor: 'Peripherals World'
     },
     {
+      id:4,
       fechaCreacion: '2025-06-14 17:45:10',
       mercancia: 'Mouse Inalámbrico Logitech',
       cantidad: 12,
       proovedor: 'Tech Accessories Co.'
     },
     {
+      id:5,
       fechaCreacion: '2025-06-13 11:20:05',
       mercancia: 'Impresora Epson EcoTank',
       cantidad: 3,
@@ -396,7 +401,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   initActionFormBuild(): void {
     this.datosDelaSolicitud = this.fb.group({
-      tipoMercancia: ['yes', Validators.required],
+      tipoMercancia: ['', Validators.required],
       aduanaIngreso: ['', Validators.required],
       oficinaInspeccion: ['', Validators.required],
       puntoInspeccion: ['', Validators.required],
@@ -404,13 +409,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       establecimientoTIF: [''],
       nombreVeterinario: [''],
       numeroGuia: [''],
-      certficacion: [''],
+      certificacion: [''],
       regimen: ['', Validators.required],
+      datosDeMercancia:['']
     });
+     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
     this.certificadoZoosanitarioQuery.seleccionarDatosSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
       if (datosDeLaSolicitud) {
         this.datosDelaSolicitud.patchValue({
-          tipoMercancia: datosDeLaSolicitud.tipoMercancia || 'yes',
+          tipoMercancia: datosDeLaSolicitud.tipoMercancia || '',
           aduanaIngreso: datosDeLaSolicitud.aduanaIngreso || '',
           oficinaInspeccion: datosDeLaSolicitud.oficinaInspeccion || '',
           puntoInspeccion: datosDeLaSolicitud.puntoInspeccion || '',
@@ -419,12 +426,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
           nombreVeterinario: datosDeLaSolicitud.nombreVeterinario || '',
           numeroGuia: datosDeLaSolicitud.numeroGuia || '',
           certificacion: datosDeLaSolicitud.certificacion || '',
-          regimen: datosDeLaSolicitud.regimen || ''
+          regimen: datosDeLaSolicitud.regimen || '',
+          datosDeMercancia: datosDeLaSolicitud.datosDeMercancia || ''
         })
-        this.notificationCheck = true;
+        this.radioBotonSeleccionado();
       }
     });
-    this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
+   
   }
 
   /**
@@ -528,12 +536,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method radioBotonSeleccionado
    */
   radioBotonSeleccionado(): void {
-    const VALOR = this.datosDelaSolicitud.value.tipoMercancia;
-    if (VALOR !== '' && VALOR !== null && VALOR !== undefined) {
-      this.notificationCheck = true;
-    } else {
-      this.notificationCheck = false;
-    }
+    const VALOR = this.datosDelaSolicitud.value.tipoMercancia
+    
     if (VALOR === 'yes') {
       this.configuracionColumnasoli = [
         { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
@@ -556,7 +560,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 }
       ];
     }
-    else {
+    else { 
       this.configuracionColumnasoli = [
         { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
         { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
@@ -694,12 +698,30 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   * @returns {boolean}
   */
   validarFormulario(): boolean {
+     this.mensajeErrorTabla = this.cuerpoTabla.length > 0 ? true :false;
     if (this.forma.valid) {
-      return true;
+      return this.mensajeErrorTabla;
     }
+
     this.forma.markAllAsTouched();
     return false
   }
+
+onFilaClic(event: SolicitudData): void {
+  if (event && event.id) {
+    this.certificadoZoosanitarioServices.obtenerSolicitudDataUrl("solicitud.json")
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        if (datos?.datosDeLaSolicitud) {
+          this.datosDelaSolicitud.patchValue(datos.datosDeLaSolicitud);
+        }
+        if (datos?.filaSolicitud) {
+          this.fitosanitarioStore.updateFilaSolicitud(datos.filaSolicitud);
+        }
+      });
+  }
+}
+
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    * Se utiliza para emitir una notificación y completar el observable `destroyNotifier$`, 
@@ -710,4 +732,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+
 }

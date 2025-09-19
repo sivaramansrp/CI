@@ -4,40 +4,29 @@
  * Incluye un formulario para capturar los datos del importador y funcionalidades adicionales.
  * Gestiona la validación, sincronización con el store global y el estado de la sección.
  */
-
-import { HttpClient } from '@angular/common/http';
-
-import {
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
-
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-
-import { Subject, delay, map, takeUntil, tap } from 'rxjs';
-
 import {
   Catalogo,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
 } from '@ng-mf/data-access-user';
-
-import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   ElegibilidadDeTextilesStore,
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+import { ERROR_FORMA_ALERT } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
-
+import { HttpClient } from '@angular/common/http';
+import { ImporteRecordService } from '../../services/catalogos/importe-record.service';
+import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
  * @component ImportadorEnDestinoComponent
@@ -98,6 +87,31 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
   importadorForm!: FormGroup;
 
   /**
+ * @property {string} formularioAlertaError
+ * @description
+ * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
+ * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
+ * Vacío cuando el formulario es válido.
+ */
+  public formularioAlertaError: string = '';
+
+  /**
+   * @property {boolean} esFormaValido
+   * @description
+   * Bandera booleana que indica si el formulario tiene errores de validación.
+   * Si es `true`, se muestra el mensaje de error; si es `false`, el formulario es válido y no se muestra la alerta.
+   */
+  public esFormaValido: boolean = false;
+
+  /**
+   * @property {EventEmitter<boolean>} mostrarTabs - Emite un valor booleano para mostrar las pestañas adicionales.
+   * EventEmitter que comunica al componente padre cuándo debe mostrar las pestañas de navegación.
+   * Se activa cuando el usuario completa exitosamente el proceso de guardado o validación.
+   * Permite la coordinación entre componentes para la navegación de la interfaz.
+   */
+  @Output() mostrarTabs: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  /**
    * @property {FormGroup} importadorEnDestino - El grupo de formularios para los datos del certificado de registro.
    * Formulario auxiliar que maneja información complementaria específica del importador en destino.
    * Se utiliza para datos adicionales que pueden requerirse según el contexto del trámite.
@@ -112,7 +126,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * al archivo 'tipo.json'. Cada elemento del catálogo contiene la información necesaria
    * para poblar el dropdown de tipos de importador disponibles en el sistema.
    */
-  tipoData: Catalogo[] = [];
+  tipoData!: Catalogo[];
 
   /**
    * @property {Subject<void>} destroyNotifier$ - Sujeto para manejar la destrucción de suscripciones.
@@ -158,6 +172,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @param {ElegibilidadDeTextilesQuery} ElegibilidadDeTextilesQuery - Query para consultar y suscribirse al estado de elegibilidad de textiles
    * @param {SeccionLibStore} seccionStore - Store para manejar el estado específico de las secciones del módulo
    * @param {SeccionLibQuery} seccionQuery - Query para consultar y suscribirse al estado de las secciones
+   * @param {ChangeDetectorRef} cdr - Referencia al ChangeDetectorRef para manejar cambios en la vista
    */
   constructor(
     private ElegibilidadTextilesService: ElegibilidadTextilesService,
@@ -166,7 +181,9 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
     private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private importeRecordService: ImporteRecordService,
+    private cdr: ChangeDetectorRef
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -290,10 +307,18 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor
    */
   obtenerIngresoSelectList(): void {
-    this.ElegibilidadTextilesService.obtenerMenuDesplegable('tipo.json')
+    this.importeRecordService.getImporteRecord()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.tipoData = data as Catalogo[];
+      .subscribe({
+        next: (data) => {
+          if (data.codigo === '00') {
+            this.tipoData = data.datos || [];
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+          this.tipoData = [];
+        }
       });
   }
 
@@ -321,7 +346,28 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
       VALOR
     );
   }
+  /**
+   * Método para continuar al siguiente paso, validando el campo cantidadFacturas.
+   * Si el formulario es inválido, muestra el mensaje de error y no permite continuar.
+   * Si es válido, limpia el error y permite continuar.
+   */
+  continuar(): void {
+    this.importadorForm.markAllAsTouched();
+    this.importadorForm.updateValueAndValidity();
+    this.cdr.detectChanges();
 
+    if (!this.importadorForm.valid) {
+      this.formularioAlertaError = ERROR_FORMA_ALERT;
+      this.esFormaValido = true;
+      window.scrollTo(0, 0);
+      return;
+    }
+    this.esFormaValido = false;
+    this.formularioAlertaError = '';
+    window.scrollTo(0, 0);
+
+    this.mostrarTabs.emit(true);
+  }
   /**
    * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.

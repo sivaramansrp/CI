@@ -30,9 +30,9 @@
                         Moral <i class="bi bi-question-circle-fill"></i>
                     </label>
                   </div>
-                  @if(tercerosRelacionadosForm.controls['tipoPersona'].invalid && tercerosRelacionadosForm.controls['tipoPersona'].touched) {
+                  @if(tercerosRelacionadosForm.get('tipoPersona')?.invalid && tercerosRelacionadosForm.get('tipoPersona')?.touched) {
                     <div class="d-grid">
-                        @if(tercerosRelacionadosForm.controls['tipoPersona'].errors?.['required']) {
+                        @if(tercerosRelacionadosForm.get('tipoPersona')?.errors?.['required']) {
                             <span class="mensaje-error">Este campo es obligatorio.</span>
                         }
                     </div>
@@ -48,9 +48,9 @@
                         class="form-control"
                         (change)="setValoresStore(tercerosRelacionadosForm,'rfc', 'setTercerosRelacionadosRfc')">
                 </div>
-                @if(tercerosRelacionadosForm.controls['rfc'].invalid && tercerosRelacionadosForm.controls['rfc'].touched) {
+                @if(tercerosRelacionadosForm.get('rfc')?.invalid && tercerosRelacionadosForm.get('rfc')?.touched) {
                     <div class="d-grid">
-                        @if(tercerosRelacionadosForm.controls['rfc'].errors?.['required']) {
+                        @if(tercerosRelacionadosForm.get('rfc')?.errors?.['required']) {
                             <span class="mensaje-error">Este campo es obligatorio.</span>
                         }
                     </div>
@@ -67,9 +67,9 @@
                             id="denominacion"
                             (change)="setValoresStore(tercerosRelacionadosForm,'denominacionSocial', 'setDenominacionSocial')">
                     </div>
-                    @if(tercerosRelacionadosForm.controls['denominacionSocial'].invalid && tercerosRelacionadosForm.controls['denominacionSocial'].touched) {
+                    @if(tercerosRelacionadosForm.get('denominacionSocial')?.invalid && tercerosRelacionadosForm.get('denominacionSocial')?.touched) {
                         <div class="d-grid">
-                            @if(tercerosRelacionadosForm.controls['denominacionSocial'].errors?.['required']) {
+                            @if(tercerosRelacionadosForm.get('denominacionSocial')?.errors?.['required']) {
                                 <span class="mensaje-error">Este campo es obligatorio.</span>
                             }
                         </div>
@@ -88,9 +88,9 @@
                             id="nombreDescripcion"
                             (change)="setValoresStore(tercerosRelacionadosForm,'terceroNombre', 'setTerceroNombre')">
                         </div>
-                        @if(tercerosRelacionadosForm.controls['terceroNombre'].invalid && tercerosRelacionadosForm.controls['terceroNombre'].touched) {
+                        @if(tercerosRelacionadosForm.get('terceroNombre')?.invalid && tercerosRelacionadosForm.get('terceroNombre')?.touched) {
                             <div class="d-grid">
-                                @if(tercerosRelacionadosForm.controls['terceroNombre'].errors?.['required']) {
+                                @if(tercerosRelacionadosForm.get('terceroNombre')?.errors?.['required']) {
                                     <span class="mensaje-error">Este campo es obligatorio.</span>
                                 }
                             </div>
@@ -104,9 +104,9 @@
                             id="primerApellido"
                             (change)="setValoresStore(tercerosRelacionadosForm,'primerApellido', 'setPrimerApellido')">
                         </div>
-                        @if(tercerosRelacionadosForm.controls['primerApellido'].invalid && tercerosRelacionadosForm.controls['primerApellido'].touched) {
+                        @if(tercerosRelacionadosForm.get('primerApellido')?.invalid && tercerosRelacionadosForm.get('primerApellido')?.touched) {
                             <div class="d-grid">
-                                @if(tercerosRelacionadosForm.controls['primerApellido'].errors?.['required']) {
+                                @if(tercerosRelacionadosForm.get('primerApellido')?.errors?.['required']) {
                                     <span class="mensaje-error">Este campo es obligatorio.</span>
                                 }
                             </div>
@@ -119,9 +119,9 @@
                             formControlName="segundoApellido"
                             id="segundoApellido">
                         </div>
-                        @if(tercerosRelacionadosForm.controls['segundoApellido'].invalid && tercerosRelacionadosForm.controls['segundoApellido'].touched) {
+                        @if(tercerosRelacionadosForm.get('segundoApellido')?.invalid && tercerosRelacionadosForm.get('segundoApellido')?.touched) {
                             <div class="d-grid">
-                                @if(tercerosRelacionadosForm.controls['segundoApellido'].errors?.['required']) {
+                                @if(tercerosRelacionadosForm.get('segundoApellido')?.errors?.['required']) {
                                     <span class="mensaje-error">Este campo es obligatorio.</span>
                                 }
                             </div>
@@ -139,9 +139,9 @@
                             class="form-control"
                             (change)="setValoresStore(tercerosRelacionadosForm,'pais', 'setPais')">
                     </div>
-                    @if(tercerosRelacionadosForm.controls['pais'].invalid && tercerosRelacionadosForm.controls['pais'].touched) {
+                    @if(tercerosRelacionadosForm.get('pais')?.invalid && tercerosRelacionadosForm.get('pais')?.touched) {
                         <div class="d-grid">
-                            @if(tercerosRelacionadosForm.controls['pais'].errors?.['required']) {
+                            @if(tercerosRelacionadosForm.get('pais')?.errors?.['required']) {
                                 <span class="mensaje-error">Este campo es obligatorio.</span>
                             }
                         </div>
@@ -155,9 +155,9 @@
                             class="form-control"
                             (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosEstado', 'setTercerosRelacionadosEstado')">
                     </div>
-                    @if(tercerosRelacionadosForm.controls['estado'].invalid && tercerosRelacionadosForm.controls['estado'].touched) {
+                    @if(tercerosRelacionadosForm.get('estado')?.invalid && tercerosRelacionadosForm.get('estado')?.touched) {
                         <div class="d-grid">
-                            @if(tercerosRelacionadosForm.controls['estado'].errors?.['required']) {
+                            @if(tercerosRelacionadosForm.get('estado')?.errors?.['required']) {
                                 <span class="mensaje-error">Este campo es obligatorio.</span>
                             }
                         </div>
@@ -171,9 +171,9 @@
                             class="form-control"
                             (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosMunicipio', 'setTercerosRelacionadosMunicipio')">
                     </div>
-                    @if(tercerosRelacionadosForm.controls['municipio'].invalid && tercerosRelacionadosForm.controls['municipio'].touched) {
+                    @if(tercerosRelacionadosForm.get('municipio')?.invalid && tercerosRelacionadosForm.get('municipio')?.touched) {
                         <div class="d-grid">
-                            @if(tercerosRelacionadosForm.controls['municipio'].errors?.['required']) {
+                            @if(tercerosRelacionadosForm.get('municipio')?.errors?.['required']) {
                                 <span class="mensaje-error">Este campo es obligatorio.</span>
                             }
                         </div>
@@ -189,9 +189,9 @@
                             class="form-control"
                             (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosLocalidad', 'setTercerosRelacionadosLocalidad')">
                     </div>
-                    @if(tercerosRelacionadosForm.controls['localidad'].invalid && tercerosRelacionadosForm.controls['localidad'].touched) {
+                    @if(tercerosRelacionadosForm.get('localidad')?.invalid && tercerosRelacionadosForm.get('localidad')?.touched) {
                         <div class="d-grid">
-                            @if(tercerosRelacionadosForm.controls['localidad'].errors?.['required']) {
+                            @if(tercerosRelacionadosForm.get('localidad')?.errors?.['required']) {
                                 <span class="mensaje-error">Este campo es obligatorio.</span>
                             }
                         </div>
@@ -205,9 +205,9 @@
                            class="form-control"
                            (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosCodigoPostal', 'setTercerosRelacionadosCodigoPostal')">
                    </div>
-                   @if(tercerosRelacionadosForm.controls['codigoPostal'].invalid && tercerosRelacionadosForm.controls['codigoPostal'].touched) {
+                   @if(tercerosRelacionadosForm.get('codigoPostal')?.invalid && tercerosRelacionadosForm.get('codigoPostal')?.touched) {
                     <div class="d-grid">
-                        @if(tercerosRelacionadosForm.controls['codigoPostal'].errors?.['required']) {
+                        @if(tercerosRelacionadosForm.get('codigoPostal')?.errors?.['required']) {
                             <span class="mensaje-error">Este campo es obligatorio.</span>
                         }
                     </div>
@@ -221,9 +221,9 @@
                        class="form-control"
                        (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosColonia', 'setTercerosRelacionadosColonia')">
                </div>
-               @if(tercerosRelacionadosForm.controls['colonia'].invalid && tercerosRelacionadosForm.controls['colonia'].touched) {
+               @if(tercerosRelacionadosForm.get('colonia')?.invalid && tercerosRelacionadosForm.get('colonia')?.touched) {
                 <div class="d-grid">
-                    @if(tercerosRelacionadosForm.controls['colonia'].errors?.['required']) {
+                    @if(tercerosRelacionadosForm.get('colonia')?.errors?.['required']) {
                         <span class="mensaje-error">Este campo es obligatorio.</span>
                     }
                 </div>
@@ -239,9 +239,9 @@
                             class="form-control"
                             (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosCalle', 'setTercerosRelacionadosCalle')">
                     </div>
-                    @if(tercerosRelacionadosForm.controls['calle'].invalid && tercerosRelacionadosForm.controls['calle'].touched) {
+                    @if(tercerosRelacionadosForm.get('calle')?.invalid && tercerosRelacionadosForm.get('calle')?.touched) {
                         <div class="d-grid">
-                            @if(tercerosRelacionadosForm.controls['calle'].errors?.['required']) {
+                            @if(tercerosRelacionadosForm.get('calle')?.errors?.['required']) {
                                 <span class="mensaje-error">Este campo es obligatorio.</span>
                             }
                         </div>
@@ -255,9 +255,9 @@
                             class="form-control"
                             (change)="setValoresStore(tercerosRelacionadosForm,'numeroExterior', 'setNumeroExterior')">
                     </div>
-                    @if(tercerosRelacionadosForm.controls['numeroExterior'].invalid && tercerosRelacionadosForm.controls['numeroExterior'].touched) {
+                    @if(tercerosRelacionadosForm.get('numeroExterior')?.invalid && tercerosRelacionadosForm.get('numeroExterior')?.touched) {
                         <div class="d-grid">
-                            @if(tercerosRelacionadosForm.controls['numeroExterior'].errors?.['required']) {
+                            @if(tercerosRelacionadosForm.get('numeroExterior')?.errors?.['required']) {
                                 <span class="mensaje-error">Este campo es obligatorio.</span>
                             }
                         </div>
@@ -273,9 +273,9 @@
                             class="form-control"
                             (change)="setValoresStore(tercerosRelacionadosForm,'numeroInterior', 'setNumeroInterior')">
                     </div>
-                    @if(tercerosRelacionadosForm.controls['numeroInterior'].invalid && tercerosRelacionadosForm.controls['numeroInterior'].touched) {
+                    @if(tercerosRelacionadosForm.get('numeroInterior')?.invalid && tercerosRelacionadosForm.get('numeroInterior')?.touched) {
                         <div class="d-grid">
-                            @if(tercerosRelacionadosForm.controls['numeroInterior'].errors?.['required']) {
+                            @if(tercerosRelacionadosForm.get('numeroInterior')?.errors?.['required']) {
                                 <span class="mensaje-error">Este campo es obligatorio.</span>
                             }
                         </div>
@@ -297,9 +297,9 @@
                                 class="form-control"
                                 (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosTelefono', 'setTercerosRelacionadosTelefono')">
                         </div>
-                        @if(tercerosRelacionadosForm.controls['telefono'].invalid && tercerosRelacionadosForm.controls['telefono'].touched) {
+                        @if(tercerosRelacionadosForm.get('telefono')?.invalid && tercerosRelacionadosForm.get('telefono')?.touched) {
                             <div class="d-grid">
-                                @if(tercerosRelacionadosForm.controls['telefono'].errors?.['required']) {
+                                @if(tercerosRelacionadosForm.get('telefono')?.errors?.['required']) {
                                     <span class="mensaje-error">Este campo es obligatorio.</span>
                                 }
                             </div>
@@ -315,9 +315,9 @@
                                 class="form-control"
                                 (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosCorreoElectronico', 'setTercerosRelacionadosCorreoElectronico')">
                         </div>
-                        @if(tercerosRelacionadosForm.controls['correoElectronico'].invalid && tercerosRelacionadosForm.controls['correoElectronico'].touched) {
+                        @if(tercerosRelacionadosForm.get('correoElectronico')?.invalid && tercerosRelacionadosForm.get('correoElectronico')?.touched) {
                             <div class="d-grid">
-                                @if(tercerosRelacionadosForm.controls['correoElectronico'].errors?.['required']) {
+                                @if(tercerosRelacionadosForm.get('correoElectronico')?.errors?.['required']) {
                                     <span class="mensaje-error">Este campo es obligatorio.</span>
                                 }
                             </div>
@@ -329,8 +329,8 @@
   </div>
   <div class="modal-footer justify-content-end">
     <div class="d-flex">
-        <button type="button" class="btn btn-danger me-2">Cancelar</button>
-        <button type="button" class="btn btn-default me-2">Limpiar</button>
-        <button type="button" class="btn btn-primary" (click)="bsModalRef.hide()">Guardar</button>
+        <button type="button" class="btn btn-danger me-2" (click)="bsModalRef.hide()">Cancelar</button>
+        <button type="button" class="btn btn-default me-2" (click)="limpiarFormulario()">Limpiar</button>
+        <button type="button" class="btn btn-primary" (click)="guardarFormulario()">Guardar</button>
     </div>
   </div>
