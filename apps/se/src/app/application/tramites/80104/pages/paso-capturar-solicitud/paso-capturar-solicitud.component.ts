@@ -1,10 +1,11 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { DatosPasos, ListaPasosWizard, PASOS4, Usuario, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, take, takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
+import { USUARIO_INFO } from '../../constantes/nuevo-programa.enum';
 import basePlantasControladoras from '@libs/shared/theme/assets/json/80104/basePlantasControladoras.json';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
 import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
@@ -55,6 +56,9 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * Se inicializa en 0 y se utiliza para referenciar la solicitud en curso.
    */
   idSolicitud: number = 0;
+
+  activarBotonCargaArchivos: boolean = false;
+
   /**
    * Datos de los pasos del wizard.
    * Esta propiedad almacena información relacionada con el número de pasos, el índice actual,
@@ -83,6 +87,30 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * @type {Subject<void>}
    */
   destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Datos del usuario actual del sistema.
+   * 
+   * Contiene la información del usuario que está utilizando la aplicación,
+   * incluyendo datos personales, permisos y configuraciones específicas.
+   * Se inicializa con los valores predeterminados definidos en USUARIO_INFO.
+   * 
+   * @type {Usuario}
+   * @memberof PasoCapturarSolicitudComponent
+   * @see {@link USUARIO_INFO} - Constante que contiene los datos predeterminados del usuario
+   * 
+   * @example
+   * ```typescript
+   * // Acceder a los datos del usuario
+   * console.log(this.datosUsuario.nombre);
+   * console.log(this.datosUsuario.email);
+   * 
+   * // Modificar datos del usuario
+   * this.datosUsuario = { ...this.datosUsuario, nombre: 'Nuevo Nombre' };
+   * ```
+   */
+  datosUsuario: Usuario = USUARIO_INFO;
+  
 
   /** Indica si el botón Guardar debe mostrarse o estar habilitado en el formulario. */
   public btnGuardar: boolean = true;
@@ -473,6 +501,17 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   public solicitudState!: Tramite80101State;
 
   /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+   /**
+     * Evento que se emite para cargar archivos.
+     * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+     */
+    cargarArchivosEvento = new EventEmitter<void>();
+  
+  /**
    * Constructor de la clase PasoCapturarSolicitudComponent.
    * 
    * @param tramiteQuery - Servicio de consulta para Tramite80101 que proporciona acceso a observables y datos relacionados.
@@ -520,6 +559,16 @@ ngOnInit(): void {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
   }
 
   /**
@@ -820,4 +869,45 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>, data: 
         },
       };
     }
+
+    /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+   /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+  
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
 }
