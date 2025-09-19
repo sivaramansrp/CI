@@ -12,8 +12,8 @@ import {
   PASOS,
   TITULOMENSAJE,
 } from '../../constantes/autorizacion-programa-nuevo.enum';
+import { Subject, map, take, takeUntil } from 'rxjs';
 import { Tramite80102State, Tramite80102Store } from '../../estados/tramite80102.store';
-import { map, Subject, take, takeUntil } from 'rxjs';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
@@ -739,19 +739,18 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
   };
 }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
 buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const MAP_TO_PAYLOAD = (item: any): any => ({
       ...base,
-      tipoLocal: item.colonia,
-      estadoEntidad: item.entidadFederativa,
-      cvePaisOrigen: item.pais,
-      rfc: item.rfc,
-      domicilio: item.domicilioFiscal,
-      razonSocial: item.razonSocial,
+      estadoEntidad: item.entidadFederativa ?? '',
+      cvePaisOrigen: item.pais ?? '',
+      rfc: item.rfc ?? '',
+      domicilio: item.domicilioFiscal ?? '',
+      razonSocial: item.razonSocial ?? '',
     });
 
     arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
