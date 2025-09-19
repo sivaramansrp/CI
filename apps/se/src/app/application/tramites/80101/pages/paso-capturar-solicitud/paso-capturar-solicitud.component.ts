@@ -558,9 +558,13 @@ export class PasoCapturarSolicitudComponent implements OnInit {
           rfc: arr.rfc || arr.taxId,
           correoElectronico: arr.correoElectronico,
           razonSocial: arr.razonSocial,
-          nombre: arr.nombre,
+          nombre: arr.taxId,
           apellidoPaterno: arr.apellidoPaterno,
           apellidoMaterno: arr.apellidoMaterno,
+          domicilioSolicitud: {
+            codigoPostal: arr.codigoPostal || arr.cp,
+            informacionExtra: arr.estado
+          }
         });
       });
     });

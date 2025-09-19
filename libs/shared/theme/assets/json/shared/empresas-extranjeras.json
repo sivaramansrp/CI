@@ -25,6 +25,10 @@
     "tiempoPrograma": "",
     "descripcionTestado": "",
     "idCompuestoEmpresa": "",
-    "idServicioAutorizado": 0
+    "idServicioAutorizado": 0,
+    "domicilioSolicitud": {
+      "codigoPostal": "12345",
+      "informacionExtra": "Estado de prueba"
+    }
   }
 ]
