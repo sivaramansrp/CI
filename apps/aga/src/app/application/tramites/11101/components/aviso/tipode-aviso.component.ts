@@ -494,7 +494,7 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
    * Agrega una nueva mercancía a la lista si el formulario es válido.
    */
   agregar(): void {
-    // if (this.mercanciaForm.valid) {
+    if (this.mercanciaForm.valid) {
       this.tramiteService.agregar().pipe(takeUntil(this.destroyNotifier$)).subscribe(
         (respuesta) => {
           if (respuesta?.success) {
@@ -509,9 +509,9 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
           }
         }
       );
-    // } else {
-    //   this.mercanciaForm.markAllAsTouched();
-    // }
+    } else {
+      this.mercanciaForm.markAllAsTouched();
+    }
   }
 
   /**
