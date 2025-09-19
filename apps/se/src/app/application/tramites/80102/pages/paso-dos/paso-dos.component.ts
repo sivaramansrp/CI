@@ -1,6 +1,7 @@
-import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS, Usuario } from '@ng-mf/data-access-user';
+import { AlertComponent, CATALOGOS_ID, CargaDocumentoComponent, Catalogo, CatalogosService, TEXTOS, TituloComponent, Usuario } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 /**
  * Este componente se muestra en PasaDos
@@ -9,6 +10,13 @@ import { Subject, map, takeUntil } from 'rxjs';
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
+  standalone: true,
+  imports: [
+    CommonModule,
+    CargaDocumentoComponent,
+    AlertComponent,
+    TituloComponent,
+  ]
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
 
