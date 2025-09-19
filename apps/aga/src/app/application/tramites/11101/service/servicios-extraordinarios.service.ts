@@ -131,6 +131,41 @@ export class TramiteFolioService {
   getColonia(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/11101/colonias.json`);
   }
+
+  /**
+   * Obtenga una lista ficticia de formaParteDePatrimonio
+   */
+  getFormaParteDePatrimonio(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/formaParteDePatrimonio.json`);
+  }
+
+  /**
+   * Obtenga una lista ficticia de unidadmedida
+   */
+  getUnidadmedida(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/unidadmedida.json`);
+  }
+
+  /**
+   * Obtenga una lista ficticia de moneda
+   */
+  getMoneda(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/moneda.json`);
+  }
+
+  /**
+   * Obtenga una lista ficticia de fin
+   */
+  getFin(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/fin.json`);
+  }
+
+  /**
+   * Obtenga una lista ficticia de estado
+   */
+  getEstado(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/estado.json`);
+  }
   
 }
 

@@ -87,6 +87,31 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
   colonia!: Catalogo[];
 
   /**
+   * Lista de catálogos disponibles para formaParteDePatrimonio.
+   */
+  formaParteDePatrimonio!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para unidadmedida.
+   */
+  unidadmedida!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para moneda.
+   */
+  moneda!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para fin.
+   */
+  fin!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para estado.
+   */
+  estado!: Catalogo[];
+
+  /**
    * Opciones de radio.
    */
   radioOpcions = [
@@ -347,6 +372,31 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
     this.store.setColonia(COLONIA);
   }
 
+  formaParteDePatrimonioSeleccion(): void {
+    const FORMAPARTADEPATRIMONIA = this.mercanciaForm.get('formapartadepatrimonia')?.value;
+    this.store.setFormaParteDePatrimonio(FORMAPARTADEPATRIMONIA);
+  }
+
+  unidadmedidaSeleccion(): void {
+    const UNIDADMEDIDA = this.mercanciaForm.get('unidadmedida')?.value;
+    this.store.setUnidadmedida(UNIDADMEDIDA);
+  }
+
+  monedaSeleccion(): void {
+    const MONEDA = this.mercanciaForm.get('moneda')?.value;
+    this.store.setMoneda(MONEDA);
+  }
+
+  finSeleccion(): void {
+    const FIN = this.mercanciaForm.get('fin')?.value;
+    this.store.setFin(FIN);
+  }
+
+  estadoSeleccion(): void {
+    const ESTADO = this.mercanciaForm.get('estado')?.value;
+    this.store.setEstado(ESTADO);
+  }
+
   /**
    * Inicializa los catálogos necesarios para el componente.
    */
@@ -375,10 +425,55 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
         })
       );
 
+    const FORMAPARTADEPATRIMONIA$ = this.tramiteService
+      .getFormaParteDePatrimonio()
+      .pipe(
+        map((resp) => {
+          this.formaParteDePatrimonio = resp.data;
+        })
+      );
+    
+    const UNIDADMEDIDA$ = this.tramiteService
+      .getUnidadmedida()
+      .pipe(
+        map((resp) => {
+          this.unidadmedida = resp.data;
+        })
+      );
+
+    const MONEDA$ = this.tramiteService
+      .getMoneda()
+      .pipe(
+        map((resp) => {
+          this.moneda = resp.data;
+        })
+      );
+
+    const FIN$ = this.tramiteService
+      .getFin()
+      .pipe(
+        map((resp) => {
+          this.fin = resp.data;
+        })
+      );
+
+    const ESTADO$ = this.tramiteService
+      .getEstado()
+      .pipe(
+        map((resp) => {
+          this.estado = resp.data;
+        })
+      );
+
       merge(
         ENTIDADFEDERATIVA$,
         ALCADILAMUNICIPIO$,
-        COLONIA$
+        COLONIA$,
+        FORMAPARTADEPATRIMONIA$,
+        UNIDADMEDIDA$,
+        MONEDA$,
+        FIN$,
+        ESTADO$
       )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe();
