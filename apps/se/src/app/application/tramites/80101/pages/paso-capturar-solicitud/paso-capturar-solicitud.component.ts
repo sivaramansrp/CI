@@ -34,7 +34,7 @@ import { Tramite80101Query } from '../../estados/tramite80101.query';
   selector: 'app-paso-capturar-solicitud',
   templateUrl: './paso-capturar-solicitud.component.html',
 })
-export class PasoCapturarSolicitudComponent implements OnInit{
+export class PasoCapturarSolicitudComponent implements OnInit {
   /**
    * Lista de pasos del wizard.
    * Esta propiedad almacena una lista de objetos que representan los pasos del wizard.
@@ -48,11 +48,11 @@ export class PasoCapturarSolicitudComponent implements OnInit{
    */
   indice: number = 1;
 
-    /**
-     * Identificador numérico de la solicitud actual.
-     * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
-     */
-    idSolicitud: number = 0;
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
 
   /**
    * Datos de los pasos del wizard.
@@ -94,60 +94,60 @@ export class PasoCapturarSolicitudComponent implements OnInit{
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private socioAccionistaBase: Readonly<Record<string, any>> = {
-      "idPersonaPersonaSolicitudR": 0,
-      "idSolicitud": 202734824,
-      "nombre": "",
-      "apellidoMaterno": "",
-      "apellidoPaterno": "",
-      "razonSocial": "AGRICOLA ALPE S DE RL DE CV",
-      "rfc": "AAL0409235E6",
-      "curp": "",
-      "ideTipoPersonaSol": "TIPERS.SL",
-      "correoElectronico": "vucem.soporte.aplicativo@ultrasist.com.mx",
-      "cedulaProfesional": "",
-      "nss": "",
-      "telefono": "8154563",
-      "descripcionGiro": "Siembra, cultivo y cosecha de papa",
-      "cvePaisOrigen": "",
-      "idDireccionSol": 260833725,
-      "tipoPatenteAgente": "",
-      "recif": "",
-      "puesto": "",
-      "tipoAgente": "",
-      "numeroPatente": "",
-      "numeroIdentificacionFiscal": "",
-      "personaMoral": false,
-      "extranjero": false,
-      "organismoPublico": false,
-      "cveUsuario": "AAL0409235E6",
-      "paginaWeb": "",
-      "ideGenerica1": "",
-      "rfcExtranjero": "",
-      "codAutorizacion": "",
-      "actividadProductiva": "",
-      "estadoEvaluacionEntidad": "AUTORIZADO",
-      "estadoEntidad": "AUTORIZADO",
-      "original": false,
-      "modificado": false,
-      "numeroRegistro": "",
-      "concentimientoInstalacionRecuperacion": false,
-      "cveCatalogo": "",
-      "alquilado": false,
-      "volumenAlmacenaje": 0,
-      "capacidadAlmacenaje": 0,
-      "descripcionDetalladaActividadEconomica": "",
-      "activo": false,
-      "generico1": false,
-      "area": "",
-      "cveNacionalidad": "",
-      "clasificacionArancelaria": "",
-      "infoAdicional": false,
-      "montoImportacion": 0,
-      "montoExportacion": 0,
-      "pctParticAccionaria": 0,
-      "ampliacionModelos": false,
-      "ampliacionPaises": false,
-      "fecFallecimiento": "2025-09-07"
+    "idPersonaPersonaSolicitudR": 0,
+    "idSolicitud": 202734824,
+    "nombre": "",
+    "apellidoMaterno": "",
+    "apellidoPaterno": "",
+    "razonSocial": "AGRICOLA ALPE S DE RL DE CV",
+    "rfc": "AAL0409235E6",
+    "curp": "",
+    "ideTipoPersonaSol": "TIPERS.SL",
+    "correoElectronico": "vucem.soporte.aplicativo@ultrasist.com.mx",
+    "cedulaProfesional": "",
+    "nss": "",
+    "telefono": "8154563",
+    "descripcionGiro": "Siembra, cultivo y cosecha de papa",
+    "cvePaisOrigen": "",
+    "idDireccionSol": 260833725,
+    "tipoPatenteAgente": "",
+    "recif": "",
+    "puesto": "",
+    "tipoAgente": "",
+    "numeroPatente": "",
+    "numeroIdentificacionFiscal": "",
+    "personaMoral": false,
+    "extranjero": false,
+    "organismoPublico": false,
+    "cveUsuario": "AAL0409235E6",
+    "paginaWeb": "",
+    "ideGenerica1": "",
+    "rfcExtranjero": "",
+    "codAutorizacion": "",
+    "actividadProductiva": "",
+    "estadoEvaluacionEntidad": "AUTORIZADO",
+    "estadoEntidad": "AUTORIZADO",
+    "original": false,
+    "modificado": false,
+    "numeroRegistro": "",
+    "concentimientoInstalacionRecuperacion": false,
+    "cveCatalogo": "",
+    "alquilado": false,
+    "volumenAlmacenaje": 0,
+    "capacidadAlmacenaje": 0,
+    "descripcionDetalladaActividadEconomica": "",
+    "activo": false,
+    "generico1": false,
+    "area": "",
+    "cveNacionalidad": "",
+    "clasificacionArancelaria": "",
+    "infoAdicional": false,
+    "montoImportacion": 0,
+    "montoExportacion": 0,
+    "pctParticAccionaria": 0,
+    "ampliacionModelos": false,
+    "ampliacionPaises": false,
+    "fecFallecimiento": "2025-09-07"
   };
 
   /**
@@ -282,9 +282,9 @@ export class PasoCapturarSolicitudComponent implements OnInit{
         }
 
 
-   /**
-   * URL de la página actual.
-   */
+  /**
+  * URL de la página actual.
+  */
   public solicitudState!: Tramite80101State;
   /**
    * Constructor de la clase PasoCapturarSolicitudComponent.
@@ -297,7 +297,7 @@ export class PasoCapturarSolicitudComponent implements OnInit{
    * utilizando los métodos `establecerSeccion` y `establecerFormaValida` del servicio `SeccionLibStore`.
    * La suscripción se gestiona para que se complete automáticamente al destruir el componente mediante `takeUntil` y `destroyNotifier$`.
    */
-  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,private tramite80101Store:Tramite80101Store,private tramite80101Query: Tramite80101Query) {
+  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService, private tramite80101Store: Tramite80101Store, private tramite80101Query: Tramite80101Query) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
@@ -339,10 +339,10 @@ export class PasoCapturarSolicitudComponent implements OnInit{
    */
   obtenerDatosDelStore(): void {
     this.nuevoProgramaIndustrialService.getAllState()
-    .pipe(take(1))
-    .subscribe(data => {
-      this.guardar(data);
-    });
+      .pipe(take(1))
+      .subscribe(data => {
+        this.guardar(data);
+      });
   }
 
   /**
@@ -387,67 +387,84 @@ export class PasoCapturarSolicitudComponent implements OnInit{
   }
 
 
- // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
-/**
- * Construye el objeto `anexo` a partir de los datos proporcionados.
- *
- * @param data - Objeto de entrada que contiene la información necesaria para construir los anexos y sus tablas asociadas.
- * @returns Un objeto con la estructura de los anexos, incluyendo ANEXOII, ANEXOIII, proveedorCliente y datosParaNavegar.
- *
- * - `ANEXOII` y `ANEXOIII`: Listas construidas a partir de los elementos de `anexoDosTablaLista` y `anexoTresTablaLista` respectivamente.
- * - `proveedorCliente`: Lista de proveedores y clientes obtenida de `proveedorClienteDatosTabla`.
- * - `datosParaNavegar`: Información adicional para navegación, construida desde `datosParaNavegar`.
- *
- * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
- */
- buildAnexo(data: any) {
-  const buildAnexoItem = (item: Anexo1) => ({
-    descripcion: item.encabezadoFraccion,
-    idTipoBien: 0,
-    idBienComercial: 0,
-    testado: true,
-    contadorGrid: null,
-    descripcionTestado: item.encabezadoDescripcion,
-  });
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
+  /**
+   * Construye el objeto `anexo` a partir de los datos proporcionados.
+   *
+   * @param data - Objeto de entrada que contiene la información necesaria para construir los anexos y sus tablas asociadas.
+   * @returns Un objeto con la estructura de los anexos, incluyendo ANEXOII, ANEXOIII, proveedorCliente y datosParaNavegar.
+   *
+   * - `ANEXOII` y `ANEXOIII`: Listas construidas a partir de los elementos de `anexoDosTablaLista` y `anexoTresTablaLista` respectivamente.
+   * - `proveedorCliente`: Lista de proveedores y clientes obtenida de `proveedorClienteDatosTabla`.
+   * - `datosParaNavegar`: Información adicional para navegación, construida desde `datosParaNavegar`.
+   *
+   * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
+   */
+  buildAnexo(data: any) {
+    const buildAnexoItem = (item: Anexo1) => ({
+      descripcion: item.encabezadoFraccion,
+      idTipoBien: 0,
+      idBienComercial: 0,
+      testado: true,
+      contadorGrid: null,
+      descripcionTestado: item.encabezadoDescripcion,
+    });
 
-  const buildProveedorCliente = (item: ProveedorClienteDatosTabla) => ({
-    idProveedor: item.idProveedor,
-    paisOrigen: item.paisOrigen,
-    rfcProveedor: item.rfcProveedor,
-    razonProveedor: item.razonProveedor,
-    paisDestino: item.paisDestino,
-    rfcCliente: item.rfcClinte,
-    razonCliente: item.razonSocial,
-    domicilio: item.domicilio,
-    testado: item.testado,
-    idProductoP: item.idProductoP,
-    descTestado: item.descTestado,
-  });
+    const buildProveedorCliente = (item: ProveedorClienteDatosTabla) => ({
+      idProveedor: item.idProveedor,
+      paisOrigen: item.paisOrigen,
+      rfcProveedor: item.rfcProveedor,
+      razonProveedor: item.razonProveedor,
+      paisDestino: item.paisDestino,
+      rfcCliente: item.rfcClinte,
+      razonCliente: item.razonSocial,
+      domicilio: item.domicilio,
+      testado: item.testado,
+      idProductoP: item.idProductoP,
+      descTestado: item.descTestado,
+    });
 
-  const buildDatosParaNavegar = (datos: any) => ({
-    anexoII: datos?.encabezadoAnexoII,
-    tipo: datos?.encabezadoTipo,
-    unidadMedida: datos?.encabezadoAnexoII,
-    categoria: datos?.encabezadoCategoria,
-    descripcion: datos?.encabezadoDescripcionComercial,
-    valorMensual: datos?.encabezadoVolumenMensual,
-    valorAnual: datos?.encabezadoVolumenAnual,
-    volumenMensual: datos?.encabezadoValorEnMonedaMensual,
-    volumenAnual: datos?.encabezadoValorEnMonedaAnual,
-    testado: true,
-    fecFinVigencia: null,
-    volumenAnualSolicitado: null,
-  });
+    const buildDatosParaNavegar = (datos: any) => ({
+      anexoII: datos?.encabezadoAnexoII,
+      tipo: datos?.encabezadoTipo,
+      unidadMedida: datos?.encabezadoAnexoII,
+      categoria: datos?.encabezadoCategoria,
+      descripcion: datos?.encabezadoDescripcionComercial,
+      valorMensual: datos?.encabezadoVolumenMensual,
+      valorAnual: datos?.encabezadoVolumenAnual,
+      volumenMensual: datos?.encabezadoValorEnMonedaMensual,
+      volumenAnual: datos?.encabezadoValorEnMonedaAnual,
+      testado: true,
+      fecFinVigencia: null,
+      volumenAnualSolicitado: null,
+    });
 
-  return {
-    anexo: {
-      ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
-      ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
-      proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
-      datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
-    },
-  };
-}
+    const anexoDos: any = [];
+
+    (data.annexoUno?.exportarDatosTabla || []).forEach((item: any) => {
+      anexoDos.push({
+        fraccionExportacion: item.encabezadoFraccionExportacion,
+        fraccionImportacion: item.encabezadoFraccionImportacion,
+        descFraccionImpo: item.encabezadoDescripcionComercial,
+        claveFraccionAnexo: item.encabezadoAnexoII,
+        idProducto: item.encabezadoIdProducto,
+        fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
+        fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
+        fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
+        categoriaFraccion: item.encabezadoCategoria,
+      });
+    });
+
+    return {
+      anexo: {
+        ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
+        ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
+        proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
+        datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
+        tableDos: anexoDos
+      },
+    };
+  }
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
 buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[] {
@@ -486,26 +503,26 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
     const ANEXO_ALL = this.buildAnexo(data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const PAYLOAD = {
-    "tipoDeSolicitud": "guardar",
-    "idSolicitud": 202781045,
-    "idTipoTramite": 80101,
-    "rfc": "AAL0409235E6",
-    "cveUnidadAdministrativa": "8101",
-    "costoTotal": 10000.5,
-    "certificadoSerialNumber": "1234567890ABCDEF",
-    "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
-    "numeroFolioTramiteOriginal": "TRM-2023-00001",
-    "nombre": "Juan",
-    "apPaterno": "Pérez",
-    "apMaterno": "López",
-    "telefono": "5551234567",
-    "discriminator_value": "80101",
-    "discriminatorValue": "80101",
-     "domicilio": {
-    },
-    "solicitante": {
-        
-    },
+      "tipoDeSolicitud": "guardar",
+      "idSolicitud": 202781045,
+      "idTipoTramite": 80101,
+      "rfc": "AAL0409235E6",
+      "cveUnidadAdministrativa": "8101",
+      "costoTotal": 10000.5,
+      "certificadoSerialNumber": "1234567890ABCDEF",
+      "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
+      "numeroFolioTramiteOriginal": "TRM-2023-00001",
+      "nombre": "Juan",
+      "apPaterno": "Pérez",
+      "apMaterno": "López",
+      "telefono": "5551234567",
+      "discriminator_value": "80101",
+      "discriminatorValue": "80101",
+      "domicilio": {
+      },
+      "solicitante": {
+
+      },
       "planta": [],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
@@ -518,11 +535,14 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
             ...ANEXO_ALL.anexo.datosParaNavegar
           },
         }
-    ],
-    "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
-    "sociosAccionistas":[...SOCIO_ACCIONISTAS]
-    
-}
+      ],
+      "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
+      "sociosAccionistas": [...SOCIO_ACCIONISTAS],
+      "solicitud": {
+        "anexoI": [...ANEXO_ALL.anexo.tableDos]
+      }
+
+    }
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
       this.tramite80101Store.setIdSolicitud(response.datos.id_solicitud || 0);
       return response;
