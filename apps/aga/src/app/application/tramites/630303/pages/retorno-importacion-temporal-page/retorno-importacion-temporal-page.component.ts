@@ -7,7 +7,7 @@ import { Component, ViewChild } from '@angular/core';
 import { AVISO, DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS_REGISTRO, TODOS_PASOS} from '../../enum/retorno-importacion-temporal.enum';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Interfaz que representa la acción de un botón.

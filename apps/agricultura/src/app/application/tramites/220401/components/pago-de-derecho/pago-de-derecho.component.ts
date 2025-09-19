@@ -120,6 +120,24 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Validador estático que verifica si el valor numérico no excede un valor máximo.
+   * @param maxValue El valor máximo permitido.
+   * @returns ValidatorFn
+   */
+  static maxTextValueValidator(maxValue: number): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (control.value === null || control.value === '') {
+      return null;
+    }
+    const numericValue = Number(control.value);
+    if (isNaN(numericValue)) {
+      return { notANumber: true };
+    }
+    return numericValue > maxValue ? { max: { maxValue, actual: numericValue } } : null;
+  };
+}
+
+  /**
    * Hook de ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Inicializa las opciones de justificación y banco, y define el grupo de formulario con sus controles y validadores.
    * Configura la lógica que habilita o deshabilita campos dependiendo de la selección del valor `exentoDePago`.
@@ -173,7 +191,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         this.solicitudState?.fechaPago,
         [Validators.required, PagoDeDerechoComponent.validadorDeFechaFutura()]
       ],
-      importePago: ['', Validators.required],
+      importePago: ['', [Validators.required,PagoDeDerechoComponent.maxTextValueValidator(10000000000000000)]],
     });
 
     // Se activa la lógica para actualizar campos según el valor inicial de 'exentoDePago'
@@ -223,6 +241,9 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
 
       this.FormSolicitud.get('fechaPago')?.disable();
       this.FormSolicitud.get('llaveDePago')?.disable();
+      this.FormSolicitud.get('rfcImportExport')?.disable();
+      this.FormSolicitud.get('cadenaDependencia')?.disable();
+      this.FormSolicitud.get('importePago')?.disable();
     }
   }
 

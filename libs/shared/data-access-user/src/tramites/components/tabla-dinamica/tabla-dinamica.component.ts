@@ -557,6 +557,18 @@ export class TablaDinamicaComponent<T> implements OnChanges, OnInit, OnDestroy {
     this.searchSubject.next(VALOR);
   }
 
+  /** Deselect all selected rows and radio */
+public clearSelection(): void {
+  this.idFilaSeleccionada = null;
+  this._inputSelection = null!;
+  this.filasSeleccionadas = [];
+  this.listaDeFilaSeleccionada.emit([]);
+
+  if (this.tipoSeleccionTabla === TablaSeleccion.RADIO) {
+    this.filaSeleccionada.emit(null as any);  // Or create a separate deselect output if needed
+  }
+}
+
   /**
  * Método del ciclo de vida que se ejecuta al destruir el componente.
  * Completa el Subject de búsqueda para evitar fugas de memoria.

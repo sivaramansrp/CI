@@ -72,6 +72,9 @@ export interface MercanciaTabla {
   rfcProductor?: string;
   numeroFactura?: string;
   complemento?: string;
+  complementoDescripcion?: string;
+  fetchFactura?: string;
+  rfcProductor1?: string;
 }
 
 /**

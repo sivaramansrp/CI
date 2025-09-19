@@ -1,7 +1,8 @@
 /**
- * Conjunto de rutas de la API para el procedimiento 80101.
+ * Conjunto de rutas de la API para el procedimiento 80208.
  */
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src/enviroments/enviroment";
+import { MODALIDAD } from "../../90102/constantes/prosec.module";
 /**
  * url base de la API
  */
@@ -29,19 +30,17 @@ const TRAMITE = ENVIRONMENT.TRAMITE_URL;
 /**
  * Procedimiento de la API
  */
-const PROCEDURE = '/sat-t80102';
+const PROCEDURE = '/sat-t80208';
 
 /**
- * Rutas de la API para el procedimiento 80102
+ * Rutas de la API para el procedimiento 80208
  */
-export const PROC_80102 = {
-    ESTADO: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/estado`,
-    PAIS: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/paises`,
+export const PROC_80208 = {
+    MODALIDAD: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/modalidad-immex`,
+    SERVICIOS: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/servicios-immex`,
     NICO: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/nico`,
     POST_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/guardar`,
     GET_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/acuse`,
     CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${TRAMITE}/consulta/${id}`,
-    OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`,
-    GUARDAR: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}/solicitud/guardar`,
-    servicoImex: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/servicios-immex`,
+    OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`
 };

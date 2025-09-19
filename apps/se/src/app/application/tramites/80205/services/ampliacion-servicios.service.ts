@@ -63,6 +63,13 @@ export class AmpliacionServiciosService {
   getServiciosData(): Observable<AmpliacionServiciosState> {
     return this.http.get<AmpliacionServiciosState>('assets/json/80205/ampliacion-campo.json');
   }
+/**
+ * Obtiene la tabla de datos desde un archivo JSON.
+ * @return {Observable<Servicio[]>} - Observable con la tabla de datos.
+ */
+  getTablaDatos(): Observable<Servicio[]> {
+    return this.http.get<Servicio[]>('assets/json/80205/ampliaciaon-autrazidos.json');
+  }
 
   
 }

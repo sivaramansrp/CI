@@ -7,11 +7,10 @@
  * relacionadas con el trámite.
  */
 
+import { ConsultaioQuery,ConsultaioState } from '@ng-mf/data-access-user';
 import { ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 import { ConsultaDatosService } from '../../servicios/consulta-datos.service';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ConsultaioState } from '@ng-mf/data-access-user';
 import { EventEmitter } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit} from '@angular/core';
@@ -180,8 +179,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         .subscribe((resp) => {
           if (resp) {
             this.esDatosRespuesta = true;
-            this.personas =
-              (resp as { personas?: PersonaTerceros[] }).personas || [];
             this.consultaDatosService.actualizarEstadoFormulario(resp);
           }
         });
