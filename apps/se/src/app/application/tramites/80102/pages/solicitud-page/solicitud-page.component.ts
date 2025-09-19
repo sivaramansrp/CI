@@ -5,9 +5,16 @@ import {
   ListaPasosWizard,
   PasoFirmaComponent,
   SeccionLibStore,
+  Usuario,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   PASOS,
   TITULOMENSAJE,
@@ -19,6 +26,7 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
+import { USUARIO_INFO } from '../../enum/enum-80102';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
 import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
 import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accionistas.json';
@@ -55,6 +63,35 @@ interface AccionBoton {
  * Componente que representa la página de solicitud.
  */
 export class SolicitudPageComponent implements OnDestroy, OnInit {
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+  /**
+   * Identificador del tipo de trámite.
+   * @type {number}
+   */
+  idTipoTRamite: string = '80102';
+
+  /**
+   * Información del usuario actual.
+   * Se inicializa con los datos definidos en la constante USUARIO_INFO.
+   */
+  datosUsuario: Usuario = USUARIO_INFO;
+
+  /**
+   * Indica si el botón para cargar archivos está habilitado.
+   */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+   * Indica si la sección de carga de documentos está activa.
+   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+   */
+  seccionCargarDocumentos: boolean = true;
+
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
    * @private
@@ -825,6 +862,56 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     });
   }
 
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado del botón de carga de archivos.
+   *  carga - Indica si la carga de documentos está activa o no.
+   * {void} No retorna ningún valor.
+   */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
 
   /**
    * Método que se ejecuta al destruir el componente.
