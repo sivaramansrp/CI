@@ -185,11 +185,26 @@ export class ComplimentosService {
    */
   getmunicipio(cveEntidad: string): Observable<JsonResponseCatalogo> {
     return this.httpService.get<JsonResponseCatalogo>(
-      `${this.apiRoutes.municipiosMax}/${cveEntidad}`,
+      `${this.apiRoutes.estadoImex}/${cveEntidad}`,
       {},
       false
     );
   }
+
+  /**
+   * Obtiene el estado IMEX correspondiente a la clave de entidad proporcionada.
+   *
+   * @param cveEntidad - Clave de la entidad para la cual se solicita el estado IMEX.
+   * @returns Un observable que emite la respuesta en formato JsonResponseCatalogo.
+   */
+  getEstadoImex(cveEntidad: string): Observable<JsonResponseCatalogo> {
+    return this.httpService.get<JsonResponseCatalogo>(
+      `${this.apiRoutes.estadoImex}/${cveEntidad}`,
+      {},
+      false
+    );
+  }
+
 
   /**
    * Obtiene la información de una categoría de tipo según el valor de la clave enumerada proporcionada.
