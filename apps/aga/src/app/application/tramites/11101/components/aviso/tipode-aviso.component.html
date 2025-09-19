@@ -5,7 +5,11 @@
       <div class="col-md-4">
         <label class="form-label" for="numero-de-registro">Número de registro<span [ngClass]="avisoForm.get('numeroderegistro')?.invalid && 
               avisoForm.get('numeroderegistro')?.touched ? 'text-danger' : ''">*</span>:</label>
-        <input type="text" class="form-control" id="numero-de-registro" formControlName="numeroderegistro" />
+        <input type="text" class="form-control" id="numero-de-registro" formControlName="numeroderegistro"
+        [ngClass]="{'is-invalid': isInvalid('numeroderegistro')}"/>
+          <div *ngIf="isInvalid('numeroderegistro')" class="mensaje-error">
+              Este campo es obligatorio.
+            </div>
       </div>
     </div>
   
@@ -53,21 +57,33 @@
           [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <label class="form-label" for="codigo-postal">Código Postal<span [ngClass]="avisoForm.get('codigopostal')?.invalid && 
+        <label class="form-label" for="codigopostal">Código Postal<span [ngClass]="avisoForm.get('codigopostal')?.invalid && 
               avisoForm.get('codigopostal')?.touched ? 'text-danger' : ''">*</span>:</label>
-        <input type="text" class="form-control" id="codigo-postal" formControlName="codigopostal" />
+        <input type="text" class="form-control" id="codigopostal" formControlName="codigopostal"
+        [ngClass]="{'is-invalid': isInvalid('codigopostal')}"/>
+            <div *ngIf="isInvalid('codigopostal')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
         <label class="form-label" for="calle">Calle<span [ngClass]="avisoForm.get('calle')?.invalid && 
               avisoForm.get('calle')?.touched ? 'text-danger' : ''">*</span>:</label>
-        <input type="text" class="form-control" id="calle" formControlName="calle" />
+        <input type="text" class="form-control" id="calle" formControlName="calle" 
+        [ngClass]="{'is-invalid': isInvalid('calle')}"/>
+            <div *ngIf="isInvalid('calle')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
       </div>
       <div class="col-md-4">
         <label class="form-label" for="numero-exterior">Número y/o letra exterior<span [ngClass]="avisoForm.get('numeroletraexterior')?.invalid && 
               avisoForm.get('numeroletraexterior')?.touched ? 'text-danger' : ''">*</span>:</label>
-        <input type="text" class="form-control" id="numero-exterior" formControlName="numeroletraexterior" />
+        <input type="text" class="form-control" id="numero-exterior" formControlName="numeroletraexterior"
+        [ngClass]="{'is-invalid': isInvalid('numeroletraexterior')}"/>
+            <div *ngIf="isInvalid('numeroletraexterior')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
       </div>
       <div class="col-md-4">
         <label class="form-label" for="numero-interior">Número y/o letra interior:</label>
@@ -78,7 +94,11 @@
       <div class="col-md-4">
         <label class="form-label" for="entre-calle">Entre calle<span [ngClass]="avisoForm.get('entrecalle')?.invalid && 
               avisoForm.get('entrecalle')?.touched ? 'text-danger' : ''">*</span>:</label>
-        <input type="text" class="form-control" id="entre-calle" formControlName="entrecalle" />
+        <input type="text" class="form-control" id="entre-calle" formControlName="entrecalle"
+        [ngClass]="{'is-invalid': isInvalid('entrecalle')}"/>
+            <div *ngIf="isInvalid('entrecalle')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
       </div>
       <div class="col-md-4">
         <label class="form-label" for="y-calle">Y calle:</label>
@@ -107,7 +127,11 @@
           <div class="col-md-4">
             <label class="form-label" for="cantidad">Cantidad<span [ngClass]="mercanciaForm.get('cantidad')?.invalid && 
               mercanciaForm.get('cantidad')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <input type="text" class="form-control" id="cantidad" formControlName="cantidad" />
+            <input type="text" class="form-control" id="cantidad" formControlName="cantidad" 
+              [ngClass]="{'is-invalid': isInvalid('cantidad')}"/>
+            <div *ngIf="isInvalid('cantidad')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
           </div>
           
           <div class="col-md-4">
@@ -119,12 +143,20 @@
           <div class="col-md-4">
             <label class="form-label" for="descripcion" >Descripcion<span [ngClass]="mercanciaForm.get('descripcion')?.invalid && 
               mercanciaForm.get('descripcion')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <textarea class="form-control" rows="3" id="descripcion" formControlName="descripcion" style="resize: vertical; overflow: hidden;height: auto;"></textarea>
+            <textarea class="form-control" rows="3" id="descripcion" formControlName="descripcion" style="resize: vertical; overflow: hidden;height: auto;"
+            [ngClass]="{'is-invalid': isInvalid('descripcion')}"></textarea>
+            <div *ngIf="isInvalid('descripcion')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
           </div>
           <div class="col-md-4">
             <label class="form-label" for="valor">Valor<span [ngClass]="mercanciaForm.get('valor')?.invalid && 
               mercanciaForm.get('valor')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <input type="text" class="form-control" id="valor" formControlName="valor" />
+            <input type="text" class="form-control" id="valor" formControlName="valor"
+            [ngClass]="{'is-invalid': isInvalid('valor')}"/>
+            <div *ngIf="isInvalid('valor')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
           </div>
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="unidadmedida" formControlName="unidadmedida" [label]="'Unidad de medida'"
@@ -135,27 +167,47 @@
           <div class="col-md-4">
             <label class="form-label" for="fraccionarancelaria">Fracción arancelaria<span [ngClass]="mercanciaForm.get('fraccionarancelaria')?.invalid && 
               mercanciaForm.get('fraccionarancelaria')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <input type="number" class="form-control" id="fraccionarancelaria" formControlName="fraccionarancelaria" />
+            <input type="text" class="form-control" id="fraccionarancelaria" formControlName="fraccionarancelaria"
+            [ngClass]="{'is-invalid': isInvalid('fraccionarancelaria')}"/>
+            <div *ngIf="isInvalid('fraccionarancelaria')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
           </div>
           <div class="col-md-4">
             <label class="form-label" for="nico">Nico<span [ngClass]="mercanciaForm.get('nico')?.invalid && 
               mercanciaForm.get('nico')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <input type="text" class="form-control" id="nico" formControlName="nico" />
+            <input type="text" class="form-control" id="nico" formControlName="nico"
+            [ngClass]="{'is-invalid': isInvalid('nico')}"/>
+            <div *ngIf="isInvalid('nico')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
           </div>
           <div class="col-md-4">
             <label class="form-label" for="marca">Marca<span [ngClass]="mercanciaForm.get('marca')?.invalid && 
               mercanciaForm.get('marca')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <input type="text" class="form-control" id="marca" formControlName="marca" />
+            <input type="text" class="form-control" id="marca" formControlName="marca"
+            [ngClass]="{'is-invalid': isInvalid('marca')}"/>
+            <div *ngIf="isInvalid('marca')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
           </div>
           <div class="col-md-4">
             <label class="form-label" for="modelo">Modelo<span [ngClass]="mercanciaForm.get('modelo')?.invalid && 
               mercanciaForm.get('modelo')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <input type="text" class="form-control" id="modelo" formControlName="modelo" />
+            <input type="text" class="form-control" id="modelo" formControlName="modelo"
+            [ngClass]="{'is-invalid': isInvalid('modelo')}"/>
+            <div *ngIf="isInvalid('modelo')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
           </div>
           <div class="col-md-4">
             <label class="form-label" for="numerodeserie">Numero de serie<span [ngClass]="mercanciaForm.get('numerodeserie')?.invalid && 
               mercanciaForm.get('numerodeserie')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <input type="text" class="form-control" id="numerodeserie" formControlName="numerodeserie" />
+            <input type="text" class="form-control" id="numerodeserie" formControlName="numerodeserie"
+            [ngClass]="{'is-invalid': isInvalid('numerodeserie')}"/>
+            <div *ngIf="isInvalid('numerodeserie')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
           </div>
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="moneda" formControlName="moneda" [label]="'Moneda'"
@@ -176,7 +228,11 @@
           <div class="col-md-9">
             <label class="form-label" for="especifique">Especifique<span [ngClass]="mercanciaForm.get('especifique')?.invalid && 
               mercanciaForm.get('especifique')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <textarea class="form-control" rows="3" id="especifique" formControlName="especifique" style="resize: vertical; overflow: hidden;height: auto;"></textarea>
+            <textarea class="form-control" rows="3" id="especifique" formControlName="especifique" style="resize: vertical; overflow: hidden;height: auto;"
+            [ngClass]="{'is-invalid': isInvalid('especifique')}"></textarea>
+            <div *ngIf="isInvalid('especifique')" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
           </div>
         </div>
         <div class="row mt-5 mb-5">

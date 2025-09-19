@@ -490,20 +490,17 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
     const RADIO_DOMICILIO = this.avisoForm?.get('radioDomicilio')?.value;
     this.isManualSelected = RADIO_DOMICILIO === 'manual';
   }
-
   /**
    * Agrega una nueva mercancía a la lista si el formulario es válido.
    */
   agregar(): void {
-    console.log('Agregar mercancía');
-    console.log(this.mercanciaForm.valid);
-    if (this.mercanciaForm.valid) {
-      console.log('inside if');
+    // if (this.mercanciaForm.valid) {
       this.tramiteService.agregar().pipe(takeUntil(this.destroyNotifier$)).subscribe(
         (respuesta) => {
-          console.log('Respuesta del servicio:', respuesta);
           if (respuesta?.success) {
-            this.discripccionDeLaMercanciaForm = [...this.discripccionDeLaMercanciaForm, ...respuesta.datos];
+            const DATOS = Array.isArray(respuesta.datos) ? respuesta.datos : [respuesta.datos];
+            this.discripccionDeLaMercanciaForm = [...this.discripccionDeLaMercanciaForm,...DATOS];
+            console.log('Respuesta del servicio:', this.discripccionDeLaMercanciaForm);
             (this.store.setPersonaFisicaExtranjeraTabla as (valor: DiscripccionDeLaMercanciaForm[]) => void)(this.discripccionDeLaMercanciaForm);
             this.store.setPersonaFisicaExtranjeraTabla(this.discripccionDeLaMercanciaForm);
             this.mercanciaForm.reset();
@@ -512,7 +509,9 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
           }
         }
       );
-    }
+    // } else {
+    //   this.mercanciaForm.markAllAsTouched();
+    // }
   }
 
   /**
@@ -520,6 +519,16 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
    */
   limpiar(): void {
     this.mercanciaForm.reset();
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @param {string} id El nombre del control del formulario.
+   * @returns {boolean} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  isInvalid(id: string): boolean {
+    const CONTROL = this.mercanciaForm.get(id);
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
   }
 
   /**

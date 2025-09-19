@@ -618,6 +618,7 @@ export class Tramite11101Store extends Store<Tramitenacionales11101State> {
             ...state,
             DiscripccionDeLaMercanciaTabla,
         }));
+        console.log(DiscripccionDeLaMercanciaTabla);
     }
 
     /**
