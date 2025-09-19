@@ -273,6 +273,13 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
 
   noRowSelected: boolean = false;
 
+   /**
+   * Indica si se han recibido datos de respuesta.
+   * @property {boolean} esDatosRespuesta
+   * */
+   noRowSelectedTablaC: boolean = false;
+
+
   /**
    * Lista de aduanas de ingreso.
    * @property {Catalogo[]} aduanaDeIngreso
@@ -718,6 +725,14 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
     }
   }
   /**
+   * Elimina las empresas nacionales seleccionadas del grid.
+   * @method eliminarEmpresasNacionales
+   * @return {void}
+   */
+  cerrarNoRowTablaC(): void {
+    this.noRowSelectedTablaC=false;
+  }
+  /**
    * Muestra una notificación de confirmación al intentar agregar un servicio duplicado.
    * @method doConfirmAgregar
    * @returns {void} Este método no retorna ningún valor.
@@ -776,7 +791,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    *  
    * */
     doAgregarDos(): void {
-      if(this.domiciliosSeleccionados.length===0 || this.domiciliosSeleccionados[0]?.id===undefined){
+      if((this.domiciliosSeleccionados.length===0 &&this.autorizadosSeleccionados.length===0)|| (this.domiciliosSeleccionados[0]?.id===undefined&&this.autorizadosSeleccionados[0]?.id===undefined)){
         this.nuevaNotificacion = {
           tipoNotificacion: TipoNotificacionEnum.ALERTA,
           categoria: CategoriaMensaje.ALERTA,
@@ -808,7 +823,21 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
      * @return {void} Este método no retorna ningún valor.
      * */
     doEliminarDos(): void {
-      if(this.empresasSeleccionados.length>0){
+      if(this.empresasSeleccionados.length===0){
+        this.nuevaNotificacion = {
+          tipoNotificacion: TipoNotificacionEnum.ALERTA,
+          categoria: CategoriaMensaje.ALERTA,
+          modo: 'modal',
+          titulo: '',
+          mensaje: 'Selecciona un registro.',
+          cerrar: false,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.noRowSelectedTablaC = true;
+
+      }
+      else{
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: CategoriaMensaje.ALERTA,
@@ -888,11 +917,14 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
     ) {
       return; 
     }
+
+    const SERVICIO_DATOS=(this.domiciliosSeleccionados[0]?.descripiónDelServicio!==undefined)?this.domiciliosSeleccionados[0]?.descripiónDelServicio:this.autorizadosSeleccionados[0]?.descripiónDelServicio;
+    const DENOMINACION_DATOS=(this.domiciliosSeleccionados[0]?.tipode!==undefined)?this.domiciliosSeleccionados[0]?.tipode:this.autorizadosSeleccionados[0]?.tipode;
   
     const CUERPODATOS = {
-      Servicio: this.domiciliosSeleccionados[0].descripiónDelServicio,
+      Servicio: SERVICIO_DATOS,
       RegistroContribuyentes: this.rfcEmpresa,
-      DenominaciónSocial:this.domiciliosSeleccionados[0].tipode,
+      DenominaciónSocial:DENOMINACION_DATOS,
       NumeroIMMEX: this.numeroPrograma,
       AñoIMMEX: this.tiempoPrograma,
     };

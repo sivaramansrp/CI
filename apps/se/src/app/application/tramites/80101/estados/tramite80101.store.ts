@@ -166,19 +166,18 @@ export interface Tramite80101State {
   tablaDatosFederatarios: FederatariosEncabezado[];
 
   /**
+   * Información detallada de plantas IMMEX.
+   */
+  plantasImmexTablaLista: PlantasImmex[];
+  /** 
+   * Información detallada de plantas disponibles. 
+   */
+  plantasDisponiblesTablaLista: PlantasDisponibles[];
+
+  /**
    * Información detallada de federatarios.
    */
   datosFederatarios: FederatariosEncabezado;
-
-  /**
-   * Información detallada de plantas immex.
-   */
-  plantasImmexTablaLista: PlantasImmex[];
-
-  /**
-   * Información detallada de plantas disponibles.
-   */
-  plantasDisponiblesTablaLista: PlantasDisponibles[];
 }
 
 /**
@@ -346,6 +345,8 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
 
   indicePrevioRuta: 0,
   tablaDatosFederatarios: [],
+  plantasImmexTablaLista: [],
+  plantasDisponiblesTablaLista: [],
   datosFederatarios: {
     nombre: '',
     primerApellido: '',
@@ -361,8 +362,6 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     estadoDos: '',
     estadoTres: ''
   },
-  plantasImmexTablaLista: [],
-  plantasDisponiblesTablaLista: []
 };
 
 /**
@@ -1008,6 +1007,20 @@ export class Tramite80101Store extends Store<Tramite80101State> {
         ...state.tablaDatosFederatarios,
         formaFederatarios,
       ],
+    }));
+  }
+
+  setPlantasDisponiblesTablaLista(plantas: PlantasDisponibles[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasDisponiblesTablaLista: [...state.plantasDisponiblesTablaLista, ...plantas],
+    }));
+  }
+
+  setPlantasImmexTablaLista(plantasImmex: PlantasImmex[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasImmexTablaLista: [...state.plantasImmexTablaLista, ...plantasImmex],
     }));
   }
 
