@@ -424,7 +424,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
             ]
   }
 
-  private plantasBase: Readonly<Record<string, any>> = {
+      private plantasBase: Readonly<Record<string, any>> = {
      "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
             "clavePlanta": "0",
             "claveAduana": null,
@@ -605,6 +605,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
             ]
   }
 
+
 /**
    * Obtiene los datos del store y los guarda utilizando el servicio.
    */
@@ -759,25 +760,34 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>, data: 
     return RESULT;
 }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+    // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
 buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const MAP_TO_PAYLOAD = (item: any): any => ({
-      ...base,
-      tipoLocal: item.colonia,
-      estadoEntidad: item.entidadFederativa,
-      cvePaisOrigen: item.pais,
-      rfc: item.rfc,
-      domicilio: item.domicilioFiscal,
-      razonSocial: item.razonSocial,
-    });
+   const MAP_TO_PAYLOAD = (item: any): any => ({
+  ...base,
+  entidadFederativa: item.estado,
+  municipioDelegacion: item.estadoOptions,
+  fechaActa: item.fechaDelActa,
+  nombreNotario: item.nombre,
+  numeroActa: item.numeroDeActa,
+  numeroNotaria: item.numeroDeNotaria,
+  apellidoPaterno: item.primerApellido,
+  apellidoMaterno: item.segundoApellido,
+  estadoEntidad: item.entidadFederativa,
+  cvePaisOrigen: item.pais,
+  rfc: item.rfc,
+  domicilio: item.domicilioFiscal,
+  razonSocial: item.razonSocial,
+});
+      
 
     arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
 
     return RESULT;
 }
+
 
   /**
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
@@ -788,9 +798,10 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
     const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
+    const PLANTAS = this.buildPlantas(data.tablaDatosFederatarios, this.plantasBase, data);
     const ANEXO_ALL = this.buildAnexo(data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase, data);
-    const PLANTAS = this.buildPlantas(data.empressaSubFabricantePlantas.plantasAgregar, this.plantasBase, data);
+    
     const PAYLOAD = {
        "tipoDeSolicitud": "guardar",
       "idSolicitud": 202781045,
