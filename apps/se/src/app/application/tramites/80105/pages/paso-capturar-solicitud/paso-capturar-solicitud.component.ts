@@ -424,7 +424,7 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
     const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.socioAccionistaBase, data);
-    const PLANTAS_TERCIARIZADORAS = PasoCapturarSolicitudComponent.buildPlantasControladoras(data.empresasSeleccionadas, this.basePlantasTerciarizadoras);
+    const PLANTAS_TERCIARIZADORAS = PasoCapturarSolicitudComponent.buildPlantasTerciarizadoras(data.empresasSeleccionadas, this.basePlantasTerciarizadoras);
     const PLANTAS = this.buildPlantas(data.tablaDatosFederatarios, this.plantasBase, data);
     const ANEXO_ALL = this.buildAnexo(data);
     const PAYLOAD = {
@@ -523,7 +523,7 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
  * @param basePlantas            Existing plantasControladoras array
  */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static buildPlantasControladoras(empresasSeleccionadas: any[], basePlantas: unknown[]): unknown[] {
+  static buildPlantasTerciarizadoras(empresasSeleccionadas: any[], basePlantas: unknown[]): unknown[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
 
@@ -532,8 +532,17 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
         const PLANTA = (planta && typeof planta === 'object') ? planta : {};
         RESULT.push({
           ...PLANTA,
+          calle: emp.calle ?? '',
+          numeroExterior: emp.numeroExterior ?? '',
+          numeroInterior: emp.numeroInterior ?? '', 
+          codigoPostal: emp.codigoPostal ?? '',
+          colonia: emp.colonia ?? '',
+          delegacionMunicipio: emp.municipioDelegacion ?? '',
+          entidadFederativa: emp.entidadFederativa ?? '',
+          pais: emp.pais ?? '',
+          rfc: emp.registroFederalContribuyentes ?? '',
           razonSocial: emp.razonSocial ?? '',
-          rfc: emp.registroFederalContribuyentes ?? ''
+          domicilioFiscal: emp.domicilioFiscalSolicitante ?? ''
         });
       });
     });

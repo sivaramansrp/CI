@@ -502,8 +502,17 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
         const PLANTA = (planta && typeof planta === 'object') ? planta : {};
         RESULT.push({
           ...PLANTA,
+          calle: emp.calle ?? '',
+          numeroExterior: emp.numeroExterior ?? '',
+          numeroInterior: emp.numeroInterior ?? '',
+          codigoPostal: emp.codigoPostal ?? '',
+          colonia: emp.colonia ?? '',
+          delegacionMunicipio: emp.municipioDelegacion ?? '',
+          entidadFederativa: emp.entidadFederativa ?? '',
+          pais: emp.pais ?? '',
+          rfc: emp.registroFederalContribuyentes ?? '',
           razonSocial: emp.razonSocial ?? '',
-          rfc: emp.registroFederalContribuyentes ?? ''
+          domicilioFiscal: emp.domicilioFiscalSolicitante ?? ''
         });
       });
     });
