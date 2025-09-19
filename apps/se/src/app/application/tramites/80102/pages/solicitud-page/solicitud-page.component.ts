@@ -713,19 +713,18 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
   };
 }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
 buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const MAP_TO_PAYLOAD = (item: any): any => ({
       ...base,
-      tipoLocal: item.colonia,
-      estadoEntidad: item.entidadFederativa,
-      cvePaisOrigen: item.pais,
-      rfc: item.rfc,
-      domicilio: item.domicilioFiscal,
-      razonSocial: item.razonSocial,
+      estadoEntidad: item.entidadFederativa ?? '',
+      cvePaisOrigen: item.pais ?? '',
+      rfc: item.rfc ?? '',
+      domicilio: item.domicilioFiscal ?? '',
+      razonSocial: item.razonSocial ?? '',
     });
 
     arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
