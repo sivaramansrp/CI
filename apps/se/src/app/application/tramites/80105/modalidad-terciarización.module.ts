@@ -2,6 +2,7 @@ import {
   AlertComponent,
   AnexarDocumentosComponent,
   BtnContinuarComponent,
+  CargaDocumentoComponent,
   CatalogoSelectComponent,
   FirmaElectronicaComponent,
   PasoFirmaComponent,
@@ -64,7 +65,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     AggregarComplimentosComponent,
     EmpresasSubfabricanteComponent,
     EmpresasTerciarizadaasComponent,
-    PasoFirmaComponent
+    PasoFirmaComponent,
+    CargaDocumentoComponent
   ],
 })
 export class ModalidadTerciarizaciónModule { }

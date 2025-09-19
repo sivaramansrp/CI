@@ -1,10 +1,11 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, Usuario, WizardComponent } from '@ng-mf/data-access-user';
 import { Subject, map, take } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
+import { USUARIO_INFO } from '../../constantes/nuevo-programa.enum';
 import basePlantasTerciarizadoras from '@libs/shared/theme/assets/json/80105/basePlantasTerciarizadoras.json';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
 import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
@@ -64,6 +65,30 @@ export class PasoCapturarSolicitudComponent implements OnDestroy,OnInit {
    * @type {Subject<void>}
    */
   destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Información del usuario actual.
+   * Este objeto contiene los datos relevantes del usuario que está interactuando con el sistema.
+   */
+  datosUsuario: Usuario = USUARIO_INFO;
+
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   * carga de archivos.
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+  /**
+   * Indica si el botón para cargar archivos está habilitado.
+  */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
 
   /** Indica si el botón Guardar está habilitado o visible. */
   public btnGuardar: boolean = true;
@@ -672,6 +697,10 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
           nombre: arr.nombre,
           apellidoPaterno: arr.apellidoPaterno,
           apellidoMaterno: arr.apellidoMaterno,
+          domicilioSolicitud: {
+            codigoPostal: arr.codigoPostal || arr.cp,
+            informacionExtra: arr.estado
+          }
         });
       });
     });
@@ -813,6 +842,57 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>, data: 
           },
         };
       }
+  
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+  
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
