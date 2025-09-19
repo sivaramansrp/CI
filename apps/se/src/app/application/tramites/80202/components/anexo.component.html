@@ -194,7 +194,7 @@
                 <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
                   <app-tabla-dinamica *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox"
                     [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos"
-                    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+                    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" (listaDeFilaSeleccionada)="seleccionTablas($event)"></app-tabla-dinamica>
                 </div>
                 <div class="container text-start mt-5">
                   <button class="btn btn-danger me-2" (click)="eliminarNicos()">Eliminar Nico</button>

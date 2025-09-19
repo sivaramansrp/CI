@@ -13,7 +13,7 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-} from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
 
 import {
   FormBuilder,
@@ -443,15 +443,15 @@ export class AnexoComponent implements OnInit, OnDestroy {
           delay(10),
           tap((_value) => {
             let ACTIVE_STATE = {
-              ...this.immexRegistroform.value.exportacionForm,
+              ...this.immexRegistroform.getRawValue().exportacionForm,
             };
             ACTIVE_STATE = {
               ...ACTIVE_STATE,
-              ...this.immexRegistroform.value.exportacionForm,
+              ...this.immexRegistroform.getRawValue().exportacionForm,
             };
             ACTIVE_STATE = {
               ...ACTIVE_STATE,
-              ...this.immexRegistroform.value.importacionForm,
+              ...this.immexRegistroform.getRawValue().importacionForm,
             };
             this.immexRegistroStore.setImmexRegistro(ACTIVE_STATE);
           })
@@ -952,6 +952,7 @@ this.showTableNicoExp = true;
      * un enlace operativo.
      */
     modalCancelar(): void {
+      this.nuevaNotificacion = {} as Notificacion;
       this.cambiarEstadoModal();
     }
       /**
@@ -980,6 +981,7 @@ this.showTableNicoExp = true;
  this.immexTableDatos = [];
  this.immexTableDatos.push(this.immexRegistroform.get('importacionForm')?.getRawValue()) ;
  this.immexRegistroform.get('importacionForm')?.reset()
+ this.nuevaNotificacion = {} as Notificacion;
       }
       else{
         this.immexRegistroform.get('importacionForm')?.markAllAsTouched();
@@ -1092,8 +1094,8 @@ estatus:true
           cantidadAnual: this.selectedRowData?.cantidadAnual || '',
           capacidadInstalada: this.selectedRowData?.capacidadInstalada || '',
           cantidadPorPeriodo: this.selectedRowData?.cantidadPorPeriodo || '',
-          Nicos:   this.immexRegistroform.get('importacionForm.Nicos')?.value|| '',
-          productoDescExportacions:  this.immexRegistroform.get('importacionForm.productoDescExportacions')?.value || '',
+          Nicos:this.selectedRowData?.Nicos || '',
+          productoDescExportacions: this.selectedRowData?.productoDescExportacions || '',
         });
  const MODAL_INSTANCIA = new Modal(
         this.mercanciaImportacionModal.nativeElement
@@ -1122,7 +1124,7 @@ descripcionValorActualizar():void{
   });
 }
 eliminarNicos():void{
-  if(this.nicoTablaDatos.length === 0){
+  if(this.nicoTablaDatos.length === 0 || (this.selectedRowDataNico === null ||this.selectedRowDataNico?.length === 0)){
         this.nuevaNotificacion = {
           tipoNotificacion: 'alert',
           categoria: 'warning',
@@ -1134,13 +1136,19 @@ eliminarNicos():void{
           txtBtnAceptar: 'Aceptar',
           txtBtnCancelar: '',
         };
+        this.eliminarDatosTablaNicoExp =true;
   }
   else{
+    this.eliminarDatosTablaNicoExp =false;
   this.showTableNicoExps = false;
   }
 }
+seleccionTablas(event: NicoInfo[]):void{
+  this.selectedRowDataNico = event;
+}
   eliminarNico():void{
     if(this.fraccionInfoSelectedNico !== null && this.nicoTablaDatos.length > 0){
+      this.nuevaNotificacion ={} as Notificacion;
       this.eliminarDatosTablaNicoExp= false;
         this.showTableNicoExp = false;
     }
