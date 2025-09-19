@@ -506,9 +506,7 @@ export class AnexoComponent implements OnInit, OnDestroy {
      * @returns {void}
      */
     fetchData(): void {
-      const DEBE_MOSTRAR_TABLA = this.immexRegistroform.get(
-        'exportacionForm.permisoImmexDatos'
-      )?.value;
+
   
       this.permisoImmexDatosService
         .getDatos()
@@ -528,15 +526,7 @@ export class AnexoComponent implements OnInit, OnDestroy {
               Array.isArray(RESPONSE_DATA.fraccionDatos) &&
               Array.isArray(RESPONSE_DATA.nicoDatos)
             ) {
-              const DEBE_MOSTRAR_DATOS =
-                DEBE_MOSTRAR_TABLA?.length > 0 ||
-                this.esFormularioSoloLectura ||
-                this.esFormularioActualizacion
-  
-              // this.fraccionTablaDatos = DEBE_MOSTRAR_DATOS
-              //   ? RESPONSE_DATA.fraccionDatos
-              //   : [];
-  
+             
               this.nicoTablaDatos = RESPONSE_DATA.nicoDatos;
   
               this.permisoImmexDatos = RESPONSE_DATA.permisoImmexDatos;
@@ -771,9 +761,7 @@ this.nuevaNotificacion = {
      */
     showTableImportacion(): void {
       if(this.immexRegistroform.get('exportacionForm.fraccionArancelariaExportacion')?.value && this.immexRegistroform.get('exportacionForm.FraccionDescExportacion')?.value && this.selectedRowData !== null){
-       const DEBE_MOSTRAR_TABLA = this.immexRegistroform.get(
-        'exportacionForm.permisoImmexDatos'
-      )?.value;
+ 
   
       this.permisoImmexDatosService
         .getDatos()
@@ -1001,6 +989,7 @@ this.showTableNicoExp = true;
     modalCancelarExportacion(): void {
          this.immexRegistroform.get('exportacionForm')?.reset();
          this.showTableNicoExp = false;
+         this.nuevaNotificacion = {} as Notificacion;
       this.cambiarEstadoModalExportacion();
     }
 
@@ -1028,6 +1017,7 @@ estatus:true
     }
     
     this.fraccionTablaDatos.push(DATA) ;
+    this.nuevaNotificacion={} as Notificacion;
     this.immexRegistroform.get('exportacionForm')?.reset();
       this.showTableNicoExp = false;
          this.cambiarEstadoModalExportacion();
