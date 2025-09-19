@@ -5,7 +5,8 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
-
+import { Servicio } from '../../models/datos-info.model';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { AmpliacionServiciosComponent } from './ampliacion-servicios.component';
 import { FormBuilder } from '@angular/forms';
@@ -61,8 +62,9 @@ describe('AmpliacionServiciosComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, AmpliacionServiciosComponent, ],
+      imports: [ FormsModule, ReactiveFormsModule,AmpliacionServiciosComponent, ],
       declarations: [
+        
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
@@ -95,7 +97,8 @@ describe('AmpliacionServiciosComponent', () => {
     component.guardarDatosFormulario = jest.fn();
     component.inicializarFormularioInfoRegistro = jest.fn();
     component.inicializarEstadoFormulario();
-   });
+   
+  });
 
   it('should run #ngOnInit()', async () => {
     component.inicializarEstadoFormulario = jest.fn();
@@ -104,8 +107,10 @@ describe('AmpliacionServiciosComponent', () => {
     component.suscribirseADatosImmex = jest.fn();
     component.suscribirseADatos = jest.fn();
     component.suscribirseAFields = jest.fn();
+    component.getTablaDatos = jest.fn();
     component.ngOnInit();
-    });
+   
+  });
 
   it('should run #enCambioDeCampo()', async () => {
     component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
@@ -113,7 +118,8 @@ describe('AmpliacionServiciosComponent', () => {
     component.ampliacionServiciosStore.setNumeroPrograma = jest.fn();
     component.ampliacionServiciosStore.setTiempoPrograma = jest.fn();
     component.enCambioDeCampo({}, {});
-      });
+   
+  });
 
   it('should run #suscribirseADatos()', async () => {
     component.subscription = component.subscription || {};
@@ -121,7 +127,46 @@ describe('AmpliacionServiciosComponent', () => {
     component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
     component.ampliacionServiciosQuery.selectDatos$ = observableOf({});
     component.suscribirseADatos();
+   
+  });
+
+  it('should run #getTablaDatos()', async () => {
+    component.subscription = component.subscription || {};
+    component.subscription.add = jest.fn();
+    component.ampliacionServiciosService = component.ampliacionServiciosService || {};
+    component.ampliacionServiciosService.getTablaDatos = jest.fn().mockReturnValue(observableOf({}));
+    component.getTablaDatos();
     
+  });
+
+  it('should run #cerrarModal()', async () => {
+
+    component.cerrarModal();
+
+  });
+
+  it('should run #cerrarModalEliminar()', async () => {
+    component.eliminarServiciosGrid = jest.fn();
+    component.cerrarModalEliminar({});
+  
+  });
+
+  it('should run #cerrarModalAgregar()', async () => {
+    component.actualizaGridEmpresasNacionales = jest.fn();
+    component.cerrarModalAgregar();
+   
+  });
+
+  it('should run #cerrarEliminarDos()', async () => {
+    component.eliminarEmpresasNacionales = jest.fn();
+    component.cerrarEliminarDos({});
+   
+  });
+
+  it('should run #cerrarNotSeleccainda()', async () => {
+
+    component.cerrarNotSeleccainda();
+
   });
 
   it('should run #suscribirseAFields()', async () => {
@@ -145,7 +190,8 @@ describe('AmpliacionServiciosComponent', () => {
       }
     });
     component.suscribirseAFields();
-    });
+   
+  });
 
   it('should run #getDatos()', async () => {
     component.subscription = component.subscription || {};
@@ -156,7 +202,8 @@ describe('AmpliacionServiciosComponent', () => {
     component.ampliacionServiciosStore.setInfoRegistro = jest.fn();
     component.initializeFormFromStore = jest.fn();
     component.getDatos();
-    });
+    
+  });
 
   it('should run #suscribirseADatosImmex()', async () => {
     component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
@@ -175,14 +222,14 @@ describe('AmpliacionServiciosComponent', () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.initializeFormFromStore();
-    
+   
   });
 
   it('should run #inicializarFormularioInfoRegistro()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.inicializarFormularioInfoRegistro();
-    
+   
   });
 
   it('should run #obtenerIngresoSelectList()', async () => {
@@ -195,26 +242,78 @@ describe('AmpliacionServiciosComponent', () => {
     component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
     component.ampliacionServiciosQuery.selectAduanaDeIngreso$ = observableOf({});
     component.obtenerIngresoSelectList();
-      });
+   
+  });
 
   it('should run #guardarDatosFormulario()', async () => {
     component.inicializarFormularioInfoRegistro = jest.fn();
     component.guardarDatosFormulario();
-    });
+    
+  });
 
   it('should run #eliminarServiciosGrid()', async () => {
     component.datosImmex = component.datosImmex || {};
     component.datosImmex.findIndex = jest.fn().mockReturnValue([
       {
-        "descripiónDelServicio": {}
+        "id": {}
       }
     ]);
     component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
-    component.domiciliosSeleccionados = '0';
+    component.domiciliosSeleccionados[0]= {
+      clearSelection: function() {}
+    };
     component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
     component.ampliacionServiciosStore.setDatosImmex = jest.fn();
     component.eliminarServiciosGrid();
-     });
+   
+  });
+
+  it('should run #doConfirmAgregar()', async () => {
+
+    component.doConfirmAgregar();
+
+  });
+
+  it('should run #doConfirmEliminar()', async () => {
+    component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
+    component.domiciliosSeleccionados[0] = {
+      id: {}
+    };
+    component.doConfirmEliminar();
+
+  });
+
+  it('should run #doAgregarDos()', async () => {
+    component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
+    component.doAgregarDos();
+
+  });
+
+  it('should run #doEliminarDos()', async () => {
+    component.empresasSeleccionados = component.empresasSeleccionados || {};
+    component.doEliminarDos();
+
+  });
+
+  it('should run #agregarServiciosAmpliacion()', async () => {
+    component.recibioDatos = component.recibioDatos || {};
+    component.recibioDatos[0] = {
+      descripcion: {},
+      tipode: {},
+      id: {}
+    };
+    component.datosImmex = component.datosImmex || {};
+    component.datosImmex.some = jest.fn().mockReturnValue([
+      {
+        "id": {}
+      }
+    ]);
+    component.doConfirmAgregar = jest.fn();
+    component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
+    component.ampliacionServiciosStore.setDatosImmex = jest.fn();
+    component.agregarServiciosAmpliacion();
+    
+  });
 
   it('should run #eliminarEmpresasNacionales()', async () => {
     component.datos = component.datos || {};
@@ -224,37 +323,77 @@ describe('AmpliacionServiciosComponent', () => {
       }
     ]);
     component.empresasSeleccionados = component.empresasSeleccionados || {};
-    component.empresasSeleccionados = {
-      RegistroContribuyentes: {}
+    component.empresasSeleccionados[0]= {
+      RegistroContribuyentes: {},
+      clearSelection: function() {}
     };
     component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
     component.ampliacionServiciosStore.setDatos = jest.fn();
     component.eliminarEmpresasNacionales();
-    });
+   
+  });
 
   it('should run #actualizaGridEmpresasNacionales()', async () => {
+    component.rfcEmpresa = component.rfcEmpresa || {};
+    component.rfcEmpresa.trim = jest.fn();
+    component.numeroPrograma = component.numeroPrograma || {};
+    component.numeroPrograma.trim = jest.fn();
+    component.tiempoPrograma = component.tiempoPrograma || {};
+    component.tiempoPrograma.trim = jest.fn();
+    component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
+    component.domiciliosSeleccionados[0] = {
+      descripiónDelServicio: {},
+      tipode: {},
+      id:1
+    };
     component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
     component.ampliacionServiciosStore.setDatos = jest.fn();
     component.ampliacionServiciosStore.setCamposEmpresa = jest.fn();
     component.actualizaGridEmpresasNacionales();
+   
   });
 
   it('should run #ngOnDestroy()', async () => {
     component.subscription = component.subscription || {};
     component.subscription.unsubscribe = jest.fn();
     component.ngOnDestroy();
-    });
+    
+  });
 
   it('should run #procesarDatosDelHijo()', async () => {
+    component.aduanaDeIngreso = component.aduanaDeIngreso || {};
+    component.aduanaDeIngreso.find = jest.fn().mockReturnValue([
+      {
+        "id": {},
+        
+      }
+    ]);
+    component.formulario = component.formulario || {};
+    component.formulario.value = {
+      entidadFederativa: {}
+    };
     component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
     component.ampliacionServiciosStore.setAduanaDeIngresoSeleccion = jest.fn();
-    component.procesarDatosDelHijo({});
-    });
+    component.procesarDatosDelHijo();
+   
+  });
 
   it('should run #seleccionarDomicilios()', async () => {
+    component.tablaB = component.tablaB || {};
+    component.tablaB.clearSelection = jest.fn();
+    component.seleccionarDomicilios({
+      id: {}
+    });
+  
+  });
 
-    component.seleccionarDomicilios({});
-
+  it('should run #seleccionarAutorizados()', async () => {
+    component.tablaA = component.tablaA || {};
+    component.tablaA.clearSelection = jest.fn();
+    component.seleccionarAutorizados({
+      id: {}
+    });
+    
   });
 
   it('should run #seleccionarEmpresas()', async () => {
