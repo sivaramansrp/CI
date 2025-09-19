@@ -277,7 +277,10 @@ export class PasoCapturarSolicitudComponent implements OnInit {
             ]
   }
 
+  /** Listado de empresas nacionales utilizadas en el formulario de solicitud. */
   private empresasNacionales = empresasNacionales;
+  
+  /** Listado de empresas  extranjeras utilizadas en el formulario de solicitud. */
   private empresasExtranjeras = empresasExtranjeras;
 
   /**
@@ -348,10 +351,8 @@ export class PasoCapturarSolicitudComponent implements OnInit {
  * utilizando un objeto base como plantilla y datos complementarios para completar
  * los campos faltantes.
  *
- * @param arr1 Primer arreglo de socios/accionistas.
- * @param arr2 Segundo arreglo de socios/accionistas.
+ * @param data Primer arreglo de socios/accionistas.
  * @param base Objeto base que sirve de plantilla para cada elemento del resultado.
- * @param data Objeto con datos complementarios necesarios para completar el payload.
  *
  * @returns Un nuevo arreglo que contiene los objetos combinados y mapeados
  *          con la información de los dos arreglos de entrada.
