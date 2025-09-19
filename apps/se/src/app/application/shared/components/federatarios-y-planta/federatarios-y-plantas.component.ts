@@ -315,6 +315,12 @@ plantasForm!: FormGroup;
  * @property {boolean} isPlantaImmexSelected
  */
   public isPlantaImmexSelected = false;
+
+   /**
+     * Arreglo que contiene los elementos del catálogo de estado IMMEX.
+     * Cada elemento representa una opción disponible en el catálogo.
+     */
+    estadoImmex: Catalogo[] = [];
   
   /**
    * Constructor de la clase FederatariosYPlantasComponent.
@@ -336,6 +342,7 @@ plantasForm!: FormGroup;
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
+    this.obtenerImex();
     this.federatoriosQuery.selectSolicitud$
     .pipe(
       takeUntil(this.destroyNotifier$),
@@ -829,6 +836,18 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
       this.federatoriosStore.setDynamicFieldValue(event.campo, event.valor);
       
     }
+  }
+
+    /**
+   * Obtiene el estado IMEX de una entidad específica y actualiza la propiedad `estadoImmex` con los datos recibidos.
+   * 
+   * @param entidad - El identificador de la entidad para la cual se desea obtener el estado IMEX.
+   */
+  obtenerImex():void {
+    this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+  this.estadoImmex = res.datos;
+    });
+    
   }
 
   /**

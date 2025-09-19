@@ -43,5 +43,5 @@ export const PROC_80102 = {
     CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${TRAMITE}/consulta/${id}`,
     OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`,
     GUARDAR: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}/solicitud/guardar`,
-    servicoImex: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/servicios-immex`,
+    servicoImex: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/servicios-immex`,
 };
