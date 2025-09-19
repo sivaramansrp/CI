@@ -45,5 +45,6 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     municipiosMax: `${BASE_URL}${API}/${procedure}${CATALOGO}/municipio-mex`,
     tipoCategoria: `${BASE_URL}${API}/${procedure}${CATALOGO}/tipo-categoria`,
     servicoImex: `${BASE_URL}${API}/${procedure}${CATALOGO}/servicios-immex`,
-    tipoInversion: `${BASE_URL}${API}/${procedure}${CATALOGO}/tipo-inversion`
+    tipoInversion: `${BASE_URL}${API}/${procedure}${CATALOGO}/tipo-inversion`,
+    estadoImex: `${BASE_URL}${API}/${procedure}${CATALOGO}/representacion-federal`
 });
