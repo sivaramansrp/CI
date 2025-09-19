@@ -735,7 +735,7 @@ this.nuevaNotificacion = {
           categoria: 'warning',
           modo: 'action',
           titulo: '',
-          mensaje: 'Debe seleccionar una fracción de importación antes de continuar.',
+          mensaje: 'Debe seleccionar una fracción de importación.',
           cerrar: false,
           tiempoDeEspera: 2000,
           txtBtnAceptar: 'Aceptar',
@@ -798,24 +798,29 @@ this.nuevaNotificacion = {
     }
   }
   eliminarFraccionExportacion():void{
-    if(this.fraccionTablaDatos.length > 0){
+    if(this.fraccionTablaDatos.length > 0 && this.fraccionInfoSelected !== null){
    this.fraccionTablaDatos = [];
       this.immexRegistroform.get('exportacionForm')?.reset();
       }
+      else if(this.fraccionTablaDatos.length > 0 && this.fraccionInfoSelected === null){
+this.nuevaNotificacion = {} as Notificacion;
+      }
       else{
-          this.nuevaNotificacion = {
+   this.nuevaNotificacion = {
           tipoNotificacion: 'alert',
           categoria: 'warning',
           modo: 'action',
           titulo: '',
-          mensaje: 'Debe seleccionar al menos una fracción antes de continuar',
+          mensaje: 'Debe seleccionar una fracción de exportación.',
           cerrar: false,
           tiempoDeEspera: 2000,
           txtBtnAceptar: 'Aceptar',
           txtBtnCancelar: '',
         };
       }
-    }
+    
+      }
+    
 
   
     /**
@@ -1068,12 +1073,12 @@ estatus:true
 
     eliminarPedimentoDatoss(borrar: boolean):void{
       if(borrar && this.selectedRowData !== null){
- this.nuevaNotificacion = {} as Notificacion;
+
   this.immexTableDatos =[];
       this.selectedRowData=null;
       this.firstloadCompleted=false;
       }
-     
+  this.nuevaNotificacion = {} as Notificacion;
       this.eliminarDatosTablaExportacion=false;
     
   }
@@ -1081,6 +1086,24 @@ descripcionValorActualizar():void{
   this.immexRegistroform.get('importacionForm')?.patchValue({
     productoDescExportacions: "Acero inoxidable laminado en frío, espesor 2mm, acabado brillante, grado 304L, para aplicaciones industriales y construcción naval"
   });
+}
+eliminarNicos():void{
+  if(this.nicoTablaDatos.length === 0){
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe elegir al menos un nico para eliminar.',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+  }
+  else{
+  this.showTableNicoExps = false;
+  }
 }
   eliminarNico():void{
     this.showTableNicoExp = false;
