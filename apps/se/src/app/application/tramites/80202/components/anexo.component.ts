@@ -246,6 +246,7 @@ export class AnexoComponent implements OnInit, OnDestroy {
   public nuevaNotificacion!: Notificacion;
   eliminarDatosTabla:boolean=false;
   eliminarDatosTablaExportacion:boolean=false;
+  eliminarDatosTablaNicoExp:boolean=false;
   
     /**
      * @constructor
@@ -597,11 +598,27 @@ export class AnexoComponent implements OnInit, OnDestroy {
      * @returns {void}
      */
     showTableExportacion(): void {
-      if(this.immexRegistroform.get('immexRegistroform.permisoImmexDatos')?.value.trim() !== '' ){
+     if(this.immexRegistroform.get('exportacionForm.permisoImmexDatos')){
+      const PERMISOVALUE = this.immexRegistroform.get('exportacionForm.permisoImmexDatos')?.value;
+    if ((PERMISOVALUE ?? '').toString().trim() !== '') {
       this.showTableExport = true;
       this.fetchData();
       }
       else{
+        this.nuevaNotificacion={
+            tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Tiene que introducir laFracción arancelaria',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+        }
+      }
+    }
+       else{
         this.nuevaNotificacion={
             tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -638,7 +655,7 @@ this.nuevaNotificacion = {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'Está seguro que desea eliminar estos datos?',
+      mensaje: 'Al eliminar el registro de fracción arancelaria, se eliminarán las fracciones de exportación asociadas. ¿Está seguro que desea eliminar la Fracción seleccionada?',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -655,7 +672,7 @@ this.nuevaNotificacion = {
           categoria: 'warning',
           modo: 'action',
           titulo: '',
-          mensaje: 'Debe seleccionar un dato para eliminar',
+          mensaje: 'Seleccione la(s) Fracción(es) de Importación a eliminar.',
           cerrar: false,
           tiempoDeEspera: 2000,
           txtBtnAceptar:'Aceptar',
@@ -667,19 +684,25 @@ this.nuevaNotificacion = {
     
     }
      mostrarDetalleMercanciaSelect(): void {
-        this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Está seguro que desea eliminar estos datos?',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar:'Aceptar',
-      txtBtnCancelar: '',
-    };
-this.firstloadCompleted=false;
-       this.eliminarDatosTabla=true;
+    if(this.immexTableDatos.length === 0 || this.selectedRowData === null){
+       this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe seleccionar una fracción de importación antes de continuar.',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar:'Aceptar',
+          txtBtnCancelar: '',
+        };
+    }
+    else{
+      
+      this.eliminarPedimentoDatos(true);
+
+    }
+
     
      
     }
@@ -700,7 +723,6 @@ this.firstloadCompleted=false;
    description: this.fraccionInfoSelected?.FRACCION_Columna_5,
    Nico:this.fraccionInfoSelected?.FRACCION_Columna_1 || 1,
    productoDescExportacion: this.fraccionInfoSelected?.FRACCION_Columna_6,
-
         })
  const MODAL_INSTANCIA = new Modal(
         this.mercanciaExportacionModal.nativeElement
@@ -713,7 +735,7 @@ this.firstloadCompleted=false;
           categoria: 'warning',
           modo: 'action',
           titulo: '',
-          mensaje: 'Debe seleccionar al menos una fracción antes de continuar',
+          mensaje: 'Debe seleccionar una fracción de importación antes de continuar.',
           cerrar: false,
           tiempoDeEspera: 2000,
           txtBtnAceptar: 'Aceptar',
@@ -767,7 +789,7 @@ this.firstloadCompleted=false;
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'Está seguro que desea eliminar estos datos?',
+      mensaje: 'Tiene que introducir la Fracción arancelaria y su descripción',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar:'Aceptar',
@@ -781,17 +803,17 @@ this.firstloadCompleted=false;
       this.immexRegistroform.get('exportacionForm')?.reset();
       }
       else{
-         this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Está seguro que desea eliminar estos datos?',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar:'Aceptar',
-      txtBtnCancelar: '',
-    };
+          this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe seleccionar al menos una fracción antes de continuar',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
       }
     }
 
@@ -816,7 +838,24 @@ this.firstloadCompleted=false;
      * @returns {void}
      */
     showTableNicoExports(): void {
-      this.showTableNicoExps = true;
+      if(this.immexRegistroform.get('importacionForm.Nicos')?.value === '' || this.immexRegistroform.get('importacionForm.productoDescExportacions')?.value === '' ){
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe seleccionar un valor nico.',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+           this.eliminarDatosTablaNicoExp = true;
+      }
+      else{
+   this.showTableNicoExps = true;
+      }
+   
     }
   
   
@@ -886,6 +925,18 @@ this.firstloadCompleted=false;
      */
     modalGuardar(): void {
       if(this.immexRegistroform.get('importacionForm')?.valid ){
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'warning',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'La operación se realizó exitosamente.',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.immexRegistroform.get('exportacionForm.permisoImmexDatos')?.reset('');
  this.cambiarEstadoModal();
  this.immexTableDatos = [];
  this.immexTableDatos.push(this.immexRegistroform.get('importacionForm')?.getRawValue()) ;
@@ -1036,6 +1087,11 @@ descripcionValorActualizar():void{
   }
   onFilaSeleccionadas(event:fraccionInfo):void{
 this.fraccionInfoSelected = event;
-
   }
+
+  onNumberInput(event: Event, formGroupName: string, controlName: string): void {
+  const INPUT = event.target as HTMLInputElement;
+  INPUT.value = INPUT.value.replace(/[^0-9]/g, ''); // remove non-numeric chars
+  this.immexRegistroform.get(`${formGroupName}.${controlName}`)?.setValue(INPUT.value, { emitEvent: false });
+}
 }
