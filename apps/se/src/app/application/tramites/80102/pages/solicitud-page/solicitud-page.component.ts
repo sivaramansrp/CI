@@ -625,6 +625,10 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
           nombre: arr.nombre,
           apellidoPaterno: arr.apellidoPaterno,
           apellidoMaterno: arr.apellidoMaterno,
+          domicilioSolicitud: {
+            codigoPostal: arr.codigoPostal || arr.cp,
+            informacionExtra: arr.estado
+          }
         });
       });
     });
