@@ -694,8 +694,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
                 : `${FAB.nombre ?? ''} ${FAB.apellido_paterno ?? ''} ${FAB.apellido_materno ?? ''}`.trim(),
               numeroRegistroFiscal: FAB.rfc,
               direccion: FAB.domicilio
-                ? `${FAB.domicilio.calle ?? ''} ${FAB.domicilio.num_exterior ?? ''}, ${FAB.domicilio.colonia ?? ''}, ${FAB.domicilio.entidad_federativa ?? ''}, ${FAB.domicilio.pais?.nombre ?? ''}`
-                : '',
+                ? `${FAB.domicilio.calle ?? ''}` : '',
               correoElectrónico: FAB.correo_electronico ?? '',
               telefono: FAB.telefono ?? '',
             };
