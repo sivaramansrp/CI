@@ -147,6 +147,16 @@ export class DatosDeLaSolicitudComponent
    */
   @Input() public opcionesColapsableState!: boolean;
 
+  /**
+   * Evento de salida que emite la acción seleccionada en la tabla de solicitudes.
+   *
+   * Permite comunicar al componente padre cuál fue la acción realizada
+   * sobre una fila específica de la tabla (por ejemplo, "ver", "editar" o "eliminar").
+   *
+   * @event
+   * @property {TablaOpcionConfig} row - Objeto con la información de la fila seleccionada.
+   * @property {string} column - Nombre de la columna o acción ejecutada.
+   */
   @Output() accioneSolitudValor = new EventEmitter<{
     row: TablaOpcionConfig;
     column: string;
