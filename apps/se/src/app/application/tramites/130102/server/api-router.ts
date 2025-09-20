@@ -10,6 +10,19 @@ export const API_GET_REGIMENES = 'sat-t130102/catalogo/regimenes';
  */
 export const API_GET_BLOQUE_PAISES = 'sat-t130102/bloques';
 
+/**
+ * Constante para la clave del tratado.
+ * Debe ser reemplazada por la clave real del tratado.
+ */
+export const CVETRATADO = '{cveTratado}';
+
+/**
+ * API MS para obtener los países por bloque del tramite 130102.
+ * @param CVETRATADO - Clave del tratado.
+ * @returns 
+ */
+export const API_GET_PAISES_BLOQUE = (CVETRATADO: string) : string => `sat-t130102/pais/${CVETRATADO}/bloques`;
+
 /*
  * API MS para obtener las entidades federativas del tramite 130102.
  *  @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/catalogo/entidades-federativas
@@ -83,11 +96,11 @@ export const API_GET_FRACCION_SUBDIVISIONES = (CVE_FRACCION: string) : string =>
  * Constante para la clave del esquema.
  * Debe ser reemplazada por la clave real del esquema.
  */
-const CVEESQUEMA = '{cveEsquema}';
+export const CVEESQUEMA = '{cveEsquema}';
 
 /**
  * API MS para obtener las reglas de un esquema específico del tramite 130102.
  * @param CVEESQUEMA - Clave del esquema.
  * @returns 
  */
-const API_GET_ESQUEMA_REGLA = (CVEESQUEMA: string) : string => `sat-t130102/esquema-regla/${CVEESQUEMA}/octava`;
+export const API_GET_ESQUEMA_REGLAS_OCTAVA = (CVEESQUEMA: string) : string => `sat-t130102/esquema-regla/${CVEESQUEMA}/octava`;

@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 
 import {
   AbstractControl,
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -87,12 +88,12 @@ export class PaisProcendenciaComponent implements OnInit {
   /**
      * Lista de paises.
      */
-    private crosListaDePaises = CROSLISTA_DE_PAISES;
+  crosListaDePaises:string[] = [];
 
   /**
    * Lista de rangos de días seleccionados.
    */
-  selectRangoDias: string[] = this.crosListaDePaises;
+  selectRangoDias: string[] = [];
 
   /**
    * Catálogo de países de procedencia.
@@ -169,7 +170,7 @@ export class PaisProcendenciaComponent implements OnInit {
    */
   ngOnInit() {
     this.inicializarEstadoFormulario();
-    this.obtenerPaisesBloque();
+    this.obtenerBloques();
     this.formularioRegistroService.registrarFormulario('paisForm', this.paisForm);
   }
     inicializarEstadoFormulario(): void {
@@ -191,6 +192,7 @@ export class PaisProcendenciaComponent implements OnInit {
         this.paisForm.enable();
       } 
   }
+
   /**
    * Inicializa el formulario reactivo y sus validaciones.
    */
@@ -207,7 +209,8 @@ export class PaisProcendenciaComponent implements OnInit {
     this.paisForm = this.fb.group({
       bloque: [this.solicitudState?.bloque],
       descripcionJustificacion: [this.solicitudState?.descripcionJustificacion, [Validators.required,PaisProcendenciaComponent.noLeadingSpacesValidator]],
-      observaciones: [this.solicitudState?.observaciones,[PaisProcendenciaComponent.noLeadingSpacesValidator]]
+      observaciones: [this.solicitudState?.observaciones,[PaisProcendenciaComponent.noLeadingSpacesValidator]],
+      fechasSeleccionadas: this.fb.array([])
     });
      if (this.esFormularioSoloLectura) {
     this.paisForm.disable();
@@ -241,6 +244,16 @@ export class PaisProcendenciaComponent implements OnInit {
   }
 
   /**
+   * Actualiza la lista de fechas seleccionadas y las almacena en el estado.
+   * 
+   * @param fechas - Arreglo de fechas a agregar.
+   * @returns void
+   */
+  changeCrosslist(fechas: string[]): void {
+    const FECHAS = new FormArray([...fechas.map(fecha => new FormControl(fecha))]);
+    this.paisForm.setControl('fechasSeleccionadas', FECHAS);
+  }
+  /**
    * Elimina elementos de la lista de fechas según el tipo especificado.
    * @param {string} tipo - Tipo de acción a realizar.
    */
@@ -259,14 +272,30 @@ export class PaisProcendenciaComponent implements OnInit {
     /**
    * Obtiene los regímenes desde el servicio CatOctavaTemporalService y actualiza el catálogo correspondiente.
    */
-    obtenerPaisesBloque(): void {
+    obtenerBloques(): void {
       this.catOctavaTemporalService.getPaisesBloque().subscribe((data) => {
-        this.paisProc = data.datos.filter(item => item.bloque ).map((item, index) => ({
-          id: index,
+        this.paisProc = data.datos.filter(item => item.bloque ).map((item) => ({
+          id: item.id || 0,
           clave: item.clave,
           descripcion: item.descripcion,
         }));  
       });
+    }
+
+    /**
+     * Método para obtener los países asociados a un bloque específico.
+     * @param cveBloque Clave del bloque para obtener los países asociados.
+     */
+    obtenerPaisesBloque(cveBloque: string): void {
+      this.catOctavaTemporalService.getPaisesBloqueEsp(cveBloque).subscribe((data) => {
+        this.selectRangoDias = data.datos.map((item, index) => item.descripcion); 
+      });
+      console.log(this.crosListaDePaises);
+    } 
+
+    changeBloque(form: FormGroup): void {
+      const CVE_BLOQUE = form.get('bloque')?.value;
+      this.obtenerPaisesBloque(CVE_BLOQUE);
     }
 
   

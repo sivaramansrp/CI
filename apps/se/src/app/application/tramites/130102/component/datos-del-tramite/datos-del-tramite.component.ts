@@ -214,6 +214,7 @@ this.tramite130102Query.selectSolicitud$
    */
   obtenerClaficacionRegimen(form: FormGroup): void {  
     const cveRegimen = form.get('regimen')?.value;
+    console.log(cveRegimen);
     if (cveRegimen) {
       this.catOctavaTemporalService.getClasificacionRegimenes(cveRegimen).subscribe((data) => {
         this.catalogosArray[1] = data.datos.map((item, index) => ({

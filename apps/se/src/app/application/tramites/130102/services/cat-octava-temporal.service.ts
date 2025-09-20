@@ -4,7 +4,16 @@ import { Injectable } from '@angular/core';
 import { CatalogosResponse, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { Observable, catchError, map, throwError } from 'rxjs';
 
-import { API_GET_BLOQUE_PAISES, API_GET_CLASIFICACION_REGIMEN, API_GET_ENTIDADES_FEDERATIVAS, API_GET_FRACCION_ARANCELARIA, API_GET_FRACCION_SUBDIVISIONES, API_GET_REGIMENES, API_GET_UNIDADES_ADMINISTRATIVAS, API_GET_UNIDADES_MEDIDA } from '../server/api-router';
+import { API_GET_BLOQUE_PAISES, 
+  API_GET_CLASIFICACION_REGIMEN, 
+  API_GET_ENTIDADES_FEDERATIVAS, 
+  API_GET_FRACCION_ARANCELARIA, 
+  API_GET_FRACCION_SUBDIVISIONES, 
+  API_GET_PAISES_BLOQUE, 
+  API_GET_REGIMENES, 
+  API_GET_UNIDADES_ADMINISTRATIVAS, 
+  API_GET_UNIDADES_MEDIDA,
+  API_GET_ESQUEMA_REGLAS_OCTAVA } from '../server/api-router';
 import { CatalogosBloquesResponse } from '../models/octava-temporal.model';
 
 @Injectable({
@@ -105,6 +114,21 @@ export class CatOctavaTemporalService {
     );
   }
 
+  getPaisesBloqueEsp (cveTratado: string): Observable<CatalogosBloquesResponse> {
+    const ENDPOINT = `${this.host}${API_GET_PAISES_BLOQUE(cveTratado)}`;
+    return this.http.get<CatalogosBloquesResponse>(ENDPOINT).pipe(
+      map((response) => {
+        return response;
+      }), 
+      catchError(() => {
+        const ERROR = new Error(    
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );  
+  } 
+
   /*
     * Obtiene las entidades federativas.    
     * @returns Observable con la respuesta del servidor.
@@ -190,7 +214,7 @@ export class CatOctavaTemporalService {
 
 
   getEsquemaReglaOctava(cveEsquema: string): Observable<CatalogosResponse> {
-    const ENDPOINT = `${this.host}` +  API_GET_ESQUEMA_REGLA_OCTAVA(cveEsquema);
+    const ENDPOINT = `${this.host}` +  API_GET_ESQUEMA_REGLAS_OCTAVA(cveEsquema);
     return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
       map((response) => {
         return response;        
@@ -206,7 +230,4 @@ export class CatOctavaTemporalService {
 
 }
 
-function API_GET_ESQUEMA_REGLA_OCTAVA(cveEsquema: string) {
-  throw new Error('Function not implemented.');
-}
 

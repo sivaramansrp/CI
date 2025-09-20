@@ -203,14 +203,7 @@ inicializarEstadoFormulario(): void {
     (this.tramite130102Store[metodoNombre] as (value: string | number) => void)(VALOR);
   }
 
-  /**
-   * Obtiene las opciones de entidades federativas.
-   * @returns void
-   */
-  fetchEntidadFederativa(e: Catalogo): void {
-    this.seleccionadaEntidadFederativa = e;
-    console.log(this.seleccionadaEntidadFederativa);
-  }
+
 
   /*
   * Obtiene las opciones de entidades federativas.    

@@ -8,7 +8,7 @@
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="paisProc"
-          (change)="setValoresStore(paisForm,'bloque', 'setBloque')"
+          (change)="setValoresStore(paisForm,'bloque', 'setBloque'); changeBloque(paisForm)"
           [label]="'Bloque'"
           [placeholder]="'Seleccione un bloque'"
           formControlName="bloque"
@@ -26,13 +26,16 @@
     </div>
     <crosslist
       [fechas]="selectRangoDias"
+      [fechasSeleccionadas]="fechasSeleccionadas"
       [showSearchInput1]="true"
       [showSearchInput2]="true"
       [searchInput1Label]="'País disponible:'"
       [searchInput2Label]="'País seleccionado:'"
       [botonField]="botonField"
       [isDisabled]="esFormularioSoloLectura"
-    ></crosslist>
+      formControlName="fechasSeleccionadas"
+      (fechasSeleccionadasChange)="changeCrosslist($event)"></crosslist>
+
   </div>
   <div class="row mt-4">
     <div class="col-md-8">
