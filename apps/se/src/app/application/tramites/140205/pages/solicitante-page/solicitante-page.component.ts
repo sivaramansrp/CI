@@ -257,6 +257,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * todas las suscripciones activas y evitar fugas de memoria.
    */
   ngOnDestroy(): void {
+    this.store.reset();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
