@@ -12,6 +12,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import {ERROR_DE_REGISTRO_ALERT} from '../../constantes/octava-temporal.enum';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 import { OCTA_TEMPO } from 'libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
+import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
 
 /**
  * @class OctavaTemporalComponent
@@ -110,7 +111,11 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
    * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado actual desde el store.
    * @param {FormularioRegistroService} formularioRegistroService - Servicio para gestionar el formulario de registro.
    */
-  constructor(private consultaQuery: ConsultaioQuery, private formularioRegistroService: FormularioRegistroService) {}
+  constructor(
+    private consultaQuery: ConsultaioQuery, 
+    private formularioRegistroService: FormularioRegistroService,
+    private catOctavaTemporalService: CatOctavaTemporalService
+  ) {}
 
   /**
    * Método del ciclo de vida `ngOnInit`.
@@ -169,6 +174,22 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
     }
     
   }
+
+  /**
+   * Método para ejecutar la notificación del trámite.
+   * @param numFolioTramite - Número de folio del trámite.
+   */
+  ejecutarNotificacion(numFolioTramite : string): void {
+      this.catOctavaTemporalService.getIniciarNotificacion(numFolioTramite ).subscribe((data) => {
+        console.log(data);
+        if(data.codigo === '200'){
+          alert(data.mensaje);
+        } else {
+          alert(`Error: ${data.error} - Causa: ${data.causa}`);
+        }
+      });
+
+  } 
 
   /*
     * Método que se ejecuta al destruir el componente.

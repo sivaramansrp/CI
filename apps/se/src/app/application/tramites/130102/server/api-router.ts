@@ -104,3 +104,17 @@ export const CVEESQUEMA = '{cveEsquema}';
  * @returns 
  */
 export const API_GET_ESQUEMA_REGLAS_OCTAVA = (CVEESQUEMA: string) : string => `sat-t130102/esquema-regla/${CVEESQUEMA}/octava`;
+
+/**
+ * Constante para el número de folio del trámite.
+ * Debe ser reemplazada por el número real de folio del trámite.
+ */
+export const NUMFOLIOTRAMITE = '{numFolioTramite}';
+
+/**
+ * API MS para iniciar la notificación de un trámite específico del tramite 130102.
+ * @param NUMFOLIOTRAMITE - Número de folio del trámite.
+ * @returns 
+ */
+
+export const API_GET_INICIAR_NOTIFICACION = (NUMFOLIOTRAMITE: string) : string => `sat-t130102/${NUMFOLIOTRAMITE}/confirmar-notificacion/iniciar`;

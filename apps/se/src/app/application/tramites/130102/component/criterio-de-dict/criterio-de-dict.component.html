@@ -12,6 +12,16 @@
           formControlName="solicitudMercancia"
           [isDisabled]="esFormularioSoloLectura ? true : false"
         ></app-catalogo-select>
+   
+        <label for="solicitudMercancia" class="form-label">Solicitud mercancia esquema regla octava clave*:</label>
+        <select class="form-control form-select" formControlName="solicitudMercancia" (change)="fetchSolicitudMercancia($event);setValoresStore(frmCriterioDictamen,'solicitudMercancia', 'setsolicitudMercancia')">
+          <option [ngValue]="null">Seleccione un valor</option>
+          <option *ngFor="let regla of solicitudMercanciaLista" [value]="regla.clave">
+            {{ regla.descripcion }}
+          </option>
+        </select>
+       
+        
         @if (frmCriterioDictamen.controls['solicitudMercancia'].invalid && frmCriterioDictamen.controls['solicitudMercancia'].touched) {
           <div class="text-danger">
             @if (frmCriterioDictamen.controls['solicitudMercancia'].errors?.['required']) {

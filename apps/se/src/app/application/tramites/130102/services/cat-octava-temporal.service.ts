@@ -13,8 +13,10 @@ import { API_GET_BLOQUE_PAISES,
   API_GET_REGIMENES, 
   API_GET_UNIDADES_ADMINISTRATIVAS, 
   API_GET_UNIDADES_MEDIDA,
-  API_GET_ESQUEMA_REGLAS_OCTAVA } from '../server/api-router';
+  API_GET_ESQUEMA_REGLAS_OCTAVA, 
+  API_GET_INICIAR_NOTIFICACION} from '../server/api-router';
 import { CatalogosBloquesResponse } from '../models/octava-temporal.model';
+import { IniciarNotificacionResponse } from '../models/response/notificaciones-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -212,7 +214,11 @@ export class CatOctavaTemporalService {
     );    
   }
 
-
+  /**
+   * Obtiene las reglas de octava temporal basadas en el esquema proporcionado.
+   * @param cveEsquema Clave del esquema para obtener las reglas de octava temporal.
+   * @returns 
+   */
   getEsquemaReglaOctava(cveEsquema: string): Observable<CatalogosResponse> {
     const ENDPOINT = `${this.host}` +  API_GET_ESQUEMA_REGLAS_OCTAVA(cveEsquema);
     return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
@@ -227,6 +233,29 @@ export class CatOctavaTemporalService {
       })
     );    
   } 
+
+
+  /**
+   * Método para iniciar una notificación basada en el número de folio del trámite.
+   * @param numFolioTramite Número de folio del trámite para iniciar la notificación.
+   * @returns 
+   */
+
+  getIniciarNotificacion(numFolioTramite: string): Observable<any> {
+    const ENDPOINT = `${this.host}` +  API_GET_INICIAR_NOTIFICACION(numFolioTramite); 
+    return this.http.get<IniciarNotificacionResponse>(ENDPOINT).pipe(
+      map((response) => {
+        return response;        
+      }       
+      ),
+      catchError(() => {    
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );  
+  }
 
 }
 
