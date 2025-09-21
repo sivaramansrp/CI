@@ -250,7 +250,7 @@
       </div>
     </div>
     } @if(idProcedimiento === 260102 || ((idProcedimiento === 260214 ||
-    idProcedimiento === 260219) &&
+    idProcedimiento === 260219 || 260904) &&
     agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
     agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA ) ||
     ( idProcedimiento === 260214 || 260904 &&
@@ -264,6 +264,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
+          [markTouched]="agregarFabricanteForm.get('pais')?.touched ?? false"
         ></app-catalogo-select>
       </div>
 
@@ -307,7 +308,9 @@
        @if(
             chequeoValidacionAlGuardar &&
             agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
-            agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL
+            agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL ||
+            agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
+            agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA
           ) {
   
           <div class="col-md-4">
