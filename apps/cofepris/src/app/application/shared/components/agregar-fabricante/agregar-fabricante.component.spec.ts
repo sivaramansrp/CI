@@ -69,6 +69,13 @@ describe('AgregarFabricanteComponent', () => {
     component.validarElementos = jest.fn();
     component.crearAgregarFormularioFabricante = jest.fn();
     component.changeNacionalidad = jest.fn();
+    if (!component.agregarFabricanteForm) {
+      component.agregarFabricanteForm = {
+        getRawValue: jest.fn().mockReturnValue({})
+      };
+    } else if (!component.agregarFabricanteForm.getRawValue) {
+      component.agregarFabricanteForm.getRawValue = jest.fn().mockReturnValue({});
+    }
     component.ngOnInit();
     expect(component.cargarDatos).toHaveBeenCalled();
     expect(component.validarElementos).toHaveBeenCalled();
@@ -124,8 +131,8 @@ describe('AgregarFabricanteComponent', () => {
     component.tipoPersona = component.tipoPersona || {};
     component.tipoPersona.MORAL = 'MORAL';
     component.tipoPersona.FISICA = 'FISICA';
-    component.fabricantes = component.fabricantes || {};
-    component.fabricantes.push = jest.fn();
+    component.fabricantes = [];
+    jest.spyOn(component.fabricantes, 'push');
     component.updateFabricanteTablaDatos = component.updateFabricanteTablaDatos || {};
     component.updateFabricanteTablaDatos.emit = jest.fn();
     component.ubicaccion = component.ubicaccion || {};
@@ -194,6 +201,7 @@ describe('AgregarFabricanteComponent', () => {
     
     component.agregarFabricanteForm = component.agregarFabricanteForm || {};
     component.agregarFabricanteForm.get = jest.fn().mockReturnValue(mockFormControl);
+    component.agregarFabricanteForm.getRawValue = jest.fn().mockReturnValue({});
     component.agregarFabricanteForm.controls = {
       nacionalidad: mockFormControl,
       tipoPersona: mockFormControl,
