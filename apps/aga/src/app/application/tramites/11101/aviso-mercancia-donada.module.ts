@@ -24,7 +24,6 @@ import { Tramite11101Store } from './estados/tramite11101.store';
         SolicitantePageComponent,
         PasoUnoComponent,
         PasoDosComponent,
-        PasoTresComponent,
     ],
 
     /**
@@ -41,6 +40,7 @@ import { Tramite11101Store } from './estados/tramite11101.store';
       AvisoMercanciaDonadaRoutingModule,
         WizardComponent,
         AnexarDocumentosComponent,
+        PasoTresComponent
     ],
 
     /**
