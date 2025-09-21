@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 /**
@@ -12,8 +13,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'paso-tres',
   standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, FirmaElectronicaComponent],
   templateUrl: './paso-tres.component.html',
-  imports: [FirmaElectronicaComponent, CommonModule],
 })
 export class PasoTresComponent {
   /**

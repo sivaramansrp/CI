@@ -1,44 +1,69 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoTresComponent } from './paso-tres.component';
-import { provideToastr, ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
-  let router: Router;
+  let routerSpy: jest.Mocked<Router>;
 
   beforeEach(async () => {
+    routerSpy = {
+      navigate: jest.fn(() => of()),
+    } as any;
+
     await TestBed.configureTestingModule({
-      imports: [PasoTresComponent],
-      providers: [provideHttpClient(), ToastrService,
-        provideToastr({
-          positionClass: 'toast-top-right',
-        }),],
+      imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FirmaElectronicaComponent,
+        PasoTresComponent,
+        HttpClientTestingModule,
+        ToastrModule.forRoot(),
+      ],
+      providers: [{ provide: Router, useValue: routerSpy }, ToastrService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
     component = fixture.componentInstance;
-    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
-  it('should navigate to acuse page on valid firma', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
-    const firma = 'valid-firma';
-    component.obtieneFirma(firma);
-    expect(navigateSpy).toHaveBeenCalledWith(['temporal-contenedores/acuse']);
-  });
 
-  it('should not navigate to acuse page on invalid firma', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
-    const firma = '';
-    component.obtieneFirma(firma);
-    expect(navigateSpy).not.toHaveBeenCalled();
+  describe('obtieneFirma', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should navigate to "temporal-contenedores/acuse" if firma is provided', () => {
+      component.obtieneFirma('firma-valida');
+      expect(routerSpy.navigate).toHaveBeenCalledWith([
+        'temporal-contenedores/acuse',
+      ]);
+    });
+
+    it('should not navigate if firma is empty', () => {
+      component.obtieneFirma('');
+      expect(routerSpy.navigate).not.toHaveBeenCalled();
+    });
+
+    it('should not navigate if firma is undefined', () => {
+      component.obtieneFirma(undefined as any);
+      expect(routerSpy.navigate).not.toHaveBeenCalled();
+    });
+
+    it('should not navigate if firma is null', () => {
+      component.obtieneFirma(null as any);
+      expect(routerSpy.navigate).not.toHaveBeenCalled();
+    });
   });
 });
