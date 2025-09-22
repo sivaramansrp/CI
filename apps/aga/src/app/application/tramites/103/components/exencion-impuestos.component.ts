@@ -214,6 +214,11 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   filaSeleccionada: number | null = null;
 
   /**
+   * Array de índices de las filas seleccionadas en la tabla con checkboxes.
+   */
+  filasSeleccionadas: number[] = [];
+
+  /**
    * Índice de la fila que se está editando, o nulo si se está agregando una nueva.
    */
   filaEditando: number | null = null;
@@ -227,6 +232,25 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   seleccionarFila(row: MercanciaRow): void {
   const INDICE = this.mercanciaBodyData.indexOf(row);
   this.filaSeleccionada = INDICE;
+  }
+
+  /**
+   * Maneja la selección múltiple de filas desde el componente tabla-dinamica.
+   * Actualiza el array de filas seleccionadas y establece filaSeleccionada solo si hay exactamente una fila seleccionada.
+   *
+   * @param {MercanciaRow[]} filasSeleccionadas Array de filas seleccionadas desde la tabla.
+   * @returns {void}
+   */
+  manejarSeleccionMultiple(filasSeleccionadas: MercanciaRow[]): void {
+    // Convertir las filas seleccionadas a índices
+    this.filasSeleccionadas = filasSeleccionadas.map(fila => this.mercanciaBodyData.indexOf(fila));
+    
+    // Solo establecer filaSeleccionada si hay exactamente una fila seleccionada
+    if (this.filasSeleccionadas.length === 1) {
+      this.filaSeleccionada = this.filasSeleccionadas[0];
+    } else {
+      this.filaSeleccionada = null;
+    }
   }
 
   /**
@@ -501,10 +525,15 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
    * @returns {void}
    */
   ngOnInit(): void {
+    // Obtener opciones de aduana
     this.exencionImpuestoService.getOpcionesAduana().subscribe(options => {
-      this.aduana = options.map(opt => ({ id: Number(opt.value ?? opt.id), descripcion: opt.label ?? opt.descripcion }));
+      this.aduana = options.map(opt => ({ 
+        id: Number(opt.value ?? opt.id), 
+        descripcion: String(opt.label ?? opt.descripcion)
+      }));
     });
 
+    // Suscribirse al estado de consultaio
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -516,14 +545,30 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
       )
       .subscribe();
 
+    // Inicializar catálogos y formularios
     this.inicializaCatalogos();
     this.obtenerEstadoSolicitud();
     this.donanteDomicilio();
-    // Configura los encabezados de la tabla para que siempre se muestren las columnas, aunque no haya datos
+
+    // Suscribirse a la tabla de mercancías
     this.mercanciaTableService.getTable().subscribe((data: MercanciaTableData) => {
       this.getMercanciaTableData = data;
       this.obtenerMercancia();
     });
+
+    // Suscribirse a cambios en aduana para ejecutar aduanaSeleccion
+    if (this.tramiteForm?.get('exencionImpuestos.aduana')) {
+      this.tramiteForm.get('exencionImpuestos.aduana')?.valueChanges
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          distinctUntilChanged()
+        )
+        .subscribe((_ ) => {
+          if (!this.isProcessingAduanaSelection) {
+            this.aduanaSeleccion();
+          }
+        });
+    }
     // Asegura que el radio esté deshabilitado por defecto (controlado en donanteDomicilio)
   }
 

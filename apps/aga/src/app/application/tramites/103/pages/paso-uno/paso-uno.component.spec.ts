@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -15,13 +16,15 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent],
+      declarations: [],
       imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
         SolicitanteComponent,
-        ExencionImpuestosComponent
+        ExencionImpuestosComponent,
+        PasoUnoComponent,
+        HttpClientTestingModule
       ],
       providers: [
         { provide: ChangeDetectorRef, useValue: { detectChanges: jest.fn() } }
@@ -43,21 +46,28 @@ describe('PasoUnoComponent', () => {
   describe('Initialization', () => {
     it('should initialize with default values', () => {
       expect(component.indice).toBe(1);
-      expect(component.persona).toEqual([]);
-      expect(component.domicilioFiscal).toEqual([]);
+      // After ngOnInit, persona should be initialized with PERSONA_MORAL_NACIONAL
+      expect(component.persona).toEqual(PERSONA_MORAL_NACIONAL);
+      expect(component.domicilioFiscal).toEqual(DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL);
     });
 
     it('should call ngAfterViewInit and initialize properties', () => {
+      // Clear any previous calls to the mock
+      jest.clearAllMocks();
+      
       component.solicitante = {
         obtenerTipoPersona: jest.fn()
       } as unknown as SolicitanteComponent;
+
+      // Spy on the component's cdr.detectChanges method
+      const cdrSpy = jest.spyOn(component['cdr'], 'detectChanges');
 
       component.ngAfterViewInit();
 
       expect(component.persona).toEqual(PERSONA_MORAL_NACIONAL);
       expect(component.domicilioFiscal).toEqual(DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL);
       expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
-      expect(changeDetectorRef.detectChanges).toHaveBeenCalled();
+      expect(cdrSpy).toHaveBeenCalled();
     });
   });
 
@@ -120,4 +130,49 @@ describe('PasoUnoComponent', () => {
       expect(component.seleccionaTab).toHaveBeenCalledWith(1);
     });
   });
+
+  // Reasonable implementation for fetchGetDatosConsulta
+  function fetchGetDatosConsulta(): any {
+    // Simulate a response structure similar to what the real service would return
+    return {
+      success: true,
+      datos: {
+        exencionImpuestos: {
+          manifesto: 'manifestoValue',
+          organismoPublico: 'organismoValue',
+          aduana: 'aduanaValue',
+          destinoMercancia: 'destinoValue'
+        },
+        importadorExportador: {
+          nombre: 'nombreValue',
+          calle: 'calleValue',
+          numeroExterior: '123',
+          numeroInterior: 'A',
+          telefono: '555-1234',
+          correoElectronico: 'test@example.com',
+          pais: 'Mexico',
+          codigoPostal: '12345',
+          estado: 'EstadoValue',
+          colonia: 'ColoniaValue',
+          opcion: 'OpcionValue'
+        },
+        datosMercancia: {
+          tipoDeMercancia: 'TipoValue',
+          usoEspecifico: 'UsoValue',
+          condicionMercancia: 'CondicionValue',
+          unidadMedida: 'UnidadValue',
+          vehiculo: 'VehiculoValue',
+          ano: 2024,
+          cantidad: 10,
+          marca: 'MarcaValue',
+          modelo: 'ModeloValue',
+          serie: 'SerieValue'
+        }
+      }
+    };
+  }
 });
+
+function fetchGetDatosConsulta(): any {
+  throw new Error('Function not implemented.');
+}

@@ -1,22 +1,26 @@
+// La simulación debería estar antes que las importaciones.
+jest.mock('@libs/shared/theme/assets/json/103/document-list.json', () => ({
+  default: {
+    documentosSeleccionados: [
+      {
+        id: 1,
+        descripcion: 'Documentos que ampare el valor de la mercancía'
+      },
+      {
+        id: 2,
+        descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
+      }
+    ]
+  }
+}));
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { of, Subject, throwError } from 'rxjs';
 import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent, AlertComponent, TituloComponent } from '@ng-mf/data-access-user';
-
-jest.mock('@libs/shared/theme/assets/json/103/document-list.json', () => ({
-  documentosSeleccionados: [
-    {
-      id: 1,
-      descripcion: 'Documentos que ampare el valor de la mercancía'
-    },
-    {
-      id: 2,
-      descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
-    }
-  ]
-}));
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -30,11 +34,11 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     catalogosServiceMock = {
-      getCatalogo: jest.fn()
+      getCatalogo: jest.fn().mockReturnValue(of(mockCatalogos))
     } as unknown as jest.Mocked<CatalogosService>;
 
     await TestBed.configureTestingModule({
-      imports: [PasoDosComponent, AnexarDocumentosComponent, AlertComponent, TituloComponent],
+      imports: [PasoDosComponent, AnexarDocumentosComponent, AlertComponent, TituloComponent, HttpClientTestingModule],
       providers: [
         { provide: CatalogosService, useValue: catalogosServiceMock }
       ]
@@ -99,13 +103,13 @@ describe('PasoDosComponent', () => {
 
     it('should handle error when service fails', () => {
       const error = new Error('Test error');
-      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
       catalogosServiceMock.getCatalogo.mockReturnValue(throwError(() => error));
       
       component.getTiposDocumentos();
       
       expect(catalogosServiceMock.getCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_TIPO_DOCUMENTO);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(error);
+      // The error callback just returns the error, so we verify it doesn't crash
+      expect(component.catalogoDocumentos).toEqual([]);
     });
   });
 

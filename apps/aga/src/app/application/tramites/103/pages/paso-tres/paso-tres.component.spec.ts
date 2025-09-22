@@ -1,8 +1,8 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoTresComponent } from './paso-tres.component';
 import { provideToastr, ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -11,7 +11,7 @@ describe('PasoTresComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoTresComponent], 
+      imports: [PasoTresComponent, HttpClientTestingModule], 
       providers: [ToastrService,
         provideToastr({
           positionClass: 'toast-top-right',

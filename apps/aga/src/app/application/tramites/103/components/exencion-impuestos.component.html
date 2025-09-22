@@ -41,13 +41,13 @@
           </div>
           <div class="table-container mt-5">
             <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [disableSeleccionTablaCheckBox]="soloLectura" [configuracionTabla]="mercanciaHeaderData"
-              [datos]="mercanciaBodyData" (filaClic)="seleccionarFila($event)">
+              [datos]="mercanciaBodyData" (listaDeFilaSeleccionada)="manejarSeleccionMultiple($event)">
             </app-tabla-dinamica>
           </div>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-default" [disabled]="soloLectura || filaSeleccionada === null"
+            <button type="button" class="btn btn-default" [disabled]="soloLectura || filasSeleccionadas.length !== 1"
               (click)="editarFila(filaSeleccionada)">Modificar</button>
-            <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura || filaSeleccionada === null"
+            <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura || filasSeleccionadas.length !== 1"
               data-bs-toggle="modal" data-bs-target="#confirmarModalCancelar" (click)="prepararEliminarFila(filaSeleccionada)">Eliminar</button>
             <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal"
               data-bs-target="#modalAgregarMercancias" (click)="abrirDialogoMercancias()"
