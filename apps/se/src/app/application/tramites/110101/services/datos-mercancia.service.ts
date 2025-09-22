@@ -1,11 +1,12 @@
-import { API_GET_FRACCION_ARANCELARIA_PARTIDA } from "../server/api-router";
+import { API_GET_FRACCION_ARANCELARIA_PARTIDA, API_POST_FRACCION_ARANCELARIA_VALIDAR } from "../server/api-router";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
 import { DatosFraccionArancelariaResponse } from "../models/response/datos-fraccion-arancelaria-response.model";
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
+import { FraccionValidarRequest } from "../models/request/validar-fraccion-request.model";
+import { FraccionValidarResponse } from "../models/response/validar-fraccion-response.model";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-
 @Injectable({
     providedIn: 'root'
 })
@@ -34,6 +35,15 @@ export class DatosMercanciaService {
     getFraccionArancelariaPartida(cveFraccion: string): Observable<BaseResponse<DatosFraccionArancelariaResponse>> {
         const ENDPOINT = `${this.host}${API_GET_FRACCION_ARANCELARIA_PARTIDA(cveFraccion)}`;
         return this.http.get<BaseResponse<DatosFraccionArancelariaResponse>>(ENDPOINT);
-
+    }
+    
+    /**
+     * Valida la fracción arancelaria mediante petición POST
+     * @param PAYLOAD - Datos requeridos para la validación de la fracción arancelaria
+     * @returns Observable con la respuesta del servidor que contiene el resultado de la validación
+     */
+    postFracccionArancelariaValidar(PAYLOAD: FraccionValidarRequest): Observable<BaseResponse<FraccionValidarResponse>> {
+        const ENDPOINT = `${this.host}${API_POST_FRACCION_ARANCELARIA_VALIDAR}`;
+        return this.http.post<BaseResponse<FraccionValidarResponse>>(ENDPOINT, PAYLOAD);
     }
 }

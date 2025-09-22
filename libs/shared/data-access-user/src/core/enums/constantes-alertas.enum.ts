@@ -112,8 +112,12 @@ export const MENSAJE_ALERTA_TRATADOS = {
 `,
 };
 
-export const INSTANCIA_URUGUAY = {
-  ADJUNTAR: `<p>Seleccione al menos 1 de las opciones por lo cual cumple el criterio de otras instancias.</p>`,
+export const INSTANCIA = {
+  MENSAJE: `<p>Seleccione al menos 1 de las opciones por lo cual cumple el criterio de otras instancias.</p>`,
+};
+
+export const INSTANCIA_ALIANZA = {
+  MENSAJE: `<p>Seleccione la(s) opcion(es) por las cual(es) cumple el criterio de otras instacias.</p>`,
 };
 
 export const ELVALORALERTA = {

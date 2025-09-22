@@ -1,7 +1,7 @@
 import { CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ELVALORALERTA, Notificacion, NotificacionesComponent, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TablePaginationComponent } from '@ng-mf/data-access-user';
 import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DATOS_MERCANCIA_MODAL_FORM, ENVASES_TABLA, INSUMOS_TABLA, MODAL_TABLA } from '../constante110101.enum';
 import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla } from '../../models/panallas110101.model';
 import { DatosMercanciaService } from '../../services/datos-mercancia.service';
@@ -13,6 +13,7 @@ import { Subject,debounceTime,distinctUntilChanged,map, takeUntil } from 'rxjs';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { FraccionValidarRequest } from '../../models/request/validar-fraccion-request.model';
 import { Modal } from 'bootstrap';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -32,7 +33,7 @@ import mercancia from '@libs/shared/theme/assets/json/110101/mercancia.json'
   standalone: true,
   imports: [TituloComponent, CommonModule, AlertComponent, ReactiveFormsModule, TablaDinamicaComponent, TablePaginationComponent, FormasDinamicasComponent, NotificacionesComponent]
 })
-export class DatosMercanciaComponent implements OnInit, OnDestroy {
+export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
      * Notificación actual que se muestra en el componente.
      *
@@ -103,27 +104,10 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   private listaSeleccionadasEnvases: EnvasesTabla[] = [];
 
   /** Un array de objetos `insumosTablaDatos` que representa los datos para la tabla de solicitudes.*/
-  public insumosTablaDatos: InsumosTabla[] = [
-    {
-      nombreTecnico: 'Producto X',
-      proveedor: 'Proveedor Y',
-      fabricanteOProductor: 'Fabricante Z',
-      rfc: 'RFC123456',
-      fraccionArancelaria: '87654321',
-      valorDeTransaccion: 5000 
-    } ];
+  public insumosTablaDatos: InsumosTabla[] = [];
 
   /** Un array de objetos `envasesTablaDatos` que representa los datos para la tabla de solicitudes.*/
-  public envasesTablaDatos: EnvasesTabla[] = [
-    {
-      nombreTecnico: 'Producto A',
-      proveedor: 'Proveedor X',
-      fabricanteOProductor: 'Fabricante Y',
-      fraccionArancelaria: '12345678',
-      valorEnDolares: 1000,
-      paisDeOrigen: 'México'
-    }
-  ];
+  public envasesTablaDatos: EnvasesTabla[] = [];
 
   /** Un array de objetos `tablaDatos` que representa los datos para la tabla de solicitudes.*/
   public tablaDatos: DatosMercanciaModalTabla[] = [
@@ -167,28 +151,9 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * const grupo = this.ninoFormGroup;
   * grupo.get('campo').setValue('nuevo valor');
   */
-  private fraccionSuscrito = false;
 
 get ninoFormGroup(): FormGroup {
-  const GRUPO = this.forma.get('ninoFormGroup') as FormGroup;
-
-    if (GRUPO && !this.fraccionSuscrito) {
-      const FRACCIONCONTROL = GRUPO.get('fraccionArancelaria');
-      if (FRACCIONCONTROL) {
-        FRACCIONCONTROL.valueChanges
-          .pipe(
-            debounceTime(500),
-            distinctUntilChanged()
-          )
-          .subscribe(valor => {
-            if (valor && valor.length >= 15) {
-              this.consultaArancelariaPartida(valor);
-            }
-          });
-        this.fraccionSuscrito = true; 
-      }
-    }
-  return GRUPO;
+  return this.forma.get('ninoFormGroup') as FormGroup;
 }
 
   /**
@@ -302,7 +267,41 @@ get ninoFormGroup(): FormGroup {
         this.solicitudeState = seccionState;
       })).subscribe();
     this.createFormMercancia();
-    this.getFormDatosDeMercancia();
+
+    
+    this.formMercancia.get('fraccionArancelaria')?.valueChanges
+    .pipe(
+      debounceTime(500), 
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
+    )
+    .subscribe(() => {
+      this.validarFraccionArancelaria();
+    }); 
+  }
+
+  /**
+   * Suscribe a los cambios en el campo `fraccionArancelaria` dentro del
+   * FormGroup hijo `ninoFormGroup` y realiza la consulta arancelaria
+   * correspondiente cuando el valor cambie. Se ejecuta después de que
+   * la vista y sus hijos han sido inicializados.
+   */
+  ngAfterViewInit(): void {
+    const FRACCIONCONTROL = this.ninoFormGroup.get('fraccionArancelaria');
+    if (!FRACCIONCONTROL) {
+      return;
+    }
+    FRACCIONCONTROL.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(valor => {
+        if (valor && valor.trim() !== '') {
+          this.consultaArancelariaPartida(valor);
+        }
+      });
   }
 
   /**
@@ -351,19 +350,6 @@ get ninoFormGroup(): FormGroup {
     });
   }
 
-  /**
-    * Rellena los campos del formulario en 'formMercancia' con datos de 'apiDatosDeRespuesta'.
-    *
-    * Este método establece los valores para los siguientes controles de formulario:
-    * - 'fraccionArancelaria': Establece el valor de 'apiDatosDeRespuesta.fraccionArancelaria'.
-    * - 'descripcion': Establece el valor de 'apiDatosDeRespuesta.descripcion'.
-    * - 'valorTransaccion': Establece el valor de 'apiDatosDeRespuesta.valorTransaccion'.
-    */
-  public getFormDatosDeMercancia(): void {
-    this.formMercancia.get('fraccionArancelaria')?.setValue(this.apiDatosDeRespuesta.fraccionArancelaria);
-    this.formMercancia.get('descripcion')?.setValue(this.apiDatosDeRespuesta.descripcion);
-    this.formMercancia.get('valorTransaccion')?.setValue(this.apiDatosDeRespuesta.valorTransaccion);
-  }
 
   /**
    * Establece el valor de un campo en el store de Tramite31601.
@@ -486,6 +472,92 @@ get ninoFormGroup(): FormGroup {
     } else {
       this.ninoFormGroup.markAllAsTouched();
     }
+  }
+
+  /**
+   * @method validarFraccionArancelaria
+   * @description Valida una fracción arancelaria mediante una petición POST al servicio correspondiente.
+   * Construye un payload con la fracción arancelaria del formulario y datos predefinidos para la validación.
+   * Si la respuesta es exitosa, actualiza la descripción en el formulario de mercancía.
+   * En caso de error, muestra una notificación con el mensaje correspondiente y desplaza la vista al inicio de la página.
+   * 
+   * @returns {void}
+ */
+  validarFraccionArancelaria(): void {
+    const PAYLOAD: FraccionValidarRequest = {
+      clave_fraccion_arancelaria:  this.formMercancia.get('fraccionArancelaria')?.value,
+      //Se manda en duro de momento
+      tipo_fraccion_arancelaria: 'TIFR.TIGIE',
+      mercancia: {
+        //Todavia no se sabe 
+        id_descripcion_alterna_ue: 0,
+        id_descripcion_alterna_aelc: 0,
+        id_descripcion_alterna_sgp: 0,
+        id_descripcion_alterna_ace: 0,
+        //mandar siempre false de momento
+        requiere_juegos_o_surtidos: false,
+        peso_es_requerido: false,
+        volumen_es_requerido: false,
+
+        //nuevos campos flujo alterno
+        fraccion_naladi: '',
+        fraccion_naladisa93: '',
+        fraccion_naladisa96: '',
+        fraccion_naladisa02: '',
+        //ultimo tab
+        tipo_proceso_mercancia: '',
+        //Mismo campo difenre nombre dependiendo del caso
+        valo_transaccional_fob: this.ninoFormGroup.get('fraccionArancelaria')?.value,
+        costo_neto_ap: 0
+      },
+      tratados_seleccionados: this.solicitudeState?.respuestaServicioDatosTabla.map(item => ({
+        cve_grupo_criterio: item.cve_grupo_criterio,
+        id_bloque: item.id_bloque ?? 0,
+        cve_tratado_acuerdo: item.cve_tratado_acuerdo ?? '',
+        id_tratado_acuerdo: item.id_tratado_acuerdo,
+        cve_pais: item.cve_pais ?? '',
+        id_desc_alterna_fraccion: 0,
+        // es lo mismo a tipo_proceso_mercancia
+        ide_tipo_proceso_mercancia: ''
+      }))
+    };
+    this.datosMercanciaService.postFracccionArancelariaValidar(PAYLOAD)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO) {
+            this.formMercancia.patchValue({
+              descripcion: response.datos?.descripcion || '' 
+            })
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: response.error || 'Error en la validacion de la fracción arancelaria.',
+              mensaje: response.causa || response.mensaje || 'Error en la validacion de la fracción arancelaria.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+        },
+        error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = error?.error?.error || 'Error en la validacion de la fracción arancelaria.';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+        }
+      });
   }
 
   /**

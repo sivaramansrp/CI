@@ -99,3 +99,9 @@ export const API_POST_SOLICITUD_TRATADOS_CONFIGURACION = `sat-t110101/solicitud/
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/consultar-datos-fraccion-arancelaria
  */
 export const API_GET_FRACCION_ARANCELARIA_PARTIDA = (CVEFRACCION: string): string => `sat-t110101/fraccion-arancelaria/${CVEFRACCION}/partida`;
+
+/**
+ * API para validar fracción arancelaria .
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/valida-fraccion-arancelaria
+ */
+export const API_POST_FRACCION_ARANCELARIA_VALIDAR = `sat-t110101/fraccion/validar`;

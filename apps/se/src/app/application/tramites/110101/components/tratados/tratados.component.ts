@@ -1,5 +1,5 @@
 
-import { AlertComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ConsultaioState,INSTANCIA_URUGUAY, InputCheckComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { AlertComponent, CategoriaMensaje, ConfiguracionColumna, ConsultaioQuery, ConsultaioState,INSTANCIA, INSTANCIA_ALIANZA, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-response.model';
 
 import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
@@ -13,8 +13,8 @@ import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
 import { CriterioConfiguracionRequest } from '../../models/request/tratado-configuracion-request.model';
 import { CriterioConfiguracionResponse } from '../../models/response/tratado-configuracion-request.model';
-import { CriteriosOtrasInstanciasRequest } from '../../models/request/criterios-otras-instancias-request.model';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
+import { OtrasInstanciasComponent } from '../otras-instancias/otras-instancias.component';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
 import { RegistroDeSolicitudesTabla} from '../../models/panallas110101.model';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
@@ -45,7 +45,7 @@ import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.
     ReactiveFormsModule,
     TablaDinamicaComponent,
     NotificacionesComponent,
-    InputCheckComponent
+    OtrasInstanciasComponent
   ]
 })
 export class TratadosComponent implements OnInit, OnDestroy {
@@ -128,9 +128,11 @@ export class TratadosComponent implements OnInit, OnDestroy {
   public origenCatalogo: Catalogo[] = [];
 
   /**
-   * Catálogo de criterios otras instancias disponibles para selección en el componente.
-   */
-  public criteriosInstanciasCatalogo: Catalogo[] = [];
+   * Lista de países que tienen configuraciones de instancias especiales.
+   * 
+   * @property {string[]} paisesInstancias - Array de claves de países que requieren manejo especial de instancias.
+  */
+  paisesInstancias: string[] = [];
 
   /**
    * @property {boolean} mostrarTabla - Indica si se debe mostrar la tabla.
@@ -223,10 +225,9 @@ export class TratadosComponent implements OnInit, OnDestroy {
      */
   public inicializarFormulario(): void {
     this.formularioTratados = this.fb.group({
-      pais: [Validators.required],
-      tratado: [ Validators.required],
-      origen: [ Validators.required],
-      criterioInstancias: [],
+      pais: [ null, Validators.required],
+      tratado: [ null, Validators.required],
+      origen: [ null, Validators.required],
     });
   }
 
@@ -241,9 +242,16 @@ export class TratadosComponent implements OnInit, OnDestroy {
   /**
    * Mensaje de alerta para instancia de uruguay.
    * 
-   * @property {string} mensajeUruguay - El mensaje de alerta que se mostrará en el componente.
+   * @property {string} mensajeGenericoInstancias - El mensaje de alerta que se mostrará en el componente.
    */
-  mensajeUruguay = INSTANCIA_URUGUAY;
+  mensajeGenericoInstancias = INSTANCIA;
+
+  /**
+   * Mensaje específico para instancias de alianza del pacífico.
+   * 
+   * @property {string} mensajeAlianza - El mensaje de alerta específico para acuerdos de alianza.
+   */
+  mensajeAlianza= INSTANCIA_ALIANZA;
 
     /**
      * Obtiene los datos de los catálogos desde el servicio backend y actualiza las propiedades de catálogos del componente.
@@ -847,6 +855,7 @@ talbleData: RegistroDeSolicitudesTabla = {
    * @returns {void} No retorna ningún valor.
    */
   onTratadoAcuerdo(selectedOption: Catalogo, campo: string): void {
+    const CLAVE = selectedOption.clave || ''
     switch (campo) {
       case 'pais':
         if (selectedOption.bloque === 'false') {
@@ -855,12 +864,9 @@ talbleData: RegistroDeSolicitudesTabla = {
           this.getCatalogoTratadoAcuerdoBloque(selectedOption.clave || '');
         }
          
-      
-          if(selectedOption.clave === "URY"){
-            this.isUruguay = true;
-            this.criteriosOtrasInstancias();
-            this.cd.detectChanges();
-          } 
+        if (this.instanciasConfig[CLAVE] && !this.paisesInstancias.includes(CLAVE)) {
+          this.paisesInstancias.push(CLAVE);
+        }
             
         break;
       case 'tratado':
@@ -871,51 +877,46 @@ talbleData: RegistroDeSolicitudesTabla = {
     }
   }
 
-  /** 
-   * @method criteriosOtrasInstancias
-   * @description Realiza una petición para obtener criterios de otras instancias.
-   * @return {void}
-   */
-  public criteriosOtrasInstancias(): void {
-    const PAYLOAD: CriteriosOtrasInstanciasRequest = {
-      paises: ['URY'],
-      otras_instancias: ['ACU', 'BMF']
-    };
-    this.catalogosTramiteService.postCatCriteriosOtrasInstancias(PAYLOAD)
-    .subscribe({
-      next: (resp) => {
-        if (resp.codigo !== CodigoRespuesta.EXITO) {
-          this.nuevaNotificacion = {
-            tipoNotificacion: 'toastr',
-            categoria: CategoriaMensaje.ERROR,
-            modo: 'action',
-            titulo: '',
-            mensaje: resp.error || 'Error al generar la cadena original.',
-            cerrar: false,
-            txtBtnAceptar: '',
-            txtBtnCancelar: '',
-          };
-        }
-        this.criteriosInstanciasCatalogo = (resp.datos || []).map((item, index) => ({
-          id: index + 1,
-          descripcion: item, 
-        }));
-      },
-      error: (error) => {
-        const MENSAJE = error?.error?.error || 'Error de conexión';
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'toastr',
-          categoria: 'error',
-          modo: 'action',
-          titulo: '',
-          mensaje: MENSAJE,
-          cerrar: false,
-          txtBtnAceptar: '',
-          txtBtnCancelar: '',
-        }
-      }
-    });
-  }
+  /**
+   * @method onTratadoAcuerdo
+   * @description Maneja el evento de cambio de selección en el catálogo de tratados o países.
+   *              Dependiendo del campo seleccionado, realiza diferentes acciones:
+   *              - Para 'pais': Obtiene el catálogo de tratados según el tipo (país o bloque)
+   *              - Para 'tratado': Obtiene el catálogo de criterios asociados al tratado
+   * @param {Catalogo} selectedOption - La opción seleccionada habilita un catálogo.
+   * @param {string} campo - El tipo de campo que generó el evento ('pais' o 'tratado').
+   * @returns {void} No retorna ningún valor.
+  */
+  instanciasConfig: Record<string, { titulo: string; alerta: string, cargarCatalogo: boolean, modificacionText?: boolean}> = {
+    URY: {
+      titulo: 'Otras Instancias para TLC-Uruguay',
+      alerta: this.mensajeGenericoInstancias.MENSAJE,
+      cargarCatalogo: true
+    },
+    CHL: {
+      titulo: 'Otras Instancias para TLC-Chile',
+      alerta: this.mensajeGenericoInstancias.MENSAJE,
+      cargarCatalogo: true
+    },
+    PER: {
+      titulo: 'Otras Instancias para TLC-Perú',
+      alerta: this.mensajeGenericoInstancias.MENSAJE,
+      cargarCatalogo: true
+    },
+    JPN: {
+      titulo: 'Otras Instancias',
+      alerta: this.mensajeGenericoInstancias.MENSAJE,
+      cargarCatalogo: false,
+    },
+    //Pendiente de checar en uat
+    SHD: {
+      titulo: 'Otras Instancias para el Acuerdo alianza del pacifico',
+      alerta: this.mensajeAlianza.MENSAJE,
+      cargarCatalogo: false,
+      modificacionText: true
+    },
+  };
+
 
   /**
    * **Ciclo de vida: OnDestroy**

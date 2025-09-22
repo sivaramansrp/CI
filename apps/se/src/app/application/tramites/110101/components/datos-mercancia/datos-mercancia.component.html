@@ -128,20 +128,6 @@
                 <formas-dinamicas [formularioTitulo]="modal==='Insumo' ? 'Insumos (materias primas, partes y piezas)' : 'Envases y empaques para venta al menudeo'" [forma]="ninoFormGroup" [formularioDatos]="modalFormaDatos"></formas-dinamicas>
             </div>
         </form>
-        <div class="row mt-5">
-            <h5>Selecciona los tratados para los cuales es originario</h5>
-            <div class="col-md-12">
-            <app-tabla-dinamica
-                [tipoSeleccionTabla]="tipoSeleccionTabla" 
-                [configuracionTabla]="configuracionTabla" 
-                [datos]="tablaDatos" 
-            >
-            </app-tabla-dinamica>
-        </div>
-        <div class="col-md-12">
-            <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
-        </div>
-        </div>
       </div>
       <div class="p-4 text-end mt-5">
         <button class="btn btn-danger ms-2" (click)="limpiarDialogo()">Limpiar datos</button>
