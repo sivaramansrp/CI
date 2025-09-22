@@ -345,6 +345,7 @@ export const INFORMACION_DE_COMPANIA = [
     valorPredeterminado: '',
     marginTop: 0,
     habilitado: true,
+    // maxlength: 13,
   },
   {
     id: 'informacionCompania.nombreCompania',
@@ -417,11 +418,10 @@ export const INFORMACION_DE_COMPANIA = [
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
-    soloLectura: false,
-    validadores: [{ tipo: 'required' },
+    soloLectura: false,    validadores: [{ tipo: 'required' },
       {
         tipo: 'maxlength',
-        varlor: 15
+        valor: 15
       },
       {
         tipo: 'pattern',
@@ -442,11 +442,10 @@ export const INFORMACION_DE_COMPANIA = [
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
-    soloLectura: false,
-    validadores: [{ tipo: 'required' },
+    soloLectura: false,    validadores: [{ tipo: 'required' },
        {
         tipo: 'maxlength',
-        varlor: 250
+        valor: 250
       },
       {
         tipo: 'pattern',
@@ -466,12 +465,11 @@ export const INFORMACION_DE_COMPANIA = [
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
-    soloLectura: false,
-    validadores: [{ tipo: 'required' },
+    soloLectura: false,    validadores: [{ tipo: 'required' },
 
        {
         tipo: 'maxlength',
-        varlor: 15
+        valor: 15
       },
       {
         tipo: 'pattern',
@@ -495,11 +493,10 @@ export const INFORMACION_DE_COMPANIA = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
-    habilitado: true,
-    validadores: [
+    habilitado: true,    validadores: [
       {
         tipo: 'maxlength',
-        varlor: 50
+        valor: 50
       },
       {
         tipo: 'pattern',
@@ -515,11 +512,10 @@ export const INFORMACION_DE_COMPANIA = [
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
-    soloLectura: false,
-    validadores: [{ tipo: 'required' },
+    soloLectura: false,    validadores: [{ tipo: 'required' },
       {
         tipo: 'maxlength',
-        varlor: 50
+        valor: 50
       },
       {
         tipo: 'pattern',
