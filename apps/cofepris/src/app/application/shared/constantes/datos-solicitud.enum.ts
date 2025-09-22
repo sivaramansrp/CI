@@ -388,7 +388,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
  *              para elementos de tabla en la aplicación.
  * @type {number[]}
  */
-export const OCULTAR_PROVEEDOR = [260102];
+export const OCULTAR_PROVEEDOR = [260102, 260101];
 
 /**
  * @const OCULTAR_FACTURADOR
@@ -396,7 +396,7 @@ export const OCULTAR_PROVEEDOR = [260102];
  *
  * @type {number[]}
  */
-export const OCULTAR_FACTURADOR = [260102];
+export const OCULTAR_FACTURADOR = [260102, 260101];
 
 /**
  * @const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE
@@ -406,7 +406,7 @@ export const OCULTAR_FACTURADOR = [260102];
  * // Ejemplo de uso:
  */
 export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [
-  260216, 260208, 260209, 260213
+  260216, 260208, 260209, 260213,
 ];
 
 /**
@@ -436,7 +436,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [
  * }
  */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO = [
-  260301, 260208, 260302, 260304, 260103, 260213,260102
+  260301, 260208, 260302, 260304, 260103, 260213, 260102, 260101,
 ];
 
 /**
@@ -477,9 +477,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS = [
  *   deshabilitarCampoMunicipio();
  * }
  */
-export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA = [
-  260214
-];
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA = [260214];
 
 /**
  * @const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA
@@ -493,7 +491,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA = [
  * }
  */
 export const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA = [
-  260208, 260103,260102
+  260208, 260103, 260102, 260101,
 ];
 
 /**
@@ -515,8 +513,8 @@ export const REPRESENTANTE_LEGAL = [260208, 260213];
  * }
  */
 export const BANCO = [
-  260104, 260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103, 260217, 260218,
-  260214, 260301,260102,260202
+  260104, 260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,
+  260217, 260218, 260214, 260301, 260102, 260202, 260101,
 ];
 
 export const REQUIRED_BANCO = [260902];
@@ -540,7 +538,7 @@ export const DATOS_MERCANCIA_CAMPO = [260208, 260209];
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO = [
-  260301, 260207, 260201, 260302, 260304, 260103,260102, 260214
+  260301, 260207, 260201, 260302, 260304, 260103, 260102, 260214,
 ];
 
 /**
@@ -554,7 +552,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO = [
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO = [
-  260301, 260207, 260201, 260302, 260304, 260103,260102, 260214
+  260301, 260207, 260201, 260302, 260304, 260103, 260102, 260214,
 ];
 
 /**
@@ -569,7 +567,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO = [
  * }
  */
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL = [
-  260301, 260207, 260201, 260302, 260304, 260103,260102, 260214
+  260301, 260207, 260201, 260302, 260304, 260103, 260102, 260214,
 ];
 
 /**
@@ -577,7 +575,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL = [
  * @description Lista de identificadores de procedimientos que deben ser deshabilitados en la inicialización.
  * @type {number[]}
  */
-export const DESHABILITADA_EN_INIT = [260302, 260214,260202];
+export const DESHABILITADA_EN_INIT = [260302, 260214, 260202, 260101];
 
 /**
  * @const SIN_ACCION_AL_INICIAR
@@ -607,7 +605,7 @@ export const NUMERO_TRAMITE = {
   TRAMITE_260103: 260103,
   TRAMITE_260201: 260201,
   TRAMITE_260301: 260301,
-  TRAMITE_260210: 260210
+  TRAMITE_260210: 260210,
 }
 
 /**
@@ -737,7 +735,8 @@ export const MENSAJE_EMERGENTE_DE_CONFIRMACION =
  *  Identificadores de notificación.
  */
 export const MOSTRAR_NOTIFICACION = [
-  260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214, 260301, 260209,260205,260204,260202
+  260219, 260302, 260304, 260206, 260201, 260103, 260203, 260214, 260301,
+  260209, 260205, 260204, 260202,
 ];
 
 /**
@@ -765,7 +764,10 @@ export const TIPO_PRODUCTO_ESPECIAL = '3';
  * @remarks
  * Esta constante se utiliza para filtrar procedimientos que no deben ser considerados en el contexto de manifiestos y declaraciones.
  */
-export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [260217, 260210, 260218, 260208, 260209, 260301, 260219, 260216, 260302, 260304, 260205, 260203];
+export const PROCEDIMIENTOS_NO_PARA_MANIFIESTOS_Y_DECLARACIONES = [
+  260217, 260210, 260218, 260208, 260209, 260301, 260219, 260216, 260302,
+  260304, 260205, 260203,
+];
 
 /**
  * @const ES_PUNTO_Y_COMA
@@ -789,7 +791,7 @@ export const TEXTO_MANIFESTO_Y_DECLARACIONES = `Cumplo con los requisitos y norm
 /**
  * Constante que representa los procedimientos para los cuales se debe adjuntar un texto específico.
  */
-export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218, 260301]; 
+export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218, 260301];
 
 /**
  * Constante que representa el código AIFA.
@@ -798,7 +800,7 @@ export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218, 260301];
  * @description Código utilizado para identificar AIFA en el sistema.
  * @remarks Utilice esta constante para referirse a AIFA en diferentes partes de la aplicación.
  */
-export const AIFA='104';
+export const AIFA = '104';
 
 /**
  * Constante que representa el código AICM.
@@ -807,4 +809,32 @@ export const AIFA='104';
  * @description Código utilizado para identificar AICM en el sistema.
  * @remarks Utilice esta constante para referirse a AICM en diferentes partes de la aplicación.
  */
-export const AICM='103';
+export const AICM = '103';
+
+/**
+ * Lista de nombres de campos clave utilizados en el formulario de mercancía.
+ *
+ * @constant
+ * @type {string[]}
+ * @default ['claveDeLos', 'fechaDeFabricacio', 'fechaDeCaducidad']
+ */
+export const CAMPOS_CLAVE = [
+  'claveDeLos',
+  'fechaDeFabricacio',
+  'fechaDeCaducidad',
+];
+
+/**
+ * Lista de identificadores de procedimientos en los que
+ * el campo de **Representante Legal** debe inicializarse.
+ *
+ * Actualmente solo aplica para el procedimiento **260101**.
+ *
+ * @constant
+ * @type {number[]}
+ * @example
+ * if (REPRESENTANTE_LEGAL_EN_INIT.includes(this.idProcedimiento)) {
+ *   // Deshabilitar o aplicar lógica específica al campo Representante Legal
+ * }
+ */
+export const REPRESENTANTE_LEGAL_EN_INIT = [260101];
