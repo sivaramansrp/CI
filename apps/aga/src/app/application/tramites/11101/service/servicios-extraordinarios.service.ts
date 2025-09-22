@@ -1,8 +1,9 @@
 import { Tramite11101Store, Tramitenacionales11101State } from '../estados/tramite11101.store';
-import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { ENVIRONMENT, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { RespuestaMercancia } from '../models/transportacion-maritima.model';
 
 /**
  * Representa la estructura estandarizada de una respuesta JSON para los servicios extraordinarios.
@@ -100,15 +101,81 @@ export class TramiteFolioService {
     this.store.setEntrecalle(DATOS.entrecalle);
     this.store.setYcalle(DATOS.ycalle);
   }
+
   /**
- * Obtiene los datos del trámite desde un archivo JSON local.
- * @returns Observable con el estado del trámite nacional (Tramitenacionales11101State).
- */
+   * Obtiene los datos del trámite desde un archivo JSON local.
+   * @returns Observable con el estado del trámite nacional (Tramitenacionales11101State).
+   */
   public getDatosDeTrtamitelDoc(): Observable<Tramitenacionales11101State> {
     return this.http.get<Tramitenacionales11101State>(
       '/assets/json/11101/aviso-tramite-data.json'
     );
   }
+
+  /**
+   * Obtenga una lista ficticia de entidadfederativa
+   */
+  getEntidadfederativa(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/entidades.json`);
+  }
+
+  /**
+   * Obtenga una lista ficticia de alcadilamunicipio
+   */
+  getAlcadilamunicipio(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/municipios.json`);
+  }
+
+  /**
+   * Obtenga una lista ficticia de colonia
+   */
+  getColonia(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/colonias.json`);
+  }
+
+  /**
+   * Obtenga una lista ficticia de formaParteDePatrimonio
+   */
+  getFormaParteDePatrimonio(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/formaParteDePatrimonio.json`);
+  }
+
+  /**
+   * Obtenga una lista ficticia de unidadmedida
+   */
+  getUnidadmedida(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/unidadmedida.json`);
+  }
+
+  /**
+   * Obtenga una lista ficticia de moneda
+   */
+  getMoneda(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/moneda.json`);
+  }
+
+  /**
+   * Obtenga una lista ficticia de fin
+   */
+  getFin(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/fin.json`);
+  }
+
+  /**
+   * Obtenga una lista ficticia de estado
+   */
+  getEstado(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11101/estado.json`);
+  }
+
+  /**
+   * Simula la adición de una nueva mercancía extraordinaria.
+   * @returns Observable con la respuesta del servidor en formato JSONResponse.
+   */
+  agregar(): Observable<RespuestaMercancia> {
+    return this.http.get<RespuestaMercancia>(`assets/json/11101/agregar.json`);
+  }
+  
 }
 
 
