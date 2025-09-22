@@ -164,7 +164,24 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
     this.store.setFederatarios(datos);
   }
 
-  
+  /**
+   * Establece los datos de las plantas disponibles en el store.
+   * @param {PlantasDisponibles[]} datos - Lista de plantas disponibles.
+   * @returns {void}
+   */
+  setPlantasDisponiblesDatos(datos: PlantasDisponibles[]): void {
+    this.store.setPlantasDisponiblesTablaLista(datos);
+  }
+
+  /**
+   * Establece los datos de las plantas IMMEX en el store.
+   * @param {PlantasImmex[]} datos - Lista de plantas IMMEX.
+   * @returns {void}
+   */
+  setPlantasImmexDatos(datos: PlantasImmex[]): void {
+    this.store.setPlantasImmexTablaLista(datos);
+  }
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
    * Emite una notificación a través del observable `destroyNotifier$` para limpiar suscripciones
