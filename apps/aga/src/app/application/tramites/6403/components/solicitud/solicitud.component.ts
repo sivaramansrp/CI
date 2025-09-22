@@ -4,6 +4,7 @@ import {
   InputFecha,
   InputFechaComponent,
   Notificacion,
+  REG_X,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -501,15 +502,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   this.solicitudFormulario = this.fb.group({
     datosAduana: this.fb.group({
       cveAduana: [{ value: this.tramiteState?.solicitudFormulario?.cveAduana, disabled: this.soloLectura }, [Validators.required]],
-      cveSeccionAduanal: [{ value: this.tramiteState?.solicitudFormulario?.cveSeccionAduanal, disabled: this.soloLectura }, [Validators.required]],
-      cveRecintoFiscalizado: [{ value: this.tramiteState?.solicitudFormulario?.cveRecintoFiscalizado, disabled: this.soloLectura }, [Validators.required]],
+      cveSeccionAduanal: [{ value: this.tramiteState?.solicitudFormulario?.cveSeccionAduanal, disabled: this.soloLectura }],
+      cveRecintoFiscalizado: [{ value: this.tramiteState?.solicitudFormulario?.cveRecintoFiscalizado, disabled: this.soloLectura }],
     }),
     datosPedimento: this.fb.group({
       cveTipoDocumento: [{ value: this.tramiteState?.solicitudFormulario?.cveTipoDocumento, disabled: this.soloLectura }, [Validators.required]],
       estadoTipoDocumento: [{ value: this.tramiteState?.solicitudFormulario?.estadoTipoDocumento, disabled: true }],
-      aduana: [{ value: this.tramiteState?.solicitudFormulario?.aduana, disabled: this.soloLectura }, [Validators.required]],
-      patente: [{ value: this.tramiteState?.solicitudFormulario?.patente, disabled: this.soloLectura }, [Validators.required]],
-      pedimento: [{ value: this.tramiteState?.solicitudFormulario?.pedimento, disabled: this.soloLectura }, [Validators.required]],
+      aduana: [{ value: this.tramiteState?.solicitudFormulario?.aduana, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]],
+      patente: [{ value: this.tramiteState?.solicitudFormulario?.patente, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]],
+      pedimento: [{ value: this.tramiteState?.solicitudFormulario?.pedimento, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]],
       folioImportacionTemporal: [{ value: this.tramiteState?.solicitudFormulario?.folioImportacionTemporal, disabled: this.soloLectura }, [Validators.required]],
       folioFormatoOficial: [{ value: this.tramiteState?.solicitudFormulario?.folioFormatoOficial, disabled: this.soloLectura }, [Validators.required]],
       checkProrroga: [{ value: this.tramiteState?.solicitudFormulario?.checkProrroga, disabled: this.soloLectura }, [Validators.required]],

@@ -4,48 +4,110 @@
     <ng-container formGroupName="datosAduana">
       <div class="row">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="aduanas" [label]="'Aduana'" [required]="true" id="cveAduana"
-            formControlName="cveAduana" [ngClass]="isValid(datosAduana,'cveAduana') ? 'required' : ''" 
-            (change)="setValoresStore(datosAduana, 'cveAduana', 'setCveAduana')"></app-catalogo-select>
+          <app-catalogo-select
+            [catalogo]="aduanas"
+            [label]="'Aduana'"
+            [required]="true"
+            id="cveAduana"
+            formControlName="cveAduana"
+            [ngClass]="isValid(datosAduana, 'cveAduana') ? 'required' : ''"
+            (change)="setValoresStore(datosAduana, 'cveAduana', 'setCveAduana')"
+          ></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="aduaneras" [label]="'Sección aduanera'" [required]="true" 
-            id="cveSeccionAduanal" formControlName="cveSeccionAduanal" 
-            [ngClass]="isValid(datosAduana,'cveSeccionAduanal') ? 'required' : ''"
-            (change)="setValoresStore(datosAduana, 'cveSeccionAduanal', 'setCveSeccionAduanal')"></app-catalogo-select>
+          <app-catalogo-select
+            [catalogo]="aduaneras"
+            [label]="'Sección aduanera'"
+            [required]="false"
+            id="cveSeccionAduanal"
+            formControlName="cveSeccionAduanal"
+            [ngClass]="
+              isValid(datosAduana, 'cveSeccionAduanal') ? 'required' : ''
+            "
+            (change)="
+              setValoresStore(
+                datosAduana,
+                'cveSeccionAduanal',
+                'setCveSeccionAduanal'
+              )
+            "
+          ></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="recintoFiscalizado" [label]="'Recinto fiscalizado'" [required]="true"
-            id="cveRecintoFiscalizado" formControlName="cveRecintoFiscalizado" 
-            [ngClass]="isValid(datosAduana,'cveRecintoFiscalizado') ? 'required' : ''"
-            (change)="setValoresStore(datosAduana, 'cveRecintoFiscalizado', 'setCveRecintoFiscalizado')"></app-catalogo-select>
+          <app-catalogo-select
+            [catalogo]="recintoFiscalizado"
+            [label]="'Recinto fiscalizado'"
+            [required]="false"
+            id="cveRecintoFiscalizado"
+            formControlName="cveRecintoFiscalizado"
+            [ngClass]="
+              isValid(datosAduana, 'cveRecintoFiscalizado') ? 'required' : ''
+            "
+            (change)="
+              setValoresStore(
+                datosAduana,
+                'cveRecintoFiscalizado',
+                'setCveRecintoFiscalizado'
+              )
+            "
+          ></app-catalogo-select>
         </div>
       </div>
     </ng-container>
     <ng-titulo
-      titulo="Datos del pedimento o forma oficial para la importación temporal de los bienes objeto de mantenimiento o reparación." />
+      titulo="Datos del pedimento o forma oficial para la importación temporal de los bienes objeto de mantenimiento o reparación."
+    />
     <ng-container formGroupName="datosPedimento">
       <div class="row">
         <div class="col-md-5">
-          <app-catalogo-select [catalogo]="tipoDeDocumento" [label]="'Tipo de documento'" [required]="true"
-            id="cveTipoDocumento" formControlName="cveTipoDocumento" 
-            [ngClass]="isValid(datosPedimento,'cveTipoDocumento') ? 'required' : ''"
-            (change)="cambiarTipoDocumento();setValoresStore(datosPedimento, 'cveTipoDocumento', 'setCveTipoDocumento')"></app-catalogo-select>
+          <app-catalogo-select
+            [catalogo]="tipoDeDocumento"
+            [label]="'Tipo de documento'"
+            [required]="true"
+            id="cveTipoDocumento"
+            formControlName="cveTipoDocumento"
+            [ngClass]="
+              isValid(datosPedimento, 'cveTipoDocumento') ? 'required' : ''
+            "
+            (change)="
+              cambiarTipoDocumento();
+              setValoresStore(
+                datosPedimento,
+                'cveTipoDocumento',
+                'setCveTipoDocumento'
+              )
+            "
+          ></app-catalogo-select>
         </div>
         <div class="col-md-2"></div>
         <div class="col-md-5">
-          @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato oficial') {
+          @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato
+          oficial') {
           <div>
-            <label class="form-label" for="estadoTipoDocumento">Estado del tipo de documento</label>
-            <span class="require form-label" id="estadoTipoDocumento">*</span>
+            <label class="form-label" for="estadoTipoDocumento"
+              >Estado del tipo de documento</label
+            >
             <label class="form-label" for="estadoTipoDocumento">:</label>
           </div>
           <div>
-            <input id="estadoTipoDocumento" name="estadoTipoDocumento" type="text" class="form-control"
-              formControlName="estadoTipoDocumento" 
-              [ngClass]="isValid(datosPedimento,'estadoTipoDocumento') ? 'required' : ''"
-              (change)="setValoresStore(datosPedimento, 'estadoTipoDocumento', 'setEstadoTipoDocumento')"
-              placeholder="No Validado" />
+            <input
+              id="estadoTipoDocumento"
+              name="estadoTipoDocumento"
+              type="text"
+              class="form-control"
+              formControlName="estadoTipoDocumento"
+              [ngClass]="
+                isValid(datosPedimento, 'estadoTipoDocumento') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosPedimento,
+                  'estadoTipoDocumento',
+                  'setEstadoTipoDocumento'
+                )
+              "
+              placeholder="No Validado"
+            />
           </div>
           }
         </div>
@@ -57,121 +119,264 @@
           <div class="col-md-4">
             <div>
               <label class="form-label" for="aduana">Aduana</label>
-              <span class="require form-label" id="aduana">*</span>
+              <span class="require form-label" [ngClass]="solicitudFormulario.get('datosPedimento.aduana')?.invalid ? 'text-danger':''" id="aduana">*</span>
               <label class="form-label" for="aduana">:</label>
             </div>
             <div>
-              <input id="aduana" name="aduana" type="text" class="form-control" formControlName="aduana" 
-                [ngClass]="isValid(datosPedimento,'aduana') ? 'required' : ''"
-                (change)="setValoresStore(datosPedimento, 'aduana', 'setAduana')" />
+              <input
+                id="aduana"
+                name="aduana"
+                maxlength="3"
+                type="text"
+                class="form-control"
+                formControlName="aduana"
+                [ngClass]="isValid(datosPedimento, 'aduana') ? 'required' : ''"
+                (change)="
+                  setValoresStore(datosPedimento, 'aduana', 'setAduana')
+                "
+              />
+              <span class="text-danger"
+                *ngIf="(solicitudFormulario.get('datosPedimento.aduana')?.invalid
+                        || solicitudFormulario.get('datosPedimento.aduana')?.errors?.['pattern'])
+                        && solicitudFormulario.get('datosPedimento.aduana')?.touched"
+              >
+                Este campo es obligatorio.
+              </span>
             </div>
           </div>
           <div class="col-md-4">
             <div>
               <label class="form-label" for="patente">Patente</label>
-              <span class="require form-label" id="patente">*</span>
+              <span class="require form-label" [ngClass]="solicitudFormulario.get('datosPedimento.patente')?.invalid ? 'text-danger':''" id="patente">*</span>
               <label class="form-label" for="patente">:</label>
             </div>
             <div>
-              <input id="patente" name="patente" type="text" class="form-control" formControlName="patente" 
-                [ngClass]="isValid(datosPedimento,'patente') ? 'required' : ''"
-                (change)="setValoresStore(datosPedimento, 'patente', 'setPatente')" />
+              <input
+                id="patente"
+                name="patente"
+                type="text"
+                maxlength="6"
+                class="form-control"
+                formControlName="patente"
+                [ngClass]="isValid(datosPedimento, 'patente') ? 'required' : ''"
+                (change)="
+                  setValoresStore(datosPedimento, 'patente', 'setPatente')
+                "
+              />
+              <span class="text-danger"
+                *ngIf="(solicitudFormulario.get('datosPedimento.patente')?.invalid
+                        || solicitudFormulario.get('datosPedimento.patente')?.errors?.['pattern'])
+                        && solicitudFormulario.get('datosPedimento.patente')?.touched"
+              >
+                Este campo es obligatorio.
+              </span>
             </div>
           </div>
           <div class="col-md-4">
             <div>
               <label class="form-label" for="pedimento">Pedimento</label>
-              <span class="require form-label" id="pedimento">*</span>
+              <span class="require form-label" [ngClass]="solicitudFormulario.get('datosPedimento.pedimento')?.invalid ? 'text-danger':''" id="pedimento">*</span>
               <label class="form-label" for="pedimento">:</label>
             </div>
             <div>
-              <input id="pedimento" name="pedimento" type="text" class="form-control" formControlName="pedimento" 
-                [ngClass]="isValid(datosPedimento,'pedimento') ? 'required' : ''"
-                (change)="setValoresStore(datosPedimento, 'pedimento', 'setPedimento')" />
+              <input
+                id="pedimento"
+                name="pedimento"
+                type="text"
+                maxlength="7"
+                class="form-control"
+                formControlName="pedimento"
+                [ngClass]="
+                  isValid(datosPedimento, 'pedimento') ? 'required' : ''
+                "
+                (change)="
+                  setValoresStore(datosPedimento, 'pedimento', 'setPedimento')
+                "
+              />
+              <span class="text-danger"
+                *ngIf="(solicitudFormulario.get('datosPedimento.pedimento')?.invalid
+                        || solicitudFormulario.get('datosPedimento.pedimento')?.errors?.['pattern'])
+                        && solicitudFormulario.get('datosPedimento.pedimento')?.touched"
+              >
+                Este campo es obligatorio.
+              </span>
             </div>
           </div>
-          }
-          @else if(datosPedimento.get('cveTipoDocumento')?.value==='Folio VUCEM'){
+          } @else if(datosPedimento.get('cveTipoDocumento')?.value==='Folio VUCEM'){
           <div>
-            <label class="form-label" for="folioImportacionTemporal">Folio de importación temporal</label>
-            <span class="require form-label" id="folioImportacionTemporal">*</span>
+            <label class="form-label" for="folioImportacionTemporal"
+              >Folio de importación temporal</label
+            >
+            <span class="require form-label" id="folioImportacionTemporal"
+              >*</span
+            >
             <label class="form-label" for="folioImportacionTemporal">:</label>
           </div>
           <div>
-            <input id="folioImportacionTemporal" name="folioImportacionTemporal" type="number" class="form-control"
+            <input
+              id="folioImportacionTemporal"
+              name="folioImportacionTemporal"
+              type="number"
+              class="form-control"
               formControlName="folioImportacionTemporal"
-              [ngClass]="isValid(datosPedimento,'folioImportacionTemporal') ? 'required' : ''"
-              (change)="setValoresStore(datosPedimento, 'folioImportacionTemporal', 'setFolioImportacionTemporal')" />
+              [ngClass]="
+                isValid(datosPedimento, 'folioImportacionTemporal')
+                  ? 'required'
+                  : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosPedimento,
+                  'folioImportacionTemporal',
+                  'setFolioImportacionTemporal'
+                )
+              "
+            />
           </div>
-          } @else if(datosPedimento.get('cveTipoDocumento')?.value==='Formato oficial'){
+          } @else if(datosPedimento.get('cveTipoDocumento')?.value==='Formato
+          oficial'){
           <div>
-            <label class="form-label" for="folioFormatoOficial">Folio de formato oficial</label>
+            <label class="form-label" for="folioFormatoOficial"
+              >Folio de formato oficial</label
+            >
             <span class="require form-label" id="folioFormatoOficial">*</span>
             <label class="form-label" for="folioFormatoOficial">:</label>
           </div>
           <div>
-            <input id="folioFormatoOficial" name="folioFormatoOficial" type="number" class="form-control"
+            <input
+              id="folioFormatoOficial"
+              name="folioFormatoOficial"
+              type="number"
+              class="form-control"
               formControlName="folioFormatoOficial"
-              [ngClass]="isValid(datosPedimento,'folioFormatoOficial') ? 'required' : ''"
-              (change)="setValoresStore(datosPedimento, 'folioFormatoOficial', 'setFolioFormatoOficial')" />
+              [ngClass]="
+                isValid(datosPedimento, 'folioFormatoOficial') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosPedimento,
+                  'folioFormatoOficial',
+                  'setFolioFormatoOficial'
+                )
+              "
+            />
           </div>
           }
         </div>
         <div class="col-md-2">
-          @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato oficial') {
-          <button type="button" class="btn btn-primary ms-3" >
-            Validor
-          </button>
+          @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato
+          oficial') {
+          <button type="button" class="btn btn-primary ms-3">Validar</button>
           }
         </div>
         <div class="col-md-5">
           <div class="col-md-5">
             <div class="form-check mt-5">
-              <input class="form-check-input" type="checkbox" id="checkProrroga" formControlName="checkProrroga"
-                [ngClass]="isValid(datosPedimento,'checkProrroga') ? 'required' : ''" 
-                (change)="cambiarCheckProrroga();setValoresStore(datosPedimento, 'checkProrroga', 'setCheckProrroga')">
-              <label class="form-check-label" for="checkProrroga">Con prórroga</label>
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="checkProrroga"
+                formControlName="checkProrroga"
+                [ngClass]="
+                  isValid(datosPedimento, 'checkProrroga') ? 'required' : ''
+                "
+                (change)="
+                  cambiarCheckProrroga();
+                  setValoresStore(
+                    datosPedimento,
+                    'checkProrroga',
+                    'setCheckProrroga'
+                  )
+                "
+              />
+              <label class="form-check-label" for="checkProrroga"
+                >Con prórroga</label
+              >
             </div>
           </div>
           <div class="col-md-7">
             <div>
-              <label class="form-label" for="folioOficialProrroga">Folio oficial prórroga</label>
+              <label class="form-label" for="folioOficialProrroga"
+                >Folio oficial prórroga</label
+              >
             </div>
             <div>
-              <input id="folioOficialProrroga" name="folioOficialProrroga" type="text" class="form-control"
-                formControlName="folioOficialProrroga" 
-                [ngClass]="isValid(datosPedimento,'folioOficialProrroga') ? 'required' : ''"
-                (change)="setValoresStore(datosPedimento, 'folioOficialProrroga', 'setFolioOficialProrroga')" />
+              <input
+                id="folioOficialProrroga"
+                name="folioOficialProrroga"
+                type="text"
+                maxlength="25"
+                class="form-control"
+                formControlName="folioOficialProrroga"
+                [ngClass]="
+                  isValid(datosPedimento, 'folioOficialProrroga')
+                    ? 'required'
+                    : ''
+                "
+                (change)="
+                  setValoresStore(
+                    datosPedimento,
+                    'folioOficialProrroga',
+                    'setFolioOficialProrroga'
+                  )
+                "
+              />
             </div>
           </div>
         </div>
-
       </div>
-      @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Folio VUCEM') {
+      <!-- @if (this.datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM')
+      { -->
       <div class="row">
         <div class="col-md-5">
           <div class="form-group datepicker-group">
-            <input-fecha [datos]="fechaImportacion" [setFecha]="datosPedimento.get('fechaImportacionTemporal')?.value"
-              (valorCambiado)="cambioImportacionTemporal($event)" ></input-fecha>
+            <input-fecha
+              [datos]="fechaImportacion"
+              [icono]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? false: true"
+              [isDisabled]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? true: false"
+              [setFecha]="datosPedimento.get('fechaImportacionTemporal')?.value"
+              (valorCambiado)="cambioImportacionTemporal($event)"
+            ></input-fecha>
           </div>
         </div>
         <div class="col-md-2"></div>
         <div class="col-md-5">
           <div class="form-group datepicker-group">
-            <input-fecha [datos]="fechaVencimiento" [setFecha]="datosPedimento.get('fechaVencimiento')?.value"
-              (valorCambiado)="cambioVencimiento($event)" ></input-fecha>
+            <input-fecha
+              [datos]="fechaVencimiento"
+              [icono]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? false: true"
+              [isDisabled]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? true: false"
+              [setFecha]="datosPedimento.get('fechaVencimiento')?.value"
+              (valorCambiado)="cambioVencimiento($event)"
+            ></input-fecha>
           </div>
         </div>
       </div>
-      }
+      <!-- } -->
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <label for="descMercancia" class="form-label">Descripción de la mercancía</label>
+            <label for="descMercancia" class="form-label"
+              >Descripción de la mercancía<span>*</span></label
+            >
             <label for="descMercancia">:</label>
-            <textarea id="descMercancia" name="descMercancia" rows="5" class="form-control textarea" 
-              formControlName="descMercancia" [ngClass]="isValid(datosPedimento,'descMercancia') ? 'required' : ''"
-              (change)="setValoresStore(datosPedimento, 'descMercancia', 'setDescMercancia')"></textarea>
+            <textarea
+              id="descMercancia"
+              name="descMercancia"
+              rows="5"
+              class="form-control textarea"
+              formControlName="descMercancia"
+              [ngClass]="
+                isValid(datosPedimento, 'descMercancia') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosPedimento,
+                  'descMercancia',
+                  'setDescMercancia'
+                )
+              "
+            ></textarea>
           </div>
         </div>
       </div>
@@ -179,22 +384,33 @@
       <div class="row">
         <div class="col-md-6">
           <div>
-            <label class="form-label" for="marca">Marca</label>
+            <label class="form-label" for="marca">Marca:</label>
           </div>
           <div>
-            <input id="marca" name="marca" type="text" class="form-control" 
-              [ngClass]="isValid(datosPedimento,'marca') ? 'required' : ''"
-              (change)="setValoresStore(datosPedimento, 'marca', 'setMarca')" />
+            <input
+              id="marca"
+              name="marca"
+              type="text"
+              class="form-control"
+              [ngClass]="isValid(datosPedimento, 'marca') ? 'required' : ''"
+              (change)="setValoresStore(datosPedimento, 'marca', 'setMarca')"
+            />
           </div>
         </div>
         <div class="col-md-6">
           <div>
-            <label class="form-label" for="modelo">Modelo</label>
+            <label class="form-label" for="modelo">Modelo:</label>
           </div>
           <div>
-            <input id="modelo" name="modelo" type="text" class="form-control" formControlName="modelo" 
-              [ngClass]="isValid(datosPedimento,'modelo') ? 'required' : ''"
-              (change)="setValoresStore(datosPedimento, 'modelo', 'setModelo')" />
+            <input
+              id="modelo"
+              name="modelo"
+              type="text"
+              class="form-control"
+              formControlName="modelo"
+              [ngClass]="isValid(datosPedimento, 'modelo') ? 'required' : ''"
+              (change)="setValoresStore(datosPedimento, 'modelo', 'setModelo')"
+            />
           </div>
         </div>
       </div>
@@ -202,42 +418,66 @@
       <div class="row">
         <div class="col-md-6">
           <div>
-            <label class="form-label" for="numeroSerie">Número de serie</label>
+            <label class="form-label" for="numeroSerie">Número de serie:</label>
           </div>
           <div>
-            <input id="numeroSerie" name="numeroSerie" type="text" class="form-control" formControlName="numeroSerie" 
-              [ngClass]="isValid(datosPedimento,'numeroSerie') ? 'required' : ''"
-              (change)="setValoresStore(datosPedimento, 'numeroSerie', 'setNumeroSerie')" />
+            <input
+              id="numeroSerie"
+              name="numeroSerie"
+              type="text"
+              class="form-control"
+              formControlName="numeroSerie"
+              [ngClass]="
+                isValid(datosPedimento, 'numeroSerie') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(datosPedimento, 'numeroSerie', 'setNumeroSerie')
+              "
+            />
           </div>
         </div>
         <div class="col-md-6">
           <div>
-            <label class="form-label" for="tipo">Tipo</label>
+            <label class="form-label" for="tipo">Tipo:</label>
           </div>
           <div>
-            <input id="tipo" name="tipo" type="text" class="form-control" formControlName="tipo" 
-              [ngClass]="isValid(datosPedimento,'tipo') ? 'required' : ''"
-              (change)="setValoresStore(datosPedimento, 'tipo', 'setTipo')" />
+            <input
+              id="tipo"
+              name="tipo"
+              type="text"
+              class="form-control"
+              formControlName="tipo"
+              [ngClass]="isValid(datosPedimento, 'tipo') ? 'required' : ''"
+              (change)="setValoresStore(datosPedimento, 'tipo', 'setTipo')"
+            />
           </div>
         </div>
       </div>
-
     </ng-container>
     <ng-titulo titulo="Partes o refacciones reemplazadas." />
     <div class="row">
-      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas"
-        [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)" [disableSeleccionTablaCheckBox]="soloLectura? true : false"></app-tabla-dinamica>
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+        [configuracionTabla]="tablaDeDatos.encabezadas"
+        [datos]="tablaDeDatos.datos"
+        (listaDeFilaSeleccionada)="filaSeleccionada($event)"
+        [disableSeleccionTablaCheckBox]="soloLectura ? true : false"
+      ></app-tabla-dinamica>
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary ms-3"  (click)="abiertoMercancia()">
+        <button
+          type="button"
+          class="btn btn-primary ms-3"
+          (click)="abiertoMercancia()"
+        >
           Agregar
         </button>
-        <button type="button" class="btn btn-primary ms-3" >
-          Modificar
-        </button>
-        <button type="button" class="btn btn-danger ms-3" >
-          Consultar
-        </button>
-        <button type="button" class="btn btn-danger ms-3"  (click)="eliminarMercancia()">
+        <button type="button" class="btn btn-primary ms-3">Modificar</button>
+        <button type="button" class="btn btn-danger ms-3">Consultar</button>
+        <button
+          type="button"
+          class="btn btn-danger ms-3"
+          (click)="eliminarMercancia()"
+        >
           Eliminar
         </button>
       </div>
@@ -246,10 +486,25 @@
     <ng-container formGroupName="datosMedioTransporte">
       <div class="row">
         <div class="col-md-3">
-          <app-catalogo-select [catalogo]="medioDeTransporte" [label]="'Medio de transporte'" [required]="true"
-            id="cveMedioTrasporte" formControlName="cveMedioTrasporte" 
-            [ngClass]="isValid(datosMedioTransporte,'cveMedioTrasporte') ? 'required' : ''"
-            (change)="setValoresStore(datosMedioTransporte, 'cveMedioTrasporte', 'setCveMedioTrasporte')"></app-catalogo-select>
+          <app-catalogo-select
+            [catalogo]="medioDeTransporte"
+            [label]="'Medio de transporte'"
+            [required]="true"
+            id="cveMedioTrasporte"
+            formControlName="cveMedioTrasporte"
+            [ngClass]="
+              isValid(datosMedioTransporte, 'cveMedioTrasporte')
+                ? 'required'
+                : ''
+            "
+            (change)="
+              setValoresStore(
+                datosMedioTransporte,
+                'cveMedioTrasporte',
+                'setCveMedioTrasporte'
+              )
+            "
+          ></app-catalogo-select>
         </div>
 
         @if (datosMedioTransporte.get('cveMedioTrasporte')?.value === '' ||
@@ -261,12 +516,27 @@
             <label class="form-label" for="guiaMaster">:</label>
           </div>
           <div>
-            <input id="guiaMaster" name="guiaMaster" type="text" class="form-control" formControlName="guiaMaster" 
-              [ngClass]="isValid(datosMedioTransporte,'guiaMaster') ? 'required' : ''"
-              (change)="setValoresStore(datosMedioTransporte, 'guiaMaster', 'setGuiaMaster')" />
+            <input
+              id="guiaMaster"
+              name="guiaMaster"
+              type="text"
+              class="form-control"
+              formControlName="guiaMaster"
+              [ngClass]="
+                isValid(datosMedioTransporte, 'guiaMaster') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosMedioTransporte,
+                  'guiaMaster',
+                  'setGuiaMaster'
+                )
+              "
+            />
           </div>
         </div>
-        } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value === 'Marítimo'){
+        } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value ===
+        'Marítimo'){
         <div class="col-md-3">
           <div>
             <label class="form-label" for="guiaBl">Guía BL</label>
@@ -274,12 +544,23 @@
             <label class="form-label" for="guiaBl">:</label>
           </div>
           <div>
-            <input id="guiaBl" name="guiaBl" type="text" class="form-control" formControlName="guiaBl" 
-              [ngClass]="isValid(datosMedioTransporte,'guiaBl') ? 'required' : ''"
-              (change)="setValoresStore(datosMedioTransporte, 'guiaBl', 'setGuiaBl')" />
+            <input
+              id="guiaBl"
+              name="guiaBl"
+              type="text"
+              class="form-control"
+              formControlName="guiaBl"
+              [ngClass]="
+                isValid(datosMedioTransporte, 'guiaBl') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(datosMedioTransporte, 'guiaBl', 'setGuiaBl')
+              "
+            />
           </div>
         </div>
-        } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value === 'Ferroviario'){
+        } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value ===
+        'Ferroviario'){
         <div class="col-md-3">
           <div>
             <label class="form-label" for="numeroBl">Número BL</label>
@@ -287,22 +568,50 @@
             <label class="form-label" for="numeroBl">:</label>
           </div>
           <div>
-            <input id="numeroBl" name="numeroBl" type="text" class="form-control" formControlName="numeroBl" 
-              [ngClass]="isValid(datosMedioTransporte,'numeroBl') ? 'required' : ''"
-              (change)="setValoresStore(datosMedioTransporte, 'numeroBl', 'setNumeroBl')" />
+            <input
+              id="numeroBl"
+              name="numeroBl"
+              type="text"
+              class="form-control"
+              formControlName="numeroBl"
+              [ngClass]="
+                isValid(datosMedioTransporte, 'numeroBl') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(datosMedioTransporte, 'numeroBl', 'setNumeroBl')
+              "
+            />
           </div>
         </div>
-        } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value === 'Carretero'){
+        } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value ===
+        'Carretero'){
         <div class="col-md-5">
           <div>
-            <label class="form-label" for="rfcEmpresaTransportista">RFC empresa transportista</label>
+            <label class="form-label" for="rfcEmpresaTransportista"
+              >RFC empresa transportista</label
+            >
             <label class="form-label" for="rfcEmpresaTransportista">:</label>
           </div>
           <div>
-            <input id="rfcEmpresaTransportista" name="rfcEmpresaTransportista" type="text" class="form-control" 
+            <input
+              id="rfcEmpresaTransportista"
+              name="rfcEmpresaTransportista"
+              type="text"
+              class="form-control"
               formControlName="rfcEmpresaTransportista"
-              [ngClass]="isValid(datosMedioTransporte,'rfcEmpresaTransportista') ? 'required' : ''"
-              (change)="setValoresStore(datosMedioTransporte, 'rfcEmpresaTransportista', 'setRfcEmpresaTransportista')" />
+              [ngClass]="
+                isValid(datosMedioTransporte, 'rfcEmpresaTransportista')
+                  ? 'required'
+                  : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosMedioTransporte,
+                  'rfcEmpresaTransportista',
+                  'setRfcEmpresaTransportista'
+                )
+              "
+            />
           </div>
         </div>
         <div class="col-md-4">
@@ -311,31 +620,58 @@
             <label class="form-label" for="cartaPorte">:</label>
           </div>
           <div>
-            <input id="cartaPorte" name="cartaPorte" type="text" class="form-control" formControlName="cartaPorte" 
-              [ngClass]="isValid(datosMedioTransporte,'cartaPorte') ? 'required' : ''"
-              (change)="setValoresStore(datosMedioTransporte, 'cartaPorte', 'setCartaPorte')" />
+            <input
+              id="cartaPorte"
+              name="cartaPorte"
+              type="text"
+              class="form-control"
+              formControlName="cartaPorte"
+              [ngClass]="
+                isValid(datosMedioTransporte, 'cartaPorte') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosMedioTransporte,
+                  'cartaPorte',
+                  'setCartaPorte'
+                )
+              "
+            />
           </div>
         </div>
-        }
-        @if(datosMedioTransporte.get('cveMedioTrasporte')?.value !== 'Carretero'){
+        } @if(datosMedioTransporte.get('cveMedioTrasporte')?.value !==
+        'Carretero'){
         <div class="col-md-2 mt-5">
-
-          <button type="button" class="btn btn-primary ms-3" >
-            Validor
-          </button>
-
+          <button type="button" class="btn btn-primary ms-3">Validar</button>
         </div>
 
         <div class="col-md-4">
           <div>
-            <label class="form-label" for="estadoMedioTransporte">Estado del medio de transporte</label>
+            <label class="form-label" for="estadoMedioTransporte"
+              >Estado del medio de transporte</label
+            >
           </div>
           <div>
-            <input id="estadoMedioTransporte" name="estadoMedioTransporte" type="text" class="form-control"
-              formControlName="estadoMedioTransporte" 
-              [ngClass]="isValid(datosMedioTransporte,'estadoMedioTransporte') ? 'required' : ''"
-              (change)="setValoresStore(datosMedioTransporte, 'estadoMedioTransporte', 'setEstadoMedioTransporte')"
-              placeholder="No Validado" />
+            <input
+              id="estadoMedioTransporte"
+              name="estadoMedioTransporte"
+              type="text"
+              class="form-control"
+              formControlName="estadoMedioTransporte"
+              [ngClass]="
+                isValid(datosMedioTransporte, 'estadoMedioTransporte')
+                  ? 'required'
+                  : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosMedioTransporte,
+                  'estadoMedioTransporte',
+                  'setEstadoMedioTransporte'
+                )
+              "
+              placeholder="No Validado"
+            />
           </div>
         </div>
         }
@@ -343,10 +679,25 @@
 
       <div class="row">
         <div class="col-md-3">
-          <app-catalogo-select [catalogo]="paisDeProcedencia" [label]="'País de procedencia'" [required]="false"
-            id="cvePaisProcedencia" formControlName="cvePaisProcedencia" 
-            [ngClass]="isValid(datosMedioTransporte,'cvePaisProcedencia') ? 'required' : ''"
-            (change)="setValoresStore(datosMedioTransporte, 'cvePaisProcedencia', 'setCvePaisProcedencia')"></app-catalogo-select>
+          <app-catalogo-select
+            [catalogo]="paisDeProcedencia"
+            [label]="'País de procedencia'"
+            [required]="false"
+            id="cvePaisProcedencia"
+            formControlName="cvePaisProcedencia"
+            [ngClass]="
+              isValid(datosMedioTransporte, 'cvePaisProcedencia')
+                ? 'required'
+                : ''
+            "
+            (change)="
+              setValoresStore(
+                datosMedioTransporte,
+                'cvePaisProcedencia',
+                'setCvePaisProcedencia'
+              )
+            "
+          ></app-catalogo-select>
         </div>
         <div class="col-md-3">
           @if (datosMedioTransporte.get('cveMedioTrasporte')?.value === '' ||
@@ -356,49 +707,112 @@
             <label class="form-label" for="guiaHouse">:</label>
           </div>
           <div>
-            <input id="guiaHouse" name="guiaHouse" type="text" class="form-control" formControlName="guiaHouse"
-              [ngClass]="isValid(datosMedioTransporte,'guiaHouse') ? 'required' : ''" 
-              (change)="setValoresStore(datosMedioTransporte, 'guiaHouse', 'setGuiaHouse')" />
+            <input
+              id="guiaHouse"
+              name="guiaHouse"
+              type="text"
+              class="form-control"
+              formControlName="guiaHouse"
+              [ngClass]="
+                isValid(datosMedioTransporte, 'guiaHouse') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosMedioTransporte,
+                  'guiaHouse',
+                  'setGuiaHouse'
+                )
+              "
+            />
           </div>
-          } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value === 'Marítimo'){
+          } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value ===
+          'Marítimo'){
           <div>
             <label class="form-label" for="numeroBuque">Número de buque</label>
             <label class="form-label" for="numeroBuque">:</label>
           </div>
           <div>
-            <input id="numeroBuque" name="numeroBuque" type="text" class="form-control" formControlName="numeroBuque"
-              [ngClass]="isValid(datosMedioTransporte,'numeroBuque') ? 'required' : ''" 
-              (change)="setValoresStore(datosMedioTransporte, 'numeroBuque', 'setNumeroBuque')" />
+            <input
+              id="numeroBuque"
+              name="numeroBuque"
+              type="text"
+              class="form-control"
+              formControlName="numeroBuque"
+              [ngClass]="
+                isValid(datosMedioTransporte, 'numeroBuque') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosMedioTransporte,
+                  'numeroBuque',
+                  'setNumeroBuque'
+                )
+              "
+            />
           </div>
-          } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value === 'Ferroviario'){
+          } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value ===
+          'Ferroviario'){
           <div>
-            <label class="form-label" for="numeroEquipo">Número de equipo</label>
+            <label class="form-label" for="numeroEquipo"
+              >Número de equipo</label
+            >
             <label class="form-label" for="numeroEquipo">:</label>
           </div>
           <div>
-            <input id="numeroEquipo" name="numeroEquipo" type="text" class="form-control" formControlName="numeroEquipo"
-              [ngClass]="isValid(datosMedioTransporte,'numeroEquipo') ? 'required' : ''" 
-              (change)="setValoresStore(datosMedioTransporte, 'numeroEquipo', 'setNumeroEquipo')" />
+            <input
+              id="numeroEquipo"
+              name="numeroEquipo"
+              type="text"
+              class="form-control"
+              formControlName="numeroEquipo"
+              [ngClass]="
+                isValid(datosMedioTransporte, 'numeroEquipo') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosMedioTransporte,
+                  'numeroEquipo',
+                  'setNumeroEquipo'
+                )
+              "
+            />
           </div>
-          } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value === 'Carretero'){
+          } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value ===
+          'Carretero'){
           <div class="form-group datepicker-group">
-            <input-fecha [datos]="fechaCartaPorte" [setFecha]="datosMedioTransporte.get('fechaCartaPorte')?.value"
-              (valorCambiado)="cambioFechaCartaPorte($event)" ></input-fecha>
+            <input-fecha
+              [datos]="fechaCartaPorte"
+              [setFecha]="datosMedioTransporte.get('fechaCartaPorte')?.value"
+              (valorCambiado)="cambioFechaCartaPorte($event)"
+            ></input-fecha>
           </div>
           }
         </div>
-        <div class="col-md-2">
-        </div>
+        <div class="col-md-2"></div>
         <div class="col-md-4">
-          @if (datosMedioTransporte.get('cveMedioTrasporte')?.value !== 'Ferroviario') {
+          @if (datosMedioTransporte.get('cveMedioTrasporte')?.value !==
+          'Ferroviario') {
           <div>
             <label class="form-label" for="tipContenedor">Contenedor</label>
           </div>
           <div>
-            <input id="tipContenedor" name="tipContenedor" type="text" class="form-control"
-              formControlName="tipContenedor" 
-              [ngClass]="isValid(datosMedioTransporte,'tipContenedor') ? 'required' : ''"
-              (change)="setValoresStore(datosMedioTransporte, 'tipContenedor', 'setTipContenedor')" />
+            <input
+              id="tipContenedor"
+              name="tipContenedor"
+              type="text"
+              class="form-control"
+              formControlName="tipContenedor"
+              [ngClass]="
+                isValid(datosMedioTransporte, 'tipContenedor') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosMedioTransporte,
+                  'tipContenedor',
+                  'setTipContenedor'
+                )
+              "
+            />
           </div>
           }
         </div>
@@ -412,10 +826,25 @@
             <label class="form-label" for="tranporteMarca">:</label>
           </div>
           <div>
-            <input id="tranporteMarca" name="tranporteMarca" type="text" class="form-control"
-              formControlName="tranporteMarca" 
-              [ngClass]="isValid(datosMedioTransporte,'tranporteMarca') ? 'required' : ''"
-              (change)="setValoresStore(datosMedioTransporte, 'tranporteMarca', 'setTranporteMarca')" />
+            <input
+              id="tranporteMarca"
+              name="tranporteMarca"
+              type="text"
+              class="form-control"
+              formControlName="tranporteMarca"
+              [ngClass]="
+                isValid(datosMedioTransporte, 'tranporteMarca')
+                  ? 'required'
+                  : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosMedioTransporte,
+                  'tranporteMarca',
+                  'setTranporteMarca'
+                )
+              "
+            />
           </div>
         </div>
         <div class="col-md-4">
@@ -425,10 +854,25 @@
             <label class="form-label" for="tranporteModelo">:</label>
           </div>
           <div>
-            <input id="tranporteModelo" name="tranporteModelo" type="text" class="form-control"
-              formControlName="tranporteModelo" 
-              [ngClass]="isValid(datosMedioTransporte,'tranporteModelo') ? 'required' : ''"
-              (change)="setValoresStore(datosMedioTransporte, 'tranporteModelo', 'setTranporteModelo')" />
+            <input
+              id="tranporteModelo"
+              name="tranporteModelo"
+              type="text"
+              class="form-control"
+              formControlName="tranporteModelo"
+              [ngClass]="
+                isValid(datosMedioTransporte, 'tranporteModelo')
+                  ? 'required'
+                  : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosMedioTransporte,
+                  'tranporteModelo',
+                  'setTranporteModelo'
+                )
+              "
+            />
           </div>
         </div>
         <div class="col-md-4">
@@ -438,10 +882,25 @@
             <label class="form-label" for="tranportePlaca">:</label>
           </div>
           <div>
-            <input id="tranportePlaca" name="tranportePlaca" type="text" class="form-control"
-              formControlName="tranportePlaca" 
-              [ngClass]="isValid(datosMedioTransporte,'tranportePlaca') ? 'required' : ''"
-              (change)="setValoresStore(datosMedioTransporte, 'tranportePlaca', 'setTranportePlaca')" />
+            <input
+              id="tranportePlaca"
+              name="tranportePlaca"
+              type="text"
+              class="form-control"
+              formControlName="tranportePlaca"
+              [ngClass]="
+                isValid(datosMedioTransporte, 'tranportePlaca')
+                  ? 'required'
+                  : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosMedioTransporte,
+                  'tranportePlaca',
+                  'setTranportePlaca'
+                )
+              "
+            />
           </div>
         </div>
       </div>
@@ -451,21 +910,42 @@
           <div class="form-group">
             <label for="observaciones" class="form-label">Observaciones</label>
             <label for="observaciones">:</label>
-            <textarea id="observaciones" name="observaciones" rows="5" class="form-control textarea"
-              [ngClass]="isValid(datosMedioTransporte,'observaciones') ? 'required' : ''" 
-              (change)="setValoresStore(datosMedioTransporte, 'observaciones', 'setObservaciones')"></textarea>
+            <textarea
+              id="observaciones"
+              name="observaciones"
+              rows="5"
+              class="form-control textarea"
+              [ngClass]="
+                isValid(datosMedioTransporte, 'observaciones') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(
+                  datosMedioTransporte,
+                  'observaciones',
+                  'setObservaciones'
+                )
+              "
+            ></textarea>
           </div>
         </div>
       </div>
     </ng-container>
   </form>
 </div>
-<div class="modal fade" id="modalMercancia" tabindex="-1" #modalMercancia aria-labelledby="modalMercancia"
-  aria-hidden="true">
+<div
+  class="modal fade"
+  id="modalMercancia"
+  tabindex="-1"
+  #modalMercancia
+  aria-labelledby="modalMercancia"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="mercanciaModalLabel">Agregar mercancías de la solicitud</h5>
+        <h5 class="modal-title" id="mercanciaModalLabel">
+          Agregar mercancías de la solicitud
+        </h5>
       </div>
       <div class="modal-body">
         <form [formGroup]="mercanciaFormulario">
@@ -474,23 +954,56 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="modalDescMercancia" class="form-label">Descripción de la mercancía</label>
+                  <label for="modalDescMercancia" class="form-label"
+                    >Descripción de la mercancía</label
+                  >
                   <label for="modalDescMercancia">:</label>
-                  <textarea id="modalDescMercancia" name="modalDescMercancia" rows="5" class="form-control textarea"
-                    formControlName="modalDescMercancia" 
-                    [ngClass]="isValid(mercanciaFormulario,'modalDescMercancia') ? 'required' : ''"
-                    (change)="setValoresStore(mercanciaFormulario, 'modalDescMercancia', 'setModalDescMercancia')"></textarea>
+                  <textarea
+                    id="modalDescMercancia"
+                    name="modalDescMercancia"
+                    rows="5"
+                    class="form-control textarea"
+                    formControlName="modalDescMercancia"
+                    [ngClass]="
+                      isValid(mercanciaFormulario, 'modalDescMercancia')
+                        ? 'required'
+                        : ''
+                    "
+                    (change)="
+                      setValoresStore(
+                        mercanciaFormulario,
+                        'modalDescMercancia',
+                        'setModalDescMercancia'
+                      )
+                    "
+                  ></textarea>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="espeMercancia" class="form-label">Especificación técnica o
-                    comercial</label>
+                  <label for="espeMercancia" class="form-label"
+                    >Especificación técnica o comercial</label
+                  >
                   <label for="espeMercancia">:</label>
-                  <textarea id="espeMercancia" name="espeMercancia" rows="5" class="form-control textarea"
-                    formControlName="espeMercancia" 
-                    [ngClass]="isValid(mercanciaFormulario,'espeMercancia') ? 'required' : ''"
-                    (change)="setValoresStore(mercanciaFormulario, 'espeMercancia', 'setEspeMercancia')"></textarea>
+                  <textarea
+                    id="espeMercancia"
+                    name="espeMercancia"
+                    rows="5"
+                    class="form-control textarea"
+                    formControlName="espeMercancia"
+                    [ngClass]="
+                      isValid(mercanciaFormulario, 'espeMercancia')
+                        ? 'required'
+                        : ''
+                    "
+                    (change)="
+                      setValoresStore(
+                        mercanciaFormulario,
+                        'espeMercancia',
+                        'setEspeMercancia'
+                      )
+                    "
+                  ></textarea>
                 </div>
               </div>
             </div>
@@ -498,24 +1011,58 @@
             <div class="row">
               <div class="col-md-6">
                 <div>
-                  <label class="form-label" for="marcaMercancia">Marca</label>
+                  <label class="form-label" for="marcaMercancia">Marca:</label>
                 </div>
                 <div>
-                  <input id="marcaMercancia" name="marcaMercancia" type="text" class="form-control" maxlength="250"
-                    formControlName="marcaMercancia" 
-                    [ngClass]="isValid(mercanciaFormulario,'marcaMercancia') ? 'required' : ''"
-                    (change)="setValoresStore(mercanciaFormulario, 'marcaMercancia', 'setMarcaMercancia')" />
+                  <input
+                    id="marcaMercancia"
+                    name="marcaMercancia"
+                    type="text"
+                    class="form-control"
+                    maxlength="250"
+                    formControlName="marcaMercancia"
+                    [ngClass]="
+                      isValid(mercanciaFormulario, 'marcaMercancia')
+                        ? 'required'
+                        : ''
+                    "
+                    (change)="
+                      setValoresStore(
+                        mercanciaFormulario,
+                        'marcaMercancia',
+                        'setMarcaMercancia'
+                      )
+                    "
+                  />
                 </div>
               </div>
               <div class="col-md-6">
                 <div>
-                  <label class="form-label" for="modeloMercancia">Modelo</label>
+                  <label class="form-label" for="modeloMercancia"
+                    >Modelo:</label
+                  >
                 </div>
                 <div>
-                  <input id="modeloMercancia" name="modeloMercancia" type="text" class="form-control" maxlength="250"
-                    formControlName="modeloMercancia" 
-                    [ngClass]="isValid(mercanciaFormulario,'modeloMercancia') ? 'required' : ''"
-                    (change)="setValoresStore(mercanciaFormulario, 'modeloMercancia', 'setModeloMercancia')" />
+                  <input
+                    id="modeloMercancia"
+                    name="modeloMercancia"
+                    type="text"
+                    class="form-control"
+                    maxlength="250"
+                    formControlName="modeloMercancia"
+                    [ngClass]="
+                      isValid(mercanciaFormulario, 'modeloMercancia')
+                        ? 'required'
+                        : ''
+                    "
+                    (change)="
+                      setValoresStore(
+                        mercanciaFormulario,
+                        'modeloMercancia',
+                        'setModeloMercancia'
+                      )
+                    "
+                  />
                 </div>
               </div>
             </div>
@@ -523,48 +1070,111 @@
             <div class="row">
               <div class="col-md-6">
                 <div>
-                  <label class="form-label" for="numSerieMercancia">Número de serie</label>
+                  <label class="form-label" for="numSerieMercancia"
+                    >Número de serie:</label
+                  >
                 </div>
                 <div>
-                  <input id="numSerieMercancia" name="numSerieMercancia" type="text" class="form-control"
-                    maxlength="250" formControlName="numSerieMercancia" 
-                    [ngClass]="isValid(mercanciaFormulario,'numSerieMercancia') ? 'required' : ''"
-                    (change)="setValoresStore(mercanciaFormulario, 'numSerieMercancia', 'setNumSerieMercancia')" />
+                  <input
+                    id="numSerieMercancia"
+                    name="numSerieMercancia"
+                    type="text"
+                    class="form-control"
+                    maxlength="250"
+                    formControlName="numSerieMercancia"
+                    [ngClass]="
+                      isValid(mercanciaFormulario, 'numSerieMercancia')
+                        ? 'required'
+                        : ''
+                    "
+                    (change)="
+                      setValoresStore(
+                        mercanciaFormulario,
+                        'numSerieMercancia',
+                        'setNumSerieMercancia'
+                      )
+                    "
+                  />
                 </div>
               </div>
               <div class="col-md-6">
                 <div>
-                  <label class="form-label" for="numParteMercancia">Número de parte</label>
+                  <label class="form-label" for="numParteMercancia"
+                    >Número de parte:</label
+                  >
                 </div>
                 <div>
-                  <input id="numParteMercancia" name="numParteMercancia" type="text" class="form-control"
-                    maxlength="250" formControlName="numParteMercancia" 
-                    [ngClass]="isValid(mercanciaFormulario,'numParteMercancia') ? 'required' : ''"
-                    (change)="setValoresStore(mercanciaFormulario, 'numParteMercancia', 'setNumParteMercancia')" />
+                  <input
+                    id="numParteMercancia"
+                    name="numParteMercancia"
+                    type="text"
+                    class="form-control"
+                    maxlength="250"
+                    formControlName="numParteMercancia"
+                    [ngClass]="
+                      isValid(mercanciaFormulario, 'numParteMercancia')
+                        ? 'required'
+                        : ''
+                    "
+                    (change)="
+                      setValoresStore(
+                        mercanciaFormulario,
+                        'numParteMercancia',
+                        'setNumParteMercancia'
+                      )
+                    "
+                  />
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
                 <div>
-                  <label class="form-label" for="tipoMercancia">Tipo</label>
+                  <label class="form-label" for="tipoMercancia">Tipo:</label>
                 </div>
                 <div>
-                  <input id="tipoMercancia" name="tipoMercancia" type="text" class="form-control" maxlength="250"
-                    formControlName="tipoMercancia" 
-                    [ngClass]="isValid(mercanciaFormulario,'tipoMercancia') ? 'required' : ''"
-                    (change)="setValoresStore(mercanciaFormulario, 'tipoMercancia', 'setTipoMercancia')" />
+                  <input
+                    id="tipoMercancia"
+                    name="tipoMercancia"
+                    type="text"
+                    class="form-control"
+                    maxlength="250"
+                    formControlName="tipoMercancia"
+                    [ngClass]="
+                      isValid(mercanciaFormulario, 'tipoMercancia')
+                        ? 'required'
+                        : ''
+                    "
+                    (change)="
+                      setValoresStore(
+                        mercanciaFormulario,
+                        'tipoMercancia',
+                        'setTipoMercancia'
+                      )
+                    "
+                  />
                 </div>
               </div>
-
             </div>
           </ng-container>
         </form>
-
       </div>
       <div class="modal-footer custom-footer mt-4 justify-content-end">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeMercancia > Cancelar </button>
-        <button type="submit" class="btn btn-primary"  (click)="agregarMercancia()"> Agregar </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-bs-dismiss="modal"
+          #closeMercancia
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          (click)="agregarMercancia()"
+        >
+          Agregar
+        </button>
       </div>
     </div>
   </div>
