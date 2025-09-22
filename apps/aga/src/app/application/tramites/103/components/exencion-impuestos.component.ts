@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectorRef,
   Component,
@@ -17,6 +18,7 @@ import {
 
 import { Modal } from 'bootstrap';
 import { Subject } from 'rxjs';
+
 import { distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 import { merge } from 'rxjs';
 
@@ -24,7 +26,6 @@ import {
   CatalogoSelectComponent,
   ConfiguracionColumna,
   ConsultaioQuery,
-  InputRadioComponent,
   REGEX_PATRON_DECIMAL_12_3,
   REGEX_POSTAL,
   REGEX_TELEFONO_DIGITOS,
@@ -37,6 +38,7 @@ import {
 
 import { DatosDelMercancia } from '../constants/exencion-impuestos.enum';
 import { Tramite103Query } from '../estados/tramite103.query';
+
 import {
   Catalogo,
   Solicitud103State,
@@ -71,8 +73,8 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
    */
   static obtenerDescripcion(catalog: Catalogo[] | undefined, value: string | number): string {
     if (!catalog) { return value as string; }
-  const FOUND = catalog.find(item => item.id === value || item.id === Number(value) || item.descripcion === value);
-    return FOUND ? FOUND.descripcion : value as string;
+    const ELEMENTO_ENCONTRADO = catalog.find(item => item.id === value || item.id === Number(value) || item.descripcion === value);
+    return ELEMENTO_ENCONTRADO ? ELEMENTO_ENCONTRADO.descripcion : value as string;
   }
 
   /**
@@ -104,13 +106,43 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
     this.filaPendienteEliminar = null;
   }
   /**
-   * Agrega la mercancía a la tabla después de aceptar en el modal de confirmación.
+   * Agrega la mercancía a la tabla después de aceptar en el modal de confirmación y cierra el modal.
    *
    * @returns {void}
    */
   agregarMercanciasAceptar(): void {
     this.agregarMercancias();
+    
+    // Cerrar el modal manualmente para evitar conflictos de Bootstrap
+    this.cerrarModalManual();
   }
+
+  /**
+   * Cierra el modal de confirmación manualmente sin usar Bootstrap.
+   *
+   * @returns {void}
+   */
+  cerrarModalManual(): void {
+    if (this.confirmarModalAgregarElement && this.confirmarModalAgregarElement.nativeElement) {
+      const ELEMENTO_MODAL = this.confirmarModalAgregarElement.nativeElement;
+      
+      // Ocultar modal
+      ELEMENTO_MODAL.style.display = 'none';
+      ELEMENTO_MODAL.classList.remove('show');
+      ELEMENTO_MODAL.classList.add('confirmar-modal-agregar');
+      ELEMENTO_MODAL.setAttribute('aria-hidden', 'true');
+      
+      // Remover backdrop
+      const FONDO_MODAL = document.querySelector('[data-modal-id="confirmarModalAgregar"]');
+      if (FONDO_MODAL) {
+        FONDO_MODAL.remove();
+      }
+      
+      // Limpiar clase del body
+      document.body.classList.remove('modal-open');
+    }
+  }
+
   /**
    * Muestra el modal de confirmación de agregado y agrega la mercancía después de aceptar.
    *
@@ -119,7 +151,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   agregarMercanciasConfirm(): void {
     this.envioIntentado = true;
     const DATOS = this.agregarMercanciasForm.get('datosMercancia');
-    if (!DATOS) return;
+    if (!DATOS) { return; }
     const VEHICULO_SELECCIONADO = DATOS.get('vehiculo')?.value;
     // Campos principales requeridos
     const CAMPOS_PRINCIPALES = [
@@ -129,7 +161,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
       'condicionMercancia',
       'unidadMedida'
     ];
-    let CAMPOS_VALIDOS = CAMPOS_PRINCIPALES.every(CAMPO => {
+    const CAMPOS_VALIDOS = CAMPOS_PRINCIPALES.every(CAMPO => {
       const CTRL = DATOS.get(CAMPO);
       return CTRL && CTRL.value !== null && CTRL.value !== '';
     });
@@ -138,10 +170,10 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
       this.agregarMercancias();
       // Cerrar el modal de agregar mercancías
       if (this.modalElement && this.modalElement.nativeElement) {
-  const WIN = window as { bootstrap?: { Modal: unknown } };
+      const WIN = window as { bootstrap?: { Modal: unknown } };
         if (WIN.bootstrap) {
-          const ModalClass = WIN.bootstrap.Modal as typeof Modal;
-          const MODAL_AGREGAR_MERCANCIAS = ModalClass.getInstance(this.modalElement.nativeElement) || new ModalClass(this.modalElement.nativeElement);
+          const CLASE_MODAL = WIN.bootstrap.Modal as typeof Modal;
+          const MODAL_AGREGAR_MERCANCIAS = CLASE_MODAL.getInstance(this.modalElement.nativeElement) || new CLASE_MODAL(this.modalElement.nativeElement);
           MODAL_AGREGAR_MERCANCIAS.hide();
         } else {
           this.modalElement.nativeElement.style.display = 'none';
@@ -151,13 +183,25 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
     }
     // Si NO es vehículo y los campos principales son válidos, mostrar el modal de confirmación
     if (!VEHICULO_SELECCIONADO && CAMPOS_VALIDOS) {
-      // Mostrar el modal de confirmación sin cerrar el modal principal
-  const WIN = window as { bootstrap?: { Modal: unknown } };
-      const MODAL_AGREGAR = document.getElementById('confirmarModalAgregar');
-      if (MODAL_AGREGAR && WIN.bootstrap) {
-        const ModalClass = WIN.bootstrap.Modal as typeof Modal;
-        const MODAL_INSTANCE = new ModalClass(MODAL_AGREGAR);
-        MODAL_INSTANCE.show();
+      // Usar implementación manual sin Bootstrap para evitar conflictos de focus
+      if (this.confirmarModalAgregarElement && this.confirmarModalAgregarElement.nativeElement) {
+        const ELEMENTO_MODAL = this.confirmarModalAgregarElement.nativeElement;
+        
+        // Mostrar modal manualmente
+        ELEMENTO_MODAL.classList.remove('confirmar-modal-agregar');
+        ELEMENTO_MODAL.style.display = 'block';
+        ELEMENTO_MODAL.classList.add('show');
+        ELEMENTO_MODAL.setAttribute('aria-hidden', 'false');
+        
+        // Agregar backdrop manualmente
+        const FONDO_MODAL = document.createElement('div');
+        FONDO_MODAL.className = 'modal-backdrop fade show';
+        FONDO_MODAL.setAttribute('data-modal-id', 'confirmarModalAgregar');
+        document.body.appendChild(FONDO_MODAL);
+        document.body.classList.add('modal-open');
+        
+        // Agregar event listener para cerrar con backdrop
+        FONDO_MODAL.addEventListener('click', () => this.cerrarModalManual());
       }
       return;
     }
@@ -177,12 +221,12 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   /**
    * Selecciona una fila de la tabla y actualiza el índice de la fila seleccionada.
    *
-   * @param {any} row Fila de mercancía seleccionada.
+   * @param {MercanciaRow} row Fila de mercancía seleccionada.
    * @returns {void}
    */
-  seleccionarFila(row: any): void {
-  const IDX = this.mercanciaBodyData.indexOf(row);
-  this.filaSeleccionada = IDX;
+  seleccionarFila(row: MercanciaRow): void {
+  const INDICE = this.mercanciaBodyData.indexOf(row);
+  this.filaSeleccionada = INDICE;
   }
 
   /**
@@ -198,19 +242,19 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
       return;
     }
     this.filaEditando = index;
-  const ROW = this.mercanciaBodyData[index];
+  const FILA = this.mercanciaBodyData[index];
     this.agregarMercanciasForm.patchValue({
       datosMercancia: {
-        tipoDeMercancia: ROW.tbodyData[0] ?? '',
-        cantidad: ROW.tbodyData[1] ?? '',
-        unidadMedida: ROW.tbodyData[2] ?? '',
-        ano: ROW.tbodyData[3] ?? '',
-        modelo: ROW.tbodyData[4] ?? '',
-        marca: ROW.tbodyData[5] ?? '',
-        serie: ROW.tbodyData[6] ?? '',
-        usoEspecifico: ROW.tbodyData[7] ?? '', // Uso específico after Numero de serie
-        condicionMercancia: ROW.tbodyData[8] ?? '',
-        vehiculo: ROW.tbodyData[9] === 'Sí',
+        tipoDeMercancia: FILA.tbodyData[0] ?? '',
+        cantidad: FILA.tbodyData[1] ?? '',
+        unidadMedida: FILA.tbodyData[2] ?? '',
+        ano: FILA.tbodyData[3] ?? '',
+        modelo: FILA.tbodyData[4] ?? '',
+        marca: FILA.tbodyData[5] ?? '',
+        serie: FILA.tbodyData[6] ?? '',
+        usoEspecifico: FILA.tbodyData[7] ?? '', // Uso específico after Numero de serie
+        condicionMercancia: FILA.tbodyData[8] ?? '',
+        vehiculo: FILA.tbodyData[9] === 'Sí',
       }
     });
     this.abrirDialogoMercancias();
@@ -225,7 +269,9 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
    * @returns {void}
    */
   eliminarFila(index: number | null): void {
-    if (index === null || index === undefined) return;
+    if (index === null || index === undefined) {
+      return;
+    }
     this.mercanciaBodyData.splice(index, 1);
     this.getMercanciaTableData.mercanciaTable.tableBody.splice(index, 1);
     this.mercanciaBodyData = [...this.mercanciaBodyData];
@@ -364,6 +410,15 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
    * Referencia al botón para cerrar el modal de confirmación.
    */
   @ViewChild('closeConfirmarModal') closeConfirmarModal!: ElementRef;
+  /**
+   * Referencia al modal de confirmación para agregar mercancías.
+   */
+  @ViewChild('confirmarModalAgregar') confirmarModalAgregarElement!: ElementRef;
+
+  /**
+   * Instancia del modal de confirmación para agregar mercancías.
+   */
+  private confirmarModalAgregarInstance: Modal | null = null;
 
   /**
    * Datos de las mercancías registradas.
@@ -501,27 +556,27 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   private inicializaCatalogos(): void {
     // Aduana se carga en ngOnInit desde ImportadorExportadorService.getOpcionesAduana()
     const DESTINO_MERCANCIA$ = this.exencionImpuestoService.getDestinoMercancia().pipe(
-      map((resp: any) => {
+      map((resp: ApiCatalogoResponse) => {
         this.destinoMercancia = resp.data;
       })
     );
     const CONDICION_MERCANCIA$ = this.exencionImpuestoService.getCondicionMercancia().pipe(
-      map((resp: any) => {
+      map((resp: ApiCatalogoResponse) => {
         this.condicionMercancia = resp.data;
       })
     );
     const UNIDAD_MEDIDA$ = this.exencionImpuestoService.getUnidadMedida().pipe(
-      map((resp: any) => {
+      map((resp: ApiCatalogoResponse) => {
         this.unidadMedida = resp.data;
       })
     );
     const ANO$ = this.exencionImpuestoService.getAno().pipe(
-      map((resp: any) => {
+      map((resp: ApiCatalogoResponse) => {
         this.ano = resp.data;
       })
     );
     const PAIS$ = this.exencionImpuestoService.getPais().pipe(
-      map((resp: any) => {
+      map((resp: ApiCatalogoResponse) => {
         this.pais = resp.data;
       })
     );
@@ -616,7 +671,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
         takeUntil(this.destroyNotifier$),
         distinctUntilChanged()
       )
-      .subscribe((value) => {
+      .subscribe((_ ) => {
         if (!this.isProcessingAduanaSelection) {
           this.aduanaSeleccion();
         }
@@ -827,18 +882,18 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
    */
   abrirModalVehiculoSeguro(): void {
     setTimeout(() => {
-      const MODAL_VEHICULO = document.getElementById('confirmarModalVehiculo');
+      const MODAL_VEHICULO = this.confirmarModalVehiculoElement?.nativeElement || document.getElementById('confirmarModalVehiculo');
       if (MODAL_VEHICULO) {
         try {
           const WIN = window as { bootstrap?: { Modal: unknown } };
           if (WIN.bootstrap && WIN.bootstrap.Modal) {
-            const ModalClass = WIN.bootstrap.Modal as typeof Modal;
-            const MODAL_INSTANCE = new ModalClass(MODAL_VEHICULO, {
+            const CLASE_MODAL = WIN.bootstrap.Modal as typeof Modal;
+            const MODAL_INSTANCIA = new CLASE_MODAL(MODAL_VEHICULO, {
               backdrop: 'static',
               keyboard: false,
               focus: false 
             });
-            MODAL_INSTANCE.show();
+            MODAL_INSTANCIA.show();
           } else {
             MODAL_VEHICULO.style.display = 'block';
             MODAL_VEHICULO.style.zIndex = '1070';
@@ -846,18 +901,24 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
             MODAL_VEHICULO.setAttribute('aria-hidden', 'false');
             
             // Agregar fondo manualmente
-            const backdrop = document.createElement('div');
-            backdrop.className = 'modal-backdrop fade show';
-            backdrop.style.zIndex = '1069';
-            document.body.appendChild(backdrop);
+            const BACKDROP = document.createElement('div');
+            BACKDROP.className = 'modal-backdrop fade show';
+            BACKDROP.style.zIndex = '1069';
+            document.body.appendChild(BACKDROP);
           }
         } catch (error) {
-          // Retroceder para confirmar el diálogo si falla el modal
-          const confirmacion = confirm('¿Confirma que la mercancía es un vehículo?');
-          if (confirmacion) {
-            this.confirmarVehiculo();
-          } else {
-            this.cancelarVehiculo();
+          // Si falla el modal, mostrar el modal de confirmación de vehículo manualmente
+          const MODAL_VEHICULO_FALLBACK = this.confirmarModalVehiculoElement?.nativeElement || document.getElementById('confirmarModalVehiculo');
+          if (MODAL_VEHICULO_FALLBACK) {
+            MODAL_VEHICULO_FALLBACK.style.display = 'block';
+            MODAL_VEHICULO_FALLBACK.style.zIndex = '1070';
+            MODAL_VEHICULO_FALLBACK.classList.add('show');
+            MODAL_VEHICULO_FALLBACK.setAttribute('aria-hidden', 'false');
+            // Agregar fondo manualmente
+            const BACKDROP = document.createElement('div');
+            BACKDROP.className = 'modal-backdrop fade show';
+            BACKDROP.style.zIndex = '1069';
+            document.body.appendChild(BACKDROP);
           }
         }
       }
@@ -870,22 +931,22 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
    * @returns {void}
    */
   confirmarVehiculo(): void {
-    const marcaCtrl = this.agregarMercanciasForm.get('datosMercancia.marca');
-    const anoCtrl = this.agregarMercanciasForm.get('datosMercancia.ano');
-    const serieCtrl = this.agregarMercanciasForm.get('datosMercancia.serie');
-    const modeloCtrl = this.agregarMercanciasForm.get('datosMercancia.modelo');
+    const MARCA_CTRL = this.agregarMercanciasForm.get('datosMercancia.marca');
+    const ANO_CTRL = this.agregarMercanciasForm.get('datosMercancia.ano');
+    const SERIE_CTRL = this.agregarMercanciasForm.get('datosMercancia.serie');
+    const MODELO_CTRL = this.agregarMercanciasForm.get('datosMercancia.modelo');
     
     // Establecer validadores para campos de vehículos
-    marcaCtrl?.setValidators([Validators.required]);
-    modeloCtrl?.setValidators([Validators.required]);
-    serieCtrl?.setValidators([Validators.required]);
-    anoCtrl?.setValidators([Validators.required]);
+    MARCA_CTRL?.setValidators([Validators.required]);
+    MODELO_CTRL?.setValidators([Validators.required]);
+    SERIE_CTRL?.setValidators([Validators.required]);
+    ANO_CTRL?.setValidators([Validators.required]);
     
     // Actualizar validez sin emitir eventos
-    marcaCtrl?.updateValueAndValidity({ emitEvent: false });
-    modeloCtrl?.updateValueAndValidity({ emitEvent: false });
-    serieCtrl?.updateValueAndValidity({ emitEvent: false });
-    anoCtrl?.updateValueAndValidity({ emitEvent: false });
+    MARCA_CTRL?.updateValueAndValidity({ emitEvent: false });
+    MODELO_CTRL?.updateValueAndValidity({ emitEvent: false });
+    SERIE_CTRL?.updateValueAndValidity({ emitEvent: false });
+    ANO_CTRL?.updateValueAndValidity({ emitEvent: false });
   }
 
   /**
@@ -895,23 +956,23 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
    */
   cancelarVehiculo(): void {
     const VEHICULO_CTRL = this.agregarMercanciasForm.get('datosMercancia.vehiculo');
-    const marcaCtrl = this.agregarMercanciasForm.get('datosMercancia.marca');
-    const anoCtrl = this.agregarMercanciasForm.get('datosMercancia.ano');
-    const serieCtrl = this.agregarMercanciasForm.get('datosMercancia.serie');
-    const modeloCtrl = this.agregarMercanciasForm.get('datosMercancia.modelo');
+    const MARCA_CTRL = this.agregarMercanciasForm.get('datosMercancia.marca');
+    const ANO_CTRL = this.agregarMercanciasForm.get('datosMercancia.ano');
+    const SERIE_CTRL = this.agregarMercanciasForm.get('datosMercancia.serie');
+    const MODELO_CTRL = this.agregarMercanciasForm.get('datosMercancia.modelo');
     
     // Desmarque la casilla de verificación del vehículo y borre los validadores.
     VEHICULO_CTRL?.setValue(false, { emitEvent: false });
-    marcaCtrl?.clearValidators();
-    modeloCtrl?.clearValidators();
-    serieCtrl?.clearValidators();
-    anoCtrl?.clearValidators();
+    MARCA_CTRL?.clearValidators();
+    MODELO_CTRL?.clearValidators();
+    SERIE_CTRL?.clearValidators();
+    ANO_CTRL?.clearValidators();
 
     // Actualizar validez sin emitir eventos
-    marcaCtrl?.updateValueAndValidity({ emitEvent: false });
-    modeloCtrl?.updateValueAndValidity({ emitEvent: false });
-    serieCtrl?.updateValueAndValidity({ emitEvent: false });
-    anoCtrl?.updateValueAndValidity({ emitEvent: false });
+    MARCA_CTRL?.updateValueAndValidity({ emitEvent: false });
+    MODELO_CTRL?.updateValueAndValidity({ emitEvent: false });
+    SERIE_CTRL?.updateValueAndValidity({ emitEvent: false });
+    ANO_CTRL?.updateValueAndValidity({ emitEvent: false });
   }
 
   /**
@@ -939,8 +1000,8 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
    */
   abrirDialogoMercancias(): void {
     if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
+      const MODAL_INSTANCIA = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCIA.show();
     }
   }
 
@@ -949,16 +1010,16 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
    */
   cerrarModal(): void {
     if (this.modalElement) {
-      const modalInstance = Modal.getInstance(this.modalElement.nativeElement) || new Modal(this.modalElement.nativeElement);
-      modalInstance.hide();
+      const INSTANCIA_MODAL = Modal.getInstance(this.modalElement.nativeElement) || new Modal(this.modalElement.nativeElement);
+      INSTANCIA_MODAL.hide();
     }
     // Alternativa: también hacer clic en el botón de cerrar si está presente
     if (this.closeModal) {
       this.closeModal.nativeElement.click();
     }
     // Limpie los fondos modales inmediatamente para evitar que se cuelguen.
-    const backdrops = document.querySelectorAll('.modal-backdrop');
-    backdrops.forEach(bd => bd.parentNode?.removeChild(bd));
+    const BACKDROPS = document.querySelectorAll('.modal-backdrop');
+    BACKDROPS.forEach(bd => bd.parentNode?.removeChild(bd));
     document.body.classList.remove('modal-open');
   }
 
@@ -1035,7 +1096,7 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
     this.limpiarFormularioMercancia();
   }
 
-  private actualizarMercanciaBodyData(DATOS: any): void {
+  private actualizarMercanciaBodyData(DATOS: MercanciaRow): void {
     if (this.filaEditando !== null) {
       this.mercanciaBodyData[this.filaEditando] = DATOS;
       if (this.getMercanciaTableData && this.getMercanciaTableData.mercanciaTable && Array.isArray(this.getMercanciaTableData.mercanciaTable.tableBody)) {
@@ -1069,9 +1130,9 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
     this.envioIntentado = true;
     if (this.agregarMercanciasForm.valid === true) {
       if (this.confirmarModalElement) {
-        const MODAL_INSTANCE = new Modal(this.confirmarModalElement.nativeElement);
+        const MODAL_INSTANCIA = new Modal(this.confirmarModalElement.nativeElement);
         this.cerrarModal();
-        MODAL_INSTANCE.show();
+        MODAL_INSTANCIA.show();
       }
     } else {
       this.agregarMercanciasForm.markAllAsTouched();
@@ -1083,11 +1144,11 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
    */
   public obtenerMercancia(): void {
     // Solo configura los encabezados, pero no carga datos iniciales
-    const headers: string[] = this.getMercanciaTableData?.mercanciaTable?.tableHeader || [];
-    this.mercanciaHeaderData = headers.map((encabezado, idx) => ({
+    const HEADERS: string[] = this.getMercanciaTableData?.mercanciaTable?.tableHeader || [];
+    this.mercanciaHeaderData = HEADERS.map((encabezado, idx) => ({
       encabezado,
       orden: idx,
-      clave: (row: TableBodyData) => {
+      clave: (row: TableBodyData): string => {
         if (encabezado.toLowerCase().includes('condición')) {
           return ExencionImpuestosComponent.obtenerDescripcion(this.condicionMercancia, row.tbodyData?.[idx]);
         }
@@ -1132,9 +1193,19 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
   * Finaliza observables y libera recursos.
   */
   ngOnDestroy(): void {
+    // Limpiar modal manual si está abierto
+    this.cerrarModalManual();
+    
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+}
+
+/**
+ * Interface para la respuesta de la API que contiene catálogos.
+ */
+interface ApiCatalogoResponse {
+  data: Catalogo[];
 }
 
 /**
