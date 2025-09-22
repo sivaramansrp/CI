@@ -299,7 +299,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    */
   agregarServiciosAmpliacion(): void {
     const CUERPODATOS = {
-      descripcion: this.recibioSector[0]?.descripcion,
+      // descripcion: this.recibioSector[0]?.descripcion,
       descripcionSector: this.recibioSector[0]?.descripcionSector,
     };
     this.tramite80206Store.setDatosSector([...this.datosSector, CUERPODATOS]);
@@ -323,7 +323,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    */
   procesarDatosDelHijo(): void {
     const DATA = this.formularioInfoRegistro.get('seleccionarRegla')?.value;
-    if (DATA === 'Regla 3RsA') {
+    if (DATA === '3.2.25') {
       this.isSelectedRegla = true;
     } else {
       this.isSelectedRegla = false;
@@ -341,10 +341,10 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * @param {Catalogo | Catalogo[]} data - Datos del sector seleccionado.
    */
   cambioDeSector(data: Catalogo): void {
-    this.formularioInfoRegistro.get('sector')?.setValue(data.id);
+    this.formularioInfoRegistro.get('sector')?.setValue(data.clave);
 
     this.recibioSector = Array.isArray(data) ? data : [data];
-    this.tramite80206Store.setSector(data?.id.toString() || '');
+    this.tramite80206Store.setSector(data?.clave || '');
   }
 
   /**

@@ -1,4 +1,4 @@
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, CargaDocumentoComponent } from '@ng-mf/data-access-user';
 import { Ampliacion3RsComponent } from './components/ampliacion-3Rs/ampliacion-3rs.component';
 import { AmpliacionAnexoComponent } from './components/ampliacion-anexo/ampliacion-anexo.component';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
@@ -65,6 +65,7 @@ import { ToastrService } from 'ngx-toastr';
     TablaDinamicaComponent,
     TituloComponent,
     WizardComponent,
+    CargaDocumentoComponent
   ],
   providers: [ToastrService]
 })
