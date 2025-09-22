@@ -1,0 +1,19 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 0,
+      "descripcion": "formaParteDePatrimonio_01"
+    },
+    {
+      "id": 1,
+      "descripcion": "formaParteDePatrimonio_02"
+    },
+    {
+      "id": 2,
+      "descripcion": "formaParteDePatrimonio_03"
+    }
+    
+  ],
+  "message": "OK "
+}
