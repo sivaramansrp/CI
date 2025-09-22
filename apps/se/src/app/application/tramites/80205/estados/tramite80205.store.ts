@@ -1,6 +1,6 @@
 import { Servicio, ServicioInmex, Servicios } from '../models/datos-info.model';
 import { Store, StoreConfig } from '@datorama/akita';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo } from '../constantes/modificacion.enum';
 import { Injectable } from '@angular/core';
 
 /**

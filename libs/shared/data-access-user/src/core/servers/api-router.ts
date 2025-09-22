@@ -153,7 +153,7 @@ export const TRAMITE = '{numeroTramite}';
  * @param TRAMITE el trámite seleccionado por el usuario.
  * @see https://api-v30.cloud-ultrasist.net/api/tramite/5701/documentos?especifico=false
  */
-export const API_GET_DOCUMENTOS_OBLIGATORIOS = `tramite/{numeroTramite}/documentos`;
+export const API_GET_DOCUMENTOS_OBLIGATORIOS = `sat-t{numeroTramite}/solicitud/documentos`;
 
 /**
  * API para recuperar el catálogo de paises

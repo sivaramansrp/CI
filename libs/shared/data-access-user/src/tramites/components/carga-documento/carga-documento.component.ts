@@ -90,6 +90,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
 
   @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef>;
 
+  @Output() cargaEnProgreso = new EventEmitter<boolean>();
+
   /**
    * Referencia inyectada para gestionar la destrucción del componente y terminar las suscripciones.
    * @type {DestroyRef}
@@ -212,13 +214,6 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
         map(() => this.confirmUpload())
       )
       .subscribe();
-
-    // this.regresarSeccionCargarDocumentoEvento
-    //   .pipe(
-    //     takeUntilDestroyed(this.destroyRef$),
-    //     map(() => this.mostrarSeccionCargaArchivosAccion())
-    //   )
-    //   .subscribe();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -913,6 +908,8 @@ cargarArchivos(archivosCargando: DocumentosParaCargar[], datosUsuario: Usuario):
             archivo.cargado = true;
             archivo.estatus = 'cargado';
           });
+
+          this.cargaEnProgreso.emit(false);
       }
     },
     error: (err) => console.error('Upload or polling failed', err)
