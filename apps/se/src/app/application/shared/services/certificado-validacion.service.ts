@@ -1,4 +1,4 @@
-import { Observable,map } from 'rxjs';
+import { Observable,catchError,map, throwError } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -98,4 +98,19 @@ export class CertificadoValidacionService {
     return this.http
       .get<{ data: Catalogo[] }>('assets/json/110202/umc.json') // Solicita los datos del archivo JSON
       .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
-  }}
+  }
+ /**
+     * @method getDatos
+     * Método para obtener datos desde un archivo JSON.
+     * @returns {Observable<unknown>} Un Observable que emite los datos obtenidos o un error.
+     */
+    getDatos(): Observable<unknown> {
+        return this.http.get('assets/json/110222/pagoderechos.json') // Realiza una solicitud GET al archivo JSON.
+          .pipe(
+            catchError((error: unknown) => { // Maneja errores en la solicitud.
+              return throwError(() => error); // Lanza el error para que pueda ser manejado por el suscriptor.
+            })
+          );
+     }
+
+}

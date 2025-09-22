@@ -28,6 +28,7 @@ describe('PasoUnoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
+      imports: [],
       declarations: [PasoUnoComponent],
       providers: [
         { provide: ConsultaioQuery, useValue: consultaQueryMock },

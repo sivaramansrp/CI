@@ -365,13 +365,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene el grupo de formulario de exención de impuestos.
-   */
-  get reexportacionForm(): FormGroup {
-    return this.solicitudForm.get('reexportacionForm') as FormGroup;
-  }
-
-  /**
    * Obtiene el grupo de formulario de datos de mercancía.
    */
   inicializarFormulario(): void {
@@ -428,7 +421,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           {value: this.solicitudState?.colonia, disabled: this.soloLectura},
           Validators.required,
         ],
-        fechasSeleccionadas: this.solicitudState?.fechasSeleccionadas || this.fb.array([]),
+        fechasSeleccionadas: this.fb.array(
+          (this.solicitudState?.fechasSeleccionadas ?? []).map(f => this.fb.control(f))
+        ),
+        entidadesSeleccionadas: this.fb.array(
+          (this.solicitudState?.entidadesSeleccionadas ?? []).map(e => this.fb.control(e))
+        ),
       }),
     });
 
@@ -451,6 +449,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         genero: [{ value: this.solicitudState?.genero, disabled: this.soloLectura }, Validators.required],
         especie: [{ value: this.solicitudState?.especie, disabled: this.soloLectura }, Validators.required],
         nombreComun: [{ value: this.solicitudState?.nombreComun, disabled: this.soloLectura }, Validators.required],
+        otroNombreComun: [{ value: this.solicitudState?.otroNombreComun, disabled: this.soloLectura }],
       }),
     });
   }
@@ -578,6 +577,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Obtiene el grupo de formulario de exención de impuestos.
+   */
+  get reexportacionForm(): FormGroup {
+    return this.solicitudForm.get('reexportacionForm') as FormGroup;
+  }
+
+  /**
    * Maneja la selección del número de certificado.
    * Obtiene el valor del formulario y lo establece en el store.
    */
@@ -695,17 +701,28 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   estadoSeleccion(): void {
     const ESTADO = this.solicitudForm.get('reexportacionForm.estado')?.value;
     this.store.setEstado(ESTADO);
-  }
-
+  }  
+  
   /**
    * Maneja el cambio en el campo de nombre común.
    * Si el valor es 'Otro', muestra un campo adicional para ingresar otro nombre común.
-   */
+   */    
   onNombreComunChange(event: Event | { value?: string } | undefined): void {
     const VALUE = 'value' in (event ?? {}) ? (event as { value?: string }).value
       : (event && (event as Event).target && ((event as Event).target as HTMLSelectElement).value) || '';
     this.setValoresStore(this.agregarMercanciasForm.get('datosMercancia') as FormGroup, 'nombreComun', 'setNombreComun');
-    this.mostrarOtroNombreComun = VALUE === 'Otro';
+    this.mostrarOtroNombreComun = VALUE === '1';
+    
+    const OTRO_CONTROL = this.agregarMercanciasForm.get('datosMercancia.otroNombreComun');
+    if (OTRO_CONTROL) {
+      if (this.mostrarOtroNombreComun) {
+        OTRO_CONTROL.setValidators([Validators.required]);
+      } else {
+        OTRO_CONTROL.clearValidators();
+        OTRO_CONTROL.setValue(''); 
+      }
+      OTRO_CONTROL.updateValueAndValidity();
+    }
   }
 
   /**
@@ -746,16 +763,36 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Obtiene el array del formulario 'entidadesSeleccionadas' del grupo de formulario  'datosServicio'.
+   *
+   * @returns {FormArray} El array de formulario 'entidadesSeleccionadas'.
+   */
+  get entidadesSeleccionadas(): FormArray {
+    return this.reexportacionForm.get('entidadesSeleccionadas') as FormArray;
+  }
+
+  /**
    * Actualiza la lista de fechas seleccionadas y las almacena en el estado.
    * 
    * @param fechas - Arreglo de fechas a agregar.
    * @returns void
    */
   changeCrosslist(fechas: string[]): void {
-    fechas.forEach((fecha) => {
-      this.fechasSeleccionadas.push(new FormControl(fecha));
-    });
+    const FECHA = this.fb.array(fechas.map(fecha => this.fb.control(fecha)));
+    this.reexportacionForm.setControl('fechasSeleccionadas', FECHA);
     this.store.setFechasSeleccionadas(fechas);
+  }
+
+  /**
+   * Actualiza la lista de entidades seleccionadas y las almacena en el estado.
+   * 
+   * @param entidades - Arreglo de entidades a agregar.
+   * @returns void
+   */
+  changeCrosslistEntidades(entidades: string[]): void {
+    const FECHA = this.fb.array(entidades.map(entidad => this.fb.control(entidad)));
+    this.reexportacionForm.setControl('entidadesSeleccionadas', FECHA);
+    this.store.setEntidadesSeleccionadas(entidades);
   }
 
   /**
@@ -769,7 +806,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe((respuesta) => {
         if (respuesta?.success) {
           respuesta.datos.id = this.datosDetalle.length + 1;
-          this.datosDetalle.push(respuesta.datos);
+          this.datosDetalle = [...this.datosDetalle, respuesta.datos];
           (
             this.store.setDatosDetalle as unknown as (
               valor: DatosDetalle[]
@@ -857,8 +894,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Si hay descripción del producto, muestra el modal para agregar mercancías.
    */
   agregarMercancia(): void {
-    const DESCRIPCION_PRODUCTO = this.reexportacionForm.get('descripcionProducto')?.value;
-    if (!DESCRIPCION_PRODUCTO) {
+    const SELECTED_PRODUCTO = this.solicitudForm.get('reexportacionForm.descripcionProducto')?.value;
+    if (!SELECTED_PRODUCTO) {
       if (this.modalConfirmacion) {
         const MODEL = new Modal(this.modalConfirmacion.nativeElement);
         MODEL.show();

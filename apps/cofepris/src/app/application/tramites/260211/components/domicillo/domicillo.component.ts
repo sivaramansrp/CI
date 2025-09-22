@@ -1,54 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  Catalogo,
-  ConfiguracionColumna,
-  CrossListLable,
-  CrosslistComponent,
-  InputFecha,
-  InputFechaComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-
+import { Catalogo, ConfiguracionColumna, CrossListLable, CrosslistComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ConsultaioQuery,ConsultaioState} from '@ng-mf/data-access-user';
-
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { FECHA_DE_PAGO } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
-
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  MERCANCIAS_DATA,
-  MercanciasInfo,
-  NICO_TABLA,
-  NicoInfo,
-} from '@libs/shared/data-access-user/src/core/models/260211/domicilo.model';
-import {
-  Solicitud260211State,
-  Tramite260211Store,
-} from '../../../../estados/tramites/tramite260211.store';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, NicoInfo } from '@libs/shared/data-access-user/src/core/models/260211/domicilo.model'; 
+import { Notificacion,NotificacionesComponent } from '@ng-mf/data-access-user';
+import { Solicitud260211State, Tramite260211Store } from '../../../../estados/tramites/tramite260211.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260211/domicilo.enum';
-
 import { BANCOS_DATA } from '../../constantes/derechos.model';
+import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260211/domicilo.enum';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { FECHA_DE_PAGO } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
 import { HttpClient } from '@angular/common/http';
+import { Modal } from 'bootstrap';
 import { SanitarioService } from '../../services/sanitario.service';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
-
 /**
  * Interfaz para la respuesta de la tabla de NICO.
  */
@@ -98,7 +64,8 @@ export interface MercanciasTabla {
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     CrosslistComponent,
-    InputFechaComponent
+    InputFechaComponent,
+    NotificacionesComponent
   ],
   templateUrl: './domicillo.component.html',
   styleUrl: './domicillo.component.scss',
@@ -141,17 +108,21 @@ export class DomicilloComponent implements OnInit, OnDestroy {
    * Lista de filas seleccionadas del componente tabla de NICO.
    * Se utiliza para manejar la selección de filas en la tabla.
    */
-  selectedRowsEvent: any[] = [];
+  selectedRowsEvent: MercanciasInfo[] = [];
   /*
    * Lista de filas seleccionadas del componente tabla de mercancías.
    * Se utiliza para manejar la selección de filas en la tabla de mercancías.
    */
-  selectedRows: any[] = [];
+  selectedRows: NicoInfo[] = [];
+  /**
+   * Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
   /*
     * Maneja el evento de cambio de selección en la tabla de NICO.
     * @param selected Lista de filas seleccionadas.
     */
-  onSeleccionChangeEvent(selected: any[]): void {
+  onSeleccionChangeEvent(selected: MercanciasInfo[]): void {
     this.selectedRowsEvent = selected;
     if (this.selectedRowsEvent.length === 1) {
       this.noSeleccionado = false;
@@ -163,17 +134,34 @@ export class DomicilloComponent implements OnInit, OnDestroy {
   /** 
    Recibe los seleccionados del componente tabla
   */
-  onSeleccionChange(selected: any[]): void {
+  onSeleccionChange(selected: NicoInfo[]): void {
     this.selectedRows = selected;
   }
   /**
    *  Elimina las filas seleccionadas
    *  */
   eliminarSeleccionados(): void {
-    this.nicoTablaDatos = this.nicoTablaDatos.filter(
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: this.selectedRows.length > 0 ? '¿Estás seguro que deseas eliminar los registros marcados?' : 'Selecciona un registro.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: this.selectedRows.length > 0 ? 'Cancelar' : '',
+      };
+  }
+/*
+  * Elimina las filas seleccionadas de la tabla NICO si se confirma la acción.
+  */
+   eliminarPedimentoDatos(borrar: boolean):void {
+    if (borrar) {
+       this.nicoTablaDatos = this.nicoTablaDatos.filter(
       (row) => !this.selectedRows.includes(row)
     );
     this.selectedRows = [];
+    } 
   }
 
   /**
@@ -305,7 +293,11 @@ export class DomicilloComponent implements OnInit, OnDestroy {
    * Lista de datos de aduanas de entrada.
    */
   aduanasDeEntradaDatos: string[] = [];
-
+/**
+ * Referencia al modal para agregar agente.
+ */
+   @ViewChild('modalAddAgent', { static: false }) modalAddAgent!: ElementRef;
+  
   /**
    * Indica si la sección es colapsable.
    */
@@ -340,24 +332,24 @@ export class DomicilloComponent implements OnInit, OnDestroy {
    * Etiqueta para el crosslist de país de origen.
    */
   public paisDeOrigenLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de orígen*',
-    derecha: 'País(es) seleccionados*',
+    tituluDeLaIzquierda: 'País de orígen:',
+    derecha: 'País(es) seleccionados:',
   };
 
   /**
    * Etiqueta para el crosslist de país de procedencia.
    */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia*',
-    derecha: 'País(es) seleccionados*',
+    tituluDeLaIzquierda: 'País de procedencia:',
+    derecha: 'País(es) seleccionados:',
   };
 
   /**
    * Etiqueta para el crosslist de uso específico.
    */
   public usoEspecificoLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Uso específico*',
-    derecha: 'Uso(s) específico(s) seleccionado(s)*',
+    tituluDeLaIzquierda: 'Uso específico:',
+    derecha: 'Uso(s) específico(s) seleccionado(s):',
   };
 
   /**
@@ -391,20 +383,35 @@ export class DomicilloComponent implements OnInit, OnDestroy {
 
     }
   }
+
+  
   /**
    * Agrega una nueva fila a la tabla NICO con los datos del formulario de agente.
    * Si el formulario es válido, crea un nuevo objeto `NicoInfo` con los valores del formulario y lo agrega a la lista `nicoTablaDatos`.
    */
   agregarFilaScian(): void {
     if (this.formAgente.valid) {
-
       const NEWVA_FILA: NicoInfo = {
         clave_Scian: this.estado.find(item => item.id === Number(this.formAgente.value.claveScianModal))?.descripcion ?? '',
-        descripcion_Scian: this.estado.find(item => item.id === Number(this.formAgente.value.claveDescripcionModal))?.descripcion ?? '',
+        descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
       };
 
       this.nicoTablaDatos = [...this.nicoTablaDatos, NEWVA_FILA];
-      this.formAgente.reset();
+
+      const MODALELEMENT = document.getElementById('modalAddAgent');
+
+    if(MODALELEMENT) {
+    const MODALINSTANCE = Modal.getInstance(MODALELEMENT) || new Modal(MODALELEMENT);
+    MODALINSTANCE.hide();
+    }
+    const BACKDROP_ELEMENTS = document.querySelectorAll('.modal-backdrop');
+    BACKDROP_ELEMENTS.forEach((backdrop) => backdrop.remove());
+
+    
+    }
+    else
+    {
+      this.formAgente.markAllAsTouched();
     }
   }
   /*
@@ -527,7 +534,7 @@ this.domicilio.get('licenciaSanitaria')?.valueChanges
      */
     this.formAgente = this.fb.group({
       claveScianModal: [this.solicitudState?.claveScianModal, Validators.required],
-      claveDescripcionModal: [this.solicitudState?.claveDescripcionModal],
+      claveDescripcionModal: [this.solicitudState?.claveDescripcionModal, Validators.required],
     });
 
     /**
@@ -648,7 +655,7 @@ this.domicilio.get('licenciaSanitaria')?.valueChanges
     this.setValoresStore(this.domicilio, 'licenciaSanitaria', 'setLicenciaSanitaria');
 
     const VALOR = form.get(campo)?.value;
-    (this.tramite260211Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite260211Store[metodoNombre] as (value: string | number | boolean) => void)(VALOR);
   }
 
 
@@ -681,7 +688,7 @@ this.domicilio.get('licenciaSanitaria')?.valueChanges
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260211Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite260211Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite260211Store[metodoNombre] as (value: string | number | boolean) => void)(VALOR);
   }
 
   /**

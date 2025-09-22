@@ -6,8 +6,8 @@ import { CommonModule } from '@angular/common';
 import { DisponsibleFiscal } from '../../../../shared/models/empresas.model';
 import { EmpresasComponent } from '../../../../shared/components/empresas/empresas.component';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
+import { Tramite80101Store} from '../../estados/tramite80101.store';
 import catalogo from '@libs/shared/theme/assets/json/80104/controladas.json';
-
 /*
   * Componente para mostrar la lista de empresas terciarizadas en el trámite 80103.
   *
@@ -37,7 +37,7 @@ export class EmpresasControladasComponent implements OnDestroy {
   * Constructor del componente.
   * @param {NuevoProgramaIndustrialService} nuevoProgramaIndustrialService - Servicio para gestionar la información del nuevo programa industrial.
   */
-  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,){
+  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService, private tramite80101Store: Tramite80101Store){
 
   }
 
@@ -70,6 +70,12 @@ export class EmpresasControladasComponent implements OnDestroy {
    * @type {ConfiguracionColumna<DisponsibleFiscal>[]}
    */
   estadosCatalogo: Catalogo[]=catalogo?.estadosCatalogos;
+
+  actualizarSeleccionadas(event: DisponsibleFiscal[]): void {
+   if (event) {
+    this.tramite80101Store.setSeleccionadas(event);
+   }
+  }
 
    /**
    * Obtiene la lista de estados desde el servicio y actualiza la propiedad estadoCatalogo.

@@ -11,7 +11,10 @@
       "rfcProductor": "AEVL621207B95",
       "numeroFactura": "1234567",
       "complemento": "QAS",
-      "nombreComercial":"A & A COMERCIAL DE JUAREZ S.A DE C.V"
+      "nombreComercial":"A & A COMERCIAL DE JUAREZ S.A DE C.V",
+       "complementoDescripcion": "Descripcion 1",
+      "fetchFactura": "Factura1",
+      "rfcProductor1": "AEVL621207B95"
     },
     {
       "id": 1,
@@ -24,7 +27,10 @@
       "rfcProductor": "AEVL6212079897",
       "numeroFactura": "1234567",
       "complemento": "QAS",
-      "nombreComercial":"A & A COMERCIAL DE JUAREZ S.A DE C.V"
+      "nombreComercial":"A & A COMERCIAL DE JUAREZ S.A DE C.V",
+      "complementoDescripcion": "Descripcion 2",
+      "fetchFactura": "Factura2",
+      "rfcProductor1": "AEVL621207B99"
     }
   ]
 }

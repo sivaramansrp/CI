@@ -1,10 +1,10 @@
-import { Component, ElementRef, EventEmitter, ViewChild } from '@angular/core';
-import { Input, OnInit,Output} from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, ViewChild } from '@angular/core';
+import { Input, OnDestroy, OnInit, Output} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { AlertComponent, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, ModeloDeFormaDinamica, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { ComplementarPlantaComponent } from '../complementar-planta/complementar-planta.component';
 import { InputFecha } from '@libs/shared/data-access-user/src';
@@ -39,6 +39,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FederatoriosQuery } from '../../../estados/queries/federatarios.query';
 
 import { FECHA_DE_Tabla, INMEX_PLANTAS } from '../../constantes/federatarios-y-plantas.enum';
+import { ComplimentosService } from '../../services/complimentos.service';
 /**
  * Componente para los federatarios y plantas
  * @export FederatariosYPlantasComponent
@@ -71,7 +72,7 @@ import { FECHA_DE_Tabla, INMEX_PLANTAS } from '../../constantes/federatarios-y-p
  * Componente para gestionar federatarios y sus plantas asociadas.
  * Inicializa los datos necesarios al iniciar el componente.
  */
-export class FederatariosYPlantasComponent implements OnInit {
+export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
 
 
   /**
@@ -205,6 +206,18 @@ export class FederatariosYPlantasComponent implements OnInit {
    */
     @Input() estadoOptions!:Catalogo[];
 
+    /**
+   * Opciones de representacionFederalOptions
+   * @type {Catalogo[]} representacionFederalOptions
+   */
+    public representacionFederalOptions: Catalogo[] = [];
+
+    /**
+   * Opciones de actividadProductivaOptions
+   * @type {Catalogo[]} actividadProductivaOptions
+   */
+    public actividadProductivaOptions: Catalogo[] = [];
+
   /**
    * Texto para mostrar en la alerta
    * @property {string} textodAlerta
@@ -244,6 +257,16 @@ plantasForm!: FormGroup;
    */
   @Output() datosFormaFedratario: EventEmitter<FederatariosEncabezado> =
     new EventEmitter<FederatariosEncabezado>(true);
+
+  /**
+   * Emisor de eventos para los datos de plantas disponibles.
+   */
+  @Output() datosPlantaDisponibles: EventEmitter<PlantasDisponibles[]> = new EventEmitter<PlantasDisponibles[]>(true);
+
+  /** 
+   * Emisor de eventos para los datos de plantas IMMEX. 
+   */
+  @Output() datosPlantasImmex: EventEmitter<PlantasImmex[]> = new EventEmitter<PlantasImmex[]>(true);
 
  /**
    * Controla la visibilidad del popup "Complementar Planta".
@@ -292,33 +315,172 @@ plantasForm!: FormGroup;
  * @property {boolean} isPlantaImmexSelected
  */
   public isPlantaImmexSelected = false;
+
+   /**
+     * Arreglo que contiene los elementos del catálogo de estado IMMEX.
+     * Cada elemento representa una opción disponible en el catálogo.
+     */
+    estadoImmex: Catalogo[] = [];
   
   /**
    * Constructor de la clase FederatariosYPlantasComponent.
    * @param {Router} router - Servicio de Angular para la navegación.
    * @param {ActivatedRoute} activatedRoute - Servicio de Angular para obtener información sobre la ruta actual.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute ,private federatoriosQuery:FederatoriosQuery,private federatoriosStore:FederatoriosStore,private consultaioQuery: ConsultaioQuery,)
-   {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-       
-          this.inicializarCertificadoFormulario();
-        })
-      )
-      .subscribe()
-  }
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private federatoriosQuery: FederatoriosQuery,
+    private federatoriosStore: FederatoriosStore,
+    private consultaioQuery: ConsultaioQuery,
+    private complimentosService: ComplimentosService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 /**
    * Método que se ejecuta cuando el componente es inicializado.
    * 
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
-   this.inicializarCertificadoFormulario();
+    this.obtenerImex();
+    this.federatoriosQuery.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitudState = seccionState as FederatoriosState;
+      })
+    )
+    .subscribe();
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarCertificadoFormulario();
+        })
+      )
+      .subscribe();
+
+   if (!(this.solicitudState['federatariosEstadoOptions'] as Catalogo[])?.length) {
+    this.obtenerFederatariosEstados();
+   } else {
+    this.estadoOptions = [...this.solicitudState['federatariosEstadoOptions'] as Catalogo[]];
+   }
+
+   if (!(this.solicitudState['municipioOptions'] as Catalogo[])?.length) {
+    this.obtenerMunicipio("BCN");
+   }
+   
+   if (!(this.solicitudState['representacionOptions'] as Catalogo[])?.length) {
+    this.obtenerRepresentacionFederal('MEX');
+   } else {
+    this.representacionFederalOptions = [...this.solicitudState['representacionOptions'] as Catalogo[]];
+   }
+
+   if (!(this.solicitudState['actividadOptions'] as Catalogo[])?.length) {
+    this.obtenerActividad();
+   } else {
+    this.actividadProductivaOptions = [...this.solicitudState['actividadOptions'] as Catalogo[]];
+   }
   }
+
+  /**
+ * Obtiene las opciones de estados para federatarios desde el servicio y actualiza el formulario dinámico.
+ * Asigna las opciones recibidas tanto a la propiedad local como al campo correspondiente en el formulario de representante legal.
+ * Además, actualiza el store con los nuevos valores y refresca la vista.
+ */
+  obtenerFederatariosEstados(): void {
+    this.complimentosService.getEstado()
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((response) => {
+        this.estadoOptions = response.datos;
+        this.establecerCambioDeValor({ campo: 'federatariosEstadoOptions', valor: response.datos });
+        const ESTADO_FIELD = this.representanteLegalFormData.find(
+          (datos: ModeloDeFormaDinamica) => datos.campo === 'estado'
+        ) as ModeloDeFormaDinamica;
+        if (ESTADO_FIELD) { 
+          ESTADO_FIELD.opciones = response.datos.map( 
+            (item: unknown) => ({
+              descripcion: (item as { descripcion: string }).descripcion,
+              id: (item as { clave: string }).clave,
+            })
+          );
+        }
+        this.changeDetectorRef.markForCheck();
+      })
+    )
+    .subscribe();
+  }
+
+  /**
+ * Obtiene las opciones de estados para federatarios desde el servicio y actualiza el formulario dinámico.
+ * Asigna las opciones recibidas tanto a la propiedad local como al campo correspondiente en el formulario de representante legal.
+ * Además, actualiza el store con los nuevos valores y refresca la vista.
+ */
+  obtenerMunicipio(cveEntidad: string): void {
+    this.complimentosService.getmunicipio(cveEntidad)
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((response) => {
+        this.establecerCambioDeValor({ campo: 'municipioOptions', valor: response.datos });
+        const MUNICIPIO_FIELD = this.representanteLegalFormData.find(
+          (datos: ModeloDeFormaDinamica) => datos.campo === 'estadoOptions'
+        ) as ModeloDeFormaDinamica;
+        if (MUNICIPIO_FIELD) {
+          MUNICIPIO_FIELD.opciones = response.datos.map(
+            (item: unknown) => ({
+              descripcion: (item as { descripcion: string }).descripcion,
+              id: (item as { clave: string }).clave,
+            })
+          );
+        }
+        this.changeDetectorRef.markForCheck();
+      })
+    )
+    .subscribe();
+  }
+
+  /**
+ * Obtiene las opciones de estados para federatarios desde el servicio y actualiza el formulario dinámico.
+ * Asigna las opciones recibidas tanto a la propiedad local como al campo correspondiente en el formulario de representante legal.
+ * Además, actualiza el store con los nuevos valores y refresca la vista.
+ */
+  obtenerRepresentacionFederal(id: string): void {
+    this.complimentosService.getRepresentacion(id)
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((response) => {
+        const DATOS = { campo: 'representacionOptions', valor: response.datos };
+        this.establecerCambioDeValor(DATOS);
+        this.representacionFederalOptions = response.datos;
+        this.changeDetectorRef.markForCheck();
+      })
+    )
+    .subscribe();
+  }
+
+  /**
+   * Obtiene la actividad productiva desde el servicio `complimentosService` y actualiza la propiedad
+   * `estadosFederatarios` en la configuración de opciones de estado.
+   * La suscripción se gestiona para finalizar automáticamente cuando se emite el notifier `destroyNotifier$`.
+   * @remarks
+   * Utiliza el método `getActividadProductiva` del servicio y espera que la respuesta contenga la propiedad `datos`.
+   */
+  obtenerActividad(): void {
+    this.complimentosService.getActividadProductiva()
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    )
+    .subscribe((res) => {
+      const DATOS = { campo: 'actividadOptions', valor: res.datos };
+      this.establecerCambioDeValor(DATOS);
+      this.actividadProductivaOptions = res.datos;
+      this.changeDetectorRef.markForCheck();
+    });
+  }
+
  /**
    * Método para inicializar el formulario reactivo con los datos de la solicitud.
    * 
@@ -326,48 +488,20 @@ plantasForm!: FormGroup;
    * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
    */
   inicializarCertificadoFormulario(): void {
+    this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-     this.inicializarFormulario()
-    }  
+      this.federatariosFormGroup.disable();
+      this.expresasFormGroup.disable();
+      this.plantasForm.disable();
+    } 
   }
-    /**
-   * @comdoc
-   * Guarda los datos del formulario de combinación requerida.
-   * 
-   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
-   * - Si el formulario es de solo lectura, lo deshabilita.
-   * - Si no es de solo lectura, lo habilita.
-   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
-   */
-  guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-       this.federatariosFormGroup.disable();
-       this.expresasFormGroup.disable();
-       this.plantasForm.disable();
-      } else {
-      this.federatariosFormGroup.enable();
-      this.expresasFormGroup.enable();
-       this.plantasForm.enable();
-      }
-  }
+
    /** Inicializa los datos del formulario suscribiéndose al estado del trámite.  
  *  Asigna el estado actual al modelo local del componente. */
    inicializarFormulario(): void {
-      this.federatoriosQuery.selectSolicitud$
-          .pipe(
-            takeUntil(this.destroyNotifier$),
-            map((seccionState) => {
-              this.solicitudState = seccionState as FederatoriosState;
-            })
-          )
-          .subscribe();
     this.initFederatariosFormGroup();
     this.initExpresasFormGroup();
-    
-   }
+  }
   /**
    * Inicializa el formulario de federatarios con sus campos y validaciones
    * @method initFederatariosFormGroup
@@ -403,11 +537,12 @@ plantasForm!: FormGroup;
       pais: new FormControl(this.solicitudState['pais'], Validators.required),
       direccion: new FormControl(this.solicitudState['direccion'], Validators.required),
     });
-     this.plantasForm = new FormGroup({
-    estadoDos: new FormControl(this.solicitudState['estadoDos'], Validators.required),
-    representacionFederal: new FormControl(this.solicitudState['representacionFederal'], Validators.required),
-    actividadProductiva: new FormControl(this.solicitudState['actividadProductiva'], Validators.required),
-  });
+
+    this.plantasForm = new FormGroup({
+      estadoDos: new FormControl(this.solicitudState['estadoDos'], Validators.required),
+      representacionFederal: new FormControl(this.solicitudState['representacionFederal'], Validators.required),
+      actividadProductiva: new FormControl(this.solicitudState['actividadProductiva'], Validators.required),
+    });
   }
   /**
    * Navega a la ruta de acciones
@@ -460,6 +595,7 @@ plantasForm!: FormGroup;
  */
 buscarPlantasImmex(): void {
   this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
+  this.datosPlantaDisponibles.emit(this.plantasDisponiblesDatos);
 }
 
 /**
@@ -471,6 +607,7 @@ buscarPlantasImmex(): void {
  */
 agregarPlantas(): void {
   this.plantasImmexDatos = [INMEX_PLANTAS];
+  this.datosPlantasImmex.emit(this.plantasImmexDatos);
 }
 
 
@@ -694,11 +831,35 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
   * establecerCambioDeValor({ campo: 'nombre', valor: 'Juan' });
   * // Actualiza el campo 'nombre' con el valor 'Juan' en el store dinámico.
   */
-  establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
+  establecerCambioDeValor(event: { campo: string; valor: object | string | [] }): void {
     if (event) {
       this.federatoriosStore.setDynamicFieldValue(event.campo, event.valor);
       
     }
+  }
+
+    /**
+   * Obtiene el estado IMEX de una entidad específica y actualiza la propiedad `estadoImmex` con los datos recibidos.
+   * 
+   * @param entidad - El identificador de la entidad para la cual se desea obtener el estado IMEX.
+   */
+  obtenerImex():void {
+    this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+  this.estadoImmex = res.datos;
+    });
+    
+  }
+
+  /**
+  * @method ngOnDestroy
+  * @description
+  * Este método es parte del ciclo de vida del componente y se ejecuta automáticamente 
+  * cuando el componente está a punto de ser destruido. Se utiliza para limpiar las suscripciones 
+  * activas y evitar fugas de memoria en la aplicación.
+  */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }

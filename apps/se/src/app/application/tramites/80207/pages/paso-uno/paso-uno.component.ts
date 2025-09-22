@@ -1,10 +1,11 @@
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject,takeUntil } from 'rxjs';
 import { Component } from '@angular/core';
+import {EmpresasSubFabricanteComponent} from '../../components/empresas-submanufactureras/empresas-subfabricante.component';
 import{ OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import{SubfabricanteService} from '../../servicios/servicios-subfabricante.service';
-
+import { ViewChild } from '@angular/core';
 /**
  * @fileoverview Componente para la gestión del paso uno.
  * Este componente maneja la lógica y la presentación del primer paso del proceso,
@@ -60,6 +61,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.indice = i;
   }
 
+   /**
+   * Referencia al componente `solicitudComponent`.
+   */
+   @ViewChild('solicitudComponent', { static: false }) solicitudComponent: EmpresasSubFabricanteComponent| undefined;
+
+   /**
+
   /**
    * Constructor del componente.
    * Inicializa los servicios necesarios.
@@ -87,6 +95,27 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  /**
+   * Valida todos los formularios del paso uno.
+   * 
+   * Este método valida principalmente el formulario de solicitante que es el único
+   * obligatorio. Los otros formularios solo se validan si están disponibles.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
+   */
+ public validarTodosLosFormularios(): boolean {
+  let allFormsValid = true;
+  if (this.indice >= 2 && this.solicitudComponent) {
+    this.solicitudComponent?.formularioDatosSubcontratista.markAllAsTouched();
+     if (!this.solicitudComponent.formularioDatosSubcontratista.valid ) {
+      allFormsValid = false;
+    }
+
+  }
+  return allFormsValid ;
+
+}
   /**
    * Guarda los datos del formulario utilizando el servicio de ampliación de servicios.
    */

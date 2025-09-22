@@ -3,6 +3,7 @@ import {
   AnexoUnoEncabezado,
   DatosAnexotressUno,
   DatosComplimento,
+  ProveedorClienteTabla,
 } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
   AnnexoDosTres,
@@ -30,6 +31,8 @@ import { StoreConfig } from '@datorama/akita';
  * Representa el estado de Tramite80101.
  */
 export interface Tramite80101State {
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
   /**
    * Información del registro de servicios.
    */
@@ -163,19 +166,18 @@ export interface Tramite80101State {
   tablaDatosFederatarios: FederatariosEncabezado[];
 
   /**
+   * Información detallada de plantas IMMEX.
+   */
+  plantasImmexTablaLista: PlantasImmex[];
+  /** 
+   * Información detallada de plantas disponibles. 
+   */
+  plantasDisponiblesTablaLista: PlantasDisponibles[];
+
+  /**
    * Información detallada de federatarios.
    */
   datosFederatarios: FederatariosEncabezado;
-
-  /**
-   * Información detallada de plantas immex.
-   */
-  plantasImmexTablaLista: PlantasImmex[];
-
-  /**
-   * Información detallada de plantas disponibles.
-   */
-  plantasDisponiblesTablaLista: PlantasDisponibles[];
 }
 
 /**
@@ -210,6 +212,7 @@ export interface Tramite80101State {
  * - `tablaDatosFederatarios`: Tabla de datos de fedatarios públicos.
  */
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
+  idSolicitud: 0,
   infoRegistro: {
     seleccionaLaModalidad: '',
     folio: '',
@@ -336,11 +339,14 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
       encabezadoVolumenAnual: 0,
       encabezadoValorEnMercado: '',
     },
+    proveedorClienteDatosTabla:[],
     seccionActiva: '',
   },
 
   indicePrevioRuta: 0,
   tablaDatosFederatarios: [],
+  plantasImmexTablaLista: [],
+  plantasDisponiblesTablaLista: [],
   datosFederatarios: {
     nombre: '',
     primerApellido: '',
@@ -356,8 +362,6 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     estadoDos: '',
     estadoTres: ''
   },
-  plantasImmexTablaLista: [],
-  plantasDisponiblesTablaLista: []
 };
 
 /**
@@ -374,7 +378,17 @@ export class Tramite80101Store extends Store<Tramite80101State> {
   constructor() {
     super(INITIAL_AMPLIACION_SERVICIOS_STATE);
   }
-
+  /**
+    * Guarda el ID de la solicitud en el estado.
+    *
+    * @param idSolicitud - El ID de la solicitud que se va a guardar.
+    */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
   /**
    * Establece la información de registro en el estado de la tienda.
    *
@@ -910,6 +924,21 @@ export class Tramite80101Store extends Store<Tramite80101State> {
   }
 
   /**
+   * Actualiza la propiedad `proveedorClienteDatosTabla` dentro de `annexoUno` en el estado de la tienda.
+   *
+   * @param proveedorClienteDatosTabla - Arreglo de objetos de tipo `ProveedorClienteTabla` que representa los datos de proveedores y clientes para la tabla.
+   */
+  setProveedorClienteDatosTabla(proveedorClienteDatosTabla: ProveedorClienteTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        proveedorClienteDatosTabla: proveedorClienteDatosTabla,
+      },
+    }));
+  }
+
+  /**
    * Establece los datos necesarios para la navegación en el estado de la aplicación.
    *
    * @param datosParaNavegar - Objeto que contiene los datos para navegar,
@@ -982,6 +1011,30 @@ export class Tramite80101Store extends Store<Tramite80101State> {
   }
 
   /**
+   * Establece la lista de plantas disponibles en el estado de la tienda.
+   *
+   * @param plantas - Una lista de objetos de tipo `PlantasDisponibles` que se asignará al estado.
+   */
+  setPlantasDisponiblesTablaLista(plantas: PlantasDisponibles[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasDisponiblesTablaLista: [...state.plantasDisponiblesTablaLista, ...plantas],
+    }));
+  }
+
+  /**
+   * Establece la lista de plantas IMMEX en el estado de la tienda.
+   *
+   * @param plantasImmex - Una lista de objetos de tipo `PlantasImmex` que se asignará al estado.
+   */
+  setPlantasImmexTablaLista(plantasImmex: PlantasImmex[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasImmexTablaLista: [...state.plantasImmexTablaLista, ...plantasImmex],
+    }));
+  }
+
+  /**
    * Agrega un nuevo elemento de tipo `PlantasImmex` a la lista `plantasImmexTablaLista`
    * en el estado actual de la tienda.
    *
@@ -1040,5 +1093,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       return { ...state, datosAnexoTressDos: VALUE };
     });
   }
+
+
 
 }

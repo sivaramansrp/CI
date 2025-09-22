@@ -2,10 +2,15 @@
  * Componente que representa la página para capturar la solicitud.
  */
 
-import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { DatosDelCertificadoComponent } from '../../components/datos-del-certificado/datos-del-certificado.component';
+import { DatosDelDestinatarioComponent } from '../../components/datos-del-destinatario/datos-del-destinatario.component';
+import { DetallesDelTransporteComponent } from '../../components/detalles-del-transporte/detalles-del-transporte.component';
+import { DomicilioDelDestinatarioComponent } from '../../components/domicilio-del-destinatario/domicilio-del-destinatario.component';
 import { SgpCertificadoService } from '../../services/sgp-certificado/sgp-certificado.service';
+import { TransporteComponent } from '../../components/transporte/transporte.component';
 
 /**
  * Componente que representa la página para capturar la solicitud.
@@ -40,6 +45,53 @@ export class CapturarSolicitudComponent implements OnInit, OnDestroy {
 
   /** Subject para notificar la destrucción del componente. */
   public destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * @property {SolicitanteComponent} solicitanteComponent
+   * @description
+   * Referencia al componente hijo `SolicitanteComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario del solicitante.
+   */
+  @ViewChild('solicitante') solicitanteComponent!: SolicitanteComponent;
+
+  /**
+   * @property {DetallesDelTransporteComponent} detallesDelTransporteComponent
+   * @description
+   * Referencia al componente hijo `DetallesDelTransporteComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de detalles del transporte.
+   */
+  @ViewChild('detallesDelTransporte') detallesDelTransporteComponent!: DetallesDelTransporteComponent;
+
+  /**
+   * @property {DatosDelDestinatarioComponent} datosDelDestinatarioComponent
+   * @description
+   * Referencia al componente hijo `DatosDelDestinatarioComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de datos del destinatario.
+   */
+  @ViewChild('datosDelDestinatario') datosDelDestinatarioComponent!: DatosDelDestinatarioComponent;
+
+  /**
+   * @property {DomicilioDelDestinatarioComponent} domicilioDelDestinatarioComponent
+   * @description
+   * Referencia al componente hijo `DomicilioDelDestinatarioComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de domicilio del destinatario.
+   */
+  @ViewChild('domicilioDelDestinatario') domicilioDelDestinatarioComponent!: DomicilioDelDestinatarioComponent;
+
+  /**
+   * @property {TransporteComponent} transporteComponent
+   * @description
+   * Referencia al componente hijo `TransporteComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de transporte.
+   */
+  @ViewChild('transporte') transporteComponent!: TransporteComponent;
+
+  /**
+   * @property {DatosDelCertificadoComponent} datosDelCertificadoComponent
+   * @description
+   * Referencia al componente hijo `DatosDelCertificadoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario de datos del certificado.
+   */
+  @ViewChild('datosDelCertificado') datosDelCertificadoComponent!: DatosDelCertificadoComponent;
 
   /**
    * Constructor del componente.
@@ -101,6 +153,77 @@ export class CapturarSolicitudComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+  /**
+   * @method validarFormularios
+   * @description
+   * Valida todos los formularios de los componentes hijos en el orden siguiente:
+   * - Solicitante
+   * - Detalles del transporte
+   * - Datos del destinatario
+   * - Domicilio del destinatario
+   * - Transporte
+   * - Datos del certificado
+   * 
+   * Para cada componente, verifica si está disponible y si su formulario es válido.
+   * Si algún formulario es inválido, marca sus controles como "tocados" para mostrar los errores de validación.
+   * Si algún componente no está disponible o su formulario es inválido, establece `isValid` a `false`.
+   * 
+   * @returns {boolean} `true` si todos los formularios son válidos, `false` si alguno no lo es o si falta algún componente.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    if (this.solicitanteComponent?.form) {
+      if (this.solicitanteComponent.form.invalid) {
+        this.solicitanteComponent.form.markAllAsTouched();
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.detallesDelTransporteComponent) {
+      if (!this.detallesDelTransporteComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosDelDestinatarioComponent) {
+      if (!this.datosDelDestinatarioComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.domicilioDelDestinatarioComponent) {
+      if (!this.domicilioDelDestinatarioComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.transporteComponent) {
+      if (!this.transporteComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    if (this.datosDelCertificadoComponent) {
+      if (!this.datosDelCertificadoComponent.validarFormulario()) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
   }
 
   /**

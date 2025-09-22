@@ -66,6 +66,20 @@ export interface Catalogo {
   nicoDescription?: string;
 }
 
+
+/**
+ * Representa la estructura de una respuesta JSON que contiene datos de catálogo.
+ *
+ * @property codigo - El código de respuesta que indica el estado de la solicitud.
+ * @property datos - Un arreglo de objetos `Catalogo` que contiene los datos del catálogo.
+ * @property mensaje - Un mensaje que proporciona información adicional sobre la respuesta.
+ */
+export interface JsonResponseCatalogo {
+  codigo: string
+  datos: Catalogo[]
+  mensaje: string
+}
+
 /**
  * Representa un catálogo de documentos que extiende las propiedades de un catálogo genérico.
  *

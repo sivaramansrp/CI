@@ -73,7 +73,7 @@
         <div class="col">
           <div class="row">
             <div class="col-md-4">
-              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Estado'" [required]="true" [isDisabled]="esFormularioSoloLectura"
+              <app-catalogo-select [catalogo]="estadoImmex" [label]="'Estado'" [required]="true" [isDisabled]="esFormularioSoloLectura"
                 name="estado"  formControlName="estadoDos" (change)="setValoresStore(plantasForm, 'estadoDos', 'setEstadoDos')"></app-catalogo-select>
             </div>
           </div>
@@ -166,12 +166,12 @@
           </div>
           <div class="row mt-5">
             <div class="col-md-4">
-              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Representación federal'" [required]="true" [isDisabled]="esFormularioSoloLectura"
+              <app-catalogo-select [catalogo]="representacionFederalOptions" [label]="'Representación federal'" [required]="true" [isDisabled]="esFormularioSoloLectura"
                 name="estado" formControlName="representacionFederal"
               (change)="setValoresStore(plantasForm, 'representacionFederal', 'setRepresentacionFederal')"></app-catalogo-select>
             </div>
             <div class="col-md-4">
-              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Actividad productiva'" [required]="true" formControlName="actividadProductiva" [isDisabled]="esFormularioSoloLectura"
+              <app-catalogo-select [catalogo]="actividadProductivaOptions" [label]="'Actividad productiva'" [required]="true" formControlName="actividadProductiva" [isDisabled]="esFormularioSoloLectura"
                (change)="setValoresStore(plantasForm, 'actividadProductiva', 'setActividadProductiva')"></app-catalogo-select>
             </div>
           </div>

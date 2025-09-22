@@ -7,8 +7,10 @@ import { FormularioAsociacionFacturaComponent } from './facturas-asociadas.compo
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-import { SeccionLibStore, SeccionLibQuery } from '@ng-mf/data-access-user';
+import { SeccionLibStore, SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { FacturasAsociadasService } from '../../services/facturas-asociadas.service';
+import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
 import { CapturarColumns, AsociadasTableColumns } from '../../models/elegibilidad-de-textiles.model';
 
 const seccionStateStub = {
@@ -58,6 +60,7 @@ const fullTextilesStateStub: TextilesState = {
   razonSocialImportador: '',
   domicilio: '',
   ciudadImportador: '',
+  fechaExpedicionFactura: '',
   cpImportador: '',
   PaisImportador: '',
   formaValida: [],
@@ -90,6 +93,8 @@ describe('FormularioAsociacionFacturaComponent', () => {
   let seccionStoreMock: Partial<SeccionLibStore>;
   let seccionQueryMock: Partial<SeccionLibQuery>;
   let serviceMock: Partial<ElegibilidadTextilesService>;
+  let facturasAsociadasServiceMock: Partial<FacturasAsociadasService>;
+  let tramite120301QueryMock: Partial<Tramite120301Query>;
 
   beforeEach(async () => {
     storeMock = {
@@ -108,53 +113,56 @@ describe('FormularioAsociacionFacturaComponent', () => {
     seccionQueryMock = {
       selectSeccionState$: of(seccionStateStub),
     };
+    tramite120301QueryMock = {
+      selectSeccionState$: of({ idExpedicion: 1, identificadorRegimen: 'TEST' }),
+    };
+    facturasAsociadasServiceMock = {
+      getFacturasTpl: jest.fn().mockReturnValue(of({
+        codigo: '00',
+        datos: {
+          content: [
+            {
+              num_factura: 'F1',
+              razon_social_consig_emisor: 'RS1',
+              direccion_consig_emisor: 'D1',
+              fecha_expedicion: '2024-01-01',
+              cantidad_total: 100,
+              cantidad_disponible: 80,
+              descripcion: 'm2',
+              imp_dls: 500,
+              id_factura_expedicion: 1,
+            }
+          ]
+        }
+      })),
+      getFacturasTplAsociadas: jest.fn().mockReturnValue(of({
+        codigo: '00',
+        datos: {
+          content: [
+            {
+              cantidad_asociada: 10,
+              factura_expedicion: {
+                num_factura: 'FA1',
+                razon_social: 'RS3',
+                domicilio: 'D3',
+                fecha_expedicion: '2024-01-03',
+                cantidad: 50,
+                cantidad_disponible: 40,
+                unidad_medida: { descripcion: 'm2' },
+                importe_dolares: 250,
+              },
+              id_factura_expedicion: 101,
+              id_expedicion: 1,
+            }
+          ]
+        }
+      })),
+    };
     serviceMock = {
       obtenerTablaDatos: jest.fn().mockImplementation((url: string) => {
-        if (url === 'facturasDisponible.json') {
-          const facturasDisponible: CapturarColumns[] = [
-            {
-              numeroDeLaFactura: 'F1',
-              razonSocial: 'RS1',
-              domicilio: 'D1',
-              fechaExpedicionFactura: '2024-01-01',
-              cantidadTotal: '100',
-              cantidadDisponible: '80',
-              unidadMedida: 'm2',
-              valorDolares: '500',
-            },
-            {
-              numeroDeLaFactura: 'F2',
-              razonSocial: 'RS2',
-              domicilio: 'D2',
-              fechaExpedicionFactura: '2024-01-02',
-              cantidadTotal: '200',
-              cantidadDisponible: '150',
-              unidadMedida: 'kg',
-              valorDolares: '1000',
-            },
-          ];
-          return of(facturasDisponible);
-        }
-        if (url === 'facturas-asociadas.json') {
-          const facturasAsociadas: AsociadasTableColumns[] = [
-            {
-              candidadAsociada: '10',
-              numeroDeLaFactura: 'FA1',
-              razonSocial: 'RS3',
-              domicilio: 'D3',
-              fechaExpedicionFactura: '2024-01-03',
-              cantidadTotal: '50',
-              cantidadDisponible: '40',
-              unidadMedida: 'm2',
-              valorDolares: '250',
-            },
-          ];
-          return of(facturasAsociadas);
-        }
         return of([]);
       }),
     };
-
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, ReactiveFormsModule, FormularioAsociacionFacturaComponent],
       providers: [
@@ -164,6 +172,8 @@ describe('FormularioAsociacionFacturaComponent', () => {
         { provide: SeccionLibStore, useValue: seccionStoreMock },
         { provide: SeccionLibQuery, useValue: seccionQueryMock },
         { provide: ElegibilidadTextilesService, useValue: serviceMock },
+        { provide: FacturasAsociadasService, useValue: facturasAsociadasServiceMock },
+        { provide: Tramite120301Query, useValue: tramite120301QueryMock },
       ],
     }).compileComponents();
 
@@ -224,8 +234,8 @@ describe('FormularioAsociacionFacturaComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(serviceMock.obtenerTablaDatos).toHaveBeenCalledWith('facturasDisponible.json');
-    expect(component.facturasDisponible.length).toBe(2);
+    expect(facturasAsociadasServiceMock.getFacturasTpl).toHaveBeenCalled();
+    expect(component.facturasDisponible.length).toBe(1);
     expect(component.facturasDisponible[0].numeroDeLaFactura).toBe('F1');
   }));
 
@@ -234,7 +244,10 @@ describe('FormularioAsociacionFacturaComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(serviceMock.obtenerTablaDatos).toHaveBeenCalledWith('facturas-asociadas.json');
+    component.recuperarDatosAsociadas();
+    tick();
+
+    expect(facturasAsociadasServiceMock.getFacturasTplAsociadas).toHaveBeenCalled();
     expect(component.facturasAsociadas.length).toBe(1);
     expect(component.facturasAsociadas[0].numeroDeLaFactura).toBe('FA1');
   }));
