@@ -9,7 +9,7 @@
       </div>
     </div>
     
-    @if (tipoMovimientoSeleccionada || formSolicitud?.get('tipodeMovimiento')?.value) {
+    @if (tipoMovimientoSeleccionada || formSolicitud.get('tipodeMovimiento')?.value) {
     <ng-titulo titulo="Régimen" />
     <div class="row">
       <div class="col-md-4">
@@ -55,8 +55,8 @@
       </nav>
       <div class="row pb-4 text-end">
         <div>
-          <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura || !enableModficarBoton" (click)="modficarMercanciaItem()">Modficar</button>
-          <button type="button" class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura || !enableEliminarBoton" (click)="confirmEliminarMercanciaItem()">Eliminar</button>
+          <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="modficarMercanciaItem()">Modificar</button>
+          <button type="button" class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura" (click)="confirmEliminarMercanciaItem()">Eliminar</button>
           <button
             type="button"
             class="btn btn-primary me-2"
@@ -110,7 +110,10 @@
             <div class="col-md-7">
               <div class="form-group">
                 <label class="form-label" for="fraccionDescripcion"
-                  >Descripción de la fracción arancelaria:</label
+                  >Descripción de la fracción arancelaria:<span tooltip="Ingrese una fracción"
+                  ><i class="bi bi-question-circle-fill"></i
+                ></span>
+                </label
                 >
                 <input
                   id="fraccionDescripcion"
@@ -149,6 +152,7 @@
                   type="text"
                   formControlName="fraccionVigenteTIGIE"
                   class="form-control"
+                  maxlength="8"
                 />
               </div>
             </div>
@@ -156,20 +160,24 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <label for="message" class="form-label">Descripción*:</label>
+              <label for="message" class="form-label">Descripción*:<span tooltip="Describe si se trata de piel, trofeos de caza, madera, plantas, semillas, entre otros, asi como la forma de presentación o preservación, las cuales pueden ser vivos, formol, taxidermia u otros."
+                ><i class="bi bi-question-circle-fill"></i
+              ></span></label>
               <textarea
                 id="descripcion"
                 formControlName="descripcion"
                 class="form-control"
                 rows="4"
                 [required]="true"
-                [class.is-invalid]="formMercancia.get('descripcion')?.touched && formMercancia.get('descripcion')?.invalid"
               ></textarea>
               <div *ngIf="esInvalido('descripcion')" class="text-danger">
                 <small
                   *ngIf="formMercancia.controls['descripcion'].hasError('required')"
                   >Este campo es obligatorio.</small
                 >
+                <small
+                  *ngIf="formMercancia.controls['descripcion'].hasError('maxlength')"
+                  >Por favor, no escribas más de 1000 caracteres</small>
               </div>
             </div>
           </div>
@@ -184,6 +192,7 @@
                 rows="4"
                 formControlName="rendimientoProducto"
               ></textarea>
+              <small *ngIf="formMercancia.controls['rendimientoProducto'].hasError('maxlength')" class="text-danger">Por favor, no escribas más de 1000 caracteres</small>
             </div>
           </div>
           <div class="row">
@@ -233,6 +242,7 @@
                   class="form-control"
                   formControlName="marca"
                   [required]="true"
+                  maxlength="200"
                   [class.is-invalid]="formMercancia.get('marca')?.touched && formMercancia.get('marca')?.invalid"
                 />
               </div>
@@ -250,6 +260,7 @@
                   formControlName="cantidad"
                   [required]="true"
                   [class.is-invalid]="formMercancia.get('cantidad')?.touched && formMercancia.get('cantidad')?.invalid"
+                  maxlength="16"
                 />
                 
                 <div *ngIf="esInvalido('cantidad')" class="text-danger">
@@ -327,3 +338,17 @@
 
 
 </div>
+@if(sinRegistro){
+  <lib-notificaciones 
+  *ngIf="sinRegistro"
+  [notificacionInput]="nuevaNotificacionModificar" 
+  (confirmacionModal)="cerrarSinRegistro()">
+</lib-notificaciones>
+}
+@if(sinEliminar){
+  <lib-notificaciones 
+  *ngIf="sinEliminar"
+  [notificacionInput]="nuevaNotificacionEliminar" 
+  (confirmacionModal)="cerrarSinEliminar()">
+</lib-notificaciones>
+}

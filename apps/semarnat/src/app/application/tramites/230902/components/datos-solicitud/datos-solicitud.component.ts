@@ -155,6 +155,41 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
 
   /** Suscripción general para manejar y limpiar las suscripciones del componente. Se utiliza para evitar fugas de memoria. */
   private subscription: Subscription = new Subscription();
+  /**
+   * @property {boolean} sinRegistro
+   * @description
+   * Indica si no hay registros seleccionados al intentar modificar un elemento.
+   * Controla la visualización de mensajes de alerta cuando no se ha seleccionado
+   * ningún registro para modificar.
+   */
+  sinRegistro: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacionModificar
+   * @description
+   * Objeto que almacena la configuración de la notificación que se muestra
+   * cuando hay errores al intentar modificar un registro (por ejemplo, cuando
+   * se seleccionan múltiples registros o ninguno).
+   */
+  public nuevaNotificacionModificar!: Notificacion;
+
+  /**
+   * @property {boolean} sinEliminar
+   * @description
+   * Indica si no hay registros seleccionados al intentar eliminar elementos.
+   * Controla la visualización de mensajes de alerta cuando no se ha seleccionado
+   * ningún registro para eliminar.
+   */
+  sinEliminar: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacionEliminar
+   * @description
+   * Objeto que almacena la configuración de la notificación que se muestra
+   * cuando hay errores al intentar eliminar registros (por ejemplo, cuando
+   * no se ha seleccionado ningún registro).
+   */
+  public nuevaNotificacionEliminar!: Notificacion;
 
   /**
    * Constructor del componente.
@@ -228,6 +263,7 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
 
         this.storeCrosslistaDatos();
       });
+    this.nuevaNotificacionModificar = {} as Notificacion;
   }
 
   /**
@@ -330,8 +366,8 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
       fraccionArancelaria: [DEFAULT_DATA.fraccionArancelaria, Validators.required],
       fraccionDescripcion: [DEFAULT_DATA.fraccionDescripcion],
       otraFraccion: [DEFAULT_DATA.otraFraccion],
-      descripcion: [DEFAULT_DATA.descripcion, Validators.required],
-      rendimientoProducto: [DEFAULT_DATA.rendimientoProducto],
+      descripcion: [DEFAULT_DATA.descripcion, [Validators.required, Validators.maxLength(1000)]],
+      rendimientoProducto: [DEFAULT_DATA.rendimientoProducto, [Validators.maxLength(1000)]],
       clasificacionTaxonomica: [DEFAULT_DATA.clasificacionTaxonomica, Validators.required],
       nombreCientifico: [DEFAULT_DATA.nombreCientifico, Validators.required],
       nombreComun: [DEFAULT_DATA.nombreComun, Validators.required],
@@ -475,7 +511,22 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
    * Actualiza los datos del formulario con los valores de la fila seleccionada.
    */
   modficarMercanciaItem(): void {
+    if(this.tablaDatos.length === 0) {
+      this.sinRegistro = true;
+      this.nuevaNotificacionModificar = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona sólo un registro para modificar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
+    }
     if (this.listaFilaSeleccionadaMercancia.length < 2) {
+      this.sinRegistro = false;
       const GET_INDEX = (array: Catalogo[], value: string): number =>
         array.findIndex((item) => item.descripcion === value) + 1;
 
@@ -610,6 +661,20 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
    * Abre el popup de confirmación si hay elementos seleccionados.
    */
   confirmEliminarMercanciaItem(): void {
+    if(this.tablaDatos.length === 0) {
+      this.sinEliminar = true;
+      this.nuevaNotificacionEliminar = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona un registro.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
     if (this.listaFilaSeleccionadaMercancia.length === 0) {
       return;
     }
@@ -750,6 +815,29 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
   setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
     this.tramite230902Store.establecerDatos({ [campo]: VALOR });
+  }
+  /**
+   * @method cerrarSinRegistro
+   * @description
+   * Cierra la notificación de alerta que se muestra cuando no hay registros seleccionados para modificar.
+   * Establece la propiedad `sinRegistro` a `false` para ocultar el mensaje de alerta correspondiente.
+   * 
+   * @returns {void}
+   */
+  cerrarSinRegistro(): void {
+    this.sinRegistro = false;
+  }
+
+  /**
+   * @method cerrarSinEliminar
+   * @description
+   * Cierra la notificación de alerta que se muestra cuando no hay registros seleccionados para eliminar.
+   * Establece la propiedad `sinEliminar` a `false` para ocultar el mensaje de alerta correspondiente.
+   * 
+   * @returns {void}
+   */
+  cerrarSinEliminar(): void {
+    this.sinEliminar = false;
   }
 
   /**

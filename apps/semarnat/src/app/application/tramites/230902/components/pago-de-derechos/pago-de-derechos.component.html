@@ -5,14 +5,14 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="control-label" for="claveDeReferencia">Clave de referencia</label>
+            <label class="control-label" for="claveDeReferencia">Clave de referencia*:</label>
             <input class="form-control" id="claveDeReferencia" type="number" placeholder="084000966"
               formControlName="claveDeReferencia" [required]="true" />
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="control-label" for="cadenaPagoDependencia">Cadena de la dependencia</label>
+            <label class="control-label" for="cadenaPagoDependencia">Cadena de la dependencia*:</label>
             <input class="form-control" id="cadenaPagoDependencia" type="number" placeholder="00130090940161"
               formControlName="cadenaPagoDependencia" [required]="true" />
           </div>
@@ -28,15 +28,17 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="control-label" for="llaveDePago">Llave de pago</label>
-            <input class="form-control" id="llaveDePago" type="text" formControlName="llaveDePago" [required]="true"
+            <label class="control-label" for="llaveDePago">Llave de pago*:</label>
+            <input class="form-control" id="llaveDePago" type="text" formControlName="llaveDePago" [required]="true" maxlength="10"
               [class.is-invalid]="formPagoDerechos.get('llaveDePago')?.touched && formPagoDerechos.get('llaveDePago')?.invalid"
               (input)="onllavaDePagoChange()" (change)="setValoresStore(formPagoDerechos,'llaveDePago')">
             <div class="invalid-feedback"
               *ngIf="formPagoDerechos.get('llaveDePago')?.touched && formPagoDerechos.get('llaveDePago')?.invalid">
               <span *ngIf="formPagoDerechos.get('llaveDePago')?.hasError('required')">Este campo es
                 obligatorio.</span>
+              <small *ngIf="formPagoDerechos.get('llaveDePago')?.hasError('pattern') && !showError">Debe capturar el formato correcto</small>
             </div>
+            <small class="text-danger" *ngIf="showError">Existen datos incorrectos que no cumplen con el formato esperado</small>
           </div>
         </div>
         <div class="col-md-4" [ngClass]="{ 'disabled-field': esFormularioSoloLectura }">
@@ -47,10 +49,11 @@
             *ngIf="formPagoDerechos.get('fecPago')?.touched && formPagoDerechos.get('fecPago')?.invalid">
             <span *ngIf="formPagoDerechos.get('fecPago')?.hasError('required')">Este campo es obligatorio.</span>
           </div>
+          <small class="text-danger" *ngIf="pagoError">La fecha de pago debe ser menor o igual a la fecha actual.</small>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="control-label" for="impPago">Importe de pago</label>
+            <label class="control-label" for="impPago">Importe de pago*:</label>
             <input class="form-control" id="impPago" type="number" placeholder="672"
               formControlName="impPago" [required]="true" />
           </div>

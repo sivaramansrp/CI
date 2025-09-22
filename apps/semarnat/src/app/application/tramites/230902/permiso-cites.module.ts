@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, NotificacionesComponent, SolicitanteComponent, TablaDinamicaComponent, TableComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, NotificacionesComponent, SolicitanteComponent, TablaDinamicaComponent, TableComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
 import { ModalComponent } from './components/modal/modal.component';
@@ -14,7 +14,7 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PermisoCitesRoutingModule } from './permiso-cites-routing.module';
-
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [DatosComponent, PasoUnoComponent, PasoTresComponent, PasoDosComponent, DatosSolicitudComponent, ModalComponent, PagoDeDerechosComponent,PagoDeDerechosComponent,TercerosComponent],
@@ -37,7 +37,8 @@ import { PermisoCitesRoutingModule } from './permiso-cites-routing.module';
     InputCheckComponent,
     InputFechaComponent,
     ToastrModule.forRoot(),
-    
+    TooltipModule,
+    InputRadioComponent
    
 ],
 providers: [ToastrService]

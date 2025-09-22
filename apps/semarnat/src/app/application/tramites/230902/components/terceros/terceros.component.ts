@@ -20,7 +20,7 @@ import { CategoriaMensaje, ConfiguracionColumna, Notificacion, TablaSeleccion, T
 
 import { map,takeUntil } from 'rxjs';
 
-import { ConfiguracionItem, DESTINARIO_TABLE_ENTRY, TERCEROS_CONFIGURACION_TABLA } from '../../enum/tereceors.enum';
+import { CatalogoEstado, CatalogoPais, DESTINARIO_TABLE_ENTRY, TERCEROS_CONFIGURACION_TABLA, TereceorsConfiguracionItem } from '../../enum/tereceors.enum';
 import { Solicitud230902State, Tramite230902Store } from '../../estados/tramite230902.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PermisoCitesService } from '../../services/permiso-cites.service';
@@ -79,9 +79,9 @@ export class TercerosComponent implements OnInit, OnDestroy {
   /**
    * Configuración de la tabla.
    * Define las columnas y configuraciones de la tabla de terceros.
-   * {ConfiguracionColumna<ConfiguracionItem>[]}
+   * {ConfiguracionColumna<TereceorsConfiguracionItem>[]}
    */
-  configuracionTabla: ConfiguracionColumna<ConfiguracionItem>[] = TERCEROS_CONFIGURACION_TABLA;
+  configuracionTabla: ConfiguracionColumna<TereceorsConfiguracionItem>[] = TERCEROS_CONFIGURACION_TABLA;
 
   /**
    * Tipo de selección de la tabla.
@@ -93,9 +93,9 @@ export class TercerosComponent implements OnInit, OnDestroy {
   /**
    * Datos de la tabla.
    * Contiene las filas de datos que se muestran en la tabla de terceros.
-   * {ConfiguracionItem[]}
+   * {TereceorsConfiguracionItem[]}
    */
-  tablaDatos: ConfiguracionItem[] = [];
+  tablaDatos: TereceorsConfiguracionItem[] = [];
 
   /**
    * Indica si la opción de modificar está habilitada.
@@ -145,6 +145,73 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * {Subscription}
    */
   private subscription: Subscription = new Subscription();
+
+  /**
+   * @property {boolean} abrirGeneralOriginal
+   * @description
+   * Controla la visibilidad del formulario modal para agregar datos generales originales.
+   * Se establece a `true` cuando se abre el modal y a `false` cuando se cierra.
+   */
+  abrirGeneralOriginal: boolean = false;
+
+  /**
+   * @property {FormGroup} generalOriginalForm
+   * @description
+   * Formulario reactivo para capturar los datos generales originales del destinatario.
+   * Incluye campos como código postal, país, estado y nombre del domicilio.
+   */
+  generalOriginalForm!: FormGroup;
+
+  /**
+   * @property {Array<{label: string, value: string}>} radioPatentes
+   * @description
+   * Opciones para el componente de radio buttons que permite seleccionar entre patentes nacionales o extranjeras.
+   * Define las etiquetas y valores disponibles para la selección.
+   */
+  radioPatentes = [
+    { label: 'Nacional', value: 'nacional' },
+    { label: 'Extranjero', value: 'extranjero' }
+  ];
+
+  /**
+   * @property {TereceorsConfiguracionItem[]} listaseleccionadaDestinatario
+   * @description
+   * Array que almacena los elementos seleccionados en la tabla de destinatarios.
+   * Se utiliza para identificar qué registros han sido marcados para operaciones como modificar o eliminar.
+   */
+  listaseleccionadaDestinatario!: TereceorsConfiguracionItem[];
+
+  /**
+   * @property {boolean} mostrarError
+   * @description
+   * Indica si se debe mostrar un mensaje de error cuando no hay registros seleccionados para eliminar.
+   * Se establece a `true` para mostrar la notificación de error correspondiente.
+   */
+  mostrarError: boolean = false;
+
+  /**
+   * @property {boolean} mostrarErrorModificar
+   * @description
+   * Indica si se debe mostrar un mensaje de error cuando no hay registros seleccionados para modificar.
+   * Se establece a `true` para mostrar la notificación de error de modificación.
+   */
+  mostrarErrorModificar: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacionEliminar
+   * @description
+   * Objeto que contiene la configuración de la notificación que se muestra cuando hay errores
+   * al intentar eliminar registros (por ejemplo, cuando no se ha seleccionado ningún registro).
+   */
+  public nuevaNotificacionEliminar!: Notificacion;
+
+  /**
+   * @property {Notificacion} nuevaNotificacionModificar
+   * @description
+   * Objeto que contiene la configuración de la notificación que se muestra cuando hay errores
+   * al intentar modificar registros (por ejemplo, cuando no se ha seleccionado ningún registro).
+   */
+  public nuevaNotificacionModificar!: Notificacion;
 
   /**
    * Constructor del componente.
@@ -215,6 +282,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     
     this.inicializarEstadoFormulario()
     this.permisoCitesService.inicializaTercerosDatosCatalogos();
+    this.permisoCitesService.inicializaUbicacionDatosCatalogos();
     
     // Llamar onEntidadFederativaChange después de que el formulario esté inicializado
     setTimeout(() => {
@@ -227,9 +295,11 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Habilita o deshabilita la opción de modificar según las filas seleccionadas.
    * filaSeleccionada Las filas seleccionadas en la tabla.
    */
-  onFilaSeleccionada(filaSeleccionada: ConfiguracionItem[]): void {
+  onFilaSeleccionada(filaSeleccionada: TereceorsConfiguracionItem[]): void {
     if(filaSeleccionada.length > 0) {
       this.isModificarEnabled = true;
+      this.listaseleccionadaDestinatario = filaSeleccionada;
+      this.tramite230902Store.establecerDatos({ listaseleccionadaDestinatario: this.listaseleccionadaDestinatario });
     }
     else {
       this.isModificarEnabled = false;
@@ -254,6 +324,21 @@ export class TercerosComponent implements OnInit, OnDestroy {
       };
       this.popupAbierto = true; // Controla la visibilidad del popup
       this.tramite230902Store.setIsPopupOpen(this.popupAbierto);
+      this.abrirGeneralOriginal = true;
+    }
+    else{
+      this.mostrarErrorModificar = true;
+      this.nuevaNotificacionModificar = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona sólo un registro para modificar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
     }
   }
 
@@ -283,6 +368,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
           takeUntil(this.destroyed$),
           map((seccionState) => {
             this.solicitud230902State = seccionState;
+            this.tablaDatos = [...this.solicitud230902State.tercerosTablaDatos];
           })
         )
         .subscribe()
@@ -292,6 +378,12 @@ export class TercerosComponent implements OnInit, OnDestroy {
         this.solicitud230902State.entidadFederativa,
         Validators.required,
       ],
+    });
+    this.generalOriginalForm = this.formBuilder.group({
+      codigoPostal: [this.solicitud230902State.codigoPostal, [Validators.required]],
+      pais: [this.solicitud230902State.pais, [Validators.required]],
+      estado: [this.solicitud230902State.estado, [Validators.required]],
+      nombre: [this.solicitud230902State.nombre, [Validators.required]],
     });
 
     // Suscribirse a los cambios del formulario para actualizar los datos de la tabla
@@ -331,6 +423,147 @@ export class TercerosComponent implements OnInit, OnDestroy {
       this.tablaDatos = [];
       this.tramite230902Store.setTercerosTablaDatos(this.tablaDatos);
     }
+  }
+
+    /**
+   * @method generalOriginal
+   * @description
+   * Abre el modal de datos generales originales estableciendo la propiedad `abrirGeneralOriginal` a `true`.
+   * Permite al usuario capturar información adicional como código postal, país, estado y nombre del domicilio.
+   * 
+   * @returns {void}
+   */
+  generalOriginal(): void {
+    this.abrirGeneralOriginal = true;
+  }
+
+  /**
+   * @method setValoresStore
+   * @description
+   * Actualiza el store con el valor de un campo específico del formulario.
+   * Obtiene el valor del campo indicado y lo almacena en el estado utilizando el método `establecerDatos`.
+   * 
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor del campo.
+   * @param {string} campo - El nombre del campo cuyo valor se desea almacenar en el store.
+   * @returns {void}
+   */
+  setValoresStore(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.tramite230902Store.establecerDatos({ [campo]: VALOR });
+  }
+
+  /**
+   * @method anadirValores
+   * @description
+   * Procesa y agrega los valores del formulario de datos generales a la tabla de terceros.
+   * Si el formulario es válido:
+   * - Cierra el modal de datos generales.
+   * - Busca las descripciones del país y estado en los catálogos correspondientes.
+   * - Si la tabla está vacía, crea un nuevo elemento.
+   * - Si la tabla tiene datos, actualiza el elemento existente.
+   * - Actualiza el store con los nuevos datos de la tabla.
+   * 
+   * @returns {void}
+   */
+  anadirValores(): void {
+    if (this.generalOriginalForm.valid) {
+      this.abrirGeneralOriginal = false;
+      const NUEVOSVALOR = { ...this.generalOriginalForm.value };
+
+      const PAISCATALGO = this.permisoCitesService.pais?.find(
+        (p: CatalogoPais) => p.id === Number(NUEVOSVALOR.pais)
+      );
+
+      const ESTADO = this.permisoCitesService.estado?.find(
+        (e: CatalogoEstado) => e.id === Number(NUEVOSVALOR.estado)
+      );
+
+      const PAISDESC = PAISCATALGO ? PAISCATALGO.descripcion : '';
+      const ESTADODESC = ESTADO ? ESTADO.descripcion : '';
+
+      if (this.tablaDatos.length === 0) {
+        const NUEVO_ITEM: TereceorsConfiguracionItem = {
+          codigoPostal: NUEVOSVALOR.codigoPostal,
+          ciudad: '---',
+          pais: PAISDESC,
+          entidadFederativa: ESTADODESC,
+          domicilio: NUEVOSVALOR.nombre,
+        };
+        this.tablaDatos = [NUEVO_ITEM];
+      } else {
+        this.tablaDatos = this.tablaDatos.map(item => {
+          const ACTUALIZADO: TereceorsConfiguracionItem = {
+            codigoPostal: NUEVOSVALOR.codigoPostal ?? item.codigoPostal,
+            ciudad: '---',
+            pais: PAISDESC ?? item.pais,
+            entidadFederativa: ESTADODESC ?? item.entidadFederativa,
+            domicilio: NUEVOSVALOR.nombre ?? item.domicilio,
+          };
+          return ACTUALIZADO;
+        });
+      }
+      this.tramite230902Store.setTercerosTablaDatos(this.tablaDatos);
+    }
+  }
+
+  /**
+   * @method cancelar
+   * @description
+   * Cancela la operación de agregar datos generales y cierra el modal correspondiente.
+   * Establece la propiedad `abrirGeneralOriginal` a `false` para ocultar el formulario modal.
+   * 
+   * @returns {void}
+   */
+  cancelar(): void {
+    this.abrirGeneralOriginal = false;
+  }
+
+  /**
+   * @method eliminarSeleccionados
+   * @description
+   * Elimina los registros seleccionados de la tabla de terceros.
+   * Si no hay registros seleccionados, muestra una notificación de error solicitando seleccionar un registro.
+   * Si hay registros seleccionados, los filtra de la tabla, actualiza el store y deshabilita la opción de modificar.
+   * 
+   * @returns {void}
+   */
+  eliminarSeleccionados(): void {
+    if(this.tramite230902Store.getValue().listaseleccionadaDestinatario?.length === 0){
+      this.mostrarError = true;
+      this.nuevaNotificacionEliminar = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Seleccione un registro.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
+    }
+    else{
+      this.tablaDatos = this.tablaDatos.filter(
+        item => !this.listaseleccionadaDestinatario.some(
+          seleccionado => seleccionado === item
+        )
+      );
+      this.tramite230902Store.setTercerosTablaDatos(this.tablaDatos);
+      this.isModificarEnabled = false;
+    }
+  }
+
+  /**
+   * @method eliminarNoSeleccionados
+   * @description
+   * Elimina todos los registros de la tabla de terceros sin verificar selecciones.
+   * Vacía completamente la tabla de datos y actualiza el store con un arreglo vacío.
+   * 
+   * @returns {void}
+   */
+  eliminarNoSeleccionados(): void {
+    this.tablaDatos = [];
+    this.tramite230902Store.setTercerosTablaDatos(this.tablaDatos);
   }
 
   /**
