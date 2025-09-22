@@ -57,3 +57,9 @@ export interface Solicitante {
     es_persona_moral: boolean;
     certificado_serial_number: string
 }
+
+export interface PlantsEmpresaSubfabricante {
+    rfcEmpresaSubManufacturera: string;
+    entidadFederativa: string;
+    idPrograma: string;
+}

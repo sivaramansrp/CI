@@ -3,6 +3,8 @@ import {
   Catalogo,
   ConfiguracionColumna,
   TablaSeleccion,
+  esValidArray,
+  esValidObject,
 } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -21,6 +23,7 @@ import { Subject } from 'rxjs';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
+import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 
 /**
  * Componente Angular para gestionar las empresas subfabricantes en el trámite 80101.
@@ -163,7 +166,8 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
     public query: Tramite80101Query,
     private store: Tramite80101Store,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private _compartidaSvc: ComplimentosService
   ) {
     this.inicializarFormularioDatosSubcontratista();
   }
@@ -226,7 +230,8 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    */
   enEstadoSeleccionado(estadoSeleccionado: Catalogo): void {
     this.formularioDatosSubcontratista.patchValue({
-      estado: estadoSeleccionado.id.toString(),
+       rfc: this.formularioDatosSubcontratista.get('rfc')?.value,
+       estado: estadoSeleccionado.clave,
     });
     this.store.setDatosSubcontratista(this.formularioDatosSubcontratista.value);
   }
@@ -277,13 +282,23 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    * @method obtenerSubfabricantesDisponibles
    */
   obtenerSubfabricantesDisponibles(): void {
-    this.nuevoProgramaIndustrialService
-      .getSubfabricantesDisponibles()
+    const PAYLOAD = {
+        "rfcEmpresaSubManufacturera": this.formularioDatosSubcontratista.get('rfc')?.value,
+        "entidadFederativa": this.formularioDatosSubcontratista.get('estado')?.value,
+        "idPrograma": "200"
+    }
+    this._compartidaSvc
+      .getSubfabricantesDisponibles(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((response: PlantasSubfabricante[]) => {
-        if (response.length > 0) {
-          this.store.setPlantasBuscadas(response);
+      .subscribe((response) => {
+        if(esValidObject(response)) {
+          if(esValidArray(response.data)) {
+            const RESPONSE:PlantasSubfabricante[] = response.data as unknown as PlantasSubfabricante[];
+            this.store.setPlantasBuscadas(RESPONSE);
+          } 
         }
+      }, (error) => {
+        console.error('Error al obtener los subfabricantes disponibles:', error);
       });
   }
 

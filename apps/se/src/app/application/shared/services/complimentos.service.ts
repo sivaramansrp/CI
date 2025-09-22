@@ -6,12 +6,14 @@ import { BehaviorSubject, Observable, catchError, map, throwError } from 'rxjs';
 import {
   Catalogo,
   HttpCoreService,
+  JSONResponse,
   JsonResponseCatalogo,
 } from '@ng-mf/data-access-user';
 import { API_ROUTES } from '../servers/api-route';
 import { ENVIRONMENT } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { PlantsEmpresaSubfabricante } from '../../tramites/130118/model/request/guardar-solicitud-request.model';
 
 @Injectable({
   providedIn: 'root',
@@ -300,4 +302,19 @@ export class ComplimentosService {
       false
     );
   }
+
+    /**
+     * Obtiene la lista de subfabricantes disponibles.
+     * @method getSubfabricantesDisponibles
+     * @returns {Observable<TableData>} Observable con la lista de subfabricantes disponibles.
+     */
+    getSubfabricantesDisponibles(body: PlantsEmpresaSubfabricante): Observable<JSONResponse> {
+      return this.http.post<JSONResponse>(API_ROUTES().buscarPlantas, body).pipe(
+        map((response) => response),
+        catchError(() => {
+          const ERROR = new Error(`Error al obtener la lista de subfabricantes en ${API_ROUTES().buscarPlantas}`);
+          return throwError(() => ERROR);
+        })
+      );
+    }
 }
