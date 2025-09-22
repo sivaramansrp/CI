@@ -6,14 +6,14 @@
 "></ng-titulo>
       <div class="row">
         <div class="col-6 col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6">
-          <label for="permiso-immex">Fracción arancelaria de importación(sensibles):</label>
+          <label for="permiso-immex">Fracción arancelaria:</label>
           <input type="text" class="form-control" id="permiso-immex" formControlName="permisoImmexDatos"
-            placeholder="" />
+            placeholder="" (input)="onNumberInput($event, 'exportacionForm', 'permisoImmexDatos')" [maxlength]="10" />
         </div>
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura ||immexTableDatos.length === 0 " (click)="eliminarPermisoImmex()">Eliminar</button>
+          <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarPermisoImmex()">Eliminar</button>
           <button class="btn btn-primary" (click)="showTableExportacion()"
-            [disabled]="esFormularioSoloLectura || immexTableDatos.length === 1 ">Agregar</button>
+            [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
       </div>
       <div class="row  mt-5" *ngIf="showTableExport">
@@ -32,14 +32,14 @@
           <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
             <label for="fraccion-arancelaria-exportacion">Fracción arancelaria:</label>
             <input type="text" class="form-control" formControlName="fraccionArancelariaExportacion"
-              id="fraccion-arancelaria-exportacion" placeholder="" />
+              id="fraccion-arancelaria-exportacion" placeholder="" (input)="onNumberInput($event, 'exportacionForm', 'fraccionArancelariaExportacion')"[maxlength]="10" />
           </div>
         </div>
         <div class="col-12 mt-5">
-          <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
+          <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
             <label for="description-del-producto">Descripción del producto:</label>
             <textarea class="form-control" id="description-del-producto" formControlName="FraccionDescExportacion"
-              rows="5" placeholder=""   style="text-transform: uppercase;"></textarea>
+              rows="5" placeholder=""   style="text-transform: uppercase;height:100px"></textarea>
           </div>
         </div>
         <div class="col-12 container text-end mt-5">
@@ -70,7 +70,7 @@
     <lib-notificaciones [notificacionInput]="nuevaNotificacion"
       (confirmacionModal)="eliminarPedimentoDatoss($event)"></lib-notificaciones>
     }
-        @if(nuevaNotificacion && !eliminarDatosTablaExportacion && !eliminarDatosTabla){
+        @if(nuevaNotificacion && !eliminarDatosTablaExportacion && !eliminarDatosTabla && !eliminarDatosTablaNicoExp){
     <lib-notificaciones [notificacionInput]="nuevaNotificacion"
     ></lib-notificaciones>
         }
@@ -88,7 +88,7 @@
         <form [formGroup]="immexRegistroform">
           <div formGroupName="importacionForm">
             <div class="row" id="commodity-importacion">
-              <ng-titulo titulo="Fracción arancelaria de importación"></ng-titulo>
+              <ng-titulo [titulo]="!firstloadCompleted ? 'Fracción arancelaria de importación': 'Detalle de la mercancia de importación'"></ng-titulo>
               <div class="col-12">
                 <div class="row">
                 <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
@@ -99,7 +99,7 @@
       La fracción arancelaria es obligatoria.
                       </small>
                 </div>
-                <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+                <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4" *ngIf="!firstloadCompleted">
                   <label for="capacidad-periodo">UMT</label>
                   <input type="text" class="form-control" id="capacidad-periodo" formControlName="umt"
                     placeholder="" [required]="true" />
@@ -108,9 +108,18 @@
                     </small>
 
                 </div>
+                  <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8" *ngIf="firstloadCompleted">
+                  <label for="description">Descripción:</label>
+                  <textarea class="form-control" id="description" formControlName="descripcionTigie" rows="5"
+                    placeholder="" style="height: 100px;"></textarea>
+                     <small *ngIf="immexRegistroform.get('importacionForm.descripcion')?.touched && immexRegistroform.get('importacionForm.descripcion')?.hasError('required')" class="text-danger" >
+      La descripción es obligatoria.
+                     </small>
+                    </div>
+                    
                 </div>
                 <div class="row">
-                 <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
+                 <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8" *ngIf="!firstloadCompleted">
                   <label for="description">Descripción:</label>
                   <textarea class="form-control" id="description" formControlName="descripcionTigie" rows="5"
                     placeholder="" style="height: 100px;"></textarea>
@@ -185,10 +194,10 @@
                 <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
                   <app-tabla-dinamica *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox"
                     [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos"
-                    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+                    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" (listaDeFilaSeleccionada)="seleccionTablas($event)"></app-tabla-dinamica>
                 </div>
                 <div class="container text-start mt-5">
-                  <button class="btn btn-danger me-2" (click)="eliminarNico()">Eliminar Nico</button>
+                  <button class="btn btn-danger me-2" (click)="eliminarNicos()">Eliminar Nico</button>
                 </div>
               </div>
             }
@@ -209,6 +218,10 @@
       </div>
     </div>
   </div>
+    @if(nuevaNotificacion && eliminarDatosTablaNicoExp){
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+    ></lib-notificaciones>
+        }
 </div>
 <div class="modal fade" id="mercanciaExportacionModal" tabindex="-1" aria-labelledby="mercanciaExportacionModal"
   aria-hidden="true" data-bs-backdrop="static" #mercanciaExportacionModal>
@@ -227,20 +240,20 @@
                 </div>
                 <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
                   <label for="description">Descripción:</label>
-                  <textarea class="form-control" id="description" formControlName="productoDescExportacion" rows="5"
-                    placeholder=""></textarea>
+                  <textarea class="form-control" id="description" formControlName="productoArancelariaExportacion" rows="5"
+                    placeholder="" style="height:100px" ></textarea>
                 </div>
               </div>
               <div class="col-12 mt-5">
                 <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
                   <app-catalogo-select [label]="'Nico'" [catalogo]="nico" formControlName="Nico" [required]="true"
                     [placeholder]="'Selecciona un valor'" name="Nico"
-                    [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                    [isDisabled]="esFormularioSoloLectura" (change)="onDescriptionChange()"></app-catalogo-select>
                 </div>
                 <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
                   <label for="description-nico">Descripción Nico:</label>
                   <textarea class="form-control" id="description-nico" formControlName="productoDescExportacion"
-                    rows="5" placeholder=""></textarea>
+                    rows="5" placeholder=""  style="height:100px"></textarea>
                 </div>
               </div>
               <div class="col-12 container text-end mt-5">
@@ -252,7 +265,7 @@
                 <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
                   <app-tabla-dinamica *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox"
                     [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos"
-                    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+                    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" (listaDeFilaSeleccionada)="seleccionTabla($event)"></app-tabla-dinamica>
                 </div>
                 <div class="container text-start mt-5">
                   <button class="btn btn-danger me-2" (click)="eliminarNico()">Eliminar Nico</button>
@@ -262,14 +275,18 @@
           </div>
         </form>
         <footer class="footer d-flex py-5 gap-3 justify-content-end">
-          <button type="button" class="btn btn-danger" (click)="modalCancelarExportacion()">
-            Regresar
-          </button>
-          <button type="button" class="btn btn-primary" (click)="guardar()">
+           <button type="button" class="btn btn-primary" (click)="guardar()">
             Guardar
+          </button>
+          <button type="button" class="btn btn-danger" (click)="modalCancelarExportacion()">
+            Cancelar
           </button>
         </footer>
       </div>
+       @if(nuevaNotificacion && eliminarDatosTablaNicoExp){
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+    ></lib-notificaciones>
+        }
     </div>
   </div>
 </div>
