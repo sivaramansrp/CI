@@ -1,15 +1,10 @@
-{
-    "labelNombre": "Datos de la póliza de fianza actual",
-    "required": false,
-    "primerOpcion": "Seleccione un valor",
-    "catalogos": [
-        {
-            "id": 1,
-            "descripcion": "DORAMA, INSTITUCION DE GARANTIAS SA"
-        },
-        {
-            "id": 2,
-            "descripcion": "DORAMA, INSTITUCION DE GARANTIAS SA - 1"
-        }
-    ]
-}
+[
+    {
+        "id": 1,
+        "descripcion": "DORAMA, INSTITUCION DE GARANTIAS SA"
+    },
+    {
+        "id": 2,
+        "descripcion": "DORAMA, INSTITUCION DE GARANTIAS SA - 1"
+    }
+]

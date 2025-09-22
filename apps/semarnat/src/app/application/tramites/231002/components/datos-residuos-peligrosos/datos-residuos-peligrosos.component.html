@@ -38,7 +38,9 @@
         </div>
         <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.nombre" [label]="'Nombre de la materia prima'" [required]="true" formControlName="nombreMateriaPrima" (change)="actualizarCampoFormularioDatos('nombreMateriaPrima'); onNombreMateriaPrimaChange()"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.nombre" [label]="'Nombre de la materia prima'" [required]="true" formControlName="nombreMateriaPrima" (change)="actualizarCampoFormularioDatos('nombreMateriaPrima'); onNombreMateriaPrimaChange()"
+            [markTouched]="formularioDatos.get('nombreMateriaPrima')?.touched??false"
+            ></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
@@ -100,10 +102,12 @@
       <form [formGroup]="formularioResiduo">
         <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.arancelaria" [label]="'Fracción arancelaria'" [required]="true" formControlName="fraccionArancelaria" (change)="actualizarCampoFormularioResiduo('fraccionArancelaria'); onFraccionArancelariaChange()"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.arancelaria" [label]="'Fracción arancelaria'" [required]="true" formControlName="fraccionArancelaria" (change)="actualizarCampoFormularioResiduo('fraccionArancelaria'); onFraccionArancelariaChange()" 
+            [markTouched]="formularioResiduo.get('fraccionArancelaria')?.touched??false"></app-catalogo-select>
           </div>
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.nico" [label]="'N I C O'" [required]="true" formControlName="nico" (change)="actualizarCampoFormularioResiduo('nico'); onNicoChange()"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.nico" [label]="'N I C O'" [required]="true" formControlName="nico" (change)="actualizarCampoFormularioResiduo('nico'); onNicoChange()"
+            [markTouched]="formularioResiduo.get('nico')?.touched??false"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
@@ -166,7 +170,8 @@
         </div>
         <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.unidad" [label]="'Unidad de medida'" [required]="true" formControlName="unidadMedida" (change)="actualizarCampoFormularioResiduo('unidadMedida')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.unidad" [label]="'Unidad de medida'" [required]="true" formControlName="unidadMedida" (change)="actualizarCampoFormularioResiduo('unidadMedida')"
+            [markTouched]="formularioResiduo.get('unidadMedida')?.touched??false"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
@@ -185,27 +190,32 @@
         </div>
         <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.residuo" [label]="'Clave de residuo'" [required]="true" [isDisabled]="claveResiduoDisabled" formControlName="claveResiduo" (change)="actualizarCampoFormularioResiduo('claveResiduo')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.residuo" [label]="'Clave de residuo'" [required]="true" [isDisabled]="claveResiduoDisabled" formControlName="claveResiduo" (change)="actualizarCampoFormularioResiduo('claveResiduo')"
+            [markTouched]="formularioDatos.get('claveResiduo')?.touched??false"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.tipoNombre" [label]="'Nombre'" [required]="true" [isDisabled]="nombreDisabled" formControlName="nombre" (change)="actualizarCampoFormularioResiduo('nombre')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.tipoNombre" [label]="'Nombre'" [required]="true" [isDisabled]="nombreDisabled" formControlName="nombre" (change)="actualizarCampoFormularioResiduo('nombre')"
+            [markTouched]="formularioDatos.get('nombre')?.touched??false"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="etiquetasForm.descripcion" [label]="'Descripción'" [required]="true" [isDisabled]="descripcionDisabled" formControlName="descripcion" (change)="actualizarCampoFormularioResiduo('descripcion')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.descripcion" [label]="'Descripción'" [required]="true" [isDisabled]="descripcionDisabled" formControlName="descripcion" (change)="actualizarCampoFormularioResiduo('descripcion')"
+            [markTouched]="formularioDatos.get('descripcion')?.touched??false"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-8">
-            <app-catalogo-select [catalogo]="etiquetasForm.creti" [label]="'CRETI'" [required]="true" formControlName="creti" (change)="actualizarCampoFormularioResiduo('creti')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.creti" [label]="'CRETI'" [required]="true" formControlName="creti" (change)="actualizarCampoFormularioResiduo('creti')"
+            [markTouched]="formularioResiduo.get('creti')?.touched??false"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-8">
-            <app-catalogo-select [catalogo]="etiquetasForm.estadoFisico" [label]="'Estado físico'" [required]="true" formControlName="estadoFisico" (change)="actualizarCampoFormularioResiduo('estadoFisico')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.estadoFisico" [label]="'Estado físico'" [required]="true" formControlName="estadoFisico" (change)="actualizarCampoFormularioResiduo('estadoFisico')"
+            [markTouched]="formularioResiduo.get('estadoFisico')?.touched??false"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">
@@ -224,7 +234,8 @@
         </div>
         <div class="row mb-3">
           <div class="col-md-8">
-            <app-catalogo-select [catalogo]="etiquetasForm.tipoContenedor" [label]="'Tipo de Contenedor'" [required]="true" formControlName="tipoContenedor" (change)="actualizarCampoFormularioResiduo('tipoContenedor')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="etiquetasForm.tipoContenedor" [label]="'Tipo de Contenedor'" [required]="true" formControlName="tipoContenedor" (change)="actualizarCampoFormularioResiduo('tipoContenedor')"
+            [markTouched]="formularioResiduo.get('tipoContenedor')?.touched??false"></app-catalogo-select>
           </div>
         </div>
         <div class="row mb-3">

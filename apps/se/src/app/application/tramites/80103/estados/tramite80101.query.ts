@@ -196,6 +196,20 @@ export class Tramite80101Query extends Query<Tramite80101State> {
     (state) => state.tablaDatosFederatarios
   );
 
+  /**
+   * Selecciona los datos de los fedatarios para el formulario del estado.
+   */
+  selectDatosPlantasImmex$ = this.select((state) => {
+    return state.plantasImmexTablaLista;
+  });
+
+  /** 
+   * Selecciona los datos de las plantas disponibles del estado.
+   */
+  selectDatosPlantasDisponibles$ = this.select((state) => {
+    return state.plantasDisponiblesTablaLista;
+  });
+
 /**
  * Observable que selecciona el estado `datosAnexoTress` desde el store.
  * Se utiliza para obtener los datos del Anexo Tres de manera reactiva.
