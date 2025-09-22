@@ -8,6 +8,7 @@ export interface TramiteFolioState {
   idTramite: string | null;
   firma: string | null;
   idSolicitud: number | null; 
+  procedure: number | null;
 }
 
 /**
@@ -19,6 +20,7 @@ export function createInitialFolioTramiteState(): TramiteFolioState {
     idTramite: null,
     firma: null,
     idSolicitud: null,
+    procedure: null,
   };
 }
 
@@ -36,12 +38,13 @@ export class TramiteFolioStore extends Store<TramiteFolioState> {
    *
    * @param idTramite
    */
- public establecerTramite(idTramite: string, firma: string, idSolicitud?: number): void {
+ public establecerTramite(idTramite: string, firma: string, idSolicitud?: number,procedure?: number): void {
   this.update((state) => ({
     ...state,
     idTramite,
     firma,
     idSolicitud,
+    procedure
   }));
 }
 

@@ -92,3 +92,8 @@ export const FECHA_FIN_VIGENCIA = {
   required: true,
   habilitado: true,
 };
+
+export const CEDULAS_OPTIONS = [
+  { "id": 1, "descripcion": "SI" },
+  { "id": 2, "descripcion": "NO" }
+]

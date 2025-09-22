@@ -23,6 +23,7 @@ export class RegistrarSolicitudService {
      this.solicitud290201Store.setTipos(DATOS.tipos);
      this.solicitud290201Store.setCalidad(DATOS.calidad);
      this.solicitud290201Store.setProcesos(DATOS.procesos);
+     this.solicitud290201Store.setNombredeagencia(DATOS.nombredeagencia);
      this.solicitud290201Store.setCertifications(DATOS.certifications);
      this.solicitud290201Store.setAdunadesalida(DATOS.adunadesalida);
      this.solicitud290201Store.setPaisdestino(DATOS.paisdestino);

@@ -3,8 +3,10 @@
   [federatariosDatos]="(federatariosTablaLista$ | async) || []"
   [plantasDisponiblesConfig]="plantasDisponiblesTablaConfiguracion"
   [plantasImmexConfig]="plantasImmexTablaConfiguracion"
-  [plantasDisponiblesDatos]="plantasDisponiblesTablaLista"
-  [plantasImmexDatos]="plantasImmexTablaLista"
+  [plantasDisponiblesDatos]="(plantasDisponiblesTablaLista$ | async) || []"
+  [plantasImmexDatos]="(plantasImmexTablaLista$ | async) || []"
   (datosFormaFedratario)="setFormaDatos($event)"
+  (datosPlantaDisponibles)="setPlantasDisponiblesDatos($event)"
+  (datosPlantasImmex)="setPlantasImmexDatos($event)"
   [estadoOptions]="estadosCatalogos"
 ></app-federatarios-y-planta>

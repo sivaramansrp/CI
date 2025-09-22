@@ -35,13 +35,14 @@
         }
         @case (2) {
           <app-paso-dos
-           [cargaArchivosEvento]="cargarArchivosEvento"
-          [regresarSeccionCargarDocumentoEvento]="regresarSeccionCargarDocumentoEvento"
+          [idTipoTRamite]="'130118'"
+          [datosUsuario]="datosUsuario"
+          [cargaArchivosEvento]="cargarArchivosEvento"
           (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
           (reenviarCargaRealizada)="cargaRealizada($event)"></app-paso-dos>
         }
         @case (3) {
-          <app-paso-tres></app-paso-tres>
+          <paso-firma [idSolicitud]="this.solicitudState.idSolicitud" [procedure]="130118" [procedureUrl]="'solicitud'"></paso-firma>
         }
       }
 
@@ -63,14 +64,14 @@
             Anterior
           </button>
 
-          <button
+          <!-- <button
             type="button"
             class="btn btn-default ms-3"
             (click)="anteriorSeccionCargarDocumento()"
             *ngIf="!seccionCargarDocumentos"
           >
             Anterior
-          </button>
+          </button> -->
 
           <button
             class="btn btn-primary ms-3"

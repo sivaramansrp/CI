@@ -207,3 +207,50 @@ export interface ReprestantanteData {
   apellidoPaterno: string;
   apellidoMaterno: string;
 }
+
+ export const NACIONAL_FISICA = [
+    'denominacionRazonSocial',
+    'entidadFederativa',
+    'coloniaoEquivalente',
+    'extranjeroCodigo',
+    'extranjeroEstado',
+    'extranjeroColonia',
+  ]
+  export const NACIONAL_MORAL = [
+    'curp',
+    'nombre',
+    'primerApellido',
+    'segundoApellido',
+    'entidadFederativa',
+    'codigoPostaloEquivalente',
+    'coloniaoEquivalente',
+    'extranjeroCodigo',
+    'extranjeroEstado',
+    'extranjeroColonia',
+  ]
+  export const EXTRANJERO_MORAL = [
+    'rfc',
+    'curp',
+    'nombre',
+    'primerApellido',
+    'segundoApellido',
+    'municipioAlcaldia',
+    'localidad',
+    'entidadFederativa',
+    'colonia',
+    'extranjeroCodigo',
+    'extranjeroEstado',
+    'extranjeroColonia',
+  ]
+  export const EXTRANJERO_FISICA =[
+    'rfc',
+    'curp',
+    'denominacionRazonSocial',
+    'municipioAlcaldia',
+    'localidad',
+    'entidadFederativa',
+    'colonia',
+    'extranjeroCodigo',
+    'extranjeroEstado',
+    'extranjeroColonia'
+  ]

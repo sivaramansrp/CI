@@ -339,6 +339,20 @@ export interface CapturarColumns {
   unidadMedida: string;
   /** Valor en dólares estadounidenses */
   valorDolares: string;
+  /** TAX ID del emisor */
+  taxId?: string;
+  /** Calle del domicilio fiscal */
+  calle?: string;
+  /** Ciudad del domicilio fiscal */
+  ciudad?: string;
+  /** Código postal del domicilio fiscal */
+  cp?: string;
+  /** País del domicilio fiscal */
+  pais?: string;
+  /** ID único de la expedición */
+  idExpedicion: number;
+  /** ID único de la factura de expedición */
+  idFacturaExpedicion?: number;
 }
 
 /**
@@ -373,6 +387,10 @@ export interface AsociadasTableColumns {
   unidadMedida: string;
   /** Valor proporcional en dólares */
   valorDolares: string;
+  /** ID único de la factura de expedición */
+  idFacturaExpedicion: number;
+  /** ID único de la expedición asociada */
+  idExpedicion: number;
 }
 
 /**

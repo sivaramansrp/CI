@@ -4,36 +4,29 @@
  * Incluye un formulario para capturar los datos del importador y funcionalidades adicionales.
  * Gestiona la validación, sincronización con el store global y el estado de la sección.
  */
-
-import { HttpClient } from '@angular/common/http';
-
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-
-import { Subject, delay, map, takeUntil, tap } from 'rxjs';
-
 import {
   Catalogo,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
 } from '@ng-mf/data-access-user';
-
-import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   ElegibilidadDeTextilesStore,
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { ERROR_FORMA_ALERT } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
-
+import { HttpClient } from '@angular/common/http';
+import { ImporteRecordService } from '../../services/catalogos/importe-record.service';
+import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
  * @component ImportadorEnDestinoComponent
@@ -93,7 +86,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    */
   importadorForm!: FormGroup;
 
-    /**
+  /**
    * @property {string} formularioAlertaError
    * @description
    * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
@@ -133,7 +126,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * al archivo 'tipo.json'. Cada elemento del catálogo contiene la información necesaria
    * para poblar el dropdown de tipos de importador disponibles en el sistema.
    */
-  tipoData: Catalogo[] = [];
+  tipoData!: Catalogo[];
 
   /**
    * @property {Subject<void>} destroyNotifier$ - Sujeto para manejar la destrucción de suscripciones.
@@ -153,7 +146,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * Incluye datos como tipo, cantidades, información de contacto y ubicación.
    * @private
    */
-  private importadorState!: TextilesState;
+  public importadorState!: TextilesState;
 
   /**
    * @property {SeccionLibState} seccionState - Estado actual de la sección.
@@ -189,6 +182,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
+    private importeRecordService: ImporteRecordService,
     private cdr: ChangeDetectorRef
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
@@ -206,51 +200,51 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor
    * @implements {OnInit}
    */
-  ngOnInit(): void {
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccionState = seccionState;
-        })
-      )
-      .subscribe();
+    ngOnInit(): void {
+      this.seccionQuery.selectSeccionState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.seccionState = seccionState;
+          })
+        )
+        .subscribe();
 
-    this.ElegibilidadDeTextilesQuery.selectTextile$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((state) => {
-          this.importadorState = state as TextilesState;
-        })
-      )
-      .subscribe();
+      this.ElegibilidadDeTextilesQuery.selectTextile$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((state) => {
+            this.importadorState = state as TextilesState;
+          })
+        )
+        .subscribe();
 
-    this.initActionFormBuild();
-    this.obtenerListasDesplegables();
+      this.initActionFormBuild();
+      this.obtenerListasDesplegables();
 
-    this.seccionStore.establecerFormaValida([false]);
+      this.seccionStore.establecerFormaValida([false]);
 
-    this.importadorForm.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap((_value) => {
-          if (this.importadorForm.valid) {
-            this.ElegibilidadDeTextilesStore.setFormaValida([
-              ...this.importadorState.formaValida,
-              { id: 4, descripcion: 'TodoValido' },
-            ]);
-          }
-          this.seccionStore.establecerSeccion([true]);
-          this.seccionStore.establecerFormaValida([true]);
-        })
-      )
-      .subscribe();
+      this.importadorForm.statusChanges
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          delay(10),
+          tap((_value) => {
+            if (this.importadorForm.valid) {
+              this.ElegibilidadDeTextilesStore.setFormaValida([
+                ...this.importadorState.formaValida,
+                { id: 4, descripcion: 'TodoValido' },
+              ]);
+            }
+            this.seccionStore.establecerSeccion([true]);
+            this.seccionStore.establecerFormaValida([true]);
+          })
+        )
+        .subscribe();
 
-    if (this.formularioDeshabilitado) {
-      this.importadorForm.disable();
+      if (this.formularioDeshabilitado) {
+        this.importadorForm.disable();
+      }
     }
-  }
 
   /**
    * @method initActionFormBuild
@@ -267,23 +261,43 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
       tipo: [this.importadorState.tipo, Validators.required],
       cantidadTotalImportador: [
         this.importadorState.cantidadTotalImportador,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        [
+          Validators.required,
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+          Validators.minLength(11),
+          Validators.maxLength(11)
+        ],
       ],
       razonSocialImportador: [
         this.importadorState.razonSocialImportador,
-        Validators.required,
+        [
+          Validators.required,
+          Validators.maxLength(70)
+        ],
       ],
-      domicilio: [this.importadorState.domicilio, Validators.required],
+      domicilio: [
+        this.importadorState.domicilio,
+        [
+          Validators.required,
+          Validators.maxLength(70)
+        ],
+      ],
       ciudadImportador: [
         this.importadorState.ciudadImportador,
-        Validators.required,
+        [
+          Validators.required,
+          Validators.maxLength(35)
+        ],
       ],
       cpImportador: [
         this.importadorState.cpImportador,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        [
+          Validators.required,
+          Validators.maxLength(9)
+        ],
       ],
       PaisImportador: [
-        { value: this.importadorState.PaisImportador, disabled: true },
+        { value: this.importadorState.PaisImportador || 'ESTADOS UNIDOS DE AMERICA', disabled: true },
         Validators.required,
       ],
     });
@@ -313,10 +327,18 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor
    */
   obtenerIngresoSelectList(): void {
-    this.ElegibilidadTextilesService.obtenerMenuDesplegable('tipo.json')
+    this.importeRecordService.getImporteRecord()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        this.tipoData = data as Catalogo[];
+      .subscribe({
+        next: (data) => {
+          if (data.codigo === '00') {
+            this.tipoData = data.datos || [];
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+          this.tipoData = [];
+        }
       });
   }
 
@@ -366,6 +388,15 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
 
     this.mostrarTabs.emit(true);
   }
+    /**
+   * Guarda los datos editados del chofer nacional si el formulario es válido, emite el evento y cierra el modal.
+   * Si el formulario es inválido, muestra una notificación de alerta.
+   * @returns {void}
+   */
+  enviada = false;
+    guardarFilaEditada(): void {
+    this.enviada = true;
+  }
   /**
    * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.
@@ -378,8 +409,8 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor
    * @implements {OnDestroy}
    */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
 }

@@ -37,8 +37,7 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="inicialesContenedor">Iniciales del equipo
-              <span [ngClass]="solicitudForm.get('datosContenedor.inicialesContenedor')?.invalid && 
+            <label class="form-label" for="inicialesContenedor">Iniciales del equipo<span [ngClass]="solicitudForm.get('datosContenedor.inicialesContenedor')?.invalid && 
               solicitudForm.get('datosContenedor.inicialesContenedor')?.touched ? 'text-danger' : ''">*</span>:
             </label>
             <input type="text" class="form-control" id="inicialesContenedor" maxlength="10"
@@ -47,7 +46,7 @@
                   datosContenedor,
                   'inicialesContenedor',
                   'setInicialesContenedor'
-                )"  [ngClass]="{'is-invalid': isInvalid('datosContenedor.inicialesContenedor')}"/>
+                )" [ngClass]="{'is-invalid': isInvalid('datosContenedor.inicialesContenedor')}"/>
               <div *ngIf="isInvalid('datosContenedor.inicialesContenedor') && solicitudForm.get('datosContenedor.inicialesContenedor')?.errors?.['required']" class="mensaje-error">
                 Este campo es obligatorio.
               </div>
@@ -56,8 +55,7 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="numeroContenedor">Número de equipo
-              <span [ngClass]="solicitudForm.get('datosContenedor.numeroContenedor')?.invalid && 
+            <label class="form-label" for="numeroContenedor">Número de equipo<span [ngClass]="solicitudForm.get('datosContenedor.numeroContenedor')?.invalid && 
               solicitudForm.get('datosContenedor.numeroContenedor')?.touched ? 'text-danger' : ''">*</span>:
             </label>
             <input type="text" class="form-control" id="numeroContenedor" maxlength="15"

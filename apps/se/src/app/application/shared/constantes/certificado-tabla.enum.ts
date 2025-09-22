@@ -60,27 +60,27 @@ export const CONFIGURACION_PRODUCTOR_EXPORTADOR = [
  */
 export const CONFIGURACION_MERCANCIA = [
   {
-    encabezado: 'RFC Productor ',
+    encabezado: 'Fracción arancelaria ',
     clave: (ele: MercanciaTabla): string | undefined => ele.rfcProductor,
     orden: 0,
   },
    {
-        encabezado: 'Fracción arancelaria',
+        encabezado: 'Cantidad',
         clave: (ele: MercanciaTabla): string | undefined => ele.fraccionArancelaria,
         orden: 1,
       },
       {
-        encabezado: 'Nombre técnico',
+        encabezado: 'Unidad de medida',
         clave: (ele: MercanciaTabla): string | undefined => ele.nombreTecnico,
         orden: 2,
       },
       {
-        encabezado: 'cantidad',
+        encabezado: 'Valor marcancía',
         clave: (ele: MercanciaTabla): string | undefined => ele.cantidad,
         orden: 3,
       },
       {
-        encabezado: 'unidadMedida',
+        encabezado: 'Tipo de factura',
         clave: (ele: MercanciaTabla): string | undefined => ele.unidadMedida,
         orden: 4,
       },
@@ -90,8 +90,23 @@ export const CONFIGURACION_MERCANCIA = [
         orden: 5,
       },
       {
-        encabezado: 'tipoFactura',
+        encabezado: 'Número factura',
         clave: (ele: MercanciaTabla): string | undefined => ele.tipoFactura,
         orden: 6,
+      },
+      {
+        encabezado: 'Complemento descripción',
+        clave: (ele: MercanciaTabla): string | undefined => ele.complementoDescripcion,
+        orden: 7,
+      },
+       {
+        encabezado: 'Fetch factura',
+        clave: (ele: MercanciaTabla): string | undefined => ele.fetchFactura,
+        orden: 8,
+      },
+       {
+        encabezado: 'RFC productor',
+        clave: (ele: MercanciaTabla): string | undefined => ele.rfcProductor1,
+        orden: 9,
       }
     ];

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { DisponsibleFiscal } from '../../../../shared/models/empresas.model';
 import { EmpresasComponent } from '../../../../shared/components/empresas/empresas.component';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
+import { Tramite80101Store } from '../../estados/tramite80101.store';
 
 @Component({
   selector: 'app-empresas-terciarizadaas',
@@ -15,7 +16,9 @@ import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciar
 })
 export class EmpresasTerciarizadaasComponent implements OnDestroy {
 
-  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService) {
+  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
+    private tramite80101Store: Tramite80101Store
+  ) {
     this.obtenerListaEstado();
   }
 
@@ -45,6 +48,12 @@ export class EmpresasTerciarizadaasComponent implements OnDestroy {
    * Cada elemento es de tipo `Catalogo`.
    */
   estadosCatalogo: Catalogo[] = [];
+
+  actualizarSeleccionadas(event: DisponsibleFiscal[]): void {
+   if (event) {
+    this.tramite80101Store.setSeleccionadas(event);
+   }
+  }
 
   /**
   * Obtiene la lista de estados desde el servicio y actualiza la propiedad estadoCatalogo.

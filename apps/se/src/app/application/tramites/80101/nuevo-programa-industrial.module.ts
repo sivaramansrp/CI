@@ -2,6 +2,7 @@ import {
   AlertComponent,
   AnexarDocumentosComponent,
   BtnContinuarComponent,
+  CargaDocumentoComponent,
   CatalogoSelectComponent,
   FirmaElectronicaComponent,
   SharedModule,
@@ -25,10 +26,12 @@ import { MontosDeInversionComponent } from '../../shared/components/montos-de-in
 import { NuevoProgramaIndustrialRoutingModule } from './nuevo-programa-industrial-routing.module';
 import { PasoCapturarSolicitudComponent } from './pages/paso-capturar-solicitud/paso-capturar-solicitud.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoFirmarSolicitudComponent } from './pages/paso-firmar-solicitud/paso-firmar-solicitud.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoCsComponent } from './pages/paso-uno-cs/paso-uno-cs.component';
 import { ReactiveFormsModule } from '@angular/forms';
+
 @NgModule({
   declarations: [
     PasoCapturarSolicitudComponent,
@@ -36,6 +39,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     PasoFirmarSolicitudComponent,
     PasoTresComponent,
     PasoUnoCsComponent,
+    
   ],
   imports: [
     CommonModule,
@@ -60,6 +64,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CapacidadInstaladaComponent,
     AggregarComplimentosComponent,
     EmpresasSubfabricanteComponent,
+    PasoFirmaComponent,
+    CargaDocumentoComponent
   ],
 })
 export class NuevoProgramaIndustrialModule {}

@@ -19,32 +19,14 @@
       </ul>
   
       <ng-container>
-        @switch (indice) {
-        @case (1) {
-        <solicitante></solicitante>
-        }
-        @case (2) {
-          @if(esDatosRespuesta){
-         <app-detalles-del-transporte></app-detalles-del-transporte>
+        <solicitante #solicitante [hidden]="indice !== 1"></solicitante>
+        @if(esDatosRespuesta){
+        <app-detalles-del-transporte #detallesDelTransporte [hidden]="indice !== 2"></app-detalles-del-transporte>
+        <app-datos-del-destinatario #datosDelDestinatario [hidden]="indice !== 3"></app-datos-del-destinatario>
+        <app-domicilio-del-destinatario #domicilioDelDestinatario [hidden]="indice !== 3"></app-domicilio-del-destinatario>
+          <app-transporte #transporte [hidden]="indice !== 4"></app-transporte>
+           <app-datos-del-certificado #datosDelCertificado [hidden]="indice !== 5" (modificarEventCertificado)="modificarEventCapturar.emit($event)"></app-datos-del-certificado>
           }
-        }
-        @case (3) {
-          @if(esDatosRespuesta){
-        <app-datos-del-destinatario></app-datos-del-destinatario>
-        <app-domicilio-del-destinatario></app-domicilio-del-destinatario>
-          }
-        }
-        @case (4) {
-          @if(esDatosRespuesta){
-              <app-transporte></app-transporte>
-          }
-        }
-        @case (5) {
-          @if(esDatosRespuesta){
-           <app-datos-del-certificado (modificarEventCertificado)="modificarEventCapturar.emit($event)"></app-datos-del-certificado>
-          }
-        }
-        }
       </ng-container>
     </div>
   </div>

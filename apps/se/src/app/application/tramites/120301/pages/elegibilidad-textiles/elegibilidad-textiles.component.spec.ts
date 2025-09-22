@@ -6,6 +6,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { of } from 'rxjs';
 
 beforeAll(() => {
   window.scrollTo = jest.fn();
@@ -24,10 +25,16 @@ describe('ElegibilidadTextilesComponent', () => {
         {
           provide: HttpClient,
           useValue: {
-            get: jest.fn().mockResolvedValue({}),
-            post: jest.fn().mockResolvedValue({}),
-            put: jest.fn().mockResolvedValue({}),
-            delete: jest.fn().mockResolvedValue({})
+            get: jest.fn().mockReturnValue(of({})),
+            post: jest.fn().mockReturnValue(of({})),
+            put: jest.fn().mockReturnValue(of({})),
+            delete: jest.fn().mockReturnValue(of({}))
+          }
+        },
+        {
+          provide: 'iniciarService',
+          useValue: {
+            postIniciar: jest.fn().mockReturnValue(of({}))
           }
         }
       ]

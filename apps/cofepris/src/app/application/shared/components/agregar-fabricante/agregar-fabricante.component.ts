@@ -424,7 +424,7 @@ export class AgregarFabricanteComponent
       codigoPostal: [
         this.obtenerValor('codigoPostal'),
         !this.elementosNoRequeridos.includes('codigoPostal')
-          ? [Validators.required]
+          ? [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)]
           : [],
       ],
       colonia: [
