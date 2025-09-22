@@ -1,17 +1,36 @@
-import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS, Usuario } from '@ng-mf/data-access-user';
+// Update the import path to the correct location of catalogos.service.ts
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
-
+import { AlertComponent } from '../../components/alert/alert.component';
+import { CATALOGOS_ID } from '../../constantes/constantes';
+import { CargaDocumentoComponent } from '../carga-documento/carga-documento.component';
+import { Catalogo } from '../../../core/models/shared/catalogos.model';
+import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
+import { CommonModule } from '@angular/common';
+import { TituloComponent } from '../../components/titulo/titulo.component';
+import { Usuario } from '../../../core/models/shared/cargar-documentos.model';
 /**
- * Este componente se muestra en PasaDos
+ * Este componente se muestra en Paso Carga Documento
  */
 @Component({
-  selector: 'app-paso-dos',
-  templateUrl: './paso-dos.component.html',
-  styleUrl: './paso-dos.component.scss',
+  selector: 'app-paso-carga-documento',
+  templateUrl: './paso-carga-documento.component.html',
+  styleUrl: './paso-carga-documento.component.scss',
+  standalone: true,
+  imports: [
+    CommonModule,
+    CargaDocumentoComponent,
+    AlertComponent,
+    TituloComponent,
+  ]
 })
-export class PasoDosComponent implements OnInit, OnDestroy {
-
+export class PasoCargaDocumentoComponent implements OnInit, OnDestroy {
+  @Input() idSolicitud: number | null = null;
+  /**
+   * Obtener el valor de la instrucción e inicializar la variable
+   */
+  TEXTOS = `La solicitud ha quedado registrada con el número temporal [${this.idSolicitud}]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.`;
+  
   @Input() regresarSeccionCargarDocumentoEvento!: EventEmitter<void>;
 
   /**
@@ -21,10 +40,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   @Input() cargaArchivosEvento!: EventEmitter<void>;
 
   @Input() idTipoTRamite!: string;
-  /**
-   * Textos utilizados en el componente.
-   */
-  TEXTOS = TEXTOS;
 
   /**
    * Evento que se emite para reenviar la solicitud de carga de documentos.
