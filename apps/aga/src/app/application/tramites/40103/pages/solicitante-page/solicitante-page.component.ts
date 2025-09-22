@@ -40,7 +40,7 @@ import {
   SECCIONES_TRAMITE_40103,
   TipoNotificacionEnum,
   WizardComponent
-} from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
 
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
