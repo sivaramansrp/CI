@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 /**
  * Decorador que define el componente ModalComponent.
@@ -9,7 +10,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.scss'
 })
@@ -22,4 +23,12 @@ export class ModalComponent {
    * @default false
    */
  @Input() active = false;
+
+/**   * Propiedad que indica si el modal debe ocupar todo el ancho disponible.
+   * Esta propiedad se puede pasar desde un componente padre utilizando la decoración @Input.
+   *
+   * @property {boolean} anchoCompleto
+   * @default false
+   */
+ @Input() anchoCompleto = false;
 }

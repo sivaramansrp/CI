@@ -98,19 +98,13 @@
           [catalogo]="estadoCatalogo"
           [label]="'Estado'"
           [required]="true"
-           id="estado"
            [primerOptionValue]="SIN"
            [hiddenPrimerOption]="false"
            [disabledPrimerOption]="false"
           [isDisabled]="esFormularioSoloLectura"
           formControlName="estado"
           (change)="enEstadoSeleccionado()"
-        ></app-catalogo-select>
-        <div *ngIf="esInvalido('estado')" class="text-danger">
-          <small *ngIf="formularioDatosSubcontratista.controls['estado'].errors?.['required']">
-            Este campo es obligatorio.
-          </small>
-          </div>
+        ></app-catalogo-select>       
       </div>
       </div>
     </div>

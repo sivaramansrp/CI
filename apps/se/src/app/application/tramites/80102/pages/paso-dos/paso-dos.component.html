@@ -1,7 +1,13 @@
 <div class="container">
   <ng-titulo titulo="Requisitos opcionales" />
 
-  <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
+  <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
 
-  <anexar-documentos></anexar-documentos>
+    <carga-documento
+      [idTipoTRamite]="idTipoTRamite"
+      [datosUsuario]="datosUsuario"
+      [cargaArchivosEvento]="reenviarEvento"
+      (cargaRealizada)="documentosCargados($event)"
+      (activarBotonCargaArchivos)="manejarEventoCargaDocumento($event)"
+    ></carga-documento>
 </div>

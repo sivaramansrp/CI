@@ -84,6 +84,11 @@ describe('SolicitantePageComponent', () => {
   });
 
   it('debería llamar a getValorIndice con los parámetros correctos cuando se llama a continuar', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as WizardComponent;
+    
     const getValorIndiceSpy = jest.spyOn(component, 'getValorIndice');
     component.indice = 2;
 

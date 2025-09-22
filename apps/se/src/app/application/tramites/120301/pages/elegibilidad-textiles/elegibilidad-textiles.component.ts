@@ -15,8 +15,7 @@
  */
 
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { CategoriaMensaje, Notificacion, } from '@ng-mf/data-access-user';
-import { DatosPasos, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { CategoriaMensaje, DatosPasos, Notificacion, SeccionLibStore } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT, PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
@@ -25,6 +24,7 @@ import { IniciarService } from '../../services/iniciar.service';
 import { ListaPasosWizard } from '../../models/elegibilidad-de-textiles.model';
 import { Location } from '@angular/common';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * @interface AccionBoton
@@ -84,8 +84,21 @@ interface AccionBoton {
   templateUrl: './elegibilidad-textiles.component.html',
 })
 export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
-    /**
+  /**
+   * @property {boolean} mostrarOtraPestana
+   * @description
+   * Controla la visibilidad de pestañas adicionales y la alerta de validación en el wizard.
+   * Se utiliza para mostrar u ocultar secciones extra según la lógica del proceso, igual que en paso-uno.component.html.
+   * @default false
+   */
+  mostrarOtraPestana: boolean = false;
+
+  /**
+   * @property {string} formularioAlertaError
+   * @description
    * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   * Se utiliza para informar al usuario sobre campos requeridos o errores en el formulario.
+   * @default ERROR_FORMA_ALERT
    */
   public formularioAlertaError = ERROR_FORMA_ALERT;
 

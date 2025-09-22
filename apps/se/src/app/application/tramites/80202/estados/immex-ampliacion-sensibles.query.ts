@@ -26,7 +26,7 @@ export class ImmexAmpliacionSensiblesQuery extends Query<ImmexRegistroState> {
     super(store);
     
   }
-    /**
+       /**
      * @propiedad selectImmexRegistro$
      * @tipo Observable<ImmexRegistroState>
      * @descripción Selector que permite obtener el estado completo de `ImmexRegistroState`.
@@ -34,5 +34,4 @@ export class ImmexAmpliacionSensiblesQuery extends Query<ImmexRegistroState> {
     selectImmexRegistro$ = this.select((state) => {
         return state;
     });
-
 }

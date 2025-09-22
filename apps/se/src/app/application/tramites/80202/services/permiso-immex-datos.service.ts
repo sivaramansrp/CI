@@ -4,6 +4,7 @@
  */
 import { HttpClient } from '@angular/common/http';
 import { ImmexAmpliacionSensiblesStore } from '../estados/immex-ampliacion-sensibles.store';
+import { ImmexRegistroform } from '../models/immex-ampliacion-sensibles.model';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { immexRegistroform } from '../../80203/modelos/immex-registro-de-solicitud-modality.model';
@@ -53,7 +54,7 @@ export class PermisoImmexDatosService {
    * @param {immexRegistroform} DATOS - Datos del formulario de registro IMMEX.
    * @returns {void}
    */
-  actualizarEstadoFormulario(DATOS: immexRegistroform): void {
+  actualizarEstadoFormulario(DATOS: ImmexRegistroform): void {
     this.tramite80202Store.setImmexRegistro(DATOS);
   }
 
