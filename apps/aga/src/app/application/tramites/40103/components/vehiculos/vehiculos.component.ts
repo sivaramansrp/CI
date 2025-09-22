@@ -898,6 +898,21 @@ export class VehiculosComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Valida los formularios de vehículos y unidades.
+   * En este componente se valida que exista al menos un vehículo y una unidad registrados.
+   * @returns {boolean} true si hay al menos un vehículo y una unidad registrados, false en caso contrario.
+   */
+  public validarFormularios(): boolean {
+    // Validar que exista al menos un vehículo
+    const TIENE_VEHICULOS = this.vehiculosTablaConfig?.datos && this.vehiculosTablaConfig.datos.length > 0;
+    
+    // Validar que exista al menos una unidad de arrastre
+    const TIENE_UNIDADES = this.unidadesTablaConfig?.datos && this.unidadesTablaConfig.datos.length > 0;
+    
+    return Boolean(TIENE_VEHICULOS && TIENE_UNIDADES);
+  }
+
+  /**
    * Índice de edición para la tabla de vehículos.
    * Cuando es null indica modo de agregar nuevo, cuando tiene valor indica modo de edición.
    * 
