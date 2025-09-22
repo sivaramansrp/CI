@@ -299,7 +299,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    */
   agregarServiciosAmpliacion(): void {
     const CUERPODATOS = {
-      // descripcion: this.recibioSector[0]?.descripcion,
+      descripcion: this.recibioSector[0]?.descripcion,
       descripcionSector: this.recibioSector[0]?.descripcionSector,
     };
     this.tramite80206Store.setDatosSector([...this.datosSector, CUERPODATOS]);

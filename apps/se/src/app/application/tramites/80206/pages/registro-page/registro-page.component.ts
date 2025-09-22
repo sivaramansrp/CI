@@ -9,10 +9,10 @@
  * relacionados con el registro de la solicitud IMMEX.
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ALERT, USUARIO_INFO } from '../../constantes/modificacion.constants';
+import { AVISO, Usuario } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { ALERT } from '../../constantes/modificacion.constants';
-import { AVISO } from '@ng-mf/data-access-user';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80206.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { ChangeDetectorRef } from '@angular/core';
@@ -115,6 +115,26 @@ export class RegistroPageComponent implements OnInit, OnDestroy {
    * @property {boolean} mostrarAlerta
    */
   mostrarAlerta: boolean = false;
+  /**
+   * Almacena la información del usuario actual.
+   * Contiene los datos del usuario que está utilizando el sistema, obtenidos de la constante USUARIO_INFO.
+   */
+  datosUsuario: Usuario = USUARIO_INFO;
+   /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+   /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
 
   /**
    * Constructor del componente.
@@ -166,8 +186,55 @@ export class RegistroPageComponent implements OnInit, OnDestroy {
     }
   }
 
- 
+    /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+   /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
 
+    /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+    
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
   /**
    * Método que se ejecuta cuando se destruye el componente.
    * Limpia el notifier para evitar fugas de memoria.
