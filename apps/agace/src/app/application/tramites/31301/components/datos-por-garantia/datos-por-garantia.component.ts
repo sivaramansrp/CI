@@ -118,11 +118,23 @@ export class DatosPorGarantiaComponent implements OnInit, OnDestroy {
   configuracionFechaInicioAnteriorVigencia: InputFecha =
     CONFIGURACION_FECHA_INICIO_ANTERIOR_VIGENCIA;
 
-  /** Configuración para el campo de fecha de fin de vigencia */
+  /**
+   * @description Configuración utilizada para el campo de **Fecha de fin de vigencia actual**.
+   * Define las propiedades de entrada como la etiqueta, si es requerido y si está habilitado.
+   *
+   * @type {InputFecha}
+   * @memberof NombreDeTuComponente
+   */
   configuracionFechaFinActualVigencia: InputFecha =
     CONFIGURACION_FECHA_FIN_ACTUAL_VIGENCIA;
 
-  /** Configuración para el campo de fecha de inicio de vigencia */
+  /**
+   * @description Configuración utilizada para el campo de **Fecha de inicio de vigencia actual**.
+   * Define las propiedades de entrada que controlan la etiqueta, si es requerido y su estado de habilitación.
+   *
+   * @type {InputFecha}
+   * @memberof NombreDeTuComponente
+   */
   configuracionFechaInicioActualVigencia: InputFecha =
     CONFIGURACION_FECHA_INICIO_ACTUAL_VIGENCIA;
 

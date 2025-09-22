@@ -1,19 +1,23 @@
+import {
+  DatosGeneralesDeLaSolicitudCatologo,
+  DatosGeneralesDeLaSolicitudDatos,
+  DatosGeneralesDeLaSolicitudRadioLista,
+  DatosPorGarantia,
+  Domicilios,
+  ModificacionDenominacionRazonSocial,
+  RecibirNotificaciones,
+  SeccionSociosIC,
+  SubContratistas,
+  TipoDeInversion,
+} from '../models/solicitud.model';
+import {
+  Solicitud31301State,
+  Solicitud31301Store,
+} from '../estados/solicitud31301.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { DatosGeneralesDeLaSolicitudCatologo } from '../models/solicitud.model';
-import { DatosGeneralesDeLaSolicitudDatos } from '../models/solicitud.model';
-import { DatosGeneralesDeLaSolicitudRadioLista } from '../models/solicitud.model';
-import { DatosPorGarantia } from '../models/solicitud.model';
-import { Domicilios } from '../models/solicitud.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ModificacionDenominacionRazonSocial } from '../models/solicitud.model';
 import { Observable } from 'rxjs';
-import { RecibirNotificaciones } from '../models/solicitud.model';
-import { SeccionSociosIC } from '../models/solicitud.model';
-import { Solicitud31301State } from '../estados/solicitud31301.store';
-import { Solicitud31301Store } from '../estados/solicitud31301.store';
-import { SubContratistas } from '../models/solicitud.model';
-import { TipoDeInversion } from '../models/solicitud.model';
 
 /**
  * Servicio encargado de obtener los datos necesarios para el llenado del formulario
