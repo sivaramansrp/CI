@@ -697,6 +697,10 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
           nombre: arr.nombre,
           apellidoPaterno: arr.apellidoPaterno,
           apellidoMaterno: arr.apellidoMaterno,
+          domicilioSolicitud: {
+            codigoPostal: arr.codigoPostal || arr.cp,
+            informacionExtra: arr.estado
+          }
         });
       });
     });
