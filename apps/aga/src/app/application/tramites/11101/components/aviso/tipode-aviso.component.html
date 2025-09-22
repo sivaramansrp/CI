@@ -143,7 +143,7 @@
           <div class="col-md-4">
             <label class="form-label" for="descripcion" >Descripcion<span [ngClass]="mercanciaForm.get('descripcion')?.invalid && 
               mercanciaForm.get('descripcion')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <textarea class="form-control" rows="3" id="descripcion" formControlName="descripcion" style="resize: vertical; overflow: hidden;height: auto;"
+            <textarea class="form-control textarea-container" rows="3" id="descripcion" formControlName="descripcion"
             [ngClass]="{'is-invalid': isInvalid('descripcion')}"></textarea>
             <div *ngIf="isInvalid('descripcion')" class="mensaje-error">
                 Este campo es obligatorio.
@@ -228,7 +228,7 @@
           <div class="col-md-9">
             <label class="form-label" for="especifique">Especifique<span [ngClass]="mercanciaForm.get('especifique')?.invalid && 
               mercanciaForm.get('especifique')?.touched ? 'text-danger' : ''">*</span>:</label>
-            <textarea class="form-control" rows="3" id="especifique" formControlName="especifique" style="resize: vertical; overflow: hidden;height: auto;"
+            <textarea class="form-control textarea-container" rows="3" id="especifique" formControlName="especifique"
             [ngClass]="{'is-invalid': isInvalid('especifique')}"></textarea>
             <div *ngIf="isInvalid('especifique')" class="mensaje-error">
                 Este campo es obligatorio.

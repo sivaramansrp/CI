@@ -8,3 +8,9 @@ label:has(+ app-catalogo-select .required) .require,
 .has-error label .require {
     color: #dc3545 !important;
 }
+
+.textarea-container {
+    resize: vertical; 
+    overflow: hidden;
+    height: auto;
+}
