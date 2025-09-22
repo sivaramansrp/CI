@@ -1042,4 +1042,135 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
     expect(component.domiciliosDatos.length).toBe(1);
     expect(component.domiciliosDatos[0].id).toBe(1);
   });
+
+  it('should remove the selected tipoDeInversionDatos and clear tipoSeleccionListo and open modal on confirmaPedimento(true)', () => {
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.tipoDeInversionDatos = [
+      { idRegistro: 1, desc: 'A' } as any,
+      { idRegistro: 2, desc: 'B' } as any,
+    ];
+    component.tipoSeleccionListo = [{ idRegistro: 1 }] as any;
+    component.confirmaPedimento(true);
+    expect(component.tipoDeInversionDatos).toEqual([{ idRegistro: 2, desc: 'B' }]);
+    expect(component.tipoSeleccionListo).toEqual([]);
+    expect(abrirModalSpy).toHaveBeenCalledWith(
+      'El registro seleccionado fue eliminado correctamente',
+      0
+    );
+  });
+
+  it('should do nothing on confirmaPedimento(true) if tipoSeleccionListo is empty', () => {
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.tipoDeInversionDatos = [
+      { idRegistro: 1, desc: 'A' } as any,
+      { idRegistro: 2, desc: 'B' } as any,
+    ];
+    component.tipoSeleccionListo = [];
+    component.confirmaPedimento(true);
+    expect(component.tipoDeInversionDatos.length).toBe(2);
+    expect(abrirModalSpy).not.toHaveBeenCalled();
+  });
+
+  it('should do nothing on confirmaPedimento(false)', () => {
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.tipoDeInversionDatos = [
+      { idRegistro: 1, desc: 'A' } as any,
+      { idRegistro: 2, desc: 'B' } as any,
+    ];
+    component.tipoSeleccionListo = [{ idRegistro: 1 }] as any;
+    component.confirmaPedimento(false);
+    expect(component.tipoDeInversionDatos.length).toBe(2);
+    expect(component.tipoSeleccionListo.length).toBe(1);
+    expect(abrirModalSpy).not.toHaveBeenCalled();
+  });
+
+  it('should remove domicilio and add pedimento and set eliminadosCorrectamenteNotificacion on eliminarPedimentoImmexNotificacion(true) with idRecinto', () => {
+    component.seleccionarDomiciliosDatos = [{ id: 1, idRecinto: 123 }] as any;
+    component.domiciliosDatos = [{ id: 1, idRecinto: 123 }, { id: 2 }] as any;
+    component.pedimentos = [];
+    component.elementoParaEliminar = 0;
+    component.eliminadosCorrectamenteNotificacion = undefined as any;
+    component.eliminarPedimentoImmexNotificacion(true);
+    expect(component.domiciliosDatos).toEqual([{ id: 2 }]);
+    expect(component.pedimentos.length).toBe(0);
+    expect(component.eliminadosCorrectamenteNotificacion).toBeDefined();
+    expect(component.seleccionarDomiciliosDatos).toEqual([]);
+  });
+
+  it('should just clear seleccionarDomiciliosDatos and remove pedimento if no idRecinto on eliminarPedimentoImmexNotificacion(true)', () => {
+    component.seleccionarDomiciliosDatos = [{ id: 1 }] as any;
+    component.domiciliosDatos = [{ id: 1 }, { id: 2 }] as any;
+    component.pedimentos = [{}, {}] as any;
+    component.elementoParaEliminar = 1;
+    component.eliminarPedimentoImmexNotificacion(true);
+    expect(component.domiciliosDatos.length).toBe(2);
+    expect(component.seleccionarDomiciliosDatos).toEqual([]);
+    expect(component.pedimentos.length).toBe(1);
+  });
+
+  it('should do nothing on eliminarPedimentoImmexNotificacion(false)', () => {
+    component.seleccionarDomiciliosDatos = [{ id: 1, idRecinto: 123 }] as any;
+    component.domiciliosDatos = [{ id: 1, idRecinto: 123 }, { id: 2 }] as any;
+    component.pedimentos = [{}, {}] as any;
+    component.elementoParaEliminar = 1;
+    component.eliminarPedimentoImmexNotificacion(false);
+    expect(component.domiciliosDatos.length).toBe(2);
+    expect(component.pedimentos.length).toBe(2);
+  });
+
+  it('should remove pedimento at elementoParaEliminar on eliminarCorrectamenteImmexNotificacion(true)', () => {
+    component.pedimentos = [{ a: 1 }, { a: 2 }, { a: 3 }] as any;
+    component.elementoParaEliminar = 1;
+    component.eliminarCorrectamenteImmexNotificacion(true);
+    expect(component.pedimentos).toEqual([{ a: 1 }, { a: 3 }]);
+  });
+
+  it('should do nothing on eliminarCorrectamenteImmexNotificacion(false)', () => {
+    component.pedimentos = [{ a: 1 }, { a: 2 }, { a: 3 }] as any;
+    component.elementoParaEliminar = 1;
+    component.eliminarCorrectamenteImmexNotificacion(false);
+    expect(component.pedimentos).toEqual([{ a: 1 }, { a: 2 }, { a: 3 }]);
+  });
+
+  it('should not throw if agregarMiembrosEmpresa called and modalElement is undefined', () => {
+    component.modalElement = undefined as any;
+    expect(() => component.agregarMiembrosEmpresa()).not.toThrow();
+  });
+
+
+  it('should not show modificarImmexProgram modal if seleccionarDomiciliosDatos.length !== 1', () => {
+    const showMock = jest.fn();
+    component.seleccionarDomiciliosDatos = [] as any;
+    component.modificarImmexProgramElement = { nativeElement: {} } as any;
+    global.Modal = function (el: any) { return { show: showMock }; };
+    component.modificarImmexProgramModel();
+    expect(showMock).not.toHaveBeenCalled();
+  });
+
+  it('should add pedimento and set eliminarImmexNotificacion with SE message if no idRecinto on eliminarImmexProgram', () => {
+    component.seleccionarDomiciliosDatos = [{ id: 1 }] as any;
+    component.pedimentos = [];
+    component.eliminarImmexProgram();
+    expect(component.eliminarImmexNotificacion).toBeDefined();
+    expect(component.eliminarImmexNotificacion.mensaje).toBe('No puede eliminar domicilios de la SE.');
+    expect(component.pedimentos.length).toBe(1);
+    expect(component.inputSelection).toBe(-1);
+  });
+
+  it('should add pedimento and set eliminarImmexNotificacion with confirm message if idRecinto on eliminarImmexProgram', () => {
+    component.seleccionarDomiciliosDatos = [{ id: 1, idRecinto: 123 }] as any;
+    component.pedimentos = [];
+    component.eliminarImmexProgram();
+    expect(component.eliminarImmexNotificacion).toBeDefined();
+    expect(component.eliminarImmexNotificacion.mensaje).toBe('¿Desea eliminar el registro seleccionado?');
+    expect(component.pedimentos.length).toBe(1);
+    expect(component.inputSelection).toBe(-1);
+  });
+
+  it('should do nothing if seleccionarDomiciliosDatos is empty on eliminarImmexProgram', () => {
+    component.seleccionarDomiciliosDatos = [] as any;
+    component.pedimentos = [];
+    component.eliminarImmexProgram();
+    expect(component.pedimentos.length).toBe(0);
+  });
 });

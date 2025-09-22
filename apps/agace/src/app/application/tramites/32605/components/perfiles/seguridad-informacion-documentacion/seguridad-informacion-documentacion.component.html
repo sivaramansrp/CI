@@ -18,9 +18,9 @@
 
             <div class="row mt-2 alert-text">
                 <div class="col-md-12 text-container">
-                    <p><span class="danger">*</span>Anexe el procedimiento documentado para el registro, control y
+                    <p>Anexe el procedimiento documentado para el registro, control y
                         almacenamiento de documentación impresa y electrónica (clasificación y archivo de documentos),
-                        debiendo incluir.</p>
+                        debiendo incluir<span class="danger">*</span>:</p>
                 </div>
             </div>
 
@@ -98,7 +98,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="encuentranFuera">
-                    <span class="danger">*</span>{{textos.etiqueta6}}
+                    {{textos.etiqueta6}}<span class="danger">*</span>:
                 </label>
                 <textarea id="encuentranFuera" class="custom-textarea" rows="6" cols="100" formControlName="encuentranFuera"
                     (change)="setValoresStore(seguridadInformacion,'encuentranFuera')"></textarea>
@@ -113,7 +113,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="actualizacionesSeguridad">
-                    <span class="danger">*</span>{{textos.etiqueta5}}
+                    {{textos.etiqueta5}}<span class="danger">*</span>:
                 </label>
                 <textarea id="actualizacionesSeguridad" class="custom-textarea" rows="6" cols="100"
                     formControlName="actualizacionesSeguridad"
@@ -129,7 +129,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="accesoLosMismos">
-                    <span class="danger">*</span>Señalar si los socios comerciales tienen acceso a los sistemas informáticos de la empresa. En su caso, indique qué programas y cómo controlan el acceso a los mismos.
+                    Señalar si los socios comerciales tienen acceso a los sistemas informáticos de la empresa. En su caso, indique qué programas y cómo controlan el acceso a los mismos<span class="danger">*</span>:
                 </label>
                 <textarea id="accesoLosMismos" class="custom-textarea" rows="6" cols="100" formControlName="accesoLosMismos"
                     (change)="setValoresStore(seguridadInformacion,'accesoLosMismos')"></textarea>
@@ -144,8 +144,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="continuidadNegocio">
-                    <span class="danger">*</span>Indique si el equipo de cómputo cuenta con un sistema de respaldo de
-                    suministro eléctrico que permita la continuidad del negocio.
+                    Indique si el equipo de cómputo cuenta con un sistema de respaldo de
+                    suministro eléctrico que permita la continuidad del negocio<span class="danger">*</span>:
                 </label>
                 <textarea id="continuidadNegocio" class="custom-textarea" rows="6" cols="100" formControlName="continuidadNegocio"
                     (change)="setValoresStore(seguridadInformacion,'continuidadNegocio')"></textarea>
@@ -160,7 +160,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="semanaCorresponda">
-                    <span class="danger">*</span>Los procedimientos referentes al respaldo de la información de la empresa también deberán incluir: Cómo y por cuánto tiempo se almacenan los datos (los datos deberían respaldarse una vez a la semana o según corresponda).
+                    Los procedimientos referentes al respaldo de la información de la empresa también deberán incluir: Cómo y por cuánto tiempo se almacenan los datos (los datos deberían respaldarse una vez a la semana o según corresponda)<span class="danger">*</span>:
                 </label>
                 <textarea id="semanaCorresponda" class="custom-textarea" rows="6" cols="100" formControlName="semanaCorresponda"
                     (change)="setValoresStore(seguridadInformacion,'semanaCorresponda')"></textarea>
@@ -175,9 +175,9 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="recuperarInformacion">
-                    <span class="danger">*</span>Indique el plan de continuidad del negocio en caso de incidente y de
+                    Indique el plan de continuidad del negocio en caso de incidente y de
                     cómo
-                    recuperar la información.
+                    recuperar la información<span class="danger">*</span>:
                 </label>
                 <textarea id="recuperarInformacion" class="custom-textarea" rows="6" cols="100" formControlName="recuperarInformacion"
                     (change)="setValoresStore(seguridadInformacion,'recuperarInformacion')"></textarea>
@@ -192,8 +192,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="informacionArchivada">
-                    <span class="danger">*</span>Indique la frecuencia y localización de las copias de seguridad y de la
-                    información archivada.
+                    Indique la frecuencia y localización de las copias de seguridad y de la
+                    información archivada<span class="danger">*</span>:
                 </label>
                 <textarea id="informacionArchivada" class="custom-textarea" rows="6" cols="100" formControlName="informacionArchivada"
                     (change)="setValoresStore(seguridadInformacion,'informacionArchivada')"></textarea>
@@ -208,8 +208,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="procesoDatos">
-                    <span class="danger">*</span>Si las copias de seguridad se almacenan en sitios alternativos a las
-                    instalaciones, indique donde se encuentra el centro de proceso de datos.
+                    Si las copias de seguridad se almacenan en sitios alternativos a las
+                    instalaciones, indique donde se encuentra el centro de proceso de datos<span class="danger">*</span>:
                 </label>
                 <textarea id="procesoDatos" class="custom-textarea" rows="6" cols="100" formControlName="procesoDatos"
                     (change)="setValoresStore(seguridadInformacion,'procesoDatos')"></textarea>
@@ -224,9 +224,9 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="copiasSeguridad">
-                    <span class="danger">*</span>Indique las pruebas que realiza para la validez de la recuperación de
+                    Indique las pruebas que realiza para la validez de la recuperación de
                     los
-                    datos a partir de copias de seguridad.
+                    datos a partir de copias de seguridad<span class="danger">*</span>:
                 </label>
                 <textarea id="copiasSeguridad" class="custom-textarea" rows="6" cols="100" formControlName="copiasSeguridad"
                     (change)="setValoresStore(seguridadInformacion,'copiasSeguridad')"></textarea>
@@ -241,9 +241,9 @@
 
             <div class="row mt-2 alert-text">
                 <div class="col-md-12 text-container">
-                    <p><span class="danger">*</span>Los procedimientos referentes a la protección de la información de
+                    <p>Los procedimientos referentes a la protección de la información de
                         la
-                        empresa, deben de incluir lo siguiente:</p>
+                        empresa, deben de incluir lo siguiente<span class="danger">*</span>:</p>
                 </div>
             </div>
 
@@ -268,7 +268,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="proteccionDeLaInformacion">
-                    <span class="danger">*</span>Describa el procedimiento referente a la protección de la información de la empresa.
+                    Describa el procedimiento referente a la protección de la información de la empresa<span class="danger">*</span>:
                 </label>
                 <textarea id="proteccionDeLaInformacion" class="custom-textarea" rows="6" cols="100"
                     formControlName="proteccionDeLaInformacion"
@@ -284,7 +284,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="perdidaDeLaInformacion">
-                    <span class="danger">*</span>Enuncie la politica para la protección de los sistemas informáticos de la empresa de accesos no autorizados y destrucción deliberada o  pérdida de la información.
+                    Enuncie la politica para la protección de los sistemas informáticos de la empresa de accesos no autorizados y destrucción deliberada o  pérdida de la información<span class="danger">*</span>:
                 </label>
                 <textarea id="perdidaDeLaInformacion" class="custom-textarea" rows="6" cols="100"
                     formControlName="perdidaDeLaInformacion"
@@ -300,7 +300,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="controlanSistemas">
-                    <span class="danger">*</span>Detalle si opera con sistemas múltiples (sedes/sitios) y cómo se controlan dichos sistemas.
+                    Detalle si opera con sistemas múltiples (sedes/sitios) y cómo se controlan dichos sistemas<span class="danger">*</span>:
                 </label>
                 <textarea id="controlanSistemas" class="custom-textarea" rows="6" cols="100" formControlName="controlanSistemas"
                     (change)="setValoresStore(seguridadInformacion,'controlanSistemas')"></textarea>
@@ -315,7 +315,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="accionesDelResto">
-                    <span class="danger">*</span>Mencione quién es responsable de la protección del sistema informático de la empresa (la responsabilidad no debería estar limitada a una persona, sino a varias, de forma que cada uno pueda controlar las acciones del resto).
+                    Mencione quién es responsable de la protección del sistema informático de la empresa (la responsabilidad no debería estar limitada a una persona, sino a varias, de forma que cada uno pueda controlar las acciones del resto)<span class="danger">*</span>:
                 </label>
                 <textarea id="accionesDelResto" class="custom-textarea" rows="6" cols="100" formControlName="accionesDelResto"
                     (change)="setValoresStore(seguridadInformacion,'accionesDelResto')"></textarea>
@@ -330,7 +330,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="sistemasConfidenciales">
-                    <span class="danger">*</span>{{textos.etiqueta}}
+                    {{textos.etiqueta}}<span class="danger">*</span>:
                 </label>
                 <textarea id="sistemasConfidenciales" class="custom-textarea" rows="6" cols="100"
                     formControlName="sistemasConfidenciales"
@@ -346,7 +346,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="proporcionaEsasContrasenas">
-                    <span class="danger">*</span>{{textos.etiqueta2}}
+                    {{textos.etiqueta2}}<span class="danger">*</span>
                 </label>
                 <textarea id="proporcionaEsasContrasenas" class="custom-textarea" rows="6" cols="100"
                     formControlName="proporcionaEsasContrasenas"
@@ -362,7 +362,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="actualizacionesPeriodicas">
-                    <span class="danger">*</span>{{textos.etiqueta3}}
+                    {{textos.etiqueta3}}<span class="danger">*</span>
                 </label>
                 <textarea id="actualizacionesPeriodicas" class="custom-textarea" rows="6" cols="100"
                     formControlName="actualizacionesPeriodicas"
@@ -378,7 +378,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="falsificadosLicencias">
-                    <span class="danger">*</span>Indique las medidas para prevenir el uso de productos tecnológicos falsificados o con licencias incorrectas (software y hardware).
+                    Indique las medidas para prevenir el uso de productos tecnológicos falsificados o con licencias incorrectas (software y hardware)<span class="danger">*</span>:
                 </label>
                 <textarea id="falsificadosLicencias" class="custom-textarea" rows="6" cols="100" formControlName="falsificadosLicencias"
                     (change)="setValoresStore(seguridadInformacion,'falsificadosLicencias')"></textarea>
@@ -393,7 +393,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="procesoDeImportacion">
-                    <span class="danger">*</span>{{textos.etiqueta4}}
+                    {{textos.etiqueta4}}<span class="danger">*</span>:
                 </label>
                 <textarea id="procesoDeImportacion" class="custom-textarea" rows="6" cols="100" formControlName="procesoDeImportacion"
                     (change)="setValoresStore(seguridadInformacion,'procesoDeImportacion')"></textarea>
@@ -408,7 +408,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="telecomunicaciones">
-                    <span class="danger">*</span>En caso de baja de personal, indique el procedimiento para eliminar al momento de la separacion del empleado, el acceso equipos de cómputo, telecomunicaciones y red, esto incluye cuentas de correo electrónico, cuentas de accesos a sistemas, software, programas, etcétera.
+                    En caso de baja de personal, indique el procedimiento para eliminar al momento de la separacion del empleado, el acceso equipos de cómputo, telecomunicaciones y red, esto incluye cuentas de correo electrónico, cuentas de accesos a sistemas, software, programas, etcétera<span class="danger">*</span>:
                 </label>
                 <textarea id="telecomunicaciones" class="custom-textarea" rows="6" cols="100" formControlName="telecomunicaciones"
                     (change)="setValoresStore(seguridadInformacion,'telecomunicaciones')"></textarea>
@@ -423,8 +423,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="sistemaComprometido">
-                    <span class="danger">*</span>Indique las medidas previstas para tratar incidentes en caso de que el
-                    sistema se vea comprometido.
+                    Indique las medidas previstas para tratar incidentes en caso de que el
+                    sistema se vea comprometido<span class="danger">*</span>:
                 </label>
                 <textarea id="sistemaComprometido" class="custom-textarea" rows="6" cols="100" formControlName="sistemaComprometido"
                     (change)="setValoresStore(seguridadInformacion,'sistemaComprometido')"></textarea>
