@@ -760,7 +760,20 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     return RESULT;
 }
 
-
+buildServico(arr: any[]): any[] {
+  return arr.map(item => ({
+    "tipoServicio": item.tipode,
+    "testado": item.testado,
+    "claveServicio": item.clave,
+    "descripcion": item.descripionDelServicio,
+    "descripcionTipo": item.descripcionTipo,
+    "descripcionTestado": item.descripcionTestado,
+    "estatus": item.estatus,
+    "desEstatus": item.desEstatus,
+    "fecIniVigencia": item.fecIniVigencia,
+    "fecFinVigencia": item.fecFinVigencia
+  }));
+}
   /**
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
    * 
@@ -775,7 +788,7 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     const PLANTAS = this.buildPlantas(data.tablaDatosFederatarios, this.plantasBase, data);
     const ANEXO_ALL = this.buildAnexo(data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase, data);
-    
+    const SERVICIOS = this.buildServico(data.datosImmex);
     const PAYLOAD = {
     "tipoDeSolicitud": "guardar",
     "idSolicitud": 202781045,
@@ -810,6 +823,7 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
           },
         }
     ],
+    "servicios": SERVICIOS,
     "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
     "sociosAccionistas": SOCIO_ACCIONISTAS,
     "empresasNacionales": EMPRESAS_NACIONALES,
