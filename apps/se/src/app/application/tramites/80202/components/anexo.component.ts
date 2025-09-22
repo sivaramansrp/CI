@@ -660,10 +660,6 @@ this.nuevaNotificacion = {
       this.immexRegistroform.get('exportacionForm')?.reset();
       this.immexRegistroform.get('exportacionForm')?.markAsUntouched();
       this.immexRegistroform.get('exportacionForm')?.markAsPristine();
-      this.immexTableDatos = [];
-      this.fraccionTablaDatos = [];
-      this.selectedRowData = null;
-      this.fraccionInfoSelected = null;
       this.eliminarDatosTablaExportacion=true;
       }
       else{
@@ -1099,10 +1095,12 @@ estatus:true
 
     eliminarPedimentoDatoss(borrar: boolean):void{
       if(borrar && this.selectedRowData !== null){
-
-  this.immexTableDatos =[];
       this.selectedRowData=null;
       this.firstloadCompleted=false;
+        this.immexTableDatos = [];
+      this.fraccionTablaDatos = [];
+      this.selectedRowData = null;
+      this.fraccionInfoSelected = null;
       }
   this.nuevaNotificacion = {} as Notificacion;
       this.eliminarDatosTablaExportacion=false;
