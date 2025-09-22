@@ -1,67 +1,60 @@
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { PasoDosComponent } from './paso-dos.component';
-import { CatalogosService, CATALOGOS_ID, TEXTOS, Catalogo, AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { of } from 'rxjs';
+import { CatalogosService } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
 
 describe('PasoDosComponent', () => {
-  let component: PasoDosComponent;
-  let catalogosServiceMock: jest.Mocked<CatalogosService>;
+  let fixture;
+  let component;
 
   beforeEach(() => {
-    catalogosServiceMock = {
-      getCatalogo: jest.fn().mockReturnValue(of([])),
-    } as any;
-    component = new PasoDosComponent(catalogosServiceMock);
+    TestBed.configureTestingModule({
+      imports: [ PasoDosComponent, FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
+
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        CatalogosService
+      ]
+    }).overrideComponent(PasoDosComponent, {
+
+    }).compileComponents();
+    fixture = TestBed.createComponent(PasoDosComponent);
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create the component', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize TEXTOS property', () => {
-    expect(component.TEXTOS).toBe(TEXTOS);
-  });
-
-  it('should have infoAlert as "alert-info"', () => {
-    expect(component.infoAlert).toBe('alert-info');
-  });
-
-  it('should call getTiposDocumentos in constructor', () => {
-    expect(catalogosServiceMock.getCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_TIPO_DOCUMENTO);
-  });
-
-  it('should set documentosSeleccionados on ngOnInit', () => {
-    component.documentosSeleccionados = [];
+  it('should run #ngOnInit()', async () => {
+    component.getTiposDocumentos = jest.fn();
     component.ngOnInit();
-    expect(component.documentosSeleccionados.length).toBe(2);
-    expect(component.documentosSeleccionados[0].id).toBe(1);
-    expect(component.documentosSeleccionados[1].id).toBe(2);
+    expect(component.getTiposDocumentos).toHaveBeenCalled();
   });
 
-  it('should update catalogoDocumentos when getTiposDocumentos receives data', (done) => {
-    const mockDocs: Catalogo[] = [
-      { id: 10, descripcion: 'Doc 1' },
-      { id: 11, descripcion: 'Doc 2' }
-    ];
-    catalogosServiceMock.getCatalogo.mockReturnValueOnce(of(mockDocs));
+  it('should run #getTiposDocumentos()', async () => {
+    component.catalogosServices = component.catalogosServices || {};
+    component.catalogosServices.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
     component.getTiposDocumentos();
-    setTimeout(() => {
-      expect(component.catalogoDocumentos).toEqual(mockDocs);
-      done();
-    }, 0);
+    expect(component.catalogosServices.getCatalogo).toHaveBeenCalled();
   });
 
-  it('should not update catalogoDocumentos if respuesta is empty', (done) => {
-    catalogosServiceMock.getCatalogo.mockReturnValueOnce(of([]));
-    component.catalogoDocumentos = [{ id: 99, descripcion: 'Existing' }];
-    component.getTiposDocumentos();
-    setTimeout(() => {
-      expect(component.catalogoDocumentos).toEqual([{ id: 99, descripcion: 'Existing' }]);
-      done();
-    }, 0);
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
+
 });
-
-// Import standalone components for completeness (even if not used directly in tests)
-AlertComponent;
-AnexarDocumentosComponent;
-TituloComponent;

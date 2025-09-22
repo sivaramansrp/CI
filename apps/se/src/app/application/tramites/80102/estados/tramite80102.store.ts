@@ -1002,6 +1002,28 @@ export class Tramite80102Store extends Store<Tramite80102State> {
       tablaDatosFederatarios: [...state.tablaDatosFederatarios, formaFederatarios],
     }));
   }
+
+  /**
+   * @method eliminarFederatarios
+   * @description Elimina federatarios del estado actual de la tienda.
+   */
+  setPlantasDisponiblesTablaLista(plantas: PlantasDisponibles[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasDisponiblesTablaLista: [...state.plantasDisponiblesTablaLista, ...plantas],
+    }));
+  }
+
+  /**
+   * @method setPlantasImmexTablaLista
+   * @description Actualiza la lista de plantas IMMEX en el estado de la tienda.
+   */
+  setPlantasImmexTablaLista(plantasImmex: PlantasImmex[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasImmexTablaLista: [...state.plantasImmexTablaLista, ...plantasImmex],
+    }));
+  }
   /**
    * Actualiza el estado con los datos complementarios proporcionados.
    *

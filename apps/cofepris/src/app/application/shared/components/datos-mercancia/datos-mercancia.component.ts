@@ -18,6 +18,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import {
+  CAMPOS_CLAVE,
   CROSLISTA_DE_PAISES,
   DATOS_MERCANCIA_CAMPO,
   DATOS_MERCANCIA_CLAVE_TABLA,
@@ -35,6 +36,8 @@ import {
 import {
   CatalogoSelectComponent,
   CrosslistComponent,
+  InputFecha,
+  InputFechaComponent,
   Notificacion,
   NotificacionesComponent,
   Pedimento,
@@ -45,6 +48,10 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
+import {
+  FECHA_DE_CADUCIDAD_PAGO,
+  FECHA_DE_FABRICACIO_PAGO,
+} from '../../models/terceros-relacionados.model';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { DetalleMercancia } from '../../models/detalle-mercancia.model';
 import { DetalleMercanciaComponent } from '../detalle-mercancia/detalle-mercancia.component';
@@ -68,6 +75,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     TablaDinamicaComponent,
     TooltipModule,
     NotificacionesComponent,
+    InputFechaComponent,
   ],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
@@ -587,6 +595,18 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
   public claveLista: TablaMercanciaClaveConfig[] = [];
 
   /**
+   * @property {InputFecha} fechaDeFabricacioInput
+   * Objeto con la configuración de la fecha inicial del componente.
+   */
+  fechaDeFabricacioInput: InputFecha = FECHA_DE_FABRICACIO_PAGO;
+
+  /**
+   * @property {InputFecha} fechaDeCaducidadInput
+   * Objeto con la configuración de la fecha inicial del componente.
+   */
+  fechaDeCaducidadInput: InputFecha = FECHA_DE_CADUCIDAD_PAGO;
+
+  /**
    * @method crossListRequirdos
    * @description Actualiza las etiquetas de los crosslists según los elementos requeridos.
    * Esta función verifica si los elementos requeridos están presentes y actualiza las etiquetas
@@ -662,7 +682,11 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
           'paisDeProcedencia',
           'usoEspecífico',
         ];
-        this.elementosAnadidos = ['especifique','especifiqueForma','especifiqueEstado'];
+        this.elementosAnadidos = [
+          'especifique',
+          'especifiqueForma',
+          'especifiqueEstado',
+        ];
         this.elementosMandatorios = ['especifiqueEstado'];
         this.elementosBelow = true;
         break;
@@ -680,6 +704,23 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
           'fechaCaducidad',
         ];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
+      case 260101:
+        this.elementosNoValidos = [
+          'denominacionDistintiva',
+          'denominacionComun',
+          'formaFarmaceutica',
+          'estadoFisico',
+          'presentacion',
+          'numeroRegistroSanitario',
+          'fechaCaducidad',
+        ];
+        this.elementosAnadidos = [
+          'marca',
+          'claveDeLos',
+          'fechaDeFabricacio',
+          'fechaDeCaducidad',
+        ];
         break;
       default:
         if (this.detalleMercancia) {
@@ -759,16 +800,18 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
     const FABRICACION = this.mercanciaForm.get('fechaDeFabricacio')?.value;
     const CADUCIDAD = this.mercanciaForm.get('fechaDeCaducidad')?.value;
     if (CLAVE && FABRICACION && CADUCIDAD) {
-      this.claveConfig.datos.push({
-        clave: CLAVE,
-        fabricacion: FABRICACION,
-        caducidad: CADUCIDAD,
-      });
-      this.mercanciaForm.patchValue({
-        claveDeLos: '',
-        fechaDeFabricacio: '',
-        fechaDeCaducidad: '',
-      });
+      this.claveConfig.datos = [
+        ...this.claveConfig.datos,
+        {
+          id: (this.claveConfig.datos.length || 0) + 1,
+          clave: CLAVE,
+          fabricacion: FABRICACION,
+          caducidad: CADUCIDAD,
+        },
+      ];
+      this.mercanciaForm.get('claveDeLos')?.reset();
+      this.mercanciaForm.get('fechaDeFabricacio')?.reset();
+      this.mercanciaForm.get('fechaDeCaducidad')?.reset();
     }
   }
 
@@ -817,7 +860,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    *
    * @returns void
    */
-  crearMercanciaForm(): void { 
+  crearMercanciaForm(): void {
     const PAIS_DE_ORIGEN = this.obtenerValor('paisDeOriginDatos') || [];
     const USO_ESPECIFICOS = this.obtenerValor('usoEspecifico') || [];
     const PAIS_DE_PROCEDENCIA =
@@ -1056,6 +1099,26 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * @returns {void} Este método no devuelve ningún valor.
    */
   agregarMercancia(): void {
+    if (
+      this.elementosAnadidos.includes('claveDeLos') &&
+      this.idProcedimiento === 260101 &&
+      this.claveConfig.datos.length > 0
+    ) {
+      CAMPOS_CLAVE.forEach(
+        (controlName) =>
+          this.mercanciaForm.get(controlName)?.clearValidators() ||
+          this.mercanciaForm.get(controlName)?.updateValueAndValidity()
+      );
+    } else if (
+      this.elementosAnadidos.includes('claveDeLos') &&
+      this.idProcedimiento === 260101 &&
+      this.claveConfig.datos.length === 0
+    ) {
+      CAMPOS_CLAVE.forEach((controlName) => {
+        this.mercanciaForm.get(controlName)?.setValidators(Validators.required);
+        this.mercanciaForm.get(controlName)?.updateValueAndValidity();
+      });
+    }
     if (this.mercanciaForm.invalid) {
       this.mercanciaForm.markAllAsTouched();
       return;
@@ -1147,19 +1210,18 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
     if (!FRACCION || FRACCION.length < 8) {
       this.mercanciaForm.get('descripcionFraccion')?.setValue('');
       this.mercanciaForm.get('cantidadUmt')?.setValue('');
-    } else if(FRACCION.length === 8){
-        if (isNaN(Number(FRACCION))) {
-          this.abrirModal();
-        } else {
-          this.mercanciaForm
-            .get('descripcionFraccion')
-            ?.setValue(DESCRIPCION_FRACCION_DESHABILITADO_VALOR);
-          this.mercanciaForm
-            .get('cantidadUmt')
-            ?.setValue(UMT_DESHABILITADO_VALOR);
-        }
+    } else if (FRACCION.length === 8) {
+      if (isNaN(Number(FRACCION))) {
+        this.abrirModal();
+      } else {
+        this.mercanciaForm
+          .get('descripcionFraccion')
+          ?.setValue(DESCRIPCION_FRACCION_DESHABILITADO_VALOR);
+        this.mercanciaForm
+          .get('cantidadUmt')
+          ?.setValue(UMT_DESHABILITADO_VALOR);
       }
-    
+    }
   }
   /**
    * Valida la longitud de la fracción arancelaria ingresada en el formulario.
@@ -1167,10 +1229,12 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * de lo contrario, lo establece en false.
    * */
   public validarFraccionArancelaria(): void {
-    const FRACCION_ARANCELARIA = this.mercanciaForm.get('fraccionArancelaria')?.value;
-    if(FRACCION_ARANCELARIA.length < 8){
+    const FRACCION_ARANCELARIA = this.mercanciaForm.get(
+      'fraccionArancelaria'
+    )?.value;
+    if (FRACCION_ARANCELARIA.length < 8) {
       this.showLimitError = true;
-    }else{
+    } else {
       this.showLimitError = false;
     }
   }
@@ -1184,6 +1248,34 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
+  }
+
+  /**
+   * Actualiza el valor del campo `fechaDeFabricacio` en el formulario `mercanciaForm`.
+   *
+   * @param valor - Cadena que representa la fecha de fabricación seleccionada.
+   *
+   * @example
+   * this.fechaDeFabricacioValor('17/09/2025');
+   */
+  fechaDeFabricacioValor(valor: string): void {
+    this.mercanciaForm.patchValue({
+      fechaDeFabricacio: valor,
+    });
+  }
+
+  /**
+   * Actualiza el valor del campo `fechaDeCaducidad` en el formulario `mercanciaForm`.
+   *
+   * @param valor - Cadena que representa la fecha de caducidad seleccionada.
+   *
+   * @example
+   * this.fechaDeCaducidadValor('01/01/2026');
+   */
+  fechaDeCaducidadValor(valor: string): void {
+    this.mercanciaForm.patchValue({
+      fechaDeCaducidad: valor,
+    });
   }
 
   /**

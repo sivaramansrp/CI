@@ -272,6 +272,7 @@
                 <input type="text" class="form-control" 
                     id="puntoIngreso" 
                     formControlName="puntoIngreso"
+                    maxlength="200"
                     [ngClass]="isValid('puntoIngreso') ? 'required' : ''"
                     (change)="setValoresStore(formCombinacion,'puntoIngreso', 'setpuntoIngreso')">
             </div>

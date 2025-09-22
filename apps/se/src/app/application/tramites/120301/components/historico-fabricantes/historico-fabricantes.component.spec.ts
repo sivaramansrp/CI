@@ -62,6 +62,35 @@ class MyCustomDirective {
   @Input() myCustom;
 }
 
+describe('HistoricoFabricantesComponent', () => {
+  let component;
+  let fixture;
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HistoricoFabricantesComponent, ReactiveFormsModule, FormsModule],
+      declarations: [],
+      providers: [
+        FormBuilder,
+        { provide: ElegibilidadDeTextilesStore, useClass: MockElegibilidadDeTextilesStore },
+        { provide: ElegibilidadDeTextilesQuery, useClass: MockElegibilidadDeTextilesQuery },
+        { provide: ElegibilidadTextilesService, useClass: MockElegibilidadTextilesService },
+        { provide: SeccionLibStore, useClass: MockSeccionLibStore },
+        { provide: SeccionLibQuery, useClass: MockSeccionLibQuery }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
+    }).compileComponents();
+    fixture = TestBed.createComponent(HistoricoFabricantesComponent);
+    component = fixture.componentInstance;
+  });
+  it('debe crear el componente correctamente', () => {
+    expect(component).toBeTruthy();
+  });
+  it('debe inicializar el formulario en español', () => {
+    component.ngOnInit();
+    expect(component.historicoFabricantesForm).toBeDefined();
+  });
+});
+
 @Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
   transform(value: any): any {
