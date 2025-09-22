@@ -22,6 +22,7 @@ import {
 import { Subject, map, take, takeUntil } from 'rxjs';
 import { Tramite80102State, Tramite80102Store } from '../../estados/tramite80102.store';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
+import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -50,6 +51,7 @@ interface AccionBoton {
   styles: ``,
   host: { hostID: crypto.randomUUID().toString() },
   imports: [
+    CommonModule,
     WizardComponent,
     PasoUnoComponent,
     PasoDosComponent,
