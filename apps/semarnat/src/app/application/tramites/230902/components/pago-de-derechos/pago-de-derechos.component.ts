@@ -237,6 +237,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     this.tramite230902Store.establecerDatos({ [campo]: VALOR });
   }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de pago de derechos.
+   * Verifica que todos los campos requeridos del formulario sean válidos antes de permitir el envío o avance.
+   * Si el formulario es válido, retorna `true`.
+   * Si el formulario es inválido, marca todos los controles como "tocados" para mostrar los errores de validación y retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (this.formPagoDerechos.valid) {
+      return true;
+    }
+    this.formPagoDerechos.markAllAsTouched();
+    return false
+  }
 
   /**
    * Limpia las suscripciones cuando el componente se destruye.

@@ -190,6 +190,14 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
    * no se ha seleccionado ningún registro).
    */
   public nuevaNotificacionEliminar!: Notificacion;
+  /**
+   * @property {boolean} tablaError
+   * @description
+   * Indica si hay un error relacionado con la tabla de mercancías.
+   * Se establece a `true` cuando se intenta validar el formulario pero la tabla de datos está vacía,
+   * mostrando un mensaje de error para indicar que se requiere al menos una mercancía en la tabla.
+   */
+  tablaError: boolean = false;
 
   /**
    * Constructor del componente.
@@ -838,6 +846,31 @@ export class DatosSolicitudComponent implements OnInit, AfterViewInit, OnDestroy
    */
   cerrarSinEliminar(): void {
     this.sinEliminar = false;
+  }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida los formularios de solicitud y mercancía del componente.
+   * Verifica que ambos formularios sean válidos antes de permitir el envío o avance.
+   * Si algún formulario es inválido:
+   * - Establece `tablaError` basándose en si existen datos en la tabla
+   * - Marca todos los controles como "tocados" para mostrar los errores de validación
+   * - Retorna `false` para indicar que la validación falló
+   * 
+   * @returns {boolean} `true` si ambos formularios son válidos, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (this.formSolicitud.valid) {
+      if(this.tablaDatos.length > 0) {
+        return true;
+      }
+    }
+    this.tablaError = this.tablaDatos.length === 0 ? true : false;
+    this.formSolicitud.markAllAsTouched();
+    if(this.formMercancia) {
+      this.formMercancia.markAllAsTouched();
+    }
+    return false
   }
 
   /**

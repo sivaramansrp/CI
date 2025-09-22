@@ -6,6 +6,9 @@
         <app-catalogo-select [catalogo]="permisoCitesService.tipodeMovimiento" formControlName="tipodeMovimiento"
           [label]="'Tipo de movimiento'" [required]="true" [isDisabled]="esFormularioSoloLectura" name="tipodeMovimiento"
           (change)="cambiarTipoDeMovimiento()"></app-catalogo-select>
+          <div *ngIf="formSolicitud.get('tipodeMovimiento')?.touched && formSolicitud.get('tipodeMovimiento')?.invalid">
+          <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+          </div>
       </div>
     </div>
     
@@ -16,6 +19,9 @@
         <app-catalogo-select [catalogo]="permisoCitesService.tipoRegimen" formControlName="tipoRegimen"
           [label]="'Tipo de régimen'" [required]="true" name="tipoRegimen" [isDisabled]="esFormularioSoloLectura"
           (change)="setValoresStore(formSolicitud, 'tipoRegimen')"></app-catalogo-select>
+          <div *ngIf="formSolicitud.get('tipoRegimen')?.touched && formSolicitud.get('tipoRegimen')?.invalid">
+          <small *ngIf="formSolicitud.get('tipoRegimen')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+        </div>
       </div>
     </div>
     <ng-titulo [titulo]="
@@ -46,6 +52,9 @@
         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         (listaDeFilaSeleccionada)="hadleFilaSeleccionada($event)"
       ></app-tabla-dinamica>
+      <div *ngIf="tablaError">
+          <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+        </div>
       </div>
 
       <nav aria-label="Page navigation example mt-3">
@@ -105,6 +114,7 @@
                 [label]="'Fracción arancelaria'"
                 [required]="true"
                 [isDisabled]="otraFraccionSeleccionada"
+                (change)="setValoresStore(formMercancia,'fraccionArancelaria')"
               ></app-catalogo-select>
             </div>
             <div class="col-md-7">
@@ -120,6 +130,7 @@
                   type="text"
                   formControlName="fraccionDescripcion"
                   class="form-control"
+                  (change)="setValoresStore(formMercancia,'fraccionDescripcion')"
                 />
               </div>
             </div>
@@ -131,7 +142,7 @@
                   id="otraFraccion"
                   type="checkbox"
                   formControlName="otraFraccion"
-                  (change)="manejarCambioOtraFraccion()"
+                  (change)="manejarCambioOtraFraccion(); setValoresStore(formMercancia,'otraFraccion')"
                   class="form-check-input"
                 />
                 <label class="form-check-label" for="otraFraccion"
@@ -153,6 +164,7 @@
                   formControlName="fraccionVigenteTIGIE"
                   class="form-control"
                   maxlength="8"
+                  (change)="setValoresStore(formMercancia,'fraccionVigenteTIGIE')"
                 />
               </div>
             </div>
@@ -169,6 +181,7 @@
                 class="form-control"
                 rows="4"
                 [required]="true"
+                (change)="setValoresStore(formMercancia,'descripcion')"
               ></textarea>
               <div *ngIf="esInvalido('descripcion')" class="text-danger">
                 <small
@@ -191,6 +204,7 @@
                 class="form-control"
                 rows="4"
                 formControlName="rendimientoProducto"
+                (change)="setValoresStore(formMercancia,'rendimientoProducto')"
               ></textarea>
               <small *ngIf="formMercancia.controls['rendimientoProducto'].hasError('maxlength')" class="text-danger">Por favor, no escribas más de 1000 caracteres</small>
             </div>
@@ -205,6 +219,7 @@
                 formControlName="clasificacionTaxonomica"
                 [label]="'Clasificación taxonómica'"
                 [required]="true"
+                (change)="setValoresStore(formMercancia,'clasificacionTaxonomica')"
               ></app-catalogo-select>
             </div>
             <div class="col-md-4">
@@ -214,6 +229,7 @@
                 formControlName="nombreCientifico"
                 [label]="'Nombre científico'"
                 [required]="true"
+                (change)="setValoresStore(formMercancia,'nombreCientifico')"
               ></app-catalogo-select>
             </div>
           </div>
@@ -225,6 +241,7 @@
                 formControlName="nombreComun"
                 [label]="'Nombre común'"
                 [required]="true"
+                (change)="setValoresStore(formMercancia,'nombreComun')"
               ></app-catalogo-select>
             </div>
           </div>
@@ -244,6 +261,7 @@
                   [required]="true"
                   maxlength="200"
                   [class.is-invalid]="formMercancia.get('marca')?.touched && formMercancia.get('marca')?.invalid"
+                  (change)="setValoresStore(formMercancia,'marca')"
                 />
               </div>
               <div *ngIf="esInvalido('marca')" class="text-danger">
@@ -261,6 +279,7 @@
                   [required]="true"
                   [class.is-invalid]="formMercancia.get('cantidad')?.touched && formMercancia.get('cantidad')?.invalid"
                   maxlength="16"
+                  (change)="setValoresStore(formMercancia,'cantidad')"
                 />
                 
                 <div *ngIf="esInvalido('cantidad')" class="text-danger">
@@ -283,6 +302,7 @@
                 [catalogo]="permisoCitesService.unidadMedida"
                 [label]="'Unidad de medida'"
                 [required]="true"
+                (change)="setValoresStore(formMercancia,'unidadMedida')"
               ></app-catalogo-select>
             </div>
           </div>
@@ -294,6 +314,7 @@
                 [catalogo]="permisoCitesService.paisOrigen"
                 [label]="'País de origen'"
                 [required]="true"
+                (change)="setValoresStore(formMercancia,'paisOrigen')"
               ></app-catalogo-select>
             </div>
             <div class="col-md-4">
@@ -303,6 +324,7 @@
                 [catalogo]="permisoCitesService.paisProcedencia"
                 [label]="'País de procedencia'"
                 [required]="true"
+                (change)="setValoresStore(formMercancia,'paisProcedencia')"
               ></app-catalogo-select>
             </div>
           </div>
