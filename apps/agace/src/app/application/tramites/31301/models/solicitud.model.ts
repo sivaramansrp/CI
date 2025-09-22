@@ -35,7 +35,7 @@ export interface ModificacionDenominacionRazonSocial {
  */
 export interface DatosPorGarantia {
   /** Póliza de fianza actual */
-  polizaDeFianzaActual: number;
+  polizaDeFianza: number | string;
 
   /** Número de folio de la garantía */
   numeroFolio: string;
@@ -60,6 +60,99 @@ export interface DatosPorGarantia {
 
   /** Importe total cubierto por la garantía */
   importeTotal: string;
+
+  /** Monto de la ampliación de la garantía */
+  montoAmpliaActual: string;
+
+  /** Monto garantizado actual */
+  montoGarantizadoActual: string;
+
+  /**
+   * Identificador de la póliza de fianza anterior.
+   * Puede ser un número o una cadena según el contexto.
+   */
+  polizaDeFianzaAnterior: number | string;
+
+  /**
+   * Número de folio de la póliza de fianza anterior.
+   */
+  numeroFolioAnterior: string;
+
+  /**
+   * RFC de la institución emisora de la póliza de fianza anterior.
+   */
+  rfcInstitucionAnterior: string;
+
+  /**
+   * Fecha de expedición de la póliza de fianza anterior.
+   */
+  fechaExpedicionAnterior: string;
+
+  /**
+   * Fecha de inicio de vigencia no anterior de la póliza.
+   */
+  fechaInicioVigenciaNoAnterior: string;
+
+  /**
+   * Fecha de fin de vigencia no anterior de la póliza.
+   */
+  fechaFinVigenciaNoAnterior: string;
+
+  /**
+   * Fecha de inicio de vigencia anterior de la póliza.
+   */
+  fechaInicioVigenciaAnterior: string;
+
+  /**
+   * Fecha de fin de vigencia anterior de la póliza.
+   */
+  fechaFinVigenciaAnterior: string;
+
+  /**
+   * Importe total de la póliza de fianza anterior.
+   */
+  importeTotalAnterior: string;
+
+  /**
+   * Identificador de la póliza de fianza actual.
+   * Puede ser un número o una cadena según el contexto.
+   */
+  polizaDeFianzaActual: number | string;
+
+  /**
+   * Número de folio de la póliza de fianza actual.
+   */
+  numeroFolioActual: string;
+
+  /**
+   * RFC de la institución emisora de la póliza de fianza actual.
+   */
+  rfcInstitucionActual: string;
+
+  /**
+   * Fecha de expedición de la póliza de fianza actual.
+   */
+  fechaExpedicionActual: string;
+
+  /**
+   * Fecha de inicio de vigencia no actual de la póliza.
+   */
+  fechaInicioVigenciaNoActual: string;
+
+  /**
+   * Fecha de fin de vigencia no actual de la póliza.
+   */
+  fechaFinVigenciaNoActual: string;
+
+  /**
+   * Fecha de inicio de vigencia actual de la póliza.
+   */
+  fechaInicioVigenciaActual: string;
+
+  /**
+   * Fecha de fin de vigencia actual de la póliza.
+   */
+  fechaFinVigenciaActual: string;
 }
 
 /**
@@ -479,7 +572,7 @@ export interface DatosGeneralesDeLaSolicitudDatos {
  * Representa el conjunto de mensajes informativos que se muestran
  * en el sistema relacionados con los requisitos legales o fiscales
  * según el tipo de garantía presentada.
- * 
+ *
  * Cada propiedad corresponde a un bloque de texto utilizado en la
  * interfaz para orientar al usuario sobre las obligaciones normativas.
  */
@@ -621,5 +714,3 @@ export interface LabelModels {
   /** Declaración bajo protesta sobre veracidad y representación legal. */
   alertInfoTres: string;
 }
-
-

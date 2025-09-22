@@ -147,6 +147,7 @@ export interface NicoInfo {
 export interface ImmexRegistroform {
   Nicos:string;
   
+  
   productoDescExportacions:string;
   /**
    * @description Cantidad de productos que se pueden producir o procesar en un periodo específico.
@@ -382,6 +383,10 @@ export interface immexInfo {
 
   /** Cantidad por periodo # */
   cantidadPorPeriodo: number;
+
+  Nicos?:number;
+  
+  productoDescExportacions?:string;
 }
 
 /**

@@ -283,7 +283,7 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
       sistemaControlInventariosArt59: ['', [Validators.required]],
       nombreSistema: [{ value: this.seccionState?.nombreSistema, disabled: !this.radioSeleccionado }, [Validators.required]],
       lugarRadicacion: [{ value: this.seccionState?.lugarRadicacion, disabled: !this.radioSeleccionado }, [Validators.required]],
-      cumpleAnexo24: [false],
+      cumpleAnexo24: [{ value: false, disabled: !this.radioSeleccionado }],
     });
 
     this.modificarRegistroControlInventariosForm = this.fb.group({
@@ -793,11 +793,13 @@ export class ControlInventariosComponent implements OnInit, OnDestroy {
       // Habilitar campos del formulario principal
       this.registroControlInventariosForm.get('nombreSistema')?.enable();
       this.registroControlInventariosForm.get('lugarRadicacion')?.enable();
+      this.registroControlInventariosForm.get('cumpleAnexo24')?.enable();
     } else {
       this.radioSeleccionado = false;
       // Deshabilitar campos del formulario principal
       this.registroControlInventariosForm.get('nombreSistema')?.disable();
       this.registroControlInventariosForm.get('lugarRadicacion')?.disable();
+      this.registroControlInventariosForm.get('cumpleAnexo24')?.disable();
     }
   }
 
