@@ -245,7 +245,7 @@ export class CTPATComponent implements OnInit, OnDestroy {
       tipoNotificacion: TipoNotificacionEnum.ALERTA,
       categoria: CategoriaMensaje.ALERTA,
       modo: 'modal',
-      titulo: '',
+      titulo: 'Mensaje',
       mensaje: datos,
       cerrar: false,
       txtBtnAceptar: 'Aceptar',

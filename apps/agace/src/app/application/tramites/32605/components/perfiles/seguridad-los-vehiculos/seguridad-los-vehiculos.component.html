@@ -37,7 +37,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label>
-                    <span class="danger">*</span>De acuerdo a su análisis de riesgo y su proceso logístico, enlista los medios de transporte que están sujetos a la colocación de sellos y/o candados de alta seguridad.
+                    De acuerdo a su análisis de riesgo y su proceso logístico, enlista los medios de transporte que están sujetos a la colocación de sellos y/o candados de alta seguridad<span class="danger">*</span>:
                 </label>
                 <textarea id="candadosSeguridad" class="custom-textarea" rows="6" cols="100" formControlName="candadosSeguridad" (change)="setValoresStore(seguridad,'candadosSeguridad')"></textarea>
                 <span
@@ -49,7 +49,7 @@
 
             <div class="row mt-2 alert-text">
                 <div class="col-md-12 text-container">
-                    <p><span class="danger">*</span>Anexar el procedimiento documentado para la colocación y revisión de sellos y/o candados en los medios de transporte que transportan mercancía de comercio exterior. Este debe incluir, entre otros aspectos de acuerdo a su operación.</p>
+                    <p>Anexar el procedimiento documentado para la colocación y revisión de sellos y/o candados en los medios de transporte que transportan mercancía de comercio exterior. Este debe incluir, entre otros aspectos de acuerdo a su operación<span class="danger">*</span>:</p>
                 </div>
             </div>
 
@@ -80,7 +80,7 @@
 
             <div class="row mt-2 alert-text">
                 <div class="col-md-12 text-container">
-                    <p><span class="danger">*</span>Anexe el procedimiento documentado para el control y manejo de los sellos y/o candados, este debe incluir, entre otros aspectos de acuerdo a su operación.</p>
+                    <p>Anexe el procedimiento documentado para el control y manejo de los sellos y/o candados, este debe incluir, entre otros aspectos de acuerdo a su operación<span class="danger">*</span>:</p>
                 </div>
             </div>
 
@@ -157,7 +157,7 @@
 
             <div class="row mt-2 alert-text">
                 <div class="col-md-12 text-container">
-                    <p><span class="danger">*</span>{{textos.etiqueta}}</p>
+                    <p>{{textos.etiqueta}}<span class="danger">*</span>:</p>
                 </div>
             </div>
 
@@ -180,7 +180,7 @@
 
             <div class="row mt-2 alert-text">
                 <div class="col-md-12 text-container">
-                    <p><span class="danger">*</span>{{textos.etiqueta2}}</p>
+                    <p>{{textos.etiqueta2}}<span class="danger">*</span>:</p>
                 </div>
             </div>
 
@@ -209,7 +209,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="proveedorExterno">
-                    <span class="danger">*</span>Indique si la reparación olTantenimiento de las unidades de transporte, contenedores o remolques se realizan en las mismas instalaciones165-son llevados con un proveedor externo.
+                    Indique si la reparación olTantenimiento de las unidades de transporte, contenedores o remolques se realizan en las mismas instalaciones165-son llevados con un proveedor externo<span class="danger">*</span>:
                 </label>
                 <textarea id="proveedorExterno" class="custom-textarea" rows="6" cols="100" formControlName="proveedorExterno" (change)="setValoresStore(seguridad,'proveedorExterno')" ></textarea>
                 <span
@@ -221,7 +221,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="susceptibleContaminacion">
-                    <span class="danger">*</span>{{textos.etiqueta3}}
+                    {{textos.etiqueta3}}<span class="danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="susceptibleContaminacion" (change)="setValoresStore(seguridad,'susceptibleContaminacion')"></app-input-radio>
@@ -240,7 +240,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="encuentrenVacios">
-                    <span class="danger">*</span>Indique si la empresa almacena los contenedores, remolques y/o semirremolques para su posterior despacho, o en su caso los que se encuentren vacíos.
+                    Indique si la empresa almacena los contenedores, remolques y/o semirremolques para su posterior despacho, o en su caso los que se encuentren vacíos<span class="danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="encuentrenVacios" (change)="setValoresStore(seguridad,'encuentrenVacios')"></app-input-radio>
@@ -248,7 +248,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="semirremolquesVacios">
-                    <span class="danger">*</span>Indique de qué manera mantiene la integridad de los mismos dentro de sus instalaciones En caso de utilizar candado y/o sellos, para los contenedores, remolques y semirremolques vacíos, indique qué tipo utiliza.
+                    Indique de qué manera mantiene la integridad de los mismos dentro de sus instalaciones En caso de utilizar candado y/o sellos, para los contenedores, remolques y semirremolques vacíos, indique qué tipo utiliza<span class="danger">*</span>:
                 </label>
                 <textarea id="semirremolquesVacios" class="custom-textarea" rows="6" cols="100" formControlName="semirremolquesVacios" (change)="setValoresStore(seguridad,'semirremolquesVacios')"></textarea>
                 <span
@@ -260,7 +260,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="utilizarCandado">
-                    <span class="danger">*</span>En caso de utilizar candado y/o sellos, indique qué tipo utiliza.
+                    En caso de utilizar candado y/o sellos, indique qué tipo utiliza<span class="danger">*</span>:
                 </label>
                 <textarea id="utilizarCandado" class="custom-textarea" rows="6" cols="100" formControlName="utilizarCandado" (change)="setValoresStore(seguridad,'utilizarCandado')"></textarea>
                 <span
@@ -272,7 +272,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="seguridadMismas">
-                    <span class="danger">*</span>En caso de utilizar algún contenedor, remolques y/o semirremolques como almacén de materia prima y/o algún otro tipo de mercancías, señale como mantiene la integridad y seguridad de las mismas.
+                    En caso de utilizar algún contenedor, remolques y/o semirremolques como almacén de materia prima y/o algún otro tipo de mercancías, señale como mantiene la integridad y seguridad de las mismas<span class="danger">*</span>:
                 </label>
                 <textarea id="seguridadMismas" class="custom-textarea" rows="6" cols="100" formControlName="seguridadMismas" (change)="setValoresStore(seguridad,'seguridadMismas')"></textarea>
                 <span
