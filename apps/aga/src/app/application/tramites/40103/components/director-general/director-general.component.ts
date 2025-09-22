@@ -91,7 +91,7 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
     this.directorGeneralForm = this.fb.group({
       nombre: [STATE.nombre, [Validators.required]],
       primerApellido: [STATE.primerApellido, [Validators.required]],
-      segundoApellido: [STATE.segundoApellido, [Validators.required]],
+      segundoApellido: [STATE.segundoApellido],
     });
   }
 

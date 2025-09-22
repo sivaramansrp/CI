@@ -98,11 +98,42 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
   }
   /**
+   * Estado de validación de cada sección
+   */
+  private validacionStates = {
+    solicitante: false,
+    directorGeneral: false
+  };
+
+  /**
    * Selecciona una pestaña.
    * @param i El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
+    // Validar la pestaña actual antes de cambiar
+    this.validarTabActual();
     this.indice = i;
+  }
+
+  /**
+   * Valida la pestaña actual y guarda el estado de validación
+   */
+  private validarTabActual(): void {
+    switch (this.indice) {
+      case 1: // Solicitante
+        if (this.solicitanteComponent) {
+          this.validacionStates.solicitante = this.solicitanteComponent.validarFormularios();
+        }
+        break;
+      case 2: // Director General
+        if (this.directorGeneralComponent) {
+          this.validacionStates.directorGeneral = this.directorGeneralComponent.validarFormularios();
+        }
+        break;
+      default:
+        // No validation needed for other tabs
+        break;
+    }
   }
 
   /**
@@ -183,12 +214,33 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @returns {object} Objeto con los estados de validación de cada formulario.
    */
   public validarTodosLosFormularios(): { formularioUnoValido: boolean; formularioDosValido: boolean } {
-    const SOLICITANTE_VALIDO = this.solicitanteComponent?.validarFormularios() ?? false;
-    const DIRECTOR_GENERAL_VALIDO = this.directorGeneralComponent?.validarFormularios() ?? false;
-    const CHOFERES_VALIDO = this.choferesComponent?.validarFormularios() ?? false;
-    const VEHICULOS_VALIDO = this.vehiculosComponent?.validarFormularios() ?? false;
+    // Compruebe si todos los datos requeridos están cargados
+    if (!this.esDatosRespuesta) {
+      return {
+        formularioUnoValido: false,
+        formularioDosValido: true
+      };
+    }
 
-    const TODOS_VALIDOS = SOLICITANTE_VALIDO && DIRECTOR_GENERAL_VALIDO && CHOFERES_VALIDO && VEHICULOS_VALIDO;
+    // Validar la pestaña actual primero
+    this.validarTabActual();
+
+    // Ahora valide todos los componentes requeridos utilizando los estados almacenados y los componentes actuales
+    let SOLICITANTE_VALIDO = this.validacionStates.solicitante;
+    let DIRECTOR_GENERAL_VALIDO = this.validacionStates.directorGeneral;
+
+    // Si el componente actual está disponible, valídelo directamente
+    if (this.indice === 1 && this.solicitanteComponent) {
+      SOLICITANTE_VALIDO = this.solicitanteComponent.validarFormularios();
+    }
+    
+    if (this.indice === 2 && this.directorGeneralComponent) {
+      DIRECTOR_GENERAL_VALIDO = this.directorGeneralComponent.validarFormularios();
+    }
+
+    // Validación de Choferes y Vehículos eliminada - estas secciones ya no requieren validación para el botón Continuar
+
+    const TODOS_VALIDOS = SOLICITANTE_VALIDO && DIRECTOR_GENERAL_VALIDO;
 
     return {
       formularioUnoValido: TODOS_VALIDOS,

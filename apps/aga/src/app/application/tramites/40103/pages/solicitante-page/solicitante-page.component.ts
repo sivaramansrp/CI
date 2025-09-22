@@ -42,10 +42,7 @@ import {
   WizardComponent
 } from '@ng-mf/data-access-user';
 
-import { ChoferesComponent } from '../../components/choferes/choferes.component';
-import { DirectorGeneralComponent } from '../../components/director-general/director-general.component';
-import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
-import { VehiculosComponent } from '../../components/vehiculos/vehiculos.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 
@@ -272,24 +269,9 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   };
 
   /**
-   * Referencias a los componentes hijo para validación.
+   * Referencia al componente paso-uno para acceder a la validación.
    */
-  @ViewChild(SolicitanteComponent) solicitanteComponent!: SolicitanteComponent;
-  @ViewChild(DirectorGeneralComponent) directorGeneralComponent!: DirectorGeneralComponent;
-  @ViewChild(ChoferesComponent) choferesComponent!: ChoferesComponent;
-  @ViewChild(VehiculosComponent) vehiculosComponent!: VehiculosComponent;
-
-  /**
-   * Alias para compatibilidad con la lógica existente.
-   */
-  get pasoUnoComponent(): { validarTodosLosFormularios: () => { formularioUnoValido: boolean; formularioDosValido: boolean } } {
-    return {
-      validarTodosLosFormularios: (): { formularioUnoValido: boolean; formularioDosValido: boolean } => ({
-        formularioUnoValido: this.validarTodosLosComponentes(),
-        formularioDosValido: true
-      })
-    };
-  }
+  @ViewChild('pasoUnoRef') pasoUnoRef!: PasoUnoComponent;
 
   /**
    * Configuración de notificación para mostrar alertas al usuario.
@@ -483,10 +465,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     this.esFormaValido = false;
     // Validar antes de pasar del paso 1 al paso 2
     if (e.accion === 'cont' && this.indice === 1) {
-      const ES_VALIDO = this.pasoUnoComponent
-        ? this.pasoUnoComponent.validarTodosLosFormularios && typeof this.pasoUnoComponent.validarTodosLosFormularios === 'function'
-          ? this.pasoUnoComponent.validarTodosLosFormularios().formularioUnoValido && this.pasoUnoComponent.validarTodosLosFormularios().formularioDosValido
-          : true
+      const ES_VALIDO = this.pasoUnoRef
+        ? this.pasoUnoRef.validarTodosLosFormularios().formularioUnoValido
         : true;
       if (!ES_VALIDO) {
         this.nuevaNotificacion = {
@@ -514,19 +494,6 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
         this.wizardComponent?.atras();
       }
     }
-  }
-
-  /**
-   * Valida todos los componentes del trámite.
-   * @returns {boolean} true si todos los componentes son válidos, false en caso contrario.
-   */
-  private validarTodosLosComponentes(): boolean {
-    const SOLICITANTE_VALIDO = this.solicitanteComponent?.validarFormularios() ?? false;
-    const DIRECTOR_GENERAL_VALIDO = this.directorGeneralComponent?.validarFormularios() ?? false;
-    const CHOFERES_VALIDO = this.choferesComponent?.validarFormularios() ?? false;
-    const VEHICULOS_VALIDO = this.vehiculosComponent?.validarFormularios() ?? false;
-
-    return SOLICITANTE_VALIDO && DIRECTOR_GENERAL_VALIDO && CHOFERES_VALIDO && VEHICULOS_VALIDO;
   }
 
   /**
