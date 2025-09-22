@@ -345,7 +345,6 @@ export const INFORMACION_DE_COMPANIA = [
     valorPredeterminado: '',
     marginTop: 0,
     habilitado: true,
-    // maxlength: 13,
   },
   {
     id: 'informacionCompania.nombreCompania',
