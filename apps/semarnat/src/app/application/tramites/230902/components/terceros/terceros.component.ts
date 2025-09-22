@@ -323,7 +323,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
       };
       this.popupAbierto = true; // Controla la visibilidad del popup
       this.tramite230902Store.setIsPopupOpen(this.popupAbierto);
-      this.abrirGeneralOriginal = true;
     }
     else{
       this.mostrarErrorModificar = true;
@@ -527,7 +526,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   eliminarSeleccionados(): void {
-    if(this.tramite230902Store.getValue().listaseleccionadaDestinatario?.length === 0){
+    if(this.listaseleccionadaDestinatario?.length === 0){
       this.mostrarError = true;
       this.nuevaNotificacionEliminar = {
         tipoNotificacion: 'alert',
