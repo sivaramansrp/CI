@@ -55,6 +55,14 @@ interface Banco {
   styleUrls: ['./pago-de-derechos.component.scss'],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
+
+  /**
+   * Indica si se deben mostrar los errores relacionados con el campo de pago.
+   * Cuando es `true`, los mensajes de error del campo de pago serán visibles en la interfaz.
+   */
+   public mostrarErroresDeCampoPago: boolean = false;
+   
+
   /** Formulario reactivo para la captura de datos de pago de derechos */
   public pagoDeDerechosForm!: FormGroup;
   
@@ -204,7 +212,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
 public static camposDependientesValidator(): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
     const FORM = group as FormGroup;
-
     const FIELDS = [
       'claveDeReferencia',
       'cadenaPagoDependencia',
@@ -219,7 +226,6 @@ public static camposDependientesValidator(): ValidatorFn {
       return VALUE !== null && VALUE !== undefined && VALUE !== '';
     });
 
-    // Si ningún campo está lleno, limpiamos todos los errores 'required'
     if (!ANY_FILLED) {
       FIELDS.forEach(field => {
         const CONTROL = FORM.get(field);
@@ -232,26 +238,29 @@ public static camposDependientesValidator(): ValidatorFn {
       return null;
     }
 
-    // Si algún campo tiene valor, todos deben tenerlo
+    // If any field is filled, all must be filled
+    let hasError = false;
     FIELDS.forEach(field => {
       const CONTROL = FORM.get(field);
       const VALUE = CONTROL?.value;
       if (VALUE === null || VALUE === undefined || VALUE === '') {
         CONTROL?.setErrors({
           ...CONTROL.errors,
-          required: true
+          required: true,
+          custom: 'Todos los campos de pago son requeridos'
         });
+        hasError = true;
       } else {
-        // Si tenía required, lo quitamos si ya tiene valor
         if (CONTROL?.hasError('required')) {
           const CURRENT_ERRORS = { ...CONTROL.errors };
           delete CURRENT_ERRORS['required'];
+          delete CURRENT_ERRORS['custom'];
           CONTROL.setErrors(Object.keys(CURRENT_ERRORS).length > 0 ? CURRENT_ERRORS : null);
         }
       }
     });
 
-    return null;
+    return hasError ? { required: true } : null;
   };
 }
 
@@ -326,6 +335,7 @@ public static camposDependientesValidator(): ValidatorFn {
     if (!CTRL) { return; }
     const VALOR = CTRL.value;
     this.tramite260904Store.setTramite260904State({ [campo]: VALOR });
+    this.mostrarErroresDeCampoPago = false;
   }
 
   /**
@@ -353,23 +363,25 @@ public static camposDependientesValidator(): ValidatorFn {
    * Marca los controles como pristine y untouched para ocultar errores de campos requeridos después de borrar.
    * Se invoca al hacer clic en el botón "Borrar datos del pago".
    */
-  public resetPagoDeDerechos(): void {
-    if (!this.pagoDeDerechosForm) { return; }
-    this.pagoDeDerechosForm.reset();
-    Object.values(this.pagoDeDerechosForm.controls).forEach(c => {
-      c.markAsPristine();
-      c.markAsUntouched();
-      c.updateValueAndValidity();
-    });
-    this.tramite260904Store.setTramite260904State({
-      claveDeReferencia: '',
-      cadenaPagoDependencia: '',
-      clave: '',
-      llaveDePago: '',
-      fecPago: '',
-      impPago: ''
-    });
-  }
+
+public resetPagoDeDerechos(): void {
+  if (!this.pagoDeDerechosForm) { return; }
+  this.pagoDeDerechosForm.reset();
+  Object.values(this.pagoDeDerechosForm.controls).forEach(c => {
+    c.markAsPristine();
+    c.markAsUntouched();
+    c.updateValueAndValidity();
+  });
+  this.mostrarErroresDeCampoPago = false; // <-- Reset flag
+  this.tramite260904Store.setTramite260904State({
+    claveDeReferencia: '',
+    cadenaPagoDependencia: '',
+    clave: '',
+    llaveDePago: '',
+    fecPago: '',
+    impPago: ''
+  });
+}
 
   /**
    * Verifica si todos los campos de pago están vacíos.

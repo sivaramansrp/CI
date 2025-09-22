@@ -17,12 +17,10 @@ describe('ModPermisoSanitarioImportacion260904Component', () => {
     fixture = TestBed.createComponent(ModPermisoSanitarioImportacion260904Component);
     component = fixture.componentInstance;
 
-    // Mock wizardComponent before view init
     (component as any).wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
     } as unknown as WizardComponent;
-
     fixture.detectChanges();
   });
 
@@ -37,19 +35,18 @@ describe('ModPermisoSanitarioImportacion260904Component', () => {
   });
 
   it('should update indice and call siguiente on "cont" action', () => {
-    // Ensure wizardComponent is mocked for this test
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
     } as unknown as WizardComponent;
     const action = { accion: 'cont', valor: 2 };
     component.getValorIndice(action);
+    fixture.detectChanges();
     expect(component.indice).toBe(2);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
   it('should update indice and call atras on non-"cont" action', () => {
-    // Ensure wizardComponent is mocked for this test
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
