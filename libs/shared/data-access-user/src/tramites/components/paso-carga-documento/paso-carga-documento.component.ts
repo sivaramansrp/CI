@@ -96,6 +96,8 @@ export class PasoCargaDocumentoComponent implements OnInit, OnDestroy {
    */
   @Input() datosUsuario!: Usuario;
 
+  @Output() cargaEnProgreso = new EventEmitter<boolean>();
+
   /**
    * Constructor del componente.
    * 
@@ -117,15 +119,6 @@ export class PasoCargaDocumentoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    // this.regresarSeccionCargarDocumentoEvento
-    //   .pipe(
-    //     takeUntil(this.destroyed$),
-    //     map(() => {
-    //       this.reenviarRegresarSeccion.emit();
-    //     })
-    //   )
-    //   .subscribe();
   }
 
   /**
@@ -171,5 +164,9 @@ export class PasoCargaDocumentoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso.emit(carga);
   }
 }

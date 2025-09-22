@@ -105,6 +105,8 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     seccionCargarDocumentos: boolean = true;
 
     datosUsuario: Usuario = USUARIO_INFO;
+
+    cargaEnProgreso: boolean = true;
     
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
@@ -804,6 +806,10 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
    */
   onClickCargaArchivos(): void {
     this.cargarArchivosEvento.emit();
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
   }
 
 }
