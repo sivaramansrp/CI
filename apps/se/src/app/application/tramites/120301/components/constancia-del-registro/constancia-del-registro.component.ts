@@ -371,7 +371,10 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     if (this.formularioDeshabilitado) {
       this.fitosanitarioForm.disable();
     } else {
-      this.fitosanitarioForm.disable();
+      this.fitosanitarioForm.enable();
+      this.fitosanitarioForm.get('flexRadioRegistro')?.enable();
+      this.fitosanitarioForm.get('numeroDeLaConstancia')?.enable();
+      this.fitosanitarioForm.get('anoDeLaConstancia')?.enable();
     }
 
     this.consultaioQuery.selectConsultaioState$
@@ -384,7 +387,10 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
             if (consultaState.readonly) {
               this.fitosanitarioForm.disable();
             } else {
-              this.fitosanitarioForm.disable();
+              this.fitosanitarioForm.enable();
+              this.fitosanitarioForm.get('flexRadioRegistro')?.enable();
+              this.fitosanitarioForm.get('numeroDeLaConstancia')?.enable();
+              this.fitosanitarioForm.get('anoDeLaConstancia')?.enable();
             }
           }
         })
@@ -879,7 +885,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   onAnoConstanciaChange(selectedOption: Catalogo): void {
     const CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
     if (CONTROL && selectedOption) {
-      const VALUE = selectedOption.id?.toString() || '';
+      const VALUE = selectedOption.clave?.toString() || '';
       CONTROL.setValue(VALUE);
       CONTROL.markAsTouched();
       CONTROL.updateValueAndValidity();
