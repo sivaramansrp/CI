@@ -299,7 +299,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
     if(filaSeleccionada.length > 0) {
       this.isModificarEnabled = true;
       this.listaseleccionadaDestinatario = filaSeleccionada;
-      this.tramite230902Store.establecerDatos({ listaseleccionadaDestinatario: this.listaseleccionadaDestinatario });
     }
     else {
       this.isModificarEnabled = false;
