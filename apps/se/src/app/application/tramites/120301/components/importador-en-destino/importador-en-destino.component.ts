@@ -87,12 +87,12 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
   importadorForm!: FormGroup;
 
   /**
- * @property {string} formularioAlertaError
- * @description
- * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
- * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
- * Vacío cuando el formulario es válido.
- */
+   * @property {string} formularioAlertaError
+   * @description
+   * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
+   * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
+   * Vacío cuando el formulario es válido.
+   */
   public formularioAlertaError: string = '';
 
   /**
@@ -146,7 +146,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * Incluye datos como tipo, cantidades, información de contacto y ubicación.
    * @private
    */
-  private importadorState!: TextilesState;
+  public importadorState!: TextilesState;
 
   /**
    * @property {SeccionLibState} seccionState - Estado actual de la sección.
@@ -200,51 +200,51 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor
    * @implements {OnInit}
    */
-  ngOnInit(): void {
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccionState = seccionState;
-        })
-      )
-      .subscribe();
+    ngOnInit(): void {
+      this.seccionQuery.selectSeccionState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.seccionState = seccionState;
+          })
+        )
+        .subscribe();
 
-    this.ElegibilidadDeTextilesQuery.selectTextile$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((state) => {
-          this.importadorState = state as TextilesState;
-        })
-      )
-      .subscribe();
+      this.ElegibilidadDeTextilesQuery.selectTextile$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((state) => {
+            this.importadorState = state as TextilesState;
+          })
+        )
+        .subscribe();
 
-    this.initActionFormBuild();
-    this.obtenerListasDesplegables();
+      this.initActionFormBuild();
+      this.obtenerListasDesplegables();
 
-    this.seccionStore.establecerFormaValida([false]);
+      this.seccionStore.establecerFormaValida([false]);
 
-    this.importadorForm.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap((_value) => {
-          if (this.importadorForm.valid) {
-            this.ElegibilidadDeTextilesStore.setFormaValida([
-              ...this.importadorState.formaValida,
-              { id: 4, descripcion: 'TodoValido' },
-            ]);
-          }
-          this.seccionStore.establecerSeccion([true]);
-          this.seccionStore.establecerFormaValida([true]);
-        })
-      )
-      .subscribe();
+      this.importadorForm.statusChanges
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          delay(10),
+          tap((_value) => {
+            if (this.importadorForm.valid) {
+              this.ElegibilidadDeTextilesStore.setFormaValida([
+                ...this.importadorState.formaValida,
+                { id: 4, descripcion: 'TodoValido' },
+              ]);
+            }
+            this.seccionStore.establecerSeccion([true]);
+            this.seccionStore.establecerFormaValida([true]);
+          })
+        )
+        .subscribe();
 
-    if (this.formularioDeshabilitado) {
-      this.importadorForm.disable();
+      if (this.formularioDeshabilitado) {
+        this.importadorForm.disable();
+      }
     }
-  }
 
   /**
    * @method initActionFormBuild
@@ -261,23 +261,43 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
       tipo: [this.importadorState.tipo, Validators.required],
       cantidadTotalImportador: [
         this.importadorState.cantidadTotalImportador,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        [
+          Validators.required,
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+          Validators.minLength(11),
+          Validators.maxLength(11)
+        ],
       ],
       razonSocialImportador: [
         this.importadorState.razonSocialImportador,
-        Validators.required,
+        [
+          Validators.required,
+          Validators.maxLength(70)
+        ],
       ],
-      domicilio: [this.importadorState.domicilio, Validators.required],
+      domicilio: [
+        this.importadorState.domicilio,
+        [
+          Validators.required,
+          Validators.maxLength(70)
+        ],
+      ],
       ciudadImportador: [
         this.importadorState.ciudadImportador,
-        Validators.required,
+        [
+          Validators.required,
+          Validators.maxLength(35)
+        ],
       ],
       cpImportador: [
         this.importadorState.cpImportador,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        [
+          Validators.required,
+          Validators.maxLength(9)
+        ],
       ],
       PaisImportador: [
-        { value: this.importadorState.PaisImportador, disabled: true },
+        { value: this.importadorState.PaisImportador || 'ESTADOS UNIDOS DE AMERICA', disabled: true },
         Validators.required,
       ],
     });
@@ -368,6 +388,15 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
 
     this.mostrarTabs.emit(true);
   }
+    /**
+   * Guarda los datos editados del chofer nacional si el formulario es válido, emite el evento y cierra el modal.
+   * Si el formulario es inválido, muestra una notificación de alerta.
+   * @returns {void}
+   */
+  enviada = false;
+    guardarFilaEditada(): void {
+    this.enviada = true;
+  }
   /**
    * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.
@@ -380,8 +409,8 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor
    * @implements {OnDestroy}
    */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
 }
