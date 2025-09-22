@@ -1,91 +1,142 @@
-import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID,Catalogo, CatalogosService, TEXTOS, TituloComponent } from '@ng-mf/data-access-user';
-import { Component, OnInit } from '@angular/core';
+/**
+ * Componente utilizado en el trámite 260101 para gestionar la funcionalidad del paso dos.
+ *
+ * Este archivo contiene la definición del componente `PasoDosComponent`, que permite anexar documentos
+ * relacionados con el trámite. También interactúa con servicios para obtener los catálogos de documentos disponibles.
+ */
+
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  CATALOGOS_ID,
+  Catalogo,
+  CatalogosService,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { TEXTOS_REQUISITOS } from '../../constants/medicos-uso.enum';
 
 /**
- * PasoDosComponent.
- * Este componente se encarga de gestionar la lógica del segundo paso en el flujo de servicios extraordinarios.
- * Muestra los tipos de documentos disponibles y permite seleccionar los documentos requeridos para el trámite.
+ * @component
+ * @name PasoDosComponent
+ * @description
+ * Componente que gestiona la funcionalidad del paso dos del trámite 260101.
+ * Permite al usuario anexar documentos y muestra información relevante sobre los requisitos del trámite.
+ *
+ * @selector app-paso-dos
+ * Define el selector del componente que se utiliza en las plantillas HTML para instanciar este componente.
+ *
+ * @standalone true
+ * Indica que este componente es independiente y no requiere un módulo Angular para ser utilizado.
+ *
+ * @templateUrl ./paso-dos.component.html
+ * Especifica la ubicación del archivo de plantilla HTML asociado con este componente.
+ *
+ * @styleUrl ./paso-dos.component.css
+ * Especifica la ubicación del archivo de estilos CSS asociado con este componente.
+ *
+ * @imports
+ * - CommonModule: Proporciona directivas comunes de Angular como `ngIf` y `ngFor`.
+ * - AlertComponent: Componente para mostrar alertas informativas.
+ * - TituloComponent: Componente para mostrar el título del paso.
+ * - AnexarDocumentosComponent: Componente para anexar documentos al trámite.
  */
 @Component({
   selector: 'app-paso-dos',
-  templateUrl: './paso-dos.component.html',
-  styleUrl: './paso-dos.component.scss',
   standalone: true,
   imports: [
+    CommonModule,
     AlertComponent,
+    TituloComponent,
     AnexarDocumentosComponent,
-    TituloComponent
   ],
+  templateUrl: './paso-dos.component.html',
+  styleUrl: './paso-dos.component.css',
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit, OnDestroy {
   /**
-   * Textos de la aplicación que serán utilizados para mostrar contenido en la interfaz.
+   * @property {string} TEXTOS
+   * Contiene el texto de requisitos del trámite, importado desde las constantes.
    */
-  TEXTOS = TEXTOS;
+  TEXTOS = TEXTOS_REQUISITOS;
 
   /**
-   * Lista de tipos de documentos obtenidos del catálogo.
+   * @property {Catalogo[]} tiposDocumentos
+   * Lista de tipos de documentos disponibles para el trámite.
    */
   tiposDocumentos: Catalogo[] = [];
 
   /**
-   * Clase CSS para definir el tipo de alerta.
-   * Valor predeterminado: 'alert-info'.
+   * @property {string} infoAlert
+   * Clase CSS utilizada para mostrar alertas informativas.
    */
   infoAlert = 'alert-info';
 
   /**
-   * Catálogo completo de documentos disponibles.
+   * @property {Catalogo[]} catalogoDocumentos
+   * Catálogo de documentos disponibles para anexar al trámite.
    */
   catalogoDocumentos: Catalogo[] = [];
 
   /**
+   * @property {Catalogo[]} documentosSeleccionados
    * Lista de documentos seleccionados por el usuario.
-   * Inicializado con documentos preseleccionados.
    */
   documentosSeleccionados: Catalogo[] = [];
 
   /**
-   * Constructor de PasoDosComponent.
-   * @param catalogosServices Servicio para interactuar con los catálogos.
+   * @property {Subject<void>} destroyNotifier$
+   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+   * @private
    */
-  constructor(private catalogosServices: CatalogosService) {
-    // Inicialización del componente
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @constructor
+   * @description
+   * Constructor que inyecta el servicio `CatalogosService` para obtener los catálogos de documentos.
+   *
+   * @param {CatalogosService} catalogosServices - Servicio para obtener los catálogos de documentos.
+   */
+  constructor(private catalogosServices: CatalogosService) {}
+
+  /**
+   * @method ngOnInit
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama al método `getTiposDocumentos` para obtener los tipos de documentos disponibles.
+   */
+  ngOnInit(): void {
     this.getTiposDocumentos();
   }
 
   /**
-   * Ciclo de vida de Angular: ngOnInit.
-   * Se ejecuta al inicializar el componente.
-   * Obtiene los tipos de documentos y establece documentos preseleccionados.
-   */
-  ngOnInit(): void {
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que ampare el valor de la mercancía',
-      },
-      {
-        id: 2,
-        descripcion:
-          'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-      },
-    ];
-  }
-
-  /**
-   * Obtiene los tipos de documentos disponibles para el trámite desde el catálogo.
-   * Actualiza la propiedad `catalogoDocumentos` con los datos obtenidos.
+   * @method getTiposDocumentos
+   * Obtiene el catálogo de los tipos de documentos disponibles para el trámite.
+   * Realiza una solicitud al servicio `CatalogosService` y actualiza la lista de documentos disponibles.
    */
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (respuesta): void => {
-          if (respuesta.length > 0) {
-            this.catalogoDocumentos = respuesta;
+        next: (resp): void => {
+          if (resp.length > 0) {
+            this.catalogoDocumentos = resp;
           }
         },
       });
+  }
+
+  /**
+   * @method ngOnDestroy
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones activas y libera recursos.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

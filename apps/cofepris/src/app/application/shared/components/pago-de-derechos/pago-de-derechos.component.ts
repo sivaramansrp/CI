@@ -81,6 +81,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   @Input() public idProcedimiento!: number;
 
   /**
+   * Indica si sólo se requiere el campo "colón".
+   *
+   * @type {boolean}
+   * @default false
+   */
+  @Input() soloDosPuntosRequeridos: boolean = false;
+
+  /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    */
   @Input() public formularioDeshabilitado: boolean = false;

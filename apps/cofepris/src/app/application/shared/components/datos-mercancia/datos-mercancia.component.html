@@ -10,6 +10,7 @@
             formControlName="clasificacionProducto"
             [label]="'Clasificación del producto'"
             [required]="true"
+            [markUntouched]="mercanciaForm.get('clasificacionProducto')?.errors?.['required'] && mercanciaForm.get('clasificacionProducto')?.touched ? true : false"
             name="clasificacionProducto"
           ></app-catalogo-select>
         </div>
@@ -23,6 +24,7 @@
             formControlName="especificarClasificacionProducto"
             [label]="'Especificar clasificación del producto'"
             [required]="true"
+            [markUntouched]="mercanciaForm.get('especificarClasificacionProducto')?.errors?.['required'] && mercanciaForm.get('especificarClasificacionProducto')?.touched? true : false"
             name="especificarClasificacionProducto"
           ></app-catalogo-select>
         </div>
@@ -65,13 +67,15 @@
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
-          <label class="form-label" for="marca">Marca<span
+          <label class="form-label" for="marca"
+            >Marca<span
               [ngClass]="
             {
               'text-danger': mercanciaForm.get('marca')?.errors?.['required'] && mercanciaForm.get('marca')?.touched
             }"
               >*</span
-            >:</label>
+            >:</label
+          >
           <input
             class="form-control"
             id="marca"
@@ -98,7 +102,7 @@
             {
               'text-danger': mercanciaForm.get('denominacionDistintiva')?.errors?.['required'] && mercanciaForm.get('denominacionDistintiva')?.touched
             }"
-            >*</span
+              >*</span
             >:</label
           >
           <input
@@ -130,8 +134,8 @@
             {
               'text-danger': mercanciaForm.get('denominacionComun')?.errors?.['required'] && mercanciaForm.get('denominacionComun')?.touched
             }"
-            >*</span
-            >: 
+              >*</span
+            >:
           </label>
           <span tooltip="Denominación común internacional o genérica">
             <i class="bi bi-question-circle-fill"></i>
@@ -164,6 +168,7 @@
           formControlName="tipoProducto"
           [label]="'Tipo de producto'"
           [required]="true"
+          [markUntouched]="mercanciaForm.get('tipoProducto')?.errors?.['required'] && mercanciaForm.get('tipoProducto')?.touched ? true : false"
           name="tipoProducto"
         ></app-catalogo-select>
       </div>
@@ -180,7 +185,7 @@
             {
               'text-danger': mercanciaForm.get('especifique')?.errors?.['required'] && mercanciaForm.get('especifique')?.touched
             }"
-            >*</span
+              >*</span
             >:</label
           >
           <input
@@ -213,7 +218,8 @@
       </div>
     </div>
     } @if(elementosAnadidos.includes('especifiqueForma') &&
-    mercanciaForm.get('formaFarmaceutica')?.value === tipoProductoEspecial && !elementosBelow){
+    mercanciaForm.get('formaFarmaceutica')?.value === tipoProductoEspecial &&
+    !elementosBelow){
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
@@ -223,7 +229,7 @@
             {
               'text-danger': mercanciaForm.get('especifiqueForma')?.errors?.['required'] && mercanciaForm.get('especifiqueForma')?.touched
             }"
-            >*</span
+              >*</span
             >:</label
           >
           <input
@@ -264,12 +270,13 @@
         <div class="form-group">
           <label class="form-label" for="especifiqueEstado"
             >Especifique@if(elementosMandatorios.includes('especifiqueEstado')){
-              <span
-                [ngClass]="
+            <span
+              [ngClass]="
                 {
                   'text-danger': mercanciaForm.get('especifiqueEstado')?.errors?.['required'] && mercanciaForm.get('especifiqueEstado')?.touched
                 }"
-              >*</span>
+              >*</span
+            >
             }:</label
           >
           <input
@@ -291,10 +298,9 @@
         </div>
       </div>
     </div>
-    }
-
-    @if(elementosAnadidos.includes('especifiqueForma') &&
-    mercanciaForm.get('formaFarmaceutica')?.value === tipoProductoEspecial && elementosBelow){
+    } @if(elementosAnadidos.includes('especifiqueForma') &&
+    mercanciaForm.get('formaFarmaceutica')?.value === tipoProductoEspecial &&
+    elementosBelow){
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
@@ -304,7 +310,7 @@
             {
               'text-danger': mercanciaForm.get('especifiqueForma')?.errors?.['required'] && mercanciaForm.get('especifiqueForma')?.touched
             }"
-            >*</span
+              >*</span
             >:</label
           >
           <input
@@ -337,8 +343,8 @@
             {
               'text-danger': mercanciaForm.get('fraccionArancelaria')?.errors?.['required'] && mercanciaForm.get('fraccionArancelaria')?.touched
             }"
-            >*</span
-            >: 
+              >*</span
+            >:
           </label>
           <span
             tooltip="Descripción numérica o desglose de un código de clasificación que otorga el Sistema Armonizado"
@@ -353,11 +359,19 @@
             formControlName="fraccionArancelaria"
             (change)="cambiarFraccionArancelaria()"
             (keydown)="validarFraccionArancelaria()"
-            />
-          <div class="mensaje-error" *ngIf="mercanciaForm.get('fraccionArancelaria')?.value && mercanciaForm.get('fraccionArancelaria')?.errors?.['pattern'] && mercanciaForm.get('fraccionArancelaria')?.touched">
+          />
+          <div
+            class="mensaje-error"
+            *ngIf="mercanciaForm.get('fraccionArancelaria')?.value && mercanciaForm.get('fraccionArancelaria')?.errors?.['pattern'] && mercanciaForm.get('fraccionArancelaria')?.touched"
+          >
             Por favor, sólo escribe dígitos
           </div>
-          <div class="mensaje-error" *ngIf="mercanciaForm.get('fraccionArancelaria')?.value && showLimitError">
+          <div
+            class="mensaje-error"
+            *ngIf="
+              mercanciaForm.get('fraccionArancelaria')?.value && showLimitError
+            "
+          >
             Por favor, no escribas menos de 8 caracteres.
           </div>
           <div
@@ -378,7 +392,7 @@
             {
               'text-danger': mercanciaForm.get('descripcionFraccion')?.errors?.['required'] && mercanciaForm.get('descripcionFraccion')?.touched
             }"
-            >*</span
+              >*</span
             >:</label
           >
           <input
@@ -407,7 +421,7 @@
             {
               'text-danger': mercanciaForm.get('cantidadUmtValor')?.errors?.['required'] && mercanciaForm.get('cantidadUmtValor')?.touched
             }"
-            >*</span
+              >*</span
             >:</label
           >
           <input
@@ -442,8 +456,8 @@
             {
               'text-danger': mercanciaForm.get('cantidadUmt')?.errors?.['required'] && mercanciaForm.get('cantidadUmt')?.touched
             }"
-            >*</span
-            >:  
+              >*</span
+            >:
           </label>
           <span tooltip="Unidad de medida de la tarifa">
             <i class="bi bi-question-circle-fill"></i>
@@ -474,7 +488,7 @@
             {
               'text-danger': mercanciaForm.get('cantidadUmcValor')?.errors?.['required'] && mercanciaForm.get('cantidadUmcValor')?.touched
             }"
-            >*</span
+              >*</span
             >:</label
           >
           <input
@@ -508,6 +522,7 @@
           formControlName="cantidadUmc"
           [label]="'UMC'"
           [required]="true"
+          [markUntouched]="mercanciaForm.get('cantidadUmc')?.errors?.['required'] && mercanciaForm.get('cantidadUmc')?.touched? true : false"
           [tooltipQuestionCircle]="true"
           [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
           name="cantidadUmc"
@@ -519,12 +534,12 @@
       <div class="col-md-10">
         <label class="form-label text-start" for="presentacion">
           Presentación farmacéutica o tipo de envase<span
-              [ngClass]="
+            [ngClass]="
             {
               'text-danger': mercanciaForm.get('presentacion')?.errors?.['required'] && mercanciaForm.get('presentacion')?.touched
             }"
             >*</span
-            >:
+          >:
         </label>
         <textarea
           maxlength="250"
@@ -669,7 +684,7 @@
 
     @if(elementosAnadidos.includes('claveDeLos')){
     <div class="row">
-      <div class="col-md-10">
+      <div class="col-md-10 mt-2">
         <div class="form-group">
           <label class="form-label" for="claveDeLos"
             >Clave de los lotes<span
@@ -677,7 +692,7 @@
             {
               'text-danger': mercanciaForm.get('claveDeLos')?.errors?.['required'] && mercanciaForm.get('claveDeLos')?.touched
             }"
-            ></span
+              >*</span
             >:</label
           >
           <input
@@ -697,32 +712,42 @@
       </div>
     </div>
     <div class="row mb-5">
-      <div class="col-md-5">
+      <div class="col-md-5 mt-1">
         <div class="form-group">
-          <ng-container
-            *ngTemplateOutlet="
-              fecha;
-              context: {
-                controlName: 'fechaDeFabricacio',
-                lableName: 'Fecha de fabricacio'
-              }
-            "
-          ></ng-container>
+          <input-fecha
+            [datos]="fechaDeFabricacioInput"
+            name="fechaDeFabricacio"
+            (valorCambiado)="fechaDeFabricacioValor($event)"
+            [setFecha]="mercanciaForm.get('fechaDeFabricacio')?.value"
+          ></input-fecha>
+
+          <div
+            class="mensaje-error"
+            *ngIf="mercanciaForm.get('fechaDeFabricacio')?.errors?.['required'] && mercanciaForm.get('fechaDeFabricacio')?.touched"
+          >
+            La fecha de pago debe ser menor o igual a la fecha actual.
+          </div>
         </div>
       </div>
-      <div class="col-md-5">
+      <div class="col-md-5 mt-1">
         <div class="form-group">
-          <ng-container
-            *ngTemplateOutlet="
-              fecha;
-              context: {
-                controlName: 'fechaDeCaducidad',
-                lableName: 'Fecha de caducidad'
-              }
-            "
-          ></ng-container>
+          <input-fecha
+            [datos]="fechaDeCaducidadInput"
+            name="fechaDeCaducidad"
+            (valorCambiado)="fechaDeCaducidadValor($event)"
+            [setFecha]="mercanciaForm.get('fechaDeCaducidad')?.value"
+          ></input-fecha>
+          <div
+            class="mensaje-error"
+            *ngIf="mercanciaForm.get('fechaDeCaducidad')?.errors?.['required'] && mercanciaForm.get('fechaDeCaducidad')?.touched"
+          >
+            La fecha de pago debe ser menor o igual a la fecha actual.
+          </div>
         </div>
       </div>
+    </div>
+    <div class="row mt-1 mb-5 ml-2">
+      <label>Lista Claves de los lotes*:</label>
     </div>
     <div class="row mb-5 justify-content-md-center">
       <div class="col-md-8">
@@ -748,7 +773,7 @@
           <button
             type="button"
             name="modificarClave"
-            class="btn btn-danger ms-2"
+            class="btn btn-primary ms-2"
             (click)="modificarClave()"
           >
             Modificar

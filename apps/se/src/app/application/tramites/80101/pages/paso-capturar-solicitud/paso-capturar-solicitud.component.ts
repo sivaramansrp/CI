@@ -105,6 +105,8 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     seccionCargarDocumentos: boolean = true;
 
     datosUsuario: Usuario = USUARIO_INFO;
+
+    cargaEnProgreso: boolean = true;
     
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
@@ -123,7 +125,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private socioAccionistaBase: any[] = socioAccionistas;
+  private socioAccionistaBase = socioAccionistas;
 
         private plantasBase: Readonly<Record<string, any>> = {
     "idPlanta": "123",
@@ -483,19 +485,39 @@ private notariosBase: Readonly<Record<string, any>> = {
  * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
  */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildSociosAccionistas(data: Record<string, any>, base: any[]): any[] {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
-      base.forEach(item => {
-        const ITEM = (item && typeof item === 'object') ? item : {};
-        RESULT.push({
-          ...ITEM,
-          paginaWeb: data['datosComplimentos'].datosGeneralis.paginaWWeb,
-          numeroRegistro: data['datosComplimentos'].formaModificaciones.nombreDeActa,
-          capacidadAlmacenaje: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
-          rfc:  data['datosComplimentos'].formaModificaciones.rfc ?? ''
-        });
-      });
+  buildSociosAccionistas(data: Record<string, any>, base: Record<string, any>): any {
+    return {
+      ...base,
+      notario: {
+        ...base['notario'],
+        rfc: data['datosComplimentos'].formaModificaciones.rfc,
+        numeroActa: data['datosComplimentos'].formaModificaciones.nombreDeActa,
+        numeroNotario: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
+        entidadFederativa: data['datosComplimentos'].formaModificaciones.estado,
+        fechaActa: data['datosComplimentos'].formaModificaciones.fechaDeActa
+      },
+      modalidad: data['datosComplimentos'].modalidad,
+      booleanGenerico: data['datosComplimentos'].programaPreOperativo ? true : false,
+      descripcionSistemasMedicion: data['datosComplimentos'].datosGeneralis.paginaWWeb,
+      descripcionLugarEmbarque: data['datosComplimentos'].datosGeneralis.localizacion,
+      capacidadAlmacenaje: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
+      numeroPermiso: data['datosComplimentos'].obligacionesFiscales.opinionPositiva === 1 ? 'SI' : '',
+      fechaOperacion: data['datosComplimentos'].obligacionesFiscales.fechaExpedicion,
+      nomOficialAutorizado: data['datosComplimentos'].formaModificaciones.nombreDelFederatario,
+
+    };
+  }
+
+  /** Construye el arreglo de declaraciones de solicitud a partir de los datos proporcionados. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static buildDeclaracionSolicitudEntries(data: Record<string, any>): unknown[] {
+    const RESULT = [
+      {
+          "acepto": data['datosComplimentos'].obligacionesFiscales.aceptarObligacionFiscal ? 1 : 0,
+          "idTipoTramite": 80101,
+          "cveDeclaracion": "123"
+      }
+    ];
     return RESULT;
   }
 
@@ -697,7 +719,8 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
   guardar(data: any): void {
     const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
-    const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data, this.socioAccionistaBase);
+    const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
+    const DECLARACION_SOLICUTUD_ENTRIES = PasoCapturarSolicitudComponent.buildDeclaracionSolicitudEntries(data);
     const EMPRESAS_NACIONALES = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentos, this.empresasNacionales);
     const EMPRESAS_EXTRANJERAS = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentosExtranjera, this.empresasExtranjeras);
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
@@ -736,15 +759,14 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
           "complemento": {
             ...ANEXO_ALL.anexo.datosParaNavegar
           },
+          "anexoI": [...ANEXO_ALL.anexo.tableDos]
         }
       ],
       "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
-      "sociosAccionistas": SOCIO_ACCIONISTAS,
+      "solicitud": SOLICITUD,
+      "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
       "empresasNacionales": EMPRESAS_NACIONALES,
       "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
-      "solicitud": {
-        "anexoI": [...ANEXO_ALL.anexo.tableDos]
-      }
     }
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
       this.tramite80101Store.setIdSolicitud(response.datos.id_solicitud || 0);
@@ -804,6 +826,10 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
    */
   onClickCargaArchivos(): void {
     this.cargarArchivosEvento.emit();
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
   }
 
 }

@@ -1,7 +1,7 @@
 import {Observable,map } from 'rxjs';
 import { AmpliacionServiciosState } from '../models/datos-info.model';
 import {AmpliacionServiciosStore} from '../estados/tramite80205.store';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo } from '../constantes/modificacion.enum';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Servicio } from '../models/datos-info.model';

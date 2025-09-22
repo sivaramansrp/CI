@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Servicio } from '../../models/datos-info.model';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo } from '../../constantes/modificacion.enum';
 import { Component } from '@angular/core';
 import { AmpliacionServiciosComponent } from './ampliacion-servicios.component';
 import { FormBuilder } from '@angular/forms';

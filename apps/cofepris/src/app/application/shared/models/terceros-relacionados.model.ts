@@ -389,6 +389,40 @@ export const FECHA_DE_PAGO = {
   habilitado: true,
 };
 
+/**
+ * @const FECHA_DE_FABRICACIO_PAGO
+ * @description Configuración del campo “Fecha de pago” en el formulario.
+ */
+export const FECHA_DE_FABRICACIO_PAGO = {
+  labelNombre: 'Fecha de fabricación',
+  required: true,
+  habilitado: true,
+};
+
+
+/**
+ * @const FECHA_DE_CADUCIDAD_PAGO
+ * @description Configuración del campo “Fecha de pago” en el formulario.
+ */
+export const FECHA_DE_CADUCIDAD_PAGO = {
+  labelNombre: 'Fecha de caducidad',
+  required: true,
+  habilitado: true,
+};
+
+/**
+ * Representa la estructura de los datos relacionados con terceros.
+ *
+ * Contiene las listas de información de los distintos actores
+ * involucrados en el proceso de solicitud.
+ *
+ * @interface TercerosRelacionadosDatos
+ *
+ * @property {Fabricante[]} fabricanteTablaDatos - Lista de fabricantes asociados.
+ * @property {Destinatario[]} destinatarioFinalTablaDatos - Lista de destinatarios finales asociados.
+ * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores asociados.
+ * @property {Facturador[]} facturadorTablaDatos - Lista de facturadores asociados.
+ */
 export interface TercerosRelacionadosDatos {
   fabricanteTablaDatos: Fabricante[];
   destinatarioFinalTablaDatos: Destinatario[];
