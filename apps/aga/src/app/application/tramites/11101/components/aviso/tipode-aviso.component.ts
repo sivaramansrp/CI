@@ -561,7 +561,6 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: string) => void)(VALOR);
     
-    // If the field being updated is radioDomicilio, update the visibility
     if (campo === 'radioDomicilio') {
       this.setManual();
     }
