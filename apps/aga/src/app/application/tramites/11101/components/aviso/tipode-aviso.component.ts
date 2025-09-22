@@ -1,10 +1,12 @@
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, merge, takeUntil } from 'rxjs';
 import { Tramite11101Store, Tramitenacionales11101State } from '../../estados/tramite11101.store';
 import { CommonModule } from '@angular/common';
-import { MercanciaComponent } from '../mercancia/mercancia.component';
+import { CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA } from '../../constants/mercancia.enum';
+import { DiscripccionDeLaMercanciaForm } from '../../models/transportacion-maritima.model';
 import { Tramite11101Query } from '../../estados/tramite11101.query';
 import { TramiteFolioService } from '../../service/servicios-extraordinarios.service';
 
@@ -36,7 +38,7 @@ import { TramiteFolioService } from '../../service/servicios-extraordinarios.ser
   templateUrl: './tipode-aviso.component.html',
   styleUrls: ['./tipode-aviso.component.scss'],
   standalone: true,
-  imports: [TituloComponent, FormsModule, ReactiveFormsModule, MercanciaComponent, CommonModule]
+  imports: [TituloComponent, FormsModule, ReactiveFormsModule, CommonModule, CatalogoSelectComponent, InputRadioComponent, TablaDinamicaComponent]
 })
 export class TipodeAvisoComponent implements OnInit, OnDestroy {
 
@@ -53,21 +55,93 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
   avisoForm!: FormGroup;
 
   /**
-* Subject para destruir notificador.
-*/
+  * Subject para destruir notificador.
+  */
   consultaDatos!: ConsultaioState;
 
   /**
-* Indica si el formulario se encuentra en modo solo lectura.
-* Si es `true`, los controles del formulario estarán deshabilitados para evitar modificaciones.
-*/
-  esFormularioSoloLectura: boolean = false
+  * Indica si el formulario se encuentra en modo solo lectura.
+  * Si es `true`, los controles del formulario estarán deshabilitados para evitar modificaciones.
+  */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Indica si la opción manual está actualmente seleccionada.
    * Se utiliza para alternar elementos de la interfaz o lógica basada en el estado de selección manual.
    */
-  isManualSelected: boolean = false
+  isManualSelected: boolean = false;
 
+  /**
+   * Lista de catálogos disponibles para aduanas.
+   */
+  entidadadfederativa!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para alcadilamunicipio.
+   */
+  alcadilamunicipio!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para colonia.
+   */
+  colonia!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para formaParteDePatrimonio.
+   */
+  formaParteDePatrimonio!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para unidadmedida.
+   */
+  unidadmedida!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para moneda.
+   */
+  moneda!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para fin.
+   */
+  fin!: Catalogo[];
+
+  /**
+   * Lista de catálogos disponibles para estado.
+   */
+  estado!: Catalogo[];
+
+  /**
+   * Opciones de radio.
+   */
+  radioOpcions = [
+    { label: 'Manual', value: 'manual' },
+    { label: 'Carga masiva', value: 'cargamasiva' }
+  ];
+
+  /**
+   * Formulario reactivo para capturar los datos de la mercancía.
+   * @type {FormGroup}
+   */
+  mercanciaForm!: FormGroup;
+
+  /**
+   * Lista de descripciones de la mercancía.
+   * @type {discripccionDeLaMercanciaForm[]}
+   */
+  discripccionDeLaMercanciaForm: DiscripccionDeLaMercanciaForm[] = [];
+  
+  /**
+   * Configuración para el persona moral nacional encabezado de la tabla.
+   */
+  configuracionParaPFEEncabezadoDeTabla = CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA;
+  
+  /**
+   * Enumeración para la selección de tablas.
+   * @type {typeof TablaSeleccion}
+   */
+  tablaSeleccion = TablaSeleccion;
+  
   /**
    * Constructor de la clase. Inicializa el FormBuilder.
    * @param {FormBuilder} formBuilder - Servicio para construir formularios reactivos.
@@ -85,39 +159,43 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private formBuilder: FormBuilder,
     private query: Tramite11101Query,
-    private service: TramiteFolioService,
+    private tramiteService: TramiteFolioService,
     private store: Tramite11101Store
-  ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-          this.esFormularioSoloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario()
-        })
-      )
-      .subscribe()
-  }
+  ) {}
+
   /**
    * Estado de la solicitud que contiene los datos del formulario.
    * @type {Tramitenacionales11101State}
    */
   public solicitudState!: Tramitenacionales11101State;
+
   /**
    * Notificador para cancelar suscripciones activas al destruir el componente.
    * Se emite un valor y se completa en el método `ngOnDestroy` para evitar fugas de memoria.
    */
-  private destroyNotifier$: Subject<void> = new Subject<void>();
+  public destroyNotifier$: Subject<void> = new Subject<void>();
+
   /**
    * Método de inicialización del componente.
    * Configura el formulario reactivo con los campos necesarios.
    */
   ngOnInit(): void {
-    this.query.selectSeccionState$.pipe(takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.solicitudState = seccionState;
-      })).subscribe()
-    this.donanteDomicilio()
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        }))
+      .subscribe();
+    this.query.selectSeccionState$
+      .pipe(takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        }))
+        .subscribe()
+    this.donanteDomicilio();
+    this.inicializaCatalogos();
   }
 
   /**
@@ -126,11 +204,14 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
 */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.guardarDatosDelFormulario();
+      this.avisoForm.disable();
+      this.mercanciaForm.disable();
     } else {
-      this.datosDeAvisoForm()
+      this.avisoForm.enable();
+      this.mercanciaForm.enable();
     }
   }
+
   /**
  * Inicializa el formulario reactivo para capturar los datos del aviso.
  * 
@@ -195,57 +276,296 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
       ycalle: [
         this.solicitudState?.ycalle,
         [Validators.maxLength(100)]
+      ],
+      radioDomicilio: [
+        this.solicitudState?.radioDomicilio
       ]
     });
+
+    this.mercanciaForm = this.formBuilder.group({
+      estado: [
+        this.solicitudState?.estado,
+        [Validators.required, Validators.maxLength(20)]
+      ],
+      cantidad: [
+        this.solicitudState?.cantidad,
+        [Validators.required, Validators.min(1)]
+      ],      
+      formaParteDePatrimonio: [
+        this.solicitudState?.formaParteDePatrimonio,
+        [Validators.required]
+      ],
+      descripcion: [
+        this.solicitudState?.descripcion,
+        [Validators.required, Validators.maxLength(200)]
+      ],
+      valor: [
+        this.solicitudState?.valor,
+        [Validators.required, Validators.min(1)]
+      ],
+      unidadmedida: [
+        this.solicitudState?.unidadmedida,
+        [Validators.required, Validators.maxLength(50)]
+      ],
+      fraccionarancelaria: [
+        this.solicitudState?.fraccionarancelaria,
+        [Validators.required, Validators.min(1), Validators.max(99999999)]
+      ],
+      nico: [
+        this.solicitudState?.nico,
+        [Validators.required, Validators.min(0)]
+      ],
+      marca: [
+        this.solicitudState?.marca,
+        [Validators.required, Validators.maxLength(50)]
+      ],
+      modelo: [
+        this.solicitudState?.modelo,
+        [Validators.required, Validators.maxLength(50)]
+      ],
+      numerodeserie: [
+        this.solicitudState?.numerodeserie,
+        [Validators.required, Validators.min(1)]
+      ],
+      fin: [
+        this.solicitudState?.fin,
+        [Validators.required, Validators.maxLength(100)]
+      ],
+      moneda: [
+        this.solicitudState?.moneda,
+        [Validators.required, Validators.maxLength(50)]
+      ],
+      especifique: [
+        this.solicitudState?.especifique,
+        [Validators.maxLength(200)]
+      ],
+      consecutivo: [
+        this.solicitudState?.consecutivo
+      ]
+    });
+
+    this.setManual();
     this.inicializarEstadoFormulario();
   }
 
   /**
-* Habilita o deshabilita el formulario según el modo de solo lectura.
-*
-* Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`),
-* deshabilita todos los controles del formulario para evitar modificaciones.
-* Si no está en modo solo lectura, habilita todos los controles del formulario para permitir la edición.
-*/
-  guardarDatosDelFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.avisoForm.disable();
-    } else {
-      this.avisoForm.enable();
-    }
+   * Maneja la selección de la aduana.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  entidadadFederativaSeleccion(): void {
+    const ENTIDADFEDERATIVA = this.avisoForm.get('entidadadfederativa')?.value;
+    this.store.setEntidadadfederativa(ENTIDADFEDERATIVA);
   }
 
   /**
-   * Establece los valores del formulario utilizando datos simulados.
+   * Maneja la selección del alcadilamunicipio.
+   * Obtiene el valor del formulario y lo establece en el store.
    */
-  datosDeAvisoForm(): void {
-    if (this.esFormularioSoloLectura && this.avisoForm) {
-      this.avisoForm.get('numeroderegistro')?.disable();
-      this.avisoForm.get('NobmreDenominationRazonSocial')?.disable();
-      this.avisoForm.get('Telefono')?.disable();
-      this.avisoForm.get('correoelectronico')?.disable();
-      this.avisoForm.get('entidadadfederativa')?.disable();
-      this.avisoForm.get('alcadilamunicipio')?.disable();
-      this.avisoForm.get('colonia')?.disable();
-      this.avisoForm.get('codigopostal')?.disable();
-      this.avisoForm.get('calle')?.disable();
-      this.avisoForm.get('numeroletraexterior')?.disable();
-      this.avisoForm.get('numeroletrainterior')?.disable();
-      this.avisoForm.get('entrecalle')?.disable();
-      this.avisoForm.get('ycalle')?.disable();
-    }
+  alcadilamunicipioSeleccion(): void {
+    const ALCADILAMUNICIPIO = this.avisoForm.get('alcadilamunicipio')?.value;
+    this.store.setAlcadilamunicipio(ALCADILAMUNICIPIO);
   }
+
+  /**
+   * Maneja la selección de la colonia.
+   * Obtiene el valor del formulario y lo establece en el store.
+   */
+  coloniaSeleccion(): void {
+    const COLONIA = this.avisoForm.get('colonia')?.value;
+    this.store.setColonia(COLONIA);
+  }
+
+  /**
+   * Maneja la selección de la formapartadepatrimonio.
+   */
+  formaParteDePatrimonioSeleccion(): void {
+    const FORMAPARTADEPATRIMONIA = this.mercanciaForm.get('formapartadepatrimonio')?.value;
+    this.store.setFormaParteDePatrimonio(FORMAPARTADEPATRIMONIA);
+  }
+
+  /**
+   * Maneja la selección de la unidadmedida.
+   */
+  unidadmedidaSeleccion(): void {
+    const UNIDADMEDIDA = this.mercanciaForm.get('unidadmedida')?.value;
+    this.store.setUnidadmedida(UNIDADMEDIDA);
+  }
+
+  /**
+   * Maneja la selección de la moneda.
+   */
+  monedaSeleccion(): void {
+    const MONEDA = this.mercanciaForm.get('moneda')?.value;
+    this.store.setMoneda(MONEDA);
+  }
+
+  /**
+   * Maneja la selección del fin.
+   */
+  finSeleccion(): void {
+    const FIN = this.mercanciaForm.get('fin')?.value;
+    this.store.setFin(FIN);
+  }
+
+  /**
+   * Maneja la selección del estado.
+   */
+  estadoSeleccion(): void {
+    const ESTADO = this.mercanciaForm.get('estado')?.value;
+    this.store.setEstado(ESTADO);
+  }
+
+  /**
+   * Inicializa los catálogos necesarios para el componente.
+   */
+  inicializaCatalogos(): void {
+    const ENTIDADFEDERATIVA$ = this.tramiteService
+      .getEntidadfederativa()
+      .pipe(
+        map((resp) => {
+          this.entidadadfederativa = resp.data;
+        })
+      );
+
+    const ALCADILAMUNICIPIO$ = this.tramiteService
+      .getAlcadilamunicipio()
+      .pipe(
+        map((resp) => {
+          this.alcadilamunicipio = resp.data;
+        })
+      );
+
+    const COLONIA$ = this.tramiteService
+      .getColonia()
+      .pipe(
+        map((resp) => {
+          this.colonia = resp.data;
+        })
+      );
+
+    const FORMAPARTADEPATRIMONIA$ = this.tramiteService
+      .getFormaParteDePatrimonio()
+      .pipe(
+        map((resp) => {
+          this.formaParteDePatrimonio = resp.data;
+        })
+      );
+    
+    const UNIDADMEDIDA$ = this.tramiteService
+      .getUnidadmedida()
+      .pipe(
+        map((resp) => {
+          this.unidadmedida = resp.data;
+        })
+      );
+
+    const MONEDA$ = this.tramiteService
+      .getMoneda()
+      .pipe(
+        map((resp) => {
+          this.moneda = resp.data;
+        })
+      );
+
+    const FIN$ = this.tramiteService
+      .getFin()
+      .pipe(
+        map((resp) => {
+          this.fin = resp.data;
+        })
+      );
+
+    const ESTADO$ = this.tramiteService
+      .getEstado()
+      .pipe(
+        map((resp) => {
+          this.estado = resp.data;
+        })
+      );
+
+      merge(
+        ENTIDADFEDERATIVA$,
+        ALCADILAMUNICIPIO$,
+        COLONIA$,
+        FORMAPARTADEPATRIMONIA$,
+        UNIDADMEDIDA$,
+        MONEDA$,
+        FIN$,
+        ESTADO$
+      )
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe();
+    }
 
   /**
    * Cambia el modo entre manual y carga masiva.
-   * @param {boolean} isManual - Indica si el modo manual debe ser seleccionado.
+   * Si el formulario es de solo lectura, actualiza los estados correspondientes.
    */
-  setManual(isManual: boolean): void {
-    if (this.esFormularioSoloLectura) {
-      this.isManualSelected = isManual;
-      this.cargaMasiva = !isManual;
+  setManual(): void {
+    const RADIO_DOMICILIO = this.avisoForm?.get('radioDomicilio')?.value;
+    this.isManualSelected = RADIO_DOMICILIO === 'manual';
+  }
+  
+  /**
+   * Agrega una nueva mercancía a la lista si el formulario es válido.
+   */
+  agregar(): void {
+    if (this.mercanciaForm.valid) {
+      this.tramiteService.agregar().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+        (respuesta) => {
+          if (respuesta?.success) {
+            const DATOS = Array.isArray(respuesta.datos) ? respuesta.datos : [respuesta.datos];
+            this.discripccionDeLaMercanciaForm = [...this.discripccionDeLaMercanciaForm,...DATOS];
+            console.log('Respuesta del servicio:', this.discripccionDeLaMercanciaForm);
+            (this.store.setPersonaFisicaExtranjeraTabla as (valor: DiscripccionDeLaMercanciaForm[]) => void)(this.discripccionDeLaMercanciaForm);
+            this.store.setPersonaFisicaExtranjeraTabla(this.discripccionDeLaMercanciaForm);
+            this.mercanciaForm.reset();
+            this.mercanciaForm.markAsUntouched();
+            this.mercanciaForm.markAsPristine();
+          }
+        }
+      );
+    } else {
+      this.mercanciaForm.markAllAsTouched();
     }
   }
+
+  /**
+   * Limpiar formulario.
+   */
+  limpiar(): void {
+    this.mercanciaForm.reset();
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @param {string} id El nombre del control del formulario.
+   * @returns {boolean} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  isInvalid(id: string): boolean {
+    const CONTROL = this.mercanciaForm.get(id);
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
+  }
+
+  /**
+   * Establece los valores en el store.
+   * @param form El formulario del cual se obtienen los valores.
+   * @param campo El campo del formulario.
+   * @param metodoNombre El nombre del método en el store.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite11101Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: string) => void)(VALOR);
+    
+    if (campo === 'radioDomicilio') {
+      this.setManual();
+    }
+  }
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Se utiliza para limpiar las suscripciones.
