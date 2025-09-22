@@ -94,7 +94,7 @@
   <div class="modal-body">
     <form [formGroup]="transportistaCertificacionForm">
       <label class="form-label text-left">
-        <span class="text-danger">*</span> RFC:
+        RFC<span class="text-danger">*</span>:
       </label>
       <div class="row">
         <div class="col-md-4">
@@ -188,12 +188,12 @@
     </button>
     <button
       type="button"
-      class="btn btn-danger"
+      class="btn btn-default"
       (click)="limpiarTransportista()"
     >
       Limpiar
     </button>
-    <button type="button" class="btn btn-danger" (click)="cancelarModal()">
+    <button type="button" class="btn btn-default" (click)="cancelarModal()">
       Cancelar
     </button>
   </div>

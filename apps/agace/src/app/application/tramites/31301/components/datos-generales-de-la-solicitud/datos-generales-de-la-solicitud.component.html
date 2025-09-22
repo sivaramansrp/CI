@@ -3,7 +3,7 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <label class="form-label">Tipo de endoso *:</label>
-        <app-input-radio formControlName="tipoDeEndoso" [selectedValue]="datosGeneralesForm.get('tipoDeEndoso')?.value"
+        <app-input-radio formControlName="tipoDeEndoso" [selectedValue]="solicitud31301State.tipoDeEndoso"
           [radioOptions]="tipoDeEndosoOpcion.radioOptions" [isRequired]="tipoDeEndosoOpcion.isRequired"
           [layout]="'vertical'" (valueChange)="getTipoDeEndoso($event)"></app-input-radio>
       </div>
@@ -12,7 +12,7 @@
         <app-input-radio formControlName="tipoDeGarantia"
           [selectedValue]="datosGeneralesForm.get('tipoDeGarantia')?.value"
           [radioOptions]="tipoDeGarantiaOpcion.radioOptions" [isRequired]="tipoDeGarantiaOpcion.isRequired"
-          [layout]="'horizontal'" [gap]="'50px'"></app-input-radio>
+          [layout]="'horizontal'" [gap]="'50px'" [gridLayout]="true"></app-input-radio>
       </div>
       <div class="col-md-12">
         @if(datosGeneralesForm.get('tipoDeEndoso')?.value === 1 ||
@@ -46,13 +46,13 @@
             datosGeneralesForm.get('modalidadDeLaGarantia')?.value
           " [radioOptions]="modalidadDeLaGarantiaOpcion.radioOptions"
           [isRequired]="modalidadDeLaGarantiaOpcion.isRequired" [layout]="'horizontal'"
-          [gap]="'50px'"></app-input-radio>
+          [gap]="'50px'" [gridLayout]="true"></app-input-radio>
       </div>
       <div class="col-md-8">
         <label class="form-label">Tipo sector *:</label>
         <app-input-radio formControlName="tipoSector" [selectedValue]="datosGeneralesForm.get('tipoSector')?.value"
           [radioOptions]="tipoSectorOpcion.radioOptions" [isRequired]="tipoSectorOpcion.isRequired"
-          [layout]="'horizontal'" [gap]="'50px'"></app-input-radio>
+          [layout]="'horizontal'" [gap]="'50px'" [gridLayout]="true"></app-input-radio>
       </div>
       <div class="col-md-4">
         <app-catalogo-select
@@ -78,6 +78,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3500"
         ></app-input-radio>
       </div>
@@ -91,6 +92,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3501"
         ></app-input-radio>
       </div>
@@ -104,6 +106,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3502"
         ></app-input-radio>
       </div>
@@ -132,7 +135,7 @@
             name="Agregar"
             id="btnBusqRfc"
             [disabled]="true"
-            class="btn btn-primary me-5"
+            class="btn btn-default me-5 "
           >
             Agregar
           </button>
@@ -160,7 +163,7 @@
             name="eliminar"
             [disabled]="true"
             id="btnBusqRfcEliminar"
-            class="btn btn-danger me-5 btn-custom-gray"
+            class="btn btn-default me-5"
           >
             Eliminar
           </button>
@@ -175,6 +178,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3503"
         ></app-input-radio>
       </div>
@@ -188,6 +192,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3504"
         ></app-input-radio>
       </div>
@@ -200,6 +205,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3505"
         ></app-input-radio>
       </div>
@@ -212,6 +218,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3506"
         ></app-input-radio>
       </div>
@@ -224,6 +231,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3507"
         ></app-input-radio>
       </div>
@@ -237,6 +245,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3508"
         ></app-input-radio>
       </div>
@@ -275,7 +284,7 @@
                 class="btn btn-default costumbre-label"
                 [class.disabled]="true"
               >
-                Elija archivo
+                Elegir archivo
               </label>
               <span>{{
                 nombreDelArchivo || 'No se eligió ningún archivo'
@@ -290,7 +299,7 @@
               name="cargaArchivoProcesos"
               id="cargaArchivoProcesos"
               [disabled]="true"
-              class="btn btn-default me-md-3 btn-custom-gray"
+              class="btn btn-default me-md-3"
             >
               Cargar archivo
             </button>
@@ -332,7 +341,7 @@
                 class="btn btn-default costumbre-label"
                 [class.disabled]="true"
               >
-                Elija archivo
+                Elegir archivo
               </label>
               <span>{{
                 nombreDelArchivo || 'No se eligió ningún archivo'
@@ -347,7 +356,7 @@
               name="cargaArchivoProcesos"
               id="cargaArchivoProcesos"
               [disabled]="true"
-              class="btn btn-default me-md-3 btn-custom-gray"
+              class="btn btn-default me-md-3"
             >
               Cargar archivo
             </button>
@@ -364,6 +373,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3511"
         ></app-input-radio>
       </div>
@@ -381,6 +391,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3512"
         ></app-input-radio>
       </div>
@@ -394,6 +405,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3513"
         ></app-input-radio>
       </div>
@@ -437,6 +449,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3514"
         ></app-input-radio>
       </div>
@@ -450,6 +463,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3515"
         ></app-input-radio>
       </div>
@@ -467,6 +481,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3516"
         ></app-input-radio>
       </div>
@@ -485,7 +500,6 @@
       </div>
 
       <div class="col-md-12">
-        <ng-titulo titulo="Miembro de la empresa" />
         <ng-titulo titulo="Miembro de la empresa" />
       </div>
 
@@ -510,7 +524,7 @@
           <button
             type="button"
             id="eliminarSocio"
-            class="btn btn-danger btn-custom-gray"
+            class="btn btn-default"
             [disabled]="true"
           >
             Eliminar
@@ -519,14 +533,14 @@
             type="button"
             [disabled]="true"
             id="modificarSocio"
-            class="btn btn-default ms-3 btn-custom-gray"
+            class="btn btn-default ms-3"
           >
             Modificar
           </button>
           <button
             type="button"
             id="agregarSocio"
-            class="btn btn-primary ms-3 btn-custom-gray"
+            class="btn btn-default ms-3"
             [disabled]="true"
           >
             Agregar
@@ -543,6 +557,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3517"
         ></app-input-radio>
       </div>
@@ -556,6 +571,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3518"
         ></app-input-radio>
       </div>
@@ -569,6 +585,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3519"
         ></app-input-radio>
       </div>
@@ -582,6 +599,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3520"
         ></app-input-radio>
       </div>
@@ -629,7 +647,7 @@
           <button
             type="button"
             id="eliminarSocio"
-            class="btn btn-danger btn-custom-gray"
+            class="btn btn-default"
             [disabled]="true"
           >
             Eliminar
@@ -637,7 +655,7 @@
           <button
             type="button"
             id="agregarSocio"
-            class="btn btn-primary ms-3 btn-custom-gray"
+            class="btn btn-default ms-3"
             [disabled]="true"
           >
             Agregar
@@ -654,6 +672,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3521"
         ></app-input-radio>
       </div>
@@ -667,6 +686,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3522"
         ></app-input-radio>
       </div>
@@ -715,7 +735,7 @@
           <button
             type="button"
             id="modificarSocio"
-            class="btn btn-default btn-custom-gray"
+            class="btn btn-default"
             [disabled]="true"
           >
             Modificar
@@ -724,7 +744,7 @@
           <button
             type="button"
             id="eliminarSocio"
-            class="btn btn-danger ms-3 btn-custom-gray"
+            class="btn btn-default ms-3"
             [disabled]="true"
           >
             Eliminar
@@ -733,7 +753,7 @@
           <button
             type="button"
             id="agregarSocio"
-            class="btn btn-primary ms-3 btn-custom-gray"
+            class="btn btn-default ms-3"
             [disabled]="true"
           >
             Agregar
@@ -775,6 +795,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3523"
         ></app-input-radio>
       </div>
@@ -792,6 +813,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3528"
         ></app-input-radio>
       </div>
@@ -805,6 +827,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3529"
         ></app-input-radio>
       </div>
@@ -849,6 +872,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3530"
         ></app-input-radio>
       </div>
@@ -874,7 +898,7 @@
                 class="btn btn-default costumbre-label"
                 [class.disabled]="true"
               >
-                Elija archivo
+                Elegir archivo
               </label>
               <span>{{
                 nombreDelArchivo || 'No se eligió ningún archivo'
@@ -889,7 +913,7 @@
               name="cargaArchivoProcesos"
               id="cargaArchivoProcesos"
               [disabled]="true"
-              class="btn btn-default me-md-3 btn-custom-gray"
+              class="btn btn-default me-md-3"
             >
               Cargar archivo
             </button>
@@ -906,6 +930,7 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          [gridLayout]="true"
           formControlName="3531"
         ></app-input-radio>
       </div>

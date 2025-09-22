@@ -258,6 +258,16 @@ plantasForm!: FormGroup;
   @Output() datosFormaFedratario: EventEmitter<FederatariosEncabezado> =
     new EventEmitter<FederatariosEncabezado>(true);
 
+  /**
+   * Emisor de eventos para los datos de plantas disponibles.
+   */
+  @Output() datosPlantaDisponibles: EventEmitter<PlantasDisponibles[]> = new EventEmitter<PlantasDisponibles[]>(true);
+
+  /** 
+   * Emisor de eventos para los datos de plantas IMMEX. 
+   */
+  @Output() datosPlantasImmex: EventEmitter<PlantasImmex[]> = new EventEmitter<PlantasImmex[]>(true);
+
  /**
    * Controla la visibilidad del popup "Complementar Planta".
    * @property {boolean} mostrarComplementarPlantaPopup
@@ -585,6 +595,7 @@ plantasForm!: FormGroup;
  */
 buscarPlantasImmex(): void {
   this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
+  this.datosPlantaDisponibles.emit(this.plantasDisponiblesDatos);
 }
 
 /**
@@ -596,6 +607,7 @@ buscarPlantasImmex(): void {
  */
 agregarPlantas(): void {
   this.plantasImmexDatos = [INMEX_PLANTAS];
+  this.datosPlantasImmex.emit(this.plantasImmexDatos);
 }
 
 

@@ -8,6 +8,9 @@ import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { USUARIO_INFO } from '../../constantes/nuevo-programa.enum';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
 import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
+import notarios from '@libs/shared/theme/assets/json/shared/notarios.json';
+import planta from '@libs/shared/theme/assets/json/shared/planta.json';
+import plantasSubmanufactureras from '@libs/shared/theme/assets/json/shared/plantas-submanufactureras.json';
 import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accionistas.json';
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
@@ -105,6 +108,8 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     seccionCargarDocumentos: boolean = true;
 
     datosUsuario: Usuario = USUARIO_INFO;
+
+    cargaEnProgreso: boolean = true;
     
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
@@ -123,287 +128,28 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private socioAccionistaBase: any[] = socioAccionistas;
+  private socioAccionistaBase = socioAccionistas;
 
-        private plantasBase: Readonly<Record<string, any>> = {
-    "idPlanta": "123",
-            "calle": "Main St",
-            "numeroInterior": "A",
-            "numeroExterior": "10",
-            "codigoPostal": "12345",
-            "colonia": "Centro",
-            "delegacionMunicipio": "MunicipioX",
-            "entidadFederativa": "EntidadY",
-            "pais": "Mexico",
-            "rfc": "RFC123456",
-            "domicilioFiscal": "Fiscal Address",
-            "razonSocial": "Empresa S.A.",
-            "claveEntidadFederativa": "EF01",
-            "clavePlantaEmpresa": "PLT01",
-            "clavePais": "MX",
-            "claveDelegacionMunicipio": "DM01",
-            "estatus": true,
-            "desEstatus": "Activo",
-            "localidad": "Localidad1",
-            "telefono": "5551234567",
-            "fax": "5557654321",
-            "idDireccion": "DIR123",
-            "testadoP": 1,
-            "empresaCalle": "Empresa St",
-            "empresaNumeroInterior": "B",
-            "empresaNumeroExterior": "20",
-            "empresaCodigoPostal": "54321",
-            "empresaColonia": "EmpColonia",
-            "empresaDelegacionMunicipio": "EmpMunicipio",
-            "empresaEntidadFederativa": "EmpEntidad",
-            "empresaPais": "Mexico",
-            "empresaClaveEntidadFederativa": "EF02",
-            "empresaClavePlantaEmpresa": "PLT02",
-            "empresaClavePais": "MX",
-            "empresaClaveDelegacionMunicipio": "DM02",
-            "empresaCorreoElectronico": "empresa@email.com",
-            "empresaTipo": "Tipo1",
-            "permaneceMercancia": "Si",
-            "rfcActivo": "RFC654321",
-            "domiciliosInscritos": "2",
-            "personaMoralISR": "Si",
-            "opinionSAT": "Positiva",
-            "fecha32D": "2024-06-01",
-            "firmantes": [
-                {
-                    "idPlantaF": "FIRM01",
-                    "tipoFirmante": "Representante Legal",
-                    "descTipoFirmante": "Legal Representative"
-                }
-            ],
-            "datosComplementarios": [
-                {
-                    "idPlantaC": "C01",
-                    "idDato": "D01",
-                    "amparoPrograma": "ProgramaX",
-                    "tipoDocumento": "DocType1",
-                    "descDocumento": "Documento de respaldo",
-                    "descripcionOtro": "Otro documento",
-                    "documentoRespaldo": "Respaldo.pdf",
-                    "descDocRespaldo": "Descripción respaldo",
-                    "respaldoOtro": "Otro respaldo",
-                    "fechaFirma": "2024-01-01",
-                    "fechaVigencia": "2025-01-01",
-                    "fechaFirmaRespaldo": "2024-01-02",
-                    "fechaVigenciaRespaldo": "2025-01-02"
-                }
-            ],
-            "montos": [
-                {
-                    "idPlantaM": "M01",
-                    "idMonto": "MON01",
-                    "tipo": "Inversión",
-                    "descTipo": "Inversión inicial",
-                    "cantidad": "1000",
-                    "descripcion": "Monto de inversión",
-                    "monto": "500000",
-                    "testado": "1",
-                    "descTestado": "Testado OK"
-                }
-            ],
-            "listaCapacidad": [
-                {
-                    "idPlantaCa": "CA01",
-                    "idCapacidad": "CAP01",
-                    "claveServicio": "1",
-                    "descripcionServicio": "Servicio de producción",
-                    "cveTipoServicio": "TS01",
-                    "tipoServicio": "Producción",
-                    "fraccion": "FR01",
-                    "fraccionVista": "Fracción Vista",
-                    "umt": "UMT01",
-                    "descripcion": "Capacidad instalada",
-                    "capacidadEfectiva": "10000",
-                    "calculo": "Manual",
-                    "turnos": "3",
-                    "horasTurno": "8",
-                    "cantidadEmpleados": "50",
-                    "cantidadMaquinaria": "10",
-                    "descripcionMaquinaria": "Maquinaria industrial",
-                    "capacidadMensual": "300000",
-                    "capacidadAnual": "3600000",
-                    "testado": "1",
-                    "descTestado": "Testado OK"
-                }
-            ],
-            "datosEmpleados": [
-                {
-                    "idPlantaE": "E01",
-                    "idEmpleados": "EMP01",
-                    "totalEmpleados": "100",
-                    "directos": "80",
-                    "cedula": "CED123",
-                    "fechaCedula": "2024-01-10",
-                    "indirectos": "20",
-                    "contrato": "ContratoX",
-                    "objetoContrato": "Objeto del contrato",
-                    "fechaFirma": "2024-01-15",
-                    "fechaFinVigencia": "2025-01-15",
-                    "rfcEmpresa": "RFCEMP123",
-                    "razonEmpresa": "Empresa Empleadora",
-                    "testado": "1",
-                    "descTestado": "Testado OK"
-                }
-            ]
-  }
+  /**
+   * Objeto base inmutable que representa la estructura inicial de un plantas.
+   */
+  private plantasBase = planta;
 
   /** Listado de empresas nacionales utilizadas en el formulario de solicitud. */
   private empresasNacionales = empresasNacionales;
   
   /** Listado de empresas  extranjeras utilizadas en el formulario de solicitud. */
   private empresasExtranjeras = empresasExtranjeras;
+
   /**
    * Objeto base inmutable que representa la estructura inicial de un plantasSubmanufactureras.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private plantasSubmanufacturerasBase: Readonly<Record<string, any>> = {
-            "idPlanta": "123",
-            "calle": "Main St",
-            "numeroInterior": "A",
-            "numeroExterior": "10",
-            "codigoPostal": "12345",
-            "colonia": "Centro",
-            "delegacionMunicipio": "MunicipioX",
-            "entidadFederativa": "EntidadY",
-            "pais": "Mexico",
-            "rfc": "RFC123456",
-            "domicilioFiscal": "Fiscal Address",
-            "razonSocial": "Empresa S.A.",
-            "claveEntidadFederativa": "EF01",
-            "clavePlantaEmpresa": "PLT01",
-            "clavePais": "MX",
-            "claveDelegacionMunicipio": "DM01",
-            "estatus": true,
-            "desEstatus": "Activo",
-            "localidad": "Localidad1",
-            "telefono": "5551234567",
-            "fax": "5557654321",
-            "idDireccion": "DIR123",
-            "testadoP": 1,
-            "empresaCalle": "Empresa St",
-            "empresaNumeroInterior": "B",
-            "empresaNumeroExterior": "20",
-            "empresaCodigoPostal": "54321",
-            "empresaColonia": "EmpColonia",
-            "empresaDelegacionMunicipio": "EmpMunicipio",
-            "empresaEntidadFederativa": "EmpEntidad",
-            "empresaPais": "Mexico",
-            "empresaClaveEntidadFederativa": "EF02",
-            "empresaClavePlantaEmpresa": "PLT02",
-            "empresaClavePais": "MX",
-            "empresaClaveDelegacionMunicipio": "DM02",
-            "empresaCorreoElectronico": "empresa@email.com",
-            "empresaTipo": "Tipo1",
-            "permaneceMercancia": "Si",
-            "rfcActivo": "RFC654321",
-            "domiciliosInscritos": "2",
-            "personaMoralISR": "Si",
-            "opinionSAT": "Positiva",
-            "fecha32D": "2024-06-01",
-            "firmantes": [
-                {
-                    "idPlantaF": "FIRM01",
-                    "tipoFirmante": "Representante Legal",
-                    "descTipoFirmante": "Legal Representative"
-                }
-            ],
-            "datosComplementarios": [
-                {
-                    "idPlantaC": "C01",
-                    "idDato": "D01",
-                    "amparoPrograma": "ProgramaX",
-                    "tipoDocumento": "DocType1",
-                    "descDocumento": "Documento de respaldo",
-                    "descripcionOtro": "Otro documento",
-                    "documentoRespaldo": "Respaldo.pdf",
-                    "descDocRespaldo": "Descripción respaldo",
-                    "respaldoOtro": "Otro respaldo",
-                    "fechaFirma": "2024-01-01",
-                    "fechaVigencia": "2025-01-01",
-                    "fechaFirmaRespaldo": "2024-01-02",
-                    "fechaVigenciaRespaldo": "2025-01-02"
-                }
-            ],
-            "montos": [
-                {
-                    "idPlantaM": "M01",
-                    "idMonto": "MON01",
-                    "tipo": "Inversión",
-                    "descTipo": "Inversión inicial",
-                    "cantidad": "1000",
-                    "descripcion": "Monto de inversión",
-                    "monto": "500000",
-                    "testado": "1",
-                    "descTestado": "Testado OK"
-                }
-            ],
-            "listaCapacidad": [
-                {
-                    "idPlantaCa": "CA01",
-                    "idCapacidad": "CAP01",
-                    "claveServicio": "1",
-                    "descripcionServicio": "Servicio de producción",
-                    "cveTipoServicio": "TS01",
-                    "tipoServicio": "Producción",
-                    "fraccion": "FR01",
-                    "fraccionVista": "Fracción Vista",
-                    "umt": "UMT01",
-                    "descripcion": "Capacidad instalada",
-                    "capacidadEfectiva": "10000",
-                    "calculo": "Manual",
-                    "turnos": "3",
-                    "horasTurno": "8",
-                    "cantidadEmpleados": "50",
-                    "cantidadMaquinaria": "10",
-                    "descripcionMaquinaria": "Maquinaria industrial",
-                    "capacidadMensual": "300000",
-                    "capacidadAnual": "3600000",
-                    "testado": "1",
-                    "descTestado": "Testado OK"
-                }
-            ],
-            "datosEmpleados": [
-                {
-                    "idPlantaE": "E01",
-                    "idEmpleados": "EMP01",
-                    "totalEmpleados": "100",
-                    "directos": "80",
-                    "cedula": "CED123",
-                    "fechaCedula": "2024-01-10",
-                    "indirectos": "20",
-                    "contrato": "ContratoX",
-                    "objetoContrato": "Objeto del contrato",
-                    "fechaFirma": "2024-01-15",
-                    "fechaFinVigencia": "2025-01-15",
-                    "rfcEmpresa": "RFCEMP123",
-                    "razonEmpresa": "Empresa Empleadora",
-                    "testado": "1",
-                    "descTestado": "Testado OK"
-                }
-            ]
-        }
+  private plantasSubmanufacturerasBase = plantasSubmanufactureras;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-private notariosBase: Readonly<Record<string, any>> = {
-
-            "nombreNotario": "JORGE",
-            "apellidoMaterno": "NAVARRO",
-            "apellidoPaterno": "NEAVES",
-            "rfc": "AAL0409235E6",
-            "numeroActa": "26117",
-            "numeroNotaria": "22",
-            "numeroNotario": null,
-            "delegacionMunicipio": "08046",
-            "entidadFederativa": "CHIH",
-            "fechaActa": "2025-09-05",
-            "numeroRegistro": "251473"
-}
-
+   /**
+   * Objeto base inmutable que representa la estructura inicial de un notarios.
+   */
+  private notariosBase = notarios;
 
   /**
   * URL de la página actual.
@@ -483,19 +229,39 @@ private notariosBase: Readonly<Record<string, any>> = {
  * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
  */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildSociosAccionistas(data: Record<string, any>, base: any[]): any[] {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
-      base.forEach(item => {
-        const ITEM = (item && typeof item === 'object') ? item : {};
-        RESULT.push({
-          ...ITEM,
-          paginaWeb: data['datosComplimentos'].datosGeneralis.paginaWWeb,
-          numeroRegistro: data['datosComplimentos'].formaModificaciones.nombreDeActa,
-          capacidadAlmacenaje: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
-          rfc:  data['datosComplimentos'].formaModificaciones.rfc ?? ''
-        });
-      });
+  buildSociosAccionistas(data: Record<string, any>, base: Record<string, any>): any {
+    return {
+      ...base,
+      notario: {
+        ...base['notario'],
+        rfc: data['datosComplimentos'].formaModificaciones.rfc,
+        numeroActa: data['datosComplimentos'].formaModificaciones.nombreDeActa,
+        numeroNotario: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
+        entidadFederativa: data['datosComplimentos'].formaModificaciones.estado,
+        fechaActa: data['datosComplimentos'].formaModificaciones.fechaDeActa
+      },
+      modalidad: data['datosComplimentos'].modalidad,
+      booleanGenerico: data['datosComplimentos'].programaPreOperativo ? true : false,
+      descripcionSistemasMedicion: data['datosComplimentos'].datosGeneralis.paginaWWeb,
+      descripcionLugarEmbarque: data['datosComplimentos'].datosGeneralis.localizacion,
+      capacidadAlmacenaje: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
+      numeroPermiso: data['datosComplimentos'].obligacionesFiscales.opinionPositiva === 1 ? 'SI' : '',
+      fechaOperacion: data['datosComplimentos'].obligacionesFiscales.fechaExpedicion,
+      nomOficialAutorizado: data['datosComplimentos'].formaModificaciones.nombreDelFederatario,
+
+    };
+  }
+
+  /** Construye el arreglo de declaraciones de solicitud a partir de los datos proporcionados. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static buildDeclaracionSolicitudEntries(data: Record<string, any>): unknown[] {
+    const RESULT = [
+      {
+          "acepto": data['datosComplimentos'].obligacionesFiscales.aceptarObligacionFiscal ? 1 : 0,
+          "idTipoTramite": 80101,
+          "cveDeclaracion": "123"
+      }
+    ];
     return RESULT;
   }
 
@@ -533,8 +299,15 @@ private notariosBase: Readonly<Record<string, any>> = {
     return RESULT;
   }
 
-        // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
+/**
+ * Construye un arreglo de objetos de plantas basado en una estructura base común.
+ * 
+ * @param arr Arreglo de datos de entrada para cada planta.
+ * @param base Objeto base que se combina con los datos específicos de cada planta.
+ * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
+ */
+// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+buildPlantas(arr: any[] = [], base: Record<string, any>): any[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -561,6 +334,13 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     return RESULT;
 }
 
+/**
+ * Genera un arreglo de objetos con los datos de fedatarios a partir de un arreglo de entrada.
+ *
+ * @param arr Arreglo de objetos con datos de entrada (opcional).
+ * @param base Objeto base que se fusiona con los datos específicos de cada fedatario.
+ * @returns Un arreglo de objetos estructurados con la información de los fedatarios.
+ */
 // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
 buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
   const RESULT: any[] = [];
@@ -662,7 +442,14 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
     };
   }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+/**
+ * Construye un arreglo de objetos con los datos de plantas submanufactureras a partir de un arreglo de entrada.
+ *
+ * @param arr Arreglo de objetos con datos de entrada (opcional).
+ * @param base Objeto base que se fusiona con los datos específicos de cada planta.
+ * @returns Un arreglo con los objetos estructurados de plantas submanufactureras.
+ */
+// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
 buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
@@ -695,9 +482,10 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
-    const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
+    const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
-    const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data, this.socioAccionistaBase);
+    const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
+    const DECLARACION_SOLICUTUD_ENTRIES = PasoCapturarSolicitudComponent.buildDeclaracionSolicitudEntries(data);
     const EMPRESAS_NACIONALES = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentos, this.empresasNacionales);
     const EMPRESAS_EXTRANJERAS = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentosExtranjera, this.empresasExtranjeras);
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
@@ -736,15 +524,14 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
           "complemento": {
             ...ANEXO_ALL.anexo.datosParaNavegar
           },
+          "anexoI": [...ANEXO_ALL.anexo.tableDos]
         }
       ],
       "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
-      "sociosAccionistas": SOCIO_ACCIONISTAS,
+      "solicitud": SOLICITUD,
+      "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
       "empresasNacionales": EMPRESAS_NACIONALES,
       "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
-      "solicitud": {
-        "anexoI": [...ANEXO_ALL.anexo.tableDos]
-      }
     }
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
       this.tramite80101Store.setIdSolicitud(response.datos.id_solicitud || 0);
@@ -804,6 +591,10 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
    */
   onClickCargaArchivos(): void {
     this.cargarArchivosEvento.emit();
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
   }
 
 }

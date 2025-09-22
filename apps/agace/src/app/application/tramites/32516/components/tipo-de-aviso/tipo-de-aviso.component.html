@@ -107,11 +107,11 @@
 
 <div class="modal fade" id="modalMercancias" tabindex="-1" #modalMercancias aria-labelledby="modalMercancias"
   aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
       <div class="modal-body">
         <ng-titulo titulo="Datos de las mercancias destruidas" />
-        <div class="container">
+        <div class="container-fluid">
           <form [formGroup]="mercanciaForm" novalidate>
             <div class="row">
               <div class="col-md-12">
@@ -189,7 +189,7 @@
         <button type="submit" class="btn btn-primary mx-2" (click)="agregarMercancia()">
           Agregar
         </button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeModal (click)="cancelarMercancia()">
+        <button type="button" class="btn btn-danger me-5" data-bs-dismiss="modal" #closeModal (click)="cancelarMercancia()">
           Cancelar </button>
       </div>
     </div>
