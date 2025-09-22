@@ -29,14 +29,15 @@
       ></btn-continuar>
         } @else {
         <div class="mt-5 mb-3 d-flex justify-content-end">
-          <button
+          @if (seccionCargarDocumentos) {
+            <button
             type="button"
             class="btn btn-default"
             (click)="anterior()"
-            *ngIf="seccionCargarDocumentos"
           >
             Anterior
           </button>
+          }
           <button
             class="btn btn-primary ms-3"
             (click)="
