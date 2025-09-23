@@ -295,8 +295,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.cargarMedioDeTransporte();
     this.cargarPaisDeProcedencia();
     this.inicializarEstadoFormulario();
-    // this.inicializarMercanciaFormulario();
-    // this.inicializarEstadoFormulario();
   }
 
   /**
@@ -546,21 +544,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         cveAduana: [
           {
             value: this.tramiteState?.solicitudFormulario?.cveAduana,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         cveSeccionAduanal: [
           {
             value: this.tramiteState?.solicitudFormulario?.cveSeccionAduanal,
-            disabled: false,
+            disabled: this.soloLectura,
           },
         ],
         cveRecintoFiscalizado: [
           {
             value:
               this.tramiteState?.solicitudFormulario?.cveRecintoFiscalizado,
-            disabled: false,
+            disabled: this.soloLectura,
           },
         ],
       }),
@@ -568,7 +566,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         cveTipoDocumento: [
           {
             value: this.tramiteState?.solicitudFormulario?.cveTipoDocumento,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
@@ -581,21 +579,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         aduana: [
           {
             value: this.tramiteState?.solicitudFormulario?.aduana,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
         ],
         patente: [
           {
             value: this.tramiteState?.solicitudFormulario?.patente,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
         ],
         pedimento: [
           {
             value: this.tramiteState?.solicitudFormulario?.pedimento,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
         ],
@@ -603,7 +601,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           {
             value:
               this.tramiteState?.solicitudFormulario?.folioImportacionTemporal,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [
             Validators.required,
@@ -614,14 +612,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         folioFormatoOficial: [
           {
             value: this.tramiteState?.solicitudFormulario?.folioFormatoOficial,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         checkProrroga: [
           {
             value: this.tramiteState?.solicitudFormulario?.checkProrroga,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
@@ -641,35 +639,35 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         descMercancia: [
           {
             value: this.tramiteState?.solicitudFormulario?.descMercancia,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         marca: [
           {
             value: this.tramiteState?.solicitudFormulario?.marca,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         modelo: [
           {
             value: this.tramiteState?.solicitudFormulario?.modelo,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         numeroSerie: [
           {
             value: this.tramiteState?.solicitudFormulario?.numeroSerie,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         tipo: [
           {
             value: this.tramiteState?.solicitudFormulario?.tipo,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
@@ -678,28 +676,28 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         cveMedioTrasporte: [
           {
             value: this.tramiteState?.solicitudFormulario?.cveMedioTrasporte,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         guiaMaster: [
           {
             value: this.tramiteState?.solicitudFormulario?.guiaMaster,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         guiaBl: [
           {
             value: this.tramiteState?.solicitudFormulario?.guiaBl,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         numeroBl: [
           {
             value: this.tramiteState?.solicitudFormulario?.numeroBl,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
@@ -707,7 +705,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           {
             value:
               this.tramiteState?.solicitudFormulario?.rfcEmpresaTransportista,
-            disabled: false,
+            disabled: this.soloLectura,
           },
         ],
         estadoMedioTransporte: [
@@ -720,33 +718,33 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         cartaPorte: [
           {
             value: this.tramiteState?.solicitudFormulario?.cartaPorte,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         cvePaisProcedencia: [
           {
             value: this.tramiteState?.solicitudFormulario?.cvePaisProcedencia,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         guiaHouse: [
           {
             value: this.tramiteState?.solicitudFormulario?.guiaHouse,
-            disabled: false,
+            disabled: this.soloLectura,
           },
         ],
         numeroBuque: [
           {
             value: this.tramiteState?.solicitudFormulario?.numeroBuque,
-            disabled: false,
+            disabled: this.soloLectura,
           },
         ],
         numeroEquipo: [
           {
             value: this.tramiteState?.solicitudFormulario?.numeroEquipo,
-            disabled: false,
+            disabled: this.soloLectura,
           },
         ],
         fechaCartaPorte: [this.tramiteState?.solicitudFormulario?.fechaCartaPorte,
@@ -762,28 +760,28 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         tranporteMarca: [
           {
             value: this.tramiteState?.solicitudFormulario?.tranporteMarca,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         tranporteModelo: [
           {
             value: this.tramiteState?.solicitudFormulario?.tranporteModelo,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         tranportePlaca: [
           {
             value: this.tramiteState?.solicitudFormulario?.tranportePlaca,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         observaciones: [
           {
             value: this.tramiteState?.solicitudFormulario?.observaciones,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
@@ -792,14 +790,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         conDestino: [
           {
             value: this.tramiteState?.solicitudFormulario?.conDestino,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         cveTipoDestino: [
           {
             value: this.tramiteState?.solicitudFormulario?.cveTipoDestino,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
@@ -808,7 +806,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             value:
               this.tramiteState?.solicitudFormulario
                 ?.cveTipoDocumentoReemplazada,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
@@ -816,35 +814,35 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           {
             value:
               this.tramiteState?.solicitudFormulario?.numeroActaDescruccion,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         cveAduanaDestino: [
           {
             value: this.tramiteState?.solicitudFormulario?.cveAduanaDestino,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         cvePatenteDestino: [
           {
             value: this.tramiteState?.solicitudFormulario?.cvePatenteDestino,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         cvePedimentoDestino: [
           {
             value: this.tramiteState?.solicitudFormulario?.cvePedimentoDestino,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
         folioVucemRetorno: [
           {
             value: this.tramiteState?.solicitudFormulario?.folioVucemRetorno,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
@@ -853,7 +851,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             value:
               this.tramiteState?.solicitudFormulario
                 ?.folioFormatoOficialDestino,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
@@ -861,7 +859,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           {
             value:
               this.tramiteState?.solicitudFormulario?.fechaDescruccionDestino,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
@@ -870,7 +868,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             value:
               this.tramiteState?.solicitudFormulario
                 ?.estadoTipoDocumentoDestino,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
@@ -879,7 +877,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             value:
               this.tramiteState?.solicitudFormulario
                 ?.autoridadPresentoAvisoDestruccion,
-            disabled: false,
+            disabled: this.soloLectura,
           },
           [Validators.required],
         ],
@@ -899,31 +897,31 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   inicializarMercanciaFormulario(): void {
     this.mercanciaFormulario = this.fb.group({
       modalDescMercancia: [
-        {value: this.tramiteState?.mercanciaFormulario?.modalDescMercancia, disabled: false},
+        {value: this.tramiteState?.mercanciaFormulario?.modalDescMercancia, disabled: this.soloLectura},
         [Validators.required],
       ],
       espeMercancia: [
-        {value: this.tramiteState?.mercanciaFormulario?.espeMercancia, disabled: false},
+        {value: this.tramiteState?.mercanciaFormulario?.espeMercancia, disabled: this.soloLectura},
         [Validators.required],
       ],
       marcaMercancia: [
-        {value: this.tramiteState?.mercanciaFormulario?.marcaMercancia, disabled: false},
+        {value: this.tramiteState?.mercanciaFormulario?.marcaMercancia, disabled: this.soloLectura},
         [],
       ],
       modeloMercancia: [
-        {value: this.tramiteState?.mercanciaFormulario?.modeloMercancia, disabled: false},
+        {value: this.tramiteState?.mercanciaFormulario?.modeloMercancia, disabled: this.soloLectura},
         [],
       ],
       numSerieMercancia: [
-        {value: this.tramiteState?.mercanciaFormulario?.numSerieMercancia, disabled: false},
+        {value: this.tramiteState?.mercanciaFormulario?.numSerieMercancia, disabled: this.soloLectura},
         [],
       ],
       numParteMercancia: [
-        {value: this.tramiteState?.mercanciaFormulario?.numParteMercancia, disabled: false},
+        {value: this.tramiteState?.mercanciaFormulario?.numParteMercancia, disabled: this.soloLectura},
         [],
       ],
       tipoMercancia: [
-        {value: this.tramiteState?.mercanciaFormulario?.tipoMercancia, disabled: false},
+        {value: this.tramiteState?.mercanciaFormulario?.tipoMercancia, disabled: this.soloLectura},
         [],
       ],
     });

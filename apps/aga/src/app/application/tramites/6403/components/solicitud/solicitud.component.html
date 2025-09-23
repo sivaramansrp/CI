@@ -385,9 +385,9 @@
           <div class="form-group datepicker-group">
             <input-fecha
               [datos]="fechaImportacion"
-              [icono]="datosPedimento?.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? false : true"
-              [isDisabled]="datosPedimento?.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? true : soloLectura"
-              [setFecha]="datosPedimento?.get('fechaImportacionTemporal')?.value"
+              [icono]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? false : true"
+              [isDisabled]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? true : soloLectura"
+              [setFecha]="datosPedimento.get('fechaImportacionTemporal')?.value"
               (valorCambiado)="cambioImportacionTemporal($event)"
             ></input-fecha>
           </div>
