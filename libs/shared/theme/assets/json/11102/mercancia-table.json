@@ -1,40 +1,24 @@
-{
-   "mercanciaTable": {
-        "tableHeader": [
-            "Tipo de mercancía",
-            "Cantidad",
-            "Unidad de medida de Comercialización",
-            "Año de importación temporal",
-            "Modelo",
-            "Marco",
-            "Numero de serie",
-            "Condición de la mercancía"
-        ],
-        "tableBody": [
-            {
-                "tbodyData": [
-                    "muebels",
-                    "22",
-                    "Caja",
-                    "1964",
-                    "model2",
-                    "marco2",
-                    "1245678",
-                    "Usado"
-                ]
-            },
-            {
-                "tbodyData": [
-                    "muebels1",
-                    "221",
-                    "Caja1",
-                    "19641",
-                    "model21",
-                    "marco21",
-                    "12456781",
-                    "Usado1"
-                ]
-            }
-        ]
-    }
-}
+[
+  {
+    "id": "1",
+    "tipoDeMercancia": "muebels",
+    "cantidad": 22,
+    "unidadMedida": 1,
+    "ano": 1,
+    "modelo": "model2",
+    "marca": "marco2",
+    "serie": "1245678",
+    "condicionMercancia": 1
+  },
+  {
+    "id": "2",
+    "tipoDeMercancia": "muebels1",
+    "cantidad": 221,
+    "unidadMedida": 2,
+    "ano": 2,
+    "modelo": "model21",
+    "marca": "marco21",
+    "serie": "12456781",
+    "condicionMercancia": 1
+  }
+]

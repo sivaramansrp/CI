@@ -20,5 +20,5 @@ const API_VERSION = ENVIRONMENT.API_VERSION;
 const PROCEDURE = '/sat-t80105';
 
 export const PROC_80105 = {
-    GUARDAR: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}/solicitud/guardar`
+    GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`
 }

@@ -6,6 +6,7 @@ import {
   WizardComponent
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
+import { AVISO } from '@libs/shared/data-access-user/src/core/enums/constantes-alertas.enum';
 import { CommonModule } from '@angular/common';
 import { PASOS } from '../../constants/pasos.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
@@ -75,7 +76,14 @@ export class SolicitantePageComponent {
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
-  };
+  };  
+
+  /**
+   * @var {typeof AVISO.Aviso} TEXTOS
+   * @description Contiene los textos utilizados en el componente, provenientes de la constante `AVISO.Aviso`.
+   * @see AVISO.Aviso
+   */
+  TEXTOS = AVISO.Alerta;
 
   /**
    * Constructor de la clase.

@@ -2,7 +2,9 @@ import { AgregarFacturadorComponent } from '../../../../shared/components/agrega
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento-260904.enum';
 import { Tramite260904Store } from '../../estados/tramite260904.store';
+
 
 
 /**
@@ -27,6 +29,15 @@ import { Tramite260904Store } from '../../estados/tramite260904.store';
   styleUrl: './agregar-facturador-contenedora.component.scss',
 })
 export class AgregarFacturadorContenedoraComponent {
+  
+    /**
+     * Identificador numérico del procedimiento actual.
+     * Se inicializa con el valor de la constante global `ID_PROCEDIMIENTO`.
+     * 
+     * @remarks
+     * Este campo se utiliza para asociar el facturador con el procedimiento correspondiente dentro del componente.
+     */
+    idProcedimiento: number = ID_PROCEDIMIENTO;
     
   /**
    * @constructor

@@ -7,6 +7,7 @@ import {
   SeccionLibStore,
   Usuario,
   WizardComponent,
+  formatearFechaYyyyMmDd,
 } from '@ng-mf/data-access-user';
 import {
   Component,
@@ -290,7 +291,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
         numeroActa: data['datosComplimentos'].formaModificaciones.nombreDeActa,
         numeroNotario: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
         entidadFederativa: data['datosComplimentos'].formaModificaciones.estado,
-        fechaActa: data['datosComplimentos'].formaModificaciones.fechaDeActa
+        fechaActa: formatearFechaYyyyMmDd(data['datosComplimentos'].formaModificaciones.fechaDeActa)
       },
       modalidad: data['datosComplimentos'].modalidad,
       booleanGenerico: data['datosComplimentos'].programaPreOperativo ? true : false,
@@ -298,7 +299,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
       descripcionLugarEmbarque: data['datosComplimentos'].datosGeneralis.localizacion,
       capacidadAlmacenaje: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
       numeroPermiso: data['datosComplimentos'].obligacionesFiscales.opinionPositiva === 1 ? 'SI' : '',
-      fechaOperacion: data['datosComplimentos'].obligacionesFiscales.fechaExpedicion,
+      fechaOperacion: formatearFechaYyyyMmDd(data['datosComplimentos'].obligacionesFiscales.fechaExpedicion), 
       nomOficialAutorizado: data['datosComplimentos'].formaModificaciones.nombreDelFederatario,
 
     };
@@ -419,7 +420,20 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
         fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
         fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
         categoriaFraccion: item.encabezadoCategoria,
+        tipoFraccion:item.encabezadoTipo,
+        umt:item.encabezadoUmt
       });
+    });
+
+     const proyectoImmexDatos = (item: any) => ({
+      tipoDocumento: item.encabezadoTipoDocument,
+      descripcion: item.encabezadoDescripcionOtro,
+      fechaFirma:  item.encabezadoFechaFirma,
+      fechaVigencia:  item.encabezadoFechaVigencia,
+      rfcFirmante:  item.encabezadoRfc,
+      razonFirmante:  item.encabezadoRazonFirmante,
+      testado: true,
+      fecFinVigencia:  item.encabezadoFechaVigencia,
     });
 
   return {
@@ -428,7 +442,8 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
       ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
       proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
       datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
-      tableDos: anexoDos
+      tableDos: anexoDos,
+      proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
     },
   };
 }
@@ -546,6 +561,7 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
 
     const PAYLOAD = {
+      "esDeGuardar": true,
     "tipoDeSolicitud": "guardar",
     "idSolicitud": 202781045,
     "idTipoTramite": 80102,
@@ -581,6 +597,11 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
         "anexoI": [...ANEXO_ALL.anexo.tableDos]
       }
     ],
+     "productoExportacionDtoList": [
+        {
+          "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]
+        }
+      ],
     "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
     "solicitud": SOLICITUD,
     "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
