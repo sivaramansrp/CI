@@ -246,6 +246,8 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       (this.servicioDeFormularioService.isFormValid('federatariosForm') ??
       false) && 
       (this.servicioDeFormularioService.isFormValid('federatariosCatalogoForm') ??
+      false) &&
+      (this.servicioDeFormularioService.isFormValid('empresasSubmanufacturerasForm') ??
       false)
     );
   }
@@ -256,7 +258,9 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    */
   getValorIndice(e: AccionBoton): void {
      if (!this.consultaState.readonly && !this.consultaState.update) {
-      console.log('continuar', this.servicioDeFormularioService.getFormValue('complimentosForm'));
+      console.log('complimentosForm', this.servicioDeFormularioService.getForm('complimentosForm'));
+      console.log('federatariosCatalogoForm', this.servicioDeFormularioService.getForm('federatariosCatalogoForm'));
+      console.log('empresasSubmanufacturerasForm', this.servicioDeFormularioService.getForm('empresasSubmanufacturerasForm'));
       this.esFormaValido = this.verificarLaValidezDelFormulario();
       if (e.valor > 0 && e.valor <= this.pasos.length) {
         if (e.accion === 'cont' && this.esFormaValido) {
@@ -274,6 +278,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
             this.servicioDeFormularioService.markFormAsTouched('complimentosForm');
             this.servicioDeFormularioService.markFormAsTouched('federatariosForm');
             this.servicioDeFormularioService.markFormAsTouched('federatariosCatalogoForm');
+            this.servicioDeFormularioService.markFormAsTouched('empresasSubmanufacturerasForm');
         }
       }
      } else {

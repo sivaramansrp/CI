@@ -4,6 +4,7 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
+  ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
@@ -17,13 +18,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { ContenedorComplementarPlantasComponent } from '../../../tramites/80101/component/contenedor-complementar-plantas/contenedor-complementar-plantas.component';
 import { Modal } from 'bootstrap';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 @Component({
   selector: 'app-gestionar-empresas-subfabricante',
   standalone: true,
@@ -292,8 +294,9 @@ private modalRef: Modal | null = null;
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param fb - FormBuilder para la creación del formulario reactivo.
    */
-  constructor(private fb: FormBuilder, private router: Router,private complimentosService: ComplimentosService) {
-    this.inicializarFormularioDatosSubcontratista();
+  constructor(private fb: FormBuilder, private router: Router,private complimentosService: ComplimentosService,
+    private servicioDeFormularioService: ServicioDeFormularioService, private validacionesService: ValidacionesFormularioService
+  ) {
   }
 
   /**
@@ -302,6 +305,7 @@ private modalRef: Modal | null = null;
    * desactiva el formulario de datos del subcontratista para evitar modificaciones.
    */
   ngOnInit(): void {
+    this.inicializarFormularioDatosSubcontratista();
     if (this.formularioDeshabilitado) {
       this._formularioDatosSubcontratista.disable();
     }
@@ -317,6 +321,13 @@ private modalRef: Modal | null = null;
       rfc: ['', Validators.required],
       estado: ['', Validators.required],
     });
+
+    this.servicioDeFormularioService.registerForm('empresasSubmanufacturerasForm', this.formularioDatosSubcontratista);
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'empresasSubmanufacturerasForm') {
+        this.formularioDatosSubcontratista.markAllAsTouched();
+      }
+    })
   }
 
   /**
@@ -329,6 +340,7 @@ private modalRef: Modal | null = null;
       rfc: this.formularioDatosSubcontratista.get('rfc')?.value,
       estado: this.formularioDatosSubcontratista.get('estado')?.value,
     });
+    this.servicioDeFormularioService.setFormValue('empresasSubmanufacturerasForm', { ['rfc']: this._formularioDatosSubcontratista.get('rfc')?.value });
   }
 
   /**
@@ -341,6 +353,19 @@ private modalRef: Modal | null = null;
     if (this.formularioDatosSubcontratista.get('rfc')?.value) {
       this.alCambiarEstado.emit(estadoSeleccionado);
     }
+    this.servicioDeFormularioService.setFormValue('empresasSubmanufacturerasForm', { ['estado']: this._formularioDatosSubcontratista.get('estado')?.value });
+  }
+
+  /**
+  * compo doc
+  * @method esValido
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param field El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(formgroup: FormGroup, campo: string): boolean | null {
+    return this.validacionesService.isValid(formgroup, campo);
   }
 
   /**
