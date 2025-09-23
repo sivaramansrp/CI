@@ -29,7 +29,7 @@ import {
   SeccionLibStore,
   TablaDinamicaComponent,
   TituloComponent,
-} from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 
 import {
@@ -404,12 +404,12 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         }
       });
 
-    // Subscribe to radio button changes to clear validation errors when switching to "Todos"
+    // Suscríbase a los cambios del botón de opción para borrar errores de validación al cambiar a "Todos"
     this.fitosanitarioForm.get('flexRadioRegistro')?.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((value) => {
         if (value === 'Todos') {
-          // Clear year validation error when switching to "Todos" mode
+          // Borrar error de validación de año al cambiar al modo "Todos"
           this.anoFormValido = false;
           this.errorValidacion.emit(false);
         }
@@ -790,13 +790,14 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       // Si el año es válido, borre cualquier error de validación anterior.
       this.errorValidacion.emit(false);
       
-      // Si el año es válido, continúe con la recuperación de datos.
+      // Si el año es válido, continúe con la validación del número de certificado
       const NUMEROCONTROL = this.fitosanitarioForm.get('numeroDeLaConstancia');
       NUMEROCONTROL?.markAsTouched();
       
       // Para modo Específico, valide que también se proporcione el número de certificado
       if (NUMEROCONTROL?.invalid) {
-        // El número de certificado también es obligatorio para búsquedas Específicas
+        // No emitir ERROR_FORMA_ANO aquí, solo marcar el campo para mostrar su error específico
+        // El error específico del campo se mostrará en el template
         window.scrollTo(0, 0);
         return;
       }
@@ -956,6 +957,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     if (value) {
       // Borrar error de validación cuando se selecciona un año
       this.anoFormValido = false;
+      this.formularioAlertaAno = '';
       this.errorValidacion.emit(false);
     }
   }
