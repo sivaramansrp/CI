@@ -105,10 +105,18 @@
               class="form-control"
               formControlName="lungarDeEntrada"
               id="lungarDeEntrada"
+              maxlength="250"
               [required]="true"
               
               (change)="setValoresStore(exportacionForm, 'lungarDeEntrada', 'setLungarDeEntrada')"
             />
+              @if (solicitudForm.get('exportacionForm.lungarDeEntrada')?.invalid && solicitudForm.get('exportacionForm.lungarDeEntrada')?.touched) {
+                <div class="text-danger">
+                  @if (solicitudForm.get('exportacionForm.lungarDeEntrada')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                </div>
+                }
           </div>
           <div class="col-md-4">
             <label>Destino en el país importador*:</label>
@@ -117,9 +125,17 @@
               class="form-control"
               formControlName="destinoDeImportador"
               id="destinoDeImportador"
+              maxlength="2000"
               [required]="true"
               
             />
+              @if (solicitudForm.get('exportacionForm.destinoDeImportador')?.invalid && solicitudForm.get('exportacionForm.destinoDeImportador')?.touched) {
+                <div class="text-danger">
+                  @if (solicitudForm.get('exportacionForm.destinoDeImportador')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                </div>
+                }
           </div>
         </div>
         <ng-titulo titulo="Datos del transporte"></ng-titulo>
@@ -143,10 +159,18 @@
               class="form-control"
               formControlName="numeroYDescripcion"
               id="numeroYDescripcion"
+              maxlength="100"
               [required]="true"
               
               (change)="setValoresStore(exportacionForm, 'numeroYDescripcion', 'setNumeroYDescripcion')"
             />
+              @if (solicitudForm.get('exportacionForm.numeroYDescripcion')?.invalid && solicitudForm.get('exportacionForm.numeroYDescripcion')?.touched) {
+                <div class="text-danger">
+                  @if (solicitudForm.get('exportacionForm.numeroYDescripcion')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                </div>
+                }
           </div>
         </div>
         <ng-titulo titulo="Datos de la ubicación de la Mercancía"></ng-titulo>
