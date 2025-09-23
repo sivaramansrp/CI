@@ -54,6 +54,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public datosRespuestaDisponibles: boolean = false;
 
   /**
+   * Referencia al componente `solicitudComponent`.
+   */
+  @ViewChild('solicitudComponent', { static: false }) solicitudComponent: DatosSolicitudComponent| undefined;
+
+
+  /**
 /**
  * Subject para notificar la destrucción del componente y desuscribirse de observables.
  */
@@ -108,6 +114,20 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.servicio.establecerDatosEstado(datos);
         }
       });
+  }
+
+  public validarTodosLosFormularios(): boolean {
+    let allFormsValid = true;
+  
+     if (this.indice >= 2 && this.solicitudComponent) {
+      this.solicitudComponent?.formAviso.markAllAsTouched();
+
+        if (!this.solicitudComponent.formAviso.valid) {
+        allFormsValid = false;
+      }
+  
+    }
+    return allFormsValid ;
   }
   /**
    * Hook del ciclo de vida que se llama cuando el componente es destruido.
