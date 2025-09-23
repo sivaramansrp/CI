@@ -67,8 +67,9 @@
             <div class="form-group">
               <input-fecha [datos]="fechaInicioInput" [isDisabled]="formularioDeshabilitado"
                 (valorCambiado)="onFechaCambiada($event)"
-                [setFecha]="federatariosFormGroup.get('fechaInicioInput')?.value" [deshabilitarFuturas]="true"></input-fecha>
-            </div>
+                [setFecha]="federatariosFormGroup.get('fechaInicioInput')?.value" [deshabilitarFuturas]="true"
+               [mostrarErrores]="federatariosFormGroup.get('fechaInicioInput')?.touched??false"></input-fecha>
+              </div>
           </div>
 
           <div class="col-md-4">
@@ -91,12 +92,12 @@
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="estadoOptionsConfig.estadosFederatarios" formControlName="estado"
               [label]="'Estado'" [required]="true" name="estado"
-              [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
+              [isDisabled]="formularioDeshabilitado" [markTouched]="federatariosFormGroup.get('estado')?.touched??false"></app-catalogo-select>
           </div>
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="municipioCatologo" formControlName="estadoOptions"
               [label]="'Municipio o alcaldía'" [required]="true" name="estadoOptions"
-              [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
+              [isDisabled]="formularioDeshabilitado" [markTouched]="federatariosFormGroup.get('estadoOptions')?.touched??false"></app-catalogo-select>
           </div>
         </div>
         <div class="row mt-5">
@@ -266,9 +267,9 @@
   </form>
 </div>
 
-@if (miembrosNotificacion && miembrosNotificacion.cerrar) {
+@if (miembrosNotificacion) {
 <section>
-  <lib-notificaciones [notificacionInput]="miembrosNotificacion" (confirmacionModal)="closeModal()">
+  <lib-notificaciones [notificacionInput]="miembrosNotificacion"  (confirmacionModal)="eliminarPedimentoDatos($event)">
   </lib-notificaciones>
 </section>
 }
