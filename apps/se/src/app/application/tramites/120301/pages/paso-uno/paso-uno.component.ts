@@ -119,6 +119,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   @Output() tabChanged = new EventEmitter<void>();
 
   /**
+   * @property {EventEmitter<boolean>} errorValidacion
+   * @description Evento emitido cuando hay errores de validación en el formulario de año.
+   */
+  @Output() errorValidacion = new EventEmitter<boolean>();
+
+  /**
    * @property {ConstanciaDelRegistroComponent} constanciaDelRegistroComp
    * @description Referencia al componente de constancia del registro de origen.
    */
@@ -173,6 +179,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       this.mostrarOtraPestana = false;
       this.mostrarOtraPestanaChange.emit(this.mostrarOtraPestana);
     }
+  }
+
+  /**
+   * Maneja el evento de error de validación emitido por el componente hijo.
+   * @param event Valor booleano que indica si hay errores de validación.
+   */
+  public alErrorDeValidacion(event: boolean): void {
+    this.errorValidacion.emit(event);
   }
   /**
    * @property {boolean} mostrarOtraPestana
