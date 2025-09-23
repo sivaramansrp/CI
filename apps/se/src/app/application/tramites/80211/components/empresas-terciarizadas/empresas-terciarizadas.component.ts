@@ -154,6 +154,23 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    * Se muestra cuando el usuario no selecciona ninguna planta para eliminar de la lista.
    */
   public nuevaNotificacionEliminar!: Notificacion;
+
+  /**
+   * @property {Notificacion} nuevaNotificacionConfirmarEliminar
+   * @description
+   * Objeto que contiene la configuración de la notificación de confirmación para eliminar plantas.
+   * Se muestra cuando el usuario confirma que desea eliminar plantas seleccionadas,
+   * solicitando una confirmación adicional antes de proceder con la eliminación.
+   */
+  public nuevaNotificacionConfirmarEliminar!: Notificacion;
+
+  /**
+   * @property {boolean} confirmarEliminar
+   * @description
+   * Bandera que controla la visibilidad del diálogo de confirmación para eliminar plantas.
+   * Se establece a true cuando se muestra el modal de confirmación y a false cuando se oculta.
+   */
+  confirmarEliminar: boolean = false;
   
     /**
      * Constructor del componente.
@@ -462,10 +479,41 @@ agregarPlantas(): void {
           txtBtnAceptar: 'Aceptar',
           txtBtnCancelar: '',
         };
-        return;
       }
-    
-      // Filtrar las plantas que no están ya en plantasDisponibles
+      else {
+        this.confirmarEliminar = true;
+        this.nuevaNotificacionConfirmarEliminar = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: '¿Estás seguro de eliminar la(s) planta(s)?',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: 'Cancelar',
+        }
+      }
+    }
+    /**
+   * @method aceptarEliminar
+   * @description
+   * Maneja la respuesta del usuario al diálogo de confirmación para eliminar plantas seleccionadas.
+   * Si el usuario confirma (event === true), procede a:
+   * - Mover las plantas seleccionadas de vuelta a la lista de plantas disponibles
+   * - Filtrar duplicados para evitar plantas repetidas en la lista disponible
+   * - Actualizar el estado global con los cambios realizados
+   * - Limpiar las selecciones temporales
+   * Si el usuario cancela, simplemente cierra el diálogo de confirmación.
+   * 
+   * @param {boolean} event - Respuesta del usuario: true para confirmar eliminación, false para cancelar.
+   * @returns {void}
+   */
+    aceptarEliminar(event: boolean): void {
+      if(event === true){
+        this.confirmarEliminar = false
+
+        // Filtrar las plantas que no están ya en plantasDisponibles
       const NUEVASPLANTAS = this.listaFilaSeleccionada.filter(
         (plantaDisponible) =>
           !this.plantasDisponibles.some(
@@ -486,8 +534,11 @@ agregarPlantas(): void {
     
       // Limpiar la lista temporal de filas seleccionadas
       this.listaFilaSeleccionada = [];
+      }
+      else{
+        this.confirmarEliminar = false
+      }
     }
-  
   
     /**
      * Método de limpieza al destruir el componente.

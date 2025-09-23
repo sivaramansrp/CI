@@ -158,3 +158,9 @@
   [notificacionInput]="nuevaNotificacionEliminar"
   (confirmacionModal)="errorEliminar = false">
 </lib-notificaciones>
+
+<lib-notificaciones 
+  *ngIf="confirmarEliminar"
+  [notificacionInput]="nuevaNotificacionConfirmarEliminar"
+  (confirmacionModal)="aceptarEliminar($event)">
+</lib-notificaciones>
