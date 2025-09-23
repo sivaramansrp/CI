@@ -47,6 +47,7 @@ export interface TablaScianConfig {
  * @property {string} descripcion - Descripción del SCIAN.
  */
 export interface TablaMercanciaClaveConfig {
+  id?: number;
   clave: string;
   fabricacion: string;
   caducidad: string;

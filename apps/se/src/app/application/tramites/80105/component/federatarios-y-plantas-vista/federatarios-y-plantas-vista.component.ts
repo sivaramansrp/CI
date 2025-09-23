@@ -1,6 +1,6 @@
 import { Catalogo, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 
 import {
   FEDERATARIOS,
@@ -27,7 +27,7 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
   templateUrl: './federatarios-y-plantas-vista.component.html',
   styleUrl: './federatarios-y-plantas-vista.component.css',
 })
-export class FederatariosYPlantasVistaComponent {
+export class FederatariosYPlantasVistaComponent implements OnInit {
   /**
    * Configuración de la tabla de federatarios
    * @property {Object} federatariosTablaConfiguracion
@@ -86,10 +86,28 @@ export class FederatariosYPlantasVistaComponent {
    * @property {FederatariosEncabezado[]} federatariosTablaLista
    */
     public federatariosTablaLista$!: Observable<FederatariosEncabezado[]>;
+      /** 
+   * Lista de plantas disponibles para mostrar en la tabla
+   * @property {PlantasDisponibles[]} plantasDisponiblesTablaLista
+   */
+    public plantasDisponiblesTablaLista$!: Observable<PlantasDisponibles[]>;
+    /** 
+   * Lista de plantas IMMEX para mostrar en la tabla
+   * @property {PlantasImmex[]} plantasImmexTablaLista
+   */
+    public plantasImmexTablaLista$!: Observable<PlantasImmex[]>;
 
   constructor(private store: Tramite80101Store, private query: Tramite80101Query) {
 
+  }
+
+  /** 
+   * Suscripción al ciclo de vida de Angular para inicializar datos al cargar el componente. 
+   */
+  ngOnInit(): void {
     this.federatariosTablaLista$ = this.query.selectDatosFederatarios$;
+    this.plantasDisponiblesTablaLista$ = this.query.selectDatosPlantasDisponibles$;
+    this.plantasImmexTablaLista$ = this.query.selectDatosPlantasImmex$;
   }
 
   /**
@@ -100,5 +118,19 @@ export class FederatariosYPlantasVistaComponent {
    */
   setFormaDatos(datos: FederatariosEncabezado): void {
     this.store.setFederatarios(datos);
+  }
+
+  /**
+   * Establece los datos de las plantas disponibles en el almacén.
+   */
+  setPlantasDisponiblesDatos(datos: PlantasDisponibles[]): void {
+    this.store.setPlantasDisponiblesTablaLista(datos);
+  }
+
+  /** 
+   * Establece los datos de las plantas IMMEX en el almacén.
+   */
+  setPlantasImmexDatos(datos: PlantasImmex[]): void {
+    this.store.setPlantasImmexTablaLista(datos);
   }
 }

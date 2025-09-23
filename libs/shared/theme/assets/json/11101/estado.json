@@ -1,0 +1,19 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 0,
+      "descripcion": "estado_01"
+    },
+    {
+      "id": 1,
+      "descripcion": "estado_02"
+    },
+    {
+      "id": 2,
+      "descripcion": "estado_03"
+    }
+    
+  ],
+  "message": "OK "
+}

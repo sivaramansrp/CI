@@ -180,6 +180,7 @@
     <lib-notificaciones *ngIf="esAgregarDos" [notificacionInput]="nuevaNotificacion" (confirmacionModal)="cerrarModalAgregar()"></lib-notificaciones>
     <lib-notificaciones *ngIf="esEliminarDos" [notificacionInput]="nuevaNotificacion" (confirmacionModal)="cerrarEliminarDos($event)"></lib-notificaciones>
     <lib-notificaciones *ngIf="rowNotSeleccionada" [notificacionInput]="nuevaNotificacion" (confirmacionModal)="cerrarNotSeleccainda()"></lib-notificaciones>
+    <lib-notificaciones *ngIf="noRowSelectedTablaC" [notificacionInput]="nuevaNotificacion" (confirmacionModal)="cerrarNoRowTablaC()"></lib-notificaciones>
 
     
 

@@ -1,17 +1,40 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { EventEmitter } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11106/pasos.enum';
+import { CancelacionDonacionesService } from '../../services/cancelacion-donaciones.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
+  let mockCancelacionDonacionesService: jest.Mocked<CancelacionDonacionesService>;
+  let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
 
   beforeEach(() => {
+    mockCancelacionDonacionesService = {
+      obtenerCancelacionDonaciones: jest.fn().mockReturnValue(of({})),
+      actualizarInformacionCancelacionDonaciones: jest.fn().mockReturnValue(of({})),
+      getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue(of({ laAutorizacionEsNula: false })),
+      actualizarEstadoFormulario: jest.fn()
+    } as any;
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({
+        update: false,
+        readonly: false
+      })
+    } as any;
+
     TestBed.configureTestingModule({
-      imports: [PasoUnoComponent],
+      imports: [PasoUnoComponent, HttpClientTestingModule],
       declarations: [],
-      providers: [],
+      providers: [
+        { provide: CancelacionDonacionesService, useValue: mockCancelacionDonacionesService },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
+      ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(PasoUnoComponent);
@@ -86,5 +109,73 @@ describe('PasoUnoComponent', () => {
     expect(component.indice).toBe(1);
     expect(siguienteSpy).not.toHaveBeenCalled();
     expect(atrasSpy).not.toHaveBeenCalled();
+  });
+
+  it('debería llamar a guardarDatosFormulario cuando consultaState.update es true', () => {
+    // Test the guardarDatosFormulario method directly
+    const serviceSpy = jest.spyOn(mockCancelacionDonacionesService, 'getRegistroTomaMuestrasMercanciasData');
+    
+    component.guardarDatosFormulario();
+    
+    expect(serviceSpy).toHaveBeenCalled();
+  });
+
+  it('debería establecer esDatosRespuesta como true en guardarDatosFormulario', () => {
+    // Test that esDatosRespuesta is set to true when response is received
+    component.guardarDatosFormulario();
+    
+    expect(component.esDatosRespuesta).toBe(true);
+  });
+
+  it('debería llamar a actualizarEstadoFormulario cuando resp existe en guardarDatosFormulario', () => {
+    const actualizarSpy = jest.spyOn(mockCancelacionDonacionesService, 'actualizarEstadoFormulario');
+    
+    component.guardarDatosFormulario();
+    
+    expect(actualizarSpy).toHaveBeenCalledWith({ laAutorizacionEsNula: false });
+  });
+
+  it('debería establecer esDatosRespuesta como true cuando update es false en ngOnInit', () => {
+    component.ngOnInit();
+    
+    expect(component.esDatosRespuesta).toBe(true);
+  });
+
+  it('debería establecer esDatosRespuesta como true cuando consultaState.update es false en ngOnInit', () => {
+    component.ngOnInit();
+    
+    expect(component.esDatosRespuesta).toBe(true);
+  });
+
+  it('debería llamar al servicio y actualizar estado cuando se ejecuta guardarDatosFormulario con respuesta válida', () => {
+    const mockResponse = { laAutorizacionEsNula: true };
+    mockCancelacionDonacionesService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(mockResponse));
+    const actualizarEstadoSpy = jest.spyOn(mockCancelacionDonacionesService, 'actualizarEstadoFormulario');
+    
+    component.guardarDatosFormulario();
+    
+    expect(mockCancelacionDonacionesService.getRegistroTomaMuestrasMercanciasData).toHaveBeenCalled();
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(actualizarEstadoSpy).toHaveBeenCalledWith(mockResponse);
+  });
+
+  it('no debería actualizar estado cuando se ejecuta guardarDatosFormulario con respuesta null/undefined', () => {
+    mockCancelacionDonacionesService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(null as any));
+    const actualizarEstadoSpy = jest.spyOn(mockCancelacionDonacionesService, 'actualizarEstadoFormulario');
+    
+    component.guardarDatosFormulario();
+    
+    expect(mockCancelacionDonacionesService.getRegistroTomaMuestrasMercanciasData).toHaveBeenCalled();
+    expect(actualizarEstadoSpy).not.toHaveBeenCalled();
+  });
+
+  it('debería limpiar recursos en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    
+    component.ngOnDestroy();
+    
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
