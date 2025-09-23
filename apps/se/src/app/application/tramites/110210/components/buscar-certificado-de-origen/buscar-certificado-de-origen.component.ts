@@ -243,12 +243,6 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Actualiza el estado del grid de comercializadores de productos.
    */
   actualizaGridComercializadoresProductos(): void {
-    const IDSOLICITUD = this.buscarCertificadoDeOrigenFrom.get('solicitud.idSolicitud')?.value;
-    if (IDSOLICITUD === null) {
-      this.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.enable(); 
-    } else {
-      this.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.disable();
-    }
      this.certificadoService.getData().pipe(
         takeUntil(this.destroyed$)
       ).subscribe(

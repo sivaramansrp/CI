@@ -189,6 +189,17 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
   @Output() datosFormaFedratario: EventEmitter<FederatariosEncabezado> =
     new EventEmitter<FederatariosEncabezado>(true);
 
+  /**
+   * Emisor de eventos para los datos de plantas disponibles.
+   */
+  @Output() datosPlantaDisponibles: EventEmitter<PlantasDisponibles[]> = new EventEmitter<PlantasDisponibles[]>(true);
+
+  /** 
+   * Emisor de eventos para los datos de plantas IMMEX. 
+   */
+  @Output() datosPlantasImmex: EventEmitter<PlantasImmex[]> = new EventEmitter<PlantasImmex[]>(true);
+
+
 
   /**
    * Arreglo que almacena los datos seleccionados de plantas IMMEX.
@@ -256,6 +267,12 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
      */
     private destroyNotifier$: Subject<void> = new Subject();
 
+    /**
+     * Arreglo que contiene los elementos del catálogo de estado IMMEX.
+     * Cada elemento representa una opción disponible en el catálogo.
+     */
+    estadoImmex: Catalogo[] = [];
+
   /**
    * Constructor de la clase FederatariosYPlantasComponent.
    * @param {Router} router - Servicio de Angular para la navegación.
@@ -274,7 +291,8 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
     this.obtenerRepresentacion('MEX');
     this.obtenerActividad();
     this.obtenerTipoDocumento(102);
-    this.obtenerMunicipio("BCN")
+    this.obtenerMunicipio("BCN");
+    this.obtenerImex();
     if (this.formularioDeshabilitado) {
       this.federatariosFormGroup.disable();
     }
@@ -561,6 +579,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
  */
 buscarPlantasImmex(): void {
   this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
+  this.datosPlantaDisponibles.emit(this.plantasDisponiblesDatos);
 }
 
 /**
@@ -572,6 +591,7 @@ buscarPlantasImmex(): void {
  */
 agregarPlantas(): void {
   this.plantasImmexDatos = [INMEX_PLANTAS];
+  this.datosPlantasImmex.emit(this.plantasImmexDatos);
 }
 
 /**
@@ -663,6 +683,18 @@ obtenerEstados():void {
    obtenerMunicipio(entidad:string):void {
     this.complimentosService.getmunicipio(entidad).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
   this.municipioCatologo = res.datos;
+    });
+    
+  }
+
+  /**
+   * Obtiene el estado IMEX de una entidad específica y actualiza la propiedad `estadoImmex` con los datos recibidos.
+   * 
+   * @param entidad - El identificador de la entidad para la cual se desea obtener el estado IMEX.
+   */
+  obtenerImex():void {
+    this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+  this.estadoImmex = res.datos;
     });
     
   }

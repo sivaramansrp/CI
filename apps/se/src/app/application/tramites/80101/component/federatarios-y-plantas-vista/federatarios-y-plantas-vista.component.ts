@@ -221,6 +221,20 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
   }
 
   /**
+   * Establece los datos de las plantas disponibles en el almacén.
+   */
+  setPlantasDisponiblesDatos(datos: PlantasDisponibles[]): void {
+    this.store.setPlantasDisponiblesTablaLista(datos);
+  }
+
+  /** 
+   * Establece los datos de las plantas IMMEX en el almacén.
+   */
+  setPlantasImmexDatos(datos: PlantasImmex[]): void {
+    this.store.setPlantasImmexTablaLista(datos);
+  }
+
+  /**
    * Muestra el popup correspondiente según la ruta de acción recibida.
    * 
    * @param {string} ruta - Ruta de la acción que determina qué popup mostrar.

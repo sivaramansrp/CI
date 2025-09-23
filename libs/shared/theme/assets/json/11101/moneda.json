@@ -1,0 +1,19 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 0,
+      "descripcion": "moneda_01"
+    },
+    {
+      "id": 1,
+      "descripcion": "moneda_02"
+    },
+    {
+      "id": 2,
+      "descripcion": "moneda_03"
+    }
+    
+  ],
+  "message": "OK "
+}

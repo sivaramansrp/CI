@@ -225,7 +225,7 @@ export interface FormaRequerimiento {
    * Este valor se utiliza para asociar un documento con su tipo correspondiente
    * dentro del catálogo de tipos de documentos.
    */
-  tipoDeDocumento: number;
+  tipoDeDocumento: string | number;
 
   /**
    * Lista de documentos adicionales asociados.
@@ -245,5 +245,5 @@ export interface DocumentoAdicional {
   /**
    * Tipo de documento asociado (por ejemplo, PDF, JPG, etc.).
    */
-  tipoDeDocumento: string;
+  tipoDeDocumento: string | number;
 }

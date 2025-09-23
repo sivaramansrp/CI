@@ -21,6 +21,7 @@ export interface DocumentosParaCargar {
   tipo: string;
   mensaje: string;
   estatus: string;
+  tamanioMaximo?: number;
 }
 
 export interface CatalogoDocumentosResponse {
@@ -62,6 +63,8 @@ export interface TipoDocumentos {
   tamanio_maximo: number;
   adicionales?: TipoDocumentos[];
   cargado?: boolean;
+  file?: DocumentosParaCargar;
+  error?:string[];
 }
 
 export interface TipoTramite {
