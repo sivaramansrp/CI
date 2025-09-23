@@ -3,6 +3,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 import { ConstanciaTramiteConfiguracion } from '@libs/shared/data-access-user/src/core/models/shared/acuse-y-resoluciones-folio-tramite.model';
 
 import { FitosanitarioForm, HistoricoColumns } from '../models/elegibilidad-de-textiles.model';
+import { FabricanteNacionalRfcResponse } from '../models/response/fabricante-nacional-response.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -53,6 +54,13 @@ export interface TextilesState {
    * @description Cantidad total de productos textiles incluidos en el trámite.
    */
   cantidadTotal: string;
+
+  /**
+   * Lista completa de fabricantes nacionales con RFC.
+   * @type {FabricanteNacionalRfcResponse[]}
+   * @description Array que contiene los datos de todos los fabricantes nacionales registrados, incluyendo su RFC.
+   */
+  listaFabricantesCompleta:FabricanteNacionalRfcResponse[];
   
   /** 
    * Unidad de medida utilizada.
@@ -392,6 +400,7 @@ export function createInitialState(): TextilesState {
   numeroFactura: '',
   exportadorFabricanteNacional : '',
   listaFabricantes:[],
+  listaFabricantesCompleta:[],
   cantidadTotal: '',
   unidadDeMedida: '',
   fechaInicioInput: '',
@@ -1610,6 +1619,23 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
     this.update((state) => ({
       ...state,
       listaFabricantes,
+    }));
+  }
+
+  /**
+   * @method setListaFabricantesCompletos
+   * @description Actualiza la lista completa de fabricantes en el store.
+   * Realiza una actualización inmutable del estado, manteniendo todas las
+   * propiedades existentes y reemplazando solamente la lista completa de fabricantes.
+   * @param listaFabricantesCompleta - Array de objetos FabricanteNacionalRfcResponse
+   * que representa la nueva lista completa de fabricantes a almacenar en el estado.
+   * @returns {void} No retorna ningún valor.
+   * 
+   */
+  public setListaFabricantesCompletos(listaFabricantesCompleta: FabricanteNacionalRfcResponse[]): void {
+    this.update((state) => ({
+      ...state,
+      listaFabricantesCompleta,
     }));
   }
 

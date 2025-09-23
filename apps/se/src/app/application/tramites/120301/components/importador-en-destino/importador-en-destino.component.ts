@@ -313,7 +313,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
       ],
       PaisImportador: [
-        { value: this.importadorState.PaisImportador, disabled: true },
+        { value: this.importadorState.PaisImportador || 'ESTADOS UNIDOS DE AMERICA', disabled: true },
         Validators.required,
       ],
     });

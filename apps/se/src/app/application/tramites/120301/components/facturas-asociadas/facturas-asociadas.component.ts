@@ -38,12 +38,12 @@ import {
   ElegibilidadDeTextilesStore,
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
+import { Solicitud120301State, Tramite120301Store } from '../../estados/tramites/tramite120301.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { FacturasAsociadasService } from '../../services/facturas-asociadas.service';
 import { FacturasTplAsociadasRequest } from '../../models/request/facturas-tpl-asociadas-request.model';
 import { FacturasTplEliminarRequest } from '../../models/request/facturas-tpl-eliminar-request.model';
-import { Solicitud120301State } from '../../estados/tramites/tramite120301.store';
 import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
 
 
@@ -375,7 +375,8 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
     private facturasAsociadasService: FacturasAsociadasService,
     private tramite120301Query: Tramite120301Query,
     private cd: ChangeDetectorRef,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+     private tramite120301: Tramite120301Store,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -534,6 +535,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       return;
     }
     this.filaSeleccionada = fila;
+    this.tramite120301.setFacturaExpedicion(this.filaSeleccionada.idFacturaExpedicion ?? 0);
   }
 
   /**

@@ -121,3 +121,20 @@ export const API_GET_HISTORICO_FABRICANTES = (tipoFabricante:string, idSolicitud
  */
 export const API_GET_FABIRCANTE_NACIONAL = (RFC: string) : string => `sat-t120301/fabricante-nacional/${RFC}`;
 
+/**
+ * Api para consultar un fabricante extranjero por su nombre del tramite 120301.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t120301/swagger-ui/index.html#/Registro-Solicitud/guardar-solicitud
+ */
+export const API_POST_GUARDAR_SOLICITUD = 'sat-t120301/solicitud/guardar'
+
+/**
+ * Api para generar la cadena original de la solicitud del tramite 120301.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t120301/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original
+ */
+export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string) : string => `sat-t120301/solicitud/${IDSOLICITUD}/genera-cadena-original`;
+
+/**
+ * Api para firmar la solicitud del tramite 120301.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t120301/swagger-ui/index.html#/Registro-Solicitud/firmar
+ */
+export const API_POST_FIRMAR = (IDSOLICITUD: string) : string => `sat-t120301/solicitud/${IDSOLICITUD}/firmar`;

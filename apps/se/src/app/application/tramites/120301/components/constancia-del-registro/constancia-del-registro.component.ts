@@ -615,6 +615,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       id_fraccion_hts_usa: fila.idFraccionHtsUsa ?? 0
     };
     this.idAsignacion = fila.idAsignacion;
+    this.tramite120301.setIdAsignacion(this.idAsignacion ?? 0);
     forkJoin({
       representacion: this.tplService.getRepresentacionFederal(fila.idAsignacion ?? 0).pipe(
         catchError(err => {
@@ -634,6 +635,8 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         fila.estado = REPRESENTACIONFEDERAL.nombre_entidad;
         fila.representacionFederal = REPRESENTACIONFEDERAL.nombre;
         this.cveUnidadAdministrativa = REPRESENTACIONFEDERAL.clave;
+        this.tramite120301.setClaveEntidad(REPRESENTACIONFEDERAL.cve_entidad);
+        this.tramite120301.setClave(REPRESENTACIONFEDERAL.clave);
       }
 
       if (detalle?.codigo === '00' && detalle?.datos) {
@@ -653,6 +656,8 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         this.tramite120301.setIdentificadorRegimen(DATOS.identificador_regimen);
         this.tramite120301.setPaisOrigenDestino(DATOS.pais_origen_destino);
         this.tramite120301.setUnidadMedida(DATOS.unidad_medida);
+         this.tramite120301.setIdMecanismo(DATOS.id_mecanismo_asignacion);
+        this.tramite120301.setClavePais(DATOS.codigo_pais);
       }
 
 
