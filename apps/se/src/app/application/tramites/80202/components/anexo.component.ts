@@ -10,6 +10,7 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
+  ConsultaioQuery,
   Notificacion,
   NotificacionesComponent,
   TablaDinamicaComponent,
@@ -30,11 +31,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
-import { Subject, takeUntil } from "rxjs";
+import {Subject, map, takeUntil } from "rxjs";
 import { CommonModule } from "@angular/common";
+import { ImmexAmpliacionSensiblesQuery } from "../estados/immex-ampliacion-sensibles.query";
+import { ImmexAmpliacionSensiblesStore } from "../estados/immex-ampliacion-sensibles.store";
 import { Modal } from "bootstrap";
 import { PermisoImmexDatosService } from "../services/permiso-immex-datos.service";
-import { setTime } from "ngx-bootstrap/chronos/utils/date-setters";
+
 
 @Component({
   selector: "app-anexo",
@@ -114,6 +117,9 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     public permisoImmexDatosService: PermisoImmexDatosService,
+    public readonly consultaQuery: ConsultaioQuery,
+    public immexRegistroStore:ImmexAmpliacionSensiblesStore,
+    public immexRegistroQuery: ImmexAmpliacionSensiblesQuery,
   ) {
     this.exportacionForm = this.fb.group({
       id: [0, Validators.required],
@@ -149,6 +155,17 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            if (!seccionState.create && seccionState.procedureId === '80203') {
+              this.esFormularioSoloLectura = seccionState.readonly;
+            }
+          })
+        )
+        .subscribe();
+
     this.permisoImmexDatosService
       .getNicos()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -166,6 +183,12 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     );
     this.modalExport = new Modal(this.mercanciaExportacionModal.nativeElement, {
       backdrop: "static",
+    });
+    this.immexRegistroQuery.selectImportacion$.subscribe((data) => {
+     this.immexTableDatos = data;
+    });
+    this.immexRegistroQuery.selectExportacion$.subscribe((data) => {
+      this.fraccionTablaDatos = data;
     });
   }
 
@@ -286,8 +309,10 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
             numero: this.immexTableDatos[INDEX].numero,
           };
           this.immexTableDatos = [...this.immexTableDatos];
+          this.immexRegistroStore.updateImportacion(this.immexTableDatos);
         } else {
           this.immexTableDatos = [...this.immexTableDatos, NUEVO_REGISTRO];
+            this.immexRegistroStore.updateImportacion(this.immexTableDatos);
         }
 
         this.modalInstance?.hide();
@@ -402,7 +427,9 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
                 numero: this.fraccionTablaDatos.length + 1,
                 nicosTable: this.nicoTablaDatos,
               },
+              
             ];
+               this.immexRegistroStore.updateExportacion(this.fraccionTablaDatos);
             setTimeout(() => {
               this.exportacionForm.reset();
             }, 100);
@@ -587,6 +614,7 @@ guardarMercanciaExportacion():void{
     } else {
       this.fraccionTablaDatos = [...this.fraccionTablaDatos, NUEVO_REGISTRO];
     }
+    this.immexRegistroStore.updateExportacion(this.fraccionTablaDatos);
     this.selectExportacion = NUEVO_REGISTRO;
     this.modalExport.hide();
     setTimeout(() => {
@@ -624,7 +652,7 @@ if(!this.nicoTablaDato.some(row=>row.NICO_Columna_1===this.exportacionForm.getRa
   setTimeout(() => {
   this.exportacionForm.get("nicos")?.setValue("");
   this.exportacionForm.get("descripcionNico")?.setValue("");
-  },500)
+  },400)
 }
 else{
 this.exportNotificacion("El NICO que intenta ingresar ya se encuentra registrado.");
