@@ -195,3 +195,60 @@
     <lib-notificaciones [notificacionInput]="nuevaNotificacion"></lib-notificaciones>
     }
 </div>
+
+<div class="modal fade" id="mercanciaExportacionModal" tabindex="-1" aria-labelledby="mercanciaExportacionModal" aria-hidden="true" data-bs-backdrop="static" #mercanciaExportacionModal>
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form [formGroup]="exportacionForm" *ngIf="exportacionForm">
+                    <div class="row" id="product-exportacion">
+                        <ng-titulo titulo="Detalle del producto de exportación"></ng-titulo>
+                        <div class="col-12">
+                            <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+                                <label for="fraccion-arancelaria-exportacion">Fracción arancelaria:</label>
+                                <input type="text" class="form-control" id="fraccion-arancelaria-exportacion" formControlName="fraccionImportacion" placeholder="" />
+                            </div>
+                            <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
+                                <label for="description">Descripción:</label>
+                                <textarea class="form-control" id="description" formControlName="descripcionTigie" rows="5" placeholder="" style="height:100px"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-5">
+                            <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
+                                <app-catalogo-select [label]="'Nico'" [catalogo]="nico" formControlName="nicos" [required]="true" [placeholder]="'Selecciona un valor'" name="nicos" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                            </div>
+                            <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
+                                <label for="description-nico">Descripción Nico:</label>
+                                <textarea class="form-control" id="description-nico" formControlName="descripcionNico" rows="5" placeholder="" style="height:100px"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 container text-end mt-5">
+                            <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar Nico</button>
+                        </div>
+                        <div class="row  mt-5">
+                            <h6>Nico</h6>
+                            <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
+                                <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla" [datos]="nicoTablaDato" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+                            </div>
+                            <div class="container text-start mt-5">
+                                <button class="btn btn-danger me-2">Eliminar Nico</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+                <footer class="footer d-flex py-5 gap-3 justify-content-end">
+                    <button type="button" class="btn btn-primary">
+                        Guardar
+                    </button>
+                    <button type="button" class="btn btn-danger">
+                        Cancelar
+                    </button>
+                </footer>
+            </div>
+            <!-- @if(nuevaNotificacion){
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"></lib-notificaciones>
+            } -->
+        </div>
+    </div>
+</div>
