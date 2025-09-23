@@ -181,6 +181,12 @@ public coloniaData: CatalogosSelect = {
   primerOpcion: 'Seleccione una opción',
   catalogos: [],
 };
+/**
+ * @propiedad {string} placeholderDomicilio
+ * @descripción Texto de marcador de posición para el campo de domicilio.
+ * Este texto indica el formato esperado: "Calle, No Ext, No Int, Ciudad, C.P."
+ * @valor 'Calle, No Ext, No Int, Ciudad, C.P.'
+ */
 placeholderDomicilio: string = 'Calle, No Ext, No Int, Ciudad, C.P.';
  /**
    * Bandera para verificar si los datos del catálogo de países están cargados.
@@ -289,13 +295,10 @@ get selectedTipoPersona(): string | undefined {
    * @param value Valor seleccionado (cadena o número).
    */
   setTipoPersona(value: string | number): void {
-  console.log('setTipoPersona called with value:', value);
   this.tipoPersonaSeleccionada = value.toString();
   if (this.filaSeleccionada) {
     this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona = this.tipoPersonaSeleccionada;
-    console.log('Updated filaSeleccionada.tipoPersona:', this.filaSeleccionada.datosDelTramiteRealizar.tipoPersona);
   }
-  console.log('Updated tipoPersonaSeleccionada:', this.tipoPersonaSeleccionada);
 }
   /**
  * @method getEntidadFederativaData
@@ -413,7 +416,6 @@ const IS_MODIFYING = Boolean(this.filaSeleccionada);
      this.destinatarioForm.get('datosDelTramiteRealizar.nombre')?.updateValueAndValidity();
     this.destinatarioForm.get('datosDelTramiteRealizar.primerApellido')?.updateValueAndValidity();
   } else {
-    // Add validators for all fields when adding a new row
     this.destinatarioForm.get('datosDelTramiteRealizar.tipoPersona')?.setValidators([Validators.required]);
     this.destinatarioForm.get('datosDelTramiteRealizar.denominacion')?.setValidators([Validators.required]);
     this.destinatarioForm.get('datosDelTramiteRealizar.nombre')?.setValidators([Validators.required]);
