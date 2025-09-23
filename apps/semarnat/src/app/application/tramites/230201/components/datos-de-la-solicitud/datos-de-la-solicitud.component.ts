@@ -8,7 +8,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosDetalle, DatosSolicitud } from '../../models/datos-tramite.model';
 import { ENCABEZADO_DE_TABLA_DETALLE, ENCABEZADO_DE_TABLE_CONFIGURACION } from '../../enum/destinatario-tabla.enum';
@@ -157,6 +157,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
+   * Lista de referencias a todos los componentes CrosslistComponent presentes en la plantilla.
+   */
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+
+  /**
    * @property {ConsultaioState} consultaDatos
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
@@ -219,6 +224,34 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla de detalles.
    */
   public encabezadoDeTablaDetalle: ConfiguracionColumna<DatosDetalle>[] = ENCABEZADO_DE_TABLA_DETALLE;
+
+  /**
+   * @description Arreglo de objetos que define los botones para la funcionalidad de entrada de aduanas.
+   * Cada objeto contiene el nombre del botón, la clase CSS para su estilo y la función asociada que se ejecuta al hacer clic.
+   * @type {Array<{btnNombre: string, class: string, funcion: () => void}>}
+   */
+  entidadFederativaOrigenBotons = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn btn-default',
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn btn-default',
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+    },
+  ];
 
   /**
    * Constructor del componente.
