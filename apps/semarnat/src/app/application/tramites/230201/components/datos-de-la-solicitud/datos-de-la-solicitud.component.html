@@ -99,8 +99,7 @@
         </div>
         <div class="row">
           <div class="col-md-8">
-            <label>Lungar de entrada en el pais importador:</label>
-            <span class="require">*</span>
+            <label>Lugar de entrada en el país importador*:</label>
             <input
               type="text"
               class="form-control"
@@ -112,8 +111,7 @@
             />
           </div>
           <div class="col-md-4">
-            <label>Destino en el país importador </label>
-            <span class="require">*:</span>
+            <label>Destino en el país importador*:</label>
             <input
               type="text"
               class="form-control"
@@ -139,8 +137,7 @@
             </app-catalogo-select>
           </div>
           <div class="col-md-8">
-            <label>Número y descripción de los bultos y/o contenedores</label>
-            <span class="require">*</span>
+            <label>Número y descripción de los bultos y/o contenedores*:</label>
             <input
               type="text"
               class="form-control"
@@ -155,8 +152,7 @@
         <ng-titulo titulo="Datos de la ubicación de la Mercancía"></ng-titulo>
         <div class="row">
           <div class="col-md-4">
-            <label>Código Postal o equivalente</label>
-            <span class="require">*</span>
+            <label>Código Postal o equivalente*:</label>
             <input
               type="text"
               class="form-control"
@@ -180,8 +176,7 @@
             </app-catalogo-select>
           </div>
           <div class="col-md-4">
-            <label>Calle</label>
-            <span class="require">*</span>
+            <label>Calle*:</label>
             <input
               type="text"
               class="form-control"
@@ -195,8 +190,7 @@
         </div>
         <div class="row">
           <div class="col-md-4">
-            <label>Colonia</label>
-            <span class="require">*</span>
+            <label>Colonia*:</label>
             <input
               type="text"
               class="form-control"
@@ -208,8 +202,7 @@
             />
           </div>
           <div class="col-md-4">
-            <label>Número exterior</label>
-            <span class="require">*</span>
+            <label>Número exterior*:</label>
             <input
               type="text"
               class="form-control"
@@ -221,8 +214,7 @@
             />
           </div>
           <div class="col-md-4">
-            <label>Número interior</label>
-            <span class="require">*</span>
+            <label>Número interior:</label>
             <input
               type="text"
               class="form-control"
@@ -267,15 +259,14 @@
                 ></app-catalogo-select>
               </div>
               <div class="col-md-8">
-                <label>Descripción de la fracción arancelaria:</label>
-                <span class="require">*</span>
+                <label>Descripción de la fracción arancelaria*:</label>
                 <input
                   type="text"
                   class="form-control"
                   formControlName="descripcionfraccionArancelaria"
                   id="descripcionfraccionArancelaria"
                   [required]="true"
-                  
+
                   (change)="
                     setValoresStore(
                       datosMercancia,
@@ -288,8 +279,7 @@
             </div>
             <div class="row">
               <div class="col-md-4">
-                <label for="cantidad">Cantidad:</label>
-                <span class="require">*</span>
+                <label for="cantidad">Cantidad*:</label>
                 <input
                   type="text"
                   class="form-control"

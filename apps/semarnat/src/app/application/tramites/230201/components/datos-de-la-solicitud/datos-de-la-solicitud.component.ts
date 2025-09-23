@@ -181,7 +181,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Etiquetas para la lista de entidades.
    */
   public entidadesLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Entidades disponsibles:',
+    tituluDeLaIzquierda: 'Entidades disponibles:',
     derecha: 'Entidades seleccionadas*:',
   };
 

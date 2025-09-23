@@ -66,8 +66,7 @@
           </div>
           <div class="row ">
             <div class="col-md-6">
-              <label class="form-label" for="nacionalidad">{{ metaInfo.nacionalidad }}</label>
-              <label for="puntos"></label>
+              <label class="form-label" for="nacionalidad">Nacionalidad:</label>
               <div class="form-check">
                 <app-input-radio [description]="metaInfo.nacionalidad" [showDescription]="true"
                   [radioOptions]="nacionalidad" id="modoCantidad" [layout]="'horizontal'"
@@ -76,12 +75,10 @@
               </div>
             </div>
             <div class="col-md-6">
-              <label for="tipoPersona">{{ metaInfo.tipoPersona }}</label>
-              <span class="require">*</span>
-              <label for="puntos"></label>
-              <app-input-radio 
-                [radioOptions]="tipoPersona" 
-                id="modoCantidad" 
+              <label for="tipoPersona">Tipo de persona*:</label>
+              <app-input-radio
+                [radioOptions]="tipoPersona"
+                id="modoCantidad"
                 [layout]="'horizontal'"
                 formControlName="tipoPersona" 
                 [isRequired]="true" 
@@ -97,9 +94,7 @@
           @if(agregarMercanciasForm.get('tipoPersona')?.value === 'moral'){
           <div class="row mt-2">
             <div class="col-md-12">
-              <label for="razonSocial">{{ metaInfo.denominacion }}</label>
-              <span class="require">*</span>
-              <label for="puntos"></label><br>
+              <label for="razonSocial">Denominación o Razón Social*:</label>
               <input type="text" formControlName="razonSocial" id="razonSocial" maxlength="250"
                 class="form-control" />
 
@@ -114,19 +109,14 @@
           <div class="row mt-2">
             <div class="row">
               <div class="col-md-4">
-                <label for="nombre">{{ metaInfo.nombre }}</label>
-                <span class="require">*</span>
-                <label for="puntos"></label>
+                <label for="nombre">Nombre*:</label>
                 <input type="text" formControlName="nombre" id="nombre" maxlength="200" class="form-control" />
-
                 <div *ngIf="isInvalid('nombre')" class="mensaje-error">
                   Este campo es obligatorio.
                 </div>
               </div>
               <div class="col-md-4">
-                <label for="apellidoPaterno">{{ metaInfo.apellidoPaterno }}</label>
-                <span class="require">*</span>
-                <label for="puntos"></label>
+                <label for="apellidoPaterno">Apellido Paterno*:</label>
                 <input type="text" formControlName="apellidoPaterno" id="apellidoPaterno" maxlength="200"
                   class="form-control" />
                 <div *ngIf="isInvalid('apellidoPaterno')" class="mensaje-error">
@@ -134,8 +124,7 @@
                 </div>
               </div>
               <div class="col-md-4">
-                <label for="apellidoMaterno">{{ metaInfo.apellidoMaterno }}</label>
-                <label for="puntos"></label>
+                <label for="apellidoMaterno">Apellido Materno:</label>
                 <input type="text" formControlName="apellidoMaterno" id="apellidoMaterno" maxlength="200"
                   class="form-control" />
               </div>
@@ -145,9 +134,7 @@
 
           <div class="row mt-2">
             <div class="col-md-4">
-              <label for="codigoPostal">{{ metaInfo.codigoPostal }}</label>
-              <span class="require">*</span>
-              <label for="puntos"></label>
+              <label for="codigoPostal">Código postal o equivalente*:</label>
               <input type="text" formControlName="codigoPostal" id="codigoPostal" maxlength="15"
                 class="form-control" />
               <div *ngIf="isInvalid('codigoPostal')" class="mensaje-error">
@@ -161,17 +148,13 @@
                 formControlName="pais" 
                 [label]="'País'" 
                 [required]="true"
+                [markTouched]="agregarMercanciasForm.get('pais')?.touched??false"
                 [isDisabled]="soloLectura">
               </app-catalogo-select>
-              <div *ngIf="isInvalid('pais')" class="mensaje-error">
-                Este campo es obligatorio.
-              </div>
             </div>
             <div class="col-md-4">
               <div class="ciudadExp">
-                <label for="ciudad">{{ metaInfo.ciudad }}</label>
-                <span class="require">*</span>
-                <label for="puntos"></label>
+                <label for="ciudad">Ciudad*:</label>
                 <input type="text" formControlName="ciudad" id="ciudad" class="form-control" />
                 <div *ngIf="isInvalid('ciudad')" class="mensaje-error">
                   Este campo es obligatorio.
@@ -181,14 +164,11 @@
           </div>
           <div class="row mt-4">
             <div class="col-md-12">
-              <label for="domicilio">{{ metaInfo.domicilio }}</label>
-              <span class="require">*</span>
-              <label for="puntos"></label>
-              <br>
+              <label for="domicilio">Domicilio*:</label>
               <textarea formControlName="domicilio" id="domicilio" class="form-control"></textarea>
-            </div>
-            <div *ngIf="isInvalid('domicilio')" class="mensaje-error">
+              <div *ngIf="isInvalid('domicilio')" class="mensaje-error">
               Este campo es obligatorio.
+              </div>
             </div>
           </div>
     </form>
