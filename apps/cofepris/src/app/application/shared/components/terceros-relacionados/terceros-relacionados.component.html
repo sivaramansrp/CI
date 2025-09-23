@@ -55,6 +55,7 @@
           class="btn btn-primary ms-2"
           (click)="irAAcciones('../agregar-fabricante',false)"
           [disabled]="esFormularioSoloLectura ? true : false"
+          *ngIf="!esVisible || (esVisible && estaOculto)"
         >
           Agregar
         </button>
@@ -111,6 +112,7 @@
           class="btn btn-primary ms-2"
           (click)="irAAcciones('../agregar-destinatario-final', false)"
           [disabled]="esFormularioSoloLectura ? true : false"
+          *ngIf="!esVisible || (esVisible && estaOculto)"
         >
           Agregar
         </button>
@@ -161,6 +163,7 @@
           class="btn btn-primary ms-2"
           (click)="irAAcciones('../agregar-proveedor', false)"
           [disabled]="esFormularioSoloLectura ? true : false"
+          *ngIf="!esVisible || (esVisible && estaOculto)"
         >
           Agregar
         </button>
@@ -211,6 +214,7 @@
           class="btn btn-primary ms-2"
           (click)="irAAcciones('../agregar-facturador', false)"
           [disabled]="esFormularioSoloLectura ? true : false"
+          *ngIf="!esVisible || (esVisible && estaOculto)"
         >
           Agregar
         </button>

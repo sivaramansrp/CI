@@ -57,6 +57,7 @@ describe('PagoDeDerechosComponent', () => {
         entidad: null,
         representacion: null,
         fabricanteTablaDatos: [],
+        fabricanteTablaModificaDatos: [],
         proveedorTablaDatos: [],
         importadorTablaDatos: [],
         destinatarioFinalTablaDatos: [],
