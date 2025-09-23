@@ -425,6 +425,8 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
         fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
         fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
         categoriaFraccion: item.encabezadoCategoria,
+        tipoFraccion:item.encabezadoTipo,
+        umt:item.encabezadoUmt
       });
     });
 
