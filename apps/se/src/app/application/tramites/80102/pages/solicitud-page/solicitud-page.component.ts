@@ -7,6 +7,7 @@ import {
   SeccionLibStore,
   Usuario,
   WizardComponent,
+  formatearFechaYyyyMmDd,
 } from '@ng-mf/data-access-user';
 import {
   Component,
@@ -290,7 +291,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
         numeroActa: data['datosComplimentos'].formaModificaciones.nombreDeActa,
         numeroNotario: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
         entidadFederativa: data['datosComplimentos'].formaModificaciones.estado,
-        fechaActa: data['datosComplimentos'].formaModificaciones.fechaDeActa
+        fechaActa: formatearFechaYyyyMmDd(data['datosComplimentos'].formaModificaciones.fechaDeActa)
       },
       modalidad: data['datosComplimentos'].modalidad,
       booleanGenerico: data['datosComplimentos'].programaPreOperativo ? true : false,
@@ -298,7 +299,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
       descripcionLugarEmbarque: data['datosComplimentos'].datosGeneralis.localizacion,
       capacidadAlmacenaje: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
       numeroPermiso: data['datosComplimentos'].obligacionesFiscales.opinionPositiva === 1 ? 'SI' : '',
-      fechaOperacion: data['datosComplimentos'].obligacionesFiscales.fechaExpedicion,
+      fechaOperacion: formatearFechaYyyyMmDd(data['datosComplimentos'].obligacionesFiscales.fechaExpedicion), 
       nomOficialAutorizado: data['datosComplimentos'].formaModificaciones.nombreDelFederatario,
 
     };
