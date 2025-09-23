@@ -262,7 +262,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
       pais: ['', Validators.required],
       descripcionPais: [''],
       ciudad: ['', [Validators.required, Validators.maxLength(120)]],
-      domicilio: ['', Validators.required],
+      domicilio: ['', Validators.required, Validators.maxLength(1000)],
     });
 
     this.filaSeleccionada.push(this.solicitudState.destinatarios[0]);

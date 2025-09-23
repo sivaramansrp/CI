@@ -159,9 +159,17 @@
               formControlName="codigoPostal"
               id="codigoPostal"
               [required]="true"
+              maxlength="12"
               
               (change)="setValoresStore(exportacionForm, 'codigoPostal', 'setCodigoPostal')"
             />
+              @if (solicitudForm.get('exportacionForm.codigoPostal')?.invalid && solicitudForm.get('exportacionForm.codigoPostal')?.touched) {
+                <div class="text-danger">
+                  @if (solicitudForm.get('exportacionForm.codigoPostal')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                </div>
+                }
           </div>
           <div class="col-md-4">
             <app-catalogo-select
@@ -182,10 +190,18 @@
               class="form-control"
               formControlName="calle"
               id="calle"
+              maxlength="100"
               [required]="true"
               
               (change)="setValoresStore(exportacionForm, 'calle', 'setCalle')"
             />
+              @if (solicitudForm.get('exportacionForm.calle')?.invalid && solicitudForm.get('exportacionForm.calle')?.touched) {
+                <div class="text-danger">
+                  @if (solicitudForm.get('exportacionForm.calle')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                </div>
+                }
           </div>
         </div>
         <div class="row">
@@ -196,10 +212,18 @@
               class="form-control"
               formControlName="colonia"
               id="colonia"
+              maxlength="120"
               [required]="true"
               
               (change)="setValoresStore(exportacionForm, 'colonia', 'setColonia')"
             />
+              @if (solicitudForm.get('exportacionForm.colonia')?.invalid && solicitudForm.get('exportacionForm.colonia')?.touched) {
+                <div class="text-danger">
+                  @if (solicitudForm.get('exportacionForm.colonia')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                </div>
+                }
           </div>
           <div class="col-md-4">
             <label>Número exterior*:</label>
@@ -209,9 +233,17 @@
               formControlName="numeroExterior"
               id="numeroExterior"
               [required]="true"
+              maxlength="55"
               
               (change)="setValoresStore(exportacionForm, 'numeroExterior', 'setNumeroExterior')"
             />
+              @if (solicitudForm.get('exportacionForm.numeroExterior')?.invalid && solicitudForm.get('exportacionForm.numeroExterior')?.touched) {
+                <div class="text-danger">
+                  @if (solicitudForm.get('exportacionForm.numeroExterior')?.errors?.['required']) {
+                  <small>Este campo es obligatorio.</small>
+                  }
+                </div>
+                }
           </div>
           <div class="col-md-4">
             <label>Número interior:</label>
@@ -220,6 +252,7 @@
               class="form-control"
               formControlName="numeroInterior"
               id="numeroInterior"
+              maxlength="55"
               [required]="true"
               
               (change)="setValoresStore(exportacionForm, 'numeroInterior', 'setNumeroInterior')"
