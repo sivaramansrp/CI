@@ -458,9 +458,19 @@ modalOperacionModo: 'agregar' | 'modificar' = 'agregar';
   soloNumerosDecimal(event: Event): void {
     const INPUT = event.target as HTMLInputElement | null;
     if (INPUT) {
-      let VALUE = INPUT.value.replace(/[^0-9.]/g, '');
-      VALUE = VALUE.replace(/(\..*)\./g, '$1');
+      let VALUE = INPUT.value.replace(/[^0-9.]/g, ''); 
+      VALUE = VALUE.replace(/(\..*)\./g, '$1'); 
+      
+      const endsWithDecimal = VALUE.endsWith('.');
+      
       VALUE = VALUE.replace(/^(\d*)(\.?\d{0,2}).*$/, '$1$2');
+       if (endsWithDecimal && !VALUE.includes('.')) {
+        VALUE = VALUE + '.';
+      } else if (endsWithDecimal && !VALUE.endsWith('.')) {
+        VALUE = VALUE.replace(/\.$/, ''); 
+        VALUE = VALUE + '.';
+      }
+      
       this.formAviso.get('valorUSD')?.setValue(VALUE, { emitEvent: false });
     }
   }
@@ -644,30 +654,24 @@ modalOperacionModo: 'agregar' | 'modificar' = 'agregar';
     this.establecerValoresEnEstado(this.formAviso, 'fechaIniExposicion');
   }
 
-  /**
-   * Actualiza el número de valor en el estado de la solicitud basado en el evento del input.
-   * @param control - El nombre del control cuyo valor se actualizará.
-   * @param evento - El evento que contiene el nuevo valor del input.
-   */
-  actualizarNumeroValor(controlName: string, event: Event): void {
-    const RAW_VALUE = (event.target as HTMLInputElement).value;
+ /**
+ * Actualiza el número de valor en el estado de la solicitud basado en el evento del input.
+ * Preserves exact input format and shows error messages for invalid formats.
+ * @param controlName - El nombre del control cuyo valor se actualizará.
+ * @param event - El evento que contiene el nuevo valor del input.
+ */
+actualizarNumeroValor(controlName: string, event: Event): void {
+  const RAW_VALUE = (event.target as HTMLInputElement).value;
+ 
+  let CLEANED = RAW_VALUE?.toString().trim();
   
-    // Optional: clean extra spaces
-    const CLEANED = RAW_VALUE?.toString().trim();
+  this.formAviso.get(controlName)?.setValue(CLEANED);
   
-    // If it's a valid number, parse it
-    const PARSED = parseFloat(CLEANED);
-  
-    // Set value as number if valid, else keep string (to show validation error)
-    if (!isNaN(PARSED)) {
-      this.formAviso.get(controlName)?.setValue(PARSED);
-    } else {
-      this.formAviso.get(controlName)?.setValue(CLEANED); // keep text to trigger pattern error
-    }
-  
-    this.formAviso.get(controlName)?.markAsTouched();
-    this.formAviso.get(controlName)?.updateValueAndValidity();
-  }
+  this.establecerValoresEnEstado(this.formAviso, controlName);
+ 
+  this.formAviso.get(controlName)?.markAsTouched();
+  this.formAviso.get(controlName)?.updateValueAndValidity();
+}
   
   modificarOperacionImp(): void {
     if (!this.selectedOperacionDeImportacion) {
