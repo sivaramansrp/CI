@@ -9,10 +9,10 @@
  * relacionados con el registro de la solicitud IMMEX.
  */
 
-import { ALERT, USUARIO_INFO } from '../../constantes/modificacion.constants';
-import { AVISO, Usuario } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
+import { ALERT } from '../../constantes/modificacion.constants';
+import { AVISO } from '@ng-mf/data-access-user';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80206.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { AmpliacionServiciosState } from '../../estados/tramite80206.store';
@@ -116,11 +116,7 @@ export class RegistroPageComponent implements OnInit, OnDestroy {
    * @property {boolean} mostrarAlerta
    */
   mostrarAlerta: boolean = false;
-  /**
-   * Almacena la información del usuario actual.
-   * Contiene los datos del usuario que está utilizando el sistema, obtenidos de la constante USUARIO_INFO.
-   */
-  datosUsuario: Usuario = USUARIO_INFO;
+
    /**
    * Evento que se emite para cargar archivos.
    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
