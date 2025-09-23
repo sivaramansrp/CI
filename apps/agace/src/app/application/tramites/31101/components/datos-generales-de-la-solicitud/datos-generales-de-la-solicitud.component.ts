@@ -173,6 +173,16 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   public nuevaNotificacion!: Notificacion;
 
   /**
+   * Objeto que almacena la información de la notificación de confirmación.
+   *
+   * Se utiliza para mostrar mensajes al usuario relacionados con acciones
+   * críticas (por ejemplo, confirmaciones, advertencias o errores).
+   *
+   * @type {Notificacion}
+   */
+  public confirmaNotificacion!: Notificacion;
+
+  /**
    * Índice del elemento seleccionado en la interfaz.
    *
    * Se inicializa con `-1` para indicar que no existe
@@ -676,13 +686,17 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
 
           if (this.solicitud31101State.tipoSector) {
             if (this.solicitud31101State.tipoSector === 1) {
+              this.espectaculoConcepto = true;
               this.datosGeneralesForm.patchValue({
                 concepto: this.solicitud31101State.productivoConcepto,
               });
             } else if (this.solicitud31101State.tipoSector === 2) {
+              this.espectaculoConcepto = true;
               this.datosGeneralesForm.patchValue({
                 concepto: this.solicitud31101State.servicioConcepto,
               });
+            } else {
+              this.espectaculoConcepto = false;
             }
           }
         })
@@ -702,7 +716,8 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         next: (respuesta: DatosGeneralesDeLaSolicitudCatologo) => {
           this.conceptoLista.catalogos = respuesta.concepto;
           this.tipoDeInversionLista.catalogos = respuesta.tipoDeInversion;
-          this.modalidadDelProgramaIMMEX.catalogos = respuesta.modalidadDelProgramaIMMEX;
+          this.modalidadDelProgramaIMMEX.catalogos =
+            respuesta.modalidadDelProgramaIMMEX;
         },
       });
   }
@@ -1243,6 +1258,31 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.elementoParaEliminar = i;
   }
 
+  /**
+   * Elimina un elemento de la lista de pedimentos en la posición especificada.
+   *
+   * @param {number} i - El índice del elemento a eliminar.
+   *
+   * @remarks
+   * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
+   * y se abre el modal para mostrar un aviso al usuario.
+   */
+  confirmacionModal(mensaje: string, i: number = 0): void {
+    this.confirmaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+
+    this.elementoParaEliminar = i;
+  }
+
   /** Calcula el valor comercial sumando los valores ingresados */
   calcularValorComercial(): void {
     const VALOR1 = this.datosGeneralesForm.get('textoGenerico10')?.value;
@@ -1297,6 +1337,32 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Confirma y ejecuta la eliminación de un pedimento según la selección actual.
+   *
+   * - Si `borrar` es `true` y existe al menos un elemento en `tipoSeleccionListo`,
+   *   elimina el registro correspondiente de la lista `tipoDeInversionDatos`.
+   * - Limpia la selección (`tipoSeleccionListo = []`).
+   * - Muestra un modal informando al usuario que la eliminación fue exitosa.
+   *
+   * @param {boolean} borrar - Indica si se debe proceder con la eliminación.
+   */
+  confirmaPedimento(borrar: boolean): void {
+    if (borrar) {
+      if (this.tipoSeleccionListo.length > 0) {
+        this.tipoDeInversionDatos = this.tipoDeInversionDatos.filter(
+          (dato) => dato.idRegistro !== this.tipoSeleccionListo[0].idRegistro
+        );
+
+        this.tipoSeleccionListo = [];
+        this.abrirModal(
+          'El registro seleccionado fue eliminado correctamente',
+          0
+        );
+      }
+    }
+  }
+
+  /**
    * Elimina un pedimento del programa IMMEX y muestra una notificación de éxito.
    *
    * Dependiendo del parámetro `borrar` y del estado de `seleccionarDomiciliosDatos`:
@@ -1311,7 +1377,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     if (borrar) {
       if (
         this.seleccionarDomiciliosDatos.length === 1 &&
-        !this.seleccionarDomiciliosDatos[0].idRecinto
+        this.seleccionarDomiciliosDatos[0].idRecinto
       ) {
         this.domiciliosDatos = this.domiciliosDatos.filter(
           (item) => item.id !== this.seleccionarDomiciliosDatos[0].id
@@ -1339,6 +1405,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
           txtBtnCancelar: '',
         };
         this.elementoParaEliminar = 0;
+        this.inputSelection = -1;
         this.pedimentos.push(PEDIMENTO);
       }
       this.seleccionarDomiciliosDatos = [];
@@ -1391,7 +1458,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   eliminarImmexProgram(): void {
     if (
       this.seleccionarDomiciliosDatos.length >= 1 &&
-      this.seleccionarDomiciliosDatos[0].idRecinto
+      !this.seleccionarDomiciliosDatos[0].idRecinto
     ) {
       const PEDIMENTO = {
         patente: 0,
@@ -1417,10 +1484,11 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       };
 
       this.elementoParaEliminar = 0;
+      this.inputSelection = -1;
       this.pedimentos.push(PEDIMENTO);
     } else if (
       this.seleccionarDomiciliosDatos.length >= 1 &&
-      !this.seleccionarDomiciliosDatos[0].idRecinto
+      this.seleccionarDomiciliosDatos[0].idRecinto
     ) {
       const PEDIMENTO = {
         patente: 0,
@@ -1501,6 +1569,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       }
     }
     this.inputSelection = -1;
+    this.seleccionarDomiciliosDatos = [];
     if (this.MODAL_INSTANCE_MODIFICAR_IMMEX) {
       this.MODAL_INSTANCE_MODIFICAR_IMMEX.hide();
     }
@@ -1534,7 +1603,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         }
       }
       const OBJETO_JSON: TipoDeInversion = {
-        idRegistro: '',
+        idRegistro: (this.tipoDeInversionDatos.length || 0) + 1,
         tipoInversion: TIPO_INVERSION,
         valor: this.datosGeneralesForm.get('cantidadInversion')?.value,
         descripcion: this.datosGeneralesForm.get('descInversion')?.value,
@@ -1544,6 +1613,9 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.datosGeneralesForm.get('tipoInversion')?.reset();
       this.datosGeneralesForm.get('cantidadInversion')?.reset();
       this.datosGeneralesForm.get('descInversion')?.reset();
+      this.solicitud31101Store.actualizarTipoInversion('');
+      this.solicitud31101Store.actualizarCantidadInversion('');
+      this.solicitud31101Store.actualizarDescInversion('');
     }
   }
 
@@ -1566,13 +1638,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     };
 
     if (this.tipoSeleccionListo.length > 0) {
-      this.tipoDeInversionDatos = this.tipoDeInversionDatos.filter(
-        (dato) =>
-          dato.tipoInversion !== this.tipoSeleccionListo[0].tipoInversion
-      );
-
-      this.tipoSeleccionListo = [];
-      this.abrirModal('El registro seleccionado fue eliminado correctamente');
+      this.confirmacionModal('¿Desea eliminar el registro seleccionado?');
       this.pedimentos.push(PEDIMENTO);
     }
   }
