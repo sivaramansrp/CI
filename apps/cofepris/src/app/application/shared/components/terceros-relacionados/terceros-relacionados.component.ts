@@ -16,7 +16,9 @@ import {
   MENSAJE_SIN_FILA_SELECCIONADA,
   OCULTAR_FACTURADOR,
   OCULTAR_PROVEEDOR,
+  PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR,
   PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR,
+  
 } from '../../constantes/datos-solicitud.enum';
 import {
   Component,
@@ -71,7 +73,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @decorador @Input
    */
   @Input() public idProcedimiento!: number;
-
+  
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    */
@@ -142,6 +144,16 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @default false
    */
   isAdjuntar: boolean = false;
+
+
+  /**
+   * Indica si el componente es visible o no.
+   * @remarks
+   * Esta propiedad controla la visibilidad del componente en la interfaz de usuario.
+   */
+  esVisible: boolean = false;
+
+  
 
   /**
    * Determina si el formulario debe estar en modo solo lectura.
@@ -426,7 +438,13 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.habilitarProveedor = OCULTAR_PROVEEDOR.includes(this.idProcedimiento)
       ? false
       : true;
+
+      this.esVisible =
+      PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(
+        this.idProcedimiento
+      );
     }
+    
 
 
   /**

@@ -16,15 +16,17 @@ import {
   ListaPasosWizard,
   PERSONA_MORAL_NACIONAL,
   SolicitanteComponent,
+  TituloComponent,
   WizardComponent
 } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud11102StaObjResp, Solicitud11102State } from '../../estados/tramite11102.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDelTramiteComponent } from '../../components/datos-del-tramite/datos-del-tramite.component';
 import { ModificacionDonacionesImmexService } from '../../services/modificacion-donaciones-immex.service';
 import { PASOS } from '../../constants/pasos.enum';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud11102StaObjResp } from '../../estados/tramite11102.store';
+import { Tramite11102Query } from '../../estados/tramite11102.query';
 
 /**
  * Interfaz que representa una acción ejecutada por un botón dentro de un flujo o formulario paso a paso.
@@ -56,14 +58,11 @@ interface AccionBoton {
     ReactiveFormsModule,
     SolicitanteComponent,
     DatosDelTramiteComponent,
+    TituloComponent
   ],
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
-  constructor(
-    private service11102: ModificacionDonacionesImmexService, // Servicio para manejar la solicitud
-    private consultaQuery: ConsultaioQuery // Servicio para consultar el estado
-  ) {}
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false; // Indica si hay datos de respuesta del servidor
@@ -85,11 +84,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
    * Evento que se emite al continuar con el flujo del trámite.
    */
   @Output() continuarEvento = new EventEmitter<string>();
-
-  /**
-   * Referencia al componente de solicitante.
-   */
-  // @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
   /**
    * Tipo de persona (e.g., física o moral).
@@ -122,6 +116,39 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
+   * Formulario reactivo que contiene los datos de la solicitud.
+   */
+  solicitudForm!: FormGroup;
+
+  /**
+   * Estado actual de la solicitud.
+   */
+  public solicitudState!: Solicitud11102State;
+
+  /**
+   * Constructor del componente PasoUno.
+   * @param service11102 Servicio para manejar la solicitud
+   * @param consultaQuery Servicio para consultar el estado
+   * @param query Query para obtener el estado del trámite
+   * @param fb FormBuilder para crear formularios reactivos
+   */
+  constructor(
+    private service11102: ModificacionDonacionesImmexService, // Servicio para manejar la solicitud
+    private consultaQuery: ConsultaioQuery, // Servicio para consultar el estado
+    private query: Tramite11102Query, // Query para obtener el estado del trámite
+    private fb: FormBuilder // FormBuilder para crear formularios reactivos
+  ) {
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    *
    * - Se suscribe al observable del estado de consulta (`selectConsultaioState$`) y actualiza la propiedad `consultaState` con el valor recibido.
@@ -130,6 +157,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
    * - Si no está en modo actualización, activa el modo de solo lectura para mostrar los datos de respuesta.
    */
   ngOnInit(): void {
+    this.solicitudForm = this.fb.group({      
+      folioOriginal: [{ value: this.solicitudState?.folioOriginal, disabled: true }, [Validators.required]]
+    });
+
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$), // Se desuscribe al destruir el componente

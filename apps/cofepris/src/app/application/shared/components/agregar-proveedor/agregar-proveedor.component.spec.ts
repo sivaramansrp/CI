@@ -70,6 +70,7 @@ describe('AgregarProveedorComponent', () => {
     component.validarElementos = jest.fn();
     component.crearAgregarFormularioProveedor = jest.fn();
     component.changeNacionalidad = jest.fn();
+    component.agregarProveedorForm = { get: jest.fn() };
     component.ngOnInit();
     expect(component.cargarDatos).toHaveBeenCalled();
     expect(component.validarElementos).toHaveBeenCalled();

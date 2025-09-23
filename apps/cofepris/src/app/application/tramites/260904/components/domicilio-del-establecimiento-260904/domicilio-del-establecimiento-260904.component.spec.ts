@@ -135,6 +135,7 @@ describe('DomicilioDelEstablecimiento260904Component', () => {
 			scianConfigDatos: [],
 			claveScianModal: '',
 			claveDescripcionModal: '',
+			fabricanteTablaModificaDatos: [],
 		};
 		component.crearFormulario();
 		expect(component.form).toBeDefined();

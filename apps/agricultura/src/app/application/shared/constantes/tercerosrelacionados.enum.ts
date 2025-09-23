@@ -22,7 +22,7 @@ export const OPCION_DE_BOTON_DE_RADIO = [
      * Etiqueta para persona física.
      * @type {string}
      */
-    "label": "Fisica",
+    "label": "Física",
     /**
      * Valor para persona física.
      * @type {string}

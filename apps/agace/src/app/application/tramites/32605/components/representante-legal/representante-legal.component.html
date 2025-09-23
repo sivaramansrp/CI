@@ -7,7 +7,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="representanteRegistro"
-              ><span class="require">*</span> Registro Federal de Contribuyentes:</label>
+              >Registro Federal de Contribuyentes<span class="require">*</span>:</label>
             <input
               class="form-control"
               id="representanteRegistro"
@@ -27,8 +27,7 @@
           representante.get('representanteRegistro')?.hasError('maxlength')
           ) {
           <div class="mensaje-error">Por favor, no escriba más de 15 caracteres.</div>
-          }
-          @if (
+          }@else if (
           representante.get('representanteRegistro')?.touched &&
           representante.get('representanteRegistro')?.hasError('pattern')
           ) {
