@@ -1,14 +1,20 @@
-import { AlertComponent, BtnContinuarComponent, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Component, ViewChild } from '@angular/core';
+import {
+  AlertComponent,
+  BtnContinuarComponent,
+  DatosPasos,
+  ListaPasosWizard,
+  WizardComponent,
+} from '@libs/shared/data-access-user/src';
+import { Component, ViewChild, ViewChildren } from '@angular/core';
 import { PAGO_DE_DERECHOS, PASOS } from '../../constantes/aviso-retorno.enum';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 export interface AccionBoton {
-    accion: string;
-    valor: number;
-  }
+  accion: string;
+  valor: number;
+}
 
 /**
  * Componente que gestiona el proceso de aviso de retorno mediante un sistema de pasos (wizard).
@@ -27,11 +33,12 @@ export interface AccionBoton {
     PasoUnoComponent,
     PasoDosComponent,
     BtnContinuarComponent,
-    AlertComponent
+    AlertComponent,
   ],
   templateUrl: './solicitud-page.component.html',
 })
 export class SolicitudPageComponent {
+  esFormaValido: boolean = false;
   /**
    * Lista de pasos configurados para el wizard.
    * @type {ListaPasosWizard[]}
@@ -43,6 +50,8 @@ export class SolicitudPageComponent {
    * @type {WizardComponent}
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  @ViewChild(PasoUnoComponent) pasoUno!: PasoUnoComponent;
 
   /**
    * Clase CSS para estilizar alertas informativas.
@@ -70,7 +79,7 @@ export class SolicitudPageComponent {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
-    txtBtnSig: 'Continuar'
+    txtBtnSig: 'Continuar',
   };
 
   /**
@@ -78,16 +87,27 @@ export class SolicitudPageComponent {
    * @param e Objeto con información de la acción del botón
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
+    if (e.accion === 'cont') {
+      let isValid = true;
+
+      if (this.indice === 1 && this.pasoUno) {
+        isValid = this.pasoUno.datosSolicitudComponent.validarFormulario();
+      }
+      if (!isValid) {
+        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+        return;
+      }
+
+      this.esFormaValido = false;
       this.indice = e.valor;
       this.datosPasos.indice = this.indice;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
+
+      this.wizardComponent.siguiente();
+      return;
     }
+    this.indice = e.valor;
+    this.datosPasos.indice = this.indice;
+    this.wizardComponent.atras();
   }
-
-
 }

@@ -1,9 +1,32 @@
-import { AvisoOpcionesDeRadio, ResiduoPeligroso } from '../../models/aviso-catalogo.model';
-import { CatalogoSelectComponent, InputRadioComponent, REGEX_POSTAL, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AvisoOpcionesDeRadio,
+  ResiduoPeligroso,
+} from '../../models/aviso-catalogo.model';
+import {
+  CatalogoSelectComponent,
+  InputRadioComponent,
+  REGEX_POSTAL,
+  TablaDinamicaComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  RadioOpcion,
+  SolicitudJson,
+} from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
@@ -24,14 +47,14 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
 
 /**
  * Componente que gestiona los datos de la solicitud para el proceso de reciclaje.
- * 
+ *
  * Maneja múltiples formularios para capturar información sobre:
  * - Solicitud principal
  * - Empresa recicladora
  * - Lugar de reciclaje
  * - Empresa transportista
  * - Precauciones de manejo
- * 
+ *
  * Integra con estado global mediante stores y queries para persistencia de datos.
  */
 @Component({
@@ -44,10 +67,10 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
     ReactiveFormsModule,
     TablaDinamicaComponent,
     InputRadioComponent,
-    DatosResiduosPeligrososComponent
+    DatosResiduosPeligrososComponent,
   ],
   templateUrl: './datos-solicitud.component.html',
-  styleUrl: './datos-solicitud.component.scss'
+  styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /** Referencia al elemento modal para agregar mercancías */
@@ -67,6 +90,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   /** Formulario para precauciones de manejo */
   formularioPrecaucionesManejo!: FormGroup;
+
+  formularioDatosDestinatario!: FormGroup;
 
   /** Opciones de radio obtenidas del JSON estático */
   radioOptions: RadioOpcion[] = RADIO_OPCIONES?.radioOptions;
@@ -169,8 +194,32 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       numeroRegistroAmbiental: ['', Validators.required],
       descripcionGenerica1: ['', Validators.required],
       numeroProgramaImmex: ['', Validators.required],
-      domicilio: ['', Validators.required]
+      domicilio: ['', Validators.required],
     });
+  }
+
+  validarFormulario(): boolean {
+    const IS_VALID =
+      this.solicitudForm.valid &&
+      this.formularioEmpresaReciclaje.valid &&
+      this.formularioLugarReciclaje.valid &&
+      this.formularioEmpresaTransportista.valid &&
+      this.formularioPrecaucionesManejo.valid &&
+      this.datosTabla.length > 0;
+
+    if (!IS_VALID) {
+      this.marcarCamposComoTocados();
+    }
+
+    return IS_VALID;
+  }
+
+  marcarCamposComoTocados(): void {
+    this.solicitudForm.markAllAsTouched();
+    this.formularioEmpresaReciclaje.markAllAsTouched();
+    this.formularioLugarReciclaje.markAllAsTouched();
+    this.formularioEmpresaTransportista.markAllAsTouched();
+    this.formularioPrecaucionesManejo.markAllAsTouched();
   }
 
   /**
@@ -182,7 +231,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       nombreEmpresa: ['', Validators.required],
       representanteLegal: ['', Validators.required],
       telefono: ['', Validators.required],
-      correoElectronico: ['', [Validators.required, Validators.email]]
+      correoElectronico: ['', [Validators.required, Validators.email]],
     });
   }
 
@@ -196,8 +245,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       destinoDomicilio: ['', Validators.required],
       codigoPostal: [
         '',
-        [Validators.required, Validators.pattern(REGEX_POSTAL), Validators.maxLength(8)]
-      ]
+        [
+          Validators.required,
+          Validators.pattern(REGEX_POSTAL),
+          Validators.maxLength(8),
+        ],
+      ],
     });
   }
 
@@ -207,7 +260,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   private inicializarFormularioEmpresaTransportista(): void {
     this.formularioEmpresaTransportista = this.fb.group({
       nombreEmpresaTransportistaResiduos: ['', Validators.required],
-      numeroAutorizacionSemarnat: ['', Validators.required]
+      numeroAutorizacionSemarnat: ['', Validators.required],
     });
   }
 
@@ -217,7 +270,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   private inicializarFormularioPrecaucionesManejo(): void {
     this.formularioPrecaucionesManejo = this.fb.group({
       clave: ['', Validators.required],
-      precaucionesManejo: ['', Validators.required]
+      precaucionesManejo: ['', Validators.required],
     });
   }
 
@@ -230,102 +283,103 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       {
         encabezado: 'Orígen del residuo',
         clave: (item: ResiduoPeligroso): string => item.origenResiduoGeneracion,
-        orden: 1
+        orden: 1,
       },
       {
         encabezado: 'Fracción Arancelaria',
-        clave: (item: ResiduoPeligroso): string => item.fraccionArancelaria,
-        orden: 2
+        clave: (item: ResiduoPeligroso): string => item.fraccionName,
+        orden: 2,
       },
       {
         encabezado: 'NICO',
-        clave: (item: ResiduoPeligroso): string => item.nico,
-        orden: 3
+        clave: (item: ResiduoPeligroso): string => item.nicoName,
+        orden: 3,
       },
       {
         encabezado: 'Acotación',
         clave: (item: ResiduoPeligroso): string => item.acotacion,
-        orden: 4
+        orden: 4,
       },
       {
         encabezado: 'Nombre Residuo Peligroso',
         clave: (item: ResiduoPeligroso): string => item.nombreResiduoPeligroso,
-        orden: 5
+        orden: 5,
       },
       {
         encabezado: 'Cantidad',
         clave: (item: ResiduoPeligroso): string => item.cantidad,
-        orden: 6
+        orden: 6,
       },
       {
         encabezado: 'Cantidad letra',
         clave: (item: ResiduoPeligroso): string => item.cantidadLetra,
-        orden: 7
+        orden: 7,
       },
       {
         encabezado: 'Unidad de medida',
-        clave: (item: ResiduoPeligroso): string => item.unidadMedida,
-        orden: 8
+        clave: (item: ResiduoPeligroso): string => item.unidadMedidaName,
+        orden: 8,
       },
       {
         encabezado: 'Clave Clasificación',
-        clave: (item: ResiduoPeligroso): string => item.claveClasificacion,
-        orden: 9  
+        clave: (item: ResiduoPeligroso): string => item.nombreClasificacion,
+        orden: 9,
       },
       {
         encabezado: 'Nombre Clasificación',
-        clave: (item: ResiduoPeligroso): string => item.nombreClasificacion,
-        orden: 10
+        clave: (item: ResiduoPeligroso): string => item.claveClasificacionDesc,
+        orden: 10,
       },
       {
         encabezado: 'Descripción clasificación',
-        clave: (item: ResiduoPeligroso): string => item.descripcionClasificacion,
-        orden: 11
+        clave: (item: ResiduoPeligroso): string =>
+          item.descripcionClasificacion,
+        orden: 11,
       },
       {
         encabezado: 'Descripción otro Clasificación',
-        clave: (item: ResiduoPeligroso): string => item.descripcionOtraClasificacion,
-        orden: 12
+        clave: (item: ResiduoPeligroso): string =>
+          item.descripcionOtraClasificacion,
+        orden: 12,
       },
       {
         encabezado: 'CRETI',
-        clave: (item: ResiduoPeligroso): string => item.creti,
-        orden: 13
+        clave: (item: ResiduoPeligroso): string => item.cretiDesc,
+        orden: 13,
       },
       {
         encabezado: 'Estado físico',
-        clave: (item: ResiduoPeligroso): string => item.estadoFisico,
-        orden: 14
+        clave: (item: ResiduoPeligroso): string => item.estadoFisicoDesc,
+        orden: 14,
       },
       {
         encabezado: 'Descripción otro estado físico',
-        clave: (item: ResiduoPeligroso): string => item.descripcionOtroEstadoFisico,
-        orden: 15
+        clave: (item: ResiduoPeligroso): string =>
+          item.descripcionOtroEstadoFisico,
+        orden: 15,
       },
       {
         encabezado: 'No. de manifiesto',
         clave: (item: ResiduoPeligroso): string => item.numeroManifiesto,
-        orden: 16
+        orden: 16,
       },
       {
         encabezado: 'Tipo de contenedor',
-        clave: (item: ResiduoPeligroso): string => item.tipoContenedor,
-        orden: 17
+        clave: (item: ResiduoPeligroso): string => item.tipoContenedorDesc,
+        orden: 17,
       },
       {
         encabezado: 'Descripción otro contenedor',
-        clave: (item: ResiduoPeligroso): string => item.descripcionOtroContenedor,
-        orden: 18
+        clave: (item: ResiduoPeligroso): string =>
+          item.descripcionOtroContenedor,
+        orden: 18,
       },
       {
         encabezado: 'Capacidad',
         clave: (item: ResiduoPeligroso): string => item.capacidad,
-        orden: 19
-      }
+        orden: 19,
+      },
     ];
-
-    // Inicializar con datos vacíos
-    this.datosTabla = [];
   }
 
   /**
@@ -334,9 +388,14 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   onRequiereEmpresaChange(valor: string): void {
     const DEBE_HABILITAR = valor === 'Si';
-    const CAMPOS = ['nombreEmpresa', 'representanteLegal', 'telefono', 'correoElectronico'];
+    const CAMPOS = [
+      'nombreEmpresa',
+      'representanteLegal',
+      'telefono',
+      'correoElectronico',
+    ];
 
-    CAMPOS.forEach(campo => {
+    CAMPOS.forEach((campo) => {
       const CONTROL = this.formularioEmpresaReciclaje.get(campo);
       if (CONTROL) {
         if (DEBE_HABILITAR) {
@@ -353,23 +412,34 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   private recuperarValoresDesdeStore(): void {
     const ESTADO = this.datoSolicitudQuery.getValue();
-
+    this.datosTabla = ESTADO.residuos ? [...ESTADO.residuos] : [];
     this.solicitudForm.patchValue(ESTADO.solicitudForm, { emitEvent: false });
-    this.formularioEmpresaReciclaje.patchValue(ESTADO.empresaReciclaje, { emitEvent: false });
-    this.formularioLugarReciclaje.patchValue(ESTADO.lugarReciclaje, { emitEvent: false });
-    this.formularioEmpresaTransportista.patchValue(ESTADO.empresaTransportista, { emitEvent: false });
-    this.formularioPrecaucionesManejo.patchValue(ESTADO.precaucionesManejo, { emitEvent: false });
+    this.formularioEmpresaReciclaje.patchValue(ESTADO.empresaReciclaje, {
+      emitEvent: false,
+    });
+    this.formularioLugarReciclaje.patchValue(ESTADO.lugarReciclaje, {
+      emitEvent: false,
+    });
+    this.formularioEmpresaTransportista.patchValue(
+      ESTADO.empresaTransportista,
+      { emitEvent: false }
+    );
+    this.formularioPrecaucionesManejo.patchValue(ESTADO.precaucionesManejo, {
+      emitEvent: false,
+    });
   }
 
   /**
    * Actualiza un campo específico del formulario principal en el store
    * @param campo Nombre del campo a actualizar
    */
-  actualizarCampoSolicitudForm(campo: keyof EstadoDatoSolicitud['solicitudForm']): void {
+  actualizarCampoSolicitudForm(
+    campo: keyof EstadoDatoSolicitud['solicitudForm']
+  ): void {
     const VALOR = this.solicitudForm.get(campo)?.value;
     this.datoSolicitudStore.actualizarSolicitudForm({
       ...this.solicitudForm.getRawValue(),
-      [campo]: VALOR
+      [campo]: VALOR,
     });
   }
 
@@ -377,7 +447,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Actualiza un campo específico del formulario de empresa recicladora en el store
    * @param campo Nombre del campo a actualizar
    */
-  actualizarCampoEmpresaReciclaje(campo: keyof EstadoDatoSolicitud['empresaReciclaje']): void {
+  actualizarCampoEmpresaReciclaje(
+    campo: keyof EstadoDatoSolicitud['empresaReciclaje']
+  ): void {
     const VALOR = this.formularioEmpresaReciclaje.get(campo)?.value;
 
     if (campo === 'requiereEmpresa') {
@@ -386,7 +458,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
     this.datoSolicitudStore.actualizarEmpresaReciclaje({
       ...this.formularioEmpresaReciclaje.getRawValue(),
-      [campo]: VALOR
+      [campo]: VALOR,
     });
   }
 
@@ -394,11 +466,13 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Actualiza un campo específico del formulario de empresa transportista en el store
    * @param campo Nombre del campo a actualizar
    */
-  actualizarCampoEmpresaTransportista(campo: keyof EstadoDatoSolicitud['empresaTransportista']): void {
+  actualizarCampoEmpresaTransportista(
+    campo: keyof EstadoDatoSolicitud['empresaTransportista']
+  ): void {
     const VALOR = this.formularioEmpresaTransportista.get(campo)?.value;
     this.datoSolicitudStore.actualizarEmpresaTransportista({
       ...this.formularioEmpresaTransportista.getRawValue(),
-      [campo]: VALOR
+      [campo]: VALOR,
     });
   }
 
@@ -406,11 +480,13 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Actualiza un campo específico del formulario de precauciones en el store
    * @param campo Nombre del campo a actualizar
    */
-  actualizarCampoPrecaucionesManejo(campo: keyof EstadoDatoSolicitud['precaucionesManejo']): void {
+  actualizarCampoPrecaucionesManejo(
+    campo: keyof EstadoDatoSolicitud['precaucionesManejo']
+  ): void {
     const VALOR = this.formularioPrecaucionesManejo.get(campo)?.value;
     this.datoSolicitudStore.actualizarPrecaucionesManejo({
       ...this.formularioPrecaucionesManejo.getRawValue(),
-      [campo]: VALOR
+      [campo]: VALOR,
     });
   }
 
@@ -442,7 +518,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (respuesta: AvisoOpcionesDeRadio) => {
           this.avisoOpcionesDeRadio = respuesta;
-        }
+        },
       });
   }
 
@@ -486,6 +562,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   onResiduoAgregado(residuoData: ResiduoPeligroso): void {
     // Agregar el nuevo residuo directamente a los datos de la tabla
     this.datosTabla = [...this.datosTabla, residuoData];
+    this.datoSolicitudStore.actualizarResiduosPeligrosos(this.datosTabla);
   }
 
   /**
@@ -495,13 +572,14 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   onFilasSeleccionadas(filasSeleccionadas: ResiduoPeligroso[]): void {
     // Limpiar selecciones previas
     this.filasSeleccionadas.clear();
-    
+
     // Encontrar los índices de las filas seleccionadas
-    filasSeleccionadas.forEach(filaSeleccionada => {
-      const INDEX = this.datosTabla.findIndex(fila => 
-        fila.nico === filaSeleccionada.nico && 
-        fila.fraccionArancelaria === filaSeleccionada.fraccionArancelaria &&
-        fila.numeroManifiesto === filaSeleccionada.numeroManifiesto
+    filasSeleccionadas.forEach((filaSeleccionada) => {
+      const INDEX = this.datosTabla.findIndex(
+        (fila) =>
+          fila.nico === filaSeleccionada.nico &&
+          fila.fraccionArancelaria === filaSeleccionada.fraccionArancelaria &&
+          fila.numeroManifiesto === filaSeleccionada.numeroManifiesto
       );
       if (INDEX !== -1) {
         this.filasSeleccionadas.add(INDEX);
@@ -518,17 +596,30 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     }
 
     // Convertir a array y ordenar de mayor a menor para eliminar correctamente
-    const INDICES_A_ELIMINAR = Array.from(this.filasSeleccionadas).sort((a, b) => b - a);
-    
-    INDICES_A_ELIMINAR.forEach(index => {
+    const INDICES_A_ELIMINAR = Array.from(this.filasSeleccionadas).sort(
+      (a, b) => b - a
+    );
+
+    INDICES_A_ELIMINAR.forEach((index) => {
       this.datosTabla.splice(index, 1);
     });
 
     // Limpiar selecciones
     this.filasSeleccionadas.clear();
-    
+
     // Forzar actualización de la tabla
     this.datosTabla = [...this.datosTabla];
+  }
+
+  actualizarDatosDestinatario(
+    campo: keyof EstadoDatoSolicitud['lugarReciclaje']
+  ): void {
+    const VALOR = this.formularioLugarReciclaje.get(campo)?.value;
+
+    this.datoSolicitudStore.actualizarLugarReciclaje({
+      ...this.formularioLugarReciclaje.getRawValue(),
+      [campo]: VALOR,
+    });
   }
 
   /**

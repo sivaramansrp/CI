@@ -1,8 +1,11 @@
 <div class="container">
-    <div class="row">
-      <div class="col-md-4">
-        <firma-electronica [tipo]="''" (firma)="obtieneFirma($event)"></firma-electronica>
-      </div>
+  <div class="row">
+    <div class="col-md-6">
+      <firma-electronica
+        [tipo]="''"
+        [cadenaOriginal]=""
+        (firma)="obtieneFirma($event)"
+      ></firma-electronica>
     </div>
   </div>
-  
+</div>

@@ -1,10 +1,38 @@
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
+import { ConvertNumberAmountToStringAmount } from '@libs/shared/data-access-user/src/core/utils/convertNumberAmountToStringAmount';
+
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoSelectComponent, InputRadioComponent, MAX_DIGITS_VALIDATOR, Notificacion, NotificacionesComponent, REGEX_DECIMAL, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
+import {
+  CatalogoSelectComponent,
+  InputRadioComponent,
+  MAX_DIGITS_VALIDATOR,
+  Notificacion,
+  NotificacionesComponent,
+  REGEX_DECIMAL,
+  TablaDinamicaComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  RadioOpcion,
+  SolicitudJson,
+} from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { SoloNumericaDirective } from '@libs/shared/data-access-user/src/tramites/directives/solo-numerica/solo-numerica.directive';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
@@ -14,6 +42,11 @@ import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.st
 import { Modal } from 'bootstrap';
 import { ResiduoPeligroso } from '../../models/aviso-catalogo.model';
 import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
+import {
+  MateriaPrima,
+  MateriaPrima231001,
+} from '../../../231001/models/datos.model';
+import { SoloNumericaDecimalDirective } from '@libs/shared/data-access-user/src/tramites/directives/solo-numeros-punto/solo-numero-y-punto.directive';
 
 /**
  * Constante que contiene las opciones de radio y demás datos del archivo JSON.
@@ -22,34 +55,24 @@ import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
 const RADIO_OPCIONES = rawData as SolicitudJson;
 
 /**
- * Interface para los datos de la materia prima
- */
-interface MateriaPrima {
-  id: string;
-  nombre: string;
-  cantidad: string;
-  cantidadLetra: string;
-  unidadMedida: string;
-  fraccionArancelaria: string;
-}
-
-/**
  * Componente encargado de manejar la sección de datos de residuos peligrosos.
  */
 @Component({
   selector: 'app-datos-residuos-peligrosos',
   standalone: true,
   imports: [
+    SoloNumericaDirective,
     CommonModule,
     TituloComponent,
     ReactiveFormsModule,
     InputRadioComponent,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    SoloNumericaDecimalDirective,
   ],
   templateUrl: './datos-residuos-peligrosos.component.html',
-  styleUrl: './datos-residuos-peligrosos.component.scss'
+  styleUrl: './datos-residuos-peligrosos.component.scss',
 })
 export class DatosResiduosPeligrososComponent implements OnInit {
   /** Event emitter para enviar datos del residuo al componente padre */
@@ -65,7 +88,8 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   radioOptions: RadioOpcion[] = RADIO_OPCIONES?.radioOptions;
 
   /** Opciones de clasificación del residuo. */
-  clasificacionRadioOptions: RadioOpcion[] = RADIO_OPCIONES?.clasificacionRadioOptions;
+  clasificacionRadioOptions: RadioOpcion[] =
+    RADIO_OPCIONES?.clasificacionRadioOptions;
 
   /** Estructura de datos completa de etiquetas y opciones del JSON. */
   etiquetasForm = RADIO_OPCIONES;
@@ -80,7 +104,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   public nuevaNotificacion: Notificacion = {} as Notificacion;
 
   /** Lista de materias primas para la tabla */
-  materiasPrimas: MateriaPrima[] = [];
+  materiasPrimas: MateriaPrima231001[] = [];
 
   /** Lista de elementos seleccionados en la tabla */
   itemsSeleccionados: Set<number> = new Set();
@@ -88,7 +112,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   /** Estado del botón borrar */
   borrarHabilitado = false;
 
-    /**
+  /**
    * Instancia del modal para gestionar archivos.
    *
    * Se utiliza para abrir o cerrar el modal de archivos.
@@ -100,16 +124,20 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     const CANTIDAD = this.formularioDatos.get('cantidad')?.value;
     const CANTIDAD_LETRA = this.formularioDatos.get('cantidadLetra')?.value;
     const UNIDAD_MEDIDA = this.formularioDatos.get('unidadDeMedida')?.value;
-    const FRACCION_ARANCELARIA = this.formularioDatos.get('fraccionArancelaria')?.value;
-    
-    return Boolean(CANTIDAD && CANTIDAD_LETRA && UNIDAD_MEDIDA && FRACCION_ARANCELARIA);
+    const FRACCION_ARANCELARIA = this.formularioDatos.get(
+      'fraccionArancelaria'
+    )?.value;
+
+    return Boolean(
+      CANTIDAD && CANTIDAD_LETRA && UNIDAD_MEDIDA && FRACCION_ARANCELARIA
+    );
   }
 
   /** Getters para verificar el estado disabled de los dropdowns de clasificación */
   get claveResiduoDisabled(): boolean {
     return this.formularioResiduo?.get('claveResiduo')?.disabled ?? true;
   }
- 
+
   /**
    * Getter para verificar si el campo 'nombre' del formulario de residuo está deshabilitado.
    */
@@ -129,7 +157,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return this.formularioResiduo?.getRawValue()?.claveResiduo || '';
   }
 
-   /**
+  /**
    * Getter para verificar si el campo 'nombreValue' del formulario de residuo está deshabilitado.
    */
   get nombreValue(): string {
@@ -151,33 +179,33 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     {
       encabezado: 'Id materia prima',
       clave: (item: MateriaPrima) => item.id,
-      orden: 1
+      orden: 1,
     },
     {
       encabezado: 'Nombre materia prima',
-      clave: (item: MateriaPrima) => item.nombre,
-      orden: 2
+      clave: (item: MateriaPrima) => item.nombreMateriaPrima,
+      orden: 2,
     },
     {
       encabezado: 'Cantidad',
       clave: (item: MateriaPrima) => item.cantidad,
-      orden: 3
+      orden: 3,
     },
     {
       encabezado: 'Cantidad letra',
       clave: (item: MateriaPrima) => item.cantidadLetra,
-      orden: 4
+      orden: 4,
     },
     {
       encabezado: 'Unidad de medida',
       clave: (item: MateriaPrima) => item.unidadMedida,
-      orden: 5
+      orden: 5,
     },
     {
       encabezado: 'Fracción',
       clave: (item: MateriaPrima) => item.fraccionArancelaria,
-      orden: 6
-    }
+      orden: 6,
+    },
   ];
 
   /** Datos de fracción arancelaria con sus NICOs relacionados */
@@ -189,14 +217,16 @@ export class DatosResiduosPeligrososComponent implements OnInit {
         {
           nicoId: 'NICO001',
           nicoDescripcion: 'Polietileno alta densidad granulado',
-          acotacion: 'Material plástico granulado de alta densidad utilizado para fabricación de envases y productos moldeados'
+          acotacion:
+            'Material plástico granulado de alta densidad utilizado para fabricación de envases y productos moldeados',
         },
         {
           nicoId: 'NICO002',
           nicoDescripcion: 'Polietileno alta densidad en polvo',
-          acotacion: 'Material plástico en polvo de alta densidad para procesos de extrusión y moldeo'
-        }
-      ]
+          acotacion:
+            'Material plástico en polvo de alta densidad para procesos de extrusión y moldeo',
+        },
+      ],
     },
     {
       fraccionId: 2,
@@ -205,31 +235,36 @@ export class DatosResiduosPeligrososComponent implements OnInit {
         {
           nicoId: 'NICO003',
           nicoDescripcion: 'Policarbonato transparente',
-          acotacion: 'Resina de policarbonato transparente de alta resistencia para aplicaciones ópticas y estructurales'
+          acotacion:
+            'Resina de policarbonato transparente de alta resistencia para aplicaciones ópticas y estructurales',
         },
         {
           nicoId: 'NICO004',
           nicoDescripcion: 'Policarbonato reforzado',
-          acotacion: 'Policarbonato con fibra de vidrio para aplicaciones de alta resistencia mecánica'
-        }
-      ]
+          acotacion:
+            'Policarbonato con fibra de vidrio para aplicaciones de alta resistencia mecánica',
+        },
+      ],
     },
     {
       fraccionId: 3,
-      fraccionDescripcion: 'Los demás copolímeros de acrilonitrilo-butadieno-estireno',
+      fraccionDescripcion:
+        'Los demás copolímeros de acrilonitrilo-butadieno-estireno',
       nicos: [
         {
           nicoId: 'NICO005',
           nicoDescripcion: 'ABS natural',
-          acotacion: 'Copolímero ABS en estado natural para moldeo por inyección y extrusión'
+          acotacion:
+            'Copolímero ABS en estado natural para moldeo por inyección y extrusión',
         },
         {
           nicoId: 'NICO006',
           nicoDescripcion: 'ABS ignífugo',
-          acotacion: 'Copolímero ABS con propiedades retardantes al fuego para aplicaciones eléctricas'
-        }
-      ]
-    }
+          acotacion:
+            'Copolímero ABS con propiedades retardantes al fuego para aplicaciones eléctricas',
+        },
+      ],
+    },
   ];
 
   /** Datos para la tabla dinámica */
@@ -243,7 +278,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       cantidad: '1000',
       cantidadLetra: 'MIL',
       unidadMedida: 'Tonelada',
-      fraccionArancelaria: '39012099'
+      fraccionArancelaria: '39012099',
     },
     {
       id: 'E5/00000004/10/2022',
@@ -251,7 +286,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       cantidad: '750',
       cantidadLetra: 'SETECIENTOS CINCUENTA',
       unidadMedida: 'Kilogramos',
-      fraccionArancelaria: '39074001'
+      fraccionArancelaria: '39074001',
     },
     {
       id: 'E5/00000005/10/2022',
@@ -259,13 +294,13 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       cantidad: '2500',
       cantidadLetra: 'DOS MIL QUINIENTOS',
       unidadMedida: 'Kilogramos',
-      fraccionArancelaria: '39033099'
-    }
+      fraccionArancelaria: '39033099',
+    },
   ];
 
   /**
    * Constructor del componente.
-   * 
+   *
    * @param fb - Servicio para construir formularios reactivos.
    * @param formularioStore - Store Akita que gestiona el estado del formulario.
    * @param formularioQuery - Query Akita para consultar el estado del formulario.
@@ -285,16 +320,16 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.inicializarFormulario();
     this.crearFormularioResiduo();
     this.recuperarValoresDesdeStore();
-    
+
     // Inicialmente dropdowns vacíos hasta que se haga búsqueda/selección
     this.etiquetasForm.nombre = [];
     this.etiquetasForm.nico = [];
-    
+
     // Asegurar que los dropdowns de clasificación estén deshabilitados al inicializar
     this.formularioResiduo.get('claveResiduo')?.disable();
     this.formularioResiduo.get('nombre')?.disable();
     this.formularioResiduo.get('descripcion')?.disable();
-    
+
     // Verificar estado después de la inicialización
     setTimeout(() => {
       this.verificarEstadoDropdowns();
@@ -311,7 +346,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       cantidad: [{ value: '', disabled: true }],
       cantidadLetra: [{ value: '', disabled: true }],
       unidadDeMedida: [{ value: '', disabled: true }],
-      fraccionArancelaria: [{ value: '', disabled: true }]
+      fraccionArancelaria: [{ value: '', disabled: true }],
     });
   }
 
@@ -324,12 +359,15 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       nico: ['', Validators.required],
       acotacion: [{ value: '', disabled: true }, Validators.required],
       residuoPeligroso: ['', Validators.required],
-      cantidad: ['', [
-        Validators.required,
-        Validators.pattern(REGEX_DECIMAL),
-        DatosResiduosPeligrososComponent.noCommaValidator,
-        DatosResiduosPeligrososComponent.maxDigitsValidator
-      ]],
+      cantidad: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(REGEX_DECIMAL),
+          DatosResiduosPeligrososComponent.noCommaValidator,
+          DatosResiduosPeligrososComponent.maxDigitsValidator,
+        ],
+      ],
       cantidadLetra: [{ value: '', disabled: true }],
       unidadMedida: ['', Validators.required],
       clasificacion: ['', Validators.required],
@@ -340,7 +378,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       estadoFisico: ['', Validators.required],
       manifiesto: ['', Validators.required],
       tipoContenedor: ['', Validators.required],
-      capacidad: ['', Validators.required]
+      capacidad: ['', Validators.required],
     });
   }
 
@@ -349,15 +387,21 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    */
   private recuperarValoresDesdeStore(): void {
     const ESTADO = this.formularioQuery.getValue();
-    
+
     // Guardar el estado actual de disabled de los controles importantes
-    const CLAVE_RESIDUO_DISABLED = this.formularioResiduo.get('claveResiduo')?.disabled;
+    const CLAVE_RESIDUO_DISABLED =
+      this.formularioResiduo.get('claveResiduo')?.disabled;
     const NOMBRE_DISABLED = this.formularioResiduo.get('nombre')?.disabled;
-    const DESCRIPCION_DISABLED = this.formularioResiduo.get('descripcion')?.disabled;
-    
-    this.formularioDatos.patchValue(ESTADO.formularioDatos, { emitEvent: false });
-    this.formularioResiduo.patchValue(ESTADO.formularioResiduo, { emitEvent: false });
-    
+    const DESCRIPCION_DISABLED =
+      this.formularioResiduo.get('descripcion')?.disabled;
+
+    this.formularioDatos.patchValue(ESTADO.formularioDatos, {
+      emitEvent: false,
+    });
+    this.formularioResiduo.patchValue(ESTADO.formularioResiduo, {
+      emitEvent: false,
+    });
+
     // Restaurar el estado disabled después del patch si estaban deshabilitados
     if (CLAVE_RESIDUO_DISABLED) {
       this.formularioResiduo.get('claveResiduo')?.disable();
@@ -368,7 +412,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     if (DESCRIPCION_DISABLED) {
       this.formularioResiduo.get('descripcion')?.disable();
     }
-    
+
     // Asegurar que los dropdowns de clasificación permanezcan deshabilitados por defecto
     this.formularioResiduo.get('claveResiduo')?.disable();
     this.formularioResiduo.get('nombre')?.disable();
@@ -378,7 +422,9 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   /**
    * Validator personalizado para verificar que no se ingrese coma.
    */
-  private static noCommaValidator(control: AbstractControl): ValidationErrors | null {
+  private static noCommaValidator(
+    control: AbstractControl
+  ): ValidationErrors | null {
     const VALUE = control.value;
     if (VALUE && VALUE.includes(',')) {
       return { noComma: true };
@@ -389,7 +435,9 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   /**
    * Validator personalizado para verificar el máximo de 6 dígitos significativos.
    */
-  private static maxDigitsValidator(control: AbstractControl): ValidationErrors | null {
+  private static maxDigitsValidator(
+    control: AbstractControl
+  ): ValidationErrors | null {
     const VALUE = control.value;
     if (VALUE) {
       const REGEX = MAX_DIGITS_VALIDATOR;
@@ -405,11 +453,13 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    *
    * @param field - Campo del formulario a actualizar.
    */
-  actualizarCampoFormularioDatos(field: keyof EstadoFormularioResiduo['formularioDatos']): void {
+  actualizarCampoFormularioDatos(
+    field: keyof EstadoFormularioResiduo['formularioDatos']
+  ): void {
     const VALOR = this.formularioDatos.get(field)?.value;
     this.formularioStore.actualizarFormularioDatos({
       ...this.formularioDatos.getRawValue(),
-      [field]: VALOR
+      [field]: VALOR,
     });
   }
 
@@ -418,11 +468,13 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    *
    * @param field - Campo del formulario a actualizar.
    */
-  actualizarCampoFormularioResiduo(field: keyof EstadoFormularioResiduo['formularioResiduo']): void {
+  actualizarCampoFormularioResiduo(
+    field: keyof EstadoFormularioResiduo['formularioResiduo']
+  ): void {
     const VALOR = this.formularioResiduo.get(field)?.value;
     this.formularioStore.actualizarFormularioResiduo({
       ...this.formularioResiduo.getRawValue(),
-      [field]: VALOR
+      [field]: VALOR,
     });
   }
 
@@ -431,10 +483,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    */
   buscarMateriaPrima(): void {
     const NUMERO = this.formularioDatos.get('numero')?.value;
-    
+
     // Marcar el campo como touched para mostrar validaciones
     this.formularioDatos.get('numero')?.markAsTouched();
-    
+
     if (!NUMERO) {
       // No mostrar alert, solo la validación del campo
       this.esFormaValido = false;
@@ -443,8 +495,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     }
 
     // Verificar si ya existe una materia prima con el mismo número de bitácora en la tabla
-    const MATERIA_EXISTENTE = this.materiasPrimas.find(materia => materia.id === NUMERO);
-    
+    const MATERIA_EXISTENTE = this.materiasPrimas.find(
+      (materia) => materia.id === NUMERO
+    );
+
     if (MATERIA_EXISTENTE) {
       // Mostrar notificación de duplicado si ya existe en la tabla
       this.mostrarNotificacionDuplicado();
@@ -452,27 +506,29 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     }
 
     // Simular búsqueda en base de datos
-    const MATERIA_ENCONTRADA = this.materiasDisponibles.find(m => m.id === NUMERO);
-    
+    const MATERIA_ENCONTRADA = this.materiasDisponibles.find(
+      (m) => m.id === NUMERO
+    );
+
     if (MATERIA_ENCONTRADA) {
       // Ocultar mensaje de error si existe
       this.esFormaValido = false;
       this.alertaErrorFormulario = '';
-      
+
       // Solo actualizar las opciones del dropdown cuando se encuentra la materia
       this.etiquetasForm.nombre = [
-        { id: 1, descripcion: MATERIA_ENCONTRADA.nombre }
+        { id: 1, descripcion: MATERIA_ENCONTRADA.nombre },
       ];
-      
+
       // Los campos permanecen deshabilitados hasta que se seleccione del dropdown
     } else {
       // Mostrar mensaje de error cuando no se encuentra la materia prima
       this.esFormaValido = true;
       this.alertaErrorFormulario = 'El número de bitácora no existe';
-      
+
       // Si no se encuentra, limpiar el dropdown
       this.etiquetasForm.nombre = [];
-      
+
       // También limpiar los campos deshabilitados
       this.formularioDatos.get('cantidad')?.setValue('');
       this.formularioDatos.get('cantidadLetra')?.setValue('');
@@ -486,21 +542,33 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    */
   onNombreMateriaPrimaChange(): void {
     const NUMERO = this.formularioDatos.get('numero')?.value;
-    const MATERIA_ENCONTRADA = this.materiasDisponibles.find(m => m.id === NUMERO);
-    
+    const MATERIA_ENCONTRADA = this.materiasDisponibles.find(
+      (m) => m.id === NUMERO
+    );
+
     if (MATERIA_ENCONTRADA) {
       // Ocultar mensaje de error si existe
       this.esFormaValido = false;
       this.alertaErrorFormulario = '';
-      
+
       // Auto-llenar los campos PERO mantenerlos disabled
-      this.formularioDatos.get('cantidad')?.setValue(MATERIA_ENCONTRADA.cantidad);
-      this.formularioDatos.get('cantidadLetra')?.setValue(MATERIA_ENCONTRADA.cantidadLetra);
-      this.formularioDatos.get('unidadDeMedida')?.setValue(MATERIA_ENCONTRADA.unidadMedida);
-      this.formularioDatos.get('fraccionArancelaria')?.setValue(MATERIA_ENCONTRADA.fraccionArancelaria);
-      
+      this.formularioDatos
+        .get('cantidad')
+        ?.setValue(MATERIA_ENCONTRADA.cantidad);
+      this.formularioDatos
+        .get('cantidadLetra')
+        ?.setValue(MATERIA_ENCONTRADA.cantidadLetra);
+      this.formularioDatos
+        .get('unidadDeMedida')
+        ?.setValue(MATERIA_ENCONTRADA.unidadMedida);
+      this.formularioDatos
+        .get('fraccionArancelaria')
+        ?.setValue(MATERIA_ENCONTRADA.fraccionArancelaria);
+
       // Actualizar el store
-      this.formularioStore.actualizarFormularioDatos(this.formularioDatos.getRawValue());
+      this.formularioStore.actualizarFormularioDatos(
+        this.formularioDatos.getRawValue()
+      );
     }
   }
 
@@ -508,26 +576,33 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    * Maneja el cambio en el dropdown de Fracción Arancelaria
    */
   onFraccionArancelariaChange(): void {
-    const FRACCION_SELECCIONADA = this.formularioResiduo.get('fraccionArancelaria')?.value;
-    
+    const FRACCION_SELECCIONADA = this.formularioResiduo.get(
+      'fraccionArancelaria'
+    )?.value;
+
     if (FRACCION_SELECCIONADA) {
       // Convertir a número si viene como string para asegurar la comparación
-      const FRACCION_ID = typeof FRACCION_SELECCIONADA === 'string' ? parseInt(FRACCION_SELECCIONADA, 10) : FRACCION_SELECCIONADA;
-      
+      const FRACCION_ID =
+        typeof FRACCION_SELECCIONADA === 'string'
+          ? parseInt(FRACCION_SELECCIONADA, 10)
+          : FRACCION_SELECCIONADA;
+
       // Buscar la fracción seleccionada y cargar sus NICOs
-      const FRACCION_DATA = this.fraccionArancelariaData.find(f => f.fraccionId === FRACCION_ID);
-      
+      const FRACCION_DATA = this.fraccionArancelariaData.find(
+        (f) => f.fraccionId === FRACCION_ID
+      );
+
       if (FRACCION_DATA) {
         // Actualizar las opciones del dropdown NICO
         this.etiquetasForm.nico = FRACCION_DATA.nicos.map((nico, index) => ({
           id: index + 1,
-          descripcion: `${nico.nicoId} - ${nico.nicoDescripcion}`
+          descripcion: `${nico.nicoId} - ${nico.nicoDescripcion}`,
         }));
       } else {
         // Limpiar NICO si no se encuentra la fracción
         this.etiquetasForm.nico = [];
       }
-      
+
       // Limpiar los campos dependientes
       this.formularioResiduo.get('nico')?.setValue('');
       this.formularioResiduo.get('acotacion')?.setValue('');
@@ -543,24 +618,33 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    * Maneja el cambio en el dropdown de NICO
    */
   onNicoChange(): void {
-    const FRACCION_SELECCIONADA = this.formularioResiduo.get('fraccionArancelaria')?.value;
+    const FRACCION_SELECCIONADA = this.formularioResiduo.get(
+      'fraccionArancelaria'
+    )?.value;
     const NICO_SELECCIONADO = this.formularioResiduo.get('nico')?.value;
-    
+
     if (FRACCION_SELECCIONADA && NICO_SELECCIONADO) {
       // Convertir a número si viene como string
-      const FRACCION_ID = typeof FRACCION_SELECCIONADA === 'string' ? parseInt(FRACCION_SELECCIONADA, 10) : FRACCION_SELECCIONADA;
-      
+      const FRACCION_ID =
+        typeof FRACCION_SELECCIONADA === 'string'
+          ? parseInt(FRACCION_SELECCIONADA, 10)
+          : FRACCION_SELECCIONADA;
+
       // Buscar la fracción y el NICO seleccionados
-      const FRACCION_DATA = this.fraccionArancelariaData.find(f => f.fraccionId === FRACCION_ID);
-      
+      const FRACCION_DATA = this.fraccionArancelariaData.find(
+        (f) => f.fraccionId === FRACCION_ID
+      );
+
       if (FRACCION_DATA) {
         // El NICO_SELECCIONADO viene como índice del dropdown, así que restamos 1
         const NICO_INDEX = NICO_SELECCIONADO - 1;
         const NICO_DATA = FRACCION_DATA.nicos[NICO_INDEX];
-        
+
         if (NICO_DATA) {
           // Auto-llenar el campo de acotación
-          this.formularioResiduo.get('acotacion')?.setValue(NICO_DATA.acotacion);
+          this.formularioResiduo
+            .get('acotacion')
+            ?.setValue(NICO_DATA.acotacion);
         }
       }
     } else {
@@ -574,31 +658,14 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    */
   onCantidadChange(): void {
     const CANTIDAD_VALUE = this.formularioResiduo.get('cantidad')?.value;
-    
+
     if (CANTIDAD_VALUE && !isNaN(parseFloat(CANTIDAD_VALUE))) {
       const NUMERO = parseFloat(CANTIDAD_VALUE);
-      
-      // Conversión básica de números a letras
-      let cantidadLetra = '';
-      if (NUMERO === 1) {
-        cantidadLetra = 'UNO';
-      } else if (NUMERO === 2) {
-        cantidadLetra = 'DOS';
-      } else if (NUMERO === 3) {
-        cantidadLetra = 'TRES';
-      } else if (NUMERO === 10) {
-        cantidadLetra = 'DIEZ';
-      } else if (NUMERO === 100) {
-        cantidadLetra = 'CIEN';
-      } else if (NUMERO === 1000) {
-        cantidadLetra = 'MIL';
-      } else {
-        // Para números más complejos, usar formato básico
-        cantidadLetra = NUMERO.toString().toUpperCase();
-      }
-      
+      const CANTIDAD_LETRA =
+        ConvertNumberAmountToStringAmount.convierteNumerosALetra(NUMERO);
+
       // Auto-llenar el campo cantidad letra
-      this.formularioResiduo.get('cantidadLetra')?.setValue(cantidadLetra);
+      this.formularioResiduo.get('cantidadLetra')?.setValue(CANTIDAD_LETRA);
     } else {
       // Limpiar si no hay valor válido
       this.formularioResiduo.get('cantidadLetra')?.setValue('');
@@ -609,8 +676,9 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    * Maneja el cambio en el radio button de clasificación
    */
   onClasificacionChange(): void {
-    const CLASIFICACION_SELECCIONADA = this.formularioResiduo.get('clasificacion')?.value;
-    
+    const CLASIFICACION_SELECCIONADA =
+      this.formularioResiduo.get('clasificacion')?.value;
+
     if (CLASIFICACION_SELECCIONADA) {
       this.manejarCambioClasificacion(CLASIFICACION_SELECCIONADA);
     } else {
@@ -625,8 +693,9 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    * Método para verificar y forzar el estado de los dropdowns (para debugging)
    */
   verificarEstadoDropdowns(): void {
-    const CLASIFICACION_VALUE = this.formularioResiduo.get('clasificacion')?.value;
-    
+    const CLASIFICACION_VALUE =
+      this.formularioResiduo.get('clasificacion')?.value;
+
     // Forzar deshabilitación si no hay clasificación seleccionada
     if (!CLASIFICACION_VALUE) {
       this.formularioResiduo.get('claveResiduo')?.disable();
@@ -643,12 +712,12 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     const CLAVE_ACTUAL = this.formularioResiduo.get('claveResiduo')?.value;
     const NOMBRE_ACTUAL = this.formularioResiduo.get('nombre')?.value;
     const DESCRIPCION_ACTUAL = this.formularioResiduo.get('descripcion')?.value;
-    
+
     // Deshabilitar todos los dropdowns primero (manteniendo sus valores)
     this.formularioResiduo.get('claveResiduo')?.disable();
     this.formularioResiduo.get('nombre')?.disable();
     this.formularioResiduo.get('descripcion')?.disable();
-    
+
     // Restaurar los valores después de deshabilitar (algunos componentes los pierden)
     if (CLAVE_ACTUAL) {
       this.formularioResiduo.get('claveResiduo')?.setValue(CLAVE_ACTUAL);
@@ -659,7 +728,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     if (DESCRIPCION_ACTUAL) {
       this.formularioResiduo.get('descripcion')?.setValue(DESCRIPCION_ACTUAL);
     }
-    
+
     // Habilitar el dropdown correspondiente según la selección
     if (clasificacionSeleccionada === 'Clave de residuo') {
       this.formularioResiduo.get('claveResiduo')?.enable();
@@ -668,12 +737,14 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     } else if (clasificacionSeleccionada === 'Descripción') {
       this.formularioResiduo.get('descripcion')?.enable();
     }
-    
+
     // Forzar detección de cambios para actualizar la UI
     this.cdr.detectChanges();
-    
+
     // Actualizar el store después de los cambios
-    this.formularioStore.actualizarFormularioResiduo(this.formularioResiduo.getRawValue());
+    this.formularioStore.actualizarFormularioResiduo(
+      this.formularioResiduo.getRawValue()
+    );
   }
 
   /**
@@ -685,7 +756,8 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       categoria: '',
       modo: 'action',
       titulo: '',
-      mensaje: 'Los datos proporcionados ya han sido agregados, por favor agregue datos diferentes',
+      mensaje:
+        'Los datos proporcionados ya han sido agregados, por favor agregue datos diferentes',
       cerrar: false,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
@@ -695,22 +767,30 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   /**
    * Agrega una materia prima a la tabla
    */
+  //TODO: arreglar
   agregarMateriaPrima(): void {
     if (this.formularioDatos.valid) {
+      const MATERIA_NOMBRE =
+        this.materiasDisponibles.find(
+          (m) => m.id === this.formularioDatos.get('numero')?.value
+        )?.nombre || '';
+
       const NUEVA_MATERIA: MateriaPrima = {
         id: this.formularioDatos.get('numero')?.value,
-        nombre: this.formularioDatos.get('nombreMateriaPrima')?.value,
+        nombreMateriaPrima: MATERIA_NOMBRE,
         cantidad: this.formularioDatos.get('cantidad')?.value,
         cantidadLetra: this.formularioDatos.get('cantidadLetra')?.value,
         unidadMedida: this.formularioDatos.get('unidadDeMedida')?.value,
-        fraccionArancelaria: this.formularioDatos.get('fraccionArancelaria')?.value
+        fraccionArancelaria: this.formularioDatos.get('fraccionArancelaria')
+          ?.value,
+        unidadMedidaDescripcion: '',
       };
 
-      this.materiasPrimas.push(NUEVA_MATERIA);
-      
+      //this.materiasPrimas.push(NUEVA_MATERIA);
+
       // Actualizar los datos de la tabla dinámica
-      this.materiasPrimasTabla = [...this.materiasPrimas];
-      
+      //this.materiasPrimasTabla = [...this.materiasPrimas];
+
       // Limpiar el formulario
       this.formularioDatos.reset();
     }
@@ -725,23 +805,25 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     }
 
     // Convertir a array y ordenar de mayor a menor para eliminar correctamente
-    const INDICES_A_ELIMINAR = Array.from(this.itemsSeleccionados).sort((a, b) => b - a);
-    
-    INDICES_A_ELIMINAR.forEach(index => {
+    const INDICES_A_ELIMINAR = Array.from(this.itemsSeleccionados).sort(
+      (a, b) => b - a
+    );
+
+    INDICES_A_ELIMINAR.forEach((index) => {
       this.materiasPrimas.splice(index, 1);
     });
 
     // Limpiar selecciones y actualizar tabla
     this.itemsSeleccionados.clear();
     this.borrarHabilitado = false;
-    this.materiasPrimasTabla = [...this.materiasPrimas];
+    //this.materiasPrimasTabla = [...this.materiasPrimas];
   }
 
   /**
    * Maneja el clic en una fila de la tabla dinámica
    */
   onSeleccionarFila(materia: MateriaPrima): void {
-    const INDEX = this.materiasPrimas.findIndex(m => m.id === materia.id);
+    const INDEX = this.materiasPrimas.findIndex((m) => m.id === materia.id);
     if (INDEX !== -1) {
       if (this.itemsSeleccionados.has(INDEX)) {
         this.itemsSeleccionados.delete(INDEX);
@@ -758,15 +840,15 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   onFilasSeleccionadas(filasSeleccionadas: MateriaPrima[]): void {
     // Limpiar selecciones previas
     this.itemsSeleccionados.clear();
-    
+
     // Agregar nuevas selecciones
-    filasSeleccionadas.forEach(materia => {
-      const INDEX = this.materiasPrimas.findIndex(m => m.id === materia.id);
+    filasSeleccionadas.forEach((materia) => {
+      const INDEX = this.materiasPrimas.findIndex((m) => m.id === materia.id);
       if (INDEX !== -1) {
         this.itemsSeleccionados.add(INDEX);
       }
     });
-    
+
     // Actualizar estado del botón borrar
     this.borrarHabilitado = this.itemsSeleccionados.size > 0;
   }
@@ -778,7 +860,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     // Validar que el formulario de residuo sea válido
     if (this.formularioResiduo.invalid) {
       // Marcar todos los campos como tocados para mostrar mensajes de error del formulario de residuo
-      Object.keys(this.formularioResiduo.controls).forEach(key => {
+      Object.keys(this.formularioResiduo.controls).forEach((key) => {
         const CONTROL = this.formularioResiduo.get(key);
         if (CONTROL) {
           CONTROL.markAsTouched();
@@ -791,24 +873,30 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     if (this.materiasPrimas.length === 0) {
       // Mostrar mensaje de error si no hay materias primas
       this.esFormaValido = true;
-      this.alertaErrorFormulario = 'Debe agregar al menos una materia prima relacionada';
+      this.alertaErrorFormulario =
+        'Debe agregar al menos una materia prima relacionada';
       return;
     }
 
     // Crear el objeto con todos los datos del residuo según la interface ResiduoPeligroso
     const RESIDUO_DATA: ResiduoPeligroso = {
-      origenResiduoGeneracion: 'Producción Industrial', // Se puede obtener del radio seleccionado
-      fraccionArancelaria: this.formularioResiduo.get('fraccionArancelaria')?.value || '',
-      nombreResiduo: this.formularioResiduo.get('residuoPeligroso')?.value || '',
+      origenResiduoGeneracion: 'Producción Industrial',
+      fraccionArancelaria:
+        this.formularioResiduo.get('fraccionArancelaria')?.value || '',
+      nombreResiduo:
+        this.formularioResiduo.get('residuoPeligroso')?.value || '',
       nico: this.formularioResiduo.get('nico')?.value || '',
       acotacion: this.formularioResiduo.get('acotacion')?.value || '',
-      nombreResiduoPeligroso: this.formularioResiduo.get('residuoPeligroso')?.value || '',
+      nombreResiduoPeligroso:
+        this.formularioResiduo.get('residuoPeligroso')?.value || '',
       cantidad: this.formularioResiduo.get('cantidad')?.value || '',
       cantidadLetra: this.formularioResiduo.get('cantidadLetra')?.value || '',
       unidadMedida: this.formularioResiduo.get('unidadMedida')?.value || '',
-      claveClasificacion: this.formularioResiduo.get('claveResiduo')?.value || '',
+      claveClasificacion:
+        this.formularioResiduo.get('claveResiduo')?.value || '',
       nombreClasificacion: this.formularioResiduo.get('nombre')?.value || '',
-      descripcionClasificacion: this.formularioResiduo.get('descripcion')?.value || '',
+      descripcionClasificacion:
+        this.formularioResiduo.get('descripcion')?.value || '',
       descripcionOtraClasificacion: '', // Campo opcional
       creti: this.formularioResiduo.get('creti')?.value || '',
       estadoFisico: this.formularioResiduo.get('estadoFisico')?.value || '',
@@ -816,9 +904,19 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       numeroManifiesto: this.formularioResiduo.get('manifiesto')?.value || '',
       tipoContenedor: this.formularioResiduo.get('tipoContenedor')?.value || '',
       descripcionOtroContenedor: '', // Campo opcional
-      capacidad: this.formularioResiduo.get('capacidad')?.value || ''
+      capacidad: this.formularioResiduo.get('capacidad')?.value || '',
+      fraccionName: this.getFraccionName(),
+      nicoName: this.getNicoName(),
+      unidadMedidaName: this.getUnidadMedidaName(),
+      claveClasificacionDesc: this.getClaveClasificacion(),
+      nameClasificacion: this.getNameClasificacion(),
+      descClasificacion: this.getDescClasificacion(),
+      cretiDesc: this.getCreti(),
+      estadoFisicoDesc: this.getEstadoFisico(),
+      tipoContenedorDesc: this.getTipoContenedor(),
+      descripcionOtro: '',
+      materiasPrimasRelacionadas: this.materiasPrimas,
     };
-
     // Emitir el evento con los datos
     this.residuoAgregado.emit(RESIDUO_DATA);
 
@@ -829,7 +927,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.materiasPrimasTabla = [];
     this.itemsSeleccionados.clear();
     this.borrarHabilitado = false;
-    
+
     // Limpiar mensaje de error si existe
     this.esFormaValido = false;
     this.alertaErrorFormulario = '';
@@ -842,7 +940,9 @@ export class DatosResiduosPeligrososComponent implements OnInit {
    * Cierra el modal de forma segura
    */
   private static cerrarModal(): void {
-    const MODAL_ELEMENT = document.getElementById('modalDatosResiduosPeligrosos');
+    const MODAL_ELEMENT = document.getElementById(
+      'modalDatosResiduosPeligrosos'
+    );
     if (MODAL_ELEMENT) {
       const MODAL = Modal.getInstance(MODAL_ELEMENT);
       if (MODAL) {
@@ -854,10 +954,85 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       }
     } else {
       // Alternativa: usar el dismiss modal de Bootstrap directamente
-      const CLOSE_BUTTON = document.querySelector('[data-bs-dismiss="modal"]') as HTMLElement;
+      const CLOSE_BUTTON = document.querySelector(
+        '[data-bs-dismiss="modal"]'
+      ) as HTMLElement;
       if (CLOSE_BUTTON) {
         CLOSE_BUTTON.click();
       }
     }
   }
+
+  private getFraccionName = (): string => {
+    const FRACCION_ID = this.formularioResiduo.get(
+      'fraccionArancelaria'
+    )?.value;
+    const FRACCION_DATA = this.fraccionArancelariaData.find(
+      (f) => f.fraccionId === Number(FRACCION_ID)
+    );
+    return FRACCION_DATA ? FRACCION_DATA.fraccionDescripcion : '';
+  };
+
+  private getNicoName = (): string => {
+    const NICO_ID = this.formularioResiduo.get('nico')?.value;
+    const FRACCION_DATA = this.fraccionArancelariaData.find(
+      (f) => f.fraccionId === Number(NICO_ID)
+    );
+    return FRACCION_DATA ? FRACCION_DATA.fraccionDescripcion : '';
+  };
+
+  private getUnidadMedidaName = (): string => {
+    const UNIDAD_ID = this.formularioResiduo.get('unidadMedida')?.value;
+    const UNIDADES = this.etiquetasForm.unidad || [];
+    const UNIDAD_DATA = UNIDADES.find((u) => u.id === Number(UNIDAD_ID));
+    return UNIDAD_DATA ? UNIDAD_DATA.descripcion : '';
+  };
+
+  private getClaveClasificacion = (): string => {
+    const CLAVE = this.formularioResiduo.get('claveResiduo')?.value;
+    const CLAVE_CLASIFICACION_DESC = this.etiquetasForm.residuo?.find(
+      (c) => c.id === Number(CLAVE)
+    )?.descripcion;
+    return CLAVE_CLASIFICACION_DESC || '';
+  };
+
+  private getNameClasificacion = (): string => {
+    const NOMBRE = this.formularioResiduo.get('nombre')?.value;
+    const CLAVE_CLASIFICACION_NAME = this.etiquetasForm.tipoNombre?.find(
+      (c) => c.id === Number(NOMBRE)
+    )?.descripcion;
+    return CLAVE_CLASIFICACION_NAME || '';
+  };
+
+  private getDescClasificacion = (): string => {
+    const DESC = this.formularioResiduo.get('descripcion')?.value;
+    const CLAVE_CLASIFICACION_DESC = this.etiquetasForm.descripcion?.find(
+      (c) => c.id === Number(DESC)
+    )?.descripcion;
+    return CLAVE_CLASIFICACION_DESC || '';
+  };
+
+  private getCreti = (): string => {
+    const CRETI = this.formularioResiduo.get('creti')?.value;
+    const CRETI_DESC = this.etiquetasForm.creti?.find(
+      (c) => c.id === Number(CRETI)
+    )?.descripcion;
+    return CRETI_DESC || '';
+  };
+
+  private getEstadoFisico = (): string => {
+    const ESTADO = this.formularioResiduo.get('estadoFisico')?.value;
+    const ESTADO_DESC = this.etiquetasForm.estadoFisico?.find(
+      (e) => e.id === Number(ESTADO)
+    )?.descripcion;
+    return ESTADO_DESC || '';
+  };
+
+  private getTipoContenedor = (): string => {
+    const TIPO = this.formularioResiduo.get('tipoContenedor')?.value;
+    const TIPO_DESC = this.etiquetasForm.tipoContenedor?.find(
+      (t) => t.id === Number(TIPO)
+    )?.descripcion;
+    return TIPO_DESC || '';
+  };
 }
