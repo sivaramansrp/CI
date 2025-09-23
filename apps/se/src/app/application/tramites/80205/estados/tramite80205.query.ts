@@ -71,6 +71,9 @@ export class AmpliacionServiciosQuery extends Query<AmpliacionServiciosState> {
    */
   selectTiempoPrograma$ = this.select((state) => state.tiempoPrograma);
 
+  selectIdSolicitud$ = this.select((state) => state.idSolicitud);
+
+
   /**
    * Constructor de la clase que inicializa el query con la tienda proporcionada.
    * 

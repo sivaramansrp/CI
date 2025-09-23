@@ -7,6 +7,10 @@ import { Injectable } from '@angular/core';
  * Representa el estado de la ampliación de servicios en la aplicación.
  */
 export interface AmpliacionServiciosState {
+
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
+
   /**
    * Información del registro de servicios.
    */
@@ -92,6 +96,8 @@ export interface AmpliacionServiciosState {
  * @property {string} tiempoPrograma - Tiempo del programa.
  */
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud:0,
   infoRegistro: {
     seleccionaLaModalidad: '',
     folio: '',

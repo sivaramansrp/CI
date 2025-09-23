@@ -1,17 +1,14 @@
 
-import { Component,OnDestroy, ViewChild } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Component,EventEmitter,OnDestroy, ViewChild } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AVISO } from '@ng-mf/data-access-user';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80205.query';
-
-
 import { DatosPasos } from '@ng-mf/data-access-user';
 import {ERROR_FORMA_ALERT} from '../../models/datos-info.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
-
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -105,18 +102,60 @@ export class RegistroPageComponent implements OnDestroy {
    */
   mensajeDeTextoDeExito: string = "MENSAJE_DE_ÉXITO_ETAPA_UNO";
 
+
+  
+      /**
+       * Evento que se emite para cargar archivos.
+       * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+       */
+      cargarArchivosEvento = new EventEmitter<void>();
+    
+      /**
+       * Evento que se emite para regresar a la sección de carga de documentos.
+       * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
+       */
+      regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+    
+      /**
+     * Indica si el botón para cargar archivos está habilitado.
+     */
+      activarBotonCargaArchivos: boolean = false;
+    
+      /**
+     * Indica si la sección de carga de documentos está activa.
+     * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+     */
+      seccionCargarDocumentos: boolean = true;
+
+      /**
+       * cargaEnProgreso - Indica si la carga de documentos está en progreso.
+       * Se utiliza para mostrar un indicador de carga o deshabilitar ciertas acciones mientras la carga está en curso.
+       */
+      cargaEnProgreso: boolean = true;
+
+      idSolicitudState: number | null = 0;
+
   /**
    * Maneja la acción del botón y navega entre los pasos.
    * @method getValorIndice
    * @param {AccionBoton} e - Objeto con la acción (cont/atras) y el valor (índice) del botón.
    */
-  constructor(private tramiteQuery: AmpliacionServiciosQuery, private seccion: SeccionLibStore, 
+  constructor(private tramiteQuery: AmpliacionServiciosQuery, private seccion: SeccionLibStore
   ){
     this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe(res => {
       this.seccion.establecerSeccion([true]);
       this.seccion.establecerFormaValida([true]);
     })
+
+    this.tramiteQuery.selectIdSolicitud$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.idSolicitudState = seccionState;
+            })
+          ).subscribe();
   }
+  
   /**
    * Maneja el cambio de índice basado en el valor y la acción proporcionados.
    * 
@@ -129,16 +168,16 @@ export class RegistroPageComponent implements OnDestroy {
    */
   getValorIndice(e: AccionBoton): void {
     if(e.accion==='cont'){
-      let isValid=true;
-      if (this.indice === 1 && this.pasoUnoComponent) {
-        isValid = this.pasoUnoComponent.validarTodosLosFormularios();
-      }
-      if (!isValid) {
-        this.esFormaValido = true;
+      // const isValid = true;
+      // if (this.indice === 1 && this.pasoUnoComponent) {
+      //   isValid = this.pasoUnoComponent.validarTodosLosFormularios();
+      // }
+      // if (!isValid) {
+      //   this.esFormaValido = true;
   
-        this.datosPasos.indice = this.indice;
-        return;
-      }
+      //   this.datosPasos.indice = this.indice;
+      //   return;
+      // }
       this.esFormaValido = false;
       this.indice = e.valor;
           this.datosPasos.indice = this.indice;
@@ -178,6 +217,62 @@ export class RegistroPageComponent implements OnDestroy {
         this.tituloMensaje = 'Registro de solicitud IMMEX modalidad ampliación servicios';
         break;
     }
+  }
+
+  
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
   }
 
   /**
