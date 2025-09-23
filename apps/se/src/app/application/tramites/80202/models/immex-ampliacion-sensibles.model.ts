@@ -384,10 +384,12 @@ export interface immexInfo {
 
   /** Cantidad por periodo # */
   cantidadPorPeriodo: number;
-
-  Nicos?:number;
-  
+  /** Nicos por periodo # */
+  Nicos?:number | string;
+    /** productoDescExportacions por periodo # */
   productoDescExportacions?:string;
+  /** id por periodo # */
+  id?:number;
 }
 
 /**
