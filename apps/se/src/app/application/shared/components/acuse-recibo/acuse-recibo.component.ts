@@ -99,6 +99,12 @@ export class AcuseReciboComponent implements OnInit, OnDestroy {
   @Input() datosTabla: BodyTablaResolucion[] = [];
 
   /**
+   * 
+   * @type {BodyTablaResolucion[]}
+  */
+  @Input() datosTablaAcuseNotificacion: BodyTablaResolucion[] = [];
+
+  /**
    * @property {ConsultaioState} guardarDatos
    * @description Estado actual del trámite consultado.
   */

@@ -153,7 +153,7 @@ export const TRAMITE = '{numeroTramite}';
  * @param TRAMITE el trámite seleccionado por el usuario.
  * @see https://api-v30.cloud-ultrasist.net/api/tramite/5701/documentos?especifico=false
  */
-export const API_GET_DOCUMENTOS_OBLIGATORIOS = `tramite/{numeroTramite}/documentos`;
+export const API_GET_DOCUMENTOS_OBLIGATORIOS = `sat-t{numeroTramite}/solicitud/documentos`;
 
 /**
  * API para recuperar el catálogo de paises
@@ -462,6 +462,12 @@ export const API_GET_OPINION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : stri
  */
 export const API_POST_REQUERIMIENTO_GUARDAR = (TRAMITE: string, IDREQUERIMIENTO: string) : string => `sat-t${TRAMITE}/confirmar-notificacion/requerimiento/${IDREQUERIMIENTO}/acuse/guardar`;
 
+/**
+ * API para obtener la notificacion de los acuses recibidos.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Confirmar-Notificacion/consulta-acuse-recibo-notificacion
+ */
+export const API_GET_ACUSES_RECIBOS_NOTIFICACION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/acuses-recibos-notificacion`;
+
 /** 
  * API para iniciar la confirmación de notificación del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Confirmar-Notificacion/iniciar-confirmacion-notificacion
@@ -474,6 +480,17 @@ export const API_GET_INICIAR_CONFIRMACION_NOTIFICACION = (TRAMITE:string, NUMFOL
  */
 export const API_POST_RESOLUCION_GUARDAR = (TRAMITE: string, IDRESOLUCION: string) : string => `sat-t${TRAMITE}/confirmar-notificacion/resolucion/${IDRESOLUCION}/acuse/guardar`;
 
+/**
+ * API para cargar documentos.
+ * @see https://api-v30.cloud-ultrasist.net/api/digitalizacion/cargar
+ */
+export const API_POST_CARGAR_DOCUMENTOS = `digitalizacion/cargar`
+
+/**
+ * 
+ * @see https://api-v30.cloud-ultrasist.net/api/digitalizacion/documentos/LEQI8101314S7-ba0fedcf-0e76-4165-be82-5923cc664f41
+ */
+export const API_POST_DOCUMENTO_REFERENCIA_SOLICITUD = (REFRERENCIASOLICITUD: string) : string => `digitalizacion/documentos/${REFRERENCIASOLICITUD}`;
 /**
  * API para obtener evaluar iniciar tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/getOpcionesEvaluacion
@@ -527,6 +544,7 @@ export const CATALOGO_PAISES = (TRAMITE: string) : string => `sat-t${TRAMITE}/ca
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/nico
  */
 export const CATALOGO_NICO = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/nico`;
+
 /**
  * API para obtener el estado de la solicitud del tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original_1

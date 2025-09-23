@@ -4,14 +4,18 @@
     "data": [
         {
             "id": 1,
-            "descripcion": "Plantas"
+            "descripcion": "Selecciona un valor"
         },
         {
             "id": 2,
-            "descripcion": "Animales"
+            "descripcion": "Plantas"
         },
         {
             "id": 3,
+            "descripcion": "Animales"
+        },
+        {
+            "id": 4,
             "descripcion": "Otros"
         }
         

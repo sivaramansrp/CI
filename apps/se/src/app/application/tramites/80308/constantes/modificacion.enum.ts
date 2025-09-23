@@ -247,17 +247,17 @@ export const CONFIGURACION_OPERACIONES = [
     orden: 1,
   },
   {
-    encabezado: 'Número Exterior',
+    encabezado: 'Número exterior',
     clave: (ele: Operacions) : string | undefined => ele.numeroExterior,
     orden: 2,
   },
   {
-    encabezado: 'Número Interior',
+    encabezado: 'Número interior',
     clave: (ele: Operacions) : string | undefined => ele.numeroInterior,
     orden: 3,
   },
   {
-    encabezado: 'Código Postal',
+    encabezado: 'Código postal',
     clave: (ele: Operacions) : string | undefined => ele.codigoPostal,
     orden: 4,
   },
@@ -266,18 +266,14 @@ export const CONFIGURACION_OPERACIONES = [
     clave: (ele: Operacions) : string | undefined => ele.colonia,
     orden: 5,
   },
+ 
   {
-    encabezado: 'Localidad',
-    clave: (ele: Operacions) : string | undefined => ele.localidad,
-    orden: 6,
-  },
-  {
-    encabezado: 'Municipio o Delegación',
+    encabezado: 'Municipio o delegación',
     clave: (ele: Operacions) : string | undefined => ele.municipioDelegacion,
     orden: 7,
   },
   {
-    encabezado: 'Estado o Distrito Federal',
+    encabezado: 'Entidad federativa',
     clave: (ele: Operacions) : string | undefined => ele.estado,
     orden: 8,
   },
@@ -287,7 +283,7 @@ export const CONFIGURACION_OPERACIONES = [
     orden: 9,
   },
   {
-    encabezado: 'Registro Federal de Contribuyente(RFC)',
+    encabezado: 'Registro Federal de Contribuyentes',
     clave: (ele: Operacions) : string | undefined => ele.rfc,
     orden: 10,
   },
@@ -433,7 +429,7 @@ export const TEXTOS_REQUISITOS =
  */
 export const CONFIGURACION_ANEXOS_FRACCION = [
   {
-    encabezado: 'Fracción arancelaria de la mercancía de Importación',
+    encabezado: 'Fracción arancelaria de la mercancia de importación',
     clave: (ele: FracciónArancelaria): string | undefined => ele.fraccionArancelariaFraccion,
     orden: 1,
   },
@@ -518,6 +514,11 @@ export const CONFIGURACION_ANEXOS_IMMEX = [
     encabezado: 'Teléfono',
     clave: (ele: DatosImmex): string | undefined => ele.telefono,
     orden: 11,
+  },
+  {
+    encabezado: 'Estatus',
+    clave: (ele: DatosImmex): string | undefined => ele.desEstatus,
+    orden: 12,
   }
 ];
 /**
@@ -554,51 +555,59 @@ export const CONFIGURACION_SERVICIOS = [
  * incluyendo información completa de la dirección y datos de contacto
  */
 export const CONFIGURACION_MODIFICACION = [
-    { encabezado: 'Id', 
-      clave: (ele: DatosDelModificacion):number | undefined => ele.id, 
-      orden: 0 },
-    { encabezado: 'Calle', 
-      clave: (ele: DatosDelModificacion):string | undefined => ele.calle, 
-      orden: 2 },
+    { 
+      encabezado: 'Id', 
+      clave: (ele: DatosDelModificacion): number | undefined => ele.id, 
+      orden: 0 
+    },
+    { 
+      encabezado: 'Calle', 
+      clave: (ele: DatosDelModificacion): string | undefined => ele.calle, 
+      orden: 2 
+    },
     {
       encabezado: 'Número Exterior',
-      clave: (ele: DatosDelModificacion):number | undefined => ele.numeroExterior,
+      clave: (ele: DatosDelModificacion): number | undefined => ele.numeroExterior,
       orden: 3,
     },
     {
       encabezado: 'Número Interior',
-      clave: (ele: DatosDelModificacion):number | undefined => ele.numeroInterior,
+      clave: (ele: DatosDelModificacion): number | undefined => ele.numeroInterior,
       orden: 4,
     },
     {
       encabezado: 'Código Postal',
-      clave: (ele: DatosDelModificacion):number | undefined => ele.codigoPosta,
+      clave: (ele: DatosDelModificacion): number | undefined => ele.codigoPosta,
       orden: 5,
     },
-    { encabezado: 'Colonia', 
-      clave: (ele: DatosDelModificacion):string | undefined => ele.colonia, 
-      orden: 6 },
+    { 
+      encabezado: 'Colonia', 
+      clave: (ele: DatosDelModificacion): string | undefined => ele.colonia, 
+      orden: 6 
+    },
     {
       encabezado: 'Municipio o alcaldía',
-      clave: (ele: DatosDelModificacion):string | undefined => ele.municipioOAlcaldia,
+      clave: (ele: DatosDelModificacion): string | undefined => ele.municipioOAlcaldia,
       orden: 7,
     },
     {
       encabezado: 'Entidad Federativa',
-      clave: (ele: DatosDelModificacion):string | undefined => ele.entidadFederativa,
+      clave: (ele: DatosDelModificacion): string | undefined => ele.entidadFederativa,
       orden: 8,
     },
-    { encabezado: 'País', 
-      clave: (ele: DatosDelModificacion):string | undefined => ele.pais, 
-      orden: 9 },
+    { 
+      encabezado: 'País', 
+      clave: (ele: DatosDelModificacion): string | undefined => ele.pais, 
+      orden: 9 
+    },
     {
       encabezado: 'Telefono',
-      clave: (ele: DatosDelModificacion):string | undefined => ele.telefono,
+      clave: (ele: DatosDelModificacion): string | undefined => ele.telefono,
       orden: 10,
     },
     {
       encabezado: 'Estatus',
-      clave: (ele: DatosDelModificacion):string | undefined => ele.desEstatus,
+      clave: (ele: DatosDelModificacion): string | undefined => ele.desEstatus,
       orden: 1,
     },
 ];
