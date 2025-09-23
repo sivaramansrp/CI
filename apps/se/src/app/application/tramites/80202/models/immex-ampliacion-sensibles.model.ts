@@ -101,6 +101,7 @@ export interface TablaFraccionDeImportacion {
  * @module Tramites.IMMEX.Interfaces.NICO
  */
 export interface NicoInfo {
+  id?:number;
   /**
    * @description Código NICO único que identifica el tipo de commodity o materia prima.
    * Código alfanumérico estandarizado que clasifica de manera única cada tipo de commodity utilizado en comercio internacional.

@@ -189,10 +189,10 @@
                 <button class="btn btn-primary" (click)="showTableNicoExports()"
                   [disabled]="esFormularioSoloLectura">Agregar Nico</button>
               </div>
-                 <div class="row  mt-5" *ngIf="showTableNicoExps">
+                 <div class="row  mt-5">
                 <h6>Nicos</h6>
                 <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
-                  <app-tabla-dinamica *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+                  <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox"
                     [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos"
                     [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" (listaDeFilaSeleccionada)="seleccionTablas($event)"></app-tabla-dinamica>
                 </div>
@@ -260,11 +260,11 @@
                 <button class="btn btn-primary" (click)="showTableNicoExport()"
                   [disabled]="esFormularioSoloLectura">Agregar Nico</button>
               </div>
-              <div class="row  mt-5" *ngIf="showTableNicoExp">
+              <div class="row  mt-5" >
                 <h6>Nico</h6>
                 <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
-                  <app-tabla-dinamica *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox"
-                    [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos"
+                  <app-tabla-dinamica  [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+                    [configuracionTabla]="nicoTabla" [datos]="nicoTablaDato"
                     [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" (listaDeFilaSeleccionada)="seleccionTabla($event)"></app-tabla-dinamica>
                 </div>
                 <div class="container text-start mt-5">

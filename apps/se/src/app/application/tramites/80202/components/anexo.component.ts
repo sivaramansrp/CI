@@ -56,7 +56,6 @@ import { Subject } from 'rxjs';
 export class AnexoComponent implements OnInit, OnDestroy {
   fraccionInfoSelected:fraccionInfo | null = null;
   selectedRowData: immexInfo | null = null;
-  showTableNicoExps:boolean=false;
     /**
      * Referencia al elemento del modal de importación de mercancía.
      * Utilizado para mostrar u ocultar el modal mediante la API de Bootstrap.
@@ -134,6 +133,11 @@ export class AnexoComponent implements OnInit, OnDestroy {
      * @description Datos de NICO.
      */
     nicoTablaDatos: NicoInfo[] = [];
+     /**
+     * @property {nicoInfo[]} nicoTablaDatos
+     * @description Datos de NICO.
+     */
+    nicoTablaDato: NicoInfo[] = [];
   
     /**
      * @property {string} immexRegistro
@@ -199,12 +203,6 @@ export class AnexoComponent implements OnInit, OnDestroy {
      */
     showTableFractionExp: boolean = false;
   
-    /**
-     * @property {boolean} showTableNicoExp
-     * @description Controla la visibilidad de la tabla NICO de exportación.
-     * Cuando es true, muestra la tabla de datos NICO para exportación.
-     */
-    showTableNicoExp: boolean = false;
   
     /**
      * @property {boolean} showTableNicoImp
@@ -527,7 +525,7 @@ export class AnexoComponent implements OnInit, OnDestroy {
               Array.isArray(RESPONSE_DATA.nicoDatos)
             ) {
              
-              this.nicoTablaDatos = RESPONSE_DATA.nicoDatos;
+            
   
               this.permisoImmexDatos = RESPONSE_DATA.permisoImmexDatos;
               this.fraccionDatos = RESPONSE_DATA.fraccionDatos;
@@ -848,7 +846,32 @@ this.nuevaNotificacion = {} as Notificacion;
       }
       else{
         this.eliminarDatosTablaNicoExp = false;
-this.showTableNicoExp = true;
+          this.permisoImmexDatosService
+        .getDatos()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response) => {
+            
+            const RESPONSE_DATA = response as unknown as {
+              permisoImmexDatos: immexInfo[];
+              fraccionDatos: fraccionInfo[];
+              nicoDatos: NicoInfo[];
+            };
+  
+            if (
+              RESPONSE_DATA &&
+              Array.isArray(RESPONSE_DATA.nicoDatos)
+            ) {
+                this.nicoTablaDato = RESPONSE_DATA.nicoDatos || [];
+                  this.immexRegistroform.get('exportacionForm')?.patchValue({
+        Nico:'',
+        productoDescExportacion:'',
+      })
+            }
+          },
+        });
+       
+
       }
       
     }
@@ -876,7 +899,34 @@ this.showTableNicoExp = true;
            this.eliminarDatosTablaNicoExp = true;
       }
       else{
-   this.showTableNicoExps = true;
+    this.eliminarDatosTablaNicoExp = false;
+          this.permisoImmexDatosService
+        .getDatos()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (response) => {
+            
+            const RESPONSE_DATA = response as unknown as {
+              permisoImmexDatos: immexInfo[];
+              fraccionDatos: fraccionInfo[];
+              nicoDatos: NicoInfo[];
+            };
+  
+            if (
+              RESPONSE_DATA &&
+              Array.isArray(RESPONSE_DATA.nicoDatos)
+            ) {
+                 this.nicoTablaDatos = (RESPONSE_DATA.nicoDatos || []).map(item => ({
+    ...item,
+    id: Math.floor(Math.random() * 10000) 
+  }));
+                this.immexRegistroform.get('importacionForm')?.patchValue({
+        Nicos:'',
+        productoDescExportacions:'',
+      })
+            }
+          },
+        });
       }
    
     }
@@ -984,7 +1034,6 @@ this.showTableNicoExp = true;
      */
     modalCancelarExportacion(): void {
          this.immexRegistroform.get('exportacionForm')?.reset();
-         this.showTableNicoExp = false;
          this.nuevaNotificacion = {} as Notificacion;
       this.cambiarEstadoModalExportacion();
     }
@@ -1015,7 +1064,6 @@ estatus:true
     this.fraccionTablaDatos.push(DATA) ;
     this.nuevaNotificacion={} as Notificacion;
     this.immexRegistroform.get('exportacionForm')?.reset();
-      this.showTableNicoExp = false;
          this.cambiarEstadoModalExportacion();
   }
 
@@ -1128,7 +1176,12 @@ eliminarNicos():void{
   }
   else{
     this.eliminarDatosTablaNicoExp =false;
-  this.showTableNicoExps = false;
+     const SELECTED_ID = this.selectedRowDataNico.map(item => item.id);
+ this.nicoTablaDatos = this.nicoTablaDatos.filter(
+    item => !SELECTED_ID.includes(item.id)
+  );
+
+this.selectedRowDataNico = null;
   }
 }
 seleccionTablas(event: NicoInfo[]):void{
@@ -1138,7 +1191,7 @@ seleccionTablas(event: NicoInfo[]):void{
     if(this.fraccionInfoSelectedNico !== null && this.nicoTablaDatos.length > 0){
       this.nuevaNotificacion ={} as Notificacion;
       this.eliminarDatosTablaNicoExp= false;
-        this.showTableNicoExp = false;
+      this.nicoTablaDato = [];
     }
   else{
      this.nuevaNotificacion = {
