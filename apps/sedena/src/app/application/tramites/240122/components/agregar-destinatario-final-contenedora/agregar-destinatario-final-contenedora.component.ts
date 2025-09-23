@@ -133,7 +133,10 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnD
     this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
     this.cerrar.emit();
   }
-
+actualizaExistenteEnDestinatarioDatos(event: DestinoFinal[]): void {
+    this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
+    this.cerrar.emit();
+  }
   /**
    * Hook del ciclo de vida que se ejecuta al destruir el componente.
    * Libera las suscripciones activas para evitar fugas de memoria.
@@ -145,4 +148,10 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnD
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  onCancelar():void {
+  this.tramiteStore.actualizarDatosDestinatario({} as DestinoFinal);
+  this.cerrar.emit();
+}
+
 }

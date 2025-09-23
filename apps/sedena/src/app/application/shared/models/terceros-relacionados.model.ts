@@ -43,6 +43,7 @@ export interface DestinoFinal {
   tableindex?: number;
   nacionalidad?: string;
   id?: number;
+  lada?: string;  
 }
 
 

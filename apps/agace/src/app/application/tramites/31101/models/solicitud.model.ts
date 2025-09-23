@@ -219,7 +219,7 @@ export interface SeccionSociosIC {
  */
 export interface TipoDeInversion {
   /** Identificador del registro */
-  idRegistro?: string;
+  idRegistro?: number;
 
   /** Tipo de inversión */
   tipoInversion: string;

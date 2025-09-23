@@ -112,4 +112,8 @@ export class AgregarProveedorContenedoraComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+   onCancelar():void {
+    this.tramite240122Store.actualizarDatosProveedor({} as Proveedor);
+    this.cerrar.emit();
+  }
 }

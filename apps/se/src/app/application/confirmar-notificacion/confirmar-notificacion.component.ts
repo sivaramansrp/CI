@@ -21,6 +21,8 @@ import { CodigoRespuesta, PasoNotificacion } from '../core/enum/se-core-enum';
 import { AcuseReciboComponent } from '../shared/components/acuse-recibo/acuse-recibo.component';
 import { FirmaConfirmarResponse } from '../core/models/confirmar-notificacion/response/confirmar-notificacion-response.model';
 
+import { AcusesRecibidosNotificacion } from '../core/models/autorizar-requerimiento/response/notificacion-acuses-recibidos-response.model';
+
 /**
  * @component ConfirmarNotificacionComponent
  * @description
@@ -83,6 +85,12 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
    * @type {ConfirmarNotificacionIniciarResponse | null}
    */
   notificacionData!: ConfirmarNotificacionIniciarResponse;
+
+  /**
+   * Datos de la notificacion, que se pasan al componente AcusesRecibidosNotificacion.
+   * @type {BodyTablaResolucion[]}
+   */
+  notificacionAcusesData: BodyTablaResolucion[] = [];
 
   /**
    * Nueva notificación para mostrar mensajes de error o información al usuario.
@@ -233,6 +241,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
             };
             throw new Error('Firma no exitosa');
           }else if (firmaResponse.codigo === CodigoRespuesta.EXITO){
+            this.getAcusesRecibidosNotificacion();
             if(firmaResponse.datos.tipo_acuse === "Resolucion"){
               this.banderaVistaAcuse = firmaResponse.datos.tipo_acuse;
               this.postResolucion(firmaResponse.datos.id_acuse);
@@ -268,6 +277,55 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * @method getAcusesRecibidosNotificacion
+   * @description
+   * Obtiene los documentos recibidos de notificación utilizando el servicio ConfirmarNotificacionService.
+   */
+  getAcusesRecibidosNotificacion(): void {
+    this.confirmarNotificacionService.getAcusesRecibidosNotificación(Number(this.guardarDatos.procedureId), this.guardarDatos.folioTramite).subscribe({
+    next: (response) => {
+        if (response.codigo === CodigoRespuesta.EXITO && response.datos) {
+          this.notificacionAcusesData = [{
+              id: 1,
+              idDocumento: response.datos.documentos_oficiales[0]?.id_documento_oficial ?? '',
+              documento: response.datos.documentos_oficiales[0]?.desc_documento ?? '',
+              urlPdf: response.datos.documentos_oficiales[0]?.documento_minio ?? ''
+            }];
+        } else {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error al obtener los documentos',
+            mensaje:
+                response.causa ||
+                response.mensaje ||
+                response.error || 'Ocurrió un error al obtener los documentos.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          //this.indiceDePaso = this.PasoNotificacion.FIRMAR;
+        }
+      },
+      error: (error) => {
+          if (!this.nuevaNotificacion) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error inesperado',
+              mensaje: error?.error.error || 'Ocurrió un error al obtener los documentos.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+          //this.indiceDePaso = this.PasoNotificacion.FIRMAR;
+      }
+    });
+  }
   /**
    * @method postResolucion
    * @description Guarda la resolución del proceso actual

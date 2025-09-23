@@ -31,6 +31,9 @@
         <btn-continuar
           [datos]="datosPasos"
           (continuarEvento)="getValorIndice($event)"
+          [btnGuardar]="true" 
+          [btnGuardarVisible]="btnGuardarVisible"
+          (btnGuardarClicked)="obtenerDatosDelStore()"
         ></btn-continuar>
         } @else {
         <div class="mt-5 mb-3 d-flex justify-content-end">

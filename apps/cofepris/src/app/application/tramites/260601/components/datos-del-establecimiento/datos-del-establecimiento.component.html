@@ -29,6 +29,7 @@
         <div class="col-md-8">
             <label for="razonSocial" class="form-label">Denominación o razón social<span [ngClass]="datosDelEstablecimientoForm.get('razonSocial')?.touched && datosDelEstablecimientoForm.get('razonSocial')?.invalid && datosDelEstablecimientoForm.get('razonSocial')?.errors?.['required'] || razonInvalid ? 'text-danger' : ''">*</span>:</label>
             <input type="text" class="form-control" formControlName="razonSocial" id="razonSocial" size="68"
+                [class.is-invalid]="datosDelEstablecimientoForm.get('razonSocial')?.touched && datosDelEstablecimientoForm.get('razonSocial')?.invalid || razonInvalid"
                 (change)="setValoresStore(datosDelEstablecimientoForm,'razonSocial', 'setRazonSocial')">
             <div *ngIf="datosDelEstablecimientoForm.get('razonSocial')?.touched">
             <small *ngIf="datosDelEstablecimientoForm.get('razonSocial')?.errors?.['required'] || razonInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
@@ -66,6 +67,7 @@
             <label for="codigoPostal" class="form-label">Código postal<span [ngClass]="domicilloDelEstablecimientoForm.get('codigoPostal')?.touched && domicilloDelEstablecimientoForm.get('codigoPostal')?.invalid && domicilloDelEstablecimientoForm.get('codigoPostal')?.errors?.['required'] || codigoPostalInvalid ? 'text-danger' : ''">*</span>:</label>
             <input type="text" name="codigoPostal" id="codigoPostal" class="form-control" formControlName="codigoPostal"
                 maxlength="12"
+                [class.is-invalid]="domicilloDelEstablecimientoForm.get('codigoPostal')?.touched && domicilloDelEstablecimientoForm.get('codigoPostal')?.invalid || codigoPostalInvalid"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'codigoPostal', 'setCodigoPostal')">
                 <div *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.touched">
             <small *ngIf="domicilloDelEstablecimientoForm.get('codigoPostal')?.errors?.['required'] || codigoPostalInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
@@ -84,6 +86,7 @@
             <label for="descripcionMunicipio" class="form-label">Municipio o alcaldía<span [ngClass]="domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.touched && domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.invalid && domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.errors?.['required'] || descripcionMunicipioInvalid ? 'text-danger' : ''">*</span>:</label>
             <input type="text" name="descripcionMunicipio" id="descripcionMunicipio" class="form-control"
                 formControlName="descripcionMunicipio" maxlength="120"
+                [class.is-invalid]="domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.touched && domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.invalid || descripcionMunicipioInvalid"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'descripcionMunicipio', 'setDescripcionMunicipio')">
                 <div *ngIf="domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.touched">
             <small *ngIf="domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.errors?.['required'] || descripcionMunicipioInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
@@ -95,6 +98,7 @@
             <label for="informacionExtra" class="form-label">Localidad<span [ngClass]="domicilloDelEstablecimientoForm.get('informacionExtra')?.touched && domicilloDelEstablecimientoForm.get('informacionExtra')?.invalid && domicilloDelEstablecimientoForm.get('informacionExtra')?.errors?.['required'] || informacionExtraInvalid ? 'text-danger' : ''">*</span>:</label>
             <input type="text" name="informacionExtra" id="informacionExtra" class="form-control"
                 formControlName="informacionExtra" maxlength="120"
+                [class.is-invalid]="domicilloDelEstablecimientoForm.get('informacionExtra')?.touched && domicilloDelEstablecimientoForm.get('informacionExtra')?.invalid || informacionExtraInvalid"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'informacionExtra', 'setInformacionExtra')">
                 <div *ngIf="domicilloDelEstablecimientoForm.get('informacionExtra')?.touched">
             <small *ngIf="domicilloDelEstablecimientoForm.get('informacionExtra')?.errors?.['required'] || informacionExtraInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
@@ -104,6 +108,7 @@
             <label for="descripcionColonia" class="form-label">Colonia<span [ngClass]="domicilloDelEstablecimientoForm.get('descripcionColonia')?.touched && domicilloDelEstablecimientoForm.get('descripcionColonia')?.invalid && domicilloDelEstablecimientoForm.get('descripcionColonia')?.errors?.['required'] || descripcionColoniaInvalid ? 'text-danger' : ''">*</span>:</label>
             <input type="text" name="descripcionColonia" id="descripcionColonia" class="form-control"
                 formControlName="descripcionColonia" maxlength="120"
+                [class.is-invalid]="domicilloDelEstablecimientoForm.get('descripcionColonia')?.touched && domicilloDelEstablecimientoForm.get('descripcionColonia')?.invalid || descripcionColoniaInvalid"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'descripcionColonia', 'setDescripcionColonia')">
                 <div *ngIf="domicilloDelEstablecimientoForm.get('descripcionColonia')?.touched">
             <small *ngIf="domicilloDelEstablecimientoForm.get('descripcionColonia')?.errors?.['required'] || descripcionColoniaInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
@@ -117,6 +122,7 @@
                     data-bs-toggle="tooltip">
                 <i class="bi bi-question-circle-fill"></i></span></label>
             <input type="text" name="calle" id="calle" class="form-control" formControlName="calle" maxlength="90"
+            [class.is-invalid]="domicilloDelEstablecimientoForm.get('calle')?.touched && domicilloDelEstablecimientoForm.get('calle')?.invalid || calleInvalid"
                 (change)="setValoresStore(domicilloDelEstablecimientoForm,'calle', 'setCalle')">
                 <div *ngIf="domicilloDelEstablecimientoForm.get('calle')?.touched">
             <small *ngIf="domicilloDelEstablecimientoForm.get('calle')?.errors?.['required'] || calleInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
