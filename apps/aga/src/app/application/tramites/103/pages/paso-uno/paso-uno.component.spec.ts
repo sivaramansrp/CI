@@ -46,20 +46,17 @@ describe('PasoUnoComponent', () => {
   describe('Initialization', () => {
     it('should initialize with default values', () => {
       expect(component.indice).toBe(1);
-      // After ngOnInit, persona should be initialized with PERSONA_MORAL_NACIONAL
       expect(component.persona).toEqual(PERSONA_MORAL_NACIONAL);
       expect(component.domicilioFiscal).toEqual(DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL);
     });
 
     it('should call ngAfterViewInit and initialize properties', () => {
-      // Clear any previous calls to the mock
       jest.clearAllMocks();
       
       component.solicitante = {
         obtenerTipoPersona: jest.fn()
       } as unknown as SolicitanteComponent;
 
-      // Spy on the component's cdr.detectChanges method
       const cdrSpy = jest.spyOn(component['cdr'], 'detectChanges');
 
       component.ngAfterViewInit();
@@ -131,9 +128,7 @@ describe('PasoUnoComponent', () => {
     });
   });
 
-  // Reasonable implementation for fetchGetDatosConsulta
   function fetchGetDatosConsulta(): any {
-    // Simulate a response structure similar to what the real service would return
     return {
       success: true,
       datos: {
@@ -173,6 +168,283 @@ describe('PasoUnoComponent', () => {
   }
 });
 
-function fetchGetDatosConsulta(): any {
-  throw new Error('Function not implemented.');
-}
+describe('PasoUnoComponent ngOnInit conditional coverage', () => {
+  let component: PasoUnoComponent;
+  beforeEach(() => {
+    component = new PasoUnoComponent({} as any, {} as any, {} as any, {} as any);
+    // Initialize consultaDatos to simulate the component being properly set up
+    (component as any)['consultaDatos'] = { update: false };
+  });
+  
+  it('should call fetchGetDatosConsulta in ngOnInit when consultaDatos.update is true', () => {
+    // Set up consultaDatos with update: true to test the conditional logic
+    (component as any)['consultaDatos'] = { update: true };
+    
+    const mockConsultaioQuery = {
+      selectConsultaioState$: {
+        pipe: jest.fn().mockReturnValue({
+          subscribe: jest.fn()
+        })
+      }
+    };
+    (component as any)['consultaioQuery'] = mockConsultaioQuery;
+    
+    // Mock the service method that fetchGetDatosConsulta will call
+    const mockExencionImpuestosService = {
+      getDatosConsulta: jest.fn().mockReturnValue({
+        pipe: jest.fn().mockReturnValue({
+          subscribe: jest.fn()
+        })
+      })
+    };
+    (component as any)['exencionImpuestosService'] = mockExencionImpuestosService;
+    
+    const spy = jest.spyOn(component, 'fetchGetDatosConsulta');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+  });
+  
+  it('should not call fetchGetDatosConsulta in ngOnInit when consultaDatos.update is false', () => {
+    // Set up consultaDatos with update: false to test the else path
+    (component as any)['consultaDatos'] = { update: false };
+    
+    const mockConsultaioQuery = {
+      selectConsultaioState$: {
+        pipe: jest.fn().mockReturnValue({
+          subscribe: jest.fn()
+        })
+      }
+    };
+    (component as any)['consultaioQuery'] = mockConsultaioQuery;
+    
+    const spy = jest.spyOn(component, 'fetchGetDatosConsulta');
+    component.ngOnInit();
+    expect(spy).not.toHaveBeenCalled();
+  });
+});
+
+describe('PasoUnoComponent fetchGetDatosConsulta method coverage', () => {
+  let component: PasoUnoComponent;
+  let fixture: ComponentFixture<PasoUnoComponent>;
+  let mockTramite103Store: any;
+  let mockExencionImpuestosService: any;
+
+  beforeEach(waitForAsync(() => {
+    // Create comprehensive mock for tramite103Store with all setter methods
+    mockTramite103Store = {
+      setManifesto: jest.fn(),
+      setOrganismoPublico: jest.fn(),
+      setAduana: jest.fn(),
+      setDestinoMercancia: jest.fn(),
+      setNombre: jest.fn(),
+      setCalle: jest.fn(),
+      setNumeroExterior: jest.fn(),
+      setNumeroInterior: jest.fn(),
+      setTelefono: jest.fn(),
+      setCorreoElectronico: jest.fn(),
+      setPais: jest.fn(),
+      setCodigoPostal: jest.fn(),
+      setEstado: jest.fn(),
+      setColonia: jest.fn(),
+      setOpcion: jest.fn(),
+      setTipoDeMercancia: jest.fn(),
+      setUsoEspecifico: jest.fn(),
+      setCondicionMercancia: jest.fn(),
+      setUnidadMedida: jest.fn(),
+      setVehiculo: jest.fn(),
+      setAno: jest.fn(),
+      setCantidad: jest.fn(),
+      setMarca: jest.fn(),
+      setModelo: jest.fn(),
+      setSerie: jest.fn()
+    };
+
+    // Mock exencionImpuestosService
+    mockExencionImpuestosService = {
+      getDatosConsulta: jest.fn()
+    };
+
+    TestBed.configureTestingModule({
+      declarations: [],
+      imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        SolicitanteComponent,
+        ExencionImpuestosComponent,
+        PasoUnoComponent,
+        HttpClientTestingModule
+      ],
+      providers: [
+        { provide: ChangeDetectorRef, useValue: { detectChanges: jest.fn() } }
+      ]
+    }).compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(PasoUnoComponent);
+    component = fixture.componentInstance;
+    
+    // Override the component's store and service with our mocks
+    (component as any)['tramite103Store'] = mockTramite103Store;
+    (component as any)['exencionImpuestosService'] = mockExencionImpuestosService;
+    
+    // Mock destroyNotifier$ subject properly
+    const mockDestroyNotifier = {
+      next: jest.fn(),
+      complete: jest.fn()
+    };
+    (component as any)['destroyNotifier$'] = mockDestroyNotifier;
+    
+    // Mock consultaDatos
+    (component as any)['consultaDatos'] = { update: false };
+    
+    // Mock consultaioQuery
+    const mockConsultaioQuery = {
+      selectConsultaioState$: {
+        pipe: jest.fn().mockReturnValue({
+          subscribe: jest.fn()
+        })
+      }
+    };
+    (component as any)['consultaioQuery'] = mockConsultaioQuery;
+    
+    fixture.detectChanges();
+  });
+
+  it('should handle successful response and call all store setters in fetchGetDatosConsulta', () => {
+    const mockResponse = {
+      success: true,
+      datos: {
+        exencionImpuestos: {
+          manifesto: 'test-manifesto',
+          organismoPublico: 'test-organismo',
+          aduana: 'test-aduana',
+          destinoMercancia: 'test-destino'
+        },
+        importadorExportador: {
+          nombre: 'test-nombre',
+          calle: 'test-calle',
+          numeroExterior: 'test-exterior',
+          numeroInterior: 'test-interior',
+          telefono: 'test-telefono',
+          correoElectronico: 'test-email',
+          pais: 'test-pais',
+          codigoPostal: 'test-postal',
+          estado: 'test-estado',
+          colonia: 'test-colonia',
+          opcion: 'test-opcion'
+        },
+        datosMercancia: {
+          tipoDeMercancia: 'test-tipo',
+          usoEspecifico: 'test-uso',
+          condicionMercancia: 'test-condicion',
+          unidadMedida: 'test-unidad',
+          vehiculo: 'test-vehiculo',
+          ano: 'test-ano',
+          cantidad: 'test-cantidad',
+          marca: 'test-marca',
+          modelo: 'test-modelo',
+          serie: 'test-serie'
+        }
+      }
+    };
+
+    // Mock the service to return successful response with proper RxJS chain
+    mockExencionImpuestosService.getDatosConsulta.mockReturnValue({
+      pipe: jest.fn().mockReturnValue({
+        subscribe: jest.fn().mockImplementation((callback) => {
+          callback(mockResponse);
+          return { unsubscribe: jest.fn() };
+        })
+      })
+    });
+
+    // Call the method
+    component.fetchGetDatosConsulta();
+
+    // Verify service was called
+    expect(mockExencionImpuestosService.getDatosConsulta).toHaveBeenCalled();
+
+    // Verify all exencionImpuestos store setters were called with correct values
+    expect(mockTramite103Store.setManifesto).toHaveBeenCalledWith('test-manifesto');
+    expect(mockTramite103Store.setOrganismoPublico).toHaveBeenCalledWith('test-organismo');
+    expect(mockTramite103Store.setAduana).toHaveBeenCalledWith('test-aduana');
+    expect(mockTramite103Store.setDestinoMercancia).toHaveBeenCalledWith('test-destino');
+
+    // Verify all importadorExportador store setters were called with correct values
+    expect(mockTramite103Store.setNombre).toHaveBeenCalledWith('test-nombre');
+    expect(mockTramite103Store.setCalle).toHaveBeenCalledWith('test-calle');
+    expect(mockTramite103Store.setNumeroExterior).toHaveBeenCalledWith('test-exterior');
+    expect(mockTramite103Store.setNumeroInterior).toHaveBeenCalledWith('test-interior');
+    expect(mockTramite103Store.setTelefono).toHaveBeenCalledWith('test-telefono');
+    expect(mockTramite103Store.setCorreoElectronico).toHaveBeenCalledWith('test-email');
+    expect(mockTramite103Store.setPais).toHaveBeenCalledWith('test-pais');
+    expect(mockTramite103Store.setCodigoPostal).toHaveBeenCalledWith('test-postal');
+    expect(mockTramite103Store.setEstado).toHaveBeenCalledWith('test-estado');
+    expect(mockTramite103Store.setColonia).toHaveBeenCalledWith('test-colonia');
+    expect(mockTramite103Store.setOpcion).toHaveBeenCalledWith('test-opcion');
+
+    // Verify all datosMercancia store setters were called with correct values
+    expect(mockTramite103Store.setTipoDeMercancia).toHaveBeenCalledWith('test-tipo');
+    expect(mockTramite103Store.setUsoEspecifico).toHaveBeenCalledWith('test-uso');
+    expect(mockTramite103Store.setCondicionMercancia).toHaveBeenCalledWith('test-condicion');
+    expect(mockTramite103Store.setUnidadMedida).toHaveBeenCalledWith('test-unidad');
+    expect(mockTramite103Store.setVehiculo).toHaveBeenCalledWith('test-vehiculo');
+    expect(mockTramite103Store.setAno).toHaveBeenCalledWith('test-ano');
+    expect(mockTramite103Store.setCantidad).toHaveBeenCalledWith('test-cantidad');
+    expect(mockTramite103Store.setMarca).toHaveBeenCalledWith('test-marca');
+    expect(mockTramite103Store.setModelo).toHaveBeenCalledWith('test-modelo');
+    expect(mockTramite103Store.setSerie).toHaveBeenCalledWith('test-serie');
+  });
+
+  it('should handle failed response and not call store setters in fetchGetDatosConsulta', () => {
+    const mockResponse = {
+      success: false,
+      datos: null
+    };
+
+    // Mock the service to return failed response
+    mockExencionImpuestosService.getDatosConsulta.mockReturnValue({
+      pipe: jest.fn().mockReturnValue({
+        subscribe: jest.fn().mockImplementation((callback) => {
+          callback(mockResponse);
+          return { unsubscribe: jest.fn() };
+        })
+      })
+    });
+
+    // Call the method
+    component.fetchGetDatosConsulta();
+
+    // Verify service was called
+    expect(mockExencionImpuestosService.getDatosConsulta).toHaveBeenCalled();
+
+    // Verify no store setters were called
+    expect(mockTramite103Store.setManifesto).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setOrganismoPublico).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setAduana).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setDestinoMercancia).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setNombre).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setCalle).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setNumeroExterior).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setNumeroInterior).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setTelefono).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setCorreoElectronico).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setPais).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setCodigoPostal).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setEstado).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setColonia).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setOpcion).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setTipoDeMercancia).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setUsoEspecifico).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setCondicionMercancia).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setUnidadMedida).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setVehiculo).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setAno).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setCantidad).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setMarca).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setModelo).not.toHaveBeenCalled();
+    expect(mockTramite103Store.setSerie).not.toHaveBeenCalled();
+  });
+});

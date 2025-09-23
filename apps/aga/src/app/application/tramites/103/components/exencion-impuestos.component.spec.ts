@@ -11,7 +11,6 @@ import { MercanciaTableService } from '../services/mercancia-table.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-// Mock Bootstrap
 (global as any).bootstrap = {
   Modal: class {
     show() {}
@@ -110,7 +109,6 @@ describe('ExencionImpuestosComponent - Full Coverage', () => {
     fixture = TestBed.createComponent(ExencionImpuestosComponent);
     component = fixture.componentInstance;
 
-    // Mock ViewChild elements
     component.modalElement = { nativeElement: document.createElement('div') } as any;
     component.confirmarModalElement = { nativeElement: document.createElement('div') } as any;
     component.confirmarModalVehiculoElement = { nativeElement: document.createElement('div') } as any;
@@ -300,42 +298,25 @@ describe('ExencionImpuestosComponent - Full Coverage', () => {
 
   describe('Form Validation', () => {
     it('should handle form validation', () => {
-      // Call the method
       component.agregarMercanciasConfirm();
-      
-      // Verify expectations - envioIntentado should always be set to true
       expect(component.envioIntentado).toBe(true);
     });
 
     it('should validate form fields when form is invalid', () => {
-      // Make the form invalid by not setting required values
       const markTouchedSpy = jest.spyOn(component.tramiteForm, 'markAllAsTouched');
-      
-      // Set form as invalid
       Object.defineProperty(component.tramiteForm, 'invalid', {
         get: jest.fn(() => true)
       });
-      
-      // Call the method
       component.validarDestinatarioFormulario();
-      
-      // Verify the method was called because form is invalid
       expect(markTouchedSpy).toHaveBeenCalled();
     });
 
     it('should not call markAllAsTouched when form is valid', () => {
-      // Mock the form as valid
       const markTouchedSpy = jest.spyOn(component.tramiteForm, 'markAllAsTouched');
-      
-      // Set form as valid
       Object.defineProperty(component.tramiteForm, 'invalid', {
         get: jest.fn(() => false)
       });
-      
-      // Call the method
       component.validarDestinatarioFormulario();
-      
-      // Verify the method was NOT called because form is valid
       expect(markTouchedSpy).not.toHaveBeenCalled();
     });
   });
@@ -355,10 +336,7 @@ describe('ExencionImpuestosComponent - Full Coverage', () => {
     });
 
     it('should handle radio changes', () => {
-      // Mock the missing store method first
       mockStore.setValorSeleccionado = jest.fn();
-      
-      // Test should pass without throwing errors now
       expect(() => component.cambiarRadio('si')).not.toThrow();
       expect(() => component.personaMoral()).not.toThrow();
     });
