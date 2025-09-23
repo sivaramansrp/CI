@@ -568,8 +568,6 @@ export class ServiciosComponent implements OnInit, OnDestroy {
 
       // Limpiar selección
       this.domiciliosSeleccionados = [];
-
-      // this.mostrarNotificacionExito('¿Está seguro de eliminar el servicio seleccionado?');
     }
   }
 
