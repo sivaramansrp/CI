@@ -87,7 +87,7 @@
       </div>
 
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" [disabled]="!esFormularioValido()" class="btn btn-primary" [ngClass]="{'btn-secondary': !this.empresasForm.valid}" (click)="buscarControladoras()">
+        <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-primary" (click)="buscarControladoras()">
           Buscar terciarizadas
         </button>
       </div>
@@ -109,7 +109,7 @@
       </div>
       
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary"  [disabled]="esFormularioSoloLectura || !this.listaFilaDisponibles.length" (click)="agregarPlantas()">
+        <button type="button" class="btn btn-primary"  [disabled]="esFormularioSoloLectura" (click)="agregarPlantas()">
           Agregar plantas
         </button>
       </div>
@@ -127,10 +127,34 @@
         ></app-tabla-dinamica>
       </div>
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura || !this.listaFilaSeleccionada.length"  (click)="eliminarPlantas()">
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura"  (click)="eliminarPlantas()">
           Eliminar plantas
         </button>
       </div>
     </div>
   </form>
 </div>
+
+<lib-notificaciones 
+  *ngIf="errorBuscar"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="errorBuscar = false">
+</lib-notificaciones>
+
+<lib-notificaciones 
+  *ngIf="errorRFC"
+  [notificacionInput]="nuevaNotificacionRFC"
+  (confirmacionModal)="errorRFC = false">
+</lib-notificaciones>
+
+<lib-notificaciones 
+  *ngIf="errorAgregar"
+  [notificacionInput]="nuevaNotificacionAgregar"
+  (confirmacionModal)="errorAgregar = false">
+</lib-notificaciones>
+
+<lib-notificaciones 
+  *ngIf="errorEliminar"
+  [notificacionInput]="nuevaNotificacionEliminar"
+  (confirmacionModal)="errorEliminar = false">
+</lib-notificaciones>

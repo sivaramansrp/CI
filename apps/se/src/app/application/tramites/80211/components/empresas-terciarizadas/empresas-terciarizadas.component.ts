@@ -2,6 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
   ConfiguracionColumna,
   ConsultaioQuery,
+  Notificacion,
   REGEX_RFC,
   TablaSeleccion,
 } from '@ng-mf/data-access-user';
@@ -89,6 +90,70 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
      * Cuando es `true`, los campos del formulario no se pueden editar.
      */
     esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacion
+   * @description
+   * Objeto que contiene la configuración de la notificación principal del componente.
+   * Se utiliza para mostrar mensajes de error o información al usuario cuando no se selecciona una entidad federativa.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * @property {Notificacion} nuevaNotificacionRFC
+   * @description
+   * Objeto que contiene la configuración de la notificación específica para errores relacionados con el RFC.
+   * Se muestra cuando el usuario no introduce un RFC válido en el formulario.
+   */
+  public nuevaNotificacionRFC!: Notificacion;
+
+  /**
+   * @property {boolean} errorBuscar
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error cuando falla la búsqueda de controladoras.
+   * Se establece a true cuando el usuario intenta buscar sin seleccionar una entidad federativa.
+   */
+  errorBuscar: boolean = false;
+
+  /**
+   * @property {boolean} errorRFC
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error específico para el campo RFC.
+   * Se establece a true cuando el RFC no cumple con el formato requerido o está vacío.
+   */
+  errorRFC: boolean = false;
+
+  /**
+   * @property {boolean} errorAgregar
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error al intentar agregar plantas.
+   * Se establece a true cuando el usuario intenta agregar plantas sin haber seleccionado ninguna.
+   */
+  errorAgregar: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacionAgregar
+   * @description
+   * Objeto que contiene la configuración de la notificación para errores al agregar plantas.
+   * Se muestra cuando el usuario no selecciona al menos una planta para realizar operaciones IMMEX.
+   */
+  public nuevaNotificacionAgregar!: Notificacion;
+
+  /**
+   * @property {boolean} errorEliminar
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error al intentar eliminar plantas.
+   * Se establece a true cuando el usuario intenta eliminar plantas sin haber seleccionado ninguna.
+   */
+  errorEliminar: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacionEliminar
+   * @description
+   * Objeto que contiene la configuración de la notificación para errores al eliminar plantas.
+   * Se muestra cuando el usuario no selecciona ninguna planta para eliminar de la lista.
+   */
+  public nuevaNotificacionEliminar!: Notificacion;
   
     /**
      * Constructor del componente.
@@ -130,6 +195,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
       this.inicializarEstadoFormulario();
+      this.nuevaNotificacion = {} as Notificacion;
     }
   
     /**
@@ -223,6 +289,34 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
         this.empresasForm.get('rfc')?.reset();
         this.empresasForm.get('estado')?.reset();
       }
+      else if(this.empresasForm.get('estado')?.value && this.empresasForm.get('rfc')?.invalid){
+        this.errorRFC = true;
+        this.nuevaNotificacionRFC = {
+          tipoNotificacion: 'alert',
+          categoria: '',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe introducir el RFC',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+      }
+      else{
+        this.errorBuscar = true;
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: '',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Selecciona la Entidad Federativa.',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+      }
     }
   
       /**
@@ -299,6 +393,18 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
  */
 agregarPlantas(): void {
   if (!this.listaFilaDisponibles?.length) {
+    this.errorAgregar = true;
+    this.nuevaNotificacionAgregar = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Selecciona al menos una planta donde se realizarán las operaciones IMMEX.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
     return;
   }
 
@@ -344,6 +450,18 @@ agregarPlantas(): void {
      */
     eliminarPlantas(): void {
       if (this.listaFilaSeleccionada?.length === 0) {
+        this.errorEliminar = true;
+        this.nuevaNotificacionEliminar = {
+          tipoNotificacion: 'alert',
+          categoria: '',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Selecciona la planta que desea eliminar.',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
         return;
       }
     
