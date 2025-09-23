@@ -35,6 +35,7 @@ import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { Validators } from '@angular/forms';
 
 
@@ -273,7 +274,9 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
    * @param {Router} router - Servicio de Angular para la navegación.
    * @param {ActivatedRoute} activatedRoute - Servicio de Angular para obtener información sobre la ruta actual.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private validacionesService: ValidacionesFormularioService,private complimentosService: ComplimentosService) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private validacionesService: ValidacionesFormularioService,private complimentosService: ComplimentosService,
+    private servicioDeFormularioService: ServicioDeFormularioService
+  ) {}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -362,6 +365,21 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
         Validators.required
       ),
     })
+
+    this.servicioDeFormularioService.registerForm('federatariosForm', this.federatariosFormGroup);
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'federatariosForm') {
+        this.federatariosFormGroup.markAllAsTouched();
+      }
+    })
+
+    this.servicioDeFormularioService.registerForm('federatariosCatalogoForm', this.federatariosCatalogoGroup);
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'federatariosCatalogoForm') {
+        this.federatariosCatalogoGroup.markAllAsTouched();
+      }
+    })
+
   }
 
   /**
@@ -405,6 +423,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
   onFechaCambiada(fecha: string): void {
     if (fecha) {
       this.federatariosFormGroup.patchValue({ fechaInicioInput: fecha });
+      this.servicioDeFormularioService.setFormValue('federatariosForm', { ['fechaInicioInput']: fecha });
     }
   }
 

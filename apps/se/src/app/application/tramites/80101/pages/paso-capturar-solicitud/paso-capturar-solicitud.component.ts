@@ -1,9 +1,11 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, ERROR_FORMA_ALERT, WizardService } from '@ng-mf/data-access-user';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, take, takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
+import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
 import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
@@ -418,6 +420,39 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   * URL de la página actual.
   */
   public solicitudState!: Tramite80101State;
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  public consultaState!: ConsultaioState;
+
+  /**
+ * @property esFormaValido
+ * @description
+ * Indica si el formulario actual es válido. Se utiliza para habilitar o deshabilitar la navegación entre pasos en el wizard.
+ * @type {boolean}
+ * @default false
+ */
+  public esFormaValido!: boolean;
+
+  /**
+ * @property wizardService
+ * @description
+ * Inyección del servicio `WizardService` para gestionar la lógica y el estado del componente wizard.
+ * @type {WizardService}
+ */
+  wizardService = inject(WizardService);
+
+  /**
+ * @property formErrorAlert
+ * @description
+ * Contiene el mensaje de alerta que se muestra cuando ocurre un error en el formulario.
+ * @type {string}
+ */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
   /**
    * Constructor de la clase PasoCapturarSolicitudComponent.
    * 
@@ -429,7 +464,13 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * utilizando los métodos `establecerSeccion` y `establecerFormaValida` del servicio `SeccionLibStore`.
    * La suscripción se gestiona para que se complete automáticamente al destruir el componente mediante `takeUntil` y `destroyNotifier$`.
    */
-  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService, private tramite80101Store: Tramite80101Store, private tramite80101Query: Tramite80101Query) {
+  constructor(
+    private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
+    private tramite80101Store: Tramite80101Store,
+    private tramite80101Query: Tramite80101Query,
+    private consultaQuery: ConsultaioQuery,
+    private servicioDeFormularioService: ServicioDeFormularioService,
+  ) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
@@ -441,6 +482,14 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * evitando fugas de memoria.
    */
   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      ).subscribe();
+
     this.tramite80101Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -451,19 +500,59 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   }
 
   /**
+ * @method verificarLaValidezDelFormulario
+ * @description
+ * Este método verifica la validez de los formularios dinámicos asociados a los pasos del wizard.
+ * @returns {boolean} - Indica si todos los formularios son válidos.
+ */
+  verificarLaValidezDelFormulario(): boolean {
+    return (
+      (this.servicioDeFormularioService.isFormValid('complimentosForm') ??
+        false) && 
+      (this.servicioDeFormularioService.isFormValid('federatariosForm') ??
+      false) && 
+      (this.servicioDeFormularioService.isFormValid('federatariosCatalogoForm') ??
+      false)
+    );
+  }
+
+  /**
    * Obtiene el valor del índice de la acción del botón.
    * @param e - event$: Acción del botón.
    */
   getValorIndice(e: AccionBoton): void {
-    this.obtenerDatosDelStore();
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+     if (!this.consultaState.readonly && !this.consultaState.update) {
+      console.log('continuar', this.servicioDeFormularioService.getFormValue('complimentosForm'));
+      this.esFormaValido = this.verificarLaValidezDelFormulario();
+      if (e.valor > 0 && e.valor <= this.pasos.length) {
+        if (e.accion === 'cont' && this.esFormaValido) {
+            this.indice = e.valor + 1;
+            this.datosPasos.indice = e.valor + 1;
+            this.wizardService.cambio_indice(this.datosPasos.indice);
+            this.wizardComponent.siguiente();
+        } else if (e.accion === 'ant' && this.esFormaValido) {
+            this.indice = e.valor - 1;
+            this.datosPasos.indice = e.valor - 1;
+            this.wizardComponent.atras();
+        } else if (!this.esFormaValido) {
+            this.indice = e.valor;
+            this.datosPasos.indice = e.valor;
+            this.servicioDeFormularioService.markFormAsTouched('complimentosForm');
+            this.servicioDeFormularioService.markFormAsTouched('federatariosForm');
+            this.servicioDeFormularioService.markFormAsTouched('federatariosCatalogoForm');
+        }
       }
-    }
+     } else {
+      this.obtenerDatosDelStore();
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
+      }
+     }
   }
 
   /**

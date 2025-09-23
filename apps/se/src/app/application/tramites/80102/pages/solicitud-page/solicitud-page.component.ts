@@ -762,16 +762,10 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
 
 buildServico(arr: any[]): any[] {
   return arr.map(item => ({
+    ...item,
     "tipoServicio": item.tipode,
-    "testado": item.testado,
     "claveServicio": item.clave,
     "descripcion": item.descripionDelServicio,
-    "descripcionTipo": item.descripcionTipo,
-    "descripcionTestado": item.descripcionTestado,
-    "estatus": item.estatus,
-    "desEstatus": item.desEstatus,
-    "fecIniVigencia": item.fecIniVigencia,
-    "fecFinVigencia": item.fecFinVigencia
   }));
 }
   /**

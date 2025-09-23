@@ -62,6 +62,7 @@ import { CatalogoPaises } from '@ng-mf/data-access-user';
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
 import { TramiteStore } from '../../../estados/tramite.store';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 /**
  * Componente Complimentos.
  * Responsable de mostrar y gestionar los datos relacionados a los complimentos.
@@ -353,7 +354,8 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     private consultaioQuery: ConsultaioQuery,
     private tramiteStore: TramiteStore,
     private validacionesService: ValidacionesFormularioService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private servicioDeFormularioService: ServicioDeFormularioService,
   ) {
 
     this.consultaioQuery.selectConsultaioState$
@@ -393,7 +395,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         localizacion: ['', [Validators.required, Validators.maxLength(120)]],
       }),
       obligacionesFiscales: this.fb.group({
-        opinionPositiva: [{ value: 1, disabled: false }],
+        opinionPositiva: [{ value: 1, disabled: false }, Validators.required],
         fechaExpedicion: ['', Validators.required],
         aceptarObligacionFiscal: [''],
       }),
@@ -443,7 +445,19 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     if (this.esFormularioSoloLectura) {
       this.formaComplimentos.disable();
     }
+
+    this.servicioDeFormularioService.registerForm('complimentosForm', this.formaComplimentos);
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'complimentosForm') {
+        this.formaComplimentos.markAllAsTouched();
+      }
+    })
   }
+
+  isTouched(campo: string): boolean { 
+    return Boolean(this.formaComplimentos.get('formaSocioAccionistas.formaDatos.' + campo)?.touched);
+  }
+
 
   /**
  * Obtiene el formulario anidado de datos de socios accionistas.
@@ -1075,6 +1089,14 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         );
       }
     }
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        formaSocioAccionistas: {
+          nationalidadMaxicana: VALUE.formaSocioAccionistas.nationalidadMaxicana,
+          tipoDePersona: VALUE.formaSocioAccionistas.tipoDePersona,
+        }
+      }
+    );
   }
 
   /**
@@ -1086,6 +1108,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       fechaExpedicion: nuevo_valor,
     });
     this.tramiteStore.setfechaExpedicion(nuevo_valor);
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        obligacionesFiscales: {
+          fechaExpedicion: nuevo_valor
+        }
+      }
+    );
   }
 
   /**
@@ -1097,6 +1126,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       fechaDeActa: nuevo_valor,
     });
     this.tramiteStore.setfechaDeActa(nuevo_valor);
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        formaModificaciones: {
+          fechaDeActa: nuevo_valor
+        }
+      }
+    );
   }
 
   /**
@@ -1333,6 +1369,23 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     // Update the input field display
     INPUT.value = UPPERCASEVALUE;
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        datosGeneralis: {
+          paginaWWeb: UPPERCASEVALUE
+        }
+      }
+    );
+  }
+
+  /**
+   * Handles input change for Localización field and converts to uppercase
+   * @param event Input event
+        datosGeneralis: {
+          paginaWWeb: UPPERCASEVALUE
+        }
+      }
+    );
   }
 
   /**
@@ -1348,6 +1401,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     // Update the input field display
     INPUT.value = UPPERCASEVALUE;
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        datosGeneralis: {
+          localizacion: UPPERCASEVALUE
+        }
+      }
+    );
   }
 
   /**
@@ -1410,6 +1470,13 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       CONTROL?.markAsDirty();
       CONTROL?.markAsTouched();
     }
+    this.servicioDeFormularioService.setFormValue('complimentosForm', 
+      {
+        formaSocioAccionistas: {
+          formaDatos: this.formaDatos.value
+        }
+      }
+    );
   }
 
 
