@@ -4,6 +4,8 @@ import {
   CatalogoServices,
   ConfiguracionColumna,
   ConsultaioQuery,
+  Notificacion,
+  NotificacionesComponent,
   SeccionLibQuery,
   SeccionLibState,
   TablaDinamicaComponent,
@@ -112,6 +114,7 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
     ReactiveFormsModule,
     TablaDinamicaComponent,
     CatalogoSelectComponent,
+    NotificacionesComponent,
   ],
 })
 export class Anexo1Component implements OnInit, OnDestroy {
@@ -272,6 +275,49 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * Cuando es true, muestra la tabla de datos NICO para importación.
    */
   showTableNicoImp: boolean = false;
+
+  /**
+   * @property {boolean} eliminarPlantasConfirmacion
+   * @description
+   * Indica si se debe mostrar el modal de confirmación para eliminar plantas seleccionadas.
+   */
+  eliminarPlantasConfirmacion: boolean = false;
+
+  /**
+   * @property {boolean} eliminarPlantasAlerta
+   * @description
+   * Indica si se debe mostrar una alerta cuando no se ha seleccionado ninguna planta para eliminar.
+   */
+  eliminarPlantasAlerta: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacion
+   * @description
+   * Objeto que contiene la información de la notificación a mostrar en el componente de notificaciones.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * @property {boolean} espectaculoAlerta
+   * @description
+   * Indica si se debe mostrar una alerta relacionada con la selección de entidad federativa o plantas.
+   */
+  espectaculoAlerta: boolean = false;
+
+  /**
+   * @property {boolean} espectaculoAlertaAgregar
+   * @description
+   * Indica si se debe mostrar una alerta relacionada con la acción de agregar plantas seleccionadas a la lista PROSEC.
+   * Se utiliza para advertir al usuario cuando no ha seleccionado ninguna planta para agregar.
+   */
+  espectaculoAlertaAgregar: boolean = false;
+
+  /**
+   * @property {FilaPlantas[]} listSelectedView
+   * @description
+   * Arreglo que contiene las plantas seleccionadas en la tabla dinámica para realizar acciones como eliminar.
+   */
+  listSelectedView: nicoInfo[] = [];
 
   /**
    * @private
@@ -720,8 +766,30 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @returns {void}
    */
   showTableExportacion(): void {
+    const PERMISO_VALUE = this.immexRegistroform.get(
+      'exportacionForm.permisoImmexDatos'
+    )?.value;
+    if (!PERMISO_VALUE || PERMISO_VALUE.length === 0) {
+      this.espectaculoAlertaAgregar = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Tiene que introducir el permiso immex.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } else {
     this.showTableExport = true;
+      this.espectaculoAlertaAgregar = false;
     this.fetchData();
+      // this.seccionStore.establecerDatos({
+      //   immexTableDatos: this.immexTableDatos,
+      // });
+    }
   }
 
   /**
@@ -734,10 +802,26 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @returns {void}
    */
   mostrarDetalleMercancia(): void {
+    if (this.immexTableDatos.length === 0) {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe seleccionar un permiso immex.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } else {
+      this.espectaculoAlerta = false;
     const MODAL_INSTANCIA = new Modal(
       this.mercanciaImportacionModal.nativeElement
     );
     MODAL_INSTANCIA.show();
+    }
   }
 
   /**
@@ -892,6 +976,48 @@ export class Anexo1Component implements OnInit, OnDestroy {
     this.immexRegistroform
       .get('importacionForm.commodityNicoDescImportacion')
       ?.disable();
+  }
+
+  /**
+   * @method seleccionTabla
+   * @description
+   * Actualiza la lista de plantas seleccionadas en la tabla dinámica y sincroniza el estado en el store.
+   * @param {nicoInfo[]} event - Arreglo de plantas seleccionadas.
+   */
+  seleccionTabla(event: nicoInfo[]): void {
+    this.listSelectedView = event;
+    this.seccionStore.update((state) => ({
+      ...state,
+      selectedDatos: event,
+    }));
+  }
+  eliminarNico(): void {
+    if (this.listSelectedView.length === 0) {
+      return;
+    }
+    const SELECTED_IDS = new Set(
+      this.listSelectedView.map((item) => item.NICO_Columna_1)
+    );
+    this.nicoTablaDatos = this.nicoTablaDatos.filter(
+      (item) => !SELECTED_IDS.has(item.NICO_Columna_1)
+    );
+
+    this.listSelectedView = [];
+    this.seccionStore.update((state) => ({
+      ...state,
+      selectedDatos: this.listSelectedView,
+    }));
+  }
+
+  /**
+   * @description
+   * Actualiza el valor en el store basado en el formulario.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo en el formulario.
+   */
+  setValoresStore(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.seccionStore.establecerDatos({ [campo]: VALOR });
   }
 
   /**

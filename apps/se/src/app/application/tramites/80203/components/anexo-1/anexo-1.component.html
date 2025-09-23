@@ -7,7 +7,7 @@
         <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
           <label for="permiso-immex">Permiso IMMEX:</label>
           <input type="text" class="form-control" id="permiso-immex" formControlName="permisoImmexDatos"
-            placeholder="" />
+            placeholder=""  (change)="setValoresStore(immexRegistroform, 'exportacionForm.permisoImmexDatos')"/>
         </div>
         <div class="col-12 container text-end mt-5">
           <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
@@ -61,6 +61,12 @@
 
     <!-- Pasos para la sección de importación -->
   </form>
+      <div>
+          @if(espectaculoAlertaAgregar) {
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+            (confirmacionModal)="showTableExportacion()"></lib-notificaciones>
+        }
+    </div>
 </div>
 
 <div class="modal fade" id="mercanciaImportacionModal" tabindex="-1" aria-labelledby="mercanciaImportacionModal"
@@ -119,10 +125,10 @@
                 <h6>Nico</h6>
                 <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
                   <app-tabla-dinamica *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox"
-                    [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos"></app-tabla-dinamica>
+                    [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos" (listaDeFilaSeleccionada)="seleccionTabla($event)"></app-tabla-dinamica>
                 </div>
                 <div class="container text-start mt-5">
-                  <button class="btn btn-danger me-2">Eliminar Nico</button>
+                  <button class="btn btn-danger me-2" (click)="eliminarNico()">Eliminar Nico</button>
                 </div>
               </div>
             </div>
@@ -185,7 +191,7 @@
                     [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
                 </div>
                 <div class="container text-start mt-5">
-                  <button class="btn btn-danger me-2">Eliminar Nico</button>
+                  <button class="btn btn-danger me-2" (click)="eliminarNico()">Eliminar Nico</button>
                 </div>
               </div>
             </div>
