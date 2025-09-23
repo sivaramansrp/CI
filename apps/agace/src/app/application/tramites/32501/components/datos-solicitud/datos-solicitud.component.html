@@ -51,8 +51,7 @@
       </div>
     </div>
 
-   <!--- @if (formAviso.get('ideGenerica1')?.value === 'por defecto' || formAviso.get('ideGenerica1')?.value === 'TAV.MON') {-->
-   @if (formAviso.get('ideGenerica1')?.value !== 'TAV.IMP' ) {
+    @if (formAviso.get('ideGenerica1')?.value !== 'TAV.IMP' ) {
     <!-- Datos del aviso de importación previa relacionado -->
     <div class="row">
       <div class="col-md-12 mt-5">
@@ -92,9 +91,7 @@
       </div>
     </div>
   }
-  <!-- }Fecha de inicio de uso de la mercancía importada 
-    @if (formAviso.get('ideGenerica1')?.value === 'por defecto' || formAviso.get('ideGenerica1')?.value === 'TAV.MON') {
-    Fecha de inicio de uso de la mercancía importada -->
+ 
     @if (formAviso.get('ideGenerica1')?.value !== 'TAV.IMP' ){
     <div class="row">
       <div class="col-md-12">

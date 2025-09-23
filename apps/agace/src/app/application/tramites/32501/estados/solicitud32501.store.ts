@@ -111,8 +111,14 @@ export interface Solicitud32501State {
    * Código de la aduana, puede ser un número o una cadena.
    */
   aduana: string | number;
-
+  
+  /**
+   * Costos de servicios de terceros, puede ser un número o una cadena.
+   */
   serviciosTerceros:string|number;
+  /**
+   * Lista de operaciones de importación asociadas a la solicitud.
+   */
   operacionDeImportacionLista: OperacionDeImportacion[];
 }
 

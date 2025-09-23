@@ -946,7 +946,7 @@ modalOperacionModo: 'agregar' | 'modificar' = 'agregar';
     };
   
     if (this.selectedOperacionDeImportacion) {
-      // Modify existing row
+   
       const IDX = this.operacionDeImportacionLista.findIndex(
         OP => OP === this.selectedOperacionDeImportacion
       );
@@ -982,14 +982,19 @@ modalOperacionModo: 'agregar' | 'modificar' = 'agregar';
     };
     this.showSuccessModal = true;
   }
-  
+  /**
+   * Cierra el modal de éxito.
+   * @return {void}
+   */
   closeSuccessModal(): void {
     this.showSuccessModal = false;
   
   }
   
 
-
+ /*
+  * Cierra el modal de datos de operación de importación y resetea el formulario.
+  */
   cerrarModalForma(): void {
     if (this.modalInstances) {
       this.modalInstances.hide();

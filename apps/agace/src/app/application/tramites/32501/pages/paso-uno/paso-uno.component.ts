@@ -115,7 +115,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         }
       });
   }
-
+ /*
+  * Valida todos los formularios del componente.
+  * @returns `true` si todos los formularios son válidos, `false` en caso contrario.
+  */
   public validarTodosLosFormularios(): boolean {
     let allFormsValid = true;
   
