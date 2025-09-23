@@ -15,10 +15,10 @@ export interface IniciarConfig {
  * Interface para la request de inicialización
  */
 export interface IniciarRequest {
-  rfc_solicitante: string;
-  rol_actual: string;
+  rfcSolicitante: string;
+  rolActual: string;
   folio_programa?:string;
-  id_tipo_tramite?:number;
+  idTipoTramite?:number;
   discriminador?:string;
 
 }
