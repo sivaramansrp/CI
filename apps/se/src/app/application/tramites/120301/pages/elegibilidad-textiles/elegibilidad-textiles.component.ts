@@ -560,7 +560,7 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
       id_solicitud: STATE_SOLICITUD.idSolicitud,
       id_asignacion: STATE_SOLICITUD.id_asignacion,
       id_factura_expedicion:STATE_SOLICITUD.id_factura_expedicion,
-      boolean_generico: true,
+      boolean_generico: Boolean(HISTORICO_STATE.exportadorFabricanteMismo),
       ide_generica_1: HISTORICO_STATE.exportadorFabricanteMismo,
       descripcion_generica_2: HISTORICO_STATE.tipo,
       ide_generica_2: HISTORICO_STATE.cantidadTotalImportador,
