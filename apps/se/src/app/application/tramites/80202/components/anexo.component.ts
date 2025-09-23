@@ -34,6 +34,7 @@ import { Subject, takeUntil } from "rxjs";
 import { CommonModule } from "@angular/common";
 import { Modal } from "bootstrap";
 import { PermisoImmexDatosService } from "../services/permiso-immex-datos.service";
+import { setTime } from "ngx-bootstrap/chronos/utils/date-setters";
 
 @Component({
   selector: "app-anexo",
@@ -70,7 +71,9 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
   nicoTablaDatos: NicoInfo[] = [];
   nicoTablaDato: NicoInfo[] = [];
   selectedNicos: NicoInfo[] = [];
+   selectedExportNicos: NicoInfo[] = [];
   selectExportacion: fraccionInfo = {} as fraccionInfo;
+  exportacionFormNotificacion: boolean = false;
   /**
    * @private
    * @property {Subject<void>} destroyNotifier$
@@ -99,7 +102,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
   public nuevaNotificacion!: Notificacion;
 
   public firstloadCompleted: boolean = false;
-
+  public deleteMessageExportacion: boolean = false;
   public eliminarDatosTablaNicoExp: boolean = false;
   @ViewChild("mercanciaImportacionModal", { static: true })
   mercanciaImportacionModal!: ElementRef;
@@ -270,6 +273,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
             "productoDescExportacions",
           )?.value,
           numero: this.immexTableDatos.length + 1,
+          nicosTable: this.nicoTablaDatos,
         };
         this.pagenuevaNotificacion = false;
         const INDEX = this.immexTableDatos.findIndex(
@@ -328,6 +332,20 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     this.eliminarDatosTablaNicoExp = true;
   }
+  private exportNotificacion(mensaje: string): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: "alert",
+      categoria: "warning",
+      modo: "action",
+      titulo: "",
+      mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: "Aceptar",
+      txtBtnCancelar: "",
+    };
+    this.exportacionFormNotificacion = true;
+  }
 
   private pagemostrarNotificacion(mensaje: string): void {
     this.nuevaNotificacion = {
@@ -382,6 +400,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
                   this.exportacionForm.value.descripcionComercialExport.toUpperCase(),
                 nicos: this.exportacionForm.value.nicos,
                 numero: this.fraccionTablaDatos.length + 1,
+                nicosTable: this.nicoTablaDatos,
               },
             ];
             setTimeout(() => {
@@ -419,9 +438,13 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       );
       this.selectExportacion = {} as fraccionInfo;
     }
+    else{
+      this.pagemostrarNotificacion("Debe seleccionar una fracción de exportación.");
+    }
   }
   mostrarDetalleMercancia(): void {
     if (this.selectFraccionArancelaria && this.selectFraccionArancelaria.id) {
+      this.nicoTablaDatos=[];
       this.importacionForm.patchValue({
         id: this.selectFraccionArancelaria.id,
         fraccionArancelaria: this.selectFraccionArancelaria.fraccionArancelaria,
@@ -436,6 +459,9 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
         productoDescExportacions:
           this.selectFraccionArancelaria.productoDescExportacions || "",
       });
+      this.nicoTablaDatos = this.selectFraccionArancelaria.nicosTable
+        ? [...this.selectFraccionArancelaria.nicosTable]
+        : [];
       this.importacionForm.get("fraccionArancelaria")?.disable();
       this.importacionForm.get("umt")?.disable();
       this.importacionForm.get("descripcionTigie")?.disable();
@@ -503,7 +529,166 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.mostrarNotificacion("Debe elegir al menos un nico para eliminar.");
     }
   }
+  mostrarDetalleMercanciaExportacion():void{
+if(this.selectExportacion && this.selectExportacion.id && this.fraccionTablaDatos.length>0){
+  this.exportacionForm.patchValue({
+    id: this.selectExportacion.id,
+    fraccionImportacion: this.selectExportacion.fraccionImportacion,
+    umt: this.selectExportacion.umt,
+    descripcionTigie: this.selectExportacion.descripcionTigie,
+    fraccionExportacion: this.selectExportacion.fraccionExportacion,
+    descripcionComercialExport: this.selectExportacion.descripcionComercialExport,
+    nicos: this.selectExportacion.nicos,
+  });
+  this.nicoTablaDato = this.selectExportacion.nicosTable ? [...this.selectExportacion.nicosTable]:[];
+  this.exportacionForm.get("fraccionImportacion")?.disable();
+  this.exportacionForm.get("umt")?.disable();
+  this.exportacionForm.get("descripcionTigie")?.disable();
+  this.exportacionForm.get("descripcionNico")?.disable();
+  this.exportacionForm.get("id")?.disable();
+  if(!document.querySelector("bs-modal-backdrop")){
+    this.modalExport.show();
+  }
+  }
+}
+cerrarModalExportacion():void{
+    this.modalExport.hide();
+  setTimeout(() => {
+  this.exportacionForm.reset();
+  this.exportacionForm.get("id")?.setValue(0);
+  this.exportacionForm.get("fraccionImportacion")?.enable();
+  this.exportacionForm.get("umt")?.enable();
+  this.exportacionForm.get("descripcionTigie")?.enable();
+  this.exportacionForm.get("descripcionNico")?.enable();
+  this.nuevaNotificacion = {} as Notificacion;
+  },100)
 
+}
+guardarMercanciaExportacion():void{
+  if(this.selectExportacion && this.selectExportacion.id){
+    const NUEVO_REGISTRO: fraccionInfo = {
+      id: this.selectExportacion.id || Math.floor(Math.random() * 1000000) + 1,
+      fraccionExportacion: this.exportacionForm.getRawValue().fraccionImportacion,
+      fraccionImportacion: this.exportacionForm.getRawValue().fraccionImportacion,
+      umt: this.exportacionForm.getRawValue().umt,
+      descripcionTigie: this.exportacionForm.getRawValue().descripcionTigie,
+      descripcionComercialExport: this.exportacionForm.getRawValue().descripcionComercialExport.toUpperCase(),
+      nicos: this.exportacionForm.getRawValue().nicos,
+      numero: this.selectExportacion.numero,
+      nicosTable: this.nicoTablaDato,
+    };
+    const INDEX = this.fraccionTablaDatos.findIndex(row => row.id === NUEVO_REGISTRO.id);
+    if (INDEX > -1) {
+      this.fraccionTablaDatos[INDEX] = {
+        ...NUEVO_REGISTRO,
+        numero: this.fraccionTablaDatos[INDEX].numero,
+      };
+      this.fraccionTablaDatos = [...this.fraccionTablaDatos];
+    } else {
+      this.fraccionTablaDatos = [...this.fraccionTablaDatos, NUEVO_REGISTRO];
+    }
+    this.selectExportacion = NUEVO_REGISTRO;
+    this.modalExport.hide();
+    setTimeout(() => {
+      this.exportacionForm.reset();
+      this.exportacionForm.get("id")?.setValue(0);
+      this.exportacionForm.get("fraccionImportacion")?.enable();
+      this.exportacionForm.get("umt")?.enable();
+      this.exportacionForm.get("descripcionTigie")?.enable();
+      this.exportacionForm.get("descripcionNico")?.enable();
+      this.nuevaNotificacion = {} as Notificacion;
+    }, 100);
+  }
+}
+onNicoChange():void{
+  if(this.exportacionForm.get("nicos")?.value){
+    this.exportacionForm
+      .get("descripcionNico")
+      ?.setValue(
+        `PRODUCTO-${Math.random().toString(36).substring(2, 15)}-${Date.now()}`,
+      );
+  }
+}
+agregarNicoExportacion():void{
+if(this.exportacionForm.getRawValue().nicos && this.exportacionForm.getRawValue().descripcionNico){
+if(!this.nicoTablaDato.some(row=>row.NICO_Columna_1===this.exportacionForm.getRawValue().nicos)){
+    this.exportacionFormNotificacion = false;
+ this.nicoTablaDato=[...this.nicoTablaDato,
+  {
+    id: Math.floor(Math.random() * 1000000) + 1,
+    NICO_Columna_1: this.exportacionForm.get("nicos")?.value,
+    NICO_Columna_2: this.exportacionForm.get("descripcionNico")?.value,
+    estatus: false,
+  }]
+
+  setTimeout(() => {
+  this.exportacionForm.get("nicos")?.setValue("");
+  this.exportacionForm.get("descripcionNico")?.setValue("");
+  },500)
+}
+else{
+this.exportNotificacion("El NICO que intenta ingresar ya se encuentra registrado.");
+}
+}
+else{
+this.exportNotificacion("Tiene que introducir el NICO y su descripción.");
+}
+}
+eliminarPedimentoDatoss(berr:boolean):void{
+if(berr && this.selectFraccionArancelaria && this.selectFraccionArancelaria.id){
+  this.immexTableDatos = this.immexTableDatos.filter(row=>row.id!==this.selectFraccionArancelaria.id);
+  this.fraccionTablaDatos = this.fraccionTablaDatos.filter(row=>row.fraccionExportacion!==this.selectFraccionArancelaria.fraccionArancelaria);
+  this.selectFraccionArancelaria = {} as immexInfo;
+  this.selectExportacion={} as fraccionInfo;
+  this.modalInstance.hide();
+  this.modalExport.hide();
+  this.deleteMessageExportacion=false;
+  this.firstloadCompleted = false;
+  this.importacionForm.reset();
+  this.importacionForm.get("id")?.setValue(0);
+  this.importacionForm.get("fraccionArancelaria")?.enable();
+  this.importacionForm.get("umt")?.enable();
+  this.nuevaNotificacion = {} as Notificacion;
+}
+else{
+  this.deleteMessageExportacion=false;
+}
+}
+
+eliminarPermisoImmex():void{
+ if(this.selectFraccionArancelaria && this.selectFraccionArancelaria.id){
+ this.nuevaNotificacion = {
+      tipoNotificacion: "alert",
+      categoria: "warning",
+      modo: "action",
+      titulo: "",
+      mensaje:'Al eliminar el registro de fracción arancelaria, se eliminarán las fracciones de exportación asociadas. ¿Está seguro que desea eliminar la Fracción seleccionada?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: "Aceptar",
+      txtBtnCancelar: "Cancelar",
+    };
+    this.deleteMessageExportacion=true;
+ }  
+ else{
+  this.pagemostrarNotificacion("Seleccione la(s) Fracción(es) de Importación a eliminar.");
+ }
+}
+eliminarNicoExportacion():void{
+  if(this.selectedExportNicos && this.selectedExportNicos.length>0){
+    const IDS_TO_DELETE = this.selectedExportNicos.map((nico) => nico.id);
+    this.nicoTablaDato = this.nicoTablaDato.filter(
+      (nico) => !IDS_TO_DELETE.includes(nico.id),
+    );
+    this.selectedExportNicos = [];
+  }
+  else{
+    this.exportNotificacion("Debe elegir al menos un nico para eliminar.");
+  }
+}
+onNicoSeleccionado(event:NicoInfo[]):void{
+  this.selectedExportNicos = event;
+}
   /**
    * @method ngOnDestroy
    * @description Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.

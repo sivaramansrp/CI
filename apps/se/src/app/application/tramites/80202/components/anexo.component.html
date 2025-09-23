@@ -11,7 +11,7 @@
                 <input type="text" class="form-control" id="permiso-immex" formControlName="fraccionArancelaria" placeholder="" (input)="onNumberInput($event, 'importacionForm', 'fraccionArancelaria')" [maxlength]="10" />
             </div>
             <div class="col-12 text-end mt-3">
-                <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarPermisoImmex()">Eliminar</button>
                 <button class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="agregarPermisoImmex()">Agregar</button>
             </div>
         </div>
@@ -53,16 +53,23 @@
                     </app-tabla-dinamica>
                 </div>
                 <div class="container text-end mt-5">
-                    <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura">Mostrar detalle mercancía</button>
+                    <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="mostrarDetalleMercanciaExportacion()">Mostrar detalle mercancía</button>
                 </div>
             </div>
         </form>
     </div>
-    <div class="row" *ngIf="nuevaNotificacion && pagenuevaNotificacion">
+    <div class="row" *ngIf="nuevaNotificacion && pagenuevaNotificacion && !deleteMessageExportacion">
         <div class="col-12" *ngIf="nuevaNotificacion">
             <lib-notificaciones [notificacionInput]="nuevaNotificacion" *ngIf="nuevaNotificacion && !eliminarDatosTablaNicoExp"></lib-notificaciones>
         </div>
     </div>
+       @if(nuevaNotificacion && deleteMessageExportacion){
+        <div class="row">
+            <div class="col-12" *ngIf="nuevaNotificacion && deleteMessageExportacion">
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimentoDatoss($event)"></lib-notificaciones>
+    </div>
+    </div>
+    }
 </div>
 
 <div class="modal fade" id="mercanciaImportacionModal" aria-labelledby="mercanciaImportacionModal" aria-hidden="true" #mercanciaImportacionModal>
@@ -194,6 +201,7 @@
     @if(nuevaNotificacion && eliminarDatosTablaNicoExp){
     <lib-notificaciones [notificacionInput]="nuevaNotificacion"></lib-notificaciones>
     }
+   
 </div>
 
 <div class="modal fade" id="mercanciaExportacionModal" tabindex="-1" aria-labelledby="mercanciaExportacionModal" aria-hidden="true" data-bs-backdrop="static" #mercanciaExportacionModal>
@@ -215,7 +223,7 @@
                         </div>
                         <div class="col-12 mt-5">
                             <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
-                                <app-catalogo-select [label]="'Nico'" [catalogo]="nico" formControlName="nicos" [required]="true" [placeholder]="'Selecciona un valor'" name="nicos" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                                <app-catalogo-select [label]="'Nico *'" [catalogo]="nico" formControlName="nicos" [placeholder]="'Selecciona un valor'" name="nicos" [isDisabled]="esFormularioSoloLectura" (change)="onNicoChange()"></app-catalogo-select>
                             </div>
                             <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
                                 <label for="description-nico">Descripción Nico:</label>
@@ -223,32 +231,32 @@
                             </div>
                         </div>
                         <div class="col-12 container text-end mt-5">
-                            <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar Nico</button>
+                            <button class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="agregarNicoExportacion()">Agregar Nico</button>
                         </div>
                         <div class="row  mt-5">
                             <h6>Nico</h6>
                             <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
-                                <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla" [datos]="nicoTablaDato" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+                                <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla" [datos]="nicoTablaDato" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" (listaDeFilaSeleccionada)="onNicoSeleccionado($event)"></app-tabla-dinamica>
                             </div>
                             <div class="container text-start mt-5">
-                                <button class="btn btn-danger me-2">Eliminar Nico</button>
+                                <button class="btn btn-danger me-2" (click)="eliminarNicoExportacion()">Eliminar Nico</button>
                             </div>
                         </div>
                     </div>
 
                 </form>
                 <footer class="footer d-flex py-5 gap-3 justify-content-end">
-                    <button type="button" class="btn btn-primary">
+                    <button type="button" class="btn btn-primary" (click)="guardarMercanciaExportacion()" [disabled]="esFormularioSoloLectura">
                         Guardar
                     </button>
-                    <button type="button" class="btn btn-danger">
+                    <button type="button" class="btn btn-danger" (click)="cerrarModalExportacion()" [disabled]="esFormularioSoloLectura">
                         Cancelar
                     </button>
                 </footer>
             </div>
-            <!-- @if(nuevaNotificacion){
+            @if(nuevaNotificacion && exportacionFormNotificacion){
             <lib-notificaciones [notificacionInput]="nuevaNotificacion"></lib-notificaciones>
-            } -->
+            }
         </div>
     </div>
 </div>

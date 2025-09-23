@@ -390,6 +390,8 @@ export interface immexInfo {
   productoDescExportacions?:string;
   /** id por periodo # */
   id?:number;
+
+  nicosTable?:NicoInfo[];
 }
 
 /**
@@ -553,7 +555,8 @@ export interface fraccionInfo {
   descripcionTigie?: string;   
   fraccionExportacion?: string;      
   descripcionComercialExport?: string;
-  nicos?:Array<string>;
+  nicos?:string | number;
+   nicosTable?:NicoInfo[];
   numero:number;
 
 }
