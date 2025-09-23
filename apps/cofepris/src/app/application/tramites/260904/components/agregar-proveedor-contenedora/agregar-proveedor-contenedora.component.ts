@@ -1,6 +1,7 @@
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento-260904.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260904Store } from '../../estados/tramite260904.store';
 
@@ -25,6 +26,17 @@ import { Tramite260904Store } from '../../estados/tramite260904.store';
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent {
+
+
+  /**
+   * Identificador numérico del procedimiento actual.
+   * Se inicializa con el valor constante `ID_PROCEDIMIENTO`.
+   * 
+   * @remarks
+   * Este campo se utiliza para asociar el proveedor con el procedimiento correspondiente
+   * dentro del componente AgregarProveedorContenedora.
+   */
+  idProcedimiento: number = ID_PROCEDIMIENTO;
   /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite260203Store` para gestionar el estado del trámite.

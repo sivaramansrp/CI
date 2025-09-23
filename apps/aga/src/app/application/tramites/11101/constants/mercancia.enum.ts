@@ -18,7 +18,7 @@ export const CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Di
      * - Clave: Obtiene el valor de `Consecutivo` de la fila.
      * - Orden: 1.
      */
-    { encabezado: 'consecutivo', clave: (fila) => fila.consecutivo, orden: 1 },
+    { encabezado: 'Consecutivo', clave: (fila) => fila.consecutivo, orden: 1 },
 
     /**
      * Columna que muestra el estado relacionado con la mercancía.
@@ -26,7 +26,7 @@ export const CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Di
      * - Clave: Obtiene el valor de `estado` de la fila.
      * - Orden: 2.
      */
-    { encabezado: 'estado', clave: (fila) => fila.estado, orden: 2 },
+    { encabezado: 'Estado', clave: (fila) => fila.estado, orden: 2 },
 
     /**
      * Columna que muestra la cantidad de la mercancía.
@@ -34,7 +34,7 @@ export const CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Di
      * - Clave: Obtiene el valor de `Cantidad` de la fila.
      * - Orden: 3.
      */
-    { encabezado: 'cantidad', clave: (fila) => fila.cantidad, orden: 3 },
+    { encabezado: 'Cantidad', clave: (fila) => fila.cantidad, orden: 3 },
 
     /**
      * Columna que muestra si la mercancía forma parte del patrimonio.
@@ -42,7 +42,7 @@ export const CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Di
      * - Clave: Obtiene el valor de `FormaParteDePatrimonio` de la fila.
      * - Orden: 4.
      */
-    { encabezado: 'formaParteDePatrimonio', clave: (fila) => fila.formaParteDePatrimonio, orden: 4 },
+    { encabezado: 'Forma parte de su patrimonio', clave: (fila) => fila.formaParteDePatrimonio, orden: 4 },
 ];
 
 /**

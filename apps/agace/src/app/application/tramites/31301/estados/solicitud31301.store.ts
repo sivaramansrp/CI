@@ -202,7 +202,67 @@ export interface Solicitud31301State {
   alerta2: boolean;
 
   /** Póliza de fianza actual, valor numérico */
-  polizaDeFianzaActual: number;
+  polizaDeFianzaAnterior: number | string;
+
+  /** Número de folio, valor en cadena */
+  numeroFolioAnterior: string;
+
+  /** RFC de la institución, valor en cadena */
+  rfcInstitucionAnterior: string;
+
+  /** Fecha de expedición, valor en cadena */
+  fechaExpedicionAnterior: string;
+
+  /** Fecha de inicio de vigencia no, valor en cadena */
+  fechaInicioVigenciaNoAnterior: string;
+
+  /** Fecha de fin de vigencia no, valor en cadena */
+  fechaFinVigenciaNoAnterior: string;
+
+  /** Fecha de inicio de vigencia, valor en cadena */
+  fechaInicioVigenciaAnterior: string;
+
+  /** Fecha de fin de vigencia, valor en cadena */
+  fechaFinVigenciaAnterior: string;
+
+  /** Importe total, valor en cadena */
+  importeTotalAnterior: string;
+
+  /** Póliza de fianza actual, valor numérico */
+  polizaDeFianzaActual: number | string;
+
+  /** Número de folio, valor en cadena */
+  numeroFolioActual: string;
+
+  /** RFC de la institución, valor en cadena */
+  rfcInstitucionActual: string;
+
+  /** Fecha de expedición, valor en cadena */
+  fechaExpedicionActual: string;
+
+  /** Fecha de inicio de vigencia no, valor en cadena */
+  fechaInicioVigenciaNoActual: string;
+
+  /** Fecha de fin de vigencia no, valor en cadena */
+  fechaFinVigenciaNoActual: string;
+
+  /** Fecha de inicio de vigencia, valor en cadena */
+  fechaInicioVigenciaActual: string;
+
+  /** Fecha de fin de vigencia, valor en cadena */
+  fechaFinVigenciaActual: string;
+
+  /**
+   * Monto en el que se amplía, valor en cadena
+   */
+  montoAmpliaActual: string;
+  /**
+   * Monto garantizado de ampliacion, valor en cadena
+   */
+  montoGarantizadoActual: string;
+
+  /** Póliza de fianza actual, valor numérico */
+  polizaDeFianza: number | string;
 
   /** Número de folio, valor en cadena */
   numeroFolio: string;
@@ -250,16 +310,16 @@ export interface Solicitud31301State {
   apellidoMaterno: string;
 }
 
-/** 
+/**
  * Función que crea el estado inicial de la solicitud.
- * Esta función devuelve un objeto vacío que representa el estado inicial 
+ * Esta función devuelve un objeto vacío que representa el estado inicial
  * de la solicitud, el cual puede ser modificado posteriormente.
- * 
+ *
  * @returns {Solicitud31301State} Estado inicial de la solicitud.
  */
 export function createInitialSolicitudState(): Solicitud31301State {
   return {
-    tipoDeEndoso: 0,
+    tipoDeEndoso: '',
     tipoDeGarantia: 0,
     modalidadDeLaGarantia: 0,
     tipoSector: '',
@@ -325,7 +385,7 @@ export function createInitialSolicitudState(): Solicitud31301State {
     textoGenerico24: 0,
     alerta1: false,
     alerta2: false,
-    polizaDeFianzaActual: 1,
+    polizaDeFianza: '',
     numeroFolio: '',
     rfcInstitucion: '',
     fechaExpedicion: '',
@@ -334,6 +394,25 @@ export function createInitialSolicitudState(): Solicitud31301State {
     fechaInicioVigencia: '',
     fechaFinVigencia: '',
     importeTotal: '',
+    polizaDeFianzaAnterior: '',
+    numeroFolioAnterior: '',
+    rfcInstitucionAnterior: '',
+    fechaExpedicionAnterior: '',
+    fechaInicioVigenciaNoAnterior: '',
+    fechaFinVigenciaNoAnterior: '',
+    fechaInicioVigenciaAnterior: '',
+    fechaFinVigenciaAnterior: '',
+    importeTotalAnterior: '',
+    polizaDeFianzaActual: '',
+    numeroFolioActual: '',
+    rfcInstitucionActual: '',
+    fechaExpedicionActual: '',
+    fechaInicioVigenciaNoActual: '',
+    fechaFinVigenciaNoActual: '',
+    fechaInicioVigenciaActual: '',
+    fechaFinVigenciaActual: '',
+    montoAmpliaActual: '',
+    montoGarantizadoActual: '',
     razonSocialAnterior: '',
     razonSocialActual: '',
     rfc: '',
@@ -687,10 +766,10 @@ export class Solicitud31301Store extends Store<Solicitud31301State> {
   }
 
   /** Actualiza el valor de la póliza de fianza actual en el estado */
-  actualizarPolizaDeFianzaActual(polizaDeFianzaActual: number): void {
+  actualizarpolizaDeFianza(polizaDeFianza: number | string): void {
     this.update((state) => ({
       ...state,
-      polizaDeFianzaActual,
+      polizaDeFianza,
     }));
   }
 
@@ -756,6 +835,111 @@ export class Solicitud31301Store extends Store<Solicitud31301State> {
       ...state,
       importeTotal,
     }));
+  }
+
+  /** Actualiza la póliza de fianza anterior en el estado */
+  actualizarPolizaDeFianzaAnterior(
+    polizaDeFianzaAnterior: number | string
+  ): void {
+    this.update((state) => ({ ...state, polizaDeFianzaAnterior }));
+  }
+
+  /** Actualiza el número de folio anterior en el estado */
+  actualizarNumeroFolioAnterior(numeroFolioAnterior: string): void {
+    this.update((state) => ({ ...state, numeroFolioAnterior }));
+  }
+
+  /** Actualiza el RFC de la institución anterior en el estado */
+  actualizarRfcInstitucionAnterior(rfcInstitucionAnterior: string): void {
+    this.update((state) => ({ ...state, rfcInstitucionAnterior }));
+  }
+
+  /** Actualiza la fecha de expedición anterior en el estado */
+  actualizarFechaExpedicionAnterior(fechaExpedicionAnterior: string): void {
+    this.update((state) => ({ ...state, fechaExpedicionAnterior }));
+  }
+
+  /** Actualiza la fecha de inicio de vigencia no anterior en el estado */
+  actualizarFechaInicioVigenciaNoAnterior(
+    fechaInicioVigenciaNoAnterior: string
+  ): void {
+    this.update((state) => ({ ...state, fechaInicioVigenciaNoAnterior }));
+  }
+
+  /** Actualiza la fecha de fin de vigencia no anterior en el estado */
+  actualizarFechaFinVigenciaNoAnterior(
+    fechaFinVigenciaNoAnterior: string
+  ): void {
+    this.update((state) => ({ ...state, fechaFinVigenciaNoAnterior }));
+  }
+
+  /** Actualiza la fecha de inicio de vigencia anterior en el estado */
+  actualizarFechaInicioVigenciaAnterior(
+    fechaInicioVigenciaAnterior: string
+  ): void {
+    this.update((state) => ({ ...state, fechaInicioVigenciaAnterior }));
+  }
+
+  /** Actualiza la fecha de fin de vigencia anterior en el estado */
+  actualizarFechaFinVigenciaAnterior(fechaFinVigenciaAnterior: string): void {
+    this.update((state) => ({ ...state, fechaFinVigenciaAnterior }));
+  }
+
+  /** Actualiza el importe total anterior en el estado */
+  actualizarImporteTotalAnterior(importeTotalAnterior: string): void {
+    this.update((state) => ({ ...state, importeTotalAnterior }));
+  }
+
+  /** Actualiza la póliza de fianza actual en el estado */
+  actualizarPolizaDeFianzaActual(polizaDeFianzaActual: number | string): void {
+    this.update((state) => ({ ...state, polizaDeFianzaActual }));
+  }
+
+  /** Actualiza el número de folio actual en el estado */
+  actualizarNumeroFolioActual(numeroFolioActual: string): void {
+    this.update((state) => ({ ...state, numeroFolioActual }));
+  }
+
+  /** Actualiza el RFC de la institución actual en el estado */
+  actualizarRfcInstitucionActual(rfcInstitucionActual: string): void {
+    this.update((state) => ({ ...state, rfcInstitucionActual }));
+  }
+
+  /** Actualiza la fecha de expedición actual en el estado */
+  actualizarFechaExpedicionActual(fechaExpedicionActual: string): void {
+    this.update((state) => ({ ...state, fechaExpedicionActual }));
+  }
+
+  /** Actualiza la fecha de inicio de vigencia no actual en el estado */
+  actualizarFechaInicioVigenciaNoActual(
+    fechaInicioVigenciaNoActual: string
+  ): void {
+    this.update((state) => ({ ...state, fechaInicioVigenciaNoActual }));
+  }
+
+  /** Actualiza la fecha de fin de vigencia no actual en el estado */
+  actualizarFechaFinVigenciaNoActual(fechaFinVigenciaNoActual: string): void {
+    this.update((state) => ({ ...state, fechaFinVigenciaNoActual }));
+  }
+
+  /** Actualiza la fecha de inicio de vigencia actual en el estado */
+  actualizarFechaInicioVigenciaActual(fechaInicioVigenciaActual: string): void {
+    this.update((state) => ({ ...state, fechaInicioVigenciaActual }));
+  }
+
+  /** Actualiza la fecha de fin de vigencia actual en el estado */
+  actualizarFechaFinVigenciaActual(fechaFinVigenciaActual: string): void {
+    this.update((state) => ({ ...state, fechaFinVigenciaActual }));
+  }
+
+  /** Actualiza el monto de ampliación actual en el estado */
+  actualizarMontoAmpliaActual(montoAmpliaActual: string): void {
+    this.update((state) => ({ ...state, montoAmpliaActual }));
+  }
+
+  /** Actualiza el monto garantizado actual en el estado */
+  actualizarMontoGarantizadoActual(montoGarantizadoActual: string): void {
+    this.update((state) => ({ ...state, montoGarantizadoActual }));
   }
 
   /** Actualiza la razón social anterior en el estado */
