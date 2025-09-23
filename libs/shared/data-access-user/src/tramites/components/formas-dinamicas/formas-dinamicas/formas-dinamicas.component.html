@@ -36,6 +36,7 @@
                           [required]="item.esRequerido ?? false"
                           [readonly]="item.soloLectura"
                           [ngClass]="esValido(item.campo) ? 'required' : ''"
+                          [attr.maxlength]="item.maxlength"
                           (change)="eventoDeCambioDeValor($event, item.campo)"
                         />
                         
@@ -74,6 +75,7 @@
                           [required]="item.esRequerido ?? false"
                           [readonly]="item.soloLectura"
                           [ngClass]="esValido(item.campo) ? 'required' : ''"
+                          [attr.maxlength]="item.maxlength"
                           (change)="eventoDeCambioDeValor($event, item.campo)"
                         />
                         <validadores-de-formularios 

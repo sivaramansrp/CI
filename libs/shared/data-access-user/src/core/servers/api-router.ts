@@ -35,7 +35,7 @@ export const AUTH_ROUTE = {
  * @param procedureId - ID del procedimiento del trámite
  * @returns URL completa para el endpoint de inicialización
  */
-export const CONSTRUIR_ENDPOINT_INICIAR = (procedureId: string): string => { return `${COMUN_URL.BASE_URL}sat-t${procedureId}/registro-solicitud/iniciar` }
+export const CONSTRUIR_ENDPOINT_INICIAR = (procedureId: string): string => { return `${COMUN_URL.BASE_URL}sat-t${procedureId}/solicitud/iniciar` }
 
 
 

@@ -6,7 +6,7 @@
  * @description Este componente es responsable de manejar el flujo de pasos para el registro de solicitud IMMEX.
  * Incluye la lógica para la navegación entre pasos y la obtención de títulos.
  */
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/immex-registro-de-solicitud-modality.enums';
@@ -184,6 +184,31 @@ export class ImmexRegistroSolicitudModalityComponent {
   };
 
   /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+  /**
+   * Evento que se emite para regresar a la sección de carga de documentos.
+   * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
+   */
+  regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+
+  /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+
+  cargaEnProgreso: boolean = true;
+
+  /**
    * @method getValorIndice
    * @description Método principal para manejar la navegación entre pasos del asistente.
    * Recibe un objeto AccionBoton que contiene la acción a realizar y el índice del paso
@@ -228,5 +253,60 @@ export class ImmexRegistroSolicitudModalityComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
   }
 }

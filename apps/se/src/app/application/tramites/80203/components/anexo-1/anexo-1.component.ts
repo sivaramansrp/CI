@@ -682,12 +682,11 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerIngresoSelectList(): void {
-    const CLAVE_FRACCION = '72162101'; // Unused variable, removed to fix lint error
+    const CLAVE_FRACCION = '72162101';
     this.catalogoService.nicosCatalogo(this.tramiteId, CLAVE_FRACCION)
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((datos) => {
-        // Transform the response to add nicoDescription
         const TRANSFORMED_DATOS = {
           ...datos,
           datos: (datos.datos ?? []).map((item: Catalogo) => ({
