@@ -1,11 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoTresComponent } from './paso-tres.component';
-import { FirmaElectronicaComponent, TramiteFolioService, TramiteStore } from '@ng-mf/data-access-user';
+import {
+  FirmaElectronicaComponent,
+  TramiteFolioService,
+  TramiteStore,
+} from '@ng-mf/data-access-user';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA, InjectionToken } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ToastrService } from 'ngx-toastr';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { FormBuilder } from '@angular/forms';
 
 describe('PasoTresComponent', () => {
@@ -17,30 +21,35 @@ describe('PasoTresComponent', () => {
   let mockToastr: any;
   const ToastConfig = new InjectionToken<any>('ToastConfig');
   beforeEach(async () => {
-  routerMock = {
+    routerMock = {
       navigate: jest.fn(),
     } as unknown as jest.Mocked<Router>;
-      tramiteFolioServiceMock = {
-      obtenerTramite: jest.fn().mockReturnValue(of({ data: { folio: '123' } }))
+    tramiteFolioServiceMock = {
+      obtenerTramite: jest.fn().mockReturnValue(of({ data: { folio: '123' } })),
     };
     tramiteStoreMock = {
-      establecerTramite: jest.fn()
+      establecerTramite: jest.fn(),
     };
     mockToastr = {
       error: jest.fn(),
-      success: jest.fn()
+      success: jest.fn(),
     };
     await TestBed.configureTestingModule({
-      imports: [PasoTresComponent, FirmaElectronicaComponent,HttpClientTestingModule],
+      imports: [
+        PasoTresComponent,
+        FirmaElectronicaComponent,
+        HttpClientTestingModule,
+        ToastrModule.forRoot(),
+      ],
       providers: [
+        ToastrService,
         { provide: Router, useValue: routerMock },
         { provide: TramiteFolioService, useValue: tramiteFolioServiceMock },
         { provide: TramiteStore, useValue: tramiteStoreMock },
-        { provide: ToastrService, useValue: mockToastr },
         { provide: ToastConfig, useValue: {} },
-        FormBuilder
+        FormBuilder,
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
@@ -59,13 +68,18 @@ describe('PasoTresComponent', () => {
   });
 
   it('should not call TramiteFolioService if FIRMA is empty', () => {
-    const spyObtenerTramite = jest.spyOn(tramiteFolioServiceMock, 'obtenerTramite');
+    const spyObtenerTramite = jest.spyOn(
+      tramiteFolioServiceMock,
+      'obtenerTramite'
+    );
     component.obtieneFirma('');
     expect(spyObtenerTramite).not.toHaveBeenCalled();
   });
 
   it('should handle error in obtieneFirma observable', () => {
-    tramiteFolioServiceMock.obtenerTramite.mockReturnValueOnce(throwError(() => new Error('error')));
+    tramiteFolioServiceMock.obtenerTramite.mockReturnValueOnce(
+      throwError(() => new Error('error'))
+    );
     expect(() => component.obtieneFirma('firma-digital')).not.toThrow();
   });
 

@@ -119,7 +119,16 @@
           <div class="col-md-4">
             <div>
               <label class="form-label" for="aduana">Aduana</label>
-              <span class="require form-label" [ngClass]="solicitudFormulario.get('datosPedimento.aduana')?.invalid ? 'text-danger':''" id="aduana">*</span>
+              <span
+                class="require form-label"
+                [ngClass]="
+                  solicitudFormulario.get('datosPedimento.aduana')?.invalid
+                    ? 'text-danger'
+                    : ''
+                "
+                id="aduana"
+                >*</span
+              >
               <label class="form-label" for="aduana">:</label>
             </div>
             <div>
@@ -135,7 +144,8 @@
                   setValoresStore(datosPedimento, 'aduana', 'setAduana')
                 "
               />
-              <span class="text-danger"
+              <span
+                class="text-danger"
                 *ngIf="(solicitudFormulario.get('datosPedimento.aduana')?.invalid
                         || solicitudFormulario.get('datosPedimento.aduana')?.errors?.['pattern'])
                         && solicitudFormulario.get('datosPedimento.aduana')?.touched"
@@ -147,7 +157,16 @@
           <div class="col-md-4">
             <div>
               <label class="form-label" for="patente">Patente</label>
-              <span class="require form-label" [ngClass]="solicitudFormulario.get('datosPedimento.patente')?.invalid ? 'text-danger':''" id="patente">*</span>
+              <span
+                class="require form-label"
+                [ngClass]="
+                  solicitudFormulario.get('datosPedimento.patente')?.invalid
+                    ? 'text-danger'
+                    : ''
+                "
+                id="patente"
+                >*</span
+              >
               <label class="form-label" for="patente">:</label>
             </div>
             <div>
@@ -163,7 +182,8 @@
                   setValoresStore(datosPedimento, 'patente', 'setPatente')
                 "
               />
-              <span class="text-danger"
+              <span
+                class="text-danger"
                 *ngIf="(solicitudFormulario.get('datosPedimento.patente')?.invalid
                         || solicitudFormulario.get('datosPedimento.patente')?.errors?.['pattern'])
                         && solicitudFormulario.get('datosPedimento.patente')?.touched"
@@ -175,7 +195,16 @@
           <div class="col-md-4">
             <div>
               <label class="form-label" for="pedimento">Pedimento</label>
-              <span class="require form-label" [ngClass]="solicitudFormulario.get('datosPedimento.pedimento')?.invalid ? 'text-danger':''" id="pedimento">*</span>
+              <span
+                class="require form-label"
+                [ngClass]="
+                  solicitudFormulario.get('datosPedimento.pedimento')?.invalid
+                    ? 'text-danger'
+                    : ''
+                "
+                id="pedimento"
+                >*</span
+              >
               <label class="form-label" for="pedimento">:</label>
             </div>
             <div>
@@ -193,7 +222,8 @@
                   setValoresStore(datosPedimento, 'pedimento', 'setPedimento')
                 "
               />
-              <span class="text-danger"
+              <span
+                class="text-danger"
                 *ngIf="(solicitudFormulario.get('datosPedimento.pedimento')?.invalid
                         || solicitudFormulario.get('datosPedimento.pedimento')?.errors?.['pattern'])
                         && solicitudFormulario.get('datosPedimento.pedimento')?.touched"
@@ -202,7 +232,8 @@
               </span>
             </div>
           </div>
-          } @else if(datosPedimento.get('cveTipoDocumento')?.value==='Folio VUCEM'){
+          } @else if(datosPedimento.get('cveTipoDocumento')?.value==='Folio
+          VUCEM'){
           <div>
             <label class="form-label" for="folioImportacionTemporal"
               >Folio de importación temporal</label
@@ -216,8 +247,9 @@
             <input
               id="folioImportacionTemporal"
               name="folioImportacionTemporal"
-              type="number"
-              class="form-control"
+              type="text"
+              max="25"
+              class="form-control no-spinner"
               formControlName="folioImportacionTemporal"
               [ngClass]="
                 isValid(datosPedimento, 'folioImportacionTemporal')
@@ -232,6 +264,23 @@
                 )
               "
             />
+            @if(solicitudFormulario.get('datosPedimento.folioImportacionTemporal')?.invalid
+            &&
+            solicitudFormulario.get('datosPedimento.folioImportacionTemporal')?.touched){
+            <span class="text-danger">Este campo es obligatorio.</span>
+            }@else if(solicitudFormulario.get(
+            'datosPedimento.folioImportacionTemporal' )?.errors?.['maxlength']
+            && solicitudFormulario.get(
+            'datosPedimento.folioImportacionTemporal' )?.touched){
+            <span class="text-danger">El folio debe de ser de 25 dígitos.</span>
+            }@else if(solicitudFormulario.get(
+            'datosPedimento.folioImportacionTemporal' )?.errors?.['pattern'] &&
+            solicitudFormulario.get( 'datosPedimento.folioImportacionTemporal'
+            )?.touched){
+            <span class="text-danger"
+              >El folio solicitado no cuenta con coincidencias</span
+            >
+            }
           </div>
           } @else if(datosPedimento.get('cveTipoDocumento')?.value==='Formato
           oficial'){
@@ -246,7 +295,8 @@
             <input
               id="folioFormatoOficial"
               name="folioFormatoOficial"
-              type="number"
+              type="text"
+              maxlength="25"
               class="form-control"
               formControlName="folioFormatoOficial"
               [ngClass]="
@@ -260,13 +310,18 @@
                 )
               "
             />
+            @if(solicitudFormulario.get('datosPedimento.folioFormatoOficial')?.invalid
+            &&
+            solicitudFormulario.get('datosPedimento.folioFormatoOficial')?.touched){
+            <span class="text-danger">Este campo es obligatorio.</span>
+            }
           </div>
           }
         </div>
         <div class="col-md-2">
           @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato
           oficial') {
-          <button type="button" class="btn btn-primary ms-3">Validar</button>
+          <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura">Validar</button>
           }
         </div>
         <div class="col-md-5">
@@ -297,7 +352,7 @@
           <div class="col-md-7">
             <div>
               <label class="form-label" for="folioOficialProrroga"
-                >Folio oficial prórroga</label
+                >Folio oficial prórroga:</label
               >
             </div>
             <div>
@@ -325,16 +380,14 @@
           </div>
         </div>
       </div>
-      <!-- @if (this.datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM')
-      { -->
       <div class="row">
         <div class="col-md-5">
           <div class="form-group datepicker-group">
             <input-fecha
               [datos]="fechaImportacion"
-              [icono]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? false: true"
-              [isDisabled]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? true: false"
-              [setFecha]="datosPedimento.get('fechaImportacionTemporal')?.value"
+              [icono]="datosPedimento?.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? false : true"
+              [isDisabled]="datosPedimento?.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? true : soloLectura"
+              [setFecha]="datosPedimento?.get('fechaImportacionTemporal')?.value"
               (valorCambiado)="cambioImportacionTemporal($event)"
             ></input-fecha>
           </div>
@@ -344,15 +397,14 @@
           <div class="form-group datepicker-group">
             <input-fecha
               [datos]="fechaVencimiento"
-              [icono]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? false: true"
-              [isDisabled]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? true: false"
+              [icono]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? false : true"
+              [isDisabled]="datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM' ? true : soloLectura"
               [setFecha]="datosPedimento.get('fechaVencimiento')?.value"
               (valorCambiado)="cambioVencimiento($event)"
             ></input-fecha>
           </div>
         </div>
       </div>
-      <!-- } -->
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
@@ -391,8 +443,9 @@
               id="marca"
               name="marca"
               type="text"
+              maxlength="100"
               class="form-control"
-              [ngClass]="isValid(datosPedimento, 'marca') ? 'required' : ''"
+              formControlName="marca"
               (change)="setValoresStore(datosPedimento, 'marca', 'setMarca')"
             />
           </div>
@@ -406,9 +459,9 @@
               id="modelo"
               name="modelo"
               type="text"
+              maxlength="100"
               class="form-control"
               formControlName="modelo"
-              [ngClass]="isValid(datosPedimento, 'modelo') ? 'required' : ''"
               (change)="setValoresStore(datosPedimento, 'modelo', 'setModelo')"
             />
           </div>
@@ -425,11 +478,9 @@
               id="numeroSerie"
               name="numeroSerie"
               type="text"
+              maxlength="100"
               class="form-control"
               formControlName="numeroSerie"
-              [ngClass]="
-                isValid(datosPedimento, 'numeroSerie') ? 'required' : ''
-              "
               (change)="
                 setValoresStore(datosPedimento, 'numeroSerie', 'setNumeroSerie')
               "
@@ -445,9 +496,9 @@
               id="tipo"
               name="tipo"
               type="text"
+              maxlength="80"
               class="form-control"
               formControlName="tipo"
-              [ngClass]="isValid(datosPedimento, 'tipo') ? 'required' : ''"
               (change)="setValoresStore(datosPedimento, 'tipo', 'setTipo')"
             />
           </div>
@@ -463,18 +514,40 @@
         (listaDeFilaSeleccionada)="filaSeleccionada($event)"
         [disableSeleccionTablaCheckBox]="soloLectura ? true : false"
       ></app-tabla-dinamica>
-      <div class="d-flex justify-content-end">
+      <div class="col-md-6">
+        <h6>
+          Total de mercancías<span class="text-danger">*</span>:
+          {{ tablaDeDatos.datos.length }}
+        </h6>
+      </div>
+      <div class="col-md-6 d-flex justify-content-end">
         <button
           type="button"
+          [disabled]="soloLectura"
           class="btn btn-primary ms-3"
           (click)="abiertoMercancia()"
         >
           Agregar
         </button>
-        <button type="button" class="btn btn-primary ms-3">Modificar</button>
-        <button type="button" class="btn btn-danger ms-3">Consultar</button>
         <button
           type="button"
+          class="btn btn-primary ms-3"
+          [disabled]="soloLectura"
+          (click)="modificarReemplazadas()"
+        >
+          Modificar
+        </button>
+        <button
+          type="button"
+          [disabled]="soloLectura"
+          class="btn btn-danger ms-3"
+          (click)="consultarReemplazadas()"
+        >
+          Consultar
+        </button>
+        <button
+          type="button"
+          [disabled]="soloLectura"
           class="btn btn-danger ms-3"
           (click)="eliminarMercancia()"
         >
@@ -512,7 +585,12 @@
         <div class="col-md-3">
           <div>
             <label class="form-label" for="guiaMaster">Guía master</label>
-            <span class="require form-label" id="guiaMaster">*</span>
+            <span
+              [ngClass]="{
+                'text-danger': isValid(datosMedioTransporte, 'guiaMaster')
+              }"
+              >*</span
+            >
             <label class="form-label" for="guiaMaster">:</label>
           </div>
           <div>
@@ -520,8 +598,10 @@
               id="guiaMaster"
               name="guiaMaster"
               type="text"
+              maxlength="10"
               class="form-control"
               formControlName="guiaMaster"
+              (input)="cambiarGuiaMaster($event)"
               [ngClass]="
                 isValid(datosMedioTransporte, 'guiaMaster') ? 'required' : ''
               "
@@ -533,6 +613,14 @@
                 )
               "
             />
+            <div
+              *ngIf="
+                datosMedioTransporte.get('guiaMaster')?.invalid &&
+                datosMedioTransporte.get('guiaMaster')?.touched
+              "
+            >
+              <span class="text-danger">Este campo es obligatorio</span>
+            </div>
           </div>
         </div>
         } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value ===
@@ -540,7 +628,12 @@
         <div class="col-md-3">
           <div>
             <label class="form-label" for="guiaBl">Guía BL</label>
-            <span class="require form-label" id="guiaBl">*</span>
+            <span
+              [ngClass]="{
+                'text-danger': isValid(datosMedioTransporte, 'guiaBl')
+              }"
+              >*</span
+            >
             <label class="form-label" for="guiaBl">:</label>
           </div>
           <div>
@@ -548,8 +641,10 @@
               id="guiaBl"
               name="guiaBl"
               type="text"
+              maxlength="20"
               class="form-control"
               formControlName="guiaBl"
+              (input)="cambiarGuiaBL($event)"
               [ngClass]="
                 isValid(datosMedioTransporte, 'guiaBl') ? 'required' : ''
               "
@@ -557,6 +652,14 @@
                 setValoresStore(datosMedioTransporte, 'guiaBl', 'setGuiaBl')
               "
             />
+            <div
+              *ngIf="
+                datosMedioTransporte.get('guiaBl')?.invalid &&
+                datosMedioTransporte.get('guiaBl')?.touched
+              "
+            >
+              <span class="text-danger">Este campo es obligatorio</span>
+            </div>
           </div>
         </div>
         } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value ===
@@ -564,7 +667,12 @@
         <div class="col-md-3">
           <div>
             <label class="form-label" for="numeroBl">Número BL</label>
-            <span class="require form-label" id="numeroBl">*</span>
+            <span
+              [ngClass]="{
+                'text-danger': isValid(datosMedioTransporte, 'numeroBl')
+              }"
+              >*</span
+            >
             <label class="form-label" for="numeroBl">:</label>
           </div>
           <div>
@@ -573,6 +681,8 @@
               name="numeroBl"
               type="text"
               class="form-control"
+              maxlength="20"
+              (input)="cambiarNumeroBL($event)"
               formControlName="numeroBl"
               [ngClass]="
                 isValid(datosMedioTransporte, 'numeroBl') ? 'required' : ''
@@ -581,6 +691,14 @@
                 setValoresStore(datosMedioTransporte, 'numeroBl', 'setNumeroBl')
               "
             />
+            <div
+              *ngIf="
+                datosMedioTransporte.get('numeroBl')?.invalid &&
+                datosMedioTransporte.get('numeroBl')?.touched
+              "
+            >
+              <span class="text-danger">Este campo es obligatorio</span>
+            </div>
           </div>
         </div>
         } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value ===
@@ -597,7 +715,9 @@
               id="rfcEmpresaTransportista"
               name="rfcEmpresaTransportista"
               type="text"
+              maxlength="12"
               class="form-control"
+              (input)="cambiarRFCEmpresaTransportista($event)"
               formControlName="rfcEmpresaTransportista"
               [ngClass]="
                 isValid(datosMedioTransporte, 'rfcEmpresaTransportista')
@@ -624,6 +744,7 @@
               id="cartaPorte"
               name="cartaPorte"
               type="text"
+              maxlength="20"
               class="form-control"
               formControlName="cartaPorte"
               [ngClass]="
@@ -642,13 +763,13 @@
         } @if(datosMedioTransporte.get('cveMedioTrasporte')?.value !==
         'Carretero'){
         <div class="col-md-2 mt-5">
-          <button type="button" class="btn btn-primary ms-3">Validar</button>
+          <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura">Validar</button>
         </div>
 
         <div class="col-md-4">
           <div>
             <label class="form-label" for="estadoMedioTransporte"
-              >Estado del medio de transporte</label
+              >Estado del medio de transporte:</label
             >
           </div>
           <div>
@@ -711,8 +832,10 @@
               id="guiaHouse"
               name="guiaHouse"
               type="text"
+              maxlength="10"
               class="form-control"
               formControlName="guiaHouse"
+              (input)="cambiarGuiaHouse($event)"
               [ngClass]="
                 isValid(datosMedioTransporte, 'guiaHouse') ? 'required' : ''
               "
@@ -736,7 +859,9 @@
               id="numeroBuque"
               name="numeroBuque"
               type="text"
+              maxlength="20"
               class="form-control"
+              (input)="cambiarNumeroDeBuque($event)"
               formControlName="numeroBuque"
               [ngClass]="
                 isValid(datosMedioTransporte, 'numeroBuque') ? 'required' : ''
@@ -763,7 +888,9 @@
               id="numeroEquipo"
               name="numeroEquipo"
               type="text"
+              maxlength="20"
               class="form-control"
+              (input)="cambiarNumeroEquipo($event)"
               formControlName="numeroEquipo"
               [ngClass]="
                 isValid(datosMedioTransporte, 'numeroEquipo') ? 'required' : ''
@@ -782,6 +909,7 @@
           <div class="form-group datepicker-group">
             <input-fecha
               [datos]="fechaCartaPorte"
+              [isDisabled]="soloLectura"
               [setFecha]="datosMedioTransporte.get('fechaCartaPorte')?.value"
               (valorCambiado)="cambioFechaCartaPorte($event)"
             ></input-fecha>
@@ -800,6 +928,7 @@
               id="tipContenedor"
               name="tipContenedor"
               type="text"
+              maxlength="10"
               class="form-control"
               formControlName="tipContenedor"
               [ngClass]="
@@ -831,6 +960,7 @@
               name="tranporteMarca"
               type="text"
               class="form-control"
+              maxlength="20"
               formControlName="tranporteMarca"
               [ngClass]="
                 isValid(datosMedioTransporte, 'tranporteMarca')
@@ -858,6 +988,7 @@
               id="tranporteModelo"
               name="tranporteModelo"
               type="text"
+              maxlength="20"
               class="form-control"
               formControlName="tranporteModelo"
               [ngClass]="
@@ -887,6 +1018,7 @@
               name="tranportePlaca"
               type="text"
               class="form-control"
+              maxlength="10"
               formControlName="tranportePlaca"
               [ngClass]="
                 isValid(datosMedioTransporte, 'tranportePlaca')
@@ -914,6 +1046,8 @@
               id="observaciones"
               name="observaciones"
               rows="5"
+              maxlength="500"
+              formControlName="observaciones"
               class="form-control textarea"
               [ngClass]="
                 isValid(datosMedioTransporte, 'observaciones') ? 'required' : ''
@@ -944,24 +1078,36 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="mercanciaModalLabel">
-          Agregar mercancías de la solicitud
+          {{ titleMercancia }} mercancías de la solicitud
         </h5>
       </div>
       <div class="modal-body">
         <form [formGroup]="mercanciaFormulario">
           <ng-titulo titulo="Partes o refacciones reemplazadas." />
+          @if(mercanciaFormulario.invalid && mercanciaFormulario.touched){
+          <p class="text-danger">
+            <i>Debe capturar todos los datos marcados como obligatorios</i>
+          </p>
+          }
           <ng-container>
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="modalDescMercancia" class="form-label"
-                    >Descripción de la mercancía</label
+                    >Descripción de la mercancía<span
+                      [ngClass]="
+                        mercanciaFormulario.get('modalDescMercancia')?.invalid
+                          ? 'text-danger'
+                          : ''
+                      "
+                      >*</span
+                    >:</label
                   >
-                  <label for="modalDescMercancia">:</label>
                   <textarea
                     id="modalDescMercancia"
                     name="modalDescMercancia"
                     rows="5"
+                    maxlength="4000"
                     class="form-control textarea"
                     formControlName="modalDescMercancia"
                     [ngClass]="
@@ -982,13 +1128,20 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="espeMercancia" class="form-label"
-                    >Especificación técnica o comercial</label
+                    >Especificación técnica o comercial<span
+                      [ngClass]="
+                        mercanciaFormulario.get('espeMercancia')?.invalid
+                          ? 'text-danger'
+                          : ''
+                      "
+                      >*</span
+                    >:</label
                   >
-                  <label for="espeMercancia">:</label>
                   <textarea
                     id="espeMercancia"
                     name="espeMercancia"
                     rows="5"
+                    maxlength="4000"
                     class="form-control textarea"
                     formControlName="espeMercancia"
                     [ngClass]="
@@ -1019,7 +1172,7 @@
                     name="marcaMercancia"
                     type="text"
                     class="form-control"
-                    maxlength="250"
+                    maxlength="100"
                     formControlName="marcaMercancia"
                     [ngClass]="
                       isValid(mercanciaFormulario, 'marcaMercancia')
@@ -1048,7 +1201,7 @@
                     name="modeloMercancia"
                     type="text"
                     class="form-control"
-                    maxlength="250"
+                    maxlength="100"
                     formControlName="modeloMercancia"
                     [ngClass]="
                       isValid(mercanciaFormulario, 'modeloMercancia')
@@ -1080,7 +1233,7 @@
                     name="numSerieMercancia"
                     type="text"
                     class="form-control"
-                    maxlength="250"
+                    maxlength="100"
                     formControlName="numSerieMercancia"
                     [ngClass]="
                       isValid(mercanciaFormulario, 'numSerieMercancia')
@@ -1109,7 +1262,7 @@
                     name="numParteMercancia"
                     type="text"
                     class="form-control"
-                    maxlength="250"
+                    maxlength="100"
                     formControlName="numParteMercancia"
                     [ngClass]="
                       isValid(mercanciaFormulario, 'numParteMercancia')
@@ -1138,7 +1291,7 @@
                     name="tipoMercancia"
                     type="text"
                     class="form-control"
-                    maxlength="250"
+                    maxlength="80"
                     formControlName="tipoMercancia"
                     [ngClass]="
                       isValid(mercanciaFormulario, 'tipoMercancia')
@@ -1160,18 +1313,13 @@
         </form>
       </div>
       <div class="modal-footer custom-footer mt-4 justify-content-end">
-        <button
-          type="button"
-          class="btn btn-danger"
-          data-bs-dismiss="modal"
-          #closeMercancia
-        >
+        <button type="button" class="btn btn-danger" (click)="cancelarModel()">
           Cancelar
         </button>
         <button
           type="submit"
           class="btn btn-primary"
-          (click)="agregarMercancia()"
+          (click)="agregarMercancias()"
         >
           Agregar
         </button>
@@ -1179,3 +1327,10 @@
     </div>
   </div>
 </div>
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+  ></lib-notificaciones>
+</section>
+}

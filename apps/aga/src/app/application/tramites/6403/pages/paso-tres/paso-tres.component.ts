@@ -1,6 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FirmaElectronicaComponent, TramiteFolioService, TramiteStore } from '@ng-mf/data-access-user';
 import { ReplaySubject, catchError, map, takeUntil } from 'rxjs';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 
 /**
@@ -11,7 +12,8 @@ import { Router } from '@angular/router';
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
   standalone:true,
-  imports: [FirmaElectronicaComponent]
+  imports: [FirmaElectronicaComponent, ToastrModule],
+  providers:[ToastrService]
 })
 export class PasoTresComponent implements OnDestroy {
 

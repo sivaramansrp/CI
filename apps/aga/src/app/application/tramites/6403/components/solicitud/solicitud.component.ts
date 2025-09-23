@@ -1,28 +1,56 @@
-import { Catalogo, CatalogoLista, SolicitudTabla, SolicitudTablaDatos } from "../../models/retorno-de-partes.model";
 import {
+  Catalogo,
   CatalogoSelectComponent,
   InputFecha,
   InputFechaComponent,
   Notificacion,
+  NotificacionesComponent,
+  REGEX_REEMPLAZAR,
   REG_X,
+  TEXTOS,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-  ValidacionesFormularioService
-} from "@libs/shared/data-access-user/src";
-import { Component, ElementRef, OnDestroy, OnInit,ViewChild} from "@angular/core";
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
+import {
+  CatalogoLista,
+  SolicitudTabla,
+  SolicitudTablaDatos,
+} from '../../models/retorno-de-partes.model';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FECHA_CARTAPORTE, FECHA_DESTINO, FECHA_IMPORTACION, FECHA_VENCIMIENTO, TABLA_DE_DATOS, TEXTOS } from "../../constants/retorno-de-partes.enum";
-import { FormBuilder,FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import { ReplaySubject, map, takeUntil } from "rxjs";
-import { Tramite6403State,Tramite6403Store } from "../../estados/tramite6403.store";
-import { CommonModule } from "@angular/common";
+import {
+  FECHA_CARTAPORTE,
+  FECHA_DESTINO,
+  FECHA_IMPORTACION,
+  FECHA_VENCIMIENTO,
+  TABLA_DE_DATOS,
+} from '../../constants/retorno-de-partes.enum';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
+import {
+  Tramite6403State,
+  Tramite6403Store,
+} from '../../estados/tramite6403.store';
+import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
-import { RetornoDePartesService } from "../../services/retorno-de-partes.service";
-import { Tramite6403Query } from "../../estados/tramite6403.query";
+import { RetornoDePartesService } from '../../services/retorno-de-partes.service';
+import { Tramite6403Query } from '../../estados/tramite6403.query';
 /**
  * Componente para gestionar el aviso de traslado.
- * 
+ *
  * Este componente permite al usuario capturar, editar y gestionar la información
  * relacionada con el aviso de traslado, incluyendo datos de la empresa, mercancías,
  * Mercancias y otros detalles necesarios para el trámite 6403.
@@ -31,16 +59,27 @@ import { Tramite6403Query } from "../../estados/tramite6403.query";
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, 
-    CatalogoSelectComponent, TablaDinamicaComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    InputFechaComponent,
+    CatalogoSelectComponent,
+    TablaDinamicaComponent,
+    NotificacionesComponent,
+  ],
   standalone: true,
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
-   /**
+  /**
+   * Título del modal para agregar o editar mercancías.
+   */
+  titleMercancia: string = 'Agregar';
+  /**
    * Subject para destruir notificador.
    */
   consultaDatos!: ConsultaioState;
-   /**
+  /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
@@ -48,13 +87,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @property {FormGroup} solicitudFormulario
    * @description Formulario reactivo que contiene los datos del solicitudFormulario en el trámite.
-  */
+   */
   solicitudFormulario!: FormGroup;
 
   /**
    * @property {FormGroup} mercanciaFormulario
    * @description Formulario reactivo que contiene los datos del mercanciaFormulario en el trámite.
-  */
+   */
   mercanciaFormulario!: FormGroup;
 
   /**
@@ -63,14 +102,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
-   /**
+  /**
    * Subject para manejar la destrucción del componente y evitar fugas de memoria.
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * @property {Tramite6403State} tramiteState
    * @description Estado actual del trámite 6403, que contiene toda la información relevante del proceso.
-  */
+   */
   public tramiteState!: Tramite6403State;
 
   /**
@@ -99,7 +138,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @property {Catalogo[]} entidadFederativa
    * @description Lista de entidades federativas cargadas desde un catálogo.
-  */
+   */
   entidadFederativa: Catalogo[] = [];
 
   /**
@@ -146,11 +185,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @property {TablaSeleccion} tablaSeleccion
    * @description Propiedad que representa la tabla de selección utilizada en el componente.
-  */
+   */
   /**
    * @property {string} INPUT
    * @description Cadena de texto utilizada como entrada en el componente.
-   * 
+   *
    * Esta propiedad puede ser utilizada para almacenar valores temporales
    * o como referencia en diferentes métodos del componente.
    */
@@ -171,21 +210,32 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * @property {SolicitudTabla[]} filaSeleccionadaLista
-   * @description Lista de filas seleccionadas en la tabla de avisos. 
+   * @description Lista de filas seleccionadas en la tabla de avisos.
    * Contiene los datos de las filas seleccionadas por el usuario.
-  */
+   */
   filaSeleccionadaLista: SolicitudTabla[] = [];
   /**
    * @property {ElementRef} modalMercancia
    * @description Referencia al elemento del modal de Mercancia en la plantilla HTML.
    * Utilizado para abrir o manipular el modal de Mercancia.
-  */
+   */
   @ViewChild('modalMercancia') modalMercancia!: ElementRef;
+
+  /**
+   * Instancia del componente `Modal`.
+   *
+   * Se utiliza para manipular directamente el modal, por ejemplo
+   * abrirlo, cerrarlo o realizar operaciones relacionadas con
+   * su estado actual.
+   *
+   * @type {Modal}
+   */
+  MODAL_INSTANCE!: Modal;
   /**
    * @property {ElementRef} closeMercancia
    * @description Referencia al botón o elemento que cierra el modal de Mercancia.
    * Utilizado para cerrar el modal de manera programática.
-  */
+   */
   @ViewChild('closeMercancia') public closeMercancia!: ElementRef;
 
   /**
@@ -196,38 +246,32 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente.
-   * 
+   *
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
    * @param {Tramite6403Store} store - Store para gestionar el estado del trámite.
    * @param {Tramite6403Query} tramiteQuery - Query para obtener el estado del trámite.
    * @param {retornoDePartesService} retornoDePartesService - Servicio para obtener datos relacionados con el aviso.
    * @param {ValidacionesFormularioService} validacionesService - Servicio para validar formularios.
-  */
+   */
   constructor(
     public fb: FormBuilder,
     public store: Tramite6403Store,
     public tramiteQuery: Tramite6403Query,
     public retornoDePartesService: RetornoDePartesService,
-    private validacionesService: ValidacionesFormularioService,
-    private consultaioQuery: ConsultaioQuery
+    public validacionesService: ValidacionesFormularioService,
+    public consultaioQuery: ConsultaioQuery
   ) {
-   this.consultaioQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
-          this.soloLectura = this.consultaDatos.readonly;
+          this.soloLectura = seccionState.readonly;
           this.inicializarEstadoFormulario();
         })
       )
-      .subscribe()
-  }
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   * 
-   * Configura los formularios, carga los datos iniciales y suscribe al estado del trámite.
-   */
-  ngOnInit(): void {
+      .subscribe();
+
     this.tramiteQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -236,7 +280,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.inicializarFormulario();
+  }
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   *
+   * Configura los formularios, carga los datos iniciales y suscribe al estado del trámite.
+   */
+  ngOnInit(): void {
     this.cargarFederativa();
     this.cargarAduanas();
     this.cargarAduaneras();
@@ -244,8 +294,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.cargarTipoDeDocumento();
     this.cargarMedioDeTransporte();
     this.cargarPaisDeProcedencia();
-    this.inicializarMercanciaFormulario();
     this.inicializarEstadoFormulario();
+    // this.inicializarMercanciaFormulario();
+    // this.inicializarEstadoFormulario();
   }
 
   /**
@@ -257,6 +308,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
+      this.inicializarMercanciaFormulario();
     }
   }
   /**
@@ -265,19 +317,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
+    this.inicializarMercanciaFormulario();
     if (this.soloLectura) {
-  this.solicitudFormulario.disable();
-  this.mercanciaFormulario.disable();
-} else {
-  this.solicitudFormulario.enable();
-  this.mercanciaFormulario.enable();
-}
+      this.solicitudFormulario?.disable();
+      this.mercanciaFormulario?.disable();
+    } else {
+      this.solicitudFormulario?.enable();
+      this.mercanciaFormulario?.enable();
+    }
   }
 
   /**
    * @method cambioImportacionTemporal
    * @description Método para manejar el cambio de la fecha de importación temporal.
-   * 
+   *
    * - Actualiza el valor del campo `fechaImportacionTemporal` en el formulario `datosPedimento`.
    * - Marca el campo como no modificado (`markAsUntouched`).
    * - Establece el nuevo valor en el store del trámite.
@@ -294,7 +347,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @method cambioVencimiento
    * @description Método para manejar el cambio de la fecha de vencimiento.
-   * 
+   *
    * - Actualiza el valor del campo `fechaVencimiento` en el formulario `datosPedimento`.
    * - Marca el campo como no modificado (`markAsUntouched`).
    * - Establece el nuevo valor en el store del trámite.
@@ -311,7 +364,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @method cambioFechaCartaPorte
    * @description Método para manejar el cambio de la fecha de la carta porte.
-   * 
+   *
    * - Actualiza el valor del campo `fechaCartaPorte` en el formulario `datosPedimento`.
    * - Marca el campo como no modificado (`markAsUntouched`).
    * - Establece el nuevo valor en el store del trámite.
@@ -350,7 +403,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param {string} campo - Nombre del campo dentro del formulario.
    * @param {keyof Tramite6403Store} metodoNombre - Nombre del método del store donde se asignará el valor.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite6403Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite6403Store
+  ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
@@ -366,11 +423,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.retornoDePartesService
       .obtenerAduaneras()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        (datos: CatalogoLista) => {
-          this.aduaneras = datos.datos;
-        }
-      );
+      .subscribe((datos: CatalogoLista) => {
+        this.aduaneras = datos.datos;
+      });
   }
 
   /**
@@ -378,18 +433,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @description Este método se encarga de cargar la lista de aduanas desde el servicio de autorización de importación.
    * Obtiene los datos mediante una suscripción al observable proporcionado por el servicio y los asigna a la propiedad `aduanas`.
    * La suscripción se gestiona utilizando el operador `takeUntil` para evitar fugas de memoria.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   public cargarAduanas(): void {
     this.retornoDePartesService
       .obtenerAduanas()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        (datos: CatalogoLista) => {
-          this.aduanas = datos.datos;
-        }
-      );
+      .subscribe((datos: CatalogoLista) => {
+        this.aduanas = datos.datos;
+      });
   }
 
   /**
@@ -403,11 +456,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.retornoDePartesService
       .obtenerRecintoFiscalizado()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        (datos: CatalogoLista) => {
-          this.recintoFiscalizado = datos.datos;
-        }
-      );
+      .subscribe((datos: CatalogoLista) => {
+        this.recintoFiscalizado = datos.datos;
+      });
   }
 
   /**
@@ -421,11 +472,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.retornoDePartesService
       .obtenerTipoDeDocumento()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        (datos: CatalogoLista) => {
-          this.tipoDeDocumento = datos.datos;
-        }
-      );
+      .subscribe((datos: CatalogoLista) => {
+        this.tipoDeDocumento = datos.datos;
+      });
   }
 
   /**
@@ -433,43 +482,38 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @description Carga los datos del medio de transporte desde el servicio de autorización de importación.
    * Suscribe a los datos obtenidos y los asigna a la propiedad `medioDeTransporte`.
    * Utiliza un observable para manejar la suscripción y asegura la limpieza con `takeUntil`.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   public cargarMedioDeTransporte(): void {
     this.retornoDePartesService
       .obtenerMedioDeTransporte()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        (datos: CatalogoLista) => {
-          this.medioDeTransporte = datos.datos;
-        }
-      );
+      .subscribe((datos: CatalogoLista) => {
+        this.medioDeTransporte = datos.datos;
+      });
   }
 
   /**
    * Carga el país de procedencia desde el servicio de autorización de importación.
-   * 
-   * Este método realiza una solicitud al servicio `retornoDePartesService` 
-   * para obtener el catálogo de países de procedencia. Los datos obtenidos se asignan 
+   *
+   * Este método realiza una solicitud al servicio `retornoDePartesService`
+   * para obtener el catálogo de países de procedencia. Los datos obtenidos se asignan
    * a la propiedad `paisDeProcedencia` del componente.
-   * 
+   *
    * @remarks
    * Utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
-   * 
+   *
    * @see {@link retornoDePartesService.obtenerPaisDeProcedencia}
    */
   public cargarPaisDeProcedencia(): void {
     this.retornoDePartesService
       .obtenerPaisDeProcedencia()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        (datos: CatalogoLista) => {
-          this.paisDeProcedencia = datos.datos;
-        }
-      );
+      .subscribe((datos: CatalogoLista) => {
+        this.paisDeProcedencia = datos.datos;
+      });
   }
-
 
   /**
    * @method cargarFederativa
@@ -482,82 +526,366 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.retornoDePartesService
       .obtenerFederativa()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        (datos: CatalogoLista) => {
-          this.entidadFederativa = datos.datos;
-        }
-      );
+      .subscribe((datos: CatalogoLista) => {
+        this.entidadFederativa = datos.datos;
+      });
   }
 
   /**
    * @method inicializarFormulario
    * @description Método para inicializar el formulario reactivo `solicitudFormulario` con los datos del estado actual del trámite.
-   * 
+   *
    * - Agrupa diferentes secciones del formulario como `datosAduana`, `datosPedimento`, `datosMedioTransporte`, `datosDestinoMercancia` entre otros.
    * - Aplica validaciones específicas a cada campo, como longitud máxima, patrones y campos obligatorios.
    *
    * @returns {void}
    */
   inicializarFormulario(): void {
-  this.solicitudFormulario = this.fb.group({
-    datosAduana: this.fb.group({
-      cveAduana: [{ value: this.tramiteState?.solicitudFormulario?.cveAduana, disabled: this.soloLectura }, [Validators.required]],
-      cveSeccionAduanal: [{ value: this.tramiteState?.solicitudFormulario?.cveSeccionAduanal, disabled: this.soloLectura }],
-      cveRecintoFiscalizado: [{ value: this.tramiteState?.solicitudFormulario?.cveRecintoFiscalizado, disabled: this.soloLectura }],
-    }),
-    datosPedimento: this.fb.group({
-      cveTipoDocumento: [{ value: this.tramiteState?.solicitudFormulario?.cveTipoDocumento, disabled: this.soloLectura }, [Validators.required]],
-      estadoTipoDocumento: [{ value: this.tramiteState?.solicitudFormulario?.estadoTipoDocumento, disabled: true }],
-      aduana: [{ value: this.tramiteState?.solicitudFormulario?.aduana, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]],
-      patente: [{ value: this.tramiteState?.solicitudFormulario?.patente, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]],
-      pedimento: [{ value: this.tramiteState?.solicitudFormulario?.pedimento, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]],
-      folioImportacionTemporal: [{ value: this.tramiteState?.solicitudFormulario?.folioImportacionTemporal, disabled: this.soloLectura }, [Validators.required]],
-      folioFormatoOficial: [{ value: this.tramiteState?.solicitudFormulario?.folioFormatoOficial, disabled: this.soloLectura }, [Validators.required]],
-      checkProrroga: [{ value: this.tramiteState?.solicitudFormulario?.checkProrroga, disabled: this.soloLectura }, [Validators.required]],
-      folioOficialProrroga: [{ value: this.tramiteState?.solicitudFormulario?.folioOficialProrroga, disabled: true }, [Validators.required]],
-      fechaImportacionTemporal: [{ value: this.tramiteState?.solicitudFormulario?.fechaImportacionTemporal, disabled: this.soloLectura }, [Validators.required]],
-      fechaVencimiento: [{ value: this.tramiteState?.solicitudFormulario?.fechaVencimiento, disabled: this.soloLectura }, [Validators.required]],
-      descMercancia: [{ value: this.tramiteState?.solicitudFormulario?.descMercancia, disabled: this.soloLectura }, [Validators.required]],
-      marca: [{ value: this.tramiteState?.solicitudFormulario?.marca, disabled: this.soloLectura }, [Validators.required]],
-      modelo: [{ value: this.tramiteState?.solicitudFormulario?.modelo, disabled: this.soloLectura }, [Validators.required]],
-      numeroSerie: [{ value: this.tramiteState?.solicitudFormulario?.numeroSerie, disabled: this.soloLectura }, [Validators.required]],
-      tipo: [{ value: this.tramiteState?.solicitudFormulario?.tipo, disabled: this.soloLectura }, [Validators.required]],
-    }),
-    datosMedioTransporte: this.fb.group({
-      cveMedioTrasporte: [{ value: this.tramiteState?.solicitudFormulario?.cveMedioTrasporte, disabled: this.soloLectura }, [Validators.required]],
-      guiaMaster: [{ value: this.tramiteState?.solicitudFormulario?.guiaMaster, disabled: this.soloLectura }, [Validators.required]],
-      guiaBl: [{ value: this.tramiteState?.solicitudFormulario?.guiaBl, disabled: this.soloLectura }, [Validators.required]],
-      numeroBl: [{ value: this.tramiteState?.solicitudFormulario?.numeroBl, disabled: this.soloLectura }, [Validators.required]],
-      rfcEmpresaTransportista: [{ value: this.tramiteState?.solicitudFormulario?.rfcEmpresaTransportista, disabled: this.soloLectura }],
-      estadoMedioTransporte: [{ value: this.tramiteState?.solicitudFormulario?.estadoMedioTransporte, disabled: true }],
-      cartaPorte: [{ value: this.tramiteState?.solicitudFormulario?.cartaPorte, disabled: this.soloLectura }, [Validators.required]],
-      cvePaisProcedencia: [{ value: this.tramiteState?.solicitudFormulario?.cvePaisProcedencia, disabled: this.soloLectura }, [Validators.required]],
-      guiaHouse: [{ value: this.tramiteState?.solicitudFormulario?.guiaHouse, disabled: this.soloLectura }],
-      numeroBuque: [{ value: this.tramiteState?.solicitudFormulario?.numeroBuque, disabled: this.soloLectura }],
-      numeroEquipo: [{ value: this.tramiteState?.solicitudFormulario?.numeroEquipo, disabled: this.soloLectura }],
-      fechaCartaPorte: [{ value: this.tramiteState?.solicitudFormulario?.fechaCartaPorte, disabled: this.soloLectura }, [Validators.required]],
-      tipContenedor: [{ value: this.tramiteState?.solicitudFormulario?.tipContenedor, disabled: this.soloLectura }, [Validators.required]],
-      tranporteMarca: [{ value: this.tramiteState?.solicitudFormulario?.tranporteMarca, disabled: this.soloLectura }, [Validators.required]],
-      tranporteModelo: [{ value: this.tramiteState?.solicitudFormulario?.tranporteModelo, disabled: this.soloLectura }, [Validators.required]],
-      tranportePlaca: [{ value: this.tramiteState?.solicitudFormulario?.tranportePlaca, disabled: this.soloLectura }, [Validators.required]],
-      observaciones: [{ value: this.tramiteState?.solicitudFormulario?.observaciones, disabled: this.soloLectura }, [Validators.required]],
-    }),
-    datosDestinoMercancia: this.fb.group({
-      conDestino: [{ value: this.tramiteState?.solicitudFormulario?.conDestino, disabled: this.soloLectura }, [Validators.required]],
-      cveTipoDestino: [{ value: this.tramiteState?.solicitudFormulario?.cveTipoDestino, disabled: this.soloLectura }, [Validators.required]],
-      cveTipoDocumentoReemplazada: [{ value: this.tramiteState?.solicitudFormulario?.cveTipoDocumentoReemplazada, disabled: this.soloLectura }, [Validators.required]],
-      numeroActaDescruccion: [{ value: this.tramiteState?.solicitudFormulario?.numeroActaDescruccion, disabled: this.soloLectura }, [Validators.required]],
-      cveAduanaDestino: [{ value: this.tramiteState?.solicitudFormulario?.cveAduanaDestino, disabled: this.soloLectura }, [Validators.required]],
-      cvePatenteDestino: [{ value: this.tramiteState?.solicitudFormulario?.cvePatenteDestino, disabled: this.soloLectura }, [Validators.required]],
-      cvePedimentoDestino: [{ value: this.tramiteState?.solicitudFormulario?.cvePedimentoDestino, disabled: this.soloLectura }, [Validators.required]],
-      folioVucemRetorno: [{ value: this.tramiteState?.solicitudFormulario?.folioVucemRetorno, disabled: this.soloLectura }, [Validators.required]],
-      folioFormatoOficialDestino: [{ value: this.tramiteState?.solicitudFormulario?.folioFormatoOficialDestino, disabled: this.soloLectura }, [Validators.required]],
-      fechaDescruccionDestino: [{ value: this.tramiteState?.solicitudFormulario?.fechaDescruccionDestino, disabled: this.soloLectura }, [Validators.required]],
-      estadoTipoDocumentoDestino: [{ value: this.tramiteState?.solicitudFormulario?.estadoTipoDocumentoDestino, disabled: this.soloLectura }, [Validators.required]],
-      autoridadPresentoAvisoDestruccion: [{ value: this.tramiteState?.solicitudFormulario?.autoridadPresentoAvisoDestruccion, disabled: this.soloLectura }, [Validators.required]],
-    }),
-  });
-}
+    this.solicitudFormulario = this.fb.group({
+      datosAduana: this.fb.group({
+        cveAduana: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.cveAduana,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        cveSeccionAduanal: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.cveSeccionAduanal,
+            disabled: false,
+          },
+        ],
+        cveRecintoFiscalizado: [
+          {
+            value:
+              this.tramiteState?.solicitudFormulario?.cveRecintoFiscalizado,
+            disabled: false,
+          },
+        ],
+      }),
+      datosPedimento: this.fb.group({
+        cveTipoDocumento: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.cveTipoDocumento,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        estadoTipoDocumento: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.estadoTipoDocumento,
+            disabled: true,
+          },
+        ],
+        aduana: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.aduana,
+            disabled: false,
+          },
+          [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        ],
+        patente: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.patente,
+            disabled: false,
+          },
+          [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        ],
+        pedimento: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.pedimento,
+            disabled: false,
+          },
+          [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        ],
+        folioImportacionTemporal: [
+          {
+            value:
+              this.tramiteState?.solicitudFormulario?.folioImportacionTemporal,
+            disabled: false,
+          },
+          [
+            Validators.required,
+            Validators.maxLength(25),
+            Validators.pattern(REG_X.SOLO_NUMEROS),
+          ],
+        ],
+        folioFormatoOficial: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.folioFormatoOficial,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        checkProrroga: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.checkProrroga,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        folioOficialProrroga: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.folioOficialProrroga,
+            disabled: true,
+          },
+          [Validators.required],
+        ],
+        fechaImportacionTemporal: [this.tramiteState?.solicitudFormulario?.fechaImportacionTemporal,
+          [Validators.required],
+        ],
+        fechaVencimiento: [this.tramiteState?.solicitudFormulario?.fechaVencimiento,
+          [Validators.required],
+        ],
+        descMercancia: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.descMercancia,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        marca: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.marca,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        modelo: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.modelo,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        numeroSerie: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.numeroSerie,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        tipo: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.tipo,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+      }),
+      datosMedioTransporte: this.fb.group({
+        cveMedioTrasporte: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.cveMedioTrasporte,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        guiaMaster: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.guiaMaster,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        guiaBl: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.guiaBl,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        numeroBl: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.numeroBl,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        rfcEmpresaTransportista: [
+          {
+            value:
+              this.tramiteState?.solicitudFormulario?.rfcEmpresaTransportista,
+            disabled: false,
+          },
+        ],
+        estadoMedioTransporte: [
+          {
+            value:
+              this.tramiteState?.solicitudFormulario?.estadoMedioTransporte,
+            disabled: true,
+          },
+        ],
+        cartaPorte: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.cartaPorte,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        cvePaisProcedencia: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.cvePaisProcedencia,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        guiaHouse: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.guiaHouse,
+            disabled: false,
+          },
+        ],
+        numeroBuque: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.numeroBuque,
+            disabled: false,
+          },
+        ],
+        numeroEquipo: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.numeroEquipo,
+            disabled: false,
+          },
+        ],
+        fechaCartaPorte: [this.tramiteState?.solicitudFormulario?.fechaCartaPorte,
+          [Validators.required],
+        ],
+        tipContenedor: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.tipContenedor,
+            disabled: true,
+          },
+          [Validators.required],
+        ],
+        tranporteMarca: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.tranporteMarca,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        tranporteModelo: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.tranporteModelo,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        tranportePlaca: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.tranportePlaca,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        observaciones: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.observaciones,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+      }),
+      datosDestinoMercancia: this.fb.group({
+        conDestino: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.conDestino,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        cveTipoDestino: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.cveTipoDestino,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        cveTipoDocumentoReemplazada: [
+          {
+            value:
+              this.tramiteState?.solicitudFormulario
+                ?.cveTipoDocumentoReemplazada,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        numeroActaDescruccion: [
+          {
+            value:
+              this.tramiteState?.solicitudFormulario?.numeroActaDescruccion,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        cveAduanaDestino: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.cveAduanaDestino,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        cvePatenteDestino: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.cvePatenteDestino,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        cvePedimentoDestino: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.cvePedimentoDestino,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        folioVucemRetorno: [
+          {
+            value: this.tramiteState?.solicitudFormulario?.folioVucemRetorno,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        folioFormatoOficialDestino: [
+          {
+            value:
+              this.tramiteState?.solicitudFormulario
+                ?.folioFormatoOficialDestino,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        fechaDescruccionDestino: [
+          {
+            value:
+              this.tramiteState?.solicitudFormulario?.fechaDescruccionDestino,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        estadoTipoDocumentoDestino: [
+          {
+            value:
+              this.tramiteState?.solicitudFormulario
+                ?.estadoTipoDocumentoDestino,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+        autoridadPresentoAvisoDestruccion: [
+          {
+            value:
+              this.tramiteState?.solicitudFormulario
+                ?.autoridadPresentoAvisoDestruccion,
+            disabled: false,
+          },
+          [Validators.required],
+        ],
+      }),
+    });
+  }
 
   /**
    * @method inicializarMercanciaFormulario
@@ -565,25 +893,46 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Este formulario contiene campos relacionados con la descripción, especificaciones, marca, modelo,
    * número de serie, número de parte y tipo de la mercancía. Los valores iniciales se obtienen del estado
    * actual del trámite (`tramiteState`) y todos los campos son obligatorios.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   inicializarMercanciaFormulario(): void {
     this.mercanciaFormulario = this.fb.group({
-      modalDescMercancia: [this.tramiteState?.mercanciaFormulario?.modalDescMercancia, [Validators.required]],
-      espeMercancia: [this.tramiteState?.mercanciaFormulario?.espeMercancia, [Validators.required]],
-      marcaMercancia: [this.tramiteState?.mercanciaFormulario?.marcaMercancia, [Validators.required]],
-      modeloMercancia: [this.tramiteState?.mercanciaFormulario?.modeloMercancia, [Validators.required]],
-      numSerieMercancia: [this.tramiteState?.mercanciaFormulario?.numSerieMercancia, [Validators.required]],
-      numParteMercancia: [this.tramiteState?.mercanciaFormulario?.numParteMercancia, [Validators.required]],
-      tipoMercancia: [this.tramiteState?.mercanciaFormulario?.tipoMercancia, [Validators.required]],
-    })
+      modalDescMercancia: [
+        {value: this.tramiteState?.mercanciaFormulario?.modalDescMercancia, disabled: false},
+        [Validators.required],
+      ],
+      espeMercancia: [
+        {value: this.tramiteState?.mercanciaFormulario?.espeMercancia, disabled: false},
+        [Validators.required],
+      ],
+      marcaMercancia: [
+        {value: this.tramiteState?.mercanciaFormulario?.marcaMercancia, disabled: false},
+        [],
+      ],
+      modeloMercancia: [
+        {value: this.tramiteState?.mercanciaFormulario?.modeloMercancia, disabled: false},
+        [],
+      ],
+      numSerieMercancia: [
+        {value: this.tramiteState?.mercanciaFormulario?.numSerieMercancia, disabled: false},
+        [],
+      ],
+      numParteMercancia: [
+        {value: this.tramiteState?.mercanciaFormulario?.numParteMercancia, disabled: false},
+        [],
+      ],
+      tipoMercancia: [
+        {value: this.tramiteState?.mercanciaFormulario?.tipoMercancia, disabled: false},
+        [],
+      ],
+    });
   }
 
   /**
    * @method datosPedimento
    * @description Getter para obtener el grupo de controles `datosPedimento` del formulario `solicitudFormulario`.
-   * 
+   *
    * @returns {FormGroup} El grupo de controles `datosPedimento`.
    */
   get datosPedimento(): FormGroup {
@@ -593,7 +942,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @method datosMedioTransporte
    * @description Getter para obtener el grupo de controles `datosMedioTransporte` del formulario `solicitudFormulario`.
-   * 
+   *
    * @returns {FormGroup} El grupo de controles `datosMedioTransporte`.
    */
   get datosMedioTransporte(): FormGroup {
@@ -603,7 +952,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @method datosDestinoMercancia
    * @description Getter para obtener el grupo de controles `datosDestinoMercancia` del formulario `solicitudFormulario`.
-   * 
+   *
    * @returns {FormGroup} El grupo de controles `datosDestinoMercancia`.
    */
   get datosDestinoMercancia(): FormGroup {
@@ -613,7 +962,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @method datosAduana
    * @description Getter para obtener el grupo de controles `datosAduana` del formulario `solicitudFormulario`.
-   * 
+   *
    * @returns {FormGroup} El grupo de controles `datosAduana`.
    */
   get datosAduana(): FormGroup {
@@ -623,7 +972,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @method isValid
    * @description Método para verificar si un campo específico de un formulario es válido.
-   * 
+   *
    * - Utiliza el servicio `validacionesService` para realizar la validación.
    *
    * @param {FormGroup} form - Formulario reactivo que contiene el campo a validar.
@@ -637,7 +986,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @method filaSeleccionada
    * @description Método para manejar las filas seleccionadas en la tabla de avisos.
-   * 
+   *
    * - Actualiza la propiedad `filaSeleccionadaLista` con las filas seleccionadas.
    *
    * @param {AvisoTabla[]} evento - Lista de filas seleccionadas en la tabla de avisos.
@@ -648,31 +997,105 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Abre el modal de mercancía en modo **modificación** y carga en el formulario
+   * los datos de la fila seleccionada.
+   *
+   * - Si existen elementos seleccionados en la lista (`filaSeleccionadaLista`),
+   *   se instancia y muestra el modal (`MODAL_INSTANCE`) y se asignan los valores
+   *   de la mercancía al formulario reactivo (`mercanciaFormulario`).
+   *
+   * - Si no hay ninguna fila seleccionada, se muestra un modal de advertencia
+   *   indicando que es necesario seleccionar un registro antes de modificar.
+   *
+   * @returns {void}
+   */
+  modificarReemplazadas(): void {
+    if (this.filaSeleccionadaLista.length > 0) {
+      if (this.modalMercancia) {
+        this.MODAL_INSTANCE = new Modal(this.modalMercancia.nativeElement);
+        this.MODAL_INSTANCE.show();
+        this.titleMercancia = 'Modificar';
+      }
+      this.mercanciaFormulario.patchValue({
+        modalDescMercancia: this.filaSeleccionadaLista[0].descripcionMercancia,
+        marcaMercancia: this.filaSeleccionadaLista[0].marca,
+        modeloMercancia: this.filaSeleccionadaLista[0].modelo,
+        numSerieMercancia: this.filaSeleccionadaLista[0].numeroDeSerie,
+        tipoMercancia: this.filaSeleccionadaLista[0].tipo,
+      });
+    } else {
+      this.abrirModal('Debe seleccionar un registro a modificar');
+    }
+  }
+
+  /**
+   * Abre el modal de mercancía en modo **consulta** y carga en el formulario
+   * los datos de la fila seleccionada.
+   *
+   * - Si existen elementos seleccionados en la lista (`filaSeleccionadaLista`),
+   *   se instancia y muestra el modal (`MODAL_INSTANCE`) y se asigna el título
+   *   del modal a **"Consultar"**.
+   *
+   * - Posteriormente, se llenan los controles del formulario reactivo
+   *   (`mercanciaFormulario`) con la información de la mercancía seleccionada.
+   *
+   * - Si no hay ninguna fila seleccionada, se muestra un modal de advertencia
+   *   indicando que es necesario seleccionar un registro antes de consultar.
+   *
+   * @returns {void}
+   */
+  consultarReemplazadas(): void {
+    if (this.filaSeleccionadaLista.length > 0) {
+      if (this.modalMercancia) {
+        this.MODAL_INSTANCE = new Modal(this.modalMercancia.nativeElement);
+        this.MODAL_INSTANCE.show();
+        this.titleMercancia = 'Consultar';
+      }
+      this.mercanciaFormulario.patchValue({
+        modalDescMercancia: this.filaSeleccionadaLista[0].descripcionMercancia,
+        marcaMercancia: this.filaSeleccionadaLista[0].marca,
+        modeloMercancia: this.filaSeleccionadaLista[0].modelo,
+        numSerieMercancia: this.filaSeleccionadaLista[0].numeroDeSerie,
+        tipoMercancia: this.filaSeleccionadaLista[0].tipo,
+      });
+    } else {
+      this.abrirModal('Debe seleccionar un registro a consultar');
+    }
+  }
+
+  /**
    * @method eliminarMercancia
    * @description Método para eliminar las filas seleccionadas de la tabla de Mercancias.
-   * 
+   *
    * - Filtra los datos de la tabla para excluir las filas seleccionadas.
    * - Limpia la lista de filas seleccionadas.
    *
    * @returns {void}
- */
+   */
   eliminarMercancia(): void {
-    this.tablaDeDatos.datos = this.tablaDeDatos.datos.filter((ele) => !this.filaSeleccionadaLista.includes(ele));
-    this.filaSeleccionadaLista = [];
+    if (this.filaSeleccionadaLista.length === 0) {
+      this.abrirModal('Debe seleccionar un registro a eliminar');
+    } else {
+      this.tablaDeDatos.datos = this.tablaDeDatos.datos.filter(
+        (ele) => !this.filaSeleccionadaLista.includes(ele)
+      );
+      this.filaSeleccionadaLista = [];
+    }
   }
 
   /**
    * @method abiertoMercancia
    * @description Método para abrir el modal de Mercancia.
-   * 
+   *
    * - Utiliza la referencia al modal de Mercancia para mostrarlo en la interfaz.
    *
    * @returns {void}
    */
   abiertoMercancia(): void {
     if (this.modalMercancia) {
-      const MODAL_INSTANCE = new Modal(this.modalMercancia.nativeElement);
-      MODAL_INSTANCE.show();
+      this.MODAL_INSTANCE = new Modal(this.modalMercancia.nativeElement);
+      this.MODAL_INSTANCE.show();
+      this.titleMercancia = 'Agregar';
     }
   }
 
@@ -687,31 +1110,120 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.retornoDePartesService
       .obtenerSolicitudTabla()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        (datos: SolicitudTablaDatos) => {
-          this.tablaDeDatos.datos = datos.datos;
-        }
+      .subscribe((datos: SolicitudTablaDatos) => {
+        this.tablaDeDatos.datos = datos.datos;
+      });
+  }
+
+  /**
+   * Agrega o actualiza un registro de mercancía en la tabla de datos.
+   *
+   * Flujo:
+   * - Obtiene los valores actuales del formulario de mercancía (`mercanciaFormulario`).
+   * - Valida que los campos obligatorios (`modalDescMercancia` y `espeMercancia`)
+   *   no estén inválidos; en caso contrario, marca todos los controles como
+   *   tocados y detiene el proceso.
+   * - Verifica si existe un `id` en la fila seleccionada:
+   *   - **Si existe**: actualiza el registro correspondiente en `tablaDeDatos.datos`.
+   *   - **Si no existe**: agrega un nuevo registro a la lista y muestra un modal
+   *     de confirmación con el mensaje **"El registro fue agregado correctamente."**.
+   * - Limpia la lista de filas seleccionadas (`filaSeleccionadaLista`),
+   *   reinicia el formulario (`mercanciaFormulario.reset()`)
+   *   y oculta el modal (`MODAL_INSTANCE.hide()`).
+   *
+   * @returns {void}
+   */
+  agregarMercancias(): void {
+    const FORMS = this.mercanciaFormulario.value;
+    if (
+      this.mercanciaFormulario.get('modalDescMercancia')?.invalid &&
+      this.mercanciaFormulario.get('espeMercancia')?.invalid
+    ) {
+      this.mercanciaFormulario?.markAllAsTouched();
+      return;
+    }
+    const ID = this.filaSeleccionadaLista?.[0]?.id;
+
+    const DATOS = {
+      id: ID ? ID : (this.tablaDeDatos.datos.length || 0) + 1,
+      marca: FORMS?.marcaMercancia,
+      modelo: FORMS?.modeloMercancia,
+      numeroDeSerie: FORMS?.numParteMercancia,
+      tipo: FORMS?.tipoMercancia,
+      descripcionMercancia: FORMS?.modalDescMercancia,
+    };
+    if (ID) {
+      this.tablaDeDatos.datos = this.tablaDeDatos.datos.map((item) =>
+        item.id === ID ? { ...item, ...DATOS } : item
       );
+    } else {
+      this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, { ...DATOS }];
+      this.abrirModal('El registro fue agregado correctamente.');
+    }
+    this.filaSeleccionadaLista = [];
+    this.mercanciaFormulario.reset();
+    this.MODAL_INSTANCE.hide();
   }
 
   /**
    * @method agregarMercancia
    * @description Método para agregar Mercancias a la tabla de avisos.
-   * 
+   *
    * - Carga los datos de la tabla de avisos y cierra el modal de Mercancia.
    *
    * @returns {void}
    */
-  agregarMercancia(): void {
-    this.cargarMercanciaTabla();
-    this.closeMercancia.nativeElement.click();
-    this.abrirModal();
+  agregarMercanciaBtn(): void {
+    const FORMS = this.mercanciaFormulario.value;
+    if (
+      this.mercanciaFormulario.get('modalDescMercancia')?.invalid &&
+      this.mercanciaFormulario.get('espeMercancia')?.invalid
+    ) {
+      this.mercanciaFormulario?.markAllAsTouched();
+      return;
+    }
+    const ID = this.filaSeleccionadaLista?.[0]?.id;
+
+    const DATOS = {
+      id: ID ? ID : (this.tablaDeDatos.datos.length || 0) + 1,
+      marca: FORMS?.marcaMercancia,
+      modelo: FORMS?.modeloMercancia,
+      numeroDeSerie: FORMS?.numParteMercancia,
+      tipo: FORMS?.tipoMercancia,
+      descripcionMercancia: FORMS?.modalDescMercancia,
+    };
+    if (ID) {
+      this.tablaDeDatos.datos = this.tablaDeDatos.datos.map((item) =>
+        item.id === ID ? { ...item, ...DATOS } : item
+      );
+    } else {
+      this.tablaDeDatos.datos = [...this.tablaDeDatos.datos, { ...DATOS }];
+    }
+    this.filaSeleccionadaLista = [];
+    this.mercanciaFormulario.reset();
+    this.MODAL_INSTANCE.hide();
+    this.abrirModal('El registro fue agregado correctamente.');
+  }
+
+  /**
+   * Cancela la operación actual en el formulario de mercancía.
+   *
+   * - Reinicia todos los controles del formulario (`mercanciaFormulario.reset()`),
+   *   eliminando cualquier valor ingresado o modificado.
+   * - Oculta el modal asociado (`MODAL_INSTANCE.hide()`),
+   *   cerrando la ventana emergente sin guardar cambios.
+   *
+   * @returns {void}
+   */
+  cancelarModel(): void {
+    this.mercanciaFormulario.reset();
+    this.MODAL_INSTANCE.hide();
   }
 
   /**
    * @method abrirModal
    * @description Método para abrir un modal de notificación.
-   * 
+   *
    * Este método configura una nueva notificación con los siguientes parámetros:
    * - `tipoNotificacion`: Tipo de notificación (en este caso, "alerta").
    * - `categoria`: Categoría de la notificación (en este caso, "peligro").
@@ -722,68 +1234,206 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * - `tiempoDeEspera`: Tiempo en milisegundos antes de que la notificación desaparezca automáticamente (en este caso, 2000 ms).
    * - `txtBtnAceptar`: Texto del botón de aceptación (en este caso, "Aceptar").
    * - `txtBtnCancelar`: Texto del botón de cancelación (en este caso, vacío).
-   * 
+   *
    * @example
    * // Llamar al método para abrir el modal de notificación
    * this.abrirModal();
    */
-  public abrirModal(): void {
+  public abrirModal(mensaje: string): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'El registro fue agregado correctamente.',
+      mensaje: mensaje,
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-    }
+    };
   }
 
   /**
    * @method cambiarTipoDocumento
    * @description Método para manejar el cambio del tipo de documento en el formulario.
-   * 
+   *
    * - Si el tipo de documento seleccionado es "Folio VUCEM", desactiva el campo `checkProrroga` y limpia su valor.
    * - En caso contrario, habilita el campo `checkProrroga`.
    *
    * @returns {void}
    */
   cambiarTipoDocumento(): void {
-    if (this.datosPedimento.get('cveTipoDocumento')?.value === 'Folio VUCEM') {
-      this.datosPedimento.get('checkProrroga')?.setValue('');
-      this.datosPedimento.get('checkProrroga')?.disable();
+    const CONTROL_NAME = [
+      'estadoTipoDocumento',
+      'aduana',
+      'patente',
+      'pedimento',
+      'folioImportacionTemporal',
+      'folioFormatoOficial',
+      'checkProrroga',
+      'folioOficialProrroga',
+      'fechaImportacionTemporal',
+      'fechaVencimiento',
+      'descMercancia',
+      'marca',
+      'modelo',
+      'numeroSerie',
+      'tipo',
+    ];
+    CONTROL_NAME?.forEach((field) => {
+      this.datosPedimento.get(field)?.reset('');
+    });
+    if (this.datosPedimento?.get('cveTipoDocumento')?.value === 'Folio VUCEM') {
+      this.datosPedimento?.get('checkProrroga')?.setValue('');
+      this.datosPedimento?.get('checkProrroga')?.disable();
+      this.datosPedimento?.get('descMercancia')?.disable();
+      this.datosPedimento?.get('marca')?.disable();
+      this.datosPedimento?.get('modelo')?.disable();
+      this.datosPedimento?.get('numeroSerie')?.disable();
+      this.datosPedimento?.get('tipo')?.disable();
     } else {
-      this.datosPedimento.get('checkProrroga')?.enable();
+      this.datosPedimento?.get('checkProrroga')?.enable();
+      this.datosPedimento?.get('descMercancia')?.enable();
+      this.datosPedimento?.get('marca')?.enable();
+      this.datosPedimento?.get('modelo')?.enable();
+      this.datosPedimento?.get('numeroSerie')?.enable();
+      this.datosPedimento?.get('tipo')?.enable();
     }
   }
-  
+
   /**
    * @method cambiarCheckProrroga
    * @description Método para manejar el cambio del estado del checkbox `checkProrroga`.
-   * 
+   *
    * - Si el checkbox está seleccionado (`true`), habilita el campo `folioOficialProrroga`.
    * - Si el checkbox no está seleccionado (`false`), deshabilita el campo `folioOficialProrroga` y limpia su valor.
    *
    * @returns {void}
    */
   cambiarCheckProrroga(): void {
-    if (this.datosPedimento.get('checkProrroga')?.value === true) {
-      this.datosPedimento.get('folioOficialProrroga')?.enable();
+    if (this.datosPedimento?.get('checkProrroga')?.value === true) {
+      this.datosPedimento?.get('folioOficialProrroga')?.enable();
     } else {
-      this.datosPedimento.get('folioOficialProrroga')?.setValue('');
-      this.datosPedimento.get('folioOficialProrroga')?.disable();
+      this.datosPedimento?.get('folioOficialProrroga')?.setValue('');
+      this.datosPedimento?.get('folioOficialProrroga')?.disable();
     }
   }
-  
+
+  /**
+   * Actualiza el campo **guiaMaster** en el formulario `datosMedioTransporte`.
+   *
+   * - Obtiene el valor desde el evento del input.
+   * - Elimina caracteres no permitidos utilizando la expresión regular `REGEX_REEMPLAZAR`.
+   * - Aplica el valor limpio al formulario con `patchValue`.
+   *
+   * @param {Event} evento Evento del input que contiene el nuevo valor.
+   * @returns {void}
+   */
+  cambiarGuiaMaster(evento: Event): void {
+    const VALUE = (evento.target as HTMLInputElement).value;
+    const CLEANED = VALUE.replace(REGEX_REEMPLAZAR, '');
+
+    this.datosMedioTransporte.patchValue({
+      guiaMaster: CLEANED,
+    });
+  }
+
+  /**
+   * Actualiza el campo **guiaHouse** en el formulario `datosMedioTransporte`.
+   *
+   * @param {Event} evento Evento del input que contiene el nuevo valor.
+   * @returns {void}
+   */
+  cambiarGuiaHouse(evento: Event): void {
+    const VALUE = (evento.target as HTMLInputElement).value;
+    const CLEANED = VALUE.replace(REGEX_REEMPLAZAR, '');
+
+    this.datosMedioTransporte.patchValue({
+      guiaHouse: CLEANED,
+    });
+  }
+
+  /**
+   * Actualiza el campo **guiaBl** en el formulario `datosMedioTransporte`.
+   *
+   * @param {Event} evento Evento del input que contiene el nuevo valor.
+   * @returns {void}
+   */
+  cambiarGuiaBL(evento: Event): void {
+    const VALUE = (evento.target as HTMLInputElement).value;
+    const CLEANED = VALUE.replace(REGEX_REEMPLAZAR, '');
+
+    this.datosMedioTransporte.patchValue({
+      guiaBl: CLEANED,
+    });
+  }
+
+  /**
+   * Actualiza el campo **numeroBuque** en el formulario `datosMedioTransporte`.
+   *
+   * @param {Event} evento Evento del input que contiene el nuevo valor.
+   * @returns {void}
+   */
+  cambiarNumeroDeBuque(evento: Event): void {
+    const VALUE = (evento.target as HTMLInputElement).value;
+    const CLEANED = VALUE.replace(REGEX_REEMPLAZAR, '');
+
+    this.datosMedioTransporte.patchValue({
+      numeroBuque: CLEANED,
+    });
+  }
+
+  /**
+   * Actualiza el campo **numeroBl** en el formulario `datosMedioTransporte`.
+   *
+   * @param {Event} evento Evento del input que contiene el nuevo valor.
+   * @returns {void}
+   */
+  cambiarNumeroBL(evento: Event): void {
+    const VALUE = (evento.target as HTMLInputElement).value;
+    const CLEANED = VALUE.replace(REGEX_REEMPLAZAR, '');
+
+    this.datosMedioTransporte.patchValue({
+      numeroBl: CLEANED,
+    });
+  }
+
+  /**
+   * Actualiza el campo **numeroEquipo** en el formulario `datosMedioTransporte`.
+   *
+   * @param {Event} evento Evento del input que contiene el nuevo valor.
+   * @returns {void}
+   */
+  cambiarNumeroEquipo(evento: Event): void {
+    const VALUE = (evento.target as HTMLInputElement).value;
+    const CLEANED = VALUE.replace(REGEX_REEMPLAZAR, '');
+
+    this.datosMedioTransporte.patchValue({
+      numeroEquipo: CLEANED,
+    });
+  }
+
+  /**
+   * Actualiza el campo **rfcEmpresaTransportista** en el formulario `datosMedioTransporte`.
+   *
+   * @param {Event} evento Evento del input que contiene el nuevo valor.
+   * @returns {void}
+   */
+  cambiarRFCEmpresaTransportista(evento: Event): void {
+    const VALUE = (evento.target as HTMLInputElement).value;
+    const CLEANED = VALUE.replace(REGEX_REEMPLAZAR, '');
+
+    this.datosMedioTransporte.patchValue({
+      rfcEmpresaTransportista: CLEANED,
+    });
+  }
 
   /**
    * @method cambiarMedioDeTransporte
    * @description Cambia el estado del medio de transporte basado en el valor del campo 'cveTipoDocumento'.
-   * Si el valor es 'Folio VUCEM', desactiva y limpia el campo 'checkProrroga'. 
+   * Si el valor es 'Folio VUCEM', desactiva y limpia el campo 'checkProrroga'.
    * En caso contrario, habilita el campo 'checkProrroga'.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   cambiarMedioDeTransporte(): void {
@@ -798,7 +1448,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @method ngOnDestroy
    * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * 
+   *
    * - Completa el `Subject` `destroyed$` para cancelar todas las suscripciones activas y evitar fugas de memoria.
    *
    * @returns {void}
@@ -806,6 +1456,5 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
-   
   }
 }
