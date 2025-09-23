@@ -38,7 +38,7 @@
           </div>
 
           <div class="col-md-6">
-              <label class="form-label">Número de la constancia de registro<span class="require" [ngClass]="fitosanitarioForm.get('numeroDeLaConstancia')?.touched && fitosanitarioForm.get('numeroDeLaConstancia')?.invalid ? 'require-error' : ''">*</span>:</label>
+            <label for="numeroDeLaConstancia" class="form-label">Número de la constancia de registro<span [ngClass]="{'text-danger': fitosanitarioForm.get('numeroDeLaConstancia')?.invalid && (fitosanitarioForm.get('numeroDeLaConstancia')?.touched || fitosanitarioForm.get('numeroDeLaConstancia')?.dirty)}">*</span>:</label>
               <input 
                 type="text" 
                 required="true" 
