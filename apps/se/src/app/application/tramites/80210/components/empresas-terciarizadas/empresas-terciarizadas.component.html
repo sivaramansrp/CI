@@ -53,9 +53,10 @@
             type="text"
             class="form-control"
             formControlName="rfc"
+            (change)="setValoresStore(empresasForm, 'rfc')"
             [class.is-invalid]="
-              empresasForm.get('rfc')?.touched &&
-              empresasForm.get('rfc')?.invalid
+            empresasForm.get('rfc')?.touched &&
+            empresasForm.get('rfc')?.invalid
             "
           />
           <div
@@ -77,17 +78,18 @@
       <div class="col-md-6">
         <app-catalogo-select
           name="estado"
-          id="estado"
+          id="clave"
           formControlName="estado"
-          [catalogo]="registroSolicitudService.estados"
+          [catalogo]="estado"
           [label]="'Estado'"
           [required]="true"
           [isDisabled]="esFormularioSoloLectura"
+          (change)="procesarDatosDelHijo()"
         ></app-catalogo-select>
       </div>
 
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" [disabled]="!esFormularioValido()" class="btn btn-primary" [ngClass]="{'btn-secondary': !this.empresasForm.valid}" (click)="buscarControladoras()">
+        <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-primary" [ngClass]="{'btn-secondary': !this.empresasForm.valid}" (click)="buscarControladoras()">
           Buscar controladoras
         </button>
       </div>
@@ -109,7 +111,7 @@
       </div>
       
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura || !this.listaFilaDisponibles.length" (click)="agregarPlantas()">
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="agregarPlantas()">
           Agregar plantas
         </button>
       </div>
@@ -127,10 +129,28 @@
         ></app-tabla-dinamica>
       </div>
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura || !this.listaFilaSeleccionada.length" (click)="eliminarPlantas()">
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="eliminarPlantas()">
           Eliminar plantas
         </button>
       </div>
     </div>
   </form>
+<div>
+  @if(eliminarPlantasAlerta) {
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+  }
+  @if(eliminarPlantasConfirmacion) {
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="eliminarPedimentoDatos($event)"></lib-notificaciones>
+  }
+  @if(espectaculoAlerta) {
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="mostrarDomicilios()"></lib-notificaciones>
+  }
+  @if(espectaculoAlertaAgregar){
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="agregarPlantasconfirmar()"></lib-notificaciones>
+  }
+</div>
 </div>

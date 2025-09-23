@@ -1,20 +1,23 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
+  Catalogo,
   ConfiguracionColumna,
   ConsultaioQuery,
+  Notificacion,
   TablaSeleccion,
 } from '@ng-mf/data-access-user';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   FormularioDatos,
   Plantas,
 } from '../../modelos/registro-solicitud-immex.model';
-import { Subject, map, takeUntil, tap } from 'rxjs';
+import { Subject, Subscription, map, takeUntil, tap } from 'rxjs';
 import {
   Tramite80210Store,
   Tramites80210State,
 } from '../../estados/tramites80210.store';
 import { CONFIGURACION_TABLA_PLANTAS } from '../../enums/registro-solicitud-immex.enum';
+import { CatalogoServices } from '@libs/shared/data-access-user/src/core/services/shared/catalogo.service';
 import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { Tramite80210Query } from '../../estados/tramites80210.query';
 import { registroSolicitudImmexService } from '../../services/registro-solicitud-immex.service';
@@ -32,6 +35,19 @@ import { registroSolicitudImmexService } from '../../services/registro-solicitud
   styleUrl: './empresas-terciarizadas.component.scss',
 })
 export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
+  /**
+   * Identificador del trámite.
+   */
+  tramiteID = '80210';
+
+  /**
+   * Lista de estados disponibles para selección.
+   *
+   * @type {Catalogo[]}
+   * @memberof EmpresasTerciarizadasComponent
+   */
+  estado!: Catalogo[];
+
   /**
    * Formulario reactivo para gestionar los datos de las empresas.
    */
@@ -51,11 +67,6 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    * Lista de plantas seleccionadas.
    */
   plantasSeleccionadas: Plantas[] = [];
-
-  /**
-   * Lista temporal de filas disponibles seleccionadas en la tabla.
-   */
-  listaFilaDisponibles: Plantas[] = [];
 
   /**
    * Lista temporal de filas seleccionadas en la tabla.
@@ -79,6 +90,12 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /**
+   * Suscripción para manejar observables.
+   * @property {Subscription} subscription
+   */
+  private subscription: Subscription = new Subscription();
+
+  /**
    * Notificación para destruir observables al destruir el componente.
    */
   destoryNotification$: Subject<void> = new Subject<void>();
@@ -90,14 +107,58 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * @property {boolean} eliminarPlantasConfirmacion
+   * @description
+   * Indica si se debe mostrar el modal de confirmación para eliminar plantas seleccionadas.
+   */
+  eliminarPlantasConfirmacion: boolean = false;
+
+  /**
+   * @property {boolean} eliminarPlantasAlerta
+   * @description
+   * Indica si se debe mostrar una alerta cuando no se ha seleccionado ninguna planta para eliminar.
+   */
+  eliminarPlantasAlerta: boolean = false;
+
+  /**
+   * @property {boolean} espectaculoAlerta
+   * @description
+   * Indica si se debe mostrar una alerta relacionada con la selección de entidad federativa o plantas.
+   */
+  espectaculoAlerta: boolean = false;
+
+  /**
+   * @property {boolean} espectaculoAlertaAgregar
+   * @description
+   * Indica si se debe mostrar una alerta relacionada con la acción de agregar plantas seleccionadas a la lista PROSEC.
+   * Se utiliza para advertir al usuario cuando no ha seleccionado ninguna planta para agregar.
+   */
+  espectaculoAlertaAgregar: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacion
+   * @description
+   * Objeto que contiene la información de la notificación a mostrar en el componente de notificaciones.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * @property {FilaPlantas[]} listSelectedView
+   * @description
+   * Arreglo que contiene las plantas seleccionadas en la tabla dinámica para realizar acciones como eliminar.
+   */
+  listSelectedView: Plantas[] = [];
+  /**
    * Constructor del componente.
    * 
+   * @param catalogoServices - Servicio para obtener catálogos.
    * @param formBuilder - Constructor de formularios reactivos.
    * @param registroSolicitudService - Servicio para gestionar solicitudes Immex.
    * @param tramite80210Store - Estado global del trámite 80210.
    * @param tramite80210Query - Consulta del estado global del trámite 80210.
    */
   constructor(
+    private catalogoServices: CatalogoServices,
     private formBuilder: FormBuilder,
     @Inject(registroSolicitudImmexService)
     public registroSolicitudService: registroSolicitudImmexService,
@@ -105,14 +166,6 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
     private tramite80210Query: Tramite80210Query,
     private consultaQuery: ConsultaioQuery
   ) {
-    this.createEmpresasForm();
-     /**
- * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-    *
-    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-    * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-    */
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destoryNotification$),
@@ -129,6 +182,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+    this.obtenerEstadoSelectList(this.tramiteID);
   }
 
   /**
@@ -139,8 +193,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-      this.empresasForm.get('rfc')?.enable();
-      this.inicializarFormulario();
+      this.crearFormulario();
     }
   }
 
@@ -160,7 +213,6 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     this.initializeTramite80210State();
     this.showPlantas = this.tramites80210State.showPlantas;
-    this.registroSolicitudService.obtenerEstados();
     this.registroSolicitudService
       .obtenerFormularioDatos()
       .pipe(takeUntil(this.destoryNotification$))
@@ -174,28 +226,51 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
         }
       });
   }
-
-
    /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Obtiene la lista de estados disponibles para el select.
+   *
+   * @param tramite - Identificador del trámite para filtrar los estados.
+   * @returns {void}
+   *
+   * @remarks
+   * Utiliza el servicio de catálogo para obtener los estados y los asigna a la propiedad `estado`.
    */
-  guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    this.empresasForm.disable();
+  obtenerEstadoSelectList(tramite: string): void {
+    this.subscription.add(
+      this.catalogoServices.estadosCatalogo(tramite).subscribe((data) => {
+        const DATOS = data.datos as Catalogo[];
+        this.estado = DATOS;
+      })
+    );
   }
 
+  /**
+   * Guarda el estado del formulario y ajusta la habilitación de los campos según el modo de solo lectura.
+   *
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormulario();
+    if (this.esFormularioSoloLectura) {
+    this.empresasForm.disable();
+    } else {
+      this.empresasForm.enable();
+    }
+  }
 
   /**
    * Crea el formulario reactivo para las empresas.
    */
-  createEmpresasForm(): void {
+  crearFormulario(): void {
+    this.inicializarFormulario();
     this.empresasForm = this.formBuilder.group({
       modalidad: [{ value: '', disabled: true }],
       folio: [{ value: '', disabled: true }],
       ano: [{ value: '', disabled: true }],
-      rfc: ['', [Validators.required, Validators.pattern(REGEX_RFC)]],
-      estado: ['', [Validators.required]],
+      rfc: [
+        this.tramites80210State.rfc,
+        [Validators.required, Validators.pattern(REGEX_RFC)],
+      ],
+      estado: [this.tramites80210State.estado, [Validators.required]],
     });
   }
 
@@ -214,11 +289,24 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    * Busca las empresas controladoras y actualiza el estado de las plantas.
    */
   buscarControladoras(): void {
-    if (this.esFormularioValido()) {
+    if (this.empresasForm.get('estado')?.value.length === 0) {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona la Entidad Federativa.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } else if (this.esFormularioValido()) {
       this.showPlantas = true;
-      this.tramite80210Store.establecerDatos({plantasDisponibles:[]});
+      this.tramite80210Store.establecerDatos({ plantasDisponibles: [] });
       this.segregatePlantasDatos();
-      this.tramite80210Store.establecerDatos({showPlantas:this.showPlantas});
+      this.tramite80210Store.establecerDatos({ showPlantas: this.showPlantas });
       this.empresasForm.get('rfc')?.reset();
       this.empresasForm.get('estado')?.reset();
     }
@@ -281,7 +369,8 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    * @param fila - Lista de filas seleccionadas.
    */
   manejarFilaDisponibles(fila: Plantas[]): void {
-    this.listaFilaDisponibles = fila;
+    this.listaFilaSeleccionada = fila;
+    // Removed listaFilaSeleccionada as it's not part of Tramites80210State
   }
 
   /**
@@ -291,26 +380,44 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    */
   manejarFilaSeleccionada(fila: Plantas[]): void {
     this.listaFilaSeleccionada = fila;
+    this.tramite80210Store.update((state) => ({
+      ...state,
+      selectedDatos: event,
+    }));
   }
 
   /**
  * Agrega plantas seleccionadas a la lista de seleccionadas, evitando duplicados.
  */
 agregarPlantas(): void {
-  if (!this.listaFilaDisponibles?.length) {
+    if (!this.listaFilaSeleccionada?.length) {
+      this.espectaculoAlertaAgregar = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje:
+          'Selecciona al menos una planta donde se realizarán las operaciones PROSEC.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     return;
   }
 
-  const PLANTAS_A_MOVER = this.plantasDisponibles.filter(planta =>
-    !this.listaFilaDisponibles.some(selectedPlanta => 
-      selectedPlanta.id === planta.id
+    const PLANTAS_A_MOVER = this.plantasDisponibles.filter(
+      (planta) =>
+        !this.listaFilaSeleccionada.some(
+          (selectedPlanta) => selectedPlanta.id === planta.id
     )
   );
 
   const PLANTAS_SELECCIONADAS_ACTUALIZADAS = [...this.plantasSeleccionadas];
-  PLANTAS_A_MOVER.forEach(planta => {
+    PLANTAS_A_MOVER.forEach((planta) => {
     const EXISTS = PLANTAS_SELECCIONADAS_ACTUALIZADAS.some(
-      plantaSeleccionada => plantaSeleccionada.id === planta.id
+        (plantaSeleccionada) => plantaSeleccionada.id === planta.id
     );
     if (!EXISTS) {
       PLANTAS_SELECCIONADAS_ACTUALIZADAS.push(planta);
@@ -319,10 +426,10 @@ agregarPlantas(): void {
 
   this.plantasSeleccionadas = PLANTAS_SELECCIONADAS_ACTUALIZADAS;
 
-  this.plantasDisponibles = [...this.listaFilaDisponibles];
+    this.plantasDisponibles = [...this.listaFilaSeleccionada];
   this.updateStoreForPlantas();
 
-  this.listaFilaDisponibles = [];
+    this.listaFilaSeleccionada = [];
 }
   /**
    * Actualiza el estado global con las plantas disponibles y seleccionadas.
@@ -330,7 +437,7 @@ agregarPlantas(): void {
   public updateStoreForPlantas(): void {
     this.tramite80210Store.establecerDatos({
       plantasDisponibles: [...this.plantasDisponibles],
-      plantasSeleccionadas: [...this.plantasSeleccionadas]
+      plantasSeleccionadas: [...this.plantasSeleccionadas],
     });
 
     this.plantasDisponibles = [...this.plantasDisponibles];
@@ -338,36 +445,153 @@ agregarPlantas(): void {
   }
 
   /**
-   * Elimina plantas seleccionadas de la lista de seleccionadas.
+   * @method eliminarPlantas
+   * @description
+   * Muestra una alerta si no hay plantas seleccionadas para eliminar.
+   * Si hay plantas seleccionadas, muestra una confirmación antes de eliminarlas.
    */
   eliminarPlantas(): void {
-    if (this.listaFilaSeleccionada?.length === 0) {
-      return;
+    if (this.listaFilaSeleccionada.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona la planta que desea eliminar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.eliminarPlantasAlerta = true;
+    } else if (this.listaFilaSeleccionada.length > 0) {
+      this.eliminarPlantasConfirmacion = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Estás seguro de eliminar la(s) planta(s)?',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
     }
-  
-    // Filtrar las plantas que no están ya en plantasDisponibles
-    const NUEVASPLANTAS = this.listaFilaSeleccionada.filter(
-      (plantaDisponible) =>
-        !this.plantasDisponibles.some(
-          (plantaSeleccionada) => plantaSeleccionada.id === plantaDisponible.id
-        )
-    );
-  
-    // Agregar solo las nuevas plantas a plantasDisponibles
-    this.plantasDisponibles.push(...NUEVASPLANTAS);
-  
-    // Remover las plantas movidas de plantasDisponibles
-    this.plantasSeleccionadas = this.plantasSeleccionadas.filter(
-      (planta) => !this.listaFilaSeleccionada.includes(planta)
-    );
-  
-    // Actualizar el estado global
-    this.updateStoreForPlantas();
-  
-    // Limpiar la lista temporal de filas seleccionadas
-    this.listaFilaSeleccionada = [];
   }
 
+  /**
+   * Procesa los datos enviados desde el componente hijo.
+   * Actualiza el estado global con el valor seleccionado.
+   */
+  procesarDatosDelHijo(): void {
+    const VALUE = this.empresasForm.get('estado')?.value;
+    this.tramite80210Store.establecerDatos({ estado: VALUE });
+  }
+
+  /**
+   * @method eliminarPedimento
+   * @description
+   * Oculta la alerta de eliminación si el evento es verdadero.
+   * @param {boolean} event - Indica si se debe ocultar la alerta.
+   */
+  eliminarPedimento(event: boolean): void {
+    if (event === true) {
+      this.eliminarPlantasAlerta = !event;
+    }
+  }
+
+  /**
+   * @method eliminarPedimentoDatos
+   * @description
+   * Elimina las plantas seleccionadas del estado y actualiza la lista en el store.
+   * @param {boolean} event - Indica si se debe proceder con la eliminación.
+   */
+  eliminarPedimentoDatos(event: boolean): void {
+    if (event === true) {
+      this.eliminarPlantasConfirmacion = false;
+      // Filtra las plantas seleccionadas para eliminar
+      const PLANTAS_A_ELIMINAR = this.listSelectedView.map(
+        (planta) => planta.id
+      );
+      // Elimina las plantas seleccionadas de la lista de plantasSeleccionadas
+      const PLANTAS_SELECCIONADAS_ACTUALIZADAS =
+        this.plantasSeleccionadas.filter(
+          (planta) => !PLANTAS_A_ELIMINAR.includes(planta.id)
+        );
+      // Actualiza el store y la lista local
+      this.tramite80210Store.establecerDatos({
+        plantasSeleccionadas: PLANTAS_SELECCIONADAS_ACTUALIZADAS,
+      });
+      this.plantasSeleccionadas = PLANTAS_SELECCIONADAS_ACTUALIZADAS;
+      this.listSelectedView = [];
+    } else {
+      this.eliminarPlantasConfirmacion = false;
+    }
+  }
+
+  mostrarDomicilios(): void {
+    if (this.empresasForm.get('Estado')?.value.length === 0) {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona la Entidad Federativa.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } else {
+      this.espectaculoAlerta = false;
+      this.recuperarDatos();
+    }
+  }
+
+  /**
+   * @method recuperarDatos
+   * @description Recupera los datos de las plantas desde un archivo JSON utilizando el servicio ProsecService.
+   * Llama al método `obtenerTablaDatos` con el nombre del archivo y suscribe a la respuesta.
+   * Si la respuesta es un arreglo, asigna los datos a la propiedad `plantasDatos`.
+   *
+   * @memberof DomiciliosDePlantasComponent
+   * @returns {void}
+   */
+  recuperarDatos(): void {
+    this.registroSolicitudService
+      .obtenerPlantasDatos()
+      .subscribe((response) => {
+        if (response && Array.isArray(response)) {
+          this.plantasDisponibles = response as Plantas[];
+          this.tramite80210Store.establecerDatos({
+            plantasDisponibles: this.plantasDisponibles,
+          });
+        }
+      });
+  }
+
+  /**
+   * @method agregarPlantasconfirmar
+   * @description
+   * Oculta la alerta relacionada con la acción de agregar plantas seleccionadas a la lista PROSEC.
+   * Se utiliza para cerrar el mensaje de advertencia cuando el usuario confirma la acción.
+   */
+  agregarPlantasconfirmar(): void {
+    this.espectaculoAlertaAgregar = false;
+  }
+
+  /**
+   * @description
+   * Actualiza el valor en el store basado en el formulario.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo en el formulario.
+   */
+  setValoresStore(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.tramite80210Store.establecerDatos({ [campo]: VALOR });
+  }
 
   /**
    * Método de limpieza al destruir el componente.
