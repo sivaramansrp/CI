@@ -9,6 +9,9 @@ import { USUARIO_INFO } from '../../constantes/nuevo-programa.enum';
 import basePlantasTerciarizadoras from '@libs/shared/theme/assets/json/80105/basePlantasTerciarizadoras.json';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
 import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
+import notarios from '@libs/shared/theme/assets/json/shared/notarios.json';
+import planta from '@libs/shared/theme/assets/json/shared/planta.json';
+import plantasSubmanufactureras from '@libs/shared/theme/assets/json/shared/plantas-submanufactureras.json';
 import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accionistas.json';
 import { takeUntil } from 'rxjs';
 // eslint-disable-next-line @nx/enforce-module-boundaries
@@ -116,368 +119,23 @@ export class PasoCapturarSolicitudComponent implements OnDestroy,OnInit {
 
   private basePlantasTerciarizadoras: unknown[] = Array.isArray(basePlantasTerciarizadoras) ? basePlantasTerciarizadoras : [];
 
-    private plantasBase: Readonly<Record<string, any>> = {
-     "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
-            "clavePlanta": "0",
-            "claveAduana": null,
-            "superficie": null,
-            "ubicacionColindancias": null,
-            "capacidadProduccion": null,
-            "capacidadProduccionUtilizada": 0,
-            "tipoLocal": null,
-            "tipoEstablecimiento": null,
-            "ubicacionEstablecimiento": null,
-            "domicilio": 260910315,
-            "empresaSolicitante": 332682,
-            "rfcRecinto": null,
-            "numeroLicencia": null,
-            "avisoFuncionamiento": null,
-            "rfcResponsableSanitario": null,
-            "correoElectronico": null,
-            "fecFinVigencia": "2025-09-05",
-            "testado": false,
-            "estadoEvaluacionEntidad": "AUTORIZADO",
-            "estadoEntidad": "AUTORIZADO",
-            "original": null,
-            "modificado": null,
-            "tipoBodega": null,
-            "tipoDeposito": null,
-            "marbetesPrecintos": null,
-            "idSolicitudRecursiva": null,
-            "idRecintoRecursiva": null,
-            "claveSidefi": null,
-            "nacional": null,
-            "numeroMovimientoVs": null,
-            "descripcionNumeroBodega": null,
-            "blnActivo": null,
-            "booleanAlquilado": null,
-            "blnCertificada": null,
-            "blnGenerico1": null,
-            "capacidadMaxAlmacenamiento": null,
-            "cveUnidadAdministrativa": null,
-            "cveUnidadMedidaCapacidad": null,
-            "cveUnidadMedidaVolumen": null,
-            "descripcionCertificador": null,
-            "fechaInicioVigencia": "2025-09-05",
-            "idAlmacenadoraMercancia": null,
-            "idPersonaSolicitud": null,
-            "tipoInmueble": null,
-            "idTipoRecinto": "TIREC.03",
-            "rfcCertificador": null,
-            "superficieEtr": null,
-            "superficieMarbetes": null,
-            "volumenManejoRecinto": null,
-            "idRecinto": 1,
-            "errorImmex": null,
-            "domiciliosMontoInversion": [
-                {
-                    "claveTipo": "TIMI.EQ",
-                    "descripcion": "EWR WERWER",
-                    "cantidad": "34",
-                    "monto": "54",
-                    "testado": true,
-                    "fecFinVigencia": "2025-09-05"
-                }
-            ],
-            "domiciliosEmpleados": [
-                {
-                    "totalEmpleados": "45",
-                    "directos": "25",
-                    "cedula": "SI",
-                    "fechaCedula": "2025-09-05",
-                    "indirectos": "20",
-                    "contrato": "435",
-                    "objetoContrato": "RET ERT",
-                    "fechaFirma": "2025-09-05",
-                    "fechaFinVigenciaFirma": "2025-09-05",
-                    "rfcEmpresa": "AAL970927390",
-                    "razonEmpresa": "ALMEXA",
-                    "testado": true,
-                    "fecFinVigencia": "2025-09-05"
-                }
-            ],
-            "domiciliosCapacidad": [
-                {
-                    "idServicio": 10,
-                    "claveFraccion": "1_84199",
-                    "unidadMedida": "pieza",
-                    "descripcion": "EXPP",
-                    "capacidadEfectiva": "90",
-                    "turnos": "22",
-                    "horasTurno": "6",
-                    "cantidadEmpleados": "33",
-                    "cantidadMaquinaria": "33",
-                    "descripcionMaquinaria": "GSD",
-                    "capacidadMensual": "3242",
-                    "capacidadAnual": "2343",
-                    "calculo": "48.1",
-                    "testado": true,
-                    "fecFinVigencia": "2025-09-05"
-                }
-            ],
-            "complementoPlanta": {
-                "amparoPrograma": "SI",
-                "tipoDoc": "TID.CA",
-                "descripcionTipoDoc": null,
-                "fechaFirmaDoc": "04/09/2025",
-                "fechaFinVigenciaDoc": "04/09/2025",
-                "rfcFirmante": null,
-                "razonFirmante": null,
-                "rfcFirmanteDos": null,
-                "razonFirmanteDos": null,
-                "tipoDocResp": "TICCOR.CC",
-                "descripcionTipoDocResp": null,
-                "fechaFirmaDocResp": "04/09/2025",
-                "fechaFinVigenciaDocResp": "04/09/2025",
-                "rfcFirmanteResp": null,
-                "razonFirmanteResp": null,
-                "rfcFirmanteRespDos": null,
-                "razonFirmanteRespDos": null,
-                "testado": true,
-                "fecFinVigencia": "2025-09-05"
-            },
-            "firmantes": [
-                {
-                    "idPersonaPersonaSolicitudR": 0,
-                    "idSolicitud": 0,
-                    "nombre": "AGRICOLA ALPE S DE RL DE CV",
-                    "apellidoMaterno": "string",
-                    "apellidoPaterno": "string",
-                    "razonSocial": "TIPERS.SL",
-                    "rfc": "AAL0409235E6",
-                    "curp": "string",
-                    "ideTipoPersonaSol": "string",
-                    "correoElectronico": "vucem.soporte.aplicativo@ultrasist.com.mx",
-                    "cedulaProfesional": "string",
-                    "nss": "260833725",
-                    "telefono": "8154563",
-                    "descripcionGiro": "Siembra, cultivo y cosecha de papa",
-                    "cvePaisOrigen": "str",
-                    "idDireccionSol": 0,
-                    "tipoPatenteAgente": "string",
-                    "recif": "string",
-                    "puesto": "string",
-                    "tipoAgente": "string",
-                    "numeroPatente": "str",
-                    "numeroIdentificacionFiscal": "AAL0409235E6",
-                    "personaMoral": true,
-                    "extranjero": true,
-                    "organismoPublico": true,
-                    "cveUsuario": "string",
-                    "paginaWeb": "string",
-                    "ideGenerica1": "string",
-                    "rfcExtranjero": "string",
-                    "codAutorizacion": "stri",
-                    "actividadProductiva": "string",
-                    "estadoEvaluacionEntidad": "AUTORIZADO",
-                    "estadoEntidad": "AUTORIZADO",
-                    "original": true,
-                    "modificado": true,
-                    "numeroRegistro": "string",
-                    "concentimientoInstalacionRecuperacion": true,
-                    "cveCatalogo": "string",
-                    "alquilado": true,
-                    "volumenAlmacenaje": 0,
-                    "capacidadAlmacenaje": 0,
-                    "descripcionDetalladaActividadEconomica": "string",
-                    "activo": true,
-                    "generico1": true,
-                    "area": "string",
-                    "cveNacionalidad": "str",
-                    "clasificacionArancelaria": "string",
-                    "infoAdicional": true,
-                    "montoImportacion": 0,
-                    "montoExportacion": 0,
-                    "pctParticAccionaria": 0,
-                    "ampliacionModelos": true,
-                    "ampliacionPaises": true,
-                    "fecFallecimiento": "2025-09-05",
-                    "idDomicilio": 0
-                }
-            ]
-  }
+  /**
+   * Objeto base inmutable que representa la estructura inicial de un plantas.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private plantasBase: any[] = planta;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private plantasSubmanufacturerasBase: Readonly<Record<string, any>> = {
-    "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
-            "clavePlanta": "0",
-            "claveAduana": null,
-            "superficie": null,
-            "ubicacionColindancias": null,
-            "capacidadProduccion": null,
-            "capacidadProduccionUtilizada": 0.0,
-            "tipoLocal": null,
-            "tipoEstablecimiento": null,
-            "ubicacionEstablecimiento": null,
-            "domicilio": 260910315,
-            "empresaSolicitante": 332682,
-            "rfcRecinto": null,
-            "numeroLicencia": null,
-            "avisoFuncionamiento": null,
-            "rfcResponsableSanitario": null,
-            "correoElectronico": null,
-            "fecFinVigencia": "2025-09-05",
-            "testado": false,
-            "estadoEvaluacionEntidad": "AUTORIZADO",
-            "estadoEntidad": "AUTORIZADO",
-            "original": null,
-            "modificado": null,
-            "tipoBodega": null,
-            "tipoDeposito": null,
-            "marbetesPrecintos": null,
-            "idSolicitudRecursiva": null,
-            "idRecintoRecursiva": null,
-            "claveSidefi": null,
-            "nacional": null,
-            "numeroMovimientoVs": null,
-            "descripcionNumeroBodega": null,
-            "blnActivo": null,
-            "booleanAlquilado": null,
-            "blnCertificada": null,
-            "blnGenerico1": null,
-            "capacidadMaxAlmacenamiento": null,
-            "cveUnidadAdministrativa": null,
-            "cveUnidadMedidaCapacidad": null,
-            "cveUnidadMedidaVolumen": null,
-            "descripcionCertificador": null,
-            "fechaInicioVigencia": "2025-09-05",
-            "idAlmacenadoraMercancia": null,
-            "idPersonaSolicitud": null,
-            "tipoInmueble": null,
-            "idTipoRecinto": "TIREC.03",
-            "rfcCertificador": null,
-            "superficieEtr": null,
-            "superficieMarbetes": null,
-            "volumenManejoRecinto": null,
-            "idRecinto": 1,
-            "errorImmex": null,
-            "domiciliosMontoInversion": [
-                {
-                    "claveTipo": "TIMI.EQ",
-                    "descripcion": "EWR WERWER",
-                    "cantidad": "34",
-                    "monto": "54",
-                    "testado": true,
-                    "fecFinVigencia": "2025-09-05"
-                }
-            ],
-            "domiciliosEmpleados": [
-                {
-                    "totalEmpleados": "45",
-                    "directos": "25",
-                    "cedula": "SI",
-                    "fechaCedula": "2025-09-05",
-                    "indirectos": "20",
-                    "contrato": "435",
-                    "objetoContrato": "RET ERT",
-                    "fechaFirma": "2025-09-05",
-                    "fechaFinVigenciaFirma": "2025-09-05",
-                    "rfcEmpresa": "AAL970927390",
-                    "razonEmpresa": "ALMEXA",
-                    "testado": true,
-                    "fecFinVigencia": "2025-09-05"
-                }
-            ],
-            "domiciliosCapacidad": [
-                {
-                    "idServicio": 10,
-                    "claveFraccion": "1_84199",
-                    "unidadMedida": "pieza",
-                    "descripcion": "EXPP",
-                    "capacidadEfectiva": "90",
-                    "turnos": "22",
-                    "horasTurno": "6",
-                    "cantidadEmpleados": "33",
-                    "cantidadMaquinaria": "33",
-                    "descripcionMaquinaria": "GSD",
-                    "capacidadMensual": "3242",
-                    "capacidadAnual": "2343",
-                    "calculo": "48.1",
-                    "testado": true,
-                    "fecFinVigencia": "2025-09-05"
-                }
-            ],
-            "complementoPlanta": {
-                "amparoPrograma": "SI",
-                "tipoDoc": "TID.CA",
-                "descripcionTipoDoc": null,
-                "fechaFirmaDoc": "04/09/2025",
-                "fechaFinVigenciaDoc": "04/09/2025",
-                "rfcFirmante": null,
-                "razonFirmante": null,
-                "rfcFirmanteDos": null,
-                "razonFirmanteDos": null,
-                "tipoDocResp": "TICCOR.CC",
-                "descripcionTipoDocResp": null,
-                "fechaFirmaDocResp": "04/09/2025",
-                "fechaFinVigenciaDocResp": "04/09/2025",
-                "rfcFirmanteResp": null,
-                "razonFirmanteResp": null,
-                "rfcFirmanteRespDos": null,
-                "razonFirmanteRespDos": null,
-                "testado": true,
-                "fecFinVigencia": "2025-09-05"
-            },
-            "firmantes": [
-                {
-                    "idPersonaPersonaSolicitudR": 0,
-                    "idSolicitud": 0,
-                    "nombre": "AGRICOLA ALPE S DE RL DE CV",
-                    "apellidoMaterno": "string",
-                    "apellidoPaterno": "string",
-                    "razonSocial": "TIPERS.SL",
-                    "rfc": "AAL0409235E6",
-                    "curp": "string",
-                    "ideTipoPersonaSol": "string",
-                    "correoElectronico": "vucem.soporte.aplicativo@ultrasist.com.mx",
-                    "cedulaProfesional": "string",
-                    "nss": "260833725",
-                    "telefono": "8154563",
-                    "descripcionGiro": "Siembra, cultivo y cosecha de papa",
-                    "cvePaisOrigen": "str",
-                    "idDireccionSol": 0,
-                    "tipoPatenteAgente": "string",
-                    "recif": "string",
-                    "puesto": "string",
-                    "tipoAgente": "string",
-                    "numeroPatente": "str",
-                    "numeroIdentificacionFiscal": "AAL0409235E6",
-                    "personaMoral": true,
-                    "extranjero": true,
-                    "organismoPublico": true,
-                    "cveUsuario": "string",
-                    "paginaWeb": "string",
-                    "ideGenerica1": "string",
-                    "rfcExtranjero": "string",
-                    "codAutorizacion": "stri",
-                    "actividadProductiva": "string",
-                    "estadoEvaluacionEntidad": "AUTORIZADO",
-                    "estadoEntidad": "AUTORIZADO",
-                    "original": true,
-                    "modificado": true,
-                    "numeroRegistro": "string",
-                    "concentimientoInstalacionRecuperacion": true,
-                    "cveCatalogo": "string",
-                    "alquilado": true,
-                    "volumenAlmacenaje": 0,
-                    "capacidadAlmacenaje": 0,
-                    "descripcionDetalladaActividadEconomica": "string",
-                    "activo": true,
-                    "generico1": true,
-                    "area": "string",
-                    "cveNacionalidad": "str",
-                    "clasificacionArancelaria": "string",
-                    "infoAdicional": true,
-                    "montoImportacion": 0,
-                    "montoExportacion": 0,
-                    "pctParticAccionaria": 0,
-                    "ampliacionModelos": true,
-                    "ampliacionPaises": true,
-                    "fecFallecimiento": "2025-09-05",
-                    "idDomicilio": 0
-                }
-            ]
-  }
+  /**
+   * Objeto base inmutable que representa la estructura inicial de un plantasSubmanufactureras.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private plantasSubmanufacturerasBase: any[] = plantasSubmanufactureras;
+
+  /**
+   * Objeto base inmutable que representa la estructura inicial de un notarios.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private notariosBase: any[] = notarios;
 
    /**
    * URL de la página actual.
@@ -550,26 +208,33 @@ ngOnInit(): void {
     });
   }
 
-        // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
+/**
+ * Construye un arreglo de objetos de plantas basado en una estructura base común.
+ * 
+ * @param arr Arreglo de datos de entrada para cada planta.
+ * @param base Objeto base que se combina con los datos específicos de cada planta.
+ * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
+ */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+buildPlantas(arr: any[] = [], base: Record<string, any>): any[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
    const MAP_TO_PAYLOAD = (item: any): any => ({
   ...base,
-  entidadFederativa: item.estado,
-  municipioDelegacion: item.estadoOptions,
-  fechaActa: item.fechaDelActa,
-  nombreNotario: item.nombre,
-  numeroActa: item.numeroDeActa,
-  numeroNotaria: item.numeroDeNotaria,
-  apellidoPaterno: item.primerApellido,
-  apellidoMaterno: item.segundoApellido,
-  estadoEntidad: item.entidadFederativa,
-  cvePaisOrigen: item.pais,
-  rfc: item.rfc,
-  domicilio: item.domicilioFiscal,
-  razonSocial: item.razonSocial,
+  idPlanta: item.planta ?? '',
+  calle: item.calle ?? '',
+  numeroExterior: item.numeroExterior ?? '',
+  numeroInterior: item.numeroInterior ?? '',
+  codigoPostal: item.codigoPostal ?? '',
+  localidad: item.localidad ?? '',
+  colonia: item.colonia ?? '',
+  delegacionMunicipio: item.delegacionMunicipio ?? '',
+  entidadFederativa: item.entidadFederativa ?? '',
+  pais: item.pais ?? '',
+  rfc: item.registroFederalDeContribuyentes ?? '',
+  domicilioFiscal: item.domicilioDelSolicitante ?? '',
+  razonSocial: item.razonSocial ?? ''
 });
       
 
@@ -577,6 +242,35 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
 
     return RESULT;
 }
+
+/**
+ * Genera un arreglo de objetos con los datos de fedatarios a partir de un arreglo de entrada.
+ *
+ * @param arr Arreglo de objetos con datos de entrada (opcional).
+ * @param base Objeto base que se fusiona con los datos específicos de cada fedatario.
+ * @returns Un arreglo de objetos estructurados con la información de los fedatarios.
+ */
+// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
+  const RESULT: any[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   const MAP_TO_PAYLOAD = (item: any): any => ({
+  ...base,
+  nombreNotario: item.nombre ?? '',
+  apellidoMaterno: item.segundoApellido ?? '',
+  apellidoPaterno: item.primerApellido ?? '',
+  numeroActa: item.numeroDeActa ?? '',
+  fechaActa: item.fechaDelActa ?? '',
+  numeroNotaria: item.numeroDeNotaria ?? '',
+  entidadFederativa: item.estado ?? '',
+  delegacionMunicipio: item.estadoOptions ?? '',
+});
+
+    arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
+
+    return RESULT;
+}
+
   /**
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
    * 
@@ -590,9 +284,11 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     const EMPRESAS_NACIONALES = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentos, this.empresasNacionales);
     const EMPRESAS_EXTRANJERAS = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentosExtranjera, this.empresasExtranjeras);
     const PLANTAS_TERCIARIZADORAS = PasoCapturarSolicitudComponent.buildPlantasTerciarizadoras(data.empresasSeleccionadas, this.basePlantasTerciarizadoras);
-    const PLANTAS = this.buildPlantas(data.tablaDatosFederatarios, this.plantasBase, data);
+    const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
     const ANEXO_ALL = this.buildAnexo(data);
-    const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase, data);
+    const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
+    const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
+
 
     const PAYLOAD = {
     "tipoDeSolicitud": "guardar",
@@ -616,6 +312,7 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
         
     },
       "planta": [...PLANTAS],
+      "notario":[...NOTARIOS],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
       "mercanciaImportacion": [
@@ -727,18 +424,31 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     return RESULT;
   }
 
+/**
+ * Construye un arreglo de objetos con los datos de plantas submanufactureras a partir de un arreglo de entrada.
+ *
+ * @param arr Arreglo de objetos con datos de entrada (opcional).
+ * @param base Objeto base que se fusiona con los datos específicos de cada planta.
+ * @returns Un arreglo con los objetos estructurados de plantas submanufactureras.
+ */
 // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>, data: any): any[] {
+buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const MAP_TO_PAYLOAD = (item: any): any => ({
       ...base,
-      estadoEntidad: item.entidadFederativa,
-      cvePaisOrigen: item.pais,
-      rfc: item.rfc,
-      domicilio: item.domicilioFiscal,
-      razonSocial: item.razonSocial,
+      empresaCalle: item.calle ?? '',
+      empresaNumeroInterior: item.numInterior ?? '',
+      empresaNumeroExterior: item.numExterior ?? '',
+      empresaCodigoPostal: item.codigoPostal ?? '',
+      localidad: item.colonia ?? '',
+      empresaDelegacionMunicipio: item.delegacionMunicipio ?? '',
+      empresaEntidadFederativa: item.entidadFederativa ?? '',
+      empresaPais: item.pais ?? '',
+      rfc: item.rfc ?? '',
+      domicilioFiscal: item.domicilioFiscalSolicitante ?? '',
+      razonSocial: item.razonSocial ?? '',
     });
 
     arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));

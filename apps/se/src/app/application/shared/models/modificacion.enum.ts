@@ -23,6 +23,7 @@ export interface Mercancia {
   fraccionNaladiSa96: string;
   fraccionNaladiSa02: string;
   nalad?: string;
+  fechaFactura?: string;
 }
 
 export interface ConfiguracionColumna<T> {

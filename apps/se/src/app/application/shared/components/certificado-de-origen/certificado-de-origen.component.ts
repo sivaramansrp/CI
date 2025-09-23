@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
+import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { CommonModule } from '@angular/common';
@@ -296,7 +296,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * Indica si el campo de fecha fin debe mostrarse en el formulario, dependiendo del procedimiento.
    */
   fechaFin: boolean = false;
-
+  
+  /**
+   * @property {boolean} fechaFin
+   * @description
+   * Indica si el campo de fecha fin debe mostrarse en el formulario, dependiendo del procedimiento.
+   */
+  fechaBoton: boolean = false;
   /**
    * Indicates whether the domicile information should be displayed.
    * Set to `true` to show domicile details; otherwise, set to `false`.
@@ -362,7 +368,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    */
   cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_SELECCIONADAS;
 
-
+cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
   /**
    * Datos de la bitácora obtenidos desde el servicio.
    * @type {Mercancia[]}
@@ -496,6 +502,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
   createForm(): void {
     this.formCertificado = this.fb.group({
       si: [false],
+      rangoDeFecha:[],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
       bloque: ['', [Validators.required, Validators.min(0)]],
       fraccionArancelariaForm: ['', [Validators.maxLength(8), Validators.pattern(EIGHT_DIGIT_NUMBER_REGEX)]],
@@ -754,6 +761,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    */
   ngOnInit(): void {
     this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
+    this.fechaBoton = BOTON_DE_OPCION_VER.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
     this.applyTercerOperadorValidation(); // Add validation for procedure 110222
     this.nuevaNotificacion = {} as Notificacion

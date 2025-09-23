@@ -57,7 +57,7 @@ export const OCULTAR_BOTONES = [240120, 240121, 240107, 240311, 240407, 240123, 
 * @author [Tu Nombre o Equipo]
 */
 export const NO_VISIBILIDAD_UMC: number[] = [
-  240122
+
 ];
 
 /**

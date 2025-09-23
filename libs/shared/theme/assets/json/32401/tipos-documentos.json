@@ -1,11 +1,6 @@
-{
-    "catalogos": [
-        {
-            "id": 1,
-            "descripcion": "Otros"
-        }
-    ],
-    "required": false,
-    "labelNombre": "Tipo de documento",
-    "primerOpcion": "Seleccione un tipo de documento"
-}
+[
+    {
+        "id": 1,
+        "descripcion": "Otros"
+    }
+]
