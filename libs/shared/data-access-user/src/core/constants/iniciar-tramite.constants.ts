@@ -18,7 +18,7 @@ export interface IniciarRequest {
   rfcSolicitante: string;
   rolActual: string;
   folio_programa?:string;
-  id_tipo_tramite?:number;
+  idTipoTramite?:number;
   discriminador?:string;
 
 }

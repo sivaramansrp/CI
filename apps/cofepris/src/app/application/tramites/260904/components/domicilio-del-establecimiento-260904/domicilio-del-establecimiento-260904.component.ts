@@ -2,6 +2,7 @@ import { AfterViewInit,Input,OnInit } from '@angular/core';
 import { AlertComponent, InputCheckComponent, REGEX_LOCALIDAD, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
+import { ID_PROCEDIMIENTO, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento-260904.enum';
 import { ConsultaioQuery} from "@ng-mf/data-access-user";
 
 import { OnChanges, OnDestroy } from '@angular/core';
@@ -25,7 +26,7 @@ import { MercanciasInfo } from '../../modelos/modificación-del-permiso-sanitari
 import { Modal } from 'bootstrap';
 import { NICO_TABLA } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { NicoInfo } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
-import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento-260904.enum';
+
 
 
 import { ReactiveFormsModule } from '@angular/forms';
@@ -78,11 +79,27 @@ import { Validators } from '@angular/forms';
 })
 export class DomicilioDelEstablecimiento260904Component
   implements OnInit, OnDestroy, AfterViewInit, OnChanges {
+
+  /**
+   * Indica si el componente debe estar deshabilitado.
+   * Cuando es `true`, el componente no permite interacción del usuario.
+   */
   @Input() disabled: boolean = false;
+
+  /**
+   * Tipo de trámite asociado al componente.
+   * Este valor se recibe como entrada y determina el tipo de trámite que se está gestionando.
+   */
   @Input() tipoTramite: string = '';
 
 
-
+ /**
+   * @property idProcedimiento
+   * @description ID of the current procedure, defined as a read-only property.
+   * @type {string | number}
+   * @readonly
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Índice del elemento de mercancía seleccionado en la tabla.
    */
@@ -202,6 +219,18 @@ export class DomicilioDelEstablecimiento260904Component
       cantidadUmc: info.cantidadUMC || '',
     });
     
+    /**
+     * Mapea la información de un objeto `MercanciasInfo` a un nuevo objeto con campos específicos.
+     * 
+     * @param info - Objeto que contiene la información de las mercancías.
+     * @returns Un objeto con los siguientes campos:
+     * - `presentacion`: La presentación del producto.
+     * - `numeroRegistroSanitario`: El número de registro sanitario.
+     * - `fechaCaducidad`: La fecha de caducidad del producto.
+     * - `paisDeOriginDatos`: Arreglo con el país de origen.
+     * - `paisDeProcedenciaDatos`: Arreglo con el país de procedencia.
+     * - `usoEspecifico`: Arreglo con el uso específico del producto.
+     */
     const MAPEXTRA = (info: MercanciasInfo): {
       presentacion: string;
       numeroRegistroSanitario: string;
@@ -217,6 +246,17 @@ export class DomicilioDelEstablecimiento260904Component
       paisDeProcedenciaDatos: info.paisDeProcedencia ? [info.paisDeProcedencia] : [],
       usoEspecifico: info.usoEspecifico ? [info.usoEspecifico] : [],
     });
+    /**
+     * Crea un objeto con campos relacionados a la información de otros datos del establecimiento.
+     * 
+     * @returns Un objeto con las siguientes propiedades:
+     * - marca: Marca del producto.
+     * - especifique: Campo para especificar información adicional.
+     * - claveDeLos: Clave identificadora.
+     * - fechaDeFabricacio: Fecha de fabricación del producto.
+     * - fechaDeCaducidad: Fecha de caducidad del producto.
+     * - especifiqueObligatorio: Campo obligatorio para especificar información adicional.
+     */
     const MAPOTHER = (): {
       marca: string;
       especifique: string;
@@ -622,7 +662,11 @@ export class DomicilioDelEstablecimiento260904Component
   /** Estado actual de la solicitud proveniente del store */
   public solicitudState!: Tramite260904State;
 
-  buttonDisableForProrroga: boolean = true;
+  /**
+   * Indica si el botón debe estar desactivado para la opción de prórroga.
+   * Cuando es `true`, el botón estará deshabilitado y no permitirá solicitar una prórroga.
+   */
+  botonDesactivarParaProrrogar: boolean =true;
 
   /**
    * Controla si los campos de nombre, apellidoPaterno y apellidoMaterno están habilitados
@@ -914,6 +958,7 @@ ngOnChanges(): void {
   if (this.tipoTramite === '1' || this.tipoTramite === '2') {
     this.isMercanciasTableDisabled = false;
     this.isNicoTablaDisabled = false;
+    this.botonDesactivarParaProrrogar = false;
   } else {
     this.isMercanciasTableDisabled = true;
     this.isNicoTablaDisabled = true;
@@ -937,7 +982,7 @@ ngOnChanges(): void {
       this.form?.enable();
       this.domicilio?.enable();
       this.representanteLegal?.enable();
-      // Enable dropdowns
+     
       this.form?.get('estado')?.enable();
       this.nicoTablaForm?.get('entidad')?.enable();
       this.nicoTablaForm?.get('representacion')?.enable();
@@ -948,7 +993,7 @@ ngOnChanges(): void {
       this.representanteLegal?.get('apellidoPaterno')?.disable();
       this.representanteLegal?.get('apellidoMaterno')?.disable();
     } else if (this.tipoTramite === '0') {
-      this.buttonDisableForProrroga = true;
+      this.botonDesactivarParaProrrogar = true;
       this.form?.disable();
       this.domicilio?.disable();
       this.representanteLegal?.disable();
@@ -961,6 +1006,7 @@ ngOnChanges(): void {
       this.domicilio?.get('regimen')?.disable();
       this.domicilio?.get('aduanasEntradas')?.disable();
     }
+    
     const AVISO_CHECKBOX_VALUE = this.domicilio?.get('avisoCheckbox')?.value;
     const LICENCIA_SANITARIA_CONTROL = this.domicilio?.get('licenciaSanitaria');
     if (LICENCIA_SANITARIA_CONTROL) {
@@ -1478,6 +1524,14 @@ onLicenciaSanitariaInput(event: Event): void {
   }
 
 
+/**
+ * Valida que todos los campos requeridos en los formularios estén completos y correctos.
+ * 
+ * - Marca todos los controles como "tocados" si son inválidos para mostrar los errores de validación.
+ * - Verifica los formularios principales: `form`, `domicilio` y `representanteLegal`.
+ * 
+ * @returns {boolean} `true` si todos los campos requeridos son válidos, `false` en caso contrario.
+ */
 public validateRequiredFields(): boolean {
     let isValid = true;
   if (this.form && this.form.invalid) {
@@ -1498,6 +1552,17 @@ public validateRequiredFields(): boolean {
   return isValid;
 }
 
+/**
+ * Marca todos los campos de los formularios asociados como 'touched' y 'dirty', 
+ * y actualiza la validez de sus valores. 
+ * 
+ * Este método recorre los controles de los formularios `form`, `domicilio` y `representanteLegal`, 
+ * asegurando que todos los campos sean marcados como modificados y tocados, 
+ * lo que puede ser útil para mostrar mensajes de validación en la interfaz de usuario.
+ * 
+ * @remarks
+ * Útil para forzar la visualización de errores de validación en todos los campos de los formularios.
+ */
 public markAllFieldsTouched(): void {
  if (this.form) {
     Object.values(this.form.controls).forEach(control => {
@@ -1547,4 +1612,110 @@ public markAllFieldsTouched(): void {
     this.agregarModalBox = false;
   }
 
-}
+  /**
+   * Restablece todos los formularios reactivos del componente a sus valores iniciales.
+   * Utiliza los valores actuales del store para restaurar los datos prellenados.
+   */
+  resetForm() {
+    // Obtiene el estado actual del store para valores iniciales
+    this.tramite260904Query.selectTramite260904$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((state) => {
+        this.resetPrincipalForm(state);
+        this.resetNicoTablaForm(state);
+        this.resetDomicilioForm(state);
+        this.resetRepresentanteLegalForm(state);
+      });
+  }
+
+  /**
+   * @private
+   * Restablece el formulario principal con los valores proporcionados en el estado dado.
+   * 
+   * Si el formulario existe, se reinicia con los valores del estado recibido. 
+   * Los campos se llenan con los valores del estado o con una cadena vacía si no están definidos.
+   * 
+   * @param state El estado actual del trámite, utilizado para poblar los campos del formulario.
+   */
+  private resetPrincipalForm(state: Tramite260904State): void {
+    if (this.form) {
+      this.form.reset({
+        codigoPostal: state?.codigoPostal || '',
+        estado: state?.estado || '',
+        municipioOAlcaldia: state?.municipioOAlcaldia || '',
+        localidad: '',
+        colonias: state?.colonias || '',
+        calle: state?.calle || '',
+        lada: state?.lada || '',
+        telefono: state?.telefono || ''
+      });
+    }
+  }
+
+  /**
+   * Restablece el formulario `nicoTablaForm` con los valores proporcionados en el estado dado.
+   * 
+   * @param state El estado actual del trámite, utilizado para inicializar los campos del formulario.
+   * 
+   * @remarks
+   * Si el formulario existe, se reinicia con los valores de `entidad` y `representacion` del estado.
+   * Si estos valores no están definidos, se asigna una cadena vacía por defecto.
+   */
+  private resetNicoTablaForm(state: Tramite260904State): void {
+    if (this.nicoTablaForm) {
+      this.nicoTablaForm.reset({
+        entidad: state?.entidad || '',
+        representacion: state?.representacion || ''
+      });
+    }
+  }
+
+  /**
+   * Restablece el formulario de domicilio con los valores proporcionados en el estado.
+   * 
+   * @param state El estado actual del trámite, utilizado para poblar los campos del formulario.
+   * 
+   * @remarks
+   * - Si el formulario `domicilio` existe, se reinicia con los valores predeterminados y los valores del estado.
+   * - Los campos `avisoCheckbox`, `aifaCheckbox` y `manifests` se establecen en `true` por defecto.
+   * - Los campos `licenciaSanitaria`, `regimen`, `aduanasEntradas` y `importPermitNumberCNSNS` se obtienen del estado o se inicializan como cadena vacía si no están definidos.
+   */
+  private resetDomicilioForm(state: Tramite260904State): void {
+    if (this.domicilio) {
+      this.domicilio.reset({
+        avisoCheckbox: true,
+        licenciaSanitaria: state?.licenciaSanitaria || '',
+        regimen: state?.regimen || '',
+        aduanasEntradas: state?.aduanasEntradas || '',
+        importPermitNumberCNSNS: state?.importPermitNumberCNSNS || '',
+        aifaCheckbox: true,
+        manifests: true
+      });
+    }
+  }
+
+  /**
+   * Restablece el formulario de representante legal con los valores proporcionados en el estado.
+   * 
+   * @param state - El estado actual del trámite, que contiene los datos del representante legal.
+   * 
+   * @remarks
+   * Si el formulario de representante legal existe, se reinicia con los valores del estado.
+   * Si algún valor no está presente en el estado, se utiliza un valor predeterminado.
+   * 
+   * @compo
+   * Esta función se utiliza para limpiar y establecer los valores del formulario de representante legal
+   * cuando se actualiza el estado del trámite.
+   */
+  private resetRepresentanteLegalForm(state: Tramite260904State): void {
+    if (this.representanteLegal) {
+      this.representanteLegal.reset({
+        acuerdoPublico: state?.acuerdoPublico || '1',
+        rfc: state?.rfc || '',
+        nombre: state?.nombre || '',
+        apellidoPaterno: state?.apellidoPaterno || '',
+        apellidoMaterno: state?.apellidoMaterno || ''
+      });
+    }
+  }
+  }

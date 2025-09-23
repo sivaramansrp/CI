@@ -8,6 +8,7 @@ import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '../../components/titulo/titulo.component';
+import { USUARIO_INFO } from '../../../core/enums/usuario-info.enum';
 import { Usuario } from '../../../core/models/shared/cargar-documentos.model';
 /**
  * Este componente se muestra en Paso Carga Documento
@@ -94,7 +95,7 @@ export class PasoCargaDocumentoComponent implements OnInit, OnDestroy {
   /**
    * Servicio para gestionar los catálogos.
    */
-  @Input() datosUsuario!: Usuario;
+  datosUsuario: Usuario = USUARIO_INFO;
 
   @Output() cargaEnProgreso = new EventEmitter<boolean>();
 

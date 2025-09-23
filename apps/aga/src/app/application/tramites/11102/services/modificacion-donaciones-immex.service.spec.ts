@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 import { Tramite11102Store } from '../estados/tramite11102.store';
 import { Solicitud11102State, Solicitud11102StaObjResp } from '../estados/tramite11102.store';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
-import { RespuestaMercancia } from '../models/modificacion-donaciones-immex.model';
+import { DatosDelMercancia, RespuestaMercancia } from '../models/modificacion-donaciones-immex.model';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ModificacionDonacionesImmexService', () => {
@@ -19,6 +19,7 @@ describe('ModificacionDonacionesImmexService', () => {
         } as any;
 
         storeMock = {
+            setAduana: jest.fn(),
             setOrganismoPublico: jest.fn(),
             setTipoDeMercancia: jest.fn(),
             setUnidadMedida: jest.fn(),
@@ -168,6 +169,16 @@ describe('ModificacionDonacionesImmexService', () => {
         service.getDatosDeTrtamitelDoc().subscribe(res => {
             expect(res).toEqual(mockResponse);
             expect(httpMock.get).toHaveBeenCalledWith('assets/json/11102/datos-del-tramite.json');
+            done();
+        });
+    });
+
+    it('obtenerMercanciaDatos should call http.get with correct URL', (done) => {
+        const MOCK_RESPONSE: DatosDelMercancia[] = [];
+        httpMock.get.mockReturnValue(of(MOCK_RESPONSE));
+        service.obtenerMercanciaDatos().subscribe(res => {
+            expect(res).toEqual(MOCK_RESPONSE);
+            expect(httpMock.get).toHaveBeenCalledWith('assets/json/11102/mercancia-table.json');
             done();
         });
     });
