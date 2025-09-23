@@ -349,15 +349,19 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getCatalogoPaises(): void {
-    this.catalogosServices
-      .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
+    this.autorizacionProgrmaNuevoService
+      .getPais()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((datos) => {
+      .subscribe((res) => {
         const INDICE = this.camposFormulario.findIndex(
           (ele) => ele.campo === ENTIDADFEDERATIVA
         );
-        this.camposFormulario[INDICE].opciones = datos;
-        this.Tramite80102Store.setPaisesOrigen(datos);
+        const PAISES =res.datos.map((item: Catalogo) => ({
+          ...item,
+          clave: typeof item.clave === 'string' ? Number(item.clave) : (item.clave ?? 0)
+        }));
+        this.camposFormulario[INDICE].opciones = PAISES
+        this.Tramite80102Store.setPaisesOrigen(PAISES);
       })
   }
 
