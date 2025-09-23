@@ -17,7 +17,7 @@
     "formaModificaciones": {
       "nombreDelFederatario": "Juan Pérez",
       "nombreDeNotaria": "123",
-      "estado": "1",
+      "estado": "Jalisco",
       "nombreDeActa": "123",
       "fechaDeActa": "30/11/2023",
       "rfc": "ABC123456XYZ",
@@ -108,7 +108,7 @@
       "rfc": "JKL321654MNO",
       "taxId": "TAX0011223344",
       "razonSocial": "Construcciones del Sur",
-      "pais": "México",
+      "pais": "1",
       "codigoPostal": "97000",
       "estado": "Yucatán",
       "correoElectronico": "info@constructsur.mx",

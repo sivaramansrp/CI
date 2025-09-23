@@ -12,7 +12,7 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 
-import { CATALOGO_TIPO,COMPLEMENTO_DE_PLANTA, PERMANCERA_OPTIONS } from '../../constantes/complementar-planta.enum';
+import { CATALOGO_TIPO,COMPLEMENTO_DE_PLANTA, ComplementoDePlanta, PERMANCERA_OPTIONS } from '../../constantes/complementar-planta.enum';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { FECHA_DE_FIN_DE_VIGENCIA } from '../../constantes/complementar-planta.enum';
@@ -104,7 +104,7 @@ export class ComplementarPlantaComponent implements OnInit {
    * Datos para la tabla de complemento de planta.
    * @property {Array} complementoDePlantaDatos
    */
-  complementoDePlantaDatos = [];
+  complementoDePlantaDatos: ComplementoDePlanta[] = [];
   /**
    * Evento que se emite al cerrar el popup.
    * 
@@ -174,6 +174,37 @@ export class ComplementarPlantaComponent implements OnInit {
       this.complementarStore.setTipoDocumentoOptions(res.datos);
       this.documentoOptions = res.datos;
     });
+  }
+
+  /**
+   * Agrega un nuevo complemento a la lista de datos.
+   */
+  agregarComplemento(): void {
+    if (this.complementarForm.valid) {
+      const VALORES_FORMULARIO = this.complementarForm.value;
+      const NUEVA_FILA: ComplementoDePlanta = {
+        PLANTA: '',
+        PERMANECERA_MERCANCIA_PROGRAMA: VALORES_FORMULARIO.permanecera || '',
+        TIPO_DOCUMENTO: VALORES_FORMULARIO.tipo || '',
+        FECHA_DE_FIRMA: VALORES_FORMULARIO.fechaDeFirma || '',
+        FECHA_DE_FIN_DE_VIGENCIA: VALORES_FORMULARIO.fetchaDeFinDeVigencia || '',
+        DOCUMENTO_RESPALDO: '',
+        FECHA_DE_FIRMA_DOCUMENTO: '',
+        FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO: '',
+      };
+      this.complementoDePlantaDatos = [
+        ...this.complementoDePlantaDatos,
+        NUEVA_FILA
+      ];
+      this.complementarForm.reset();
+    }
+  }
+  
+  /**
+   * Limpia el formulario.
+   */
+  limpiar(): void {
+    this.complementarForm.reset();
   }
 
 /**
