@@ -965,7 +965,7 @@ export class DomiciliosRfcSolicitanteComponent
   abrirMultipleSeleccionPopup(
     titulo: string,
     mensaje: string,
-    txtBtnAceptar: string = 'Cerrar',
+    txtBtnAceptar: string = 'Aceptar',
     txtBtnCancelar: string = ''
   ): void {
     this.nuevaNotificacion = {

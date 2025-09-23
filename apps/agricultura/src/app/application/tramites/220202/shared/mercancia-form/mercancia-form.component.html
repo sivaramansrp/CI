@@ -63,7 +63,7 @@
           class="form-control"
           formControlName="numeroCertificadoInternacional"
           maxlength="50"
-          title="Si la normatividad no le solicita el Certificado puede capturar NO APLICA ó N/A"
+          title="Si la normatividad no le solicita el Certificado puede capturar NO APLICA ó &quot;N/A&quot;."
           [ngClass]="
             mercanciaForm.get('numeroCertificadoInternacional')?.invalid &&
             mercanciaForm.get('numeroCertificadoInternacional')?.touched
@@ -173,7 +173,7 @@
           class="form-control"
           style="height: 60%; resize: none"
           formControlName="descripcion"
-          maxlength="1000"
+          maxlength="250"
           [ngClass]="
             mercanciaForm.get('descripcion')?.invalid &&
             mercanciaForm.get('descripcion')?.touched

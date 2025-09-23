@@ -148,7 +148,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     this.representante = this.fb.group({
       representanteRegistro: [
         this.solicitudState.representanteRegistro,
-        [ Validators.pattern(REG_X.RFC_13_ALFANUM), Validators.maxLength(15)],
+        [Validators.required, Validators.pattern(REG_X.RFC_13_ALFANUM), Validators.maxLength(15)],
       ],
       representanteRfc: [
         { value: this.solicitudState.representanteRfc, disabled: true },

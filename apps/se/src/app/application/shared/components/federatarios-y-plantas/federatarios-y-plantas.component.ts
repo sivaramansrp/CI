@@ -189,6 +189,17 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
   @Output() datosFormaFedratario: EventEmitter<FederatariosEncabezado> =
     new EventEmitter<FederatariosEncabezado>(true);
 
+  /**
+   * Emisor de eventos para los datos de plantas disponibles.
+   */
+  @Output() datosPlantaDisponibles: EventEmitter<PlantasDisponibles[]> = new EventEmitter<PlantasDisponibles[]>(true);
+
+  /** 
+   * Emisor de eventos para los datos de plantas IMMEX. 
+   */
+  @Output() datosPlantasImmex: EventEmitter<PlantasImmex[]> = new EventEmitter<PlantasImmex[]>(true);
+
+
 
   /**
    * Arreglo que almacena los datos seleccionados de plantas IMMEX.
@@ -568,6 +579,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
  */
 buscarPlantasImmex(): void {
   this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
+  this.datosPlantaDisponibles.emit(this.plantasDisponiblesDatos);
 }
 
 /**
@@ -579,6 +591,7 @@ buscarPlantasImmex(): void {
  */
 agregarPlantas(): void {
   this.plantasImmexDatos = [INMEX_PLANTAS];
+  this.datosPlantasImmex.emit(this.plantasImmexDatos);
 }
 
 /**

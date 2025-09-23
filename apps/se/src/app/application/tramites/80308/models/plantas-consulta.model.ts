@@ -192,6 +192,8 @@ export interface DatosImmex {
     pais?: string;
     /** Teléfono */
     telefono?: string;
+    /** Descripción del estatus */
+    desEstatus?: string;
 }
 
 /**

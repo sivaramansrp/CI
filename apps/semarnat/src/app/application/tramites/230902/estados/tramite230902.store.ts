@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 
 import { ConfiguracionItem } from '../enum/mercancia.enum';
-import { ConfiguracionItem as TercerosConfiguracionItem } from '../enum/tereceors.enum';
+import { TereceorsConfiguracionItem as TercerosConfiguracionItem } from '../enum/tereceors.enum';
 
 
 /**
@@ -62,6 +62,124 @@ export interface Solicitud230902State {
   /** Lista de movimientos seleccionados. */
   listaSeleccionadaMovimiento: string[];
 
+    /**
+   * @property {string} codigoPostal
+   * @description
+   * Código postal capturado en el formulario de datos generales de terceros.
+   * Campo opcional que almacena la información postal del destinatario.
+   */
+  codigoPostal?: string;
+  
+  /**
+   * @property {string} pais
+   * @description
+   * Identificador del país seleccionado en el formulario de datos generales de terceros.
+   * Campo opcional que almacena el ID del país del destinatario.
+   */
+  pais?: string;
+  
+  /**
+   * @property {string} estado
+   * @description
+   * Identificador del estado o entidad federativa seleccionado en el formulario de datos generales de terceros.
+   * Campo opcional que almacena el ID del estado del destinatario.
+   */
+  estado?: string;
+  
+  /**
+   * @property {string} nombre
+   * @description
+   * Nombre del domicilio capturado en el formulario de datos generales de terceros.
+   * Campo opcional que almacena la descripción del domicilio del destinatario.
+   */
+  nombre?: string;
+  
+  /**
+   * @property {TercerosConfiguracionItem[]} listaseleccionadaDestinatario
+   * @description
+   * Array que contiene los elementos seleccionados en la tabla de destinatarios de terceros.
+   * Se utiliza para identificar qué registros han sido marcados para operaciones como modificar o eliminar.
+   */
+  listaseleccionadaDestinatario: TercerosConfiguracionItem[];
+
+  /** Identificador único para la mercancía. */
+  id: number;
+  /**
+     * @description
+     * Fracción arancelaria de la mercancía.
+     */ 
+    fraccionArancelaria: string;
+    /**
+     * @description
+     * Descripción de la fracción arancelaria.
+     */
+    fraccionDescripcion : string;
+    /**
+     * @description
+     * Indica si la mercancía pertenece a otra fracción.
+     */
+    otraFraccion: boolean;
+  
+    /**
+     * @description
+     * Descripción de la mercancía.
+     */
+    descripcion: string;
+  
+    /**
+     * @description
+     * Clasificación taxonómica de la mercancía.
+     */
+    clasificacionTaxonomica: string;
+  
+    /**
+     * @description
+     * Rendimiento del producto.
+     */
+    rendimientoProducto: string;
+  
+    /**
+     * @description
+     * Nombre científico de la mercancía.
+     */
+    nombreCientifico: string;
+  
+    /**
+     * @description
+     * Nombre común de la mercancía.
+     */
+    nombreComun: string;
+  
+    /**
+     * @description
+     * Marca o marcaje de la mercancía.
+     */
+    marca: string;
+  
+    /**
+     * @description
+     * cantidad de la mercancía.
+     */
+    cantidad: string;
+  
+    /**
+     * @description
+     * Unidad de medida de la mercancía.
+     */
+    unidadMedida: string;
+  
+    /**
+     * @description
+     * País de origen de la mercancía.
+     */
+    paisOrigen: string;
+  
+    /**
+     * @description
+     * País de procedencia de la mercancía.
+     */
+    paisProcedencia: string;
+
 }
 
 export function createInitialState(): Solicitud230902State {
@@ -83,6 +201,25 @@ export function createInitialState(): Solicitud230902State {
     listaSeleccionadaAduanas: [],
     listaOriginalMovimiento: [],
     listaSeleccionadaMovimiento: [],
+    codigoPostal: '',
+    pais: '1',
+    estado: '',
+    nombre: '',
+    listaseleccionadaDestinatario: [],
+    id: 0,
+    fraccionArancelaria: '',
+    fraccionDescripcion: '',
+    otraFraccion: false,
+    descripcion: '',
+    rendimientoProducto: '',
+    clasificacionTaxonomica: '',
+    nombreCientifico: '',
+    nombreComun: '',
+    marca: '',
+    cantidad: '',
+    unidadMedida: '',
+    paisOrigen: '',
+    paisProcedencia: '',
   };
 }
 
