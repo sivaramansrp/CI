@@ -36,12 +36,12 @@ const PROCEDURE = '/sat-t80102';
  */
 export const PROC_80102 = {
     ESTADO: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/estado`,
-    PAIS: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/paises`,
+    PAIS: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/paises`,
     NICO: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${CATALOGO}/nico`,
     POST_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/guardar`,
     GET_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/acuse`,
     CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${TRAMITE}/consulta/${id}`,
     OPINIONES: (numFolioTramite: string | number): string => `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`,
-    GUARDAR: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}/solicitud/guardar`,
+    GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
     servicoImex: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/servicios-immex`,
 };

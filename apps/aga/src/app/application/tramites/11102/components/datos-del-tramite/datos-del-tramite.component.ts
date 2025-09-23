@@ -1,26 +1,46 @@
 import {
   AlertComponent,
-  CatalogoSelectComponent,
+  ConfiguracionColumna,
   ConsultaioQuery,
   ConsultaioState,
-  InputCheckComponent,
+  REGEX_CANTIDAD_15_4,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_NUMERO_INTERIOR,
   REGEX_POSTAL,
+  REGEX_RFC,
   REGEX_TELEFONO_DIGITOS,
-  TableBodyData,
-  TableComponent,
+  REGEX_TELEFONO_OPCIONAL,
+  TablaDinamicaComponent,
+  TablaSeleccion,
   TituloComponent,
-  ValidacionesFormularioService
+  ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { 
+  CatalogoSelectComponent, 
+  InputCheckComponent 
+} from '@libs/shared/data-access-user/src';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
-import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { Catalogo } from '../../estados/tramite11102.store';
 import { CommonModule } from '@angular/common';
 import { DatosDelMercancia } from '../../models/modificacion-donaciones-immex.model';
+import { MERCANCIA_TABLA_CONFIGURACION } from '../../constants/modificacion-donaciones-immex.enum';
 import { Modal } from 'bootstrap';
 import { ModificacionDonacionesImmexService } from '../../services/modificacion-donaciones-immex.service';
 import { Solicitud11102State } from '../../estados/tramite11102.store';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { Tramite11102Query } from '../../estados/tramite11102.query';
 import { Tramite11102Store } from '../../estados/tramite11102.store';
 import mercanciaTable from '@libs/shared/theme/assets/json/11102/mercancia-table.json';
@@ -37,8 +57,9 @@ import mercanciaTable from '@libs/shared/theme/assets/json/11102/mercancia-table
     CatalogoSelectComponent,
     TituloComponent,
     AlertComponent,
-    TableComponent,
+    TablaDinamicaComponent,
     InputCheckComponent,
+    TooltipModule,
   ],
   templateUrl: './datos-del-tramite.component.html',
   styleUrls: ['./datos-del-tramite.component.scss'],
@@ -68,18 +89,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Suscripción para obtener el catálogo de países.
    */
   getPaisSubscription!: Subscription;
-
-  /**
-   * @var {typeof AVISO.Aviso} TEXTOS
-   * @description Contiene los textos utilizados en el componente, provenientes de la constante `AVISO.Aviso`.
-   * @see AVISO.Aviso
-   */
-  TEXTOS = AVISO.Aviso;
-
-  /**
-   * Indica si el campo de país está deshabilitado en el formulario.
-   */
-  isPaisDisabled: boolean = true;
 
   /**
    * Clase CSS utilizada para mostrar mensajes de alerta informativos en la interfaz.
@@ -113,7 +122,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de la tabla de mercancías.
    */
-  public mercanciaBodyData: TableBodyData[] = [{ tbodyData: [] }];
+  public mercanciaBodyData: DatosDelMercancia[] = [];
 
   /**
    * Datos de la tabla de mercancías.
@@ -197,6 +206,25 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Si es `true`, los controles del formulario estarán deshabilitados para evitar modificaciones.
    */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Tipo de selección de la tabla.
+   * @property {TablaSeleccion} tablaSeleccion
+   */
+  tablaSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Configuración de las columnas de la tabla MERCANCÍA.
+   */
+  configuracionTablaMercancia: ConfiguracionColumna<DatosDelMercancia>[] =
+    MERCANCIA_TABLA_CONFIGURACION;
+
+  /**
+   * Lista de mercancías seleccionadas.
+   * @type {DatosDelMercancia[]}
+   */
+  mercanciaSeleccionados: DatosDelMercancia[] = [];
+
   /**
    * Constructor de la clase DatosDelTramiteComponent.
    *
@@ -241,7 +269,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio();
-    this.obtenerMercancia();
   }
 
   /**
@@ -304,7 +331,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       PAIS$
     )
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe();
+      .subscribe({
+        complete: () => {
+          this.obtenerMercancia();
+        },
+      });
   }
 
   /**
@@ -322,74 +353,73 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       modificacionDonacionesImmex: this.formBuilder.group({
         aduana: [this.solicitudState?.aduana, [Validators.required]],
         organismoPublico: [
-          { value: true, disabled: true },
-          [this.solicitudState?.organismoPublico],
+          [{ value: this.solicitudState?.organismoPublico, disabled: true }],
         ],
         usoEspecifico: [
           this.solicitudState?.usoEspecifico,
-          [Validators.required, Validators.maxLength(512)],
+          [Validators.maxLength(4000)],
         ],
-        pais: [this.solicitudState?.pais, Validators.required],
-        rfc: [this.solicitudState?.rfc, Validators.required],
-        numeroProgramaImmex: [
-          this.solicitudState?.numeroProgramaImmex,
+        pais: [
+          { value: this.solicitudState?.pais, disabled: true },
           Validators.required,
         ],
+        rfc: [
+          this.solicitudState?.rfc,
+          [Validators.required, Validators.pattern(REGEX_RFC)],
+        ],
+        numeroProgramaImmex: [
+          this.solicitudState?.numeroProgramaImmex,
+          [Validators.required, Validators.maxLength(11)],
+        ],
         razonSocial: [
-          { value: '', disabled: true },
-          [this.solicitudState?.razonSocial, Validators.required],
+          { value: this.solicitudState?.razonSocial, disabled: true },
+          [Validators.required],
         ],
         correoElectronicoOpcional: [
           this.solicitudState?.correoElectronicoOpcional,
-          [Validators.required, Validators.email, Validators.maxLength(50)],
+          [
+            Validators.pattern(REGEX_CORREO_ELECTRONICO),
+            Validators.maxLength(50),
+          ],
         ],
         telefonoOpcional: [
           this.solicitudState?.telefonoOpcional,
-          [Validators.required, Validators.maxLength(30)],
+          [
+            Validators.maxLength(30),
+            Validators.pattern(REGEX_TELEFONO_OPCIONAL),
+          ],
         ],
         calle: [
-          { value: '', disabled: true },
-          this.solicitudState?.calle,
-          [Validators.required, Validators.maxLength(80)],
+          { value: this.solicitudState?.calle, disabled: true },
+          [Validators.maxLength(80)],
         ],
         numeroExterior: [
-          { value: '', disabled: true },
-          this.solicitudState?.numeroExterior,
-          [Validators.required, Validators.maxLength(40)],
+          { value: this.solicitudState?.numeroExterior, disabled: true },
+          [Validators.maxLength(40)],
         ],
         numeroInterior: [
-          { value: '', disabled: true },
-          this.solicitudState?.numeroInterior,
-          [Validators.maxLength(30)],
+          { value: this.solicitudState?.numeroInterior, disabled: true },
+          [Validators.maxLength(30), Validators.pattern(REGEX_NUMERO_INTERIOR)],
         ],
         telefono: [
-          { value: '', disabled: true },
-          this.solicitudState?.telefono,
+          { value: this.solicitudState?.telefono, disabled: true },
           [Validators.required, Validators.pattern(REGEX_TELEFONO_DIGITOS)],
         ],
         correoElectronico: [
-          { value: '', disabled: true },
-          this.solicitudState?.correoElectronico,
-          [Validators.required, Validators.email, Validators.maxLength(50)],
+          { value: this.solicitudState?.correoElectronico, disabled: true },
+          [Validators.maxLength(50)],
         ],
         codigoPostal: [
-          { value: '', disabled: true },
-          this.solicitudState?.codigoPostal,
-          [
-            Validators.required,
-            Validators.pattern(REGEX_POSTAL),
-            Validators.maxLength(8),
-          ],
+          { value: this.solicitudState?.codigoPostal, disabled: true },
+          [Validators.pattern(REGEX_POSTAL), Validators.maxLength(8)],
         ],
         estado: [
-          { value: '', disabled: true },
-          this.solicitudState?.estado,
-          [Validators.required, Validators.maxLength(80)],
+          { value: this.solicitudState?.estado, disabled: true },
+          [Validators.maxLength(80)],
         ],
         colonia: [
-          { value: '', disabled: true },
-          this.solicitudState?.colonia,
-          [Validators.required, Validators.maxLength(50)],
+          { value: this.solicitudState?.colonia, disabled: true },
+          [Validators.maxLength(50)],
         ],
       }),
     });
@@ -398,18 +428,21 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       datosMercancia: this.formBuilder.group({
         tipoDeMercancia: [
           this.solicitudState?.tipoDeMercancia,
-          Validators.required,
+          [Validators.required, Validators.maxLength(200)],
         ],
         condicionMercancia: [
-          this.solicitudState?.condicionMercancia,
+          { value: this.solicitudState?.condicionMercancia, disabled: true },
           Validators.required,
         ],
         unidadMedida: [this.solicitudState?.unidadMedida, Validators.required],
         ano: [this.solicitudState?.ano, Validators.required],
-        cantidad: [this.solicitudState?.ano, Validators.required],
-        marca: [this.solicitudState?.ano],
-        modelo: [this.solicitudState?.ano],
-        serie: [this.solicitudState?.ano],
+        cantidad: [
+          this.solicitudState?.cantidad,
+          [Validators.required, Validators.pattern(REGEX_CANTIDAD_15_4)],
+        ],
+        marca: [this.solicitudState?.marca, Validators.maxLength(60)],
+        modelo: [this.solicitudState?.modelo, Validators.maxLength(80)],
+        serie: [this.solicitudState?.serie, Validators.maxLength(30)],
       }),
     });
     this.inicializarEstadoFormulario();
@@ -426,7 +459,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Obtiene el grupo de formulario de datos de mercancía.
    */
   get datosMercancia(): FormGroup {
-    return this.tramiteForm.get('datosMercancia') as FormGroup;
+    return this.agregarMercanciasForm.get('datosMercancia') as FormGroup;
   }
 
   /**
@@ -534,7 +567,48 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Abre el modal de confirmación si el formulario es válido.
    */
   modificarConfirmarModal(): void {
-    this.cerrarModal();
+    const DATOS_ACTUALIZADOS = this.datosMercancia.getRawValue();
+
+    const TABLA_DATOS = {
+      ...DATOS_ACTUALIZADOS,
+      ano:
+        this.ano.find((x) => String(x.id) === String(DATOS_ACTUALIZADOS.ano))
+          ?.descripcion ?? DATOS_ACTUALIZADOS.ano,
+      unidadMedida:
+        this.unidadMedida.find(
+          (x) => String(x.id) === String(DATOS_ACTUALIZADOS.unidadMedida)
+        )?.descripcion ?? DATOS_ACTUALIZADOS.unidadMedida,
+      condicionMercancia:
+        this.condicionMercancia.find(
+          (x) => String(x.id) === String(DATOS_ACTUALIZADOS.condicionMercancia)
+        )?.descripcion ?? DATOS_ACTUALIZADOS.condicionMercancia,
+    };
+
+    const SELECCIONADO = this.mercanciaSeleccionados[0];
+    const INDICE = this.mercanciaBodyData.findIndex(
+      (item) =>
+        item.tipoDeMercancia === SELECCIONADO.tipoDeMercancia &&
+        item.cantidad === SELECCIONADO.cantidad &&
+        item.unidadMedida === SELECCIONADO.unidadMedida &&
+        item.ano === SELECCIONADO.ano &&
+        item.modelo === SELECCIONADO.modelo &&
+        item.marca === SELECCIONADO.marca &&
+        item.serie === SELECCIONADO.serie &&
+        item.condicionMercancia === SELECCIONADO.condicionMercancia
+    );
+
+    if (INDICE !== -1) {
+      this.mercanciaBodyData[INDICE] = {
+        ...this.mercanciaBodyData[INDICE],
+        ...TABLA_DATOS,
+      };
+      this.mercanciaBodyData = [...this.mercanciaBodyData];
+      this.store.setDelMercancia(this.mercanciaBodyData);
+    }
+
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
+    }
   }
 
   /**
@@ -548,9 +622,36 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @returns {void} Este método no retorna ningún valor.
    */
   modifySeleccionada(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
+    if (this.mercanciaSeleccionados.length > 0) {
+      const DATOS = this.mercanciaSeleccionados[0];
+
+      const MAPPED_DATOS = {
+        ...DATOS,
+        unidadMedida:
+          this.unidadMedida.find((x) => x.descripcion === DATOS.unidadMedida)
+            ?.id ?? DATOS.unidadMedida,
+        ano: this.ano.find((x) => x.descripcion === DATOS.ano)?.id ?? DATOS.ano,
+        condicionMercancia:
+          this.condicionMercancia.find(
+            (x) => x.descripcion === DATOS.condicionMercancia
+          )?.id ?? DATOS.condicionMercancia,
+      };
+
+      this.datosMercancia.patchValue({
+        tipoDeMercancia: MAPPED_DATOS.tipoDeMercancia,
+        cantidad: MAPPED_DATOS.cantidad,
+        unidadMedida: MAPPED_DATOS.unidadMedida,
+        ano: MAPPED_DATOS.ano,
+        modelo: MAPPED_DATOS.modelo,
+        marca: MAPPED_DATOS.marca,
+        serie: MAPPED_DATOS.serie,
+        condicionMercancia: MAPPED_DATOS.condicionMercancia,
+      });
+
+      if (this.modalElement) {
+        const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+        MODAL_INSTANCE.show();
+      }
     }
   }
 
@@ -558,10 +659,28 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Obtiene los datos de mercancías.
    */
   public obtenerMercancia(): void {
-    this.mercanciaHeaderData =
-      this.getMercanciaTableData?.mercanciaTable?.tableHeader;
-    this.mercanciaBodyData =
-      this.getMercanciaTableData?.mercanciaTable?.tableBody;
+    this.service11102
+      .obtenerMercanciaDatos()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((resp) =>
+          resp.map((item) => ({
+            ...item,
+            ano:
+              this.ano.find((x) => x.id === item.ano)?.descripcion ?? item.ano,
+            unidadMedida:
+              this.unidadMedida.find((x) => x.id === item.unidadMedida)
+                ?.descripcion ?? item.unidadMedida,
+            condicionMercancia:
+              this.condicionMercancia.find(
+                (x) => x.id === item.condicionMercancia
+              )?.descripcion ?? item.condicionMercancia,
+          }))
+        )
+      )
+      .subscribe((mappedData) => {
+        this.mercanciaBodyData = mappedData;
+      });
   }
 
   /**
@@ -644,6 +763,25 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         ?.disable();
     }
   }
+
+  /**
+   * Método para seleccionar las mercancías.
+   * @param mercancia Lista de mercancías seleccionadas.
+   */
+  seleccionarMercancias(mercancia: DatosDelMercancia[]): void {
+    this.mercanciaSeleccionados = mercancia;
+  }
+
+  /**
+   * Método para validar el formulario.
+   * @param form Formulario a validar.
+   * @param field Campo a validar.
+   * @returns {boolean} Regresa un booleano si el campo es válido o no.
+   */
+  esValido(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) === true;
+  }
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Se utiliza para limpiar las suscripciones.
