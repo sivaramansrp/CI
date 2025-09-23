@@ -156,9 +156,9 @@ export class AcuseComponent implements OnChanges {
       });
 
     } else if (this.url === 'elegibilidad-de-textiles') {
-      this.acusesService.guardarAcuse(this.idSolicitud.toString(), this.procedure).pipe(
+      this.acusesService.guardarAcuse(this.idSolicitud.toString(), 120301).pipe(
         switchMap(() => {
-          return this.acusesService.vistaPrevia(this.idSolicitud.toString(), this.procedure);
+          return this.acusesService.vistaPrevia(this.idSolicitud.toString(), 120301);
         }),
         catchError((error) => {
           console.error('Error en guardarAcuse o vistaPrevia:', error);
