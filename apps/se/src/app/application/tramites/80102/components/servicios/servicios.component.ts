@@ -515,7 +515,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: 'warning',
       modo: 'action',
-      titulo: 'Confirmar adición',
+      titulo: '',
       mensaje: '¿Está seguro de agregar el(los) servicio(s) seleccionado(s)?',
       cerrar: true,
       tiempoDeEspera: 2000,
@@ -552,7 +552,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       tipode: this.recibioDatos[0].tipode,
     };
     this.Tramite80102Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
-    this.mostrarNotificacionExito('¿Está seguro de agregar el(los) servicio(s) seleccionado(s)?');
+    
   }
 
   /**
@@ -572,31 +572,11 @@ export class ServiciosComponent implements OnInit, OnDestroy {
 
       // Limpiar selección
       this.domiciliosSeleccionados = [];
-
-      this.mostrarNotificacionExito('¿Está seguro de eliminar el servicio seleccionado?');
     }
   }
 
-  /**
-   * Muestra una notificación de éxito.
-   * @param {string} mensaje - Mensaje a mostrar.
-   * @returns {void}
-   */
-  private mostrarNotificacionExito(mensaje: string): void {
-    this.nuevaNotificacionRfc = {
-      tipoNotificacion: 'alert',
-      categoria: 'success',
-      modo: 'info',
-      titulo: 'Operación exitosa',
-      mensaje: mensaje,
-      ttl: '',
-      cerrar: true,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar'
-    };
-  }
-
-  /**
+  
+/**
    * Muestra una notificación de error.
    * @param {string} mensaje - Mensaje a mostrar.
    * @returns {void}
