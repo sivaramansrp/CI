@@ -1,6 +1,6 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@libs/shared/data-access-user/src';
+import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent, formatearFechaYyyyMmDd } from '@libs/shared/data-access-user/src';
 import { Subject, map, take, takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
@@ -235,7 +235,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
         numeroActa: data['datosComplimentos'].formaModificaciones.nombreDeActa,
         numeroNotario: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
         entidadFederativa: data['datosComplimentos'].formaModificaciones.estado,
-        fechaActa: data['datosComplimentos'].formaModificaciones.fechaDeActa
+        fechaActa: formatearFechaYyyyMmDd(data['datosComplimentos'].formaModificaciones.fechaDeActa)
       },
       modalidad: data['datosComplimentos'].modalidad,
       booleanGenerico: data['datosComplimentos'].programaPreOperativo ? true : false,
@@ -243,7 +243,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       descripcionLugarEmbarque: data['datosComplimentos'].datosGeneralis.localizacion,
       capacidadAlmacenaje: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
       numeroPermiso: data['datosComplimentos'].obligacionesFiscales.opinionPositiva === 1 ? 'SI' : '',
-      fechaOperacion: data['datosComplimentos'].obligacionesFiscales.fechaExpedicion,
+      fechaOperacion: formatearFechaYyyyMmDd(data['datosComplimentos'].obligacionesFiscales.fechaExpedicion), 
       nomOficialAutorizado: data['datosComplimentos'].formaModificaciones.nombreDelFederatario,
 
     };
