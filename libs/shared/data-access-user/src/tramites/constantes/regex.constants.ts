@@ -1094,3 +1094,11 @@ export const REGEX_LLAVE_PAGO = /^[A-Z0-9]{10}$/;
  * usuario@dominio.com, usuario2@dominio.com
  * */
 export const REGEX_CORREO = /^[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4}(\,[[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4})*$/i;
+
+/**
+ * Expresión regular para validar un número interior de 9 dígitos.
+ * Esta expresión asegura que la cadena contenga exactamente 9 dígitos numéricos (0-9).
+ * Ejemplos válidos: "123456789", "000000001"
+ * Ejemplos no válidos: "12345678" (menos de 9 dígitos), "1234567890" (más de 9 dígitos), "1234abcd" (contiene letras)
+ */
+export const REGEX_NUMERO_INTERIOR = /^\d{9}$/;

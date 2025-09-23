@@ -5,6 +5,7 @@ import {
   ConsultaioState,
   REGEX_CANTIDAD_15_4,
   REGEX_CORREO_ELECTRONICO,
+  REGEX_NUMERO_INTERIOR,
   REGEX_POSTAL,
   REGEX_RFC,
   REGEX_TELEFONO_DIGITOS,
@@ -398,7 +399,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         ],
         numeroInterior: [
           { value: this.solicitudState?.numeroInterior, disabled: true },
-          [Validators.maxLength(30)],
+          [Validators.maxLength(30), Validators.pattern(REGEX_NUMERO_INTERIOR)],
         ],
         telefono: [
           { value: this.solicitudState?.telefono, disabled: true },
