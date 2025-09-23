@@ -85,6 +85,22 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   /**
+   * @property {boolean} showError
+   * @description
+   * Indica si se debe mostrar un mensaje de error cuando la llave de pago contiene caracteres especiales.
+   * Se establece a `true` cuando se detectan caracteres no alfanuméricos en el campo llave de pago.
+   */
+  showError: boolean = false;
+
+  /**
+   * @property {boolean} pagoError
+   * @description
+   * Indica si se debe mostrar un error de fecha cuando la fecha de pago ingresada es posterior a la fecha actual.
+   * Se establece a `true` cuando el usuario ingresa una fecha futura en el campo de fecha de pago.
+   */
+  pagoError: boolean = false;
+
+  /**
    * Constructor del componente.
    * Inicializa los servicios y dependencias necesarias para la gestión de datos y formularios.
    * permisoCitesService Servicio de permisos CITES.
@@ -170,7 +186,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       claveDeReferencia: new FormControl(this.solicitud230902State.claveDeReferencia),
       cadenaPagoDependencia: new FormControl(this.solicitud230902State.cadenaPagoDependencia),
       banco: new FormControl(this.solicitud230902State.banco, Validators.required),
-      llaveDePago: new FormControl(this.solicitud230902State.llaveDePago, Validators.required),
+      llaveDePago: new FormControl(this.solicitud230902State.llaveDePago, [Validators.required, Validators.pattern('^[A-Za-z]{10}$')]),
       fecPago: new FormControl(this.solicitud230902State.fecPago, Validators.required),
       impPago: new FormControl({ value: this.solicitud230902State.impPago, disabled: true }),
     });
@@ -192,6 +208,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.tramite230902Store.setfecPago(
       this.formPagoDerechos.get('fecPago')?.value
     );
+    const FECHA_ACTUAL = new Date();
+    const [DIA, MES, ANIO] = nuevo_valor.split('/').map(Number);
+    const FECHA_INGRESADA = new Date(ANIO, MES - 1, DIA);
+    this.pagoError = FECHA_INGRESADA > FECHA_ACTUAL;
   }
 
   /**
@@ -203,6 +223,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .get('llaveDePago')
       ?.value.toUpperCase();
     this.formPagoDerechos.get('llaveDePago')?.setValue(CAPITALIZED_VALUE);
+    const HASSPECIALCHAR = /[^A-Za-z0-9]/.test(CAPITALIZED_VALUE);
+    this.showError = HASSPECIALCHAR;
   }
 
   /**
@@ -214,6 +236,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
     this.tramite230902Store.establecerDatos({ [campo]: VALOR });
+  }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de pago de derechos.
+   * Verifica que todos los campos requeridos del formulario sean válidos antes de permitir el envío o avance.
+   * Si el formulario es válido, retorna `true`.
+   * Si el formulario es inválido, marca todos los controles como "tocados" para mostrar los errores de validación y retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (this.formPagoDerechos.valid) {
+      return true;
+    }
+    this.formPagoDerechos.markAllAsTouched();
+    return false
   }
 
   /**

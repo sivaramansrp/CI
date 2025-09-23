@@ -226,6 +226,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Devuelve la instancia actual del componente `PagoDeDerechosComponent`.
+   * 
+   * @returns {PagoDeDerechosComponent | undefined} La instancia del componente si está disponible, de lo contrario `undefined`.
+   */
+  public getPagoDeDerechosComponent(): PagoDeDerechosComponent | undefined {
+  return this.pagoDeDerechosComponent;
+}
+  /**
    * Hook de destrucción del componente.
    * Completa el subject para cancelar todas las suscripciones activas.
    */

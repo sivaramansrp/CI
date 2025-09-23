@@ -1104,9 +1104,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    * Actualiza el estado del almacén con la fecha de pago proporcionada.  
    */
   cambioFechaFinal(nuevo_valor: string): void {
-    this.formaComplimentos.patchValue({
-      fechaExpedicion: nuevo_valor,
-    });
+    this.formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.setValue(nuevo_valor);
     this.tramiteStore.setfechaExpedicion(nuevo_valor);
     this.servicioDeFormularioService.setFormValue('complimentosForm', 
       {
@@ -1122,9 +1120,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
  * Actualiza el estado del almacén con la fecha de pago proporcionada.  
  */
   cambioFecha(nuevo_valor: string): void {
-    this.formaComplimentos.patchValue({
-      fechaDeActa: nuevo_valor,
-    });
+    this.formaComplimentos.get('formaModificaciones.fechaDeActa')?.setValue(nuevo_valor);
     this.tramiteStore.setfechaDeActa(nuevo_valor);
     this.servicioDeFormularioService.setFormValue('complimentosForm', 
       {

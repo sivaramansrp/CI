@@ -1,0 +1,19 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 0,
+      "descripcion": "unidadmedida_01"
+    },
+    {
+      "id": 1,
+      "descripcion": "unidadmedida_02"
+    },
+    {
+      "id": 2,
+      "descripcion": "unidadmedida_03"
+    }
+    
+  ],
+  "message": "OK "
+}

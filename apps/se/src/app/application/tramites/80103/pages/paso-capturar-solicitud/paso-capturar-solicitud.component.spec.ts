@@ -4,28 +4,33 @@ import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { of, Subject } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('PasoCapturarSolicitudComponent', () => {
   let component: PasoCapturarSolicitudComponent;
   let fixture: ComponentFixture<PasoCapturarSolicitudComponent>;
-
-  const mockFormaValida$ = new Subject<boolean>();
-
-  const mockQuery = {
-    FormaValida$: mockFormaValida$.asObservable(),
-  };
-
-  const mockSeccionStore = {
-    establecerSeccion: jest.fn(),
-    establecerFormaValida: jest.fn(),
-  };
+  let mockFormaValida$: Subject<boolean>;
+  let mockQuery: any;
+  let mockSeccionStore: any;
 
   beforeEach(async () => {
+    mockFormaValida$ = new Subject<boolean>();
+    mockQuery = {
+      FormaValida$: mockFormaValida$.asObservable(),
+    };
+    mockSeccionStore = {
+      establecerSeccion: jest.fn(),
+      establecerFormaValida: jest.fn(),
+    };
+
     await TestBed.configureTestingModule({
       declarations: [PasoCapturarSolicitudComponent],
       providers: [
         { provide: Tramite80101Query, useValue: mockQuery },
         { provide: SeccionLibStore, useValue: mockSeccionStore },
+      ],
+      imports: [
+        HttpClientModule
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA], // Ignore WizardComponent
     }).compileComponents();

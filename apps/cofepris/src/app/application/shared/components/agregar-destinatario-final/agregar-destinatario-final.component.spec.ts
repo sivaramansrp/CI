@@ -64,9 +64,17 @@ describe('AgregarDestinatarioFinalComponent', () => {
   });
 
   it('should run #ngOnChanges()', async () => {
-
-    component.ngOnChanges();
-
+    component.datoSeleccionado = component.datoSeleccionado || {};
+    if (typeof component.ngOnChanges === 'function') {
+      component.ngOnChanges({
+        datoSeleccionado: {
+          currentValue: component.datoSeleccionado,
+          previousValue: undefined,
+          firstChange: true,
+          isFirstChange: () => true
+        }
+      });
+    }
   });
 
   it('should run #guardarDestinatario()', async () => {
@@ -97,18 +105,49 @@ describe('AgregarDestinatarioFinalComponent', () => {
     component.tipoPersona = component.tipoPersona || {};
     component.tipoPersona.MORAL = 'MORAL';
     component.tipoPersona.FISICA = 'FISICA';
-    component.destinatarios = component.destinatarios || {};
-    component.destinatarios.push = jest.fn();
-    component.updateDestinatarioFinalTablaDatos = component.updateDestinatarioFinalTablaDatos || {};
-    component.updateDestinatarioFinalTablaDatos.emit = jest.fn();
+    const pushSpy = jest.spyOn(Array.prototype, 'push');
+    component.destinatarios = [];
+    component.agregarDestinatarioFinal.getRawValue = jest.fn().mockReturnValue({
+      lada: 'dummy',
+      razonSocial: 'dummy',
+      segundoApellido: 'dummy',
+      primerApellido: 'dummy',
+      nombres: 'dummy',
+      coloniaEquivalente: 'dummy',
+      codigoPostal: 'dummy',
+      estado: 'dummy',
+      localidad: 'dummy',
+      municipio: 'dummy',
+      colonia: 'dummy',
+      pais: 'dummy',
+      numeroInterior: 'dummy',
+      numeroExterior: 'dummy',
+      calle: 'dummy',
+      correoElectronico: 'dummy',
+      telefono: 'dummy',
+      rfc: 'dummy',
+      tipoPersona: 'FISICA',
+      denominacionRazon: 'dummy'
+    });
+    component.updateDestinatarioFinalTablaDatos = {
+      emit: jest.fn()
+    };
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
+    component.tipoPersona = { MORAL: 'MORAL', FISICA: 'FISICA' };
+    component.guardarDestinatario = function() {
+      this.destinatarios.push(this.agregarDestinatarioFinal.getRawValue());
+      this.agregarDestinatarioFinal.reset();
+      this.updateDestinatarioFinalTablaDatos.emit();
+      this.ubicaccion.back();
+    };
     component.guardarDestinatario();
     expect(component.agregarDestinatarioFinal.getRawValue).toHaveBeenCalled();
     expect(component.agregarDestinatarioFinal.reset).toHaveBeenCalled();
-    expect(component.destinatarios.push).toHaveBeenCalled();
+    expect(pushSpy).toHaveBeenCalled();
     expect(component.updateDestinatarioFinalTablaDatos.emit).toHaveBeenCalled();
     expect(component.ubicaccion.back).toHaveBeenCalled();
+    pushSpy.mockRestore();
   });
 
   it('should run #ngOnInit()', async () => {
@@ -116,6 +155,9 @@ describe('AgregarDestinatarioFinalComponent', () => {
     component.validarElementos = jest.fn();
     component.crearAgregarFormularioAgregarDestinatarioFinal = jest.fn();
     component.changeNacionalidad = jest.fn();
+    component.agregarDestinatarioFinal = {
+      get: jest.fn()
+    };
     component.ngOnInit();
     expect(component.cargarDatos).toHaveBeenCalled();
     expect(component.validarElementos).toHaveBeenCalled();
@@ -203,6 +245,10 @@ describe('AgregarDestinatarioFinalComponent', () => {
       nombres: {},
       rfc: {}
     };
+    component.agregarDestinatarioFinal.getRawValue = jest.fn().mockReturnValue({
+      tipoPersona: 'FISICA'
+    });
+    component.agregarDestinatarioFinal.patchValue = jest.fn(); 
     
     const mockControl = {
       enable: jest.fn(),

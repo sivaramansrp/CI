@@ -1,6 +1,6 @@
 <div class="form-group" [ngClass]="{'has-error': isInvalid()}">
   <label for="input_fecha" class="form-label">
-    {{datos.labelNombre}}<span *ngIf="datos.required" class="require">*</span><span *ngIf="datos.required">:</span>
+    {{datos.labelNombre}}<span *ngIf="datos.required" class="require">*</span><span *ngIf="datos.required">:</span><span *ngIf="soloDosPuntosRequeridos">:</span>
     @if(tooltipQuestionCircle){ <span class="bi bi-question-circle-fill" tooltip="{{tooltipQuestionCircleText ? tooltipQuestionCircleText : datos.labelNombre}}"></span>}
   </label>
   <div class="d-flex justify-content-start" [formGroup]="Formulario">
