@@ -562,17 +562,17 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * Control del formulario para el nombre del usuario.
        * Este campo es obligatorio.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl({value:'',disabled:true}, [Validators.required]),
       /**
        * Control del formulario para el primer apellido del usuario.
        * Este campo es obligatorio.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl({value:'',disabled:true}, [Validators.required]),
       /**
        * Control del formulario para el segundo apellido del usuario.
        * Este campo es obligatorio.
        */
-      segundoApellido: new FormControl('', [Validators.required]),
+      segundoApellido: new FormControl({value:'',disabled:true}, [Validators.required]),
       /**
        * Denominación o razón social del tercero.
        */
@@ -583,77 +583,77 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl('', [
+      pais: new FormControl({ value: '', disabled: true }, [
         Validators.required,
         TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl('', [Validators.required]),
+      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl('', [Validators.required]),
+      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl(''),
+      localidad: new FormControl({ value: '', disabled: true }),
       /**
        * Entidad federativa del tercero.
        */
-      entidadFederativa: new FormControl('', [Validators.required]),
+      entidadFederativa: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Colonia del tercero.
        */
-      colonia: new FormControl(''),
+      colonia: new FormControl({ value: '', disabled: true }),
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl({ value: '', disabled: true }),
       /**
        * Calle del tercero.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl({ value: '', disabled: true }),
       /**
        * Lada del tercero.
        */
-      lada: new FormControl(''),
+      lada: new FormControl({ value: '', disabled: true }),
       /**
        * Teléfono del tercero.
        * Requiere validación adicional mediante `telefonoValidator`.
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl({ value: '', disabled: true }, [
         TercerosRelacionadosComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl({ value: '', disabled: true }),
       /**
        * Código del extranjero.
        */
-      extranjeroCodigo: new FormControl('', [Validators.required]),
+      extranjeroCodigo: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Estado del extranjero.
        */
-      extranjeroEstado: new FormControl('', [Validators.required]),
+      extranjeroEstado: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Colonia del extranjero.
        */
-      extranjeroColonia: new FormControl('', [Validators.required]),
+      extranjeroColonia: new FormControl({ value: '', disabled: true }, [Validators.required]),
     });
   }
 
@@ -719,17 +719,17 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * Control del formulario para el nombre del usuario.
        * Este campo es obligatorio.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Control del formulario para el primer apellido del usuario.
        * Este campo es obligatorio.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Control del formulario para el segundo apellido del usuario.
        * Este campo es obligatorio.
        */
-      segundoApellido: new FormControl('', [Validators.required]),
+      segundoApellido: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Denominación o razón social del tercero.
        */
@@ -740,77 +740,77 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl('', [
+      pais: new FormControl({ value: '', disabled: true }, [
         Validators.required,
         TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl('', [Validators.required]),
+      estadoLocalidad: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl('', [Validators.required]),
+      municipioAlcaldia: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl(''),
+      localidad: new FormControl({ value: '', disabled: true }),
       /**
        * Entidad federativa del tercero.
        */
-      entidadFederativa: new FormControl('', [Validators.required]),
+      entidadFederativa: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Colonia del tercero.
        */
-      colonia: new FormControl(''),
+      colonia: new FormControl({ value: '', disabled: true }),
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl({ value: '', disabled: true }),
       /**
        * Calle del tercero.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl({ value: '', disabled: true }),
       /**
        * Lada del tercero.
        */
-      lada: new FormControl(''),
+      lada: new FormControl({ value: '', disabled: true }),
       /**
        * Teléfono del tercero.
        * Requiere validación adicional mediante `telefonoValidator`.
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl({ value: '', disabled: true }, [
         TercerosRelacionadosComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl({ value: '', disabled: true }),
       /**
        * Código del extranjero.
        */
-      extranjeroCodigo: new FormControl('', [Validators.required]),
+      extranjeroCodigo: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Estado del extranjero.
        */
-      extranjeroEstado: new FormControl('', [Validators.required]),
+      extranjeroEstado: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Colonia del extranjero.
        */
-      extranjeroColonia: new FormControl('', [Validators.required]),
+      extranjeroColonia: new FormControl({ value: '', disabled: true }, [Validators.required]),
     });
   }
 
@@ -895,10 +895,32 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       this.fisica = true;
       this.moral = false;
       this.noContribuyente = false;
+      if(this.extranjero){
+        this.agregarFormuladorFormGroup.enable();
+        this.agregarProveedorFormGroup.enable();
+      }else{
+        this.agregarFormuladorFormGroup.disable();
+        this.agregarProveedorFormGroup.disable();
+        this.agregarFormuladorFormGroup.get('tercerosNacionalidad')?.enable();
+        this.agregarFormuladorFormGroup.get('tipoPersona')?.enable();
+        this.agregarProveedorFormGroup.get('tercerosNacionalidad')?.enable();
+        this.agregarProveedorFormGroup.get('tipoPersona')?.enable();
+      }
     } else if (checkBoxName === 'moral') {
       this.fisica = false;
       this.moral = true;
       this.noContribuyente = false;
+      if(this.extranjero){
+        this.agregarFormuladorFormGroup.enable();
+        this.agregarProveedorFormGroup.enable();
+      }else{
+        this.agregarFormuladorFormGroup.disable();
+        this.agregarProveedorFormGroup.disable();
+        this.agregarFormuladorFormGroup.get('tercerosNacionalidad')?.enable();
+        this.agregarFormuladorFormGroup.get('tipoPersona')?.enable();
+        this.agregarProveedorFormGroup.get('tercerosNacionalidad')?.enable();
+        this.agregarProveedorFormGroup.get('tipoPersona')?.enable();
+      }
     } else {
       this.noContribuyente = true;
       this.fisica = false;

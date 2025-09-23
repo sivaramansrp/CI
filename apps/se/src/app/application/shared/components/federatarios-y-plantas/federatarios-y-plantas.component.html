@@ -1,8 +1,6 @@
 <div class="container">
   <ng-titulo titulo="Datos de los federatarios" />
   <form [formGroup]="federatariosFormGroup">
-    <div class="row">
-      <div class="col">
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
@@ -67,8 +65,9 @@
             <div class="form-group">
               <input-fecha [datos]="fechaInicioInput" [isDisabled]="formularioDeshabilitado"
                 (valorCambiado)="onFechaCambiada($event)"
-                [setFecha]="federatariosFormGroup.get('fechaInicioInput')?.value" [deshabilitarFuturas]="true"></input-fecha>
-            </div>
+                [setFecha]="federatariosFormGroup.get('fechaInicioInput')?.value" [deshabilitarFuturas]="true"
+               [mostrarErrores]="federatariosFormGroup.get('fechaInicioInput')?.touched??false"></input-fecha>
+              </div>
           </div>
 
           <div class="col-md-4">
@@ -91,12 +90,12 @@
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="estadoOptionsConfig.estadosFederatarios" formControlName="estado"
               [label]="'Estado'" [required]="true" name="estado"
-              [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
+              [isDisabled]="formularioDeshabilitado" [markTouched]="federatariosFormGroup.get('estado')?.touched??false"></app-catalogo-select>
           </div>
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="municipioCatologo" formControlName="estadoOptions"
               [label]="'Municipio o alcaldía'" [required]="true" name="estadoOptions"
-              [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
+              [isDisabled]="formularioDeshabilitado" [markTouched]="federatariosFormGroup.get('estadoOptions')?.touched??false"></app-catalogo-select>
           </div>
         </div>
         <div class="row mt-5">
@@ -108,12 +107,8 @@
             </button>
           </div>
         </div>
-      </div>
-    </div>
   </form>
   <form [formGroup]="federatariosCatalogoGroup">
-    <div class="row mt-5">
-      <div class="col">
         <div class="row mt-5">
           <h5>Datos de los federatarios:</h5>
         </div>
@@ -126,139 +121,64 @@
               [totalItems]="federatariosDatos.length" [itemsPerPage]="5"></app-tabla-dinamica>
           </div>
         </div>
-      </div>
-    </div>
-
+    
     <div class="row mt-5">
       <div class="col">
-        <div class="row">
-          <div class="col">
-            <ng-titulo titulo="Datos de las plantas donde se realizaran las operaciones IMMEX" />
+        <ng-titulo titulo="Datos de las plantas donde se realizaran las operaciones IMMEX" />
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <app-catalogo-select [catalogo]="estadoImmex" [label]="'Estado'" [required]="true"
+              name="estadoUno" formControlName="estadoUno"
+              [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
           </div>
         </div>
-        <div class="row">
-          <div class="col">
-            <div class="row">
-              <div class="col-md-4">
-                <app-catalogo-select [catalogo]="estadoImmex" [label]="'Estado'" [required]="true"
-                  name="estadoUno" formControlName="estadoUno"
-                  [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="pull-right ms-2">
-                  <button class="btn btn-primary" [disabled]="formularioDeshabilitado"
-                    (click)="buscarPlantasImmex()">Buscar plantas IMMEX</button>
-                </div>
-              </div>
-            </div>
+          <div class="d-flex justify-content-end mt-2">
+          <button class="btn btn-primary" [disabled]="formularioDeshabilitado"
+              (click)="buscarPlantasImmex()">Buscar plantas IMMEX</button>
+        </div>
+
+        <h5 class="mt-4">Plantas disponibles:</h5>
+        <app-tabla-dinamica [configuracionTabla]="plantasDisponiblesConfig.TablaEncabezado"
+          [tipoSeleccionTabla]="plantasDisponiblesConfig.TablaSeleccion"
+          [datos]="plantasDisponiblesDatos"
+          [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
+        <ng-alert [CONTENIDO]="textodAlerta"></ng-alert>
+        <div class="d-flex justify-content-end mt-2">
+          <button class="btn btn-primary" [disabled]="formularioDeshabilitado"
+            (click)="agregarPlantas()">Agregar plantas</button>
+        </div>
+
+        <h5 class="mt-4">Plantas Immex:</h5>
+        <app-tabla-dinamica [configuracionTabla]="plantasImmexConfig.TablaEncabezado"
+          [tipoSeleccionTabla]="plantasImmexConfig.TablaSeleccion" [datos]="plantasImmexDatos"
+          (listaDeFilaSeleccionada)="plantasImmexSeleccionadoDatos=$event"
+          [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
+
+        <div class="d-flex flex-wrap mt-3 gap-2">
+          <button class="btn btn-danger" (click)="irAAcciones('../complementar-plantas-acciones')"
+            [disabled]="formularioDeshabilitado">Complementar planta</button>
+          <button class="btn btn-danger" (click)="irAAcciones('../montos-inversion-acciones')"
+            [disabled]="formularioDeshabilitado">Montos de inversión</button>
+          <button class="btn btn-danger" (click)="irAAcciones('../empleados-acciones')"
+            [disabled]="formularioDeshabilitado">Empleados</button>
+          <button class="btn btn-danger" (click)="irAAcciones('../capacidad-instalada-acciones')"
+            [disabled]="formularioDeshabilitado">Capacidad Instalada</button>
+          <button class="btn btn-primary" (click)="irAAcciones('../proveedor-por-archivo')"
+            [disabled]="formularioDeshabilitado">Carga por archivo</button>
+          <button class="btn btn-danger end ms-auto" [disabled]="formularioDeshabilitado"
+            (click)="eliminarPlantas()">Eliminar plantas</button>
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-md-4">
+            <app-catalogo-select [catalogo]="RepresentacionCatalogo" [label]="'Representación federal'"
+              [required]="true" name="estadoDos" formControlName="estadoDos"
+              [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
           </div>
-          <div class="row">
-            <div class="col">
-              <div class="row">
-                <div class="col">
-                  <div class="row">
-                    <div class="col">
-                      <h5>Plantas disponibles:</h5>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <app-tabla-dinamica [configuracionTabla]="
-                        plantasDisponiblesConfig.TablaEncabezado
-                      " [tipoSeleccionTabla]="
-                        plantasDisponiblesConfig.TablaSeleccion
-                      " [datos]="plantasDisponiblesDatos"
-                        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <ng-alert [CONTENIDO]="textodAlerta"></ng-alert>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="pull-right ms-2">
-                        <button class="btn btn-primary" [disabled]="formularioDeshabilitado"
-                          (click)="agregarPlantas()">Agregar plantas</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="row">
-                    <div class="col">
-                      <h5>Plantas Immex:</h5>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <app-tabla-dinamica [configuracionTabla]="plantasImmexConfig.TablaEncabezado"
-                        [tipoSeleccionTabla]="plantasImmexConfig.TablaSeleccion" [datos]="plantasImmexDatos"
-                        (listaDeFilaSeleccionada)="plantasImmexSeleccionadoDatos=$event"
-                        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="d-flex flex-row flex-wrap">
-                    <div class="p-1">
-                      <button class="btn btn-danger" (click)="irAAcciones('../complementar-plantas-acciones')"
-                        [disabled]="formularioDeshabilitado ">
-                        Complementar planta
-                      </button>
-                    </div>
-                    <div class="p-1">
-                      <button class="btn btn-danger" (click)="irAAcciones('../montos-inversion-acciones')"
-                        [disabled]="formularioDeshabilitado ">
-                        Montos de inversión
-                      </button>
-                    </div>
-                    <div class="p-1">
-                      <button class="btn btn-danger" (click)="irAAcciones('../empleados-acciones')"
-                        [disabled]="formularioDeshabilitado ">
-                        Empleados
-                      </button>
-                    </div>
-                    <div class="p-1">
-                      <button class="btn btn-danger" (click)="irAAcciones('../capacidad-instalada-acciones')"
-                        [disabled]="formularioDeshabilitado ">
-                        Capacidad Instalada
-                      </button>
-                    </div>
-                    <div class="p-1">
-                      <button class="btn btn-primary" (click)="irAAcciones('../proveedor-por-archivo')"
-                        [disabled]="formularioDeshabilitado ">
-                        Carga por archivo
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="p-1 pull-right">
-                      <button class="btn btn-danger end" [disabled]="formularioDeshabilitado " (click)="eliminarPlantas()">Eliminar plantas</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row mt-5">
-                  <div class="col-md-4">
-                    <app-catalogo-select [catalogo]="RepresentacionCatalogo" [label]="'Representación federal'"
-                      [required]="true" name="estadoDos" formControlName="estadoDos"
-                      [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
-                  </div>
-                  <div class="col-md-4">
-                    <app-catalogo-select [catalogo]="estadoOptionsConfig.municipio" [label]="'Actividad productiva'"
-                      [required]="true" name="estadoTres" formControlName="estadoTres"
-                      [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="col-md-4">
+            <app-catalogo-select [catalogo]="estadoOptionsConfig.municipio" [label]="'Actividad productiva'"
+              [required]="true" name="estadoTres" formControlName="estadoTres"
+              [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
           </div>
         </div>
       </div>
@@ -266,9 +186,9 @@
   </form>
 </div>
 
-@if (miembrosNotificacion && miembrosNotificacion.cerrar) {
+@if (miembrosNotificacion) {
 <section>
-  <lib-notificaciones [notificacionInput]="miembrosNotificacion" (confirmacionModal)="closeModal()">
+  <lib-notificaciones [notificacionInput]="miembrosNotificacion"  (confirmacionModal)="eliminarPedimentoDatos($event)">
   </lib-notificaciones>
 </section>
 }

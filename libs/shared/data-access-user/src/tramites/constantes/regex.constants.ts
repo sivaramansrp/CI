@@ -1112,3 +1112,10 @@ export const REGEX_CAPTURA_CBP = /^([0-9]{11})$/;
  * La clave debe consistir en exactamente 9 dígitos numéricos.
  */
 export const REGEX_CAPTURA_USDA = /^([0-9]{9})$/;
+/*
+ * Expresión regular para validar un número interior de 9 dígitos.
+ * Esta expresión asegura que la cadena contenga exactamente 9 dígitos numéricos (0-9).
+ * Ejemplos válidos: "123456789", "000000001"
+ * Ejemplos no válidos: "12345678" (menos de 9 dígitos), "1234567890" (más de 9 dígitos), "1234abcd" (contiene letras)
+ */
+export const REGEX_NUMERO_INTERIOR = /^\d{9}$/;

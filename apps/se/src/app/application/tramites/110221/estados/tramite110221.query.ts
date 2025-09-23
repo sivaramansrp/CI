@@ -34,12 +34,27 @@ export class Tramite110221Query extends Query<Tramite110221State> {
     return state.mercanciaTabla;
   });
 
-  /**
-   * @descripcion
-   * Observable que selecciona los datos del formulario de certificado.
+   /**
+   * Selecciona el formulario del certificado.
+   * @returns {Observable<any>} - Observable con el formulario del certificado.
    */
-  formCertificado$ = this.select((state) => {
+  formCertificado$ = this.select((state) => {    
     return state.formCertificado;
+  });
+ /**
+   * Selecciona el estado del alta de la planta.
+   * @returns {Observable<any>} - Observable con los datos de alta de la planta.
+   */
+  selectAltaPlanta$ = this.select((state) => {
+    return state.altaPlanta;
+  });
+
+    /**
+   * Selecciona los países bloqueados.
+   * @returns {Observable<any>} - Observable con los países bloqueados.
+   */
+  selectPaisBloque$ = this.select((state) => {
+    return state.paisBloques;
   });
 
     /**
@@ -72,7 +87,35 @@ export class Tramite110221Query extends Query<Tramite110221State> {
   selectSolicitud$ = this.select((state) => {
     return state;
   });
-
+ /**
+   * Selecciona la mercancía que se está buscando.
+   * @returns {Observable<any>} - Observable con los datos de la mercancía a buscar.
+   */
+  selectBuscarMercancia$ = this.select((state) => {    
+    return state.buscarMercancia;
+  });
+     /**
+   * Selecciona las fechas del certificado.
+   * @returns {Observable<any>} - Observable con las fechas del certificado.
+   */
+    formMercancia$ = this.select((state) => {    
+      return state.mercanciaForm;
+    });
+     /**
+   * Selecciona el estado del factura.
+   * @returns {Observable<any>} - Observable con los factura.
+   */
+   selectFactura$ = this.select((state) => {
+    return state.factura;
+  });
+     /**
+   * Selecciona el estado del umc.
+   * @returns {Observable<any>} - Observable con los umc.
+   */
+    selectUmc$ = this.select((state) => {
+      return state.umcs;
+    });
+  
   /**
    * @descripcion
    * Constructor que inyecta el almacén `camCertificadoStore`.
