@@ -2,6 +2,7 @@
  * @Injectable
  * @description Servicio para obtener los datos del permiso IMMEX.
  */
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { ImmexAmpliacionSensiblesStore } from '../estados/immex-ampliacion-sensibles.store';
 import { ImmexRegistroform } from '../models/immex-ampliacion-sensibles.model';
@@ -47,6 +48,9 @@ export class PermisoImmexDatosService {
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<immexRegistroform> {
     return this.httpClient.get<immexRegistroform>('assets/json/80202/immexRegistro.json');
+  }
+  getNicos(): Observable<Catalogo[]> {
+    return this.httpClient.get<Catalogo[]>('assets/json/80202/nico.json');
   }
 
    /**
