@@ -424,13 +424,25 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
       });
     });
 
+     const proyectoImmexDatos = (item: any) => ({
+      tipoDocumento: item.encabezadoTipoDocument,
+      descripcion: item.encabezadoDescripcionOtro,
+      fechaFirma:  item.encabezadoFechaFirma,
+      fechaVigencia:  item.encabezadoFechaVigencia,
+      rfcFirmante:  item.encabezadoRfc,
+      razonFirmante:  item.encabezadoRazonFirmante,
+      testado: true,
+      fecFinVigencia:  item.encabezadoFechaVigencia,
+    });
+
   return {
     anexo: {
       ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
       ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
       proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
       datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
-      tableDos: anexoDos
+      tableDos: anexoDos,
+      proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
     },
   };
 }
@@ -548,6 +560,7 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
 
     const PAYLOAD = {
+      "esDeGuardar": true,
     "tipoDeSolicitud": "guardar",
     "idSolicitud": 202781045,
     "idTipoTramite": 80102,
@@ -583,6 +596,11 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
         "anexoI": [...ANEXO_ALL.anexo.tableDos]
       }
     ],
+     "productoExportacionDtoList": [
+        {
+          "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]
+        }
+      ],
     "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
     "solicitud": SOLICITUD,
     "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,

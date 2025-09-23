@@ -510,6 +510,7 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
     
     const PAYLOAD = {
+      "esDeGuardar": true,
     "tipoDeSolicitud": "guardar",
     "idSolicitud": 202781045,
     "idTipoTramite": 80103,

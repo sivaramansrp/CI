@@ -83,34 +83,34 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   public infoAlert = 'alert-info';
 
 
-  
-    /**
-     * Evento que se emite para cargar archivos.
-     * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
-     */
-    cargarArchivosEvento = new EventEmitter<void>();
-  
-    /**
-     * Evento que se emite para regresar a la sección de carga de documentos.
-     * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
-     */
-    regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
-  
-    /**
-   * Indica si el botón para cargar archivos está habilitado.
-   */
-    activarBotonCargaArchivos: boolean = false;
-  
-    /**
-   * Indica si la sección de carga de documentos está activa.
-   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
-   */
-    seccionCargarDocumentos: boolean = true;
 
-    datosUsuario: Usuario = USUARIO_INFO;
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
 
-    cargaEnProgreso: boolean = true;
-    
+  /**
+   * Evento que se emite para regresar a la sección de carga de documentos.
+   * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
+   */
+  regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+
+  /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+
+  datosUsuario: Usuario = USUARIO_INFO;
+
+  cargaEnProgreso: boolean = true;
+
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
    * @private
@@ -137,7 +137,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
 
   /** Listado de empresas nacionales utilizadas en el formulario de solicitud. */
   private empresasNacionales = empresasNacionales;
-  
+
   /** Listado de empresas  extranjeras utilizadas en el formulario de solicitud. */
   private empresasExtranjeras = empresasExtranjeras;
 
@@ -146,9 +146,9 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    */
   private plantasSubmanufacturerasBase = plantasSubmanufactureras;
 
-   /**
-   * Objeto base inmutable que representa la estructura inicial de un notarios.
-   */
+  /**
+  * Objeto base inmutable que representa la estructura inicial de un notarios.
+  */
   private notariosBase = notarios;
 
   /**
@@ -257,9 +257,9 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   static buildDeclaracionSolicitudEntries(data: Record<string, any>): unknown[] {
     const RESULT = [
       {
-          "acepto": data['datosComplimentos'].obligacionesFiscales.aceptarObligacionFiscal ? 1 : 0,
-          "idTipoTramite": 80101,
-          "cveDeclaracion": "123"
+        "acepto": data['datosComplimentos'].obligacionesFiscales.aceptarObligacionFiscal ? 1 : 0,
+        "idTipoTramite": 80101,
+        "cveDeclaracion": "123"
       }
     ];
     return RESULT;
@@ -299,68 +299,68 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     return RESULT;
   }
 
-/**
- * Construye un arreglo de objetos de plantas basado en una estructura base común.
- * 
- * @param arr Arreglo de datos de entrada para cada planta.
- * @param base Objeto base que se combina con los datos específicos de cada planta.
- * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
- */
-// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-buildPlantas(arr: any[] = [], base: Record<string, any>): any[] {
+  /**
+   * Construye un arreglo de objetos de plantas basado en una estructura base común.
+   * 
+   * @param arr Arreglo de datos de entrada para cada planta.
+   * @param base Objeto base que se combina con los datos específicos de cada planta.
+   * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+  buildPlantas(arr: any[] = [], base: Record<string, any>): any[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-   const MAP_TO_PAYLOAD = (item: any): any => ({
-  ...base,
-  idPlanta: item.planta ?? '',
-  calle: item.calle ?? '',
-  numeroExterior: item.numeroExterior ?? '',
-  numeroInterior: item.numeroInterior ?? '',
-  codigoPostal: item.codigoPostal ?? '',
-  localidad: item.localidad ?? '',
-  colonia: item.colonia ?? '',
-  delegacionMunicipio: item.delegacionMunicipio ?? '',
-  entidadFederativa: item.entidadFederativa ?? '',
-  pais: item.pais ?? '',
-  rfc: item.registroFederalDeContribuyentes ?? '',
-  domicilioFiscal: item.domicilioDelSolicitante ?? '',
-  razonSocial: item.razonSocial ?? '',
-});
-      
+    const MAP_TO_PAYLOAD = (item: any): any => ({
+      ...base,
+      idPlanta: item.planta ?? '',
+      calle: item.calle ?? '',
+      numeroExterior: item.numeroExterior ?? '',
+      numeroInterior: item.numeroInterior ?? '',
+      codigoPostal: item.codigoPostal ?? '',
+      localidad: item.localidad ?? '',
+      colonia: item.colonia ?? '',
+      delegacionMunicipio: item.delegacionMunicipio ?? '',
+      entidadFederativa: item.entidadFederativa ?? '',
+      pais: item.pais ?? '',
+      rfc: item.registroFederalDeContribuyentes ?? '',
+      domicilioFiscal: item.domicilioDelSolicitante ?? '',
+      razonSocial: item.razonSocial ?? '',
+    });
+
 
     arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
 
     return RESULT;
-}
+  }
 
-/**
- * Genera un arreglo de objetos con los datos de fedatarios a partir de un arreglo de entrada.
- *
- * @param arr Arreglo de objetos con datos de entrada (opcional).
- * @param base Objeto base que se fusiona con los datos específicos de cada fedatario.
- * @returns Un arreglo de objetos estructurados con la información de los fedatarios.
- */
-// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
-  const RESULT: any[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-   const MAP_TO_PAYLOAD = (item: any): any => ({
-  ...base,
-  nombreNotario: item.nombre ?? '',
-  apellidoMaterno: item.segundoApellido ?? '',
-  apellidoPaterno: item.primerApellido ?? '',
-  numeroActa: item.numeroDeActa ?? '',
-  fechaActa: item.fechaInicioInput ?? '',
-  numeroNotaria: item.numeroDeNotaria ?? '',
-  entidadFederativa: item.estado ?? '',
-  delegacionMunicipio: item.estadoOptions ?? '',
-});
+  /**
+   * Genera un arreglo de objetos con los datos de fedatarios a partir de un arreglo de entrada.
+   *
+   * @param arr Arreglo de objetos con datos de entrada (opcional).
+   * @param base Objeto base que se fusiona con los datos específicos de cada fedatario.
+   * @returns Un arreglo de objetos estructurados con la información de los fedatarios.
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+  buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
+    const RESULT: any[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const MAP_TO_PAYLOAD = (item: any): any => ({
+      ...base,
+      nombreNotario: item.nombre ?? '',
+      apellidoMaterno: item.segundoApellido ?? '',
+      apellidoPaterno: item.primerApellido ?? '',
+      numeroActa: item.numeroDeActa ?? '',
+      fechaActa: item.fechaInicioInput ?? '',
+      numeroNotaria: item.numeroDeNotaria ?? '',
+      entidadFederativa: item.estado ?? '',
+      delegacionMunicipio: item.estadoOptions ?? '',
+    });
 
     arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
 
     return RESULT;
-}
+  }
 
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
@@ -415,23 +415,31 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
       volumenAnualSolicitado: null,
     });
 
-    const anexoDos: any = [];
-
-    (data.annexoUno?.exportarDatosTabla || []).forEach((item: any) => {
-      anexoDos.push({
-        fraccionExportacion: item.encabezadoFraccionExportacion,
-        fraccionImportacion: item.encabezadoFraccionImportacion,
-        descFraccionImpo: item.encabezadoDescripcionComercial,
-        claveFraccionAnexo: item.encabezadoAnexoII,
-        idProducto: item.encabezadoIdProducto,
-        fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
-        fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
-        fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
-        categoriaFraccion: item.encabezadoCategoria,
-        tipoFraccion:item.encabezadoTipo,
-        umt:item.encabezadoUmt
-      });
+    const buildAnexoDos = (item: any) => ({
+      fraccionExportacion: item.encabezadoFraccionExportacion,
+      fraccionImportacion: item.encabezadoFraccionImportacion,
+      descFraccionImpo: item.encabezadoDescripcionComercial,
+      claveFraccionAnexo: item.encabezadoAnexoII,
+      idProducto: item.encabezadoIdProducto,
+      fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
+      fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
+      fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
+      categoriaFraccion: item.encabezadoCategoria,
+      tipoFraccion: item.encabezadoTipo,
+      umt: item.encabezadoUmt,
     });
+
+    const proyectoImmexDatos = (item: any) => ({
+      tipoDocumento: item.encabezadoTipoDocument,
+      descripcion: item.encabezadoDescripcionOtro,
+      fechaFirma:  item.encabezadoFechaFirma,
+      fechaVigencia:  item.encabezadoFechaVigencia,
+      rfcFirmante:  item.encabezadoRfc,
+      razonFirmante:  item.encabezadoRazonFirmante,
+      testado: true,
+      fecFinVigencia:  item.encabezadoFechaVigencia,
+    });
+
 
     return {
       anexo: {
@@ -439,20 +447,21 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
         ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
         proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
         datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
-        tableDos: anexoDos
+        tableDos: (data.annexoUno?.exportarDatosTabla || []).map(buildAnexoDos),
+        proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
       },
     };
   }
 
-/**
- * Construye un arreglo de objetos con los datos de plantas submanufactureras a partir de un arreglo de entrada.
- *
- * @param arr Arreglo de objetos con datos de entrada (opcional).
- * @param base Objeto base que se fusiona con los datos específicos de cada planta.
- * @returns Un arreglo con los objetos estructurados de plantas submanufactureras.
- */
-// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[] {
+  /**
+   * Construye un arreglo de objetos con los datos de plantas submanufactureras a partir de un arreglo de entrada.
+   *
+   * @param arr Arreglo de objetos con datos de entrada (opcional).
+   * @param base Objeto base que se fusiona con los datos específicos de cada planta.
+   * @returns Un arreglo con los objetos estructurados de plantas submanufactureras.
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+  buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -474,7 +483,7 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
     arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
 
     return RESULT;
-}
+  }
 
   /**
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
@@ -492,30 +501,31 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
     const EMPRESAS_EXTRANJERAS = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentosExtranjera, this.empresasExtranjeras);
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
     const ANEXO_ALL = this.buildAnexo(data);
-   
+
     const PAYLOAD = {
-    "tipoDeSolicitud": "guardar",
-    "idSolicitud": 202781045,
-    "idTipoTramite": 80101,
-    "rfc": "AAL0409235E6",
-    "cveUnidadAdministrativa": "8101",
-    "costoTotal": 10000.5,
-    "certificadoSerialNumber": "1234567890ABCDEF",
-    "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
-    "numeroFolioTramiteOriginal": "TRM-2023-00001",
-    "nombre": "Juan",
-    "apPaterno": "Pérez",
-    "apMaterno": "López",
-    "telefono": "5551234567",
-    "discriminator_value": "80101",
-    "discriminatorValue": "80101",
-     "domicilio": {
-    },
-    "solicitante": {
-        
-    },
+      "esDeGuardar": true,
+      "tipoDeSolicitud": "guardar",
+      "idSolicitud": 202781045,
+      "idTipoTramite": 80101,
+      "rfc": "AAL0409235E6",
+      "cveUnidadAdministrativa": "8101",
+      "costoTotal": 10000.5,
+      "certificadoSerialNumber": "1234567890ABCDEF",
+      "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
+      "numeroFolioTramiteOriginal": "TRM-2023-00001",
+      "nombre": "Juan",
+      "apPaterno": "Pérez",
+      "apMaterno": "López",
+      "telefono": "5551234567",
+      "discriminator_value": "80101",
+      "discriminatorValue": "80101",
+      "domicilio": {
+      },
+      "solicitante": {
+
+      },
       "planta": [...PLANTAS],
-      "notario":[...NOTARIOS],
+      "notario": [...NOTARIOS],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
       "mercanciaImportacion": [
@@ -527,6 +537,11 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
             ...ANEXO_ALL.anexo.datosParaNavegar
           },
           "anexoI": [...ANEXO_ALL.anexo.tableDos]
+        },
+      ],
+      "productoExportacionDtoList": [
+        {
+          "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]
         }
       ],
       "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
@@ -543,7 +558,7 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
 
 
 
-  
+
   /**
    * Método para manejar el evento de carga de documentos.
    * Actualiza el estado de la sección de carga de documentos.

@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CatalogosService {
-  urlServer = ENVIRONMENT.URL_SERVER;
+  urlServer = ENVIRONMENT.API_HOST;
   urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   constructor(private http: HttpClient) 
