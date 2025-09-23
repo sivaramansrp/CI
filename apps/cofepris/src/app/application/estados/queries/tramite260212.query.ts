@@ -2,7 +2,7 @@
 /**
  * Importaciones necesarias para el funcionamiento de la consulta del trámite.
  */
-import { TercerosRelacionadas260212State, Tramite260212Store } from "../tramites/tramite260212.store";
+import { Shared260212Store, TercerosRelacionadas260212State } from "../tramites/tramite260212.store";
 import { Injectable } from "@angular/core";
 import { Query } from "@datorama/akita";
 
@@ -30,7 +30,7 @@ export class Tramite260212Query extends Query<TercerosRelacionadas260212State> {
    * @param store Store del trámite 260212.
    */
   constructor(
-    protected override store: Tramite260212Store
+    protected override store: Shared260212Store
   ) {
     super(store);
   }

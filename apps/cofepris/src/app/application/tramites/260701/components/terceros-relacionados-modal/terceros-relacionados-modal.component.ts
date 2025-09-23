@@ -24,6 +24,12 @@ import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
 })
 export class TercerosRelacionadosModalComponent implements OnInit,OnDestroy {
 
+  /** Notificador para cerrar el modal y enviar datos al componente padre.
+   * Este Subject se utiliza para emitir un evento cuando el modal se cierra,
+   * permitiendo que el componente padre reciba los datos del formulario
+   * si es necesario.
+   */
+  public onClose: Subject<unknown> = new Subject();
   /**
      * Representa el título del componente modal.
      */
@@ -101,27 +107,27 @@ export class TercerosRelacionadosModalComponent implements OnInit,OnDestroy {
      */
     public cerrarTercerosRelacionadosForm(): void {
       this.tercerosRelacionadosForm = this.fb.group({
-        denominacionSocial: [this.solicitudState.denominacionSocial,Validators.required],
-        terceroNombre: [this.solicitudState.terceroNombre,Validators.required],
-        primerApellido: [this.solicitudState.primerApellido,Validators.required],
-        nacional: [this.solicitudState.nacional,Validators.required],
-        extranjero: [this.solicitudState.extranjero,Validators.required],
-        tipoPersona: [this.solicitudState.tipoPersona,Validators.required],
-        rfc: [this.solicitudState.tercerosRelacionadosRfc,Validators.required],
-        curp: [this.solicitudState.curp,Validators.required],
-        razonSocial: [this.solicitudState.razonSocial,Validators.required],
-        pais: [this.solicitudState.pais,Validators.required],
-        estado: [this.solicitudState.tercerosRelacionadosEstado,Validators.required],
-        municipio: [this.solicitudState.tercerosRelacionadosMunicipio,Validators.required],
-        localidad: [this.solicitudState.tercerosRelacionadosLocalidad,Validators.required],
-        codigoPostal: [this.solicitudState.tercerosRelacionadosCodigoPostal,Validators.required],
-        colonia: [this.solicitudState.tercerosRelacionadosColonia,Validators.required],
-        calle: [this.solicitudState.tercerosRelacionadosCalle,Validators.required],
-        numeroExterior: [this.solicitudState.numeroExterior,Validators.required],
-        numeroInterior: [this.solicitudState.numeroInterior,Validators.required],
-        lada: [this.solicitudState.tercerosRelacionadosLada],
-        telefono: [this.solicitudState.tercerosRelacionadosTelefono,Validators.required],
-        correoElectronico: [this.solicitudState.tercerosRelacionadosCorreoElectronico,Validators.required],
+        denominacionSocial: [this.solicitudState?.denominacionSocial,Validators.required],
+        terceroNombre: [this.solicitudState?.terceroNombre,Validators.required],
+        primerApellido: [this.solicitudState?.primerApellido,Validators.required],
+        nacional: [this.solicitudState?.nacional,Validators.required],
+        extranjero: [this.solicitudState?.extranjero,Validators.required],
+        tipoPersona: [this.solicitudState?.tipoPersona,Validators.required],
+        rfc: [this.solicitudState?.tercerosRelacionadosRfc,Validators.required],
+        curp: [this.solicitudState?.curp,Validators.required],
+        razonSocial: [this.solicitudState?.razonSocial,Validators.required],
+        pais: [this.solicitudState?.pais,Validators.required],
+        estado: [this.solicitudState?.tercerosRelacionadosEstado,Validators.required],
+        municipio: [this.solicitudState?.tercerosRelacionadosMunicipio,Validators.required],
+        localidad: [this.solicitudState?.tercerosRelacionadosLocalidad,Validators.required],
+        codigoPostal: [this.solicitudState?.tercerosRelacionadosCodigoPostal,Validators.required],
+        colonia: [this.solicitudState?.tercerosRelacionadosColonia,Validators.required],
+        calle: [this.solicitudState?.tercerosRelacionadosCalle,Validators.required],
+        numeroExterior: [this.solicitudState?.numeroExterior,Validators.required],
+        numeroInterior: [this.solicitudState?.numeroInterior,Validators.required],
+        lada: [this.solicitudState?.tercerosRelacionadosLada],
+        telefono: [this.solicitudState?.tercerosRelacionadosTelefono,Validators.required],
+        correoElectronico: [this.solicitudState?.tercerosRelacionadosCorreoElectronico,Validators.required],
       });
     }
 
@@ -150,6 +156,33 @@ export class TercerosRelacionadosModalComponent implements OnInit,OnDestroy {
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260701Store): void {
       const VALOR = form.get(campo)?.value;
       (this.tramite260701Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Limpia el formulario `tercerosRelacionadosForm`, reseteando sus valores y estado.
+   * También restablece el objeto `radioObjeto` a su estado inicial con ambas opciones en `false`.
+   */
+  public limpiarFormulario(): void {
+    this.tercerosRelacionadosForm.reset();
+    this.tercerosRelacionadosForm.markAsUntouched();
+    this.tercerosRelacionadosForm.updateValueAndValidity();
+    this.radioObjeto = {
+      fisica: false,
+      moral: false,
+    }
+  }
+
+  /** 
+   * Guarda el formulario si es válido y cierra el modal.
+   * Si el formulario es válido, emite los valores del formulario a través del Subject `onClose`
+   * y luego oculta el modal utilizando `bsModalRef.hide()`.
+   */
+  public guardarFormulario(): void {
+    if (!this.tercerosRelacionadosForm.invalid) {
+      const FORM_VALOR = this.tercerosRelacionadosForm.value;
+      this.onClose.next(FORM_VALOR);
+      this.bsModalRef.hide();
+    }
   }
 
   /**

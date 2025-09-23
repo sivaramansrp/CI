@@ -6,7 +6,7 @@
  * @description Interfaz que define la estructura del formulario de registro IMMEX (Industria Manufacturera, Maquiladora y de Servicios de Exportación).
  * Esta interfaz contiene todos los campos necesarios para el registro de solicitudes IMMEX, incluyendo información sobre
  * productos, fracciones arancelarias, capacidades de producción y datos comerciales.
- * 
+ *
  * @author Sistema VUCEM 3.0
  * @version 1.0.0
  * @since 2025
@@ -21,6 +21,8 @@ export interface immexRegistroform {
    * @required
    */
   candidadPorPeriodo: string;
+
+  productoImportacion: string;
 
   /**
    * @description Capacidad máxima de producción disponible durante un periodo determinado.
@@ -209,7 +211,7 @@ export interface immexRegistroform {
  * Define la estructura y orden de visualización de la información relacionada con permisos IMMEX,
  * incluyendo números de permiso, fracciones arancelarias, descripciones TIGIE y períodos de vigencia.
  * Cada elemento contiene el encabezado de la columna, la función para extraer el valor y el orden de presentación.
- * 
+ *
  * @type {Array<{encabezado: string, clave: Function, orden: number}>}
  * @readonly
  * @author Sistema VUCEM 3.0
@@ -234,7 +236,7 @@ export const IMMEX_SERVICIO = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 1
+    orden: 1,
   },
   {
     /**
@@ -252,7 +254,7 @@ export const IMMEX_SERVICIO = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 2
+    orden: 2,
   },
   {
     /**
@@ -270,7 +272,7 @@ export const IMMEX_SERVICIO = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 3
+    orden: 3,
   },
   {
     /**
@@ -288,7 +290,7 @@ export const IMMEX_SERVICIO = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 4
+    orden: 4,
   },
   {
     /**
@@ -306,7 +308,7 @@ export const IMMEX_SERVICIO = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 5
+    orden: 5,
   },
   {
     /**
@@ -324,7 +326,7 @@ export const IMMEX_SERVICIO = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 6
+    orden: 6,
   },
   {
     /**
@@ -342,7 +344,7 @@ export const IMMEX_SERVICIO = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 7
+    orden: 7,
   },
   {
     /**
@@ -360,16 +362,16 @@ export const IMMEX_SERVICIO = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 8
-  }
-]
+    orden: 8,
+  },
+];
 
 /**
  * @interface immexInfo
  * @description Interfaz que define la estructura de la información de IMMEX para visualización en tabla.
  * Representa los datos de un permiso IMMEX específico con todas sus características y detalles técnicos
  * necesarios para la presentación en formato tabular dentro del sistema VUCEM.
- * 
+ *
  * @author Sistema VUCEM 3.0
  * @version 1.0.0
  * @since 2025
@@ -449,16 +451,6 @@ export interface immexInfo {
    * @required
    */
   IMMEX_Columna_8: string;
-
-  /**
-   * @description Indicador del estado activo (true) o inactivo (false) del registro.
-   * Bandera booleana que determina si el registro está habilitado para operaciones o ha sido desactivado.
-   * @type {boolean}
-   * @default true
-   * @example true
-   * @required
-   */
-  estatus: boolean;
 }
 
 /**
@@ -467,7 +459,21 @@ export interface immexInfo {
  * Define la estructura de visualización de información relacionada con fracciones arancelarias de exportación,
  * incluyendo códigos de fracción, mercancías de importación relacionadas, unidades de medida y descripciones comerciales.
  * Facilita la presentación ordenada de datos para procesos de exportación bajo el régimen IMMEX.
- * 
+ *
+ * @type {Array<{encabezado: string, clave: Function, orden: number}>}
+ * @readonly
+ * @author Sistema VUCEM 3.0
+ * @version 1.0.0
+ * @since 2025
+ * @module Tramites.IMMEX.Tablas.Exportacion
+ */
+/**
+ * @constant FRACCION_EXPORTACION
+ * @description Configuración de las columnas de la tabla para la fracción de exportación.
+ * Define la estructura de visualización de información relacionada con fracciones arancelarias de exportación,
+ * incluyendo códigos de fracción, mercancías de importación relacionadas, unidades de medida y descripciones comerciales.
+ * Facilita la presentación ordenada de datos para procesos de exportación bajo el régimen IMMEX.
+ *
  * @type {Array<{encabezado: string, clave: Function, orden: number}>}
  * @readonly
  * @author Sistema VUCEM 3.0
@@ -492,7 +498,7 @@ export const FRACCION_EXPORTACION = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 1
+    orden: 1,
   },
   {
     /**
@@ -510,7 +516,7 @@ export const FRACCION_EXPORTACION = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 2
+    orden: 2,
   },
   {
     /**
@@ -528,7 +534,7 @@ export const FRACCION_EXPORTACION = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 3
+    orden: 3,
   },
   {
     /**
@@ -546,7 +552,7 @@ export const FRACCION_EXPORTACION = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 4
+    orden: 4,
   },
   {
     /**
@@ -564,14 +570,14 @@ export const FRACCION_EXPORTACION = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 5
+    orden: 5,
   },
   {
     /**
      * @description Encabezado para la columna de descripción comercial de exportación
      * @type {string}
      */
-    encabezado: 'Descripción comercial de la exportación',
+    encabezado: 'Descripción comercial del producto de exportación',
     /**
      * @description Función extractora para obtener la descripción comercial del producto de exportación
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
@@ -582,16 +588,34 @@ export const FRACCION_EXPORTACION = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 6
+    orden: 6,
+  },
+  {
+    /**
+     * @description Encabezado para la columna de solicitud de baja de fracción
+     * @type {string}
+     */
+    encabezado: 'Solicita baja',
+    /**
+     * @description Función extractora para obtener información de solicitud de baja
+     * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
+     * @returns {string} Información de solicitud de baja asociada a la fracción
+     */
+    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_7,
+    /**
+     * @description Orden de presentación de la columna en la tabla
+     * @type {number}
+     */
+    orden: 7,
   }
-]
+];
 
 /**
  * @interface fraccionInfo
  * @description Interfaz que define la estructura de la información de la fracción de exportación.
  * Contiene los datos específicos de una fracción arancelaria para productos de exportación bajo el régimen IMMEX,
  * incluyendo clasificaciones, descripciones comerciales y unidades de medida técnica.
- * 
+ *
  * @author Sistema VUCEM 3.0
  * @version 1.0.0
  * @since 2025
@@ -653,6 +677,15 @@ export interface fraccionInfo {
   FRACCION_Columna_6: string;
 
   /**
+   * @description Campo adicional para información específica de la fracción arancelaria.
+   * Puede utilizarse para almacenar datos complementarios, observaciones o referencias asociadas a la fracción.
+   * @type {string}
+   * @example "Observaciones adicionales"
+   * @optional
+   */
+  FRACCION_Columna_7: string;
+
+  /**
    * @description Indicador del estado activo (true) o inactivo (false) del registro de fracción.
    * Bandera booleana que determina si la fracción está habilitada para operaciones o ha sido desactivada.
    * @type {boolean}
@@ -669,7 +702,7 @@ export interface fraccionInfo {
  * Define la estructura de visualización para códigos NICO y sus descripciones correspondientes,
  * facilitando la identificación y clasificación de materias primas y productos básicos en el comercio internacional.
  * Esta configuración es esencial para la correcta presentación de datos de commodities en el sistema VUCEM.
- * 
+ *
  * @type {Array<{encabezado: string, clave: Function, orden: number}>}
  * @readonly
  * @author Sistema VUCEM 3.0
@@ -694,7 +727,7 @@ export const NICO_TABLA = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 1
+    orden: 1,
   },
   {
     /**
@@ -712,16 +745,16 @@ export const NICO_TABLA = [
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
      */
-    orden: 2
-  }
-]
+    orden: 2,
+  },
+];
 
 /**
  * @interface nicoInfo
  * @description Interfaz que define la estructura de la información de NICO (Nomenclatura de Identificación de Commodities).
  * Representa los datos de clasificación de materias primas y productos básicos utilizados en el comercio internacional,
  * proporcionando una base estandarizada para la identificación de commodities en operaciones IMMEX.
- * 
+ *
  * @author Sistema VUCEM 3.0
  * @version 1.0.0
  * @since 2025
@@ -763,7 +796,7 @@ export interface nicoInfo {
  * Contiene toda la información detallada de un permiso individual del programa IMMEX,
  * incluyendo identificadores, fracciones arancelarias, descripciones y períodos de vigencia.
  * Esta interfaz es fundamental para el manejo de datos de permisos en el sistema VUCEM.
- * 
+ *
  * @author Sistema VUCEM 3.0
  * @version 1.0.0
  * @since 2025
@@ -851,7 +884,7 @@ export interface PermisoImmexDato {
  * Representa los datos específicos de una fracción arancelaria utilizada en procesos de exportación,
  * incluyendo códigos de clasificación, descripciones de mercancías y unidades de medida.
  * Esta interfaz es esencial para el manejo de datos de clasificación arancelaria en operaciones IMMEX.
- * 
+ *
  * @author Sistema VUCEM 3.0
  * @version 1.0.0
  * @since 2025
@@ -919,7 +952,7 @@ export interface FraccionDato {
  * Representa la información básica de clasificación de materias primas y productos básicos
  * utilizados en operaciones de comercio exterior bajo el régimen IMMEX.
  * Esta interfaz proporciona la estructura fundamental para el manejo de datos de commodities.
- * 
+ *
  * @author Sistema VUCEM 3.0
  * @version 1.0.0
  * @since 2025
@@ -952,7 +985,7 @@ export interface NicoDato {
  * incluyendo permisos, fracciones arancelarias y códigos NICO en una estructura unificada.
  * Esta interfaz facilita el manejo conjunto de datos para procesos de importación y exportación,
  * proporcionando una estructura integral para el intercambio de información IMMEX.
- * 
+ *
  * @author Sistema VUCEM 3.0
  * @version 1.0.0
  * @since 2025

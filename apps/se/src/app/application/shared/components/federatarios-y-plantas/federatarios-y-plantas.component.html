@@ -74,7 +74,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="numeroDeNotaria">Número de notaría*:</label>
-              <input class="form-control min-hgt" id="numeroDeNotaria" formControlName="numeroDeNotaria" type="text"
+              <input class="form-control min-hgt" id="numeroDeNotaria" formControlName="numeroDeNotaria" type="number"
                 maxlength="6" [ngClass]="esValido(federatariosFormGroup, 'numeroDeNotaria') ? 'required' : ''"/>
               <div
                 *ngIf="federatariosFormGroup.get('numeroDeNotaria')?.invalid && federatariosFormGroup.get('numeroDeNotaria')?.touched"
@@ -94,7 +94,7 @@
               [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
           </div>
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="estadoOptionsConfig.municipio" formControlName="estadoOptions"
+            <app-catalogo-select [catalogo]="municipioCatologo" formControlName="estadoOptions"
               [label]="'Municipio o alcaldía'" [required]="true" name="estadoOptions"
               [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
           </div>
@@ -140,7 +140,7 @@
           <div class="col">
             <div class="row">
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="estadoOptionsConfig.estadoImmex" [label]="'Estado'" [required]="true"
+                <app-catalogo-select [catalogo]="estadoImmex" [label]="'Estado'" [required]="true"
                   name="estadoUno" formControlName="estadoUno"
                   [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
               </div>
@@ -247,7 +247,7 @@
 
                 <div class="row mt-5">
                   <div class="col-md-4">
-                    <app-catalogo-select [catalogo]="estadoOptionsConfig.municipio" [label]="'Representación federal'"
+                    <app-catalogo-select [catalogo]="RepresentacionCatalogo" [label]="'Representación federal'"
                       [required]="true" name="estadoDos" formControlName="estadoDos"
                       [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
                   </div>

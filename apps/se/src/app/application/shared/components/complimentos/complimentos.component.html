@@ -86,7 +86,7 @@
         </div>
         <div class="row">
           <div class="col-md-4 mb-4 mt-3">
-            <label for="Numero"> Número de Notaria*:</label>
+            <label for="Numero"> Número de notaria*:</label>
             <input type="number" id="Numero" name="Numero" class="form-control" formControlName="nombreDeNotaria"
               maxlength="10" [ngClass]="esValido('formaModificaciones', 'nombreDeNotaria') ? 'required' : ''"/>
                <div *ngIf="formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.hasError('required') && formaComplimentos.get('formaModificaciones.nombreDeNotaria')?.touched">
@@ -125,7 +125,7 @@
               <input type="text" id="rfc" name="rfc" class="form-control" formControlName="rfc" maxlength="13"
                 onkeyup="this.value = this.value.toUpperCase();"
                 onkeypress="return /^[A-ZÑ&0-9]$/i.test(event.key) || event.key === 'Backspace' || event.key === 'Delete' || event.key === 'Tab'"
-                (blur)="onRfcBlur()" (input)="onRfcChange()" [ngClass]="esValido('formaModificaciones', 'rfc') ? 'required' : ''"/>
+                 [ngClass]="esValido('formaModificaciones', 'rfc') ? 'required' : ''"/>
             </div>
              <div *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.hasError('required') && formaComplimentos.get('formaModificaciones.rfc')?.touched">
                <p class="mensaje-error">Este campo es obligatorio.</p>

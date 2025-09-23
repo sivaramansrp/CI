@@ -5,7 +5,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-          <label class="form-label text-left"><span class="text-danger">*</span> Señale si los socios, accionistas, según corresponda, representante legal con facultad para actos de dominio e integrantes de la administración de conformidad con la constitución de la empresa solicitante, se encuentran al corriente en el cumplimiento de sus obligaciones fiscales.</label>
+          <label class="form-label text-left">Señale si los socios, accionistas, según corresponda, representante legal con facultad para actos de dominio e integrantes de la administración de conformidad con la constitución de la empresa solicitante, se encuentran al corriente en el cumplimiento de sus obligaciones fiscales<span class="text-danger">*</span>:</label>
       </div>
         <div *ngIf="agregarMiembroEmpresaList.length === 0 && registroAgregarMiembroEmpresaForm.get('miembroDeLaEmpresaTabla')?.touched"
         class="mt-3">
@@ -39,9 +39,9 @@
                             </app-tabla-dinamica>
                             <div class="d-flex justify-content-end">
                               <div class="d-flex flex-row flex-wrap gap-3">
-                                  <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
+                                 <button class="btn btn-default" [ngClass]="{'btn-secondary': !enableEliminarBoton}" (click)="modificarItemEmpleado()" [disabled]="esFormularioSoloLectura">Modificar</button> 
+                                  <button class="btn btn-danger" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
                                   (click)="confirmEliminarEmpleadoItem()" [disabled]="esFormularioSoloLectura">Eliminar</button>
-                                  <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}" (click)="modificarItemEmpleado()" [disabled]="esFormularioSoloLectura">Modificar</button>
                                   <button class="btn btn-primary" (click)="agregarDialogoDatos()" [disabled]="esFormularioSoloLectura">Agregar</button>
                               </div>
                             </div>
@@ -72,7 +72,7 @@
                                                       formControlName="caracter"
                                                       [label]="'En su carácter de'"
                                                       [required]="true"
-                                                      [placeholder]="'Seleccione un valor'"
+                                                      [placeholder]="'Seleccione una opción'"
                                                       >
                                                       </app-catalogo-select>
                                                     </div>
@@ -80,7 +80,7 @@
                                               </div>
                                               <div class="row">
                                                 <div class="col-md-12 pt-5">
-                                                    <label class="form-label text-left"><span class="text-danger">*</span> Obligado a Tributar en México</label>
+                                                    <label class="form-label text-left">Obligado a Tributar en México<span class="text-danger">*</span>:</label>
                                                     <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                                                     formControlName="obligadoTributarMexico" (valueChange)="enCambioDeValor($event)"
                                                     ></app-input-radio>
@@ -94,7 +94,7 @@
                                                       formControlName="nacionalidad"
                                                       [label]="'Nacionalidad'"
                                                       [required]="true"
-                                                      [placeholder]="'Seleccione nacionalidad'"
+                                                      [placeholder]="'Seleccione una opción'"
                                                       >
                                                       </app-catalogo-select>
                                                     </div>
@@ -106,7 +106,7 @@
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
                                                       <div class="form-group">
-                                                          <label for="rfcInput" class="form-label"><span class="text-danger">*</span> RFC</label>
+                                                          <label for="rfcInput" class="form-label">RFC<span class="text-danger">*</span>:</label>
                                                           <div class="d-flex">
                                                             <input
                                                                 type="text"
@@ -115,7 +115,7 @@
                                                                 formControlName="rfcInput"
                                                                 placeholder="Ingrese RFC"
                                                                 />
-                                                            <button class="btn btn-secondary ms-2" type="button" (click)="onBuscarRfc()">
+                                                            <button class="btn btn-primary ms-2" type="button" (click)="onBuscarRfc()">
                                                             Buscar
                                                             </button>
                                                           </div>
@@ -126,7 +126,7 @@
                                                     <div class="col-md-12">
                                                       <div class="form-group">
                                                           <label for="rfc" class="form-label text-left"
-                                                            ><span class="text-danger">*</span> Registro Federal de Contribuyentes</label
+                                                            >Registro Federal de Contribuyentes<span class="text-danger">*</span>:</label
                                                             >
                                                           <input
                                                             type="text"
@@ -141,7 +141,7 @@
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
                                                       <div class="form-group">
-                                                          <label for="nombreCompleto" class="form-label"><span class="text-danger">*</span> Nombre completo</label>
+                                                          <label for="nombreCompleto" class="form-label">Nombre completo<span class="text-danger">*</span>:</label>
                                                           <input
                                                             type="text"
                                                             class="form-control"
@@ -163,7 +163,7 @@
                                                           [label]="'Tipo de Persona'"
                                                           [required]="true"
                                                           (change)="alSeleccionarElemento($event)"
-                                                          [placeholder]="'Seleccione tipo de persona'"
+                                                          [placeholder]="'Seleccione una opción'"
                                                           [isDisabled]="this.radioSeleccionado !== 'tipdeSeccion'"
                                                           >
                                                           </app-catalogo-select>
@@ -174,7 +174,7 @@
                                                     <div class="row mb-3">
                                                       <div class="col-md-12">
                                                           <div class="form-group">
-                                                            <label for="nombre" class="form-label"><span class="text-danger">*</span> Nombre</label>
+                                                            <label for="nombre" class="form-label">Nombre<span class="text-danger">*</span>:</label>
                                                             <input
                                                                 type="text"
                                                                 class="form-control"
@@ -187,7 +187,7 @@
                                                     <div class="row mb-3">
                                                       <div class="col-md-12">
                                                           <div class="form-group">
-                                                            <label for="apellidoPaterno" class="form-label"><span class="text-danger">*</span> Apellido Paterno</label>
+                                                            <label for="apellidoPaterno" class="form-label">Apellido Paterno<span class="text-danger">*</span>:</label>
                                                             <input
                                                                 type="text"
                                                                 class="form-control"
@@ -215,7 +215,7 @@
                                                     <div class="row mb-3">
                                                       <div class="col-md-12">
                                                           <div class="form-group">
-                                                            <label for="nombreEmpresa" class="form-label"><span class="text-danger">*</span> Nombre de la Empresa</label>
+                                                            <label for="nombreEmpresa" class="form-label">Nombre de la Empresa<span class="text-danger">*</span>:</label>
                                                             <input
                                                                 type="text"
                                                                 class="form-control"
@@ -230,7 +230,7 @@
                                           </div>
                                         </div>
                                     <footer class="footer d-flex py-5 gap-3 justify-content-end">
-                                        <button type="button" class="btn btn-primary" (click)="modalCancelar()">Cancelar</button>
+                                        <button type="button" class="btn btn-danger" (click)="modalCancelar()">Cancelar</button>
                                         <button type="button" class="btn btn-primary" (click)="enviarDialogData()">Agregar</button>
                                     </footer>
                                   </div>

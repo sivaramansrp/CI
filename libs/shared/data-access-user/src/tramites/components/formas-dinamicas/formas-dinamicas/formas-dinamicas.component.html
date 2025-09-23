@@ -36,6 +36,7 @@
                           [required]="item.esRequerido ?? false"
                           [readonly]="item.soloLectura"
                           [ngClass]="esValido(item.campo) ? 'required' : ''"
+                          [attr.maxlength]="item.maxlength"
                           (change)="eventoDeCambioDeValor($event, item.campo)"
                         />
                         
@@ -74,6 +75,7 @@
                           [required]="item.esRequerido ?? false"
                           [readonly]="item.soloLectura"
                           [ngClass]="esValido(item.campo) ? 'required' : ''"
+                          [attr.maxlength]="item.maxlength"
                           (change)="eventoDeCambioDeValor($event, item.campo)"
                         />
                         <validadores-de-formularios 
@@ -166,7 +168,10 @@
                     }
                   } @case ('button') {
                     @if (item.mostrar !== false) {
-                      <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]" class="btn-min-height">
+                      <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]" class="btn-min-height"[ngStyle]="{
+                        'margin-left': item.marginLeft || '5rem',
+                        'width': item.divWidth || '238px'
+                      }">
                         <div class="form-group">
                           <input 
                             [id]="item.id"
@@ -175,6 +180,9 @@
                             [value]="item.labelNombre" 
                             [disabled]="item.desactivado || soloLectura"
                             (click)="alHacerClicEnElBoton(item)" 
+                            [ngStyle]="{
+                              'width': item.buttonWidth || '246px'
+                            }"
                           />
                         </div>
                       </div>

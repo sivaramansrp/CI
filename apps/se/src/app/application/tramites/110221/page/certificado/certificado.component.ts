@@ -10,9 +10,9 @@
  * @import { DatosPasos } from '@ng-mf/data-access-user';
  * @import { PASOS } from '../../constantes/peru-certificado.module';
  */
-import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.model';
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, SeccionLibStore } from '@ng-mf/data-access-user';
+import { AccionBoton } from '../../models/peru-certificado.model';
 import { ERROR_FORMA_ALERT } from '../../../120601/constantes/definiciones.enum';
 import { PASOS } from '../../constantes/peru-certificado.model';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';

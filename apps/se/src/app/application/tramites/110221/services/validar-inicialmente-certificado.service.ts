@@ -6,6 +6,7 @@ import { Tramite110221State, Tramite110221Store } from '../estados/tramite110221
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
+import { Mercancias } from '../models/plantas-consulta.model';
 
 /**
  * @descripcion
@@ -76,10 +77,17 @@ export class ValidarInicialmenteCertificadoService {
    * Obtiene el historial de mercancías seleccionadas desde un archivo JSON local.
    * @returns {Observable<MercanciasHistorico>} Un observable que emite los datos del historial de mercancías.
    */
-  obtenerMercancia(): Observable<MercanciasHistorico> {
+  /**
+   * Obtiene la lista de mercancías desde un archivo JSON local.
+   * @method obtenerMercancia
+   * @returns {Observable<Mercancia[]>} Observable con la lista de mercancías.
+   */
+  obtenerMercancia(): Observable<Mercancias[]> {
     return this.http
-      .get<MercanciasHistorico>('assets/json/110221/mercancias-seleccionadas.json');
+      .get<{ data: Mercancias[] }>('assets/json/110204/mercancia.json') // Solicita los datos del archivo JSON
+      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
   }
+
 
   /**
    * Obtiene el catálogo de países de destino.
@@ -166,4 +174,53 @@ export class ValidarInicialmenteCertificadoService {
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite110221State> {
     return this.http.get<Tramite110221State>('assets/json/110221/datos-prefill.json');
   }
+
+    /**
+     * Obtiene la lista de estados desde un archivo JSON local.
+     * @method obtenerListaEstado
+     * @returns {Observable<Catalogo[]>} Observable con la lista de estados.
+     */
+    obtenerListaEstado(): Observable<Catalogo[]> {
+      return this.http
+        .get<{ data: Catalogo[] }>('./assets/json/110221/estado.json') // Solicita los datos del archivo JSON
+        .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
+    }
+    /**
+   * Obtiene la lista de países bloque desde un archivo JSON local.
+   * @method obtenerPaisBloque
+   * @returns {Observable<Catalogo[]>} Observable con la lista de países bloque.
+   */
+  obtenerPaisBloque(): Observable<Catalogo[]> {
+    return this.http
+      .get<{ data: Catalogo[] }>('assets/json/110221/país-bloque.json') // Solicita los datos del archivo JSON
+      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
+  }
+
+
+    obtenerMercancias(): Observable<MercanciasHistorico> {
+    return this.http
+      .get<MercanciasHistorico>('assets/json/110221/mercancias-seleccionadas.json');
+  }
+   /**
+ * Obtiene la lista de facturas desde un archivo JSON local.
+ * @method obtenerFacturas
+ * @returns {Observable<Catalogo[]>} Observable con la lista de facturas.
+ */
+  obtenerFacturas(): Observable<Catalogo[]> {
+    return this.http
+      .get<{ data: Catalogo[] }>('assets/json/110204/factura.json') // Solicita los datos del archivo JSON
+      .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
+  }
+   /**
+     * Obtiene la lista de UMC desde un archivo JSON local.
+     * @method obtenerUmc
+     * @returns {Observable<Catalogo[]>} Observable con la lista de UMC.
+     */
+    obtenerUmc(): Observable<Catalogo[]> {
+      return this.http
+        .get<{ data: Catalogo[] }>('assets/json/110204/umc.json') // Solicita los datos del archivo JSON
+        .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
+    }
+  
+
 }

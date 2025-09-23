@@ -6,6 +6,8 @@
   [plantasDisponiblesDatos]="(plantasDisponiblesTablaLista$ | async) || []"
   [plantasImmexDatos]="(plantasImmexTablaLista$ | async) || []"
   (datosFormaFedratario)="setFormaDatos($event)"
+  (datosPlantaDisponibles)="setPlantasDisponiblesDatos($event)"
+  (datosPlantasImmex)="setPlantasImmexDatos($event)"
   [formularioDeshabilitado]="formularioDeshabilitado"
   [esFormularioUpdate]="esFormularioUpdate"
   [datosFederatarios]="datosFederatarios"
@@ -52,3 +54,8 @@
     </div>
   </div>
 </ng-container>
+
+<section *ngIf="nuevaUnoNotificacion">
+    <lib-notificaciones [notificacionInput]="nuevaUnoNotificacion">
+    </lib-notificaciones>
+</section>

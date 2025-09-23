@@ -1,4 +1,11 @@
 import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import {
   BANCO_CATALOGOS,
   ESTADO_CATALOGOS
 } from '../../constantes/pago-banco.enum';
@@ -25,12 +32,6 @@ import {
   FECHA_DE_PAGO,
   PagoDerechosFormState
 } from '../../models/terceros-relacionados.model';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
 import {
   PagoDerechosState,
   PagoDerechosStore
@@ -80,6 +81,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   @Input() public idProcedimiento!: number;
 
   /**
+   * Indica si sólo se requiere el campo "colón".
+   *
+   * @type {boolean}
+   * @default false
+   */
+  @Input() soloDosPuntosRequeridos: boolean = false;
+
+  /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    */
   @Input() public formularioDeshabilitado: boolean = false;
@@ -104,6 +113,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    * @private
    */
   private unsubscribe$ = new Subject<void>();
+
+  /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de información bancaria en la interfaz.
@@ -174,6 +188,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
         takeUntil(this.unsubscribe$),
         map((seccionState) => { 
           this.formularioDeshabilitado = seccionState.readonly;
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
       .subscribe();
@@ -217,7 +232,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       importePago: [
         this.solicitudState?.importePago || '',
         [
-          Validators.pattern(REGEX_PATRON_DECIMAL_2),
+          decimalValidator(2),
           Validators.maxLength(16),
         ],
       ],
@@ -225,7 +240,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.updatePagoDerechos.emit(valores);
     });
-
+    this.formularioDeshabilitado = this.esFormularioSoloLectura
     if (this.formularioDeshabilitado) {
       this.pagoDerechosForm.disable();
     }
@@ -395,4 +410,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     this.unsubscribe$.next();
     this.unsubscribe$.unsubscribe();
   }
+}
+
+export function decimalValidator(maxDecimals: number = 2) {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    if (!control.value) return null;
+    
+    const VALOR = control.value.toString();
+    
+    if (isNaN(parseFloat(VALOR))) {
+      return { invalidNumber: true };
+    }
+    
+    const decimalParts = VALOR.split('.');
+    if (decimalParts.length > 1 && decimalParts[1].length > maxDecimals) {
+      return { tooManyDecimals: { max: maxDecimals, actual: decimalParts[1].length } };
+    }
+    
+    return null;
+  };
 }

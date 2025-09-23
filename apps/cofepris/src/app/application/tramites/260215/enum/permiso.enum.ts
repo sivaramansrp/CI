@@ -82,7 +82,7 @@ export const MUNICIPIOSELECTDATA = [
  * Cada objeto contiene un ID y una descripción del país.
  */
 export const PAISSELECTDATA = [
-  { id: 1, descripcion: 'MUESTRA1 (ESTADOS UNIDOS MEXICANO)' },
+  { id: 1, descripcion: 'MEXICO (ESTADOS UNIDOS MEXICANO)' },
   { id: 2, descripcion: 'MUESTRA2' },
   { id: 3, descripcion: 'MUESTRA3' },
 ];

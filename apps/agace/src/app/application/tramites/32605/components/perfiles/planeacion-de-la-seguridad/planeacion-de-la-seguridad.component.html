@@ -19,7 +19,7 @@
 
       <div class="row mt-2 alert-text">
         <div class="col-md-12 text-container">
-          <p><span class="danger">*</span>{{textos.paraca3}}</p>
+          <p>{{textos.paraca3}}<span class="danger">*</span>:</p>
         </div>
       </div>
 
@@ -42,10 +42,10 @@
 
       <div class="row mt-2 alert-text">
         <div class="col-md-12 text-container">
-          <p><span class="danger">*</span>Asimismo, el procedimiento documentado para identificar riesgos en la cadena
+          <p>Asimismo, el procedimiento documentado para identificar riesgos en la cadena
             de suministro y sus
             instalaciones,deberá contemplar el proceso de apreciación y gestión del riesgo, e incluir los siguientes
-            aspectos:</p>
+            aspectos<span class="danger">*</span>:</p>
         </div>
       </div>
 
@@ -78,8 +78,8 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="comiteSeguridad">
-          <span class="danger">*</span>Señale quiénes conforman el Comité de Seguridad de la
-          compañía (Nombre y puesto).
+          Señale quiénes conforman el Comité de Seguridad de la
+          compañía (Nombre y puesto)<span class="danger">*</span>:
         </label>
         <textarea class="custom-textarea" rows="6" cols="100" id="comiteSeguridad" formControlName="comiteSeguridad"
           (change)="setValoresStore(contingencyForm,'comiteSeguridad')"></textarea>
@@ -94,8 +94,8 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="fuentesInformacion">
-          <span class="danger">*</span>Indique cuáles son las fuentes de información utilizadas
-          para calificar riesgos durante la fase de análisis.
+          Indique cuáles son las fuentes de información utilizadas
+          para calificar riesgos durante la fase de análisis<span class="danger">*</span>:
         </label>
         <textarea class="custom-textarea" rows="6" cols="100" id="fuentesInformacion"
           formControlName="fuentesInformacion"
@@ -128,8 +128,8 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="politica">
-          <span class="danger">*</span>Enunciar la política de seguridad orientada a prevenir, asegurar
-          y reconocer amenazas en la cadena de suministros e instalaciones, de la empresa
+          Enunciar la política de seguridad orientada a prevenir, asegurar
+          y reconocer amenazas en la cadena de suministros e instalaciones, de la empresa<span class="danger">*</span>:
         </label>
         <textarea class="custom-textarea" rows="6" cols="100" id="politica" formControlName="politica"
           (change)="setValoresStore(contingencyForm,'politica')"></textarea>
@@ -145,8 +145,8 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="indique">
-          <span class="danger">*</span>Indique quién es el responsable de su revisión, firma y difusión
-          hacia los empleados.
+          Indique quién es el responsable de su revisión, firma y difusión
+          hacia los empleados<span class="danger">*</span>:
         </label>
         <textarea class="custom-textarea" rows="6" cols="100" id="indique" formControlName="indique"
           (change)="setValoresStore(contingencyForm,'indique')"></textarea>
@@ -162,8 +162,8 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="periodicidadDos">
-          <span class="danger">*</span>Indique la periodicidad con la que se lleva a cabo su
-          actualización.
+          Indique la periodicidad con la que se lleva a cabo su
+          actualización<span class="danger">*</span>:
         </label>
         <textarea class="custom-textarea" rows="6" cols="100" id="periodicidadDos" formControlName="periodicidadDos"
           (change)="setValoresStore(contingencyForm,'periodicidadDos')"></textarea>
@@ -179,9 +179,9 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="programa">
-          <span class="danger">*</span>Indique el programa y/o campaña de difusión que utiliza para comunicar a los
+          Indique el programa y/o campaña de difusión que utiliza para comunicar a los
           empleados la política de
-          seguridad en la cadena de suministros.
+          seguridad en la cadena de suministros<span class="danger">*</span>:
         </label>
         <textarea class="custom-textarea" rows="6" cols="100" id="programa" formControlName="programa"
           (change)="setValoresStore(contingencyForm,'programa')"></textarea>
@@ -197,9 +197,9 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="capacitacion">
-          <span class="danger">*</span>Indique si realiza capacitación inicial y de reforzamiento de la política de
+          Indique si realiza capacitación inicial y de reforzamiento de la política de
           seguridad en la cadena de
-          suministros.
+          suministros<span class="danger">*</span>:
         </label>
         <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" class="gap"
           formControlName="capacitacion"
@@ -218,7 +218,7 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="procedimiento">
-          <span class="danger">*</span>Si cuenta con un procedimiento documentado para su realización.
+          Si cuenta con un procedimiento documentado para su realización<span class="danger">*</span>:
         </label>
         <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" class="gap"
           formControlName="procedimiento"
@@ -227,9 +227,9 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="descripcionProcedimiento">
-          <span class="danger">*</span>Describa el procedimiento documentado para llevar a cabo una auditoría interna
+          Describa el procedimiento documentado para llevar a cabo una auditoría interna
           enfocada en la seguridad en la
-          cadena de suministros.
+          cadena de suministros<span class="danger">*</span>:
         </label>
         <textarea class="custom-textarea" rows="6" cols="100" id="descripcionProcedimiento"
           formControlName="descripcionProcedimiento"
@@ -246,9 +246,9 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="nombreProcedimiento">
-          <span class="danger">*</span>Nombre del procedimiento para llevar a cabo una auditoría interna enfocada en la
+          Nombre del procedimiento para llevar a cabo una auditoría interna enfocada en la
           seguridad en la cadena de
-          suministros.
+          suministros<span class="danger">*</span>:
         </label>
         <textarea class="custom-textarea" rows="6" cols="100" id="nombreProcedimiento"
           formControlName="nombreProcedimiento"
@@ -265,9 +265,9 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="programacionAuditoria">
-          <span class="danger">*</span>Señale cómo la empresa de mensajería y paquetería lleva a cabo la programación o
+          Señale cómo la empresa de mensajería y paquetería lleva a cabo la programación o
           calendarización para una
-          auditoría interna, en materia de seguridad en la cadena de suministros.
+          auditoría interna, en materia de seguridad en la cadena de suministros<span class="danger">*</span>:
         </label>
         <textarea class="custom-textarea" rows="6" cols="100" id="programacionAuditoria"
           formControlName="programacionAuditoria"
@@ -284,9 +284,9 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="participantesAuditoria">
-          <span class="danger">*</span>Indique quiénes participan en ellas, los registros que se generan, así como la
+          Indique quiénes participan en ellas, los registros que se generan, así como la
           periodicidad con la que se
-          llevan a cabo.
+          llevan a cabo<span class="danger">*</span>:
         </label>
         <textarea class="custom-textarea" rows="6" cols="100" id="participantesAuditoria"
           formControlName="participantesAuditoria"
@@ -303,7 +303,7 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="enfoqueAuditoria">
-          <span class="danger">*</span>Si cuenta con un procedimiento documentado para su realización.
+          Si cuenta con un procedimiento documentado para su realización<span class="danger">*</span>:
         </label>
         <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" class="gap"
           formControlName="enfoqueAuditoria"
@@ -312,7 +312,7 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="procesosAuditados">
-          <span class="danger">*</span>Mencione los procesos o tópicos que se auditan.
+          Mencione los procesos o tópicos que se auditan<span class="danger">*</span>:
         </label>
         <textarea class="custom-textarea" rows="6" cols="100" id="procesosAuditados" formControlName="procesosAuditados"
           (change)="setValoresStore(contingencyForm,'procesosAuditados')"></textarea>
@@ -328,7 +328,7 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="registrosAuditoria">
-          <span class="danger">*</span>Describa los registros de los resultados de las auditorías y su seguimiento.
+          Describa los registros de los resultados de las auditorías y su seguimiento<span class="danger">*</span>:
         </label>
         <textarea class="custom-textarea" rows="6" cols="100" id="registrosAuditoria"
           formControlName="registrosAuditoria"
@@ -346,9 +346,9 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="programacion">
-          <span class="danger">*</span>Señale cómo lleva a cabo la programación o calendarización para realizar una
+          Señale cómo lleva a cabo la programación o calendarización para realizar una
           auditoría interna en materia de
-          seguridad en la cadena de suministros.
+          seguridad en la cadena de suministros<span class="danger">*</span>:
         </label>
         <textarea class="custom-textarea" rows="6" cols="100" id="programacion" formControlName="programacion"
           (change)="setValoresStore(contingencyForm,'programacion')"></textarea>
@@ -364,9 +364,9 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="registrosNombre">
-          <span class="danger">*</span>Indique los nombre y puestos de quienes participan, los registros que se efectúan
+          Indique los nombre y puestos de quienes participan, los registros que se efectúan
           y la periodicidad con la que
-          se realizan las auditorías internas.
+          se realizan las auditorías internas<span class="danger">*</span>:
         </label>
         <textarea class="custom-textarea" rows="6" cols="100" id="registrosNombre" formControlName="registrosNombre"
           (change)="setValoresStore(contingencyForm,'registrosNombre')"></textarea>
@@ -382,10 +382,10 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="registrosEmpresa">
-          <span class="danger">*</span>Indique cómo es que la gerencia de la empresa verifica el resultado de las
+          Indique cómo es que la gerencia de la empresa verifica el resultado de las
           auditorias en materia de seguridad
           de la cadena de suministros y como realiza y/o implementa acciones preventivas, correctivas y de mejora además
-          del seguimiento y cierre de las mismas.
+          del seguimiento y cierre de las mismas<span class="danger">*</span>:
         </label>
         <textarea class="custom-textarea" rows="6" cols="100" id="registrosEmpresa" formControlName="registrosEmpresa"
           (change)="setValoresStore(contingencyForm,'registrosEmpresa')"></textarea>
@@ -411,10 +411,10 @@
 
       <div class="col-md-12 text-container mt-4">
         <label for="planEmergencia">
-          <span class="danger">*</span>Indique si cuenta con procedimiento o plan de emergencia documentado, para
+          Indique si cuenta con procedimiento o plan de emergencia documentado, para
           asegurar la continuidad del
           negocio en caso de una situación de emergencia o de seguridad.que afecte el desarrollo normal de las
-          actividades de comercio exterior de la empresa
+          actividades de comercio exterior de la empresa<span class="danger">*</span>:
         </label>
         <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" class="gap"
           formControlName="enfoqueAuditoria"
@@ -425,11 +425,11 @@
       <div>
         <div class="row mt-4 alert-text">
           <div class="col-md-12 text-container">
-            <p><span class="danger">*</span>Anexe el procedimiento o plan de contingencia y/o emergencia documentado,
+            <p>Anexe el procedimiento o plan de contingencia y/o emergencia documentado,
               para
               asegurar la continuidad del negocio en caso de una situación de emergencia o de seguridad, que afecte el
               desarrollo normal de las actividades de comercio exterior de la empresa de mensajería y paquetería.
-              Este procedimiento debe incluir, de manera enunciativa mas no limitativa, lo siguiente:</p>
+              Este procedimiento debe incluir, de manera enunciativa mas no limitativa, lo siguiente<span class="danger">*</span>:</p>
           </div>
         </div>
 

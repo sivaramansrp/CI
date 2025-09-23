@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   DOCUMENTO_CATALOGO_DATOS,
   PROYECTO_DATOS,
@@ -35,12 +35,6 @@ export class ProyectoImmexVistaComponent implements OnInit, OnDestroy {
   public proyectoImmexDatos: PoryectoDatos = PROYECTO_DATOS;
 
   /**
-   * Datos del catálogo de documentos.
-   * @type {Catalogo[]}
-   */
-  public documentoCatalogDatos: Catalogo[] = DOCUMENTO_CATALOGO_DATOS;
-
-  /**
    * Configuración del proyecto IMMEX.
    * @type {Object}
    * @property {TablaSeleccion} proyectoImmexSeleccionCheckBox - Selección de tabla del proyecto IMMEX.
@@ -64,6 +58,11 @@ export class ProyectoImmexVistaComponent implements OnInit, OnDestroy {
    * @property {Subject<void>} destroyNotifier$
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+/**
+ * Evento que se emite para cerrar el popup.
+ */
+  @Output() cerrarPopup = new EventEmitter<void>();
 
   /**
    * Constructor de la clase ProyectoImmexVistaComponent.

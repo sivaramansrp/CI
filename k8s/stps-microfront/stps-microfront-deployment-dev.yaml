@@ -15,6 +15,7 @@ spec:
       containers:
       - name: front-vucem30-container-dev
         image: ghcr.io/vucem30/dockerized-modulefederation-stps-microfront:1.0.2
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:

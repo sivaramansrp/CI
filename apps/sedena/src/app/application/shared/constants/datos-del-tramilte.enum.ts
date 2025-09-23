@@ -57,7 +57,7 @@ export const OCULTAR_BOTONES = [240120, 240121, 240107, 240311, 240407, 240123, 
 * @author [Tu Nombre o Equipo]
 */
 export const NO_VISIBILIDAD_UMC: number[] = [
-  240122
+
 ];
 
 /**
@@ -144,7 +144,7 @@ export const FETCHA_SALIDA = [240123];
  * @type {number[]}
  * @description Contiene un arreglo de identificadores numéricos relacionados con CURP en el sistema.
  */
-export const ES_CURP = [240107, 240114, 240118, 240117, 240121, 240311];
+export const ES_CURP = [240107, 240114, 240118, 240117, 240121, 240311, 240105];
 
 /**
  * Identificadores numéricos relacionados con RFC.
@@ -217,6 +217,15 @@ export const AGGREGAR_MERCANCIA_PAISE_OCULTAR = [240108];
  * Este valor es utilizado en el sistema para identificar trámites que requieren justificación.
  */
 export const PERMISO_JUSTIFICACION = [240308, 240405, 240305, 240411, 240407, 240321];
+
+/**
+ * @constant
+ * @name PERMISO_JUSTIFICACION
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos relacionados con permisos de justificación específicos.
+ * Este valor es utilizado en el sistema para identificar trámites que requieren justificación.
+ */
+export const PERMISO_DISABLE = [240305];
 
 /**
  * Constante que define una lista de permisos generales que deben ser ocultados.

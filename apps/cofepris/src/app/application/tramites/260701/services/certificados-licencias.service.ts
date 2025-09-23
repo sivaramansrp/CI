@@ -1,10 +1,10 @@
-import { Observable,catchError, throwError } from 'rxjs';
+import { DomicilioState, DomicilioStore } from '../../../shared/estados/stores/domicilio.store';
+import { Observable,Subject,catchError, throwError } from 'rxjs';
 import { Solicitud260701State, Tramite260701Store } from '../estados/tramites/tramite260701.store';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '@libs/shared/data-access-user/src';
-
 /**
  * Servicio para gestionar operaciones relacionadas con certificados y licencias.
  * Proporciona métodos para obtener datos desde el servidor o archivos JSON locales,
@@ -16,6 +16,17 @@ import { JSONResponse } from '@libs/shared/data-access-user/src';
 })
 export class CertificadosLicenciasService {
 
+  /**
+   * Subject utilizado para emitir y escuchar eventos personalizados dentro del servicio.
+   * Puede ser suscrito para comunicación basada en eventos entre componentes o servicios.
+   * @private
+   */
+  private eventSubject = new Subject();
+  /**
+   * Flujo observable que emite eventos desde el subject interno de eventos.
+   * Suscríbete a este observable para escuchar notificaciones de eventos.
+   */
+  event$ = this.eventSubject.asObservable();
   /**
    * La URL del servidor utilizada para operaciones auxiliares con JSON.
    * Este valor se obtiene de la configuración del entorno.
@@ -29,7 +40,8 @@ export class CertificadosLicenciasService {
    */
   constructor(
     private http: HttpClient,
-    private tramite260701Store: Tramite260701Store
+    private tramite260701Store: Tramite260701Store,
+    private domicilioStore: DomicilioStore
   ) {
     //
    }
@@ -127,6 +139,15 @@ export class CertificadosLicenciasService {
   }
 
   /**
+   * Recupera los datos del representante legal desde un archivo JSON local.
+   * @returns Un `Observable` que emite un `DomicilioState` que contiene los datos
+   *          del archivo `represent-consulta.json`.
+   */
+  getRepresentLegalaConsulta(): Observable<DomicilioState> {
+    return this.http.get<DomicilioState>('./assets/json/260701/represent-consulta.json');
+  }
+
+  /**
    * Actualiza el estado del formulario en el store `tramite260701Store` utilizando los datos proporcionados.
    */
   actualizarEstadoFormulario(DATOS: Solicitud260701State): void {
@@ -200,6 +221,26 @@ export class CertificadosLicenciasService {
     this.tramite260701Store.setMuncipio(DATOS.municipio);
     this.tramite260701Store.setTipoOperacion(DATOS.tipoOperacion);
     this.tramite260701Store.setJustificacion(DATOS.justificacion);
+  }
+
+  /**
+   * Actualiza el estado del representante legal en el store `domicilioStore` utilizando los datos proporcionados.
+   */
+  actualizarRepresentLegala(DATOS: DomicilioState): void {
+    this.domicilioStore.setRfc(DATOS.rfc);
+    this.domicilioStore.setNombreRazonSocial(DATOS.nombreRazonSocial);
+    this.domicilioStore.setApellidoPaterno(DATOS.apellidoPaterno);
+    this.domicilioStore.setApellidoMaterno(DATOS.apellidoMaterno);
+    this.domicilioStore.setCumplimiento(DATOS.cumplimiento);
+  }
+
+  /**
+   * Emite un evento booleano a los suscriptores a través de eventSubject.
+   *
+   * @param datos - El valor booleano que se emitirá a los observadores.
+   */
+  emitEvent(datos: boolean): void {
+    this.eventSubject.next(datos);
   }
 
 }

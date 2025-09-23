@@ -338,7 +338,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           [
             Validators.required,
             Validators.min(0),
-            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            SolicitudComponent.validarCatorceEnterosTresDecimalesUSD,
             Validators.maxLength(20),
           ],
         ],
@@ -361,7 +361,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           [
             Validators.required,
             Validators.min(0),
-            SolicitudComponent.validarCatorceEnterosTresDecimales,
+            SolicitudComponent.validarCatorceEnterosTresDecimalesUSD,
             Validators.maxLength(20),
           ],
         ],
@@ -477,25 +477,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 	    this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
 	  }
 
-  /**
-   * Método para obtener los datos de la tabla dinámica.
-   * Este método realiza una solicitud al servicio `vehiculosUsadosAdaptadosService` para obtener los datos
-   * de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
-   * 
-   * - Actualiza `tableBodyData` con los datos obtenidos.
-   * - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
-   * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
-   * 
-   */
-    obtenerTablaDatos(): void {
-        this.vehiculosUsadosAdaptadosService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
-          this.tableBodyData = data;
-          this.formForTotalCount.patchValue({
-            cantidadTotal:data[0].cantidad,
-            valorTotalUSD:data[0].totalUSD
-          });
-        });
-    }
    
     /**
      * validarYEnviarFormulario
@@ -753,7 +734,23 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
         return null;
     }
+  /*
+    Valida que un número tenga como máximo 16 enteros y 3 decimales.
+    */
+    static validarCatorceEnterosTresDecimalesUSD(control: AbstractControl): ValidationErrors | null {
+      const VALOR = control.value;
+        if (VALOR === null || VALOR === undefined || VALOR === '') { return null; }
 
+        if (!/^\d*\.?\d*$/.test(VALOR)) {
+          return { noEsNumero: true };
+        }
+
+        if (!/^\d{1,16}(\.\d{1,3})?$/.test(VALOR)) {
+          return { validarCatorceEnterosTresDecimalesUSD: true };
+        }
+
+        return null;
+    }
       /**
      * Valida los formularios de mercancía y partidas de la mercancía antes de permitir la carga de un archivo.
      */

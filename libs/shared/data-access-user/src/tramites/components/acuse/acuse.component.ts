@@ -85,9 +85,10 @@ export class AcuseComponent implements OnChanges {
   ];
 
   /**
- * Datos que se muestran en la tabla de acuse.
- */
+  * Datos que se muestran en la tabla de acuse.
+  */
   datosTablaAcuse: BodyTablaAcuse[] = [];
+  @Input() procedure: number = 0;
 
 
   constructor(private router: Router,
@@ -127,10 +128,10 @@ export class AcuseComponent implements OnChanges {
    * Luego, obtiene el contenido del documento generado y lo muestra en la tabla de acuse.
    */
   generarYMostrarDocumentos(): void {
-    if (this.url === 'pexim') {
-      this.documentosService130118.guardarAcuse(this.idSolicitud.toString()).pipe(
+    if (this.url === 'pexim' || [80101, 80102, 80103, 80104, 80105].includes(this.procedure)) {
+      this.documentosService130118.guardarAcuse(this.idSolicitud.toString(),this.procedure).pipe(
         switchMap(() => {
-          return this.documentosService130118.vistaPrevia(this.idSolicitud.toString());
+          return this.documentosService130118.vistaPrevia(this.idSolicitud.toString(),this.procedure);
         }),
         catchError((error) => {
           console.error('Error en guardarAcuse o vistaPrevia:', error);

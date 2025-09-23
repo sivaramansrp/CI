@@ -221,7 +221,7 @@ editingRowId: number | null = null;
       datosDelTramiteRealizar: this.fb.group({
         envasadoen: [this.dataCafeState?.envasadoen, Validators.required],
         utilizoCafeComo: [this.dataCafeState?.utilizoCafeComo, Validators.required],
-        cantidadutilizada: [{ value: this.dataCafeState?.cantidadutilizada, disabled: true }, Validators.required],
+        cantidadutilizada: [{ value: this.dataCafeState?.cantidadutilizada, disabled: true }, [Validators.required,Validators.pattern(REGEX_SOLO_DIGITOS)]],
         numerodepedimento: [{ value: this.dataCafeState?.numerodepedimento, disabled: true }, Validators.required],
         paisdeimportacion: [{ value: this.dataCafeState?.paisdeimportacion, disabled: true }, Validators.required],
         fraccionarancelaria: [{ value: this.dataCafeState?.fraccionarancelaria, disabled: true }, Validators.required],
@@ -233,7 +233,7 @@ editingRowId: number | null = null;
           Validators.required,
           Validators.pattern(REGEX_SOLO_NUMEROS) 
         ]],
-        otrasmarcas: [this.dataCafeState?.otrasmarcas, Validators.required],
+        otrasmarcas: [this.dataCafeState?.otrasmarcas, [Validators.required,Validators.pattern(/^\d+$/)]],
         otros: [false],
         otrasCaracteristicas:['',Validators.required],
         elcafe: [this.dataCafeState?.elcafe, Validators.required],
@@ -644,6 +644,17 @@ get isCantidadInvalid(): boolean {
     (this.dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.touched ?? false)
   );
 }
+/** Getter para verificar si el campo 'cantidadutilizada' es inválido y ha sido tocado.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'cantidadutilizada' es inválido y ha sido tocado, de lo contrario, devuelve `false`.
+ */
+get isCantidadUtilizadaInvalid(): boolean {
+  return (
+    (this.dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.invalid ?? false) &&
+    (this.dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.touched ?? false)
+  );
+}
+
 /**
  * Getter to check if the 'otrasCaracteristicas' field is required and has been touched.
  * 
@@ -668,12 +679,21 @@ get isLoteInvalid(): boolean {
   );
 }
 /**
- * Getter to check if the 'cantidad' field has a 'pattern' error.
+ * Getter para verificar si el campo 'cantidad' tiene un error de patrón.
  * 
- * @returns {boolean} Returns `true` if the 'cantidad' field has a 'pattern' error, otherwise `false`.
+ * @returns {boolean} Devuelve `true` si el campo 'cantidad' tiene un error de patrón, de lo contrario, devuelve `false`.
  */
 get isCantidadPatternInvalid(): boolean {
   return this.dataCafeForm.get('datosDelTramiteRealizar.cantidad')?.errors?.['pattern'] ?? false;
+}
+
+/**
+ * Getter para verificar si el campo 'cantidadutilizada' tiene un error de patrón.
+ * 
+ * @returns {boolean} Devuelve `true` si el campo 'cantidadutilizada' tiene un error de patrón, de lo contrario, devuelve `false`.
+ */
+get isCantidadUtilizadaPatternInvalid(): boolean {
+  return this.dataCafeForm.get('datosDelTramiteRealizar.cantidadutilizada')?.errors?.['pattern'] ?? false;
 }
 /**
  * Getter para verificar si el campo 'precioapplicable' tiene un error de patrón.

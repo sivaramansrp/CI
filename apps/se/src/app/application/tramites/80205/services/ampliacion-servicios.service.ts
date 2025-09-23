@@ -1,7 +1,7 @@
 import {Observable,map } from 'rxjs';
 import { AmpliacionServiciosState } from '../models/datos-info.model';
 import {AmpliacionServiciosStore} from '../estados/tramite80205.store';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo } from '../constantes/modificacion.enum';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Servicio } from '../models/datos-info.model';
@@ -62,6 +62,13 @@ export class AmpliacionServiciosService {
 
   getServiciosData(): Observable<AmpliacionServiciosState> {
     return this.http.get<AmpliacionServiciosState>('assets/json/80205/ampliacion-campo.json');
+  }
+/**
+ * Obtiene la tabla de datos desde un archivo JSON.
+ * @return {Observable<Servicio[]>} - Observable con la tabla de datos.
+ */
+  getTablaDatos(): Observable<Servicio[]> {
+    return this.http.get<Servicio[]>('assets/json/80205/ampliaciaon-autrazidos.json');
   }
 
   

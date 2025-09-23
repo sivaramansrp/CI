@@ -1,9 +1,10 @@
-import { CambioDeModalidadForm, CambioModalidadResponse, ServiciosState } from '../modelos/cambio-de-modalidad.model';
+import { CambioDeModalidadForm, CambioModalidadResponse, RespuestaCatalogos } from '../modelos/cambio-de-modalidad.model';
 import { CambioModalidadState, CambioModalidadStore,} from '../estados/tramite80208.store';
+import { Observable, map } from 'rxjs';
+import { ENVIRONMENT } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 /**
  * @service CambioModalidadService
@@ -30,6 +31,7 @@ export class CambioModalidadService {
    */
   constructor(
     private http: HttpClient,
+    public httpService: HttpCoreService,
     public cambioModalidadStore: CambioModalidadStore,
   ) {
     // No se necesita lógica de inicialización adicional.
@@ -50,7 +52,9 @@ export class CambioModalidadService {
    * @returns {Observable<RespuestaCatalogos>} Observable que emite la respuesta de los catálogos.
    */
   getServiciosImmx(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(`${this.datosSimuladosUrl}servicios-immex.json`);
+    return this.httpService.get<RespuestaCatalogos>(`${ENVIRONMENT.API_HOST}/api/catalogo/servicios-immex`, {}, false).pipe(map((res: RespuestaCatalogos) => {
+            return res;
+          }));
   }
 
   /**
@@ -59,7 +63,9 @@ export class CambioModalidadService {
    * @returns {Observable<CambioModalidadResponse>} Observable que emite la respuesta del cambio de modalidad.
    */
   getCambioDeModalidad(): Observable<CambioModalidadResponse> {
-    return this.http.get<CambioModalidadResponse>(`${this.datosSimuladosUrl}cambio-de-modalidad.json`);
+    return this.httpService.get<CambioModalidadResponse>(`${ENVIRONMENT.API_HOST}/api/catalogo/modalidad-immex`, {}, false).pipe(map((res: CambioModalidadResponse) => {
+            return res;
+          }));
   }
 
   /**

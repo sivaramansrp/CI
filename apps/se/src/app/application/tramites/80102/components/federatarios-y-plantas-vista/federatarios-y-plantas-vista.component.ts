@@ -1,8 +1,9 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 import {
+  CatalogoDatosIdx,
   FEDERATARIOS,
   FederatariosEncabezado,
   PLANTAS_DIPONIBLES,
@@ -11,6 +12,7 @@ import {
   PlantasImmex,
 } from '../../../../shared/models/federatarios-y-plantas.model';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-plantas/federatarios-y-plantas.component';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
@@ -37,7 +39,7 @@ import { Tramite80102Store } from '../../estados/tramite80102.store';
  * para manejar y observar los datos relacionados con los federatarios y plantas. Además, implementa el ciclo de vida
  * de Angular para limpiar las suscripciones al destruirse.
  */
-export class FederatariosYPlantasVistaComponent implements OnDestroy {
+export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
   /**
    * Configuración de la tabla de federatarios
    * @property {Object} federatariosTablaConfiguracion
@@ -96,6 +98,18 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy {
    * @property {Subject<void>} destroyNotifier$
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Datos de federatarios que se mostrarán en la tabla
+   * @property {FederatariosEncabezado} datosFederatarios
+   */
+  public datosFederatarios!: FederatariosEncabezado;
+
+  /**
+     * Configuración del catálogo de estados para el formulario.
+     * @property {CatalogoDatosIdx} estadoOptionsConfig
+     */
+    public estadoOptionsConfig!: CatalogoDatosIdx;
   
   /**
    * Constructor de la clase FederatariosYPlantasVistaComponent.
@@ -104,7 +118,8 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy {
    */
   constructor(
     private store: Tramite80102Store,
-    private query: Tramite80102Query, private consultaQuery: ConsultaioQuery
+    private query: Tramite80102Query, private consultaQuery: ConsultaioQuery,
+    private autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService
       ) {
         this.consultaQuery.selectConsultaioState$
           .pipe(
@@ -120,6 +135,27 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy {
   }
 
   /**
+   * Método que se ejecuta al inicializar el componente.
+   * Se suscribe a los cambios en los datos de federatarios del almacén y actualiza la propiedad `datosFederatarios`.
+   *
+   * @returns {void}
+   */
+  ngOnInit(): void {
+    this.query.selectDatosFederatariosFormulario$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        this.datosFederatarios = datos;
+      });
+
+    this.autorizacionProgrmaNuevoService
+      .getFederataiosyPlantaCatalogosData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        this.estadoOptionsConfig = resp
+      });
+  }
+
+  /**
    * Establece los datos del formulario de federatarios.
    * @param {FederatariosEncabezado} datos - Datos del encabezado de federatarios.
    * @returns {void}
@@ -128,7 +164,24 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy {
     this.store.setFederatarios(datos);
   }
 
-  
+  /**
+   * Establece los datos de las plantas disponibles en el store.
+   * @param {PlantasDisponibles[]} datos - Lista de plantas disponibles.
+   * @returns {void}
+   */
+  setPlantasDisponiblesDatos(datos: PlantasDisponibles[]): void {
+    this.store.setPlantasDisponiblesTablaLista(datos);
+  }
+
+  /**
+   * Establece los datos de las plantas IMMEX en el store.
+   * @param {PlantasImmex[]} datos - Lista de plantas IMMEX.
+   * @returns {void}
+   */
+  setPlantasImmexDatos(datos: PlantasImmex[]): void {
+    this.store.setPlantasImmexTablaLista(datos);
+  }
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
    * Emite una notificación a través del observable `destroyNotifier$` para limpiar suscripciones

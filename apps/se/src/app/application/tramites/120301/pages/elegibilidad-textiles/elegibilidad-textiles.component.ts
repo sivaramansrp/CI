@@ -15,14 +15,16 @@
  */
 
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-
-import { DatosPasos, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { CategoriaMensaje, DatosPasos, Notificacion, SeccionLibStore } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT, PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
-
+import { IniciarRequest } from '../../models/request/iniciar-request.model';
+import { IniciarService } from '../../services/iniciar.service';
 import { ListaPasosWizard } from '../../models/elegibilidad-de-textiles.model';
+import { Location } from '@angular/common';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * @interface AccionBoton
@@ -49,7 +51,7 @@ interface AccionBoton {
    * @example 'cont' | 'prev' | 'back'
    */
   accion: string;
-  
+
   /**
    * @property {number} valor
    * @description Índice del paso de destino en el wizard (comenzando desde 1)
@@ -82,8 +84,21 @@ interface AccionBoton {
   templateUrl: './elegibilidad-textiles.component.html',
 })
 export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
-    /**
+  /**
+   * @property {boolean} mostrarOtraPestana
+   * @description
+   * Controla la visibilidad de pestañas adicionales y la alerta de validación en el wizard.
+   * Se utiliza para mostrar u ocultar secciones extra según la lógica del proceso, igual que en paso-uno.component.html.
+   * @default false
+   */
+  mostrarOtraPestana: boolean = false;
+
+  /**
+   * @property {string} formularioAlertaError
+   * @description
    * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   * Se utiliza para informar al usuario sobre campos requeridos o errores en el formulario.
+   * @default ERROR_FORMA_ALERT
    */
   public formularioAlertaError = ERROR_FORMA_ALERT;
 
@@ -135,6 +150,12 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
    * ```
    */
   pasos: Array<ListaPasosWizard> = PASOS;
+
+  /**
+   * @property {Notificacion | null} nuevaNotificacion
+   * @description Objeto que representa una notificación para el usuario.
+   */
+  nuevaNotificacion: Notificacion | null = null;
 
   /**
    * @property {string | null} tituloMensaje
@@ -255,7 +276,11 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
    * @see {@link FormGroup} - Documentación de FormGroup de Angular
    * @see {@link FormControl} - Documentación de FormControl de Angular
    */
-  constructor(private seccionStore: SeccionLibStore, public ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore) {
+  constructor(
+    private iniciarService: IniciarService,
+    private location: Location,
+    private seccionStore: SeccionLibStore, 
+    public ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore) {
     this.formGroup = new FormGroup({
       campo1: new FormControl(''),
       campo2: new FormControl(''),
@@ -401,6 +426,54 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
     this.datosPasos.indice = 1;
     this.indice = 1;
     this.asignarSecciones();
+    this.iniciar();
+  }
+
+  /**
+   * @method iniciar
+   * @description Método que inicia el trámite 120301 enviando una solicitud
+   * al servicio IniciarService. Maneja la respuesta del servidor
+   */
+  iniciar(): void {
+    const PAYLOAD: IniciarRequest = {
+      rfc_solicitante: 'LEQI810131GA8',
+      rol_actual: 'SOLICITANTE'
+    };
+
+    // Realiza la solicitud de inicio del trámite
+    this.iniciarService.postIniciar(PAYLOAD).subscribe({
+      next: (response) => {
+        if (response.codigo !== '00') {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: response.error || 'Error al iniciar el trámite.',
+            mensaje:
+              response.causa ||
+              response.mensaje ||
+              'Ocurrió un error al guardar la solicitud.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          this.location.back();
+        }
+      },
+      error: (error) => {
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'action',
+          titulo: '',
+          mensaje: error?.error?.error || 'Error inesperado al iniciar el trámite.',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+        this.location.back();
+      }
+    });
   }
 
   /**

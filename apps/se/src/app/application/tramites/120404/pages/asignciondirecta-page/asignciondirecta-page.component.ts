@@ -4,11 +4,9 @@
  * incluyendo la inicialización y la gestión de los pasos del wizard.
  * @module AsignciondirectaPageComponent
  */
-
+import { ASIGNACION, TEXTOS_BUSCAR } from '../../constants/asignacion.enum';
+import { AVISO_CONTRNIDO, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { ASIGNACION } from '../../constants/asignacion.enum';
-
-import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 
 interface AccionBoton {
@@ -57,6 +55,31 @@ export class AsignciondirectaPageComponent {
    * Propiedad para mostrar/ocultar el mensaje de error de búsqueda
    */
   public showBuscarError = false;
+     /**
+   * Contiene los textos que se muestran al usuario cuando ocurre una cancelación.
+   * Los textos provienen del archivo de constantes TEXTOS_CANCELACIONS.
+   */
+   TEXTOS = TEXTOS_BUSCAR;
+     /**
+   * Clase CSS para la alerta de información.
+   */
+  infoAlert = 'alert-danger';
+    /**
+   * Controla si se debe mostrar la alerta en pantalla.
+   * Se activa cuando el subíndice del child componente es 3.
+   */
+  mostrarAlerta: boolean = false;
+ /**
+ * Contiene el texto del aviso de privacidad simplificado.
+ * 
+ * @constant {string} avisoContrnido
+ * Se inicializa con la propiedad `aviso` del objeto `AVISO_CONTRNIDO`.
+ * 
+ * Uso:
+ * - Mostrar el aviso de privacidad en la interfaz de usuario.
+ * - Reutilizar el contenido del aviso en distintos componentes.
+ */
+avisoContrnido = AVISO_CONTRNIDO.aviso;
 
   /**
    * Método para manejar el evento de intento de búsqueda desde componentes hijos.

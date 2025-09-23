@@ -4,6 +4,7 @@
   [catalogosArray]="catalogosArray"
   [solicitudOpciones]="opcionesSolicitud"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
+  [mostrarErrorClasificacion]="mostrarErrorClasificacion"
   (setValoresStoreEvent)="setValoresStore($event)"
 ></app-datos-del-tramite>
 
@@ -13,8 +14,11 @@
   [fraccionCatalogo]="fraccionCatalogo"
   [unidadCatalogo]="unidadCatalogo"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
+  [mostrarTooltipValorFacturaUSD]="mostrarTooltipValorFacturaUSD"
+  [mostrarErrores]="mostrarErroresMercancia"
   (setValoresStoreEvent)="setValoresStore($event)"
 ></app-datos-de-la-mercancia>
+
 
 <app-partidas-de-la-mercancia
   [partidasDelaMercanciaForm]="partidasDelaMercanciaForm"
@@ -24,10 +28,17 @@
   [mostrarTabla]="mostrarTabla"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
+  [mostrarErrores]="mostrarErroresPartidas"
   (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
-  (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
+  [disabled]="disabledModificar()"
   (setValoresStoreEvent)="setValoresStore($event)"
+  (validarAntesDeCargarArchivo)="validarYCargarArchivo()"
+  (partidasEliminadas)="onPartidasEliminadas($event)"
+  [modificarPartidasDelaMercanciaForm]="modificarPartidasDelaMercanciaForm"
+	(modificarPartidaSeleccionada)="onModificarPartidaSeleccionada($event)"
+  (partidaModificada)="onPartidaModificada($event)" 
 ></app-partidas-de-la-mercancia>
+
 
 <app-pais-procendencia
 [paisForm]="paisForm"
@@ -35,9 +46,9 @@
 [paisesPorBloque]="paisesPorBloque"
 [selectRangoDias]="selectRangoDias"
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
-[idProcedimiento] = "idProcedimiento"
 (bloqueCambiar)="enCambioDeBloque($event)"
 (setValoresStoreEvent)="setValoresStore($event)"
+[idProcedimiento] = "idProcedimiento"
 ></app-pais-procendencia>
 
 <app-representacion 
@@ -46,5 +57,12 @@
 [representacionFederal]="representacionFederal"
 [TEXTOS]="TEXTOS"
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
-(setValoresStoreEvent)="setValoresStore($event)">
+(setValoresStoreEvent)="setValoresStore($event)"
+[idProcedimiento]="idProcedimiento">
 </app-representacion>
+
+<lib-notificaciones
+  *ngIf="mostrarNotificacion"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="mostrarNotificacion = false">
+</lib-notificaciones>

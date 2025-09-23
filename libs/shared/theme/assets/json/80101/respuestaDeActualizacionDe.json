@@ -238,7 +238,13 @@
         "numExterior": 202,
         "numInterior": 10,
         "codigoPostal": 54321,
-        "colonia": "Polanco"
+        "colonia": "Polanco",
+        "municipio": "Miguel Hidalgo",
+        "entidadFederativa": "Ciudad de México",
+        "pais": "México",
+        "rfc": "22kk",
+        "domicilioFiscal": "Av. Reforma 456, Polanco, Miguel Hidalgo, CDMX",
+        "razonSocial": "Industrias MexTech S.A. de C.V."
       }
     ],
     "plantasSubfabricantesAgregar": [
@@ -247,7 +253,13 @@
         "numExterior": 101,
         "numInterior": 5,
         "codigoPostal": 12345,
-        "colonia": "Roma Norte"
+        "colonia": "Roma Norte",
+        "municipio": "Miguel Hidalgo",
+        "entidadFederativa": "Ciudad de México",
+        "pais": "México",
+        "rfc": "22kk",
+        "domicilioFiscal": "Av. Reforma 456, Polanco, Miguel Hidalgo, CDMX",
+        "razonSocial": "Industrias MexTech S.A. de C.V."
       }
     ],
     "plantasPorCompletar": []

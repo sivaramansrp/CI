@@ -21,6 +21,8 @@ export interface Solicitante110101State {
   tratado: string;
   /** Actividad económica principal del solicitante. */
   origen: string;
+  /** Criterio Instancia de uruguay. */
+  criterio: string;
   /** nombreComercial del solicitante. */
   nombreComercial: string;
   /** Nombre en inglés del solicitante. */
@@ -61,6 +63,7 @@ export function createSolicitanteInitialState(): Solicitante110101State {
     pais: '',
     tratado: '',
     origen: '',
+    criterio: '',
     nombreComercial: '',
     nombreIngles: '',
     fraccionArancelaria: '',
@@ -150,6 +153,18 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
       pais,
     }));
   }
+
+  /**
+   * Actualiza el estado del criterio instacia.
+   * @param criterio - El país a establecer en el estado.
+   */
+  public setCriterioInstancia(criterio: string):void {
+    this.update((state) => ({
+      ...state,
+      criterio,
+    }));
+  }
+
 
   /**
    * Actualiza el estado con el país especificado.

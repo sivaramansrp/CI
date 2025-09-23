@@ -11,7 +11,7 @@ import { DatosComponent } from './pages/datos/datos.component';
 
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { FirmarSolicitudComponent } from './pages/firmar-solicitud/firmar-solicitud.component';
-
+import { InputFechaComponent } from '@ng-mf/data-access-user'
 import { NgModule } from '@angular/core';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -54,6 +54,7 @@ import { TercerosComponent } from './components/terceros/terceros.component';
     FirmaElectronicaComponent,
     InputRadioComponent,
     TablaDinamicaComponent,
+    InputFechaComponent
   ],
   providers: [ToastrService],
 })

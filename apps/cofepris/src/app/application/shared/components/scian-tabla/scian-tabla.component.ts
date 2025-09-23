@@ -24,10 +24,23 @@ export class ScianTablaComponent implements OnInit {
   @Output() scianSeleccionado: EventEmitter<TablaScianConfig> = new EventEmitter<TablaScianConfig>();
 
   /**
+   * Evento que emite el objeto o lista de objetos seleccionados de tipo `TablaScianConfig`.
+   * Se utiliza para notificar al componente padre cuando uno o más SCiAN han sido seleccionados.
+   */
+  @Output() scianSeleccionadoSpecific: EventEmitter<TablaScianConfig | TablaScianConfig[]> = new EventEmitter<TablaScianConfig | TablaScianConfig[]>();
+
+  /**
    * Identificador del procedimiento relacionado.
    * Este valor debe ser proporcionado por el componente padre.
    */
   @Input() public idProcedimiento!: number;
+
+  /**
+   * @property {TablaScianConfig[]} scianState
+   * @description
+   * Almacena el estado actual de la tabla SCIAN.
+   */
+  @Input() public scianState!: TablaScianConfig[];
 
   /**
    * @property {TablaScianConfig[]} scianConfigDatos
@@ -61,7 +74,10 @@ export class ScianTablaComponent implements OnInit {
    * Indica si la selección de un SCiAN hijo (niño) es requerida.
    */
   public scianNinoRequerido = true;
-
+  /**
+   * Indica si el campo de descripción está deshabilitado.
+   */
+  public disableDescripcion: boolean = false;
 
   /**
    * Almacena el mensaje de error para mostrar cuando el formulario es inválido.
@@ -105,17 +121,27 @@ export class ScianTablaComponent implements OnInit {
    * con base en el tipo de procedimiento.
    */
   ngOnInit(): void {
+    // Inicializa el formulario reactivo con controles y validaciones.
     this.scianForm = this.fb.group({
-      clave: ['', Validators.required],
-      scianNino: ['', Validators.required],
+      clave: [this.obtenerValor('clave'), Validators.required],
+      scianNino: [this.obtenerValor('descripcion'), Validators.required],
     });
 
     this.scianNinoRequerido =
       PROCEDIMIENTOS_NO_PARA_ELEMENTO_DESCRIPCION_REQUERIDO.includes(this.idProcedimiento)
         ? false
         : true;
-  }
 
+    this.disableDescripcion = this.idProcedimiento === 260201 ? true : false;
+  }
+  /**
+   * Obtiene el valor de un campo específico en el estado del SCiAN.
+   * @param campo - Clave del campo cuyo valor se desea obtener.
+   * @returns 
+   */
+obtenerValor(campo: keyof TablaScianConfig): string | null {
+  return this.scianState?.[0]?.[campo] ?? null;
+}
   /**
    * Maneja el evento cuando se selecciona un elemento del catálogo.
    * Filtra la lista de elementos SCIAN para encontrar el elemento correspondiente
@@ -160,7 +186,17 @@ export class ScianTablaComponent implements OnInit {
         clave: this.scianNinoLista[0].descripcion,
         descripcion: this.scianForm.get('scianNino')?.value
       }
-      this.scianSeleccionado.emit(SCIAN_IDX);
+      if(this.idProcedimiento === 260201){
+        if(this.scianConfigDatos && this.scianConfigDatos.length > 0){
+          this.scianConfigDatos.push(SCIAN_IDX);
+          this.scianSeleccionadoSpecific.emit(this.scianConfigDatos);
+        }else{
+          this.scianSeleccionadoSpecific.emit(SCIAN_IDX);
+        }
+      }else{
+        this.scianSeleccionado.emit(SCIAN_IDX);
+      }
+
       this.ubicaccion.back();
     }
   }

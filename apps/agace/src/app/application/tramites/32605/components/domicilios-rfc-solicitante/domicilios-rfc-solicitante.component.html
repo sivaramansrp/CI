@@ -7,9 +7,8 @@
       </app-catalogo-select>
     </form>
  
-    <label class="form-label text-left">Indique todos los dom, ilios registrados ante el RFC del solicitante e indique
-      aquellos en que se desarrollen actividades relacionadas con su proceso productivo y/o la prestación de
-      servicios.</label>
+    <label class="form-label text-left">Indique todos los domicilios registrados ante el RFC del solicitante e indique aquellos en que se desarrollen actividades
+relacionadas con su proceso productivo y/o la prestación de servicios.</label>
  
     <ng-alert [CONTENIDO]="DOMICILIO_REGISTRADOS"></ng-alert>
   </div>
@@ -39,10 +38,11 @@
  
     <div class="d-flex justify-content-end">
       <div class="d-flex flex-row flex-wrap gap-3">
-        <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
-          (click)="confirmEliminarEmpleadoItem()" [disabled]="esFormularioSoloLectura">Eliminar</button>
-        <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
+        
+        <button class="btn btn-default" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
           (click)="modificarItemEmpleado()" [disabled]="esFormularioSoloLectura">Modificar</button>
+        <button class="btn btn-danger" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
+          (click)="confirmEliminarEmpleadoItem()" [disabled]="esFormularioSoloLectura">Eliminar</button>
         <button class="btn btn-primary" (click)="agregarDialogoDatos()"
           [disabled]="esFormularioSoloLectura">Agregar</button>
       </div>
@@ -58,7 +58,7 @@
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title mt-0">Agregar</h4>
+        <h4 class="modal-title mt-0">Agregar Enlace Operativo</h4>
       </div>
  
       <div class="modal-body">
@@ -66,7 +66,7 @@
           (instalacionesSeleccionadas)="instalacionesSeleccionadas($event)"></app-agregar-enlace-operativo>
  
         <footer class="footer d-flex py-5 gap-3 justify-content-end">
-          <button type="button" class="btn btn-primary" (click)="modalCancelar()">Cancelar</button>
+          <button type="button" class="btn btn-danger" (click)="modalCancelar()">Cancelar</button>
           <button type="button" class="btn btn-primary" (click)="enviarDialogData()">Aceptar</button>
         </footer>
       </div>
@@ -91,7 +91,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label for="instalacionesPrincipales" class="form-label text-left">
-                  <span class="text-danger">*</span> Instalaciones Principales
+                  Instalaciones Principales<span class="text-danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                   formControlName="InstalacionesPrincipales"></app-input-radio>
@@ -117,7 +117,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="tipoInstalacionList" formControlName="tipoInstalacion"
-                  [label]="'Tipo de Instalación'" [placeholder]="'Seleccione un tipo de instalación'" [required]="true">
+                  [label]="'Tipo de Instalación'" [placeholder]="'Seleccione una opción'" [required]="true">
                 </app-catalogo-select>
                 @if(registroDomiciliosRfcSolicitanteForm.get('tipoInstalacion')?.invalid &&
                 registroDomiciliosRfcSolicitanteForm.get('tipoInstalacion')?.touched) {
@@ -170,7 +170,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label for="procesoProductivo" class="form-label text-left">
-                  <span class="text-danger">*</span> Proceso Productivo
+                  Proceso Productivo<span class="text-danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                   formControlName="procesoProductivo"></app-input-radio>
@@ -179,7 +179,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label for="acreditaUsoGoceInmueble" class="form-label text-left">
-                  <span class="text-danger">*</span> Acreditación del Uso y Goce del Inmueble
+                  Acreditación del Uso y Goce del Inmueble<span class="text-danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                   formControlName="acreditaUsoGoceInmueble"></app-input-radio>
@@ -189,10 +189,10 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label for="perfilEmpresa" class="form-label text-left">
-                  Perfil del Recinto Fiscalizado Estratégico
+                  Perfil de la empresa
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                  formControlName="perfilEmpresa"></app-input-radio>
+                  formControlName="perfilEmpresa" (valueChange)="perfillRecintoChange($event)" [disableLabel]="disablePerfillLabel"></app-input-radio>
               </div>
             </div>
           </div>
@@ -202,7 +202,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label text-left">
-                  <span class="text-danger">*</span> Realiza actividad economica de comercio exterior
+                  Realiza actividad economica de comercio exterior<span class="text-danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                   formControlName="realizaActividadComercioExterior"></app-input-radio>
@@ -211,10 +211,10 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label text-left">
-                  <span class="text-danger">*</span> Reconocimiento Mutuo (Instalación CTPAT)
+                  Reconocimiento Mutuo (Instalación CTPAT)<span class="text-danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                  formControlName="reconocimientoMutuoCTPAT"></app-input-radio>
+                  formControlName="reconocimientoMutuoCTPAT" (valueChange)="reconocimientoMutuoChange($event)" [disableLabel]="disableReconocimientoLabel"></app-input-radio>
               </div>
             </div>
           </div>
@@ -222,7 +222,7 @@
         </form>
  
         <footer class="footer d-flex py-5 gap-3 justify-content-end">
-          <button type="button" class="btn btn-primary" (click)="modalCancelar('modificar')">Cancelar</button>
+          <button type="button" class="btn btn-default" (click)="modalCancelar('modificar')">Cancelar</button>
           <button type="button" class="btn btn-primary" (click)="enviarActualizarDialogData()">Aceptar</button>
         </footer>
       </div>

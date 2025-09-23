@@ -149,7 +149,7 @@ label:has(+ app-catalogo-select .required) .require,
     left: 0;
     //border: 1px solid #dc3545;
     border-radius: 0.25rem;
-    pointer-events: none;
+    pointer-events: none; 
     z-index: 1;
 }
 
@@ -159,6 +159,8 @@ label:has(+ app-catalogo-select .required) .require,
 
 .margin-top-dos{
     margin-top: 20px;
+    position: relative;
+    padding: 15px;
 }
 
 .margin-right{

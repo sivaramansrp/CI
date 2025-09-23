@@ -115,46 +115,105 @@ export const MERCANCIA_SELECCIONADAS = [
  */
 export const CARGA_MERCANCIA_SELECCIONADAS = [
   {
-    encabezado: 'Fracción arancelaria', // Título de la columna
-    clave: (ele: Mercancia): string | undefined => ele.fraccionArancelaria, // Función que devuelve la fracción Naladi
+    encabezado: 'Fracción NALADI', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.fraccionNaladi, // Función que devuelve la fracción Naladi
     orden: 1, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Fracción NALADISA93', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.fraccionNaladiSa93, // Función que devuelve la fracción Naladi SA93
+    orden: 2, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Fracción NALADISA96', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.fraccionNaladiSa96, // Función que devuelve la fracción Naladi SA96
+    orden: 3, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Fracción NALADISA02', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.fraccionNaladiSa02, // Función que devuelve la fracción Naladi SA02
+    orden: 4, // Orden en que se mostrará la columna
   },
   {
     encabezado: 'Cantidad', // Título de la columna
     clave: (ele: Mercancia): string | undefined => ele.cantidad, // Función que devuelve la fracción Naladi SA93
-    orden: 2, // Orden en que se mostrará la columna
+    orden: 5, // Orden en que se mostrará la columna
   },
   {
     encabezado: 'Unidad de medida', // Título de la columna
     clave: (ele: Mercancia): string | undefined => ele.unidadMedidaMasaBruta, // Función que devuelve la fracción Naladi SA96
-    orden: 3, // Orden en que se mostrará la columna
+    orden: 6, // Orden en que se mostrará la columna
   },
   {
     encabezado: 'Valor mercancía', // Título de la columna
     clave: (ele: Mercancia): string | undefined => ele.valorMercancia, // Función que devuelve la fracción Naladi SA02
-    orden: 4, // Orden en que se mostrará la columna
+    orden: 7, // Orden en que se mostrará la columna
   },
   {
-    encabezado: 'Tipo de fractura', // Título de la columna
+    encabezado: 'Tipo de factura', // Título de la columna
     clave: (ele: Mercancia): string | undefined => ele.tipoFactura, // Función que devuelve el nombre técnico de la mercancía
-    orden: 5, // Orden en que se mostrará la columna
+    orden: 8, // Orden en que se mostrará la columna
   },
   {
     encabezado: 'Número factura', // Título de la columna
     clave: (ele: Mercancia): string | undefined => ele.numeroFactura, // Función que devuelve el nombre comercial de la mercancía
-    orden: 6, // Orden en que se mostrará la columna
+    orden: 9, // Orden en que se mostrará la columna
   },
   {
     encabezado: 'Complemento descripción', // Título de la columna
     clave: (ele: Mercancia): string | undefined => ele.complementoDescripcion, // Función que devuelve el nombre comercial de la mercancía
-    orden: 7, // Orden en que se mostrará la columna
+    orden: 10, // Orden en que se mostrará la columna
   },
   {
     encabezado: 'Fecha factura', // Título de la columna
     clave: (ele: Mercancia): string | undefined => ele.fechaFinalInput, // Función que devuelve el nombre comercial de la mercancía
-    orden: 8, // Orden en que se mostrará la columna
+    orden: 11, // Orden en que se mostrará la columna
   }
 ];
+
+export const CARGA_MERCANCIA_EXPORT = [
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (ele: Mercancia): string | undefined => ele.fraccionArancelaria,
+    orden: 1,
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (ele: Mercancia): string | undefined => ele.cantidad,
+    orden: 2,
+  },
+  {
+    encabezado: 'Unidad de medida',
+    clave: (ele: Mercancia): string | undefined => ele.umc,
+    orden: 3,
+  },
+  {
+    encabezado: 'Valor mercancía',
+    clave: (ele: Mercancia): string | undefined => ele.valorMercancia,
+    orden: 4,
+  },
+  {
+    encabezado: 'Tipo de factura',
+    clave: (ele: Mercancia): string | undefined => ele.tipoFactura,
+    orden: 5,
+  },
+  {
+    encabezado: 'Número factura',
+    clave: (ele: Mercancia): string | undefined => ele.numeroFactura,
+    orden: 6,
+  },
+  {
+    encabezado: 'Complemento descripción',
+    clave: (ele: Mercancia): string | undefined => ele.complementoDescripcion,
+    orden: 7,
+  },
+  {
+    encabezado: 'Fecha factura',
+    clave: (ele: Mercancia): string | undefined => ele.fechaFactura,
+    orden: 8,
+  },
+];
+
 
 
 
@@ -281,3 +340,20 @@ export const CONFIGURACION_MERCANCIA_TABLA = [
  * @type {number[]}
  */
 export const FECHA_ID = [ 110204,110223 ];
+/**
+ * @constant REQUIREDA
+ * @description
+ * Arreglo de identificadores de procedimiento para los cuales ciertos campos son requeridos.
+ * Se utiliza para establecer validaciones adicionales en formularios cuando el ID del procedimiento
+ * coincide con algún valor de este arreglo.
+ * @type {number[]}
+ */
+export const REQUIREDA = [110204,110205];
+/**
+ * @constant BOTON_DE_OPCION_VER
+ * @description
+ * Arreglo que contiene los identificadores de procedimiento que requieren el campo de fecha en la configuración.
+ * Se utiliza para determinar si se debe mostrar o procesar el campo de fecha en los formularios relacionados.
+ * @type {number[]}
+ */
+export const BOTON_DE_OPCION_VER =[110221];

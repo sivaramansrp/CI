@@ -1,18 +1,29 @@
-import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Catalogo, JsonResponseCatalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { InfoServicios, Servicio } from '../models/autorizacion-programa-nuevo.model';
 import { Observable, map } from 'rxjs';
 import { Tramite80102State, Tramite80102Store } from '../estados/tramite80102.store';
+import { CatalogoDatosIdx } from '../../../shared/models/federatarios-y-plantas.model';
+import { ComplimentosService } from '../../../shared/services/complimentos.service';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { HttpClient } from '@angular/common/http';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
+import { PROC_80102 } from '../servers/api-route';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
+import { Tramite80102Query } from '../estados/tramite80102.query';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AutorizacionProgrmaNuevoService {
- constructor(private readonly http: HttpClient, public tramite80102Store: Tramite80102Store) {
-   // No se necesita lógica de inicialización adicional.
+ constructor(private readonly http: HttpClient, public tramite80102Store: Tramite80102Store,
+  private tramite80102Query:Tramite80102Query,public httpService: HttpCoreService,private complimentosService:ComplimentosService) {
+   this.setProcedure();
+   this.setProcedureNo();
+  }
+
+   setProcedureNo(): void {
+    this.complimentosService.setProcedureNo('80102');
   }
 
   /**
@@ -93,6 +104,79 @@ actualizarEstadoFormulario(DATOS: Tramite80102State): void {
 */
 getRegistroTomaMuestrasMercanciasData(): Observable<Tramite80102State> {
   return this.http.get<Tramite80102State>('assets/json/80102/respuestaDeActualizacionDe.json');
+}
+
+/**
+   * Obtiene los datos del catálogo de federatarios y plantas desde un archivo JSON local.
+   *
+   * Este método realiza una solicitud HTTP GET para recuperar los datos del catálogo
+   * almacenados en el archivo `federatarios-y-plantas-catalogos.json` ubicado en la
+   * carpeta de activos (`assets/json/80101/`). Los datos recuperados se devuelven como
+   * un observable de tipo `CatalogoDatosIdx`.
+   *
+   * @returns {Observable<CatalogoDatosIdx>} Un observable que emite los datos del catálogo
+   * de federatarios y plantas.
+   *
+   * @example
+   * this.nuevoProgramaIndustrialService.getFederataiosyPlantaCatalogosData()
+   *   .subscribe((datos: CatalogoDatosIdx) => {
+   *     console.log('Datos del catálogo:', datos);
+   *   });
+   *
+   * @remarks
+   * Este método es útil para cargar información estática de catálogos que se utiliza
+   * en la aplicación, como listas de federatarios y plantas. Asegúrese de que el archivo
+   * JSON exista en la ubicación especificada para evitar errores de carga.
+   */
+  getFederataiosyPlantaCatalogosData(): Observable<CatalogoDatosIdx> {
+    return this.http.get<CatalogoDatosIdx>(
+      'assets/json/80101/federatarios-y-plantas-catalogos.json'
+    );
+  }
+
+/**
+ * Obtiene todos los datos del estado almacenado en el store.
+ * @returns {Observable<Tramite80101State>} Observable con todos los datos del estado.
+ */
+getAllState(): Observable<Tramite80102State> {
+  return this.tramite80102Query.allStoreData$;
+}
+
+/**
+ * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+ * 
+ * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+ * @returns Observable con la respuesta de la solicitud POST.
+ */
+guardarDatosPost(body: any): Observable<any> {
+  return this.httpService.post<any>(PROC_80102.GUARDAR, { body: body });
+}
+/**
+ * Establece el procedimiento actual para la gestión de trámites industriales.
+ * Asigna el identificador de procedimiento 'st_t80101' y lo configura en el servicio de cumplimientos.
+ *
+ * @returns {void} No retorna ningún valor.
+ */
+setProcedure():void{
+  const PROCEDURE='sat-t80102'
+  this.complimentosService.setProcedure(PROCEDURE);
+}
+
+/**
+ * Obtiene información del servicio IMMEX desde el catálogo correspondiente.
+ *
+ * Realiza una solicitud HTTP GET al endpoint definido en `apiRoutes.servicoImex`
+ * y retorna la respuesta como un observable de tipo `JsonResponseCatalogo`.
+ *
+ * @returns Observable que emite la respuesta del catálogo IMMEX.
+ */
+getServicoImmex(): Observable<JsonResponseCatalogo> {
+  
+     return this.httpService.get<JsonResponseCatalogo>(
+    PROC_80102.servicoImex,
+    {},
+    false
+  );
 }
 
 }

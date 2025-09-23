@@ -1,3 +1,5 @@
+import { Catalogo } from "@libs/shared/data-access-user/src";
+
 /**
  * @interface CambioDeModalidadForm
  * @description
@@ -26,7 +28,7 @@ export interface CambioDeModalidadForm {
  * @property {string} descripcion - Descripción de la modalidad.
  */
 export interface CambioModalidad {
-    id: number;
+    clave: number;
     descripcion: string;
 }
 export interface ServicioInmex {
@@ -64,9 +66,18 @@ export interface ServicioInmex {
  * @property {CambioModalidad[]} data - Lista de modalidades de cambio.
  */
 export interface CambioModalidadResponse {
-    cambioModalidad: {
-        data: CambioModalidad[];
-    };
+  codigo: string;
+  mensaje: string;
+  datos: CambioModalidad[];
+}
+
+/**
+ * Representa la respuesta de un conjunto de catálogos.
+ */
+export interface RespuestaCatalogos {
+  codigo: string;
+  mensaje: string;
+  datos: Catalogo[];
 }
 
 /**

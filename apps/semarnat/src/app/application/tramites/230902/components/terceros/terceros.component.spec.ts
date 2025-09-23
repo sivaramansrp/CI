@@ -6,7 +6,8 @@ import { PermisoCitesService } from '../../services/permiso-cites.service';
 import { Tramite230902Store } from '../../estados/tramite230902.store';
 import { Tramite230902Query } from '../../estados/tramite230902.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ConfiguracionItem, DESTINARIO_TABLE_ENTRY } from '../../enum/tereceors.enum';
+import { DESTINARIO_TABLE_ENTRY, TereceorsConfiguracionItem } from '../../enum/tereceors.enum';
+
 
 describe('TercerosComponent', () => {
   let component: TercerosComponent;
@@ -18,6 +19,7 @@ describe('TercerosComponent', () => {
   beforeEach(async () => {
     const permisoCitesServiceMock = {
       inicializaTercerosDatosCatalogos: jest.fn(),
+      inicializaUbicacionDatosCatalogos: jest.fn(),
       entidadFederativa: [],
     };
     const tramite230902StoreMock = {
@@ -65,7 +67,7 @@ describe('TercerosComponent', () => {
   });
   
   it('should handle row selection', () => {
-    const filaSeleccionada: ConfiguracionItem[] = [{ ...DESTINARIO_TABLE_ENTRY }];
+    const filaSeleccionada: TereceorsConfiguracionItem[] = [{ ...DESTINARIO_TABLE_ENTRY }];
     component.onFilaSeleccionada(filaSeleccionada);
     expect(component.isModificarEnabled).toBeTruthy();
 

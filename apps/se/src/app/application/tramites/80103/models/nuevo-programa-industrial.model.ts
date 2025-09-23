@@ -3,6 +3,8 @@ import { Catalogo, CatalogoPaises } from "@ng-mf/data-access-user";
 import { AnexoDosEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
 import { PlantasSubfabricante } from "../../../shared/models/empresas-subfabricanta.model";
 
+import { AnexoFraccionAnarelaria, AnexoUnoProducto } from "../../../shared/models/complimentos-seccion.model";
+
 /**
  * Representa la estructura de datos para un servicio IMMEX.
  * 
@@ -131,9 +133,9 @@ export interface AnnexoDosTres{
  * - `seccionActiva`: Cadena que indica la sección activa actual.
  */
 export interface AnnexoUno{
-  exportarDatosTabla: AnexoDosEncabezado[];
-  importarDatosTabla:AnexoUnoEncabezado[];
-  datosParaNavegar:AnexoUnoEncabezado | AnexoDosEncabezado ;
+  exportarDatosTabla: AnexoFraccionAnarelaria[];
+  importarDatosTabla:AnexoUnoProducto[];
+  datosParaNavegar:AnexoUnoEncabezado | AnexoDosEncabezado;
   seccionActiva: string;
 }
 /**
@@ -178,3 +180,43 @@ export interface PlantasSubfabricanteResponse {
   code: number;
   data: PlantasSubfabricante[];
 }
+
+ /**
+ * Representa los datos de la tabla para proveedores y clientes en el contexto de un programa industrial.
+ *
+ * @property {number} idProveedor - Identificador único del proveedor.
+ * @property {string} paisOrigen - País de origen del proveedor.
+ * @property {string} rfcProveedor - RFC del proveedor.
+ * @property {string} razonProveedor - Razón social del proveedor.
+ * @property {string} paisDestino - País de destino del cliente.
+ * @property {string} rfcClinte - RFC del cliente.
+ * @property {string} razonSocial - Razón social del cliente.
+ * @property {string} domicilio - Domicilio del cliente.
+ * @property {boolean} testado - Indica si el producto ha sido testado.
+ * @property {number} idProductoP - Identificador del producto.
+ * @property {string} descTestado - Descripción del estado de testado.
+ */
+export interface ProveedorClienteDatosTabla {
+      idProveedor: number;
+      paisOrigen: string;
+      rfcProveedor: string;
+      razonProveedor: string;
+      paisDestino: string;
+      rfcClinte: string;
+      razonSocial: string;
+      domicilio: string;
+      testado: boolean;
+      idProductoP: number;
+      descTestado: string;
+    }
+
+    /**
+     * Representa la estructura del Anexo 1, que contiene información sobre el encabezado de la fracción y su descripción.
+     *
+     * @property {string} encabezadoFraccion - Texto que identifica el encabezado de la fracción.
+     * @property {string} encabezadoDescripcion - Descripción asociada al encabezado de la fracción.
+     */
+    export interface Anexo1{
+       encabezadoFraccion: string; 
+      encabezadoDescripcion: string
+     }

@@ -1,5 +1,6 @@
-import { AnexoEncabezado, AnexoUnoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoEncabezado, AnexoUnoEncabezado, DatosAnexotressUno } from '../../../shared/models/nuevo-programa-industrial.model';
 import { AnnexoDosTres, AnnexoUno } from '../models/nuevo-programa-industrial.model';
+import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoPaises } from '@libs/shared/data-access-user/src';
@@ -7,7 +8,6 @@ import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { DatosEmpresaExtranjera} from '../models/nuevo-programa-industrial.model';
 import { DatosSubcontratista } from '../../../shared/models/empresas-subfabricanta.model';
 import { EmpressaSubFabricantePlantas } from '../../../shared/models/empresas-subfabricanta.model';
-import { FederatariosEncabezado } from '../../../shared/models/federatarios-y-plantas.model';
 import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Servicio } from '../models/nuevo-programa-industrial.model';
@@ -16,6 +16,8 @@ import { Servicios } from '../models/nuevo-programa-industrial.model';
 import { SociaoAccionistas } from '../../../shared/models/complimentos.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
+
+import { AnexoFraccionAnarelaria, AnexoUnoProducto } from '../../../shared/models/complimentos-seccion.model';
 
 /**
  * Representa el estado de Tramite80101 en la aplicación.
@@ -46,6 +48,8 @@ import { StoreConfig } from '@datorama/akita';
  * @property {FederatariosEncabezado[]} tablaDatosFederatarios - Tabla de datos de fedatarios públicos.
  */
 export interface Tramite80101State {
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
   infoRegistro: Servicios;
   aduanaDeIngreso: Catalogo[];
   datosImmex: Servicio[];
@@ -66,12 +70,25 @@ export interface Tramite80101State {
   tablaDatosComplimentos: SociaoAccionistas[];
   tablaDatosComplimentosExtranjera: SociaoAccionistas[];
 
+  /** Contiene los datos del primer anexo Tress. */
+  datosAnexoTress: DatosAnexotressUno;
+  /** Contiene los datos del segundo anexo Tress. */
+  datosAnexoTressDos: DatosAnexotressUno;
+
   empressaSubFabricantePlantas: EmpressaSubFabricantePlantas;
   annexoDosTres: AnnexoDosTres,
   annexoUno: AnnexoUno,
   
   indicePrevioRuta: number;
   tablaDatosFederatarios: FederatariosEncabezado[]
+  /**
+   * Información detallada de plantas IMMEX.
+   */
+  plantasImmexTablaLista: PlantasImmex[];
+  /** 
+   * Información detallada de plantas disponibles. 
+   */
+  plantasDisponiblesTablaLista: PlantasDisponibles[];
 }
 
 /**
@@ -136,6 +153,14 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     nombreEmpresaExt: '',
     direccionEmpresaExtranjera: '',
   },
+  datosAnexoTress:{
+    fraccionArancelaria:"",
+    descripcion: ""
+  },
+  datosAnexoTressDos:{
+    fraccionArancelaria:"",
+    descripcion: ""
+  },
   datosComplimentos: {
     modalidad: 'Servicios',
     programaPreOperativo: '',
@@ -144,8 +169,8 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
       localizacion: '',
     },
     obligacionesFiscales: {
-      opinionPositiva: 'Si',
-      fechaExpedicion: '2025-03-15',
+      opinionPositiva: 'SI',
+      fechaExpedicion: '15/02/2024',
       aceptarObligacionFiscal: '',
     },
     formaModificaciones: {
@@ -216,7 +241,10 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   },
 
   indicePrevioRuta: 0,
-  tablaDatosFederatarios: []
+  tablaDatosFederatarios: [],
+  plantasImmexTablaLista: [],
+  plantasDisponiblesTablaLista: [],
+  idSolicitud: 0,
 };
 
 /**
@@ -765,7 +793,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    * Este método actualiza el estado del componente añadiendo o reemplazando 
    * los datos de la tabla de importación en la propiedad `annexoUno`.
    */
-  setImportarDatosTabla(importarDatosTabla:AnexoUnoEncabezado[]):void{
+  setImportarDatosTabla(importarDatosTabla:AnexoUnoProducto[]):void{
     this.update((state) => ({
       ...state,
       annexoUno: {
@@ -781,7 +809,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    *
    * @param exportarDatosTabla - Un arreglo de objetos de tipo `AnexoDosEncabezado` que contiene los datos a exportar.
    */
-  setExportarDatosTabla(exportarDatosTabla:AnexoDosEncabezado[]):void{
+  setExportarDatosTabla(exportarDatosTabla:AnexoFraccionAnarelaria[]):void{
     this.update((state) => ({
       ...state,
       annexoUno: {
@@ -803,6 +831,30 @@ export class Tramite80101Store extends Store<Tramite80101State> {
     this.update((state) => ({
       ...state,
       tablaDatosFederatarios: [...state.tablaDatosFederatarios, formaFederatarios],
+    }));
+  }
+
+  /**
+   * Agrega un nuevo conjunto de datos a la tabla de plantas disponibles en el estado.
+   * 
+   * @param plantas - Un arreglo de objetos de tipo `PlantasDisponibles` que se agregarán a la tabla.
+   */
+  setPlantasDisponiblesTablaLista(plantas: PlantasDisponibles[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasDisponiblesTablaLista: [...state.plantasDisponiblesTablaLista, ...plantas],
+    }));
+  }
+
+  /**
+   * Agrega un nuevo conjunto de datos a la tabla de plantas IMMEX en el estado.
+   * 
+   * @param plantasImmex - Un arreglo de objetos de tipo `PlantasImmex` que se agregarán a la tabla.
+   */
+  setPlantasImmexTablaLista(plantasImmex: PlantasImmex[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasImmexTablaLista: [...state.plantasImmexTablaLista, ...plantasImmex],
     }));
   }
     /**
@@ -849,5 +901,43 @@ export class Tramite80101Store extends Store<Tramite80101State> {
         tablaDatosComplimentosExtranjera: [...state.tablaDatosComplimentosExtranjera, DATOS],
       };
     });
+  }
+
+    /**
+   * Actualiza la propiedad `datosAnexoTress` en el store con los datos proporcionados.
+   * Fusiona el estado existente de `datosAnexoTress` con los nuevos valores recibidos.
+   *
+   * @param datosAnexoTress - Objeto que contiene los nuevos datos a fusionar en `datosAnexoTress`.
+   */
+  setDatosAnexoTres(datosAnexoTress: DatosAnexotressUno): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosAnexoTress, ...datosAnexoTress };
+      return { ...state, datosAnexoTress: VALUE };
+    });
+  }
+
+  /**
+   * Actualiza la propiedad `datosAnexoTressDos` en el store con los datos proporcionados.
+   * Fusiona el estado existente de `datosAnexoTressDos` con los nuevos valores recibidos.
+   *
+   * @param datosAnexoTressDos - Objeto que contiene los nuevos datos a fusionar en `datosAnexoTressDos`.
+   */
+  setDatosAnexoTresDos(datosAnexoTressDos: DatosAnexotressUno): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosAnexoTressDos, ...datosAnexoTressDos };
+      return { ...state, datosAnexoTressDos: VALUE };
+    });
+  }
+  
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
   }
 }

@@ -1,13 +1,11 @@
 import {
   CATALOGOS_ID,
   Catalogo,
-  CatalogoSelectComponent,
   CatalogosService,
   ConsultaioQuery,
   FormularioDinamico,
   Notificacion,
   NotificacionesComponent,
-  SelectPaisesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -41,8 +39,10 @@ import { Tramite80102Store } from '../../estados/tramite80102.store';
 
 import { Input, OnDestroy, OnInit } from '@angular/core';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
 
 const ENTIDADFEDERATIVA = 'entidadFederativaEmpresaExt';
 
@@ -249,6 +249,12 @@ export class ServiciosComponent implements OnInit, OnDestroy {
   datosEmpresaExtranjera$!: Observable<DatosEmpresaExtranjera[]>;
 
   /**
+   * Array de datos de empresas extranjeras.
+   * @type {DatosEmpresaExtranjera[]}
+   */
+  public datosEmpresaExtranjera!: DatosEmpresaExtranjera[];
+
+  /**
     * Notificador utilizado para manejar la destrucción o desuscripción de observables.
     * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
     *
@@ -276,6 +282,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     private readonly autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
     private catalogosServices: CatalogosService, private consultaQuery: ConsultaioQuery
   ) {
+   
     this.formulario = this.fb.group({
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
     });
@@ -293,18 +300,23 @@ export class ServiciosComponent implements OnInit, OnDestroy {
         });
       });
 
+    this.datosEmpresaExtranjera$ =
+      this.Tramite80102Query.selectdatosEmpresaExtranjera$;
+
+      this.datosEmpresaExtranjera$.subscribe((datos) => {
+        this.datosEmpresaExtranjera = datos;
+      });
+
     this.formularioEmpresaExtranjera = this.fb.group({
-      taxIdEmpresaExt: ['', [Validators.required, Validators.maxLength(50)]],
-      nombreEmpresaExt: ['', [Validators.required, Validators.maxLength(200)]],
-      entidadFederativaEmpresaExt: ['', Validators.required],
+      taxIdEmpresaExt: [this.datosEmpresaExtranjera?.[0]?.taxIdEmpresaExt, [Validators.required, Validators.maxLength(50)]],
+      nombreEmpresaExt: [this.datosEmpresaExtranjera?.[0]?.nombreEmpresaExt, [Validators.required, Validators.maxLength(200)]],
+      entidadFederativaEmpresaExt: [this.datosEmpresaExtranjera?.[0]?.entidadFederativaEmpresaExt, Validators.required],
       direccionEmpresaExtranjera: [
-        '',
+        this.datosEmpresaExtranjera?.[0]?.direccionEmpresaExtranjera,
         [Validators.required, Validators.maxLength(300)],
       ],
     });
-
-    this.datosEmpresaExtranjera$ =
-      this.Tramite80102Query.selectdatosEmpresaExtranjera$;
+     this.obtainorServico();
   }
 
   /**
@@ -446,9 +458,9 @@ export class ServiciosComponent implements OnInit, OnDestroy {
         // También puedes asignarlo directamente al componente si lo necesitas, pero es mejor usar el store para mantener la reactividad
         this.Tramite80102Query.selectAduanaDeIngreso$.subscribe(
           (aduanaDeIngreso) => {
-            this.aduanaDeIngreso = aduanaDeIngreso;
-            if (this.aduanaDeIngreso?.length) {
-              this.formulario.get('entidadFederativa')?.setValue(this.aduanaDeIngreso[0].id);
+            // this.aduanaDeIngreso = aduanaDeIngreso;
+            if (aduanaDeIngreso?.length) {
+              this.formulario.get('entidadFederativa')?.setValue(aduanaDeIngreso[0].id);
             }
           }
         );
@@ -718,6 +730,13 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+obtainorServico():void{
+  this.autorizacionProgrmaNuevoService.getServicoImmex().pipe(takeUntil(this.destroyNotifier$)).subscribe((data)=>{
+  this.aduanaDeIngreso=data.datos;
+  });
+}
+
 
   /**
   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

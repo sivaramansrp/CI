@@ -34,7 +34,9 @@
         (continuarEvento)="getValorIndice($event)"
       ></btn-continuar>
       } @case (2) {
+        @if (esDatosRespuesta){
       <solicitud (continuarEvento)="continuar()"> </solicitud>
+        }
       } }
     </ng-container>
   </div>

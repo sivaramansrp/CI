@@ -67,6 +67,8 @@ import { Injectable } from '@angular/core';
  * @property {PlantasDisponibles[]} plantasDisponiblesTablaLista - Lista de plantas disponibles para asociación.
  */
 export interface Tramite80102State {
+  /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
   infoRegistro: Servicios;
   aduanaDeIngreso: Catalogo[];
   datosImmex: Servicio[];
@@ -114,6 +116,10 @@ export interface Tramite80102State {
   tablaDatosFederatarios: FederatariosEncabezado[];
   plantasImmexTablaLista: PlantasImmex[];
   plantasDisponiblesTablaLista: PlantasDisponibles[];
+  /**
+   * Información detallada de federatarios.
+   */
+  datosFederatarios: FederatariosEncabezado;
 }
 
 /**
@@ -360,6 +366,23 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
   tablaDatosFederatarios: [],
   plantasImmexTablaLista: [],
   plantasDisponiblesTablaLista: [],
+  datosFederatarios: {
+    nombre: '',
+    primerApellido: '',
+    segundoApellido: '',
+    numeroDeActa: '',
+    fechaDelActa: '',
+    numeroDeNotaria: '',
+    entidadFederativa: '',
+    municipioODelegacion: '',
+    estado: '',
+    estadoOptions: '',
+    estadoUno: '',
+    estadoDos: '',
+    estadoTres: '',
+  },
+  idSolicitud: 0,
+
 };
 
 
@@ -979,6 +1002,28 @@ export class Tramite80102Store extends Store<Tramite80102State> {
       tablaDatosFederatarios: [...state.tablaDatosFederatarios, formaFederatarios],
     }));
   }
+
+  /**
+   * @method eliminarFederatarios
+   * @description Elimina federatarios del estado actual de la tienda.
+   */
+  setPlantasDisponiblesTablaLista(plantas: PlantasDisponibles[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasDisponiblesTablaLista: [...state.plantasDisponiblesTablaLista, ...plantas],
+    }));
+  }
+
+  /**
+   * @method setPlantasImmexTablaLista
+   * @description Actualiza la lista de plantas IMMEX en el estado de la tienda.
+   */
+  setPlantasImmexTablaLista(plantasImmex: PlantasImmex[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasImmexTablaLista: [...state.plantasImmexTablaLista, ...plantasImmex],
+    }));
+  }
   /**
    * Actualiza el estado con los datos complementarios proporcionados.
    *
@@ -1033,4 +1078,17 @@ export class Tramite80102Store extends Store<Tramite80102State> {
       return { ...state, datosAnexoTressDos: VALUE };
     });
   }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
 }

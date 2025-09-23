@@ -15,6 +15,7 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
+  ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import {
   Component,
@@ -49,6 +50,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
 import { Modal } from 'bootstrap';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
@@ -197,7 +199,9 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     private datosDomicilioLegalStore: DatosDomicilioLegalStore,
     private datosDomicilioLegalQuery: DatosDomicilioLegalQuery,
     private service: DatosDomicilioLegalService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private servicioDeFormularioService: ServicioDeFormularioService,
+    private validacionesService: ValidacionesFormularioService
   ) {
     // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$
@@ -206,6 +210,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.esFormularioActualizacion = seccionState.update;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe()
@@ -256,11 +261,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
  */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-
     if (this.esFormularioSoloLectura) {
       this.domicilio.disable();
-    } else {
-      this.domicilio.enable();
     }
   }
 
@@ -289,7 +291,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       calle: [this.solicitudState?.calle, Validators.required],
       lada: [this.solicitudState?.lada],
       telefono: [this.solicitudState?.telefono, Validators.required],
-      avisoCheckbox: [this.solicitudState?.avisoCheckbox, Validators.required],
+      avisoCheckbox: [this.solicitudState?.avisoCheckbox, Validators.requiredTrue],
       licenciaSanitaria: [
         { value: this.solicitudState?.licenciaSanitaria, disabled: false }, Validators.required
       ],
@@ -315,9 +317,25 @@ export class DomicilioComponent implements OnInit, OnDestroy {
  * - Requerido (`Validators.required`)
  * - Longitud máxima de 50 caracteres (`Validators.maxLength(50)`)
  */
-    if (this.mostrarNumeroRegistro) {
-      this.domicilio.addControl('numeroRegistro', this.fb.control('', [Validators.required, Validators.maxLength(50)]));
-    }
+
+    this.servicioDeFormularioService.registerForm('domicilioForm', this.domicilio);
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'domicilioForm') {
+        this.domicilio.markAllAsTouched();
+      }
+    })
+  }
+
+  /**
+  * compo doc
+  * @method esValido
+  * @description 
+  * Verifica si un campo específico del formulario es válido.
+  * @param campo El nombre del campo que se desea validar.
+  * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
+  */
+  public esValido(campo: string): boolean | null {
+    return this.validacionesService.isValid(this.domicilio, campo);
   }
 
 
@@ -955,10 +973,17 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   onAvisoCheckboxChange(event: Event): void {
     const CHECKBOX = event.target as HTMLInputElement;
+    const LICENCIA_SANITARIA_CONTROL = this.domicilio.get('licenciaSanitaria');
     if (CHECKBOX.checked) {
-      this.domicilio.get('licenciaSanitaria')?.disable();
+      LICENCIA_SANITARIA_CONTROL?.clearValidators();
+      LICENCIA_SANITARIA_CONTROL?.updateValueAndValidity();
+      LICENCIA_SANITARIA_CONTROL?.disable();
+      this.servicioDeFormularioService.updateControlValidator('domicilioForm', 'licenciaSanitaria', []);
     } else {
-      this.domicilio.get('licenciaSanitaria')?.enable();
+      LICENCIA_SANITARIA_CONTROL?.setValidators([Validators.required]);
+      LICENCIA_SANITARIA_CONTROL?.updateValueAndValidity();
+      LICENCIA_SANITARIA_CONTROL?.enable();
+      this.servicioDeFormularioService.updateControlValidator('domicilioForm', 'licenciaSanitaria', [Validators.required]);
     }
   }
 
@@ -1027,6 +1052,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         value: string | number | boolean
       ) => void
     )(VALOR);
+    this.servicioDeFormularioService.setFormValue('domicilioForm', { [campo]: VALOR });
   }
 
   /**

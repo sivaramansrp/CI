@@ -7,4 +7,8 @@
   [plantasDisponiblesDatos]="(plantasDisponiblesTablaLista$ | async) || []"
   [plantasImmexDatos]="(plantasImmexTablaLista$ | async) || []"
   (datosFormaFedratario)="setFormaDatos($event)"
+  (datosPlantaDisponibles)="setPlantasDisponiblesDatos($event)"
+  (datosPlantasImmex)="setPlantasImmexDatos($event)"
+  [datosFederatarios]="datosFederatarios"
+  [estadoOptionsConfig]="estadoOptionsConfig"
 ></app-federatarios-y-plantas>

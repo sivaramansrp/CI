@@ -1,13 +1,14 @@
-import { AnexoEncabezado, AnexoUnoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoEncabezado, AnexoUnoEncabezado, DatosAnexotressUno } from '../../../shared/models/nuevo-programa-industrial.model';
 import { AnnexoDosTres, AnnexoUno } from '../models/nuevo-programa-industrial.model';
+import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoPaises } from '@ng-mf/data-access-user';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { DatosEmpresaExtranjera} from '../models/nuevo-programa-industrial.model';
 import { DatosSubcontratista } from '../../../shared/models/empresas-subfabricanta.model';
+import { DisponsibleFiscal } from '../../../shared/models/empresas.model';
 import { EmpressaSubFabricantePlantas } from '../../../shared/models/empresas-subfabricanta.model';
-import { FederatariosEncabezado } from '../../../shared/models/federatarios-y-plantas.model';
 import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Servicio } from '../models/nuevo-programa-industrial.model';
@@ -46,6 +47,9 @@ import { StoreConfig } from '@datorama/akita';
  * @property {FederatariosEncabezado[]} tablaDatosFederatarios - Tabla de datos de fedatarios públicos.
  */
 export interface Tramite80101State {
+  
+/** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
   infoRegistro: Servicios;
   aduanaDeIngreso: Catalogo[];
   datosImmex: Servicio[];
@@ -66,12 +70,26 @@ export interface Tramite80101State {
   tablaDatosComplimentos: SociaoAccionistas[];
   tablaDatosComplimentosExtranjera: SociaoAccionistas[];
 
+  /** Contiene los datos del primer anexo Tress. */
+  datosAnexoTress: DatosAnexotressUno;
+  /** Contiene los datos del segundo anexo Tress. */
+  datosAnexoTressDos: DatosAnexotressUno;
+
   empressaSubFabricantePlantas: EmpressaSubFabricantePlantas;
   annexoDosTres: AnnexoDosTres,
   annexoUno: AnnexoUno,
   
   indicePrevioRuta: number;
-  tablaDatosFederatarios: FederatariosEncabezado[]
+  tablaDatosFederatarios: FederatariosEncabezado[];
+  /**
+   * Información detallada de plantas IMMEX.
+   */
+  plantasImmexTablaLista: PlantasImmex[];
+  /** 
+   * Información detallada de plantas disponibles. 
+   */
+  plantasDisponiblesTablaLista: PlantasDisponibles[];
+  empresasSeleccionadas: DisponsibleFiscal[];
 }
 
 /**
@@ -135,6 +153,14 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     entidadFederativaEmpresaExt: '',
     nombreEmpresaExt: '',
     direccionEmpresaExtranjera: '',
+  },
+  datosAnexoTress:{
+  fraccionArancelaria:"",
+  descripcion: ""
+  },
+  datosAnexoTressDos:{
+  fraccionArancelaria:"",
+  descripcion: ""
   },
   datosComplimentos: {
     modalidad: 'Servicios',
@@ -216,7 +242,11 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   },
 
   indicePrevioRuta: 0,
-  tablaDatosFederatarios: []
+  tablaDatosFederatarios: [],
+  plantasImmexTablaLista: [],
+  plantasDisponiblesTablaLista: [],
+  idSolicitud: 0,
+  empresasSeleccionadas: [],
 };
 
 /**
@@ -805,4 +835,77 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       tablaDatosFederatarios: [...state.tablaDatosFederatarios, formaFederatarios],
     }));
   }
+
+    /**
+     * Agrega un nuevo conjunto de datos a la tabla de plantas disponibles en el estado.
+     * 
+     * @param plantas - Un arreglo de objetos de tipo `PlantasDisponibles` que se agregarán a la tabla.
+     */
+    setPlantasDisponiblesTablaLista(plantas: PlantasDisponibles[]): void {
+      this.update((state) => ({
+        ...state,
+        plantasDisponiblesTablaLista: [...state.plantasDisponiblesTablaLista, ...plantas],
+      }));
+    }
+  
+    /**
+     * Agrega un nuevo conjunto de datos a la tabla de plantas IMMEX en el estado.
+     * 
+     * @param plantasImmex - Un arreglo de objetos de tipo `PlantasImmex` que se agregarán a la tabla.
+     */
+    setPlantasImmexTablaLista(plantasImmex: PlantasImmex[]): void {
+      this.update((state) => ({
+        ...state,
+        plantasImmexTablaLista: [...state.plantasImmexTablaLista, ...plantasImmex],
+      }));
+    }
+
+      /**
+   * Actualiza la propiedad `datosAnexoTress` en el store con los datos proporcionados.
+   * Fusiona el estado existente de `datosAnexoTress` con los nuevos valores recibidos.
+   *
+   * @param datosAnexoTress - Objeto que contiene los nuevos datos a fusionar en `datosAnexoTress`.
+   */
+  setDatosAnexoTres(datosAnexoTress: DatosAnexotressUno): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosAnexoTress, ...datosAnexoTress };
+      return { ...state, datosAnexoTress: VALUE };
+    });
+  }
+
+  /**
+   * Actualiza la propiedad `datosAnexoTressDos` en el store con los datos proporcionados.
+   * Fusiona el estado existente de `datosAnexoTressDos` con los nuevos valores recibidos.
+   *
+   * @param datosAnexoTressDos - Objeto que contiene los nuevos datos a fusionar en `datosAnexoTressDos`.
+   */
+  setDatosAnexoTresDos(datosAnexoTressDos: DatosAnexotressUno): void {
+    this.update((state) => {
+      const VALUE = { ...state.datosAnexoTressDos, ...datosAnexoTressDos };
+      return { ...state, datosAnexoTressDos: VALUE };
+    });
+  }
+  
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
+  /**
+     * Establece la lista de empresas seleccionadas en el estado.
+     * @param empresasSeleccionadas - Arreglo de empresas seleccionadas.
+     */
+      public setSeleccionadas(empresasSeleccionadas: DisponsibleFiscal[]):void {
+        this.update((state) => ({
+          ...state,
+          empresasSeleccionadas,
+        }));
+      }
 }

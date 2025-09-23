@@ -8,6 +8,7 @@ import { Subject,takeUntil } from 'rxjs';
 import { CROSLISTA_DE_PAISES } from '../../constants/datos-solicitud.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { MercanciaDetalle } from '../../models/datos-del-tramite.model';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 /**
  * @title Datos de la Mercancía
  * @description Componente que permite capturar y emitir la información relacionada con una mercancía específica.
@@ -23,6 +24,7 @@ import { MercanciaDetalle } from '../../models/datos-del-tramite.model';
     CatalogoSelectComponent,
     ReactiveFormsModule,
     CrosslistComponent,
+    TooltipModule
   ],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
@@ -296,14 +298,14 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
         );
       this.datosMercancia.get('descFraccion')?.disable();
       this.datosMercancia.get('umt')?.setValue('Kilogramo');
-      this.datosMercancia.get('umt')?.enable();
+      this.datosMercancia.get('umt')?.disable();
     } else if (value === 2) {
       this.datosMercancia
         .get('descFraccion')
         ?.setValue('Otra descripción para 25030003.');
       this.datosMercancia.get('descFraccion')?.disable();
       this.datosMercancia.get('umt')?.setValue('Tonelada');
-      this.datosMercancia.get('umt')?.enable();
+      this.datosMercancia.get('umt')?.disable();
     } else {
       this.datosMercancia.get('descFraccion')?.setValue(null);
       this.datosMercancia.get('descFraccion')?.disable();
@@ -319,8 +321,6 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     if (this.esFormularioSoloLectura) {
       this.datosMercancia.disable();
-    } else {
-      this.datosMercancia.enable();
     }
   }
 
@@ -331,14 +331,11 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    */
   crearFormaulario(): void {
     this.datosMercancia = this.fb.group({
-      descripcion: ['QAS', Validators.required],
+      descripcion: ['', Validators.required],
       fraccionArancelaria: ['', { validators: Validators.required }],
       descFraccion: [
-        {
-          value: null,
-          disabled: true,
-        },
-        { validators: Validators.required },
+        { value:null, disabled: true },
+  [Validators.required]
       ],
       cantidadUMT: [
         '',
@@ -363,13 +360,39 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * @param {Event} event - Evento de entrada del campo cantidadUMT.
    * @returns {void}
    */
-  onCantidadUMTInput(event: Event): void {
-    const INPUT = event.target as HTMLInputElement;
-    INPUT.value = INPUT.value.replace(REGEX_NUMEROS, '').slice(0, 22);
-    this.datosMercancia
-      .get('cantidadUMT')
-      ?.setValue(INPUT.value, { emitEvent: false });
+onCantidadUMTInput(event: Event): void {
+  const INPUT = event.target as HTMLInputElement;
+  let value = INPUT.value;
+  value = value.replace(/[^0-9.]/g, '');
+  const PARTS = value.split('.');
+  if (PARTS.length > 2) {
+    value = PARTS[0] + '.' + PARTS.slice(1).join('');
   }
+  const [INTEGER_PART, DECIMAL_PART] = value.split('.');
+  const LIMITED_INTEGER = INTEGER_PART.slice(0, 12);
+  const LIMITED_DECIMAL = DECIMAL_PART ? DECIMAL_PART.slice(0, 3) : '';
+  value = LIMITED_DECIMAL ? `${LIMITED_INTEGER}.${LIMITED_DECIMAL}` : LIMITED_INTEGER;
+  INPUT.value = value;
+  this.datosMercancia.get('cantidadUMT')?.setValue(value, { emitEvent: false });
+}
+
+
+onCantidadvalorComercialInput(event: Event): void {
+ const INPUT = event.target as HTMLInputElement;
+  let value = INPUT.value;
+  value = value.replace(/[^0-9.]/g, '');
+  const PARTS = value.split('.');
+  if (PARTS.length > 2) {
+    value = PARTS[0] + '.' + PARTS.slice(1).join('');
+  }
+  const [INTEGER_PART, DECIMAL_PART] = value.split('.');
+  const LIMITED_INTEGER = INTEGER_PART.slice(0, 12);
+  const LIMITED_DECIMAL = DECIMAL_PART ? DECIMAL_PART.slice(0, 3) : '';
+  value = LIMITED_DECIMAL ? `${LIMITED_INTEGER}.${LIMITED_DECIMAL}` : LIMITED_INTEGER;
+  INPUT.value = value;
+  this.datosMercancia.get('valorComercial')?.setValue(value, { emitEvent: false });
+}
+
   /**
    * @method campoObligatorioChange
    * @description Cambia las validaciones de los campos del formulario según el valor de `campoObligatorioProveedor`.

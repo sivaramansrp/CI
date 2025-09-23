@@ -5,7 +5,7 @@
    <form [formGroup]="registroControlInventariosForm">
       <div class="row mb-3">
          <div class="col-md-12">
-            <label class="form-label text-left">"Mencione el nombre, RFC y número de empleados que le proveen las
+            <label class="form-label text-left">Mencione el nombre, RFC y número de empleados que le proveen las
                empresas que le prestan el servicio de subcontratación*:</label>
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                formControlName="sistemaControlInventariosArt59" (valueChange)="onSeleccionfalsa($event)"
@@ -20,10 +20,8 @@
       <div class="row mb-3">
          <div class="col-md-6">
             <div class="form-group">
-               <label for="nombreSistema" class="form-label text-left"><span class="text-danger">*</span> Nombre del
-                  sistema o datos para su identificación</label>
-               <input type="text" class="form-control" id="nombreSistema" formControlName="nombreSistema"
-                  [disabled]="!radioSeleccionado" />
+               <label for="nombreSistema" class="form-label text-left">Nombre del sistema o datos para su identificación<span class="text-danger">*</span>:</label>
+               <input type="text" class="form-control" maxlength="250" id="nombreSistema" formControlName="nombreSistema" />
                <div *ngIf="esInvalido('nombreSistema')" class="text-danger mt-3">
                   <b *ngIf="registroControlInventariosForm.controls['nombreSistema'].hasError('required')">Respuesta
                      Obligatoria</b>
@@ -32,10 +30,8 @@
          </div>
          <div class="col-md-6">
             <div class="form-group">
-               <label for="lugarRadicacion" class="form-label"><span class="text-danger">*</span> Lugar de
-                  radicación</label>
-               <input type="text" class="form-control" id="lugarRadicacion" formControlName="lugarRadicacion"
-                  [disabled]="!radioSeleccionado" />
+               <label for="lugarRadicacion" class="form-label">Lugar de radicación<span class="text-danger">*</span>:</label>
+               <input type="text" class="form-control" maxlength="250" id="lugarRadicacion" formControlName="lugarRadicacion"/>
                <div *ngIf="esInvalido('lugarRadicacion')" class="text-danger mt-3">
                   <b *ngIf="registroControlInventariosForm.controls['lugarRadicacion'].hasError('required')">Respuesta
                      Obligatoria</b>
@@ -47,7 +43,7 @@
          <div class="col-md-8">
             <div class="form-group">
                <lib-input-check [id]="'cumpleAnexo24'" [label]="cumpleAnexoNota" [required]="false" [reverse]="false"
-                  formControlName="cumpleAnexo24" [isDisabled]="esFormularioSoloLectura"></lib-input-check>
+                  formControlName="cumpleAnexo24" [isDisabled]="esFormularioSoloLectura || seccionState.sistemaControlInventariosArt59 !== '1'"></lib-input-check>
             </div>
          </div>
       </div>
@@ -80,10 +76,10 @@
                         </app-tabla-dinamica>
                         <div class="d-flex justify-content-end">
                            <div class="d-flex flex-row flex-wrap gap-3">
-                              <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
+                              <button class="btn btn-danger" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
                                  (click)="confirmEliminarEmpleadoItem()"
                                  [disabled]="esFormularioSoloLectura">Eliminar</button>
-                              <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
+                              <button class="btn btn-default" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
                                  (click)="modificarItemEmpleado()"
                                  [disabled]="esFormularioSoloLectura">Modificar</button>
                            </div>
@@ -116,9 +112,8 @@
                <div class="row mb-3">
                   <div class="col-md-6">
                      <div class="form-group">
-                        <label for="modificarNombreSistema" class="form-label text-left"><span
-                              class="text-danger">*</span> Nombre del sistema o datos para su identificación</label>
-                        <input type="text" class="form-control" id="modificarNombreSistema"
+                        <label for="modificarNombreSistema" class="form-label text-left">Nombre del sistema o datos para su identificación<span class="text-danger">*</span>:</label>
+                        <input type="text" maxlength="250" class="form-control" id="modificarNombreSistema"
                            formControlName="modificarNombreSistema" />
                      </div>
                   </div>
@@ -133,16 +128,15 @@
                <div class="row mb-3">
                   <div class="col-md-6">
                      <div class="form-group">
-                        <label for="modificarLugarRadicacion" class="form-label"><span class="text-danger">*</span>
-                           Lugar de radicación</label>
-                        <input type="text" class="form-control" id="modificarLugarRadicacion"
+                        <label for="modificarLugarRadicacion" class="form-label">Lugar de radicación<span class="text-danger">*</span>:</label>
+                        <input type="text" maxlength="250" class="form-control" id="modificarLugarRadicacion"
                            formControlName="modificarLugarRadicacion" />
                      </div>
                   </div>
                </div>
             </form>
             <footer class="footer d-flex py-5 gap-3 justify-content-end">
-               <button type="button" class="btn btn-primary" (click)="modalCancelar()">Cancelar</button>
+               <button type="button" class="btn btn-danger" (click)="modalCancelar()">Cancelar</button>
                <button type="button" class="btn btn-primary" (click)="modificarEnviarDialogData()">Agregar</button>
             </footer>
          </div>

@@ -19,7 +19,6 @@ import {
 import {
   DatosGeneralesDeLaSolicitudCatologo,
   DatosGeneralesDeLaSolicitudDatos,
-  DatosGeneralesDeLaSolicitudRadioLista,
   Domicilios,
   InputRadio,
   LabelModels,
@@ -29,7 +28,7 @@ import {
   TipoDeInversion,
 } from '../../models/solicitud.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LABELS, NOTA_MENSAJE } from '../../constants/constants.enum';
+import { LABELS, MODALIDAD_DE_LA_GARANTIA_OPCION, NOTA_MENSAJE, SINO_OPCION, TIPO_DE_ENDOSO_OPCION, TIPO_DE_GARANTIA_OPCION, TIPO_SECTOR_OPCION } from '../../constants/constants.enum';
 import { Solicitud31301State, Solicitud31301Store } from '../../estados/solicitud31301.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -63,15 +62,15 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   public destroy$: Subject<void> = new Subject<void>();
 
   /** Opciones para el tipo de endoso */
-  tipoDeEndosoOpcion: InputRadio = {} as InputRadio;
+  tipoDeEndosoOpcion: InputRadio = TIPO_DE_ENDOSO_OPCION;
   /** Opciones para el tipo de garantía */
-  tipoDeGarantiaOpcion: InputRadio = {} as InputRadio;
+  tipoDeGarantiaOpcion: InputRadio = TIPO_DE_GARANTIA_OPCION;
   /** Opciones para la modalidad de la garantía */
-  modalidadDeLaGarantiaOpcion: InputRadio = {} as InputRadio;
+  modalidadDeLaGarantiaOpcion: InputRadio = MODALIDAD_DE_LA_GARANTIA_OPCION;
   /** Opciones para el tipo de sector */
-  tipoSectorOpcion: InputRadio = {} as InputRadio;
+  tipoSectorOpcion: InputRadio = TIPO_SECTOR_OPCION;
   /** Opciones de sí/no */
-  sinoOpcion: InputRadio = {} as InputRadio;
+  sinoOpcion: InputRadio = SINO_OPCION;
 
   /** Catálogo de conceptos */
   conceptoLista: CatalogosSelect = {} as CatalogosSelect;
@@ -185,7 +184,6 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    * - Emite el cambio de `tipoDeEndoso` una vez que los datos se actualizan.
    */
   ngOnInit(): void {
-    this.conseguirDatosGeneralesOpcionDeRadio();
     this.conseguirDatosGeneralesCatologo();
     this.conseguirListaDeSubcontratistas();
     this.conseguirRegimenAduanero();
@@ -231,7 +229,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     // Inicialización del formulario con los valores actuales del estado
     this.datosGeneralesForm = this.fb.group({
       tipoDeEndoso: [
-        { value: this.solicitud31301State.tipoDeEndoso, disabled: true },
+        { value: this.solicitud31301State.tipoDeEndoso, disabled: false },
         [Validators.required],
       ],
       tipoDeGarantia: [
@@ -458,7 +456,6 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         map((respuesta: Solicitud31301State) => {
           this.solicitud31301State = respuesta;
           this.datosGeneralesForm.patchValue({
-            tipoDeEndoso: this.solicitud31301State.tipoDeEndoso,
             tipoDeGarantia: this.solicitud31301State.tipoDeGarantia,
             modalidadDeLaGarantia:
               this.solicitud31301State.modalidadDeLaGarantia,
@@ -532,25 +529,6 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  }
-
-  /**
-   * Obtiene los datos generales correspondientes a las opciones de tipo de radio.
-   * Asigna los valores recibidos a las propiedades correspondientes del componente.
-   */
-  conseguirDatosGeneralesOpcionDeRadio(): void {
-    this.solicitudService
-      .conseguirDatosGeneralesOpcionDeRadio()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (respuesta: DatosGeneralesDeLaSolicitudRadioLista) => {
-          this.tipoDeEndosoOpcion = respuesta.tipoDeEndoso;
-          this.tipoDeGarantiaOpcion = respuesta.tipoDeGarantia;
-          this.modalidadDeLaGarantiaOpcion = respuesta.modalidadDeLaGarantia;
-          this.tipoSectorOpcion = respuesta.tipoSector;
-          this.sinoOpcion = respuesta.requisitos;
-        },
-      });
   }
 
   /**
@@ -789,7 +767,6 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
           );
           this.solicitud31301Store.actualizarAlerta1(respuesta.alerta1);
           this.solicitud31301Store.actualizarAlerta2(respuesta.alerta2);
-          this.solicitud31301Store.actualizarTipoDeEndoso(respuesta.tipoDeEndoso);
         },
       });
   }

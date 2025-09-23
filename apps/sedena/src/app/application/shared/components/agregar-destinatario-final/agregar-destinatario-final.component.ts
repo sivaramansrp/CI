@@ -1,3 +1,4 @@
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import {
   CAMPO_OBLIGATORIO_DESTINATARIO,
   PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,
@@ -6,18 +7,18 @@ import {
   TIPO_PERSONA_OPCIONES,
   TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE
 } from '../../constants/datos-solicitud.enum';
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, InputRadioComponent, REGEX_RFC_FISICA, REGEX_RFC_MORAL, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent,ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   DestinoFinal,
   Proveedor
 } from '../../models/terceros-relacionados.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
@@ -34,6 +35,7 @@ import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
     CatalogoSelectComponent,
     TituloComponent,
     InputRadioComponent,
+    TooltipModule
   ],
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.scss',
@@ -149,6 +151,18 @@ export class AgregarDestinatarioFinalComponent
    */
 
   @Output() cancelarEventListener = new EventEmitter<boolean>();
+
+   /**
+   * Evento que se emite cuando el usuario desea cancelar una acción.
+   * @property {EventEmitter<boolean>} cancelarEventListener
+   */
+
+  /**
+   * Evento que se emite cuando el usuario desea cancelar una acción.
+   * @property {EventEmitter<void>} cancelarEventListenerCancel
+   */
+  @Output() cancelarEventListenerCancel = new EventEmitter<void>();
+  
   /**
    * Constante que almacena el valor de "Nacional" para su uso en el formulario.
    * @property {string} nacionalStr
@@ -190,6 +204,13 @@ export class AgregarDestinatarioFinalComponent
    * @default true
    */
   public campoObligatorio = false;
+  /**
+   * @property estaDeshabilitadoDesplegable
+   * @description Indica si el desplegable está deshabilitado.
+   * @type {boolean}
+   * @default true
+   */
+  estaDeshabilitadoDesplegable: boolean = true;
 
   /**
    * Crea el componente e inicializa el grupo de formulario.
@@ -255,38 +276,56 @@ export class AgregarDestinatarioFinalComponent
    * y actualiza la información en el store. Finalmente, resetea el formulario
    * y navega hacia atrás en el historial.
    */
-  guardarDestinatario(): void {
-    if (this.agregarDestinatarioFinal.invalid) {
-      this.agregarDestinatarioFinal.markAllAsTouched();
-      return;
-    }
-    
-    const NUEVO_DESTINATARIO: DestinoFinal = {
-      nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${this.agregarDestinatarioFinal.value.primerApellido
-        } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
-      rfc: this.agregarDestinatarioFinal.value.rfc,
-      curp: this.agregarDestinatarioFinal.value.curp,
-      telefono:
-        `${this.agregarDestinatarioFinal.value.lada} ${this.agregarDestinatarioFinal.value.telefono}`.trim(),
-      correoElectronico: this.agregarDestinatarioFinal.value.correoElectronico,
-      calle: this.agregarDestinatarioFinal.value.calle,
-      numeroExterior: this.agregarDestinatarioFinal.value.numeroExterior,
-      numeroInterior: this.agregarDestinatarioFinal.value.numeroInterior || '',
-      pais: this.agregarDestinatarioFinal.value.pais,
-      colonia: this.agregarDestinatarioFinal.value.colonia,
-      municipioAlcaldia: this.agregarDestinatarioFinal.value.municipio,
-      localidad: this.agregarDestinatarioFinal.value.localidad,
-      entidadFederativa: '',
-      estadoLocalidad: this.agregarDestinatarioFinal.value.estado,
-      codigoPostal: this.agregarDestinatarioFinal.value.codigoPostal,
-      tipoPersona: this.agregarDestinatarioFinal.value.tipoPersona,
-      estado: this.agregarDestinatarioFinal.value.estado,
-    };
+guardarDestinatario(): void {
+  const FORM_VALUE = this.agregarDestinatarioFinal.getRawValue();
 
-    this.destinatarios = [...this.destinatarios, NUEVO_DESTINATARIO];
-    this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
-    this.agregarDestinatarioFinal.reset();
+  if (this.agregarDestinatarioFinal.invalid) {
+    this.agregarDestinatarioFinal.markAllAsTouched();
+    return;
   }
+
+  const EXISTING_INDEX = this.destinatarios.findIndex(
+    d => d.id === FORM_VALUE.id 
+  );
+
+  const NUEVO_DESTINATARIO: DestinoFinal = {
+    id: EXISTING_INDEX !== -1
+      ? this.destinatarios[EXISTING_INDEX].id
+      : this.destinatarios.length + 1,
+    nombreRazonSocial: `${FORM_VALUE.nombres} ${FORM_VALUE.primerApellido} ${FORM_VALUE.segundoApellido || ''}`.trim(),
+    rfc: FORM_VALUE.rfc,
+    curp: FORM_VALUE.curp,
+    telefono: `${FORM_VALUE.lada} ${FORM_VALUE.telefono}`.trim(),
+    correoElectronico: FORM_VALUE.correoElectronico,
+    calle: FORM_VALUE.calle,
+    numeroExterior: FORM_VALUE.numeroExterior,
+    numeroInterior: FORM_VALUE.numeroInterior || '',
+    pais: FORM_VALUE.pais,
+    colonia: FORM_VALUE.colonia,
+    municipioAlcaldia: FORM_VALUE.municipio,
+    localidad: FORM_VALUE.localidad,
+    entidadFederativa: '',
+    estadoLocalidad: FORM_VALUE.estado,
+    codigoPostal: FORM_VALUE.codigoPostal,
+    tipoPersona: FORM_VALUE.tipoPersona,
+    estado: FORM_VALUE.estado,
+    nacionalidad: FORM_VALUE.nacionalidad,
+    nombres: FORM_VALUE.nombres,
+    primerApellido: FORM_VALUE.primerApellido,
+    segundoApellido: FORM_VALUE.segundoApellido,
+  };
+
+  if (EXISTING_INDEX !== -1) {
+   this.destinatarios[EXISTING_INDEX] = NUEVO_DESTINATARIO;
+  } else {
+    this.destinatarios = [...this.destinatarios, NUEVO_DESTINATARIO];
+  }
+  
+  this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
+ this.formaDatos = null;
+  this.agregarDestinatarioFinal.reset();
+}
+
 
   /**
    * Hook del ciclo de vida que se invoca cuando se inicializa el componente.
@@ -321,7 +360,6 @@ export class AgregarDestinatarioFinalComponent
       curp: [
         '',
         [
-          Validators.required,
           Validators.minLength(12),
           Validators.maxLength(13),
         ],
@@ -330,7 +368,7 @@ export class AgregarDestinatarioFinalComponent
       denominacionRazon: ['', [Validators.required, Validators.maxLength(254)]],
       primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
       segundoApellido: ['', Validators.maxLength(200)],
-      pais: ['', Validators.required],
+      pais: [{ value: '', disabled: true }, Validators.required],
       estado: ['', [Validators.required, Validators.maxLength(120)]],
       municipio: ['', Validators.required],
       localidad: ['', Validators.required],
@@ -346,9 +384,10 @@ export class AgregarDestinatarioFinalComponent
     });
     this.cargarDatos();
     this.agregarDestinatarioFinal.disable();
-    this.agregarDestinatarioFinal.get('tipoPersona')?.enable();
     this.agregarDestinatarioFinal.get('nacionalidad')?.enable();
+     this.agregarDestinatarioFinal.get('tipoPersona')?.disable();
     if (this.formaDatos) {
+      this.agregarDestinatarioFinal.enable();
       this.agregarDestinatarioFinal.patchValue(this.formaDatos);
     }
   }
@@ -447,6 +486,8 @@ export class AgregarDestinatarioFinalComponent
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
+    this.formaDatos = null;
+    this.cancelarEventListenerCancel.emit();
     this.cancelarEventListener.emit(true);
   }
 
@@ -461,6 +502,7 @@ export class AgregarDestinatarioFinalComponent
     this.agregarDestinatarioFinal.patchValue({
       tipoPersona: event,
     });
+    this.changeTipoPersona();
   }
 
   /**
@@ -472,8 +514,177 @@ export class AgregarDestinatarioFinalComponent
   terecerosNacionalidadCambioDeValor(event: string | number): void {
     this.agregarDestinatarioFinal.patchValue({
       nacionalidad: event,
+      tipoPersona: null,
+      pais: null
     });
+    this.changeNacionalidad();
   }
+  /**
+   * Validador personalizado para RFC según el tipo de persona (Física o Moral).
+   *
+   * @param TIPO_PERSONA El tipo de persona para el cual se debe validar el RFC.
+   * @returns Una función validadora que verifica si el valor cumple con el formato RFC correspondiente.
+   *          Si el valor es inválido, retorna un objeto con la clave de error específica.
+   *          Si el tipo de persona es desconocido o el valor está vacío, retorna null.
+   */
+  static rfcFisicaValidator(
+    TIPO_PERSONA: TipoPersona
+  ): (CONTROL: AbstractControl) => ValidationErrors | null {
+    return (CONTROL: AbstractControl): ValidationErrors | null => {
+      const VALUE = CONTROL?.value;
+
+      if (!VALUE) {
+        return null;
+      }
+
+      let REGEX;
+      let ERROR_KEY;
+
+      if (TIPO_PERSONA === TipoPersona.FISICA) {
+        REGEX = REGEX_RFC_FISICA;
+        ERROR_KEY = { INVALID_RFC_FISICA: true };
+      } else if (TIPO_PERSONA === TipoPersona.MORAL) {
+        REGEX = REGEX_RFC_MORAL;
+        ERROR_KEY = { INVALID_RFC_MORAL: true };
+      } else {
+        return null;
+      }
+
+      return REGEX.test(VALUE) ? null : ERROR_KEY;
+    };
+  }
+
+
+  /**
+ * Habilita o deshabilita los controles del formulario según el estado de los campos
+ * 'nacionalidad' y 'tipoPersona'. Si ambos están vacíos o indefinidos, deshabilita
+ * todos los controles excepto estos dos. Si alguno tiene valor, habilita todos los controles.
+ *
+ * @returns {void} Este método no retorna ningún valor.
+ */
+changeNacionalidad(): void {
+  const NACIONALIDAD = this.agregarDestinatarioFinal.get('nacionalidad')?.value;
+  const TIPO_PERSONA = this.agregarDestinatarioFinal.get('tipoPersona')?.value;
+  const PAIS_CTRL = this.agregarDestinatarioFinal.get('pais');
+
+  this.agregarDestinatarioFinal.get('tipoPersona')?.enable({ emitEvent: false });
+
+  if (!NACIONALIDAD || !TIPO_PERSONA) {
+    Object.keys(this.agregarDestinatarioFinal.controls).forEach(CTRL => {
+      this.agregarDestinatarioFinal.get(CTRL)?.disable({ emitEvent: false });
+    });
+    this.agregarDestinatarioFinal.get('nacionalidad')?.enable({ emitEvent: false });
+    this.agregarDestinatarioFinal.get('tipoPersona')?.enable({ emitEvent: false });
+    this.estaDeshabilitadoDesplegable = true;
+    return;
+  }
+
+  this.agregarDestinatarioFinal.enable({ emitEvent: false });
+
+  const IS_MEXICAN_FISICA_MORAL =
+    NACIONALIDAD === 'Mexicana' &&
+    (TIPO_PERSONA === this.tipoPersona.FISICA || TIPO_PERSONA === this.tipoPersona.MORAL);
+
+  if (IS_MEXICAN_FISICA_MORAL) {
+    PAIS_CTRL?.setValue('MX', { emitEvent: false });
+    PAIS_CTRL?.clearValidators();
+    PAIS_CTRL?.disable({ emitEvent: false });
+    this.estaDeshabilitadoDesplegable = true;
+  } else {
+    PAIS_CTRL?.setValidators([Validators.required]);
+    PAIS_CTRL?.enable({ emitEvent: false });
+    this.estaDeshabilitadoDesplegable = false;
+  }
+
+  PAIS_CTRL?.updateValueAndValidity({ emitEvent: false });
+}
+
+
+/**
+ * Cambia el tipo de persona y actualiza los controles del formulario en consecuencia.
+ *
+ * @returns {void} Este método no retorna ningún valor.
+ */
+changeTipoPersona(): void {
+  const NACIONALIDAD = this.agregarDestinatarioFinal.get('nacionalidad')?.value;
+  const TIPO_PERSONA = this.agregarDestinatarioFinal.get('tipoPersona')?.value;
+
+  const RFC_CTRL = this.agregarDestinatarioFinal.get('rfc');
+  const CURP_CTRL = this.agregarDestinatarioFinal.get('curp');
+  const PAIS_CTRL = this.agregarDestinatarioFinal.get('pais');
+  const DENOMINACION_CTRL = this.agregarDestinatarioFinal.get('denominacionRazon');
+  const MUNICIPIO_CTRL = this.agregarDestinatarioFinal.get('municipio');
+  const LOCALIDAD_CTRL = this.agregarDestinatarioFinal.get('localidad');
+
+  if (!TIPO_PERSONA || !NACIONALIDAD) {
+    Object.keys(this.agregarDestinatarioFinal.controls).forEach(CTRL => {
+      this.agregarDestinatarioFinal.get(CTRL)?.disable({ emitEvent: false });
+    });
+    this.agregarDestinatarioFinal.get('nacionalidad')?.enable({ emitEvent: false });
+    this.agregarDestinatarioFinal.get('tipoPersona')?.enable({ emitEvent: false });
+    PAIS_CTRL?.reset({ emitEvent: false });
+    this.estaDeshabilitadoDesplegable = true;
+    return;
+  }
+
+  this.agregarDestinatarioFinal.enable({ emitEvent: false });
+
+  const IS_EXTRANJERO = NACIONALIDAD === 'Extranjero';
+
+  if (RFC_CTRL) {
+    if (IS_EXTRANJERO) {
+      RFC_CTRL.clearValidators();
+    } else {
+      RFC_CTRL.setValidators([
+        Validators.required,
+        AgregarDestinatarioFinalComponent.rfcFisicaValidator(TIPO_PERSONA),
+      ]);
+    }
+    RFC_CTRL.updateValueAndValidity({ emitEvent: false });
+  }
+
+  if (DENOMINACION_CTRL) {
+    if (TIPO_PERSONA === this.tipoPersona.MORAL) {
+      DENOMINACION_CTRL.setValidators([Validators.required]);
+    } else {
+      DENOMINACION_CTRL.clearValidators();
+    }
+    DENOMINACION_CTRL.updateValueAndValidity({ emitEvent: false });
+  }
+
+  if (IS_EXTRANJERO) {
+    MUNICIPIO_CTRL?.clearValidators();
+    LOCALIDAD_CTRL?.clearValidators();
+  } else {
+    MUNICIPIO_CTRL?.setValidators([Validators.required]);
+    LOCALIDAD_CTRL?.setValidators([Validators.required]);
+  }
+  MUNICIPIO_CTRL?.updateValueAndValidity({ emitEvent: false });
+  LOCALIDAD_CTRL?.updateValueAndValidity({ emitEvent: false });
+
+  const IS_MEXICAN_FISICA_MORAL =
+    NACIONALIDAD === 'Mexicana' &&
+    (TIPO_PERSONA === this.tipoPersona.FISICA || TIPO_PERSONA === this.tipoPersona.MORAL);
+
+  if (IS_MEXICAN_FISICA_MORAL) {
+    PAIS_CTRL?.setValue('MX', { emitEvent: false });
+    PAIS_CTRL?.clearValidators();
+    PAIS_CTRL?.disable({ emitEvent: false });
+    this.estaDeshabilitadoDesplegable = true;
+  } else {
+    PAIS_CTRL?.setValidators([Validators.required]);
+    PAIS_CTRL?.enable({ emitEvent: false });
+    this.estaDeshabilitadoDesplegable = false;
+  }
+  PAIS_CTRL?.updateValueAndValidity({ emitEvent: false });
+
+  if (TIPO_PERSONA === this.tipoPersona.NO_CONTRIBUYENTE) {
+    RFC_CTRL?.disable({ emitEvent: false });
+  } else {
+    CURP_CTRL?.disable({ emitEvent: false });
+  }
+}
+
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

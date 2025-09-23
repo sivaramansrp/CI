@@ -17,7 +17,7 @@
 
                 <div class="row">
                   <div class="d-flex justify-content-end mb-2">
-                    <button type="button" class="btn btn-primary">
+                    <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">
                       Copiar datos en una Nueva Solicitud
                     </button>
                   </div>
@@ -63,16 +63,17 @@
         <div class="form-group">
           <label class="form-label" for="denominacionORazonSocial">Denominación o razón social*:</label>
           <input class="form-control" id="denominacionORazonSocial" placeholder="" type="text"
-            formControlName="denominacionORazonSocial"
+            formControlName="denominacionORazonSocial" maxlength="100"
             (change)="setValoresStore(forma, 'denominacionORazonSocial', 'setDenominacionORazonSocial')" />
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="correoElectronico">Correo electrónico*: <i
-              class="bi bi-question-circle-fill"></i></label>
+          <label class="form-label" for="correoElectronico">Correo electrónico*: 
+              <span class="bi bi-question-circle-fill" tooltip="ejemplo@dominio.com" placement="top"></span>
+          </label>
           <input class="form-control" id="correoElectronico" placeholder="" type="text"
-            formControlName="correoElectronico"
+            formControlName="correoElectronico" maxlength="320"
             (change)="setValoresStore(forma, 'correoElectronico', 'setCorreoElectronico')" />
         </div>
       </div>
@@ -82,3 +83,10 @@
   <app-manifiestos></app-manifiestos>
   <app-representante-legal></app-representante-legal>
 </div>
+
+@if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+    </lib-notificaciones>
+  </section>
+}

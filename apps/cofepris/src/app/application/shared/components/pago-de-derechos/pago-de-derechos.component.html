@@ -80,7 +80,7 @@
         <app-catalogo-select
           [catalogo]="estadosDatos"
           formControlName="estado"
-          [label]="'Estado/localidad'"
+          [label]="'Banco'"
           [required]="true"
           [isDisabled]="formularioDeshabilitado"
           (change)="
@@ -132,6 +132,8 @@
         (valorCambiado)="onFechaCambiada($event)"
         [setFecha]="pagoDerechosForm.get('fechaPago')?.value"
         [isDisabled]="formularioDeshabilitado"
+        [soloDosPuntosRequeridos]="soloDosPuntosRequeridos"
+        [deshabilitarFuturas]="true"
         ></input-fecha>
 
         <div *ngIf="esInvalido('fechaPago')" class="text-danger">
@@ -163,7 +165,10 @@
           <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['required']">
             Todos los campos de pago son requeridos
           </small>
-          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['pattern']">
+          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['invalidNumber']">
+            Por favor, escribe un número entero válido
+          </small>
+          <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['tooManyDecimals']">
             Este campo solo permite números hasta dos decimales
           </small>
           </div>

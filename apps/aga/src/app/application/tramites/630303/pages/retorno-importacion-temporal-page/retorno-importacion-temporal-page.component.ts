@@ -6,8 +6,8 @@ import { Component, ViewChild } from '@angular/core';
 
 import { AVISO, DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS_REGISTRO } from '../../enum/retorno-importacion-temporal.enum';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { PASOS_REGISTRO, TODOS_PASOS} from '../../enum/retorno-importacion-temporal.enum';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Interfaz que representa la acción de un botón.
@@ -57,6 +57,11 @@ export class RetornoImportacionTemporalComponent {
    * Variable utilizada para almacenar la lista de pasos.
    */
   pantallasPasos: ListaPasosWizard[] = PASOS_REGISTRO;
+
+  /**
+   * Variable utilizada para almacenar el tipo de alerta.
+   */
+  alerta = TODOS_PASOS.Importante;
 
   /**
    * Variable utilizada para almacenar el índice del paso actual.

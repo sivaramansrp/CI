@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AccionBoton } from '../../models/aviso-traslado.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/aviso-traslado.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '../../constants/aviso-traslado.enum';
 import { Tramite32503Query } from '../../../../estados/queries/tramite32503.query';
@@ -61,6 +62,13 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   AVISO = AVISO;
 
   /**
+   * @property {boolean} showValidationAlert
+   * @description Indica si se debe mostrar la alerta de validación cuando faltan campos por capturar.
+   * @default false
+   */
+  showValidationAlert: boolean = false;
+
+  /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
    * 
    * Este `Subject` se utiliza para cancelar las suscripciones activas cuando
@@ -82,6 +90,14 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * del wizard dentro de la plantilla.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Referencia al componente `PasoUnoComponent`.
+   * 
+   * Esta propiedad utiliza `@ViewChild` para obtener una referencia al componente
+   * del paso uno dentro de la plantilla.
+   */
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
 
   /**
    * Datos relacionados con los pasos del wizard.
@@ -129,11 +145,22 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
      * Método para manejar las acciones de los botones del wizard.
      * 
      * Este método actualiza el índice del paso activo y avanza o retrocede en el wizard
-     * dependiendo de la acción recibida.
+     * dependiendo de la acción recibida. Incluye validación de formularios antes de continuar.
      * 
      * @param {AccionBoton} e - Objeto que contiene la acción (`cont` o `atras`) y el valor del índice.
      */
   getValorIndice(e: AccionBoton): void {
+    // Si la acción es continuar desde el paso 1, validar formularios
+    if (e.accion === 'cont' && this.indice === 1) {
+      if (!this.validateCurrentStep()) {
+        this.showValidationAlert = true;
+        return; // No continuar si hay errores de validación
+      }
+    }
+
+    // Ocultar alerta de validación si se puede continuar
+    this.showValidationAlert = false;
+
     // Verifica si el valor de la acción está en el rango adecuado
     if (e.valor > 0 && e.valor < 5) {
       // Actualiza el índice del paso basado en el valor de la acción
@@ -151,6 +178,54 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       // Actualiza el paso activo en el store
       this.store.setPasoActivo(this.indice);
     }
+  }
+
+  /**
+   * @method validateCurrentStep
+   * @description Valida los formularios del paso actual.
+   * @returns {boolean} true si todos los formularios son válidos, false en caso contrario.
+   */
+  private validateCurrentStep(): boolean {
+    // Obtener el estado actual del formulario desde el store
+    const AVISO_FORMULARIO = this.tramiteState?.avisoFormulario;
+    
+    // Lista de campos requeridos en el formulario de aviso
+    const REQUIRED_FIELDS = [
+      'valorProgramaImmex',
+      'valorAnioProgramaImmex', 
+      'tipoAviso',
+      'motivoProrroga',
+      'fechaTranslado',
+      'claveEntidadFederativa',
+      'claveDelegacionMunicipio',
+      'claveColonia',
+      'calle',
+      'numeroExterior',
+      'codigoPostal',
+      'tipoCarga'
+    ];
+
+    // Verificar si algún campo requerido está vacío
+    for (const FIELD of REQUIRED_FIELDS) {
+      const VALUE = AVISO_FORMULARIO?.[FIELD as keyof typeof AVISO_FORMULARIO];
+      if (!VALUE || (typeof VALUE === 'string' && VALUE.trim() === '')) {
+        // Activar validación visual en los componentes
+        if (this.pasoUnoComponent) {
+          this.pasoUnoComponent.triggerValidation();
+        }
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * @method closeValidationAlert
+   * @description Cierra la alerta de validación.
+   */
+  closeValidationAlert(): void {
+    this.showValidationAlert = false;
   }
 
   /**

@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 
-import { AVISO, CategoriaMensaje, DatosPasos, ListaPasosWizard, Notificacion, PASOS, WizardComponent } from '@ng-mf/data-access-user';
+import { AVISO, CategoriaMensaje, DatosPasos, ListaPasosWizard, Notificacion, PASOS, Usuario, WizardComponent } from '@ng-mf/data-access-user';
 import { GuadarSolicitudRequest } from '../../model/request/guardar-solicitud-request.model';
 import { GuardarService } from '../../services/guardar.service';
 import { IniciarService } from '../../services/iniciar.service';
@@ -14,8 +14,8 @@ import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
+import { MSG_REGISTRO_EXITOSO, USUARIO_INFO } from '../../enum/enum-130118';
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
-import { MSG_REGISTRO_EXITOSO } from '../../enum/enum-130118';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -133,13 +133,13 @@ export class SolicitudPageComponent implements OnInit {
    * Evento que se emite para cargar archivos.
    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
    */
-  @Output() cargarArchivosEvento = new EventEmitter<void>();
+  cargarArchivosEvento = new EventEmitter<void>();
 
   /**
    * Evento que se emite para regresar a la sección de carga de documentos.
    * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
    */
-  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+  regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
 
   /**
  * Indica si el botón para cargar archivos está habilitado.
@@ -158,6 +158,8 @@ export class SolicitudPageComponent implements OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  datosUsuario: Usuario = USUARIO_INFO;
+
   /**
    * Notificación que se muestra al usuario.
    * Se utiliza para mostrar mensajes de éxito, error o información.
@@ -168,7 +170,7 @@ export class SolicitudPageComponent implements OnInit {
     private guardarService: GuardarService,
     private tramite130118Store: Tramite130118Store,
     private tramite130118Query: Tramite130118Query,
-  ) { }
+  ) {}
 
   /**
    * Datos de los pasos del asistente, incluyendo textos de botones y el índice actual.
@@ -431,9 +433,9 @@ export class SolicitudPageComponent implements OnInit {
    * Emite un evento para regresar a la sección de carga de documentos.
    * {void} No retorna ningún valor.
    */
-  anteriorSeccionCargarDocumento(): void {
-    this.regresarSeccionCargarDocumentoEvento.emit();
-  }
+  // anteriorSeccionCargarDocumento(): void {
+  //   this.regresarSeccionCargarDocumentoEvento.emit();
+  // }
 
   /**
    * Método para manejar el evento de carga de documentos.
