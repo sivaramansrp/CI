@@ -7,7 +7,7 @@
     [tipoSolicitud]="notificacionData.desc_modalidad">
   </app-detalles-folio>
   } @if(indiceDePaso === PasoNotificacion.ACUSES){
-    <app-acuse-recibo [banderaVista]="banderaVistaAcuse" [guardarDatos]="guardarDatos" [datosTabla]="datosTabla"></app-acuse-recibo>
+    <app-acuse-recibo [banderaVista]="banderaVistaAcuse" [guardarDatos]="guardarDatos" [datosTabla]="datosTabla" [datosTablaAcuseNotificacion]="notificacionAcusesData"></app-acuse-recibo>
   }@else if(indiceDePaso === PasoNotificacion.CONFIRMAR_NOTIFICACION) {
   <app-notificacion-acto-administrativo [datosNotificacion]="notificacionData"></app-notificacion-acto-administrativo>
   } @if(indiceDePaso === PasoNotificacion.FIRMAR) {

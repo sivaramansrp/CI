@@ -17,7 +17,7 @@ export interface IniciarConfig {
 export interface IniciarRequest {
   rfcSolicitante: string;
   rolActual: string;
-  folioPrograma?:string;
+  folio_programa?:string;
   idTipoTramite?:number;
   discriminador?:string;
 

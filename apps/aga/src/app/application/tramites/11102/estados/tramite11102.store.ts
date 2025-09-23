@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { DatosDelMercancia } from '../models/modificacion-donaciones-immex.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -26,12 +27,12 @@ export interface Solicitud11102State {
   /**
    * Nombre del organismo público.
    */
-  organismoPublico: string;
+  organismoPublico: boolean;
  
   /**
    * Lista de aduanas disponibles.
    */
-  aduana: Catalogo[] | null;
+  aduana: Catalogo[] | string;
  
   /**
    * Uso específico de la mercancía.
@@ -61,7 +62,7 @@ export interface Solicitud11102State {
   /**
    * Lista de años disponibles.
    */
-  ano: Catalogo[] | null;
+  ano: string;
  
   /**
    * Cantidad de mercancía.
@@ -86,7 +87,7 @@ export interface Solicitud11102State {
   /**
    * Lista de países disponibles.
    */
-  pais: Catalogo[] | null;
+  pais: Catalogo[] | string;
  
   /**
    * RFC del solicitante.
@@ -156,7 +157,12 @@ export interface Solicitud11102State {
   /**
    * Datos relacionados con la mercancía.
    */
-  datosDelMercancia: [];
+  datosDelMercancia: DatosDelMercancia[];
+
+  /**
+   * Folio original de la solicitud.
+   */
+  folioOriginal: string;
 }
  
 /**
@@ -333,33 +339,34 @@ export interface ModificacionDonacionesImmexResponse {
  */
 export function createInitialState(): Solicitud11102State {
   return {
-    organismoPublico: '',
-    aduana: null,
+    organismoPublico: false,
+    aduana: '',
     usoEspecifico: '',
     showTabla: true,
     tipoDeMercancia: '',
     unidadMedida: '',
-    condicionMercancia: '',
-    ano: null,
+    condicionMercancia: '1',
+    ano: '',
     cantidad: '',
     marca: '',
     modelo: '',
     serie: '',
-    pais: null,
-    calle: '',
-    numeroExterior: '',
+    pais: '1',
+    calle: 'CAMINO VIEJO',
+    numeroExterior: '1353',
     numeroInterior: '',
-    telefono: '',
-    correoElectronico: '',
+    telefono: '55-98764532',
+    correoElectronico: 'brpomskyldi@etllpqhpyrpks.zgi',
     correoElectronicoOpcional: '',
     telefonoOpcional: '',
     rfc: '',
     numeroProgramaImmex: '',
-    razonSocial: '',
-    codigoPostal: '',
-    estado: '',
-    colonia: '',
+    razonSocial: 'INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV',
+    codigoPostal: '81210',
+    estado: 'SINALOA',
+    colonia: 'MIGUEL HIDALGO',
     datosDelMercancia: [],
+    folioOriginal: '0100001030220251005000005'
   };
 }
  
@@ -383,7 +390,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
    * Establece el organismo público en el estado.
    * @param organismoPublico Nombre del organismo público.
    */
-  public setOrganismoPublico(organismoPublico: string): void {
+  public setOrganismoPublico(organismoPublico: boolean): void {
     this.update((state) => ({
       ...state,
       organismoPublico,
@@ -394,7 +401,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
    * Establece la lista de aduanas en el estado.
    * @param aduana Lista de aduanas.
    */
-  public setAduana(aduana: Catalogo[]): void {
+  public setAduana(aduana: Catalogo[] | string): void {
     this.update((state) => ({
       ...state,
       aduana,
@@ -438,7 +445,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
    * Establece la lista de años en el estado.
    * @param ano Lista de años.
    */
-  public setAno(ano: Catalogo[]): void {
+  public setAno(ano: string): void {
     this.update((state) => ({
       ...state,
       ano,
@@ -493,7 +500,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
    * Establece la lista de países en el estado.
    * @param pais Lista de países.
    */
-  public setPais(pais: Catalogo[]): void {
+  public setPais(pais: Catalogo[] | string): void {
     this.update((state) => ({
       ...state,
       pais,
@@ -658,7 +665,7 @@ export class Tramite11102Store extends Store<Solicitud11102State> {
    * Establece los datos del contenedor.
    * @param datosDelMercancia Datos del contenedor.
    */
-  public setDelMercancia(datosDelMercancia: []): void {
+  public setDelMercancia(datosDelMercancia: DatosDelMercancia[]): void {
     this.update((state) => ({
       ...state,
       datosDelMercancia,

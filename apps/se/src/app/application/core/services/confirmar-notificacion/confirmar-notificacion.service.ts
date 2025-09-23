@@ -1,4 +1,4 @@
-import { API_GET_INICIAR_CONFIRMACION_NOTIFICACION, API_POST_REQUERIMIENTO_GUARDAR, API_POST_RESOLUCION_GUARDAR } from '@libs/shared/data-access-user/src';
+import { API_GET_ACUSES_RECIBOS_NOTIFICACION, API_GET_INICIAR_CONFIRMACION_NOTIFICACION, API_POST_REQUERIMIENTO_GUARDAR, API_POST_RESOLUCION_GUARDAR } from '@libs/shared/data-access-user/src';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { ConfirmarNotificacionIniciarResponse } from '../../models/confirmar-notificacion/response/confirmar-notificacion-iniciar-response.model';
 import { DocumentoOficialResponse } from '../../models/autorizar-requerimiento/response/oficio-autorizacion-response.model';
@@ -6,6 +6,8 @@ import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
+import { AcusesRecibidosNotificacion} from '../../models/autorizar-requerimiento/response/notificacion-acuses-recibidos-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -58,5 +60,16 @@ export class ConfirmarNotificacionService {
   postRequerimientoGuardar(tramite: number, idRequerimiento: number): Observable<BaseResponse<DocumentoOficialResponse>>{
     const ENDPOINT = `${this.host}${API_POST_REQUERIMIENTO_GUARDAR(tramite.toString(), idRequerimiento.toString())}`;
     return this.http.post<BaseResponse<DocumentoOficialResponse>>(ENDPOINT, null);
+  }
+
+  /**
+   * Método para obtener la notificación de acuses recibidos.
+   * @param tramite Número de trámite.
+   * @param numFolio Número de folio del trámite.
+   * @returns Observable que emite la respuesta del servidor con los acuses recibidos de notificación.
+   */
+  getAcusesRecibidosNotificación(tramite: number, numFolio: string): Observable<BaseResponse<AcusesRecibidosNotificacion>>{
+    const ENDPOINT = `${this.host}${API_GET_ACUSES_RECIBOS_NOTIFICACION(tramite.toString(), numFolio)}`;
+    return this.http.get<BaseResponse<AcusesRecibidosNotificacion>>(ENDPOINT);
   }
 }
