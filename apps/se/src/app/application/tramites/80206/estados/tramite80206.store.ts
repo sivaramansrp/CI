@@ -18,6 +18,8 @@ import { Injectable } from '@angular/core';
  * @interface AmpliacionServiciosState
  */
 export interface AmpliacionServiciosState {
+    /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
   /**
    * Información del registro.
    * @property {Servicios} infoRegistro
@@ -138,6 +140,7 @@ export interface AmpliacionServiciosState {
  * @constant {AmpliacionServiciosState} INITIAL_AMPLIACION_SERVICIOS_STATE
  */
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
+  idSolicitud: 0,
   infoRegistro: {
     seleccionaLaModalidad: '',
     folio: '',

@@ -10,23 +10,24 @@
     </div>
 
     <div class="row">
-      @switch (indice) { @case (1) {
+      @switch (indice) { 
+      @case (1) {
         <app-paso-uno></app-paso-uno>
       } @case (2) {
-         <app-paso-dos
-          [idTipoTRamite]="'80206'"
-          [datosUsuario]="datosUsuario"
-          [cargaArchivosEvento]="cargarArchivosEvento"
-          (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
-          (reenviarCargaRealizada)="cargaRealizada($event)"></app-paso-dos>
+        <app-paso-carga-documento 
+      [idSolicitud]="solicitudState.idSolicitud"
+      [idTipoTRamite]="'80206'"
+      [datosUsuario]="datosUsuario"
+      [cargaArchivosEvento]="cargarArchivosEvento"
+      (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+      (reenviarCargaRealizada)="cargaRealizada($event)"
+      (cargaEnProgreso)="onCargaEnProgreso($event)"
+    ></app-paso-carga-documento>
       } @case (3) {
-      <app-paso-tres></app-paso-tres>
-      } }
-<!-- 
-      <btn-continuar
-        [datos]="datosPasos"
-        (continuarEvento)="getValorIndice($event)"
-      ></btn-continuar> -->
+      <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="80206" [procedureUrl]="'modalidad-ampliacion/registro'"></paso-firma>
+      }
+     }
+
        <div class="row">
       <div class="col-md-12">
         @if (indice !== 2) {

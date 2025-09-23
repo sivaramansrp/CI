@@ -12,9 +12,10 @@
 import { ALERT, USUARIO_INFO } from '../../constantes/modificacion.constants';
 import { AVISO, Usuario } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80206.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
+import { AmpliacionServiciosState } from '../../estados/tramite80206.store';
 import { ChangeDetectorRef } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -135,6 +136,22 @@ export class RegistroPageComponent implements OnInit, OnDestroy {
  * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
  */
   seccionCargarDocumentos: boolean = true;
+  
+  /**
+   * Identificador numérico de la solicitud actual.
+   * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
+   */
+  idSolicitud: number = 0;
+  
+    /**
+  * URL de la página actual.
+  */
+  public solicitudState!: AmpliacionServiciosState;
+
+  /*
+  * Indica si hay una carga en progreso.
+  */
+  cargaEnProgreso: boolean = true;
 
   /**
    * Constructor del componente.
@@ -148,7 +165,8 @@ export class RegistroPageComponent implements OnInit, OnDestroy {
     private tramiteQuery: AmpliacionServiciosQuery,
     private seccion: SeccionLibStore,
     private ampliacionServiciosService: AmpliacionServiciosService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private tramite80206Query: AmpliacionServiciosQuery
   ) {
     this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
       this.seccion.establecerSeccion([true]);
@@ -162,6 +180,14 @@ export class RegistroPageComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
+    this.tramite80206Query.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      ).subscribe();
+      
     this.ampliacionServiciosService.deberiaMostrar$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((res) => {
@@ -234,6 +260,13 @@ export class RegistroPageComponent implements OnInit, OnDestroy {
    */
   onClickCargaArchivos(): void {
     this.cargarArchivosEvento.emit();
+  }
+
+  /*
+  * Maneja el evento de carga en progreso.
+  */
+   onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
   }
   /**
    * Método que se ejecuta cuando se destruye el componente.
