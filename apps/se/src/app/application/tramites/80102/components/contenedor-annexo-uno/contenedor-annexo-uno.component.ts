@@ -7,6 +7,7 @@ import {
   AnexoDosEncabezado,
   AnexoUnoEncabezado,
   DatosComplimento,
+  ProveedorClienteTabla,
   RutaNombre,
 
 } from '../../../../shared/models/nuevo-programa-industrial.model';
@@ -135,6 +136,8 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
    * Se utiliza para mostrar u ocultar el popup correspondiente en la interfaz.
    */
   public mostrarProveedorPorArchivoPopup: boolean = false;
+
+  proveedorClienteDatosTablaId?:string;
 
   /**
    * Constructor de la clase ContenedorAnnexoUnoComponent.
@@ -280,6 +283,7 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
    */
   public rutaLaFraccionDeComplemento(event: RutaNombre): void {
     if (event && event.catagoria && event.id && event.datos) {
+      this.proveedorClienteDatosTablaId=event.id;
       this.store.setAnnexoUnoSeccionActiva(event.id);
       this.store.setDatosParaNavegar(event.datos);
 
@@ -325,6 +329,20 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
  */
   cerrarProveedorPorArchivo(): void {
     this.mostrarProveedorPorArchivoPopup = false;
+  }
+
+/**
+ * Actualiza los datos de la tabla de proveedor/cliente en el store.
+ *
+ * @param event - Arreglo de objetos de tipo ProveedorClienteTabla que contiene los datos a establecer en la tabla.
+ */
+ public datosActualizadosProveedorCliente($event: ProveedorClienteTabla[]): void {
+  if(this.proveedorClienteDatosTablaId==='IMPORT'){
+       this.store.setProveedorClienteDatosTablaUno($event);
+  }else{
+       this.store.setProveedorClienteDatosTablaDos($event); 
+  }
+
   }
 
   /**
