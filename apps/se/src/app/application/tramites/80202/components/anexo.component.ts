@@ -420,7 +420,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
                   this.exportacionForm.value.descripcionComercialExport.toUpperCase(),
                 nicos: this.exportacionForm.value.nicos,
                 numero: this.fraccionTablaDatos.length + 1,
-                nicosTable: this.nicoTablaDatos,
+                nicosTable: this.nicoTablaDato,
               },
               
             ];
@@ -499,7 +499,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   seleccionTablas(event: NicoInfo[]): void {
-    this.selectedNicos = event;
+    this.selectedNicos = event.map(item => ({ ...item, estatus: true }));
   }
 
   descripcionNico(): void {
@@ -532,6 +532,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
         ];
         this.importacionForm.get("nicos")?.setValue("");
         this.importacionForm.get("productoDescExportacions")?.setValue("");
+        
       } else {
         this.mostrarNotificacion(
           "El NICO que intenta ingresar ya se encuentra registrado.",
@@ -721,7 +722,7 @@ eliminarNicoExportacion():void{
   }
 }
 onNicoSeleccionado(event:NicoInfo[]):void{
-  this.selectedExportNicos = event;
+  this.selectedExportNicos = event.map(item => ({ ...item, estatus: true }));
 }
   /**
    * @method ngOnDestroy
