@@ -4,8 +4,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import {Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
+import { InputFecha, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from'@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
@@ -32,6 +32,7 @@ import { Location } from '@angular/common';
     InputFechaComponent,
     TablaDinamicaComponent,FormsModule,
     ReactiveFormsModule,
+    NotificacionesComponent
   ],
   templateUrl: './complementar-planta.component.html',
   styleUrl: './complementar-planta.component.scss',
@@ -112,6 +113,7 @@ export class ComplementarPlantaComponent implements OnInit {
    */
   @Output() cerrarPopup = new EventEmitter<void>();
   
+  public exitosamenteNotificacion!: Notificacion;
 
    inicializarFormulario(): void {
    
@@ -181,6 +183,7 @@ export class ComplementarPlantaComponent implements OnInit {
    */
   agregarComplemento(): void {
     if (this.complementarForm.valid) {
+      this.abrirexitosamente();
       const VALORES_FORMULARIO = this.complementarForm.value;
       const NUEVA_FILA: ComplementoDePlanta = {
         PLANTA: '',
@@ -200,6 +203,20 @@ export class ComplementarPlantaComponent implements OnInit {
     }
   }
   
+  abrirexitosamente(): void {
+    this.exitosamenteNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'la operación se realizó exitosamente.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
   /**
    * Limpia el formulario.
    */
