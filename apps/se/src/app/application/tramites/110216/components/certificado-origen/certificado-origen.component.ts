@@ -525,6 +525,34 @@ actualizarEstadoCampos(): void {
     return this.validacionesService.isValid(form, field) || false;
   }
 
+/**
+ * Determina si un campo específico de un formulario es inválido.
+ *
+ * @param form - El `FormGroup` que contiene los controles del formulario.
+ * @param fieldPath - La ruta al campo del formulario que se desea verificar.
+ * @returns `true` si el campo especificado es inválido; de lo contrario, `false`.
+ */
+isInvalid(form: FormGroup, fieldPath: string): boolean {
+  return this.checkControlValidity(form, fieldPath); // ✅ uses `this`
+}
+
+/**
+ * Verifica la validez de un control específico dentro de un FormGroup.
+ *
+ * Este método retorna `true` si el control existe, es inválido y ha sido tocado o modificado (dirty).
+ * Si el servicio de validaciones no está disponible, retorna `false`.
+ *
+ * @param form - El FormGroup que contiene el control a verificar.
+ * @param fieldPath - La ruta al control dentro del FormGroup.
+ * @returns `true` si el control es inválido y ha sido interactuado; de lo contrario, `false`.
+ */
+private checkControlValidity(form: FormGroup, fieldPath: string): boolean {
+  if (!this.validacionesService) {
+    return false;
+  }
+  const CONTROL = form.get(fieldPath);
+  return Boolean(CONTROL && CONTROL.invalid && (CONTROL.touched || CONTROL.dirty));
+}
   /**
    * Deshabilita la funcionalidad del formulario.
    * 

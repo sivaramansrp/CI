@@ -304,30 +304,30 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildPlantas(arr: any[] = [], base: Record<string, any>): any[] {
+  buildPlantas(array: any[] = [], base: unknown[]): unknown[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const MAP_TO_PAYLOAD = (item: any): any => ({
-      ...base,
-      idPlanta: item.planta ?? '',
-      calle: item.calle ?? '',
-      numeroExterior: item.numeroExterior ?? '',
-      numeroInterior: item.numeroInterior ?? '',
-      codigoPostal: item.codigoPostal ?? '',
-      localidad: item.localidad ?? '',
-      colonia: item.colonia ?? '',
-      delegacionMunicipio: item.delegacionMunicipio ?? '',
-      entidadFederativa: item.entidadFederativa ?? '',
-      pais: item.pais ?? '',
-      rfc: item.registroFederalDeContribuyentes ?? '',
-      domicilioFiscal: item.domicilioDelSolicitante ?? '',
-      razonSocial: item.razonSocial ?? '',
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+      idPlanta: arr.planta ?? '',
+      calle: arr.calle ?? '',
+      numeroExterior: arr.numeroExterior ?? '',
+      numeroInterior: arr.numeroInterior ?? '',
+      codigoPostal: arr.codigoPostal ?? '',
+      localidad: arr.localidad ?? '',
+      colonia: arr.colonia ?? '',
+      delegacionMunicipio: arr.delegacionMunicipio ?? '',
+      entidadFederativa: arr.entidadFederativa ?? '',
+      pais: arr.pais ?? '',
+      rfc: arr.registroFederalDeContribuyentes ?? '',
+      domicilioFiscal: arr.domicilioDelSolicitante ?? '',
+      razonSocial: arr.razonSocial ?? '',
+        });
+      });
     });
-
-
-    arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-
     return RESULT;
   }
 
@@ -339,23 +339,24 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * @returns Un arreglo de objetos estructurados con la información de los fedatarios.
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
+  buildDatosFederatarios(array: any[] = [], base: unknown[]): unknown[] {
     const RESULT: any[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const MAP_TO_PAYLOAD = (item: any): any => ({
-      ...base,
-      nombreNotario: item.nombre ?? '',
-      apellidoMaterno: item.segundoApellido ?? '',
-      apellidoPaterno: item.primerApellido ?? '',
-      numeroActa: item.numeroDeActa ?? '',
-      fechaActa: item.fechaInicioInput ?? '',
-      numeroNotaria: item.numeroDeNotaria ?? '',
-      entidadFederativa: item.estado ?? '',
-      delegacionMunicipio: item.estadoOptions ?? '',
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+      nombreNotario: arr.nombre ?? '',
+      apellidoMaterno: arr.segundoApellido ?? '',
+      apellidoPaterno: arr.primerApellido ?? '',
+      numeroActa: arr.numeroDeActa ?? '',
+      fechaActa: arr.fechaInicioInput ?? '',
+      numeroNotaria: arr.numeroDeNotaria ?? '',
+      entidadFederativa: arr.estado ?? '',
+      delegacionMunicipio: arr.estadoOptions ?? '',
+        });
+      });
     });
-
-    arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-
     return RESULT;
   }
 
@@ -475,27 +476,28 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * @returns Un arreglo con los objetos estructurados de plantas submanufactureras.
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[] {
+  buildPlantasSubmanufactureras(array: any[] = [], base: unknown[]): unknown[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const MAP_TO_PAYLOAD = (item: any): any => ({
-      ...base,
-      empresaCalle: item.calle ?? '',
-      empresaNumeroInterior: item.numInterior ?? '',
-      empresaNumeroExterior: item.numExterior ?? '',
-      empresaCodigoPostal: item.codigoPostal ?? '',
-      localidad: item.colonia ?? '',
-      empresaDelegacionMunicipio: item.delegacionMunicipio ?? '',
-      empresaEntidadFederativa: item.entidadFederativa ?? '',
-      empresaPais: item.pais ?? '',
-      rfc: item.rfc ?? '',
-      domicilioFiscal: item.domicilioFiscalSolicitante ?? '',
-      razonSocial: item.razonSocial ?? '',
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+      empresaCalle: arr.calle ?? '',
+      empresaNumeroInterior: arr.numInterior ?? '',
+      empresaNumeroExterior: arr.numExterior ?? '',
+      empresaCodigoPostal: arr.codigoPostal ?? '',
+      localidad: arr.colonia ?? '',
+      empresaDelegacionMunicipio: arr.delegacionMunicipio ?? '',
+      empresaEntidadFederativa: arr.entidadFederativa ?? '',
+      empresaPais: arr.pais ?? '',
+      rfc: arr.rfc ?? '',
+      domicilioFiscal: arr.domicilioFiscalSolicitante ?? '',
+      razonSocial: arr.razonSocial ?? '',
+        });
+      });
     });
-
-    arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-
     return RESULT;
   }
 

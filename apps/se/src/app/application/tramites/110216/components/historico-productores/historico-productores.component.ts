@@ -5,14 +5,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import {
-  ConfiguracionColumna,
-  REGEX_SOLO_DIGITOS,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-  ValidacionesFormularioService
-} from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, Notificacion, NotificacionesComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
@@ -43,7 +36,7 @@ import { Tramite110216Query } from '../../../../estados/queries/tramite110216.qu
 @Component({
   selector: 'app-historico-productores',
   standalone: true,
-  imports: [CommonModule, TituloComponent, FormsModule, ReactiveFormsModule, TablaDinamicaComponent],
+  imports: [CommonModule, TituloComponent, FormsModule, ReactiveFormsModule, TablaDinamicaComponent, NotificacionesComponent],
   templateUrl: './historico-productores.component.html',
   styleUrl: './historico-productores.component.scss',
 })
@@ -123,6 +116,17 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * @default false
    */
   soloLectura: boolean = false;
+   /**
+     * Representa una nueva notificación que será utilizada en el componente.
+     * @type {Notificacion}
+     */
+    public nuevaNotificacion!: Notificacion;
+       /**
+   * Indica si se debe mostrar el mensaje de error.
+   * @type {boolean}
+   */
+  public mostrarMensajeError: boolean = false;
+
   /**
    * Constructor del componente.
    * 
@@ -240,18 +244,52 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Agrega los productores seleccionados a la lista de productores agregados.
    */
   productoresSeleccionados(): void {
-    this.agregarProductoresExportador = [...this.agregarProductoresExportador, ...this.seleccionadoProductoresExportador];
-    this.productoresExportador = this.productoresExportador.filter(elementos => !this.seleccionadoProductoresExportador.some(elementosSecundarios => elementosSecundarios.id === elementos.id));
-    this.seleccionadoProductoresExportador = [];
+
+    if (!this.seleccionadoProductoresExportador.length) {
+      this.mostrarMensajeError = true;
+        this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'info',
+        titulo: '',
+        mensaje: 'Debes seleccionar un productor',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } else {
+      this.mostrarMensajeError = false;
+      this.agregarProductoresExportador = [...this.agregarProductoresExportador, ...this.seleccionadoProductoresExportador];
+      this.productoresExportador = this.productoresExportador.filter(elementos => !this.seleccionadoProductoresExportador.some(elementosSecundarios => elementosSecundarios.id === elementos.id));
+      this.seleccionadoProductoresExportador = [];
+    
+    }
   }
 
   /**
    * Elimina los productores seleccionados de la lista de productores agregados.
    */
   eliminarProductoresSeleccionados(): void {
-    this.productoresExportador = [...this.productoresExportador, ...this.seleccionadoAgregarProductoresExportador];
-    this.agregarProductoresExportador = this.agregarProductoresExportador.filter(elementos => !this.seleccionadoAgregarProductoresExportador.some(elementosSecundarios => elementosSecundarios.id === elementos.id));
-    this.seleccionadoAgregarProductoresExportador = [];
+    if (!this.seleccionadoAgregarProductoresExportador.length) {
+      this.mostrarMensajeError = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'info',
+        titulo: '',
+        mensaje: 'Debes seleccionar un productor',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }else{
+      this.mostrarMensajeError = false;
+      this.productoresExportador = [...this.productoresExportador, ...this.seleccionadoAgregarProductoresExportador];
+      this.agregarProductoresExportador = this.agregarProductoresExportador.filter(elementos => !this.seleccionadoAgregarProductoresExportador.some(elementosSecundarios => elementosSecundarios.id === elementos.id));
+      this.seleccionadoAgregarProductoresExportador = [];
+    }
   }
 
   /**
