@@ -10,7 +10,7 @@ import { Plantas } from '../modelos/registro-expansion.model';
  * Contiene propiedades relacionadas con los datos del trámite, como información de pago, datos de vehículos, agentes y más.
  */
 export interface Tramites80211State {
-
+  idSolicitud: number | null;
   /**
    * Lista de identificadores de plantas disponibles.
    */
@@ -40,6 +40,7 @@ export function createInitialState(): Tramites80211State {
     plantasDisponibles: [],
     plantasSeleccionadas: [],
     showPlantas: false,
+    idSolicitud: 0,
   };
 }
 
@@ -81,4 +82,16 @@ export class Tramite80211Store extends Store<Tramites80211State> {
       ...values,
     }));
   }
+     /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
 }

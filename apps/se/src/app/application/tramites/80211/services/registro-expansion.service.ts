@@ -1,9 +1,10 @@
-import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { Catalogo, HttpCoreService, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { FormularioDatos, Plantas, RespuestaPlantas } from '../modelos/registro-expansion.model';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { Tramite80211Store, Tramites80211State } from '../estados/tramites80211.store';
 import { HttpClient } from '@angular/common/http';
+import { Tramite80211Query } from '../estados/tramites80211.query';
 
 /**
  * Servicio para manejar las renovaciones de muestras de mercancías.
@@ -73,6 +74,8 @@ export class registroSolicitudImmexService implements OnDestroy {
   constructor(
     private http: HttpClient,
     private tramite80211Store: Tramite80211Store,
+    private tramite80211Query: Tramite80211Query,
+    public httpService: HttpCoreService
   ) {
     // Si es necesario, se puede agregar aquí la lógica de inicialización
   }
@@ -97,15 +100,31 @@ export class registroSolicitudImmexService implements OnDestroy {
       });
     }
   }
-
-/**
-   * Actualiza el estado del formulario en el store global.
-   *
-   * @param datos - Objeto de tipo Tramites80211State con los datos a establecer en el store.
-   * @returns {void}
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<Tramites80211State>} Observable con todos los datos del estado.
    */
+  getAllState(): Observable<Tramites80211State> {
+    return this.tramite80211Query.selectTramite80211$;
+  }
+  /**
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+   * 
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
+   */
+  guardarDatosPost(body: any) {
+    // return this.httpService.post<any>(PROC_80211.GUARDAR, { body: body });
+    return this.httpService.post<any>('localhost:8080/api/sat-t80211/solicitud/guardar', { body: body });
+  }
+  /**
+     * Actualiza el estado del formulario en el store global.
+     *
+     * @param datos - Objeto de tipo Tramites80211State con los datos a establecer en el store.
+     * @returns {void}
+     */
   actualizarEstadoFormulario(datos: Tramites80211State): void {
-      this.tramite80211Store.establecerDatos(datos);
+    this.tramite80211Store.establecerDatos(datos);
   }
 
   /**

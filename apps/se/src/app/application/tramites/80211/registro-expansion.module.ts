@@ -5,6 +5,7 @@ import {
   NotificacionesComponent,
   TablaDinamicaComponent,
 } from '@ng-mf/data-access-user';
+import { PasoCargaDocumentoComponent,PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -12,7 +13,6 @@ import { EmpresasTerciarizadasComponent } from './components/empresas-terciariza
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -27,7 +27,6 @@ import { registroSolicitudImmexService } from './services/registro-expansion.ser
 @NgModule({
   declarations: [
     PasoUnoComponent,
-    PasoDosComponent,
     PasoTresComponent,
     RegistroExpansionComponent,
     EmpresasTerciarizadasComponent,
@@ -35,7 +34,9 @@ import { registroSolicitudImmexService } from './services/registro-expansion.ser
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    PasoCargaDocumentoComponent,
     RegistroExpansionRoutingModule,
+    PasoFirmaComponent,
     WizardComponent,
     BtnContinuarComponent,
     SolicitanteComponent,
@@ -50,7 +51,7 @@ import { registroSolicitudImmexService } from './services/registro-expansion.ser
     TablaDinamicaComponent,
     NotificacionesComponent
   ],
-  exports: [PasoUnoComponent, PasoDosComponent, PasoTresComponent],
+  exports: [PasoUnoComponent,PasoFirmaComponent,PasoCargaDocumentoComponent],
   providers: [registroSolicitudImmexService, ToastrService],
 })
 export class RegistroExpansionModule {}
