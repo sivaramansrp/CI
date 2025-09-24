@@ -1,5 +1,5 @@
 import { ConfiguracionColumna, REGEX_DIGITOS } from "@libs/shared/data-access-user/src";
-import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla } from "../models/panallas110101.model";
+import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla, ProcesosTabla } from "../models/panallas110101.model";
 
 /**
  * @constant RADIO_OPCIONS
@@ -39,6 +39,11 @@ export const INSUMOS_TABLA: ConfiguracionColumna<InsumosTabla>[] = [
     { encabezado: "Fracción arancelaria", clave: (item: InsumosTabla) => item.fraccionArancelaria, orden: 5 },
     { encabezado: "Valor de transacción", clave: (item: InsumosTabla) => item.valorDeTransaccion, orden: 6 }
   ];
+
+/** Configuración de las columnas para la tabla de procesos en el trámite 110101. */
+export const PROCESO_TABLA: ConfiguracionColumna<ProcesosTabla>[] = [
+    { encabezado: 'Proceso', clave: (item: ProcesosTabla) => item.proceso, orden: 1 },
+];
 
   /** Configuración de las columnas para la tabla de envases en el trámite 110101. */
 export const ENVASES_TABLA: ConfiguracionColumna<EnvasesTabla>[] = [

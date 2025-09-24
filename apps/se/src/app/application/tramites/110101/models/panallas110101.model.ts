@@ -74,3 +74,11 @@ export interface DatosMercanciaModalTabla {
     tratado: string;
     pais: string;
 }
+/**
+ * Representa una fila de la tabla de procesos.
+ *
+ * @property proceso - Nombre del proceso.
+ */
+export interface ProcesosTabla {
+    proceso: string;
+}
