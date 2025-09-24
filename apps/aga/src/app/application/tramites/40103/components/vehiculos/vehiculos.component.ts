@@ -437,7 +437,7 @@ export class VehiculosComponent implements OnInit, OnDestroy {
       ...VEHICULOS_TABLA_CONFIG,
       encabezadas: [
         {
-          encabezado: 'ID',
+          encabezado: 'IDENTIFICACIÓN',
           clave: (item: VehiculoTabla) => String(item.idDeVehiculo),
           orden: 0,
         },
@@ -457,7 +457,7 @@ export class VehiculosComponent implements OnInit, OnDestroy {
           orden: 3,
         },
         {
-          encabezado: 'Transponder',
+          encabezado: 'Transpondedor',
           clave: (item: VehiculoTabla) => item.transponder,
           orden: 4,
         },
@@ -467,7 +467,7 @@ export class VehiculosComponent implements OnInit, OnDestroy {
           orden: 5,
         },
         {
-          encabezado: 'País emisor',
+          encabezado: 'Emisora País',
           clave: (item: VehiculoTabla) => item.paisEmisor,
           orden: 6,
         },
@@ -518,7 +518,7 @@ export class VehiculosComponent implements OnInit, OnDestroy {
       ...UNIDAD_TABLA_CONFIG,
       encabezadas: [
         {
-          encabezado: 'ID',
+          encabezado: 'IDENTIFICACIÓN',
           clave: (item: UnidadTabla) => String(item.idDeVehiculo),
           orden: 0,
         },
