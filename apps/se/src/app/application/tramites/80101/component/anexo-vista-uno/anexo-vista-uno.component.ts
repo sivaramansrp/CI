@@ -270,6 +270,8 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    */
   tenerDatosDeTabla = false;
 
+  proveedorClienteDatosTablaId?:string;
+
   /**
    * Constructor del componente AnexoVistaUnoComponent.
    * @param {Router} router - Servicio de enrutamiento de Angular para navegar entre rutas.
@@ -428,6 +430,7 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    */
   public rutaLaFraccionDeComplemento(event: RutaNombre): void {
     if (event && event.catagoria && event.id && event.datos) {
+      this.proveedorClienteDatosTablaId=event.id;
       this.store.setAnnexoUnoSeccionActiva(event.id);
       this.store.setDatosParaNavegar(event.datos);
 
@@ -534,7 +537,12 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
  * @param event - Arreglo de objetos de tipo ProveedorClienteTabla que contiene los datos a establecer en la tabla.
  */
  public datosActualizadosProveedorCliente($event: ProveedorClienteTabla[]): void {
-   this.store.setProveedorClienteDatosTabla($event);
+  if(this.proveedorClienteDatosTablaId==='IMPORT'){
+       this.store.setProveedorClienteDatosTablaUno($event);
+  }else{
+       this.store.setProveedorClienteDatosTablaDos($event); 
+  }
+
   }
 
   /**

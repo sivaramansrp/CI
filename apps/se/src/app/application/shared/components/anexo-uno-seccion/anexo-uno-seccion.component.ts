@@ -201,6 +201,19 @@ public mostrarProveedorClientesPopup: boolean = false;
   AnexoFraccionAnarelaria[]
 > = new EventEmitter<AnexoFraccionAnarelaria[]>(true);
 
+
+/**
+   * Evento para devolver la llamada del Anexo Uno
+   */
+  @Output() obtenerProyectoImmexTablaLista: EventEmitter<
+    ProyectoImmex[]
+  > = new EventEmitter<ProyectoImmex[]>(true);
+
+
+    @Output() obtenerProveedorCliente: EventEmitter<
+      {data:ProveedorCliente[], id?:string}
+    > = new EventEmitter<{data:ProveedorCliente[], id?:string}>(true);
+
 /**
    * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
    */
@@ -706,6 +719,8 @@ guardarComplementarFraccion(): void {
   } 
 }
 
+proveedorClienteDatos: {data: ProveedorCliente[], id?: string} = {data: [], id: ''};
+
 /**
  * @method abrirProveedorClienteModal
  * @description Abre el modal de proveedor o cliente según el contexto especificado.
@@ -714,8 +729,11 @@ guardarComplementarFraccion(): void {
  * @param {'cliente' | 'proveedor'} context - Define si el modal es para cliente o proveedor.
  */
 abrirProveedorClienteModal(context: 'cliente' | 'proveedor'): void {
+  if (this.proveedorClienteDatos) {
+    this.proveedorClienteDatos.id = context;
 
- const SELECT_ROW =
+  }
+  const SELECT_ROW =
     context === 'cliente'
       ? Boolean(this.selectedFraccionRowUno)
       : Boolean(this.selectedFraccionRowDos);
@@ -921,6 +939,7 @@ agregarProyectoImmex(): void {
 
     // Agregar los datos transformados a la lista de proyectos IMMEX
     this.proyectoImmexTablaLista.push(TRANSFORMED_DATA);
+    this.setProyectoImmex();
 
     // Reiniciar el formulario
     this.proyectoForm.reset();
@@ -936,6 +955,13 @@ agregarProyectoImmex(): void {
  */
 agregarProveedorCliente(): void {
   if (this.formularioProveedorCliente.valid) {
+    if (this.proveedorClienteDatos) {
+      this.proveedorClienteDatos.data = this.proveedorTablaLista;
+      this.obtenerProveedorCliente.emit({
+        data: this.proveedorClienteDatos.data ?? [],
+        id: this.proveedorClienteDatos.id
+      });
+    }
     const FORM_DATA = this.formularioProveedorCliente.value;
 
     this.proveedorTablaLista.push(FORM_DATA);
@@ -1055,4 +1081,14 @@ public tipoDeDocumenteCatalog: Catalogo[] = [];
       twoPeriodVolume: [this.solicitudState['twoPeriodVolume'], Validators.required],
     });
   }
+
+
+  /**
+   * Emite el evento `obtenerProyectoImmexTablaLista` con la lista de proyectos IMMEX proporcionada.
+   *
+   * @param event - Arreglo de objetos `ProyectoImmex` que representa la lista de proyectos IMMEX seleccionados.
+   */
+  setProyectoImmex(): void {
+    this.obtenerProyectoImmexTablaLista.emit(this.proyectoImmexTablaLista);
+}
 }

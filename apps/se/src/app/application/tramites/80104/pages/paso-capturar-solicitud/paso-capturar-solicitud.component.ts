@@ -390,6 +390,16 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
            "anexoI": [...ANEXO_ALL.anexo.tableDos]
         }
     ],
+    "fraccionArancelaria":[
+        {
+          "listaProveedores": [...ANEXO_ALL.anexo.proveedorClienteDos]
+        }
+      ],
+    "productoExportacionDtoList": [
+        {
+          "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]
+        }
+      ],
     "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
     "solicitud": SOLICITUD,
     "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
@@ -593,6 +603,29 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
         umt:item.encabezadoUmt
       });
     });
+
+     const proyectoImmexDatos = (item: any) => ({
+      tipoDocumento: item.encabezadoTipoDocument,
+      descripcion: item.encabezadoDescripcionOtro,
+      fechaFirma:  item.encabezadoFechaFirma,
+      fechaVigencia:  item.encabezadoFechaVigencia,
+      rfcFirmante:  item.encabezadoRfc,
+      razonFirmante:  item.encabezadoRazonFirmante,
+      testado: true,
+      fecFinVigencia:  item.encabezadoFechaVigencia,
+    });
+
+     const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
+              paisOrigen: item.paisOrigen,
+              rfcProveedor: item.rfcProveedor,
+              razonProveedor: item.razonProveedor,
+              paisDestino: item.paisDestino,
+              rfcCliente: item.rfcClinte,
+              razonCliente: item.razonSocial,
+              domicilio: item.domicilio,
+              descTestado: item.descTestado,
+            });
+
     
       return {
         anexo: {
@@ -600,7 +633,9 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
           ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
           proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
           datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
-          tableDos: anexoDos
+          tableDos: anexoDos,
+           proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
+           proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
         },
       };
     }
