@@ -5,6 +5,7 @@ import {
   AnexoUnoEncabezado,
   DatosAnexotressUno,
   DatosComplimento,
+  ProyectoImmexEncabezado,
 } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
   AnnexoDosTres,
@@ -120,6 +121,11 @@ export interface Tramite80102State {
    * Información detallada de federatarios.
    */
   datosFederatarios: FederatariosEncabezado;
+
+   /**
+   * Información detallada de plantas IMMEX.
+   */
+  proyectoImmexTablaLista: ProyectoImmexEncabezado[];
 }
 
 /**
@@ -382,7 +388,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
     estadoTres: '',
   },
   idSolicitud: 0,
-
+proyectoImmexTablaLista: [],
 };
 
 
@@ -1088,6 +1094,18 @@ export class Tramite80102Store extends Store<Tramite80102State> {
     this.update((state) => ({
       ...state,
       idSolicitud,
+    }));
+  }
+
+  /**
+ * Actualiza la lista de proyectos IMMEX en el estado agregando los elementos proporcionados.
+ *
+ * @param proyectoImmex - Arreglo de encabezados de proyectos IMMEX que se añadirán a la lista existente.
+ */
+setProyectoImmexTablaLista(proyectoImmex: ProyectoImmexEncabezado[]): void {
+    this.update((state) => ({
+      ...state,
+      proyectoImmexTablaLista: [...state.proyectoImmexTablaLista, ...proyectoImmex],
     }));
   }
 

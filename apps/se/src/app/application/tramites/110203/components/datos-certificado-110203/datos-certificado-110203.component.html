@@ -97,7 +97,7 @@
                   <div class="col-md-12">
                       <div class="form-group">
                           <label class="form-label" for="complemento">Complemento de la descripción:</label>
-                          <input class="form-control" id="complemento" formControlName="complemento" type="text" >
+                          <input class="form-control" id="complemento" formControlName="complemento" type="text" (change)="setValoresStore(mercanciasForm,'complemento', 'setComplemento')">
                       </div>
                   </div>
               </div>
@@ -106,19 +106,19 @@
                   <div class="col-md-4">
                       <div class="form-group">
                           <label class="form-label" for="marca">Marca:</label>
-                          <input class="form-control" id="marca" formControlName="marca" type="text" >
+                          <input class="form-control" id="marca" formControlName="marca" type="text" (change)="setValoresStore(mercanciasForm,'marca', 'setMarca')">
                       </div>
                   </div>
                   <div class="col-md-4">
                       <div class="form-group">
                           <label class="form-label" for="valor">Valor mercancía:</label>
-                          <input class="form-control" id="valor" formControlName="valor" type="number" (blur)="formatDecimal('valor')" >
+                          <input class="form-control" id="valor" formControlName="valor" type="text" (blur)="formatDecimal('valor','setValor')" (change)="setValoresStore(mercanciasForm,'valor', 'setValor')">
                       </div>
                   </div>
                   <div class="col-md-4">
                       <div class="form-group">
                           <label class="form-label" for="cantidad">Cantidad:</label>
-                          <input class="form-control" id="cantidad" formControlName="cantidad" type="number"  (blur)="formatDecimal('cantidad')">
+                          <input class="form-control" id="cantidad" formControlName="cantidad" type="text" (blur)="formatDecimal('cantidad','setBruta')">
                       </div>
                   </div>
               </div>
@@ -135,7 +135,7 @@
                   <div class="col-md-4">
                       <div class="form-group">
                           <label class="form-label" for="bruta">Masa bruta:</label>
-                          <input class="form-control" id="bruta" formControlName="bruta" type="number"  (blur)="formatDecimal('bruta')" >
+                          <input class="form-control" id="bruta" formControlName="bruta" type="text"  (blur)="formatDecimal('bruta','setBruta')" (change)="setValoresStore(mercanciasForm,'bruta', 'setBruta')">
                       </div>
                   </div>
                   <div class="col-md-4">
@@ -151,7 +151,7 @@
                   <div class="col-md-4">
                       <div class="form-group">
                           <label class="form-label" for="factura">Número de factura:</label>
-                          <input class="form-control" id="factura" formControlName="factura" type="number" >
+                          <input class="form-control" id="factura" formControlName="factura" type="text" (change)="setValoresStore(mercanciasForm,'factura', 'setFactura')">
                       </div>
                   </div>
                   <div class="col-md-4">

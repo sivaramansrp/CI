@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   DestinoFinal,
   Proveedor,
@@ -23,49 +23,45 @@ import { Tramite240106Store } from '../../estados/tramite240106Store.store';
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
-export class AgregarDestinatarioFinalContenedoraComponent {
+export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
+    /**
+     * @property terechosDatos$
+     * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
+     * @description Observable que emite datos relacionados con el destino final o proveedor.
+     * Puede ser un objeto de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+     * @command Este observable se utiliza para gestionar y observar los datos de los proveedores o destinos finales en el componente.
+     */
+    terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
   /**
-   * Evento emitido cuando se solicita cerrar el componente.
-   *
    * @event cerrar
+   * @description Evento emitido para indicar que se debe cerrar el componente.
    */
   @Output() cerrar = new EventEmitter<void>();
 
+
   /**
-   * @property {boolean} estaOculto - Indica si el elemento está oculto o visible.
-   * @remarks Este valor determina la visibilidad del componente en la interfaz de usuario.
-   * @command Cambiar el valor de esta propiedad para alternar la visibilidad.
+   * Emite un evento para señalar la cancelación de una acción o proceso.
+   * 
+   * Otros componentes o servicios pueden suscribirse a este evento para realizar limpieza
+   * o revertir cambios cuando el usuario activa una acción de cancelación.
+   *
+   * @event
    */
-  
+  cancelarEventListenerCancel = new EventEmitter<void>();
+
+  /**
+   * Identificador del procedimiento.
+   * @property {number} idProcedimiento
+   */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
-
-  /**
-   * Observable que emite información sobre el destino final, proveedor o un valor nulo/indefinido.
-   *
-   * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
-   *
-   * @remarks
-   * Este observable se utiliza para gestionar los datos relacionados con los derechos
-   * y destinatarios finales en el contexto de la aplicación.
-   */
-  public terechosDatos$!: Observable<
-    DestinoFinal | Proveedor | null | undefined
-  >;
-
   /**
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240106Store} tramiteStore - Store que administra el estado del trámite.
+   * @param {Tramite240105Store} tramiteStore - Store que administra el estado del trámite.
    * @returns {void}
    */
-  // eslint-disable-next-line no-empty-function
-  constructor(
-    public tramiteStore: Tramite240106Store,
-    public tramiteQuery: Tramite240106Query
-  ) {
-    this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
-  }
+  constructor(public tramiteStore: Tramite240106Store,public tramiteQuery: Tramite240106Query) {}
 
   /**
    * Actualiza la lista de destinatarios finales en el store del trámite.
@@ -76,5 +72,24 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    */
   updateDestinatarioFinalTablaDatos(event: DestinoFinal[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
+    this.cerrar.emit();
+  }
+
+  /**
+   * Maneja el evento para cerrar la acción actual.
+   * Limpia los datos de terceros del store de trámite.
+   */
+  cerrarEvent(): void {
+    this.tramiteStore.clearTercerosDatos();
+  }
+  
+
+   /**
+   * @method ngOnInit
+   * @description Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * @command Este método asigna un observable `terechosDatos$` con los datos obtenidos desde `tramiteQuery`.
+   */
+  ngOnInit(): void {
+    this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
   }
 }

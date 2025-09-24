@@ -121,7 +121,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       const ES_VALIDO = this.validarFormulariosPasoActual();
       if (!ES_VALIDO) {
         this.isPeligro = true;
-      this.TEXTO_DE_PELIGRO = '<strong>¡Error de registro!</strong> Faltan campos por capturar.';
+      this.TEXTO_DE_PELIGRO = '<strong>¡Error de registro!</strong> Faltan campos por capturar';
+      this.mostrarNotificacionError();
 
         return; // Detener ejecución si los formularios son inválidos
       }
@@ -151,6 +152,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    */
   validarFormulariosPasoActual(): boolean {
     if (this.indice === 1) {
+      
       // Validar formularios del paso uno
       return this.pasoUnoComponent?.validarFormularios() ?? true;
     }
