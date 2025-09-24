@@ -78,6 +78,11 @@ export const COMPLEMENTO_DE_PLANTA = [
   },
 ];
 
+/**
+ * Configuración de las columnas para la tabla de montos de inversión.
+ * Cada objeto dentro del arreglo representa una columna de la tabla,
+ * definiendo su encabezado, la clave para obtener el valor correspondiente
+ */
 export const MONTOS_DE_INVERSION = [
   {
     encabezado: '#Planta',
