@@ -7,14 +7,8 @@
               </li>
           </ul>
     <ng-container>
-      @switch (indice) { @case (1) {
-      <solicitante></solicitante>
-      } @case (2) {
-                @if(esDatosRespuesta){
-        <anexo-1></anexo-1>
-                }
-      } 
-    }
+     <solicitante [hidden]="indice !== 1"></solicitante>
+     <anexo-1 [hidden]="!esDatosRespuesta && indice !== 2"></anexo-1>
     </ng-container>
   </div>
 </div>

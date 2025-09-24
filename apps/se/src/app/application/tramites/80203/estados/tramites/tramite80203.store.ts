@@ -17,7 +17,9 @@
  * @requires @angular/core
  */
 import { Store, StoreConfig } from '@datorama/akita';
+import { fraccionInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { immexInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -56,6 +58,25 @@ export interface ImmexRegistroState {
      * @memberof ImmexRegistroState
      */
     immexRegistro: immexRegistroform;
+  /**
+   * @property {immexInfo[]} immexTableDatos
+   * @description
+   * Arreglo que contiene la información tabular relacionada con los datos IMMEX.
+   * Cada elemento representa una fila con información específica del trámite.
+   *
+   * @see {@link immexInfo} Para la estructura de cada elemento.
+   */
+  immexTableDatos: immexInfo[];
+
+  /**
+   * @property {fraccionInfo[]} [fraccionTablaDatos]
+   * @description
+   * Arreglo opcional que almacena la información tabular de las fracciones arancelarias.
+   * Puede estar ausente si no se han capturado datos de fracciones.
+   *
+   * @see {@link fraccionInfo} Para la estructura de cada elemento.
+   */
+  fraccionTablaDatos?: fraccionInfo[];
 }
 
 /**
@@ -238,7 +259,18 @@ export function createInitialState(): ImmexRegistroState {
              */
             nicoDatos: ''
         },
-     
+    /**
+     * Datos de la tabla IMMEX.
+     * @type {any[]}
+     * @default []
+     */
+    immexTableDatos: [],
+    /**
+     * Datos de la tabla Fracción.
+     * @type {any[]}
+     * @default []
+     */
+    fraccionTablaDatos: [],
     };
 }
 
@@ -369,6 +401,31 @@ export class ImmexRegistroStore extends Store<ImmexRegistroState> {
         this.update((state) => ({
             ...state,
             immexRegistro,
+        }));
+    }
+
+  /**
+   * @method establecerDatos
+   * @description
+   * Actualiza parcialmente el estado del store con los valores proporcionados.
+   * Permite modificar una o varias propiedades del estado sin reemplazar el objeto completo.
+   * Es útil para actualizaciones granulares y mantiene la inmutabilidad del estado.
+   *
+   * @param {Partial<ImmexRegistroState>} values - Objeto parcial con las propiedades a actualizar.
+   * @returns {void}
+   * @memberof ImmexRegistroStore
+   * @since 1.0.0
+   *
+   * @example
+   * ```typescript
+   * // Actualizar solo la tabla de datos IMMEX
+   * this.immexRegistroStore.establecerDatos({ immexTableDatos: nuevoArray });
+   * ```
+   */
+  public establecerDatos(values: Partial<ImmexRegistroState>): void {
+    this.update((state) => ({
+      ...state,
+      ...values,
         }));
     }
 }
