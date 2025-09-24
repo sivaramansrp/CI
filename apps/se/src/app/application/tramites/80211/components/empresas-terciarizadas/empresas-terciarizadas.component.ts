@@ -2,6 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
   ConfiguracionColumna,
   ConsultaioQuery,
+  Notificacion,
   REGEX_RFC,
   TablaSeleccion,
 } from '@ng-mf/data-access-user';
@@ -89,6 +90,87 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
      * Cuando es `true`, los campos del formulario no se pueden editar.
      */
     esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacion
+   * @description
+   * Objeto que contiene la configuración de la notificación principal del componente.
+   * Se utiliza para mostrar mensajes de error o información al usuario cuando no se selecciona una entidad federativa.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * @property {Notificacion} nuevaNotificacionRFC
+   * @description
+   * Objeto que contiene la configuración de la notificación específica para errores relacionados con el RFC.
+   * Se muestra cuando el usuario no introduce un RFC válido en el formulario.
+   */
+  public nuevaNotificacionRFC!: Notificacion;
+
+  /**
+   * @property {boolean} errorBuscar
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error cuando falla la búsqueda de controladoras.
+   * Se establece a true cuando el usuario intenta buscar sin seleccionar una entidad federativa.
+   */
+  errorBuscar: boolean = false;
+
+  /**
+   * @property {boolean} errorRFC
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error específico para el campo RFC.
+   * Se establece a true cuando el RFC no cumple con el formato requerido o está vacío.
+   */
+  errorRFC: boolean = false;
+
+  /**
+   * @property {boolean} errorAgregar
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error al intentar agregar plantas.
+   * Se establece a true cuando el usuario intenta agregar plantas sin haber seleccionado ninguna.
+   */
+  errorAgregar: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacionAgregar
+   * @description
+   * Objeto que contiene la configuración de la notificación para errores al agregar plantas.
+   * Se muestra cuando el usuario no selecciona al menos una planta para realizar operaciones IMMEX.
+   */
+  public nuevaNotificacionAgregar!: Notificacion;
+
+  /**
+   * @property {boolean} errorEliminar
+   * @description
+   * Bandera que controla la visibilidad del mensaje de error al intentar eliminar plantas.
+   * Se establece a true cuando el usuario intenta eliminar plantas sin haber seleccionado ninguna.
+   */
+  errorEliminar: boolean = false;
+
+  /**
+   * @property {Notificacion} nuevaNotificacionEliminar
+   * @description
+   * Objeto que contiene la configuración de la notificación para errores al eliminar plantas.
+   * Se muestra cuando el usuario no selecciona ninguna planta para eliminar de la lista.
+   */
+  public nuevaNotificacionEliminar!: Notificacion;
+
+  /**
+   * @property {Notificacion} nuevaNotificacionConfirmarEliminar
+   * @description
+   * Objeto que contiene la configuración de la notificación de confirmación para eliminar plantas.
+   * Se muestra cuando el usuario confirma que desea eliminar plantas seleccionadas,
+   * solicitando una confirmación adicional antes de proceder con la eliminación.
+   */
+  public nuevaNotificacionConfirmarEliminar!: Notificacion;
+
+  /**
+   * @property {boolean} confirmarEliminar
+   * @description
+   * Bandera que controla la visibilidad del diálogo de confirmación para eliminar plantas.
+   * Se establece a true cuando se muestra el modal de confirmación y a false cuando se oculta.
+   */
+  confirmarEliminar: boolean = false;
   
     /**
      * Constructor del componente.
@@ -130,6 +212,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
       this.inicializarEstadoFormulario();
+      this.nuevaNotificacion = {} as Notificacion;
     }
   
     /**
@@ -223,6 +306,34 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
         this.empresasForm.get('rfc')?.reset();
         this.empresasForm.get('estado')?.reset();
       }
+      else if(this.empresasForm.get('estado')?.value && this.empresasForm.get('rfc')?.invalid){
+        this.errorRFC = true;
+        this.nuevaNotificacionRFC = {
+          tipoNotificacion: 'alert',
+          categoria: '',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe introducir el RFC',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+      }
+      else{
+        this.errorBuscar = true;
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: '',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Selecciona la Entidad Federativa.',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+      }
     }
   
       /**
@@ -299,6 +410,18 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
  */
 agregarPlantas(): void {
   if (!this.listaFilaDisponibles?.length) {
+    this.errorAgregar = true;
+    this.nuevaNotificacionAgregar = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Selecciona al menos una planta donde se realizarán las operaciones IMMEX.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
     return;
   }
 
@@ -344,10 +467,53 @@ agregarPlantas(): void {
      */
     eliminarPlantas(): void {
       if (this.listaFilaSeleccionada?.length === 0) {
-        return;
+        this.errorEliminar = true;
+        this.nuevaNotificacionEliminar = {
+          tipoNotificacion: 'alert',
+          categoria: '',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Selecciona la planta que desea eliminar.',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
       }
-    
-      // Filtrar las plantas que no están ya en plantasDisponibles
+      else {
+        this.confirmarEliminar = true;
+        this.nuevaNotificacionConfirmarEliminar = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: '¿Estás seguro de eliminar la(s) planta(s)?',
+          cerrar: false,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: 'Cancelar',
+        }
+      }
+    }
+    /**
+   * @method aceptarEliminar
+   * @description
+   * Maneja la respuesta del usuario al diálogo de confirmación para eliminar plantas seleccionadas.
+   * Si el usuario confirma (event === true), procede a:
+   * - Mover las plantas seleccionadas de vuelta a la lista de plantas disponibles
+   * - Filtrar duplicados para evitar plantas repetidas en la lista disponible
+   * - Actualizar el estado global con los cambios realizados
+   * - Limpiar las selecciones temporales
+   * Si el usuario cancela, simplemente cierra el diálogo de confirmación.
+   * 
+   * @param {boolean} event - Respuesta del usuario: true para confirmar eliminación, false para cancelar.
+   * @returns {void}
+   */
+    aceptarEliminar(event: boolean): void {
+      if(event === true){
+        this.confirmarEliminar = false
+
+        // Filtrar las plantas que no están ya en plantasDisponibles
       const NUEVASPLANTAS = this.listaFilaSeleccionada.filter(
         (plantaDisponible) =>
           !this.plantasDisponibles.some(
@@ -368,8 +534,11 @@ agregarPlantas(): void {
     
       // Limpiar la lista temporal de filas seleccionadas
       this.listaFilaSeleccionada = [];
+      }
+      else{
+        this.confirmarEliminar = false
+      }
     }
-  
   
     /**
      * Método de limpieza al destruir el componente.

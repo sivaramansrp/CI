@@ -53,7 +53,8 @@
         <div class="row">
             <div class="col-md-12 mb-5">
                 <div class="pull-right">
-                    <button name="eliminarServicio" (click)="eliminarServiciosGrid()" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
+                    <button name="eliminarServicio"  class="btn btn-danger" [disabled]="esFormularioSoloLectura" [attr.data-bs-toggle]="condicion ? 'modal' : null"
+                     [attr.data-bs-target]="condicion ? '#confirmarEliminar' : null" (click)="onIntentarEliminar()">
                         Eliminar
                     </button>
                     <button name="agregarServicio" (click)="actualizaGridEmpresasNacionales()"
@@ -175,3 +176,22 @@
             </div>
         </div>
     </div>
+
+    <div id="confirmarEliminar" class="modal fade" tabindex="-1"
+  aria-labelledby="confirmarEliminarLabel" aria-hidden="true">
+  <div class="modal-dialog eliminar-modal" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <label>Al eliminar el registro de fracción arancelaria, se eliminará toda la información asociada a Capacidad instalada, Proveedor cliente, Proyecto de exportación. ¿Está seguro que desea eliminar la(s) Fraccion(es) seleccionada(s)?</label>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="eliminarServiciosGrid()"
+          data-bs-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
