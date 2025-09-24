@@ -64,7 +64,7 @@ export class IniciarTramiteResolver implements Resolve<IniciarResolverResult | b
           rfc_solicitante: perfilUsuario?.rfc || 'ABC123456789212', // RFC del usuario o fallback
           rol_actual: 'CapturistaGubernamental',
           folio_programa: "FOL123456",
-          id_tipo_tramite:Number(INICIAR_CONFIG?.procedureId),
+          idTipoTramite:Number(INICIAR_CONFIG?.procedureId),
           discriminador:INICIAR_CONFIG?.procedureId // Valor estándar
         };
 

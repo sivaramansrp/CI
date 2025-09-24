@@ -2,6 +2,7 @@ import { AnexoEncabezado, AnexoUnoEncabezado } from "../../../shared/models/nuev
 import { Catalogo, CatalogoPaises } from "@ng-mf/data-access-user";
 import { AnexoDosEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
 import { PlantasSubfabricante } from "../../../shared/models/empresas-subfabricanta.model";
+import { ProveedorCliente } from "../../../shared/models/complimentos-seccion.model";
 
 /**
  * Representa la estructura de datos para un servicio IMMEX.
@@ -113,7 +114,7 @@ export interface DatosCatalago {
  * Representa la estructura de datos para los anexos dos y tres.
  * Contiene listas de encabezados para cada uno de los anexos.
  */
-export interface AnnexoDosTres{
+export interface AnnexoDosTres {
   anexoDosTablaLista: AnexoEncabezado[];
   anexoTresTablaLista: AnexoEncabezado[];
 }
@@ -130,11 +131,13 @@ export interface AnnexoDosTres{
  * - `datosParaNavegar`: Encabezado de tipo `AnexoUnoEncabezado` o `AnexoDosEncabezado` utilizado para la navegación de datos.
  * - `seccionActiva`: Cadena que indica la sección activa actual.
  */
-export interface AnnexoUno{
+export interface AnnexoUno {
   exportarDatosTabla: AnexoDosEncabezado[];
-  importarDatosTabla:AnexoUnoEncabezado[];
-  datosParaNavegar:AnexoUnoEncabezado | AnexoDosEncabezado ;
+  importarDatosTabla: AnexoUnoEncabezado[];
+  datosParaNavegar: AnexoUnoEncabezado | AnexoDosEncabezado;
   seccionActiva: string;
+  proveedorClienteDatosTabla: ProveedorCliente[];
+  proveedorClienteDatosTablaDos: ProveedorCliente[];
 }
 /**
  * Representa la respuesta de una solicitud de ampliación de servicios.
@@ -179,70 +182,70 @@ export interface PlantasSubfabricanteResponse {
   data: PlantasSubfabricante[];
 }
 
- /**
- * Representa los datos de la tabla para proveedores y clientes en el contexto de un programa industrial.
- *
- * @property {number} idProveedor - Identificador único del proveedor.
- * @property {string} paisOrigen - País de origen del proveedor.
- * @property {string} rfcProveedor - RFC del proveedor.
- * @property {string} razonProveedor - Razón social del proveedor.
- * @property {string} paisDestino - País de destino del cliente.
- * @property {string} rfcClinte - RFC del cliente.
- * @property {string} razonSocial - Razón social del cliente.
- * @property {string} domicilio - Domicilio del cliente.
- * @property {boolean} testado - Indica si el producto ha sido testado.
- * @property {number} idProductoP - Identificador del producto.
- * @property {string} descTestado - Descripción del estado de testado.
- */
+/**
+* Representa los datos de la tabla para proveedores y clientes en el contexto de un programa industrial.
+*
+* @property {number} idProveedor - Identificador único del proveedor.
+* @property {string} paisOrigen - País de origen del proveedor.
+* @property {string} rfcProveedor - RFC del proveedor.
+* @property {string} razonProveedor - Razón social del proveedor.
+* @property {string} paisDestino - País de destino del cliente.
+* @property {string} rfcClinte - RFC del cliente.
+* @property {string} razonSocial - Razón social del cliente.
+* @property {string} domicilio - Domicilio del cliente.
+* @property {boolean} testado - Indica si el producto ha sido testado.
+* @property {number} idProductoP - Identificador del producto.
+* @property {string} descTestado - Descripción del estado de testado.
+*/
 export interface ProveedorClienteDatosTabla {
-      idProveedor: number;
-      paisOrigen: string;
-      rfcProveedor: string;
-      razonProveedor: string;
-      paisDestino: string;
-      rfcClinte: string;
-      razonSocial: string;
-      domicilio: string;
-      testado: boolean;
-      idProductoP: number;
-      descTestado: string;
-    }
+  idProveedor: number;
+  paisOrigen: string;
+  rfcProveedor: string;
+  razonProveedor: string;
+  paisDestino: string;
+  rfcClinte: string;
+  razonSocial: string;
+  domicilio: string;
+  testado: boolean;
+  idProductoP: number;
+  descTestado: string;
+}
 
-    /**
-     * Representa la estructura del Anexo 1, que contiene información sobre el encabezado de la fracción y su descripción.
-     *
-     * @property {string} encabezadoFraccion - Texto que identifica el encabezado de la fracción.
-     * @property {string} encabezadoDescripcion - Descripción asociada al encabezado de la fracción.
-     */
-    export interface Anexo1{
-       encabezadoFraccion: string; 
-      encabezadoDescripcion: string
-     }
-
-     /**
- * Interfaz que representa la información fiscal disponible de una empresa.
+/**
+ * Representa la estructura del Anexo 1, que contiene información sobre el encabezado de la fracción y su descripción.
+ *
+ * @property {string} encabezadoFraccion - Texto que identifica el encabezado de la fracción.
+ * @property {string} encabezadoDescripcion - Descripción asociada al encabezado de la fracción.
  */
+export interface Anexo1 {
+  encabezadoFraccion: string;
+  encabezadoDescripcion: string
+}
+
+/**
+* Interfaz que representa la información fiscal disponible de una empresa.
+*/
 export interface DisponsibleFiscal {
-    /** Nombre de la calle. */
-    calle: string;
-    /** Número exterior. */
-    numeroExterior: string;
-    /** Número interior. */
-    numeroInterior?: string;
-    /** Código postal. */
-    codigoPostal: string;
-    /** Nombre de la colonia. */
-    colonia: string;
-    /** Municipio o delegación. */
-    municipioDelegacion: string;
-    /** Entidad federativa. */
-    entidadFederativa: string |undefined;
-    /** País. */
-    pais: string;
-    /** Registro Federal de Contribuyentes (RFC). */
-    registroFederalContribuyentes: string;
-    /** Domicilio fiscal del solicitante. */
-    domicilioFiscalSolicitante: string;
-    /** Razón social. */
-    razonSocial: string;
-  }
+  /** Nombre de la calle. */
+  calle: string;
+  /** Número exterior. */
+  numeroExterior: string;
+  /** Número interior. */
+  numeroInterior?: string;
+  /** Código postal. */
+  codigoPostal: string;
+  /** Nombre de la colonia. */
+  colonia: string;
+  /** Municipio o delegación. */
+  municipioDelegacion: string;
+  /** Entidad federativa. */
+  entidadFederativa: string | undefined;
+  /** País. */
+  pais: string;
+  /** Registro Federal de Contribuyentes (RFC). */
+  registroFederalContribuyentes: string;
+  /** Domicilio fiscal del solicitante. */
+  domicilioFiscalSolicitante: string;
+  /** Razón social. */
+  razonSocial: string;
+}

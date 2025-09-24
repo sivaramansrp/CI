@@ -1,6 +1,6 @@
 <div class="container form-container">
     <form [formGroup]="asignacionForm" class="mt-5">
-        <ng-titulo titulo="Mecanismo de asignación directa" />
+        <ng-titulo titulo="Descripción del cupo" />
         <div class="row mb-3">
             <div class="col">
                 <div class="form-group">
@@ -26,7 +26,7 @@
             <div class="col-md-6">
                 <div class="form-group custom-clasifi-regimen-catalogo">
                     <label for="clasificacionRegimen">Número de oficio de asignación*:</label>
-                    <input type="text" class="form-control" formControlName="numTramite" id="numTramite"
+                    <input type="text" class="form-control" formControlName="numTramite" id="numTramite"  maxlength="30"
                         [class.is-invalid]="isInvalid('numTramite')"
                         (change)="setValoresStore(asignacionForm,'numTramite')">
                 </div>
@@ -37,6 +37,9 @@
       }
       @if(asignacionForm.controls['numTramite'].errors?.['maxlength']) {
         <span class="mensaje-error">El número de oficio no puede ser mayor a 30 caracteres</span>
+      }
+      @if(asignacionForm.controls['numTramite'].errors?.['pattern']) {
+        <span class="mensaje-error">Corrija los siguientes errores:<br>El valor {{ asignacionForm.controls['numTramite'].value }} debe ser un número válido</span>
       }
     </div>
   }
