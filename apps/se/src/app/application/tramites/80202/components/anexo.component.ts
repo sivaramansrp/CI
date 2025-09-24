@@ -267,7 +267,6 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   guardarMercanciaImportacion(): void {
-    if(this.selectFraccionArancelaria && this.selectFraccionArancelaria.id || this.firstloadCompleted){
     if (this.importacionForm.valid) {
       if (this.checkCantidadPorPeriodo()) {
         const NUEVO_REGISTRO: immexInfo = {
@@ -328,10 +327,6 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     else{
     this.mostrarNotificacion("Los campos marcados con (*) son requeridos.");
     }
-  }
-  else{
-    this.pagemostrarNotificacion("Debe seleccionar una fracción de importación.");
-  }
   }
   cerrarModal(): void {
     this.eliminarDatosTablaNicoExp = false;
@@ -499,6 +494,9 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
         this.modalInstance.show();
       }
     }
+    else{
+      this.pagemostrarNotificacion("Debe seleccionar una fracción de importación.");
+    }
   }
   seleccionTablas(event: NicoInfo[]): void {
     this.selectedNicos = event;
@@ -576,6 +574,9 @@ if(this.selectExportacion && this.selectExportacion.id && this.fraccionTablaDato
   if(!document.querySelector("bs-modal-backdrop")){
     this.modalExport.show();
   }
+  }
+  else{
+    this.pagemostrarNotificacion("Debe seleccionar una fracción de importación.");
   }
 }
 cerrarModalExportacion():void{
