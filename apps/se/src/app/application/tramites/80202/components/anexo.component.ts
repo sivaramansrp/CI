@@ -267,6 +267,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   guardarMercanciaImportacion(): void {
+    if(this.selectFraccionArancelaria && this.selectFraccionArancelaria.id || this.firstloadCompleted){
     if (this.importacionForm.valid) {
       if (this.checkCantidadPorPeriodo()) {
         const NUEVO_REGISTRO: immexInfo = {
@@ -327,6 +328,10 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     else{
     this.mostrarNotificacion("Los campos marcados con (*) son requeridos.");
     }
+  }
+  else{
+    this.pagemostrarNotificacion("Debe seleccionar una fracción de importación.");
+  }
   }
   cerrarModal(): void {
     this.eliminarDatosTablaNicoExp = false;
@@ -587,7 +592,7 @@ cerrarModalExportacion():void{
 
 }
 guardarMercanciaExportacion():void{
-  if(this.selectExportacion && this.selectExportacion.id){
+  if(this.selectExportacion && this.selectExportacion.id ){
     const NUEVO_REGISTRO: fraccionInfo = {
       id: this.selectExportacion.id || Math.floor(Math.random() * 1000000) + 1,
       fraccionExportacion: this.exportacionForm.getRawValue().fraccionImportacion,
@@ -621,6 +626,9 @@ guardarMercanciaExportacion():void{
       this.exportacionForm.get("descripcionNico")?.enable();
       this.nuevaNotificacion = {} as Notificacion;
     }, 100);
+  }
+  else{
+    this.pagemostrarNotificacion("Debe seleccionar una fracción de importación.");
   }
 }
 onNicoChange():void{
@@ -661,6 +669,8 @@ eliminarPedimentoDatoss(berr:boolean):void{
 if(berr && this.selectFraccionArancelaria && this.selectFraccionArancelaria.id){
   this.immexTableDatos = this.immexTableDatos.filter(row=>row.id!==this.selectFraccionArancelaria.id);
   this.fraccionTablaDatos = this.fraccionTablaDatos.filter(row=>row.fraccionExportacion!==this.selectFraccionArancelaria.fraccionArancelaria);
+  this.immexRegistroStore.updateExportacion(this.fraccionTablaDatos);
+  this.immexRegistroStore.updateImportacion(this.immexTableDatos);
   this.selectFraccionArancelaria = {} as immexInfo;
   this.selectExportacion={} as fraccionInfo;
   this.modalInstance.hide();
