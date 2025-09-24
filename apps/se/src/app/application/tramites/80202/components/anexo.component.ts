@@ -213,14 +213,6 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Check cantidadPorPeriodo ≤ cantidadAnual / 3
   checkCantidadPorPeriodo(): boolean {
-    if (
-      this.importacionForm.value.cantidadAnual === "" ||
-      this.importacionForm.value.cantidadPorPeriodo === "" ||
-      this.importacionForm.value.capacidadInstalada === ""
-    ) {
-      this.mostrarNotificacion("Los campos marcados con (*) son requeridos.");
-      return false;
-    }
     const CANTIDAD_ANUAL = Number(
       this.importacionForm.get("cantidadAnual")?.value,
     );
@@ -324,6 +316,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
           this.firstloadCompleted = false;
           this.eliminarDatosTablaNicoExp = false;
           this.nuevaNotificacion = {} as Notificacion;
+          this.pagemostrarNotificacion('La operación se realizó exitosamente.')
         }, 100);
       } else {
         this.mostrarNotificacion(
@@ -331,7 +324,9 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
         );
       }
     }
+    else{
     this.mostrarNotificacion("Los campos marcados con (*) son requeridos.");
+    }
   }
   cerrarModal(): void {
     this.eliminarDatosTablaNicoExp = false;
