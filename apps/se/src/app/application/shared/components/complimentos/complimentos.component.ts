@@ -367,6 +367,14 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         })
       )
       .subscribe();
+      
+      if (this.datosSocioAccionistas) {
+        this.servicioDeFormularioService.registerArray('datosSocioAccionistas', this.datosSocioAccionistas);
+      }
+
+      if (this.datosSocioAccionistasExtrenjeros) {
+        this.servicioDeFormularioService.registerArray('datosSocioAccionistasExtrenjeros', this.datosSocioAccionistasExtrenjeros);
+      }
   }
 
   /**
@@ -449,7 +457,9 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     this.servicioDeFormularioService.registerForm('complimentosForm', this.formaComplimentos);
     this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
       if (formName === 'complimentosForm') {
-        this.formaComplimentos.markAllAsTouched();
+        this.formaComplimentos.get('datosGeneralis')?.markAllAsTouched();
+        this.formaComplimentos.get('obligacionesFiscales')?.markAllAsTouched();
+        this.formaComplimentos.get('formaModificaciones')?.markAllAsTouched();
       }
     })
   }
@@ -874,6 +884,12 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       if (VALUE) {
 
         this.accionistasAgregados.emit(VALUE);
+      }
+
+      if (VALUE.rfc) {
+        this.servicioDeFormularioService.pushToArray('datosSocioAccionistas', VALUE);
+      } else if (VALUE.taxId) {
+        this.servicioDeFormularioService.pushToArray('datosSocioAccionistasExtrenjeros', VALUE);
       }
     } else {
     this.accionistasExtranjerosNotificacion = {

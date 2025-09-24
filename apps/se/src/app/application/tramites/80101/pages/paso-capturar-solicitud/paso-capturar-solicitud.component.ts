@@ -242,14 +242,19 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   verificarLaValidezDelFormulario(): boolean {
     return (
       (this.servicioDeFormularioService.isFormValid('complimentosForm') ??
-        false) && 
-      (this.servicioDeFormularioService.isFormValid('federatariosForm') ??
-      false) && 
+        false) &&
       (this.servicioDeFormularioService.isFormValid('federatariosCatalogoForm') ??
-      false) &&
-      (this.servicioDeFormularioService.isFormValid('empresasSubmanufacturerasForm') ??
-      false)
+      false) && 
+      ((this.servicioDeFormularioService.isArrayFilled('datosSocioAccionistas') ??
+      false) ||
+      (this.servicioDeFormularioService.isArrayFilled('datosSocioAccionistasExtrenjeros') ??
+      false)) &&
+      this.isAllArraysFilledIn80101(['anexoUnoTabla1', 'anexoUnoTabla2', 'federatariosDatos', 'plantasImmexDatos', 'datosTablaSubfabricantesSeleccionadas', 'anexoTresTablaLista'])
     );
+  }
+
+  isAllArraysFilledIn80101(array: string[]): boolean {
+    return array.every(item => this.servicioDeFormularioService.isArrayFilled(item));
   }
 
   /**
@@ -258,9 +263,6 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    */
   getValorIndice(e: AccionBoton): void {
      if (!this.consultaState.readonly && !this.consultaState.update) {
-      console.log('complimentosForm', this.servicioDeFormularioService.getForm('complimentosForm'));
-      console.log('federatariosCatalogoForm', this.servicioDeFormularioService.getForm('federatariosCatalogoForm'));
-      console.log('empresasSubmanufacturerasForm', this.servicioDeFormularioService.getForm('empresasSubmanufacturerasForm'));
       this.esFormaValido = this.verificarLaValidezDelFormulario();
       if (e.valor > 0 && e.valor <= this.pasos.length) {
         if (e.accion === 'cont' && this.esFormaValido) {
@@ -276,9 +278,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
             this.indice = e.valor;
             this.datosPasos.indice = e.valor;
             this.servicioDeFormularioService.markFormAsTouched('complimentosForm');
-            this.servicioDeFormularioService.markFormAsTouched('federatariosForm');
             this.servicioDeFormularioService.markFormAsTouched('federatariosCatalogoForm');
-            this.servicioDeFormularioService.markFormAsTouched('empresasSubmanufacturerasForm');
         }
       }
      } else {

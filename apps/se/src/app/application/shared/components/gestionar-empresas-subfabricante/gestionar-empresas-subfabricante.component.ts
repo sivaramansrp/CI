@@ -6,7 +6,7 @@ import {
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 
 import {
   DatosSubcontratista,
@@ -45,7 +45,7 @@ import { ServicioDeFormularioService } from '../../services/forma-servicio/servi
  * Este componente permite gestionar los datos de las empresas subfabricantes,
  * incluyendo la selección de plantas, la configuración de la tabla y el cambio de estados.
  */
-export class GestionarEmpresasSubfabricantesComponent implements OnInit {
+export class GestionarEmpresasSubfabricantesComponent implements OnInit, OnChanges {
   /**
    * Lista de estados del catálogo. Esta propiedad almacena los diferentes estados disponibles para ser seleccionados.
    * @property {Catalogo[]} _estadoCatalogo
@@ -196,8 +196,10 @@ export class GestionarEmpresasSubfabricantesComponent implements OnInit {
    * Establece el formulario de datos del subcontratista.
    * @param valor - Formulario reactivo con los datos del subcontratista.
    */
-  set formularioDatosSubcontratista(valor: FormGroup) {
-    this._formularioDatosSubcontratista.setValue(valor.value);
+  set formularioDatosSubcontratista(valor: FormGroup | null) {
+     if (valor && this._formularioDatosSubcontratista) {
+      this._formularioDatosSubcontratista.setValue(valor.value);
+    }
   }
 
   /**
@@ -311,6 +313,15 @@ private modalRef: Modal | null = null;
     }
     this.obtenerEstados();
   }
+
+  ngOnChanges(): void {
+    if (this.datosTablaSubfabricantesSeleccionadas.length === 0) {
+      this.servicioDeFormularioService.registerArray('datosTablaSubfabricantesSeleccionadas', this.datosTablaSubfabricantesSeleccionadas);
+    } else {
+      this.servicioDeFormularioService.setArray('datosTablaSubfabricantesSeleccionadas', this.datosTablaSubfabricantesSeleccionadas);
+    }
+  }
+
   /**
    * Inicializa el formulario de datos del subcontratista con los campos `rfc` y `estado`, ambos requeridos.
    * @method inicializarFormularioDatosSubcontratista
@@ -321,13 +332,6 @@ private modalRef: Modal | null = null;
       rfc: ['', Validators.required],
       estado: ['', Validators.required],
     });
-
-    this.servicioDeFormularioService.registerForm('empresasSubmanufacturerasForm', this.formularioDatosSubcontratista);
-    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
-      if (formName === 'empresasSubmanufacturerasForm') {
-        this.formularioDatosSubcontratista.markAllAsTouched();
-      }
-    })
   }
 
   /**
@@ -340,7 +344,6 @@ private modalRef: Modal | null = null;
       rfc: this.formularioDatosSubcontratista.get('rfc')?.value,
       estado: this.formularioDatosSubcontratista.get('estado')?.value,
     });
-    this.servicioDeFormularioService.setFormValue('empresasSubmanufacturerasForm', { ['rfc']: this._formularioDatosSubcontratista.get('rfc')?.value });
   }
 
   /**
@@ -353,7 +356,6 @@ private modalRef: Modal | null = null;
     if (this.formularioDatosSubcontratista.get('rfc')?.value) {
       this.alCambiarEstado.emit(estadoSeleccionado);
     }
-    this.servicioDeFormularioService.setFormValue('empresasSubmanufacturerasForm', { ['estado']: this._formularioDatosSubcontratista.get('estado')?.value });
   }
 
   /**

@@ -142,7 +142,10 @@
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="estadoImmex" [label]="'Estado'" [required]="true"
                   name="estadoUno" formControlName="estadoUno"
-                  [isDisabled]="formularioDeshabilitado" [markTouched]="federatariosCatalogoGroup.get('estadoUno')?.touched ?? false"></app-catalogo-select>
+                  [isDisabled]="formularioDeshabilitado"
+                  [markTouched]="federatariosCatalogoGroup.get('estadoUno')?.touched ?? false"
+                  (selectionChange)="eventoDeCambioDeValor($event, 'estadoUno')"
+                  ></app-catalogo-select>
               </div>
             </div>
             <div class="row">
@@ -249,12 +252,14 @@
                   <div class="col-md-4">
                     <app-catalogo-select [catalogo]="RepresentacionCatalogo" [label]="'Representación federal'"
                       [required]="true" name="estadoDos" formControlName="estadoDos"
-                      [isDisabled]="formularioDeshabilitado" [markTouched]="federatariosCatalogoGroup.get('estadoDos')?.touched ?? false"></app-catalogo-select>
+                      [isDisabled]="formularioDeshabilitado" [markTouched]="federatariosCatalogoGroup.get('estadoDos')?.touched ?? false"
+                      (selectionChange)="eventoDeCambioDeValor($event, 'estadoDos')"></app-catalogo-select>
                   </div>
                   <div class="col-md-4">
                     <app-catalogo-select [catalogo]="estadoOptionsConfig.municipio" [label]="'Actividad productiva'"
                       [required]="true" name="estadoTres" formControlName="estadoTres"
-                      [isDisabled]="formularioDeshabilitado" [markTouched]="federatariosCatalogoGroup.get('estadoTres')?.touched ?? false"></app-catalogo-select>
+                      [isDisabled]="formularioDeshabilitado" [markTouched]="federatariosCatalogoGroup.get('estadoTres')?.touched ?? false"
+                      (selectionChange)="eventoDeCambioDeValor($event, 'estadoTres')"></app-catalogo-select>
                   </div>
                 </div>
               </div>

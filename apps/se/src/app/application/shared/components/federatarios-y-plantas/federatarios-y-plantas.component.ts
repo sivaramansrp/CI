@@ -146,6 +146,12 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
   @Output() accionSeccion: EventEmitter<string> = new EventEmitter<string>();
 
   /**
+   * Emite eventos relacionados con acciones en la sección.
+   * @event datosFederatariosEvent
+   */
+  @Output() datosFederatariosEvent: EventEmitter<FederatariosEncabezado> = new EventEmitter<FederatariosEncabezado>();
+
+  /**
    * Opciones de estados disponibles
    * @property {[]} estadoOptions
    */
@@ -308,6 +314,14 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
         actividadProductiva: []
       };
     }
+
+    if (this.federatariosDatos) {
+      this.servicioDeFormularioService.registerArray('federatariosDatos', this.federatariosDatos);
+    }
+
+    if (this.plantasImmexDatos) {
+      this.servicioDeFormularioService.registerArray('plantasImmexDatos', this.plantasImmexDatos);
+    }
   }
 
   /**
@@ -371,13 +385,6 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
       ),
     })
 
-    this.servicioDeFormularioService.registerForm('federatariosForm', this.federatariosFormGroup);
-    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
-      if (formName === 'federatariosForm') {
-        this.federatariosFormGroup.markAllAsTouched();
-      }
-    })
-
     this.servicioDeFormularioService.registerForm('federatariosCatalogoForm', this.federatariosCatalogoGroup);
     this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
       if (formName === 'federatariosCatalogoForm') {
@@ -428,7 +435,6 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
   onFechaCambiada(fecha: string): void {
     if (fecha) {
       this.federatariosFormGroup.patchValue({ fechaInicioInput: fecha });
-      this.servicioDeFormularioService.setFormValue('federatariosForm', { ['fechaInicioInput']: fecha });
     }
   }
 
@@ -443,6 +449,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
       return;
     }
     this.datosFormaFedratario.emit(this.federatariosFormGroup.value);
+    this.servicioDeFormularioService.pushToArray('federatariosDatos', this.federatariosFormGroup.value);
     this.federatariosFormGroup.reset();
   }
 
@@ -610,6 +617,7 @@ buscarPlantasImmex(): void {
  */
 agregarPlantas(): void {
   this.plantasImmexDatos = [INMEX_PLANTAS];
+  this.servicioDeFormularioService.pushToArray('plantasImmexDatos', INMEX_PLANTAS);
   this.datosPlantasImmex.emit(this.plantasImmexDatos);
 }
 
@@ -716,6 +724,16 @@ obtenerEstados():void {
   this.estadoImmex = res.datos;
     });
     
+  }
+
+  eventoDeCambioDeValor(event: Catalogo, campo: string): void {
+    this.datosFederatarios = {
+      ...this.datosFederatarios,
+      [campo]: event.clave
+    };
+    this.datosFederatariosEvent.emit(this.datosFederatarios);
+    this.servicioDeFormularioService.setFormValue('federatariosCatalogoForm', { [campo]: event.clave ?? '' });
+
   }
 
 }

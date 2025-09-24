@@ -41,6 +41,14 @@ export class ServicioDeFormularioService {
   public formTouched$ = this.formTouchedNotifier.asObservable();
 
   /**
+   * @property arrays
+   * @description
+   * Mapa para almacenar arreglos dinámicos.  
+   * La clave es el nombre del arreglo y el valor es un array genérico.
+   */
+  private arrays = new Map<string, unknown[]>();
+
+  /**
  * @method registerForm
  * @description
  * Registra un formulario dinámico en el servicio si no ha sido registrado previamente.
@@ -157,4 +165,54 @@ export class ServicioDeFormularioService {
     this.formTouchedNotifier.next(formName);
   }
 
+   /**
+   * Registra un arreglo con un nombre único.  
+   * Si ya existe, lo reemplaza.
+   */
+  registerArray<T>(name: string, data: T[] = []): void {
+    this.arrays.set(name, [...data]);
+  }
+
+  /**
+   * Obtiene el arreglo registrado.
+   */
+  getArray<T>(name: string): T[] | undefined {
+    return this.arrays.get(name) as T[] | undefined;
+  }
+
+  /**
+   * Actualiza el arreglo completo (reemplaza su contenido).
+   */
+  setArray<T>(name: string, data: T[]): void {
+    this.arrays.set(name, [...data]);
+  }
+
+  /**
+   * Agrega un elemento al arreglo.
+   */
+  pushToArray<T>(name: string, item: T): void {
+    const CURRENT = this.arrays.get(name) ?? [];
+    this.arrays.set(name, [...CURRENT, item]);
+  }
+
+  /**
+   * Longitud del arreglo.
+   */
+  getArrayLength(name: string): number {
+    return this.arrays.get(name)?.length ?? 0;
+  }
+
+  /**
+   * Retorna true si el arreglo existe y tiene al menos un elemento.
+   */
+  isArrayFilled(name: string): boolean {
+    return (this.arrays.get(name)?.length ?? 0) > 0;
+  }
+
+  /**
+   * Limpia el arreglo.
+   */
+  clearArray(name: string): void {
+    this.arrays.set(name, []);
+  }
 }

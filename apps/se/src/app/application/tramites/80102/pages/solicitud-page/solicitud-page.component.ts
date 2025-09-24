@@ -500,15 +500,6 @@ buildPlantas(arr: any[] = [], base: Record<string, any>): any[] {
     return RESULT;
 }
 
-buildServico(arr: any[]): any[] {
-  return arr.map(item => ({
-    ...item,
-    "tipoServicio": item.tipode,
-    "claveServicio": item.clave,
-    "descripcion": item.descripionDelServicio,
-  }));
-}
-
 /**
  * Genera un arreglo de objetos con los datos de fedatarios a partir de un arreglo de entrada.
  *
@@ -553,7 +544,6 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
     const ANEXO_ALL = this.buildAnexo(data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
-    const SERVICIOS = this.buildServico(data.datosImmex);
 
     const PAYLOAD = {
     "tipoDeSolicitud": "guardar",
@@ -596,7 +586,6 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
     "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
     "empresasNacionales": EMPRESAS_NACIONALES,
     "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
-    "servicios": SERVICIOS,
 }
     this.autorizacionProgrmaNuevoService.guardarDatosPost(PAYLOAD).subscribe(response => {
       this.tramite80102Store.setIdSolicitud(response.datos.id_solicitud || 0);
