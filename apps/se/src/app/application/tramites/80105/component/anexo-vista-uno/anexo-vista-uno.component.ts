@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { ProveedorCliente, ProyectoImmex } from '../../../../shared/models/complimentos-seccion.model';
 import { Router } from '@angular/router';
 import { RutaNombre } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { Subject } from 'rxjs';
@@ -117,6 +118,33 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
       this.router.navigate([`../${event.catagoria}`], { relativeTo: this.activatedRoute });
     }
   }
+  
+    /**
+     * Establece la lista de proyectos IMMEX en la tabla correspondiente del store.
+     *
+     * @param event - Arreglo de objetos de tipo ProyectoImmex que representa la nueva lista de proyectos a almacenar.
+     */
+    setProyectoImmex(event: ProyectoImmex[]): void {
+      this.store.setProyectoImmexTablaLista(event);
+    }
+  
+
+/**
+     * Maneja la obtención de datos de proveedor o cliente según el identificador recibido en el evento.
+     * 
+     * @param event - Objeto que contiene un arreglo de datos de tipo `ProveedorCliente` y un identificador opcional.
+     *   - `data`: Lista de objetos `ProveedorCliente` a procesar.
+     *   - `id`: Identificador opcional que determina si los datos corresponden a un cliente ('cliente') o a un proveedor.
+     * 
+     * Si el identificador es 'cliente', almacena los datos en la tabla uno; en caso contrario, los almacena en la tabla dos.
+     */
+    obtenerProveedorCliente(event: {data:ProveedorCliente[], id?:string}):void{
+      if(event.id ==='cliente'){
+        this.store.setProveedorClienteDatosTablaUno(event.data);
+      }else{
+        this.store.setProveedorClienteDatosTablaDos(event.data);
+      }
+    }
 
   /**
      * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

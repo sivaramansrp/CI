@@ -54,6 +54,14 @@ export class ContenedorProveedorClienteComponent implements OnDestroy, OnInit {
  */
   @Output() cerrarPopup = new EventEmitter<void>();
 
+   /**
+   * Emisor de eventos para los datos actualizados de proveedores y clientes.
+   * @type {EventEmitter<ProveedorClienteTabla[]>}
+   */
+  @Output() public datosActualizadosProveedorClient = new EventEmitter<
+    ProveedorClienteTabla[]
+  >();
+
   /**
    * Constructor de la clase ContenedorProveedorClienteComponent.
    * @param {Tramite80102Query} query - Servicio para consultar el estado del trámite.
@@ -84,6 +92,7 @@ export class ContenedorProveedorClienteComponent implements OnDestroy, OnInit {
     $event: ProveedorClienteTabla[]
   ): void {
     this.datosDelProveedor = $event;
+        this.datosActualizadosProveedorClient.emit(this.datosDelProveedor);
   }
 
   /**
