@@ -39,6 +39,14 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
   @Output() cerrar = new EventEmitter<void>();
 
 
+  /**
+   * Emite un evento para señalar la cancelación de una acción o proceso.
+   * 
+   * Otros componentes o servicios pueden suscribirse a este evento para realizar limpieza
+   * o revertir cambios cuando el usuario activa una acción de cancelación.
+   *
+   * @event
+   */
   cancelarEventListenerCancel = new EventEmitter<void>();
 
   /**

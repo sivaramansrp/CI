@@ -57,7 +57,7 @@ export interface Tramite240106State {
 }
 
 /**
- * Crea el estado inicial para el trámite 240101.
+ * Crea el estado inicial para el trámite 240106.
  *
  * @function createInitialState
  * @returns {Tramite240106State} El estado inicial del store.
