@@ -9,7 +9,7 @@ export const FECHA_DE_FIN_DE_VIGENCIA = {
   habilitado: true,
 };
 
-export interface ComplementoDePlanta {
+export interface ComplementoDePlanta { 
   PLANTA: string;
   PERMANECERA_MERCANCIA_PROGRAMA: string;
   TIPO_DOCUMENTO: string;
@@ -19,6 +19,20 @@ export interface ComplementoDePlanta {
   FECHA_DE_FIRMA_DOCUMENTO: string;
   FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO: string;
 }
+
+/**
+ * Configuración de las columnas para la tabla de complemento de planta.
+ * Cada objeto dentro del arreglo representa una columna de la tabla,
+ * definiendo su encabezado, la clave para obtener el valor correspondiente
+ */
+export interface MontoDeInversion {
+  PLANTA: string;
+  TIPO: string;
+  CANTIDAD: string;
+  DESCRIPCION: string;
+  MONTO: string;
+}
+
 export const COMPLEMENTO_DE_PLANTA = [
   {
     encabezado: '#Planta',
@@ -63,6 +77,35 @@ export const COMPLEMENTO_DE_PLANTA = [
     orden: 8,
   },
 ];
+
+export const MONTOS_DE_INVERSION = [
+  {
+    encabezado: '#Planta',
+    clave: (ele: MontoDeInversion): string => ele.PLANTA,
+    orden: 1,
+  },
+  {
+    encabezado: 'Tipo',
+    clave: (ele: MontoDeInversion): string => ele.TIPO,
+    orden: 2,
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (ele: MontoDeInversion): string => ele.CANTIDAD,
+    orden: 3,
+  },
+  {
+    encabezado: 'Descripción',
+    clave: (ele: MontoDeInversion): string => ele.DESCRIPCION,
+    orden: 4,
+  },
+  {
+    encabezado: 'Monto',
+    clave: (ele: MontoDeInversion): string => ele.MONTO,
+    orden: 5,
+  },
+];
+
 export const CATALOGO_TIPO = [{ "id": 1, "descripcion": "JALISCO" }];
 
 /**
