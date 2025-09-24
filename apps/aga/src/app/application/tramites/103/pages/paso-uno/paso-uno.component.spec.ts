@@ -172,12 +172,12 @@ describe('PasoUnoComponent ngOnInit conditional coverage', () => {
   let component: PasoUnoComponent;
   beforeEach(() => {
     component = new PasoUnoComponent({} as any, {} as any, {} as any, {} as any);
-    // Initialize consultaDatos to simulate the component being properly set up
+    // Inicializa consultaDatos para simular que el componente se está configurando correctamente
     (component as any)['consultaDatos'] = { update: false };
   });
   
   it('should call fetchGetDatosConsulta in ngOnInit when consultaDatos.update is true', () => {
-    // Set up consultaDatos with update: true to test the conditional logic
+    // Configura consultaDatos con update: true para probar la lógica condicional
     (component as any)['consultaDatos'] = { update: true };
     
     const mockConsultaioQuery = {
@@ -189,7 +189,7 @@ describe('PasoUnoComponent ngOnInit conditional coverage', () => {
     };
     (component as any)['consultaioQuery'] = mockConsultaioQuery;
     
-    // Mock the service method that fetchGetDatosConsulta will call
+    // Simula el método de servicio que llamará fetchGetDatosConsulta
     const mockExencionImpuestosService = {
       getDatosConsulta: jest.fn().mockReturnValue({
         pipe: jest.fn().mockReturnValue({
@@ -205,7 +205,7 @@ describe('PasoUnoComponent ngOnInit conditional coverage', () => {
   });
   
   it('should not call fetchGetDatosConsulta in ngOnInit when consultaDatos.update is false', () => {
-    // Set up consultaDatos with update: false to test the else path
+    // Configura consultaDatos con update: false para probar la ruta else
     (component as any)['consultaDatos'] = { update: false };
     
     const mockConsultaioQuery = {
@@ -230,7 +230,7 @@ describe('PasoUnoComponent fetchGetDatosConsulta method coverage', () => {
   let mockExencionImpuestosService: any;
 
   beforeEach(waitForAsync(() => {
-    // Create comprehensive mock for tramite103Store with all setter methods
+    // Cree un simulacro completo para tramite103Store con todos los métodos de configuración
     mockTramite103Store = {
       setManifesto: jest.fn(),
       setOrganismoPublico: jest.fn(),
@@ -259,7 +259,7 @@ describe('PasoUnoComponent fetchGetDatosConsulta method coverage', () => {
       setSerie: jest.fn()
     };
 
-    // Mock exencionImpuestosService
+    // Simula el servicio exencionImpuestosService
     mockExencionImpuestosService = {
       getDatosConsulta: jest.fn()
     };
@@ -285,21 +285,17 @@ describe('PasoUnoComponent fetchGetDatosConsulta method coverage', () => {
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
     
-    // Override the component's store and service with our mocks
     (component as any)['tramite103Store'] = mockTramite103Store;
     (component as any)['exencionImpuestosService'] = mockExencionImpuestosService;
     
-    // Mock destroyNotifier$ subject properly
     const mockDestroyNotifier = {
       next: jest.fn(),
       complete: jest.fn()
     };
     (component as any)['destroyNotifier$'] = mockDestroyNotifier;
     
-    // Mock consultaDatos
     (component as any)['consultaDatos'] = { update: false };
     
-    // Mock consultaioQuery
     const mockConsultaioQuery = {
       selectConsultaioState$: {
         pipe: jest.fn().mockReturnValue({
@@ -350,7 +346,7 @@ describe('PasoUnoComponent fetchGetDatosConsulta method coverage', () => {
       }
     };
 
-    // Mock the service to return successful response with proper RxJS chain
+    // Simula el servicio para devolver una respuesta exitosa con la cadena RxJS adecuada
     mockExencionImpuestosService.getDatosConsulta.mockReturnValue({
       pipe: jest.fn().mockReturnValue({
         subscribe: jest.fn().mockImplementation((callback) => {
@@ -360,19 +356,15 @@ describe('PasoUnoComponent fetchGetDatosConsulta method coverage', () => {
       })
     });
 
-    // Call the method
     component.fetchGetDatosConsulta();
 
-    // Verify service was called
     expect(mockExencionImpuestosService.getDatosConsulta).toHaveBeenCalled();
 
-    // Verify all exencionImpuestos store setters were called with correct values
     expect(mockTramite103Store.setManifesto).toHaveBeenCalledWith('test-manifesto');
     expect(mockTramite103Store.setOrganismoPublico).toHaveBeenCalledWith('test-organismo');
     expect(mockTramite103Store.setAduana).toHaveBeenCalledWith('test-aduana');
     expect(mockTramite103Store.setDestinoMercancia).toHaveBeenCalledWith('test-destino');
 
-    // Verify all importadorExportador store setters were called with correct values
     expect(mockTramite103Store.setNombre).toHaveBeenCalledWith('test-nombre');
     expect(mockTramite103Store.setCalle).toHaveBeenCalledWith('test-calle');
     expect(mockTramite103Store.setNumeroExterior).toHaveBeenCalledWith('test-exterior');
@@ -385,7 +377,6 @@ describe('PasoUnoComponent fetchGetDatosConsulta method coverage', () => {
     expect(mockTramite103Store.setColonia).toHaveBeenCalledWith('test-colonia');
     expect(mockTramite103Store.setOpcion).toHaveBeenCalledWith('test-opcion');
 
-    // Verify all datosMercancia store setters were called with correct values
     expect(mockTramite103Store.setTipoDeMercancia).toHaveBeenCalledWith('test-tipo');
     expect(mockTramite103Store.setUsoEspecifico).toHaveBeenCalledWith('test-uso');
     expect(mockTramite103Store.setCondicionMercancia).toHaveBeenCalledWith('test-condicion');
@@ -404,7 +395,6 @@ describe('PasoUnoComponent fetchGetDatosConsulta method coverage', () => {
       datos: null
     };
 
-    // Mock the service to return failed response
     mockExencionImpuestosService.getDatosConsulta.mockReturnValue({
       pipe: jest.fn().mockReturnValue({
         subscribe: jest.fn().mockImplementation((callback) => {
@@ -414,13 +404,10 @@ describe('PasoUnoComponent fetchGetDatosConsulta method coverage', () => {
       })
     });
 
-    // Call the method
     component.fetchGetDatosConsulta();
 
-    // Verify service was called
     expect(mockExencionImpuestosService.getDatosConsulta).toHaveBeenCalled();
 
-    // Verify no store setters were called
     expect(mockTramite103Store.setManifesto).not.toHaveBeenCalled();
     expect(mockTramite103Store.setOrganismoPublico).not.toHaveBeenCalled();
     expect(mockTramite103Store.setAduana).not.toHaveBeenCalled();

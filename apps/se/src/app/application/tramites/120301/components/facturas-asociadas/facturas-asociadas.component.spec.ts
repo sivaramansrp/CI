@@ -186,7 +186,7 @@ describe('FormularioAsociacionFacturaComponent', () => {
     fixture = TestBed.createComponent(FormularioAsociacionFacturaComponent);
     component = fixture.componentInstance;
     
-    // Initialize component state properties
+    // Inicializar propiedades de estado de componentes
     (component as any).facturasState = {
       cantidadFacturas: '5',
       cantidadFacturasTotal: 100,
@@ -201,7 +201,7 @@ describe('FormularioAsociacionFacturaComponent', () => {
     (component as any).facturasAsociadas = [];
     (component as any).facturasDisponible = [];
     
-    // Initialize the form manually since ngOnInit creates async issues
+    // Inicialice el formulario manualmente ya que ngOnInit crea problemas asíncronos
     component.initActionFormBuild();
   });
 
@@ -326,7 +326,7 @@ it('debe deshabilitar el formulario si formularioDeshabilitado es verdadero en n
   });
 
   it('debe ejecutar abrirModalEliminar() correctamente', () => {
-    // Mock DOM methods for modal
+    // Métodos DOM simulados para modal
     const mockModal = { show: jest.fn() };
     window.bootstrap = { Modal: jest.fn().mockReturnValue(mockModal) } as any;
     document.getElementById = jest.fn().mockReturnValue({});
@@ -334,8 +334,8 @@ it('debe deshabilitar el formulario si formularioDeshabilitado es verdadero en n
     component.seleccionadasParaEliminar = [{ numeroFactura: 'F001' }] as any;
     
     component.abrirModalEliminar();
-    
-    // Verify the method execution
+
+    // Verificar la ejecución del método
     expect(component.seleccionadasParaEliminar.length).toBeGreaterThan(0);
   });
 
@@ -365,8 +365,8 @@ it('debe deshabilitar el formulario si formularioDeshabilitado es verdadero en n
       idFacturaExpedicion: 1,
       idExpedicion: 1
     }] as any;
-    
-    // Mock DOM methods
+
+    // Métodos DOM simulados
     const mockModal = { show: jest.fn() };
     window.bootstrap = { Modal: jest.fn().mockReturnValue(mockModal) } as any;
     document.getElementById = jest.fn().mockReturnValue({});
@@ -439,8 +439,8 @@ it('debe deshabilitar el formulario si formularioDeshabilitado es verdadero en n
     const mockFila: any = { numeroFactura: 'F001' };
     
     component.eliminarSeleccionado();
-    
-    // Verify method exists and can be called
+
+    // Verificar que el método existe y se puede llamar
     expect(component.eliminarSeleccionado).toBeDefined();
   });
 
@@ -449,7 +449,7 @@ it('debe deshabilitar el formulario si formularioDeshabilitado es verdadero en n
     component.formularioAsociacionFactura.markAsUntouched();
     jest.spyOn(component.mostrarTabs, 'emit');
     jest.spyOn(window, 'scrollTo').mockImplementation();
-    // Mock the change detector
+    // Burlarse del detector de cambios
     const mockChangeDetector = { detectChanges: jest.fn() };
     (component as any).changeDetectorRef = mockChangeDetector;
     
@@ -463,7 +463,7 @@ it('debe deshabilitar el formulario si formularioDeshabilitado es verdadero en n
   it('debe ejecutar continuar() con formulario inválido', () => {
     component.formularioAsociacionFactura.get('cantidadFacturas')?.setValue('');
     jest.spyOn(window, 'scrollTo').mockImplementation();
-    // Mock the change detector
+    // Burlarse del detector de cambios
     const mockChangeDetector = { detectChanges: jest.fn() };
     (component as any).changeDetectorRef = mockChangeDetector;
     
@@ -489,8 +489,8 @@ it('debe deshabilitar el formulario si formularioDeshabilitado es verdadero en n
     component.seleccionadasParaEliminar = [];
     
     component.eliminarFacturasAsociadas();
-    
-    // Should return early when no items to delete
+
+    // Debería regresar temprano cuando no hay elementos para eliminar
     expect(component.seleccionadasParaEliminar.length).toBe(0);
   });
 
@@ -498,8 +498,8 @@ it('debe deshabilitar el formulario si formularioDeshabilitado es verdadero en n
     component.formularioDeshabilitado = true;
     
     component.initActionFormBuild();
-    
-    // The form is created first, then disabled in ngOnInit, so we need to call that part manually
+
+    // El formulario se crea primero, luego se desactiva en ngOnInit, por lo que necesitamos llamar a esa parte manualmente
     if (component.formularioDeshabilitado) {
       component.formularioAsociacionFactura.disable();
     }

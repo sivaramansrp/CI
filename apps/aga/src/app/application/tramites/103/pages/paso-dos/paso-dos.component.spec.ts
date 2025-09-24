@@ -108,7 +108,7 @@ describe('PasoDosComponent', () => {
       component.getTiposDocumentos();
       
       expect(catalogosServiceMock.getCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_TIPO_DOCUMENTO);
-      // The error callback just returns the error, so we verify it doesn't crash
+      // La devolución de llamada de error simplemente devuelve el error, por lo que verificamos que no falle.
       expect(component.catalogoDocumentos).toEqual([]);
     });
   });

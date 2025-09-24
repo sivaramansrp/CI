@@ -130,7 +130,7 @@ describe('ConstanciaDelRegistroComponent', () => {
     (component as any).constanciaState = mockConstanciaState;
     (component as any).anios = [];
     
-    // Initialize the form
+    // Inicializar el formulario
     component.initActionFormBuild();
     
     (component as any).seccionQuery = {
@@ -284,7 +284,7 @@ describe('ConstanciaDelRegistroComponent', () => {
     };
     anioService.getAnios.mockReturnValue(observableOf(response));
     
-    // Spy on the component's service property
+    // Espiar la propiedad de servicio del componente
     jest.spyOn(component['anioConstanciaService'], 'getAnios').mockReturnValue(observableOf(response));
     
     component.catAnios();
@@ -303,8 +303,8 @@ describe('ConstanciaDelRegistroComponent', () => {
       mensaje: 'error'
     };
     anioService.getAnios.mockReturnValue(observableOf(response));
-    
-    // Spy on the component's service property
+
+    // Espiar la propiedad de servicio del componente
     jest.spyOn(component['anioConstanciaService'], 'getAnios').mockReturnValue(observableOf(response));
     
     component.catAnios();
