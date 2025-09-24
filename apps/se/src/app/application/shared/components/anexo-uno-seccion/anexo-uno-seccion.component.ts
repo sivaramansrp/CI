@@ -202,14 +202,33 @@ public mostrarProveedorClientesPopup: boolean = false;
 > = new EventEmitter<AnexoFraccionAnarelaria[]>(true);
 
 
-/**
-   * Evento para devolver la llamada del Anexo Uno
+
+  /**
+   * Evento que emite una lista de objetos `ProyectoImmex` al componente padre.
+   * 
+   * @event
+   * @type {EventEmitter<ProyectoImmex[]>}
+   * @description
+   * Se dispara cuando se requiere enviar la lista actualizada de proyectos IMMEX
+   * desde este componente hacia el componente que lo contiene.
    */
   @Output() obtenerProyectoImmexTablaLista: EventEmitter<
     ProyectoImmex[]
   > = new EventEmitter<ProyectoImmex[]>(true);
 
 
+    /**
+     * Evento que emite información sobre proveedores o clientes obtenidos.
+     * 
+     * @event
+     * @typeParam data - Arreglo de objetos de tipo `ProveedorCliente` que contiene los proveedores o clientes obtenidos.
+     * @typeParam id - (Opcional) Identificador asociado a la obtención de los datos.
+     * 
+     * @remarks
+     * Este evento se dispara cuando se requiere enviar la información de proveedores o clientes seleccionados
+     * hacia el componente padre. El parámetro `id` es opcional y puede ser utilizado para identificar la fuente
+     * o contexto de la obtención.
+     */
     @Output() obtenerProveedorCliente: EventEmitter<
       {data:ProveedorCliente[], id?:string}
     > = new EventEmitter<{data:ProveedorCliente[], id?:string}>(true);
@@ -440,6 +459,14 @@ fracionArancelaria: AnexoUnoEncabezado[] = [];
 /** Lista de fracciones anarelaria para el Anexo Fracción. */
 @Input() anexoFraccionAnarelaria: AnexoFraccionAnarelaria[] = [];
 
+
+/**
+ * Objeto que almacena los datos relacionados con proveedores o clientes.
+ * 
+ * @property {ProveedorCliente[]} data - Lista de objetos de tipo ProveedorCliente.
+ * @property {string} [id] - Identificador opcional asociado a los datos.
+ */
+proveedorClienteDatos: {data: ProveedorCliente[], id?: string} = {data: [], id: ''};
 
 /**
  *  * compodoc
@@ -719,14 +746,21 @@ guardarComplementarFraccion(): void {
   } 
 }
 
-proveedorClienteDatos: {data: ProveedorCliente[], id?: string} = {data: [], id: ''};
+
+
 
 /**
- * @method abrirProveedorClienteModal
- * @description Abre el modal de proveedor o cliente según el contexto especificado.
- * Establece el contexto actual y muestra el modal correspondiente si el elemento existe en el DOM.
+ * Abre el modal para seleccionar o ingresar datos de un proveedor o cliente, dependiendo del contexto proporcionado.
  * 
- * @param {'cliente' | 'proveedor'} context - Define si el modal es para cliente o proveedor.
+ * @param context Indica si el modal se abrirá en el contexto de 'cliente' o 'proveedor'.
+ * 
+ * Si existe información previa en `proveedorClienteDatos`, se actualiza el identificador con el contexto actual.
+ * 
+ * El modal solo se muestra si hay una fracción arancelaria seleccionada correspondiente al contexto:
+ * - Para 'cliente', se verifica `selectedFraccionRowUno`.
+ * - Para 'proveedor', se verifica `selectedFraccionRowDos`.
+ * 
+ * Si no hay una fracción seleccionada, se muestra una notificación de alerta indicando que es necesario seleccionar una fracción arancelaria para continuar.
  */
 abrirProveedorClienteModal(context: 'cliente' | 'proveedor'): void {
   if (this.proveedorClienteDatos) {

@@ -437,6 +437,12 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       fecFinVigencia:  item.encabezadoFechaVigencia,
     });
 
+    /**
+     * Construye un objeto con los datos del proveedor y cliente a partir de un elemento de tipo `ProveedorClienteDatosTabla`.
+     *
+     * @param item - Objeto que contiene la información del proveedor y cliente.
+     * @returns Un objeto con las propiedades: paisOrigen, rfcProveedor, razonProveedor, paisDestino, rfcCliente, razonCliente, domicilio y descTestado.
+     */
      const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
       paisOrigen: item.paisOrigen,
       rfcProveedor: item.rfcProveedor,

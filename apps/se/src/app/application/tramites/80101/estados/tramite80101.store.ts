@@ -184,7 +184,16 @@ export interface Tramite80101State {
    * Información detallada de plantas IMMEX.
    */
   proyectoImmexTablaLista: ProyectoImmexEncabezado[];
+
+  /**
+   * Información detallada de proveedor Cliente Datos Tabla.
+   */
   proveedorClienteDatosTabla: ProveedorClienteTabla[];
+
+   /**
+   * Información detallada de proveedor Cliente Datos TablaDos.
+   */
+
   proveedorClienteDatosTablaDos: ProveedorClienteTabla[];
 }
 

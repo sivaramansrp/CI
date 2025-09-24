@@ -604,6 +604,20 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
       });
     });
 
+    /**
+     * Transforma un objeto de entrada en un objeto con los datos requeridos para el proyecto IMMEX.
+     *
+     * @param item - Objeto de entrada que contiene los datos del encabezado del documento.
+     * @returns Un objeto con las propiedades mapeadas para el proyecto IMMEX:
+     *   - tipoDocumento: Tipo de documento del encabezado.
+     *   - descripcion: Descripción adicional del encabezado.
+     *   - fechaFirma: Fecha de firma del documento.
+     *   - fechaVigencia: Fecha de vigencia del documento.
+     *   - rfcFirmante: RFC del firmante.
+     *   - razonFirmante: Razón social del firmante.
+     *   - testado: Valor booleano fijo en true.
+     *   - fecFinVigencia: Fecha de fin de vigencia del documento.
+     */
      const proyectoImmexDatos = (item: any) => ({
       tipoDocumento: item.encabezadoTipoDocument,
       descripcion: item.encabezadoDescripcionOtro,

@@ -270,6 +270,12 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    */
   tenerDatosDeTabla = false;
 
+  /**
+   * Identificador opcional de la tabla que contiene los datos del proveedor o cliente.
+   * 
+   * Esta propiedad puede ser utilizada para referenciar de manera única la tabla asociada
+   * a los datos de un proveedor o cliente en el componente.
+   */
   proveedorClienteDatosTablaId?:string;
 
   /**
@@ -343,6 +349,14 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     }
 
 
+/**
+ * Obtiene los datos de complementos dos desde el almacén (store) y actualiza el formulario `anexoDosFormGroup` con dichos datos.
+ * 
+ * Se suscribe al observable `selectDatosComplimentosDos$` del store a través de la propiedad `query`, y utiliza el operador `takeUntil` para cancelar la suscripción cuando se emite `destroyNotifier$`.
+ * 
+ * @remarks
+ * Este método es útil para mantener sincronizados los datos del formulario con el estado global de la aplicación.
+ */
  obtenerDatosDosDelAlmacen(): void {
     this.query.selectDatosComplimentosDos$
       .pipe(takeUntil(this.destroyNotifier$))
