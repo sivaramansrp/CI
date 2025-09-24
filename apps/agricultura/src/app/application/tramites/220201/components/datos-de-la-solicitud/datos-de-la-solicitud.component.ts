@@ -5,14 +5,14 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-
+import {CatalogosService} from '../../services/220201/catalogos/catalogos.service'
 import { HttpClient } from '@angular/common/http';
 
 import { DatosForma, RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
-import { Subject, debounceTime, map, takeUntil } from 'rxjs';
+import { Subject, debounceTime, map, switchMap, takeUntil } from 'rxjs';
 import { AnimalesVivoContenedoraComponent } from '../animales-vivo-contenedora/animales-vivo-contenedora.component';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
@@ -326,7 +326,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     private consultaQuery: ConsultaioQuery,
     public fitosanitarioStore: ZoosanitarioStore,
     public router: Router,
-    public activatedRoute: ActivatedRoute
+    public activatedRoute: ActivatedRoute,
+    private catalogoService: CatalogosService
   ) {
     this.obtenerListasDesplegables();
   }
@@ -461,10 +462,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method obtenerIngresoSelectList
    */
   obtenerIngresoSelectList(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/aduana_de_ingreso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
-      const DATOS = data?.data;
-      this.aduanaDeIngreso = DATOS;
-    });
+
+    this.catalogoService.obtieneCatalogoAduana(220201)
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe(
+      (data): void => {
+        this.aduanaDeIngreso = data.datos ?? [];
+      }
+    );
   }
 
   /**
@@ -472,10 +478,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method obtenerSanidadAgropecuariaList
    */
   obtenerSanidadAgropecuariaList(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/oficina_de_inspeccion.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
-      const DATOS = data?.data;
-      this.sanidadAgropecuaria = DATOS;
-    });
+    this.catalogoService.obtieneCatalogoOficinasInspeccion(220201, '010')
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe(
+      (data): void => {
+        this.sanidadAgropecuaria = data.datos ?? [];
+      }
+    );
   }
 
   /**
@@ -483,9 +493,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method obtenerPuntoInspeccionList
    */
   obtenerPuntoInspeccionList(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
-      const DATOS = data?.data;
-      this.puntoInspeccion = DATOS;
+
+    this.catalogoService.obtieneCatalogoPuntoInspeccion(220201, '34013').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+      this.puntoInspeccion = data.datos ?? [];
     });
   }
 
@@ -494,9 +504,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method obtenerEstablecimientoList
    */
   obtenerEstablecimientoList(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/establecimiento.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
-      const DATOS = data?.data;
-      this.establecimientoTIF = DATOS;
+
+    this.catalogoService.obtieneCatalogoEstablecimientoTif(220201, 'LEQI8101314S7','220201').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+      this.establecimientoTIF = data.datos ?? [];
     });
   }
 
@@ -505,9 +515,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method obtenerVeterinarioList
    */
   obtenerVeterinarioList(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
-      const DATOS = data?.data;
-      this.veterinario = DATOS;
+    this.catalogoService.obtieneCatalogoMedicosVeterinarios(220201, '1').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+      this.veterinario = data.datos ?? [];
     });
   }
 
@@ -516,9 +525,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method obtenerRegimenList
    */
   obtenerRegimenList(): void {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/regimen.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      const DATOS = data?.data;
-      this.regimen = DATOS;
+
+    this.catalogoService.obtieneCatalogoRegimenes(220201).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.regimen = data.datos ?? [];
     });
   }
 
