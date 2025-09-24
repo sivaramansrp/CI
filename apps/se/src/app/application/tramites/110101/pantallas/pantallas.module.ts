@@ -10,10 +10,12 @@ import { NavComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from '../pages/pantallas/pantallas.component';
 import { PantallasRoutingModule } from './pantallas-routing.module';
+import { ProcesosComponent } from "../components/procesos/procesos.component";
 import { ProtestoDecirVerdadComponent } from '../components/protesto-decir-verdad/protesto-decir-verdad.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TratadosComponent } from '../components/tratados/tratados.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
+
 @NgModule({
   declarations: [
     DatosComponent,
@@ -33,8 +35,9 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     TratadosComponent,
     BtnContinuarComponent,
     FirmaElectronicaComponent,
-    ProtestoDecirVerdadComponent
-  ]
+    ProtestoDecirVerdadComponent,
+    ProcesosComponent
+]
 })
 
 /**
