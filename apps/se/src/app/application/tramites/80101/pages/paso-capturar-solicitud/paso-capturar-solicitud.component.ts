@@ -1,9 +1,10 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent, formatearFechaYyyyMmDd } from '@libs/shared/data-access-user/src';
-import { Subject, map, take, takeUntil } from 'rxjs';
+import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@libs/shared/data-access-user/src';
+import { Subject, finalize, map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
 import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
@@ -37,6 +38,7 @@ import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accion
 @Component({
   selector: 'app-paso-capturar-solicitud',
   templateUrl: './paso-capturar-solicitud.component.html',
+  providers: [ToastrService],
 })
 export class PasoCapturarSolicitudComponent implements OnInit {
   /**
@@ -163,7 +165,12 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * utilizando los métodos `establecerSeccion` y `establecerFormaValida` del servicio `SeccionLibStore`.
    * La suscripción se gestiona para que se complete automáticamente al destruir el componente mediante `takeUntil` y `destroyNotifier$`.
    */
-  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService, private tramite80101Store: Tramite80101Store, private tramite80101Query: Tramite80101Query) {
+  constructor(
+    private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService, 
+    private tramite80101Store: Tramite80101Store, 
+    private tramite80101Query: Tramite80101Query,
+    private toastrService: ToastrService,
+  ) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
@@ -184,21 +191,45 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       ).subscribe();
   }
 
-  /**
-   * Obtiene el valor del índice de la acción del botón.
-   * @param e - event$: Acción del botón.
-   */
-  getValorIndice(e: AccionBoton): void {
-    this.obtenerDatosDelStore();
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
-  }
+
+
+/**
+ * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
+ * 
+ * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
+ * y muestra un mensaje de éxito o error dependiendo del código de respuesta. Si la respuesta es exitosa
+ * y el valor del evento está dentro del rango válido (1 a 4), actualiza el índice del wizard y navega
+ * hacia adelante o atrás según el tipo de acción.
+ * 
+ * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
+ */
+getValorIndice(e: AccionBoton): void {
+  let shouldNavigate = false;
+  this.nuevoProgramaIndustrialService.getAllState()
+    .pipe(
+      take(1),
+      switchMap((data) => this.guardar(data)),
+      tap(response => {
+        shouldNavigate = response.codigo === '00';
+        if(shouldNavigate) {
+          this.toastrService.success(response.mensaje);
+        } else {
+          this.toastrService.error(response.mensaje);
+        }
+      }),
+      finalize(() => {
+        if (shouldNavigate && e.valor > 0 && e.valor < 5) {
+          this.indice = e.valor;
+          if (e.accion === 'cont') {
+            this.wizardComponent.siguiente();
+          } else {
+            this.wizardComponent.atras();
+          }
+        }
+      })
+    )
+    .subscribe();
+}
 
   /**
    * Obtiene los datos del store y los guarda utilizando el servicio.
@@ -489,7 +520,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * @returns void
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  guardar(data: any): void {
+  guardar(data: any): Promise<any> {
     const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
@@ -547,9 +578,19 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       "empresasNacionales": EMPRESAS_NACIONALES,
       "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
     }
-    this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
-      this.tramite80101Store.setIdSolicitud(response.datos.id_solicitud || 0);
-      return response;
+    return new Promise((resolve, reject) => {
+      this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
+        if(esValidObject(response) && esValidObject(response.datos)) {
+          if(getValidDatos(response.datos.id_solicitud)) {
+            this.tramite80101Store.setIdSolicitud(response.datos.id_solicitud);
+          } else {
+            this.tramite80101Store.setIdSolicitud(0);
+          }
+        }
+        resolve(response);
+      }, error => {
+        reject(error);
+      });
     });
   }
 
