@@ -9,12 +9,13 @@
         </h2>
       </div>
       <div class="col-12">
-        @if (esFormaValido) {
-        <div
-          class="alert alert-info alert-danger"
-          [innerHTML]="formErrorAlert"
-        ></div>
-        }
+
+        @if(esFormaValido){
+          <div class="col-md-12">
+            <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+          </div>
+          }
+       
       </div>
       @if (indice === 1) {
         <div class="=row">
