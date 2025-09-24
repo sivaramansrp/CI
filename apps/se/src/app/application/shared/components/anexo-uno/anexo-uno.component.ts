@@ -312,7 +312,7 @@ export class AnexoUnoComponent implements OnInit, OnDestroy, OnChanges {
         this.complimentosDatosDos.emit(this.anexoDosFormGroup.value);
       });
   }
-
+  /** Sincroniza los datos de las tablas de Anexo Dos y Tres con el servicio de formularios al detectar cambios. */
   ngOnChanges(): void {
     if (this.anexoUnoTablaLista.length === 0) {
         this.servicioDeFormularioService.registerArray('anexoUnoTabla1', this.anexoUnoTablaLista);

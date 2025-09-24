@@ -726,6 +726,12 @@ obtenerEstados():void {
     
   }
 
+  /**
+ * Maneja el cambio de valor en un campo del formulario de federatarios.
+ * Actualiza el objeto de datos, emite el evento correspondiente y sincroniza el valor en el formulario reactivo.
+ * @param event Objeto del catálogo seleccionado.
+ * @param campo Nombre del campo que se actualiza.
+ */
   eventoDeCambioDeValor(event: Catalogo, campo: string): void {
     this.datosFederatarios = {
       ...this.datosFederatarios,

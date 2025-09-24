@@ -464,11 +464,6 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     })
   }
 
-  isTouched(campo: string): boolean { 
-    return Boolean(this.formaComplimentos.get('formaSocioAccionistas.formaDatos.' + campo)?.touched);
-  }
-
-
   /**
  * Obtiene el formulario anidado de datos de socios accionistas.
  * @returns {FormGroup} FormGroup correspondiente a 'formaSocioAccionistas.formaDatos'.

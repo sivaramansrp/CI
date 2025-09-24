@@ -253,6 +253,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     );
   }
 
+  /** Verifica que todos los arreglos indicados estén llenos en el formulario del trámite 80101. */
   isAllArraysFilledIn80101(array: string[]): boolean {
     return array.every(item => this.servicioDeFormularioService.isArrayFilled(item));
   }

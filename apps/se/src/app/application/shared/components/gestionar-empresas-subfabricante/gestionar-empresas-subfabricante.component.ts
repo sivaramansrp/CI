@@ -314,6 +314,7 @@ private modalRef: Modal | null = null;
     this.obtenerEstados();
   }
 
+  /** Sincroniza los datos de las tablas de Anexo Dos y Tres con el servicio de formularios al detectar cambios. */
   ngOnChanges(): void {
     if (this.datosTablaSubfabricantesSeleccionadas.length === 0) {
       this.servicioDeFormularioService.registerArray('datosTablaSubfabricantesSeleccionadas', this.datosTablaSubfabricantesSeleccionadas);

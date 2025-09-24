@@ -545,7 +545,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
   private ejecutarAgregarServicio(): void {
     const CUERPODATOS = {
       descripionDelServicio: this.recibioDatos[0].descripcion,
-      tipode: this.recibioDatos[0].ide_tipo_servicio_immex,
+      tipode: this.recibioDatos[0].tipode || this.recibioDatos[0].ide_tipo_servicio_immex,
       clave: this.recibioDatos[0].clave,
     };
     this.Tramite80102Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);

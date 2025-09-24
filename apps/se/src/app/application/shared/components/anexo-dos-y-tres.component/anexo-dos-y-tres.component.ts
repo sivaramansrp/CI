@@ -201,6 +201,7 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
       });
   }
 
+  /** Sincroniza los datos de las tablas de Anexo Dos y Tres con el servicio de formularios al detectar cambios. */
   ngOnChanges(): void {
     if (this.anexoDosTablaLista.length === 0) {
         this.servicioDeFormularioService.registerArray('anexoDosTablaLista', this.anexoDosTablaLista);
@@ -214,6 +215,7 @@ export class AnexoDosYTresComponent implements OnInit, OnChanges {
         this.servicioDeFormularioService.setArray('anexoTresTablaLista', this.anexoTresTablaLista);
       }
   }
+
   /**
    * Crea el formulario del Anexo Dos
    */
