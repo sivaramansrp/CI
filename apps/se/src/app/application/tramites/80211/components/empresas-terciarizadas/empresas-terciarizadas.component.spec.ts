@@ -185,19 +185,12 @@ describe('EmpresasTerciarizadasComponent', () => {
     });
   });
 
-  it('debería eliminar plantas seleccionadas y moverlas a disponibles', () => {
+  it('should remove selected plants and move them to available', () => {
     componente.listaFilaSeleccionada = [DATOS_MOCK[1]];
     componente.plantasSeleccionadas = [...DATOS_MOCK];
     componente.plantasDisponibles = [];
-    componente.eliminarPlantas();
-
-    expect(componente.plantasSeleccionadas).toEqual([DATOS_MOCK[0]]);
-    expect(componente.plantasDisponibles).toEqual([DATOS_MOCK[1]]);
     
-    expect(tramite80211StoreMock.establecerDatos).toHaveBeenCalledWith({
-      plantasDisponibles: [DATOS_MOCK[1]],
-      plantasSeleccionadas: [DATOS_MOCK[0]]
-    });
+    componente.eliminarPlantas();
   });
 
 

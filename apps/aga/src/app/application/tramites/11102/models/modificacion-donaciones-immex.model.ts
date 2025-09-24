@@ -13,7 +13,7 @@ export interface RespuestaMercancia {
   /**
    * Objeto que contiene los datos detallados de la mercancía relacionados con la operación.
    */
-  datos: DatosDelMercancia;
+  datos: DatosDelMercancia[];
 
   /**
    * Mensaje que describe el resultado de la operación.
@@ -40,21 +40,21 @@ export interface DatosDelMercancia {
 
   /**
    * Unidad de medida de la mercancía.
-   * @type {string}
+   * @type {string | number}
    */
-  unidadMedida: string;
+  unidadMedida: string | number;
 
   /**
    * Condición de la mercancía.
-   * @type {string}
+   * @type {string | number}
    */
-  condicionMercancia: string;
+  condicionMercancia: string | number;
 
   /**
    * Año relacionado con la mercancía.
-   * @type {Array<any>}
+   * @type {string | number}
    */
-  ano: [];
+  ano: string | number;
 
   /**
    * Cantidad de mercancía.

@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
+import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { CommonModule } from '@angular/common';
@@ -296,7 +296,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * Indica si el campo de fecha fin debe mostrarse en el formulario, dependiendo del procedimiento.
    */
   fechaFin: boolean = false;
-
+  
+  /**
+   * @property {boolean} fechaFin
+   * @description
+   * Indica si el campo de fecha fin debe mostrarse en el formulario, dependiendo del procedimiento.
+   */
+  fechaBoton: boolean = false;
   /**
    * Indicates whether the domicile information should be displayed.
    * Set to `true` to show domicile details; otherwise, set to `false`.
@@ -362,7 +368,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    */
   cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_SELECCIONADAS;
 
-
+cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
   /**
    * Datos de la bitácora obtenidos desde el servicio.
    * @type {Mercancia[]}
@@ -473,6 +479,15 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    */
   tableErrorMensajeError: boolean = false;
 
+    /**
+   * @property {boolean} requerida
+   * @description
+   * Indica si determinados campos del formulario son obligatorios según el tipo de procedimiento.
+   * Se establece como true cuando el ID del procedimiento está incluido en el arreglo REQUIREDA,
+   * lo que activa validaciones adicionales en ciertos campos del formulario.
+   */
+  requerida: boolean = false;
+
 
   /**
    * Constructor del componente. Inicializa el formulario reactivo con los controles necesarios y sus validaciones.
@@ -496,6 +511,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
   createForm(): void {
     this.formCertificado = this.fb.group({
       si: [false],
+      rangoDeFecha:[],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
       bloque: ['', [Validators.required, Validators.min(0)]],
       fraccionArancelariaForm: ['', [Validators.maxLength(8), Validators.pattern(EIGHT_DIGIT_NUMBER_REGEX)]],
@@ -754,14 +770,18 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    */
   ngOnInit(): void {
     this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
+    this.fechaBoton = BOTON_DE_OPCION_VER.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
     this.applyTercerOperadorValidation(); // Add validation for procedure 110222
     this.nuevaNotificacion = {} as Notificacion
     this.inicializarFormularioArchivo();
     this.loadComboUnidadMedida();
+    if(REQUIREDA.includes(this.idProcedimiento)){
+      this.requerida = true;
+    }
   }
   validarFormularios(): boolean {
-    if (this.formCertificado.valid) {
+    if ((this.formCertificado.get('entidadFederativa')?.value !== '' && this.formCertificado.get('entidadFederativa')?.value !== null)&&(this.formCertificado.get('bloque')?.value!=='' && this.formCertificado.get('bloque')?.value !== null)) {
       return true;
     }
     this.formCertificado.markAllAsTouched();
@@ -1098,5 +1118,55 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
     }
     this.nuevaNotificacion = {} as Notificacion;
   }
+
+  /**
+   * @method onNombreInput
+   * @description
+   * Maneja los cambios en el campo de nombre del formulario.
+   * Cuando se ingresa un valor en el campo de nombre, limpia y deshabilita el campo de razón social,
+   * ya que estos campos son mutuamente excluyentes (persona física vs. persona moral).
+   * Cuando se borra el valor del nombre, habilita nuevamente el campo de razón social.
+   * 
+   * @param {Event} event - Evento del input que contiene el valor del campo de nombre.
+   * @returns {void}
+   */
+  onNombreInput(event: Event): void {
+    const NOMBRE = (event.target as HTMLInputElement).value.trim();
+
+    if (NOMBRE) {
+      this.formCertificado.patchValue({ razonSocial: '' }, { emitEvent: false });
+      this.formCertificado.get('razonSocial')?.disable({ emitEvent: false });
+    } else {
+      this.formCertificado.get('razonSocial')?.enable({ emitEvent: false });
+    }
+  }
+  /**
+   * @method onRazonSocialInput
+   * @description
+   * Maneja los cambios en el campo de razón social del formulario.
+   * Cuando se ingresa un valor en la razón social, limpia y deshabilita los campos relacionados con persona física
+   * (nombres, primerApellido, segundoApellido), ya que estos campos son mutuamente excluyentes.
+   * Cuando se borra el valor de la razón social, habilita nuevamente los campos de persona física.
+   * 
+   * @param {Event} event - Evento del input que contiene el valor del campo de razón social.
+   * @returns {void}
+   */
+  onRazonSocialInput(event: Event): void {
+    const RAZONSOCIAL = (event.target as HTMLInputElement).value.trim();
+    if (RAZONSOCIAL) {
+      this.formCertificado.patchValue({
+        nombres: '',
+        primerApellido: '',
+        segundoApellido: '',
+      }, { emitEvent: false });
+      this.formCertificado.get('nombres')?.disable({ emitEvent: false });
+      this.formCertificado.get('primerApellido')?.disable({ emitEvent: false });
+      this.formCertificado.get('segundoApellido')?.disable({ emitEvent: false });
+    } else {
+      this.formCertificado.get('nombres')?.enable({ emitEvent: false });
+      this.formCertificado.get('primerApellido')?.enable({ emitEvent: false });
+      this.formCertificado.get('segundoApellido')?.enable({ emitEvent: false });
+    }
+}
 
 }

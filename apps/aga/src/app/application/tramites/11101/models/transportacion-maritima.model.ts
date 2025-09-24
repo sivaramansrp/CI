@@ -4,115 +4,34 @@
  * @interface DiscripccionDeLaMercancia
  */
 export interface DiscripccionDeLaMercanciaForm {
-    /**
-     * Denominación de la persona fisca
-     * @type {string}
-     */
-    consecutivo: string;
-
-    /**
-     * Estado de la persona fisca
-     * @type {string}
-     */
-    estado: string;
-
-    /**
- * Denominación de la persona fisca
- * @type {string}
- */
-    cantidad: string;
-
-
-    /**
-     *  Forma parte de patrimonio persona fisca
-     * @type { string; }
-     */
-    formaParteDePatrimonio: string;
-
-    /**
- * Número de registro del aviso
- * @type {string}
- */
-    numeroderegistro: string;
-
-    /**
-     * Nombre, denominación o razón social
-     * @type {string}
-     */
-    NobmreDenominationRazonSocial: string;
-
-    /**
-     * RFC o tax ID
-     * @type {string}
-     */
-    rfctaxid: string;
-
-    /**
-     * Teléfono de contacto
-     * @type {string}
-     */
-    Telefono: string;
-
-    /**
-     * Correo electrónico de contacto
-     * @type {string}
-     */
-    correoelectronico: string;
-
-    /**
-     * Entidad federativa
-     * @type {string}
-     */
-    entidadadfederativa: string;
-
-    /**
-     * Alcaldía o municipio
-     * @type {string}
-     */
-    alcadilamunicipio: string;
-
-    /**
-     * Colonia
-     * @type {string}
-     */
-    colonia: string;
-
-    /**
-     * Código postal
-     * @type {string}
-     */
-    codigopostal: string;
-
-    /**
-     * Calle
-     * @type {string}
-     */
-    calle: string;
-
-    /**
-     * Número o letra exterior
-     * @type {string}
-     */
-    numeroletraexterior: string;
-
-    /**
-     * Número o letra interior
-     * @type {string}
-     */
-    numeroletrainterior: string;
-
-    /**
-     * Entre calle
-     * @type {string}
-     */
-    entrecalle: string;
-
-    /**
-     * Y calle
-     * @type {string}
-     */
-    ycalle: string;
+   
+   consecutivo: string;
+   estado: string;
+   formaParteDePatrimonio: string;
+   descripcion: string;
+   cantidad: string;
+   unidadmedida: string;
+   fraccionarancelaria: string;
+   valor: string;
+   moneda: string;
+   fin: string;
+   nico: string;
+   marca: string;
+   modelo: string;
+   numerodeserie: string;
+   especifique: string;
 }
+
+/**
+ * RespuestaMercancia: Interface para la respuesta de la mercancía
+ * @interface RespuestaMercancia
+ */
+export interface RespuestaMercancia {
+  success: boolean;
+  datos: DiscripccionDeLaMercanciaForm[];
+  message: string;
+}
+
 /**
  * Interfaz que representa los datos de un solicitante.
  */

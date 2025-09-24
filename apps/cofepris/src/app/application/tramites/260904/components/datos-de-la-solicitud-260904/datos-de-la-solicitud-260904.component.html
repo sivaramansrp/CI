@@ -20,7 +20,11 @@
                 <div class="col-md-6"></div>
                 <div class="col-md-6 text-end">
                   <div class="btn-group">
-                    <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" type="button">
+                    <button class="btn btn-primary me-2" 
+                    [disabled]="esFormularioSoloLectura" 
+                    *ngIf="!botonDesactivarParaProrrogar"
+                    (click)="restaurarDatosPrellenados()"
+                    type="button">
                       Copiar datos en una Nueva Solicitud
                     </button>
                   </div>
@@ -44,8 +48,8 @@
           formControlName="btonDeRadio"
           (change)="setValorStore(form,'btonDeRadio'); tipoTramiteChange.emit(form.get('btonDeRadio')?.value)"
         ></app-input-radio>
-               <div *ngIf="form.get('btonDeRadio')?.invalid && form.get('btonDeRadio')?.touched" class="text-danger">
-            Este campo es obligatorio
+        <div *ngIf="form.get('btonDeRadio')?.invalid && (form.get('btonDeRadio')?.touched || form.get('btonDeRadio')?.dirty) && form.get('btonDeRadio')?.errors?.['required']" class="text-danger">
+          Este campo es obligatorio
         </div>
       </div>
 
@@ -80,8 +84,9 @@
           <button
             type="button"
             class="btn btn-primary"
-            (click)="toggleFormControls()"
+            (click)="openEstablecimientoModal()"
             [disabled]="esFormularioSoloLectura"
+            *ngIf="!botonDesactivarParaProrrogar"
           >
             Seleccionar establecimiento
           </button>
@@ -178,5 +183,24 @@
         </div>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- Modal para Seleccionar Establecimiento -->
+<div class="modal fade" id="establecimientoModal" tabindex="-1" role="dialog" aria-labelledby="establecimientoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="establecimientoModalLabel"></h5>
+      </div>
+      <div class="modal-body">
+        <p>Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.</p>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="closeEstablecimientoModal()">
+          Aceptar
+        </button>
+      </div>
+    </div>
   </div>
 </div>

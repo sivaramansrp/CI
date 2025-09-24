@@ -31,7 +31,7 @@
   <div class="row">
     <div class="col-md-6">
       <div class="form-group">
-        <input-fecha [datos]="fetchaDeFirma" [setFecha]="complementarForm.get('fechaDeFirma')?.value" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+        <input-fecha [datos]="fetchaDeFirma" [setFecha]="complementarForm.get('fechaDeFirma')?.value" (valorCambiado)="cambioFechaFinal($event)" [deshabilitarFuturas]="true"></input-fecha>
       </div>
     </div>
     <div class="col-md-6">
@@ -64,3 +64,10 @@
 </div>
     </form>
 </div>
+
+@if (exitosamenteNotificacion) {
+<section class="exito-modal">
+  <lib-notificaciones [notificacionInput]="exitosamenteNotificacion">
+  </lib-notificaciones>
+</section>
+}

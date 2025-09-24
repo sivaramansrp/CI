@@ -31,6 +31,9 @@
           />
           Extranjero
         </div>
+          <div *ngIf="chequeoValidacionAlGuardar && esInvalido('nacionalidad')" class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
       </div>
       <div class="col-md-6">
         <label class="form-label">Tipo persona*:</label>
@@ -40,7 +43,7 @@
             formControlName="tipoPersona"
             [value]="tipoPersona.FISICA"
             (change)="changeTipoPersona()"
-          />
+             />
           Física
           <span
             tooltip="Una persona física es entendida como toda persona con una actividad específica"
@@ -59,6 +62,9 @@
             tooltip="Una persona moral es entendida como una empresa con una actividad específica"
             ><i class="bi bi-question-circle-fill"></i
           ></span>
+        </div>
+          <div *ngIf="chequeoValidacionAlGuardar && esInvalido('tipoPersona')" class="text-danger">
+          <small>Este campo es obligatorio</small>
         </div>
         @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr &&
         habilitarContribuyente === true) {
@@ -244,10 +250,10 @@
       </div>
     </div>
     } @if(idProcedimiento === 260102 || ((idProcedimiento === 260214 ||
-    idProcedimiento === 260219) &&
+    idProcedimiento === 260219 || 260904) &&
     agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
     agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA ) ||
-    ( idProcedimiento === 260214 &&
+    ( idProcedimiento === 260214 || 260904 &&
     agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL &&
     agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero')) {
     <h4 class="mt-5">Domicilio</h4>
@@ -258,6 +264,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
+          [markTouched]="agregarFabricanteForm.get('pais')?.touched ?? false"
         ></app-catalogo-select>
       </div>
 
@@ -297,7 +304,28 @@
         />
       </div>
     </div>
+    <div class="row mt-3">
+       @if(
+            chequeoValidacionAlGuardar &&
+            agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
+            agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL ||
+            agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero' &&
+            agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA
+          ) {
+  
+          <div class="col-md-4">
+            <label class="form-label">Colonia o equivalente:</label>
+            <input
+              type="text"
+              class="form-control"
+              [maxlength]="100"
+              formControlName="coloniaOEquivalente"
+            />
+          </div>
+      }
+    </div>
     }
+  
 
     <!-- Domicilio -->
     @else{
