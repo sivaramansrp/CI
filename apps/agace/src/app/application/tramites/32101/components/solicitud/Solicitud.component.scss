@@ -18,3 +18,9 @@
   display: block; 
   margin-bottom: 2em;
 }
+
+.textarea-container {
+    resize: vertical; 
+    overflow: hidden;
+    height: auto;
+}

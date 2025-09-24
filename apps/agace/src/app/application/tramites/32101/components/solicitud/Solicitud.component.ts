@@ -408,6 +408,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @param {string} id El nombre del control del formulario.
+   * @returns {boolean} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  isInvalid(id: string): boolean {
+    const CONTROL = this.registroForm.get(id);
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
+  }
+
+  /**
    * Obtiene la lista de documentos relacionados con el trámite de inversión.
    *
    * Este método realiza una solicitud al servicio `consultaAvisoAcreditacionService`
@@ -512,10 +522,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         categoria: 'danger',
         modo: 'action',
         titulo: 'Error de validación',
-        mensaje: 'Por favor, complete todos los campos requeridos antes de agregar.',
+        mensaje: 'Debe capturar todos los datos marcados como obligatorios.',
         cerrar: true,
         tiempoDeEspera: 3000,
-        txtBtnAceptar: 'De acuerdo',
+        txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
       
@@ -598,10 +608,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         categoria: 'danger',
         modo: 'action',
         titulo: 'Error',
-        mensaje: 'Por favor, seleccione exactamente una fila para modificar.',
+        mensaje: 'Seleccione un registro.',
         cerrar: true,
         tiempoDeEspera: 3000,
-        txtBtnAceptar: 'De acuerdo',
+        txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
       return;
@@ -634,20 +644,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         categoria: 'danger',
         modo: 'action',
         titulo: 'Error',
-        mensaje: 'No se seleccionaron filas para eliminar.',
+        mensaje: 'Seleccione un registro.',
         cerrar: true,
         tiempoDeEspera: 3000,
-        txtBtnAceptar: 'De acuerdo',
+        txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
       return;
+    } else {
+      this.abrirEleminarModal();
     }
-    this.configuracionTablaDatos = this.configuracionTablaDatos.filter(
-      (row) => !this.selectedRows.includes(row)
-    );
-    this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);
-    this.selectedRows = [];
-    this.abrirEleminarModal();
+    // this.configuracionTablaDatos = this.configuracionTablaDatos.filter(
+    //   (row) => !this.selectedRows.includes(row)
+    // );
+    // this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);
+    // this.selectedRows = [];
+    // this.abrirEleminarModal();
   }
 
 
@@ -779,7 +791,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'Seguro que desea eliminar el pedimento?',
+      mensaje: 'Seguro que desea eliminar el registro seleccionado?',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -793,6 +805,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
+      this.configuracionTablaDatos = this.configuracionTablaDatos.filter(
+        (row) => !this.selectedRows.includes(row)
+      );
+      this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);
+      this.selectedRows = [];
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }

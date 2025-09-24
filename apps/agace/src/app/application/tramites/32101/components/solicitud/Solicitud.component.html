@@ -2,38 +2,55 @@
   <ng-titulo titulo="Acreditación de infraestructura (etapa pre-operativa)"></ng-titulo>
   <form [formGroup]="registroForm">
   <ng-container>
-    <div class="row mb-3">
-                  <div class="col-md-4">
-                      <app-catalogo-select [catalogo]="tramiteList.catalogos" [label]="tramiteList.labelNombre" [placeholder]="tramiteList.primerOpcion" [required]="true"  formControlName="tipoDeInversion" name="tipoDeInversion" id="tipoDeInversion" (change)="setValoresStore(registroForm, 'tipoDeInversion', 'setTipoDeInversion')" [isDisabled]="soloLectura"></app-catalogo-select>
-                  </div>
-                  <div class="col-md-5">
-                      <label for="valorEnPesos" class="form-label">Valor en pesos*:</label>
-                      <input class="form-control" [ngClass]="isValid(valorEnPesos, 'valorEnPesos') ? 'required' : ''" type="number" formControlName="valorEnPesos" name="valorEnPesos" id="valorEnPesos" (change)="setValoresStore(registroForm, 'valorEnPesos', 'setValorEnPesos')" />
-                  </div>
-                  <div class="col-md-4">
-                    <label for="tipoDeInversion" class="form-label">Descripción general*:</label>
-                    <input class="form-control" [ngClass]="isValid(descripcionGeneral, 'descripcionGeneral') ? 'required' : ''" type="text" formControlName="descripcionGeneral" name="descripcionGeneral" id="descripcionGeneral" (change)="setValoresStore(registroForm, 'descripcionGeneral', 'setDescripcionGeneral')" />
-                  </div>
-                  <div class="col-md-5">
-                    <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
-                      [placeholder]="aduana.primerOpcion" [required]="true"  formControlName="listaDeDocumentos" name="listaDeDocumentos" id="listaDeDocumentos" (change)="setValoresStore(registroForm, 'listaDeDocumentos', 'setListaDeDocumentos')" [isDisabled]="soloLectura"></app-catalogo-select>
-                  </div>
-                  <div class="col-md-12 mt-5 d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary ms-3" (click)="poblarTabla()" [disabled]="soloLectura">Agregar</button>
-                  </div>
-                  @if (nuevaNotificacion) { <section>
-        <lib-notificaciones [notificacionInput]="nuevaNotificacion"
-          (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
-      </section> }
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="tramiteList.catalogos" [label]="tramiteList.labelNombre" [markTouched]="registroForm.get('tipoDeInversion')?.touched??false"
+                [placeholder]="tramiteList.primerOpcion" [required]="true"  formControlName="tipoDeInversion" name="tipoDeInversion" id="tipoDeInversion" (change)="setValoresStore(registroForm, 'tipoDeInversion', 'setTipoDeInversion')" [isDisabled]="soloLectura"></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+                <label for="valorEnPesos" class="form-label">Valor en pesos*:</label>
+                <input class="form-control" [ngClass]="isValid(valorEnPesos, 'valorEnPesos') ? 'required' : ''" type="number" formControlName="valorEnPesos" name="valorEnPesos" id="valorEnPesos" (change)="setValoresStore(registroForm, 'valorEnPesos', 'setValorEnPesos')" />
+                <div *ngIf="isInvalid('valorEnPesos') && registroForm.get('valorEnPesos')?.errors?.['required']" class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
+            </div>
+        </div>        
+        <div class="row mb-3">
+            <div class="col-md-8">
+              <label for="tipoDeInversion" class="form-label">Descripción general*:</label>
+              <textarea class="form-control textarea-container" [ngClass]="isValid(descripcionGeneral, 'descripcionGeneral') ? 'required' : ''" rows="2" formControlName="descripcionGeneral" name="descripcionGeneral" id="descripcionGeneral" (change)="setValoresStore(registroForm, 'descripcionGeneral', 'setDescripcionGeneral')"></textarea>
+              <div *ngIf="isInvalid('valorEnPesos') && registroForm.get('valorEnPesos')?.errors?.['required']" class="mensaje-error">
+                Este campo es obligatorio.
+              </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-4">
+              <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre" [markTouched]="registroForm.get('listaDeDocumentos')?.touched??false"
+                [placeholder]="aduana.primerOpcion" [required]="true"  formControlName="listaDeDocumentos" name="listaDeDocumentos" id="listaDeDocumentos" (change)="setValoresStore(registroForm, 'listaDeDocumentos', 'setListaDeDocumentos')" [isDisabled]="soloLectura"></app-catalogo-select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-12 mt-5 d-flex justify-content-end">
+              <button type="button" class="btn btn-primary ms-3" (click)="poblarTabla()" [disabled]="soloLectura">Agregar</button>
+            </div>
+          @if (nuevaNotificacion) { 
+          <section>
+              <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+                (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+          </section> 
+        }
     </div>
   </ng-container>
   <ng-container>
     <h6>Datos de la inversión</h6>
     <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezadoDeTabla" [datos]="configuracionTablaDatos" (filaSeleccionada)="onCheckboxClicked($event)" [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
-    <div class="col-md-12 mt-5 d-flex justify-content-end" *ngIf="configuracionTablaDatos.length > 0">
+    
+    <div class="col-md-12 mt-5 mb-3 d-flex justify-content-end" *ngIf="configuracionTablaDatos.length > 0">
       <button type="button" name="modificarMercancias" class="btn btn-default" (click)="modificarFilaSeleccionada()">Modificar</button>
       <button type="button" name="eliminarMercancias" class="btn btn-danger ms-2" (click)="eliminarFilasSeleccionadas()">Eliminar</button>
-      @if (nuevaNotificacion2) { <section>
+      @if (nuevaNotificacion2) { 
+      <section>
         <lib-notificaciones [notificacionInput]="nuevaNotificacion2"
           (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
       </section> }
