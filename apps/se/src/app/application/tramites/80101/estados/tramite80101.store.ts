@@ -184,6 +184,17 @@ export interface Tramite80101State {
    * Información detallada de plantas IMMEX.
    */
   proyectoImmexTablaLista: ProyectoImmexEncabezado[];
+
+  /**
+   * Información detallada de proveedor Cliente Datos Tabla.
+   */
+  proveedorClienteDatosTabla: ProveedorClienteTabla[];
+
+   /**
+   * Información detallada de proveedor Cliente Datos TablaDos.
+   */
+
+  proveedorClienteDatosTablaDos: ProveedorClienteTabla[];
 }
 
 /**
@@ -346,6 +357,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
       encabezadoValorEnMercado: '',
     },
     proveedorClienteDatosTabla:[],
+    proveedorClienteDatosTablaDos:[],
     seccionActiva: '',
   },
 
@@ -369,6 +381,8 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     estadoTres: ''
   },
   proyectoImmexTablaLista: [],
+  proveedorClienteDatosTabla: [],
+  proveedorClienteDatosTablaDos: [],
 };
 
 /**
@@ -935,12 +949,27 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    *
    * @param proveedorClienteDatosTabla - Arreglo de objetos de tipo `ProveedorClienteTabla` que representa los datos de proveedores y clientes para la tabla.
    */
-  setProveedorClienteDatosTabla(proveedorClienteDatosTabla: ProveedorClienteTabla[]): void {
+  setProveedorClienteDatosTablaUno(proveedorClienteDatosTabla: ProveedorClienteTabla[]): void {
     this.update((state) => ({
       ...state,
       annexoUno: {
         ...state.annexoUno,
         proveedorClienteDatosTabla: proveedorClienteDatosTabla,
+      },
+    }));
+  }
+
+/**
+   * Actualiza la propiedad `proveedorClienteDatosTablaDos` dentro de `annexoUno` en el estado de la tienda.
+   *
+   * @param proveedorClienteDatosTablaDos - Arreglo de objetos de tipo `ProveedorClienteTabla` que representa los datos de proveedores y clientes para la tabla.
+   */
+  setProveedorClienteDatosTablaDos(proveedorClienteDatosTabla: ProveedorClienteTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        proveedorClienteDatosTablaDos: proveedorClienteDatosTabla,
       },
     }));
   }

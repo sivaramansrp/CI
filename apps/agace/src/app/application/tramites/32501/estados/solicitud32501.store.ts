@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {OperacionDeImportacion} from "../models/aviso-catalogo.model";
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
@@ -110,6 +111,15 @@ export interface Solicitud32501State {
    * Código de la aduana, puede ser un número o una cadena.
    */
   aduana: string | number;
+  
+  /**
+   * Costos de servicios de terceros, puede ser un número o una cadena.
+   */
+  serviciosTerceros:string|number;
+  /**
+   * Lista de operaciones de importación asociadas a la solicitud.
+   */
+  operacionDeImportacionLista: OperacionDeImportacion[];
 }
 
 /**
@@ -139,6 +149,9 @@ export function createInitialSolicitudState(): Solicitud32501State {
     rfc: '',
     pedimento: '',
     aduana: '',
+    serviciosTerceros: '',
+    operacionDeImportacionLista:[]
+    
   };
 }
 
