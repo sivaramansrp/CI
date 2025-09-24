@@ -122,7 +122,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public validarTodosLosFormularios(): boolean {
     let allFormsValid = true;
   
-     if (this.indice >= 2 && this.solicitudComponent) {
+     if (this.indice >= 1 && this.solicitudComponent) {
       this.solicitudComponent?.formAviso.markAllAsTouched();
 
         if (!this.solicitudComponent.formAviso.valid) {
