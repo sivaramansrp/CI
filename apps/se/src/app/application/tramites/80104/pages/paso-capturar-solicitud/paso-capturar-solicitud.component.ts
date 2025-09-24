@@ -392,6 +392,16 @@ ngOnInit(): void {
            "anexoI": [...ANEXO_ALL.anexo.tableDos]
         }
     ],
+    "fraccionArancelaria":[
+        {
+          "listaProveedores": [...ANEXO_ALL.anexo.proveedorClienteDos]
+        }
+      ],
+    "productoExportacionDtoList": [
+        {
+          "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]
+        }
+      ],
     "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
     "solicitud": SOLICITUD,
     "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
@@ -595,6 +605,43 @@ ngOnInit(): void {
         umt:item.encabezadoUmt
       });
     });
+
+    /**
+     * Transforma un objeto de entrada en un objeto con los datos requeridos para el proyecto IMMEX.
+     *
+     * @param item - Objeto de entrada que contiene los datos del encabezado del documento.
+     * @returns Un objeto con las propiedades mapeadas para el proyecto IMMEX:
+     *   - tipoDocumento: Tipo de documento del encabezado.
+     *   - descripcion: Descripción adicional del encabezado.
+     *   - fechaFirma: Fecha de firma del documento.
+     *   - fechaVigencia: Fecha de vigencia del documento.
+     *   - rfcFirmante: RFC del firmante.
+     *   - razonFirmante: Razón social del firmante.
+     *   - testado: Valor booleano fijo en true.
+     *   - fecFinVigencia: Fecha de fin de vigencia del documento.
+     */
+     const proyectoImmexDatos = (item: any) => ({
+      tipoDocumento: item.encabezadoTipoDocument,
+      descripcion: item.encabezadoDescripcionOtro,
+      fechaFirma:  item.encabezadoFechaFirma,
+      fechaVigencia:  item.encabezadoFechaVigencia,
+      rfcFirmante:  item.encabezadoRfc,
+      razonFirmante:  item.encabezadoRazonFirmante,
+      testado: true,
+      fecFinVigencia:  item.encabezadoFechaVigencia,
+    });
+
+     const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
+              paisOrigen: item.paisOrigen,
+              rfcProveedor: item.rfcProveedor,
+              razonProveedor: item.razonProveedor,
+              paisDestino: item.paisDestino,
+              rfcCliente: item.rfcClinte,
+              razonCliente: item.razonSocial,
+              domicilio: item.domicilio,
+              descTestado: item.descTestado,
+            });
+
     
       return {
         anexo: {
@@ -602,7 +649,9 @@ ngOnInit(): void {
           ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
           proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
           datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
-          tableDos: anexoDos
+          tableDos: anexoDos,
+           proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
+           proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
         },
       };
     }

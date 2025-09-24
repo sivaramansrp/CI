@@ -91,7 +91,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
  */
   public infoAlert = 'alert-info';
 
-  idSolicitud: number=0;
+  idSolicitud: number = 0;
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
    * @private
@@ -102,15 +102,15 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
   /** Indica la visibilidad del botón Guardar. */
   public btnGuardarVisible: string = 'visible';
 
-   /**
-   * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
-   */
+  /**
+  * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
+  */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private socioAccionistaBase = socioAccionistas;
 
   /** Listado de empresas nacionales utilizadas en el formulario de solicitud. */
   private empresasNacionales = empresasNacionales;
-  
+
   /** Listado de empresas  extranjeras utilizadas en el formulario de solicitud. */
   private empresasExtranjeras = empresasExtranjeras;
 
@@ -131,9 +131,9 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private notariosBase: any[] = notarios;
 
-   /**
-   * URL de la página actual.
-   */
+  /**
+  * URL de la página actual.
+  */
   public solicitudState!: Tramite80101State;
 
   /**
@@ -141,14 +141,14 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
    * Contiene los datos del usuario que está utilizando el sistema, obtenidos de la constante USUARIO_INFO.
    */
   datosUsuario: Usuario = USUARIO_INFO;
-   /**
-   * Evento que se emite para cargar archivos.
-   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
-   */
+  /**
+  * Evento que se emite para cargar archivos.
+  * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+  */
   cargarArchivosEvento = new EventEmitter<void>();
-   /**
- * Indica si el botón para cargar archivos está habilitado.
- */
+  /**
+* Indica si el botón para cargar archivos está habilitado.
+*/
   activarBotonCargaArchivos: boolean = false;
 
   /**
@@ -156,7 +156,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
  * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
  */
   seccionCargarDocumentos: boolean = true;
-  
+
   /**
    * Texto del aviso de privacidad simplificado.
    */
@@ -191,7 +191,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
    * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`,
    * evitando fugas de memoria.
    */
-ngOnInit(): void {
+  ngOnInit(): void {
     this.tramiteQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -222,26 +222,26 @@ ngOnInit(): void {
    */
   obtenerDatosDelStore(): void {
     this.nuevoProgramaIndustrialService.getAllState()
-    .pipe(take(1))
-    .subscribe(data => {
-      this.guardar(data);
-    });
+      .pipe(take(1))
+      .subscribe(data => {
+        this.guardar(data);
+      });
   }
 
- /**
- * Construye un arreglo de socios/accionistas a partir de dos listas de entrada,
- * utilizando un objeto base como plantilla y datos complementarios para completar
- * los campos faltantes.
- *
- * @param data Primer arreglo de socios/accionistas.
- * @param base Objeto base que sirve de plantilla para cada elemento del resultado.
- *
- * @returns Un nuevo arreglo que contiene los objetos combinados y mapeados
- *          con la información de los dos arreglos de entrada.
- *
- * @example
- * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
- */
+  /**
+  * Construye un arreglo de socios/accionistas a partir de dos listas de entrada,
+  * utilizando un objeto base como plantilla y datos complementarios para completar
+  * los campos faltantes.
+  *
+  * @param data Primer arreglo de socios/accionistas.
+  * @param base Objeto base que sirve de plantilla para cada elemento del resultado.
+  *
+  * @returns Un nuevo arreglo que contiene los objetos combinados y mapeados
+  *          con la información de los dos arreglos de entrada.
+  *
+  * @example
+  * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
+  */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
   buildSociosAccionistas(data: Record<string, any>, base: Record<string, any>): any {
     return {
@@ -271,9 +271,9 @@ ngOnInit(): void {
   static buildDeclaracionSolicitudEntries(data: Record<string, any>): unknown[] {
     const RESULT = [
       {
-          "acepto": data['datosComplimentos'].obligacionesFiscales.aceptarObligacionFiscal ? 1 : 0,
-          "idTipoTramite": 80103,
-          "cveDeclaracion": "123"
+        "acepto": data['datosComplimentos'].obligacionesFiscales.aceptarObligacionFiscal ? 1 : 0,
+        "idTipoTramite": 80103,
+        "cveDeclaracion": "123"
       }
     ];
     return RESULT;
@@ -362,8 +362,8 @@ ngOnInit(): void {
    *
    * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
    */
-   buildAnexo(data: any) {
-   
+  buildAnexo(data: any) {
+
     const buildAnexoItem = (item: Anexo1) => ({
       descripcion: item.encabezadoFraccion,
       idTipoBien: 0,
@@ -372,7 +372,7 @@ ngOnInit(): void {
       contadorGrid: null,
       descripcionTestado: item.encabezadoDescripcion,
     });
-  
+
     const buildProveedorCliente = (item: ProveedorClienteDatosTabla) => ({
       idProveedor: item.idProveedor,
       paisOrigen: item.paisOrigen,
@@ -386,7 +386,7 @@ ngOnInit(): void {
       idProductoP: item.idProductoP,
       descTestado: item.descTestado,
     });
-  
+
     const buildDatosParaNavegar = (datos: any) => ({
       anexoII: datos?.encabezadoAnexoII,
       tipo: datos?.encabezadoTipo,
@@ -415,19 +415,42 @@ ngOnInit(): void {
         fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
         fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
         categoriaFraccion: item.encabezadoCategoria,
-        tipoFraccion:item.encabezadoTipo,
-        umt:item.encabezadoUmt
+        tipoFraccion: item.encabezadoTipo,
+        umt: item.encabezadoUmt
       });
     });
 
-  
+    const proyectoImmexDatos = (item: any) => ({
+      tipoDocumento: item.encabezadoTipoDocument,
+      descripcion: item.encabezadoDescripcionOtro,
+      fechaFirma: item.encabezadoFechaFirma,
+      fechaVigencia: item.encabezadoFechaVigencia,
+      rfcFirmante: item.encabezadoRfc,
+      razonFirmante: item.encabezadoRazonFirmante,
+      testado: true,
+      fecFinVigencia: item.encabezadoFechaVigencia,
+    });
+
+     const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
+              paisOrigen: item.paisOrigen,
+              rfcProveedor: item.rfcProveedor,
+              razonProveedor: item.razonProveedor,
+              paisDestino: item.paisDestino,
+              rfcCliente: item.rfcClinte,
+              razonCliente: item.razonSocial,
+              domicilio: item.domicilio,
+              descTestado: item.descTestado,
+            });
+
     return {
       anexo: {
         ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
         ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
         proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
         datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
-        tableDos: anexoDos
+        tableDos: anexoDos,
+        proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
+        proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
       },
     };
   }
@@ -510,31 +533,31 @@ ngOnInit(): void {
     const ANEXO_ALL = this.buildAnexo(data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
-    
+
     const PAYLOAD = {
       "esDeGuardar": true,
-    "tipoDeSolicitud": "guardar",
-    "idSolicitud": 202781045,
-    "idTipoTramite": 80103,
-    "rfc": "AAL0409235E6",
-    "cveUnidadAdministrativa": "8101",
-    "costoTotal": 10000.5,
-    "certificadoSerialNumber": "1234567890ABCDEF",
-    "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
-    "numeroFolioTramiteOriginal": "TRM-2023-00001",
-    "nombre": "Juan",
-    "apPaterno": "Pérez",
-    "apMaterno": "López",
-    "telefono": "5551234567",
-    "discriminator_value": "80103",
-    "discriminatorValue": "80103",
-     "domicilio": {
-    },
-    "solicitante": {
-        
-    },
+      "tipoDeSolicitud": "guardar",
+      "idSolicitud": 202781045,
+      "idTipoTramite": 80103,
+      "rfc": "AAL0409235E6",
+      "cveUnidadAdministrativa": "8101",
+      "costoTotal": 10000.5,
+      "certificadoSerialNumber": "1234567890ABCDEF",
+      "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
+      "numeroFolioTramiteOriginal": "TRM-2023-00001",
+      "nombre": "Juan",
+      "apPaterno": "Pérez",
+      "apMaterno": "López",
+      "telefono": "5551234567",
+      "discriminator_value": "80103",
+      "discriminatorValue": "80103",
+      "domicilio": {
+      },
+      "solicitante": {
+
+      },
       "planta": [...PLANTAS],
-      "notario":[...NOTARIOS],
+      "notario": [...NOTARIOS],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
       "mercanciaImportacion": [
@@ -547,12 +570,22 @@ ngOnInit(): void {
           },
           "anexoI": [...ANEXO_ALL.anexo.tableDos]
         }
-    ],
-    "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
-    "solicitud": SOLICITUD,
-    "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
-    "empresasNacionales": EMPRESAS_NACIONALES,
-    "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
+      ],
+      "fraccionArancelaria":[
+        {
+          "listaProveedores": [...ANEXO_ALL.anexo.proveedorClienteDos]
+        }
+      ],
+      "productoExportacionDtoList": [
+        {
+          "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]
+        }
+      ],
+      "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
+      "solicitud": SOLICITUD,
+      "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
+      "empresasNacionales": EMPRESAS_NACIONALES,
+      "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
     };
     this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
       this.tramite80103Store.setIdSolicitud(response.datos.id_solicitud || 0);
@@ -560,7 +593,7 @@ ngOnInit(): void {
     });
   }
 
-  
+
   /**
    * Emite un evento para cargar archivos.
    * {void} No retorna ningún valor.
@@ -568,21 +601,21 @@ ngOnInit(): void {
   onClickCargaArchivos(): void {
     this.cargarArchivosEvento.emit();
   }
-   /**
-  * Método para manejar el evento de carga de documentos.
-  * Actualiza el estado del botón de carga de archivos.
-  *  carga - Indica si la carga de documentos está activa o no.
-  * {void} No retorna ningún valor.
-  */
+  /**
+ * Método para manejar el evento de carga de documentos.
+ * Actualiza el estado del botón de carga de archivos.
+ *  carga - Indica si la carga de documentos está activa o no.
+ * {void} No retorna ningún valor.
+ */
   manejaEventoCargaDocumentos(carga: boolean): void {
     this.activarBotonCargaArchivos = carga;
   }
-   /**
-   * Método para manejar el evento de carga de documentos.
-   * Actualiza el estado de la sección de carga de documentos.
-   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
-   * {void} No retorna ningún valor.
-   */
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado de la sección de carga de documentos.
+  *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+  * {void} No retorna ningún valor.
+  */
   cargaRealizada(cargaRealizada: boolean): void {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
   }

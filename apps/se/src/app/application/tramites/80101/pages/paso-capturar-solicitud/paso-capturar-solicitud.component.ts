@@ -438,6 +438,22 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       fecFinVigencia:  item.encabezadoFechaVigencia,
     });
 
+    /**
+     * Construye un objeto con los datos del proveedor y cliente a partir de un elemento de tipo `ProveedorClienteDatosTabla`.
+     *
+     * @param item - Objeto que contiene la información del proveedor y cliente.
+     * @returns Un objeto con las propiedades: paisOrigen, rfcProveedor, razonProveedor, paisDestino, rfcCliente, razonCliente, domicilio y descTestado.
+     */
+     const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
+      paisOrigen: item.paisOrigen,
+      rfcProveedor: item.rfcProveedor,
+      razonProveedor: item.razonProveedor,
+      paisDestino: item.paisDestino,
+      rfcCliente: item.rfcClinte,
+      razonCliente: item.razonSocial,
+      domicilio: item.domicilio,
+      descTestado: item.descTestado,
+    });
 
     return {
       anexo: {
@@ -447,6 +463,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
         datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
         tableDos: (data.annexoUno?.exportarDatosTabla || []).map(buildAnexoDos),
         proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
+       proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
       },
     };
   }
@@ -492,6 +509,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
+    
     const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
@@ -538,6 +556,12 @@ export class PasoCapturarSolicitudComponent implements OnInit {
           "anexoI": [...ANEXO_ALL.anexo.tableDos]
         },
       ],
+      "fraccionArancelaria":[
+        {
+          "listaProveedores": [...ANEXO_ALL.anexo.proveedorClienteDos]
+        }
+      ],
+
       "productoExportacionDtoList": [
         {
           "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]

@@ -271,6 +271,14 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
   tenerDatosDeTabla = false;
 
   /**
+   * Identificador opcional de la tabla que contiene los datos del proveedor o cliente.
+   * 
+   * Esta propiedad puede ser utilizada para referenciar de manera única la tabla asociada
+   * a los datos de un proveedor o cliente en el componente.
+   */
+  proveedorClienteDatosTablaId?:string;
+
+  /**
    * Constructor del componente AnexoVistaUnoComponent.
    * @param {Router} router - Servicio de enrutamiento de Angular para navegar entre rutas.
    * @param {ActivatedRoute} activatedRoute - Servicio que proporciona información sobre la ruta activa.
@@ -341,6 +349,14 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     }
 
 
+/**
+ * Obtiene los datos de complementos dos desde el almacén (store) y actualiza el formulario `anexoDosFormGroup` con dichos datos.
+ * 
+ * Se suscribe al observable `selectDatosComplimentosDos$` del store a través de la propiedad `query`, y utiliza el operador `takeUntil` para cancelar la suscripción cuando se emite `destroyNotifier$`.
+ * 
+ * @remarks
+ * Este método es útil para mantener sincronizados los datos del formulario con el estado global de la aplicación.
+ */
  obtenerDatosDosDelAlmacen(): void {
     this.query.selectDatosComplimentosDos$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -428,6 +444,7 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    */
   public rutaLaFraccionDeComplemento(event: RutaNombre): void {
     if (event && event.catagoria && event.id && event.datos) {
+      this.proveedorClienteDatosTablaId=event.id;
       this.store.setAnnexoUnoSeccionActiva(event.id);
       this.store.setDatosParaNavegar(event.datos);
 
@@ -534,7 +551,12 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
  * @param event - Arreglo de objetos de tipo ProveedorClienteTabla que contiene los datos a establecer en la tabla.
  */
  public datosActualizadosProveedorCliente($event: ProveedorClienteTabla[]): void {
-   this.store.setProveedorClienteDatosTabla($event);
+  if(this.proveedorClienteDatosTablaId==='IMPORT'){
+       this.store.setProveedorClienteDatosTablaUno($event);
+  }else{
+       this.store.setProveedorClienteDatosTablaDos($event); 
+  }
+
   }
 
   /**

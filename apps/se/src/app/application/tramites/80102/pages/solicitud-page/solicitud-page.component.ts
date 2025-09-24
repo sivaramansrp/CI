@@ -436,6 +436,16 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
       fecFinVigencia:  item.encabezadoFechaVigencia,
     });
 
+    const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
+          paisOrigen: item.paisOrigen,
+          rfcProveedor: item.rfcProveedor,
+          razonProveedor: item.razonProveedor,
+          paisDestino: item.paisDestino,
+          rfcCliente: item.rfcClinte,
+          razonCliente: item.razonSocial,
+          domicilio: item.domicilio,
+          descTestado: item.descTestado,
+        });
   return {
     anexo: {
       ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
@@ -444,6 +454,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
       datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
       tableDos: anexoDos,
       proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
+       proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
     },
   };
 }
@@ -599,6 +610,11 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
         "anexoI": [...ANEXO_ALL.anexo.tableDos]
       }
     ],
+    "fraccionArancelaria":[
+        {
+          "listaProveedores": [...ANEXO_ALL.anexo.proveedorClienteDos]
+        }
+      ],
      "productoExportacionDtoList": [
         {
           "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]
