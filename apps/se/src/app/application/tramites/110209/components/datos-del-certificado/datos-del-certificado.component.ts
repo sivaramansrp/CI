@@ -233,6 +233,22 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
     }
   }
 }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de datos del certificado.
+   * Si el formulario es válido, devuelve `true`.
+   * Si el formulario es inválido, marca todos los controles como "tocados" para mostrar los errores de validación y devuelve `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (this.datosDelCertificadoForm.valid) {
+      return true;
+    }
+    this.datosDelCertificadoForm.markAllAsTouched();
+    return false;
+  }
 
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.

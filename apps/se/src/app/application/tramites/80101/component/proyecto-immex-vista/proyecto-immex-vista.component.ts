@@ -8,6 +8,7 @@ import { PoryectoDatos } from '../../../../shared/models/nuevo-programa-industri
 import { ProyectoImmexComponent } from '../../../../shared/components/proyecto-immex/proyecto-immex.component';
 import { ProyectoImmexEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Tramite80101Store } from '../../estados/tramite80101.store';
 
 /**
  * Componente Angular para la vista del proyecto IMMEX.
@@ -34,12 +35,16 @@ export class ProyectoImmexVistaComponent {
    *              inicializados con un valor predeterminado definido en `PROYECTO_DATOS`.
    */
   public proyectoImmexDatos: PoryectoDatos = PROYECTO_DATOS;
+
   /**
-   * Arreglo que contiene los datos del catálogo de documentos.
-   * Este catálogo se utiliza para gestionar y mostrar información relacionada
-   * con los documentos disponibles en el sistema.
+   * Crea una instancia del componente e inyecta el servicio Tramite80101Store.
+   * 
+   * @param tramite80101Store Servicio para gestionar el estado y operaciones relacionadas con el trámite 80101.
    */
-  public documentoCatalogDatos: Catalogo[] = DOCUMENTO_CATALOGO_DATOS;
+  constructor( private tramite80101Store: Tramite80101Store){
+ // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+  }
+
   /**
    * Lista de encabezados del proyecto IMMEX.
    * 
@@ -82,5 +87,6 @@ export class ProyectoImmexVistaComponent {
    */
   obtenerProyectoTablaDevolverLaLlamada(event: ProyectoImmexEncabezado[]): void{
     this.proyectoImmexTablaLista = event;
+    this.tramite80101Store.setProyectoImmexTablaLista(this.proyectoImmexTablaLista);
   }
 }

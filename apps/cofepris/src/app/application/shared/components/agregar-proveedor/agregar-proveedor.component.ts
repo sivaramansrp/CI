@@ -25,10 +25,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR, STR_NACIONAL } from '../../constantes/datos-solicitud.enum';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Proveedor } from '../../models/terceros-relacionados.model';
-import { STR_NACIONAL } from '../../constantes/datos-solicitud.enum';
 import { Subject } from 'rxjs';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../constantes/terceros-fabricante.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -54,6 +54,12 @@ import { takeUntil } from 'rxjs/operators';
   styleUrl: './agregar-proveedor.component.css',
 })
 export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
+ /**
+   * Indica si se ha realizado la verificación de validación al intentar guardar.
+   * Esta bandera se utiliza para controlar la visualización de mensajes de error o advertencia
+   * cuando el usuario intenta guardar el formulario sin cumplir con los requisitos de validación.
+   */
+  chequeoValidacionAlGuardar =false;
   /**
    * Identificador del procedimiento actual.
    * Utilizado para controlar el flujo de la vista dependiendo del tipo de procedimiento.
@@ -183,9 +189,14 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
     this.cambiarHabilitacionNacionalidad();
     this.cargarDatos();
     this.validarElementos();
+    this.chequeoValidacionAlGuardar =
+      PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(this.idProcedimiento)
+        ? true
+        :false;
     this.crearAgregarFormularioProveedor();
     this.actualizarValidaciones();
     this.changeNacionalidad();
+     
   }
 
   /**
@@ -240,7 +251,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
       pais: [this.obtenerValor('pais'), Validators.required],
       estado: [
         this.obtenerValor('estadoLocalidad'),
-        this.elementosRequeridos.includes('estado')
+        (this.elementosRequeridos.includes('estado') || this.chequeoValidacionAlGuardar)
           ? [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)]
           : [],
       ],
@@ -271,6 +282,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
         },
         [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
       ],
+      municipioAlcaldia: [this.obtenerValor('municipioAlcaldia')],
+      localidad: [this.obtenerValor('localidad')],
     });
   }
 
@@ -339,7 +352,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
         ]);
       this.agregarProveedorForm
         .get('curp')
-        ?.setValidators([Validators.required]);
+        ?.setValidators([Validators.required, Validators.pattern(/^[A-Za-z]{4}\d{6}[HM][A-Za-z]{5}\d{2}$/)]);
     } else {
       this.agregarProveedorForm.get('nacionalidad')?.clearValidators();
       this.agregarProveedorForm.get('rfc')?.clearValidators();
@@ -361,6 +374,9 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
         this.elementosRequeridos = ['estado'];
         break;
       case 260214:
+        this.elementosRequeridos = ['estado'];
+        break;
+      case 260601:
         this.elementosRequeridos = ['estado'];
         break;
       default:
@@ -388,6 +404,18 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
    * local, actualiza el store del trámite y luego limpia el formulario y regresa a la vista anterior.
    */
   guardarProveedor(): void {
+    if(this.chequeoValidacionAlGuardar){
+      if (this.agregarProveedorForm.invalid) {
+            // Marca todos los controles como tocados para mostrar errores de validación
+          Object.values(this.agregarProveedorForm.controls).forEach(control => {
+            control.markAsTouched();
+            control.updateValueAndValidity();
+          });
+          
+            // NO redirigir ni emitir nada si el formulario es inválido
+          return;
+        }
+    }
     const VALOR_FORMULARIO = this.agregarProveedorForm.getRawValue();
 
     let nombreRazonSocial: string;

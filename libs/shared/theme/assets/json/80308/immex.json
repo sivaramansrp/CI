@@ -12,7 +12,8 @@
         "localidad": "Ciudad de México",
         "entidadFederativa": "CDMX",
         "pais": "México",
-        "telefono": "5551234567"
+        "telefono": "5551234567",
+        "desEstatus": "Activada"
     },
     {
        "rfc": "ABC123456789",
@@ -26,7 +27,8 @@
             "localidad": "Ciudad de México",
             "entidadFederativa": "CDMX",
             "pais": "México",
-            "telefono": "5551234567"
+            "telefono": "5551234567",
+            "desEstatus": "Activada"
     },
     {
        "rfc": "ABC123456789",
@@ -40,7 +42,8 @@
             "localidad": "Ciudad de México",
             "entidadFederativa": "CDMX",
             "pais": "México",
-            "telefono": "5551234567"
+            "telefono": "5551234567",
+            "desEstatus": "Activada"
     },
     {
       "rfc": "ABC123456789",
@@ -54,7 +57,8 @@
       "localidad": "Ciudad de México",
       "entidadFederativa": "CDMX",
       "pais": "México",
-      "telefono": "5551234567"
+      "telefono": "5551234567",
+      "desEstatus": "Activada"
     },
     {
        "rfc": "ABC123456789",
@@ -68,7 +72,8 @@
       "localidad": "Ciudad de México",
       "entidadFederativa": "CDMX",
       "pais": "México",
-      "telefono": "5551234567"
+      "telefono": "5551234567",
+      "desEstatus": "Activada"
     }
    
   ]

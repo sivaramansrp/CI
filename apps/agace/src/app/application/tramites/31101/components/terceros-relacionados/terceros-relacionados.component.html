@@ -9,12 +9,15 @@
       <label>Personas para oír y recibir notificaciones</label>
     </div>
     <div class="col-md-12">
-        <app-tabla-dinamica
+      <app-tabla-dinamica
         [tipoSeleccionTabla]="tipoSeleccionTabla"
         [configuracionTabla]="configuracionColumnas"
         [datos]="orecibirNotificacionesLista"
+        [mode]="'client'"
+        [totalItems]="orecibirNotificacionesLista.length"
+        [showPagination]="true"
       >
       </app-tabla-dinamica>
-      </div>
+    </div>
   </div>
 </div>

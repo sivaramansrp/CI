@@ -2,6 +2,7 @@ import {
   AlertComponent,
   AnexarDocumentosComponent,
   CatalogoSelectComponent,
+  NotificacionesComponent,
   TablaDinamicaComponent,
 } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -47,6 +48,7 @@ import { registroSolicitudImmexService } from './services/registro-expansion.ser
     CatalogoSelectComponent,
     SolicitarTransferenciaCuposModule,
     TablaDinamicaComponent,
+    NotificacionesComponent
   ],
   exports: [PasoUnoComponent, PasoDosComponent, PasoTresComponent],
   providers: [registroSolicitudImmexService, ToastrService],

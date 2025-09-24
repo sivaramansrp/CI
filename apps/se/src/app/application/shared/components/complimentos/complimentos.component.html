@@ -1,16 +1,14 @@
 <form class="complimentos-container container" [formGroup]="formaComplimentos">
-  @if (consultaState && consultaState.parameter !== 'READ_PROCEDURE') {
-    <div class="row">
-      <ng-titulo titulo="Datos de la solicitude" />
+  <div class="row">
+    <ng-titulo titulo="Datos de la solicitude" />
 
-      <div class="row">
-        <div class="col-md-4">
-          <label for="modalidad">Modalidad:</label>
-          <input type="text" id="modalidad" name="modalidad" class="form-control" formControlName="modalidad" />
-        </div>
+    <div class="row">
+      <div class="col-md-4">
+        <label for="modalidad">Modalidad:</label>
+        <input type="text" id="modalidad" name="modalidad" class="form-control" formControlName="modalidad" />
       </div>
     </div>
-  }
+  </div>
   <div class="row">
     <ng-titulo titulo="Programa Pre operativo" />
     <div class="col-md-12">
@@ -59,19 +57,17 @@
           (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="formularioDeshabilitado">
         </input-fecha>
       </div>
-      @if (consultaState && consultaState.parameter !== 'READ_PROCEDURE') {
-        <div class="col-12 mt-5">
-          <div class="alert alert-info text-start">
-            <label class="d-flex align-items-start">
-              <input id="filaSeleccion" class="cursor-pointer custom-checkbox me-5 mt-5" type="checkbox"
-                aria-label="Seleccionar" formControlName="aceptarObligacionFiscal" />
-              <span class="fw-normal">* Compromiso de ventas anuales por un valor superios a 500,000 dólares de los Estados Unidos de
-                América, o su equivalente en moneda nacional, o bien facturar exportaciones, cuando menos por el 10% de su
-                facturación total.</span>
-            </label>
-          </div>
+      <div class="col-12 mt-5">
+        <div class="alert alert-info text-start">
+          <label class="d-flex align-items-start">
+            <input id="filaSeleccion" class="cursor-pointer custom-checkbox me-5 mt-4" type="checkbox"
+              aria-label="Seleccionar" formControlName="aceptarObligacionFiscal" />
+            <span>* Compromiso de ventas anuales por un valor superios a 500,000 dólares de los Estados Unidos de
+              América, o su equivalente en moneda nacional, o bien facturar exportaciones, cuando menos por el 10% de su
+              facturación total.</span>
+          </label>
         </div>
-      }
+      </div>
     </div>
   </div>
 
@@ -129,7 +125,7 @@
               <input type="text" id="rfc" name="rfc" class="form-control" formControlName="rfc" maxlength="13"
                 onkeyup="this.value = this.value.toUpperCase();"
                 onkeypress="return /^[A-ZÑ&0-9]$/i.test(event.key) || event.key === 'Backspace' || event.key === 'Delete' || event.key === 'Tab'"
-                (blur)="onRfcBlur()" (input)="onRfcChange()" [ngClass]="esValido('formaModificaciones', 'rfc') ? 'required' : ''"/>
+                 [ngClass]="esValido('formaModificaciones', 'rfc') ? 'required' : ''"/>
             </div>
              <div *ngIf="formaComplimentos.get('formaModificaciones.rfc')?.hasError('required') && formaComplimentos.get('formaModificaciones.rfc')?.touched">
                <p class="mensaje-error">Este campo es obligatorio.</p>

@@ -64,3 +64,11 @@ export const COMPLEMENTO_DE_PLANTA = [
   },
 ];
 export const CATALOGO_TIPO = [{ "id": 1, "descripcion": "JALISCO" }];
+
+/**
+ * Opciones para indicar si la mercancía permanecerá al amparo del programa.
+ */
+export const PERMANCERA_OPTIONS = [
+  { "id": 1, "descripcion": "SI" },
+  { "id": 2, "descripcion": "NO" }
+]

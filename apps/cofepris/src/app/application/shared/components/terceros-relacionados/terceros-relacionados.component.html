@@ -9,7 +9,7 @@
   <div class="row mt-5">
     <div class="col-md-3">
       <h6>
-        Fabricante<span class="form-label" *ngIf="esCampoRequerido('fabricante')">*</span><span class="form-label">:</span>
+        Fabricante<span class="form-label" *ngIf="!esCampoRequerido('fabricante')">*</span><span class="form-label">:</span>
       </h6>
     </div>
   </div>
@@ -26,35 +26,36 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        @if (fabricanteSeleccionadoDatos.length > 0) {
-          @if (fabricanteSeleccionadoDatos.length === 1) {
-            <button
-              type="button"
-              name="modificarMercancias"
-              class="btn btn-default"
-              (click)="modificarFabricante()"
-              [disabled]="esFormularioSoloLectura ? true : false"
-            >
-              Modificar
-            </button>
-          }
+        @if (fabricanteSeleccionadoDatos.length > 0) {       
         <button
           type="button"
           name="eliminarMercancias"
-          class="btn btn-danger ms-2"
+          class="btn btn-danger"
           (click)="eliminarFabricante()"
           [disabled]="esFormularioSoloLectura ? true : false"
         >
           Eliminar
         </button>
-        }
-         
+      }
+           @if (fabricanteSeleccionadoDatos.length === 1) {
+            <button
+              type="button"
+              name="modificarMercancias"
+              class="btn btn-default ms-2"
+              (click)="modificarFabricante()"
+              [disabled]="esFormularioSoloLectura ? true : false"
+            >
+              Modificar
+            </button>
+        
+        }         
         <button
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
           (click)="irAAcciones('../agregar-fabricante',false)"
           [disabled]="esFormularioSoloLectura ? true : false"
+          *ngIf="!esVisible || (esVisible && estaOculto)"
         >
           Agregar
         </button>
@@ -64,7 +65,7 @@
   </div>
   <div class="row mt-5">
     <div class="col-md-3">
-      <h6> Destinatario (destino final)<span class="form-label" *ngIf="esCampoRequerido('destinoFinal')">*</span><span class="form-label">:</span>
+      <h6> Destinatario (destino final)<span class="form-label" *ngIf="!esCampoRequerido('destinoFinal')">*</span><span class="form-label">:</span>
       </h6>
     </div>
   </div>
@@ -82,27 +83,28 @@
     <div class="col-md-12">
       <div class="pull-right">
         @if (destinatarioSeleccionadoDatos.length > 0) {
-          @if (destinatarioSeleccionadoDatos.length === 1) {
+          <button
+          type="button"
+          name="eliminarMercancias"
+          class="btn btn-danger"
+          (click)="eliminarDestinatario()"
+          [disabled]="esFormularioSoloLectura ? true : false"
+        >
+          Eliminar
+        </button>
+      }
+           @if (destinatarioSeleccionadoDatos.length === 1) {
           <button
             type="button"
             name="modificarMercancias"
-            class="btn btn-default"
+            class="btn btn-default ms-2"
             (click)="modificarDestinatario()"
             [disabled]="esFormularioSoloLectura ? true : false"
           >
             Modificar
           </button>
         }
-        <button
-          type="button"
-          name="eliminarMercancias"
-          class="btn btn-danger ms-2"
-          (click)="eliminarDestinatario()"
-          [disabled]="esFormularioSoloLectura ? true : false"
-        >
-          Eliminar
-        </button>
-        }
+        
         
         <button
           type="button"
@@ -110,6 +112,7 @@
           class="btn btn-primary ms-2"
           (click)="irAAcciones('../agregar-destinatario-final', false)"
           [disabled]="esFormularioSoloLectura ? true : false"
+          *ngIf="!esVisible || (esVisible && estaOculto)"
         >
           Agregar
         </button>
@@ -133,11 +136,21 @@
     <div class="col-md-12">
       <div class="pull-right">
         @if (proveedorSeleccionadoDatos.length > 0) {
-           @if (proveedorSeleccionadoDatos.length === 1) {
+        <button
+          type="button"
+          name="eliminarMercancias"
+          class="btn btn-danger"
+          (click)="eliminarProveedor()"
+          [disabled]="esFormularioSoloLectura ? true : false"
+        >
+          Eliminar
+        </button>        
+        }
+          @if (proveedorSeleccionadoDatos.length === 1) {
             <button
               type="button"
               name="modificarMercancias"
-              class="btn btn-default"
+              class="btn btn-default ms-2"
               (click)="modificarProveedor()"
               [disabled]="esFormularioSoloLectura ? true : false"
             >
@@ -146,21 +159,11 @@
           }
         <button
           type="button"
-          name="eliminarMercancias"
-          class="btn btn-danger ms-2"
-          (click)="eliminarProveedor()"
-          [disabled]="esFormularioSoloLectura ? true : false"
-        >
-          Eliminar
-        </button>
-        }
-        
-        <button
-          type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
           (click)="irAAcciones('../agregar-proveedor', false)"
           [disabled]="esFormularioSoloLectura ? true : false"
+          *ngIf="!esVisible || (esVisible && estaOculto)"
         >
           Agregar
         </button>
@@ -182,28 +185,28 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        @if (facturadorSeleccionadoDatos.length > 0) {
-          @if (facturadorSeleccionadoDatos.length === 1) {
-            <button
-              type="button"
-              name="modificarMercancias"
-              class="btn btn-default"
-              (click)="modificarFacturador()"
-              [disabled]="esFormularioSoloLectura ? true : false"
-            >
-              Modificar
-            </button>
-          }
+        @if (facturadorSeleccionadoDatos.length > 0) {        
         <button
           type="button"
           name="eliminarMercancias"
-          class="btn btn-danger ms-2"
+          class="btn btn-danger"
           (click)="eliminarFacturador()"
           [disabled]="esFormularioSoloLectura ? true : false"
         >
           Eliminar
         </button>
         }
+          @if (facturadorSeleccionadoDatos.length === 1) {
+            <button
+              type="button"
+              name="modificarMercancias"
+              class="btn btn-default ms-2"
+              (click)="modificarFacturador()"
+              [disabled]="esFormularioSoloLectura ? true : false"
+            >
+              Modificar
+            </button>
+          }
          
         <button
           type="button"
@@ -211,6 +214,7 @@
           class="btn btn-primary ms-2"
           (click)="irAAcciones('../agregar-facturador', false)"
           [disabled]="esFormularioSoloLectura ? true : false"
+          *ngIf="!esVisible || (esVisible && estaOculto)"
         >
           Agregar
         </button>

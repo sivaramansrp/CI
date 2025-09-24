@@ -93,7 +93,7 @@ export const CONFIGURATION_TABLA_MERCANCIAS = [
  * de visualización.
  */
 export const CONFIGURATION_TABLA_DESTINATARIO: ConfiguracionColumna<Destinatario>[] = [
-    { encabezado: 'Nombre/denominación o razón social', clave: (item: Destinatario): string => item.nombreDenominacionORazonSocial, orden: 1 },
+    { encabezado: 'Nombre/Razón social', clave: (item: Destinatario): string => item.nombreDenominacionORazonSocial, orden: 1 },
     { encabezado: 'Teléfono', clave: (item: Destinatario): string => item.telefono || '', orden: 2 },
     { encabezado: 'Correo electrónico', clave: (item: Destinatario): string => item.correoElectronico, orden: 3 },
     { encabezado: 'Domicilio', clave: (item: Destinatario): string => item.domicilio, orden: 4 },
@@ -102,7 +102,7 @@ export const CONFIGURATION_TABLA_DESTINATARIO: ConfiguracionColumna<Destinatario
     { encabezado: 'Número interior', clave: (item: Destinatario): string => item.numeroInterior || '', orden: 7 },
     { encabezado: 'País', clave: (item: Destinatario): string => item.pais || '', orden: 8 },
     { encabezado: 'Colonia', clave: (item: Destinatario): string => item.colonia || '', orden: 9 },
-    { encabezado: 'Delegación', clave: (item: Destinatario): string => item.municipioOAlcaldia || '', orden: 10 },
+    { encabezado: 'Delegación/Municipio', clave: (item: Destinatario): string => item.municipioOAlcaldia || '', orden: 10 },
     { encabezado: 'Entidad Federativa', clave: (item: Destinatario): string => item.entidadFederativa || '', orden: 11 },
     { encabezado: 'Código Postal', clave: (item: Destinatario): string => item.codigoPostal, orden: 12 }
   ];

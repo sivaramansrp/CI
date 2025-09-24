@@ -37,9 +37,8 @@
           [fechas]="selectRangoDias"
           [label]="paisDeOrigenLabel"
           [botones]="paisDeOrigenBotons"
-          [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
+          [fechasSeleccionadas]="fechasSeleccionadas.value"
           [isDisabled]="soloLectura"
-          [formControlName]="'pais'"
           (fechasSeleccionadasChange)="changeCrosslist($event)"
         ></crosslist>
         <br />
@@ -50,18 +49,20 @@
           [fechas]="selectEntidades"
           [label]="entidadesLabel"
           [botones]="entidadesBotons"
-          [formControlName]="'entidades'"
+          [fechasSeleccionadas]="entidadesSeleccionadas.value"
           [isDisabled]="soloLectura"
+          (fechasSeleccionadasChange)="changeCrosslistEntidades($event)"
         ></crosslist>
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-12">            
             <app-catalogo-select
               [catalogo]="descripcionProducto"
               [label]="'Descripción del producto'"
-              fromControlName="descripcionProducto"
+              formControlName="descripcionProducto"
               [isDisabled]="soloLectura"
+              [required]="true"
+              [markTouched]="solicitudForm.get('reexportacionForm.descripcionProducto')?.touched??false"
               (change)="descripcionProductoSeleccion()"
-              name="descripcionProducto"
             >
             </app-catalogo-select>
           </div>
@@ -206,7 +207,6 @@
               class="form-control"
               formControlName="numeroInterior"
               id="numeroInterior"
-              
               (change)="setValoresStore(reexportacionForm, 'numeroInterior', 'setNumeroInterior')"
             />
           </div>
@@ -236,23 +236,20 @@
                   [catalogo]="fraccionArancelaria"
                   [label]="'Fracción arancelaria'"
                   formControlName="fraccionArancelaria"
-                  
+                  [required]="true"
+                  [markTouched]="agregarMercanciasForm.get('datosMercancia.fraccionArancelaria')?.touched??false"
                   (change)="fraccionArancelariaSeleccion()"
                   name="fraccionArancelaria"
                 ></app-catalogo-select>
-                <div *ngIf="isInvalid('fraccionArancelaria')" class="mensaje-error">
-                  Este campo es obligatorio.
-                </div>
               </div>
               <div class="col-md-8">
-                <label>Descripción de la fracción arancelaria:</label>
-                <span class="require">*</span>
+                <label>Descripción de la fracción arancelaria<span [ngClass]="agregarMercanciasForm.get('datosMercancia.descripcionfraccionArancelaria')?.invalid && 
+                  agregarMercanciasForm.get('datosMercancia.descripcionfraccionArancelaria')?.touched ? 'text-danger' : ''">*</span>:</label>
                 <input
                   type="text"
                   class="form-control"
                   formControlName="descripcionfraccionArancelaria"
                   id="descripcionfraccionArancelaria"
-                  
                   (change)="
                     setValoresStore(
                       datosMercancia,
@@ -265,14 +262,13 @@
             </div>
             <div class="row">
               <div class="col-md-4">
-                <label for="cantidad">Cantidad:</label>
-                <span class="require">*</span>
+                <label for="cantidad">Cantidad<span [ngClass]="agregarMercanciasForm.get('datosMercancia.cantidad')?.invalid && 
+                  agregarMercanciasForm.get('datosMercancia.cantidad')?.touched ? 'text-danger' : ''">*</span>:</label>
                 <input
                   type="text"
                   class="form-control"
                   formControlName="cantidad"
                   id="cantidad"
-                  
                   (change)="setValoresStore(datosMercancia, 'cantidad', 'setCantidad')"
                 />
                 <div *ngIf="isInvalid('cantidad')" class="mensaje-error">
@@ -305,10 +301,9 @@
                     formControlName="genero"
                     [label]="'Género'"
                     name="genero"
+                    [required]="true"
+                    [markTouched]="agregarMercanciasForm.get('datosMercancia.genero')?.touched??false"
                   ></app-catalogo-select>
-                  <div *ngIf="isInvalid('genero')" class="mensaje-error">
-                    Este campo es obligatorio.
-                  </div>
                 </div>
               </div>
               <div class="col-md-4">
@@ -318,10 +313,9 @@
                     formControlName="especie"
                     [label]="'Especie'"
                     name="especie"
+                    [required]="true"
+                    [markTouched]="agregarMercanciasForm.get('datosMercancia.especie')?.touched??false"
                   ></app-catalogo-select>
-                  <div *ngIf="isInvalid('especie')" class="mensaje-error">
-                    Este campo es obligatorio.
-                  </div>
                 </div>
               </div>
               <div class="col-md-4">
@@ -331,19 +325,22 @@
                     formControlName="nombreComun"
                     [label]="'Nombre común'"
                     name="nombreComun"
+                    [required]="true"
+                    [markTouched]="agregarMercanciasForm.get('datosMercancia.nombreComun')?.touched??false"
                     (change)="onNombreComunChange($event)"
                   ></app-catalogo-select>
-                  <div *ngIf="isInvalid('nombreComun')" class="mensaje-error">
-                    Este campo es obligatorio.
-                  </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
+            </div>            
+            <div *ngIf="mostrarOtroNombreComun" class="row">
               <div class="col-md-4">
-                <div *ngIf="mostrarOtroNombreComun" class="form-group mt-2">
-                  <label for="otroNombreComun">Otro:</label>
+                <div class="form-group mt-2">
+                  <label for="otroNombreComun">Otro<span [ngClass]="agregarMercanciasForm.get('datosMercancia.otroNombreComun')?.invalid && 
+                    agregarMercanciasForm.get('datosMercancia.otroNombreComun')?.touched ? 'text-danger' : ''">*</span>:</label>
                   <input type="text" formControlName="otroNombreComun" id="otroNombreComun" class="form-control" />
+                  <div *ngIf="isInvalid('otroNombreComun')" class="mensaje-error">
+                    Este campo es obligatorio.
+                  </div>
                 </div>
               </div>
             </div>
@@ -405,9 +402,11 @@
   role="dialog"
   aria-hidden="true"
   #modalConfirmacion
->
-  <div class="modal-dialog modal-dialog-centered" role="document">
+>  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content modalsm">
+      <div class="modal-header w-100">
+          <h3 class="modal-title w-100"></h3>
+      </div>
       <div class="modal-body">
         <label>Seleccione la descripcion<br />del producto</label>
       </div>
@@ -418,7 +417,7 @@
           data-bs-dismiss="modal"
           #closeModal
         >
-          Acceptar
+          Aceptar
         </button>
       </div>
     </div>

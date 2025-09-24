@@ -91,14 +91,17 @@
               appUppercase
               aria-labelledby="localidad"
               maxlength="120"
-              (input)="onLocalidadInput($event)"
-              (change)="setValorStore(form, 'localidad')"
-            />
-            <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.invalid" class="text-danger">
-              <div *ngIf="form.get('localidad')?.hasError('required')">
-                Por favor, corrija el localidad.
-              </div>
-            </div>
+          (input)="onLocalidadInput($event)"
+          (change)="setValorStore(form, 'localidad')"
+        />
+        <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.invalid" class="text-danger">
+          <div *ngIf="form.get('localidad')?.hasError('required')">
+            Este campo es obligatorio
+          </div>
+          <div *ngIf="form.get('localidad')?.hasError('pattern')">
+            El valor capturado no es válido.
+          </div>
+        </div>
           </div>
         </div>
 
@@ -227,9 +230,9 @@
     <div class="mt-3">
     </div>
     <div class="container text-end mt-5">
-  <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="onEliminarScian(selectedScianIndex === null ? null : selectedScianIndex)">Eliminar</button>
+  <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" *ngIf="!botonDesactivarParaProrrogar" (click)="onEliminarScian(selectedScianIndex === null ? null : selectedScianIndex)">Eliminar</button>
   <!-- Modal shown when NO row is selected -->
-  <div class="modal fade" id="modalSeleccionaRegistro" tabindex="-1" aria-labelledby="modalSeleccionaRegistroLabel" aria-hidden="true">
+  <div class="modal fade" id="modalSeleccionaRegistro" tabindex="-1"aria-labelledby="modalSeleccionaRegistroLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -266,6 +269,7 @@
         class="btn btn-primary me-2" 
         [disabled]="esFormularioSoloLectura"
         (click)="openScianModal()"
+        *ngIf="!botonDesactivarParaProrrogar"
       >
         Agregar
       </button>
@@ -306,7 +310,7 @@
                   <app-catalogo-select
                   [catalogo]="subRepresentacion"
                   [label]="'Descripción del S.C.I.A.N.'"
-                  [required]="true"
+                  [required]="false"
                   name="representacion"
                   [isDisabled]="esFormularioSoloLectura "
                   formControlName="representacion"
@@ -345,42 +349,46 @@
     </div>
   </div>
   <form [formGroup]="domicilio">
-    <div class="row align-item-center">
-      <div class="col-md-4 mt-5">
-        <lib-input-check 
-          [id]="'avisoCheckbox'" 
-          [label]="'Aviso de funcionamiento:'" 
-          [required]="true"
+  
+<div class="row align-item-center">
+  <div class="col-md-4 mt-5">
+    <lib-input-check 
+      [id]="'avisoCheckbox'" 
+      [label]="'Aviso de funcionamiento:'" 
+      [required]="true"
       formControlName="avisoCheckbox" 
-      [isDisabled]="esFormularioSoloLectura"
+      [isDisabled]="esFormularioSoloLectura || !!domicilio.get('licenciaSanitaria')?.value"
       (change)="setValorStore(domicilio, 'avisoCheckbox')"
     ></lib-input-check>
-
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="licenciaSanitaria"
-          >No. de licencia sanitaria:
-            <span 
-              class="bi bi-question-circle-fill" 
-              title="Número de la autorización
-                    indicado en el documento
-                    emitido por la autoridad
-                    sanitaria competente"
-              data-bs-toggle="tooltip"
-              ></span
-            ></label>
-            <input 
-              class="form-control" 
-              id="licenciaSanitaria" 
-              placeholder="" 
-              type="text"
-                formControlName="licenciaSanitaria"
-                [disabled]="domicilio.get('avisoCheckbox')?.value"
-              />
-        </div>
-      </div>
+  </div>
+  <div class="col-md-4">
+    <div class="form-group">
+      <label class="form-label" for="licenciaSanitaria"
+      >No. de licencia sanitaria:
+        <span 
+          class="bi bi-question-circle-fill" 
+          title="Número de la autorización
+                indicado en el documento
+                emitido por la autoridad
+                sanitaria competente"
+          data-bs-toggle="tooltip"
+          ></span
+        ></label>
+        <input 
+          class="form-control" 
+          id="licenciaSanitaria" 
+          placeholder="" 
+          type="text"
+          maxlength="20"
+          formControlName="licenciaSanitaria"
+          (input)="onLicenciaSanitariaInput($event)"
+          (change)="setValorStore(domicilio, 'licenciaSanitaria')"
+          [disabled]="domicilio.get('avisoCheckbox')?.value"
+          />
     </div>
+  </div>
+</div>
+
 
     <div class="row">
       <div class="col-md-4">
@@ -477,11 +485,12 @@
           (listaDeFilaSeleccionada)="onMercanciaRowSelected($event)">
         </app-tabla-dinamica>
         <div class="container text-end mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="selectedMercanciaIndex !== null && selectedMercanciaCount === 1 ? onModificarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Modificar</button>
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="selectedMercanciaIndex !== null ? onEliminarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Eliminar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" *ngIf="!botonDesactivarParaProrrogar" (click)="selectedMercanciaIndex !== null && selectedMercanciaCount === 1 ? onModificarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" *ngIf="!botonDesactivarParaProrrogar" (click)="selectedMercanciaIndex !== null ? onEliminarMercancia(selectedMercanciaIndex) : mostrarSeleccionaRegistroMercancia()">Eliminar</button>
           <button 
             class="btn btn-primary me-2" 
             [disabled]="esFormularioSoloLectura"
+            *ngIf="!botonDesactivarParaProrrogar"
             (click)="openMercanciaModal()"
           >
             Agregar
@@ -592,16 +601,19 @@
               maxlength="13"
               (input)="onRfcInput($event)"
               (change)="setValorStore(representanteLegal, 'rfc')" 
+              [ngClass]="{'is-invalid': representanteLegal.get('rfc')?.touched && representanteLegal.get('rfc')?.invalid}"
             />
-              <div *ngIf="esInvalido('rfc')" class="text-danger">
-              <small *ngIf="representanteLegal.get('rfc')?.errors?.['required']">
-                Este campo es obligatorio.
-              </small>
+         
+           <div *ngIf="representanteLegal.get('rfc')?.touched && representanteLegal.get('rfc')?.invalid" class="text-danger">
+            <div *ngIf="representanteLegal.get('rfc')?.hasError('required')">
+              Este campo es obligatorio
+            </div>
           </div>
+          
           </div>
         </div>
         <div class="col-md-3 mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" (click)="onBuscarRepresentanteLegal()">Buscar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura" *ngIf="!botonDesactivarParaProrrogar" (click)="onBuscarRepresentanteLegal()">Buscar</button>
         </div>
       </div>
 

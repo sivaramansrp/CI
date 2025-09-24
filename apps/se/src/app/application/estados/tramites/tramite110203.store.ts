@@ -89,6 +89,16 @@ export interface Solicitud110203State {
     comercializacion: string;
     /** **tipo económico relacionado con la solicitud** */
      tipo: string;
+    /** **complemento de la descripción de la mercancía** */
+     complemento: string;
+    /** **marca de la mercancía** */
+     marca: string;
+    /** **valor de la mercancía** */
+     valor: string;
+    /** **peso bruto de la mercancía** */
+     bruta: string;
+    /** **Número de factura asociado a la solicitud** */
+     factura: string;
 }
 
 
@@ -185,6 +195,16 @@ export function createInitialState(): Solicitud110203State {
 
         /** **País o bloque económico relacionado con la solicitud** */
         paisBloque: '',
+        /** **complemento de la descripción de la mercancía** */
+        complemento: '',
+        /** **marca de la mercancía** */
+        marca: '',
+        /** **valor de la mercancía** */
+        valor: '',
+        /** **peso bruto de la mercancía** */
+        bruta: '',
+        /** **Número de factura asociado a la solicitud** */
+        factura: '',
     };
 }
 
@@ -578,6 +598,63 @@ export class Tramite110203Store extends Store<Solicitud110203State> {
         }));
     }
 
+    /**
+   * Establece el valor de "complemento" en el estado.
+   * 
+   * @param complemento - Valor que representa el complemento de la descripción de la mercancía.
+   */
+    public setComplemento(complemento: string): void {
+        this.update((state) => ({
+            ...state,
+            complemento
+        }));
+    }
+    /**
+   * Establece el valor de "marca" en el estado.
+   * 
+   * @param marca - Valor que representa la marca de la mercancía.
+   */
+    public setMarca(marca: string): void {
+        this.update((state) => ({
+            ...state,
+            marca
+        }));
+    }
+    /**
+   * Establece el valor de "valor" en el estado.
+   * 
+   * @param valor - Valor que representa el valor de la mercancía.
+   */
+    public setValor(valor: string): void {
+        this.update((state) => ({
+            ...state,
+            valor
+        }));
+    }
+
+    /**
+   * Establece el valor de "bruta" en el estado.
+   * 
+   * @param bruta - Valor que representa el peso bruto de la mercancía.
+   */
+    public setBruta(bruta: string): void {
+        this.update((state) => ({
+            ...state,
+            bruta
+        }));
+    }
+
+    /**
+   * Establece el valor de "factura" en el estado.
+   * 
+   * @param factura - Valor que representa el número de factura asociado a la solicitud.
+   */
+    public setFactura(factura: string): void {
+        this.update((state) => ({
+            ...state,
+            factura
+        }));
+    }
 
 }
 

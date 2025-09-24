@@ -72,10 +72,16 @@
           [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
           [disableSeleccionTablaCheckBox]="consultaState.readonly"
           [desactivarEmitirEvento]="!consultaState.readonly"
+          (listaDeFilaSeleccionada)="alCambiarSeleccion($event)"
         
         ></app-tabla-dinamica>
     </div>
     <div class="container text-end mt-5">
-        <button class="btn btn-danger" [disabled]="consultaState.readonly">Eliminar seleccionado</button>
+        <button class="btn btn-danger" [disabled]="consultaState.readonly"  (click)="eliminarSeleccionadas()">Eliminar seleccionado</button>
     </div>
 </div>
+ @if (alertaNotificacion) {
+        <div>
+            <lib-notificaciones [notificacionInput]="alertaNotificacion" (confirmacionModal)="onConfirmacionModal($event)"></lib-notificaciones>
+        </div>
+    }

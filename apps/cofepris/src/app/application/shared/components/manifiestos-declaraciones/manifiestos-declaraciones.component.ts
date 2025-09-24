@@ -111,10 +111,10 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.isUpdateDatos = seccionState.update;
+          this.configurarGrupoForm(); // Configura el formulario reactivo.
         })
       )
       .subscribe()
-      this.configurarGrupoForm(); // Configura el formulario reactivo.
   }
 
   /**

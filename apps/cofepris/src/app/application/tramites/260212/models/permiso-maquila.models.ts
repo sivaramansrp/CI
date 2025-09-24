@@ -154,4 +154,5 @@ export interface FabricanteDatos {
   entidadFederativa: string;
   estado: string;
   codigoPostal: string;
+  coloniaEquivalente: string;
 }

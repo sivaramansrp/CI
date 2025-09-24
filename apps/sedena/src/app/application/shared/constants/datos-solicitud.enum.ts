@@ -60,8 +60,8 @@ export const STR_NACIONAL = 'Nacional';
  * Cada opción incluye una etiqueta (`label`) y un valor (`value`).
  */
 export const TIPO_PERSONA_OPCIONES = [
-  { label: 'Física', value: 'Fisica', hint:'Una persona física es entendida como toda persona con una actividad específica' },
-  { label: 'Moral', value: 'Moral', hint:'Una persona moral es entendida como una empresa con una actividad específica' },
+  { label: 'Física', value: 'Fisica', hint:'Una persona fisica es entendida como toda persona con una actividad especifica' },
+  { label: 'Moral', value: 'Moral', hint:'Una persona moral es entendida como una empresa con una actividad especifica' },
 ];
 
 /**

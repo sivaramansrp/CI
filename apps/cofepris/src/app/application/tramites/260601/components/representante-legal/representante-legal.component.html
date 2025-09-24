@@ -3,8 +3,9 @@
 <form [formGroup]="representanteLegalForm">
     <div class="row">
         <div class="col-md-4">
-            <label for="rfc" class="form-label">RFC*:</label>
+            <label for="rfc" class="form-label">RFC<span [ngClass]="representanteLegalForm.get('rfc')?.touched && representanteLegalForm.get('rfc')?.invalid &&representanteLegalForm.get('rfc')?.errors?.['required'] ? 'text-danger' : ''">*</span>:</label>
             <input type="text" class="form-control" formControlName="rfc" id="representanteLegalRFC" maxlength="13"
+                [class.is-invalid]="representanteLegalForm.get('rfc')?.touched && representanteLegalForm.get('rfc')?.invalid"
                 (change)="setValoresStore(representanteLegalForm,'rfc', 'setRfc')">
             <input type="hidden" name="resultadoIDC" id="resultadoIDC">
             <div *ngIf="representanteLegalForm.get('rfc')?.touched && representanteLegalForm.get('rfc')?.invalid">
@@ -22,16 +23,18 @@
     }
     <div class="row mt-3">
         <div class="col-md-4">
-            <label for="nombreOrazonsocial" class="form-label">Nombre o Razón Social*:</label>
+            <label for="nombreOrazonsocial" class="form-label">Nombre o Razón Social<span [ngClass]="representanteLegalForm.get('nombreOrazonsocial')?.touched && representanteLegalForm.get('nombreOrazonsocial')?.invalid &&representanteLegalForm.get('nombreOrazonsocial')?.errors?.['required'] || nombreOrazonsocialInvalid ? 'text-danger' : ''">*</span>:</label>
             <input type="text" class="form-control" formControlName="nombreOrazonsocial" id="representanteLegalNombre"
+                [class.is-invalid]="(representanteLegalForm.get('nombreOrazonsocial')?.touched && representanteLegalForm.get('nombreOrazonsocial')?.invalid) || nombreOrazonsocialInvalid"
                 (change)="setValoresStore(representanteLegalForm,'nombreOrazonsocial', 'setNombreOrazonsocial')">
             <div *ngIf="representanteLegalForm.get('nombreOrazonsocial')?.touched">
           <small *ngIf="representanteLegalForm.get('nombreOrazonsocial')?.errors?.['required'] || nombreOrazonsocialInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
         </div>
         </div>
         <div class="col-md-4">
-            <label for="apellidoPaterno" class="form-label">Apellido paterno:</label>
+            <label for="apellidoPaterno" class="form-label">Apellido paterno<span [ngClass]="representanteLegalForm.get('apellidoPaterno')?.touched && representanteLegalForm.get('apellidoPaterno')?.invalid && representanteLegalForm.get('apellidoPaterno')?.errors?.['required'] || apellidoPaternoInvalid ? 'text-danger' : ''">*</span>:</label>
             <input type="text" class="form-control" formControlName="apellidoPaterno" id="representanteLegalApPaterno"
+                [class.is-invalid]="(representanteLegalForm.get('apellidoPaterno')?.touched && representanteLegalForm.get('apellidoPaterno')?.invalid )|| apellidoPaternoInvalid"
                 (change)="setValoresStore(representanteLegalForm,'apellidoPaterno', 'setApellidoPaterno')">
                 <div *ngIf="representanteLegalForm.get('apellidoPaterno')?.touched">
           <small *ngIf="representanteLegalForm.get('apellidoPaterno')?.errors?.['required'] || apellidoPaternoInvalid" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>

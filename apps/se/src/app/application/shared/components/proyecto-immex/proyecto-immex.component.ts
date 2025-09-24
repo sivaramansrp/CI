@@ -3,9 +3,13 @@ import {
   ProyectoImmexConfiguartion,
   ProyectoImmexEncabezado,
 } from '../../models/nuevo-programa-industrial.model';
+import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { OnInit, Output } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { ComplementarQuery } from '../../../estados/queries/complementar.query';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { Component } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
@@ -44,7 +48,7 @@ export class ProyectoImmexComponent implements OnInit {
    * Datos del catálogo de documentos.
    * @type {Catalogo[]}
    */
-  @Input() documentoCatalogDatos!: Catalogo[];
+  public documentoCatalogDatos: Catalogo[] = [];
 
   /**
    * Configuración del proyecto IMMEX.
@@ -93,16 +97,62 @@ export class ProyectoImmexComponent implements OnInit {
   @Output() cerrarPopup = new EventEmitter<void>();
 
   /**
+    *  * compodoc
+   * @property {Subject<void>} destroyNotifier$
+   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
+   */
+  public complementarState!: ComplementarState;
+
+  /**
    * Constructor de la clase ProyectoImmexComponent.
    * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
    */
-  constructor(private fb: FormBuilder, private ubicaccion: Location) {
+  constructor(
+    private fb: FormBuilder,
+    private ubicaccion: Location,
+    private complimentosService: ComplimentosService,
+    private complementarStore: ComplementarStore,
+    private complementarQuery: ComplementarQuery) {
     //El constructor requiere inyección de dependencias, pero se ha mantenido vacío debido a una regla de ESLint.
   }
 
+  /**
+ * Inicializa el componente, suscribe al estado de la solicitud y carga las opciones de país si es necesario.
+ */
   ngOnInit(): void {
     this.crearProyectoForm();
+    this.complementarQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.complementarState = seccionState as ComplementarState;
+        })
+      )
+      .subscribe();
+    if (!(this.complementarState.tipoDocumentoOptions.length)) {
+      this.obtenerTipoDocumentoOptions(102);
+    } else {
+      this.documentoCatalogDatos = [...this.complementarState.tipoDocumentoOptions];
+    }
+  }
+
+  /** Obtiene y actualiza las opciones del catálogo de tipo de documento desde el servicio. */
+  obtenerTipoDocumentoOptions(id: number): void {
+    this.complimentosService.getTipoDocumento(id)
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    )
+    .subscribe((res) => {
+      this.complementarStore.setTipoDocumentoOptions(res.datos);
+      this.documentoCatalogDatos = res.datos;
+    });
   }
 
   /**

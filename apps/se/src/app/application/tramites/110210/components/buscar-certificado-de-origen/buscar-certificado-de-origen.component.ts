@@ -243,12 +243,6 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Actualiza el estado del grid de comercializadores de productos.
    */
   actualizaGridComercializadoresProductos(): void {
-    const IDSOLICITUD = this.buscarCertificadoDeOrigenFrom.get('solicitud.idSolicitud')?.value;
-    if (IDSOLICITUD === null) {
-      this.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.enable(); 
-    } else {
-      this.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.disable();
-    }
      this.certificadoService.getData().pipe(
         takeUntil(this.destroyed$)
       ).subscribe(
@@ -260,6 +254,23 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
             }
         }
       );
+  }
+  /**
+   * @method validarFormulario
+   * @description
+   * Valida el formulario de búsqueda de certificado de origen.
+   * Comprueba si el formulario es válido según las reglas de validación configuradas.
+   * Si el formulario es válido, retorna `true`.
+   * Si el formulario es inválido, marca todos los controles como "tocados" para mostrar los errores de validación y retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    if (this.buscarCertificadoDeOrigenFrom.valid) {
+      return true;
+    }
+    this.buscarCertificadoDeOrigenFrom.markAllAsTouched();
+    return false
   }
 
   /**

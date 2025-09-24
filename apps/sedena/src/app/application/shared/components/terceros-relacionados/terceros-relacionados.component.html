@@ -4,7 +4,7 @@
     <ng-alert [CONTENIDO]="tercerorTextoDeAlerta"></ng-alert>
   </div>
   <div class="row mt-5">
-    <h5>Destinatario (destino final)*:</h5>
+    <h5>Destinatario (destino final)*</h5>
   </div>
   <div class="row">
     <app-tabla-dinamica
@@ -18,25 +18,26 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-         @if(destinarioTablaSeleccionada.length > 0 && destinatarioFinalTablaDatos.length > 0) {
-          <button
-            type="button"
-            name="modificarMercancias"
-            class="btn btn-default"
-            (click)="modificarDestinatario()"
-            [disabled]="destinarioTablaSeleccionada.length !== 1 || esFormularioSoloLectura" 
-          >
-            Modificar
-          </button>
-          <button
+         @if(destinatarioFinalTablaDatos.length > 0) {
+             <button
             type="button"
             name="eliminarMercancias"
-            class="btn btn-danger ms-2"
+            class="btn btn-danger"
             (click)="eliminarDestinatarioFinal()"
             [disabled]="destinarioTablaSeleccionada.length !== 1 || esFormularioSoloLectura" 
           >
             Eliminar
           </button>
+          <button
+            type="button"
+            name="modificarMercancias"
+            class="btn btn-default ms-2"
+            (click)="modificarDestinatario()"
+            [disabled]="destinarioTablaSeleccionada.length !== 1 || esFormularioSoloLectura" 
+          >
+            Modificar
+          </button>
+       
       }
         <button
           type="button"
@@ -51,7 +52,7 @@
     </div>
   </div>
   <div class="row mt-5">
-    <h5>Proveedor*:</h5>
+    <h5>Proveedor*</h5>
   </div>
   <div class="row">
     <app-tabla-dinamica
@@ -65,26 +66,26 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-         @if(proveedorTablaSeleccionada.length > 0 && proveedorTablaDatos.length > 0) {
-
-        <button
-          type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
-          [disabled]="proveedorTablaSeleccionada.length !== 1 || esFormularioSoloLectura"
-          (click)="modificarProveedor()"
-        >
-          Modificar
-        </button>
-        <button
+         @if(proveedorTablaDatos.length > 0) {
+           <button
           type="button"
           name="eliminarMercancias"
-          class="btn btn-danger ms-2"
+          class="btn btn-danger"
           (click)="eliminarProveedorFinal()"
           [disabled]="proveedorTablaSeleccionada.length !== 1 || esFormularioSoloLectura"
         >
           Eliminar
         </button>
+        <button
+          type="button"
+          name="modificarMercancias"
+          class="btn btn-default ms-2"
+          [disabled]="proveedorTablaSeleccionada.length !== 1 || esFormularioSoloLectura"
+          (click)="modificarProveedor()"
+        >
+          Modificar
+        </button>
+       
       }
       @if(!tercerosNacionalidad){
         <button

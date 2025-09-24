@@ -9,6 +9,11 @@
             <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
           </div>
         }
+        @if (esFormaValido) {
+          <div class="col-md-12">
+            <ng-alert [CONTENIDO]="formSuccessAlert"></ng-alert>
+          </div>
+        }
         <app-wizard [listaPasos]="pasos"></app-wizard>
       </div>
   
@@ -23,10 +28,14 @@
   
         <btn-continuar
           [datos]="datosPasos"
-          [dePadre]="consultaState.readonly ? false : true"
+          [dePadre]="consultaState.update ? false : true"
           (continuarEvento)="getValorIndice($event)"
         ></btn-continuar>
       </div>
+      <ng-alert
+        [CONTENIDO]="TEXTOS"
+        [CUSTOMECLASS]="'mt-3'"
+      ></ng-alert>
     </div>
   </div>
   

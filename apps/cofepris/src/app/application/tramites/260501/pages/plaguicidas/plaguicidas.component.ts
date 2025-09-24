@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, WizardService } from '@ng-mf/data-access-user';
+import { ERROR_FORMA_ALERT, MSG_REGISTRO_EXITOSO } from '../../constantes/260501constante.enum';
 import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ERROR_FORMA_ALERT } from '../../constantes/260501constante.enum';
 import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
+import { TEXTOS } from '../../constantes/260501constante.enum';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 interface AccionBoton {
   accion: string;
@@ -25,6 +26,9 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
    * Se obtiene de una constante definida en otro archivo.
    */
   pasos: ListaPasosWizard[] = PASOS;
+
+  /** Textos usados en el componente, provenientes de una fuente centralizada. */
+    TEXTOS = TEXTOS;
 
   /**
    * Indice actual del paso en el asistente.
@@ -83,6 +87,19 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
   public formErrorAlert = ERROR_FORMA_ALERT;
 
   /**
+   * Estado del tramite Folio
+   */
+  public folioTemporal: number = 202773617;
+
+  /**
+ * @property formSuccessAlert
+ * @description
+ * Contiene el mensaje de alerta que se muestra cuando ocurre un success en el formulario.
+ * @type {string}
+ */
+  public formSuccessAlert = MSG_REGISTRO_EXITOSO(String(this.folioTemporal));
+
+  /**
    * @constructor
    * @description
    * Inicializa el componente e inyecta las dependencias necesarias mediante el sistema de inyección de Angular.
@@ -121,7 +138,7 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
    * @param e - Objeto que contiene la acción y el valor del botón.
    */
   getValorIndice(e: AccionBoton): void {
-    if (!this.consultaState.readonly) {
+    if (!this.consultaState.readonly && !this.consultaState.update) {
       this.esFormaValido = this.verificarLaValidezDelFormulario();
       if (e.valor > 0 && e.valor <= this.pasos.length) {
         if (e.accion === 'cont' && this.esFormaValido) {
@@ -140,11 +157,13 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
             this.servicioDeFormularioService.markFormAsTouched('domicilioForm');
             this.servicioDeFormularioService.markFormAsTouched('manifiestosForm');
             this.servicioDeFormularioService.markFormAsTouched('representanteForm');
+            this.servicioDeFormularioService.markFormAsTouched('tercerosForm');
         }
       }
     } else {
         if (e.valor > 0 && e.valor < 5) {
         this.indice = e.valor;
+        this.esFormaValido = true;
         if (e.accion === 'cont') {
           this.wizardComponent.siguiente();
         } else {
@@ -169,7 +188,9 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
       (this.servicioDeFormularioService.isFormValid('manifiestosForm') ??
         false) &&
       (this.servicioDeFormularioService.isFormValid('representanteForm') ??
-        false)
+        false) &&
+      (this.servicioDeFormularioService.isFormValid('tercerosForm') ??
+      false)
     );
   }
 

@@ -68,3 +68,19 @@
 .pd-0 {
     padding: 0 !important;
 }
+
+/* Haz que el asterisco sea rojo cuando el campo tenga errores de validación */
+::ng-deep .form-group.has-error label .require,
+.form-group:has(.is-invalid) label .require,
+label:has(+ input.is-invalid) .require,
+label:has(+ input-fecha.is-invalid) .require,
+label:has(+ app-catalogo-select .required) .require,
+.has-error .form-label,
+.has-error label .require, .require.has-error {
+    color: #dc3545 !important;
+}
+
+.error-message{
+    right: 457px;
+    position: relative;
+}

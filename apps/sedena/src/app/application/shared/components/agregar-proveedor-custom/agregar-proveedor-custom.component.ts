@@ -432,6 +432,7 @@ export class AgregarProveedorCustomComponent
       this.agregarProveedorForm.value.tipoPersona === TipoPersona.MORAL &&
       NUMERO_TRAMITE.TRAMITE_240117 === this.idProcedimiento;
     const NUEVO_PROVEEDOR: Proveedor = {
+      id: this.agregarProveedorForm.value.id ? this.agregarProveedorForm.value.id : Math.floor(Math.random() * 1000000),
       nombreRazonSocial: DENOMINACIONRAZON_ONLY_FLAG
         ? `${this.agregarProveedorForm.value.denominacionRazon}`.trim()
         : `${this.agregarProveedorForm.value.nombres} ${
@@ -467,7 +468,6 @@ export class AgregarProveedorCustomComponent
       this.updateProveedorTablaDatos.emit(this.proveedores);
     }
     this.agregarProveedorForm.reset();
-    this.ubicaccion.back();
   }
   /**
    * @method limpiarFormulario

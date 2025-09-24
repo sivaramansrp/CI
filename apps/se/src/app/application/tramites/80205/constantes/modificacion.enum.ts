@@ -96,3 +96,12 @@ export const CONFIGURACION_SERVICIO_IMMEX = [
     orden: 2,
   },
 ];
+
+export interface Catalogo {
+  /** Identificador único del catálogo. */
+  id: number;
+  /** Descripción del catálogo. */
+  descripcion: string;
+  /** Clave opcional del catálogo. */
+  tipode?: string;
+}

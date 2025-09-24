@@ -91,7 +91,7 @@ relacionadas con su proceso productivo y/o la prestación de servicios.</label>
             <div class="col-md-4">
               <div class="form-group">
                 <label for="instalacionesPrincipales" class="form-label text-left">
-                  <span class="text-danger">*</span> Instalaciones Principales
+                  Instalaciones Principales<span class="text-danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                   formControlName="InstalacionesPrincipales"></app-input-radio>
@@ -117,7 +117,7 @@ relacionadas con su proceso productivo y/o la prestación de servicios.</label>
             <div class="col-md-4">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="tipoInstalacionList" formControlName="tipoInstalacion"
-                  [label]="'Tipo de Instalación'" [placeholder]="'Seleccione un tipo de instalación'" [required]="true">
+                  [label]="'Tipo de Instalación'" [placeholder]="'Seleccione una opción'" [required]="true">
                 </app-catalogo-select>
                 @if(registroDomiciliosRfcSolicitanteForm.get('tipoInstalacion')?.invalid &&
                 registroDomiciliosRfcSolicitanteForm.get('tipoInstalacion')?.touched) {
@@ -170,7 +170,7 @@ relacionadas con su proceso productivo y/o la prestación de servicios.</label>
             <div class="col-md-4">
               <div class="form-group">
                 <label for="procesoProductivo" class="form-label text-left">
-                  <span class="text-danger">*</span> Proceso Productivo
+                  Proceso Productivo<span class="text-danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                   formControlName="procesoProductivo"></app-input-radio>
@@ -179,7 +179,7 @@ relacionadas con su proceso productivo y/o la prestación de servicios.</label>
             <div class="col-md-4">
               <div class="form-group">
                 <label for="acreditaUsoGoceInmueble" class="form-label text-left">
-                  <span class="text-danger">*</span> Acreditación del Uso y Goce del Inmueble
+                  Acreditación del Uso y Goce del Inmueble<span class="text-danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                   formControlName="acreditaUsoGoceInmueble"></app-input-radio>
@@ -189,7 +189,7 @@ relacionadas con su proceso productivo y/o la prestación de servicios.</label>
             <div class="col-md-4">
               <div class="form-group">
                 <label for="perfilEmpresa" class="form-label text-left">
-                  Perfil del Recinto Fiscalizado Estratégico
+                  Perfil de la empresa
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                   formControlName="perfilEmpresa" (valueChange)="perfillRecintoChange($event)" [disableLabel]="disablePerfillLabel"></app-input-radio>
@@ -202,7 +202,7 @@ relacionadas con su proceso productivo y/o la prestación de servicios.</label>
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label text-left">
-                  <span class="text-danger">*</span> Realiza actividad economica de comercio exterior
+                  Realiza actividad economica de comercio exterior<span class="text-danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                   formControlName="realizaActividadComercioExterior"></app-input-radio>
@@ -211,7 +211,7 @@ relacionadas con su proceso productivo y/o la prestación de servicios.</label>
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label text-left">
-                  <span class="text-danger">*</span> Reconocimiento Mutuo (Instalación CTPAT)
+                  Reconocimiento Mutuo (Instalación CTPAT)<span class="text-danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                   formControlName="reconocimientoMutuoCTPAT" (valueChange)="reconocimientoMutuoChange($event)" [disableLabel]="disableReconocimientoLabel"></app-input-radio>

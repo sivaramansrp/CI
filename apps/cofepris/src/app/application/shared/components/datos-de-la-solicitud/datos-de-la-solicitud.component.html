@@ -19,6 +19,8 @@
               <h4>Solicitud</h4>
               <app-tabla-dinamica [configuracionTabla]="opcionConfig.configuracionTabla" [datos]="opcionConfig.datos"
                 (listaDeFilaSeleccionada)="opcionLista = $event"
+                [acciones]="tablaAcciones"
+                (alternarValor)="accionesSolitudValor($event)"
                 [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
             </div>
           </div>
@@ -33,7 +35,8 @@
   <div class="row">
     <div class="col-md-12">
       <div class="pull-right ml-2">
-        <button type="button" class="btn btn-primary" (click)="abrirModal()" [disabled]="formularioDeshabilitado || establecimientoSeleccionado">
+        <button type="button" class="btn btn-primary" (click)="abrirModal()"
+          [disabled]="formularioDeshabilitado || establecimientoSeleccionado">
           Seleccionar establecimiento
         </button>
       </div>
@@ -50,7 +53,9 @@
           <span class="form-label">:</span>
           <input class="form-control" id="rfcSanitario" type="text" maxlength="13" formControlName="rfcSanitario"
             [ngClass]="isValid(datosSolicitudForm, 'rfcSanitario') ? 'required' : ''" />
-          <div *ngIf="datosSolicitudForm.get('rfcSanitario')?.hasError('pattern') && datosSolicitudForm.get('rfcSanitario')?.touched" class="mensaje-error">
+          <div
+            *ngIf="datosSolicitudForm.get('rfcSanitario')?.hasError('pattern') && datosSolicitudForm.get('rfcSanitario')?.touched"
+            class="mensaje-error">
             El RFC no tiene un formato válido.
           </div>
           <div class="mensaje-error"
@@ -60,7 +65,7 @@
         </div>
       </div>
       }
-      
+
       <div [class.col-md-6]="!mostrarCorreoElectronicoenMismaFila"
         [class.col-md-8]="mostrarCorreoElectronicoenMismaFila">
         <div class="form-group">
@@ -203,7 +208,8 @@
     <div class="row">
       <div class="col-md-4" *ngIf="mostrarCamposDelProcedimiento('correoElectronico')">
         <div class="form-group">
-          <label class="form-label" for="correoElectronico">Correo electrónico<span [ngClass]="isValid(datosSolicitudForm, 'correoElectronico') ? 'text-danger' : ''">*</span>:
+          <label class="form-label" for="correoElectronico">Correo electrónico<span
+              [ngClass]="isValid(datosSolicitudForm, 'correoElectronico') ? 'text-danger' : ''">*</span>:
           </label>
           <span tooltip="ejemplo@dominio.com">
             <i class="bi bi-question-circle-fill"></i>
@@ -224,9 +230,9 @@
               datosSolicitudForm.get('correoElectronico')?.hasError('email')
             ">
             @if(correoElectronicoMensajeError){
-                El valor Ingresado no es una dirección válida de correo electrónico
+            El valor Ingresado no es una dirección válida de correo electrónico
             }@else{
-                Por favor, escribe una dirección de correo válida
+            Por favor, escribe una dirección de correo válida
             }
           </div>
         </div>
@@ -322,20 +328,15 @@
       </div>
       <div class="col-md-4">
         <div class="form-check mt-4">
-          <label class="form-label mx-1" for="licenciaSanitaria"><b>No. de licencia sanitaria</b><span
+          <label class="form-label mx-1" for="licenciaSanitaria"><b>No.de licencia sanitaria</b><span
               *ngIf="esCampoRequerido('licenciaSanitaria')">*</span>:</label>
           <span
             tooltip="Número de la autorización indicado en el  documento emitido por la autoridad sanitaria competente">
             <i class="bi bi-question-circle-fill"></i>
           </span>
-          <input
-            class="form-control"
-            id="licenciaSanitaria"
-            type="text"
-            formControlName="licenciaSanitaria"
-            (change)="cambioLicenciaSanitaria($event)"
-           />
-         </div>
+          <input class="form-control" id="licenciaSanitaria" type="text" formControlName="licenciaSanitaria"
+            (change)="cambioLicenciaSanitaria($event)" />
+        </div>
       </div>
     </div>
 
@@ -447,27 +448,20 @@
     </div>
 
     @if(!esManifesto){
+
     <div class="row mt-2">
       <ng-titulo titulo="Manifiestos y declaraciones" class="mt-4 col-md-12"></ng-titulo>
-      <div class="mt-5 alert alert-info infoAlert">
-
+      <div class="alert alert-info">
         <div class="row align-items-center justify-content-start py-2">
           <div class="col-auto d-flex align-items-start pt-1">
-            <input class="form-check-input mt-1 me-3" type="checkbox" formControlName="manifesto" value=""
-              id="manifesto">
-            <label class="form-check-label ms-2" for="manifesto" *ngIf="esCampoRequerido('manifesto')">
-              <span [ngClass]="
-                    datosSolicitudForm.get('manifesto')?.invalid &&
-                    (datosSolicitudForm.get('manifesto')?.touched ||
-                      datosSolicitudForm.get('manifesto')?.dirty)
-                      ? 'mensaje-error font-weight-bold' : ''
-                  "> *</span></label>
+            <input class="form-check-input me-3" type="checkbox" id="manifesto" formControlName="manifesto" />
+            <label class="form-check-label ms-2 mt-2" for="manifesto">
+              <span
+                [ngClass]="datosSolicitudForm.get('manifesto')?.invalid && (datosSolicitudForm.get('manifesto')?.touched || datosSolicitudForm.get('manifesto')?.dirty) ? 'mensaje-error font-weight-bold' : ''">*</span>
+            </label>
           </div>
-
-          <div class="col margin-left-check">
-            <p class="mb-0">
-              {{alertaDeManifestoContenido}}
-            </p>
+          <div class="col align-items-center ml-38">
+            <label for="manifesto" class="fw-300">{{ alertaDeManifestoContenido }}</label>
           </div>
         </div>
       </div>
@@ -520,12 +514,20 @@
 
     @if(mostrarRepresentanteLegal) {
     <ng-titulo titulo="Representante legal" class="mt-4"></ng-titulo>
-
+    
+    <!-- First row: RFC/Solicitud de comentarios field -->
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="representanteRfc">RFC*:</label>
-          <input class="form-control" id="representanteRfc" type="text" maxlength="13"
+          <label class="form-label" for="representanteRfc">
+            @if(esProcedimiento260210) {
+              Solicitud de comentarios*:
+            } @else {
+              RFC*:
+            }
+          </label>
+          <input class="form-control" id="representanteRfc" type="text" 
+            [maxlength]="esProcedimiento260210 ? 50 : 13"
             formControlName="representanteRfc" [ngClass]="
               isValid(datosSolicitudForm, 'representanteRfc') ? 'required' : ''
             " />
@@ -542,15 +544,15 @@
         </button>
       </div>
     </div>
-    <div class="row mt-2">
+
+    <!-- Second row: Name fields (for all procedures) -->
+    <div class="row mt-3">
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="representanteNombre">Nombre o Razón Social*:</label>
-          <input class="form-control" id="representanteNombre" type="text" formControlName="representanteNombre"
-            [ngClass]="
-              isValid(datosSolicitudForm, 'representanteNombre')
-                ? 'required'
-                : ''
+          <input class="form-control" id="representanteNombre" type="text" maxlength="100"
+            formControlName="representanteNombre" [ngClass]="
+              isValid(datosSolicitudForm, 'representanteNombre') ? 'required' : ''
             " />
           <div class="mensaje-error"
             *ngIf="datosSolicitudForm.get('representanteNombre')?.errors?.['required'] && datosSolicitudForm.get('representanteNombre')?.touched">
@@ -561,8 +563,8 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
-
-          <input class="form-control" id="apellidoPaterno" type="text" formControlName="apellidoPaterno" [ngClass]="
+          <input class="form-control" id="apellidoPaterno" type="text" maxlength="50"
+            formControlName="apellidoPaterno" [ngClass]="
               isValid(datosSolicitudForm, 'apellidoPaterno') ? 'required' : ''
             " />
           <div class="mensaje-error"
@@ -574,16 +576,20 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
-          <input class="form-control" id="apellidoMaterno" type="text" formControlName="apellidoMaterno" />
+          <input class="form-control" id="apellidoMaterno" type="text" maxlength="50"
+            formControlName="apellidoMaterno" />
         </div>
       </div>
     </div>
     }
+
     <ng-template #campoCorreoElectronico>
       <div class="form-group">
         <label class="form-label" for="correoElectronico">Correo electrónico
         </label>
-        <span class="form-label municipio-label" [ngClass]="isValid(datosSolicitudForm, 'correoElectronico') ? 'text-danger' : ''" *ngIf="esCampoRequerido('correoElectronico')">*</span>
+        <span class="form-label municipio-label"
+          [ngClass]="isValid(datosSolicitudForm, 'correoElectronico') ? 'text-danger' : ''"
+          *ngIf="esCampoRequerido('correoElectronico')">*</span>
         <span class="form-label mx-1">:</span>
         <span tooltip="ejemplo@dominio.com">
           <i class="bi bi-question-circle-fill"></i>
@@ -602,16 +608,14 @@
             datosSolicitudForm.get('correoElectronico')?.touched &&
             datosSolicitudForm.get('correoElectronico')?.hasError('pattern')
           ">
-           @if(correoElectronicoMensajeError){
-                El valor Ingresado no es una dirección válida de correo electrónico
-            }@else{
-                Por favor, escribe una dirección de correo válida
-            }
+          El valor Ingresado no es una dirección válida de correo electrónico
+
         </div>
       </div>
     </ng-template>
   </form>
 </div>
+
 @if(confirmacionAlerta){
 <section>
   <lib-notificaciones [notificacionInput]="seleccionarFilaNotificacion"

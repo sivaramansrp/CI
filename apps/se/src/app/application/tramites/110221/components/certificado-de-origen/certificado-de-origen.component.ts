@@ -39,6 +39,7 @@ import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { Tramite110221State, Tramite110221Store } from '../../estados/tramite110221.store';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { ERROR_FORMA_ALERT_CONSULTA } from '../../../120601/constantes/definiciones.enum';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { Modal } from 'bootstrap';
 import { Tramite110221Query } from '../../estados/tramite110221.query';
@@ -106,6 +107,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy,AfterView
    * Texto de alerta mostrado en el componente.
    */
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
+
+  formErrorAlert = ERROR_FORMA_ALERT_CONSULTA;
 
   /**
    * @description

@@ -1,14 +1,17 @@
-import { Component, ViewChild } from '@angular/core';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import {
+  BtnContinuarComponent,
+  DatosPasos,
+  ListaPasosWizard,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/paso-tres-steps.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { Solicitud31101Store } from '../../estados/solicitud31101.store';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -42,7 +45,7 @@ interface AccionBoton {
 /**
  * Componente que representa la página de solicitud.
  */
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnDestroy {
   /**
    * Lista de pasos del asistente.
    */
@@ -69,6 +72,14 @@ export class SolicitudPageComponent {
   };
 
   /**
+   * @description Constructor del componente.
+   * Inicializa la inyección de dependencias necesarias para manejar el estado de `Solicitud31101Store`.
+   *
+   * @param {Solicitud31101Store} solicitud31101Store - Servicio de la tienda encargado de gestionar y mantener el estado de la solicitud 31101.
+   */
+  constructor(public solicitud31101Store: Solicitud31101Store) {}
+
+  /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
    */
@@ -89,5 +100,16 @@ export class SolicitudPageComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+   * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Se encarga de reiniciar el estado de la tienda `solicitud31101Store` para liberar memoria
+   * y evitar inconsistencias en los datos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  ngOnDestroy(): void {
+    this.solicitud31101Store.resetStore();
   }
 }

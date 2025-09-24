@@ -5,7 +5,7 @@
         <div class="panel panel-default">
           <div class="panel-heading" (click)="mostrar_colapsable()">
            <p class="panel-title espacio-extra">
-              <img src="assets/img/icons/data-copy.ico" height="24" width="24" alt="" style="vertical-align:middle; margin-right:8px;">
+              <img src="assets/img/icons/icono_copiado.ico" height="24" width="24" alt="" style="vertical-align:middle; margin-right:8px;">
                 Opciones de pre-llenado de Solicitud
             </p>
             <button type="button" class="collpase-button collapsed"
@@ -20,7 +20,11 @@
                 <div class="col-md-6"></div>
                 <div class="col-md-6 text-end">
                   <div class="btn-group">
-                    <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" type="button">
+                    <button class="btn btn-primary me-2" 
+                    [disabled]="esFormularioSoloLectura" 
+                    *ngIf="!botonDesactivarParaProrrogar"
+                    (click)="restaurarDatosPrellenados()"
+                    type="button">
                       Copiar datos en una Nueva Solicitud
                     </button>
                   </div>
@@ -44,8 +48,8 @@
           formControlName="btonDeRadio"
           (change)="setValorStore(form,'btonDeRadio'); tipoTramiteChange.emit(form.get('btonDeRadio')?.value)"
         ></app-input-radio>
-               <div *ngIf="form.get('btonDeRadio')?.invalid && form.get('btonDeRadio')?.touched" class="text-danger">
-            Este campo es obligatorio
+        <div *ngIf="form.get('btonDeRadio')?.invalid && (form.get('btonDeRadio')?.touched || form.get('btonDeRadio')?.dirty) && form.get('btonDeRadio')?.errors?.['required']" class="text-danger">
+          Este campo es obligatorio
         </div>
       </div>
 
@@ -80,8 +84,9 @@
           <button
             type="button"
             class="btn btn-primary"
-            (click)="toggleFormControls()"
+            (click)="openEstablecimientoModal()"
             [disabled]="esFormularioSoloLectura"
+            *ngIf="!botonDesactivarParaProrrogar"
           >
             Seleccionar establecimiento
           </button>
@@ -91,7 +96,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="rfcDel"
-              >RFC del responsable sanitario:</label
+              >RFC del responsable sanitario*:</label
             >
             <input
               class="form-control"
@@ -102,46 +107,17 @@
               maxlength="13"
               (change)="setValorStore(datosDelEstablecimiento,'rfcDel')"
             />
-              <div
-            *ngIf="datosDelEstablecimiento.get('rfcDel')?.invalid && datosDelEstablecimiento.get('rfcDel')?.touched && datosDelEstablecimiento.get('rfcDel')?.errors?.['pattern']"
-            class="text-danger">
-              El RFC no tiene un formato valido.
-            </div> 
+            <div *ngIf="isInvalid(datosDelEstablecimiento, 'rfcDel')" class="text-danger">
+              <div *ngIf="datosDelEstablecimiento.get('rfcDel')?.invalid && datosDelEstablecimiento.get('rfcDel')?.touched && datosDelEstablecimiento.get('rfcDel')?.errors?.['pattern']">
+                 El RFC no tiene un formato valido.
+              </div>
+              <div *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
+                Este campo es obligatorio.
+              </div>
+          </div>
           </div>
         </div>
        <div class="col-md-8">
-          <!-- <div class="form-group">
-            <label class="form-label" for="denominacion"
-              >Denominación o razón social*:</label
-            >
-            <input
-              class="form-control"
-              id="denominacion"
-              placeholder=""
-              type="text"
-              formControlName="denominacion"
-              maxlength="100"
-              (change)="setValorStore(datosDelEstablecimiento,'denominacion')"
-              (input)="validarLongitudMaxima('denominacion', 100)"
-              [ngClass]="isInvalid(datosDelEstablecimiento, 'denominacion') ? 'required' : ''"
-            />
-              <div class="text-danger" *ngIf="datosDelEstablecimiento.get('denominacion')?.touched && datosDelEstablecimiento.get('denominacion')?.invalid">
-            <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['required']">
-              Este campo es obligatorio
-            </span>
-            <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['maxlength']">
-              Máximo 100 caracteres permitidos
-            </span>
-            <span *ngIf="datosDelEstablecimiento.get('denominacion')?.errors?.['pattern']">
-              Por favor, corrige la descripción/dirección
-            </span>
-            <div *ngIf="esInvalido('denominacion')">
-            <span class="text-danger">
-              Por favor, corrige la descripción/dirección 2.
-            </span>
-</div>
-          </div>
-          </div> -->
         <div class="form-group">
   <label class="form-label" for="denominacion"
     >Denominación o razón social*:</label
@@ -194,12 +170,12 @@
               [ngClass]="isInvalid(datosDelEstablecimiento, 'correo') ? 'required' : ''"
             />
           <div *ngIf="isInvalid(datosDelEstablecimiento, 'correo')" class="text-danger">
-            <small *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
+            <div *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['required']">
               Este campo es obligatorio.
-            </small>
-            <small *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
+            </div>
+            <div *ngIf="datosDelEstablecimiento.get('correo')?.errors?.['email']">
               El valor ingresado no es una dirección válida de correo electrónico
-            </small>
+            </div>
           </div>
           
 
@@ -207,5 +183,24 @@
         </div>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- Modal para Seleccionar Establecimiento -->
+<div class="modal fade" id="establecimientoModal" tabindex="-1" role="dialog" aria-labelledby="establecimientoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="establecimientoModalLabel"></h5>
+      </div>
+      <div class="modal-body">
+        <p>Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.</p>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="closeEstablecimientoModal()">
+          Aceptar
+        </button>
+      </div>
+    </div>
   </div>
 </div>

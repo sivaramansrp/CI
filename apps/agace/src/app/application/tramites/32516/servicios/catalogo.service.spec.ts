@@ -25,7 +25,7 @@ describe('CatalogosService', () => {
   });
 
   it('should fetch menu desplegable data', () => {
-    const mockResponse = { data: [{ id: 1, descripcion: 'Test' }] as Catalogo[] };
+    const mockResponse = [{ id: 1, descripcion: 'Test' }] as Catalogo[];
     let result: Catalogo[] | undefined;
     service.obtenerMenuDesplegable('test.json').subscribe(data => result = data);
 
@@ -33,7 +33,7 @@ describe('CatalogosService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
 
-    expect(result).toEqual(mockResponse.data);
+    expect(result).toEqual(mockResponse);
   });
 
   it('should fetch levantar acta desplegable data', () => {

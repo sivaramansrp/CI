@@ -282,6 +282,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     private readonly autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
     private catalogosServices: CatalogosService, private consultaQuery: ConsultaioQuery
   ) {
+   
     this.formulario = this.fb.group({
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
     });
@@ -315,6 +316,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.maxLength(300)],
       ],
     });
+     this.obtainorServico();
   }
 
   /**
@@ -347,15 +349,19 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getCatalogoPaises(): void {
-    this.catalogosServices
-      .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
+    this.autorizacionProgrmaNuevoService
+      .getPais()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((datos) => {
+      .subscribe((res) => {
         const INDICE = this.camposFormulario.findIndex(
           (ele) => ele.campo === ENTIDADFEDERATIVA
         );
-        this.camposFormulario[INDICE].opciones = datos;
-        this.Tramite80102Store.setPaisesOrigen(datos);
+        const PAISES =res.datos.map((item: Catalogo) => ({
+          ...item,
+          clave: typeof item.clave === 'string' ? Number(item.clave) : (item.clave ?? 0)
+        }));
+        this.camposFormulario[INDICE].opciones = PAISES
+        this.Tramite80102Store.setPaisesOrigen(PAISES);
       })
   }
 
@@ -456,9 +462,9 @@ export class ServiciosComponent implements OnInit, OnDestroy {
         // También puedes asignarlo directamente al componente si lo necesitas, pero es mejor usar el store para mantener la reactividad
         this.Tramite80102Query.selectAduanaDeIngreso$.subscribe(
           (aduanaDeIngreso) => {
-            this.aduanaDeIngreso = aduanaDeIngreso;
-            if (this.aduanaDeIngreso?.length) {
-              this.formulario.get('entidadFederativa')?.setValue(this.aduanaDeIngreso[0].id);
+            // this.aduanaDeIngreso = aduanaDeIngreso;
+            if (aduanaDeIngreso?.length) {
+              this.formulario.get('entidadFederativa')?.setValue(aduanaDeIngreso[0].id);
             }
           }
         );
@@ -509,7 +515,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: 'warning',
       modo: 'action',
-      titulo: 'Confirmar adición',
+      titulo: '',
       mensaje: '¿Está seguro de agregar el(los) servicio(s) seleccionado(s)?',
       cerrar: true,
       tiempoDeEspera: 2000,
@@ -546,7 +552,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       tipode: this.recibioDatos[0].tipode,
     };
     this.Tramite80102Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
-    this.mostrarNotificacionExito('¿Está seguro de agregar el(los) servicio(s) seleccionado(s)?');
+    
   }
 
   /**
@@ -566,31 +572,11 @@ export class ServiciosComponent implements OnInit, OnDestroy {
 
       // Limpiar selección
       this.domiciliosSeleccionados = [];
-
-      this.mostrarNotificacionExito('¿Está seguro de eliminar el servicio seleccionado?');
     }
   }
 
-  /**
-   * Muestra una notificación de éxito.
-   * @param {string} mensaje - Mensaje a mostrar.
-   * @returns {void}
-   */
-  private mostrarNotificacionExito(mensaje: string): void {
-    this.nuevaNotificacionRfc = {
-      tipoNotificacion: 'alert',
-      categoria: 'success',
-      modo: 'info',
-      titulo: 'Operación exitosa',
-      mensaje: mensaje,
-      ttl: '',
-      cerrar: true,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar'
-    };
-  }
-
-  /**
+  
+/**
    * Muestra una notificación de error.
    * @param {string} mensaje - Mensaje a mostrar.
    * @returns {void}
@@ -728,6 +714,13 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+obtainorServico():void{
+  this.autorizacionProgrmaNuevoService.getServicoImmex().pipe(takeUntil(this.destroyNotifier$)).subscribe((data)=>{
+  this.aduanaDeIngreso=data.datos;
+  });
+}
+
 
   /**
   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

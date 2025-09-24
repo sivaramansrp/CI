@@ -1,4 +1,4 @@
-import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AVISO,AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
 import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from '../../services/certificados-licencias.enum';
 
@@ -14,10 +14,20 @@ import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from 
 })
 export class TodospasosComponent {
 
+  /**
+   * Esta variable se utiliza para almacenar los textos de aviso.
+   */
+  TEXTOS = AVISO;
    /**
 * Esta variable se utiliza para almacenar la lista de pasos.
 */
  pantallasPasos: ListaPasosWizard[] = PANTA_PASOS;
+
+   /**
+     * Una cadena que representa la clase CSS para una alerta de información.
+     * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+     */
+  public infoAlert = 'alert-info';
  /**
   * Esta variable se utiliza para almacenar el índice del paso.
   */

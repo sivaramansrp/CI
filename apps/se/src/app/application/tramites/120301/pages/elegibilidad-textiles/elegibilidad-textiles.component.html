@@ -4,6 +4,11 @@
         <div class="col-md-12">
           <h2>Expedición de certificados de elegibilidad de bienes textiles y prendas de vestir con Canadá y Estados Unidos de América</h2>
         </div>
+        @if(mostrarOtraPestana) {
+        <div class="alert alert-info alert-dismissible fade show text-center firmar-alert" role="alert">
+          La Solicitud ha quedado registrada con el número temporal 202772729. Éste no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la Sollicitud al momento en que ésta sea formada
+        </div>
+        }
         <div class="col-12">
           @if (esFormaValido) {
           <div
@@ -15,8 +20,8 @@
         <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="row">
-      @switch (indice) { @case (1) {
-      <app-paso-uno #pasoUnoRef (tabChanged)="onTabChanged()"></app-paso-uno>
+  @switch (indice) { @case (1) {
+  <app-paso-uno #pasoUnoRef (tabChanged)="onTabChanged()" (mostrarOtraPestanaChange)="mostrarOtraPestana = $event"></app-paso-uno>
       } @case (2) {
       <app-paso-dos></app-paso-dos>
       } @case (3) {
