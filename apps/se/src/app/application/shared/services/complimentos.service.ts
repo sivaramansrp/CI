@@ -14,6 +14,7 @@ import { ENVIRONMENT } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PlantsEmpresaSubfabricante } from '../../tramites/130118/model/request/guardar-solicitud-request.model';
+import { PlantasSubfabricante } from '../models/empresas-subfabricanta.model';
 
 @Injectable({
   providedIn: 'root',
@@ -317,4 +318,21 @@ export class ComplimentosService {
         })
       );
     }
+
+  // eslint-disable-next-line class-methods-use-this
+  mapApiResponseToPlantasSubfabricante(apiResponse: any[]): PlantasSubfabricante[] {
+      return apiResponse.map(item => ({
+        calle: item.domicilio?.calle || '',
+        numExterior: parseInt(item.domicilio?.numeroExterior, 10) || 0,
+        numInterior: parseInt(item.domicilio?.numeroInterior, 10) || 0,
+        codigoPostal: parseInt(item.domicilio?.codigoPostal, 10) || 0,
+        colonia: item.domicilio?.colonia?.nombre || '',
+        municipio: item.domicilio?.delegacionMunicipio?.nombre || '',
+        entidadFederativa: item.domicilio?.entidadFederativa?.nombre || '',
+        pais: item.domicilio?.pais?.nombre || '',
+        rfc: item.empresaSolicitante?.rfc || '',
+        domicilioFiscal: item.empresaSolicitante?.domicilioCompleto || '',
+        razonSocial: item.empresaSolicitante?.razonSocial || ''
+      }));
+  }
 }

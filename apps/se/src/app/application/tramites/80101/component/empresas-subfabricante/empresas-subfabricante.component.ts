@@ -3,6 +3,7 @@ import {
   Catalogo,
   ConfiguracionColumna,
   TablaSeleccion,
+  doDeepCopy,
   esValidArray,
   esValidObject,
 } from '@libs/shared/data-access-user/src';
@@ -292,8 +293,9 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((response) => {
         if(esValidObject(response)) {
-          if(esValidArray(response.data)) {
-            const RESPONSE:PlantasSubfabricante[] = response.data as unknown as PlantasSubfabricante[];
+          const API_DATOS = doDeepCopy(response);
+          if(esValidArray(API_DATOS.data)) {
+            const RESPONSE:PlantasSubfabricante[] = this._compartidaSvc.mapApiResponseToPlantasSubfabricante(API_DATOS.data);
             this.store.setPlantasBuscadas(RESPONSE);
           } 
         }
