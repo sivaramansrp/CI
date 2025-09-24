@@ -1,35 +1,46 @@
-<div class="container mt-5">
-  <!-- <ng-titulo titulo="Modificar Información"></ng-titulo> -->
-  <form [formGroup]="modificarFormulario">
-    <div class="row mb-3">
-      <div class="col-md-4">
-        <app-catalogo-select [catalogo]="tramiteList.catalogos" [label]="tramiteList.labelNombre"
-          [placeholder]="tramiteList.primerOpcion" [required]="true" formControlName="tipoDeInversion"
-          name="tipoDeInversion" id="tipoDeInversion"></app-catalogo-select>
+<div class="modal fade" id="modalModificar" tabindex="-1" aria-labelledby="modalModificarLabel"
+  aria-hidden="true" #modalModificar>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalModificarLabel">Modificar Información</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onCancelar()"></button>
       </div>
-      <div class="col-md-4">
-        <label for="valorEnPesos" class="form-label">Valor en pesos*:</label>
-        <input class="form-control" type="text" formControlName="valorEnPesos" name="valorEnPesos" id="valorEnPesos" />
-      </div>
-      <div class="col-md-8">
-        <label for="descripcionGeneral" class="form-label">Descripción general*:</label>
-        <input class="form-control" type="text" formControlName="descripcionGeneral" name="descripcionGeneral"
-          id="descripcionGeneral" />
-      </div>
-      <div class="col-md-4">
-        <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
-          [placeholder]="aduana.primerOpcion" [required]="true" formControlName="formaAdquisicion"
-          name="formaAdquisicion" id="formaAdquisicion"></app-catalogo-select>
-      </div>
-      <div class="col-md-4">
-        <!-- <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
+      <div class="modal-body">
+        <form [formGroup]="modificarFormulario">
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <app-catalogo-select [catalogo]="tramiteList.catalogos" [label]="tramiteList.labelNombre"
+                [placeholder]="tramiteList.primerOpcion" [required]="true" formControlName="tipoDeInversion"
+                name="tipoDeInversion" id="tipoDeInversion"></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+              <label for="valorEnPesos" class="form-label">Valor en pesos*:</label>
+              <input class="form-control" type="text" formControlName="valorEnPesos" name="valorEnPesos"
+                id="valorEnPesos" />
+            </div>            
+            <div class="col-md-8">
+              <label for="descripcionGeneral" class="form-label">Descripción general*:</label>
+              <textarea class="form-control" rows="2" formControlName="descripcionGeneral" name="descripcionGeneral"
+                id="descripcionGeneral"></textarea>
+            </div>
+            <div class="col-md-4">
+              <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
+                [placeholder]="aduana.primerOpcion" [required]="true" formControlName="formaAdquisicion"
+                name="formaAdquisicion" id="formaAdquisicion"></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+              <!-- <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
           [placeholder]="aduana.primerOpcion" [required]="true" formControlName="formaAdquisicion"
           name="formaAdquisicion" id="formaAdquisicion"></app-catalogo-select> -->
+            </div>          
+          </div>
+        </form>
       </div>
-      <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary ms-3" (click)="onGuardarCambios()">Aceptar</button>
-        <button type="submit" class="btn btn-primary ms-3">Cancelar</button>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onCancelar()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="onGuardarCambios()">Aceptar</button>
       </div>
     </div>
-  </form>
+  </div>
 </div>

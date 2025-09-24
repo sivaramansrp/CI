@@ -1,6 +1,6 @@
 import {Catalogo,Solicitud32101State,Tramite32101Store} from '../../../../estados/tramites/tramite32101.store';
 import {CatalogoSelectComponent,TituloComponent} from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
 import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -69,6 +69,11 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud32101State;
 
   configuracionTablaDatos: DatosDeLaTabla[] = [];
+
+  /**
+   * Referencia al modal para agregar mercancías.
+   */
+  @ViewChild('modalModificar', { static: false }) modalRef!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
@@ -206,9 +211,9 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
    *          de lo contrario, devuelve una cadena vacía.
    */
   static getDropdownLabel(selectedId: number, catalog: Catalogo[]): string {
-  const SELECTED_ITEMS = catalog.find((item) => item.id === selectedId);
-  return SELECTED_ITEMS ? SELECTED_ITEMS.descripcion : '';
-}
+    const SELECTED_ITEMS = catalog.find((item) => item.id === selectedId);
+    return SELECTED_ITEMS ? SELECTED_ITEMS.descripcion : '';
+  }
 
   /**
    * Maneja el evento para guardar los cambios realizados en el formulario de modificación.
@@ -216,18 +221,8 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
    * Este método crea un objeto `datosDeLaTabla` con los valores actualizados del formulario
    * y lo envía al servicio `consultaAvisoAcreditacionService` para actualizar la fila correspondiente.
    * 
-   * @remarks
-   * - Utiliza métodos estáticos para obtener las etiquetas de los valores seleccionados en los desplegables.
-   * - Si no se encuentra un ID en el estado de la solicitud, se asigna un valor predeterminado de `0`.
-   * - El campo `comprobanteDePago` se establece como "N/A" de forma predeterminada.
-   * 
-   * @example
-   * ```typescript
-   * this.onGuardarCambios();
-   * ```
-   */
+   */  
   onGuardarCambios(): void {
-    const CURRENT_URL = this.router.url;
     const UPDATED_ROW: DatosDeLaTabla = {
       id: this.solicitudState.abc?.id ?? 0,
       tipoDeInversion: ComponenteDeActualizacionComponent.getDropdownLabel(
@@ -242,16 +237,56 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
       valorEnPesos: this.modificarFormulario.value.valorEnPesos,
       comprobanteDePago: 'N/A',
     };
-    this.configuracionTablaDatos = [...this.configuracionTablaDatos, UPDATED_ROW];
+    
     this.consultaAvisoAcreditacionService.setUpdatedRow([UPDATED_ROW]);
-    this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);
-    setTimeout(() => {
-      if (CURRENT_URL.includes('agace')) {
-        this.router.navigate(['/agace/consulta-aviso-acreditacion/solicitud']);
+    
+    this.cerrarModal();
+  }
+
+  /**
+   * Abre el modal y carga los datos de la fila seleccionada
+   */
+  abrirModal(selectedRow: DatosDeLaTabla): void {
+    // Populate form with selected row data
+    this.modificarFormulario.patchValue({
+      tipoDeInversion: this.getIdFromDescription(selectedRow.tipoDeInversion, this.tramiteList.catalogos),
+      valorEnPesos: selectedRow.valorEnPesos,
+      descripcionGeneral: selectedRow.descripcionGeneral,
+      formaAdquisicion: this.getIdFromDescription(selectedRow.formaAdquisicion, this.aduana.catalogos)
+    });
+
+    // Show the modal using Bootstrap modal
+    if (this.modalRef?.nativeElement) {
+      const modal = new (window as any).bootstrap.Modal(this.modalRef.nativeElement);
+      modal.show();
+    }
+  }
+
+  /**
+   * Cierra el modal
+   */
+  cerrarModal(): void {
+    if (this.modalRef?.nativeElement) {
+      const modal = (window as any).bootstrap.Modal.getInstance(this.modalRef.nativeElement);
+      if (modal) {
+        modal.hide();
       }
-      if (CURRENT_URL.includes('pago')) {
-        this.router.navigate(['/pago/consulta-aviso-acreditacion/solicitud']);
-      }
-    }, 100);
+    }
+  }
+
+  /**
+   * Maneja el evento de cancelar la modificación.
+   * Cierra el modal sin guardar cambios.
+   */
+  onCancelar(): void {
+    this.cerrarModal();
+  }
+
+  /**
+   * Obtiene el ID de un elemento basado en su descripción
+   */
+  private getIdFromDescription(description: string, catalog: any[]): number | null {
+    const item = catalog.find(cat => cat.descripcion === description);
+    return item ? item.id : null;
   }
 }

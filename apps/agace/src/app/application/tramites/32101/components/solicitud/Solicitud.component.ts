@@ -1,6 +1,6 @@
 import {AbstractControl,FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
 import {Catalogo,CatalogoSelectComponent,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService,} from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
 import { ENCABEZADO_TABLA_DATOS, Solicitud32101Enum } from '../../constants/solicitud32101.enum';
@@ -11,6 +11,7 @@ import { ConsultaAvisoAcreditacionService } from '../../services/consulta-aviso-
 import { FECHA_PAGO } from '../../models/registro.model';
 import { Router } from '@angular/router';
 import { Tramite32101Query } from '../../../../estados/queries/tramite32101.query';
+import { ComponenteDeActualizacionComponent } from '../componente-de-actualizacion/componente-de-actualizacion.component';
 
 /**
  * Componente que gestiona la solicitud del trámite 31803.
@@ -18,8 +19,7 @@ import { Tramite32101Query } from '../../../../estados/queries/tramite32101.quer
  */
 @Component({
   selector: 'app-solicitud',
-  standalone: true,
-  imports: [
+  standalone: true,  imports: [
     CommonModule,
     TituloComponent,
     InputFechaComponent,
@@ -29,6 +29,7 @@ import { Tramite32101Query } from '../../../../estados/queries/tramite32101.quer
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     NotificacionesComponent,
+    ComponenteDeActualizacionComponent,
   ],
   providers: [ConsultaAvisoAcreditacionService],
   templateUrl: './Solicitud.component.html',
@@ -148,6 +149,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Este encabezado define los datos que se mostrarán en la tabla.
    */
   public encabezadoDeTabla = ENCABEZADO_TABLA_DATOS;
+
+  /**
+   * Referencia al componente modal de actualización
+   */
+  @ViewChild(ComponenteDeActualizacionComponent) modalActualizacion!: ComponenteDeActualizacionComponent;
 
   /**
    * Constructor del componente.
@@ -595,13 +601,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       );
     }
   }
-
   /**
-  * modificar la fila seleccionada en otro componente 
+  * modificar la fila seleccionada en modal popup
   */
   modificarFilaSeleccionada(): void {
-    const SELECTED_ROW = this.selectedRows[0];
-    const CURRENT_URL = this.router.url;
     if (this.selectedRows.length !== 1) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -616,21 +619,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       };
       return;
     }
-    if (SELECTED_ROW) {
+    
+    const SELECTED_ROW = this.selectedRows[0];
+    if (SELECTED_ROW && this.modalActualizacion) {
       this.consultaAvisoAcreditacionService.setUpdatedRow([SELECTED_ROW]);
       this.tramite32101Store.setAbc(SELECTED_ROW);
-      setTimeout(() => {
-        if (CURRENT_URL.includes('agace')) {
-          this.router.navigate(
-        ['/agace/consulta-aviso-acreditacion/actualizacion',
-  SELECTED_ROW.id]);
-        }
-        if (CURRENT_URL.includes('pago')) {
-          this.router.navigate(
-        ['/pago/consulta-aviso-acreditacion/actualizacion',
-  SELECTED_ROW.id]);
-        }
-      }, 100);
+      this.modalActualizacion.abrirModal(SELECTED_ROW);
     }
   }
 

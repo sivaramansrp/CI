@@ -10,23 +10,17 @@
             <div class="col-md-4">
                 <label for="valorEnPesos" class="form-label">Valor en pesos*:</label>
                 <input class="form-control" [ngClass]="isValid(valorEnPesos, 'valorEnPesos') ? 'required' : ''" type="number" formControlName="valorEnPesos" name="valorEnPesos" id="valorEnPesos" (change)="setValoresStore(registroForm, 'valorEnPesos', 'setValorEnPesos')" />
-                <div *ngIf="isInvalid('valorEnPesos') && registroForm.get('valorEnPesos')?.errors?.['required']" class="mensaje-error">
-                  Este campo es obligatorio.
-                </div>
             </div>
-        </div>        
+        </div>
         <div class="row mb-3">
             <div class="col-md-8">
               <label for="tipoDeInversion" class="form-label">Descripción general*:</label>
-              <textarea class="form-control textarea-container" [ngClass]="isValid(descripcionGeneral, 'descripcionGeneral') ? 'required' : ''" rows="2" formControlName="descripcionGeneral" name="descripcionGeneral" id="descripcionGeneral" (change)="setValoresStore(registroForm, 'descripcionGeneral', 'setDescripcionGeneral')"></textarea>
-              <div *ngIf="isInvalid('valorEnPesos') && registroForm.get('valorEnPesos')?.errors?.['required']" class="mensaje-error">
-                Este campo es obligatorio.
-              </div>
+              <input class="form-control" [ngClass]="isValid(descripcionGeneral, 'descripcionGeneral') ? 'required' : ''" type="text" rows="2" formControlName="descripcionGeneral" name="descripcionGeneral" id="descripcionGeneral" (change)="setValoresStore(registroForm, 'descripcionGeneral', 'setDescripcionGeneral')" />
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-4">
-              <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre" [markTouched]="registroForm.get('listaDeDocumentos')?.touched??false"
+              <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
                 [placeholder]="aduana.primerOpcion" [required]="true"  formControlName="listaDeDocumentos" name="listaDeDocumentos" id="listaDeDocumentos" (change)="setValoresStore(registroForm, 'listaDeDocumentos', 'setListaDeDocumentos')" [isDisabled]="soloLectura"></app-catalogo-select>
             </div>
         </div>
@@ -34,23 +28,19 @@
             <div class="col-md-12 mt-5 d-flex justify-content-end">
               <button type="button" class="btn btn-primary ms-3" (click)="poblarTabla()" [disabled]="soloLectura">Agregar</button>
             </div>
-          @if (nuevaNotificacion) { 
-          <section>
-              <lib-notificaciones [notificacionInput]="nuevaNotificacion"
-                (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
-          </section> 
-        }
+          @if (nuevaNotificacion) { <section>
+          <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+            (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+      </section> }
     </div>
   </ng-container>
   <ng-container>
     <h6>Datos de la inversión</h6>
     <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezadoDeTabla" [datos]="configuracionTablaDatos" (filaSeleccionada)="onCheckboxClicked($event)" [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
-    
-    <div class="col-md-12 mt-5 mb-3 d-flex justify-content-end" *ngIf="configuracionTablaDatos.length > 0">
+    <div class="col-md-12 mt-5 d-flex justify-content-end" *ngIf="configuracionTablaDatos.length > 0">
       <button type="button" name="modificarMercancias" class="btn btn-default" (click)="modificarFilaSeleccionada()">Modificar</button>
       <button type="button" name="eliminarMercancias" class="btn btn-danger ms-2" (click)="eliminarFilasSeleccionadas()">Eliminar</button>
-      @if (nuevaNotificacion2) { 
-      <section>
+      @if (nuevaNotificacion2) { <section>
         <lib-notificaciones [notificacionInput]="nuevaNotificacion2"
           (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
       </section> }
@@ -113,8 +103,10 @@
     </div>
     <div class="col-md-12 text-end mt-3">
           <button class="btn btn-danger" (click)="borrar()" [disabled]="soloLectura">Borrar datos del pago</button>
-        </div>
-  </ng-container>
+        </div>  </ng-container>
   
   </form>
+
+  <!-- Modal for editing row data -->
+  <app-componente-de-actualizacion></app-componente-de-actualizacion>
 </div>
