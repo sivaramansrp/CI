@@ -12,6 +12,7 @@ import { ProyectoImmexComponent } from '../../../../shared/components/proyecto-i
 import { ProyectoImmexEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
+import { Tramite80102Store } from '../../estados/tramite80102.store';
 
 @Component({
   selector: 'app-proyecto-immex-vista',
@@ -34,11 +35,7 @@ export class ProyectoImmexVistaComponent implements OnInit, OnDestroy {
    */
   public proyectoImmexDatos: PoryectoDatos = PROYECTO_DATOS;
 
-  /**
-   * Datos del catálogo de documentos.
-   * @type {Catalogo[]}
-   */
-  public documentoCatalogDatos: Catalogo[] = DOCUMENTO_CATALOGO_DATOS;
+  
 
   /**
    * Configuración del proyecto IMMEX.
@@ -74,7 +71,7 @@ export class ProyectoImmexVistaComponent implements OnInit, OnDestroy {
    * Constructor de la clase ProyectoImmexVistaComponent.
    * @param {Tramite80102Query} query - Servicio para consultar el estado del trámite.
    */
-  constructor(private query: Tramite80102Query) {
+  constructor(private query: Tramite80102Query,private tramite80101Store: Tramite80102Store) {
     //El constructor requiere inyección de dependencias, pero se ha mantenido vacío debido a una regla de ESLint.
   }
 
@@ -104,6 +101,8 @@ export class ProyectoImmexVistaComponent implements OnInit, OnDestroy {
     event: ProyectoImmexEncabezado[]
   ): void {
     this.proyectoImmexTablaLista = event;
+
+     this.tramite80101Store.setProyectoImmexTablaLista(this.proyectoImmexTablaLista);
   }
 
   /**

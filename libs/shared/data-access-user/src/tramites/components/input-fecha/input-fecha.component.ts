@@ -26,14 +26,7 @@ export class InputFechaComponent implements OnInit, OnChanges {
    * Indica si se deben mostrar los mensajes de error en el input-fecha.
    */
   @Input() mostrarErrores: boolean = true;
-  /**
-   * Verifica si el campo de fecha es inválido y ha sido tocado.
-   * @returns {boolean} true si es requerido, está vacío y ha sido tocado.
-   */
-  isInvalid(): boolean {
-    const CONTROL = this.Formulario?.get('fechaString');
-    return CONTROL ? CONTROL.invalid && CONTROL.touched : false;
-  }
+
   /**
    * Emite el valor seleccionado cuando cambia.
    */
@@ -48,6 +41,14 @@ export class InputFechaComponent implements OnInit, OnChanges {
    * Datos requeridos para inicializar el componente.
    */
   @Input({ required: true }) datos!: InputFecha;
+
+  /**
+   * Indica si sólo se requiere el campo "colón".
+   *
+   * @type {boolean}
+   * @default false
+   */
+  @Input() soloDosPuntosRequeridos: boolean = false;
 
   /**
    * Indica si se debe mostrar el ícono de ayuda (círculo con signo de interrogación).
@@ -144,7 +145,14 @@ export class InputFechaComponent implements OnInit, OnChanges {
       }
     }
   }
-
+  /**
+   * Verifica si el campo de fecha es inválido y ha sido tocado.
+   * @returns {boolean} true si es requerido, está vacío y ha sido tocado.
+   */
+  isInvalid(): boolean {
+    const CONTROL = this.Formulario?.get('fechaString');
+    return CONTROL ? CONTROL.invalid && CONTROL.touched : false;
+  }
 
   /**
  * Método del ciclo de vida `ngOnInit` de Angular.

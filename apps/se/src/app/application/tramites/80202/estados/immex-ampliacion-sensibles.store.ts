@@ -17,9 +17,8 @@
  * @requires @angular/core
  */
 import { Store, StoreConfig } from '@datorama/akita';
-
 import { Injectable } from '@angular/core';
-import { immexRegistroform } from '../../80203/modelos/immex-registro-de-solicitud-modality.model';
+import { fraccionInfo, immexInfo } from '../models/immex-ampliacion-sensibles.model';
 
 /**
  * @interface ImmexRegistroState
@@ -56,7 +55,8 @@ export interface ImmexRegistroState {
      * @type {immexRegistroform}
      * @memberof ImmexRegistroState
      */
-    immexRegistro: immexRegistroform;
+    importacion: immexInfo[];
+    exportacion: fraccionInfo[];
 }
 
 /**
@@ -83,165 +83,12 @@ export interface ImmexRegistroState {
  * @author Sistema VUCEM 3.0
  */
 export function createInitialState(): ImmexRegistroState {
-    return {
-        /**
-         * @description Estado inicial del formulario de registro IMMEX con todos los campos
-         * configurados a sus valores predeterminados. Incluye campos numéricos iniciados en 0
-         * y campos de texto iniciados como cadenas vacías.
-         */
-        immexRegistro: {
-            /**
-             * @description Identificador numérico del permiso IMMEX, inicializado en 0.
-             * @type {number}
-             * @default 0
-             */
-            permisoImmexDatos: 0,
-
-            productoImportacion:'',
-            
-            /**
-             * @description Código de fracción arancelaria para exportación, inicializado como cadena vacía.
-             * @type {string}
-             * @default ''
-             */
-            fraccionArancelariaExportacion: '',
-            
-            /**
-             * @description Descripción del producto de exportación, inicializada como cadena vacía.
-             * @type {string}
-             * @default ''
-             */
-            productoDescExportacion: '',
-            
-            /**
-             * @description Código numérico de fracción arancelaria de exportación, inicializado en 0.
-             * @type {number}
-             * @default 0
-             */
-            productoArancelariaExportacion: 0,
-            
-            /**
-             * @description Código NICO (Nomenclatura de Identificación de Commodities), inicializado como cadena vacía.
-             * @type {string}
-             * @default ''
-             */
-            Nico: '',
-            
-            /**
-             * @description Identificador numérico de datos de fracción, inicializado en 0.
-             * @type {number}
-             * @default 0
-             */
-            fraccionDatos: 0,
-            
-            /**
-             * @description Cantidad anual del commodity, inicializada en 0.
-             * @type {number}
-             * @default 0
-             */
-            commodityCandiadAnual: 0,
-            
-            /**
-             * @description Descripción de capacidad instalada del commodity, inicializada como cadena vacía.
-             * @type {string}
-             * @default ''
-             */
-            commodityCapacidadInstalda: '',
-            
-            /**
-             * @description Cantidad por periodo del commodity, inicializada como cadena vacía.
-             * @type {string}
-             * @default ''
-             */
-            commodityCandidadPor: '',
-            
-            /**
-             * @description Código de fracción de importación del commodity, inicializado en 0.
-             * @type {number}
-             * @default 0
-             */
-            commodityFraccionImportacion: 0,
-            
-            /**
-             * @description Identificador de importación del commodity, inicializado en 0.
-             * @type {number}
-             * @default 0
-             */
-            commodityImportacion: 0,
-            
-            /**
-             * @description Descripción del commodity de importación, inicializada como cadena vacía.
-             * @type {string}
-             * @default ''
-             */
-            commodityDescImportacion: '',
-            
-            /**
-             * @description Descripción NICO de importación, inicializada como cadena vacía.
-             * @type {string}
-             * @default ''
-             */
-            nicoDescImportacion: '',
-            
-            /**
-             * @description Descripción de exportación, inicializada como cadena vacía.
-             * @type {string}
-             * @default ''
-             */
-            exportacionDescExportacion: '',
-            
-            /**
-             * @description Descripción de fracción de exportación, inicializada como cadena vacía.
-             * @type {string}
-             * @default ''
-             */
-            FraccionDescExportacion: '',
-            
-            /**
-             * @description Descripción de fracción arancelaria, inicializada como cadena vacía.
-             * @type {string}
-             * @default ''
-             */
-            fraccionArancelariaDesc: '',
-            
-            /**
-             * @description Cantidad por periodo, inicializada como cadena vacía.
-             * @type {string}
-             * @default ''
-             */
-            candidadPorPeriodo: '',
-            
-            /**
-             * @description Periodo de capacidad, inicializado como cadena vacía.
-             * @type {string}
-             * @default ''
-             */
-            capacidadPeriodo: '',
-            
-            /**
-             * @description Cantidad anual, inicializada como cadena vacía.
-             * @type {string}
-             * @default ''
-             */
-            candiadAnual: '',
-            
-            /**
-             * @description Descripción NICO del commodity de importación, inicializada como cadena vacía.
-             * @type {string}
-             * @default ''
-             */
-            commodityNicoDescImportacion: '',
-            
-            /**
-             * @description Datos NICO, inicializados como cadena vacía.
-             * @type {string}
-             * @default ''
-             */
-            nicoDatos: ''
-        },
-     
-    };
+   return {
+    importacion: [] as immexInfo[],
+    exportacion: [] as fraccionInfo[],
+    }
 }
+
 
 /**
  * @class ImmexRegistroStore
@@ -306,70 +153,43 @@ export class ImmexAmpliacionSensiblesStore extends Store<ImmexRegistroState> {
     constructor() {
         super(createInitialState());
     }
+    /**
+     * @method updateImportacion
+     * @description
+     * Actualiza el array de información de importación en el estado del store.
+     * 
+     * @param {immexInfo[]} importacion - Array con la información de importación a actualizar
+     * @memberof ImmexAmpliacionSensiblesStore
+     * @since 1.0.0
+     */
+    updateImportacion(importacion: immexInfo[]): void {
+        this.update({ importacion });
+    }
 
     /**
-     * @method setImmexRegistro
+     * @method updateExportacion
      * @description
-     * Método público para actualizar completamente el estado del formulario de registro IMMEX.
-     * Este método reemplaza todo el objeto `immexRegistro` en el estado con los nuevos valores
-     * proporcionados, manteniendo la inmutabilidad del estado mediante el operador spread.
+     * Actualiza el array de información de exportación en el estado del store.
      * 
-     * La actualización es reactiva, lo que significa que todos los componentes suscritos al estado
-     * serán notificados automáticamente de los cambios y podrán actualizar sus vistas en consecuencia.
-     * 
-     * @param {immexRegistroform} immexRegistro - Objeto completo con todos los datos del formulario
-     * de cambio de modalidad. Debe incluir todas las propiedades requeridas por la interfaz
-     * immexRegistroform para mantener la consistencia del estado.
-     * 
-     * @returns {void} Este método no retorna ningún valor, pero actualiza el estado interno del store.
-     * 
-     * @memberof ImmexRegistroStore
-     * @public
+     * @param {fraccionInfo[]} exportacion - Array con la información de exportación a actualizar
+     * @memberof ImmexAmpliacionSensiblesStore
      * @since 1.0.0
-     * 
-     * @example
-     * ```typescript
-     * // Ejemplo de uso completo
-     * const datosFormulario: immexRegistroform = {
-     *   permisoImmexDatos: 12345,
-     *   fraccionArancelariaExportacion: '6205.20.01',
-     *   productoDescExportacion: 'Camisas de vestir para caballero',
-     *   productoArancelariaExportacion: 620520,
-     *   Nico: '520100',
-     *   fraccionDatos: 1001,
-     *   commodityCandiadAnual: 50000,
-     *   commodityCapacidadInstalda: 'Planta textil con capacidad de 1000 toneladas mensuales',
-     *   commodityCandidadPor: '4166.67 kg/mes',
-     *   commodityFraccionImportacion: 520100,
-     *   commodityImportacion: 2001,
-     *   commodityDescImportacion: 'Algodón en rama sin procesar',
-     *   nicoDescImportacion: 'Algodón sin cardar ni peinar',
-     *   exportacionDescExportacion: 'Prendas de vestir confeccionadas',
-     *   FraccionDescExportacion: 'Camisas de algodón para hombre',
-     *   fraccionArancelariaDesc: 'Camisas de fibras sintéticas o artificiales',
-     *   candidadPorPeriodo: '1000',
-     *   capacidadPeriodo: 'Mensual',
-     *   candiadAnual: '12000',
-     *   commodityNicoDescImportacion: 'Algodón sin cardar ni peinar',
-     *   nicoDatos: '520100'
-     * };
-     * 
-     * // Actualizar el estado
-     * this.immexRegistroStore.setImmexRegistro(datosFormulario);
-     * 
-     * // Los componentes suscritos serán notificados automáticamente
-     * ```
-     * 
-     * @throws {Error} Puede lanzar errores si el objeto proporcionado no cumple con la estructura
-     * requerida por la interfaz immexRegistroform.
-     * 
-     * @see {@link immexRegistroform} Para la estructura completa del objeto requerido
-     * @see {@link ImmexRegistroState} Para el contexto del estado completo
      */
-    public setImmexRegistro(immexRegistro: immexRegistroform): void {
-        this.update((state) => ({
-            ...state,
-            immexRegistro,
-        }));
+    updateExportacion(exportacion: fraccionInfo[]): void {
+        this.update({ exportacion });
     }
+    /**
+     * @method updateImportacionAndExportacion
+     * @description
+     * Actualiza tanto el array de información de importación como el de exportación en una sola operación.
+     * 
+     * @param {immexInfo[]} importacion - Array con la información de importación a actualizar
+     * @param {fraccionInfo[]} exportacion - Array con la información de exportación a actualizar
+     * @memberof ImmexAmpliacionSensiblesStore
+     * @since 1.0.0
+     */
+    updateImportacionAndExportacion(importacion: immexInfo[], exportacion: fraccionInfo[]): void {
+        this.update({ importacion, exportacion });
+    }
+   
 }

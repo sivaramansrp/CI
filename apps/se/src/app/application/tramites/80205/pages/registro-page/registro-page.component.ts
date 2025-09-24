@@ -1,10 +1,15 @@
 
 import { Component,OnDestroy, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { AVISO } from '@ng-mf/data-access-user';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80205.query';
+
+
 import { DatosPasos } from '@ng-mf/data-access-user';
+import {ERROR_FORMA_ALERT} from '../../models/datos-info.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -59,6 +64,30 @@ export class RegistroPageComponent implements OnDestroy {
    */
   indice: number = 1;
 
+   /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+   /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+   public formErrorAlert = ERROR_FORMA_ALERT;
+
+
+  /**
+     * Constante que almacena el valor de la nota de privacidad.
+     * 
+     * @constant AVISO_PRIVACIDAD_ADJUNTAR - Almacena el valor definido en `NOTA.AVISO_PRIVACIDAD_ADJUNTAR`.
+     * Se utiliza para adjuntar o gestionar el aviso de privacidad dentro del sistema.
+     */
+      AVISO_PRIVACIDAD_ADJUNTAR = AVISO.Aviso;
+
+      /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  esFormaValido: boolean = false;
+
   /**
    * Datos para la configuración de los botones del asistente.
    * @property {DatosPasos} datosPasos - Configuración para los botones "Anterior" y "Siguiente".
@@ -83,7 +112,6 @@ export class RegistroPageComponent implements OnDestroy {
    */
   constructor(private tramiteQuery: AmpliacionServiciosQuery, private seccion: SeccionLibStore, 
   ){
-
     this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe(res => {
       this.seccion.establecerSeccion([true]);
       this.seccion.establecerFormaValida([true]);
@@ -100,15 +128,28 @@ export class RegistroPageComponent implements OnDestroy {
    * en el componente del asistente (`wizardComponent`).
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      //this.tituloMensaje =RegistroPageComponent.obtenerNombreDelTítulo(e.valor);
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+    if(e.accion==='cont'){
+      let isValid=true;
+      if (this.indice === 1 && this.pasoUnoComponent) {
+        isValid = this.pasoUnoComponent.validarTodosLosFormularios();
       }
-    }
+      if (!isValid) {
+        this.esFormaValido = true;
+  
+        this.datosPasos.indice = this.indice;
+        return;
+      }
+      this.esFormaValido = false;
+      this.indice = e.valor;
+          this.datosPasos.indice = this.indice;
+          this.wizardComponent.siguiente();
+          return;
+     }   
+  
+     this.indice = e.valor;
+     this.datosPasos.indice = this.indice;
+     this.wizardComponent.atras();
+  
   }
 
   /**

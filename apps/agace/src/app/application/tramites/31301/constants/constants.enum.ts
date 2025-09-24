@@ -1,3 +1,5 @@
+import { InputFecha } from '@libs/shared/data-access-user/src';
+
 /**
  * Contiene los mensajes informativos relacionados con la presentación
  * de garantías fiscales como pólizas de fianza y cartas de crédito.
@@ -55,9 +57,7 @@ export const LABELS = {
           IMSS, del SUA, y realiza el pago de las cuotas obrero patronales, así
           como que cumple con la obligación de retener y enterar el ISR de los
           trabajadores.`,
-  3503: `Señale si se encuentra en el listado de empresas publicadas por el
-          SAT en términos del artículo 69 del CFF, con excepción de lo dispuesto
-          en la fracción VI del referido artículo.`,
+  3503: `Señale si se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69 del CFF, con excepción de lo dispuesto en la fracción II y VI del referido artículo.`,
   3504: `Del mismo modo indique si se encuentra en el listado de empresas
           publicadas por el SAT en términos del artículo 69-B, párrafo cuarto
           del CFF.`,
@@ -79,15 +79,9 @@ export const LABELS = {
   filedos: `Archivo que contiene el RFC de los proveedores de insumos adquiridos
           en territorio nacional, vinculados al proceso bajo el régimen que
           solicita de los últimos 6 meses.`,
-  3511: `Indique si cuenta con un sistema de control de inventarios, para el
-          registro de sus operaciones de comercio exterior de conformidad con el
-          artículo 59, fracción I de la Ley.`,
-  3512: `Señale si el SAT ha interpuesto querella o denuncia penal en contra
-          de los socios, accionistas, representante legal con facultad para
-          actos de administración o de dominio, o integrantes de la
-          administración de la empresa solicitante o, en su caso declaratoria de
-          perjuicio, durante los últimos tres años anteriores a la presentación
-          de la solicitud.`,
+  3511: `Señale si el SAT ha interpuesto querella o denuncia penal en contra de los socios, accionistas, representante legal con facultad para actos de dominio, o integrantes de la administración de la empresa solicitante o, en su caso declaratoria de perjuicio, durante los últimos tres años anteriores a la presentación de la solicitud.`,
+  3512: `Indique si cuenta con un sistema de control de inventarios, para el registro de sus operaciones de comercio exterior de conformidad
+con el artículo 59, fracción I de la Ley.`,
   3513: `Indique, si cuenta con un sistema de control de inventarios de
           conformidad con las disposiciones previstas por el Anexo 24.`,
   3514: `Señale si lleva la contabilidad en medios electrónicos de conformidad
@@ -183,4 +177,196 @@ export const LABELS = {
             los datos asentados en el presente documento son ciertos y que las
             facultades que me fueron otorgadas para representar al solicitante
             no me han sido modificadas y/o revocadas`,
+};
+
+/**
+ * Opciones disponibles para el tipo de endoso.
+ *
+ * Contiene las alternativas que el usuario puede seleccionar
+ * en relación al tipo de modificación o ampliación de la garantía.
+ */
+export const TIPO_DE_ENDOSO_OPCION = {
+  radioOptions: [
+    {
+      label: 'Aumento de monto',
+      value: 1,
+    },
+    {
+      label: 'Aumento de monto y renovación/ampliación de vigencia',
+      value: 2,
+    },
+    {
+      label: 'Modificación de denominación o razón social',
+      value: 3,
+    },
+    {
+      label: 'Renovación/ampliación de vigencia',
+      value: 4,
+    },
+  ],
+  isRequired: true,
+};
+
+/**
+ * Opciones disponibles para el tipo de garantía.
+ *
+ * Define si la garantía será mediante fianza o carta de crédito.
+ */
+export const TIPO_DE_GARANTIA_OPCION = {
+  radioOptions: [
+    {
+      label: 'Fianza',
+      value: 1,
+    },
+    {
+      label: 'Carta de crédito',
+      value: 2,
+    },
+  ],
+  isRequired: true,
+};
+
+/**
+ * Opciones disponibles para la modalidad de la garantía.
+ *
+ * Define si la garantía es de tipo revolvente o individual.
+ */
+export const MODALIDAD_DE_LA_GARANTIA_OPCION = {
+  radioOptions: [
+    {
+      label: 'Garantía revolvente',
+      value: 1,
+    },
+    {
+      label: 'Garantía individual',
+      value: 2,
+    },
+  ],
+  isRequired: true,
+};
+
+/**
+ * Opciones disponibles para el tipo de sector.
+ *
+ * Permite seleccionar si la garantía corresponde al sector productivo o de servicios.
+ */
+export const TIPO_SECTOR_OPCION = {
+  radioOptions: [
+    {
+      label: 'Sector productivo',
+      value: 1,
+    },
+    {
+      label: 'Sector servicio',
+      value: 2,
+    },
+  ],
+  isRequired: true,
+};
+
+/**
+ * Catálogo de instituciones de fianza actuales.
+ *
+ * Contiene la lista de instituciones disponibles para seleccionar en la póliza de fianza actual.
+ */
+export const SINO_OPCION = {
+  radioOptions: [
+    {
+      label: 'Si',
+      value: 1,
+    },
+    {
+      label: 'No',
+      value: 2,
+    },
+  ],
+  isRequired: true,
+};
+
+/**
+ * Catálogo de instituciones de fianza anteriores.
+ *
+ * Contiene la lista de instituciones que emitieron pólizas de fianza previas.
+ */
+export const NOMBRE_INSTITUCION_CATALOGO = {
+  labelNombre: 'Datos de la póliza de fianza actual',
+  required: false,
+  primerOpcion: 'Seleccione una opción',
+  catalogos: [],
+};
+
+/**
+ * Catálogo de instituciones de fianza actuales.
+ *
+ * Similar al catálogo general pero enfocado en la póliza actual.
+ */
+export const NOMBRE_INSTITUCION_ANTERIOR_CATALOGO = {
+  labelNombre: 'Nombre de la institucion de fianza que emite el documento',
+  required: false,
+  primerOpcion: 'Seleccione una opción',
+  catalogos: [],
+};
+
+/**
+ * Configuración del campo de fecha de fin de vigencia para ampliación.
+ */
+export const NOMBRE_INSTITUCION_ACTUAL_CATALOGO = {
+  labelNombre: 'Datos de la póliza de fianza actual',
+  required: false,
+  primerOpcion: 'Seleccione una opción',
+  catalogos: [],
+};
+
+/**
+ * Configuración del campo de fecha de inicio de vigencia para ampliación.
+ */
+export const CONFIGURACION_FECHA_FIN_VIGENCIA: InputFecha = {
+  labelNombre: 'Fecha fin de la ampliacion',
+  required: true,
+  habilitado: false,
+};
+
+/**
+ * Configuración del campo de fecha de fin de vigencia anterior.
+ */
+export const CONFIGURACION_FECHA_INICIO_VIGENCIA: InputFecha = {
+  labelNombre: 'Fecha inicio de la ampliación',
+  required: true,
+  habilitado: false,
+};
+
+/**
+ * Configuración del campo de fecha de inicio de vigencia anterior.
+ */
+export const CONFIGURACION_FECHA_FIN_ANTERIOR_VIGENCIA: InputFecha = {
+  labelNombre: 'Fecha de fin de vigencia',
+  required: false,
+  habilitado: false,
+};
+
+/**
+ * Configuración del campo de fecha de fin de vigencia actual.
+ */
+export const CONFIGURACION_FECHA_INICIO_ANTERIOR_VIGENCIA: InputFecha = {
+  labelNombre: 'Fecha de inicio de vigencia',
+  required: false,
+  habilitado: false,
+};
+
+/**
+ * Configuración del campo de fecha de fin de vigencia actual.
+ */
+export const CONFIGURACION_FECHA_FIN_ACTUAL_VIGENCIA: InputFecha = {
+  labelNombre: 'Fecha de fin de vigencia',
+  required: false,
+  habilitado: false,
+};
+
+/**
+ * Configuración del campo de fecha de inicio de vigencia actual.
+ */
+export const CONFIGURACION_FECHA_INICIO_ACTUAL_VIGENCIA: InputFecha = {
+  labelNombre: 'Fecha de inicio de vigencia',
+  required: false,
+  habilitado: false,
 };

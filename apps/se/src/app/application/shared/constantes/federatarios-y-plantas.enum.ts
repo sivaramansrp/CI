@@ -239,10 +239,9 @@ export const DATOS_FEDERATARIOS = [
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: 'Selecciona un valor',
     valorPredeterminado: '',
     marginTop: 0,
-    opciones: [{ "id": 1, "descripcion": "JALISIYO" }] 
+    opciones: []
   },
   {
     id: 'estadoOptions',
@@ -253,10 +252,9 @@ export const DATOS_FEDERATARIOS = [
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: 'Selecciona un valor',
     valorPredeterminado: '',
     marginTop: 0,
-    opciones: [{ "id": 1, "descripcion": "JALISCO" }]     
+    opciones: []     
   
   },
   

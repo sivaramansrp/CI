@@ -18,26 +18,27 @@
           (keydown.space)="seleccionaTab(4)" role="button" tabindex="4">Pago de derechos</a>
       </li>
     </ul>
-
     <ng-container>
       @switch (indice) {
       @case (1) {
       <solicitante [tabindex]="1"></solicitante>
       }
       @case (2) {
-         @if(esDatosRespuesta) {
-      <app-solicitud-datos></app-solicitud-datos>
-         }
+      @if (esDatosRespuesta){
+      <app-contenedor-de-datos-solicitud [formularioDeshabilitado]="formularioDeshabilitado"
+        #contenedorDeDatosSolicitudComponent></app-contenedor-de-datos-solicitud> }
       }
       @case (3) {
-         @if(esDatosRespuesta) {
-      <app-terceros-relacionados></app-terceros-relacionados>
-         }
-      } 
-      @case (4) {
-         @if(esDatosRespuesta) {
-        <app-pago-derechos></app-pago-derechos>
-         }
+      @if (esDatosRespuesta){
+      <app-terceros-relacionados-vista
+        [formularioDeshabilitado]="formularioDeshabilitado"></app-terceros-relacionados-vista>
+      }
+      }
+      @case(4){
+      @if (esDatosRespuesta){
+      <app-pago-de-derechos-contenedora
+        [formularioDeshabilitado]="formularioDeshabilitado"></app-pago-de-derechos-contenedora>
+      }
       }
       }
     </ng-container>

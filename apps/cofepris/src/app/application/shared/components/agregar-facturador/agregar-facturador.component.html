@@ -48,6 +48,9 @@
               ></span>
              </label>
           </div>
+          <div *ngIf="chequeoValidacionAlGuardar && esInvalido('tipoPersona')" class="text-danger">
+          <small>Este campo es obligatorio</small>
+        </div>
         </div>
       </div>
     </div>
@@ -168,6 +171,7 @@
             estaDeshabilitadoDesplegable ||
             elementosDeshabilitados.includes('pais')
           "
+          [markTouched]="agregarFacturadorForm.get('pais')?.touched ?? false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -209,7 +213,63 @@
         </div>
       </div>
     </div>
+    @if(chequeoValidacionAlGuardar) {
+      <!-- Colonia on its own row -->
+      <div class="row mt-3">
+        <div class="col-md-4">
+          <label class="form-label">Colonia o equivalente:</label>
+          <input
+            type="text"
+            class="form-control"
+            maxlength="100"
+            formControlName="colonia"
+          />
+        </div>
+      </div>
 
+      <!-- Calle and Número exterior on the same row -->
+      <div class="row mt-3">
+        <div class="col-md-8">
+          <label class="form-label">Calle<span [ngClass]="agregarFacturadorForm.controls['calle'].errors?.['required'] && agregarFacturadorForm.controls['calle'].touched ? 'text-danger' : ''">*</span>:</label>
+          <span tooltip="Domicilio, calle, número interior, número exterior, lote"
+            ><i class="bi bi-question-circle-fill"></i
+          ></span>
+          <input
+            type="text"
+            class="form-control"
+            maxlength="100"
+            formControlName="calle"
+            [ngClass]="esInvalido('calle') ? 'required' : ''"
+          />
+          <i class="fas fa-info-circle"></i>
+          <div *ngIf="esInvalido('calle')" class="text-danger">
+            <small
+              *ngIf="agregarFacturadorForm.controls['calle'].errors?.['required']"
+            >
+              Este campo es obligatorio
+            </small>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Número exterior<span [ngClass]="agregarFacturadorForm.controls['numeroExterior'].errors?.['required'] && agregarFacturadorForm.controls['numeroExterior'].touched ? 'text-danger' : ''">*</span>:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="numeroExterior"
+            maxlength="55"
+            [ngClass]="esInvalido('numeroExterior') ? 'required' : ''"
+          />
+          <div *ngIf="esInvalido('numeroExterior')" class="text-danger">
+            <small
+              *ngIf="agregarFacturadorForm.controls['numeroExterior'].errors?.['required']"
+            >
+              Este campo es obligatorio
+            </small>
+          </div>
+        </div>
+      </div>
+    }
+@else {
     <div class="row mt-3">
       <div class="col-md-4">
         <label class="form-label">Colonia o equivalente:</label>
@@ -258,7 +318,7 @@
         </div>
       </div>
     </div>
-
+  }
     <div class="row mt-3">
       <div class="col-md-4">
         <label class="form-label">Número interior:</label>

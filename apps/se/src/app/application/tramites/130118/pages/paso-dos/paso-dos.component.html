@@ -4,9 +4,9 @@
   <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
 
     <carga-documento
-      [idTipoTRamite]="'130118'"
+      [idTipoTRamite]="idTipoTRamite"
+      [datosUsuario]="datosUsuario"
       [cargaArchivosEvento]="reenviarEvento"
-      [regresarSeccionCargarDocumentoEvento]="reenviarRegresarSeccion"
       (cargaRealizada)="documentosCargados($event)"
       (activarBotonCargaArchivos)="manejarEventoCargaDocumento($event)"
     ></carga-documento>

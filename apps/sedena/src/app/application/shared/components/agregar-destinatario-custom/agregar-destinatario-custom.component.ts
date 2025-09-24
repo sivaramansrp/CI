@@ -216,6 +216,7 @@ export class AgregarDestinatarioCustomComponent
       this.agregarDestinatarioFinal.value.tipoPersona === TipoPersona.MORAL &&
       NUMERO_TRAMITE.TRAMITE_240117 === this.idProcedimiento;
     const NUEVO_DESTINATARIO: DestinoFinal = {
+      id: this.agregarDestinatarioFinal.value.id ? this.agregarDestinatarioFinal.value?.id : Math.floor(Math.random() * 1000000),
       nombreRazonSocial: DENOMINACIONRAZON_ONLY_FLAG
         ? `${this.agregarDestinatarioFinal.value.denominacionRazon}`.trim()
         : `${this.agregarDestinatarioFinal.value.nombres} ${this.agregarDestinatarioFinal.value.primerApellido
@@ -225,6 +226,7 @@ export class AgregarDestinatarioCustomComponent
       curp: '',
       telefono:
         `${this.agregarDestinatarioFinal.value.lada} ${this.agregarDestinatarioFinal.value.telefono}`.trim(),
+        lada: this.agregarDestinatarioFinal.value.lada,
       correoElectronico: this.agregarDestinatarioFinal.value.correoElectronico,
       calle: this.agregarDestinatarioFinal.value.calle,
       numeroExterior: this.agregarDestinatarioFinal.value.numeroExterior,
@@ -243,16 +245,17 @@ export class AgregarDestinatarioCustomComponent
       segundoApellido: this.agregarDestinatarioFinal.value.segundoApellido,
       estado: this.agregarDestinatarioFinal.value.estado,
     };
-    this.destinatarios = [...this.destinatarios, NUEVO_DESTINATARIO];
+    const INDEX = this.destinatarios.findIndex(d => d.id === NUEVO_DESTINATARIO.id);
+    if (INDEX > -1) {
+  this.destinatarios[INDEX] = NUEVO_DESTINATARIO;
+  this.destinatarios = [...this.destinatarios];
+} else {
+  this.destinatarios = [...this.destinatarios, NUEVO_DESTINATARIO];
+}
     if (this.formaDatos) {
-      if ('tableindex' in this.formaDatos) {
-        this.destinatarios[0].tableindex = (
-          this.formaDatos as DestinoFinal
-        ).tableindex;
-      }
-      this.actualizaExistenteEnDestinatarioDatos.emit(this.destinatarios);
+       this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
     } else {
-      this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
+       this.actualizaExistenteEnDestinatarioDatos.emit(this.destinatarios);
     }
     this.agregarDestinatarioFinal.reset();
   }

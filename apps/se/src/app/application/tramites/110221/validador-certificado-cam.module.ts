@@ -19,6 +19,8 @@ import { RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ValidadorCertificadoCamRoutingModule } from './validador-certificado-cam-routing.module';
 
+import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
+
 
 
 @NgModule({
@@ -48,7 +50,8 @@ import { ValidadorCertificadoCamRoutingModule } from './validador-certificado-ca
     AlertComponent,
     RepresentanteLegalComponent,
     DestinatarioComponent,
-    CertificadoDeOrigenComponent
+    CertificadoDeOrigenComponent,
+    CertificadoOrigenComponent
   ],
     providers: [
     ToastrService

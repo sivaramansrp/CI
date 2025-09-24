@@ -1,6 +1,6 @@
 [
     {
-        "idRegistro": "INV12345",
+        "idRegistro": 1,
         "tipoInversion": "Bienes Inmuebles",
         "descripcion": "Departamento en Ciudad de México",
         "valor": "2500000",

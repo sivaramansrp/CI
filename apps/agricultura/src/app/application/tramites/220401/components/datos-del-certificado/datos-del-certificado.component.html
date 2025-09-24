@@ -45,7 +45,7 @@
      <div class="row">
         <div class="col-md-4" *ngFor="let config of catalogConfigs">
           <app-catalogo-select [required]="config.required" [catalogo]="config.catalogo" [label]="config.label"
-            [formControlName]="config.controlName" [isDisabled]="esFormularioSoloLectura"
+            [formControlName]="config.controlName" [isDisabled]="config.disabled || esFormularioSoloLectura"
             (change)="getDelegaciones()"></app-catalogo-select>
         </div>
       </div>
@@ -94,25 +94,31 @@
 
 }
 
+<div class="row mt-3 mb-3">
+    <div class="col-md-12">
+      <label class="form-label">Mercancías</label>
+    </div>
+</div>
+  
   <ng-table [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false" [commonTableHeader]="tableColumns"
     [commonTableBody]="mercanciasData"></ng-table>
   <div class="text-end">
     <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura? true : false"  >
       Carga por archivo
     </button>
-    <button class="btn btn-primary" type="button" [disabled]="esFormularioSoloLectura? true : false" (click)="openModificarMercancias()" data-bs-toggle="modal"
+    <button class="btn btn-primary" type="button" [disabled]="esFormularioSoloLectura? true : false" (click)="openModificarMercancias()"
         data-bs-target="#modalAgregarMercancias">
       Agregar
     </button>
   </div>
   <form [formGroup]="datosdelForm">
     <div class="col-md-12" style="padding: 0px; padding-top: 10px;" *ngIf="datosdelForm.get('certificada')?.value === 'Producto' || datosdelForm.get('certificada')?.value === 'QFBA'">
-   <ng-alert [CONTENIDO]="TEXTO.mensaje" [CUSTOMECLASS]="infoAlert"></ng-alert>
+   <ng-alert [CONTENIDO]="TEXTO.mensaje" [CUSTOMECLASS]="infoAlert" class="text-center"></ng-alert>
     </div>
    <div class="row" *ngIf="datosdelForm.get('certificada')?.value === 'Producto' || datosdelForm.get('certificada')?.value === 'QFBA'">
     <div class="col-md-4">
       <label class="form-label" for="numeroTotal">Número total de bultos:</label>
-      <input type="text" class="form-control" id="numeroTotal" formControlName="numeroTotal" [disabled]="esFormularioSoloLectura">
+      <input type="text" class="form-control" id="numeroTotal" formControlName="numeroTotal" [disabled]="esFormularioSoloLectura" maxlength="60">
    </div>
     <div class="col-md-4" *ngIf="datosdelForm.get('certificada')?.value === 'QFBA'">
       <app-catalogo-select
@@ -144,7 +150,7 @@
     <div class="col-md-4">
       <label class="form-label" for="CantidadTotal">Cantidad total:<i
               class="bi bi-question-circle-fill"></i></label>
-      <input type="text" class="form-control" id="CantidadTotal"  formControlName="cantidadTotal" [disabled]="esFormularioSoloLectura">
+      <input type="text" class="form-control" id="CantidadTotal"  formControlName="cantidadTotal" [disabled]="esFormularioSoloLectura" maxlength="60">
    </div>
    <div class="col-md-4">
       <app-catalogo-select
@@ -164,14 +170,11 @@
       <textarea class="form-control" rows="5" formControlName="datoscertificado" [disabled]="esFormularioSoloLectura"
         (change)="setValoresStore(datosdelForm,'datoscertificado','setdatoscertificado')"></textarea>
     </div>
-    <div class="container text-end mt-5">
-      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura? true : false">Guardar</button>
-      <button class="btn btn-primary" [disabled]="esFormularioSoloLectura? true : false">Continuar</button>
-    </div>
   </form>
   
 </div>
 <div
+  #modalAgregarMercancias
   class="modal fade"
   id="modalAgregarMercancias"
   tabindex="-1"
@@ -180,8 +183,8 @@
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <app-datos-generales-animales (cancelar)="cerrarModal()" data-bs-toggle="modal"
-        data-bs-target="#modalAgregarMercancias"></app-datos-generales-animales>
+      <app-datos-generales-animales (cancelar)="cerrarModal()"
+        ></app-datos-generales-animales>
     </div>
   </div>
 </div>

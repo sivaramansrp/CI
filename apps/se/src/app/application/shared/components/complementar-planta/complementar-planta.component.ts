@@ -4,16 +4,17 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import {Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
+import { InputFecha, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from'@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 
-import { CATALOGO_TIPO,COMPLEMENTO_DE_PLANTA } from '../../constantes/complementar-planta.enum';
+import { CATALOGO_TIPO,COMPLEMENTO_DE_PLANTA, ComplementoDePlanta, PERMANCERA_OPTIONS } from '../../constantes/complementar-planta.enum';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
+import { ComplimentosService } from '../../services/complimentos.service';
 import { FECHA_DE_FIN_DE_VIGENCIA } from '../../constantes/complementar-planta.enum';
 import { FECHA_DE_FIRMA } from '../../constantes/complementar-planta.enum';
 import { Location } from '@angular/common';
@@ -31,6 +32,7 @@ import { Location } from '@angular/common';
     InputFechaComponent,
     TablaDinamicaComponent,FormsModule,
     ReactiveFormsModule,
+    NotificacionesComponent
   ],
   templateUrl: './complementar-planta.component.html',
   styleUrl: './complementar-planta.component.scss',
@@ -43,7 +45,7 @@ export class ComplementarPlantaComponent implements OnInit {
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
    */
   constructor(private ubicaccion: Location, private fb: FormBuilder,private complementarStore: ComplementarStore,
-    private complementarQuery: ComplementarQuery,) {
+    private complementarQuery: ComplementarQuery, private complimentosService: ComplimentosService,) {
         this.complementarQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -70,7 +72,7 @@ export class ComplementarPlantaComponent implements OnInit {
    * Opciones disponibles para mercancía programa.
    * @property {Array} permaneceraMercanciaProgramaOptions
    */
-   permaneceraMercanciaProgramaOptions =CATALOGO_TIPO;
+   permaneceraMercanciaProgramaOptions = PERMANCERA_OPTIONS;
 
 
   /**
@@ -103,7 +105,7 @@ export class ComplementarPlantaComponent implements OnInit {
    * Datos para la tabla de complemento de planta.
    * @property {Array} complementoDePlantaDatos
    */
-  complementoDePlantaDatos = [];
+  complementoDePlantaDatos: ComplementoDePlanta[] = [];
   /**
    * Evento que se emite al cerrar el popup.
    * 
@@ -111,6 +113,7 @@ export class ComplementarPlantaComponent implements OnInit {
    */
   @Output() cerrarPopup = new EventEmitter<void>();
   
+  public exitosamenteNotificacion!: Notificacion;
 
    inicializarFormulario(): void {
    
@@ -156,7 +159,71 @@ export class ComplementarPlantaComponent implements OnInit {
    */
   ngOnInit(): void {
     this.inicializarFormulario();
+    if (!(this.solicitudState.tipoDocumentoOptions.length)) {
+      this.obtenerTipoDocumentoOptions(102);
+    } else {
+      this.documentoOptions = [...this.solicitudState.tipoDocumentoOptions];
+    }
   }
+
+  /** Obtiene y actualiza las opciones del catálogo de tipo de categoría desde el servicio. */
+  obtenerTipoDocumentoOptions(id: number): void {
+    this.complimentosService.getTipoDocumento(id)
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    )
+    .subscribe((res) => {
+      this.complementarStore.setTipoDocumentoOptions(res.datos);
+      this.documentoOptions = res.datos;
+    });
+  }
+
+  /**
+   * Agrega un nuevo complemento a la lista de datos.
+   */
+  agregarComplemento(): void {
+    if (this.complementarForm.valid) {
+      this.abrirexitosamente();
+      const VALORES_FORMULARIO = this.complementarForm.value;
+      const NUEVA_FILA: ComplementoDePlanta = {
+        PLANTA: '',
+        PERMANECERA_MERCANCIA_PROGRAMA: VALORES_FORMULARIO.permanecera || '',
+        TIPO_DOCUMENTO: VALORES_FORMULARIO.tipo || '',
+        FECHA_DE_FIRMA: VALORES_FORMULARIO.fechaDeFirma || '',
+        FECHA_DE_FIN_DE_VIGENCIA: VALORES_FORMULARIO.fetchaDeFinDeVigencia || '',
+        DOCUMENTO_RESPALDO: '',
+        FECHA_DE_FIRMA_DOCUMENTO: '',
+        FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO: '',
+      };
+      this.complementoDePlantaDatos = [
+        ...this.complementoDePlantaDatos,
+        NUEVA_FILA
+      ];
+      this.complementarForm.reset();
+    }
+  }
+  
+  abrirexitosamente(): void {
+    this.exitosamenteNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'la operación se realizó exitosamente.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+  /**
+   * Limpia el formulario.
+   */
+  limpiar(): void {
+    this.complementarForm.reset();
+  }
+
 /**
    * Método que actualiza el store con los valores del formulario.
    * 

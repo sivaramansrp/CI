@@ -4,35 +4,46 @@ import {
   CONFIGURACION_COLUMNAS_SOLICITUD,
   DATOS_INICIALES_TABLA,
 } from '../../constantes/260910-enum';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { Component } from '@angular/core';
-import { DatosDeSolicitud } from '../../models/solicitud-datos.model';
-import { ElementRef } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
+import {
+  Catalogo,
+  CatalogosSelect,
+  REGEX_CORREO,
+  TablaSeleccion,
+} from '@libs/shared/data-access-user/src';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO,
+  REGEX_RFC,
+  REGEX_SOLO_NUMEROS,
+  ValidacionesFormularioService,
+} from '@ng-mf/data-access-user';
+import {
+  DatosDeSolicitud,
+  RadioOptions,
+  Solicitud,
+  SolicitudDatos,
+} from '../../models/solicitud-datos.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  Solicitud260910State,
+  Solicitud260910Store,
+} from '../../estados/tramites260910.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Mercancia } from '../../models/mercancia.model';
 import { Modal } from 'bootstrap';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { REGEX_CORREO_ELECTRONICO } from '@libs/shared/data-access-user/src';
-import { REGEX_TELEFONO } from '@libs/shared/data-access-user/src';
-import { RadioOptions } from '../../models/solicitud-datos.model';
+import { ModificarMercanciasComponent } from '../mercancias-datos/mercancias-datos.component';
 import { SCIAN } from '../../models/SCIAN.model';
-import { Solicitud } from '../../models/solicitud-datos.model';
 import { Solicitud260910Query } from '../../estados/tramites260910.query';
-import { Solicitud260910State } from '../../estados/tramites260910.store';
-import { Solicitud260910Store } from '../../estados/tramites260910.store';
-import { SolicitudDatos } from '../../models/solicitud-datos.model';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
-import { Subject } from 'rxjs';
 import { TEXTOS } from '../../constantes/constantes';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa los datos de la solicitud.
@@ -127,12 +138,12 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   /**
    * Referencia al elemento del modal de confirmación.
    */
-  @ViewChild('modal-confirmar') modalConfirmarElement!: ElementRef;
+  @ViewChild('modalConfirmar') modalConfirmarElement!: ElementRef;
 
   /**
    * Referencia al elemento del modal de mercancías.
    */
-  @ViewChild('modal-agregar-mercancias') modalElement!: ElementRef;
+  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
 
   /**
    * Referencia al elemento del modal SCIAN.
@@ -215,18 +226,31 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   public esFormularioSoloLectura: boolean = false;
 
   /**
+   * Referencia al componente hijo ModificarMercanciasComponent.
+   */
+  @ViewChild(ModificarMercanciasComponent)
+  mercanciasComponent!: ModificarMercanciasComponent;
+
+  /**
+   * Mercancía seleccionada para editar en el modal
+   */
+  seleccionadaMercancia!: Mercancia | null;
+
+  /**
    * Constructor del componente.
    * @param solicitudDatosService Servicio para datos de solicitud
    * @param solicitud260910Store Almacén para estado de solicitud
    * @param solicitud260910Query Consulta para estado de solicitud
    * @param fb Constructor de formularios
+   * @param validacionesService Servicio para validar formularios.
    */
   constructor(
     public solicitudDatosService: SolicitudDatosService,
     public solicitud260910Store: Solicitud260910Store,
     public solicitud260910Query: Solicitud260910Query,
     public fb: FormBuilder,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private validacionesService: ValidacionesFormularioService
   ) {
     // Constructor vacío, no requiere inicialización adicional.
   }
@@ -275,44 +299,63 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       ],
       observaciones: [
         { value: this.solicitud260910State.observaciones, disabled: true },
-        [Validators.required],
+        [Validators.required, Validators.maxLength(2000)],
       ],
       rfcSanitario: [
         { value: this.solicitud260910State.rfcSanitario, disabled: true },
-        [Validators.required],
+        [
+          Validators.required,
+          Validators.pattern(REGEX_RFC),
+          Validators.maxLength(13),
+        ],
       ],
       razonSocial: [
         { value: this.solicitud260910State.razonSocial, disabled: true },
-        [Validators.required, Validators.maxLength(30)],
+        [
+          Validators.required,
+          Validators.maxLength(100),
+          Validators.pattern(REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO),
+        ],
       ],
       correoElectronico: [
         { value: this.solicitud260910State.correoElectronico, disabled: true },
-        [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)],
+        [Validators.required, Validators.pattern(REGEX_CORREO)],
       ],
       codigoPostal: [
         { value: this.solicitud260910State.codigoPostal, disabled: true },
-        [Validators.required, Validators.maxLength(10)],
+        [
+          Validators.required,
+          Validators.maxLength(12),
+          Validators.pattern(REGEX_SOLO_NUMEROS),
+        ],
       ],
       estado: [this.solicitud260910State.estado, [Validators.required]],
       municipio: [
         { value: this.solicitud260910State.municipio, disabled: true },
-        [Validators.required],
+        [Validators.required, Validators.maxLength(120)],
       ],
       localidad: [
         { value: this.solicitud260910State.localidad, disabled: true },
+        Validators.maxLength(120),
       ],
-      colonia: [{ value: this.solicitud260910State.colonia, disabled: true }],
+      colonia: [
+        { value: this.solicitud260910State.colonia, disabled: true },
+        [Validators.maxLength(120)],
+      ],
       calle: [
         { value: this.solicitud260910State.calle, disabled: true },
-        [Validators.required, Validators.maxLength(68)],
+        [Validators.required, Validators.maxLength(100)],
       ],
-      lada: [{ value: this.solicitud260910State.lada, disabled: true }],
+      lada: [
+        { value: this.solicitud260910State.lada, disabled: true },
+        [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_NUMEROS)],
+      ],
       telefono: [
         { value: this.solicitud260910State.telefono, disabled: true },
         [
           Validators.required,
-          Validators.maxLength(10),
-          Validators.pattern(REGEX_TELEFONO),
+          Validators.maxLength(30),
+          Validators.pattern(REGEX_SOLO_NUMEROS),
         ],
       ],
       avisoDeFuncionamiento: [this.solicitud260910State.avisoDeFuncionamiento],
@@ -558,10 +601,21 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Abre modal para modificar mercancías.
    */
   openModificarMercancias(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
+    if (this.selectedMercanciasDatos.length > 0) {
+      this.seleccionadaMercancia = this.selectedMercanciasDatos[0];
+      if (this.modalElement) {
+        const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+        MODAL_INSTANCE.show();
+      }
     }
+  }
+
+  /**
+   * Maneja la modificación de una mercancía.
+   * @param nuevoValor Nuevo valor de mercancía modificado
+   */
+  onMercanciaModificada(nuevoValor: Mercancia): void {
+    this.solicitud260910Store.modificarMercanciasDatos(nuevoValor);
   }
 
   /**
@@ -580,6 +634,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Abre modal para agregar mercancías.
    */
   openAgregarMercancias(): void {
+    this.seleccionadaMercancia = null;
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
@@ -744,11 +799,13 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   agregarSCIAN(): void {
     const SELECCIONADA_SCIAN =
       this.SCIANCatalogo.catalogos.find(
-        (item) => item.id === Number(this.claveSCIANForm.get('claveSCIAN')?.value)
+        (item) =>
+          item.id === Number(this.claveSCIANForm.get('claveSCIAN')?.value)
       )?.descripcion ?? '';
     const SELECCIONADA_SCIAN_DESCRIPCION =
       this.SCIANDescCatalogo.catalogos.find(
-        (item) => item.id === Number(this.claveSCIANForm.get('claveSCIANDesc')?.value)
+        (item) =>
+          item.id === Number(this.claveSCIANForm.get('claveSCIANDesc')?.value)
       )?.descripcion ?? '';
     const OBJETO_JSON = {
       claveSCIAN: SELECCIONADA_SCIAN,
@@ -768,6 +825,8 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
     } else if (tipo === 'SCIAN') {
       this.eliminarSCIAN();
     }
+    this.selectedMercanciasDatos = [];
+    this.seleccionaSCIANDatos = [];
   }
 
   /**
@@ -775,12 +834,17 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * @param tipo Tipo de elemento a eliminar
    */
   confirmarEliminarMercancias(tipo: string): void {
-    this.seleccionadoTipo = tipo;
-    if (this.modalConfirmarElement) {
-      const MODAL_CONFIRMAR_INSTANCE = new Modal(
-        this.modalConfirmarElement.nativeElement
-      );
-      MODAL_CONFIRMAR_INSTANCE.show();
+    if (
+      this.selectedMercanciasDatos.length > 0 ||
+      this.seleccionaSCIANDatos.length > 0
+    ) {
+      this.seleccionadoTipo = tipo;
+      if (this.modalConfirmarElement) {
+        const MODAL_CONFIRMAR_INSTANCE = new Modal(
+          this.modalConfirmarElement.nativeElement
+        );
+        MODAL_CONFIRMAR_INSTANCE.show();
+      }
     }
   }
 
@@ -845,6 +909,16 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       );
       MODAL_ALERTA_INSTANCE.show();
     }
+  }
+
+  /**
+   * Método para validar el formulario.
+   * @param form Formulario a validar.
+   * @param field Campo a validar.
+   * @returns {boolean} Regresa un booleano si el campo es válido o no.
+   */
+  esValido(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) === true;
   }
 
   /**

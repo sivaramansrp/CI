@@ -228,6 +228,7 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
             sello: FIRMAHEX,
             fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
             documentos_requeridos: response.datos?.documentos_requeridos || [],
+            rfcSolicitante: 'AAL0409235E6'
           };
 
           return this.documentoService.enviarFirma<string>(String(this.idSolicitud), PAYLOAD, this.procedure);
@@ -256,7 +257,8 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
           this.tramiteStore.establecerTramite(
             this.folio,
             firma,
-            this.idSolicitud ?? 0
+            this.idSolicitud ?? 0,
+            this.procedure
           );
           this.router.navigate([this.router.url.replace(this.procedureUrl, 'acuse')]);
         }),

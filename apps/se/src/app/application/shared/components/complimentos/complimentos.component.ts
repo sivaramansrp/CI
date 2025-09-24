@@ -638,6 +638,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     this.getCatalogoEstado();
     this.loadComboUnidadMedida();
     this.getPais();
+    this.obtenerEstados();
 
     this.formaComplimentos.valueChanges
       .pipe(delay(100))
@@ -801,24 +802,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     ).contains('formaDatos');
   }
 
-  /**
-   * @description Obtiene el catálogo de países y actualiza las opciones de los campos del formulario.
-   * @returns {void}
-   */
-  getCatalogoPaises(): void {
-    this.catalogosServices
-      .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((datos) => {
-        const INDICE = this.camposFormulario.findIndex(
-          (ele) => ele.campo === PAIS
-        );
-        const INDICEALT = this.camposFormularioTipoPersona.findIndex(
-          (ele) => ele.campo === PAIS
-        );
-      //  this.camposFormularioTipoPersona[INDICEALT].opciones = datos;
-      });
-  }
+ 
 
   /**
   * method loadComboUnidadMedida
@@ -847,7 +831,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         const INDICEALT = this.camposFormularioTipoPersona.findIndex(
           (ele) => ele.campo === ESTADO
         );
-        this.estados = datos;
+        
         this.camposFormularioTipoPersona[INDICEALT].opcionesCatalogo = datos;
         if(this.camposFormularioDefault && this.camposFormularioDefault[INDICE].opcionesCatalogo){
           this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
@@ -1098,9 +1082,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
    * Actualiza el estado del almacén con la fecha de pago proporcionada.  
    */
   cambioFechaFinal(nuevo_valor: string): void {
-    this.formaComplimentos.patchValue({
-      fechaExpedicion: nuevo_valor,
-    });
+    this.formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.setValue(nuevo_valor);
     this.tramiteStore.setfechaExpedicion(nuevo_valor);
   }
 
@@ -1109,9 +1091,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
  * Actualiza el estado del almacén con la fecha de pago proporcionada.  
  */
   cambioFecha(nuevo_valor: string): void {
-    this.formaComplimentos.patchValue({
-      fechaDeActa: nuevo_valor,
-    });
+    this.formaComplimentos.get('formaModificaciones.fechaDeActa')?.setValue(nuevo_valor);
     this.tramiteStore.setfechaDeActa(nuevo_valor);
   }
 
@@ -1447,7 +1427,24 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
         );
         this.camposFormularioDefault[INDICE].opcionesCatalogo = res.datos;
 
-        this.camposFormularioTipoPersona[INDICEALT].opciones = res.datos;
+        this.camposFormularioTipoPersona[INDICEALT].opciones = res.datos
+          .filter((item: Catalogo) => item.clave !== undefined)
+          .map((item: Catalogo) => ({
+            ...item,
+            clave: Number(item.clave)
+          })) as CatalogoPaises[];
     });
+    
+  }
+
+  /**
+ * Obtiene la lista de estados llamando al servicio `complimentosService`.
+ * Se suscribe al observable retornado por `getEstado()` y muestra la respuesta en la consola.
+ * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
+ */
+obtenerEstados():void {
+    this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
+      this.estados = res.datos;
+    }); 
   }
 }

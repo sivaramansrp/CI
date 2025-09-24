@@ -1012,7 +1012,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.fraccionArancelariaService.getFraccionesCve(SELECTED_FRACCION).subscribe({
         next: (response) => {
           this.unidadMedidaTarifaria = response.datos || [];
-          const VALOR = cveUmt ?? this.solicitudState?.unidadMedidaTarifaria ?? null;
+          const VALOR = cveUmt ?? this.solicitudState?.unidadMedidaTarifaria ?? (this.unidadMedidaTarifaria.length > 0 ? this.unidadMedidaTarifaria[0].clave : null);
           const FORCE_DISABLE = Boolean(cveUmt);
           this.toggleControl(UMT_CONTROL, this.unidadMedidaTarifaria.length > 0, VALOR, FORCE_DISABLE);
         },

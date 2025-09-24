@@ -40,6 +40,7 @@ import { Solicitud260919Query } from '../../estados/tramites260919.query';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
+
 /**
  * Componente para gestionar los terceros relacionados en el trámite.
  * Este componente permite obtener y mostrar datos relacionados con destinatarios,
@@ -77,7 +78,10 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
 
   /** Configuración de las columnas de la tabla */
   destinatarioConfiguracionTabla = DESTINATARIO_CONFIGURACION_TABLA;
-
+  /** Título del formulario */
+ formTitle: string = ''; 
+  /** Nombre de la tabla actual (fabricante, destinatario, proveedor, facturador) */
+  currentTable: string = '';
   /** Datos de los destinatarios */
   destinatarioDatos: FilaTablaData[] = [];
 
@@ -92,6 +96,27 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
 
   /** Conjunto de filas seleccionadas en la tabla */
   selectedRows: Set<number> = new Set();
+
+
+  /** 
+ * Conjunto de filas seleccionadas en la tabla de fabricantes.
+ */
+filasSeleccionadasFabricante: Set<number> = new Set();
+
+/** 
+ * Conjunto de filas seleccionadas en la tabla de destinatarios.
+ */
+filasSeleccionadasDestinatario: Set<number> = new Set();
+
+/** 
+ * Conjunto de filas seleccionadas en la tabla de proveedores.
+ */
+filasSeleccionadasProveedor: Set<number> = new Set();
+
+/** 
+ * Conjunto de filas seleccionadas en la tabla de facturadores.
+ */
+filasSeleccionadasFacturador: Set<number> = new Set();
 
   /** Fila seleccionada actualmente */
   selectedRow: FilaTablaData | null = null;
@@ -348,6 +373,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    * @param isDeleted Indica si se debe mostrar el mensaje de éxito por eliminación.
    */
   abrirModal(i: number = 0, isDeleted: boolean = false): void {
+
     if (isDeleted) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -372,77 +398,179 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: 'Cancelar',
       };
-      this.elementoParaEliminar = i;
+      this.elementoParaEliminar = i; 
     }
-  }
+  
+}
   /**
    * Maneja el evento de cambio de filas seleccionadas en la tabla.
    * Actualiza el conjunto de filas seleccionadas y oculta el formulario si es visible.
    *
    * @param selectedRows Filas seleccionadas en la tabla.
    */
-  onSelectedRowsChange(selectedRows: FilaTablaData[]): void {
-    this.selectedRows = new Set(selectedRows.map((row) => row.id));
-    this.esFormularioVisible = false;
+ enCambioDeFilasSeleccionadas(selectedRows: FilaTablaData[], tableName: string): void {
+  this.currentTable = tableName;
+  switch (tableName) {
+    case 'fabricante':
+      this.filasSeleccionadasFabricante = new Set(selectedRows.map((row) => row.id));
+      break;
+    case 'destinatario':
+      this.filasSeleccionadasDestinatario = new Set(selectedRows.map((row) => row.id));
+      break;
+    case 'proveedor':
+      this.filasSeleccionadasProveedor = new Set(selectedRows.map((row) => row.id));
+      break;
+    case 'facturador':
+      this.filasSeleccionadasFacturador = new Set(selectedRows.map((row) => row.id));
+      break;
+    default:
+      console.error('Invalid table name');
   }
-
+}
   /**
    * Maneja el evento de eliminación de filas seleccionadas.
    */
-  onDeleted(): void {
-    if (this.selectedRows.size > 0) {
-      this.abrirModal();
-    }
+enEliminado(tableName: string): void {
+  this.currentTable = tableName;
+
+  let selectedRows: Set<number>;
+  switch (this.currentTable) {
+    case 'fabricante':
+      selectedRows = this.filasSeleccionadasFabricante;
+      break;
+    case 'destinatario':
+      selectedRows = this.filasSeleccionadasDestinatario;
+      break;
+    case 'proveedor':
+      selectedRows = this.filasSeleccionadasProveedor;
+      break;
+    case 'facturador':
+      selectedRows = this.filasSeleccionadasFacturador;
+      break;
+    default:
+      console.error('Invalid table selection:', this.currentTable);
+      return;
   }
+
+  if (selectedRows.size > 0) {
+     
+
+  this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Confirma la eliminación?',
+        cerrar: false,
+        tiempoDeEspera: 0,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+       this.elementoParaEliminar = 0; 
+
+  } else {
+    console.warn('No rows selected for deletion.');
+  }
+}
   /**
    * Abre el formulario para modificar las mercancías seleccionadas.
    */
   openModificarMercancias(): void {
-    if (this.selectedRows.size === 1) {
-      const SELECTED_ID = Array.from(this.selectedRows)[0];
-      const SELECTED_ROW_DATA = this.tableData.find(
-        (row) => row.id === SELECTED_ID
-      ) || null;
+  let selectedRows: Set<number>;
 
-      if (SELECTED_ROW_DATA) {
-         const PAIS_ID = this.paisData.catalogos.find(
+  switch (this.currentTable) {
+    case 'fabricante':
+      selectedRows = this.filasSeleccionadasFabricante;
+      break;
+    case 'destinatario':
+      selectedRows = this.filasSeleccionadasDestinatario;
+      break;
+    case 'proveedor':
+      selectedRows = this.filasSeleccionadasProveedor;
+      break;
+    case 'facturador':
+      selectedRows = this.filasSeleccionadasFacturador;
+      break;
+    default:
+      console.error('Invalid table selection:', this.currentTable);
+      return;
+  }
+
+  if (selectedRows.size === 1) {
+    const SELECTED_ID = Array.from(selectedRows)[0];
+    let selectedRowData: FilaTablaData | undefined;
+
+    switch (this.currentTable) {
+      case 'fabricante':
+        selectedRowData = this.fabricanteDatos.find((row) => row.id === SELECTED_ID);
+        break;
+      case 'destinatario':
+        selectedRowData = this.destinatarioDatos.find((row) => row.id === SELECTED_ID);
+        break;
+      case 'proveedor':
+        selectedRowData = this.proveedorDatos.find((row) => row.id === SELECTED_ID);
+        break;
+      case 'facturador':
+        selectedRowData = this.facturadorDatos.find((row) => row.id === SELECTED_ID);
+        break;
+      default:
+        console.error('Invalid table selection:', this.currentTable);
+        return;
+    }
+
+    if (selectedRowData) {
+      this.selectedRow = selectedRowData; 
+
+      const PAIS_ID = this.paisData.catalogos.find(
         (catalogo) =>
-          catalogo.descripcion === SELECTED_ROW_DATA.pais || 
-          String(catalogo.id) === String(SELECTED_ROW_DATA.pais) 
+          catalogo.descripcion === selectedRowData.pais ||
+          String(catalogo.id) === String(selectedRowData.pais)
       )?.id;
 
-        this.destinatarioForm.patchValue({
-          agregarDestinatario: {
-            tipoPersona: SELECTED_ROW_DATA.tipoPersona,
-          },
-          datosPersonales: {
-            nombre: SELECTED_ROW_DATA.nombre,
-            primerApellido: SELECTED_ROW_DATA.primerApellido,
-            segundoApellido: SELECTED_ROW_DATA.segundoApellido,
-            denominacion: SELECTED_ROW_DATA.denominacion,
-             pais: PAIS_ID || '',
-            domicilio: SELECTED_ROW_DATA.domicilio,
-            estado: SELECTED_ROW_DATA.estado,
-            codigopostal: SELECTED_ROW_DATA.codigopostal,
-            calle: SELECTED_ROW_DATA.calle,
-            numeroExterior: SELECTED_ROW_DATA.numeroExterior,
-            numeroInterior: SELECTED_ROW_DATA.numeroInterior,
-            lada: SELECTED_ROW_DATA.lada,
-            telefono: SELECTED_ROW_DATA.telefono,
-            correoElectronico: SELECTED_ROW_DATA.correoElectronico,
-          },
-        });
+      this.destinatarioForm.patchValue({
+        agregarDestinatario: {
+          tipoPersona: selectedRowData.tipoPersona || 'fisica',
+        },
+        datosPersonales: {
+           nombre: selectedRowData.tipoPersona === 'fisica' ? selectedRowData.nombre : '',
+          primerApellido: selectedRowData.tipoPersona === 'fisica' ? selectedRowData.primerApellido : '',
+          segundoApellido: selectedRowData.tipoPersona === 'fisica' ? selectedRowData.segundoApellido : '',
+          denominacion: selectedRowData.denominacion,
+          pais: PAIS_ID || '',
+          domicilio: selectedRowData.domicilio,
+          estado: selectedRowData.estado,
+          codigopostal: selectedRowData.codigopostal,
+          calle: selectedRowData.calle,
+          numeroExterior: selectedRowData.numeroExterior,
+          numeroInterior: selectedRowData.numeroInterior,
+          lada: selectedRowData.lada,
+          telefono: selectedRowData.telefono,
+          correoElectronico: selectedRowData.correoElectronico,
+        },
+      });
 
-        this.esFormularioVisible = true;
-      }
+      this.tipoPersonaSeleccionada = selectedRowData.tipoPersona || 'fisica';
+      this.esFormularioVisible = true; 
+      console.warn('No data found for the selected row.');
     }
+  } else {
+    console.warn('Please select exactly one row to modify.');
   }
+}
   /**
    * Abre el formulario para agregar nuevas mercancías.
    */
-  agregarMercancias(): void {
-    this.esFormularioVisible = true;
-    this.destinatarioForm.reset();
+
+    agregarMercancias(tableName: string, title: string): void {
+        if (!['fabricante', 'destinatario', 'proveedor', 'facturador'].includes(tableName)) {
+    console.error('Invalid table name:', tableName);
+    return;
+  }
+    this.currentTable = tableName; 
+    this.formTitle = title; 
+    this.esFormularioVisible = true; 
+    this.destinatarioForm.reset(); 
+
   }
   /**
    * Obtiene los datos del catálogo de países.
@@ -492,82 +620,124 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Guarda los datos del formulario en la tabla.
    */
-  onGuardar(): void {
-    const FORM_DATA = this.destinatarioForm.value;
+onGuardar(): void {
+  const FORM_DATA = this.destinatarioForm.value;
+  let targetTable: FilaTablaData[] = [];
+  switch (this.currentTable) {
+    case 'fabricante':
+      targetTable = this.fabricanteDatos;
+      break;
+    case 'destinatario':
+      targetTable = this.destinatarioDatos;
+      break;
+    case 'proveedor':
+      targetTable = this.proveedorDatos;
+      break;
+    case 'facturador':
+      targetTable = this.facturadorDatos;
+      break;
+    default:
+      console.error('Invalid table selection');
+      return;
+  }
 
-    if (this.selectedRow) {
-      const ROW_INDEX = this.tableData.findIndex(
-        (row) => row.id === this.selectedRow?.id
-      );
-      if (ROW_INDEX !== -1) {
-        this.tableData[ROW_INDEX] = {
-          ...this.tableData[ROW_INDEX],
-          ...FORM_DATA.agregarDestinatario,
-          ...FORM_DATA.datosPersonales,
-          pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
-        };
-      }
-
-      const FABRICANTE_INDEX = this.fabricanteDatos.findIndex(
-        (row) => row.id === this.selectedRow?.id
-      );
-
-      if (FABRICANTE_INDEX !== -1) {
-        this.fabricanteDatos[FABRICANTE_INDEX] = {
-          ...this.fabricanteDatos[FABRICANTE_INDEX],
-          ...FORM_DATA.agregarDestinatario,
-          ...FORM_DATA.datosPersonales,
-          pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
-        };
-      }
-
-      this.selectedRow = null;
-    } else {
-
-       const NEW_ID = this.tableData.length > 0
-      ? Math.max(...this.tableData.map((row) => row.id || 0)) + 1
-      : 1;
-      const NEW_ROW = {
-        id: NEW_ID,
+  if (this.selectedRow) {
+    const INDEX = targetTable.findIndex((row) => row.id === this.selectedRow?.id);
+    if (INDEX !== -1) {
+      const UPDATED_ROW = {
+        ...targetTable[INDEX],
         ...FORM_DATA.agregarDestinatario,
         ...FORM_DATA.datosPersonales,
-        pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
       };
+      targetTable[INDEX] = UPDATED_ROW;
 
-   this.tableData = [...this.tableData, NEW_ROW];
-   this.fabricanteDatos = [...this.fabricanteDatos, NEW_ROW];
+      if (this.currentTable === 'fabricante') {
+        this.fabricanteDatos = [...targetTable];
+      } else if (this.currentTable === 'destinatario') {
+        this.destinatarioDatos = [...targetTable];
+      } else if (this.currentTable === 'proveedor') {
+        this.proveedorDatos = [...targetTable];
+      } else if (this.currentTable === 'facturador') {
+        this.facturadorDatos = [...targetTable];
+      }
     }
+  } else {
+    const NEW_ID =
+      targetTable.length > 0
+        ? Math.max(...targetTable.map((row) => row.id || 0)) + 1
+        : 1;
+    const NEW_ROW = {
+      id: NEW_ID,
+      ...FORM_DATA.agregarDestinatario,
+      ...FORM_DATA.datosPersonales,
+    };
 
-    this.destinatarioForm.reset();
-    this.esFormularioVisible = false;
+    if (this.currentTable === 'fabricante') {
+      this.fabricanteDatos = [...this.fabricanteDatos, NEW_ROW];
+    } else if (this.currentTable === 'destinatario') {
+      this.destinatarioDatos = [...this.destinatarioDatos, NEW_ROW];
+    } else if (this.currentTable === 'proveedor') {
+      this.proveedorDatos = [...this.proveedorDatos, NEW_ROW];
+    } else if (this.currentTable === 'facturador') {
+      this.facturadorDatos = [...this.facturadorDatos, NEW_ROW];
+    }
   }
-  /**
-   * Obtiene el nombre del país a partir de su ID.
-   * @param paisId ID del país.
-   * @returns Nombre del país o 'N/A' si no se encuentra.
-   */
-  private getPaisName(paisId: string): string {
-    const PAIS = this.paisData.catalogos.find(
-      (catalogo) => catalogo.id === Number(paisId)
-    );
-    return PAIS ? PAIS.descripcion : 'N/A';
-  }
+
+  this.destinatarioForm.reset();
+  this.esFormularioVisible = false;
+  this.selectedRow = null; 
+}
   /**
    * Elimina las mercancías seleccionadas de la tabla.
    */
-  eliminarMercancias(): void {
-    if (this.selectedRows.size > 0) {
-      this.tableData = this.tableData.filter(
-        (row) => !this.selectedRows.has(row.id)
-      );
+eliminarMercancias(): void {
+  let selectedRows: Set<number>;
 
+  switch (this.currentTable) {
+    case 'fabricante':
+      selectedRows = this.filasSeleccionadasFabricante;
       this.fabricanteDatos = this.fabricanteDatos.filter(
-        (row) => !this.selectedRows.has(row.id)
+        (row) => !selectedRows.has(row.id)
       );
-
-      this.selectedRows.clear();
-    }
+      break;
+    case 'destinatario':
+      selectedRows = this.filasSeleccionadasDestinatario;
+      this.destinatarioDatos = this.destinatarioDatos.filter(
+        (row) => !selectedRows.has(row.id)
+      );
+      break;
+    case 'proveedor':
+      selectedRows = this.filasSeleccionadasProveedor;
+      this.proveedorDatos = this.proveedorDatos.filter(
+        (row) => !selectedRows.has(row.id)
+      );
+      break;
+    case 'facturador':
+      selectedRows = this.filasSeleccionadasFacturador;
+      this.facturadorDatos = this.facturadorDatos.filter(
+        (row) => !selectedRows.has(row.id)
+      );
+      break;
+    default:
+      console.error('Invalid table selection:', this.currentTable);
+      return;
   }
+
+  selectedRows.clear();
+
+  this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'success',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Datos eliminados correctamente',
+    cerrar: false,
+    tiempoDeEspera: 0,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+
+}
   /**
    * Limpia los datos del formulario.
    */

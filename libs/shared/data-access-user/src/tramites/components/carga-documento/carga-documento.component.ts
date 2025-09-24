@@ -1,3 +1,4 @@
+import { CategoriaMensaje, Notificacion, NotificacionesComponent} from '../notificaciones/notificaciones.component';
 import {
   ChangeDetectorRef,
   Component,
@@ -6,6 +7,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   QueryList,
@@ -29,16 +31,15 @@ import {
   OPCIONAL,
   UNIDADES_DOCUMENTOS,
 } from '../../../core/enums/mensajes-documentos.enum';
-import {
-  Notificacion,
-  NotificacionesComponent,
-} from '../notificaciones/notificaciones.component';
+import { ErrorModelo, UploadDocumentResponse, Usuario } from '../../../core/models/shared/cargar-documentos.model';
+import { Subject, catchError, interval, map, of, switchMap, takeUntil, takeWhile } from 'rxjs';
+import { CargarDocumentoService } from '../../../core/services/shared/cargar-documento/cargar-documento.service';
 import { CatalogoDocumentosService } from '../../../core/services/shared/catalogos/catalogo-documentos.service';
 import { CommonModule } from '@angular/common';
 import { DocumentosQuery } from '../../../core/queries/documentos.query';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -48,7 +49,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './carga-documento.component.html',
   styleUrl: './carga-documento.component.scss',
 })
-export class CargaDocumentoComponent implements OnInit, OnChanges {
+export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * @description ID del tipo de trámite.
    * @type {string}
@@ -73,6 +74,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
    */
   @Input() regresarSeccionCargarDocumentoEvento!: EventEmitter<void>;
 
+  @Input() datosUsuario!: Usuario;
+
   /**
    * @description Evento para indicar que la carga de documentos se ha realizado.
    * @type {EventEmitter<boolean>}
@@ -86,6 +89,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
   @Output() activarBotonCargaArchivos = new EventEmitter<boolean>();
 
   @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef>;
+
+  @Output() cargaEnProgreso = new EventEmitter<boolean>();
 
   /**
    * Referencia inyectada para gestionar la destrucción del componente y terminar las suscripciones.
@@ -171,12 +176,22 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
    */
   public nuevaNotificacion!: Notificacion;
 
+  public alertaNotificacion: Notificacion | null = null;
+
+  public PDF_ERRORS: ErrorModelo[] = [];
+
+  private destroy$ = new Subject<void>();
+
   constructor(
     private documentosQuery: DocumentosQuery,
     private documentosStore: DocumentosStore,
     private cdr: ChangeDetectorRef,
-    private catalogoDocumentosService: CatalogoDocumentosService
-  ) { }
+    private catalogoDocumentosService: CatalogoDocumentosService,
+    private cargarDocumentoService: CargarDocumentoService,
+    private http: HttpClient
+  ) { 
+    
+  }
 
   ngOnInit(): void {
     this.documentosQuery.selectDocumentoState$
@@ -197,13 +212,6 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       .pipe(
         takeUntilDestroyed(this.destroyRef$),
         map(() => this.confirmUpload())
-      )
-      .subscribe();
-
-    this.regresarSeccionCargarDocumentoEvento
-      .pipe(
-        takeUntilDestroyed(this.destroyRef$),
-        map(() => this.mostrarSeccionCargaArchivosAccion())
       )
       .subscribe();
   }
@@ -242,7 +250,10 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
           });
         })
       )
-      .subscribe();
+      .subscribe(() => {
+        // Validar estado inicial después de cargar documentos obligatorios
+        this.actualizarEstadoBotonCargarArchivos();
+      });
   }
 
   /**
@@ -251,9 +262,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
    * @return {void} No retorna nada.
    */
   getListaDocumentoOpcionales(): void {
-    const TRAMITE = '5701';
     this.catalogoDocumentosService
-      .getDocumentosObligatorios(TRAMITE, { especifico: true })
+      .getDocumentosObligatorios(this.idTipoTRamite, { especifico: true })
       .pipe(
         takeUntilDestroyed(this.destroyRef$),
         map((response) => {
@@ -288,6 +298,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
             adicionales: [],
             cargado: false,
           }));
+          
+          // Validar estado inicial después de cargar documentos 130118
+          this.actualizarEstadoBotonCargarArchivos();
         },
         error: (err) => {
           console.error('Error obteniendo documentos desde 130118', err);
@@ -330,7 +343,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
     event: Event,
     fileInput: HTMLInputElement,
     id: number,
-    tipo: string
+    tipo: string,
+    tamanioMaximo:number,
+    item?: TipoDocumentos
   ): void {
     const ARCHIVO = event.target as HTMLInputElement;
     const INFORMACION_ARCHIVO = (ARCHIVO.files as FileList)[0];
@@ -351,18 +366,45 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
           txtBtnAceptar: '',
           txtBtnCancelar: '',
         };
+        this.mostrarAlertaDeNotificacion('toastr', 'danger', '', '', MENSAJES_DOCUMENTOS.ONL_YPDF, '', '');
         fileInput.value = '';
         return;
       }
 
-      this.documentoSeleccionado =
-        tipo === OPCIONAL
-          ? (this.catalogoDocumentosOpcionales.find(
-            (doc) => doc.id_tipo_documento === id
-          ) as TipoDocumentos)
-          : (this.catalogoDocumentosObligatorios.find(
-            (doc) => doc.id_tipo_documento === id
-          ) as TipoDocumentos);
+      // Validación 2: Verificar nombres de archivo duplicados
+      const ARCHIVO_DUPLICADO = this.listadoArchivos.find(
+        archivo => archivo.name.toLowerCase() === INFORMACION_ARCHIVO.name.toLowerCase() && 
+                  !(archivo.id === id && archivo.tipo === tipo) // Excluir el mismo campo y tipo (para re-uploads)
+      );
+
+      if (ARCHIVO_DUPLICADO) {
+        this.mostrarAlertaDeNotificacion('toastr', 'danger', '', 'Archivo duplicado', `Ya existe un archivo con el nombre "${INFORMACION_ARCHIVO.name}" en otro campo. Por favor, seleccione un archivo con nombre diferente.`, '', '');
+        fileInput.value = '';
+        return;
+      }
+
+      // Buscar el documento tanto en catálogos principales como en adicionales
+      const DOCUMENTO_ENCONTRADO = this.encontrarDocumento(id);
+      
+      if (DOCUMENTO_ENCONTRADO) {
+        this.documentoSeleccionado = DOCUMENTO_ENCONTRADO;
+      } else {
+        // Fallback al método anterior si no se encuentra
+        this.documentoSeleccionado =
+          tipo === OPCIONAL
+            ? (this.catalogoDocumentosOpcionales.find(
+              (doc) => doc.id_tipo_documento === id
+            ) as TipoDocumentos)
+            : (this.catalogoDocumentosObligatorios.find(
+              (doc) => doc.id_tipo_documento === id
+            ) as TipoDocumentos);
+      }
+
+      if (!this.documentoSeleccionado) {
+        this.mostrarAlertaDeNotificacion('toastr', 'danger', '', '', 'No se pudo encontrar la configuración del documento', '', '');
+        fileInput.value = '';
+        return;
+      }
 
       const TAMANIO_REQUERIDO: number =
         CargaDocumentoComponent.convertirMbaBytes(
@@ -373,20 +415,17 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       const TAMANIO_ARCHIVO: number = INFORMACION_ARCHIVO.size;
 
       if (TAMANIO_ARCHIVO > TAMANIO_REQUERIDO) {
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'toastr',
-          categoria: 'danger',
-          modo: '',
-          titulo: '',
-          mensaje: MENSAJES_DOCUMENTOS.MAX_SIZE,
-          cerrar: false,
-          txtBtnAceptar: '',
-          txtBtnCancelar: '',
-        };
+        this.mostrarAlertaDeNotificacion('toastr', 'danger', '', '', MENSAJES_DOCUMENTOS.MAX_SIZE, '', '', '');
         fileInput.value = '';
         return;
       }
-      this.listadoArchivos.push({
+
+      // Verificar si ya existe un archivo con el mismo ID y tipo
+      const EXISTING_INDEX = this.listadoArchivos.findIndex(
+        archivo => archivo.id === id && archivo.tipo === tipo
+      );
+
+      const NEW_FILE_OBJECT = {
         name: INFORMACION_ARCHIVO.name,
         id,
         archivo: INFORMACION_ARCHIVO,
@@ -395,13 +434,29 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         tipo,
         mensaje: '',
         estatus: 'Pendiente',
-      });
+        tamanioMaximo
+      };
 
-      const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(
-        (item) => item.archivo !== undefined && item.archivo !== null
-      );
+      if (item) {
+        item.file = NEW_FILE_OBJECT;
+        // Clear any existing errors when uploading a new file
+        item.error = [];
+      }
+      
+      if (EXISTING_INDEX !== -1) {
+        // Reemplazar archivo existente para evitar duplicados
+        // Limpiar URL anterior para prevenir pérdidas de memoria
+        if (this.listadoArchivos[EXISTING_INDEX].ruta) {
+          URL.revokeObjectURL(this.listadoArchivos[EXISTING_INDEX].ruta);
+        }
+        this.listadoArchivos[EXISTING_INDEX] = NEW_FILE_OBJECT;
+      } else {
+        // Agregar nuevo archivo si no existe
+        this.listadoArchivos.push(NEW_FILE_OBJECT);
+      }
 
-      this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+      // Actualizar estado del botón después de cargar archivo
+      this.actualizarEstadoBotonCargarArchivos();
     }
   }
 
@@ -417,6 +472,11 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         (doc) => doc.id_tipo_documento === item.id_tipo_documento
       );
       if (INDICE !== -1) {
+        // Inicializar adicionales si no existe
+        if (!this.catalogoDocumentosObligatorios[INDICE].adicionales) {
+          this.catalogoDocumentosObligatorios[INDICE].adicionales = [];
+        }
+        
         const NUEVO_ID: number =
           (this.catalogoDocumentosObligatorios[INDICE]?.adicionales?.length ??
             0) + 1;
@@ -441,6 +501,11 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         (doc) => doc.id_tipo_documento === item.id_tipo_documento
       );
       if (INDICE !== -1) {
+        // Inicializar adicionales si no existe
+        if (!this.documentosOpcionalesSeleccionados[INDICE].adicionales) {
+          this.documentosOpcionalesSeleccionados[INDICE].adicionales = [];
+        }
+        
         const NUEVO_ID: number =
           (this.documentosOpcionalesSeleccionados[INDICE]?.adicionales
             ?.length ?? 0) + 1;
@@ -460,7 +525,111 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         );
       }
     }
+    
+    // Forzar detección de cambios y actualizar estado del botón después de agregar una parte
+    this.cdr.detectChanges();
+    this.actualizarEstadoBotonCargarArchivos();
   }
+
+  /**
+   * Encontrar un documento por ID en catalogos principales o adicionales.
+   * @param {number} id - El ID del documento a buscar.
+   * @returns {TipoDocumentos | null} El documento encontrado o null.
+   */
+  private encontrarDocumento(id: number): TipoDocumentos | null {
+    // Buscar en documentos obligatorios principales
+    const DOC_OBLIGATORIO = this.catalogoDocumentosObligatorios.find(
+      (doc) => doc.id_tipo_documento === id
+    );
+    if (DOC_OBLIGATORIO) {
+      return DOC_OBLIGATORIO;
+    }
+
+    // Buscar en documentos adicionales de obligatorios
+    for (const DOC of this.catalogoDocumentosObligatorios) {
+      if (DOC.adicionales) {
+        const ADICIONAL = DOC.adicionales.find(
+          (add) => add.id_tipo_documento === id
+        );
+        if (ADICIONAL) {
+          return ADICIONAL;
+        }
+      }
+    }
+
+    // Buscar en documentos opcionales principales
+    const DOC_OPCIONAL = this.documentosOpcionalesSeleccionados.find(
+      (doc) => doc.id_tipo_documento === id
+    );
+    if (DOC_OPCIONAL) {
+      return DOC_OPCIONAL;
+    }
+
+    // Buscar en documentos adicionales de opcionales
+    for (const DOC of this.documentosOpcionalesSeleccionados) {
+      if (DOC.adicionales) {
+        const ADICIONAL = DOC.adicionales.find(
+          (add) => add.id_tipo_documento === id
+        );
+        if (ADICIONAL) {
+          return ADICIONAL;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Actualiza el estado del botón "Cargar archivos" basado en la validación completa de documentos obligatorios.
+   * Debe llamarse después de cualquier operación que modifique los documentos (agregar, eliminar, limpiar).
+   * @returns {void}
+   */
+  private actualizarEstadoBotonCargarArchivos(): void {
+    const TODOS_OBLIGATORIOS_COMPLETOS = this.validarCompletitudDocumentosObligatorios();
+    this.activarBotonCargaArchivos.emit(TODOS_OBLIGATORIOS_COMPLETOS);
+  }
+
+  /**
+ * Verifica si todos los documentos obligatorios han sido cargados
+ * @returns true si todos los docs están listos, false en caso contrario
+ */
+private validarCompletitudDocumentosObligatorios(): boolean {
+  // Si no hay documentos configurados, no podemos continuar
+  if (!this.catalogoDocumentosObligatorios?.length) {
+    return false;
+  }
+
+  // Revisamos cada documento obligatorio
+  for (const DOCUMENTO of this.catalogoDocumentosObligatorios) {
+    // Buscamos si este documento ya fue cargado
+    const ARCHIVO_SUBIDO = this.listadoArchivos.find(
+      archivo => archivo.id === DOCUMENTO.id_tipo_documento && archivo.tipo === 'obligatorio'
+    );
+    
+    // El documento principal debe estar cargado y sin errores
+    if (!ARCHIVO_SUBIDO?.archivo || ARCHIVO_SUBIDO.estatus === 'Error') {
+      return false;
+    }
+
+    // Si tiene partes adicionales, también las revisamos
+    if (Array.isArray(DOCUMENTO.adicionales) && DOCUMENTO.adicionales.length > 0) {
+      for (const PARTE_ADICIONAL of DOCUMENTO.adicionales) {
+        const ARCHIVO_ADICIONAL = this.listadoArchivos.find(
+          archivo => archivo.id === PARTE_ADICIONAL.id_tipo_documento && archivo.tipo === 'obligatorio'
+        );
+        
+        // Cada parte adicional también debe estar completa
+        if (!ARCHIVO_ADICIONAL?.archivo || ARCHIVO_ADICIONAL.estatus === 'Error') {
+          return false;
+        }
+      }
+    }
+  }
+
+  // Si llegamos hasta aquí, todo está en orden
+  return true;
+}
 
   /**
    * Verifica si un archivo ya existe en la lista de archivos cargados.
@@ -495,17 +664,17 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
     }
 
     const INDEX_ARCHIVO: number = this.listadoArchivos.findIndex(
-      (f) => f.id === item.id_tipo_documento
+      (f) => f.id === item.id_tipo_documento && f.tipo === (tipo === 'obligatorios' ? 'obligatorio' : 'opcional')
     );
     if (INDEX_ARCHIVO !== -1) {
       this.listadoArchivos.splice(INDEX_ARCHIVO, 1);
     }
 
-    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(
-      (item) => item.archivo !== undefined && item.archivo !== null
-    );
+    // Clear errors when removing file
+    item.error = [];
 
-    this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+    // Actualizar estado del botón después de limpiar archivo
+    this.actualizarEstadoBotonCargarArchivos();
   }
 
   /**
@@ -515,47 +684,18 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
    */
   verPdf(id: number): void {
     const RUTA = this.listadoArchivos.find((f) => f.id === id)?.ruta;
-    this.limpiarNotificacion();
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: '',
-      modo: 'pdf',
-      titulo: 'Vista previa documento',
-      mensaje: RUTA ? RUTA.toString() : '',
-      cerrar: false,
-      txtBtnAceptar: 'Cargar archivos',
-      txtBtnCancelar: 'Cerrar',
-      tamanioModal: 'modal-lg',
-    };
-  }
-
-  limpiarNotificacion(): void {
-    this.nuevaNotificacion = {
-      tipoNotificacion: '',
-      categoria: '',
-      modo: '',
-      titulo: '',
-      mensaje: '',
-      cerrar: false,
-      txtBtnAceptar: '',
-      txtBtnCancelar: '',
-      tamanioModal: '',
-    };
+    this.mostrarAlertaDeNotificacion('alert', '', 'pdf', 'Vista previa documento', RUTA ? RUTA.toString() : '', 'Cargar archivos', 'Cerrar', 'modal-lg');
   }
 
   confirmarCargaArchivos(acepta: boolean): void {
     if (acepta) {
-      this.cargarDocumentos = true;
-      this.mostrarSeccionCargaArchivos = false;
       this.archivosCargando.obligatorios = this.listadoArchivos.filter(
         (f) => f.tipo === 'obligatorio'
       );
       this.archivosCargando.opcionales = this.listadoArchivos.filter(
         (f) => f.tipo === 'opcional'
       );
-      this.cargarArchivos(this.archivosCargando.obligatorios);
-      this.cargarArchivos(this.archivosCargando.opcionales);
-      this.cargaRealizada.emit(this.cargarDocumentos);
+      this.cargarArchivos(this.listadoArchivos, this.datosUsuario);
     }
   }
 
@@ -574,13 +714,26 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
           (f) => f.id_tipo_documento === doc
         ) as TipoDocumentos;
 
-        this.documentosOpcionalesSeleccionados.push(OPCIONAL);
+        // Crear una copia limpia del documento sin partes adicionales
+        const DOCUMENTO_LIMPIO: TipoDocumentos = {
+          ...OPCIONAL,
+          adicionales: [], // Siempre empezar con array vacío de adicionales
+          cargado: false,
+          error: []
+        };
+
+        this.documentosOpcionalesSeleccionados.push(DOCUMENTO_LIMPIO);
+        
+        // También asegurar que el catálogo original esté limpio
         const INDICE_OPCIONAL = this.catalogoDocumentosOpcionales.findIndex(
           (f) => f.id_tipo_documento === doc
         );
         if (INDICE_OPCIONAL !== -1) {
           this.catalogoDocumentosOpcionales[INDICE_OPCIONAL] = {
             ...this.catalogoDocumentosOpcionales[INDICE_OPCIONAL],
+            adicionales: [], // Resetear adicionales en el catálogo original
+            cargado: false,
+            error: []
           };
         }
       }
@@ -590,33 +743,39 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
       this.documentosOpcionalesSeleccionados
     );
     this.listDocOpcionalesAgregar = [];
-
   }
 
   /**
    * Elimina un nuevo documento de la lista de documentos.
    * @param {any} item - El documento a eliminar.
    * @param {boolean} adicional - Indica si el documento es adicional.
+   * @param {string} tipo - El tipo de documento ('obligatorio' u 'opcional').
    * @returns {void}
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  eliminarNuevo(item: any, adicional = false): void {
+  eliminarNuevo(item: any, adicional = false, tipo: string = 'obligatorio'): void {
     if (adicional) {
       const INDICE_ADICIONAL = item.item.adicionales.findIndex(
         (adicional: TipoDocumentos) =>
           adicional.id_tipo_documento === item.adicional.id_tipo_documento
       );
-      item.item.adicionales.splice(INDICE_ADICIONAL, 1);
-      const INDICE: number = this.listadoArchivos.findIndex(
-        (f) => f.id === item.id_tipo_documento
-      );
-      this.listadoArchivos.splice(INDICE, 1);
+      
+      if (INDICE_ADICIONAL !== -1) {
+        // Eliminar del array de adicionales
+        item.item.adicionales.splice(INDICE_ADICIONAL, 1);
+        
+        // Eliminar archivo de la lista si existe
+        const INDICE_ARCHIVO: number = this.listadoArchivos.findIndex(
+          (f) => f.id === item.adicional.id_tipo_documento && f.tipo === tipo
+        );
+        if (INDICE_ARCHIVO !== -1) {
+          this.listadoArchivos.splice(INDICE_ARCHIVO, 1);
+        }
+      }
 
-      const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(
-        (item) => item.archivo !== undefined && item.archivo !== null
-      );
-
-      this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+      // Forzar detección de cambios y actualizar estado del botón
+      this.cdr.detectChanges();
+      this.actualizarEstadoBotonCargarArchivos();
     }
   }
 
@@ -637,19 +796,32 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         this.documentosOpcionalesSeleccionados[INDICE]?.adicionales?.forEach(
           (adicional: TipoDocumentos) => {
             const INDICE_LISTADO: number = this.listadoArchivos.findIndex(
-              (f) => f.id === adicional.id_tipo_documento
+              (f) => f.id === adicional.id_tipo_documento && f.tipo === 'opcional'
             );
-            this.listadoArchivos.splice(INDICE_LISTADO, 1);
+            if (INDICE_LISTADO !== -1) {
+              this.listadoArchivos.splice(INDICE_LISTADO, 1);
+            }
           }
         );
       }
 
       const INDICE_LISTADO: number = this.listadoArchivos.findIndex(
-        (f) => f.id === item.id_tipo_documento
+        (f) => f.id === item.id_tipo_documento && f.tipo === 'opcional'
       );
-      this.listadoArchivos.splice(INDICE_LISTADO, 1);
+      if (INDICE_LISTADO !== -1) {
+        this.listadoArchivos.splice(INDICE_LISTADO, 1);
+      }
 
       this.documentosOpcionalesSeleccionados.splice(INDICE, 1);
+      
+      // También limpiar las partes adicionales del catálogo original
+      // para que cuando se vuelva a agregar, empiece limpio
+      const INDICE_CATALOGO_ORIGINAL = this.catalogoDocumentosOpcionales.findIndex(
+        (f) => f.id_tipo_documento === item.id_tipo_documento
+      );
+      if (INDICE_CATALOGO_ORIGINAL !== -1) {
+        this.catalogoDocumentosOpcionales[INDICE_CATALOGO_ORIGINAL].adicionales = [];
+      }
     }
     const INDICE_AGREGAR: number = this.listDocOpcionalesAgregar.findIndex(
       (id) => id === item.id_tipo_documento
@@ -660,11 +832,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
     }
     this.cdr.detectChanges();
 
-    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(
-      (item) => item.archivo !== undefined && item.archivo !== null
-    );
-
-    this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+    // Actualizar estado del botón después de eliminar documento opcional
+    this.actualizarEstadoBotonCargarArchivos();
   }
 
   static convertirKbaBytes(size: number | undefined): number {
@@ -685,44 +854,120 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
    * Abre el modal para confirmar la carga de documentos
    */
   confirmUpload(): void {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: '',
-      modo: 'html',
-      titulo: 'Carga de archivos',
-      mensaje: MENSAJES_MODAL.INFORMACION_SUBIR_DOCUMENTOS,
-      cerrar: false,
-      txtBtnAceptar: 'Cargar archivos',
-      txtBtnCancelar: 'Cerrar',
-      tamanioModal: 'modal-lg',
-    };
+    this.mostrarAlertaDeNotificacion('alert', '', 'html', 'Carga de archivos', MENSAJES_MODAL.INFORMACION_SUBIR_DOCUMENTOS, 'Cargar archivos', 'Cerrar', 'modal-lg');
   }
 
   /**
    * Muestra la sección de carga de archivos y emite un evento para activar el botón de carga de archivos.
    * @returns {void}
    */
-  mostrarSeccionCargaArchivosAccion(): void {
-    this.mostrarSeccionCargaArchivos = true;
-    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(
-      (item) => item.cargado === true
-    );
+  // mostrarSeccionCargaArchivosAccion(): void {
+  //   this.mostrarSeccionCargaArchivos = true;
+  //   const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(
+  //     (item) => item.cargado === true
+  //   );
 
-    this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
-    this.cargaRealizada.emit(false);
-  }
+  //   this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
+  //   this.cargaRealizada.emit(false);
+  // }
 
-  /**
-   * Carga los archivos seleccionados.
-   * @param {any[]} archivosCargando - Lista de archivos a cargar.
-   * @returns {Promise<void>} Promesa que se resuelve cuando la carga se completa.
-   */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, require-await
-  async cargarArchivos(archivosCargando: any[]): Promise<void> {
-    for (const ARCHIVO of archivosCargando) {
-      // const DATA = await this.uploadFiles(ARCHIVO.archivo);  TODO: Descomentar cuando funcione el API de cargar documento
-      ARCHIVO.cargado = true;
-      ARCHIVO.estatus = 'cargado';
+cargarArchivos(archivosCargando: DocumentosParaCargar[], datosUsuario: Usuario): void {
+  this.cargarDocumentoService.cargarDocumentos(archivosCargando, datosUsuario).pipe(
+    switchMap((res: UploadDocumentResponse) => {
+      if (res.error && res.codigo === 'UPSER001') {
+        this.PDF_ERRORS = res.errores_modelo ?? [];
+        this.manejarErrorArchivo(this.catalogoDocumentosObligatorios);
+        this.manejarErrorArchivo(this.documentosOpcionalesSeleccionados);
+        return of(null);
+      }
+      if (res.error && res.codigo === 'UPSER04') {
+        this.mostrarAlertaDeNotificacion('toastr', 'danger', '', '','Actualmente no se puede realizar la operación, intentelo después', '', '', '');
+        return of(null);
+      }
+
+      this.cargarDocumentos = true;
+      this.mostrarSeccionCargaArchivos = false;
+      this.cargaRealizada.emit(this.cargarDocumentos);
+
+      const REFERENCIA = res?.datos?.referenciaSolicitud;
+      return interval(3000).pipe(
+        switchMap(() => this.cargarDocumentoService.documentosreferenciaSolicitud(REFERENCIA)),
+        takeWhile((statusResponse) => !(statusResponse.datos.every((doc) => doc.cargaEstadoKafka === "ARCHIVO_SUBIDO_MINIO")), true),
+        catchError((err) => {
+          console.error('Polling error', err);
+          return of(null);
+        })
+      );
+    }),
+    takeUntil(this.destroy$)
+  ).subscribe({
+    next: (res) => {
+      const FILESTATUS = res?.datos?.every((doc) => doc.cargaEstadoKafka === "ARCHIVO_SUBIDO_MINIO")
+      if (res?.codigo === '00' && FILESTATUS) {
+          this.listadoArchivos.forEach((archivo) => {
+            archivo.cargado = true;
+            archivo.estatus = 'cargado';
+          });
+
+          this.cargaEnProgreso.emit(false);
+      }
+    },
+    error: (err) => console.error('Upload or polling failed', err)
+  });
+}
+
+mostrarAlertaDeNotificacion(
+  tipoNotificacion: string,
+  categoria: string,
+  modo: string,
+  titulo: string,
+  mensaje: string,
+  txtBtnAceptar: string = '',
+  txtBtnCancelar: string = '',
+  tamanioModal: string = 'modal-md'
+): void {
+  this.nuevaNotificacion = {
+    tipoNotificacion,
+    categoria,
+    modo,
+    titulo,
+    mensaje,
+    cerrar: false,
+    txtBtnAceptar: txtBtnAceptar ?? '',
+    txtBtnCancelar: txtBtnCancelar ?? '',
+    tamanioModal: tamanioModal,
+  };
+}
+
+manejarErrorArchivo(tipoDeCampo: TipoDocumentos[]): void {
+  tipoDeCampo.forEach(res => {
+    if (res) {
+      res.error = [];
+      
+      const ERROR_EXISTS = this.PDF_ERRORS.find((error: ErrorModelo) => error.campo === res?.file?.name);
+     
+      if (ERROR_EXISTS) {
+        res.error = ERROR_EXISTS.errores;
+      }
+
+      if (res.adicionales && res.adicionales.length > 0) {
+        res.adicionales.forEach(adicional => {
+          adicional.error = [];
+          
+          const ADICIONAL_ERROR = this.PDF_ERRORS.find((error: ErrorModelo) => error.campo === adicional?.file?.name);
+          
+          if (ADICIONAL_ERROR) {
+            adicional.error = ADICIONAL_ERROR.errores;
+          }
+        });
+      }
     }
-  }
+  });
+}
+
+ngOnDestroy(): void {
+  this.destroy$.next();
+  this.destroy$.complete();
+}
+
 }

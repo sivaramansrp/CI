@@ -15,14 +15,14 @@
 
             <div class="row mt-2 alert-text">
                 <div class="col-md-12 text-container">
-                    <p><span class="danger">*</span>{{textos.paraca3}}</p>
+                    <p>{{textos.paraca3}}<span class="danger">*</span>:</p>
                 </div>
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <div class="mt-2 alert-text">
                     <ul>
-                        <li><span class="danger">*</span>El mapeo de procesos debe incluir, los nombres (RFC y razón Social) de las empresas que le proporcionan los servicios en su cadena logística. Este mapeo debe contener por lo menos los siguientes aspectos:
+                        <li>El mapeo de procesos debe incluir, los nombres (RFC y razón Social) de las empresas que le proporcionan los servicios en su cadena logística. Este mapeo debe contener por lo menos los siguientes aspectos<span class="danger">*</span>:
                             <div class="centered-list-wrapper">
                                 <ol type="a">
                                     <li>Recolección, entrega y/o recepción de mercancía de comercio exterior en el (los) centro(s) de distribución y/o acopio.</li>
@@ -57,13 +57,13 @@
 
             <div class="row mt-2">
                 <div class="col-md-12 text-container">
-                    <p><span class="danger">*</span>{{textos.paraca5}}</p>
+                    <p>{{textos.paraca5}}<span class="danger">*</span>:</p>
                 </div>
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueAlmacenes">
-                    <span class="danger">*</span>{{textos.etiqueta}}
+                    {{textos.etiqueta}}<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueAlmacenes" formControlName="indiqueAlmacenes" (change)="setValoresStore(seguridadProcesosForm,'indiqueAlmacenes')"></textarea>
             </div>
@@ -78,7 +78,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="expliqueBrevementeDos">
-                    <span class="danger">*</span>Explique brevemente qué actividad se lleva a cabo en cada instalación.(Cross Dock, Almacén temporal, etc.).
+                    Explique brevemente qué actividad se lleva a cabo en cada instalación.(Cross Dock, Almacén temporal, etc.)<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="expliqueBrevementeDos" formControlName="expliqueBrevementeDos" (change)="setValoresStore(seguridadProcesosForm,'expliqueBrevementeDos')"></textarea>
             </div>
@@ -93,7 +93,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="estosEmpresa">
-                    <span class="danger">*</span>Indique si estos pertenecen a la empresa o es un servicio contratado a través de un tercero y sean parte de un grupo accionista.
+                    Indique si estos pertenecen a la empresa o es un servicio contratado a través de un tercero y sean parte de un grupo accionista<span class="danger">*</span>:
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                     class="gap" formControlName="estosEmpresa" (change)="setValoresStore(seguridadProcesosForm,'estosEmpresa')"></app-input-radio>
@@ -101,7 +101,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueCerciora">
-                    <span class="danger">*</span>Indique de qué forma se cerciora que estos cumplen con los requerimientos mínimos en materia de seguridad.
+                    Indique de qué forma se cerciora que estos cumplen con los requerimientos mínimos en materia de seguridad<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueCerciora" formControlName="indiqueCerciora" (change)="setValoresStore(seguridadProcesosForm,'indiqueCerciora')"></textarea>
             </div>
@@ -124,7 +124,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueEstos">
-                    <span class="danger">*</span>Indique si estos almacenes están registrados ante su R.F.C. proporcionando sus datos generales (Denominación y domicilio) y explicando brevemente qué actividad se lleva a cabo en esa o esas instalaciones (Cross Dock, almacén temporal, etcétera).
+                    Indique si estos almacenes están registrados ante su R.F.C. proporcionando sus datos generales (Denominación y domicilio) y explicando brevemente qué actividad se lleva a cabo en esa o esas instalaciones (Cross Dock, almacén temporal, etcétera)<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueEstos" formControlName="indiqueEstos" (change)="setValoresStore(seguridadProcesosForm,'indiqueEstos')"></textarea>
             </div>
@@ -140,7 +140,7 @@
             <div class="col-md-12 text-container mt-4">
                 <div class="mt-2 alert-text">
                     <label for="indiquePertenecen">
-                        <span class="danger">*</span>{{textos.etiqueta2}}
+                        {{textos.etiqueta2}}<span class="danger">*</span>:
                     </label>
                     <ul>
                         <div class="centered-list-wrapper">
@@ -198,7 +198,7 @@
 
             <div class="col-md-12 text-container mt-4 alert-text">
                 <ul>
-                    <label><span class="danger">*</span>Anexar el procedimiento documentado para la entrega y recepción de carga debiendo incluir los siguientes:
+                    <label>Anexar el procedimiento documentado para la entrega y recepción de carga debiendo incluir los siguientes<span class="danger">*</span>:
                         <div class="centered-list-wrapper">
                             <ol type="a">
                                 <li>Método de inspección en el punto de acceso a la empresa de mensajería y paquetería.</li>
@@ -220,7 +220,7 @@
 
             <div class="col-md-12 text-container mt-4 alert-text">
                 <ul>
-                    <label><span class="danger">*</span>Anexar el procedimiento documentado para detectar y reportar discrepancias en la entrega o recepción de medios de transporte que traslada mercancías y asegúrese que incluya los siguientes puntos:
+                    <label>Anexar el procedimiento documentado para detectar y reportar discrepancias en la entrega o recepción de medios de transporte que traslada mercancías y asegúrese que incluya los siguientes puntos<span class="danger">*</span>:
                         <div class="centered-list-wrapper">
                             <ol type="a">
                                 <li>Responsables de llevar a cabo la revisión.</li>
@@ -234,7 +234,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueResponsable">
-                    <span class="danger">*</span>{{textos.etiqueta3}}
+                    {{textos.etiqueta3}}<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueResponsable" formControlName="indiqueResponsable" (change)="setValoresStore(seguridadProcesosForm,'indiqueResponsable')"></textarea>
             </div>
@@ -249,7 +249,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueTecnologia">
-                    <span class="danger">*</span>Indique si cuenta con tecnología no intrusiva para la revisión y supervisión de entradas y salidas de la empresa de mensajería y paquetería, explicando el plan de mantenimiento para el buen funcionamiento de los equipos. (calibración).
+                    Indique si cuenta con tecnología no intrusiva para la revisión y supervisión de entradas y salidas de la empresa de mensajería y paquetería, explicando el plan de mantenimiento para el buen funcionamiento de los equipos. (calibración)<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueTecnologia" formControlName="indiqueTecnologia" (change)="setValoresStore(seguridadProcesosForm,'indiqueTecnologia')"></textarea>
             </div>
@@ -273,7 +273,7 @@
 
             <div class="row mt-2 alert-text">
                 <div class="col-md-12 text-container">
-                    <p><span class="danger">*</span>Anexar el procedimiento documentado para monitorear los traslados internos en la empresa de mensajería y paquetería de mercancía de comercio exterior completa y/o consolidada.</p>
+                    <p>Anexar el procedimiento documentado para monitorear los traslados internos en la empresa de mensajería y paquetería de mercancía de comercio exterior completa y/o consolidada<span class="danger">*</span>:</p>
                 </div>
             </div>
 
@@ -309,7 +309,7 @@
             <div class="col-md-12 text-container mt-4">
                 <div class="mt-2 alert-text">
                     <ul>
-                        <label><span class="danger">*</span>Anexar el procedimiento documentado para detectar y reportar discrepancias en la entrega o recepción de las mercancías y asegúrese que incluya los siguientes puntos:</label>
+                        <label>Anexar el procedimiento documentado para detectar y reportar discrepancias en la entrega o recepción de las mercancías y asegúrese que incluya los siguientes puntos<span class="danger">*</span>:</label>
                         <div class="centered-list-wrapper">
                             <ol type="a">
                                 <li>Responsables de llevar a cabo la revisión.
@@ -335,8 +335,8 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="describirProcesamiento">
-                    <span class="danger">*</span>Describir el procedimiento para el procesamiento de la documentación de
-                    la carga.
+                    Describir el procedimiento para el procesamiento de la documentación de
+                    la carga<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="describirProcesamiento" formControlName="describirProcesamiento" (change)="setValoresStore(seguridadProcesosForm,'describirProcesamiento')"></textarea>
             </div>
@@ -351,7 +351,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="detalleComo">
-                    <span class="danger">*</span>Detalle como transmite y/o recibe información relacionada al traslado y maniobras de carga en la empresa de mensajería y paquetería.
+                    Detalle como transmite y/o recibe información relacionada al traslado y maniobras de carga en la empresa de mensajería y paquetería<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="detalleComo" formControlName="detalleComo" (change)="setValoresStore(seguridadProcesosForm,'detalleComo')"></textarea>
             </div>
@@ -366,7 +366,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueUtiliza">
-                    <span class="danger">*</span>Indique si utiliza un sistema informático de control específico y explique brevemente su función.
+                    Indique si utiliza un sistema informático de control específico y explique brevemente su función<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueUtiliza" formControlName="indiqueUtiliza" (change)="setValoresStore(seguridadProcesosForm,'indiqueUtiliza')"></textarea>
             </div>
@@ -381,7 +381,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="detalleValida">
-                    <span class="danger">*</span>Detalle cómo valida que la información proporcionada sea legible, completa, exacta y protegida.
+                    Detalle cómo valida que la información proporcionada sea legible, completa, exacta y protegida<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="detalleValida" formControlName="detalleValida" (change)="setValoresStore(seguridadProcesosForm,'detalleValida')"></textarea>
             </div>
@@ -396,7 +396,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="comoNumero">
-                    <span class="danger">*</span>Cómo valida que el número de sello y/o candado con el que se aseguró la carga coincida con la información electrónica de los embarques y carga en general.
+                    Cómo valida que el número de sello y/o candado con el que se aseguró la carga coincida con la información electrónica de los embarques y carga en general<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="comoNumero" formControlName="comoNumero" (change)="setValoresStore(seguridadProcesosForm,'comoNumero')"></textarea>
             </div>
@@ -411,7 +411,7 @@
 
             <div class="col-md-12 text-container mt-4">
                 <label for="senaleAsociados">
-                    <span class="danger">*</span>{{textos.etiqueta4}}
+                    {{textos.etiqueta4}}<span class="danger">*</span>:
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="senaleAsociados" formControlName="senaleAsociados" (change)="setValoresStore(seguridadProcesosForm,'senaleAsociados')"></textarea>
             </div>
@@ -455,7 +455,7 @@
 
             <div class="col-md-12 text-container mt-4 alert-text">
                 <ul>
-                    <label><span class="danger">*</span>Anexe el procedimiento documentado para la gestión de inventarios. Este debe incluir, entre otros aspectos de acuerdo a su operación.
+                    <label>Anexe el procedimiento documentado para la gestión de inventarios. Este debe incluir, entre otros aspectos de acuerdo a su operación<span class="danger">*</span>:
                         <div class="centered-list-wrapper">
                             <ol type="a">
                                 <li>La frecuencia con la que lleva a cabo la verificación de existencias (inventario periódico). Indique si existe un calendario programado documentado para realizarlos.

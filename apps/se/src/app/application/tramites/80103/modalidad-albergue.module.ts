@@ -2,20 +2,22 @@ import {
   AlertComponent,
   AnexarDocumentosComponent,
   BtnContinuarComponent,
+  CargaDocumentoComponent,
   CatalogoSelectComponent,
   FirmaElectronicaComponent,
+  PasoFirmaComponent,
   SharedModule,
   SolicitanteComponent,
   TituloComponent,
   WizardComponent,
 } from '@ng-mf/data-access-user';
+import { NgModule, forwardRef } from '@angular/core';
 import { AggregarComplimentosComponent } from './component/aggregar-complimentos/aggregar-complimentos.component';
 import { AnexoVistaDosYTresComponent } from './component/anexo-vista-dos-y-tres/anexo-vista-dos-y-tres.component';
 import { AnexoVistaUnoComponent } from './component/anexo-vista-uno/anexo-vista-uno.component';
 import { CommonModule } from '@angular/common';
 import { EmpleadosComponent } from '../../shared/components/empleados/empleados.component';
 import { EmpresasSubfabricanteComponent } from './component/empresas-subfabricante/empresas-subfabricante.component';
-import { NgModule } from '@angular/core';
 
 import { CapacidadInstaladaComponent } from '../../shared/components/capacidad-instalada/capacidad-instalada.component';
 import { ComplementarPlantaComponent } from '../../shared/components/complementar-planta/complementar-planta.component';
@@ -72,6 +74,8 @@ import { AnexoTresComponent } from '../../shared/components/anexo-tres/anexo-tre
     ComplementosSeccionComponent,
     AnexoUnoSeccionComponent,
     AnexoTresComponent,
+    PasoFirmaComponent,
+    forwardRef(() => CargaDocumentoComponent),
   ],
 })
 export class ModalidadAlbergueModule {}

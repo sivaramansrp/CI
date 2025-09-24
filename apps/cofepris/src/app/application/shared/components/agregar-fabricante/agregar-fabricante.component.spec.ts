@@ -69,6 +69,38 @@ describe('AgregarFabricanteComponent', () => {
     component.validarElementos = jest.fn();
     component.crearAgregarFormularioFabricante = jest.fn();
     component.changeNacionalidad = jest.fn();
+    const mockRFCControl = {
+      setValidators: jest.fn(),
+      updateValueAndValidity: jest.fn(),
+      enable: jest.fn(),
+      disable: jest.fn(),
+      value: '',
+      markAsTouched: jest.fn()
+    };
+
+    if (!component.agregarFabricanteForm) {
+      component.agregarFabricanteForm = {
+        getRawValue: jest.fn().mockReturnValue({}),
+        get: jest.fn().mockReturnValue(mockRFCControl),
+        controls: {
+          RFC_CONTROL: mockRFCControl
+        }
+      };
+    } else {
+      if (!component.agregarFabricanteForm.getRawValue) {
+        component.agregarFabricanteForm.getRawValue = jest.fn().mockReturnValue({});
+      }
+      if (!component.agregarFabricanteForm.get) {
+        component.agregarFabricanteForm.get = jest.fn().mockReturnValue(mockRFCControl);
+      }
+      if (!component.agregarFabricanteForm.controls) {
+        component.agregarFabricanteForm.controls = {
+          RFC_CONTROL: mockRFCControl
+        };
+      } else if (!component.agregarFabricanteForm.controls.RFC_CONTROL) {
+        component.agregarFabricanteForm.controls.RFC_CONTROL = mockRFCControl;
+      }
+    }
     component.ngOnInit();
     expect(component.cargarDatos).toHaveBeenCalled();
     expect(component.validarElementos).toHaveBeenCalled();
@@ -124,15 +156,15 @@ describe('AgregarFabricanteComponent', () => {
     component.tipoPersona = component.tipoPersona || {};
     component.tipoPersona.MORAL = 'MORAL';
     component.tipoPersona.FISICA = 'FISICA';
-    component.fabricantes = component.fabricantes || {};
-    component.fabricantes.push = jest.fn();
+    component.fabricantes = [];
+    component.fabricantes[Symbol.iterator] = Array.prototype[Symbol.iterator];
     component.updateFabricanteTablaDatos = component.updateFabricanteTablaDatos || {};
     component.updateFabricanteTablaDatos.emit = jest.fn();
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
     component.guardarFabricante();
     expect(component.agregarFabricanteForm.getRawValue).toHaveBeenCalled();
-    expect(component.fabricantes.push).toHaveBeenCalled();
+    expect(component.fabricantes.length).toBe(1);
     expect(component.updateFabricanteTablaDatos.emit).toHaveBeenCalled();
     expect(component.ubicaccion.back).toHaveBeenCalled();
   });
@@ -189,14 +221,19 @@ describe('AgregarFabricanteComponent', () => {
     const mockFormControl = {
       disable: jest.fn(),
       enable: jest.fn(),
-      value: ''
+      value: '',
+      setValidators: jest.fn(),
+      updateValueAndValidity: jest.fn(),
+      markAsTouched: jest.fn()
     };
     
     component.agregarFabricanteForm = component.agregarFabricanteForm || {};
     component.agregarFabricanteForm.get = jest.fn().mockReturnValue(mockFormControl);
+    component.agregarFabricanteForm.getRawValue = jest.fn().mockReturnValue({});
     component.agregarFabricanteForm.controls = {
       nacionalidad: mockFormControl,
       tipoPersona: mockFormControl,
+      RFC_CONTROL: mockFormControl,
       otherControl: mockFormControl
     };
     
@@ -205,6 +242,8 @@ describe('AgregarFabricanteComponent', () => {
     expect(component.agregarFabricanteForm.get).toHaveBeenCalled();
     expect(mockFormControl.disable).toHaveBeenCalled();
     expect(mockFormControl.enable).toHaveBeenCalled();
+    expect(mockFormControl.setValidators).toHaveBeenCalled();
+    expect(mockFormControl.updateValueAndValidity).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {

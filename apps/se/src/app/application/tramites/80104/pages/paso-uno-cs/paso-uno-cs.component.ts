@@ -29,7 +29,9 @@ import { Solocitud80104Service } from '../../services/service80104.service'
 
 
 import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
+import { ProveedorCliente, ProyectoImmex } from '../../../../shared/models/complimentos-seccion.model';
 import { Subject, takeUntil } from 'rxjs';
+import { Tramite80101Store } from '../../estados/tramite80101.store';
 /*
   * Componente para gestionar el primer paso del trámite 80103.
   * Este componente permite la visualización y selección de pestañas,
@@ -67,13 +69,18 @@ export class PasoUnoCsComponent implements OnInit {
   * Almacena la configuración de las pestañas del primer paso.
   */
    indice: number = 1;
+
+   /** Indica si el formulario está deshabilitado. */
+   public formularioDeshabilitado: boolean = false;
+
 /**
  * 
  * @param seccionStore 
  */
   constructor(private seccionStore: SeccionLibStore,
     private Solocitud80104Service: Solocitud80104Service,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private tramite80101Store: Tramite80101Store
   ){
     this.asignarSecciones();
   }
@@ -170,4 +177,30 @@ export class PasoUnoCsComponent implements OnInit {
         }
       });
   }
+
+   /**
+   * Establece la lista de proyectos IMMEX en la tabla correspondiente del store.
+   *
+   * @param event - Arreglo de objetos de tipo ProyectoImmex que representa la nueva lista de proyectos a almacenar.
+   */
+  setProyectoImmex(event: ProyectoImmex[]): void {
+    this.tramite80101Store.setProyectoImmexTablaLista(event);
+  }
+
+  /**
+     * Maneja la obtención de datos de proveedor o cliente según el identificador recibido en el evento.
+     * 
+     * @param event - Objeto que contiene un arreglo de datos de tipo `ProveedorCliente` y un identificador opcional.
+     *   - `data`: Lista de objetos `ProveedorCliente` a procesar.
+     *   - `id`: Identificador opcional que determina si los datos corresponden a un cliente ('cliente') o a un proveedor.
+     * 
+     * Si el identificador es 'cliente', almacena los datos en la tabla uno; en caso contrario, los almacena en la tabla dos.
+     */
+    obtenerProveedorCliente(event: {data:ProveedorCliente[], id?:string}):void{
+      if(event.id ==='cliente'){
+        this.tramite80101Store.setProveedorClienteDatosTablaUno(event.data);
+      }else{
+        this.tramite80101Store.setProveedorClienteDatosTablaDos(event.data);
+      }
+    }
 }
