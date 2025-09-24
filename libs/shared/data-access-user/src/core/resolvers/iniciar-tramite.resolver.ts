@@ -63,7 +63,7 @@ export class IniciarTramiteResolver implements Resolve<IniciarResolverResult | b
         const PAYLOAD: IniciarRequest = {
           rfcSolicitante: perfilUsuario?.rfc || 'ABC123456789212', // RFC del usuario o fallback
           rolActual: 'CapturistaGubernamental',
-          folio_programa: "FOL123456",
+          folioPrograma: "FOL123456",
           idTipoTramite:Number(INICIAR_CONFIG?.procedureId),
           discriminador:INICIAR_CONFIG?.procedureId // Valor estándar
         };

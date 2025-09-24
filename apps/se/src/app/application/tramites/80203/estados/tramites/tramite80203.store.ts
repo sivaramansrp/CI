@@ -17,9 +17,8 @@
  * @requires @angular/core
  */
 import { Store, StoreConfig } from '@datorama/akita';
-import { fraccionInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { fraccionInfo, PermisoImmexGridDatos } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
-import { immexInfo } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -59,14 +58,14 @@ export interface ImmexRegistroState {
      */
     immexRegistro: immexRegistroform;
   /**
-   * @property {immexInfo[]} immexTableDatos
+   * @property {PermisoImmexGridDatos[]} immexTableDatos
    * @description
    * Arreglo que contiene la información tabular relacionada con los datos IMMEX.
    * Cada elemento representa una fila con información específica del trámite.
    *
-   * @see {@link immexInfo} Para la estructura de cada elemento.
+   * @see {@link PermisoImmexGridDatos} Para la estructura de cada elemento.
    */
-  immexTableDatos: immexInfo[];
+  immexTableDatos: PermisoImmexGridDatos[];
 
   /**
    * @property {fraccionInfo[]} [fraccionTablaDatos]
@@ -76,7 +75,7 @@ export interface ImmexRegistroState {
    *
    * @see {@link fraccionInfo} Para la estructura de cada elemento.
    */
-  fraccionTablaDatos?: fraccionInfo[];
+  fraccionTablaDatos: fraccionInfo[];
 }
 
 /**
@@ -115,7 +114,7 @@ export function createInitialState(): ImmexRegistroState {
              * @type {number}
              * @default 0
              */
-            permisoImmexDatos: 0,
+            permisoImmexDatos: '',
 
             productoImportacion:'',
             
@@ -145,7 +144,7 @@ export function createInitialState(): ImmexRegistroState {
              * @type {string}
              * @default ''
              */
-            Nico: '',
+            nico: '',
             
             /**
              * @description Identificador numérico de datos de fracción, inicializado en 0.

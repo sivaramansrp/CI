@@ -1,31 +1,28 @@
-{
-    "permisoImmexDatos": [
-      {
-        "IMMEX_Columna_1": "1",
-        "IMMEX_Columna_2": "IM25000185",
-        "IMMEX_Columna_3": "72162101",
-        "IMMEX_Columna_4": "Perfiles en L.",
-        "IMMEX_Columna_5": "Kilogramo",
-        "IMMEX_Columna_6": "300",
-        "IMMEX_Columna_7": "05/06/2025",
-        "IMMEX_Columna_8": "05/10/2025"
-      }
-    ],
-    "fraccionDatos": [
-      {
-        "FRACCION_Columna_1": "00",
-        "FRACCION_Columna_2": "72012001",
-        "FRACCION_Columna_3": "72012001",
-        "FRACCION_Columna_4": "Kilogramo",
-        "FRACCION_Columna_5": "Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso",
-        "FRACCION_Columna_6": "FRACC EXP 1 SENASICA"
-      }
-    ],
-    "nicoDatos": [
-      {
-        "NICO_Columna_1": "01",
-        "NICO_Columna_2": "Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso"
-      }
-    ]
+[
+  {
+  "permisoImmex": "IM25000185",
+  "permisoImmexGridDatos": [
+    {
+      "IMMEX_Columna_1": "1",
+      "IMMEX_Columna_2": "IM25000185",
+      "IMMEX_Columna_3": "72162101",
+      "IMMEX_Columna_4": "Perfiles en L.",
+      "IMMEX_Columna_5": "Kilogramo",
+      "IMMEX_Columna_6": "300",
+      "IMMEX_Columna_7": "05/06/2025",
+      "IMMEX_Columna_8": "05/10/2025"
+    }
+  ],
+  "fraccionGridDatos": [
+    {
+      "FRACCION_Columna_1": "1",
+      "FRACCION_Columna_2": "72012001",
+      "FRACCION_Columna_3": "72012001",
+      "FRACCION_Columna_4": "Kilogramo",
+      "FRACCION_Columna_5": "Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso",
+      "FRACCION_Columna_6": "FRACC EXP 1 SENASICA"
+    }
+  ]
   }
+]
   

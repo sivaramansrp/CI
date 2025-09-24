@@ -6,11 +6,14 @@
  * @description Este componente es responsable de manejar el flujo de pasos para el registro de solicitud IMMEX.
  * Incluye la lógica para la navegación entre pasos y la obtención de títulos.
  */
-import { Component, EventEmitter, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/immex-registro-de-solicitud-modality.enums';
 import { WizardComponent } from '@ng-mf/data-access-user';
+
+import { ImmexRegistroQuery } from '../../estados/queries/tramite80203.query';
+import { ImmexRegistroState } from '../../estados/tramites/tramite80203.store';
 
 /**
  * @interface AccionBoton
@@ -53,7 +56,7 @@ interface AccionBoton {
   selector: 'app-immex-registro-solicitud-modality',
   templateUrl: './immex-registro-solicitud-modality.component.html',
 })
-export class ImmexRegistroSolicitudModalityComponent {
+export class ImmexRegistroSolicitudModalityComponent implements OnInit {
   /**
    * @property {any} asistenteSolicitud
    * @description Variable destinada a almacenar los datos y configuración del asistente de solicitud.
@@ -208,6 +211,17 @@ export class ImmexRegistroSolicitudModalityComponent {
 
   cargaEnProgreso: boolean = true;
 
+  storeData!: ImmexRegistroState;
+
+  constructor(public immexRegistroQuery: ImmexRegistroQuery) {
+  }
+
+  ngOnInit(): void {
+    this.immexRegistroQuery.selectImmexRegistro$.pipe().subscribe((data) => {
+      this.storeData = data;
+    });
+  }
+
   /**
    * @method getValorIndice
    * @description Método principal para manejar la navegación entre pasos del asistente.
@@ -253,6 +267,9 @@ export class ImmexRegistroSolicitudModalityComponent {
         this.wizardComponent.atras();
       }
     }
+    
+    // eslint-disable-next-line no-console
+    console.log("this.storeData===", this.storeData);
   }
 
   /**
