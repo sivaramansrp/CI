@@ -35,7 +35,8 @@
           <div class="col-md-4 mb-3">
             <label>Segundo apellido:</label>
             <input type="text" [maxlength]="15" class="form-control" id="segundoApellido"
-              formControlName="apellidoSegundo" (change)="
+              formControlName="apellidoSegundo"
+              (change)="
                     setValoresStore(grupoOperador, 'apellidoSegundo', 'setGrupoOperadorSegundo');actualizarEstadoCampos()" />
           </div>
         </div>
@@ -45,13 +46,13 @@
             <input type="text" class="form-control" id="numeroFiscal" formControlName="numeroFiscal"
               [ngClass]="isValid(grupoOperador,'numeroFiscal') ? 'required' : ''"
               (change)="setValoresStore(grupoOperador, 'numeroFiscal', 'setGrupoOperadorNumeroFiscal')" />
-              <div class="error-message col-md-12 ps-0">
-                <small
-                  *ngIf="formularioCertificado.get('grupoOperador.numeroFiscal')?.touched && formularioCertificado.get('grupoOperador.numeroFiscal')?.hasError('required')"
-                  class="text-danger">
-                  Este campo es obligatorio.
-                </small>
-                </div>
+            <div class="error-message col-md-12 ps-0">
+              <small
+                *ngIf="formularioCertificado.get('grupoOperador.numeroFiscal')?.touched && formularioCertificado.get('grupoOperador.numeroFiscal')?.hasError('required')"
+                class="text-danger">
+                Este campo es obligatorio.
+              </small>
+            </div>
           </div>
           <div class="col-md-8 mb-3">
             <label>Razón social:</label>
@@ -70,6 +71,7 @@
             <app-catalogo-select [catalogo]="optionsPais" [label]="'País'" [required]="true" id="pais"
               formControlName="pais" [ngClass]="isValid(grupoDeDomicilio,'pais') ? 'required' : ''"
               (change)="setValoresStore(grupoDeDomicilio, 'pais', 'setGrupoDeDomicilioPais')"
+              [markTouched]="formularioCertificado.get('grupoDeDomicilio.pais')?.touched??false"
               [isDisabled]="soloLectura"></app-catalogo-select>
           </div>
           <div class="col-md-8 mb-3">
@@ -129,12 +131,14 @@
           <app-catalogo-select [catalogo]="optionsTratado" [label]="'Tratado/Acuerdo'" [required]="true" id="tratado"
             formControlName="tratado" [ngClass]="isValid(grupoTratado,'tratado') ? 'required' : ''"
             (change)=" setValoresStore(grupoTratado, 'tratado', 'setGrupoTratadoTratado') "
+            [markTouched]="formularioCertificado.get('grupoTratado.tratado')?.touched??false"
             [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="optionsPais" [label]="'País / Bloque'" [required]="true" id="pais"
             formControlName="pais" [ngClass]="isValid(grupoTratado,'pais') ? 'required' : ''"
             (change)="setValoresStore(grupoTratado, 'pais', 'setGrupoTratadoPais')"
+            [markTouched]="formularioCertificado.get('grupoTratado.pais')?.touched??false"
             [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
@@ -167,11 +171,14 @@
         <div class="col-md-4">
           <input-fecha [setFecha]="formularioCertificado.get('grupoTratado.fechaInicial')?.value"
             [datos]="fechaInicialInput" (valorCambiado)="cambioFechaInicial($event)"
-            [isDisabled]="soloLectura"></input-fecha>
+            [mostrarErrores]="isInvalid(formularioCertificado, 'grupoTratado.fechaInicial')"
+            [ngClass]="{ 'required': isInvalid(formularioCertificado, 'grupoTratado.fechaInicial') }" [isDisabled]="soloLectura"></input-fecha>
         </div>
         <div class="col-md-4">
           <input-fecha [setFecha]="formularioCertificado.get('grupoTratado.fechaFinal')?.value"
             [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"
+              [mostrarErrores]="isInvalid(formularioCertificado, 'grupoTratado.fechaFinal')"
+              [ngClass]="{ 'required': isInvalid(formularioCertificado, 'grupoTratado.fechaFinal') }"
             [isDisabled]="soloLectura"></input-fecha>
         </div>
       </div>
@@ -207,11 +214,12 @@
       <div class="table-container mt-5">
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.RADIO" [configuracionTabla]="seleccionadasEncabezados"
           [datos]="mercanciaSeleccionadasTablaDatos" (filaSeleccionada)="seleccionDeFilas($event)"
-          [disableSeleccionTablaRadio]="soloLectura" ></app-tabla-dinamica>
+          [disableSeleccionTablaRadio]="soloLectura"></app-tabla-dinamica>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
           <button type="button" class="btn btn-danger ms-3" (click)="eliminar()"
             [disabled]="soloLectura">Eliminar</button>
-          <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura" (click)="modificarMercanciaSeleccionada(mercanciaSeleccionadasFila!)"> Modificar </button>
+          <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura"
+            (click)="modificarMercanciaSeleccionada(mercanciaSeleccionadasFila!)"> Modificar </button>
         </div>
       </div>
     </ng-container>
@@ -250,7 +258,7 @@
   </div>
 </div>
 
- <div class="modal fade" id="modalBuscar" tabindex="-1" #modalBuscar aria-labelledby="modalBuscar" aria-hidden="true">
+<div class="modal fade" id="modalBuscar" tabindex="-1" #modalBuscar aria-labelledby="modalBuscar" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
@@ -266,36 +274,35 @@
               </div>
               <div class="col-md-8">
                 <label>Nombre comercial de la mercancía(igual que en la factura):</label>
-                <input type="text" class="form-control gray-glass"
-                  formControlName="nombreComercialDelaMercancia" [disabled]="true"
+                <input type="text" class="form-control gray-glass" formControlName="nombreComercialDelaMercancia"
+                  [disabled]="true"
                   (change)=" setValoresStore( formularioMercancia, 'nombreComercialDelaMercancia', 'setNombreComercialDelaMercancia' ) " />
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-md-8">
                 <label>Nombre técnico:</label>
-                <input type="text"[disabled]="true" class="form-control gray-glass" formControlName="nombreTecnico"
+                <input type="text" [disabled]="true" class="form-control gray-glass" formControlName="nombreTecnico"
                   readonly (change)=" setValoresStore( formularioMercancia, 'nombreTecnico', 'setNombreTecnico' ) " />
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-md-8">
                 <label>Nomre en inglés:</label>
-                <input type="text"  class="form-control gray-glass" formControlName="nombreEnIngles"
-                  [disabled]="true" (change)=" setValoresStore( formularioMercancia, 'nombreEnIngles', 'setNombreEnIngles' ) " />
+                <input type="text" class="form-control gray-glass" formControlName="nombreEnIngles" [disabled]="true"
+                  (change)=" setValoresStore( formularioMercancia, 'nombreEnIngles', 'setNombreEnIngles' ) " />
               </div>
               <div class="col-md-4">
                 <label>Otras instancias:</label>
-                <input type="text" class="form-control gray-glass" formControlName="otrasInstancias"
-                  [disabled]="true"
+                <input type="text" class="form-control gray-glass" formControlName="otrasInstancias" [disabled]="true"
                   (change)=" setValoresStore( formularioMercancia, 'otrasInstancias', 'setOtrasInstancias' ) " />
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-md-4">
                 <label>Criterio para conferir origen:</label>
-                <input type="text" class="form-control gray-glass"
-                  formControlName="criterioParaConferir" [disabled]="true"
+                <input type="text" class="form-control gray-glass" formControlName="criterioParaConferir"
+                  [disabled]="true"
                   (change)=" setValoresStore( formularioMercancia, 'criterioParaConferir', 'setCriterioParaConferir' ) " />
               </div>
             </div>
@@ -318,6 +325,7 @@
                 <app-catalogo-select [catalogo]="optionsPais" [label]="'UMC'" [required]="true" id="pais"
                   formControlName="pais" [ngClass]="isValid(formularioMercancia,'pais') ? 'required' : ''"
                   (change)="setValoresStore(formularioMercancia, 'pais', 'setPais')"
+                  [markTouched]="formularioMercancia.get('pais')?.touched??false"
                   [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
 
@@ -328,7 +336,7 @@
                 <input type="text" required="true" class="form-control" formControlName="valorDelaMercancia"
                   [ngClass]="isValid(formularioMercancia,'valorDelaMercancia') ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'valorDelaMercancia', 'setValorDelaMercancia' ) " />
-                        <div class="error-message col-md-12 ps-0">
+                <div class="error-message col-md-12 ps-0">
                   <small
                     *ngIf="formularioMercancia.get('valorDelaMercancia')?.touched && formularioMercancia.get('valorDelaMercancia')?.hasError('required')"
                     class="text-danger">
@@ -341,7 +349,7 @@
                 <textarea rows="3" class="w-100" formControlName="complementoDescripcion"
                   [ngClass]="isValid(formularioMercancia,'complementoDescripcion') ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'complementoDescripcion', 'setComplementoDelaDescripcion' ) "></textarea>
-                        <div class="error-message col-md-12 ps-0">
+                <div class="error-message col-md-12 ps-0">
                   <small
                     *ngIf="formularioMercancia.get('complementoDescripcion')?.touched && formularioMercancia.get('complementoDescripcion')?.hasError('required')"
                     class="text-danger">
@@ -354,14 +362,18 @@
             <div class="row mt-5">
               <div class="col-md-4">
                 <input-fecha [setFecha]="formularioMercancia.get('fecha')?.value" [datos]="fechaFacturaInput"
-                [mostrarErrores]="formularioMercancia.get('fecha')?.touched??false"
-                  (valorCambiado)="cambioFechaFactura($event)" [isDisabled]="soloLectura"></input-fecha>
+                  [mostrarErrores]="isInvalid(formularioMercancia, 'fecha')"
+                  [ngClass]="{ 'required': isInvalid(formularioMercancia, 'fecha') }"
+                  (valorCambiado)="cambioFechaFactura($event)" [isDisabled]="soloLectura">
+                </input-fecha>
+
               </div>
               <div class="col-md-4">
                 <label>N° factura*:</label>
-                <input type="text" class="form-control" formControlName="numeroFactura" [ngClass]="isValid(formularioMercancia,'numeroFactura') ? 'required' : ''"
+                <input type="text" class="form-control" formControlName="numeroFactura"
+                  [ngClass]="isValid(formularioMercancia,'numeroFactura') ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'numeroFactura', 'setNumeroFactura' ) " />
-                       <div class="error-message col-md-12 ps-0">
+                <div class="error-message col-md-12 ps-0">
                   <small
                     *ngIf="formularioMercancia.get('numeroFactura')?.touched && formularioMercancia.get('numeroFactura')?.hasError('required')"
                     class="text-danger">
@@ -371,8 +383,7 @@
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="optionsTipoFactura" [label]="'Tipo de factura'" id="tipoFactura"
-                  formControlName="tipoFactura"
-                  [required]="true"
+                  formControlName="tipoFactura" [required]="true"
                   [markTouched]="formularioMercancia.get('tipoFactura')?.touched??false"
                   (change)=" setValoresStore( formularioMercancia, 'tipoFactura', 'setTipoFactura' ) "
                   [isDisabled]="soloLectura"></app-catalogo-select>
@@ -384,7 +395,8 @@
       </div>
       <div class="modal-footer custom-footer mt-4">
         <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal> Cancelar </button>
-        <button type="submit" class="btn btn-primary" #closeModal  (click)="activarModal(formularioMercancia)"> Agregar </button>
+        <button type="submit" class="btn btn-primary" #closeModal (click)="activarModal(formularioMercancia)"> Agregar
+        </button>
       </div>
     </div>
   </div>
