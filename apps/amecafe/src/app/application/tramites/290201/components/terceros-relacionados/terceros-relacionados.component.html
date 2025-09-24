@@ -28,7 +28,7 @@
         [disabled]="!filaSeleccionada || esFormularioSoloLectura"
         (click)="enModificar()"
         data-bs-toggle="modal"
-        data-bs-target="#tercerosRelacionadosModal"
+       
       >
         Modificar
       </button>
@@ -80,7 +80,7 @@
                 <div class="col-md-6">
                   <app-input-radio
                     [radioOptions]="tipoPersonaRadioOptions"
-                    [selectedValue]="tipoDePublicos"
+                    [selectedValue]="tipoPersonaSeleccionada"
                     [isRequired]="true"
                     (valueChange)="setTipoPersona($event)"
                     formControlName="tipoPersona"
@@ -229,7 +229,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label class="form-label" for="segundoApellido"
-                      >Segundo apellido*:</label
+                      >Segundo apellido:</label
                     >
                     <input
                       type="text"
@@ -263,7 +263,9 @@
                       height="50"
                       style="height: 100px"
                       formControlName="domicilio"
-                      placeholder="Calle, No Ext, No Int, Ciudad, C.P."
+                     [placeholder]="placeholderDomicilio"
+  (focus)="placeholderDomicilio = ''"
+  (blur)="placeholderDomicilio = 'Calle, No Ext, No Int, Ciudad, C.P.'"
                       (change)="
                         setValoresStore(
                           datosDelTramiteRealizar,
@@ -278,6 +280,15 @@
 
       }"
                     ></textarea>
+                     <div
+    *ngIf="
+      destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.touched &&
+      destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.hasError('pattern')
+    "
+    class="text-danger validation-message"
+  >
+    Existen datos incorrectos que no cumplen con el formato esperado.
+  </div>
                    <div
       *ngIf="
         destinatarioForm.get('datosDelTramiteRealizar.domicilio')?.touched &&
@@ -294,7 +305,7 @@
       "
       class="text-danger validation-message"
     >
-      Este campo es obligatorio.
+    Existen datos incorrectos que no cumplen con el formato esperado.
     </div>
                   </div>
                 </div>
