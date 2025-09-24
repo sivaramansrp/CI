@@ -32,7 +32,7 @@
             <div class="col-md-12" *ngIf="tramiteState?.productorMismoExportador">
                 <h6>Productores por exportador</h6>
                 <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
-                    [datos]="productoresExportador" (listaDeFilaSeleccionada)="obtenerSeleccionadoProductores($event)"
+                    [datos]="productoresExportador" (listaDeFilaSeleccionada)="seleccionadoProductoresExportador = $event"
                     [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
                 <div class="container text-end mt-5">
                     <button type="button" name="actualizarProductoresSeleccionados" class="btn btn-default me-2"
@@ -47,7 +47,7 @@
                 <h6>Productores por exportador</h6>
                 <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
                     [datos]="agregarProductoresExportador"
-                    (listaDeFilaSeleccionada)="obtenerAnadirProductosSeleccionados($event)"
+                    (listaDeFilaSeleccionada)="seleccionadoAgregarProductoresExportador = $event"
                     [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
                 <div class="container text-end mt-5">
                     <button type="button" name="actualizarProductoresSeleccionados" class="btn btn-danger"
@@ -96,4 +96,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>   @if(mostrarMensajeError){
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+        (confirmacionModal)="$event"></lib-notificaciones>
+    }

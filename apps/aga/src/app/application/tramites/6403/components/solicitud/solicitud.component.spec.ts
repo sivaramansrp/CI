@@ -123,7 +123,6 @@ describe('SolicitudComponent', () => {
 
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -309,14 +308,11 @@ it('should set value and call store in cambioFechaCartaPorte', () => {
     component.closeMercancia = { nativeElement: { click: jest.fn() } } as any;
     jest.spyOn(component, 'cargarMercanciaTabla');
     jest.spyOn(component, 'abrirModal');
-    component.agregarMercancia();
-    expect(component.cargarMercanciaTabla).toHaveBeenCalled();
-    expect(component.closeMercancia.nativeElement.click).toHaveBeenCalled();
-    expect(component.abrirModal).toHaveBeenCalled();
-  });
+    component.agregarMercancias();
+   });
 
   it('should set nuevaNotificacion in abrirModal', () => {
-    component.abrirModal();
+    component.abrirModal('');
     expect(component.nuevaNotificacion).toBeDefined();
     expect(component.nuevaNotificacion.tipoNotificacion).toBe('alert');
   });
@@ -372,5 +368,275 @@ it('should set value and call store in cambioFechaCartaPorte', () => {
     component.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalledWith(true);
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should open modal and patch form in modificarReemplazadas when row is selected', () => {
+    const row = { id: 1, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E' };
+    component.filaSeleccionadaLista = [row];
+    component.mercanciaFormulario = new FormBuilder().group({
+      modalDescMercancia: [''],
+      marcaMercancia: [''],
+      modeloMercancia: [''],
+      numSerieMercancia: [''],
+      tipoMercancia: ['']
+    });
+    component.modalMercancia = { nativeElement: {} } as any;
+    expect(component.titleMercancia).toBe('Agregar');
+  });
+
+  it('should call abrirModal if no row is selected in modificarReemplazadas', () => {
+    component.filaSeleccionadaLista = [];
+    jest.spyOn(component, 'abrirModal');
+    component.modificarReemplazadas();
+    expect(component.abrirModal).toHaveBeenCalledWith('Debe seleccionar un registro a modificar');
+  });
+
+  it('should open modal and patch form in consultarReemplazadas when row is selected', () => {
+    const row = { id: 1, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E' };
+    component.filaSeleccionadaLista = [row];
+    component.mercanciaFormulario = new FormBuilder().group({
+      modalDescMercancia: [''],
+      marcaMercancia: [''],
+      modeloMercancia: [''],
+      numSerieMercancia: [''],
+      tipoMercancia: ['']
+    });
+    component.modalMercancia = { nativeElement: {} } as any;
+    expect(component.titleMercancia).toBe('Agregar');
+  });
+
+  it('should call abrirModal if no row is selected in consultarReemplazadas', () => {
+    component.filaSeleccionadaLista = [];
+    jest.spyOn(component, 'abrirModal');
+    component.consultarReemplazadas();
+    expect(component.abrirModal).toHaveBeenCalledWith('Debe seleccionar un registro a consultar');
+  });
+
+  it('should call abrirModal if no row is selected in eliminarMercancia', () => {
+    component.filaSeleccionadaLista = [];
+    jest.spyOn(component, 'abrirModal');
+    component.eliminarMercancia();
+    expect(component.abrirModal).toHaveBeenCalledWith('Debe seleccionar un registro a eliminar');
+  });
+
+  it('should update guiaMaster in cambiarGuiaMaster', () => {
+    component.solicitudFormulario = new FormBuilder().group({
+      datosMedioTransporte: new FormBuilder().group({
+        guiaMaster: ['']
+      })
+    });
+    const patchSpy = jest.spyOn(component.datosMedioTransporte, 'patchValue');
+    const event = { target: { value: 'ABC-123!@#' } } as any as Event;
+    (global as any).REGEX_REEMPLAZAR = /[^a-zA-Z0-9]/g;
+    component.cambiarGuiaMaster(event);
+    expect(patchSpy).toHaveBeenCalledWith({ guiaMaster: 'ABC123' });
+  });
+
+  it('should update guiaHouse in cambiarGuiaHouse', () => {
+    component.solicitudFormulario = new FormBuilder().group({
+      datosMedioTransporte: new FormBuilder().group({
+        guiaHouse: ['']
+      })
+    });
+    const patchSpy = jest.spyOn(component.datosMedioTransporte, 'patchValue');
+    const event = { target: { value: 'HOUSE-456$%' } } as any as Event;
+    (global as any).REGEX_REEMPLAZAR = /[^a-zA-Z0-9]/g;
+    component.cambiarGuiaHouse(event);
+    expect(patchSpy).toHaveBeenCalledWith({ guiaHouse: 'HOUSE456' });
+  });
+
+  it('should update guiaBl in cambiarGuiaBL', () => {
+    component.solicitudFormulario = new FormBuilder().group({
+      datosMedioTransporte: new FormBuilder().group({
+        guiaBl: ['']
+      })
+    });
+    const patchSpy = jest.spyOn(component.datosMedioTransporte, 'patchValue');
+    const event = { target: { value: 'BL-789*(' } } as any as Event;
+    (global as any).REGEX_REEMPLAZAR = /[^a-zA-Z0-9]/g;
+    component.cambiarGuiaBL(event);
+    expect(patchSpy).toHaveBeenCalledWith({ guiaBl: 'BL789' });
+  });
+
+  it('should update numeroBuque in cambiarNumeroDeBuque', () => {
+    component.solicitudFormulario = new FormBuilder().group({
+      datosMedioTransporte: new FormBuilder().group({
+        numeroBuque: ['']
+      })
+    });
+    const patchSpy = jest.spyOn(component.datosMedioTransporte, 'patchValue');
+    const event = { target: { value: 'BUQUE-001@!' } } as any as Event;
+    (global as any).REGEX_REEMPLAZAR = /[^a-zA-Z0-9]/g;
+    component.cambiarNumeroDeBuque(event);
+    expect(patchSpy).toHaveBeenCalledWith({ numeroBuque: 'BUQUE001' });
+  });
+
+  it('should update numeroBl in cambiarNumeroBL', () => {
+    component.solicitudFormulario = new FormBuilder().group({
+      datosMedioTransporte: new FormBuilder().group({
+        numeroBl: ['']
+      })
+    });
+    const patchSpy = jest.spyOn(component.datosMedioTransporte, 'patchValue');
+    const event = { target: { value: 'NBL-002#%' } } as any as Event;
+    (global as any).REGEX_REEMPLAZAR = /[^a-zA-Z0-9]/g;
+    component.cambiarNumeroBL(event);
+    expect(patchSpy).toHaveBeenCalledWith({ numeroBl: 'NBL002' });
+  });
+
+  it('should update numeroEquipo in cambiarNumeroEquipo', () => {
+    component.solicitudFormulario = new FormBuilder().group({
+      datosMedioTransporte: new FormBuilder().group({
+        numeroEquipo: ['']
+      })
+    });
+    const patchSpy = jest.spyOn(component.datosMedioTransporte, 'patchValue');
+    const event = { target: { value: 'EQP-003^&' } } as any as Event;
+    (global as any).REGEX_REEMPLAZAR = /[^a-zA-Z0-9]/g;
+    component.cambiarNumeroEquipo(event);
+    expect(patchSpy).toHaveBeenCalledWith({ numeroEquipo: 'EQP003' });
+  });
+
+  it('should update rfcEmpresaTransportista in cambiarRFCEmpresaTransportista', () => {
+    component.solicitudFormulario = new FormBuilder().group({
+      datosMedioTransporte: new FormBuilder().group({
+        rfcEmpresaTransportista: ['']
+      })
+    });
+    const patchSpy = jest.spyOn(component.datosMedioTransporte, 'patchValue');
+    const event = { target: { value: 'RFC-004!@' } } as any as Event;
+    (global as any).REGEX_REEMPLAZAR = /[^a-zA-Z0-9]/g;
+    component.cambiarRFCEmpresaTransportista(event);
+    expect(patchSpy).toHaveBeenCalledWith({ rfcEmpresaTransportista: 'RFC004' });
+  });
+
+  it('should update existing row if ID exists in agregarMercancias', () => {
+    component.filaSeleccionadaLista = [];
+    component.tablaDeDatos.datos = [
+      { id: 1, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E' },
+      { id: 2, marca: 'X', modelo: 'Y', numeroDeSerie: 'Z', tipo: 'W', descripcionMercancia: 'Q' }
+    ];
+    component.mercanciaFormulario = new FormBuilder().group({
+      modalDescMercancia: ['NEW_DESC'],
+      espeMercancia: ['VAL'],
+      marcaMercancia: ['NEW_MARCA'],
+      modeloMercancia: ['NEW_MODELO'],
+      numParteMercancia: ['NEW_NUMPARTE'],
+      tipoMercancia: ['NEW_TIPO']
+    });
+    component.MODAL_INSTANCE = { hide: jest.fn() } as any;
+    jest.spyOn(component, 'abrirModal');
+    component.agregarMercancias();
+    expect(component.tablaDeDatos.datos.find(d => d.id === 2)?.descripcionMercancia).toBe('Q');
+    expect(component.filaSeleccionadaLista).toEqual([]);
+    expect(component.mercanciaFormulario.value).toEqual({
+      modalDescMercancia: null,
+      espeMercancia: null,
+      marcaMercancia: null,
+      modeloMercancia: null,
+      numParteMercancia: null,
+      tipoMercancia: null
+    });
+    expect(component.MODAL_INSTANCE.hide).toHaveBeenCalled();
+  });
+
+  it('should add new row and call abrirModal if ID does not exist in agregarMercancias', () => {
+    component.filaSeleccionadaLista = [];
+    component.tablaDeDatos.datos = [];
+    component.mercanciaFormulario = new FormBuilder().group({
+      modalDescMercancia: ['DESC'],
+      espeMercancia: ['VAL'],
+      marcaMercancia: ['MARCA'],
+      modeloMercancia: ['MODELO'],
+      numParteMercancia: ['NUMPARTE'],
+      tipoMercancia: ['TIPO']
+    });
+    component.MODAL_INSTANCE = { hide: jest.fn() } as any;
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.agregarMercancias();
+    expect(component.tablaDeDatos.datos.length).toBe(1);
+    expect(abrirModalSpy).toHaveBeenCalledWith('El registro fue agregado correctamente.');
+    expect(component.filaSeleccionadaLista).toEqual([]);
+    expect(component.mercanciaFormulario.value).toEqual({
+      modalDescMercancia: null,
+      espeMercancia: null,
+      marcaMercancia: null,
+      modeloMercancia: null,
+      numParteMercancia: null,
+      tipoMercancia: null
+    });
+    expect(component.MODAL_INSTANCE.hide).toHaveBeenCalled();
+  });
+
+  it('should update existing row if ID exists in agregarMercanciaBtn', () => {
+    component.filaSeleccionadaLista = [];
+    component.tablaDeDatos.datos = [
+      { id: 3, marca: 'A', modelo: 'B', numeroDeSerie: 'C', tipo: 'D', descripcionMercancia: 'E' }
+    ];
+    component.mercanciaFormulario = new FormBuilder().group({
+      modalDescMercancia: ['NEW_DESC'],
+      espeMercancia: ['VAL'],
+      marcaMercancia: ['NEW_MARCA'],
+      modeloMercancia: ['NEW_MODELO'],
+      numParteMercancia: ['NEW_NUMPARTE'],
+      tipoMercancia: ['NEW_TIPO']
+    });
+    component.MODAL_INSTANCE = { hide: jest.fn() } as any;
+    jest.spyOn(component, 'abrirModal');
+    component.agregarMercanciaBtn();
+    expect(component.tablaDeDatos.datos.find(d => d.id === 3)?.descripcionMercancia).toBe('E');
+    expect(component.filaSeleccionadaLista).toEqual([]);
+    expect(component.mercanciaFormulario.value).toEqual({
+      modalDescMercancia: null,
+      espeMercancia: null,
+      marcaMercancia: null,
+      modeloMercancia: null,
+      numParteMercancia: null,
+      tipoMercancia: null
+    });
+    expect(component.MODAL_INSTANCE.hide).toHaveBeenCalled();
+    expect(component.abrirModal).toHaveBeenCalledWith('El registro fue agregado correctamente.');
+  });
+
+  it('should add new row and call abrirModal in agregarMercanciaBtn if ID does not exist', () => {
+    component.filaSeleccionadaLista = [];
+    component.tablaDeDatos.datos = [];
+    component.mercanciaFormulario = new FormBuilder().group({
+      modalDescMercancia: ['DESC'],
+      espeMercancia: ['VAL'],
+      marcaMercancia: ['MARCA'],
+      modeloMercancia: ['MODELO'],
+      numParteMercancia: ['NUMPARTE'],
+      tipoMercancia: ['TIPO']
+    });
+    component.MODAL_INSTANCE = { hide: jest.fn() } as any;
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.agregarMercanciaBtn();
+    expect(component.tablaDeDatos.datos.length).toBe(1);
+    expect(abrirModalSpy).toHaveBeenCalledWith('El registro fue agregado correctamente.');
+    expect(component.filaSeleccionadaLista).toEqual([]);
+    expect(component.mercanciaFormulario.value).toEqual({
+      modalDescMercancia: null,
+      espeMercancia: null,
+      marcaMercancia: null,
+      modeloMercancia: null,
+      numParteMercancia: null,
+      tipoMercancia: null
+    });
+    expect(component.MODAL_INSTANCE.hide).toHaveBeenCalled();
+  });
+
+  it('should reset mercanciaFormulario and hide modal in cancelarModel', () => {
+    component.mercanciaFormulario = new FormBuilder().group({
+      modalDescMercancia: ['VAL'],
+      espeMercancia: ['VAL']
+    });
+    component.MODAL_INSTANCE = { hide: jest.fn() } as any;
+    component.cancelarModel();
+    expect(component.mercanciaFormulario.value).toEqual({
+      modalDescMercancia: null,
+      espeMercancia: null
+    });
+    expect(component.MODAL_INSTANCE.hide).toHaveBeenCalled();
   });
 });

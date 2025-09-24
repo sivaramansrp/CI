@@ -5,6 +5,8 @@ import {
   AnexoUnoEncabezado,
   DatosAnexotressUno,
   DatosComplimento,
+  ProveedorClienteTabla,
+  ProyectoImmexEncabezado,
 } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
   AnnexoDosTres,
@@ -120,6 +122,11 @@ export interface Tramite80102State {
    * Información detallada de federatarios.
    */
   datosFederatarios: FederatariosEncabezado;
+
+   /**
+   * Información detallada de plantas IMMEX.
+   */
+  proyectoImmexTablaLista: ProyectoImmexEncabezado[];
 }
 
 /**
@@ -358,6 +365,8 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
       encabezadoCategoria: '',
       encabezadoValorEnMercado: '',
     },
+    proveedorClienteDatosTabla: [],
+    proveedorClienteDatosTablaDos: [],
     seccionActiva: '',
   },
 
@@ -382,7 +391,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
     estadoTres: '',
   },
   idSolicitud: 0,
-
+proyectoImmexTablaLista: [],
 };
 
 
@@ -1091,4 +1100,47 @@ export class Tramite80102Store extends Store<Tramite80102State> {
     }));
   }
 
+  /**
+ * Actualiza la lista de proyectos IMMEX en el estado agregando los elementos proporcionados.
+ *
+ * @param proyectoImmex - Arreglo de encabezados de proyectos IMMEX que se añadirán a la lista existente.
+ */
+setProyectoImmexTablaLista(proyectoImmex: ProyectoImmexEncabezado[]): void {
+    this.update((state) => ({
+      ...state,
+      proyectoImmexTablaLista: [...state.proyectoImmexTablaLista, ...proyectoImmex],
+    }));
+  }
+
+
+
+/**
+   * Actualiza la propiedad `proveedorClienteDatosTabla` dentro de `annexoUno` en el estado de la tienda.
+   *
+   * @param proveedorClienteDatosTabla - Arreglo de objetos de tipo `ProveedorClienteTabla` que representa los datos de proveedores y clientes para la tabla.
+   */
+  setProveedorClienteDatosTablaUno(proveedorClienteDatosTabla: ProveedorClienteTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        proveedorClienteDatosTabla: proveedorClienteDatosTabla,
+      },
+    }));
+  }
+
+  /**
+     * Actualiza la propiedad `proveedorClienteDatosTablaDos` dentro de `annexoUno` en el estado de la tienda.
+     *
+     * @param proveedorClienteDatosTablaDos - Arreglo de objetos de tipo `ProveedorClienteTabla` que representa los datos de proveedores y clientes para la tabla.
+     */
+    setProveedorClienteDatosTablaDos(proveedorClienteDatosTabla: ProveedorClienteTabla[]): void {
+      this.update((state) => ({
+        ...state,
+        annexoUno: {
+          ...state.annexoUno,
+          proveedorClienteDatosTablaDos: proveedorClienteDatosTabla,
+        },
+      }));
+    }
 }

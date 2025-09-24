@@ -78,7 +78,7 @@ export const CONFIGURACION_DOMICILIOS = [
     orden: 2,
   },
   {
-    encabezado: 'Denominación o razón socialNúmero Interior',
+    encabezado: 'Denominación o razón social',
     clave: (ele: ServicioInmex): string | undefined => ele.denominacionSocial,
     orden: 3,
   },
@@ -180,7 +180,7 @@ export const CONFIGURACION_EMPRESA_ECTRANJERA = [
  * */
 export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
   {
-    labelNombre: 'Tax ID',
+    labelNombre: 'Tax ID*',
     campo: 'taxIdEmpresaExt',
     class: 'col-md-4 col-sm-10',
     tipo_input: 'text',
@@ -189,7 +189,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     maxlength: 50
   },
   {
-    labelNombre: 'Nombre del empresa',
+    labelNombre: 'Nombre del empresa*',
     campo: 'nombreEmpresaExt',
     class: 'col-md-4 col-sm-10',
     tipo_input: 'text',
@@ -207,7 +207,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
     orden: 3,
   },
   {
-    labelNombre: 'Dirección',
+    labelNombre: 'Dirección*',
     campo: 'direccionEmpresaExtranjera',
     class: 'col-md-10 col-10',
     tipo_input: 'textarea',

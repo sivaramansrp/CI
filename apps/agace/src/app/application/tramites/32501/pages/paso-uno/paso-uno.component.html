@@ -9,8 +9,9 @@
           (keydown.space)="seleccionaTab(1)"
           role="button"
           tabindex="0"
-          >Solicitante</a
         >
+          Solicitante
+        </a>
       </li>
       <li [ngClass]="indice === 2 ? 'active' : ''">
         <a
@@ -20,19 +21,21 @@
           (keydown.space)="seleccionaTab(2)"
           role="button"
           tabindex="2"
-          >Aviso</a
         >
+          Aviso
+        </a>
       </li>
     </ul>
 
-    <ng-container>
-      @switch (indice) { @case (1) {
+    <div [hidden]="indice !== 1">
       <solicitante></solicitante>
-      } @case (2) {
-        @if (datosRespuestaDisponibles) {
-      <app-datos-solicitud></app-datos-solicitud>
-      } }
-    }
-    </ng-container>
+    </div>
+
+    <div [hidden]="indice !== 2">
+      <app-datos-solicitud
+        #solicitudComponent
+        *ngIf="datosRespuestaDisponibles"
+      ></app-datos-solicitud>
+    </div>
   </div>
 </div>

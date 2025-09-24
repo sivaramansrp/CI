@@ -1,9 +1,10 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent, formatearFechaYyyyMmDd } from '@libs/shared/data-access-user/src';
-import { Subject, map, take, takeUntil } from 'rxjs';
+import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@libs/shared/data-access-user/src';
+import { Subject, finalize, map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
 import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
@@ -37,6 +38,7 @@ import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accion
 @Component({
   selector: 'app-paso-capturar-solicitud',
   templateUrl: './paso-capturar-solicitud.component.html',
+  providers: [ToastrService],
 })
 export class PasoCapturarSolicitudComponent implements OnInit {
   /**
@@ -106,8 +108,8 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    */
     seccionCargarDocumentos: boolean = true;
 
-    cargaEnProgreso: boolean = true;
-    
+  cargaEnProgreso: boolean = true;
+
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
    * @private
@@ -134,7 +136,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
 
   /** Listado de empresas nacionales utilizadas en el formulario de solicitud. */
   private empresasNacionales = empresasNacionales;
-  
+
   /** Listado de empresas  extranjeras utilizadas en el formulario de solicitud. */
   private empresasExtranjeras = empresasExtranjeras;
 
@@ -143,9 +145,9 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    */
   private plantasSubmanufacturerasBase = plantasSubmanufactureras;
 
-   /**
-   * Objeto base inmutable que representa la estructura inicial de un notarios.
-   */
+  /**
+  * Objeto base inmutable que representa la estructura inicial de un notarios.
+  */
   private notariosBase = notarios;
 
   /**
@@ -163,7 +165,12 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * utilizando los métodos `establecerSeccion` y `establecerFormaValida` del servicio `SeccionLibStore`.
    * La suscripción se gestiona para que se complete automáticamente al destruir el componente mediante `takeUntil` y `destroyNotifier$`.
    */
-  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService, private tramite80101Store: Tramite80101Store, private tramite80101Query: Tramite80101Query) {
+  constructor(
+    private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService, 
+    private tramite80101Store: Tramite80101Store, 
+    private tramite80101Query: Tramite80101Query,
+    private toastrService: ToastrService,
+  ) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
@@ -184,21 +191,45 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       ).subscribe();
   }
 
-  /**
-   * Obtiene el valor del índice de la acción del botón.
-   * @param e - event$: Acción del botón.
-   */
-  getValorIndice(e: AccionBoton): void {
-    this.obtenerDatosDelStore();
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
-  }
+
+
+/**
+ * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
+ * 
+ * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
+ * y muestra un mensaje de éxito o error dependiendo del código de respuesta. Si la respuesta es exitosa
+ * y el valor del evento está dentro del rango válido (1 a 4), actualiza el índice del wizard y navega
+ * hacia adelante o atrás según el tipo de acción.
+ * 
+ * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
+ */
+getValorIndice(e: AccionBoton): void {
+  let shouldNavigate = false;
+  this.nuevoProgramaIndustrialService.getAllState()
+    .pipe(
+      take(1),
+      switchMap((data) => this.guardar(data)),
+      tap(response => {
+        shouldNavigate = response.codigo === '00';
+        if(shouldNavigate) {
+          this.toastrService.success(response.mensaje);
+        } else {
+          this.toastrService.error(response.mensaje);
+        }
+      }),
+      finalize(() => {
+        if (shouldNavigate && e.valor > 0 && e.valor < 5) {
+          this.indice = e.valor;
+          if (e.accion === 'cont') {
+            this.wizardComponent.siguiente();
+          } else {
+            this.wizardComponent.atras();
+          }
+        }
+      })
+    )
+    .subscribe();
+}
 
   /**
    * Obtiene los datos del store y los guarda utilizando el servicio.
@@ -254,9 +285,9 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   static buildDeclaracionSolicitudEntries(data: Record<string, any>): unknown[] {
     const RESULT = [
       {
-          "acepto": data['datosComplimentos'].obligacionesFiscales.aceptarObligacionFiscal ? 1 : 0,
-          "idTipoTramite": 80101,
-          "cveDeclaracion": "123"
+        "acepto": data['datosComplimentos'].obligacionesFiscales.aceptarObligacionFiscal ? 1 : 0,
+        "idTipoTramite": 80101,
+        "cveDeclaracion": "123"
       }
     ];
     return RESULT;
@@ -296,68 +327,69 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     return RESULT;
   }
 
-/**
- * Construye un arreglo de objetos de plantas basado en una estructura base común.
- * 
- * @param arr Arreglo de datos de entrada para cada planta.
- * @param base Objeto base que se combina con los datos específicos de cada planta.
- * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
- */
-// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-buildPlantas(arr: any[] = [], base: Record<string, any>): any[] {
+  /**
+   * Construye un arreglo de objetos de plantas basado en una estructura base común.
+   * 
+   * @param arr Arreglo de datos de entrada para cada planta.
+   * @param base Objeto base que se combina con los datos específicos de cada planta.
+   * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+  buildPlantas(array: any[] = [], base: unknown[]): unknown[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-   const MAP_TO_PAYLOAD = (item: any): any => ({
-  ...base,
-  idPlanta: item.planta ?? '',
-  calle: item.calle ?? '',
-  numeroExterior: item.numeroExterior ?? '',
-  numeroInterior: item.numeroInterior ?? '',
-  codigoPostal: item.codigoPostal ?? '',
-  localidad: item.localidad ?? '',
-  colonia: item.colonia ?? '',
-  delegacionMunicipio: item.delegacionMunicipio ?? '',
-  entidadFederativa: item.entidadFederativa ?? '',
-  pais: item.pais ?? '',
-  rfc: item.registroFederalDeContribuyentes ?? '',
-  domicilioFiscal: item.domicilioDelSolicitante ?? '',
-  razonSocial: item.razonSocial ?? '',
-});
-      
-
-    arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+      idPlanta: arr.planta ?? '',
+      calle: arr.calle ?? '',
+      numeroExterior: arr.numeroExterior ?? '',
+      numeroInterior: arr.numeroInterior ?? '',
+      codigoPostal: arr.codigoPostal ?? '',
+      localidad: arr.localidad ?? '',
+      colonia: arr.colonia ?? '',
+      delegacionMunicipio: arr.delegacionMunicipio ?? '',
+      entidadFederativa: arr.entidadFederativa ?? '',
+      pais: arr.pais ?? '',
+      rfc: arr.registroFederalDeContribuyentes ?? '',
+      domicilioFiscal: arr.domicilioDelSolicitante ?? '',
+      razonSocial: arr.razonSocial ?? '',
+        });
+      });
+    });
     return RESULT;
-}
+  }
 
-/**
- * Genera un arreglo de objetos con los datos de fedatarios a partir de un arreglo de entrada.
- *
- * @param arr Arreglo de objetos con datos de entrada (opcional).
- * @param base Objeto base que se fusiona con los datos específicos de cada fedatario.
- * @returns Un arreglo de objetos estructurados con la información de los fedatarios.
- */
-// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
-  const RESULT: any[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-   const MAP_TO_PAYLOAD = (item: any): any => ({
-  ...base,
-  nombreNotario: item.nombre ?? '',
-  apellidoMaterno: item.segundoApellido ?? '',
-  apellidoPaterno: item.primerApellido ?? '',
-  numeroActa: item.numeroDeActa ?? '',
-  fechaActa: item.fechaInicioInput ?? '',
-  numeroNotaria: item.numeroDeNotaria ?? '',
-  entidadFederativa: item.estado ?? '',
-  delegacionMunicipio: item.estadoOptions ?? '',
-});
-
-    arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-
+  /**
+   * Genera un arreglo de objetos con los datos de fedatarios a partir de un arreglo de entrada.
+   *
+   * @param arr Arreglo de objetos con datos de entrada (opcional).
+   * @param base Objeto base que se fusiona con los datos específicos de cada fedatario.
+   * @returns Un arreglo de objetos estructurados con la información de los fedatarios.
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+  buildDatosFederatarios(array: any[] = [], base: unknown[]): unknown[] {
+    const RESULT: any[] = [];
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+      nombreNotario: arr.nombre ?? '',
+      apellidoMaterno: arr.segundoApellido ?? '',
+      apellidoPaterno: arr.primerApellido ?? '',
+      numeroActa: arr.numeroDeActa ?? '',
+      fechaActa: arr.fechaInicioInput ?? '',
+      numeroNotaria: arr.numeroDeNotaria ?? '',
+      entidadFederativa: arr.estado ?? '',
+      delegacionMunicipio: arr.estadoOptions ?? '',
+        });
+      });
+    });
     return RESULT;
-}
+  }
 
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
@@ -412,20 +444,46 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
       volumenAnualSolicitado: null,
     });
 
-    const anexoDos: any = [];
+    const buildAnexoDos = (item: any) => ({
+      fraccionExportacion: item.encabezadoFraccionExportacion,
+      fraccionImportacion: item.encabezadoFraccionImportacion,
+      descFraccionImpo: item.encabezadoDescripcionComercial,
+      claveFraccionAnexo: item.encabezadoAnexoII,
+      idProducto: item.encabezadoIdProducto,
+      fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
+      fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
+      fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
+      categoriaFraccion: item.encabezadoCategoria,
+      tipoFraccion: item.encabezadoTipo,
+      umt: item.encabezadoUmt,
+    });
 
-    (data.annexoUno?.exportarDatosTabla || []).forEach((item: any) => {
-      anexoDos.push({
-        fraccionExportacion: item.encabezadoFraccionExportacion,
-        fraccionImportacion: item.encabezadoFraccionImportacion,
-        descFraccionImpo: item.encabezadoDescripcionComercial,
-        claveFraccionAnexo: item.encabezadoAnexoII,
-        idProducto: item.encabezadoIdProducto,
-        fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
-        fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
-        fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
-        categoriaFraccion: item.encabezadoCategoria,
-      });
+    const proyectoImmexDatos = (item: any) => ({
+      tipoDocumento: item.encabezadoTipoDocument,
+      descripcion: item.encabezadoDescripcionOtro,
+      fechaFirma:  item.encabezadoFechaFirma,
+      fechaVigencia:  item.encabezadoFechaVigencia,
+      rfcFirmante:  item.encabezadoRfc,
+      razonFirmante:  item.encabezadoRazonFirmante,
+      testado: true,
+      fecFinVigencia:  item.encabezadoFechaVigencia,
+    });
+
+    /**
+     * Construye un objeto con los datos del proveedor y cliente a partir de un elemento de tipo `ProveedorClienteDatosTabla`.
+     *
+     * @param item - Objeto que contiene la información del proveedor y cliente.
+     * @returns Un objeto con las propiedades: paisOrigen, rfcProveedor, razonProveedor, paisDestino, rfcCliente, razonCliente, domicilio y descTestado.
+     */
+     const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
+      paisOrigen: item.paisOrigen,
+      rfcProveedor: item.rfcProveedor,
+      razonProveedor: item.razonProveedor,
+      paisDestino: item.paisDestino,
+      rfcCliente: item.rfcClinte,
+      razonCliente: item.razonSocial,
+      domicilio: item.domicilio,
+      descTestado: item.descTestado,
     });
 
     return {
@@ -434,42 +492,45 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
         ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
         proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
         datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
-        tableDos: anexoDos
+        tableDos: (data.annexoUno?.exportarDatosTabla || []).map(buildAnexoDos),
+        proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
+       proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
       },
     };
   }
 
-/**
- * Construye un arreglo de objetos con los datos de plantas submanufactureras a partir de un arreglo de entrada.
- *
- * @param arr Arreglo de objetos con datos de entrada (opcional).
- * @param base Objeto base que se fusiona con los datos específicos de cada planta.
- * @returns Un arreglo con los objetos estructurados de plantas submanufactureras.
- */
-// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[] {
+  /**
+   * Construye un arreglo de objetos con los datos de plantas submanufactureras a partir de un arreglo de entrada.
+   *
+   * @param arr Arreglo de objetos con datos de entrada (opcional).
+   * @param base Objeto base que se fusiona con los datos específicos de cada planta.
+   * @returns Un arreglo con los objetos estructurados de plantas submanufactureras.
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+  buildPlantasSubmanufactureras(array: any[] = [], base: unknown[]): unknown[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const MAP_TO_PAYLOAD = (item: any): any => ({
-      ...base,
-      empresaCalle: item.calle ?? '',
-      empresaNumeroInterior: item.numInterior ?? '',
-      empresaNumeroExterior: item.numExterior ?? '',
-      empresaCodigoPostal: item.codigoPostal ?? '',
-      localidad: item.colonia ?? '',
-      empresaDelegacionMunicipio: item.delegacionMunicipio ?? '',
-      empresaEntidadFederativa: item.entidadFederativa ?? '',
-      empresaPais: item.pais ?? '',
-      rfc: item.rfc ?? '',
-      domicilioFiscal: item.domicilioFiscalSolicitante ?? '',
-      razonSocial: item.razonSocial ?? '',
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+      empresaCalle: arr.calle ?? '',
+      empresaNumeroInterior: arr.numInterior ?? '',
+      empresaNumeroExterior: arr.numExterior ?? '',
+      empresaCodigoPostal: arr.codigoPostal ?? '',
+      localidad: arr.colonia ?? '',
+      empresaDelegacionMunicipio: arr.delegacionMunicipio ?? '',
+      empresaEntidadFederativa: arr.entidadFederativa ?? '',
+      empresaPais: arr.pais ?? '',
+      rfc: arr.rfc ?? '',
+      domicilioFiscal: arr.domicilioFiscalSolicitante ?? '',
+      razonSocial: arr.razonSocial ?? '',
+        });
+      });
     });
-
-    arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-
     return RESULT;
-}
+  }
 
   /**
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
@@ -478,7 +539,7 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
    * @returns void
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  guardar(data: any): void {
+  guardar(data: any): Promise<any> {
     const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
@@ -487,30 +548,31 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
     const EMPRESAS_EXTRANJERAS = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentosExtranjera, this.empresasExtranjeras);
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
     const ANEXO_ALL = this.buildAnexo(data);
-   
+
     const PAYLOAD = {
-    "tipoDeSolicitud": "guardar",
-    "idSolicitud": 202781045,
-    "idTipoTramite": 80101,
-    "rfc": "AAL0409235E6",
-    "cveUnidadAdministrativa": "8101",
-    "costoTotal": 10000.5,
-    "certificadoSerialNumber": "1234567890ABCDEF",
-    "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
-    "numeroFolioTramiteOriginal": "TRM-2023-00001",
-    "nombre": "Juan",
-    "apPaterno": "Pérez",
-    "apMaterno": "López",
-    "telefono": "5551234567",
-    "discriminator_value": "80101",
-    "discriminatorValue": "80101",
-     "domicilio": {
-    },
-    "solicitante": {
-        
-    },
+      "esDeGuardar": true,
+      "tipoDeSolicitud": "guardar",
+      "idSolicitud": 202781045,
+      "idTipoTramite": 80101,
+      "rfc": "AAL0409235E6",
+      "cveUnidadAdministrativa": "8101",
+      "costoTotal": 10000.5,
+      "certificadoSerialNumber": "1234567890ABCDEF",
+      "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
+      "numeroFolioTramiteOriginal": "TRM-2023-00001",
+      "nombre": "Juan",
+      "apPaterno": "Pérez",
+      "apMaterno": "López",
+      "telefono": "5551234567",
+      "discriminator_value": "80101",
+      "discriminatorValue": "80101",
+      "domicilio": {
+      },
+      "solicitante": {
+
+      },
       "planta": [...PLANTAS],
-      "notario":[...NOTARIOS],
+      "notario": [...NOTARIOS],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
       "mercanciaImportacion": [
@@ -522,6 +584,17 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
             ...ANEXO_ALL.anexo.datosParaNavegar
           },
           "anexoI": [...ANEXO_ALL.anexo.tableDos]
+        },
+      ],
+      "fraccionArancelaria":[
+        {
+          "listaProveedores": [...ANEXO_ALL.anexo.proveedorClienteDos]
+        }
+      ],
+
+      "productoExportacionDtoList": [
+        {
+          "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]
         }
       ],
       "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
@@ -530,15 +603,25 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
       "empresasNacionales": EMPRESAS_NACIONALES,
       "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
     }
-    this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
-      this.tramite80101Store.setIdSolicitud(response.datos.id_solicitud || 0);
-      return response;
+    return new Promise((resolve, reject) => {
+      this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
+        if(esValidObject(response) && esValidObject(response.datos)) {
+          if(getValidDatos(response.datos.id_solicitud)) {
+            this.tramite80101Store.setIdSolicitud(response.datos.id_solicitud);
+          } else {
+            this.tramite80101Store.setIdSolicitud(0);
+          }
+        }
+        resolve(response);
+      }, error => {
+        reject(error);
+      });
     });
   }
 
 
 
-  
+
   /**
    * Método para manejar el evento de carga de documentos.
    * Actualiza el estado de la sección de carga de documentos.

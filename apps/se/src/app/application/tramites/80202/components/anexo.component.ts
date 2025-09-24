@@ -1,5 +1,11 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -7,1165 +13,746 @@ import {
   ConsultaioQuery,
   Notificacion,
   NotificacionesComponent,
-  SeccionLibQuery,
-  SeccionLibState,
-  SeccionLibStore,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-} from '@libs/shared/data-access-user/src';
-
+} from "@libs/shared/data-access-user/src";
+import {
+  FRACCION_EXPORTACION,
+  IMMEX_SERVICIO,
+  NICO_TABLA,
+  NicoInfo,
+  fraccionInfo,
+  immexInfo,
+} from "../models/immex-ampliacion-sensibles.model";
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
-} from '@angular/forms';
+} from "@angular/forms";
+import {Subject, map, takeUntil } from "rxjs";
+import { CommonModule } from "@angular/common";
+import { ImmexAmpliacionSensiblesQuery } from "../estados/immex-ampliacion-sensibles.query";
+import { ImmexAmpliacionSensiblesStore } from "../estados/immex-ampliacion-sensibles.store";
+import { Modal } from "bootstrap";
+import { PermisoImmexDatosService } from "../services/permiso-immex-datos.service";
 
 
-import { FRACCION_EXPORTACION, IMMEX_SERVICIO,ImmexRegistroform,NICO_TABLA,NicoInfo,fraccionInfo, immexInfo} from '../models/immex-ampliacion-sensibles.model';
-import { delay, map, takeUntil, tap } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensibles.query';
-import { ImmexAmpliacionSensiblesStore } from '../estados/immex-ampliacion-sensibles.store';
-import { Modal } from 'bootstrap';
-import { NicoService } from '../services/nico.service';
-import { PermisoImmexDatosService } from '../services/permiso-immex-datos.service';
-import { Subject } from 'rxjs';
-
-/**
- * @title Anexo
- * @description Componente que permite visualizar el anexo de la solicitud
- * @summary Componente que permite visualizar el anexo de la solicitud
- *
- */
 @Component({
-  selector: 'app-anexo',
-  templateUrl: './anexo.component.html',
-  styleUrl: './anexo.component.scss',
+  selector: "app-anexo",
+  templateUrl: "./anexo.component.html",
+  styleUrls: ["./anexo.component.scss"],
   standalone: true,
   imports: [
     CommonModule,
+    TituloComponent,
     ReactiveFormsModule,
     TablaDinamicaComponent,
-    TituloComponent,
+    NotificacionesComponent,
     CatalogoSelectComponent,
-    NotificacionesComponent
   ],
 })
-export class AnexoComponent implements OnInit, OnDestroy {
-  fraccionInfoSelected:fraccionInfo | null = null;
-  selectedRowData: immexInfo | null = null;
-  showTableNicoExps:boolean=false;
-    /**
-     * Referencia al elemento del modal de importación de mercancía.
-     * Utilizado para mostrar u ocultar el modal mediante la API de Bootstrap.
-     */
-    @ViewChild('mercanciaImportacionModal')
-    mercanciaImportacionModal!: ElementRef;
-  
-    fraccionInfoSelectedNico:NicoInfo[] | null = null;
+export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
+  pagenuevaNotificacion: boolean = false;
+  // Forms
+  exportacionForm: FormGroup;
+  importacionForm: FormGroup;
+  nico: Catalogo[] = [] as Catalogo[];
 
-    selectedRowDataNico:NicoInfo[] | null = null;
-    /**
-     * Referencia al elemento del modal de exportación de mercancía.
-     * Utilizado para mostrar u ocultar el modal mediante la API de Bootstrap.
-     */
-    @ViewChild('mercanciaExportacionModal')
-    mercanciaExportacionModal!: ElementRef;
-  
-    /**
-     * @property {FormGroup} immexRegistroform
-     * @description Formulario principal del registro IMMEX.
-     */
-    immexRegistroform!: FormGroup;
-  
-    /**
-     * @property {immexRegistroform} immexRegitroAnexoState
-     * @description Estado del formulario de registro IMMEX.
-     */
-    immexRegitroAnexoState!: ImmexRegistroform;
-  
-    /**
-     * @property {TablaSeleccion} tablaSeleccionRadio
-     * @description Tipo de selección de la tabla (Radio).
-     */
-    tablaSeleccionRadio: TablaSeleccion = TablaSeleccion.RADIO;
-  
-    /**
-     * @property {TablaSeleccion} tablaSeleccionCheckbox
-     * @description Tipo de selección de la tabla (Checkbox).
-     */
-    tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
-  
-    /**
-     * @property {ConfiguracionColumna<immexInfo>[]} permisoImmexTabla
-     * @description Configuración de las columnas de la tabla para servicios IMMEX.
-     */
-    permisoImmexTabla: ConfiguracionColumna<immexInfo>[] = IMMEX_SERVICIO;
-  
-    /**
-     * @property {immexInfo[]} immexTableDatos
-     * @description Datos de los servicios IMMEX.
-     */
-    immexTableDatos: immexInfo[] = [];
-  
-    /**
-     * @property {ConfiguracionColumna<fraccionInfo>[]} fraccionExportacionTabla
-     * @description Configuración de las columnas de la tabla para fracciones de exportación.
-     */
-    fraccionExportacionTabla: ConfiguracionColumna<fraccionInfo>[] =
-      FRACCION_EXPORTACION;
-  
-    /**
-     * @property {fraccionInfo[]} fraccionTablaDatos
-     * @description Datos de las fracciones arancelarias.
-     */
-    fraccionTablaDatos: fraccionInfo[] = [];
-  
-    /**
-     * @property {ConfiguracionColumna<NicoInfo>[]} nicoTabla
-     * @description Configuración de las columnas de la tabla para NICO.
-     */
-    nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
-  
-    /**
-     * @property {nicoInfo[]} nicoTablaDatos
-     * @description Datos de NICO.
-     */
-    nicoTablaDatos: NicoInfo[] = [];
-  
-    /**
-     * @property {string} immexRegistro
-     * @description Variable de estado para IMMEX Registro.
-     */
-    immexRegistro!: string;
-  
-    /**
-     * @private
-     * @property {Subject<void>} destroyNotifier$
-     * @description Subject utilizado para manejar la desuscripción de observables y evitar memory leaks.
-     * Se emite cuando el componente se destruye.
-     */
-    private destroyNotifier$: Subject<void> = new Subject();
-  
-    /**
-     * @property {any[]} permisoImmexDatos
-     * @description Array que contiene los datos de permisos IMMEX obtenidos del servicio.
-     * Almacena la información necesaria para mostrar los permisos disponibles en la tabla.
-     */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    permisoImmexDatos: any[] = [];
-  
-    /**
-     * @property {fraccionInfo[]} fraccionDatos
-     * @description Array que contiene los datos de fracciones arancelarias obtenidos del servicio.
-     * Estos datos se utilizan para poblar las tablas de fracciones de exportación e importación.
-     */
-    fraccionDatos: fraccionInfo[] = [];
-  
-    /**
-     * @property {nicoInfo[]} nicoDatos
-     * @description Array que contiene los datos de NICO (Nomenclatura de Identificación de Commodities)
-     * obtenidos del servicio. Se utiliza para mostrar información relacionada con commodities.
-     */
-    nicoDatos: NicoInfo[] = [];
-  
-    /**
-     * @property {Catalogo[]} nico
-     * @description Configuración para el select de unidad de medida NICO.
-     * Contiene las opciones disponibles para el catálogo desplegable de NICO.
-     */
-    nico: Catalogo[] = [];
-  
-    /**
-     * @property {boolean} showTableExport
-     * @description Controla la visibilidad de la tabla de exportación.
-     * Cuando es true, muestra la tabla de datos de exportación.
-     */
-    showTableExport: boolean = false;
-  
-    /**
-     * @property {boolean} showTableImport
-     * @description Controla la visibilidad de la tabla de importación.
-     * Cuando es true, muestra la tabla de datos de importación.
-     */
-    showTableImport: boolean = false;
-  
-    /**
-     * @property {boolean} showTableFractionExp
-     * @description Controla la visibilidad de la tabla de fracción de exportación.
-     * Cuando es true, muestra la tabla específica para fracciones de exportación.
-     */
-    showTableFractionExp: boolean = false;
-  
-    /**
-     * @property {boolean} showTableNicoExp
-     * @description Controla la visibilidad de la tabla NICO de exportación.
-     * Cuando es true, muestra la tabla de datos NICO para exportación.
-     */
-    showTableNicoExp: boolean = false;
-  
-    /**
-     * @property {boolean} showTableNicoImp
-     * @description Controla la visibilidad de la tabla NICO de importación.
-     * Cuando es true, muestra la tabla de datos NICO para importación.
-     */
-    showTableNicoImp: boolean = false;
-  
-    /**
-     * @private
-     * @property {SeccionLibState} seccion
-     * @description Estado de la sección actual obtenido del store.
-     * Contiene información sobre el estado de validación y navegación de las secciones.
-     */
-    private seccion!: SeccionLibState;
-  
-    /**
-     * Indica si el formulario debe mostrarse solo en modo de lectura.
-     * Si es `true`, todos los controles del formulario estarán deshabilitados y solo podrán visualizarse.
-     * Si es `false`, el formulario será editable.
-     *
-     * @type {boolean}
-     * @memberof Anexo1Component
-     */
-    esFormularioSoloLectura: boolean = false;
-
-    firstloadCompleted:boolean= false;
-  
-    /**
-     * Indica si el formulario está en modo de actualización.
-     * Si es `true`, el formulario está en estado de edición/actualización de datos existentes.
-     * Si es `false`, el formulario está en modo de alta/nuevo registro.
-     *
-     * @type {boolean}
-     * @memberof Anexo1Component
-     */
-    esFormularioActualizacion: boolean = false;
-      /**
+  // Flags
+  esFormularioSoloLectura: boolean = false;
+  selectFraccionArancelaria: immexInfo = {} as immexInfo;
+  // Tabla
+  tablaSeleccionRadio: TablaSeleccion = TablaSeleccion.RADIO;
+  tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  immexTableDatos: immexInfo[] = [];
+  permisoImmexTabla: ConfiguracionColumna<immexInfo>[] = IMMEX_SERVICIO;
+  fraccionExportacionTabla: ConfiguracionColumna<fraccionInfo>[] =
+    FRACCION_EXPORTACION;
+  fraccionTablaDatos: fraccionInfo[] = [];
+  nicoTablaDatos: NicoInfo[] = [];
+  nicoTablaDato: NicoInfo[] = [];
+  selectedNicos: NicoInfo[] = [];
+   selectedExportNicos: NicoInfo[] = [];
+  selectExportacion: fraccionInfo = {} as fraccionInfo;
+  exportacionFormNotificacion: boolean = false;
+  /**
+   * @private
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject utilizado para manejar la desuscripción de observables y evitar memory leaks.
+   * Se emite cuando el componente se destruye.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * @property {ConfiguracionColumna<NicoInfo>[]} nicoTabla
+   * @description Configuración de las columnas de la tabla para NICO.
+   */
+  nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
+  /**
+   * Indica si el formulario está en modo de actualización.
+   * Si es `true`, el formulario está en estado de edición/actualización de datos existentes.
+   * Si es `false`, el formulario está en modo de alta/nuevo registro.
+   *
+   * @type {boolean}
+   * @memberof Anexo1Component
+   */
+  esFormularioActualizacion: boolean = false;
+  /**
    * Representa una nueva notificación que será utilizada en el componente.
    * @type {Notificacion}
    */
   public nuevaNotificacion!: Notificacion;
-  eliminarDatosTabla:boolean=false;
-  eliminarDatosTablaExportacion:boolean=false;
-  eliminarDatosTablaNicoExp:boolean=false;
-  
-    /**
-     * @constructor
-     * @description
-     * Constructor del componente Anexo1Component.
-     * Inicializa los servicios y stores necesarios para la gestión del formulario IMMEX, la obtención de datos y la interacción con el estado global.
-     *
-     * @param {FormBuilder} fb - Servicio para la creación y gestión de formularios reactivos.
-     * @param {PermisoImmexDatosService} permisoImmexDatosService - Servicio para obtener datos de permiso IMMEX.
-     * @param {NicoService} nicoService - Servicio para obtener datos de NICO.
-     * @param {ImmexRegistroQuery} immexRegistroQuery - Query para consultar el estado del registro IMMEX.
-     * @param {ImmexRegistroStore} immexRegistroStore - Store para manejar el estado del registro IMMEX.
-     * @param {SeccionLibQuery} seccionQuery - Query para consultar el estado de la sección.
-     * @param {SeccionLibStore} seccionStore - Store para manejar el estado de la sección.
-     * @param {ConsultaioQuery} consultaQuery - Query para consultar el estado de la consulta.
-     */
-    constructor(
-      public fb: FormBuilder,
-      public permisoImmexDatosService: PermisoImmexDatosService,
-      public readonly nicoService: NicoService,
-      public immexRegistroQuery: ImmexAmpliacionSensiblesQuery,
-      public immexRegistroStore:ImmexAmpliacionSensiblesStore ,
-      public seccionQuery: SeccionLibQuery,
-      public seccionStore: SeccionLibStore,
-      public readonly consultaQuery: ConsultaioQuery
-    ) {
-      this.consultaQuery.selectConsultaioState$
+
+  public firstloadCompleted: boolean = false;
+  public deleteMessageExportacion: boolean = false;
+  public eliminarDatosTablaNicoExp: boolean = false;
+  @ViewChild("mercanciaImportacionModal", { static: true })
+  mercanciaImportacionModal!: ElementRef;
+  modalInstance!: Modal;
+  @ViewChild("mercanciaExportacionModal", { static: true })
+  mercanciaExportacionModal!: ElementRef;
+  modalExport!: Modal;
+
+  constructor(
+    private fb: FormBuilder,
+    public permisoImmexDatosService: PermisoImmexDatosService,
+    public readonly consultaQuery: ConsultaioQuery,
+    public immexRegistroStore:ImmexAmpliacionSensiblesStore,
+    public immexRegistroQuery: ImmexAmpliacionSensiblesQuery,
+  ) {
+    this.exportacionForm = this.fb.group({
+      id: [0, Validators.required],
+      fraccionImportacion: [""],
+      umt: [""],
+      descripcionTigie: [""],
+      fraccionExportacion: [""],
+      descripcionComercialExport: [""],
+      nicos: [""],
+      descripcionNico: [""],
+    });
+
+    this.importacionForm = this.fb.group({
+      id: [0, [Validators.required]],
+      fraccionArancelaria: [""],
+      umt: [""],
+      descripcionTigie: [""],
+      cantidadAnual: [
+        "",
+        [Validators.required, Validators.pattern("^[0-9]+$")],
+      ],
+      capacidadInstalada: [
+        "",
+        [Validators.required, Validators.pattern("^[0-9]+$")],
+      ],
+      cantidadPorPeriodo: [
+        "",
+        [Validators.required, Validators.pattern("^[0-9]+$")],
+      ],
+      nicos: [""],
+      productoDescExportacions: [""],
+      fraccionDescExportacion: [""],
+    });
+  }
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             if (!seccionState.create && seccionState.procedureId === '80203') {
               this.esFormularioSoloLectura = seccionState.readonly;
-              this.esFormularioActualizacion = seccionState.update;
-            }
-            if (seccionState) {
-              this.showTableExport = true;
-              this.showTableImport = true;
-              this.showTableFractionExp = true;
-            }
-            this.inicializarEstadoFormulario();
-          })
-        )
-        .subscribe();
-    }
-  
-    /**
-     * Método del ciclo de vida de Angular que se ejecuta cuando el componente se inicializa.
-     * Inicializa el estado del formulario dependiendo si está en modo solo lectura.
-     */
-    ngOnInit(): void {
-      this.inicializarEstadoFormulario();
-    }
-  
-    /**
-     * @method creatFormSolicitud
-     * @description Inicializa el formulario reactivo immexRegistroform con los grupos de controles necesarios
-     * para la exportación e importación. Utiliza los valores actuales del estado immexRegitroAnexoState para
-     * poblar los campos del formulario. El formulario se divide en dos secciones principales:
-     * - exportacionForm: Contiene todos los campos relacionados con la exportación de mercancías
-     * - importacionForm: Contiene todos los campos relacionados con la importación de mercancías
-     *
-     * Cada sección incluye campos para datos de permisos, fracciones arancelarias, descripciones de productos
-     * y códigos NICO, permitiendo la gestión completa del trámite IMMEX.
-     *
-     * @returns {void}
-     */
-    creatFormSolicitud(): void {
-      this.immexRegistroform = this.fb.group({
-        exportacionForm: this.createExportacionFormGroup(),
-        importacionForm: this.createImportacionFormGroup(),
-      });
-    }
-  
-    private createExportacionFormGroup(): FormGroup {
-      return this.fb.group({
-        permisoImmexDatos: [
-          this.immexRegitroAnexoState.permisoImmexDatos || [],
-          [],
-        ],
-        fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
-        nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
-        fraccionArancelariaExportacion: [
-          this.immexRegitroAnexoState?.fraccionArancelariaExportacion || '',
-          [],
-        ],
-        // Add missing controls for template binding
-        productoArancelariaExportacion: [
-          this.immexRegitroAnexoState?.productoArancelariaExportacion || '',
-          [],
-        ],
-        productoDescExportacion: [
-          this.immexRegitroAnexoState?.productoDescExportacion || '',
-          [],
-        ],
-        fraccionArancelariaDesc: [
-          this.immexRegitroAnexoState?.fraccionArancelariaDesc || '',
-          [],
-        ],
-        FraccionDescExportacion: [
-          this.immexRegitroAnexoState?.FraccionDescExportacion || '',
-          [],
-        ],
-        exportacionDescExportacion: [
-          this.immexRegitroAnexoState?.exportacionDescExportacion || '',
-          [],
-        ],
-        Nico: [this.immexRegitroAnexoState?.Nico || '', []],
-      });
-    }
-  
-    private createImportacionFormGroup(): FormGroup {
-      return this.fb.group({
-      fraccionArancelaria: [{value:this.immexRegitroAnexoState?.fraccionArancelaria || '', disabled: true}, [Validators.required]],               
-      umt: [{value:this.immexRegitroAnexoState?.umt || '', disabled: true}, [Validators.required]],
-      descripcionTigie: [{value:this.immexRegitroAnexoState?.descripcionTigie || '' , disabled: true}, [Validators.required]],                      
-      cantidadAnual: [this.immexRegitroAnexoState?.cantidadAnual|| '', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      capacidadInstalada: [this.immexRegitroAnexoState?.capacidadInstalada || '',[ Validators.required]], 
-      cantidadPorPeriodo: [this.immexRegitroAnexoState?.cantidadPorPeriodo || '' , [Validators.required,Validators.pattern('^[0-9]+$')]], 
-            Nicos: [this.immexRegitroAnexoState?.Nicos || '' ], 
-            productoDescExportacions: [{value: this.immexRegitroAnexoState?.productoDescExportacions || '', disabled: true}],
-      });
-    }
-  
-    /**
-     * @method inicializarEstadoFormulario
-     * @description Inicializa el estado del formulario basándose en la configuración de solo lectura.
-     * Si el formulario no existe, lo crea mediante creatFormSolicitud(). Posteriormente, evalúa
-     * si el formulario debe estar en modo solo lectura (esFormularioSoloLectura) y aplica el
-     * estado correspondiente: deshabilitado para solo lectura o habilitado para edición.
-     *
-     * @returns {void}
-     */
-    inicializarEstadoFormulario(): void {
-      if (this.esFormularioSoloLectura) {
-        this.guardarDatosFormulario();
-      } else {
-        this.initActionFormBuild();
-      }
-      if (!this.immexRegistroform) {
-        this.creatFormSolicitud();
-      }
-    }
-  
-    /**
-     * Habilita o deshabilita el formulario dependiendo del modo de solo lectura.
-     *
-     * @returns {void}
-     */
-    guardarDatosFormulario(): void {
-      this.initActionFormBuild();
-      if (this.esFormularioSoloLectura) {
-        this.immexRegistroform.get('exportacionForm')?.disable();
-        this.immexRegistroform.get('importacionForm')?.disable();
-      } else {
-        this.immexRegistroform.get('exportacionForm')?.enable();
-        this.immexRegistroform.get('importacionForm')?.enable();
-      }
-    }
-  
-    /**
-     * Inicializa el formulario de acción.
-     * @method initActionFormBuild
-     * @returns {void}
-     */
-    initActionFormBuild(): void {
-      this.immexRegistroQuery.selectImmexRegistro$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.immexRegitroAnexoState = seccionState.immexRegistro;
-          })
-        )
-        .subscribe();
-  
-      this.creatFormSolicitud();
-  
-      // Asegúrese de que immexRegitroAnexoState esté asignado antes de acceder a sus propiedades
-      this.immexRegistroQuery.selectImmexRegistro$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState: { immexRegistro: ImmexRegistroform }) => {
-            if (seccionState) {
-              this.immexRegitroAnexoState = seccionState.immexRegistro;
             }
           })
         )
         .subscribe();
-      this.immexRegistroform.valueChanges
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          delay(10),
-          tap((_value) => {
-            let ACTIVE_STATE = {
-              ...this.immexRegistroform.getRawValue().exportacionForm,
-            };
-            ACTIVE_STATE = {
-              ...ACTIVE_STATE,
-              ...this.immexRegistroform.getRawValue().exportacionForm,
-            };
-            ACTIVE_STATE = {
-              ...ACTIVE_STATE,
-              ...this.immexRegistroform.getRawValue().importacionForm,
-            };
-            this.immexRegistroStore.setImmexRegistro(ACTIVE_STATE);
-          })
-        )
-        .subscribe();
-      this.obtenerListasDesplegables();
-      this.disableFormControls();
-  
-      // Para el botón de validación Continuar
-      this.seccionQuery.selectSeccionState$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.seccion = seccionState;
-          })
-        )
-        .subscribe();
-  
-      this.immexRegistroform.statusChanges
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          delay(10),
-          tap(() => {
-            const SECCION: number = 1;
-            const SECCION_STATE = this.seccionQuery.getValue();
-            const FORMAS_VALIDADAS = [...SECCION_STATE.formaValida];
-            const CONTROL_PATH = 'immexRegistroform.exportacionForm';
-            const CONTROL_PATH_2 = 'immexRegistroform.importacionForm';
-            const CONTROL = this.immexRegistroform.get(CONTROL_PATH)?.status;
-            const CONTROL2 = this.immexRegistroform.get(CONTROL_PATH_2)?.status;
-  
-            FORMAS_VALIDADAS[SECCION] =
-              this.immexRegistroform.valid || CONTROL === 'VALID';
-            FORMAS_VALIDADAS[SECCION] =
-              this.immexRegistroform.valid || CONTROL2 === 'VALID';
-          })
-        )
-        .subscribe();
-    }
-  
-    /**
-     * @method fetchData
-     * @description Obtiene los datos necesarios desde el servicio PermisoImmexDatosService.
-     * Realiza dos llamadas principales:
-     * 1. Primera llamada: Obtiene datos estructurados (permisoImmexDatos, fraccionDatos, nicoDatos)
-     *    y los asigna a las propiedades del componente para poblar las tablas dinámicas.
-     *    También actualiza campos específicos del formulario con los primeros elementos de cada array.
-     * 2. Segunda llamada: Obtiene datos adicionales para actualizar el formulario mediante patchValue.
-     *
-     * Todas las suscripciones se manejan con takeUntil para evitar memory leaks.
-     *
-     * @returns {void}
-     */
-    fetchData(): void {
 
-  
-      this.permisoImmexDatosService
-        .getDatos()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe({
-          next: (response) => {
-            
-            const RESPONSE_DATA = response as unknown as {
-              permisoImmexDatos: immexInfo[];
-              fraccionDatos: fraccionInfo[];
-              nicoDatos: NicoInfo[];
-            };
-  
-            if (
-              RESPONSE_DATA &&
-              Array.isArray(RESPONSE_DATA.permisoImmexDatos) &&
-              Array.isArray(RESPONSE_DATA.fraccionDatos) &&
-              Array.isArray(RESPONSE_DATA.nicoDatos)
-            ) {
-             
-              this.nicoTablaDatos = RESPONSE_DATA.nicoDatos;
-  
-              this.permisoImmexDatos = RESPONSE_DATA.permisoImmexDatos;
-              this.fraccionDatos = RESPONSE_DATA.fraccionDatos;
-              this.nicoDatos = RESPONSE_DATA.nicoDatos;
-  
-  
-              if (this.permisoImmexDatos.length > 0) {
-                this.immexRegistroform.get('importacionForm')?.patchValue(RESPONSE_DATA.permisoImmexDatos[0])
-                this.mostrarDetalleMercancia();
-             
-              }
-            }
-          },
-        });
-  
-      this.permisoImmexDatosService
-        .getDatos()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((data) => {
-          const FORM_DATA = data as unknown as {
-            [key: string]: string | number | boolean | object;
+    this.permisoImmexDatosService
+      .getNicos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.nico = response;
+        },
+      });
+  }
+
+  ngAfterViewInit(): void {
+    this.modalInstance = new Modal(
+      this.mercanciaImportacionModal.nativeElement,
+      { backdrop: "static" },
+    );
+    this.modalExport = new Modal(this.mercanciaExportacionModal.nativeElement, {
+      backdrop: "static",
+    });
+    this.immexRegistroQuery.selectImportacion$.subscribe((data) => {
+     this.immexTableDatos = data;
+    });
+    this.immexRegistroQuery.selectExportacion$.subscribe((data) => {
+      this.fraccionTablaDatos = data;
+    });
+  }
+
+  // Number-only input handler
+  onNumberInput(
+    event: Event,
+    formGroupName: string,
+    controlName: string,
+  ): void {
+    const INPUT = event.target as HTMLInputElement;
+    INPUT.value = INPUT.value.replace(/[^0-9]/g, "");
+    if (formGroupName === "exportacionForm") {
+      this.exportacionForm
+        .get(controlName)
+        ?.setValue(INPUT.value, { emitEvent: false });
+    } else if (formGroupName === "importacionForm") {
+      this.importacionForm
+        .get(controlName)
+        ?.setValue(INPUT.value, { emitEvent: false });
+    }
+  }
+
+  // Check cantidadPorPeriodo ≤ cantidadAnual / 3
+  checkCantidadPorPeriodo(): boolean {
+    const CANTIDAD_ANUAL = Number(
+      this.importacionForm.get("cantidadAnual")?.value,
+    );
+    const CANTIDAD_POR_PERIODO = Number(
+      this.importacionForm.get("cantidadPorPeriodo")?.value,
+    );
+    if (CANTIDAD_POR_PERIODO > CANTIDAD_ANUAL / 3) {
+      return false;
+    }
+    return true;
+  }
+
+  agregarPermisoImmex(): void {
+    this.firstloadCompleted = false;
+    if (
+      this.importacionForm &&
+      this.importacionForm.value.fraccionArancelaria
+    ) {
+      const EXISTS = this.immexTableDatos.some(
+        (row) =>
+          row.fraccionArancelaria ===
+          this.importacionForm.value.fraccionArancelaria,
+      );
+      if (!EXISTS) {
+        this.importacionForm
+          .get("id")
+          ?.setValue(Math.floor(Math.random() * 1000));
+        this.importacionForm.get("fraccionArancelaria")?.disable();
+        this.importacionForm.get("umt")?.setValue("PZA", { emitEvent: false });
+        this.importacionForm
+          .get("descripcionTigie")
+          ?.setValue(
+            "Máquinas automáticas para tratamiento o procesamiento de datos, portátiles, de peso inferior o igual a 10 kg",
+            { emitEvent: false },
+          );
+        this.pagenuevaNotificacion = false;
+        this.importacionForm.get("umt")?.disable();
+        this.importacionForm.get("descripcionTigie")?.disable();
+        if (!document.querySelector("bs-modal-backdrop")) {
+          this.modalInstance.show();
+        }
+      } else {
+        this.pagemostrarNotificacion(
+          "La fracción que intenta ingresar ya se encuentra registrada.",
+        );
+      }
+    } else {
+      this.pagemostrarNotificacion(
+        "Tiene que introducir la Fracción arancelaria.",
+      );
+    }
+  }
+
+  guardarMercanciaImportacion(): void {
+    if (this.importacionForm.valid) {
+      if (this.checkCantidadPorPeriodo()) {
+        const NUEVO_REGISTRO: immexInfo = {
+          id:
+            Number(this.importacionForm.get("id")?.value) === 0
+              ? Math.floor(Math.random() * 1000)
+              : Number(this.importacionForm.get("id")?.value),
+          fraccionArancelaria: this.importacionForm.get("fraccionArancelaria")
+            ?.value,
+          umt: this.importacionForm.get("umt")?.value,
+          descripcionTigie: this.importacionForm.get("descripcionTigie")?.value,
+          cantidadAnual: this.importacionForm.get("cantidadAnual")?.value,
+          capacidadInstalada:
+            this.importacionForm.get("capacidadInstalada")?.value,
+          cantidadPorPeriodo:
+            this.importacionForm.get("cantidadPorPeriodo")?.value,
+          nicos: this.importacionForm.get("nicos")?.value,
+          productoDescExportacions: this.importacionForm.get(
+            "productoDescExportacions",
+          )?.value,
+          numero: this.immexTableDatos.length + 1,
+          nicosTable: this.nicoTablaDatos,
+        };
+        this.pagenuevaNotificacion = false;
+        const INDEX = this.immexTableDatos.findIndex(
+          (row) => row.id === NUEVO_REGISTRO.id,
+        );
+        if (INDEX > -1) {
+          this.selectFraccionArancelaria = NUEVO_REGISTRO;
+          this.immexTableDatos[INDEX] = {
+            ...NUEVO_REGISTRO,
+            numero: this.immexTableDatos[INDEX].numero,
           };
-          this.immexRegistroform.patchValue(FORM_DATA);
-        });
-    }
-  
-    /**
-     * @method obtenerListasDesplegables
-     * @description Método principal para obtener todas las listas desplegables necesarias
-     * para el formulario. Actualmente delega la responsabilidad a obtenerIngresoSelectList()
-     * para obtener los datos del catálogo NICO. Este método puede expandirse para incluir
-     * otras listas desplegables en el futuro.
-     *
-     * @returns {void}
-     */
-    obtenerListasDesplegables(): void {
-      this.obtenerIngresoSelectList();
-    }
-  
-    /**
-     * @method obtenerIngresoSelectList
-     * @description Obtiene la lista de opciones para el select de unidad de medida NICO.
-     * Realiza una llamada al servicio nicoService para obtener el menú desplegable desde
-     * el archivo 'nico.json' y asigna los datos obtenidos a la propiedad nico del componente.
-     * Esta lista se utiliza para poblar los selects relacionados con códigos NICO.
-     *
-     * @returns {void}
-     */
-    obtenerIngresoSelectList(): void {
-      this.nicoService.obtenerMenuDesplegable('nico.json').subscribe((data) => {
-        this.nico = data as Catalogo[];
-      });
-    }
-  
-    /**
-     * @method showTableExportacion
-     * @description Controla la visibilidad de la tabla de exportación.
-     * Establece la propiedad showTableExport en true para mostrar la tabla
-     * de datos de exportación en la interfaz de usuario.
-     *
-     * @returns {void}
-     */
-    showTableExportacion(): void {
-     if(this.immexRegistroform.get('exportacionForm.permisoImmexDatos')){
-      const PERMISOVALUE = this.immexRegistroform.get('exportacionForm.permisoImmexDatos')?.value;
-    if ((PERMISOVALUE ?? '').toString().trim() !== '') {
-      this.showTableExport = true;
-      this.fetchData();
-      }
-      else{
-        this.nuevaNotificacion={
-            tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Tiene que introducir laFracción arancelaria',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
+          this.immexTableDatos = [...this.immexTableDatos];
+          const DEEPCOPY = [...this.immexTableDatos];
+          this.immexTableDatos = [];
+          this.immexTableDatos = DEEPCOPY;
+          this.immexRegistroStore.updateImportacion(this.immexTableDatos);
+        } else {
+          this.immexTableDatos = [...this.immexTableDatos, NUEVO_REGISTRO];
+            this.immexRegistroStore.updateImportacion(this.immexTableDatos);
         }
+
+        this.modalInstance?.hide();
+        setTimeout(() => {
+          this.importacionForm.get("id")?.setValue(0);
+          this.importacionForm.get("fraccionArancelaria")?.enable();
+          this.importacionForm.get("umt")?.enable();
+          this.importacionForm.reset();
+          this.firstloadCompleted = false;
+          this.eliminarDatosTablaNicoExp = false;
+          this.nuevaNotificacion = {} as Notificacion;
+          this.pagemostrarNotificacion('La operación se realizó exitosamente.')
+        }, 100);
+      } else {
+        this.mostrarNotificacion(
+          "La capacidad instalada por periodo debe ser menor o igual a la cantidad anual.",
+        );
       }
-    }
-       else{
-        this.nuevaNotificacion={
-            tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Tiene que introducir laFracción arancelaria',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-        }
-      }
-    }
-  
-    /**
-     * @method mostrarDetalleMercancia
-     * @description
-     * Muestra el modal de detalle de mercancía de importación.
-     * Utiliza la instancia de Bootstrap Modal para mostrar el cuadro de diálogo
-     * asociado al elemento mercanciaImportacionModal.
-     *
-     * @returns {void}
-     */
-    mostrarDetalleMercancia(): void {
-      const MODAL_INSTANCIA = new Modal(
-        this.mercanciaImportacionModal.nativeElement
-      );
-      MODAL_INSTANCIA.show();
-    }
-    eliminarPermisoImmex():void{
-      if(this.selectedRowData !== null && this.immexTableDatos.length > 0){
-this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Al eliminar el registro de fracción arancelaria, se eliminarán las fracciones de exportación asociadas. ¿Está seguro que desea eliminar la Fracción seleccionada?',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
-    };
-      this.immexRegistroform.get('importacionForm')?.reset();
-      this.immexRegistroform.get('importacionForm')?.markAsUntouched();
-      this.immexRegistroform.get('importacionForm')?.markAsPristine();
-      this.immexRegistroform.get('exportacionForm')?.reset();
-      this.immexRegistroform.get('exportacionForm')?.markAsUntouched();
-      this.immexRegistroform.get('exportacionForm')?.markAsPristine();
-      this.eliminarDatosTablaExportacion=true;
-      }
-      else{
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'warning',
-          modo: 'action',
-          titulo: '',
-          mensaje: 'Seleccione la(s) Fracción(es) de Importación a eliminar.',
-          cerrar: false,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar:'Aceptar',
-          txtBtnCancelar: '',
-        };
-  
-      }
-       
-    
-    }
-     mostrarDetalleMercanciaSelect(): void {
-    if(this.immexTableDatos.length === 0 || this.selectedRowData === null){
-       this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'warning',
-          modo: 'action',
-          titulo: '',
-          mensaje: 'Debe seleccionar una fracción de importación antes de continuar.',
-          cerrar: false,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar:'Aceptar',
-          txtBtnCancelar: '',
-        };
     }
     else{
-      
-      this.eliminarPedimentoDatos(true);
-
+    this.mostrarNotificacion("Los campos marcados con (*) son requeridos.");
     }
-
-    
-     
-    }
-  
-    /**
-     * @method mostrarDetalleMercanciaExportacion
-     * @description
-     * Muestra el modal de detalle de mercancía de exportación.
-     * Utiliza la instancia de Bootstrap Modal para mostrar el cuadro de diálogo
-     * asociado al elemento mercanciaExportacionModal.
-     *
-     * @returns {void}
-     */
-    mostrarDetalleMercanciaExportacion(): void {
-      if(this.fraccionTablaDatos.length === 1 && this.fraccionInfoSelected !== null){
-        this.immexRegistroform.get('exportacionForm')?.patchValue({
-   productoArancelariaExportacion: this.fraccionInfoSelected?.FRACCION_Columna_2,
-   description: this.fraccionInfoSelected?.FRACCION_Columna_5,
-   Nico:this.immexRegistroform.get('exportacionForm.Nico')?.value || '',
-   productoDescExportacion: this.immexRegistroform.get('exportacionForm.productoDescExportacion')?.value || '',
-        })
- const MODAL_INSTANCIA = new Modal(
-        this.mercanciaExportacionModal.nativeElement
-      );
-      MODAL_INSTANCIA.show();
-      }
-      else {
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'warning',
-          modo: 'action',
-          titulo: '',
-          mensaje: 'Debe seleccionar una fracción de importación.',
-          cerrar: false,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        };
-      }
-     
-    }
-    onDescriptionChange():void{
-      this.immexRegistroform.get('exportacionForm')?.patchValue({
-        productoDescExportacion: "Razón social de la empresa",
-      })
-    
-    }
-  
-    /**
-     * @method showTableImportacion
-     * @description Controla la visibilidad de la tabla de importación.
-     * Establece la propiedad showTableImport en true para mostrar la tabla
-     * de datos de importación en la interfaz de usuario.
-     *
-     * @returns {void}
-     */
-    showTableImportacion(): void {
-      if(this.immexRegistroform.get('exportacionForm.fraccionArancelariaExportacion')?.value && this.immexRegistroform.get('exportacionForm.FraccionDescExportacion')?.value && this.selectedRowData !== null){
- 
-  
-      this.permisoImmexDatosService
-        .getDatos()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe({
-          next: (response) => {
-            
-            const RESPONSE_DATA = response as unknown as {
-              permisoImmexDatos: immexInfo[];
-              fraccionDatos: fraccionInfo[];
-              nicoDatos: NicoInfo[];
-            };
-  
-            if (
-              RESPONSE_DATA &&
-              Array.isArray(RESPONSE_DATA.permisoImmexDatos) &&
-              Array.isArray(RESPONSE_DATA.fraccionDatos) &&
-              Array.isArray(RESPONSE_DATA.nicoDatos)
-            ) {
-              this.fraccionTablaDatos = RESPONSE_DATA.fraccionDatos || [];
-            }
-          },
-        });
-     
-    }
-    else{
-     this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Tiene que introducir la Fracción arancelaria y su descripción',
+  }
+  cerrarModal(): void {
+    this.eliminarDatosTablaNicoExp = false;
+    this.importacionForm.reset();
+    this.importacionForm.get("id")?.setValue(0);
+    this.importacionForm.get("fraccionArancelaria")?.enable();
+    this.importacionForm.get("umt")?.enable();
+    this.firstloadCompleted = false;
+    this.nuevaNotificacion = {} as Notificacion;
+    this.modalInstance.hide();
+  }
+  private mostrarNotificacion(mensaje: string): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: "alert",
+      categoria: "warning",
+      modo: "action",
+      titulo: "",
+      mensaje,
       cerrar: false,
       tiempoDeEspera: 2000,
-      txtBtnAceptar:'Aceptar',
-      txtBtnCancelar: '',
+      txtBtnAceptar: "Aceptar",
+      txtBtnCancelar: "",
     };
-    }
+    this.eliminarDatosTablaNicoExp = true;
   }
-  eliminarFraccionExportacion():void{
-    if(this.fraccionTablaDatos.length > 0 && this.fraccionInfoSelected !== null){
-   this.fraccionTablaDatos = [];
-      this.immexRegistroform.get('exportacionForm')?.reset();
-      }
-      else if(this.fraccionTablaDatos.length > 0 && this.fraccionInfoSelected === null){
-this.nuevaNotificacion = {} as Notificacion;
-      }
-      else{
-   this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'warning',
-          modo: 'action',
-          titulo: '',
-          mensaje: 'Debe seleccionar una fracción de exportación.',
-          cerrar: false,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        };
-      }
-    
-      }
-    
-
-  
-    /**
-     * @method showTableNicoExport
-     * @description Controla la visibilidad de la tabla NICO de exportación.
-     * Establece la propiedad showTableNicoExp en true para mostrar la tabla
-     * de códigos NICO relacionados con exportación en la interfaz de usuario.
-     *
-     * @returns {void}
-     */
-    showTableNicoExport(): void {
-      if(this.immexRegistroform.get('exportacionForm.Nico')?.value === '' || this.immexRegistroform.get('exportacionForm.productoDescExportacion')?.value === '' ){
-           this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'warning',
-          modo: 'action',
-          titulo: '',
-          mensaje: 'Debe seleccionar un valor nico.',
-          cerrar: false,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        };
-        this.eliminarDatosTablaNicoExp = true;
-      }
-      else{
-        this.eliminarDatosTablaNicoExp = false;
-this.showTableNicoExp = true;
-      }
-      
-    }
-    /**
-     * @method showTableNicoExport
-     * @description Controla la visibilidad de la tabla NICO de exportación.
-     * Establece la propiedad showTableNicoExp en true para mostrar la tabla
-     * de códigos NICO relacionados con exportación en la interfaz de usuario.
-     *
-     * @returns {void}
-     */
-    showTableNicoExports(): void {
-      if(this.immexRegistroform.get('importacionForm.Nicos')?.value === '' || this.immexRegistroform.get('importacionForm.productoDescExportacions')?.value === '' ){
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'warning',
-          modo: 'action',
-          titulo: '',
-          mensaje: 'Debe seleccionar un valor nico.',
-          cerrar: false,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        };
-           this.eliminarDatosTablaNicoExp = true;
-      }
-      else{
-   this.showTableNicoExps = true;
-      }
-   
-    }
-  
-  
-    /**
-     * @method showTableNicoImport
-     * @description Controla la visibilidad de la tabla NICO de importación.
-     * Establece la propiedad showTableNicoImp en true para mostrar la tabla
-     * de códigos NICO relacionados con importación en la interfaz de usuario.
-     *
-     * @returns {void}
-     */
-    showTableNicoImport(): void {
-      this.showTableNicoImp = true;
-    }
-  
-    /**
-     * Alterna la visibilidad del cuadro de diálogo modal para el registro de enlaces operativos.
-     *
-     * @description
-     * Oculta el modal si está visible actualmente. Utiliza la API de Bootstrap
-     * para obtener la instancia del modal y controlarlo programáticamente.
-     *
-     */
-    cambiarEstadoModal(): void {
-      const MODAL_INSTANCIA = Modal.getInstance(
-        this.mercanciaImportacionModal.nativeElement
-      );
-      if (MODAL_INSTANCIA) {
-        MODAL_INSTANCIA.hide();
-      }
-    }
-  
-    /**
-     * Alterna la visibilidad del cuadro de diálogo modal para el registro de enlaces operativos.
-     *
-     * @description
-     * Oculta el modal si está visible actualmente. Utiliza la API de Bootstrap
-     * para obtener la instancia del modal y controlarlo programáticamente.
-     *
-     */
-    cambiarEstadoModalExportacion(): void {
-      const MODAL_INSTANCIA = Modal.getInstance(
-        this.mercanciaExportacionModal.nativeElement
-      );
-      if (MODAL_INSTANCIA) {
-        MODAL_INSTANCIA.hide();
-      }
-    }
-    /**
-     * Cancela el cuadro de diálogo modal para el registro de enlaces operativos.
-     *
-     * @description
-     * Cierra el modal activo y restablece el formulario a su estado inicial.
-     * Se ejecuta cuando el usuario cancela la operación de agregar o editar
-     * un enlace operativo.
-     */
-    modalCancelar(): void {
-      this.nuevaNotificacion = {} as Notificacion;
-      this.cambiarEstadoModal();
-    }
-      /**
-     * Cancela el cuadro de diálogo modal para el registro de enlaces operativos.
-     *
-     * @description
-     * Cierra el modal activo y restablece el formulario a su estado inicial.
-     * Se ejecuta cuando el usuario cancela la operación de agregar o editar
-     * un enlace operativo.
-     */
-    modalGuardar(): void {
-      if(this.immexRegistroform.get('importacionForm')?.valid ){
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'warning',
-          modo: 'action',
-          titulo: '',
-          mensaje: 'La operación se realizó exitosamente.',
-          cerrar: false,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        };
-        this.immexRegistroform.get('exportacionForm.permisoImmexDatos')?.reset('');
- this.cambiarEstadoModal();
- this.immexTableDatos = [];
- this.immexTableDatos.push(this.immexRegistroform.get('importacionForm')?.getRawValue()) ;
- this.immexRegistroform.get('importacionForm')?.reset()
- this.nuevaNotificacion = {} as Notificacion;
-      }
-      else{
-        this.immexRegistroform.get('importacionForm')?.markAllAsTouched();
-      }
-     
-    }
-  
-  
-    /**
-     * Cancela el cuadro de diálogo modal para el registro de enlaces operativos de exportación.
-     *
-     * @description
-     * Cierra el modal activo de exportación y restablece el formulario a su estado inicial.
-     * Se ejecuta cuando el usuario cancela la operación de agregar o editar
-     * un enlace operativo de exportación.
-     */
-    modalCancelarExportacion(): void {
-         this.immexRegistroform.get('exportacionForm')?.reset();
-         this.showTableNicoExp = false;
-         this.nuevaNotificacion = {} as Notificacion;
-      this.cambiarEstadoModalExportacion();
-    }
-
-  guardar(): void {
-    const DATA:fraccionInfo ={
-FRACCION_Columna_1
-: 
-this.immexRegistroform.get('exportacionForm')?.getRawValue().Nico,
-FRACCION_Columna_2
-: 
-"72012001",
-FRACCION_Columna_3
-: 
-"72012001",
-FRACCION_Columna_4
-: 
-"Kilogramo",
-FRACCION_Columna_5
-: 
-"Fundición en bruto sin alear con un contenido de fosforo superior al 0.5% en peso",
-FRACCION_Columna_6
-: 
-"FRACC EXP 1 SENASICA",
-estatus:true
-    }
-    
-    this.fraccionTablaDatos.push(DATA) ;
-    this.nuevaNotificacion={} as Notificacion;
-    this.immexRegistroform.get('exportacionForm')?.reset();
-      this.showTableNicoExp = false;
-         this.cambiarEstadoModalExportacion();
+  private exportNotificacion(mensaje: string): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: "alert",
+      categoria: "warning",
+      modo: "action",
+      titulo: "",
+      mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: "Aceptar",
+      txtBtnCancelar: "",
+    };
+    this.exportacionFormNotificacion = true;
   }
 
-    /**
-     * @method disableFormControls
-     * @description Deshabilita controles específicos del formulario relacionados con la exportación e importación.
-     * Los campos deshabilitados incluyen códigos arancelarios y descripciones de productos que no deben ser
-     * editables por el usuario, ya que se calculan automáticamente o se obtienen de otras fuentes.
-     *
-     * Campos deshabilitados:
-     * - productoArancelariaExportacion: Código arancelario del producto de exportación
-     * - productoDescExportacion: Descripción del producto de exportación
-     * - commodityImportacion: Código del commodity de importación
-     * - commodityDescImportacion: Descripción del commodity de importación
-     * - commodityNicoDescImportacion: Descripción NICO del commodity de importación
-     *
-     * @returns {void}
-     */
-    disableFormControls(): void {
-      this.immexRegistroform
-        .get('exportacionForm.productoArancelariaExportacion')
-        ?.disable();
-      this.immexRegistroform
-        .get('exportacionForm.productoDescExportacion')
-        ?.disable();
-      this.immexRegistroform
-        .get('importacionForm.commodityImportacion')
-        ?.disable();
-      this.immexRegistroform
-        .get('importacionForm.commodityDescImportacion')
-        ?.disable();
-      this.immexRegistroform
-        .get('importacionForm.commodityNicoDescImportacion')
-        ?.disable();
-    }
-
-  onFilaSeleccionada(event: immexInfo):void{
-    this.selectedRowData=event;
+  private pagemostrarNotificacion(mensaje: string): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: "alert",
+      categoria: "warning",
+      modo: "action",
+      titulo: "",
+      mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: "Aceptar",
+      txtBtnCancelar: "",
+    };
+    this.pagenuevaNotificacion = true;
   }
-    /**
-     * @method ngOnDestroy
-     * @description Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
-     * Se encarga de la limpieza de recursos para evitar memory leaks. Emite una señal a través de
-     * destroyNotifier$ para cancelar todas las suscripciones activas y luego completa el subject.
-     *
-     * @returns {void}
-     * @implements {OnDestroy}
-     */
-    ngOnDestroy(): void {
-      this.destroyNotifier$.next();
-      this.destroyNotifier$.complete();
-    }
 
-    eliminarPedimentoDatos(borrar: boolean):void{
-        this.nuevaNotificacion = {} as Notificacion;
-      this.eliminarDatosTabla=false;
-       if(this.selectedRowData !== null && borrar){
-        this.immexRegistroform.get('importacionForm')?.patchValue({
-          fraccionArancelaria: this.selectedRowData?.fraccionArancelaria || '',
-          umt: this.selectedRowData?.umt || '',
-          descripcionTigie: this.selectedRowData?.descripcionTigie || '',
-          cantidadAnual: this.selectedRowData?.cantidadAnual || '',
-          capacidadInstalada: this.selectedRowData?.capacidadInstalada || '',
-          cantidadPorPeriodo: this.selectedRowData?.cantidadPorPeriodo || '',
-          Nicos:this.selectedRowData?.Nicos || '',
-          productoDescExportacions: this.selectedRowData?.productoDescExportacions || '',
-        });
- const MODAL_INSTANCIA = new Modal(
-        this.mercanciaImportacionModal.nativeElement
-      );
-      this.firstloadCompleted=true;
-      MODAL_INSTANCIA.show();
+  onFilaSeleccionada(event: immexInfo): void {
+    this.selectFraccionArancelaria = event;
+  }
+
+  agregarExportacion(): void {
+    if (
+      this.exportacionForm.getRawValue().descripcionComercialExport.trim() &&
+      this.exportacionForm.getRawValue().fraccionImportacion.trim()
+    ) {
+      if (this.selectFraccionArancelaria) {
+        if (
+          this.selectFraccionArancelaria.fraccionArancelaria ===
+          this.exportacionForm.getRawValue().fraccionImportacion
+        ) {
+          const EXISTS = this.fraccionTablaDatos.some(
+            (row) =>
+              row.descripcionComercialExport ===
+                this.exportacionForm
+                  .getRawValue()
+                  .descripcionComercialExport?.toUpperCase() &&
+              row.fraccionExportacion ===
+                this.selectFraccionArancelaria.fraccionArancelaria,
+          );
+          if (!EXISTS) {
+            this.fraccionTablaDatos = [
+              ...this.fraccionTablaDatos,
+              {
+                id: Math.floor(Math.random() * 1000000) + 1,
+                fraccionExportacion:
+                  this.selectFraccionArancelaria.fraccionArancelaria,
+                fraccionImportacion:
+                  this.selectFraccionArancelaria.fraccionArancelaria,
+                umt: this.selectFraccionArancelaria.umt,
+                descripcionTigie: `Descripción TIGIE ${Math.floor(Math.random() * 1000)} - ${["Maquinaria", "Textiles", "Alimentos", "Químicos", "Electrónicos"][Math.floor(Math.random() * 5)]}`,
+                descripcionComercialExport:
+                  this.exportacionForm.value.descripcionComercialExport.toUpperCase(),
+                nicos: this.exportacionForm.value.nicos,
+                numero: this.fraccionTablaDatos.length + 1,
+                nicosTable: this.nicoTablaDato,
+              },
+             
+              
+            ];
+             const DEEPCOPY = [...this.fraccionTablaDatos];
+             this.fraccionTablaDatos = [];
+             this.fraccionTablaDatos = DEEPCOPY;
+               this.immexRegistroStore.updateExportacion(this.fraccionTablaDatos);
+            setTimeout(() => {
+              this.exportacionForm.reset();
+            }, 100);
+          } else {
+            this.pagemostrarNotificacion(
+              "La fracción que intenta ingresar ya se encuentra registrada.",
+            );
+          }
+        } else {
+          this.pagemostrarNotificacion(
+            "La fracción arancelaria no es válida o no esta vigente..",
+          );
+        }
+      } else {
+        this.pagemostrarNotificacion(
+          "Debe seleccionar una fracción de importación.",
+        );
       }
-      
-      
+    } else {
+      this.pagemostrarNotificacion(
+        "Tiene que introducir la Fracción arancelaria y su descripción.",
+      );
     }
+  }
+  onFilaSeleccionadaExportacion(event: fraccionInfo): void {
+    this.selectExportacion = event;
+  }
 
-    eliminarPedimentoDatoss(borrar: boolean):void{
-      if(borrar && this.selectedRowData !== null){
-      this.selectedRowData=null;
-      this.firstloadCompleted=false;
-        this.immexTableDatos = [];
+  eliminarExportacion(): void {
+    if (this.selectExportacion && this.selectExportacion.id) {
+      this.fraccionTablaDatos = this.fraccionTablaDatos.filter(
+        (row) => row.id !== this.selectExportacion.id,
+      );
+      const DEEPCOPY2 = [...this.fraccionTablaDatos];
       this.fraccionTablaDatos = [];
-      this.selectedRowData = null;
-      this.fraccionInfoSelected = null;
-      }
-  this.nuevaNotificacion = {} as Notificacion;
-      this.eliminarDatosTablaExportacion=false;
-    
-  }
-descripcionValorActualizar():void{
-  this.immexRegistroform.get('importacionForm')?.patchValue({
-    productoDescExportacions: "Acero inoxidable laminado en frío, espesor 2mm, acabado brillante, grado 304L, para aplicaciones industriales y construcción naval"
-  });
-}
-eliminarNicos():void{
-  if(this.nicoTablaDatos.length === 0 || (this.selectedRowDataNico === null ||this.selectedRowDataNico?.length === 0)){
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'warning',
-          modo: 'action',
-          titulo: '',
-          mensaje: 'Debe elegir al menos un nico para eliminar.',
-          cerrar: false,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        };
-        this.eliminarDatosTablaNicoExp =true;
-  }
-  else{
-    this.eliminarDatosTablaNicoExp =false;
-  this.showTableNicoExps = false;
-  }
-}
-seleccionTablas(event: NicoInfo[]):void{
-  this.selectedRowDataNico = event;
-}
-  eliminarNico():void{
-    if(this.fraccionInfoSelectedNico !== null && this.nicoTablaDatos.length > 0){
-      this.nuevaNotificacion ={} as Notificacion;
-      this.eliminarDatosTablaNicoExp= false;
-        this.showTableNicoExp = false;
+      this.fraccionTablaDatos = DEEPCOPY2;
+      this.selectExportacion = {} as fraccionInfo;
     }
+    else{
+      this.pagemostrarNotificacion("Debe seleccionar una fracción de exportación.");
+    }
+  }
+  mostrarDetalleMercancia(): void {
+    if (this.selectFraccionArancelaria && this.selectFraccionArancelaria.id) {
+      this.nicoTablaDatos=[];
+      this.importacionForm.patchValue({
+        id: this.selectFraccionArancelaria.id,
+        fraccionArancelaria: this.selectFraccionArancelaria.fraccionArancelaria,
+        umt: this.selectFraccionArancelaria.umt,
+        descripcionTigie: this.selectFraccionArancelaria.descripcionTigie,
+        cantidadAnual: this.selectFraccionArancelaria.cantidadAnual || "",
+        capacidadInstalada:
+          this.selectFraccionArancelaria.capacidadInstalada || "",
+        cantidadPorPeriodo:
+          this.selectFraccionArancelaria.cantidadPorPeriodo || "",
+        nicos: this.selectFraccionArancelaria.nicos || "",
+        productoDescExportacions:
+          this.selectFraccionArancelaria.productoDescExportacions || "",
+      });
+      this.nicoTablaDatos = this.selectFraccionArancelaria.nicosTable
+        ? [...this.selectFraccionArancelaria.nicosTable]
+        : [];
+      this.importacionForm.get("fraccionArancelaria")?.disable();
+      this.importacionForm.get("umt")?.disable();
+      this.importacionForm.get("descripcionTigie")?.disable();
+      this.importacionForm.get("productoDescExportacions")?.disable();
+      this.importacionForm.get("id")?.disable();
+      this.firstloadCompleted = true;
+      if (!document.querySelector("bs-modal-backdrop")) {
+        this.modalInstance.show();
+      }
+    }
+    else{
+      this.pagemostrarNotificacion("Debe seleccionar una fracción de importación.");
+    }
+  }
+  seleccionTablas(event: NicoInfo[]): void {
+    this.selectedNicos = event.map(item => ({ ...item, estatus: true }));
+  }
+
+  descripcionNico(): void {
+    this.importacionForm
+      .get("productoDescExportacions")
+      ?.setValue(
+        `PRODUCTO-${Math.random().toString(36).substring(2, 15)}-${Date.now()}`,
+      );
+  }
+
+  agregarNico(): void {
+    if (
+      this.importacionForm.value.nicos &&
+      this.importacionForm.getRawValue().productoDescExportacions
+    ) {
+      const EXISTS = this.nicoTablaDatos.some(
+        (row) =>
+          row.NICO_Columna_1 === this.importacionForm.getRawValue().nicos,
+      );
+      if (!EXISTS) {
+        this.nicoTablaDatos = [
+          ...this.nicoTablaDatos,
+          {
+            id: Math.floor(Math.random() * 1000000) + 1,
+            NICO_Columna_1: this.importacionForm.value.nicos,
+            NICO_Columna_2:
+              this.importacionForm.getRawValue().productoDescExportacions,
+            estatus: false,
+          },
+        ];
+        this.importacionForm.get("nicos")?.setValue("");
+        this.importacionForm.get("productoDescExportacions")?.setValue("");
+        
+      } else {
+        this.mostrarNotificacion(
+          "El NICO que intenta ingresar ya se encuentra registrado.",
+        );
+      }
+    } else {
+      this.mostrarNotificacion(
+        "Tiene que introducir el NICO y su descripción.",
+      );
+    }
+  }
+  eliminarNico(): void {
+    if (this.selectedNicos && this.selectedNicos.length > 0) {
+      const IDS_TO_DELETE = this.selectedNicos.map((nico) => nico.id);
+      this.nicoTablaDatos = this.nicoTablaDatos.filter(
+        (nico) => !IDS_TO_DELETE.includes(nico.id),
+      );
+      this.selectedNicos = [];
+    } else {
+      this.mostrarNotificacion("Debe elegir al menos un nico para eliminar.");
+    }
+  }
+  mostrarDetalleMercanciaExportacion():void{
+if(this.selectExportacion && this.selectExportacion.id && this.fraccionTablaDatos.length>0){
+  this.exportacionForm.patchValue({
+    id: this.selectExportacion.id,
+    fraccionImportacion: this.selectExportacion.fraccionImportacion,
+    umt: this.selectExportacion.umt,
+    descripcionTigie: this.selectExportacion.descripcionTigie,
+    fraccionExportacion: this.selectExportacion.fraccionExportacion,
+    descripcionComercialExport: this.selectExportacion.descripcionComercialExport,
+    nicos: this.selectExportacion.nicos,
+  });
+  this.nicoTablaDato = this.selectExportacion.nicosTable ? [...this.selectExportacion.nicosTable]:[];
+  this.exportacionForm.get("fraccionImportacion")?.disable();
+  this.exportacionForm.get("umt")?.disable();
+  this.exportacionForm.get("descripcionTigie")?.disable();
+  this.exportacionForm.get("descripcionNico")?.disable();
+  this.exportacionForm.get("id")?.disable();
+  if(!document.querySelector("bs-modal-backdrop")){
+    this.modalExport.show();
+  }
+  }
   else{
-     this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: 'warning',
-          modo: 'action',
-          titulo: '',
-          mensaje: 'Debe elegir al menos un nico para eliminar.',
-          cerrar: false,
-          tiempoDeEspera: 2000,
-          txtBtnAceptar: 'Aceptar',
-          txtBtnCancelar: '',
-        };
-        this.eliminarDatosTablaNicoExp =true;
+    this.pagemostrarNotificacion("Debe seleccionar una fracción de importación.");
   }
-  }
-  onFilaSeleccionadas(event:fraccionInfo):void{
-this.fraccionInfoSelected = event;
-  }
+}
+cerrarModalExportacion():void{
+    this.modalExport.hide();
+  setTimeout(() => {
+  this.exportacionForm.reset();
+  this.exportacionForm.get("id")?.setValue(0);
+  this.exportacionForm.get("fraccionImportacion")?.enable();
+  this.exportacionForm.get("umt")?.enable();
+  this.exportacionForm.get("descripcionTigie")?.enable();
+  this.exportacionForm.get("descripcionNico")?.enable();
+  this.nuevaNotificacion = {} as Notificacion;
+  },100)
 
-  onNumberInput(event: Event, formGroupName: string, controlName: string): void {
-  const INPUT = event.target as HTMLInputElement;
-  INPUT.value = INPUT.value.replace(/[^0-9]/g, ''); // remove non-numeric chars
-  this.immexRegistroform.get(`${formGroupName}.${controlName}`)?.setValue(INPUT.value, { emitEvent: false });
+}
+guardarMercanciaExportacion():void{
+  if(this.selectExportacion && this.selectExportacion.id ){
+    const NUEVO_REGISTRO: fraccionInfo = {
+      id: this.selectExportacion.id || Math.floor(Math.random() * 1000000) + 1,
+      fraccionExportacion: this.exportacionForm.getRawValue().fraccionImportacion,
+      fraccionImportacion: this.exportacionForm.getRawValue().fraccionImportacion,
+      umt: this.exportacionForm.getRawValue().umt,
+      descripcionTigie: this.exportacionForm.getRawValue().descripcionTigie,
+      descripcionComercialExport: this.exportacionForm.getRawValue().descripcionComercialExport.toUpperCase(),
+      nicos: this.exportacionForm.getRawValue().nicos,
+      numero: this.selectExportacion.numero,
+      nicosTable: this.nicoTablaDato,
+    };
+    const INDEX = this.fraccionTablaDatos.findIndex(row => row.id === NUEVO_REGISTRO.id);
+    if (INDEX > -1) {
+      this.fraccionTablaDatos[INDEX] = {
+        ...NUEVO_REGISTRO,
+        numero: this.fraccionTablaDatos[INDEX].numero,
+      };
+      this.fraccionTablaDatos = [...this.fraccionTablaDatos];
+    } else {
+      this.fraccionTablaDatos = [...this.fraccionTablaDatos, NUEVO_REGISTRO];
+    }
+    this.immexRegistroStore.updateExportacion(this.fraccionTablaDatos);
+    this.selectExportacion = NUEVO_REGISTRO;
+    this.modalExport.hide();
+    setTimeout(() => {
+      this.exportacionForm.reset();
+      this.exportacionForm.get("id")?.setValue(0);
+      this.exportacionForm.get("fraccionImportacion")?.enable();
+      this.exportacionForm.get("umt")?.enable();
+      this.exportacionForm.get("descripcionTigie")?.enable();
+      this.exportacionForm.get("descripcionNico")?.enable();
+      this.nuevaNotificacion = {} as Notificacion;
+    }, 100);
+  }
+  else{
+    this.pagemostrarNotificacion("Debe seleccionar una fracción de importación.");
+  }
+}
+onNicoChange():void{
+  if(this.exportacionForm.get("nicos")?.value){
+    this.exportacionForm
+      .get("descripcionNico")
+      ?.setValue(
+        `PRODUCTO-${Math.random().toString(36).substring(2, 15)}-${Date.now()}`,
+      );
+  }
+}
+agregarNicoExportacion():void{
+if(this.exportacionForm.getRawValue().nicos && this.exportacionForm.getRawValue().descripcionNico){
+if(!this.nicoTablaDato.some(row=>row.NICO_Columna_1===this.exportacionForm.getRawValue().nicos)){
+    this.exportacionFormNotificacion = false;
+ this.nicoTablaDato=[...this.nicoTablaDato,
+  {
+    id: Math.floor(Math.random() * 1000000) + 1,
+    NICO_Columna_1: this.exportacionForm.get("nicos")?.value,
+    NICO_Columna_2: this.exportacionForm.get("descripcionNico")?.value,
+    estatus: false,
+  }]
+
+  setTimeout(() => {
+  this.exportacionForm.get("nicos")?.setValue("");
+  this.exportacionForm.get("descripcionNico")?.setValue("");
+  },400)
+}
+else{
+this.exportNotificacion("El NICO que intenta ingresar ya se encuentra registrado.");
+}
+}
+else{
+this.exportNotificacion("Tiene que introducir el NICO y su descripción.");
+}
+}
+eliminarPedimentoDatoss(berr:boolean):void{
+if(berr && this.selectFraccionArancelaria && this.selectFraccionArancelaria.id){
+  this.immexTableDatos = this.immexTableDatos.filter(row=>row.id!==this.selectFraccionArancelaria.id);
+  this.fraccionTablaDatos = this.fraccionTablaDatos.filter(row=>row.fraccionExportacion!==this.selectFraccionArancelaria.fraccionArancelaria);
+  const DEEPCOPY = [...this.immexTableDatos];
+  this.immexTableDatos = [];
+  this.immexTableDatos = DEEPCOPY;
+  const DEEPCOPY2 = [...this.fraccionTablaDatos];
+  this.fraccionTablaDatos = [];
+  this.fraccionTablaDatos = DEEPCOPY2;
+  this.immexRegistroStore.updateExportacion(this.fraccionTablaDatos);
+  this.immexRegistroStore.updateImportacion(this.immexTableDatos);
+  this.selectFraccionArancelaria = {} as immexInfo;
+  this.selectExportacion={} as fraccionInfo;
+  this.modalInstance.hide();
+  this.modalExport.hide();
+  this.deleteMessageExportacion=false;
+  this.firstloadCompleted = false;
+  this.importacionForm.reset();
+  this.importacionForm.get("id")?.setValue(0);
+  this.importacionForm.get("fraccionArancelaria")?.enable();
+  this.importacionForm.get("umt")?.enable();
+  this.nuevaNotificacion = {} as Notificacion;
+}
+else{
+  this.nuevaNotificacion = {} as Notificacion;
+  this.pagenuevaNotificacion = false;
+  this.deleteMessageExportacion=false;
+}
 }
 
-seleccionTabla(event: NicoInfo[]):void{
-  this.fraccionInfoSelectedNico = event;
+eliminarPermisoImmex():void{
+ if(this.selectFraccionArancelaria && this.selectFraccionArancelaria.id){
+ this.nuevaNotificacion = {
+      tipoNotificacion: "alert",
+      categoria: "warning",
+      modo: "action",
+      titulo: "",
+      mensaje:'Al eliminar el registro de fracción arancelaria, se eliminarán las fracciones de exportación asociadas. ¿Está seguro que desea eliminar la Fracción seleccionada?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: "Aceptar",
+      txtBtnCancelar: "Cancelar",
+    };
+    this.deleteMessageExportacion=true;
+ }  
+ else{
+  this.pagemostrarNotificacion("Seleccione la(s) Fracción(es) de Importación a eliminar.");
+ }
 }
+eliminarNicoExportacion():void{
+  if(this.selectedExportNicos && this.selectedExportNicos.length>0){
+    const IDS_TO_DELETE = this.selectedExportNicos.map((nico) => nico.id);
+    this.nicoTablaDato = this.nicoTablaDato.filter(
+      (nico) => !IDS_TO_DELETE.includes(nico.id),
+    );
+    this.selectedExportNicos = [];
+  }
+  else{
+    this.exportNotificacion("Debe elegir al menos un nico para eliminar.");
+  }
+}
+onNicoSeleccionado(event:NicoInfo[]):void{
+  this.selectedExportNicos = event.map(item => ({ ...item, estatus: true }));
+}
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Se encarga de la limpieza de recursos para evitar memory leaks. Emite una señal a través de
+   * destroyNotifier$ para cancelar todas las suscripciones activas y luego completa el subject.
+   *
+   * @returns {void}
+   * @implements {OnDestroy}
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
