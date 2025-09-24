@@ -462,10 +462,10 @@ export const VEHICULOS_TABLA_CONFIG: VehiculoTablaConfig = {
       orden: 3,
     },
     /**
-     * Configuración para la columna de Transponder.
+     * Configuración para la columna de Transpondedor.
      */
     {
-      encabezado: 'Transponder',
+      encabezado: 'Transpondedor',
       clave: (item: VehiculoTabla) => item.transponder,
       orden: 4,
     },
@@ -481,7 +481,7 @@ export const VEHICULOS_TABLA_CONFIG: VehiculoTablaConfig = {
      * Configuración para la columna de País emisor.
      */
     {
-      encabezado: 'País Emisor',
+      encabezado: 'Emisora País ',
       clave: (item: VehiculoTabla) => item.paisEmisor,
       orden: 6,
     },
@@ -591,7 +591,7 @@ export const UNIDAD_TABLA_CONFIG: UnidadTablaConfig = {
      * Configuración para la columna de país emisor.
      */
     {
-      encabezado: 'País emisor',
+      encabezado: 'Emisora País',
       clave: (item: UnidadTabla) => item.paisEmisor,
       orden: 5,
     },
