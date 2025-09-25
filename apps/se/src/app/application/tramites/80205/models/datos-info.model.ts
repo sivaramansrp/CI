@@ -96,6 +96,9 @@ export interface InfoServicios {
    * Año relacionado con el servicio.
    */
   ano: string;
+
+  /** Folio del programa. */
+  folioPrograma: string;
 }
 
 /**
@@ -105,6 +108,7 @@ export interface InfoServicios {
  * @property {string} seleccionaLaModalidad - Modalidad seleccionada para el servicio.
  * @property {string} folio - Folio único asociado al servicio.
  * @property {string} ano - Año relacionado con el servicio.
+ * @property {string} folioPrograma - Folio del programa.
  */
 export interface Servicios {
   /**
@@ -121,6 +125,11 @@ export interface Servicios {
    * Año relacionado con el servicio.
    */
   ano: string;
+
+  /**
+   * Folio del programa.
+   */
+  folioPrograma:string;
 }
 
 /**
@@ -253,6 +262,53 @@ export interface AmpliacionServiciosState {
    */
   tablaDatosIMMEX: Servicio[];
 }
+
+
+export interface ServicioAmpliacion {
+  idServicio: number;
+  descripcion: string;
+  tipoServicio: string;
+  descripcionTipo: string;
+  claveServicio: string;
+}
+
+export interface ServicioAutorizado {
+  estatus: string | boolean;
+  desEstatus: string ;
+  idServicio: string;
+  idSolicitud: string;
+  tipoServicio: string;
+  claveServicio: string;
+  descripcion: string;
+  descripcionTipo: string;
+}
+
+
+/**
+ * Representa la información de un servicio IMMEX.
+ * @interface EmpresasNacionales
+ * 
+ * @property {string} idCompuestoEmpresa - Identificador compuesto de la empresa
+ * @property {string} idServicioAutorizado - Identificador del servicio autorizado
+ * @property {string} idServicio - Identificador único del servicio
+ * @property {string} descripcionServicio - Descripción detallada del servicio
+ * @property {string} rfc - RFC de la empresa
+ * @property {string} razonSocial - Razón social de la empresa
+ * @property {string} numeroPrograma - Número del programa IMMEX
+ * @property {string} tiempoPrograma - Vigencia o duración del programa
+ */
+export interface EmpresasNacionales {
+ idCompuestoEmpresa: string;
+  idServicioAutorizado: string;
+  idServicio: string;
+  descripcionServicio: string;
+  rfc: string;
+  razonSocial: string;
+  numeroPrograma: string;
+  tiempoPrograma: string;
+}
+
+
 /**
  * Mensaje de alerta que se muestra cuando hay errores de validación en los formularios.
  * 

@@ -1,4 +1,4 @@
-import { Servicio, ServicioInmex, Servicios } from '../models/datos-info.model';
+import { EmpresasNacionales, Servicio, ServicioAmpliacion, ServicioAutorizado, ServicioInmex, Servicios } from '../models/datos-info.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '../constantes/modificacion.enum';
 import { Injectable } from '@angular/core';
@@ -24,7 +24,9 @@ export interface AmpliacionServiciosState {
   /**
    * Datos relacionados con los servicios IMMEX.
    */
-  datosImmex: Servicio[];
+  datosImmex: ServicioAmpliacion[];
+
+  datosAutorizados: ServicioAutorizado[];
 
   /**
    * Datos adicionales relacionados con IMMEX.
@@ -44,7 +46,7 @@ export interface AmpliacionServiciosState {
   /**
    * Lista de empresas relacionadas con IMMEX.
    */
-  empresas: ServicioInmex[];
+  empresas: EmpresasNacionales[];
 
   /**
    * Lista de servicios disponibles.
@@ -97,16 +99,18 @@ export interface AmpliacionServiciosState {
  */
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
   /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
-  idSolicitud:0,
+  idSolicitud:202792606,
   infoRegistro: {
     seleccionaLaModalidad: '',
     folio: '',
     ano: '',
+    folioPrograma: '',
   },
   empresas: [],
   servicios: [],
   aduanaDeIngreso: [],
   datosImmex: [],
+  datosAutorizados: [],
   datos: [],
   aduanaDeIngresoSelecion: {
     id: -1,
@@ -166,7 +170,7 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
    *
    * @param datosImmex - Un arreglo de objetos de tipo `Servicio` que contiene la información IMMEX a actualizar en el estado.
    */
-  setDatosImmex(datosImmex: Servicio[]): void {
+  setDatosImmex(datosImmex: ServicioAmpliacion[]): void {
     this.update((state) => ({
       ...state,
       datosImmex,
@@ -277,7 +281,7 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
    *
    * @param empresas - Arreglo de objetos de tipo `ServicioInmex` que representa las empresas a establecer en el estado.
    */
-  setEmpresas(empresas: ServicioInmex[]): void {
+  setEmpresas(empresas: EmpresasNacionales[]): void {
     this.update((state) => ({
       ...state,
       empresas,
@@ -310,12 +314,19 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
   /**
    * Agrega una nueva empresa al estado actual.
    *
-   * @param empresa - Objeto de tipo `ServicioInmex` que representa la empresa a agregar.
+   * @param empresa - Objeto de tipo `EmpresasNacionales` que representa la empresa a agregar.
    */
-  agregarEmpresa(empresa: ServicioInmex): void {
+  agregarEmpresa(empresa: EmpresasNacionales): void {
     this.update((state) => ({
       ...state,
       empresas: [...state.empresas, empresa],
+    }));
+  }
+
+  datosAutorizados(datosAutorizados: ServicioAutorizado[]): void {
+    this.update((state) => ({
+      ...state,
+      datosAutorizados,
     }));
   }
 }

@@ -111,7 +111,7 @@
     </div>  
 </div>
 <div class="my-4">
- <app-tabla-dinamica #tablaB [tipoSeleccionTabla]="tablaSeleccion"   [configuracionTabla]="configuracionTablaServicio" [datos]="datosAutorizados" [filasSeleccionadas]="tablaDosSeleccionados"(filaSeleccionada)="seleccionarAutorizados($event)" [disableSeleccionTablaRadio]="esFormularioSoloLectura"
+ <app-tabla-dinamica #tablaB [tipoSeleccionTabla]="tablaSeleccion"   [configuracionTabla]="configuracionTablaServicioAutorizado" [datos]="datosAutorizados" [filasSeleccionadas]="tablaDosSeleccionados"(filaSeleccionada)="seleccionarAutorizados($event)" [disableSeleccionTablaRadio]="esFormularioSoloLectura"
     ></app-tabla-dinamica></div>
 
 <div class="row">
@@ -167,7 +167,7 @@
 </div>
 
 <app-tabla-dinamica  #tablaC [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarEmpresas($event)"  [configuracionTabla]="configuracionTabla" [disableSeleccionTablaRadio]="esFormularioSoloLectura"
-[datos]="datos"></app-tabla-dinamica>
+[datos]="empresas"></app-tabla-dinamica>
 
 </div>
 

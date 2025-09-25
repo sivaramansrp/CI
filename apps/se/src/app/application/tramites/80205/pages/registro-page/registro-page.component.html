@@ -5,12 +5,10 @@
         <h1>{{ tituloMensaje || null }}</h1>
       </div>
       <div class="col-12">
-        @if (esFormaValido) {
-        <div
-          class="alert alert-info alert-danger"
-          [innerHTML]="formErrorAlert"
-        ></div>
-        }
+        @if (!esFormaValido) {
+        <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="infoError"></ng-alert>
+      }
+
       </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
@@ -21,7 +19,7 @@
       } @case (2) {
       <app-paso-carga-documento 
       [idSolicitud]="idSolicitudState"
-      [idTipoTRamite]="'80205'"
+      [idTipoTRamite]="idTipoTRamite"
       [cargaArchivosEvento]="cargarArchivosEvento"
       (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
       (reenviarCargaRealizada)="cargaRealizada($event)"
@@ -34,7 +32,7 @@
 
       <div class="row">
       <div class="col-md-12">
-        @if (indice !== 2) {
+        @if (indice !== 2) {  
         <btn-continuar
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
@@ -63,8 +61,6 @@
         }
       </div>
     </div>
-      
-
 
       <ng-alert [CONTENIDO]="AVISO_PRIVACIDAD_ADJUNTAR"  *ngIf="indice === 1"></ng-alert>
      

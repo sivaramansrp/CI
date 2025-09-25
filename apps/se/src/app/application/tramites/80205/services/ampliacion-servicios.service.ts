@@ -1,6 +1,9 @@
+import { AmpliacionServiciosState, ServicioAmpliacion, ServicioAutorizado } from '../models/datos-info.model';
 import {Observable,map } from 'rxjs';
-import { AmpliacionServiciosState } from '../models/datos-info.model';
+import { API_POST_GUARDAR } from '@libs/shared/data-access-user/src/core/servers/api-router';
 import {AmpliacionServiciosStore} from '../estados/tramite80205.store';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { COMUN_URL } from '../../../core/server/api-router';
 import { Catalogo } from '../constantes/modificacion.enum';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
@@ -13,10 +16,13 @@ import { Servicio } from '../models/datos-info.model';
   providedIn: 'root',
 })
 export class AmpliacionServiciosService {
+
+  host!: string;
+
   constructor(private readonly http: HttpClient,
     private tramite80205Store: AmpliacionServiciosStore
   ) {
-   // No se necesita lógica de inicialización adicional.
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   /**
@@ -41,7 +47,9 @@ export class AmpliacionServiciosService {
     this.tramite80205Store.setNumeroPrograma(DATOS.numeroPrograma); 
     this.tramite80205Store.setRfcEmpresa(DATOS.rfcEmpresa);
     this.tramite80205Store.setTiempoPrograma(DATOS.tiempoPrograma);
-    this.tramite80205Store.setDatosImmex(DATOS.tablaDatosIMMEX);
+    this.tramite80205Store.setDatosImmex(
+      (DATOS.tablaDatosIMMEX as unknown as ServicioAmpliacion[])
+    );
     this.tramite80205Store.setDatos(DATOS.tablaDatos);
 
   }
@@ -55,13 +63,17 @@ export class AmpliacionServiciosService {
   }
 /**
  * Obtiene la tabla de datos desde un archivo JSON.
- * @return {Observable<Servicio[]>} - Observable con la tabla de datos.
+ * @return {Observable<ServicioAutorizado[]>} - Observable con la tabla de datos.
  */
-  getTablaDatos(): Observable<Servicio[]> {
-    return this.http.get<Servicio[]>('assets/json/80205/ampliaciaon-autrazidos.json');
+  getTablaDatos(): Observable<ServicioAutorizado[]> {
+    return this.http.get<ServicioAutorizado[]>('assets/json/80205/ampliaciaon-autrazidos.json');
   }
 
-  
+  OnGuardar(tramite:string, body: any): Observable<BaseResponse<any>> {
+    const ENDPOINT = `${this.host}${API_POST_GUARDAR(tramite)}`;
+    return this.http.post<BaseResponse<any>>(ENDPOINT, { body: body });
+  }
+
 }
 
 

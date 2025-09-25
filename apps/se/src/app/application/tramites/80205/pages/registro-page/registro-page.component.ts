@@ -1,8 +1,11 @@
 
 import { Component,EventEmitter,OnDestroy, ViewChild } from '@angular/core';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { AVISO } from '@ng-mf/data-access-user';
+import { AmpliacionServiciosAdapter } from '../../adapters/ampliacion-servicios.adapter';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80205.query';
+import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import {ERROR_FORMA_ALERT} from '../../models/datos-info.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -41,7 +44,16 @@ export class RegistroPageComponent implements OnDestroy {
    * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
    */
   pasos: ListaPasosWizard[] = PASOS;
+
+  /**
+   * Notificador para la destrucción del componente.
+   */
   destroyNotifier$: Subject<void> = new Subject();
+
+   /**
+   * Clase CSS para mostrar una alerta de error.
+   */
+  infoError = 'alert-danger';
 
   /**
    * Título del mensaje principal.
@@ -83,7 +95,7 @@ export class RegistroPageComponent implements OnDestroy {
       /**
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
    */
-  esFormaValido: boolean = false;
+  esFormaValido: boolean = true;
 
   /**
    * Datos para la configuración de los botones del asistente.
@@ -135,14 +147,20 @@ export class RegistroPageComponent implements OnDestroy {
 
       idSolicitudState: number | null = 0;
 
+      idTipoTRamite: string = '80205';
+
   /**
    * Maneja la acción del botón y navega entre los pasos.
    * @method getValorIndice
    * @param {AccionBoton} e - Objeto con la acción (cont/atras) y el valor (índice) del botón.
    */
-  constructor(private tramiteQuery: AmpliacionServiciosQuery, private seccion: SeccionLibStore
-  ){
-    this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe(res => {
+  constructor(
+    private tramiteQuery: AmpliacionServiciosQuery,
+    private seccion: SeccionLibStore,
+    private ampliacionServiciosAdapter: AmpliacionServiciosAdapter,
+    private ampliacionServiciosApi: AmpliacionServiciosService
+  ) {
+    this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe(_res => {
       this.seccion.establecerSeccion([true]);
       this.seccion.establecerFormaValida([true]);
     })
@@ -166,29 +184,84 @@ export class RegistroPageComponent implements OnDestroy {
    * Si el valor está dentro del rango permitido, actualiza el índice y realiza la acción correspondiente
    * en el componente del asistente (`wizardComponent`).
    */
-  getValorIndice(e: AccionBoton): void {
-    if(e.accion==='cont'){
-      // const isValid = true;
-      // if (this.indice === 1 && this.pasoUnoComponent) {
-      //   isValid = this.pasoUnoComponent.validarTodosLosFormularios();
-      // }
-      // if (!isValid) {
-      //   this.esFormaValido = true;
+  // getValorIndice(e: AccionBoton): void {
+  //   if(e.accion==='cont'){
+  //     let ISVALID = true;
+  //     if (this.indice === 1 && this.pasoUnoComponent) {
+  //       ISVALID = this.pasoUnoComponent.validarTodosLosFormularios();
+  //     }
+  //     if (!ISVALID) {
+  //       this.esFormaValido = false;
   
-      //   this.datosPasos.indice = this.indice;
+  //       this.datosPasos.indice = this.indice;
+  //       return;
+  //     }
+      
+  //     this.esFormaValido = true;
+  //     this.indice = e.valor;
+  //         this.datosPasos.indice = this.indice;
+  //         this.wizardComponent.siguiente();
+  //         return;
+  //    }   
+  
+  //    this.indice = e.valor;
+  //    this.datosPasos.indice = this.indice;
+  //    this.wizardComponent.atras();
+  
+  // }
+
+
+  getValorIndice(e: AccionBoton): void {
+    if (this.indice === 1) {
+      const FORM_VALIDO = this.pasoUnoComponent?.validarTodosLosFormularios() ?? false;
+      this.esFormaValido = FORM_VALIDO;
+
+      // if (!this.esFormaValido) {
+      //   this.datosPasos.indice = 1;
+      //   setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
       //   return;
       // }
-      this.esFormaValido = false;
-      this.indice = e.valor;
-          this.datosPasos.indice = this.indice;
-          this.wizardComponent.siguiente();
+
+      this.onGuardar().pipe(
+        takeUntil(this.destroyNotifier$),
+        tap(() => this.handleGuardadoExitoso())
+      ).subscribe((respuesta) => {
+        if (!respuesta.exito) {
+          this.esFormaValido = false;
+          this.indice = 1;
+          this.wizardComponent.indiceActual = 1;
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
           return;
-     }   
-  
-     this.indice = e.valor;
-     this.datosPasos.indice = this.indice;
-     this.wizardComponent.atras();
-  
+        }
+
+        this.esFormaValido = true;
+        this.indice = e.valor;
+        this.datosPasos.indice = this.indice;
+        this.wizardComponent.siguiente();
+        if (e.accion === 'cont') {
+              this.wizardComponent.siguiente();
+            } else {
+              this.wizardComponent.atras();
+            }
+        // this.indice = e.valor;
+        //       this.actualizarDatosPasos();
+        //       if (e.accion === 'cont') {
+        //         this.wizardComponent.siguiente();
+        //       } else {
+        //         this.wizardComponent.atras();
+        //       }
+      });
+      
+    } else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
+      }
+    }
   }
 
   /**
@@ -273,6 +346,25 @@ export class RegistroPageComponent implements OnDestroy {
 
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
+  }
+
+  /**
+   * Guarda la solicitud de ampliación de servicios utilizando el adaptador para convertir el estado
+   * y enviar los datos al servidor.
+   * @returns {Observable<{ exito: boolean; [key: string]: any }>}
+   */
+  onGuardar(): Observable<any> {
+    return this.tramiteQuery.selectTramite80205$.pipe(
+      map(ESTADO_ACTUAL => AmpliacionServiciosAdapter.toFormPayload(ESTADO_ACTUAL)),
+      switchMap(FORM_PAYLOAD => {
+        console.log('FORM_PAYLOAD', FORM_PAYLOAD);
+        return this.ampliacionServiciosApi.OnGuardar(this.idTipoTRamite, FORM_PAYLOAD);
+      })
+    );
+  }
+
+  private handleGuardadoExitoso(): void {
+    this.esFormaValido = true;
   }
 
   /**
