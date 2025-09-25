@@ -231,7 +231,9 @@ export class ComplementarPlantaComponent implements OnInit {
       this.complementarForm.reset();
     }
   }
-
+/**
+ * Agrega un nuevo firmante a la lista de datos.
+ */
   agregarFirmante():void{
     if(this.complimentosPlantaForma.valid)
   {
@@ -246,6 +248,10 @@ export class ComplementarPlantaComponent implements OnInit {
   }
   }
 
+  /**
+   * Muestra una notificación de éxito al usuario.
+   * La notificación indica que la operación se realizó exitosamente.
+   */
   abrirexitosamente(): void {
     this.exitosamenteNotificacion = {
       tipoNotificacion: 'alert',
