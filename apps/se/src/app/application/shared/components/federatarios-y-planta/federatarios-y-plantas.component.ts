@@ -39,6 +39,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FederatoriosQuery } from '../../../estados/queries/federatarios.query';
 
 import { FECHA_DE_Tabla, INMEX_PLANTAS } from '../../constantes/federatarios-y-plantas.enum';
+import { CapacidadInstalada } from '../../constantes/capacidad-instalada.enum';
 import { ComplimentosService } from '../../services/complimentos.service';
 /**
  * Componente para los federatarios y plantas
@@ -146,7 +147,17 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
     ,
   };
 
-
+/**
+   * Evento que emite la lista de objetos de tipo `CapacidadInstalada` para la tabla de capacidad instalada.
+   * 
+   * @event
+   * @type {EventEmitter<CapacidadInstalada[]>}
+   * @remarks
+   * Este evento se dispara cuando hay cambios en la lista de capacidad instalada, permitiendo que componentes padres reciban la información actualizada.
+   */
+  @Output() obtainorCapacidadInstaladaTablaList: EventEmitter<
+      CapacidadInstalada[]
+    > = new EventEmitter<CapacidadInstalada[]>(false);
 
   /**
    * Configuración para la tabla de plantas disponibles
@@ -848,6 +859,16 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
   this.estadoImmex = res.datos;
     });
     
+  }
+
+  /**
+   * Emite el evento `obtainorCapacidadInstaladaTablaList` con la lista de capacidades instaladas recibida.
+   *
+   * @param event - Arreglo de objetos de tipo `CapacidadInstalada` que representa la lista de capacidades instaladas seleccionadas.
+   */
+  obtenerCapacidadInstaladaTablaList(event: any[]): void {
+    console.log(event);
+   //this.obtainorCapacidadInstaladaTablaList.emit(event);
   }
 
   /**
