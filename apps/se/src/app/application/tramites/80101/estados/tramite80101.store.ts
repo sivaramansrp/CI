@@ -26,6 +26,7 @@ import { Servicios } from '../models/nuevo-programa-industrial.model';
 import { SociaoAccionistas } from '../../../shared/models/complimentos.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
+import { MontoDeInversion } from '../../../shared/constantes/complementar-planta.enum';
 
 
 /**
@@ -195,6 +196,8 @@ export interface Tramite80101State {
    */
 
   proveedorClienteDatosTablaDos: ProveedorClienteTabla[];
+
+  montosDeInversionTablaDatos: MontoDeInversion[];
 }
 
 /**
@@ -383,6 +386,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   proyectoImmexTablaLista: [],
   proveedorClienteDatosTabla: [],
   proveedorClienteDatosTablaDos: [],
+  montosDeInversionTablaDatos: [],
 };
 
 /**
@@ -1142,4 +1146,10 @@ setProyectoImmexTablaLista(proyectoImmex: ProyectoImmexEncabezado[]): void {
     }));
   }
 
+  setMontosDeInversionTablaDatos(montos: MontoDeInversion[]): void {
+  this.update((state) => ({
+    ...state,
+    montosDeInversionTablaDatos: [...state.montosDeInversionTablaDatos, ...montos ],
+  }));
+}
 }
