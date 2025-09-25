@@ -20,6 +20,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/modificacion.constants';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -148,6 +149,16 @@ export class RegistroPageComponent implements OnInit, OnDestroy {
   * Indica si hay una carga en progreso.
   */
   cargaEnProgreso: boolean = true;
+  /**
+ * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+ * const isValid = this.pasoUnoComponent.validateForms();
+ * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+ */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+  /**
+ * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+ */
+esFormaValido: boolean = false;
 
   /**
    * Constructor del componente.
@@ -205,9 +216,49 @@ export class RegistroPageComponent implements OnInit, OnDestroy {
       } else {
         this.wizardComponent.atras();
       }
-    }
-  }
+    } 
+  //    this.esFormaValido = false;
+  
+  // // Validar formularios antes de continuar desde el paso uno
+  // if (this.indice === 1 && e.accion === 'cont') {
+  //   const ES_VALIDO = this.validarTodosFormulariosPasoUno();
+  //   if (!ES_VALIDO) {
+  //     this.esFormaValido = true;
+  //     return; // Detener ejecución si los formularios son inválidos - NO actualizar índice
+  //   }
+  // }
 
+  // // Solo calcular y actualizar el índice si la validación pasó
+  // let indiceActualizado = e.valor;
+  // if (e.accion === 'cont') {
+  //   indiceActualizado = e.valor + 1;
+  // } else if (e.accion === 'ant') {
+  //   indiceActualizado = e.valor - 1;
+  // }
+
+  // // Validar que el nuevo índice esté dentro de los límites permitidos
+  // if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+  //   // Actualizar el índice y datosPasos solo si todo está válido
+  //   this.indice = indiceActualizado;
+  //   this.datosPasos.indice = indiceActualizado;
+    
+  //   if (e.accion === 'cont') {
+  //     this.wizardComponent.siguiente();
+  //   } else if (e.accion === 'ant') {
+  //     this.wizardComponent.atras();
+  //   }
+  // }
+  }
+/**
+ * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
+ */
+  validarTodosFormulariosPasoUno(): boolean {
+  if (!this.pasoUnoComponent) {
+    return false; // Changed from true to false - if component doesn't exist, validation should fail
+  }
+  const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+  return ISFORM_VALID_TOUCHED;
+}
     /**
   * Método para manejar el evento de carga de documentos.
   * Actualiza el estado del botón de carga de archivos.

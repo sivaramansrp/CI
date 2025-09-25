@@ -8,18 +8,34 @@
  * Este componente permite la navegación entre pestañas y utiliza el servicio `AmpliacionServiciosService` para gestionar 
  * la visibilidad de ciertos elementos en función de la pestaña seleccionada.
  */
+import { Component, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
+import { Ampliacion3RsComponent } from '../../components/ampliacion-3Rs/ampliacion-3rs.component';
+import { AmpliacionAnexoComponent } from '../../components/ampliacion-anexo/ampliacion-anexo.component';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
-import { Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
+    /**
+   * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
+   */
+  @ViewChild('solicitanteRef') solicitante!: SolicitanteComponent;
+    /**
+   * Referencia al componente ImportadorExportadorComponent para acceder a sus métodos de validación.
+   * Permite validar el formulario de datos de importador/exportador antes de continuar al siguiente paso.
+   */
+  @ViewChild('ampliacionServiciosRef')
+  ampliacionAnexoComponent!: AmpliacionAnexoComponent;
+
+  @ViewChild('ampliacion3RsRef')
+  ampliacion3RsComponent!: Ampliacion3RsComponent;
   /**
    * Índice de la pestaña seleccionada.
    * @property {number} indice
@@ -49,6 +65,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  * Cuando es `true`, los campos del formulario no se pueden editar.
  */
  esFormularioSoloLectura: boolean = false;
+
+ /* Agrega esta propiedad para definir tus pestañas (todas las pestañas siempre visibles) */
+ seccionesDeLaSolicitud = [
+  { index: 1, title: 'Solicitante' },
+  { index: 2, title: 'Anexo I' },
+  { index: 3, title: "3 R's" }
+];
 
 
   /**
@@ -110,4 +133,44 @@ ngOnDestroy(): void {
   this.destroyNotifier$.next();
   this.destroyNotifier$.complete();
 }
+  /**
+   * Valida todos los formularios del paso uno.
+   * Retorna true si todos los formularios son válidos, false en caso contrario.
+   */
+  public validarFormularios(): boolean {
+    let isValid = true;
+
+    // if (this.solicitante?.form) {
+    //   if (this.solicitante.form.invalid) {
+    //     this.solicitante.form.markAllAsTouched();
+    //     isValid = false;
+    //   }
+    // } else {
+    //   isValid = false;
+    // }
+    // if (this.ampliacionAnexoComponent) {
+    //   const AMPLIACION_ANEXO_VALID =
+    //     this.ampliacionAnexoComponent.validarFormulario();
+    //   if (!AMPLIACION_ANEXO_VALID) {
+    //     isValid = false;
+    //   }
+    // } else {
+    //   isValid = false;
+    // }
+
+     if (this.ampliacion3RsComponent) {
+      const AMPLIACION_3RS_VALID =
+        this.ampliacion3RsComponent.validarFormulario();
+      if (!AMPLIACION_3RS_VALID) {
+        isValid = false;
+      }
+    } else {
+      if (this.indice === 3 || this.esDatosRespuesta) {
+      isValid = false;
+    }
+    }
+
+
+     return isValid;
+  }
 }

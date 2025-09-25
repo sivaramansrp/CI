@@ -538,5 +538,31 @@ VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
     this.domiciliosSeleccionados = [domicilios];
   }
 
+   /**
+   * @method validarFormulario
+   * Valida todos los controles del formulario.
+   *
+   * Marca todos los controles como tocados y actualiza su estado de validación
+   * para mostrar los errores correspondientes en la interfaz de usuario.
+   * También valida los formularios de los componentes hijo.
+   *
+   * @returns {void}
+   */
+  validarFormulario(): boolean {
+    let isValid = true;
+
+    if (this.formularioInfoRegistro) {
+      this.formularioInfoRegistro.markAllAsTouched();
+      this.formularioInfoRegistro.updateValueAndValidity();
+
+      if (this.formularioInfoRegistro.invalid) {
+        isValid = false;
+      }
+    } else {
+      isValid = false;
+    }
+  
+   return isValid;
+}
   
 }

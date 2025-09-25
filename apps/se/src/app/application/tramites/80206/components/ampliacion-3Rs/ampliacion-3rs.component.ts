@@ -355,4 +355,48 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
   seleccionarDomicilios(domicilios: Sector[]): void {
     this.domiciliosSeleccionados = [...domicilios];
   }
+
+   /**
+   * @method validarFormulario
+   * Valida todos los controles del formulario.
+   *
+   * Marca todos los controles como tocados y actualiza su estado de validación
+   * para mostrar los errores correspondientes en la interfaz de usuario.
+   * También valida los formularios de los componentes hijo.
+   *
+   * @returns {void}
+   */
+validarFormulario(): boolean {
+  let isValid = true;
+
+  if (this.formularioInfoRegistro) {
+    this.formularioInfoRegistro.markAllAsTouched();
+    this.formularioInfoRegistro.updateValueAndValidity();
+
+    // Check specific required fields
+    const seleccionaLaModalidad = this.formularioInfoRegistro.get('seleccionaLaModalidad')?.value;
+    const seleccionarRegla = this.formularioInfoRegistro.get('seleccionarRegla')?.value;
+
+    // Add your specific validation logic here
+    if (!seleccionaLaModalidad || !seleccionarRegla) {
+      isValid = false;
+    }
+
+    // If regla is selected, validate sector selection
+    if (this.isSelectedRegla) {
+      const sector = this.formularioInfoRegistro.get('sector')?.value;
+      if (!sector) {
+        isValid = false;
+      }
+    }
+
+    if (this.formularioInfoRegistro.invalid) {
+      isValid = false;
+    }
+  } else {
+    isValid = false;
+  }
+
+  return isValid;
+}
 }

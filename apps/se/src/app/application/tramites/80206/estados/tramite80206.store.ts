@@ -140,7 +140,7 @@ export interface AmpliacionServiciosState {
  * @constant {AmpliacionServiciosState} INITIAL_AMPLIACION_SERVICIOS_STATE
  */
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
-  idSolicitud: 0,
+  idSolicitud: 202792606,
   infoRegistro: {
     seleccionaLaModalidad: '',
     folio: '',
