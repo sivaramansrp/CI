@@ -196,6 +196,13 @@ export class TratadosComponent implements OnInit, OnDestroy {
         tratado: item.tratado_nombre,
         origen: item.cve_grupo_criterio
       }));
+      const SELECTED = this.registroDeSolicitudesTablaDatos[this.selectedRowIndex ?? 0];
+
+      const GETCATALOGOTRATADO = this.solicitudeState.respuestaServicioDatosTabla.find(item => item.tratado_nombre === SELECTED.tratado);
+      const GETCATALOGOCRITERIO = this.solicitudeState.respuestaServicioDatosTabla.find(item => item.cve_grupo_criterio === SELECTED.origen);
+      this.getCatalogoTratadoAcuerdo(GETCATALOGOTRATADO?.cve_pais ?? "");
+      this.getCatalogoCriterios(GETCATALOGOCRITERIO?.id_tratado_acuerdo.toString() ?? "");
+        
     }
   }
 
@@ -773,7 +780,7 @@ modificarTratado(): void {
 
   const PAIS_ID = this.paisCatalogo.find(item => item.descripcion === SELECTED.pais)?.id ?? '';
   const TRATADO_ID = this.tratadoCatalogo.find(item => item.descripcion === SELECTED.tratado)?.id ?? '';
-  const ORIGEN_ID = this.origenCatalogo.find(item => item.clave === SELECTED.origen)?.id ?? '';
+  const ORIGEN_ID = this.origenCatalogo.find(item => item.clave === SELECTED.origen)?.id ?? ''; 
 
   this.formularioTratados.patchValue({
     pais: PAIS_ID,
