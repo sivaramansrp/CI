@@ -1,51 +1,54 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-
-import { HttpClient } from '@angular/common/http';
-
-import { Subject, delay, map, takeUntil, tap } from 'rxjs';
-
+  CONFIGURACION_ENCABEZADO_FACTURAS,
+  ERROR_FORMA_ALERT,
+  EXPEDICION_FACTURA_FECHA,
+  VALIDO,
+} from '../../constantes/elegibilidad-de-textiles.enums';
 import {
   Catalogo,
   CatalogoSelectComponent,
-  ConfiguracionColumna,
   InputFecha,
   InputFechaComponent,
+  Notificacion,
+  NotificacionesComponent,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-
-
+} from '@ng-mf/data-access-user';
 import {
-  ERROR_FORMA_ALERT,
-  EXPEDICION_FACTURA_FECHA,
-  VALIDO,
-} from '../../constantes/elegibilidad-de-textiles.enums';
-
-import {
-  REGEX_SOLO_DIGITOS,
-} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import {
   ElegibilidadDeTextilesStore,
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
-
-import { CapturarColumns } from '../../models/elegibilidad-de-textiles.model';
-
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-
-import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+import { FacturaTplCapturaRequest } from '../../models/request/facturas-tpl-captura-requet.model';
+import { FacturasAsociadasService } from '../../services/facturas-asociadas.service';
+import { FacturasTplCapturaResponse } from '../../models/response/facturas-tpl-captura-response.model';
+import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { Solicitud120301State } from '../../estados/tramites/tramite120301.store';
+import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
+import { UnidadMedidaService } from '../../services/catalogos/unidad-medida.service';
 
 
 /**
@@ -58,141 +61,33 @@ import { ElegibilidadTextilesService } from '../../services/elegibilidad-textile
   templateUrl: './capturar-facturas.component.html',
   styleUrl: './capturar-facturas.component.scss',
   standalone: true,
-  imports: [
-    CommonModule,
-    TituloComponent,
-    ReactiveFormsModule,
-    InputFechaComponent,
-    CatalogoSelectComponent,
-    TablaDinamicaComponent,
-  ],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, InputFechaComponent, CatalogoSelectComponent, TablaDinamicaComponent, NotificacionesComponent, ModalModule],
 })
 export class CapturarFacturasComponent implements OnInit, OnDestroy {
-  /**
-   * Marca todos los controles de un formulario como "touched" y "dirty".
-   * Esto fuerza la visualización de los mensajes de error de validación en la interfaz,
-   * siguiendo el patrón robusto de validación utilizado en 40402.
-   * @param form FormGroup del formulario a procesar
-   */
-  private static markAllControlsTouched(form: FormGroup): void {
-    Object.values(form.controls).forEach(control => {
-      control.markAsTouched();
-      control.markAsDirty();
-    });
-  }
-  /**
-   * Maneja el evento de cambio de valor en el campo de fecha de expedición de la factura.
-   * Actualiza el valor del control correspondiente en el formulario y lo marca como "dirty" y "touched"
-   * para asegurar que se muestren los mensajes de validación si corresponde.
-   * @param fecha Valor de la fecha seleccionada (formato string)
-   */
-  onFechaExpedicionFacturaChange(fecha: string): void {
-    this.facturaForm.get('fechaExpedicionFactura')?.setValue(fecha);
-    this.facturaForm.get('fechaExpedicionFactura')?.markAsDirty();
-    this.facturaForm.get('fechaExpedicionFactura')?.markAsTouched();
-  }
-  /**
-   * @property {boolean} showFechaExpedicionFactura
-   * @description
-   * Controla la visualización del campo de fecha de expedición de la factura en el formulario.
-   * Se utiliza principalmente en el método limpiarFacturaForm() para forzar el reinicio visual del componente de fecha,
-   * asegurando que el campo se limpie correctamente y se actualice en la interfaz de usuario.
-   * Es útil cuando el componente de fecha necesita ser reseteado completamente, ya que Angular no siempre actualiza los controles visuales solo con cambios en el valor del formulario.
-   */
-  showFechaExpedicionFactura: boolean = true;
-  /**
-   * Limpia el formulario de captura de facturas, restaurando los valores y estados de los controles clave.
-   * - Restablece el campo de fecha de expedición y lo marca como "pristine" y "untouched".
-   * - Preserva y deshabilita los campos de país y unidad de medida, restaurando sus valores por defecto.
-   * - Marca todos los controles como "pristine" y "untouched" para evitar mostrar mensajes de error.
-   * Este método sigue el patrón robusto de limpieza de formularios utilizado en 40402.
-   */
-  limpiarFacturaForm(): void {
-    this.showFechaExpedicionFactura = false;
-    setTimeout(() => {
-      this.showFechaExpedicionFactura = true;
-      const FECHA_CONTROL = this.facturaForm.get('fechaExpedicionFactura');
-      FECHA_CONTROL?.setValue(null);
-      FECHA_CONTROL?.markAsPristine();
-      FECHA_CONTROL?.markAsUntouched();
-    });
-    const PAISES_VALUE = this.facturaForm.get('pais')?.value || 'ESTADOS UNIDOS DE AMERICA';
-    const UNIDAD_DE_MEDIDA_VALUE = this.facturaForm.get('unidadDeMedida')?.value || '1';
-    this.facturaForm.reset();
-    this.facturaForm.get('pais')?.enable();
-    this.facturaForm.get('pais')?.setValue(PAISES_VALUE);
-    this.facturaForm.get('unidadDeMedida')?.enable();
-    this.facturaForm.get('unidadDeMedida')?.setValue(UNIDAD_DE_MEDIDA_VALUE);
-    setTimeout(() => {
-      this.facturaForm.get('pais')?.disable();
-      this.facturaForm.get('unidadDeMedida')?.disable();
-    });
-    Object.keys(this.facturaForm.controls).forEach(key => {
-      this.facturaForm.get(key)?.markAsPristine();
-      this.facturaForm.get(key)?.markAsUntouched();
-    });
-  }
-  /**
-   * @property {number | null} indiceSeleccionado
-   * @description
-   * Índice de la fila seleccionada en la tabla de facturas para su modificación.
-   * Si es `null`, no hay ninguna factura seleccionada para editar.
-   * Se actualiza al seleccionar una factura en la tabla y se utiliza para cargar los datos en el formulario de edición.
-   */
-  indiceSeleccionado: number | null = null;
-  /**
-   * @property {CapturarColumns[]} selectedRows
-   * @description
-   * Almacena las filas seleccionadas en la tabla de facturas para su eliminación o modificación.
-   * Se actualiza al seleccionar una o varias facturas mediante la interfaz (checkbox o selección directa).
-   * Es utilizada para habilitar/deshabilitar los botones de modificar y eliminar, y para realizar operaciones en lote.
-   */
-  selectedRows: CapturarColumns[] = [];
-  /**
-   * @property {'agregar' | 'modificar'} modalMode
-   * @description
-   * Estado actual del modal de facturas, indica si el formulario está en modo "agregar" (nueva factura)
-   * o en modo "modificar" (edición de factura existente). Se utiliza para controlar la lógica de guardado
-   * y la visualización de los datos en el formulario modal.
-   */
-  modalMode: 'agregar' | 'modificar' = 'agregar';
-  /**
-   * @method formGroup
-   * @description
-   * Getter que expone el FormGroup principal del formulario de facturas como 'formGroup'.
-   * Permite que el componente padre acceda directamente al estado y los controles del formulario reactivo,
-   * facilitando la integración, validación y manipulación desde otros componentes o servicios.
-   * @returns {FormGroup} El grupo de controles reactivos del formulario de facturas.
-   */
-  public get formGroup(): FormGroup {
-    return this.facturaForm;
-  }
-  /**
-   * @property {boolean} formularioDeshabilitado
-   * @description
-   * Propiedad de entrada que indica si el formulario de facturas debe estar deshabilitado.
-   * Cuando es `true`, todos los controles del formulario se desactivan y el usuario no puede editar los datos.
-   * Se utiliza para controlar el acceso y la edición desde el componente padre según el flujo de la aplicación.
-   */
+  /** Título del modal */
+  @Input() titulo: string = '';
+  /**Variable para mostrar el modal */
+  public mostrarModal: boolean = false;
+  /** Referencia al modal */
+  @ViewChild('modal', { static: false }) modal?: ModalDirective;
+  /** Indica si se debe abrir el modal */
+  @Input() abrirModal: boolean = false;
+  /** Evento que se emite al cerrar el modal */
+  @Output() cerrar = new EventEmitter<void>();
+  /**  Getter para exponer el FormGroup principal como 'formGroup' para integración con el padre.*/
+  public get formGroup(): FormGroup { return this.facturaForm; }
+  /** @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado. */
   @Input()
   formularioDeshabilitado: boolean = false;
-
-  /**
-   * @property {FormGroup} facturaForm
-   * @description
-   * Grupo de controles reactivos que representa el formulario principal para capturar los datos de las facturas.
-   * Incluye todos los campos requeridos, sus validaciones y el estado actual de cada control.
-   * Es inicializado en el método initActionFormBuild() y utilizado en toda la lógica de captura, edición y validación.
-   */
+  /** @property {FormGroup} facturaForm - El grupo de formularios para capturar los datos de las facturas. */
   facturaForm!: FormGroup;
-
-    /**
-   * @property {string} formularioAlertaError
-   * @description
-   * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
-   * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
-   * Vacío cuando el formulario es válido.
-   */
+  /**
+ * @property {string} formularioAlertaError
+ * @description
+ * Mensaje HTML que se muestra cuando el formulario no es válido y faltan campos requeridos por capturar.
+ * Se utiliza para mostrar una alerta visual al usuario en la interfaz.
+ * Vacío cuando el formulario es válido.
+ */
   public formularioAlertaError: string = '';
 
   /**
@@ -210,14 +105,8 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * Permite la coordinación entre componentes para la navegación de la interfaz.
    */
   @Output() mostrarTabs: EventEmitter<boolean> = new EventEmitter<boolean>();
-    
-  /**
-   * @property {string[]} selectRangoDias
-   * @description
-   * Arreglo que contiene los rangos de días disponibles para selección en el formulario de facturas.
-   * Se utiliza para poblar opciones en campos select relacionados con fechas o periodos.
-   * Puede ser configurado dinámicamente según la lógica de negocio o los catálogos cargados.
-   */
+
+  /** @property {string[]} selectRangoDias - Array de rangos de días seleccionables. */
   selectRangoDias: string[] = [];
 
   /**
@@ -236,24 +125,33 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @property {CapturarColumns[]} facturas - Array de datos de facturas para mostrar en la tabla.
    * Contiene la información de todas las facturas capturadas que se visualizan en la tabla dinámica.
    */
-  facturas: CapturarColumns[] = [];
-
+  facturas: FacturasTplCapturaResponse[] = [];
+  /**
+   *  @property {CapturarColumns[]} facturaSeleccionada - Array de facturas seleccionadas en la tabla. 
+   */
+  facturaSeleccionada: FacturasTplCapturaResponse[] = [];
+  /**  
+   * @property {CapturasColumns} facturaModificar - Objeto que contiene los datos de la factura a modificar. 
+   */
+  facturaModificar!: FacturasTplCapturaResponse;
   /**
    * @property {Subject<void>} destroyNotifier$ - Notificador para cancelar suscripciones y evitar fugas de memoria.
    * Utilizado con operadores como `takeUntil`.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * @property {TextilesState} capturarState - Estado actual relacionado con la captura de datos textiles.
-   */
+  /**  @property {TextilesState} capturarState - Estado actual relacionado con la captura de datos textiles. */
   private capturarState!: TextilesState;
 
-  /**
-   * @property {SeccionLibState} seccionState - Estado actual de la sección en el módulo de librerías.
-   */
+  /**  @property {SeccionLibState} seccionState - Estado actual de la sección en el módulo de librerías. */
   private seccionState!: SeccionLibState;
 
+  /**
+     * @property {Solicitud120301State} solicitudState - Estado de la solicitud en el store de Akita.
+     * Almacena el estado completo de la solicitud según la arquitectura Akita,
+     * incluyendo todos los datos relevantes para el manejo del estado de la aplicación.
+     * Se actualiza mediante los correspondientes stores y queries de Akita.
+     */
+  public solicitudState!: Solicitud120301State;
   /**
    * @property {TablaSeleccion} TablaSeleccion - Referencia a la enumeración o constante `TablaSeleccion`
    * para su uso en la plantilla o lógica del componente.
@@ -266,52 +164,49 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * Define la estructura, encabezados y orden de las columnas que se mostrarán en la tabla de facturas.
    * Cada elemento especifica el encabezado, la clave de acceso a los datos y el orden de visualización.
    */
-  tableColumns: ConfiguracionColumna<CapturarColumns>[] = [
-    {
-      encabezado: 'Número de la factura',
-      clave: (fila) => fila.numeroDeLaFactura,
-      orden: 1,
-    },
-    {
-      encabezado: 'Razón social',
-      clave: (fila) => fila.razonSocial,
-      orden: 2,
-    },
-    {
-      encabezado: 'Domicilio',
-      clave: (fila) => fila.domicilio,
-      orden: 3,
-    },
-    {
-      encabezado: 'Fecha de expedición de la factura',
-      clave: (fila) => fila.fechaExpedicionFactura,
-      orden: 4,
-    },
-    {
-      encabezado: 'Cantidad total',
-      clave: (fila) => fila.cantidadTotal,
-      orden: 5,
-    },
-    {
-      encabezado: 'Cantidad disponible',
-      clave: (fila) => fila.cantidadDisponible,
-      orden: 6,
-    },
-    {
-      encabezado: 'Unidad de medida',
-      clave: (fila): string => {
-        const UNIDAD_CATALOGO: Catalogo[] = this.unidadDeMedida || [];
-        const UNIDAD = UNIDAD_CATALOGO.find((item) => String(item.id) === String(fila.unidadMedida));
-        return UNIDAD ? UNIDAD.descripcion : String(fila.unidadMedida);
-      },
-      orden: 7,
-    },
-    {
-      encabezado: 'Valor en dólares',
-      clave: (fila) => fila.valorDolares,
-      orden: 8,
-    },
-  ];
+  tableColumns = CONFIGURACION_ENCABEZADO_FACTURAS;
+
+  /**
+     * Notificación que se muestra al usuario en caso de error o éxito en el proceso de firma.
+     * Incluye información sobre el tipo de notificación, categoría, título y mensaje.
+     */
+  nuevaNotificacion!: Notificacion;
+  /**
+  * @property {boolean} showFechaExpedicionFactura
+  * @description
+  * Controla la visualización del campo de fecha de expedición de la factura en el formulario.
+  * Se utiliza principalmente en el método limpiarFacturaForm() para forzar el reinicio visual del componente de fecha,
+  * asegurando que el campo se limpie correctamente y se actualice en la interfaz de usuario.
+  * Es útil cuando el componente de fecha necesita ser reseteado completamente, ya que Angular no siempre actualiza los controles visuales solo con cambios en el valor del formulario.
+  */
+  showFechaExpedicionFactura: boolean = true;
+
+  /**
+   * @property {'agregar' | 'modificar'} modalMode
+   * @description
+   * Estado actual del modal de facturas, indica si el formulario está en modo "agregar" (nueva factura)
+   * o en modo "modificar" (edición de factura existente). Se utiliza para controlar la lógica de guardado
+   * y la visualización de los datos en el formulario modal.
+   */
+  modalMode: 'agregar' | 'modificar' = 'agregar';
+
+  /** Variable para controlar la visibilidad del modal de agregar agente */
+  agregarAgentemodal = false;
+  eliminarFacturaModal = false;
+
+  /**
+  * @property {Catalogo[]} unidadDeMedida - Configuración para el select de unidad de medida.
+  * Array que contiene las opciones disponibles para el campo de unidad de medida en el formulario.
+  * Se carga dinámicamente desde el servicio al inicializar el componente.
+  */
+  unidadDeMedida!: Catalogo[];
+
+  /**
+   * @property {InputFecha} fechaInicioInputs - Configuración para el input de fecha de expedición de la factura.
+   * Contiene la configuración específica para el campo de fecha, incluyendo formato,
+   * validaciones y restricciones de fechas permitidas.
+   */
+  fechaInicioInputs: InputFecha = EXPEDICION_FACTURA_FECHA;
 
   /**
    * @constructor
@@ -328,14 +223,15 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @param {ChangeDetectorRef} cdr - ChangeDetectorRef para detectar cambios en la vista.
    */
   constructor(
-    private ElegibilidadTextilesService: ElegibilidadTextilesService,
-    private readonly httpServicios: HttpClient,
     private readonly fb: FormBuilder,
     private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
-    private cdr: ChangeDetectorRef
+    private unidadMedidaService: UnidadMedidaService,
+    private cdr: ChangeDetectorRef,
+    private facturasAsociadasService: FacturasAsociadasService,
+    private tramite120301Query: Tramite120301Query,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -349,6 +245,13 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   ngOnInit(): void {
+    this.tramite120301Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      ).subscribe();
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -365,13 +268,10 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  this.initActionFormBuild();
-  this.obtenerListasDesplegables();
-  this.facturas = [];
-  this.facturaForm.reset();
-
+    this.initActionFormBuild();
+    this.obtenerListasDesplegables();
+    this.recuperarDatos();
     this.seccionStore.establecerFormaValida([false]);
-
     this.facturaForm.statusChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -399,7 +299,6 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     if (this.formularioDeshabilitado) {
       this.facturaForm.disable();
     }
-    this.facturaForm.get('unidadDeMedida')?.disable();
   }
 
   /**
@@ -411,89 +310,31 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * Los valores iniciales se obtienen del estado actual almacenado.
    * @returns {void} No retorna ningún valor.
    */
-    /**
-     * @method initActionFormBuild
-     * @description
-     * Inicializa el formulario reactivo principal para capturar los datos de las facturas.
-     * Crea todos los controles del formulario con sus validadores correspondientes, incluyendo:
-     * - Número de factura, cantidad total, unidad de medida, valor en dólares, información fiscal y de dirección, país y fecha de expedición.
-     * Los valores iniciales de cada campo se obtienen del estado actual (`capturarState`).
-     * Incluye validaciones personalizadas, como el formato de fecha de expedición (acepta DD/MM/AAAA y fechas válidas).
-     * Este método se invoca al inicializar el componente y cada vez que se requiere reiniciar el formulario.
-     * No recibe parámetros y no retorna ningún valor.
-     * @returns {void} No retorna ningún valor.
-     */
-    initActionFormBuild(): void {
+  initActionFormBuild(): void {
     this.facturaForm = this.fb.group({
-      numeroFactura: [{value: this.capturarState.numeroFactura}, [Validators.required, Validators.maxLength(50)]],
+      numeroFactura: [{ value: this.capturarState.numeroFactura }, [Validators.required, Validators.maxLength(50)]],
       cantidadTotal: [
-        {value: this.capturarState.cantidadTotal},
+        { value: this.capturarState.cantidadTotal },
         [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
-      unidadDeMedida: [{value: '1', disabled: true}, Validators.required],
+      unidadDeMedida: [{ value: this.capturarState.unidadDeMedida, disabled: false }, Validators.required],
       valorDolares: [
-        {value: this.capturarState.valorDolares},
+        { value: this.capturarState.valorDolares },
         [Validators.required],
       ],
-      taxId: [{value: this.capturarState.taxId}, [Validators.maxLength(35)]],
-      razonSocial: [{value: this.capturarState.razonSocial}, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(70)]],
-      domicilio: [this.capturarState.domicilio || '5th Avenue 123 New York NY México 12345'],
-      calle: [{value:this.capturarState.calle}, [Validators.required, Validators.maxLength(70)]],
-      ciudad: [{value:this.capturarState.ciudad}, [Validators.required, Validators.maxLength(35)]],
+      taxId: [{ value: this.capturarState.taxId }, [Validators.maxLength(35)]],
+      razonSocial: [{ value: this.capturarState.razonSocial }, [Validators.required, Validators.maxLength(70)]],
+      calle: [{ value: this.capturarState.calle }, [Validators.required, Validators.maxLength(70)]],
+      ciudad: [{ value: this.capturarState.ciudad }, [Validators.required, Validators.maxLength(35)]],
       cp: [
-        {value: this.capturarState.cp},
+        { value: this.capturarState.cp },
         [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(9)],
       ],
-      pais: [
-        { value: this.capturarState.pais || 'ESTADOS UNIDOS DE AMERICA', disabled: true },
-        [Validators.required],
-      ],
-      fechaExpedicionFactura: [
-        this.capturarState.fechaExpedicionFactura,
-        [
-          (control: import('@angular/forms').AbstractControl): { [key: string]: unknown } | null => {
-            const VALUE = control.value;
-            if (VALUE instanceof Date && !isNaN(VALUE.getTime())) {
-              return null;
-            }
-            if (typeof VALUE === 'string' && VALUE.trim() !== '') {
-              // Acepta el formato DD/MM/AAAA
-              const PARTS = VALUE.split('/');
-              if (PARTS.length === 3) {
-                const DAY = parseInt(PARTS[0], 10);
-                const MONTH = parseInt(PARTS[1], 10) - 1;
-                const YEAR = parseInt(PARTS[2], 10);
-                const DATE = new Date(YEAR, MONTH, DAY);
-                if (!isNaN(DATE.getTime())) {
-                  return null;
-                }
-              }
-              // Alternativa: pruebe el análisis de fechas nativo
-              const DATE = new Date(VALUE);
-              if (!isNaN(DATE.getTime())) {
-                return null;
-              }
-            }
-            return { required: true };
-          }
-        ]
-      ],
+      pais: [{ value: this.solicitudState.pais_origen_destino || this.capturarState.pais, disabled: true }, Validators.required],
+      fechaExpedicionFactura: [{ value: this.capturarState.fechaExpedicionFactura }, Validators.required],
     });
   }
-  /**
-   * @property {Catalogo[]} unidadDeMedida - Configuración para el select de unidad de medida.
-   * Array que contiene las opciones disponibles para el campo de unidad de medida en el formulario.
-   * Se carga dinámicamente desde el servicio al inicializar el componente.
-   */
-  unidadDeMedida: Catalogo[] = [];
-  
-  /**
-   * @property {InputFecha} fechaInicioInputs - Configuración para el input de fecha de expedición de la factura.
-   * Contiene la configuración específica para el campo de fecha, incluyendo formato,
-   * validaciones y restricciones de fechas permitidas.
-   */
-  fechaInicioInputs: InputFecha = EXPEDICION_FACTURA_FECHA;
-  
+
   /**
    * @method obtenerListasDesplegables
    * @description Obtiene las listas desplegables necesarias para el formulario.
@@ -502,7 +343,28 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   obtenerListasDesplegables(): void {
-    this.obtenerIngresoSelectList();
+    this.unidadMedidaService.getUnidadMedida()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          if (data.codigo === '00') {
+            this.unidadDeMedida = data.datos || [];
+            if (this.solicitudState?.unidadMedida) {
+              const MATCH = this.unidadDeMedida.find(
+                (item) => item.descripcion?.toLowerCase() === this.solicitudState.unidadMedida.toLowerCase()
+              );
+              if (MATCH) {
+                this.facturaForm.get('unidadDeMedida')?.setValue(MATCH.clave || '');
+                this.ElegibilidadDeTextilesStore.setUnidadDeMedida(MATCH.clave || '');
+              }
+            }
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+          this.unidadDeMedida = [];
+        }
+      });
   }
 
   /**
@@ -527,26 +389,6 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method obtenerIngresoSelectList
-   * @description Obtiene la lista para el select de unidad de medida.
-   * Realiza una petición HTTP al servicio para cargar las opciones disponibles
-   * del catálogo de unidades de medida y las asigna a la propiedad correspondiente.
-   * La suscripción se maneja con takeUntil para evitar fugas de memoria.
-   * @returns {void} No retorna ningún valor.
-   */
-  obtenerIngresoSelectList(): void {
-    this.ElegibilidadTextilesService.obtenerMenuDesplegable(
-      'unidad-de-medida.json'
-    )
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (data) => {
-          this.unidadDeMedida = data as Catalogo[];
-        },
-      });
-  }
-
-  /**
    * @method recuperarDatos
    * @description Obtiene los datos de las facturas desde el servicio.
    * Realiza una petición HTTP para cargar los datos de las facturas desde un archivo JSON
@@ -555,389 +397,37 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   recuperarDatos(): void {
-    this.ElegibilidadTextilesService.obtenerTablaDatos<CapturarColumns>(
-      'capturar-facturas.json'
-    )
+    this.facturasAsociadasService
+      .getFacturasTplAll(
+        "AAL0409235E6",
+        this.solicitudState.idExpedicion,
+        this.solicitudState.identificadorRegimen
+      )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response) => {
-          if (response && Array.isArray(response)) {
-            this.facturas = response as CapturarColumns[];
+          if (response.codigo === '00' && response.datos) {
+            this.facturas = response.datos;
+          } else {
+            this.facturas = [];
           }
         },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+          this.facturas = [];
+        }
       });
   }
 
   /**
-   * @property {CapturarColumns[]} seleccionadasParaEliminar
-   * @description
-   * Almacena las filas seleccionadas en la tabla de facturas que están marcadas para eliminación múltiple.
-   * Se actualiza cuando el usuario selecciona varias facturas mediante la interfaz (checkbox o selección directa).
-   * Es utilizada para realizar operaciones de eliminación en lote y para controlar la lógica de los botones de acción.
-   * Si el arreglo está vacío, no hay facturas seleccionadas para eliminar.
-   */
-  seleccionadasParaEliminar: CapturarColumns[] = [];
-
-  /**
-   * @method abrirModalAgregar
-   * @description
-   * Abre el modal para agregar una nueva factura.
-   * Establece el modo del formulario en "agregar", limpia la selección actual y reinicia el formulario de captura de facturas.
-   * Asigna valores por defecto a los campos de domicilio, unidad de medida y país, habilitándolos temporalmente para su edición.
-   * Posteriormente, deshabilita estos campos para mantener la integridad de los datos.
-   * Finalmente, muestra el modal correspondiente mediante Bootstrap o lógica Angular.
-   * No recibe parámetros y no retorna ningún valor.
-   * @returns {void} No retorna ningún valor.
-   */
-  abrirModalAgregar(): void {
-    const ELEMENTO_MODAL = document.getElementById('modalAgregar');
-    if (ELEMENTO_MODAL && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.parentNode?.removeChild(bd));
-      document.body.classList.remove('modal-open');
-      const INSTANCIA_ANTIGUA = window.bootstrap.Modal.getInstance(ELEMENTO_MODAL);
-      if (INSTANCIA_ANTIGUA) {
-        INSTANCIA_ANTIGUA.hide();
-      }
-    }
-    this.modalMode = 'agregar';
-    this.indiceSeleccionado = null;
-    this.facturaForm.reset();
-    this.facturaForm.get('domicilio')?.setValue('5th Avenue 123 New York NY México 12345');
-    this.facturaForm.get('unidadDeMedida')?.enable();
-    this.facturaForm.get('unidadDeMedida')?.setValue('1');
-    this.facturaForm.get('pais')?.enable();
-    this.facturaForm.get('pais')?.setValue('ESTADOS UNIDOS DE AMERICA');
-    setTimeout(() => {
-      this.facturaForm.get('unidadDeMedida')?.disable();
-      this.facturaForm.get('pais')?.disable();
-      if (ELEMENTO_MODAL && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const INSTANCIA_MODAL = new window.bootstrap.Modal(ELEMENTO_MODAL);
-        INSTANCIA_MODAL.show();
-      }
-    });
-  }
-
-  /**
-   * @method abrirModalModificar
-   * @description
-   * Abre el modal para modificar la factura seleccionada en la tabla.
-   * Establece el modo del formulario en "modificar" y carga los datos de la factura seleccionada en el formulario reactivo.
-   * Habilita temporalmente el campo de unidad de medida para permitir su edición y asigna los valores correspondientes a cada control.
-   * Posteriormente, deshabilita los campos de unidad de medida y país para mantener la integridad de los datos.
-   * No recibe parámetros y no retorna ningún valor.
-   * @returns {void} No retorna ningún valor.
-   */
-  abrirModalModificar(): void {
-    const ELEMENTO_MODAL = document.getElementById('modalAgregar');
-    if (ELEMENTO_MODAL && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.parentNode?.removeChild(bd));
-      document.body.classList.remove('modal-open');
-      const INSTANCIA_ANTIGUA = window.bootstrap.Modal.getInstance(ELEMENTO_MODAL);
-      if (INSTANCIA_ANTIGUA) {
-        INSTANCIA_ANTIGUA.hide();
-      }
-    }
-    if (this.indiceSeleccionado !== null) {
-      this.modalMode = 'modificar';
-      const FACTURA = this.facturas[this.indiceSeleccionado];
-      if (FACTURA) {
-        this.facturaForm.reset();
-        this.facturaForm.get('unidadDeMedida')?.enable();
-        this.poblarFacturaForm(FACTURA);
-        setTimeout(() => {
-          this.facturaForm.get('unidadDeMedida')?.disable();
-          this.facturaForm.get('pais')?.disable();
-          if (ELEMENTO_MODAL && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-            const INSTANCIA_MODAL = new window.bootstrap.Modal(ELEMENTO_MODAL);
-            INSTANCIA_MODAL.show();
-          }
-        });
-      }
-    }
-
-  }
-
-  /**
-   * Rellena los campos del formulario de factura (`facturaForm`) con los valores de un objeto `CapturarColumns`.
-   * Este método se utiliza para cargar los datos de una factura seleccionada en el formulario de edición,
-   * asegurando que cada control del formulario reciba el valor correspondiente del modelo.
-   * Si algún valor está ausente en el objeto, se asigna un valor por defecto adecuado.
-   *
-   * @param {CapturarColumns} FACTURA - El objeto de factura cuyos datos se van a cargar en el formulario.
-   * @returns {void} No retorna ningún valor.
-   */
-  private poblarFacturaForm(FACTURA: CapturarColumns): void {
-    this.facturaForm.get('numeroFactura')?.setValue(FACTURA.numeroDeLaFactura ?? '');
-    this.facturaForm.get('razonSocial')?.setValue(FACTURA.razonSocial ?? '');
-    this.facturaForm.get('domicilio')?.setValue(FACTURA.domicilio ?? '');
-    this.facturaForm.get('fechaExpedicionFactura')?.setValue(FACTURA.fechaExpedicionFactura ?? '');
-    this.facturaForm.get('cantidadTotal')?.setValue(FACTURA.cantidadTotal ?? '');
-    this.facturaForm.get('cantidadDisponible')?.setValue(FACTURA.cantidadDisponible ?? FACTURA.cantidadTotal ?? '');
-    this.facturaForm.get('unidadDeMedida')?.setValue(FACTURA.unidadMedida ?? '1');
-    this.facturaForm.get('valorDolares')?.setValue(FACTURA.valorDolares ?? '');
-    this.facturaForm.get('taxId')?.setValue(FACTURA.taxId ?? '');
-    this.facturaForm.get('calle')?.setValue(FACTURA.calle ?? '');
-    this.facturaForm.get('ciudad')?.setValue(FACTURA.ciudad ?? '');
-    this.facturaForm.get('cp')?.setValue(FACTURA.cp ?? '');
-    this.facturaForm.get('pais')?.setValue(FACTURA.pais ?? 'ESTADOS UNIDOS DE AMERICA');
-  }
-
-  /**
-   * Guarda los datos editados del chofer nacional si el formulario es válido, emite el evento y cierra el modal.
-   * Si el formulario es inválido, muestra una notificación de alerta.
-   * @returns {void}
-   */
-  enviada = true;
-  /**
-   * @method guardarFactura
-   * @description
-   * Agrega una nueva factura o actualiza una existente en la tabla de facturas.
-   * Marca todos los controles del formulario como "touched" y "dirty" para activar la validación visual.
-   * Verifica explícitamente que todos los campos obligatorios estén completos y válidos antes de continuar.
-   * Si el formulario es válido, crea un objeto de factura con los datos capturados y lo agrega o actualiza en el arreglo de facturas según el modo actual ("agregar" o "modificar").
-   * Finalmente, cierra el modal y muestra una alerta de éxito, limpiando la selección y el estado del formulario.
-   * No recibe parámetros y no retorna ningún valor.
-   * @returns {void} No retorna ningún valor.
-   */
-  guardarFactura(): void {
-    this.enviada = true;
-    Object.keys(this.facturaForm.controls).forEach(_key => {
-      // No operativo: se eliminó la asignación de variables no utilizadas anteriormente para corregir errores de pelusa
-    });
-    CapturarFacturasComponent.markAllControlsTouched(this.facturaForm);
-    this.facturaForm.updateValueAndValidity();
-
-    // Verifique explícitamente los campos obligatorios
-    const REQUIRED_FIELDS = [
-      'numeroFactura',
-      'cantidadTotal',
-      'unidadDeMedida',
-      'valorDolares',
-      'razonSocial',
-      'domicilio',
-      'calle',
-      'ciudad',
-      'cp',
-      'pais',
-      'fechaExpedicionFactura'
-    ];
-    for (const FIELD of REQUIRED_FIELDS) {
-      const CONTROL = this.facturaForm.get(FIELD);
-      if (!CONTROL || CONTROL.invalid || CONTROL.value === null || CONTROL.value === undefined || CONTROL.value === '') {
-        // Opcionalmente, desplácese hasta el primer campo no válido o muestre un mensaje.
-        return;
-      }
-    }
-    const DATOS = this.facturaForm.getRawValue();
-    const NUEVA_FACTURA: CapturarColumns = {
-      numeroDeLaFactura: DATOS['numeroFactura'],
-      razonSocial: DATOS['razonSocial'],
-      domicilio: DATOS['domicilio'],
-      fechaExpedicionFactura: DATOS['fechaExpedicionFactura'],
-      cantidadTotal: DATOS['cantidadTotal'],
-      cantidadDisponible: DATOS['cantidadDisponible'] ?? DATOS['cantidadTotal'],
-      unidadMedida: DATOS['unidadDeMedida'],
-      valorDolares: DATOS['valorDolares'],
-      taxId: DATOS['taxId'],
-      calle: DATOS['calle'],
-      ciudad: DATOS['ciudad'],
-      cp: DATOS['cp'],
-      pais: DATOS['pais'],
-      idExpedicion: DATOS['idExpedicion']
-    };
-    if (this.modalMode === 'agregar') {
-      this.facturas = [...this.facturas, NUEVA_FACTURA];
-      this.indiceSeleccionado = null;
-    } else if (this.modalMode === 'modificar' && this.indiceSeleccionado !== null) {
-      this.facturas[this.indiceSeleccionado] = NUEVA_FACTURA;
-      this.facturas = [...this.facturas];
-      this.indiceSeleccionado = null;
-    }
-
-    setTimeout(() => {
-      const ELEMENTO_MODAL = document.getElementById('modalAgregar');
-      if (ELEMENTO_MODAL && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const INSTANCIA_MODAL = window.bootstrap.Modal.getInstance(ELEMENTO_MODAL);
-        if (INSTANCIA_MODAL) {
-          INSTANCIA_MODAL.hide();
-        }
-      }
-
-      document.querySelectorAll('.modal-backdrop').forEach(bd => bd.parentNode?.removeChild(bd));
-      document.body.classList.remove('modal-open');
-    }, 300);
-  }
-
-  /**
-   * @method seleccionarRegistro
-   * @description
-   * Selecciona una fila de la tabla de facturas para modificar, utilizando el objeto de factura como referencia.
-   * Actualiza el índice de la factura seleccionada (`indiceSeleccionado`) para cargar sus datos en el formulario de edición.
-   * No recibe parámetros adicionales y no retorna ningún valor.
-   * @param {CapturarColumns} registro - El objeto de factura seleccionado en la tabla.
-   * @returns {void} No retorna ningún valor.
-   */
-  seleccionarRegistro(registro: CapturarColumns): void {
-    this.indiceSeleccionado = this.facturas.findIndex(f => f === registro);
-  }
-
-  /**
-   * @method onFilasSeleccionadas
-   * @description
-   * Maneja la selección de una o varias filas en la tabla de facturas para su eliminación o modificación.
-   * Actualiza los arreglos de filas seleccionadas (`selectedRows` y `seleccionadasParaEliminar`) y el índice de la factura seleccionada si solo hay una fila seleccionada.
-   * Si hay más de una fila seleccionada, el índice se establece en `null` para evitar la edición múltiple.
-   * No retorna ningún valor.
-   * @param {CapturarColumns[]} filas - Arreglo de facturas seleccionadas en la tabla.
-   * @returns {void} No retorna ningún valor.
-   */
-  onFilasSeleccionadas(filas: CapturarColumns[]): void {
-    this.selectedRows = filas;
-    this.seleccionadasParaEliminar = filas;
-    if (filas.length === 1) {
-      this.indiceSeleccionado = this.facturas.findIndex(f => f === filas[0]);
-    } else {
-      this.indiceSeleccionado = null;
-    }
-  }
-
-  /**
-   * @method eliminarSeleccionados
-   * @description
-   * Elimina las facturas seleccionadas de la tabla.
-   * Si no hay filas seleccionadas, no realiza ninguna acción.
-   * Actualiza el arreglo de facturas, limpia la selección y reinicia el formulario, restaurando los valores por defecto de los campos clave.
-   * No recibe parámetros y no retorna ningún valor.
-   * @returns {void} No retorna ningún valor.
-   */
-  eliminarSeleccionados(): void {
-    if (this.selectedRows.length === 0) {
-      return;
-    }
-    this.facturas = this.facturas.filter(f => !this.selectedRows.includes(f));
-    this.selectedRows = [];
-    this.seleccionadasParaEliminar = [];
-    this.indiceSeleccionado = null;
-    this.facturaForm.reset();
-    this.facturaForm.get('unidadDeMedida')?.enable();
-    this.facturaForm.get('unidadDeMedida')?.setValue('1');
-    this.facturaForm.get('pais')?.enable();
-    this.facturaForm.get('pais')?.setValue('ESTADOS UNIDOS DE AMERICA');
-    setTimeout(() => {
-      this.facturaForm.get('unidadDeMedida')?.disable();
-      this.facturaForm.get('pais')?.disable();
-    });
-  }
-
-  /**
-   * @method onSeleccionEliminar
-   * @description
-   * Maneja el evento de selección de filas en la tabla de facturas asociadas para su eliminación.
-   * Convierte el evento en un arreglo y lo pasa al método de selección de filas.
-   * No retorna ningún valor.
-   * @param {CapturarColumns[]} event - Arreglo de facturas seleccionadas para eliminar.
-   * @returns {void} No retorna ningún valor.
-   */
-  onSeleccionEliminar(event: CapturarColumns[]): void {
-    this.onFilasSeleccionadas(Array.isArray(event) ? event : []);
-  }
-  
-  /**
-   * @method abrirModalEliminar
-   * @description
-   * Abre el modal de confirmación de eliminación según la selección actual de facturas.
-   * Si no hay filas seleccionadas, muestra el modal de confirmación para selección vacía; si hay filas seleccionadas, muestra el modal de confirmación estándar.
-   * Utiliza Bootstrap para mostrar el modal correspondiente.
-   * No recibe parámetros y no retorna ningún valor.
-   * @returns {void} No retorna ningún valor.
-   */
-  abrirModalEliminar(): void {
-    if (!Array.isArray(this.selectedRows) || this.selectedRows.length === 0) {
-      const ELEMENTO_MODAL = document.getElementById('confirmarEliminarSeleccion');
-      if (ELEMENTO_MODAL && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const INSTANCIA_MODAL = new window.bootstrap.Modal(ELEMENTO_MODAL);
-        INSTANCIA_MODAL.show();
-      }
-      return;
-    }
-    const ELEMENTO_MODAL = document.getElementById('confirmarEliminar');
-    if (ELEMENTO_MODAL && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-      const INSTANCIA_MODAL = new window.bootstrap.Modal(ELEMENTO_MODAL);
-      INSTANCIA_MODAL.show();
-    }
-  }
-  /**
-   * @method eliminarFacturasAsociadas
-   * @description
-   * Elimina las facturas asociadas seleccionadas de la tabla.
-   * Si no hay filas seleccionadas, no realiza ninguna acción.
-   * Actualiza el arreglo de facturas asociadas, limpia la selección y deja la tabla actualizada.
-   * No recibe parámetros y no retorna ningún valor.
-   * @returns {void} No retorna ningún valor.
-   */
-  /**
-   * @method eliminarFacturasAsociadas
-   * @description
-   * Elimina las facturas asociadas seleccionadas de la tabla y limpia el TELONES_DE_FONDO modal persistente si existe.
-   * Si no hay filas seleccionadas, no realiza ninguna acción.
-   * Actualiza el arreglo de facturas asociadas, limpia la selección y elimina el TELONES_DE_FONDO modal si está presente.
-   * @returns {void} No retorna ningún valor.
-   */
-  eliminarFacturasAsociadas(): void {
-    if (this.seleccionadasParaEliminar.length === 0) {
-      return;
-    }
-    this.facturas = this.facturas.filter(
-      item => !this.seleccionadasParaEliminar.includes(item)
-    );
-    this.seleccionadasParaEliminar = [];
-    // Cerrar el modal de eliminar si está abierto
-    setTimeout(() => {
-      const ELEMENTO_MODAL = document.getElementById('confirmarEliminar');
-      if (ELEMENTO_MODAL && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const INSTANCIA_MODAL = window.bootstrap.Modal.getInstance(ELEMENTO_MODAL) || new window.bootstrap.Modal(ELEMENTO_MODAL);
-        INSTANCIA_MODAL.hide();
-      }
-      // Eliminar el TELONES_DE_FONDO modal persistente si está presente
-      const TELONES_DE_FONDO = document.querySelectorAll('.modal-backdrop');
-      TELONES_DE_FONDO.forEach(bd => bd.parentNode?.removeChild(bd));
-      document.body.classList.remove('modal-open');
-    }, 350);
-  }
-  /**
-   * @property {boolean} puedeModificar
-   * @description
-   * Indica si el botón de modificar debe estar habilitado.
-   * El botón se habilita solo si hay una fila seleccionada y el índice de selección no es nulo.
-   * @returns {boolean} `true` si se puede modificar, `false` en caso contrario.
-   */
-  get puedeModificar(): boolean {
-    return this.indiceSeleccionado !== null && this.selectedRows.length === 1;
-  }
-  /**
-   * @property {boolean} puedeEliminar
-   * @description
-   * Indica si el botón de eliminar debe estar habilitado.
-   * El botón se habilita si hay al menos una fila seleccionada en la tabla de facturas.
-   * @returns {boolean} `true` si se puede eliminar, `false` en caso contrario.
-   */
-  get puedeEliminar(): boolean {
-    return this.indiceSeleccionado !== null && this.selectedRows.length === 1;
-  }
-  /**
-   * @method continuar
-   * @description
-   * Valida el formulario de facturas y permite continuar al siguiente paso del flujo si es válido.
-   * Marca todos los controles como "touched" para activar la validación visual, actualiza el estado y detecta cambios en la vista.
-   * Si el formulario es inválido, muestra el mensaje de error y no permite avanzar; si es válido, limpia el error y emite el evento para mostrar las pestañas siguientes.
-   * No recibe parámetros y no retorna ningún valor.
-   * @returns {void} No retorna ningún valor.
+   * Método para continuar al siguiente paso, validando el campo cantidadFacturas.
+   * Si el formulario es inválido, muestra el mensaje de error y no permite continuar.
+   * Si es válido, limpia el error y permite continuar.
    */
   continuar(): void {
     this.facturaForm.markAllAsTouched();
     this.facturaForm.updateValueAndValidity();
     this.cdr.detectChanges();
-
     if (!this.facturaForm.valid) {
       this.formularioAlertaError = ERROR_FORMA_ALERT;
       this.esFormaValido = true;
@@ -947,10 +437,9 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     this.esFormaValido = false;
     this.formularioAlertaError = '';
     window.scrollTo(0, 0);
-
     this.mostrarTabs.emit(true);
   }
-  
+
   /**
    * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.
@@ -962,5 +451,310 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * @method VisualizarAgregar
+   * @description Método para cambiar la vista y permitir la captura de una nueva factura.
+   * Cambia las banderas internas para mostrar el formulario de captura y ocultar la tabla de facturas.
+   * @returns {void} No retorna ningún valor.
+   */
+  VisualizarAgregarFactura(): void {
+    if (this.facturaModificar) {
+      this.facturaForm.patchValue(this.facturaModificar);
+    }
+    this.modalMode = 'agregar';
+    this.facturaForm.reset();
+    this.facturaForm.get('unidadDeMedida')?.enable();
+    this.facturaForm.get('unidadDeMedida')?.setValue('1');
+    this.facturaForm.get('pais')?.enable();
+    this.facturaForm.get('pais')?.setValue('ESTADOS UNIDOS DE AMERICA');
+    setTimeout(() => {
+      this.facturaForm.get('unidadDeMedida')?.disable();
+      this.facturaForm.get('pais')?.disable();
+    });
+    this.agregarAgentemodal = true;
+  }
+
+  /**
+   * @method agregarFactura
+   * @description Método para cambiar la vista y permitir la captura de una nueva factura.
+   * Cambia las banderas internas para mostrar el formulario de captura y ocultar la tabla de facturas.
+   * @returns {void} No retorna ningún valor.
+   */
+  agregarModificarFactura(): void {
+    this.facturaForm.markAllAsTouched();
+    this.facturaForm.updateValueAndValidity();
+    this.cdr.detectChanges();
+    if (!this.facturaForm.valid) {
+      this.formularioAlertaError = ERROR_FORMA_ALERT;
+      this.esFormaValido = true;
+      window.scrollTo(0, 0);
+      return;
+    }
+    this.formularioAlertaError = '';
+    this.esFormaValido = false;
+    const RAWFECHA = this.facturaForm.get('fechaExpedicionFactura')?.value;
+    let fechaFormateada = '';
+    if (RAWFECHA) {
+      const PARTES = RAWFECHA.split('/');
+      if (PARTES.length === 3) {
+        const [DIA, MES, ANIO] = PARTES;
+        fechaFormateada = `${ANIO}-${MES.padStart(2, '0')}-${DIA.padStart(2, '0')}`;
+      } else {
+        const FECHAOBJ = new Date(RAWFECHA);
+        fechaFormateada = FECHAOBJ.toISOString().split('T')[0];
+      }
+    }
+    const FACTURA: FacturaTplCapturaRequest = {
+      id_factura_expedicion: this.facturaModificar?.id_factura_expedicion || null,
+      num_factura: this.facturaForm.get('numeroFactura')?.value,
+      fecha_expedicion: fechaFormateada,
+      razon_social_consig_emisor: this.facturaForm.get('razonSocial')?.value,
+      ide_regimen: this.solicitudState.identificadorRegimen ?? '',
+      cantidad: this.facturaForm.get('cantidadTotal')?.value,
+      importe_dolares: this.facturaForm.get('valorDolares')?.value,
+      domicilio: this.facturaForm.get('calle')?.value,
+      cve_unidad_medida: this.facturaForm.get('unidadDeMedida')?.value,
+      tax_id: this.facturaForm.get('taxId')?.value,
+      ciudad: this.facturaForm.get('ciudad')?.value,
+      cp: this.facturaForm.get('cp')?.value,
+      pais: this.facturaForm.get('pais')?.value,
+    };
+    this.facturasAsociadasService.postFacturasTplAgregar(this.solicitudState.idSolicitud, FACTURA).subscribe({
+      next: (response) => {
+        if (response.codigo === '00') {
+          this.recuperarDatos();
+          this.cerrarModal()
+        } else {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: `No se pudo agregar la factura: ${response.mensaje}`,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          this.nuevaNotificacion = { ...this.nuevaNotificacion };
+          this.formularioAlertaError = `No se pudo agregar la factura: ${response.mensaje}`;
+          this.esFormaValido = true;
+        }
+      },
+      error: (error) => {
+        console.error('Error al agregar la factura:', error);
+        this.formularioAlertaError = 'Error inesperado al agregar la factura.';
+        this.esFormaValido = true;
+      }
+    });
+  }
+
+  /**
+   * @method modificarFactura
+   * @description Método para cambiar la vista y permitir la modificación de una factura existente.
+   * Cambia las banderas internas para mostrar el formulario de captura y ocultar la tabla de facturas.
+   * @returns {void} No retorna ningún valor.
+   */
+  visualizarModificarFactura(): void {
+    if (!this.facturaSeleccionada || this.facturaSeleccionada.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe seleccionar una factura para modificar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    if (this.facturaSeleccionada.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Solo puede modificar una factura a la vez.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    const FACTURA_SELECCIONADA = this.facturaSeleccionada[0];
+    this.facturaModificar = FACTURA_SELECCIONADA;
+    // Buscar la unidad de medida en el catálogo
+    let unidadClave: string | null = null;
+    if (FACTURA_SELECCIONADA.descripcion && this.unidadDeMedida?.length > 0) {
+      const MATCH = this.unidadDeMedida.find(
+        (item) => item.descripcion?.toLowerCase() === FACTURA_SELECCIONADA.descripcion.toLowerCase()
+      );
+      if (MATCH) {
+        unidadClave = MATCH.clave || null;
+      }
+    }
+    let fechaFormateada = '';
+    if (FACTURA_SELECCIONADA.fecha_expedicion) {
+      const PARTES = FACTURA_SELECCIONADA.fecha_expedicion.split(' ')[0].split('-'); // ["DD", "MM", "YYYY"]
+      if (PARTES.length === 3) {
+        fechaFormateada = `${PARTES[0]}/${PARTES[1]}/${PARTES[2]}`;
+      }
+    }
+    this.facturaForm.patchValue({
+      numeroFactura: FACTURA_SELECCIONADA.num_factura,
+      razonSocial: FACTURA_SELECCIONADA.razon_social_consig_emisor,
+      calle: FACTURA_SELECCIONADA.direccion_consig_emisor,
+      fechaExpedicionFactura: fechaFormateada,
+      cantidadTotal: FACTURA_SELECCIONADA.cantidad,
+      unidadDeMedida: unidadClave,
+      valorDolares: FACTURA_SELECCIONADA.imp_dls,
+      taxId: FACTURA_SELECCIONADA.tax_id_consig_emisor,
+      ciudad: FACTURA_SELECCIONADA.ciudad_consig_emisor,
+      cp: FACTURA_SELECCIONADA.cp_consig_emisor,
+      pais: FACTURA_SELECCIONADA.pais_consig_emisor,
+    });
+    this.agregarAgentemodal = true;
+  }
+
+  /**
+   * @method eliminarSeleccionados
+   * @description Método para cancelar la acción de agregar o modificar facturas.
+   * Cambia las banderas internas para ocultar el formulario de captura y mostrar la tabla de facturas.
+   * @returns {void} No retorna ningún valor.
+   */
+  eliminarSeleccionados(): void {
+    const IDS_A_ELIMINAR = this.facturaSeleccionada.map(factura => factura.id_factura_expedicion).filter(id => id !== null) as number[];
+    this.facturasAsociadasService.deleteFactura(IDS_A_ELIMINAR[0]).subscribe({
+      next: (response) => {
+        if (response.codigo === '00') {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'success',
+            modo: 'action',
+            titulo: '',
+            mensaje: 'Factura(s) eliminada(s) correctamente.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          this.recuperarDatos();
+          this.facturaSeleccionada = [];
+        }
+      },
+      error: (error) => {
+        console.error('Error al eliminar la factura:', error);
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'success',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Error inesperado al eliminar la(s) factura(s).',
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        };
+      }
+    });
+  }
+
+  /**
+   * @method limpiarFormulario
+   * @description Método para limpiar el formulario de captura de facturas.
+   * Resetea todos los campos del formulario y limpia cualquier mensaje de error o estado de validación.
+   * @returns {void} No retorna ningún valor.
+   */
+  limpiarFormulario(): void {
+    const PAISES_VALUE = this.facturaForm.get('pais')?.value || 'ESTADOS UNIDOS DE AMERICA';
+    const UNIDAD_DE_MEDIDA_VALUE = this.facturaForm.get('unidadDeMedida')?.value || '1';
+    this.facturaForm.reset();
+    this.facturaForm.get('pais')?.enable();
+    this.facturaForm.get('pais')?.setValue(PAISES_VALUE);
+    this.facturaForm.get('unidadDeMedida')?.enable();
+    this.facturaForm.get('unidadDeMedida')?.setValue(UNIDAD_DE_MEDIDA_VALUE);
+    setTimeout(() => {
+      this.facturaForm.get('pais')?.disable();
+      this.facturaForm.get('unidadDeMedida')?.disable();
+    });
+  }
+
+  /**
+   * @method abrirModalEliminar
+   * @description Método para abrir el modal de confirmación de eliminación de facturas.
+   * Muestra el modal y prepara la interfaz para que el usuario confirme o cancele la eliminación.
+   */
+  abrirModalEliminar(): void {
+    if (!this.facturaSeleccionada || this.facturaSeleccionada.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Seleccione el monto a eliminar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    if (this.facturaSeleccionada.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Solo puede eliminar una factura a la vez.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    this.eliminarFacturaModal = true;
+  }
+
+  /**
+   * @method cerrarModal
+   * @description Método para cerrar el modal de captura de facturas.
+   * Oculta el modal y emite un evento al componente padre para notificar el cierre.
+   */
+  cerrarModal(): void {
+    // Cierra la modal si la referencia está disponible
+    this.modal?.hide();
+    this.agregarAgentemodal = false;
+    // Emite el evento de cierre para notificar al padre
+    this.cerrar.emit();
+    // Detecta cambios en la UI
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * @method abrirEliminarModal
+   * @description Método para abrir el modal de confirmación de eliminación de facturas.
+   * Muestra el modal y prepara la interfaz para que el usuario confirme o cancele la eliminación.
+   */
+  aceptarEliminarFacturas(): void {
+    this.eliminarSeleccionados();
+    this.cerrarEliminarModal();
+  }
+
+  /**
+   * @method cerrarEliminarModal
+   * @description Método para cerrar el modal de confirmación de eliminación de facturas.
+   * Oculta el modal y emite un evento al componente padre para notificar el cierre.
+   */
+  cerrarEliminarModal(): void {
+    this.modal?.hide();
+    this.eliminarFacturaModal = false;
+    this.cerrar.emit();
+    this.cdr.detectChanges();
+  }
+
+  /**
+  * Método que se ejecuta al ocultar el modal.
+  */
+  onHidden(): void {
+    this.mostrarModal = false;
   }
 }
