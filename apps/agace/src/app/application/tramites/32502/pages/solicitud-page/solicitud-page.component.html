@@ -6,10 +6,9 @@
       </div>
       <div class="col-12">
         @if (esFormaValido) {
-        <div
-          class="alert alert-info alert-danger"
-          [innerHTML]="formErrorAlert"
-        ></div>
+          <div class="col-md-12">
+            <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+          </div>
         }
       </div>
 

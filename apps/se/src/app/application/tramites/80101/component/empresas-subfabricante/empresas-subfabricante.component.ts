@@ -226,7 +226,7 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    */
   enEstadoSeleccionado(estadoSeleccionado: Catalogo): void {
     this.formularioDatosSubcontratista.patchValue({
-      estado: estadoSeleccionado.id.toString(),
+      estado: estadoSeleccionado?.id?.toString() || estadoSeleccionado?.clave?.toString(),
     });
     this.store.setDatosSubcontratista(this.formularioDatosSubcontratista.value);
   }

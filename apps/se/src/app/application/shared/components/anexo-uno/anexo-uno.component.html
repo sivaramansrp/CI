@@ -17,10 +17,8 @@
             maxlength="10"
           />
           <div
-            *ngIf="anexoUnoFormGroup.get('fraccionArancelaria')?.invalid && (anexoUnoFormGroup.get('fraccionArancelaria')?.touched || anexoUnoFormGroup.get('fraccionArancelaria')?.dirty)"
-            class="text-danger mt-1"
-          >
-            Este campo es obligatorio y debe ser válido.
+            *ngIf="anexoUnoFormGroup.get('fraccionArancelaria')?.invalid && (anexoUnoFormGroup.get('fraccionArancelaria')?.touched || anexoUnoFormGroup.get('fraccionArancelaria')?.dirty)">
+            <p class="mensaje-error">Este campo es obligatorio y debe ser válido.</p>
           </div>
         </div>
       </div>
@@ -40,10 +38,8 @@
             maxlength="1000"
           ></textarea>
           <div
-            *ngIf="anexoUnoFormGroup.get('descripcion')?.invalid && (anexoUnoFormGroup.get('descripcion')?.touched || anexoUnoFormGroup.get('descripcion')?.dirty)"
-            class="text-danger mt-1"
-          >
-            Este campo es obligatorio y debe ser válido.
+            *ngIf="anexoUnoFormGroup.get('descripcion')?.invalid && (anexoUnoFormGroup.get('descripcion')?.touched || anexoUnoFormGroup.get('descripcion')?.dirty)">
+            <p class="mensaje-error">Este campo es obligatorio y debe ser válido.</p>
           </div>
         </div>
       </div>
@@ -125,9 +121,8 @@
           />
           <div
             *ngIf="anexoDosFormGroup.get('fraccionArancelaria')?.invalid && (anexoDosFormGroup.get('fraccionArancelaria')?.touched || anexoDosFormGroup.get('fraccionArancelaria')?.dirty)"
-            class="text-danger mt-1"
           >
-            Este campo es obligatorio y debe ser válido.
+            <p class="mensaje-error">Este campo es obligatorio y debe ser válido.</p>
           </div>
         </div>
       </div>
@@ -148,9 +143,8 @@
           ></textarea>
           <div
             *ngIf="anexoDosFormGroup.get('descripcion')?.invalid && (anexoDosFormGroup.get('descripcion')?.touched || anexoDosFormGroup.get('descripcion')?.dirty)"
-            class="text-danger mt-1"
           >
-            Este campo es obligatorio y debe ser válido.
+            <p class="mensaje-error">Este campo es obligatorio y debe ser válido.</p>
           </div>
         </div>
       </div>

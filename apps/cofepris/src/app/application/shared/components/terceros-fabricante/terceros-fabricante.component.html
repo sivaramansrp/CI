@@ -484,9 +484,9 @@
               <label for="curp" class="form-label">C.U.R.P.*: </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
             </div>
-          </div>
-          <div class="d-flex justify-content-center mt-3">
-            <button type="button" class="btn btn-primary w-40" (click)="buscar(agregarFormuladorFormGroup)">Buscar</button>
+            <div class="d-flex justify-content-end mt-3">
+              <button type="button" class="btn btn-primary w-40" (click)="buscar(agregarFormuladorFormGroup)">Buscar</button>
+            </div>
           </div>
         </div>
 
@@ -500,7 +500,9 @@
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
             <div class="d-flex justify-content-end mt-2">
-              <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarFormuladorFormGroup)">Buscar</button>
+              @if(nacional && fisica) {
+                <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarFormuladorFormGroup)">Buscar</button>
+              }
             </div>
           </div>
           <div class="col-md-4">
@@ -510,33 +512,7 @@
             </div>
           </div>
         </div>
-        <hr />
-        <hr />
-        <h5>Datos personales</h5>
-        <div class="row d-flex datos-personales-form-container">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label for="nombre" class="form-label">Nombre(s)*: </label>
-              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="primerApellido">Primer apellido*:</label>
-              <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
-                class="form-control" />
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
-              <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
-                class="form-control" />
-            </div>
-          </div>
-        </div>
+        
         } @if (nacional && moral){
         <div class="row">
           <div class="col-md-4">
@@ -567,7 +543,7 @@
             </div>
           </div>
         </div>
-        } @if (extranjero && moral || (!fisica && !moral && !noContribuyente)){
+        } @if (extranjero && moral){
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
@@ -579,6 +555,37 @@
         </div>
         } @if (extranjero && fisica){
         <h5>Datos personales</h5>
+        <div class="row d-flex datos-personales-form-container">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="nombre" class="form-label">Nombre(s)*: </label>
+              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="primerApellido">Primer apellido*:</label>
+              <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
+                class="form-control" />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
+              <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
+                class="form-control" />
+            </div>
+          </div>
+        </div>
+        }
+
+        <hr />
+        <hr />
+
+        @if ((nacional && (fisica || noContribuyente || moral)) || (!fisica && !noContribuyente && !moral)) {
+          <h5>Datos personales</h5>
         <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
             <div class="form-group">
@@ -832,9 +839,9 @@
               <label for="curp" class="form-label">C.U.R.P.*: </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
             </div>
-          </div>
-          <div class="d-flex justify-content-center mt-3">
-            <button type="button" class="btn btn-primary w-40" (click)="buscar(agregarProveedorFormGroup)">Buscar</button>
+            <div class="d-flex justify-content-end mt-3">
+              <button type="button" class="btn btn-primary w-40" (click)="buscar(agregarProveedorFormGroup)">Buscar</button>
+            </div>
           </div>
         </div>
 
@@ -848,40 +855,16 @@
               <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
             <div class="d-flex justify-content-end mt-2">
-              <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarProveedorFormGroup)">Buscar</button>
+              @if (nacional && fisica){
+
+                <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarProveedorFormGroup)">Buscar</button>
+              }
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label">C.U.R.P.*: </label>
               <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
-            </div>
-          </div>
-        </div>
-        <hr />
-        <hr />
-        <h5>Datos personales</h5>
-        <div class="row d-flex datos-personales-form-container">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label for="nombre" class="form-label">Nombre(s)*: </label>
-              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control"/>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="primerApellido">Primer apellido*:</label>
-              <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
-                class="form-control" />
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
-              <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
-                class="form-control" />
             </div>
           </div>
         </div>
@@ -956,10 +939,41 @@
         <hr />
         <hr />
 
+        @if ((nacional && (fisica || noContribuyente || moral)) || (!fisica && !noContribuyente && !moral)) {
+          <h5>Datos personales</h5>
+        <div class="row d-flex datos-personales-form-container">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="nombre" class="form-label">Nombre(s)*: </label>
+              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control"/>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="primerApellido">Primer apellido*:</label>
+              <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
+                class="form-control" />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
+              <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
+                class="form-control" />
+            </div>
+          </div>
+        </div>
+        }
+
+        <hr />
+        <hr />
+
         <!-- Contenedor-del-formulario-de-domicilio -->
         <h5>Domicilio</h5>
         <div class="row d-flex domicilio-form-container">
-          @if(nacional){
+          @if(nacional || (!nacional && !extranjero)){
             <div>
               <div class="col-md-4">
                 <div class="form-group">
