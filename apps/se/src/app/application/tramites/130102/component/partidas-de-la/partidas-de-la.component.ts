@@ -28,6 +28,8 @@ import { Modal } from 'bootstrap';
 import { OctavaTemporal } from '../../models/octava-temporal.model';
 import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
+import { Tigies } from '../../models/response/catalogos-response.model';
 
 
 /**
@@ -131,7 +133,7 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
   form!: FormGroup;
   formForTotalCount!: FormGroup;
   TEXTOS = TEXTOS;
-  fraccionArancelariaTIGIE: Catalogo[] = [];
+  fraccionArancelariaTigieData: Tigies[] = [];
   tableBodyData: { tbodyData: string[] }[] = [];
   public solicitudState!: Solicitud130102State;
   private destroyNotifier$: Subject<void> = new Subject();
@@ -144,7 +146,8 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
     private formularioRegistroService: FormularioRegistroService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catOctavaTemporalService: CatOctavaTemporalService
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -175,9 +178,9 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.formularioRegistroService.getFraccionArancelariaTIGIE().pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+    /*this.formularioRegistroService.getFraccionArancelariaTIGIE().pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.fraccionArancelariaTIGIE = data;
-    });
+    });*/
 
     this.inicializarEstadoFormulario();
     this.formularioTotalCount();
@@ -371,6 +374,23 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.modalEditar?.show();
     }
   }
+  /**
+   *  Método que se ejecuta al perder el foco del campo de fracción arancelaria TIGIE.
+   *  Obtiene los datos relacionados con la fracción arancelaria TIGIE y los asigna al formulario.
+   */
+
+  onBlurFraccionArancelaria(): void {
+    const CVE_FRACCION = this.form.get('fraccionArancelariaTIGIE')?.value;
+    if (CVE_FRACCION) {
+      this.catOctavaTemporalService.getTigieFraccion(CVE_FRACCION).subscribe((data) => {
+        if (data && data.datos && data.datos.length > 0) {
+          this.fraccionArancelariaTigieData = data.datos;
+
+        }
+      });
+    }
+  }
+
 
   guardarEdicion(): void {
     if (this.partidasSeleccionadas.length) {

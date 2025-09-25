@@ -14,9 +14,11 @@ import { API_GET_BLOQUE_PAISES,
   API_GET_UNIDADES_ADMINISTRATIVAS, 
   API_GET_UNIDADES_MEDIDA,
   API_GET_ESQUEMA_REGLAS_OCTAVA, 
-  API_GET_INICIAR_NOTIFICACION} from '../server/api-router';
+  API_GET_INICIAR_NOTIFICACION,
+  API_GET_TIGIE} from '../server/api-router';
 import { CatalogosBloquesResponse } from '../models/octava-temporal.model';
 import { IniciarNotificacionResponse } from '../models/response/notificaciones-response.model';
+import { CatalogosTigiesResponse } from '../models/response/catalogos-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -256,6 +258,28 @@ export class CatOctavaTemporalService {
       })
     );  
   }
+
+  /**
+   * Obtiene los datos relacionados con una fracción arancelaria específica del TIGIE.
+   * @param cveFraccion Clave de la fracción para obtener los datos relacionados con TIGIE.
+   * @returns 
+   */
+
+  getTigieFraccion(cveFraccion: string): Observable<CatalogosTigiesResponse> {
+    const ENDPOINT = `${this.host}` + API_GET_TIGIE(cveFraccion);
+    return this.http.get<CatalogosTigiesResponse>(ENDPOINT).pipe(
+      map((response) => {
+        return response;      
+      }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    ); 
+  } 
+
 
 }
 

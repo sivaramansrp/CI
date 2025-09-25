@@ -118,3 +118,16 @@ export const NUMFOLIOTRAMITE = '{numFolioTramite}';
  */
 
 export const API_GET_INICIAR_NOTIFICACION = (NUMFOLIOTRAMITE: string) : string => `sat-t130102/${NUMFOLIOTRAMITE}/confirmar-notificacion/iniciar`;
+
+/*
+    * Constante para la clave de la fracción.
+    * Debe ser reemplazada por la clave real de la fracción.
+*/
+export const CLVFRACCION = '{clvFraccion}';
+
+/**
+ * API MS para obtener el TIGIE de una fracción arancelaria específica del tramite 130102.
+ * @param CLVFRACCION - Clave de la fracción arancelaria.
+ * @returns 
+ */
+export const API_GET_TIGIE = (CLVFRACCION: string) : string => `sat-t130102/tramite/${CLVFRACCION}/tigie`;
