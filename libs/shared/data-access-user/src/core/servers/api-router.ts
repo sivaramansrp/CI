@@ -462,6 +462,12 @@ export const API_GET_OPINION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : stri
  */
 export const API_POST_REQUERIMIENTO_GUARDAR = (TRAMITE: string, IDREQUERIMIENTO: string) : string => `sat-t${TRAMITE}/confirmar-notificacion/requerimiento/${IDREQUERIMIENTO}/acuse/guardar`;
 
+/**
+ * API para obtener la notificacion de los acuses recibidos.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Confirmar-Notificacion/consulta-acuse-recibo-notificacion
+ */
+export const API_GET_ACUSES_RECIBOS_NOTIFICACION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/acuses-recibos-notificacion`;
+
 /** 
  * API para iniciar la confirmación de notificación del tramite generico.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Confirmar-Notificacion/iniciar-confirmacion-notificacion
@@ -549,3 +555,8 @@ export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string, PROCEDURE: number)
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/firmar
  */
 export const API_POST_FIRMA = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/firmar`;
+
+/** API para guardar la solicitud del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/solicitud/guardar
+ */
+export const API_POST_SOLICITUD_GUARDAR = (PROCEDURE: string): string => `sat-t${PROCEDURE}/solicitud/guardar`;

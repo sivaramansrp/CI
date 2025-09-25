@@ -218,3 +218,4 @@ export * from './core/models/shared/cargar-documentos.model';
 export * from './tramites/components/paso-firma/paso-firma.component';
 export * from './core/services/shared/catalogo.service';
 export * from './tramites/components/paso-carga-documento/paso-carga-documento.component';
+export * from './core/services/shared/registro-solicitud.service';

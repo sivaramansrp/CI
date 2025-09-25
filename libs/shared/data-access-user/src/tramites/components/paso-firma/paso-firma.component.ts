@@ -31,7 +31,7 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
   * Cadena original generada a partir de los datos del trámite.
   * Esta cadena será firmada con el certificado digital y la llave privada proporcionados.
   */
-  cadenaOriginal?: string='|202782605|01/07/2025|20:01:25|Juan Pérez||||||||null|brpomskyldi@etllpqhpyrpks.zgi|1|1|null||||';
+  cadenaOriginal?: string;
 
   /**
    * Folio del trámite que se está procesando.
@@ -228,6 +228,7 @@ export class PasoFirmaComponent implements OnInit, OnDestroy {
             sello: FIRMAHEX,
             fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
             documentos_requeridos: response.datos?.documentos_requeridos || [],
+            rfcSolicitante: 'AAL0409235E6'
           };
 
           return this.documentoService.enviarFirma<string>(String(this.idSolicitud), PAYLOAD, this.procedure);

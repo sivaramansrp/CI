@@ -29,12 +29,12 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="form-group">
-        <input-fecha [datos]="fetchaDeFirma" [setFecha]="complementarForm.get('fechaDeFirma')?.value" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+        <input-fecha [datos]="fetchaDeFirma" [setFecha]="complementarForm.get('fechaDeFirma')?.value" (valorCambiado)="cambioFechaFinal($event)" [deshabilitarFuturas]="true"></input-fecha>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="form-group">
         <input-fecha [datos]="fetchaDeFinDeVigencia" [setFecha]="complementarForm.get('fetchaDeFinDeVigencia')?.value" (valorCambiado)="cambioFechaFinale($event)"></input-fecha>
       </div>
@@ -42,8 +42,8 @@
   </div>
   <div class="row mt-5">
     <div class="col-12 container text-end mt-5">
-      <button class="btn btn-default me-2">Limpiar</button>
-      <button class="btn btn-primary">Agregar Complemento</button>
+      <button class="btn btn-default me-2" (click)="limpiar()">Limpiar</button>
+      <button class="btn btn-primary" (click)="agregarComplemento()">Agregar Complemento</button>
     </div>
   </div>
   <div class="row mt-5">
@@ -64,3 +64,10 @@
 </div>
     </form>
 </div>
+
+@if (exitosamenteNotificacion) {
+<section class="exito-modal">
+  <lib-notificaciones [notificacionInput]="exitosamenteNotificacion">
+  </lib-notificaciones>
+</section>
+}

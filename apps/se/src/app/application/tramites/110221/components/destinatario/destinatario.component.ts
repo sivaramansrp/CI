@@ -220,38 +220,63 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Configura el formulario reactivo con los valores iniciales del estado.
-   */
-  donanteDomicilio(): void {
-    this.registroForm = this.fb.group({
-      destinatarioForm : this.fb.group({
-      nombre: [this.solicitudState?.destinatarioForm.nombre||'', [Validators.required, Validators.maxLength(250)]],
-      numeroFiscal: [this.solicitudState?.destinatarioForm.numeroFiscal||'', [Validators.required, Validators.maxLength(30)]],
-    }),
-     domicilioForm : this.fb.group({
-      calle: [this.solicitudState.domicilioForm.calle || '', [Validators.required, Validators.maxLength(90)]],
-      numeroLetra: [this.solicitudState.domicilioForm.numeroLetra || '', [Validators.required, Validators.maxLength(30)]],
-      paisDestino: [this.solicitudState.domicilioForm.paisDestino || '', Validators.required],
-      ciudad: [this.solicitudState.domicilioForm.ciudad || '', [Validators.required, Validators.maxLength(50)]],
-      correoElectronico: [this.solicitudState.domicilioForm.correoElectronico || '', [Validators.required, Validators.email, Validators.maxLength(70)]],
-      lada: [this.solicitudState.domicilioForm.lada || '', [Validators.maxLength(5)]],
-      telefono: [this.solicitudState.domicilioForm.telefono || '', [Validators.maxLength(20)]],
-    }),
-    representanteLegalForm : this.fb.group({
-  lugar: [this.solicitudState?.representanteLegalForm.lugar || '', Validators.required],
-  nombreRepresentante: [this.solicitudState?.representanteLegalForm.nombreRepresentante || '', Validators.required],
-  empresa: [this.solicitudState?.representanteLegalForm.empresa || '', Validators.required],
-  cargo: [this.solicitudState?.representanteLegalForm.cargo || '', Validators.required],
-  lada: [this.solicitudState?.representanteLegalForm.lada || ''],
-  telefono: [this.solicitudState?.representanteLegalForm.telefono || '', Validators.required],
-  fax: [this.solicitudState?.representanteLegalForm.fax || '', Validators.required], 
-  correoElectronico: [this.solicitudState?.representanteLegalForm.correoElectronico || '', [Validators.required, Validators.email]] 
-})
+/**
+ * Configura el formulario reactivo con los valores iniciales del estado.
+ */
+donanteDomicilio(): void {
+  this.registroForm = this.fb.group({
+    destinatarioForm: this.createDestinatarioForm(),
+    domicilioForm: this.createDomicilioForm(),
+    representanteLegalForm: this.createRepresentanteLegalForm()
+  });
+  this.inicializarEstadoFormulario();
+}
 
-    });
-    this.inicializarEstadoFormulario();
-  }
+/**
+ * Crea el formulario de destinatario.
+ */
+private createDestinatarioForm(): FormGroup {
+  return this.fb.group({
+    nombre: [this.solicitudState?.destinatarioForm.nombre || '', [Validators.required, Validators.maxLength(250)]],
+    numeroFiscal: [this.solicitudState?.destinatarioForm.numeroFiscal || '', [Validators.required, Validators.maxLength(30)]],
+  });
+}
+
+/**
+ * Crea el formulario de domicilio.
+ */
+private createDomicilioForm(): FormGroup {
+  return this.fb.group({
+    calle: [this.solicitudState.domicilioForm.calle || '', [Validators.required, Validators.maxLength(90)]],
+    numeroLetra: [this.solicitudState.domicilioForm.numeroLetra || '', [Validators.required, Validators.maxLength(30)]],
+    paisDestino: [this.solicitudState.domicilioForm.paisDestino || '', Validators.required],
+    ciudad: [this.solicitudState.domicilioForm.ciudad || '', [Validators.required, Validators.maxLength(50)]],
+    correoElectronico: [this.solicitudState.domicilioForm.correoElectronico || '', [Validators.required, Validators.email, Validators.maxLength(70)]],
+    lada: [this.solicitudState.domicilioForm.lada || '', [Validators.maxLength(5)]],
+    telefono: [this.solicitudState.domicilioForm.telefono || '', [Validators.maxLength(20)]],
+  });
+}
+
+/**
+ * Crea el formulario de representante legal.
+ */
+private createRepresentanteLegalForm(): FormGroup {
+  return this.fb.group({
+    nombreRepresentante: [this.solicitudState?.representanteLegalForm.nombreRepresentante || '', Validators.required],
+    lugar: [this.solicitudState?.representanteLegalForm.lugar || '', Validators.required],
+    calle: [this.solicitudState?.representanteLegalForm.calle || '', Validators.required],
+    numero: [this.solicitudState?.representanteLegalForm.numero || '', Validators.required],
+    pais: [this.solicitudState?.representanteLegalForm.pais || '', Validators.required],
+    ciudad: [this.solicitudState?.representanteLegalForm.ciudad || '', Validators.required],
+    cargo: [this.solicitudState?.representanteLegalForm.cargo || '', Validators.required],
+    empresa: [this.solicitudState?.representanteLegalForm.empresa || '', Validators.required],
+    numeroRegistroFiscal: [this.solicitudState?.representanteLegalForm.numeroRegistroFiscal || '', Validators.required],
+    lada: [this.solicitudState?.representanteLegalForm.lada || '', [Validators.pattern(/^[0-9]{1,5}$/)]],
+    telefono: [this.solicitudState?.representanteLegalForm.telefono || '', [Validators.required, Validators.pattern(/^[0-9]{7,15}$/)]],
+    fax: [this.solicitudState?.representanteLegalForm.fax || '', [Validators.required]],
+    correoElectronico: [this.solicitudState?.representanteLegalForm.correoElectronico || '', [Validators.required, Validators.email]],
+  });
+}
 
   /**
    * Inicializa el estado del formulario (habilitado/deshabilitado) basado en el modo de solo lectura.

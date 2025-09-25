@@ -1,13 +1,14 @@
 import {
   AlertComponent,
   AnexarDocumentosComponent,
+  Catalogo,
+  CatalogoSelectComponent,
   ConfiguracionColumna,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import {
-  CatalogoSelectComponent,
   CatalogosSelect,
   ConsultaioQuery,
   SELECCIONAR_DOCUMENTOS,
@@ -22,6 +23,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { AutoridadService } from '../../services/autoridad.service';
 import { CommonModule } from '@angular/common';
 import { DocumentoAdicional } from '../../models/datos-tramite.model';
+import { TIPO_DE_DOCUMENTO } from '../../constantes/constantes32401';
 import { Tramite32401Query } from '../../estados/tramite32401.query';
 
 /**
@@ -82,7 +84,7 @@ export class SeleccionarDocumentosComponent implements OnInit, OnDestroy {
    *
    * Este objeto se llena al llamar al método `getTiposDocumentos()` y se utiliza para poblar listas desplegables u otras interfaces.
    */
-  tiposDocumentos: CatalogosSelect = {} as CatalogosSelect;
+  tiposDocumentos: CatalogosSelect = TIPO_DE_DOCUMENTO;
 
   /**
    * Valor seleccionado desde el input asociado a la selección de documentos.
@@ -219,7 +221,7 @@ export class SeleccionarDocumentosComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.seleccionaRequerimientoForm = this.fb.group({
-      tipoDeDocumento: [this.solicitudState.tipoDeDocumento],
+      tipoDeDocumento: [this.solicitudState?.tipoDeDocumento],
     });
 
     this.tramite32401Query.selectSolicitud$
@@ -252,8 +254,8 @@ export class SeleccionarDocumentosComponent implements OnInit, OnDestroy {
     this.autoridadService
       .getTiposDocumentos()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((response: CatalogosSelect) => {
-        this.tiposDocumentos = response;
+      .subscribe((response: Catalogo[]) => {
+        this.tiposDocumentos.catalogos = response;
       });
   }
 
@@ -270,6 +272,28 @@ export class SeleccionarDocumentosComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite32401Store[metodoNombre] as (valor: unknown) => void)(VALOR);
+  }
+
+   /**
+   * Asigna el tipo de documento seleccionado.
+   *
+   * - Verifica si el documento ya existe en `datosDelContenedor` comparando la descripción.  
+   * - Si no existe, lo agrega con un nuevo identificador incremental y su descripción obtenida desde `tiposDocumentos`.  
+   * - Finalmente, actualiza el estado en el store con el `id` del documento seleccionado.
+   *
+   * @param evento - Objeto de tipo `Catalogo` que contiene la información del documento seleccionado
+   *                 (incluye `id` y `descripcion`).
+   */
+  setTipoDeDocumento(evento: Catalogo): void {
+    if (evento.id && !this.datosDelContenedor.some((item) => item.tipoDeDocumento === evento.descripcion)
+    ) {
+      this.datosDelContenedor.push({
+        id: this.datosDelContenedor.length + 1,
+        tipoDeDocumento:
+          this.tiposDocumentos?.catalogos?.[evento.id]?.descripcion,
+      });
+    }
+    this.tramite32401Store.setTipoDeDocumento(evento.id);
   }
 
   /**

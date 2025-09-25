@@ -1,20 +1,12 @@
-import { AVISO,AlertComponent, BtnContinuarComponent, DatosPasos } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AccionBoton } from '../../models/retorno-de-partes.model';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constants/retorno-de-partes.enum';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { Subject } from 'rxjs';
-import { TEXTOS } from '../../constants/retorno-de-partes.enum';
-import { Tramite6403Query } from '../../estados/tramite6403.query';
-import { Tramite6403State } from '../../estados/tramite6403.store';
-import { Tramite6403Store } from '../../estados/tramite6403.store';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
+import { AVISO, AccionBoton, AlertComponent, BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from "@libs/shared/data-access-user/src";
+import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { Subject, map, takeUntil } from "rxjs";
+import { Tramite6403State, Tramite6403Store } from "../../estados/tramite6403.store";
+import { PasoDosComponent } from "../paso-dos/paso-dos.component";
+import { PasoTresComponent } from "../paso-tres/paso-tres.component";
+import { PasoUnoComponent } from "../paso-uno/paso-uno.component";
+import { TEXTOS } from "../../constants/retorno-de-partes.enum";
+import { Tramite6403Query } from "../../estados/tramite6403.query";
 
 
 /**

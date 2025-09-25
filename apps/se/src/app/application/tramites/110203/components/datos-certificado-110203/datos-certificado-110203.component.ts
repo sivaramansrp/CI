@@ -11,6 +11,8 @@ import { Tramite110203Query } from '../../../../estados/queries/tramite110203.qu
 
 import mediocatalogo from '@libs/shared/theme/assets/json/110203/mediocatalogo.json';
 
+import mercanciasFromDatos from '@libs/shared/theme/assets/json/110203/mercancias-from-datos.json';
+
 import { REGEX_RFC,REG_X} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 
@@ -239,21 +241,20 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
    */
   public getRegistroForm(): void {
     this.mercanciasForm = this.fb.group({
-      comercial: ['', Validators.required],
-      ingles: ['', Validators.required],
-      complemento: [''],
-      marca: ['', Validators.required],
-      valor: ['', [Validators.required, Validators.pattern(REG_X.DECIMALES_DOS_LUGARES)]],
-      cantidad: ['', [Validators.required,Validators.pattern(REGEX_RFC)]],
+      comercial: [mercanciasFromDatos?.comercial, Validators.required],
+      ingles: [mercanciasFromDatos?.ingles, Validators.required],
+      complemento: [this.solicitudState?.complemento ? this.solicitudState?.complemento : mercanciasFromDatos?.complemento],
+      marca: [this.solicitudState?.marca ? this.solicitudState?.marca : mercanciasFromDatos?.marca, Validators.required],
+      valor: [this.solicitudState?.valor ? this.solicitudState?.valor : mercanciasFromDatos?.valor, [Validators.required, Validators.pattern(REG_X.DECIMALES_DOS_LUGARES)]],
+      cantidad: [mercanciasFromDatos?.cantidad, [Validators.required, Validators.pattern(REGEX_RFC)]],
       comercializacion: [this.solicitudState?.comercializacion, Validators.required],
-      bruta: ['', [Validators.required, Validators.pattern(REG_X.DECIMALES_DOS_LUGARES)]],
+      bruta: [this.solicitudState?.bruta ? this.solicitudState?.bruta : mercanciasFromDatos?.bruta, [Validators.required, Validators.pattern(REG_X.DECIMALES_DOS_LUGARES)]],
       medida: [this.solicitudState?.medida, Validators.required],
-      factura: ['', Validators.required],
+      factura: [this.solicitudState?.factura ? this.solicitudState?.factura : mercanciasFromDatos?.factura, Validators.required],
       tipo: [this.solicitudState?.tipo, Validators.required],
-      fecha: ['', Validators.required]
+      fecha: [mercanciasFromDatos?.fecha, Validators.required]
     });
-     this.patchData();
-  
+    this.patchData();
   }
    /**
    * Asigna valores predeterminados al formulario de mercancías.
@@ -261,17 +262,6 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
    * lo cual es útil para pruebas o para precargar información existente en un flujo de edición.
    */
   patchData():void {
-    this.mercanciasForm.patchValue({
-      comercial: 'Patitos de hule',
-      ingles: 'rubber ducklings',
-      complemento:'preabus',
-      marca: 'preabus',
-      valor: 15,
-      cantidad: 20000,
-      bruta: '4',         
-      factura: '23',
-      fecha: '18/02/2025',
-    });
    /**
    * Desactiva campos específicos del formulario de mercancías.
    * Los campos deshabilitados no pueden ser modificados por el usuario y no se incluirán al enviar el formulario.
@@ -312,7 +302,7 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
  *
  * @param controlName - El nombre del campo dentro del formulario `mercanciasForm` que se desea formatear.
  */
-formatDecimal(controlName: string): void {
+formatDecimal(controlName: string, functionName: keyof Tramite110203Store): void {
   const DATA = this.mercanciasForm.get(controlName);
   if (!DATA) 
     {
@@ -325,6 +315,7 @@ formatDecimal(controlName: string): void {
     // Convert to float and format with 4 decimal places
     const FORMAT_DATOS = parseFloat(VALUE).toFixed(4);
     DATA.setValue(FORMAT_DATOS, { emitEvent: false });
+    this.setValoresStore(this.mercanciasForm, controlName, functionName);
   }
 }
 
@@ -339,9 +330,9 @@ formatDecimal(controlName: string): void {
  * Contiene los campos: observaciones, descripción precisa de la solicitud (precisa) y quién presenta la solicitud (presenta).
  */
     this.certificadoForm = this.fb.group({
-      observaciones: [this.solicitudState.observaciones],
-      precisa: [this.solicitudState.precisa,Validators.required],
-      presenta: [this.solicitudState.presenta],
+      observaciones: [this.solicitudState?.observaciones],
+      precisa: [this.solicitudState?.precisa,Validators.required],
+      presenta: [this.solicitudState?.presenta],
     });
     /**
  * Crea el formulario reactivo correspondiente a los datos del certificado.
@@ -383,7 +374,6 @@ formatDecimal(controlName: string): void {
  * Finalmente, cierra el modal después de guardar los cambios.
  */
 onModificar(): void {
-  if (this.mercanciasForm.valid) {
     const UPDATED_DATOS = this.mercanciasForm.value;
 
     this.mercancias[0] = {
@@ -402,7 +392,7 @@ onModificar(): void {
       fechaExpedicion: UPDATED_DATOS.fecha,
     };    
     this.closeModal.nativeElement.click();
-  }
+  
 }
 
   /**

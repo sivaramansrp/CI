@@ -1,7 +1,8 @@
 export interface Tabulaciones {
     titulo: string;
     id: string;
-    disabled: boolean
+    disabled: boolean,
+    visible?: boolean
 }
 export interface AccuseComponentes {
     tramite: number;

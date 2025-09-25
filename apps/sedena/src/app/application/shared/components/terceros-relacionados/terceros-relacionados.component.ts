@@ -89,6 +89,8 @@ export class TercerosRelacionadosComponent implements OnInit{
 
   @Output() openModal = new EventEmitter<string>();
 
+  @Output () eliminarProveedorContenedoraFinalEvent = new EventEmitter<Proveedor>();
+
   /**
    * Indica si el formulario se encuentra en modo solo lectura.
    * Cuando es verdadero, los campos del formulario no pueden ser editados.

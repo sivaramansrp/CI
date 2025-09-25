@@ -103,7 +103,7 @@ export function obtenerColumnasUnidad(
 ): ConfiguracionColumna<UnidadTabla>[] {
   return [
     {
-      encabezado: 'ID',
+      encabezado: 'IDENTIFICACIÓN',
       clave: (item: UnidadTabla): string => item.idDeVehiculo ? String(item.idDeVehiculo) : '',
       orden: 0,
     },
@@ -128,7 +128,7 @@ export function obtenerColumnasUnidad(
       orden: 4,
     },
     {
-      encabezado: 'País emisor',
+      encabezado: 'Emisora País',
       clave: (item: UnidadTabla): string => obtenerDescripcionDeCatalogo(item.paisEmisor, paisEmisorCatalogo),
       orden: 5,
     },

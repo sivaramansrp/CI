@@ -35,7 +35,7 @@ export interface Solicitud32401State {
   /**
    * Representa el tipo de documento actualmente seleccionado.
    */
-  tipoDeDocumento: number | null;
+  tipoDeDocumento: string | number;
 }
 
 /**
@@ -73,7 +73,7 @@ export function createInitialState(): Solicitud32401State {
     /**
      * Representa el tipo de documento actualmente seleccionado.
      */
-    tipoDeDocumento: null,
+    tipoDeDocumento: '',
   };
 }
 
@@ -201,9 +201,9 @@ export class Tramite32401Store extends Store<Solicitud32401State> {
    *
    * Actualiza el estado del store con el valor proporcionado para `tipoDeDocumento`.
    *
-   * @param {number | null} tipoDeDocumento - El identificador del tipo de documento. Puede ser `null` si no se ha seleccionado ninguno.
+   * @param {number | string} tipoDeDocumento - El identificador del tipo de documento. Puede ser `null` si no se ha seleccionado ninguno.
    */
-  setTipoDeDocumento(tipoDeDocumento: number | null): void {
+  setTipoDeDocumento(tipoDeDocumento: string | number): void {
     this.update((state) => ({
       ...state,
       tipoDeDocumento: tipoDeDocumento,
