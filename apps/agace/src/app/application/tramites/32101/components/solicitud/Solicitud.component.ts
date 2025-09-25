@@ -245,6 +245,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.fetchListaDeDocumentos();
     this.fetchListaDeInversion();
     this.fetchBancoList();
+    this.fetchListaComprobante();
     /**
     * Escuchar los datos actualizados de la fila
     */
@@ -497,6 +498,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Obtiene la lista de comprobantes desde el servicio `consultaAvisoAcreditacionService`
+   * y actualiza el catálogo de comprobantes en el componente.
+   * @returns {void} No retorna ningún valor.
+   */
+  fetchListaComprobante(): void {
+    this.consultaAvisoAcreditacionService
+      .getListaDeDocumentos('listaDeComprobante')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        this.comprobante.catalogos = respuesta.data;
+      });
+  }
+
+
+  /**
    * Obtiene la lista de bancos desde el servicio `consultaAvisoAcreditacionService`
    * y actualiza el catálogo de bancos en el componente.
    *
@@ -520,16 +536,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param selectedOption - El objeto de la opción seleccionada del catálogo.
    */  
   onlistaDeDocumentosChange(selectedOption: any): void {
-    console.log('Opción seleccionada:', selectedOption);
     
     const VALUE = selectedOption?.id || selectedOption?.clave;
-    console.log('Valor seleccionado:', VALUE);
-    
+
     this.comprobanteVisible = String(VALUE) === '1';
-    console.log('comprobanteVisible:', this.comprobanteVisible);
     
     const COMPROBANTE_CONTROL = this.registroForm.get('comprobante');
-    console.log('Form control comprobante:', COMPROBANTE_CONTROL);
     
     if (COMPROBANTE_CONTROL) {
       if (this.comprobanteVisible) {
