@@ -91,7 +91,7 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
     this.directorGeneralForm = this.fb.group({
       nombre: [STATE.nombre, [Validators.required]],
       primerApellido: [STATE.primerApellido, [Validators.required]],
-      segundoApellido: [STATE.segundoApellido, [Validators.required]],
+      segundoApellido: [STATE.segundoApellido],
     });
   }
 
@@ -117,5 +117,21 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.chofer40103Store[metodoNombre] as (valor: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Valida el formulario del director general.
+   * @returns {boolean} true si el formulario es válido, false en caso contrario.
+   */
+  public validarFormularios(): boolean {
+    if (!this.directorGeneralForm) {
+      return false;
+    }
+    
+    // Marcar todos los campos como tocados para mostrar errores
+    this.directorGeneralForm.markAllAsTouched();
+    
+    // Verificar si el formulario es válido
+    return this.directorGeneralForm.valid;
   }
 }
