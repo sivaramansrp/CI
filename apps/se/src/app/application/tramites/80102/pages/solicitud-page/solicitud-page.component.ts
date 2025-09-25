@@ -385,6 +385,60 @@ getValorIndice(e: AccionBoton): void {
 
     return [...arr1.map(MAP_TO_PAYLOAD), ...arr2.map(MAP_TO_PAYLOAD)];
   }
+/**
+ * Genera un array de empresas nacionales combinando datos de entrada con una base.
+ * @param array - Datos dinámicos con propiedades como servicio, RFC, año y número IMMEX.
+ * @param base - Plantilla base con valores por defecto para cada empresa.
+ * @returns Array de objetos que fusiona la base con los datos del array.
+ * @example buildEmpresaacionales(input, base) => [{ rfc: 'RFC123', razonSocial: 'Empresa X', idServicio: 'S01', ... }]
+ */
+  // eslint-disable-next-line class-methods-use-this
+  buildEmpresaNacionales(array: any[] = [], base: unknown[]): unknown[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const RESULT: any[] = [];
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,      
+      idServicio :arr.servicio?? '',
+      rfc:arr.registroContribuyentes?? '',
+      tiempoPrograma:arr.anoIMMEX?? '',
+      numeroPrograma:arr.numeroIMMEX?? '',
+      razonSocial:arr.denominacionSocial?? '',
+        });
+      });
+    });
+    return RESULT;
+  }
+/**
+ * Construye un array de empresas extranjeras combinando datos de entrada con una base.
+ * @param array - Datos dinámicos con propiedades como dirección, servicio y nombre.
+ * @param base - Plantilla base con valores por defecto para cada empresa extranjera.
+ * @returns Array de objetos fusionando la base con los datos del array.
+ * @example buildEmpresaExtranjera(input, base) => [{ nombre: 'Empresa X', idServicio: 'S01', idDireccionSol: 'Dirección Y' }]
+ */
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
+  buildEmpresaExtranjera(array: any[] = [], base: unknown[]): unknown[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const RESULT: any[] = [];
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,     
+        idDireccionSol:arr.direccionEmpresaExtranjera,
+        idServicio:arr.servicio,
+        nombre:arr.nombreEmpresa,
+        });
+      });
+    });
+    return RESULT;
+  }
+
+
+
 
   /** Construye el arreglo de declaraciones de solicitud a partir de los datos proporcionados. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -659,7 +713,8 @@ getValorIndice(e: AccionBoton): void {
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
     const SOCIOS_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.sociosAccionistas);
-
+    const EMPRESAS_NACIONALES = this.buildEmpresaNacionales(data.datos,this.empresasNacionales);
+    const EMPRESAS_EXTRANJERAS = this.buildEmpresaExtranjera(data.datosEmpresaExtranjera,this.empresasExtranjeras);
     const PAYLOAD = {
       "esDeGuardar": true,
     "tipoDeSolicitud": "guardar",
@@ -710,7 +765,9 @@ getValorIndice(e: AccionBoton): void {
     "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
     "solicitud": SOLICITUD,
     "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
-    "sociosAccionistas": [...SOCIOS_ACCIONISTAS]
+    "sociosAccionistas": [...SOCIOS_ACCIONISTAS],
+    "empresasNacionales":[...EMPRESAS_NACIONALES] ,
+    "empresasExtranjeras":[...EMPRESAS_EXTRANJERAS] ,
 }
 
     return new Promise((resolve, reject) => {
