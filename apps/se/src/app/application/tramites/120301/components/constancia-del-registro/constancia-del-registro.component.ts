@@ -29,7 +29,7 @@ import {
   SeccionLibStore,
   TablaDinamicaComponent,
   TituloComponent,
-} from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 
 import {
@@ -39,7 +39,8 @@ import {
 
 import { AnioConstanciaService } from '../../services/catalogos/anio-constancia.service';
 
-import { ERROR_FORMA_ALERT, REPRESENTACION_FEDERAL_NOTA } from '../../constantes/elegibilidad-de-textiles.enums';
+import { ERROR_FORMA_ALERT, ERROR_FORMA_ANO, REPRESENTACION_FEDERAL_NOTA } from '../../constantes/elegibilidad-de-textiles.enums';
+
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { GuardadoService } from '../../services/guardado.service';
@@ -140,6 +141,22 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    * Si es `true`, se muestra el mensaje de error; si es `false`, el formulario es válido y no se muestra la alerta.
    */
   public esFormaValido: boolean = false;
+
+  /**
+   * @property {boolean} anoFormValido
+   * @description
+   * Bandera booleana que indica si el año ingresado no es válido.
+   * Si es `true`, se muestra el mensaje de error específico para el año; si es `false`, el año es válido.
+   */
+  public anoFormValido: boolean = false;
+
+  /**
+   * @property {string} formularioAlertaAno
+   * @description
+   * Mensaje HTML que se muestra cuando el año ingresado no es válido.
+   * Contiene el mensaje de error específico para validación de año.
+   */
+  public formularioAlertaAno: string = ERROR_FORMA_ANO;
 
   /**
    * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
@@ -263,6 +280,13 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   public representacionFederalNota = REPRESENTACION_FEDERAL_NOTA;
 
   /**
+   * @property {EventEmitter<boolean>} errorValidacion - Emite un valor booleano para indicar errores de validación.
+   * EventEmitter que comunica al componente padre cuándo hay errores de validación en el formulario.
+   * Se activa cuando la validación del año falla en el método buscarEvaluar.
+   */
+  @Output() errorValidacion: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  /**
    * @constructor
    * @description Constructor del componente. Inicializa los servicios necesarios para el funcionamiento del componente.
    * Inyecta todas las dependencias requeridas para el manejo de formularios reactivos,
@@ -370,6 +394,26 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
 
 
     this.initActionFormBuild();
+
+    this.fitosanitarioForm.get('anoDeLaConstancia')?.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((value) => {
+        if (value && value !== '') {
+          this.anoFormValido = false;
+          this.errorValidacion.emit(false);
+        }
+      });
+
+    // Suscríbase a los cambios del botón de opción para borrar errores de validación al cambiar a "Todos"
+    this.fitosanitarioForm.get('flexRadioRegistro')?.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((value) => {
+        if (value === 'Todos') {
+          // Borrar error de validación de año al cambiar al modo "Todos"
+          this.anoFormValido = false;
+          this.errorValidacion.emit(false);
+        }
+      });
 
   // Obtenga el estado actual de solo lectura inmediatamente
   // Se eliminó el filtrado por cambio de entrada; ahora solo filtra al hacer clic en el botón Buscar
@@ -722,8 +766,9 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   buscarEvaluar(): void {
+    // Restablecer indicadores de validación
+    this.anoFormValido = false;
 
-    this.cargaDatosTabla();
     const ANO_DE_LA_CONSTANCIA =
       this.fitosanitarioForm.get('anoDeLaConstancia')?.value;
     const NUMERO_DE_LA_CONSTANCIA = this.fitosanitarioForm.get(
@@ -742,15 +787,36 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     this.enviada = true;
     const RADIO_VALUE = this.fitosanitarioForm.get('flexRadioRegistro')?.value;
     if (RADIO_VALUE === 'Especifico') {
-      // Validar campos requeridos
+      // Validar únicamente el campo "anoDeLaConstancia"
       const ANO_CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
-      const NUMEROCONTROL = this.fitosanitarioForm.get('numeroDeLaConstancia');
       ANO_CONTROL?.markAsTouched();
-      NUMEROCONTROL?.markAsTouched();
-      if (ANO_CONTROL?.invalid || NUMEROCONTROL?.invalid) {
+
+      // Verificar específicamente si el campo de año es inválido
+      if (ANO_CONTROL?.invalid) {
+        // Mostrar alerta de error de validación solo para el campo de año
+        this.anoFormValido = true;
+        this.errorValidacion.emit(true);
+        window.scrollTo(0, 0);
         return;
       }
-      // Siempre obtener y filtrar datos desde el JSON por numeroDeLaConstancia
+      
+      // Si el año es válido, borre cualquier error de validación anterior.
+      this.errorValidacion.emit(false);
+      
+      // Si el año es válido, continúe con la validación del número de certificado
+      const NUMEROCONTROL = this.fitosanitarioForm.get('numeroDeLaConstancia');
+      NUMEROCONTROL?.markAsTouched();
+      
+      // Para modo Específico, valide que también se proporcione el número de certificado
+      if (NUMEROCONTROL?.invalid) {
+        // No emitir ERROR_FORMA_ANO aquí, solo marcar el campo para mostrar su error específico
+        // El error específico del campo se mostrará en el template
+        window.scrollTo(0, 0);
+        return;
+      }
+      
+      // Cargar datos de la tabla después de pasar la validación
+      // Para modo Específico, use datos basados en archivos con filtrado
       this.ElegibilidadTextilesService.obtenerTablaDatos<ConstanciaTramiteConfiguracion>(
         'constancia-del-registro-tabla-asociados.json'
       )
@@ -779,19 +845,8 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
           },
         });
     } else {
-      // Obtener todos los datos de 'Todos' u otros valores
-      this.ElegibilidadTextilesService.obtenerTablaDatos<ConstanciaTramiteConfiguracion>(
-        'constancia-del-registro-tabla-asociados.json'
-      )
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe({
-          next: (allData) => {
-            this.configuracionTablaDatos = allData as ConstanciaTramiteConfiguracion[];
-            this.ElegibilidadDeTextilesStore.setdatosTablaConstanciaDelRegistro(
-              this.configuracionTablaDatos
-            );
-          },
-        });
+      // Para la opción 'Todos', use la llamada API
+      this.cargaDatosTabla();
     }
   }
 
@@ -907,10 +962,9 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
 
 
   /**
-   * @method onAnoConstanciaChange
-   * @description Maneja el evento de cambio de selección en el catálogo de años de constancia.
-   * Marca el control del formulario como tocado y actualiza el valor en el store.
-   * @param {Catalogo} selectedOption - La opción seleccionada del catálogo.
+   * @method alCambioDeModeloDeAño
+   * @description Maneja el evento de cambio del modelo del año.
+   * @param {string | number} value - El valor seleccionado.
    * @returns {void} No retorna ningún valor.
    */
   onAnoConstanciaChange(selectedOption: Catalogo): void {
@@ -925,27 +979,6 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * @method onAnoConstanciaChangeFromSelect
-   * @description Maneja el evento de cambio regular del dropdown cuando selectionChange no funciona.
-   * @param {Event} event - El evento de cambio del dropdown.
-   * @returns {void} No retorna ningún valor.
-   */
-  onAnoConstanciaChangeFromSelect(event: Event): void {
-    const SELECT_ELEMENT = event.target as HTMLSelectElement;
-    const VALUE = SELECT_ELEMENT.value;
-
-    if (VALUE && VALUE !== '-1') {
-      const CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
-      if (CONTROL) {
-        CONTROL.setValue(VALUE);
-        CONTROL.markAsTouched();
-        CONTROL.updateValueAndValidity();
-
-        this.ElegibilidadDeTextilesStore.setAnoDeLaConstancia(VALUE);
-      }
-    }
-  }
   /**
  * Método para continuar al siguiente paso, validando el campo cantidadFacturas.
  * Si el formulario es inválido, muestra el mensaje de error y no permite continuar.

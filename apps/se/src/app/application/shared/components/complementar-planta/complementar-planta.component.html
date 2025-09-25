@@ -54,6 +54,57 @@
       [datos]="complementoDePlantaDatos"
     ></app-tabla-dinamica>
   </div>
+ <div class="row mt-5">
+    <div class="col-12 container text-end mt-5">
+      <button class="btn btn-default me-2" (click)="limpiar()">Eliminar</button>
+      <button class="btn btn-primary" (click)="agregarComplemento()">Editar</button>
+    </div>
+  </div>
+  <form class="container" [formGroup]="complimentosPlantaForma">
+      <div class="row mt-5">
+      <div class="col-md-4">
+        <label class="form-label" for="cantidad">RFC:</label>
+        <input
+          class="form-control min-hgt"
+          id="rfcFirmante"
+          formControlName="rfcFirmante"
+          type="text"
+          (change)="setValoresStore(complementarForm, 'rfcFirmante', 'setRfcFirmante')"
+        />
+      </div>
+     <div class="col-md-4">
+       <div class="form-group">
+      <app-catalogo-select
+        [catalogo]="permaneceraMercanciaProgramaOptions"
+        [label]="'Tipo de firmante'"
+        [required]="true"
+        name="tipoFirmante"
+        formControlName="tipoFirmante" (change)="setValoresStore(complementarForm, 'tipoFirmante', 'setTipoFirmante')"
+      
+      ></app-catalogo-select>
+      </div>
+    </div>
+         <div class="col-md-4">
+        <button class="btn btn-primary" (click)="agregarFirmante()">Agregar Firmante</button>
+        </div>
+ </div>
+  </form>  
+  
+    <div class="row mt-5">
+      <h6>Complemento de planta</h6>
+      <app-tabla-dinamica
+        [configuracionTabla]="complementoPlanta"
+        [tipoSeleccionTabla]="complementoPlantaTableSelection"
+        [datos]="complementoPlantaDatos"
+      ></app-tabla-dinamica>
+    </div>
+     <div class="row mt-5">
+    <div class="col-12 container text-end mt-5">
+      <button class="btn btn-default me-2">Eliminar</button>
+     </div>
+  </div>
+
+
   <div class="row mt-5">
     <div class="col-12 container text-end mt-5 mb-5">
       <button class="btn btn-default me-2" (click)="regrasar()">

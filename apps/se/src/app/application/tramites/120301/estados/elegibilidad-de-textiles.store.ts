@@ -372,8 +372,6 @@ export interface TextilesState {
 }
 
 /**
- * @function createInitialState
- * @description
  * Crea y retorna el estado inicial para la sección de elegibilidad de textiles.
  * Esta función factory inicializa todas las propiedades del estado con valores por defecto
  * apropiados para comenzar un nuevo trámite. Los valores incluyen cadenas vacías para

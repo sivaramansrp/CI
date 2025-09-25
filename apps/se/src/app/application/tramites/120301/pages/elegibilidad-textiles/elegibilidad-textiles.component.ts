@@ -17,7 +17,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CategoriaMensaje, Notificacion, } from '@ng-mf/data-access-user';
 import { DatosPasos, SeccionLibStore } from '@ng-mf/data-access-user';
-import { ERROR_FORMA_ALERT, PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
+import { ERROR_FORMA_ALERT, ERROR_FORMA_ANO, PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
 import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IniciarRequest } from '../../models/request/iniciar-request.model';
@@ -114,9 +114,20 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
   public formularioAlertaError = ERROR_FORMA_ALERT;
 
   /**
+   * Contiene el mensaje de error que se muestra cuando el año ingresado no es válido.
+   */
+  public formularioAlertaAno = ERROR_FORMA_ANO;
+
+  /**
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
    */
   esFormaValido: boolean = false;
+
+  /**
+   * Controla la visibilidad del mensaje de error cuando el año ingresado no es válido.
+   */
+  anoFormValido: boolean = false;
+
   /**
    * @property {FormGroup} formGroup
    * @description Grupo de formularios reactivos de Angular que maneja todos los datos 
@@ -415,6 +426,23 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnD
    */
   onTabChanged(): void {
     this.esFormaValido = false;
+  }
+
+  /**
+   * Maneja el evento de error de validación del año emitido por el componente paso-uno.
+   * Muestra o oculta el mensaje de error de año según el estado de validación.
+   * @param hasError Valor booleano que indica si hay errores de validación en el año.
+   */
+  alErrorDeValidacion(hasError: boolean): void {
+    this.anoFormValido = hasError;
+  }
+
+  /**
+   * Maneja el evento de cambio de visibilidad de pestañas emitido por el componente paso-uno.
+   * @param show Valor booleano que indica si se deben mostrar las pestañas adicionales.
+   */
+  onMostrarOtraPestanaChange(show: boolean): void {
+    this.mostrarOtraPestana = show;
   }
 
   /**

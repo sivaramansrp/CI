@@ -357,11 +357,23 @@ export const REPRESENTACION_FEDERAL_NOTA = '*El monto mostrado es de carácter i
  * antes de poder continuar al siguiente paso del trámite.
  */
 export const ERROR_FORMA_ALERT = `
-<div class="d-flex justify-content-center text-center">
-  <div>
-    <div class="col-md-12 campos-requeridos">
       <p class="m-0">Corrija los siguientes errores:</p>
       <p class="text-danger m-0">Debe seleccionar una constancia de registro.</p>
+`;
+/**
+ * Constante que define el mensaje de error para validación de formularios.
+ * 
+ * Este mensaje se utiliza para informar al usuario que Corrija los siguientes errores
+ * antes de poder buscar al siguiente paso del trámite.
+ */
+export const ERROR_FORMA_ANO = `
+    <p class="m-0">Corrija los siguientes errores:</p>
+
+    <div class="d-flex align-items-center">
+    <span class="text-danger text-start me-2">1.</span>
+    <p class="text-danger m-0 flex-grow-1 text-center">
+        (Año del oficio de asignación) es un campo requerido
+    </p>
     </div>
   </div>
 </div>

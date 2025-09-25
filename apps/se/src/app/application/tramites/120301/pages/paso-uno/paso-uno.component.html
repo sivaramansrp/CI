@@ -28,7 +28,7 @@
         <solicitante #Solicitante></solicitante>
         } @case (2) {
           @if(esDatosRespuesta){
-          <app-constancia-del-registro #constanciaDelRegistroRef (mostrarTabs)="onMostrarTabs($event)"
+          <app-constancia-del-registro #constanciaDelRegistroRef (mostrarTabs)="onMostrarTabs($event)" (errorValidacion)="alErrorDeValidacion($event)"
             [formularioDeshabilitado]="formularioDeshabilitado"></app-constancia-del-registro>
           }
         } @case (3) {
