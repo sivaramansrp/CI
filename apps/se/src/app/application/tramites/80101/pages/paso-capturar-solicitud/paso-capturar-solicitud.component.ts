@@ -372,8 +372,8 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
         });
       });
     });
-
-    return { resultData: RESULT, listaCapacidad: listaCapacidad };
+    const RESULT_DATA = { ...RESULT[0], listaCapacidad };
+    return RESULT_DATA;
   }
 
   /**
@@ -554,7 +554,6 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
-    console.log('Datos a guardar:', data); // Depuración: Ver los datos que se van a enviar
     const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
@@ -586,13 +585,7 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
       "solicitante": {
 
       },
-      "planta": [
-        {
-          ...PLANTAS.result,
-          listaCapacidad: [...PLANTAS.listaCapacidad]
-
-        }
-      ],
+      "planta": Array.isArray(PLANTAS) ? [...PLANTAS] : [PLANTAS],
       "notario": [...NOTARIOS],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
