@@ -125,7 +125,22 @@ export class ReviewersTabsComponent implements OnChanges, OnInit {
    * @property {ViewContainerRef} childContainer
    * @description Referencia al contenedor donde se insertan dinámicamente los componentes hijos.
    */
-  @ViewChild('childContainer', { read: ViewContainerRef }) childContainer!: ViewContainerRef;
+   @ViewChild('childContainer', { read: ViewContainerRef }) childContainer!: ViewContainerRef;
+
+   /**
+    * @property {Record<string, number>} TAB_INDEX
+    * @description Mapeo de los identificadores de las pestañas a sus respectivos índices.
+    */
+   TAB_INDEX: Record<string, number> = {
+     "solicitud": 0,
+     "documentos": 1,
+     "dictamen": 2,
+     "requerimientos": 3,
+     "opiniones": 4,
+     "resoluciones": 5,
+     "tareas": 6,
+     "enviodigital": 7
+   };
   /**
    * @method ngOnInit
    * @description Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -182,7 +197,8 @@ export class ReviewersTabsComponent implements OnChanges, OnInit {
       if (VALUE === null) {return null;} 
       return {
         ...tab,
-        disabled: VALUE === false 
+        disabled: VALUE === false,
+        visible: VALUE !== null
       };
     })
     .filter(Boolean) as Tabulaciones[];

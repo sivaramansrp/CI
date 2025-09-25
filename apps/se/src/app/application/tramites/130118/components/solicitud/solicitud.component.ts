@@ -415,13 +415,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.FormSolicitud = this.fb.group({
       datosRegimen: this.fb.group({
         regimenMercancia: [this.solicitudState?.regimenMercancia || null, Validators.required],
-        clasifiRegimen: [{ value: this.solicitudState?.clasifiRegimen || null, disabled: true }, Validators.required]
+        clasifiRegimen: [this.solicitudState?.clasifiRegimen || null , Validators.required]
       }),
       datosMercancia: this.fb.group({
         valueTA: [this.solicitudState?.valueTA, [Validators.maxLength(4000), Validators.required, Validators.pattern(/^[^~`^]*$/)]],
         fraccionArancelaria: [this.solicitudState?.fraccionArancelaria || null, Validators.required],
-        nico: [{ value: this.solicitudState?.nico || null, disabled: true }, Validators.required],
-        unidadMedidaTarifaria: [{ value: this.solicitudState?.unidadMedidaTarifaria || null, disabled: true }, Validators.required],
+        nico: [this.solicitudState?.nico || null, Validators.required],
+        unidadMedidaTarifaria: [this.solicitudState?.unidadMedidaTarifaria || null, Validators.required],
         cantidadTarifaria: [this.solicitudState?.cantidadTarifaria, [Validators.min(0), Validators.required, Validators.max(99999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
         valorFacturaUSD: [this.solicitudState?.valorFacturaUSD, [Validators.min(0), Validators.max(99999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES), Validators.required]],
         precioUnitarioUSD: [{ value: this.solicitudState?.precioUnitarioUSD, disabled: true }],
@@ -442,7 +442,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       }),
       registroFederal: this.fb.group({
         estado: [this.solicitudState?.estado || null, Validators.required],
-        representacionFederal: [{ value: this.solicitudState?.representacionFederal || null, disabled: true }, Validators.required]
+        representacionFederal: [this.solicitudState?.representacionFederal || null , Validators.required]
       })
     });
   }
@@ -850,28 +850,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         next: (response) => {
           this.clasifiRegimen = response.datos || [];
 
-          if (!cveRegimen) {
-            if (this.clasifiRegimen.length > 0) {
-              CLASIFI_CONTROL?.enable();
-            } else {
-              CLASIFI_CONTROL?.disable();
-            }
-          }
-
+          
           const CLASIFI_GUARDADO = cveRegimen || this.solicitudState?.clasifiRegimen || null;
           CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
         },
         error: (error) => {
           console.error('Error al obtener clasificación de régimen:', error);
           this.clasifiRegimen = [];
-          CLASIFI_CONTROL?.disable();
+         
           const CLASIFI_GUARDADO = this.solicitudState?.clasifiRegimen || null;
           CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
         }
       });
     } else {
       this.clasifiRegimen = [];
-      CLASIFI_CONTROL?.disable();
+     
       CLASIFI_CONTROL?.setValue(null); // <- aquí también ajustas
     }
   }
@@ -892,14 +885,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         next: (response) => {
           this.representacionFederal = response.datos || [];
 
-          if (!cveEntidad) {
-            if (this.representacionFederal.length > 0) {
-              FEDERAL_CONTROL?.enable();
-            } else {
-              FEDERAL_CONTROL?.disable();
-            }
-          }
-
+         
           // Obtener valor guardado (si existe)
           const REPRESENTACION_GUARDADA = cveEntidad || this.solicitudState?.representacionFederal;
 
@@ -913,14 +899,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error al obtener representación federal:', error);
           this.representacionFederal = [];
-          FEDERAL_CONTROL?.setValue('-1');
-          FEDERAL_CONTROL?.disable();
+          FEDERAL_CONTROL?.setValue(null);
         }
       });
     } else {
       this.representacionFederal = [];
       FEDERAL_CONTROL?.setValue(null);
-      FEDERAL_CONTROL?.disable();
     }
   }
 
@@ -1039,14 +1023,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     control.setValue(value);
 
     if (forceDisable) {
-      control.disable();
+      control.setValue(value);
     } else {
-      if (enable) {
-        control.enable();
-      } else {
-        control.disable();
+      if (!enable) {
         control.setValue(null);
-      }
+      } 
     }
   }
 
