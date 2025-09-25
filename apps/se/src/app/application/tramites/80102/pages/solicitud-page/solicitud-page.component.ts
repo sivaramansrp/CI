@@ -7,7 +7,9 @@ import {
   SeccionLibStore,
   Usuario,
   WizardComponent,
+  esValidObject,
   formatearFechaYyyyMmDd,
+  getValidDatos,
 } from '@ng-mf/data-access-user';
 import {
   Component,
@@ -20,13 +22,14 @@ import {
   PASOS,
   TITULOMENSAJE,
 } from '../../constantes/autorizacion-programa-nuevo.enum';
-import { Subject, map, take, takeUntil } from 'rxjs';
+import { Subject, finalize, map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { Tramite80102State, Tramite80102Store } from '../../estados/tramite80102.store';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { USUARIO_INFO } from '../../enum/enum-80102';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
@@ -63,6 +66,7 @@ interface AccionBoton {
     PasoTresComponent,
     PasoFirmaComponent
   ],
+  providers: [ToastrService],
   standalone: true,
 })
 /**
@@ -151,7 +155,8 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
     private seccion: SeccionLibStore,
     private autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
     private tramite80102Store: Tramite80102Store,
-    private tramite80102Query: Tramite80102Query
+    private tramite80102Query: Tramite80102Query,
+    private toastrService: ToastrService,
   ) {
     // Constructor del componente
   }
@@ -191,21 +196,43 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
    */
   idSolicitud: number = 0;
 
-  /**
-   * Obtiene el valor del índice de la acción del botón.
-   * @param e Acción del botón.
-   */
-  getValorIndice(e: AccionBoton): void {
-    this.obtenerDatosDelStore();
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
-  }
+/**
+ * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
+ * 
+ * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
+ * y muestra un mensaje de éxito o error dependiendo del código de respuesta. Si la respuesta es exitosa
+ * y el valor del evento está dentro del rango válido (1 a 4), actualiza el índice del wizard y navega
+ * hacia adelante o atrás según el tipo de acción.
+ * 
+ * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
+ */
+getValorIndice(e: AccionBoton): void {
+  let shouldNavigate = false;
+  this.autorizacionProgrmaNuevoService.getAllState()
+    .pipe(
+      take(1),
+      switchMap((data) => this.guardar(data)),
+      tap(response => {
+        shouldNavigate = response.codigo === '00';
+        if(shouldNavigate) {
+          this.toastrService.success(response.mensaje);
+        } else {
+          this.toastrService.error(response.mensaje);
+        }
+      }),
+      finalize(() => {
+        if (shouldNavigate && e.valor > 0 && e.valor < 5) {
+          this.indice = e.valor;
+          if (e.accion === 'cont') {
+            this.wizardComponent.siguiente();
+          } else {
+            this.wizardComponent.atras();
+          }
+        }
+      })
+    )
+    .subscribe();
+}
 
   /**
    * Obtiene el título para cada página según el índice.
@@ -436,6 +463,16 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
       fecFinVigencia:  item.encabezadoFechaVigencia,
     });
 
+    const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
+          paisOrigen: item.paisOrigen,
+          rfcProveedor: item.rfcProveedor,
+          razonProveedor: item.razonProveedor,
+          paisDestino: item.paisDestino,
+          rfcCliente: item.rfcClinte,
+          razonCliente: item.razonSocial,
+          domicilio: item.domicilio,
+          descTestado: item.descTestado,
+        });
   return {
     anexo: {
       ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
@@ -444,6 +481,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
       datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
       tableDos: anexoDos,
       proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
+       proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
     },
   };
 }
@@ -552,7 +590,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
    * @returns void
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  guardar(data: any): void {
+  guardar(data: any): Promise<any> {
     const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
     const DECLARACION_SOLICUTUD_ENTRIES = SolicitudPageComponent.buildDeclaracionSolicitudEntries(data);
     const EMPRESAS_NACIONALES = SolicitudPageComponent.buildComplementosTablaPayload(data.tablaDatosComplimentos, this.empresasNacionales);
@@ -599,6 +637,11 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
         "anexoI": [...ANEXO_ALL.anexo.tableDos]
       }
     ],
+    "fraccionArancelaria":[
+        {
+          "listaProveedores": [...ANEXO_ALL.anexo.proveedorClienteDos]
+        }
+      ],
      "productoExportacionDtoList": [
         {
           "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]
@@ -610,9 +653,20 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
     "empresasNacionales": EMPRESAS_NACIONALES,
     "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
 }
-    this.autorizacionProgrmaNuevoService.guardarDatosPost(PAYLOAD).subscribe(response => {
-      this.tramite80102Store.setIdSolicitud(response.datos.id_solicitud || 0);
-      return response;
+
+    return new Promise((resolve, reject) => {
+      this.autorizacionProgrmaNuevoService.guardarDatosPost(PAYLOAD).subscribe(response => {
+        if(esValidObject(response) && esValidObject(response.datos)) {
+          if(getValidDatos(response.datos.id_solicitud)) {
+            this.tramite80102Store.setIdSolicitud(response.datos.id_solicitud);
+          } else {
+            this.tramite80102Store.setIdSolicitud(0);
+          }
+        }
+        resolve(response);
+      }, error => {
+        reject(error);
+      });
     });
   }
 
