@@ -34,6 +34,9 @@ export interface FilaData2 {
     datosDelTramiteRealizar: {
         tipoPersona: string; // Tipo de persona (física o moral).
         denominacion: string; // Denominación o razón social.
+        nombre: string; // Nombre de la persona.
+        primerApellido: string; // Primer apellido (si aplica).
+        segundoApellido: string; // Segundo apellido (si aplica).
         domicilio: string; // Dirección del domicilio.
         pais: string; // País de residencia.
         codigopostal: number; // Código postal.

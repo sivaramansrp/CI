@@ -161,7 +161,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
    * Arreglo que contiene el catálogo de municipios.
    * Cada elemento es de tipo `Catalogo`, representando la información de un municipio disponible.
    */
-  municipioCatologo:Catalogo[]=[];
+  municipioCatologo: Catalogo[] = [];
 
   /**
    * Arreglo que contiene las instancias del catálogo de representaciones.
@@ -252,12 +252,12 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
    */
   public federatariosSeleccionadoDatos: FederatariosEncabezado[] = [];
 
-    /**
-     * @description
-     * Objeto que representa una nueva notificación.
-     * Se utiliza para mostrar mensajes de alerta o información al usuario.
-     */
-    public miembrosNotificacion!: Notificacion;
+  /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public miembrosNotificacion!: Notificacion;
 
   /**
 * @description
@@ -272,13 +272,13 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
      *
      * @property {Subject<void>} destroyNotifier$
      */
-    private destroyNotifier$: Subject<void> = new Subject();
+  private destroyNotifier$: Subject<void> = new Subject();
 
-    /**
-     * Arreglo que contiene los elementos del catálogo de estado IMMEX.
-     * Cada elemento representa una opción disponible en el catálogo.
-     */
-    estadoImmex: Catalogo[] = [];
+  /**
+   * Arreglo que contiene los elementos del catálogo de estado IMMEX.
+   * Cada elemento representa una opción disponible en el catálogo.
+   */
+  estadoImmex: Catalogo[] = [];
 
   /**
    * Constructor de la clase FederatariosYPlantasComponent.
@@ -305,7 +305,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
     if (this.formularioDeshabilitado) {
       this.federatariosFormGroup.disable();
     }
-    if(!this.estadoOptionsConfig){
+    if (!this.estadoOptionsConfig) {
       this.estadoOptionsConfig = {
         estadosFederatarios: [],
         municipio: [],
@@ -371,7 +371,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
       estadoOptions: new FormControl(this.datosFederatarios?.estadoOptions,
         Validators.required
       ),
-      
+
     });
     this.federatariosCatalogoGroup = new FormGroup({
       estadoUno: new FormControl(this.datosFederatarios?.estadoUno,
@@ -411,20 +411,20 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
    * @param accionesPath
    */
   irAAcciones(accionesPath: string): void {
-    if (accionesPath === '../proveedor-por-archivo' && this.accionSeccion.observers.length > 0){
-    this.accionSeccion.emit(accionesPath);
-    return;
+    if (accionesPath === '../proveedor-por-archivo' && this.accionSeccion.observers.length > 0) {
+      this.accionSeccion.emit(accionesPath);
+      return;
     }
-    if (!this.plantasImmexSeleccionadoDatos.length){
+    if (!this.plantasImmexSeleccionadoDatos.length) {
       this.abrirPlantasModal();
       return;
     }
-  /**
-   * Emite la acción seleccionada si existen observadores suscritos a `accionSeccion`.
-   */
-  if (this.accionSeccion.observers.length > 0) {
-    this.accionSeccion.emit(accionesPath);
-  }
+    /**
+     * Emite la acción seleccionada si existen observadores suscritos a `accionSeccion`.
+     */
+    if (this.accionSeccion.observers.length > 0) {
+      this.accionSeccion.emit(accionesPath);
+    }
   }
 
   /**
@@ -477,13 +477,17 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
    * ```
    */
   eliminarDatos(): void {
-    if (this.federatariosSeleccionadoDatos.length === 0) {
-      this.abrirUnoModal();
-      return;
-    }
-    this.federatariosDatos = this.federatariosDatos.filter(
-      (item) => !this.federatariosSeleccionadoDatos.includes(item)
-    );
+    this.miembrosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: this.federatariosSeleccionadoDatos.length > 0 ? '¿Está seguro de eliminar el(los) notario(s)?' : 'Seleccione el notario que desea eliminar.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: this.federatariosSeleccionadoDatos.length > 0 ? 'Cancelar' : '',
+    };
   }
 
   /**
@@ -547,18 +551,23 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
    * 
    * @param {PlantasImmex} event - Objeto de tipo `PlantasImmex` que representa la planta seleccionada.
    */
-  closeModal(): void {
-    this.miembrosNotificacion.cerrar = false;
+  eliminarPedimentoDatos(borrar: boolean): void {
+    if (borrar) {
+      this.federatariosDatos = this.federatariosDatos.filter(
+        (item) => !this.federatariosSeleccionadoDatos.includes(item)
+      );
+    }
+
   }
 
-    /**
-   * Método para manejar la selección de plantas IMMEX.
-   * 
-   * Este método recibe un evento de tipo `PlantasImmex` y lo agrega al arreglo
-   * `plantasImmexSeleccionadoDatos`, asegurando que no se dupliquen entradas.
-   * 
-   * @param {PlantasImmex} event - Objeto de tipo `PlantasImmex` que representa la planta seleccionada.
-   */
+  /**
+ * Método para manejar la selección de plantas IMMEX.
+ * 
+ * Este método recibe un evento de tipo `PlantasImmex` y lo agrega al arreglo
+ * `plantasImmexSeleccionadoDatos`, asegurando que no se dupliquen entradas.
+ * 
+ * @param {PlantasImmex} event - Objeto de tipo `PlantasImmex` que representa la planta seleccionada.
+ */
   closePlantasModal(): void {
     this.plantasNotificacion.cerrar = false;
   }
@@ -586,27 +595,13 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'No se seleccionaron datos de las plantas Immex.',
+      mensaje: 'Seleccione una planta.',
       cerrar: true,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
   }
-
-/**
- * Searches and assigns available IMMEX plants data.
- *
- * This method sets the `plantasDisponiblesDatos` property with the value of `FECHA_DE_Tabla`.
- * Typically used to update the list of available plants for IMMEX operations.
- *
- * @remarks
- * Ensure that `FECHA_DE_Tabla` is defined and contains the expected data structure before calling this method.
- */
-buscarPlantasImmex(): void {
-  this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
-  this.datosPlantaDisponibles.emit(this.plantasDisponiblesDatos);
-}
 
 /**
  * Adds IMMEX plant data to the `plantasImmexDatos` array.
@@ -625,8 +620,19 @@ agregarPlantas(): void {
    * Elimina todas las plantas seleccionadas, vaciando el arreglo `seleccionadas`.
    * 
    * @remarks
-   * Esta función se utiliza para limpiar la selección de plantas en el componente.
+   * Ensure that `FECHA_DE_Tabla` is defined and contains the expected data structure before calling this method.
    */
+  buscarPlantasImmex(): void {
+    this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
+    this.datosPlantaDisponibles.emit(this.plantasDisponiblesDatos);
+  }
+
+  /**
+     * Elimina todas las plantas seleccionadas, vaciando el arreglo `seleccionadas`.
+     * 
+     * @remarks
+     * Esta función se utiliza para limpiar la selección de plantas en el componente.
+     */
   eliminarPlantas(): void {
     if (this.plantasImmexSeleccionadoDatos?.length > 0) {
       this.plantasImmexSeleccionadoDatos.forEach(planta => {
@@ -634,21 +640,21 @@ agregarPlantas(): void {
         if (INDEX !== -1) {
           this.plantasImmexDatos.splice(INDEX, 1);
         }
-    });
-    this.plantasImmexDatos = [...this.plantasImmexDatos];
+      });
+      this.plantasImmexDatos = [...this.plantasImmexDatos];
+    }
   }
-}
 
-/**
- * Obtiene la lista de estados llamando al servicio `complimentosService`.
- * Se suscribe al observable retornado por `getEstado()` y muestra la respuesta en la consola.
- * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
- */
-obtenerEstados():void {
+  /**
+   * Obtiene la lista de estados llamando al servicio `complimentosService`.
+   * Se suscribe al observable retornado por `getEstado()` y muestra la respuesta en la consola.
+   * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
+   */
+  obtenerEstados(): void {
     this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
       this.estadoOptionsConfig.estadosFederatarios = res.datos;
     });
-    
+
   }
 
   /**
@@ -658,11 +664,11 @@ obtenerEstados():void {
    * La suscripción se cancela automáticamente cuando el observable `destroyNotifier$` emite un valor,
    * evitando posibles fugas de memoria.
    */
-  obtenerRepresentacion(id:string):void {
+  obtenerRepresentacion(id: string): void {
     this.complimentosService.getRepresentacion(id).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-      this.RepresentacionCatalogo=res.datos
+      this.RepresentacionCatalogo = res.datos
     });
-    
+
   }
 
   /**
@@ -674,12 +680,12 @@ obtenerEstados():void {
    * @remarks
    * Utiliza el método `getActividadProductiva` del servicio y espera que la respuesta contenga la propiedad `datos`.
    */
-  obtenerActividad():void {
+  obtenerActividad(): void {
     this.complimentosService.getActividadProductiva().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-      this.estadoOptionsConfig.municipio=res.datos;
+      this.estadoOptionsConfig.municipio = res.datos;
 
     });
-    
+
   }
 
   /**
@@ -690,12 +696,12 @@ obtenerEstados():void {
    *
    * @param id - Identificador numérico del tipo de documento a consultar.
    */
-   obtenerTipoDocumento(id:number):void {
+  obtenerTipoDocumento(id: number): void {
     this.complimentosService.getTipoDocumento(id).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-      this.estadoOptionsConfig.municipio=res.datos;
+      this.estadoOptionsConfig.municipio = res.datos;
 
     });
-    
+
   }
 
   /**
@@ -707,11 +713,11 @@ obtenerEstados():void {
    *
    * @param entidad - Clave o nombre de la entidad para la cual se desean obtener los municipios.
    */
-   obtenerMunicipio(entidad:string):void {
+  obtenerMunicipio(entidad: string): void {
     this.complimentosService.getmunicipio(entidad).pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-  this.municipioCatologo = res.datos;
+      this.municipioCatologo = res.datos;
     });
-    
+
   }
 
   /**
@@ -719,11 +725,11 @@ obtenerEstados():void {
    * 
    * @param entidad - El identificador de la entidad para la cual se desea obtener el estado IMEX.
    */
-  obtenerImex():void {
+  obtenerImex(): void {
     this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-  this.estadoImmex = res.datos;
+      this.estadoImmex = res.datos;
     });
-    
+
   }
 
   /**

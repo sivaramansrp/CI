@@ -5,6 +5,7 @@ import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
+import { TEXTOS } from '../../constantes/260501constante.enum';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 interface AccionBoton {
   accion: string;
@@ -25,6 +26,9 @@ export class PlaguicidasComponent implements OnInit, OnDestroy {
    * Se obtiene de una constante definida en otro archivo.
    */
   pasos: ListaPasosWizard[] = PASOS;
+
+  /** Textos usados en el componente, provenientes de una fuente centralizada. */
+    TEXTOS = TEXTOS;
 
   /**
    * Indice actual del paso en el asistente.

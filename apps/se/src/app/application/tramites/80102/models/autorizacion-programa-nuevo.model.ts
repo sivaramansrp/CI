@@ -1,4 +1,4 @@
-import { AnexoDosEncabezado,AnexoEncabezado,AnexoUnoEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
+import { AnexoDosEncabezado,AnexoEncabezado,AnexoUnoEncabezado, ProveedorClienteTabla } from "../../../shared/models/nuevo-programa-industrial.model";
 import { Catalogo, CatalogoPaises } from "@ng-mf/data-access-user";
 
 /**
@@ -102,6 +102,8 @@ export interface AnnexoUno{
   importarDatosTabla:AnexoUnoEncabezado[];
   datosParaNavegar:AnexoUnoEncabezado | AnexoDosEncabezado ;
   seccionActiva: string;
+  proveedorClienteDatosTabla: ProveedorClienteTabla[];
+    proveedorClienteDatosTablaDos: ProveedorClienteTabla[];
 }
 
  /**

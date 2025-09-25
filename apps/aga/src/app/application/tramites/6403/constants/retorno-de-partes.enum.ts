@@ -101,43 +101,93 @@ export const FECHA_DESTINO = {
    * @description Configuración de la tabla de datos utilizada en el componente.
    * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
   */
+/**
+ * Tabla de datos utilizada para mostrar y organizar información de mercancías.
+ *
+ * Contiene dos propiedades principales:
+ * - **encabezadas**: Arreglo que define las columnas de la tabla (títulos, clave y orden).
+ * - **datos**: Lista de registros de tipo `SolicitudTabla`.
+ */
 export const TABLA_DE_DATOS: {
+  /**
+   * Definición de las columnas que forman el encabezado de la tabla.
+   */
   encabezadas: {
-    encabezado: string,
-    clave: (ele: SolicitudTabla) => string,
-    orden: number
-  }[],
-  datos: SolicitudTabla[],
+    /**
+     * Nombre visible de la columna en la tabla.
+     */
+    encabezado: string;
+
+    /**
+     * Función que extrae el valor de la propiedad correspondiente
+     * desde un objeto `SolicitudTabla`.
+     */
+    clave: (ele: SolicitudTabla) => string;
+
+    /**
+     * Número que determina el orden de aparición de la columna.
+     */
+    orden: number;
+  }[];
+
+  /**
+   * Arreglo de registros de mercancías que se mostrarán en la tabla.
+   */
+  datos: SolicitudTabla[];
 } = {
   encabezadas: [
+    /**
+     * Columna que muestra la **marca** de la mercancía.
+     */
     {
       encabezado: 'Marca',
       clave: (ele: SolicitudTabla) => ele.marca,
       orden: 1,
     },
+
+    /**
+     * Columna que muestra el **modelo** de la mercancía.
+     */
     {
       encabezado: 'Modelo',
       clave: (ele: SolicitudTabla) => ele.modelo,
-      orden: 2
+      orden: 2,
     },
+
+    /**
+     * Columna que muestra el **número de serie** de la mercancía.
+     */
     {
       encabezado: 'Número de serie',
       clave: (ele: SolicitudTabla) => ele.numeroDeSerie,
-      orden: 3
+      orden: 3,
     },
+
+    /**
+     * Columna que muestra el **tipo** de mercancía.
+     */
     {
       encabezado: 'Tipo',
       clave: (ele: SolicitudTabla) => ele.tipo,
-      orden: 4
+      orden: 4,
     },
+
+    /**
+     * Columna que muestra la **descripción de la mercancía**.
+     */
     {
       encabezado: 'Descripción de la mercancía',
       clave: (ele: SolicitudTabla) => ele.descripcionMercancia,
-      orden: 5
-    }
+      orden: 5,
+    },
   ],
-  datos: []
+
+  /**
+   * Inicialmente vacío; contendrá los registros de mercancías.
+   */
+  datos: [],
 };
+
 
 
 
