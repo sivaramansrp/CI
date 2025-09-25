@@ -40,6 +40,11 @@ export interface Solicitud32101State {
   listaDeDocumentos: string;
 
   /**
+   * Comprobante asociado a la solicitud.
+   */
+  comprobante: string;
+
+  /**
    * Datos del contenedor representados como un arreglo de objetos de tipo `datosDeLaTabla`.
    */
   datosDelContenedor: DatosDeLaTabla[];
@@ -131,6 +136,7 @@ export function createInitialState(): Solicitud32101State {
     valorEnPesos: 0,
     descripcionGeneral: '',
     listaDeDocumentos: '',
+    comprobante: '',
     datosDelContenedor: [],
     abc: null,
     manifiesto1: '',
@@ -190,6 +196,18 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
       descripcionGeneral,
     }));
   }
+
+/**
+   * Establece la comprobante en el estado de la tienda.
+   *
+   * @param comprobante - La nueva comprobante que se asignará al estado.
+   */
+  public setComprobante(comprobante: string): void {
+    this.update((state) => ({
+      ...state,
+      comprobante,
+    }));
+  }  
 
   /**
    * Establece el valor de "abc" en el estado de la tienda.

@@ -50,3 +50,9 @@ textarea.form-control {
 #modalModificar {
   min-height: 80%;
 }
+
+.textarea-container {
+    resize: vertical; 
+    overflow: hidden;
+    height: auto;
+}

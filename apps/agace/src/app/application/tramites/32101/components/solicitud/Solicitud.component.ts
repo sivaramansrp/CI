@@ -114,6 +114,26 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   };
 
   /**
+   * Representa la información relacionada con la comprobante.
+   * 
+   * @property {Catalogo[]} catalogos - Lista de catálogos asociados a la comprobante.
+   * @property {string} labelNombre - Etiqueta que representa el nombre de la comprobante.
+   * @property {string} primerOpcion - Primera opción seleccionable en el contexto de la comprobante.
+   */
+  comprobante: {
+    catalogos: Catalogo[];
+    labelNombre: string;
+    primerOpcion: string;
+  };
+
+  /**
+   * @property {boolean} comprobanteVisible
+   * @description Indica si se debe mostrar el campo para otro nombre común.
+   * @default false
+   */
+  comprobanteVisible = false;
+
+  /**
    * Configuración para el campo de fecha inicial.
    */
   fechaInicialInput: InputFecha = FECHA_PAGO;
@@ -177,17 +197,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramiteList = {
       catalogos: [],
       labelNombre: 'Tipo de inversión',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
     };
     this.aduana = {
       catalogos: [],
       labelNombre: 'Forma de adquisicion',
-      primerOpcion: 'Selecciona el tipo de Trámite',
+      primerOpcion: 'Seleccione una opción',
     };
     this.banco = {
       catalogos: [],
       labelNombre: 'Banco',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
+    };
+    this.comprobante = {
+      catalogos: [],
+      labelNombre: 'Comprobante',
+      primerOpcion: 'Seleccione una opción',
     };
   }
 
@@ -283,6 +308,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
       listaDeDocumentos: [this.solicitudState?.listaDeDocumentos, [Validators.required]],
+      comprobante: [this.solicitudState?.comprobante, [Validators.required]],
       manifiesto1: [this.solicitudState?.manifiesto1],
       manifiesto2: [this.solicitudState?.manifiesto2],
       manifiesto3: [this.solicitudState?.manifiesto3],
@@ -490,6 +516,33 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Maneja el cambio en la selección de la forma de adquisición.
+   * @param selectedOption - El objeto de la opción seleccionada del catálogo.
+   */  
+  onFormaAdquisicionChange(selectedOption: any): void {
+    console.log('Opción seleccionada:', selectedOption);
+    
+    const VALUE = selectedOption?.id || selectedOption?.clave;
+    console.log('Valor seleccionado:', VALUE);
+    
+    this.comprobanteVisible = String(VALUE) === '1';
+    console.log('comprobanteVisible:', this.comprobanteVisible);
+    
+    const COMPROBANTE_CONTROL = this.registroForm.get('comprobante');
+    console.log('Form control comprobante:', COMPROBANTE_CONTROL);
+    
+    if (COMPROBANTE_CONTROL) {
+      if (this.comprobanteVisible) {
+        COMPROBANTE_CONTROL.setValidators([Validators.required]);
+      } else {
+        COMPROBANTE_CONTROL.clearValidators();
+        COMPROBANTE_CONTROL.setValue(''); 
+      }
+      COMPROBANTE_CONTROL.updateValueAndValidity();
+    }
+  }
+  
+  /**
    * Método para poblar una tabla con los datos ingresados en un formulario.
    *
    * Este método toma los valores del formulario `registroForm`, crea una nueva fila
@@ -553,7 +606,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.aduana.catalogos
       ),
       valorEnPesos: FORM_VALUES.valorEnPesos,
-      comprobanteDePago: 'N/A',
+      comprobante: 'N/A',
     };
 
     this.configuracionTablaDatos = [...this.configuracionTablaDatos, NEW_ROW];

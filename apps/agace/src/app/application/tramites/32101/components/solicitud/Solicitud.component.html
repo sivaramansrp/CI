@@ -23,16 +23,22 @@
               <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
                 [placeholder]="aduana.primerOpcion" [required]="true"  formControlName="listaDeDocumentos" name="listaDeDocumentos" id="listaDeDocumentos" (change)="setValoresStore(registroForm, 'listaDeDocumentos', 'setListaDeDocumentos')" [isDisabled]="soloLectura"></app-catalogo-select>
             </div>
+            <div *ngIf="comprobanteVisible" class="col-md-4">
+              <app-catalogo-select [catalogo]="comprobante.catalogos" [label]="comprobante.labelNombre"
+                [placeholder]="comprobante.primerOpcion" [required]="true" formControlName="comprobante"
+                name="comprobante" id="comprobante"></app-catalogo-select>
+            </div>
         </div>
         <div class="row mb-3">
-            <div class="col-md-12 mt-5 d-flex justify-content-end">
+            <div class="mt-5 d-flex justify-content-end">
               <button type="button" class="btn btn-primary ms-3" (click)="poblarTabla()" [disabled]="soloLectura">Agregar</button>
             </div>
-          @if (nuevaNotificacion) { <section>
-          <lib-notificaciones [notificacionInput]="nuevaNotificacion"
-            (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
-      </section> }
-    </div>
+          @if (nuevaNotificacion) {
+          <section>
+            <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+              (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+          </section> }
+        </div>
   </ng-container>
   <ng-container>
     <h6>Datos de la inversión</h6>
@@ -94,16 +100,18 @@
     <div class="col-md-5">
       <input-fecha [datos]="fechaInicialInput"   (valorCambiado)="cambioFechaIngreso($event)" [setFecha]="registroForm.get('fechaInicialInput')?.value" [isDisabled]="soloLectura"></input-fecha>
       <div *ngIf="registroForm.get('fechaInicialInput')?.hasError('fechaInvalida')" class="text-danger">
-    La fecha de pago debe ser menor o igual a la fecha actual.
-  </div>
+      La fecha de pago debe ser menor o igual a la fecha actual.
+    </div>
     </div>
     <div class="col-md-4">
       <label for="importeDePago" class="form-label">Importe de pago:</label>
       <input class="form-control" [ngClass]="isValid(importeDePago, 'importeDePago') ? 'required' : ''" type="number" formControlName="importeDePago" name="importeDePago" id="importeDePago" (change)="setValoresStore(registroForm, 'importeDePago', 'setImporteDePago')" />
     </div>
     <div class="col-md-12 text-end mt-3">
-          <button class="btn btn-danger" (click)="borrar()" [disabled]="soloLectura">Borrar datos del pago</button>
-        </div>  </ng-container>
+      <button class="btn btn-danger" (click)="borrar()" [disabled]="soloLectura">Borrar datos del pago</button>
+    </div>  
+      
+    </ng-container>
   
   </form>
 

@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalModificarLabel">Modificar Información</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onCancelar()"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form [formGroup]="modificarFormulario">
@@ -18,26 +18,30 @@
               <label for="valorEnPesos" class="form-label">Valor en pesos*:</label>
               <input class="form-control" type="text" formControlName="valorEnPesos" name="valorEnPesos"
                 id="valorEnPesos" />
-            </div>            
-            <div class="col-md-8">
+            </div>
+          </div>
+          <div class="row mb-3">     
+            <div class="col-md-8 textarea-container">
               <label for="descripcionGeneral" class="form-label">Descripción general*:</label>
               <textarea class="form-control" rows="2" formControlName="descripcionGeneral" name="descripcionGeneral"
                 id="descripcionGeneral"></textarea>
             </div>
+          </div>
+          <div class="row">            
             <div class="col-md-4">
               <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
                 [placeholder]="aduana.primerOpcion" [required]="true" formControlName="formaAdquisicion"
-                name="formaAdquisicion" id="formaAdquisicion"></app-catalogo-select>
+                name="formaAdquisicion" id="formaAdquisicion" (selectionChange)="onFormaAdquisicionChange($event)"></app-catalogo-select>
             </div>
             <div class="col-md-4">
-              <!-- <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
-          [placeholder]="aduana.primerOpcion" [required]="true" formControlName="formaAdquisicion"
-          name="formaAdquisicion" id="formaAdquisicion"></app-catalogo-select> -->
-            </div>          
+              <app-catalogo-select [catalogo]="comprobante.catalogos" [label]="comprobante.labelNombre"
+                [placeholder]="comprobante.primerOpcion" [required]="true" formControlName="comprobante"
+                name="comprobante" id="comprobante"></app-catalogo-select>
+            </div>
           </div>
         </form>
-      </div>
-      <div class="modal-footer">
+      </div>      
+      <div class="modal-footer justify-content-end">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onCancelar()">Cancelar</button>
         <button type="button" class="btn btn-primary" (click)="onGuardarCambios()">Aceptar</button>
       </div>

@@ -2,7 +2,7 @@ import {Catalogo,Solicitud32101State,Tramite32101Store} from '../../../../estado
 import {CatalogoSelectComponent,TituloComponent} from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
-import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule, Validators} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaAvisoAcreditacionService } from '../../services/consulta-aviso-acreditacion.service';
@@ -57,6 +57,19 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
   };
 
   /**
+   * Representa la información relacionada con la comprobante.
+   * 
+   * @property {Catalogo[]} catalogos - Lista de catálogos asociados a la comprobante.
+   * @property {string} labelNombre - Etiqueta que representa el nombre de la comprobante.
+   * @property {string} primerOpcion - Primera opción seleccionable en el contexto de la comprobante.
+   */
+  comprobante: {
+    catalogos: Catalogo[];
+    labelNombre: string;
+    primerOpcion: string;
+  };
+
+  /**
    * Sujeto utilizado como notificador para la destrucción del componente.
    * Se emite un valor cuando el componente se destruye, permitiendo cancelar
    * suscripciones o liberar recursos asociados.
@@ -85,13 +98,19 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
     this.tramiteList = {
       catalogos: [],
       labelNombre: 'Tipo de inversión',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
     };
 
     this.aduana = {
       catalogos: [],
       labelNombre: 'Forma de adquisición',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
+    };
+
+    this.comprobante = {
+      catalogos: [],
+      labelNombre: 'Comprobante',
+      primerOpcion: 'Seleccione una opción',
     };
   }
 
@@ -116,6 +135,7 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
     this.initForm();
     this.fetchListaDeDocumentos();
     this.fetchListaDeInversion();
+    this.fetchListaDeComprobante();
   }
 
     /**
@@ -145,6 +165,7 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
       descripcionGeneral: [SELECTED_ROW?.descripcionGeneral],
       valorEnPesos: [SELECTED_ROW?.valorEnPesos],
       formaAdquisicion: [SELECTED_ROW?.formaAdquisicion],
+      comprobante: [SELECTED_ROW?.comprobante],
     });
   }
 
@@ -201,7 +222,22 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
         });
       });
   }
-  
+
+  fetchListaDeComprobante(): void {
+    this.consultaAvisoAcreditacionService
+      .getListaDeDocumentos('listaDeComprobante')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        this.comprobante.catalogos = respuesta.data;
+        const VALOR3 = this.comprobante.catalogos.find(
+          (res) => res.descripcion === this.solicitudState.abc?.comprobante
+        );
+        this.modificarFormulario.patchValue({
+          comprobante: VALOR3?.id,
+        });
+      });
+  }
+
   /**
    * Obtiene la etiqueta de un elemento seleccionado en un catálogo.
    *
@@ -235,14 +271,13 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
         this.aduana.catalogos
       ),
       valorEnPesos: this.modificarFormulario.value.valorEnPesos,
-      comprobanteDePago: 'N/A',
+      comprobante: 'N/A',
     };
     
     this.consultaAvisoAcreditacionService.setUpdatedRow([UPDATED_ROW]);
-    
     this.cerrarModal();
-  }
-
+  }  
+  
   /**
    * Abre el modal y carga los datos de la fila seleccionada
    */
@@ -273,7 +308,6 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
       }
     }
   }
-
   /**
    * Maneja el evento de cancelar la modificación.
    * Cierra el modal sin guardar cambios.

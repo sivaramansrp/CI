@@ -80,7 +80,7 @@ export interface DatosDeLaTabla {
   descripcionGeneral: string;
   formaAdquisicion: string;
   valorEnPesos: number;
-  comprobanteDePago: string;
+  comprobante: string;
 }
 
 export interface RespuestaConsulta {
