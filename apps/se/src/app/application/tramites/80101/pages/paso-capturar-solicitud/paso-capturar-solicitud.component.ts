@@ -1,9 +1,11 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
-import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild, inject } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, ERROR_FORMA_ALERT, WizardService } from '@ng-mf/data-access-user';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@libs/shared/data-access-user/src';
-import { Subject, finalize, map, switchMap, take, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, finalize, map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
+import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
@@ -154,6 +156,39 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   * URL de la página actual.
   */
   public solicitudState!: Tramite80101State;
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  public consultaState!: ConsultaioState;
+
+  /**
+ * @property esFormaValido
+ * @description
+ * Indica si el formulario actual es válido. Se utiliza para habilitar o deshabilitar la navegación entre pasos en el wizard.
+ * @type {boolean}
+ * @default false
+ */
+  public esFormaValido!: boolean;
+
+  /**
+ * @property wizardService
+ * @description
+ * Inyección del servicio `WizardService` para gestionar la lógica y el estado del componente wizard.
+ * @type {WizardService}
+ */
+  wizardService = inject(WizardService);
+
+  /**
+ * @property formErrorAlert
+ * @description
+ * Contiene el mensaje de alerta que se muestra cuando ocurre un error en el formulario.
+ * @type {string}
+ */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
   /**
    * Constructor de la clase PasoCapturarSolicitudComponent.
    * 
@@ -170,6 +205,8 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     private tramite80101Store: Tramite80101Store, 
     private tramite80101Query: Tramite80101Query,
     private toastrService: ToastrService,
+    private consultaQuery: ConsultaioQuery,
+    private servicioDeFormularioService: ServicioDeFormularioService,
   ) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
@@ -182,6 +219,14 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * evitando fugas de memoria.
    */
   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      ).subscribe();
+
     this.tramite80101Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -191,9 +236,90 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       ).subscribe();
   }
 
+  /**
+ * @method verificarLaValidezDelFormulario
+ * @description
+ * Este método verifica la validez de los formularios dinámicos asociados a los pasos del wizard.
+ * @returns {boolean} - Indica si todos los formularios son válidos.
+ */
+  verificarLaValidezDelFormulario(): boolean {
+    return (
+      (this.servicioDeFormularioService.isFormValid('datosGeneralisForm') ??
+        false) &&
+      (this.servicioDeFormularioService.isFormValid('formaModificacionesForm') ??
+      false) &&
+      (this.servicioDeFormularioService.isFormValid('obligacionesFiscalesForm') ??
+      false) &&
+      (this.servicioDeFormularioService.isFormValid('federatariosCatalogoForm') ??
+      false) && 
+      ((this.servicioDeFormularioService.isArrayFilled('datosSocioAccionistas') ??
+      false) ||
+      (this.servicioDeFormularioService.isArrayFilled('datosSocioAccionistasExtrenjeros') ??
+      false)) &&
+      this.isAllArraysFilledIn80101(['anexoUnoTabla1', 'anexoUnoTabla2', 'federatariosDatos', 'plantasImmexDatos', 'datosTablaSubfabricantesSeleccionadas', 'anexoTresTablaLista'])
+    );
+  }
 
+  /** Verifica que todos los arreglos indicados estén llenos en el formulario del trámite 80101. */
+  isAllArraysFilledIn80101(array: string[]): boolean {
+    return array.every(item => this.servicioDeFormularioService.isArrayFilled(item));
+  }
 
-/**
+  /**
+   * Obtiene el valor del índice de la acción del botón.
+   * @param e - event$: Acción del botón.
+   */
+  getValorIndice(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor <= this.pasos.length) {
+      const NEXT_INDEX =
+        e.accion === 'cont' ? e.valor + 1 :
+        e.accion === 'ant' ? e.valor - 1 :
+        e.valor;
+      if (!this.consultaState.readonly && e.accion === 'cont') {
+        if (!this.consultaState.update) {
+          this.esFormaValido = this.verificarLaValidezDelFormulario();
+          if (!this.esFormaValido) {
+            this.indice = e.valor;
+            this.datosPasos.indice = e.valor;
+            this.servicioDeFormularioService.markFormAsTouched('datosGeneralisForm');
+            this.servicioDeFormularioService.markFormAsTouched('formaModificacionesForm');
+            this.servicioDeFormularioService.markFormAsTouched('obligacionesFiscalesForm');
+            this.servicioDeFormularioService.markFormAsTouched('federatariosCatalogoForm');
+            return;
+          }
+        }
+        this.shouldNavigate$()
+          .subscribe((shouldNavigate) => {
+            if (shouldNavigate) {
+              this.indice = NEXT_INDEX;
+              this.datosPasos.indice = NEXT_INDEX;
+              this.wizardService.cambio_indice(NEXT_INDEX);
+            } else {
+              this.indice = e.valor;
+              this.datosPasos.indice = e.valor;
+            }
+          });
+      } else if (e.accion === 'cont') {
+        this.shouldNavigate$()
+          .subscribe((shouldNavigate) => {
+            if (shouldNavigate) {
+              this.indice = NEXT_INDEX;
+              this.datosPasos.indice = NEXT_INDEX;
+              this.wizardService.cambio_indice(NEXT_INDEX);
+            } else {
+              this.indice = e.valor;
+              this.datosPasos.indice = e.valor;
+            }
+          });
+      } else {
+        this.indice = NEXT_INDEX;
+        this.datosPasos.indice = NEXT_INDEX;
+        this.wizardComponent.atras();
+      }
+    }
+  }
+
+  /**
  * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
  * 
  * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
@@ -203,33 +329,21 @@ export class PasoCapturarSolicitudComponent implements OnInit {
  * 
  * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
  */
-getValorIndice(e: AccionBoton): void {
-  let shouldNavigate = false;
-  this.nuevoProgramaIndustrialService.getAllState()
-    .pipe(
+  private shouldNavigate$(): Observable<boolean> {
+    return this.nuevoProgramaIndustrialService.getAllState().pipe(
       take(1),
-      switchMap((data) => this.guardar(data)),
-      tap(response => {
-        shouldNavigate = response.codigo === '00';
-        if(shouldNavigate) {
+      switchMap(data => this.guardar(data)),
+      map(response => {
+        const OK = response.codigo === '00';
+        if (OK) {
           this.toastrService.success(response.mensaje);
         } else {
           this.toastrService.error(response.mensaje);
         }
-      }),
-      finalize(() => {
-        if (shouldNavigate && e.valor > 0 && e.valor < 5) {
-          this.indice = e.valor;
-          if (e.accion === 'cont') {
-            this.wizardComponent.siguiente();
-          } else {
-            this.wizardComponent.atras();
-          }
-        }
+        return OK;
       })
-    )
-    .subscribe();
-}
+    );
+  }
 
   /**
    * Obtiene los datos del store y los guarda utilizando el servicio.
