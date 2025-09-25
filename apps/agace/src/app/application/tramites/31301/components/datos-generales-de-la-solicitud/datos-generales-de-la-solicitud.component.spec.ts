@@ -26,15 +26,6 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
 
   beforeEach(async () => {
     solicitudServiceSpy = {
-      conseguirDatosGeneralesOpcionDeRadio: jest.fn().mockReturnValue(
-        of({
-          tipoDeEndoso: {},
-          tipoDeGarantia: {},
-          modalidadDeLaGarantia: {},
-          tipoSector: {},
-          requisitos: {},
-        })
-      ),
       conseguirDatosGeneralesCatologo: jest.fn().mockReturnValue(
         of({
           concepto: {},
@@ -275,87 +266,6 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
     expect(enableSpy).toHaveBeenCalled();
   });
 
-  it('should set tipoDeEndosoOpcion and others in conseguirDatosGeneralesOpcionDeRadio', () => {
-    component.tipoDeEndosoOpcion = {
-      radioOptions: [
-        {
-          label: 'Aumento de monto',
-          value: 1,
-        },
-        {
-          label: 'Aumento de monto y renovación/ampliación de vigencia',
-          value: 2,
-        },
-        {
-          label: 'Modificación de denominación o razórrsocial',
-          value: 3,
-        },
-        {
-          label: 'Renovación/ampliación de vigencia',
-          value: 4,
-        },
-      ],
-      isRequired: true,
-    } as any;
-    component.tipoDeGarantiaOpcion = {
-      radioOptions: [
-        {
-          label: 'Fianza',
-          value: 1,
-        },
-        {
-          label: 'Carta de crédito',
-          value: 2,
-        },
-      ],
-      isRequired: true,
-    } as any;
-    component.modalidadDeLaGarantiaOpcion = {
-      radioOptions: [
-        {
-          label: 'Garantía revolvente',
-          value: 1,
-        },
-        {
-          label: 'Garantía individual',
-          value: 2,
-        },
-      ],
-      isRequired: true,
-    } as any;
-    component.tipoSectorOpcion = {
-      radioOptions: [
-        {
-          label: 'Sector productivo',
-          value: 1,
-        },
-        {
-          label: 'Sector servicio',
-          value: 2,
-        },
-      ],
-      isRequired: true,
-    } as any;
-    component.sinoOpcion = {
-      radioOptions: [
-        {
-          label: 'Sí',
-          value: 1,
-        },
-        {
-          label: 'No',
-          value: 2,
-        },
-      ],
-      isRequired: true,
-    } as any;
-    component.conseguirDatosGeneralesOpcionDeRadio();
-    expect(component.tipoDeEndosoOpcion).toBeDefined();
-    expect(component.tipoDeGarantiaOpcion).toBeDefined();
-    expect(component.modalidadDeLaGarantiaOpcion).toBeDefined();
-    expect(component.tipoSectorOpcion).toBeDefined();
-    expect(component.sinoOpcion).toBeDefined();
-  });
 
   it('should set conceptoLista and tipoDeInversionLista in conseguirDatosGeneralesCatologo', () => {
     component.conceptoLista = {

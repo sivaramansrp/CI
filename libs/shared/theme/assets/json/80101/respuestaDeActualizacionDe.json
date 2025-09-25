@@ -17,7 +17,7 @@
     "formaModificaciones": {
       "nombreDelFederatario": "Juan Pérez",
       "nombreDeNotaria": "123",
-      "estado": "1",
+      "estado": "Jalisco",
       "nombreDeActa": "123",
       "fechaDeActa": "30/11/2023",
       "rfc": "ABC123456XYZ",
@@ -32,11 +32,11 @@
       "nationalidadMaxicana": "No",
       "tipoDePersona": "Moral",
       "formaDatos": {
-        "taxId":"TAX0011223344",
-        "razonSocial":"Comercial Mexicana S.A. de C.V.",
+        "taxId": "TAX0011223344",
+        "razonSocial": "Comercial Mexicana S.A. de C.V.",
         "pais": "1",
-        "codigoPostal":"03100",
-        "estado":"Nuevo León",
+        "codigoPostal": "03100",
+        "estado": "Nuevo León",
         "correoElectronico": "contacto@comercialmexicana.com",
         "socio1": "Carlos López",
         "socio2": "Ana García",
@@ -108,7 +108,7 @@
       "rfc": "JKL321654MNO",
       "taxId": "TAX0011223344",
       "razonSocial": "Construcciones del Sur",
-      "pais": "México",
+      "pais": "1",
       "codigoPostal": "97000",
       "estado": "Yucatán",
       "correoElectronico": "info@constructsur.mx",
@@ -296,27 +296,26 @@
     "numeroDeNotaria": "456",
     "entidadFederativa": "1",
     "municipioODelegacion": "1",
-    "estado":"1",
-    "estadoOptions":"101",
+    "estado": "1",
+    "estadoOptions": "101",
     "estadoUno": "201",
     "estadoDos": "101",
     "estadoTres": "101"
   },
-  "datosComplimento":{
+  "datosComplimento": {
     "fraccionArancelaria": "fraccionArancelar",
     "descripcion": "descripcion test"
   },
-  "datosComplimentoDos":{
+  "datosComplimentoDos": {
     "fraccionArancelaria": "fraccionArance",
     "descripcion": "descripcionXZS"
   },
-  "datosAnexoTress":{
-    "fraccionArancelaria":"fraccionArancelari",
-  "descripcion": "descripcion CFRDFF"
+  "datosAnexoTress": {
+    "fraccionArancelaria": "fraccionArancelari",
+    "descripcion": "descripcion CFRDFF"
   },
-
-   "datosAnexoTressDos":{
-    "fraccionArancelaria":"fraccionArancelaria",
-  "descripcion": "descripcion test"
+  "datosAnexoTressDos": {
+    "fraccionArancelaria": "fraccionArancelaria",
+    "descripcion": "descripcion test"
   }
 }

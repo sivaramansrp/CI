@@ -590,8 +590,8 @@
   {
     "id": 85,
     "tramite": 260101,
-    "linkDashboard": "/cofepris/importacion-productos/productos",
-    "linkDepartment": "/pago/importacion-productos/productos",
+    "linkDashboard": "/cofepris/importacion-productos/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-productos/contenedor-de-pasos",
     "department": "cofepris"
   },
   {

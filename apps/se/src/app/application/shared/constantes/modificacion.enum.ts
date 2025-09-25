@@ -171,6 +171,50 @@ export const CARGA_MERCANCIA_SELECCIONADAS = [
   }
 ];
 
+export const CARGA_MERCANCIA_EXPORT = [
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (ele: Mercancia): string | undefined => ele.fraccionArancelaria,
+    orden: 1,
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (ele: Mercancia): string | undefined => ele.cantidad,
+    orden: 2,
+  },
+  {
+    encabezado: 'Unidad de medida',
+    clave: (ele: Mercancia): string | undefined => ele.umc,
+    orden: 3,
+  },
+  {
+    encabezado: 'Valor mercancía',
+    clave: (ele: Mercancia): string | undefined => ele.valorMercancia,
+    orden: 4,
+  },
+  {
+    encabezado: 'Tipo de factura',
+    clave: (ele: Mercancia): string | undefined => ele.tipoFactura,
+    orden: 5,
+  },
+  {
+    encabezado: 'Número factura',
+    clave: (ele: Mercancia): string | undefined => ele.numeroFactura,
+    orden: 6,
+  },
+  {
+    encabezado: 'Complemento descripción',
+    clave: (ele: Mercancia): string | undefined => ele.complementoDescripcion,
+    orden: 7,
+  },
+  {
+    encabezado: 'Fecha factura',
+    clave: (ele: Mercancia): string | undefined => ele.fechaFactura,
+    orden: 8,
+  },
+];
+
+
 
 
 
@@ -305,3 +349,11 @@ export const FECHA_ID = [ 110204,110223 ];
  * @type {number[]}
  */
 export const REQUIREDA = [110204,110205];
+/**
+ * @constant BOTON_DE_OPCION_VER
+ * @description
+ * Arreglo que contiene los identificadores de procedimiento que requieren el campo de fecha en la configuración.
+ * Se utiliza para determinar si se debe mostrar o procesar el campo de fecha en los formularios relacionados.
+ * @type {number[]}
+ */
+export const BOTON_DE_OPCION_VER =[110221];

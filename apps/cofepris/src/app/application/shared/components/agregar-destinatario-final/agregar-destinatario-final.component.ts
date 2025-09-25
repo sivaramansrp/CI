@@ -30,10 +30,10 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR } from '../../constantes/datos-solicitud.enum';
 import {CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
-import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constantes/datos-solicitud.enum';
 import { Subject } from 'rxjs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { takeUntil } from 'rxjs/operators';
@@ -68,6 +68,12 @@ export class AgregarDestinatarioFinalComponent
    */
   private unsubscribe$ = new Subject<void>();
 
+    /**
+   * Indica si se ha realizado la verificación de validación al intentar guardar.
+   * Esta bandera se utiliza para controlar la visualización de mensajes de error o advertencia
+   * cuando el usuario intenta guardar el formulario sin cumplir con los requisitos de validación.
+   */
+  chequeoValidacionAlGuardar =false;
   /**
    * Grupo de formulario reactivo para recopilar los datos del destinatario final.
    * @property {FormGroup} agregarDestinatarioFinal
@@ -284,6 +290,15 @@ export class AgregarDestinatarioFinalComponent
    * y navega hacia atrás en el historial.
    */
   guardarDestinatario(): void {
+   if (this.chequeoValidacionAlGuardar) {
+    if (this.agregarDestinatarioFinal.invalid) {
+      Object.values(this.agregarDestinatarioFinal.controls).forEach(control => {
+        control.markAsTouched();
+        control.updateValueAndValidity();
+      });
+      return;
+    }
+  }
     const VALOR_FORMULARIO = this.agregarDestinatarioFinal.getRawValue();
 
     let nombreRazonSocial: string;
@@ -341,8 +356,37 @@ export class AgregarDestinatarioFinalComponent
     this.changeNacionalidad();
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
+        this.chequeoValidacionAlGuardar =
+      PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(this.idProcedimiento)
+        ? true
+        :false;
+     this.forzarDeshabilitarPais()
+     this.actualizarValidadoresCalleNumeroExterior();
   }
 
+  /**
+   * Actualiza los validadores de los campos 'calle' y 'numeroExterior' en el formulario 'agregarDestinatarioFinal'.
+   * 
+   * Si la propiedad `chequeoValidacionAlGuardar` es verdadera, se asigna el validador `Validators.required` a ambos campos,
+   * obligando al usuario a proporcionar estos valores. Si es falsa, se eliminan los validadores requeridos.
+   * 
+   * Finalmente, se actualiza el estado y la validez de ambos controles para reflejar los cambios en los validadores.
+   *
+   * @private
+   */
+  private actualizarValidadoresCalleNumeroExterior(): void {
+  const CALLE_CONTROL = this.agregarDestinatarioFinal.get('calle');
+  const NUMERO_EXTERIOR_CONTROL = this.agregarDestinatarioFinal.get('numeroExterior');
+  if (this.chequeoValidacionAlGuardar) {
+    CALLE_CONTROL?.setValidators([Validators.required]);
+    NUMERO_EXTERIOR_CONTROL?.setValidators([Validators.required]);
+  } else {
+    CALLE_CONTROL?.clearValidators();
+    NUMERO_EXTERIOR_CONTROL?.clearValidators();
+  }
+  CALLE_CONTROL?.updateValueAndValidity();
+  NUMERO_EXTERIOR_CONTROL?.updateValueAndValidity();
+}
   /**
    * Recupera varias listas de datos del servicio `DatosSolicitudService` y
    * las asigna a propiedades locales. Se desuscribe automáticamente en el hook de
@@ -438,15 +482,15 @@ export class AgregarDestinatarioFinalComponent
         },
         [Validators.pattern(REGEX_NOMBRE)],
       ],
-      pais: [
-        {
-          value: this.elementosDeshabilitados.includes('pais')
-            ? '1'
-            : this.obtenerValor('pais'),
-          disabled: this.elementosDeshabilitados.includes('pais'),
-        },
-        [Validators.required],
-      ],
+     pais: [
+      {
+        value: this.elementosDeshabilitados.includes('pais')
+          ? '1'
+          : this.obtenerValor('pais'),
+        disabled: this.elementosDeshabilitados.includes('pais') || this.chequeoValidacionAlGuardar,
+      },
+      [Validators.required],
+    ],
       estado: [this.obtenerValor('estadoLocalidad'), [Validators.required]],
       municipio: [
         this.obtenerValor('municipioAlcaldia'),
@@ -462,11 +506,13 @@ export class AgregarDestinatarioFinalComponent
       ],
       calle: [
         this.obtenerValor('calle'),
-        this.elementosRequeridos.includes('calle') ? [Validators.required] : [],
+        this.elementosRequeridos.includes('calle'), 
+        this.chequeoValidacionAlGuardar ? [Validators.required] : [],
       ],
       numeroExterior: [
         this.obtenerValor('numeroExterior'),
-        this.elementosRequeridos.includes('numeroExterior')
+        this.elementosRequeridos.includes('numeroExterior'),
+        this.chequeoValidacionAlGuardar
           ? [Validators.required]
           : [],
       ],
@@ -493,6 +539,20 @@ export class AgregarDestinatarioFinalComponent
     });
   }
 
+  /**
+   * @private
+   * Fuerza la deshabilitación del campo 'pais' en el formulario de agregar destinatario final.
+   * 
+   * Si la variable `chequeoValidacionAlGuardar` es verdadera, deshabilita el control 'pais'
+   * dentro del formulario reactivo `agregarDestinatarioFinal`.
+   * 
+   * Útil para evitar que el usuario modifique el país cuando ciertas condiciones de validación se cumplen al guardar.
+   */
+  private forzarDeshabilitarPais(): void {
+  if (this.chequeoValidacionAlGuardar) {
+    this.agregarDestinatarioFinal.get('pais')?.disable();
+  }
+}
   /**
    * Obtiene el valor de un campo específico del formulario o de los datos seleccionados.
    * @param {keyof Destinatario } field - Nombre del campo a obtener.
@@ -658,6 +718,7 @@ export class AgregarDestinatarioFinalComponent
         }
       );
     }
+    this.forzarDeshabilitarPais();
   }
 
   /**

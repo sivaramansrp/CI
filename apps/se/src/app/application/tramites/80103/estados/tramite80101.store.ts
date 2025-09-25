@@ -1,5 +1,6 @@
-import { AnexoEncabezado, AnexoUnoEncabezado, DatosAnexotressUno } from '../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoEncabezado, AnexoUnoEncabezado, DatosAnexotressUno, ProveedorClienteTabla } from '../../../shared/models/nuevo-programa-industrial.model';
 import { AnnexoDosTres, AnnexoUno } from '../models/nuevo-programa-industrial.model';
+import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoPaises } from '@libs/shared/data-access-user/src';
@@ -7,7 +8,6 @@ import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { DatosEmpresaExtranjera} from '../models/nuevo-programa-industrial.model';
 import { DatosSubcontratista } from '../../../shared/models/empresas-subfabricanta.model';
 import { EmpressaSubFabricantePlantas } from '../../../shared/models/empresas-subfabricanta.model';
-import { FederatariosEncabezado, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Servicio } from '../models/nuevo-programa-industrial.model';
@@ -17,7 +17,7 @@ import { SociaoAccionistas } from '../../../shared/models/complimentos.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
-import { AnexoFraccionAnarelaria, AnexoUnoProducto } from '../../../shared/models/complimentos-seccion.model';
+import { AnexoFraccionAnarelaria, AnexoUnoProducto, ProveedorCliente, ProyectoImmex } from '../../../shared/models/complimentos-seccion.model';
 
 /**
  * Representa el estado de Tramite80101 en la aplicación.
@@ -81,6 +81,19 @@ export interface Tramite80101State {
   
   indicePrevioRuta: number;
   tablaDatosFederatarios: FederatariosEncabezado[]
+  /**
+   * Información detallada de plantas IMMEX.
+   */
+  plantasImmexTablaLista: PlantasImmex[];
+  /** 
+   * Información detallada de plantas disponibles. 
+   */
+  plantasDisponiblesTablaLista: PlantasDisponibles[];
+
+  /**
+   * Información detallada de plantas IMMEX.
+   */
+  proyectoImmexTablaLista: ProyectoImmex[];
 }
 
 /**
@@ -229,12 +242,17 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
       encabezadoCategoria: '',
       encabezadoValorEnMercado: '',
     },
+    proveedorClienteDatosTabla: [],
+      proveedorClienteDatosTablaDos:[],
     seccionActiva:''
   },
 
   indicePrevioRuta: 0,
   tablaDatosFederatarios: [],
+  plantasImmexTablaLista: [],
+  plantasDisponiblesTablaLista: [],
   idSolicitud: 0,
+  proyectoImmexTablaLista:[]
 };
 
 /**
@@ -823,6 +841,30 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       tablaDatosFederatarios: [...state.tablaDatosFederatarios, formaFederatarios],
     }));
   }
+
+  /**
+   * Agrega un nuevo conjunto de datos a la tabla de plantas disponibles en el estado.
+   * 
+   * @param plantas - Un arreglo de objetos de tipo `PlantasDisponibles` que se agregarán a la tabla.
+   */
+  setPlantasDisponiblesTablaLista(plantas: PlantasDisponibles[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasDisponiblesTablaLista: [...state.plantasDisponiblesTablaLista, ...plantas],
+    }));
+  }
+
+  /**
+   * Agrega un nuevo conjunto de datos a la tabla de plantas IMMEX en el estado.
+   * 
+   * @param plantasImmex - Un arreglo de objetos de tipo `PlantasImmex` que se agregarán a la tabla.
+   */
+  setPlantasImmexTablaLista(plantasImmex: PlantasImmex[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasImmexTablaLista: [...state.plantasImmexTablaLista, ...plantasImmex],
+    }));
+  }
     /**
    * Agrega un nuevo conjunto de datos a la tabla de complementos en el estado.
    * 
@@ -906,4 +948,46 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       idSolicitud,
     }));
   }
+
+  /**
+ * Actualiza la lista de proyectos IMMEX en el estado agregando los elementos proporcionados.
+ *
+ * @param proyectoImmex - Arreglo de encabezados de proyectos IMMEX que se añadirán a la lista existente.
+ */
+setProyectoImmexTablaLista(proyectoImmex: ProyectoImmex[]): void {
+    this.update((state) => ({
+      ...state,
+      proyectoImmexTablaLista: [...state.proyectoImmexTablaLista, ...proyectoImmex],
+    }));
+  }
+
+  /**
+     * Actualiza la propiedad `proveedorClienteDatosTabla` dentro de `annexoUno` en el estado de la tienda.
+     *
+     * @param proveedorClienteDatosTabla - Arreglo de objetos de tipo `ProveedorClienteTabla` que representa los datos de proveedores y clientes para la tabla.
+     */
+    setProveedorClienteDatosTablaUno(proveedorClienteDatosTabla: ProveedorCliente[]): void {
+      this.update((state) => ({
+        ...state,
+        annexoUno: {
+          ...state.annexoUno,
+          proveedorClienteDatosTabla: proveedorClienteDatosTabla,
+        },
+      }));
+    }
+  
+    /**
+       * Actualiza la propiedad `proveedorClienteDatosTablaDos` dentro de `annexoUno` en el estado de la tienda.
+       *
+       * @param proveedorClienteDatosTablaDos - Arreglo de objetos de tipo `ProveedorClienteTabla` que representa los datos de proveedores y clientes para la tabla.
+       */
+      setProveedorClienteDatosTablaDos(proveedorClienteDatosTabla: ProveedorCliente[]): void {
+        this.update((state) => ({
+          ...state,
+          annexoUno: {
+            ...state.annexoUno,
+            proveedorClienteDatosTablaDos: proveedorClienteDatosTabla,
+          },
+        }));
+      }
 }

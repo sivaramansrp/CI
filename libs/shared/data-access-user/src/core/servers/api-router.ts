@@ -153,7 +153,7 @@ export const TRAMITE = '{numeroTramite}';
  * @param TRAMITE el trámite seleccionado por el usuario.
  * @see https://api-v30.cloud-ultrasist.net/api/tramite/5701/documentos?especifico=false
  */
-export const API_GET_DOCUMENTOS_OBLIGATORIOS = `tramite/{numeroTramite}/documentos`;
+export const API_GET_DOCUMENTOS_OBLIGATORIOS = `sat-t{numeroTramite}/solicitud/documentos`;
 
 /**
  * API para recuperar el catálogo de paises
@@ -461,6 +461,12 @@ export const API_GET_OPINION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : stri
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Generar-Dictamen/guardar-dictamen-generado-by-numFolioTramite
  */
 export const API_POST_REQUERIMIENTO_GUARDAR = (TRAMITE: string, IDREQUERIMIENTO: string) : string => `sat-t${TRAMITE}/confirmar-notificacion/requerimiento/${IDREQUERIMIENTO}/acuse/guardar`;
+
+/**
+ * API para obtener la notificacion de los acuses recibidos.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Confirmar-Notificacion/consulta-acuse-recibo-notificacion
+ */
+export const API_GET_ACUSES_RECIBOS_NOTIFICACION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/acuses-recibos-notificacion`;
 
 /** 
  * API para iniciar la confirmación de notificación del tramite generico.

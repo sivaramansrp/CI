@@ -1,63 +1,41 @@
-import {
-  TramiteFolioService,
-  TramiteFolioStore
-} from '@ng-mf/data-access-user';
-import { catchError, map } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 /**
- * Componente para gestionar el paso tres del trámite.
- * Este componente se encarga de manejar la obtención de la firma y la navegación posterior.
+ * Componente para el paso tres del trámite 301.
+ * Este componente se utiliza para mostrar los pasos del asistente - 301
+ * Lista de pasos
+ * Índice del paso
  */
 @Component({
-  selector: 'app-paso-tres',
+  selector: 'paso-tres',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, FirmaElectronicaComponent],
   templateUrl: './paso-tres.component.html',
-  styleUrl: './paso-tres.component.scss'
 })
 export class PasoTresComponent {
   /**
-   * Constructor de la clase. Inyecta los servicios necesarios.
-   * @param {Router} router - Servicio para manejar la navegación entre rutas.
-   * @param {TramiteFolioService} tramiteFolioServices - Servicio para obtener información del trámite.
-   * @param {TramiteFolioStore} tramiteStore - Almacén para gestionar el estado del trámite.
+   * componente doc
+   * @constructor
+   * @param {Router} router - Servicio de Angular para la navegación entre rutas.
    */
-  constructor(
-    private router: Router,
-    private tramiteFolioServices: TramiteFolioService,
-    private tramiteStore: TramiteFolioStore
-  ) {}
+  constructor(private router: Router) {
+    // Constructor del componente
+  }
 
   /**
-   * Maneja el evento para obtener la firma y realiza acciones adicionales.
-   * 
-   * Este método realiza las siguientes acciones:
-   * - Obtiene el número de trámite utilizando el servicio `TramiteFolioService`.
-   * - Establece el trámite en el almacén `TramiteFolioStore` junto con la firma obtenida.
-   * - Navega a la página de acuse (`servicios-extraordinarios/acuse`).
-   * 
-   * @param {string} ev - La cadena de texto que representa la firma obtenida.
-   * @returns {void}
+   * componente doc
+   * @método obtieneFirma
+   * @descripcion Recibe la firma electrónica y redirige a la página de acuse si la firma es válida.
+   * @param {string} ev - Cadena que representa la firma electrónica obtenida.
    */
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
     if (FIRMA) {
-      // Obtiene el número de trámite
-      this.tramiteFolioServices
-        .obtenerTramite(19)
-        .pipe(
-          map((tramite) => {
-            // Establece el trámite en el almacén con la firma
-            this.tramiteStore.establecerTramite(tramite.data, FIRMA);
-            // Navega a la página de acuse
-            this.router.navigate(['servicios-extraordinarios/acuse']);
-          }),
-          catchError((_error) => {
-            // Manejo de errores
-            return _error;
-          })
-        )
-        .subscribe();
+      this.router.navigate(['temporal-contenedores/acuse']); // Navegación a la página de acuse
     }
   }
 }

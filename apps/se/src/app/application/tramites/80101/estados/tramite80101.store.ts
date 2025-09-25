@@ -4,6 +4,7 @@ import {
   DatosAnexotressUno,
   DatosComplimento,
   ProveedorClienteTabla,
+  ProyectoImmexEncabezado,
 } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
   AnnexoDosTres,
@@ -178,6 +179,22 @@ export interface Tramite80101State {
    * Información detallada de federatarios.
    */
   datosFederatarios: FederatariosEncabezado;
+
+  /**
+   * Información detallada de plantas IMMEX.
+   */
+  proyectoImmexTablaLista: ProyectoImmexEncabezado[];
+
+  /**
+   * Información detallada de proveedor Cliente Datos Tabla.
+   */
+  proveedorClienteDatosTabla: ProveedorClienteTabla[];
+
+   /**
+   * Información detallada de proveedor Cliente Datos TablaDos.
+   */
+
+  proveedorClienteDatosTablaDos: ProveedorClienteTabla[];
 }
 
 /**
@@ -340,6 +357,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
       encabezadoValorEnMercado: '',
     },
     proveedorClienteDatosTabla:[],
+    proveedorClienteDatosTablaDos:[],
     seccionActiva: '',
   },
 
@@ -362,6 +380,9 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     estadoDos: '',
     estadoTres: ''
   },
+  proyectoImmexTablaLista: [],
+  proveedorClienteDatosTabla: [],
+  proveedorClienteDatosTablaDos: [],
 };
 
 /**
@@ -928,12 +949,27 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    *
    * @param proveedorClienteDatosTabla - Arreglo de objetos de tipo `ProveedorClienteTabla` que representa los datos de proveedores y clientes para la tabla.
    */
-  setProveedorClienteDatosTabla(proveedorClienteDatosTabla: ProveedorClienteTabla[]): void {
+  setProveedorClienteDatosTablaUno(proveedorClienteDatosTabla: ProveedorClienteTabla[]): void {
     this.update((state) => ({
       ...state,
       annexoUno: {
         ...state.annexoUno,
         proveedorClienteDatosTabla: proveedorClienteDatosTabla,
+      },
+    }));
+  }
+
+/**
+   * Actualiza la propiedad `proveedorClienteDatosTablaDos` dentro de `annexoUno` en el estado de la tienda.
+   *
+   * @param proveedorClienteDatosTablaDos - Arreglo de objetos de tipo `ProveedorClienteTabla` que representa los datos de proveedores y clientes para la tabla.
+   */
+  setProveedorClienteDatosTablaDos(proveedorClienteDatosTabla: ProveedorClienteTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        proveedorClienteDatosTablaDos: proveedorClienteDatosTabla,
       },
     }));
   }
@@ -1010,6 +1046,11 @@ export class Tramite80101Store extends Store<Tramite80101State> {
     }));
   }
 
+  /**
+   * Establece la lista de plantas disponibles en el estado de la tienda.
+   *
+   * @param plantas - Una lista de objetos de tipo `PlantasDisponibles` que se asignará al estado.
+   */
   setPlantasDisponiblesTablaLista(plantas: PlantasDisponibles[]): void {
     this.update((state) => ({
       ...state,
@@ -1017,6 +1058,11 @@ export class Tramite80101Store extends Store<Tramite80101State> {
     }));
   }
 
+  /**
+   * Establece la lista de plantas IMMEX en el estado de la tienda.
+   *
+   * @param plantasImmex - Una lista de objetos de tipo `PlantasImmex` que se asignará al estado.
+   */
   setPlantasImmexTablaLista(plantasImmex: PlantasImmex[]): void {
     this.update((state) => ({
       ...state,
@@ -1084,6 +1130,16 @@ export class Tramite80101Store extends Store<Tramite80101State> {
     });
   }
 
-
+/**
+ * Actualiza la lista de proyectos IMMEX en el estado agregando los elementos proporcionados.
+ *
+ * @param proyectoImmex - Arreglo de encabezados de proyectos IMMEX que se añadirán a la lista existente.
+ */
+setProyectoImmexTablaLista(proyectoImmex: ProyectoImmexEncabezado[]): void {
+    this.update((state) => ({
+      ...state,
+      proyectoImmexTablaLista: [...state.proyectoImmexTablaLista, ...proyectoImmex],
+    }));
+  }
 
 }

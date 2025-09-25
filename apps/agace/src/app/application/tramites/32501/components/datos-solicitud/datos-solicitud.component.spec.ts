@@ -240,6 +240,7 @@ describe('DatosSolicitudComponent', () => {
         rfc: '',
         pedimento: '',
         aduana: '',
+        serviciosTerceros: '',
       }),
     };
 
@@ -325,7 +326,9 @@ describe('DatosSolicitudComponent', () => {
       patente: [''],
       rfc: [''],
       pedimento: [''],
-      aduana: ['']
+      aduana: [''],
+      serviciosTerceros: ['']  
+ 
     });
     
     // Inicializar propiedades que podrían estar undefined

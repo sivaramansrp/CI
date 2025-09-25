@@ -101,6 +101,24 @@ export class PermisoCitesService {
   banco: Catalogo[] = [];
 
   /**
+   * @property {Catalogo[]} pais
+   * @description
+   * Catálogo de países disponibles para selección en los formularios del trámite.
+   * Contiene la lista de países que pueden ser utilizados en diferentes secciones como datos de terceros.
+   * Se inicializa mediante el método `inicializaUbicacionDatosCatalogos()`.
+   */
+  pais: Catalogo[] = [];
+
+  /**
+   * @property {Catalogo[]} estado
+   * @description
+   * Catálogo de estados o entidades federativas disponibles para selección en los formularios del trámite.
+   * Contiene la lista de estados que pueden ser utilizados en diferentes secciones como datos de terceros.
+   * Se inicializa mediante el método `inicializaUbicacionDatosCatalogos()`.
+   */
+  estado: Catalogo[] = [];
+
+  /**
    * Constructor del servicio.
    * Inicializa el cliente HTTP para realizar solicitudes y el store para manipular el estado.
    * {HttpClient} http - Cliente HTTP para realizar solicitudes.
@@ -133,6 +151,15 @@ export class PermisoCitesService {
    */
   public inicializaPagoDeDerechosDatosCatalogos():void {
     this.obtenerRespuestaPorUrl(this, 'banco', '/230902/banco.json');
+  }
+
+  /**
+   * Inicializa los catálogos relacionados con la ubicación.
+   * Carga el catálogo de países y estados desde archivos JSON.
+   */
+  public inicializaUbicacionDatosCatalogos():void {
+    this.obtenerRespuestaPorUrl(this, 'pais', '/230902/pais.json');
+    this.obtenerRespuestaPorUrl(this, 'estado', '/230902/estado.json');
   }
 
   /**

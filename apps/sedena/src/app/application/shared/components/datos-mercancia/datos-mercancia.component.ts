@@ -360,13 +360,39 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    * @param {Event} event - Evento de entrada del campo cantidadUMT.
    * @returns {void}
    */
-  onCantidadUMTInput(event: Event): void {
-    const INPUT = event.target as HTMLInputElement;
-    INPUT.value = INPUT.value.replace(REGEX_NUMEROS, '').slice(0, 22);
-    this.datosMercancia
-      .get('cantidadUMT')
-      ?.setValue(INPUT.value, { emitEvent: false });
+onCantidadUMTInput(event: Event): void {
+  const INPUT = event.target as HTMLInputElement;
+  let value = INPUT.value;
+  value = value.replace(/[^0-9.]/g, '');
+  const PARTS = value.split('.');
+  if (PARTS.length > 2) {
+    value = PARTS[0] + '.' + PARTS.slice(1).join('');
   }
+  const [INTEGER_PART, DECIMAL_PART] = value.split('.');
+  const LIMITED_INTEGER = INTEGER_PART.slice(0, 12);
+  const LIMITED_DECIMAL = DECIMAL_PART ? DECIMAL_PART.slice(0, 3) : '';
+  value = LIMITED_DECIMAL ? `${LIMITED_INTEGER}.${LIMITED_DECIMAL}` : LIMITED_INTEGER;
+  INPUT.value = value;
+  this.datosMercancia.get('cantidadUMT')?.setValue(value, { emitEvent: false });
+}
+
+
+onCantidadvalorComercialInput(event: Event): void {
+ const INPUT = event.target as HTMLInputElement;
+  let value = INPUT.value;
+  value = value.replace(/[^0-9.]/g, '');
+  const PARTS = value.split('.');
+  if (PARTS.length > 2) {
+    value = PARTS[0] + '.' + PARTS.slice(1).join('');
+  }
+  const [INTEGER_PART, DECIMAL_PART] = value.split('.');
+  const LIMITED_INTEGER = INTEGER_PART.slice(0, 12);
+  const LIMITED_DECIMAL = DECIMAL_PART ? DECIMAL_PART.slice(0, 3) : '';
+  value = LIMITED_DECIMAL ? `${LIMITED_INTEGER}.${LIMITED_DECIMAL}` : LIMITED_INTEGER;
+  INPUT.value = value;
+  this.datosMercancia.get('valorComercial')?.setValue(value, { emitEvent: false });
+}
+
   /**
    * @method campoObligatorioChange
    * @description Cambia las validaciones de los campos del formulario según el valor de `campoObligatorioProveedor`.

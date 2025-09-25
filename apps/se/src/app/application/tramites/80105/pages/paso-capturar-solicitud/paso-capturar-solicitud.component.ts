@@ -1,14 +1,18 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
 import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, Usuario, WizardComponent } from '@ng-mf/data-access-user';
-import { Subject, map, take } from 'rxjs';
+import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, Usuario, WizardComponent, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@ng-mf/data-access-user';
+import { Subject, finalize, map, switchMap, take, tap } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { USUARIO_INFO } from '../../constantes/nuevo-programa.enum';
 import basePlantasTerciarizadoras from '@libs/shared/theme/assets/json/80105/basePlantasTerciarizadoras.json';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
 import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
+import notarios from '@libs/shared/theme/assets/json/shared/notarios.json';
+import planta from '@libs/shared/theme/assets/json/shared/planta.json';
+import plantasSubmanufactureras from '@libs/shared/theme/assets/json/shared/plantas-submanufactureras.json';
 import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accionistas.json';
 import { takeUntil } from 'rxjs';
 // eslint-disable-next-line @nx/enforce-module-boundaries
@@ -16,8 +20,9 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-paso-capturar-solicitud',
   templateUrl: './paso-capturar-solicitud.component.html',
+  providers: [ToastrService],
 })
-export class PasoCapturarSolicitudComponent implements OnDestroy,OnInit {
+export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
   /**
    * Almacena los pasos del wizard definidos en PASOS4.
    * @type {ListaPasosWizard[]}
@@ -100,388 +105,43 @@ export class PasoCapturarSolicitudComponent implements OnDestroy,OnInit {
    * Identificador numérico de la solicitud actual.
    * Se inicializa en 0 y se utiliza para rastrear la solicitud en curso.
    */
-  idSolicitud: number=0;
+  idSolicitud: number = 0;
 
   /**
    * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private socioAccionistaBase: any[] = socioAccionistas;
+  private socioAccionistaBase = socioAccionistas;
 
-   /** Listado de empresas nacionales utilizadas en el formulario de solicitud. */
+  /** Listado de empresas nacionales utilizadas en el formulario de solicitud. */
   private empresasNacionales = empresasNacionales;
-  
+
   /** Listado de empresas  extranjeras utilizadas en el formulario de solicitud. */
   private empresasExtranjeras = empresasExtranjeras;
 
   private basePlantasTerciarizadoras: unknown[] = Array.isArray(basePlantasTerciarizadoras) ? basePlantasTerciarizadoras : [];
 
-    private plantasBase: Readonly<Record<string, any>> = {
-     "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
-            "clavePlanta": "0",
-            "claveAduana": null,
-            "superficie": null,
-            "ubicacionColindancias": null,
-            "capacidadProduccion": null,
-            "capacidadProduccionUtilizada": 0,
-            "tipoLocal": null,
-            "tipoEstablecimiento": null,
-            "ubicacionEstablecimiento": null,
-            "domicilio": 260910315,
-            "empresaSolicitante": 332682,
-            "rfcRecinto": null,
-            "numeroLicencia": null,
-            "avisoFuncionamiento": null,
-            "rfcResponsableSanitario": null,
-            "correoElectronico": null,
-            "fecFinVigencia": "2025-09-05",
-            "testado": false,
-            "estadoEvaluacionEntidad": "AUTORIZADO",
-            "estadoEntidad": "AUTORIZADO",
-            "original": null,
-            "modificado": null,
-            "tipoBodega": null,
-            "tipoDeposito": null,
-            "marbetesPrecintos": null,
-            "idSolicitudRecursiva": null,
-            "idRecintoRecursiva": null,
-            "claveSidefi": null,
-            "nacional": null,
-            "numeroMovimientoVs": null,
-            "descripcionNumeroBodega": null,
-            "blnActivo": null,
-            "booleanAlquilado": null,
-            "blnCertificada": null,
-            "blnGenerico1": null,
-            "capacidadMaxAlmacenamiento": null,
-            "cveUnidadAdministrativa": null,
-            "cveUnidadMedidaCapacidad": null,
-            "cveUnidadMedidaVolumen": null,
-            "descripcionCertificador": null,
-            "fechaInicioVigencia": "2025-09-05",
-            "idAlmacenadoraMercancia": null,
-            "idPersonaSolicitud": null,
-            "tipoInmueble": null,
-            "idTipoRecinto": "TIREC.03",
-            "rfcCertificador": null,
-            "superficieEtr": null,
-            "superficieMarbetes": null,
-            "volumenManejoRecinto": null,
-            "idRecinto": 1,
-            "errorImmex": null,
-            "domiciliosMontoInversion": [
-                {
-                    "claveTipo": "TIMI.EQ",
-                    "descripcion": "EWR WERWER",
-                    "cantidad": "34",
-                    "monto": "54",
-                    "testado": true,
-                    "fecFinVigencia": "2025-09-05"
-                }
-            ],
-            "domiciliosEmpleados": [
-                {
-                    "totalEmpleados": "45",
-                    "directos": "25",
-                    "cedula": "SI",
-                    "fechaCedula": "2025-09-05",
-                    "indirectos": "20",
-                    "contrato": "435",
-                    "objetoContrato": "RET ERT",
-                    "fechaFirma": "2025-09-05",
-                    "fechaFinVigenciaFirma": "2025-09-05",
-                    "rfcEmpresa": "AAL970927390",
-                    "razonEmpresa": "ALMEXA",
-                    "testado": true,
-                    "fecFinVigencia": "2025-09-05"
-                }
-            ],
-            "domiciliosCapacidad": [
-                {
-                    "idServicio": 10,
-                    "claveFraccion": "1_84199",
-                    "unidadMedida": "pieza",
-                    "descripcion": "EXPP",
-                    "capacidadEfectiva": "90",
-                    "turnos": "22",
-                    "horasTurno": "6",
-                    "cantidadEmpleados": "33",
-                    "cantidadMaquinaria": "33",
-                    "descripcionMaquinaria": "GSD",
-                    "capacidadMensual": "3242",
-                    "capacidadAnual": "2343",
-                    "calculo": "48.1",
-                    "testado": true,
-                    "fecFinVigencia": "2025-09-05"
-                }
-            ],
-            "complementoPlanta": {
-                "amparoPrograma": "SI",
-                "tipoDoc": "TID.CA",
-                "descripcionTipoDoc": null,
-                "fechaFirmaDoc": "04/09/2025",
-                "fechaFinVigenciaDoc": "04/09/2025",
-                "rfcFirmante": null,
-                "razonFirmante": null,
-                "rfcFirmanteDos": null,
-                "razonFirmanteDos": null,
-                "tipoDocResp": "TICCOR.CC",
-                "descripcionTipoDocResp": null,
-                "fechaFirmaDocResp": "04/09/2025",
-                "fechaFinVigenciaDocResp": "04/09/2025",
-                "rfcFirmanteResp": null,
-                "razonFirmanteResp": null,
-                "rfcFirmanteRespDos": null,
-                "razonFirmanteRespDos": null,
-                "testado": true,
-                "fecFinVigencia": "2025-09-05"
-            },
-            "firmantes": [
-                {
-                    "idPersonaPersonaSolicitudR": 0,
-                    "idSolicitud": 0,
-                    "nombre": "AGRICOLA ALPE S DE RL DE CV",
-                    "apellidoMaterno": "string",
-                    "apellidoPaterno": "string",
-                    "razonSocial": "TIPERS.SL",
-                    "rfc": "AAL0409235E6",
-                    "curp": "string",
-                    "ideTipoPersonaSol": "string",
-                    "correoElectronico": "vucem.soporte.aplicativo@ultrasist.com.mx",
-                    "cedulaProfesional": "string",
-                    "nss": "260833725",
-                    "telefono": "8154563",
-                    "descripcionGiro": "Siembra, cultivo y cosecha de papa",
-                    "cvePaisOrigen": "str",
-                    "idDireccionSol": 0,
-                    "tipoPatenteAgente": "string",
-                    "recif": "string",
-                    "puesto": "string",
-                    "tipoAgente": "string",
-                    "numeroPatente": "str",
-                    "numeroIdentificacionFiscal": "AAL0409235E6",
-                    "personaMoral": true,
-                    "extranjero": true,
-                    "organismoPublico": true,
-                    "cveUsuario": "string",
-                    "paginaWeb": "string",
-                    "ideGenerica1": "string",
-                    "rfcExtranjero": "string",
-                    "codAutorizacion": "stri",
-                    "actividadProductiva": "string",
-                    "estadoEvaluacionEntidad": "AUTORIZADO",
-                    "estadoEntidad": "AUTORIZADO",
-                    "original": true,
-                    "modificado": true,
-                    "numeroRegistro": "string",
-                    "concentimientoInstalacionRecuperacion": true,
-                    "cveCatalogo": "string",
-                    "alquilado": true,
-                    "volumenAlmacenaje": 0,
-                    "capacidadAlmacenaje": 0,
-                    "descripcionDetalladaActividadEconomica": "string",
-                    "activo": true,
-                    "generico1": true,
-                    "area": "string",
-                    "cveNacionalidad": "str",
-                    "clasificacionArancelaria": "string",
-                    "infoAdicional": true,
-                    "montoImportacion": 0,
-                    "montoExportacion": 0,
-                    "pctParticAccionaria": 0,
-                    "ampliacionModelos": true,
-                    "ampliacionPaises": true,
-                    "fecFallecimiento": "2025-09-05",
-                    "idDomicilio": 0
-                }
-            ]
-  }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private plantasSubmanufacturerasBase: Readonly<Record<string, any>> = {
-    "razonSocial": "INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV",
-            "clavePlanta": "0",
-            "claveAduana": null,
-            "superficie": null,
-            "ubicacionColindancias": null,
-            "capacidadProduccion": null,
-            "capacidadProduccionUtilizada": 0.0,
-            "tipoLocal": null,
-            "tipoEstablecimiento": null,
-            "ubicacionEstablecimiento": null,
-            "domicilio": 260910315,
-            "empresaSolicitante": 332682,
-            "rfcRecinto": null,
-            "numeroLicencia": null,
-            "avisoFuncionamiento": null,
-            "rfcResponsableSanitario": null,
-            "correoElectronico": null,
-            "fecFinVigencia": "2025-09-05",
-            "testado": false,
-            "estadoEvaluacionEntidad": "AUTORIZADO",
-            "estadoEntidad": "AUTORIZADO",
-            "original": null,
-            "modificado": null,
-            "tipoBodega": null,
-            "tipoDeposito": null,
-            "marbetesPrecintos": null,
-            "idSolicitudRecursiva": null,
-            "idRecintoRecursiva": null,
-            "claveSidefi": null,
-            "nacional": null,
-            "numeroMovimientoVs": null,
-            "descripcionNumeroBodega": null,
-            "blnActivo": null,
-            "booleanAlquilado": null,
-            "blnCertificada": null,
-            "blnGenerico1": null,
-            "capacidadMaxAlmacenamiento": null,
-            "cveUnidadAdministrativa": null,
-            "cveUnidadMedidaCapacidad": null,
-            "cveUnidadMedidaVolumen": null,
-            "descripcionCertificador": null,
-            "fechaInicioVigencia": "2025-09-05",
-            "idAlmacenadoraMercancia": null,
-            "idPersonaSolicitud": null,
-            "tipoInmueble": null,
-            "idTipoRecinto": "TIREC.03",
-            "rfcCertificador": null,
-            "superficieEtr": null,
-            "superficieMarbetes": null,
-            "volumenManejoRecinto": null,
-            "idRecinto": 1,
-            "errorImmex": null,
-            "domiciliosMontoInversion": [
-                {
-                    "claveTipo": "TIMI.EQ",
-                    "descripcion": "EWR WERWER",
-                    "cantidad": "34",
-                    "monto": "54",
-                    "testado": true,
-                    "fecFinVigencia": "2025-09-05"
-                }
-            ],
-            "domiciliosEmpleados": [
-                {
-                    "totalEmpleados": "45",
-                    "directos": "25",
-                    "cedula": "SI",
-                    "fechaCedula": "2025-09-05",
-                    "indirectos": "20",
-                    "contrato": "435",
-                    "objetoContrato": "RET ERT",
-                    "fechaFirma": "2025-09-05",
-                    "fechaFinVigenciaFirma": "2025-09-05",
-                    "rfcEmpresa": "AAL970927390",
-                    "razonEmpresa": "ALMEXA",
-                    "testado": true,
-                    "fecFinVigencia": "2025-09-05"
-                }
-            ],
-            "domiciliosCapacidad": [
-                {
-                    "idServicio": 10,
-                    "claveFraccion": "1_84199",
-                    "unidadMedida": "pieza",
-                    "descripcion": "EXPP",
-                    "capacidadEfectiva": "90",
-                    "turnos": "22",
-                    "horasTurno": "6",
-                    "cantidadEmpleados": "33",
-                    "cantidadMaquinaria": "33",
-                    "descripcionMaquinaria": "GSD",
-                    "capacidadMensual": "3242",
-                    "capacidadAnual": "2343",
-                    "calculo": "48.1",
-                    "testado": true,
-                    "fecFinVigencia": "2025-09-05"
-                }
-            ],
-            "complementoPlanta": {
-                "amparoPrograma": "SI",
-                "tipoDoc": "TID.CA",
-                "descripcionTipoDoc": null,
-                "fechaFirmaDoc": "04/09/2025",
-                "fechaFinVigenciaDoc": "04/09/2025",
-                "rfcFirmante": null,
-                "razonFirmante": null,
-                "rfcFirmanteDos": null,
-                "razonFirmanteDos": null,
-                "tipoDocResp": "TICCOR.CC",
-                "descripcionTipoDocResp": null,
-                "fechaFirmaDocResp": "04/09/2025",
-                "fechaFinVigenciaDocResp": "04/09/2025",
-                "rfcFirmanteResp": null,
-                "razonFirmanteResp": null,
-                "rfcFirmanteRespDos": null,
-                "razonFirmanteRespDos": null,
-                "testado": true,
-                "fecFinVigencia": "2025-09-05"
-            },
-            "firmantes": [
-                {
-                    "idPersonaPersonaSolicitudR": 0,
-                    "idSolicitud": 0,
-                    "nombre": "AGRICOLA ALPE S DE RL DE CV",
-                    "apellidoMaterno": "string",
-                    "apellidoPaterno": "string",
-                    "razonSocial": "TIPERS.SL",
-                    "rfc": "AAL0409235E6",
-                    "curp": "string",
-                    "ideTipoPersonaSol": "string",
-                    "correoElectronico": "vucem.soporte.aplicativo@ultrasist.com.mx",
-                    "cedulaProfesional": "string",
-                    "nss": "260833725",
-                    "telefono": "8154563",
-                    "descripcionGiro": "Siembra, cultivo y cosecha de papa",
-                    "cvePaisOrigen": "str",
-                    "idDireccionSol": 0,
-                    "tipoPatenteAgente": "string",
-                    "recif": "string",
-                    "puesto": "string",
-                    "tipoAgente": "string",
-                    "numeroPatente": "str",
-                    "numeroIdentificacionFiscal": "AAL0409235E6",
-                    "personaMoral": true,
-                    "extranjero": true,
-                    "organismoPublico": true,
-                    "cveUsuario": "string",
-                    "paginaWeb": "string",
-                    "ideGenerica1": "string",
-                    "rfcExtranjero": "string",
-                    "codAutorizacion": "stri",
-                    "actividadProductiva": "string",
-                    "estadoEvaluacionEntidad": "AUTORIZADO",
-                    "estadoEntidad": "AUTORIZADO",
-                    "original": true,
-                    "modificado": true,
-                    "numeroRegistro": "string",
-                    "concentimientoInstalacionRecuperacion": true,
-                    "cveCatalogo": "string",
-                    "alquilado": true,
-                    "volumenAlmacenaje": 0,
-                    "capacidadAlmacenaje": 0,
-                    "descripcionDetalladaActividadEconomica": "string",
-                    "activo": true,
-                    "generico1": true,
-                    "area": "string",
-                    "cveNacionalidad": "str",
-                    "clasificacionArancelaria": "string",
-                    "infoAdicional": true,
-                    "montoImportacion": 0,
-                    "montoExportacion": 0,
-                    "pctParticAccionaria": 0,
-                    "ampliacionModelos": true,
-                    "ampliacionPaises": true,
-                    "fecFallecimiento": "2025-09-05",
-                    "idDomicilio": 0
-                }
-            ]
-  }
-
-   /**
-   * URL de la página actual.
+  /**
+   * Objeto base inmutable que representa la estructura inicial de un plantas.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private plantasBase: any[] = planta;
+
+  /**
+   * Objeto base inmutable que representa la estructura inicial de un plantasSubmanufactureras.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private plantasSubmanufacturerasBase: any[] = plantasSubmanufactureras;
+
+  /**
+   * Objeto base inmutable que representa la estructura inicial de un notarios.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private notariosBase: any[] = notarios;
+
+  /**
+  * URL de la página actual.
+  */
   public solicitudState!: Tramite80101State;
 
   /**
@@ -496,7 +156,8 @@ export class PasoCapturarSolicitudComponent implements OnDestroy,OnInit {
     private seccion: SeccionLibStore,
     private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
     private tramite80105Store: Tramite80101Store,
-    private tramite80105Query: Tramite80101Query
+    private tramite80105Query: Tramite80101Query,
+    private toastrService: ToastrService,
   ) {
     this.tramiteQuery.FormaValida$.pipe(
       takeUntil(this.destroyNotifier$)
@@ -507,14 +168,14 @@ export class PasoCapturarSolicitudComponent implements OnDestroy,OnInit {
   }
 
 
- /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Suscribe al observable `selectSeccionState$` para escuchar cambios en el estado de la sección,
-   * actualizando la propiedad `solicitudState` con el nuevo estado recibido.
-   * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`,
-   * evitando fugas de memoria.
-   */
-ngOnInit(): void {
+  /**
+    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+    * Suscribe al observable `selectSeccionState$` para escuchar cambios en el estado de la sección,
+    * actualizando la propiedad `solicitudState` con el nuevo estado recibido.
+    * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`,
+    * evitando fugas de memoria.
+    */
+  ngOnInit(): void {
     this.tramite80105Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -524,59 +185,119 @@ ngOnInit(): void {
       ).subscribe();
   }
 
-  /**
-   * Obtiene el valor del índice de la acción del botón.
-   * @param e - event$: Acción del botón.
-   */
-  getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
-  }
+/**
+ * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
+ * 
+ * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
+ * y muestra un mensaje de éxito o error dependiendo del código de respuesta. Si la respuesta es exitosa
+ * y el valor del evento está dentro del rango válido (1 a 4), actualiza el índice del wizard y navega
+ * hacia adelante o atrás según el tipo de acción.
+ * 
+ * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
+ */
+getValorIndice(e: AccionBoton): void {
+  let shouldNavigate = false;
+  this.nuevoProgramaIndustrialService.getAllState()
+    .pipe(
+      take(1),
+      switchMap((data) => this.guardar(data)),
+      tap(response => {
+        shouldNavigate = response.codigo === '00';
+        if(shouldNavigate) {
+          this.toastrService.success(response.mensaje);
+        } else {
+          this.toastrService.error(response.mensaje);
+        }
+      }),
+      finalize(() => {
+        if (shouldNavigate && e.valor > 0 && e.valor < 5) {
+          this.indice = e.valor;
+          if (e.accion === 'cont') {
+            this.wizardComponent.siguiente();
+          } else {
+            this.wizardComponent.atras();
+          }
+        }
+      })
+    )
+    .subscribe();
+}
 
   /**
    * Obtiene los datos del store y los guarda utilizando el servicio.
    */
   obtenerDatosDelStore(): void {
     this.nuevoProgramaIndustrialService.getAllState()
-    .pipe(take(1))
-    .subscribe(data => {
-      this.guardar(data);
-    });
+      .pipe(take(1))
+      .subscribe(data => {
+        this.guardar(data);
+      });
   }
 
-        // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
+  /**
+   * Construye un arreglo de objetos de plantas basado en una estructura base común.
+   * 
+   * @param arr Arreglo de datos de entrada para cada planta.
+   * @param base Objeto base que se combina con los datos específicos de cada planta.
+   * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+  buildPlantas(array: any[] = [], base: unknown[]): unknown[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-   const MAP_TO_PAYLOAD = (item: any): any => ({
-  ...base,
-  entidadFederativa: item.estado,
-  municipioDelegacion: item.estadoOptions,
-  fechaActa: item.fechaDelActa,
-  nombreNotario: item.nombre,
-  numeroActa: item.numeroDeActa,
-  numeroNotaria: item.numeroDeNotaria,
-  apellidoPaterno: item.primerApellido,
-  apellidoMaterno: item.segundoApellido,
-  estadoEntidad: item.entidadFederativa,
-  cvePaisOrigen: item.pais,
-  rfc: item.rfc,
-  domicilio: item.domicilioFiscal,
-  razonSocial: item.razonSocial,
-});
-      
-
-    arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+      idPlanta: arr.planta ?? '',
+      calle: arr.calle ?? '',
+      numeroExterior: arr.numeroExterior ?? '',
+      numeroInterior: arr.numeroInterior ?? '',
+      codigoPostal: arr.codigoPostal ?? '',
+      localidad: arr.localidad ?? '',
+      colonia: arr.colonia ?? '',
+      delegacionMunicipio: arr.delegacionMunicipio ?? '',
+      entidadFederativa: arr.entidadFederativa ?? '',
+      pais: arr.pais ?? '',
+      rfc: arr.registroFederalDeContribuyentes ?? '',
+      domicilioFiscal: arr.domicilioDelSolicitante ?? '',
+      razonSocial: arr.razonSocial ?? '',
+        });
+      });
+    });
     return RESULT;
-}
+  }
+
+/**
+ * Genera un arreglo de objetos con los datos de fedatarios a partir de un arreglo de entrada.
+ *
+ * @param arr Arreglo de objetos con datos de entrada (opcional).
+ * @param base Objeto base que se fusiona con los datos específicos de cada fedatario.
+ * @returns Un arreglo de objetos estructurados con la información de los fedatarios.
+ */
+// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+ buildDatosFederatarios(array: any[] = [], base: unknown[]): unknown[] {
+    const RESULT: any[] = [];
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+      nombreNotario: arr.nombre ?? '',
+      apellidoMaterno: arr.segundoApellido ?? '',
+      apellidoPaterno: arr.primerApellido ?? '',
+      numeroActa: arr.numeroDeActa ?? '',
+      fechaActa: arr.fechaDelActa ?? '',
+      numeroNotaria: arr.numeroDeNotaria ?? '',
+      entidadFederativa: arr.estado ?? '',
+      delegacionMunicipio: arr.estadoOptions ?? '',
+        });
+      });
+    });
+    return RESULT;
+  }
+
   /**
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
    * 
@@ -584,37 +305,42 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
    * @returns void
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  guardar(data: any): void {
-    const SOCIO_ACCIONISTAS = this.buildSociosAccionistas(data, this.socioAccionistaBase);
+  guardar(data: any): Promise<any> {
+    const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
+    const DECLARACION_SOLICUTUD_ENTRIES = PasoCapturarSolicitudComponent.buildDeclaracionSolicitudEntries(data);
     const EMPRESAS_NACIONALES = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentos, this.empresasNacionales);
     const EMPRESAS_EXTRANJERAS = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentosExtranjera, this.empresasExtranjeras);
     const PLANTAS_TERCIARIZADORAS = PasoCapturarSolicitudComponent.buildPlantasTerciarizadoras(data.empresasSeleccionadas, this.basePlantasTerciarizadoras);
-    const PLANTAS = this.buildPlantas(data.tablaDatosFederatarios, this.plantasBase, data);
+    const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
     const ANEXO_ALL = this.buildAnexo(data);
-    const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase, data);
+    const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
+    const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
+
 
     const PAYLOAD = {
-    "tipoDeSolicitud": "guardar",
-    "idSolicitud": 202781045,
-    "idTipoTramite": 80105,
-    "rfc": "AAL0409235E6",
-    "cveUnidadAdministrativa": "8101",
-    "costoTotal": 10000.5,
-    "certificadoSerialNumber": "1234567890ABCDEF",
-    "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
-    "numeroFolioTramiteOriginal": "TRM-2023-00001",
-    "nombre": "Juan",
-    "apPaterno": "Pérez",
-    "apMaterno": "López",
-    "telefono": "5551234567",
-    "discriminator_value": "80105",
-    "discriminatorValue": "80105",
-     "domicilio": {
-    },
-    "solicitante": {
-        
-    },
+      "esDeGuardar": true,
+      "tipoDeSolicitud": "guardar",
+      "idSolicitud": 202781045,
+      "idTipoTramite": 80105,
+      "rfc": "AAL0409235E6",
+      "cveUnidadAdministrativa": "8101",
+      "costoTotal": 10000.5,
+      "certificadoSerialNumber": "1234567890ABCDEF",
+      "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
+      "numeroFolioTramiteOriginal": "TRM-2023-00001",
+      "nombre": "Juan",
+      "apPaterno": "Pérez",
+      "apMaterno": "López",
+      "telefono": "5551234567",
+      "discriminator_value": "80105",
+      "discriminatorValue": "80105",
+      "domicilio": {
+      },
+      "solicitante": {
+
+      },
       "planta": [...PLANTAS],
+      "notario": [...NOTARIOS],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
       "mercanciaImportacion": [
@@ -625,20 +351,40 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
           "complemento": {
             ...ANEXO_ALL.anexo.datosParaNavegar
           },
+          "anexoI": [...ANEXO_ALL.anexo.tableDos]
         }
-    ],
-    "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
-    "sociosAccionistas": SOCIO_ACCIONISTAS,
-    "empresasNacionales": EMPRESAS_NACIONALES,
-    "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
-    "solicitud": {
-      "anexoI": [...ANEXO_ALL.anexo.tableDos]
-    },
-    "plantasTerciarizadoras": PLANTAS_TERCIARIZADORAS
+      ],
+      "fraccionArancelaria": [
+        {
+          "listaProveedores": [...ANEXO_ALL.anexo.proveedorClienteDos]
+        }
+      ],
+      "productoExportacionDtoList": [
+        {
+          "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]
+        }
+      ],
+      "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
+      "solicitud": SOLICITUD,
+      "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
+      "empresasNacionales": EMPRESAS_NACIONALES,
+      "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
+      "plantasTerciarizadoras": PLANTAS_TERCIARIZADORAS
     };
-    this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
-      this.tramite80105Store.setIdSolicitud(response.datos.id_solicitud || 0);
-      return response;
+
+    return new Promise((resolve, reject) => {
+      this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
+        if(esValidObject(response) && esValidObject(response.datos)) {
+          if(getValidDatos(response.datos.id_solicitud)) {
+            this.tramite80105Store.setIdSolicitud(response.datos.id_solicitud);
+          } else {
+            this.tramite80105Store.setIdSolicitud(0);
+          }
+        }
+        resolve(response);
+      }, error => {
+        reject(error);
+      });
     });
   }
 
@@ -657,19 +403,39 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
  * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
  */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildSociosAccionistas(data: Record<string, any>, base: any[]): any[] {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
-      base.forEach(item => {
-        const ITEM = (item && typeof item === 'object') ? item : {};
-        RESULT.push({
-          ...ITEM,
-          paginaWeb: data['datosComplimentos'].datosGeneralis.paginaWWeb,
-          numeroRegistro: data['datosComplimentos'].formaModificaciones.nombreDeActa,
-          capacidadAlmacenaje: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
-          rfc:  data['datosComplimentos'].formaModificaciones.rfc ?? ''
-        });
-      });
+  buildSociosAccionistas(data: Record<string, any>, base: Record<string, any>): any {
+    return {
+      ...base,
+      notario: {
+        ...base['notario'],
+        rfc: data['datosComplimentos'].formaModificaciones.rfc,
+        numeroActa: data['datosComplimentos'].formaModificaciones.nombreDeActa,
+        numeroNotario: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
+        entidadFederativa: data['datosComplimentos'].formaModificaciones.estado,
+        fechaActa: formatearFechaYyyyMmDd(data['datosComplimentos'].formaModificaciones.fechaDeActa)
+      },
+      modalidad: data['datosComplimentos'].modalidad,
+      booleanGenerico: data['datosComplimentos'].programaPreOperativo ? true : false,
+      descripcionSistemasMedicion: data['datosComplimentos'].datosGeneralis.paginaWWeb,
+      descripcionLugarEmbarque: data['datosComplimentos'].datosGeneralis.localizacion,
+      capacidadAlmacenaje: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
+      numeroPermiso: data['datosComplimentos'].obligacionesFiscales.opinionPositiva === 1 ? 'SI' : '',
+      fechaOperacion: formatearFechaYyyyMmDd(data['datosComplimentos'].obligacionesFiscales.fechaExpedicion), 
+      nomOficialAutorizado: data['datosComplimentos'].formaModificaciones.nombreDelFederatario,
+
+    };
+  }
+
+  /** Construye el arreglo de declaraciones de solicitud a partir de los datos proporcionados. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static buildDeclaracionSolicitudEntries(data: Record<string, any>): unknown[] {
+    const RESULT = [
+      {
+        "acepto": data['datosComplimentos'].obligacionesFiscales.aceptarObligacionFiscal ? 1 : 0,
+        "idTipoTramite": 80105,
+        "cveDeclaracion": "123"
+      }
+    ];
     return RESULT;
   }
 
@@ -707,24 +473,38 @@ buildPlantas(arr: any[] = [], base: Record<string, any>, data: any): any[] {
     return RESULT;
   }
 
+/**
+ * Construye un arreglo de objetos con los datos de plantas submanufactureras a partir de un arreglo de entrada.
+ *
+ * @param arr Arreglo de objetos con datos de entrada (opcional).
+ * @param base Objeto base que se fusiona con los datos específicos de cada planta.
+ * @returns Un arreglo con los objetos estructurados de plantas submanufactureras.
+ */
 // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>, data: any): any[] {
+  buildPlantasSubmanufactureras(array: any[] = [], base: unknown[]): unknown[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const MAP_TO_PAYLOAD = (item: any): any => ({
-      ...base,
-      estadoEntidad: item.entidadFederativa,
-      cvePaisOrigen: item.pais,
-      rfc: item.rfc,
-      domicilio: item.domicilioFiscal,
-      razonSocial: item.razonSocial,
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+      empresaCalle: arr.calle ?? '',
+      empresaNumeroInterior: arr.numInterior ?? '',
+      empresaNumeroExterior: arr.numExterior ?? '',
+      empresaCodigoPostal: arr.codigoPostal ?? '',
+      localidad: arr.colonia ?? '',
+      empresaDelegacionMunicipio: arr.delegacionMunicipio ?? '',
+      empresaEntidadFederativa: arr.entidadFederativa ?? '',
+      empresaPais: arr.pais ?? '',
+      rfc: arr.rfc ?? '',
+      domicilioFiscal: arr.domicilioFiscalSolicitante ?? '',
+      razonSocial: arr.razonSocial ?? '',
+        });
+      });
     });
-
-    arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-
     return RESULT;
-}
+  }
 
   /**
  * Build plantasControladoras by taking the base array
@@ -746,7 +526,7 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>, data: 
           ...PLANTA,
           calle: emp.calle ?? '',
           numeroExterior: emp.numeroExterior ?? '',
-          numeroInterior: emp.numeroInterior ?? '', 
+          numeroInterior: emp.numeroInterior ?? '',
           codigoPostal: emp.codigoPostal ?? '',
           colonia: emp.colonia ?? '',
           delegacionMunicipio: emp.municipioDelegacion ?? '',
@@ -765,58 +545,58 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>, data: 
 
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
-      /**
-       * Construye el objeto `anexo` a partir de los datos proporcionados.
-       *
-       * @param data - Objeto de entrada que contiene la información necesaria para construir los anexos y sus tablas asociadas.
-       * @returns Un objeto con la estructura de los anexos, incluyendo ANEXOII, ANEXOIII, proveedorCliente y datosParaNavegar.
-       *
-       * - `ANEXOII` y `ANEXOIII`: Listas construidas a partir de los elementos de `anexoDosTablaLista` y `anexoTresTablaLista` respectivamente.
-       * - `proveedorCliente`: Lista de proveedores y clientes obtenida de `proveedorClienteDatosTabla`.
-       * - `datosParaNavegar`: Información adicional para navegación, construida desde `datosParaNavegar`.
-       *
-       * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
-       */
-       buildAnexo(data: any) {
-       
-        const buildAnexoItem = (item: Anexo1) => ({
-          descripcion: item.encabezadoFraccion,
-          idTipoBien: 0,
-          idBienComercial: 0,
-          testado: true,
-          contadorGrid: null,
-          descripcionTestado: item.encabezadoDescripcion,
-        });
-      
-        const buildProveedorCliente = (item: ProveedorClienteDatosTabla) => ({
-          idProveedor: item.idProveedor,
-          paisOrigen: item.paisOrigen,
-          rfcProveedor: item.rfcProveedor,
-          razonProveedor: item.razonProveedor,
-          paisDestino: item.paisDestino,
-          rfcCliente: item.rfcClinte,
-          razonCliente: item.razonSocial,
-          domicilio: item.domicilio,
-          testado: item.testado,
-          idProductoP: item.idProductoP,
-          descTestado: item.descTestado,
-        });
-      
-        const buildDatosParaNavegar = (datos: any) => ({
-          anexoII: datos?.encabezadoAnexoII,
-          tipo: datos?.encabezadoTipo,
-          unidadMedida: datos?.encabezadoAnexoII,
-          categoria: datos?.encabezadoCategoria,
-          descripcion: datos?.encabezadoDescripcionComercial,
-          valorMensual: datos?.encabezadoVolumenMensual,
-          valorAnual: datos?.encabezadoVolumenAnual,
-          volumenMensual: datos?.encabezadoValorEnMonedaMensual,
-          volumenAnual: datos?.encabezadoValorEnMonedaAnual,
-          testado: true,
-          fecFinVigencia: null,
-          volumenAnualSolicitado: null,
-        });
-           const anexoDos: any = [];
+  /**
+   * Construye el objeto `anexo` a partir de los datos proporcionados.
+   *
+   * @param data - Objeto de entrada que contiene la información necesaria para construir los anexos y sus tablas asociadas.
+   * @returns Un objeto con la estructura de los anexos, incluyendo ANEXOII, ANEXOIII, proveedorCliente y datosParaNavegar.
+   *
+   * - `ANEXOII` y `ANEXOIII`: Listas construidas a partir de los elementos de `anexoDosTablaLista` y `anexoTresTablaLista` respectivamente.
+   * - `proveedorCliente`: Lista de proveedores y clientes obtenida de `proveedorClienteDatosTabla`.
+   * - `datosParaNavegar`: Información adicional para navegación, construida desde `datosParaNavegar`.
+   *
+   * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
+   */
+  buildAnexo(data: any) {
+
+    const buildAnexoItem = (item: Anexo1) => ({
+      descripcion: item.encabezadoFraccion,
+      idTipoBien: 0,
+      idBienComercial: 0,
+      testado: true,
+      contadorGrid: null,
+      descripcionTestado: item.encabezadoDescripcion,
+    });
+
+    const buildProveedorCliente = (item: ProveedorClienteDatosTabla) => ({
+      idProveedor: item.idProveedor,
+      paisOrigen: item.paisOrigen,
+      rfcProveedor: item.rfcProveedor,
+      razonProveedor: item.razonProveedor,
+      paisDestino: item.paisDestino,
+      rfcCliente: item.rfcClinte,
+      razonCliente: item.razonSocial,
+      domicilio: item.domicilio,
+      testado: item.testado,
+      idProductoP: item.idProductoP,
+      descTestado: item.descTestado,
+    });
+
+    const buildDatosParaNavegar = (datos: any) => ({
+      anexoII: datos?.encabezadoAnexoII,
+      tipo: datos?.encabezadoTipo,
+      unidadMedida: datos?.encabezadoAnexoII,
+      categoria: datos?.encabezadoCategoria,
+      descripcion: datos?.encabezadoDescripcionComercial,
+      valorMensual: datos?.encabezadoVolumenMensual,
+      valorAnual: datos?.encabezadoVolumenAnual,
+      volumenMensual: datos?.encabezadoValorEnMonedaMensual,
+      volumenAnual: datos?.encabezadoValorEnMonedaAnual,
+      testado: true,
+      fecFinVigencia: null,
+      volumenAnualSolicitado: null,
+    });
+    const anexoDos: any = [];
 
     (data.annexoUno?.exportarDatosTabla || []).forEach((item: any) => {
       anexoDos.push({
@@ -829,20 +609,46 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>, data: 
         fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
         fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
         categoriaFraccion: item.encabezadoCategoria,
+        tipoFraccion: item.encabezadoTipo,
+        umt: item.encabezadoUmt
       });
     });
-      
-        return {
-          anexo: {
-            ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
-            ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
-            proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
-            datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
-            tableDos: anexoDos
-          },
-        };
-      }
-  
+
+    const proyectoImmexDatos = (item: any) => ({
+      tipoDocumento: item.encabezadoTipoDocument,
+      descripcion: item.encabezadoDescripcionOtro,
+      fechaFirma: item.encabezadoFechaFirma,
+      fechaVigencia: item.encabezadoFechaVigencia,
+      rfcFirmante: item.encabezadoRfc,
+      razonFirmante: item.encabezadoRazonFirmante,
+      testado: true,
+      fecFinVigencia: item.encabezadoFechaVigencia,
+    });
+
+    const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
+      paisOrigen: item.paisOrigen,
+      rfcProveedor: item.rfcProveedor,
+      razonProveedor: item.razonProveedor,
+      paisDestino: item.paisDestino,
+      rfcCliente: item.rfcClinte,
+      razonCliente: item.razonSocial,
+      domicilio: item.domicilio,
+      descTestado: item.descTestado,
+    });
+
+    return {
+      anexo: {
+        ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
+        ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
+        proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
+        datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
+        tableDos: anexoDos,
+        proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
+        proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
+      },
+    };
+  }
+
   /**
    * Método para navegar a la siguiente sección del wizard.
    * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
@@ -854,7 +660,7 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>, data: 
     this.indice = this.wizardComponent.indiceActual + 1;
     this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
   }
-  
+
   /**
    * Método para navegar a la sección anterior del wizard.
    * Actualiza el índice y el estado de los pasos.

@@ -14,12 +14,14 @@
     <app-paso-uno-cs></app-paso-uno-cs>
     }
     @case (2) {
-    <app-paso-dos
-          [idTipoTRamite]="'80101'"
-          [datosUsuario]="datosUsuario"
-          [cargaArchivosEvento]="cargarArchivosEvento"
-          (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
-          (reenviarCargaRealizada)="cargaRealizada($event)"></app-paso-dos>
+    <app-paso-carga-documento 
+    [idSolicitud]="solicitudState.idSolicitud"
+    [idTipoTRamite]="'80101'"
+    [cargaArchivosEvento]="cargarArchivosEvento"
+    (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+    (reenviarCargaRealizada)="cargaRealizada($event)"
+    (cargaEnProgreso)="onCargaEnProgreso($event)"
+    ></app-paso-carga-documento>
     }
     @case (3) {
      <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="80101" [procedureUrl]="'nuevo-programa-industrial/action'"></paso-firma>
@@ -46,7 +48,7 @@
             (click)="
               seccionCargarDocumentos ? onClickCargaArchivos() : siguiente()
             "
-            [disabled]="!activarBotonCargaArchivos && seccionCargarDocumentos"
+            [disabled]="(seccionCargarDocumentos && !activarBotonCargaArchivos) || (!seccionCargarDocumentos && cargaEnProgreso)"
           >
             {{ seccionCargarDocumentos ? 'Cargar archivos' : 'Continuar' }}
           </button>

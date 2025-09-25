@@ -179,4 +179,18 @@ getServicoImmex(): Observable<JsonResponseCatalogo> {
   );
 }
 
+ /**
+   * Recupera una lista de países desde el API de catálogo.
+   *
+   * @returns Un Observable que emite la respuesta con un arreglo de países.
+   */
+  getPais(): Observable<JsonResponseCatalogo> {
+    return this.httpService.get<JsonResponseCatalogo>(
+      PROC_80102.PAIS,
+      {},
+      false
+    );
+  }
+
+
 }
