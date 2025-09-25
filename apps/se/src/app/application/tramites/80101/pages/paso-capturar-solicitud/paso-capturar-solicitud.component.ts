@@ -11,6 +11,9 @@ import notarios from '@libs/shared/theme/assets/json/shared/notarios.json';
 import planta from '@libs/shared/theme/assets/json/shared/planta.json';
 import plantasSubmanufactureras from '@libs/shared/theme/assets/json/shared/plantas-submanufactureras.json';
 import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accionistas.json';
+
+import { ComplementarService } from '../../../../shared/services/complementar.service';
+import { ComplementarStore } from '../../../../estados/tramites/complementar.store';
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
  * 
@@ -163,7 +166,11 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * utilizando los métodos `establecerSeccion` y `establecerFormaValida` del servicio `SeccionLibStore`.
    * La suscripción se gestiona para que se complete automáticamente al destruir el componente mediante `takeUntil` y `destroyNotifier$`.
    */
-  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService, private tramite80101Store: Tramite80101Store, private tramite80101Query: Tramite80101Query) {
+  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService, 
+    private tramite80101Store: Tramite80101Store, 
+    private tramite80101Query: Tramite80101Query,
+    private complementarStore:ComplementarStore,
+  private complementarService:ComplementarService) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
@@ -207,7 +214,9 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     this.nuevoProgramaIndustrialService.getAllState()
       .pipe(take(1))
       .subscribe(data => {
-        this.guardar(data);
+        const complementarData = this.complementarService.getComplementarDataSync();
+        const mergedData = { ...data, ...complementarData };
+        this.guardar(mergedData);
       });
   }
 
@@ -304,10 +313,11 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildPlantas(array: any[] = [], base: unknown[]): unknown[] {
+  buildPlantas(array: any[] = [], base: unknown[], data: any): unknown[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
     array.forEach(arr => {
+      // eslint-disable-next-line complexity
       base.forEach(item => {
         const ITEM = (item && typeof item === 'object') ? item : {};
         RESULT.push({
@@ -325,6 +335,20 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       rfc: arr.registroFederalDeContribuyentes ?? '',
       domicilioFiscal: arr.domicilioDelSolicitante ?? '',
       razonSocial: arr.razonSocial ?? '',
+      datosComplementarios:[{
+        ...(ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0],
+         amparoPrograma: data.permanecera ?? ((ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0]?.amparoPrograma ?? ''),
+        tipoDocumento: data.tipo ?? (ITEM as any)?.datosComplementarios?.[0]?.tipoDocumento ?? '',
+        fechaFirma: data.fechaDeFirma ?? (ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0]?.fechaFirma ?? '',
+        fechaVigencia: data.fetchaDeFinDeVigencia ?? (ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0]?.fechaVigencia ?? ''
+      }],
+      montos:[{
+        ...(ITEM as { montos?: any[] }).montos?.[0],
+        tipo: data.tipos ?? ((ITEM as { montos?: any[] }).montos?.[0]?.tipo ?? ''),
+        descripcion: data.descripsion ?? (ITEM as any)?.montos?.[0]?.descripcion ?? '',
+        cantidad: data.cantidad ?? (ITEM as { montos?: any[] }).montos?.[0]?.cantidad ?? '',
+        monto: data.mnx ?? (ITEM as { montos?: any[] }).montos?.[0]?.monto ?? ''
+      }]
         });
       });
     });
