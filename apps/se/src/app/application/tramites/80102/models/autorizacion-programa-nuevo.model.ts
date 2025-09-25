@@ -23,6 +23,7 @@ export interface Servicio {
   descripionDelServicio?: string;
   descripcion?: string;
   tipode?: string;
+  ide_tipo_servicio_immex?: string;
 }
 
 
