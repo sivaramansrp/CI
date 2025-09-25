@@ -4,6 +4,8 @@ import {
   CatalogoSelectComponent,
   ConfiguracionColumna,
   InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -36,7 +38,8 @@ import { Tramite230201Query } from '../../estados/tramite230201.query';
     TituloComponent,
     TablaDinamicaComponent,
     InputRadioComponent,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    NotificacionesComponent
   ],
   providers: [BsModalService],
 })
@@ -83,12 +86,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Tipo de selección de la tabla (por ejemplo, selección por checkbox).
    */
   tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.CHECKBOX;
-
-  /**
-   * Datos que se mostrarán en la tabla de terceros.
-   * Inicialmente está vacío y se llena al cambiar la entidad federativa.
-   */
-  datosTabla: DestinatarioConfiguracionItem[] = [];
 
   /**
    * Indica si el botón de modificar está habilitado.
@@ -159,6 +156,24 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
   soloLectura: boolean = false;
 
+  /**
+   * @property moduloEmergente
+   * @description Indica si el módulo emergente está activo.
+   */
+  public moduloEmergente: boolean = false;
+
+  /**
+   * @property nuevaNotificacion
+   * @description Objeto que contiene la configuración de la notificación a mostrar.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * @property isEditMode
+   * @description Indica si el formulario está en modo edición (true) o modo agregar (false).
+   */
+  public isEditMode: boolean = false;
+
 
   /**
    * Constructor del componente TercerosComponent.
@@ -221,6 +236,9 @@ export class TercerosComponent implements OnInit, OnDestroy {
     } else {
       this.formularioDestinatario?.enable();
       this.agregarMercanciasForm?.enable();
+      
+      // Always keep nacionalidad field disabled regardless of soloLectura state
+      this.agregarMercanciasForm?.get('nacionalidad')?.disable();
     }
   }
 
@@ -251,21 +269,24 @@ export class TercerosComponent implements OnInit, OnDestroy {
   crearFormularioDestinatario(): void {
     this.formularioDestinatario = this.formBuilder.group({});
     this.agregarMercanciasForm = this.formBuilder.group({
-      nacionalidad: [{ value: 'nacional', disabled: true }, Validators.required],
+      nacionalidad: [{ value: 'extranjero', disabled: true }],
       tipoPersona: ['', Validators.required],
       razonSocial: ['', Validators.maxLength(250)],
       nombre: ['', Validators.maxLength(200)],
       apellidoPaterno: ['', Validators.maxLength(200)],
       apellidoMaterno: [''],
-      codigoPostal: ['', [Validators.required, Validators.maxLength(15)]],
+      codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
       paisSinMexico: [''],
       pais: ['', Validators.required],
       descripcionPais: [''],
-      ciudad: ['', [Validators.required, Validators.maxLength(120)]],
-      domicilio: ['', Validators.required, Validators.maxLength(1000)],
+      ciudad: ['', [Validators.required]],
+      domicilio: ['', [Validators.required, Validators.maxLength(1000)]],
     });
 
-    this.filaSeleccionada.push(this.solicitudState.destinatarios[0]);
+    // Initialize filaSeleccionada only if destinatarios exist
+    if (this.solicitudState?.destinatarios?.length > 0) {
+      this.filaSeleccionada.push(this.solicitudState.destinatarios[0]);
+    }
   }
 
   /**
@@ -282,7 +303,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     if (IS_FISICA) {
       NOMBRES?.setValidators([Validators.required, Validators.maxLength(200)]);
       PRIMER_APELLIDO?.setValidators([Validators.required, Validators.maxLength(200)]);
-      MATERNO_APELLIDO?.setValidators([Validators.required, Validators.maxLength(200)]);
+      MATERNO_APELLIDO?.setValidators([Validators.maxLength(200)]); // No required for apellido materno
       DENOMINACION_RAZON?.clearValidators();
     } else {
       NOMBRES?.clearValidators();
@@ -340,18 +361,68 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @param template La plantilla del modal.
    */
   abrirModal(template: TemplateRef<unknown>): void {
+    this.isEditMode = false;
     this.modalRef = this.modalService.show(template, { class: 'modal-xl' });
   }
 
   /**
    * Abre un modal para editar datos si hay una fila seleccionada.
+   * Si no hay filas seleccionadas, muestra una notificación de alerta.
    * @param template La plantilla del modal.
    */
   editDataModal(template: TemplateRef<unknown>): void {
     if (this.filaSeleccionada?.length > 0) {
+      this.isEditMode = true;
       this.agregarMercanciasForm.patchValue(this.filaSeleccionada[0]);
       this.modalRef = this.modalService.show(template, { class: 'modal-xl' });
+    } else {
+      this.eliminarMercanciaNotification();
     }
+  }
+
+  /**
+   * Muestra una notificación de alerta cuando no se ha seleccionado ningún registro para modificar.
+   */
+  eliminarMercanciaNotification(): void {
+    const SELECTED_DATA = this.filaSeleccionada;
+    const TABLE_DATA = this.solicitudState.destinatarios;
+    
+    let mensaje = 'Selecciona sólo un registro para modificar.';
+    
+    // Si no hay registros en la tabla
+    if (!TABLE_DATA || TABLE_DATA.length === 0) {
+      mensaje = 'Selecciona sólo un registro para modificar.';
+    }
+    // Si no hay registros seleccionados pero hay registros en la tabla
+    else if (!SELECTED_DATA || SELECTED_DATA.length === 0) {
+      mensaje = 'Selecciona sólo un registro para modificar.';
+    }
+    // Si hay múltiples registros seleccionados
+    else if (SELECTED_DATA.length > 1) {
+      mensaje = 'Selecciona sólo un registro para modificar.';
+    }
+    
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    this.moduloEmergente = true;
+  }
+
+  /**
+   * Maneja la confirmación del modal de notificación.
+   * @param _confirmacion Indica si se confirmó o canceló la acción.
+   */
+  eliminarPedimento(_confirmacion: boolean): void {
+    this.moduloEmergente = false;
   }
 
   /**
@@ -360,6 +431,8 @@ export class TercerosComponent implements OnInit, OnDestroy {
   cerrarModal(): void {
     this.agregarMercanciasForm.markAsUntouched();
     this.agregarMercanciasForm.updateValueAndValidity();
+    this.agregarMercanciasForm.reset();
+    this.isEditMode = false;
     if (this.modalRef) {
       this.modalRef.hide();
     }
@@ -369,9 +442,17 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Elimina las filas seleccionadas de la tabla y restablece el formulario.
    */
   eliminarSeleccionados(): void {
-    this.datosTabla = [];
+    // Get current destinatarios and remove selected ones
+    const CURRENT_DESTINATARIOS = [...this.solicitudState.destinatarios];
+    const FILTERED_DESTINATARIOS = CURRENT_DESTINATARIOS.filter(
+      (destinatario) => !this.filaSeleccionada.includes(destinatario)
+    );
+    
+    // Update the store with the filtered list
+    this.tramite230201Store.setDatosDestinatario(FILTERED_DESTINATARIOS);
+    
+    // Reset form and selections
     this.filaSeleccionada = [];
-    this.tramite230201Store.setDatosDestinatario(this.datosTabla);
     this.agregarMercanciasForm.reset();
     this.formularioDestinatario.reset();
     this.botonModificarHabilitado = false;
@@ -385,16 +466,30 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.agregarMercanciasForm.updateValueAndValidity();
 
     if (this.agregarMercanciasForm.valid) {
-      const DATA = this.agregarMercanciasForm.value;
+      const DATA = this.agregarMercanciasForm.getRawValue(); // Get raw value to include disabled fields
       const TABLE_DATA = {
         ...DATA,
         paisStr: this.paisesDatos.find((pais) => pais.id === DATA.pais)?.descripcion,
       };
-      if (this.datosTabla.length > 0) {
-        this.datosTabla.pop();
+      
+      // Get current destinatarios from the state
+      const CURRENT_DESTINATARIOS = [...this.solicitudState.destinatarios];
+      
+      if (this.isEditMode && this.filaSeleccionada.length > 0) {
+        // Update existing record
+        const INDEX = CURRENT_DESTINATARIOS.findIndex(
+          (destinatario) => destinatario === this.filaSeleccionada[0]
+        );
+        if (INDEX !== -1) {
+          CURRENT_DESTINATARIOS[INDEX] = TABLE_DATA;
+        }
+      } else {
+        // Add new record
+        CURRENT_DESTINATARIOS.push(TABLE_DATA);
       }
-      this.datosTabla.push(TABLE_DATA);
-      this.tramite230201Store.setDatosDestinatario(this.datosTabla);
+      
+      // Update the store with the new/updated list
+      this.tramite230201Store.setDatosDestinatario(CURRENT_DESTINATARIOS);
       this.cerrarModal();
     }
   }
