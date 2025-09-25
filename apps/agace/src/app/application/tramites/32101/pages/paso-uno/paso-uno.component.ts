@@ -129,6 +129,7 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
           this.store.setValorEnPesos(FORM.valorEnPesos ?? 0);
           this.store.setDescripcionGeneral(FORM.descripcionGeneral ?? '');
           this.store.setListaDeDocumentos(FORM.listaDeDocumentos ?? '');
+          this.store.setComprobante(FORM.comprobante ?? '');
           this.store.setManifiesto1(FORM.manifiesto1 ?? '');
           this.store.setManifiesto2(FORM.manifiesto2 ?? '');
           this.store.setManifiesto3(FORM.manifiesto3 ?? '');

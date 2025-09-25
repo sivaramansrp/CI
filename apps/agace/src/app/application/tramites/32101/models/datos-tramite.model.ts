@@ -116,6 +116,7 @@ export interface SolicitudState {
   valorEnPesos?: number;
   descripcionGeneral?: string;
   listaDeDocumentos?: string;
+  comprobante?: string;
   manifiesto1?: string;
   manifiesto2?: string;
   manifiesto3?: string;

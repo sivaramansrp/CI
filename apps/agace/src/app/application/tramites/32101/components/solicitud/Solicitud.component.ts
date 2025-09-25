@@ -519,7 +519,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Maneja el cambio en la selección de la forma de adquisición.
    * @param selectedOption - El objeto de la opción seleccionada del catálogo.
    */  
-  onFormaAdquisicionChange(selectedOption: any): void {
+  onlistaDeDocumentosChange(selectedOption: any): void {
     console.log('Opción seleccionada:', selectedOption);
     
     const VALUE = selectedOption?.id || selectedOption?.clave;
