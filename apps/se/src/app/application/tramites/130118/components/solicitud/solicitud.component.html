@@ -109,7 +109,7 @@
           <select class="form-control form-select" formControlName="unidadMedidaTarifaria"
             (change)="unidadMedidaTarifariaSeleccion()">
             <option [ngValue]="null">Selecciona una opción</option>
-            <option *ngFor="let unidad of unidadMedidaTarifaria" [title]="unidad.descripcion" [value]="unidad.clave">
+            <option *ngFor="let unidad of unidadMedidaTarifaria" [title]="unidad.descripcion" [ngValue]="unidad.clave">
               {{ unidad.descripcion }}
             </option>
           </select>

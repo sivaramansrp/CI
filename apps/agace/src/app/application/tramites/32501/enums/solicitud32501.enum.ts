@@ -43,3 +43,22 @@ export const COLONIA = {
   required: true,
   primerOpcion: 'Seleccione una opción',
 };
+/**
+ * Configuración del catálogo "Aduana de Importación".
+ */
+export const OPCIONES_DE_BOTON_DE_RADIO = [
+  {
+    label: 'Sí',
+    value: '1',
+  },
+  {
+    label: 'No',
+    value: '0',
+  }
+]; 
+/**
+ * Configuración del catálogo "Aduana de Importación".
+ */
+export const TODOS_PASOS = {
+  Importante: `<p>Se sugiere verificar todos los datos capturados y documentos adjuntos antes de culminar el trámite, ya que, en caso de existir algún error, no se podrá modificar o eliminar la información posterior a su firma.</p>`
+};

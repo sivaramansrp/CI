@@ -150,4 +150,17 @@ export class ChoferesComponent {
   static onCancelarChoferExtranjero(): void {
   // Lógica de cancelación no implementada
   }
+
+  /**
+   * Valida los formularios de choferes.
+   * En este componente se valida que exista al menos un chofer registrado.
+   * @returns {boolean} true si hay al menos un chofer registrado, false en caso contrario.
+   */
+  public validarFormularios(): boolean {
+    // Validar que exista al menos un chofer nacional o extranjero
+    const TIENE_CHOFERES_NACIONALES = this.choferesNacionales && this.choferesNacionales.length > 0;
+    const TIENE_CHOFERES_EXTRANJEROS = this.choferesExtranjeros && this.choferesExtranjeros.length > 0;
+    
+    return TIENE_CHOFERES_NACIONALES || TIENE_CHOFERES_EXTRANJEROS;
+  }
 }

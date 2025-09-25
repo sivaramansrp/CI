@@ -1,4 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
+import { AVISO } from '@ng-mf/data-access-user';
+import { AlertComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosPasos } from '@ng-mf/data-access-user';
@@ -7,6 +9,7 @@ import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/pas
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { TODOS_PASOS } from '../../enums/solicitud32501.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -35,6 +38,7 @@ interface AccionBoton {
     PasoDosComponent,
     PasoTresComponent,
     BtnContinuarComponent,
+    AlertComponent,
   ],
 })
 /**
@@ -47,14 +51,43 @@ export class SolicitudPageComponent {
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlert =`<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`
+
+  /**
    * Índice del paso actual.
    */
   indice: number = 1;
 
   /**
+   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+ 
+
+  /**
    * Referencia al componente del asistente.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Variable utilizada para almacenar el tipo de alerta.
+   */
+  alerta = TODOS_PASOS.Importante;
+
+   /**
+   * Mensaje de información para la alerta.
+   */
+   public infoAlert = 'alert-info';
+
 
   /**
    * Datos de los pasos del asistente.
@@ -65,6 +98,21 @@ export class SolicitudPageComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  /**
+     * Constante que almacena el valor de la nota de privacidad.
+     * 
+     * @constant AVISO_PRIVACIDAD_ADJUNTAR - Almacena el valor definido en `NOTA.AVISO_PRIVACIDAD_ADJUNTAR`.
+     * Se utiliza para adjuntar o gestionar el aviso de privacidad dentro del sistema.
+     */
+  AVISO_PRIVACIDAD_ADJUNTAR = AVISO.Aviso;
+
+   /**
+ * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+ * }
+ */
+esFormaValido: boolean = false;
+
 
   /**
    * Selecciona una pestaña del asistente.
@@ -78,14 +126,31 @@ export class SolicitudPageComponent {
    * Obtiene el valor del índice de la acción del botón.
    * @param e Acción del botón.
    */
-  getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+  public getValorIndice(e: AccionBoton): void {
+    if (e.accion === 'cont') {
+      let isValid = true;
+
+        if (this.indice === 1 && this.pasoUnoComponent) {
+        isValid = this.pasoUnoComponent.validarTodosLosFormularios();
       }
+      if (!isValid) {
+        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+        return;
+      }
+
+      this.esFormaValido = false;
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+
+      this.wizardComponent.siguiente();
+      return;
     }
+
+      this.indice = e.valor;
+    this.datosPasos.indice = this.indice;
+    this.wizardComponent.atras();
+
+
   }
 }

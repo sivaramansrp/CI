@@ -5,6 +5,7 @@ import {
   AnexoUnoEncabezado,
   DatosAnexotressUno,
   DatosComplimento,
+  ProveedorClienteTabla,
   ProyectoImmexEncabezado,
 } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
@@ -364,6 +365,8 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
       encabezadoCategoria: '',
       encabezadoValorEnMercado: '',
     },
+    proveedorClienteDatosTabla: [],
+    proveedorClienteDatosTablaDos: [],
     seccionActiva: '',
   },
 
@@ -1109,4 +1112,35 @@ setProyectoImmexTablaLista(proyectoImmex: ProyectoImmexEncabezado[]): void {
     }));
   }
 
+
+
+/**
+   * Actualiza la propiedad `proveedorClienteDatosTabla` dentro de `annexoUno` en el estado de la tienda.
+   *
+   * @param proveedorClienteDatosTabla - Arreglo de objetos de tipo `ProveedorClienteTabla` que representa los datos de proveedores y clientes para la tabla.
+   */
+  setProveedorClienteDatosTablaUno(proveedorClienteDatosTabla: ProveedorClienteTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      annexoUno: {
+        ...state.annexoUno,
+        proveedorClienteDatosTabla: proveedorClienteDatosTabla,
+      },
+    }));
+  }
+
+  /**
+     * Actualiza la propiedad `proveedorClienteDatosTablaDos` dentro de `annexoUno` en el estado de la tienda.
+     *
+     * @param proveedorClienteDatosTablaDos - Arreglo de objetos de tipo `ProveedorClienteTabla` que representa los datos de proveedores y clientes para la tabla.
+     */
+    setProveedorClienteDatosTablaDos(proveedorClienteDatosTabla: ProveedorClienteTabla[]): void {
+      this.update((state) => ({
+        ...state,
+        annexoUno: {
+          ...state.annexoUno,
+          proveedorClienteDatosTablaDos: proveedorClienteDatosTabla,
+        },
+      }));
+    }
 }

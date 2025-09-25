@@ -1,6 +1,6 @@
 import * as mockData from '@libs/shared/theme/assets/json/40103/solicitante-mockdata.json';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 /**
  * Componente para gestionar el formulario del solicitante.
  */
@@ -33,21 +33,21 @@ export class SolicitanteComponent implements OnInit {
    */
   ngOnInit(): void {
     this.solicitudForm = this.fb.group({
-      rfc: [''],
-      denominacion: [''],
-      actividadEconomica: [''],
-      correoElectronico: [''],
-      pais: [''],
-      codigoPostal: [''],
-      estado: [''],
-      municipioOAlcadia: [''],
-      localidad: [''],
-      colonia: [''],
-      calle: [''],
-      numeroExterior: [''],
+      rfc: ['', [Validators.required]],
+      denominacion: ['', [Validators.required]],
+      actividadEconomica: ['', [Validators.required]],
+      correoElectronico: ['', [Validators.required, Validators.email]],
+      pais: ['', [Validators.required]],
+      codigoPostal: ['', [Validators.required]],
+      estado: ['', [Validators.required]],
+      municipioOAlcadia: ['', [Validators.required]],
+      localidad: ['', [Validators.required]],
+      colonia: ['', [Validators.required]],
+      calle: ['', [Validators.required]],
+      numeroExterior: ['', [Validators.required]],
       numeroInterior: [''],
       lada: [''],
-      telefono: [''],
+      telefono: ['', [Validators.required]],
     });
     this.setFormValues();
   }
@@ -80,5 +80,21 @@ export class SolicitanteComponent implements OnInit {
     this.solicitudForm.get('numeroExterior')?.setValue(this.solicitudData.numeroExterior);
     this.solicitudForm.get('numeroInterior')?.setValue(this.solicitudData.numeroInterior);
     this.solicitudForm.get('telefono')?.setValue(this.solicitudData.telefono);
+  }
+
+  /**
+   * Valida el formulario del solicitante.
+   * @returns {boolean} true si el formulario es válido, false en caso contrario.
+   */
+  public validarFormularios(): boolean {
+    if (!this.solicitudForm) {
+      return false;
+    }
+    
+    // Marcar todos los campos como tocados para mostrar errores
+    this.solicitudForm.markAllAsTouched();
+    
+    // Verificar si el formulario es válido
+    return this.solicitudForm.valid;
   }
 }

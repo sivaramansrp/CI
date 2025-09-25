@@ -18,7 +18,7 @@ import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
 
-import { AnexoFraccionAnarelaria, AnexoUnoProducto } from '../../../../shared/models/complimentos-seccion.model';
+import { AnexoFraccionAnarelaria, AnexoUnoProducto, ProveedorCliente, ProyectoImmex } from '../../../../shared/models/complimentos-seccion.model';
 import { AnexoUnoSeccionComponent } from '../../../../shared/components/anexo-uno-seccion/anexo-uno-seccion.component';
 
 /*
@@ -154,6 +154,32 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
       this.store.setAnnexoUnoSeccionActiva(event.id);
       this.store.setDatosParaNavegar(event.datos);
       this.router.navigate([`../${event.catagoria}`], { relativeTo: this.activatedRoute });
+    }
+  }
+
+  /**
+   * Establece la lista de proyectos IMMEX en la tabla correspondiente del store.
+   *
+   * @param event - Arreglo de objetos de tipo ProyectoImmex que representa la nueva lista de proyectos a almacenar.
+   */
+  setProyectoImmex(event: ProyectoImmex[]): void {
+    this.store.setProyectoImmexTablaLista(event);
+  }
+
+  /**
+   * Maneja la obtención de datos de proveedor o cliente según el identificador recibido en el evento.
+   * 
+   * @param event - Objeto que contiene un arreglo de datos de tipo `ProveedorCliente` y un identificador opcional.
+   *   - `data`: Lista de objetos `ProveedorCliente` a procesar.
+   *   - `id`: Identificador opcional que determina si los datos corresponden a un cliente ('cliente') o a un proveedor.
+   * 
+   * Si el identificador es 'cliente', almacena los datos en la tabla uno; en caso contrario, los almacena en la tabla dos.
+   */
+  obtenerProveedorCliente(event: {data:ProveedorCliente[], id?:string}):void{
+    if(event.id ==='cliente'){
+      this.store.setProveedorClienteDatosTablaUno(event.data);
+    }else{
+      this.store.setProveedorClienteDatosTablaDos(event.data);
     }
   }
 

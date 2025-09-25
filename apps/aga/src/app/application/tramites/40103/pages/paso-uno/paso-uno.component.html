@@ -22,18 +22,18 @@
     <ng-container>
       @switch (indice) {
       @case (1) {
-      <app-solicitante #Solicitante></app-solicitante>
+      <app-solicitante #solicitanteComponent></app-solicitante>
       } @case (2) {
       @if(esDatosRespuesta) {
-      <app-director-general> </app-director-general>
+      <app-director-general #directorGeneralComponent></app-director-general>
       }
       }@case (3) {
       @if(esDatosRespuesta) {
-      <app-choferes> </app-choferes>
+      <app-choferes #choferesComponent></app-choferes>
       }
       } @case (4) {
       @if(esDatosRespuesta) {
-      <app-vehiculos></app-vehiculos>
+      <app-vehiculos #vehiculosComponent></app-vehiculos>
       }
       }
       }

@@ -53,7 +53,13 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    * @description Controla la visibilidad de los campos de fecha de vigencia autorizada.
    * Se muestra cuando el sentido del dictamen es "Aceptado" (valor '1').
    */
-  public mostrarCamposFecha = true;
+  public mostrarCamposFecha = false;
+
+  /**
+   * @property {boolean} habilitarFechasPorAceptacion
+   * @description Controla si los campos de fecha de vigencia autorizada deben mostrarse solo cuando el dictamen es aceptado.
+   */
+  @Input() habilitarFechasPorAceptacion: boolean = false;
 
   /**
    * @property {EventEmitter<{ events: string, datos: unknown }>} enviarEvento
@@ -206,9 +212,9 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
    */
   private actualizarVisibilidadCamposFecha(valorCumplimiento: string): void {
     const ESDICTAMENACEPTADO = valorCumplimiento === 'SEDI.AC';
-    // Actualizar la visibilidad de los campos de fecha
-    this.mostrarCamposFecha = false;
 
+    this.mostrarCamposFecha = this.habilitarFechasPorAceptacion && ESDICTAMENACEPTADO;
+    
     // Actualizar validadores según la visibilidad
     const FECHAINICIOCONTROL = this.dictamenForm.get('fechaInicioVigenciaAutorizada');
     const FECHAFINCONTROL = this.dictamenForm.get('fechaFinVigenciaAutorizada');
@@ -221,8 +227,6 @@ export class GenerarDictamenComponent implements OnInit, OnChanges {
       // Si el dictamen es rechazado, remover validadores y limpiar valores
       FECHAINICIOCONTROL?.clearValidators();
       FECHAFINCONTROL?.clearValidators();
-      FECHAINICIOCONTROL?.setValue('');
-      FECHAFINCONTROL?.setValue('');
     }
 
     // Actualizar el estado de validación
