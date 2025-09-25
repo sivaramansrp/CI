@@ -25,7 +25,7 @@
   <ng-titulo titulo="Lista de Domicilios" />
   <div class="row">
     <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarDomicilios($event)"  [configuracionTabla]="configuracionTabla"
-    [datos]="(datos$ | async) || []"></app-tabla-dinamica>
+    [datos]="(datos$ | async) || []"  [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
    
   </div>
 
@@ -39,7 +39,7 @@
 
   <div class="row">
     <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="configuracionTabla"
-    [datos]="(domicilios$ | async) || []" (filaSeleccionada)="seleccionarDomicilios($event)"></app-tabla-dinamica>
+    [datos]="(domicilios$ | async) || []" (filaSeleccionada)="seleccionarDomicilios($event)" [disableSeleccionTablaRadio]="esFormularioSoloLectura"></app-tabla-dinamica>
    
   </div>
   <div class="row">

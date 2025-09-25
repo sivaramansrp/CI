@@ -1,6 +1,7 @@
 import { AnexoEncabezado, AnexoUnoEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
 import { Catalogo, CatalogoPaises } from "@ng-mf/data-access-user";
 import { AnexoDosEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
+import { ProveedorCliente } from "../../../shared/models/complimentos-seccion.model";
 
 /**
  * Representa la estructura de datos para un servicio IMMEX.
@@ -112,7 +113,7 @@ export interface DatosCatalago {
  * Representa la estructura de datos para los anexos dos y tres.
  * Contiene listas de encabezados para cada uno de los anexos.
  */
-export interface AnnexoDosTres{
+export interface AnnexoDosTres {
   anexoDosTablaLista: AnexoEncabezado[];
   anexoTresTablaLista: AnexoEncabezado[];
 }
@@ -129,11 +130,13 @@ export interface AnnexoDosTres{
  * - `datosParaNavegar`: Encabezado de tipo `AnexoUnoEncabezado` o `AnexoDosEncabezado` utilizado para la navegación de datos.
  * - `seccionActiva`: Cadena que indica la sección activa actual.
  */
-export interface AnnexoUno{
+export interface AnnexoUno {
   exportarDatosTabla: AnexoDosEncabezado[];
-  importarDatosTabla:AnexoUnoEncabezado[];
-  datosParaNavegar:AnexoUnoEncabezado | AnexoDosEncabezado ;
+  importarDatosTabla: AnexoUnoEncabezado[];
+  datosParaNavegar: AnexoUnoEncabezado | AnexoDosEncabezado;
   seccionActiva: string;
+  proveedorClienteDatosTabla: ProveedorCliente[];
+  proveedorClienteDatosTablaDos: ProveedorCliente[];
 }
 
 export interface AmpliacionServiciosData {
@@ -169,26 +172,26 @@ export interface AmpliacionImmexDropdownItem {
  * @property {string} descTestado - Descripción del estado de testado.
  */
 export interface ProveedorClienteDatosTabla {
-      idProveedor: number;
-      paisOrigen: string;
-      rfcProveedor: string;
-      razonProveedor: string;
-      paisDestino: string;
-      rfcClinte: string;
-      razonSocial: string;
-      domicilio: string;
-      testado: boolean;
-      idProductoP: number;
-      descTestado: string;
-    }
+  idProveedor: number;
+  paisOrigen: string;
+  rfcProveedor: string;
+  razonProveedor: string;
+  paisDestino: string;
+  rfcClinte: string;
+  razonSocial: string;
+  domicilio: string;
+  testado: boolean;
+  idProductoP: number;
+  descTestado: string;
+}
 
-    /**
-     * Representa la estructura del Anexo 1, que contiene información sobre el encabezado de la fracción y su descripción.
-     *
-     * @property {string} encabezadoFraccion - Texto que identifica el encabezado de la fracción.
-     * @property {string} encabezadoDescripcion - Descripción asociada al encabezado de la fracción.
-     */
-    export interface Anexo1{
-       encabezadoFraccion: string; 
-      encabezadoDescripcion: string
-     }
+/**
+ * Representa la estructura del Anexo 1, que contiene información sobre el encabezado de la fracción y su descripción.
+ *
+ * @property {string} encabezadoFraccion - Texto que identifica el encabezado de la fracción.
+ * @property {string} encabezadoDescripcion - Descripción asociada al encabezado de la fracción.
+ */
+export interface Anexo1 {
+  encabezadoFraccion: string;
+  encabezadoDescripcion: string
+}

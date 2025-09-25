@@ -167,6 +167,18 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
       });
     }
   }
+    /**
+   * Actualiza la lista de destinatarios finales en el store del trámite.
+   *
+   * @method modificarMercanciasDatos
+   * @param {MercanciaDetalle[]} event - Lista de destinatarios finales actualizada.
+   * @returns {void}
+   */
+  modificarMercanciasDatos(datos: MercanciaDetalle): void {
+    this.tramiteStore.actualizarMercancias(datos);
+    this.openModal('Datosmercancia');
+  }
+
 
   /**
    * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
