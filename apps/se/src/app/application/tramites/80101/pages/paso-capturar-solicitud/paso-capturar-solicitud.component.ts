@@ -276,15 +276,17 @@ export class PasoCapturarSolicitudComponent implements OnInit {
         e.accion === 'ant' ? e.valor - 1 :
         e.valor;
       if (!this.consultaState.readonly && e.accion === 'cont') {
-        this.esFormaValido = this.verificarLaValidezDelFormulario() && !this.consultaState.update;
-        if (!this.esFormaValido && !this.consultaState.update) {
-          this.indice = e.valor;
-          this.datosPasos.indice = e.valor;
-          this.servicioDeFormularioService.markFormAsTouched('datosGeneralisForm');
-          this.servicioDeFormularioService.markFormAsTouched('formaModificacionesForm');
-          this.servicioDeFormularioService.markFormAsTouched('obligacionesFiscalesForm');
-          this.servicioDeFormularioService.markFormAsTouched('federatariosCatalogoForm');
-          return;
+        if (!this.consultaState.update) {
+          this.esFormaValido = this.verificarLaValidezDelFormulario();
+          if (!this.esFormaValido) {
+            this.indice = e.valor;
+            this.datosPasos.indice = e.valor;
+            this.servicioDeFormularioService.markFormAsTouched('datosGeneralisForm');
+            this.servicioDeFormularioService.markFormAsTouched('formaModificacionesForm');
+            this.servicioDeFormularioService.markFormAsTouched('obligacionesFiscalesForm');
+            this.servicioDeFormularioService.markFormAsTouched('federatariosCatalogoForm');
+            return;
+          }
         }
         this.shouldNavigate$()
           .subscribe((shouldNavigate) => {

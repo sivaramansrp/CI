@@ -113,12 +113,6 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
   formaComplimentos!: FormGroup;
 
   /**
-   * @type {FormGroup}
-   * @description Grupo de formularios para las obligaciones fiscales.
-   */
-  obligacionesFiscales!: FormGroup;
-
-  /**
   * Constante para configurar el input de fecha.
   * Define las propiedades del campo de entrada de fecha.
   */
@@ -454,14 +448,44 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
       this.formaComplimentos.disable();
     }
 
-    this.servicioDeFormularioService.registerForm('complimentosForm', this.formaComplimentos);
+    this.servicioDeFormularioService.registerForm('datosGeneralisForm', this.datosGeneralis);
+    this.servicioDeFormularioService.registerForm('obligacionesFiscalesForm', this.obligacionesFiscales);
+    this.servicioDeFormularioService.registerForm('formaModificacionesForm', this.formaModificaciones);
     this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
-      if (formName === 'complimentosForm') {
+      if (formName === 'datosGeneralisForm') {
         this.formaComplimentos.get('datosGeneralis')?.markAllAsTouched();
+      } 
+      if (formName === 'obligacionesFiscalesForm') { 
         this.formaComplimentos.get('obligacionesFiscales')?.markAllAsTouched();
+      } 
+      if (formName === 'formaModificacionesForm') {
         this.formaComplimentos.get('formaModificaciones')?.markAllAsTouched();
       }
     })
+  }
+
+  /**
+ * Obtiene el formulario anidado de datos de socios accionistas.
+ * @returns {FormGroup} FormGroup correspondiente a 'formaSocioAccionistas.formaDatos'.
+ */
+  get datosGeneralis(): FormGroup {
+    return this.formaComplimentos.get('datosGeneralis') as FormGroup;
+  }
+
+  /**
+ * Obtiene el formulario anidado de datos de socios accionistas.
+ * @returns {FormGroup} FormGroup correspondiente a 'formaSocioAccionistas.formaDatos'.
+ */
+  get obligacionesFiscales(): FormGroup {
+    return this.formaComplimentos.get('obligacionesFiscales') as FormGroup;
+  }
+
+  /**
+ * Obtiene el formulario anidado de datos de socios accionistas.
+ * @returns {FormGroup} FormGroup correspondiente a 'formaSocioAccionistas.formaDatos'.
+ */
+  get formaModificaciones(): FormGroup {
+    return this.formaComplimentos.get('formaModificaciones') as FormGroup;
   }
 
   /**
@@ -688,6 +712,14 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
     if (this.formaComplimentos && this.datosFormaComplimentos) {
       // Apply immediately for better user experience
       this.aplicarDatosFormulario();
+    }
+
+    if (this.datosSocioAccionistas.length) {
+        this.servicioDeFormularioService.setArray('datosSocioAccionistas', this.datosSocioAccionistas);
+      }
+
+    if (this.datosSocioAccionistasExtrenjeros.length) {
+      this.servicioDeFormularioService.setArray('datosSocioAccionistasExtrenjeros', this.datosSocioAccionistasExtrenjeros);
     }
   }
 

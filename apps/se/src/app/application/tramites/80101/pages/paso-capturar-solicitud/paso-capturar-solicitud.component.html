@@ -39,7 +39,7 @@
          <btn-continuar
           [datos]="datosPasos"
           [btnGuardar]="btnGuardar"
-          [dePadre]="consultaState.update ? false : true"
+          [dePadre]="!consultaState.readonly ? true : false"
           [btnGuardarVisible]="btnGuardarVisible"
           (continuarEvento)="getValorIndice($event)"
           (btnGuardarClicked)="obtenerDatosDelStore()"
