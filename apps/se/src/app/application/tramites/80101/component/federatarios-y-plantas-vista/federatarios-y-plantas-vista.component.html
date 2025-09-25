@@ -13,6 +13,7 @@
   [datosFederatarios]="datosFederatarios"
   [estadoOptionsConfig]="estadoOptionsConfig"
   (accionSeccion)="onAccionSeccion($event)"
+
 ></app-federatarios-y-plantas>
 
 <ng-container *ngIf="mostrarComplementarPlantaPopup">
@@ -42,7 +43,7 @@
 <ng-container *ngIf="mostrarCapacidadInstaladaPopup">
   <div class="modal-overlay">
     <div class="modal-content">
-      <app-capacidad-instalada (cerrarPopup)="cerrarCapacidadInstalada()"></app-capacidad-instalada>
+      <app-capacidad-instalada (obtenerCapacidadInstaladaTablaList)="obtenerCapacidadInstaladaTablaList($event)" (cerrarPopup)="cerrarCapacidadInstalada()"></app-capacidad-instalada>
     </div>
   </div>
 </ng-container>

@@ -12,6 +12,7 @@ import {
 } from '../models/nuevo-programa-industrial.model';
 import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
+import { CapacidadInstalada } from '../../../shared/constantes/capacidad-instalada.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoPaises } from '@ng-mf/data-access-user';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
@@ -195,6 +196,11 @@ export interface Tramite80101State {
    */
 
   proveedorClienteDatosTablaDos: ProveedorClienteTabla[];
+
+/**
+ * así como información de proveedores y capacidad instalada.
+ */
+  tablaDatosCapacidadInstalada: CapacidadInstalada[];
 }
 
 /**
@@ -383,6 +389,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   proyectoImmexTablaLista: [],
   proveedorClienteDatosTabla: [],
   proveedorClienteDatosTablaDos: [],
+  tablaDatosCapacidadInstalada: [],
 };
 
 /**
@@ -1139,6 +1146,18 @@ setProyectoImmexTablaLista(proyectoImmex: ProyectoImmexEncabezado[]): void {
     this.update((state) => ({
       ...state,
       proyectoImmexTablaLista: [...state.proyectoImmexTablaLista, ...proyectoImmex],
+    }));
+  }
+
+/**
+ * Actualiza la lista de capacidad instalada en el estado agregando los elementos proporcionados.
+ *
+ * @param CapacidadInstaladaTablaLista - Arreglo de objetos de tipo `CapacidadInstalada` que serán añadidos a la tabla de datos de capacidad instalada.
+ */
+setCapacidadInstaladaTableLista(CapacidadInstaladaTablaLista: CapacidadInstalada[]): void {
+    this.update((state) => ({
+      ...state,
+      tablaDatosCapacidadInstalada: [...state.tablaDatosCapacidadInstalada, ...CapacidadInstaladaTablaLista],
     }));
   }
 

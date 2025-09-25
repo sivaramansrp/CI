@@ -17,6 +17,7 @@ import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-in
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 
+import { CapacidadInstalada } from '../../../../shared/constantes/capacidad-instalada.enum';
 import { CapacidadInstaladaComponent } from '../../../../shared/components/capacidad-instalada/capacidad-instalada.component';
 import { CargaPorArchivoComponent } from '../../../../shared/components/carga-por-archivo/carga-por-archivo.component';
 import { ComplementarPlantaComponent } from '../../../../shared/components/complementar-planta/complementar-planta.component';
@@ -29,7 +30,7 @@ import { MontosDeInversionComponent } from '../../../../shared/components/montos
 @Component({
   selector: 'app-federatarios-y-plantas-vista',
   standalone: true,
-  imports: [CommonModule, FederatariosYPlantasComponent,ComplementarPlantaComponent,MontosDeInversionComponent,EmpleadosComponent,CapacidadInstaladaComponent,CargaPorArchivoComponent,NotificacionesComponent],
+  imports: [CommonModule, FederatariosYPlantasComponent, ComplementarPlantaComponent, MontosDeInversionComponent, EmpleadosComponent, CapacidadInstaladaComponent, CargaPorArchivoComponent, NotificacionesComponent],
   templateUrl: './federatarios-y-plantas-vista.component.html',
   styleUrl: './federatarios-y-plantas-vista.component.css',
 })
@@ -129,31 +130,31 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
    * Controla la visibilidad del popup "Complementar Planta".
    * @property {boolean} mostrarComplementarPlantaPopup
    */
-  public mostrarComplementarPlantaPopup:boolean = false;
+  public mostrarComplementarPlantaPopup: boolean = false;
 
   /**
    * Controla la visibilidad del popup "Montos de Inversión".
    * @property {boolean} mostrarMontosDeInversionPopup
    */
-  public mostrarMontosDeInversionPopup:boolean = false;
+  public mostrarMontosDeInversionPopup: boolean = false;
 
   /**
    * Controla la visibilidad del popup "Empleados".
    * @property {boolean} mostrarEmpleadosPopup
    */
-  public mostrarEmpleadosPopup:boolean = false;
+  public mostrarEmpleadosPopup: boolean = false;
 
   /**
    * Controla la visibilidad del popup "Capacidad Instalada".
    * @property {boolean} mostrarCapacidadInstaladaPopup
    */
-  public mostrarCapacidadInstaladaPopup:boolean = false;
+  public mostrarCapacidadInstaladaPopup: boolean = false;
 
   /**
    * Controla la visibilidad del popup "Proveedor por Archivo".
    * @property {boolean} mostrarProveedorPorArchivoPopup
    */
-  public mostrarProveedorPorArchivoPopup:boolean = false;
+  public mostrarProveedorPorArchivoPopup: boolean = false;
 
   /**
    * Indica si la tabla contiene datos actualmente.
@@ -198,11 +199,11 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
         this.datosFederatarios = datos;
       });
 
-  this.nuevoProgramaIndustrialService.tieneDatosDeTabla$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((val: boolean) => {
-      this.tieneDatosDeTabla = val;
-    });
+    this.nuevoProgramaIndustrialService.tieneDatosDeTabla$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((val: boolean) => {
+        this.tieneDatosDeTabla = val;
+      });
     this.nuevoProgramaIndustrialService
       .getFederataiosyPlantaCatalogosData()
       .pipe(takeUntil(this.destroy$))
@@ -245,33 +246,33 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
    * - '../capacidad-instalada-acciones' → Muestra el popup de "Capacidad Instalada".
    * - '../proveedor-por-archivo' → Muestra el popup de "Proveedor por Archivo".
    */
-onAccionSeccion(ruta: string):void {
-  if (ruta === '../complementar-plantas-acciones') {
-    this.mostrarComplementarPlantaPopup = true;
-  } else if (ruta === '../montos-inversion-acciones') {
-    this.mostrarMontosDeInversionPopup = true;
-  } else if (ruta === '../empleados-acciones') {
-    this.mostrarEmpleadosPopup = true;
-  } else if (ruta === '../capacidad-instalada-acciones') {
-    this.mostrarCapacidadInstaladaPopup = true;
-  } else if (ruta === '../proveedor-por-archivo'){
-    if(this.tieneDatosDeTabla){
-      this.mostrarProveedorPorArchivoPopup = true;
-    } else {
-      this.nuevaUnoNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Debe ingresar las fracciones del producto para agregar la capacidad instalada.',
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
+  onAccionSeccion(ruta: string): void {
+    if (ruta === '../complementar-plantas-acciones') {
+      this.mostrarComplementarPlantaPopup = true;
+    } else if (ruta === '../montos-inversion-acciones') {
+      this.mostrarMontosDeInversionPopup = true;
+    } else if (ruta === '../empleados-acciones') {
+      this.mostrarEmpleadosPopup = true;
+    } else if (ruta === '../capacidad-instalada-acciones') {
+      this.mostrarCapacidadInstaladaPopup = true;
+    } else if (ruta === '../proveedor-por-archivo') {
+      if (this.tieneDatosDeTabla) {
+        this.mostrarProveedorPorArchivoPopup = true;
+      } else {
+        this.nuevaUnoNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: '',
+          mensaje: 'Debe ingresar las fracciones del producto para agregar la capacidad instalada.',
+          cerrar: true,
+          tiempoDeEspera: 2000,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+      }
+    }
   }
-  }
-}
 
   /**
    * Cierra el popup de complementar planta.
@@ -321,6 +322,16 @@ onAccionSeccion(ruta: string):void {
    */
   cerrarProveedorPorArchivo(): void {
     this.mostrarProveedorPorArchivoPopup = false;
+  }
+
+  /**
+   * Actualiza la lista de capacidad instalada en la tabla utilizando el evento recibido.
+   *
+   * @param event - Arreglo de objetos de tipo `CapacidadInstalada` que representa la nueva lista de capacidad instalada.
+   */
+  obtenerCapacidadInstaladaTablaList(event: CapacidadInstalada[]): void {
+    console.log(event);
+    this.store.setCapacidadInstaladaTableLista(event);
   }
 
   /**

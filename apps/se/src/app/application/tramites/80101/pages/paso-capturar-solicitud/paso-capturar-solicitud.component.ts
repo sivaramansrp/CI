@@ -1,5 +1,5 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
-import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent, formatearFechaYyyyMmDd } from '@libs/shared/data-access-user/src';
 import { Subject, map, take, takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
@@ -41,7 +41,7 @@ import { ComplementarStore } from '../../../../estados/tramites/complementar.sto
   selector: 'app-paso-capturar-solicitud',
   templateUrl: './paso-capturar-solicitud.component.html',
 })
-export class PasoCapturarSolicitudComponent implements OnInit {
+export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Lista de pasos del wizard.
    * Esta propiedad almacena una lista de objetos que representan los pasos del wizard.
@@ -85,29 +85,29 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   public infoAlert = 'alert-info';
 
 
-  
-    /**
-     * Evento que se emite para cargar archivos.
-     * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
-     */
-    cargarArchivosEvento = new EventEmitter<void>();
-  
-    /**
-     * Evento que se emite para regresar a la sección de carga de documentos.
-     * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
-     */
-    regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
-  
-    /**
-   * Indica si el botón para cargar archivos está habilitado.
+
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
    */
-    activarBotonCargaArchivos: boolean = false;
-  
-    /**
-   * Indica si la sección de carga de documentos está activa.
-   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+  cargarArchivosEvento = new EventEmitter<void>();
+
+  /**
+   * Evento que se emite para regresar a la sección de carga de documentos.
+   * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
    */
-    seccionCargarDocumentos: boolean = true;
+  regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+
+  /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+
+  /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
 
   cargaEnProgreso: boolean = true;
 
@@ -155,6 +155,8 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   * URL de la página actual.
   */
   public solicitudState!: Tramite80101State;
+
+
   /**
    * Constructor de la clase PasoCapturarSolicitudComponent.
    * 
@@ -166,11 +168,11 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * utilizando los métodos `establecerSeccion` y `establecerFormaValida` del servicio `SeccionLibStore`.
    * La suscripción se gestiona para que se complete automáticamente al destruir el componente mediante `takeUntil` y `destroyNotifier$`.
    */
-  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService, 
-    private tramite80101Store: Tramite80101Store, 
+  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
+    private tramite80101Store: Tramite80101Store,
     private tramite80101Query: Tramite80101Query,
-    private complementarStore:ComplementarStore,
-  private complementarService:ComplementarService) {
+    private complementarStore: ComplementarStore,
+    private complementarService: ComplementarService) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
@@ -252,7 +254,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       descripcionLugarEmbarque: data['datosComplimentos'].datosGeneralis.localizacion,
       capacidadAlmacenaje: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
       numeroPermiso: data['datosComplimentos'].obligacionesFiscales.opinionPositiva === 1 ? 'SI' : '',
-      fechaOperacion: formatearFechaYyyyMmDd(data['datosComplimentos'].obligacionesFiscales.fechaExpedicion), 
+      fechaOperacion: formatearFechaYyyyMmDd(data['datosComplimentos'].obligacionesFiscales.fechaExpedicion),
       nomOficialAutorizado: data['datosComplimentos'].formaModificaciones.nombreDelFederatario,
 
     };
@@ -313,46 +315,65 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildPlantas(array: any[] = [], base: unknown[], data: any): unknown[] {
+  buildPlantas(array: any[] = [], base: unknown[], data: any): any {
+    const mapCapacidadInstalada = (item: any) => ({
+      idPlantaCa: item.PLANTA ?? "",
+      fraccion: item.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO ?? "",
+      umt: item.UMT ?? "",
+      descripcion: item.DESCRIPCION_COMERCIAL_PRODUCTO_TERMINADO ?? "",
+      capacidadEfectiva: item.CAPACIDAD_EFECTIVAMENTE_UTILIZADA ?? "",
+      calculo: item.CALCULO_CAPACIDAD_INSTALADA ?? "",
+      turnos: item.TURNOS ?? "",
+      horasTurno: item.HORAS_POR_TURNO ?? "",
+      cantidadEmpleados: item.CANTIDAD_EMPLEADOS ?? "",
+      cantidadMaquinaria: item.CANTIDAD_MAQUINARIA ?? "",
+      descripcionMaquinaria: item.DESCRIPCION_MAQUINARIA ?? "",
+      capacidadMensual: item.CAPACIDAD_INSTALADA_MENSUAL ?? "",
+      capacidadAnual: item.CAPACIDAD_INSTALADA_ANUAL ?? "",
+      testado: "1"
+    });
+
+    const listaCapacidad = (data.tablaDatosCapacidadInstalada || []).map(mapCapacidadInstalada);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
+    let RESULT: any[] = [];
     array.forEach(arr => {
       // eslint-disable-next-line complexity
       base.forEach(item => {
         const ITEM = (item && typeof item === 'object') ? item : {};
         RESULT.push({
           ...ITEM,
-      idPlanta: arr.planta ?? '',
-      calle: arr.calle ?? '',
-      numeroExterior: arr.numeroExterior ?? '',
-      numeroInterior: arr.numeroInterior ?? '',
-      codigoPostal: arr.codigoPostal ?? '',
-      localidad: arr.localidad ?? '',
-      colonia: arr.colonia ?? '',
-      delegacionMunicipio: arr.delegacionMunicipio ?? '',
-      entidadFederativa: arr.entidadFederativa ?? '',
-      pais: arr.pais ?? '',
-      rfc: arr.registroFederalDeContribuyentes ?? '',
-      domicilioFiscal: arr.domicilioDelSolicitante ?? '',
-      razonSocial: arr.razonSocial ?? '',
-      datosComplementarios:[{
-        ...(ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0],
-         amparoPrograma: data.permanecera ?? ((ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0]?.amparoPrograma ?? ''),
-        tipoDocumento: data.tipo ?? (ITEM as any)?.datosComplementarios?.[0]?.tipoDocumento ?? '',
-        fechaFirma: data.fechaDeFirma ?? (ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0]?.fechaFirma ?? '',
-        fechaVigencia: data.fetchaDeFinDeVigencia ?? (ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0]?.fechaVigencia ?? ''
-      }],
-      montos:[{
-        ...(ITEM as { montos?: any[] }).montos?.[0],
-        tipo: data.tipos ?? ((ITEM as { montos?: any[] }).montos?.[0]?.tipo ?? ''),
-        descripcion: data.descripsion ?? (ITEM as any)?.montos?.[0]?.descripcion ?? '',
-        cantidad: data.cantidad ?? (ITEM as { montos?: any[] }).montos?.[0]?.cantidad ?? '',
-        monto: data.mnx ?? (ITEM as { montos?: any[] }).montos?.[0]?.monto ?? ''
-      }]
+          idPlanta: arr.planta ?? '',
+          calle: arr.calle ?? '',
+          numeroExterior: arr.numeroExterior ?? '',
+          numeroInterior: arr.numeroInterior ?? '',
+          codigoPostal: arr.codigoPostal ?? '',
+          localidad: arr.localidad ?? '',
+          colonia: arr.colonia ?? '',
+          delegacionMunicipio: arr.delegacionMunicipio ?? '',
+          entidadFederativa: arr.entidadFederativa ?? '',
+          pais: arr.pais ?? '',
+          rfc: arr.registroFederalDeContribuyentes ?? '',
+          domicilioFiscal: arr.domicilioDelSolicitante ?? '',
+          razonSocial: arr.razonSocial ?? '',
+          datosComplementarios: [{
+            ...(ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0],
+            amparoPrograma: data.permanecera ?? ((ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0]?.amparoPrograma ?? ''),
+            tipoDocumento: data.tipo ?? (ITEM as any)?.datosComplementarios?.[0]?.tipoDocumento ?? '',
+            fechaFirma: data.fechaDeFirma ?? (ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0]?.fechaFirma ?? '',
+            fechaVigencia: data.fetchaDeFinDeVigencia ?? (ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0]?.fechaVigencia ?? ''
+          }],
+          montos: [{
+            ...(ITEM as { montos?: any[] }).montos?.[0],
+            tipo: data.tipos ?? ((ITEM as { montos?: any[] }).montos?.[0]?.tipo ?? ''),
+            descripcion: data.descripsion ?? (ITEM as any)?.montos?.[0]?.descripcion ?? '',
+            cantidad: data.cantidad ?? (ITEM as { montos?: any[] }).montos?.[0]?.cantidad ?? '',
+            monto: data.mnx ?? (ITEM as { montos?: any[] }).montos?.[0]?.monto ?? ''
+          }]
         });
       });
     });
-    return RESULT;
+
+    return { resultData: RESULT, listaCapacidad: listaCapacidad };
   }
 
   /**
@@ -370,14 +391,14 @@ export class PasoCapturarSolicitudComponent implements OnInit {
         const ITEM = (item && typeof item === 'object') ? item : {};
         RESULT.push({
           ...ITEM,
-      nombreNotario: arr.nombre ?? '',
-      apellidoMaterno: arr.segundoApellido ?? '',
-      apellidoPaterno: arr.primerApellido ?? '',
-      numeroActa: arr.numeroDeActa ?? '',
-      fechaActa: arr.fechaInicioInput ?? '',
-      numeroNotaria: arr.numeroDeNotaria ?? '',
-      entidadFederativa: arr.estado ?? '',
-      delegacionMunicipio: arr.estadoOptions ?? '',
+          nombreNotario: arr.nombre ?? '',
+          apellidoMaterno: arr.segundoApellido ?? '',
+          apellidoPaterno: arr.primerApellido ?? '',
+          numeroActa: arr.numeroDeActa ?? '',
+          fechaActa: arr.fechaInicioInput ?? '',
+          numeroNotaria: arr.numeroDeNotaria ?? '',
+          entidadFederativa: arr.estado ?? '',
+          delegacionMunicipio: arr.estadoOptions ?? '',
         });
       });
     });
@@ -454,12 +475,12 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     const proyectoImmexDatos = (item: any) => ({
       tipoDocumento: item.encabezadoTipoDocument,
       descripcion: item.encabezadoDescripcionOtro,
-      fechaFirma:  item.encabezadoFechaFirma,
-      fechaVigencia:  item.encabezadoFechaVigencia,
-      rfcFirmante:  item.encabezadoRfc,
-      razonFirmante:  item.encabezadoRazonFirmante,
+      fechaFirma: item.encabezadoFechaFirma,
+      fechaVigencia: item.encabezadoFechaVigencia,
+      rfcFirmante: item.encabezadoRfc,
+      razonFirmante: item.encabezadoRazonFirmante,
       testado: true,
-      fecFinVigencia:  item.encabezadoFechaVigencia,
+      fecFinVigencia: item.encabezadoFechaVigencia,
     });
 
     /**
@@ -468,7 +489,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
      * @param item - Objeto que contiene la información del proveedor y cliente.
      * @returns Un objeto con las propiedades: paisOrigen, rfcProveedor, razonProveedor, paisDestino, rfcCliente, razonCliente, domicilio y descTestado.
      */
-     const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
+    const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
       paisOrigen: item.paisOrigen,
       rfcProveedor: item.rfcProveedor,
       razonProveedor: item.razonProveedor,
@@ -487,7 +508,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
         datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
         tableDos: (data.annexoUno?.exportarDatosTabla || []).map(buildAnexoDos),
         proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
-       proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
+        proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
       },
     };
   }
@@ -508,17 +529,17 @@ export class PasoCapturarSolicitudComponent implements OnInit {
         const ITEM = (item && typeof item === 'object') ? item : {};
         RESULT.push({
           ...ITEM,
-      empresaCalle: arr.calle ?? '',
-      empresaNumeroInterior: arr.numInterior ?? '',
-      empresaNumeroExterior: arr.numExterior ?? '',
-      empresaCodigoPostal: arr.codigoPostal ?? '',
-      localidad: arr.colonia ?? '',
-      empresaDelegacionMunicipio: arr.delegacionMunicipio ?? '',
-      empresaEntidadFederativa: arr.entidadFederativa ?? '',
-      empresaPais: arr.pais ?? '',
-      rfc: arr.rfc ?? '',
-      domicilioFiscal: arr.domicilioFiscalSolicitante ?? '',
-      razonSocial: arr.razonSocial ?? '',
+          empresaCalle: arr.calle ?? '',
+          empresaNumeroInterior: arr.numInterior ?? '',
+          empresaNumeroExterior: arr.numExterior ?? '',
+          empresaCodigoPostal: arr.codigoPostal ?? '',
+          localidad: arr.colonia ?? '',
+          empresaDelegacionMunicipio: arr.delegacionMunicipio ?? '',
+          empresaEntidadFederativa: arr.entidadFederativa ?? '',
+          empresaPais: arr.pais ?? '',
+          rfc: arr.rfc ?? '',
+          domicilioFiscal: arr.domicilioFiscalSolicitante ?? '',
+          razonSocial: arr.razonSocial ?? '',
         });
       });
     });
@@ -533,8 +554,8 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
-    
-    const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
+    console.log('Datos a guardar:', data); // Depuración: Ver los datos que se van a enviar
+    const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
     const DECLARACION_SOLICUTUD_ENTRIES = PasoCapturarSolicitudComponent.buildDeclaracionSolicitudEntries(data);
@@ -565,7 +586,13 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       "solicitante": {
 
       },
-      "planta": [...PLANTAS],
+      "planta": [
+        {
+          ...PLANTAS.result,
+          listaCapacidad: [...PLANTAS.listaCapacidad]
+
+        }
+      ],
       "notario": [...NOTARIOS],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
@@ -580,7 +607,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
           "anexoI": [...ANEXO_ALL.anexo.tableDos]
         },
       ],
-      "fraccionArancelaria":[
+      "fraccionArancelaria": [
         {
           "listaProveedores": [...ANEXO_ALL.anexo.proveedorClienteDos]
         }
@@ -597,10 +624,18 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       "empresasNacionales": EMPRESAS_NACIONALES,
       "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
     }
-    this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
-      this.tramite80101Store.setIdSolicitud(response.datos.id_solicitud || 0);
-      return response;
-    });
+    this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          const ID_SOLICITUD = response?.datos?.id_solicitud ?? 0;
+          this.tramite80101Store.setIdSolicitud(ID_SOLICITUD);
+        },
+        error: (err) => {
+          // Manejo de error: puedes mostrar una alerta o loguear el error
+          console.error('Error al guardar los datos de la solicitud:', err);
+        }
+      });
   }
 
 
@@ -661,4 +696,14 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     this.cargaEnProgreso = carga;
   }
 
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
+   * @method ngOnDestroy
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

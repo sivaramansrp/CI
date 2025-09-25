@@ -300,6 +300,7 @@ export class EmpleadosComponent implements OnInit {
     RAZON_SOCIAL: INDIRECTOS ? this.empleadosForm.get('razonSocial')?.value : ''
   };
   this.directosDatos.push(TABLA_VALOR);
+  this.directosDatos = [...this.directosDatos];
   this.limpiar();
   }
 
