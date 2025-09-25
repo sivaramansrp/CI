@@ -292,7 +292,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       * Formulario reactivo para detalle observacion.
     */
     this.observacionForm = this.fb.group({
-      observacion: ['', Validators.required],
+      observacion: ['',],
     });
   }
 

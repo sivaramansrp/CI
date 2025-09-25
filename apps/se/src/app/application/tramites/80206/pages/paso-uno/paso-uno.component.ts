@@ -78,8 +78,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$.subscribe((seccionState) => {
       this.consultaState = seccionState;
-      if (this.consultaState.update) {
-        this.esFormularioSoloLectura = true;
+      if (this.consultaState.update || this.consultaState.readonly) {
         this.guardarDatosFormulario();
       } else {
         this.esDatosRespuesta = true;

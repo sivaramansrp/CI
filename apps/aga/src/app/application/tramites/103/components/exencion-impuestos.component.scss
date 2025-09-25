@@ -60,3 +60,28 @@ textarea.form-control {
   position: relative;
     top: 15%;
 }
+
+// Clases para modales personalizados
+.confirmar-modal-agregar {
+  display: none !important;
+}
+
+.confirmar-modal-small {
+  max-width: 350px !important;
+}
+
+.confirmar-modal-medium {
+  max-width: 450px !important;
+}
+
+.confirmar-modal-large {
+  max-width: 650px !important;
+}
+
+.modal-footer-centered {
+  justify-content: center!important;
+}
+
+.modal-vehiculo-confirmation {
+  z-index: 1070 !important;
+}

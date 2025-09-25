@@ -4,15 +4,15 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import {Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
+import { InputFecha, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from'@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 
-import { CATALOGO_TIPO,COMPLEMENTO_DE_PLANTA, PERMANCERA_OPTIONS } from '../../constantes/complementar-planta.enum';
+import { CATALOGO_TIPO,COMPLEMENTO_DE_PLANTA, ComplementoDePlanta, PERMANCERA_OPTIONS } from '../../constantes/complementar-planta.enum';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { FECHA_DE_FIN_DE_VIGENCIA } from '../../constantes/complementar-planta.enum';
@@ -32,6 +32,7 @@ import { Location } from '@angular/common';
     InputFechaComponent,
     TablaDinamicaComponent,FormsModule,
     ReactiveFormsModule,
+    NotificacionesComponent
   ],
   templateUrl: './complementar-planta.component.html',
   styleUrl: './complementar-planta.component.scss',
@@ -104,7 +105,7 @@ export class ComplementarPlantaComponent implements OnInit {
    * Datos para la tabla de complemento de planta.
    * @property {Array} complementoDePlantaDatos
    */
-  complementoDePlantaDatos = [];
+  complementoDePlantaDatos: ComplementoDePlanta[] = [];
   /**
    * Evento que se emite al cerrar el popup.
    * 
@@ -112,6 +113,7 @@ export class ComplementarPlantaComponent implements OnInit {
    */
   @Output() cerrarPopup = new EventEmitter<void>();
   
+  public exitosamenteNotificacion!: Notificacion;
 
    inicializarFormulario(): void {
    
@@ -174,6 +176,52 @@ export class ComplementarPlantaComponent implements OnInit {
       this.complementarStore.setTipoDocumentoOptions(res.datos);
       this.documentoOptions = res.datos;
     });
+  }
+
+  /**
+   * Agrega un nuevo complemento a la lista de datos.
+   */
+  agregarComplemento(): void {
+    if (this.complementarForm.valid) {
+      this.abrirexitosamente();
+      const VALORES_FORMULARIO = this.complementarForm.value;
+      const NUEVA_FILA: ComplementoDePlanta = {
+        PLANTA: '',
+        PERMANECERA_MERCANCIA_PROGRAMA: VALORES_FORMULARIO.permanecera || '',
+        TIPO_DOCUMENTO: VALORES_FORMULARIO.tipo || '',
+        FECHA_DE_FIRMA: VALORES_FORMULARIO.fechaDeFirma || '',
+        FECHA_DE_FIN_DE_VIGENCIA: VALORES_FORMULARIO.fetchaDeFinDeVigencia || '',
+        DOCUMENTO_RESPALDO: '',
+        FECHA_DE_FIRMA_DOCUMENTO: '',
+        FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO: '',
+      };
+      this.complementoDePlantaDatos = [
+        ...this.complementoDePlantaDatos,
+        NUEVA_FILA
+      ];
+      this.complementarForm.reset();
+    }
+  }
+  
+  abrirexitosamente(): void {
+    this.exitosamenteNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'la operación se realizó exitosamente.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+  /**
+   * Limpia el formulario.
+   */
+  limpiar(): void {
+    this.complementarForm.reset();
   }
 
 /**
