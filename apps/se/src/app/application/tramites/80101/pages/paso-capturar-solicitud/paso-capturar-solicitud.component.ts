@@ -43,6 +43,8 @@ import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accion
   providers: [ToastrService],
 })
 export class PasoCapturarSolicitudComponent implements OnInit {
+
+  padreBtn: boolean = true;
   /**
    * Lista de pasos del wizard.
    * Esta propiedad almacena una lista de objetos que representan los pasos del wizard.
@@ -338,6 +340,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
         if (OK) {
           this.toastrService.success(response.mensaje);
         } else {
+          this.padreBtn = true;
           this.toastrService.error(response.mensaje);
         }
         return OK;

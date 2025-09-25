@@ -43,6 +43,11 @@ import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accion
   providers: [ToastrService],
 })
 export class PasoCapturarSolicitudComponent implements OnInit {
+
+  /** 
+   * Indica si el componente padre es BtnContinuarComponent. 
+   */
+  padreBtn: boolean = true;
   /**
    * Lista de pasos del wizard.
    * Esta propiedad almacena una lista de objetos que representan los pasos del wizard.
@@ -228,8 +233,10 @@ getValorIndice(e: AccionBoton): void {
       tap(response => {
         shouldNavigate = response.codigo === '00';
         if(shouldNavigate) {
+          this.padreBtn = false;
           this.toastrService.success(response.mensaje);
         } else {
+          this.padreBtn = true;
           this.toastrService.error(response.mensaje);
         }
       }),
