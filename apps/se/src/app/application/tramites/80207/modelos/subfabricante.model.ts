@@ -189,6 +189,9 @@ export interface PlantasDireccionModelo {
  * @interface Tramite80207State
  */
 export interface Tramite80207State {
+  
+    /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
+  idSolicitud: number | null;
   /**
    * Información del registro asociada al trámite.
    * @property {InfoRegistro} infoRegistro

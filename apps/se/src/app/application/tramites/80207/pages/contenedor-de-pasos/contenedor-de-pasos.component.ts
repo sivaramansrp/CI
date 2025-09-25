@@ -1,16 +1,18 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   DatosPasos,
   ListaPasosWizard,
-  SeccionLibStore, 
+  SeccionLibStore,
+  Usuario, 
 } from '@ng-mf/data-access-user';
+import { PASOS, USUARIO_INFO } from '../../constantes/pasos.enum';
+import { Subject, map } from 'rxjs';
 import { AVISO } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constantes/pasos.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { Subject } from 'rxjs';
+import { Tramite80207State } from '../../modelos/subfabricante.model';
 import { Tramites80207Queries } from '../../estados/tramite80207.query';
-import { takeUntil } from 'rxjs/operators';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * @fileoverview Componente para la gestión del contenedor de pasos.
@@ -49,7 +51,7 @@ interface AccionBoton {
  * Lista de pasos del wizard.
  * @property {ListaPasosWizard[]} pasos
  */
-export class ContenedorDePasosComponent implements OnDestroy {
+export class ContenedorDePasosComponent implements OnInit, OnDestroy {
   /**
    * Lista de pasos del wizard.
    * @property {ListaPasosWizard[]} pasos
@@ -102,6 +104,34 @@ export class ContenedorDePasosComponent implements OnDestroy {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+    /**
+     * Evento que se emite para cargar archivos.
+     * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+     */
+    cargarArchivosEvento = new EventEmitter<void>();
+
+    /**
+     * Evento que se emite para regresar a la sección de carga de documentos.
+     * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
+     */
+    regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+
+    /**
+   * Indica si el botón para cargar archivos está habilitado.
+   */
+    activarBotonCargaArchivos: boolean = false;
+
+    /**
+   * Indica si la sección de carga de documentos está activa.
+   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+   */
+    seccionCargarDocumentos: boolean = true;
+
+  
+    cargaEnProgreso: boolean = true;
+
+// Add this near your other property declarations
+public solicitudState: Tramite80207State = {} as Tramite80207State; // or provide a proper initial state
   /**
    * Constructor de la clase ContenedorDePasosComponent.
    *
@@ -123,6 +153,23 @@ export class ContenedorDePasosComponent implements OnDestroy {
         this.seccion.establecerFormaValida([true]);
       });
   }
+
+   /**
+     * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+     * Suscribe al observable `selectSeccionState$` para escuchar cambios en el estado de la sección,
+     * actualizando la propiedad `solicitudState` con el nuevo estado recibido.
+     * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`,
+     * evitando fugas de memoria.
+     */
+    ngOnInit(): void {
+      this.tramiteQuery.selectSeccionState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        ).subscribe();
+    }
 
   /**
    * @method getValorIndice
@@ -157,6 +204,63 @@ export class ContenedorDePasosComponent implements OnDestroy {
    this.wizardComponent.atras();
 
   }
+
+   /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+   onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Utiliza un Subject para notificar a todos los observables suscritos que deben completarse.
