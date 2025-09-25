@@ -500,6 +500,13 @@ getValorIndice(e: AccionBoton): void {
       rfc: arr.rfc ?? '',
       domicilioFiscal: arr.domicilioFiscalSolicitante ?? '',
       razonSocial: arr.razonSocial ?? '',
+       datosComplementarios: Array.isArray((ITEM as any)?.datosComplementarios)
+          ? (ITEM as any).datosComplementarios.map((dc:any) => ({
+              idPlantaC: dc.idPlantaC ?? '',
+              idDato: dc.idDato ?? '',
+              amparoPrograma: dc.amparoPrograma ?? '',              
+            }))
+          : []
         });
       });
     });
