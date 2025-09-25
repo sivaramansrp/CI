@@ -1,6 +1,6 @@
 
 import { CATALOGO_ESTADOS, CATALOGO_IMMEX, CATALOGO_NICO, CATALOGO_PAISES, COMUN_URL } from '../../servers/api-router';
-import { BaseResponse } from '../../models/5701/base-response.model';
+import { BaseResponse } from '../../models/shared/base-response.model';
 import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';

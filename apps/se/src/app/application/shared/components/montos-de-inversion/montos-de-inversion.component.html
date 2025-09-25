@@ -39,7 +39,7 @@
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
-        <label class="form-label" for="mnx"
+        <label class="form-label mnx" for="mnx"
           >Monto de inversión en moneda nacional(mxn)*:</label
         >
         <input
@@ -54,8 +54,8 @@
     </div>
     <div class="row mt-5">
       <div class="col-12 container text-end mt-5">
-        <button class="btn btn-default me-2">Limpiar</button>
-        <button class="btn btn-primary">Agregar</button>
+        <button class="btn btn-default me-2" (click)="limpiarFormulario()">Limpiar</button>
+        <button class="btn btn-primary" (click)="agregarMonto()">Agregar</button>
       </div>
     </div>
   </form>
@@ -84,3 +84,10 @@
     </div>
   </div>
 </div>
+
+@if (agregarMontoNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="agregarMontoNotificacion">
+  </lib-notificaciones>
+</section>
+}

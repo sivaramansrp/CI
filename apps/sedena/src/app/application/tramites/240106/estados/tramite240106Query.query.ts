@@ -69,6 +69,16 @@ export class Tramite240106Query extends Query<Tramite240106State> {
     (state) => state.destinatarioFinalTablaDatos
   );
 
+    /**
+   * @description
+   * Selector que obtiene los datos de la tabla de mercancías modificadas desde el estado.
+   *
+   * @returns Observable con los datos de las mercancías modificadas.
+   *
+   */
+  public getmodificarMercanciaTablaDatos$ = this.select((state) => {
+    return state.modificarMercanciasDatos;
+  });
   /**
    * Observable que emite los datos de la tabla de mercancía.
    *

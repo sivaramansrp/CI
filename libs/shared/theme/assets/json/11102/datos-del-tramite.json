@@ -1,40 +1,10 @@
 {
     "modificacionDonacionesImmex": {
-       "organismoPublico":"SECRETARIA",
-        "aduana": [
-            {
-                "id": 0,
-                "descripcion": "AGUA PRIETA"
-            },
-            {
-                "id": 1,
-                "descripcion": "AEROPUERTOS"
-            },
-            {
-                "id": 2,
-                "descripcion": "PUERTOS MARÍTIMOS"
-            },
-            {
-                "id": 3,
-                "descripcion": "FRONTERAS TERRESTRES"
-            }
-        ],
-        "pais": [
-            {
-                "id": 1,
-                "descripcion": "PAIS_A"
-            },
-            {
-                "id": 2,
-                "descripcion": "PAIS_B"
-            },
-            {
-                "id": 3,
-                "descripcion": "PAIS_C"
-            }
-        ],
+       "organismoPublico": true,
+        "aduana": 1,
+        "pais": 1,
         "rfc": "LEQI810131GA8",
-        "numeroProgramaImmex": "A13BSD123456789",
+        "numeroProgramaImmex": "A13BSD12345",
         "razonSocial": "vucmilnk",
         "correoElectronicoOpcional": "CBDVUCEMcbp@hotmail.com",
         "telefonoOpcional": "165185",
