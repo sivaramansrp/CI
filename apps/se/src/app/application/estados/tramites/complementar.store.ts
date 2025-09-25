@@ -46,6 +46,8 @@ export interface ComplementarState {
   tipoInversionOptions: Catalogo[];
   tipoCategoriaOptions: Catalogo[];
   paisOptions: Catalogo[];
+  rfcFirmante: string;
+  tipoFirmante: string;
 }
 
 /**
@@ -91,6 +93,8 @@ export function createInitialState(): ComplementarState {
   tipoInversionOptions: [],
   tipoCategoriaOptions: [],
   paisOptions: [],
+  rfcFirmante: '',
+  tipoFirmante: '',
   };
 }
 /**
@@ -465,5 +469,18 @@ public setPaisOptions(paisOptions: Catalogo[]): void {
   }));
 }
 
+public setRfcFirmante(rfcFirmante: string): void {
+  this.update((state) => ({
+    ...state,
+    rfcFirmante,
+  }));
+}
+
+public setTipoFirmante(tipoFirmante: string): void {
+  this.update((state) => ({
+    ...state,
+    tipoFirmante,
+  }));
+}
 
 }
