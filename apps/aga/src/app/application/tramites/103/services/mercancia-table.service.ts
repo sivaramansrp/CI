@@ -1,7 +1,17 @@
-
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { TableBodyData } from '@libs/shared/data-access-user/src';
+
+/**
+ * Interface para representar la estructura completa de datos de la tabla de mercancías.
+ */
+interface MercanciaTableData {
+  mercanciaTable: {
+    tableHeader: string[];
+    tableBody: TableBodyData[];
+  };
+}
 
 /**
  * Servicio para obtener la tabla de mercancías desde un archivo JSON local.
@@ -25,9 +35,9 @@ export class MercanciaTableService {
 
   /**
    * Obtiene los datos de la tabla de mercancías desde el archivo JSON.
-   * @returns {Observable<any>} Observable con los datos de la tabla de mercancías.
+   * @returns {Observable<MercanciaTableData>} Observable con los datos de la tabla de mercancías.
    */
-  getTable(): Observable<any> {
-    return this.http.get<any>(this.jsonUrl);
+  getTable(): Observable<MercanciaTableData> {
+    return this.http.get<MercanciaTableData>(this.jsonUrl);
   }
 }

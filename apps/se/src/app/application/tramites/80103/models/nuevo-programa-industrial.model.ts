@@ -1,9 +1,9 @@
-import { AnexoEncabezado, AnexoUnoEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
+import { AnexoEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla } from "../../../shared/models/nuevo-programa-industrial.model";
 import { Catalogo, CatalogoPaises } from "@ng-mf/data-access-user";
 import { AnexoDosEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
 import { PlantasSubfabricante } from "../../../shared/models/empresas-subfabricanta.model";
 
-import { AnexoFraccionAnarelaria, AnexoUnoProducto } from "../../../shared/models/complimentos-seccion.model";
+import { AnexoFraccionAnarelaria, AnexoUnoProducto, ProveedorCliente } from "../../../shared/models/complimentos-seccion.model";
 
 /**
  * Representa la estructura de datos para un servicio IMMEX.
@@ -137,6 +137,8 @@ export interface AnnexoUno{
   importarDatosTabla:AnexoUnoProducto[];
   datosParaNavegar:AnexoUnoEncabezado | AnexoDosEncabezado;
   seccionActiva: string;
+  proveedorClienteDatosTabla: ProveedorCliente[];
+      proveedorClienteDatosTablaDos: ProveedorCliente[];
 }
 /**
  * Representa la respuesta de una solicitud de ampliación de servicios.

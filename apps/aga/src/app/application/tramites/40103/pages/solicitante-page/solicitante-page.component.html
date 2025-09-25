@@ -6,6 +6,12 @@
       </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
+    <!-- Modal de notificación de error -->
+    <lib-notificaciones
+      *ngIf="btnContinuar"
+      [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="btnContinuar = false"
+    ></lib-notificaciones>
     <div class="row">
       <!--
         Muestra el componente correspondiente según el valor de `indice`.
@@ -14,7 +20,7 @@
       -->
       @switch (indice) { 
         @case (1) {
-          <paso-uno></paso-uno>
+          <paso-uno #pasoUnoRef></paso-uno>
         } 
         @case (2) {
           <app-paso-dos></app-paso-dos>

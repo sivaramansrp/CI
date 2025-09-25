@@ -1,34 +1,36 @@
-import { DatosSolicitante, MercanciaFormulario, SolicitudFormulario } from '../models/retorno-de-partes.model';
+import {
+  DatosSolicitante,
+  MercanciaFormulario,
+  SolicitudFormulario,
+} from '../models/retorno-de-partes.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
-
 /**
  * Interfaz que define el estado del trámite 6403.
- * 
+ *
  * Esta interfaz contiene todas las propiedades necesarias para manejar el estado del trámite,
  * incluyendo datos del solicitante, formularios relacionados, y otros datos relevantes.
  */
 export interface Tramite6403State {
-
   /**
    * Paso activo del trámite.
-   * 
+   *
    * Representa el número del paso actual en el proceso del trámite.
    */
   pasoActivo: number;
 
   /**
    * Pestaña activa del trámite.
-   * 
+   *
    * Representa el número de la pestaña actualmente activa en el proceso del trámite.
    */
   pestanaActiva: number;
 
   /**
    * Información del solicitante.
-   * 
+   *
    * Contiene los datos personales y de contacto del solicitante del trámite.
    */
   datosSolicitante: DatosSolicitante;
@@ -40,26 +42,25 @@ export interface Tramite6403State {
 
   /**
    * Información del formulario de mercancía.
-   * 
+   *
    * Contiene los datos relacionados con la mercancía, como descripción, especificaciones,
    * marca, modelo, número de serie, número de parte, y tipo de mercancía.
    */
   mercanciaFormulario: MercanciaFormulario;
-  
 }
 /**
  * Estado inicial del trámite 6403.
- * 
+ *
  * Esta función define el estado inicial del trámite, incluyendo datos del solicitante,
  * formulario de mercancías, formulario de domicilio, formulario de aviso, y otros datos relacionados.
- * 
+ *
  * @returns {Tramite6403State} El estado inicial del trámite.
- * 
- * 
+ *
+ *
  */
 export function createInitialState(): Tramite6403State {
   return {
-   pasoActivo: 1,
+    pasoActivo: 1,
     pestanaActiva: 1,
     solicitudFormulario: {
       cveAduana: '',
@@ -109,27 +110,27 @@ export function createInitialState(): Tramite6403State {
       folioFormatoOficialDestino: '',
       fechaDescruccionDestino: '',
       estadoTipoDocumentoDestino: '',
-      autoridadPresentoAvisoDestruccion: ''
+      autoridadPresentoAvisoDestruccion: '',
     },
     datosSolicitante: {
-      rfc: "",
-      denominacion: "",
-      actividadEconomica: "",
-      correoElectronico: "",
-      pais: "",
-      codigoPostal: "",
-      horaDestruccion: "",
-      fechaDestruccion: "",
-      entidadFederativa: "",
-      municipio: "",
-      localidad: "",
-      colonia: "",
-      calle: "",
-      nExt: "",
-      nInt: "",
-      lada: "",
-      telefono: "",
-      adace: "",
+      rfc: '',
+      denominacion: '',
+      actividadEconomica: '',
+      correoElectronico: '',
+      pais: '',
+      codigoPostal: '',
+      horaDestruccion: '',
+      fechaDestruccion: '',
+      entidadFederativa: '',
+      municipio: '',
+      localidad: '',
+      colonia: '',
+      calle: '',
+      nExt: '',
+      nInt: '',
+      lada: '',
+      telefono: '',
+      adace: '',
     },
     mercanciaFormulario: {
       modalDescMercancia: '',
@@ -138,13 +139,13 @@ export function createInitialState(): Tramite6403State {
       modeloMercancia: '',
       numSerieMercancia: '',
       numParteMercancia: '',
-      tipoMercancia: ''
-    }
+      tipoMercancia: '',
+    },
   };
-  }
+}
 /**
  * Store para gestionar el estado del trámite 6403.
- * 
+ *
  * Este store utiliza Akita para manejar el estado del trámite, permitiendo actualizar y consultar
  * diferentes propiedades relacionadas con el trámite.
  */
@@ -153,10 +154,9 @@ export function createInitialState(): Tramite6403State {
 })
 @StoreConfig({ name: 'tramite6403', resettable: true })
 export class Tramite6403Store extends Store<Tramite6403State> {
-
   /**
    * Constructor del store.
-   * 
+   *
    * Inicializa el store con el estado inicial definido en `createInitialState`.
    */
   constructor() {
@@ -164,10 +164,10 @@ export class Tramite6403Store extends Store<Tramite6403State> {
   }
 
   /**
- * Actualiza el paso activo del trámite.
- * 
- * @param {number} pasoActivo - El número del paso activo.
- */
+   * Actualiza el paso activo del trámite.
+   *
+   * @param {number} pasoActivo - El número del paso activo.
+   */
   public setPasoActivo(pasoActivo: number): void {
     this.update((state) => ({
       ...state,
@@ -177,7 +177,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la pestaña activa del trámite.
-   * 
+   *
    * @param {number} pestanaActiva - El número de la pestaña activa.
    */
   public setPestanaActiva(pestanaActiva: number): void {
@@ -189,19 +189,19 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza los datos del solicitante en el estado.
-   * 
+   *
    * @param {DatosSolicitante} datosSolicitante - Objeto que contiene los datos del solicitante.
    */
   public setDatosSolicitante(datosSolicitante: DatosSolicitante): void {
     this.update((state) => ({
       ...state,
-      datosSolicitante
+      datosSolicitante,
     }));
   }
 
   /**
    * Actualiza la clave de la aduana en el formulario de solicitud.
-   * 
+   *
    * @param {string} cveAduana - La clave de la aduana a actualizar.
    */
   public setCveAduana(cveAduana: string): void {
@@ -213,7 +213,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la clave de la sección aduanal en el formulario de solicitud.
-   * 
+   *
    * @param {string} cveSeccionAduanal - La clave de la sección aduanal a actualizar.
    */
   public setCveSeccionAduanal(cveSeccionAduanal: string): void {
@@ -225,19 +225,22 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la clave del recinto fiscalizado en el formulario de solicitud.
-   * 
+   *
    * @param {string} cveRecintoFiscalizado - La clave del recinto fiscalizado a actualizar.
    */
   public setCveRecintoFiscalizado(cveRecintoFiscalizado: string): void {
     this.update((state) => ({
       ...state,
-      solicitudFormulario: { ...state.solicitudFormulario, cveRecintoFiscalizado },
+      solicitudFormulario: {
+        ...state.solicitudFormulario,
+        cveRecintoFiscalizado,
+      },
     }));
   }
 
   /**
    * Actualiza la clave del tipo de documento en el formulario de solicitud.
-   * 
+   *
    * @param {string} cveTipoDocumento - La clave del tipo de documento a actualizar.
    */
   public setCveTipoDocumento(cveTipoDocumento: string): void {
@@ -249,19 +252,22 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el estado del tipo de documento en el formulario de solicitud.
-   * 
+   *
    * @param {string} estadoTipoDocumento - El estado del tipo de documento a actualizar.
    */
   public setEstadoTipoDocumento(estadoTipoDocumento: string): void {
     this.update((state) => ({
       ...state,
-      solicitudFormulario: { ...state.solicitudFormulario, estadoTipoDocumento },
+      solicitudFormulario: {
+        ...state.solicitudFormulario,
+        estadoTipoDocumento,
+      },
     }));
   }
 
   /**
    * Actualiza la aduana en el formulario de solicitud.
-   * 
+   *
    * @param {string} aduana - La aduana a actualizar.
    */
   public setAduana(aduana: string): void {
@@ -273,7 +279,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la patente en el formulario de solicitud.
-   * 
+   *
    * @param {string} patente - La patente a actualizar.
    */
   public setPatente(patente: string): void {
@@ -285,7 +291,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el pedimento en el formulario de solicitud.
-   * 
+   *
    * @param {string} pedimento - El pedimento a actualizar.
    */
   public setPedimento(pedimento: string): void {
@@ -297,31 +303,37 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el folio de importación temporal en el formulario de solicitud.
-   * 
+   *
    * @param {string} folioImportacionTemporal - El folio de importación temporal a actualizar.
    */
   public setFolioImportacionTemporal(folioImportacionTemporal: string): void {
     this.update((state) => ({
       ...state,
-      solicitudFormulario: { ...state.solicitudFormulario, folioImportacionTemporal },
+      solicitudFormulario: {
+        ...state.solicitudFormulario,
+        folioImportacionTemporal,
+      },
     }));
   }
 
   /**
    * Actualiza el folio del formato oficial en el formulario de solicitud.
-   * 
+   *
    * @param {string} folioFormatoOficial - El folio del formato oficial a actualizar.
    */
   public setFolioFormatoOficial(folioFormatoOficial: string): void {
     this.update((state) => ({
       ...state,
-      solicitudFormulario: { ...state.solicitudFormulario, folioFormatoOficial },
+      solicitudFormulario: {
+        ...state.solicitudFormulario,
+        folioFormatoOficial,
+      },
     }));
   }
 
   /**
    * Actualiza el check de prórroga en el formulario de solicitud.
-   * 
+   *
    * @param {boolean} checkProrroga - El valor del check de prórroga a actualizar.
    */
   public setCheckProrroga(checkProrroga: boolean): void {
@@ -333,31 +345,37 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el folio oficial de prórroga en el formulario de solicitud.
-   * 
+   *
    * @param {string} folioOficialProrroga - El folio oficial de prórroga a actualizar.
    */
   public setFolioOficialProrroga(folioOficialProrroga: string): void {
     this.update((state) => ({
       ...state,
-      solicitudFormulario: { ...state.solicitudFormulario, folioOficialProrroga },
+      solicitudFormulario: {
+        ...state.solicitudFormulario,
+        folioOficialProrroga,
+      },
     }));
   }
 
   /**
    * Actualiza la fecha de importación temporal en el formulario de solicitud.
-   * 
+   *
    * @param {string} fechaImportacionTemporal - La fecha de importación temporal a actualizar.
    */
   public setFechaImportacionTemporal(fechaImportacionTemporal: string): void {
     this.update((state) => ({
       ...state,
-      solicitudFormulario: { ...state.solicitudFormulario, fechaImportacionTemporal },
+      solicitudFormulario: {
+        ...state.solicitudFormulario,
+        fechaImportacionTemporal,
+      },
     }));
   }
 
   /**
    * Actualiza la fecha de vencimiento en el formulario de solicitud.
-   * 
+   *
    * @param {string} fechaVencimiento - La fecha de vencimiento a actualizar.
    */
   public setFechaVencimiento(fechaVencimiento: string): void {
@@ -369,7 +387,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la descripción de la mercancía en el formulario de solicitud.
-   * 
+   *
    * @param {string} descMercancia - La descripción de la mercancía a actualizar.
    */
   public setDescMercancia(descMercancia: string): void {
@@ -381,7 +399,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la marca en el formulario de solicitud.
-   * 
+   *
    * @param {string} marca - La marca a actualizar.
    */
   public setMarca(marca: string): void {
@@ -393,7 +411,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el modelo en el formulario de solicitud.
-   * 
+   *
    * @param {string} modelo - El modelo a actualizar.
    */
   public setModelo(modelo: string): void {
@@ -405,7 +423,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el número de serie en el formulario de solicitud.
-   * 
+   *
    * @param {string} numeroSerie - El número de serie a actualizar.
    */
   public setNumeroSerie(numeroSerie: string): void {
@@ -417,7 +435,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el tipo en el formulario de solicitud.
-   * 
+   *
    * @param {string} tipo - El tipo a actualizar.
    */
   public setTipo(tipo: string): void {
@@ -441,7 +459,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la guía master en el formulario de solicitud.
-   * 
+   *
    * @param {string} guiaMaster - La guía master a actualizar.
    */
   public setGuiaMaster(guiaMaster: string): void {
@@ -453,7 +471,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la guía BL en el formulario de solicitud.
-   * 
+   *
    * @param {string} guiaBl - La guía BL a actualizar.
    */
   public setGuiaBl(guiaBl: string): void {
@@ -465,7 +483,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el número BL en el formulario de solicitud.
-   * 
+   *
    * @param {string} numeroBl - El número BL a actualizar.
    */
   public setNumeroBl(numeroBl: string): void {
@@ -477,31 +495,37 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el RFC de la empresa transportista en el formulario de solicitud.
-   * 
+   *
    * @param {string} rfcEmpresaTransportista - El RFC de la empresa transportista a actualizar.
    */
   public setRfcEmpresaTransportista(rfcEmpresaTransportista: string): void {
     this.update((state) => ({
       ...state,
-      solicitudFormulario: { ...state.solicitudFormulario, rfcEmpresaTransportista },
+      solicitudFormulario: {
+        ...state.solicitudFormulario,
+        rfcEmpresaTransportista,
+      },
     }));
   }
 
   /**
    * Actualiza el estado del medio de transporte en el formulario de solicitud.
-   * 
+   *
    * @param {string} estadoMedioTransporte - El estado del medio de transporte a actualizar.
    */
   public setEstadoMedioTransporte(estadoMedioTransporte: string): void {
     this.update((state) => ({
       ...state,
-      solicitudFormulario: { ...state.solicitudFormulario, estadoMedioTransporte },
+      solicitudFormulario: {
+        ...state.solicitudFormulario,
+        estadoMedioTransporte,
+      },
     }));
   }
 
   /**
    * Actualiza la carta porte en el formulario de solicitud.
-   * 
+   *
    * @param {string} cartaPorte - La carta porte a actualizar.
    */
   public setCartaPorte(cartaPorte: string): void {
@@ -513,7 +537,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la clave del país de procedencia en el formulario de solicitud.
-   * 
+   *
    * @param {string} cvePaisProcedencia - La clave del país de procedencia a actualizar.
    */
   public setCvePaisProcedencia(cvePaisProcedencia: string): void {
@@ -525,7 +549,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la guía house en el formulario de solicitud.
-   * 
+   *
    * @param {string} guiaHouse - La guía house a actualizar.
    */
   public setGuiaHouse(guiaHouse: string): void {
@@ -537,7 +561,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el número de buque en el formulario de solicitud.
-   * 
+   *
    * @param {string} numeroBuque - El número de buque a actualizar.
    */
   public setNumeroBuque(numeroBuque: string): void {
@@ -549,7 +573,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el número de equipo en el formulario de solicitud.
-   * 
+   *
    * @param {string} numeroEquipo - El número de equipo a actualizar.
    */
   public setNumeroEquipo(numeroEquipo: string): void {
@@ -561,7 +585,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la fecha de la carta porte en el formulario de solicitud.
-   * 
+   *
    * @param {string} fechaCartaPorte - La fecha de la carta porte a actualizar.
    */
   public setFechaCartaPorte(fechaCartaPorte: string): void {
@@ -573,7 +597,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el tipo de contenedor en el formulario de solicitud.
-   * 
+   *
    * @param {string} tipContenedor - El tipo de contenedor a actualizar.
    */
   public setTipContenedor(tipContenedor: string): void {
@@ -585,7 +609,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la marca del transporte en el formulario de solicitud.
-   * 
+   *
    * @param {string} tranporteMarca - La marca del transporte a actualizar.
    */
   public setTranporteMarca(tranporteMarca: string): void {
@@ -597,7 +621,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el modelo del transporte en el formulario de solicitud.
-   * 
+   *
    * @param {string} tranporteModelo - El modelo del transporte a actualizar.
    */
   public setTranporteModelo(tranporteModelo: string): void {
@@ -609,7 +633,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la placa del transporte en el formulario de solicitud.
-   * 
+   *
    * @param {string} tranportePlaca - La placa del transporte a actualizar.
    */
   public setTranportePlaca(tranportePlaca: string): void {
@@ -621,7 +645,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza las observaciones en el formulario de solicitud.
-   * 
+   *
    * @param {string} observaciones - Las observaciones a actualizar.
    */
   public setObservaciones(observaciones: string): void {
@@ -633,7 +657,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el destino en el formulario de solicitud.
-   * 
+   *
    * @param {string} conDestino - El destino a actualizar.
    */
   public setConDestino(conDestino: string): void {
@@ -645,7 +669,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la clave del tipo de destino en el formulario de solicitud.
-   * 
+   *
    * @param {string} cveTipoDestino - La clave del tipo de destino a actualizar.
    */
   public setCveTipoDestino(cveTipoDestino: string): void {
@@ -657,31 +681,39 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la clave del tipo de documento reemplazada en el formulario de solicitud.
-   * 
+   *
    * @param {string} cveTipoDocumentoReemplazada - La clave del tipo de documento reemplazada a actualizar.
    */
-  public setCveTipoDocumentoReemplazada(cveTipoDocumentoReemplazada: string): void {
+  public setCveTipoDocumentoReemplazada(
+    cveTipoDocumentoReemplazada: string
+  ): void {
     this.update((state) => ({
       ...state,
-      solicitudFormulario: { ...state.solicitudFormulario, cveTipoDocumentoReemplazada },
+      solicitudFormulario: {
+        ...state.solicitudFormulario,
+        cveTipoDocumentoReemplazada,
+      },
     }));
   }
 
   /**
    * Actualiza el número de acta de destrucción en el formulario de solicitud.
-   * 
+   *
    * @param {string} numeroActaDescruccion - El número de acta de destrucción a actualizar.
    */
   public setNumeroActaDescruccion(numeroActaDescruccion: string): void {
     this.update((state) => ({
       ...state,
-      solicitudFormulario: { ...state.solicitudFormulario, numeroActaDescruccion },
+      solicitudFormulario: {
+        ...state.solicitudFormulario,
+        numeroActaDescruccion,
+      },
     }));
   }
 
   /**
    * Actualiza la clave de la aduana de destino en el formulario de solicitud.
-   * 
+   *
    * @param {string} cveAduanaDestino - La clave de la aduana de destino a actualizar.
    */
   public setCveAduanaDestino(cveAduanaDestino: string): void {
@@ -693,7 +725,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la clave de la patente de destino en el formulario de solicitud.
-   * 
+   *
    * @param {string} cvePatenteDestino - La clave de la patente de destino a actualizar.
    */
   public setCvePatenteDestino(cvePatenteDestino: string): void {
@@ -705,19 +737,22 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la clave del pedimento de destino en el formulario de solicitud.
-   * 
+   *
    * @param {string} cvePedimentoDestino - La clave del pedimento de destino a actualizar.
    */
   public setCvePedimentoDestino(cvePedimentoDestino: string): void {
     this.update((state) => ({
       ...state,
-      solicitudFormulario: { ...state.solicitudFormulario, cvePedimentoDestino },
+      solicitudFormulario: {
+        ...state.solicitudFormulario,
+        cvePedimentoDestino,
+      },
     }));
   }
 
   /**
    * Actualiza el folio VUCEM de retorno en el formulario de solicitud.
-   * 
+   *
    * @param {string} folioVucemRetorno - El folio VUCEM de retorno a actualizar.
    */
   public setFolioVucemRetorno(folioVucemRetorno: string): void {
@@ -729,55 +764,73 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el folio del formato oficial de destino en el formulario de solicitud.
-   * 
+   *
    * @param {string} folioFormatoOficialDestino - El folio del formato oficial de destino a actualizar.
    */
-  public setFolioFormatoOficialDestino(folioFormatoOficialDestino: string): void {
+  public setFolioFormatoOficialDestino(
+    folioFormatoOficialDestino: string
+  ): void {
     this.update((state) => ({
       ...state,
-      solicitudFormulario: { ...state.solicitudFormulario, folioFormatoOficialDestino },
+      solicitudFormulario: {
+        ...state.solicitudFormulario,
+        folioFormatoOficialDestino,
+      },
     }));
   }
 
   /**
    * Actualiza la fecha de destrucción de destino en el formulario de solicitud.
-   * 
+   *
    * @param {string} fechaDescruccionDestino - La fecha de destrucción de destino a actualizar.
    */
   public setFechaDescruccionDestino(fechaDescruccionDestino: string): void {
     this.update((state) => ({
       ...state,
-      solicitudFormulario: { ...state.solicitudFormulario, fechaDescruccionDestino },
+      solicitudFormulario: {
+        ...state.solicitudFormulario,
+        fechaDescruccionDestino,
+      },
     }));
   }
 
   /**
    * Actualiza el estado del tipo de documento de destino en el formulario de solicitud.
-   * 
+   *
    * @param {string} estadoTipoDocumentoDestino - El estado del tipo de documento de destino a actualizar.
    */
-  public setEstadoTipoDocumentoDestino(estadoTipoDocumentoDestino: string): void {
+  public setEstadoTipoDocumentoDestino(
+    estadoTipoDocumentoDestino: string
+  ): void {
     this.update((state) => ({
       ...state,
-      solicitudFormulario: { ...state.solicitudFormulario, estadoTipoDocumentoDestino },
+      solicitudFormulario: {
+        ...state.solicitudFormulario,
+        estadoTipoDocumentoDestino,
+      },
     }));
   }
 
   /**
    * Actualiza la autoridad que presentó el aviso de destrucción en el formulario de solicitud.
-   * 
+   *
    * @param {string} autoridadPresentoAvisoDestruccion - La autoridad que presentó el aviso de destrucción a actualizar.
    */
-  public setAutoridadPresentoAvisoDestruccion(autoridadPresentoAvisoDestruccion: string): void {
+  public setAutoridadPresentoAvisoDestruccion(
+    autoridadPresentoAvisoDestruccion: string
+  ): void {
     this.update((state) => ({
       ...state,
-      solicitudFormulario: { ...state.solicitudFormulario, autoridadPresentoAvisoDestruccion },
+      solicitudFormulario: {
+        ...state.solicitudFormulario,
+        autoridadPresentoAvisoDestruccion,
+      },
     }));
   }
 
   /**
    * Actualiza el modal de descripción de mercancía en el formulario de mercancía.
-   * 
+   *
    * @param {string} modalDescMercancia - El modal de descripción de mercancía a actualizar.
    */
   public setModalDescMercancia(modalDescMercancia: string): void {
@@ -789,7 +842,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la especificación de mercancía en el formulario de mercancía.
-   * 
+   *
    * @param {string} espeMercancia - La especificación de mercancía a actualizar.
    */
   public setEspeMercancia(espeMercancia: string): void {
@@ -801,7 +854,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza la marca de mercancía en el formulario de mercancía.
-   * 
+   *
    * @param {string} marcaMercancia - La marca de mercancía a actualizar.
    */
   public setMarcaMercancia(marcaMercancia: string): void {
@@ -813,7 +866,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el modelo de mercancía en el formulario de mercancía.
-   * 
+   *
    * @param {string} modeloMercancia - El modelo de mercancía a actualizar.
    */
   public setModeloMercancia(modeloMercancia: string): void {
@@ -825,7 +878,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el número de serie de mercancía en el formulario de mercancía.
-   * 
+   *
    * @param {string} numSerieMercancia - El número de serie de mercancía a actualizar.
    */
   public setNumSerieMercancia(numSerieMercancia: string): void {
@@ -837,7 +890,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el número de parte de mercancía en el formulario de mercancía.
-   * 
+   *
    * @param {string} numParteMercancia - El número de parte de mercancía a actualizar.
    */
   public setNumParteMercancia(numParteMercancia: string): void {
@@ -849,7 +902,7 @@ export class Tramite6403Store extends Store<Tramite6403State> {
 
   /**
    * Actualiza el tipo de mercancía en el formulario de mercancía.
-   * 
+   *
    * @param {string} tipoMercancia - El tipo de mercancía a actualizar.
    */
   public setTipoMercancia(tipoMercancia: string): void {
@@ -859,4 +912,36 @@ export class Tramite6403Store extends Store<Tramite6403State> {
     }));
   }
 
+  /**
+   * Actualiza la propiedad `mercanciaFormulario` dentro del estado global.
+   *
+   * - Recibe un objeto de tipo `MercanciaFormulario`.
+   * - Utiliza la función `update` para generar un nuevo estado inmutable,
+   *   conservando el resto de propiedades.
+   * - Sobrescribe el valor de `mercanciaFormulario` con el formulario recibido.
+   *
+   * @param {MercanciaFormulario} mercanciaFormulario
+   *        Objeto que contiene los datos actualizados del formulario de mercancía.
+   * @returns {void}
+   */
+  public setMercanciaFormulario(
+    mercanciaFormulario: MercanciaFormulario
+  ): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaFormulario: {
+        ...state.mercanciaFormulario,
+        mercanciaFormulario,
+      },
+    }));
+  }
+
+  /**
+   * Limpia la solicitud actual restableciendo su estado.
+   * Este método llama a la función `reset` para reiniciar los valores
+   * de la solicitud a su estado inicial.
+   */
+  public limpiarSolicitud(): void {
+    this.reset();
+  }
 }
