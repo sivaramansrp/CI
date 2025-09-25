@@ -113,7 +113,10 @@ export class EmpleadosComponent implements OnInit {
    */
   @Output() cerrarPopup = new EventEmitter<void>();
   
-
+/**  
+ * Evento de salida que emite una lista de empleados directos al componente padre.
+ */
+ @Output() obtenerEmpleadosList: EventEmitter<Directos[]> = new EventEmitter<Directos[]>();
   /**
    * Constructor del componente.
    * @constructor
@@ -170,6 +173,7 @@ export class EmpleadosComponent implements OnInit {
    * @returns {void}
    */
   regrasar(): void {
+    this.obtenerEmpleadosList.emit(this.directosDatos);
     this.cerrarPopup.emit();
   }
    /**

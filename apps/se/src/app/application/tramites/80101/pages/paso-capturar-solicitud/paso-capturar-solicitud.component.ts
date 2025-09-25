@@ -210,33 +210,17 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
  * 
  * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
  */
-getValorIndice(e: AccionBoton): void {
-  let shouldNavigate = false;
-  this.nuevoProgramaIndustrialService.getAllState()
-    .pipe(
-      take(1),
-      switchMap((data) => this.guardar(data)),
-      tap(response => {
-        shouldNavigate = response.codigo === '00';
-        if(shouldNavigate) {
-          this.toastrService.success(response.mensaje);
-        } else {
-          this.toastrService.error(response.mensaje);
-        }
-      }),
-      finalize(() => {
-        if (shouldNavigate && e.valor > 0 && e.valor < 5) {
-          this.indice = e.valor;
-          if (e.accion === 'cont') {
-            this.wizardComponent.siguiente();
-          } else {
-            this.wizardComponent.atras();
-          }
-        }
-      })
-    )
-    .subscribe();
-}
+ getValorIndice(e: AccionBoton): void {
+    this.obtenerDatosDelStore();
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
+  }
 
   /**
    * Obtiene los datos del store y los guarda utilizando el servicio.
@@ -245,9 +229,7 @@ getValorIndice(e: AccionBoton): void {
     this.nuevoProgramaIndustrialService.getAllState()
       .pipe(take(1))
       .subscribe(data => {
-        const complementarData = this.complementarService.getComplementarDataSync();
-        const mergedData = { ...data, ...complementarData };
-        this.guardar(mergedData);
+        this.guardar(data);
       });
   }
 
@@ -362,7 +344,58 @@ getValorIndice(e: AccionBoton): void {
       testado: "1"
     });
 
+    const mapMontosInversion = (item: any) => ({
+      idPlantaM: item.PLANTA ?? "",
+      tipo: item.TIPO ?? "",
+      cantidad: item.CANTIDAD ?? "",
+      descripcion: item.DESCRIPCION ?? "",
+      monto: item.MONTO ?? "",
+    })
+
+    const mapEmpleados = (item: any) => ({
+      idPlantaE: item.PLANTA ?? '',
+      idEmpleados: item.ID_EMPLEADOS ?? '',
+      totalEmpleados: item.TOTAL ?? '',
+      directos: item.DIRECTOS ?? '',
+      cedula: item.CEDULA_DE_CUOTAS ?? '',
+      fechaCedula: item.FECHA_DE_CEDULA ?? '',
+      indirectos: item.INDIRECTOS ?? '',
+      contrato: item.CONTRATO ?? '',
+      objetoContrato: item.OBJETO_DEL_CONTRATO_DEL_SERVICIO ?? '',
+      fechaFirma: item.FECHA_FIRMA ?? '',
+      fechaFinVigencia: item.FECHA_FIN_VIGENCIA ?? '',
+      rfcEmpresa: item.RFC ?? '',
+      razonEmpresa: item.RAZON_SOCIAL ?? '',
+    })
+
+    const mapComplementar = (item: any) => ({
+      idPlantaC: item.PLANTA ?? '' ,
+      idDato: item.DATO ?? '',
+      amparoPrograma: item.PERMANECERA_MERCANCIA_PROGRAMA ?? '',
+      tipoDocumento: item.TIPO_DOCUMENTO ?? '',
+      descDocumento: item.DESCRIPCION_DOCUMENTO ?? '',
+      descripcionOtro: item.DESCRIPCION_OTRO ?? '',
+      documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
+      descDocRespaldo: item.DESC_DOCUMENTO_RESPALDO ?? '',
+      respaldoOtro: item.RESPALDO_OTRO ?? '',
+      fechaFirma: item.FECHA_DE_FIRMA ?? '',
+      fechaVigencia: item.FECHA_DE_FIN_DE_VIGENCIA ?? '',
+      fechaFirmaRespaldo: item.FECHA_DE_FIRMA_DOCUMENTO ?? '',
+      fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
+    })
+
+    const mapPlantaFirmantes = (item:any) => ({
+      idPlantaF: item.PLANTA ?? '',
+      tipoFirmante: item.tipoFirmante ?? '',
+      descTipoFirmante: item.descTipoFirmante ?? '',
+    })
+
     const listaCapacidad = (data.tablaDatosCapacidadInstalada || []).map(mapCapacidadInstalada);
+    const montos = (data.montosDeInversionTablaDatos || []).map(mapMontosInversion);
+    const datosEmpleados = (data.empleadosTablaDatos || []).map(mapEmpleados);
+    const datosComplementarios = (data.complementarPlantaDatos || []).map(mapComplementar);
+    const firmantes = (data.complementarFirmanteDatos || []).map(mapPlantaFirmantes);
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let RESULT: any[] = [];
     array.forEach(arr => {
@@ -384,24 +417,10 @@ getValorIndice(e: AccionBoton): void {
           rfc: arr.registroFederalDeContribuyentes ?? '',
           domicilioFiscal: arr.domicilioDelSolicitante ?? '',
           razonSocial: arr.razonSocial ?? '',
-          datosComplementarios: [{
-            ...(ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0],
-            amparoPrograma: data.permanecera ?? ((ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0]?.amparoPrograma ?? ''),
-            tipoDocumento: data.tipo ?? (ITEM as any)?.datosComplementarios?.[0]?.tipoDocumento ?? '',
-            fechaFirma: data.fechaDeFirma ?? (ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0]?.fechaFirma ?? '',
-            fechaVigencia: data.fetchaDeFinDeVigencia ?? (ITEM as { datosComplementarios?: any[] }).datosComplementarios?.[0]?.fechaVigencia ?? ''
-          }],
-          montos: [{
-            ...(ITEM as { montos?: any[] }).montos?.[0],
-            tipo: data.tipos ?? ((ITEM as { montos?: any[] }).montos?.[0]?.tipo ?? ''),
-            descripcion: data.descripsion ?? (ITEM as any)?.montos?.[0]?.descripcion ?? '',
-            cantidad: data.cantidad ?? (ITEM as { montos?: any[] }).montos?.[0]?.cantidad ?? '',
-            monto: data.mnx ?? (ITEM as { montos?: any[] }).montos?.[0]?.monto ?? ''
-          }]
         });
       });
     });
-    const RESULT_DATA = { ...RESULT[0], listaCapacidad };
+    const RESULT_DATA = { ...RESULT[0], listaCapacidad, montos, datosEmpleados, datosComplementarios, firmantes };
     return RESULT_DATA;
   }
 
@@ -582,7 +601,8 @@ getValorIndice(e: AccionBoton): void {
    * @returns void
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  guardar(data: any): Promise<any> {
+  guardar(data: any): void {
+    console.log(data);
     const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
