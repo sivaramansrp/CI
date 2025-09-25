@@ -24,7 +24,7 @@ export class RegistroSolicitudService {
    * @returns {Observable<BaseResponse<any>>} - Observable con la respuesta del servidor.
    */
 
-  postGuardarDatos<T>(tramite: number, payload: T): Observable<BaseResponse<T>> {
+  postGuardarDatos<T>(tramite: string, payload: T): Observable<BaseResponse<T>> {
     const ENDPOINT = `${this.host}${API_POST_SOLICITUD_GUARDAR(tramite)}`;
     return this.http.post<BaseResponse<T>>(ENDPOINT, payload);
   }
