@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 
@@ -13,7 +13,8 @@ import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 
 import {
   ConfiguracionColumna,
-  REG_X,
+  Notificacion,
+  NotificacionesComponent,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -32,6 +33,7 @@ import {
   ElegibilidadDeTextilesStore,
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
+import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 import { Solicitud120301State, Tramite120301Store } from '../../estados/tramites/tramite120301.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
@@ -85,6 +87,8 @@ import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
     CommonModule,
     ReactiveFormsModule,
     TablaDinamicaComponent,
+    NotificacionesComponent,
+    ModalModule,
   ],
 })
 export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
@@ -343,6 +347,23 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * Se utiliza para alternar la visibilidad de la tabla según el estado de la aplicación.
    */
   mostrarTabla = true;
+  /**
+      * Notificación que se muestra al usuario en caso de error o éxito en el proceso de firma.
+      * Incluye información sobre el tipo de notificación, categoría, título y mensaje.
+      */
+  nuevaNotificacion!: Notificacion;
+  /**
+   * @property {boolean} eliminarFacturaModal - Controla la visibilidad del modal de eliminación de factura.
+   */
+  eliminarFacturaModal: boolean = false;
+  /**Variable para mostrar el modal */
+  public mostrarModal: boolean = false;
+  /** Referencia al modal */
+  @ViewChild('modal', { static: false }) modal?: ModalDirective;
+  /** Indica si se debe abrir el modal */
+  @Input() abrirModal: boolean = false;
+  /** Evento que se emite al cerrar el modal */
+  @Output() cerrar = new EventEmitter<void>();
 
   /**
    * @constructor
@@ -370,7 +391,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
     private tramite120301Query: Tramite120301Query,
     private cd: ChangeDetectorRef,
     private cdr: ChangeDetectorRef,
-     private tramite120301: Tramite120301Store,
+    private tramite120301: Tramite120301Store,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -454,6 +475,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   initActionFormBuild(): void {
+    this.facturasAsociadas = this.facturasState.facturasAsociadas;
     this.formularioAsociacionFactura = this.fb.group({
       cantidadFacturas: [
         this.facturasState.cantidadFacturas,
@@ -500,7 +522,6 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
               cantidadDisponible: factura.cantidad_disponible.toString(),
               unidadMedida: factura.descripcion,
               valorDolares: factura.imp_dls.toString(),
-
               idFacturaExpedicion: factura.id_factura_expedicion,
               idExpedicion: this.solicitudState.idExpedicion,
             }));
@@ -546,6 +567,19 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       id_factura_expedicion: this.filaSeleccionada?.idFacturaExpedicion,
       cantidad_asociada: this.formularioAsociacionFactura.get('cantidadFacturas')?.value
     };
+    if (!PAYLOAD.id_expedicion || !PAYLOAD.id_factura_expedicion || !PAYLOAD.cantidad_asociada) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe seleccionar una factura y capturar la cantidad a asociar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
     this.facturasAsociadasService
       .postFacturasAsociar(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
@@ -592,12 +626,13 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
               cantidadDisponible: factura.factura_expedicion.cantidad_disponible.toString(),
               unidadMedida: factura.factura_expedicion.unidad_medida.descripcion,
               valorDolares: factura.factura_expedicion.importe_dolares.toString(),
-
               idFacturaExpedicion: factura.id_factura_expedicion,
               idExpedicion: factura.id_expedicion
             }));
+            this.ElegibilidadDeTextilesStore.setFacturasAsociadas(this.facturasAsociadas);
           } else {
             this.facturasAsociadas = [];
+            this.ElegibilidadDeTextilesStore.setFacturasAsociadas(this.facturasAsociadas);
           }
         },
         error: (error) => {
@@ -663,8 +698,22 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    */
   eliminarSeleccionado(): void {
     if (!this.filaSeleccionadaAsociada) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe seleccionar al menos una factura a eliminar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       return;
     }
+    this.eliminarFacturaModal = true;
+  }
+
+  aceptarEliminarFacturas(): void {
     const PAYLOAD: FacturasTplEliminarRequest[] = [
       {
         id_expedicion: this.filaSeleccionadaAsociada?.idExpedicion,
@@ -687,12 +736,14 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
             this.mostrarTabla = false;
             this.cd.detectChanges();
             this.mostrarTabla = true;
+            this.cerrarEliminarModal();
           }
         },
         error: (error) => {
           console.error('Error al obtener los datos:', error);
         }
       });
+
   }
 
   /**
@@ -753,5 +804,19 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+* Método que se ejecuta al ocultar el modal.
+*/
+  onHidden(): void {
+    this.mostrarModal = false;
+  }
+
+  cerrarEliminarModal(): void {
+    this.modal?.hide();
+    this.eliminarFacturaModal = false;
+    this.cerrar.emit();
+    this.cdr.detectChanges();
   }
 }

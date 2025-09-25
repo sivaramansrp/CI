@@ -25,6 +25,7 @@ export interface Solicitud120301State {
     id_mecanismo: number;
     /** ID de asignación del trámite */
     id_asignacion: number;
+    /** ID de la factura de expedición */
     id_factura_expedicion:number;
 }
 /**

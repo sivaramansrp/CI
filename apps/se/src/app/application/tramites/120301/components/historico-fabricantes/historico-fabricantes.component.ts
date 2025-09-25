@@ -1,19 +1,23 @@
-import { CommonModule } from '@angular/common';
-
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-
+import { CATALOGOS, ERROR_FORMA_ALERT, VALIDO, } from '../../constantes/elegibilidad-de-textiles.enums';
 import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 import {
   CatalogosSelect,
   ConfiguracionColumna,
+  Notificacion,
+  NotificacionesComponent,
   REGEX_RFC,
   SeccionLibQuery,
   SeccionLibState,
@@ -22,23 +26,18 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { InputCheckComponent } from "@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component";
-import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import { InputCheckComponent } from '@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/tipos-de-fabricante-exportador.json';
 import radioOptionsNacional from '@libs/shared/theme/assets/json/120301/tipo-fabricantes-nacional.json';
 import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
 
+import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
+import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 import {
-  CATALOGOS,
-  ERROR_FORMA_ALERT,
-  VALIDO,
-} from '../../constantes/elegibilidad-de-textiles.enums';
-
-import {
-  ElegibilidadDeTextilesStore,
-  TextilesState,
-} from '../../estados/elegibilidad-de-textiles.store';
-import { Solicitud120301State, Tramite120301Store } from '../../estados/tramites/tramite120301.store';
+  Solicitud120301State,
+  Tramite120301Store,
+} from '../../estados/tramites/tramite120301.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
@@ -90,8 +89,10 @@ import { HistoricoFabricantesService } from '../../services/historicoFabricantes
     ReactiveFormsModule,
     InputCheckComponent,
     InputRadioComponent,
-    TablaDinamicaComponent
-],
+    TablaDinamicaComponent,
+    ModalModule,
+    NotificacionesComponent,
+  ],
 })
 export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
 
@@ -143,14 +144,14 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
       INSTANCIA_MODAL.show();
     }
   }
-        /**
-         * Indica si el botón de eliminar debe estar habilitado.
-         * El botón se habilita si hay al menos un fabricante seleccionado en la tabla de asociados.
-         * @returns {boolean} `true` si se puede eliminar, `false` en caso contrario.
-         */
-        get puedeEliminar(): boolean {
-          return this.selectedFabricantes.length > 0;
-        }
+  /**
+   * Indica si el botón de eliminar debe estar habilitado.
+   * El botón se habilita si hay al menos un fabricante seleccionado en la tabla de asociados.
+   * @returns {boolean} `true` si se puede eliminar, `false` en caso contrario.
+   */
+  get puedeEliminar(): boolean {
+    return this.selectedFabricantes.length > 0;
+  }
 
   /**
    * @method eliminarFabricantesAsociados
@@ -204,10 +205,10 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     }
   }
 
-      /**
-   * @method abrirModalAgregar
-   * @description Abre el modal para agregar fabricante, o muestra error si ya existe uno asociado.
-   */
+  /**
+* @method abrirModalAgregar
+* @description Abre el modal para agregar fabricante, o muestra error si ya existe uno asociado.
+*/
   abrirModalAgregar(): void {
     // Sólo proceder si se selecciona un registro
     if (!this.selectedFabricantesNacionales.length) {
@@ -523,6 +524,24 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    */
   private seccionState!: SeccionLibState;
 
+  registraNumeroRegistro: boolean = false;
+  /**Variable para mostrar el modal */
+  public mostrarModal: boolean = false;
+  /** Referencia al modal */
+  @ViewChild('modal', { static: false }) modal?: ModalDirective;
+  /** Indica si se debe abrir el modal */
+  @Input() abrirModal: boolean = false;
+  /** Evento que se emite al cerrar el modal */
+  @Output() cerrar = new EventEmitter<void>();
+  /**
+       * Notificación que se muestra al usuario en caso de error o éxito en el proceso de firma.
+       * Incluye información sobre el tipo de notificación, categoría, título y mensaje.
+       */
+  nuevaNotificacion!: Notificacion;
+  /**
+   * @property {boolean} eliminarFabricanteModal - Indica si el modal de eliminación de fabricante está abierto.
+   */
+  eliminarFabricanteModal: boolean = false;
   /**
    * @constructor
    * @description Constructor del componente. Inicializa los servicios necesarios para el funcionamiento del componente.
@@ -795,7 +814,8 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * y ocultar la lista de fabricantes existentes.
    */
   fabricanteNuevo(): void {
-    this.isFabricantes = false;
+    this.historicoFabricantesForm.get('numeroRegistroFiscal')?.setValue('');
+    this.registraNumeroRegistro = true;
   }
 
   /**
@@ -804,7 +824,10 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * y mostrar nuevamente la lista de fabricantes existentes.
    */
   cancelar(): void {
-    this.isFabricantes = true;
+    this.modal?.hide();
+    this.registraNumeroRegistro = false;
+    this.cerrar.emit();
+    this.cdr.detectChanges();
   }
 
   /**
@@ -930,7 +953,8 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
             // Limpiar la tabla y agregar
             this.fabricante = [...this.fabricante, NUEVO_FABRICANTE];
             this.ElegibilidadDeTextilesStore.setListaFabricantes(this.fabricante);
-             this.ElegibilidadDeTextilesStore.setListaFabricantesCompletos([FAB]);
+            this.ElegibilidadDeTextilesStore.setListaFabricantesCompletos([FAB]);
+            this.cancelar();
           } else {
             console.error('Error en la búsqueda:', resp.mensaje);
           }
@@ -950,6 +974,23 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
    * Eliminar filas seleccionadas de la tabla
    */
   eliminarSeleccionados(): void {
+    if (this.seleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe seleccionar al menos un fabricante a eliminar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    this.eliminarFabricanteModal = true;
+  }
+
+  aceptarEliminar(): void {
     if (this.seleccionados.length > 0) {
       this.fabricante = this.fabricante.filter(
         f => !this.seleccionados.some(sel => sel.numeroRegistroFiscal === f.numeroRegistroFiscal)
@@ -957,8 +998,16 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
       this.seleccionados = [];
     }
     this.ElegibilidadDeTextilesStore.setListaFabricantes(this.fabricante);
+    this.cerrarEliminarModal();
   }
 
+  cerrarEliminarModal(): void {
+    this.modal?.hide();
+    this.eliminarFabricanteModal = false;
+    this.cerrar.emit();
+    this.cdr.detectChanges();
+
+  }
 
   /**
    * @method ngOnDestroy
@@ -973,5 +1022,12 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+ * Método que se ejecuta al ocultar el modal.
+ */
+  onHidden(): void {
+    this.mostrarModal = false;
   }
 }

@@ -2,7 +2,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { ConstanciaTramiteConfiguracion } from '@libs/shared/data-access-user/src/core/models/shared/acuse-y-resoluciones-folio-tramite.model';
 
-import { FitosanitarioForm, HistoricoColumns } from '../models/elegibilidad-de-textiles.model';
+import { AsociadasTableColumns, FitosanitarioForm, HistoricoColumns } from '../models/elegibilidad-de-textiles.model';
 import { FabricanteNacionalRfcResponse } from '../models/response/fabricante-nacional-response.model';
 import { Injectable } from '@angular/core';
 
@@ -250,6 +250,13 @@ export interface TextilesState {
    * @description Número total de facturas asociadas al trámite.
    */
   cantidadFacturas: string;
+
+  /**
+   * Facturas asociadas al trámite.
+   * @type {AsociadasTableColumns[]}
+   * @description Array que contiene los datos de las facturas asociadas al trámite, incluyendo detalles relevantes para cada una.
+   * */
+  facturasAsociadas: AsociadasTableColumns[];
   
   /** 
    * Indica si el exportador y fabricante son el mismo.
@@ -435,6 +442,7 @@ export function createInitialState(): TextilesState {
   fechaInicioVigencia: '',
   fechaFinVigencia: '',
   cantidadFacturas: '',
+  facturasAsociadas: [],
   exportadorFabricanteMismo: '',
   numeroRegistroFiscal: '',
   tipo: '',
@@ -1561,6 +1569,18 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
     this.update((state) => ({
       ...state,
       cantidadFacturas,
+    }));
+  }
+
+  /**
+   * Actualiza la lista de facturas asociadas en el estado.
+   * @param facturasAsociadas - Array de objetos que representan las facturas asociadas.
+   * @returns void
+   */
+  public setFacturasAsociadas(facturasAsociadas: AsociadasTableColumns[]): void {
+    this.update((state) => ({
+      ...state,
+      facturasAsociadas,
     }));
   }
 
