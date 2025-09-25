@@ -555,3 +555,8 @@ export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string, PROCEDURE: number)
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/firmar
  */
 export const API_POST_FIRMA = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/firmar`;
+
+/** API para guardar la solicitud del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/solicitud/guardar
+ */
+export const API_POST_SOLICITUD_GUARDAR = (PROCEDURE: string): string => `sat-t${PROCEDURE}/solicitud/guardar`;

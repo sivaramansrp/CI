@@ -413,7 +413,7 @@ export const SELECCIONAR_DOCUMENTOS = {
  * Constante que contiene las condiciones para que los juegos o surtidos de mercancías califiquen como originarios.
  *
  * @constant
- * @type {{ CONDICION: string }
+ * @type {{ CONDICION: string }}
  */
 export const CONDICIONES_JUEGOS_SURTIDOS = {
   CONDICION: 
@@ -438,3 +438,21 @@ export const CONDICIONES_JUEGOS_SURTIDOS = {
 export const MENSAJE_DE_SELECCION = {
   MENSAJE: `<p>Favor de seleccionar el proceso de transformación utilizado en la mercancía.</p>`,
 }
+
+/**
+  * @constant ERROR_FORMA_ALERT
+  * @type {string}
+  * @description
+  * Este mensaje de alerta informa al usuario sobre el proceso para agregar datos del traslado y la sede, 
+  * indicando que a cada traslado le corresponde una sede con un máximo de dos itinerarios.
+  */
+export const ERROR_FORMA_ALERT =
+`
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      <strong>¡Error de registro!</strong> Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`;

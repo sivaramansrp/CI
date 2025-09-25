@@ -1,7 +1,8 @@
 import { AlertComponent, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { Anexo1y3Configuartion, DatosAnexotressUno } from '../../models/nuevo-programa-industrial.model';
 import { Component, OnInit } from '@angular/core';
-import { delay, Subject, takeUntil } from 'rxjs';
+import { OnChanges, Output } from '@angular/core';
+import { Subject, delay, takeUntil } from 'rxjs';
 import { ANEXO_TRES_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
 import { AnexoEncabezado } from '../../models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
@@ -9,8 +10,8 @@ import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
-import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
@@ -32,7 +33,7 @@ import { Validators } from '@angular/forms';
 /**
  * Componente AnexoDosYTresComponent
  */
-export class AnexoDosYTresComponent implements OnInit {
+export class AnexoDosYTresComponent implements OnInit, OnChanges {
   /**
    * Formulario del Anexo Dos
    */
@@ -167,7 +168,10 @@ export class AnexoDosYTresComponent implements OnInit {
    * Constructor del componente
    * @param fb FormBuilder para crear formularios
    */
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private servicioDeFormularioService: ServicioDeFormularioService,
+  ) {
     this.crearFormularioAnexoDos();
     this.crearFormularioAnexoTres();
   }
@@ -195,8 +199,23 @@ export class AnexoDosYTresComponent implements OnInit {
       .subscribe((_) => {
         this.anexoTressDatosDos.emit(this.anexoTresFormGroup.value);
       });
-
   }
+
+  /** Sincroniza los datos de las tablas de Anexo Dos y Tres con el servicio de formularios al detectar cambios. */
+  ngOnChanges(): void {
+    if (this.anexoDosTablaLista.length === 0) {
+        this.servicioDeFormularioService.registerArray('anexoDosTablaLista', this.anexoDosTablaLista);
+      } else {
+        this.servicioDeFormularioService.setArray('anexoDosTablaLista', this.anexoDosTablaLista);
+      }
+
+      if (this.anexoTresTablaLista.length === 0) {
+        this.servicioDeFormularioService.registerArray('anexoTresTablaLista', this.anexoTresTablaLista);
+      } else {
+        this.servicioDeFormularioService.setArray('anexoTresTablaLista', this.anexoTresTablaLista);
+      }
+  }
+
   /**
    * Crea el formulario del Anexo Dos
    */

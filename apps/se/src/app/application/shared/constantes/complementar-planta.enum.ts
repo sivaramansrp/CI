@@ -9,7 +9,7 @@ export const FECHA_DE_FIN_DE_VIGENCIA = {
   habilitado: true,
 };
 
-export interface ComplementoDePlanta { 
+export interface ComplementoDePlanta {
   PLANTA: string;
   PERMANECERA_MERCANCIA_PROGRAMA: string;
   TIPO_DOCUMENTO: string;
@@ -31,6 +31,17 @@ export interface MontoDeInversion {
   CANTIDAD: string;
   DESCRIPCION: string;
   MONTO: string;
+}
+/**
+ * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
+ * @property {string} rfcFirmante - RFC de la parte firmante.
+ * @property {string} nombreRazonFirmante - Nombre o razón social de la parte firmante.
+ * @property {string} tipoFirmante - Tipo de firmante (persona física o moral).
+ */
+export interface ComplementarPlantaState {
+  rfcFirmante: string;
+  nombreRazonFirmante: string;
+  tipoFirmante: string;
 }
 
 export const COMPLEMENTO_DE_PLANTA = [
@@ -77,6 +88,30 @@ export const COMPLEMENTO_DE_PLANTA = [
     orden: 8,
   },
 ];
+/**
+ * Configuración de las columnas para la tabla de complemento de planta.
+ * Cada objeto dentro del arreglo representa una columna de la tabla,
+ * definiendo su encabezado, la clave para obtener el valor correspondiente
+ */
+export const COMPLEMENTO_PLANTA =
+  [
+    {
+      encabezado: 'RFC de la parte firmante',
+      clave: (ele: ComplementarPlantaState): string => ele.rfcFirmante,
+      orden: 1,
+    },
+    {
+      encabezado: 'Nombre/Razón de la parte firmante',
+      clave: (ele: ComplementarPlantaState): string =>
+        ele.nombreRazonFirmante,
+      orden: 2,
+    },
+    {
+      encabezado: 'Tipo firmante',
+      clave: (ele: ComplementarPlantaState): string => ele.tipoFirmante,
+      orden: 3,
+    },
+  ]
 
 /**
  * Configuración de las columnas para la tabla de montos de inversión.
