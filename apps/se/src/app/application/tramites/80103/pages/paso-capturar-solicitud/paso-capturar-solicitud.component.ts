@@ -18,13 +18,14 @@
  *
  * @templateUrl ./paso-capturar-solicitud.component.html
  */
-import { AVISO, Usuario, formatearFechaYyyyMmDd } from '@ng-mf/data-access-user'
+import { AVISO, Usuario, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@ng-mf/data-access-user'
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
 import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Subject, map, take } from 'rxjs';
+import { Subject, finalize, map, switchMap, take, tap } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { USUARIO_INFO } from '../../constantes/nuevo-programa.enum';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
@@ -43,6 +44,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-paso-capturar-solicitud',
   templateUrl: './paso-capturar-solicitud.component.html',
+  providers: [ToastrService],
 })
 /**
  * Clase que representa el componente de captura de solicitud.
@@ -91,7 +93,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
  */
   public infoAlert = 'alert-info';
 
-  idSolicitud: number=0;
+  idSolicitud: number = 0;
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
    * @private
@@ -102,15 +104,15 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
   /** Indica la visibilidad del botón Guardar. */
   public btnGuardarVisible: string = 'visible';
 
-   /**
-   * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
-   */
+  /**
+  * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
+  */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private socioAccionistaBase = socioAccionistas;
 
   /** Listado de empresas nacionales utilizadas en el formulario de solicitud. */
   private empresasNacionales = empresasNacionales;
-  
+
   /** Listado de empresas  extranjeras utilizadas en el formulario de solicitud. */
   private empresasExtranjeras = empresasExtranjeras;
 
@@ -131,9 +133,9 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private notariosBase: any[] = notarios;
 
-   /**
-   * URL de la página actual.
-   */
+  /**
+  * URL de la página actual.
+  */
   public solicitudState!: Tramite80101State;
 
   /**
@@ -141,14 +143,14 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
    * Contiene los datos del usuario que está utilizando el sistema, obtenidos de la constante USUARIO_INFO.
    */
   datosUsuario: Usuario = USUARIO_INFO;
-   /**
-   * Evento que se emite para cargar archivos.
-   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
-   */
+  /**
+  * Evento que se emite para cargar archivos.
+  * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+  */
   cargarArchivosEvento = new EventEmitter<void>();
-   /**
- * Indica si el botón para cargar archivos está habilitado.
- */
+  /**
+* Indica si el botón para cargar archivos está habilitado.
+*/
   activarBotonCargaArchivos: boolean = false;
 
   /**
@@ -156,7 +158,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
  * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
  */
   seccionCargarDocumentos: boolean = true;
-  
+
   /**
    * Texto del aviso de privacidad simplificado.
    */
@@ -174,7 +176,8 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
     private tramiteQuery: Tramite80101Query,
     private seccion: SeccionLibStore,
     private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
-    private tramite80103Store: Tramite80101Store
+    private tramite80103Store: Tramite80101Store,
+    private toastrService: ToastrService,
   ) {
     this.tramiteQuery.FormaValida$.pipe(
       takeUntil(this.destroyNotifier$)
@@ -191,7 +194,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
    * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`,
    * evitando fugas de memoria.
    */
-ngOnInit(): void {
+  ngOnInit(): void {
     this.tramiteQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -201,47 +204,69 @@ ngOnInit(): void {
       ).subscribe();
   }
 
-  /**
-   * Obtiene el valor del índice de la acción del botón.
-   * @param e - event$: Acción del botón.
-   */
-  getValorIndice(e: AccionBoton): void {
-    this.obtenerDatosDelStore()
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
-  }
+/**
+ * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
+ * 
+ * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
+ * y muestra un mensaje de éxito o error dependiendo del código de respuesta. Si la respuesta es exitosa
+ * y el valor del evento está dentro del rango válido (1 a 4), actualiza el índice del wizard y navega
+ * hacia adelante o atrás según el tipo de acción.
+ * 
+ * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
+ */
+getValorIndice(e: AccionBoton): void {
+  let shouldNavigate = false;
+  this.nuevoProgramaIndustrialService.getAllState()
+    .pipe(
+      take(1),
+      switchMap((data) => this.guardar(data)),
+      tap(response => {
+        shouldNavigate = response.codigo === '00';
+        if(shouldNavigate) {
+          this.toastrService.success(response.mensaje);
+        } else {
+          this.toastrService.error(response.mensaje);
+        }
+      }),
+      finalize(() => {
+        if (shouldNavigate && e.valor > 0 && e.valor < 5) {
+          this.indice = e.valor;
+          if (e.accion === 'cont') {
+            this.wizardComponent.siguiente();
+          } else {
+            this.wizardComponent.atras();
+          }
+        }
+      })
+    )
+    .subscribe();
+}
 
   /**
    * Obtiene los datos del store y los guarda utilizando el servicio.
    */
   obtenerDatosDelStore(): void {
     this.nuevoProgramaIndustrialService.getAllState()
-    .pipe(take(1))
-    .subscribe(data => {
-      this.guardar(data);
-    });
+      .pipe(take(1))
+      .subscribe(data => {
+        this.guardar(data);
+      });
   }
 
- /**
- * Construye un arreglo de socios/accionistas a partir de dos listas de entrada,
- * utilizando un objeto base como plantilla y datos complementarios para completar
- * los campos faltantes.
- *
- * @param data Primer arreglo de socios/accionistas.
- * @param base Objeto base que sirve de plantilla para cada elemento del resultado.
- *
- * @returns Un nuevo arreglo que contiene los objetos combinados y mapeados
- *          con la información de los dos arreglos de entrada.
- *
- * @example
- * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
- */
+  /**
+  * Construye un arreglo de socios/accionistas a partir de dos listas de entrada,
+  * utilizando un objeto base como plantilla y datos complementarios para completar
+  * los campos faltantes.
+  *
+  * @param data Primer arreglo de socios/accionistas.
+  * @param base Objeto base que sirve de plantilla para cada elemento del resultado.
+  *
+  * @returns Un nuevo arreglo que contiene los objetos combinados y mapeados
+  *          con la información de los dos arreglos de entrada.
+  *
+  * @example
+  * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
+  */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
   buildSociosAccionistas(data: Record<string, any>, base: Record<string, any>): any {
     return {
@@ -271,9 +296,9 @@ ngOnInit(): void {
   static buildDeclaracionSolicitudEntries(data: Record<string, any>): unknown[] {
     const RESULT = [
       {
-          "acepto": data['datosComplimentos'].obligacionesFiscales.aceptarObligacionFiscal ? 1 : 0,
-          "idTipoTramite": 80103,
-          "cveDeclaracion": "123"
+        "acepto": data['datosComplimentos'].obligacionesFiscales.aceptarObligacionFiscal ? 1 : 0,
+        "idTipoTramite": 80103,
+        "cveDeclaracion": "123"
       }
     ];
     return RESULT;
@@ -362,8 +387,8 @@ ngOnInit(): void {
    *
    * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
    */
-   buildAnexo(data: any) {
-   
+  buildAnexo(data: any) {
+
     const buildAnexoItem = (item: Anexo1) => ({
       descripcion: item.encabezadoFraccion,
       idTipoBien: 0,
@@ -372,7 +397,7 @@ ngOnInit(): void {
       contadorGrid: null,
       descripcionTestado: item.encabezadoDescripcion,
     });
-  
+
     const buildProveedorCliente = (item: ProveedorClienteDatosTabla) => ({
       idProveedor: item.idProveedor,
       paisOrigen: item.paisOrigen,
@@ -386,7 +411,7 @@ ngOnInit(): void {
       idProductoP: item.idProductoP,
       descTestado: item.descTestado,
     });
-  
+
     const buildDatosParaNavegar = (datos: any) => ({
       anexoII: datos?.encabezadoAnexoII,
       tipo: datos?.encabezadoTipo,
@@ -415,19 +440,42 @@ ngOnInit(): void {
         fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
         fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
         categoriaFraccion: item.encabezadoCategoria,
-        tipoFraccion:item.encabezadoTipo,
-        umt:item.encabezadoUmt
+        tipoFraccion: item.encabezadoTipo,
+        umt: item.encabezadoUmt
       });
     });
 
-  
+    const proyectoImmexDatos = (item: any) => ({
+      tipoDocumento: item.encabezadoTipoDocument,
+      descripcion: item.encabezadoDescripcionOtro,
+      fechaFirma: item.encabezadoFechaFirma,
+      fechaVigencia: item.encabezadoFechaVigencia,
+      rfcFirmante: item.encabezadoRfc,
+      razonFirmante: item.encabezadoRazonFirmante,
+      testado: true,
+      fecFinVigencia: item.encabezadoFechaVigencia,
+    });
+
+     const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
+              paisOrigen: item.paisOrigen,
+              rfcProveedor: item.rfcProveedor,
+              razonProveedor: item.razonProveedor,
+              paisDestino: item.paisDestino,
+              rfcCliente: item.rfcClinte,
+              razonCliente: item.razonSocial,
+              domicilio: item.domicilio,
+              descTestado: item.descTestado,
+            });
+
     return {
       anexo: {
         ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
         ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
         proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
         datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
-        tableDos: anexoDos
+        tableDos: anexoDos,
+        proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
+        proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
       },
     };
   }
@@ -501,7 +549,7 @@ ngOnInit(): void {
    * @returns void
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  guardar(data: any): void {
+  guardar(data: any): Promise<any> {
     const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
     const DECLARACION_SOLICUTUD_ENTRIES = PasoCapturarSolicitudComponent.buildDeclaracionSolicitudEntries(data);
     const EMPRESAS_NACIONALES = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentos, this.empresasNacionales);
@@ -510,31 +558,31 @@ ngOnInit(): void {
     const ANEXO_ALL = this.buildAnexo(data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
-    
+
     const PAYLOAD = {
       "esDeGuardar": true,
-    "tipoDeSolicitud": "guardar",
-    "idSolicitud": 202781045,
-    "idTipoTramite": 80103,
-    "rfc": "AAL0409235E6",
-    "cveUnidadAdministrativa": "8101",
-    "costoTotal": 10000.5,
-    "certificadoSerialNumber": "1234567890ABCDEF",
-    "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
-    "numeroFolioTramiteOriginal": "TRM-2023-00001",
-    "nombre": "Juan",
-    "apPaterno": "Pérez",
-    "apMaterno": "López",
-    "telefono": "5551234567",
-    "discriminator_value": "80103",
-    "discriminatorValue": "80103",
-     "domicilio": {
-    },
-    "solicitante": {
-        
-    },
+      "tipoDeSolicitud": "guardar",
+      "idSolicitud": 202781045,
+      "idTipoTramite": 80103,
+      "rfc": "AAL0409235E6",
+      "cveUnidadAdministrativa": "8101",
+      "costoTotal": 10000.5,
+      "certificadoSerialNumber": "1234567890ABCDEF",
+      "certificado": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
+      "numeroFolioTramiteOriginal": "TRM-2023-00001",
+      "nombre": "Juan",
+      "apPaterno": "Pérez",
+      "apMaterno": "López",
+      "telefono": "5551234567",
+      "discriminator_value": "80103",
+      "discriminatorValue": "80103",
+      "domicilio": {
+      },
+      "solicitante": {
+
+      },
       "planta": [...PLANTAS],
-      "notario":[...NOTARIOS],
+      "notario": [...NOTARIOS],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
       "mercanciaImportacion": [
@@ -547,20 +595,41 @@ ngOnInit(): void {
           },
           "anexoI": [...ANEXO_ALL.anexo.tableDos]
         }
-    ],
-    "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
-    "solicitud": SOLICITUD,
-    "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
-    "empresasNacionales": EMPRESAS_NACIONALES,
-    "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
+      ],
+      "fraccionArancelaria":[
+        {
+          "listaProveedores": [...ANEXO_ALL.anexo.proveedorClienteDos]
+        }
+      ],
+      "productoExportacionDtoList": [
+        {
+          "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]
+        }
+      ],
+      "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
+      "solicitud": SOLICITUD,
+      "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
+      "empresasNacionales": EMPRESAS_NACIONALES,
+      "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
     };
-    this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
-      this.tramite80103Store.setIdSolicitud(response.datos.id_solicitud || 0);
-      return response;
+
+    return new Promise((resolve, reject) => {
+      this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
+        if(esValidObject(response) && esValidObject(response.datos)) {
+          if(getValidDatos(response.datos.id_solicitud)) {
+            this.tramite80103Store.setIdSolicitud(response.datos.id_solicitud);
+          } else {
+            this.tramite80103Store.setIdSolicitud(0);
+          }
+        }
+        resolve(response);
+      }, error => {
+        reject(error);
+      });
     });
   }
 
-  
+
   /**
    * Emite un evento para cargar archivos.
    * {void} No retorna ningún valor.
@@ -568,21 +637,21 @@ ngOnInit(): void {
   onClickCargaArchivos(): void {
     this.cargarArchivosEvento.emit();
   }
-   /**
-  * Método para manejar el evento de carga de documentos.
-  * Actualiza el estado del botón de carga de archivos.
-  *  carga - Indica si la carga de documentos está activa o no.
-  * {void} No retorna ningún valor.
-  */
+  /**
+ * Método para manejar el evento de carga de documentos.
+ * Actualiza el estado del botón de carga de archivos.
+ *  carga - Indica si la carga de documentos está activa o no.
+ * {void} No retorna ningún valor.
+ */
   manejaEventoCargaDocumentos(carga: boolean): void {
     this.activarBotonCargaArchivos = carga;
   }
-   /**
-   * Método para manejar el evento de carga de documentos.
-   * Actualiza el estado de la sección de carga de documentos.
-   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
-   * {void} No retorna ningún valor.
-   */
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado de la sección de carga de documentos.
+  *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+  * {void} No retorna ningún valor.
+  */
   cargaRealizada(cargaRealizada: boolean): void {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
   }

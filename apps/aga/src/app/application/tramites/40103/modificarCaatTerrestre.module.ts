@@ -18,6 +18,7 @@ import {
   InputCheckComponent,
   InputFechaComponent,
   InputHoraComponent,
+  NotificacionesComponent,
   RepresentanteFiscalComponent,
   SelectPaisesComponent,
   SharedModule,
@@ -67,6 +68,7 @@ import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-p
     forwardRef(() => RepresentanteFiscalComponent),
     forwardRef(() => SelectPaisesComponent),
     forwardRef(() => CatalogoSelectComponent),
+    forwardRef(() => NotificacionesComponent),
     ChoferesComponent,
     TablaDinamicaComponent,
     VehiculosModule
