@@ -135,7 +135,7 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    * Vista instancia de proceso de transformación
    * Cuando es 'true', permite ver la vista de proceso de transformación.
    */
-  isProcesoTransformacion: boolean = true;
+  isProcesoTransformacion: boolean = false;
 
   /**
    * Mensaje de alerta para selección de proceso de transformación de la mercancía
@@ -147,7 +147,7 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    * Vista instancia de juegos o surtidos
    * Cuando es 'true', permite ver la vista de juegos o surtidos
    */
-  isJuegosSurtidos: boolean = true;
+  isJuegosSurtidos: boolean = false;
 
   /**
    * Mensaje de alerta para juegos o surtidos
@@ -222,7 +222,8 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
       exportadorAutorizado: [Boolean(this.solicitudeState?.exportadorAutorizado), Validators.required],
       informacionRadios: [this.solicitudeState?.informacionRadios],
       juegoSurtido:[],
-      descripcionJuegoSurtido: ['', Validators.required]
+      descripcionJuegoSurtido: ['', Validators.required],
+      protestoDecirVerdad: [false, Validators.requiredTrue]
     });
   }
 

@@ -115,6 +115,9 @@ export class PantallasComponent {
     }
   }
 
+  guardarSolicitudCompleta(): void{
+    
+  }
 
 
 }

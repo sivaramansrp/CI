@@ -6,10 +6,10 @@ export interface FraccionValidarResponse {
     descripcion: string;
     
     /** Indica si el peso es requerido */
-    peso_requerido: boolean;
+    peso_requerido: boolean | null;
     
     /** Indica si el volumen es requerido */
-    volumen_requerido: boolean;
+    volumen_requerido: boolean | null;
     
     /** Detalles adicionales de la mercancía */
     mercancia: DetalleMercancia;
@@ -29,10 +29,10 @@ export interface FraccionValidarResponse {
  */
 export interface DetalleMercancia {
     /** Indica si el peso es requerido */
-    peso_es_requerido: boolean;
+    peso_es_requerido: boolean | null;
     
     /** Indica si el volumen es requerido */
-    volumen_es_requerido: boolean;
+    volumen_es_requerido: boolean | null;
     
     /** Indica si el proceso es requerido */
     proceso_es_requerido: boolean;

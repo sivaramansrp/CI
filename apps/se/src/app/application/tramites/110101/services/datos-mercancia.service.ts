@@ -1,4 +1,4 @@
-import { API_GET_FRACCION_ARANCELARIA_PARTIDA, API_POST_FRACCION_ARANCELARIA_VALIDAR } from "../server/api-router";
+import { API_GET_FRACCION_ARANCELARIA_PARTIDA, API_POST_FRACCION_ARANCELARIA_VALIDAR, API_POST_VALIDAR_EMPAQUE, API_POST_VALIDAR_INSUMO } from "../server/api-router";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
 import { DatosFraccionArancelariaResponse } from "../models/response/datos-fraccion-arancelaria-response.model";
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
@@ -6,6 +6,7 @@ import { FraccionValidarRequest } from "../models/request/validar-fraccion-reque
 import { FraccionValidarResponse } from "../models/response/validar-fraccion-response.model";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { InsumoTratadosRequest } from "../models/request/validar-insumo-request.model";
 import { Observable } from "rxjs";
 @Injectable({
     providedIn: 'root'
@@ -45,5 +46,25 @@ export class DatosMercanciaService {
     postFracccionArancelariaValidar(PAYLOAD: FraccionValidarRequest): Observable<BaseResponse<FraccionValidarResponse>> {
         const ENDPOINT = `${this.host}${API_POST_FRACCION_ARANCELARIA_VALIDAR}`;
         return this.http.post<BaseResponse<FraccionValidarResponse>>(ENDPOINT, PAYLOAD);
+    }
+
+    /**
+     * Valida un insumo
+     * @param PAYLOAD - Datos del insumo a validar
+     * @returns Observable con la respuesta del servidor que indica si el insumo es válido
+     */
+    postValidarInsumo(PAYLOAD: InsumoTratadosRequest): Observable<BaseResponse<boolean>> {
+        const ENDPOINT = `${this.host}${API_POST_VALIDAR_INSUMO}`;
+        return this.http.post<BaseResponse<boolean>>(ENDPOINT, PAYLOAD);
+    }
+
+    /**
+     * Valida un empaque
+     * @param PAYLOAD - Datos del empaque a validar
+     * @returns Observable con la respuesta del servidor que indica si el empaque es válido
+     */
+    postValidarEmpaque(PAYLOAD: InsumoTratadosRequest): Observable<BaseResponse<boolean>> {
+        const ENDPOINT = `${this.host}${API_POST_VALIDAR_EMPAQUE}`;
+        return this.http.post<BaseResponse<boolean>>(ENDPOINT, PAYLOAD);
     }
 }

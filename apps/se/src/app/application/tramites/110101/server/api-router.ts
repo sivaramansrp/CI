@@ -75,6 +75,12 @@ export const API_GET_CAT_DECLARACION_DATOS = (IDTIPOTRAMITE: string): string => 
 export const API_GET_CAT_CRITERIOS_OTRAS_INSTANCIAS = `sat-t110101/catalogo/criterios-otras-instancias`;
 
 /**
+ * API para el catalogo de paises activos.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Cat%C3%A1logos/consulta-paises
+ */
+export const API_GET_CAT_PAISES = `sat-t110101/catalogo/paises`;
+
+/**
  *  URLs de validacion de tratados y de tabla de tratados
  */
 
@@ -101,7 +107,25 @@ export const API_POST_SOLICITUD_TRATADOS_CONFIGURACION = `sat-t110101/solicitud/
 export const API_GET_FRACCION_ARANCELARIA_PARTIDA = (CVEFRACCION: string): string => `sat-t110101/fraccion-arancelaria/${CVEFRACCION}/partida`;
 
 /**
- * API para validar fracción arancelaria .
+ * API para validar fracción arancelaria.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/valida-fraccion-arancelaria
  */
 export const API_POST_FRACCION_ARANCELARIA_VALIDAR = `sat-t110101/fraccion/validar`;
+
+/**
+ * API para validar insumo.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/validar-insumo
+ */
+export const API_POST_VALIDAR_INSUMO = `sat-t110101/solicitud/insumo/validar`;
+
+/**
+ * API para validar empaque.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/validar-empaque
+ */
+export const API_POST_VALIDAR_EMPAQUE = `sat-t110101/solicitud/empaque/validar`;
+
+/**
+ * API para guardar solicitud
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/guardar-solicitud
+ */
+export const API_POST_GUARDAR_SOLICITUD = `sat-t110101/solicitud/guardar`;

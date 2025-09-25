@@ -37,7 +37,10 @@ export const INSUMOS_TABLA: ConfiguracionColumna<InsumosTabla>[] = [
     { encabezado: "Fabricante o productor", clave: (item: InsumosTabla) => item.fabricanteOProductor, orden: 3 },
     { encabezado: "RFC", clave: (item: InsumosTabla) => item.rfc, orden: 4 },
     { encabezado: "Fracción arancelaria", clave: (item: InsumosTabla) => item.fraccionArancelaria, orden: 5 },
-    { encabezado: "Valor de transacción", clave: (item: InsumosTabla) => item.valorDeTransaccion, orden: 6 }
+    { encabezado: "Valor en dolares", clave: (item: InsumosTabla) => item.valorEnDolares, orden: 6 },
+    { encabezado: "Pais de origen", clave: (item: InsumosTabla) => item.paisDeOrigen, orden: 7 },
+    { encabezado: "Peso", clave: (item: InsumosTabla) => item.peso ?? '', orden: 8 },
+    { encabezado: "Volumen", clave: (item: InsumosTabla) => item.volumen ?? '', orden: 9 },
   ];
 
 /** Configuración de las columnas para la tabla de procesos en el trámite 110101. */
@@ -57,8 +60,8 @@ export const ENVASES_TABLA: ConfiguracionColumna<EnvasesTabla>[] = [
 
 /** Configuración de las columnas para la tabla modal de mercancías en el trámite 110101. */
 export const MODAL_TABLA: ConfiguracionColumna<DatosMercanciaModalTabla>[] = [
-  { encabezado: 'Tratado o Acuerdo', clave: (item: DatosMercanciaModalTabla) => item.tratado, orden: 1 },
-  { encabezado: "País o bloque", clave: (item: DatosMercanciaModalTabla) => item.pais, orden: 2 }
+  { encabezado: 'Tratado o Acuerdo', clave: (item: DatosMercanciaModalTabla) => item.tratado_nombre, orden: 1 },
+  { encabezado: "País o bloque", clave: (item: DatosMercanciaModalTabla) => item.nombre_pais_bloque, orden: 2 }
 ];
 
 /** Configuración de los campos del formulario modal para agregar o editar datos de mercancía en el trámite 110101. */

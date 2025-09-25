@@ -284,12 +284,12 @@ export class TratadosComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
-            // El backend manda "datos"
+           
             const DATOS = response.datos || [];
 
           // Transformación a tu respuesta a response Catalogo
           this.paisCatalogo = DATOS.map((item, index) => ({
-            id: index + 1,
+             id: item.id !== null && item.id !== undefined ? Number(item.id) : index + 1,
             descripcion: item.descripcion,
             clave: item.clave,
             bloque: item.bloque,
@@ -342,7 +342,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
     .subscribe({
       next: (response) => {
         if (response.codigo === CodigoRespuesta.EXITO) {
-          // El backend manda "datos"
+         
           const DATOS = response.datos || [];
 
           // Transformación a tu respuesta a response Catalogo
@@ -399,7 +399,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
-            // El backend manda "datos"
+            
             const DATOS = response.datos || [];
 
           // Transformación a tu respuesta a response Catalogo
@@ -456,7 +456,6 @@ export class TratadosComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
-            // El backend manda "datos"
             const DATOS = response.datos || [];
 
           // Transformación a tu respuesta a response Catalogo
@@ -567,11 +566,10 @@ agregarTratado(): void {
     const TRATADO_ID = this.formularioTratados.get('tratado')?.value;
     const ORIGEN_ID = this.formularioTratados.get('origen')?.value;
 
-    
-    const PAIS_DESC = this.paisCatalogo.find(item => item.id.toString() === PAIS_ID) || null;
-    const TRATADO_DESC = this.tratadoCatalogo.find(item => item.id.toString() === TRATADO_ID) || null;
-    const ORIGENDESC = this.origenCatalogo.find(item => item.id.toString() === ORIGEN_ID) || null ;
-
+    const PAIS_DESC = this.paisCatalogo.find(item => item.id === Number(PAIS_ID)) || null;
+    const TRATADO_DESC = this.tratadoCatalogo.find(item => item.id === Number(TRATADO_ID)) || null;
+    const ORIGENDESC = this.origenCatalogo.find(item => item.id === Number(ORIGEN_ID)) || null;
+  
     if (this.isEditMode && this.selectedRowIndex !== null && this.selectedRowIndex > -1) {
       const SELECTED_ITEM = this.respuestaServicioDatosTabla[this.selectedRowIndex];
 
@@ -609,13 +607,11 @@ agregarTratado(): void {
       clave_pais_bloque: PAIS_DESC?.clave,
       criterio_certificado: ORIGENDESC?.clave,
       requiere_juegos_o_surtidos: false,
-      is_bloque: PAIS_DESC?.bloque === 'true'
+      is_bloque: PAIS_DESC?.bloque === "true"
     }
     this.tratadoCriterioAgregar(DATOS_SELECCIONADOS);
      
     }
-    this.habilitarPestana.emit();
-    this.formularioTratados.reset();
   }
 }
 
@@ -630,7 +626,7 @@ agregarTratado(): void {
       clave_pais_bloque: datos.clave_pais_bloque,
       criterio_certificado: datos.criterio_certificado,
       requiere_juegos_o_surtidos: false,
-      is_bloque: false,
+      is_bloque: datos.is_bloque,
       tratados_agregados: this.respuestaServicioDatosTabla.map(item => ({
         id_criterio_tratado: item.id_criterio_tratado,
         id_bloque: item.id_bloque ?? null, 
@@ -663,7 +659,7 @@ agregarTratado(): void {
           const PAYLOADRESPUESTA: CriterioConfiguracionRequest[] = this.respuestaServicioDatosTabla.map(item => ({
             cve_grupo_criterio: item.cve_grupo_criterio,
             cve_tratado_acuerdo: item.cve_tratado_acuerdo ?? '',
-            cve_pais: item.cve_pais ?? '',
+            cve_pais: item.cve_pais && item.cve_pais.trim() !== '' ? item.cve_pais : null,
             id_tratado_acuerdo: item.id_tratado_acuerdo
           }));
           this.configuracion(PAYLOADRESPUESTA);
@@ -723,6 +719,8 @@ agregarTratado(): void {
           this.respuestaTratadosConfiguracion = resp.datos;
           this.tramite110101Store.clearRespuestaServicioDatosConfiguracion();
           this.tramite110101Store.setRespuestaServicioDatosConfiguracion(this.respuestaTratadosConfiguracion ?? {} as CriterioConfiguracionResponse);
+          this.habilitarPestana.emit();
+          this.formularioTratados.reset();
         }else{
           window.scrollTo({ top: 0, behavior: 'smooth' });
           this.nuevaNotificacion = {
@@ -775,7 +773,7 @@ modificarTratado(): void {
 
   const PAIS_ID = this.paisCatalogo.find(item => item.descripcion === SELECTED.pais)?.id ?? '';
   const TRATADO_ID = this.tratadoCatalogo.find(item => item.descripcion === SELECTED.tratado)?.id ?? '';
-  const ORIGEN_ID = this.origenCatalogo.find(item => item.descripcion === SELECTED.origen)?.id ?? '';
+  const ORIGEN_ID = this.origenCatalogo.find(item => item.clave === SELECTED.origen)?.id ?? '';
 
   this.formularioTratados.patchValue({
     pais: PAIS_ID,

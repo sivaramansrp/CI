@@ -1,5 +1,6 @@
 import { CriterioConfiguracionResponse } from '../../models/response/tratado-configuracion-request.model';
 import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-response.model';
+import { FraccionValidarResponse } from '../../models/response/validar-fraccion-response.model';
 
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
@@ -52,6 +53,9 @@ export interface Solicitante110101State {
 
   /** Datos de configuracion tratados */
   respuestaServiceConfiguracion: CriterioConfiguracionResponse;
+
+  /** Datos de servicio de fraccion arancelaria */
+  validacionFraccionArancelaria: FraccionValidarResponse;
 }
 
 
@@ -114,6 +118,22 @@ export function createSolicitanteInitialState(): Solicitante110101State {
       mostrar_naladisa_93: false,
       mostrar_naladisa_96: false,
       mostrar_naladisa_02: false
+    },
+    validacionFraccionArancelaria:{
+      descripcion: '',
+      peso_requerido: null,
+      volumen_requerido: null,
+      mercancia:{
+        peso_es_requerido: null,
+        volumen_es_requerido: null,
+        proceso_es_requerido: false,
+        peso_textil_es_requerido: false,
+        descripcion_alterna_modificada: null,
+        procesos_solicitados: []
+      },
+      has_errors: false,
+      error_message: null,
+      cumple_acumulacion: false
     }
   };
 }
@@ -378,6 +398,27 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
     this.update((state) => ({
       ...state,
       respuestaServiceConfiguracion: {} as CriterioConfiguracionResponse,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con la respuesta de validar fraccion arancelaria.
+   * @param datos- El array de fraccion.
+   */
+  public setRespuestaServicioValidarFraccion(datos: FraccionValidarResponse): void {
+    this.update((state) => ({
+      ...state,
+      validacionFraccionArancelaria: datos,
+    }));
+  }
+
+   /**
+   * Limpia la fraccion
+   */
+  public clearRespuestaServicioValidarFraccionArancelaria(): void {
+    this.update((state) => ({
+      ...state,
+      validacionFraccionArancelaria: {} as FraccionValidarResponse,
     }));
   }
 }

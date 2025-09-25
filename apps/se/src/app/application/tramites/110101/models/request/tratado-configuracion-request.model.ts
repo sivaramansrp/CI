@@ -9,7 +9,7 @@ export interface CriterioConfiguracionRequest {
     cve_tratado_acuerdo: string;
     
     /** Clave del país */
-    cve_pais: string;
+    cve_pais: string | null;
     
     /** ID del tratado o acuerdo */
     id_tratado_acuerdo: number;

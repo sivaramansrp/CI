@@ -80,12 +80,13 @@
     <ng-titulo titulo="Protesto de Decir Verdad" />
     <div class="alert alert-info manifest-box">
         <div class="form-check">
-            <input class="form-check-input me-2" type="checkbox" id="protesta" [disabled]="esFormularioSoloLectura"
+            <input class="form-check-input me-2" type="checkbox" id="protesta" formControlName="protestoDecirVerdad" [disabled]="esFormularioSoloLectura"
                 [checked]="esFormularioSoloLectura || actualizacionCounsulta">
             <span class="form-check-label" for="protesta">
                 {{ textos }}
             </span>
         </div>
+         <small *ngIf="formulario.get('protestoDecirVerdad')?.touched && formulario.get('protestoDecirVerdad')?.invalid">Este campo es obligatorio.</small>
     </div>
     </form>
 </div>
