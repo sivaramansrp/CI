@@ -321,18 +321,18 @@ export class ComplimentosService {
 
   // eslint-disable-next-line class-methods-use-this
   mapApiResponseToPlantasSubfabricante(apiResponse: any[]): PlantasSubfabricante[] {
-      return apiResponse.map(item => ({
-        calle: item.domicilio?.calle || '',
-        numExterior: parseInt(item.domicilio?.numeroExterior, 10) || 0,
-        numInterior: parseInt(item.domicilio?.numeroInterior, 10) || 0,
-        codigoPostal: parseInt(item.domicilio?.codigoPostal, 10) || 0,
-        colonia: item.domicilio?.colonia?.nombre || '',
-        municipio: item.domicilio?.delegacionMunicipio?.nombre || '',
-        entidadFederativa: item.domicilio?.entidadFederativa?.nombre || '',
-        pais: item.domicilio?.pais?.nombre || '',
-        rfc: item.empresaSolicitante?.rfc || '',
-        domicilioFiscal: item.empresaSolicitante?.domicilioCompleto || '',
-        razonSocial: item.empresaSolicitante?.razonSocial || ''
-      }));
+    return apiResponse.map(item => ({
+      calle: item.empresaCalle || item.calle || '',
+      numExterior: parseInt(item.empresaNumeroExterior || item.numeroExterior, 10) || 0,
+      numInterior: parseInt(item.empresaNumeroInterior || item.numeroInterior, 10) || 0,
+      codigoPostal: parseInt(item.empresaCodigoPostal || item.codigoPostal, 10) || 0,
+      colonia: item.empresaColonia || item.colonia || '',
+      municipio: item.empresaDelegacionMunicipio || item.delegacionMunicipio || '',
+      entidadFederativa: item.empresaEntidadFederativa || item.entidadFederativa || '',
+      pais: item.empresaPais || item.pais || '',
+      rfc: item.rfc || '',
+      domicilioFiscal: item.domicilioFiscal || '',
+      razonSocial: item.razonSocial || ''
+    }));
   }
 }
