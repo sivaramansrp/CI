@@ -51,6 +51,11 @@ import { takeUntil } from 'rxjs';
  * Este componente gestiona el flujo del wizard para la captura de la solicitud en el trámite 80103.
  */
 export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
+
+  /** 
+   * Indica si el componente padre es BtnContinuarComponent. 
+   */
+  padreBtn: boolean = true;
   /**
    * Almacena los pasos del wizard definidos en PASOS4.
    * @type {ListaPasosWizard[]}
@@ -223,8 +228,10 @@ getValorIndice(e: AccionBoton): void {
       tap(response => {
         shouldNavigate = response.codigo === '00';
         if(shouldNavigate) {
+          this.padreBtn = false;
           this.toastrService.success(response.mensaje);
         } else {
+          this.padreBtn = true;
           this.toastrService.error(response.mensaje);
         }
       }),

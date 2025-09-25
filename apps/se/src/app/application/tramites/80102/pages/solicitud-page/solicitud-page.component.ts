@@ -73,6 +73,11 @@ interface AccionBoton {
  * Componente que representa la página de solicitud.
  */
 export class SolicitudPageComponent implements OnDestroy, OnInit {
+
+  /** 
+   * Indica si el componente padre es BtnContinuarComponent. 
+   */
+  padreBtn: boolean = true;
   /**
    * Evento que se emite para cargar archivos.
    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
@@ -215,8 +220,10 @@ getValorIndice(e: AccionBoton): void {
       tap(response => {
         shouldNavigate = response.codigo === '00';
         if(shouldNavigate) {
+          this.padreBtn = false;
           this.toastrService.success(response.mensaje);
         } else {
+          this.padreBtn = true;
           this.toastrService.error(response.mensaje);
         }
       }),
