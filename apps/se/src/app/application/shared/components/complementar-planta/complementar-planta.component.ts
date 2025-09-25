@@ -137,8 +137,16 @@ export class ComplementarPlantaComponent implements OnInit {
    */
   @Output() cerrarPopup = new EventEmitter<void>();
 
+  /**
+   * Evento que se emite al cerrar el popup.
+   * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
+   */
   public exitosamenteNotificacion!: Notificacion;
 
+  /**
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   * @property {void} inicializarFormulario
+   */
   inicializarFormulario(): void {
 
     this.complementarForm = this.fb.group({

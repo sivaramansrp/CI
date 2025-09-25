@@ -469,6 +469,12 @@ public setPaisOptions(paisOptions: Catalogo[]): void {
   }));
 }
 
+/**
+ * Establece el RFC de la parte firmante del documento.
+ * @param rfcFirmante 
+ * Establece el RFC de la parte firmante del documento.
+ * Este valor es crucial para identificar legalmente a la entidad que suscribe el contrato.
+ */
 public setRfcFirmante(rfcFirmante: string): void {
   this.update((state) => ({
     ...state,
@@ -476,6 +482,10 @@ public setRfcFirmante(rfcFirmante: string): void {
   }));
 }
 
+/**
+ * Establece el tipo de firmante del documento.
+ * @param tipoFirmante 
+ */
 public setTipoFirmante(tipoFirmante: string): void {
   this.update((state) => ({
     ...state,
