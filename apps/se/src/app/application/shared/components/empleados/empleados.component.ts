@@ -44,9 +44,11 @@ export class EmpleadosComponent implements OnInit {
    * @property {FormGroup} empleadosForm
    */
   empleadosForm!: FormGroup;
+
   /**
-     * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
-     */
+ * Estado actual de la solicitud, utilizado para inicializar y gestionar los datos del formulario de empleados.
+ * @property {ComplementarState} solicitudState
+ */
   public solicitudState!: ComplementarState;
   /**
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
@@ -283,26 +285,26 @@ export class EmpleadosComponent implements OnInit {
    * Actualiza el estado del almacén con la razón social proporcionada.  
    */
   agregar(): void {
-    if(this.empleadosForm.valid){
-    const DIRECTOS = this.empleadosForm.get('directos')?.value;
-    const INDIRECTOS = this.empleadosForm.get('indirectos')?.value;
-    const TABLA_VALOR: Directos = {
-      PLANTA: this.empleadosForm.get('directo')?.value,
-      TOTAL: this.empleadosForm.get('totalDeEmpleados')?.value,
-      DIRECTOS: DIRECTOS ? this.empleadosForm.get('directo')?.value : '',
-      CEDULA_DE_CUOTAS: DIRECTOS ? this.empleadosForm.get('cedula')?.value : '',
-      FECHA_DE_CEDULA: DIRECTOS ? this.empleadosForm.get('fechaCedula')?.value : '',
-      INDIRECTOS: INDIRECTOS,
-      CONTRATO: INDIRECTOS ? this.empleadosForm.get('contrato')?.value : '',
-      OBJETO_DEL_CONTRATO_DEL_SERVICIO: INDIRECTOS ? this.empleadosForm.get('objeto')?.value : '',
-      FECHA_FIRMA: INDIRECTOS ? this.empleadosForm.get('fechaFirma')?.value : '',
-      FECHA_FIN_VIGENCIA: INDIRECTOS ? this.empleadosForm.get('fechaFinVigencia')?.value : '',
-      RFC: INDIRECTOS ? this.empleadosForm.get('rfcEmpresa')?.value : '',
-      RAZON_SOCIAL: INDIRECTOS ? this.empleadosForm.get('razonSocial')?.value : ''
-    };
-    this.directosDatos = [...this.directosDatos, TABLA_VALOR];
-    this.limpiar();
-  }
+    if (this.empleadosForm.valid) {
+      const DIRECTOS = this.empleadosForm.get('directos')?.value;
+      const INDIRECTOS = this.empleadosForm.get('indirectos')?.value;
+      const TABLA_VALOR: Directos = {
+        PLANTA: this.empleadosForm.get('directo')?.value,
+        TOTAL: this.empleadosForm.get('totalDeEmpleados')?.value,
+        DIRECTOS: DIRECTOS ? this.empleadosForm.get('directo')?.value : '',
+        CEDULA_DE_CUOTAS: DIRECTOS ? this.empleadosForm.get('cedula')?.value : '',
+        FECHA_DE_CEDULA: DIRECTOS ? this.empleadosForm.get('fechaCedula')?.value : '',
+        INDIRECTOS: INDIRECTOS,
+        CONTRATO: INDIRECTOS ? this.empleadosForm.get('contrato')?.value : '',
+        OBJETO_DEL_CONTRATO_DEL_SERVICIO: INDIRECTOS ? this.empleadosForm.get('objeto')?.value : '',
+        FECHA_FIRMA: INDIRECTOS ? this.empleadosForm.get('fechaFirma')?.value : '',
+        FECHA_FIN_VIGENCIA: INDIRECTOS ? this.empleadosForm.get('fechaFinVigencia')?.value : '',
+        RFC: INDIRECTOS ? this.empleadosForm.get('rfcEmpresa')?.value : '',
+        RAZON_SOCIAL: INDIRECTOS ? this.empleadosForm.get('razonSocial')?.value : ''
+      };
+      this.directosDatos = [...this.directosDatos, TABLA_VALOR];
+      this.limpiar();
+    }
   }
 
   /**
