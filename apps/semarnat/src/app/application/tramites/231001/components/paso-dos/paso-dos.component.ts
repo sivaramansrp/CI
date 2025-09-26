@@ -5,6 +5,7 @@ import {
   Catalogo,
   CatalogosService,
   TituloComponent,
+  Usuario,
 } from '@ng-mf/data-access-user';
 
 import {
@@ -111,6 +112,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   @Output() reenviarCargaRealizada = new EventEmitter<boolean>();
 
+  @Input() datosUsuario!: Usuario;
+  @Input() idTipoTramite!: string;
+
   /**
    * Evento que se emite para indicar si existen documentos para cargar, y así activar el botón de "Cargar Archivos en <solicitud-page>".
    * Este evento se utiliza para habilitar o deshabilitar el botón de carga de archivos en <solicitud-page>.
@@ -133,15 +137,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map(() => {
           this.reenviarEvento.emit();
-        })
-      )
-      .subscribe();
-
-    this.regresarSeccionCargarDocumentoEvento
-      .pipe(
-        takeUntil(this.destroyed$),
-        map(() => {
-          this.reenviarRegresarSeccion.emit();
         })
       )
       .subscribe();

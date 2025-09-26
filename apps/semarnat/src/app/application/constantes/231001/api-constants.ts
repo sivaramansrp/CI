@@ -62,6 +62,8 @@ export const API_GET_CAPITULO_FRACCION =
  */
 
 export const API_GET_IMMEX = 'sat-t231001/catalogo/no-autorizacion-immex/rfc';
+
+export const API_POST_GUARDAR_SOLICITUD = 'sat-t231001/solicitud/guardar';
 /**
  * API para iniciar el tramite 231001.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Registro-Solicitud/iniciar

@@ -1,9 +1,8 @@
 import {
-  AfterViewInit,
   Component,
   OnDestroy,
   OnInit,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import {
   ConsultaioQuery,

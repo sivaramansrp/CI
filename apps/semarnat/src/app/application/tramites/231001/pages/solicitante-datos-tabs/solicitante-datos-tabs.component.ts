@@ -5,11 +5,7 @@
  * @templateUrl ./solicitante-detos-tabs.component.html
  */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  ConsultaioQuery,
-  ConsultaioState,
-  SolicitanteComponent,
-} from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { MateriaprimaformserviceService } from '../../services/materia-prima-formservice.service';
 import { ViewChild } from '@angular/core';
@@ -127,7 +123,7 @@ export class SolicitanteDatosTabsComponent implements OnInit, OnDestroy {
    * @returns {boolean} `true` si todos los formularios son válidos, `false` en caso contrario.
    */
   public validarTodosLosFormularios(): boolean {
-    let allFormsValid = true;
+    let allFormsValid = false;
 
     // Validar el formulario de certificado de origen si existe y es visible
     if (this.indice >= 2 && this.solicitudComponent) {
@@ -139,6 +135,8 @@ export class SolicitanteDatosTabsComponent implements OnInit, OnDestroy {
         !this.solicitudComponent.datosComponent?.solicitudForm.valid
       ) {
         allFormsValid = false;
+      } else {
+        return true;
       }
     }
     return allFormsValid;

@@ -27,12 +27,12 @@ import {
   SolicitudJson,
 } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model';
 import { CommonModule } from '@angular/common';
+import { ConvertNumberAmountToStringAmount } from '@libs/shared/data-access-user/src/core/utils/convertNumberAmountToStringAmount';
 import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
 import { FormularioResiduoQuery } from '../../estados/queries/datos-residuos.query';
 import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.store';
 import { ResiduoPeligroso } from '../../../231002/models/aviso-catalogo.model';
 import { SoloNumericaDecimalDirective } from '@libs/shared/data-access-user/src/tramites/directives/solo-numeros-punto/solo-numero-y-punto.directive';
-import { ConvertNumberAmountToStringAmount } from '@libs/shared/data-access-user/src/core/utils/convertNumberAmountToStringAmount';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
 
 /**
@@ -309,35 +309,35 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     });
   }
 
-  agregarMateriaPrima(): void {
-    if (this.formularioMateriaPrima.valid) {
-      const MATERIA_NOMBRE =
-        this.materiasDisponiblesCatalogo.find(
-          (m) => m.id === this.formularioMateriaPrima.get('numero')?.value
-        )?.descripcion || '';
+  // agregarMateriaPrima(): void {
+  //   if (this.formularioMateriaPrima.valid) {
+  //     const MATERIA_NOMBRE =
+  //       this.materiasDisponiblesCatalogo.find(
+  //         (m) => m.id === this.formularioMateriaPrima.get('numero')?.value
+  //       )?.descripcion || '';
 
-      const NUEVA_MATERIA: MateriaPrima = {
-        id: this.formularioMateriaPrima.get('numero')?.value,
-        nombreMateriaPrima: MATERIA_NOMBRE,
-        cantidad: this.formularioMateriaPrima.get('cantidad')?.value,
-        cantidadLetra: this.formularioMateriaPrima.get('cantidadLetra')?.value,
-        unidadMedida: this.formularioMateriaPrima.get('unidadDeMedida')?.value,
-        unidadMedidaDescripcion:
-          this.formularioMateriaPrima.get('unidadDeMedida')?.value,
-        fraccionArancelaria: this.formularioMateriaPrima.get(
-          'fraccionArancelaria'
-        )?.value,
-      };
+  //     const NUEVA_MATERIA: MateriaPrima = {
+  //       id: this.formularioMateriaPrima.get('numero')?.value,
+  //       nombreMateriaPrima: MATERIA_NOMBRE,
+  //       cantidad: this.formularioMateriaPrima.get('cantidad')?.value,
+  //       cantidadLetra: this.formularioMateriaPrima.get('cantidadLetra')?.value,
+  //       unidadMedida: this.formularioMateriaPrima.get('unidadDeMedida')?.value,
+  //       unidadMedidaDescripcion:
+  //         this.formularioMateriaPrima.get('unidadDeMedida')?.value,
+  //       fraccionArancelaria: this.formularioMateriaPrima.get(
+  //         'fraccionArancelaria'
+  //       )?.value,
+  //     };
 
-      //this.materiasPrimas.push(NUEVA_MATERIA);
+  //     //this.materiasPrimas.push(NUEVA_MATERIA);
 
-      // Actualizar los datos de la tabla dinámica
-      this.materiasPrimasTabla = [...this.materiasPrimas];
+  //     // Actualizar los datos de la tabla dinámica
+  //     this.materiasPrimasTabla = [...this.materiasPrimas];
 
-      // Limpiar el formulario
-      this.formularioMateriaPrima.reset();
-    }
-  }
+  //     // Limpiar el formulario
+  //     this.formularioMateriaPrima.reset();
+  //   }
+  // }
 
   borrarElementosSeleccionados(): void {
     if (this.itemsSeleccionados.size === 0) {
@@ -410,7 +410,6 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     };
   }
 
-  //TODO arreglar
   buscarMateriaPrimaById(): void {
     const NO_BITACORA = this.formularioMateriaPrima.get('numero')?.value;
     if (!NO_BITACORA) {

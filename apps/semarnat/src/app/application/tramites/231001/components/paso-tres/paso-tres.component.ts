@@ -1,32 +1,27 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-
-import { Subject, catchError, map, of, switchMap, takeUntil, tap } from 'rxjs';
-
 import {
-  base64ToHex,
   CategoriaMensaje,
   DocumentoService,
-  encodeToISO88591Hex,
   FirmaElectronicaComponent,
   Notificacion,
   NotificacionesComponent,
   TramiteFolioQueries,
   TramiteFolioStore,
+  base64ToHex,
+  encodeToISO88591Hex,
 } from '@ng-mf/data-access-user';
-
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
+import { CadenaOriginal231001Service } from '../../services/cadenaOriginal231001.service';
+import { CadenaOriginalRequest } from '../../models/cadena-original-request';
+import { CommonModule } from '@angular/common';
 import { DocumentosQuery } from '@libs/shared/data-access-user/src/core/queries/documentos.query';
 import { DocumentosState } from '@libs/shared/data-access-user/src/core/estados/documentos.store';
-import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
-import { CatalogoDocumentosService } from '@libs/shared/data-access-user/src/core/services/shared/catalogos/catalogo-documentos.service';
-
-import { Tramite231001Query } from '../../estados/queries/tramite231001.query';
-import { Solicitud231001State } from '../../estados/tramites/tramite231001.store';
-import { CadenaOriginalRequest } from '../../models/cadena-original-request';
-import { CadenaOriginal231001Service } from '../../services/cadenaOriginal231001.service';
 import { Firma231001Service } from '../../services/firma231001.service';
+import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
+import { Router } from '@angular/router';
+import { Solicitud231001State } from '../../estados/tramites/tramite231001.store';
+import { Tramite231001Query } from '../../estados/queries/tramite231001.query';
 
 /**
  * @class PasoTresComponent
@@ -66,6 +61,8 @@ export class PasoTresComponent implements OnInit, OnDestroy {
   };
   public solicitudState!: Solicitud231001State;
   folio!: string;
+  @Input() procedureUrl: string = '';
+  @Input() procedure: number = 0;
 
   /**
    * @constructor
@@ -103,7 +100,6 @@ export class PasoTresComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((documentosState) => {
           this.documentosState = documentosState;
-          console.log(this.documentosState);
         })
       )
       .subscribe();
@@ -113,7 +109,6 @@ export class PasoTresComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((state) => {
           this.solicitudState = state;
-          console.log('Estado del trámite 231001:', state);
         })
       )
       .subscribe();
@@ -137,7 +132,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
    */
   obtenerCadenaOriginal(): void {
     const PAYLOAD: CadenaOriginalRequest = {
-      num_folio_tramite: this.tramiteFolioQuery.getTramite() || '1234',
+      num_folio_tramite: this.solicitudState.idSolicitud?.toString() || null,
       boolean_extranjero: true,
       solicitante: {
         rfc: 'AAL0409235E6',
@@ -149,41 +144,42 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       cve_usuario_capturista: 'Gubernamental',
       fecha_firma: '2025-07-01 20:01:25',
     };
-    //TODO regresar la funcionalidad
-    this.cadena.obtenerCadenaOriginal('1234', PAYLOAD).subscribe({
-      next: (resp) => {
-        if (resp.codigo !== '00') {
+    this.cadena
+      .obtenerCadenaOriginal(String(this.solicitudState.idSolicitud), PAYLOAD)
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo !== '00') {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: '',
+              mensaje: resp.error || 'Error al generar la cadena original.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            return;
+          }
+          this.cadenaOriginal =
+            typeof resp.datos === 'string' ? resp.datos : 'cadenajemeplo';
+        },
+        error: (error) => {
+          console.error('Error al iniciar trámite:', error);
+          const MENSAJE =
+            error?.error?.error || 'Error inesperado al iniciar trámite.';
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',
-            categoria: CategoriaMensaje.ERROR,
+            categoria: 'error',
             modo: 'action',
             titulo: '',
-            mensaje: resp.error || 'Error al generar la cadena original.',
+            mensaje: MENSAJE,
             cerrar: false,
             txtBtnAceptar: '',
             txtBtnCancelar: '',
           };
-          return;
-        }
-        this.cadenaOriginal =
-          typeof resp.datos === 'string' ? resp.datos : 'cadenajemeplo';
-      },
-      error: (error) => {
-        console.error('Error al iniciar trámite:', error);
-        const MENSAJE =
-          error?.error?.error || 'Error inesperado al iniciar trámite.';
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'toastr',
-          categoria: 'error',
-          modo: 'action',
-          titulo: '',
-          mensaje: MENSAJE,
-          cerrar: false,
-          txtBtnAceptar: '',
-          txtBtnCancelar: '',
-        };
-      },
-    });
+        },
+      });
   }
 
   /**
@@ -240,29 +236,23 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
     const FIRMAHEX = base64ToHex(firma);
 
-    this.documentoService
-      .obtenerDatosFirma<FirmarRequest>()
+    const PAYLOAD: FirmarRequest = {
+      cadena_original: CADENAHEX,
+      cert_serial_number: this.datosFirmaReales.certSerialNumber,
+      clave_usuario: this.datosFirmaReales.rfc,
+      fecha_firma: PasoTresComponent.formatFecha(new Date()),
+      clave_rol: 'Solicitante',
+      sello: FIRMAHEX,
+      fecha_fin_vigencia: PasoTresComponent.formatFecha(
+        this.datosFirmaReales.fechaFin
+      ),
+      documentos_requeridos: [],
+    };
+
+    this.firma
+      .enviarFirma<string>(String(this.solicitudState.idSolicitud), PAYLOAD)
       .pipe(
         takeUntil(this.destroy$),
-        switchMap((response) => {
-          const PAYLOAD: FirmarRequest = {
-            cadena_original: CADENAHEX,
-            cert_serial_number: this.datosFirmaReales.certSerialNumber,
-            clave_usuario: this.datosFirmaReales.rfc,
-            fecha_firma: PasoTresComponent.formatFecha(new Date()),
-            clave_rol: 'Solicitante',
-            sello: FIRMAHEX,
-            fecha_fin_vigencia: PasoTresComponent.formatFecha(
-              this.datosFirmaReales.fechaFin
-            ),
-            documentos_requeridos: response.datos?.documentos_requeridos || [],
-          };
-          //TODO quitar el ?? 1
-          return this.firma.enviarFirma<string>(
-            String(this.solicitudState.idSolicitud ?? 1),
-            PAYLOAD
-          );
-        }),
         tap((firmaResponse: BaseResponse<string>) => {
           // Validar si la firma fue exitosa
           if (firmaResponse.codigo !== '00' || !firmaResponse.datos) {
@@ -290,9 +280,12 @@ export class PasoTresComponent implements OnInit, OnDestroy {
           this.tramiteStore.establecerTramite(
             this.folio,
             firma,
-            this.solicitudState.idSolicitud ?? 0
+            this.solicitudState.idSolicitud ?? 0,
+            this.procedure
           );
-          this.router.navigate([`${this.url}/acuse`]);
+          this.router.navigate([
+            this.router.url.replace(this.procedureUrl, 'acuse'),
+          ]);
         }),
         catchError((error) => {
           console.error('Error en el proceso de firma:', error);
@@ -303,13 +296,13 @@ export class PasoTresComponent implements OnInit, OnDestroy {
               modo: 'action',
               titulo: 'Error inesperado',
               mensaje:
-                error?.error.error || 'Ocurrió un error al procesar la firma.',
+                error?.error?.error || 'Ocurrió un error al procesar la firma.',
               cerrar: false,
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             };
           }
-          return of(null); // Evita que se propague y corte el flujo sin redirigir
+          return of(null);
         })
       )
       .subscribe();

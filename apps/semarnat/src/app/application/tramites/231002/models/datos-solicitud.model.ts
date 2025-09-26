@@ -1,4 +1,3 @@
-import { Residuo } from '../../231003/models/datos-solicitud.model';
 import { ResiduoPeligroso } from './aviso-catalogo.model';
 
 /**

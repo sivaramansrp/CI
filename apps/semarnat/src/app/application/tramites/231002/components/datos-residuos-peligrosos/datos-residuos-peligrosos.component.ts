@@ -6,7 +6,10 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { ConvertNumberAmountToStringAmount } from '@libs/shared/data-access-user/src/core/utils/convertNumberAmountToStringAmount';
+import {
+  MateriaPrima,
+  MateriaPrima231001,
+} from '../../../231001/models/datos.model';
 
 import {
   ChangeDetectorRef,
@@ -32,21 +35,16 @@ import {
   SolicitudJson,
 } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { SoloNumericaDirective } from '@libs/shared/data-access-user/src/tramites/directives/solo-numerica/solo-numerica.directive';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-
+import { ConvertNumberAmountToStringAmount } from '@libs/shared/data-access-user/src/core/utils/convertNumberAmountToStringAmount';
 import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
 import { FormularioResiduoQuery } from '../../estados/queries/datos-residuos.query';
 import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.store';
-
 import { Modal } from 'bootstrap';
 import { ResiduoPeligroso } from '../../models/aviso-catalogo.model';
-import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
-import {
-  MateriaPrima,
-  MateriaPrima231001,
-} from '../../../231001/models/datos.model';
 import { SoloNumericaDecimalDirective } from '@libs/shared/data-access-user/src/tramites/directives/solo-numeros-punto/solo-numero-y-punto.directive';
+import { SoloNumericaDirective } from '@libs/shared/data-access-user/src/tramites/directives/solo-numerica/solo-numerica.directive';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
 
 /**
  * Constante que contiene las opciones de radio y demás datos del archivo JSON.
@@ -767,34 +765,33 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   /**
    * Agrega una materia prima a la tabla
    */
-  //TODO: arreglar
-  agregarMateriaPrima(): void {
-    if (this.formularioDatos.valid) {
-      const MATERIA_NOMBRE =
-        this.materiasDisponibles.find(
-          (m) => m.id === this.formularioDatos.get('numero')?.value
-        )?.nombre || '';
+  // agregarMateriaPrima(): void {
+  //   if (this.formularioDatos.valid) {
+  //     const MATERIA_NOMBRE =
+  //       this.materiasDisponibles.find(
+  //         (m) => m.id === this.formularioDatos.get('numero')?.value
+  //       )?.nombre || '';
 
-      const NUEVA_MATERIA: MateriaPrima = {
-        id: this.formularioDatos.get('numero')?.value,
-        nombreMateriaPrima: MATERIA_NOMBRE,
-        cantidad: this.formularioDatos.get('cantidad')?.value,
-        cantidadLetra: this.formularioDatos.get('cantidadLetra')?.value,
-        unidadMedida: this.formularioDatos.get('unidadDeMedida')?.value,
-        fraccionArancelaria: this.formularioDatos.get('fraccionArancelaria')
-          ?.value,
-        unidadMedidaDescripcion: '',
-      };
+  //     // const NUEVA_MATERIA: MateriaPrima = {
+  //     //   id: this.formularioDatos.get('numero')?.value,
+  //     //   nombreMateriaPrima: MATERIA_NOMBRE,
+  //     //   cantidad: this.formularioDatos.get('cantidad')?.value,
+  //     //   cantidadLetra: this.formularioDatos.get('cantidadLetra')?.value,
+  //     //   unidadMedida: this.formularioDatos.get('unidadDeMedida')?.value,
+  //     //   fraccionArancelaria: this.formularioDatos.get('fraccionArancelaria')
+  //     //     ?.value,
+  //     //   unidadMedidaDescripcion: '',
+  //     // };
 
-      //this.materiasPrimas.push(NUEVA_MATERIA);
+  //     //this.materiasPrimas.push(NUEVA_MATERIA);
 
-      // Actualizar los datos de la tabla dinámica
-      //this.materiasPrimasTabla = [...this.materiasPrimas];
+  //     // Actualizar los datos de la tabla dinámica
+  //     //this.materiasPrimasTabla = [...this.materiasPrimas];
 
-      // Limpiar el formulario
-      this.formularioDatos.reset();
-    }
-  }
+  //     // Limpiar el formulario
+  //     this.formularioDatos.reset();
+  //   }
+  // }
 
   /**
    * Borra los elementos seleccionados de la tabla

@@ -1,4 +1,3 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { MateriaPrima231001 } from '../../models/datos.model';
 import { Store } from '@datorama/akita';
@@ -44,6 +43,18 @@ export class Tramite231001Store extends Store<Solicitud231001State> {
     this.update((state) => ({
       ...state,
       ...valores,
+    }));
+  }
+
+   /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 }

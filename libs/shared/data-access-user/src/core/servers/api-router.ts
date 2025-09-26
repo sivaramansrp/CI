@@ -269,6 +269,11 @@ export const API_POST_VISTA_PREVIA = (IDSOLICITUD: string, PROCEDURE: number): s
 export const API_GET_DOCUMENTOS130118 = 'sat-t130118/solicitud/documentos';
 
 /**
+ * 
+ */
+export const API_GET_DOCUMENTOS231001 = 'sat-t231001/solicitud/documentos';
+
+/**
  * Ruta de la API para obtener la información del contribuyente IDC.
  * Utiliza el RFC genérico como parte de la URL.
  *

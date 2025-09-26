@@ -355,7 +355,7 @@ export class AdministrarResiduosComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyed$) // Se usa takeUntil para asegurarse de que las suscripciones se cancelen al destruirse el componente
       )
-      .subscribe((data) => {
+      .subscribe(() => {
         this.actualizarRecuentoTotalDeFilas();
       });
   }

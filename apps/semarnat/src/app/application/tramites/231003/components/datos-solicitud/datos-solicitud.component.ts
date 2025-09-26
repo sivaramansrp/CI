@@ -1,13 +1,10 @@
 import {
   ADMINISTRAR_RESIDUOS,
   EstadoDatoSolicitud,
-  Residuo,
 } from '../../models/datos-solicitud.model';
 import {
   CatalogoSelectComponent,
   ConfiguracionColumna,
-  esDefined,
-  ESTADO_REGISTRO,
   InputRadioComponent,
   TablaDinamicaComponent,
   TablaSeleccion,

@@ -1,7 +1,6 @@
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import {
-  MateriaPrima,
-  MateriaPrima231001,
+  MateriaPrima231001
 } from '../../231001/models/datos.model';
 
 /**

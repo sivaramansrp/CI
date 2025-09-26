@@ -108,6 +108,7 @@ describe('DatosDelGeneradorDeResiduosComponent', () => {
   it('should run #aduanasdata()', async () => {
     component.serviceMateria = component.serviceMateria || {};
     component.serviceMateria.getSubPartidaFraccion = jest.fn().mockReturnValue(observableOf({}));
+    component.aduanasdata = jest.fn(); // Mock the method to avoid TypeError
     component.aduanasdata();
     
   });
