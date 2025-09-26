@@ -376,11 +376,7 @@ export class NuevoProgramaIndustrialService {
    * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildSociosAccionistas(
-    arr1: any[] = [],
-    arr2: any[] = [],
-    base: Record<string, any>
-  ): any[] {
+  buildSociosAccionistas(arr1: any[] = [], arr2: any[] = [], base: Record<string, any>): any[] {
     const BASE_OBJECT = base[0];
     const CLONED_BASE = structuredClone
       ? structuredClone(BASE_OBJECT)
