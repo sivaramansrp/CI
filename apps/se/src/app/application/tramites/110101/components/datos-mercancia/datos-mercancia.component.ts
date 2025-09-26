@@ -916,6 +916,7 @@ get ninoFormGroup(): FormGroup {
    */
   eliminar(event: string): void {
     this.modal = event;
+    this.mostrarTabla = false;
     if (event === 'Insumo') {
       if (!this.listaSeleccionadasInsumos.length) {
         const MODAL_INSTANCE = new Modal(this.modalConfirmacion.nativeElement);
@@ -941,6 +942,9 @@ get ninoFormGroup(): FormGroup {
         }
       })
     }
+    this.cd.detectChanges();
+    this.mostrarTabla = true;
+    this.ninoFormGroup.reset();
   }
 
   /**

@@ -198,10 +198,14 @@ export class TratadosComponent implements OnInit, OnDestroy {
       }));
       const SELECTED = this.registroDeSolicitudesTablaDatos[this.selectedRowIndex ?? 0];
 
-      const GETCATALOGOTRATADO = this.solicitudeState.respuestaServicioDatosTabla.find(item => item.tratado_nombre === SELECTED.tratado);
-      const GETCATALOGOCRITERIO = this.solicitudeState.respuestaServicioDatosTabla.find(item => item.cve_grupo_criterio === SELECTED.origen);
-      this.getCatalogoTratadoAcuerdo(GETCATALOGOTRATADO?.cve_pais ?? "");
-      this.getCatalogoCriterios(GETCATALOGOCRITERIO?.id_tratado_acuerdo.toString() ?? "");
+      const GETCATALOGO= this.solicitudeState.respuestaServicioDatosTabla.find(item => item.tratado_nombre === SELECTED.tratado);
+        if(GETCATALOGO?.cve_pais === null){
+          this.getCatalogoTratadoAcuerdoBloque(GETCATALOGO?.cve_tratado_acuerdo ?? "");
+        }else{
+          this.getCatalogoTratadoAcuerdo(GETCATALOGO?.cve_pais ?? "");
+        }
+     
+      this.getCatalogoCriterios(GETCATALOGO?.id_tratado_acuerdo.toString() ?? "");
         
     }
   }
