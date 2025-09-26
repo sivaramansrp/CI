@@ -212,7 +212,7 @@
       </div>
     </div>
 
-<div *ngIf="idProcedimiento === 110221">
+<div *ngIf="domTercerOperador">
   <ng-titulo titulo="Domicilio del tercer operador" />
 
   <div class="row">
@@ -321,7 +321,7 @@
 </div>
 
 
-      <div class="row" *ngIf="idProcedimiento === 110221">
+      <div class="row" *ngIf="domTercerOperador">
         <div class="mt-3 mb-3">
           <app-input-radio 
             [radioOptions]="radioOptions" 

@@ -92,6 +92,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
   @Input() title: string = 'Validación inicial del certificado de circulación de mercancías';
 
   /**
+ * @property {boolean} domTercerOperador
+ * @description
+ * Propiedad de entrada que controla la visualización del domicilio del tercer operador.
+ * Cuando es true, muestra los campos relacionados con el domicilio del tercer operador.
+ */
+@Input() domTercerOperador: boolean = false;
+  /**
    * Propiedad de entrada que recibe un arreglo de menús desplegables.
    * @type {MenusDesplegables[]}
    */
