@@ -80,6 +80,7 @@
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarMercancias"
             [disabled]="soloLectura"
+            (click)="agregarMercancias()"
           >
             Agregar
           </button>
@@ -323,8 +324,6 @@
                   class="form-control"
                   formControlName="descripcionfraccionArancelaria"
                   id="descripcionfraccionArancelaria"
-                  [required]="true"
-
                   (change)="
                     setValoresStore(
                       datosMercancia,
@@ -342,11 +341,23 @@
                   type="text"
                   class="form-control"
                   formControlName="cantidad"
+                  maxlength="16"
                   id="cantidad"
-                  [required]="true"
-                  
-                  (change)="setValoresStore(datosMercancia, 'cantidad', 'setCantidad')"
+                  (focus)="onCantidadFocus()"
+                  (blur)="onCantidadBlur()"
                 />
+                @if (agregarMercanciasForm.get('datosMercancia.cantidad')?.invalid && agregarMercanciasForm.get('datosMercancia.cantidad')?.touched) {
+                  <div class="text-danger">
+                    @if (agregarMercanciasForm.get('datosMercancia.cantidad')?.errors?.['required']) {
+                      <small>Este campo es obligatorio.</small>
+                    }
+                  </div>
+                }
+                @if (mostrarErrorCantidad) {
+                  <div class="text-danger">
+                    <small>No está permitido capturar "," (COMA)</small>
+                  </div>
+                }
               </div>
               <div class="col-md-8">
                 <label for="cantidadComercial">Cantidad(letra)</label>
@@ -435,7 +446,7 @@
               ></app-tabla-dinamica>
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">
-              <button type="button" [disabled]="soloLectura" class="btn btn-default">Limpiar</button>
+              <button type="button" [disabled]="soloLectura" class="btn btn-default" (click)="limpiarAgregarMercanciasForm()">Limpiar</button>
               <button type="button" [disabled]="soloLectura" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal>
                 Cancelar
               </button>
@@ -455,30 +466,10 @@
   </div>
 </div>
 
-<div
-  id="modalConfirmacion"
-  aria-labelledby="modalConfirmacionLabel"
-  class="modal fade"
-  tabindex="-1"
-  role="dialog"
-  aria-hidden="true"
-  #modalConfirmacion
->
-  <div class="modal-dialog" role="document">
-    <div class="modal-content modalsm">
-      <div class="modal-body">
-        <label>Seleccione la descripcion<br />del producto</label>
-      </div>
-      <div class="modal-footer" style="justify-content: center">
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-dismiss="modal"
-          #closeModal
-        >
-          Acceptar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+
+@if(moduloEmergente){
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="manejarConfirmacionNotificacion($event)"
+  ></lib-notificaciones>
+}

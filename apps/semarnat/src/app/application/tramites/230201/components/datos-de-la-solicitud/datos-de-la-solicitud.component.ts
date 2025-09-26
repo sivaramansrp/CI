@@ -4,6 +4,8 @@ import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -33,6 +35,7 @@ import { Tramite230201Query } from '../../estados/tramite230201.query';
     CatalogoSelectComponent,
     CrosslistComponent,
     TablaDinamicaComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -139,7 +142,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Referencia a los componentes Crosslist en la vista.
    */
-  // @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
   /**
    * Referencia al modal para agregar mercancías.
@@ -147,19 +150,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   @ViewChild('modalAgregarMercancias', { static: false }) modalRef!: ElementRef;
 
   /**
-   * Referencia al modal de confirmación.
-   */
-  @ViewChild('modalConfirmacion', { static: false }) modalConfirmacion!: ElementRef;
-
-  /**
    * Referencia al botón para cerrar el modal.
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
-
-  /**
-   * Lista de referencias a todos los componentes CrosslistComponent presentes en la plantilla.
-   */
-  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
   /**
    * @property {ConsultaioState} consultaDatos
@@ -173,6 +166,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @default false
    */
   soloLectura: boolean = false;
+
+  /**
+   * @property moduloEmergente
+   * @description Indica si el módulo emergente está activo.
+   */
+  public moduloEmergente: boolean = false;
+
+  /**
+   * @property nuevaNotificacion
+   * @description Objeto que contiene la configuración de la notificación a mostrar.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * @property mostrarErrorCantidad
+   * @description Controla si se muestra el error personalizado para el campo cantidad.
+   */
+  public mostrarErrorCantidad: boolean = false;
 
   /**
    * Etiquetas para la lista de países de origen.
@@ -295,7 +306,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.updateEstadoFormulario();
   }
 
 
@@ -309,12 +319,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   updateEstadoFormulario(): void {
     if (this.soloLectura) {
       this.solicitudForm.disable();
-      this.agregarMercanciasForm.disable();
       this.exportacionForm?.disable();
       this.datosMercancia?.disable();
     } else {
       this.solicitudForm?.enable();
-      this.agregarMercanciasForm?.enable();
       this.exportacionForm?.enable();
       this.datosMercancia?.enable();
     }
@@ -593,12 +601,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Maneja la selección de la fracción arancelaria.
    * Obtiene el valor del formulario y lo establece en el store.
+   * También auto-llena el campo de descripción con la descripción de la fracción seleccionada.
    */
   fraccionArancelariaSeleccion(): void {
-    const FRACCION = this.solicitudForm.get(
+    const FRACCION_ID = this.agregarMercanciasForm.get(
       'datosMercancia.fraccionArancelaria'
     )?.value;
-    this.store.setFraccionArancelaria(FRACCION);
+    
+    if (FRACCION_ID && this.fraccionArancelaria?.length > 0) {
+      const FRACCION_SELECCIONADA = this.fraccionArancelaria.find(
+        fraccion => String(fraccion.id) === String(FRACCION_ID)
+      );
+      
+      if (FRACCION_SELECCIONADA) {
+        const DESCRIPCION_FIELD = this.agregarMercanciasForm.get('datosMercancia.descripcionfraccionArancelaria');
+        if (DESCRIPCION_FIELD) {
+          DESCRIPCION_FIELD.setValue(FRACCION_SELECCIONADA.descripcion);
+        }
+      }
+    }
+    
+    this.store.setFraccionArancelaria(FRACCION_ID);
   }
 
   /**
@@ -723,6 +746,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Limpia el formulario de agregar mercancías.
+   * Útil para preparar el formulario para una nueva entrada de mercancía.
+   */
+  agregarMercancias(): void {
+    this.agregarMercanciasForm.reset();
+  }
+
+  /**
    * Agrega una nueva solicitud a la lista de solicitudes.
    * Obtiene los datos del servicio y los agrega a la lista local y al store.
    * También reinicia el formulario de la solicitud.
@@ -764,10 +795,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.store.setDatosSolicitud(this.datosSolicitud);
       this.selectedRows = [];
     } else {
-      if (this.modalConfirmacion) {
-        const MODEL = new Modal(this.modalConfirmacion.nativeElement);
-        MODEL.show();
-      }
+      this.mostrarNotificacionSeleccion('Selecciona un registro.');
     }
   }
 
@@ -783,10 +811,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         MODEL.show();
       }
     } else {
-      if (this.modalConfirmacion) {
-        const MODEL = new Modal(this.modalConfirmacion.nativeElement);
-        MODEL.show();
-      }
+      this.mostrarNotificacionSeleccion('Selecciona sólo un registro para modificar.');
     }
   }
 
@@ -832,4 +857,79 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  /**
+   * Maneja la confirmación del modal de notificación.
+   * @param _confirmacion Indica si se confirmó o canceló la acción.
+   */
+  manejarConfirmacionNotificacion(_confirmacion: boolean): void {
+    this.moduloEmergente = false;
+  }
+
+  /**
+   * Muestra una notificación de alerta con el mensaje proporcionado.
+   * @param mensaje El mensaje a mostrar en la notificación.
+   */
+  mostrarNotificacionSeleccion(mensaje: string): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    this.moduloEmergente = true;
+  }
+
+  /**
+   * Maneja el evento focus del campo cantidad.
+   * Muestra el error personalizado cuando el usuario hace clic en el campo.
+   */
+  onCantidadFocus(): void {
+    this.mostrarErrorCantidad = true;
+  }
+
+  /**
+   * Maneja el evento blur del campo cantidad.
+   * Oculta el error personalizado cuando el usuario sale del campo.
+   */
+  onCantidadBlur(): void {
+    this.mostrarErrorCantidad = false;
+    
+    // Auto-fill cantidadLetra with random text when user leaves cantidad field
+    const CANTIDAD_VALUE = this.agregarMercanciasForm.get('datosMercancia.cantidad')?.value;
+    if (CANTIDAD_VALUE) {
+      const RANDOM_TEXTS = [
+        'Cien piezas',
+        'Doscientos kilogramos', 
+        'Quinientos litros',
+        'Mil unidades',
+        'Cincuenta cajas',
+        'Trescientos metros',
+        'Setecientos gramos',
+        'Novecientos toneladas'
+      ];
+      
+      const RANDOM_INDEX = Math.floor(Math.random() * RANDOM_TEXTS.length);
+      const RANDOM_TEXT = RANDOM_TEXTS[RANDOM_INDEX];
+      
+      this.agregarMercanciasForm.get('datosMercancia.cantidadLetra')?.setValue(RANDOM_TEXT);
+    }
+  }
+
+  
+  /**
+   * Limpia el formulario de agregar mercancías.
+   */
+  limpiarAgregarMercanciasForm(): void {
+    this.agregarMercanciasForm.reset();
+    this.agregarMercanciasForm.markAsUntouched();
+    this.agregarMercanciasForm.markAsPristine();
+  }
+
 }
