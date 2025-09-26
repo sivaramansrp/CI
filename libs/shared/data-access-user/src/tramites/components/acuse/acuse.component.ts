@@ -130,7 +130,7 @@ export class AcuseComponent implements OnChanges {
    * Luego, obtiene el contenido del documento generado y lo muestra en la tabla de acuse.
    */
   generarYMostrarDocumentos(): void {
-    if (this.url === 'pexim' || [80101, 80102, 80103, 80104, 80105].includes(this.procedure)) {
+    if (this.url === 'pexim' || [80101, 80102, 80103, 80104, 80105, 80202, 80203, 80205, 80206, 80207, 80208, 80210, 80211].includes(this.procedure)) {
       this.documentosService130118.guardarAcuse(this.idSolicitud.toString(),this.procedure).pipe(
         switchMap(() => {
           return this.documentosService130118.vistaPrevia(this.idSolicitud.toString(), this.procedure);
