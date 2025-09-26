@@ -221,6 +221,21 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
    */
   storeData!: ImmexRegistroState;
 
+  /**
+     * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+     */
+   public formErrorAlert!:string;
+   
+   /**
+   * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+   */
+  esFormaValido: boolean = true;
+
+  /**
+   * Clase CSS para mostrar una alerta de error.
+   */
+  infoError = 'alert-danger';
+
   constructor(public immexRegistroQuery: ImmexRegistroQuery, public immexRegistroStore: ImmexRegistroStore, public registroSolicitudService: RegistroSolicitudService, private toastrService: ToastrService) {
   }
 
@@ -270,12 +285,18 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
    */
   getValorIndice(e: AccionBoton) {
     const PAYLOAD = buildGuardarPayload(this.storeData);
-    // eslint-disable-next-line no-console
-    console.log("payload-->>", PAYLOAD);
-    // return;
     let shouldNavigate = false;
     this.registroSolicitudService.postGuardarDatos('80203', PAYLOAD).subscribe(response => {
       shouldNavigate = response.codigo === '00';
+      if (!shouldNavigate) {
+        const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
+        this.formErrorAlert = ImmexRegistroSolicitudModalityComponent.generarAlertaDeError(ERROR_MESSAGE);
+        this.esFormaValido = false;
+        this.indice = 1;
+        this.wizardComponent.indiceActual = 1;
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        return;
+      }
       if(shouldNavigate) {
         if(esValidObject(response) && esValidObject(response.datos)) {
           const DATOS = response.datos as { id_solicitud?: number };
@@ -357,5 +378,21 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
 
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
+  }
+
+   public static generarAlertaDeError(mensajes:string): string {
+    const ALERTA = `
+      <div class="d-flex justify-content-center text-center">
+        <div class="col-md-12 p-3  border-danger  text-danger rounded">
+          <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+          <div class="d-flex justify-content-start mb-1">
+            <span class="me-2">1.</span>
+            <span class="flex-grow-1 text-center">${mensajes}</span>
+          </div>  
+        </div>
+      </div>
+      `;
+      return ALERTA;
   }
 }

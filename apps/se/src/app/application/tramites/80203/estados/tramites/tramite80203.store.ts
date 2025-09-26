@@ -107,8 +107,6 @@ export interface ImmexRegistroState {
  * @example
  * ```typescript
  * const estadoInicial = createInitialState();
- * console.log(estadoInicial.immexRegistro.permisoImmexDatos); // 0
- * console.log(estadoInicial.immexRegistro.fraccionArancelariaExportacion); // ''
  * ```
  * 
  * @since 1.0.0

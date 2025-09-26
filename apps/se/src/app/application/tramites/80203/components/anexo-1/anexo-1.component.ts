@@ -507,8 +507,6 @@ export class Anexo1Component implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          // eslint-disable-next-line no-console
-          console.log("store---", seccionState);
           this.immexRegitroAnexoState = seccionState.immexRegistro;
           this.immexTableDatos = seccionState.immexTableDatos;
           this.fraccionTablaDatos = seccionState.fraccionTablaDatos;
@@ -947,8 +945,6 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
   onFilaSeleccionadaFraccion(event: fraccionInfo): void {
     this.listaFilaSeleccionadaFraccion = event;
-    // eslint-disable-next-line no-console
-    console.log(this.listaFilaSeleccionadaFraccion);
   }
 
   /**
@@ -1082,15 +1078,10 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */ 
   guardarMercanciaImportacion(): void {
     if (this.mercanciaImportacionForm.valid) {
-      // Process the form data
-      const FORM_DATA = this.mercanciaImportacionForm.value;
-      // eslint-disable-next-line no-console
-      console.log('Mercancia Importacion Data:', FORM_DATA);
       const VALOR = this.nicoTablaDatosImportacion;
       this.immexRegistroStore.establecerDatos({ ['nicoTablaDatosImportacion']: VALOR });
       this.modalCancelar('Importacion');
     } else {
-      // Handle form validation errors
       this.mercanciaImportacionForm.markAllAsTouched();
       
     }

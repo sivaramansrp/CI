@@ -41,7 +41,7 @@ import { map } from 'rxjs';
  * // Obtener datos de un catálogo NICO
  * this.nicoService.obtenerMenuDesplegable('catalogo-nico.json')
  *   .subscribe(catalogos => {
- *     console.log('Catálogos NICO:', catalogos);
+ *     // Procesar los catálogos obtenidos
  *   });
  * ```
  * 
@@ -137,7 +137,6 @@ export class NicoService {
    * this.nicoService.obtenerMenuDesplegable('catalogo-nico.json')
    *   .subscribe({
    *     next: (catalogos) => {
-   *       console.log('Catálogos obtenidos:', catalogos);
    *       // Procesar los datos del catálogo
    *       this.opcionesMenu = catalogos;
    *     },
