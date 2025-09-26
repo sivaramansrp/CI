@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 
@@ -13,7 +13,8 @@ import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 
 import {
   ConfiguracionColumna,
-  REG_X,
+  Notificacion,
+  NotificacionesComponent,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -32,12 +33,13 @@ import {
   ElegibilidadDeTextilesStore,
   TextilesState,
 } from '../../estados/elegibilidad-de-textiles.store';
+import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
+import { Solicitud120301State, Tramite120301Store } from '../../estados/tramites/tramite120301.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { FacturasAsociadasService } from '../../services/facturas-asociadas.service';
 import { FacturasTplAsociadasRequest } from '../../models/request/facturas-tpl-asociadas-request.model';
 import { FacturasTplEliminarRequest } from '../../models/request/facturas-tpl-eliminar-request.model';
-import { Solicitud120301State } from '../../estados/tramites/tramite120301.store';
 import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
 
 
@@ -85,128 +87,11 @@ import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
     CommonModule,
     ReactiveFormsModule,
     TablaDinamicaComponent,
+    NotificacionesComponent,
+    ModalModule,
   ],
 })
 export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
-  /**
-   * @property {AsociadasTableColumns[]} seleccionadasParaEliminar
-   * @description
-   * Almacena las filas seleccionadas en la tabla de facturas asociadas que están marcadas para eliminación múltiple.
-   * Se actualiza cuando el usuario selecciona varias facturas mediante la interfaz (checkbox o selección directa).
-   * Es utilizada para realizar operaciones de eliminación en lote y para controlar la lógica de los botones de acción.
-   * Si el arreglo está vacío, no hay facturas seleccionadas para eliminar.
-   */
-  seleccionadasParaEliminar: AsociadasTableColumns[] = [];
-
-  /**
-   * @method onSeleccionEliminar
-   * @description
-   * Maneja el evento de selección de filas en la tabla de facturas asociadas para su eliminación.
-   * Convierte el evento en un arreglo y lo asigna a la propiedad seleccionadasParaEliminar.
-   * No retorna ningún valor.
-   * @param {AsociadasTableColumns[]} event - Arreglo de facturas asociadas seleccionadas para eliminar.
-   * @returns {void} No retorna ningún valor.
-   */
-  onSeleccionEliminar(event: AsociadasTableColumns[]): void {
-    this.seleccionadasParaEliminar = Array.isArray(event) ? event : [];
-  }
-
-  /**
-   * @method abrirModalEliminar
-   * @description
-   * Abre el modal de confirmación de eliminación según la selección actual de facturas asociadas.
-   * Si no hay filas seleccionadas, muestra el modal de confirmación para selección vacía; si hay filas seleccionadas, muestra el modal de confirmación estándar.
-   * Utiliza Bootstrap para mostrar el modal correspondiente.
-   * No recibe parámetros y no retorna ningún valor.
-   * @returns {void} No retorna ningún valor.
-   */
-  abrirModalEliminar(): void {
-    if (!Array.isArray(this.seleccionadasParaEliminar) || this.seleccionadasParaEliminar.length === 0) {
-      const MODAL_ELEMENT = document.getElementById('confirmarEliminarSeleccion');
-      if (MODAL_ELEMENT && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const MODAL_INSTANCE = new window.bootstrap.Modal(MODAL_ELEMENT);
-        MODAL_INSTANCE.show();
-      }
-      return;
-    }
-    const MODAL_ELEMENT = document.getElementById('confirmarEliminar');
-    if (MODAL_ELEMENT && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-      const MODAL_INSTANCE = new window.bootstrap.Modal(MODAL_ELEMENT);
-      MODAL_INSTANCE.show();
-    }
-  }
-
-  /**
-   * @method eliminarFacturasAsociadas
-   * @description
-   * Elimina las facturas asociadas seleccionadas de la tabla.
-   * Si no hay filas seleccionadas, no realiza ninguna acción.
-   * Actualiza el arreglo de facturas asociadas, limpia la selección y deja la tabla actualizada.
-   * No recibe parámetros y no retorna ningún valor.
-   * @returns {void} No retorna ningún valor.
-   */
-  eliminarFacturasAsociadas(): void {
-    if (this.seleccionadasParaEliminar.length === 0) {
-      return;
-    }
-    this.facturasAsociadas = this.facturasAsociadas.filter(
-      item => !this.seleccionadasParaEliminar.includes(item)
-    );
-    this.seleccionadasParaEliminar = [];
-  }
-  /**
-   * @method asociarFacturas
-   * @description
-   * Asocia la factura seleccionada en la tabla de facturas disponibles y la agrega a la tabla de facturas asociadas.
-   * Valida que la cantidad total de facturas no sea cero, que haya exactamente una factura seleccionada y muestra los modales de confirmación correspondientes si no se cumplen las condiciones.
-   * Si la validación es exitosa, crea el objeto de factura asociada con los datos capturados y lo agrega al arreglo de facturas asociadas.
-   * Se invoca al hacer clic en el botón "Asociar".
-   * No recibe parámetros y no retorna ningún valor.
-   * @returns {void} No retorna ningún valor.
-   */
-  asociarFacturas(): void {
-    const CANTIDAD = this.formularioAsociacionFactura.get('cantidadFacturas')?.value;
-    const CANTIDAD_TOTAL = this.formularioAsociacionFactura.get('cantidadFacturasTotal')?.value;
-    if (Number(CANTIDAD_TOTAL) === 0) {
-      const MODAL_ELEMENT = document.getElementById('confirmarCantidadAsociada');
-      if (MODAL_ELEMENT && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const MODAL_INSTANCE = new window.bootstrap.Modal(MODAL_ELEMENT);
-        MODAL_INSTANCE.show();
-      }
-      return;
-    }
-    if (this.seleccionadaFacturas.length === 0) {
-      const MODAL_ELEMENT = document.getElementById('confirmarUnRegistro');
-      if (MODAL_ELEMENT && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const MODAL_INSTANCE = new window.bootstrap.Modal(MODAL_ELEMENT);
-        MODAL_INSTANCE.show();
-      }
-      return;
-    }
-    if (this.seleccionadaFacturas.length > 1) {
-      const MODAL_ELEMENT = document.getElementById('confirmarAsociar');
-      if (MODAL_ELEMENT && typeof window !== 'undefined' && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const MODAL_INSTANCE = new window.bootstrap.Modal(MODAL_ELEMENT);
-        MODAL_INSTANCE.show();
-      }
-      return;
-    }
-    this.facturasAsociadas = this.seleccionadaFacturas
-      .filter(factura => typeof factura.idFacturaExpedicion === 'number')
-      .map(factura => ({
-        candidadAsociada: CANTIDAD,
-        numeroDeLaFactura: factura.numeroDeLaFactura,
-        razonSocial: factura.razonSocial,
-        domicilio: factura.domicilio,
-        fechaExpedicionFactura: factura.fechaExpedicionFactura,
-        cantidadTotal: factura.cantidadTotal,
-        cantidadDisponible: factura.cantidadDisponible,
-        unidadMedida: factura.unidadMedida,
-        valorDolares: factura.valorDolares,
-        idFacturaExpedicion: factura.idFacturaExpedicion as number,
-        idExpedicion: factura.idExpedicion
-      }));
-  }
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    * Propiedad de entrada que controla si todos los controles del formulario deben estar deshabilitados.
@@ -362,39 +247,6 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   ];
 
   /**
-   * @property {CapturarColumns[]} seleccionadaFacturas
-   * @description
-   * Almacena las facturas seleccionadas en la tabla dinámica de facturas disponibles para su asociación.
-   * Se actualiza cada vez que el usuario selecciona o deselecciona facturas en la interfaz.
-   * Es utilizada para controlar la lógica de asociación y para validar las acciones sobre las facturas seleccionadas.
-   * Si el arreglo está vacío, no hay facturas seleccionadas para asociar.
-   */
-  seleccionadaFacturas: CapturarColumns[] = [];
-
-  /**
-   * @method onSelectionChange
-   * @description
-   * Maneja el cambio de selección en la tabla dinámica de facturas disponibles.
-   * Actualiza el arreglo de facturas seleccionadas (`seleccionadaFacturas`) según el evento recibido.
-   * El evento puede ser un arreglo directo de facturas o un objeto con la propiedad `FILA_SELECCIONADA`.
-   * Permite la integración con diferentes formatos de eventos emitidos por la tabla dinámica.
-   * No retorna ningún valor.
-   * @param {unknown} event - Evento de selección que puede contener el arreglo de facturas seleccionadas.
-   * @returns {void} No retorna ningún valor.
-   */
-  onSelectionChange(event: unknown): void {
-    let seleccion: CapturarColumns[] = [];
-    if (Array.isArray(event)) {
-      seleccion = event as CapturarColumns[];
-    } else if ((event as { FILA_SELECCIONADA?: CapturarColumns[] }).FILA_SELECCIONADA) {
-      seleccion = (event as { FILA_SELECCIONADA: CapturarColumns[] }).FILA_SELECCIONADA;
-    } else if ((event as { detail?: { FILA_SELECCIONADA?: CapturarColumns[] } }).detail?.FILA_SELECCIONADA) {
-      seleccion = (event as { detail: { FILA_SELECCIONADA: CapturarColumns[] } }).detail.FILA_SELECCIONADA;
-    }
-    this.seleccionadaFacturas = Array.isArray(seleccion) ? seleccion : [];
-  }
-
-  /**
    * @property {ConfiguracionColumna<AsociadasTableColumns>[]} asociadastableColumns - Configuración de las columnas de la tabla de facturas asociadas.
    * Define la estructura y comportamiento de las columnas en la tabla de facturas ya asociadas.
    * Incluye configuración para cantidad asociada, información de la factura, datos del proveedor,
@@ -423,7 +275,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       orden: 4,
     },
     {
-      encabezado: 'Fecha de emisión/expedición de la factura',
+      encabezado: 'Fecha de expedición de la factura',
       clave: (fila) => fila.fechaExpedicionFactura,
       orden: 5,
     },
@@ -495,14 +347,31 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * Se utiliza para alternar la visibilidad de la tabla según el estado de la aplicación.
    */
   mostrarTabla = true;
+  /**
+      * Notificación que se muestra al usuario en caso de error o éxito en el proceso de firma.
+      * Incluye información sobre el tipo de notificación, categoría, título y mensaje.
+      */
+  nuevaNotificacion!: Notificacion;
+  /**
+   * @property {boolean} eliminarFacturaModal - Controla la visibilidad del modal de eliminación de factura.
+   */
+  eliminarFacturaModal: boolean = false;
+  /**Variable para mostrar el modal */
+  public mostrarModal: boolean = false;
+  /** Referencia al modal */
+  @ViewChild('modal', { static: false }) modal?: ModalDirective;
+  /** Indica si se debe abrir el modal */
+  @Input() abrirModal: boolean = false;
+  /** Evento que se emite al cerrar el modal */
+  @Output() cerrar = new EventEmitter<void>();
 
   /**
    * @constructor
-   * @description
-   * Constructor del componente FormularioAsociacionFacturaComponent.
-   * Inicializa e inyecta todos los servicios y dependencias necesarios para el funcionamiento del componente,
-   * incluyendo la gestión de formularios reactivos, el manejo de estado global y local, consultas de datos y servicios de negocio.
-   * Permite la comunicación y sincronización entre el componente y los servicios del sistema relacionados con la gestión de facturas asociadas en el contexto de elegibilidad de textiles.
+   * @description Constructor del componente. Inicializa los servicios necesarios para el funcionamiento del componente.
+   * Inyecta todas las dependencias requeridas para el manejo de formularios reactivos,
+   * gestión de estado global y local, consultas de datos y servicios específicos del dominio.
+   * Establece la base para la comunicación entre el componente y los servicios del sistema
+   * relacionados con la gestión de facturas asociadas en el contexto de elegibilidad de textiles.
    * @param {FormBuilder} fb - Servicio de Angular para la creación y gestión de formularios reactivos.
    * @param {ElegibilidadDeTextilesStore} ElegibilidadDeTextilesStore - Store para manejar el estado global de elegibilidad de textiles.
    * @param {ElegibilidadDeTextilesQuery} ElegibilidadDeTextilesQuery - Query para consultar y suscribirse al estado de elegibilidad de textiles.
@@ -520,7 +389,9 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
     private elegibilidadTextilesService: ElegibilidadTextilesService,
     private facturasAsociadasService: FacturasAsociadasService,
     private tramite120301Query: Tramite120301Query,
-    @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef,
+    private cd: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef,
+    private tramite120301: Tramite120301Store,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
@@ -533,16 +404,6 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * establece la validación del formulario y configura el monitoreo de cambios.
    * También maneja el estado de habilitación del formulario basado en las propiedades de entrada
    * y sincroniza el estado de validez con el store global de la aplicación.
-   * @returns {void} No retorna ningún valor.
-   */
-  /**
-   * @method ngOnInit
-   * @description
-   * Método que se ejecuta al inicializar el componente de facturas asociadas.
-   * Configura las suscripciones a los observables del estado, inicializa el formulario,
-   * obtiene las listas de facturas disponibles y establece la validación del formulario.
-   * También maneja el estado de habilitación/deshabilitación del formulario y sincroniza la validez con el store global.
-   * No recibe parámetros y no retorna ningún valor.
    * @returns {void} No retorna ningún valor.
    */
   ngOnInit(): void {
@@ -614,17 +475,18 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   initActionFormBuild(): void {
+    this.facturasAsociadas = this.facturasState.facturasAsociadas;
     this.formularioAsociacionFactura = this.fb.group({
       cantidadFacturas: [
         this.facturasState.cantidadFacturas,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]
+        [Validators.required],
       ],
       cantidadFacturasTotal: [
-        { value: this.facturasState.cantidadFacturasTotal || '15', disabled: true },
+        { value: this.facturasState.cantidadFacturasTotal, disabled: true },
       ],
       metrosCuadradosEquivalentes: [
         {
-          value: this.facturasState.metrosCuadradosEquivalentes || '167',
+          value: this.facturasState.metrosCuadradosEquivalentes,
           disabled: true,
         },
       ],
@@ -660,9 +522,8 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
               cantidadDisponible: factura.cantidad_disponible.toString(),
               unidadMedida: factura.descripcion,
               valorDolares: factura.imp_dls.toString(),
-
-              idFacturaExpedicion: Number(factura.id_factura_expedicion),
-              idExpedicion: Number(this.solicitudState.idExpedicion),
+              idFacturaExpedicion: factura.id_factura_expedicion,
+              idExpedicion: this.solicitudState.idExpedicion,
             }));
           } else {
             this.facturasDisponible = [];
@@ -689,6 +550,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       return;
     }
     this.filaSeleccionada = fila;
+    this.tramite120301.setFacturaExpedicion(this.filaSeleccionada.idFacturaExpedicion ?? 0);
   }
 
   /**
@@ -701,10 +563,23 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   */
   asociarEvaluate(): void {
     const PAYLOAD: FacturasTplAsociadasRequest = {
-      id_expedicion: this.filaSeleccionada?.idExpedicion ? Number(this.filaSeleccionada.idExpedicion) : undefined,
-      id_factura_expedicion: this.filaSeleccionada?.idFacturaExpedicion ? Number(this.filaSeleccionada.idFacturaExpedicion) : undefined,
+      id_expedicion: this.filaSeleccionada?.idExpedicion,
+      id_factura_expedicion: this.filaSeleccionada?.idFacturaExpedicion,
       cantidad_asociada: this.formularioAsociacionFactura.get('cantidadFacturas')?.value
     };
+    if (!PAYLOAD.id_expedicion || !PAYLOAD.id_factura_expedicion || !PAYLOAD.cantidad_asociada) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe seleccionar una factura y capturar la cantidad a asociar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
     this.facturasAsociadasService
       .postFacturasAsociar(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
@@ -751,12 +626,13 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
               cantidadDisponible: factura.factura_expedicion.cantidad_disponible.toString(),
               unidadMedida: factura.factura_expedicion.unidad_medida.descripcion,
               valorDolares: factura.factura_expedicion.importe_dolares.toString(),
-
-              idFacturaExpedicion: Number(factura.id_factura_expedicion),
-              idExpedicion: Number(factura.id_expedicion)
+              idFacturaExpedicion: factura.id_factura_expedicion,
+              idExpedicion: factura.id_expedicion
             }));
+            this.ElegibilidadDeTextilesStore.setFacturasAsociadas(this.facturasAsociadas);
           } else {
             this.facturasAsociadas = [];
+            this.ElegibilidadDeTextilesStore.setFacturasAsociadas(this.facturasAsociadas);
           }
         },
         error: (error) => {
@@ -822,8 +698,22 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    */
   eliminarSeleccionado(): void {
     if (!this.filaSeleccionadaAsociada) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe seleccionar al menos una factura a eliminar.',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       return;
     }
+    this.eliminarFacturaModal = true;
+  }
+
+  aceptarEliminarFacturas(): void {
     const PAYLOAD: FacturasTplEliminarRequest[] = [
       {
         id_expedicion: this.filaSeleccionadaAsociada?.idExpedicion,
@@ -844,14 +734,16 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
             this.formularioAsociacionFactura.reset();
 
             this.mostrarTabla = false;
-            this.changeDetectorRef.detectChanges();
+            this.cd.detectChanges();
             this.mostrarTabla = true;
+            this.cerrarEliminarModal();
           }
         },
         error: (error) => {
           console.error('Error al obtener los datos:', error);
         }
       });
+
   }
 
   /**
@@ -878,18 +770,14 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method continuar
-   * @description
-   * Valida el formulario de facturas asociadas y permite continuar al siguiente paso del flujo si es válido.
-   * Marca todos los controles como "touched" para activar la validación visual, actualiza el estado y detecta cambios en la vista.
-   * Si el formulario es inválido, muestra el mensaje de error y no permite avanzar; si es válido, limpia el error y emite el evento para mostrar las pestañas siguientes.
-   * No recibe parámetros y no retorna ningún valor.
-   * @returns {void} No retorna ningún valor.
+   * Método para continuar al siguiente paso, validando el campo cantidadFacturas.
+   * Si el formulario es inválido, muestra el mensaje de error y no permite continuar.
+   * Si es válido, limpia el error y permite continuar.
    */
   continuar(): void {
     this.formularioAsociacionFactura.markAllAsTouched();
     this.formularioAsociacionFactura.updateValueAndValidity();
-    this.changeDetectorRef.detectChanges();
+    this.cdr.detectChanges();
 
     if (!this.formularioAsociacionFactura.valid) {
       this.formularioAlertaError = ERROR_FORMA_ALERT;
@@ -916,5 +804,19 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+* Método que se ejecuta al ocultar el modal.
+*/
+  onHidden(): void {
+    this.mostrarModal = false;
+  }
+
+  cerrarEliminarModal(): void {
+    this.modal?.hide();
+    this.eliminarFacturaModal = false;
+    this.cerrar.emit();
+    this.cdr.detectChanges();
   }
 }

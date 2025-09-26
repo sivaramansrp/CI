@@ -272,6 +272,7 @@ export interface AnnexoUno {
    */
 
   proveedorClienteDatosTabla:ProveedorClienteTabla[];
+  proveedorClienteDatosTablaDos:ProveedorClienteTabla[];
 }
 /**
  * Obtiene los datos de la submanufacturera desde un archivo local JSON.

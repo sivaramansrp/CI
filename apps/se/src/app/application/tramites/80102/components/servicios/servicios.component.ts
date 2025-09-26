@@ -349,15 +349,19 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getCatalogoPaises(): void {
-    this.catalogosServices
-      .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
+    this.autorizacionProgrmaNuevoService
+      .getPais()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((datos) => {
+      .subscribe((res) => {
         const INDICE = this.camposFormulario.findIndex(
           (ele) => ele.campo === ENTIDADFEDERATIVA
         );
-        this.camposFormulario[INDICE].opciones = datos;
-        this.Tramite80102Store.setPaisesOrigen(datos);
+        const PAISES =res.datos.map((item: Catalogo) => ({
+          ...item,
+          clave: typeof item.clave === 'string' ? Number(item.clave) : (item.clave ?? 0)
+        }));
+        this.camposFormulario[INDICE].opciones = PAISES
+        this.Tramite80102Store.setPaisesOrigen(PAISES);
       })
   }
 
@@ -511,7 +515,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: 'warning',
       modo: 'action',
-      titulo: 'Confirmar adición',
+      titulo: '',
       mensaje: '¿Está seguro de agregar el(los) servicio(s) seleccionado(s)?',
       cerrar: true,
       tiempoDeEspera: 2000,
@@ -545,10 +549,11 @@ export class ServiciosComponent implements OnInit, OnDestroy {
   private ejecutarAgregarServicio(): void {
     const CUERPODATOS = {
       descripionDelServicio: this.recibioDatos[0].descripcion,
-      tipode: this.recibioDatos[0].tipode,
+      tipode: this.recibioDatos[0].tipode || this.recibioDatos[0].ide_tipo_servicio_immex,
+      clave: this.recibioDatos[0].clave,
     };
     this.Tramite80102Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
-    this.mostrarNotificacionExito('¿Está seguro de agregar el(los) servicio(s) seleccionado(s)?');
+    
   }
 
   /**
@@ -568,31 +573,11 @@ export class ServiciosComponent implements OnInit, OnDestroy {
 
       // Limpiar selección
       this.domiciliosSeleccionados = [];
-
-      this.mostrarNotificacionExito('¿Está seguro de eliminar el servicio seleccionado?');
     }
   }
 
-  /**
-   * Muestra una notificación de éxito.
-   * @param {string} mensaje - Mensaje a mostrar.
-   * @returns {void}
-   */
-  private mostrarNotificacionExito(mensaje: string): void {
-    this.nuevaNotificacionRfc = {
-      tipoNotificacion: 'alert',
-      categoria: 'success',
-      modo: 'info',
-      titulo: 'Operación exitosa',
-      mensaje: mensaje,
-      ttl: '',
-      cerrar: true,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar'
-    };
-  }
-
-  /**
+  
+/**
    * Muestra una notificación de error.
    * @param {string} mensaje - Mensaje a mostrar.
    * @returns {void}

@@ -437,7 +437,7 @@ export class VehiculosComponent implements OnInit, OnDestroy {
       ...VEHICULOS_TABLA_CONFIG,
       encabezadas: [
         {
-          encabezado: 'ID',
+          encabezado: 'IDENTIFICACIÓN',
           clave: (item: VehiculoTabla) => String(item.idDeVehiculo),
           orden: 0,
         },
@@ -457,7 +457,7 @@ export class VehiculosComponent implements OnInit, OnDestroy {
           orden: 3,
         },
         {
-          encabezado: 'Transponder',
+          encabezado: 'Transpondedor',
           clave: (item: VehiculoTabla) => item.transponder,
           orden: 4,
         },
@@ -467,7 +467,7 @@ export class VehiculosComponent implements OnInit, OnDestroy {
           orden: 5,
         },
         {
-          encabezado: 'País emisor',
+          encabezado: 'Emisora País',
           clave: (item: VehiculoTabla) => item.paisEmisor,
           orden: 6,
         },
@@ -518,7 +518,7 @@ export class VehiculosComponent implements OnInit, OnDestroy {
       ...UNIDAD_TABLA_CONFIG,
       encabezadas: [
         {
-          encabezado: 'ID',
+          encabezado: 'IDENTIFICACIÓN',
           clave: (item: UnidadTabla) => String(item.idDeVehiculo),
           orden: 0,
         },
@@ -895,6 +895,21 @@ export class VehiculosComponent implements OnInit, OnDestroy {
    */
   isValid(form: FormGroup, field: string): boolean | null {
     return this.validacionesService.isValid(form, field);
+  }
+
+  /**
+   * Valida los formularios de vehículos y unidades.
+   * En este componente se valida que exista al menos un vehículo y una unidad registrados.
+   * @returns {boolean} true si hay al menos un vehículo y una unidad registrados, false en caso contrario.
+   */
+  public validarFormularios(): boolean {
+    // Validar que exista al menos un vehículo
+    const TIENE_VEHICULOS = this.vehiculosTablaConfig?.datos && this.vehiculosTablaConfig.datos.length > 0;
+    
+    // Validar que exista al menos una unidad de arrastre
+    const TIENE_UNIDADES = this.unidadesTablaConfig?.datos && this.unidadesTablaConfig.datos.length > 0;
+    
+    return Boolean(TIENE_VEHICULOS && TIENE_UNIDADES);
   }
 
   /**

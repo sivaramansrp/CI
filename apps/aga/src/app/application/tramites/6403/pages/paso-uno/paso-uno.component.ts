@@ -1,13 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { Tramite6403State ,Tramite6403Store} from '../../estados/tramite6403.store';
+import { Tramite6403State, Tramite6403Store} from '../../estados/tramite6403.store';
 import { CommonModule } from '@angular/common';
 import { RetornoDePartesService } from '../../services/retorno-de-partes.service';
 import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 import { Tramite6403Query } from '../../estados/tramite6403.query';
-
 /**
  * Componente para gestionar el paso uno del trámite 6403.
  * 
@@ -68,7 +67,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   constructor(
     public store: Tramite6403Store,
     public tramiteQuery: Tramite6403Query,
-    private consultaQuery: ConsultaioQuery,
+    public consultaQuery: ConsultaioQuery,
     public retornoDePartesService: RetornoDePartesService) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -113,6 +112,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           this.esDatosRespuesta = true;
           const FORM = respuesta?.datos?.solicitudFormulario;
           const MERCANCIA = respuesta?.datos?.mercanciaFormulario;
+          this.store.setMercanciaFormulario(respuesta?.datos?.mercanciaFormulario);
           this.store.setCveAduana(FORM.cveAduana);
           this.store.setCveSeccionAduanal(FORM.cveSeccionAduanal);
           this.store.setCveRecintoFiscalizado(FORM.cveRecintoFiscalizado);

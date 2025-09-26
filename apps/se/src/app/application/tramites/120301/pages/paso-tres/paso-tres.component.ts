@@ -14,8 +14,18 @@
  * @see Router
  */
 
-import { Component } from '@angular/core';
+import { CategoriaMensaje, DocumentoService,Notificacion,TramiteFolioStore,base64ToHex, encodeToISO88591Hex, formatFecha} from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, catchError, of, switchMap, takeUntil, tap } from 'rxjs';
+import { FirmarService } from '../../services/firmar.service';
+import { GenerarCadenaResponse } from '../../models/request/generar-cadena-request.model';
 import { Router } from '@angular/router';
+import { Solicitud120301State } from '../../estados/tramites/tramite120301.store';
+import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
+
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { Firmar120301Request } from '../../models/request/firmar-request.model';
+import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 
 /**
  * Componente para el paso tres del trámite 120301.
@@ -25,23 +35,257 @@ import { Router } from '@angular/router';
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss'
 })
-export class PasoTresComponent {
+export class PasoTresComponent implements OnInit, OnDestroy {
+
+  /**
+   * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
+   * Se utiliza para completar el observable cuando el componente se destruye.
+   */
+  private destroy$ = new Subject<void>();
+
+  /**
+  * URL del servicio o endpoint al que se realizará la solicitud relacionada con la firma.
+  * Puede ser utilizado para enviar la firma generada o para obtener la cadena original.
+  */
+  url: string = '';
+
+  /**
+  * Cadena original generada a partir de los datos del trámite.
+  * Esta cadena será firmada con el certificado digital y la llave privada proporcionados.
+  */
+  cadenaOriginal?: string;
+
+  /**
+   * Folio del trámite que se está procesando.
+   * Este folio es único para cada trámite y se utiliza para identificarlo en el sistema.
+   */
+  folio!: string;
+
+  /**
+   * Objeto que contiene los datos necesarios para generar la cadena original.
+   * Este objeto es enviado al servicio de firma electrónica para obtener la cadena original.
+   */
+  datosCadena!: GenerarCadenaResponse;
+
+
+  /**
+   * Notificación que se muestra al usuario en caso de error o éxito en el proceso de firma.
+   * Incluye información sobre el tipo de notificación, categoría, título y mensaje.
+   */
+  nuevaNotificacion!: Notificacion;
+
+  /**
+   * Recuperado de datos del state
+   */
+  public solicitudState!: Solicitud120301State;
+
+
+  /**
+ * Objeto que contiene los datos reales de la firma electrónica generada después del proceso de firma.
+ * Incluye:
+ * - firma: Cadena de la firma generada (en base64).
+ * - certSerialNumber: Número de serie del certificado digital.
+ * - rfc: RFC extraído del certificado.
+ * - fechaFin: Fecha de vencimiento del certificado.
+ */
+  datosFirmaReales!: {
+    firma: string;
+    certSerialNumber: string;
+    rfc: string;
+    fechaFin: string;
+  };
+
+
+
   /**
    * Constructor del componente.
    * @param router Servicio de enrutamiento de Angular.
    */
-  constructor(private router: Router) {
-    // Se puede agregar aquí la lógica del constructor si es necesario
+  constructor(
+    private router: Router,
+    private firmarService: FirmarService,
+    private tramiteQuery: Tramite120301Query,
+    private documentoService: DocumentoService,
+    private tramiteStore: TramiteFolioStore,) { }
+
+  ngOnInit(): void {
+
+    this.tramiteQuery.selectSeccionState$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((state) => {
+        this.solicitudState = state;
+      });
+
+    // Obtener la URL actual y separar los segmentos
+    const URL_ACTUAL = this.router.url;
+    const URL_SEPARADA = URL_ACTUAL.split('/');
+    this.url = URL_SEPARADA.slice(0, 3).join('/');
+
+    // Obtener la cadena original del trámite
+    this.obtenerCadenaOriginal();
   }
 
   /**
-   * Obtiene la firma y navega a la página de acuse si la firma es válida.
-   * @param {string} ev - La firma obtenida.
-   */
-  obtieneFirma(ev: string): void {
-    const FIRMA: string = ev;
-    if (FIRMA) {
-      this.router.navigate(['servicios-extraordinarios/acuse']);
+    * Método para obtener la cadena original del trámite.
+    * Este método se encarga de llamar al servicio correspondiente para generar la cadena original.
+    */
+  obtenerCadenaOriginal(): void {
+    const PAYLOAD: GenerarCadenaResponse = {
+      num_folio_tramite: null,
+      boolean_extranjero: true,
+      solicitante: {
+        rfc: "AAL0409235E6",
+        certificado_serial_number: "string"
+      },
+      cve_rol_capturista: "CapturistaGubernamental",
+      cve_usuario_capturista: "Gubernamental",
+      fecha_firma: "2025-07-01 20:01:25"
+    };
+    this.firmarService.postGenerarCadena(this.solicitudState.idSolicitud, PAYLOAD).subscribe({
+      next: (resp) => {
+        if (resp.codigo !== '00') {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: resp.error || 'Error al generar la cadena original.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          return;
+        }
+        this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
+      },
+      error: (error) => {
+        console.error('Error al iniciar trámite:', error);
+        const MENSAJE = error?.error?.error || 'Error inesperado al iniciar trámite.';
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'error',
+          modo: 'action',
+          titulo: '',
+          mensaje: MENSAJE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
+      }
+    });
+  }
+
+  /**
+ * Maneja el evento de firma y obtiene los datos de la firma.
+ * @param datos - Objeto que contiene la firma, número de serie del certificado y RFC.
+ */
+  datosFirma(datos: {
+    firma: string;
+    certSerialNumber: string;
+    rfc: string;
+    fechaFin: string;
+  }): void {
+    this.datosFirmaReales = datos;
+    this.obtieneFirma(datos.firma);
+  }
+
+  /**
+     * Método para obtener la firma del documento.
+     * Este método se encarga de enviar la solicitud de firma al servicio correspondiente.
+     * @param firma - La firma en formato base64 que se desea procesar.
+     */
+  obtieneFirma(firma: string): void {
+    if (!this.cadenaOriginal || !this.datosFirmaReales) {
+      console.error('Faltan datos para completar la firma');
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'toastr',
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'action',
+        titulo: 'Error',
+        mensaje: 'Faltan datos para completar la firma.',
+        cerrar: false,
+        txtBtnAceptar: '',
+        txtBtnCancelar: '',
+      };
+      return;
     }
+
+    const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
+    const FIRMAHEX = base64ToHex(firma);
+
+    this.documentoService
+      .obtenerDatosFirma<FirmarRequest>()
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((response) => {
+          const PAYLOAD: Firmar120301Request = {
+            cadena_original: CADENAHEX,
+            cert_serial_number: this.datosFirmaReales.certSerialNumber,
+            clave_usuario: this.datosFirmaReales.rfc,
+            fecha_firma: formatFecha(new Date()),
+            clave_rol: 'Solicitante',
+            sello: FIRMAHEX,
+            fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
+            documentos_requeridos: response.datos?.documentos_requeridos || [],
+          };
+
+          return this.firmarService.postFirma(this.solicitudState.idSolicitud, PAYLOAD);
+        }),
+        tap((firmaResponse: BaseResponse<string>) => {
+          // Validar si la firma fue exitosa
+          if (firmaResponse.codigo !== '00' || !firmaResponse.datos) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error al firmar la solicitud',
+              mensaje: firmaResponse.mensaje || firmaResponse.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            throw new Error('Firma no exitosa');
+          }
+
+          // Éxito: guardar folio
+          this.folio = firmaResponse.datos;
+        }),
+        tap(() => {
+          // Solo se ejecuta si todo fue exitoso
+          this.tramiteStore.establecerTramite(
+            this.folio,
+            firma,
+            this.solicitudState.idSolicitud ?? 0
+          );
+          this.router.navigate([`${this.url}/acuse`]);
+        }),
+        catchError((error) => {
+          console.error('Error en el proceso de firma:', error);
+          if (!this.nuevaNotificacion) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: CategoriaMensaje.ERROR,
+              modo: 'action',
+              titulo: 'Error inesperado',
+              mensaje: error?.error.error || 'Ocurrió un error al procesar la firma.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+          }
+          return of(null); // Evita que se propague y corte el flujo sin redirigir
+        })
+      )
+      .subscribe();
+  }
+
+
+  /**
+ * Método para obtener la cadena original del trámite.
+ * Este método se encarga de llamar al servicio correspondiente para obtener la cadena original.
+ */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

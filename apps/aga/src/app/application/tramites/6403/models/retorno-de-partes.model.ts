@@ -41,7 +41,6 @@ export interface SolicitudTabla {
    * Descripción de la mercancía del Solicitud.
    */
   descripcionMercancia: string;
-
 }
 
 /**
@@ -55,7 +54,7 @@ export interface CatalogoLista {
 }
 /**
  * Modelos utilizados en el trámite 6403.
- * 
+ *
  * Este archivo contiene las interfaces que definen las estructuras de datos utilizadas
  * en el trámite de aviso de traslado, incluyendo catálogos, datos del solicitante,
  * tablas de avisos, tablas de mercancías, formularios y documentos.
@@ -75,7 +74,6 @@ export interface Catalogo {
    */
   descripcion: string;
 }
-
 
 /**
  * Representa una acción de un botón en el wizard.
@@ -335,7 +333,6 @@ export interface SolicitudFormulario {
 }
 
 export interface MercanciaFormulario {
-
   /**
    * Descripción de la mercancía.
    */
@@ -494,5 +491,16 @@ export interface ConsultaDatos {
    */
   solicitudFormulario: SolicitudFormulario;
 
+  /**
+   * Formulario reactivo que contiene los datos de la mercancía.
+   *
+   * Esta propiedad almacena una instancia de `MercanciaFormulario`,
+   * la cual define los controles y validaciones relacionados con
+   * la captura de información de la mercancía (marca, modelo, tipo,
+   * número de serie, descripción, etc.).
+   *
+   * Se utiliza en los métodos que agregan, modifican, consultan o
+   * cancelan registros de mercancías dentro del flujo de la aplicación.
+   */
   mercanciaFormulario: MercanciaFormulario;
 }
