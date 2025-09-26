@@ -18,13 +18,13 @@ import { FederatariosYPlantasComponent } from '../../../../shared/components/fed
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
 
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../../shared/constantes/complementar-planta.enum';
 import { CapacidadInstaladaComponent } from '../../../../shared/components/capacidad-instalada/capacidad-instalada.component';
 import { CargaPorArchivoComponent } from '../../../../shared/components/carga-por-archivo/carga-por-archivo.component';
 import { ComplementarPlantaComponent } from '../../../../shared/components/complementar-planta/complementar-planta.component';
+import { Directos } from '../../../../shared/constantes/empleados.enum';
 import { EmpleadosComponent } from '../../../../shared/components/empleados/empleados.component';
 import { MontosDeInversionComponent } from '../../../../shared/components/montos-de-inversion/montos-de-inversion.component';
-import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../../shared/constantes/complementar-planta.enum';
-import { Directos } from '../../../../shared/constantes/empleados.enum';
 
 /**
  * Componente para la vista de federatarios y plantas

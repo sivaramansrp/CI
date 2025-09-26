@@ -405,7 +405,7 @@ getValorIndice(e: AccionBoton): void {
 
       },
       "planta": Array.isArray(PLANTAS) ? [...PLANTAS] : [PLANTAS],
-      "notario": [...NOTARIOS],
+      "notarios": [...NOTARIOS],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
       "mercanciaImportacion": [

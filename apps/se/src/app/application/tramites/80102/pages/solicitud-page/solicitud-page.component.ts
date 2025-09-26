@@ -646,12 +646,12 @@ getValorIndice(e: AccionBoton): void {
 
     const MAP_MONTOS_INVERSION = (item: any) => ({
       idPlantaM: item.PLANTA ?? "",
-      idMonto: item.MONTO ?? "",
+      idMonto: (item.MONTO ?? "").toString(),
       tipo: item.TIPO ?? "",
       descTipo: item.DESC_TIPO ?? "",
-      cantidad: item.CANTIDAD ?? "",
+      cantidad: (item.CANTIDAD ?? "").toString(),
       descripcion: item.DESCRIPCION ?? "",
-      monto: item.MONTO ?? "",
+      monto: (item.MONTO ?? "").toString(),
       testado: item.TESTADO ?? "",
       descTestado: item.DESC_TESTADO ?? "",
     })
@@ -659,15 +659,15 @@ getValorIndice(e: AccionBoton): void {
     const MAP_EMPLEADOS = (item: any) => ({
       idPlantaE: item.PLANTA ?? '',
       idEmpleados: item.ID_EMPLEADOS ?? '',
-      totalEmpleados: item.TOTAL ?? '',
+      totalEmpleados: (item.TOTAL ?? '').toString(),
       directos: item.DIRECTOS ?? '',
       cedula: item.CEDULA_DE_CUOTAS ?? '',
-      fechaCedula: item.FECHA_DE_CEDULA ?? '',
-      indirectos: item.INDIRECTOS_TEST ?? '',
+      fechaCedula: formatearFechaYyyyMmDd(item.FECHA_DE_CEDULA ?? ''),
+      indirectos: (item.INDIRECTOS ?? '').toString(),
       contrato: item.CONTRATO ?? '',
       objetoContrato: item.OBJETO_DEL_CONTRATO_DEL_SERVICIO ?? '',
-      fechaFirma: item.FECHA_FIRMA ?? '',
-      fechaFinVigencia: item.FECHA_FIN_VIGENCIA ?? '',
+      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_FIRMA ?? ''),
+      fechaFinVigencia: formatearFechaYyyyMmDd(item.FECHA_FIN_VIGENCIA ?? ''),
       rfcEmpresa: item.RFC ?? '',
       razonEmpresa: item.RAZON_SOCIAL ?? '',
       testado: item.TESTADO ?? '',
@@ -684,8 +684,8 @@ getValorIndice(e: AccionBoton): void {
       documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
       descDocRespaldo: item.DESC_DOCUMENTO_RESPALDO ?? '',
       respaldoOtro: item.RESPALDO_OTRO ?? '',
-      fechaFirma: item.FECHA_DE_FIRMA ?? '',
-      fechaVigencia: item.FECHA_DE_FIN_DE_VIGENCIA ?? '',
+      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_DE_FIRMA ?? ''),
+      fechaVigencia: formatearFechaYyyyMmDd(item.FECHA_DE_FIN_DE_VIGENCIA ?? ''),
       fechaFirmaRespaldo: item.FECHA_DE_FIRMA_DOCUMENTO ?? '',
       fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
     })
@@ -746,9 +746,9 @@ getValorIndice(e: AccionBoton): void {
       nombreNotario: arr.nombre ?? '',
       apellidoMaterno: arr.segundoApellido ?? '',
       apellidoPaterno: arr.primerApellido ?? '',
-      numeroActa: arr.numeroDeActa ?? '',
-      fechaActa: arr.fechaInicioInput ?? '',
-      numeroNotaria: arr.numeroDeNotaria ?? '',
+      numeroActa: (arr.numeroDeActa ?? '').toString(),
+      fechaActa: formatearFechaYyyyMmDd(arr.fechaInicioInput ?? ''),
+      numeroNotaria: (arr.numeroDeNotaria ?? '').toString(),
       entidadFederativa: arr.estado ?? '',
       delegacionMunicipio: arr.estadoOptions ?? '',
         });
@@ -765,6 +765,7 @@ getValorIndice(e: AccionBoton): void {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): Promise<any> {
+    console.log(data);
     const SOLICITUD = this.buildComplimentos(data, this.complimentosBase);
     const DECLARACION_SOLICUTUD_ENTRIES = SolicitudPageComponent.buildDeclaracionSolicitudEntries(data);
     const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
@@ -797,7 +798,7 @@ getValorIndice(e: AccionBoton): void {
         
     },
     "planta": Array.isArray(PLANTAS) ? [...PLANTAS] : [PLANTAS],
-    "notario":[...NOTARIOS],
+    "notarios":[...NOTARIOS],
     "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
     "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
     "mercanciaImportacion": [

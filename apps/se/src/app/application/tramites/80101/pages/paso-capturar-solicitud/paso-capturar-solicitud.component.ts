@@ -519,10 +519,14 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
 
     const MAP_MONTOS_INVERSION = (item: any) => ({
       idPlantaM: item.PLANTA ?? "",
+      idMonto: item.MONTO ?? "",
       tipo: item.TIPO ?? "",
+      descTipo: item.DESC_TIPO ?? "",
       cantidad: item.CANTIDAD ?? "",
       descripcion: item.DESCRIPCION ?? "",
       monto: item.MONTO ?? "",
+      testado: item.TESTADO ?? "",
+      descTestado: item.DESC_TESTADO ?? "",
     })
 
     const MAP_EMPLEADOS = (item: any) => ({
@@ -531,12 +535,12 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
       totalEmpleados: item.TOTAL ?? '',
       directos: item.DIRECTOS ?? '',
       cedula: item.CEDULA_DE_CUOTAS ?? '',
-      fechaCedula: item.FECHA_DE_CEDULA ?? '',
+      fechaCedula: formatearFechaYyyyMmDd(item.FECHA_DE_CEDULA ?? ''),
       indirectos: item.INDIRECTOS ?? '',
       contrato: item.CONTRATO ?? '',
       objetoContrato: item.OBJETO_DEL_CONTRATO_DEL_SERVICIO ?? '',
-      fechaFirma: item.FECHA_FIRMA ?? '',
-      fechaFinVigencia: item.FECHA_FIN_VIGENCIA ?? '',
+      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_FIRMA ?? ''),
+      fechaFinVigencia: formatearFechaYyyyMmDd(item.FECHA_FIN_VIGENCIA ?? ''),
       rfcEmpresa: item.RFC ?? '',
       razonEmpresa: item.RAZON_SOCIAL ?? '',
       testado: item.TESTADO ?? '',
@@ -553,8 +557,8 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
       documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
       descDocRespaldo: item.DESC_DOCUMENTO_RESPALDO ?? '',
       respaldoOtro: item.RESPALDO_OTRO ?? '',
-      fechaFirma: item.FECHA_DE_FIRMA ?? '',
-      fechaVigencia: item.FECHA_DE_FIN_DE_VIGENCIA ?? '',
+      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_DE_FIRMA ?? ''),
+      fechaVigencia: formatearFechaYyyyMmDd(item.FECHA_DE_FIN_DE_VIGENCIA ?? ''),
       fechaFirmaRespaldo: item.FECHA_DE_FIRMA_DOCUMENTO ?? '',
       fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
     })
@@ -815,7 +819,7 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
 
       },
       "planta": Array.isArray(PLANTAS) ? [...PLANTAS] : [PLANTAS],
-      "notario": [...NOTARIOS],
+      "notarios": [...NOTARIOS],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
       "mercanciaImportacion": [
