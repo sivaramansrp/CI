@@ -6,6 +6,7 @@ import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 
 import { AcuseDetalleService } from '../../../core/services/shared/detalleAcuse.service';
+import { AcusesService } from '../../../core/services/120301/acuses.service';
 import { DocumentoService } from '../../..';
 import { DocumentosRequest } from '../../../core/models/shared/documentos-request.model';
 import { DocumentosService } from '../../../core/services/shared/documentos.service';
@@ -55,9 +56,9 @@ export class AcuseComponent implements OnChanges {
    */
   @Input() idSolicitud!: number;
 
-   /**
-   * Datos que se muestran en la tabla de acuse.
-  */
+  /**
+  * Datos que se muestran en la tabla de acuse.
+ */
   @Input() datosTabla: BodyTablaAcuse[] = [];
 
   /**
@@ -96,6 +97,7 @@ export class AcuseComponent implements OnChanges {
     private route: ActivatedRoute,
     private documentosService130118: DocumentosService,
     private acuseDetalleService: AcuseDetalleService,
+    private acusesService: AcusesService
   ) { }
 
 
@@ -110,7 +112,7 @@ export class AcuseComponent implements OnChanges {
       this.txtAlerta = changes['txtAlerta'].currentValue;
     }
 
-    if(changes['datosTabla']?.currentValue) {
+    if (changes['datosTabla']?.currentValue) {
       this.datosTabla = changes['datosTabla'].currentValue;
       this.datosTablaAcuse = this.datosTabla;
     }
@@ -131,7 +133,7 @@ export class AcuseComponent implements OnChanges {
     if (this.url === 'pexim' || [80101, 80102, 80103, 80104, 80105].includes(this.procedure)) {
       this.documentosService130118.guardarAcuse(this.idSolicitud.toString(),this.procedure).pipe(
         switchMap(() => {
-          return this.documentosService130118.vistaPrevia(this.idSolicitud.toString(),this.procedure);
+          return this.documentosService130118.vistaPrevia(this.idSolicitud.toString(), this.procedure);
         }),
         catchError((error) => {
           console.error('Error en guardarAcuse o vistaPrevia:', error);
@@ -153,6 +155,30 @@ export class AcuseComponent implements OnChanges {
         error: (err) => console.error('Error:', err)
       });
 
+    } else if (this.url === 'elegibilidad-de-textiles') {
+      this.acusesService.guardarAcuse(this.idSolicitud.toString(), 120301).pipe(
+        switchMap(() => {
+          return this.acusesService.vistaPrevia(this.idSolicitud.toString(), 120301);
+        }),
+        catchError((error) => {
+          console.error('Error en guardarAcuse o vistaPrevia:', error);
+          return throwError(() => error);
+        })
+      ).subscribe({
+        next: (response) => {
+          if (response?.datos) {
+            this.datosTablaAcuse = [{
+              id: 1,
+              documento: response.datos.nombre_archivo,
+              urlPdf: AcuseComponent.crearUrlPdf(response.datos.contenido),
+              idDocumento: '1'
+            }];
+          } else {
+            this.datosTablaAcuse = [];
+          }
+        },
+        error: (err) => console.error('Error:', err)
+      });
     } else {
       const BODY: DocumentosRequest = {
         tipo_dependencia: "AGA",
@@ -286,7 +312,7 @@ export class AcuseComponent implements OnChanges {
    *
    * @param url - La URL del PDF.
    */
-  descargarPdf(url: string):void{
+  descargarPdf(url: string): void {
     this.base64Archivos(url, 'descargar');
   }
 
@@ -296,6 +322,6 @@ export class AcuseComponent implements OnChanges {
     }else{
       this.router.navigate(['/bandeja-de-tareas-pendientes']);
     }
-    
+
   }
 }
