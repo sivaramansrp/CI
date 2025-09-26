@@ -425,6 +425,9 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       this.fitosanitarioForm.disable();
     } else {
       this.fitosanitarioForm.enable();
+      this.fitosanitarioForm.get('flexRadioRegistro')?.enable();
+      this.fitosanitarioForm.get('numeroDeLaConstancia')?.enable();
+      this.fitosanitarioForm.get('anoDeLaConstancia')?.enable();
     }
 
     this.consultaioQuery.selectConsultaioState$
@@ -438,6 +441,9 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
               this.fitosanitarioForm.disable();
             } else {
               this.fitosanitarioForm.enable();
+              this.fitosanitarioForm.get('flexRadioRegistro')?.enable();
+              this.fitosanitarioForm.get('numeroDeLaConstancia')?.enable();
+              this.fitosanitarioForm.get('anoDeLaConstancia')?.enable();
             }
           }
         })
@@ -662,6 +668,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       id_fraccion_hts_usa: fila.idFraccionHtsUsa ?? 0
     };
     this.idAsignacion = fila.idAsignacion;
+    this.tramite120301.setIdAsignacion(this.idAsignacion ?? 0);
     forkJoin({
       representacion: this.tplService.getRepresentacionFederal(fila.idAsignacion ?? 0).pipe(
         catchError(err => {
@@ -681,6 +688,8 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         fila.estado = REPRESENTACIONFEDERAL.nombre_entidad;
         fila.representacionFederal = REPRESENTACIONFEDERAL.nombre;
         this.cveUnidadAdministrativa = REPRESENTACIONFEDERAL.clave;
+        this.tramite120301.setClaveEntidad(REPRESENTACIONFEDERAL.cve_entidad);
+        this.tramite120301.setClave(REPRESENTACIONFEDERAL.clave);
       }
 
       if (detalle?.codigo === '00' && detalle?.datos) {
@@ -698,6 +707,10 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         fila.fechaInicioVigencia = DATOS.fecha_inicio_vigencia;
         fila.fechaFinVigencia = DATOS.fecha_fin_vigencia;
         this.tramite120301.setIdentificadorRegimen(DATOS.identificador_regimen);
+        this.tramite120301.setPaisOrigenDestino(DATOS.pais_origen_destino);
+        this.tramite120301.setUnidadMedida(DATOS.unidad_medida);
+         this.tramite120301.setIdMecanismo(DATOS.id_mecanismo_asignacion);
+        this.tramite120301.setClavePais(DATOS.codigo_pais);
       }
 
 
@@ -866,6 +879,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         if (response?.codigo === '00' && response?.datos) {
           const DATOS = response.datos;
           this.tramite120301.setIdExpedicion(DATOS.id_expedicion);
+          this.tramite120301.setIdSolicitud(DATOS.id_solicitud);
           this.mostrarTabs.emit(true);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
@@ -953,12 +967,15 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
    * @param {string | number} value - El valor seleccionado.
    * @returns {void} No retorna ningún valor.
    */
-  alCambioDeModeloDeAno(value: string | number): void {
-    if (value) {
-      // Borrar error de validación cuando se selecciona un año
-      this.anoFormValido = false;
-      this.formularioAlertaAno = '';
-      this.errorValidacion.emit(false);
+  onAnoConstanciaChange(selectedOption: Catalogo): void {
+    const CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
+    if (CONTROL && selectedOption) {
+      const VALUE = selectedOption.clave?.toString() || '';
+      CONTROL.setValue(VALUE);
+      CONTROL.markAsTouched();
+      CONTROL.updateValueAndValidity();
+
+      this.ElegibilidadDeTextilesStore.setAnoDeLaConstancia(VALUE);
     }
   }
 
