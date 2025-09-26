@@ -82,6 +82,7 @@
           [catalogo]="optionsEstado"
           [label]="'Estado'"
           [required]="true"
+          [markTouched]="empresasForm.get('estado')?.touched??false"
           [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
       </div>

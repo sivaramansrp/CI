@@ -6,7 +6,7 @@ import {
   REGEX_RFC,
   TablaSeleccion,
 } from '@ng-mf/data-access-user';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   FormularioDatos,
@@ -34,7 +34,7 @@ import { registroSolicitudImmexService } from '../../services/registro-expansion
   templateUrl: './empresas-terciarizadas.component.html',
   styleUrl: './empresas-terciarizadas.component.scss',
 })
-export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
+export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
    * Formulario reactivo para gestionar los datos de las empresas.
@@ -174,7 +174,17 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    */
   confirmarEliminar: boolean = false;
 
+  /**
+   * Identificador único para el trámite actual que se está procesando.
+   * Se utiliza para distinguir el tipo específico de trámite dentro de la aplicación.
+   */
   tramiteId: string = '80211';
+
+  /**
+   * Indica si el componente está actualmente activo.
+   * Este input puede usarse para controlar la visibilidad o el estado del componente.
+   */
+  @Input() active: boolean = false;
   /**
    * Arreglo de estados disponibles para selección, donde cada estado está representado por un objeto
    * que contiene una clave única (`clave`) y una etiqueta descriptiva (`descripcion`).
@@ -215,7 +225,17 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
-
+  /**
+   * Método del ciclo de vida que se ejecuta cuando cambia alguna propiedad enlazada por datos.
+   * Ejecuta lógica cuando la propiedad 'active' cambia, disparando métodos de obtención de datos.
+   *
+   * @param changes - Objeto con pares clave/valor que representan las propiedades cambiadas.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['active']?.currentValue) {
+      this.getEstado();
+    }
+  }
   /**
    * Método de inicialización del componente.
    */
@@ -239,15 +259,13 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
   }
   getEstado(): void {
     this.catalogoServices.estadosCatalogo(this.tramiteId).pipe(takeUntil(this.destoryNotification$)).subscribe((res) => {
-      console.log(res, 'res');
-
       this.optionsEstado = res.datos ?? [];
     });
   }
   /**
  * Inicializa el formulario de empresas terciarizadas.
  *
- * - Inicializa el estado global del trámite 80210.
+ * - Inicializa el estado global del trámite 80211.
  * - Asigna el valor de `showPlantas` según el estado actual.
  * - Solicita los estados disponibles a través del servicio.
  * - Obtiene los datos del formulario y actualiza los valores del formulario reactivo.
@@ -275,7 +293,17 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
       });
   }
 
+  validarFormularios(): boolean {
+    let isValid = true;
 
+    if (!this.plantasSeleccionadas || this.plantasSeleccionadas.length === 0) {
+      isValid = false;
+    }
+    if (!this.plantasDisponibles || this.plantasDisponibles.length === 0) {
+      isValid = false;
+    }
+    return isValid;
+  }
   /**
   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
   * Luego reinicializa el formulario con los valores actualizados desde el store.
@@ -391,7 +419,6 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
           .pipe(
             takeUntil(this.destoryNotification$),
             tap((plantas) => {
-              console.log(plantas, 'plantas');
               this.tramite80211Store.establecerDatos({ plantasDisponibles: plantas?.datos });
             })
           )
@@ -415,9 +442,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    * 
    * @param fila - Lista de filas seleccionadas.
    */
-  manejarFilaDisponibles(fila: Plantas[]): void {
-    console.log(fila,'listaFilaDisponibles');
-    
+  manejarFilaDisponibles(fila: Plantas[]): void {    
     this.listaFilaDisponibles = fila;
     if (fila.length > 0) {
       this.listaFilaDisponibles = fila;

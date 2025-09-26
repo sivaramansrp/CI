@@ -1,14 +1,15 @@
-import { AVISO, DatosPasos, RegistroSolicitudService } from '@ng-mf/data-access-user';
+import { AVISO, DatosPasos } from '@ng-mf/data-access-user';
 import { Component, EventEmitter } from '@angular/core';
 import { OnInit, ViewChild } from '@angular/core';
 import { Subject, map, take, takeUntil } from 'rxjs';
 import { Tramite80211Store, Tramites80211State } from '../../estados/tramites80211.store';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
+import { PAYLOAD} from '../../enums/registro-expansion.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite80211Query } from '../../estados/tramites80211.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { registroSolicitudImmexService } from '../../services/registro-expansion.service';
-import { PAYLOAD,PLANTASBUILD} from '../../enums/registro-expansion.enum';
 
 /**
  * Interfaz que representa el botón de acción.
@@ -55,6 +56,13 @@ export class RegistroExpansionComponent implements OnInit {
  * Permite interactuar con sus propiedades y métodos en el código del componente principal.
  */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+    /**
+   * @property {PasoUnoComponent} pasoUnoComponent
+   * @description
+   * Referencia al componente hijo `PasoUnoComponent` mediante ViewChild.
+   * Permite acceder a los métodos y propiedades del formulario del primer paso del asistente desde el componente padre.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
   /**
  * Constante que almacena el valor de la nota de privacidad.
@@ -104,7 +112,13 @@ export class RegistroExpansionComponent implements OnInit {
    * @type {Subject<void>}
    */
   destroyNotifier$: Subject<void> = new Subject();
-
+  /**
+    * @property {boolean} esFormaValido
+    * @description
+    * Indica si el formulario del paso actual es válido.
+    * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
+    */
+  esFormaValido: boolean = false;
   /**
    * Evento que se emite para regresar a la sección de carga de documentos.
    * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
@@ -121,7 +135,6 @@ export class RegistroExpansionComponent implements OnInit {
     private tramite80211Store: Tramite80211Store,
     private tramite80211Query: Tramite80211Query,
     private registroService: registroSolicitudImmexService,
-    private registroSolicitudService: RegistroSolicitudService
   ) { }
 
 
@@ -140,10 +153,56 @@ export class RegistroExpansionComponent implements OnInit {
    * Maneja la navegación entre los pasos del asistente según las acciones de los botones.
    * @param e - La acción del botón que contiene el tipo de acción y el valor del índice.
    */
-  getValorIndice(evento: AccionBoton): void {
+getValorIndice(evento: AccionBoton): void {
+  this.esFormaValido = false;
+
+  // Obtener datos del store antes de cualquier validación
+  this.obtenerDatosDelStore();
+
+  // Validación específica para el paso 1
+  if (this.indice === 1 && evento.accion === 'cont') {
+    const IS_VALID = this.validarTodosFormulariosPasoUno();
+    if (!IS_VALID) {
+      this.esFormaValido = true;
+      this.datosPasos.indice = 1;
+      return; 
+    }
+  }
+
+  if (evento.valor > 0 && evento.valor <= this.pasos.length) {
     this.indice = evento.valor;
-    this.obtenerDatosDelStore()
-    this.wizardComponent[evento.accion === 'cont' ? 'siguiente' : 'atras']();
+    this.datosPasos.indice = evento.valor;
+
+    if (evento.valor > 0 && evento.valor < 5) {
+      if (evento.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
+  }
+}
+
+  /**
+     * @method validarTodosFormulariosPasoUno
+     * @description
+     * Valida todos los formularios del componente `PasoUnoComponent`.
+     * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
+     * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
+     * Retorna `true` si todos los formularios son válidos.
+     *
+     * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+     */
+  private validarTodosFormulariosPasoUno(): boolean {
+
+    if (!this.pasoUnoComponent) {
+      return true;
+    }
+    const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+    if (!ISFORM_VALID_TOUCHED) {
+      return false;
+    }
+    return true;
   }
 
 
