@@ -24,8 +24,9 @@
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplimentosComponent } from '../../../../shared/components/complimentos/complimentos.component';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { DatosComplimentos } from '../../../../shared/models/complimentos.model';
 import { SociaoAccionistas } from '../../../../shared/models/complimentos.model';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
@@ -49,6 +50,11 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
   styleUrl: './agregar-complimentos.component.scss',
 })
 export class AgregarComplimentosComponent implements OnDestroy {
+  
+  /**
+   * @property {ConsultaioState} consultaState - Estado actual relacionado con la consulta.
+   */
+  @Input() consultaState!: ConsultaioState;
   /**
    * Almacena los datos de los cumplimentos.
    * 
