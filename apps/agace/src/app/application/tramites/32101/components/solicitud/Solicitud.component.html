@@ -126,7 +126,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <input-fecha [datos]="fechaInicialInput"   (valorCambiado)="cambioFechaIngreso($event)" [setFecha]="registroForm.get('fechaInicialInput')?.value" [isDisabled]="soloLectura"></input-fecha>
+        <input-fecha [datos]="fechaInicialInput" (valorCambiado)="cambioFechaIngreso($event)" [setFecha]="registroForm.get('fechaInicialInput')?.value" [isDisabled]="soloLectura"></input-fecha>
         <div *ngIf="registroForm.get('fechaInicialInput')?.hasError('fechaInvalida')" class="text-danger">
           Todos los campos de pago son requeridos
         </div>

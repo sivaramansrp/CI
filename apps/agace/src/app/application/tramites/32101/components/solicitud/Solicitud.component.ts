@@ -323,10 +323,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       numeroDeOperacion: [this.solicitudState?.numeroDeOperacion, [Validators.maxLength(30), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
       banco: [this.solicitudState?.banco],
       llaveDePago: [this.solicitudState?.llaveDePago, [ Validators.maxLength(20), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
-      fechaInicialInput: [
-        this.solicitudState?.fechaInicialInput,
-        [SolicitudComponent.validateFechaMenorIgualHoy.bind(this)],
-      ],
+      fechaInicialInput: [this.solicitudState?.fechaInicialInput],
       importeDePago: [
         { value: this.solicitudState?.importeDePago, disabled: true },
       ],
