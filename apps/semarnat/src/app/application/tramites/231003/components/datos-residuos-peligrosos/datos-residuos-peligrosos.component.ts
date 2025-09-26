@@ -401,30 +401,6 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     if (!NO_BITACORA) {
       this.setMateriaEncontradaMensaje('Debes ingresar un número de bitácora');
     }
-    //   .subscribe({
-    //     next: (data) => {
-    //       this.materiasDisponibles = data ?? [];
-    //       const MATERIAS_FOUND = this.materiasDisponibles.filter(
-    //         (m) => m.id === NO_BITACORA
-    //       );
-
-    //       if (MATERIAS_FOUND.length > 0) {
-    //         this.esFormaValido = true;
-    //         this.alertaErrorFormulario = '';
-    //         this.materiasDisponiblesCatalogo = MATERIAS_FOUND.map((m) => ({
-    //           id: m.id ?? 0,
-    //           descripcion: m.nombreMateriaPrima ?? '',
-    //         }));
-    //       } else {
-    //         this.setMateriaEncontradaMensaje('El número de bitácora no existe');
-    //       }
-    //     },
-    //     error: () => {
-    //       this.setMateriaEncontradaMensaje(
-    //         'Error al consultar la materia prima'
-    //       );
-    //     },
-    //   });
   }
 
   /**
