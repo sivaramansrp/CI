@@ -149,10 +149,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
-  /**
-   * Notificación utilizada para mostrar mensajes o alertas en la interfaz.
-   */
-  public nuevaNotificacion2!: Notificacion;
+  // /**
+  //  * Notificación utilizada para mostrar mensajes o alertas en la interfaz.
+  //  */
+  // public nuevaNotificacion2!: Notificacion;
 
   /** 
   * Índice del pedimento marcado para eliminación.

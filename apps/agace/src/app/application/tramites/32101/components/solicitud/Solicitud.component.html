@@ -59,11 +59,11 @@
     <div class="col-md-12 mt-5 mb-5 d-flex justify-content-end" *ngIf="configuracionTablaDatos.length > 0">
       <button type="button" name="modificarMercancias" class="btn btn-default" (click)="modificarFilaSeleccionada()">Modificar</button>
       <button type="button" name="eliminarMercancias" class="btn btn-danger ms-2" (click)="eliminarFilasSeleccionadas()">Eliminar</button>
-      @if (nuevaNotificacion2) { 
+      <!-- @if (nuevaNotificacion2) { 
         <section>
           <lib-notificaciones [notificacionInput]="nuevaNotificacion2"
             (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
-        </section> }
+        </section> } -->
     </div>
     <div class="row mt-5">
       <div class="alert alert-info">
