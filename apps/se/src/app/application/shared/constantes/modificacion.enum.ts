@@ -357,3 +357,11 @@ export const REQUIREDA = [110204,110205];
  * @type {number[]}
  */
 export const BOTON_DE_OPCION_VER =[110221];
+/**
+ * @constant FECHA_ID
+ * @description
+ * Arreglo que contiene los identificadores de procedimiento que requieren el campo de fecha en la configuración.
+ * Se utiliza para determinar si se debe mostrar o procesar el campo de fecha en los formularios relacionados.
+ * @type {number[]}
+ */
+export const PRESENTA_ID = [ 110211,110205 ];

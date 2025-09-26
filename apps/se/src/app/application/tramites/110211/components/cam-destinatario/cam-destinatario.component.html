@@ -1,10 +1,10 @@
 <div class="container">
   <app-datos-del-destinatario (formDatosDelDestinatarioEvent)="setValoresStoreDatos($event)"
     (formaValida)="setFormValida($event)" [datosForm]="formDatosDelDestinatarioValues"
-    [esFormularioSoloLectura]="esFormularioSoloLectura" [razonSocialEditable]="true"></app-datos-del-destinatario>
+    [esFormularioSoloLectura]="esFormularioSoloLectura" [razonSocialEditable]="true" [idProcedimiento]="idProcedimiento"></app-datos-del-destinatario>
   <app-destinatario (formaValida)="setFormValidaDestinatario($event)" [datosForm]="formDestinatarioValues"
     (formDestinatarioEvent)="setValoresStoreDe($event)"
-    [esFormularioSoloLectura]="esFormularioSoloLectura" #destinatarioRef></app-destinatario>
+    [esFormularioSoloLectura]="esFormularioSoloLectura" [idProcedimiento]="idProcedimiento"  #destinatarioRef></app-destinatario>
   <form [formGroup]="exportadorForm">
     <div class="row mt-5">
       <ng-titulo titulo="Datos del representante legal del exportador" />

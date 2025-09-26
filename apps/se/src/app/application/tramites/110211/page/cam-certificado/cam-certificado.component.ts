@@ -7,7 +7,7 @@
  */
 import { AccionBoton, ListaPasoWizard } from '../../models/cam-certificado.module';
 import { Component, ViewChild } from '@angular/core';
-import { ERROR_FORMA_ALERT, PASOS } from '../../constantes/cam-certificado.module';
+import { ERROR_FORMA_ALERT, PASOS, PRIVACY_NOTICE_CONTENT } from '../../constantes/cam-certificado.module';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -74,6 +74,8 @@ export class CamCertificadoComponent {
 
       /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esFormaValido: boolean = false;
+
+  public PRIVACY_NOTICE_CONTENT:string=PRIVACY_NOTICE_CONTENT;
 
   /**
    * @method getValorIndice

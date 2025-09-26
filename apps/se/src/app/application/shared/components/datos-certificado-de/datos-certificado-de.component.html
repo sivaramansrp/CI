@@ -7,7 +7,7 @@
           <label for="justificacionDictamen" class="form-label">Observaciones:</label>
           <textarea id="justificacionDictamen" formControlName="observacionesDates" (change)="setValoresStore('formDatosCertificado','observacionesDates','setFormDatosCertificado')"   class="mb-4 h-20 w-100" placeholder="" rows="6"></textarea>
         </div>
-        @if(idioma && idProcedimiento!==110205){
+        @if(idioma && !presentaView){
           <div class="col-md-8">
           <label for="presenta" class="form-label">Presenta:</label>
           <textarea id="presenta" formControlName="presenta" (change)="setValoresStore('formDatosCertificado','presenta','setPresenta')"   class="mb-4 h-20 w-100" placeholder="" rows="6"></textarea>
