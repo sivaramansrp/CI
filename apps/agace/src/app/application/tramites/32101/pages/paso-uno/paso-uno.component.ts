@@ -126,7 +126,7 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
           this.esDatosRespuesta = true;
           const FORM = respuesta?.datos?.solicitudFormulario;
           this.store.setTipoDeInversion(FORM.tipoDeInversion ?? []);
-          this.store.setValorEnPesos(FORM.valorEnPesos ?? 0);
+          this.store.setValorEnPesos(FORM.valorEnPesos ?? '');
           this.store.setDescripcionGeneral(FORM.descripcionGeneral ?? '');
           this.store.setListaDeDocumentos(FORM.listaDeDocumentos ?? '');
           this.store.setComprobante(FORM.comprobante ?? '');

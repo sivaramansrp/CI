@@ -1,5 +1,5 @@
-import {AbstractControl,FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
-import {Catalogo,CatalogoSelectComponent,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService,} from '@libs/shared/data-access-user/src';
+import {AbstractControl,FormBuilder,FormControl,FormGroup,FormsModule,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
+import {Catalogo,CatalogoSelectComponent,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,SOLO_REGEX_NUMEROS,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService,} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
@@ -148,11 +148,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Notificación utilizada para mostrar mensajes o alertas en la interfaz.
    */
   public nuevaNotificacion!: Notificacion;
-
-  // /**
-  //  * Notificación utilizada para mostrar mensajes o alertas en la interfaz.
-  //  */
-  // public nuevaNotificacion2!: Notificacion;
 
   /** 
   * Índice del pedimento marcado para eliminación.
@@ -303,7 +298,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.solicitudState?.listaDeDocumentos,
         [Validators.required],
       ],
-      valorEnPesos: [this.solicitudState?.valorEnPesos, [Validators.required]],
+      valorEnPesos: [this.solicitudState?.valorEnPesos, [Validators.required, Validators.pattern(SOLO_REGEX_NUMEROS), Validators.maxLength(15)]],
       descripcionGeneral: [
         this.solicitudState?.descripcionGeneral,
         [Validators.required],
@@ -358,13 +353,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   get tipoDeInversion(): FormGroup {
     return this.registroForm.get('tipoDeInversion') as FormGroup;
   }
-
   /**
-   * Obtiene el grupo de formulario 'valorEnPesos' del formulario principal 'FormSolicitud'.
-   * @returns {FormGroup} El grupo de formulario 'valorEnPesos'.
+   * Obtiene el control de formulario 'valorEnPesos' del formulario principal 'FormSolicitud'.
+   * @returns {FormControl} El control de formulario 'valorEnPesos'.
    */
-  get valorEnPesos(): FormGroup {
-    return this.registroForm.get('valorEnPesos') as FormGroup;
+  get valorEnPesos(): FormControl {
+    return this.registroForm.get('valorEnPesos') as FormControl;
   }
 
   /**
@@ -592,7 +586,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Error de validación',
+        titulo: '',
         mensaje: 'Debe capturar todos los datos marcados como obligatorios.',
         cerrar: true,
         tiempoDeEspera: 3000,
@@ -675,7 +669,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Error',
+        titulo: '',
         mensaje: 'Seleccione un registro.',
         cerrar: true,
         tiempoDeEspera: 3000,
@@ -702,7 +696,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Error',
+        titulo: '',
         mensaje: 'Seleccione un registro.',
         cerrar: true,
         tiempoDeEspera: 3000,
@@ -713,12 +707,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     } else {
       this.abrirEleminarModal();
     }
-    // this.configuracionTablaDatos = this.configuracionTablaDatos.filter(
-    //   (row) => !this.selectedRows.includes(row)
-    // );
-    // this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);
-    // this.selectedRows = [];
-    // this.abrirEleminarModal();
   }
 
 

@@ -113,7 +113,7 @@ export interface ConsultaDatos {
 
 export interface SolicitudState {
   tipoDeInversion?: Catalogo[];
-  valorEnPesos?: number;
+  valorEnPesos?: string;
   descripcionGeneral?: string;
   listaDeDocumentos?: string;
   comprobante?: string;

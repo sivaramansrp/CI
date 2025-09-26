@@ -27,7 +27,7 @@ export interface Solicitud32101State {
   /**
    * Valor en pesos asociado a la solicitud.
    */
-  valorEnPesos: number;
+  valorEnPesos: string;
 
   /**
    * Descripción general de la solicitud.
@@ -133,7 +133,7 @@ export interface Solicitud32101State {
 export function createInitialState(): Solicitud32101State {
   return {
     tipoDeInversion: null,
-    valorEnPesos: 0,
+    valorEnPesos: '',
     descripcionGeneral: '',
     listaDeDocumentos: '',
     comprobante: '',
@@ -178,7 +178,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param valorEnPesos - El nuevo valor en pesos que se debe asignar al estado.
    */
-  public setValorEnPesos(valorEnPesos: number): void {
+  public setValorEnPesos(valorEnPesos: string): void {
     this.update((state) => ({
       ...state,
       valorEnPesos,
