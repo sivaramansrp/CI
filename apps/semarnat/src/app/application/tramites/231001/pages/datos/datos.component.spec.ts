@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosComponent } from './datos.component';
-import { PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
+import { PASOS } from '@libs/shared/data-access-user/src';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('DatosComponent', () => {
@@ -10,13 +10,17 @@ describe('DatosComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DatosComponent],
-      imports: [WizardComponent],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA], 
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
   });
 
   it('should create', () => {
