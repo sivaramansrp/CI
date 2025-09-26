@@ -211,8 +211,14 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
  */
   seccionCargarDocumentos: boolean = true;
 
+  /**
+   * Indica si la carga de archivos está en progreso.
+   */
   cargaEnProgreso: boolean = true;
 
+  /**
+   * Estado del formulario de registro IMMEX.
+   */
   storeData!: ImmexRegistroState;
 
   constructor(public immexRegistroQuery: ImmexRegistroQuery, public immexRegistroStore: ImmexRegistroStore, public registroSolicitudService: RegistroSolicitudService, private toastrService: ToastrService) {

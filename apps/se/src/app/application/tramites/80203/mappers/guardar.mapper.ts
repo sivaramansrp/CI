@@ -25,8 +25,96 @@ export function buildGuardarPayload(storeData: ImmexRegistroState): unknown {
             idFraccion: item.idFraccion,
             idProductoPadre: null,
             claveProductoExportacion: null,
-            descripcion: item.descripcion
-        },
+            descripcion: item.descripcion,
+            descripcionFraccionPadre: "string",
+            exenta: true,
+            fraccionCompuesta: "string",
+            claveFraccionPadre: "string",
+            unidadMedida: "string",
+            fraccionConcatenada: "string",
+            descripcionTestado: "string",
+            testado: true,
+            tipoOperacion: "string",
+            valorMonedaMensual: "string",
+            valorMonedaAnual: "string",
+            valorProduccionMensual: "string",
+            valorProduccionAnual: "string",
+            valorProduccionAnualSolicitada: "string",
+            claveCategoria: "string",
+            descripcionCategoria: "string",
+            mensaje: "string",
+            idProducto: "stri",
+            descripcionServicio: "string",
+            rowID: "string",
+            cveFraccion: "61032301",
+            capitulo: "string",
+            partida: "string",
+            subPartida: "string",
+            fechaCaptura: "2025-09-07T12:43:35.647Z",
+            fechaInicioVigencia: "2025-09-07T12:43:35.647Z",
+            fechaFinVigencia: "2025-09-07T12:43:35.647Z",
+            cveUsuario: "string",
+            cveCapituloFraccion: "string",
+            cvePartidaFraccion: "string",
+            cveSubPartidaFraccion: "string",
+            activo: true,
+            activoAnexo28: true,
+            decretoImmex: true,
+            sector: [
+            {
+                cveSector: "string",
+                nombre: "string",
+                productorIndirecto: 0,
+                ampliacionMercancias: 0,
+                fechaInicioVigencia: "2025-09-07T12:43:35.647Z",
+                fechaFinVigencia: "2025-09-07T12:43:35.647Z",
+                blnActivo: 0
+            }
+            ],
+            cveServicioImmex: {
+            claveServicio: "string",
+            nombre: "string",
+            tipoServicio: "string",
+            fechaInicioVigencia: "2025-09-07T12:43:35.647Z",
+            fechaFinVigencia: "2025-09-07T12:43:35.647Z",
+            blnActivo: true
+            },
+            listaProveedores: [
+            {
+                idProveedor: "string",
+                paisOrigen: "string",
+                rfcProveedor: "string",
+                razonProveedor: "string",
+                paisDestino: "string",
+                rfcCliente: "string",
+                razonCliente: "string",
+                domicilio: "string",
+                testado: true,
+                idProductoP: "string",
+                descTestado: "string"
+            }
+            ],
+            listaProyecto: [
+            {
+                idProyecto: "string",
+                tipoDocumento: "string",
+                descDocumento: "string",
+                otro: "string",
+                fechaIncio: "string",
+                fechaFin: "string",
+                firmante: {
+                idFirmante: "string",
+                rfc: "string",
+                razonSocial: "string",
+                claveFraccion: "string"
+                },
+                testado: "string",
+                idProducto: "stri",
+                descTestado: "string"
+            }
+            ],
+            nicoDtos: storeData.nicoTablaDatosExportacion
+        }
     })),
     mercanciaImportacion: [
         {
@@ -42,9 +130,9 @@ export function buildGuardarPayload(storeData: ImmexRegistroState): unknown {
         unidadMedida: "string",
         tipoOperacion: "string",
         valorMonedaMensual: "string",
-        valorMonedaAnual: "string",
-        valorProduccionMensual: "string",
-        valorProduccionAnual: "string",
+        valorMonedaAnual: storeData.candiadAnual,
+        valorProduccionMensual: storeData.capacidadPeriodo,
+        valorProduccionAnual: storeData.candidadPorPeriodo,
         valorProduccionAnualSolicitada: "string",
         categoria: "string",
         mensaje: "string",
@@ -133,14 +221,7 @@ export function buildGuardarPayload(storeData: ImmexRegistroState): unknown {
             descTestado: "string"
             }
         ],
-        nicoDtos: [
-            {
-            claveNico: "string",
-            descripcion: "string",
-            testadoNico: "string",
-            testadoInt: true
-            }
-        ],
+        nicoDtos: storeData.nicoTablaDatosImportacion,
         proyectosClientes: [
             {
             paisOrigen: "",

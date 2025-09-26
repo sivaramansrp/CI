@@ -85,17 +85,17 @@
             <div class="col-12">
               <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
                 <label for="candiad-anual">Cantidad anual*:</label>
-                <input type="text" class="form-control" id="candiad-anual" formControlName="candiadAnual"
+                <input type="text" class="form-control" id="candiad-anual" formControlName="candiadAnual" (change)="setValoresStore(mercanciaImportacionForm, 'candiadAnual')"
                   placeholder="" [required]="true" />
               </div>
               <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
                 <label for="capacidad-periodo">Capacidad instalada por periodo*:</label>
-                <input type="text" class="form-control" id="capacidad-periodo" formControlName="capacidadPeriodo"
+                <input type="text" class="form-control" id="capacidad-periodo" formControlName="capacidadPeriodo" (change)="setValoresStore(mercanciaImportacionForm, 'capacidadPeriodo')"
                   placeholder="" [required]="true" />
               </div>
               <div class="col-12 col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4">
                 <label for="candidad-por-periodo">Cantidad por periodo*:</label>
-                <input type="text" class="form-control" id="candidad-por-periodo" formControlName="candidadPorPeriodo"
+                <input type="text" class="form-control" id="candidad-por-periodo" formControlName="candidadPorPeriodo" (change)="setValoresStore(mercanciaImportacionForm, 'candidadPorPeriodo')"
                   placeholder="" [required]="true" />
               </div>
             </div>
@@ -136,7 +136,7 @@
           </div>
         </form>
         <footer class="footer d-flex py-5 gap-3 justify-content-end">
-          <button type="button" class="btn btn-danger" (click)="modalCancelar()">
+          <button type="button" class="btn btn-danger" (click)="modalCancelar('Importacion')">
             Regresar
           </button>
           <button type="button" class="btn btn-primary" (click)="guardarMercanciaImportacion()">
@@ -197,7 +197,7 @@
           </div>
         </form>
         <footer class="footer d-flex py-5 gap-3 justify-content-end">
-          <button type="button" class="btn btn-danger" (click)="modalCancelarExportacion()">
+          <button type="button" class="btn btn-danger" (click)="modalCancelar('Exportacion')">
             Regresar
           </button>
           <button type="button" class="btn btn-primary" (click)="guardarMercanciaExportacion()">

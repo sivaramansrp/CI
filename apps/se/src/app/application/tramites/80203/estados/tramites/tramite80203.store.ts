@@ -17,7 +17,7 @@
  * @requires @angular/core
  */
 import { Store, StoreConfig } from '@datorama/akita';
-import { fraccionInfo, PermisoImmexGridDatos } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { fraccionInfo, nicoInfo, PermisoImmexGridDatos } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { Injectable } from '@angular/core';
 
@@ -74,6 +74,12 @@ export interface ImmexRegistroState {
    */
   idSolicitud: number;
 
+  candiadAnual: string;
+  capacidadPeriodo: string;
+  candidadPorPeriodo: string;
+  nicoTablaDatosImportacion: Array<nicoInfo>;
+  nicoTablaDatosExportacion: Array<nicoInfo>;
+
   /**
    * @property {fraccionInfo[]} [fraccionTablaDatos]
    * @description
@@ -112,6 +118,16 @@ export function createInitialState(): ImmexRegistroState {
     return {
 
         idSolicitud: 0,
+
+        candiadAnual: '',
+
+        capacidadPeriodo: '',
+
+        candidadPorPeriodo: '',
+
+        nicoTablaDatosImportacion: [],
+
+        nicoTablaDatosExportacion: [],
         /**
          * @description Estado inicial del formulario de registro IMMEX con todos los campos
          * configurados a sus valores predeterminados. Incluye campos numéricos iniciados en 0

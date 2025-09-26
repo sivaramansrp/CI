@@ -644,7 +644,7 @@ export const NICO_TABLA = [
      * @param {nicoInfo} ele - Objeto con información del código NICO
      * @returns {string} Código NICO único que identifica el commodity
      */
-    clave: (ele: nicoInfo) => ele.NICO_Columna_1,
+    clave: (ele: nicoInfo) => ele.claveNico,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -662,7 +662,7 @@ export const NICO_TABLA = [
      * @param {nicoInfo} ele - Objeto con información del código NICO
      * @returns {string} Descripción completa del commodity asociado al código NICO
      */
-    clave: (ele: nicoInfo) => ele.NICO_Columna_2,
+    clave: (ele: nicoInfo) => ele.descripcion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -690,7 +690,7 @@ export interface nicoInfo {
    * @example "520100"
    * @required
    */
-  NICO_Columna_1: string;
+  claveNico: string;
 
   /**
    * @description Descripción detallada del commodity asociado al código NICO.
@@ -699,17 +699,7 @@ export interface nicoInfo {
    * @example "Algodón sin cardar ni peinar"
    * @required
    */
-  NICO_Columna_2: string;
-
-  /**
-   * @description Indicador del estado activo (true) o inactivo (false) del código NICO.
-   * Bandera booleana que determina si el código NICO está vigente y disponible para su uso en operaciones comerciales.
-   * @type {boolean}
-   * @default true
-   * @example true
-   * @required
-   */
-  estatus: boolean;
+  descripcion: string;
 }
 
 /**

@@ -813,12 +813,11 @@ export class Anexo1Component implements OnInit, OnDestroy {
   showTableNicoExport(): void {
     if (this.NICO_SELECCIONADO) {
       const NUEVO_ELEMENTO: nicoInfo = {
-        NICO_Columna_1: this.NICO_SELECCIONADO[0]?.clave ?? '',
-        NICO_Columna_2: this.NICO_SELECCIONADO[0]?.nicoDescription ?? '',
-        estatus: true,
+        claveNico: this.NICO_SELECCIONADO[0]?.clave ?? '',
+        descripcion: this.NICO_SELECCIONADO[0]?.nicoDescription ?? ''
       };
       const YA_EXISTE = this.nicoTablaDatosExportacion.some(
-        (item) => item.NICO_Columna_1 === NUEVO_ELEMENTO.NICO_Columna_1
+        (item) => item.claveNico === NUEVO_ELEMENTO.claveNico
       );
       if (!YA_EXISTE) {
         this.nicoTablaDatosExportacion = [...this.nicoTablaDatosExportacion, NUEVO_ELEMENTO];
@@ -835,13 +834,12 @@ export class Anexo1Component implements OnInit, OnDestroy {
     
     if (NICO_VALUE) {
       const NUEVO_ELEMENTO: nicoInfo = {
-        NICO_Columna_1: this.NICO_SELECCIONADO[0]?.clave ?? '',
-        NICO_Columna_2: this.NICO_SELECCIONADO[0]?.nicoDescription ?? '',
-        estatus: true,
+        claveNico: this.NICO_SELECCIONADO[0]?.clave ?? '',
+        descripcion: this.NICO_SELECCIONADO[0]?.nicoDescription ?? ''
       };
 
       const YA_EXISTE = this.nicoTablaDatosImportacion.some(
-        (item) => item.NICO_Columna_1 === NUEVO_ELEMENTO.NICO_Columna_1
+        (item) => item.claveNico === NUEVO_ELEMENTO.claveNico
       );
       
       if (!YA_EXISTE) {
@@ -851,39 +849,6 @@ export class Anexo1Component implements OnInit, OnDestroy {
   }
 
   /**
-   * Alterna la visibilidad del cuadro de diálogo modal para el registro de enlaces operativos.
-   *
-   * @description
-   * Oculta el modal si está visible actualmente. Utiliza la API de Bootstrap
-   * para obtener la instancia del modal y controlarlo programáticamente.
-   *
-   */
-  cambiarEstadoModal(): void {
-    const MODAL_INSTANCIA = Modal.getInstance(
-      this.mercanciaImportacionModal.nativeElement
-    );
-    if (MODAL_INSTANCIA) {
-      MODAL_INSTANCIA.hide();
-    }
-  }
-
-  /**
-   * Alterna la visibilidad del cuadro de diálogo modal para el registro de enlaces operativos.
-   *
-   * @description
-   * Oculta el modal si está visible actualmente. Utiliza la API de Bootstrap
-   * para obtener la instancia del modal y controlarlo programáticamente.
-   *
-   */
-  cambiarEstadoModalExportacion(): void {
-    const MODAL_INSTANCIA = Modal.getInstance(
-      this.mercanciaExportacionModal.nativeElement
-    );
-    if (MODAL_INSTANCIA) {
-      MODAL_INSTANCIA.hide();
-    }
-  }
-  /**
    * Cancela el cuadro de diálogo modal para el registro de enlaces operativos.
    *
    * @description
@@ -891,33 +856,13 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * Se ejecuta cuando el usuario cancela la operación de agregar o editar
    * un enlace operativo.
    */
-  modalCancelar(): void {
-    // Reset the separate form
-    this.mercanciaImportacionForm.reset();
-    this.cambiarEstadoModal();
-  }
-
-  /**
-   * Cancela el cuadro de diálogo modal para el registro de enlaces operativos de exportación.
-   *
-   * @description
-   * Cierra el modal activo de exportación y restablece el formulario a su estado inicial.
-   * Se ejecuta cuando el usuario cancela la operación de agregar o editar
-   * un enlace operativo de exportación.
-   */
-  modalCancelarExportacion(): void {
-    try {
-      // Reset the separate form
-      this.mercanciaExportacionForm.reset();
-      this.cambiarEstadoModalExportacion();
-    } catch (error) {
-      console.error('Error closing exportacion modal:', error);
-      // Fallback: try to hide modal directly
-      const MODAL_ELEMENT = this.mercanciaExportacionModal?.nativeElement;
-      if (MODAL_ELEMENT) {
-        const MODAL = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
-        MODAL.hide();
-      }
+  modalCancelar(param:string): void {
+    const ELEMENT = param === 'Importacion' ? this.mercanciaImportacionModal : this.mercanciaExportacionModal;
+    const MODAL_INSTANCIA = Modal.getInstance(
+      ELEMENT.nativeElement
+    );
+    if (MODAL_INSTANCIA) {
+      MODAL_INSTANCIA.hide();
     }
   }
 
@@ -963,15 +908,15 @@ export class Anexo1Component implements OnInit, OnDestroy {
       return;
     }
     const SELECTED_IDS = new Set(
-      this.listSelectedView.map((item) => item.NICO_Columna_1)
+      this.listSelectedView.map((item) => item.claveNico)
     );
     if(params === 'Importacion'){
       this.nicoTablaDatosImportacion = this.nicoTablaDatosImportacion.filter(
-        (item) => !SELECTED_IDS.has(item.NICO_Columna_1)
+        (item) => !SELECTED_IDS.has(item.claveNico)
       );
     } else if(params === 'Exportacion'){
       this.nicoTablaDatosExportacion = this.nicoTablaDatosExportacion.filter(
-        (item) => !SELECTED_IDS.has(item.NICO_Columna_1)
+        (item) => !SELECTED_IDS.has(item.claveNico)
       );
     }
 
@@ -1134,20 +1079,16 @@ export class Anexo1Component implements OnInit, OnDestroy {
 
   /**
    * Add method to save mercancia importacion data
-   */
+   */ 
   guardarMercanciaImportacion(): void {
     if (this.mercanciaImportacionForm.valid) {
       // Process the form data
       const FORM_DATA = this.mercanciaImportacionForm.value;
-      
       // eslint-disable-next-line no-console
       console.log('Mercancia Importacion Data:', FORM_DATA);
-      
-      // Reset the form after saving
-      this.mercanciaImportacionForm.reset();
-      
-      // Close modal after saving
-      this.modalCancelar();
+      const VALOR = this.nicoTablaDatosImportacion;
+      this.immexRegistroStore.establecerDatos({ ['nicoTablaDatosImportacion']: VALOR });
+      this.modalCancelar('Importacion');
     } else {
       // Handle form validation errors
       this.mercanciaImportacionForm.markAllAsTouched();
@@ -1160,23 +1101,9 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
   guardarMercanciaExportacion(): void {
     if (this.mercanciaExportacionForm.valid) {
-      try {
-        // Process the form data
-        const FORM_DATA = this.mercanciaExportacionForm.value;
-    
-        // eslint-disable-next-line no-console
-        console.log('Mercancia Exportacion Data:', FORM_DATA);
-        
-        // Reset the form after saving
-        this.mercanciaExportacionForm.reset();
-        
-        // Close modal after saving
-        this.modalCancelarExportacion();
-        
-        
-      } catch (error) {
-        console.error('Error saving exportacion data:', error);
-      }
+      const VALOR = this.nicoTablaDatosExportacion;
+      this.immexRegistroStore.establecerDatos({ ['nicoTablaDatosExportacion']: VALOR });
+      this.modalCancelar('Exportacion');
     } else {
       // Handle form validation errors
       this.mercanciaExportacionForm.markAllAsTouched();
