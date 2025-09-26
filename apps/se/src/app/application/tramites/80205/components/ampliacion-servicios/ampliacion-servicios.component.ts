@@ -332,7 +332,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
     private ampliacionServiciosQuery: AmpliacionServiciosQuery,
     private ampliacionServiciosStore: AmpliacionServiciosStore,
     private readonly httpServicios: HttpClient,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -481,7 +481,6 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
  * 
  */
   cerrarModalAgregar(): void {
-    this.actualizaGridEmpresasNacionales();
     this.esAgregarDos=false;
   }
 
@@ -815,17 +814,19 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
         };
         this.rowNotSeleccionada = true;
       } else{
-      this.nuevaNotificacion = {
-        tipoNotificacion: TipoNotificacionEnum.ALERTA,
-        categoria: CategoriaMensaje.ALERTA,
-        modo: 'modal',
-        titulo: '',
-        mensaje: '¿La empresa a otorgar servicios no tiene un programa IMMEX vigente.',
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-      this.esAgregarDos = true;
+
+        this.actualizaGridEmpresasNacionales();
+      // this.nuevaNotificacion = {
+      //   tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      //   categoria: CategoriaMensaje.ALERTA,
+      //   modo: 'modal',
+      //   titulo: '',
+      //   mensaje: '¿La empresa a otorgar servicios no tiene un programa IMMEX vigente.',
+      //   cerrar: false,
+      //   txtBtnAceptar: 'Aceptar',
+      //   txtBtnCancelar: '',
+      // };
+      // this.esAgregarDos = true;
     }
     }
     /**
@@ -866,7 +867,13 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @method agregarServiciosAmpliacion
    */
 
-  agregarServiciosAmpliacion(): void {
+  agregarServiciosAmpliacion(event?: Event): void {
+    // Prevent event propagation to avoid triggering parent form validation
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+
     const ID=this.serviciosImmexServId;
     const CUERPODATOS: ServicioAmpliacion = {
       idServicio: 12,
@@ -929,7 +936,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
     const CUERPODATOS: EmpresasNacionales = {
       idCompuestoEmpresa: "",
       idServicioAutorizado: "",
-      idServicio: "",
+      idServicio: "1",
       descripcionServicio: SERVICIO_DATOS,
       rfc: this.rfcEmpresa,
       razonSocial: DENOMINACION_DATOS,
@@ -980,6 +987,12 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @param {any} domicilios - Domicilios seleccionados.
    */
   seleccionarDomicilios(servicio: ServicioAmpliacion): void {
+    if (!servicio) {
+      this.domiciliosSeleccionados = [];
+      this.mercanciasSeleccionados = [];
+      return;
+    }
+    
     this.domiciliosSeleccionados = [servicio];
     this.mercanciasSeleccionados = [servicio.idServicio];
     this.tablaB?.clearSelection();
@@ -991,6 +1004,12 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    */
 
   seleccionarAutorizados(autorizados: ServicioAutorizado): void {
+    if (!autorizados) {
+      this.autorizadosSeleccionados = [];
+      this.tablaDosSeleccionados = [];
+      return;
+    }
+    
     this.autorizadosSeleccionados= [{ ...autorizados }];
     this.tablaDosSeleccionados = [autorizados.idServicio as unknown as number];
     this.tablaA?.clearSelection();
@@ -1002,6 +1021,11 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @param {any} empresas - Empresas seleccionadas.
    */
   seleccionarEmpresas(empresas: EmpresasNacionales): void {
+    if (!empresas) {
+      this.empresasSeleccionados = [];
+      return;
+    }
+    
     this.empresasSeleccionados = [{ ...empresas }];
   }
 }

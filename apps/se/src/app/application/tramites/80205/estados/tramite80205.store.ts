@@ -99,7 +99,7 @@ export interface AmpliacionServiciosState {
  */
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
   /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
-  idSolicitud:202792606,
+  idSolicitud:null,
   infoRegistro: {
     seleccionaLaModalidad: '',
     folio: '',
@@ -329,4 +329,12 @@ export class AmpliacionServiciosStore extends Store<AmpliacionServiciosState> {
       datosAutorizados,
     }));
   }
+
+  setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
 }

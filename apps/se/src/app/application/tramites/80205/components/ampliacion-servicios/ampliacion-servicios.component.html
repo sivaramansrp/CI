@@ -86,7 +86,7 @@
             <button name="eliminarServicio" (click)="doConfirmEliminar()" class="btn btn-danger"  [disabled]="esFormularioSoloLectura">
                 Eliminar
             </button>
-            <button name="agregarServicio" (click)="agregarServiciosAmpliacion()" class="btn btn-primary mx-2" [disabled]="esFormularioSoloLectura">
+            <button name="agregarServicio" (click)="agregarServiciosAmpliacion($event)" class="btn btn-primary mx-2" [disabled]="esFormularioSoloLectura">
                 Agregar
             </button> 
         </div>

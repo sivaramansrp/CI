@@ -270,13 +270,14 @@ export interface ServicioAmpliacion {
   tipoServicio: string;
   descripcionTipo: string;
   claveServicio: string;
+  testado?: boolean;
 }
 
 export interface ServicioAutorizado {
-  estatus: string | boolean;
-  desEstatus: string ;
+  estatus?: string | boolean;
+  desEstatus?: string;
   idServicio: string;
-  idSolicitud: string;
+  idSolicitud?: string;
   tipoServicio: string;
   claveServicio: string;
   descripcion: string;
@@ -331,3 +332,10 @@ export const ERROR_FORMA_ALERT = `
 
 
 `;
+
+/*
+  * Mensaje de alerta que se muestra cuando hay errores relacionados con los servicios.
+  * Este mensaje se utiliza para informar al usuario que debe agregar al menos un servicio
+  * antes de poder continuar con el trámite.
+  */
+export const ERROR_SERVICIO_ALERT = `(Debe agregar al menos un servicio) es un campo requerido`;

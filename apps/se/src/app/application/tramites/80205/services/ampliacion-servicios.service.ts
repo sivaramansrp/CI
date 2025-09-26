@@ -1,8 +1,6 @@
 import { AmpliacionServiciosState, ServicioAmpliacion, ServicioAutorizado } from '../models/datos-info.model';
 import {Observable,map } from 'rxjs';
-import { API_POST_GUARDAR } from '@libs/shared/data-access-user/src/core/servers/api-router';
 import {AmpliacionServiciosStore} from '../estados/tramite80205.store';
-import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { COMUN_URL } from '../../../core/server/api-router';
 import { Catalogo } from '../constantes/modificacion.enum';
 import { HttpClient } from "@angular/common/http";
@@ -67,11 +65,6 @@ export class AmpliacionServiciosService {
  */
   getTablaDatos(): Observable<ServicioAutorizado[]> {
     return this.http.get<ServicioAutorizado[]>('assets/json/80205/ampliaciaon-autrazidos.json');
-  }
-
-  OnGuardar(tramite:string, body: any): Observable<BaseResponse<any>> {
-    const ENDPOINT = `${this.host}${API_POST_GUARDAR(tramite)}`;
-    return this.http.post<BaseResponse<any>>(ENDPOINT, { body: body });
   }
 
 }

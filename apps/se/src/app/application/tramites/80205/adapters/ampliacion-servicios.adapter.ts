@@ -13,11 +13,11 @@ import { Injectable } from '@angular/core';
 interface Servicio {
   tipoServicio: string;
   claveServicio: number;
-  descripcion: string | null;
-  descripcionTipo: string | null;
-  descripcionTestado: string | null;
-  estatus: boolean;
-  desEstatus: string | null;
+  descripcion: string;
+  descripcionTipo: string;
+  testado?: boolean;
+  estatus?: boolean;
+  desEstatus?: string;
 }
 
 /**
@@ -30,8 +30,8 @@ interface EmpresaNacional {
   descripcionServicio: string;
   numeroPrograma: string;
   tiempoPrograma: string;
-  idCompuestoEmpresa: string;
-  idServicioAutorizado: number;
+  idCompuestoEmpresa?: string;
+  idServicioAutorizado?: number;
 }
 
 /**
@@ -40,8 +40,94 @@ interface EmpresaNacional {
 interface Solicitud {
   modalidad: string;
   folioProgramaAutorizado: number;
-  folioPrograma: string;
+  folioPrograma?: string;
   anioPrograma: string;
+}
+
+/**
+ * Interface representing the domicilio details
+ */
+interface Domicilio {
+  idDomicilio: number;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  codigoPostal: string;
+  informacionExtra: string;
+  clave: string;
+  cveLocalidad: string;
+  cveDelegMun: string;
+  cveEntidad: string;
+  cvePais: string;
+  ciudad: string;
+  telefono: string;
+  fax: string;
+  municipio: string;
+  colonia: string;
+  descUbicacion: string;
+  cveCatalogo: string;
+  telefonos: string;
+  tipoDomicilio: number;
+}
+
+/**
+ * Interface representing the solicitante details
+ */
+interface Solicitante {
+  idPersonaPersonaSolicitudR: number;
+  idSolicitud: number;
+  nombre: string;
+  apellidoMaterno: string;
+  apellidoPaterno: string;
+  razonSocial: string;
+  rfc: string;
+  curp: string;
+  ideTipoPersonaSol: string;
+  correoElectronico: string;
+  cedulaProfesional: string;
+  nss: string;
+  telefono: string;
+  descripcionGiro: string;
+  cvePaisOrigen: string;
+  idDireccionSol: number;
+  tipoPatenteAgente: string;
+  recif: string;
+  puesto: string;
+  tipoAgente: string;
+  numeroPatente: string;
+  numeroIdentificacionFiscal: string;
+  personaMoral: boolean;
+  extranjero: boolean;
+  organismoPublico: boolean;
+  cveUsuario: string;
+  paginaWeb: string;
+  ideGenerica1: string;
+  rfcExtranjero: string;
+  codAutorizacion: string;
+  actividadProductiva: string;
+  estadoEvaluacionEntidad: string;
+  estadoEntidad: string;
+  original: boolean;
+  modificado: boolean;
+  numeroRegistro: string;
+  concentimientoInstalacionRecuperacion: boolean;
+  cveCatalogo: string;
+  alquilado: boolean;
+  volumenAlmacenaje: number;
+  capacidadAlmacenaje: number;
+  descripcionDetalladaActividadEconomica: string;
+  activo: boolean;
+  generico1: boolean;
+  area: string;
+  cveNacionalidad: string;
+  clasificacionArancelaria: string;
+  infoAdicional: boolean;
+  montoImportacion: number;
+  montoExportacion: number;
+  pctParticAccionaria: number;
+  ampliacionModelos: boolean;
+  ampliacionPaises: boolean;
+  fecFallecimiento: string;
 }
 
 /**
@@ -64,6 +150,10 @@ export interface AmpliacionServiciosPayload {
   solicitud: Solicitud;
   servicios: Servicio[];
   empresasNacionales: EmpresaNacional[];
+  discriminatorValue: string;
+  discriminator_value?: string;
+  solicitante: object;
+  domicilio: object;
 }
 
 @Injectable({
@@ -81,20 +171,16 @@ export class AmpliacionServiciosAdapter {
       ...state.datosImmex.map(si => ({
         tipoServicio: si.tipoServicio,
         claveServicio: Number(si.claveServicio),
+        testado: true,
         descripcion: si.descripcion,
         descripcionTipo: si.descripcionTipo,
-        descripcionTestado: null,
-        estatus: true,
-        desEstatus: null
       })),
       ...state.datosAutorizados.map(sa => ({
         tipoServicio: sa.tipoServicio,
         claveServicio: Number(sa.claveServicio),
+        testado: true,
         descripcion: sa.descripcion,
         descripcionTipo: sa.descripcionTipo,
-        descripcionTestado: null,
-        estatus: sa.estatus === 'true',
-        desEstatus: sa.desEstatus
       }))
     ];
 
@@ -106,36 +192,38 @@ export class AmpliacionServiciosAdapter {
       descripcionServicio: e.descripcionServicio,
       numeroPrograma: e.numeroPrograma,
       tiempoPrograma: e.tiempoPrograma,
-      idCompuestoEmpresa: e.idCompuestoEmpresa,
-      idServicioAutorizado: Number(e.idServicioAutorizado)
+    //   idCompuestoEmpresa: e.idCompuestoEmpresa,
+    //   idServicioAutorizado: Number(e.idServicioAutorizado),
     }));
 
     // Get solicitud data from infoRegistro
     const SOLICITUD: Solicitud = {
       modalidad: state.infoRegistro.seleccionaLaModalidad,
       folioProgramaAutorizado: 0, // This should come from somewhere else in state
-      folioPrograma: state.infoRegistro.folioPrograma || state.infoRegistro.folio,
       anioPrograma: state.infoRegistro.ano
     };
 
     return {
       // Static values for now, these should come from configuration or other state
       tipoDeSolicitud: "guardar",
-      idSolicitud: state.idSolicitud || 0,
+      idSolicitud: state.idSolicitud ?? 0,
       idTipoTramite: 80205,
-      rfc: state.rfcEmpresa,
+      rfc: "AAL0409235E6",
       cveUnidadAdministrativa: "8101",
       costoTotal: 10000.5,
       certificadoSerialNumber: "1234567890ABCDEF",
       certificado: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A",
       numeroFolioTramiteOriginal: "TRM-2023-00001",
-      nombre: "",
-      apPaterno: "",
-      apMaterno: "",
-      telefono: "",
+      nombre: "Juan",
+      apPaterno: "Pérez",
+      apMaterno: "López",
+      telefono: "5551234567",
       solicitud: SOLICITUD,
       servicios: COMBINED_SERVICIOS,
-      empresasNacionales: EMPRESAS_NACIONALES
+      empresasNacionales: EMPRESAS_NACIONALES,
+      discriminatorValue: "80205",
+      solicitante: {},
+      domicilio: {}
     };
   }
 

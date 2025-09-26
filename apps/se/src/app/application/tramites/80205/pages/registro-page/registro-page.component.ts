@@ -1,13 +1,14 @@
 
+import { AVISO, RegistroSolicitudService } from '@ng-mf/data-access-user';
 import { Component,EventEmitter,OnDestroy, ViewChild } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { AVISO } from '@ng-mf/data-access-user';
+import { Observable, Subject, throwError } from 'rxjs';
+import { catchError, map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { AmpliacionServiciosAdapter } from '../../adapters/ampliacion-servicios.adapter';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80205.query';
-import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
+import { AmpliacionServiciosStore } from '../../estados/tramite80205.store';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { DatosPasos } from '@ng-mf/data-access-user';
-import {ERROR_FORMA_ALERT} from '../../models/datos-info.model';
+import { ERROR_SERVICIO_ALERT } from '../../models/datos-info.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -81,7 +82,7 @@ export class RegistroPageComponent implements OnDestroy {
    /**
      * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
      */
-   public formErrorAlert = ERROR_FORMA_ALERT;
+   public formErrorAlert!:string;
 
 
   /**
@@ -156,9 +157,9 @@ export class RegistroPageComponent implements OnDestroy {
    */
   constructor(
     private tramiteQuery: AmpliacionServiciosQuery,
+    private tranmiteStore: AmpliacionServiciosStore,
     private seccion: SeccionLibStore,
-    private ampliacionServiciosAdapter: AmpliacionServiciosAdapter,
-    private ampliacionServiciosApi: AmpliacionServiciosService
+    private registroSolicitudService: RegistroSolicitudService
   ) {
     this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe(_res => {
       this.seccion.establecerSeccion([true]);
@@ -174,82 +175,47 @@ export class RegistroPageComponent implements OnDestroy {
           ).subscribe();
   }
   
-  /**
-   * Maneja el cambio de índice basado en el valor y la acción proporcionados.
-   * 
-   * @param e - Objeto de tipo `AccionBoton` que contiene el valor y la acción a realizar.
-   *   - `valor`: Número que representa el índice. Debe estar entre 1 y 4 (exclusivo).
-   *   - `accion`: Cadena que indica la acción a realizar ('cont' para avanzar, cualquier otro valor para retroceder).
-   * 
-   * Si el valor está dentro del rango permitido, actualiza el índice y realiza la acción correspondiente
-   * en el componente del asistente (`wizardComponent`).
-   */
-  // getValorIndice(e: AccionBoton): void {
-  //   if(e.accion==='cont'){
-  //     let ISVALID = true;
-  //     if (this.indice === 1 && this.pasoUnoComponent) {
-  //       ISVALID = this.pasoUnoComponent.validarTodosLosFormularios();
-  //     }
-  //     if (!ISVALID) {
-  //       this.esFormaValido = false;
-  
-  //       this.datosPasos.indice = this.indice;
-  //       return;
-  //     }
-      
-  //     this.esFormaValido = true;
-  //     this.indice = e.valor;
-  //         this.datosPasos.indice = this.indice;
-  //         this.wizardComponent.siguiente();
-  //         return;
-  //    }   
-  
-  //    this.indice = e.valor;
-  //    this.datosPasos.indice = this.indice;
-  //    this.wizardComponent.atras();
-  
-  // }
-
-
   getValorIndice(e: AccionBoton): void {
     if (this.indice === 1) {
       const FORM_VALIDO = this.pasoUnoComponent?.validarTodosLosFormularios() ?? false;
       this.esFormaValido = FORM_VALIDO;
 
-      // if (!this.esFormaValido) {
-      //   this.datosPasos.indice = 1;
-      //   setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-      //   return;
-      // }
+      if (!this.esFormaValido) {
+        this.datosPasos.indice = 1;
+        this.formErrorAlert = RegistroPageComponent.generarAlertaDeError(ERROR_SERVICIO_ALERT);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        return;
+      }
 
       this.onGuardar().pipe(
-        takeUntil(this.destroyNotifier$),
-        tap(() => this.handleGuardadoExitoso())
-      ).subscribe((respuesta) => {
-        if (!respuesta.exito) {
+        takeUntil(this.destroyNotifier$)
+      ).subscribe({
+        next: (respuesta: BaseResponse<{ id_solicitud: number }>) => {
+          if (respuesta.codigo !== '00') {
+            const ERROR_MESSAGE = respuesta.error || 'Error desconocido en la solicitud';
+            this.formErrorAlert = RegistroPageComponent.generarAlertaDeError(ERROR_MESSAGE);
+            this.esFormaValido = false;
+            this.indice = 1;
+            this.wizardComponent.indiceActual = 1;
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+            return;
+          }
+            this.esFormaValido = true;
+            this.indice = e.valor;
+            this.datosPasos.indice = this.indice;
+            this.wizardComponent.siguiente();
+            if (respuesta.datos?.id_solicitud) {
+              this.tranmiteStore.setIdSolicitud(respuesta.datos.id_solicitud);
+            }
+        },
+        error: (error) => {
+          console.error('Error en onGuardar:', error);
+          this.formErrorAlert = RegistroPageComponent.generarAlertaDeError('Error al procesar la solicitud');
           this.esFormaValido = false;
           this.indice = 1;
           this.wizardComponent.indiceActual = 1;
           setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-          return;
         }
-
-        this.esFormaValido = true;
-        this.indice = e.valor;
-        this.datosPasos.indice = this.indice;
-        this.wizardComponent.siguiente();
-        if (e.accion === 'cont') {
-              this.wizardComponent.siguiente();
-            } else {
-              this.wizardComponent.atras();
-            }
-        // this.indice = e.valor;
-        //       this.actualizarDatosPasos();
-        //       if (e.accion === 'cont') {
-        //         this.wizardComponent.siguiente();
-        //       } else {
-        //         this.wizardComponent.atras();
-        //       }
       });
       
     } else {
@@ -355,16 +321,33 @@ export class RegistroPageComponent implements OnDestroy {
    */
   onGuardar(): Observable<any> {
     return this.tramiteQuery.selectTramite80205$.pipe(
+      take(1), // Tomar solo el primer valor para evitar loops
       map(ESTADO_ACTUAL => AmpliacionServiciosAdapter.toFormPayload(ESTADO_ACTUAL)),
       switchMap(FORM_PAYLOAD => {
-        console.log('FORM_PAYLOAD', FORM_PAYLOAD);
-        return this.ampliacionServiciosApi.OnGuardar(this.idTipoTRamite, FORM_PAYLOAD);
+        return this.registroSolicitudService.postGuardarDatos(this.idTipoTRamite, FORM_PAYLOAD);
+      }),
+      catchError(error => {
+        console.error('Error al guardar:', error);
+        return throwError(() => error);
       })
     );
   }
 
-  private handleGuardadoExitoso(): void {
-    this.esFormaValido = true;
+
+  public static generarAlertaDeError(mensajes:string): string {
+    const ALERTA = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12 p-3  border-danger  text-danger rounded">
+    <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+    <div class="d-flex justify-content-start mb-1">
+      <span class="me-2">1.</span>
+      <span class="flex-grow-1 text-center">${mensajes}</span>
+    </div>  
+  </div>
+</div>
+`;
+return ALERTA;
   }
 
   /**
