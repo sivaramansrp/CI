@@ -283,8 +283,8 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
     if (status) {
       this.periodoForm = this.fb.group({
         periodo: ['', [Validators.required]],
-        periodoInicial: ['', [Validators.required, validadorDeMesyAno(), Validators.maxLength(7)]],
-        periodoFinal: ['', [Validators.required, validadorDeMesyAno(), Validators.maxLength(7)]],
+        periodoInicial: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{4}$/), Validators.maxLength(7)]],
+        periodoFinal: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{4}$/), Validators.maxLength(7)]],
       });
     }
   }

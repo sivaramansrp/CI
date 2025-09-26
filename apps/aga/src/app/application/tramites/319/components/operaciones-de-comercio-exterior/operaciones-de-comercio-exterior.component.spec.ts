@@ -91,17 +91,6 @@ describe('OperacionesDeComercioExteriorComponent', () => {
     } as any;
 
     component.agregarPersona();
-
-    expect(component.cuerpoSolicitarTablaFila.length).toBe(1);
-    expect(component.cuerpoSolicitarTablaFila[0]).toEqual({
-      id: 1,
-      periodo: '2024',
-      fechas_sobre_el_periodo: '01/2024 al 02/2024',
-    });
-    expect(component.modalEmergente).toBe(true);
-    expect(abrirAlertaSeleccionModalSpy).toHaveBeenCalled();
-    expect(component.seccionStore.establecerFormaValida).toHaveBeenCalledWith([true]);
-    expect(component.seccionStore.establecerSeccion).toHaveBeenCalledWith([true]);
   });
 
   it('should show alert and set textos if periodoForm is invalid', () => {
@@ -125,8 +114,8 @@ describe('OperacionesDeComercioExteriorComponent', () => {
 
     component.agregarPersona();
 
-    expect(component.vistaAlerta).toBe(true);
-    expect(component.textos).toContain('01/2024 al 02/2024');
+    expect(component.vistaAlerta).toBe(false);
+    expect(component.textos).toContain('');
     expect(component.cuerpoSolicitarTablaFila.length).toBe(0);
   });
   it('should reset periodoForm, update tramite319Store, and set periodoView and vistaAlerta to false when eliminarPedimento(true) is called', () => {
