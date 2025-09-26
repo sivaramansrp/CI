@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
+import { AnimalesEventos, DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
+import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
-import { FilaSolicitud } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
 import { CONFIGURACION_SENSIBLES } from '../../constantes/datos-de-la-solicitue.enum';
-import { AnimalesEventos, DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
+import { CommonModule } from '@angular/common';
+import { FilaSolicitud } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-animales-vivo-detalles',

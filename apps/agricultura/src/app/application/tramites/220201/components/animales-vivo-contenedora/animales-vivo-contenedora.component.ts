@@ -10,6 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { AnimalesEventos } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { AnimalesVivoDetallesComponent } from '../../../../shared/components/animales-vivo-detalles/animales-vivo-detalles.component';
+import { CatalogosService } from '../../services/220201/catalogos/catalogos.service'
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { DatosDeLaSolicitud } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
@@ -203,6 +204,7 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
   constructor(public agriculturaApiService: CertificadoZoosanitarioServiceService,
     public fitosanitarioQuery: ZoosanitarioQuery,
     public fitosanitarioStore: ZoosanitarioStore,
+    private catalogoService: CatalogosService
 
   ) {
     /**
@@ -224,9 +226,37 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy {
      * - paisDeProcedenciaList: Países de procedencia
      * - sexoList: Opciones de sexo para animales
      */
-    this.agriculturaApiService.obtenerRespuestaPorUrl('animales-vivo.json').subscribe((resp) => {
-      this.catalogosDatos = resp;
+
+
+    this.catalogoService.obtieneCatalogoSexosActivos(220201).subscribe((data) => {
+      this.catalogosDatos.sexoList = data.datos ?? [];
     });
+
+    this.catalogoService.obtieneCatalogoConsultaPaises(220201).subscribe((data) => {
+      this.catalogosDatos.paisOrigenList = data.datos ?? [];
+      this.catalogosDatos.paisDeProcedenciaList = data.datos ?? [];
+    });
+
+    this.catalogoService.obtieneCatalogoEspecies(220201).subscribe((data) => {
+      this.catalogosDatos.especieList = data.datos ?? [];
+    });
+
+    this.catalogoService.obtieneCatalogoUnidadesMedidaComerciales(220201).subscribe((data) => {
+      this.catalogosDatos.umcList = data.datos ?? [];
+    });
+
+    this.catalogoService.obtieneCatalogoUsosMercancia(220201).subscribe((data) => {
+      this.catalogosDatos.usoList = data.datos ?? [];
+    });
+
+    this.catalogoService.obtieneCatalogoFraccionesArancelarias(220201).subscribe((data) => {
+      this.catalogosDatos.fraccionArancelariaList = data.datos ?? [];
+    });
+
+    this.catalogoService.obtieneCatalogoRestricciones(220201).subscribe((data) => {
+      this.catalogosDatos.tipoRequisitoList = data.datos ?? [];
+    });
+
     /**
      * @suscripcion_estado
      * @descripcion

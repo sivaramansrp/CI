@@ -33,19 +33,19 @@ export const API_GET_CATALOGO_UNIDADES_MEDIDA_COMERCIALES = (TRAMITE: string) : 
  * Servicio que permite consultar los usos de mercancía ACTIVOS por tipo de trámite ordenados por nombre ascendente.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-usos-mercancia
  */
-export const API_GET_CATALOGO_USOS_MERCANCIA = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/usos-mercancia`;
+export const API_GET_CATALOGO_USOS_MERCANCIA = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tramite/usos-mercancia`;
 
 /**
  * Servicio que permite consultar la información de restricción por el identificador del trámite.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-usos-mercancia
  */
-export const API_GET_CATALOGO_RESTRICCIONES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/restricciones`;
+export const API_GET_CATALOGO_RESTRICCIONES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tramite/restricciones`;
 
 /**
  * Servicio que permite consultar los datos de las francciones arancelarías ACTIVAS por el identificador del trámite.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-fracciones-tramite
  */
-export const API_GET_CATALOGO_FRACCIONES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/fracciones-arancelarias`;
+export const API_GET_CATALOGO_FRACCIONES_ARANCELARIAS = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tramite/fracciones-arancelarias`;
 
 /**
  * Servicio que permite consultar una lista de Tipo Presentacion.
@@ -150,6 +150,12 @@ export const API_GET_CATALOGO_FRACCION_ARANCELARIA = (TRAMITE: string, CVEFRACCI
 export const API_GET_CATALOGO_MEDICOS_VETERINARIOS = (TRAMITE: string, CVEESTABLECIMIENTOTIF: string) : string => `sat-t${TRAMITE}/catalogo/establecimiento-tif/${CVEESTABLECIMIENTOTIF}/medicos-veterinarios`;
 
 /**
+ * Servicio que permite consultar los nombres del los medicos veterinarios por establecimiento TIF.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-especies
+ */
+export const API_GET_CATALOGO_ESPECIES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/especies`;
+
+/**
  * Servicio que permite consultar las entidades federativas ordenados por el nombre ascendente.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-entidades-federativas
  */
@@ -178,3 +184,14 @@ export const API_GET_CATALOGO_ADUANAS = (TRAMITE: string) : string => `sat-t${TR
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta_9
  */
 export const API_GET_CATALOGO_OFICINAS_INSPECCION = (TRAMITE: string, CVEADUANA: string) : string => `sat-t${TRAMITE}/catalogo/aduana/${CVEADUANA}/oficinas-inspeccion`;
+
+
+/**
+ * Genera la ruta de la API para obtener los datos de una solicitud.
+ *
+ * @param TRAMITE - Identificador del trámite.
+ * @param esPrellenado - Indica si es prellenado.
+ * @param idSolicitud - ID de la solicitud.
+ * @returns Ruta de la API como string.
+ */
+export const API_GET_DATOS_SOLICITUD = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/datos-solicitud`;

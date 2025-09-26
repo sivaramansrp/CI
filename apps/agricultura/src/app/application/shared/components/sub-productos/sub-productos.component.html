@@ -9,9 +9,12 @@
                     [isDisabled]="productosForm.disabled"></app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="catalogosDatos.requisitoList" formControlName="requisito"
-                    [label]="'Requisito'" [required]="true" name="requisito"
-                    [isDisabled]="productosForm.disabled"></app-catalogo-select>
+                <label class="form-label">Requisito*:</label>
+                <input type="text" class="form-control" formControlName="requisito" name="requisito" [maxlength]="50" />
+                <div *ngIf="productosForm.get('requisito')?.invalid && productosForm.get('requisito')?.touched"
+                    class="text-danger">
+                    <small class="text-danger"> Este campo es obligatorio</small>
+                </div>
             </div>
             <div class="col-md-4 form-group">
                 <label class="form-label">Número de certificado internacional*</label>

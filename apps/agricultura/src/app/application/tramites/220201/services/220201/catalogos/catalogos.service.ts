@@ -1,8 +1,9 @@
 import { Catalogo, ENVIRONMENT } from "@libs/shared/data-access-user/src";
+import { Observable, map } from "rxjs";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+
 
 import { 
     API_GET_CATALOGO_ADUANAS,
@@ -12,8 +13,9 @@ import {
     API_GET_CATALOGO_ENTIDADES_FEDERATIVAS,
     API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL,
     API_GET_CATALOGO_ENTIDAD_FEDERATIVA_MUNICIPIOS,
+    API_GET_CATALOGO_ESPECIES,
     API_GET_CATALOGO_ESTABLECIMIENTO_TIF,
-    API_GET_CATALOGO_FRACCIONES,
+    API_GET_CATALOGO_FRACCIONES_ARANCELARIAS,
     API_GET_CATALOGO_FRACCION_ARANCELARIA,
     API_GET_CATALOGO_JUSTIFICACIONES_PAGO,
     API_GET_CATALOGO_MEDICOS_VETERINARIOS,
@@ -119,9 +121,18 @@ export class CatalogosService {
      * @param tramite - El identificador numérico del trámite para el cual se requiere obtener el catálogo de fracciones.
      * @returns Un observable que emite la respuesta base con un arreglo de objetos de tipo Catalogo.
      */
-    obtieneCatalogoFracciones(tramite: number): Observable<BaseResponse<Catalogo[]>> {
-        const ENDPOINT = `${this.host}${API_GET_CATALOGO_FRACCIONES(tramite.toString())}`;
-        return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    obtieneCatalogoFraccionesArancelarias(tramite: number): Observable<BaseResponse<Catalogo[]>> {
+        const ENDPOINT = `${this.host}${API_GET_CATALOGO_FRACCIONES_ARANCELARIAS(tramite.toString())}`;
+        return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT).pipe(
+            // Veo que al tener una descripcion muy larga, en la UI se ve mal, por eso ponen  la clave en UAT.
+            map((response: BaseResponse<Catalogo[]>) => ({
+                ...response,
+                datos: response.datos?.map(item => ({
+                    ...item,
+                    descripcion: `${item.clave}`
+                })) ?? []
+            }))
+        );
     }
 
     /**
@@ -314,6 +325,11 @@ export class CatalogosService {
      */
     obtieneCatalogoMedicosVeterinarios(tramite: number, cveEstablecimientoTif: string): Observable<BaseResponse<Catalogo[]>> {
         const ENDPOINT = `${this.host}${API_GET_CATALOGO_MEDICOS_VETERINARIOS(tramite.toString(), cveEstablecimientoTif)}`;
+        return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+    }
+
+    obtieneCatalogoEspecies(tramite: number): Observable<BaseResponse<Catalogo[]>> {
+        const ENDPOINT = `${this.host}${API_GET_CATALOGO_ESPECIES(tramite.toString())}`;
         return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
     }
 
