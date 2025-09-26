@@ -133,7 +133,7 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * Datos recibidos desde un componente hijo.
    * @property {Servicio[]} recibioDatos
    */
-  recibioDatos!: number | string;
+  recibioDatos!: { id: string, descripcion: string };
 
   /**
    * Formulario para la información de registro.
@@ -876,8 +876,8 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
 
     const ID=this.serviciosImmexServId;
     const CUERPODATOS: ServicioAmpliacion = {
-      idServicio: 12,
-      descripcion: 'descriptcion',
+      idServicio: Number(this.recibioDatos.id),
+      descripcion: this.recibioDatos.descripcion,
       tipoServicio: 'servico',
       descripcionTipo: 'servicio', 
       claveServicio: '', 
@@ -974,10 +974,11 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
    * @param {any} data - Datos recibidos.
    */
   procesarDatosDelHijo(): void {
-    const ID= Number(this.formulario.value.entidadFederativa);
-    const SELECTED_DATOS = this.aduanaDeIngreso.find(item => item.id === ID);
-    const DATOS = { id: ID, descripcion: SELECTED_DATOS?.descripcion };
+    const ID= this.formulario.value.entidadFederativa;
+    const SELECTED_DATOS = this.aduanaDeIngreso.find((item: any) => item.clave === ID);
+    const DATOS = { id: ID, descripcion: SELECTED_DATOS?.descripcion ?? '' };
     this.serviciosImmexServId = ID;
+    this.recibioDatos = DATOS;
     this.ampliacionServiciosStore.setAduanaDeIngresoSeleccion(DATOS as Catalogo);
   }
 
