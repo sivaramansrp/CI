@@ -29,6 +29,8 @@ import {
 import {
   CONFIGURACION_ARANCELARIAS,
   CONFIGURACION_ARANCELARIASIMPORTACION,
+  FRACCIONARANCELARIAVALIDO,
+  MERCANCIAVALIDO,
   TEXTOS_80206
 } from "../../constantes/modificacion.constants";
 
@@ -200,6 +202,12 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    */
   @Input() esFormularioSoloLectura: boolean = false;
 
+/**
+ * Valor válido de fracción arancelaria para validaciones en el componente.
+ * Utiliza la constante FRACCIONARANCELARIAVALIDO.
+ * @type {string}
+ */
+VALIDOAR_FRACCION_ARANCELARIA: string = FRACCIONARANCELARIAVALIDO;
   /**
    * Constructor del componente.
    * @constructor
@@ -377,6 +385,28 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
       this.domiciliosSeleccionados = [];
     }
   }
+
+  get condicion(): boolean {
+  if (!this.domiciliosSeleccionados?.length) {
+    return false;
+  }
+
+  const SELECCIONADO = this.domiciliosSeleccionados[0]?.fraccionArancelaria;
+  const INDICE = this.datosImmex.findIndex(
+    (item: Arancelaria) => item.fraccionArancelaria === SELECCIONADO
+  );
+
+  return INDICE !== -1; 
+}
+
+ onIntentarEliminar(): void {
+  if (!this.condicion) {
+    this.mensajeDeAlerta = 'Seleccione la(s) Fracción(es) de Exportación a eliminar.';
+    this.activarModal();
+  }
+}
+
+
   /**
    * Elimina datos de importación seleccionados del grid.
    * @method eliminarImportacion
@@ -396,7 +426,15 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    */
   actualizaGridEmpresasNacionales(): void {
     const EXISTS = this.datosImmex.some(item => item.fraccionArancelaria === this.fraccionArancelaria);
-    if (EXISTS) {
+    if (!this.fraccionArancelaria || this.fraccionArancelaria.trim() === '') {
+    this.mensajeDeAlerta = 'Tiene que introducir la Fracción arancelaria.';
+    this.activarModal();
+    }
+    else if(this.fraccionArancelaria !== this.VALIDOAR_FRACCION_ARANCELARIA) {
+      this.mensajeDeAlerta = 'La fracción arancelaria es inválida.';
+      this.activarModal();
+    }
+    else if (EXISTS) {
       this.mensajeDeAlerta = 'La fracción arancelaria que desea agregar a la lista ya existe.';
       this.activarModal();
     }
@@ -434,6 +472,14 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
   agregarImportacion(): void {
     if(this.domiciliosSeleccionados.length === 0) {
       this.mensajeDeAlerta = 'Debe seleccionar una fracción de exportación';
+      this.activarModal();
+    }
+    else if(!this.importacion || this.importacion.trim() === '') {
+      this.mensajeDeAlerta = 'Tiene que introducir la mercancía.';
+      this.activarModal();
+    }
+    else if(MERCANCIAVALIDO !== this.importacion) {
+      this.mensajeDeAlerta = 'La mercancía es inválida.';
       this.activarModal();
     }
     else if (this.domiciliosSeleccionados[0]?.fraccionArancelaria === this.importacion) {

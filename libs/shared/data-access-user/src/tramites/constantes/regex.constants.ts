@@ -483,7 +483,7 @@ export const REGEX_PATRON_DECIMAL_12_3 = /^\d{1,12}(\.\d{1,3})?$/;
  * - Válido: "abc123", "ABCDEF", "123456"
  * - Inválido: "abc-123", "abc_123", "abc 123"
  */
-export const REGEX_LLAVE_DE_PAGO_DE_DERECHO =/^[a-zA-Z0-9]+$/;
+export const REGEX_LLAVE_DE_PAGO_DE_DERECHO = /^[a-zA-Z0-9]+$/;
 
 /**
  * Expresión regular que valida si una cadena contiene únicamente un solo dígito numérico (0-9).
@@ -493,7 +493,7 @@ export const REGEX_LLAVE_DE_PAGO_DE_DERECHO =/^[a-zA-Z0-9]+$/;
  * REGEX_SOLO_NÚMERO.test('12'); // false
  * REGEX_SOLO_NÚMERO.test('a'); // false
  */
-export const REGEX_SOLO_NÚMERO =/^[0-9]$/;
+export const REGEX_SOLO_NÚMERO = /^[0-9]$/;
 
 /**
  * Expresión regular que valida si una cadena contiene únicamente ceros.
@@ -871,7 +871,7 @@ export const IMPORTE = /^\d{1,16}$/;
  * - "123" (sin decimales)
  */
 export const REGEX_DECIMAL_16_TOTAL = /^\d{1,13}\.\d{2}$/;
- 
+
 
 /**
  * Expresión regular para validar números con hasta 6 dígitos enteros y opcionalmente hasta 6 decimales.
@@ -924,7 +924,7 @@ export const REGEX_NUMERIC_ONLY = /^[0-9]*\.?[0-9]*$/;/*
   *   
   * Ejemplos no válidos: "1234567" (menos de 8 dígitos), "123456789" (más de 8 dígitos), "1234abcd" (contiene letras)
   */
- export const EIGHT_DIGIT_NUMBER_REGEX = /^\d{8}$/;
+export const EIGHT_DIGIT_NUMBER_REGEX = /^\d{8}$/;
 
 /**
  * Expresión regular para validar un código postal compuesto por 1 a 12 dígitos.
@@ -1094,3 +1094,28 @@ export const REGEX_LLAVE_PAGO = /^[A-Z0-9]{10}$/;
  * usuario@dominio.com, usuario2@dominio.com
  * */
 export const REGEX_CORREO = /^[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4}(\,[[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4})*$/i;
+
+/**
+ * Expresión regular para validar una clave de captura del IRS.
+ * La clave debe consistir en exactamente 11 caracteres alfanuméricos (letras mayúsculas y dígitos).
+ */
+export const REGEX_CAPTURA_IRS = /^([0-9]{9}[a-zA-Z-0-9]{2})$/;
+
+/**
+ * Expresión regular para validar una clave de captura del CBP.
+ * La clave debe consistir en exactamente 11 dígitos numéricos.
+ */
+export const REGEX_CAPTURA_CBP = /^([0-9]{11})$/;
+
+/**
+ * Expresión regular para validar una clave de captura del USDA.
+ * La clave debe consistir en exactamente 9 dígitos numéricos.
+ */
+export const REGEX_CAPTURA_USDA = /^([0-9]{9})$/;
+/*
+ * Expresión regular para validar un número interior de 9 dígitos.
+ * Esta expresión asegura que la cadena contenga exactamente 9 dígitos numéricos (0-9).
+ * Ejemplos válidos: "123456789", "000000001"
+ * Ejemplos no válidos: "12345678" (menos de 9 dígitos), "1234567890" (más de 9 dígitos), "1234abcd" (contiene letras)
+ */
+export const REGEX_NUMERO_INTERIOR = /^\d{9}$/;

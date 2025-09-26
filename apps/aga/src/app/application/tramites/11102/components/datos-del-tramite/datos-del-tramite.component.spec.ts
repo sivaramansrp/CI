@@ -21,6 +21,8 @@ import { CommonModule } from '@angular/common';
 import { Tramite11102Query } from '../../estados/tramite11102.query';
 import { Tramite11102Store } from '../../estados/tramite11102.store';
 import { ModificacionDonacionesImmexService } from '../../services/modificacion-donaciones-immex.service';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { DatosDelMercancia } from '../../models/modificacion-donaciones-immex.model';
 
 describe('DatosDelTramiteComponent', () => {
   let component: DatosDelTramiteComponent;
@@ -52,6 +54,7 @@ describe('DatosDelTramiteComponent', () => {
       getPais: jest
         .fn()
         .mockReturnValue(of({ data: [{ id: 1, nombre: 'México' }] })),
+      obtenerMercanciaDatos: jest.fn().mockReturnValue(of({}))
     };
     MockTramite11102Store = {
       setAduana: jest.fn(() => of()),
@@ -61,22 +64,23 @@ describe('DatosDelTramiteComponent', () => {
       setAno: jest.fn(() => of()),
       setPais: jest.fn(() => of()),
       setOrganismoPublico: jest.fn(() => of()),
+      setDelMercancia: jest.fn(() => of()),
     };
     MockTramite11102Query = {
       selectSolicitud$: of({
-        organismoPublico: '',
-        aduana: null,
+        organismoPublico: false,
+        aduana: '',
         usoEspecifico: '',
         showTabla: true,
         tipoDeMercancia: '',
         unidadMedida: '',
         condicionMercancia: '',
-        ano: null,
+        ano: '',
         cantidad: '',
         marca: '',
         modelo: '',
         serie: '',
-        pais: null,
+        pais: '',
         calle: '',
         numeroExterior: '',
         numeroInterior: '',
@@ -91,9 +95,12 @@ describe('DatosDelTramiteComponent', () => {
         estado: '',
         colonia: '',
         datosDelMercancia: [],
+        folioOriginal: '',
       }),
     };
-    MockValidacionesFormularioService = {};
+    MockValidacionesFormularioService = {
+      isValid: jest.fn().mockReturnValue(true)
+    };
 
     await TestBed.configureTestingModule({
       imports: [
@@ -109,6 +116,7 @@ describe('DatosDelTramiteComponent', () => {
         DatosDelTramiteComponent,
       ],
       declarations: [],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: FormBuilder, useClass: FormBuilder },
         { provide: ConsultaioQuery, useValue: MockConsultaioQuery },
@@ -163,7 +171,7 @@ describe('DatosDelTramiteComponent', () => {
     expect(component.agregarMercanciasForm).toBeDefined();
     expect(
       component.tramiteForm.get('modificacionDonacionesImmex.aduana')?.value
-    ).toBe(null);
+    ).toBe("");
   });
 
   it('should call setAduana on aduanaSeleccion', () => {
@@ -288,8 +296,8 @@ describe('DatosDelTramiteComponent', () => {
 
   it('should set mercanciaHeaderData and mercanciaBodyData in obtenerMercancia', () => {
     component.obtenerMercancia();
-    expect(component.mercanciaHeaderData).toEqual(undefined);
-    expect(component.mercanciaBodyData).toEqual(undefined);
+    expect(component.mercanciaHeaderData).toEqual([]);
+    expect(component.mercanciaBodyData).toEqual([]);
   });
 
 
@@ -405,5 +413,119 @@ describe('DatosDelTramiteComponent', () => {
     component.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should assign the provided mercancia array to mercanciaSeleccionados', () => {
+      const mockMercancia: DatosDelMercancia[] = [
+        {
+          id: 1,
+          tipoDeMercancia: 'Vehiculo',
+          cantidad: '10',
+          unidadMedida: 'kg',
+          ano: '2023',
+          modelo: 'ModelX',
+          marca: 'MarcaX',
+          serie: '12345',
+          condicionMercancia: 'Nueva',
+          datosDelMercancia: []
+        }
+      ];
+
+      component.seleccionarMercancias(mockMercancia);
+
+      expect(component.mercanciaSeleccionados).toEqual(mockMercancia);
+    });
+
+    it('should handle empty array correctly', () => {
+      component.seleccionarMercancias([]);
+
+      expect(component.mercanciaSeleccionados).toEqual([]);
+    });
+
+    it('should call click on closeModal.nativeElement when closeModal exists', () => {
+    const mockClick = jest.fn();
+    component.closeModal = {
+      nativeElement: { click: mockClick }
+    } as any;
+
+    component.cerrarModal();
+
+    expect(mockClick).toHaveBeenCalled();
+  });
+
+  it('should not throw error when closeModal does not exist', () => {
+    component.closeModal = null as any;
+
+    expect(() => component.cerrarModal()).not.toThrow();
+  });
+
+  it('should update the selected mercancia with descriptions and call store', () => {    
+    component.mercanciaBodyData = [
+      {
+        id: 1,
+        tipoDeMercancia: '1',
+        cantidad: '221',
+        unidadMedida: '1',
+        ano: '2023',
+        modelo: 'model21',
+        marca: 'marco21',
+        serie: '12456781',
+        condicionMercancia: '1',
+        datosDelMercancia: []
+      }
+    ];
+    component.mercanciaSeleccionados = [
+      {
+        id: 1,
+        tipoDeMercancia: '1',
+        cantidad: '221',
+        unidadMedida: '1',
+        ano: '2023',
+        modelo: 'model21',
+        marca: 'marco21',
+        serie: '12456781',
+        condicionMercancia: '1',
+        datosDelMercancia: []
+      }
+    ];
+    
+    component.tipoDeMercancia = [
+      { id: 1, descripcion: 'muebels1' }
+    ];
+    component.unidadMedida = [
+      { id: 1, descripcion: 'Kilogramos' }
+    ];
+    component.condicionMercancia = [
+      { id: 1, descripcion: 'Nueva' }
+    ];
+
+    const mockClick = jest.fn();
+    component.closeModal = { nativeElement: { click: mockClick } } as any;
+
+    component.modificarConfirmarModal();
+
+    expect(component.mercanciaBodyData[0]).toMatchObject({
+      tipoDeMercancia: '',
+      cantidad: '',
+      unidadMedida: '',
+      ano: '',
+      modelo: '',
+      marca: '',
+      serie: '',
+      condicionMercancia: ''
+    });
+
+    expect(MockTramite11102Store.setDelMercancia).toHaveBeenCalledWith(component.mercanciaBodyData);
+    expect(component.closeModal.nativeElement.click).toHaveBeenCalled();
+  });
+
+  it('should not update if item is not found', () => {
+    component.mercanciaSeleccionados = [
+      { ...component.mercanciaSeleccionados[0], tipoDeMercancia: 'no-match' }
+    ];
+
+    component.modificarConfirmarModal();
+
+    expect(MockTramite11102Store.setDelMercancia).not.toHaveBeenCalled();
   });
 });

@@ -209,3 +209,17 @@ export const ALERT = {
       <p style="color:#d0021b; display: flex; justify-content: center; position: relative;"><span style="position: absolute; left: 2px;">1</span>(Toda fracción de exportación debe tener al menos una fracción de importación) es un campo requerido </p>
       <p style="color:#d0021b; display: flex; justify-content: center; position: relative;"><span style="position: absolute; left: 2px;">2</span>(Regla Tres Rs) es un campo requerido </p>`,
 };
+
+/**
+ * Valor válido para la fracción arancelaria utilizada en validaciones de formularios o lógica de negocio.
+ * @constant
+ * @type {string}
+ */
+export const FRACCIONARANCELARIAVALIDO = '87033302';
+
+/**
+ * Valor válido para la mercancía utilizada en validaciones de formularios o lógica de negocio.
+ * @constant
+ * @type {string}
+ */
+export const MERCANCIAVALIDO = '85044017';

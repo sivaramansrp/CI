@@ -1,4 +1,4 @@
-<div class="container">
+<div>
   <form
     [formGroup]="tramiteForm"
     (ngSubmit)="validarDestinatarioFormulario()"
@@ -6,28 +6,29 @@
   >
     <div class="col-md-12">
       <ng-container formGroupName="modificacionDonacionesImmex">
-        <div class="row mt-5">
-          <div class="col-md-8">
+        <ng-titulo titulo="Aduana por la que ingresará la mercancía" />
+        <div class="row">
+          <div class="col-md-4">
             <app-catalogo-select
               [catalogo]="aduana"
-              [label]="'Aduana por la que ingresará la mercancía'"
+              [label]="''"
               formControlName="aduana"
               [required]="true"
               (change)="aduanaSeleccion()"
               name="aduana"
-              [isDisabled]="esFormularioSoloLectura "
+              [isDisabled]="esFormularioSoloLectura"
             >
             </app-catalogo-select>
           </div>
- 
-          <div class="col-md-4" style="margin-top: 35px">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
             <lib-input-check
               [id]="'organismoPublico'"
               [label]="'Organismo público'"
               [required]="true"
               formControlName="organismoPublico"
               (change)="organismoPublico()"
-              [isDisabled]="esFormularioSoloLectura "
+              [isDisabled]="esFormularioSoloLectura"
             ></lib-input-check>
           </div>
         </div>
@@ -35,16 +36,17 @@
         <div class="row">
           <div class="col-md-6">
             <label for="usoEspecifico"
-              >Fin al cual se destinará la mercancía</label
+              >Fin al cual se destinar&aacute; la mercanc&iacute;a:</label
             >
-            <span class="require">*</span>
           </div>
-          <div class="col-md-12">
+          <div class="col-md-12 mb-3">
             <div class="form-group">
               <textarea
                 class="form-control form-check-input"
                 id="usoEspecifico"
                 required="true"
+                cols="110"
+                rows="4"
                 formControlName="usoEspecifico"
                 (change)="
                   setValoresStore(
@@ -56,38 +58,54 @@
                 cols="110"
                 rows="4"
               ></textarea>
+              @if (modificacionDonacionesImmex.get('usoEspecifico')?.touched &&
+              modificacionDonacionesImmex.get('usoEspecifico')?.invalid) { @if
+              (modificacionDonacionesImmex.get('usoEspecifico')?.errors?.['required'])
+              {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              } @if
+              (modificacionDonacionesImmex.get('usoEspecifico')?.errors?.['maxlength'])
+              {
+              <span class="mensaje-error"
+                >Por favor, no escribas más de 4000 caracteres</span
+              >
+              } }
             </div>
           </div>
-          <div class="table-container" style="margin-top: 20px">
-            <ng-table
-              [commonTableHeader]="mercanciaHeaderData"
-              [commonTableBody]="mercanciaBodyData"
-            ></ng-table>
+          <div class="table-container mt-5">
+            <app-tabla-dinamica 
+              [tipoSeleccionTabla]="tablaSeleccion" 
+              [datos]="mercanciaBodyData"
+              [configuracionTabla]="configuracionTablaMercancia"
+              [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+              (listaDeFilaSeleccionada)="seleccionarMercancias($event)"
+              ></app-tabla-dinamica>
           </div>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
             <button
               type="button"
               class="btn btn-default me-md-3"
-              data-bs-toggle="modal"
-              data-bs-target="#modalAgregarMercancias"
               (click)="modifySeleccionada()"
             >
               Modificar
             </button>
           </div>
         </div>
- 
+
         <ng-titulo titulo="Datos del donante" />
-        <div class="row">
+        <div class="row mb-3">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc">Registro federal de Contribuyentes</label>
-              <span class="require">*</span>
-              <span
-                class="bi bi-question-circle-fill"
-                title="Registro Federal de Contribuyentes"
-                data-bs-toggle="tooltip"
-              ></span>
+              <label for="rfc"
+                >Registro federal de contribuyentes<span
+                  [ngClass]="
+                    modificacionDonacionesImmex.get('rfc') && esValido(modificacionDonacionesImmex, 'rfc')
+                      ? 'require'
+                      : ''
+                  "
+                  >*</span
+                >:</label
+              >
               <input
                 type="text"
                 id="rfc"
@@ -98,22 +116,36 @@
                   setValoresStore(modificacionDonacionesImmex, 'rfc', 'setRfc')
                 "
               />
+              @if (modificacionDonacionesImmex.get('rfc') && modificacionDonacionesImmex.get('rfc')?.touched &&
+              modificacionDonacionesImmex.get('rfc')?.invalid) { @if
+              (modificacionDonacionesImmex.get('rfc')?.errors?.['pattern']) {
+              <span class="mensaje-error"> El RFC es inválido </span>
+              } }
             </div>
           </div>
           <div class="col-md-8">
             <div class="form-group">
-              <label for="numeroProgramaImmex">Número de programa Immex</label>
-              <span class="require">*</span>
-              <span
-                class="bi bi-question-circle-fill"
-                title="Registro Federal de Contribuyentes"
-                data-bs-toggle="tooltip"
-              ></span>
+              <label for="numeroProgramaImmex"
+                >Número de programa immex<span
+                  for="asterisk"
+                  [ngClass]="
+                    modificacionDonacionesImmex.get('numeroProgramaImmex') && esValido(modificacionDonacionesImmex, 'numeroProgramaImmex')
+                      ? 'require'
+                      : ''
+                  "
+                  >*</span
+                >:
+                <span
+                  tooltip="M&iacute;nimo 1 d&iacute;gito para programa / 4 d&iacute;gitos para a&ntilde;o"
+                  ><i class="bi bi-question-circle-fill"></i
+                ></span>
+              </label>
               <input
                 type="text"
                 id="numeroProgramaImmex"
                 formControlName="numeroProgramaImmex"
-                maxlength="11"
+                size="30"
+                maxlength="180"
                 class="form-control"
                 (change)="
                   setValoresStore(
@@ -123,167 +155,181 @@
                   )
                 "
               />
+              @if (
+                modificacionDonacionesImmex.get('numeroProgramaImmex') &&
+                modificacionDonacionesImmex.get('numeroProgramaImmex')?.touched &&
+                modificacionDonacionesImmex.get('numeroProgramaImmex')?.invalid
+              ) {
+                @if (
+                  modificacionDonacionesImmex.get('numeroProgramaImmex')?.errors?.['required']
+                ) {
+                  <div class="mensaje-error">Este campo es obligatorio</div>
+                }
+              }
+              @if (
+                modificacionDonacionesImmex.get('numeroProgramaImmex') &&
+                modificacionDonacionesImmex.get('numeroProgramaImmex')?.errors?.['maxlength']
+              ) {
+                <span class="mensaje-error">
+                  Por favor, no escribas más de 11 caracteres
+                </span>
+              }
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row mb-3">
           <div class="col-md-8">
             <div class="form-group">
-              <label for="razonSocial">Nombre / Razón Social</label>
-              <span class="require">*</span>
+              <label for="razonSocial">Nombre / razón social:</label>
               <input
                 type="text"
                 id="razonSocial"
                 formControlName="razonSocial"
-                maxlength="180"
+                size="100"
                 readonly
                 class="form-control"
               />
             </div>
           </div>
         </div>
- 
+
         <ng-titulo titulo="Domicilio fiscal" />
-        <div class="row">
+        <div class="row mb-3">
           <div class="col-md-4">
-            <app-catalogo-select
-              [catalogo]="pais"
-              [label]="'País'"
-              [required]="true"
-              formControlName="pais"
-              (change)="paisSeleccion()"
-              name="pais"
-              [isDisabled]="isPaisDisabled"
-            ></app-catalogo-select>
+            <label for="calle">Calle:</label>
+            <input
+              type="text"
+              id="calle"
+              formControlName="calle"
+              maxlength="50"
+              size="30"
+              readonly
+              class="form-control"
+            />
           </div>
           <div class="col-md-4">
-            <div class="form-group">
-              <label for="codigoPostal">C.P. o zona postal</label>
-              <span class="require">*</span>
-              <input
-                type="text"
-                id="codigoPostal"
-                formControlName="codigoPostal"
-                maxlength="8"
-                readonly
-                class="form-control"
-              />
-            </div>
+            <label for="numeroExterior">Número y/o letra exterior:</label>
+            <input
+              type="text"
+              id="numeroExterior"
+              formControlName="numeroExterior"
+              maxlength="40"
+              size="11"
+              readonly
+              class="form-control"
+            />
           </div>
           <div class="col-md-4">
+            <label for="numeroInterior">Número y/o letra interior:</label>
+            <input
+              type="text"
+              id="numeroInterior"
+              formControlName="numeroInterior"
+              maxlength="30"
+              size="11"
+              readonly
+              class="form-control"
+            />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
             <div class="form-group">
-              <label for="estado">Estado</label>
-              <span class="require">*</span>
+              <label for="estado">Estado:</label>
               <input
                 type="text"
                 id="estado"
                 formControlName="estado"
                 maxlength="30"
+                size="30"
                 readonly
                 class="form-control"
               />
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-6">
             <div class="form-group">
-              <label for="colonia">Colonia</label>
-              <span class="require">*</span>
+              <label for="colonia">Colonia:</label>
               <input
                 type="text"
                 id="colonia"
                 formControlName="colonia"
-                maxlength="80"
-                readonly
-                class="form-control"
-              />
-            </div>
-          </div>
-          <div class="col-md-8">
-            <div class="form-group">
-              <label for="calle">Calle</label>
-              <span class="require">*</span>
-              <input
-                type="text"
-                id="calle"
-                formControlName="calle"
-                maxlength="80"
+                maxlength="50"
+                size="50"
                 readonly
                 class="form-control"
               />
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-4">
+        <div class="row mb-3">
+          <div class="col-md-6">
             <div class="form-group">
-              <label for="numeroExterior">Número y/o letra exterior</label>
-              <span class="require">*</span>
+              <label for="codigoPostal">Código/zona postal:</label>
               <input
                 type="text"
-                id="numeroExterior"
-                formControlName="numeroExterior"
-                maxlength="40"
+                id="codigoPostal"
+                formControlName="codigoPostal"
+                maxlength="12"
+                size="12"
                 readonly
                 class="form-control"
               />
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label for="numeroInterior">Número y/o letra interior</label>
-              <span class="require">*</span>
-              <input
-                type="text"
-                id="numeroInterior"
-                formControlName="numeroInterior"
-                maxlength="30"
-                pattern="\\d(\\d?){9}"
-                class="form-control"
-              />
-            </div>
+          <div class="col-md-6">
+            <app-catalogo-select
+              [catalogo]="pais"
+              [label]="'País'"
+              formControlName="pais"
+              (change)="paisSeleccion()"
+              name="pais"
+              [isDisabled]="true"
+            ></app-catalogo-select>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-8">
+        <div class="row mb-3">
+          <div class="col-md-6">
             <div class="form-group">
-              <label for="correoElectronico">Correo electrónico</label>
+              <label for="correoElectronico">Correo electrónico:</label>
               <input
-                type="email"
+                type="text"
                 id="correoElectronico"
                 formControlName="correoElectronico"
                 maxlength="50"
+                size="40"
                 readonly
                 class="form-control"
               />
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <div class="form-group">
-              <label for="telefono">Teléfono</label>
+              <label for="telefono">Teléfono:</label>
               <input
                 type="tel"
                 id="telefono"
                 formControlName="telefono"
                 maxlength="30"
+                size="25"
                 readonly
                 class="form-control"
               />
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row mb-3">
           <div class="col-md-8">
             <div class="form-group">
               <label for="correoElectronicoOpcional"
-                >Correo electrónico (opcional)</label
+                >Correo electrónico (opcional):</label
               >
               <input
-                type="email"
+                type="text"
                 id="correoElectronicoOpcional"
                 formControlName="correoElectronicoOpcional"
                 maxlength="50"
+                size="40"
                 class="form-control"
                 (change)="
                   setValoresStore(
@@ -293,16 +339,30 @@
                   )
                 "
               />
+              @if (
+                tramiteForm.get('modificacionDonacionesImmex.correoElectronicoOpcional') &&
+                tramiteForm.get('modificacionDonacionesImmex.correoElectronicoOpcional')?.touched &&
+                tramiteForm.get('modificacionDonacionesImmex.correoElectronicoOpcional')?.invalid
+              ) {
+                @if (
+                  tramiteForm.get('modificacionDonacionesImmex.correoElectronicoOpcional')?.errors?.['pattern']
+                ) {
+                  <div class="mensaje-error">
+                    El dato debe de ser conforme el formato indicado
+                  </div>
+                }
+              }
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="telefonoOpcional">Teléfono (opcional)</label>
+              <label for="telefonoOpcional">Teléfono (opcional):</label>
               <input
                 type="tel"
                 id="telefonoOpcional"
                 formControlName="telefonoOpcional"
                 maxlength="30"
+                size="25"
                 class="form-control"
                 (change)="
                   setValoresStore(
@@ -312,25 +372,31 @@
                   )
                 "
               />
+              @if (
+                tramiteForm.get('modificacionDonacionesImmex.telefonoOpcional') &&
+                tramiteForm.get('modificacionDonacionesImmex.telefonoOpcional')?.touched &&
+                tramiteForm.get('modificacionDonacionesImmex.telefonoOpcional')?.invalid
+              ) {
+                @if (
+                  tramiteForm.get('modificacionDonacionesImmex.telefonoOpcional')?.errors?.['pattern']
+                ) {
+                  <div class="mensaje-error">
+                    El dato debe de ser conforme el formato indicado
+                  </div>
+                }
+              }
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <ng-alert
-              [CONTENIDO]="TEXTOS"
-              [CUSTOMECLASS]="infoAlert"
-            ></ng-alert>
           </div>
         </div>
       </ng-container>
     </div>
   </form>
 </div>
- 
+
 <div
   class="modal fade"
   id="modalAgregarMercancias"
+  #modalAgregarMercancias
   tabindex="-1"
   aria-labelledby="modalAgregarMercanciasLabel"
   aria-hidden="true"
@@ -342,49 +408,97 @@
           <!--Datos de la mercancía-->
           <ng-titulo titulo="Datos de la mercancía"></ng-titulo>
           <ng-container formGroupName="datosMercancia">
-            <div class="row">
-              <div class="col-md-4">
-                <app-catalogo-select
-                  [catalogo]="tipoDeMercancia"
-                  [label]="'Tipo de mercancía'"
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <label for="tipoDeMercancia"
+                  >Tipo de mercancía<span
+                    [ngClass]="
+                      datosMercancia.get('tipoDeMercancia')?.errors?.['maxlength']
+                        ? 'require'
+                        : ''
+                    "
+                    >*</span
+                  >:</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
                   formControlName="tipoDeMercancia"
-                  [required]="true"
-                  (change)="tipoDeMercanciaSeleccion()"
-                  name="tipoDeMercancia"
-                ></app-catalogo-select>
+                  id="descripcionMerc"
+                  size="100"
+                  maxlength="250"
+                  [ngClass]="
+                    datosMercancia.get('tipoDeMercancia')?.errors?.['maxlength'] ? 'required' : ''
+                  "
+                  (change)="
+                    setValoresStore(
+                      datosMercancia,
+                      'tipoDeMercancia',
+                      'setTipoDeMercancia'
+                    )
+                  "
+                />
+                @if (datosMercancia.get('tipoDeMercancia')?.touched &&
+                datosMercancia.get('tipoDeMercancia')?.invalid) { @if
+                (datosMercancia.get('tipoDeMercancia')?.errors?.['maxlength']) {
+                <span class="mensaje-error"
+                  >Por favor, no escribas más de 200 caracteres</span
+                >
+                } }
               </div>
-              <div class="col-md-8">
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
                 <app-catalogo-select
                   [catalogo]="condicionMercancia"
                   [label]="'Condición de la mercancía'"
                   [required]="true"
                   formControlName="condicionMercancia"
+                  [isDisabled]="true"
                   (change)="condicionMercanciaSeleccion()"
                   name="condicionMercancia"
                 ></app-catalogo-select>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-8">
-                <label for="cantidadComercial">Cantidad</label>
-                <span class="require">*</span>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="cantidadComercial">Cantidad<span 
+                  [ngClass]="
+                    esValido(datosMercancia, 'cantidad') ? 'require' : ''
+                  ">*</span>:</label>
                 <input
                   type="text"
                   class="form-control"
                   formControlName="cantidad"
-                  id="cantidad"
+                  id="cantidadComercial" 
+                  size="20"
                   maxlength="12"
                   [required]="true"
+                  [ngClass]="
+                    esValido(datosMercancia, 'cantidad') ? 'required' : ''
+                  "
                   (change)="
                     setValoresStore(
-                      modificacionDonacionesImmex,
-                      'datosMercancia.cantidad',
+                      datosMercancia,
+                      'cantidad',
                       'setCantidad'
                     )
                   "
                 />
+                @if (datosMercancia.get('cantidad')?.touched &&
+                datosMercancia.get('cantidad')?.invalid) { @if
+                (datosMercancia.get('cantidad')?.errors?.['required']) {
+                <span class="mensaje-error"
+                  >Este campo es obligatorio</span
+                >
+                } } @if
+                (datosMercancia.get('cantidad')?.errors?.['pattern']) {
+                  <span class="mensaje-error"
+                    >Por favor, escribe un número entero válido</span
+                  >
+                } 
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <app-catalogo-select
                   [catalogo]="unidadMedida"
                   [label]="'Unidad de medida'"
@@ -395,16 +509,16 @@
                 ></app-catalogo-select>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-md-12" style="margin-top: 15px">
                 <div class="form-group">
                   <label id="leyenda"
-                    >En su caso (maquinaría y equipo obsoleto)</label
+                    >En su caso (maquinar&iacute;a y equipo obsoleto)</label
                   >
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="marca">Marca:</label>
@@ -413,11 +527,12 @@
                     class="form-control"
                     formControlName="marca"
                     id="marca"
-                    maxlength="100"
+                    size="30" 
+                    maxlength="60"
                     (change)="
                       setValoresStore(
-                        modificacionDonacionesImmex,
-                        'datosMercancia.marca',
+                        datosMercancia,
+                        'marca',
                         'setMarca'
                       )
                     "
@@ -427,10 +542,9 @@
               <div class="col-md-4">
                 <app-catalogo-select
                   [catalogo]="ano"
-                  [label]="'Año de importación temporal'"
+                  [label]="'Año'"
                   name="ano"
                   formControlName="ano"
-                  [required]="true"
                   (change)="anoSeleccion()"
                 ></app-catalogo-select>
               </div>
@@ -442,11 +556,11 @@
                     class="form-control"
                     formControlName="modelo"
                     id="modelo"
-                    maxlength="50"
+                    maxlength="80"
                     (change)="
                       setValoresStore(
-                        modificacionDonacionesImmex,
-                        'datosMercancia.modelo',
+                        datosMercancia,
+                        'modelo',
                         'setModelo'
                       )
                     "
@@ -454,21 +568,21 @@
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-md-8">
                 <div class="form-group">
-                  <label for="serie">Serie:</label>
+                  <label for="serie">Número de serie:</label>
                   <input
                     type="text"
                     class="form-control"
                     formControlName="serie"
                     id="serie"
                     size="50"
-                    maxlength="25"
+                    maxlength="30"
                     (change)="
                       setValoresStore(
-                        modificacionDonacionesImmex,
-                        'datosMercancia.serie',
+                        datosMercancia,
+                        'serie',
                         'setSerie'
                       )
                     "

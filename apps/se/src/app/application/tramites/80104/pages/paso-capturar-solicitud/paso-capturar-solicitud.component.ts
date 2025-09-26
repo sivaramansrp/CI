@@ -1,18 +1,21 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, Usuario, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Subject, map, take, takeUntil } from 'rxjs';
+import { DatosPasos, ListaPasosWizard, PASOS4, Usuario, WizardComponent, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@libs/shared/data-access-user/src';
+import { Subject, finalize, map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { USUARIO_INFO } from '../../constantes/nuevo-programa.enum';
 import basePlantasControladoras from '@libs/shared/theme/assets/json/80104/basePlantasControladoras.json';
+import complimentos from '@libs/shared/theme/assets/json/shared/complimentos.json';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
 import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
 import notarios from '@libs/shared/theme/assets/json/shared/notarios.json';
 import planta from '@libs/shared/theme/assets/json/shared/planta.json';
 import plantasSubmanufactureras from '@libs/shared/theme/assets/json/shared/plantas-submanufactureras.json';
-import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accionistas.json';
+import sociosAccionistas from '@libs/shared/theme/assets/json/shared/socios-accionistas.json';
+
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
  * 
@@ -39,8 +42,14 @@ import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accion
 @Component({
   selector: 'app-paso-capturar-solicitud',
   templateUrl: './paso-capturar-solicitud.component.html',
+  providers: [ToastrService],
 })
 export class PasoCapturarSolicitudComponent implements OnInit {
+
+  /** 
+   * Indica si el componente padre es BtnContinuarComponent. 
+   */
+  padreBtn: boolean = true;
   /**
    * Lista de pasos del wizard.
    * Esta propiedad almacena una lista de objetos que representan los pasos del wizard.
@@ -125,7 +134,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private socioAccionistaBase = socioAccionistas;
+  private complimentosBase = complimentos;
 
    /** Listado de empresas nacionales utilizadas en el formulario de solicitud. */
   private empresasNacionales = empresasNacionales;
@@ -152,6 +161,11 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private notariosBase: any[] = notarios;
+
+  /**
+  * Objeto base inmutable que representa la estructura inicial de un sociosAccionistas.
+  */
+  private sociosAccionistas = sociosAccionistas;
 
    /**
    * URL de la página actual.
@@ -180,8 +194,12 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * utilizando los métodos `establecerSeccion` y `establecerFormaValida` del servicio `SeccionLibStore`.
    * La suscripción se gestiona para que se complete automáticamente al destruir el componente mediante `takeUntil` y `destroyNotifier$`.
    */
-  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
-    private tramite80104Store: Tramite80101Store,private tramite80104Query: Tramite80101Query,) {
+  constructor(
+    private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
+    private tramite80104Store: Tramite80101Store,
+    private tramite80104Query: Tramite80101Query,
+    private toastrService: ToastrService,
+  ) {
   //
   }
 
@@ -203,21 +221,45 @@ ngOnInit(): void {
       ).subscribe();
   }
 
-  /**
-   * Obtiene el valor del índice de la acción del botón.
-   * @param e - event$: Acción del botón.
-   */
-  getValorIndice(e: AccionBoton): void {
-    this.obtenerDatosDelStore();
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
-  }
+/**
+ * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
+ * 
+ * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
+ * y muestra un mensaje de éxito o error dependiendo del código de respuesta. Si la respuesta es exitosa
+ * y el valor del evento está dentro del rango válido (1 a 4), actualiza el índice del wizard y navega
+ * hacia adelante o atrás según el tipo de acción.
+ * 
+ * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
+ */
+getValorIndice(e: AccionBoton): void {
+  let shouldNavigate = false;
+  this.nuevoProgramaIndustrialService.getAllState()
+    .pipe(
+      take(1),
+      switchMap((data) => this.guardar(data)),
+      tap(response => {
+        shouldNavigate = response.codigo === '00';
+        if(shouldNavigate) {
+          this.padreBtn = false;
+          this.toastrService.success(response.mensaje);
+        } else {
+          this.padreBtn = true;
+          this.toastrService.error(response.mensaje);
+        }
+      }),
+      finalize(() => {
+        if (shouldNavigate && e.valor > 0 && e.valor < 5) {
+          this.indice = e.valor;
+          if (e.accion === 'cont') {
+            this.wizardComponent.siguiente();
+          } else {
+            this.wizardComponent.atras();
+          }
+        }
+      })
+    )
+    .subscribe();
+}
 
   /**
   * Método para manejar el evento de carga de documentos.
@@ -248,29 +290,37 @@ ngOnInit(): void {
  * @returns Un arreglo con los objetos estructurados de plantas submanufactureras.
  */
 // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[] {
+  buildPlantasSubmanufactureras(array: any[] = [], base: unknown[]): unknown[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const MAP_TO_PAYLOAD = (item: any): any => ({
-      ...base,
-      empresaCalle: item.calle ?? '',
-      empresaNumeroInterior: item.numInterior ?? '',
-      empresaNumeroExterior: item.numExterior ?? '',
-      empresaCodigoPostal: item.codigoPostal ?? '',
-      localidad: item.colonia ?? '',
-      empresaDelegacionMunicipio: item.municipio ?? '',
-      empresaEntidadFederativa: item.entidadFederativa ?? '',
-      empresaPais: item.pais ?? '',
-      rfc: item.rfc ?? '',
-      domicilioFiscal: item.domicilioFiscal ?? '',
-      razonSocial: item.razonSocial ?? '',
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+      empresaCalle: arr.calle ?? '',
+      empresaNumeroInterior: arr.numInterior ?? '',
+      empresaNumeroExterior: arr.numExterior ?? '',
+      empresaCodigoPostal: arr.codigoPostal ?? '',
+      localidad: arr.colonia ?? '',
+      empresaDelegacionMunicipio: arr.municipio ?? '',
+      empresaEntidadFederativa: arr.entidadFederativa ?? '',
+      empresaPais: arr.pais ?? '',
+      rfc: arr.rfc ?? '',
+      domicilioFiscal: arr.domicilioFiscal ?? '',
+      razonSocial: arr.razonSocial ?? '',
+       datosComplementarios: Array.isArray((ITEM as any)?.datosComplementarios)
+          ? (ITEM as any).datosComplementarios.map((dc:any) => ({
+              idPlantaC: dc.idPlantaC ?? '',
+              idDato: dc.idDato ?? '',
+              amparoPrograma: dc.amparoPrograma ?? '',              
+            }))
+          : []
+        });
+      });
     });
-
-        arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-
     return RESULT;
-}
+  }
 
 /**
  * Construye un arreglo de objetos de plantas basado en una estructura base común.
@@ -280,32 +330,32 @@ buildPlantasSubmanufactureras(arr: any[] = [], base: Record<string, any>): any[]
  * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
  */
 // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-buildPlantas(arr: any[] = [], base: Record<string, any>): any[] {
+ buildPlantas(array: any[] = [], base: unknown[]): unknown[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-   const MAP_TO_PAYLOAD = (item: any): any => ({
-  ...base,
-  idPlanta: item.planta ?? '',
-  calle: item.calle ?? '',
-  numeroExterior: item.numeroExterior ?? '',
-  numeroInterior: item.numeroInterior ?? '',
-  codigoPostal: item.codigoPostal ?? '',
-  localidad: item.localidad ?? '',
-  colonia: item.colonia ?? '',
-  delegacionMunicipio: item.delegacionMunicipio ?? '',
-  entidadFederativa: item.entidadFederativa ?? '',
-  pais: item.pais ?? '',
-  rfc: item.registroFederalDeContribuyentes ?? '',
-  domicilioFiscal: item.domicilioDelSolicitante ?? '',
-  razonSocial: item.razonSocial ?? '',
-});
-      
-
-    arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+      idPlanta: arr.planta ?? '',
+      calle: arr.calle ?? '',
+      numeroExterior: arr.numeroExterior ?? '',
+      numeroInterior: arr.numeroInterior ?? '',
+      codigoPostal: arr.codigoPostal ?? '',
+      localidad: arr.localidad ?? '',
+      colonia: arr.colonia ?? '',
+      delegacionMunicipio: arr.delegacionMunicipio ?? '',
+      entidadFederativa: arr.entidadFederativa ?? '',
+      pais: arr.pais ?? '',
+      rfc: arr.registroFederalDeContribuyentes ?? '',
+      domicilioFiscal: arr.domicilioDelSolicitante ?? '',
+      razonSocial: arr.razonSocial ?? '',
+        });
+      });
+    });
     return RESULT;
-}
+  }
 
 /**
  * Genera un arreglo de objetos con los datos de fedatarios a partir de un arreglo de entrada.
@@ -315,25 +365,26 @@ buildPlantas(arr: any[] = [], base: Record<string, any>): any[] {
  * @returns Un arreglo de objetos estructurados con la información de los fedatarios.
  */
 // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
-  const RESULT: any[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-   const MAP_TO_PAYLOAD = (item: any): any => ({
-  ...base,
-  nombreNotario: item.nombre ?? '',
-  apellidoMaterno: item.segundoApellido ?? '',
-  apellidoPaterno: item.primerApellido ?? '',
-  numeroActa: item.numeroDeActa ?? '',
-  fechaActa: item.fechaDelActa ?? '',
-  numeroNotaria: item.numeroDeNotaria ?? '',
-  entidadFederativa: item.estado ?? '',
-  delegacionMunicipio: item.estadoOptions ?? '',
-});
-
-    arr.forEach(row => RESULT.push(MAP_TO_PAYLOAD(row)));
-
+ buildDatosFederatarios(array: any[] = [], base: unknown[]): unknown[] {
+    const RESULT: any[] = [];
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,
+      nombreNotario: arr.nombre ?? '',
+      apellidoMaterno: arr.segundoApellido ?? '',
+      apellidoPaterno: arr.primerApellido ?? '',
+      numeroActa: arr.numeroDeActa ?? '',
+      fechaActa: arr.fechaDelActa ?? '',
+      numeroNotaria: arr.numeroDeNotaria ?? '',
+      entidadFederativa: arr.estado ?? '',
+      delegacionMunicipio: arr.estadoOptions ?? '',
+        });
+      });
+    });
     return RESULT;
-}
+  }
 
     /**
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
@@ -342,18 +393,18 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
    * @returns void
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  guardar(data: any): void {
-    const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
+  guardar(data: any): Promise<any> {
+    const SOLICITUD = this.buildComplimentos(data, this.complimentosBase);
     const DECLARACION_SOLICUTUD_ENTRIES = PasoCapturarSolicitudComponent.buildDeclaracionSolicitudEntries(data);
-    const EMPRESAS_NACIONALES = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentos, this.empresasNacionales);
-    const EMPRESAS_EXTRANJERAS = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentosExtranjera, this.empresasExtranjeras);
     const PLANTAS_CONTROLADORAS = PasoCapturarSolicitudComponent.buildPlantasControladoras(data.empresasSeleccionadas, this.basePlantasControladoras);
     const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
     const ANEXO_ALL = this.buildAnexo(data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
-    
+    const SOCIOS_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.sociosAccionistas);
+
     const PAYLOAD = {
+      "esDeGuardar": true,
     "tipoDeSolicitud": "guardar",
     "idSolicitud": 202781045,
     "idTipoTramite": 80104,
@@ -389,17 +440,36 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
            "anexoI": [...ANEXO_ALL.anexo.tableDos]
         }
     ],
+    "fraccionArancelaria":[
+        {
+          "listaProveedores": [...ANEXO_ALL.anexo.proveedorClienteDos]
+        }
+      ],
+    "productoExportacionDtoList": [
+        {
+          "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]
+        }
+      ],
     "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
     "solicitud": SOLICITUD,
     "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
-    "empresasNacionales": EMPRESAS_NACIONALES,
-    "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
-    "plantasControladoras": PLANTAS_CONTROLADORAS
+    "plantasControladoras": PLANTAS_CONTROLADORAS,
+    "sociosAccionistas": [...SOCIOS_ACCIONISTAS]
     };
 
-    this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
-      this.tramite80104Store.setIdSolicitud(response.datos.id_solicitud || 0);
-      return response;
+    return new Promise((resolve, reject) => {
+      this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
+      if(esValidObject(response) && esValidObject(response.datos)) {
+        if(getValidDatos(response.datos.id_solicitud)) {
+          this.tramite80104Store.setIdSolicitud(response.datos.id_solicitud);
+        } else {
+          this.tramite80104Store.setIdSolicitud(0);
+        }
+      }
+        resolve(response);
+      }, error => {
+        reject(error);
+      });
     });
   }
 
@@ -453,7 +523,7 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
  * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
  */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildSociosAccionistas(data: Record<string, any>, base: Record<string, any>): any {
+  buildComplimentos(data: Record<string, any>, base: Record<string, any>): any {
     return {
       ...base,
       notario: {
@@ -462,7 +532,7 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
         numeroActa: data['datosComplimentos'].formaModificaciones.nombreDeActa,
         numeroNotario: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
         entidadFederativa: data['datosComplimentos'].formaModificaciones.estado,
-        fechaActa: data['datosComplimentos'].formaModificaciones.fechaDeActa
+        fechaActa: formatearFechaYyyyMmDd(data['datosComplimentos'].formaModificaciones.fechaDeActa)
       },
       modalidad: data['datosComplimentos'].modalidad,
       booleanGenerico: data['datosComplimentos'].programaPreOperativo ? true : false,
@@ -470,10 +540,50 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
       descripcionLugarEmbarque: data['datosComplimentos'].datosGeneralis.localizacion,
       capacidadAlmacenaje: data['datosComplimentos'].formaModificaciones.nombreDeNotaria,
       numeroPermiso: data['datosComplimentos'].obligacionesFiscales.opinionPositiva === 1 ? 'SI' : '',
-      fechaOperacion: data['datosComplimentos'].obligacionesFiscales.fechaExpedicion,
+      fechaOperacion: formatearFechaYyyyMmDd(data['datosComplimentos'].obligacionesFiscales.fechaExpedicion), 
       nomOficialAutorizado: data['datosComplimentos'].formaModificaciones.nombreDelFederatario,
 
     };
+  }
+
+  /**
+ * Construye un arreglo de socios/accionistas a partir de dos listas de entrada,
+ * utilizando un objeto base como plantilla y datos complementarios para completar
+ * los campos faltantes.
+ *
+ * @param arr1 Primer arreglo de socios/accionistas.
+ * @param arr2 Segundo arreglo de socios/accionistas.
+ * @param base Objeto base que sirve de plantilla para cada elemento del resultado.
+ * @param data Objeto con datos complementarios necesarios para completar el payload.
+ *
+ * @returns Un nuevo arreglo que contiene los objetos combinados y mapeados
+ *          con la información de los dos arreglos de entrada.
+ *
+ * @example
+ * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
+ */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+  buildSociosAccionistas(arr1: any[] = [], arr2: any[] = [], base: Record<string, any>): any[] {
+    const BASE_OBJECT = base[0];
+    const CLONED_BASE = structuredClone ? structuredClone(BASE_OBJECT) : JSON.parse(JSON.stringify(BASE_OBJECT));
+    const MAP_TO_PAYLOAD = (item: Record<string, unknown>): Record<string, unknown> => ({
+      ...CLONED_BASE,
+      nombre: item['nombre'] ?? '',
+      apellidoPaterno: item['apellidoPaterno'] ?? '',
+      apellidoMaterno: item['apellidoMaterno'] ?? '',
+      rfc: item['rfc'] ?? '',
+      correoElectronico: item['correoElectronico'] ?? '',
+      razonSocial: item['razonSocial'] ?? '',
+      estadoEvaluacionEntidad: item['estado'] ?? '',
+      estadoEntidad: item['estado'] ?? '',
+      cvePaisOrigen: item['pais'] ?? '',
+      rfcExtranjero: item['taxId'] ?? '',
+      domicilio: {
+        codigoPostal: item['codigoPostal'] ?? '',
+      }
+    });
+
+    return [...arr1.map(MAP_TO_PAYLOAD), ...arr2.map(MAP_TO_PAYLOAD)];
   }
 
   /** Construye el arreglo de declaraciones de solicitud a partir de los datos proporcionados. */
@@ -588,8 +698,47 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
         fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
         fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
         categoriaFraccion: item.encabezadoCategoria,
+        tipoFraccion:item.encabezadoTipo,
+        umt:item.encabezadoUmt
       });
     });
+
+    /**
+     * Transforma un objeto de entrada en un objeto con los datos requeridos para el proyecto IMMEX.
+     *
+     * @param item - Objeto de entrada que contiene los datos del encabezado del documento.
+     * @returns Un objeto con las propiedades mapeadas para el proyecto IMMEX:
+     *   - tipoDocumento: Tipo de documento del encabezado.
+     *   - descripcion: Descripción adicional del encabezado.
+     *   - fechaFirma: Fecha de firma del documento.
+     *   - fechaVigencia: Fecha de vigencia del documento.
+     *   - rfcFirmante: RFC del firmante.
+     *   - razonFirmante: Razón social del firmante.
+     *   - testado: Valor booleano fijo en true.
+     *   - fecFinVigencia: Fecha de fin de vigencia del documento.
+     */
+     const proyectoImmexDatos = (item: any) => ({
+      tipoDocumento: item.encabezadoTipoDocument,
+      descripcion: item.encabezadoDescripcionOtro,
+      fechaFirma:  item.encabezadoFechaFirma,
+      fechaVigencia:  item.encabezadoFechaVigencia,
+      rfcFirmante:  item.encabezadoRfc,
+      razonFirmante:  item.encabezadoRazonFirmante,
+      testado: true,
+      fecFinVigencia:  item.encabezadoFechaVigencia,
+    });
+
+     const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
+              paisOrigen: item.paisOrigen,
+              rfcProveedor: item.rfcProveedor,
+              razonProveedor: item.razonProveedor,
+              paisDestino: item.paisDestino,
+              rfcCliente: item.rfcClinte,
+              razonCliente: item.razonSocial,
+              domicilio: item.domicilio,
+              descTestado: item.descTestado,
+            });
+
     
       return {
         anexo: {
@@ -597,7 +746,9 @@ buildDatosFederatarios(arr: any[] = [], base: Record<string, any>): any[] {
           ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
           proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
           datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
-          tableDos: anexoDos
+          tableDos: anexoDos,
+           proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
+           proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
         },
       };
     }

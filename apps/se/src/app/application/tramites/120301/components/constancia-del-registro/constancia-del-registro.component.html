@@ -33,16 +33,12 @@
               [required]="true"
               [isDisabled]="formularioDeshabilitado"
               [placeholder]="'Seleccione un año'"
-              (change)="onAnoConstanciaChangeFromSelect($event)"
-              (selectionChange)="onAnoConstanciaChange($event)"
+              [markTouched]="fitosanitarioForm.get('anoDeLaConstancia')?.touched??false"
             ></app-catalogo-select>
-              @if(fitosanitarioForm.get('anoDeLaConstancia')?.invalid && (fitosanitarioForm.get('anoDeLaConstancia')?.touched || enviada)) {
-                <small class="text-danger mt-1">Año del oficio de asignación es un campo requerido</small>
-              }
           </div>
 
           <div class="col-md-6">
-              <label class="form-label">Número de la constancia de registro<span class="require" [ngClass]="fitosanitarioForm.get('numeroDeLaConstancia')?.touched && fitosanitarioForm.get('numeroDeLaConstancia')?.invalid ? 'require-error' : ''">*</span>:</label>
+            <label for="numeroDeLaConstancia" class="form-label">Número de la constancia de registro<span [ngClass]="{'text-danger': fitosanitarioForm.get('numeroDeLaConstancia')?.invalid && (fitosanitarioForm.get('numeroDeLaConstancia')?.touched || fitosanitarioForm.get('numeroDeLaConstancia')?.dirty)}">*</span>:</label>
               <input 
                 type="text" 
                 required="true" 
