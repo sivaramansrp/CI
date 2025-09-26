@@ -166,13 +166,6 @@ export class RegistroPageComponent implements OnDestroy {
       this.seccion.establecerFormaValida([true]);
     })
 
-    this.tramiteQuery.selectIdSolicitud$
-          .pipe(
-            takeUntil(this.destroyNotifier$),
-            map((seccionState) => {
-              this.idSolicitudState = seccionState;
-            })
-          ).subscribe();
   }
   
   getValorIndice(e: AccionBoton): void {
@@ -205,6 +198,7 @@ export class RegistroPageComponent implements OnDestroy {
             this.datosPasos.indice = this.indice;
             this.wizardComponent.siguiente();
             if (respuesta.datos?.id_solicitud) {
+              this.idSolicitudState = respuesta.datos.id_solicitud;
               this.tranmiteStore.setIdSolicitud(respuesta.datos.id_solicitud);
             }
         },
