@@ -1,49 +1,55 @@
-/**
- * Servicio para obtener la tabla de mercancía desde un archivo JSON local.
- *
- * Este servicio proporciona un método para obtener los datos de la tabla de mercancía
- * consumiendo el archivo JSON correspondiente a la ruta '/assets/json/103/mercancia-table.json'.
- *
- * @example
- *   constructor(private mercanciaTableService: MercanciaTableService) {}
- *   this.mercanciaTableService.getTable().subscribe(data => { ... });
- *
- * @see MercanciaTableService.getTable
- */
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { MercanciaTableService } from './mercancia-table.service';
 
-/**
- * Servicio para la obtención de la tabla de mercancía.
- *
- * @remarks
- * Utiliza HttpClient para realizar una petición GET al archivo JSON local.
- */
-@Injectable({
-  providedIn: 'root'
-})
-export class MercanciaTableService {
-  /**
-   * Ruta del archivo JSON con la información de la tabla de mercancía.
-   * @private
-   * @readonly
-   * @type {string}
-   */
-  private readonly jsonUrl = '/assets/json/103/mercancia-table.json';
+describe('MercanciaTableService', () => {
+  let service: MercanciaTableService;
+  let httpMock: HttpTestingController;
 
-  /**
-   * Inicializa el servicio con HttpClient.
-   * @param {HttpClient} http - Cliente HTTP de Angular para peticiones REST.
-   */
-  constructor(private http: HttpClient) {}
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [MercanciaTableService]
+    });
+    service = TestBed.inject(MercanciaTableService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
 
-  /**
-   * Obtiene los datos de la tabla de mercancía desde el archivo JSON.
-   *
-   * @returns {Observable<any>} Observable con los datos de la tabla de mercancía.
-   */
-  getTable(): Observable<any> {
-    return this.http.get<any>(this.jsonUrl);
-  }
-}
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  it('should get table data from JSON file', () => {
+    const mockData = {
+      mercancia: [
+        { id: 1, nombre: 'Mercancía 1' },
+        { id: 2, nombre: 'Mercancía 2' }
+      ]
+    };
+
+    service.getTable().subscribe(data => {
+      expect(data).toEqual(mockData);
+    });
+
+    const req = httpMock.expectOne('/assets/json/103/mercancia-table.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
+  });
+
+  it('should handle error when fetching table data', () => {
+    service.getTable().subscribe(
+      data => fail('should have failed with 404 error'),
+      error => {
+        expect(error.status).toBe(404);
+      }
+    );
+
+    const req = httpMock.expectOne('/assets/json/103/mercancia-table.json');
+    expect(req.request.method).toBe('GET');
+    req.flush('Something went wrong', { status: 404, statusText: 'Not Found' });
+  });
+});

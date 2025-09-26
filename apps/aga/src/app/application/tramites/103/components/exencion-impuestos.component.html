@@ -41,13 +41,13 @@
           </div>
           <div class="table-container mt-5">
             <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [disableSeleccionTablaCheckBox]="soloLectura" [configuracionTabla]="mercanciaHeaderData"
-              [datos]="mercanciaBodyData" (filaClic)="seleccionarFila($event)">
+              [datos]="mercanciaBodyData" (listaDeFilaSeleccionada)="manejarSeleccionMultiple($event)">
             </app-tabla-dinamica>
           </div>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-default" [disabled]="soloLectura || filaSeleccionada === null"
+            <button type="button" class="btn btn-default" [disabled]="soloLectura || filasSeleccionadas.length !== 1"
               (click)="editarFila(filaSeleccionada)">Modificar</button>
-            <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura || filaSeleccionada === null"
+            <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura || filasSeleccionadas.length !== 1"
               data-bs-toggle="modal" data-bs-target="#confirmarModalCancelar" (click)="prepararEliminarFila(filaSeleccionada)">Eliminar</button>
             <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal"
               data-bs-target="#modalAgregarMercancias" (click)="abrirDialogoMercancias()"
@@ -351,7 +351,7 @@
 <!-- Confirmar modal (Ningún vehículo registrado) -->
 <div id="confirmarModal" aria-labelledby="confirmarModalLabel" class="modal fade" tabindex="-1" role="dialog"
   aria-hidden="true" #confirmarModal>
-  <div class="modal-dialog modal-sm" role="document" style="max-width: 350px!important;">
+  <div class="modal-dialog modal-sm confirmar-modal-small" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
@@ -359,7 +359,7 @@
       <div class="modal-body">
         <label>No se ha registrado ningún vehículo en el año fiscal 2025.</label>
       </div>
-      <div class="modal-footer" style="justify-content: center">
+      <div class="modal-footer modal-footer-centered">
         <button type="button" class="btn btn-primary" (click)="agregarMercancias()" data-bs-dismiss="modal"
           #closeConfirmarModal [disabled]="soloLectura">Aceptar</button>
       </div>
@@ -368,18 +368,18 @@
 </div>
 
 <!-- Confirmar Modal Agregar (Sin marcar casilla de verificación) -->
-<div id="confirmarModalAgregar" aria-labelledby="confirmarModalAgregarLabel" class="modal fade" tabindex="-1" role="dialog"
+<div id="confirmarModalAgregar" aria-labelledby="confirmarModalAgregarLabel" class="modal fade confirmar-modal-agregar" role="dialog"
   aria-hidden="true" #confirmarModalAgregar>
-  <div class="modal-dialog modal-sm" role="document" style="max-width: 350px!important;">
+  <div class="modal-dialog modal-sm confirmar-modal-small" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
+        <button type="button" aria-label="Close" class="btn-close" (click)="cerrarModalManual()"></button>
       </div>
       <div class="modal-body">
-        <label>La mercancía fue agregada correctamente.</label>
+        <label id="confirmarModalAgregarLabel">La mercancía fue agregada correctamente.</label>
       </div>
-      <div class="modal-footer" style="justify-content: center">
-        <button type="button" class="btn btn-primary" (click)="agregarMercanciasAceptar()" data-bs-dismiss="modal"
+      <div class="modal-footer modal-footer-centered">
+        <button type="button" class="btn btn-primary" (click)="agregarMercanciasAceptar()"
           #closeConfirmarModal [disabled]="soloLectura">Aceptar</button>
       </div>
     </div>
@@ -390,7 +390,7 @@
 <!-- Confirmar Cancelar Modal (Confirmación de eliminación)-->
 <div id="confirmarModalCancelar" aria-labelledby="confirmarModalCancelarLabel" class="modal fade" tabindex="-1" role="dialog"
   aria-hidden="true" #confirmarModalCancelar>
-  <div class="modal-dialog modal-sm modal-cancelar" role="document" style="max-width: 650px!important;">
+  <div class="modal-dialog modal-sm modal-cancelar confirmar-modal-large" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
@@ -398,7 +398,7 @@
       <div class="modal-body">
         <label>¿Estás seguro que deseas eliminar los registros marcados?</label>
       </div>
-      <div class="modal-footer" style="justify-content: center">
+      <div class="modal-footer modal-footer-centered">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-primary" (click)="eliminarMercancias()" data-bs-dismiss="modal"
           #closeConfirmarModal [disabled]="soloLectura">Aceptar</button>
@@ -408,10 +408,9 @@
 </div>
 
 <!-- Modalidad de confirmación del vehículo -->
-<div id="confirmarModalVehiculo" aria-labelledby="confirmarModalVehiculoLabel" class="modal fade" tabindex="-1" role="dialog"
-  aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" #confirmarModalVehiculo
-  style="z-index: 1070 !important;">
-  <div class="modal-dialog modal-sm" role="document" style="max-width: 450px !important;">
+<div id="confirmarModalVehiculo" aria-labelledby="confirmarModalVehiculoLabel" class="modal fade modal-vehiculo-confirmation" tabindex="-1" role="dialog"
+  aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" #confirmarModalVehiculo>
+  <div class="modal-dialog modal-sm confirmar-modal-medium" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="confirmarModalVehiculoLabel">Confirmación de Vehículo</h5>
@@ -419,7 +418,7 @@
       <div class="modal-body">
         <p><strong>No se ha registrado ningún vehículo en el año fiscal 2025.</strong></p>
       </div>
-      <div class="modal-footer" style="justify-content: center;">
+      <div class="modal-footer modal-footer-centered">
         <button type="button" class="btn btn-primary" (click)="confirmarVehiculo()" data-bs-dismiss="modal"
           [disabled]="soloLectura">
           Aceptar

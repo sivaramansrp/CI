@@ -523,9 +523,9 @@ export const API_GET_DATOS_SOLICITANTE = (TRAMITE: string, IDSOLICITUD: string) 
 
 /*
  * API para obtener el catálogo de immex
- * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/immex
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/servicios-immex
  */
-export const CATALOGO_IMMEX = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/immex`;
+export const CATALOGO_IMMEX = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/servicios-immex`;
 
 /*
  * API para obtener el catálogo de estados
@@ -555,3 +555,8 @@ export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string, PROCEDURE: number)
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/firmar
  */
 export const API_POST_FIRMA = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/firmar`;
+
+/** API para guardar la solicitud del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/solicitud/guardar
+ */
+export const API_POST_SOLICITUD_GUARDAR = (PROCEDURE: string): string => `sat-t${PROCEDURE}/solicitud/guardar`;

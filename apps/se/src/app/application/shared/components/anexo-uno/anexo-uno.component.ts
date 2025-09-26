@@ -8,6 +8,7 @@ import {
   RutaNombre,
 } from '../../models/nuevo-programa-industrial.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { OnChanges, Output } from '@angular/core';
 import { Subject, delay, takeUntil } from 'rxjs';
 import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
 import { CargaDeFraccionesComponent } from '../carga-de-fracciones/carga-de-fracciones.component';
@@ -18,8 +19,8 @@ import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
-import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
@@ -40,7 +41,7 @@ import { Validators } from '@angular/forms';
   templateUrl: './anexo-uno.component.html',
   styleUrl: './anexo-uno.component.scss',
 })
-export class AnexoUnoComponent implements OnInit, OnDestroy {
+export class AnexoUnoComponent implements OnInit, OnDestroy, OnChanges {
   public anexoUnoAlerta = ANEXO_UNO_ALERTA;
   public anexoUnoFormGroup!: FormGroup;
   public anexoDosFormGroup!: FormGroup;
@@ -215,7 +216,10 @@ export class AnexoUnoComponent implements OnInit, OnDestroy {
    * Constructor de la clase AnexoUnoComponent
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos
    */
-  constructor(private fb: FormBuilder, private complimentosService: ComplimentosService) {
+  constructor(
+    private fb: FormBuilder,
+    private complimentosService: ComplimentosService,
+    private servicioDeFormularioService: ServicioDeFormularioService,) {
     this.crearFormularioAnexoUno();
     this.crearFormularioAnexoDos();
   }
@@ -307,7 +311,20 @@ export class AnexoUnoComponent implements OnInit, OnDestroy {
       .subscribe((_) => {
         this.complimentosDatosDos.emit(this.anexoDosFormGroup.value);
       });
+  }
+  /** Sincroniza los datos de las tablas de Anexo Dos y Tres con el servicio de formularios al detectar cambios. */
+  ngOnChanges(): void {
+    if (this.anexoUnoTablaLista.length === 0) {
+        this.servicioDeFormularioService.registerArray('anexoUnoTabla1', this.anexoUnoTablaLista);
+      } else {
+        this.servicioDeFormularioService.setArray('anexoUnoTabla1', this.anexoUnoTablaLista);
+      }
 
+      if (this.anexoDosTablaLista.length === 0) {
+        this.servicioDeFormularioService.registerArray('anexoUnoTabla2', this.anexoDosTablaLista);
+      } else {
+        this.servicioDeFormularioService.setArray('anexoUnoTabla2', this.anexoDosTablaLista);
+      }
   }
 
   /**

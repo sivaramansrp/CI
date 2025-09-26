@@ -1,6 +1,7 @@
-import { API_POST_GUARDADO_PARCIAL } from '../server/api-router';
+import { API_POST_GUARDADO_PARCIAL, API_POST_GUARDAR_SOLICITUD } from '../server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { GuardarSolicitudCompletaRequest } from '../models/request/guardar-solicitud-request.model';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from 'rxjs';
@@ -31,5 +32,15 @@ export class GuardadoService {
   postGuardadoParcial(PAYLOAD: ParcialRequest): Observable<BaseResponse<ParcialResponse>> {
     const ENDPOINT = `${this.host}` + API_POST_GUARDADO_PARCIAL;
     return this.http.post<BaseResponse<ParcialResponse>>(ENDPOINT, PAYLOAD);
+  }
+
+  /**
+   * Envía la solicitud para guardado completo del trámite 120301.
+   * @param PAYLOAD Datos de la solicitud completa.
+   * @returns Observable con la respuesta del servidor.
+   */
+  postGuardadoCompleto(PAYLOAD: GuardarSolicitudCompletaRequest): Observable<BaseResponse<null>> {
+    const ENDPOINT = `${this.host}` + API_POST_GUARDAR_SOLICITUD;
+    return this.http.post<BaseResponse<null>>(ENDPOINT, PAYLOAD);
   }
 }
