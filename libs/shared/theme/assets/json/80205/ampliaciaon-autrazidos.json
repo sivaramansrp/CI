@@ -1,13 +1,12 @@
 [
     {
-      "id": 1,
-      "descripiónDelServicio": "Servicio de gestión de datos",
-      "descripcion": "Este servicio permite la administración eficiente de los datos empresariales.",
-      "tipode": "Tecnología"
-    },
-    {
-      "id": 2,
-      "descripiónDelServicio": "Servicio de soporte técnico",
-      "descripcion": "Asistencia técnica para usuarios internos.",
-      "tipode": "Soporte"
-    }]
+  "estatus": "A",
+  "desEstatus": "Autorizado",
+  "idServicio": "SVC123",
+  "idSolicitud": "SOL456",
+  "tipoServicio": "T1",
+  "claveServicio": "CLV001",
+  "descripcion": "Consultoría en Tecnologías de Información",
+  "descripcionTipo": "Servicios Profesionales"
+}
+  ]
