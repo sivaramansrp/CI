@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
+import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CARGA_MERCANCIA_SELECCIONADAS_LIST, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, MERCANCIA_SELECCIONADAS_LIST, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { CommonModule } from '@angular/common';
@@ -361,12 +361,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
   configuracionTablaMercanciaDisponible: ConfiguracionColumna<Mercancia>[] = CONFIGURACION_MERCANCIA_TABLA;
-
+mercanciasDisponiblesTablaDisponible: boolean = false;
   /**
    * Configuración de las columnas de la tabla de mercancia seleccionada.
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
-  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_SELECCIONADAS;
+  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = !this.mercanciasDisponiblesTablaDisponible ? CARGA_MERCANCIA_SELECCIONADAS : MERCANCIA_SELECCIONADAS_LIST;
 
 cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
   /**
@@ -769,6 +769,7 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
    * Inicializa el estado del formulario llamando a `inicializarEstadoFormulario()`.
    */
   ngOnInit(): void {
+    this.mercanciasDisponiblesTablaDisponible = CARGA_MERCANCIA_SELECCIONADAS_LIST.includes(this.idProcedimiento);
     this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
     this.fechaBoton = BOTON_DE_OPCION_VER.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();

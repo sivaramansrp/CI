@@ -93,6 +93,49 @@ export const MERCANCIA_SELECCIONADAS = [
   }
 ];
 
+export const MERCANCIA_SELECCIONADAS_LIST = [
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (ele: Mercancia): string | undefined => ele.fraccionArancelaria,
+    orden: 1,
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (ele: Mercancia): string | undefined => ele.cantidad,
+    orden: 2,
+  },
+  {
+    encabezado: 'Unidad de medida',
+    clave: (ele: Mercancia): string | undefined => ele.unidadMedidaMasaBruta,
+    orden: 3,
+  },
+  {
+    encabezado: 'Valor mercancía',
+    clave: (ele: Mercancia): string | undefined => ele.valorMercancia,
+    orden: 4,
+  },
+  {
+    encabezado: 'Tipo de factura',
+    clave: (ele: Mercancia): string | undefined => ele.tipoFactura,
+    orden: 5,
+  },
+  {
+    encabezado: 'Número factura',
+    clave: (ele: Mercancia): string | undefined => ele.numeroFactura,
+    orden: 6,
+  },
+  {
+    encabezado: 'Complemento descripción',
+    clave: (ele: Mercancia): string | undefined => ele.complementoDescripcion,
+    orden: 7,
+  },
+  {
+    encabezado: 'Fecha factura',
+    clave: (ele: Mercancia): string | undefined => ele.fechaFactura,
+    orden: 8,
+  }
+];
+
 /**`
  * @constant {Array<Object>} CARGA_MERCANCIA_SELECCIONADAS
  * 
@@ -340,6 +383,8 @@ export const CONFIGURACION_MERCANCIA_TABLA = [
  * @type {number[]}
  */
 export const FECHA_ID = [ 110204,110223 ];
+
+export const CARGA_MERCANCIA_SELECCIONADAS_LIST = [110211]
 /**
  * @constant REQUIREDA
  * @description
