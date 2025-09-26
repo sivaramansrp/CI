@@ -170,6 +170,10 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
 
   REGEX_NUMERIC_ONLY = REGEX_NUMERIC_ONLY;
 
+  /**
+   * Recupera el estado de la solicitud desde el query y asigna los datos a variables locales.
+   * La suscripción se cancela usando `takeUntil(this.destroyed$)`.
+   */
   obtenerEstadoSolicitud(): void {
     this.tramite231001Query.selectSolicitud$
       ?.pipe(takeUntil(this.destroyed$))
@@ -258,6 +262,10 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Solicita y mapea el catálogo de unidades de medida para el trámite 231001.
+   * La respuesta se transforma al formato `Catalogo` esperado por los selects del componente.
+   */
   getUnidadMedida(): void {
     this.catalogoService
       .getUnidadMedida('231001')
@@ -271,6 +279,11 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Maneja el cambio de capítulo de fracción.
+   * - Si el valor es vacío, resetea controles dependientes.
+   * - Si tiene valor, normaliza la clave a 2 dígitos y solicita las partidas asociadas.
+   */
   changeCapituloFraccion(): void {
     if (!this.materiaPrimaForm) {
       return;
@@ -307,6 +320,11 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
     this.obtenerPartidasFraccion(CLAVE);
   }
 
+  /**
+   * Maneja el cambio de partida de fracción.
+   * - Si el valor es vacío, resetea controles dependientes.
+   * - Si tiene valor, normaliza claves a 2 dígitos y solicita las subpartidas asociadas.
+   */
   changePartidaFraccion(): void {
     if (!this.materiaPrimaForm) {
       return;
@@ -346,6 +364,11 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
     this.obtenerSubPartidasFraccion(CAPITULO_CLAVE, PARTIDA_CLAVE);
   }
 
+  /**
+   * Maneja el cambio de subpartida de fracción.
+   * - Si el valor es vacío, resetea controles dependientes.
+   * - Si tiene valor, normaliza claves a 2 dígitos y solicita las fracciones arancelarias asociadas.
+   */
   changeSubPartidaFraccion(): void {
     if (!this.materiaPrimaForm) {
       return;
@@ -388,6 +411,12 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
     this.getFracciones(CAPITULO_CLAVE, PARTIDA_CLAVE, SUB_PARTIDA_CLAVE);
   }
 
+  /**
+   * Obtiene la lista de capítulos desde el servicio de catálogos y mapea la respuesta
+   * al formato de `Catalogo` usado por los selects del componente.
+   *
+   * Realiza la suscripción con `takeUntil(this.destroyed$)` para evitar fugas.
+   */
   getCapitulos(): void {
     this.catalogoService
       .getCapitulos()
@@ -401,6 +430,10 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Obtiene las partidas asociadas a un capítulo de fracción.
+   * @param cveCapitulo - Clave del capítulo (ya formateada a dos dígitos al ser llamada).
+   */
   obtenerPartidasFraccion(cveCapitulo: string): void {
     this.catalogoService
       .getPartidas(cveCapitulo)
@@ -414,6 +447,11 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Obtiene las subpartidas asociadas a una partida y capítulo de fracción.
+   * @param cveCapitulo - Clave del capítulo (2 dígitos).
+   * @param cvePartida - Clave de la partida (2 dígitos).
+   */
   obtenerSubPartidasFraccion(cveCapitulo: string, cvePartida: string): void {
     this.catalogoService
       .getSubPartidas(cveCapitulo, cvePartida)
@@ -427,6 +465,12 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Obtiene las fracciones arancelarias correspondientes a la combinación capítulo/partida/subpartida.
+   * @param cveCapitulo - Clave del capítulo (2 dígitos).
+   * @param cvePartida - Clave de la partida (2 dígitos).
+   * @param cveSubPartida - Clave de la subpartida (2 dígitos).
+   */
   getFracciones(
     cveCapitulo: string,
     cvePartida: string,
@@ -444,12 +488,25 @@ export class DatosDeLosResiduosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Cierra el modal de alta de materia prima:
+   * - Restablece el formulario.
+   * - Emite el evento `cerrar` para notificar al componente padre.
+   */
   closeModal(): void {
     this.esFormaValido = true;
     this.materiaPrimaForm.reset();
     this.cerrar.next();
   }
 
+  /**
+   * Guarda la materia prima validando el formulario, construyendo el objeto `MateriaPrima231001`,
+   * actualizando el store y limpiando el formulario/modal.
+   *
+   * - Valida controles y muestra errores si aplica.
+   * - Mapea valores y normaliza claves (padStart).
+   * - Actualiza el estado global vía `tramite231001Store`.
+   */
   guardarMateriaPrima(): void {
     const DESC_UM = this.comboUnidadMedida.find(
       (umc) =>

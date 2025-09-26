@@ -1,3 +1,10 @@
+/**
+ * Utilidad para convertir cantidades numéricas a su representación en letras (español).
+ * - Soporta parte entera y decimal (los decimales se procesan como "PUNTO X").
+ * - Límite de conversión: valores >= 0 y < 1,000,000 (según isNumberValid).
+ *
+ * Nota: Sólo se añadieron comentarios; la lógica original se mantiene sin cambios.
+ */
 export class ConvertNumberAmountToStringAmount {
   private static unidades: string[] = [
     '',
@@ -67,6 +74,13 @@ export class ConvertNumberAmountToStringAmount {
     ' MIL',
   ];
 
+  /**
+   * Convierte un número a su representación en letras en español.
+   * Ejemplo: 123 -> "CIENTO VEINTITRES"
+   *
+   * @param numeros Número a convertir (puede incluir decimales).
+   * @returns Cadena con la representación en letras o cadena vacía si el número no es válido.
+   */
   public static convierteNumerosALetra(numeros: number): string {
     if (!this.isNumberValid(numeros.toString())) {
       return '';
@@ -139,6 +153,13 @@ export class ConvertNumberAmountToStringAmount {
     return CANTIDAD_LETRA.join('') + CADENA_DECIMAL.join('');
   }
 
+  /**
+   * Construye la representación en letras de un bloque de hasta tres dígitos (0-999).
+   * Maneja casos especiales como 100 -> "CIEN" y combina centenas/decenas/unidades.
+   *
+   * @param x Número entero entre 0 y 999.
+   * @returns Cadena parcial en letras para ese bloque de hasta tres dígitos.
+   */
   private static obtenerCantidadLetraParcial(x: number): string {
     if (x === 100) {
       return 'CIEN';
@@ -164,6 +185,13 @@ export class ConvertNumberAmountToStringAmount {
     return LETRA + ' ' + this.decenas[Math.floor(RESTO / 10)];
   }
 
+  /**
+   * Valida que la cadena represente un número adecuado para conversión.
+   * Condiciones: parseFloat(cadena) >= 0 y < 1,000,000 y que no sea NaN.
+   *
+   * @param cadena Representación en texto del número a validar.
+   * @returns true si es válido; false en caso contrario.
+   */
   private static isNumberValid(cadena: string): boolean {
     return (
       !isNaN(Number(cadena)) &&

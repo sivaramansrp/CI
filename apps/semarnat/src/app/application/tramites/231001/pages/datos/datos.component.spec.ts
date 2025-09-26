@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosComponent } from './datos.component';
-import { PASOS } from '@libs/shared/data-access-user/src'; // Removed WizardComponent import
+import { PASOS } from '@libs/shared/data-access-user/src';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('DatosComponent', () => {
@@ -10,13 +10,13 @@ describe('DatosComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DatosComponent],
-      schemas: [NO_ERRORS_SCHEMA], // keep schema to ignore unknown child components/elements
+      schemas: [NO_ERRORS_SCHEMA], 
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    // Assign the mock after detectChanges so it is not overwritten by @ViewChild/ngAfterViewInit
+  
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),

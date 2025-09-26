@@ -1,5 +1,11 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { catchError, switchMap, throwError } from 'rxjs';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+} from '@angular/core';
+import { Subject, catchError, switchMap, takeUntil, throwError } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { AlertComponent } from '../alert/alert.component';
 import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
@@ -19,12 +25,18 @@ import { Router } from '@angular/router';
   templateUrl: './acuse.component.html',
   styleUrl: './acuse.component.scss',
 })
-export class AcuseComponent implements OnChanges {
+export class AcuseComponent implements OnChanges, OnDestroy {
   /**
    * Título principal que se mostrará en el encabezado del componente.
    * Generalmente representa el nombre del trámite o sección.
    */
   @Input() titulo!: string;
+
+  /**
+   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
+   *
+   */
+  private destroyed$ = new Subject<void>();
 
   /**
    * Texto del mensaje de alerta que se mostrará en el componente.
@@ -131,31 +143,44 @@ export class AcuseComponent implements OnChanges {
    * Luego, obtiene el contenido del documento generado y lo muestra en la tabla de acuse.
    */
   generarYMostrarDocumentos(): void {
-    if (this.url === 'pexim' || [80101, 80102, 80103, 80104, 80105, 80202, 80203, 80205, 80206, 80207, 80208, 80210, 80211].includes(this.procedure)) {
-      this.documentosService130118.guardarAcuse(this.idSolicitud.toString(),this.procedure).pipe(
-        switchMap(() => {
-          return this.documentosService130118.vistaPrevia(this.idSolicitud.toString(), this.procedure);
-        }),
-        catchError((error) => {
-          console.error('Error en guardarAcuse o vistaPrevia:', error);
-          return throwError(() => error);
-        })
-      ).subscribe({
-        next: (response) => {
-          if (response?.datos) {
-            this.datosTablaAcuse = [{
-              id: 1,
-              documento: response.datos.nombre_archivo,
-              urlPdf: AcuseComponent.crearUrlPdf(response.datos.contenido),
-              idDocumento: '1'
-            }];
-          } else {
-            this.datosTablaAcuse = [];
-          }
-        },
-        error: (err) => console.error('Error:', err)
-      });
-
+    if (
+      this.url === 'pexim' ||
+      [
+        80101, 80102, 80103, 80104, 80105, 80202, 80203, 80205, 80206, 80207,
+        80208, 80210, 80211,
+      ].includes(this.procedure)
+    ) {
+      this.documentosService130118
+        .guardarAcuse(this.idSolicitud.toString(), this.procedure)
+        .pipe(
+          switchMap(() => {
+            return this.documentosService130118.vistaPrevia(
+              this.idSolicitud.toString(),
+              this.procedure
+            );
+          }),
+          catchError((error) => {
+            console.error('Error en guardarAcuse o vistaPrevia:', error);
+            return throwError(() => error);
+          })
+        )
+        .subscribe({
+          next: (response) => {
+            if (response?.datos) {
+              this.datosTablaAcuse = [
+                {
+                  id: 1,
+                  documento: response.datos.nombre_archivo,
+                  urlPdf: AcuseComponent.crearUrlPdf(response.datos.contenido),
+                  idDocumento: '1',
+                },
+              ];
+            } else {
+              this.datosTablaAcuse = [];
+            }
+          },
+          error: (err) => console.error('Error:', err),
+        });
     } else if (this.url === 'elegibilidad-de-textiles') {
       this.acusesService
         .guardarAcuse(this.idSolicitud.toString(), 120301)
@@ -378,6 +403,7 @@ export class AcuseComponent implements OnChanges {
     this.documentosService130118
       .guardarAcuse(this.idSolicitud.toString(), this.procedure)
       .pipe(
+        takeUntil(this.destroyed$),
         switchMap(() => {
           return this.documentosService130118.vistaPrevia(
             this.idSolicitud.toString(),
@@ -406,5 +432,14 @@ export class AcuseComponent implements OnChanges {
         },
         error: (err) => console.error('Error:', err),
       });
+  }
+
+  /**
+   * Método que se ejecuta cuando el componente es destruido.
+   * Se utiliza para limpiar recursos y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

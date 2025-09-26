@@ -63,18 +63,28 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
   styleUrl: './datos-residuos-peligrosos.component.scss',
 })
 export class DatosResiduosPeligrososComponent implements OnInit {
+  /**
+   * Evento emitido cuando se agrega un residuo peligroso.
+   * El payload es un objeto `ResiduoPeligroso`.
+   */
   @Output() residuoAgregado = new EventEmitter<ResiduoPeligroso>();
+
+  /** Indica si el formulario está en estado válido (usado para mostrar mensajes). */
   esFormaValido = true;
+
+  /** Mensaje de alerta mostrado en pantalla cuando hay errores de validación. */
   alertaErrorFormulario = '';
+
+  /** Notificación para mostrar alertas/errores al usuario. */
   public nuevaNotificacion: Notificacion = {} as Notificacion;
+
+  /** Conjunto de índices seleccionados en la tabla (para acciones en lote). */
   itemsSeleccionados: Set<number> = new Set();
-  /**
-   * Formulario reactivo que contiene los datos generales del residuo.
-   */
+
+  /** Formulario reactivo de datos de materia prima. */
   formularioMateriaPrima!: FormGroup;
-  /**
-   * Formulario reactivo que contiene la información detallada del residuo peligroso.
-   */
+
+  /** Formulario reactivo de captura del residuo peligroso. */
   formularioResiduo!: FormGroup;
 
   /**
@@ -116,11 +126,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   borrarHabilitado = false;
 
   /**
-   * Constructor del componente. Inicializa el formulario reactivo y conecta con el store y query de Akita.
-   *
-   * @param fb - Constructor del formulario reactivo.
-   * @param formularioStore - Store de Akita que gestiona el estado del formulario de residuos.
-   * @param formularioQuery - Query de Akita para obtener el estado actual del formulario.
+   * Constructor del componente.
+   * @param fb - FormBuilder para crear formularios reactivos.
+   * @param formularioStore - Store de Akita que persiste el estado del formulario.
+   * @param formularioQuery - Query de Akita para leer el estado actual del formulario.
    */
   constructor(
     public fb: FormBuilder,
@@ -147,13 +156,8 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.recuperarValoresDesdeStore();
   }
 
-  // getMateriasPrimas(): void {
-  //   this.materiaPrimaService.getMateriasPrimas().subscribe((data) => {
-  //     this.materiasDisponibles = data;
-  //   });
-  // }
   /**
-   * Inicializa el formulario de datos de materia prima con validaciones y algunos campos deshabilitados por defecto.
+   * Inicializa el formulario de materia prima con validaciones y campos deshabilitados por defecto.
    */
   private inicializarFormularioMateriaPrima(): void {
     this.formularioMateriaPrima = this.fb.group({
@@ -177,13 +181,16 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     });
   }
 
+  /**
+   * Maneja la selección múltiple de mercancias desde la tabla.
+   * @param seleccionados Array de mercancias seleccionadas.
+   */
   onSeleccionMultiple(seleccionados: MateriaPrima[]): void {
     this.selectedMercancias = seleccionados;
   }
 
   /**
-   * Crea el formulario para capturar los datos del residuo peligroso.
-   * Cada campo se inicializa con su valor por defecto y sus validaciones correspondientes.
+   * Crea el formulario para capturar los datos del residuo peligroso y sus validadores.
    */
   private crearFormularioResiduo(): void {
     this.formularioResiduo = this.fb.group({
@@ -235,8 +242,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   }
 
   /**
-   * Recupera los valores almacenados en el estado (store) de Akita y los asigna
-   * a los formularios correspondientes sin emitir eventos de cambio.
+   * Recupera valores almacenados en el store y los aplica a los formularios sin emitir eventos.
    */
   private recuperarValoresDesdeStore(): void {
     /** Obtiene el estado actual del store */
@@ -254,9 +260,8 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   }
 
   /**
-   * Actualiza un campo específico del formulario de datos de materia prima en el store.
-   *
-   * @param field - Nombre del campo del formulario de datos a actualizar.
+   * Actualiza un campo específico del formulario de datos de materia prima y lo persiste en el store.
+   * @param field - Clave del campo a actualizar.
    */
   actualizarCampoFormularioDatos(
     field: keyof EstadoFormularioResiduo['formularioMateriaPrima']
@@ -269,9 +274,8 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   }
 
   /**
-   * Actualiza un campo específico del formulario de residuos en el store.
-   *
-   * @param field - Nombre del campo del formulario de residuos a actualizar.
+   * Actualiza un campo específico del formulario de residuo y lo persiste en el store.
+   * @param field - Clave del campo a actualizar.
    */
   actualizarCampoFormularioResiduo(
     field: keyof EstadoFormularioResiduo['formularioResiduo']
@@ -284,16 +288,9 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   }
 
   /**
-   * Actualiza un campo específico en el formulario "formularioResiduo" y sincroniza las banderas de clasificación relacionadas.
-   *
-   * - Obtiene el valor del campo especificado desde el formulario.
-   * - Establece las banderas correspondientes en `clasificacionObj` según el valor del campo:
-   *   - `claveResiduo` se establece en `true` si el valor es 'Clave de residuo'.
-   *   - `nombre` se establece en `true` si el valor es 'Nombre'.
-   *   - `descripcion` se establece en `true` si el valor es 'Descripción'.
-   * - Actualiza el estado del formulario en `formularioStore` con el nuevo valor para el campo especificado.
-   *
-   * @param field - La clave del campo en el formulario `formularioResiduo` a actualizar.
+   * Similar a `actualizarCampoFormularioResiduo` pero sincroniza también las banderas
+   * de clasificación (clave, nombre, descripción) según el valor recibido.
+   * @param field - Clave del campo a actualizar.
    */
   actualizarCampoFormularioResiduoDos(
     field: keyof EstadoFormularioResiduo['formularioResiduo']
@@ -309,36 +306,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     });
   }
 
-  // agregarMateriaPrima(): void {
-  //   if (this.formularioMateriaPrima.valid) {
-  //     const MATERIA_NOMBRE =
-  //       this.materiasDisponiblesCatalogo.find(
-  //         (m) => m.id === this.formularioMateriaPrima.get('numero')?.value
-  //       )?.descripcion || '';
-
-  //     const NUEVA_MATERIA: MateriaPrima = {
-  //       id: this.formularioMateriaPrima.get('numero')?.value,
-  //       nombreMateriaPrima: MATERIA_NOMBRE,
-  //       cantidad: this.formularioMateriaPrima.get('cantidad')?.value,
-  //       cantidadLetra: this.formularioMateriaPrima.get('cantidadLetra')?.value,
-  //       unidadMedida: this.formularioMateriaPrima.get('unidadDeMedida')?.value,
-  //       unidadMedidaDescripcion:
-  //         this.formularioMateriaPrima.get('unidadDeMedida')?.value,
-  //       fraccionArancelaria: this.formularioMateriaPrima.get(
-  //         'fraccionArancelaria'
-  //       )?.value,
-  //     };
-
-  //     //this.materiasPrimas.push(NUEVA_MATERIA);
-
-  //     // Actualizar los datos de la tabla dinámica
-  //     this.materiasPrimasTabla = [...this.materiasPrimas];
-
-  //     // Limpiar el formulario
-  //     this.formularioMateriaPrima.reset();
-  //   }
-  // }
-
+  /**
+   * Elimina los elementos seleccionados del arreglo `materiasPrimas`.
+   * Ordena índices de mayor a menor para evitar desajustes al momento de eliminar.
+   */
   borrarElementosSeleccionados(): void {
     if (this.itemsSeleccionados.size === 0) {
       return;
@@ -359,6 +330,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.materiasPrimasTabla = [...this.materiasPrimas];
   }
 
+  /**
+   * Maneja las filas seleccionadas desde la tabla dinámica y actualiza el conjunto de índices seleccionados.
+   * @param filasSeleccionadas - Array de materias seleccionadas.
+   */
   onFilasSeleccionadas(filasSeleccionadas: MateriaPrima231001[]): void {
     // Limpiar selecciones previas
     this.itemsSeleccionados.clear();
@@ -375,6 +350,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.borrarHabilitado = this.itemsSeleccionados.size > 0;
   }
 
+  /**
+   * Inicia la búsqueda de materia prima por número de bitácora.
+   * Valida que el campo esté presente y maneja duplicados.
+   */
   buscarMateriaPrima(): void {
     const NUMERO = this.formularioMateriaPrima.get('numero')?.value;
     this.formularioMateriaPrima.get('numero')?.markAsTouched();
@@ -396,6 +375,9 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     }
   }
 
+  /**
+   * Muestra una notificación de duplicado cuando se intenta agregar una materia existente.
+   */
   mostrarNotificacionDuplicado(): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -410,14 +392,15 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     };
   }
 
+  /**
+   * Búsqueda simulada / remota de materia prima por ID de bitácora.
+   * Si se utiliza la API, aquí se debe sustituir por la llamada HTTP correspondiente.
+   */
   buscarMateriaPrimaById(): void {
     const NO_BITACORA = this.formularioMateriaPrima.get('numero')?.value;
     if (!NO_BITACORA) {
       this.setMateriaEncontradaMensaje('Debes ingresar un número de bitácora');
-      //return;
     }
-    // this.materiaPrimaService
-    //   .getMAteriaPrimaByBitacoraId(NO_BITACORA)
     //   .subscribe({
     //     next: (data) => {
     //       this.materiasDisponibles = data ?? [];
@@ -444,6 +427,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     //   });
   }
 
+  /**
+   * Establece el mensaje y estado cuando no se encuentra una materia prima.
+   * @param mensaje - Texto a mostrar al usuario.
+   */
   setMateriaEncontradaMensaje(mensaje: string): void {
     this.esFormaValido = false;
     this.alertaErrorFormulario = mensaje;
@@ -454,6 +441,9 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.formularioMateriaPrima.get('fraccionArancelaria')?.setValue('');
   }
 
+  /**
+   * Maneja el cambio en el dropdown de nombre de materia prima para autocompletar campos relacionados.
+   */
   onNombreMateriaPrimaChange(): void {
     const NUMERO = this.formularioMateriaPrima.get('numero')?.value;
     const MATERIA_ENCONTRADA = this.materiasDisponibles.find(
@@ -481,19 +471,11 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     }
   }
 
+  /**
+   * Valida formularios y crea el objeto ResiduoPeligroso que se emite al componente padre.
+   * Realiza limpieza de formularios y estados al final.
+   */
   agregarResiduoPeligroso(): void {
-    // Validar que el formulario de residuo sea válido
-    // if (this.formularioResiduo.invalid) {
-    //   // Marcar todos los campos como tocados para mostrar mensajes de error del formulario de residuo
-    //   Object.keys(this.formularioResiduo.controls).forEach((key) => {
-    //     const CONTROL = this.formularioResiduo.get(key);
-    //     if (CONTROL) {
-    //       CONTROL.markAsTouched();
-    //     }
-    //   });
-    //   return; // Salir de la función si el formulario es inválido
-    // }
-
     // Validar que se hayan agregado materias primas
     if (this.materiasPrimas.length === 0) {
       // Mostrar mensaje de error si no hay materias primas
@@ -536,7 +518,6 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       cretiDesc: this.getCreti(),
       estadoFisicoDesc: this.getEstadoFisico(),
       tipoContenedorDesc: this.getTipoContenedor(),
-      //materiasPrimasRelacionadas: this.materiasPrimas,
     };
 
     // Emitir el evento con los datos
@@ -555,6 +536,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.alertaErrorFormulario = '';
   }
 
+  /**
+   * Obtiene la descripción de la fracción arancelaria seleccionada desde `etiquetasForm`.
+   * @returns Descripción de la fracción o cadena vacía si no existe.
+   */
   private getFraccionName = (): string => {
     const FRACCION_ID = this.formularioResiduo.get(
       'fraccionArancelaria'
@@ -566,6 +551,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     );
   };
 
+  /**
+   * Obtiene la descripción del NICO seleccionado desde `etiquetasForm`.
+   * @returns Descripción del NICO o cadena vacía si no existe.
+   */
   private getNicoName = (): string => {
     const NICO_ID = this.formularioResiduo.get('nico')?.value;
     const NICO_DATA = this.etiquetasForm.nico.find(
@@ -574,6 +563,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return NICO_DATA?.descripcion ?? '';
   };
 
+  /**
+   * Obtiene la descripción de la unidad de medida seleccionada.
+   * @returns Nombre de la unidad de medida o cadena vacía si no existe.
+   */
   private getUnidadMedidaName = (): string => {
     const UNIDAD_ID = this.formularioResiduo.get('unidadMedida')?.value;
     const UNIDADES = this.etiquetasForm.unidad || [];
@@ -581,6 +574,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return UNIDAD_DATA ? UNIDAD_DATA.descripcion : '';
   };
 
+  /**
+   * Obtiene la descripción de la clave de clasificación seleccionada.
+   * @returns Descripción o cadena vacía si no existe.
+   */
   private getClaveClasificacion = (): string => {
     const CLAVE = this.formularioResiduo.get('claveResiduo')?.value;
     const CLAVE_CLASIFICACION_DESC = this.etiquetasForm.residuo?.find(
@@ -589,6 +586,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return CLAVE_CLASIFICACION_DESC || '';
   };
 
+  /**
+   * Obtiene el nombre asociado a la clasificación por nombre.
+   * @returns Nombre de clasificación o cadena vacía si no existe.
+   */
   private getNameClasificacion = (): string => {
     const NOMBRE = this.formularioResiduo.get('nombre')?.value;
     const CLAVE_CLASIFICACION_NAME = this.etiquetasForm.tipoNombre?.find(
@@ -597,6 +598,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return CLAVE_CLASIFICACION_NAME || '';
   };
 
+  /**
+   * Obtiene la descripción de la clasificación por descripción.
+   * @returns Descripción o cadena vacía si no existe.
+   */
   private getDescClasificacion = (): string => {
     const DESC = this.formularioResiduo.get('descripcion')?.value;
     const CLAVE_CLASIFICACION_DESC = this.etiquetasForm.descripcion?.find(
@@ -605,6 +610,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return CLAVE_CLASIFICACION_DESC || '';
   };
 
+  /**
+   * Obtiene la descripción del CRETI seleccionado.
+   * @returns Descripción o cadena vacía si no existe.
+   */
   private getCreti = (): string => {
     const CRETI = this.formularioResiduo.get('creti')?.value;
     const CRETI_DESC = this.etiquetasForm.creti?.find(
@@ -613,6 +622,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return CRETI_DESC || '';
   };
 
+  /**
+   * Obtiene la descripción del estado físico seleccionado.
+   * @returns Descripción o cadena vacía si no existe.
+   */
   private getEstadoFisico = (): string => {
     const ESTADO = this.formularioResiduo.get('estadoFisico')?.value;
     const ESTADO_DESC = this.etiquetasForm.estadoFisico?.find(
@@ -621,6 +634,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return ESTADO_DESC || '';
   };
 
+  /**
+   * Obtiene la descripción del tipo de contenedor seleccionado.
+   * @returns Descripción o cadena vacía si no existe.
+   */
   private getTipoContenedor = (): string => {
     const TIPO = this.formularioResiduo.get('tipoContenedor')?.value;
     const TIPO_DESC = this.etiquetasForm.tipoContenedor?.find(
@@ -629,6 +646,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return TIPO_DESC || '';
   };
 
+  /**
+   * Convierte una cantidad numérica a su representación en letra y la asigna al control correspondiente.
+   * @param cantidad - Valor numérico en string a convertir.
+   */
   obtenerLetraCantidad(cantidad: string): void {
     this.formularioResiduo.get('cantidadLetra')?.enable();
     this.formularioResiduo.patchValue({

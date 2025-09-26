@@ -135,12 +135,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Constructor para inyección de dependencias
-   * @param fb Constructor de formularios reactivos
-   * @param datoSolicitudStore Store para estado de datos de solicitud
-   * @param datoSolicitudQuery Query para estado de datos de solicitud
-   * @param consultaQuery Query para estado de consulta
-   * @param mercanciasDesmontadasOSinMontarService Servicio para opciones de radio
+   * Constructor para inyección de dependencias.
+   *
+   * @param fb - FormBuilder para construir formularios reactivos.
+   * @param datoSolicitudStore - Store para persistir cambios locales del formulario.
+   * @param datoSolicitudQuery - Query para leer el estado actual del store.
+   * @param consultaQuery - Query que provee el estado de solo lectura/edición de la aplicación.
+   * @param mercanciasDesmontadasOSinMontarService - Servicio que provee opciones de radio y catálogos.
+   *
+   * El constructor además inicializa la carga de opciones de radio llamando a obtenerAvisoOpcionesDeRadio().
    */
   constructor(
     public fb: FormBuilder,
@@ -198,6 +201,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Valida todos los formularios y la existencia de al menos una fila en la tabla.
+   * Marca los campos como tocados si la validación falla.
+   *
+   * @returns true si todos los formularios son válidos y existen datos en la tabla; false en caso contrario.
+   */
   validarFormulario(): boolean {
     const IS_VALID =
       this.solicitudForm.valid &&
@@ -214,6 +223,13 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     return IS_VALID;
   }
 
+  /**
+   * Marca todos los campos relevantes como "touched" para forzar la aparición
+   * de mensajes de validación en la UI.
+   *
+   * Se usa cuando la validación global falla para que el usuario identifique
+   * los campos que requieren atención.
+   */
   marcarCamposComoTocados(): void {
     this.solicitudForm.markAllAsTouched();
     this.formularioEmpresaReciclaje.markAllAsTouched();
@@ -611,6 +627,13 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.datosTabla = [...this.datosTabla];
   }
 
+  /**
+   * Actualiza un campo específico del formulario de lugar de reciclaje en el store.
+   *
+   * @param campo - Nombre del campo a actualizar dentro de `lugarReciclaje`.
+   *
+   * Toma el valor actual del control correspondiente y lo persiste en el store.
+   */
   actualizarDatosDestinatario(
     campo: keyof EstadoDatoSolicitud['lugarReciclaje']
   ): void {

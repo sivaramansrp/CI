@@ -152,6 +152,9 @@ export class DatosDelGeneradorDeResiduosComponent implements OnInit {
 
   /**
    * Obtiene los datos de los immex desde el servicio de catálogos.
+   * Los datos obtenidos se asignan al arreglo `immexCatalogo`.
+   * Se pone el RFC estatico para pruebas en lo que se integra la funcion de
+   * obtener los datos del usuario logueado
    */
   immexData(): void {
     this.catalogoService

@@ -763,37 +763,6 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   }
 
   /**
-   * Agrega una materia prima a la tabla
-   */
-  // agregarMateriaPrima(): void {
-  //   if (this.formularioDatos.valid) {
-  //     const MATERIA_NOMBRE =
-  //       this.materiasDisponibles.find(
-  //         (m) => m.id === this.formularioDatos.get('numero')?.value
-  //       )?.nombre || '';
-
-  //     // const NUEVA_MATERIA: MateriaPrima = {
-  //     //   id: this.formularioDatos.get('numero')?.value,
-  //     //   nombreMateriaPrima: MATERIA_NOMBRE,
-  //     //   cantidad: this.formularioDatos.get('cantidad')?.value,
-  //     //   cantidadLetra: this.formularioDatos.get('cantidadLetra')?.value,
-  //     //   unidadMedida: this.formularioDatos.get('unidadDeMedida')?.value,
-  //     //   fraccionArancelaria: this.formularioDatos.get('fraccionArancelaria')
-  //     //     ?.value,
-  //     //   unidadMedidaDescripcion: '',
-  //     // };
-
-  //     //this.materiasPrimas.push(NUEVA_MATERIA);
-
-  //     // Actualizar los datos de la tabla dinámica
-  //     //this.materiasPrimasTabla = [...this.materiasPrimas];
-
-  //     // Limpiar el formulario
-  //     this.formularioDatos.reset();
-  //   }
-  // }
-
-  /**
    * Borra los elementos seleccionados de la tabla
    */
   borrarElementosSeleccionados(): void {
@@ -813,7 +782,6 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     // Limpiar selecciones y actualizar tabla
     this.itemsSeleccionados.clear();
     this.borrarHabilitado = false;
-    //this.materiasPrimasTabla = [...this.materiasPrimas];
   }
 
   /**
@@ -960,6 +928,11 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     }
   }
 
+  /**
+   * Obtiene el nombre/descripcion de la fracción arancelaria seleccionada.
+   * Busca en `fraccionArancelariaData` por el id almacenado en el control 'fraccionArancelaria'.
+   * @returns Nombre o descripción de la fracción; cadena vacía si no se encuentra.
+   */
   private getFraccionName = (): string => {
     const FRACCION_ID = this.formularioResiduo.get(
       'fraccionArancelaria'
@@ -970,6 +943,11 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return FRACCION_DATA ? FRACCION_DATA.fraccionDescripcion : '';
   };
 
+  /**
+   * Obtiene el nombre/descripcion del NICO seleccionado.
+   * Nota: el método intenta obtener la fracción asociada y devolver una descripción relacionada.
+   * @returns Descripción del NICO o cadena vacía si no se encuentra.
+   */
   private getNicoName = (): string => {
     const NICO_ID = this.formularioResiduo.get('nico')?.value;
     const FRACCION_DATA = this.fraccionArancelariaData.find(
@@ -978,6 +956,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return FRACCION_DATA ? FRACCION_DATA.fraccionDescripcion : '';
   };
 
+  /**
+   * Devuelve la descripción de la unidad de medida seleccionada según las etiquetas cargadas.
+   * @returns Descripción de la unidad de medida o cadena vacía si no se encuentra.
+   */
   private getUnidadMedidaName = (): string => {
     const UNIDAD_ID = this.formularioResiduo.get('unidadMedida')?.value;
     const UNIDADES = this.etiquetasForm.unidad || [];
@@ -985,6 +967,11 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return UNIDAD_DATA ? UNIDAD_DATA.descripcion : '';
   };
 
+  /**
+   * Obtiene la descripción correspondiente a la clave de clasificación seleccionada.
+   * Busca en `etiquetasForm.residuo`.
+   * @returns Descripción de la clave de clasificación o cadena vacía si no se encuentra.
+   */
   private getClaveClasificacion = (): string => {
     const CLAVE = this.formularioResiduo.get('claveResiduo')?.value;
     const CLAVE_CLASIFICACION_DESC = this.etiquetasForm.residuo?.find(
@@ -993,6 +980,11 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return CLAVE_CLASIFICACION_DESC || '';
   };
 
+  /**
+   * Obtiene el nombre asociado a la clasificación por nombre (si aplica).
+   * Busca en `etiquetasForm.tipoNombre`.
+   * @returns Nombre de la clasificación o cadena vacía si no se encuentra.
+   */
   private getNameClasificacion = (): string => {
     const NOMBRE = this.formularioResiduo.get('nombre')?.value;
     const CLAVE_CLASIFICACION_NAME = this.etiquetasForm.tipoNombre?.find(
@@ -1001,6 +993,11 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return CLAVE_CLASIFICACION_NAME || '';
   };
 
+  /**
+   * Obtiene la descripción de la clasificación por descripción (si aplica).
+   * Busca en `etiquetasForm.descripcion`.
+   * @returns Descripción de la clasificación o cadena vacía si no se encuentra.
+   */
   private getDescClasificacion = (): string => {
     const DESC = this.formularioResiduo.get('descripcion')?.value;
     const CLAVE_CLASIFICACION_DESC = this.etiquetasForm.descripcion?.find(
@@ -1009,6 +1006,11 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return CLAVE_CLASIFICACION_DESC || '';
   };
 
+  /**
+   * Obtiene la descripción legible del CRETI seleccionado.
+   * Busca en `etiquetasForm.creti`.
+   * @returns Descripción del CRETI o cadena vacía si no se encuentra.
+   */
   private getCreti = (): string => {
     const CRETI = this.formularioResiduo.get('creti')?.value;
     const CRETI_DESC = this.etiquetasForm.creti?.find(
@@ -1017,6 +1019,11 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return CRETI_DESC || '';
   };
 
+  /**
+   * Obtiene la descripción legible del estado físico seleccionado.
+   * Busca en `etiquetasForm.estadoFisico`.
+   * @returns Descripción del estado físico o cadena vacía si no se encuentra.
+   */
   private getEstadoFisico = (): string => {
     const ESTADO = this.formularioResiduo.get('estadoFisico')?.value;
     const ESTADO_DESC = this.etiquetasForm.estadoFisico?.find(
@@ -1025,6 +1032,11 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     return ESTADO_DESC || '';
   };
 
+  /**
+   * Obtiene la descripción legible del tipo de contenedor seleccionado.
+   * Busca en `etiquetasForm.tipoContenedor`.
+   * @returns Descripción del tipo de contenedor o cadena vacía si no se encuentra.
+   */
   private getTipoContenedor = (): string => {
     const TIPO = this.formularioResiduo.get('tipoContenedor')?.value;
     const TIPO_DESC = this.etiquetasForm.tipoContenedor?.find(

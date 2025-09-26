@@ -62,7 +62,10 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
+  /** Indica si el botón de borrar (acciones en tabla) está habilitado. */
   borrarHabilitado: boolean = false;
+
+  /** Conjunto de índices de residuos seleccionados en la tabla para acciones en lote. */
   residuoSeleccionado: Set<number> = new Set();
   /**
    * Referencia al elemento del DOM del modal para agregar mercancías.
@@ -548,6 +551,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Elimina los residuos seleccionados de la lista `administrarResiduos`.
+   *
+   * Ordena los índices de mayor a menor para evitar desajustes al eliminar.
+   * Actualiza la tabla y el estado de la selección/botón borrar.
+   */
   borrarResiduo(): void {
     if (this.residuoSeleccionado.size === 0) {
       return;
@@ -568,6 +577,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.administrarResiduos = [...this.administrarResiduos];
   }
 
+  /**
+   * Maneja la llegada de un residuo peligroso agregado desde el componente hijo.
+   * Persiste localmente en la lista `administrarResiduos` y actualiza el store.
+   *
+   * @param residuoData - Objeto con la información del residuo agregado.
+   */
   onResiduoAgregado(residuoData: ResiduoPeligroso): void {
     this.administrarResiduos = [...this.administrarResiduos, residuoData];
     this.datoSolicitudStore.actualizarResiduos(this.administrarResiduos);

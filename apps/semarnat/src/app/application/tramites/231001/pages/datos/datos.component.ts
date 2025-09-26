@@ -6,17 +6,13 @@ import {
   Usuario,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import { MSG_REGISTRO_EXITOSO, USUARIO_INFO } from '../../enum/enum-tramite';
+import {
+  CodigoRespuesta,
+  MSG_REGISTRO_EXITOSO,
+  USUARIO_INFO,
+} from '../../enum/enum-tramite';
 import {
   Solicitud231001State,
   Tramite231001Store,
@@ -45,6 +41,13 @@ interface AccionBoton {
   valor: number;
 }
 
+/**
+ * Identificador del primer paso del wizard.
+ * Usado para lógica condicional en la navegación.
+ *
+ */
+const PASO_UNO = 1;
+
 /** Representa la forma cruda que puede venir desde el backend */
 interface ErrorModeloRaw {
   campo?: string;
@@ -62,9 +65,9 @@ interface ErrorModelo {
  * app-datos
  * ./datos.component.html
  *
- *
- *
- * Componente Angular para manejar los datos del wizard.
+ * Componente Angular para manejar los datos del wizard del trámite 231001.
+ * Maneja la captura de información del solicitante, envío de la solicitud al backend,
+ * navegación entre pasos y la presentación de notificaciones de resultado.
  */
 @Component({
   selector: 'app-datos',
@@ -72,53 +75,70 @@ interface ErrorModelo {
   styles: ``,
 })
 export class DatosComponent implements OnInit, OnDestroy {
+  /**
+   * Constructor del componente.
+   * @param tramite231001Query Servicio de consulta del estado del trámite.
+   * @param tramite231001Store Store para actualizar el estado del trámite.
+   * @param guardarService Servicio que realiza el POST para guardar la solicitud.
+   */
   constructor(
     private tramite231001Query: Tramite231001Query,
     private tramite231001Store: Tramite231001Store,
     private guardarService: GuardarService
   ) {}
 
-  @Output() cargarArchivosEvento = new EventEmitter<void>();
-
+  /**
+   * Tipo de trámite (id) recibido como input.
+   * Usado para lógica condicional dependiendo del tipo de trámite.
+   */
   @Input() idTipoTRamite!: string;
-  datosUsuario: Usuario = USUARIO_INFO;
+
+  /**
+   * Clase personalizada para las alertas
+   * Usada para definir el estilo de las alertas en la interfaz.
+   */
   public infoAlert = 'alert-info';
 
+  /**
+   * Información del usuario que realiza la solicitud.
+   * Por defecto se inicializa con la constante USUARIO_INFO.
+   */
+  datosUsuario: Usuario = USUARIO_INFO;
+
+  /**
+   * Textos definidos en el modelo AVISO (aviso de privacidad u otros textos).
+   */
   TEXTOS = AVISO.Aviso;
 
   /**
-   * Evento que se emite para regresar a la sección de carga de documentos.
-   * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
+   * Subject para controlar la destrucción de subscripciones (takeUntil).
    */
-  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
-
-  /**
-   * Indica si el botón para cargar archivos está habilitado.
-   */
-  activarBotonCargaArchivos: boolean = false;
-
-  /**
-   * Indica si la sección de carga de documentos está activa.
-   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
-   */
-  seccionCargarDocumentos: boolean = true;
   private destroyed$ = new Subject<void>();
+  /**
+   * Notificación que se puede utilizar para mostrar mensajes emergentes (toastr).
+   * Null cuando no hay notificación nueva.
+   */
   public nuevaNotificacion: Notificacion | null = null;
+  /**
+   * Notificación tipo banner que se muestra tras operaciones exitosas.
+   */
   public alertaNotificacion!: Notificacion;
+  /**
+   * Estado local de la solicitud obtenido desde el query/store.
+   */
   public solicitudState!: Solicitud231001State;
 
+  /**
+   * Inicializa el componente y carga el estado inicial de la solicitud.
+   */
   ngOnInit(): void {
     this.obtenerEstadoSolicitud();
   }
 
-  manejaEventoCargaDocumentos(carga: boolean): void {
-    this.activarBotonCargaArchivos = carga;
-  }
-
-  cargaRealizada(cargaRealizada: boolean): void {
-    this.seccionCargarDocumentos = cargaRealizada ? false : true;
-  }
-
+  /**
+   * Se suscribe al estado de la solicitud en el query y lo asigna a `solicitudState`.
+   * La suscripción se cancela automáticamente con `destroyed$`.
+   */
   obtenerEstadoSolicitud(): void {
     this.tramite231001Query.selectSolicitud$
       ?.pipe(
@@ -130,10 +150,9 @@ export class DatosComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  onClickCargaArchivos(): void {
-    this.cargarArchivosEvento.emit();
-  }
-
+  /**
+   * Avanza al siguiente paso del wizard y actualiza el índice local.
+   */
   siguiente(): void {
     this.wizardComponent.siguiente();
     this.indice = this.wizardComponent.indiceActual + 1;
@@ -159,6 +178,12 @@ export class DatosComponent implements OnInit, OnDestroy {
 
   aviso = AVISO.Aviso;
 
+  /**
+   * @property folioTemporal
+   * @type {number}
+   * Identificador temporal de la solicitud asignado por el backend al guardar.
+   * Usado para mostrar en notificaciones.
+   */
   public folioTemporal: number = 0;
 
   /**
@@ -199,7 +224,8 @@ export class DatosComponent implements OnInit, OnDestroy {
   esFormaValido: boolean = true;
 
   /**
-   * The data for the steps in the wizard.
+   * Datos para el wizard de pasos.
+   * Contiene información sobre el número total de pasos, el paso actual y los textos de los botones.
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -208,17 +234,12 @@ export class DatosComponent implements OnInit, OnDestroy {
     txtBtnSig: 'Continuar',
   };
 
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
-  }
-
   /**
-   * Updates the index value based on the action button event.
-   * @param e The action button event containing the action and value.
+   * Actualiza el valor del index basado en el evento recibido
+   * @param e El AccionBoton .
    */
   public getValorIndice(e: AccionBoton): void {
-    if (this.indice === 1) {
+    if (this.indice === PASO_UNO) {
       const FORM_VALIDO = this.pasoUnoComponent?.validarTodosLosFormularios();
       this.esFormaValido = FORM_VALIDO;
       if (!FORM_VALIDO) {
@@ -249,6 +270,9 @@ export class DatosComponent implements OnInit, OnDestroy {
     };
   }
 
+  /**
+   * Retrocede al paso anterior del wizard y actualiza el índice local.
+   */
   anterior(): void {
     this.wizardComponent.atras();
     this.indice = this.wizardComponent.indiceActual + 1;
@@ -263,6 +287,11 @@ export class DatosComponent implements OnInit, OnDestroy {
     this.esFormaValido = true;
   }
 
+  /**
+   * Envía el payload construido al servicio `guardarService.postSolicitud`.
+   * Normaliza la respuesta y devuelve un Observable con ResultadoSolicitud.
+   * @returns Observable<ResultadoSolicitud> con el resultado del intento de guardado.
+   */
   ejecutaEnviarSolicitud(): Observable<ResultadoSolicitud> {
     const PAYLOAD: GuardarSolicitud231001Request = {
       solicitante: {
@@ -294,7 +323,10 @@ export class DatosComponent implements OnInit, OnDestroy {
 
     return this.guardarService.postSolicitud(PAYLOAD).pipe(
       map((response) => {
-        if (response.codigo === '00' && response.datos?.id_solicitud) {
+        if (
+          response.codigo === CodigoRespuesta.EXITO &&
+          response.datos?.id_solicitud
+        ) {
           this.tramite231001Store.setIdSolicitud(response.datos.id_solicitud);
           this.folioTemporal = response.datos.id_solicitud;
           return { exito: true };
@@ -341,15 +373,18 @@ export class DatosComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Lógica que se ejecuta después de intentar guardar la solicitud.
+   * Maneja notificaciones, navegación del wizard y errores devueltos por el backend.
+   * @param e Acción del botón con la dirección y valor de índice destino.
+   */
   ejecutaPostGuardar(e: AccionBoton): void {
-    if (this.indice === 1) {
+    if (this.indice === PASO_UNO) {
       this.ejecutaEnviarSolicitud()
         .pipe(
           takeUntil(this.destroyed$),
           tap((respuesta) => {
             if (!respuesta.exito) {
-              console.error('entra aqui');
-
               const ERRORESEXTRA = (respuesta.erroresModelo || [])
                 .map((err) => `${err.campo}: ${err.errores.join(', ')}`)
                 .join('<br>');
@@ -431,5 +466,13 @@ export class DatosComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  /**
+   * Cancela la suscripción a las observables al destruirse el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

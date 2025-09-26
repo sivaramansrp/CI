@@ -36,23 +36,7 @@
       ></app-paso-tres>
       }}
 
-      <!-- @switch (indice) { @case (1) {
-      <app-solicitante-datos-tabs #pasoUnoRef></app-solicitante-datos-tabs>
-      } @case (2) {
-      <app-paso-dos
-        [idTipoTramite]="'231001'"
-        [datosUsuario]="datosUsuario"
-        [cargaArchivosEvento]="cargarArchivosEvento"
-        (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
-        (reenviarCargaRealizada)="cargaRealizada($event)"
-      ></app-paso-dos>
-      } @case (3) {
-      <app-paso-tres
-        [procedureUrl]="'datos'"
-        [procedure]="231001"
-      ></app-paso-tres>
-      } } -->
-
+  
       <div class="row">
         <div class="col-md-12">
           @if (indice !== 2) {
@@ -66,15 +50,6 @@
               Anterior
             </button>
 
-            <!-- <button
-              class="btn btn-primary ms-3"
-              (click)="
-                seccionCargarDocumentos ? onClickCargaArchivos() : siguiente()
-              "
-              [disabled]="!activarBotonCargaArchivos && seccionCargarDocumentos"
-            >
-              {{ seccionCargarDocumentos ? 'Cargar archivos' : 'Continuar' }}
-            </button> -->
           </div>
           }
         </div>
