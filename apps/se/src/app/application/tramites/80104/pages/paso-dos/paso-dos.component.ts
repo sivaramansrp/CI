@@ -161,7 +161,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       this.destroyed$.complete();
     }
 
-    
+  /** Emite un evento para indicar si hay una carga en progreso.
+   * @param carga - Indica si hay una carga en progreso.
+   */
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso.emit(carga);
   }
