@@ -6,7 +6,8 @@
       "infoServicios": {
         "seleccionaLaModalidad": "Ampliación Servicios",
         "folio": "8",
-        "ano": "2024"
+        "ano": "2024",
+        "folioPrograma": "FOL123456"
       }
       
     }
