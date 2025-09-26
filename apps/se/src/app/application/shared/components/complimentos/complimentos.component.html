@@ -49,13 +49,16 @@
     <ng-titulo titulo="Obligaciones fiscales" />
     <div class="row">
       <div class="col-md-4">
-       <app-catalogo-select [catalogo]="derechosList" formControlName="opinionPositiva" [label]="'Opinión positiva del SAT*'" [required]="false"
-          [isDisabled]="true"  name="opinionPositiva"></app-catalogo-select>
+       <app-catalogo-select [catalogo]="derechosList" formControlName="opinionPositiva" [label]="'Opinión positiva del SAT'" [required]="true"
+          [isDisabled]="true"  name="opinionPositiva" [markTouched]="formaComplimentos.get('obligacionesFiscales.opinionPositiva')?.touched ?? false"></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <input-fecha [datos]="INPUT_FECHA_CONFIG" [setFecha]="formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.value"
           (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="formularioDeshabilitado">
         </input-fecha>
+        <div *ngIf="formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.hasError('required') && formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.touched">
+          <p class="mensaje-error">Este campo es obligatorio.</p>
+        </div>
       </div>
       <div class="col-12 mt-5">
         <div class="alert alert-info text-start">
@@ -94,8 +97,8 @@
                </div>
           </div>
           <div class="col-4 mb-4 mt-1">
-            <app-catalogo-select [catalogo]="estados || []" [label]="'Estado*'" [required]="false" name="estado"
-              formControlName="estado" [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="estados || []" [label]="'Estado'" [required]="true" name="estado"
+              formControlName="estado" [isDisabled]="formularioDeshabilitado" [markTouched]="formaComplimentos.get('formaModificaciones.estado')?.touched ?? false"></app-catalogo-select>
           </div>
         </div>
 
@@ -111,11 +114,11 @@
 
           <div class="col-md-4">
             <input-fecha [datos]="INPUT_FECHA_CONFIGURACION" [setFecha]="formaComplimentos.get('formaModificaciones.fechaDeActa')?.value" [deshabilitarFuturas]="true"
-          (valorCambiado)="cambioFecha($event)" [isDisabled]="formularioDeshabilitado">
-        </input-fecha>
-        <div *ngIf="formaComplimentos.get('formaModificaciones.fechaDeActa')?.hasError('required') && formaComplimentos.get('formaModificaciones.fechaDeActa')?.touched">
-            <p class="mensaje-error">Este campo es obligatorio.</p>
-           </div>
+              (valorCambiado)="cambioFecha($event)" [isDisabled]="formularioDeshabilitado">
+            </input-fecha>
+            <div *ngIf="formaComplimentos.get('formaModificaciones.fechaDeActa')?.hasError('required') && formaComplimentos.get('formaModificaciones.fechaDeActa')?.touched">
+              <p class="mensaje-error">Este campo es obligatorio.</p>
+            </div>
           </div>
         </div>
         <div class="row mb-4">

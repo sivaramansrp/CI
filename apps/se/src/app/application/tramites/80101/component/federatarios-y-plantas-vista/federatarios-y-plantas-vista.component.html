@@ -13,6 +13,7 @@
   [datosFederatarios]="datosFederatarios"
   [estadoOptionsConfig]="estadoOptionsConfig"
   (accionSeccion)="onAccionSeccion($event)"
+  (datosFederatariosEvent)="setDatosFederatarios($event)"
 ></app-federatarios-y-plantas>
 
 <ng-container *ngIf="mostrarComplementarPlantaPopup">
