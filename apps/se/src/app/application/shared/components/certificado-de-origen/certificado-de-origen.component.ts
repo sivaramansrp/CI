@@ -361,12 +361,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
   configuracionTablaMercanciaDisponible: ConfiguracionColumna<Mercancia>[] = CONFIGURACION_MERCANCIA_TABLA;
-mercanciasDisponiblesTablaDisponible: boolean = false;
+
   /**
    * Configuración de las columnas de la tabla de mercancia seleccionada.
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
-  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = !this.mercanciasDisponiblesTablaDisponible ? CARGA_MERCANCIA_SELECCIONADAS : MERCANCIA_SELECCIONADAS_LIST;
+  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_SELECCIONADAS;
 
 cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_EXPORT;
   /**
@@ -769,7 +769,8 @@ cargaMercanciaConfiguracionTablaDisponible: ConfiguracionColumna<Mercancia>[] = 
    * Inicializa el estado del formulario llamando a `inicializarEstadoFormulario()`.
    */
   ngOnInit(): void {
-    this.mercanciasDisponiblesTablaDisponible = CARGA_MERCANCIA_SELECCIONADAS_LIST.includes(this.idProcedimiento);
+    this.mercanciasDisponiblesTabla = CARGA_MERCANCIA_SELECCIONADAS_LIST.includes(this.idProcedimiento);
+    this.cargaMercanciaConfiguracionTabla = !this.mercanciasDisponiblesTabla ? CARGA_MERCANCIA_SELECCIONADAS : MERCANCIA_SELECCIONADAS_LIST;
     this.fechaFin = FECHA_ID.includes(this.idProcedimiento);
     this.fechaBoton = BOTON_DE_OPCION_VER.includes(this.idProcedimiento);
     this.inicializarEstadoFormulario();
