@@ -17,7 +17,6 @@ export const ROUTES_REGISTRO: Routes = [
     path: 'registro',
     component: RegistroPageComponent,
     canActivate: [IniciarTramiteResolver],
-        resolve: { iniciarResolverData: IniciarTramiteResolver },
         data: {
           iniciarConfig: {
             procedureId: '80205'
