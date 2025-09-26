@@ -64,7 +64,6 @@ export class ComplementarPlantaComponent implements OnInit {
         })
       )
       .subscribe();
-
   }
   /**
    * Configuración de la fecha de firma.
