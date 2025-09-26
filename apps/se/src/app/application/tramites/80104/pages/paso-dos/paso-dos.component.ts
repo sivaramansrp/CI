@@ -80,6 +80,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
      * Servicio para gestionar los catálogos.
      */
     @Input() datosUsuario!: Usuario;
+
+    /** Indica si hay una carga en progreso. */
+    @Output() cargaEnProgreso = new EventEmitter<boolean>();
   
     /**
      * Constructor del componente.
@@ -157,4 +160,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       this.destroyed$.next();
       this.destroyed$.complete();
     }
+
+    
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso.emit(carga);
+  }
   }
