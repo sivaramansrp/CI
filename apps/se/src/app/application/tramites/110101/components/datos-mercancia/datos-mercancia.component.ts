@@ -208,6 +208,10 @@ get ninoFormGroup(): FormGroup {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   public esFormularioSoloLectura: boolean = false;
+/**
+   * Indica si el formulario se va editar.
+   */
+  public modifcacion: boolean = true;
   /**
    * Una constante que contiene la cadena de mensaje requerida.
    * Este mensaje se utiliza para indicar que un campo es obligatorio.
@@ -291,6 +295,12 @@ get ninoFormGroup(): FormGroup {
         this.solicitudeState = seccionState;
       })).subscribe();
     this.createFormMercancia();
+
+    if(this.solicitudeState.insumosTablaDatos.length){
+      this.insumosTablaDatos = this.solicitudeState.insumosTablaDatos;
+    }else if(this.solicitudeState.envasesTablaDatos.length){
+      this.envasesTablaDatos = this.solicitudeState.envasesTablaDatos;
+    }
 
     
     const FRACCION = this.formMercancia.get('fraccionArancelaria');
@@ -431,6 +441,9 @@ get ninoFormGroup(): FormGroup {
    */
   abrirDialogo(event: string): void {
     this.catalogoPais();
+    if(this.modifcacion === true){
+      this.limpiarDialogo();
+    }
       this.tablaDatos = (this.solicitudeState?.respuestaServicioDatosTabla ?? [])
         .filter(item => item.cve_grupo_criterio === 'OTROS')
         .map(item => ({
@@ -493,7 +506,6 @@ get ninoFormGroup(): FormGroup {
       this.ninoFormGroup.markAllAsTouched();
       return;
     }
-
     if (this.modal === 'Insumo') {
       this.validarInsumoOempaque('Insumo');
     } else {
@@ -589,6 +601,8 @@ get ninoFormGroup(): FormGroup {
                 peso: PAYLOAD.insumo.peso,
                 volumen: PAYLOAD.insumo.volumen
               });
+              this.tramite110101Store.clearInsumos();
+              this.tramite110101Store.addInsumo(this.insumosTablaDatos);
             }else{
               this.envasesTablaDatos.push({
                  nombreTecnico:  this.ninoFormGroup.get('nombreTecnico')?.value ?? '',
@@ -598,6 +612,8 @@ get ninoFormGroup(): FormGroup {
                  valorEnDolares: this.ninoFormGroup.get('valorDolares')?.value ?? 0,
                  paisDeOrigen: PAIS_DESC?.descripcion ?? ''
               });
+              this.tramite110101Store.clearEmpaques();
+              this.tramite110101Store.addEmpaque(this.envasesTablaDatos);
             }
            
            this.cd.detectChanges();
@@ -616,6 +632,7 @@ get ninoFormGroup(): FormGroup {
               txtBtnCancelar: '',
             };
           }
+          this.filasSeleccionadas = [];
         },
         error: (error) => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -903,6 +920,7 @@ get ninoFormGroup(): FormGroup {
       })
     }
     if (event) {
+      this.modifcacion = false;
       this.abrirDialogo(event);
     }
   }

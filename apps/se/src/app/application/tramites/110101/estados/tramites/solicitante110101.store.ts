@@ -2,6 +2,7 @@ import { CriterioConfiguracionResponse } from '../../models/response/tratado-con
 import { CriterioTratadoResponse } from '../../models/response/tratado-criterio-response.model';
 import { FraccionValidarResponse } from '../../models/response/validar-fraccion-response.model';
 
+import { EnvasesTabla, InsumosTabla } from '../../models/panallas110101.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -56,6 +57,12 @@ export interface Solicitante110101State {
 
   /** Datos de servicio de fraccion arancelaria */
   validacionFraccionArancelaria: FraccionValidarResponse;
+
+  /** Un array de objetos que representa los insumos registrados */
+  insumosTablaDatos: InsumosTabla[];
+
+  /** Un array de objetos que representa los empaques registrados */
+  envasesTablaDatos: EnvasesTabla[];
 }
 
 
@@ -134,7 +141,9 @@ export function createSolicitanteInitialState(): Solicitante110101State {
       has_errors: false,
       error_message: null,
       cumple_acumulacion: false
-    }
+    },
+    insumosTablaDatos: [],
+    envasesTablaDatos: [],
   };
 }
 
@@ -419,6 +428,48 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
     this.update((state) => ({
       ...state,
       validacionFraccionArancelaria: {} as FraccionValidarResponse,
+    }));
+  }
+
+  /**
+   * Agrega un nuevo insumo al estado `insumosTablaDatos`.
+   * @param insumo - El objeto `InsumosTabla` a insertar en el array.
+  */
+  public addInsumo(insumo: InsumosTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      insumosTablaDatos: insumo,
+    }));
+  }
+
+  /**
+   * Limpia la lista de insumos, dejando el array vacío.
+   */
+  public clearInsumos(): void {
+    this.update((state) => ({
+      ...state,
+      insumosTablaDatos: [],
+    }));
+  }
+
+  /**
+   * Agrega un nuevo empaque al estado `envasesTablaDatos`.
+   * @param empaque - El objeto `EnvasesTabla` a insertar en el array.
+   */
+  public addEmpaque(empaque: EnvasesTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      envasesTablaDatos: empaque,
+    }));
+  }
+
+  /**
+   * Limpia la lista de empaques, dejando el array vacío.
+   */
+  public clearEmpaques(): void {
+    this.update((state) => ({
+      ...state,
+      envasesTablaDatos: [],
     }));
   }
 }
