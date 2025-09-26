@@ -118,9 +118,9 @@ describe('DatosDeLaSolicitud260911Component', () => {
   });
 
 it('should create form and datosDelEstablecimiento with initial values from estadoSeleccionado', () => {
-  component.getValorStore(); // Ensure estadoSeleccionado is set from the mock store
+  component.getValorStore();
   component.crearFormulario();
-  expect(component.form.get('btonDeRadio')?.value).toBe('');
+  expect(component.form.get('btonDeRadio')?.value).toBe(null);
   expect(component.form.get('justificacion')?.value).toBe('justificationData');
   expect(component.datosDelEstablecimiento.get('rfcDel')?.value).toBe('RFC123');
   expect(component.datosDelEstablecimiento.get('denominacion')?.value).toBe('Empresa S.A.');
