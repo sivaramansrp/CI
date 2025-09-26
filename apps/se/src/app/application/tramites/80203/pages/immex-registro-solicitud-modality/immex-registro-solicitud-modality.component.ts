@@ -7,13 +7,15 @@
  * Incluye la lógica para la navegación entre pasos y la obtención de títulos.
  */
 import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import { DatosPasos, RegistroSolicitudService, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constantes/immex-registro-de-solicitud-modality.enums';
+import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
+import { ImmexRegistroState, ImmexRegistroStore } from '../../estados/tramites/tramite80203.store';
 import { ImmexRegistroQuery } from '../../estados/queries/tramite80203.query';
-import { ImmexRegistroState } from '../../estados/tramites/tramite80203.store';
+import { PASOS } from '../../constantes/immex-registro-de-solicitud-modality.enums';
+import { buildGuardarPayload } from '../../mappers/guardar.mapper';
 
 /**
  * @interface AccionBoton
@@ -213,13 +215,15 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
 
   storeData!: ImmexRegistroState;
 
-  constructor(public immexRegistroQuery: ImmexRegistroQuery) {
+  constructor(public immexRegistroQuery: ImmexRegistroQuery, public immexRegistroStore: ImmexRegistroStore, public registroSolicitudService: RegistroSolicitudService, private toastrService: ToastrService) {
   }
 
   ngOnInit(): void {
     this.immexRegistroQuery.selectImmexRegistro$.pipe().subscribe((data) => {
       this.storeData = data;
-    });
+    }); 
+
+    
   }
 
   /**
@@ -259,14 +263,36 @@ export class ImmexRegistroSolicitudModalityComponent implements OnInit {
    * @see {@link WizardComponent.atras} - Método para retroceder pasos
    */
   getValorIndice(e: AccionBoton) {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+    const PAYLOAD = buildGuardarPayload(this.storeData);
+    // eslint-disable-next-line no-console
+    console.log("payload-->>", PAYLOAD);
+    // return;
+    let shouldNavigate = false;
+    this.registroSolicitudService.postGuardarDatos('80203', PAYLOAD).subscribe(response => {
+      shouldNavigate = response.codigo === '00';
+      if(shouldNavigate) {
+        if(esValidObject(response) && esValidObject(response.datos)) {
+          const DATOS = response.datos as { id_solicitud?: number };
+          if(getValidDatos(DATOS.id_solicitud)) {
+            this.immexRegistroStore.setIdSolicitud(DATOS.id_solicitud ?? 0);
+          } else {
+            this.immexRegistroStore.setIdSolicitud(0);
+          }
+        }
+        this.toastrService.success(response.mensaje);
+         if (e.valor > 0 && e.valor < 5) {
+          this.indice = e.valor;
+          if (e.accion === 'cont') {
+            this.wizardComponent.siguiente();
+          } else {
+            this.wizardComponent.atras();
+          }
+        }
       } else {
-        this.wizardComponent.atras();
+        this.toastrService.error(response.mensaje);
       }
-    }
+    })
+
     
     // eslint-disable-next-line no-console
     console.log("this.storeData===", this.storeData);

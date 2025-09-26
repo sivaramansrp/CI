@@ -11,7 +11,7 @@
       <app-paso-uno></app-paso-uno>
       } @case (2) {
       <app-paso-carga-documento 
-        [idSolicitud]="123456"
+        [idSolicitud]="storeData.idSolicitud"
         [idTipoTRamite]="'80203'"
         [cargaArchivosEvento]="cargarArchivosEvento"
         (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
@@ -19,10 +19,10 @@
         (cargaEnProgreso)="onCargaEnProgreso($event)"
       ></app-paso-carga-documento>
       } @case (3) {
-        <paso-firma [idSolicitud]="202792606" [procedure]="80203" [procedureUrl]="'immex-registro-solicitud-modality/immex-registro'"></paso-firma>
+        <paso-firma [idSolicitud]="storeData.idSolicitud" [procedure]="80203" [procedureUrl]="'immex-registro-solicitud-modality/immex-registro'"></paso-firma>
       }
     }
-  </div>
+  </div> 
 
   <div class="row">
     <div class="col-md-12">

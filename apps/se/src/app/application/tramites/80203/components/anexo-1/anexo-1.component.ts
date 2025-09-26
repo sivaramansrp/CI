@@ -1,12 +1,4 @@
 import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import {
   Catalogo,
   CatalogoSelectComponent,
   CatalogoServices,
@@ -21,6 +13,13 @@ import {
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
   FRACCION_EXPORTACION,
   IMMEX_SERVICIO,
   NICO_TABLA,
@@ -30,7 +29,7 @@ import {
   nicoInfo,
 } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ImmexRegistroQuery } from '../../estados/queries/tramite80203.query';
 import { ImmexRegistroStore } from '../../estados/tramites/tramite80203.store';
@@ -82,7 +81,6 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
  * @method inicializarEstadoFormulario Inicializa el estado del formulario dependiendo si está en modo solo lectura.
  * @method ngOnDestroy Maneja la limpieza de recursos antes de destruir el componente.
  * @method fetchData Obtiene los datos de los fabricantes desde el servicio.
- * @method obtenerListasDesplegables Obtiene las listas desplegables.
  * @method obtenerIngresoSelectList Obtiene la lista para el select de unidad de medida.
  * @method showFraccionExportacion Muestra la sección de fracción de exportación.
  * @method showTableExportacion Muestra la tabla de exportación.
@@ -116,7 +114,7 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
     NotificacionesComponent,
   ],
 })
-export class Anexo1Component implements OnInit, AfterViewInit, OnDestroy {
+export class Anexo1Component implements OnInit, OnDestroy {
   /**
    * Referencia al elemento del modal de importación de mercancía.
    * Utilizado para mostrar u ocultar el modal mediante la API de Bootstrap.
@@ -427,10 +425,6 @@ export class Anexo1Component implements OnInit, AfterViewInit, OnDestroy {
     this.inicializarEstadoFormulario();
   }
 
-  ngAfterViewInit(): void {
-    this.obtenerIngresoSelectList();
-  }
-
   /**
    * @method creatFormSolicitud
    * @description Inicializa el formulario reactivo immexRegistroform con campos planos
@@ -541,7 +535,6 @@ export class Anexo1Component implements OnInit, AfterViewInit, OnDestroy {
       // need to check
     const PERMISO_VALUE = this.immexRegistroform.get('permisoImmexDatos')?.value;
     this.fetchData(PERMISO_VALUE);
-    // this.obtenerListasDesplegables();
     this.disableFormControls();
 
     // Para el botón de validación Continuar
@@ -550,22 +543,6 @@ export class Anexo1Component implements OnInit, AfterViewInit, OnDestroy {
     //     takeUntil(this.destroyNotifier$),
     //     map((seccionState) => {
     //       this.seccion = seccionState;
-    //     })
-    //   )
-    //   .subscribe();
-
-    // this.immexRegistroform.statusChanges
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     delay(10),
-    //     tap(() => {
-    //       const SECCION: number = 1;
-    //       const SECCION_STATE = this.seccionQuery.getValue();
-    //       const FORMAS_VALIDADAS = [...SECCION_STATE.formaValida];
-    //       const STATUS = this.immexRegistroform.get('immexRegistroform')?.status;
-
-    //       FORMAS_VALIDADAS[SECCION] =
-    //         this.immexRegistroform.valid || STATUS === 'VALID';
     //     })
     //   )
     //   .subscribe();
@@ -636,19 +613,6 @@ export class Anexo1Component implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * @method obtenerListasDesplegables
-   * @description Método principal para obtener todas las listas desplegables necesarias
-   * para el formulario. Actualmente delega la responsabilidad a obtenerIngresoSelectList()
-   * para obtener los datos del catálogo NICO. Este método puede expandirse para incluir
-   * otras listas desplegables en el futuro.
-   *
-   * @returns {void}
-   */
-  obtenerListasDesplegables(): void {
-    this.obtenerIngresoSelectList();
-  }
-
-  /**
    * @method obtenerIngresoSelectList
    * @description Obtiene la lista de opciones para el select de unidad de medida NICO.
    * Realiza una llamada al servicio nicoService para obtener el menú desplegable desde
@@ -657,9 +621,9 @@ export class Anexo1Component implements OnInit, AfterViewInit, OnDestroy {
    *
    * @returns {void}
    */
-  obtenerIngresoSelectList(): void {
-    const CLAVE_FRACCION = '72162101';
-    this.catalogoService.nicosCatalogo(this.tramiteId, CLAVE_FRACCION)
+  obtenerIngresoSelectList(tipo: 'importacion' | 'exportacion'): void {
+    const CLAVE_FRACCION = tipo === 'importacion' ? this.listaFilaSeleccionada?.fraccion : this.listaFilaSeleccionadaFraccion?.fraccionPadre;
+    this.catalogoService.nicosCatalogo(this.tramiteId, CLAVE_FRACCION ?? '')
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((datos) => {
@@ -752,7 +716,7 @@ export class Anexo1Component implements OnInit, AfterViewInit, OnDestroy {
    * @returns {void}
    */
   mostrarDetalleMercancia(): void {
-    if (this.immexTableDatos.length === 0) {
+    if (!this.listaFilaSeleccionada) {
       this.espectaculoAlerta = true;
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -767,6 +731,11 @@ export class Anexo1Component implements OnInit, AfterViewInit, OnDestroy {
       };
     } else {
       this.espectaculoAlerta = false;
+      this.obtenerIngresoSelectList('importacion');
+      this.mercanciaImportacionForm?.patchValue({
+        commodityImportacion: this.listaFilaSeleccionada?.fraccion,
+        commodityDescImportacion: this.listaFilaSeleccionada?.descripcion,
+      });
       const MODAL_INSTANCIA = new Modal(this.mercanciaImportacionModal.nativeElement);
       MODAL_INSTANCIA.show();
     }
@@ -782,10 +751,31 @@ export class Anexo1Component implements OnInit, AfterViewInit, OnDestroy {
    * @returns {void}
    */
   mostrarDetalleMercanciaExportacion(): void {
-    const MODAL_INSTANCIA = new Modal(
-      this.mercanciaExportacionModal.nativeElement
-    );
-    MODAL_INSTANCIA.show();
+    if (!this.listaFilaSeleccionadaFraccion) {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe seleccionar un Fracción.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } else {
+      this.obtenerIngresoSelectList('exportacion');
+       this.mercanciaExportacionForm?.patchValue({
+        productoArancelariaExportacion: this.listaFilaSeleccionadaFraccion.clave,
+        productoDescExportacion: this.listaFilaSeleccionadaFraccion.descripcion
+      });
+      this.espectaculoAlerta = false;
+      const MODAL_INSTANCIA = new Modal(
+        this.mercanciaExportacionModal.nativeElement
+      );
+      MODAL_INSTANCIA.show();
+    }
   }
 
   /**
@@ -1001,10 +991,6 @@ export class Anexo1Component implements OnInit, AfterViewInit, OnDestroy {
    */
   onFilaSeleccionada(event: PermisoImmexGridDatos): void {
     this.listaFilaSeleccionada = event;
-    this.mercanciaImportacionForm?.patchValue({
-      commodityImportacion: event.IMMEX_Columna_3,
-      commodityDescImportacion: event.IMMEX_Columna_4,
-    });
   }
 
   /**
@@ -1018,12 +1004,6 @@ export class Anexo1Component implements OnInit, AfterViewInit, OnDestroy {
     this.listaFilaSeleccionadaFraccion = event;
     // eslint-disable-next-line no-console
     console.log(this.listaFilaSeleccionadaFraccion);
-    if (this.fraccionDatos.length > 0) {
-      this.mercanciaExportacionForm?.patchValue({
-        fraccionArancelariaExportacion: event.FRACCION_Columna_2,
-        productoDescExportacion: event.FRACCION_Columna_5
-      });
-    }
   }
 
   /**
@@ -1063,10 +1043,10 @@ export class Anexo1Component implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.listaFilaSeleccionada) {
       const SELECTED_IDS = new Set(
-        [this.listaFilaSeleccionada].map((item) => item.IMMEX_Columna_1)
+        [this.listaFilaSeleccionada].map((item) => item.consecutivo)
       );
       this.immexTableDatos = this.immexTableDatos.filter(
-        (item) => !SELECTED_IDS.has(item.IMMEX_Columna_1)
+        (item) => !SELECTED_IDS.has(item.consecutivo)
       );
       this.listaFilaSeleccionada = null;
       this.immexRegistroStore.establecerDatos({
@@ -1113,11 +1093,11 @@ export class Anexo1Component implements OnInit, AfterViewInit, OnDestroy {
     if (this.listaFilaSeleccionadaFraccion) {
       const SELECTED_IDS = new Set(
         [this.listaFilaSeleccionadaFraccion].map(
-          (item) => item.FRACCION_Columna_1
+          (item) => item.idFraccion
         )
       );
       this.fraccionTablaDatos = this.fraccionTablaDatos.filter(
-        (item) => !SELECTED_IDS.has(item.FRACCION_Columna_1)
+        (item) => !SELECTED_IDS.has(item.idFraccion)
       );
       this.listaFilaSeleccionadaFraccion = null;
       this.immexRegistroStore.establecerDatos({

@@ -68,6 +68,13 @@ export interface ImmexRegistroState {
   immexTableDatos: PermisoImmexGridDatos[];
 
   /**
+   * @property {number} idSolicitud
+   * @description
+   * Identificador único de la solicitud IMMEX.
+   */
+  idSolicitud: number;
+
+  /**
    * @property {fraccionInfo[]} [fraccionTablaDatos]
    * @description
    * Arreglo opcional que almacena la información tabular de las fracciones arancelarias.
@@ -103,6 +110,8 @@ export interface ImmexRegistroState {
  */
 export function createInitialState(): ImmexRegistroState {
     return {
+
+        idSolicitud: 0,
         /**
          * @description Estado inicial del formulario de registro IMMEX con todos los campos
          * configurados a sus valores predeterminados. Incluye campos numéricos iniciados en 0
@@ -117,6 +126,8 @@ export function createInitialState(): ImmexRegistroState {
             permisoImmexDatos: '',
 
             productoImportacion:'',
+
+            fraccionArancelaria: '',
             
             /**
              * @description Código de fracción arancelaria para exportación, inicializado como cadena vacía.
@@ -337,6 +348,13 @@ export class ImmexRegistroStore extends Store<ImmexRegistroState> {
         super(createInitialState());
     }
 
+    setTramite80203State(valores: Partial<ImmexRegistroState>): void {
+        this.update((state) => ({
+            ...state,
+            ...valores,
+        }));
+    }
+
     /**
      * @method setImmexRegistro
      * @description
@@ -400,6 +418,13 @@ export class ImmexRegistroStore extends Store<ImmexRegistroState> {
         this.update((state) => ({
             ...state,
             immexRegistro,
+        }));
+    }
+
+    public setIdSolicitud(idSolicitud: number): void {
+        this.update((state) => ({
+            ...state,
+            idSolicitud,
         }));
     }
 

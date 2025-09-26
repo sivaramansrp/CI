@@ -97,6 +97,15 @@ export interface immexRegistroform {
   permisoImmexDatos: string;
 
   /**
+   * @description Código de fracción arancelaria específico para productos de importación.
+   * Código numérico de clasificación arancelaria aplicable a los productos que serán importados.
+   * @type {string}
+   * @example "6205.20.01"
+   * @required
+   */
+  fraccionArancelaria: string;
+
+  /**
    * @description Código de fracción arancelaria específico para productos de exportación.
    * Código numérico de clasificación arancelaria aplicable a los productos que serán exportados.
    * @type {string}
@@ -225,13 +234,13 @@ export const IMMEX_SERVICIO = [
      * @description Encabezado para la columna de numeración secuencial
      * @type {string}
      */
-    encabezado: 'No.',
+    encabezado: 'No.', 
     /**
      * @description Función extractora para obtener el número secuencial del elemento
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Número secuencial del registro
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.IMMEX_Columna_1,
+    clave: (ele: PermisoImmexGridDatos) => ele.consecutivo,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -249,7 +258,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Número oficial del permiso otorgado por la Secretaría de Economía
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.IMMEX_Columna_2,
+    clave: (ele: PermisoImmexGridDatos) => ele.numeroPrograma,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -267,7 +276,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Código de fracción arancelaria según la TIGIE
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.IMMEX_Columna_3,
+    clave: (ele: PermisoImmexGridDatos) => ele.fraccion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -285,7 +294,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Descripción oficial según la Tarifa de Importación y Exportación
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.IMMEX_Columna_4,
+    clave: (ele: PermisoImmexGridDatos) => ele.descripcion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -303,7 +312,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Unidad de Medida Técnica aplicable al producto
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.IMMEX_Columna_5,
+    clave: (ele: PermisoImmexGridDatos) => ele.umt,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -321,7 +330,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Cantidad autorizada para el periodo especificado
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.IMMEX_Columna_6,
+    clave: (ele: PermisoImmexGridDatos) => ele.cantidadAutorizada,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -339,7 +348,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Fecha de inicio de vigencia en formato establecido
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.IMMEX_Columna_7,
+    clave: (ele: PermisoImmexGridDatos) => ele.fechaInicio,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -357,7 +366,7 @@ export const IMMEX_SERVICIO = [
      * @param {PermisoImmexGridDatos} ele - Objeto con información del permiso IMMEX
      * @returns {string} Fecha de fin de vigencia en formato establecido
      */
-    clave: (ele: PermisoImmexGridDatos) => ele.IMMEX_Columna_8,
+    clave: (ele: PermisoImmexGridDatos) => ele.fechaFin,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -406,7 +415,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Número secuencial del registro de fracción
      */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_1,
+    clave: (ele: fraccionInfo) => ele.idFraccion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -424,7 +433,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Código de fracción arancelaria según nomenclatura internacional
      */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_2,
+    clave: (ele: fraccionInfo) => ele.clave,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -442,7 +451,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Descripción de la mercancía importada relacionada con esta fracción
      */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_3,
+    clave: (ele: fraccionInfo) => ele.fraccionPadre,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -460,7 +469,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Unidad de Medida Técnica aplicable a esta fracción
      */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_4,
+    clave: (ele: fraccionInfo) => ele.umt,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -478,7 +487,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Descripción oficial según la Tarifa de Importación y Exportación
      */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_5,
+    clave: (ele: fraccionInfo) => ele.descripcion,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -496,7 +505,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Descripción comercial específica del producto destinado a exportación
      */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_6,
+    clave: (ele: fraccionInfo) => ele.descripcionUsuario,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -514,7 +523,7 @@ export const FRACCION_EXPORTACION = [
      * @param {fraccionInfo} ele - Objeto con información de la fracción arancelaria
      * @returns {string} Información de solicitud de baja asociada a la fracción
      */
-    clave: (ele: fraccionInfo) => ele.FRACCION_Columna_7,
+    clave: (ele: fraccionInfo) => ele.solicitaBaja,
     /**
      * @description Orden de presentación de la columna en la tabla
      * @type {number}
@@ -542,7 +551,7 @@ export interface fraccionInfo {
    * @example "1"
    * @required
    */
-  FRACCION_Columna_1: string;
+  idFraccion: string;
 
   /**
    * @description Código oficial de la fracción arancelaria según la nomenclatura internacional.
@@ -551,7 +560,7 @@ export interface fraccionInfo {
    * @example "6205.20.01"
    * @required
    */
-  FRACCION_Columna_2: string;
+  clave: string;
 
   /**
    * @description Descripción de la mercancía de importación relacionada con esta fracción de exportación.
@@ -560,7 +569,7 @@ export interface fraccionInfo {
    * @example "Telas de algodón sin confeccionar"
    * @required
    */
-  FRACCION_Columna_3: string;
+  fraccionPadre: string;
 
   /**
    * @description Unidad de Medida Técnica (UMT) aplicable a la mercancía de esta fracción.
@@ -569,7 +578,7 @@ export interface fraccionInfo {
    * @example "Metro cuadrado"
    * @required
    */
-  FRACCION_Columna_4: string;
+  umt: string;
 
   /**
    * @description Descripción oficial según la Tarifa de la Ley de los Impuestos Generales de Importación y Exportación (TIGIE).
@@ -578,7 +587,7 @@ export interface fraccionInfo {
    * @example "Camisas de fibras sintéticas o artificiales, para hombres o niños"
    * @required
    */
-  FRACCION_Columna_5: string;
+  descripcion: string;
 
   /**
    * @description Descripción comercial específica del producto destinado a exportación.
@@ -587,7 +596,7 @@ export interface fraccionInfo {
    * @example "Camisas de vestir para caballero marca Premium"
    * @required
    */
-  FRACCION_Columna_6: string;
+  descripcionUsuario: string;
 
   /**
    * @description Campo adicional para información específica de la fracción arancelaria.
@@ -596,7 +605,7 @@ export interface fraccionInfo {
    * @example "Observaciones adicionales"
    * @optional
    */
-  FRACCION_Columna_7: string;
+  solicitaBaja: string;
 
   /**
    * @description Indicador del estado activo (true) o inactivo (false) del registro de fracción.
@@ -723,7 +732,7 @@ export interface PermisoImmexGridDatos {
    * @example "001"
    * @required
    */
-  IMMEX_Columna_1: string;
+  consecutivo: string;
 
   /**
    * @description Número oficial del permiso IMMEX asignado por la autoridad competente.
@@ -732,7 +741,7 @@ export interface PermisoImmexGridDatos {
    * @example "IMX-2023-001234"
    * @required
    */
-  IMMEX_Columna_2: string;
+  numeroPrograma: string;
 
   /**
    * @description Código de fracción arancelaria aplicable al permiso.
@@ -741,7 +750,7 @@ export interface PermisoImmexGridDatos {
    * @example "6205.20.01"
    * @required
    */
-  IMMEX_Columna_3: string;
+  fraccion: string;
 
   /**
    * @description Descripción oficial de la mercancía según la TIGIE (Tarifa de Importación y Exportación).
@@ -750,7 +759,7 @@ export interface PermisoImmexGridDatos {
    * @example "Camisas de fibras sintéticas o artificiales, para hombres o niños"
    * @required
    */
-  IMMEX_Columna_4: string;
+  descripcion: string;
 
   /**
    * @description Unidad de Medida Técnica (UMT) correspondiente al producto.
@@ -759,7 +768,7 @@ export interface PermisoImmexGridDatos {
    * @example "Pieza"
    * @required
    */
-  IMMEX_Columna_5: string;
+  umt: string;
 
   /**
    * @description Cantidad autorizada para el periodo especificado en el permiso.
@@ -768,7 +777,7 @@ export interface PermisoImmexGridDatos {
    * @example "10000"
    * @required
    */
-  IMMEX_Columna_6: string;
+  cantidadAutorizada: string;
 
   /**
    * @description Fecha de inicio de vigencia del permiso IMMEX.
@@ -778,7 +787,7 @@ export interface PermisoImmexGridDatos {
    * @example "2023-01-15"
    * @required
    */
-  IMMEX_Columna_7: string;
+  fechaInicio: string;
 
   /**
    * @description Estado de activación del permiso (true: activo, false: inactivo).
@@ -790,7 +799,7 @@ export interface PermisoImmexGridDatos {
    */
   estatus: boolean;
 
-  IMMEX_Columna_8: string;
+  fechaFin: string;
 }
 
 /**
