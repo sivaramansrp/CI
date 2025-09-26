@@ -57,8 +57,8 @@ export class AcuseComponent implements OnChanges {
   @Input() idSolicitud!: number;
 
   /**
-  * Datos que se muestran en la tabla de acuse.
- */
+   * Datos que se muestran en la tabla de acuse.
+   */
   @Input() datosTabla: BodyTablaAcuse[] = [];
 
   /**
@@ -101,8 +101,7 @@ export class AcuseComponent implements OnChanges {
     private documentosService130118: DocumentosService,
     private acuseDetalleService: AcuseDetalleService,
     private acusesService: AcusesService
-  ) { }
-
+  ) {}
 
   /**
    * Método que se ejecuta cuando uno o más inputs del componente cambian.
@@ -132,59 +131,73 @@ export class AcuseComponent implements OnChanges {
    * Luego, obtiene el contenido del documento generado y lo muestra en la tabla de acuse.
    */
   generarYMostrarDocumentos(): void {
-    if (this.url === 'pexim' || [80101, 80102, 80103, 80104, 80105].includes(this.procedure)) {
-      this.documentosService130118.guardarAcuse(this.idSolicitud.toString(),this.procedure).pipe(
-        switchMap(() => {
-          return this.documentosService130118.vistaPrevia(this.idSolicitud.toString(), this.procedure);
-        }),
-        catchError((error) => {
-          console.error('Error en guardarAcuse o vistaPrevia:', error);
-          return throwError(() => error);
-        })
-      ).subscribe({
-        next: (response) => {
-          if (response?.datos) {
-            this.datosTablaAcuse = [{
-              id: 1,
-              documento: response.datos.nombre_archivo,
-              urlPdf: AcuseComponent.crearUrlPdf(response.datos.contenido),
-              idDocumento: '1'
-            }];
-          } else {
-            this.datosTablaAcuse = [];
-          }
-        },
-        error: (err) => console.error('Error:', err)
-      });
-
-    } else if (this.url === 'elegibilidad-de-textiles') {
-      this.acusesService.guardarAcuse(this.idSolicitud.toString(), 120301).pipe(
-        switchMap(() => {
-          return this.acusesService.vistaPrevia(this.idSolicitud.toString(), 120301);
-        }),
-        catchError((error) => {
-          console.error('Error en guardarAcuse o vistaPrevia:', error);
-          return throwError(() => error);
-        })
-      ).subscribe({
-        next: (response) => {
-          if (response?.datos) {
-            this.datosTablaAcuse = [{
-              id: 1,
-              documento: response.datos.nombre_archivo,
-              urlPdf: AcuseComponent.crearUrlPdf(response.datos.contenido),
-              idDocumento: '1'
-            }];
-          } else {
-            this.datosTablaAcuse = [];
-          }
-        },
-        error: (err) => console.error('Error:', err)
-      });
     if (
       this.url === 'pexim' ||
       [80101, 80102, 80103, 80104, 80105].includes(this.procedure)
     ) {
+      this.documentosService130118
+        .guardarAcuse(this.idSolicitud.toString(), this.procedure)
+        .pipe(
+          switchMap(() => {
+            return this.documentosService130118.vistaPrevia(
+              this.idSolicitud.toString(),
+              this.procedure
+            );
+          }),
+          catchError((error) => {
+            console.error('Error en guardarAcuse o vistaPrevia:', error);
+            return throwError(() => error);
+          })
+        )
+        .subscribe({
+          next: (response) => {
+            if (response?.datos) {
+              this.datosTablaAcuse = [
+                {
+                  id: 1,
+                  documento: response.datos.nombre_archivo,
+                  urlPdf: AcuseComponent.crearUrlPdf(response.datos.contenido),
+                  idDocumento: '1',
+                },
+              ];
+            } else {
+              this.datosTablaAcuse = [];
+            }
+          },
+          error: (err) => console.error('Error:', err),
+        });
+    } else if (this.url === 'elegibilidad-de-textiles') {
+      this.acusesService
+        .guardarAcuse(this.idSolicitud.toString(), 120301)
+        .pipe(
+          switchMap(() => {
+            return this.acusesService.vistaPrevia(
+              this.idSolicitud.toString(),
+              120301
+            );
+          }),
+          catchError((error) => {
+            console.error('Error en guardarAcuse o vistaPrevia:', error);
+            return throwError(() => error);
+          })
+        )
+        .subscribe({
+          next: (response) => {
+            if (response?.datos) {
+              this.datosTablaAcuse = [
+                {
+                  id: 1,
+                  documento: response.datos.nombre_archivo,
+                  urlPdf: AcuseComponent.crearUrlPdf(response.datos.contenido),
+                  idDocumento: '1',
+                },
+              ];
+            } else {
+              this.datosTablaAcuse = [];
+            }
+          },
+          error: (err) => console.error('Error:', err),
+        });
       this.documentosService130118
         .guardarAcuse(this.idSolicitud.toString(), this.procedure)
         .pipe(

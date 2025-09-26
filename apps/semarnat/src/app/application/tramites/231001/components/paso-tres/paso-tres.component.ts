@@ -1,14 +1,13 @@
 import {
-  CategoriaMensaje,
-  DocumentoService,
-  FirmaElectronicaComponent,
+  CategoriaMensaje, FirmaElectronicaComponent,
   Notificacion,
   NotificacionesComponent,
   TramiteFolioQueries,
-  TramiteFolioStore,
+  
   base64ToHex,
-  encodeToISO88591Hex,
+  encodeToISO88591Hex
 } from '@ng-mf/data-access-user';
+
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
@@ -22,7 +21,7 @@ import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/sha
 import { Router } from '@angular/router';
 import { Solicitud231001State } from '../../estados/tramites/tramite231001.store';
 import { Tramite231001Query } from '../../estados/queries/tramite231001.query';
-
+import { TramiteFolioStore } from '@libs/shared/data-access-user/src';
 /**
  * @class PasoTresComponent
  * @description
@@ -77,9 +76,8 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     private documentosQuery: DocumentosQuery,
     private tramite231001Query: Tramite231001Query,
     private firma: Firma231001Service,
-    private tramiteFolioQuery: TramiteFolioQueries,
     private cadena: CadenaOriginal231001Service,
-    private documentoService: DocumentoService,
+    private tramiteFolioQuery: TramiteFolioQueries,
     private tramiteStore: TramiteFolioStore
   ) {
     // Constructor
@@ -283,9 +281,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             this.solicitudState.idSolicitud ?? 0,
             this.procedure
           );
-          this.router.navigate([
-            this.router.url.replace(this.procedureUrl, 'acuse'),
-          ]);
+          this.router.navigate([`${this.url}/acuse`]);
         }),
         catchError((error) => {
           console.error('Error en el proceso de firma:', error);

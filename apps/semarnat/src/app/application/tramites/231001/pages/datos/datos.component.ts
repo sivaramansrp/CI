@@ -178,7 +178,7 @@ export class DatosComponent implements OnInit, OnDestroy {
    * @type {WizardComponent}
    *  Referencia al componente del wizard.
    */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @ViewChild('wizard', { static: false }) wizardComponent!: WizardComponent;
 
   /**
    * @property indice

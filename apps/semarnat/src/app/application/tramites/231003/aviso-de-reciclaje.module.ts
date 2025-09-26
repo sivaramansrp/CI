@@ -5,7 +5,7 @@ import {
   NotificacionesComponent,
   SolicitanteComponent,
   WizardComponent,
-} from '@libs/shared/data-access-user/src';
+} from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
 import { NgModule } from '@angular/core';

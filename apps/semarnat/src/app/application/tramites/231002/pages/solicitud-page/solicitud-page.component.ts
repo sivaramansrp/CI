@@ -4,7 +4,7 @@ import {
   DatosPasos,
   ListaPasosWizard,
   WizardComponent,
-} from '@libs/shared/data-access-user/src';
+} from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { PAGO_DE_DERECHOS, PASOS } from '../../constantes/aviso-retorno.enum';
 import { CommonModule } from '@angular/common';
@@ -49,7 +49,7 @@ export class SolicitudPageComponent {
    * Referencia al componente wizard para controlar la navegación entre pasos.
    * @type {WizardComponent}
    */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @ViewChild('wizard', { static: false }) wizardComponent!: WizardComponent;
 
   @ViewChild(PasoUnoComponent) pasoUno!: PasoUnoComponent;
 
