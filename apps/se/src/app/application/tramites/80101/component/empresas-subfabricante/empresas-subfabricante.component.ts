@@ -282,10 +282,10 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    * @method obtenerSubfabricantesDisponibles
    */
   obtenerSubfabricantesDisponibles(): void {
-    const PAYLOAD = {
+    const PAYLOAD: any = {
         "rfcEmpresaSubManufacturera": this.formularioDatosSubcontratista.get('rfc')?.value,
         "entidadFederativa": this.formularioDatosSubcontratista.get('estado')?.value,
-        "idPrograma": "200"
+        "idPrograma": null
     }
     this._compartidaSvc
       .getSubfabricantesDisponibles(PAYLOAD)
@@ -293,8 +293,8 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
       .subscribe((response) => {
         if(esValidObject(response)) {
           const API_DATOS = doDeepCopy(response);
-          if(esValidArray(API_DATOS.data)) {
-            const RESPONSE:PlantasSubfabricante[] = this._compartidaSvc.mapApiResponseToPlantasSubfabricante(API_DATOS.data);
+          if(esValidArray(API_DATOS.datos)) {
+            const RESPONSE:PlantasSubfabricante[] = this._compartidaSvc.mapApiResponseToPlantasSubfabricante(API_DATOS.datos);
             this.store.setPlantasBuscadas(RESPONSE);
           } 
         }

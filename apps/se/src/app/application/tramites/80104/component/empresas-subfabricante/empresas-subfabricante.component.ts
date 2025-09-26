@@ -23,7 +23,7 @@
  */
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { Catalogo, ConfiguracionColumna, esValidArray, esValidObject, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConfiguracionColumna,TablaSeleccion, doDeepCopy, esValidArray, esValidObject } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -263,18 +263,19 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
  * @method obtenerSubfabricantesDisponibles
  */
   obtenerSubfabricantesDisponibles(): void {
-      const PAYLOAD = {
+      const PAYLOAD:any = {
         "rfcEmpresaSubManufacturera": this.formularioDatosSubcontratista.get('rfc')?.value,
         "entidadFederativa": this.formularioDatosSubcontratista.get('estado')?.value,
-        "idPrograma": "200"
+        "idPrograma": null
       }
     this._compartidaSvc
       .getSubfabricantesDisponibles(PAYLOAD)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((response) => {
           if(esValidObject(response)) {
-            if(esValidArray(response.data)) {
-              const RESPONSE:PlantasSubfabricante[] = response.data as unknown as PlantasSubfabricante[];
+            const API_DATOS = doDeepCopy(response);
+            if(esValidArray(API_DATOS.datos)) {
+              const RESPONSE:PlantasSubfabricante[] = this._compartidaSvc.mapApiResponseToPlantasSubfabricante(API_DATOS.datos);
               this.store.setPlantasBuscadas(RESPONSE);
             } 
           }
