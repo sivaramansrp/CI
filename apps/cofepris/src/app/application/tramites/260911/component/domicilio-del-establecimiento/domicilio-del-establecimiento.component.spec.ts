@@ -1,18 +1,19 @@
+import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento/domicilio-del-establecimiento.service';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { DomicilioDelEstablecimientoComponent } from './domicilio-del-establecimiento.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento/domicilio-del-establecimiento.service';
+
 import { Tramite260911Query } from '../../estados/tramite260911.query';
 import { Tramite260911Store } from '../../estados/tramite260911.store';
 import { Location } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { MERCANCIAS_DATA, NICO_TABLA, MercanciasInfo, NicoInfo } from '../../models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
+import { DomicilioDelEstablecimientoComponent } from './domicilio-del-establecimiento.component';
 
 
-describe('DomicilioDelEstablecimientoComponent', () => {
+describe('DomicilioDelEstablecimiento260911Component', () => {
 	let component: DomicilioDelEstablecimientoComponent;
 	let fixture: ComponentFixture<DomicilioDelEstablecimientoComponent>;
 	let serviceSpy: jest.Mocked<DomicilioDelEstablecimientoService>;
@@ -135,6 +136,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
 			scianConfigDatos: [],
 			claveScianModal: '',
 			claveDescripcionModal: '',
+			fabricanteTablaModificaDatos: [],
 		};
 		component.crearFormulario();
 		expect(component.form).toBeDefined();

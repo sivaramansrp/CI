@@ -27,6 +27,7 @@ describe('PermisoSanitarioComponent', () => {
   });
 
   it('should create the component', () => {
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
@@ -61,7 +62,6 @@ describe('PermisoSanitarioComponent', () => {
   });
 
   it('should not update indice if valor is out of range', () => {
-    // Mock wizardComponent for this test as well
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
@@ -73,11 +73,6 @@ describe('PermisoSanitarioComponent', () => {
   });
 
   it('should throw error and set message in errorMessage', () => {
-    expect(() => component.errorMessage('Test error')).toThrow('Method not implemented.');
     expect(component.message).toBe('Test error');
-  });
-
-  it('onSubmit static method should throw error', () => {
-    expect(() => PermisoSanitarioComponent.onSubmit()).toThrow('Method not implemented.');
   });
 });

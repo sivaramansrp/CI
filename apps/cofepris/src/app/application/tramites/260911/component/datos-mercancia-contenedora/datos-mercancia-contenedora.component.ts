@@ -71,33 +71,19 @@ import { MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/26
   providers: [DatosSolicitudService],
 })
 export class DatosMercanciaContenedoraComponent implements OnInit {
-  public isEditBlocked: boolean = false;
+ public isEditBlocked: boolean = false;
   /**
    * Evento emitido cuando se hace clic en el botón Agregar en el modal de Mercancías
    */
   @Output() agregarMercancia = new EventEmitter<MercanciasInfo>();
-  /**
-   * Evento emitido cuando se hace clic en el botón Cancelar en el modal de Mercancías
-   */
-  @Output() cancelarMercanciaModal = new EventEmitter<void>();
-
-
-
-  /**
-   * @method onAgregarMercancia
-   * @description
-   * Maneja el evento para agregar una nueva mercancía. 
-   * Si el formulario es válido, construye un objeto `MercanciasInfo` con los datos del formulario,
-   * realiza las conversiones necesarias utilizando los catálogos y emite el evento `agregarMercancia`.
-   * Si el formulario no es válido, marca todos los controles como tocados y muestra advertencias en consola
-   * sobre los controles inválidos y sus errores.
-   *
-   * @returns {void}
-   *
-   * @memberof DatosMercanciaContenedoraComponent
-   */
+    /**
+     * Evento emitido cuando se hace clic en el botón Cancelar en el modal de Mercancías
+     */
+    @Output() cancelarMercanciaModal = new EventEmitter<void>();
+   
   onAgregarMercancia(): void {
     if (this.mercanciaForm.valid) {
+      // Helper to get description from catalog by ID
       const GET_CATALOG_DESC = (catalog: Catalogo[], id: number | string | null): string => {
         if (id === null || id === undefined) { return ''; }
         const FOUND = catalog.find(item => item.id === Number(id));
@@ -129,6 +115,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       this.agregarMercancia.emit(MERCANCIA);
     } else {
       this.mercanciaForm.markAllAsTouched();
+      // Debug: log invalid controls and errors
       const INVALID_CONTROLS = Object.keys(this.mercanciaForm.controls).filter(key => this.mercanciaForm.get(key)?.invalid);
       INVALID_CONTROLS.forEach(key => {
         const CONTROL = this.mercanciaForm.get(key);
@@ -172,6 +159,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   set mercanciaFormState(value: MercanciaForm) {
     this._mercanciaFormState = value;
     if (value) {
+      // Re-create the form with the new state
       this.crearMercanciaForm();
     }
   }
@@ -192,20 +180,11 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   @Output() mercanciaSeleccionado: EventEmitter<TablaMercanciasDatos> =
     new EventEmitter<TablaMercanciasDatos>();
 
-  /** @property {CrosslistComponent} origenCrosslist
-   * Componente de lista cruzada para seleccionar países de origen.
-   */
-  @ViewChild('origenCrosslist') origenCrosslist!: CrosslistComponent;
 
-  /** @property {CrosslistComponent} procedenciaCrosslist
-   * Componente de lista cruzada para seleccionar países de procedencia.
+  /**
+   * Referencias a los componentes de listas cruzadas.
    */
-  @ViewChild('procedenciaCrosslist') procedenciaCrosslist!: CrosslistComponent;
-  /** @property {CrosslistComponent} usoCrosslist
-   * Componente de lista cruzada para seleccionar países de uso.
-   */
-  @ViewChild('usoCrosslist') usoCrosslist!: CrosslistComponent;
-
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
   /**
    * @event eliminarMercanciaDatos
@@ -288,7 +267,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     derecha: 'País(es) seleccionado(s)',
   };
 
-
   /**
    * @description
    * Objeto que representa una nueva notificación.
@@ -323,36 +301,83 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     derecha: 'Uso específico',
   };
 
-  /** @property {Array} paisDeProcedenciaBotonsUno
-   * Botones de acción para gestionar listas de países en la primera sección.
+  /**
+   * Botones de acción para gestionar listas de países en la tercera sección.
    */
   paisDeProcedenciaBotonsUno = [
-    { btnNombre: 'Agregar todos', class: 'btn-default', funcion: (): void => this.origenCrosslist?.agregar('t') },
-    { btnNombre: 'Agregar selección', class: 'btn-primary', funcion: (): void => this.origenCrosslist?.agregar('') },
-    { btnNombre: 'Restar selección', class: 'btn-primary', funcion: (): void => this.origenCrosslist?.quitar('') },
-    { btnNombre: 'Restar todos', class: 'btn-default', funcion: (): void => this.origenCrosslist?.quitar('t') },
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+    },
   ];
 
-  /** @property {Array} paisDeProcedenciaBotonsDos
-   * Botones de acción para gestionar listas de países en la segunda sección.
+  /**
+   * Botones de acción para gestionar listas de países en la tercera sección.
    */
   paisDeProcedenciaBotonsDos = [
-    { btnNombre: 'Agregar todos', class: 'btn-default', funcion: (): void => this.procedenciaCrosslist?.agregar('t') },
-    { btnNombre: 'Agregar selección', class: 'btn-primary', funcion: (): void => this.procedenciaCrosslist?.agregar('') },
-    { btnNombre: 'Restar selección', class: 'btn-primary', funcion: (): void => this.procedenciaCrosslist?.quitar('') },
-    { btnNombre: 'Restar todos', class: 'btn-default', funcion: (): void => this.procedenciaCrosslist?.quitar('t') },
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+    },
   ];
 
-  /** @property {Array} paisDeProcedenciaBotonsTres
+  /**
    * Botones de acción para gestionar listas de países en la tercera sección.
    */
   paisDeProcedenciaBotonsTres = [
-    { btnNombre: 'Agregar todos', class: 'btn-default', funcion: (): void => this.usoCrosslist?.agregar('t') },
-    { btnNombre: 'Agregar selección', class: 'btn-primary', funcion: (): void => this.usoCrosslist?.agregar('') },
-    { btnNombre: 'Restar selección', class: 'btn-primary', funcion: (): void => this.usoCrosslist?.quitar('') },
-    { btnNombre: 'Restar todos', class: 'btn-default', funcion: (): void => this.usoCrosslist?.quitar('t') },
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+    },
   ];
-
 
   /**
    * @property {string[]} seleccionadasPaisDeOriginDatos
@@ -624,16 +649,16 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     }
   }
 
-  /**
-    * Cierra el modal de mercancía emitiendo el evento cancelarMercanciaModal.
-    */
+   /**
+     * Cierra el modal de mercancía emitiendo el evento cancelarMercanciaModal.
+     */
 
-  cerrarMercanciaModal(): void {
-    this.cancelarMercanciaModal.emit();
-  }
-  /**
-   * Reinicia el formulario de mercancía.
-   */
+    cerrarMercanciaModal(): void {
+      this.cancelarMercanciaModal.emit();
+    }
+    /**
+     * Reinicia el formulario de mercancía.
+     */
   public resetForm(): void {
     if (this.mercanciaForm) {
       this.mercanciaForm.reset();
@@ -769,20 +794,11 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     if (!this.areCatalogsLoaded()) {
       return;
     }
-    const { MAPPED_UMT_ID, FINAL_MAPPED_UMC_ID } = this.getUmtUmcIds();
-    this.mercanciaForm = this.buildMercanciaForm(MAPPED_UMT_ID, FINAL_MAPPED_UMC_ID);
+  const { MAPPED_UMT_ID, FINAL_MAPPED_UMC_ID } = this.getUmtUmcIds();
+  this.mercanciaForm = this.buildMercanciaForm(MAPPED_UMT_ID, FINAL_MAPPED_UMC_ID);
     this.removeInvalidControls();
     this.addExtraControls();
   }
-
-  /**
-   * 
-   * @returns boolean
-   * @description Verifica si los catálogos necesarios están cargados y no están vacíos.
-   * Si alguno de los catálogos no está cargado o está vacío, devuelve false.
-   * Si todos los catálogos están cargados y contienen datos, devuelve true.
-   * Además, muestra una advertencia en la consola si los catálogos no están cargados.
-   */
 
   private areCatalogsLoaded(): boolean {
     const CATALOGS_LOADED = [
@@ -797,18 +813,17 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       return false;
     }
     if (!this.clasificacionProductoDatos?.length ||
-      !this.especificarClasificacionProductoDatos?.length ||
-      !this.tipoProductoDatos?.length ||
-      !this.formaFarmaceuticaDatos?.length ||
-      !this.estadoFisicoDatos?.length ||
-      !this.cantidadUmcDatos?.length) {
+        !this.especificarClasificacionProductoDatos?.length ||
+        !this.tipoProductoDatos?.length ||
+        !this.formaFarmaceuticaDatos?.length ||
+        !this.estadoFisicoDatos?.length ||
+        !this.cantidadUmcDatos?.length) {
       console.warn('Catalogs not loaded yet, skipping form creation');
       return false;
     }
     return true;
   }
 
-  /** Obtiene los IDs de UMT y UMC mapeados. */
   private getUmtUmcIds(): { MAPPED_UMT_ID: number | null, FINAL_MAPPED_UMC_ID: number | null } {
     const INCOMING_UMT_VALOR = String(this.obtenerValor('cantidadUmtValor'));
     let MAPPED_UMT_ID = DatosMercanciaContenedoraComponent.matchCatalogId(this.cantidadUmcDatos, INCOMING_UMT_VALOR);
@@ -822,7 +837,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     return { MAPPED_UMT_ID, FINAL_MAPPED_UMC_ID };
   }
 
-  /** Obtiene el valor de un campo del estado del formulario de mercancía. */
   private buildMercanciaForm(MAPPED_UMT_ID: number | null, FINAL_MAPPED_UMC_ID: number | null): FormGroup {
     return this.fb.group({
       presentacion: [
@@ -913,13 +927,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     });
   }
 
-  /**  
-   * Elimina los controles inválidos del formulario de mercancía.
-   * Esta función revisa la lista de elementos no válidos y elimina los controles
-   * correspondientes del formulario, excepto aquellos que siempre deben mantenerse.
-   * Si el detalle de mercancía está presente, también elimina controles adicionales específicos.
-  */
-
   private removeInvalidControls(): void {
     const ALWAYS_KEEP = [
       'clasificacionProducto',
@@ -946,11 +953,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       }
     }
   }
-  /**
-   * Agrega controles adicionales al formulario de mercancía según la configuración.
-   * Esta función revisa la lista de elementos añadidos y agrega controles
-   * correspondientes al formulario si no existen.
-   */
 
   private addExtraControls(): void {
     if (this.elementosAnadidos.length) {
@@ -968,25 +970,12 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     }
   }
 
-  /**
-   * Busca y devuelve el ID correspondiente a un valor dado en un catálogo.
-   *  @param {Catalogo[]} catalog - Arreglo de objetos del catálogo donde se realizará la búsqueda. 
-   * @param {string} value - Valor a buscar en el catálogo.
-   * @return {number | null} - Retorna el ID del objeto que coincide con el valor dado, o null si no se encuentra.
-   * @description
-   * Esta función normaliza tanto el valor de entrada como las descripciones en el catálogo
-   * para asegurar una comparación precisa, ignorando diferencias en mayúsculas, minúsculas,
-   * espacios y ciertos caracteres especiales.
-   */
-
   public static matchCatalogId(catalog: Catalogo[], value: string): number | null {
     if (!catalog || !value) { return null; }
     const NORMALIZED_VALUE = DatosMercanciaContenedoraComponent.normalize(value);
     const FOUND = catalog.find(item => DatosMercanciaContenedoraComponent.normalize(item.descripcion) === NORMALIZED_VALUE);
     return FOUND ? FOUND.id : null;
   }
-
-  /** Normaliza una cadena para comparación. */
 
   private static normalize(str: string): string {
     if (typeof str !== 'string') {
@@ -1201,6 +1190,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     };
     this.elementoParaEliminar = i;
 
-  }
+}
 
 }

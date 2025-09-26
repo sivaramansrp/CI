@@ -97,9 +97,9 @@ export class TramitesAsociadoComponent implements OnInit, OnDestroy {
     });
   }
 
-    /**
-   * Devuelve los datos actuales de la tabla de trámites asociados.
-   */
+  /**
+ * Devuelve los datos actuales de la tabla de trámites asociados.
+ */
   getData(): Asociados[] {
     return this.acuseTablaDatos;
   }
@@ -111,6 +111,16 @@ export class TramitesAsociadoComponent implements OnInit, OnDestroy {
    */
   isValid(): boolean {
     return Array.isArray(this.acuseTablaDatos) && this.acuseTablaDatos.length > 0;
+  }
+  // eslint-disable-next-line class-methods-use-this
+  public validateRequiredFields(): boolean {
+    // No required fields in this component
+    return true;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  public markAllFieldsTouched(): void {
+    // No fields to mark as touched in this component
   }
 
   /**
