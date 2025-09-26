@@ -57,11 +57,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
 
   TEXTOS = ALERT;
   estadoSeleccionado!: Tramite260911State;
-  
-  // Configure radio options normally (no disabled property since shared component doesn't support it)
   btonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
-  
-  // Create disableLabel array to disable options 0 and 2
   disableLabels: string[] = [];
   
   form!: FormGroup;
@@ -103,25 +99,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
         })
       )
       .subscribe();
-    
-    // Set up disable labels based on OPCIONES_DE_BOTON_DE_RADIO
     this.setupDisableLabels();
   }
 
   private setupDisableLabels(): void {
-    // Find labels for values 0 and 2 to disable them
     this.disableLabels = OPCIONES_DE_BOTON_DE_RADIO
       .filter(option => Number(option.value) === 0 || Number(option.value) === 2)
       .map(option => option.label);
-    
-    console.log('Disable labels:', this.disableLabels);
   }
 
   ngOnInit(): void {
-    console.log('inside oninit')
     this.inicializarEstadoFormulario();
-    console.log('radio', this.btonDeRadio);
-    console.log('disable labels', this.disableLabels);
   }
 
   ngAfterViewInit(): void {
@@ -153,7 +141,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
         // No hacer nada, solo para usar 'this'
       }
     } catch (error) {
-      console.warn('Error inicializando tooltips:', error);
+      console.error('Error initializing tooltips:', error);
     }
   }
 
@@ -197,18 +185,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
   }
 
   onRadioButtonChange(value: string | null): void {
-    // Check if the selected value corresponds to a disabled option
-    const selectedOption = OPCIONES_DE_BOTON_DE_RADIO.find(option => option.value === value);
-    if (selectedOption && this.disableLabels.includes(selectedOption.label)) {
-      // If user somehow selects a disabled option, reset to null
+    const SELECTED_OPTION = OPCIONES_DE_BOTON_DE_RADIO.find(option => option.value === value);
+    let selectedValue = value;
+    if (SELECTED_OPTION && this.disableLabels.includes(SELECTED_OPTION.label)) {
       this.form.get('btonDeRadio')?.setValue(null, { emitEvent: false });
-      value = null;
+      selectedValue = null;
     }
 
-    this.isRadioButtonSelected = value === '1';
+    this.isRadioButtonSelected = selectedValue === '1';
     this.radioButtonSelectedChange.emit(this.isRadioButtonSelected);
     
-    if (this.isRadioButtonSelected && value === '1') {
+    if (this.isRadioButtonSelected && selectedValue === '1') {
       this.enableSections();
       this.botonDesactivarParaProrrogar = false;
     } else {
@@ -239,7 +226,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
         map((seccionState) => {
           this.estadoSeleccionado = seccionState;
           this.initialFormValues = {
-            btonDeRadio: '', // Always start empty
+            btonDeRadio: '',
             justificacion: seccionState.justificacion || 'Justificación de prueba'
           };
 
@@ -251,10 +238,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
         })
       )
       .subscribe();
-
-    // Force no initial selection - always start with null
     this.form = this.fb.group({
-      btonDeRadio: [null, [Validators.required]], // Always null initially
+      btonDeRadio: [null, [Validators.required]],
       justificacion: [this.estadoSeleccionado?.justificacion || 'justificationData', [Validators.required]],
     });
 
@@ -285,17 +270,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, AfterViewInit, OnDes
         }
       )
     });
-
-    // Always start with no selection
     this.isRadioButtonSelected = false;
     this.botonDesactivarParaProrrogar = true;
-    
-    // Subscribe to radio button changes
     this.form.get('btonDeRadio')?.valueChanges.subscribe(value => {
       this.onRadioButtonChange(value);
     });
-
-    // Start with all sections disabled since no option is selected
     this.disableSections();
   }
 
