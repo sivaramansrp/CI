@@ -900,7 +900,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   onCantidadBlur(): void {
     this.mostrarErrorCantidad = false;
     
-    // Auto-fill cantidadLetra with random text when user leaves cantidad field
     const CANTIDAD_VALUE = this.agregarMercanciasForm.get('datosMercancia.cantidad')?.value;
     if (CANTIDAD_VALUE) {
       const RANDOM_TEXTS = [

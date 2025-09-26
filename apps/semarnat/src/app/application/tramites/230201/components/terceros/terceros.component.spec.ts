@@ -175,7 +175,7 @@ describe('TercerosComponent', () => {
     
     expect(nombreControl?.hasError('required')).toBe(true);
     expect(apellidoPaternoControl?.hasError('required')).toBe(true);
-    expect(apellidoMaternoControl?.hasError('required')).toBe(false); // apellidoMaterno is not required for fisica
+    expect(apellidoMaternoControl?.hasError('required')).toBe(false); 
     expect(razonSocialControl?.hasError('required')).toBe(false);
   });
 
@@ -238,7 +238,6 @@ describe('TercerosComponent', () => {
     
     component.eliminarSeleccionados();
     
-    // The component calls the store to update, but the local state doesn't change until the next subscription update
     expect(component.filaSeleccionada).toEqual([]);
     expect(component.botonModificarHabilitado).toBe(false);
     expect(tramite230201StoreMock.setDatosDestinatario).toHaveBeenCalledWith([]);
@@ -300,9 +299,7 @@ describe('TercerosComponent', () => {
     
     component.guardarDestinatario();
     
-    // The component sends data to store but local state doesn't change until subscription updates
     expect(tramite230201StoreMock.setDatosDestinatario).toHaveBeenCalledTimes(1);
-    // The original state remains until the store updates trigger new subscription
     expect(component.solicitudState.destinatarios[0].paisStr).toBe('Estados Unidos');
     expect(component.solicitudState.destinatarios[0].nombre).toBe('Test');
   });
@@ -310,7 +307,6 @@ describe('TercerosComponent', () => {
   it('should not save destinatario when form is invalid', () => {
     component.ngOnInit();
     component.agregarMercanciasForm.patchValue({
-      // Missing required fields
       pais: '',
       ciudad: '',
       domicilio: '',

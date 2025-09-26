@@ -237,7 +237,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
       this.formularioDestinatario?.enable();
       this.agregarMercanciasForm?.enable();
       
-      // Always keep nacionalidad field disabled regardless of soloLectura state
+
       this.agregarMercanciasForm?.get('nacionalidad')?.disable();
     }
   }
@@ -283,7 +283,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
       domicilio: ['', [Validators.required, Validators.maxLength(1000)]],
     });
 
-    // Initialize filaSeleccionada only if destinatarios exist
+   
     if (this.solicitudState?.destinatarios?.length > 0) {
       this.filaSeleccionada.push(this.solicitudState.destinatarios[0]);
     }
@@ -442,16 +442,16 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Elimina las filas seleccionadas de la tabla y restablece el formulario.
    */
   eliminarSeleccionados(): void {
-    // Get current destinatarios and remove selected ones
+ 
     const CURRENT_DESTINATARIOS = [...this.solicitudState.destinatarios];
     const FILTERED_DESTINATARIOS = CURRENT_DESTINATARIOS.filter(
       (destinatario) => !this.filaSeleccionada.includes(destinatario)
     );
     
-    // Update the store with the filtered list
+  
     this.tramite230201Store.setDatosDestinatario(FILTERED_DESTINATARIOS);
     
-    // Reset form and selections
+ 
     this.filaSeleccionada = [];
     this.agregarMercanciasForm.reset();
     this.formularioDestinatario.reset();
@@ -466,17 +466,17 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.agregarMercanciasForm.updateValueAndValidity();
 
     if (this.agregarMercanciasForm.valid) {
-      const DATA = this.agregarMercanciasForm.getRawValue(); // Get raw value to include disabled fields
+      const DATA = this.agregarMercanciasForm.getRawValue(); 
       const TABLE_DATA = {
         ...DATA,
         paisStr: this.paisesDatos.find((pais) => pais.id === DATA.pais)?.descripcion,
       };
       
-      // Get current destinatarios from the state
+   
       const CURRENT_DESTINATARIOS = [...this.solicitudState.destinatarios];
       
       if (this.isEditMode && this.filaSeleccionada.length > 0) {
-        // Update existing record
+
         const INDEX = CURRENT_DESTINATARIOS.findIndex(
           (destinatario) => destinatario === this.filaSeleccionada[0]
         );
@@ -484,7 +484,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
           CURRENT_DESTINATARIOS[INDEX] = TABLE_DATA;
         }
       } else {
-        // Add new record
         CURRENT_DESTINATARIOS.push(TABLE_DATA);
       }
       
