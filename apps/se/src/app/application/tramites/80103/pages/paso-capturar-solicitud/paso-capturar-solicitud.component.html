@@ -31,6 +31,7 @@
         <btn-continuar
           [datos]="datosPasos"
           (continuarEvento)="getValorIndice($event)"
+          [dePadre]="padreBtn"
           [btnGuardar]="true" 
           [btnGuardarVisible]="btnGuardarVisible"
           (btnGuardarClicked)="obtenerDatosDelStore()"

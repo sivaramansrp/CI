@@ -404,3 +404,21 @@ export const SELECCIONAR_DOCUMENTOS = {
   <p>-Para solicitar documentos adicionales, selecciona el documento y presiona "Agregar nuevo".</p>
   <p>-En caso de que no requieras algún documento, selecciónalo y elimínalo.</p>`,
 };
+
+/**
+  * @constant ERROR_FORMA_ALERT
+  * @type {string}
+  * @description
+  * Este mensaje de alerta informa al usuario sobre el proceso para agregar datos del traslado y la sede, 
+  * indicando que a cada traslado le corresponde una sede con un máximo de dos itinerarios.
+  */
+export const ERROR_FORMA_ALERT =
+`
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      <strong>¡Error de registro!</strong> Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`;

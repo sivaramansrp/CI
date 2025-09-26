@@ -1,9 +1,21 @@
-import { RespuestaConsulta, RespuestaMercancia } from '../models/exencion-impuestos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
+import { RespuestaConsulta, RespuestaMercancia } from '../models/exencion-impuestos.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Tramite103Store } from '../estados/tramite103.store';
+
+/**
+ * Interface para representar una opción de aduana.
+ */
+interface OpcionAduana {
+  id?: string | number;
+  value?: string | number;
+  descripcion?: string;
+  label?: string;
+  [key: string]: string | number | boolean | undefined;
+}
 
 /**
  * Servicio para gestionar datos relacionados con el trámite de exención de impuestos.
@@ -17,8 +29,8 @@ export class ExencionImpuestosService {
      * Obtiene el catálogo de opciones de aduana (opciones-aduana.json).
      * @returns Observable con la respuesta del catálogo de opciones de aduana.
      */
-    getOpcionesAduana(): Observable<any[]> {
-      return this.http.get<any[]>('assets/json/103/opciones-aduana.json');
+    getOpcionesAduana(): Observable<OpcionAduana[]> {
+      return this.http.get<OpcionAduana[]>('assets/json/103/opciones-aduana.json');
     }
   /**
    * Constructor para inyección de dependencias.
