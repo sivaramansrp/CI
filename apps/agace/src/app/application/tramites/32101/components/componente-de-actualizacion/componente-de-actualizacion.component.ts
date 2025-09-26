@@ -2,7 +2,7 @@ import {Catalogo,Solicitud32101State,Tramite32101Store} from '../../../../estado
 import {CatalogoSelectComponent,TituloComponent} from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
-import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaAvisoAcreditacionService } from '../../services/consulta-aviso-acreditacion.service';
@@ -292,8 +292,8 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
 
     // Show the modal using Bootstrap modal
     if (this.modalRef?.nativeElement) {
-      const modal = new (window as any).bootstrap.Modal(this.modalRef.nativeElement);
-      modal.show();
+      const MODAL = new (window).bootstrap.Modal(this.modalRef.nativeElement);
+      MODAL.show();
     }
   }
 
@@ -302,12 +302,13 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
    */
   cerrarModal(): void {
     if (this.modalRef?.nativeElement) {
-      const modal = (window as any).bootstrap.Modal.getInstance(this.modalRef.nativeElement);
-      if (modal) {
-        modal.hide();
+      const CERRAR_MODAL = (window).bootstrap.Modal.getInstance(this.modalRef.nativeElement);
+      if (CERRAR_MODAL) {
+        CERRAR_MODAL.hide();
       }
     }
   }
+
   /**
    * Maneja el evento de cancelar la modificación.
    * Cierra el modal sin guardar cambios.
@@ -319,8 +320,8 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
   /**
    * Obtiene el ID de un elemento basado en su descripción
    */
-  private getIdFromDescription(description: string, catalog: any[]): number | null {
-    const item = catalog.find(cat => cat.descripcion === description);
-    return item ? item.id : null;
+  private getIdFromDescription(description: string, catalog: Catalogo[]): number | null {
+    const ITEM = catalog.find(cat => cat.descripcion === description);
+    return ITEM ? ITEM.id : null;
   }
 }

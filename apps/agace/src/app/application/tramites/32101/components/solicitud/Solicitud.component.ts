@@ -7,11 +7,11 @@ import { ENCABEZADO_TABLA_DATOS, Solicitud32101Enum } from '../../constants/soli
 import { Solicitud32101State, Tramite32101Store } from '../../../../estados/tramites/tramite32101.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ComponenteDeActualizacionComponent } from '../componente-de-actualizacion/componente-de-actualizacion.component';
 import { ConsultaAvisoAcreditacionService } from '../../services/consulta-aviso-acreditacion.service';
 import { FECHA_PAGO } from '../../models/registro.model';
 import { Router } from '@angular/router';
 import { Tramite32101Query } from '../../../../estados/queries/tramite32101.query';
-import { ComponenteDeActualizacionComponent } from '../componente-de-actualizacion/componente-de-actualizacion.component';
 
 /**
  * Componente que gestiona la solicitud del trámite 31803.
@@ -19,7 +19,8 @@ import { ComponenteDeActualizacionComponent } from '../componente-de-actualizaci
  */
 @Component({
   selector: 'app-solicitud',
-  standalone: true,  imports: [
+  standalone: true,
+  imports: [
     CommonModule,
     TituloComponent,
     InputFechaComponent,
@@ -329,7 +330,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ],
     });
     this.inicializarEstadoFormulario()
-  }      /**
+  }      
+  
+  /**
    * Inicializa el estado del formulario según el modo de solo lectura.
    * @private
    */
@@ -527,7 +530,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Maneja el cambio en la selección de la forma de adquisición.
    * @param selectedOption - El objeto de la opción seleccionada del catálogo.
    */  
-  onlistaDeDocumentosChange(selectedOption: any): void {
+  onlistaDeDocumentosChange(selectedOption: Catalogo): void {
     
     const VALUE = selectedOption?.id || selectedOption?.clave;
 
@@ -595,8 +598,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       // Marcar todos los controles del formulario como tocados para mostrar errores de validación
       this.registroForm.markAllAsTouched();
       return;
-    }
-
+    }    
+    
     const FORM_VALUES = this.registroForm.value;
     const NEW_ROW: DatosDeLaTabla = {
       id: this.configuracionTablaDatos.length + 1,
@@ -610,10 +613,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.aduana.catalogos
       ),
       valorEnPesos: FORM_VALUES.valorEnPesos,
-      comprobante: SolicitudComponent.getDropdownLabel(
+      comprobante: this.comprobanteVisible ? SolicitudComponent.getDropdownLabel(
         FORM_VALUES.comprobante,
         this.comprobante.catalogos
-      ),
+      ) : 'N/A',
     };
 
     this.configuracionTablaDatos = [...this.configuracionTablaDatos, NEW_ROW];
@@ -704,7 +707,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-      return;
     } else {
       this.abrirEleminarModal();
     }
