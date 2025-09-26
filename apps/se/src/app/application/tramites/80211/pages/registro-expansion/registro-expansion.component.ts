@@ -1,4 +1,4 @@
-import { AVISO, DatosPasos } from '@ng-mf/data-access-user';
+import { AVISO, DatosPasos, RegistroSolicitudService } from '@ng-mf/data-access-user';
 import { Component, EventEmitter } from '@angular/core';
 import { OnInit, ViewChild } from '@angular/core';
 import { Subject, map, take, takeUntil } from 'rxjs';
@@ -8,6 +8,7 @@ import { PASOS } from '@ng-mf/data-access-user';
 import { Tramite80211Query } from '../../estados/tramites80211.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { registroSolicitudImmexService } from '../../services/registro-expansion.service';
+import { PAYLOAD,PLANTASBUILD} from '../../enums/registro-expansion.enum';
 
 /**
  * Interfaz que representa el botón de acción.
@@ -115,10 +116,12 @@ export class RegistroExpansionComponent implements OnInit {
  */
   activarBotonCargaArchivos: boolean = false;
 
+  payload = PAYLOAD;
     constructor(
     private tramite80211Store: Tramite80211Store,
     private tramite80211Query: Tramite80211Query,
-    private registroService: registroSolicitudImmexService
+    private registroService: registroSolicitudImmexService,
+    private registroSolicitudService: RegistroSolicitudService
   ) { }
 
 
@@ -139,11 +142,45 @@ export class RegistroExpansionComponent implements OnInit {
    */
   getValorIndice(evento: AccionBoton): void {
     this.indice = evento.valor;
+    this.obtenerDatosDelStore()
     this.wizardComponent[evento.accion === 'cont' ? 'siguiente' : 'atras']();
   }
-   /**
-  * Obtiene los datos del store y los guarda utilizando el servicio.
-  */
+
+
+buildPlantasTerciarizadoras(array: any[] = []): any[] {
+  // eslint-disable-next-line complexity
+  return array.map(flat => ({
+    idPlanta: flat.idPlanta ?? '',
+    calle: flat.calle ?? '',
+    numeroInterior: flat.numeroInterio ?? '',
+    numeroExterior: flat.numeroExterio ?? '',
+    codigoPostal: flat.codiogoPostal ?? '',
+    colonia: flat.colonia ?? '',
+    delegacionMunicipio: flat.municipio ?? '',
+    entidadFederativa: flat.entidadFederativa ?? '',
+    pais: flat.pais ?? '',
+    rfc: flat.registroFederal ?? '',
+    domicilioFiscal: flat.domicilio ?? '',
+    razonSocial: flat.razon ?? '',
+    empresaCalle: flat.calle ?? '',
+    empresaNumeroInterior: flat.numeroInterio ?? '',
+    empresaNumeroExterior: flat.numeroExterio ?? '',
+    empresaCodigoPostal: flat.codiogoPostal ?? '',
+    empresaColonia: flat.colonia ?? '',
+    empresaDelegacionMunicipio: flat.municipio ?? '',
+    empresaEntidadFederativa: flat.entidadFederativa ?? '',
+    empresaPais: flat.pais ?? '',
+    datosComplementarios: flat.datosComplementarios ?? [],
+    firmantes: flat.firmantes ?? [],
+    montos: flat.montos ?? [],
+    listaCapacidad: flat.listaCapacidad ?? [],
+    datosEmpleados: flat.datosEmpleados ?? []
+  }));
+}
+
+ /**
+ * Obtiene los datos del store y los guarda utilizando el servicio.
+ */
   obtenerDatosDelStore(): void {
     this.registroService.getAllState()
       .pipe(take(1))
@@ -152,36 +189,14 @@ export class RegistroExpansionComponent implements OnInit {
       });
   }
     guardar(item: any): void {
-    const PAYLOAD = {
-      rfc_solicitante: 'AAL0409235E6',
-      solicitante: {
-        rfc: "AAL0409235E6",
-        nombre: "ACEROS ALVARADO S.A. DE C.V.",
-        actividad_economica: "Fabricación de productos de hierro y acero",
-        correo_electronico: "contacto@acerosalvarado.com",
-        domicilio: {
-          pais: "México",
-          codigo_postal: "06700",
-          estado: "Ciudad de México",
-          municipio_alcaldia: "Cuauhtémoc",
-          localidad: "Centro",
-          colonia: "Roma Norte",
-          calle: "Av. Insurgentes Sur",
-          numero_exterior: "123",
-          numero_interior: "Piso 5, Oficina A",
-          lada: "",
-          telefono: "123456"
-        }
-      },
+      this.payload = {
+      ...this.payload,
+      idSolicitud: item.idSolicitud,
+    plantasTerciarizadoras: this.buildPlantasTerciarizadoras(item.plantasSeleccionadas),
     };
 
-
-    console.log(PAYLOAD, 'PAYLOAD');
-
-    this.registroService.guardarDatosPost(PAYLOAD).subscribe(response => {
-      this.tramite80211Store.setIdSolicitud(response.idSolicitud || 0);
-      console.log(response,'response');
-
+    this.registroService.guardarDatosPost(this.payload).subscribe(response => {
+      this.tramite80211Store.setIdSolicitud(response.datos.id_solicitud || 0);
       return response;
     });
   }

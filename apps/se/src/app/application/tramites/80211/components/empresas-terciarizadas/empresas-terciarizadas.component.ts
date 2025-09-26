@@ -174,6 +174,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    */
   confirmarEliminar: boolean = false;
 
+  tramiteId: string = '80211';
   /**
    * Arreglo de estados disponibles para selección, donde cada estado está representado por un objeto
    * que contiene una clave única (`clave`) y una etiqueta descriptiva (`descripcion`).
@@ -237,7 +238,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
     }
   }
   getEstado(): void {
-    this.catalogoServices.estadosCatalogo('80211').pipe(takeUntil(this.destoryNotification$)).subscribe((res) => {
+    this.catalogoServices.estadosCatalogo(this.tramiteId).pipe(takeUntil(this.destoryNotification$)).subscribe((res) => {
       console.log(res, 'res');
 
       this.optionsEstado = res.datos ?? [];
@@ -380,10 +381,17 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
       this.plantasDisponibles = this.tramites80211State.plantasDisponibles;
     } else {
       if (this.empresasForm.valid) {
+        // const payload = {
+        //   "rfcEmpresaSubManufacturera": "PEL000523L12",
+        //   "entidadFederativa": "AGS",
+        //   "idPrograma": "200",
+        //   "modalidad": "80101"
+        // }
         this.registroSolicitudService.obtenerPlantasDatos()
           .pipe(
             takeUntil(this.destoryNotification$),
             tap((plantas) => {
+              console.log(plantas, 'plantas');
               this.tramite80211Store.establecerDatos({ plantasDisponibles: plantas?.datos });
             })
           )
@@ -408,7 +416,14 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    * @param fila - Lista de filas seleccionadas.
    */
   manejarFilaDisponibles(fila: Plantas[]): void {
+    console.log(fila,'listaFilaDisponibles');
+    
     this.listaFilaDisponibles = fila;
+    if (fila.length > 0) {
+      this.listaFilaDisponibles = fila;
+    } else {
+      this.listaFilaDisponibles = [];
+    }
   }
 
   /**
@@ -424,45 +439,36 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
 * Agrega plantas seleccionadas a la lista de seleccionadas, evitando duplicados.
 */
   agregarPlantas(): void {
-    if (!this.listaFilaDisponibles?.length) {
-      this.errorAgregar = true;
-      this.nuevaNotificacionAgregar = {
-        tipoNotificacion: 'alert',
-        categoria: '',
-        modo: 'action',
-        titulo: '',
-        mensaje: 'Selecciona al menos una planta donde se realizarán las operaciones IMMEX.',
-        cerrar: false,
-        tiempoDeEspera: 2000,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-      return;
-    }
-
-    const PLANTAS_A_MOVER = this.plantasDisponibles.filter(planta =>
-      !this.listaFilaDisponibles.some(selectedPlanta =>
-        selectedPlanta.id === planta.id
-      )
-    );
-
-    const PLANTAS_SELECCIONADAS_ACTUALIZADAS = [...this.plantasSeleccionadas];
-    PLANTAS_A_MOVER.forEach(planta => {
-      const EXISTS = PLANTAS_SELECCIONADAS_ACTUALIZADAS.some(
-        plantaSeleccionada => plantaSeleccionada.id === planta.id
-      );
-      if (!EXISTS) {
-        PLANTAS_SELECCIONADAS_ACTUALIZADAS.push(planta);
-      }
-    });
-
-    this.plantasSeleccionadas = PLANTAS_SELECCIONADAS_ACTUALIZADAS;
-
-    this.plantasDisponibles = [...this.listaFilaDisponibles];
-    this.updateStoreForPlantas();
-
-    this.listaFilaDisponibles = [];
+  if (!this.listaFilaDisponibles?.length) {
+    this.errorAgregar = true;
+    this.nuevaNotificacionAgregar = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Selecciona al menos una planta donde se realizarán las operaciones IMMEX.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    return;
   }
+
+  const NUEVAS_PLANTAS = this.listaFilaDisponibles.filter(
+    (planta) => !this.plantasSeleccionadas.some((sel) => sel.id === planta.id)
+  );
+
+  this.plantasSeleccionadas = [...this.plantasSeleccionadas, ...NUEVAS_PLANTAS];
+
+  this.plantasDisponibles = this.plantasDisponibles.filter(
+    (planta) => !this.listaFilaDisponibles.some((sel) => sel.id === planta.id)
+  );
+
+  this.updateStoreForPlantas();
+  this.listaFilaDisponibles = [];
+}
+
   /**
    * Actualiza el estado global con las plantas disponibles y seleccionadas.
    */

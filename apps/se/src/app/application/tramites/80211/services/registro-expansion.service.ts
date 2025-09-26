@@ -5,6 +5,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { Tramite80211Store, Tramites80211State } from '../estados/tramites80211.store';
 import { HttpClient } from '@angular/common/http';
 import { Tramite80211Query } from '../estados/tramites80211.query';
+import { PROC_80211 } from '../servers/api-route';
 
 /**
  * Servicio para manejar las renovaciones de muestras de mercancías.
@@ -113,9 +114,9 @@ export class registroSolicitudImmexService implements OnDestroy {
    * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
    * @returns Observable con la respuesta de la solicitud POST.
    */
-  guardarDatosPost(body: any) {
-    // return this.httpService.post<any>(PROC_80211.GUARDAR, { body: body });
-    return this.httpService.post<any>('localhost:8080/api/sat-t80211/solicitud/guardar', { body: body });
+  guardarDatosPost(body: any) : Observable<any> {
+    return this.httpService.post<any>(PROC_80211.GUARDAR, { body: body });
+    // return this.httpService.post<any>('localhost:8080/api/sat-t80211/solicitud/guardar', { body: body });
   }
   /**
      * Actualiza el estado del formulario en el store global.
@@ -136,6 +137,10 @@ export class registroSolicitudImmexService implements OnDestroy {
     return this.http.get<Tramites80211State>('assets/json/80211/registro_ampliacion_datos.json');
   }
 
+
+  getBuscarPlantasDatos(body:any) : Observable<any> {
+    return this.httpService.post<any>(PROC_80211.BUSCAR_PLANTAS,{ body: body })
+  }
   /**
  * Método llamado al destruir el componente o servicio.
  * 
