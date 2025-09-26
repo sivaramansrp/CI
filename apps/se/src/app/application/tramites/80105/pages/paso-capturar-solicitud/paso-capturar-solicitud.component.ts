@@ -242,7 +242,60 @@ getValorIndice(e: AccionBoton): void {
    * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildPlantas(array: any[] = [], base: unknown[]): unknown[] {
+  buildPlantas(array: any[] = [], base: unknown[], data: any): unknown[] {
+
+  const MAP_COMPLEMENTAR = (item:any) => ({
+      idPlantaC: item.PLANTA ?? '' ,
+      idDato: item.DATO ?? '',
+      amparoPrograma: item.PERMANECERA_MERCANCIA_PROGRAMA ?? '',
+      tipoDocumento: item.TIPO_DOCUMENTO ?? '',
+      descDocumento: item.DESCRIPCION_DOCUMENTO ?? '',
+      descripcionOtro: item.DESCRIPCION_OTRO ?? '',
+      documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
+      descDocRespaldo: item.DESC_DOCUMENTO_RESPALDO ?? '',
+      respaldoOtro: item.RESPALDO_OTRO ?? '',
+      fechaFirma: item.FECHA_DE_FIRMA ?? '',
+      fechaVigencia: item.FECHA_DE_FIN_DE_VIGENCIA ?? '',
+      fechaFirmaRespaldo: item.FECHA_DE_FIRMA_DOCUMENTO ?? '',
+      fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
+  })
+
+  const MAP_FIRMANTES = (item:any) => ({
+      idPlantaF: item.planta ?? '',
+      tipoFirmante: item.tipoFirmante ?? '',
+      descTipoFirmante: item.descTipoFirmante ?? '',
+  })
+  
+  const MAP_MONTOS_INVERSION = (item:any) => ({
+      idPlantaM: item.PLANTA ?? "",
+      tipo: item.TIPO ?? "",
+      cantidad: item.CANTIDAD ?? "",
+      descripcion: item.DESCRIPCION ?? "",
+      monto: item.MONTO ?? "",
+  })
+
+  const MAP_EMPLEADOS = (item:any) => ({
+      idPlantaE: item.PLANTA ?? '',
+      idEmpleados: item.ID_EMPLEADOS ?? '',
+      totalEmpleados: item.TOTAL ?? '',
+      directos: item.DIRECTOS ?? '',
+      cedula: item.CEDULA_DE_CUOTAS ?? '',
+      fechaCedula: item.FECHA_DE_CEDULA ?? '',
+      indirectos: item.INDIRECTOS ?? '',
+      contrato: item.CONTRATO ?? '',
+      objetoContrato: item.OBJETO_DEL_CONTRATO_DEL_SERVICIO ?? '',
+      fechaFirma: item.FECHA_FIRMA ?? '',
+      fechaFinVigencia: item.FECHA_FIN_VIGENCIA ?? '',
+      rfcEmpresa: item.RFC ?? '',
+      razonEmpresa: item.RAZON_SOCIAL ?? '',
+  })
+
+  const datosComplementarios = (data.complementarPlantaDatos || []).map(MAP_COMPLEMENTAR);
+  const firmantes = (data.firmantesDatos || []).map(MAP_FIRMANTES); 
+  const montos = (data.montosInversionDatos || []).map(MAP_MONTOS_INVERSION);
+  const datosEmpleados = (data.empleadosDatos || []).map(MAP_EMPLEADOS);
+
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
     array.forEach(arr => {
@@ -266,7 +319,8 @@ getValorIndice(e: AccionBoton): void {
         });
       });
     });
-    return RESULT;
+    const RESULT_DATA = { ...RESULT[0], datosComplementarios, firmantes, montos, datosEmpleados };
+    return RESULT_DATA;
   }
 
 /**
@@ -311,7 +365,7 @@ getValorIndice(e: AccionBoton): void {
     const EMPRESAS_NACIONALES = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentos, this.empresasNacionales);
     const EMPRESAS_EXTRANJERAS = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentosExtranjera, this.empresasExtranjeras);
     const PLANTAS_TERCIARIZADORAS = PasoCapturarSolicitudComponent.buildPlantasTerciarizadoras(data.empresasSeleccionadas, this.basePlantasTerciarizadoras);
-    const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
+    const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
     const ANEXO_ALL = this.buildAnexo(data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
@@ -339,7 +393,7 @@ getValorIndice(e: AccionBoton): void {
       "solicitante": {
 
       },
-      "planta": [...PLANTAS],
+      "planta": Array.isArray(PLANTAS) ? [...PLANTAS] : [PLANTAS],
       "notario": [...NOTARIOS],
       "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
       "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],

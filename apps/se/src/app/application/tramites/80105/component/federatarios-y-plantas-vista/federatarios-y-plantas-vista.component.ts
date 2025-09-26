@@ -1,4 +1,5 @@
 import { Catalogo, TablaSeleccion } from '@ng-mf/data-access-user';
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../../shared/constantes/complementar-planta.enum';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -10,6 +11,7 @@ import {
   PlantasDisponibles,
   PlantasImmex,
 } from '../../../../shared/models/federatarios-y-plantas.model';
+import { Directos } from '../../../../shared/constantes/empleados.enum';
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-planta/federatarios-y-plantas.component';
 import { Observable } from 'rxjs';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
@@ -132,5 +134,42 @@ export class FederatariosYPlantasVistaComponent implements OnInit {
    */
   setPlantasImmexDatos(datos: PlantasImmex[]): void {
     this.store.setPlantasImmexTablaLista(datos);
+  }
+
+  
+/**
+ * Establece los datos complementarios de plantas en el almacén.
+ * 
+ * @param event - Lista de datos complementarios de planta a almacenar.
+ */
+  setComplementarPlantaList(event: ComplementoDePlanta[]): void {
+    this.store.setComplementarPlantaDatos(event);
+  }
+
+/**
+ * Establece los datos de firmantes en el almacén.
+ * 
+ * @param event - Lista de datos de firmantes a almacenar.
+ */
+  setFirmantesList(event: ComplementarPlantaState[]): void {
+    this.store.setFirmantesDatos(event);
+  }
+
+/**
+ * Establece los datos de montos de inversión en el almacén.
+ * 
+ * @param event - Lista de montos de inversión a almacenar.
+ */
+  setMontosInversionList(event: MontoDeInversion[]): void {
+    this.store.setMontosInversionDatos(event);
+  }
+
+ /**
+ * Establece los datos de empleados directos en el almacén.
+ * 
+ * @param event - Lista de empleados directos a almacenar.
+ */
+  setEmpleadosList(event: Directos[]): void {
+    this.store.setEmpleadosDatos(event);
   }
 }

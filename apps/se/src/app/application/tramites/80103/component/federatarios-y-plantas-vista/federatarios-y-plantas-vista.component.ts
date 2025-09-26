@@ -3,9 +3,11 @@
  * Importa interfaces compartidas de catálogos y tablas de selección
  * desde la librería de acceso a datos del usuario.
  */
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../../shared/constantes/complementar-planta.enum';
 import { Component, OnInit } from '@angular/core';
 import { FEDERATARIOS,FederatariosEncabezado,PLANTAS_DIPONIBLES,PLANTAS_IMMEX,PlantasDisponibles,PlantasImmex} from '../../../../shared/models/federatarios-y-plantas.model';
 import { CommonModule } from '@angular/common';
+import { Directos } from '../../../../shared/constantes/empleados.enum';
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-planta/federatarios-y-plantas.component';
 import { Observable } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
@@ -122,5 +124,41 @@ export class FederatariosYPlantasVistaComponent implements OnInit {
    */
   setPlantasImmexDatos(datos: PlantasImmex[]): void {
     this.store.setPlantasImmexTablaLista(datos);
+  }
+
+/**
+ * Establece los datos complementarios de plantas en el almacén.
+ * 
+ * @param event - Lista de datos complementarios de planta a almacenar.
+ */
+  setComplementarPlantaList(event: ComplementoDePlanta[]): void {
+    this.store.setComplementarPlantaDatos(event);
+  }
+
+/**
+ * Establece los datos de firmantes en el almacén.
+ * 
+ * @param event - Lista de datos de firmantes a almacenar.
+ */
+  setFirmantesList(event: ComplementarPlantaState[]): void {
+    this.store.setFirmantesDatos(event);
+  }
+
+/**
+ * Establece los datos de montos de inversión en el almacén.
+ * 
+ * @param event - Lista de montos de inversión a almacenar.
+ */
+  setMontosInversionList(event: MontoDeInversion[]): void {
+    this.store.setMontosInversionDatos(event);
+  }
+
+ /**
+ * Establece los datos de empleados directos en el almacén.
+ * 
+ * @param event - Lista de empleados directos a almacenar.
+ */
+  setEmpleadosList(event: Directos[]): void {
+    this.store.setEmpleadosDatos(event);
   }
 }

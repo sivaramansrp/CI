@@ -385,7 +385,7 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
     })
 
     const mapPlantaFirmantes = (item:any) => ({
-      idPlantaF: item.PLANTA ?? '',
+      idPlantaF: item.planta ?? '',
       tipoFirmante: item.tipoFirmante ?? '',
       descTipoFirmante: item.descTipoFirmante ?? '',
     })
@@ -602,7 +602,6 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): void {
-    console.log(data);
     const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
