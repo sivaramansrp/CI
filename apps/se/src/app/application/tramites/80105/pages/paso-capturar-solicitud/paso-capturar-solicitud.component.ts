@@ -331,7 +331,7 @@ getValorIndice(e: AccionBoton): void {
     const PAYLOAD = {
       "esDeGuardar": true,
       "tipoDeSolicitud": "guardar",
-      "idSolicitud": 202781045,
+      "idSolicitud": 0,
       "idTipoTramite": 80105,
       "rfc": "AAL0409235E6",
       "cveUnidadAdministrativa": "8101",

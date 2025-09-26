@@ -283,7 +283,7 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    * @method obtenerSubfabricantesDisponibles
    */
   obtenerSubfabricantesDisponibles(): void {
-    const PAYLOAD: any = {
+    const PAYLOAD = {
         "rfcEmpresaSubManufacturera": this.formularioDatosSubcontratista.get('rfc')?.value,
         "entidadFederativa": this.formularioDatosSubcontratista.get('estado')?.value,
         "idPrograma": null

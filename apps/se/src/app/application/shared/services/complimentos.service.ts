@@ -9,12 +9,10 @@ import {
   JSONResponse,
   JsonResponseCatalogo,
 } from '@ng-mf/data-access-user';
+import { PlantasSubfabricante, PlantsEmpresaSubfabricante } from '../models/empresas-subfabricanta.model';
 import { API_ROUTES } from '../servers/api-route';
-import { ENVIRONMENT } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PlantsEmpresaSubfabricante } from '../../tramites/130118/model/request/guardar-solicitud-request.model';
-import { PlantasSubfabricante } from '../models/empresas-subfabricanta.model';
 
 @Injectable({
   providedIn: 'root',
