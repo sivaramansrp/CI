@@ -32,12 +32,14 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { USUARIO_INFO } from '../../enum/enum-80102';
+import complimentos from '@libs/shared/theme/assets/json/shared/complimentos.json';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
 import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
 import notarios from '@libs/shared/theme/assets/json/shared/notarios.json';
 import planta from '@libs/shared/theme/assets/json/shared/planta.json';
 import plantasSubmanufactureras from '@libs/shared/theme/assets/json/shared/plantas-submanufactureras.json';
-import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accionistas.json';
+import sociosAccionistas from '@libs/shared/theme/assets/json/shared/socios-accionistas.json';
+
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
@@ -73,6 +75,11 @@ interface AccionBoton {
  * Componente que representa la página de solicitud.
  */
 export class SolicitudPageComponent implements OnDestroy, OnInit {
+
+  /** 
+   * Indica si el componente padre es BtnContinuarComponent. 
+   */
+  padreBtn: boolean = true;
   /**
    * Evento que se emite para cargar archivos.
    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
@@ -151,6 +158,11 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
   /** Listado de empresas  extranjeras utilizadas en el formulario de solicitud. */
   private empresasExtranjeras = empresasExtranjeras;
 
+  /**
+  * Objeto base inmutable que representa la estructura inicial de un sociosAccionistas.
+  */
+  private sociosAccionistas = sociosAccionistas;
+
   constructor(
     private seccion: SeccionLibStore,
     private autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
@@ -215,8 +227,10 @@ getValorIndice(e: AccionBoton): void {
       tap(response => {
         shouldNavigate = response.codigo === '00';
         if(shouldNavigate) {
+          this.padreBtn = false;
           this.toastrService.success(response.mensaje);
         } else {
+          this.padreBtn = true;
           this.toastrService.error(response.mensaje);
         }
       }),
@@ -263,7 +277,7 @@ getValorIndice(e: AccionBoton): void {
    * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private socioAccionistaBase = socioAccionistas;
+  private complimentosBase = complimentos;
 
   /**
    * Objeto base inmutable que representa la estructura inicial de un plantasSubmanufactureras.
@@ -306,10 +320,10 @@ getValorIndice(e: AccionBoton): void {
  *          con la información de los dos arreglos de entrada.
  *
  * @example
- * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
+ * const socios = buildComplimentos(listaA, listaB, BASE, datos);
  */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildSociosAccionistas(data: Record<string, any>, base: Record<string, any>): any {
+  buildComplimentos(data: Record<string, any>, base: Record<string, any>): any {
     return {
       ...base,
       notario: {
@@ -331,6 +345,100 @@ getValorIndice(e: AccionBoton): void {
 
     };
   }
+
+  /**
+ * Construye un arreglo de socios/accionistas a partir de dos listas de entrada,
+ * utilizando un objeto base como plantilla y datos complementarios para completar
+ * los campos faltantes.
+ *
+ * @param arr1 Primer arreglo de socios/accionistas.
+ * @param arr2 Segundo arreglo de socios/accionistas.
+ * @param base Objeto base que sirve de plantilla para cada elemento del resultado.
+ * @param data Objeto con datos complementarios necesarios para completar el payload.
+ *
+ * @returns Un nuevo arreglo que contiene los objetos combinados y mapeados
+ *          con la información de los dos arreglos de entrada.
+ *
+ * @example
+ * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
+ */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+  buildSociosAccionistas(arr1: any[] = [], arr2: any[] = [], base: Record<string, any>): any[] {
+    const BASE_OBJECT = base[0];
+    const CLONED_BASE = structuredClone ? structuredClone(BASE_OBJECT) : JSON.parse(JSON.stringify(BASE_OBJECT));
+    const MAP_TO_PAYLOAD = (item: Record<string, unknown>): Record<string, unknown> => ({
+      ...CLONED_BASE,
+      nombre: item['nombre'] ?? '',
+      apellidoPaterno: item['apellidoPaterno'] ?? '',
+      apellidoMaterno: item['apellidoMaterno'] ?? '',
+      rfc: item['rfc'] ?? '',
+      correoElectronico: item['correoElectronico'] ?? '',
+      razonSocial: item['razonSocial'] ?? '',
+      estadoEvaluacionEntidad: item['estado'] ?? '',
+      estadoEntidad: item['estado'] ?? '',
+      cvePaisOrigen: item['pais'] ?? '',
+      rfcExtranjero: item['taxId'] ?? '',
+      domicilio: {
+        codigoPostal: item['codigoPostal'] ?? '',
+      }
+    });
+
+    return [...arr1.map(MAP_TO_PAYLOAD), ...arr2.map(MAP_TO_PAYLOAD)];
+  }
+/**
+ * Genera un array de empresas nacionales combinando datos de entrada con una base.
+ * @param array - Datos dinámicos con propiedades como servicio, RFC, año y número IMMEX.
+ * @param base - Plantilla base con valores por defecto para cada empresa.
+ * @returns Array de objetos que fusiona la base con los datos del array.
+ * @example buildEmpresaacionales(input, base) => [{ rfc: 'RFC123', razonSocial: 'Empresa X', idServicio: 'S01', ... }]
+ */
+  // eslint-disable-next-line class-methods-use-this
+  buildEmpresaNacionales(array: any[] = [], base: unknown[]): unknown[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const RESULT: any[] = [];
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,      
+      idServicio :arr.servicio?? '',
+      rfc:arr.registroContribuyentes?? '',
+      tiempoPrograma:arr.anoIMMEX?? '',
+      numeroPrograma:arr.numeroIMMEX?? '',
+      razonSocial:arr.denominacionSocial?? '',
+        });
+      });
+    });
+    return RESULT;
+  }
+/**
+ * Construye un array de empresas extranjeras combinando datos de entrada con una base.
+ * @param array - Datos dinámicos con propiedades como dirección, servicio y nombre.
+ * @param base - Plantilla base con valores por defecto para cada empresa extranjera.
+ * @returns Array de objetos fusionando la base con los datos del array.
+ * @example buildEmpresaExtranjera(input, base) => [{ nombre: 'Empresa X', idServicio: 'S01', idDireccionSol: 'Dirección Y' }]
+ */
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
+  buildEmpresaExtranjera(array: any[] = [], base: unknown[]): unknown[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const RESULT: any[] = [];
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,     
+        idDireccionSol:arr.direccionEmpresaExtranjera,
+        idServicio:arr.servicio,
+        nombre:arr.nombreEmpresa,
+        });
+      });
+    });
+    return RESULT;
+  }
+
+
+
 
   /** Construye el arreglo de declaraciones de solicitud a partir de los datos proporcionados. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -598,15 +706,15 @@ getValorIndice(e: AccionBoton): void {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): Promise<any> {
-    const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
+    const SOLICITUD = this.buildComplimentos(data, this.complimentosBase);
     const DECLARACION_SOLICUTUD_ENTRIES = SolicitudPageComponent.buildDeclaracionSolicitudEntries(data);
-    const EMPRESAS_NACIONALES = SolicitudPageComponent.buildComplementosTablaPayload(data.tablaDatosComplimentos, this.empresasNacionales);
-    const EMPRESAS_EXTRANJERAS = SolicitudPageComponent.buildComplementosTablaPayload(data.tablaDatosComplimentosExtranjera, this.empresasExtranjeras);
     const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
     const ANEXO_ALL = this.buildAnexo(data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
-
+    const SOCIOS_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.sociosAccionistas);
+    const EMPRESAS_NACIONALES = this.buildEmpresaNacionales(data.datos,this.empresasNacionales);
+    const EMPRESAS_EXTRANJERAS = this.buildEmpresaExtranjera(data.datosEmpresaExtranjera,this.empresasExtranjeras);
     const PAYLOAD = {
       "esDeGuardar": true,
     "tipoDeSolicitud": "guardar",
@@ -657,8 +765,9 @@ getValorIndice(e: AccionBoton): void {
     "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
     "solicitud": SOLICITUD,
     "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
-    "empresasNacionales": EMPRESAS_NACIONALES,
-    "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
+    "sociosAccionistas": [...SOCIOS_ACCIONISTAS],
+    "empresasNacionales":[...EMPRESAS_NACIONALES] ,
+    "empresasExtranjeras":[...EMPRESAS_EXTRANJERAS] ,
 }
 
     return new Promise((resolve, reject) => {

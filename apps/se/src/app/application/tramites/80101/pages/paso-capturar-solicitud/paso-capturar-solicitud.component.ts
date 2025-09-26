@@ -2,18 +2,20 @@ import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nu
 import { Component, EventEmitter, OnInit, ViewChild, inject } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, ERROR_FORMA_ALERT, WizardService } from '@ng-mf/data-access-user';
 import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@libs/shared/data-access-user/src';
-import { Observable, Subject, finalize, map, switchMap, take, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
+import complimentos from '@libs/shared/theme/assets/json/shared/complimentos.json';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
 import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
 import notarios from '@libs/shared/theme/assets/json/shared/notarios.json';
 import planta from '@libs/shared/theme/assets/json/shared/planta.json';
 import plantasSubmanufactureras from '@libs/shared/theme/assets/json/shared/plantas-submanufactureras.json';
-import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accionistas.json';
+import sociosAccionistas from '@libs/shared/theme/assets/json/shared/socios-accionistas.json';
+
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
  * 
@@ -43,6 +45,8 @@ import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accion
   providers: [ToastrService],
 })
 export class PasoCapturarSolicitudComponent implements OnInit {
+
+  padreBtn: boolean = true;
   /**
    * Lista de pasos del wizard.
    * Esta propiedad almacena una lista de objetos que representan los pasos del wizard.
@@ -129,7 +133,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private socioAccionistaBase = socioAccionistas;
+  private complimentosBase = complimentos;
 
   /**
    * Objeto base inmutable que representa la estructura inicial de un plantas.
@@ -151,6 +155,11 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   * Objeto base inmutable que representa la estructura inicial de un notarios.
   */
   private notariosBase = notarios;
+
+  /**
+  * Objeto base inmutable que representa la estructura inicial de un sociosAccionistas.
+  */
+  private sociosAccionistas = sociosAccionistas;
 
   /**
   * URL de la página actual.
@@ -338,6 +347,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
         if (OK) {
           this.toastrService.success(response.mensaje);
         } else {
+          this.padreBtn = true;
           this.toastrService.error(response.mensaje);
         }
         return OK;
@@ -371,7 +381,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
  * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
  */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildSociosAccionistas(data: Record<string, any>, base: Record<string, any>): any {
+  buildComplimentos(data: Record<string, any>, base: Record<string, any>): any {
     return {
       ...base,
       notario: {
@@ -405,6 +415,46 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       }
     ];
     return RESULT;
+  }
+
+  /**
+ * Construye un arreglo de socios/accionistas a partir de dos listas de entrada,
+ * utilizando un objeto base como plantilla y datos complementarios para completar
+ * los campos faltantes.
+ *
+ * @param arr1 Primer arreglo de socios/accionistas.
+ * @param arr2 Segundo arreglo de socios/accionistas.
+ * @param base Objeto base que sirve de plantilla para cada elemento del resultado.
+ * @param data Objeto con datos complementarios necesarios para completar el payload.
+ *
+ * @returns Un nuevo arreglo que contiene los objetos combinados y mapeados
+ *          con la información de los dos arreglos de entrada.
+ *
+ * @example
+ * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
+ */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+  buildSociosAccionistas(arr1: any[] = [], arr2: any[] = [], base: Record<string, any>): any[] {
+    const BASE_OBJECT = base[0];
+    const CLONED_BASE = structuredClone ? structuredClone(BASE_OBJECT) : JSON.parse(JSON.stringify(BASE_OBJECT));
+    const MAP_TO_PAYLOAD = (item: Record<string, unknown>): Record<string, unknown> => ({
+      ...CLONED_BASE,
+      nombre: item['nombre'] ?? '',
+      apellidoPaterno: item['apellidoPaterno'] ?? '',
+      apellidoMaterno: item['apellidoMaterno'] ?? '',
+      rfc: item['rfc'] ?? '',
+      correoElectronico: item['correoElectronico'] ?? '',
+      razonSocial: item['razonSocial'] ?? '',
+      estadoEvaluacionEntidad: item['estado'] ?? '',
+      estadoEntidad: item['estado'] ?? '',
+      cvePaisOrigen: item['pais'] ?? '',
+      rfcExtranjero: item['taxId'] ?? '',
+      domicilio: {
+        codigoPostal: item['codigoPostal'] ?? '',
+      }
+    });
+
+    return [...arr1.map(MAP_TO_PAYLOAD), ...arr2.map(MAP_TO_PAYLOAD)];
   }
 
   /**
@@ -663,13 +713,12 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   guardar(data: any): Promise<any> {
     const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
-    const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
+    const SOLICITUD = this.buildComplimentos(data, this.complimentosBase);
     const DECLARACION_SOLICUTUD_ENTRIES = PasoCapturarSolicitudComponent.buildDeclaracionSolicitudEntries(data);
-    const EMPRESAS_NACIONALES = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentos, this.empresasNacionales);
-    const EMPRESAS_EXTRANJERAS = PasoCapturarSolicitudComponent.buildComplementosTablaPayload(data.tablaDatosComplimentosExtranjera, this.empresasExtranjeras);
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
     const ANEXO_ALL = this.buildAnexo(data);
-
+    const SOCIOS_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.sociosAccionistas);
+    
     const PAYLOAD = {
       "esDeGuardar": true,
       "tipoDeSolicitud": "guardar",
@@ -721,8 +770,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
       "solicitud": SOLICITUD,
       "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
-      "empresasNacionales": EMPRESAS_NACIONALES,
-      "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
+      "sociosAccionistas": [...SOCIOS_ACCIONISTAS],
     }
     return new Promise((resolve, reject) => {
       this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {

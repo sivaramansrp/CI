@@ -40,6 +40,7 @@
         <btn-continuar
         [datos]="datosPasos"
         [btnGuardar]="true" 
+        [dePadre]="padreBtn"
         [btnGuardarVisible]="btnGuardarVisible"
         (btnGuardarClicked)="obtenerDatosDelStore()"
         (continuarEvento)="getValorIndice($event)"></btn-continuar>

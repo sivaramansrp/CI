@@ -1,4 +1,4 @@
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, PasoCargaDocumentoComponent } from '@ng-mf/data-access-user';
 import { AmpliacionServiciosComponent } from './components/ampliacion-servicios/ampliacion-servicios.component';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
@@ -17,6 +17,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RegistroPageComponent } from './pages/registro-page/registro-page.component';
@@ -58,6 +59,8 @@ import { ToastrService } from 'ngx-toastr';
     SolicitanteComponent,
     TituloComponent,
     WizardComponent,
+    PasoCargaDocumentoComponent,
+    PasoFirmaComponent,
   ],
   providers: [ToastrService]
 })
