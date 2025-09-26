@@ -140,7 +140,7 @@ export interface AmpliacionServiciosState {
  * @constant {AmpliacionServiciosState} INITIAL_AMPLIACION_SERVICIOS_STATE
  */
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
-  idSolicitud: 202792606,
+  idSolicitud: 0,
   infoRegistro: {
     seleccionaLaModalidad: '',
     folio: '',
@@ -425,6 +425,13 @@ export class Tramite80206Store extends Store<AmpliacionServiciosState> {
     this.update((state) => ({
       ...state,
       isSelectedRegla,
+    }));
+  }
+
+  setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 }
