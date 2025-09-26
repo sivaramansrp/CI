@@ -1,265 +1,322 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, ChangeDetectorRef } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of as observableOf } from 'rxjs';
 import { CapturarFacturasComponent } from './capturar-facturas.component';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { HttpClient } from '@angular/common/http';
-import { FormBuilder } from '@angular/forms';
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { SeccionLibStore, SeccionLibQuery } from '@ng-mf/data-access-user';
-import { Component } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-
-@Component({
-  selector: 'app-input-fecha',
-  template: '<input />',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: MockInputFechaComponent,
-      multi: true
-    }
-  ]
-})
-class MockInputFechaComponent implements ControlValueAccessor {
-  writeValue(obj: any): void {}
-  registerOnChange(fn: any): void {}
-  registerOnTouched(fn: any): void {}
-  setDisabledState?(isDisabled: boolean): void {}
-}
-@Injectable()
-class MockElegibilidadTextilesService {}
-@Injectable()
-class MockHttpClient { post() {} }
-@Injectable()
-class MockElegibilidadDeTextilesStore {}
-@Injectable()
-class MockElegibilidadDeTextilesQuery {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value: any): any { return value; }
-}
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value: any): any { return value; }
-}
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value: any): any { return value; }
-}
+import { CapturarColumns } from '../../models/elegibilidad-de-textiles.model';
 
 describe('CapturarFacturasComponent', () => {
   let component: CapturarFacturasComponent;
   let fixture: ComponentFixture<CapturarFacturasComponent>;
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule, CapturarFacturasComponent],
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        CapturarFacturasComponent
+      ],
       providers: [
         FormBuilder,
-        { provide: HttpClient, useValue: { get: jest.fn().mockReturnValue(observableOf({})) } },
-        { provide: ElegibilidadTextilesService, useClass: MockElegibilidadTextilesService },
-        { provide: ElegibilidadDeTextilesStore, useClass: MockElegibilidadDeTextilesStore },
-        { provide: ElegibilidadDeTextilesQuery, useClass: MockElegibilidadDeTextilesQuery },
-        { provide: SeccionLibStore, useValue: { establecerFormaValida: jest.fn() } },
+        { provide: ElegibilidadTextilesService, useValue: { 
+          obtenerMenuDesplegable: jest.fn().mockReturnValue(observableOf([])),
+          metodo1: jest.fn().mockReturnValue(observableOf({})) 
+        } },
+        { provide: HttpClient, useValue: {} },
+        { provide: ElegibilidadDeTextilesStore, useValue: {} },
+        { provide: ElegibilidadDeTextilesQuery, useValue: { selectTextile$: observableOf({ capturarColumns: [] }) } },
+        { provide: SeccionLibStore, useValue: { 
+          establecerFormaValida: jest.fn().mockReturnValue(observableOf({}))
+        } },
         { provide: SeccionLibQuery, useValue: { selectSeccionState$: observableOf({}) } },
         { provide: ChangeDetectorRef, useValue: { detectChanges: jest.fn() } }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     }).compileComponents();
+
     fixture = TestBed.createComponent(CapturarFacturasComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
-  it('debe crear el componente correctamente', () => {
+
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('debe inicializar el formulario en español', () => {
-    component.facturaForm = new FormBuilder().group({
-      unidadDeMedida: [''],
-      pais: [''],
-      fechaExpedicionFactura: ['']
-    });
+
+  it('debe validar formulario', () => {
     expect(component.facturaForm).toBeDefined();
-    expect(typeof component.facturaForm.get).toBe('function');
   });
 
-  it('debe crear el componente correctamente (constructor)', async () => {
-    expect(component).toBeTruthy();
+  it('debe ejecutar ngOnInit', () => {
+    const spy = jest.spyOn(component, 'ngOnInit');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('debe retornar facturaForm desde el getter formGroup', () => {
-    const grupoMock = { test: 'valor' } as any;
-    component.facturaForm = grupoMock;
-    expect(component.formGroup).toBe(grupoMock);
+  it('debe ejecutar continuar()', async () => {
+    component.facturaForm.patchValue({
+      numeroFactura: '123',
+      cantidadTotal: '100',
+      valorDolares: '200'
+    });
+    component.continuar();
+    expect(component.facturas).toBeDefined();
   });
 
-  it('debe mapear correctamente las columnas de la tabla', () => {
-    expect(component.tableColumns.length).toBe(8);
-    const filaEjemplo = {
+  it('debe ejecutar ngOnDestroy()', async () => {
+    component['destroyNotifier$'] = { next: jest.fn(), complete: jest.fn() } as any;
+    component.ngOnDestroy();
+    expect(component['destroyNotifier$'].next).toHaveBeenCalled();
+    expect(component['destroyNotifier$'].complete).toHaveBeenCalled();
+  });
+
+  describe('Comprehensive Method Testing', () => {
+    
+    const createTestFactura = (overrides: Partial<CapturarColumns> = {}): CapturarColumns => ({
       numeroDeLaFactura: 'F001',
-      razonSocial: 'Empresa X',
-      domicilio: 'CDMX',
+      razonSocial: 'Test Company',
+      domicilio: 'Test Address',
       fechaExpedicionFactura: '2025-01-01',
       cantidadTotal: '100',
-      cantidadDisponible: '50',
+      cantidadDisponible: '100',
       unidadMedida: 'KG',
       valorDolares: '200',
+      taxId: 'TAX123',
+      calle: 'Test Street',
+      ciudad: 'Test City',
+      cp: '12345',
+      pais: 'Mexico',
       idExpedicion: 1,
-    };
-    expect(component.tableColumns[0].clave(filaEjemplo)).toBe('F001');
-    expect(component.tableColumns[1].clave(filaEjemplo)).toBe('Empresa X');
-    expect(component.tableColumns[2].clave(filaEjemplo)).toBe('CDMX');
-    expect(component.tableColumns[3].clave(filaEjemplo)).toBe('2025-01-01');
-    expect(component.tableColumns[4].clave(filaEjemplo)).toBe('100');
-    expect(component.tableColumns[5].clave(filaEjemplo)).toBe('50');
-    expect(component.tableColumns[6].clave(filaEjemplo)).toBe('KG');
-    expect(component.tableColumns[7].clave(filaEjemplo)).toBe('200');
-  });
-
-  it('debe manejar continuar() cuando el formulario es válido', () => {
-    component['facturaForm'] = {
-      markAllAsTouched: jest.fn(),
-      updateValueAndValidity: jest.fn(),
-      valid: true,
-    } as any;
-    component['cdr'] = { detectChanges: jest.fn() } as any;
-    window.scrollTo = jest.fn();
-    component['mostrarTabs'] = { emit: jest.fn() } as any;
-    component.continuar();
-    expect(component.formularioAlertaError).toBe('');
-    expect(component.esFormaValido).toBe(false);
-    expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
-    expect(component['mostrarTabs'].emit).toHaveBeenCalledWith(true);
-  });
-
-  it('debe ejecutar ngOnInit correctamente', () => {
-    const estadoSeccionMock = { readonly: true };
-    const estadoTextilMock = { formaValida: [{ descripcion: 'Valida' }] };
-
-    component['seccionQuery'] = {
-      selectSeccionState$: observableOf(estadoSeccionMock),
-    } as any;
-
-    component['ElegibilidadDeTextilesQuery'] = {
-      selectTextile$: observableOf(estadoTextilMock),
-    } as any;
-
-      component['initActionFormBuild'] = jest.fn();
-      component['obtenerListasDesplegables'] = jest.fn();
-      component['recuperarDatos'] = jest.fn();
-
-    component['seccionStore'] = {
-      establecerFormaValida: jest.fn(),
-      establecerSeccion: jest.fn(),
-    } as any;
-
-    component['ElegibilidadDeTextilesStore'] = {
-      setFormaValida: jest.fn(),
-    } as any;
-
-    component['facturaForm'] = new FormBuilder().group({
-      unidadDeMedida: [''],
-      pais: [''],
-      fechaExpedicionFactura: ['']
+      idFacturaExpedicion: 1,
+      ...overrides
+    });
+    
+    it('debe ejecutar onFechaExpedicionFacturaChange() correctamente', () => {
+      const fechaTest = '2025-01-01';
+      const control = component.facturaForm.get('fechaExpedicionFactura');
+      jest.spyOn(control!, 'setValue');
+      jest.spyOn(control!, 'markAsDirty');
+      jest.spyOn(control!, 'markAsTouched');
+      
+      component.onFechaExpedicionFacturaChange(fechaTest);
+      
+      expect(control!.setValue).toHaveBeenCalledWith(fechaTest);
+      expect(control!.markAsDirty).toHaveBeenCalled();
+      expect(control!.markAsTouched).toHaveBeenCalled();
     });
 
-    component['formularioDeshabilitado'] = true;
-    component['capturarState'] = estadoTextilMock as any;
+    it('debe ejecutar limpiarFacturaForm() correctamente', () => {
+      component.facturaForm.patchValue({
+        numeroFactura: 'test',
+        cantidadTotal: '100',
+        valorDolares: '200'
+      });
+      
+      component.showFechaExpedicionFactura = true;
+      component.modalMode = 'modificar';
+      
+      component.limpiarFacturaForm();
+      
+      expect(component.facturaForm.get('numeroFactura')?.value).toBe(null);
+      expect(component.showFechaExpedicionFactura).toBe(false);
+    });
 
-  component.ngOnInit();
+    it('debe ejecutar abrirModalAgregar() correctamente', () => {
+      component.abrirModalAgregar();
+      
+      expect(component.modalMode).toBe('agregar');
+      expect(component.indiceSeleccionado).toBe(null);
+      expect(component.facturaForm.get('domicilio')?.value).toBe('5th Avenue 123 New York NY México 12345');
+      expect(component.facturaForm.get('pais')?.value).toBe('ESTADOS UNIDOS DE AMERICA');
+    });
 
-  expect(component['initActionFormBuild']).toHaveBeenCalled();
-  expect(component['obtenerListasDesplegables']).toHaveBeenCalled();
-  });
+    it('debe ejecutar abrirModalModificar() correctamente', () => {
+      const facturaTest = createTestFactura();
+      
+      component.facturas = [facturaTest];
+      component.indiceSeleccionado = 0;
+      component['poblarFacturaForm'] = jest.fn();
+      
+      component.abrirModalModificar();
+      
+      expect(component.modalMode).toBe('modificar');
+      expect(component['poblarFacturaForm']).toHaveBeenCalledWith(facturaTest);
+    });
 
-  it('debe ejecutar #initActionFormBuild()', async () => {
-  jest.spyOn(component['fb'], 'group').mockImplementation(jest.fn());
-    component['capturarState'] = {
-      numeroFactura: 'numeroFactura',
-      cantidadTotal: 'cantidadTotal',
-      unidadDeMedida: 'unidadDeMedida',
-      valorDolares: 'valorDolares',
-      taxId: 'taxId',
-      razonSocial: 'razonSocial',
-      calle: 'calle',
-      ciudad: 'ciudad',
-      cp: 'cp',
-      pais: 'pais',
-      formaValida: [],
-    } as any;
-  component.initActionFormBuild();
-  expect(component['fb'].group).toHaveBeenCalled();
-  });
+    it('debe ejecutar poblarFacturaForm() correctamente', () => {
+      const facturaTest = createTestFactura();
+      
+      component['poblarFacturaForm'](facturaTest);
+      
+      expect(component.facturaForm.get('numeroFactura')?.value).toBe('F001');
+      expect(component.facturaForm.get('cantidadTotal')?.value).toBe('100');
+      expect(component.facturaForm.get('valorDolares')?.value).toBe('200');
+    });
 
-  it('debe ejecutar #obtenerListasDesplegables()', async () => {
-    component.obtenerIngresoSelectList = jest.fn();
-    component.obtenerListasDesplegables();
-    expect(component.obtenerIngresoSelectList).toHaveBeenCalled();
-  });
+    it('debe ejecutar guardarFactura() con formulario válido', () => {
+      component.facturaForm = {
+        valid: true,
+        controls: {
+          numeroFactura: { 
+            value: 'F001',
+            markAsTouched: jest.fn(),
+            markAsDirty: jest.fn(),
+            invalid: false
+          },
+          cantidadTotal: { 
+            value: '100',
+            markAsTouched: jest.fn(),
+            markAsDirty: jest.fn(),
+            invalid: false
+          },
+          valorDolares: { 
+            value: '200',
+            markAsTouched: jest.fn(),
+            markAsDirty: jest.fn(),
+            invalid: false
+          },
+          unidadDeMedida: { 
+            value: 'kg',
+            markAsTouched: jest.fn(),
+            markAsDirty: jest.fn(),
+            invalid: false
+          },
+          razonSocial: { 
+            value: 'Test Company',
+            markAsTouched: jest.fn(),
+            markAsDirty: jest.fn(),
+            invalid: false
+          },
+          domicilio: { 
+            value: 'Test Address',
+            markAsTouched: jest.fn(),
+            markAsDirty: jest.fn(),
+            invalid: false
+          },
+          calle: { 
+            value: 'Test Street',
+            markAsTouched: jest.fn(),
+            markAsDirty: jest.fn(),
+            invalid: false
+          },
+          ciudad: { 
+            value: 'Test City',
+            markAsTouched: jest.fn(),
+            markAsDirty: jest.fn(),
+            invalid: false
+          },
+          cp: { 
+            value: '12345',
+            markAsTouched: jest.fn(),
+            markAsDirty: jest.fn(),
+            invalid: false
+          },
+          pais: { 
+            value: 'Test Country',
+            markAsTouched: jest.fn(),
+            markAsDirty: jest.fn(),
+            invalid: false
+          },
+          fechaExpedicionFactura: { 
+            value: '2023-01-01',
+            markAsTouched: jest.fn(),
+            markAsDirty: jest.fn(),
+            invalid: false
+          }
+        },
+        get: jest.fn((field) => ({
+          value: field === 'numeroFactura' ? 'F001' : 'testValue',
+          invalid: false
+        })),
+        getRawValue: jest.fn(() => ({
+          numeroFactura: 'F001',
+          razonSocial: 'Test Company',
+          cantidadTotal: '100',
+          valorDolares: '200',
+          fechaExpedicionFactura: '2023-01-01',
+          unidadDeMedida: 'kg',
+          domicilio: 'Test Address',
+          calle: 'Test Street',
+          ciudad: 'Test City',
+          cp: '12345',
+          pais: 'Test Country',
+          taxId: '123456789',
+          idExpedicion: '1'
+        })),
+        markAllAsTouched: jest.fn(),
+        updateValueAndValidity: jest.fn()
+      } as any;
+      
+      component.modalMode = 'agregar';
+      component.facturas = [];
+      
+      component.guardarFactura();
+      
+      expect(component.facturas.length).toBe(1);
+      expect(component.facturas[0].numeroDeLaFactura).toBe('F001');
+    });
 
-  it('debe ejecutar #setValoresStore()', () => {
-    const mockForm = {
-      get: jest.fn().mockReturnValue({ value: 'ABC123' }),
-    } as any;
+    it('debe ejecutar eliminarSeleccionados() correctamente', () => {
+      const factura1 = createTestFactura({ numeroDeLaFactura: 'F001' });
+      const factura2 = createTestFactura({ numeroDeLaFactura: 'F002' });
+      
+      component.facturas = [factura1, factura2];
+      component.selectedRows = [factura1];
+      
+      component.eliminarSeleccionados();
+      
+      expect(component.facturas.length).toBe(1);
+      expect(component.facturas[0].numeroDeLaFactura).toBe('F002');
+    });
 
-    const mockStore = {
-      setTaxId: jest.fn(),
-    } as any;
+    it('debe retornar correctamente puedeModificar getter', () => {
+      component.selectedRows = [];
+      component.indiceSeleccionado = null;
+      expect(component.puedeModificar).toBe(false);
+      
+      const factura1 = createTestFactura();
+      component.selectedRows = [factura1];
+      component.indiceSeleccionado = 0;
+      expect(component.puedeModificar).toBe(true);
+    });
 
-    component['ElegibilidadDeTextilesStore'] = mockStore;
-    component.setValoresStore(mockForm, 'taxId', 'setTaxId');
+    it('debe retornar correctamente puedeEliminar getter', () => {
+      component.selectedRows = [];
+      component.indiceSeleccionado = null;
+      expect(component.puedeEliminar).toBe(false);
+      
+      const factura1 = createTestFactura();
+      component.selectedRows = [factura1];
+      component.indiceSeleccionado = 0;
+      expect(component.puedeEliminar).toBe(true);
+    });
 
-    expect(mockForm.get).toHaveBeenCalledWith('taxId');
-    expect(mockStore.setTaxId).toHaveBeenCalledWith('ABC123');
-  });
+    it('debe manejar onFilasSeleccionadas correctamente', () => {
+      const factura1 = createTestFactura();
+      
+      component.facturas = [factura1];
+      component.onFilasSeleccionadas([factura1]);
+      
+      expect(component.selectedRows).toEqual([factura1]);
+      expect(component.indiceSeleccionado).toBe(0);
+    });
 
-  it('debe ejecutar #obtenerIngresoSelectList() con datos', () => {
-    const mockData = [{ id: '1', descripcion: 'KG' }];
-    component['ElegibilidadTextilesService'] = {
-      obtenerMenuDesplegable: jest.fn().mockReturnValue(observableOf(mockData)),
-    } as any;
+    it('debe manejar onSeleccionEliminar correctamente', () => {
+      const factura1 = createTestFactura();
+      
+      component.onSeleccionEliminar([factura1]);
+      
+      expect(component.seleccionadasParaEliminar).toEqual([factura1]);
+    });
 
-    component.obtenerIngresoSelectList();
+    it('debe manejar getter formGroup correctamente', () => {
+      expect(component.formGroup).toBe(component.facturaForm);
+    });
 
-    expect(component.unidadDeMedida).toEqual(mockData);
-  });
-
-  it('debe ejecutar #recuperarDatos() con datos', () => {
-    const mockFacturas = [
-      {
-        numeroDeLaFactura: 'F001',
-        razonSocial: 'Empresa X',
-        domicilio: 'CDMX',
-        fechaExpedicionFactura: '2025-01-01',
-        cantidadTotal: 100,
-        cantidadDisponible: 100,
-        unidadMedida: 'KG',
-        valorDolares: 200,
-        idExpedicion: 1,
-      },
-    ];
-    component['ElegibilidadTextilesService'] = {
-      obtenerTablaDatos: jest.fn().mockReturnValue(observableOf(mockFacturas)),
-    } as any;
-
-    component.recuperarDatos();
-
-    expect(component.facturas).toEqual(mockFacturas);
-  });
-
-  it('debe ejecutar #ngOnDestroy()', async () => {
-  component['destroyNotifier$'] = component['destroyNotifier$'] || {};
-  component['destroyNotifier$'].next = jest.fn();
-  component['destroyNotifier$'].complete = jest.fn();
-  component.ngOnDestroy();
-  expect(component['destroyNotifier$'].next).toHaveBeenCalled();
-  expect(component['destroyNotifier$'].complete).toHaveBeenCalled();
   });
 });

@@ -35,6 +35,7 @@ import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { Validators } from '@angular/forms';
 
 
@@ -143,6 +144,12 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
    * @event accionSeccion
    */
   @Output() accionSeccion: EventEmitter<string> = new EventEmitter<string>();
+
+  /**
+   * Emite eventos relacionados con acciones en la sección.
+   * @event datosFederatariosEvent
+   */
+  @Output() datosFederatariosEvent: EventEmitter<FederatariosEncabezado> = new EventEmitter<FederatariosEncabezado>();
 
   /**
    * Opciones de estados disponibles
@@ -278,7 +285,9 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
    * @param {Router} router - Servicio de Angular para la navegación.
    * @param {ActivatedRoute} activatedRoute - Servicio de Angular para obtener información sobre la ruta actual.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private validacionesService: ValidacionesFormularioService, private complimentosService: ComplimentosService) { }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private validacionesService: ValidacionesFormularioService,private complimentosService: ComplimentosService,
+    private servicioDeFormularioService: ServicioDeFormularioService
+  ) {}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -304,6 +313,14 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
         representacionFederal: [],
         actividadProductiva: []
       };
+    }
+
+    if (this.federatariosDatos) {
+      this.servicioDeFormularioService.registerArray('federatariosDatos', this.federatariosDatos);
+    }
+
+    if (this.plantasImmexDatos) {
+      this.servicioDeFormularioService.registerArray('plantasImmexDatos', this.plantasImmexDatos);
     }
   }
 
@@ -367,6 +384,14 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
         Validators.required
       ),
     })
+
+    this.servicioDeFormularioService.registerForm('federatariosCatalogoForm', this.federatariosCatalogoGroup);
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'federatariosCatalogoForm') {
+        this.federatariosCatalogoGroup.markAllAsTouched();
+      }
+    })
+
   }
 
   /**
@@ -424,6 +449,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
       return;
     }
     this.datosFormaFedratario.emit(this.federatariosFormGroup.value);
+    this.servicioDeFormularioService.pushToArray('federatariosDatos', this.federatariosFormGroup.value);
     this.federatariosFormGroup.reset();
   }
 
@@ -577,30 +603,28 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
     };
   }
 
-  /**
-   * Searches and assigns available IMMEX plants data.
-   *
-   * This method sets the `plantasDisponiblesDatos` property with the value of `FECHA_DE_Tabla`.
-   * Typically used to update the list of available plants for IMMEX operations.
-   *
+/**
+ * Adds IMMEX plant data to the `plantasImmexDatos` array.
+ * This method assigns the value of `INMEX_PLANTAS` to the `plantasImmexDatos` property.
+ *
+ * @remarks
+ * Ensure that `INMEX_PLANTAS` is properly defined and contains the expected plant data.
+ */
+agregarPlantas(): void {
+  this.plantasImmexDatos = [INMEX_PLANTAS];
+  this.servicioDeFormularioService.pushToArray('plantasImmexDatos', INMEX_PLANTAS);
+  this.datosPlantasImmex.emit(this.plantasImmexDatos);
+}
+
+/**
+   * Elimina todas las plantas seleccionadas, vaciando el arreglo `seleccionadas`.
+   * 
    * @remarks
    * Ensure that `FECHA_DE_Tabla` is defined and contains the expected data structure before calling this method.
    */
   buscarPlantasImmex(): void {
     this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
     this.datosPlantaDisponibles.emit(this.plantasDisponiblesDatos);
-  }
-
-  /**
-   * Adds IMMEX plant data to the `plantasImmexDatos` array.
-   * This method assigns the value of `INMEX_PLANTAS` to the `plantasImmexDatos` property.
-   *
-   * @remarks
-   * Ensure that `INMEX_PLANTAS` is properly defined and contains the expected plant data.
-   */
-  agregarPlantas(): void {
-    this.plantasImmexDatos = [INMEX_PLANTAS];
-    this.datosPlantasImmex.emit(this.plantasImmexDatos);
   }
 
   /**
@@ -705,6 +729,22 @@ export class FederatariosYPlantasComponent implements OnInit, OnChanges {
     this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
       this.estadoImmex = res.datos;
     });
+
+  }
+
+  /**
+ * Maneja el cambio de valor en un campo del formulario de federatarios.
+ * Actualiza el objeto de datos, emite el evento correspondiente y sincroniza el valor en el formulario reactivo.
+ * @param event Objeto del catálogo seleccionado.
+ * @param campo Nombre del campo que se actualiza.
+ */
+  eventoDeCambioDeValor(event: Catalogo, campo: string): void {
+    this.datosFederatarios = {
+      ...this.datosFederatarios,
+      [campo]: event.clave
+    };
+    this.datosFederatariosEvent.emit(this.datosFederatarios);
+    this.servicioDeFormularioService.setFormValue('federatariosCatalogoForm', { [campo]: event.clave ?? '' });
 
   }
 
