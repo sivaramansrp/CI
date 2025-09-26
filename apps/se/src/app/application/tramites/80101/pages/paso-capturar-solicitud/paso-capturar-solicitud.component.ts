@@ -517,7 +517,7 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
       testado: "1"
     });
 
-    const mapMontosInversion = (item: any) => ({
+    const MAP_MONTOS_INVERSION = (item: any) => ({
       idPlantaM: item.PLANTA ?? "",
       tipo: item.TIPO ?? "",
       cantidad: item.CANTIDAD ?? "",
@@ -525,7 +525,7 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
       monto: item.MONTO ?? "",
     })
 
-    const mapEmpleados = (item: any) => ({
+    const MAP_EMPLEADOS = (item: any) => ({
       idPlantaE: item.PLANTA ?? '',
       idEmpleados: item.ID_EMPLEADOS ?? '',
       totalEmpleados: item.TOTAL ?? '',
@@ -539,9 +539,11 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
       fechaFinVigencia: item.FECHA_FIN_VIGENCIA ?? '',
       rfcEmpresa: item.RFC ?? '',
       razonEmpresa: item.RAZON_SOCIAL ?? '',
+      testado: item.TESTADO ?? '',
+      descTestado: item.DESC_TESTADO ?? '',
     })
 
-    const mapComplementar = (item: any) => ({
+    const MAP_COMPLEMENTAR = (item: any) => ({
       idPlantaC: item.PLANTA ?? '' ,
       idDato: item.DATO ?? '',
       amparoPrograma: item.PERMANECERA_MERCANCIA_PROGRAMA ?? '',
@@ -557,17 +559,17 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
       fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
     })
 
-    const mapPlantaFirmantes = (item:any) => ({
+    const MAP_FIRMANTES = (item:any) => ({
       idPlantaF: item.planta ?? '',
       tipoFirmante: item.tipoFirmante ?? '',
       descTipoFirmante: item.descTipoFirmante ?? '',
     })
 
     const listaCapacidad = (data.tablaDatosCapacidadInstalada || []).map(mapCapacidadInstalada);
-    const montos = (data.montosDeInversionTablaDatos || []).map(mapMontosInversion);
-    const datosEmpleados = (data.empleadosTablaDatos || []).map(mapEmpleados);
-    const datosComplementarios = (data.complementarPlantaDatos || []).map(mapComplementar);
-    const firmantes = (data.complementarFirmanteDatos || []).map(mapPlantaFirmantes);
+    const montos = (data.montosDeInversionTablaDatos || []).map(MAP_MONTOS_INVERSION);
+    const datosEmpleados = (data.empleadosTablaDatos || []).map(MAP_EMPLEADOS);
+    const datosComplementarios = (data.complementarPlantaDatos || []).map(MAP_COMPLEMENTAR);
+    const firmantes = (data.complementarFirmanteDatos || []).map(MAP_FIRMANTES);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let RESULT: any[] = [];
@@ -781,7 +783,7 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
    * @returns void
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  guardar(data: any): void {
+  guardar(data: any): Promise<any> {
     const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const SOLICITUD = this.buildComplimentos(data, this.complimentosBase);
@@ -843,17 +845,19 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
       "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
       "sociosAccionistas": [...SOCIOS_ACCIONISTAS],
     }
-    this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD)
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe({
-        next: (response) => {
-          const ID_SOLICITUD = response?.datos?.id_solicitud ?? 0;
-          this.tramite80101Store.setIdSolicitud(ID_SOLICITUD);
-        },
-        error: (err) => {
-          // Manejo de error: puedes mostrar una alerta o loguear el error
-          console.error('Error al guardar los datos de la solicitud:', err);
+    return new Promise((resolve, reject) => {
+      this.nuevoProgramaIndustrialService.guardarDatosPost(PAYLOAD).subscribe(response => {
+        if(esValidObject(response) && esValidObject(response.datos)) {
+          if(getValidDatos(response.datos.id_solicitud)) {
+            this.tramite80101Store.setIdSolicitud(response.datos.id_solicitud);
+          } else {
+            this.tramite80101Store.setIdSolicitud(0);
+          }
         }
+        resolve(response);
+      }, error => {
+        reject(error);
+      });
       });
   }
 

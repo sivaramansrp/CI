@@ -23,6 +23,8 @@ import { CargaPorArchivoComponent } from '../../../../shared/components/carga-po
 import { ComplementarPlantaComponent } from '../../../../shared/components/complementar-planta/complementar-planta.component';
 import { EmpleadosComponent } from '../../../../shared/components/empleados/empleados.component';
 import { MontosDeInversionComponent } from '../../../../shared/components/montos-de-inversion/montos-de-inversion.component';
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../../shared/constantes/complementar-planta.enum';
+import { Directos } from '../../../../shared/constantes/empleados.enum';
 
 /**
  * Componente para la vista de federatarios y plantas
@@ -319,6 +321,43 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
   cerrarProveedorPorArchivo(): void {
     this.mostrarProveedorPorArchivoPopup = false;
   }
+
+  /**
+   * Actualiza la lista de montos de inversión en la tabla utilizando el evento recibido.
+   *
+   * @param event - Arreglo de objetos de tipo `MontoDeInversion` que representa la nueva lista de montos de inversión.
+   */
+    obtenerMontosInversionList(event: MontoDeInversion[]): void {
+      this.store.setMontosDeInversionTablaDatos(event);
+    }
+    
+  /**
+   * Actualiza la lista de empleados directos en la tabla utilizando el evento recibido.
+   *
+   * @param event - Arreglo de objetos de tipo `Directos` que representa la nueva lista de empleados directos.
+   */
+    obtenerEmpleadosList(event: Directos[]): void {
+      this.store.setEmpleadosTablaDatos(event);
+    }
+  
+  /**
+   * Actualiza la lista de complementos de planta en la tabla utilizando el evento recibido.
+   *
+   * @param event - Arreglo de objetos de tipo `ComplementoDePlanta` que representa la nueva lista de complementos de planta.
+   */
+    obtenerComplementarPlantaList(event: ComplementoDePlanta[]): void {
+      this.store.setComplementarPlantaDatos(event);
+    }
+  
+  /**
+   * Actualiza la lista de firmantes (estado de complementar planta) utilizando el evento recibido.
+   *
+   * @param event - Arreglo de objetos de tipo `ComplementarPlantaState` que representa la nueva lista de firmantes.
+   */
+  obtenerFirmantesList(event: ComplementarPlantaState[]): void {
+      this.store.setComplementarPlantaState(event);
+    }
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
    * Emite una notificación a través del observable `destroyNotifier$` para limpiar suscripciones
