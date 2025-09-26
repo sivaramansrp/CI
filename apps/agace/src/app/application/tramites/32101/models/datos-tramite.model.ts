@@ -120,11 +120,11 @@ export interface SolicitudState {
   manifiesto1?: string;
   manifiesto2?: string;
   manifiesto3?: string;
-  claveDeReferencia?: number;
+  claveDeReferencia?: string;
   cadenaDeLaDependencia?: string;
-  numeroDeOperacion?: number;
+  numeroDeOperacion?: string;
   banco?: Catalogo[] | null;
-  llaveDePago?: number;
+  llaveDePago?: string;
   fechaInicialInput?: string;
-  importeDePago?: number;
+  importeDePago?: string;
 }

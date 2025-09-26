@@ -1,5 +1,5 @@
 import {AbstractControl,FormBuilder,FormControl,FormGroup,FormsModule,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
-import {Catalogo,CatalogoSelectComponent,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,SOLO_REGEX_NUMEROS,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService,} from '@libs/shared/data-access-user/src';
+import {Catalogo,CatalogoSelectComponent,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,REGEX_LLAVE_DE_PAGO_DE_DERECHO,SOLO_REGEX_NUMEROS,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService,} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
@@ -295,7 +295,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     this.registroForm = this.fb.group({
       tipoDeInversion: [
-        this.solicitudState?.listaDeDocumentos,
+        this.solicitudState?.tipoDeInversion,
         [Validators.required],
       ],
       valorEnPesos: [this.solicitudState?.valorEnPesos, [Validators.required, Validators.pattern(SOLO_REGEX_NUMEROS), Validators.maxLength(15)]],
@@ -310,31 +310,29 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       manifiesto3: [this.solicitudState?.manifiesto3],
       claveDeReferencia: [
         {
-          value: this.solicitudState?.claveDeReferencia || '284000255',
+          value: this.solicitudState?.claveDeReferencia,
           disabled: true,
         },
       ],
       cadenaDeLaDependencia: [
         {
-          value: this.solicitudState?.cadenaDeLaDependencia || '0111514EC10101',
+          value: this.solicitudState?.cadenaDeLaDependencia,
           disabled: true,
         },
       ],
-      numeroDeOperacion: [this.solicitudState?.numeroDeOperacion],
+      numeroDeOperacion: [this.solicitudState?.numeroDeOperacion, [Validators.maxLength(30), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
       banco: [this.solicitudState?.banco],
-      llaveDePago: [this.solicitudState?.llaveDePago],
+      llaveDePago: [this.solicitudState?.llaveDePago, [ Validators.maxLength(20), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
       fechaInicialInput: [
         this.solicitudState?.fechaInicialInput,
         [SolicitudComponent.validateFechaMenorIgualHoy.bind(this)],
       ],
       importeDePago: [
-        { value: this.solicitudState?.importeDePago || '7735', disabled: true },
+        { value: this.solicitudState?.importeDePago, disabled: true },
       ],
     });
     this.inicializarEstadoFormulario()
-  }
-
-      /**
+  }      /**
    * Inicializa el estado del formulario según el modo de solo lectura.
    * @private
    */
@@ -343,15 +341,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.registroForm?.disable();
     } else {
       this.registroForm?.enable();
+      this.registroForm?.get('claveDeReferencia')?.disable();
+      this.registroForm?.get('cadenaDeLaDependencia')?.disable();
+      this.registroForm?.get('importeDePago')?.disable();
     }
   }
 
   /**
    * Obtiene el grupo de formulario 'tipoDeInversion' del formulario principal 'FormSolicitud'.
-   * @returns {FormGroup} El grupo de formulario 'tipoDeInversion'.
+   * @returns {FormControl} El grupo de formulario 'tipoDeInversion'.
    */
-  get tipoDeInversion(): FormGroup {
-    return this.registroForm.get('tipoDeInversion') as FormGroup;
+  get tipoDeInversion(): FormControl {
+    return this.registroForm.get('tipoDeInversion') as FormControl;
   }
   /**
    * Obtiene el control de formulario 'valorEnPesos' del formulario principal 'FormSolicitud'.
@@ -379,26 +380,26 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene el grupo de formulario 'valorEnPesos' del formulario principal 'FormSolicitud'.
-   * @returns {FormGroup} El grupo de formulario 'valorEnPesos'.
+   * @returns {FormControl} El grupo de formulario 'valorEnPesos'.
    */
-  get cadenaDeLaDependencia(): FormGroup {
-    return this.registroForm.get('cadenaDeLaDependencia') as FormGroup;
+  get cadenaDeLaDependencia(): FormControl {
+    return this.registroForm.get('cadenaDeLaDependencia') as FormControl;
   }
 
   /**
    * Obtiene el grupo de formulario 'valorEnPesos' del formulario principal 'FormSolicitud'.
-   * @returns {FormGroup} El grupo de formulario 'valorEnPesos'.
+   * @returns {FormControl} El grupo de formulario 'valorEnPesos'.
    */
-  get llaveDePago(): FormGroup {
-    return this.registroForm.get('llaveDePago') as FormGroup;
+  get llaveDePago(): FormControl {
+    return this.registroForm.get('llaveDePago') as FormControl;
   }
 
   /**
    * Obtiene el grupo de formulario 'valorEnPesos' del formulario principal 'FormSolicitud'.
-   * @returns {FormGroup} El grupo de formulario 'valorEnPesos'.
+   * @returns {FormControl} El grupo de formulario 'valorEnPesos'.
    */
-  get numeroDeOperacion(): FormGroup {
-    return this.registroForm.get('numeroDeOperacion') as FormGroup;
+  get numeroDeOperacion(): FormControl {
+    return this.registroForm.get('numeroDeOperacion') as FormControl;
   }
 
   /**
@@ -612,7 +613,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.aduana.catalogos
       ),
       valorEnPesos: FORM_VALUES.valorEnPesos,
-      comprobante: 'N/A',
+      comprobante: SolicitudComponent.getDropdownLabel(
+        FORM_VALUES.comprobante,
+        this.comprobante.catalogos
+      ),
     };
 
     this.configuracionTablaDatos = [...this.configuracionTablaDatos, NEW_ROW];
@@ -779,9 +783,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * elimina cualquier error de validación asociado.
    */
   borrar(): void {
-    this.registroForm.get('numeroDeOperacion')?.reset();
-    this.registroForm.get('banco')?.reset();
-    this.registroForm.get('llaveDePago')?.reset();
+    this.registroForm.reset();
     const FECHA_CONTROL = this.registroForm.get('fechaInicialInput');
     FECHA_CONTROL?.setValue('');
     FECHA_CONTROL?.setErrors(null);

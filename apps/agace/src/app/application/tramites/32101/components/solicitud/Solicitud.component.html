@@ -86,38 +86,54 @@
       <ng-titulo titulo="Pago de derecho"></ng-titulo>
     <div class="row mb-3">
       <div class="col-md-6">
-        <label for="claveDeReferencia" class="form-label">Clave de referencia:</label>
-        <input class="form-control" [ngClass]="isValid(claveDeReferencia, 'claveDeReferencia') ? 'required' : ''" type="number" formControlName="claveDeReferencia" name="claveDeReferencia" id="claveDeReferencia"
+        <label for="claveDeReferencia" class="form-label">Clave de referencia:</label>        
+        <input class="form-control" [ngClass]="{'is-invalid': isInvalid('claveDeReferencia')}" type="text" formControlName="claveDeReferencia" 
+            name="claveDeReferencia" id="claveDeReferencia"
           (change)="setValoresStore(registroForm, 'claveDeReferencia', 'setClaveDeReferencia')" />
       </div>
       <div class="col-md-6">
         <label for="numeroDeOperacion" class="form-label">Número de operación:</label>
-        <input class="form-control" [ngClass]="isValid(numeroDeOperacion, 'numeroDeOperacion') ? 'required' : ''" type="number" formControlName="numeroDeOperacion" name="numeroDeOperacion" id="numeroDeOperacion" (change)="setValoresStore(registroForm, 'numeroDeOperacion', 'setNumeroDeOperacion')" />
+        <input class="form-control" [ngClass]="{'is-invalid': isInvalid('numeroDeOperacion')}"
+          type="text" formControlName="numeroDeOperacion" name="numeroDeOperacion" id="numeroDeOperacion"  maxlength="30"
+          (change)="setValoresStore(registroForm, 'numeroDeOperacion', 'setNumeroDeOperacion')" />
+          <div *ngIf="registroForm.get('numeroDeOperacion')?.hasError('required')" class="text-danger">
+          Todos los campos de pago son requeridos
+        </div>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-md-6">
         <label for="cadenaDeLaDependencia" class="form-label">Cadena de la dependencia:</label>
-        <input class="form-control" [ngClass]="isValid(cadenaDeLaDependencia, 'cadenaDeLaDependencia') ? 'required' : ''" type="string" formControlName="cadenaDeLaDependencia" name="cadenaDeLaDependencia" id="cadenaDeLaDependencia" (change)="setValoresStore(registroForm, 'cadenaDeLaDependencia', 'setCadenaDeLaDependencia')" />
+        <input class="form-control" [ngClass]="{'is-invalid': isInvalid('cadenaDeLaDependencia')}"
+          type="text" formControlName="cadenaDeLaDependencia" name="cadenaDeLaDependencia"
+          id="cadenaDeLaDependencia" (change)="setValoresStore(registroForm, 'cadenaDeLaDependencia', 'setCadenaDeLaDependencia')" />
       </div>
       <div class="col-md-6">
         <app-catalogo-select [catalogo]="banco.catalogos" [label]="banco.labelNombre" [placeholder]="banco.primerOpcion" formControlName="banco" name="banco" id="banco" (change)="setValoresStore(registroForm, 'banco', 'setBanco')" [isDisabled]="soloLectura"></app-catalogo-select>
+        <div *ngIf="registroForm.get('banco')?.hasError('required')" class="text-danger">
+          Todos los campos de pago son requeridos
+        </div>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-md-4">
         <label for="llaveDePago" class="form-label">Llave de pago:</label>
-        <input class="form-control" [ngClass]="isValid(llaveDePago, 'llaveDePago') ? 'required' : ''" type="number" formControlName="llaveDePago" name="llaveDePago" id="llaveDePago" (change)="setValoresStore(registroForm, 'llaveDePago', 'setLlaveDePago')" />
+        <input class="form-control" [ngClass]="{'is-invalid': isInvalid('llaveDePago')}" 
+        type="text" formControlName="llaveDePago" name="llaveDePago" id="llaveDePago" maxlength="20"
+        (change)="setValoresStore(registroForm, 'llaveDePago', 'setLlaveDePago')" />
+        <div *ngIf="registroForm.get('llaveDePago')?.hasError('required')" class="text-danger">
+          Todos los campos de pago son requeridos
+        </div>
       </div>
       <div class="col-md-4">
         <input-fecha [datos]="fechaInicialInput"   (valorCambiado)="cambioFechaIngreso($event)" [setFecha]="registroForm.get('fechaInicialInput')?.value" [isDisabled]="soloLectura"></input-fecha>
         <div *ngIf="registroForm.get('fechaInicialInput')?.hasError('fechaInvalida')" class="text-danger">
-          La fecha de pago debe ser menor o igual a la fecha actual.
+          Todos los campos de pago son requeridos
         </div>
       </div>
       <div class="col-md-4">
         <label for="importeDePago" class="form-label">Importe de pago:</label>
-        <input class="form-control" [ngClass]="isValid(importeDePago, 'importeDePago') ? 'required' : ''" type="number" formControlName="importeDePago" name="importeDePago" id="importeDePago" (change)="setValoresStore(registroForm, 'importeDePago', 'setImporteDePago')" />
+        <input class="form-control" [ngClass]="{'is-invalid': isInvalid('importeDePago')}" type="text" formControlName="importeDePago" name="importeDePago" id="importeDePago" (change)="setValoresStore(registroForm, 'importeDePago', 'setImporteDePago')" />
       </div>
     </div>
     <div class="col-md-12 text-end mt-3">
