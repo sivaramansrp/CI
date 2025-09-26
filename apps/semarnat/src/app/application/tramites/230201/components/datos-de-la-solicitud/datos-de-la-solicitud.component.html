@@ -24,9 +24,9 @@
               [label]="'País de procedencia'"
               formControlName="paisDeProcedencia"
               [required]="true"
-              name="paisDeProcedencia"
-              [isDisabled]="true"
+              [isDisabled]="soloLectura"
               (change)="paisDeProcedenciaSeleccion()"
+              name="paisDeProcedencia"
             >
             </app-catalogo-select>
           </div>

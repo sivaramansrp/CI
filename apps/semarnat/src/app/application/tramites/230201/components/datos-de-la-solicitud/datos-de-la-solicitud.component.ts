@@ -351,8 +351,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.solicitudForm = this.fb.group({
       exportacionForm: this.fb.group({
         paisDeProcedencia: [
-          0,
-          [Validators.required],
+          this.solicitudState?.paisDeProcedencia
         ],
         aduana: [this.solicitudState?.aduana, [Validators.required]],
         entidades: [this.solicitudState?.entidades, [Validators.required]],
