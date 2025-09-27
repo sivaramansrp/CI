@@ -62,11 +62,11 @@
     tipoPersona.MORAL)
     {
     <div class="row">
-      <div class="form-group">
+      <div class="col-md-8 form-group">
         <label class="form-label row mt-3 mover-izquierda fs-2" for="denominacionRazon">Denominación/razón
           social*:</label>
-        <input class="form-control col-md-4" id="denominacionRazon" type="text" formControlName="denominacionRazon"
-          maxlength="254" [disabled]="esFormularioSoloLectura" />
+        <input class="form-control" id="denominacionRazon" type="text" formControlName="denominacionRazon"
+          maxlength="254" size="75" [disabled]="esFormularioSoloLectura" />
         <div class="error-message">
           <small
             *ngIf="agregarDestinatarioFinal.get('denominacionRazon')?.touched && agregarDestinatarioFinal.get('denominacionRazon')?.hasError('required')"
@@ -84,9 +84,8 @@
     }
 
     <!-- Datos Personales -->
-    @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===
-    tipoPersona.FISICA ||
-    agregarDestinatarioFinal.get('tipoPersona')?.touched) {
+    @if(agregarDestinatarioFinal.get('nacionalidad')?.value === 'Extranjero' || 
+        agregarDestinatarioFinal.get('tipoPersona')?.value === 'Fisica') {
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
@@ -138,6 +137,26 @@
     </div>
     }
 
+    <!-- Denominación/razón social for procedure 240105 -->
+    @if (idProcedimiento === 240105 && 
+         agregarDestinatarioFinal.get('nacionalidad')?.value === 'Extranjero' && 
+         agregarDestinatarioFinal.get('tipoPersona')?.value !== 'Fisica') {
+    <div class="row">
+      <div class="col-md-8 form-group">
+        <label class="form-label mt-3 mover-izquierda fs-2" for="denominacionRazon">Denominación/razón social<span *ngIf="campoObligatorio">*</span>:</label>
+        <input class="form-control" id="denominacionRazon" type="text" formControlName="denominacionRazon" maxlength="254" size="75" [disabled]="esFormularioSoloLectura" />
+        <div class="error-message col-md-12 p-0">
+          <small *ngIf="agregarDestinatarioFinal.get('denominacionRazon')?.touched && agregarDestinatarioFinal.get('denominacionRazon')?.hasError('required')" class="text-danger">
+            Este campo es obligatorio.
+          </small>
+          <small *ngIf="agregarDestinatarioFinal.get('denominacionRazon')?.touched && agregarDestinatarioFinal.get('denominacionRazon')?.hasError('maxlength')" class="text-danger">
+            Máximo 254 caracteres permitidos.
+          </small>
+        </div>
+      </div>
+    </div>
+    }
+
 
     @if (
     agregarDestinatarioFinal.get('nacionalidad')?.value === 'Extranjero' &&
@@ -155,7 +174,7 @@
         </div>
         <div class="col-md-4 ">
           <label class="form-label">Estado*:</label>
-          <input type="text" class="form-control" formControlName="estado" maxlength="120" />
+          <input type="text" class="form-control" formControlName="estado" maxlength="255" size="29" />
           <div class="error-message">
             <small
               *ngIf="agregarDestinatarioFinal.get('estado')?.touched && agregarDestinatarioFinal.get('estado')?.hasError('required')"
@@ -165,14 +184,14 @@
             <small
               *ngIf="agregarDestinatarioFinal.get('estado')?.touched && agregarDestinatarioFinal.get('estado')?.hasError('maxlength')"
               class="text-danger">
-              Máximo 120 caracteres permitidos.
+              Máximo 255 caracteres permitidos.
             </small>
           </div>
         </div>
 
         <div class="col-md-4 ">
           <label class="form-label">Código postal o equivalente*:</label>
-          <input type="text" class="form-control" formControlName="codigoPostal" maxlength="12"
+          <input type="text" class="form-control" formControlName="codigoPostal" maxlength="12" size="29"
             [disabled]="esFormularioSoloLectura" />
           <div class="error-message">
             <small
@@ -266,7 +285,7 @@
 
           <div class="col-md-4">
             <label class="form-label">Estado/localidad*:</label>
-            <input type="text" class="form-control" formControlName="estado" maxlength="120" />
+            <input type="text" class="form-control" formControlName="estado" maxlength="255" size="29"/>
             <div class="error-message">
               <small
                 *ngIf="agregarDestinatarioFinal.get('estado')?.touched && agregarDestinatarioFinal.get('estado')?.hasError('required')"
@@ -276,14 +295,14 @@
               <small
                 *ngIf="agregarDestinatarioFinal.get('estado')?.touched && agregarDestinatarioFinal.get('estado')?.hasError('maxlength')"
                 class="text-danger">
-                Máximo 120 caracteres permitidos.
+                Máximo 255 caracteres permitidos.
               </small>
             </div>
           </div>
 
           <div class="col-md-4">
             <label class="form-label">Municipio/alcaldía*:</label>
-            <input type="text" class="form-control" formControlName="municipio" maxlength="120" />
+            <input type="text" class="form-control" formControlName="municipio" maxlength="255" size="29"/>
             <div class="error-message">
               <small
                 *ngIf="agregarDestinatarioFinal.get('municipio')?.touched && agregarDestinatarioFinal.get('municipio')?.hasError('required')"
@@ -302,7 +321,7 @@
         <div class="row mt-3">
           <div class="col-md-4">
             <label class="form-label">Localidad*:</label>
-            <input type="text" class="form-control" formControlName="localidad" maxlength="120" />
+            <input type="text" class="form-control" formControlName="localidad" maxlength="120" size="29"/>
             <div class="error-message">
               <small
                 *ngIf="agregarDestinatarioFinal.get('localidad')?.touched && agregarDestinatarioFinal.get('localidad')?.hasError('required')"
@@ -319,7 +338,7 @@
 
           <div class="col-md-4">
             <label class="form-label">Código postal o equivalente*:</label>
-            <input type="text" class="form-control" formControlName="codigoPostal" maxlength="12"
+            <input type="text" class="form-control" formControlName="codigoPostal" maxlength="12" size="29"
               [disabled]="esFormularioSoloLectura" />
             <div class="error-message">
               <small
@@ -337,7 +356,7 @@
 
           <div class="col-md-4">
             <label class="form-label">Colonia:</label>
-            <input type="text" class="form-control" formControlName="colonia" maxlength="12"
+            <input type="text" class="form-control" formControlName="colonia" maxlength="120" size="29"
               [disabled]="esFormularioSoloLectura" />
             <div class="error-message">
               <small
@@ -348,7 +367,7 @@
               <small
                 *ngIf="agregarDestinatarioFinal.get('colonia')?.touched && agregarDestinatarioFinal.get('colonia')?.hasError('maxlength')"
                 class="text-danger">
-                Máximo 12 caracteres permitidos.
+                Máximo 120 caracteres permitidos.
               </small>
             </div>
           </div>
@@ -373,7 +392,7 @@
       </div>
       <div class="col-md-3">
         <label class="form-label">Número exterior<span *ngIf="campoObligatorio">*</span>:</label>
-        <input type="text" class="form-control" formControlName="numeroExterior" maxlength="55"
+        <input type="text" class="form-control" formControlName="numeroExterior" maxlength="55" size="29"
           [disabled]="esFormularioSoloLectura" />
         <div class="error-message">
           <small
@@ -393,7 +412,7 @@
     <div class="row mt-3">
       <div class="col-md-4">
         <label class="form-label">Número interior:</label>
-        <input type="text" class="form-control" formControlName="numeroInterior" maxlength="55"
+        <input type="text" class="form-control" formControlName="numeroInterior" maxlength="55" size="29"
           [disabled]="esFormularioSoloLectura" />
         <div class="error-message">
           <small
@@ -405,7 +424,7 @@
       </div>
       <div class="col-md-1">
         <label class="form-label">Lada:</label>
-        <input type="text" class="form-control" formControlName="lada" maxlength="5"
+        <input type="text" class="form-control" formControlName="lada" maxlength="30" size="4"
           [disabled]="esFormularioSoloLectura" />
         <div class="error-message">
           <small
@@ -417,7 +436,7 @@
       </div>
       <div class="col-md-3">
         <label class="form-label">Teléfono:</label>
-        <input type="text" class="form-control" formControlName="telefono" maxlength="24"
+        <input type="text" class="form-control" formControlName="telefono" maxlength="30" size="29"
           [disabled]="esFormularioSoloLectura" />
         <div class="error-message">
           <small
@@ -429,7 +448,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Correo electrónico:<span class="bi bi-question-circle-fill" tooltip="ejemplo@dominio.com" data-bs-toggle="tooltip"></span></label>
-        <input type="email" class="form-control" formControlName="correoElectronico" maxlength="320"
+        <input type="email" class="form-control" formControlName="correoElectronico" maxlength="320" size="29"
           [disabled]="esFormularioSoloLectura" />
         <div class="error-message">
           <small

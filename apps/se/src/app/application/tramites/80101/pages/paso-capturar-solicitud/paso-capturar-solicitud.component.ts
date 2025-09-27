@@ -722,7 +722,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     const PAYLOAD = {
       "esDeGuardar": true,
       "tipoDeSolicitud": "guardar",
-      "idSolicitud": 202781045,
+      "idSolicitud": 0,
       "idTipoTramite": 80101,
       "rfc": "AAL0409235E6",
       "cveUnidadAdministrativa": "8101",
