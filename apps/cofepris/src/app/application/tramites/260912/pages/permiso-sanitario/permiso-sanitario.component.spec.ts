@@ -3,6 +3,7 @@ import { PermisoSanitarioComponent } from './permiso-sanitario.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { PASOS } from '@ng-mf/data-access-user';
+
 describe('PermisoSanitarioComponent', () => {
   let component: PermisoSanitarioComponent;
   let fixture: ComponentFixture<PermisoSanitarioComponent>;
