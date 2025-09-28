@@ -100,6 +100,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    */
   @Input() tipoTramite: string = '';
 
+  @Input() emitirSeleccionEstablecimiento : boolean = false;
+
 
  /**
    * @property idProcedimiento
@@ -957,6 +959,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
       this.domicilio?.disable();
       this.representanteLegal?.disable();
     }
+    
   }
   /**
    * Detecta cambios en las propiedades de entrada del componente.

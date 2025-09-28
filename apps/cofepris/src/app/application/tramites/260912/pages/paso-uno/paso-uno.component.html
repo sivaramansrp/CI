@@ -26,12 +26,14 @@
           #datosDeLaSolicitudComponent
           (tipoTramiteChange)="selectedTipoTramite = $event"
           [hidden]="subTabIndex !== 2"
+          (emitirSeleccionEstablecimiento)="mostrarAlgoDesdeElPadre($event)"
         ></app-datos-empresa>
 
         <app-domicilio-del-establecimiento
           #domicilioDelEstablecimientoComponent
           [tipoTramite]="selectedTipoTramite"
           [hidden]="subTabIndex !== 2"
+          [emitirSeleccionEstablecimiento]="emitirSeleccionEstablecimiento"
         ></app-domicilio-del-establecimiento>
 
         <app-terceros-relacionados-vista

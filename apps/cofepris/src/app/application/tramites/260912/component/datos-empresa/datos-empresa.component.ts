@@ -67,11 +67,13 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Output() radioButtonSelectedChange = new EventEmitter<boolean>();
   @Output() tipoTramiteChange = new EventEmitter<string>();
+  @Output() emitirSeleccionEstablecimiento = new EventEmitter<boolean>();
 
   isRadioButtonSelected: boolean = false;
   esFormularioSoloLectura: boolean = false;
   botonDesactivarParaProrrogar:boolean = true;
   mostrarModal: boolean = false;
+  isSeleccionEstablecimientoClicked : boolean = false;
 
   private destroy$ = new Subject<void>();
 
@@ -326,6 +328,8 @@ private initialEstablecimientoValues: { rfcDel: string; denominacion: string; co
 
   openEstablecimientoModal(): void {
     this.mostrarModal = true;
+    this.isSeleccionEstablecimientoClicked = true;
+    this.emitirSeleccionEstablecimiento.emit(this.isSeleccionEstablecimientoClicked);
     const MODAL_ELEMENT = document.getElementById('establecimientoModal');
     if (MODAL_ELEMENT) {
       type BootstrapModalConstructor = new (element: Element) => { show: () => void };

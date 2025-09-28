@@ -1,24 +1,26 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AgregarDestinatarioFinalContenedoraComponent } from './agregar-destinatario-final-contenedora.component';
-import { HttpClientModule } from '@angular/common/http';
+import { Tramite260912Store } from '../../estados/tramite-260912.store';
+import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento.enum';
+import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
+
+jest.mock('../../estados/tramite-260912.store');
 
 describe('AgregarDestinatarioFinalContenedoraComponent', () => {
+  let tramiteStoreMock: jest.Mocked<Tramite260912Store>;
   let component: AgregarDestinatarioFinalContenedoraComponent;
-  let fixture: ComponentFixture<AgregarDestinatarioFinalContenedoraComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AgregarDestinatarioFinalContenedoraComponent,HttpClientModule],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(
-      AgregarDestinatarioFinalContenedoraComponent
-    );
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    tramiteStoreMock = {
+      updateDestinatarioFinalTablaDatos: jest.fn(),
+    } as any;
+    component = new AgregarDestinatarioFinalContenedoraComponent(tramiteStoreMock);
   });
 
-      it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should set idProcedimiento to ID_PROCEDIMIENTO', () => {
+    expect(component.idProcedimiento).toBe(ID_PROCEDIMIENTO);
   });
 });

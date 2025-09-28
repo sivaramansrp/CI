@@ -1,6 +1,6 @@
 
 import { Component, OnInit } from '@angular/core';
-import { Tramite260904State, Tramite260904Store } from '../../estados/tramite260904.store';
+import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
 import { ActivatedRoute } from '@angular/router';
 import { AgregarFabricanteComponent } from '../../../../shared/components/agregar-fabricante/agregar-fabricante.component';
 import { CommonModule } from '@angular/common';
@@ -8,9 +8,9 @@ import { CommonModule } from '@angular/common';
 import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
 
 import { Subject, map, takeUntil } from 'rxjs';
-import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento-260904.enum';
+import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento.enum';
 import { Router } from '@angular/router';
-import { Tramite260904Query } from '../../estados/tramite260904.query';
+import { Tramite260912Query } from '../../estados/tramite-260912.query';
 
 
 
@@ -66,7 +66,7 @@ export class AgregarFabricanteContenedoraComponent implements OnInit {
    * Se inicializa mediante datos externos o servicios que gestionan
    * el flujo de la aplicación.
    */
-  public tramiteState!: Tramite260904State;
+  public tramiteState!: Tramites260912State;
 
   /**
    * Lista de fabricantes en la tabla de datos.
@@ -83,15 +83,15 @@ export class AgregarFabricanteContenedoraComponent implements OnInit {
    * @constructor
    * @description Constructor que inyecta el store `Tramite260911Store` para gestionar el estado del trámite.
    * 
-   * @param tramite260904Store - Store que administra el estado del trámite 260911.
+   * @param tramite260912Store - Store que administra el estado del trámite 260911.
    */
     constructor(
-    public tramite260904Store: Tramite260904Store,
-    public tramite260904Query: Tramite260904Query,
+    public tramite260912Store: Tramite260912Store,
+    public tramite260912Query: Tramite260912Query,
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this.tramite260904Query.selectTramite260904$
+    this.tramite260912Query.selectTramite260912$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -132,11 +132,11 @@ export class AgregarFabricanteContenedoraComponent implements OnInit {
    * @returns {void} Este método no retorna ningún valor.
    */
     updateFabricanteTablaDatos(event:Fabricante[]): void {
-        this.tramite260904Store.updateFabricanteTablaDatos(event);
+        this.tramite260912Store.updateFabricanteTablaDatos(event);
     }
 
     onCancelarFabricante(): void {
-  // Navigate to terceros-relacionados tab for 260904
+  // Navigate to terceros-relacionados tab for 260912
   this.router.navigate(['../terceros-relacionados'], { relativeTo: this.route });
 }
 
