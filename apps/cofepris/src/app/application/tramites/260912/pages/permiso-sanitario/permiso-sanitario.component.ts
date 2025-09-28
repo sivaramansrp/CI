@@ -1,19 +1,9 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
 import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
-
-import { DatosEmpresaComponent } from '../../component/datos-empresa/datos-empresa.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-
-import { DomicilioDelEstablecimientoComponent } from '../../component/domicilio-del-establecimiento/domicilio-del-establecimiento.component';
-import { TercerosRelacionadosVistaComponent } from '../../component/terceros-relacionados/terceros-relacionados-vista.component.ts';
-import { TramitesAsociadoComponent } from '../../component/tramites-asociado/tramites-asociado.component';
-
-import { PagoDeDerechosComponent } from '../../component/pago-de-derechos/pago-de-derechos.component';
-
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
-
-import { FormGroup } from '@angular/forms';
+import { PagoDeDerechosComponent } from '../../component/pago-de-derechos/pago-de-derechos.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { take } from 'rxjs';
 
 /**
