@@ -6,6 +6,7 @@ import { FederatariosYPlantasComponent } from '../../../../shared/components/fed
 import { Observable } from 'rxjs';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
+import { CapacidadInstalada } from '../../../../shared/constantes/capacidad-instalada.enum';
 /**
  * Componente para la vista de federatarios y plantas
  * @export FederatariosYPlantasVistaComponent
@@ -115,5 +116,14 @@ export class FederatariosYPlantasVistaComponent implements OnInit {
    */
   setPlantasImmexDatos(datos: PlantasImmex[]): void {
     this.store.setPlantasImmexTablaLista(datos);
+  }
+
+   /**
+       * Actualiza la lista de capacidad instalada en la tabla utilizando el evento recibido.
+       *
+       * @param event - Arreglo de objetos de tipo `CapacidadInstalada` que representa la nueva lista de capacidad instalada.
+       */
+  obtenerCapacidadInstaladaTablaList(event: CapacidadInstalada[]): void {
+    this.store.setCapacidadInstaladaTableLista(event);
   }
 }

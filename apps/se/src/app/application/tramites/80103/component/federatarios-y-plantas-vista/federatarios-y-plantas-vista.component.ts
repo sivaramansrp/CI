@@ -4,7 +4,8 @@
  * desde la librería de acceso a datos del usuario.
  */
 import { Component, OnInit } from '@angular/core';
-import { FEDERATARIOS,FederatariosEncabezado,PLANTAS_DIPONIBLES,PLANTAS_IMMEX,PlantasDisponibles,PlantasImmex} from '../../../../shared/models/federatarios-y-plantas.model';
+import { FEDERATARIOS, FederatariosEncabezado, PLANTAS_DIPONIBLES, PLANTAS_IMMEX, PlantasDisponibles, PlantasImmex } from '../../../../shared/models/federatarios-y-plantas.model';
+import { CapacidadInstalada } from '../../../../shared/constantes/capacidad-instalada.enum';
 import { CommonModule } from '@angular/common';
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-planta/federatarios-y-plantas.component';
 import { Observable } from 'rxjs';
@@ -18,7 +19,7 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
 @Component({
   selector: 'app-federatarios-y-plantas-vista',
   standalone: true,
-  imports: [CommonModule,FederatariosYPlantasComponent],
+  imports: [CommonModule, FederatariosYPlantasComponent],
   templateUrl: './federatarios-y-plantas-vista.component.html',
   styleUrl: './federatarios-y-plantas-vista.component.scss',
 })
@@ -69,23 +70,23 @@ export class FederatariosYPlantasVistaComponent implements OnInit {
    * @property {PlantasImmex[]} plantasImmexTablaLista
    */
   public plantasImmexTablaLista: PlantasImmex[] = [];
-    /**
-   * Lista de federatarios para mostrar en la tabla
-   * @property {FederatariosEncabezado[]} federatariosTablaLista
-   */
-    public federatariosTablaLista$!: Observable<FederatariosEncabezado[]>;
-    /** 
-   * Lista de plantas disponibles para mostrar en la tabla
-   * @property {PlantasDisponibles[]} plantasDisponiblesTablaLista
-   */
-    public plantasDisponiblesTablaLista$!: Observable<PlantasDisponibles[]>;
-    /** 
-   * Lista de plantas IMMEX para mostrar en la tabla
-   * @property {PlantasImmex[]} plantasImmexTablaLista
-   */
-    public plantasImmexTablaLista$!: Observable<PlantasImmex[]>;
-/** Inyecta el store y query del trámite 80101 para gestionar el estado.  
- * Inicializa el observable para la lista de federatarios desde el query. */
+  /**
+ * Lista de federatarios para mostrar en la tabla
+ * @property {FederatariosEncabezado[]} federatariosTablaLista
+ */
+  public federatariosTablaLista$!: Observable<FederatariosEncabezado[]>;
+  /** 
+ * Lista de plantas disponibles para mostrar en la tabla
+ * @property {PlantasDisponibles[]} plantasDisponiblesTablaLista
+ */
+  public plantasDisponiblesTablaLista$!: Observable<PlantasDisponibles[]>;
+  /** 
+ * Lista de plantas IMMEX para mostrar en la tabla
+ * @property {PlantasImmex[]} plantasImmexTablaLista
+ */
+  public plantasImmexTablaLista$!: Observable<PlantasImmex[]>;
+  /** Inyecta el store y query del trámite 80101 para gestionar el estado.  
+   * Inicializa el observable para la lista de federatarios desde el query. */
   constructor(private store: Tramite80101Store, private query: Tramite80101Query) {
 
   }
@@ -110,9 +111,9 @@ export class FederatariosYPlantasVistaComponent implements OnInit {
   }
 
 
-    /**
-   * Establece los datos de las plantas disponibles en el almacén.
-   */
+  /**
+ * Establece los datos de las plantas disponibles en el almacén.
+ */
   setPlantasDisponiblesDatos(datos: PlantasDisponibles[]): void {
     this.store.setPlantasDisponiblesTablaLista(datos);
   }
@@ -122,5 +123,14 @@ export class FederatariosYPlantasVistaComponent implements OnInit {
    */
   setPlantasImmexDatos(datos: PlantasImmex[]): void {
     this.store.setPlantasImmexTablaLista(datos);
+  }
+
+  /**
+       * Actualiza la lista de capacidad instalada en la tabla utilizando el evento recibido.
+       *
+       * @param event - Arreglo de objetos de tipo `CapacidadInstalada` que representa la nueva lista de capacidad instalada.
+       */
+  obtenerCapacidadInstaladaTablaList(event: CapacidadInstalada[]): void {
+    this.store.setCapacidadInstaladaTableLista(event);
   }
 }
