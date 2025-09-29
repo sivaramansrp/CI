@@ -2,7 +2,9 @@ import { AgregarDestinatarioFinalComponent } from '../../../../shared/components
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento.enum';
 import { Tramite260911Store } from '../../estados/tramite260911.store';
+
 
 
 /**
@@ -28,6 +30,16 @@ import { Tramite260911Store } from '../../estados/tramite260911.store';
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
+ /**
+     * @constructor
+     * @description
+     * Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
+     *
+     * @param {Tramite260214Store} tramite260214Store - Store que administra el estado del trámite 260214.
+     */
+  
+    idProcedimiento: number = ID_PROCEDIMIENTO;
+  
 
     /**
    * @constructor

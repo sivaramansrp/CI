@@ -10,9 +10,7 @@
 	(destinatarioSeleccionadoDatos)="onDestinatarioSeleccionado($event)"
 	(proveedorSeleccionadoDatos)="onProveedorSeleccionado($event)"
 	(facturadorSeleccionadoDatos)="onFacturadorSeleccionado($event)"
+	[estaOculto]="botonDesactivarParaProrrogar"
+	[idProcedimiento]="idProcedimiento"
 	[formularioDeshabilitado]="esFormularioSoloLectura || isFabricanteTablaDatosDisabled || isDestinatarioFinalTablaDatosDisabled || isProveedorTablaDatosDisabled || isFacturadorTablaDatosDisabled"
 ></app-terceros-relacionados>
-
-<div class="d-flex justify-content-end mt-4">
-	<button type="button" class="btn btn-primary" (click)="onContinuarClicked()">Continuar</button>
-</div>
