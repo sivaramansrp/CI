@@ -269,6 +269,13 @@ export const API_POST_VISTA_PREVIA = (IDSOLICITUD: string, PROCEDURE: number): s
 export const API_GET_DOCUMENTOS130118 = 'sat-t130118/solicitud/documentos';
 
 /**
+ *API para obtener los documentos del tramite 231001
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t231001/swagger-ui/index.html#/Registro-Solicitud/consulta-documentos
+ */ 
+
+export const API_GET_DOCUMENTOS231001 = 'sat-t231001/solicitud/documentos';
+
+/**
  * Ruta de la API para obtener la información del contribuyente IDC.
  * Utiliza el RFC genérico como parte de la URL.
  *
@@ -523,9 +530,9 @@ export const API_GET_DATOS_SOLICITANTE = (TRAMITE: string, IDSOLICITUD: string) 
 
 /*
  * API para obtener el catálogo de immex
- * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/immex
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/servicios-immex
  */
-export const CATALOGO_IMMEX = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/immex`;
+export const CATALOGO_IMMEX = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/servicios-immex`;
 
 /*
  * API para obtener el catálogo de estados
@@ -541,10 +548,10 @@ export const CATALOGO_PAISES = (TRAMITE: string) : string => `sat-t${TRAMITE}/ca
 
 /*
  * API para obtener el catálogo de NICO
- * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/nico
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t80203/catalogo/nicos/producto-exportacion/72162101
+ 
  */
-export const CATALOGO_NICO = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/nico`;
-
+export const CATALOGO_NICO = (TRAMITE: string, claveFraccion: string) : string => `sat-t${TRAMITE}/catalogo/nicos/producto-exportacion/${claveFraccion}`;
 /**
  * API para obtener el estado de la solicitud del tramite 130118.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/genera-cadena-original_1
@@ -555,3 +562,8 @@ export const API_POST_CADENA_ORIGINAL = (IDSOLICITUD: string, PROCEDURE: number)
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Registro-Solicitud/firmar
  */
 export const API_POST_FIRMA = (IDSOLICITUD: string, PROCEDURE: number): string => `sat-t${PROCEDURE}/solicitud/${IDSOLICITUD}/firmar`;
+
+/** API para guardar la solicitud del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/solicitud/guardar
+ */
+export const API_POST_SOLICITUD_GUARDAR = (PROCEDURE: string): string => `sat-t${PROCEDURE}/solicitud/guardar`;

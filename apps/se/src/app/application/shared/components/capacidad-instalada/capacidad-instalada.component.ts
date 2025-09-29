@@ -219,8 +219,7 @@ export class CapacidadInstaladaComponent implements OnInit {
     CALCULO_CAPACIDAD_INSTALADA: this.capacidadForm.value.calculoCapacidadInstalada,
   };
 
-  this.capacidadInstaladaDatos.push(CAPACIDAD);
-  this.capacidadInstaladaDatos = [...this.capacidadInstaladaDatos]; 
+  this.capacidadInstaladaDatos = [...this.capacidadInstaladaDatos, CAPACIDAD];
   this.limpiar();
 }
 

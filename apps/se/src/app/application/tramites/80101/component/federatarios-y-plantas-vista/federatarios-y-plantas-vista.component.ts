@@ -222,6 +222,16 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
   }
 
   /**
+   * Establece los datos de los federatarios en el almacén.
+   *
+   * @param datos - Objeto de tipo `FederatariosEncabezado` que contiene la información
+   *                de los federatarios a ser almacenada.
+   */
+  setDatosFederatarios(datos: FederatariosEncabezado): void {
+    this.store.setFederatariosCatalogo(datos);
+  }
+
+  /**
    * Establece los datos de las plantas disponibles en el almacén.
    */
   setPlantasDisponiblesDatos(datos: PlantasDisponibles[]): void {

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Notificacion, NotificacionesComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 import {
   CatalogoDatosIdx,
@@ -18,6 +18,12 @@ import { FederatariosYPlantasComponent } from '../../../../shared/components/fed
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
 
+import { CapacidadInstaladaComponent } from '../../../../shared/components/capacidad-instalada/capacidad-instalada.component';
+import { CargaPorArchivoComponent } from '../../../../shared/components/carga-por-archivo/carga-por-archivo.component';
+import { ComplementarPlantaComponent } from '../../../../shared/components/complementar-planta/complementar-planta.component';
+import { EmpleadosComponent } from '../../../../shared/components/empleados/empleados.component';
+import { MontosDeInversionComponent } from '../../../../shared/components/montos-de-inversion/montos-de-inversion.component';
+
 /**
  * Componente para la vista de federatarios y plantas
  * @export FederatariosYPlantasVistaComponent
@@ -26,7 +32,8 @@ import { Tramite80102Store } from '../../estados/tramite80102.store';
 @Component({
   selector: 'app-federatarios-y-plantas-vista',
   standalone: true,
-  imports: [CommonModule, FederatariosYPlantasComponent],
+  imports: [CommonModule, FederatariosYPlantasComponent, NotificacionesComponent ,ComplementarPlantaComponent,
+    MontosDeInversionComponent, EmpleadosComponent, CapacidadInstaladaComponent, CargaPorArchivoComponent],
   templateUrl: './federatarios-y-plantas-vista.component.html',
   styleUrl: './federatarios-y-plantas-vista.component.scss',
 })
@@ -111,6 +118,11 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
      */
     public estadoOptionsConfig!: CatalogoDatosIdx;
   
+      /**
+       * Instancia de la notificación que representa un nuevo evento o mensaje.
+       * Se utiliza para manejar y mostrar notificaciones dentro del componente.
+       */
+      public nuevaUnoNotificacion!: Notificacion;
   /**
    * Constructor de la clase FederatariosYPlantasVistaComponent.
    * @param {Tramite80102Store} store - Servicio para manejar el estado del trámite.
@@ -119,7 +131,8 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
   constructor(
     private store: Tramite80102Store,
     private query: Tramite80102Query, private consultaQuery: ConsultaioQuery,
-    private autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService
+    private autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
+    
       ) {
         this.consultaQuery.selectConsultaioState$
           .pipe(
@@ -146,6 +159,12 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
       .subscribe((datos) => {
         this.datosFederatarios = datos;
       });
+
+    this.autorizacionProgrmaNuevoService.tieneDatosDeTabla$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((val: boolean) => {
+      this.tieneDatosDeTabla = val;
+    });
 
     this.autorizacionProgrmaNuevoService
       .getFederataiosyPlantaCatalogosData()
@@ -181,7 +200,125 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
   setPlantasImmexDatos(datos: PlantasImmex[]): void {
     this.store.setPlantasImmexTablaLista(datos);
   }
+/**
+ * 
+ * @param ruta - Ruta que indica la acción a realizar.
+ * Maneja la acción correspondiente según la ruta proporcionada.
+ * Si la ruta coincide con una de las opciones predefinidas, se muestra el popup correspondiente.
+ */
+/**
+   * Controla la visibilidad del popup "Complementar Planta".
+   * @property {boolean} mostrarComplementarPlantaPopup
+   */
+  public mostrarComplementarPlantaPopup:boolean = false;
 
+  /**
+   * Controla la visibilidad del popup "Montos de Inversión".
+   * @property {boolean} mostrarMontosDeInversionPopup
+   */
+  public mostrarMontosDeInversionPopup:boolean = false;
+
+  /**
+   * Controla la visibilidad del popup "Empleados".
+   * @property {boolean} mostrarEmpleadosPopup
+   */
+  public mostrarEmpleadosPopup:boolean = false;
+
+  /**
+   * Controla la visibilidad del popup "Capacidad Instalada".
+   * @property {boolean} mostrarCapacidadInstaladaPopup
+   */
+  public mostrarCapacidadInstaladaPopup:boolean = false;
+
+  /**
+   * Controla la visibilidad del popup "Proveedor por Archivo".
+   * @property {boolean} mostrarProveedorPorArchivoPopup
+   */
+  public mostrarProveedorPorArchivoPopup:boolean = false;
+
+    /**
+   * Indica si la tabla contiene datos actualmente.
+   * Se emplea para controlar comportamientos o visualizaciones basadas en la presencia de datos.
+   */
+  tieneDatosDeTabla: boolean = false;
+
+  onAccionSeccion(ruta: string):void { 
+  if (ruta === '../complementar-plantas-acciones') {
+    this.mostrarComplementarPlantaPopup = true;
+  } else if (ruta === '../montos-inversion-acciones') {
+    this.mostrarMontosDeInversionPopup = true;
+  } else if (ruta === '../empleados-acciones') {
+    this.mostrarEmpleadosPopup = true;
+  } else if (ruta === '../capacidad-instalada-acciones') {
+    this.mostrarCapacidadInstaladaPopup = true;
+  } else if (ruta === '../proveedor-por-archivo'){
+    if(this.tieneDatosDeTabla){
+      this.mostrarProveedorPorArchivoPopup = true;
+    } else {
+      this.nuevaUnoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Debe ingresar las fracciones del producto para agregar la capacidad instalada.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+  }
+}
+
+  /**
+   * Cierra el popup de complementar planta.
+   * 
+   * Cambia la bandera `mostrarComplementarPlantaPopup` a `false`
+   * para ocultar el popup correspondiente.
+   */
+  cerrarComplementarPlanta(): void {
+    this.mostrarComplementarPlantaPopup = false;
+  }
+
+  /**
+   * Cierra el popup de montos de inversión.
+   * 
+   * Establece la variable `mostrarMontosDeInversionPopup` en `false`
+   * para ocultar el popup correspondiente en la interfaz.
+   */
+  cerrarMontosDeInversion(): void {
+    this.mostrarMontosDeInversionPopup = false;
+  }
+
+  /**
+   * Cierra el popup de empleados.
+   * 
+   * Cambia la variable `mostrarEmpleadosPopup` a `false` para ocultar
+   * el popup relacionado con la información de empleados.
+   */
+  cerrarEmpleados(): void {
+    this.mostrarEmpleadosPopup = false;
+  }
+
+  /**
+   * Cierra el popup de capacidad instalada.
+   * 
+   * Establece la variable `mostrarCapacidadInstaladaPopup` en `false`
+   * para ocultar el popup correspondiente en la interfaz.
+   */
+  cerrarCapacidadInstalada(): void {
+    this.mostrarCapacidadInstaladaPopup = false;
+  }
+
+  /**
+   * Cierra el popup de proveedor por archivo.
+   * 
+   * Cambia la variable `mostrarProveedorPorArchivoPopup` a `false`
+   * para ocultar el popup correspondiente en la interfaz.
+   */
+  cerrarProveedorPorArchivo(): void {
+    this.mostrarProveedorPorArchivoPopup = false;
+  }
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
    * Emite una notificación a través del observable `destroyNotifier$` para limpiar suscripciones

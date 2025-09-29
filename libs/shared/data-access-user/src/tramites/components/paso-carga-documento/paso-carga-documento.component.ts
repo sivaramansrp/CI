@@ -1,6 +1,7 @@
 // Update the import path to the correct location of catalogos.service.ts
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
+import { USUARIO_INFO, createUsuarioInfoWithSolicitud } from '../../../core/enums/usuario-info.enum';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { CATALOGOS_ID } from '../../constantes/constantes';
 import { CargaDocumentoComponent } from '../carga-documento/carga-documento.component';
@@ -8,7 +9,6 @@ import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '../../components/titulo/titulo.component';
-import { USUARIO_INFO } from '../../../core/enums/usuario-info.enum';
 import { Usuario } from '../../../core/models/shared/cargar-documentos.model';
 /**
  * Este componente se muestra en Paso Carga Documento
@@ -25,12 +25,15 @@ import { Usuario } from '../../../core/models/shared/cargar-documentos.model';
     TituloComponent,
   ]
 })
-export class PasoCargaDocumentoComponent implements OnInit, OnDestroy {
+export class PasoCargaDocumentoComponent implements OnInit, OnDestroy, OnChanges {
   @Input() idSolicitud: number | null = null;
+  
   /**
    * Obtener el valor de la instrucción e inicializar la variable
    */
-  TEXTOS = `La solicitud ha quedado registrada con el número temporal [${this.idSolicitud}]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.`;
+  get TEXTOS(): string {
+    return `La solicitud ha quedado registrada con el número temporal [${this.idSolicitud}]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.`;
+  }
   
   @Input() regresarSeccionCargarDocumentoEvento!: EventEmitter<void>;
 
@@ -106,7 +109,18 @@ export class PasoCargaDocumentoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private catalogosServices: CatalogosService,
-  ) { }
+  ) {
+    // datosUsuario will be updated in ngOnChanges when idSolicitud is available
+  }
+
+  /**
+   * Hook del ciclo de vida que se ejecuta cuando las propiedades de entrada cambian.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['idSolicitud']) {
+      this.actualizarDatosUsuario();
+    }
+  }
 
   /**
    * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
@@ -120,6 +134,13 @@ export class PasoCargaDocumentoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+
+  /**
+   * Actualiza los datos del usuario con el idSolicitud actual.
+   */
+  private actualizarDatosUsuario(): void {
+    this.datosUsuario = createUsuarioInfoWithSolicitud(this.idSolicitud);
   }
 
   /**

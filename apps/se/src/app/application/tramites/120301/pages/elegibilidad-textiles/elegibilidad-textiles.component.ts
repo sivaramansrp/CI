@@ -14,17 +14,27 @@
  * @requires ./constantes/elegibilidad-de-textiles.enums - Constantes y enumeraciones
  */
 
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { CategoriaMensaje, DatosPasos, Notificacion, SeccionLibStore } from '@ng-mf/data-access-user';
-import { ERROR_FORMA_ALERT, PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CategoriaMensaje, Notificacion, } from '@ng-mf/data-access-user';
+import { DatosPasos, SeccionLibStore } from '@ng-mf/data-access-user';
+import { ERROR_FORMA_ALERT, ERROR_FORMA_ANO, PASOS } from '../../constantes/elegibilidad-de-textiles.enums';
+import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { IniciarRequest } from '../../models/request/iniciar-request.model';
 import { IniciarService } from '../../services/iniciar.service';
 import { ListaPasosWizard } from '../../models/elegibilidad-de-textiles.model';
 import { Location } from '@angular/common';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+
+import { Solicitud120301State, Tramite120301Store } from '../../estados/tramites/tramite120301.store';
+import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
+import { GuardadoService } from '../../services/guardado.service';
+import { GuardarSolicitudCompletaRequest } from '../../models/request/guardar-solicitud-request.model';
+import { Tramite120301Query } from '../../estados/queries/tramite120301.query';
+
+import { Subject, map, takeUntil } from 'rxjs';
+
 
 /**
  * @interface AccionBoton
@@ -83,7 +93,8 @@ interface AccionBoton {
   selector: 'app-elegibilidad-textiles',
   templateUrl: './elegibilidad-textiles.component.html',
 })
-export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
+export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit, OnDestroy {
+
   /**
    * @property {boolean} mostrarOtraPestana
    * @description
@@ -103,9 +114,20 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
   public formularioAlertaError = ERROR_FORMA_ALERT;
 
   /**
+   * Contiene el mensaje de error que se muestra cuando el año ingresado no es válido.
+   */
+  public formularioAlertaAno = ERROR_FORMA_ANO;
+
+  /**
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
    */
   esFormaValido: boolean = false;
+
+  /**
+   * Controla la visibilidad del mensaje de error cuando el año ingresado no es válido.
+   */
+  anoFormValido: boolean = false;
+
   /**
    * @property {FormGroup} formGroup
    * @description Grupo de formularios reactivos de Angular que maneja todos los datos 
@@ -128,6 +150,20 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
    * ```
    */
   formGroup: FormGroup;
+
+  /**
+    * @property {TextilesState} historicoState - Estado actual del historial de fabricantes.
+    * Almacena el estado completo relacionado con el historial de fabricantes en el contexto de elegibilidad de textiles.
+    * Se actualiza mediante suscripciones al query correspondiente y contiene
+    * toda la información necesaria para el funcionamiento del componente de histórico de fabricantes.
+    * @private
+    */
+  private historicoState!: TextilesState;
+
+  /**
+    * Recuperado de datos del state
+    */
+  public solicitudState!: Solicitud120301State;
 
   /**
    * @property {Array<ListaPasosWizard>} pasos
@@ -201,9 +237,9 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-    /**
-   * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
-   */
+  /**
+ * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+ */
   @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
 
   /**
@@ -229,6 +265,15 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
    * ```
    */
   indice: number = 1;
+
+  /**
+   * @property {Subject<void>} destroyNotifier$ - Sujeto para manejar la destrucción de suscripciones.
+   * Subject privado utilizado con el operador takeUntil para cancelar automáticamente
+   * todas las suscripciones activas cuando el componente es destruido.
+   * Implementa el patrón estándar para prevenir fugas de memoria en Angular.
+   * @private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @property {DatosPasos} datosPasos
@@ -279,8 +324,13 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
   constructor(
     private iniciarService: IniciarService,
     private location: Location,
-    private seccionStore: SeccionLibStore, 
-    public ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore) {
+    private seccionStore: SeccionLibStore,
+    private guardadoService: GuardadoService,
+    public ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
+    private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
+    private tramiteStore: Tramite120301Store,
+    private tramiteQuery: Tramite120301Query,
+    private textilesState: ElegibilidadDeTextilesStore) {
     this.formGroup = new FormGroup({
       campo1: new FormControl(''),
       campo2: new FormControl(''),
@@ -315,25 +365,21 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
   getValorIndice(e: AccionBoton): void {
     // Si la acción es continuar, validar formularios del paso actual
     if (e.accion === 'cont') {
-      let isValid = true;
-      
-      // Validar formularios del paso 1 antes de continuar
-      if (this.indice === 1 && this.pasoUnoComponent) {
-        isValid = this.pasoUnoComponent.validarTodosLosFormularios();
-      }
-      
+      const ISVALID = true;
+       this.guardarSolicitudCompleta();
+
       // Si los formularios no son válidos, mostrar error y no continuar
-      if (!isValid) {
+      if (!ISVALID) {
         this.esFormaValido = true;
         this.datosPasos.indice = this.indice;
         window.scrollTo(0, 0);
         return;
       }
-      
+
       this.esFormaValido = false;
       this.indice = e.valor;
       this.datosPasos.indice = this.indice;
-      
+
       // Avanzar al siguiente paso
       this.wizardComponent.siguiente();
       this.ElegibilidadDeTextilesStore.setPestanaActiva(this.indice);
@@ -347,12 +393,56 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
     this.ElegibilidadDeTextilesStore.setPestanaActiva(this.indice);
   }
 
+  guardarSolicitudCompleta(): void {
+    const PAYLOAD = this.buildPayload();
+
+    this.guardadoService
+      .postGuardadoCompleto(PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (resp) => {
+          if (resp.codigo !== '00') {
+            this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: resp.error || 'Error al guardar la solicitud.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          }
+        },
+        error: (err) => {
+          console.error('Error en la petición:', err);
+        },
+      });
+  }
+
   /**
    * Método que se ejecuta cuando cambia de tab en paso-uno.
    * Oculta el mensaje de error de validación.
    */
   onTabChanged(): void {
     this.esFormaValido = false;
+  }
+
+  /**
+   * Maneja el evento de error de validación del año emitido por el componente paso-uno.
+   * Muestra o oculta el mensaje de error de año según el estado de validación.
+   * @param hasError Valor booleano que indica si hay errores de validación en el año.
+   */
+  alErrorDeValidacion(hasError: boolean): void {
+    this.anoFormValido = hasError;
+  }
+
+  /**
+   * Maneja el evento de cambio de visibilidad de pestañas emitido por el componente paso-uno.
+   * @param show Valor booleano que indica si se deben mostrar las pestañas adicionales.
+   */
+  onMostrarOtraPestanaChange(show: boolean): void {
+    this.mostrarOtraPestana = show;
   }
 
   /**
@@ -422,11 +512,25 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
    * }
    * ```
    */
-  ngOnInit():void {
+  ngOnInit(): void {
     this.datosPasos.indice = 1;
     this.indice = 1;
     this.asignarSecciones();
     this.iniciar();
+    this.tramiteQuery.selectSeccionState$
+      .pipe(takeUntil(this.destroyNotifier$)) 
+      .subscribe((state) => {
+        this.solicitudState = state;
+      });
+
+    this.ElegibilidadDeTextilesQuery.selectTextile$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.historicoState = state as TextilesState;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -476,6 +580,82 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
     });
   }
 
+  private buildPayload(): GuardarSolicitudCompletaRequest {
+    const HISTORICO_STATE = this.historicoState;
+    const STATE_SOLICITUD = this.solicitudState
+
+    return {
+      id_solicitud: STATE_SOLICITUD.idSolicitud,
+      id_asignacion: STATE_SOLICITUD.id_asignacion,
+      id_factura_expedicion:STATE_SOLICITUD.id_factura_expedicion,
+      boolean_generico: Boolean(HISTORICO_STATE.exportadorFabricanteMismo),
+      ide_generica_1: HISTORICO_STATE.exportadorFabricanteMismo,
+      descripcion_generica_2: HISTORICO_STATE.tipo,
+      ide_generica_2: HISTORICO_STATE.cantidadTotalImportador,
+      requiere_descripcion_mercancia: true,
+
+      solicitante: {
+        rfc: 'AAL0409235E6',
+        certificado_serial_number: '',
+        nombre:'PRUEBA',
+        es_persona_moral: true
+      },
+
+      representacion_federal: {
+        cve_entidad_federativa: STATE_SOLICITUD.cve_entidad,
+        cve_unidad_administrativa: STATE_SOLICITUD.clave,
+      },
+
+      expedicion: {
+        id_expedicion: STATE_SOLICITUD.idExpedicion,
+        cantidad: Number(HISTORICO_STATE.cantidadFacturas),
+        descripcion_mercancia: HISTORICO_STATE.descripcionCategoriaTextil,
+      },
+
+      fabricantes: HISTORICO_STATE.listaFabricantesCompleta?.map(fab => ({
+        id_fabricante: Number(fab.id_persona_sol),
+        rfc: fab.rfc,
+        rfc_extranjero: '', // no viene en el response, lo dejas vacío
+        razon_social: fab.razon_social,
+        es_extranjero: fab.bln_extranjero === '1', // si en el backend es string
+        nombre: fab.nombre,
+        apellido_paterno: fab.apellido_paterno,
+        apellido_materno: fab.apellido_materno,
+        correo_electronico: fab.correo_electronico,
+        telefono: fab.telefono,
+        pagina_web: '', // no viene en response
+        nss: '', // no viene en response
+        area: fab.descripcion_giro ?? '', // puedes usar este campo
+        numero_registro: '', // no viene en response
+        domicilio: {
+          calle: fab.domicilio?.calle ?? '',
+          numero_exterior: fab.domicilio?.num_exterior ?? '',
+          numero_interior: fab.domicilio?.num_interior ?? '',
+          codigo_postal: fab.domicilio?.cp ?? '',
+          nombre_entidad_federativa: fab.domicilio?.entidad_federativa ?? '',
+          nombre_pais: fab.domicilio?.pais?.nombre ?? '',
+        }
+      })) ?? [],
+
+      instrumento: {
+        id_mecanismo: STATE_SOLICITUD.id_mecanismo,
+        pais_origen_destino: STATE_SOLICITUD.pais_origen_destino,
+        cve_pais: STATE_SOLICITUD.cve_pais,
+      },
+
+      importador: {
+        razon_social: HISTORICO_STATE.razonSocialImportador,
+        domicilio: {
+          calle: HISTORICO_STATE.domicilio,
+          ciudad: HISTORICO_STATE.ciudadImportador,
+          codigo_postal: HISTORICO_STATE.cpImportador,
+          cve_pais: 'USA',
+        },
+      },
+    };
+  }
+
+
   /**
    * @method ngAfterViewInit
    * @description Método del ciclo de vida de Angular que se ejecuta después de que
@@ -490,5 +670,20 @@ export class ElegibilidadTextilesComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.asignarSecciones();
     }, 200);
+  }
+
+  /**
+ * @method ngOnDestroy
+ * @description Método que se ejecuta cuando el componente es destruido.
+ * Implementa la limpieza necesaria para evitar fugas de memoria cancelando
+ * todas las suscripciones activas mediante el subject destroyNotifier$.
+ * Es una implementación estándar del patrón de limpieza en Angular que asegura
+ * que todas las suscripciones del componente sean correctamente finalizadas
+ * cuando el componente se destruye, liberando recursos del sistema.
+ * @returns {void} No retorna ningún valor.
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

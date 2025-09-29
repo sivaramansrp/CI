@@ -25,20 +25,31 @@
  * @module SolicitantePageComponent
  */
 
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+
+import { Subject } from 'rxjs';
+
+import { map, takeUntil } from 'rxjs/operators';
+
+import {
+  CategoriaMensaje,
+  DatosPasos,
+  ListaPasosWizard,
+  Notificacion,
+  PASOS,
+  SECCIONES_TRAMITE_40103,
+  TipoNotificacionEnum,
+  WizardComponent
+} from '@libs/shared/data-access-user/src';
+
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+
+import { Chofer40103Query } from '../../estados/chofer40103.query';
+
 import {
   Chofer40103Store,
   Choferesnacionales40103State,
 } from '../../estados/chofer40103.store';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Chofer40103Query } from '../../estados/chofer40103.query';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
-import { SECCIONES_TRAMITE_40103 } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { map } from 'rxjs/operators';
-import { takeUntil } from 'rxjs/operators';
 
 /**
  * Interfaz que define la estructura de una acción de botón en el wizard.
@@ -258,6 +269,26 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   };
 
   /**
+   * Referencia al componente paso-uno para acceder a la validación.
+   */
+  @ViewChild('pasoUnoRef') pasoUnoRef!: PasoUnoComponent;
+
+  /**
+   * Configuración de notificación para mostrar alertas al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Estado del botón continuar.
+   */
+  public btnContinuar: boolean = false;
+
+  /**
+   * Estado de validación del formulario.
+   */
+  public esFormaValido: boolean = false;
+
+  /**
    * Constructor del componente SolicitantePageComponent.
    * 
    * Inicializa las dependencias necesarias para el funcionamiento del componente,
@@ -431,14 +462,48 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * @since 1.0.0
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 6) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+    this.esFormaValido = false;
+    // Validar antes de pasar del paso 1 al paso 2
+    if (e.accion === 'cont' && this.indice === 1) {
+      const ES_VALIDO = this.pasoUnoRef
+        ? this.pasoUnoRef.validarTodosLosFormularios().formularioUnoValido
+        : true;
+      if (!ES_VALIDO) {
+        this.nuevaNotificacion = {
+          tipoNotificacion: TipoNotificacionEnum.ALERTA,
+          categoria: CategoriaMensaje.ERROR,
+          modo: 'modal-md',
+          titulo: '',
+          mensaje: 'Existen requisitos obligatorios en blanco o con errores.',
+          cerrar: false,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.btnContinuar = true;
+        this.indice = 1;
+        this.actualizarDatosPasos();
+        return; // Evitar pasar al siguiente paso
       }
     }
+    // Si es válida o no paso 1, permitir la navegación
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent?.siguiente();
+      } else {
+        this.wizardComponent?.atras();
+      }
+    }
+  }
+
+  /**
+   * Actualiza los datos de los pasos del wizard.
+   */
+  private actualizarDatosPasos(): void {
+    this.datosPasos = {
+      ...this.datosPasos,
+      indice: this.indice
+    };
   }
 
   /**

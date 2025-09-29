@@ -1,7 +1,9 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { ConstanciaTramiteConfiguracion } from '@libs/shared/data-access-user/src/core/models/shared/acuse-y-resoluciones-folio-tramite.model';
-import { FitosanitarioForm } from '../models/elegibilidad-de-textiles.model';
+
+import { AsociadasTableColumns, FitosanitarioForm, HistoricoColumns } from '../models/elegibilidad-de-textiles.model';
+import { FabricanteNacionalRfcResponse } from '../models/response/fabricante-nacional-response.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -41,6 +43,10 @@ export interface TextilesState {
    * @description Identificador único de la factura comercial relacionada con los textiles.
    */
   numeroFactura: string;
+
+  exportadorFabricanteNacional : string;
+
+  listaFabricantes: HistoricoColumns[];
   
   /** 
    * Cantidad total de textiles.
@@ -48,6 +54,13 @@ export interface TextilesState {
    * @description Cantidad total de productos textiles incluidos en el trámite.
    */
   cantidadTotal: string;
+
+  /**
+   * Lista completa de fabricantes nacionales con RFC.
+   * @type {FabricanteNacionalRfcResponse[]}
+   * @description Array que contiene los datos de todos los fabricantes nacionales registrados, incluyendo su RFC.
+   */
+  listaFabricantesCompleta:FabricanteNacionalRfcResponse[];
   
   /** 
    * Unidad de medida utilizada.
@@ -237,6 +250,13 @@ export interface TextilesState {
    * @description Número total de facturas asociadas al trámite.
    */
   cantidadFacturas: string;
+
+  /**
+   * Facturas asociadas al trámite.
+   * @type {AsociadasTableColumns[]}
+   * @description Array que contiene los datos de las facturas asociadas al trámite, incluyendo detalles relevantes para cada una.
+   * */
+  facturasAsociadas: AsociadasTableColumns[];
   
   /** 
    * Indica si el exportador y fabricante son el mismo.
@@ -352,8 +372,6 @@ export interface TextilesState {
 }
 
 /**
- * @function createInitialState
- * @description
  * Crea y retorna el estado inicial para la sección de elegibilidad de textiles.
  * Esta función factory inicializa todas las propiedades del estado con valores por defecto
  * apropiados para comenzar un nuevo trámite. Los valores incluyen cadenas vacías para
@@ -392,6 +410,9 @@ export function createInitialState(): TextilesState {
   return {
   SolicitudState: {} as FitosanitarioForm,
   numeroFactura: '',
+  exportadorFabricanteNacional : '',
+  listaFabricantes:[],
+  listaFabricantesCompleta:[],
   cantidadTotal: '',
   unidadDeMedida: '',
   fechaInicioInput: '',
@@ -419,6 +440,7 @@ export function createInitialState(): TextilesState {
   fechaInicioVigencia: '',
   fechaFinVigencia: '',
   cantidadFacturas: '',
+  facturasAsociadas: [],
   exportadorFabricanteMismo: '',
   numeroRegistroFiscal: '',
   tipo: '',
@@ -1549,6 +1571,18 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
   }
 
   /**
+   * Actualiza la lista de facturas asociadas en el estado.
+   * @param facturasAsociadas - Array de objetos que representan las facturas asociadas.
+   * @returns void
+   */
+  public setFacturasAsociadas(facturasAsociadas: AsociadasTableColumns[]): void {
+    this.update((state) => ({
+      ...state,
+      facturasAsociadas,
+    }));
+  }
+
+  /**
    * Actualiza el valor que indica si el exportador y fabricante son la misma entidad en el estado.
    * 
    * @description
@@ -1579,6 +1613,55 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
     this.update((state) => ({
       ...state,
       exportadorFabricanteMismo,
+    }));
+  }
+
+  /**
+   * @method setExportadorFabricanteNacional
+   * @description Actualiza el estado del exportador/fabricante nacional en el store.
+   * Utiliza el patrón de actualización inmutables para modificar el estado,
+   * preservando las demás propiedades del estado actual.
+   * @param {string} exportadorFabricanteNacional - El nuevo valor para la propiedad
+   * exportadorFabricanteNacional en el estado del store.
+   * @returns {void} No retorna ningún valor.
+   */
+   public setExportadorFabricanteNacional(exportadorFabricanteNacional: string): void {
+    this.update((state) => ({
+      ...state,
+      exportadorFabricanteNacional,
+    }));
+  }
+
+  /**
+   * @method setListaFabricantes
+   * @description Actualiza la lista de fabricantes en el store.
+   * Realiza una actualización inmutable del estado, manteniendo todas las
+   * propiedades existentes y reemplazando solamente la lista de fabricantes.
+   * @param {HistoricoColumns[]} listaFabricantes - Array de objetos HistoricoColumns
+   * que representa la nueva lista de fabricantes a almacenar en el estado.
+   * @returns {void} No retorna ningún valor.
+   */
+  public setListaFabricantes(listaFabricantes: HistoricoColumns[]): void {
+    this.update((state) => ({
+      ...state,
+      listaFabricantes,
+    }));
+  }
+
+  /**
+   * @method setListaFabricantesCompletos
+   * @description Actualiza la lista completa de fabricantes en el store.
+   * Realiza una actualización inmutable del estado, manteniendo todas las
+   * propiedades existentes y reemplazando solamente la lista completa de fabricantes.
+   * @param listaFabricantesCompleta - Array de objetos FabricanteNacionalRfcResponse
+   * que representa la nueva lista completa de fabricantes a almacenar en el estado.
+   * @returns {void} No retorna ningún valor.
+   * 
+   */
+  public setListaFabricantesCompletos(listaFabricantesCompleta: FabricanteNacionalRfcResponse[]): void {
+    this.update((state) => ({
+      ...state,
+      listaFabricantesCompleta,
     }));
   }
 

@@ -9,13 +9,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
 
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, PasoCargaDocumentoComponent, PasoFirmaComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { Anexo1Component } from './components/anexo-1/anexo-1.component';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { ImmexRegistroDeSolicitudModalityRoutingModule } from './immex-registro-de-solicitud-modalidad-enrutamiento.modulo';
 import { ImmexRegistroSolicitudModalityComponent } from './pages/immex-registro-solicitud-modality/immex-registro-solicitud-modality.component';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
@@ -31,7 +30,6 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
   declarations: [
-    PasoDosComponent,
     PasoTresComponent,
     ImmexRegistroSolicitudModalityComponent,
   ],
@@ -51,7 +49,9 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     Anexo1Component,
     TablaDinamicaComponent,
     SolicitanteComponent,
-    PasoUnoComponent
+    PasoUnoComponent,
+    PasoCargaDocumentoComponent,
+    PasoFirmaComponent
   ],
   providers: [ToastrService],
 })

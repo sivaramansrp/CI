@@ -406,6 +406,19 @@ export class Tramite80101Store extends Store<Tramite80101State> {
   constructor() {
     super(INITIAL_AMPLIACION_SERVICIOS_STATE);
   }
+
+  /**
+    * Guarda el ID de la solicitud en el estado.
+    *
+    * @param idSolicitud - El ID de la solicitud que se va a guardar.
+    */
+  public setFederatariosCatalogo(datosFederatarios: FederatariosEncabezado): void {
+    this.update((state) => ({
+      ...state,
+      datosFederatarios,
+    }));
+  }
+  
   /**
     * Guarda el ID de la solicitud en el estado.
     *

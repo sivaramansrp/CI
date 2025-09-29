@@ -15,4 +15,16 @@ export const USUARIO_INFO = {
       "rfcSolicitante": "LEQI8101314S7",
       "idSolicitud": 202775426,
       "referenciaSolicitud": ""
-    }
+    };
+
+/**
+ * Función para crear datos de usuario con idSolicitud dinámico
+ * @param idSolicitud - El ID de solicitud dinámico a asignar
+ * @returns Objeto con los datos de usuario actualizados
+ */
+export function createUsuarioInfoWithSolicitud(idSolicitud: number | null): typeof USUARIO_INFO {
+  return {
+    ...USUARIO_INFO,
+    idSolicitud: idSolicitud || 0
+  };
+}

@@ -2,7 +2,7 @@ import { CEDULAS_OPTIONS, DIRECTOS, Directos } from '../../constantes/empleados.
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Subject,map,takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
@@ -44,9 +44,11 @@ export class EmpleadosComponent implements OnInit {
    * @property {FormGroup} empleadosForm
    */
   empleadosForm!: FormGroup;
-/**
-   * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
-   */
+
+  /**
+ * Estado actual de la solicitud, utilizado para inicializar y gestionar los datos del formulario de empleados.
+ * @property {ComplementarState} solicitudState
+ */
   public solicitudState!: ComplementarState;
   /**
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
@@ -112,16 +114,16 @@ export class EmpleadosComponent implements OnInit {
    * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
    */
   @Output() cerrarPopup = new EventEmitter<void>();
-  
+
 
   /**
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para construcción de formularios
    */
-  constructor(public fb: FormBuilder, private ubicaccion: Location,private complementarStore: ComplementarStore,
-        private complementarQuery: ComplementarQuery) {
-   
+  constructor(public fb: FormBuilder, private ubicaccion: Location, private complementarStore: ComplementarStore,
+    private complementarQuery: ComplementarQuery) {
+
   }
   /**
    * Método que se ejecuta cuando el componente es inicializado.
@@ -129,7 +131,7 @@ export class EmpleadosComponent implements OnInit {
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
-   this.crearFormularioEmpleados();
+    this.crearFormularioEmpleados();
     if (!this.directosDatos) {
       this.directosDatos = [];
     }
@@ -140,28 +142,28 @@ export class EmpleadosComponent implements OnInit {
    * @returns {void}
    */
   crearFormularioEmpleados(): void {
-     this.complementarQuery.selectSolicitud$
-              .pipe(
-                takeUntil(this.destroyNotifier$),
-                map((seccionState) => {
-                  this.solicitudState = seccionState as ComplementarState;
-                })
-              )
-              .subscribe();
+    this.complementarQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState as ComplementarState;
+        })
+      )
+      .subscribe();
     this.empleadosForm = this.fb.group({
       totalDeEmpleados: [this.solicitudState.totalDeEmpleados, Validators.required],
-  directos: [this.solicitudState.directos],
-  indirectos: [this.solicitudState.indirectos],
-  directo: [this.solicitudState.directo],
-  cedula: [this.solicitudState.cedula],
-  fechaCedula: [this.solicitudState.fechaCedula],
-  indirectosDatos: [this.solicitudState.indirectosDatos],
-  contrato: [this.solicitudState.contrato],
-  objeto: [this.solicitudState.objeto],
-  fechaFirma: [ this.solicitudState.fechaFirma],
-  fechaFinVigencia: [this.solicitudState.fechaFinVigencia],
-  rfcEmpresa: [this.solicitudState.rfcEmpresa],
-  razonSocial: [this.solicitudState.razonSocial]
+      directos: [this.solicitudState.directos],
+      indirectos: [this.solicitudState.indirectos],
+      directo: [this.solicitudState.directo],
+      cedula: [this.solicitudState.cedula],
+      fechaCedula: [this.solicitudState.fechaCedula],
+      indirectosDatos: [this.solicitudState.indirectosDatos],
+      contrato: [this.solicitudState.contrato],
+      objeto: [this.solicitudState.objeto],
+      fechaFirma: [this.solicitudState.fechaFirma],
+      fechaFinVigencia: [this.solicitudState.fechaFinVigencia],
+      rfcEmpresa: [this.solicitudState.rfcEmpresa],
+      razonSocial: [this.solicitudState.razonSocial]
     });
   }
 
@@ -172,46 +174,46 @@ export class EmpleadosComponent implements OnInit {
   regrasar(): void {
     this.cerrarPopup.emit();
   }
-   /**
-   * Maneja los cambios en el campo "Fecha de Pago".
-   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
-   */
-   cambiofetchaDeCedula(nuevo_valor: string): void {
+  /**
+  * Maneja los cambios en el campo "Fecha de Pago".
+  * Actualiza el estado del almacén con la fecha de pago proporcionada.  
+  */
+  cambiofetchaDeCedula(nuevo_valor: string): void {
     this.empleadosForm.patchValue({
       fechaCedula: nuevo_valor,
     });
     this.complementarStore.setFechaCedula(nuevo_valor);
   }
-   /**
-   * Maneja los cambios en el campo "Fecha de Pago".
-   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
-   */
-   cambiofetchaDeFirma(nuevo_valor: string): void {
+  /**
+  * Maneja los cambios en el campo "Fecha de Pago".
+  * Actualiza el estado del almacén con la fecha de pago proporcionada.  
+  */
+  cambiofetchaDeFirma(nuevo_valor: string): void {
     this.empleadosForm.patchValue({
       fechaFirma: nuevo_valor,
     });
     this.complementarStore.setFechaFirma(nuevo_valor);
   }
-   /**
-   * Maneja los cambios en el campo "Fecha de Pago".
-   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
-   */
-   cambiofechaFinVigencia(nuevo_valor: string): void {
+  /**
+  * Maneja los cambios en el campo "Fecha de Pago".
+  * Actualiza el estado del almacén con la fecha de pago proporcionada.  
+  */
+  cambiofechaFinVigencia(nuevo_valor: string): void {
     this.empleadosForm.patchValue({
       fechaFinVigencia: nuevo_valor,
     });
     this.complementarStore.setFechaFinVigencia(nuevo_valor);
   }
-   /**
-   * Método que actualiza el store con los valores del formulario.
-   * 
-   * @param form - Formulario reactivo con los datos actuales.
-   * @param campo - El campo que debe actualizarse en el store.
-   * @param metodoNombre - El nombre del método en el store que se debe invocar.
-   */
+  /**
+  * Método que actualiza el store con los valores del formulario.
+  * 
+  * @param form - Formulario reactivo con los datos actuales.
+  * @param campo - El campo que debe actualizarse en el store.
+  * @param metodoNombre - El nombre del método en el store que se debe invocar.
+  */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof ComplementarStore): void {
     const VALOR = form.get(campo)?.value;
-    if(campo === 'directos') {
+    if (campo === 'directos') {
       this.setDirectosValidation();
     } else if (campo === 'indirectos') {
       this.setIndirectosValidation();
@@ -283,25 +285,26 @@ export class EmpleadosComponent implements OnInit {
    * Actualiza el estado del almacén con la razón social proporcionada.  
    */
   agregar(): void {
-  const DIRECTOS = this.empleadosForm.get('directos')?.value;
-  const INDIRECTOS = this.empleadosForm.get('indirectos')?.value;
-  const TABLA_VALOR: Directos = {
-    PLANTA: this.empleadosForm.get('directo')?.value,
-    TOTAL: this.empleadosForm.get('totalDeEmpleados')?.value,
-    DIRECTOS: DIRECTOS ? this.empleadosForm.get('directo')?.value : '',
-    CEDULA_DE_CUOTAS: DIRECTOS ? this.empleadosForm.get('cedula')?.value : '',
-    FECHA_DE_CEDULA: DIRECTOS ? this.empleadosForm.get('fechaCedula')?.value : '',
-    INDIRECTOS: INDIRECTOS,
-    CONTRATO: INDIRECTOS ? this.empleadosForm.get('contrato')?.value : '',
-    OBJETO_DEL_CONTRATO_DEL_SERVICIO: INDIRECTOS ? this.empleadosForm.get('objeto')?.value : '',
-    FECHA_FIRMA: INDIRECTOS ? this.empleadosForm.get('fechaFirma')?.value : '',
-    FECHA_FIN_VIGENCIA: INDIRECTOS ? this.empleadosForm.get('fechaFinVigencia')?.value : '',
-    RFC: INDIRECTOS ? this.empleadosForm.get('rfcEmpresa')?.value : '',
-    RAZON_SOCIAL: INDIRECTOS ? this.empleadosForm.get('razonSocial')?.value : ''
-  };
-  this.directosDatos.push(TABLA_VALOR);
-  this.directosDatos = [...this.directosDatos];
-  this.limpiar();
+    if (this.empleadosForm.valid) {
+      const DIRECTOS = this.empleadosForm.get('directos')?.value;
+      const INDIRECTOS = this.empleadosForm.get('indirectos')?.value;
+      const TABLA_VALOR: Directos = {
+        PLANTA: this.empleadosForm.get('directo')?.value,
+        TOTAL: this.empleadosForm.get('totalDeEmpleados')?.value,
+        DIRECTOS: DIRECTOS ? this.empleadosForm.get('directo')?.value : '',
+        CEDULA_DE_CUOTAS: DIRECTOS ? this.empleadosForm.get('cedula')?.value : '',
+        FECHA_DE_CEDULA: DIRECTOS ? this.empleadosForm.get('fechaCedula')?.value : '',
+        INDIRECTOS: INDIRECTOS,
+        CONTRATO: INDIRECTOS ? this.empleadosForm.get('contrato')?.value : '',
+        OBJETO_DEL_CONTRATO_DEL_SERVICIO: INDIRECTOS ? this.empleadosForm.get('objeto')?.value : '',
+        FECHA_FIRMA: INDIRECTOS ? this.empleadosForm.get('fechaFirma')?.value : '',
+        FECHA_FIN_VIGENCIA: INDIRECTOS ? this.empleadosForm.get('fechaFinVigencia')?.value : '',
+        RFC: INDIRECTOS ? this.empleadosForm.get('rfcEmpresa')?.value : '',
+        RAZON_SOCIAL: INDIRECTOS ? this.empleadosForm.get('razonSocial')?.value : ''
+      };
+      this.directosDatos = [...this.directosDatos, TABLA_VALOR];
+      this.limpiar();
+    }
   }
 
   /**
@@ -334,33 +337,33 @@ export class EmpleadosComponent implements OnInit {
      * @param capacidadInstalada - Arreglo de objetos `CapacidadInstalada` seleccionados.
      * Si el arreglo contiene elementos, actualiza la propiedad `SelectedInstaladaDatos` con la selección.
      */
-    onDirectosSeleccionadas(DirectosDatos: Directos[]): void {
-      if (DirectosDatos.length > 0) {
-        this.selectedDirectosDatos = DirectosDatos;
-      }
+  onDirectosSeleccionadas(DirectosDatos: Directos[]): void {
+    if (DirectosDatos.length > 0) {
+      this.selectedDirectosDatos = DirectosDatos;
     }
-  
-    /**
-     * Elimina las capacidades instaladas seleccionadas de la lista `capacidadInstaladaDatos`.
-     * 
-     * Recorre el arreglo `SelectedInstaladaDatos` y elimina cada elemento correspondiente
-     * de `capacidadInstaladaDatos` si existe. Al finalizar, actualiza la referencia del arreglo
-     * para asegurar la detección de cambios en Angular.
-     *
-     * @remarks
-     * Esta función asume que `SelectedInstaladaDatos` y `capacidadInstaladaDatos` son arreglos
-     * de objetos comparables mediante igualdad estricta (`===`).
-     */
-    eliminarDirectos(): void {
-     if (this.selectedDirectosDatos?.length > 0) {
-        this.selectedDirectosDatos.forEach(planta => {
-          const INDEX = this.selectedDirectosDatos.findIndex(row => row === planta);
-          if (INDEX !== -1) {
-            this.directosDatos.splice(INDEX, 1);
-          }
+  }
+
+  /**
+   * Elimina las capacidades instaladas seleccionadas de la lista `capacidadInstaladaDatos`.
+   * 
+   * Recorre el arreglo `SelectedInstaladaDatos` y elimina cada elemento correspondiente
+   * de `capacidadInstaladaDatos` si existe. Al finalizar, actualiza la referencia del arreglo
+   * para asegurar la detección de cambios en Angular.
+   *
+   * @remarks
+   * Esta función asume que `SelectedInstaladaDatos` y `capacidadInstaladaDatos` son arreglos
+   * de objetos comparables mediante igualdad estricta (`===`).
+   */
+  eliminarDirectos(): void {
+    if (this.selectedDirectosDatos?.length > 0) {
+      this.selectedDirectosDatos.forEach(planta => {
+        const INDEX = this.selectedDirectosDatos.findIndex(row => row === planta);
+        if (INDEX !== -1) {
+          this.directosDatos.splice(INDEX, 1);
+        }
       });
       this.directosDatos = [...this.directosDatos];
     }
-    }
-  
+  }
+
 }

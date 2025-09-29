@@ -7,7 +7,9 @@ import {
   SeccionLibStore,
   Usuario,
   WizardComponent,
+  esValidObject,
   formatearFechaYyyyMmDd,
+  getValidDatos,
 } from '@ng-mf/data-access-user';
 import {
   Component,
@@ -20,21 +22,24 @@ import {
   PASOS,
   TITULOMENSAJE,
 } from '../../constantes/autorizacion-programa-nuevo.enum';
-import { Subject, map, take, takeUntil } from 'rxjs';
+import { Subject, finalize, map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { Tramite80102State, Tramite80102Store } from '../../estados/tramite80102.store';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { USUARIO_INFO } from '../../enum/enum-80102';
+import complimentos from '@libs/shared/theme/assets/json/shared/complimentos.json';
 import empresasExtranjeras from '@libs/shared/theme/assets/json/shared/empresas-extranjeras.json';
 import empresasNacionales from '@libs/shared/theme/assets/json/shared/empresas-nacionales.json';
 import notarios from '@libs/shared/theme/assets/json/shared/notarios.json';
 import planta from '@libs/shared/theme/assets/json/shared/planta.json';
 import plantasSubmanufactureras from '@libs/shared/theme/assets/json/shared/plantas-submanufactureras.json';
-import socioAccionistas from '@libs/shared/theme/assets/json/shared/socio-accionistas.json';
+import sociosAccionistas from '@libs/shared/theme/assets/json/shared/socios-accionistas.json';
+
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
@@ -63,12 +68,18 @@ interface AccionBoton {
     PasoTresComponent,
     PasoFirmaComponent
   ],
+  providers: [ToastrService],
   standalone: true,
 })
 /**
  * Componente que representa la página de solicitud.
  */
 export class SolicitudPageComponent implements OnDestroy, OnInit {
+
+  /** 
+   * Indica si el componente padre es BtnContinuarComponent. 
+   */
+  padreBtn: boolean = true;
   /**
    * Evento que se emite para cargar archivos.
    * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
@@ -147,11 +158,17 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
   /** Listado de empresas  extranjeras utilizadas en el formulario de solicitud. */
   private empresasExtranjeras = empresasExtranjeras;
 
+  /**
+  * Objeto base inmutable que representa la estructura inicial de un sociosAccionistas.
+  */
+  private sociosAccionistas = sociosAccionistas;
+
   constructor(
     private seccion: SeccionLibStore,
     private autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
     private tramite80102Store: Tramite80102Store,
-    private tramite80102Query: Tramite80102Query
+    private tramite80102Query: Tramite80102Query,
+    private toastrService: ToastrService,
   ) {
     // Constructor del componente
   }
@@ -191,21 +208,45 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
    */
   idSolicitud: number = 0;
 
-  /**
-   * Obtiene el valor del índice de la acción del botón.
-   * @param e Acción del botón.
-   */
-  getValorIndice(e: AccionBoton): void {
-    this.obtenerDatosDelStore();
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
-  }
+/**
+ * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
+ * 
+ * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
+ * y muestra un mensaje de éxito o error dependiendo del código de respuesta. Si la respuesta es exitosa
+ * y el valor del evento está dentro del rango válido (1 a 4), actualiza el índice del wizard y navega
+ * hacia adelante o atrás según el tipo de acción.
+ * 
+ * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
+ */
+getValorIndice(e: AccionBoton): void {
+  let shouldNavigate = false;
+  this.autorizacionProgrmaNuevoService.getAllState()
+    .pipe(
+      take(1),
+      switchMap((data) => this.guardar(data)),
+      tap(response => {
+        shouldNavigate = response.codigo === '00';
+        if(shouldNavigate) {
+          this.padreBtn = false;
+          this.toastrService.success(response.mensaje);
+        } else {
+          this.padreBtn = true;
+          this.toastrService.error(response.mensaje);
+        }
+      }),
+      finalize(() => {
+        if (shouldNavigate && e.valor > 0 && e.valor < 5) {
+          this.indice = e.valor;
+          if (e.accion === 'cont') {
+            this.wizardComponent.siguiente();
+          } else {
+            this.wizardComponent.atras();
+          }
+        }
+      })
+    )
+    .subscribe();
+}
 
   /**
    * Obtiene el título para cada página según el índice.
@@ -236,7 +277,7 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
    * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private socioAccionistaBase = socioAccionistas;
+  private complimentosBase = complimentos;
 
   /**
    * Objeto base inmutable que representa la estructura inicial de un plantasSubmanufactureras.
@@ -279,10 +320,10 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
  *          con la información de los dos arreglos de entrada.
  *
  * @example
- * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
+ * const socios = buildComplimentos(listaA, listaB, BASE, datos);
  */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildSociosAccionistas(data: Record<string, any>, base: Record<string, any>): any {
+  buildComplimentos(data: Record<string, any>, base: Record<string, any>): any {
     return {
       ...base,
       notario: {
@@ -304,6 +345,100 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
 
     };
   }
+
+  /**
+ * Construye un arreglo de socios/accionistas a partir de dos listas de entrada,
+ * utilizando un objeto base como plantilla y datos complementarios para completar
+ * los campos faltantes.
+ *
+ * @param arr1 Primer arreglo de socios/accionistas.
+ * @param arr2 Segundo arreglo de socios/accionistas.
+ * @param base Objeto base que sirve de plantilla para cada elemento del resultado.
+ * @param data Objeto con datos complementarios necesarios para completar el payload.
+ *
+ * @returns Un nuevo arreglo que contiene los objetos combinados y mapeados
+ *          con la información de los dos arreglos de entrada.
+ *
+ * @example
+ * const socios = buildSociosAccionistas(listaA, listaB, BASE, datos);
+ */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
+  buildSociosAccionistas(arr1: any[] = [], arr2: any[] = [], base: Record<string, any>): any[] {
+    const BASE_OBJECT = base[0];
+    const CLONED_BASE = structuredClone ? structuredClone(BASE_OBJECT) : JSON.parse(JSON.stringify(BASE_OBJECT));
+    const MAP_TO_PAYLOAD = (item: Record<string, unknown>): Record<string, unknown> => ({
+      ...CLONED_BASE,
+      nombre: item['nombre'] ?? '',
+      apellidoPaterno: item['apellidoPaterno'] ?? '',
+      apellidoMaterno: item['apellidoMaterno'] ?? '',
+      rfc: item['rfc'] ?? '',
+      correoElectronico: item['correoElectronico'] ?? '',
+      razonSocial: item['razonSocial'] ?? '',
+      estadoEvaluacionEntidad: item['estado'] ?? '',
+      estadoEntidad: item['estado'] ?? '',
+      cvePaisOrigen: item['pais'] ?? '',
+      rfcExtranjero: item['taxId'] ?? '',
+      domicilio: {
+        codigoPostal: item['codigoPostal'] ?? '',
+      }
+    });
+
+    return [...arr1.map(MAP_TO_PAYLOAD), ...arr2.map(MAP_TO_PAYLOAD)];
+  }
+/**
+ * Genera un array de empresas nacionales combinando datos de entrada con una base.
+ * @param array - Datos dinámicos con propiedades como servicio, RFC, año y número IMMEX.
+ * @param base - Plantilla base con valores por defecto para cada empresa.
+ * @returns Array de objetos que fusiona la base con los datos del array.
+ * @example buildEmpresaacionales(input, base) => [{ rfc: 'RFC123', razonSocial: 'Empresa X', idServicio: 'S01', ... }]
+ */
+  // eslint-disable-next-line class-methods-use-this
+  buildEmpresaNacionales(array: any[] = [], base: unknown[]): unknown[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const RESULT: any[] = [];
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,      
+      idServicio :arr.servicio?? '',
+      rfc:arr.registroContribuyentes?? '',
+      tiempoPrograma:arr.anoIMMEX?? '',
+      numeroPrograma:arr.numeroIMMEX?? '',
+      razonSocial:arr.denominacionSocial?? '',
+        });
+      });
+    });
+    return RESULT;
+  }
+/**
+ * Construye un array de empresas extranjeras combinando datos de entrada con una base.
+ * @param array - Datos dinámicos con propiedades como dirección, servicio y nombre.
+ * @param base - Plantilla base con valores por defecto para cada empresa extranjera.
+ * @returns Array de objetos fusionando la base con los datos del array.
+ * @example buildEmpresaExtranjera(input, base) => [{ nombre: 'Empresa X', idServicio: 'S01', idDireccionSol: 'Dirección Y' }]
+ */
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
+  buildEmpresaExtranjera(array: any[] = [], base: unknown[]): unknown[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const RESULT: any[] = [];
+    array.forEach(arr => {
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
+        RESULT.push({
+          ...ITEM,     
+        idDireccionSol:arr.direccionEmpresaExtranjera,
+        idServicio:arr.servicio,
+        nombre:arr.nombreEmpresa,
+        });
+      });
+    });
+    return RESULT;
+  }
+
+
+
 
   /** Construye el arreglo de declaraciones de solicitud a partir de los datos proporcionados. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -486,6 +621,13 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
       rfc: arr.rfc ?? '',
       domicilioFiscal: arr.domicilioFiscal ?? '',
       razonSocial: arr.razonSocial ?? '',
+       datosComplementarios: Array.isArray((ITEM as any)?.datosComplementarios)
+          ? (ITEM as any).datosComplementarios.map((dc:any) => ({
+              idPlantaC: dc.idPlantaC ?? '',
+              idDato: dc.idDato ?? '',
+              amparoPrograma: dc.amparoPrograma ?? '',              
+            }))
+          : []
         });
       });
     });
@@ -563,20 +705,20 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
    * @returns void
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  guardar(data: any): void {
-    const SOLICITUD = this.buildSociosAccionistas(data, this.socioAccionistaBase);
+  guardar(data: any): Promise<any> {
+    const SOLICITUD = this.buildComplimentos(data, this.complimentosBase);
     const DECLARACION_SOLICUTUD_ENTRIES = SolicitudPageComponent.buildDeclaracionSolicitudEntries(data);
-    const EMPRESAS_NACIONALES = SolicitudPageComponent.buildComplementosTablaPayload(data.tablaDatosComplimentos, this.empresasNacionales);
-    const EMPRESAS_EXTRANJERAS = SolicitudPageComponent.buildComplementosTablaPayload(data.tablaDatosComplimentosExtranjera, this.empresasExtranjeras);
     const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
     const ANEXO_ALL = this.buildAnexo(data);
     const PLANTAS_SUBMANUFACTURERAS = this.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const NOTARIOS = this.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
-
+    const SOCIOS_ACCIONISTAS = this.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.sociosAccionistas);
+    const EMPRESAS_NACIONALES = this.buildEmpresaNacionales(data.datos,this.empresasNacionales);
+    const EMPRESAS_EXTRANJERAS = this.buildEmpresaExtranjera(data.datosEmpresaExtranjera,this.empresasExtranjeras);
     const PAYLOAD = {
       "esDeGuardar": true,
     "tipoDeSolicitud": "guardar",
-    "idSolicitud": 202781045,
+    "idSolicitud": 0,
     "idTipoTramite": 80102,
     "rfc": "AAL0409235E6",
     "cveUnidadAdministrativa": "8101",
@@ -623,12 +765,24 @@ export class SolicitudPageComponent implements OnDestroy, OnInit {
     "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
     "solicitud": SOLICITUD,
     "declaracionSolicitudEntities": DECLARACION_SOLICUTUD_ENTRIES,
-    "empresasNacionales": EMPRESAS_NACIONALES,
-    "empresasExtranjeras": EMPRESAS_EXTRANJERAS,
+    "sociosAccionistas": [...SOCIOS_ACCIONISTAS],
+    "empresasNacionales":[...EMPRESAS_NACIONALES] ,
+    "empresasExtranjeras":[...EMPRESAS_EXTRANJERAS] ,
 }
-    this.autorizacionProgrmaNuevoService.guardarDatosPost(PAYLOAD).subscribe(response => {
-      this.tramite80102Store.setIdSolicitud(response.datos.id_solicitud || 0);
-      return response;
+
+    return new Promise((resolve, reject) => {
+      this.autorizacionProgrmaNuevoService.guardarDatosPost(PAYLOAD).subscribe(response => {
+        if(esValidObject(response) && esValidObject(response.datos)) {
+          if(getValidDatos(response.datos.id_solicitud)) {
+            this.tramite80102Store.setIdSolicitud(response.datos.id_solicitud);
+          } else {
+            this.tramite80102Store.setIdSolicitud(0);
+          }
+        }
+        resolve(response);
+      }, error => {
+        reject(error);
+      });
     });
   }
 

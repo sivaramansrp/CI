@@ -301,6 +301,9 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
             numero: this.immexTableDatos[INDEX].numero,
           };
           this.immexTableDatos = [...this.immexTableDatos];
+          const DEEPCOPY = [...this.immexTableDatos];
+          this.immexTableDatos = [];
+          this.immexTableDatos = DEEPCOPY;
           this.immexRegistroStore.updateImportacion(this.immexTableDatos);
         } else {
           this.immexTableDatos = [...this.immexTableDatos, NUEVO_REGISTRO];
@@ -420,10 +423,14 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
                   this.exportacionForm.value.descripcionComercialExport.toUpperCase(),
                 nicos: this.exportacionForm.value.nicos,
                 numero: this.fraccionTablaDatos.length + 1,
-                nicosTable: this.nicoTablaDatos,
+                nicosTable: this.nicoTablaDato,
               },
+             
               
             ];
+             const DEEPCOPY = [...this.fraccionTablaDatos];
+             this.fraccionTablaDatos = [];
+             this.fraccionTablaDatos = DEEPCOPY;
                this.immexRegistroStore.updateExportacion(this.fraccionTablaDatos);
             setTimeout(() => {
               this.exportacionForm.reset();
@@ -458,6 +465,9 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.fraccionTablaDatos = this.fraccionTablaDatos.filter(
         (row) => row.id !== this.selectExportacion.id,
       );
+      const DEEPCOPY2 = [...this.fraccionTablaDatos];
+      this.fraccionTablaDatos = [];
+      this.fraccionTablaDatos = DEEPCOPY2;
       this.selectExportacion = {} as fraccionInfo;
     }
     else{
@@ -499,7 +509,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   seleccionTablas(event: NicoInfo[]): void {
-    this.selectedNicos = event;
+    this.selectedNicos = event.map(item => ({ ...item, estatus: true }));
   }
 
   descripcionNico(): void {
@@ -532,6 +542,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
         ];
         this.importacionForm.get("nicos")?.setValue("");
         this.importacionForm.get("productoDescExportacions")?.setValue("");
+        
       } else {
         this.mostrarNotificacion(
           "El NICO que intenta ingresar ya se encuentra registrado.",
@@ -670,6 +681,12 @@ eliminarPedimentoDatoss(berr:boolean):void{
 if(berr && this.selectFraccionArancelaria && this.selectFraccionArancelaria.id){
   this.immexTableDatos = this.immexTableDatos.filter(row=>row.id!==this.selectFraccionArancelaria.id);
   this.fraccionTablaDatos = this.fraccionTablaDatos.filter(row=>row.fraccionExportacion!==this.selectFraccionArancelaria.fraccionArancelaria);
+  const DEEPCOPY = [...this.immexTableDatos];
+  this.immexTableDatos = [];
+  this.immexTableDatos = DEEPCOPY;
+  const DEEPCOPY2 = [...this.fraccionTablaDatos];
+  this.fraccionTablaDatos = [];
+  this.fraccionTablaDatos = DEEPCOPY2;
   this.immexRegistroStore.updateExportacion(this.fraccionTablaDatos);
   this.immexRegistroStore.updateImportacion(this.immexTableDatos);
   this.selectFraccionArancelaria = {} as immexInfo;
@@ -685,6 +702,8 @@ if(berr && this.selectFraccionArancelaria && this.selectFraccionArancelaria.id){
   this.nuevaNotificacion = {} as Notificacion;
 }
 else{
+  this.nuevaNotificacion = {} as Notificacion;
+  this.pagenuevaNotificacion = false;
   this.deleteMessageExportacion=false;
 }
 }
@@ -721,7 +740,7 @@ eliminarNicoExportacion():void{
   }
 }
 onNicoSeleccionado(event:NicoInfo[]):void{
-  this.selectedExportNicos = event;
+  this.selectedExportNicos = event.map(item => ({ ...item, estatus: true }));
 }
   /**
    * @method ngOnDestroy
