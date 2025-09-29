@@ -1,6 +1,9 @@
 import {
   Catalogo,
   ConfiguracionColumna,
+  doDeepCopy,
+  esValidArray,
+  esValidObject,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -503,7 +506,14 @@ private modalRef: Modal | null = null;
    */
   obtenerEstados():void {
       this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-        this.estadoCatalogo = res.datos;
+        if(esValidObject(res)) {
+          const RESPONSE = doDeepCopy(res);
+          if(esValidArray(RESPONSE.datos)) {
+            this.estadoCatalogo = RESPONSE.datos;
+          }
+        }
+      },error => {
+        //console.error('Error al obtener los estados:', error);
       });
       
     }

@@ -1,15 +1,13 @@
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { CatalogosService } from '@ng-mf/data-access-user';
+import { CatalogosTramite231001Service } from '../../services/catalogos-tramite-231001.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { ImmexResponse } from '../../models/catalogo-response';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { MateriaprimaformserviceService } from '../../services/materia-prima-formservice.service';
 import { OnInit } from '@angular/core';
 import { PASOS } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -27,11 +25,12 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-datos-del-generador-de-residuos',
   standalone: true,
-  imports: [ CommonModule,
-      CatalogoSelectComponent,
-      TituloComponent,
-      ReactiveFormsModule
-      ],
+  imports: [
+    CommonModule,
+    CatalogoSelectComponent,
+    TituloComponent,
+    ReactiveFormsModule,
+  ],
   templateUrl: './datos-del-generador-de-residuos.component.html',
   styleUrl: './datos-del-generador-de-residuos.component.scss',
 })
@@ -49,16 +48,10 @@ export class DatosDelGeneradorDeResiduosComponent implements OnInit {
   datosForm!: FormGroup;
 
   /**
-   *  aduanas
-   *  Arreglo que almacena los catálogos de aduanas.
+   *  immexCatalogo
+   *  Arreglo que almacena los catálogos de IMMEX.
    */
-  aduanas!: Catalogo[];
-
-  /**
-   *  selectedAduana
-   *  Aduana seleccionada en el formulario.
-   */
-  selectedAduana!: string | number;
+  immexCatalogo!: Catalogo[];
 
   /**
    *  pasos
@@ -83,33 +76,31 @@ export class DatosDelGeneradorDeResiduosComponent implements OnInit {
    *  FormGroup que contiene el formulario de solicitud.
    */
   solicitudForm!: FormGroup;
-    /**
+  /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando se establece en `true`, todos los controles del formulario y elementos interactivos
    * se deshabilitan, impidiendo que el usuario realice cambios. Esta propiedad normalmente se
    * configura según el estado de la aplicación, por ejemplo, al visualizar una solicitud enviada
    * o cuando el usuario no tiene permisos de edición.
    */
-    esFormularioSoloLectura: boolean = false;
-      /**
+  esFormularioSoloLectura: boolean = false;
+  /**
    * Estado actual de la sección del trámite 120501.
    * Esta propiedad almacena los datos del estado de la sección, obtenidos generalmente
    * desde el store o desde una consulta al backend. Se utiliza para inicializar y actualizar
    * los formularios del componente con los valores correspondientes a la solicitud en curso.
    */
-     private seccionState!: Solicitud231001State;
+  private seccionState!: Solicitud231001State;
   /**
    * Constructor del componente.
    */
   constructor(
     public fb: FormBuilder,
-    private catalogosServices: CatalogosService,
     private tramite231001Query: Tramite231001Query,
     private tramite231001Store: Tramite231001Store,
     private consultaioQuery: ConsultaioQuery,
-    private serviceMateria:MateriaprimaformserviceService
+    private catalogoService: CatalogosTramite231001Service
   ) {
-
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
@@ -119,8 +110,6 @@ export class DatosDelGeneradorDeResiduosComponent implements OnInit {
         })
       )
       .subscribe();
-
-
   }
 
   /**
@@ -158,85 +147,96 @@ export class DatosDelGeneradorDeResiduosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
-   this.aduanasdata();
+    this.immexData();
   }
 
-  
   /**
-   * Obtiene los datos de las aduanas desde el servicio de catálogos.
+   * Obtiene los datos de los immex desde el servicio de catálogos.
+   * Los datos obtenidos se asignan al arreglo `immexCatalogo`.
+   * Se pone el RFC estatico para pruebas en lo que se integra la funcion de
+   * obtener los datos del usuario logueado
    */
-  aduanasdata(): void {
-    this.serviceMateria.getSubPartidaFraccion().pipe(
-      takeUntil(this.destroyed$)).subscribe(
-      (data) => {
-        this.aduanas = data;
-      }
-    );
+  immexData(): void {
+    this.catalogoService
+      .getDatosImmex('AAL0409235E6')
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.immexCatalogo = data.datos.map((item: ImmexResponse) => ({
+          id: item.idProgAutorizado,
+          descripcion: item.numFolioTramite,
+        }));
+      });
   }
 
+  /**
+   * Obtiene el valor de un campo específico del formulario y lo establece en el store utilizando el método proporcionado.
+   */
+  setValoresStore(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.tramite231001Store.actualizarEstado({ [campo]: VALOR });
+  }
 
   /**
- * Obtiene el valor de un campo específico del formulario y lo establece en el store utilizando el método proporcionado.
- */
-setValoresStore(form: FormGroup, campo: string): void {
-  const VALOR = form.get(campo)?.value;
-  this.tramite231001Store.actualizarEstado({ [campo]: VALOR });
-}
-
-     /**
- * Inicializa el estado de los formularios según el modo de solo lectura.
- *
- * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), llama a `guardarDatosFormulario()`
- * para deshabilitar todos los controles. En caso contrario, inicializa los formularios normalmente.
- */
-   inicializarEstadoFormulario(): void {
+   * Inicializa el estado de los formularios según el modo de solo lectura.
+   *
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), llama a `guardarDatosFormulario()`
+   * para deshabilitar todos los controles. En caso contrario, inicializa los formularios normalmente.
+   */
+  inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario(); 
+      this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
     }
   }
-    /**
- * Guarda y actualiza el estado de los formularios según el modo de solo lectura.
- *
- * Inicializa los formularios y luego los deshabilita si el formulario está en modo solo lectura,
- * o los habilita si está en modo edición.
- */
+  /**
+   * Guarda y actualiza el estado de los formularios según el modo de solo lectura.
+   *
+   * Inicializa los formularios y luego los deshabilita si el formulario está en modo solo lectura,
+   * o los habilita si está en modo edición.
+   */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.solicitudForm.disable();
       this.datosForm.disable();
-     
     } else {
       this.solicitudForm.enable();
       this.datosForm.enable();
     }
-}
+  }
   /**
- * Inicializa los formularios principales del componente con los valores actuales del estado.
- */
+   * Inicializa los formularios principales del componente con los valores actuales del estado.
+   */
   inicializarFormulario(): void {
-    this. obtenerEstadoSolicitud();
+    this.obtenerEstadoSolicitud();
     this.solicitudForm = this.fb.group({
-        numeroRegistroAmbiental: [this.seccionState?.numeroRegistroAmbiental, Validators.required],
-        descripcionGenerica1: [this.seccionState?.descripcionGenerica1, Validators.required],
-        numeroProgramaImmex: [this.seccionState?.numeroProgramaImmex, Validators.required],
+      numeroRegistroAmbiental: [
+        this.seccionState?.numeroRegistroAmbiental,
+        Validators.required,
+      ],
+      descripcionGenerica1: [
+        this.seccionState?.descripcionGenerica1,
+        Validators.required,
+      ],
+      numeroProgramaImmex: [
+        this.seccionState?.numeroProgramaImmex,
+        Validators.required,
+      ],
     });
-    
-      this.datosForm = this.fb.group({
-      aduanas: [this.seccionState?.aduanas, Validators.required],
+
+    this.datosForm = this.fb.group({
+      aduanas: [this.seccionState?.aduana, Validators.required],
     });
   }
-    /**
+  /**
    * Suscribe al observable `selectSolicitud$` del query `tramite120501Query` para obtener el estado actual de la solicitud y actualizar la propiedad `seccionState` con los datos recibidos. La suscripción se mantiene activa hasta que se emite un valor en `destroyed$`, evitando fugas de memoria.
    */
   obtenerEstadoSolicitud(): void {
-    this.tramite231001Query.selectSolicitud$?.pipe(takeUntil(this.destroyed$))
+    this.tramite231001Query.selectSolicitud$
+      ?.pipe(takeUntil(this.destroyed$))
       .subscribe((data: Solicitud231001State) => {
         this.seccionState = data;
       });
   }
-
-  
 }

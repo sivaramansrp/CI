@@ -1,6 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
 import { Injectable } from '@angular/core';
+import { ResiduoPeligroso } from '../../models/aviso-catalogo.model';
 
 /**
  * Retorna el estado inicial del formulario de reciclaje con valores por defecto.
@@ -70,7 +71,9 @@ export class DatoSolicitudStore extends Store<EstadoDatoSolicitud> {
    *
    * @param valores - Objeto con los valores actualizados para `empresaReciclaje`.
    */
-  actualizarEmpresaReciclaje(valores: EstadoDatoSolicitud['empresaReciclaje']): void {
+  actualizarEmpresaReciclaje(
+    valores: EstadoDatoSolicitud['empresaReciclaje']
+  ): void {
     this.update((state) => ({
       ...state,
       empresaReciclaje: { ...valores },
@@ -82,7 +85,9 @@ export class DatoSolicitudStore extends Store<EstadoDatoSolicitud> {
    *
    * @param valores - Objeto con los valores actualizados para `lugarReciclaje`.
    */
-  actualizarLugarReciclaje(valores: EstadoDatoSolicitud['lugarReciclaje']): void {
+  actualizarLugarReciclaje(
+    valores: EstadoDatoSolicitud['lugarReciclaje']
+  ): void {
     this.update((state) => ({
       ...state,
       lugarReciclaje: { ...valores },
@@ -94,7 +99,9 @@ export class DatoSolicitudStore extends Store<EstadoDatoSolicitud> {
    *
    * @param valores - Objeto con los valores actualizados para `empresaTransportista`.
    */
-  actualizarEmpresaTransportista(valores: EstadoDatoSolicitud['empresaTransportista']): void {
+  actualizarEmpresaTransportista(
+    valores: EstadoDatoSolicitud['empresaTransportista']
+  ): void {
     this.update((state) => ({
       ...state,
       empresaTransportista: { ...valores },
@@ -106,10 +113,19 @@ export class DatoSolicitudStore extends Store<EstadoDatoSolicitud> {
    *
    * @param valores - Objeto con los valores actualizados para `precaucionesManejo`.
    */
-  actualizarPrecaucionesManejo(valores: EstadoDatoSolicitud['precaucionesManejo']): void {
+  actualizarPrecaucionesManejo(
+    valores: EstadoDatoSolicitud['precaucionesManejo']
+  ): void {
     this.update((state) => ({
       ...state,
       precaucionesManejo: { ...valores },
+    }));
+  }
+
+  actualizarResiduosPeligrosos(residuos: ResiduoPeligroso[]): void {
+    this.update((state) => ({
+      ...state,
+      residuos: [...residuos],
     }));
   }
 

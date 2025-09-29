@@ -1,83 +1,210 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PermisoSanitarioComponent } from './permiso-sanitario.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { PASOS } from '@ng-mf/data-access-user';
+import { ChangeDetectorRef } from '@angular/core';
+import { Tramite260911Store } from '../../estados/tramite260911.store';
+import { of } from 'rxjs';
 
 describe('PermisoSanitarioComponent', () => {
   let component: PermisoSanitarioComponent;
-  let fixture: ComponentFixture<PermisoSanitarioComponent>;
+  let cdr: ChangeDetectorRef;
+  let store: Tramite260911Store;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PermisoSanitarioComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA], // Ignore unknown components like WizardComponent
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PermisoSanitarioComponent);
-    component = fixture.componentInstance;
-
-    // Mock wizardComponent before view init
-    (component as any).wizardComponent = {
+  beforeEach(() => {
+    cdr = { detectChanges: jest.fn() } as any;
+    store = {
+      _select: jest.fn()
+    } as any;
+    component = new PermisoSanitarioComponent(cdr, store);
+    component.wizardComponent = {
       siguiente: jest.fn(),
-      atras: jest.fn(),
-    } as unknown as WizardComponent;
-
-    fixture.detectChanges();
+      atras: jest.fn()
+    } as any;
+    component.pasoUnoComponent = {
+      validateRequiredFields: jest.fn().mockReturnValue(true),
+      markAllFieldsTouched: jest.fn(),
+      getPagoDeDerechosComponent: jest.fn().mockReturnValue({
+        pagoDeDerechosForm: {
+          valid: true,
+          value: {
+            claveDeReferencia: '123',
+            cadenaPagoDependencia: 'abc',
+            clave: '456',
+            llaveDePago: '789',
+            fecPago: '2024-01-01',
+            impPago: '100'
+          },
+          controls: {
+            claveDeReferencia: { updateValueAndValidity: jest.fn(), markAsTouched: jest.fn(), markAsDirty: jest.fn(), setErrors: jest.fn(), value: '123' },
+            cadenaPagoDependencia: { updateValueAndValidity: jest.fn(), markAsTouched: jest.fn(), markAsDirty: jest.fn(), setErrors: jest.fn(), value: 'abc' },
+            clave: { updateValueAndValidity: jest.fn(), markAsTouched: jest.fn(), markAsDirty: jest.fn(), setErrors: jest.fn(), value: '456' },
+            llaveDePago: { updateValueAndValidity: jest.fn(), markAsTouched: jest.fn(), markAsDirty: jest.fn(), setErrors: jest.fn(), value: '789' },
+            fecPago: { updateValueAndValidity: jest.fn(), markAsTouched: jest.fn(), markAsDirty: jest.fn(), setErrors: jest.fn(), value: '2024-01-01' },
+            impPago: { updateValueAndValidity: jest.fn(), markAsTouched: jest.fn(), markAsDirty: jest.fn(), setErrors: jest.fn(), value: '100' }
+          }
+        },
+        mostrarErroresDeCampoPago: false
+      })
+    } as any;
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pasos and datosPasos correctly', () => {
-    expect(component.pasos).toEqual(PASOS);
-    expect(component.datosPasos.nroPasos).toBe(PASOS.length);
-    expect(component.datosPasos.indice).toBe(component.indice);
+  it('should update anterior button visibility', () => {
+    component.indice = 1;
+    component.updateAnteriorButtonVisibility();
+    expect(component.ocultarBtnAnterior).toBe(true);
+    component.indice = 2;
+    component.updateAnteriorButtonVisibility();
+    expect(component.ocultarBtnAnterior).toBe(false);
   });
 
-  it('should update indice and call siguiente on "cont" action', () => {
-    // Ensure wizardComponent is mocked for this test
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    } as unknown as WizardComponent;
-    const action = { accion: 'cont', valor: 2 };
-    component.getValorIndice(action);
+  it('should handle getValorIndice for continuar action', () => {
+    component.indice = 1;
+    component.subTabIndex = 5;
+    const event = { accion: 'cont', valor: 5 };
+    component.getValorIndice(event);
     expect(component.indice).toBe(2);
+    expect(component.subTabIndex).toBe(1);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should update indice and call atras on non-"cont" action', () => {
-    // Ensure wizardComponent is mocked for this test
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    } as unknown as WizardComponent;
-    const action = { accion: 'back', valor: 3 };
-    component.getValorIndice(action);
-    expect(component.indice).toBe(3);
+  it('should handle getValorIndice for atras action', () => {
+    component.indice = 2;
+    component.subTabIndex = 1;
+    const event = { accion: 'atras', valor: 1 };
+    component.getValorIndice(event);
+    expect(component.indice).toBe(1);
+    expect(component.subTabIndex).toBe(5);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should not update indice if valor is out of range', () => {
-    // Mock wizardComponent for this test as well
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    } as unknown as WizardComponent;
-    const action = { accion: 'cont', valor: 6 };
-    component.getValorIndice(action);
-    expect(component.indice).not.toBe(6);
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  it('should show payment modal if payment fields are not filled and hasTriedPagoValidation is false', () => {
+    component.hasTriedPagoValidation = false;
+    (store._select as jest.Mock).mockReturnValue(of({
+      claveDeReferencia: '',
+      cadenaPagoDependencia: '',
+      clave: '',
+      llaveDePago: '',
+      fecPago: '',
+      impPago: ''
+    }));
+    component.pasoUnoComponent.validateRequiredFields = jest.fn().mockReturnValue(true);
+    const event = { accion: 'cont', valor: 2 };
+    component.onContinuar(event);
+    expect(component.showPaymentModal).toBe(true);
+    expect(component.lastContinueEvent).toBe(event);
+    expect(cdr.detectChanges).toHaveBeenCalled();
   });
 
-  it('should throw error and set message in errorMessage', () => {
-    expect(() => component.errorMessage('Test error')).toThrow('Method not implemented.');
-    expect(component.message).toBe('Test error');
+  it('should not proceed if required fields are invalid', () => {
+    component.hasTriedPagoValidation = true;
+    (store._select as jest.Mock).mockReturnValue(of({
+      claveDeReferencia: '123',
+      cadenaPagoDependencia: 'abc',
+      clave: '456',
+      llaveDePago: '789',
+      fecPago: '2024-01-01',
+      impPago: '100'
+    }));
+    component.pasoUnoComponent.validateRequiredFields = jest.fn().mockReturnValue(false);
+    const event = { accion: 'cont', valor: 2 };
+    component.onContinuar(event);
+    expect(component.message).toBe('¡Error de registro! Faltan campos por capturer');
   });
 
-  it('onSubmit static method should throw error', () => {
-    expect(() => PermisoSanitarioComponent.onSubmit()).toThrow('Method not implemented.');
+  it('should proceed if all fields are valid', () => {
+    component.hasTriedPagoValidation = true;
+    (store._select as jest.Mock).mockReturnValue(of({
+      claveDeReferencia: '123',
+      cadenaPagoDependencia: 'abc',
+      clave: '456',
+      llaveDePago: '789',
+      fecPago: '2024-01-01',
+      impPago: '100'
+    }));
+    component.pasoUnoComponent.validateRequiredFields = jest.fn().mockReturnValue(true);
+    const event = { accion: 'cont', valor: 2 };
+    component.onContinuar(event);
+    expect(component.message).toBeUndefined();
+  });
+
+  it('should handle onPaymentModalYes with valid fields', () => {
+    component.lastContinueEvent = { accion: 'cont', valor: 2 };
+    component.onPaymentModalYes();
+    expect(component.message).toBeUndefined();
+    expect(component.hasTriedPagoValidation).toBe(true);
+    expect(component.showPaymentModal).toBe(false);
+    expect(component.lastContinueEvent).toBeNull();
+  });
+
+  it('should handle onPaymentModalYes with invalid payment fields', () => {
+    component.pasoUnoComponent.getPagoDeDerechosComponent = jest.fn().mockReturnValue({
+      pagoDeDerechosForm: {
+        valid: false,
+        value: {
+          claveDeReferencia: '',
+          cadenaPagoDependencia: '',
+          clave: '',
+          llaveDePago: '',
+          fecPago: '',
+          impPago: ''
+        },
+        controls: {}
+      }
+    });
+    component.onPaymentModalYes();
+    expect(component.message).toBe('Todos los campos de pago son requeridos');
+    expect(component.hasTriedPagoValidation).toBe(false);
+    expect(component.showPaymentModal).toBe(false);
+  });
+
+  it('should handle onPaymentModalNo', () => {
+    jest.useFakeTimers();
+    component.pasoUnoComponent.getPagoDeDerechosComponent = jest.fn().mockReturnValue({
+      pagoDeDerechosForm: {
+        controls: {
+          claveDeReferencia: { markAsTouched: jest.fn(), markAsDirty: jest.fn(), updateValueAndValidity: jest.fn() }
+        }
+      },
+      mostrarErroresDeCampoPago: false
+    });
+    component.onPaymentModalNo();
+    expect(component.showPaymentModal).toBe(false);
+    expect(component.lastContinueEvent).toBeNull();
+    expect(component.hasTriedPagoValidation).toBe(false);
+    expect(component.subTabIndex).toBe(4);
+    jest.runAllTimers();
+  });
+
+  it('should reset hasTriedPagoValidation on onPagoFieldsCleared', () => {
+    component.hasTriedPagoValidation = true;
+    component.onPagoFieldsCleared();
+    expect(component.hasTriedPagoValidation).toBe(false);
+  });
+
+  it('should handle onPasoUnoTabChanged', () => {
+    component.pasoUnoComponent.getPagoDeDerechosComponent = jest.fn().mockReturnValue({
+      mostrarErroresDeCampoPago: true
+    });
+    component.onPasoUnoTabChanged(3);
+    expect(component.subTabIndex).toBe(3);
+    expect(component.showPaymentModal).toBe(false);
+    expect(component.lastContinueEvent).toBeNull();
+  });
+
+  it('should return true for shouldShowContinuarButton getter', () => {
+    expect(component.shouldShowContinuarButton).toBe(true);
+  });
+
+  it('should return correct value for inSubTabOfMain1 getter', () => {
+    component.indice = 1;
+    component.subTabIndex = 2;
+    expect(component.inSubTabOfMain1).toBe(true);
+    component.subTabIndex = 1;
+    expect(component.inSubTabOfMain1).toBe(false);
+    component.indice = 2;
+    component.subTabIndex = 2;
+    expect(component.inSubTabOfMain1).toBe(false);
   });
 });

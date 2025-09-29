@@ -6,13 +6,14 @@ import {
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
 import { EventEmitter, Output } from '@angular/core';
-
+import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento.enum';
 
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260911Query } from '../../estados/tramite260911.query';
 import { Tramite260911Store } from '../../estados/tramite260911.store';
+
 
 /**
  * Componente para la gestión y visualización de terceros relacionados (fabricantes y destinatarios).
@@ -43,12 +44,13 @@ import { Tramite260911Store } from '../../estados/tramite260911.store';
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, OnChanges {
-  @Output() continuar = new EventEmitter<void>();
+    @Output() continuar = new EventEmitter<void>();
   // ...existing code...
 
-  onContinuarClicked(): void {
-    this.continuar.emit();
-  }
+  tipoTramiteUP: string = '';
+  botonDesactivarParaProrrogar: boolean = false;
+
+  
 
   /**
    * Tipo de trámite actual.
@@ -126,10 +128,20 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
    */
   esFormularioSoloLectura = false;
 
+  //botonDesactivarParaProrrogar!:boolean;
+
   /**
    * Subject para manejar la destrucción del componente.
    */
   private destroy$ = new Subject<void>();
+
+   /**
+     * @property idProcedimiento
+     * @description ID of the current procedure, defined as a read-only property.
+     * @type {string | number}
+     * @readonly
+     */
+    public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
    * Constructor de la clase.
@@ -177,6 +189,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
       .subscribe((datos) => {
         this.facturadorTablaDatos = datos as Facturador[];
       });
+    
   }
 /**
  * Método del ciclo de vida de Angular que se ejecuta al detectar cambios en las propiedades de entrada.
@@ -192,11 +205,16 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
     this.isDestinatarioFinalTablaDatosDisabled = false;
     this.isProveedorTablaDatosDisabled = false;
     this.isFacturadorTablaDatosDisabled = false;
+    this.botonDesactivarParaProrrogar =true;
+
+    
   } else {
     this.isFabricanteTablaDatosDisabled = true;
     this.isDestinatarioFinalTablaDatosDisabled = true;
     this.isProveedorTablaDatosDisabled = true;
     this.isFacturadorTablaDatosDisabled = true;
+    this.botonDesactivarParaProrrogar = false;
+
   }
 }
   /**
@@ -521,4 +539,15 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy, On
       )
     );
   }
+
+// eslint-disable-next-line class-methods-use-this
+public validateRequiredFields(): boolean {
+  // No required fields in this component
+  return true;
+}
+
+// eslint-disable-next-line class-methods-use-this
+public markAllFieldsTouched(): void {
+  // No fields to mark as touched in this component
+}
 }

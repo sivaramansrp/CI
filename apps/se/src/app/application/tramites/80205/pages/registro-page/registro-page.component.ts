@@ -1,17 +1,18 @@
 
-import { Component,OnDestroy, ViewChild } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
-import { AVISO } from '@ng-mf/data-access-user';
+import { AVISO, RegistroSolicitudService } from '@ng-mf/data-access-user';
+import { Component,EventEmitter,OnDestroy, ViewChild } from '@angular/core';
+import { Observable, Subject, throwError } from 'rxjs';
+import { catchError, map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { AmpliacionServiciosAdapter } from '../../adapters/ampliacion-servicios.adapter';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80205.query';
-
-
+import { AmpliacionServiciosStore } from '../../estados/tramite80205.store';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { DatosPasos } from '@ng-mf/data-access-user';
-import {ERROR_FORMA_ALERT} from '../../models/datos-info.model';
+import { ERROR_SERVICIO_ALERT } from '../../models/datos-info.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
-
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -44,7 +45,16 @@ export class RegistroPageComponent implements OnDestroy {
    * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
    */
   pasos: ListaPasosWizard[] = PASOS;
+
+  /**
+   * Notificador para la destrucción del componente.
+   */
   destroyNotifier$: Subject<void> = new Subject();
+
+   /**
+   * Clase CSS para mostrar una alerta de error.
+   */
+  infoError = 'alert-danger';
 
   /**
    * Título del mensaje principal.
@@ -72,7 +82,7 @@ export class RegistroPageComponent implements OnDestroy {
    /**
      * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
      */
-   public formErrorAlert = ERROR_FORMA_ALERT;
+   public formErrorAlert!:string;
 
 
   /**
@@ -86,7 +96,7 @@ export class RegistroPageComponent implements OnDestroy {
       /**
    * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
    */
-  esFormaValido: boolean = false;
+  esFormaValido: boolean = true;
 
   /**
    * Datos para la configuración de los botones del asistente.
@@ -105,51 +115,113 @@ export class RegistroPageComponent implements OnDestroy {
    */
   mensajeDeTextoDeExito: string = "MENSAJE_DE_ÉXITO_ETAPA_UNO";
 
+
+  
+      /**
+       * Evento que se emite para cargar archivos.
+       * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+       */
+      cargarArchivosEvento = new EventEmitter<void>();
+    
+      /**
+       * Evento que se emite para regresar a la sección de carga de documentos.
+       * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
+       */
+      regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+    
+      /**
+     * Indica si el botón para cargar archivos está habilitado.
+     */
+      activarBotonCargaArchivos: boolean = false;
+    
+      /**
+     * Indica si la sección de carga de documentos está activa.
+     * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+     */
+      seccionCargarDocumentos: boolean = true;
+
+      /**
+       * cargaEnProgreso - Indica si la carga de documentos está en progreso.
+       * Se utiliza para mostrar un indicador de carga o deshabilitar ciertas acciones mientras la carga está en curso.
+       */
+      cargaEnProgreso: boolean = true;
+
+      idSolicitudState: number | null = 0;
+
+      idTipoTRamite: string = '80205';
+
   /**
    * Maneja la acción del botón y navega entre los pasos.
    * @method getValorIndice
    * @param {AccionBoton} e - Objeto con la acción (cont/atras) y el valor (índice) del botón.
    */
-  constructor(private tramiteQuery: AmpliacionServiciosQuery, private seccion: SeccionLibStore, 
-  ){
-    this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe(res => {
+  constructor(
+    private tramiteQuery: AmpliacionServiciosQuery,
+    private tranmiteStore: AmpliacionServiciosStore,
+    private seccion: SeccionLibStore,
+    private registroSolicitudService: RegistroSolicitudService
+  ) {
+    this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe(_res => {
       this.seccion.establecerSeccion([true]);
       this.seccion.establecerFormaValida([true]);
     })
+
   }
-  /**
-   * Maneja el cambio de índice basado en el valor y la acción proporcionados.
-   * 
-   * @param e - Objeto de tipo `AccionBoton` que contiene el valor y la acción a realizar.
-   *   - `valor`: Número que representa el índice. Debe estar entre 1 y 4 (exclusivo).
-   *   - `accion`: Cadena que indica la acción a realizar ('cont' para avanzar, cualquier otro valor para retroceder).
-   * 
-   * Si el valor está dentro del rango permitido, actualiza el índice y realiza la acción correspondiente
-   * en el componente del asistente (`wizardComponent`).
-   */
-  getValorIndice(e: AccionBoton): void {
-    if(e.accion==='cont'){
-      let isValid=true;
-      if (this.indice === 1 && this.pasoUnoComponent) {
-        isValid = this.pasoUnoComponent.validarTodosLosFormularios();
-      }
-      if (!isValid) {
-        this.esFormaValido = true;
   
-        this.datosPasos.indice = this.indice;
+  getValorIndice(e: AccionBoton): void {
+    if (this.indice === 1) {
+      const FORM_VALIDO = this.pasoUnoComponent?.validarTodosLosFormularios() ?? false;
+      this.esFormaValido = FORM_VALIDO;
+
+      if (!this.esFormaValido) {
+        this.datosPasos.indice = 1;
+        this.formErrorAlert = RegistroPageComponent.generarAlertaDeError(ERROR_SERVICIO_ALERT);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
         return;
       }
-      this.esFormaValido = false;
-      this.indice = e.valor;
-          this.datosPasos.indice = this.indice;
+
+      this.onGuardar().pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe({
+        next: (respuesta: BaseResponse<{ id_solicitud: number }>) => {
+          if (respuesta.codigo !== '00') {
+            const ERROR_MESSAGE = respuesta.error || 'Error desconocido en la solicitud';
+            this.formErrorAlert = RegistroPageComponent.generarAlertaDeError(ERROR_MESSAGE);
+            this.esFormaValido = false;
+            this.indice = 1;
+            this.wizardComponent.indiceActual = 1;
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+            return;
+          }
+            this.esFormaValido = true;
+            this.indice = e.valor;
+            this.datosPasos.indice = this.indice;
+            this.wizardComponent.siguiente();
+            if (respuesta.datos?.id_solicitud) {
+              this.idSolicitudState = respuesta.datos.id_solicitud;
+              this.tranmiteStore.setIdSolicitud(respuesta.datos.id_solicitud);
+            }
+        },
+        error: (error) => {
+          console.error('Error en onGuardar:', error);
+          this.formErrorAlert = RegistroPageComponent.generarAlertaDeError('Error al procesar la solicitud');
+          this.esFormaValido = false;
+          this.indice = 1;
+          this.wizardComponent.indiceActual = 1;
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        }
+      });
+      
+    } else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
           this.wizardComponent.siguiente();
-          return;
-     }   
-  
-     this.indice = e.valor;
-     this.datosPasos.indice = this.indice;
-     this.wizardComponent.atras();
-  
+        } else {
+          this.wizardComponent.atras();
+        }
+      }
+    }
   }
 
   /**
@@ -178,6 +250,98 @@ export class RegistroPageComponent implements OnDestroy {
         this.tituloMensaje = 'Registro de solicitud IMMEX modalidad ampliación servicios';
         break;
     }
+  }
+
+  
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para navegar a la siguiente sección del wizard.
+   * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Método para navegar a la sección anterior del wizard.
+   * Actualiza el índice y el estado de los pasos.
+   * {void} No retorna ningún valor.
+   */
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+
+  /**
+   * Guarda la solicitud de ampliación de servicios utilizando el adaptador para convertir el estado
+   * y enviar los datos al servidor.
+   * @returns {Observable<{ exito: boolean; [key: string]: any }>}
+   */
+  onGuardar(): Observable<any> {
+    return this.tramiteQuery.selectTramite80205$.pipe(
+      take(1), // Tomar solo el primer valor para evitar loops
+      map(ESTADO_ACTUAL => AmpliacionServiciosAdapter.toFormPayload(ESTADO_ACTUAL)),
+      switchMap(FORM_PAYLOAD => {
+        return this.registroSolicitudService.postGuardarDatos(this.idTipoTRamite, FORM_PAYLOAD);
+      }),
+      catchError(error => {
+        console.error('Error al guardar:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+
+  public static generarAlertaDeError(mensajes:string): string {
+    const ALERTA = `
+<div class="d-flex justify-content-center text-center">
+  <div class="col-md-12 p-3  border-danger  text-danger rounded">
+    <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
+
+    <div class="d-flex justify-content-start mb-1">
+      <span class="me-2">1.</span>
+      <span class="flex-grow-1 text-center">${mensajes}</span>
+    </div>  
+  </div>
+</div>
+`;
+return ALERTA;
   }
 
   /**
