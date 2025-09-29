@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild,} from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
@@ -24,12 +24,11 @@ import { takeUntil } from 'rxjs';
   ]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-  @ViewChild(DatosCertificadoComponent) datosCertificadoComponent!: DatosCertificadoComponent;
-  @ViewChild(DestinatarioComponent) destinatarioComponent!: DestinatarioComponent;
-  @ViewChild(HistoricoProductoresComponent) historicoProductoresComponent!: HistoricoProductoresComponent;
-  @ViewChild(CertificadoOrigenComponent) certificadoOrigenComponent!: CertificadoOrigenComponent;
-
+  @ViewChild('Solicitante', { static: false }) solicitante!: SolicitanteComponent;
+  @ViewChild('DatosCertificadoComponent', { static: false }) datosCertificadoComponent!: DatosCertificadoComponent;
+  @ViewChild('DestinatarioComponent', { static: false }) destinatarioComponent!: DestinatarioComponent;
+  @ViewChild('HistoricoProductoresComponent', { static: false }) historicoProductoresComponent!: HistoricoProductoresComponent;
+  @ViewChild('CertificadoOrigenComponent', { static: false }) certificadoOrigenComponent!: CertificadoOrigenComponent;
   indice: number = 1;
   public tramiteState!: Tramite110214State;
   destroyNotifier$: Subject<void> = new Subject();
@@ -122,13 +121,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       isValid = false;
     }
 
-    if (this.datosCertificadoComponent) {
-      if (!this.datosCertificadoComponent.validarFormulario()) {
-        isValid = false;
-      }
-    } else {
-      isValid = false;
-    }
+  if (!this.datosCertificadoComponent) {
+  console.error('DatosCertificadoComponent is not loaded');
+  isValid = false;
+} else {
+  if (!this.datosCertificadoComponent.validarFormulario()) {
+    isValid = false;
+  }
+}
 
     if (this.destinatarioComponent) {
       if (!this.destinatarioComponent.validarFormulario()) {
