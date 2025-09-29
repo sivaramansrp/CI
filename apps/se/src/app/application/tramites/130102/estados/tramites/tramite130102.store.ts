@@ -1,6 +1,7 @@
-import { FraccionArancelariaProsec, OctavaTemporal } from '../../models/octava-temporal.model';
+import { FraccionArancelariaProsec } from '../../models/octava-temporal.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { PartidaMercancia } from '../../models/request/regla-octava-request.model';
 
 /**
  * Interfaz que define el estado de la solicitud 130102.
@@ -72,7 +73,7 @@ export interface Solicitud130102State {
   solicitud :string; // Indica si la solicitud está activa o pendiente de revisión.
 
   /** Lista de partidas temporales (octava regla) asociadas a la solicitud. */
-  partidas_tabla?: OctavaTemporal[];
+  partidas_tabla?: PartidaMercancia[];
 
   /** Lista de usos específicos relacionados con fracciones arancelarias PROSEC. */
   uso_especifico_tabla?: FraccionArancelariaProsec[];
@@ -436,7 +437,7 @@ public setCriterioDictamen(criterioDictamen: string):void {
     * Actualiza el estado de la solicitud.
     * @param {string} solicitud - Nueva solicitud.
     */
-  public setPartidasTabla(fieldName: string, value: OctavaTemporal[]):void {
+  public setPartidasTabla(fieldName: string, value: PartidaMercancia[]):void {
     this.update((state) => ({
       ...state,
       [fieldName]: value,

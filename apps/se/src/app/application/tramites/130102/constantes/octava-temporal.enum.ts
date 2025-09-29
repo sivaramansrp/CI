@@ -1,4 +1,5 @@
-import { FraccionArancelariaProsec, OctavaTemporal } from "../models/octava-temporal.model";
+import { FraccionArancelariaProsec } from "../models/octava-temporal.model";
+import { PartidaMercancia } from "../models/request/regla-octava-request.model";
 
 /**
  * Mensaje de alerta que se muestra cuando hay un error en el registro 
@@ -12,42 +13,40 @@ export const ERROR_DE_REGISTRO_ALERT =
 /*
   * Mensaje de alerta que se muestra cuando hay un error en el registro 
   * debido a que la mercancía ya ha sido registrada.
+  * export interface PartidaMercancia {
+    cantidad: number;
+    descripcion: string;
+    valor_autorizado: number;
+    cve_fraccion: string;
+    importe_Unitario: number
+    importe_partida_total_usd: number;
+}
   */
 export const MERCANCIA_TABLA = [
   {
     encabezado: 'Cantidad',
-    clave: (ele: OctavaTemporal): number => ele.cantidad,
+    clave: (ele: PartidaMercancia): number => ele.cantidad,
     orden: 1,
   },
   {
-    encabezado: "Unidad de medida",
-    clave: (ele: OctavaTemporal): string => ele.unidadDeMedida,
+    encabezado:  "Fracción arancelaria",
+    clave: (ele: PartidaMercancia): string => ele.cve_fraccion,
     orden: 2,
   },
   {
-    encabezado:  "Fracción arancelaria",
-    clave: (ele: OctavaTemporal): string => ele.fraccionArancelaria,
+    encabezado: "Descripción",
+    clave: (ele: PartidaMercancia): string => ele.descripcion,
     orden: 3,
   },
   {
-    encabezado: "Descripción",
-    clave: (ele: OctavaTemporal): string => ele.descripción,
+    encabezado: "Precio unitario USD",
+    clave: (ele: PartidaMercancia): number => ele.importe_Unitario,
     orden: 4,
   },
   {
-    encabezado: "Colonia",
-    clave: (ele: OctavaTemporal): string => ele.colonia,
-    orden: 5,
-  },
-  {
-    encabezado: "Precio unitario USD",
-    clave: (ele: OctavaTemporal): string => ele.precioUnitarioUSD,
-    orden: 6,
-  },
-  {
     encabezado:   "Total USD",
-    clave: (ele: OctavaTemporal): number => ele.totalUsd,
-    orden: 7,
+    clave: (ele: PartidaMercancia): number => ele.importe_partida_total_usd,
+    orden: 5,
   }
 ];
 /*

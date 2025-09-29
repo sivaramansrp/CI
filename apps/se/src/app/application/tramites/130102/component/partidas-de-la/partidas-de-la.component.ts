@@ -17,7 +17,7 @@ import { AlertComponent, Catalogo, Pedimento, REGEX_NUMERO_DECIMAL_ENTERO, REG_X
 import { MERCANCIA_TABLA, MODIFICAR_PARTIDAS_FORM } from '../../constantes/octava-temporal.enum';
 import{ Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 
-import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Solicitud130102State, Tramite130102Store } from '../../estados/tramites/tramite130102.store';
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
@@ -25,11 +25,11 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 import { Modal } from 'bootstrap';
-import { OctavaTemporal } from '../../models/octava-temporal.model';
 import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
-import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
 import { Tigies } from '../../models/response/catalogos-response.model';
+import { PartidaMercancia } from '../../models/request/regla-octava-request.model';
 
 
 /**
@@ -113,21 +113,13 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
     archivo: new FormControl(''),
   });
 
-  public partidasSeleccionadas: OctavaTemporal[] = [];
+  public partidasSeleccionadas: PartidaMercancia[] = [];
   public modificarPartidasFormData = MODIFICAR_PARTIDAS_FORM;
   tablaSeleccion = TablaSeleccion;
   configuracionTabla = MERCANCIA_TABLA;
 
-  datosSocios: OctavaTemporal[] = [
-    {
-      cantidad: 10,
-      unidadDeMedida: 'kg',
-      fraccionArancelaria: '0101.21.01',
-      descripción: 'Producto de ejemplo',
-      colonia: 'Centro',
-      precioUnitarioUSD: '15.50',
-      totalUsd: 155
-    },
+  datosSocios: PartidaMercancia[] = [
+    
   ];
 
   form!: FormGroup;
@@ -188,10 +180,10 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const PARTIDAS_TABLA = this.solicitudState?.['partidas_tabla'];
     if ((!Array.isArray(PARTIDAS_TABLA) || PARTIDAS_TABLA.length === 0) && this.esFormularioSoloLectura) {
-      this.formularioRegistroService.getPartidasFromJson().pipe(takeUntil(this.destroyNotifier$)).subscribe(partidas => {
+      /*this.formularioRegistroService.getPartidasFromJson().pipe(takeUntil(this.destroyNotifier$)).subscribe(partidas => {
         this.datosSocios = partidas;
         this.tramite130102Store.setPartidasTabla('partidas_tabla', this.datosSocios);
-      });
+      });*/
     }
 
     this.formForTotalCount.controls['cantidadTotal'].disable();
@@ -206,7 +198,7 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   crearFormulario(): void {
-    this.tramite130102Query.selectSolicitud$
+    this.tramite130102Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {  
@@ -217,10 +209,10 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
               this.solicitudState !== null &&
               'partidas_tabla' in this.solicitudState
             ) {
-              const PRODUCTO = this.solicitudState['partidas_tabla'] as OctavaTemporal[];
-              PRODUCTO.forEach((productoItem: OctavaTemporal) => {
+              const PRODUCTO = this.solicitudState['partidas_tabla'] as PartidaMercancia[];
+              PRODUCTO.forEach((productoItem: PartidaMercancia) => {
                 const IS_ALREADY_ADDED = this.datosSocios.some(
-                (item: OctavaTemporal) => item.fraccionArancelaria === productoItem.fraccionArancelaria
+                (item: PartidaMercancia) => item.cve_fraccion === productoItem.cve_fraccion
               );
 
               if (!IS_ALREADY_ADDED) {
@@ -281,7 +273,7 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  onPartidasSeleccion(lista: OctavaTemporal[]): void {
+  onPartidasSeleccion(lista: PartidaMercancia[]): void {
     this.partidasSeleccionadas = [...lista];
     
     if (!this.partidasSeleccionadas.length) {
@@ -292,19 +284,19 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
     if (FILA_SELECCIONADA) {
       this.modificarPartidaForm?.patchValue({
         modificar_cantidad: FILA_SELECCIONADA.cantidad,
-        modificar_descripcion: FILA_SELECCIONADA.descripción,
-        valor_partidas_usd: FILA_SELECCIONADA.totalUsd,
-        fraccion_partidas: FILA_SELECCIONADA.fraccionArancelaria,
+        modificar_descripcion: FILA_SELECCIONADA.descripcion,
+        valor_partidas_usd: FILA_SELECCIONADA.importe_partida_total_usd,
+        fraccion_partidas: FILA_SELECCIONADA.cve_fraccion,
       });
     }
   }
 
   calculateTotals(): void {
     const CANTIDAD_TOTAL = this.datosSocios.reduce(
-      (sum: number, item: OctavaTemporal) => sum + Number(item.cantidad || 0), 0
+      (sum: number, item: PartidaMercancia) => sum + Number(item.cantidad || 0), 0
     );
     const VALOR_TOTAL_USD = this.datosSocios.reduce(
-      (sum: number, item: OctavaTemporal) => sum + Number(item.totalUsd || 0), 0
+      (sum: number, item: PartidaMercancia) => sum + Number(item.importe_partida_total_usd || 0), 0
     );
 
     this.formForTotalCount.patchValue({
@@ -336,25 +328,24 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.form.valid) {
       const VALOR_PARTIDA = Number(this.form.get('valorPartidaUSD')?.value || 0);
       const CANTIDAD = Number(this.form.get('cantidad')?.value || 0);
-      const FRACCION_ARANCELARIA = this.form.get('fraccionArancelariaTIGIE')?.value;
+      const FRACCION_ARANCELARIA = this.form.get('fraccionArancelariaTIGIE_TIGIE')?.value;
       const DESCRIPCION = this.form.get('descripcion')?.value;
       const ITEM_EXISTS = this.datosSocios.some(item => 
-        item.fraccionArancelaria === FRACCION_ARANCELARIA &&
-        item.descripción === DESCRIPCION
+        item.cve_fraccion === FRACCION_ARANCELARIA &&
+        item.descripcion === DESCRIPCION
       );
 
       if (ITEM_EXISTS) {
        return;
       }
 
-      const NUEVO_PRODUCTO: OctavaTemporal = {
+      const NUEVO_PRODUCTO: PartidaMercancia = {
         cantidad: CANTIDAD,
-        unidadDeMedida: 'kg', 
-        fraccionArancelaria: FRACCION_ARANCELARIA,
-        descripción: DESCRIPCION,
-        colonia: 'Centro', 
-        precioUnitarioUSD: (VALOR_PARTIDA / CANTIDAD).toFixed(2),
-        totalUsd: VALOR_PARTIDA
+        descripcion: DESCRIPCION,
+        valor_autorizado: VALOR_PARTIDA,
+        cve_fraccion: FRACCION_ARANCELARIA,
+        importe_Unitario: VALOR_PARTIDA / CANTIDAD,
+        importe_partida_total_usd: VALOR_PARTIDA,
       };
       this.datosSocios = [...this.datosSocios, NUEVO_PRODUCTO];
       this.tramite130102Store.setPartidasTabla('partidas_tabla', this.datosSocios);
@@ -395,10 +386,10 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
   guardarEdicion(): void {
     if (this.partidasSeleccionadas.length) {
       const INDEX = this.datosSocios.findIndex((item) => 
-        item.fraccionArancelaria === this.partidasSeleccionadas[0].fraccionArancelaria &&
+        item.cve_fraccion === this.partidasSeleccionadas[0].cve_fraccion &&
         item.cantidad === this.partidasSeleccionadas[0].cantidad &&
-        item.descripción === this.partidasSeleccionadas[0].descripción &&
-        item.totalUsd === this.partidasSeleccionadas[0].totalUsd
+        item.descripcion === this.partidasSeleccionadas[0].descripcion &&
+        item.importe_partida_total_usd === this.partidasSeleccionadas[0].importe_partida_total_usd
       );
       
       if (INDEX !== -1) {
@@ -464,12 +455,12 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const PARTIDAS_A_ELIMINAR = [...this.partidasSeleccionadas];
 
-    PARTIDAS_A_ELIMINAR.forEach((elementoAEliminar: OctavaTemporal) => {
+    PARTIDAS_A_ELIMINAR.forEach((elementoAEliminar: PartidaMercancia) => {
       const INDICE = this.datosSocios.findIndex((item) =>
-        item.fraccionArancelaria === elementoAEliminar.fraccionArancelaria &&
+        item.cve_fraccion === elementoAEliminar.cve_fraccion &&
         item.cantidad === elementoAEliminar.cantidad &&
-        item.descripción === elementoAEliminar.descripción &&
-        item.totalUsd === elementoAEliminar.totalUsd
+        item.descripcion === elementoAEliminar.descripcion &&
+        item.importe_partida_total_usd === elementoAEliminar.importe_partida_total_usd
       );
       if (INDICE !== -1) {
         this.datosSocios.splice(INDICE, 1);

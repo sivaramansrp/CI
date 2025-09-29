@@ -11,7 +11,6 @@ import { HttpClient } from '@angular/common/http';
 
 import {
   AbstractControl,
-  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -88,12 +87,12 @@ export class PaisProcendenciaComponent implements OnInit {
   /**
      * Lista de paises.
      */
-  crosListaDePaises:string[] = [];
+    private crosListaDePaises = CROSLISTA_DE_PAISES;
 
   /**
    * Lista de rangos de días seleccionados.
    */
-  selectRangoDias: string[] = [];
+  selectRangoDias: string[] = this.crosListaDePaises;
 
   /**
    * Catálogo de países de procedencia.
@@ -249,9 +248,10 @@ export class PaisProcendenciaComponent implements OnInit {
    * @param fechas - Arreglo de fechas a agregar.
    * @returns void
    */
-  changeCrosslist(fechas: string[]): void {
-    const FECHAS = new FormArray([...fechas.map(fecha => new FormControl(fecha))]);
-    this.paisForm.setControl('fechasSeleccionadas', FECHAS);
+  changeCrosslist(fechas: any): void {
+    console.log("PAISESSS sele"+fechas);
+    //const PAISES = new FormArray([...fechas.map(fecha => new FormControl(fecha))]);
+   //this.paisForm.setControl('fechasSeleccionadas', PAISES);
   }
   /**
    * Elimina elementos de la lista de fechas según el tipo especificado.
@@ -274,8 +274,8 @@ export class PaisProcendenciaComponent implements OnInit {
    */
     obtenerBloques(): void {
       this.catOctavaTemporalService.getPaisesBloque().subscribe((data) => {
-        this.paisProc = data.datos.filter(item => item.bloque ).map((item) => ({
-          id: item.id || 0,
+        this.paisProc = data.datos.filter(item => item.bloque ).map((item, index) => ({
+          id: index,
           clave: item.clave,
           descripcion: item.descripcion,
         }));  
