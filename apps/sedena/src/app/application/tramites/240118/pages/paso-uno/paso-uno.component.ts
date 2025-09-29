@@ -77,14 +77,19 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Initializes the component with required query and store for state management.
+   * Initializes the component with required services for state management and data handling.
    *
-   * @param Tramite240118Query Query to access procedure state.
-   * @param tramite240118Store Store to update procedure state.
-   *  @param consultaQuery Query to access consultation state.
-   *  @param datosSolicitudService Service to fetch and manage request data.
+   * @param route - ActivatedRoute service for accessing route parameters and query parameters
+   * @param seccionStore - SeccionLibStore for managing section-related state updates
+   * @param consultaDatosService - Service for data consultation and form state management
+   * @param consultaQuery - ConsultaioQuery for accessing consultation state observables
+   * @param tramite240118Query - Tramite240118Query for accessing procedure-specific state
+   * @param tramite240118Store - Tramite240118Store for updating procedure-specific state
+   * @param datosSolicitudService - Service for fetching and managing request data
+   * 
    * @description
-   *  This constructor injects the necessary services to manage the state of the procedure and consultation.
+   * This constructor injects the necessary services to manage the state of the procedure and consultation.
+   * It establishes the dependencies required for form management, data retrieval, and state synchronization.
    */
   constructor(
     private route: ActivatedRoute,
@@ -100,7 +105,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
 
   /**
    * Angular lifecycle method that runs on component initialization.
-   * Subscribes to the selected tab from state and updates `indice`.
+   * Sets up subscriptions for consultation state and route parameters.
+   * Manages form state based on consultation permissions and loads data when appropriate.
    *
    * @returns {void}
    */
