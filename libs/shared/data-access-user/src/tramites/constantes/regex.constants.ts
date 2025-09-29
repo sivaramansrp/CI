@@ -1119,3 +1119,11 @@ export const REGEX_CAPTURA_USDA = /^([0-9]{9})$/;
  * Ejemplos no válidos: "12345678" (menos de 9 dígitos), "1234567890" (más de 9 dígitos), "1234abcd" (contiene letras)
  */
 export const REGEX_NUMERO_INTERIOR = /^\d{9}$/;
+
+/**
+ * Expresión regular para validar caracteres permitidos en mercancías.
+ * - Dígitos numéricos (0-9)
+ * - Letras mayúsculas y minúsculas (A-Z, a-z)
+ * - Espacios en blanco
+ */
+export const REGEX_MERCANCIAS_CHARACTERS = /^[0-9A-Za-z\s]+$/;

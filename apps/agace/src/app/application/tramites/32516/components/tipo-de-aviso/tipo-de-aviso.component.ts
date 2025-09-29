@@ -12,9 +12,9 @@
  * @since 2025
  */
 
+import { ALFANUMERICO_ESPACIO, REGEX_MERCANCIAS_CHARACTERS } from '@libs/shared/data-access-user/src';
 import { HECHOS_TABLA_COLUMNAS, HechosDatosTabla } from '../../modelos/acta-de-hechos.model';
 import { TramiteState, TramiteStore } from '../../estados/tramite32516Store.store';
-import { ALFANUMERICO_ESPACIO } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosService } from '../../servicios/catalogo.service';
@@ -763,6 +763,30 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
   private actualizarDatosEnStore(): void {
     this.tramiteStore.setHechosTablaDatos(this.datosTabla);
+  }
+
+  /**
+   * Maneja el evento keypress para el campo cantidad, permitiendo solo caracteres alfanuméricos y espacios.
+   * Previene la entrada de caracteres especiales y símbolos aritméticos.
+   * @param {KeyboardEvent} event - El evento de teclado
+   * @returns {boolean} - false si el carácter no está permitido, true en caso contrario
+   * @memberof TipoDeAvisoComponent
+   */
+  onKeyPress(event: KeyboardEvent): boolean {
+    // Si el formulario es de solo lectura, no permitir entrada
+    if (this.esFormularioSoloLectura) {
+      event.preventDefault();
+      return false;
+    }
+
+    const CHAR = event.key;
+    const PATTERN = REGEX_MERCANCIAS_CHARACTERS;
+    
+    if (!PATTERN.test(CHAR)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
   }
 
 }
