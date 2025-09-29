@@ -1,22 +1,23 @@
 {
   "success": true,
-  "message": "",
+  "message": "Success",
   "datos": {
     "solicitudFormulario": {
-      "tipoDeInversion": 0,
-      "valorEnPesos": 5000000,
+      "tipoDeInversion": "1",
+      "valorEnPesos": "5000000",
       "descripcionGeneral": "Inversión en maquinaria y tecnología de punta.",
-      "listaDeDocumentos": "0",
+      "comprobante": "1",
+      "listaDeDocumentos": "2",
       "manifiesto1": "true",
       "manifiesto2": "true",
       "manifiesto3": "true",
-      "claveDeReferencia": 284000255,
+      "claveDeReferencia": "284000255",
       "cadenaDeLaDependencia": "0111514EC10101",
-      "numeroDeOperacion": 123456789,
-      "banco": 0,
-      "llaveDePago": 987654321,
+      "numeroDeOperacion": "123456789",
+      "banco": "1",
+      "llaveDePago": "LLAVE123456",
       "fechaInicialInput": "2025-06-14",
-      "importeDePago": 7735
+      "importeDePago": "7735"
     }
   }
 }
