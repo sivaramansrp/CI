@@ -110,7 +110,7 @@
           </small>
         </div>
       </div>
-      @if (!estaOculto) {
+      @if (!estaOculto && idProcedimiento !== 260911) {
       <div class="col-md-4">
         <label class="form-label">C.U.R.P.*:</label>
         <input
@@ -255,7 +255,8 @@
     agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA ) ||
     ( idProcedimiento === 260214 || 260904 &&
     agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL &&
-    agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero')) {
+    agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero') ||
+    (idProcedimiento === 260911 && agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero')){
     <h4 class="mt-5">Domicilio</h4>
     <div class="row mt-5">
       <div class="col-md-4">
@@ -296,12 +297,27 @@
       </div>
 
       <div class="col-md-4">
-        <label class="form-label">Código postal o equivalente:</label>
+        <label class="form-label">Código postal o equivalente<span [ngClass]="agregarFabricanteForm.controls['codigoPostal'].errors?.['required'] && agregarFabricanteForm.controls['codigoPostal'].touched ? 'text-danger' : ''">
+            @if(idProcedimiento === 260911 && agregarFabricanteForm.get('nacionalidad')?.value === 'Extranjero'){*}
+          </span>:</label>
         <input
           type="text"
           class="form-control"
           formControlName="codigoPostal"
+          [ngClass]="esInvalido('codigoPostal') ? 'required' : ''"
         />
+         <div *ngIf="esInvalido('codigoPostal')" class="text-danger">
+      <small
+        *ngIf="agregarFabricanteForm.controls['codigoPostal'].errors?.['required'] && agregarFabricanteForm.controls['codigoPostal'].touched"
+      >
+        Este campo es obligatorio
+      </small>
+      <small
+        *ngIf="agregarFabricanteForm.controls['codigoPostal'].errors?.['pattern']"
+      >
+        Existen datos incorrectos que no cumplen con el formato esperado.
+      </small>
+    </div>
       </div>
     </div>
     <div class="row mt-3">

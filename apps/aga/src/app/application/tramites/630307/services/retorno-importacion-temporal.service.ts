@@ -104,6 +104,8 @@ export class RetornoImportacionTemporalService {
 * @param DATOS Estado actualizado del trámite.
 */
 actualizarEstadoFormulario(DATOS: Tramite630307State): void {
-  this.tramite630307store.actualizarEstado(DATOS);
+  Object.entries(DATOS).forEach(([key, value]) => {
+    this.tramite630307store.setTramite630307State(key, value);
+   });
 }
 }

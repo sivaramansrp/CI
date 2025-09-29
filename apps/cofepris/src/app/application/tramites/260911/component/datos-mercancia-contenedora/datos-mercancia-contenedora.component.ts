@@ -41,7 +41,8 @@ import {
   OnInit,
   Output,
   QueryList,
-  ViewChildren,
+  ViewChild,
+  ViewChildren
 } from '@angular/core';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { DetalleMercancia } from '../../../../shared/models/detalle-mercancia.model';
@@ -54,7 +55,7 @@ import { MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/26
 @Component({
   selector: 'app-datos-mercancia-contenedora',
   standalone: true,
-    imports: [
+  imports: [
     CommonModule,
     ReactiveFormsModule,
     TituloComponent,
@@ -70,7 +71,7 @@ import { MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/26
   providers: [DatosSolicitudService],
 })
 export class DatosMercanciaContenedoraComponent implements OnInit {
-  public isEditBlocked: boolean = false;
+ public isEditBlocked: boolean = false;
   /**
    * Evento emitido cuando se hace clic en el botón Agregar en el modal de Mercancías
    */
