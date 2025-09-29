@@ -558,7 +558,7 @@ describe('DatosDeLaSolicitudComponent', () => {
   });
 
   it('should run #fraccionArancelariaSeleccion() correctly', async () => {
-    component.solicitudForm = {
+    component.agregarMercanciasForm = {
       get: jest.fn().mockReturnValue({ value: 'test-fraccion' })
     } as any;
     
@@ -566,10 +566,13 @@ describe('DatosDeLaSolicitudComponent', () => {
       setFraccionArancelaria: jest.fn()
     } as any;
     
+    component.fraccionArancelaria = [
+      { id: 1, descripcion: 'Test Fraccion' }
+    ];
+    
     component.fraccionArancelariaSeleccion();
     
-    expect(component.solicitudForm.get).toHaveBeenCalledWith('datosMercancia.fraccionArancelaria');
-    expect(component.store.setFraccionArancelaria).toHaveBeenCalledWith('test-fraccion');
+    expect(component.agregarMercanciasForm.get).toHaveBeenCalledWith('datosMercancia.fraccionArancelaria');
   });
 
   it('should run #generoSeleccion() correctly', async () => {

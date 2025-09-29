@@ -1127,3 +1127,11 @@ export const REGEX_NUMERO_INTERIOR = /^\d{9}$/;
  * - Espacios en blanco
  */
 export const REGEX_MERCANCIAS_CHARACTERS = /^[0-9A-Za-z\s]+$/;
+
+/**
+ * Expresión regular para detectar caracteres especiales no permitidos.
+ * Esta expresión regular identifica la presencia de caracteres especiales que
+ * generalmente no están permitidos en campos como llaves de pago, códigos de referencia,
+ * o campos alfanuméricos específicos.
+ */
+export const REGEX_CARACTERES_ESPECIALES = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>?]/;
