@@ -174,9 +174,16 @@ export class MontosDeInversionComponent implements OnInit {
       .subscribe();
     this.montosDeInversionForm = this.fb.group({
       tipos: [this.solicitudState.tipos],
-      cantidad: [this.solicitudState.cantidad, [Validators.required , Validators.max(11)]],
-      descripsion: [this.solicitudState.descripsion, [Validators.required , Validators.max(1000)]],
-      mnx: [this.solicitudState.mnx,[ Validators.required , Validators.max(16)]],
+      cantidad: [this.solicitudState.cantidad, [Validators.required , Validators.maxLength(11), Validators.pattern('^\\d{1,11}$')]],
+      descripsion: [this.solicitudState.descripsion, [Validators.required , Validators.maxLength(1000)]],
+      mnx: [
+        this.solicitudState.mnx,
+        [
+          Validators.required,
+          Validators.maxLength(16), 
+          Validators.pattern('^\\d{1,16}$')
+        ]
+      ],
     });
   }
   /**
