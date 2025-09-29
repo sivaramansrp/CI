@@ -210,12 +210,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
     private consultaQuery: ConsultaioQuery,
     private servicioDeFormularioService: ServicioDeFormularioService,
   ) {
-    this.tramiteQuery.FormaValida$.pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe((res) => {
-      this.seccion.establecerSeccion([true]);
-      this.seccion.establecerFormaValida([res]);
-    });
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
 

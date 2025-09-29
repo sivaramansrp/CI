@@ -319,8 +319,8 @@ ngOnInit(): void {
         if (!this.consultaState.update) {
           this.esFormaValido = this.verificarLaValidezDelFormulario();
           if (!this.esFormaValido) {
-            this.indice = e.valor-1;
-            this.datosPasos.indice = e.valor-1;
+            this.indice = e.valor;
+            this.datosPasos.indice = e.valor;
             this.servicioDeFormularioService.markFormAsTouched('datosGeneralisForm');
             this.servicioDeFormularioService.markFormAsTouched('formaModificacionesForm');
             this.servicioDeFormularioService.markFormAsTouched('obligacionesFiscalesForm');
