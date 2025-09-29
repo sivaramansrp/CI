@@ -31,6 +31,7 @@ import { Solocitud260912Service } from '../../services/service260912.service';
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
+  emitirSeleccionEstablecimiento: boolean = false;
   /** 
    * Evento que se emite cuando cambia la pestaña activa.
    * Comunica al componente padre el índice de la nueva pestaña seleccionada.
@@ -222,6 +223,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public getPagoDeDerechosComponent(): PagoDeDerechosComponent | undefined {
   return this.pagoDeDerechosComponent;
 }
+mostrarAlgoDesdeElPadre(selected: boolean): void {
+    this.emitirSeleccionEstablecimiento = selected;
+    // ...existing code...
+  }
   /**
    * Hook de destrucción del componente.
    * Completa el subject para cancelar todas las suscripciones activas.

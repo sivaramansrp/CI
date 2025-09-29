@@ -2,8 +2,8 @@ import { AgregarDestinatarioFinalComponent } from '../../../../shared/components
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
-import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento-260904.enum';
-import { Tramite260904Store } from '../../estados/tramite260904.store';
+import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento.enum';
+import { Tramite260912Store } from '../../estados/tramite-260912.store';
 
 
 
@@ -47,7 +47,7 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * 
    * @param tramiteStore - Store que administra el estado del trámite 260911.
    */
-  constructor(public tramiteStore: Tramite260904Store) {}
+  constructor(public tramiteStore: Tramite260912Store) {}
 
     /**
    * @method updateDestinatarioFinalTablaDatos

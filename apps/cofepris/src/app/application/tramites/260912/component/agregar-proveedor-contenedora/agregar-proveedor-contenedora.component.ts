@@ -1,9 +1,9 @@
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento-260904.enum';
+import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Tramite260904Store } from '../../estados/tramite260904.store';
+import { Tramite260912Store } from '../../estados/tramite-260912.store';
 
 
 /**
@@ -41,9 +41,9 @@ export class AgregarProveedorContenedoraComponent {
    * @constructor
    * @description Constructor que inyecta el store `Tramite260203Store` para gestionar el estado del trámite.
    *
-   * @param tramite260904Store - Store que administra el estado del trámite 260904.
+   * @param tramite260912Store - Store que administra el estado del trámite 260912.
    */
-  constructor(public tramite260904Store: Tramite260904Store) {}
+  constructor(public tramite260912Store: Tramite260912Store) {}
 
   /**
    * @method updateProveedorTablaDatos
@@ -53,6 +53,6 @@ export class AgregarProveedorContenedoraComponent {
    * @returns {void} Este método no retorna ningún valor.
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
-    this.tramite260904Store.updateProveedorTablaDatos(event);
+    this.tramite260912Store.updateProveedorTablaDatos(event);
   }
 }

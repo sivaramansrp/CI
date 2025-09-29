@@ -2,8 +2,8 @@ import { AgregarFacturadorComponent } from '../../../../shared/components/agrega
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
-import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento-260904.enum';
-import { Tramite260904Store } from '../../estados/tramite260904.store';
+import { ID_PROCEDIMIENTO } from '../../enums/domicilio-del-establecimiento.enum';
+import { Tramite260912Store } from '../../estados/tramite-260912.store';
 
 
 
@@ -43,10 +43,10 @@ export class AgregarFacturadorContenedoraComponent {
    * @constructor
    * @description Constructor que inyecta el store `Tramite260911Store` para gestionar el estado del trámite.
    * 
-   * @param tramite260904Store - Store que administra el estado del trámite 260911.
+   * @param tramite260912Store - Store que administra el estado del trámite 260911.
    */
     constructor(
-        public tramite260904Store: Tramite260904Store){
+        public tramite260912Store: Tramite260912Store){
     }
 
     /**
@@ -57,6 +57,6 @@ export class AgregarFacturadorContenedoraComponent {
    * @returns {void} Este método no retorna ningún valor.
    */
     updateFacturadorTablaDatos(event:Facturador[]): void {
-        this.tramite260904Store.updateFacturadorTablaDatos(event);
+        this.tramite260912Store.updateFacturadorTablaDatos(event);
     }
 }
