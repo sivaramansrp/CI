@@ -11,6 +11,7 @@
 
 import {
   Catalogo,
+  SeccionLibStore,
   TablaSeleccion,
 } from '@ng-mf/data-access-user';
 
@@ -138,6 +139,11 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
      * @property {Subscription} subscription
      */
     private subscription: Subscription = new Subscription();
+      /**
+   * Valor predeterminado para la selección de aduanas.
+   * @property {number} predeterminado
+   */
+  predeterminado=-1;
    
 
   /**
@@ -152,9 +158,11 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
     private ampliacionServiciosService: AmpliacionServiciosService,
     private ampliacionServiciosQuery: AmpliacionServiciosQuery,
     private tramite80206Store: Tramite80206Store,
-    private catalogoServices: CatalogoServices
+    private catalogoServices: CatalogoServices,
+    private seccionStore: SeccionLibStore
   ) {
     this.inicializarFormularioInfoRegistro();
+   
   }
 
   /**
@@ -228,11 +236,17 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * @method inicializarFormularioInfoRegistro
    */
   inicializarFormularioInfoRegistro(): void {
-    this.formularioInfoRegistro = this.fb.group({
-      seleccionaLaModalidad: [''],
-      seleccionarRegla: [''],
-      sector: [''],
-    });
+  this.formularioInfoRegistro = this.fb.group({
+    seleccionaLaModalidad: [
+      { value: 'Ampliación 3RS' }, 
+    ],
+    seleccionarRegla: [
+      { value: this.tramiteState.seleccionarRegla || '' }, 
+    ],
+    sector: [
+      { value: this.tramiteState.sector || '' }
+    ],
+  });
   }
 
   /**
@@ -303,6 +317,10 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
       descripcionSector: this.recibioSector[0]?.descripcionSector,
     };
     this.tramite80206Store.setDatosSector([...this.datosSector, CUERPODATOS]);
+     // Trigger validation and update section state after adding sector
+        const ISVALID = this.validarFormulario();
+        this.seccionStore.establecerSeccion([ISVALID]);
+        this.seccionStore.establecerFormaValida([ISVALID]);
   }
 
   /**
@@ -333,6 +351,11 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
     this.ampliacionServiciosService.enviarDeberiaMostrar(this.isSelectedRegla);
     this.tramite80206Store.setIsSelectedRegla(this.isSelectedRegla);
     this.tramite80206Store.setSeleccionarRegla(DATA);
+
+      // Trigger validation and update section state after regla change
+    const ISVALID = this.validarFormulario();
+    this.seccionStore.establecerSeccion([ISVALID]);
+    this.seccionStore.establecerFormaValida([ISVALID]);
   }
 
   /**
@@ -345,6 +368,11 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
 
     this.recibioSector = Array.isArray(data) ? data : [data];
     this.tramite80206Store.setSector(data?.clave || '');
+
+    // Trigger validation and update section state after sector change
+    const ISVALID = this.validarFormulario();
+    this.seccionStore.establecerSeccion([ISVALID]);
+    this.seccionStore.establecerFormaValida([ISVALID]);
   }
 
   /**
@@ -369,30 +397,30 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
 validarFormulario(): boolean {
   let isValid = true;
 
+  
   if (this.formularioInfoRegistro) {
     this.formularioInfoRegistro.markAllAsTouched();
     this.formularioInfoRegistro.updateValueAndValidity();
 
-    // Check specific required fields
-    const seleccionaLaModalidad = this.formularioInfoRegistro.get('seleccionaLaModalidad')?.value;
-    const seleccionarRegla = this.formularioInfoRegistro.get('seleccionarRegla')?.value;
+    const SELECCIONA_LA_MODALIDA = this.formularioInfoRegistro.get('seleccionaLaModalidad')?.value;
+    const SELECCIONAR_REGLA = this.formularioInfoRegistro.get('seleccionarRegla')?.value;
 
-    // Add your specific validation logic here
-    if (!seleccionaLaModalidad || !seleccionarRegla) {
+
+    if (!SELECCIONA_LA_MODALIDA || SELECCIONA_LA_MODALIDA.trim() === '') {
       isValid = false;
     }
 
-    // If regla is selected, validate sector selection
-    if (this.isSelectedRegla) {
-      const sector = this.formularioInfoRegistro.get('sector')?.value;
-      if (!sector) {
+    if (!SELECCIONAR_REGLA || SELECCIONAR_REGLA.trim() === '') {
+      isValid = false;
+    }
+
+    if (SELECCIONAR_REGLA === '3.2.25' && this.isSelectedRegla) {
+      
+      if (this.datosSector.length === 0) {
         isValid = false;
-      }
+      } 
     }
 
-    if (this.formularioInfoRegistro.invalid) {
-      isValid = false;
-    }
   } else {
     isValid = false;
   }

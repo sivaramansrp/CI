@@ -137,40 +137,61 @@ ngOnDestroy(): void {
    * Valida todos los formularios del paso uno.
    * Retorna true si todos los formularios son válidos, false en caso contrario.
    */
-  public validarFormularios(): boolean {
-    let isValid = true;
+  validarFormularios(): boolean {
+  console.log('=== Starting paso-uno validarFormularios ===');
+  let isValid = true;
 
-    // if (this.solicitante?.form) {
-    //   if (this.solicitante.form.invalid) {
-    //     this.solicitante.form.markAllAsTouched();
-    //     isValid = false;
-    //   }
-    // } else {
-    //   isValid = false;
-    // }
-    // if (this.ampliacionAnexoComponent) {
-    //   const AMPLIACION_ANEXO_VALID =
-    //     this.ampliacionAnexoComponent.validarFormulario();
-    //   if (!AMPLIACION_ANEXO_VALID) {
-    //     isValid = false;
-    //   }
-    // } else {
-    //   isValid = false;
-    // }
+  // Validate solicitante form
+  console.log('Checking solicitante component...');
+  console.log('solicitante exists:', !!this.solicitante);
+  console.log('solicitante.form exists:', !!(this.solicitante?.form));
+  
+  // if (this.solicitante?.form) {
+  //   const solicitanteValid = this.solicitante.form.valid;
+  //   console.log('solicitante form valid:', solicitanteValid);
+  //   console.log('solicitante form errors:', this.solicitante.form.errors);
+    
+  //   if (this.solicitante.form.invalid) {
+  //     this.solicitante.form.markAllAsTouched();
+  //     isValid = false;
+  //     console.log('Solicitante form is invalid');
+  //   }
+  // } else {
+  //   console.log('Solicitante form not found');
+  // }
 
-     if (this.ampliacion3RsComponent) {
-      const AMPLIACION_3RS_VALID =
-        this.ampliacion3RsComponent.validarFormulario();
-      if (!AMPLIACION_3RS_VALID) {
-        isValid = false;
-      }
-    } else {
-      if (this.indice === 3 || this.esDatosRespuesta) {
+  // // Validate ampliacion anexo component (tab 2)
+  // console.log('Checking ampliacionAnexoComponent...');
+  // console.log('ampliacionAnexoComponent exists:', !!this.ampliacionAnexoComponent);
+  
+  // if (this.ampliacionAnexoComponent) {
+  //   const AMPLIACION_ANEXO_VALID = this.ampliacionAnexoComponent.validarFormulario();
+  //   console.log('ampliacionAnexoComponent validation result:', AMPLIACION_ANEXO_VALID);
+    
+  //   if (!AMPLIACION_ANEXO_VALID) {
+  //     isValid = false;
+  //     console.log('Ampliacion anexo validation failed');
+  //   }
+  // } else {
+  //   console.log('ampliacionAnexoComponent not found');
+  // }
+
+  // Validate ampliacion 3Rs component (tab 3) - This is the key validation
+  
+  if (this.ampliacion3RsComponent) {
+    const AMPLIACION_3RS_VALID = this.ampliacion3RsComponent.validarFormulario();
+    
+    if (!AMPLIACION_3RS_VALID) {
       isValid = false;
     }
+  } else {
+    if (this.esDatosRespuesta) {
+      isValid = false;
     }
-
-
-     return isValid;
   }
+
+  console.log('Final validation result:', isValid);
+  console.log('=== End paso-uno validarFormularios ===');
+  return isValid;
+} 
 }

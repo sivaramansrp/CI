@@ -9,11 +9,11 @@
  * relacionados con el registro de la solicitud IMMEX.
  */
 
+import { ALERT, ERROR_FORMA_ALERT } from '../../constantes/modificacion.constants';
 import { AVISO, RegistroSolicitudService, esValidObject, getValidDatos} from '@ng-mf/data-access-user';
 import { AmpliacionServiciosState, Tramite80206Store } from '../../estados/tramite80206.store';
 import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
-import { ALERT } from '../../constantes/modificacion.constants';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80206.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { ChangeDetectorRef } from '@angular/core';
@@ -81,7 +81,7 @@ export class RegistroPageComponent implements OnInit, OnDestroy {
    * Referencia al componente Wizard para controlar la navegación.
    * @property {WizardComponent} wizardComponent
    */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @ViewChild('wizardRef') wizardComponent!: WizardComponent;
 
   /**
    * Índice actual del paso.
@@ -161,6 +161,10 @@ export class RegistroPageComponent implements OnInit, OnDestroy {
 esFormaValido: boolean = false;
 
 tramiteId: string = '80206';
+  /**
+   * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+   */
+  public formErrorAlert = ERROR_FORMA_ALERT;
 
   /**
    * Constructor del componente.
@@ -177,7 +181,7 @@ tramiteId: string = '80206';
     private cdRef: ChangeDetectorRef,
     private tramite80206Query: AmpliacionServiciosQuery,
     private registroSolicitudService: RegistroSolicitudService,
-    private store: Tramite80206Store
+    private store: Tramite80206Store,
   ) {
     this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
       this.seccion.establecerSeccion([true]);
@@ -213,47 +217,112 @@ tramiteId: string = '80206';
    * @param {AccionBoton} e - Objeto con la acción (cont/atras) y el valor (índice) del botón.
    */
   getValorIndice(e: AccionBoton): void {
-     const PAYLOAD = buildGuardarPayload(this.solicitudState);
-  // eslint-disable-next-line no-console
-  console.log("payload-->>", PAYLOAD);
+  // const PAYLOAD = buildGuardarPayload(this.solicitudState);
+  // let shouldNavigate = false;
   
-  let shouldNavigate = false;
-  
-  this.registroSolicitudService.postGuardarDatos(this.tramiteId, PAYLOAD)
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe(response => {
-      shouldNavigate = response.codigo === '00';
+  // this.registroSolicitudService.postGuardarDatos(this.tramiteId, PAYLOAD)
+  //   .pipe(takeUntil(this.destroyNotifier$))
+  //   .subscribe(response => {
+  //     shouldNavigate = response.codigo === '00';
       
-      if (shouldNavigate) {
-        if (esValidObject(response) && esValidObject(response.datos)) {
-          const DATOS = response.datos as { id_solicitud?: number };
-          if (getValidDatos(DATOS.id_solicitud)) {
-            this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
-          } else {
-            this.store.setIdSolicitud(0);
-          }
-        }
-        
-        // Show success message (you'll need to inject ToastrService)
-        // this.toastrService.success(response.mensaje);
-        
-        if (e.valor > 0 && e.valor < 5) {
-          this.indice = e.valor;
-          if (e.accion === 'cont') {
-            this.wizardComponent.siguiente();
-          } else {
-            this.wizardComponent.atras();
-          }
-        }
-      } else {
-        // Show error message (you'll need to inject ToastrService)
-        // this.toastrService.error(response.mensaje);
-        console.error('Error saving data:', response.mensaje);
-      }
-    });
+  //     if (shouldNavigate) {
+  //       if (esValidObject(response) && esValidObject(response.datos)) {
+  //         const DATOS = response.datos as { id_solicitud?: number };
+  //         if (getValidDatos(DATOS.id_solicitud)) {
+  //           this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+  //         } else {
+  //           this.store.setIdSolicitud(0);
+  //         }
+  //       }
+  //       if (e.valor > 0 && e.valor < 5) {
+  //         this.indice = e.valor;
+  //         if (e.accion === 'cont') {
+  //           this.wizardComponent.siguiente();
+  //         } else {
+  //           this.wizardComponent.atras();
+  //         }
+  //       }
+  //     } else {
+  //       console.error('Error saving data:', response.mensaje);
+  //     }
+  //   });
 
-  // eslint-disable-next-line no-console
-  console.log("this.solicitudState===", this.solicitudState);
+  //-------------------------------------------------------------------------------------
+
+  if (e.accion === 'cont') {
+    this.esFormaValido = false;
+    
+    // Validar formularios antes de continuar desde el paso uno
+    if (this.indice === 1 && e.accion === 'cont') {
+      const ES_VALIDO = this.validarTodosFormulariosPasoUno();
+      
+      if (!ES_VALIDO) {
+        this.esFormaValido = true;
+        return; // Detener ejecución si los formularios son inválidos
+      }
+    }
+    
+    
+    // If validation passes, save data and navigate
+    const PAYLOAD = buildGuardarPayload(this.solicitudState);
+    
+    this.registroSolicitudService.postGuardarDatos(this.tramiteId, PAYLOAD)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          const SHOULD_NAVIGATE = response.codigo === '00';
+          
+          if (SHOULD_NAVIGATE) {
+            // Update solicitud ID if available
+            if (esValidObject(response) && esValidObject(response.datos)) {
+              const DATOS = response.datos as { id_solicitud?: number };
+              if (getValidDatos(DATOS.id_solicitud)) {
+                this.store.setIdSolicitud(DATOS.id_solicitud ?? 0);
+              } else {
+                this.store.setIdSolicitud(0);
+              }
+            }
+            
+            // Calculate the correct next step index
+            const SIGUIENTE_PASO = this.indice + 1;
+            
+            // Update indices
+            this.indice = SIGUIENTE_PASO;
+            this.datosPasos.indice = SIGUIENTE_PASO;
+            
+            // Make sure wizardComponent exists before calling siguiente()
+            if (this.wizardComponent) {
+              this.wizardComponent.siguiente();
+            } else {
+              console.error('wizardComponent is not available');
+            }
+          } else {
+            console.error('API call failed - cannot navigate');
+            console.error('Error message:', response.mensaje);
+            console.error('Response code:', response.codigo);
+            this.esFormaValido = true;
+          }
+        },
+        error: (error) => {
+          console.error('API call error:', error);
+          this.esFormaValido = true;
+        }
+      });
+    
+    return;
+  }
+  
+  // Handle 'atras' action
+  const PASO_ANTERIOR = this.indice - 1;
+  this.indice = PASO_ANTERIOR;
+  this.datosPasos.indice = PASO_ANTERIOR;
+  
+  if (this.wizardComponent) {
+    this.wizardComponent.atras();
+  } else {
+    console.error('wizardComponent is not available for going back');
+  }
+  //-------------------------------------------------------------------------------------
     
   //    this.esFormaValido = false;
   
@@ -291,10 +360,20 @@ tramiteId: string = '80206';
  * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
  */
   validarTodosFormulariosPasoUno(): boolean {
+  
   if (!this.pasoUnoComponent) {
-    return false; // Changed from true to false - if component doesn't exist, validation should fail
+    this.seccion.establecerSeccion([false]);
+    this.seccion.establecerFormaValida([false]);
+    return false;
   }
+  
+  // Call the validation method from PasoUnoComponent
   const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+  
+  // Update section state based on validation result
+  this.seccion.establecerSeccion([ISFORM_VALID_TOUCHED]);
+  this.seccion.establecerFormaValida([ISFORM_VALID_TOUCHED]);
+  
   return ISFORM_VALID_TOUCHED;
 }
     /**
