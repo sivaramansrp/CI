@@ -132,15 +132,6 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private solicitudRequerimientoQuery: SolicitudRequerimientoQuery,
   ) {
-    this.consultaioStore.establecerConsultaio(
-          '32101',
-          'this.guardarDatos?.parameter',
-          'agace',
-          'this.guardarDatos?.folioTramite',
-          'this.guardarDatos?.tipoDeTramite',
-          'this.guardarDatos?.estadoDeTramite',
-          true, false, true);
-
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
