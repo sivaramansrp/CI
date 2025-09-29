@@ -683,11 +683,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       return;
     }
     
-    const SELECTED_ROW = this.selectedRows[0];
-    if (SELECTED_ROW && this.modalActualizacion) {
-      this.consultaAvisoAcreditacionService.setUpdatedRow([SELECTED_ROW]);
-      this.tramite32101Store.setAbc(SELECTED_ROW);
-      this.modalActualizacion.abrirModal(SELECTED_ROW);
+    const FILA_SELECCIONADA = this.selectedRows[0];
+    if (FILA_SELECCIONADA && this.modalActualizacion) {
+      this.consultaAvisoAcreditacionService.setUpdatedRow([FILA_SELECCIONADA]);
+      this.tramite32101Store.setAbc(FILA_SELECCIONADA);
+      this.modalActualizacion.abrirModal(FILA_SELECCIONADA);
     }
   }
 

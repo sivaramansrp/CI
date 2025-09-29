@@ -223,6 +223,17 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Obtiene la lista de documentos relacionados con la comprobante y actualiza el formulario
+   * con los valores correspondientes basados en la selección del usuario.
+   *
+   * Este método realiza una consulta al servicio `consultaAvisoAcreditacionService` para
+   * obtener los documentos disponibles. Luego, filtra los resultados para encontrar el documento
+   * que coincide con la descripción de la comprobante seleccionada en el estado de la solicitud.
+   * Finalmente, actualiza el formulario con el identificador del documento encontrado.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
   fetchListaDeComprobante(): void {
     this.consultaAvisoAcreditacionService
       .getListaDeDocumentos('listaDeComprobante')
@@ -282,7 +293,6 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
    * Abre el modal y carga los datos de la fila seleccionada
    */
   abrirModal(selectedRow: DatosDeLaTabla): void {
-    // Populate form with selected row data
     this.modificarFormulario.patchValue({
       tipoDeInversion: this.getIdFromDescription(selectedRow.tipoDeInversion, this.tramiteList.catalogos),
       valorEnPesos: selectedRow.valorEnPesos,
@@ -290,7 +300,6 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
       formaAdquisicion: this.getIdFromDescription(selectedRow.formaAdquisicion, this.aduana.catalogos)
     });
 
-    // Show the modal using Bootstrap modal
     if (this.modalRef?.nativeElement) {
       const MODAL = new (window).bootstrap.Modal(this.modalRef.nativeElement);
       MODAL.show();
@@ -298,7 +307,7 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cierra el modal
+   * Cierra el modal si está abierto.
    */
   cerrarModal(): void {
     if (this.modalRef?.nativeElement) {
