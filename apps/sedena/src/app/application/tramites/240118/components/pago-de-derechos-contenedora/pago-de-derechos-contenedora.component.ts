@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
@@ -92,13 +92,10 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
         this.pagoDerechoFormState = data;
       });
     this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-        })
-      )
-      .subscribe();      
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      });      
   }
   /**
    * Actualiza el estado del formulario de pago de derechos en el store.
