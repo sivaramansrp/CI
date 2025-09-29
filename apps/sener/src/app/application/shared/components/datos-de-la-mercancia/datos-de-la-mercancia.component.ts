@@ -6,7 +6,6 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import {CatalogoSener } from '../../models/complimentos.model';
 import { CommonModule } from '@angular/common';
 import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
@@ -146,9 +145,9 @@ esValorNumerico(controlName: string): boolean {
     // Se emite el evento con el valor seleccionado para que el componente padre lo procese.
     const METODO_NOMBRE = i === 0 ? 'setFraccion' : (i === 1 ? 'setUmt' : 'setNico');
     this.alCambioDelCampoValores.emit({ form, campo: controlName, metodoNombre: METODO_NOMBRE });
-    let selectedNum=Number(this.form.get('fraccion')?.value)
-let description=this.mercanciaCatalogoArray[i][selectedNum]
-this.form.get('acotacion')?.setValue(description.acotacion)
+    const SELECTED_NUM=Number(this.form.get('fraccion')?.value)
+const DESCRIPTION=this.mercanciaCatalogoArray[i][SELECTED_NUM]
+this.form.get('acotacion')?.setValue(DESCRIPTION.acotacion)
 this.setValoresStore(this.form, 'acotacion')
   }
 
