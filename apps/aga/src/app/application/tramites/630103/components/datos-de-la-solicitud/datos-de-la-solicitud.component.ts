@@ -182,6 +182,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.tramite630103Store.setTramite630103State($event.campo, $event.valor);
     }
   }
+ /*
+  * Valida el formulario de datos de importación temporal.
+  * @returns {boolean} - `true` si el formulario es válido, `false` en caso contrario.
+  */
+  validarFormulario(): boolean {
+    this.datosImportacionTemporalFormulario.markAllAsTouched();
+    return this.datosImportacionTemporalFormulario.valid;
+  }
 
   /**
    * Ciclo de vida: Libera recursos al destruir el componente.
