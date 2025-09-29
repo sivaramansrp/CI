@@ -149,7 +149,14 @@ export class ManifiestoComponent implements OnInit, OnDestroy {
       }
     );
   }
-
+  /*
+  * Valida el formulario de datos de importación temporal.
+  * @returns {boolean} - `true` si el formulario es válido, `false` en caso contrario.
+  */
+  validarFormulario(): boolean {
+    this.manifiestoFormulario.markAllAsTouched();
+    return this.manifiestoFormulario.valid;
+  }
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.
    * Libera las suscripciones activas para evitar fugas de memoria.
