@@ -88,6 +88,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     return this._indice;
   }
 
+  public getDomicilioDelEstablecimientoComponent(): DomicilioDelEstablecimientoComponent | undefined {
+  return this.domicilioDelEstablecimientoComponent;
+}
+
   /** Bandera que indica si los datos de respuesta están disponibles */
   esDatosRespuesta: boolean = false;
   

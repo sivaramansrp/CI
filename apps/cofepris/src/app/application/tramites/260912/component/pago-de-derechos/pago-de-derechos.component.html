@@ -101,6 +101,11 @@
             {{ pagoDeDerechosForm.get('fecPago')?.errors?.['custom'] }}
           </small>
       </span>
+      <span class="text-danger">
+        <small *ngIf="pagoDeDerechosForm.get('fecPago')?.errors?.['fechaLim']">
+          La fecha de pago debe ser menor o igual a la fecha actual.
+        </small>
+      </span>
       
         </div>
       </div>

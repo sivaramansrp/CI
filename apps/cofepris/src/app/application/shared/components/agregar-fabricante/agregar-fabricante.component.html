@@ -91,7 +91,7 @@
         <input
           type="text"
           class="form-control"
-          [maxlength]="13"
+          [maxlength]="15"
           formControlName="rfc"
           (input)="onChangeRfc($event)"
           [ngClass]="esInvalido('rfc') ? 'required' : ''"
@@ -276,6 +276,7 @@
           class="form-control"
           id="estado"
           formControlName="estado"
+          maxlength="255"
           [ngClass]="
             esInvalido('estado') && agregarFabricanteForm.get('estado')?.touched
               ? 'required'
@@ -304,6 +305,7 @@
           type="text"
           class="form-control"
           formControlName="codigoPostal"
+          maxlength="12"
           [ngClass]="esInvalido('codigoPostal') ? 'required' : ''"
         />
          <div *ngIf="esInvalido('codigoPostal')" class="text-danger">
@@ -397,6 +399,7 @@
           [label]="'País'"
           [required]="true"
           [placeholder]="'Selecciona un valor'"
+          [markTouched]="agregarFabricanteForm.get('pais')?.touched ?? false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -491,6 +494,7 @@
             estaDeshabilitadoDesplegable ||
             elementosDeshabilitados.includes('pais')
           "
+          [markTouched]="agregarFabricanteForm.get('pais')?.touched ?? false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -502,6 +506,7 @@
           [required]="true"
           [placeholder]="'Selecciona un valor'"
           [isDisabled]="estaDeshabilitadoDesplegable"
+          [markTouched]="agregarFabricanteForm.get('estado')?.touched ?? false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -513,6 +518,7 @@
           [required]="true"
           [placeholder]="'Selecciona un valor'"
           [isDisabled]="estaDeshabilitadoDesplegable"
+          [markTouched]="agregarFabricanteForm.get('municipio')?.touched ?? false"
         ></app-catalogo-select>
       </div>
     </div>
@@ -526,6 +532,7 @@
           [placeholder]="'Selecciona un valor'"
           [required]="!elementosNoRequeridos.includes('localidad')"
           [isDisabled]="estaDeshabilitadoDesplegable"
+          [markTouched]="agregarFabricanteForm.get('localidad')?.touched ?? false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -536,6 +543,7 @@
           [placeholder]="'Selecciona un valor'"
           [required]="!elementosNoRequeridos.includes('codigoPostal')"
           [isDisabled]="estaDeshabilitadoDesplegable"
+          [markTouched]="agregarFabricanteForm.get('codigoPostal')?.touched ?? false"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -546,6 +554,7 @@
           [placeholder]="'Selecciona un valor'"
           [required]="!elementosNoRequeridos.includes('colonia')"
           [isDisabled]="estaDeshabilitadoDesplegable"
+          [markTouched]="agregarFabricanteForm.get('colonia')?.touched ?? false"
         ></app-catalogo-select>
       </div>
     </div>

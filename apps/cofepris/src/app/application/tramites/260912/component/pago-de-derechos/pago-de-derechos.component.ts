@@ -343,12 +343,30 @@ public static camposDependientesValidator(): ValidatorFn {
    * Valida que la fecha de un campo no sea futura y actualiza su validez.
    * @param field - Nombre del campo de fecha a validar
    */
-  public validarFechaFutura(field: string): void {
-    const CTRL = this.pagoDeDerechosForm.get(field);
-    if (!CTRL) { return; }
-    CTRL.updateValueAndValidity({ emitEvent: false });
-  }
 
+validarFechaFutura(controlName: string): void {
+  const CONTROL = this.pagoDeDerechosForm.get(controlName);
+  if (!CONTROL) {
+    return;
+  }
+  
+  const VALOR = CONTROL.value;
+  if (VALOR) {
+    const FECHA_SELECCIONADA = new Date(VALOR);
+    const FECHA_ACTUAL = new Date();
+    FECHA_ACTUAL.setHours(0, 0, 0, 0); 
+    const CURRENT_ERRORS = CONTROL.errors || {};
+
+    if (FECHA_SELECCIONADA > FECHA_ACTUAL) {
+      CONTROL.setErrors({ ...CURRENT_ERRORS, custom: 'La fecha de pago debe ser menor o igual a la fecha actual.' });
+    } else {
+      if ('custom' in CURRENT_ERRORS) {
+        delete CURRENT_ERRORS['custom'];
+        CONTROL.setErrors(Object.keys(CURRENT_ERRORS).length ? CURRENT_ERRORS : null);
+      }
+    }
+  }
+}
    /**
    * Resetea todos los campos del formulario de pago de derechos y actualiza el store.
    * Marca los controles como pristine y untouched para ocultar errores de campos requeridos después de borrar.

@@ -87,7 +87,7 @@ import { Validators } from '@angular/forms';
   styleUrl: './domicilio-del-establecimiento.component.scss',
 })
 export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
-
+public mercanciasTableTouched = false;
   /**
    * Indica si el componente debe estar deshabilitado.
    * Cuando es `true`, el componente no permite interacción del usuario.
@@ -323,6 +323,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
   } else {
     this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, event];
   }
+  this.mercanciasTableTouched = false;
   this.cerrarMercanciaModal();
   }
 
@@ -1100,7 +1101,7 @@ ngOnChanges(): void {
       regimen: [this.solicitudState?.regimen, [Validators.required]],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas, [Validators.required]],
       importPermitNumberCNSNS: [{ value: this.solicitudState?.importPermitNumberCNSNS, disabled: false }],
-      aifaCheckbox: [true],
+      ano:[{ value: this.solicitudState?.ano, disabled: false }],
       manifests: [true],
     });
 
@@ -1689,7 +1690,7 @@ public markAllFieldsTouched(): void {
    * @remarks
    * - Si el formulario `domicilio` existe, se reinicia con los valores predeterminados y los valores del estado.
    * - Los campos `avisoCheckbox`, `aifaCheckbox` y `manifests` se establecen en `true` por defecto.
-   * - Los campos `licenciaSanitaria`, `regimen`, `aduanasEntradas` y `importPermitNumberCNSNS` se obtienen del estado o se inicializan como cadena vacía si no están definidos.
+   * - Los campos `licenciaSanitaria`, `regimen`, `aduanasEntradas` y `importPermitNumberCNSNS` y `ano` se obtienen del estado o se inicializan como cadena vacía si no están definidos.
    */
   private resetDomicilioForm(state: Tramites260912State): void {
     if (this.domicilio) {
@@ -1699,7 +1700,7 @@ public markAllFieldsTouched(): void {
         regimen: state?.regimen || '',
         aduanasEntradas: state?.aduanasEntradas || '',
         importPermitNumberCNSNS: state?.importPermitNumberCNSNS || '',
-        aifaCheckbox: true,
+        ano:state?.ano || '',
         manifests: true
       });
     }
@@ -1729,4 +1730,14 @@ public markAllFieldsTouched(): void {
       });
     }
   }
+  public validateMercanciasTable(): boolean {
+  return this.mercanciasTablaDatos && this.mercanciasTablaDatos.length > 0;
+}
+public markMercanciasTableTouched(): void {
+  // Aquí podrías emitir un flag o llamar ChangeDetectorRef si usas mensajes en el template
+  // Ejemplo: this.mercanciasTableTouched = true;
+  // O podrías marcar un campo de error en el formulario principal si lo deseas
+  this.mercanciasTableTouched = true;
+}
+
   }
