@@ -16,6 +16,8 @@ import { ComplimentosService } from '../../../../shared/services/complimentos.se
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-planta/federatarios-y-plantas.component';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
+import { CapacidadInstalada } from '../../../../shared/constantes/capacidad-instalada.enum';
+
 /**
  * Componente para la vista de federatarios y plantas
  * @export FederatariosYPlantasVistaComponent
@@ -187,6 +189,16 @@ export class FederatariosYPlantasVistaComponent implements OnInit, OnDestroy {
     this.estadoValor = datos.estadoUno;
     this.store.setFederatariosCatalogo(datos);
   }
+
+  /**
+   * Actualiza la lista de capacidad instalada en la tabla utilizando el evento recibido.
+   *
+   * @param event - Arreglo de objetos de tipo `CapacidadInstalada` que representa la nueva lista de capacidad instalada.
+   */
+
+    obtenerCapacidadInstaladaTablaList(event: CapacidadInstalada[]): void {
+      this.store.setCapacidadInstaladaTableLista(event);
+    }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.

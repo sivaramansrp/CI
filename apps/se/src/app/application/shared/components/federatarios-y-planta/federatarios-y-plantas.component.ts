@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, ViewChild } from '@angular/core';
-import { Input, OnDestroy, OnInit, Output} from '@angular/core';
+import { Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -32,14 +32,16 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 
 import { FederatoriosState, FederatoriosStore } from '../../../estados/tramites/federatarios.store';
-import { Subject,map,takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CargaPorArchivoComponent } from '../carga-por-archivo/carga-por-archivo.component';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FederatoriosQuery } from '../../../estados/queries/federatarios.query';
 
 import { FECHA_DE_Tabla, INMEX_PLANTAS } from '../../constantes/federatarios-y-plantas.enum';
+import { CapacidadInstalada } from '../../constantes/capacidad-instalada.enum';
 import { ComplimentosService } from '../../services/complimentos.service';
+
 /**
  * Componente para los federatarios y plantas
  * @export FederatariosYPlantasComponent
@@ -152,7 +154,17 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
     ,
   };
 
-
+  /**
+     * Evento que emite la lista de objetos de tipo `CapacidadInstalada` para la tabla de capacidad instalada.
+     * 
+     * @event
+     * @type {EventEmitter<CapacidadInstalada[]>}
+     * @remarks
+     * Este evento se dispara cuando hay cambios en la lista de capacidad instalada, permitiendo que componentes padres reciban la información actualizada.
+     */
+  @Output() obtainorCapacidadInstaladaTablaList: EventEmitter<
+    CapacidadInstalada[]
+  > = new EventEmitter<CapacidadInstalada[]>(false);
 
   /**
    * Configuración para la tabla de plantas disponibles
@@ -191,7 +203,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
    */
   @Input() plantasImmexDatos!: PlantasImmex[];
 
- 
+
   /**
    * Indica si la sección de "Expresas" debe ser visible o no.
    * @type {boolean}
@@ -210,53 +222,53 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
    * Opciones de estados disponibles
    * @property {[]} estadoOptions
    */
-    @Input() estadoOptions!:Catalogo[];
+  @Input() estadoOptions!: Catalogo[];
 
-    /**
-   * Opciones de representacionFederalOptions
-   * @type {Catalogo[]} representacionFederalOptions
-   */
-    public representacionFederalOptions: Catalogo[] = [];
+  /**
+ * Opciones de representacionFederalOptions
+ * @type {Catalogo[]} representacionFederalOptions
+ */
+  public representacionFederalOptions: Catalogo[] = [];
 
-    /**
-   * Opciones de actividadProductivaOptions
-   * @type {Catalogo[]} actividadProductivaOptions
-   */
-    public actividadProductivaOptions: Catalogo[] = [];
+  /**
+ * Opciones de actividadProductivaOptions
+ * @type {Catalogo[]} actividadProductivaOptions
+ */
+  public actividadProductivaOptions: Catalogo[] = [];
 
   /**
    * Texto para mostrar en la alerta
    * @property {string} textodAlerta
    */
   public textodAlerta = TEXTO_DE_ALERTA;
-/**
-   * Estado de la solicitud 250101, que contiene los valores actuales de la solicitud.
-   */
+  /**
+     * Estado de la solicitud 250101, que contiene los valores actuales de la solicitud.
+     */
   public solicitudState!: FederatoriosState;
- 
+
   /**
    * Formulario para los datos de federatarios
    * @property {FormGroup} federatariosFormGroup
    */
   public federatariosFormGroup!: FormGroup;
-/**
-   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
-   */
+  /**
+     * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+     */
   private destroyNotifier$: Subject<void> = new Subject();
- 
+
   /** Indica si el formulario debe mostrarse en modo solo lectura.  
  *  Controla la habilitación o deshabilitación de los campos. */
- esFormularioSoloLectura: boolean = false;
-/** 
- * Formularios reactivos para capturar información de empresas y plantas. 
- * Se inicializan en el ciclo de vida del componente. 
- */
+  esFormularioSoloLectura: boolean = false;
+  /** 
+   * Formularios reactivos para capturar información de empresas y plantas. 
+   * Se inicializan en el ciclo de vida del componente. 
+   */
   public expresasFormGroup!: FormGroup;
   /** 
  * Formularios reactivos para capturar información de empresas y plantas. 
  * Se inicializan en el ciclo de vida del componente. 
  */
-plantasForm!: FormGroup;
+  plantasForm!: FormGroup;
   /**
    * Emisor de eventos para los datos del formulario de federatarios.
    * @type {EventEmitter<FederatariosEncabezado>}
@@ -284,55 +296,67 @@ plantasForm!: FormGroup;
    * @property {boolean} mostrarComplementarPlantaPopup
    */
   public mostrarComplementarPlantaPopup:boolean = false;
+  
 
-    /**
-   * Controla la visibilidad del popup "Montos de Inversión".
-   * @property {boolean} mostrarMontosDeInversionPopup
-   */
-  public mostrarMontosDeInversionPopup:boolean = false;
+  /**
+ * Controla la visibilidad del popup "Montos de Inversión".
+ * @property {boolean} mostrarMontosDeInversionPopup
+ */
+  public mostrarMontosDeInversionPopup: boolean = false;
 
   /**
    * Controla la visibilidad del popup "Empleados".
    * @property {boolean} mostrarEmpleadosPopup
    */
-  public mostrarEmpleadosPopup:boolean = false;
+  public mostrarEmpleadosPopup: boolean = false;
 
   /**
    * Controla la visibilidad del popup "Capacidad Instalada".
    * @property {boolean} mostrarCapacidadInstaladaPopup
    */
-  public mostrarCapacidadInstaladaPopup:boolean = false;
+  public mostrarCapacidadInstaladaPopup: boolean = false;
 
   /**
    * Controla la visibilidad del popup "Proveedor por Archivo".
    * @property {boolean} mostrarProveedorPorArchivoPopup
    */
-  public mostrarProveedorPorArchivoPopup:boolean = false;
+  public mostrarProveedorPorArchivoPopup: boolean = false;
 
-/**
- * Objeto de notificación utilizado para mostrar mensajes relacionados con el proceso del federatario.
- * @property {Notificacion} federatarioNotificacion
- */
+  /**
+   * Objeto de notificación utilizado para mostrar mensajes relacionados con el proceso del federatario.
+   * @property {Notificacion} federatarioNotificacion
+   */
   public federatarioNotificacion?: Notificacion;
 
-/**
- * Contiene la planta IMMEX seleccionada por el usuario o `null` si no hay selección.
- * @property {PlantasImmex | null} selectedPlantaImmex
- */
+  /**
+   * Contiene la planta IMMEX seleccionada por el usuario o `null` si no hay selección.
+   * @property {PlantasImmex | null} selectedPlantaImmex
+   */
   public selectedPlantaImmex: PlantasImmex | null = null;
 
-/**
- * Indica si una planta IMMEX ha sido seleccionada.
- * @property {boolean} isPlantaImmexSelected
- */
+  /**
+   * Indica si una planta IMMEX ha sido seleccionada.
+   * @property {boolean} isPlantaImmexSelected
+   */
   public isPlantaImmexSelected = false;
 
-   /**
-     * Arreglo que contiene los elementos del catálogo de estado IMMEX.
-     * Cada elemento representa una opción disponible en el catálogo.
-     */
-    estadoImmex: Catalogo[] = [];
-  
+  /**
+    * Arreglo que contiene los elementos del catálogo de estado IMMEX.
+    * Cada elemento representa una opción disponible en el catálogo.
+    */
+  estadoImmex: Catalogo[] = [];
+
+  /**
+   * Evento que emite un arreglo de objetos de tipo `CapacidadInstalada` cuando se obtienen los datos de la tabla de capacidad instalada.
+   * 
+   * @event
+   * @type {EventEmitter<CapacidadInstalada[]>}
+   */
+  @Output() obtenerCapacidadInstaladaTablaDatos: EventEmitter<
+    CapacidadInstalada[]
+  > = new EventEmitter<CapacidadInstalada[]>(true);
+
+
   /**
    * Constructor de la clase FederatariosYPlantasComponent.
    * @param {Router} router - Servicio de Angular para la navegación.
@@ -346,22 +370,22 @@ plantasForm!: FormGroup;
     private consultaioQuery: ConsultaioQuery,
     private complimentosService: ComplimentosService,
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
-/**
-   * Método que se ejecuta cuando el componente es inicializado.
-   * 
-   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
-   */
+  ) { }
+  /**
+     * Método que se ejecuta cuando el componente es inicializado.
+     * 
+     * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+     */
   ngOnInit(): void {
     this.obtenerImex();
     this.federatoriosQuery.selectSolicitud$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.solicitudState = seccionState as FederatoriosState;
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState as FederatoriosState;
+        })
+      )
+      .subscribe();
 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -373,27 +397,27 @@ plantasForm!: FormGroup;
       )
       .subscribe();
 
-   if (!(this.solicitudState['federatariosEstadoOptions'] as Catalogo[])?.length) {
-    this.obtenerFederatariosEstados();
-   } else {
-    this.estadoOptions = [...this.solicitudState['federatariosEstadoOptions'] as Catalogo[]];
-   }
+    if (!(this.solicitudState['federatariosEstadoOptions'] as Catalogo[])?.length) {
+      this.obtenerFederatariosEstados();
+    } else {
+      this.estadoOptions = [...this.solicitudState['federatariosEstadoOptions'] as Catalogo[]];
+    }
 
-   if (!(this.solicitudState['municipioOptions'] as Catalogo[])?.length) {
-    this.obtenerMunicipio("BCN");
-   }
-   
-   if (!(this.solicitudState['representacionOptions'] as Catalogo[])?.length) {
-    this.obtenerRepresentacionFederal('MEX');
-   } else {
-    this.representacionFederalOptions = [...this.solicitudState['representacionOptions'] as Catalogo[]];
-   }
+    if (!(this.solicitudState['municipioOptions'] as Catalogo[])?.length) {
+      this.obtenerMunicipio("BCN");
+    }
 
-   if (!(this.solicitudState['actividadOptions'] as Catalogo[])?.length) {
-    this.obtenerActividad();
-   } else {
-    this.actividadProductivaOptions = [...this.solicitudState['actividadOptions'] as Catalogo[]];
-   }
+    if (!(this.solicitudState['representacionOptions'] as Catalogo[])?.length) {
+      this.obtenerRepresentacionFederal('MEX');
+    } else {
+      this.representacionFederalOptions = [...this.solicitudState['representacionOptions'] as Catalogo[]];
+    }
+
+    if (!(this.solicitudState['actividadOptions'] as Catalogo[])?.length) {
+      this.obtenerActividad();
+    } else {
+      this.actividadProductivaOptions = [...this.solicitudState['actividadOptions'] as Catalogo[]];
+    }
   }
 
   /**
@@ -403,26 +427,26 @@ plantasForm!: FormGroup;
  */
   obtenerFederatariosEstados(): void {
     this.complimentosService.getEstado()
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((response) => {
-        this.estadoOptions = response.datos;
-        this.establecerCambioDeValor({ campo: 'federatariosEstadoOptions', valor: response.datos });
-        const ESTADO_FIELD = this.representanteLegalFormData.find(
-          (datos: ModeloDeFormaDinamica) => datos.campo === 'estado'
-        ) as ModeloDeFormaDinamica;
-        if (ESTADO_FIELD) { 
-          ESTADO_FIELD.opciones = response.datos.map( 
-            (item: unknown) => ({
-              descripcion: (item as { descripcion: string }).descripcion,
-              id: (item as { clave: string }).clave,
-            })
-          );
-        }
-        this.changeDetectorRef.markForCheck();
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((response) => {
+          this.estadoOptions = response.datos;
+          this.establecerCambioDeValor({ campo: 'federatariosEstadoOptions', valor: response.datos });
+          const ESTADO_FIELD = this.representanteLegalFormData.find(
+            (datos: ModeloDeFormaDinamica) => datos.campo === 'estado'
+          ) as ModeloDeFormaDinamica;
+          if (ESTADO_FIELD) {
+            ESTADO_FIELD.opciones = response.datos.map(
+              (item: unknown) => ({
+                descripcion: (item as { descripcion: string }).descripcion,
+                id: (item as { clave: string }).clave,
+              })
+            );
+          }
+          this.changeDetectorRef.markForCheck();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -432,25 +456,25 @@ plantasForm!: FormGroup;
  */
   obtenerMunicipio(cveEntidad: string): void {
     this.complimentosService.getmunicipio(cveEntidad)
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((response) => {
-        this.establecerCambioDeValor({ campo: 'municipioOptions', valor: response.datos });
-        const MUNICIPIO_FIELD = this.representanteLegalFormData.find(
-          (datos: ModeloDeFormaDinamica) => datos.campo === 'estadoOptions'
-        ) as ModeloDeFormaDinamica;
-        if (MUNICIPIO_FIELD) {
-          MUNICIPIO_FIELD.opciones = response.datos.map(
-            (item: unknown) => ({
-              descripcion: (item as { descripcion: string }).descripcion,
-              id: (item as { clave: string }).clave,
-            })
-          );
-        }
-        this.changeDetectorRef.markForCheck();
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((response) => {
+          this.establecerCambioDeValor({ campo: 'municipioOptions', valor: response.datos });
+          const MUNICIPIO_FIELD = this.representanteLegalFormData.find(
+            (datos: ModeloDeFormaDinamica) => datos.campo === 'estadoOptions'
+          ) as ModeloDeFormaDinamica;
+          if (MUNICIPIO_FIELD) {
+            MUNICIPIO_FIELD.opciones = response.datos.map(
+              (item: unknown) => ({
+                descripcion: (item as { descripcion: string }).descripcion,
+                id: (item as { clave: string }).clave,
+              })
+            );
+          }
+          this.changeDetectorRef.markForCheck();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -460,16 +484,16 @@ plantasForm!: FormGroup;
  */
   obtenerRepresentacionFederal(id: string): void {
     this.complimentosService.getRepresentacion(id)
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((response) => {
-        const DATOS = { campo: 'representacionOptions', valor: response.datos };
-        this.establecerCambioDeValor(DATOS);
-        this.representacionFederalOptions = response.datos;
-        this.changeDetectorRef.markForCheck();
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((response) => {
+          const DATOS = { campo: 'representacionOptions', valor: response.datos };
+          this.establecerCambioDeValor(DATOS);
+          this.representacionFederalOptions = response.datos;
+          this.changeDetectorRef.markForCheck();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -481,35 +505,35 @@ plantasForm!: FormGroup;
    */
   obtenerActividad(): void {
     this.complimentosService.getActividadProductiva()
-    .pipe(
-      takeUntil(this.destroyNotifier$)
-    )
-    .subscribe((res) => {
-      const DATOS = { campo: 'actividadOptions', valor: res.datos };
-      this.establecerCambioDeValor(DATOS);
-      this.actividadProductivaOptions = res.datos;
-      this.changeDetectorRef.markForCheck();
-    });
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((res) => {
+        const DATOS = { campo: 'actividadOptions', valor: res.datos };
+        this.establecerCambioDeValor(DATOS);
+        this.actividadProductivaOptions = res.datos;
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
- /**
-   * Método para inicializar el formulario reactivo con los datos de la solicitud.
-   * 
-   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
-   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
-   */
+  /**
+    * Método para inicializar el formulario reactivo con los datos de la solicitud.
+    * 
+    * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+    * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
+    */
   inicializarCertificadoFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.federatariosFormGroup.disable();
       this.expresasFormGroup.disable();
       this.plantasForm.disable();
-    } 
+    }
   }
 
-   /** Inicializa los datos del formulario suscribiéndose al estado del trámite.  
- *  Asigna el estado actual al modelo local del componente. */
-   inicializarFormulario(): void {
+  /** Inicializa los datos del formulario suscribiéndose al estado del trámite.  
+*  Asigna el estado actual al modelo local del componente. */
+  inicializarFormulario(): void {
     this.initFederatariosFormGroup();
     this.initExpresasFormGroup();
   }
@@ -520,7 +544,7 @@ plantasForm!: FormGroup;
    */
   initFederatariosFormGroup(): void {
     this.federatariosFormGroup = new FormGroup({
-      nombre: new FormControl( this.solicitudState['nombre'], Validators.required),
+      nombre: new FormControl(this.solicitudState['nombre'], Validators.required),
       fechaDelActa: new FormControl(this.solicitudState['fechaDelActa'], Validators.required),
       primerApellido: new FormControl(this.solicitudState['primerApellido'], Validators.required),
       segundoApellido: new FormControl(this.solicitudState['segundoApellido']),
@@ -581,23 +605,23 @@ plantasForm!: FormGroup;
    */
   aggregarDatos(): void {
     if (this.federatariosFormGroup.invalid) {
-    this.federatariosFormGroup.markAllAsTouched();
+      this.federatariosFormGroup.markAllAsTouched();
 
-    this.federatarioNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Introduzca el Nombre completo y correcto del Notario.',
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
-    return;
-  }
-  this.datosFormaFedratario.emit(this.federatariosFormGroup.value);
-  this.federatariosFormGroup.reset();
+      this.federatarioNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Introduzca el Nombre completo y correcto del Notario.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    this.datosFormaFedratario.emit(this.federatariosFormGroup.value);
+    this.federatariosFormGroup.reset();
   }
 
 /**
@@ -642,17 +666,17 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
     if (this.selectedPlantaImmex) {
       this.mostrarComplementarPlantaPopup = true;
     } else {
-    this.federatarioNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'No se seleccionaron datos de las plantas Immex.',
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
+      this.federatarioNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'No se seleccionaron datos de las plantas Immex.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
   }
 
@@ -670,17 +694,17 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
     if (this.selectedPlantaImmex) {
       this.mostrarMontosDeInversionPopup = true;
     } else {
-    this.federatarioNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'No se seleccionaron datos de las plantas Immex.',
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
+      this.federatarioNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'No se seleccionaron datos de las plantas Immex.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
   }
 
@@ -696,17 +720,17 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
     if (this.selectedPlantaImmex) {
       this.mostrarEmpleadosPopup = true;
     } else {
-    this.federatarioNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'No se seleccionaron datos de las plantas Immex.',
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
+      this.federatarioNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'No se seleccionaron datos de las plantas Immex.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
   }
 
@@ -725,17 +749,17 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
     if (this.selectedPlantaImmex) {
       this.mostrarCapacidadInstaladaPopup = true;
     } else {
-    this.federatarioNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'No se seleccionaron datos de las plantas Immex.',
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
+      this.federatarioNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'No se seleccionaron datos de las plantas Immex.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
   }
 
@@ -752,26 +776,26 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
     if (this.selectedPlantaImmex) {
       this.mostrarProveedorPorArchivoPopup = true;
     } else {
-    this.federatarioNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'No se seleccionaron datos de las plantas Immex.',
-      cerrar: true,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-    };
+      this.federatarioNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'No se seleccionaron datos de las plantas Immex.',
+        cerrar: true,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
   }
 
-   /**
-   * Cierra el popup de complementar planta.
-   * 
-   * Cambia la bandera `mostrarComplementarPlantaPopup` a `false`
-   * para ocultar el popup correspondiente.
-   */
+  /**
+  * Cierra el popup de complementar planta.
+  * 
+  * Cambia la bandera `mostrarComplementarPlantaPopup` a `false`
+  * para ocultar el popup correspondiente.
+  */
   cerrarComplementarPlanta(): void {
     this.mostrarComplementarPlantaPopup = false;
   }
@@ -826,38 +850,47 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
   aggregarExpresasDatos(): void {
     this.expresasDatos.push(this.expresasFormGroup.value);
   }
-    /**
-  * compo doc
-  * @method establecerCambioDeValor
-  * @description
-  * Este método se utiliza para manejar los cambios en los valores de un formulario dinámico.
-  * Recibe un evento que contiene el nombre del campo y su nuevo valor, y actualiza el estado
-  * dinámico del formulario en el store correspondiente.
-  * 
-  * @param event - Un objeto que contiene el campo que ha cambiado y su nuevo valor.
-  * El objeto tiene la estructura: `{ campo: string; valor: any }`.
-  * 
-  * @example
-  * establecerCambioDeValor({ campo: 'nombre', valor: 'Juan' });
-  * // Actualiza el campo 'nombre' con el valor 'Juan' en el store dinámico.
-  */
+  /**
+* compo doc
+* @method establecerCambioDeValor
+* @description
+* Este método se utiliza para manejar los cambios en los valores de un formulario dinámico.
+* Recibe un evento que contiene el nombre del campo y su nuevo valor, y actualiza el estado
+* dinámico del formulario en el store correspondiente.
+* 
+* @param event - Un objeto que contiene el campo que ha cambiado y su nuevo valor.
+* El objeto tiene la estructura: `{ campo: string; valor: any }`.
+* 
+* @example
+* establecerCambioDeValor({ campo: 'nombre', valor: 'Juan' });
+* // Actualiza el campo 'nombre' con el valor 'Juan' en el store dinámico.
+*/
   establecerCambioDeValor(event: { campo: string; valor: object | string | [] }): void {
     if (event) {
       this.federatoriosStore.setDynamicFieldValue(event.campo, event.valor);
-      
+
     }
   }
 
-    /**
-   * Obtiene el estado IMEX de una entidad específica y actualiza la propiedad `estadoImmex` con los datos recibidos.
-   * 
-   * @param entidad - El identificador de la entidad para la cual se desea obtener el estado IMEX.
-   */
-  obtenerImex():void {
+  /**
+ * Obtiene el estado IMEX de una entidad específica y actualiza la propiedad `estadoImmex` con los datos recibidos.
+ * 
+ * @param entidad - El identificador de la entidad para la cual se desea obtener el estado IMEX.
+ */
+  obtenerImex(): void {
     this.complimentosService.getEstado().pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-  this.estadoImmex = res.datos;
+      this.estadoImmex = res.datos;
     });
-    
+
+  }
+
+  /**
+   * Emite el evento `obtainorCapacidadInstaladaTablaList` con la lista de capacidades instaladas recibida.
+   *
+   * @param event - Arreglo de objetos de tipo `CapacidadInstalada` que representa la lista de capacidades instaladas seleccionadas.
+   */
+  obtenerCapacidadInstaladaTablaList(event: CapacidadInstalada[]): void {
+    this.obtenerCapacidadInstaladaTablaDatos.emit(event);
   }
 
     /**
@@ -888,3 +921,7 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
   }
 
 }
+function abrirDialogoComplementarPlanta() {
+  throw new Error('Function not implemented.');
+}
+

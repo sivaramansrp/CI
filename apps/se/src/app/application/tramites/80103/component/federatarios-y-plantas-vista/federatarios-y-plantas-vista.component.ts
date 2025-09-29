@@ -12,6 +12,7 @@ import { ComplimentosService } from '../../../../shared/services/complimentos.se
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-planta/federatarios-y-plantas.component';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
+import { CapacidadInstalada } from '../../../../shared/constantes/capacidad-instalada.enum';
 /**
  * Componente para la vista de federatarios y plantas
  * @export FederatariosYPlantasVistaComponent
@@ -19,7 +20,7 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
 @Component({
   selector: 'app-federatarios-y-plantas-vista',
   standalone: true,
-  imports: [CommonModule,FederatariosYPlantasComponent],
+  imports: [CommonModule, FederatariosYPlantasComponent],
   templateUrl: './federatarios-y-plantas-vista.component.html',
   styleUrl: './federatarios-y-plantas-vista.component.scss',
 })
@@ -175,6 +176,14 @@ export class FederatariosYPlantasVistaComponent implements OnInit,OnDestroy {
   setDatosFederatarios(datos: FederatariosEncabezado): void {
     this.estadoValor = datos.estadoUno;
     this.store.setFederatariosCatalogo(datos);
+  }
+
+  /**
+   * Cierra el popup de capacidad instalada.
+   * Establece la variable `mostrarCapacidadInstaladaPopup` a `false` para ocultar el popup.
+   */
+  obtenerCapacidadInstaladaTablaList(event: CapacidadInstalada[]): void {
+    this.store.setCapacidadInstaladaTableLista(event);
   }
 
   /**

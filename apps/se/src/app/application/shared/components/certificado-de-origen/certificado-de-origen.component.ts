@@ -1,5 +1,5 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent,InputRadioComponent, Notificacion, SoloLetrasNumerosDirective, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { BOTON_DE_OPCION_VER, CARGA_MERCANCIA_EXPORT, CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, CONFIGURACION_MERCANCIA_TABLA, FECHA_ID, MERCANCIA_SELECCIONADAS, REQUIREDA, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, forwardRef } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
@@ -14,6 +14,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from "ngx-toastr";
 
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
+import { RADIO_OPTIONS } from '../../../tramites/110214/constants/validar-inicialmente-certificado.enum';
 
 
 /**
@@ -75,7 +76,8 @@ export const FECHA_FIN = {
     AlertComponent,
     NotificacionesComponent,
     forwardRef(() => SoloLetrasNumerosDirective),
-  ],
+    InputRadioComponent
+],
   templateUrl: './certificado-de-origen.component.html',
   providers: [ToastrService],
   styleUrl: './certificado-de-origen.component.scss'
@@ -90,6 +92,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
   @Input() title: string = 'Validación inicial del certificado de circulación de mercancías';
 
   /**
+ * @property {boolean} domTercerOperador
+ * @description
+ * Propiedad de entrada que controla la visualización del domicilio del tercer operador.
+ * Cuando es true, muestra los campos relacionados con el domicilio del tercer operador.
+ */
+@Input() domTercerOperador: boolean = false;
+  /**
    * Propiedad de entrada que recibe un arreglo de menús desplegables.
    * @type {MenusDesplegables[]}
    */
@@ -100,6 +109,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit, OnChange
    * @type {boolean}
    */
   @Input() operador!: boolean;
+
+
+    /**
+     * Indica si el componente está en modo de solo lectura.
+     */
+   radioOptions = RADIO_OPTIONS;
 
   /**
    * Indica si el formulario debe mostrarse solo en modo de lectura.
