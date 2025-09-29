@@ -69,7 +69,7 @@
 
                 <div class="col-md-8">
                     <label class="form-label" for="calle">Calle*:</label>
-                    <input type="text" class="form-control" id="calle" placeholder="CALLE"
+                    <input type="text" class="form-control" id="calle" placeholder=""
                         formControlName="calle"
                         [class.is-invalid]="domicilioDelDestinatario.get('calle')?.touched && domicilioDelDestinatario.get('calle')?.invalid"
                         (change)="setValorStore(domicilioDelDestinatario,'calle')"
@@ -80,7 +80,7 @@
 
                 <div class="col-md-4">
                     <label class="form-label" for="numeroLetra">Número y/o letra*:</label>
-                    <input type="text" class="form-control" id="numeroLetra" placeholder="NUMERO"
+                    <input type="text" class="form-control" id="numeroLetra" placeholder=""
                         formControlName="numeroLetra"
                         [class.is-invalid]="domicilioDelDestinatario.get('numeroLetra')?.touched && domicilioDelDestinatario.get('numeroLetra')?.invalid"
                         (change)="setValorStore(domicilioDelDestinatario,'numeroLetra')"
@@ -91,7 +91,7 @@
 
                 <div class="col-md-8 mt-4">
                     <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)*:</label>
-                    <input type="text" class="form-control"id="ciudad" placeholder="CIUDAD"
+                    <input type="text" class="form-control"id="ciudad" placeholder=""
                         formControlName="ciudad"
                         [class.is-invalid]="domicilioDelDestinatario.get('ciudad')?.touched && domicilioDelDestinatario.get('ciudad')?.invalid"
                         (change)="setValorStore(domicilioDelDestinatario,'ciudad')"
@@ -103,7 +103,7 @@
                 <div class="col-md-4 mt-4">
                     <label class="form-label" for="correoElectronico">Correo electrónico*:</label>
                     <input type="email" class="form-control" id="correoElectronico"
-                        placeholder="correo@correo.com" formControlName="correoElectronico"
+                        placeholder="" formControlName="correoElectronico"
                         [class.is-invalid]="domicilioDelDestinatario.get('correoElectronico')?.touched && domicilioDelDestinatario.get('correoElectronico')?.invalid"
                         (change)="setValorStore(domicilioDelDestinatario,'correoElectronico')"
                         maxlength="70"
@@ -113,7 +113,7 @@
 
                 <div class="col-md-4 mt-4">
                     <label class="form-label" for="fax">Fax:</label>
-                    <input type="text" class="form-control"id="fax" placeholder="546456" formControlName="fax"
+                    <input type="text" class="form-control" id="fax" placeholder="" formControlName="fax"
                         (change)="setValorStore(domicilioDelDestinatario,'fax')"
                         maxlength="30"
                         [class.bg-white]="!domicilioDelDestinatario.get('fax')?.disabled">
@@ -121,7 +121,7 @@
 
                 <div class="col-md-4 mt-4">
                     <label class="form-label" for="telefono">Teléfono:</label>
-                    <input type="text" class="form-control"id="telefono" placeholder="5555687"
+                    <input type="text" class="form-control" id="telefono" placeholder="" formControlName="telefono"
                         formControlName="telefono" (change)="setValorStore(domicilioDelDestinatario,'telefono')"
                         [class.bg-white]="!domicilioDelDestinatario.get('telefono')?.disabled"
                         maxlength="30">
