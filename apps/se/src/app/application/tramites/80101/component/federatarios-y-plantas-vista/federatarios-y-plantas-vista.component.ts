@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Notificacion, NotificacionesComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { doDeepCopy, esValidArray, esValidObject, Notificacion, NotificacionesComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
 import {
@@ -26,6 +26,7 @@ import { MontosDeInversionComponent } from '../../../../shared/components/montos
 
 import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../../shared/constantes/complementar-planta.enum';
 import { Directos } from '../../../../shared/constantes/empleados.enum';
+import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 /**
  * Componente para la vista de federatarios y plantas
  * @export FederatariosYPlantasVistaComponent
@@ -172,6 +173,12 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
   public nuevaUnoNotificacion!: Notificacion;
 
   /**
+   * Valor del estado seleccionado en el formulario.
+   * Se utiliza para almacenar y gestionar el estado actual seleccionado por el usuario.
+   */
+  public estadoValor: string = '';
+
+  /**
    * Constructor de la clase FederatariosYPlantasVistaComponent.
    *
    * @param store - Inyección de dependencia del servicio `Tramite80101Store` para gestionar el estado de la aplicación.
@@ -182,7 +189,8 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
   constructor(
     private store: Tramite80101Store,
     private query: Tramite80101Query,
-    public nuevoProgramaIndustrialService: NuevoProgramaIndustrialService
+    public nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
+    private _complimentoSvc: ComplimentosService
   ) {
     this.federatariosTablaLista$ = this.query.selectDatosFederatarios$;
     this.plantasImmexTablaLista$ = this.query.selectDatosPlantasImmex$;
@@ -211,7 +219,7 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
       .getFederataiosyPlantaCatalogosData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((resp) => {
-        this.estadoOptionsConfig = resp
+        this.estadoOptionsConfig = resp;
       });
   }
   /**
@@ -231,14 +239,31 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
    *                de los federatarios a ser almacenada.
    */
   setDatosFederatarios(datos: FederatariosEncabezado): void {
+    this.estadoValor = datos.estadoUno;
     this.store.setFederatariosCatalogo(datos);
   }
 
   /**
    * Establece los datos de las plantas disponibles en el almacén.
    */
-  setPlantasDisponiblesDatos(datos: PlantasDisponibles[]): void {
-    this.store.setPlantasDisponiblesTablaLista(datos);
+  setPlantasDisponiblesDatos(): void {
+    const PAYLOAD = {
+        "rfcEmpresaSubManufacturera": "AAL0409235E6",
+        "entidadFederativa": this.estadoValor,
+        "idPrograma": null
+    }
+    this._complimentoSvc.getPlantasDisponibles(PAYLOAD).pipe(takeUntil(this.destroy$))
+      .subscribe((response) => {
+        if(esValidObject(response)) {
+          const API_DATOS = doDeepCopy(response);
+          if(esValidArray(API_DATOS.datos)) {
+            const DATOS: PlantasDisponibles[] = this._complimentoSvc.mapApiResponseToPlantasDisponibles(API_DATOS.datos);
+            this.store.setPlantasDisponiblesTablaLista(DATOS);
+          }
+        }
+      }, (error) => {
+        console.error('Error al obtener los plantas disponibles:', error);
+      });
   }
 
   /** 

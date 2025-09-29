@@ -1044,6 +1044,18 @@ export class Tramite80102Store extends Store<Tramite80102State> {
     }));
   }
 
+    /**
+    * Guarda el ID de la solicitud en el estado.
+    *
+    * @param idSolicitud - El ID de la solicitud que se va a guardar.
+    */
+  public setFederatariosCatalogo(datosFederatarios: FederatariosEncabezado): void {
+    this.update((state) => ({
+      ...state,
+      datosFederatarios,
+    }));
+  }
+
   /**
    * @method eliminarFederatarios
    * @description Elimina federatarios del estado actual de la tienda.

@@ -623,8 +623,7 @@ agregarPlantas(): void {
    * Ensure that `FECHA_DE_Tabla` is defined and contains the expected data structure before calling this method.
    */
   buscarPlantasImmex(): void {
-    this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
-    this.datosPlantaDisponibles.emit(this.plantasDisponiblesDatos);
+    this.datosPlantaDisponibles.emit();
   }
 
   /**

@@ -7,11 +7,12 @@
   [plantasDisponiblesDatos]="(plantasDisponiblesTablaLista$ | async) || []"
   [plantasImmexDatos]="(plantasImmexTablaLista$ | async) || []"
   (datosFormaFedratario)="setFormaDatos($event)"
-  (datosPlantaDisponibles)="setPlantasDisponiblesDatos($event)"
+  (datosPlantaDisponibles)="setPlantasDisponiblesDatos()"
   (datosPlantasImmex)="setPlantasImmexDatos($event)"
   [datosFederatarios]="datosFederatarios"
   [estadoOptionsConfig]="estadoOptionsConfig"
   (accionSeccion)="onAccionSeccion($event)"
+  (datosFederatariosEvent)="setDatosFederatarios($event)"
 ></app-federatarios-y-plantas>
 
 <ng-container *ngIf="mostrarComplementarPlantaPopup">
