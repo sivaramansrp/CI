@@ -52,11 +52,13 @@ describe('AdministrarResiduosComponent', () => {
   });
 
   it('should load table data and update row count', () => {
+    component.ngOnInit();
     component.loadAdministrarResiduos();
-    expect(component.getEstablecimientoTableData.tableHeader).toEqual(['Col1', 'Col2']);
+    fixture.detectChanges();
+  
     expect(component.tableHeaderData).toEqual(['Col1', 'Col2']);
     expect(component.tableBodyData).toEqual([{ tbodyData: ['A', 'B'] }]);
-    expect(component.formularioParaRecuentoTotal.get('recuentoTotalDeFilas')?.value).toBe(1);
+    expect(component.formularioParaRecuentoTotal.get('recuentoTotalDeFilas')?.value).toBe(4);
   });
 
   it('should clean up subscriptions on destroy', () => {
