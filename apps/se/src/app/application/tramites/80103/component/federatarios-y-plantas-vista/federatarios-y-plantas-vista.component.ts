@@ -3,16 +3,18 @@
  * Importa interfaces compartidas de catálogos y tablas de selección
  * desde la librería de acceso a datos del usuario.
  */
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../../shared/constantes/complementar-planta.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FEDERATARIOS,FederatariosEncabezado,PLANTAS_DIPONIBLES,PLANTAS_IMMEX,PlantasDisponibles,PlantasImmex} from '../../../../shared/models/federatarios-y-plantas.model';
+import { FEDERATARIOS, FederatariosEncabezado, PLANTAS_DIPONIBLES, PLANTAS_IMMEX, PlantasDisponibles, PlantasImmex } from '../../../../shared/models/federatarios-y-plantas.model';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { TablaSeleccion,doDeepCopy, esValidArray, esValidObject } from '@libs/shared/data-access-user/src';
+import { CapacidadInstalada } from '../../../../shared/constantes/capacidad-instalada.enum';
 import { CommonModule } from '@angular/common';
 import { ComplimentosService } from '../../../../shared/services/complimentos.service';
+import { Directos } from '../../../../shared/constantes/empleados.enum';
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-planta/federatarios-y-plantas.component';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
-import { CapacidadInstalada } from '../../../../shared/constantes/capacidad-instalada.enum';
 /**
  * Componente para la vista de federatarios y plantas
  * @export FederatariosYPlantasVistaComponent
@@ -168,6 +170,42 @@ export class FederatariosYPlantasVistaComponent implements OnInit,OnDestroy {
     this.store.setPlantasImmexTablaLista(datos);
   }
 
+/**
+ * Establece los datos complementarios de plantas en el almacén.
+ * 
+ * @param event - Lista de datos complementarios de planta a almacenar.
+ */
+  setComplementarPlantaList(event: ComplementoDePlanta[]): void {
+    this.store.setComplementarPlantaDatos(event);
+  }
+
+/**
+ * Establece los datos de firmantes en el almacén.
+ * 
+ * @param event - Lista de datos de firmantes a almacenar.
+ */
+  setFirmantesList(event: ComplementarPlantaState[]): void {
+    this.store.setFirmantesDatos(event);
+  }
+
+/**
+ * Establece los datos de montos de inversión en el almacén.
+ * 
+ * @param event - Lista de montos de inversión a almacenar.
+ */
+  setMontosInversionList(event: MontoDeInversion[]): void {
+    this.store.setMontosInversionDatos(event);
+  }
+
+ /**
+ * Establece los datos de empleados directos en el almacén.
+ * 
+ * @param event - Lista de empleados directos a almacenar.
+ */
+  setEmpleadosList(event: Directos[]): void {
+    this.store.setEmpleadosDatos(event);
+  }
+  
   /**
    * Establece los datos de los federatarios y actualiza el estado seleccionado.
    * @param {FederatariosEncabezado} datos - Datos del encabezado de federatarios.

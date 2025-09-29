@@ -42,6 +42,9 @@ import { FECHA_DE_Tabla, INMEX_PLANTAS } from '../../constantes/federatarios-y-p
 import { CapacidadInstalada } from '../../constantes/capacidad-instalada.enum';
 import { ComplimentosService } from '../../services/complimentos.service';
 
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../shared/constantes/complementar-planta.enum';
+import { Directos } from '../../constantes/empleados.enum';
+
 /**
  * Componente para los federatarios y plantas
  * @export FederatariosYPlantasComponent
@@ -166,6 +169,34 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
     CapacidadInstalada[]
   > = new EventEmitter<CapacidadInstalada[]>(false);
 
+/**
+ * Evento que emite la lista de complementos de planta.
+ * 
+ * La emisión es síncrona para garantizar que los datos se procesen inmediatamente.
+ */
+  @Output() obtenerComplementarPlantaListChange = new EventEmitter<ComplementoDePlanta[]>(false);
+
+/**
+ * Evento que emite la lista de firmantes relacionados con los complementos de planta.
+ * 
+ * La emisión es síncrona para garantizar el procesamiento inmediato de los datos.
+ */
+  @Output() obtenerFirmantesListChange = new EventEmitter<ComplementarPlantaState[]>(false);
+
+/**
+ * Evento que emite la lista de montos de inversión.
+ * 
+ * La emisión es síncrona para asegurar que los datos se procesen de inmediato.
+ */
+  @Output() obtenerMontosInversionListChange = new EventEmitter<MontoDeInversion[]>(false);
+
+/**
+ * Evento que emite la lista de empleados directos.
+ * 
+ * La emisión es síncrona para garantizar el procesamiento inmediato de los datos.
+ */
+  @Output() obtenerEmpleadosListChange = new EventEmitter<Directos[]>(false);
+  
   /**
    * Configuración para la tabla de plantas disponibles
    * @property {FederatariosYPlantasConfiguration<PlantasDisponibles>} plantasDisponiblesConfig
@@ -891,6 +922,43 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
    */
   obtenerCapacidadInstaladaTablaList(event: CapacidadInstalada[]): void {
     this.obtenerCapacidadInstaladaTablaDatos.emit(event);
+  }
+
+  
+/**
+ * Emite el evento `obtenerComplementarPlantaListChange` con la lista de complementos de planta recibida.
+ * 
+ * @param event - Arreglo de objetos de tipo `ComplementoDePlanta` que representa la lista de complementos de planta.
+ */
+  obtenerComplementarPlantaList(event: ComplementoDePlanta[]): void {
+      this.obtenerComplementarPlantaListChange.emit(event);
+  }
+
+/**
+ * Emite el evento `obtenerFirmantesListChange` con la lista de firmantes recibida.
+ * 
+ * @param event - Arreglo de objetos de tipo `ComplementarPlantaState` que representa la lista de firmantes.
+ */
+  obtenerFirmantesList(event:ComplementarPlantaState[]): void {
+    this.obtenerFirmantesListChange.emit(event);
+  }
+
+/**
+ * Emite el evento `obtenerMontosInversionListChange` con la lista de montos de inversión recibida.
+ * 
+ * @param event - Arreglo de objetos de tipo `MontoDeInversion` que representa la lista de montos de inversión.
+ */
+  obtenerMontosInversionList(event:MontoDeInversion[]): void {
+    this.obtenerMontosInversionListChange.emit(event);
+  }
+
+/**
+ * Emite el evento `obtenerEmpleadosListChange` con la lista de empleados directos recibida.
+ * 
+ * @param event - Arreglo de objetos de tipo `Directos` que representa la lista de empleados directos.
+ */
+  obtenerEmpleadosList(event:Directos[]): void {
+    this.obtenerEmpleadosListChange.emit(event);
   }
 
     /**

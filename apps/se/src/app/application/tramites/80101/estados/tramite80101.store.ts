@@ -10,6 +10,7 @@ import {
   AnnexoDosTres,
   AnnexoUno,
 } from '../models/nuevo-programa-industrial.model';
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../shared/constantes/complementar-planta.enum';
 import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { CapacidadInstalada } from '../../../shared/constantes/capacidad-instalada.enum';
@@ -18,6 +19,7 @@ import { CatalogoPaises } from '@ng-mf/data-access-user';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { DatosEmpresaExtranjera } from '../models/nuevo-programa-industrial.model';
 import { DatosSubcontratista } from '../../../shared/models/empresas-subfabricanta.model';
+import { Directos } from '../../../shared/constantes/empleados.enum';
 import { EmpressaSubFabricantePlantas } from '../../../shared/models/empresas-subfabricanta.model';
 import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
@@ -194,8 +196,27 @@ export interface Tramite80101State {
    /**
    * Información detallada de proveedor Cliente Datos TablaDos.
    */
-
   proveedorClienteDatosTablaDos: ProveedorClienteTabla[];
+
+  /**
+ * Información detallada de montos de inversión en la tabla.
+ */
+  montosDeInversionTablaDatos: MontoDeInversion[];
+
+  /**
+ * Información detallada de los empleados directos en la tabla.
+ */
+  empleadosTablaDatos: Directos[];
+
+  /**
+ * Información detallada de los complementos de planta en la tabla.
+ */
+  complementarPlantaDatos: ComplementoDePlanta[];
+
+  /**
+ * Información detallada del estado de firmantes de complementar planta en la tabla.
+ */
+  complementarFirmanteDatos: ComplementarPlantaState[];
 
 /**
  * así como información de proveedores y capacidad instalada.
@@ -389,6 +410,10 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   proyectoImmexTablaLista: [],
   proveedorClienteDatosTabla: [],
   proveedorClienteDatosTablaDos: [],
+  montosDeInversionTablaDatos: [],
+  empleadosTablaDatos: [],
+  complementarPlantaDatos: [],
+  complementarFirmanteDatos: [],
   tablaDatosCapacidadInstalada: [],
 };
 
@@ -1162,6 +1187,12 @@ setProyectoImmexTablaLista(proyectoImmex: ProyectoImmexEncabezado[]): void {
     }));
   }
 
+  setMontosDeInversionTablaDatos(montos: MontoDeInversion[]): void {
+  this.update((state) => ({
+    ...state,
+    montosDeInversionTablaDatos: [...state.montosDeInversionTablaDatos, ...montos ],
+  }));
+}
 /**
  * Actualiza la lista de capacidad instalada en el estado agregando los elementos proporcionados.
  *
@@ -1174,4 +1205,39 @@ setCapacidadInstaladaTableLista(CapacidadInstaladaTablaLista: CapacidadInstalada
     }));
   }
 
+/**
+ * Actualiza la lista de empleados directos en el estado agregando los nuevos empleados recibidos.
+ *
+ * @param empleados - Arreglo de objetos de tipo `Directos` para agregar a la lista existente.
+ */
+  setEmpleadosTablaDatos(empleados: Directos[]): void {
+  this.update((state) => ({
+    ...state,
+    empleadosTablaDatos: [...state.empleadosTablaDatos, ...empleados ],
+  }));
+}
+
+/**
+ * Actualiza la lista de complementos de planta en el estado agregando los nuevos complementos recibidos.
+ *
+ * @param complementar - Arreglo de objetos de tipo `ComplementoDePlanta` para agregar a la lista existente.
+ */
+setComplementarPlantaDatos(complementar: ComplementoDePlanta[]): void {
+  this.update((state) => ({
+    ...state,
+    complementarPlantaDatos: [...state.complementarPlantaDatos, ...complementar ],
+  }));
+}
+
+/**
+ * Actualiza la lista de estados de firmantes de complementar planta en el estado agregando los nuevos datos recibidos.
+ *
+ * @param complementarPlantaDatos - Arreglo de objetos de tipo `ComplementarPlantaState` para agregar a la lista existente.
+ */
+setComplementarPlantaState(complementarPlantaDatos: ComplementarPlantaState[]): void {
+  this.update((state) => ({
+    ...state,
+    complementarFirmanteDatos: [...state.complementarFirmanteDatos, ...complementarPlantaDatos ],
+  }));
+}
 }

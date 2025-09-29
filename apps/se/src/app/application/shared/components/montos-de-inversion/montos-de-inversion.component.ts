@@ -87,6 +87,12 @@ export class MontosDeInversionComponent implements OnInit {
    * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
    */
   @Output() cerrarPopup = new EventEmitter<void>();
+
+/**  
+ * Evento de salida que emite una lista de montos de inversión al componente padre.
+ */
+  @Output() obtenerMontosInversionList: EventEmitter<MontoDeInversion[]> = new EventEmitter<MontoDeInversion[]>();
+
   /**
    * Constructor del componente.
    * @constructor
@@ -195,6 +201,7 @@ export class MontosDeInversionComponent implements OnInit {
    * @returns {void}
    */
   regrasar(): void {
+    this.obtenerMontosInversionList.emit(this.montosDeInversionDatos);
     this.cerrarPopup.emit();
   }
 }

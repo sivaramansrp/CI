@@ -19,10 +19,12 @@ import { FederatariosYPlantasComponent } from '../../../../shared/components/fed
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
 
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../../shared/constantes/complementar-planta.enum';
 import { CapacidadInstalada } from '../../../../shared/constantes/capacidad-instalada.enum';
 import { CapacidadInstaladaComponent } from '../../../../shared/components/capacidad-instalada/capacidad-instalada.component';
 import { CargaPorArchivoComponent } from '../../../../shared/components/carga-por-archivo/carga-por-archivo.component';
 import { ComplementarPlantaComponent } from '../../../../shared/components/complementar-planta/complementar-planta.component';
+import { Directos } from '../../../../shared/constantes/empleados.enum';
 import { EmpleadosComponent } from '../../../../shared/components/empleados/empleados.component';
 import { MontosDeInversionComponent } from '../../../../shared/components/montos-de-inversion/montos-de-inversion.component';
 
@@ -343,6 +345,42 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
   cerrarProveedorPorArchivo(): void {
     this.mostrarProveedorPorArchivoPopup = false;
   }
+
+  /**
+   * Actualiza la lista de montos de inversión en la tabla utilizando el evento recibido.
+   *
+   * @param event - Arreglo de objetos de tipo `MontoDeInversion` que representa la nueva lista de montos de inversión.
+   */
+    obtenerMontosInversionList(event: MontoDeInversion[]): void {
+      this.store.setMontosDeInversionTablaDatos(event);
+    }
+    
+  /**
+   * Actualiza la lista de empleados directos en la tabla utilizando el evento recibido.
+   *
+   * @param event - Arreglo de objetos de tipo `Directos` que representa la nueva lista de empleados directos.
+   */
+    obtenerEmpleadosList(event: Directos[]): void {
+      this.store.setEmpleadosTablaDatos(event);
+    }
+  
+  /**
+   * Actualiza la lista de complementos de planta en la tabla utilizando el evento recibido.
+   *
+   * @param event - Arreglo de objetos de tipo `ComplementoDePlanta` que representa la nueva lista de complementos de planta.
+   */
+    obtenerComplementarPlantaList(event: ComplementoDePlanta[]): void {
+      this.store.setComplementarPlantaDatos(event);
+    }
+  
+  /**
+   * Actualiza la lista de firmantes (estado de complementar planta) utilizando el evento recibido.
+   *
+   * @param event - Arreglo de objetos de tipo `ComplementarPlantaState` que representa la nueva lista de firmantes.
+   */
+  obtenerFirmantesList(event: ComplementarPlantaState[]): void {
+      this.store.setComplementarPlantaState(event);
+    }
 
   /**
    * Establece los datos de los federatarios y actualiza el estado seleccionado.

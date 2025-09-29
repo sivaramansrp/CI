@@ -18,7 +18,9 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 import { AnexoFraccionAnarelaria, AnexoUnoProducto, ProveedorCliente, ProyectoImmex } from '../../../shared/models/complimentos-seccion.model';
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../shared/constantes/complementar-planta.enum';
 import { CapacidadInstalada } from '../../../shared/constantes/capacidad-instalada.enum';
+import { Directos } from '../../../shared/constantes/empleados.enum';
 
 /**
  * Representa el estado de Tramite80101 en la aplicación.
@@ -97,6 +99,25 @@ export interface Tramite80101State {
    */
   proyectoImmexTablaLista: ProyectoImmex[];
 
+  /**
+ * Información detallada de los complementos de planta en la tabla.
+ */
+  complementarPlantaDatos: ComplementoDePlanta[];
+
+/**
+ * Información de los firmantes relacionada con los complementos de planta.
+ */
+  firmantesDatos: ComplementarPlantaState[];
+
+/**
+ * Información de los montos de inversión registrados en la tabla.
+ */
+  montosInversionDatos: MontoDeInversion[];
+
+/**
+ * Información de los empleados directos registrados en la tabla.
+ */
+  empleadosDatos: Directos[];
   
 /**
  * así como información de proveedores y capacidad instalada.
@@ -276,6 +297,10 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   plantasDisponiblesTablaLista: [],
   idSolicitud: 0,
   proyectoImmexTablaLista:[],
+  complementarPlantaDatos: [],
+  firmantesDatos: [],
+  montosInversionDatos: [],
+  empleadosDatos: [],
   tablaDatosCapacidadInstalada: [],
 
 };
@@ -1028,6 +1053,53 @@ setProyectoImmexTablaLista(proyectoImmex: ProyectoImmex[]): void {
         }));
       }
 
+/**
+ * Agrega datos complementarios de planta al estado existente.
+ * 
+ * @param complementar - Lista de datos complementarios de planta a agregar.
+ */
+setComplementarPlantaDatos(complementar: ComplementoDePlanta[]): void {
+  this.update((state) => ({
+    ...state,
+    complementarPlantaDatos: [...state.complementarPlantaDatos, ...complementar ],
+  }));
+}
+
+/**
+ * Agrega datos de firmantes al estado existente.
+ * 
+ * @param firmantes - Lista de datos de firmantes a agregar.
+ */
+setFirmantesDatos(firmantes: ComplementarPlantaState[]): void {
+  this.update((state) => ({
+    ...state,
+    firmantesDatos: [...state.firmantesDatos, ...firmantes],
+  }));
+}
+
+/**
+ * Agrega datos de montos de inversión al estado existente.
+ * 
+ * @param montosInversion - Lista de montos de inversión a agregar.
+ */
+setMontosInversionDatos(montosInversion: MontoDeInversion[]): void {
+  this.update((state) => ({
+    ...state,
+    montosInversionDatos: [...state.montosInversionDatos, ...montosInversion],
+  }))
+}
+
+/**
+ * Agrega datos de empleados directos al estado existente.
+ * 
+ * @param empleados - Lista de empleados directos a agregar.
+ */
+setEmpleadosDatos(empleados: Directos[]): void {
+  this.update((state) => ({
+    ...state,
+    empleadosDatos: [...state.empleadosDatos, ...empleados]
+  }))
+}
       
 /**
  * Actualiza la lista de capacidad instalada en el estado agregando los elementos proporcionados.
