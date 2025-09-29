@@ -6,7 +6,7 @@
   [plantasDisponiblesDatos]="(plantasDisponiblesTablaLista$ | async) || []"
   [plantasImmexDatos]="(plantasImmexTablaLista$ | async) || []"
   (datosFormaFedratario)="setFormaDatos($event)"
-  (datosPlantaDisponibles)="setPlantasDisponiblesDatos($event)"
+  (datosPlantaDisponibles)="setPlantasDisponiblesDatos()"
   (datosPlantasImmex)="setPlantasImmexDatos($event)"
   [formularioDeshabilitado]="formularioDeshabilitado"
   [esFormularioUpdate]="esFormularioUpdate"

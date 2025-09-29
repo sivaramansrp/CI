@@ -76,6 +76,12 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
 
 
   /**
+   * Datos de federatarios que se mostrarán en la tabla
+   * @property {FederatariosEncabezado} datosFederatarios
+   */
+  @Input()
+  datosFederatarios!: FederatariosEncabezado;
+  /**
    * Contiene los datos de los federatarios utilizados en el formulario de representante legal.
    * Esta propiedad se inicializa con la constante `DATOS_FEDERATARIOS`.
    */
@@ -267,6 +273,11 @@ plantasForm!: FormGroup;
    * Emisor de eventos para los datos de plantas IMMEX. 
    */
   @Output() datosPlantasImmex: EventEmitter<PlantasImmex[]> = new EventEmitter<PlantasImmex[]>(true);
+
+  /**
+   * Emisor de eventos para los datos de federatarios.
+   */
+  @Output() datosFederatariosEvent: EventEmitter<FederatariosEncabezado> = new EventEmitter<FederatariosEncabezado>();
 
  /**
    * Controla la visibilidad del popup "Complementar Planta".
@@ -594,8 +605,7 @@ plantasForm!: FormGroup;
  * Método utilizado para cargar o actualizar la lista de plantas disponibles.
  */
 buscarPlantasImmex(): void {
-  this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
-  this.datosPlantaDisponibles.emit(this.plantasDisponiblesDatos);
+  this.datosPlantaDisponibles.emit();
 }
 
 /**
@@ -848,6 +858,21 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
   this.estadoImmex = res.datos;
     });
     
+  }
+
+    /**
+ * Maneja el cambio de valor en un campo del formulario de federatarios.
+ * Actualiza el objeto de datos, emite el evento correspondiente y sincroniza el valor en el formulario reactivo.
+ * @param event Objeto del catálogo seleccionado.
+ * @param campo Nombre del campo que se actualiza.
+ */
+  eventoDeCambioDeValor(event: Catalogo, campo: string): void {
+    this.datosFederatarios = {
+      ...this.datosFederatarios,
+      [campo]: event.clave
+    };
+    this.datosFederatariosEvent.emit(this.datosFederatarios);
+
   }
 
   /**

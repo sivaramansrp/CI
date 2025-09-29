@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Notificacion, NotificacionesComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Notificacion, NotificacionesComponent, TablaSeleccion,doDeepCopy, esValidArray, esValidObject } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
 import {
@@ -13,6 +13,7 @@ import {
 } from '../../../../shared/models/federatarios-y-plantas.model';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
+import { ComplimentosService } from '../../../../shared/services/complimentos.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-plantas/federatarios-y-plantas.component';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
@@ -124,6 +125,11 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
        */
       public nuevaUnoNotificacion!: Notificacion;
   /**
+   * Valor del estado seleccionado en el formulario.
+   * Se utiliza para almacenar y gestionar el estado actual seleccionado por el usuario.
+   */
+  public estadoValor: string = '';
+  /**
    * Constructor de la clase FederatariosYPlantasVistaComponent.
    * @param {Tramite80102Store} store - Servicio para manejar el estado del trámite.
    * @param {Tramite80102Query} query - Servicio para consultar el estado del trámite.
@@ -132,6 +138,7 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
     private store: Tramite80102Store,
     private query: Tramite80102Query, private consultaQuery: ConsultaioQuery,
     private autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
+    private _complimentoSvc: ComplimentosService
     
       ) {
         this.consultaQuery.selectConsultaioState$
@@ -188,8 +195,24 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
    * @param {PlantasDisponibles[]} datos - Lista de plantas disponibles.
    * @returns {void}
    */
-  setPlantasDisponiblesDatos(datos: PlantasDisponibles[]): void {
-    this.store.setPlantasDisponiblesTablaLista(datos);
+  setPlantasDisponiblesDatos(): void {
+    const PAYLOAD = {
+        "rfcEmpresaSubManufacturera": "AAL0409235E6",
+        "entidadFederativa": this.estadoValor,
+        "idPrograma": null
+    }
+    this._complimentoSvc.getPlantasDisponibles(PAYLOAD).pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response) => {
+        if(esValidObject(response)) {
+          const API_DATOS = doDeepCopy(response);
+          if(esValidArray(API_DATOS.datos)) {
+            const DATOS: PlantasDisponibles[] = this._complimentoSvc.mapApiResponseToPlantasDisponibles(API_DATOS.datos);
+            this.store.setPlantasDisponiblesTablaLista(DATOS);
+          }
+        }
+      }, (error) => {
+        console.error('Error al obtener los plantas disponibles:', error);
+      });
   }
 
   /**
@@ -318,6 +341,16 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
    */
   cerrarProveedorPorArchivo(): void {
     this.mostrarProveedorPorArchivoPopup = false;
+  }
+
+  /**
+   * Establece los datos de los federatarios y actualiza el estado seleccionado.
+   * @param {FederatariosEncabezado} datos - Datos del encabezado de federatarios.
+   * @returns {void}
+   */
+  setDatosFederatarios(datos: FederatariosEncabezado): void {
+    this.estadoValor = datos.estadoUno;
+    this.store.setFederatariosCatalogo(datos);
   }
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
