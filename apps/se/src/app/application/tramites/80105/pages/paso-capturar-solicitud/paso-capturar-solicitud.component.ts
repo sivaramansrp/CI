@@ -213,8 +213,7 @@ export class PasoCapturarSolicitudComponent implements OnDestroy, OnInit {
     this.tramiteQuery.FormaValida$.pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe((res) => {
-      this.seccion.establecerSeccion([true]);
-      this.seccion.establecerFormaValida([res]);
+      
     });
   }
 
