@@ -537,9 +537,10 @@ export class ComplimentosComponent implements OnInit, OnDestroy, OnChanges {
 
     const PROGRAMA_PREOPERATIVO_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.programaPreOperativo);
 
-
+    const ACEPTAR_OBLIGACION_FISCAL_VALUE = this.transformarCheckboxValue(DATOS_TRANSFORMADOS.aceptarObligacionFiscal);
     this.formaComplimentos.patchValue(DATOS_TRANSFORMADOS, { emitEvent: false });
     this.formaComplimentos.get('programaPreOperativo')?.setValue(PROGRAMA_PREOPERATIVO_VALUE, { emitEvent: false });
+    this.formaComplimentos.get('aceptarObligacionFiscal')?.setValue(ACEPTAR_OBLIGACION_FISCAL_VALUE, { emitEvent: false });
 
     if (DATOS_TRANSFORMADOS.formaSocioAccionistas) {
       this.aplicarDatosDinamicos(DATOS_TRANSFORMADOS);

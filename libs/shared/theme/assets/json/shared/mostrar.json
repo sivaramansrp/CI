@@ -182,7 +182,13 @@
   ],
   "mercanciaImportacion": [
     {
-      "listaProveedores": [],
+      "listaProveedores": [
+        {
+          "paisDestino": "",
+          "rfcCliente": "AAL0409235E6",
+          "razonCliente": "arxon"
+        }
+      ],
       "complemento": {
         "anexoII": "",
         "tipo": "",
@@ -212,8 +218,33 @@
       ]
     }
   ],
-  "fraccionArancelaria": [{ "listaProveedores": [] }],
-  "productoExportacionDtoList": [{ "proyectosImmex": [] }],
+  "fraccionArancelaria": [
+    {
+      "listaProveedores": [
+        {
+          "paisDestino": "",
+          "rfcCliente": "ABC123456XYZ",
+          "razonCliente": "arxon"
+        }
+      ]
+    }
+  ],
+  "productoExportacionDtoList": [
+    {
+      "proyectosImmex": [
+        {
+          "tipoDocumento": "1162",
+          "descripcion": "TEST COMPLEMENTOR",
+          "fechaFirma": "2025-09-29",
+          "fechaVigencia": "2025-09-26",
+          "rfcFirmante": 1234,
+          "razonFirmante": "qqqqqqqqqqqqqqqqqqqqqqq",
+          "testado": true,
+          "fecFinVigencia": "2025-09-26"
+        }
+      ]
+    }
+  ],
   "plantasSubmanufactureras": [
     {
       "idPlanta": "123",

@@ -4,10 +4,13 @@ import {
   ProveedorClienteDatosTabla,
   Servicio
 } from '../models/nuevo-programa-industrial.model';
+import { AnexoEncabezado, ProveedorClienteTabla, ProyectoImmexEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
   Catalogo,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { CatalogoDatosIdx, FederatariosEncabezado, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
+import { DatosComplimentos, SociaoAccionistas } from '../../../shared/models/complimentos.model';
 import {
   HttpCoreService,
   formatearFechaDdMmYyyy,
@@ -21,9 +24,7 @@ import {
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { BehaviorSubject } from 'rxjs';
 import { CadenaOriginalRequest } from '../../130118/model/request/cadena-original-request.model';
-import { CatalogoDatosIdx } from '../../../shared/models/federatarios-y-plantas.model';
 import { ComplimentosService } from '../../../shared/services/complimentos.service';
-import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -198,17 +199,79 @@ export class NuevoProgramaIndustrialService {
         .pipe(map((res: any) => res))
     );
   }
+
   /**
    * Actualiza el estado del formulario con los datos proporcionados.
-   *
-   * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información
-   *                del tipo de solicitud a actualizar en el store.
+   * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información del tipo de solicitud a actualizar en el store.
    */
-
   actualizarEstadoFormulario(DATOS: unknown): void {
+    this.setComplimentos(DATOS);
+    this.setFederatarios(DATOS);
+    this.setEmpresasSubmanufactureras(DATOS);
+    this.setAnexoI(DATOS);
+    this.setAnexoIIyIII(DATOS);
+    console.log('After update:', this.tramite80101Store.getValue());
+  }
+
+  setComplimentos(DATOS: unknown): void {
     const DATOS_COMPLIMENTOS = this.reverseBuildComplimentos(DATOS) as DatosComplimentos;
     this.tramite80101Store.setDatosComplimentos(DATOS_COMPLIMENTOS);
-    console.log('After update:', this.tramite80101Store.getValue());
+    const SOCIOS_ACCIONISTAS = this.reverseBuildSociosAccionistas((DATOS as { sociosAccionistas?: unknown[] }).sociosAccionistas ?? []) as { ARR1: SociaoAccionistas[]; ARR2: SociaoAccionistas[] };
+    SOCIOS_ACCIONISTAS.ARR1.forEach((ele: SociaoAccionistas) => {
+      this.tramite80101Store.aggregarTablaDatosComplimentos(ele);
+    });
+    SOCIOS_ACCIONISTAS.ARR2.forEach((ele: SociaoAccionistas) => {
+      this.tramite80101Store.aggregarTablaDatosComplimentosExtranjera(ele);
+    });
+  }
+
+  setFederatarios(DATOS: unknown): void {
+    if (typeof DATOS === 'object' && DATOS !== null && 'notario' in DATOS) {
+      const NOTARIOS = this.reverseBuildDatosFederatarios((DATOS as { notario?: unknown[] }).notario ?? []);
+      NOTARIOS.forEach((ele: FederatariosEncabezado) => {
+        this.tramite80101Store.setFederatarios(ele);
+      });
+    }
+
+    if (typeof DATOS === 'object' && DATOS !== null && 'planta' in DATOS) {
+      const PLANTAS = this.reverseBuildPlantas((DATOS as { planta?: unknown[] }).planta ?? []);
+      this.tramite80101Store.setPlantasImmexTablaLista(PLANTAS);
+    }
+  }
+
+  setEmpresasSubmanufactureras(DATOS: unknown): void {
+    if (typeof DATOS === 'object' && DATOS !== null && 'plantasSubmanufactureras' in DATOS) {
+      const PLANTAS_SUBMANUFACTURERAS = this.reverseBuildPlantasSubmanufactureras((DATOS as { plantasSubmanufactureras?: unknown[] }).plantasSubmanufactureras ?? []);
+      this.tramite80101Store.setPlantasSubfabricantesAgregar(PLANTAS_SUBMANUFACTURERAS);
+    }
+  }
+
+  setAnexoI(DATOS: unknown): void {
+    if (typeof DATOS === 'object' && DATOS !== null && 'mercanciaImportacion' in DATOS) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const MERCANCIA_IMPORTACION = (DATOS as { mercanciaImportacion?: any[] }).mercanciaImportacion ?? [];
+      const ANEXO_1 = this.reverseBuildAnexoDos(MERCANCIA_IMPORTACION[0]?.anexoI);
+      this.tramite80101Store.setImportarDatosTabla(ANEXO_1);
+      const LISTA_PROVEEDORES_CLIENT = this.reverseBuildProveedorCliente(MERCANCIA_IMPORTACION[0]?.listaProveedores);
+      this.tramite80101Store.setProveedorClienteDatosTablaUno(LISTA_PROVEEDORES_CLIENT);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const LISTA_PROVEEDORES_CLIENT_DOS = this.reverseProveedoresClientDos((DATOS as any).fraccionArancelaria[0].listaProveedores);
+      this.tramite80101Store.setProveedorClienteDatosTablaDos(LISTA_PROVEEDORES_CLIENT_DOS);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const PROYECTO_IMMEX = this.reverseProyectoIMMEX((DATOS as any).productoExportacionDtoList[0].proyectosImmex);
+      this.tramite80101Store.setProyectoImmexTablaLista(PROYECTO_IMMEX);
+    }
+  }
+
+  setAnexoIIyIII(DATOS: unknown): void {
+    if (typeof DATOS === 'object' && DATOS !== null && 'anexoII' in DATOS) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const ANEXO_II = this.reverseBuildAnexoDosTres((DATOS as any).anexoII);
+      this.tramite80101Store.setAnnexoDosTableLista(ANEXO_II);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const ANEXO_III = this.reverseBuildAnexoDosTres((DATOS as any).anexoIII);
+      this.tramite80101Store.setAnnexoTresTableLista(ANEXO_III);
+    }
   }
 
   /**
@@ -343,9 +406,7 @@ export class NuevoProgramaIndustrialService {
 
   /** Construye el arreglo de declaraciones de solicitud a partir de los datos proporcionados. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static buildDeclaracionSolicitudEntries(
-    data: Record<string, any>
-  ): unknown[] {
+  static buildDeclaracionSolicitudEntries(data: Record<string, any>): unknown[] {
     const RESULT = [
       {
         acepto: data['datosComplimentos'].obligacionesFiscales
@@ -667,29 +728,200 @@ export class NuevoProgramaIndustrialService {
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
   reverseBuildComplimentos(payload: any): DatosComplimentos {
-  return {
-    // datosComplimentos: {
-      formaModificaciones: {
-        rfc: payload.solicitud.notario.rfc,
-        nombreDeActa: payload.solicitud.notario.numeroActa,
-        nombreDeNotaria: payload.solicitud.notario.numeroNotario,
-        estado: payload.solicitud.notario.entidadFederativa,
-        fechaDeActa: formatearFechaDdMmYyyy(payload.solicitud.notario.fechaActa),
-        nombreDelFederatario: payload.solicitud.nomOficialAutorizado,
-      },
-      modalidad: payload.solicitud.modalidad,
-      programaPreOperativo: payload.solicitud.booleanGenerico,
-      datosGeneralis: {
-        paginaWWeb: payload.solicitud.descripcionSistemasMedicion,
-        localizacion: payload.solicitud.descripcionLugarEmbarque,
-      },
-      obligacionesFiscales: {
-        opinionPositiva: payload.solicitud.numeroPermiso === 1 ? 'SI' : 'NO',
-        fechaExpedicion: formatearFechaDdMmYyyy(payload.solicitud.fechaOperacion),
-        // aceptarObligacionFiscal: payload.declaracionSolicitudEntities?.[0]?.acepto === 1 ? true: false
+    return {
+        formaModificaciones: {
+          rfc: payload.solicitud.notario.rfc,
+          nombreDeActa: payload.solicitud.notario.numeroActa,
+          nombreDeNotaria: payload.solicitud.notario.numeroNotario,
+          estado: payload.solicitud.notario.entidadFederativa,
+          fechaDeActa: formatearFechaDdMmYyyy(payload.solicitud.notario.fechaActa),
+          nombreDelFederatario: payload.solicitud.nomOficialAutorizado,
+        },
+        modalidad: payload.solicitud.modalidad,
+        programaPreOperativo: payload.solicitud.booleanGenerico,
+        datosGeneralis: {
+          paginaWWeb: payload.solicitud.descripcionSistemasMedicion,
+          localizacion: payload.solicitud.descripcionLugarEmbarque,
+        },
+        obligacionesFiscales: {
+          opinionPositiva: payload.solicitud.numeroPermiso === 'SI' ? '' : '',
+          fechaExpedicion: formatearFechaDdMmYyyy(payload.solicitud.fechaOperacion),
+          aceptarObligacionFiscal: payload.declaracionSolicitudEntities?.[0]?.acepto === 1 ? 'Si' : 'No'
+        }
+    };
+  }
+
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  reverseBuildSociosAccionistas(payload: any[]): { ARR1: SociaoAccionistas[]; ARR2: SociaoAccionistas[] } {
+    const ARR1: SociaoAccionistas[] = [];
+    const ARR2: SociaoAccionistas[] = [];
+    for (const ELE of payload) {
+      if (ELE?.rfc && String(ELE.rfc).trim() !== '') {
+        ARR1.push({
+          rfc: ELE.rfc
+        });
+      } else if (ELE?.rfcExtranjero && String(ELE.rfcExtranjero).trim() !== '') {
+        ARR2.push({
+          nombre: ELE.nombre,
+          apellidoPaterno: ELE.apellidoPaterno,
+          apellidoMaterno: ELE.apellidoMaterno,
+          taxId: ELE.rfcExtranjero,
+          correoElectronico: ELE.correoElectronico,
+          razonSocial: ELE.razonSocial,
+          estado: ELE.estadoEntidad ?? ELE.estadoEvaluacionEntidad,
+          pais: ELE.cvePaisOrigen,
+          codigoPostal: ELE.domicilio?.codigoPostal,
+        });
       }
-    // }
-  };
+    }
+    return { ARR1, ARR2 };
+  }
+
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  reverseBuildDatosFederatarios(payload: any[]): FederatariosEncabezado[] {
+    const RESULT: FederatariosEncabezado[] = [];
+    for (const ELE of payload) {
+      RESULT.push({
+        nombre: ELE.nombreNotario ?? '',
+        primerApellido: ELE.apellidoPaterno ?? '',
+        segundoApellido: ELE.apellidoMaterno ?? '',
+        numeroDeActa: ELE.numeroActa ?? '',
+        fechaDelActa: ELE.fechaActa ?? '',
+        numeroDeNotaria: ELE.numeroNotaria ?? '',
+        estado: ELE.entidadFederativa ?? '',
+        estadoOptions: ELE.delegacionMunicipio ?? '',
+        entidadFederativa: ELE.entidadFederativa ?? '',
+        municipioODelegacion: ELE.delegacionMunicipio ?? '',
+        estadoUno: '',
+        estadoDos: '',
+        estadoTres: ''
+      });
+    }
+    return RESULT;
+  }
+
+  // Turn the merged payload back into the original array of plant objects
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  reverseBuildPlantas(payload: any[]): PlantasImmex[] {
+    const RESULT: PlantasImmex[] = [];
+    for (const ELE of payload) {
+      RESULT.push({
+        planta: ELE.idPlanta ?? '',
+        calle: ELE.calle ?? '',
+        numeroExterior: ELE.numeroExterior ?? '',
+        numeroInterior: ELE.numeroInterior ?? '',
+        codigoPostal: ELE.codigoPostal ?? '',
+        localidad: ELE.localidad ?? '',
+        colonia: ELE.colonia ?? '',
+        delegacionMunicipio: ELE.delegacionMunicipio ?? '',
+        entidadFederativa: ELE.entidadFederativa ?? '',
+        pais: ELE.pais ?? '',
+        registroFederalDeContribuyentes: ELE.rfc ?? '',
+        domicilioDelSolicitante: ELE.domicilioFiscal ?? '',
+        razonSocial: ELE.razonSocial ?? '',
+      });
+    }
+    return RESULT;
+  }
+
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  reverseBuildPlantasSubmanufactureras(payload: any[]): PlantasSubfabricante[] {
+    const RESULT: PlantasSubfabricante[] = [];
+    for (const ELE of payload) {
+      RESULT.push({
+        calle: ELE.empresaCalle ?? '',
+        numInterior: ELE.empresaNumeroInterior ?? '',
+        numExterior: ELE.empresaNumeroExterior ?? '',
+        codigoPostal: ELE.empresaCodigoPostal ?? '',
+        colonia: ELE.localidad ?? '',
+        municipio: ELE.empresaDelegacionMunicipio ?? '',
+        entidadFederativa: ELE.empresaEntidadFederativa ?? '',
+        pais: ELE.empresaPais ?? '',
+        rfc: ELE.rfc ?? '',
+        domicilioFiscal: ELE.domicilioFiscal ?? '',
+        razonSocial: ELE.razonSocial ?? '',
+      });
+    }
+    return RESULT;
+  }
+
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  reverseBuildAnexoDos(items: any[]): any[] {
+    return items.map((built) => ({
+      encabezadoFraccionExportacion: built.fraccionExportacion,
+      encabezadoFraccionImportacion: built.fraccionImportacion,
+      encabezadoDescripcionComercial: built.descFraccionImpo,
+      encabezadoAnexoII: built.claveFraccionAnexo,
+      encabezadoIdProducto: built.idProducto,
+      encabezadoFraccionDescripcionAnexo: built.fraccionDescripcionAnexo,
+      encabezadoValorEnMonedaAnual: built.fraccionValorMonedaAI,
+      encabezadoValorEnMonedaMensual: built.fraccionValorProdMI,
+      encabezadoCategoria: built.categoriaFraccion,
+      encabezadoTipo: built.tipoFraccion,
+      encabezadoUmt: built.umt,
+    }));
+  }
+
+// Reverse function: from built shape back to the original keys
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  reverseBuildAnexoDosTres(items: any[]): AnexoEncabezado[] {
+    return items.map((built) => ({
+      encabezadoFraccion: built.descripcion,
+      encabezadoDescripcion: built.descripcionTestado,
+      estatus: built.estatus ?? true, // Default to true if not present
+    }));
+  }
+
+  // Reverse function: from built object(s) back to the original shape
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
+  reverseBuildProveedorCliente(items: any[]): ProveedorClienteDatosTabla[] {
+    return items.map((built) => ({
+      idProveedor: built.idProveedor,
+      paisOrigen: built.paisOrigen,
+      rfcProveedor: built.rfcProveedor,
+      razonProveedor: built.razonProveedor,
+      paisDestino: built.paisDestino,
+      rfcClinte: built.rfcCliente,
+      razonSocial: built.razonCliente,
+      domicilio: built.domicilio,
+      testado: built.testado,
+      idProductoP: built.idProductoP,
+      descTestado: built.descTestado,
+    }));
+  }
+
+  // Reverse build: from the built array back to ProveedorClienteDatosTabla[]
+// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+reverseProveedoresClientDos(items: any[]): ProveedorClienteTabla[] {
+  return items.map((built) => ({
+    idProveedor: built.idProveedor ?? 0,
+    paisOrigen: built.paisOrigen,
+    rfcProveedor: built.rfcProveedor,
+    razonProveedor: built.razonProveedor,
+    paisDestino: built.paisDestino,
+    rfcClinte: built.rfcCliente,
+    razonSocial: built.razonCliente,
+    domicilio: built.domicilio,
+    descTestado: built.descTestado,
+    testado: built.testado ?? false,
+    idProductoP: built.idProductoP ?? 0,
+  }));
 }
+
+  // Reverse build: from PROYECTO_IMMEX_DATOS output back to original format
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  reverseProyectoIMMEX(items: any[]): ProyectoImmexEncabezado[] {
+    return items.map((built) => ({
+      encabezadoTipoDocument: built.tipoDocumento,
+      encabezadoDescripcionOtro: built.descripcion,
+      encabezadoFechaFirma: built.fechaFirma,
+      encabezadoFechaVigencia: built.fechaVigencia,
+      encabezadoRfc: built.rfcFirmante,
+      encabezadoRazonFirmante: built.razonFirmante,
+      testado: built.testado,
+      encabezadoFraccion: built.encabezadoFraccion ?? '',
+      estatus: built.estatus ?? true
+    }));
+  }
 
 }
