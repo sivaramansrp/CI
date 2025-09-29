@@ -61,35 +61,34 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   formularioDeshabilitado: boolean = false;
 
   /**
-  /**
    * @property indice
-   * @description Indicates the index of the selected tab within the form step.
+   * @description Indica el índice de la pestaña seleccionada dentro del paso del formulario.
    * @type {number | undefined}
    */
   public indice: number | undefined = 1;
 
   /**
    * @property destroyNotifier$
-   * @description Observable notifier to unsubscribe active subscriptions when the component is destroyed.
-   * Helps prevent memory leaks.
+   * @description Notificador observable para cancelar las suscripciones activas cuando se destruye el componente.
+   * Ayuda a prevenir fugas de memoria.
    * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Initializes the component with required services for state management and data handling.
+   * Inicializa el componente con los servicios requeridos para la gestión de estado y manejo de datos.
    *
-   * @param route - ActivatedRoute service for accessing route parameters and query parameters
-   * @param seccionStore - SeccionLibStore for managing section-related state updates
-   * @param consultaDatosService - Service for data consultation and form state management
-   * @param consultaQuery - ConsultaioQuery for accessing consultation state observables
-   * @param tramite240118Query - Tramite240118Query for accessing procedure-specific state
-   * @param tramite240118Store - Tramite240118Store for updating procedure-specific state
-   * @param datosSolicitudService - Service for fetching and managing request data
+   * @param route - Servicio ActivatedRoute para acceder a parámetros de ruta y parámetros de consulta
+   * @param seccionStore - SeccionLibStore para gestionar actualizaciones de estado relacionadas con secciones
+   * @param consultaDatosService - Servicio para consulta de datos y gestión de estado del formulario
+   * @param consultaQuery - ConsultaioQuery para acceder a observables de estado de consulta
+   * @param tramite240118Query - Tramite240118Query para acceder al estado específico del procedimiento
+   * @param tramite240118Store - Tramite240118Store para actualizar el estado específico del procedimiento
+   * @param datosSolicitudService - Servicio para obtener y gestionar datos de solicitud
    * 
    * @description
-   * This constructor injects the necessary services to manage the state of the procedure and consultation.
-   * It establishes the dependencies required for form management, data retrieval, and state synchronization.
+   * Este constructor inyecta los servicios necesarios para gestionar el estado del procedimiento y consulta.
+   * Establece las dependencias requeridas para la gestión de formularios, recuperación de datos y sincronización de estado.
    */
   constructor(
     private route: ActivatedRoute,
@@ -104,9 +103,9 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Angular lifecycle method that runs on component initialization.
-   * Sets up subscriptions for consultation state and route parameters.
-   * Manages form state based on consultation permissions and loads data when appropriate.
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Configura las suscripciones para el estado de consulta y los parámetros de ruta.
+   * Gestiona el estado del formulario basado en los permisos de consulta y carga datos cuando es apropiado.
    *
    * @returns {void}
    */
