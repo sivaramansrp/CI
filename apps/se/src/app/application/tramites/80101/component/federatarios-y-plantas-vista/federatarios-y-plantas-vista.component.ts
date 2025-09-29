@@ -330,7 +330,6 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
    * @param event - Arreglo de objetos de tipo `CapacidadInstalada` que representa la nueva lista de capacidad instalada.
    */
   obtenerCapacidadInstaladaTablaList(event: CapacidadInstalada[]): void {
-    console.log(event);
     this.store.setCapacidadInstaladaTableLista(event);
   }
 
