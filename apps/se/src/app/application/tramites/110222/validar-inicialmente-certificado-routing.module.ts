@@ -1,10 +1,11 @@
 import { RouterModule, Routes } from '@angular/router';
 import { CertificadoComponent } from './page/certificado/certificado.component';
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 
 /**
  * Define la configuración de enrutamiento para el módulo.
- * 
+ *
  * @constant
  * @type {Routes}
  * @description
@@ -14,18 +15,24 @@ import { NgModule } from '@angular/core';
  */
 const ROUTES: Routes = [
   {
-      path: 'certificado',
-      component: CertificadoComponent,
+    canActivate: [IniciarTramiteResolver],
+    data: {
+      iniciarConfig: {
+        procedureId: '110222',
+      },
     },
-    {
-      path: '',
-      redirectTo: 'certificado',
-      pathMatch: 'full'
-    }
+    path: 'certificado',
+    component: CertificadoComponent,
+  },
+  {
+    path: '',
+    redirectTo: 'certificado',
+    pathMatch: 'full',
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ValidarInicialmenteCertificadoRoutingModule { }
+export class ValidarInicialmenteCertificadoRoutingModule {}

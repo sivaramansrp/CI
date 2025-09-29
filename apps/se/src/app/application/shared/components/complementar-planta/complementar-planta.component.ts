@@ -136,6 +136,16 @@ export class ComplementarPlantaComponent implements OnInit {
    */
   @Output() cerrarPopup = new EventEmitter<void>();
 
+/**  
+ * Evento de salida que emite una lista de objetos ComplementoDePlanta al componente padre.
+ */
+  @Output() obtenerComplementarPlantaList: EventEmitter<ComplementoDePlanta[]> = new EventEmitter<ComplementoDePlanta[]>();
+
+/**  
+ * Evento de salida que emite una lista de estados de firmantes hacia el componente padre.
+ */
+  @Output() obtenerFirmantesList: EventEmitter<ComplementarPlantaState[]> = new EventEmitter<ComplementarPlantaState[]>();
+
   /**
    * Evento que se emite al cerrar el popup.
    * Se utiliza para notificar al componente padre que el popup ha sido cerrado.
@@ -186,6 +196,8 @@ export class ComplementarPlantaComponent implements OnInit {
   * @returns {void}
   */
   regrasar(): void {
+    this.obtenerComplementarPlantaList.emit(this.complementoDePlantaDatos);
+    this.obtenerFirmantesList.emit(this.complementoPlantaDatos);
     this.cerrarPopup.emit();
   }
   /**
