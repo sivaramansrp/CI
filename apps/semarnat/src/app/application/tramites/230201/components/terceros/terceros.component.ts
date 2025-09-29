@@ -487,7 +487,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
         CURRENT_DESTINATARIOS.push(TABLE_DATA);
       }
       
-      // Update the store with the new/updated list
+      // Actualizar la tienda con la lista nueva/actualizada
       this.tramite230201Store.setDatosDestinatario(CURRENT_DESTINATARIOS);
       this.cerrarModal();
     }

@@ -5,6 +5,7 @@ import {
   CatalogosSelect,
   ConsultaioQuery, 
   ConsultaioState,
+  REGEX_CARACTERES_ESPECIALES,
   TituloComponent,
   ValidacionesFormularioService,
   dateLessThanOrEqualToday
@@ -270,7 +271,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     const VALOR_LIMPIO = VALOR.toString().trim();
     
     // PRIMERO verificar caracteres especiales - "Existen datos incorrectos que no cumplen con el formato esperado"
-    const CONTIENE_ESPECIALES = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>?]/.test(VALOR_LIMPIO);
+    const CONTIENE_ESPECIALES = REGEX_CARACTERES_ESPECIALES.test(VALOR_LIMPIO);
     if (CONTIENE_ESPECIALES) {
       return { caracteresInvalidos: true };
     }
