@@ -6,7 +6,6 @@ import { PeruCertificadoComponent } from './page/peru-certificado/peru-certifica
 const ROUTES: Routes = [
   {
     canActivate: [IniciarTramiteResolver],
-    resolve: { iniciarResolverData: IniciarTramiteResolver },
     data: {
       iniciarConfig: {
         procedureId: '110205',

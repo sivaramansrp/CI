@@ -6,7 +6,6 @@ import { NgModule } from '@angular/core';
 export const ROUTES: Routes = [
   {
     canActivate: [IniciarTramiteResolver],
-    resolve: { iniciarResolverData: IniciarTramiteResolver },
     data: {
       iniciarConfig: {
         procedureId: '110202',

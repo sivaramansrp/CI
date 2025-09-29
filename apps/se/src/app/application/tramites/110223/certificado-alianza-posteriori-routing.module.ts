@@ -6,7 +6,6 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 const ROUTES: Routes = [
   {
     canActivate: [IniciarTramiteResolver],
-    resolve: { iniciarResolverData: IniciarTramiteResolver },
     data: {
       iniciarConfig: {
         procedureId: '110223',

@@ -7,7 +7,6 @@ import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 export const ROUTES_SOLICITUDES: Routes = [
   {
     canActivate: [IniciarTramiteResolver],
-    resolve: { iniciarResolverData: IniciarTramiteResolver },
     data: {
       iniciarConfig: {
         procedureId: '110204',
