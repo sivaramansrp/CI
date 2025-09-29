@@ -24,16 +24,41 @@ import { takeUntil } from 'rxjs';
   ]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
-  @ViewChild('Solicitante', { static: false }) solicitante!: SolicitanteComponent;
-  @ViewChild('DatosCertificadoComponent', { static: false }) datosCertificadoComponent!: DatosCertificadoComponent;
-  @ViewChild('DestinatarioComponent', { static: false }) destinatarioComponent!: DestinatarioComponent;
-  @ViewChild('HistoricoProductoresComponent', { static: false }) historicoProductoresComponent!: HistoricoProductoresComponent;
-  @ViewChild('CertificadoOrigenComponent', { static: false }) certificadoOrigenComponent!: CertificadoOrigenComponent;
-  indice: number = 1;
-  public tramiteState!: Tramite110214State;
-  destroyNotifier$: Subject<void> = new Subject();
-  consultaDatos!: ConsultaioState;
-  public esDatosRespuesta: boolean = false;
+  
+// Referencia al componente 'Solicitante' en la plantilla.
+// Permite acceder a sus propiedades y métodos desde el componente padre.
+@ViewChild('Solicitante', { static: false }) solicitante!: SolicitanteComponent;
+
+// Referencia al componente 'DatosCertificadoComponent' en la plantilla.
+// Permite interactuar con sus métodos y propiedades.
+@ViewChild('DatosCertificadoComponent', { static: false }) datosCertificadoComponent!: DatosCertificadoComponent;
+
+// Referencia al componente 'DestinatarioComponent' en la plantilla.
+// Facilita el acceso a sus funcionalidades desde este componente.
+@ViewChild('DestinatarioComponent', { static: false }) destinatarioComponent!: DestinatarioComponent;
+
+// Referencia al componente 'HistoricoProductoresComponent' en la plantilla.
+// Permite gestionar sus métodos y propiedades.
+@ViewChild('HistoricoProductoresComponent', { static: false }) historicoProductoresComponent!: HistoricoProductoresComponent;
+
+// Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
+// Proporciona acceso a sus métodos y propiedades.
+@ViewChild('CertificadoOrigenComponent', { static: false }) certificadoOrigenComponent!: CertificadoOrigenComponent;
+
+ // Índice que representa la pestaña activa en el componente.
+indice: number = 1;
+
+// Estado del trámite actual, utilizado para almacenar y gestionar datos relacionados con el trámite.
+public tramiteState!: Tramite110214State;
+
+// Notificador para destruir observables y evitar fugas de memoria.
+destroyNotifier$: Subject<void> = new Subject();
+
+// Estado de la consulta, utilizado para almacenar los datos obtenidos de la consulta.
+consultaDatos!: ConsultaioState;
+
+// Bandera que indica si los datos de la consulta ya están disponibles.
+public esDatosRespuesta: boolean = false;
 
   constructor(
     public store: Tramite110214Store,

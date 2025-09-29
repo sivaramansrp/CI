@@ -231,17 +231,19 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
 public validarFormulario(): boolean {
   let isValid = true;
 
-  if (!this.formDatosCertificado) {
-    console.error('formDatosCertificado is not initialized');
+
+// Verifica si el formulario 'formDatosCertificado' está inicializado.
+// Si no está inicializado, muestra un error en la consola y retorna false.
+if (!this.formDatosCertificado) {
     return false;
-  }
+}
 
-
-  if (this.formDatosCertificado.invalid) {
+// Verifica si el formulario 'formDatosCertificado' es inválido.
+// Si es inválido, marca todos los campos como tocados y establece 'isValid' en false.
+if (this.formDatosCertificado.invalid) {
     this.formDatosCertificado.markAllAsTouched();
     isValid = false;
-  }
-
+}
 
   return isValid;
 }
