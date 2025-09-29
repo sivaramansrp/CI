@@ -40,6 +40,7 @@ import { FederatoriosQuery } from '../../../estados/queries/federatarios.query';
 
 import { FECHA_DE_Tabla, INMEX_PLANTAS } from '../../constantes/federatarios-y-plantas.enum';
 import { ComplimentosService } from '../../services/complimentos.service';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 /**
  * Componente para los federatarios y plantas
  * @export FederatariosYPlantasComponent
@@ -193,6 +194,12 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
    */
   @Input() esExpresasVisible: boolean = false;
 
+    /**
+   * Emite eventos relacionados con acciones en la sección.
+   * @event datosFederatariosEvent
+   */
+  @Output() datosFederatariosEvent: EventEmitter<FederatariosEncabezado> = new EventEmitter<FederatariosEncabezado>();
+
 
   /**
    * Configuración del input de fecha de inicio
@@ -334,7 +341,8 @@ plantasForm!: FormGroup;
     private federatoriosStore: FederatoriosStore,
     private consultaioQuery: ConsultaioQuery,
     private complimentosService: ComplimentosService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private servicioDeFormularioService: ServicioDeFormularioService
   ) {}
 /**
    * Método que se ejecuta cuando el componente es inicializado.
@@ -383,6 +391,14 @@ plantasForm!: FormGroup;
    } else {
     this.actividadProductivaOptions = [...this.solicitudState['actividadOptions'] as Catalogo[]];
    }
+
+    if (this.federatariosDatos) {
+      this.servicioDeFormularioService.registerArray('federatariosDatos', this.federatariosDatos);
+    }
+
+    if (this.plantasImmexDatos) {
+      this.servicioDeFormularioService.registerArray('plantasImmexDatos', this.plantasImmexDatos);
+    }
   }
 
   /**
@@ -543,6 +559,13 @@ plantasForm!: FormGroup;
       representacionFederal: new FormControl(this.solicitudState['representacionFederal'], Validators.required),
       actividadProductiva: new FormControl(this.solicitudState['actividadProductiva'], Validators.required),
     });
+
+    this.servicioDeFormularioService.registerForm('federatariosCatalogoForm', this.plantasForm);
+    this.servicioDeFormularioService.formTouched$.subscribe((formName) => {
+      if (formName === 'federatariosCatalogoForm') {
+        this.plantasForm.markAllAsTouched();
+      }
+    })
   }
   /**
    * Navega a la ruta de acciones
@@ -586,6 +609,7 @@ plantasForm!: FormGroup;
     return;
   }
   this.datosFormaFedratario.emit(this.federatariosFormGroup.value);
+  this.servicioDeFormularioService.pushToArray('federatariosDatos', this.plantasForm.value);
   this.federatariosFormGroup.reset();
   }
 
@@ -607,6 +631,7 @@ buscarPlantasImmex(): void {
  */
 agregarPlantas(): void {
   this.plantasImmexDatos = [INMEX_PLANTAS];
+  this.servicioDeFormularioService.pushToArray('plantasImmexDatos', INMEX_PLANTAS);
   this.datosPlantasImmex.emit(this.plantasImmexDatos);
 }
 
@@ -848,6 +873,37 @@ setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
   this.estadoImmex = res.datos;
     });
     
+  }
+
+/**
+ * Maneja el cambio de valor en un campo del formulario de federatarios.
+ * Actualiza el objeto de datos, emite el evento correspondiente y sincroniza el valor en el formulario reactivo.
+ * @param event Objeto del catálogo seleccionado.
+ * @param campo Nombre del campo que se actualiza.
+ */
+  eventoDeCambioDeValor(event: Catalogo, campo: string): void {
+    this.solicitudState = {
+      ...this.solicitudState,
+      [campo]: event.clave
+    };
+    const FEDERATARIOS_ENCABEZADO: FederatariosEncabezado = {
+      nombre: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeActa: '',
+      fechaDelActa: '',
+      numeroDeNotaria: '',
+      entidadFederativa: '',
+      municipioODelegacion: '',
+      estado: '',
+      estadoOptions: '',
+      estadoUno: this.solicitudState['representacionFederal'] ?? '',
+      estadoDos: this.solicitudState['estadoDos'] ?? '',
+      estadoTres: this.solicitudState['actividadProductiva'] ?? '',
+    };
+    this.datosFederatariosEvent.emit(FEDERATARIOS_ENCABEZADO);
+    this.servicioDeFormularioService.setFormValue('federatariosCatalogoForm', { [campo]: event.clave ?? '' });
+
   }
 
   /**
