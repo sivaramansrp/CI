@@ -33,3 +33,4 @@ import { PartidasDeLaMercanciaModelo } from '../models/partidas-de-la-mercancia.
     }
   ]
   
+  export const VALORES_SELECCIONADOS = [130201]

@@ -17,6 +17,7 @@ import {
   Servicios,
 } from '../models/autorizacion-programa-nuevo.model';
 import { Catalogo, CatalogoPaises } from '@libs/shared/data-access-user/src';
+import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../shared/constantes/complementar-planta.enum';
 import {
   DatosComplimentos,
   SociaoAccionistas,
@@ -28,9 +29,9 @@ import {
 } from '../../../shared/models/empresas-subfabricanta.model';
 import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { Store, StoreConfig } from '@datorama/akita';
-import { Injectable } from '@angular/core';
-import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../shared/constantes/complementar-planta.enum';
+import { CapacidadInstalada } from '../../../shared/constantes/capacidad-instalada.enum';
 import { Directos } from '../../../shared/constantes/empleados.enum';
+import { Injectable } from '@angular/core';
 
 /**
  * @file tramite80102.store.ts
@@ -149,6 +150,10 @@ export interface Tramite80102State {
  * Información detallada del estado de firmantes de complementar planta en la tabla.
  */
   complementarFirmanteDatos: ComplementarPlantaState[];
+  /**
+ * así como información de proveedores y capacidad instalada.
+ */
+  tablaDatosCapacidadInstalada: CapacidadInstalada[];
 }
 
 /**
@@ -418,6 +423,7 @@ proyectoImmexTablaLista: [],
   empleadosTablaDatos: [],
   complementarPlantaDatos: [],
   complementarFirmanteDatos: [],
+tablaDatosCapacidadInstalada: [],
 };
 
 
@@ -1206,10 +1212,27 @@ setProyectoImmexTablaLista(proyectoImmex: ProyectoImmexEncabezado[]): void {
       }));
     }
 
+    /**
+     * Actualiza la lista de estados de firmantes de complementar planta en el estado agregando los nuevos datos recibidos.
+     *
+     * @param montos - Arreglo de objetos de tipo `MontoDeInversion` para agregar a la lista existente.
+     */
       setMontosDeInversionTablaDatos(montos: MontoDeInversion[]): void {
       this.update((state) => ({
         ...state,
         montosDeInversionTablaDatos: [...state.montosDeInversionTablaDatos, ...montos ],
       }));
     }
+
+    /**
+     * Actualiza la lista de capacidad instalada en el estado agregando los elementos proporcionados.
+     *
+     * @param CapacidadInstaladaTablaLista - Arreglo de objetos de tipo `CapacidadInstalada` que serán añadidos a la tabla de datos de capacidad instalada.
+     */
+    setCapacidadInstaladaTableLista(CapacidadInstaladaTablaLista: CapacidadInstalada[]): void {
+        this.update((state) => ({
+          ...state,
+          tablaDatosCapacidadInstalada: [...state.tablaDatosCapacidadInstalada, ...CapacidadInstaladaTablaLista],
+        }));
+      }
 }

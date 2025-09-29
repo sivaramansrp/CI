@@ -1,9 +1,11 @@
 import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
-import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild, inject } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState,ERROR_FORMA_ALERT,WizardService} from '@ng-mf/data-access-user';
 import { DatosPasos, ListaPasosWizard, PASOS4, Usuario, WizardComponent, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@libs/shared/data-access-user/src';
-import { Subject, finalize, map, switchMap, take, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, finalize, map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
+import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { USUARIO_INFO } from '../../constantes/nuevo-programa.enum';
@@ -172,11 +174,46 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    */
   public solicitudState!: Tramite80101State;
 
+    /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  public consultaState!: ConsultaioState;
+
+    /**
+ * @property esFormaValido
+ * @description
+ * Indica si el formulario actual es válido. Se utiliza para habilitar o deshabilitar la navegación entre pasos en el wizard.
+ * @type {boolean}
+ * @default false
+ */
+  public esFormaValido!: boolean;
+
+    /**
+ * @property formErrorAlert
+ * @description
+ * Contiene el mensaje de alerta que se muestra cuando ocurre un error en el formulario.
+ * @type {string}
+ */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+  
+  /**
+ * @property wizardService
+ * @description
+ * Inyección del servicio `WizardService` para gestionar la lógica y el estado del componente wizard.
+ * @type {WizardService}
+ */
+  wizardService = inject(WizardService);
+
   /**
  * Indica si la sección de carga de documentos está activa.
  * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
  */
   seccionCargarDocumentos: boolean = true;
+
+  /** Indica si hay una carga en progreso. */
+  cargaEnProgreso: boolean = true;
    /**
      * Evento que se emite para cargar archivos.
      * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
@@ -199,6 +236,8 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     private tramite80104Store: Tramite80101Store,
     private tramite80104Query: Tramite80101Query,
     private toastrService: ToastrService,
+    private servicioDeFormularioService: ServicioDeFormularioService,
+    private consultaQuery: ConsultaioQuery,
   ) {
   //
   }
@@ -219,6 +258,45 @@ ngOnInit(): void {
           this.solicitudState = seccionState;
         })
       ).subscribe();
+
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      ).subscribe();
+  }
+
+  
+  /**
+ * @method verificarLaValidezDelFormulario
+ * @description
+ * Este método verifica la validez de los formularios dinámicos asociados a los pasos del wizard.
+ * @returns {boolean} - Indica si todos los formularios son válidos.
+ */
+  verificarLaValidezDelFormulario(): boolean {
+    return (
+      (this.servicioDeFormularioService.isFormValid('datosGeneralisForm') ??
+        false) 
+        &&
+      (this.servicioDeFormularioService.isFormValid('formaModificacionesForm') ??
+      false) &&
+      (this.servicioDeFormularioService.isFormValid('obligacionesFiscalesForm') ??
+      false) &&
+      (this.servicioDeFormularioService.isFormValid('federatariosCatalogoForm') ??
+      false) && 
+      ((this.servicioDeFormularioService.isArrayFilled('datosSocioAccionistas') ??
+      false) ||
+      (this.servicioDeFormularioService.isArrayFilled('datosSocioAccionistasExtrenjeros') ??
+      false)) &&
+      this.isAllArraysFilledIn80101(['anexoUnoTabla1', 'anexoUnoTabla2', 'federatariosDatos', 'plantasImmexDatos', 'datosTablaSubfabricantesSeleccionadas', 'anexoTresTablaLista'])
+    );
+  }
+
+  /** Verifica que todos los arreglos indicados estén llenos en el formulario del trámite 80101. */
+  isAllArraysFilledIn80101(array: string[]): boolean {
+    return array.every(item => this.servicioDeFormularioService.isArrayFilled(item));
   }
 
 /**
@@ -231,35 +309,83 @@ ngOnInit(): void {
  * 
  * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
  */
-getValorIndice(e: AccionBoton): void {
-  let shouldNavigate = false;
-  this.nuevoProgramaIndustrialService.getAllState()
-    .pipe(
+  getValorIndice(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor <= this.pasos.length) {
+      const NEXT_INDEX =
+        e.accion === 'cont' ? e.valor + 1 :
+        e.accion === 'ant' ? e.valor - 1 :
+        e.valor;
+      if (!this.consultaState.readonly && e.accion === 'cont') {
+        if (!this.consultaState.update) {
+          this.esFormaValido = this.verificarLaValidezDelFormulario();
+          if (!this.esFormaValido) {
+            this.indice = e.valor-1;
+            this.datosPasos.indice = e.valor-1;
+            this.servicioDeFormularioService.markFormAsTouched('datosGeneralisForm');
+            this.servicioDeFormularioService.markFormAsTouched('formaModificacionesForm');
+            this.servicioDeFormularioService.markFormAsTouched('obligacionesFiscalesForm');
+            this.servicioDeFormularioService.markFormAsTouched('federatariosCatalogoForm');
+            return;
+          }
+        }
+        this.shouldNavigate$()
+          .subscribe((shouldNavigate) => {
+            if (shouldNavigate) {
+              this.indice = NEXT_INDEX;
+              this.datosPasos.indice = NEXT_INDEX;
+              this.wizardService.cambio_indice(NEXT_INDEX);
+            } else {
+              this.indice = e.valor;
+              this.datosPasos.indice = e.valor;
+            }
+          });
+      } else if (e.accion === 'cont') {
+        this.shouldNavigate$()
+          .subscribe((shouldNavigate) => {
+            if (shouldNavigate) {
+              this.indice = NEXT_INDEX;
+              this.datosPasos.indice = NEXT_INDEX;
+              this.wizardService.cambio_indice(NEXT_INDEX);
+            } else {
+              this.indice = e.valor;
+              this.datosPasos.indice = e.valor;
+            }
+          });
+      } else {
+        this.indice = NEXT_INDEX;
+        this.datosPasos.indice = NEXT_INDEX;
+        this.wizardComponent.atras();
+      }
+    }
+  }
+
+  
+  /**
+ * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
+ * 
+ * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
+ * y muestra un mensaje de éxito o error dependiendo del código de respuesta. Si la respuesta es exitosa
+ * y el valor del evento está dentro del rango válido (1 a 4), actualiza el índice del wizard y navega
+ * hacia adelante o atrás según el tipo de acción.
+ * 
+ * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
+ */
+  private shouldNavigate$(): Observable<boolean> {
+    return this.nuevoProgramaIndustrialService.getAllState().pipe(
       take(1),
-      switchMap((data) => this.guardar(data)),
-      tap(response => {
-        shouldNavigate = response.codigo === '00';
-        if(shouldNavigate) {
-          this.padreBtn = false;
+      switchMap(data => this.guardar(data)),
+      map(response => {
+        const OK = response.codigo === '00';
+        if (OK) {
           this.toastrService.success(response.mensaje);
         } else {
           this.padreBtn = true;
           this.toastrService.error(response.mensaje);
         }
-      }),
-      finalize(() => {
-        if (shouldNavigate && e.valor > 0 && e.valor < 5) {
-          this.indice = e.valor;
-          if (e.accion === 'cont') {
-            this.wizardComponent.siguiente();
-          } else {
-            this.wizardComponent.atras();
-          }
-        }
+        return OK;
       })
-    )
-    .subscribe();
-}
+    );
+  }
 
   /**
   * Método para manejar el evento de carga de documentos.
@@ -322,6 +448,7 @@ getValorIndice(e: AccionBoton): void {
     return RESULT;
   }
 
+
 /**
  * Construye un arreglo de objetos de plantas basado en una estructura base común.
  * 
@@ -331,6 +458,31 @@ getValorIndice(e: AccionBoton): void {
  */
 // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
  buildPlantas(array: any[] = [], base: unknown[], data: any): unknown[] {
+
+   // eslint-disable-next-line complexity
+    const mapCapacidadInstalada = (item: any) => ({
+      idPlantaCa: item.PLANTA ?? "",
+      fraccion: item.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO ?? "",
+      umt: item.UMT ?? "",
+      descripcion: item.DESCRIPCION_COMERCIAL_PRODUCTO_TERMINADO ?? "",
+      capacidadEfectiva: item.CAPACIDAD_EFECTIVAMENTE_UTILIZADA ?? "",
+      calculo: item.CALCULO_CAPACIDAD_INSTALADA ?? "",
+      turnos: (item.TURNOS ?? "").toString(),
+      horasTurno: (item.HORAS_POR_TURNO ?? "").toString(),
+      cantidadEmpleados: (item.CANTIDAD_EMPLEADOS ?? "").toString(),
+      cantidadMaquinaria: (item.CANTIDAD_MAQUINARIA ?? "").toString(),
+      descripcionMaquinaria: item.DESCRIPCION_MAQUINARIA ?? "",
+      capacidadMensual: (item.CAPACIDAD_INSTALADA_MENSUAL ?? "").toString(),
+      capacidadAnual: item.CAPACIDAD_INSTALADA_ANUAL ?? "",
+      testado: "1",
+      claveServicio: item.CLAVE_SERVICIO ?? "",
+      cveTipoServicio: item.CVE_TIPO_SERVICIO ?? "",
+      descripcionServicio: item.DESCRIPCION_SERVICIO ?? "",
+      descTestado: item.DESC_TESTADO ?? "",
+      fraccionVista: item.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO ?? "",
+      idCapacidad: item.ID_CAPACIDAD ?? "",
+      tipoServicio: item.TIPO_SERVICIO ?? "",
+    });
 
   const MAP_COMPLEMENTAR = (item:any) => ({
       idPlantaC: item.PLANTA ?? '' ,
@@ -370,35 +522,37 @@ getValorIndice(e: AccionBoton): void {
       razonEmpresa: item.RAZON_SOCIAL ?? '',
   })
 
+  const listaCapacidad = (data.tablaDatosCapacidadInstalada || []).map(mapCapacidadInstalada);
   const datosComplementarios = (data.complementarPlantaDatos || []).map(MAP_COMPLEMENTAR);
   const firmantes = (data.firmantesDatos || []).map(MAP_FIRMANTES); 
   const montos = (data.montosInversionDatos || []).map(MAP_MONTOS_INVERSION);
   const datosEmpleados = (data.empleadosDatos || []).map(MAP_EMPLEADOS);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const RESULT: any[] = [];
+    let RESULT: any[] = [];
     array.forEach(arr => {
+      // eslint-disable-next-line complexity
       base.forEach(item => {
         const ITEM = (item && typeof item === 'object') ? item : {};
         RESULT.push({
           ...ITEM,
-      idPlanta: arr.planta ?? '',
-      calle: arr.calle ?? '',
-      numeroExterior: arr.numeroExterior ?? '',
-      numeroInterior: arr.numeroInterior ?? '',
-      codigoPostal: arr.codigoPostal ?? '',
-      localidad: arr.localidad ?? '',
-      colonia: arr.colonia ?? '',
-      delegacionMunicipio: arr.delegacionMunicipio ?? '',
-      entidadFederativa: arr.entidadFederativa ?? '',
-      pais: arr.pais ?? '',
-      rfc: arr.registroFederalDeContribuyentes ?? '',
-      domicilioFiscal: arr.domicilioDelSolicitante ?? '',
-      razonSocial: arr.razonSocial ?? '',
+          idPlanta: arr.planta ?? '',
+          calle: arr.calle ?? '',
+          numeroExterior: arr.numeroExterior ?? '',
+          numeroInterior: arr.numeroInterior ?? '',
+          codigoPostal: arr.codigoPostal ?? '',
+          localidad: arr.localidad ?? '',
+          colonia: arr.colonia ?? '',
+          delegacionMunicipio: arr.delegacionMunicipio ?? '',
+          entidadFederativa: arr.entidadFederativa ?? '',
+          pais: arr.pais ?? '',
+          rfc: arr.registroFederalDeContribuyentes ?? '',
+          domicilioFiscal: arr.domicilioDelSolicitante ?? '',
+          razonSocial: arr.razonSocial ?? '',
         });
       });
     });
-    const RESULT_DATA = { ...RESULT[0], datosComplementarios, firmantes, montos, datosEmpleados };
+    const RESULT_DATA = { ...RESULT[0], listaCapacidad, montos, datosEmpleados, datosComplementarios, firmantes };
     return RESULT_DATA;
   }
 
@@ -451,7 +605,7 @@ getValorIndice(e: AccionBoton): void {
     const PAYLOAD = {
       "esDeGuardar": true,
     "tipoDeSolicitud": "guardar",
-    "idSolicitud": 202781045,
+    "idSolicitud": 0,
     "idTipoTramite": 80104,
     "rfc": "AAL0409235E6",
     "cveUnidadAdministrativa": "8101",
@@ -679,7 +833,7 @@ getValorIndice(e: AccionBoton): void {
   }
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
-    /**
+   /**
      * Construye el objeto `anexo` a partir de los datos proporcionados.
      *
      * @param data - Objeto de entrada que contiene la información necesaria para construir los anexos y sus tablas asociadas.
@@ -691,8 +845,7 @@ getValorIndice(e: AccionBoton): void {
      *
      * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
      */
-     buildAnexo(data: any) {
-     
+    buildAnexo(data: any) {
       const buildAnexoItem = (item: Anexo1) => ({
         descripcion: item.encabezadoFraccion,
         idTipoBien: 0,
@@ -701,7 +854,7 @@ getValorIndice(e: AccionBoton): void {
         contadorGrid: null,
         descripcionTestado: item.encabezadoDescripcion,
       });
-    
+   
       const buildProveedorCliente = (item: ProveedorClienteDatosTabla) => ({
         idProveedor: item.idProveedor,
         paisOrigen: item.paisOrigen,
@@ -715,7 +868,7 @@ getValorIndice(e: AccionBoton): void {
         idProductoP: item.idProductoP,
         descTestado: item.descTestado,
       });
-    
+   
       const buildDatosParaNavegar = (datos: any) => ({
         anexoII: datos?.encabezadoAnexoII,
         tipo: datos?.encabezadoTipo,
@@ -730,10 +883,8 @@ getValorIndice(e: AccionBoton): void {
         fecFinVigencia: null,
         volumenAnualSolicitado: null,
       });
-      const anexoDos: any = [];
-
-    (data.annexoUno?.exportarDatosTabla || []).forEach((item: any) => {
-      anexoDos.push({
+   
+      const buildAnexoDos = (item: any) => ({
         fraccionExportacion: item.encabezadoFraccionExportacion,
         fraccionImportacion: item.encabezadoFraccionImportacion,
         descFraccionImpo: item.encabezadoDescripcionComercial,
@@ -742,62 +893,53 @@ getValorIndice(e: AccionBoton): void {
         fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
         fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
         fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
+        fraccionVolumenMensual: item?.encabezadoValorEnMonedaMensual,
+        fraccionVolumenAnual: item?.encabezadoVolumenAnual,
         categoriaFraccion: item.encabezadoCategoria,
-        tipoFraccion:item.encabezadoTipo,
-        umt:item.encabezadoUmt
+        tipoFraccion: item.encabezadoTipo,
+        umt: item.encabezadoUmt,
       });
-    });
-
-    /**
-     * Transforma un objeto de entrada en un objeto con los datos requeridos para el proyecto IMMEX.
-     *
-     * @param item - Objeto de entrada que contiene los datos del encabezado del documento.
-     * @returns Un objeto con las propiedades mapeadas para el proyecto IMMEX:
-     *   - tipoDocumento: Tipo de documento del encabezado.
-     *   - descripcion: Descripción adicional del encabezado.
-     *   - fechaFirma: Fecha de firma del documento.
-     *   - fechaVigencia: Fecha de vigencia del documento.
-     *   - rfcFirmante: RFC del firmante.
-     *   - razonFirmante: Razón social del firmante.
-     *   - testado: Valor booleano fijo en true.
-     *   - fecFinVigencia: Fecha de fin de vigencia del documento.
-     */
-     const proyectoImmexDatos = (item: any) => ({
-      tipoDocumento: item.encabezadoTipoDocument,
-      descripcion: item.encabezadoDescripcionOtro,
-      fechaFirma:  item.encabezadoFechaFirma,
-      fechaVigencia:  item.encabezadoFechaVigencia,
-      rfcFirmante:  item.encabezadoRfc,
-      razonFirmante:  item.encabezadoRazonFirmante,
-      testado: true,
-      fecFinVigencia:  item.encabezadoFechaVigencia,
-    });
-
-     const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
-              paisOrigen: item.paisOrigen,
-              rfcProveedor: item.rfcProveedor,
-              razonProveedor: item.razonProveedor,
-              paisDestino: item.paisDestino,
-              rfcCliente: item.rfcClinte,
-              razonCliente: item.razonSocial,
-              domicilio: item.domicilio,
-              descTestado: item.descTestado,
-            });
-
-    
+   
+      const proyectoImmexDatos = (item: any) => ({
+        tipoDocumento: item.encabezadoTipoDocument,
+        descripcion: item.encabezadoDescripcionOtro,
+        fechaFirma: item.encabezadoFechaFirma,
+        fechaVigencia: item.encabezadoFechaVigencia,
+        rfcFirmante: item.encabezadoRfc,
+        razonFirmante: item.encabezadoRazonFirmante,
+        testado: true,
+        fecFinVigencia: item.encabezadoFechaVigencia,
+      });
+   
+      /**
+       * Construye un objeto con los datos del proveedor y cliente a partir de un elemento de tipo `ProveedorClienteDatosTabla`.
+       *
+       * @param item - Objeto que contiene la información del proveedor y cliente.
+       * @returns Un objeto con las propiedades: paisOrigen, rfcProveedor, razonProveedor, paisDestino, rfcCliente, razonCliente, domicilio y descTestado.
+       */
+      const buildProveedorClienteDos = (item: ProveedorClienteDatosTabla) => ({
+        paisOrigen: item.paisOrigen,
+        rfcProveedor: item.rfcProveedor,
+        razonProveedor: item.razonProveedor,
+        paisDestino: item.paisDestino,
+        rfcCliente: item.rfcClinte,
+        razonCliente: item.razonSocial,
+        domicilio: item.domicilio,
+        descTestado: item.descTestado,
+      });
+   
       return {
         anexo: {
           ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(buildAnexoItem),
           ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(buildAnexoItem),
           proveedorCliente: (data.annexoUno?.proveedorClienteDatosTabla || []).map(buildProveedorCliente),
-          datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.datosParaNavegar || {}),
-          tableDos: anexoDos,
-           proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
-           proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
+          datosParaNavegar: buildDatosParaNavegar(data.annexoUno?.importarDatosTabla[0] || {}),
+          tableDos: (data.annexoUno?.exportarDatosTabla || []).map(buildAnexoDos),
+          proyectoimex: (data.proyectoImmexTablaLista || []).map(proyectoImmexDatos),
+          proveedorClienteDos: (data.annexoUno?.proveedorClienteDatosTablaDos || []).map(buildProveedorClienteDos),
         },
       };
     }
-
     /**
    * Método para manejar el evento de carga de documentos.
    * Actualiza el estado de la sección de carga de documentos.
@@ -837,5 +979,11 @@ getValorIndice(e: AccionBoton): void {
    */
   onClickCargaArchivos(): void {
     this.cargarArchivosEvento.emit();
+  }
+  /** Actualiza el estado de carga en progreso.
+   * @param carga - Indica si hay una carga en progreso.
+   */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
   }
 }

@@ -11,6 +11,7 @@ import {
   PlantasDisponibles,
   PlantasImmex,
 } from '../../../../shared/models/federatarios-y-plantas.model';
+import { CapacidadInstalada } from '../../../../shared/constantes/capacidad-instalada.enum';
 import { Directos } from '../../../../shared/constantes/empleados.enum';
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-planta/federatarios-y-plantas.component';
 import { Observable } from 'rxjs';
@@ -136,7 +137,6 @@ export class FederatariosYPlantasVistaComponent implements OnInit {
     this.store.setPlantasImmexTablaLista(datos);
   }
 
-  
 /**
  * Establece los datos complementarios de plantas en el almacén.
  * 
@@ -171,5 +171,14 @@ export class FederatariosYPlantasVistaComponent implements OnInit {
  */
   setEmpleadosList(event: Directos[]): void {
     this.store.setEmpleadosDatos(event);
+  }
+
+  /**
+       * Actualiza la lista de capacidad instalada en la tabla utilizando el evento recibido.
+       *
+       * @param event - Arreglo de objetos de tipo `CapacidadInstalada` que representa la nueva lista de capacidad instalada.
+       */
+  obtenerCapacidadInstaladaTablaList(event: CapacidadInstalada[]): void {
+    this.store.setCapacidadInstaladaTableLista(event);
   }
 }

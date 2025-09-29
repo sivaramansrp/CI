@@ -109,7 +109,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
     },
     {
         id: 'descripcionMercancia',
-        labelNombre: 'Descripción general de la mercancía',
+        labelNombre: 'Descripción adicional de la mercancía',
         campo: 'descripcionMercancia',
         clase: 'col-md-12 ps-0',
         tipoInput: 'textarea',
@@ -202,7 +202,7 @@ export const FORMULARIO_DATOS_SOLICITUD = [
             { tipo: 'required' }
         ],
         marcadorDePosicion: '',
-        valorPredeterminado: '',
+        valorPredeterminado:'10/02/2025',
         marginTop: 0,
         habilitado: true
     },

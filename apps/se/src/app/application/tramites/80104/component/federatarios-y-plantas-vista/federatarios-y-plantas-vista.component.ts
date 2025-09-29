@@ -2,6 +2,7 @@ import { Catalogo, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { ComplementarPlantaState, ComplementoDePlanta, MontoDeInversion } from '../../../../shared/constantes/complementar-planta.enum';
 import { Component, OnInit } from '@angular/core';
 import { FEDERATARIOS,FederatariosEncabezado,PLANTAS_DIPONIBLES,PLANTAS_IMMEX,PlantasDisponibles,PlantasImmex} from '../../../../shared/models/federatarios-y-plantas.model';
+import { CapacidadInstalada } from '../../../../shared/constantes/capacidad-instalada.enum';
 import { CommonModule } from '@angular/common';
 import { Directos } from '../../../../shared/constantes/empleados.enum';
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-planta/federatarios-y-plantas.component';
@@ -154,4 +155,12 @@ export class FederatariosYPlantasVistaComponent implements OnInit {
     setEmpleadosList(event: Directos[]): void {
       this.store.setEmpleadosDatos(event);
     }
+   /**
+       * Actualiza la lista de capacidad instalada en la tabla utilizando el evento recibido.
+       *
+       * @param event - Arreglo de objetos de tipo `CapacidadInstalada` que representa la nueva lista de capacidad instalada.
+       */
+  obtenerCapacidadInstaladaTablaList(event: CapacidadInstalada[]): void {
+    this.store.setCapacidadInstaladaTableLista(event);
+  }
 }

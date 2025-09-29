@@ -1,12 +1,12 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { PARTIDASDELAMERCANCIA_TABLA, VALORES_SELECCIONADOS } from '../../constantes/partidas-de-la-mercancia.enum';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
-import {NotificacionesComponent} from '@ng-mf/data-access-user';
 import { Notificacion } from '@ng-mf/data-access-user';
+import {NotificacionesComponent} from '@ng-mf/data-access-user';
 import {OCULTAR_PROVEEDOR } from '../../constantes/empleados.enum';
-import { PARTIDASDELAMERCANCIA_TABLA } from '../../constantes/partidas-de-la-mercancia.enum';
 
 import { PartidasDeLaMercanciaModelo } from '../../models/partidas-de-la-mercancia.model';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
@@ -30,12 +30,13 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
     ReactiveFormsModule,
     TituloComponent,
     TablaDinamicaComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    CatalogoSelectComponent
   ],
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
-export class PartidasDeLaMercanciaComponent {
+export class PartidasDeLaMercanciaComponent implements OnInit {
 
 /**
  * Referencia al elemento del modal de modificación de partida.
@@ -51,6 +52,7 @@ export class PartidasDeLaMercanciaComponent {
    * @description Formulario reactivo principal para capturar los datos de las partidas.
    */
   @Input() partidasDelaMercanciaForm!: FormGroup;
+  @Input() elementosDeBloque!: Catalogo[];
 
   /**
    * @description Indica si el formulario debe mostrarse en modo solo lectura.
@@ -141,6 +143,9 @@ export class PartidasDeLaMercanciaComponent {
    */
   CHECKBOX = TablaSeleccion.CHECKBOX;
 
+
+delaMercancia:boolean=false;
+
   /**
    * @constructor
    * @description Constructor para inicializar el componente e inyectar dependencias.
@@ -149,7 +154,9 @@ export class PartidasDeLaMercanciaComponent {
   constructor(private fb: FormBuilder) {
     // Constructor del componente
   }
-
+ngOnInit(): void {
+  this.delaMercancia = VALORES_SELECCIONADOS.includes(this.idProcedominto);
+}
   /**
    * @method esInvalido
    * @description Verifica si un control del formulario es inválido.
