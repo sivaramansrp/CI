@@ -13,7 +13,10 @@ import {ERROR_DE_REGISTRO_ALERT} from '../../constantes/octava-temporal.enum';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 import { OCTA_TEMPO } from 'libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
 import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
-
+import { SaveReglaOctavaRequest } from '../../models/request/regla-octava-request.model';
+import { dataRequestROctavaTemporal } from '../../models/request/data-test';
+import { Solicitud130102State, Tramite130102Store } from '../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 /**
  * @class OctavaTemporalComponent
  * @classdesc Esta clase representa el componente Octava Temporal.
@@ -73,6 +76,10 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  /**
+   * Estado de la solicitud.
+   */
+  public solicitudState!: Solicitud130102State;
 
   
   /**
@@ -90,6 +97,10 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Subject para destruir notificador y cancelar suscripciones.
+   */
+  destruirNotificador$: Subject<void> = new Subject();
   /*
   * @description Estado actual de la consulta, obtenido desde el store.
   */
@@ -114,7 +125,8 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
   constructor(
     private consultaQuery: ConsultaioQuery, 
     private formularioRegistroService: FormularioRegistroService,
-    private catOctavaTemporalService: CatOctavaTemporalService
+    private catOctavaTemporalService: CatOctavaTemporalService,
+    private tramite130102Query: Tramite130102Query,
   ) {}
 
   /**
@@ -131,6 +143,15 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
       this.consultaState = seccionState;
       }
     )).subscribe();
+
+    this.tramite130102Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      ).subscribe();
+    
   }
 
   /**
@@ -191,6 +212,73 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
 
   } 
 
+  generaContratoSolicitud(): void {
+    console.log('Generando contrato de solicitud...'+ JSON.stringify(this.solicitudState));
+    const data: SaveReglaOctavaRequest = {
+        cve_regimen: this.solicitudState.regimen || '',
+        cve_clasificacion_regimen: this.solicitudState.clasificacionRegimen || '',
+        numero_autorizado_programa_prosec_pex: "string",
+        cve_usuario_capturista: "string",
+        lista_paises: this.solicitudState.paises || [],
+        mercancia: {
+            cve_fraccion_arancelaria: "string",
+            cve_subdivision: "string",
+            descripcion: this.solicitudState.descripcion || '',
+            cve_unidad_medida_tarifaria: this.solicitudState.unidadMedida || '',
+            cantidad_tarifaria: this.solicitudState.cantidad || 0,
+            valor_factura_usd: parseFloat(this.solicitudState.valorFacturaUSD) || 0,
+            ide_condicion_mercancia: "CONDMER.N",
+        },
+        solicitante: {
+            rfc: "string",
+            nombre: "string",
+            es_persona_moral: false,
+            certificado_serial_number: "string",
+        },
+        representacion_federal: {
+            cve_entidad_federativa: this.solicitudState.entidad || '',
+            cve_unidad_administrativa:  this.solicitudState.representacion,
+        },
+        partidas_mercancia:[{
+      "cantidad": 1000,
+      "descripcion": "Descripción de la partida",
+      "valor_autorizado": 25000.50,
+      "cve_fraccion": "72021999",
+      "importe_Unitario": 25.00,
+      "importe_partida_total_usd": 25000.00
+    }],
+        cantidad_total: 0,
+        cantidad_total_usd: 0,
+        lista_fracciones_prosec: [{
+      "clave": "72021999",
+      "fraccion": "Descripción de la fracción arancelaria"
+    }]
+    
+    }
+    console.log('Datos para guardar la solicitud: ', JSON.stringify(data));
+  }
+  /**
+   * Método que invoca al servicio de guardado de la solicitud.
+   * @param data - Datos de la solicitud a guardar.
+   */
+  ejecutarGuardadoSolicitud(): void {
+    console.log('Guardando solicitud...', JSON.stringify(this.solicitudState));
+    const dataRequest : SaveReglaOctavaRequest = dataRequestROctavaTemporal;
+    this.catOctavaTemporalService.saveDataRequest(dataRequest).subscribe({
+      next: (data) => {
+        if(data.datos.id_solicitud){
+          alert(data.datos.id_solicitud);
+         // this.ejecutarNotificacion(data.datos.id_solicitud.toString());
+        } else {
+          alert(`Error: ${data.codigo} - Causa: ${data.mensaje}`);
+        } 
+      },
+      error: (error) => {
+        alert(`Error: ${error}`);
+      }
+    }
+    );
+  }
   /*
     * Método que se ejecuta al destruir el componente.
   */

@@ -29,7 +29,7 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
 import solicitudeSelectVal from 'libs/shared/theme/assets/json/130102/solicitude-select.json';
 
 import { Solicitud130102State, Tramite130102Store } from '../../estados/tramites/tramite130102.store';
-import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
@@ -172,7 +172,7 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
    * con los valores iniciales obtenidos del store.
    */
   inicializarFormulario():void{
-this.tramite130102Query.selectSolicitud$
+this.tramite130102Query.selectSeccionState$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  

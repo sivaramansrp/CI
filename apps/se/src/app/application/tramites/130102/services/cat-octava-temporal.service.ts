@@ -15,10 +15,13 @@ import { API_GET_BLOQUE_PAISES,
   API_GET_UNIDADES_MEDIDA,
   API_GET_ESQUEMA_REGLAS_OCTAVA, 
   API_GET_INICIAR_NOTIFICACION,
-  API_GET_TIGIE} from '../server/api-router';
+  API_GET_TIGIE,
+  API_POST_GUARDAR_SOLICITUD} from '../server/api-router';
 import { CatalogosBloquesResponse } from '../models/octava-temporal.model';
 import { IniciarNotificacionResponse } from '../models/response/notificaciones-response.model';
 import { CatalogosTigiesResponse } from '../models/response/catalogos-response.model';
+import { ReglaOctacaResponse } from '../models/response/regla-octava-response.model';
+import { SaveReglaOctavaRequest } from '../models/request/regla-octava-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -280,7 +283,25 @@ export class CatOctavaTemporalService {
     ); 
   } 
 
+  /**
+   * Guarda los datos de la solicitud de regla de octava temporal.
+   * @param dataRequest Datos de la solicitud a guardar.
+   * @returns 
+   */
+  saveDataRequest(dataRequest:SaveReglaOctavaRequest): Observable<ReglaOctacaResponse> {
+    const ENDPOINT = `${this.host}` + API_POST_GUARDAR_SOLICITUD;
+    return this.http.post<ReglaOctacaResponse>(ENDPOINT, dataRequest).pipe(
+      map((response) => {
+        return response;      
+      }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );
+
+  }
 
 }
-
-

@@ -131,3 +131,9 @@ export const CLVFRACCION = '{clvFraccion}';
  * @returns 
  */
 export const API_GET_TIGIE = (CLVFRACCION: string) : string => `sat-t130102/tramite/${CLVFRACCION}/tigie`;
+
+/**
+ * API MS para guardar la solicitud del tramite 130102.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t130102/swagger-ui/index.html#/Solicitud%20Importaci%C3%B3n%20Regla%20Octava/guardar
+ */
+export const API_POST_GUARDAR_SOLICITUD = 'sat-t130102/solicitud/guardar';

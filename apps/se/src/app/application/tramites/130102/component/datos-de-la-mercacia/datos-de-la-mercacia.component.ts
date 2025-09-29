@@ -30,7 +30,7 @@ import { REG_X } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { Solicitud130102State, Tramite130102Store } from '../../../130102/estados/tramites/tramite130102.store';
-import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
@@ -184,7 +184,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
   * Suscribe al estado de la solicitud para obtener los datos necesarios.
 */
   inicializarFormulario():void{
- this.tramite130102Query.selectSolicitud$
+ this.tramite130102Query.selectSeccionState$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  

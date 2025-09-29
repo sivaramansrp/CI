@@ -76,6 +76,8 @@ export interface Solicitud130102State {
 
   /** Lista de usos específicos relacionados con fracciones arancelarias PROSEC. */
   uso_especifico_tabla?: FraccionArancelariaProsec[];
+
+  paises: string[]; // Lista de países involucrados en la solicitud.
 }
 /**
  * Crea y devuelve el estado inicial de la solicitud.
@@ -110,7 +112,7 @@ export function createInitialState(): Solicitud130102State {
     solicitud : '', // Indica que la solicitud no está activa por defecto.
     partidas_tabla: [], // Lista de partidas vacía por defecto.
     uso_especifico_tabla: [], // Lista de usos específicos vacía por defecto.;
-
+    paises: [] // Lista de países vacía por defecto.
   };
 }
 
@@ -146,6 +148,17 @@ export class Tramite130102Store extends Store<Solicitud130102State> {
     this.update((state) => ({
       ...state,
       regimen,
+    }));
+  }
+
+  /**
+   * Actualiza  los paises.
+   * @param paises - Lista de países involucrados en la solicitud.
+   */
+  public setPaises(paises: string[]):void {
+    this.update((state) => ({
+      ...state,
+      paises,
     }));
   }
 
