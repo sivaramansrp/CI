@@ -232,6 +232,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   nicoCatalogoArray: Catalogo[] = nicoCatalogoVal as Catalogo[];
 
+
+  idProcedominto:number = 130201; 
+
    /**
  * @property
  * @name tituloParte
@@ -463,6 +466,15 @@ tituloParte = TITULO_DESTINO;
           Validators.maxLength(18),
         ],
       ],
+      fraccionArancelariaTIGIE:[
+        this.seccionState?.fraccionArancelariaTIGIE,
+        [
+          Validators.required
+        ]
+      ],
+      catalogo:[
+        this.seccionState?.catalogo,
+      ],
 
       /**
        * Descripción de las partidas de la mercancía.
@@ -472,6 +484,7 @@ tituloParte = TITULO_DESTINO;
         this.seccionState?.descripcionModificar,
         [Validators.required, Validators.maxLength(1000)],
       ],
+
 
       /**
        * Valor en USD de cada partida de la mercancía.

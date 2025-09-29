@@ -13,13 +13,13 @@
  */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 
 import {
   ImmexRegistroState,
   ImmexRegistroStore,
 } from '../../estados/tramites/tramite80203.store';
-import { immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { ImmexTablaJson, immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { Observable, map } from 'rxjs';
 
 
 @Injectable({
@@ -47,10 +47,12 @@ export class PermisoImmexDatosService {
 
     /**
    * Obtiene los datos de la tabla IMMEX desde un archivo JSON local.
-   * @returns {Observable<unknown[]>} Observable con los datos de la tabla IMMEX.
+   * @returns {Observable<ImmexTablaJson[]>} Observable con los datos filtrados de la tabla IMMEX.
    */
-  getDatos(): Observable<unknown[]> {
-    return this.httpClient.get<unknown[]>(this.jsonUrl);
+  getDatos(permisoImmexDatos: string): Observable<ImmexTablaJson[]> {
+    return this.httpClient.get<ImmexTablaJson[]>(this.jsonUrl).pipe(
+      map(response => response.filter(item => item.permisoImmex === permisoImmexDatos))
+    );
   }
 
     /**

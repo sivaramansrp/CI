@@ -8,6 +8,9 @@ import { NgModule } from '@angular/core';
 
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
+
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
+
 /**
  * @constant ROUTES_PERMISO
  * @description Rutas para el módulo de registro de solicitud IMMEX.
@@ -16,6 +19,12 @@ export const ROUTES_PERMISO: Routes = [
   {
     path: 'immex-registro',
     component: ImmexRegistroSolicitudModalityComponent,
+    canActivate: [IniciarTramiteResolver],
+    data: {
+      iniciarConfig: {
+        procedureId: '80203'
+      }
+    }
   },
   {
     path: '',

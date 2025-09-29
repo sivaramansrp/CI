@@ -124,6 +124,7 @@
           class="form-control resize-disable"
           cols="80" rows="3"
           id="Observaciones"
+          [maxLength]="512"
           placeholder=""
           formControlName="observaciones"
           (change)="setValoresStore(paisForm,'observaciones')"

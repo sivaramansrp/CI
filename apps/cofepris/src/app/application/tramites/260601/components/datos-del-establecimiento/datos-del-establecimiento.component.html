@@ -163,11 +163,9 @@
     [configuracionTabla]="configuracionTablaSCIAN"
     [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     (listaDeFilaSeleccionada)="seleccionarDomicilios($event)"
+    [isInvalida]="tableErrorMeassageDispalySCIAN && scianBodyData.length === 0"
     >
 </app-tabla-dinamica>
-<div *ngIf="tableErrorMeassageDispalySCIAN && scianBodyData.length === 0">
-          <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
-        </div>
 
     <div class="row" *ngIf="!habilitarEstado">
         <div class="col-md-8"></div>
@@ -238,17 +236,14 @@
         <div class="col-md-4">
             <app-catalogo-select [catalogo]="regimenes" formControlName="cveRegimenes"
                 [label]="'Régimen al que se destinará'" [required]="true" name="cveRegimenes"
-                (change)="regimenesSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
-                <div *ngIf="domicilloDelEstablecimientoForm.get('cveRegimenes')?.touched && domicilloDelEstablecimientoForm.get('cveRegimenes')?.invalid">
-            <small *ngIf="domicilloDelEstablecimientoForm.get('cveRegimenes')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
-            </div>
+                (change)="regimenesSeleccion()" [isDisabled]="esFormularioSoloLectura"
+                [markTouched]="domicilloDelEstablecimientoForm.get('cveRegimenes')?.touched && domicilloDelEstablecimientoForm.get('cveRegimenes')?.errors?.['required']"></app-catalogo-select>
+                
         </div>
         <div class="col-md-8">
             <app-catalogo-select [catalogo]="aduanas" formControlName="cveAduanas" [label]="'Aduana'" [required]="true"
-                name="cveAduanas" (change)="aduanaSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
-                <div *ngIf="domicilloDelEstablecimientoForm.get('cveAduanas')?.touched && domicilloDelEstablecimientoForm.get('cveAduanas')?.invalid">
-            <small *ngIf="domicilloDelEstablecimientoForm.get('cveAduanas')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
-            </div>
+                name="cveAduanas" (change)="aduanaSeleccion()" [isDisabled]="esFormularioSoloLectura"
+                [markTouched]="domicilloDelEstablecimientoForm.get('cveAduanas')?.touched && domicilloDelEstablecimientoForm.get('cveAduanas')?.errors?.['required']"></app-catalogo-select>
         </div>
     </div>
 
@@ -258,10 +253,8 @@
      [tipoSeleccionTabla]="tablaSeleccion" 
      [configuracionTabla]="configuracionTabla"
      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+     [isInvalida]="tableErrorMeassageDispalyProducto && productoBodyData.length === 0"
      ></app-tabla-dinamica>
-        <div *ngIf="tableErrorMeassageDispalyProducto && productoBodyData.length === 0">
-            <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
-            </div>
 
     <div class="row">
         <div class="col-md-12 text-end">
