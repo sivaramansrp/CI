@@ -18,7 +18,7 @@
       } @case (2) {
       <app-paso-dos></app-paso-dos>
       } @case (3) {
-      <app-paso-tres></app-paso-tres>
+      <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="110201" [procedureUrl]="'nuevo-programa-industrial/action'"></paso-firma>
       } }
 
       <btn-continuar *ngIf="cargarArchivo"

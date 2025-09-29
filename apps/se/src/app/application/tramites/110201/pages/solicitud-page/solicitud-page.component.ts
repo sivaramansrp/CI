@@ -1,9 +1,12 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT } from '../../enum/certificado.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Solicitud110201State } from '../../state/Tramite110201.store';
+import { Tramite110201Query } from '../../state/Tramite110201.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -37,7 +40,7 @@ interface AccionBoton {
 /**
  * Componente que representa la página de solicitud.
  */
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnDestroy {
   /**
    * Texto de alerta que se muestra a los terceros.
    */
@@ -58,19 +61,23 @@ export class SolicitudPageComponent {
    */
   indice: number = 1;
 
+  /**
+   * URL de la página actual.
+   */
+  public solicitudState!: Solicitud110201State;
 
   /**
-    * @property {boolean} esFormaValido
-    * @description
-    * Indica si el formulario del paso actual es válido.
-    * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
-    */
+   * @property {boolean} esFormaValido
+   * @description
+   * Indica si el formulario del paso actual es válido.
+   * Se utiliza para mostrar mensajes de error o controlar la navegación en el asistente.
+   */
   esFormaValido: boolean = false;
   /**
-    * @property {string} formErrorAlert
-    * @description
-    * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
-    */
+   * @property {string} formErrorAlert
+   * @description
+   * Mensaje HTML que se muestra como alerta cuando faltan campos por capturar en el formulario.
+   */
   public formErrorAlert = ERROR_FORMA_ALERT;
   /**
    * @property {PasoUnoComponent} pasoUnoComponent
@@ -95,6 +102,21 @@ export class SolicitudPageComponent {
   };
 
   /**
+   * Notificador para destruir los observables y evitar posibles fugas de memoria.
+   * @private
+   * @type {Subject<void>}
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+  constructor(public tramite110201Query: Tramite110201Query) {
+    this.tramite110201Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((solicitud) => {
+        this.solicitudState = solicitud;
+      });
+  }
+
+  /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
    */
@@ -107,7 +129,6 @@ export class SolicitudPageComponent {
    * @param e Acción del botón.
    */
   getValorIndice(e: AccionBoton): void {
-
     this.esFormaValido = false;
 
     if (this.indice === 1 && e.accion === 'cont') {
@@ -127,7 +148,6 @@ export class SolicitudPageComponent {
 
     // Validar que el nuevo índice esté dentro de los límites permitidos
     if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
-
       // Actualizar el índice y datosPasos
       this.indice = indiceActualizado;
       this.datosPasos.indice = indiceActualizado;
@@ -144,15 +164,15 @@ export class SolicitudPageComponent {
   }
 
   /**
-     * @method validarTodosFormulariosPasoUno
-     * @description
-     * Valida todos los formularios del componente `PasoUnoComponent`.
-     * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
-     * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
-     * Retorna `true` si todos los formularios son válidos.
-     *
-     * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
-     */
+   * @method validarTodosFormulariosPasoUno
+   * @description
+   * Valida todos los formularios del componente `PasoUnoComponent`.
+   * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
+   * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
+   * Retorna `true` si todos los formularios son válidos.
+   *
+   * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
+   */
   private validarTodosFormulariosPasoUno(): boolean {
     if (!this.pasoUnoComponent) {
       return true;
@@ -164,7 +184,6 @@ export class SolicitudPageComponent {
     return true;
   }
 
-
   /**
    * Actualiza el estado de carga de archivo, permitiendo mostrar u ocultar el botón de continuar.
    * Este método es llamado desde un componente hijo mediante un evento.
@@ -172,5 +191,10 @@ export class SolicitudPageComponent {
    */
   cargaArchivo(data: boolean): void {
     this.cargarArchivo = data;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
