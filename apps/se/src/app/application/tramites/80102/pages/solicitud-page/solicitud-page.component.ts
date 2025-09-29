@@ -646,54 +646,40 @@ getValorIndice(e: AccionBoton): void {
 
     const MAP_MONTOS_INVERSION = (item: any) => ({
       idPlantaM: item.PLANTA ?? "",
-      idMonto: (item.MONTO ?? "").toString(),
       tipo: item.TIPO ?? "",
-      descTipo: item.DESC_TIPO ?? "",
-      cantidad: (item.CANTIDAD ?? "").toString(),
+      cantidad: item.CANTIDAD ?? "",
       descripcion: item.DESCRIPCION ?? "",
-      monto: (item.MONTO ?? "").toString(),
-      testado: item.TESTADO ?? "",
-      descTestado: item.DESC_TESTADO ?? "",
+      monto: item.MONTO ?? "",
     })
 
     const MAP_EMPLEADOS = (item: any) => ({
       idPlantaE: item.PLANTA ?? '',
-      idEmpleados: item.ID_EMPLEADOS ?? '',
-      totalEmpleados: (item.TOTAL ?? '').toString(),
+      totalEmpleados: item.TOTAL ?? '',
       directos: item.DIRECTOS ?? '',
       cedula: item.CEDULA_DE_CUOTAS ?? '',
       fechaCedula: formatearFechaYyyyMmDd(item.FECHA_DE_CEDULA ?? ''),
-      indirectos: (item.INDIRECTOS ?? '').toString(),
+      indirectos: item.INDIRECTOS ?? '',
       contrato: item.CONTRATO ?? '',
       objetoContrato: item.OBJETO_DEL_CONTRATO_DEL_SERVICIO ?? '',
       fechaFirma: formatearFechaYyyyMmDd(item.FECHA_FIRMA ?? ''),
       fechaFinVigencia: formatearFechaYyyyMmDd(item.FECHA_FIN_VIGENCIA ?? ''),
       rfcEmpresa: item.RFC ?? '',
       razonEmpresa: item.RAZON_SOCIAL ?? '',
-      testado: item.TESTADO ?? '',
-      descTestado: item.DESC_TESTADO ?? ''
     })
 
     const MAP_COMPLEMENTAR = (item: any) => ({
       idPlantaC: item.PLANTA ?? '' ,
-      idDato: item.DATO ?? '',
       amparoPrograma: item.PERMANECERA_MERCANCIA_PROGRAMA ?? '',
       tipoDocumento: item.TIPO_DOCUMENTO ?? '',
-      descDocumento: item.DESCRIPCION_DOCUMENTO ?? '',
-      descripcionOtro: item.DESCRIPCION_OTRO ?? '',
-      documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
-      descDocRespaldo: item.DESC_DOCUMENTO_RESPALDO ?? '',
-      respaldoOtro: item.RESPALDO_OTRO ?? '',
       fechaFirma: formatearFechaYyyyMmDd(item.FECHA_DE_FIRMA ?? ''),
       fechaVigencia: formatearFechaYyyyMmDd(item.FECHA_DE_FIN_DE_VIGENCIA ?? ''),
+      documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
       fechaFirmaRespaldo: item.FECHA_DE_FIRMA_DOCUMENTO ?? '',
       fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
     })
 
     const MAP_FIRMANTES = (item:any) => ({
-      idPlantaF: item.planta ?? '',
       tipoFirmante: item.tipoFirmante ?? '',
-      descTipoFirmante: item.descTipoFirmante ?? '',
     })
 
     const montos = (data.montosDeInversionTablaDatos || []).map(MAP_MONTOS_INVERSION);
@@ -746,9 +732,9 @@ getValorIndice(e: AccionBoton): void {
       nombreNotario: arr.nombre ?? '',
       apellidoMaterno: arr.segundoApellido ?? '',
       apellidoPaterno: arr.primerApellido ?? '',
-      numeroActa: (arr.numeroDeActa ?? '').toString(),
+      numeroActa: arr.numeroDeActa ?? '',
       fechaActa: formatearFechaYyyyMmDd(arr.fechaInicioInput ?? ''),
-      numeroNotaria: (arr.numeroDeNotaria ?? '').toString(),
+      numeroNotaria: arr.numeroDeNotaria ?? '',
       entidadFederativa: arr.estado ?? '',
       delegacionMunicipio: arr.estadoOptions ?? '',
         });
@@ -765,7 +751,6 @@ getValorIndice(e: AccionBoton): void {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): Promise<any> {
-    console.log(data);
     const SOLICITUD = this.buildComplimentos(data, this.complimentosBase);
     const DECLARACION_SOLICUTUD_ENTRIES = SolicitudPageComponent.buildDeclaracionSolicitudEntries(data);
     const PLANTAS = this.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);

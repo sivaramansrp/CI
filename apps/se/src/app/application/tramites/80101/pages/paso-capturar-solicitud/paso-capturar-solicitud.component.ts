@@ -519,19 +519,14 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
 
     const MAP_MONTOS_INVERSION = (item: any) => ({
       idPlantaM: item.PLANTA ?? "",
-      idMonto: item.MONTO ?? "",
       tipo: item.TIPO ?? "",
-      descTipo: item.DESC_TIPO ?? "",
       cantidad: item.CANTIDAD ?? "",
       descripcion: item.DESCRIPCION ?? "",
       monto: item.MONTO ?? "",
-      testado: item.TESTADO ?? "",
-      descTestado: item.DESC_TESTADO ?? "",
     })
 
     const MAP_EMPLEADOS = (item: any) => ({
       idPlantaE: item.PLANTA ?? '',
-      idEmpleados: item.ID_EMPLEADOS ?? '',
       totalEmpleados: item.TOTAL ?? '',
       directos: item.DIRECTOS ?? '',
       cedula: item.CEDULA_DE_CUOTAS ?? '',
@@ -543,30 +538,21 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
       fechaFinVigencia: formatearFechaYyyyMmDd(item.FECHA_FIN_VIGENCIA ?? ''),
       rfcEmpresa: item.RFC ?? '',
       razonEmpresa: item.RAZON_SOCIAL ?? '',
-      testado: item.TESTADO ?? '',
-      descTestado: item.DESC_TESTADO ?? '',
     })
 
     const MAP_COMPLEMENTAR = (item: any) => ({
       idPlantaC: item.PLANTA ?? '' ,
-      idDato: item.DATO ?? '',
       amparoPrograma: item.PERMANECERA_MERCANCIA_PROGRAMA ?? '',
       tipoDocumento: item.TIPO_DOCUMENTO ?? '',
-      descDocumento: item.DESCRIPCION_DOCUMENTO ?? '',
-      descripcionOtro: item.DESCRIPCION_OTRO ?? '',
-      documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
-      descDocRespaldo: item.DESC_DOCUMENTO_RESPALDO ?? '',
-      respaldoOtro: item.RESPALDO_OTRO ?? '',
       fechaFirma: formatearFechaYyyyMmDd(item.FECHA_DE_FIRMA ?? ''),
       fechaVigencia: formatearFechaYyyyMmDd(item.FECHA_DE_FIN_DE_VIGENCIA ?? ''),
+      documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
       fechaFirmaRespaldo: item.FECHA_DE_FIRMA_DOCUMENTO ?? '',
       fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
     })
 
     const MAP_FIRMANTES = (item:any) => ({
-      idPlantaF: item.planta ?? '',
       tipoFirmante: item.tipoFirmante ?? '',
-      descTipoFirmante: item.descTipoFirmante ?? '',
     })
 
     const listaCapacidad = (data.tablaDatosCapacidadInstalada || []).map(mapCapacidadInstalada);
@@ -622,7 +608,7 @@ export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
           apellidoMaterno: arr.segundoApellido ?? '',
           apellidoPaterno: arr.primerApellido ?? '',
           numeroActa: arr.numeroDeActa ?? '',
-          fechaActa: arr.fechaInicioInput ?? '',
+          fechaActa: formatearFechaYyyyMmDd(arr.fechaInicioInput ?? ''),
           numeroNotaria: arr.numeroDeNotaria ?? '',
           entidadFederativa: arr.estado ?? '',
           delegacionMunicipio: arr.estadoOptions ?? '',
