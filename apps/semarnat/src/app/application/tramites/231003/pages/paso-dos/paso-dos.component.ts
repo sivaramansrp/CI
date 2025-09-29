@@ -24,6 +24,7 @@ export class PasoDosComponent {
      * @param ev Firma obtenida.
      */
     obtieneFirma(ev: string): void {
+      // TODO generarCadena
       const FIRMA: string = ev;
       if (FIRMA) {
         this.router.navigate(['servicios-extraordinarios/acuse']);
@@ -32,3 +33,6 @@ export class PasoDosComponent {
     }
   
 }
+// 130118
+
+

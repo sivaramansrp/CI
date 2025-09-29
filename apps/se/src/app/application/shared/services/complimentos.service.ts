@@ -6,10 +6,11 @@ import { BehaviorSubject, Observable, catchError, map, throwError } from 'rxjs';
 import {
   Catalogo,
   HttpCoreService,
+  JSONResponse,
   JsonResponseCatalogo,
 } from '@ng-mf/data-access-user';
+import { PlantasSubfabricante, PlantsEmpresaSubfabricante } from '../models/empresas-subfabricanta.model';
 import { API_ROUTES } from '../servers/api-route';
-import { ENVIRONMENT } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -299,5 +300,72 @@ export class ComplimentosService {
       {},
       false
     );
+  }
+
+    /**
+     * Obtiene la lista de subfabricantes disponibles.
+     * @method getSubfabricantesDisponibles
+     * @returns {Observable<TableData>} Observable con la lista de subfabricantes disponibles.
+     */
+    getSubfabricantesDisponibles(body: PlantsEmpresaSubfabricante): Observable<JSONResponse> {
+      return this.http.post<JSONResponse>(API_ROUTES().buscarPlantas, body).pipe(
+        map((response) => response),
+        catchError(() => {
+          const ERROR = new Error(`Error al obtener la lista de subfabricantes en ${API_ROUTES().buscarPlantas}`);
+          return throwError(() => ERROR);
+        })
+      );
+    }
+
+    /**
+ * Construye el domicilio fiscal completo a partir de los datos de domicilio
+ * @param domicilio - Objeto domicilioDto
+ * @param empresaDomicilio - Objeto domicilioSolicitud de empresaDto
+ * @returns String con el domicilio fiscal completo
+ */
+// eslint-disable-next-line class-methods-use-this
+private buildDomicilioFiscal(domicilio: any, empresaDomicilio: any = {}): string {
+  const CALLE = domicilio.calle || empresaDomicilio.calle || '';
+  const NUM_EXTERIOR = domicilio.numExterior || empresaDomicilio.numExterior || '';
+  const NUM_INTERIOR = domicilio.numInterior || empresaDomicilio.numInterior || '';
+  const COLONIA = domicilio.colonia || empresaDomicilio.colonia || '';
+  const MUNICIPIO = domicilio.municipio || empresaDomicilio.municipio || domicilio.delegacionMunicipio || '';
+  const ENTIDAD = domicilio.entidadFederativa?.nombre || empresaDomicilio.entidadFederativa?.nombre || '';
+  const CODIGO_POSTAL = domicilio.codigoPostal || empresaDomicilio.codigoPostal || '';
+
+  const PARTS = [CALLE, NUM_EXTERIOR, NUM_INTERIOR, COLONIA, MUNICIPIO, ENTIDAD, CODIGO_POSTAL]
+    .filter(part => part && part.toString().trim() !== '')
+    .map(part => part.toString().trim());
+
+  return PARTS.join(', ');
+}
+
+/**
+ * Mapea la respuesta de la API a un arreglo de objetos PlantasSubfabricante.
+ * @param apiResponse - Respuesta de la API que contiene los datos de las plantas subfabricantes.
+ * @returns Arreglo de objetos PlantasSubfabricante mapeados.
+ */
+  // eslint-disable-next-line class-methods-use-this
+  mapApiResponseToPlantasSubfabricante(apiResponse: any[]): PlantasSubfabricante[] {
+    // eslint-disable-next-line complexity
+    return apiResponse.map(item => {
+      const DOMICILIO = item.domicilioDto || {};
+      const EMPRESA = item.empresaDto || {};
+      const EMPRESA_DOMICILIO = EMPRESA.domicilioSolicitud || {};
+
+      return {
+        calle: DOMICILIO.calle || EMPRESA_DOMICILIO.calle || item.calle || '',
+        numExterior: parseInt(DOMICILIO.numExterior || EMPRESA_DOMICILIO.numExterior || item.numeroExterior, 10) || 0,
+        numInterior: parseInt(DOMICILIO.numInterior || EMPRESA_DOMICILIO.numInterior || item.numeroInterior, 10) || 0,
+        codigoPostal: parseInt(DOMICILIO.codigoPostal || EMPRESA_DOMICILIO.codigoPostal || item.codigoPostal, 10) || 0,
+        colonia: DOMICILIO.colonia || EMPRESA_DOMICILIO.colonia || item.colonia || '',
+        municipio: DOMICILIO.municipio || EMPRESA_DOMICILIO.municipio || DOMICILIO.delegacionMunicipio || item.delegacionMunicipio || '',
+        entidadFederativa: DOMICILIO.entidadFederativa?.nombre || EMPRESA_DOMICILIO.entidadFederativa?.nombre || item.entidadFederativa || '',
+        pais: DOMICILIO.pais?.nombre || EMPRESA_DOMICILIO.pais?.nombre || item.pais || '',
+        rfc: EMPRESA.rfc || item.rfc || '',
+        domicilioFiscal: this.buildDomicilioFiscal(DOMICILIO, EMPRESA_DOMICILIO),
+        razonSocial: EMPRESA.razonSocial || item.razonSocial || ''
+      };
+    });
   }
 }

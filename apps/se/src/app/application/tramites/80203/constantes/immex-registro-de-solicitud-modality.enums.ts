@@ -26,11 +26,9 @@
  * @see {@link https://vucem.gob.mx|VUCEM}
  * @since 1.0.0
  * @example
- * console.log(PASOS[0].titulo);
  * // Output: 'Capturar solicitud'
  * @example
  * const pasoActivo = PASOS.find(paso => paso.activo);
- * console.log(pasoActivo);
  */
 export const PASOS = [
     {
@@ -122,7 +120,6 @@ export const PASOS = [
  * @namespace TEXTOS
  * @since 1.0.0
  * @example
- * console.log(TEXTOS.INSTRUCCIONES);
  * // Output: HTML con las instrucciones
  */
 export const TEXTOS = {
@@ -148,7 +145,6 @@ export const TEXTOS = {
  * @namespace TEXTOS_REQUISITOS
  * @since 1.0.0
  * @example
- * console.log(TEXTOS_REQUISITOS.INSTRUCCIONES);
  * @example
  * document.getElementById('help').innerHTML = TEXTOS_REQUISITOS.ADJUNTAR;
  */
@@ -184,7 +180,6 @@ export const TEXTOS_REQUISITOS = {
  * alert(MENSAJE_DE_ÉXITO_ETAPA_UNO);
  * @example
  * const mensaje = MENSAJE_DE_ÉXITO_ETAPA_UNO;
- * console.log(mensaje);
  */
 export const MENSAJE_DE_ÉXITO_ETAPA_UNO = `La solicitud ha quedado registrada con el número temporal 202758511. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.`
 
@@ -201,7 +196,6 @@ export const MENSAJE_DE_ÉXITO_ETAPA_UNO = `La solicitud ha quedado registrada c
  * @since 1.0.0
  * @example
  * const campos = ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL;
- * campos.forEach(campo => console.log(campo.labelNombre));
  * @example
  * const rfcField = ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL.find(field => field.campo === 'rfc');
  */
@@ -404,7 +398,6 @@ export const ZOOSANITARIO_SOLICITANTE_FISICA_NACIONAL = [
  * @since 1.0.0
  * @example
  * const config = FECHA_DE_PAGO;
- * console.log(config.labelNombre); // 'Fecha de pago'
  * @example
  * if (FECHA_DE_PAGO.required) {
  *   // Campo obligatorio
@@ -461,7 +454,6 @@ export const TERCERO_TEXTO_DE_ALERTA = 'Las tablas con asterisco son obligatoria
  * @default 21
  * @example
  * const userId = ID_DE_USUARIO;
- * console.log(`Usuario ID: ${userId}`);
  * @example
  * if (currentUser.id === ID_DE_USUARIO) {
  *   // Usuario específico
@@ -509,7 +501,6 @@ export const PERMISO_IMMEX = [
  * @since 1.0.0
  * @example
  * const columnHeaders = FRACCION_ARANCELARIA;
- * console.log(columnHeaders.length); // 6
  * @example
  * const firstHeader = FRACCION_ARANCELARIA[0]; // 'No.'
  */
@@ -563,7 +554,6 @@ export const NICO = [
  * }
  * @example
  * const paso3Config = SECCIONES_TRAMITE_80203.PASO_3;
- * console.log(paso3Config.requiereValidacion); // true
  */
 export const SECCIONES_TRAMITE_80203 = {
     /**

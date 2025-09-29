@@ -82,7 +82,7 @@ export class PasoUnoCsComponent implements OnInit {
     private consultaQuery: ConsultaioQuery,
     private tramite80101Store: Tramite80101Store
   ){
-    this.asignarSecciones();
+    
   }
   /**
    * Selecciona una pestaña específica.

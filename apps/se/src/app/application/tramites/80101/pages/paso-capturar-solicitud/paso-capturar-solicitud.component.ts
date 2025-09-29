@@ -1,9 +1,9 @@
-import { AccionBoton, Anexo1, ProveedorClienteDatosTabla } from '../../models/nuevo-programa-industrial.model';
-import { Component, EventEmitter, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, ERROR_FORMA_ALERT, WizardService } from '@ng-mf/data-access-user';
-import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent, esValidObject, formatearFechaYyyyMmDd, getValidDatos } from '@libs/shared/data-access-user/src';
+import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, map, switchMap, take, takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../estados/tramite80101.store';
+import { AccionBoton } from '../../models/nuevo-programa-industrial.model';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { ServicioDeFormularioService } from '../../../../shared/services/forma-servicio/servicio-de-formulario.service';
 import { ToastrService } from 'ngx-toastr';
@@ -15,24 +15,24 @@ import notarios from '@libs/shared/theme/assets/json/shared/notarios.json';
 import planta from '@libs/shared/theme/assets/json/shared/planta.json';
 import plantasSubmanufactureras from '@libs/shared/theme/assets/json/shared/plantas-submanufactureras.json';
 import sociosAccionistas from '@libs/shared/theme/assets/json/shared/socios-accionistas.json';
-
+ 
 /**
  * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
- * 
- * Este método se utiliza para manejar las acciones de los botones en el componente. 
- * Dependiendo del valor y la acción proporcionados, actualiza el índice actual y 
+ *
+ * Este método se utiliza para manejar las acciones de los botones en el componente.
+ * Dependiendo del valor y la acción proporcionados, actualiza el índice actual y
  * navega hacia adelante o hacia atrás en el componente Wizard.
- * 
+ *
  * @param e - Un objeto de tipo `AccionBoton` que contiene dos propiedades:
  *   - `valor`: Un número que representa el índice al que se desea navegar. Debe estar entre 1 y 4.
  *   - `accion`: Una cadena que indica la acción a realizar. Puede ser:
  *     - `'cont'`: Para avanzar al siguiente paso en el Wizard.
  *     - `'atras'`: Para retroceder al paso anterior en el Wizard.
- * 
+ *
  * @remarks
- * Si el valor proporcionado está fuera del rango permitido (menor que 1 o mayor que 4), 
+ * Si el valor proporcionado está fuera del rango permitido (menor que 1 o mayor que 4),
  * el método no realiza ninguna acción.
- * 
+ *
  * @example
  * ```typescript
  * const accion: AccionBoton = { valor: 2, accion: 'cont' };
@@ -44,8 +44,8 @@ import sociosAccionistas from '@libs/shared/theme/assets/json/shared/socios-acci
   templateUrl: './paso-capturar-solicitud.component.html',
   providers: [ToastrService],
 })
-export class PasoCapturarSolicitudComponent implements OnInit {
-
+export class PasoCapturarSolicitudComponent implements OnInit, OnDestroy {
+ 
   padreBtn: boolean = true;
   /**
    * Lista de pasos del wizard.
@@ -59,13 +59,13 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    * El valor inicial es 1, lo que indica que el primer paso está activo al cargar el componente.
    */
   indice: number = 1;
-
+ 
   /**
    * Identificador numérico de la solicitud actual.
    * Se inicializa en 0 y se actualiza cuando se captura una nueva solicitud.
    */
   idSolicitud: number = 0;
-
+ 
   /**
    * Datos de los pasos del wizard.
    * Esta propiedad almacena información relacionada con el número de pasos, el índice actual,
@@ -83,96 +83,96 @@ export class PasoCapturarSolicitudComponent implements OnInit {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   /**
- * 
+ *
  * Una cadena que representa la clase CSS para una alerta de información.
  * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
  */
   public infoAlert = 'alert-info';
-
-
-  
-    /**
-     * Evento que se emite para cargar archivos.
-     * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
-     */
-    cargarArchivosEvento = new EventEmitter<void>();
-  
-    /**
-     * Evento que se emite para regresar a la sección de carga de documentos.
-     * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
-     */
-    regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
-  
-    /**
-   * Indica si el botón para cargar archivos está habilitado.
+ 
+ 
+ 
+  /**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
    */
-    activarBotonCargaArchivos: boolean = false;
-  
-    /**
-   * Indica si la sección de carga de documentos está activa.
-   * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+  cargarArchivosEvento = new EventEmitter<void>();
+ 
+  /**
+   * Evento que se emite para regresar a la sección de carga de documentos.
+   * Este evento se utiliza para notificar a otros componentes que se debe regresar a la sección de carga de documentos.
    */
-    seccionCargarDocumentos: boolean = true;
-
+  regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+ 
+  /**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+ 
+  /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+ 
   cargaEnProgreso: boolean = true;
-
+ 
   /**
    * Notificador para destruir los observables y evitar posibles fugas de memoria.
    * @private
    * @type {Subject<void>}
    */
   destroyNotifier$: Subject<void> = new Subject();
-
+ 
   /** Indica si el botón Guardar debe mostrarse o estar habilitado en el formulario. */
   public btnGuardar: boolean = true;
-
+ 
   /** Indica la visibilidad del botón Guardar. */
   public btnGuardarVisible: string = 'visible';
-
+ 
   /**
    * Objeto base inmutable que representa la estructura inicial de un socio/accionista.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private complimentosBase = complimentos;
-
+ 
   /**
    * Objeto base inmutable que representa la estructura inicial de un plantas.
    */
   private plantasBase = planta;
-
+ 
   /** Listado de empresas nacionales utilizadas en el formulario de solicitud. */
   private empresasNacionales = empresasNacionales;
-
+ 
   /** Listado de empresas  extranjeras utilizadas en el formulario de solicitud. */
   private empresasExtranjeras = empresasExtranjeras;
-
+ 
   /**
    * Objeto base inmutable que representa la estructura inicial de un plantasSubmanufactureras.
    */
   private plantasSubmanufacturerasBase = plantasSubmanufactureras;
-
+ 
   /**
   * Objeto base inmutable que representa la estructura inicial de un notarios.
   */
   private notariosBase = notarios;
-
+ 
   /**
   * Objeto base inmutable que representa la estructura inicial de un sociosAccionistas.
   */
   private sociosAccionistas = sociosAccionistas;
-
+ 
   /**
   * URL de la página actual.
   */
   public solicitudState!: Tramite80101State;
-
+ 
   /**
   * @property consultaState
   * @description
   * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
   */
   public consultaState!: ConsultaioState;
-
+ 
   /**
  * @property esFormaValido
  * @description
@@ -181,7 +181,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
  * @default false
  */
   public esFormaValido!: boolean;
-
+ 
   /**
  * @property wizardService
  * @description
@@ -189,7 +189,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
  * @type {WizardService}
  */
   wizardService = inject(WizardService);
-
+ 
   /**
  * @property formErrorAlert
  * @description
@@ -197,21 +197,21 @@ export class PasoCapturarSolicitudComponent implements OnInit {
  * @type {string}
  */
   public formErrorAlert = ERROR_FORMA_ALERT;
-
+ 
   /**
    * Constructor de la clase PasoCapturarSolicitudComponent.
-   * 
+   *
    * @param tramiteQuery - Servicio de consulta para Tramite80101 que proporciona acceso a observables y datos relacionados.
    * @param seccion - Servicio de gestión de estado para manejar la sección y la validez del formulario.
-   * 
+   *
    * Este constructor inicializa el componente y configura una suscripción al observable `FormaValida$` del servicio `Tramite80101Query`.
    * Cuando se emite un valor desde el observable, se actualiza el estado de la sección y la validez del formulario
    * utilizando los métodos `establecerSeccion` y `establecerFormaValida` del servicio `SeccionLibStore`.
    * La suscripción se gestiona para que se complete automáticamente al destruir el componente mediante `takeUntil` y `destroyNotifier$`.
    */
   constructor(
-    private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService, 
-    private tramite80101Store: Tramite80101Store, 
+    private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
+    private tramite80101Store: Tramite80101Store,
     private tramite80101Query: Tramite80101Query,
     private toastrService: ToastrService,
     private consultaQuery: ConsultaioQuery,
@@ -219,7 +219,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   ) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
-
+ 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Suscribe al observable `selectSeccionState$` para escuchar cambios en el estado de la sección,
@@ -235,7 +235,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
           this.consultaState = seccionState;
         })
       ).subscribe();
-
+ 
     this.tramite80101Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -244,7 +244,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
         })
       ).subscribe();
   }
-
+ 
   /**
  * @method verificarLaValidezDelFormulario
  * @description
@@ -260,7 +260,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       (this.servicioDeFormularioService.isFormValid('obligacionesFiscalesForm') ??
       false) &&
       (this.servicioDeFormularioService.isFormValid('federatariosCatalogoForm') ??
-      false) && 
+      false) &&
       ((this.servicioDeFormularioService.isArrayFilled('datosSocioAccionistas') ??
       false) ||
       (this.servicioDeFormularioService.isArrayFilled('datosSocioAccionistasExtrenjeros') ??
@@ -268,12 +268,12 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       this.isAllArraysFilledIn80101(['anexoUnoTabla1', 'anexoUnoTabla2', 'federatariosDatos', 'plantasImmexDatos', 'datosTablaSubfabricantesSeleccionadas', 'anexoTresTablaLista'])
     );
   }
-
+ 
   /** Verifica que todos los arreglos indicados estén llenos en el formulario del trámite 80101. */
   isAllArraysFilledIn80101(array: string[]): boolean {
     return array.every(item => this.servicioDeFormularioService.isArrayFilled(item));
   }
-
+ 
   /**
    * Obtiene el valor del índice de la acción del botón.
    * @param e - event$: Acción del botón.
@@ -327,15 +327,15 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       }
     }
   }
-
+ 
   /**
  * Maneja la lógica para actualizar el índice del paso del wizard según el evento del botón de acción proporcionado.
- * 
+ *
  * Este método obtiene el estado actual desde `nuevoProgramaIndustrialService`, lo guarda,
  * y muestra un mensaje de éxito o error dependiendo del código de respuesta. Si la respuesta es exitosa
  * y el valor del evento está dentro del rango válido (1 a 4), actualiza el índice del wizard y navega
  * hacia adelante o atrás según el tipo de acción.
- * 
+ *
  * @param e - El evento del botón de acción que contiene el valor y el tipo de acción.
  */
   private shouldNavigate$(): Observable<boolean> {
@@ -354,7 +354,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       })
     );
   }
-
+ 
   /**
    * Obtiene los datos del store y los guarda utilizando el servicio.
    */
@@ -365,23 +365,23 @@ export class PasoCapturarSolicitudComponent implements OnInit {
         this.guardar(data);
       });
   }
-
+ 
   /**
    * Guarda los datos proporcionados enviándolos al servidor mediante el servicio `nuevoProgramaIndustrialService`.
-   * 
+   *
    * @param data - Los datos que se desean guardar y enviar al servidor.
    * @returns void
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guardar(data: any): Promise<any> {
-    const PLANTAS = this.nuevoProgramaIndustrialService.buildPlantas(data.plantasImmexTablaLista, this.plantasBase);
+    const PLANTAS = this.nuevoProgramaIndustrialService.buildPlantas(data.plantasImmexTablaLista, this.plantasBase, data);
     const PLANTAS_SUBMANUFACTURERAS = this.nuevoProgramaIndustrialService.buildPlantasSubmanufactureras(data.empressaSubFabricantePlantas.plantasSubfabricantesAgregar, this.plantasSubmanufacturerasBase);
     const SOLICITUD = this.nuevoProgramaIndustrialService.buildComplimentos(data, this.complimentosBase);
     const DECLARACION_SOLICUTUD_ENTRIES = NuevoProgramaIndustrialService.buildDeclaracionSolicitudEntries(data);
     const NOTARIOS = this.nuevoProgramaIndustrialService.buildDatosFederatarios(data.tablaDatosFederatarios, this.notariosBase);
     const ANEXO_ALL = this.nuevoProgramaIndustrialService.buildAnexo(data);
     const SOCIOS_ACCIONISTAS = this.nuevoProgramaIndustrialService.buildSociosAccionistas(data.tablaDatosComplimentos, data.tablaDatosComplimentosExtranjera, this.sociosAccionistas);
-    
+   
     const PAYLOAD = {
       "esDeGuardar": true,
       "tipoDeSolicitud": "guardar",
@@ -402,32 +402,32 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       "domicilio": {
       },
       "solicitante": {
-
+ 
       },
-      "planta": [...PLANTAS],
-      "notario": [...NOTARIOS],
-      "anexoII": [...ANEXO_ALL.anexo.ANEXOII],
-      "anexoIII": [...ANEXO_ALL.anexo.ANEXOIII],
+      "planta": Array.isArray(PLANTAS) ? [...PLANTAS] : [PLANTAS],
+      "notarios": [...NOTARIOS],
+      "anexoII": Array.isArray(ANEXO_ALL.anexo['ANEXOII']) ? [...ANEXO_ALL.anexo['ANEXOII']] : [],
+      "anexoIII": Array.isArray(ANEXO_ALL.anexo['ANEXOIII']) ? [...ANEXO_ALL.anexo['ANEXOIII']] : [],
       "mercanciaImportacion": [
         {
           "listaProveedores": [
-            ...ANEXO_ALL.anexo.proveedorCliente
+            ...(Array.isArray(ANEXO_ALL.anexo['proveedorCliente']) ? ANEXO_ALL.anexo['proveedorCliente'] : [])
           ],
           "complemento": {
-            ...ANEXO_ALL.anexo.datosParaNavegar
+            ...(typeof ANEXO_ALL.anexo['datosParaNavegar'] === 'object' && ANEXO_ALL.anexo['datosParaNavegar'] !== null ? ANEXO_ALL.anexo['datosParaNavegar'] : {})
           },
-          "anexoI": [...ANEXO_ALL.anexo.tableDos]
+          "anexoI": Array.isArray(ANEXO_ALL.anexo['tableDos']) ? [...ANEXO_ALL.anexo['tableDos']] : []
         },
       ],
-      "fraccionArancelaria":[
+      "fraccionArancelaria": [
         {
-          "listaProveedores": [...ANEXO_ALL.anexo.proveedorClienteDos]
+          "listaProveedores": Array.isArray(ANEXO_ALL.anexo['proveedorClienteDos']) ? [...ANEXO_ALL.anexo['proveedorClienteDos']] : []
         }
       ],
-
+ 
       "productoExportacionDtoList": [
         {
-          "proyectosImmex": [...ANEXO_ALL.anexo.proyectoimex]
+          "proyectosImmex": Array.isArray(ANEXO_ALL.anexo['proyectoimex']) ? [...ANEXO_ALL.anexo['proyectoimex']] : []
         }
       ],
       "plantasSubmanufactureras": [...PLANTAS_SUBMANUFACTURERAS],
@@ -448,12 +448,12 @@ export class PasoCapturarSolicitudComponent implements OnInit {
       }, error => {
         reject(error);
       });
-    });
+      });
   }
-
-
-
-
+ 
+ 
+ 
+ 
   /**
    * Método para manejar el evento de carga de documentos.
    * Actualiza el estado de la sección de carga de documentos.
@@ -463,7 +463,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   cargaRealizada(cargaRealizada: boolean): void {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
   }
-
+ 
   /**
   * Método para manejar el evento de carga de documentos.
   * Actualiza el estado del botón de carga de archivos.
@@ -473,7 +473,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   manejaEventoCargaDocumentos(carga: boolean): void {
     this.activarBotonCargaArchivos = carga;
   }
-
+ 
   /**
    * Método para navegar a la siguiente sección del wizard.
    * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
@@ -485,7 +485,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     this.indice = this.wizardComponent.indiceActual + 1;
     this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
   }
-
+ 
   /**
    * Método para navegar a la sección anterior del wizard.
    * Actualiza el índice y el estado de los pasos.
@@ -496,7 +496,7 @@ export class PasoCapturarSolicitudComponent implements OnInit {
     this.indice = this.wizardComponent.indiceActual + 1;
     this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
   }
-
+ 
   /**
    * Emite un evento para cargar archivos.
    * {void} No retorna ningún valor.
@@ -504,9 +504,19 @@ export class PasoCapturarSolicitudComponent implements OnInit {
   onClickCargaArchivos(): void {
     this.cargarArchivosEvento.emit();
   }
-
+ 
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
   }
-
+ 
+ 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
+   * @method ngOnDestroy
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

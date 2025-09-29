@@ -2,9 +2,10 @@ import {
   AlertComponent,
   BtnContinuarComponent,
   FirmaElectronicaComponent,
+  NotificacionesComponent,
   SolicitanteComponent,
   WizardComponent,
-} from '@libs/shared/data-access-user/src';
+} from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
 import { NgModule } from '@angular/core';
@@ -25,6 +26,7 @@ import { ToastrService } from 'ngx-toastr';
     PasoDosComponent,
   ],
   imports: [
+    NotificacionesComponent,
     CommonModule,
     WizardComponent,
     AlertComponent,
@@ -35,6 +37,6 @@ import { ToastrService } from 'ngx-toastr';
     FirmaElectronicaComponent,
     ToastrModule.forRoot(),
   ],
-  providers:[ToastrService]
+  providers: [ToastrService],
 })
 export class AvisoDeReciclajeModule {}
