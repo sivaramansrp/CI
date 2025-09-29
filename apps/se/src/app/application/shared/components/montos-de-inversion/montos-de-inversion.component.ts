@@ -6,9 +6,9 @@ import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { ComplimentosService } from '../../services/complimentos.service';
 
 import { CATALOGO_TIPO, MontoDeInversion } from '../../constantes/complementar-planta.enum';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Notificacion,NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 import { MONTOS_DE_INVERSION } from '../../constantes/montos-de-inversion.enum';
