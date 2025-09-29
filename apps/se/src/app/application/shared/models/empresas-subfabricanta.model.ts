@@ -30,7 +30,7 @@ export interface RespuestaSubfabricantes {
 }
 
 
-export interface PlantsEmpresaSubfabricante {
+export interface BuscarPayload {
     rfcEmpresaSubManufacturera: string;
     entidadFederativa: string;
     idPrograma: string | null;

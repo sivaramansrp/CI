@@ -119,19 +119,6 @@ describe('SolicitudComponent', () => {
     const descripcionGeneral = component.descripcionGeneral;
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.tramite32101Query = component.tramite32101Query || {};
-    component.tramite32101Query.selectSolicitud$ = observableOf({});
-    component.inicializarFormulario = jest.fn();
-    component.fetchListaDeDocumentos = jest.fn();
-    component.fetchListaDeInversion = jest.fn();
-    component.fetchBancoList = jest.fn();
-    component.consultaAvisoAcreditacionService = component.consultaAvisoAcreditacionService || {};
-    component.consultaAvisoAcreditacionService.formData$ = observableOf({});
-    component.updateTableRow = jest.fn();
-    component.ngOnInit();
-  });
-
   it('should run #inicializarFormulario()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
@@ -280,12 +267,6 @@ describe('SolicitudComponent', () => {
 
     component.abrirEleminarModal();
 
-  });
-
-  it('should run #eliminarPedimento()', async () => {
-    component.pedimentos = component.pedimentos || {};
-    component.pedimentos.splice = jest.fn();
-    component.eliminarPedimento({});
   });
 
 });

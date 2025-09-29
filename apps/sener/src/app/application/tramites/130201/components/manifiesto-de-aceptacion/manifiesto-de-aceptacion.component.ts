@@ -18,7 +18,6 @@
  */
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { AlertComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { MANIFIESTO_ACEPTACION_HTML } from '../../../../shared/constantes/manifesto-texto.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -55,7 +54,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
    * - TituloComponent: Un componente utilizado para mostrar títulos de sección dentro del flujo.
    * - AlertComponent: Un componente utilizado para mostrar alertas y notificaciones al usuario.
    */
-  imports: [CommonModule, TituloComponent, AlertComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
 
   /**
    * @plantillaUrl

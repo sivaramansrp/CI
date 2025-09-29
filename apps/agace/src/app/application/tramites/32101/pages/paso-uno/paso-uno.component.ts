@@ -126,19 +126,20 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
           this.esDatosRespuesta = true;
           const FORM = respuesta?.datos?.solicitudFormulario;
           this.store.setTipoDeInversion(FORM.tipoDeInversion ?? []);
-          this.store.setValorEnPesos(FORM.valorEnPesos ?? 0);
+          this.store.setValorEnPesos(FORM.valorEnPesos ?? '');
           this.store.setDescripcionGeneral(FORM.descripcionGeneral ?? '');
           this.store.setListaDeDocumentos(FORM.listaDeDocumentos ?? '');
+          this.store.setComprobante(FORM.comprobante ?? '');
           this.store.setManifiesto1(FORM.manifiesto1 ?? '');
           this.store.setManifiesto2(FORM.manifiesto2 ?? '');
           this.store.setManifiesto3(FORM.manifiesto3 ?? '');
-          this.store.setClaveDeReferencia(FORM.claveDeReferencia ?? 0);
+          this.store.setClaveDeReferencia(FORM.claveDeReferencia ?? '');
           this.store.setCadenaDeLaDependencia(FORM.cadenaDeLaDependencia ?? '');
-          this.store.setNumeroDeOperacion(FORM.numeroDeOperacion ?? 0);
+          this.store.setNumeroDeOperacion(FORM.numeroDeOperacion ?? '');
           this.store.setBanco(FORM.banco ?? []);
-          this.store.setLlaveDePago(FORM.llaveDePago ?? 0);
+          this.store.setLlaveDePago(FORM.llaveDePago ?? '');
           this.store.setFechaInicialInput(FORM.fechaInicialInput ?? '');
-          this.store.setImporteDePago(FORM.importeDePago ?? 0);
+          this.store.setImporteDePago(FORM.importeDePago ?? '');
         }
       });
   }

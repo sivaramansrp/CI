@@ -32,15 +32,35 @@
           <div *ngIf="chequeoValidacionAlGuardar && esInvalido('tipoPersona')" class="text-danger">
           <small>Este campo es obligatorio</small>
         </div>
-        @if(mostrarCamposNoContribuyente){
+        @if(mostrarCamposNoContribuyente || idProcedimiento === 260911){
         <div class="form-check">
-          <input type="radio" class="form-check-input" formControlName="tipoPersona" value="NoContribyunte" />
+          <input type="radio" class="form-check-input" formControlName="tipoPersona" value="NoContribyunte"
+          (change)="changeNacionalidad()" />
           No Contribyunte
         </div>
         }
       </div>
     </div>
-
+ @if(agregarDestinatarioFinal.get('tipoPersona')?.value === 'NoContribyunte' && idProcedimiento === 260911){
+    <div class="row mt-5 justify-content-center">
+  <div class="col-md-4">
+    <label class="form-label">
+      C.U.R.P<span>*</span>:
+    </label>
+    <input type="text" class="form-control" [maxlength]="18" formControlName="curp"
+      [ngClass]="esInvalido('curp') ? 'required' : ''" />
+    <div *ngIf="esInvalido('curp')" class="text-danger">
+      <small *ngIf="agregarDestinatarioFinal.controls['curp'].errors?.['required']">
+        Este campo es obligatorio
+      </small>
+      <small *ngIf="agregarDestinatarioFinal.controls['curp'].errors?.['pattern']">
+        Existen datos incorrectos que no cumplen con el formato esperado
+      </small>
+    </div>
+  </div>
+</div>
+      }
+      @else {
     <div class="row mt-5">
       <div class="col-md-4">
         <label class="form-label">
@@ -64,6 +84,7 @@
         </div>
       </div>
     </div>
+  }
 
     @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===
     tipoPersona.MORAL) {
@@ -91,7 +112,7 @@
 
     <!-- Datos Personales -->
     @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===
-    tipoPersona.FISICA ) {
+    tipoPersona.FISICA || agregarDestinatarioFinal.get('tipoPersona')?.value === 'NoContribyunte' && idProcedimiento === 260911 ) {
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
@@ -188,13 +209,16 @@
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="codigosPostalesDatos" formControlName="codigoPostal"
           [label]="'Código postal o equivalente'" [required]="true" [placeholder]="'Selecciona un valor'"
-          [isDisabled]="estaDeshabilitadoDesplegable" [markTouched]="agregarDestinatarioFinal.get('codigoPostal')?.touched ?? false"
+          [isDisabled]="estaDeshabilitadoDesplegable" 
+          [markTouched]="agregarDestinatarioFinal.get('codigoPostal')?.touched ?? false"
           ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="coloniasDatos" formControlName="colonia" [label]="'Colonia'"
           [placeholder]="'Selecciona un valor'" [isDisabled]="estaDeshabilitadoDesplegable"
-          [required]="elementosNoRequeridos.includes('colonia')"></app-catalogo-select>
+          [required]="idProcedimiento === 260911 || !elementosNoRequeridos.includes('colonia')"
+          [markTouched]="idProcedimiento === 260911 ? (agregarDestinatarioFinal.get('colonia')?.touched ?? false) : false">
+        </app-catalogo-select>
       </div>
     </div>
     }

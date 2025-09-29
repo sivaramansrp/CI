@@ -284,6 +284,10 @@ export class AgregarFabricanteComponent
   ngOnInit(): void {
     this.cambiarHabilitacionContribuyente();
     this.cargarDatos();
+      this.chequeoValidacionAlGuardar =
+      PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(this.idProcedimiento)
+        ? true
+        :false;
     this.validarElementos();
     this.crearAgregarFormularioFabricante();
     this.changeNacionalidad();
@@ -292,14 +296,11 @@ export class AgregarFabricanteComponent
       PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE.includes(this.idProcedimiento)
         ? true
         : false;
-    this.chequeoValidacionAlGuardar =
-      PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(this.idProcedimiento)
-        ? true
-        :false;
 
        if (this.chequeoValidacionAlGuardar && !this.agregarFabricanteForm?.get('nacionalidad')?.value) {
     this.agregarFabricanteForm.get('tipoPersona')?.disable();
   }
+  this.forzarDeshabilitarPais()
   }
 
   /**
@@ -415,7 +416,7 @@ export class AgregarFabricanteComponent
           value: this.elementosDeshabilitados.includes('pais')
             ? ''
             : this.obtenerValor('pais'),
-          disabled: this.elementosDeshabilitados.includes('pais'),
+          disabled: this.elementosDeshabilitados.includes('pais') || this.idProcedimiento === 260911,
         },
         [Validators.required],
       ],
@@ -445,9 +446,11 @@ export class AgregarFabricanteComponent
       ],
       codigoPostal: [
         this.obtenerValor('codigoPostal'),
-        !this.elementosNoRequeridos.includes('codigoPostal')
-          ? [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)]
-          : [],
+        this.idProcedimiento === 260911 
+        ? [] 
+        :!this.elementosNoRequeridos.includes('codigoPostal')
+        ? [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)]
+        : [],
       ],
       colonia: [
         this.obtenerValor('colonia'),
@@ -484,6 +487,21 @@ export class AgregarFabricanteComponent
     });
   }
 
+    /**
+   * @private
+   * Fuerza la deshabilitación del campo 'pais' en el formulario de agregar destinatario final.
+   * 
+   * Si la variable `chequeoValidacionAlGuardar` es verdadera, deshabilita el control 'pais'
+   * dentro del formulario reactivo `agregarDestinatarioFinal`.
+   * 
+   * Útil para evitar que el usuario modifique el país cuando ciertas condiciones de validación se cumplen al guardar.
+   */
+  private forzarDeshabilitarPais(): void {
+  if (this.chequeoValidacionAlGuardar) {
+    this.agregarFabricanteForm.get('pais')?.disable();
+  }
+}
+
   /**
    * Valida elementos según el `idProcedimiento` y establece
    * las listas de elementos no válidos y añadidos.
@@ -503,6 +521,10 @@ export class AgregarFabricanteComponent
         break;
       case 260214:
         this.elementosDeshabilitados = ['pais'];
+        break;
+       case 260911:
+        this.elementosDeshabilitados = []; 
+        this.elementosNoRequeridos = ['colonia'];
         break;
       default:
         this.elementosDeshabilitados = [];
@@ -835,7 +857,7 @@ export class AgregarFabricanteComponent
       // Asegura que tipoPersona esté habilitado cuando se selecciona nacionalidad (anula chequeoValidacionAlGuardar)
     this.agregarFabricanteForm.get('tipoPersona')?.enable();
     }
- 
+    this.forzarDeshabilitarPais();
   }
 
   /**
@@ -903,6 +925,7 @@ changeTipoPersona(): void {
   if (this.chequeoValidacionAlGuardar && !HAS_NACIONALIDAD && this.isTipoPersonaEmpty()) {
     this.agregarFabricanteForm.get('tipoPersona')?.disable();
   }
+  this.forzarDeshabilitarPais();
 }
 
 private isTipoPersonaEmpty(): boolean {
