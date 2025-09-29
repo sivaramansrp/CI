@@ -450,6 +450,7 @@ export class AgregarDestinatarioFinalComponent
       rfc: [
         this.obtenerValor('rfc'), [Validators.required],
       ],
+      curp:['', [Validators.required]],
       nombres: [
         {
           value: this.elementosDeshabilitados.includes('nombres')
@@ -500,10 +501,12 @@ export class AgregarDestinatarioFinalComponent
       codigoPostal: [this.obtenerValor('codigoPostal'), [Validators.required]],
       colonia: [
         this.obtenerValor('colonia'),
-        !this.elementosNoRequeridos.includes('colonia')
+        this.idProcedimiento === 260911 
+        ? [] 
+        :!this.elementosNoRequeridos.includes('colonia')
           ? [Validators.required]
           : [],
-      ],
+      ], 
       calle: [
         this.obtenerValor('calle'),
         this.elementosRequeridos.includes('calle'), 
@@ -628,6 +631,9 @@ export class AgregarDestinatarioFinalComponent
         this.elementosRequeridos = ['calle', 'numeroExterior'];
         this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos = ['colonia'];
+        break;
+         case 260911:
+        this.elementosNoRequeridos = [];
         break;
       default:
         this.elementosDeshabilitados = [];

@@ -1,4 +1,4 @@
-import { Catalogo, InputFecha, InputFechaComponent, REGEX_IMPORTE_PAGO, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, InputFecha, InputFechaComponent, REGEX_SOLO_DIGITOS, TituloComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent, ConsultaioQuery, REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FECHA_DE_PAGO, PagoDerechosFormState } from '../../models/pago-de-derechos.model';
@@ -97,6 +97,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   public campoObligatorio = false;
 
   /**
+   * @property mostrarMensajeComaVisible
+   * @description Controla la visibilidad del mensaje de advertencia sobre el uso de comas.
+   * @type {boolean}
+   * @default false
+   */
+  public mostrarMensajeComaVisible = false;
+
+  /**
    * @constructor
    * Inicializa el formulario y las dependencias del componente.
    *
@@ -170,11 +178,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
         this.pagoDerechoFormState?.claveReferencia || '',
-       [Validators.required, Validators.maxLength(9)]
+       [Validators.required, Validators.maxLength(50)]
       ],
       cadenaDependencia: [
         this.pagoDerechoFormState?.cadenaDependencia || '',
-        [Validators.required, Validators.maxLength(14)]
+        [Validators.required, Validators.maxLength(50)]
       ],
       llavePago: [
         this.pagoDerechoFormState?.llavePago || '',
@@ -186,7 +194,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       ],
       importePago: [
         this.pagoDerechoFormState?.importePago || '',
-        [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
+        [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(16)]
       ],
       banco: [this.pagoDerechoFormState?.banco || '', Validators.required],
     });
@@ -247,6 +255,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
    */
   onFechaCambiada(fecha: string): void {
     this.pagoDerechosForm.patchValue({ fechaPago: fecha });
+    this.pagoDerechosForm.get('fechaPago')?.markAsTouched();
+  }
+
+  /**
+   * @method markFechaPagoAsTouched
+   * @description Marca el campo de fecha de pago como tocado cuando el usuario interactúa con el componente.
+   */
+  markFechaPagoAsTouched(): void {
+    const FECHA_CONTROL = this.pagoDerechosForm.get('fechaPago');
+    FECHA_CONTROL?.markAsTouched();
+    this.pagoDerechosForm.updateValueAndValidity();
   }
 
   /**
@@ -286,6 +305,19 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * @method mostrarMensajeComa
+   * @description Muestra el mensaje de advertencia sobre el uso de comas y lo oculta después de 3 segundos.
+   *
+   * @returns {void}
+   */
+  mostrarMensajeComa(): void {
+    this.mostrarMensajeComaVisible = true;
+    setTimeout(() => {
+      this.mostrarMensajeComaVisible = false;
+    }, 3000);
   }
 
   /**

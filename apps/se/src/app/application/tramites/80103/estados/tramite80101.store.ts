@@ -18,6 +18,7 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 import { AnexoFraccionAnarelaria, AnexoUnoProducto, ProveedorCliente, ProyectoImmex } from '../../../shared/models/complimentos-seccion.model';
+import { CapacidadInstalada } from '../../../shared/constantes/capacidad-instalada.enum';
 
 /**
  * Representa el estado de Tramite80101 en la aplicación.
@@ -94,6 +95,12 @@ export interface Tramite80101State {
    * Información detallada de plantas IMMEX.
    */
   proyectoImmexTablaLista: ProyectoImmex[];
+
+  
+/**
+ * así como información de proveedores y capacidad instalada.
+ */
+  tablaDatosCapacidadInstalada: CapacidadInstalada[];
 }
 
 /**
@@ -252,7 +259,9 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   plantasImmexTablaLista: [],
   plantasDisponiblesTablaLista: [],
   idSolicitud: 0,
-  proyectoImmexTablaLista:[]
+  proyectoImmexTablaLista:[],
+  tablaDatosCapacidadInstalada: [],
+
 };
 
 /**
@@ -990,4 +999,17 @@ setProyectoImmexTablaLista(proyectoImmex: ProyectoImmex[]): void {
           },
         }));
       }
+
+      
+/**
+ * Actualiza la lista de capacidad instalada en el estado agregando los elementos proporcionados.
+ *
+ * @param CapacidadInstaladaTablaLista - Arreglo de objetos de tipo `CapacidadInstalada` que serán añadidos a la tabla de datos de capacidad instalada.
+ */
+setCapacidadInstaladaTableLista(CapacidadInstaladaTablaLista: CapacidadInstalada[]): void {
+    this.update((state) => ({
+      ...state,
+      tablaDatosCapacidadInstalada: [...state.tablaDatosCapacidadInstalada, ...CapacidadInstaladaTablaLista],
+    }));
+  }
 }
