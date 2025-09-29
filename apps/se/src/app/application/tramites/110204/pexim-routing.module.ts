@@ -2,9 +2,17 @@ import { NgModule } from '@angular/core';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
 import { RouterModule, Routes } from '@angular/router';
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 
 export const ROUTES_SOLICITUDES: Routes = [
   {
+    canActivate: [IniciarTramiteResolver],
+    resolve: { iniciarResolverData: IniciarTramiteResolver },
+    data: {
+      iniciarConfig: {
+        procedureId: '110204',
+      },
+    },
     path: 'certificado-origen',
     component: SolicitudPageComponent,
   },
@@ -17,6 +25,6 @@ export const ROUTES_SOLICITUDES: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES_SOLICITUDES)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class PeximRoutingModule { }
+export class PeximRoutingModule {}

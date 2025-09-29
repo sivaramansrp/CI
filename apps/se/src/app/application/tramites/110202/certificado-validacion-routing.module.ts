@@ -1,9 +1,17 @@
 import { RouterModule, Routes } from '@angular/router';
 import { CartificadoValidacionPageComponent } from './pages/cartificado-validacion-page/cartificado-validacion-page.component';
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 
 export const ROUTES: Routes = [
   {
+    canActivate: [IniciarTramiteResolver],
+    resolve: { iniciarResolverData: IniciarTramiteResolver },
+    data: {
+      iniciarConfig: {
+        procedureId: '110202',
+      },
+    },
     path: 'validacion',
     component: CartificadoValidacionPageComponent,
   },
@@ -16,6 +24,6 @@ export const ROUTES: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class CertificadoValidacionRoutingModule { }
+export class CertificadoValidacionRoutingModule {}
