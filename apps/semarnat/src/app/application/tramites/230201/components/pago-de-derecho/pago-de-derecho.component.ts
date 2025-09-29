@@ -1,19 +1,24 @@
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { 
+  Catalogo, 
+  CatalogoSelectComponent, 
+  CatalogosSelect,
+  ConsultaioQuery, 
+  ConsultaioState,
+  REGEX_CARACTERES_ESPECIALES,
+  TituloComponent,
+  ValidacionesFormularioService,
+  dateLessThanOrEqualToday
+} from '@ng-mf/data-access-user';
 import { Solicitud230201State, Tramite230201Store } from '../../estados/tramite230201.store';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DESTINATARIO_BANCO } from '../../enum/destinatario-tabla.enum';
-import { FormGroup } from '@angular/forms';
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Tramite230201Query } from '../../estados/tramite230201.query';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -200,8 +205,8 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         claveDeReferencia: [{ value: this.derechoState?.claveDeReferencia, disabled: true }, [Validators.required, Validators.maxLength(50)]],
         cadenaPagoDependencia: [{ value: this.derechoState?.cadenaPagoDependencia, disabled: true }, [Validators.required, Validators.maxLength(50)]],
         banco: [this.derechoState?.banco, Validators.required],
-        llaveDePago: [this.derechoState?.llaveDePago, [Validators.required, Validators.maxLength(10)]],
-        fecPago: [this.derechoState?.fecPago, Validators.required],
+        llaveDePago: [this.derechoState?.llaveDePago, [Validators.required, Validators.maxLength(8), PagoDeDerechoComponent.llaveDePagoValidator]],
+        fecPago: [this.derechoState?.fecPago, [Validators.required, dateLessThanOrEqualToday]],
         impPago: [{ value: this.derechoState?.impPago, disabled: true }, [Validators.required, Validators.maxLength(16)]]
       }),
     });
@@ -228,6 +233,56 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite230201Store): void {
     const VALOR = form.get(campo)?.value;
     (this.solicitud230201Store[metodoNombre] as (value: string | number | boolean) => void)(VALOR);
+  }
+
+  /**
+   * Maneja el input de la llave de pago, convirtiendo automáticamente a mayúsculas
+   * y actualizando el store.
+   */
+  onLlaveDePagoInput(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    const VALOR = INPUT.value;
+    
+    // Convertir a mayúsculas automáticamente
+    const VALOR_EN_MAYUSCULAS = VALOR.toUpperCase();
+    
+    // Si el valor cambió al convertir a mayúsculas, actualizar el input
+    if (VALOR !== VALOR_EN_MAYUSCULAS) {
+      INPUT.value = VALOR_EN_MAYUSCULAS;
+      // Actualizar el FormControl
+      this.pagodeDerechos.get('llaveDePago')?.setValue(VALOR_EN_MAYUSCULAS);
+    }
+    
+    // Actualizar el store
+    this.setValoresStore(this.pagodeDerechos, 'llaveDePago', 'setllaveDePago');
+  }
+
+  /**
+   * Validador para el campo llaveDePago que verifica el formato correcto.
+   * - Si contiene caracteres especiales, retorna error 'caracteresInvalidos'
+   */
+  static llaveDePagoValidator(control: AbstractControl): ValidationErrors | null {
+    const VALOR = control.value;
+    
+    if (!VALOR || VALOR === '') {
+      return null; // Si está vacío, que maneje el required validator
+    }
+
+    const VALOR_LIMPIO = VALOR.toString().trim();
+    
+    // PRIMERO verificar caracteres especiales - "Existen datos incorrectos que no cumplen con el formato esperado"
+    const CONTIENE_ESPECIALES = REGEX_CARACTERES_ESPECIALES.test(VALOR_LIMPIO);
+    if (CONTIENE_ESPECIALES) {
+      return { caracteresInvalidos: true };
+    }
+
+    // SEGUNDO verificar longitud - si es menor a 8, mostrar error
+    if (VALOR_LIMPIO.length < 8) {
+      return { formatoIncorrecto: true };
+    }
+
+    // Si llegó hasta aquí y tiene 8 caracteres sin especiales, es válido
+    return null;
   }
 
   /**

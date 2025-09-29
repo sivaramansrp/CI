@@ -1,12 +1,13 @@
-import {AbstractControl,FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
-import {Catalogo,CatalogoSelectComponent,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService,} from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {AbstractControl,FormBuilder,FormControl,FormGroup,FormsModule,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
+import {Catalogo,CatalogoSelectComponent,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,REGEX_LLAVE_DE_PAGO_DE_DERECHO,SOLO_REGEX_NUMEROS,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService,} from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
 import { ENCABEZADO_TABLA_DATOS, Solicitud32101Enum } from '../../constants/solicitud32101.enum';
 import { Solicitud32101State, Tramite32101Store } from '../../../../estados/tramites/tramite32101.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ComponenteDeActualizacionComponent } from '../componente-de-actualizacion/componente-de-actualizacion.component';
 import { ConsultaAvisoAcreditacionService } from '../../services/consulta-aviso-acreditacion.service';
 import { FECHA_PAGO } from '../../models/registro.model';
 import { Router } from '@angular/router';
@@ -29,6 +30,7 @@ import { Tramite32101Query } from '../../../../estados/queries/tramite32101.quer
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     NotificacionesComponent,
+    ComponenteDeActualizacionComponent,
   ],
   providers: [ConsultaAvisoAcreditacionService],
   templateUrl: './Solicitud.component.html',
@@ -113,6 +115,26 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   };
 
   /**
+   * Representa la información relacionada con la comprobante.
+   * 
+   * @property {Catalogo[]} catalogos - Lista de catálogos asociados a la comprobante.
+   * @property {string} labelNombre - Etiqueta que representa el nombre de la comprobante.
+   * @property {string} primerOpcion - Primera opción seleccionable en el contexto de la comprobante.
+   */
+  comprobante: {
+    catalogos: Catalogo[];
+    labelNombre: string;
+    primerOpcion: string;
+  };
+
+  /**
+   * @property {boolean} comprobanteVisible
+   * @description Indica si se debe mostrar el campo para otro nombre común.
+   * @default false
+   */
+  comprobanteVisible = false;
+
+  /**
    * Configuración para el campo de fecha inicial.
    */
   fechaInicialInput: InputFecha = FECHA_PAGO;
@@ -127,11 +149,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Notificación utilizada para mostrar mensajes o alertas en la interfaz.
    */
   public nuevaNotificacion!: Notificacion;
-
-  /**
-   * Notificación utilizada para mostrar mensajes o alertas en la interfaz.
-   */
-  public nuevaNotificacion2!: Notificacion;
 
   /** 
   * Índice del pedimento marcado para eliminación.
@@ -148,6 +165,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Este encabezado define los datos que se mostrarán en la tabla.
    */
   public encabezadoDeTabla = ENCABEZADO_TABLA_DATOS;
+
+  /**
+   * Referencia al componente modal de actualización
+   */
+  @ViewChild(ComponenteDeActualizacionComponent) modalActualizacion!: ComponenteDeActualizacionComponent;
 
   /**
    * Constructor del componente.
@@ -171,17 +193,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramiteList = {
       catalogos: [],
       labelNombre: 'Tipo de inversión',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
     };
     this.aduana = {
       catalogos: [],
       labelNombre: 'Forma de adquisicion',
-      primerOpcion: 'Selecciona el tipo de Trámite',
+      primerOpcion: 'Seleccione una opción',
     };
     this.banco = {
       catalogos: [],
       labelNombre: 'Banco',
-      primerOpcion: 'Seleccione un valor',
+      primerOpcion: 'Seleccione una opción',
+    };
+    this.comprobante = {
+      catalogos: [],
+      labelNombre: 'Comprobante',
+      primerOpcion: 'Seleccione una opción',
     };
   }
 
@@ -214,6 +241,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.fetchListaDeDocumentos();
     this.fetchListaDeInversion();
     this.fetchBancoList();
+    this.fetchListaComprobante();
     /**
     * Escuchar los datos actualizados de la fila
     */
@@ -268,45 +296,43 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     this.registroForm = this.fb.group({
       tipoDeInversion: [
-        this.solicitudState?.listaDeDocumentos,
+        this.solicitudState?.tipoDeInversion,
         [Validators.required],
       ],
-      valorEnPesos: [this.solicitudState?.valorEnPesos, [Validators.required]],
+      valorEnPesos: [this.solicitudState?.valorEnPesos, [Validators.required, Validators.pattern(SOLO_REGEX_NUMEROS), Validators.maxLength(15)]],
       descripcionGeneral: [
         this.solicitudState?.descripcionGeneral,
         [Validators.required],
       ],
       listaDeDocumentos: [this.solicitudState?.listaDeDocumentos, [Validators.required]],
+      comprobante: [this.solicitudState?.comprobante, [Validators.required]],
       manifiesto1: [this.solicitudState?.manifiesto1],
       manifiesto2: [this.solicitudState?.manifiesto2],
       manifiesto3: [this.solicitudState?.manifiesto3],
       claveDeReferencia: [
         {
-          value: this.solicitudState?.claveDeReferencia || '284000255',
+          value: this.solicitudState?.claveDeReferencia,
           disabled: true,
         },
       ],
       cadenaDeLaDependencia: [
         {
-          value: this.solicitudState?.cadenaDeLaDependencia || '0111514EC10101',
+          value: this.solicitudState?.cadenaDeLaDependencia,
           disabled: true,
         },
       ],
-      numeroDeOperacion: [this.solicitudState?.numeroDeOperacion],
+      numeroDeOperacion: [this.solicitudState?.numeroDeOperacion, [Validators.maxLength(30), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
       banco: [this.solicitudState?.banco],
-      llaveDePago: [this.solicitudState?.llaveDePago],
-      fechaInicialInput: [
-        this.solicitudState?.fechaInicialInput,
-        [SolicitudComponent.validateFechaMenorIgualHoy.bind(this)],
-      ],
+      llaveDePago: [this.solicitudState?.llaveDePago, [ Validators.maxLength(20), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
+      fechaInicialInput: [this.solicitudState?.fechaInicialInput],
       importeDePago: [
-        { value: this.solicitudState?.importeDePago || '7735', disabled: true },
+        { value: this.solicitudState?.importeDePago, disabled: true },
       ],
     });
     this.inicializarEstadoFormulario()
-  }
-
-      /**
+  }      
+  
+  /**
    * Inicializa el estado del formulario según el modo de solo lectura.
    * @private
    */
@@ -315,23 +341,25 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.registroForm?.disable();
     } else {
       this.registroForm?.enable();
+      this.registroForm?.get('claveDeReferencia')?.disable();
+      this.registroForm?.get('cadenaDeLaDependencia')?.disable();
+      this.registroForm?.get('importeDePago')?.disable();
     }
   }
 
   /**
    * Obtiene el grupo de formulario 'tipoDeInversion' del formulario principal 'FormSolicitud'.
-   * @returns {FormGroup} El grupo de formulario 'tipoDeInversion'.
+   * @returns {FormControl} El grupo de formulario 'tipoDeInversion'.
    */
-  get tipoDeInversion(): FormGroup {
-    return this.registroForm.get('tipoDeInversion') as FormGroup;
+  get tipoDeInversion(): FormControl {
+    return this.registroForm.get('tipoDeInversion') as FormControl;
   }
-
   /**
-   * Obtiene el grupo de formulario 'valorEnPesos' del formulario principal 'FormSolicitud'.
-   * @returns {FormGroup} El grupo de formulario 'valorEnPesos'.
+   * Obtiene el control de formulario 'valorEnPesos' del formulario principal 'FormSolicitud'.
+   * @returns {FormControl} El control de formulario 'valorEnPesos'.
    */
-  get valorEnPesos(): FormGroup {
-    return this.registroForm.get('valorEnPesos') as FormGroup;
+  get valorEnPesos(): FormControl {
+    return this.registroForm.get('valorEnPesos') as FormControl;
   }
 
   /**
@@ -352,26 +380,26 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene el grupo de formulario 'valorEnPesos' del formulario principal 'FormSolicitud'.
-   * @returns {FormGroup} El grupo de formulario 'valorEnPesos'.
+   * @returns {FormControl} El grupo de formulario 'valorEnPesos'.
    */
-  get cadenaDeLaDependencia(): FormGroup {
-    return this.registroForm.get('cadenaDeLaDependencia') as FormGroup;
+  get cadenaDeLaDependencia(): FormControl {
+    return this.registroForm.get('cadenaDeLaDependencia') as FormControl;
   }
 
   /**
    * Obtiene el grupo de formulario 'valorEnPesos' del formulario principal 'FormSolicitud'.
-   * @returns {FormGroup} El grupo de formulario 'valorEnPesos'.
+   * @returns {FormControl} El grupo de formulario 'valorEnPesos'.
    */
-  get llaveDePago(): FormGroup {
-    return this.registroForm.get('llaveDePago') as FormGroup;
+  get llaveDePago(): FormControl {
+    return this.registroForm.get('llaveDePago') as FormControl;
   }
 
   /**
    * Obtiene el grupo de formulario 'valorEnPesos' del formulario principal 'FormSolicitud'.
-   * @returns {FormGroup} El grupo de formulario 'valorEnPesos'.
+   * @returns {FormControl} El grupo de formulario 'valorEnPesos'.
    */
-  get numeroDeOperacion(): FormGroup {
-    return this.registroForm.get('numeroDeOperacion') as FormGroup;
+  get numeroDeOperacion(): FormControl {
+    return this.registroForm.get('numeroDeOperacion') as FormControl;
   }
 
   /**
@@ -405,6 +433,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   isValid(form: FormGroup, field: string): boolean | null {
     return this.validacionesService.isValid(form, field);
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @param {string} id El nombre del control del formulario.
+   * @returns {boolean} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  isInvalid(id: string): boolean {
+    const CONTROL = this.registroForm.get(id);
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
   }
 
   /**
@@ -455,6 +493,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Obtiene la lista de comprobantes desde el servicio `consultaAvisoAcreditacionService`
+   * y actualiza el catálogo de comprobantes en el componente.
+   * @returns {void} No retorna ningún valor.
+   */
+  fetchListaComprobante(): void {
+    this.consultaAvisoAcreditacionService
+      .getListaDeDocumentos('listaDeComprobante')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        this.comprobante.catalogos = respuesta.data;
+      });
+  }
+
+
+  /**
    * Obtiene la lista de bancos desde el servicio `consultaAvisoAcreditacionService`
    * y actualiza el catálogo de bancos en el componente.
    *
@@ -473,6 +526,29 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Maneja el cambio en la selección de la forma de adquisición.
+   * @param selectedOption - El objeto de la opción seleccionada del catálogo.
+   */  
+  onlistaDeDocumentosChange(selectedOption: Catalogo): void {
+    
+    const VALUE = selectedOption?.id || selectedOption?.clave;
+
+    this.comprobanteVisible = String(VALUE) === '1';
+    
+    const COMPROBANTE_CONTROL = this.registroForm.get('comprobante');
+    
+    if (COMPROBANTE_CONTROL) {
+      if (this.comprobanteVisible) {
+        COMPROBANTE_CONTROL.setValidators([Validators.required]);
+      } else {
+        COMPROBANTE_CONTROL.clearValidators();
+        COMPROBANTE_CONTROL.setValue(''); 
+      }
+      COMPROBANTE_CONTROL.updateValueAndValidity();
+    }
+  }
+  
   /**
    * Método para poblar una tabla con los datos ingresados en un formulario.
    *
@@ -511,19 +587,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Error de validación',
-        mensaje: 'Por favor, complete todos los campos requeridos antes de agregar.',
+        titulo: '',
+        mensaje: 'Debe capturar todos los datos marcados como obligatorios.',
         cerrar: true,
         tiempoDeEspera: 3000,
-        txtBtnAceptar: 'De acuerdo',
+        txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
       
       // Marcar todos los controles del formulario como tocados para mostrar errores de validación
       this.registroForm.markAllAsTouched();
       return;
-    }
-
+    }    
+    
     const FORM_VALUES = this.registroForm.value;
     const NEW_ROW: DatosDeLaTabla = {
       id: this.configuracionTablaDatos.length + 1,
@@ -537,7 +613,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.aduana.catalogos
       ),
       valorEnPesos: FORM_VALUES.valorEnPesos,
-      comprobanteDePago: 'N/A',
+      comprobante: this.comprobanteVisible ? SolicitudComponent.getDropdownLabel(
+        FORM_VALUES.comprobante,
+        this.comprobante.catalogos
+      ) : 'N/A',
     };
 
     this.configuracionTablaDatos = [...this.configuracionTablaDatos, NEW_ROW];
@@ -585,42 +664,30 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       );
     }
   }
-
   /**
-  * modificar la fila seleccionada en otro componente 
+  * modificar la fila seleccionada en modal popup
   */
   modificarFilaSeleccionada(): void {
-    const SELECTED_ROW = this.selectedRows[0];
-    const CURRENT_URL = this.router.url;
     if (this.selectedRows.length !== 1) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Error',
-        mensaje: 'Por favor, seleccione exactamente una fila para modificar.',
+        titulo: '',
+        mensaje: 'Seleccione un registro.',
         cerrar: true,
         tiempoDeEspera: 3000,
-        txtBtnAceptar: 'De acuerdo',
+        txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
       return;
     }
-    if (SELECTED_ROW) {
-      this.consultaAvisoAcreditacionService.setUpdatedRow([SELECTED_ROW]);
-      this.tramite32101Store.setAbc(SELECTED_ROW);
-      setTimeout(() => {
-        if (CURRENT_URL.includes('agace')) {
-          this.router.navigate(
-        ['/agace/consulta-aviso-acreditacion/actualizacion',
-  SELECTED_ROW.id]);
-        }
-        if (CURRENT_URL.includes('pago')) {
-          this.router.navigate(
-        ['/pago/consulta-aviso-acreditacion/actualizacion',
-  SELECTED_ROW.id]);
-        }
-      }, 100);
+    
+    const FILA_SELECCIONADA = this.selectedRows[0];
+    if (FILA_SELECCIONADA && this.modalActualizacion) {
+      this.consultaAvisoAcreditacionService.setUpdatedRow([FILA_SELECCIONADA]);
+      this.tramite32101Store.setAbc(FILA_SELECCIONADA);
+      this.modalActualizacion.abrirModal(FILA_SELECCIONADA);
     }
   }
 
@@ -633,21 +700,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: 'Error',
-        mensaje: 'No se seleccionaron filas para eliminar.',
+        titulo: '',
+        mensaje: 'Seleccione un registro.',
         cerrar: true,
         tiempoDeEspera: 3000,
-        txtBtnAceptar: 'De acuerdo',
+        txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-      return;
+    } else {
+      this.abrirEleminarModal();
     }
-    this.configuracionTablaDatos = this.configuracionTablaDatos.filter(
-      (row) => !this.selectedRows.includes(row)
-    );
-    this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);
-    this.selectedRows = [];
-    this.abrirEleminarModal();
   }
 
 
@@ -720,9 +782,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * elimina cualquier error de validación asociado.
    */
   borrar(): void {
-    this.registroForm.get('numeroDeOperacion')?.reset();
-    this.registroForm.get('banco')?.reset();
-    this.registroForm.get('llaveDePago')?.reset();
+    this.registroForm.reset();
     const FECHA_CONTROL = this.registroForm.get('fechaInicialInput');
     FECHA_CONTROL?.setValue('');
     FECHA_CONTROL?.setErrors(null);
@@ -779,7 +839,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'Seguro que desea eliminar el pedimento?',
+      mensaje: 'Seguro que desea eliminar el registro seleccionado?',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -793,6 +853,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
+      this.configuracionTablaDatos = this.configuracionTablaDatos.filter(
+        (row) => !this.selectedRows.includes(row)
+      );
+      this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);
+      this.selectedRows = [];
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }
