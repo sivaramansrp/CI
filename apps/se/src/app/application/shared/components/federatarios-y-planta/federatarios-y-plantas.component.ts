@@ -78,6 +78,12 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
 
 
   /**
+   * Datos de federatarios que se mostrarán en la tabla
+   * @property {FederatariosEncabezado} datosFederatarios
+   */
+  @Input()
+  datosFederatarios!: FederatariosEncabezado;
+  /**
    * Contiene los datos de los federatarios utilizados en el formulario de representante legal.
    * Esta propiedad se inicializa con la constante `DATOS_FEDERATARIOS`.
    */
@@ -281,10 +287,16 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
   @Output() datosPlantasImmex: EventEmitter<PlantasImmex[]> = new EventEmitter<PlantasImmex[]>(true);
 
   /**
-    * Controla la visibilidad del popup "Complementar Planta".
-    * @property {boolean} mostrarComplementarPlantaPopup
-    */
-  public mostrarComplementarPlantaPopup: boolean = false;
+   * Emisor de eventos para los datos de federatarios.
+   */
+  @Output() datosFederatariosEvent: EventEmitter<FederatariosEncabezado> = new EventEmitter<FederatariosEncabezado>();
+
+ /**
+   * Controla la visibilidad del popup "Complementar Planta".
+   * @property {boolean} mostrarComplementarPlantaPopup
+   */
+  public mostrarComplementarPlantaPopup:boolean = false;
+  
 
   /**
  * Controla la visibilidad del popup "Montos de Inversión".
@@ -612,35 +624,34 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
     this.federatariosFormGroup.reset();
   }
 
-  /**
-   * Asigna a `plantasDisponiblesDatos` los datos disponibles de plantas IMMEX.
-   * Método utilizado para cargar o actualizar la lista de plantas disponibles.
-   */
-  buscarPlantasImmex(): void {
-    this.plantasDisponiblesDatos = [FECHA_DE_Tabla];
-    this.datosPlantaDisponibles.emit(this.plantasDisponiblesDatos);
-  }
+/**
+ * Asigna a `plantasDisponiblesDatos` los datos disponibles de plantas IMMEX.
+ * Método utilizado para cargar o actualizar la lista de plantas disponibles.
+ */
+buscarPlantasImmex(): void {
+  this.datosPlantaDisponibles.emit();
+}
 
-  /**
-   * Adds IMMEX plant data to the `plantasImmexDatos` array.
-   * This method assigns the value of `INMEX_PLANTAS` to the `plantasImmexDatos` property.
-   *
-   * @remarks
-   * Ensure that `INMEX_PLANTAS` is properly defined and contains the expected plant data.
-   */
-  agregarPlantas(): void {
-    this.plantasImmexDatos = [INMEX_PLANTAS];
-    this.datosPlantasImmex.emit(this.plantasImmexDatos);
-  }
+/**
+ * Adds IMMEX plant data to the `plantasImmexDatos` array.
+ * This method assigns the value of `INMEX_PLANTAS` to the `plantasImmexDatos` property.
+ *
+ * @remarks
+ * Ensure that `INMEX_PLANTAS` is properly defined and contains the expected plant data.
+ */
+agregarPlantas(): void {
+  this.plantasImmexDatos = [INMEX_PLANTAS];
+  this.datosPlantasImmex.emit(this.plantasImmexDatos);
+}
 
 
-  setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
-    if (row) {
-      this.selectedPlantaImmex = row;
-    } else {
-      this.selectedPlantaImmex = null;
-    }
+setPlantaImmexSeleccionada(row: PlantasImmex | null): void {
+  if (row) {
+    this.selectedPlantaImmex = row;
+  } else {
+    this.selectedPlantaImmex = null;
   }
+}
 
   /**
    * Abre un diálogo modal para complementar información de la planta.
@@ -882,6 +893,21 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
     this.obtenerCapacidadInstaladaTablaDatos.emit(event);
   }
 
+    /**
+ * Maneja el cambio de valor en un campo del formulario de federatarios.
+ * Actualiza el objeto de datos, emite el evento correspondiente y sincroniza el valor en el formulario reactivo.
+ * @param event Objeto del catálogo seleccionado.
+ * @param campo Nombre del campo que se actualiza.
+ */
+  eventoDeCambioDeValor(event: Catalogo, campo: string): void {
+    this.datosFederatarios = {
+      ...this.datosFederatarios,
+      [campo]: event.clave
+    };
+    this.datosFederatariosEvent.emit(this.datosFederatarios);
+
+  }
+
   /**
   * @method ngOnDestroy
   * @description
@@ -895,3 +921,7 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
   }
 
 }
+function abrirDialogoComplementarPlanta() {
+  throw new Error('Function not implemented.');
+}
+

@@ -82,6 +82,7 @@ export interface Tramite80101State {
   
   indicePrevioRuta: number;
   tablaDatosFederatarios: FederatariosEncabezado[]
+  datosFederatarios: FederatariosEncabezado;
   /**
    * Información detallada de plantas IMMEX.
    */
@@ -256,6 +257,21 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
 
   indicePrevioRuta: 0,
   tablaDatosFederatarios: [],
+  datosFederatarios: {
+    nombre: '',
+    primerApellido: '',
+    segundoApellido: '',
+    numeroDeActa: '',
+    fechaDelActa: '',
+    numeroDeNotaria: '',
+    entidadFederativa: '',
+    municipioODelegacion: '',
+    estado: '',
+    estadoOptions: '',
+    estadoUno: '',
+    estadoDos: '',
+    estadoTres: '',
+    },
   plantasImmexTablaLista: [],
   plantasDisponiblesTablaLista: [],
   idSolicitud: 0,
@@ -672,6 +688,18 @@ export class Tramite80101Store extends Store<Tramite80101State> {
         tablaDatosComplimentos: DOMICILIOS,
       };
     });
+  }
+
+  /**
+    * Guarda el ID de la solicitud en el estado.
+    *
+    * @param idSolicitud - El ID de la solicitud que se va a guardar.
+    */
+  public setFederatariosCatalogo(datosFederatarios: FederatariosEncabezado): void {
+    this.update((state) => ({
+      ...state,
+      datosFederatarios,
+    }));
   }
 
   /**
