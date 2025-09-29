@@ -1119,3 +1119,11 @@ export const REGEX_CAPTURA_USDA = /^([0-9]{9})$/;
  * Ejemplos no válidos: "12345678" (menos de 9 dígitos), "1234567890" (más de 9 dígitos), "1234abcd" (contiene letras)
  */
 export const REGEX_NUMERO_INTERIOR = /^\d{9}$/;
+
+/**
+ * Expresión regular para detectar caracteres especiales no permitidos.
+ * Esta expresión regular identifica la presencia de caracteres especiales que
+ * generalmente no están permitidos en campos como llaves de pago, códigos de referencia,
+ * o campos alfanuméricos específicos.
+ */
+export const REGEX_CARACTERES_ESPECIALES = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>?]/;
