@@ -7,6 +7,8 @@ import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-
  * @interface
  */
 export interface Tramite130201State {
+  catalogo:string;
+  fraccionArancelariaTIGIE: string;
   /** Plazo del trámite */
   plazo: string;
   /** Descripción del trámite */
@@ -70,6 +72,8 @@ export interface Tramite130201State {
  */
 export function createInitialState(): Tramite130201State {
   return {
+    fraccionArancelariaTIGIE:'',
+    catalogo:'',
     filaSeleccionada: [],
     mostrarTabla: false,
     solicitud: 'Inicial',
