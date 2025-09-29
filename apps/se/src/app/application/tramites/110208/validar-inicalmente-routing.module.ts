@@ -9,7 +9,7 @@ const ROUTES: Routes = [
     resolve: { iniciarResolverData: IniciarTramiteResolver },
     data: {
       iniciarConfig: {
-        procedureId: '110207',
+        procedureId: '110208',
       },
     },
     path: 'certificado-origen',
