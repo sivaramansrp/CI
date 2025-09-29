@@ -37,7 +37,7 @@ export class PasoUnoCsComponent implements OnInit, OnDestroy {
 
   constructor(private seccionStore: SeccionLibStore, private solocitud80105Service: Solocitud80105Service,
       private consultaQuery: ConsultaioQuery){
-    this.asignarSecciones();
+        
   }
 
 
