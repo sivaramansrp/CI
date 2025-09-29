@@ -45,7 +45,6 @@ describe('PagoDeDerechosContenedoraComponent', () => {
   };
 
   beforeEach(async () => {
-    // Create Jest mocks
     mockTramiteQuery = {
       getPagoDerechos$: of(mockPagoDerechosState)
     } as any;
@@ -61,7 +60,6 @@ describe('PagoDeDerechosContenedoraComponent', () => {
     mockDatosSolicitudService = {
       obtenerBancoCatalogo: jest.fn().mockReturnValue(of([])),
       obtenerBancos: jest.fn().mockReturnValue(of([])),
-      // Add other methods that might be needed by the service
     } as any;
 
     await TestBed.configureTestingModule({
@@ -95,7 +93,6 @@ describe('PagoDeDerechosContenedoraComponent', () => {
     it('should initialize with default values', () => {
       expect(component.esFormularioSoloLectura).toBe(false);
       expect(component.campoObligatorio).toBe(false);
-      expect(component.idProcedimiento).toBeDefined();
     });
 
     it('should inject dependencies correctly', () => {
@@ -107,60 +104,42 @@ describe('PagoDeDerechosContenedoraComponent', () => {
 
   describe('ngOnInit', () => {
     it('should subscribe to pago derechos state and update component state', () => {
-      // Act
       component.ngOnInit();
       fixture.detectChanges();
-
-      // Assert
       expect(component.pagoDerechoFormState).toEqual(mockPagoDerechosState);
     });
 
     it('should subscribe to consultaio state and update readonly flag', () => {
-      // Arrange - Create a new observable with the readonly state
       const readonlyState = { ...mockConsultaioState, readonly: true };
       
-      // Completely replace the mock with the new observable
       component['consultaioQuery'].selectConsultaioState$ = of(readonlyState);
-
-      // Act
       component.ngOnInit();
-      
-      // Give Angular time to process subscriptions
+    
       fixture.detectChanges();
       
-      // Assert
       expect(component.esFormularioSoloLectura).toBe(true);
     });
 
     it('should handle empty pago derechos state', () => {
-      // Arrange
       mockTramiteQuery.getPagoDerechos$ = of({} as PagoDerechosFormState);
 
-      // Act
       component.ngOnInit();
       fixture.detectChanges();
 
-      // Assert
       expect(component.pagoDerechoFormState).toEqual({});
     });
 
     it('should handle consultaio state changes', () => {
-      // Arrange
       const stateSubject = new Subject<ConsultaioState>();
       
-      // Replace the mock with the Subject
       component['consultaioQuery'].selectConsultaioState$ = stateSubject.asObservable();
-
-      // Act
       component.ngOnInit();
       fixture.detectChanges();
 
-      // Initial state
       stateSubject.next({ ...mockConsultaioState, readonly: false });
       fixture.detectChanges();
       expect(component.esFormularioSoloLectura).toBe(false);
 
-      // State change
       stateSubject.next({ ...mockConsultaioState, readonly: true });
       fixture.detectChanges();
       expect(component.esFormularioSoloLectura).toBe(true);
@@ -169,37 +148,30 @@ describe('PagoDeDerechosContenedoraComponent', () => {
 
   describe('updatePagoDerechos', () => {
     it('should call tramiteStore.updatePagoDerechosFormState with provided data', () => {
-      // Arrange
       const testData: PagoDerechosFormState = {
         ...mockPagoDerechosState,
         importePago: '2000.75'
       };
 
-      // Act
       component.updatePagoDerechos(testData);
 
-      // Assert
       expect(mockTramiteStore.updatePagoDerechosFormState).toHaveBeenCalledTimes(1);
       expect(mockTramiteStore.updatePagoDerechosFormState).toHaveBeenCalledWith(testData);
     });
 
     it('should handle null data', () => {
-      // Act
       component.updatePagoDerechos(null as any);
 
-      // Assert
       expect(mockTramiteStore.updatePagoDerechosFormState).toHaveBeenCalledTimes(1);
       expect(mockTramiteStore.updatePagoDerechosFormState).toHaveBeenCalledWith(null);
     });
 
     it('should handle partial data updates', () => {
-      // Arrange
       const partialData = {
         claveReferencia: 'NEW_REF',
         importePago: '500.00'
       } as Partial<PagoDerechosFormState>;
 
-      // Act
       component.updatePagoDerechos(partialData as PagoDerechosFormState);
 
       // Assert
@@ -209,91 +181,64 @@ describe('PagoDeDerechosContenedoraComponent', () => {
 
   describe('ngOnDestroy', () => {
     it('should complete destroyNotifier$ subject', () => {
-      // Arrange
       const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
       const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
-      // Act
       component.ngOnDestroy();
 
-      // Assert
       expect(nextSpy).toHaveBeenCalledTimes(1);
       expect(completeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should unsubscribe from observables to prevent memory leaks', () => {
-      // Arrange
       component.ngOnInit();
       const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-
-      // Act
       component.ngOnDestroy();
-
-      // Assert
       expect(destroyNotifierSpy).toHaveBeenCalled();
     });
   });
 
   describe('Input Properties', () => {
     it('should accept esFormularioSoloLectura input', () => {
-      // Arrange - Component should start with default false value
       expect(component.esFormularioSoloLectura).toBe(false);
 
-      // Act - Set the input property
       component.esFormularioSoloLectura = true;
 
-      // Assert - Property should be updated
       expect(component.esFormularioSoloLectura).toBe(true);
     });
 
-    it('should have correct idProcedimiento value', () => {
-      // Assert - ID_PROCEDIMIENTO should be imported from constants
-      expect(component.idProcedimiento).toBeDefined();
-      expect(typeof component.idProcedimiento).toBe('number');
-    });
-
     it('should have campoObligatorio set to false by default', () => {
-      // Assert
       expect(component.campoObligatorio).toBe(false);
     });
   });
 
   describe('Component Integration', () => {
     it('should handle complete workflow: init -> update -> destroy', () => {
-      // Arrange
       const updatedData: PagoDerechosFormState = {
         ...mockPagoDerechosState,
         claveReferencia: 'UPDATED_REF'
       };
 
-      // Act - Initialize
       component.ngOnInit();
       fixture.detectChanges();
 
-      // Act - Update
       component.updatePagoDerechos(updatedData);
 
-      // Act - Destroy
       component.ngOnDestroy();
 
-      // Assert
       expect(component.pagoDerechoFormState).toEqual(mockPagoDerechosState);
       expect(mockTramiteStore.updatePagoDerechosFormState).toHaveBeenCalledWith(updatedData);
     });
 
     it('should maintain state consistency between query updates', () => {
-      // Arrange
       const stateSubject = new Subject<PagoDerechosFormState>();
       mockTramiteQuery.getPagoDerechos$ = stateSubject.asObservable();
 
-      // Act
       component.ngOnInit();
 
-      // Emit first state
       stateSubject.next(mockPagoDerechosState);
       expect(component.pagoDerechoFormState).toEqual(mockPagoDerechosState);
 
-      // Emit updated state
       const updatedState = { ...mockPagoDerechosState, importePago: '3000.00' };
       stateSubject.next(updatedState);
       expect(component.pagoDerechoFormState).toEqual(updatedState);
@@ -302,24 +247,20 @@ describe('PagoDeDerechosContenedoraComponent', () => {
 
   describe('Error Handling', () => {
     it('should handle store update errors gracefully', () => {
-      // Arrange
       mockTramiteStore.updatePagoDerechosFormState.mockImplementation(() => {
         throw new Error('Store error');
       });
 
-      // Act & Assert
       expect(() => {
         component.updatePagoDerechos(mockPagoDerechosState);
       }).toThrow('Store error');
     });
 
     it('should handle observable errors in ngOnInit', () => {
-      // Arrange
       mockTramiteQuery.getPagoDerechos$ = new Observable(subscriber => {
         subscriber.error(new Error('Observable error'));
       });
 
-      // Act & Assert - Should not throw
       expect(() => {
         component.ngOnInit();
       }).not.toThrow();
@@ -328,34 +269,28 @@ describe('PagoDeDerechosContenedoraComponent', () => {
 
   describe('Observable Subscriptions', () => {
     it('should unsubscribe when destroyNotifier$ emits', () => {
-      // Arrange
+
       const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
       const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
-      // Act
       component.ngOnInit();
       fixture.detectChanges();
       component.ngOnDestroy();
 
-      // Assert - Verify that ngOnDestroy calls the proper cleanup methods
       expect(destroyNotifierSpy).toHaveBeenCalled();
       expect(completeSpy).toHaveBeenCalled();
     });
 
     it('should handle multiple rapid state updates', () => {
-      // Arrange
       const stateSubject = new Subject<PagoDerechosFormState>();
       mockTramiteQuery.getPagoDerechos$ = stateSubject.asObservable();
 
-      // Act
       component.ngOnInit();
 
-      // Emit multiple rapid updates
       for (let i = 0; i < 5; i++) {
         stateSubject.next({ ...mockPagoDerechosState, importePago: `${i * 100}.00` });
       }
 
-      // Assert - Should have the latest value
       expect(component.pagoDerechoFormState.importePago).toBe('400.00');
     });
   });

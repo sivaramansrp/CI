@@ -91,7 +91,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     private seccionStore: SeccionLibStore,
     private consultaDatosService: ConsultaDatosService,
     private consultaQuery: ConsultaioQuery,
-    private tramite240118Query: Tramite240118Query,
+    public tramite240118Query: Tramite240118Query,
     private tramite240118Store: Tramite240118Store,
     private datosSolicitudService: DatosSolicitudService
   ) {
