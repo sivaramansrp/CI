@@ -4,7 +4,7 @@ import {
   ProveedorClienteDatosTabla,
   Servicio
 } from '../models/nuevo-programa-industrial.model';
-import { AnexoEncabezado, ProveedorClienteTabla, ProyectoImmexEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla, ProyectoImmexEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
   Catalogo,
   RespuestaCatalogos,
@@ -250,8 +250,10 @@ export class NuevoProgramaIndustrialService {
     if (typeof DATOS === 'object' && DATOS !== null && 'mercanciaImportacion' in DATOS) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const MERCANCIA_IMPORTACION = (DATOS as { mercanciaImportacion?: any[] }).mercanciaImportacion ?? [];
-      const ANEXO_1 = this.reverseBuildAnexoDos(MERCANCIA_IMPORTACION[0]?.anexoI);
-      this.tramite80101Store.setImportarDatosTabla(ANEXO_1);
+      const ANEXO_TABLA_UNO = this.reverseBuildDatosParaNavegar(MERCANCIA_IMPORTACION[0]?.complemento);
+      this.tramite80101Store.setImportarDatosTabla(ANEXO_TABLA_UNO);
+      const ANEXO_TABLA_DOS = this.reverseBuildAnexoDos(MERCANCIA_IMPORTACION[0]?.anexoI);
+      this.tramite80101Store.setExportarDatosTabla(ANEXO_TABLA_DOS);
       const LISTA_PROVEEDORES_CLIENT = this.reverseBuildProveedorCliente(MERCANCIA_IMPORTACION[0]?.listaProveedores);
       this.tramite80101Store.setProveedorClienteDatosTablaUno(LISTA_PROVEEDORES_CLIENT);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -472,12 +474,92 @@ export class NuevoProgramaIndustrialService {
    * @returns Un nuevo arreglo de objetos con la información estructurada de cada planta.
    */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, default-param-last
-  buildPlantas(array: any[] = [], base: unknown[]): unknown[] {
+  buildPlantas(array: any[] = [], base: unknown[], data: any): any {
+    // eslint-disable-next-line complexity, @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
+    const MAP_CAPACIDAD_INSTALADA = (item: any) => ({
+      fraccion: item.FRACCION_ARANCELARIA_PRODUCTO_TERMINADO_CATLOGO ?? "",
+      umt: item.UMT ?? "",
+      descripcion: item.DESCRIPCION_COMERCIAL_PRODUCTO_TERMINADO ?? "",
+      capacidadEfectiva: item.CAPACIDAD_EFECTIVAMENTE_UTILIZADA ?? "",
+      calculo: item.CALCULO_CAPACIDAD_INSTALADA ?? "",
+      turnos: (item.TURNOS ?? "").toString(),
+      horasTurno: (item.HORAS_POR_TURNO ?? "").toString(),
+      cantidadEmpleados: (item.CANTIDAD_EMPLEADOS ?? "").toString(),
+      cantidadMaquinaria: (item.CANTIDAD_MAQUINARIA ?? "").toString(),
+      descripcionMaquinaria: item.DESCRIPCION_MAQUINARIA ?? "",
+      capacidadMensual: (item.CAPACIDAD_INSTALADA_MENSUAL ?? "").toString(),
+      capacidadAnual: item.CAPACIDAD_INSTALADA_ANUAL ?? "",
+      testado: "1",
+    });
+ 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
+    const MAP_MONTOS_INVERSION = (item: any) => ({
+      idPlantaM: item.PLANTA ?? "",
+      idMonto: (item.MONTO ?? "").toString(),
+      tipo: item.TIPO ?? "",
+      descTipo: item.DESC_TIPO ?? "",
+      cantidad: (item.CANTIDAD ?? "").toString(),
+      descripcion: item.DESCRIPCION ?? "",
+      monto: (item.MONTO ?? "").toString(),
+      testado: item.TESTADO ?? "",
+      descTestado: item.DESC_TESTADO ?? "",
+    })
+ 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
+    const MAP_EMPLEADOS = (item: any) => ({
+      idPlantaE: item.PLANTA ?? '',
+      idEmpleados: item.ID_EMPLEADOS ?? '',
+      totalEmpleados: (item.TOTAL ?? '').toString(),
+      directos: item.DIRECTOS ?? '',
+      cedula: item.CEDULA_DE_CUOTAS ?? '',
+      fechaCedula: formatearFechaYyyyMmDd(item.FECHA_DE_CEDULA ?? ''),
+      indirectos: item.INDIRECTOS_TEST ?? '',
+      contrato: item.CONTRATO ?? '',
+      objetoContrato: item.OBJETO_DEL_CONTRATO_DEL_SERVICIO ?? '',
+      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_FIRMA ?? ''),
+      fechaFinVigencia: formatearFechaYyyyMmDd(item.FECHA_FIN_VIGENCIA ?? ''),
+      rfcEmpresa: item.RFC ?? '',
+      razonEmpresa: item.RAZON_SOCIAL ?? '',
+      testado: item.TESTADO ?? '',
+      descTestado: item.DESC_TESTADO ?? '',
+    })
+ 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
+    const MAP_COMPLEMENTAR = (item: any) => ({
+      idPlantaC: item.PLANTA ?? '' ,
+      idDato: item.DATO ?? '',
+      amparoPrograma: item.PERMANECERA_MERCANCIA_PROGRAMA ?? '',
+      tipoDocumento: item.TIPO_DOCUMENTO ?? '',
+      descDocumento: item.DESCRIPCION_DOCUMENTO ?? '',
+      descripcionOtro: item.DESCRIPCION_OTRO ?? '',
+      documentoRespaldo: item.DOCUMENTO_RESPALDO ?? '',
+      descDocRespaldo: item.DESC_DOCUMENTO_RESPALDO ?? '',
+      respaldoOtro: item.RESPALDO_OTRO ?? '',
+      fechaFirma: formatearFechaYyyyMmDd(item.FECHA_DE_FIRMA ?? ''),
+      fechaVigencia: formatearFechaYyyyMmDd(item.FECHA_DE_FIN_DE_VIGENCIA ?? ''),
+      fechaFirmaRespaldo: item.FECHA_DE_FIRMA_DOCUMENTO ?? '',
+      fechaVigenciaRespaldo: item.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO ?? ''
+    })
+ 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
+    const MAP_FIRMANTES = (item:any) => ({
+      idPlantaF: item.planta ?? '',
+      tipoFirmante: item.tipoFirmante ?? '',
+      descTipoFirmante: item.descTipoFirmante ?? '',
+    })
+ 
+    const LISTA_CAPACIDAD = (data.tablaDatosCapacidadInstalada || []).map(MAP_CAPACIDAD_INSTALADA);
+    const MONTOS = (data.montosDeInversionTablaDatos || []).map(MAP_MONTOS_INVERSION);
+    const DATOS_EMPLEADOS = (data.empleadosTablaDatos || []).map(MAP_EMPLEADOS);
+    const DATOS_COMPLEMENTARIOS = (data.complementarPlantaDatos || []).map(MAP_COMPLEMENTAR);
+    const FIRMATES = (data.complementarFirmanteDatos || []).map(MAP_FIRMANTES);
+ 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
-    array.forEach((arr) => {
-      base.forEach((item) => {
-        const ITEM = item && typeof item === 'object' ? item : {};
+    array.forEach(arr => {
+      // eslint-disable-next-line complexity
+      base.forEach(item => {
+        const ITEM = (item && typeof item === 'object') ? item : {};
         RESULT.push({
           ...ITEM,
           idPlanta: arr.planta ?? '',
@@ -496,7 +578,8 @@ export class NuevoProgramaIndustrialService {
         });
       });
     });
-    return RESULT;
+    const RESULT_DATA = { ...RESULT[0], LISTA_CAPACIDAD, MONTOS, DATOS_EMPLEADOS, DATOS_COMPLEMENTARIOS, FIRMATES };
+    return RESULT_DATA;
   }
 
   /**
@@ -527,8 +610,10 @@ export class NuevoProgramaIndustrialService {
           domicilioFiscal: arr.domicilioFiscalSolicitante ?? '',
           razonSocial: arr.razonSocial ?? '',
           datosComplementarios: Array.isArray(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (ITEM as any)?.datosComplementarios
           )
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ? (ITEM as any).datosComplementarios.map((dc: any) => ({
                 idPlantaC: dc.idPlantaC ?? '',
                 idDato: dc.idDato ?? '',
@@ -620,7 +705,9 @@ export class NuevoProgramaIndustrialService {
    *
    * Cada subestructura se construye utilizando funciones auxiliares para mapear y transformar los datos de entrada.
    */
-  buildAnexo(data: any) {
+  // eslint-disable-next-line class-methods-use-this
+  buildAnexo(data: unknown): { anexo: Record<string, unknown> } {
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const BUILD_ANEXO_ITEM = (item: Anexo1) => ({
       descripcion: item.encabezadoFraccion,
       idTipoBien: 0,
@@ -629,7 +716,8 @@ export class NuevoProgramaIndustrialService {
       contadorGrid: null,
       descripcionTestado: item.encabezadoDescripcion,
     });
-
+ 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const BUILD_PROVEEDOR_CLIENTE = (item: ProveedorClienteDatosTabla) => ({
       idProveedor: item.idProveedor,
       paisOrigen: item.paisOrigen,
@@ -644,6 +732,7 @@ export class NuevoProgramaIndustrialService {
       descTestado: item.descTestado,
     });
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any
     const BUILD_DATOS_PARA_NAVEGAR = (datos: any) => ({
       anexoII: datos?.encabezadoAnexoII,
       tipo: datos?.encabezadoTipo,
@@ -658,7 +747,8 @@ export class NuevoProgramaIndustrialService {
       fecFinVigencia: null,
       volumenAnualSolicitado: null,
     });
-
+ 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
     const BUILD_ANEXO_DOS = (item: any) => ({
       fraccionExportacion: item.encabezadoFraccionExportacion,
       fraccionImportacion: item.encabezadoFraccionImportacion,
@@ -668,11 +758,14 @@ export class NuevoProgramaIndustrialService {
       fraccionDescripcionAnexo: item.encabezadoFraccionDescripcionAnexo,
       fraccionValorMonedaAI: item.encabezadoValorEnMonedaAnual,
       fraccionValorProdMI: item.encabezadoValorEnMonedaMensual,
+      fraccionVolumenMensual: item?.encabezadoValorEnMonedaMensual,
+      fraccionVolumenAnual: item?.encabezadoVolumenAnual,
       categoriaFraccion: item.encabezadoCategoria,
       tipoFraccion: item.encabezadoTipo,
       umt: item.encabezadoUmt,
     });
-
+ 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
     const PROYECTO_IMMEX_DATOS = (item: any) => ({
       tipoDocumento: item.encabezadoTipoDocument,
       descripcion: item.encabezadoDescripcionOtro,
@@ -683,13 +776,14 @@ export class NuevoProgramaIndustrialService {
       testado: true,
       fecFinVigencia: item.encabezadoFechaVigencia,
     });
-
+ 
     /**
      * Construye un objeto con los datos del proveedor y cliente a partir de un elemento de tipo `ProveedorClienteDatosTabla`.
      *
      * @param item - Objeto que contiene la información del proveedor y cliente.
      * @returns Un objeto con las propiedades: paisOrigen, rfcProveedor, razonProveedor, paisDestino, rfcCliente, razonCliente, domicilio y descTestado.
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
     const BUILD_PROVEEDOR_CLIENTE_DOS = (item: ProveedorClienteDatosTabla) => ({
       paisOrigen: item.paisOrigen,
       rfcProveedor: item.rfcProveedor,
@@ -700,28 +794,23 @@ export class NuevoProgramaIndustrialService {
       domicilio: item.domicilio,
       descTestado: item.descTestado,
     });
-
+ 
     return {
       anexo: {
-        ANEXOII: (data.annexoDosTres?.anexoDosTablaLista || []).map(
-          BUILD_ANEXO_ITEM
-        ),
-        ANEXOIII: (data.annexoDosTres?.anexoTresTablaLista || []).map(
-          BUILD_ANEXO_ITEM
-        ),
-        proveedorCliente: (
-          data.annexoUno?.proveedorClienteDatosTabla || []
-        ).map(BUILD_PROVEEDOR_CLIENTE),
-        datosParaNavegar: BUILD_DATOS_PARA_NAVEGAR(
-          data.annexoUno?.datosParaNavegar || {}
-        ),
-        tableDos: (data.annexoUno?.exportarDatosTabla || []).map(BUILD_ANEXO_DOS),
-        proyectoimex: (data.proyectoImmexTablaLista || []).map(
-          PROYECTO_IMMEX_DATOS
-        ),
-        proveedorClienteDos: (
-          data.annexoUno?.proveedorClienteDatosTablaDos || []
-        ).map(BUILD_PROVEEDOR_CLIENTE_DOS),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ANEXOII: ((data as any).annexoDosTres?.anexoDosTablaLista || []).map(BUILD_ANEXO_ITEM),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ANEXOIII: ((data as any).annexoDosTres?.anexoTresTablaLista || []).map(BUILD_ANEXO_ITEM),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        proveedorCliente: ((data as any).annexoUno?.proveedorClienteDatosTabla || []).map(BUILD_PROVEEDOR_CLIENTE),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        datosParaNavegar: BUILD_DATOS_PARA_NAVEGAR((data as any).annexoUno?.importarDatosTabla[0] || {}),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        tableDos: ((data as any).annexoUno?.exportarDatosTabla || []).map(BUILD_ANEXO_DOS),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        proyectoimex: ((data as any).proyectoImmexTablaLista || []).map(PROYECTO_IMMEX_DATOS),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        proveedorClienteDos: ((data as any).annexoUno?.proveedorClienteDatosTablaDos || []).map(BUILD_PROVEEDOR_CLIENTE_DOS),
       },
     };
   }
@@ -862,7 +951,6 @@ export class NuevoProgramaIndustrialService {
     }));
   }
 
-// Reverse function: from built shape back to the original keys
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
   reverseBuildAnexoDosTres(items: any[]): AnexoEncabezado[] {
     return items.map((built) => ({
@@ -872,7 +960,6 @@ export class NuevoProgramaIndustrialService {
     }));
   }
 
-  // Reverse function: from built object(s) back to the original shape
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
   reverseBuildProveedorCliente(items: any[]): ProveedorClienteDatosTabla[] {
     return items.map((built) => ({
@@ -890,7 +977,6 @@ export class NuevoProgramaIndustrialService {
     }));
   }
 
-  // Reverse build: from the built array back to ProveedorClienteDatosTabla[]
 // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
 reverseProveedoresClientDos(items: any[]): ProveedorClienteTabla[] {
   return items.map((built) => ({
@@ -908,7 +994,6 @@ reverseProveedoresClientDos(items: any[]): ProveedorClienteTabla[] {
   }));
 }
 
-  // Reverse build: from PROYECTO_IMMEX_DATOS output back to original format
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
   reverseProyectoIMMEX(items: any[]): ProyectoImmexEncabezado[] {
     return items.map((built) => ({
@@ -923,5 +1008,26 @@ reverseProveedoresClientDos(items: any[]): ProveedorClienteTabla[] {
       estatus: built.estatus ?? true
     }));
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
+  reverseBuildDatosParaNavegar(items: any): AnexoUnoEncabezado[] {
+    return [
+      {
+        encabezadoAnexoII: items.anexoII,
+        encabezadoTipo: items.tipo,
+        encabezadoCategoria: items.categoria,
+        encabezadoDescripcionComercial: items.descripcion,
+        encabezadoVolumenMensual: items.valorMensual,
+        encabezadoVolumenAnual: items.valorAnual,
+        encabezadoValorEnMonedaMensual: items.volumenMensual,
+        encabezadoValorEnMonedaAnual: items.volumenAnual,
+        encabezadoFraccion: items.fraccion ?? "",
+        encabezadoFraccionArancelaria: items.fraccionArancelaria ?? "",
+        encabezadoUmt: items.umt ?? "",
+        estatus: items.estatus ?? true,
+      },
+    ];
+  }
+
 
 }

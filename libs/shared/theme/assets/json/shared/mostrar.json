@@ -190,11 +190,11 @@
         }
       ],
       "complemento": {
-        "anexoII": "",
-        "tipo": "",
-        "unidadMedida": "",
+        "anexoII": "NO SENSIBLE",
+        "tipo": "IMPORTACION",
+        "unidadMedida": "NO SENSIBLE",
         "categoria": "",
-        "descripcion": "",
+        "descripcion": "table 1",
         "valorMensual": 0,
         "valorAnual": 0,
         "volumenMensual": 0,
