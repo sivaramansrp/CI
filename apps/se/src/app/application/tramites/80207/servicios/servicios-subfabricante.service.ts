@@ -1,19 +1,21 @@
+import { DEFAULT_DOMICILIO, Tramites80207Store } from '../estados/tramite80207.store';
 import {
+  DomicilioPayload,
   InfoRegistro,
   PlantasDireccionModelo,
   SubfabricanteDireccionModelo,
   Tramite80207State,
 } from '../modelos/subfabricante.model';
-
+import { JSONResponse, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Observable, catchError, map, throwError } from 'rxjs';
+import { API_ROUTES } from '../../../shared/servers/api-route';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { BuscarPayload } from '../../../shared/models/empresas-subfabricanta.model';
 import { CadenaOriginalRequest } from '../../130118/model/request/cadena-original-request.model';
 import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PROC_80207 } from '../servers/api-route';
-import { RespuestaCatalogos } from '@ng-mf/data-access-user';
-import { Tramites80207Store } from '../estados/tramite80207.store';
 
 /**
  * Decorador que marca una clase como un servicio que puede ser inyectado en otros componentes o servicios.
@@ -67,13 +69,14 @@ export class SubfabricanteService {
    * @method getSubfabricantesDisponibles
    * @returns {Observable<TableData>} Observable con la lista de subfabricantes disponibles.
    */
-  getSubfabricantesDisponibles(): Observable<SubfabricanteDireccionModelo[]> {
-    return (
-      this.http
-        .get<SubfabricanteDireccionModelo[]>(
-          'assets/json/80207/submanufactureras-disponibles-datos.json'
-        )
-        .pipe(map((res) => res)));
+  getSubfabricantesDisponibles(body: BuscarPayload): Observable<JSONResponse> {
+     return this.http.post<JSONResponse>(API_ROUTES('/sat-t80207','80207').buscarPlantas, body).pipe(
+            map((response) => response),
+            catchError(() => {
+              const ERROR = new Error(`Error al obtener la lista de subfabricantes en ${API_ROUTES().buscarPlantas}`);
+              return throwError(() => ERROR);
+            })
+          );
   }
   /**
    * Obtiene la lista de plantas disponibles.
@@ -143,5 +146,90 @@ export class SubfabricanteService {
         );
       }
 
+
+          /**
+ * Construye el domicilio fiscal completo a partir de los datos de domicilio
+ * @param domicilio - Objeto domicilioDto
+ * @param empresaDomicilio - Objeto domicilioSolicitud de empresaDto
+ * @returns String con el domicilio fiscal completo
+ */
+// eslint-disable-next-line class-methods-use-this
+private buildDomicilioFiscal(domicilio: any, empresaDomicilio: any = {}): string {
+  const CALLE = domicilio.calle || empresaDomicilio.calle || '';
+  const NUM_EXTERIOR = domicilio.numExterior || empresaDomicilio.numExterior || '';
+  const NUM_INTERIOR = domicilio.numInterior || empresaDomicilio.numInterior || '';
+  const COLONIA = domicilio.colonia || empresaDomicilio.colonia || '';
+  const MUNICIPIO = domicilio.municipio || empresaDomicilio.municipio || domicilio.delegacionMunicipio || '';
+  const ENTIDAD = domicilio.entidadFederativa?.nombre || empresaDomicilio.entidadFederativa?.nombre || '';
+  const CODIGO_POSTAL = domicilio.codigoPostal || empresaDomicilio.codigoPostal || '';
+
+  const PARTS = [CALLE, NUM_EXTERIOR, NUM_INTERIOR, COLONIA, MUNICIPIO, ENTIDAD, CODIGO_POSTAL]
+    .filter(part => part && part.toString().trim() !== '')
+    .map(part => part.toString().trim());
+
+  return PARTS.join(', ');
+}
+
+      /**
+       * Mapea la respuesta de la API a un arreglo de objetos PlantasSubfabricante.
+       * @param apiResponse - Respuesta de la API que contiene los datos de las plantas subfabricantes.
+       * @returns Arreglo de objetos PlantasSubfabricante mapeados.
+       */
+        // eslint-disable-next-line class-methods-use-this
+        mapApiResponseToPlantasSubfabricante(apiResponse: any[]): SubfabricanteDireccionModelo[] {
+          // eslint-disable-next-line complexity
+          return apiResponse.map(item => {
+            const DOMICILIO = item.domicilioDto || {};
+            const EMPRESA = item.empresaDto || {};
+            const EMPRESA_DOMICILIO = EMPRESA.domicilioSolicitud || {};
+      
+            return {
+              calle: DOMICILIO.calle || EMPRESA_DOMICILIO.calle || item.calle || '',
+              numExterior: parseInt(DOMICILIO.numExterior || EMPRESA_DOMICILIO.numExterior || item.numeroExterior, 10) || 0,
+              numInterior: parseInt(DOMICILIO.numInterior || EMPRESA_DOMICILIO.numInterior || item.numeroInterior, 10) || 0,
+              codigoPostal: parseInt(DOMICILIO.codigoPostal || EMPRESA_DOMICILIO.codigoPostal || item.codigoPostal, 10) || 0,
+              colonia: DOMICILIO.colonia || EMPRESA_DOMICILIO.colonia || item.colonia || '',
+              delegacionMunicipio: DOMICILIO.municipio || EMPRESA_DOMICILIO.municipio || DOMICILIO.delegacionMunicipio || item.delegacionMunicipio || '',
+              entidadFederativa: DOMICILIO.entidadFederativa?.nombre || EMPRESA_DOMICILIO.entidadFederativa?.nombre || item.entidadFederativa || '',
+              pais: DOMICILIO.pais?.nombre || EMPRESA_DOMICILIO.pais?.nombre || item.pais || '',
+              idSubfabricante: item.idSubfabricante || 0,
+              rfc: EMPRESA.rfc || item.rfc || '',
+              domicilioFiscalSolicitante: this.buildDomicilioFiscal(DOMICILIO, EMPRESA_DOMICILIO),
+              razonSocial: EMPRESA.razonSocial || item.razonSocial || ''
+            };
+          });
+        }
+
   
 }
+
+export function mapPlantaToDomicilio(planta?: PlantasDireccionModelo): DomicilioPayload {
+  if (!planta){
+    return DEFAULT_DOMICILIO;
+  } 
+
+  return {
+    idDomicilio: 0,
+    calle: planta.calle ?? '',
+    numeroExterior: planta.numExterior !== null ? String(planta.numExterior) : '',
+    numeroInterior: planta.numInterior !== null ? String(planta.numInterior) : '',
+    codigoPostal: planta.codigoPostal !== null ? String(planta.codigoPostal) : '',
+    informacionExtra: '',
+    clave: '',
+    cveLocalidad: planta.localidad ?? '',
+    cveDelegMun: planta.delegacionMunicipio ?? '',
+    cveEntidad: planta.entidadFederativa ?? '',
+    cvePais: planta.pais ?? '',
+    ciudad: '',
+    telefono: '',
+    fax: '',
+    municipio: planta.delegacionMunicipio ?? '',
+    colonia: planta.localidad ?? '',
+    descUbicacion: '',
+    cveCatalogo: '',
+    telefonos: '',
+    tipoDomicilio: 0,
+  };
+}
+
+

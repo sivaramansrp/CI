@@ -1,5 +1,6 @@
 import {
   DatosSubcontratista,
+  DomicilioPayload,
   InfoRegistro,
   PlantasDireccionModelo,
   SubfabricanteDireccionModelo,
@@ -306,3 +307,26 @@ eliminarPlantas(plantasAEliminar: PlantasDireccionModelo[]): void {
     super(createInitialState());
   }
 }
+
+export const DEFAULT_DOMICILIO: DomicilioPayload = {
+  idDomicilio: 0,
+  calle: '',
+  numeroExterior: '',
+  numeroInterior: '',
+  codigoPostal: '',
+  informacionExtra: '',
+  clave: '',
+  cveLocalidad: '',
+  cveDelegMun: '',
+  cveEntidad: '',
+  cvePais: '',
+  ciudad: '',
+  telefono: '',
+  fax: '',
+  municipio: '',
+  colonia: '',
+  descUbicacion: '',
+  cveCatalogo: '',
+  telefonos: '',
+  tipoDomicilio: 0,
+};

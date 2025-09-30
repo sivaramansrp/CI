@@ -235,3 +235,26 @@ export interface Tramite80207State {
     esDatosSubcontratistaValido: boolean;
   };
 }
+
+export interface DomicilioPayload {
+  idDomicilio: number;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  codigoPostal: string;
+  informacionExtra: string;
+  clave: string;
+  cveLocalidad: string;
+  cveDelegMun: string;
+  cveEntidad: string;
+  cvePais: string;
+  ciudad: string;
+  telefono: string;
+  fax: string;
+  municipio: string;
+  colonia: string;
+  descUbicacion: string;
+  cveCatalogo: string;
+  telefonos: string;
+  tipoDomicilio: number;
+}
