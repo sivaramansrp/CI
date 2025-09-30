@@ -1,9 +1,13 @@
 import { Catalogo, Solicitud110201State, Tramite110201Store } from '../state/Tramite110201.store';
 import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
-import { ENVIRONMENT, JSONResponse } from '@libs/shared/data-access-user/src';
+import { HttpCoreService, JSONResponse } from '@libs/shared/data-access-user/src';
 import { Observable, catchError, throwError } from 'rxjs';
+import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { PROC_110201 } from '../servers/api-route';
+import { Tramite110201Query } from '../state/Tramite110201.query';
+
 
 /**
  * Servicio para gestionar las solicitudes relacionadas con los catálogos y datos del trámite 110201.
@@ -27,7 +31,7 @@ export class RegistroService {
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar solicitudes al servidor.
    */
-  constructor(private http: HttpClient, private tramite110201Store: Tramite110201Store) {
+  constructor(private http: HttpClient, private tramite110201Store: Tramite110201Store, public httpService: HttpCoreService, private Tramite110201Query: Tramite110201Query) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
@@ -106,6 +110,14 @@ export class RegistroService {
   getPais(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/110201/pais.json');
   }
+  
+/**
+ * Obtiene todos los datos del estado almacenado en el store.
+ * @returns {Observable<Solicitud110201State>} Observable con todos los datos del estado.
+ */
+getAllState(): Observable<Solicitud110201State> {
+  return this.Tramite110201Query.selectSolicitud$;
+}
 
   /**
    * Obtiene el catálogo de idiomas.
@@ -205,5 +217,21 @@ export class RegistroService {
       })
     );
   }
+buscarMercanciasCert(body: any): Observable<any> {
+  return this.httpService.post<any>(
+    'http://localhost:8080/api/sat-t110201/solicitud/buscar-mercancias',
+    { body: body }
+  );
+}
 
+/**
+ * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+ * 
+ * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+ * @returns Observable con la respuesta de la solicitud POST.
+ */
+guardarDatosPost(body: any) {
+  return this.httpService.post<any>(PROC_110201.GUARDAR, { body: body });
+  // return this.httpService.post<any>('localhost:8080/api/sat-t110201/eur/solicitud/guardar', { body: body });
+}
 }

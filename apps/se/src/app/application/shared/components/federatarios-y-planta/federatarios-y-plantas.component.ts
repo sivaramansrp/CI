@@ -324,10 +324,6 @@ export class FederatariosYPlantasComponent implements OnInit, OnDestroy {
    */
   @Output() datosPlantasImmex: EventEmitter<PlantasImmex[]> = new EventEmitter<PlantasImmex[]>(true);
 
-  /**
-   * Emisor de eventos para los datos de federatarios.
-   */
-  @Output() datosFederatariosEvent: EventEmitter<FederatariosEncabezado> = new EventEmitter<FederatariosEncabezado>();
 
  /**
    * Controla la visibilidad del popup "Complementar Planta".

@@ -5,16 +5,17 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 
 const ROUTES: Routes = [
   {
-    canActivate: [IniciarTramiteResolver],
-    data: {
-      iniciarConfig: {
-        procedureId: '110201',
-      },
-    },
     path: 'solicitud',
     component: SolicitudPageComponent,
+    canActivate: [IniciarTramiteResolver],
+    resolve: { iniciarResolverData: IniciarTramiteResolver },
+    data: {
+      iniciarConfig: {
+        procedureId: '110201'
+      }
+    }
   },
-  {
+    {
     path: '',
     pathMatch: 'full',
     redirectTo: 'solicitud',
@@ -23,6 +24,6 @@ const ROUTES: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
-export class RegistroRoutingModule {}
+export class RegistroRoutingModule { }
