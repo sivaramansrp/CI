@@ -4,6 +4,12 @@
       <h1>Registro de solicitud IMMEX modalidad terciarización</h1>
     </div>
 
+    @if (!esFormaValido && esFormaValido !== undefined) {
+      <div class="col-md-12">
+        <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+      </div>
+    }
+
     <app-wizard [listaPasos]="pasos"></app-wizard>
 
   </div>
@@ -19,7 +25,9 @@
       [datosUsuario]="datosUsuario"
       [cargaArchivosEvento]="cargarArchivosEvento"
       (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
-      (reenviarCargaRealizada)="cargaRealizada($event)">
+      (reenviarCargaRealizada)="cargaRealizada($event)"
+      (cargaEnProgreso)="onCargaEnProgreso($event)"
+      >
     </app-paso-dos>
     }
     @case (3) {
@@ -34,6 +42,7 @@
             [datos]="datosPasos"
             [btnGuardar]="true" 
             [btnGuardarVisible]="btnGuardarVisible"
+            [dePadre]="padreBtn"
             (btnGuardarClicked)="obtenerDatosDelStore()"
             (continuarEvento)="getValorIndice($event)"
           ></btn-continuar>
@@ -52,7 +61,7 @@
             (click)="
               seccionCargarDocumentos ? onClickCargaArchivos() : siguiente()
             "
-            [disabled]="!activarBotonCargaArchivos && seccionCargarDocumentos"
+            [disabled]="(seccionCargarDocumentos && !activarBotonCargaArchivos) || (!seccionCargarDocumentos && cargaEnProgreso)"
           >
             {{ seccionCargarDocumentos ? 'Cargar archivos' : 'Continuar' }}
           </button>

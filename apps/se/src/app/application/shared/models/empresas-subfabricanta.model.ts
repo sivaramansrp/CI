@@ -28,3 +28,10 @@ export interface RespuestaSubfabricantes {
   code: number;
   data: PlantasSubfabricante[];
 }
+
+
+export interface BuscarPayload {
+    rfcEmpresaSubManufacturera: string;
+    entidadFederativa: string;
+    idPrograma: string | null;
+}

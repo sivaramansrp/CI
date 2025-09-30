@@ -62,6 +62,8 @@ export interface Catalogo {
   title?: string;
   /** Decripcion del titulo del bloque, cuando se requiera. */
   bloque?: string;
+  /** Descripción del NICO, cuando se requiera. */
+  nicoDescription?: string;
 }
 
 

@@ -28,8 +28,8 @@
               ? 'red'
               : ''
         }"
-          placeholder="Descripción de la mercancía" rows="8" formControlName="descripcion" [maxlength]="1000"
-          (change)="setValoresStore(form, 'descripcion')"></textarea>
+          placeholder="Descripción de la mercancía" rows="8" formControlName="descripcion" 
+          (change)="setValoresStore(form, 'descripcion')" [maxlength]="250"></textarea>
         <div *ngIf="esInvalido('descripcion')" class="text-danger">
           <small *ngIf="form.controls['descripcion'].errors?.['required']">
             Este campo es obligatorio
@@ -88,7 +88,7 @@
                 : 'black'
           }"
         >*</span>:</label>
-        <input class="form-control" id="cantidad" placeholder="" type="text" formControlName="cantidad" maxlength="15"
+        <input class="form-control" id="cantidad" placeholder="" type="text" formControlName="cantidad" [maxlength]="15"
         [ngStyle]="{
           borderColor:
             form.controls['cantidad'].invalid &&
@@ -122,7 +122,7 @@
                 : 'black'
           }"
         >*</span>:</label>
-        <input class="form-control" id="valorFacturaUSD" placeholder="" type="text" formControlName="valorFacturaUSD"   maxlength="15"
+        <input class="form-control" id="valorFacturaUSD" placeholder="" type="text" formControlName="valorFacturaUSD"   [maxlength]="20"
         [ngStyle]="{
           borderColor:
             form.controls['valorFacturaUSD'].invalid &&

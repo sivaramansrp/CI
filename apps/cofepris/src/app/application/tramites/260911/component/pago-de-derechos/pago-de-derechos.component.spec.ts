@@ -1,12 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
-import { PagoDeDerechosService } from '../../services/datos-de-la-solicitud/pago-de-derechos.service';
-import { Tramite260911Query } from '../../estados/tramite260911.query';
-import { Tramite260911Store } from '../../estados/tramite260911.store';
-import { of, Subject } from 'rxjs';
+import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
+import { of } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { BancoList } from '../../models/pago-de-derechos.model';
+import { Tramite260911Query } from '../../estados/tramite260911.query';
+import { Tramite260911Store } from '../../estados/tramite260911.store';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+ 
 
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
@@ -55,6 +57,7 @@ describe('PagoDeDerechosComponent', () => {
         entidad: null,
         representacion: null,
         fabricanteTablaDatos: [],
+        fabricanteTablaModificaDatos: [],
         proveedorTablaDatos: [],
         importadorTablaDatos: [],
         destinatarioFinalTablaDatos: [],
@@ -111,7 +114,7 @@ describe('PagoDeDerechosComponent', () => {
   
   it('should fetch bancoList on obtenerBancoList call', () => {
     
-    const mockBancoList = [{ id: 1, descripcion: 'Banco 1' }];
+    const mockBancoList = [{ id: 1, name: 'Banco 1' }];
 
     // Asegúrese de que la simulación esté configurada antes de inicializar el componente
     (mockPagoDeDerechosService.onBancoList as jest.Mock).mockReturnValue(of(mockBancoList));
@@ -145,4 +148,7 @@ describe('PagoDeDerechosComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 });
+
+
+
 

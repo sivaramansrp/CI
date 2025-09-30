@@ -26,7 +26,7 @@ describe('Tramite230201Query', () => {
     const mockState: Solicitud230201State = {
       ...createInitialState(),
       claveDeReferencia: 'REF123',
-      banco: 'BANCO',
+      banco: [{ id: 1, descripcion: 'BANCO' }],
     };
 
     store.update(mockState);
@@ -59,8 +59,9 @@ describe('Tramite230201Store', () => {
   });
 
   it('should update banco', () => {
-    store.setBanco('BANCO');
-    expect(store._value().banco).toBe('BANCO');
+    const bancoMock = [{ id: 1, descripcion: 'BANCO' }];
+    store.setBanco(bancoMock);
+    expect(store._value().banco).toEqual(bancoMock);
   });
 
   it('should update fechasSeleccionadas', () => {

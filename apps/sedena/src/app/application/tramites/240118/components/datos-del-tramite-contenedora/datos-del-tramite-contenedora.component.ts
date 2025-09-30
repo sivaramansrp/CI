@@ -1,3 +1,12 @@
+/**
+ * @fileoverview Componente contenedor para los datos del trámite 240118.
+ * @description Gestiona la integración entre el formulario de datos del trámite y el estado global,
+ * incluyendo la gestión de mercancías y la navegación entre modalos.
+ * @author VUCEM Development Team
+ * @since 1.0.0
+ * @version 1.0.0
+ */
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
@@ -12,9 +21,32 @@ import { Tramite240118Query } from '../../estados/tramite240118Query.query';
 import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 
 /**
- * @title Datos del Trámite Contenedora
- * @description Componente contenedor que se encarga de enlazar el estado del trámite con el componente de datos del trámite.
- * @summary Maneja la suscripción al estado y propaga los cambios a través del store.
+ * @class DatosDelTramiteContenedoraComponent
+ * @implements {OnInit, OnDestroy}
+ * @description Componente contenedor que gestiona los datos principales del trámite 240118.
+ * Actúa como intermediario entre el componente de datos del trámite reutilizable y el
+ * estado específico del trámite, manejando también la gestión de mercancías y navegación.
+ * 
+ * Este componente centraliza:
+ * - La gestión del estado del formulario de datos del trámite
+ * - El manejo de mercancías asociadas al trámite
+ * - La navegación entre diferentes secciones del proceso
+ * - La integración con modales para acciones específicas
+ * 
+ * @example
+ * ```html
+ * <app-datos-del-tramite-contenedora
+ *   [esFormularioSoloLectura]="modoConsulta">
+ * </app-datos-del-tramite-contenedora>
+ * ```
+ * 
+ * @standalone
+ * @selector app-datos-del-tramite-contenedora
+ * @templateUrl ./datos-del-tramite-contenedora.component.html
+ * @styleUrl ./datos-del-tramite-contenedora.component.scss
+ * @since 1.0.0
+ * @author VUCEM Development Team
+ * @version 1.0.0
  */
 
 @Component({

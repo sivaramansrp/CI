@@ -54,6 +54,17 @@ export class CapacidadInstaladaComponent implements OnInit {
    */
   public complementosSeccionState!: ComplementosSeccionState;
     
+  /**
+   * Evento que emite la lista de objetos de tipo `CapacidadInstalada` para la tabla de capacidad instalada.
+   * 
+   * @event
+   * @type {EventEmitter<CapacidadInstalada[]>}
+   * @remarks
+   * Este evento se dispara cuando hay cambios en la lista de capacidad instalada, permitiendo que componentes padres reciban la información actualizada.
+   */
+  @Output() obtenerCapacidadInstaladaTablaList: EventEmitter<
+      CapacidadInstalada[]
+    > = new EventEmitter<CapacidadInstalada[]>(true);
 
   /**
    * Constructor de la clase CapacidadInstaladaComponent
@@ -127,6 +138,7 @@ export class CapacidadInstaladaComponent implements OnInit {
    * @returns {void}
    */
   regrasar(): void {
+    this.obtenerCapacidadInstaladaTablaList.emit(this.capacidadInstaladaDatos);
     this.cerrarPopup.emit();
 
   }
@@ -207,7 +219,7 @@ export class CapacidadInstaladaComponent implements OnInit {
     CALCULO_CAPACIDAD_INSTALADA: this.capacidadForm.value.calculoCapacidadInstalada,
   };
 
-  this.capacidadInstaladaDatos.push(CAPACIDAD);
+  this.capacidadInstaladaDatos = [...this.capacidadInstaladaDatos, CAPACIDAD];
   this.limpiar();
 }
 
