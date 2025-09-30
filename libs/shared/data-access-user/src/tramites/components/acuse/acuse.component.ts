@@ -191,68 +191,29 @@ export class AcuseComponent implements OnChanges, OnDestroy {
           error: (err) => console.error('Error:', err),
         });
     } else if (this.url === 'elegibilidad-de-textiles') {
-      this.acusesService
-        .guardarAcuse(this.idSolicitud.toString(), 120301)
-        .pipe(
-          switchMap(() => {
-            return this.acusesService.vistaPrevia(
-              this.idSolicitud.toString(),
-              120301
-            );
-          }),
-          catchError((error) => {
-            console.error('Error en guardarAcuse o vistaPrevia:', error);
-            return throwError(() => error);
-          })
-        )
-        .subscribe({
-          next: (response) => {
-            if (response?.datos) {
-              this.datosTablaAcuse = [
-                {
-                  id: 1,
-                  documento: response.datos.nombre_archivo,
-                  urlPdf: AcuseComponent.crearUrlPdf(response.datos.contenido),
-                  idDocumento: '1',
-                },
-              ];
-            } else {
-              this.datosTablaAcuse = [];
-            }
-          },
-          error: (err) => console.error('Error:', err),
-        });
-      this.documentosService130118
-        .guardarAcuse(this.idSolicitud.toString(), this.procedure)
-        .pipe(
-          switchMap(() => {
-            return this.documentosService130118.vistaPrevia(
-              this.idSolicitud.toString(),
-              this.procedure
-            );
-          }),
-          catchError((error) => {
-            console.error('Error en guardarAcuse o vistaPrevia:', error);
-            return throwError(() => error);
-          })
-        )
-        .subscribe({
-          next: (response) => {
-            if (response?.datos) {
-              this.datosTablaAcuse = [
-                {
-                  id: 1,
-                  documento: response.datos.nombre_archivo,
-                  urlPdf: AcuseComponent.crearUrlPdf(response.datos.contenido),
-                  idDocumento: '1',
-                },
-              ];
-            } else {
-              this.datosTablaAcuse = [];
-            }
-          },
-          error: (err) => console.error('Error:', err),
-        });
+      this.acusesService.guardarAcuse(this.idSolicitud.toString(), 120301).pipe(
+        switchMap(() => {
+          return this.acusesService.vistaPrevia(this.idSolicitud.toString(), 120301);
+        }),
+        catchError((error) => {
+          console.error('Error en guardarAcuse o vistaPrevia:', error);
+          return throwError(() => error);
+        })
+      ).subscribe({
+        next: (response) => {
+          if (response?.datos) {
+            this.datosTablaAcuse = [{
+              id: 1,
+              documento: response.datos.nombre_archivo,
+              urlPdf: AcuseComponent.crearUrlPdf(response.datos.contenido),
+              idDocumento: '1'
+            }];
+          } else {
+            this.datosTablaAcuse = [];
+          }
+        },
+        error: (err) => console.error('Error:', err)
+      });
     } else if (this.url === 'aviso-de-materiales') {
       this.descargarDocumentoTramite231001();
     } else {
