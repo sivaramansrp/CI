@@ -345,14 +345,9 @@ export class NuevoProgramaIndustrialService {
     this.complimentosService.setProcedure(PROCEDURE);
   }
 
-  fetchMostrarDatos(body: {
-    idSolicitud: number;
-    idSolicitudSeleccionada: string;
-  }): Observable<unknown> {
-    return this.httpService.post<{
-      idSolicitud: number;
-      idSolicitudSeleccionada: string;
-    }>(PROC_80101.MOSTRAR, { body: body });
+  /** Realiza una solicitud POST para obtener los datos de la solicitud seleccionada desde el servidor. */
+  fetchMostrarDatos(body: {idSolicitud: number; idSolicitudSeleccionada: string}): Observable<unknown> {
+    return this.httpService.post<{ idSolicitud: number; idSolicitudSeleccionada: string }>(PROC_80101.MOSTRAR, { body: body });
   }
 
   /**
@@ -635,10 +630,7 @@ export class NuevoProgramaIndustrialService {
    * @param base            Existing plantasControladoras array
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static buildComplementosTablaPayload(
-    array: any[],
-    base: unknown[]
-  ): unknown[] {
+  static buildComplementosTablaPayload(array: any[], base: unknown[]): unknown[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const RESULT: any[] = [];
 
