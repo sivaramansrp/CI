@@ -71,7 +71,7 @@
             }
             <div class="container text-end mt-5">
                 <button type="button" name="agregarMercancia" class="btn btn-primary" (click)="agregarMercancia()" [disabled]="esFormularioSoloLectura">
-                    Agregar Productor
+                    Asignar productor
                 </button>
             </div>
         </div>
@@ -173,7 +173,7 @@
                                     id="tipoFactura" formControlName="tipoFactura"
                                     (change)="setValoresStore('formularioMercancia','tipoFactura')"></app-catalogo-select>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-4">
                                 <label>Número de registro fiscal*:</label>
                                 <input type="text" required="false" class="form-control"
                                     formControlName="numeroDeRegistroFiscal"
@@ -187,7 +187,7 @@
             <div class="modal-footer custom-footer mt-4">
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura"> Cancelar </button>
                 <button type="submit" class="btn btn-primary" #modalBuscar data-bs-dismiss="modal"
-                    (click)="mercanciaAgregarSeleccionada()" [disabled]="esFormularioSoloLectura"> Agregar </button>
+                    (click)="mercanciaAgregarSeleccionada()" [disabled]="esFormularioSoloLectura"> Asignar </button>
             </div>
         </div>
     </div>
