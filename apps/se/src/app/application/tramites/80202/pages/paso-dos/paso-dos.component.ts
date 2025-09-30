@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input } from '@angular/core';
 
 import { Catalogo } from '@ng-mf/data-access-user';
 import { TEXTOS_REQUISITOS } from '../../constants/immex-ampliacion-sensibles.enums';
@@ -10,6 +10,16 @@ import { TEXTOS_REQUISITOS } from '../../constants/immex-ampliacion-sensibles.en
   styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent {
+  
+  @Input() regresarSeccionCargarDocumentoEvento!: EventEmitter<void>;
+  
+    /**
+   * Escucha el evento para cargar los documentos que se emite desde <solicitud-page>.
+   * @type {EventEmitter<void>}
+   */
+    @Input() cargaArchivosEvento!: EventEmitter<void>;
+  
+    @Input() idTipoTRamite!: string;
   /**
    * Lista de documentos del catálogo que se utilizarán en el componente.
    * 

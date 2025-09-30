@@ -17,6 +17,7 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import {PasoCargaDocumentoComponent} from '@libs/shared/data-access-user/src';
 
 // Application imports
 import { AnexoComponent } from './components/anexo.component';
@@ -46,6 +47,7 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     TablaDinamicaComponent,
     TituloComponent,
     WizardComponent,
+    PasoCargaDocumentoComponent,
     forwardRef(() => AnexarDocumentosComponent),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

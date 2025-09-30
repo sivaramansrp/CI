@@ -5,10 +5,10 @@
 import { ImmexAmpliacionSensiblesStore, ImmexRegistroState } from '../estados/immex-ampliacion-sensibles.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
-
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { immexRegistroform } from '../../80203/modelos/immex-registro-de-solicitud-modality.model';
+import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensibles.query';
 
 
 @Injectable({
@@ -26,8 +26,16 @@ export class PermisoImmexDatosService {
    * @description Constructor que inicializa el cliente HTTP para realizar solicitudes.
    * @param {HttpClient} httpClient - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private httpClient: HttpClient,private readonly tramite80202Store:ImmexAmpliacionSensiblesStore) {}
+  constructor(private httpClient: HttpClient,private readonly tramite80202Store:ImmexAmpliacionSensiblesStore, private tramite80202Query: ImmexAmpliacionSensiblesQuery) {}
 
+  /**
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<Solicitud110201State>} Observable con todos los datos del estado.
+   */
+  getAllState(): Observable<ImmexRegistroState> {
+    return this.tramite80202Query.selectSolicitud$;
+  }
+  
   /**
    * @method getDatos
    * @description Obtiene los datos del permiso IMMEX desde el archivo JSON.
@@ -51,6 +59,7 @@ export class PermisoImmexDatosService {
   }
   getNicos(): Observable<Catalogo[]> {
     return this.httpClient.get<Catalogo[]>('assets/json/80202/nico.json');
+    
   }
 
    /**

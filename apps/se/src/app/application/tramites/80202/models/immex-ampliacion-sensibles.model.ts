@@ -146,6 +146,8 @@ export interface NicoInfo {
  * @module Tramites.IMMEX
  */
 export interface ImmexRegistroform {
+
+  
   Nicos:string;
   
   

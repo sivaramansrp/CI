@@ -1,8 +1,27 @@
-import { Component, ViewChild } from '@angular/core';
-import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constants/immex-ampliacion-sensibles.enums';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import {
+  DatosPasos,
+  RegistroSolicitudService,
+  Usuario,
+  esValidObject,
+  getValidDatos,
+} from '@ng-mf/data-access-user';
+import {
+  MENSAJE_DE_EXITO_ETAPA_UNO,
+  PASOS,
+  USUARIO_INFO,
+} from '../../constants/immex-ampliacion-sensibles.enums';
+import { Subject, takeUntil } from 'rxjs';
+import { GuardarService } from '../../services/guardar.service';
+import { ImmexAmpliacionSensiblesQuery } from '../../estados/immex-ampliacion-sensibles.query';
+import { ImmexAmpliacionSensiblesService } from '../../services/immex-ampliacion-sensibles.service';
+import { ImmexAmpliacionSensiblesStore } from '../../estados/immex-ampliacion-sensibles.store';
+import { ImmexRegistroState } from '../../estados/immex-ampliacion-sensibles.store';
 import { ListaPasosWizard } from '../../models/immex-ampliacion-sensibles.model';
+import { PermisoImmexDatosService } from '../../services/permiso-immex-datos.service';
+import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { buildGuardarPayload } from '../../mappers/guardar.mapper';
 
 /**
  * Interfaz para la acción de los botones
@@ -19,8 +38,15 @@ interface AccionBoton {
   selector: 'app-solicitud-page',
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.scss',
+  providers: [ToastrService],
 })
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnInit {
+  datosUsuario: Usuario = USUARIO_INFO;
+  cargarArchivosEvento = new EventEmitter<void>();
+  activarBotonCargaArchivos: boolean = false;
+  seccionCargarDocumentos: boolean = true;
+  cargaEnProgreso: boolean = true;
+
   /**
    * Título del mensaje principal.
    * @property {string | null} tituloMensaje - Título que se muestra en la parte superior del formulario.
@@ -28,6 +54,10 @@ export class SolicitudPageComponent {
   tituloMensaje: string | null =
     'Registro de solicitud IMMEX modalidad ampliación sensibles';
 
+  /**
+   * URL de la página actual.
+   */
+  public solicitudState!: ImmexRegistroState;
 
   /**
    * Mensaje de éxito para el primer paso.
@@ -57,6 +87,14 @@ export class SolicitudPageComponent {
    */
 
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  /**
+   * @private
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject utilizado para manejar la desuscripción de observables y evitar memory leaks.
+   * Se emite cuando el componente se destruye.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+  private immexRegistroState!: ImmexRegistroState;
 
   /**
    * Datos para la configuración de los botones del asistente.
@@ -75,6 +113,32 @@ export class SolicitudPageComponent {
   }
 
   /**
+   * Estado del tramite Folio
+   */
+  public folioTemporal: number = 0;
+
+  constructor(
+    private immexRegistroStore: ImmexAmpliacionSensiblesStore,
+    private Query: ImmexAmpliacionSensiblesQuery,
+    private registroService: PermisoImmexDatosService,
+    public registroSolicitudService: RegistroSolicitudService,
+    private immexAmpliacionSensiblesService: ImmexAmpliacionSensiblesService,
+    private guardarService: GuardarService,
+    private toastrService: ToastrService
+  ) {}
+
+  /**
+   * Mantiene la suscripción al estado de CambioModalidadQuery para tener siempre el estado actualizado.
+   */
+  ngOnInit(): void {
+    this.Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((state: ImmexRegistroState) => {
+        this.solicitudState = state;
+      });
+  }
+
+  /**
    * Updates the `indice` and `tituloMensaje` properties based on the value of the provided `AccionBoton` object.
    * If the `valor` property of `AccionBoton` is between 1 and 4 (inclusive), it sets the `indice` to `e.valor`
    * and updates the `tituloMensaje` using the `obtenerNombreDelTítulo` method.
@@ -83,6 +147,7 @@ export class SolicitudPageComponent {
    * @param {AccionBoton} e - The action button object containing the `valor` and `accion` properties.
    */
   getValorIndice(e: AccionBoton): void {
+
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       this.tituloMensaje = SolicitudPageComponent.obtenerNombreDelTítulo(
@@ -148,5 +213,71 @@ export class SolicitudPageComponent {
         this.tituloMensaje = 'Zoosanitario para importación';
         break;
     }
+  }
+
+  /**
+   * Obtiene los datos del store y los guarda utilizando el servicio.
+   */
+  obtenerDatosDelStore(e: AccionBoton): void {
+    const PAYLOAD = buildGuardarPayload(this.solicitudState);
+    let shouldNavigate = false;
+    this.registroSolicitudService
+      .postGuardarDatos('80202', PAYLOAD)
+      .subscribe((response) => {
+        shouldNavigate = response.codigo === '00';
+        if (shouldNavigate) {
+          if (esValidObject(response) && esValidObject(response.datos)) {
+            const DATOS = response.datos as { id_solicitud?: number };
+            if (getValidDatos(DATOS.id_solicitud)) {
+              this.immexRegistroStore.setIdSolicitud(DATOS.id_solicitud ?? 0);
+            } else {
+              this.immexRegistroStore.setIdSolicitud(0);
+            }
+            if (e.valor > 0 && e.valor < 5) {
+              this.indice = e.valor;
+              this.tituloMensaje =
+                SolicitudPageComponent.obtenerNombreDelTítulo(e.valor);
+
+                if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      this.tituloMensaje = SolicitudPageComponent.obtenerNombreDelTítulo(
+        e.valor
+      );
+
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
+            }
+          }
+          this.toastrService.success(response.mensaje);
+        } else {
+          this.toastrService.error(response.mensaje);
+        }
+      });
+  }
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado del botón de carga de archivos.
+   *  carga - Indica si la carga de documentos está activa o no.
+   * {void} No retorna ningún valor.
+   */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
   }
 }
