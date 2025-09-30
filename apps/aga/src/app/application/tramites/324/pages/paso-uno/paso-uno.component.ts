@@ -56,7 +56,7 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
    * Índice del paso actual.
    * Representa el número del paso en el asistente de pasos.
    */
-  indice: number = 1;
+  indice: number = 2;
 
   /**
    * Formulario reactivo que contiene los campos del paso uno del trámite.

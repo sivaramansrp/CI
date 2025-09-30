@@ -18,7 +18,7 @@
       @switch (indice) { @case (1) {
       <app-paso-uno #pasoUnoRef (cambioDePestana)="alCambiarPestana()"></app-paso-uno>
       } @case (2) {
-      <app-paso-tres></app-paso-tres>
+      <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="110217" [procedureUrl]="'certificado-origen/solicitante'"></paso-firma>
       }
       }
       <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>

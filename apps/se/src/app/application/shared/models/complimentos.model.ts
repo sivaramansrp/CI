@@ -25,7 +25,7 @@ export interface DatosComplimentos {
   obligacionesFiscales: {
     opinionPositiva: string;
     fechaExpedicion: string;
-    aceptarObligacionFiscal: string;
+    aceptarObligacionFiscal?: string;
   };
   formaModificaciones: {
     nombreDelFederatario: string;
@@ -33,18 +33,18 @@ export interface DatosComplimentos {
     estado: string;
     nombreDeActa: string;
     fechaDeActa: string;
-    rfc: string;
-    nombreDeRepresentante: string;
+    rfc?: string;
+    nombreDeRepresentante?: string;
   };
-  formaCertificacion: {
+  formaCertificacion?: {
     certificada: string;
     fechaInicio: string;
     fechaVigencia: string;
   };
-  formaSocioAccionistas: {
-    nationalidadMaxicana: string;
-    tipoDePersona: string;
-    formaDatos: { [key: string]: string };
+  formaSocioAccionistas?: {
+    nationalidadMaxicana?: string;
+    tipoDePersona?: string;
+    formaDatos?: { [key: string]: string };
   };
 }
 
