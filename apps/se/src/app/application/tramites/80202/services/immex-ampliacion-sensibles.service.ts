@@ -1,7 +1,7 @@
-
-import { Injectable } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { HttpCoreService } from '@libs/shared/data-access-user/src';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PROC_80202 } from '../servers/api-routes';
 

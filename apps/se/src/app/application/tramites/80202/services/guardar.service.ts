@@ -1,9 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
-import { Injectable } from '@angular/core';
 import { GuadarSolicitudResponse } from '../models/response/guardar_response.model';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 import { API_GET_CERTIFICADO_ANTIGUEDAD, API_GET_MOLINOS_ACERO_HABILITAR, API_POST_SOLICITUD } from '../servers/api-routes';
 
@@ -31,7 +31,7 @@ export class GuardarService {
    * @param solicitud Objeto que contiene los datos de la solicitud a guardar.
    * @returns Observable con la respuesta del servidor.
    */
-  postSolicitud(solicitud: any): Observable<BaseResponse<GuadarSolicitudResponse>> {
+  postSolicitud(solicitud: unknown): Observable<BaseResponse<GuadarSolicitudResponse>> {
     const ENDPOINT = `${this.host}` + API_POST_SOLICITUD;
 
     return this.http.post<BaseResponse<GuadarSolicitudResponse>>(ENDPOINT, solicitud).pipe(

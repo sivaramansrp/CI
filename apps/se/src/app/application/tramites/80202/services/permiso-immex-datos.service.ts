@@ -1,14 +1,9 @@
-/**
- * @Injectable
- * @description Servicio para obtener los datos del permiso IMMEX.
- */
 import { ImmexAmpliacionSensiblesStore, ImmexRegistroState } from '../estados/immex-ampliacion-sensibles.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
+import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensibles.query';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { immexRegistroform } from '../../80203/modelos/immex-registro-de-solicitud-modality.model';
-import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensibles.query';
 
 
 @Injectable({
