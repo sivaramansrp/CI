@@ -1,12 +1,9 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ERROR_FORMA_ALERT } from '../../enum/certificado.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { Solicitud110201State } from '../../state/Tramite110201.store';
-import { Tramite110201Query } from '../../state/Tramite110201.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -40,7 +37,7 @@ interface AccionBoton {
 /**
  * Componente que representa la página de solicitud.
  */
-export class SolicitudPageComponent implements OnDestroy {
+export class SolicitudPageComponent {
   /**
    * Texto de alerta que se muestra a los terceros.
    */
@@ -60,11 +57,6 @@ export class SolicitudPageComponent implements OnDestroy {
    * Índice del paso actual en el asistente.
    */
   indice: number = 1;
-
-  /**
-   * URL de la página actual.
-   */
-  public solicitudState!: Solicitud110201State;
 
   /**
    * @property {boolean} esFormaValido
@@ -100,21 +92,6 @@ export class SolicitudPageComponent implements OnDestroy {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-
-  /**
-   * Notificador para destruir los observables y evitar posibles fugas de memoria.
-   * @private
-   * @type {Subject<void>}
-   */
-  destroyNotifier$: Subject<void> = new Subject();
-
-  constructor(public tramite110201Query: Tramite110201Query) {
-    this.tramite110201Query.selectSolicitud$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((solicitud) => {
-        this.solicitudState = solicitud;
-      });
-  }
 
   /**
    * Selecciona una pestaña del asistente.
@@ -163,16 +140,6 @@ export class SolicitudPageComponent implements OnDestroy {
     }
   }
 
-  /**
-   * @method validarTodosFormulariosPasoUno
-   * @description
-   * Valida todos los formularios del componente `PasoUnoComponent`.
-   * Si la referencia al componente no existe, retorna `true` (no hay formularios que validar).
-   * Llama al método `validarFormularios()` del componente hijo y retorna `false` si algún formulario es inválido.
-   * Retorna `true` si todos los formularios son válidos.
-   *
-   * @returns {boolean} Indica si todos los formularios del paso uno son válidos.
-   */
   private validarTodosFormulariosPasoUno(): boolean {
     if (!this.pasoUnoComponent) {
       return true;
@@ -191,10 +158,5 @@ export class SolicitudPageComponent implements OnDestroy {
    */
   cargaArchivo(data: boolean): void {
     this.cargarArchivo = data;
-  }
-
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
   }
 }
