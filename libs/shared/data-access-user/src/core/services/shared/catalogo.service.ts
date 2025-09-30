@@ -1,5 +1,5 @@
 
-import { CATALOGO_ESTADOS, CATALOGO_IMMEX, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUES, COMUN_URL } from '../../servers/api-router';
+import { CATALOGO_ESTADOS, CATALOGO_IMMEX, CATALOGO_MEDIO_TRANSPORTE, CATALOGO_NICO, CATALOGO_PAISES, CATALOGO_PAISES_BLOQUE, CATALOGO_TRATADO_ACUERDO, COMUN_URL } from '../../servers/api-router';
 import { BaseResponse } from '../../models/shared/base-response.model';
 import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
@@ -58,13 +58,38 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
-    /*
-   * Obtiene el catálogo de países.
-   * @param {string} tramite - El ID del trámite.
-   * @returns {Observable<BaseResponse<Catalogo[]>>} - Observable con la respuesta del servidor.
+  /**
+   * Obtiene el catálogo de tratados de acuerdo para un trámite específico.
+   *
+   * @param tramite - Identificador del trámite para el cual se solicita el catálogo.
+   * @returns Un observable que emite la respuesta base con el arreglo de elementos del catálogo.
    */
-  paisesBloquesCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host}${CATALOGO_PAISES_BLOQUES(tramite)}`;
+  tratadoAcuerdoCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_TRATADO_ACUERDO(tramite)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
-}
+
+  /**
+   * Obtiene el catálogo de países bloqueados para un trámite específico.
+   *
+   * @param tramite - Identificador del trámite para el cual se requiere el catálogo de países bloqueados.
+   * @returns Un observable que emite la respuesta base con el listado de países bloqueados en el catálogo.
+   */
+  paisBloqueCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_PAISES_BLOQUE(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /**
+   * Obtiene el catálogo de medios de transporte para un trámite específico.
+   *
+   * @param tramite - Identificador del trámite para el cual se solicita el catálogo de medios de transporte.
+   * @returns Un observable que emite la respuesta base con el listado de medios de transporte disponibles.
+   */
+  medioTransporteCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_MEDIO_TRANSPORTE(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+   
+  }
+
+  }

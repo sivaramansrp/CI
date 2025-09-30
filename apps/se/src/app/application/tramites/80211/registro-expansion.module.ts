@@ -1,33 +1,30 @@
-import {
+import { 
   AlertComponent,
   AnexarDocumentosComponent,
+  BtnContinuarComponent,
   CatalogoSelectComponent,
+  FirmaElectronicaComponent,
   NotificacionesComponent,
+  SolicitanteComponent,
   TablaDinamicaComponent,
+  TituloComponent,
+  WizardComponent,
 } from '@ng-mf/data-access-user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PasoCargaDocumentoComponent, PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { EmpresasTerciarizadasComponent } from './components/empresas-terciarizadas/empresas-terciarizadas.component';
-import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroExpansionComponent } from './pages/registro-expansion/registro-expansion.component';
 import { RegistroExpansionRoutingModule } from './registro-expansion-routing.module';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { SolicitarTransferenciaCuposModule } from '../120501/solicitar-transferencia-cupos.module';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
 import { registroSolicitudImmexService } from './services/registro-expansion.service';
 
 @NgModule({
   declarations: [
     PasoUnoComponent,
-    PasoDosComponent,
     PasoTresComponent,
     RegistroExpansionComponent,
     EmpresasTerciarizadasComponent,
@@ -35,7 +32,9 @@ import { registroSolicitudImmexService } from './services/registro-expansion.ser
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    PasoCargaDocumentoComponent,
     RegistroExpansionRoutingModule,
+    PasoFirmaComponent,
     WizardComponent,
     BtnContinuarComponent,
     SolicitanteComponent,
@@ -46,11 +45,10 @@ import { registroSolicitudImmexService } from './services/registro-expansion.ser
     AnexarDocumentosComponent,
     ToastrModule.forRoot(),
     CatalogoSelectComponent,
-    SolicitarTransferenciaCuposModule,
     TablaDinamicaComponent,
     NotificacionesComponent
   ],
-  exports: [PasoUnoComponent, PasoDosComponent, PasoTresComponent],
+  exports: [PasoUnoComponent,PasoFirmaComponent,PasoCargaDocumentoComponent],
   providers: [registroSolicitudImmexService, ToastrService],
 })
 export class RegistroExpansionModule {}
