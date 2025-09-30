@@ -8,7 +8,6 @@ const ROUTES: Routes = [
     path: 'solicitud',
     component: SolicitudPageComponent,
     canActivate: [IniciarTramiteResolver],
-    resolve: { iniciarResolverData: IniciarTramiteResolver },
     data: {
       iniciarConfig: {
         procedureId: '80202'
