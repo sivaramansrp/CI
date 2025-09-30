@@ -23,6 +23,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { ReplaySubject,map, takeUntil } from 'rxjs';
 import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
+import { CatalogoServices } from '@ng-mf/data-access-user';
 import { CertificadoService } from '../../services/certificado.service';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from "@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component";
@@ -220,7 +221,9 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private store: Tramite110219Store,
     private query: Tramite110219Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private catalogoServices: CatalogoServices,
+
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -247,7 +250,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     });
 
     this.getTratadoData();
-    this.getPaisdata();
+    this.getPaisdata("110219");
     this.getSolicitudesTabla();
     this.inicializarEstadoFormulario();
 
@@ -475,12 +478,12 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Obtiene los datos del catálogo de países.
    */
-  getPaisdata(): void {
-    this.certificadoService
-      .getTratadoData()
+  getPaisdata(tramiteId: string): void {
+    this.catalogoServices
+      .paisesBloquesCatalogo(tramiteId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp): void => {
-        this.paisCatalogo.catalogos = resp as Catalogo[];
+        this.paisCatalogo.catalogos = resp.datos as Catalogo[];
       });
   }
 

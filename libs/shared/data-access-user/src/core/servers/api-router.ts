@@ -567,3 +567,9 @@ export const API_POST_FIRMA = (IDSOLICITUD: string, PROCEDURE: number): string =
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/solicitud/guardar
  */
 export const API_POST_SOLICITUD_GUARDAR = (PROCEDURE: string): string => `sat-t${PROCEDURE}/solicitud/guardar`;
+
+/*
+ * API para obtener el catálogo de países
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/paises
+ */
+export const CATALOGO_PAISES_BLOQUES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/paises/bloques`;
