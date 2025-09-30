@@ -125,7 +125,7 @@ describe('ExencionImpuestosComponent - Full Coverage', () => {
     });
 
     it('should initialize default values', () => {
-      expect(component.filaPendienteEliminar).toBe(null);
+      expect(component.filasPendientesEliminar).toEqual([]);
       expect(component.filaSeleccionada).toBe(null);
       expect(component.filasSeleccionadas).toEqual([]);
       expect(component.filaEditando).toBe(null);
@@ -187,9 +187,10 @@ describe('ExencionImpuestosComponent - Full Coverage', () => {
       ];
     });
 
-    it('should prepare row for deletion', () => {
-      component.prepararEliminarFila(1);
-      expect(component.filaPendienteEliminar).toBe(1);
+    it('should prepare rows for deletion', () => {
+      component.filasSeleccionadas = [1, 2];
+      component.prepararEliminarFila();
+      expect(component.filasPendientesEliminar).toEqual([1, 2]);
     });
 
     it('should select row', () => {
@@ -204,8 +205,9 @@ describe('ExencionImpuestosComponent - Full Coverage', () => {
       expect(component.filasSeleccionadas).toEqual([0, 2]);
     });
 
-    it('should delete row when valid index', () => {
-      component.filaPendienteEliminar = 1;
+    it('should delete multiple rows when valid indices', () => {
+      component.filasPendientesEliminar = [1, 2];
+      component.filasSeleccionadas = [1, 2];
       const originalLength = component.mercanciaBodyData.length;
       
       const eliminarFilaSpy = jest.spyOn(component, 'eliminarFila').mockImplementation((index) => {
@@ -215,14 +217,36 @@ describe('ExencionImpuestosComponent - Full Coverage', () => {
       });
       
       component.eliminarMercancias();
+      expect(eliminarFilaSpy).toHaveBeenCalledWith(2); // Called with higher index first
       expect(eliminarFilaSpy).toHaveBeenCalledWith(1);
+      expect(component.filasSeleccionadas).toEqual([]);
+      expect(component.filaSeleccionada).toBe(null);
+      expect(component.filasPendientesEliminar).toEqual([]);
     });
 
-    it('should not delete when invalid index', () => {
-      component.filaPendienteEliminar = -1;
+    it('should not delete when no rows selected', () => {
+      component.filasPendientesEliminar = [];
       const eliminarFilaSpy = jest.spyOn(component, 'eliminarFila');
       component.eliminarMercancias();
       expect(eliminarFilaSpy).not.toHaveBeenCalled();
+      expect(component.filasPendientesEliminar).toEqual([]);
+    });
+
+    it('should handle invalid indices in multiple deletion', () => {
+      component.filasPendientesEliminar = [-1, 10, 1]; // Mix of invalid and valid indices
+      component.filasSeleccionadas = [-1, 10, 1];
+      const eliminarFilaSpy = jest.spyOn(component, 'eliminarFila').mockImplementation((index) => {
+        if (index !== null && index >= 0 && index < component.mercanciaBodyData.length) {
+          component.mercanciaBodyData.splice(index, 1);
+        }
+      });
+      
+      component.eliminarMercancias();
+      expect(eliminarFilaSpy).toHaveBeenCalledWith(10); // Called but should not delete due to bounds check
+      expect(eliminarFilaSpy).toHaveBeenCalledWith(1);  // Valid index, should delete
+      expect(eliminarFilaSpy).toHaveBeenCalledWith(-1); // Called but should not delete due to bounds check
+      expect(component.filasSeleccionadas).toEqual([]);
+      expect(component.filasPendientesEliminar).toEqual([]);
     });
 
     it('should edit row when valid index', () => {
@@ -366,8 +390,9 @@ describe('ExencionImpuestosComponent - Full Coverage', () => {
 
   describe('Edge Cases', () => {
     it('should handle null/undefined values gracefully', () => {
-      component.prepararEliminarFila(null);
-      expect(component.filaPendienteEliminar).toBe(null);
+      component.filasSeleccionadas = [];
+      component.prepararEliminarFila();
+      expect(component.filasPendientesEliminar).toEqual([]);
 
       component.editarFila(null);
       expect(component.filaEditando).toBe(null);

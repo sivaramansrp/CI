@@ -61,6 +61,12 @@ textarea.form-control {
     top: 15%;
 }
 
+.seleccionar-desplegable {
+  ::ng-deep .form-label {
+    padding-top: 0 !important;
+  }
+}
+
 // Clases para modales personalizados
 .modal-content{
   .modal-header{

@@ -227,7 +227,7 @@
                 </div>
                 }
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4 seleccionar-desplegable">
                 <app-catalogo-select [catalogo]="condicionMercancia" [label]="'Condición de la mercancía*'"
                   [required]="true" formControlName="condicionMercancia" (change)="condicionMercanciaSeleccion()"
                   name="condicionMercancia" [isDisabled]="soloLectura"></app-catalogo-select>
@@ -238,7 +238,7 @@
                 }
               </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
               <div class="col-md-8">
                 <label for="cantidadComercial">Cantidad*:</label>
                 <input type="text" class="form-control" formControlName="cantidad" id="cantidad" maxlength="20" size="20"
@@ -263,7 +263,7 @@
                     <div class="text-danger small mt-1">Por favor, escribe un valor mayor o igual a 1</div>
                   }
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4 seleccionar-desplegable">
                 <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida*'" [required]="true"
                   name="unidadMedida" formControlName="unidadMedida" (change)="unidadMedidaSeleccion()"
                   [isDisabled]="soloLectura"></app-catalogo-select>
@@ -274,7 +274,7 @@
                 }
               </div>
             </div>
-            <div class="row mt-3">
+            <div class="row mt-4">
               <div class="col-md-4">
                 <label>
                   <input type="checkbox" id="vehiculo" formControlName="vehiculo" (change)="vehiculo()" />
@@ -282,7 +282,7 @@
                 </label>
               </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
               <div class="col-md-4">
                 <label for="marca">Marca:</label>
                 <input type="text" class="form-control" formControlName="marca" id="marca" maxlength="100" size="30"
@@ -294,7 +294,7 @@
                 <div class="text-danger small mt-1">Este campo es obligatorio.</div>
                 }
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4 seleccionar-desplegable">
                 <app-catalogo-select [catalogo]="ano" [label]="'Año'" name="ano" formControlName="ano" [required]="true"
                   (change)="anoSeleccion()" [isDisabled]="soloLectura"></app-catalogo-select>
                 @if (agregarMercanciasForm.get('datosMercancia.vehiculo')?.value &&
@@ -316,7 +316,7 @@
                 }
               </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
               <div class="col-md-8">
                 <label for="serie">Número de serie:</label>
                 <input type="text" class="form-control" formControlName="serie" id="serie" size="50" maxlength="25"
@@ -393,7 +393,7 @@
         
       </div>
       <div class="modal-body">
-        <label>¿Estás seguro que deseas eliminar el/los registro(s) seleccionado(s)?</label>
+        <label>¿Estás seguro que deseas eliminar los registros marcados?</label>
       </div>
       <div class="modal-footer modal-footer-centered">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
