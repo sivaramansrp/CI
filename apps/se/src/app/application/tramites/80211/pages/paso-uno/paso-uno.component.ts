@@ -105,10 +105,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       isValid = false;
     }
-    if (this.empresasTerciarizadas) {
-      this.empresasTerciarizadas.validarFormularios();
-      isValid = false;
-
+   if (this.empresasTerciarizadas) {
+      if (!this.empresasTerciarizadas.validarFormularios()) {
+        isValid = false;
+      }
     } else {
       isValid = false;
     }
