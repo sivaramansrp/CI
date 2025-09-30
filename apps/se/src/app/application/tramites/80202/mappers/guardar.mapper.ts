@@ -1,5 +1,17 @@
+
+/**
+ * @file guardar.mapper.ts
+ * @description Mapper para construir el payload de guardado de la solicitud IMMEX Ampliación Sensibles.
+ * @author Ultrasist
+ * @date 2025-09-30
+ */
 import { ImmexRegistroState } from '../estados/immex-ampliacion-sensibles.store';
 
+/**
+ * Construye el objeto de datos para guardar la solicitud IMMEX Ampliación Sensibles.
+ * @param storeData Estado actual del registro IMMEX.
+ * @returns Objeto con la información estructurada para guardar.
+ */
 export function buildGuardarPayload(storeData: ImmexRegistroState): unknown {
   return {
     tipoDeSolicitud: "guardar",

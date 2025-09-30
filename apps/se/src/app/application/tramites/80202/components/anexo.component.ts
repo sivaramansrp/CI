@@ -14,6 +14,8 @@ import {
   ConsultaioQuery,
   Notificacion,
   NotificacionesComponent,
+  REG_X,
+  REGEX_NUMEROS,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -39,6 +41,10 @@ import { ImmexAmpliacionSensiblesStore } from '../estados/immex-ampliacion-sensi
 import { Modal } from 'bootstrap';
 import { PermisoImmexDatosService } from '../services/permiso-immex-datos.service';
 
+/**
+ * @component AnexoComponent
+ * Componente para la gestión de anexos en el trámite 80202.
+ */
 @Component({
   selector: 'app-anexo',
   templateUrl: './anexo.component.html',
@@ -54,28 +60,41 @@ import { PermisoImmexDatosService } from '../services/permiso-immex-datos.servic
   ],
 })
 export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
+  /** Indica si hay una nueva notificación en la página. */
   pagenuevaNotificacion: boolean = false;
-  // Forms
+  /** Formulario para datos de exportación. */
   exportacionForm: FormGroup;
+  /** Formulario para datos de importación. */
   importacionForm: FormGroup;
+  /** Catálogo de NICO para selects. */
   nico: Catalogo[] = [] as Catalogo[];
-
-  // Flags
+  /** Indica si el formulario está en modo solo lectura. */
   esFormularioSoloLectura: boolean = false;
+  /** Fracción arancelaria seleccionada para importación. */
   selectFraccionArancelaria: immexInfo = {} as immexInfo;
-  // Tabla
+  /** Tipo de selección de tabla: radio. */
   tablaSeleccionRadio: TablaSeleccion = TablaSeleccion.RADIO;
+  /** Tipo de selección de tabla: checkbox. */
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  /** Datos de la tabla de importación IMMEX. */
   immexTableDatos: immexInfo[] = [];
+  /** Configuración de columnas para la tabla de permisos IMMEX. */
   permisoImmexTabla: ConfiguracionColumna<immexInfo>[] = IMMEX_SERVICIO;
-  fraccionExportacionTabla: ConfiguracionColumna<fraccionInfo>[] =
-    FRACCION_EXPORTACION;
+  /** Configuración de columnas para la tabla de fracciones de exportación. */
+  fraccionExportacionTabla: ConfiguracionColumna<fraccionInfo>[] = FRACCION_EXPORTACION;
+  /** Datos de la tabla de fracciones de exportación. */
   fraccionTablaDatos: fraccionInfo[] = [];
+  /** Datos de la tabla de NICO para importación. */
   nicoTablaDatos: NicoInfo[] = [];
+  /** Datos de la tabla de NICO para exportación. */
   nicoTablaDato: NicoInfo[] = [];
+  /** NICO seleccionados para importación. */
   selectedNicos: NicoInfo[] = [];
+  /** NICO seleccionados para exportación. */
   selectedExportNicos: NicoInfo[] = [];
+  /** Fracción seleccionada para exportación. */
   selectExportacion: fraccionInfo = {} as fraccionInfo;
+  /** Indica si hay notificación en el formulario de exportación. */
   exportacionFormNotificacion: boolean = false;
   /**
    * @private
@@ -83,11 +102,13 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
    * @description Subject utilizado para manejar la desuscripción de observables y evitar memory leaks.
    * Se emite cuando el componente se destruye.
    */
+  /** Subject para manejar la destrucción del componente y evitar memory leaks. */
   private destroyNotifier$: Subject<void> = new Subject();
   /**
    * @property {ConfiguracionColumna<NicoInfo>[]} nicoTabla
    * @description Configuración de las columnas de la tabla para NICO.
    */
+  /** Configuración de columnas para la tabla NICO. */
   nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
   /**
    * Indica si el formulario está en modo de actualización.
@@ -97,24 +118,45 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
    * @type {boolean}
    * @memberof Anexo1Component
    */
+  /** Indica si el formulario está en modo actualización. */
   esFormularioActualizacion: boolean = false;
   /**
    * Representa una nueva notificación que será utilizada en el componente.
    * @type {Notificacion}
    */
+  /** Nueva notificación para mostrar en el componente. */
   public nuevaNotificacion!: Notificacion;
 
+  /** Indica si la primera carga de datos se ha completado. */
   public firstloadCompleted: boolean = false;
+  /** Indica si se muestra el mensaje de eliminación en exportación. */
   public deleteMessageExportacion: boolean = false;
+  /** Indica si se eliminan datos de la tabla NICO de exportación. */
   public eliminarDatosTablaNicoExp: boolean = false;
+  /** Referencia al modal de mercancia de importación. */
   @ViewChild('mercanciaImportacionModal', { static: true })
+  /** Referencia al modal de mercancia de importación. */
   mercanciaImportacionModal!: ElementRef;
+  /** Instancia del modal de importación. */
   modalInstance!: Modal;
+  /** Referencia al modal de mercancia de exportación. */
   @ViewChild('mercanciaExportacionModal', { static: true })
+  /** Referencia al modal de mercancia de exportación. */
   mercanciaExportacionModal!: ElementRef;
+  /** Instancia del modal de exportación. */
   modalExport!: Modal;
+  /** ID del trámite actual. */
   tramiteId: string = '80202';
 
+  /**
+   * Constructor del componente AnexoComponent.
+   * @param fb FormBuilder para crear formularios.
+   * @param permisoImmexDatosService Servicio de datos IMMEX.
+   * @param consultaQuery Query para consulta de datos.
+   * @param immexRegistroStore Store para el registro IMMEX.
+   * @param immexRegistroQuery Query para el registro IMMEX.
+   * @param catalogoService Servicio para catálogos.
+   */
   constructor(
     private fb: FormBuilder,
     public permisoImmexDatosService: PermisoImmexDatosService,
@@ -141,21 +183,26 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       descripcionTigie: [''],
       cantidadAnual: [
         '',
-        [Validators.required, Validators.pattern('^[0-9]+$')],
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
       ],
       capacidadInstalada: [
         '',
-        [Validators.required, Validators.pattern('^[0-9]+$')],
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
       ],
       cantidadPorPeriodo: [
         '',
-        [Validators.required, Validators.pattern('^[0-9]+$')],
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
       ],
       nicos: [''],
       productoDescExportacions: [''],
       fraccionDescExportacion: [''],
     });
   }
+  /**
+   * Método de inicialización del componente.
+   * @memberof AnexoComponent
+   */
+  /** Inicializa el componente y suscripciones. */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -167,9 +214,12 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
         })
       )
       .subscribe();
-    // this.obtenerIngresoSelectList();
   }
-
+  /**
+   * Método que se ejecuta después de que la vista del componente ha sido inicializada.
+   * @memberof AnexoComponent
+   */
+  /** Ejecuta lógica después de inicializar la vista. */
   ngAfterViewInit(): void {
     this.modalInstance = new Modal(
       this.mercanciaImportacionModal.nativeElement,
@@ -185,15 +235,20 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.fraccionTablaDatos = data;
     });
   }
-
-  // Number-only input handler
+  /**
+   * Método que se ejecuta cuando se produce un evento de entrada en un campo numérico.
+   * @param event Evento del input.
+   * @param formGroupName Nombre del FormGroup al que pertenece el control.
+   * @param controlName Nombre del control dentro del FormGroup.
+   */
+  /** Maneja la entrada numérica en formularios. */
   onNumberInput(
     event: Event,
     formGroupName: string,
     controlName: string
   ): void {
     const INPUT = event.target as HTMLInputElement;
-    INPUT.value = INPUT.value.replace(/[^0-9]/g, '');
+    INPUT.value = INPUT.value.replace(REGEX_NUMEROS, '');
     if (formGroupName === 'exportacionForm') {
       this.exportacionForm
         .get(controlName)
@@ -205,7 +260,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // Check cantidadPorPeriodo ≤ cantidadAnual / 3
+  /** Valida que la cantidad por periodo no exceda un tercio de la anual. */
   checkCantidadPorPeriodo(): boolean {
     const CANTIDAD_ANUAL = Number(
       this.importacionForm.get('cantidadAnual')?.value
@@ -219,6 +274,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     return true;
   }
 
+  /** Agrega un nuevo permiso IMMEX a la tabla. */
   agregarPermisoImmex(): void {
     this.firstloadCompleted = false;
     if (
@@ -260,6 +316,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  /** Guarda los datos de mercancía de importación. */
   guardarMercanciaImportacion(): void {
     if (this.importacionForm.valid) {
       if (this.checkCantidadPorPeriodo()) {
@@ -324,6 +381,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.mostrarNotificacion('Los campos marcados con (*) son requeridos.');
     }
   }
+  /** Cierra el modal de importación y limpia el formulario. */
   cerrarModal(): void {
     this.eliminarDatosTablaNicoExp = false;
     this.importacionForm.reset();
@@ -334,6 +392,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.nuevaNotificacion = {} as Notificacion;
     this.modalInstance.hide();
   }
+  /** Muestra una notificación de advertencia. */
   private mostrarNotificacion(mensaje: string): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -348,6 +407,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     this.eliminarDatosTablaNicoExp = true;
   }
+  /** Muestra una notificación de advertencia en exportación. */
   private exportNotificacion(mensaje: string): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -363,6 +423,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.exportacionFormNotificacion = true;
   }
 
+  /** Muestra una notificación en la página. */
   private pagemostrarNotificacion(mensaje: string): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -378,10 +439,12 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.pagenuevaNotificacion = true;
   }
 
+  /** Selecciona una fila de la tabla de importación. */
   onFilaSeleccionada(event: immexInfo): void {
     this.selectFraccionArancelaria = event;
   }
 
+  /** Agrega una nueva fracción de exportación a la tabla. */
   agregarExportacion(): void {
     if (
       this.exportacionForm.getRawValue().descripcionComercialExport.trim() &&
@@ -395,11 +458,11 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
           const EXISTS = this.fraccionTablaDatos.some(
             (row) =>
               row.descripcionComercialExport ===
-                this.exportacionForm
-                  .getRawValue()
-                  .descripcionComercialExport?.toUpperCase() &&
+              this.exportacionForm
+                .getRawValue()
+                .descripcionComercialExport?.toUpperCase() &&
               row.fraccionExportacion ===
-                this.selectFraccionArancelaria.fraccionArancelaria
+              this.selectFraccionArancelaria.fraccionArancelaria
           );
           if (!EXISTS) {
             this.fraccionTablaDatos = [
@@ -413,15 +476,14 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
                 umt: this.selectFraccionArancelaria.umt,
                 descripcionTigie: `Descripción TIGIE ${Math.floor(
                   Math.random() * 1000
-                )} - ${
-                  [
-                    'Maquinaria',
-                    'Textiles',
-                    'Alimentos',
-                    'Químicos',
-                    'Electrónicos',
-                  ][Math.floor(Math.random() * 5)]
-                }`,
+                )} - ${[
+                  'Maquinaria',
+                  'Textiles',
+                  'Alimentos',
+                  'Químicos',
+                  'Electrónicos',
+                ][Math.floor(Math.random() * 5)]
+                  }`,
                 descripcionComercialExport:
                   this.exportacionForm.value.descripcionComercialExport.toUpperCase(),
                 nicos: this.exportacionForm.value.nicos,
@@ -457,10 +519,12 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     }
   }
+  /** Selecciona una fila de la tabla de exportación. */
   onFilaSeleccionadaExportacion(event: fraccionInfo): void {
     this.selectExportacion = event;
   }
 
+  /** Elimina la fracción de exportación seleccionada. */
   eliminarExportacion(): void {
     if (this.selectExportacion && this.selectExportacion.id) {
       this.fraccionTablaDatos = this.fraccionTablaDatos.filter(
@@ -476,6 +540,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     }
   }
+  /** Muestra el detalle de la mercancía seleccionada para importación. */
   mostrarDetalleMercancia(): void {
     if (this.selectFraccionArancelaria && this.selectFraccionArancelaria.id) {
       this.nicoTablaDatos = [];
@@ -512,10 +577,12 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     }
   }
+  /** Selecciona los NICO en la tabla de importación. */
   seleccionTablas(event: NicoInfo[]): void {
     this.selectedNicos = event.map((item) => ({ ...item, estatus: true }));
   }
 
+  /** Genera una descripción aleatoria para el NICO. */
   descripcionNico(): void {
     this.importacionForm
       .get('productoDescExportacions')
@@ -524,6 +591,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       );
   }
 
+  /** Agrega un NICO a la tabla de importación. */
   agregarNico(): void {
     if (
       this.importacionForm.value.nicos &&
@@ -556,6 +624,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     }
   }
+  /** Elimina los NICO seleccionados de la tabla de importación. */
   eliminarNico(): void {
     if (this.selectedNicos && this.selectedNicos.length > 0) {
       const IDS_TO_DELETE = this.selectedNicos.map((nico) => nico.id);
@@ -567,6 +636,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.mostrarNotificacion('Debe elegir al menos un nico para eliminar.');
     }
   }
+  /** Muestra el detalle de la mercancía seleccionada para exportación. */
   mostrarDetalleMercanciaExportacion(): void {
     if (
       this.selectExportacion &&
@@ -601,6 +671,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     }
   }
+  /** Cierra el modal de exportación y limpia el formulario. */
   cerrarModalExportacion(): void {
     this.modalExport.hide();
     setTimeout(() => {
@@ -613,6 +684,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.nuevaNotificacion = {} as Notificacion;
     }, 100);
   }
+  /** Guarda los datos de mercancía de exportación. */
   guardarMercanciaExportacion(): void {
     if (this.selectExportacion && this.selectExportacion.id) {
       const NUEVO_REGISTRO: fraccionInfo = {
@@ -661,6 +733,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     }
   }
+  /** Actualiza la descripción del NICO en exportación. */
   onNicoChange(): void {
     if (this.exportacionForm.get('nicos')?.value) {
       this.exportacionForm
@@ -672,6 +745,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
         );
     }
   }
+  /** Agrega un NICO a la tabla de exportación. */
   agregarNicoExportacion(): void {
     if (
       this.exportacionForm.getRawValue().nicos &&
@@ -707,6 +781,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.exportNotificacion('Tiene que introducir el NICO y su descripción.');
     }
   }
+  /** Elimina el permiso IMMEX y fracciones asociadas. */
   eliminarPedimentoDatoss(berr: boolean): void {
     if (
       berr &&
@@ -747,6 +822,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  /** Muestra confirmación para eliminar un permiso IMMEX. */
   eliminarPermisoImmex(): void {
     if (this.selectFraccionArancelaria && this.selectFraccionArancelaria.id) {
       this.nuevaNotificacion = {
@@ -768,6 +844,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     }
   }
+  /** Elimina los NICO seleccionados de la tabla de exportación. */
   eliminarNicoExportacion(): void {
     if (this.selectedExportNicos && this.selectedExportNicos.length > 0) {
       const IDS_TO_DELETE = this.selectedExportNicos.map((nico) => nico.id);
@@ -779,6 +856,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.exportNotificacion('Debe elegir al menos un nico para eliminar.');
     }
   }
+  /** Selecciona los NICO en la tabla de exportación. */
   onNicoSeleccionado(event: NicoInfo[]): void {
     this.selectedExportNicos = event.map((item) => ({
       ...item,
@@ -794,6 +872,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
    *
    * @returns {void}
    */
+  /** Obtiene la lista de opciones para el select de unidad de medida NICO. */
   obtenerIngresoSelectList(tipo: 'importacion' | 'exportacion'): void {
     const CLAVE_FRACCION = tipo === 'importacion' ? this.selectFraccionArancelaria?.fraccionArancelaria : this.selectExportacion?.fraccionExportacion;
     this.catalogoService
@@ -826,6 +905,7 @@ export class AnexoComponent implements OnInit, AfterViewInit, OnDestroy {
    * @returns {void}
    * @implements {OnDestroy}
    */
+  /** Limpia recursos y cancela suscripciones al destruir el componente. */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

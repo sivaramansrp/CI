@@ -679,6 +679,14 @@ export const NICO_TABLA = [
     orden: 2,
   },
 ];
+
+/**
+ * @interface nicoInfo
+ * @description Interfaz que define la estructura de la información de NICO (Nomenclatura de Identificación de Commodities).
+ * Representa los datos de clasificación de materias primas y productos básicos utilizados en el comercio internacional,
+ * proporcionando una base estandarizada para la identificación de commodities en operaciones IMMEX.
+ */
+
 export interface nicoInfo {
   /**
    * @description Código NICO único que identifica el tipo de commodity o materia prima.

@@ -57,6 +57,7 @@ export interface ImmexRegistroState {
    * @memberof ImmexRegistroState
    */
   importacion: immexInfo[];
+  /** Información sobre la fracción arancelaria de importación. */
   exportacion: fraccionInfo[];
   /** Identificador de la solicitud, puede ser nulo si aún no se ha creado. */
   idSolicitud: number | null;

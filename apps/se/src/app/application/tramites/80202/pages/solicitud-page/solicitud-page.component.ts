@@ -34,6 +34,12 @@ interface AccionBoton {
  * Componente principal para el formulario de solicitud IMMEX modalidad ampliación sensibles.
  */
 
+/**
+ * @component SolicitudPageComponent
+ * @description Componente principal para el formulario de solicitud IMMEX modalidad ampliación sensibles. Gestiona los pasos, carga de documentos y guardado de datos.
+ * @author Ultrasist
+ * @date 2025-09-30
+ */
 @Component({
   selector: 'app-solicitud-page',
   templateUrl: './solicitud-page.component.html',
@@ -41,82 +47,44 @@ interface AccionBoton {
   providers: [ToastrService],
 })
 export class SolicitudPageComponent implements OnInit {
+  /** Información del usuario actual. */
   datosUsuario: Usuario = USUARIO_INFO;
+  /** Evento para cargar archivos en el formulario. */
   cargarArchivosEvento = new EventEmitter<void>();
+  /** Indica si el botón de carga de archivos está activo. */
   activarBotonCargaArchivos: boolean = false;
+  /** Indica si la sección de carga de documentos está visible. */
   seccionCargarDocumentos: boolean = true;
+  /** Indica si la carga está en progreso. */
   cargaEnProgreso: boolean = true;
 
-  /**
-   * Título del mensaje principal.
-   * @property {string | null} tituloMensaje - Título que se muestra en la parte superior del formulario.
-   */
-  tituloMensaje: string | null =
-    'Registro de solicitud IMMEX modalidad ampliación sensibles';
-
-  /**
-   * URL de la página actual.
-   */
+  /** Título principal del formulario. */
+  tituloMensaje: string | null = 'Registro de solicitud IMMEX modalidad ampliación sensibles';
+  /** Estado actual de la solicitud. */
   public solicitudState!: ImmexRegistroState;
-
-  /**
-   * Mensaje de éxito para el primer paso.
-   * @property {string} mensajeDeTextoDeExito - Mensaje que se muestra si el primer paso se completa con éxito.
-   *
-   */
+  /** Mensaje de éxito para el primer paso. */
   mensajeDeTextoDeExito: string = MENSAJE_DE_EXITO_ETAPA_UNO;
-
-  /**
-   * Array de pasos del asistente.
-   * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
-   *
-   */
+  /** Pasos del asistente de la solicitud. */
   pasos: ListaPasosWizard[] = PASOS;
-
-  /**
-   * Índice actual del paso.
-   * @property {number} indice - Índice del paso actual en el que se encuentra el usuario.
-   *
-   */
+  /** Índice del paso actual. */
   indice: number = 1;
-
-  /**
-   * Componente Wizard.
-   * @property {WizardComponent} wizardComponent - Referencia al componente Wizard para controlar la navegación.
-   *
-   */
-
+  /** Referencia al componente Wizard para navegación. */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-  /**
-   * @private
-   * @property {Subject<void>} destroyNotifier$
-   * @description Subject utilizado para manejar la desuscripción de observables y evitar memory leaks.
-   * Se emite cuando el componente se destruye.
-   */
+  /** Subject para manejar la desuscripción de observables. */
   private destroyNotifier$: Subject<void> = new Subject();
+  /** Estado interno del registro IMMEX. */
   private immexRegistroState!: ImmexRegistroState;
-
-  /**
-   * Datos para la configuración de los botones del asistente.
-   * @property {DatosPasos} datosPasos - Configuración para los botones "Anterior" y "Siguiente".
-   *
-   */
+  /** Configuración de los botones del asistente. */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-
-  seleccionaTab(i: number): void {
-    this.indice = i;
-  }
-
-  /**
-   * Estado del tramite Folio
-   */
+  /** Folio temporal del trámite. */
   public folioTemporal: number = 0;
 
+  /** Constructor con inyección de servicios. */
   constructor(
     private immexRegistroStore: ImmexAmpliacionSensiblesStore,
     private Query: ImmexAmpliacionSensiblesQuery,
@@ -125,7 +93,7 @@ export class SolicitudPageComponent implements OnInit {
     private immexAmpliacionSensiblesService: ImmexAmpliacionSensiblesService,
     private guardarService: GuardarService,
     private toastrService: ToastrService
-  ) {}
+  ) { }
 
   /**
    * Mantiene la suscripción al estado de CambioModalidadQuery para tener siempre el estado actualizado.
@@ -238,18 +206,18 @@ export class SolicitudPageComponent implements OnInit {
               this.tituloMensaje =
                 SolicitudPageComponent.obtenerNombreDelTítulo(e.valor);
 
-                if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      this.tituloMensaje = SolicitudPageComponent.obtenerNombreDelTítulo(
-        e.valor
-      );
+              if (e.valor > 0 && e.valor < 5) {
+                this.indice = e.valor;
+                this.tituloMensaje = SolicitudPageComponent.obtenerNombreDelTítulo(
+                  e.valor
+                );
 
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
+                if (e.accion === 'cont') {
+                  this.wizardComponent.siguiente();
+                } else {
+                  this.wizardComponent.atras();
+                }
+              }
             }
           }
           this.toastrService.success(response.mensaje);
@@ -276,7 +244,12 @@ export class SolicitudPageComponent implements OnInit {
   cargaRealizada(cargaRealizada: boolean): void {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;
   }
-
+  /**
+   * Método para manejar el evento de cambio en la carga en progreso.
+   * Actualiza el estado de la carga en progreso.
+   * carga - Indica si la carga está en progreso o no.
+   * {void} No retorna ningún valor.
+   */
   onCargaEnProgreso(carga: boolean): void {
     this.cargaEnProgreso = carga;
   }
