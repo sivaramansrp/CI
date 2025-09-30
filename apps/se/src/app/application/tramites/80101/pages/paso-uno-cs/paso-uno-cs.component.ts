@@ -72,7 +72,7 @@ export class PasoUnoCsComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.consultaState = {...seccionState, update: true, id_solicitud: '202734892', idSolicitudSeleccionada: "67890"};
+          this.consultaState = {...seccionState, id_solicitud: '202734892', idSolicitudSeleccionada: "67890"};
           this.formularioDeshabilitado = seccionState.readonly;
           this.esFormularioUpdate = seccionState.update;
           if (this.consultaState.update) {
