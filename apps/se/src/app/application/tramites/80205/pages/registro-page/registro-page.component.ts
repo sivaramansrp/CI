@@ -13,6 +13,7 @@ import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
+import { ServiciosService } from '../../../../shared/services/servicios.service';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -148,7 +149,7 @@ export class RegistroPageComponent implements OnDestroy {
 
       idSolicitudState: number | null = 0;
 
-      idTipoTRamite: string = '80205';
+      idTipoTramite: string = '80205';
 
   /**
    * Maneja la acción del botón y navega entre los pasos.
@@ -159,7 +160,7 @@ export class RegistroPageComponent implements OnDestroy {
     private tramiteQuery: AmpliacionServiciosQuery,
     private tranmiteStore: AmpliacionServiciosStore,
     private seccion: SeccionLibStore,
-    private registroSolicitudService: RegistroSolicitudService
+    private registroSolicitudService: RegistroSolicitudService,
   ) {
     this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe(_res => {
       this.seccion.establecerSeccion([true]);
@@ -175,7 +176,7 @@ export class RegistroPageComponent implements OnDestroy {
 
       if (!this.esFormaValido) {
         this.datosPasos.indice = 1;
-        this.formErrorAlert = RegistroPageComponent.generarAlertaDeError(ERROR_SERVICIO_ALERT);
+        this.formErrorAlert = ServiciosService.generarAlertaDeError(ERROR_SERVICIO_ALERT);
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
         return;
       }
@@ -186,7 +187,7 @@ export class RegistroPageComponent implements OnDestroy {
         next: (respuesta: BaseResponse<{ id_solicitud: number }>) => {
           if (respuesta.codigo !== '00') {
             const ERROR_MESSAGE = respuesta.error || 'Error desconocido en la solicitud';
-            this.formErrorAlert = RegistroPageComponent.generarAlertaDeError(ERROR_MESSAGE);
+            this.formErrorAlert = ServiciosService.generarAlertaDeError(ERROR_MESSAGE);
             this.esFormaValido = false;
             this.indice = 1;
             this.wizardComponent.indiceActual = 1;
@@ -203,8 +204,7 @@ export class RegistroPageComponent implements OnDestroy {
             }
         },
         error: (error) => {
-          console.error('Error en onGuardar:', error);
-          this.formErrorAlert = RegistroPageComponent.generarAlertaDeError('Error al procesar la solicitud');
+          this.formErrorAlert = ServiciosService.generarAlertaDeError('Error al procesar la solicitud');
           this.esFormaValido = false;
           this.indice = 1;
           this.wizardComponent.indiceActual = 1;
@@ -221,34 +221,6 @@ export class RegistroPageComponent implements OnDestroy {
           this.wizardComponent.atras();
         }
       }
-    }
-  }
-
-  /**
-   * Obtiene el título para cada página según el índice.
-   * @method obtenerNombreDelTítulo
-   * @param {number} valor - El índice de la página.
-   * @returns {string} - El título correspondiente.
-   */
-   
-
-  /**
-   * Cambia el título del mensaje según la pestaña seleccionada.
-   * @method enTabChange
-   * @param {number} selectedTab - El índice de la pestaña seleccionada.
-   */
-  enTabChange(selectedTab: number): void {
-    switch (selectedTab) {
-      case 1:
-        this.tituloMensaje = 'Registro de solicitud IMMEX modalidad ampliación servicios';
-        break;
-      case 2:
-        this.tituloMensaje =
-          'Registro de solicitud IMMEX modalidad ampliación servicios';
-        break;
-      default:
-        this.tituloMensaje = 'Registro de solicitud IMMEX modalidad ampliación servicios';
-        break;
     }
   }
 
@@ -318,30 +290,13 @@ export class RegistroPageComponent implements OnDestroy {
       take(1), // Tomar solo el primer valor para evitar loops
       map(ESTADO_ACTUAL => AmpliacionServiciosAdapter.toFormPayload(ESTADO_ACTUAL)),
       switchMap(FORM_PAYLOAD => {
-        return this.registroSolicitudService.postGuardarDatos(this.idTipoTRamite, FORM_PAYLOAD);
+        return this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, FORM_PAYLOAD);
       }),
       catchError(error => {
         console.error('Error al guardar:', error);
         return throwError(() => error);
       })
     );
-  }
-
-
-  public static generarAlertaDeError(mensajes:string): string {
-    const ALERTA = `
-<div class="d-flex justify-content-center text-center">
-  <div class="col-md-12 p-3  border-danger  text-danger rounded">
-    <div class="mb-2 text-secondary" >Corrija los siguientes errores:</div>
-
-    <div class="d-flex justify-content-start mb-1">
-      <span class="me-2">1.</span>
-      <span class="flex-grow-1 text-center">${mensajes}</span>
-    </div>  
-  </div>
-</div>
-`;
-return ALERTA;
   }
 
   /**

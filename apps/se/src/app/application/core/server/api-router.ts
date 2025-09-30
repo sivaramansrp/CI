@@ -22,3 +22,8 @@ export const API_GET_EVALUAR_INICIAR = (TRAMITE: string, NUMFOLIOTRAMITE: string
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/getOpcionesEvaluacion
  */
 export const API_GET_EVALUAR_MOSTRAR = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/evaluar/mostrar`;
+
+/**
+ * API para prepar evaluacion tramite general.
+ */
+export const SERVICIO_IMMEX_TABLA = (TRAMITE: string) : string => `sat-t${TRAMITE}/servicios/buscar`;

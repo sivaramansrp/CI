@@ -1,32 +1,23 @@
-// Angular Core imports
-import { CommonModule } from '@angular/common';
-
-import { NgModule } from '@angular/core';
-import { forwardRef } from '@angular/core';
-
-import { ReactiveFormsModule } from '@angular/forms';
-
-// Third-party library imports
 import {
   AlertComponent,
   AnexarDocumentosComponent,
+  BtnContinuarComponent,
+  FirmaElectronicaComponent,
+  SolicitanteComponent,
+  TablaDinamicaComponent,
+  TituloComponent,
+  WizardComponent,
 } from '@ng-mf/data-access-user';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
-
-// Application imports
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, forwardRef } from '@angular/core';
 import { AnexoComponent } from './components/anexo.component';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ImmexAmpliacionSensiblesRoutingModule } from './immex-ampliacion-sensibles-routing.module';
+import { PasoCargaDocumentoComponent } from '@libs/shared/data-access-user/src';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-
 @NgModule({
   declarations: [
     PasoDosComponent,
@@ -46,6 +37,7 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     TablaDinamicaComponent,
     TituloComponent,
     WizardComponent,
+    PasoCargaDocumentoComponent,
     forwardRef(() => AnexarDocumentosComponent),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
