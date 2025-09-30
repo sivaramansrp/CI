@@ -296,98 +296,103 @@
     </div>
 
     <div class="row">
-  <div class="col-md-5">
-    <div class="form-group">
-      <label class="form-label" for="cantidadUmtValor">
-        Cantidad UMT*:
-      </label>
-      <input
-        maxlength="16"
-        class="form-control"
-        id="cantidadUmtValor"
-        type="text"
-        formControlName="cantidadUmtValor"
-        [ngClass]="isValid(mercanciaForm, 'cantidadUmtValor') ? 'required' : ''"
-      />
-      <div
-        class="mensaje-error"
-        *ngIf="mercanciaForm.get('cantidadUmtValor')?.errors?.['required'] && mercanciaForm.get('cantidadUmtValor')?.touched"
-      >
-        Este campo es obligatorio.
+      <div class="col-md-5">
+        <div class="form-group">
+          <label class="form-label" for="cantidadUmtValor"
+            >Cantidad UMT*:</label
+          >
+          <input
+            maxlength="16"
+            class="form-control"
+            id="cantidadUmtValor"
+            type="text"
+            formControlName="cantidadUmtValor"
+            [ngClass]="
+              isValid(mercanciaForm, 'cantidadUmtValor') ? 'required' : ''
+            "
+          />
+          <div
+            class="mensaje-error"
+            *ngIf="mercanciaForm.get('cantidadUmtValor')?.errors?.['required'] && mercanciaForm.get('cantidadUmtValor')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
+          <div
+            *ngIf="mercanciaForm.get('cantidadUmtValor')?.touched && mercanciaForm.get('cantidadUmtValor')?.errors?.['pattern']"
+            class="mensaje-error"
+          >
+            Por favor, escribe un número entero válido.
+          </div>
+        </div>
       </div>
-      <div
-        *ngIf="mercanciaForm.get('cantidadUmtValor')?.touched && mercanciaForm.get('cantidadUmtValor')?.errors?.['pattern']"
-        class="mensaje-error"
-      >
-        Por favor, escribe un número entero válido.
+      <div class="col-md-5">
+        <div class="form-group">
+          <label class="form-label" for="cantidadUmt">UMT*:</label>
+          <span
+            tooltip="Unidad de medida de la tarifa"
+          >
+            <i class="bi bi-question-circle-fill"></i>
+          </span>
+          <input
+            class="form-control"
+            id="cantidadUmt"
+            type="text"
+            formControlName="cantidadUmt"
+            [ngClass]="isValid(mercanciaForm, 'cantidadUmt') ? 'required' : ''"
+          />
+          <div
+            class="mensaje-error"
+            *ngIf="mercanciaForm.get('cantidadUmt')?.errors?.['required'] && mercanciaForm.get('cantidadUmt')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="col-md-5">
-    <div class="form-group">
-      <label class="form-label" for="cantidadUmt">
-        UMT*:
-        <span tooltip="Unidad de medida de la tarifa">
-          <i class="bi bi-question-circle-fill"></i>
-        </span>
-      </label>
-      <input
-        class="form-control"
-        id="cantidadUmt"
-        type="text"
-        formControlName="cantidadUmt"
-        [ngClass]="isValid(mercanciaForm, 'cantidadUmt') ? 'required' : ''"
-      />
-      <div
-        class="mensaje-error"
-        *ngIf="mercanciaForm.get('cantidadUmt')?.errors?.['required'] && mercanciaForm.get('cantidadUmt')?.touched"
-      >
-        Este campo es obligatorio.
-      </div>
-    </div>
-  </div>
-</div>
 
-<div class="row">
-  <div class="col-md-5">
-    <div class="form-group">
-      <label class="form-label" for="cantidadUmcValor">
-        Cantidad UMC*:
-      </label>
-      <input
-        maxlength="16"
-        class="form-control"
-        id="cantidadUmcValor"
-        type="text"
-        formControlName="cantidadUmcValor"
-        [ngClass]="isValid(mercanciaForm, 'cantidadUmcValor') ? 'required' : ''"
-      />
-      <div
-        class="mensaje-error"
-        *ngIf="mercanciaForm.get('cantidadUmcValor')?.errors?.['required'] && mercanciaForm.get('cantidadUmcValor')?.touched"
-      >
-        Este campo es obligatorio.
+    <div class="row">
+      <div class="col-md-5">
+        <div class="form-group">
+          <label class="form-label" for="cantidadUmcValor"
+            >Cantidad UMC*:</label
+          >
+          <input
+            maxlength="16"
+            class="form-control"
+            id="cantidadUmcValor"
+            type="text"
+            formControlName="cantidadUmcValor"
+            [ngClass]="
+              isValid(mercanciaForm, 'cantidadUmcValor') ? 'required' : ''
+            "
+          />
+          <div
+            class="mensaje-error"
+            *ngIf="mercanciaForm.get('cantidadUmcValor')?.errors?.['required'] && mercanciaForm.get('cantidadUmcValor')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
+
+          <div
+            *ngIf="mercanciaForm.get('cantidadUmcValor')?.touched && mercanciaForm.get('cantidadUmcValor')?.errors?.['pattern']"
+            class="mensaje-error"
+          >
+            Por favor, escribe un número entero válido.
+          </div>
+        </div>
       </div>
-      <div
-        *ngIf="mercanciaForm.get('cantidadUmcValor')?.touched && mercanciaForm.get('cantidadUmcValor')?.errors?.['pattern']"
-        class="mensaje-error"
-      >
-        Por favor, escribe un número entero válido.
+      <div class="col-md-5 ml-2">
+        <app-catalogo-select
+          [catalogo]="cantidadUmcDatos"
+          formControlName="cantidadUmc"
+          [label]="'UMC'"
+          [required]="true"
+          [tooltipQuestionCircle]="true"
+          [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
+          name="cantidadUmc"
+        ></app-catalogo-select>
       </div>
     </div>
-  </div>
-  <div class="col-md-5 ml-2">
-    <app-catalogo-select
-      [catalogo]="cantidadUmcDatos"
-      formControlName="cantidadUmc"
-      [label]="'UMC'"
-      [required]="true"
-      [tooltipQuestionCircle]="true"
-      [tooltipQuestionCircleText]="'Unidad de medida de comercialización'"
-      name="cantidadUmc"
-    ></app-catalogo-select>
-  </div>
-</div>
     @if(!elementosNoValidos.includes('presentacion')){
     <div class="row">
       <div class="col-6 ml-1">
@@ -474,7 +479,6 @@
             <div class="panel-collapse collapse in" id="panel-01">
               <div class="panel-body">
                 <crosslist
-                  #origenCrosslist
                   [fechas]="seleccionarOrigenDelPais"
                   [botones]="paisDeProcedenciaBotonsUno"
                   [label]="paisDeOriginLabel"
@@ -509,7 +513,6 @@
             <div class="panel-collapse collapse in" id="panel-01">
               <div class="panel-body">
                 <crosslist
-                  #procedenciaCrosslist
                   [fechas]="paisDeProcedenciaDatos"
                   [botones]="paisDeProcedenciaBotonsDos"
                   [label]="paisDeProcedenciaLabel"
@@ -606,7 +609,6 @@
             <div class="panel-collapse collapse in" id="panel-01">
               <div class="panel-body">
                 <crosslist
-                  #usoCrosslist
                   [fechas]="usoEspesificoDatos"
                   [label]="usoEspesificoLabel"
                   [botones]="paisDeProcedenciaBotonsTres"
@@ -634,7 +636,7 @@
         [ngClass]="isValid(mercanciaForm, controlName) ? 'required' : ''"
       />
     </ng-template>
-
+  </form>
 
   @if(detalleMercancia) {
   <div class="row mt-3">
@@ -677,7 +679,7 @@
       </div>
     </div>
   </div>
-
+</div>
 
 @if (nuevaNotificacion) {
 <section>
