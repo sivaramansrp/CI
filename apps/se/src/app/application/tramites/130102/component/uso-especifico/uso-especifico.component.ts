@@ -138,7 +138,7 @@ filasSeleccionadas: FraccionArancelariaProsec[] = [];
       this.tramite130102Store.setDynamicFieldValue('uso_especifico_tabla', this.datosSocios);
       this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
     }
-    this.obtienerDivisionesFraccion('73121099');
+    this.obtienerDivisionesFraccion(this.solicitudState?.fraccionArancelaria || '');
   }
 
 

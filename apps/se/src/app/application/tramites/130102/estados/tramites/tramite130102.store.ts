@@ -1,7 +1,7 @@
 import { FraccionArancelariaProsec } from '../../models/octava-temporal.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { PartidaMercancia } from '../../models/request/regla-octava-request.model';
+import { FraccionesProsecRequest, PartidaMercancia } from '../../models/request/regla-octava-request.model';
 
 /**
  * Interfaz que define el estado de la solicitud 130102.
@@ -76,7 +76,7 @@ export interface Solicitud130102State {
   partidas_tabla?: PartidaMercancia[];
 
   /** Lista de usos específicos relacionados con fracciones arancelarias PROSEC. */
-  uso_especifico_tabla?: FraccionArancelariaProsec[];
+  lista_fracciones_prosec?: FraccionesProsecRequest[];
 
   paises: string[]; // Lista de países involucrados en la solicitud.
 }
@@ -112,7 +112,7 @@ export function createInitialState(): Solicitud130102State {
     productos: '', // Sin productos asignados.
     solicitud : '', // Indica que la solicitud no está activa por defecto.
     partidas_tabla: [], // Lista de partidas vacía por defecto.
-    uso_especifico_tabla: [], // Lista de usos específicos vacía por defecto.;
+    lista_fracciones_prosec: [], // Lista de usos específicos vacía por defecto.;
     paises: [] // Lista de países vacía por defecto.
   };
 }
@@ -459,10 +459,10 @@ public setCriterioDictamen(criterioDictamen: string):void {
  * Actualiza el estado con las fracciones arancelarias PROSEC proporcionadas.
  * @param uso Lista de fracciones arancelarias a asignar en el estado.
  */
-  public setUsoEspecificoTablas(uso: FraccionArancelariaProsec[]): void {
+  public setUsoEspecificoTablas(uso: FraccionesProsecRequest[]): void {
   this.update(state => ({
     ...state,
-    uso_especifico_tabla: uso
+    lista_fracciones_prosec: uso
   }));
 }
 }

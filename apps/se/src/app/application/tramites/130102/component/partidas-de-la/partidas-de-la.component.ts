@@ -303,6 +303,8 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
       cantidadTotal: CANTIDAD_TOTAL,
       valorTotalUSD: VALOR_TOTAL_USD
     });
+    this.tramite130102Store.setcantidadTotal( CANTIDAD_TOTAL);
+    this.tramite130102Store.setvalorTotalUSD( VALOR_TOTAL_USD + "");
   }
 
   formularioTotalCount(): void {

@@ -3,15 +3,13 @@
   <form [formGroup]="frmRepresentacion">
     <div class="row">
       <div class="col-md-4 form-group">
-        <app-catalogo-select
-          [catalogo]="entidadFederativaLista"
-          [label]="'Entidad federativa'"
-          [required]="true"
-          (change)="setValoresStore(frmRepresentacion,'entidad', 'setEntidad'); onChangeEntidad(frmRepresentacion)"
-          [placeholder]="'Seleccione un valor'"
-          formControlName="entidad"
-            [isDisabled]="esFormularioSoloLectura ? true : false"
-        ></app-catalogo-select>
+        <label for="entidad" class="form-label">Entidad federativa*:</label>
+          <select class="form-control form-select" formControlName="entidad" (change)="setValoresStore(frmRepresentacion,'entidad', 'setEntidad'); onChangeEntidad(frmRepresentacion)">
+            <option [ngValue]="null">Selecciona una opción</option>
+            <option *ngFor="let ent of entidadFederativaLista" [value]="ent.clave">
+              {{ ent.descripcion }}
+            </option>
+          </select>
         @if (frmRepresentacion.controls['entidad'].invalid && frmRepresentacion.controls['entidad'].touched) {
           <div class="text-danger">
             @if (frmRepresentacion.controls['entidad'].errors?.['required']) {
@@ -22,7 +20,7 @@
         
       </div>
       <div class="col-md-4 form-group">
-        <app-catalogo-select
+        <!--<app-catalogo-select
           [catalogo]="representacionFederalLista"
           [label]="'Representación federal'"
           [required]="true"
@@ -30,7 +28,14 @@
           [placeholder]="'Seleccione un valor'"
           formControlName="representacion"
             [isDisabled]="esFormularioSoloLectura ? true : false"
-        ></app-catalogo-select>
+        ></app-catalogo-select>-->
+        <label for="representacion" class="form-label">Representación federal*:</label>
+          <select class="form-control form-select" formControlName="representacion" (change)="setValoresStore(frmRepresentacion,'representacion', 'setRepresentacion')">
+            <option [ngValue]="null">Selecciona una opción</option>
+            <option *ngFor="let rep of representacionFederalLista" [value]="rep.clave">
+              {{ rep.descripcion }}
+            </option>
+          </select>
         @if (frmRepresentacion.controls['representacion'].invalid && frmRepresentacion.controls['representacion'].touched) {
           <div class="text-danger">
             @if (frmRepresentacion.controls['representacion'].errors?.['required']) {

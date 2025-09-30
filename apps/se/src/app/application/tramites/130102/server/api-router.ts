@@ -92,18 +92,31 @@ export const CVE_FRACCION = '{cveFraccion}';
  */
 export const API_GET_FRACCION_SUBDIVISIONES = (CVE_FRACCION: string) : string => `sat-t130102/catalogo/fraccion-arancelaria/${CVE_FRACCION}/subdiviciones`;
 
-/**
- * Constante para la clave del esquema.
- * Debe ser reemplazada por la clave real del esquema.
- */
-export const CVEESQUEMA = '{cveEsquema}';
 
 /**
- * API MS para obtener las reglas de un esquema específico del tramite 130102.
- * @param CVEESQUEMA - Clave del esquema.
+ * Constante para el ID del tipo de trámite.
+ */
+export const IDTIPOTRAMITE = '130102';
+/**
+ * Constante para la clave de la fracción de octava temporal.
+ */
+export const CVEFRACCIONOCTAVA = '{cveFraccionOctava}';
+ /**
+  * constante para el régimen de octava temporal.
+  */
+export const REGIMEN = '{regimen}';
+/**
+ * Constante para la clasificación del régimen.
+ */
+export const CLASIFICACIONREGIMEN = '{clasificacionRegimen}';
+/**
+ * API MS para obtener la octava temporal basada en la fracción, régimen y clasificación del régimen del tramite
+ * @param CVEFRACCIONOCTAVA 
+ * @param REGIMEN 
+ * @param CLASIFICACIONREGIMEN 
  * @returns 
  */
-export const API_GET_ESQUEMA_REGLAS_OCTAVA = (CVEESQUEMA: string) : string => `sat-t130102/esquema-regla/${CVEESQUEMA}/octava`;
+export const API_GET_OCTAVA_TEMPORAL = (CVEFRACCIONOCTAVA: string, REGIMEN: string, CLASIFICACIONREGIMEN: string) : string => `sat-t130102/esquema-regla/${IDTIPOTRAMITE}/${CVEFRACCIONOCTAVA}/${REGIMEN}/${CLASIFICACIONREGIMEN}/octava`;
 
 /**
  * Constante para el número de folio del trámite.

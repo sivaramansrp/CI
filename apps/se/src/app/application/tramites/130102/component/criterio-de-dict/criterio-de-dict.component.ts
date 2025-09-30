@@ -22,8 +22,8 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import {
   Solicitud130102State,
   Tramite130102Store,
-} from '../../../../estados/tramites/tramite130102.store';
-import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+} from '../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
@@ -103,6 +103,22 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
         })
       )
       .subscribe();
+
+      
+    this.tramite130102Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map(state => ({
+          fraccionArancelaria: state.fraccionArancelaria,
+          regimen: state.regimen,
+          clasificacionRegimen: state.clasificacionRegimen
+        }))
+      )
+      .subscribe(({ fraccionArancelaria, regimen, clasificacionRegimen }) => {
+        if (fraccionArancelaria && regimen && clasificacionRegimen) {
+          this.obtenerCatEsquemaRegla();
+        }
+      });
   }
 
   /**
@@ -115,8 +131,11 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
   }
 
 
-  obtenerCatEsquemaRegla(cveEsquema: string): void {
-    this.catOctavaTemporalService.getEsquemaReglaOctava(cveEsquema).subscribe((data) => {
+  obtenerCatEsquemaRegla(): void {
+    this.catOctavaTemporalService.getEsquemaReglaOctava(
+      this.solicitudState.fraccionArancelaria || '', 
+      this.solicitudState.regimen || '', 
+      this.solicitudState.clasificacionRegimen || '').subscribe((data) => {
       this.solicitudMercanciaLista = data.datos.map((item, index) => ({
         id: index,
         clave: item.clave,
@@ -152,7 +171,7 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
       'frmCriterioDictamen',
       this.frmCriterioDictamen
     );
-    this.obtenerCatEsquemaRegla('2'); // 2 es el cveEsquema para octava temporal
+    
   }
 /** 
     * Inicializa el formulario de criterio de dictamen.
@@ -160,7 +179,7 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
   
     inicializarFormulario(): void {
     this.subscription.add(
-      this.tramite130102Query.selectSolicitud$
+      this.tramite130102Query.selectSeccionState$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {

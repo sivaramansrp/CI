@@ -212,7 +212,7 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
 
   } 
 
-  generaContratoSolicitud(): void {
+  generaContratoSolicitud(): SaveReglaOctavaRequest {
     console.log('Generando contrato de solicitud...'+ JSON.stringify(this.solicitudState));
     const data: SaveReglaOctavaRequest = {
         cve_regimen: this.solicitudState.regimen || '',
@@ -221,13 +221,13 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
         cve_usuario_capturista: "string",
         lista_paises: this.solicitudState.paises || [],
         mercancia: {
-            cve_fraccion_arancelaria: "string",
+            cve_fraccion_arancelaria: this.solicitudState.fraccionArancelaria || '',
             cve_subdivision: "string",
             descripcion: this.solicitudState.descripcion || '',
             cve_unidad_medida_tarifaria: this.solicitudState.unidadMedida || '',
             cantidad_tarifaria: this.solicitudState.cantidad || 0,
             valor_factura_usd: parseFloat(this.solicitudState.valorFacturaUSD) || 0,
-            ide_condicion_mercancia: "CONDMER.N",
+            ide_condicion_mercancia: this.solicitudState.productos || 'CONDMER.N',
         },
         solicitante: {
             rfc: "string",
@@ -239,31 +239,22 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
             cve_entidad_federativa: this.solicitudState.entidad || '',
             cve_unidad_administrativa:  this.solicitudState.representacion,
         },
-        partidas_mercancia:[{
-      "cantidad": 1000,
-      "descripcion": "Descripción de la partida",
-      "valor_autorizado": 25000.50,
-      "cve_fraccion": "72021999",
-      "importe_Unitario": 25.00,
-      "importe_partida_total_usd": 25000.00
-    }],
-        cantidad_total: 0,
-        cantidad_total_usd: 0,
-        lista_fracciones_prosec: [{
-      "clave": "72021999",
-      "fraccion": "Descripción de la fracción arancelaria"
-    }]
+        partidas_mercancia: this.solicitudState.partidas_tabla || [],
+        cantidad_total: this.solicitudState.cantidadTotal || 0,
+        cantidad_total_usd: parseFloat(this.solicitudState.valorTotalUSD) || 0,
+        lista_fracciones_prosec: this.solicitudState.lista_fracciones_prosec || [],
     
     }
     console.log('Datos para guardar la solicitud: ', JSON.stringify(data));
+    return data;
   }
   /**
    * Método que invoca al servicio de guardado de la solicitud.
    * @param data - Datos de la solicitud a guardar.
    */
   ejecutarGuardadoSolicitud(): void {
-    console.log('Guardando solicitud...', JSON.stringify(this.solicitudState));
-    const dataRequest : SaveReglaOctavaRequest = dataRequestROctavaTemporal;
+    this.generaContratoSolicitud();
+    const dataRequest : SaveReglaOctavaRequest = this.generaContratoSolicitud();//dataRequestROctavaTemporal;
     this.catOctavaTemporalService.saveDataRequest(dataRequest).subscribe({
       next: (data) => {
         if(data.datos.id_solicitud){

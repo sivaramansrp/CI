@@ -3,7 +3,7 @@
   <form [formGroup]="frmCriterioDictamen">
     <div class="row">
       <div class="col-md-7 form-group">
-        <app-catalogo-select
+        <!--<app-catalogo-select
           [catalogo]="solicitudMercanciaLista"
           [label]="'Solicitud mercancia esquema regla octava clave'"
           [required]="true"
@@ -11,7 +11,7 @@
           [placeholder]="'Seleccione un valor'"
           formControlName="solicitudMercancia"
           [isDisabled]="esFormularioSoloLectura ? true : false"
-        ></app-catalogo-select>
+        ></app-catalogo-select>-->
    
         <label for="solicitudMercancia" class="form-label">Solicitud mercancia esquema regla octava clave*:</label>
         <select class="form-control form-select" formControlName="solicitudMercancia" (change)="fetchSolicitudMercancia($event);setValoresStore(frmCriterioDictamen,'solicitudMercancia', 'setsolicitudMercancia')">

@@ -57,7 +57,7 @@ import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.ser
   styleUrl: './datos-de-la-mercacia.component.scss',
 })
 export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
-   defaultSelect: string = 'Nuevo';
+   defaultSelect: string = 'CONDMER.N';
   /** 
   * @description Indica si el formulario es de solo lectura.
   */
@@ -313,7 +313,10 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * @description Carga las opciones de productos desde el JSON.
    */
   fetchProductoOptions(): void {
-    this.producto = productoOptions?.options;
+    this.producto = [
+      { "label": "Nuevo", "value": "CONDMER.N" },
+      { "label": "Usado", "value": "CONDMER.U" }
+    ]
   }
 
   /**

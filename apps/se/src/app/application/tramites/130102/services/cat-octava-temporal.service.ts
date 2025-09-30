@@ -13,7 +13,7 @@ import { API_GET_BLOQUE_PAISES,
   API_GET_REGIMENES, 
   API_GET_UNIDADES_ADMINISTRATIVAS, 
   API_GET_UNIDADES_MEDIDA,
-  API_GET_ESQUEMA_REGLAS_OCTAVA, 
+  API_GET_OCTAVA_TEMPORAL, 
   API_GET_INICIAR_NOTIFICACION,
   API_GET_TIGIE,
   API_POST_GUARDAR_SOLICITUD} from '../server/api-router';
@@ -224,8 +224,8 @@ export class CatOctavaTemporalService {
    * @param cveEsquema Clave del esquema para obtener las reglas de octava temporal.
    * @returns 
    */
-  getEsquemaReglaOctava(cveEsquema: string): Observable<CatalogosResponse> {
-    const ENDPOINT = `${this.host}` +  API_GET_ESQUEMA_REGLAS_OCTAVA(cveEsquema);
+  getEsquemaReglaOctava(cveFraccion: string, cveRegimen: string, cveClasificacion: string): Observable<CatalogosResponse> {
+    const ENDPOINT = `${this.host}` +  API_GET_OCTAVA_TEMPORAL(cveFraccion, cveRegimen, cveClasificacion);
     return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
       map((response) => {
         return response;        
